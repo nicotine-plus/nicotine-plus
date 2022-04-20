@@ -73,19 +73,12 @@ confidence=
 disable=missing-class-docstring,
         missing-module-docstring,
         missing-function-docstring,
-        import-outside-toplevel,
-        too-many-branches,
         broad-except,
-        pointless-string-statement,
-        too-many-statements,
-        too-many-locals,
-        too-many-return-statements,
-        too-many-instance-attributes,
         cyclic-import,
-        consider-using-with,
+        import-outside-toplevel,
+        pointless-string-statement,
         duplicate-code,
-        consider-using-f-string,
-        no-value-for-parameter
+        consider-using-f-string
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option
@@ -472,16 +465,16 @@ valid-metaclass-classmethod-first-arg=cls
 max-args=12
 
 # Maximum number of attributes for a class (see R0902).
-max-attributes=8
+max-attributes=150
 
 # Maximum number of boolean expressions in an if statement (see R0916).
 max-bool-expr=6
 
 # Maximum number of branch for function / method body.
-max-branches=12
+max-branches=70
 
 # Maximum number of locals for function / method body.
-max-locals=15
+max-locals=30
 
 # Maximum number of parents for a class (see R0901).
 max-parents=7
@@ -490,10 +483,10 @@ max-parents=7
 max-public-methods=140
 
 # Maximum number of return / yield for function / method body.
-max-returns=6
+max-returns=12
 
 # Maximum number of statements in function / method body.
-max-statements=50
+max-statements=160
 
 # Minimum number of public methods for a class (see R0903).
 min-public-methods=0

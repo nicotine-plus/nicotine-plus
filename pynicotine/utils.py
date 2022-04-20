@@ -427,14 +427,20 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
 
     try:
         if len(subcommands) == 1:  # no need to fool around with pipes
-            procs.append(Popen(subcommands[0], stdout=finalstdout))
+            procs.append(Popen(subcommands[0], stdout=finalstdout))      # pylint: disable=consider-using-with
         else:
-            procs.append(Popen(subcommands[0], stdout=PIPE))
+            procs.append(Popen(subcommands[0], stdout=PIPE))             # pylint: disable=consider-using-with
+
             for subcommand in subcommands[1:-1]:
-                procs.append(Popen(subcommand, stdin=procs[-1].stdout, stdout=PIPE))
-            procs.append(Popen(subcommands[-1], stdin=procs[-1].stdout, stdout=finalstdout))
+                procs.append(Popen(subcommand, stdin=procs[-1].stdout,   # pylint: disable=consider-using-with
+                                   stdout=PIPE))
+
+            procs.append(Popen(subcommands[-1], stdin=procs[-1].stdout,  # pylint: disable=consider-using-with
+                               stdout=finalstdout))
+
         if not background and not returnoutput:
             procs[-1].wait()
+
     except Exception as error:
         raise RuntimeError("Problem while executing command %s (%s of %s)" %
                            (subcommands[len(procs)], len(procs) + 1, len(subcommands))) from error
