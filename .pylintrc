@@ -72,6 +72,7 @@ confidence=
 disable=missing-class-docstring,
         missing-module-docstring,
         missing-function-docstring,
+        bad-option-value,
         broad-except,
         cyclic-import,
         import-outside-toplevel,
