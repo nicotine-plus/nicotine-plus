@@ -1343,22 +1343,30 @@ class NicotineFrame(UserInterface):
     def on_tab_close(self, *_args):
         """ Ctrl+W and Ctrl+F4: close current secondary tab """
 
-        notebook_name = self.current_page_id
-        notebook = getattr(self, notebook_name)
+        try:
+            notebook = getattr(self, self.current_page_id + "_notebook")
+
+        except AttributeError:
+            return False
+
         page = notebook.get_nth_page(notebook.get_current_page())
 
         if page is None:
             return False
 
-        tab_label, _menu_label = notebook.get_labels(page)
+        tab_label = notebook.get_tab_label(page)
         tab_label.close_callback()
         return True
 
     def on_tab_cycle(self, _widget, _state, backwards=False):
         """ Ctrl+Tab and Shift+Ctrl+Tab: cycle through secondary tabs """
 
-        notebook_name = self.current_page_id
-        notebook = getattr(self, notebook_name)
+        try:
+            notebook = getattr(self, self.current_page_id + "_notebook")
+
+        except AttributeError:
+            return False
+
         num_pages = notebook.get_n_pages()
         current_page = notebook.get_current_page()
 
