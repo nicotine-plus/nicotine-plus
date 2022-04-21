@@ -51,6 +51,11 @@ GTK_SETTINGS = Gtk.Settings.get_default()
 
 
 def read_color_scheme():
+    """ Available color schemes:
+    - 0: No preference
+    - 1: Prefer dark appearance
+    - 2: Prefer light appearance
+    """
 
     try:
         value = SETTINGS_PORTAL.call_sync(
@@ -94,7 +99,7 @@ def set_dark_mode(force=False):
         color_scheme = read_color_scheme()
 
         if color_scheme is not None:
-            enabled = bool(color_scheme)
+            enabled = (color_scheme == 1)
 
     GTK_SETTINGS.set_property("gtk-application-prefer-dark-theme", enabled)
 
