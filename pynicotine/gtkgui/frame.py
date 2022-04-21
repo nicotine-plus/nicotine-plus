@@ -81,8 +81,7 @@ class NicotineFrame(UserInterface):
 
         if not ci_mode:
             # Show errors in the GUI from here on
-            sys.excepthook = self.on_critical_error
-            threading.excepthook = self.on_critical_error_threading  # Python >= 3.8 only
+            self.init_exception_handler()
 
         self.application = application
         self.core = self.np = core  # pylint:disable=invalid-name
@@ -372,6 +371,32 @@ class NicotineFrame(UserInterface):
         # Maximize main window if necessary
         if config.sections["ui"]["maximized"]:
             self.window.maximize()
+
+    def init_exception_handler(self):
+
+        sys.excepthook = self.on_critical_error
+
+        if hasattr(threading, "excepthook"):
+            threading.excepthook = self.on_critical_error_threading
+            return
+
+        # Workaround for Python <= 3.7
+        init_thread = threading.Thread.__init__
+
+        def init_thread_excepthook(self, *args, **kwargs):
+
+            init_thread(self, *args, **kwargs)
+            run_thread = self.run
+
+            def run_with_excepthook(*args2, **kwargs2):
+                try:
+                    run_thread(*args2, **kwargs2)
+                except Exception:
+                    GLib.idle_add(sys.excepthook, *sys.exc_info())
+
+            self.run = run_with_excepthook
+
+        threading.Thread.__init__ = init_thread_excepthook
 
     def on_startup(self):
 
