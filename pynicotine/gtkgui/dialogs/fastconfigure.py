@@ -101,8 +101,9 @@ class FastConfigure(UserInterface):
             ["virtual_folder", _("Virtual Folder"), 0, "text", None],
             ["folder", _("Folder"), 0, "text", None]
         )
-
         self.shares_list_view.set_model(self.sharelist)
+
+        self.reset_completeness()
 
     def reset_completeness(self):
         """ Turns on the complete flag if everything required is filled in. """
