@@ -37,12 +37,45 @@ SETTINGS_PORTAL = None
 
 if "gi.repository.Adw" not in sys.modules:
     # GNOME 42+ system-wide dark mode for vanilla GTK (no libadwaita)
+
+    def read_color_scheme():
+        """ Available color schemes:
+        - 0: No preference
+        - 1: Prefer dark appearance
+        - 2: Prefer light appearance
+        """
+
+        try:
+            result = SETTINGS_PORTAL.call_sync(
+                "Read", GLib.Variant("(ss)", ("org.freedesktop.appearance", "color-scheme")),
+                Gio.DBusCallFlags.NONE, -1, None
+            )
+
+            return result.unpack()[0]
+
+        except Exception:
+            return None
+
+    def on_color_scheme_changed(_proxy, _sender_name, signal_name, parameters):
+
+        if signal_name != "SettingChanged":
+            return
+
+        namespace, name, color_scheme, *_unused = parameters.unpack()
+
+        if (config.sections["ui"]["dark_mode"]
+                or namespace != "org.freedesktop.appearance" or name != "color-scheme"):
+            return
+
+        set_dark_mode(color_scheme == 1)
+
     try:
         SETTINGS_PORTAL = Gio.DBusProxy.new_for_bus_sync(
             Gio.BusType.SESSION, Gio.DBusProxyFlags.NONE, None,
             "org.freedesktop.portal.Desktop", "/org/freedesktop/portal/desktop",
             "org.freedesktop.portal.Settings", None
         )
+        SETTINGS_PORTAL.connect("g-signal", on_color_scheme_changed)
 
     except Exception:
         pass
@@ -50,52 +83,16 @@ if "gi.repository.Adw" not in sys.modules:
 GTK_SETTINGS = Gtk.Settings.get_default()
 
 
-def read_color_scheme():
-    """ Available color schemes:
-    - 0: No preference
-    - 1: Prefer dark appearance
-    - 2: Prefer light appearance
-    """
-
-    try:
-        value = SETTINGS_PORTAL.call_sync(
-            "Read", GLib.Variant("(ss)", ("org.freedesktop.appearance", "color-scheme")),
-            Gio.DBusCallFlags.NONE, -1, None
-        )
-
-        return value.get_child_value(0).get_variant().get_variant().get_uint32()
-
-    except Exception:
-        return None
-
-
-def on_color_scheme_changed(_proxy, _sender_name, signal_name, parameters):
-
-    if signal_name != "SettingChanged":
-        return
-
-    namespace = parameters.get_child_value(0).get_string()
-    name = parameters.get_child_value(1).get_string()
-
-    if (config.sections["ui"]["dark_mode"]
-            or namespace != "org.freedesktop.appearance" or name != "color-scheme"):
-        return
-
-    set_dark_mode()
-
-
-def set_dark_mode(force=False):
+def set_dark_mode(enabled):
 
     if "gi.repository.Adw" in sys.modules:
         from gi.repository import Adw  # pylint:disable=no-name-in-module
 
-        color_scheme = Adw.ColorScheme.FORCE_DARK if force else Adw.ColorScheme.DEFAULT
+        color_scheme = Adw.ColorScheme.FORCE_DARK if enabled else Adw.ColorScheme.DEFAULT
         Adw.StyleManager.get_default().set_color_scheme(color_scheme)
         return
 
-    enabled = force
-
-    if not force:
+    if not enabled:
         color_scheme = read_color_scheme()
 
         if color_scheme is not None:
@@ -118,9 +115,6 @@ def set_use_header_bar(enabled):
 
 
 def set_visual_settings():
-
-    if SETTINGS_PORTAL is not None:
-        SETTINGS_PORTAL.connect("g-signal", on_color_scheme_changed)
 
     global_font = config.sections["ui"]["globalfont"]
     set_dark_mode(config.sections["ui"]["dark_mode"])
