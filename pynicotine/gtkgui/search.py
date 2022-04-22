@@ -899,13 +899,13 @@ class Search(UserInterface):
         if filters["filterout"] and filters["filterout"].search(row[11].lower()):
             return False
 
-        if filters["filtersize"] and not self.check_digit(filters["filtersize"], row[13].get_uint64()):
+        if filters["filtersize"] and not self.check_digit(filters["filtersize"], row[13].get_value()):
             return False
 
-        if filters["filterbr"] and not self.check_digit(filters["filterbr"], row[10].get_uint(), False):
+        if filters["filterbr"] and not self.check_digit(filters["filterbr"], row[10].get_value(), False):
             return False
 
-        if filters["filterslot"] and row[15].get_uint() > 0:
+        if filters["filterslot"] and row[15].get_value() > 0:
             return False
 
         if filters["filtercc"] and not self.check_country(filters["filtercc"], row[12]):
@@ -1254,7 +1254,7 @@ class Search(UserInterface):
                     _h_size, h_bitrate, h_length, _bitrate, fullpath, _country, size, _speed,
                     _queue, _length, _color) = row
                 visible_files.append(
-                    (user, fullpath, destination, size.get_uint64(), h_bitrate, h_length))
+                    (user, fullpath, destination, size.get_value(), h_bitrate, h_length))
 
             self.core.search.request_folder_download(user, folder, visible_files)
 
