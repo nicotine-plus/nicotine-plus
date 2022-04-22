@@ -216,6 +216,12 @@ class UserInfo(UserInterface):
     def load_picture(self, data):
 
         if not data:
+            if Gtk.get_major_version() == 4:
+                self.picture.set_paintable(None)
+            else:
+                self.picture.clear()
+
+            self.picture_data = None
             self.placeholder_picture.show()
             return
 
@@ -486,6 +492,11 @@ class UserInfo(UserInterface):
         self.core.userinfo.request_user_info(self.user)
 
     def on_close(self, *_args):
+
+        self.description_view.clear()
+        self.likes_store.clear()
+        self.dislikes_store.clear()
+        self.load_picture(None)
 
         del self.userinfos.pages[self.user]
         self.core.userinfo.remove_user(self.user)

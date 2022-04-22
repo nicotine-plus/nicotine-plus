@@ -439,7 +439,9 @@ class PrivateChat(UserInterface):
 
     def on_close(self, *_args):
 
+        self.chat_view.clear()
         self.frame.notifications.clear("private", self.user)
+
         del self.chats.pages[self.user]
         self.core.privatechats.remove_user(self.user)
 
