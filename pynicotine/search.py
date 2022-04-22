@@ -107,9 +107,11 @@ class Search:
 
         if search["term"] in self.config.sections["server"]["autosearch"]:
             search["ignore"] = True
-            return
+        else:
+            del self.searches[token]
 
-        del self.searches[token]
+        if self.ui_callback:
+            self.ui_callback.remove_search(token)
 
     def process_search_term(self, text, mode, room, user):
 

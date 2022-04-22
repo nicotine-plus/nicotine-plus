@@ -122,6 +122,17 @@ class PrivateChats(IconNotebook):
         if switch_page and self.get_current_page() != self.page_num(self.pages[user].container):
             self.set_current_page(self.page_num(self.pages[user].container))
 
+    def remove_user(self, user):
+
+        page = self.pages.get(user)
+
+        if page is None:
+            return
+
+        page.clear()
+        self.remove_page(page.container)
+        del self.pages[user]
+
     def echo_message(self, user, text, message_type):
 
         page = self.pages.get(user)
@@ -278,6 +289,10 @@ class PrivateChat(UserInterface):
         # Offline color for usernames
         self.update_remote_username_tag(status=0)
         self.update_local_username_tag(status=0)
+
+    def clear(self):
+        self.chat_view.clear()
+        self.frame.notifications.clear("private", self.user)
 
     def set_label(self, label):
         self.popup_menu_user_tab.set_parent(label)
@@ -451,14 +466,7 @@ class PrivateChat(UserInterface):
             self.chat_view.update_tag(tag)
 
     def on_close(self, *_args):
-
-        self.chat_view.clear()
-        self.frame.notifications.clear("private", self.user)
-
-        del self.chats.pages[self.user]
         self.core.privatechats.remove_user(self.user)
-
-        self.chats.remove_page(self.container)
 
     def on_close_all_tabs(self, *_args):
         self.chats.remove_all_pages()

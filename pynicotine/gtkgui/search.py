@@ -159,6 +159,17 @@ class Searches(IconNotebook):
         # Repopulate the combo list
         self.populate_search_history()
 
+    def remove_search(self, token):
+
+        page = self.pages.get(token)
+
+        if page is None:
+            return
+
+        page.clear_model(stored_results=True)
+        self.remove_page(page.Main)
+        del self.pages[token]
+
     def clear_search_history(self):
 
         self.frame.search_entry.set_text("")
@@ -1471,12 +1482,7 @@ class Search(UserInterface):
         self.update_result_counter()
 
     def on_close(self, *_args):
-
-        self.clear_model(stored_results=True)
-
-        del self.searches.pages[self.token]
         self.core.search.remove_search(self.token)
-        self.searches.remove_page(self.Main)
 
     def on_close_all_tabs(self, *_args):
         self.searches.remove_all_pages()

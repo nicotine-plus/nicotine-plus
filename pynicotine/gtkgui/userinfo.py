@@ -71,6 +71,17 @@ class UserInfos(IconNotebook):
             self.set_current_page(self.page_num(self.pages[user].container))
             self.frame.change_main_page(self.frame.userinfo_page)
 
+    def remove_user(self, user):
+
+        page = self.pages.get(user)
+
+        if page is None:
+            return
+
+        page.clear()
+        self.remove_page(page.container)
+        del self.pages[user]
+
     def show_connection_error(self, user):
         if user in self.pages:
             self.pages[user].show_connection_error()
@@ -219,6 +230,13 @@ class UserInfo(UserInterface):
         )
 
         self.update_visuals()
+
+    def clear(self):
+
+        self.description_view.clear()
+        self.likes_store.clear()
+        self.dislikes_store.clear()
+        self.load_picture(None)
 
     def set_label(self, label):
         self.user_popup.set_parent(label)
@@ -513,15 +531,7 @@ class UserInfo(UserInterface):
         self.core.userinfo.request_user_info(self.user)
 
     def on_close(self, *_args):
-
-        self.description_view.clear()
-        self.likes_store.clear()
-        self.dislikes_store.clear()
-        self.load_picture(None)
-
-        del self.userinfos.pages[self.user]
         self.core.userinfo.remove_user(self.user)
-        self.userinfos.remove_page(self.container)
 
     def on_close_all_tabs(self, *_args):
         self.userinfos.remove_all_pages()

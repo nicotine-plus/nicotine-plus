@@ -45,7 +45,11 @@ class UserInfo:
             self.users.add(user)
 
     def remove_user(self, user):
+
         self.users.remove(user)
+
+        if self.ui_callback:
+            self.ui_callback.remove_user(user)
 
     def show_user(self, user, switch_page=True):
         if self.ui_callback:
