@@ -194,6 +194,9 @@ class ChatRooms(IconNotebook):
         if page is None:
             return
 
+        page.activity_view.clear()
+        page.chat_view.clear()
+
         self.remove_page(page.container)
         del self.pages[msg.room]
 
