@@ -194,9 +194,7 @@ class ChatRooms(IconNotebook):
         if page is None:
             return
 
-        page.activity_view.clear()
-        page.chat_view.clear()
-
+        page.clear()
         self.remove_page(page.container)
         del self.pages[msg.room]
 
@@ -521,6 +519,10 @@ class ChatRoom(UserInterface):
         self.create_tags()
         self.update_visuals()
         self.read_room_logs()
+
+    def clear(self):
+        self.activity_view.clear()
+        self.chat_view.clear()
 
     def set_label(self, label):
         self.tab_menu.set_parent(label)

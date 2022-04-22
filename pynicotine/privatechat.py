@@ -90,6 +90,9 @@ class PrivateChats:
 
         self.users.remove(user)
 
+        if self.ui_callback:
+            self.ui_callback.remove_user(user)
+
     def show_user(self, user, switch_page=True):
 
         self.add_user(user)

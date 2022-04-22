@@ -88,6 +88,17 @@ class UserBrowses(IconNotebook):
             self.set_current_page(self.page_num(page.container))
             self.frame.change_main_page(self.frame.userbrowse_page)
 
+    def remove_user(self, user):
+
+        page = self.pages.get(user)
+
+        if page is None:
+            return
+
+        page.clear_model()
+        self.remove_page(page.container)
+        del self.pages[user]
+
     def show_connection_error(self, user):
         if user in self.pages:
             self.pages[user].show_connection_error()
@@ -1241,12 +1252,7 @@ class UserBrowse(UserInterface):
         self.core.userbrowse.browse_user(self.user, local_shares_type=self.local_shares_type, new_request=True)
 
     def on_close(self, *_args):
-
-        self.clear_model()
-
-        del self.userbrowses.pages[self.user]
         self.core.userbrowse.remove_user(self.user)
-        self.userbrowses.remove_page(self.container)
 
     def on_close_all_tabs(self, *_args):
         self.userbrowses.remove_all_pages()
