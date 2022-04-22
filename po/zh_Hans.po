@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-22 02:04+0300\n"
-"PO-Revision-Date: 2022-03-01 16:41+0000\n"
-"Last-Translator: hadwin <huadiw@gmail.com>\n"
+"PO-Revision-Date: 2022-04-21 23:51+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/zh_Hans/>\n"
 "Language: zh_Hans\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.11.1-dev\n"
+"X-Generator: Weblate 4.12-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:8
@@ -1611,8 +1611,9 @@ msgid "_Finish"
 msgstr "已完成"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:114
+#, fuzzy
 msgid "_Next"
-msgstr ""
+msgstr "_下一个"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:168
 #: pynicotine/gtkgui/dialogs/preferences.py:687
@@ -2180,8 +2181,9 @@ msgid "Queued…"
 msgstr "队列…"
 
 #: pynicotine/gtkgui/downloads.py:70 pynicotine/gtkgui/uploads.py:69
+#, fuzzy
 msgid "Everything…"
-msgstr ""
+msgstr "一切…"
 
 #: pynicotine/gtkgui/downloads.py:82
 msgid "Clear Queued Downloads"

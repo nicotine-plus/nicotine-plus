@@ -6,10 +6,10 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-22 02:04+0300\n"
-"PO-Revision-Date: 2022-03-16 00:36+0000\n"
-"Last-Translator: MELERIX <melerix@outlook.com>\n"
-"Language-Team: Spanish (Chile) <https://hosted.weblate.org/projects/nicotine-"
-"plus/nicotine-plus/es_CL/>\n"
+"PO-Revision-Date: 2022-04-21 23:51+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Spanish (Chile) <https://hosted.weblate.org/projects/"
+"nicotine-plus/nicotine-plus/es_CL/>\n"
 "Language: es_CL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1373,8 +1373,9 @@ msgid "_Finish"
 msgstr "Terminado"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:114
+#, fuzzy
 msgid "_Next"
-msgstr ""
+msgstr "_Próximo"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:168
 #: pynicotine/gtkgui/dialogs/preferences.py:687
@@ -1949,8 +1950,9 @@ msgid "Queued…"
 msgstr "En cola…"
 
 #: pynicotine/gtkgui/downloads.py:70 pynicotine/gtkgui/uploads.py:69
+#, fuzzy
 msgid "Everything…"
-msgstr ""
+msgstr "Todo…"
 
 #: pynicotine/gtkgui/downloads.py:82
 msgid "Clear Queued Downloads"

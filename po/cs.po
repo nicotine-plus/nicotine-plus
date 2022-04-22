@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-22 02:04+0300\n"
-"PO-Revision-Date: 2022-02-19 02:55+0000\n"
+"PO-Revision-Date: 2022-04-21 23:51+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/cs/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Weblate 4.11-dev\n"
+"X-Generator: Weblate 4.12-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:8
@@ -1656,8 +1656,9 @@ msgid "_Finish"
 msgstr "Hotový"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:114
+#, fuzzy
 msgid "_Next"
-msgstr ""
+msgstr "_Další"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:168
 #: pynicotine/gtkgui/dialogs/preferences.py:687
@@ -2332,8 +2333,9 @@ msgid "Queued…"
 msgstr "Zařazený do fronty…"
 
 #: pynicotine/gtkgui/downloads.py:70 pynicotine/gtkgui/uploads.py:69
+#, fuzzy
 msgid "Everything…"
-msgstr ""
+msgstr "Všechno…"
 
 #: pynicotine/gtkgui/downloads.py:82
 #, fuzzy
