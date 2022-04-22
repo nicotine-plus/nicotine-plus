@@ -226,8 +226,8 @@ class UserBrowse(UserInterface):
             str,                  # (2) hbitrate
             str,                  # (3) hlength
             GObject.TYPE_UINT64,  # (4) size
-            GObject.TYPE_UINT64,  # (5) bitrate
-            GObject.TYPE_UINT64   # (6) length
+            GObject.TYPE_UINT,    # (5) bitrate
+            GObject.TYPE_UINT     # (6) length
         )
 
         self.file_column_offsets = {}
@@ -553,8 +553,8 @@ class UserBrowse(UserInterface):
 
             file_row = [filename, human_size(size), h_bitrate, h_length,
                         GObject.Value(GObject.TYPE_UINT64, size),
-                        GObject.Value(GObject.TYPE_UINT64, bitrate),
-                        GObject.Value(GObject.TYPE_UINT64, length)]
+                        GObject.Value(GObject.TYPE_UINT, bitrate),
+                        GObject.Value(GObject.TYPE_UINT, length)]
 
             self.file_iters[filename] = self.file_store.insert_with_valuesv(-1, self.file_column_numbers, file_row)
 

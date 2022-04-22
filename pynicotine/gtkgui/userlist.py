@@ -385,8 +385,8 @@ class UserList(UserInterface):
 
         self.usersmodel.set_value(iterator, 3, h_speed)
         self.usersmodel.set_value(iterator, 4, h_files)
-        self.usersmodel.set_value(iterator, 11, GObject.Value(GObject.TYPE_UINT64, avgspeed))
-        self.usersmodel.set_value(iterator, 12, GObject.Value(GObject.TYPE_UINT64, files))
+        self.usersmodel.set_value(iterator, 11, GObject.Value(GObject.TYPE_UINT, avgspeed))
+        self.usersmodel.set_value(iterator, 12, GObject.Value(GObject.TYPE_UINT, files))
 
     def set_user_country(self, user, country_code):
 
