@@ -899,6 +899,19 @@ class Search(UserInterface):
 
         self.FilterLabel.set_tooltip_text("%d active filter(s)" % count)
 
+    def clear_model(self, stored_results=False):
+
+        if stored_results:
+            self.all_data.clear()
+            self.num_results_found = 0
+            self.max_limited = False
+            self.max_limit = config.sections["searches"]["max_displayed_results"]
+
+        self.usersiters.clear()
+        self.directoryiters.clear()
+        self.resultsmodel.clear()
+        self.num_results_visible = 0
+
     def update_results_model(self):
 
         # Temporarily disable sorting for increased performance
@@ -906,10 +919,7 @@ class Search(UserInterface):
         self.resultsmodel.set_default_sort_func(lambda *_args: 0)
         self.resultsmodel.set_sort_column_id(-1, Gtk.SortType.ASCENDING)
 
-        self.usersiters.clear()
-        self.directoryiters.clear()
-        self.resultsmodel.clear()
-        self.num_results_visible = 0
+        self.clear_model()
 
         for row in self.all_data:
             if self.check_filter(row):
@@ -1428,14 +1438,7 @@ class Search(UserInterface):
 
     def on_clear(self, *_args):
 
-        self.all_data = []
-        self.usersiters.clear()
-        self.directoryiters.clear()
-        self.resultsmodel.clear()
-        self.num_results_found = 0
-        self.num_results_visible = 0
-        self.max_limited = False
-        self.max_limit = config.sections["searches"]["max_displayed_results"]
+        self.clear_model(stored_results=True)
 
         # Allow parsing search result messages again
         self.core.search.add_allowed_token(self.token)
@@ -1444,6 +1447,8 @@ class Search(UserInterface):
         self.update_result_counter()
 
     def on_close(self, *_args):
+
+        self.clear_model(stored_results=True)
 
         del self.searches.pages[self.token]
         self.core.search.remove_search(self.token)
