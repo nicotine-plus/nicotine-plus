@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-22 02:04+0300\n"
-"PO-Revision-Date: 2022-02-19 08:17+0000\n"
+"PO-Revision-Date: 2022-04-22 04:11+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.11-dev\n"
+"X-Generator: Weblate 4.12-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:8
@@ -1354,9 +1354,8 @@ msgstr ""
 "dauerhaft löschen?"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:71
-#, fuzzy
 msgid "Setup Assistant"
-msgstr "_Einrichtungsassistent"
+msgstr "Einrichtungsassistent"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:101
 #: pynicotine/gtkgui/dialogs/preferences.py:558
@@ -1371,13 +1370,12 @@ msgid "Folder"
 msgstr "Ordner"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:114
-#, fuzzy
 msgid "_Finish"
-msgstr "Abgeschlossen"
+msgstr "_Beenden"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:114
 msgid "_Next"
-msgstr ""
+msgstr "_Nächste"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:168
 #: pynicotine/gtkgui/dialogs/preferences.py:687
@@ -1950,7 +1948,7 @@ msgstr "In der Warteschlange…"
 
 #: pynicotine/gtkgui/downloads.py:70 pynicotine/gtkgui/uploads.py:69
 msgid "Everything…"
-msgstr ""
+msgstr "Alles…"
 
 #: pynicotine/gtkgui/downloads.py:82
 msgid "Clear Queued Downloads"
@@ -2243,7 +2241,7 @@ msgstr "[Debug] Verbindungen"
 
 #: pynicotine/gtkgui/frame.py:1731
 msgid "[Debug] Messages"
-msgstr "[Debug]-Meldungen"
+msgstr "[Debug] Meldungen"
 
 #: pynicotine/gtkgui/frame.py:1732
 msgid "[Debug] Transfers"
@@ -2625,9 +2623,8 @@ msgid "Transferring"
 msgstr "Übertragen"
 
 #: pynicotine/gtkgui/transferlist.py:95
-#, fuzzy
 msgid "Connection timeout"
-msgstr "Verbindung"
+msgstr "Verbindungszeitüberschreitung"
 
 #: pynicotine/gtkgui/transferlist.py:96
 msgid "Pending shutdown"
@@ -3892,9 +3889,8 @@ msgid "_Log Conversation"
 msgstr "_Konversation protokollieren"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:6
-#, fuzzy
 msgid "_Previous"
-msgstr "Vorherige Datei"
+msgstr "_Bisherige"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:44
 msgid "Welcome to Nicotine+"
@@ -4016,19 +4012,16 @@ msgid "Last Speed"
 msgstr "Letzte Geschwindigkeit"
 
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:12
-#, fuzzy
 msgid "_Export…"
-msgstr "Export"
+msgstr "_Exportieren…"
 
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:18
-#, fuzzy
 msgid "_Apply"
-msgstr "Anwenden"
+msgstr "_Anwenden"
 
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:24
-#, fuzzy
 msgid "_OK"
-msgstr "Okay"
+msgstr "_OK"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:6
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:55
@@ -4170,9 +4163,8 @@ msgid "Find Previous Match"
 msgstr "Vorherige Treffer finden"
 
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:6
-#, fuzzy
 msgid "_Reset…"
-msgstr "_Fortsetzen"
+msgstr "_Zurücksetzen…"
 
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:29
 msgid "Current Session"
@@ -4269,9 +4261,8 @@ msgstr ""
 "Alle Downloads, die mit einem bestimmten Status gekennzeichnet sind, löschen."
 
 #: pynicotine/gtkgui/ui/downloads.ui:183 pynicotine/gtkgui/ui/uploads.ui:181
-#, fuzzy
 msgid "Clear _All…"
-msgstr "Alles löschen…"
+msgstr "_Alles löschen…"
 
 #: pynicotine/gtkgui/ui/interests.ui:24
 msgid "Personal Interests"
@@ -5457,7 +5448,7 @@ msgstr "Übertragungen in eine Datei protokollieren"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:64
 msgid "Log debug messages to file"
-msgstr "Debugmeldungen in Datei protokollieren"
+msgstr "Debug-Meldungen in Datei protokollieren"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:77
 msgid "Log file timestamp format:"
