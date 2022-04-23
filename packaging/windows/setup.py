@@ -38,7 +38,8 @@ else:
 include_files = []
 plugin_packages = []
 
-gtk_version = os.environ.get("NICOTINE_GTK_VERSION") or 3
+gtk_version = os.environ.get("NICOTINE_GTK_VERSION") or '3'
+use_libadwaita = bool(os.environ.get("NICOTINE_LIBADWAITA"))  # GTK 4 only
 pynicotine_path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", ".."))
 sys.path.append(pynicotine_path)
 
@@ -63,7 +64,11 @@ def add_files_by_pattern(rel_path, starts_with, ends_with, output_path=None, rec
 def add_gtk():
 
     # This also includes all dlls required by GTK
-    add_files_by_pattern("bin", "libgtk-" + str(gtk_version), ".dll", output_path="lib")
+    add_files_by_pattern("bin", "libgtk-" + gtk_version, ".dll", output_path="lib")
+
+    if use_libadwaita:
+        add_files_by_pattern("bin", "libadwaita-", ".dll", output_path="lib")
+
     include_files.append((os.path.join(sys_base, "share/glib-2.0/schemas/gschemas.compiled"),
                          "share/glib-2.0/schemas/gschemas.compiled"))
 
@@ -84,20 +89,38 @@ def add_gtk():
     add_files_by_pattern("lib/gdk-pixbuf-2.0/2.10.0/loaders", "libpixbufloader-", ".dll", output_path="lib")
 
     # Typelibs
-    required_typelibs = (
-        "Gtk-" + str(gtk_version),
+    required_typelibs = [
+        "Gtk-" + gtk_version,
         "Gio-",
-        "Gdk-" + str(gtk_version),
+        "Gdk-" + gtk_version,
         "GLib-",
-        "Atk-",
         "HarfBuzz-",
         "Pango-",
         "GObject-",
         "GdkPixbuf-",
         "cairo-",
         "GModule-"
-    )
-    add_files_by_pattern("lib/girepository-1.0", required_typelibs, ".typelib")
+    ]
+
+    required_typelibs_gtk3 = [
+        "Atk-"
+    ]
+
+    required_typelibs_gtk4 = [
+        "Graphene-",
+        "Gsk-",
+        "PangoCairo-"
+    ]
+
+    if gtk_version == '4':
+        if use_libadwaita:
+            required_typelibs_gtk4.append("Adw-")
+
+        required_typelibs += required_typelibs_gtk4
+    else:
+        required_typelibs += required_typelibs_gtk3
+
+    add_files_by_pattern("lib/girepository-1.0", tuple(required_typelibs), ".typelib")
 
 
 def add_icon_packs():
@@ -130,7 +153,7 @@ def add_translations():
     languages = build_translations()
 
     include_files.append((os.path.join(pynicotine_path, "mo"), "share/locale"))
-    add_files_by_pattern("share/locale", tuple(languages), "gtk" + str(gtk_version) + "0.mo", recursive=True)
+    add_files_by_pattern("share/locale", tuple(languages), "gtk" + gtk_version + "0.mo", recursive=True)
 
 
 def add_plugin_packages():

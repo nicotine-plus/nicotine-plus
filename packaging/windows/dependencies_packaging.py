@@ -29,7 +29,7 @@ ARCH = os.environ.get("ARCH") or "x86_64"
 def install_pacman():
     """ Install dependencies from the main MinGW repos """
 
-    prefix = "mingw-w64-" + str(ARCH) + "-"
+    prefix = "mingw-w64-" + ARCH + "-"
     packages = [prefix + "python-cx-freeze",
                 prefix + "python-pywin32"]
 
