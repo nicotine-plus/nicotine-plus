@@ -61,7 +61,8 @@ jobs:
         shell: msys2 {0}
     env:
       ARCH: ${{ matrix.arch }}
-      NICOTINE_GTK_VERSION: 3
+      NICOTINE_GTK_VERSION: 4
+      NICOTINE_LIBADWAITA: 1
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -101,6 +102,7 @@ jobs:
     runs-on: macos-10.15
     env:
       NICOTINE_GTK_VERSION: 3
+      NICOTINE_LIBADWAITA: 0
     steps:
       - name: Checkout code
         uses: actions/checkout@v2

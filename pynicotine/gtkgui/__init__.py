@@ -17,10 +17,24 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import sys
 
 
 def check_gui_dependencies():
 
+    # Defaults for different operating systems
+    components = {
+        "gtk": {"win32": '4', "darwin": '3'},
+        "libadwaita": {"win32": '1', "darwin": '0'}
+    }
+
+    if os.getenv("NICOTINE_GTK_VERSION") is None:
+        os.environ["NICOTINE_GTK_VERSION"] = components.get("gtk").get(sys.platform, '3')
+
+    if os.getenv("NICOTINE_LIBADWAITA") is None:
+        os.environ["NICOTINE_LIBADWAITA"] = components.get("libadwaita").get(sys.platform, '0')
+
+    # Require minor version of GTK
     if os.getenv("NICOTINE_GTK_VERSION") == '4':
         gtk_version = (4, 6, 0)
         pygobject_version = (3, 40, 0)
