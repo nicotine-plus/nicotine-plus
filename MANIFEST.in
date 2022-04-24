@@ -7,7 +7,7 @@ recursive-include pynicotine *
 recursive-include test *
 
 recursive-exclude * *.desktop
-recursive-exclude * *.metainfo.xml
+recursive-exclude * *.appdata.xml
 recursive-exclude * *.mo
 recursive-exclude * *.pyc
 recursive-exclude test *.db

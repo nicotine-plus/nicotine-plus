@@ -136,13 +136,13 @@ def build_translations():
 
         subprocess.check_call(["msgfmt", "--check", po_file, "-o", mo_file])
 
-    # Merge translations into .desktop and metainfo files
+    # Merge translations into .desktop and appdata files
     for desktop_file in glob.glob(os.path.join(BASE_FOLDER, "data", "*.desktop.in")):
         subprocess.check_call(["msgfmt", "--desktop", "--template=" + desktop_file, "-d", "po",
                                "-o", desktop_file[:-3]])
 
-    for metainfo_file in glob.glob(os.path.join(BASE_FOLDER, "data", "*.metainfo.xml.in")):
-        subprocess.check_call(["msgfmt", "--xml", "--template=" + metainfo_file, "-d", "po", "-o", metainfo_file[:-3]])
+    for appdata_file in glob.glob(os.path.join(BASE_FOLDER, "data", "*.appdata.xml.in")):
+        subprocess.check_call(["msgfmt", "--xml", "--template=" + appdata_file, "-d", "po", "-o", appdata_file[:-3]])
 
     return languages
 

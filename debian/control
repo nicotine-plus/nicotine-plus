@@ -4,7 +4,6 @@ Priority: optional
 Maintainer: Nicotine+ Team <nicotine-team@lists.launchpad.net>
 Standards-Version: 4.1.4.1
 Build-Depends:
-    appstream,
     debhelper-compat (= 11),
     devscripts,
     dh-python,

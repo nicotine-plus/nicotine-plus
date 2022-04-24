@@ -16,7 +16,6 @@
 
 ## Building
 
-- [appstream](https://freedesktop.org/wiki/Distributions/AppStream/) for generating translations;
 - [gettext](https://www.gnu.org/software/gettext/) for generating translations;
 - [setuptools](https://setuptools.pypa.io/) for packaging.
 
@@ -65,13 +64,13 @@ sudo dnf install gspell libappindicator-gtk3
 - On Debian/Ubuntu based distributions:
 
 ```sh
-sudo apt install appstream gettext python3-setuptools
+sudo apt install gettext python3-setuptools
 ```
 
 - On Redhat/Fedora based distributions:
 
 ```sh
-sudo dnf install appstream gettext python3-setuptools
+sudo dnf install gettext python3-setuptools
 ```
 
 #### Installing Test Dependencies

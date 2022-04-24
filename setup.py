@@ -65,7 +65,7 @@ functionality while keeping current with the Soulseek protocol."""
 
     DATA_FILES = [
         ("share/applications", ["data/%s.desktop" % config.application_id]),
-        ("share/metainfo", ["data/%s.metainfo.xml" % config.application_id]),
+        ("share/metainfo", ["data/%s.appdata.xml" % config.application_id]),
         ("share/icons/hicolor/scalable/apps", glob.glob("pynicotine/gtkgui/icons/hicolor/scalable/apps/*.svg")),
         ("share/icons/hicolor/scalable/intl", glob.glob("pynicotine/gtkgui/icons/hicolor/scalable/intl/*.svg")),
         ("share/icons/hicolor/symbolic/apps", glob.glob("pynicotine/gtkgui/icons/hicolor/symbolic/apps/*.svg")),

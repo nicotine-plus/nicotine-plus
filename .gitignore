@@ -1,6 +1,6 @@
 # Auto-generated files
 *.desktop
-*.metainfo.xml
+*.appdata.xml
 
 # Translation Machine Object files
 *.mo
