@@ -141,14 +141,15 @@ def build_translations():
         if not os.path.exists(mo_dir):
             os.makedirs(mo_dir)
 
-        subprocess.check_call("msgfmt --check %s -o %s" % (po_file, mo_file))
+        subprocess.check_call(["msgfmt", "--check", po_file, "-o", mo_file])
 
     # Merge translations into .desktop and metainfo files
     for desktop_file in glob.glob(os.path.join(BASE_FOLDER, "data", "*.desktop.in")):
-        subprocess.check_call("msgfmt --desktop --template=%s -d po -o %s" % (desktop_file, desktop_file[:-3]))
+        subprocess.check_call(["msgfmt", "--desktop", "--template=" + desktop_file, "-d", "po",
+                               "-o", desktop_file[:-3]])
 
     for metainfo_file in glob.glob(os.path.join(BASE_FOLDER, "data", "*.metainfo.xml.in")):
-        subprocess.check_call("msgfmt --xml --template=%s -d po -o %s" % (metainfo_file, metainfo_file[:-3]))
+        subprocess.check_call(["msgfmt", "--xml", "--template=" + metainfo_file, "-d", "po", "-o", metainfo_file[:-3]])
 
     return languages
 
