@@ -19,8 +19,10 @@
 
 import glob
 import os
+import pkgutil
 import re
 import ssl
+import subprocess
 import sys
 import tempfile
 
@@ -137,7 +139,7 @@ def add_plugin_packages():
 
     import pynicotine.plugins  # noqa: E402
 
-    for importer, name, ispkg in walk_packages(path=pynicotine.plugins.__path__, prefix="pynicotine.plugins."):
+    for importer, name, ispkg in pkgutil.walk_packages(path=pynicotine.plugins.__path__, prefix="pynicotine.plugins."):
         if ispkg:
             plugin_packages.append(name)
 

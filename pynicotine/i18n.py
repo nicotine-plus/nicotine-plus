@@ -121,6 +121,7 @@ def apply_translations():
 def build_translations():
     """ Builds .mo translation files in the 'mo' folder of the project repository """
 
+    import subprocess
     languages = []
 
     for po_file in glob.glob(os.path.join(BASE_FOLDER, "po", "*.po")):
@@ -133,17 +134,14 @@ def build_translations():
         if not os.path.exists(mo_dir):
             os.makedirs(mo_dir)
 
-        exit_code = os.system("msgfmt --check " + po_file + " -o " + mo_file)
-
-        if exit_code > 0:
-            sys.exit(exit_code)
+        subprocess.check_call("msgfmt --check %s -o %s" % (po_file, mo_file))
 
     # Merge translations into .desktop and metainfo files
     for desktop_file in glob.glob(os.path.join(BASE_FOLDER, "data", "*.desktop.in")):
-        os.system("msgfmt --desktop --template=" + desktop_file + " -d po -o " + desktop_file[:-3])
+        subprocess.check_call("msgfmt --desktop --template=%s -d po -o %s" % (desktop_file, desktop_file[:-3]))
 
     for metainfo_file in glob.glob(os.path.join(BASE_FOLDER, "data", "*.metainfo.xml.in")):
-        os.system("msgfmt --xml --template=" + metainfo_file + " -d po -o " + metainfo_file[:-3])
+        subprocess.check_call("msgfmt --xml --template=%s -d po -o %s" % (metainfo_file, metainfo_file[:-3]))
 
     return languages
 
