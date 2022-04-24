@@ -30,8 +30,7 @@ def install_pacman():
     """ Install dependencies from the main MinGW repos """
 
     prefix = "mingw-w64-" + str(ARCH) + "-"
-    packages = [prefix + "python-cx-freeze",
-                prefix + "python-pywin32"]
+    packages = [prefix + "python-cx-freeze"]
 
     subprocess.check_call(["pacman", "--noconfirm", "-S", "--needed"] + packages)
 
