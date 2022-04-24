@@ -26,39 +26,39 @@ import subprocess
 import sys
 import tempfile
 
-from cx_Freeze import Executable, setup
+from cx_Freeze import Executable, setup  # pylint: disable=import-error
 
 
 if sys.platform == "win32":
-    gui_base = "Win32GUI"
-    sys_base = sys.prefix
-    lib_folder = "bin"
-    lib_extension = ".dll"
+    GUI_BASE = "Win32GUI"
+    SYS_BASE = sys.prefix
+    LIB_FOLDER = "bin"
+    LIB_EXTENSION = ".dll"
 
 elif sys.platform == "darwin":
-    gui_base = None
-    sys_base = "/usr/local"
-    lib_folder = "lib"
-    lib_extension = (".dylib", ".so")
+    GUI_BASE = None
+    SYS_BASE = "/usr/local"
+    LIB_FOLDER = "lib"
+    LIB_EXTENSION = (".dylib", ".so")
 
 else:
     raise RuntimeError("Only Windows and macOS are supported")
 
-include_files = []
-plugin_packages = []
-temp_folder = tempfile.mkdtemp()
+INCLUDE_FILES = []
+PLUGIN_PACKAGES = []
+TEMP_FOLDER = tempfile.mkdtemp()
 
-gtk_version = os.environ.get("NICOTINE_GTK_VERSION") or '3'
-use_libadwaita = gtk_version == '4' and os.environ.get("NICOTINE_LIBADWAITA") == '1'
+GTK_VERSION = os.environ.get("NICOTINE_GTK_VERSION") or '3'
+USE_LIBADWAITA = GTK_VERSION == '4' and os.environ.get("NICOTINE_LIBADWAITA") == '1'
 
-pynicotine_path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", ".."))
-sys.path.append(pynicotine_path)
+PYNICOTINE_PATH = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", ".."))
+sys.path.append(PYNICOTINE_PATH)
 
 
 def process_files(rel_path, starts_with, ends_with, callback, callback_data=None,
                   recursive=False, temporary=False):
 
-    folder_path = temp_folder if temporary else os.path.join(sys_base, rel_path)
+    folder_path = TEMP_FOLDER if temporary else os.path.join(SYS_BASE, rel_path)
 
     for full_path in glob.glob(os.path.join(folder_path, '**'), recursive=recursive):
         short_path = os.path.relpath(full_path, folder_path)
@@ -73,7 +73,7 @@ def process_files(rel_path, starts_with, ends_with, callback, callback_data=None
 
 
 def _add_files_callback(full_path, short_path, output_path):
-    include_files.append((full_path, os.path.join(output_path, short_path)))
+    INCLUDE_FILES.append((full_path, os.path.join(output_path, short_path)))
 
 
 def add_files(rel_path, starts_with, ends_with, output_path=None,
@@ -90,31 +90,31 @@ def add_files(rel_path, starts_with, ends_with, output_path=None,
 def add_pixbuf_loaders():
 
     loaders_file = "lib/gdk-pixbuf-2.0/2.10.0/loaders.cache"
-    temp_loaders_file = os.path.join(temp_folder, "loaders.cache")
+    temp_loaders_file = os.path.join(TEMP_FOLDER, "loaders.cache")
 
-    with open(temp_loaders_file, "w") as temp_file_handle, \
-         open(os.path.join(sys_base, loaders_file), "r") as real_file_handle:
+    with open(temp_loaders_file, "w", encoding="utf-8") as temp_file_handle, \
+         open(os.path.join(SYS_BASE, loaders_file), "r", encoding="utf-8") as real_file_handle:
         data = real_file_handle.read()
 
         if sys.platform == "win32":
             data = data.replace("lib\\\\gdk-pixbuf-2.0\\\\2.10.0\\\\loaders", "lib")
 
         elif sys.platform == "darwin":
-            data = data.replace(os.path.join(sys_base, "lib/gdk-pixbuf-2.0/2.10.0/loaders"), "@executable_path/lib")
+            data = data.replace(os.path.join(SYS_BASE, "lib/gdk-pixbuf-2.0/2.10.0/loaders"), "@executable_path/lib")
 
         temp_file_handle.write(data)
 
-    include_files.append((temp_loaders_file, loaders_file))
-    add_files("lib/gdk-pixbuf-2.0/2.10.0/loaders", "libpixbufloader-", lib_extension, output_path="lib")
+    INCLUDE_FILES.append((temp_loaders_file, loaders_file))
+    add_files("lib/gdk-pixbuf-2.0/2.10.0/loaders", "libpixbufloader-", LIB_EXTENSION, output_path="lib")
 
 
-def _add_typelibs_callback(full_path, short_path, callback_data=None):
+def _add_typelibs_callback(full_path, short_path, _callback_data=None):
 
-    temp_file_gir = os.path.join(temp_folder, short_path)
-    temp_file_typelib = os.path.join(temp_folder, short_path.replace(".gir", ".typelib"))
+    temp_file_gir = os.path.join(TEMP_FOLDER, short_path)
+    temp_file_typelib = os.path.join(TEMP_FOLDER, short_path.replace(".gir", ".typelib"))
 
-    with open(temp_file_gir, "w") as temp_file_handle, \
-         open(full_path, "r") as real_file_handle:
+    with open(temp_file_gir, "w", encoding="utf-8") as temp_file_handle, \
+         open(full_path, "r", encoding="utf-8") as real_file_handle:
         data = real_file_handle.read()
         data = data.replace('shared-library="lib', 'shared-library="@loader_path/lib')
         temp_file_handle.write(data)
@@ -125,9 +125,9 @@ def _add_typelibs_callback(full_path, short_path, callback_data=None):
 def add_typelibs():
 
     required_typelibs = [
-        "Gtk-%s" % gtk_version,
+        "Gtk-%s" % GTK_VERSION,
         "Gio-",
-        "Gdk-%s" % gtk_version,
+        "Gdk-%s" % GTK_VERSION,
         "GLib-",
         "HarfBuzz-",
         "Pango-",
@@ -137,7 +137,7 @@ def add_typelibs():
         "GModule-"
     ]
 
-    if gtk_version == '4':
+    if GTK_VERSION == '4':
         required_typelibs += [
             "Graphene-",
             "Gsk-",
@@ -148,7 +148,7 @@ def add_typelibs():
             "Atk-"
         ]
 
-    if use_libadwaita:
+    if USE_LIBADWAITA:
         required_typelibs.append("Adw-")
 
     required_typelibs = tuple(required_typelibs)
@@ -166,7 +166,7 @@ def add_gtk():
 
     if sys.platform == "win32":
         # gdbus required for single-instance application (Windows)
-        include_files.append((os.path.join(sys_base, lib_folder, "gdbus.exe"), "lib/gdbus.exe"))
+        INCLUDE_FILES.append((os.path.join(SYS_BASE, LIB_FOLDER, "gdbus.exe"), "lib/gdbus.exe"))
         lib_output_path = "lib"
 
     elif sys.platform == "darwin":
@@ -174,12 +174,12 @@ def add_gtk():
         lib_output_path = ""
 
     # This also includes all dlls required by GTK
-    add_files(lib_folder, "libgtk-%s" % gtk_version, lib_extension, output_path=lib_output_path)
+    add_files(LIB_FOLDER, "libgtk-%s" % GTK_VERSION, LIB_EXTENSION, output_path=lib_output_path)
 
-    if use_libadwaita:
-        add_files(lib_folder, "libadwaita-", lib_extension, output_path=lib_output_path)
+    if USE_LIBADWAITA:
+        add_files(LIB_FOLDER, "libadwaita-", LIB_EXTENSION, output_path=lib_output_path)
 
-    include_files.append((os.path.join(sys_base, "share/glib-2.0/schemas/gschemas.compiled"),
+    INCLUDE_FILES.append((os.path.join(SYS_BASE, "share/glib-2.0/schemas/gschemas.compiled"),
                          "share/glib-2.0/schemas/gschemas.compiled"))
 
     # Pixbuf loaders
@@ -210,25 +210,25 @@ def add_themes():
 
 def add_ssl_certs():
     ssl_paths = ssl.get_default_verify_paths()
-    include_files.append((ssl_paths.openssl_cafile, "share/ssl/cert.pem"))
+    INCLUDE_FILES.append((ssl_paths.openssl_cafile, "share/ssl/cert.pem"))
 
 
 def add_translations():
 
-    from pynicotine.i18n import build_translations  # noqa: E402
+    from pynicotine.i18n import build_translations  # noqa: E402  # pylint: disable=import-error
     languages = build_translations()
 
-    include_files.append((os.path.join(pynicotine_path, "mo"), "share/locale"))
-    add_files("share/locale", tuple(languages), "gtk%s0.mo" % gtk_version, recursive=True)
+    INCLUDE_FILES.append((os.path.join(PYNICOTINE_PATH, "mo"), "share/locale"))
+    add_files("share/locale", tuple(languages), "gtk%s0.mo" % GTK_VERSION, recursive=True)
 
 
 def add_plugin_packages():
 
-    import pynicotine.plugins  # noqa: E402
+    import pynicotine.plugins  # noqa: E402  # pylint: disable=import-error
 
-    for importer, name, ispkg in pkgutil.walk_packages(path=pynicotine.plugins.__path__, prefix="pynicotine.plugins."):
+    for _importer, name, ispkg in pkgutil.walk_packages(path=pynicotine.plugins.__path__, prefix="pynicotine.plugins."):
         if ispkg:
-            plugin_packages.append(name)
+            PLUGIN_PACKAGES.append(name)
 
 
 # GTK
@@ -246,7 +246,7 @@ add_translations()
 add_plugin_packages()
 
 # Setup
-from pynicotine.config import config  # noqa: E402
+from pynicotine.config import config  # noqa: E402  # pylint: disable=import-error,wrong-import-position
 
 setup(
     name=config.application_name,
@@ -254,20 +254,20 @@ setup(
     version=re.sub(r".(dev|rc)(.*)", "", config.version),
     options={
         "build_exe": dict(
-            packages=["gi"] + plugin_packages,
+            packages=["gi"] + PLUGIN_PACKAGES,
             excludes=["pygtkcompat", "tkinter"],
-            include_files=include_files,
+            include_files=INCLUDE_FILES,
             zip_include_packages=["*"],
             zip_exclude_packages=["pynicotine"]
         ),
         "bdist_msi": dict(
             all_users=True,
-            install_icon=os.path.join(pynicotine_path, "packaging/windows/nicotine.ico"),
+            install_icon=os.path.join(PYNICOTINE_PATH, "packaging/windows/nicotine.ico"),
             target_name="%s-%s.msi" % (config.application_name, config.version),
             upgrade_code="{8ffb9dbb-7106-41fc-9e8a-b2469aa1fe9f}"
         ),
         "bdist_mac": dict(
-            iconfile=os.path.join(pynicotine_path, "packaging/macos/nicotine.icns"),
+            iconfile=os.path.join(PYNICOTINE_PATH, "packaging/macos/nicotine.icns"),
             bundle_name=config.application_name
         ),
         "bdist_dmg": dict(
@@ -276,10 +276,10 @@ setup(
     },
     executables=[
         Executable(
-            script=os.path.join(pynicotine_path, "nicotine"),
+            script=os.path.join(PYNICOTINE_PATH, "nicotine"),
             target_name=config.application_name,
-            base=gui_base,
-            icon=os.path.join(pynicotine_path, "packaging/windows/nicotine.ico"),
+            base=GUI_BASE,
+            icon=os.path.join(PYNICOTINE_PATH, "packaging/windows/nicotine.ico"),
             shortcut_name=config.application_name,
             shortcut_dir="StartMenuFolder"
         )
