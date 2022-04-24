@@ -841,7 +841,6 @@ class NicotineFrame(UserInterface):
 
         state = config.sections["ui"]["header_bar"]
         action = Gio.SimpleAction(name="showheaderbar", state=GLib.Variant("b", state))
-        action.set_enabled(sys.platform != "darwin")  # Disable header bar on macOS for now due to GTK 3 perf issues
         action.connect("change-state", self.on_show_header_bar)
         self.window.add_action(action)
 
@@ -1231,7 +1230,7 @@ class NicotineFrame(UserInterface):
         """ Switch out the active headerbar for another one. This is used when
         changing the active notebook tab. """
 
-        if config.sections["ui"]["header_bar"] and sys.platform != "darwin":
+        if config.sections["ui"]["header_bar"]:
             self.hide_current_header_bar()
             self.show_header_bar(page_id)
         else:
