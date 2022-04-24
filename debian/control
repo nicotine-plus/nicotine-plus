@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Nicotine+ Team <nicotine-team@lists.launchpad.net>
 Standards-Version: 4.1.4.1
 Build-Depends:
-    debhelper-compat (= 11),
+    debhelper-compat (= 10),
     devscripts,
     dh-python,
     gettext,
