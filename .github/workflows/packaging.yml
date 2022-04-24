@@ -120,14 +120,12 @@ jobs:
 
       - name: Freeze application
         run: |
-          pyinstaller packaging/macos/nicotine.spec
-          rm -rf dist/Nicotine+/
-
-      - name: Generate .dmg
-        run: python3 packaging/macos/create_dmg.py
+          python3 packaging/macos/setup.py bdist_dmg
+          mkdir build/dmg/
+          mv build/*.dmg build/dmg/
 
       - name: Archive installer artifacts
         uses: actions/upload-artifact@v2
         with:
           name: macos-installer
-          path: dmg
+          path: build/dmg

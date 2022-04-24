@@ -116,9 +116,7 @@ export NICOTINE_GTK_VERSION=3
 Build the application:
 
 ```sh
-pyinstaller packaging/macos/nicotine.spec
-rm -rf dist/Nicotine+/
-/usr/local/bin/python3 packaging/macos/create_dmg.py
+python3 packaging/windows/setup.py bdist_dmg
 ```
 
-When the application has finished building, it is located in the `dmg\` subfolder.
+When the application has finished building, it is located in the `build/` subfolder as a .dmg file.

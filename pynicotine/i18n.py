@@ -72,6 +72,7 @@ def apply_translations():
     falling back to the system path does not work."""
 
     libintl_path = None
+    executable_folder = os.path.dirname(sys.executable)
     _set_default_system_language()
 
     # Local path where to find translation (mo) files
@@ -82,8 +83,14 @@ def apply_translations():
     if sys.platform == "win32":
         libintl_path = "libintl-8.dll"
 
+        if getattr(sys, 'frozen', False):
+            libintl_path = os.path.join(executable_folder, "lib", libintl_path)
+
     elif sys.platform == "darwin":
         libintl_path = "libintl.8.dylib"
+
+        if getattr(sys, 'frozen', False):
+            libintl_path = os.path.join(executable_folder, libintl_path)
 
     if libintl_path is not None:
         import ctypes
@@ -93,7 +100,7 @@ def apply_translations():
             mo_path = local_mo_path
 
         elif getattr(sys, 'frozen', False):
-            mo_path = os.path.join(os.path.dirname(sys.executable), "share", "locale")
+            mo_path = os.path.join(executable_folder, "share", "locale")
 
         else:
             mo_path = os.path.join(sys.prefix, "share", "locale")

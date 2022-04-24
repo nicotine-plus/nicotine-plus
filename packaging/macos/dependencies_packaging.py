@@ -23,22 +23,12 @@ import sys
 """ Script used to install packaging dependencies in Homebrew """
 
 
-def install_brew():
-    """ Install dependencies from the main Homebrew repos """
-
-    packages = ["create-dmg"]
-    subprocess.check_call(["brew", "install"] + packages)
-
-
 def install_pypi():
     """ Install dependencies from PyPi """
 
-    packages = ["certifi",
-                "pyinstaller==4.10",
-                "stdlib_list"]
+    packages = ["cx_Freeze"]
     subprocess.check_call([sys.executable, "-m", "pip", "install"] + packages)
 
 
 if __name__ == '__main__':
-    install_brew()
     install_pypi()
