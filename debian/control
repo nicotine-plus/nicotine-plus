@@ -2,19 +2,18 @@ Source: nicotine
 Section: net
 Priority: optional
 Maintainer: Nicotine+ Team <nicotine-team@lists.launchpad.net>
-Standards-Version: 4.1.4.1
-Build-Depends:
-    debhelper-compat (= 10),
-    devscripts,
-    dh-python,
-    gettext,
-    gir1.2-gtk-3.0 (>= 3.18),
-    python3 (>= 3.5),
-    python3-gdbm,
-    python3-gi (>= 3.18),
-    python3-pytest,
-    python3-pytest-xvfb,
-    python3-setuptools
+Standards-Version: 4.6.0
+Build-Depends: debhelper-compat (= 10),
+               devscripts,
+               dh-python,
+               gettext,
+               gir1.2-gtk-3.0 (>= 3.18),
+               python3 (>= 3.5),
+               python3-gdbm,
+               python3-gi (>= 3.18),
+               python3-pytest,
+               python3-pytest-xvfb,
+               python3-setuptools
 Vcs-Git: https://github.com/nicotine-plus/nicotine-plus.git
 Vcs-Browser: https://github.com/nicotine-plus/nicotine-plus
 X-Python3-Version: >= 3.5
@@ -23,16 +22,14 @@ Rules-Requires-Root: no
 
 Package: nicotine
 Architecture: all
-Depends:
-    ${python3:Depends},
-    ${misc:Depends},
-    gir1.2-gtk-3.0 (>= 3.18),
-    python3 (>= 3.5),
-    python3-gdbm,
-    python3-gi (>= 3.18)
-Recommends:
-    gir1.2-ayatanaappindicator3-0.1 | gir1.2-appindicator3-0.1,
-    gir1.2-gspell-1
+Depends: ${python3:Depends},
+         ${misc:Depends},
+         gir1.2-gtk-3.0 (>= 3.18),
+         python3 (>= 3.5),
+         python3-gdbm,
+         python3-gi (>= 3.18)
+Recommends: gir1.2-ayatanaappindicator3-0.1 | gir1.2-appindicator3-0.1,
+            gir1.2-gspell-1
 Description: graphical client for Soulseek peer-to-peer network
  Nicotine+ is a graphical client for the Soulseek peer-to-peer
  network.
