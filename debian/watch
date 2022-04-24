@@ -1,2 +1,2 @@
-version=3
+version=4
 https://pypi.debian.net/nicotine-plus/nicotine-plus-(.+)\.(?:zip|tgz|tbz|txz|(?:tar\.(?:gz|bz2|xz)))
