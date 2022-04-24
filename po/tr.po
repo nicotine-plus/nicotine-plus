@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-22 02:04+0300\n"
-"PO-Revision-Date: 2022-04-21 23:51+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2022-04-23 22:10+0000\n"
+"Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/tr/>\n"
 "Language: tr\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.12-dev\n"
+"X-Generator: Weblate 4.12.1-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:8
@@ -1348,9 +1348,8 @@ msgstr ""
 "misiniz?"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:71
-#, fuzzy
 msgid "Setup Assistant"
-msgstr "K_urulum Yardımcısı"
+msgstr "Kurulum Yardımcısı"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:101
 #: pynicotine/gtkgui/dialogs/preferences.py:558
@@ -1365,12 +1364,10 @@ msgid "Folder"
 msgstr "Klasör"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:114
-#, fuzzy
 msgid "_Finish"
-msgstr "Tamamlandı"
+msgstr "_Bitir"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:114
-#, fuzzy
 msgid "_Next"
 msgstr "_Sonraki"
 
@@ -1943,7 +1940,6 @@ msgid "Queued…"
 msgstr "Kuyruğa alındı…"
 
 #: pynicotine/gtkgui/downloads.py:70 pynicotine/gtkgui/uploads.py:69
-#, fuzzy
 msgid "Everything…"
 msgstr "Her şey…"
 
@@ -2618,9 +2614,8 @@ msgid "Transferring"
 msgstr "Aktarılıyor"
 
 #: pynicotine/gtkgui/transferlist.py:95
-#, fuzzy
 msgid "Connection timeout"
-msgstr "Bağlantı"
+msgstr "Bağlantı zaman aşımı"
 
 #: pynicotine/gtkgui/transferlist.py:96
 msgid "Pending shutdown"
@@ -2938,9 +2933,8 @@ msgid "Add a note about user %s:"
 msgstr "%s kullanıcısı hakkında bir not ekleyin:"
 
 #: pynicotine/gtkgui/widgets/dialogs.py:142
-#, fuzzy
 msgid "Close"
-msgstr "Sekmeyi kapat"
+msgstr "Kapat"
 
 #: pynicotine/gtkgui/widgets/dialogs.py:219
 msgid "_No"
@@ -3857,9 +3851,8 @@ msgid "_Log Conversation"
 msgstr "Konuşmayı _Günlüğe Kaydet"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:6
-#, fuzzy
 msgid "_Previous"
-msgstr "Önceki dosya"
+msgstr "_Önceki"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:44
 msgid "Welcome to Nicotine+"
@@ -3977,19 +3970,16 @@ msgid "Last Speed"
 msgstr "Son Hız"
 
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:12
-#, fuzzy
 msgid "_Export…"
-msgstr "Dışa aktar"
+msgstr "_Dışa Aktar…"
 
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:18
-#, fuzzy
 msgid "_Apply"
-msgstr "Uygula"
+msgstr "_Uygula"
 
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:24
-#, fuzzy
 msgid "_OK"
-msgstr "Tamam"
+msgstr "_Tamam"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:6
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:55
@@ -4131,9 +4121,8 @@ msgid "Find Previous Match"
 msgstr "Önceki Eşleşmeyi Bul"
 
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:6
-#, fuzzy
 msgid "_Reset…"
-msgstr "_Devam et"
+msgstr "_Sıfırla…"
 
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:29
 msgid "Current Session"
@@ -4229,9 +4218,8 @@ msgid "Clear all downloads marked with a specific status."
 msgstr "Belirli bir durumla işaretlenen tüm indirmeleri temizle."
 
 #: pynicotine/gtkgui/ui/downloads.ui:183 pynicotine/gtkgui/ui/uploads.ui:181
-#, fuzzy
 msgid "Clear _All…"
-msgstr "Tümünü Temizle…"
+msgstr "Tümünü _Temizle…"
 
 #: pynicotine/gtkgui/ui/interests.ui:24
 msgid "Personal Interests"

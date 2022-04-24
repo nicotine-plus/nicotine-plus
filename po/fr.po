@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-22 02:04+0300\n"
-"PO-Revision-Date: 2022-04-21 23:51+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2022-04-23 22:10+0000\n"
+"Last-Translator: Maxime Leroy <lisacintosh@gmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/fr/>\n"
 "Language: fr\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.12-dev\n"
+"X-Generator: Weblate 4.12.1-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:8
@@ -1353,7 +1353,6 @@ msgstr ""
 "de ce salon ?"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:71
-#, fuzzy
 msgid "Setup Assistant"
 msgstr "Assistant de configuration"
 
@@ -1370,12 +1369,10 @@ msgid "Folder"
 msgstr "Répertoire"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:114
-#, fuzzy
 msgid "_Finish"
-msgstr "Terminé"
+msgstr "_Terminer"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:114
-#, fuzzy
 msgid "_Next"
 msgstr "_Suivant"
 
@@ -1952,7 +1949,6 @@ msgid "Queued…"
 msgstr "En attente…"
 
 #: pynicotine/gtkgui/downloads.py:70 pynicotine/gtkgui/uploads.py:69
-#, fuzzy
 msgid "Everything…"
 msgstr "Tout…"
 
@@ -2631,9 +2627,8 @@ msgid "Transferring"
 msgstr "Transfert en cours"
 
 #: pynicotine/gtkgui/transferlist.py:95
-#, fuzzy
 msgid "Connection timeout"
-msgstr "Connexion"
+msgstr "Délai de connexion dépassé"
 
 #: pynicotine/gtkgui/transferlist.py:96
 msgid "Pending shutdown"
@@ -2952,9 +2947,8 @@ msgid "Add a note about user %s:"
 msgstr "Ajouter des commentaires concernant l'utilisateur %s :"
 
 #: pynicotine/gtkgui/widgets/dialogs.py:142
-#, fuzzy
 msgid "Close"
-msgstr "Fermer l'onglet"
+msgstr "Fermer"
 
 #: pynicotine/gtkgui/widgets/dialogs.py:219
 msgid "_No"
@@ -3898,9 +3892,8 @@ msgid "_Log Conversation"
 msgstr "_journalisation des discussions"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:6
-#, fuzzy
 msgid "_Previous"
-msgstr "Fichier précédent"
+msgstr "_Précédent"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:44
 msgid "Welcome to Nicotine+"
@@ -4022,19 +4015,16 @@ msgid "Last Speed"
 msgstr "Dernière vitesse"
 
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:12
-#, fuzzy
 msgid "_Export…"
-msgstr "Exporter"
+msgstr "_Exporter…"
 
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:18
-#, fuzzy
 msgid "_Apply"
-msgstr "Appliquer"
+msgstr "_Appliquer"
 
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:24
-#, fuzzy
 msgid "_OK"
-msgstr "Valider"
+msgstr "_OK"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:6
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:55
@@ -4176,9 +4166,8 @@ msgid "Find Previous Match"
 msgstr "Recherche l'occurrence précédente"
 
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:6
-#, fuzzy
 msgid "_Reset…"
-msgstr "_Reprendre"
+msgstr "_Rétablir…"
 
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:29
 msgid "Current Session"
@@ -4275,9 +4264,8 @@ msgid "Clear all downloads marked with a specific status."
 msgstr "Effacer tous les téléchargements avec un statut spécifique."
 
 #: pynicotine/gtkgui/ui/downloads.ui:183 pynicotine/gtkgui/ui/uploads.ui:181
-#, fuzzy
 msgid "Clear _All…"
-msgstr "Tout effacer…"
+msgstr "Tout _effacer…"
 
 #: pynicotine/gtkgui/ui/interests.ui:24
 msgid "Personal Interests"
