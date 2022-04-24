@@ -119,15 +119,15 @@ def _add_typelibs_callback(full_path, short_path, callback_data=None):
         data = data.replace('shared-library="lib', 'shared-library="@loader_path/lib')
         temp_file_handle.write(data)
 
-    check_call(["g-ir-compiler", "--output=" + temp_file_typelib, temp_file_gir])
+    check_call(["g-ir-compiler", "--output=%s" % temp_file_typelib, temp_file_gir])
 
 
 def add_typelibs():
 
     required_typelibs = [
-        "Gtk-" + gtk_version,
+        "Gtk-%s" % gtk_version,
         "Gio-",
-        "Gdk-" + gtk_version,
+        "Gdk-%s" % gtk_version,
         "GLib-",
         "HarfBuzz-",
         "Pango-",
@@ -174,7 +174,7 @@ def add_gtk():
         lib_output_path = ""
 
     # This also includes all dlls required by GTK
-    add_files(lib_folder, "libgtk-" + gtk_version, lib_extension, output_path=lib_output_path)
+    add_files(lib_folder, "libgtk-%s" % gtk_version, lib_extension, output_path=lib_output_path)
 
     if use_libadwaita:
         add_files(lib_folder, "libadwaita-", lib_extension, output_path=lib_output_path)
@@ -219,7 +219,7 @@ def add_translations():
     languages = build_translations()
 
     include_files.append((os.path.join(pynicotine_path, "mo"), "share/locale"))
-    add_files("share/locale", tuple(languages), "gtk" + gtk_version + "0.mo", recursive=True)
+    add_files("share/locale", tuple(languages), "gtk%s0.mo" % gtk_version, recursive=True)
 
 
 def add_plugin_packages():
@@ -249,8 +249,8 @@ add_plugin_packages()
 from pynicotine.config import config  # noqa: E402
 
 setup(
-    name="Nicotine+",
-    author="Nicotine+ Team",
+    name=config.application_name,
+    author=config.author,
     version=re.sub(r".(dev|rc)(.*)", "", config.version),
     options={
         "build_exe": dict(
@@ -263,12 +263,12 @@ setup(
         "bdist_msi": dict(
             all_users=True,
             install_icon=os.path.join(pynicotine_path, "packaging/windows/nicotine.ico"),
-            target_name="Nicotine+-%s.msi" % config.version,
+            target_name="%s-%s.msi" % (config.application_name, config.version),
             upgrade_code="{8ffb9dbb-7106-41fc-9e8a-b2469aa1fe9f}"
         ),
         "bdist_mac": dict(
             iconfile=os.path.join(pynicotine_path, "packaging/macos/nicotine.icns"),
-            bundle_name="Nicotine+"
+            bundle_name=config.application_name
         ),
         "bdist_dmg": dict(
             applications_shortcut=True
@@ -277,10 +277,10 @@ setup(
     executables=[
         Executable(
             script=os.path.join(pynicotine_path, "nicotine"),
-            target_name="Nicotine+",
+            target_name=config.application_name,
             base=gui_base,
             icon=os.path.join(pynicotine_path, "packaging/windows/nicotine.ico"),
-            shortcut_name="Nicotine+",
+            shortcut_name=config.application_name,
             shortcut_dir="StartMenuFolder"
         )
     ],
