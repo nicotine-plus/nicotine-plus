@@ -19,13 +19,13 @@
 
 import glob
 import os
+import pkgutil
 import re
 import ssl
+import subprocess
 import sys
 import tempfile
 
-from pkgutil import walk_packages
-from subprocess import check_call
 from cx_Freeze import Executable, setup
 
 
@@ -119,7 +119,7 @@ def _add_typelibs_callback(full_path, short_path, callback_data=None):
         data = data.replace('shared-library="lib', 'shared-library="@loader_path/lib')
         temp_file_handle.write(data)
 
-    check_call(["g-ir-compiler", "--output=%s" % temp_file_typelib, temp_file_gir])
+    subprocess.check_call(["g-ir-compiler", "--output=%s" % temp_file_typelib, temp_file_gir])
 
 
 def add_typelibs():
@@ -226,7 +226,7 @@ def add_plugin_packages():
 
     import pynicotine.plugins  # noqa: E402
 
-    for importer, name, ispkg in walk_packages(path=pynicotine.plugins.__path__, prefix="pynicotine.plugins."):
+    for importer, name, ispkg in pkgutil.walk_packages(path=pynicotine.plugins.__path__, prefix="pynicotine.plugins."):
         if ispkg:
             plugin_packages.append(name)
 

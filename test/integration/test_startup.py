@@ -40,7 +40,7 @@ class StartupTest(unittest.TestCase):
             is_success = False
 
             try:
-                subprocess.call(command, timeout=5)
+                subprocess.check_call(command, timeout=5)
 
             except subprocess.TimeoutExpired:
                 # Program was still running, success!
