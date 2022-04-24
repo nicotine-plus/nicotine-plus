@@ -126,7 +126,7 @@ python3 setup.py sdist
  5. Increase the Nicotine+ version number / add new version entries in the master branch. Nicotine+ uses [Semantic Versioning](https://semver.org/). The following files need to be modified:
     * [NEWS.md](/NEWS.md)
     * [README.md](/README.md)
-    * [data/org.nicotine_plus.Nicotine.metainfo.xml.in](/data/org.nicotine_plus.Nicotine.metainfo.xml.in)
+    * [data/org.nicotine_plus.Nicotine.appdata.xml.in](/data/org.nicotine_plus.Nicotine.appdata.xml.in)
     * [debian/changelog](/debian/changelog)
     * [pynicotine/config.py](/pynicotine/config.py)
 
