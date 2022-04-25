@@ -94,7 +94,7 @@ You are recommended to clone a fresh copy of the `nicotine-plus` Git repository 
 
 GitHub Actions currently builds Nicotine+ packages for macOS. However, the following instructions may be useful if you wish to generate a package on your own machine.
 
-### Building a Frozen Application with PyInstaller
+### Building a Frozen Application with cx_Freeze
 
 Follow the instructions on installing Homebrew: [https://brew.sh/](https://brew.sh/)
 
@@ -116,7 +116,7 @@ export NICOTINE_GTK_VERSION=3
 Build the application:
 
 ```sh
-python3 packaging/windows/setup.py bdist_dmg
+python3 packaging/macos/setup.py bdist_dmg
 ```
 
 When the application has finished building, it is located in the `build/` subfolder as a .dmg file.
