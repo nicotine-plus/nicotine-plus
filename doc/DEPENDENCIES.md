@@ -87,10 +87,6 @@ sudo apt install gir1.2-gtk-3.0 pylint3 python3-flake8 python3-gi
 sudo dnf install gtk3 pylint python3-flake8 python3-gobject
 ```
 
-### Windows
+### Windows and macOS
 
-See [PACKAGING.md](PACKAGING.md#windows)
-
-### macOS
-
-See [PACKAGING.md](PACKAGING.md#macos)
+Since Windows and macOS builds bundle all required dependencies, no action is required from a regular user. For developers who need to install dependencies in a development environment, see [PACKAGING.md](PACKAGING.md).
