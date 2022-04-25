@@ -11,8 +11,8 @@
 
 ### Recommended
 
-- [ayatanaappindicator](https://lazka.github.io/pgi-docs/AyatanaAppIndicator3-0.1/) / appindicator for tray icon;
-- [gspell](https://lazka.github.io/pgi-docs/Gspell-1/) for spell checking in chat.
+- [ayatanaappindicator / appindicator](https://ayatanaindicators.github.io/) for tray icon;
+- [gspell](https://gitlab.gnome.org/GNOME/gspell) for spell checking in chat.
 
 ## Building
 
@@ -22,7 +22,7 @@
 ## Testing
 
 - [flake8](https://flake8.pycqa.org/) for lint checks;
-- [pylint](https://pylint.org/) for lint checks;
+- [pylint](https://pylint.pycqa.org/) for lint checks;
 - [pygobject](https://pygobject.readthedocs.io/) for integration tests;
 - [gtk3](https://gtk.org/) for integration tests.
 
