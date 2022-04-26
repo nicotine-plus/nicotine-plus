@@ -23,7 +23,6 @@ import zlib
 
 from pynicotine.config import config
 from pynicotine.logfacility import log
-from pynicotine.utils import debug
 
 """ This module contains message classes, that networking and UI thread
 exchange. Basically there are three types of messages: internal messages,
@@ -332,6 +331,7 @@ class SlskMessage:
         log.add_debug("Can't parse incoming messages, class %s", self.__class__)
 
     def debug(self, message=None):
+        from pynicotine.utils import debug
         debug(type(self).__name__, self.__dict__, message.__repr__())
 
 
