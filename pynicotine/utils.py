@@ -33,6 +33,7 @@ import webbrowser
 
 from pynicotine.config import config
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import UINT_LIMIT
 
 FILE_SIZE_SUFFIXES = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
 PUNCTUATION = ['!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>',
@@ -278,7 +279,7 @@ def get_result_bitrate_length(filesize, attributes):
             length = -1
 
     # Ignore invalid values
-    if bitrate <= 0:
+    if bitrate <= 0 or bitrate > UINT_LIMIT:
         bitrate = 0
         h_bitrate = ""
 
@@ -288,7 +289,7 @@ def get_result_bitrate_length(filesize, attributes):
         if vbr == 1:
             h_bitrate += " (vbr)"
 
-    if length < 0:
+    if length < 0 or length > UINT_LIMIT:
         length = 0
         h_length = ""
 
