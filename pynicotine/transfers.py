@@ -2444,7 +2444,6 @@ class Transfers:
             # Don't save if transfers didn't load properly!
             return
 
-        self.config.create_data_folder()
         current_time = time.time()
 
         if not force_save and (current_time - self.last_save_times[transfer_type]) < 15:
@@ -2458,6 +2457,7 @@ class Transfers:
             transfers_file = self.downloads_file_name
             callback = self.save_downloads_callback
 
+        self.config.create_data_folder()
         write_file_and_backup(transfers_file, callback)
         self.last_save_times[transfer_type] = current_time
 
