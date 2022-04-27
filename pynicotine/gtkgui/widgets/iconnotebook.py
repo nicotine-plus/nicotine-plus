@@ -51,6 +51,7 @@ class TabLabel(Gtk.Box):
             self.eventbox = Gtk.Box()
         else:
             self.eventbox = Gtk.EventBox(visible=True)
+            self.eventbox.add_events(Gdk.EventMask.SCROLL_MASK | Gdk.EventMask.SMOOTH_SCROLL_MASK)
 
         self.box = Gtk.Box(spacing=6, visible=True)
 
@@ -104,6 +105,7 @@ class TabLabel(Gtk.Box):
             self.close_button = Gtk.Button.new_from_icon_name("window-close-symbolic",
                                                               Gtk.IconSize.BUTTON)  # pylint: disable=no-member
             self.add(self.close_button)  # pylint: disable=no-member
+            self.close_button.add_events(Gdk.EventMask.SCROLL_MASK | Gdk.EventMask.SMOOTH_SCROLL_MASK)
 
         self.close_button.get_style_context().add_class("flat")
         self.close_button.set_tooltip_text(_("Close tab"))
@@ -284,9 +286,18 @@ class IconNotebook:
                     item.set_propagation_phase(Gtk.PropagationPhase.BUBBLE)
                     break
 
+            self.scroll_controller = Gtk.EventControllerScroll(flags=Gtk.EventControllerScrollFlags.BOTH_AXES)
+            self.scroll_controller.connect("scroll", self.on_tab_scroll)
+
+            tab_bar = self.notebook.get_first_child()
+            tab_bar.add_controller(self.scroll_controller)
+
         else:
             self.window = self.notebook.get_toplevel()
             self.unread_button.set_image(Gtk.Image(icon_name="emblem-important-symbolic"))  # pylint: disable=no-member
+
+            self.notebook.add_events(Gdk.EventMask.SCROLL_MASK | Gdk.EventMask.SMOOTH_SCROLL_MASK)
+            self.notebook.connect("scroll-event", self.on_tab_scroll_event)
 
         style_context = self.unread_button.get_style_context()
         for style_class in ("circular", "flat"):
@@ -519,6 +530,37 @@ class IconNotebook:
 
         # Dismiss tab highlight
         self.remove_tab_hilite(new_page)
+
+    def on_tab_scroll_event(self, _widget, event):
+
+        current_page = self.get_nth_page(self.get_current_page())
+
+        if not current_page:
+            return False
+
+        if Gtk.get_event_widget(event).is_ancestor(current_page):
+            return False
+
+        if event.direction == Gdk.ScrollDirection.SMOOTH:
+            return self.on_tab_scroll(scroll_x=event.delta_x, scroll_y=event.delta_y)
+
+        if event.direction in (Gdk.ScrollDirection.RIGHT, Gdk.ScrollDirection.DOWN):
+            self.next_page()
+
+        elif event.direction in (Gdk.ScrollDirection.LEFT, Gdk.ScrollDirection.UP):
+            self.prev_page()
+
+        return True
+
+    def on_tab_scroll(self, _controller=None, scroll_x=0, scroll_y=0):
+
+        if scroll_x > 0 or scroll_y > 0:
+            self.next_page()
+
+        elif scroll_x < 0 or scroll_y < 0:
+            self.prev_page()
+
+        return True
 
     def on_tab_popup(self, widget, page):
         # Dummy implementation
