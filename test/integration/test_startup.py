@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -40,7 +40,7 @@ class StartupTest(unittest.TestCase):
             is_success = False
 
             try:
-                subprocess.call(command, timeout=5)
+                subprocess.check_call(command, timeout=5)
 
             except subprocess.TimeoutExpired:
                 # Program was still running, success!

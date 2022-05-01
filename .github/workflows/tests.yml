@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python: ['3.5', '3.6', '3.7', '3.8', '3.9', '3.10', 'pypy-3.6', 'pypy-3.7']
+        python: ['3.5', '3.6', '3.7', '3.8', '3.9', '3.10', 'pypy-3.6', 'pypy-3.7', 'pypy-3.8', 'pypy-3.9']
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -30,7 +30,7 @@ jobs:
         run: python -m flake8
 
       - name: Pylint linter
-        run: python3 -m pylint pynicotine test
+        run: python -m pylint pynicotine test
 
       - name: Integration and unit tests
         run: xvfb-run python -m unittest
@@ -90,7 +90,6 @@ jobs:
 
       - name: Install dependencies
         run: |
-          brew update
           python3 packaging/macos/dependencies_core.py
 
       - name: Flake8 linter

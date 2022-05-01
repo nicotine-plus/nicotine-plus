@@ -1,21 +1,111 @@
-Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: nicotine
 Upstream-Contact: Nicotine+ Team <nicotine-team@lists.launchpad.net>
 Source: https://github.com/nicotine-plus/nicotine-plus/
 
 Files: *
-Copyright: 2001-2003 PySoulSeek Contributors
-           2003-2004 Nicotine Team
-           2004-2022 Nicotine+ Team
+Copyright: 2001-2003, 2009 Alexander Kanavin (alexbk/hedonist)
+           2002 Joe Halliwell
+           2003 Brett W. Thompson (Zip)
+                Geert Kloosterman (geertk)
+                Alexey Vyskubov
+                Jason Green (SmackleFunky)
+                (va)\*10^3
+                Gustavo J. A. M. Carneiro
+           2003-2004, 2007 Ingmar K. Steen (Hyriand)
+           2003-2009 daelstorm
+           2006 Vandy Omall (osiris)
+                lee8oi
+           2006-2017 Adam Cécile (eLvErDe)
+           2007-2008 gallows
+           2007-2012 QuinoX
+           2010 Julien
+           2013 SeeSchloss
+           2015 chzchzchz
+           2016-2018 Mutnick
+           2016-2017 Michael Labouebe (gfarmerfr)
+           2016-2020 Kip Warner (kiplingw)
+           2019 Vladimir Sedach (vsedach)
+           2019-2020 gahag
+           2020 Lene Preuss
+                droserasprout
+                zniavre
+                alekksander
+           2020-2021 toofar
+           2020-2022 Mat (mathiascode)
+                     Han Boetes (hboetes)
+           2021 redactedscribe
+                Mendelson Gusmão (mendelgusmao)
+                Inso-m-niaC
+                Nachtalb
+           2021-2022 slook
+License: GPL-3+
+
+Files: po/*.po
+Copyright: 2003-2004 Ingmar K. Steen (Hyriand)
+                     dbazza
+                     mathsped
+                     Dreslo
+                     Julien Wajsberg (flashfr)
+                     Wojciech Owczarek (owczi)
+                     Markus Magnuson (alimony)
+           2004 lippel
+           2004-2009 daelstorm
+           2006 systr
+                Felipe Nogaroto Gonzalez (Suicide|Solution)
+           2006-2020 David Balazs (djbaloo)
+           2006-2008 Jozef Říha
+           2006-2009 Žygimantas Beručka
+           2006-2007 Kari Viittanen (Kalevi)
+                     Julen
+           2007 nicola
+                nince78
+                Meokater
+                (._.)
+                thine
+                Amun-Ra
+                ManWell
+                Silvio Orta
+           2007-2022 zniavre
+           2009 Nils
+                Kenny Verstraete
+           2009-2010 Monsieur Poisson
+           2016-2017 Michael Labouebe (gfarmerfr)
+           2017-2022 mariachini
+           2020 yyyyyyyan
+                m-balthazar
+                mantas
+           2020-2022 Mat (mathiascode)
+                     Gianluca Boiano
+           2021 mitramai
+                Strange
+                Allan Nordhøy (comradekingu)
+                burnmail123
+                Nicolas Abril
+           2021-2022 melmorabity
+                     slook
+                     Han Boetes (hboetes)
+                     Oğuz Ersen
+                     MELERIX
+                     Lisapple
+                     Mehavoid
+                     tagomago
+           2022 SnIPeRSnIPeR
+                b1llso
+                Guilherme Santos
+                uniss2209
+                hadwin
+                Gabboxl
+                Szia Tomi
 License: GPL-3+
 
 Files: pynicotine/geoip/ip2location.py
 Copyright: 2017 IP2Location.com
-           2021 Nicotine+ Team
+           2021-2022 Mat (mathiascode)
 License: MIT
 
 Files: pynicotine/geoip/ipcountrydb.bin
-Copyright: 2001-2018 Hexasoft Development Sdn. Bhd.
+Copyright: 2001-2022 Hexasoft Development Sdn. Bhd.
 License: CC-BY-SA-4.0
 
 Files: pynicotine/gtkgui/icons/hicolor/scalable/intl/nplus-flag-*.svg
@@ -23,9 +113,9 @@ Copyright: 2016-2017 Bowtie AB
            2018-2020 Jack Marsh
 License: MIT
 
-Files: pynicotine/metadata/*
-Copyright: 2014-2021 Tom Wallroth
-           2020-2021 Nicotine+ Team
+Files: pynicotine/metadata/tinytag.py
+Copyright: 2014-2022 Tom Wallroth
+           2020-2022 Mat (mathiascode)
 License: MIT
 
 License: GPL-3+

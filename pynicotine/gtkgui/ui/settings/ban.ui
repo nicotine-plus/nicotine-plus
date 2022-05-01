@@ -31,14 +31,14 @@
         <child>
           <object class="GtkBox">
             <property name="visible">True</property>
-            <property name="spacing">6</property>
+            <property name="spacing">12</property>
             <property name="orientation">vertical</property>
             <child>
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">Prohibit users from accessing your shared files, based on username, IP address or country.</property>
-                <property name="margin-bottom">12</property>
+                <property name="margin-bottom">6</property>
                 <property name="selectable">True</property>
                 <property name="wrap">True</property>
               </object>
@@ -116,6 +116,7 @@
     <child>
       <object class="GtkFlowBox">
         <property name="visible">True</property>
+        <property name="vexpand">True</property>
         <property name="homogeneous">True</property>
         <property name="column-spacing">18</property>
         <property name="row-spacing">24</property>
@@ -134,7 +135,7 @@
                   <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
-                    <property name="label" translatable="yes">Usernames</property>
+                    <property name="label" translatable="yes">Users</property>
                     <property name="mnemonic_widget">BannedList</property>
                     <attributes>
                       <attribute name="weight" value="bold"/>
@@ -144,6 +145,7 @@
                 <child>
                   <object class="GtkFrame">
                     <property name="visible">True</property>
+                    <property name="vexpand">True</property>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
@@ -271,6 +273,7 @@
                 <child>
                   <object class="GtkFrame">
                     <property name="visible">True</property>
+                    <property name="vexpand">True</property>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>

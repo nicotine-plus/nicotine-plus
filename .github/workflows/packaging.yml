@@ -43,7 +43,7 @@ jobs:
   flatpak:
     runs-on: ubuntu-20.04
     container:
-      image: bilelmoussaoui/flatpak-github-actions:freedesktop-20.08
+      image: bilelmoussaoui/flatpak-github-actions:gnome-42
       options: --privileged
     steps:
     - uses: actions/checkout@v2
@@ -67,7 +67,8 @@ jobs:
         shell: msys2 {0}
     env:
       ARCH: ${{ matrix.arch }}
-      NICOTINE_GTK_VERSION: 3
+      NICOTINE_GTK_VERSION: 4
+      NICOTINE_LIBADWAITA: 1
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -106,7 +107,8 @@ jobs:
   macos:
     runs-on: macos-10.15
     env:
-      NICOTINE_GTK_VERSION: 3
+      NICOTINE_GTK_VERSION: 4
+      NICOTINE_LIBADWAITA: 1
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -118,20 +120,17 @@ jobs:
 
       - name: Install build dependencies
         run: |
-          brew update
           python3 packaging/macos/dependencies_core.py
           python3 packaging/macos/dependencies_packaging.py
 
       - name: Freeze application
         run: |
-          pyinstaller packaging/macos/nicotine.spec
-          rm -rf dist/Nicotine+/
-
-      - name: Generate .dmg
-        run: python3 packaging/macos/create_dmg.py
+          python3 packaging/macos/setup.py bdist_dmg
+          mkdir build/dmg/
+          mv build/*.dmg build/dmg/
 
       - name: Archive installer artifacts
         uses: actions/upload-artifact@v2
         with:
           name: macos-installer
-          path: dmg
+          path: build/dmg

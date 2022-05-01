@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -23,9 +23,9 @@ from pynicotine.config import config
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.dialogs import dialog_hide
 from pynicotine.gtkgui.widgets.dialogs import dialog_show
-from pynicotine.gtkgui.widgets.dialogs import entry_dialog
+from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.dialogs import generic_dialog
-from pynicotine.gtkgui.widgets.dialogs import option_dialog
+from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
@@ -34,14 +34,19 @@ from pynicotine.gtkgui.widgets.ui import UserInterface
 
 class WishList(UserInterface):
 
-    def __init__(self, frame, searches):
+    def __init__(self, frame, core, searches):
 
         super().__init__("ui/dialogs/wishlist.ui")
+        (
+            self.container,
+            self.list_view,
+            self.wish_entry
+        ) = self.widgets
 
         self.dialog = generic_dialog(
-            parent=frame.MainWindow,
+            parent=frame.window,
             modal=False,
-            content_box=self.main,
+            content_box=self.container,
             quit_callback=self.hide,
             title=_("Wishlist"),
             width=600,
@@ -49,6 +54,7 @@ class WishList(UserInterface):
         )
 
         self.frame = frame
+        self.core = core
         self.searches = searches
         self.timer = None
         self.wishes = {}
@@ -85,7 +91,7 @@ class WishList(UserInterface):
         wish_exists = (wish in self.wishes)
         self.wish_entry.set_text("")
 
-        self.frame.np.search.add_wish(wish)
+        self.core.search.add_wish(wish)
 
         if not wish_exists:
             return
@@ -103,8 +109,8 @@ class WishList(UserInterface):
         if not wish:
             return
 
-        self.frame.np.search.remove_wish(old_wish)
-        self.frame.np.search.add_wish(wish)
+        self.core.search.remove_wish(old_wish)
+        self.core.search.add_wish(wish)
         self.select_wish(wish)
 
     def on_edit_wish(self, *_args):
@@ -115,14 +121,14 @@ class WishList(UserInterface):
             iterator = model.get_iter(path)
             old_wish = model.get_value(iterator, 0)
 
-            entry_dialog(
+            EntryDialog(
                 parent=self.dialog,
                 title=_("Edit Wish"),
                 message=_("Enter new value for wish '%s':") % old_wish,
                 default=old_wish,
                 callback=self.on_edit_wish_response,
                 callback_data=old_wish
-            )
+            ).show()
             return
 
     def on_remove_wish(self, *_args):
@@ -132,7 +138,7 @@ class WishList(UserInterface):
         for path in reversed(paths):
             iterator = model.get_iter(path)
             wish = model.get_value(iterator, 0)
-            self.frame.np.search.remove_wish(wish)
+            self.core.search.remove_wish(wish)
 
         self.wish_entry.grab_focus()
         return True
@@ -143,18 +149,18 @@ class WishList(UserInterface):
 
         if response_id == 2:
             for wish in self.wishes.copy():
-                self.frame.np.search.remove_wish(wish)
+                self.core.search.remove_wish(wish)
 
         self.wish_entry.grab_focus()
 
     def on_clear_wishlist(self, *_args):
 
-        option_dialog(
+        OptionDialog(
             parent=self.dialog,
             title=_('Clear Wishlist?'),
             message=_('Do you really want to clear your wishlist?'),
             callback=self.clear_wishlist_response
-        )
+        ).show()
 
     def add_wish(self, wish):
 
@@ -181,8 +187,8 @@ class WishList(UserInterface):
         self.list_view.grab_focus()
 
     def set_interval(self, msg):
-        self.frame.np.search.do_wishlist_search_interval()
-        self.timer = GLib.timeout_add_seconds(msg.seconds, self.frame.np.search.do_wishlist_search_interval)
+        self.core.search.do_wishlist_search_interval()
+        self.timer = GLib.timeout_add_seconds(msg.seconds, self.core.search.do_wishlist_search_interval)
 
     def server_disconnect(self):
 

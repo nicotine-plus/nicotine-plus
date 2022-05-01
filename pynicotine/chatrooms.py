@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -125,7 +125,7 @@ class ChatRooms:
     def request_room_list(self):
         self.queue.append(slskmessages.RoomList())
 
-    def request_join_room(self, room, private=None):
+    def request_join_room(self, room, private=False):
         self.queue.append(slskmessages.JoinRoom(room, private))
 
     def request_leave_room(self, room):
@@ -248,7 +248,7 @@ class ChatRooms:
             self.ui_callback.private_room_removed(msg)
 
     def private_room_toggle(self, msg):
-        self.config.sections["server"]["private_chatrooms"] = msg.enabled
+        self.config.sections["server"]["private_chatrooms"] = bool(msg.enabled)
 
     def private_room_add_operator(self, msg):
 

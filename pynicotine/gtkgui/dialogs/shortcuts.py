@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2021 Nicotine+ Team
+# COPYRIGHT (C) 2021-2022 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -29,13 +29,14 @@ class Shortcuts(UserInterface):
     def __init__(self, frame):
 
         super().__init__("ui/dialogs/shortcuts.ui")
+        self.dialog, self.emoji_shortcut = self.widgets
 
         self.frame = frame
-        set_dialog_properties(self.dialog, frame.MainWindow, quit_callback=self.hide)
+        set_dialog_properties(self.dialog, frame.window, quit_callback=self.hide)
 
         if hasattr(Gtk.Entry.props, "show-emoji-icon"):
             # Emoji picker only available in GTK 3.24+
-            self.emoji.show()
+            self.emoji_shortcut.show()
 
         # Workaround for off-centered dialog on first run
         dialog_show(self.dialog)

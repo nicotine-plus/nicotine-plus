@@ -65,7 +65,7 @@
           <object class="GtkCheckButton" id="ShowPrivateSearchResults">
             <property name="label" translatable="yes">Show privately shared files in search results</property>
             <property name="visible">True</property>
-            <property name="tooltip_text" translatable="yes">Other clients may offer an option to send privately shared files in response to search requests. Such files are prefixed with '[PRIVATE]', and are not downloadable unless the uploader gives explicit permission.</property>
+            <property name="tooltip_text" translatable="yes">Other Soulseek clients may have the option to share files privately. If so, these files will be prefixed with '[PRIVATE]', and can not be downloaded until the uploader gives explicit permission. Ask them kindly.</property>
             <property name="use-underline">True</property>
           </object>
         </child>
@@ -88,7 +88,7 @@
                 <property name="visible">True</property>
                 <property name="width-chars">9</property>
                 <property name="adjustment">adjustment_MaxDisplayedResults</property>
-                <property name="numeric">1</property>
+                <property name="numeric">True</property>
                 <property name="valign">center</property>
               </object>
             </child>
@@ -470,7 +470,7 @@
                     <property name="visible">True</property>
                     <property name="width-chars">9</property>
                     <property name="adjustment">adjustment_MinSearchChars</property>
-                    <property name="numeric">1</property>
+                    <property name="numeric">True</property>
                     <property name="valign">center</property>
                   </object>
                 </child>
@@ -495,7 +495,7 @@
                     <property name="visible">True</property>
                     <property name="width-chars">9</property>
                     <property name="adjustment">adjustment_MaxResults</property>
-                    <property name="numeric">1</property>
+                    <property name="numeric">True</property>
                     <property name="valign">center</property>
                   </object>
                 </child>

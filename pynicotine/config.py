@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016-2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2008-2011 Quinox <quinox@users.sf.net>
@@ -55,15 +55,16 @@ class Config:
         config_dir, self.data_dir = self.get_user_directories()
         self.filename = os.path.join(config_dir, "config")
         self.plugin_dir = os.path.join(self.data_dir, "plugins")
-        self.version = "3.2.2.dev1"
+        self.version = "3.3.0.dev1"
         self.python_version = sys.version
         self.gtk_version = ""
 
         self.application_name = "Nicotine+"
         self.application_id = "org.nicotine_plus.Nicotine"
         self.summary = _("Graphical client for the Soulseek peer-to-peer network")
-        self.copyright = """© 2004–2022 Nicotine+ Team
-© 2003–2004 Nicotine Team
+        self.author = "Nicotine+ Team"
+        self.copyright = """© 2004–2022 Nicotine+ Contributors
+© 2003–2004 Nicotine Contributors
 © 2001–2003 PySoulSeek Contributors"""
 
         self.website_url = "https://nicotine-plus.org/"
@@ -558,10 +559,6 @@ class Config:
 
         # Update config values from file
         self.set_config()
-
-        if sys.platform == "darwin":
-            # Disable header bar in macOS for now due to GTK 3 performance issues
-            self.sections["ui"]["header_bar"] = False
 
         # Convert special download folder share to regular share
         if self.sections["transfers"].get("sharedownloaddir", False):

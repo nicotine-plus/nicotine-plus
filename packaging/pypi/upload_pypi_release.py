@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -23,14 +23,6 @@ import sys
 """ Script used to create new Nicotine+ releases on PyPi """
 
 
-def install_dependencies():
-    """ Install dependencies required to upload release """
-
-    packages = ["setuptools",
-                "twine"]
-    subprocess.check_call([sys.executable, "-m", "pip", "install"] + packages)
-
-
 def create_packages():
     """ Prepare source distribution and wheel """
 
@@ -45,6 +37,5 @@ def upload_packages():
 
 
 if __name__ == '__main__':
-    install_dependencies()
     create_packages()
     upload_packages()

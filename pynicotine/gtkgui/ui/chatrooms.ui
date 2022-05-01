@@ -1,29 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.0"/>
-  <object class="GtkBox" id="Main">
+  <object class="GtkBox" id="container">
     <property name="visible">True</property>
     <child>
       <object class="GtkBox">
-        <property name="visible">False</property>
+        <property name="visible">True</property>
         <property name="orientation">vertical</property>
         <child>
-          <object class="GtkPaned" id="ChatPaned">
+          <object class="GtkPaned" id="users_paned">
             <property name="visible">True</property>
+            <property name="vexpand">True</property>
             <child>
-              <object class="GtkPaned" id="ChatPanedSecond">
+              <object class="GtkPaned" id="chat_paned">
                 <property name="visible">True</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkBox" id="ActivityView">
+                  <object class="GtkBox" id="activity_container">
                     <property name="visible">True</property>
                     <property name="orientation">vertical</property>
                     <child>
-                      <object class="GtkSearchBar" id="LogSearchBar">
+                      <object class="GtkSearchBar" id="activity_search_bar">
                         <property name="visible">True</property>
                         <property name="show-close-button">True</property>
                         <child>
-                          <object class="GtkSearchEntry" id="LogSearchEntry">
+                          <object class="GtkSearchEntry" id="activity_search_entry">
                             <property name="visible">True</property>
                             <property name="max-width-chars">75</property>
                           </object>
@@ -33,15 +34,15 @@
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
+                        <property name="vexpand">True</property>
                         <child>
-                          <object class="GtkScrolledWindow" id="RoomLogWindow">
+                          <object class="GtkScrolledWindow">
                             <property name="visible">True</property>
-                            <property name="vexpand">True</property>
+                            <property name="hexpand">True</property>
                             <property name="height-request">48</property>
                             <child>
-                              <object class="GtkTextView" id="RoomLog">
+                              <object class="GtkTextView" id="activity_view">
                                 <property name="visible">True</property>
-                                <property name="hexpand">True</property>
                                 <property name="editable">False</property>
                                 <property name="wrap-mode">word-char</property>
                                 <property name="cursor-visible">False</property>
@@ -60,15 +61,15 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkBox" id="ChatView">
+                  <object class="GtkBox" id="chat_container">
                     <property name="visible">True</property>
                     <property name="orientation">vertical</property>
                     <child>
-                      <object class="GtkSearchBar" id="ChatSearchBar">
+                      <object class="GtkSearchBar" id="chat_search_bar">
                         <property name="visible">True</property>
                         <property name="show-close-button">True</property>
                         <child>
-                          <object class="GtkSearchEntry" id="ChatSearchEntry">
+                          <object class="GtkSearchEntry" id="chat_search_entry">
                             <property name="visible">True</property>
                             <property name="max-width-chars">75</property>
                           </object>
@@ -78,14 +79,14 @@
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
+                        <property name="vexpand">True</property>
                         <child>
-                          <object class="GtkScrolledWindow" id="ChatScrollWindow">
+                          <object class="GtkScrolledWindow">
                             <property name="visible">True</property>
-                            <property name="vexpand">True</property>
+                            <property name="hexpand">True</property>
                             <child>
-                              <object class="GtkTextView" id="ChatScroll">
+                              <object class="GtkTextView" id="chat_view">
                                 <property name="visible">True</property>
-                                <property name="hexpand">True</property>
                                 <property name="editable">False</property>
                                 <property name="wrap-mode">word-char</property>
                                 <property name="cursor-visible">False</property>
@@ -102,7 +103,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkBox" id="ChatEntryBox">
+                      <object class="GtkBox" id="chat_entry_row">
                         <property name="visible">True</property>
                         <property name="margin-start">8</property>
                         <property name="margin-end">8</property>
@@ -110,14 +111,14 @@
                         <property name="margin-bottom">8</property>
                         <property name="spacing">6</property>
                         <child>
-                          <object class="GtkEntry" id="ChatEntry">
+                          <object class="GtkEntry" id="chat_entry">
                             <property name="visible">True</property>
                             <property name="hexpand">True</property>
-                            <property name="width-chars">5</property>
+                            <property name="width-chars">8</property>
                           </object>
                         </child>
                         <child>
-                          <object class="GtkToggleButton" id="Speech">
+                          <object class="GtkToggleButton" id="speech_toggle">
                             <property name="visible">True</property>
                             <property name="tooltip-text" translatable="yes">Toggle Text-to-Speech</property>
                             <property name="active">True</property>
@@ -133,7 +134,7 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkMenuButton" id="ShowRoomWall">
+                          <object class="GtkMenuButton" id="room_wall_button">
                             <property name="visible">True</property>
                             <property name="tooltip-text" translatable="yes">Room wall</property>
                             <child>
@@ -148,7 +149,7 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkMenuButton" id="ShowChatHelp">
+                          <object class="GtkMenuButton" id="help_button">
                             <property name="visible">True</property>
                             <property name="tooltip-text" translatable="yes">Chat room command help</property>
                             <child>
@@ -169,7 +170,7 @@
               </object>
             </child>
             <child>
-              <object class="GtkBox" id="UserView">
+              <object class="GtkBox" id="users_container">
                 <property name="visible">True</property>
                 <property name="orientation">vertical</property>
                 <child>
@@ -183,19 +184,19 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">User List</property>
-                        <property name="mnemonic_widget">PeopleButton</property>
+                        <property name="label" translatable="yes">Users</property>
+                        <property name="mnemonic_widget">users_button</property>
                         <attributes>
                           <attribute name="weight" value="bold"/>
                         </attributes>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkButton" id="PeopleButton">
+                      <object class="GtkButton" id="users_button">
                         <property name="visible">True</property>
                         <signal name="clicked" handler="on_ignore_users_settings"/>
                         <child>
-                          <object class="GtkLabel" id="LabelPeople">
+                          <object class="GtkLabel" id="users_label">
                             <property name="visible">True</property>
                             <property name="label">0</property>
                             <attributes>
@@ -217,15 +218,15 @@
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
+                    <property name="vexpand">True</property>
                     <child>
                       <object class="GtkScrolledWindow">
                         <property name="width-request">400</property>
                         <property name="visible">True</property>
-                        <property name="vexpand">True</property>
+                        <property name="hexpand">True</property>
                         <child>
-                          <object class="GtkTreeView" id="UserList">
+                          <object class="GtkTreeView" id="users_list_view">
                             <property name="visible">True</property>
-                            <property name="hexpand">True</property>
                             <property name="has-tooltip">True</property>
                             <property name="search-column">2</property>
                             <signal name="query-tooltip" handler="on_tooltip"/>
@@ -237,7 +238,7 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkBox" id="room_options_container">
                     <property name="visible">True</property>
                     <property name="orientation">vertical</property>
                     <property name="margin-start">8</property>
@@ -246,7 +247,7 @@
                     <property name="margin-bottom">6</property>
                     <property name="spacing">4</property>
                     <child>
-                      <object class="GtkCheckButton" id="AutoJoin">
+                      <object class="GtkCheckButton" id="auto_join_toggle">
                         <property name="label" translatable="yes">_Auto-join Room</property>
                         <property name="visible">True</property>
                         <property name="use-underline">True</property>
@@ -254,7 +255,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkCheckButton" id="Log">
+                      <object class="GtkCheckButton" id="log_toggle">
                         <property name="label" translatable="yes">_Log Conversation</property>
                         <property name="visible">True</property>
                         <property name="use-underline">True</property>

@@ -1,11 +1,15 @@
 # Packaging
 
-## Note for packagers
+## Note for Packagers
+
 This is a special note for distribution packagers: There is a standard feature of GitHub which enables you to be notified of new package releases: In the top right bar there is the *Watch* option, which has the suboption to be notified of *releases only*. Please subscribe so you won't miss any of our new releases.
 Thanks!
 
+
 ## Dependencies
+
 Dependencies for Nicotine+ are described in [DEPENDENCIES.md](DEPENDENCIES.md).
+
 
 ## GNU/Linux Instructions
 
@@ -84,3 +88,36 @@ If you want to run the application, you can launch the executable `build\exe.*\N
 Start a MinGW 32-bit terminal, and follow the above instructions again. Replace any instance of `x86_64` with `i686` when installing packages.
 
 You are recommended to clone a fresh copy of the `nicotine-plus` Git repository before building a frozen application again.
+
+
+## macOS
+
+GitHub Actions currently builds Nicotine+ packages for macOS. However, the following instructions may be useful if you wish to generate a package on your own machine.
+
+### Building a Frozen Application with cx_Freeze
+
+Follow the instructions on installing Homebrew: [https://brew.sh/](https://brew.sh/)
+
+Clone the `nicotine-plus` Git repository:
+
+```sh
+git clone https://github.com/nicotine-plus/nicotine-plus
+cd nicotine-plus
+```
+
+Install dependencies:
+
+```sh
+export NICOTINE_GTK_VERSION=3
+/usr/local/bin/python3 packaging/macos/dependencies_core.py
+/usr/local/bin/python3 packaging/macos/dependencies_packaging.py
+```
+
+Build the application:
+
+```sh
+python3 packaging/macos/setup.py bdist_dmg
+```
+
+When the application has finished building, it is located in the `build/` subfolder as a .dmg file.
+

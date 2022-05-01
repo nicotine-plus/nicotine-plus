@@ -280,7 +280,7 @@
               </object>
             </child>
             <child>
-              <object class="GtkShortcutsShortcut" id="emoji">
+              <object class="GtkShortcutsShortcut" id="emoji_shortcut">
                 <property name="visible">False</property>
                 <property name="accelerator">&lt;Primary&gt;period</property>
                 <property name="title" translatable="yes">Insert Emoji</property>

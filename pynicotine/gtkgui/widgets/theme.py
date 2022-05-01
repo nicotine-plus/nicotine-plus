@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -37,12 +37,45 @@ SETTINGS_PORTAL = None
 
 if "gi.repository.Adw" not in sys.modules:
     # GNOME 42+ system-wide dark mode for vanilla GTK (no libadwaita)
+
+    def read_color_scheme():
+        """ Available color schemes:
+        - 0: No preference
+        - 1: Prefer dark appearance
+        - 2: Prefer light appearance
+        """
+
+        try:
+            result = SETTINGS_PORTAL.call_sync(
+                "Read", GLib.Variant("(ss)", ("org.freedesktop.appearance", "color-scheme")),
+                Gio.DBusCallFlags.NONE, -1, None
+            )
+
+            return result.unpack()[0]
+
+        except Exception:
+            return None
+
+    def on_color_scheme_changed(_proxy, _sender_name, signal_name, parameters):
+
+        if signal_name != "SettingChanged":
+            return
+
+        namespace, name, color_scheme, *_unused = parameters.unpack()
+
+        if (config.sections["ui"]["dark_mode"]
+                or namespace != "org.freedesktop.appearance" or name != "color-scheme"):
+            return
+
+        set_dark_mode(color_scheme == 1)
+
     try:
         SETTINGS_PORTAL = Gio.DBusProxy.new_for_bus_sync(
             Gio.BusType.SESSION, Gio.DBusProxyFlags.NONE, None,
             "org.freedesktop.portal.Desktop", "/org/freedesktop/portal/desktop",
             "org.freedesktop.portal.Settings", None
         )
+        SETTINGS_PORTAL.connect("g-signal", on_color_scheme_changed)
 
     except Exception:
         pass
@@ -50,51 +83,20 @@ if "gi.repository.Adw" not in sys.modules:
 GTK_SETTINGS = Gtk.Settings.get_default()
 
 
-def read_color_scheme():
-
-    try:
-        value = SETTINGS_PORTAL.call_sync(
-            "Read", GLib.Variant("(ss)", ("org.freedesktop.appearance", "color-scheme")),
-            Gio.DBusCallFlags.NONE, -1, None
-        )
-
-        return value.get_child_value(0).get_variant().get_variant().get_uint32()
-
-    except Exception:
-        return None
-
-
-def on_color_scheme_changed(_proxy, _sender_name, signal_name, parameters):
-
-    if signal_name != "SettingChanged":
-        return
-
-    namespace = parameters.get_child_value(0).get_string()
-    name = parameters.get_child_value(1).get_string()
-
-    if (config.sections["ui"]["dark_mode"]
-            or namespace != "org.freedesktop.appearance" or name != "color-scheme"):
-        return
-
-    set_dark_mode()
-
-
-def set_dark_mode(force=False):
+def set_dark_mode(enabled):
 
     if "gi.repository.Adw" in sys.modules:
         from gi.repository import Adw  # pylint:disable=no-name-in-module
 
-        color_scheme = Adw.ColorScheme.FORCE_DARK if force else Adw.ColorScheme.DEFAULT
+        color_scheme = Adw.ColorScheme.FORCE_DARK if enabled else Adw.ColorScheme.DEFAULT
         Adw.StyleManager.get_default().set_color_scheme(color_scheme)
         return
 
-    enabled = force
-
-    if not force:
+    if not enabled:
         color_scheme = read_color_scheme()
 
         if color_scheme is not None:
-            enabled = bool(color_scheme)
+            enabled = (color_scheme == 1)
 
     GTK_SETTINGS.set_property("gtk-application-prefer-dark-theme", enabled)
 
@@ -113,9 +115,6 @@ def set_use_header_bar(enabled):
 
 
 def set_visual_settings():
-
-    if SETTINGS_PORTAL is not None:
-        SETTINGS_PORTAL.connect("g-signal", on_color_scheme_changed)
 
     global_font = config.sections["ui"]["globalfont"]
     set_dark_mode(config.sections["ui"]["dark_mode"])
@@ -147,7 +146,7 @@ def set_global_css():
         margin: 0;
     }
 
-    .preferences .dialog-action-box {
+    .generic-dialog .dialog-action-box {
         /* Add missing spacing to dialog action buttons */
         padding: 6px;
     }
@@ -179,6 +178,18 @@ def set_global_css():
     .count {
         padding-left: 10px;
         padding-right: 10px;
+    }
+
+    /* Headings */
+
+    .title-1 {
+        font-weight: 800;
+        font-size: 20pt;
+    }
+
+    .title-2 {
+        font-weight: 800;
+        font-size: 15pt;
     }
     """
 
@@ -228,20 +239,23 @@ def set_global_css():
     global_css_provider = Gtk.CssProvider()
 
     if Gtk.get_major_version() == 4:
-        Gtk.StyleContext.add_provider_for_screen = Gtk.StyleContext.add_provider_for_display
-        screen = Gdk.Display.get_default()
         css = css + css_gtk3_20 + css_gtk4
-    else:
-        screen = Gdk.Screen.get_default()
 
+        global_css_provider.load_from_data(css)
+
+        Gtk.StyleContext.add_provider_for_display(  # pylint: disable=no-member
+            Gdk.Display.get_default(), global_css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+        )
+
+    else:
         if not Gtk.check_version(3, 20, 0):
             css = css + css_gtk3_20
 
-    global_css_provider.load_from_data(css)
+        global_css_provider.load_from_data(css)
 
-    Gtk.StyleContext.add_provider_for_screen(
-        screen, global_css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
-    )
+        Gtk.StyleContext.add_provider_for_screen(  # pylint: disable=no-member
+            Gdk.Screen.get_default(), global_css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+        )
 
 
 def set_global_style():
@@ -255,9 +269,9 @@ def set_global_style():
 ICONS = {}
 
 if Gtk.get_major_version() == 4:
-    ICON_THEME = Gtk.IconTheme.get_for_display(Gdk.Display.get_default())
+    ICON_THEME = Gtk.IconTheme.get_for_display(Gdk.Display.get_default())  # pylint: disable=no-member
 else:
-    ICON_THEME = Gtk.IconTheme.get_default()
+    ICON_THEME = Gtk.IconTheme.get_default()  # pylint: disable=no-member
 
 
 def get_icon(icon_name):
@@ -276,13 +290,16 @@ def get_flag_icon_name(country):
 
 def get_status_icon(status):
 
+    if status == 0:
+        return get_icon("offline")
+
     if status == 1:
         return get_icon("away")
 
     if status == 2:
         return get_icon("online")
 
-    return get_icon("offline")
+    return None
 
 
 def load_ui_icon(name):
@@ -302,7 +319,8 @@ def load_custom_icons(names):
     if not config.sections["ui"].get("icontheme"):
         return False
 
-    log.add_debug("Loading custom icons when available")
+    icon_theme_path = config.sections["ui"]["icontheme"]
+    log.add_debug("Loading custom icon theme from %s", icon_theme_path)
     extensions = ["jpg", "jpeg", "bmp", "png", "svg"]
 
     for name in names:
@@ -311,8 +329,7 @@ def load_custom_icons(names):
         loaded = False
 
         while not path or (exts and not loaded):
-            path = os.path.expanduser(os.path.join(config.sections["ui"]["icontheme"], "%s.%s" %
-                                      (name, exts.pop())))
+            path = os.path.expanduser(os.path.join(icon_theme_path, "%s.%s" % (name, exts.pop())))
 
             try:
                 if os.path.isfile(path):

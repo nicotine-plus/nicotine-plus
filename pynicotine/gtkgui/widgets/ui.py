@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -46,25 +46,30 @@ class UserInterface:
                         UI_DATA[filename] = file_handle.read()
 
             if Gtk.get_major_version() == 4:
-                builder = Gtk.Builder(self)
-                builder.set_translation_domain(TRANSLATION_DOMAIN)
-                builder.add_from_string(UI_DATA[filename])
-                Gtk.Buildable.get_name = Gtk.Buildable.get_buildable_id
+                self.builder = Gtk.Builder(self)
+                self.builder.set_translation_domain(TRANSLATION_DOMAIN)
+                self.builder.add_from_string(UI_DATA[filename])
+                Gtk.Buildable.get_name = Gtk.Buildable.get_buildable_id  # pylint: disable=no-member
             else:
-                builder = Gtk.Builder()
-                builder.set_translation_domain(TRANSLATION_DOMAIN)
-                builder.add_from_string(UI_DATA[filename])
-                builder.connect_signals(self)
+                self.builder = Gtk.Builder()
+                self.builder.set_translation_domain(TRANSLATION_DOMAIN)
+                self.builder.add_from_string(UI_DATA[filename])
+                self.builder.connect_signals(self)                       # pylint: disable=no-member
 
-            for obj in builder.get_objects():
+            self.widgets = self.builder.get_objects()
+
+            for obj in list(self.widgets):
                 try:
                     obj_name = Gtk.Buildable.get_name(obj)
-
                     if not obj_name.startswith("_"):
-                        setattr(self, obj_name, obj)
+                        continue
 
                 except TypeError:
                     pass
+
+                self.widgets.remove(obj)
+
+            self.widgets.sort(key=Gtk.Buildable.get_name)
 
         except Exception as error:
             log.add(_("Failed to load ui file %(file)s: %(error)s"), {

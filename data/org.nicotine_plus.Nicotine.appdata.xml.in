@@ -26,16 +26,13 @@
   </categories>
   <screenshots>
     <screenshot type="default">
-      <image>https://raw.githubusercontent.com/nicotine-plus/nicotine-plus/master/data/screenshots/screenshot1.png</image>
+      <image>https://raw.githubusercontent.com/nicotine-plus/nicotine-plus/HEAD/data/screenshots/screenshot1.png</image>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/nicotine-plus/nicotine-plus/master/data/screenshots/screenshot2.png</image>
+      <image>https://raw.githubusercontent.com/nicotine-plus/nicotine-plus/HEAD/data/screenshots/screenshot2.png</image>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/nicotine-plus/nicotine-plus/master/data/screenshots/screenshot3.png</image>
-    </screenshot>
-    <screenshot>
-      <image>https://raw.githubusercontent.com/nicotine-plus/nicotine-plus/master/data/screenshots/screenshot4.png</image>
+      <image>https://raw.githubusercontent.com/nicotine-plus/nicotine-plus/HEAD/data/screenshots/screenshot3.png</image>
     </screenshot>
   </screenshots>
   <recommends>
@@ -60,6 +57,7 @@
     <content_attribute id="social-info">mild</content_attribute>
   </content_rating>
   <releases>
+    <release version="3.2.2" date="2022-03-19"/>
     <release version="3.2.1" date="2022-02-10"/>
     <release version="3.2.0" date="2021-12-18"/>
     <release version="3.1.1" date="2021-08-02"/>

@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2021-2022 Nicotine+ Team
+# COPYRIGHT (C) 2021-2022 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -17,10 +17,24 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import sys
 
 
 def check_gui_dependencies():
 
+    # Defaults for different operating systems
+    components = {
+        "gtk": {"win32": '4', "darwin": '4'},
+        "libadwaita": {"win32": '1', "darwin": '1'}
+    }
+
+    if os.getenv("NICOTINE_GTK_VERSION") is None:
+        os.environ["NICOTINE_GTK_VERSION"] = components.get("gtk").get(sys.platform, '3')
+
+    if os.getenv("NICOTINE_LIBADWAITA") is None:
+        os.environ["NICOTINE_LIBADWAITA"] = components.get("libadwaita").get(sys.platform, '0')
+
+    # Require minor version of GTK
     if os.getenv("NICOTINE_GTK_VERSION") == '4':
         gtk_version = (4, 6, 0)
         pygobject_version = (3, 40, 0)
@@ -66,7 +80,7 @@ def check_gui_dependencies():
     return None
 
 
-def run_gui(network_processor, trayicon, hidden, bindip, port, ci_mode, multi_instance):
+def run_gui(core, trayicon, hidden, bindip, port, ci_mode, multi_instance):
     """ Run Nicotine+ GTK GUI """
 
     from pynicotine.logfacility import log
@@ -76,5 +90,5 @@ def run_gui(network_processor, trayicon, hidden, bindip, port, ci_mode, multi_in
         log.add(error)
         return 1
 
-    from pynicotine.gtkgui.frame import Application
-    return Application(network_processor, trayicon, hidden, bindip, port, ci_mode, multi_instance).run()
+    from pynicotine.gtkgui.application import Application
+    return Application(core, trayicon, hidden, bindip, port, ci_mode, multi_instance).run()

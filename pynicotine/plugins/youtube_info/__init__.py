@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2021 Nicotine+ Team
+# COPYRIGHT (C) 2021-2022 Nicotine+ Contributors
 # COPYRIGHT (C) 2021 Inso-m-niaC
 #
 # GNU GENERAL PUBLIC LICENSE
@@ -62,8 +62,8 @@ class Plugin(BasePlugin):
 
     def incoming_public_chat_notification(self, room, user, line):
 
-        if (self.frame.np.network_filter.is_user_ignored(user)
-                or self.frame.np.network_filter.is_user_ip_ignored(user)):
+        if (self.core.network_filter.is_user_ignored(user)
+                or self.core.network_filter.is_user_ip_ignored(user)):
             return
 
         video_id = self.get_video_id('public', room, line)
@@ -79,8 +79,8 @@ class Plugin(BasePlugin):
 
     def incoming_private_chat_notification(self, user, line):
 
-        if (self.frame.np.network_filter.is_user_ignored(user)
-                or self.frame.np.network_filter.is_user_ip_ignored(user)):
+        if (self.core.network_filter.is_user_ignored(user)
+                or self.core.network_filter.is_user_ip_ignored(user)):
             return
 
         video_id = self.get_video_id('private', user, line)

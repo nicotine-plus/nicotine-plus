@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -38,7 +38,8 @@ class TextView:
 
         self.textview = textview
         self.textbuffer = textview.get_buffer()
-        self.scrollable = textview.get_parent()
+        self.scrollable = textview.get_ancestor(Gtk.ScrolledWindow)
+        scrollable_container = self.scrollable.get_ancestor(Gtk.Box)
         self.font = font
         self.url_regex = re.compile("(\\w+\\://[^\\s]+)|(www\\.\\w+\\.[^\\s]+)|(mailto\\:[^\\s]+)")
 
@@ -48,13 +49,13 @@ class TextView:
 
         if Gtk.get_major_version() == 4:
             self.gesture_click_primary = Gtk.GestureClick()
-            self.scrollable.get_parent().add_controller(self.gesture_click_primary)
+            scrollable_container.add_controller(self.gesture_click_primary)
 
             self.gesture_click_secondary = Gtk.GestureClick()
-            self.scrollable.get_parent().add_controller(self.gesture_click_secondary)
+            scrollable_container.add_controller(self.gesture_click_secondary)
         else:
-            self.gesture_click_primary = Gtk.GestureMultiPress(widget=self.scrollable.get_parent())
-            self.gesture_click_secondary = Gtk.GestureMultiPress(widget=self.scrollable.get_parent())
+            self.gesture_click_primary = Gtk.GestureMultiPress(widget=scrollable_container)
+            self.gesture_click_secondary = Gtk.GestureMultiPress(widget=scrollable_container)
 
         self.gesture_click_primary.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
         self.gesture_click_primary.connect("pressed", self._callback_pressed_primary)

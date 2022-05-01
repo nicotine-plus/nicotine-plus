@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -35,12 +35,6 @@ class About:
    - Maintainer (2020–present)
    - Developer
 
-> Kip Warner
-   - Maintainer (2018–2020)
-   - Developer
-   - Debianization
-   - [kip(at)thevertigo(dot)com]
-
 > eLvErDe
    - Maintainer (2013–2016)
    - Domain name administrator
@@ -62,45 +56,43 @@ class About:
    - Accessibility improvements
 
 
-Retired Contributors
+Inactive
 
 > daelstorm
    - Maintainer (2004–2009)
    - Developer
-   - [daelstorm(at)gmail(dot)com]
 
 > QuinoX
    - Maintainer (2009–2012)
    - Developer
 
-> Michael Labouebe (aka gfarmerfr)
+> Michael Labouebe (gfarmerfr)
    - Maintainer (2016–2017)
    - Developer
-   - [gfarmerfr(at)free(dot)fr]
+
+> Kip Warner
+   - Maintainer (2018–2020)
+   - Developer
+   - Debianization
 
 > gallows (aka &apos;burp O&apos;)
    - Developer
    - Packager
    - Submitted Slack.Build file
-   - [g4ll0ws(at)gmail(dot)com]
 
 > hedonist (formerly known as alexbk)
    - OS X Nicotine.app maintainer / developer
    - Author of PySoulSeek, used for Nicotine core
-   - [ak(at)sensi(dot)org]
 
 > lee8oi
    - Bash commander
    - New and updated /alias
-   - [winslaya(at)gmail(dot)com]
 
 > INMCM
    - Nicotine+ topic maintainer on ubuntuforums.org
-     https://ubuntuforums.org/showthread.php?t=196835
 
 > suser-guru
    - Suse Linux packager
-     https://dev-loki.blogspot.fr/
    - Nicotine+ RPM&apos;s for Suse 9.1, 9.2, 9.3, 10.0, 10.1
 
 > osiris
@@ -109,29 +101,26 @@ Retired Contributors
    - Some GNU/Linux packaging
    - Nicotine+ on Win32
    - Author of Nicotine+ guide
-   - [osiris.contact(at)gmail(dot)com]
 
 > Mutnick
    - Created Nicotine+ GitHub organization
    - Developer
-   - [muhing(at)yahoo(dot)com]
 
 > Lene Preuss
    - Python 3 migration
    - Unit and DEP-8 continuous integration testing
-   - [lene.preuss(at)here(dot)com]
 
 
 Nicotine Team
 –––––––––––––––––––––––––––––––––––––––>
 
-> Hyriand
+> Ingmar K. Steen (Hyriand)
    - Maintainer (2003–2004)
-   - [hyriand(at)thegraveyard(dot)org]
 
-> osiris
-   - Handy-man
-   - [osiris.contact(at)gmail(dot)com]
+> daelstorm
+   - Beta tester
+   - Designer of most of the settings
+   - Made the Nicotine icons
 
 > SmackleFunky
    - Beta tester
@@ -148,76 +137,62 @@ Nicotine Team
    - MacOSX tester
    - soulseeX developer
 
-> Gustavo
+> Gustavo J. A. M. Carneiro
    - Created the exception dialog
-   - [gjc(at)inescporto(dot)pt]
 
 > SeeSchloss
    - Developer
    - Created 1.0.8 Win32 installer
    - Created Soulfind,
      open source Soulseek server written in D
-     https://github.com/seeschloss/soulfind
 
 > vasi
    - Mac developer
    - Packaged Nicotine on OSX PowerPC
-   - [djvasi(at)gmail(dot)com]
 
 
 PySoulSeek Contributors
 –––––––––––––––––––––––––––––––––––––––>
 
 > Alexander Kanavin
-   - Maintainer (2001–2005)
-   - [ak(at)sensi(dot)org]
+   - Maintainer (2001–2003)
 
 > Nir Arbel
    - Helped with many protocol questions I had, and
      of course he designed and implemented the whole
      system.
-   - [nir(at)slsk(dot)org]
 
-> Zip (Brett W. Thompson)
+> Brett W. Thompson (Zip)
    - I used his client code to get an initial
      impression of how the system works.
    - Supplied the patch for logging chat conversations.
-   - [brettt(at)tfn(dot)net]
 
 > Josselin Mouette
    - Official Debian package maintainer
-   - [joss(at)debian(dot)org]
 
 > blueboy
    - Former unofficial Debian package maintainer
-   - [bluegeek(at)eresmas(dot)com]
 
 > Christian Swinehart
    - Fink package maintainer
-   - [cswinehart(at)users(dot)sourceforge(dot)net]
 
-> Hyriand
+> Ingmar K. Steen (Hyriand)
    - Patches for upload bandwidth management,
      banning, various UI improvements and more
-   - [hyriand(at)thegraveyard(dot)org]
 
 > Geert Kloosterman
    - A script for importing Windows Soulseek
      configuration
-   - [geertk(at)ai(dot)rug(dot)nl]
 
 > Joe Halliwell
    - Submitted a patch for optionally discarding search
      results after closing a search tab
-   - [s9900164(at)sms(dot)ed(dot)ac(dot)uk]
 
 > Alexey Vyskubov
    - Code cleanups
-   - [alexey(dot)vyskubov(at)nokia(dot)com]
 
-> Jason Green
+> Jason Green (SmackleFunky)
    - Ignore list and auto-join checkbox, wishlists
-   - [smacklefunky(at)optusnet(dot)com(dot)au]
 
 
 Third-Party Attributions
@@ -233,7 +208,7 @@ Third-Party Attributions
   https://github.com/jackiboy/flagpack
 
 - tinytag licensed under the MIT License.
-  Copyright (c) 2014–2021 Tom Wallroth
+  Copyright (c) 2014–2022 Tom Wallroth
   https://github.com/devsnd/tinytag/
 
 
@@ -242,85 +217,115 @@ Third-Party Attributions
     TRANSLATORS = """Nicotine+ Translators
 –––––––––––––––––––––––––––––––––––––––>
 
+Chinese (Simplified)
+ - hadwin (2022)
+
+Czech
+ - burnmail123 (2021)
+
+Danish
+ - mathsped (2003–2004)
+
 Dutch
- - hboetes (2021–2022)
+ - Han Boetes (hboetes) (2021–2022)
+ - Kenny Verstraete (2009)
  - nince78 (2007)
- - hyriand
+ - Ingmar K. Steen (Hyriand) (2003–2004)
 
 English
- - mathiascode (2020–2022)
- - Michael Labouebe (2016)
- - hyriand
- - daelstorm
+ - slook (2021–2022)
+ - Han Boetes (hboetes) (2021–2022)
+ - Mat (mathiascode) (2020–2022)
+ - Michael Labouebe (gfarmerfr) (2016)
+ - daelstorm (2004–2009)
+ - Ingmar K. Steen (Hyriand) (2003–2004)
 
 Euskara
- - The Librezale.org Team
+ - Julen (2006–2007)
 
 Finnish
- - Kalevi
+ - Kari Viittanen (Kalevi) (2006–2007)
 
 French
  - Lisapple (2021–2022)
- - zniavre (2007–2022)
  - melmorabity (2021–2022)
  - m-balthazar (2020)
- - Michael Labouebe (2016–2017)
+ - Michael Labouebe (gfarmerfr) (2016–2017)
+ - Monsieur Poisson (2009–2010)
  - ManWell (2007)
- - flashfr
- - systr
+ - zniavre (2007–2022)
+ - systr (2006)
+ - Julien Wajsberg (flashfr) (2003–2004)
 
 German
- - hboetes (2021–2022)
+ - Han Boetes (hboetes) (2021–2022)
  - Meokater (2007)
  - (._.) (2007)
  - lippel (2004)
- - hyriand (2003)
+ - Ingmar K. Steen (Hyriand) (2003–2004)
 
 Hungarian
- - djbaloo
+ - Szia Tomi (2022)
+ - Nils (2009)
+ - David Balazs (djbaloo) (2006–2020)
 
 Italian
+ - Gabboxl (2022)
  - Gianluca Boiano (2020–2022)
- - Nicola (2007)
- - dbazza
+ - nicola (2007)
+ - dbazza (2003–2004)
 
 Lithuanian
  - mantas (2020)
- - Žygimantas Beručka (2006)
+ - Žygimantas Beručka (2006–2009)
+
+Norwegian Bokmål
+ - Allan Nordhøy (comradekingu) (2021)
 
 Polish
- - mariachini (2021–2022)
+ - mariachini (2017–2022)
  - Amun-Ra (2007)
  - thine (2007)
- - owczi
+ - Wojciech Owczarek (owczi) (2003–2004)
 
-Portuguese Brazilian
+Portuguese (Brazil)
+ - Guilherme Santos (2022)
  - b1llso (2022)
+ - Nicolas Abril (2021)
  - yyyyyyyan (2020)
- - Suicide|Solution (2006)
+ - Felipe Nogaroto Gonzalez (Suicide|Solution) (2006)
 
 Russian
  - SnIPeRSnIPeR (2022)
  - Mehavoid (2021–2022)
 
 Slovak
- - Josef Riha (2006)
+ - Jozef Říha (2006-2008)
 
-Spanish
+Spanish (Chile)
+ - MELERIX (2021–2022)
  - tagomago (2021–2022)
  - Strange (2021)
  - Silvio Orta (2007)
- - Dreslo
+ - Dreslo (2003–2004)
+
+Spanish (Spain)
+ - MELERIX (2021)
+ - tagomago (2021–2022)
+ - Strange (2021)
+ - Silvio Orta (2007)
+ - Dreslo (2003–2004)
 
 Swedish
  - mitramai (2021)
- - alimony
+ - Markus Magnuson (alimony) (2003–2004)
 
 Turkish
  - Oğuz Ersen (2021–2022)
 
 Ukrainian
  - uniss2209 (2022)
+
 """
 
     def __init__(self, frame):
@@ -335,7 +340,7 @@ Ukrainian
             authors=self.AUTHORS.splitlines(),
             translator_credits=self.TRANSLATORS + config.translations_url
         )
-        set_dialog_properties(self.dialog, frame.MainWindow)
+        set_dialog_properties(self.dialog, frame.window)
         main_icon = get_icon("n")
 
         if not main_icon:

@@ -48,37 +48,6 @@
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="ReadRoomLogs">
-            <property name="label" translatable="yes">Display logged chat room messages when a room is rejoined</property>
-            <property name="visible">True</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="visible">True</property>
-            <property name="spacing">12</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">True</property>
-                <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Number of recent chat lines to show:</property>
-                <property name="xalign">0</property>
-                <property name="wrap">True</property>
-                <property name="mnemonic_widget">RoomLogLines</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkSpinButton" id="RoomLogLines">
-                <property name="visible">True</property>
-                <property name="width-chars">9</property>
-                <property name="adjustment">adjustment_RoomLogLines</property>
-                <property name="numeric">1</property>
-                <property name="valign">center</property>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
           <object class="GtkCheckButton" id="ReopenPrivateChats">
             <property name="label" translatable="yes">Restore previously open private chats on startup</property>
             <property name="visible">True</property>
@@ -93,7 +62,7 @@
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Number of recent chat lines to show:</property>
+                <property name="label" translatable="yes">Number of recent private chat messages to show:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
                 <property name="mnemonic_widget">PrivateLogLines</property>
@@ -104,7 +73,32 @@
                 <property name="visible">True</property>
                 <property name="width-chars">9</property>
                 <property name="adjustment">adjustment_PrivateLogLines</property>
-                <property name="numeric">1</property>
+                <property name="numeric">True</property>
+                <property name="valign">center</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">True</property>
+            <property name="spacing">12</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="hexpand">True</property>
+                <property name="label" translatable="yes">Number of recent chat room messages to show:</property>
+                <property name="xalign">0</property>
+                <property name="wrap">True</property>
+                <property name="mnemonic_widget">RoomLogLines</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkSpinButton" id="RoomLogLines">
+                <property name="visible">True</property>
+                <property name="width-chars">9</property>
+                <property name="adjustment">adjustment_RoomLogLines</property>
+                <property name="numeric">True</property>
                 <property name="valign">center</property>
               </object>
             </child>
@@ -190,6 +184,7 @@
                       <object class="GtkSpinButton" id="CharactersCompletion">
                         <property name="visible">True</property>
                         <property name="adjustment">adjustment_CharactersCompletion</property>
+                        <property name="numeric">True</property>
                         <property name="valign">center</property>
                         <property name="width-chars">9</property>
                         <signal name="changed" handler="on_completion_changed"/>
@@ -308,12 +303,12 @@
             <property name="visible">True</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkLabel" id="ChatRoomFormatLabel">
+              <object class="GtkLabel" id="PrivateChatFormatLabel">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">Chat room format:</property>
+                <property name="label" translatable="yes">Private chat format:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic_widget">ChatRoomFormat</property>
+                <property name="mnemonic_widget">PrivateChatFormat</property>
               </object>
             </child>
             <child>
@@ -322,7 +317,7 @@
                 <property name="spacing">12</property>
                 <property name="valign">center</property>
                 <child>
-                  <object class="GtkEntry" id="ChatRoomFormat">
+                  <object class="GtkEntry" id="PrivateChatFormat">
                     <property name="visible">True</property>
                     <property name="hexpand">True</property>
                     <property name="tooltip-text">https://docs.python.org/3/library/time.html</property>
@@ -333,7 +328,7 @@
                   <object class="GtkButton">
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Default</property>
-                    <signal name="clicked" handler="on_room_default_timestamp"/>
+                    <signal name="clicked" handler="on_private_default_timestamp"/>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
@@ -364,12 +359,12 @@
             <property name="visible">True</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkLabel" id="PrivateChatFormatLabel">
+              <object class="GtkLabel" id="ChatRoomFormatLabel">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">Private room format:</property>
+                <property name="label" translatable="yes">Chat room format:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic_widget">PrivateChatFormat</property>
+                <property name="mnemonic_widget">ChatRoomFormat</property>
               </object>
             </child>
             <child>
@@ -378,7 +373,7 @@
                 <property name="spacing">12</property>
                 <property name="valign">center</property>
                 <child>
-                  <object class="GtkEntry" id="PrivateChatFormat">
+                  <object class="GtkEntry" id="ChatRoomFormat">
                     <property name="visible">True</property>
                     <property name="hexpand">True</property>
                     <property name="tooltip-text">https://docs.python.org/3/library/time.html</property>
@@ -389,7 +384,7 @@
                   <object class="GtkButton">
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Default</property>
-                    <signal name="clicked" handler="on_private_default_timestamp"/>
+                    <signal name="clicked" handler="on_room_default_timestamp"/>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
@@ -508,61 +503,6 @@
             <property name="visible">True</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkLabel" id="RoomMessageLabel">
-                <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="label" translatable="yes">Chat room message:</property>
-                <property name="wrap">True</property>
-                <property name="mnemonic_widget">RoomMessage</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="spacing">12</property>
-                <property name="valign">center</property>
-                <child>
-                  <object class="GtkEntry" id="RoomMessage">
-                    <property name="visible">True</property>
-                    <property name="hexpand">True</property>
-                    <property name="width-chars">20</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkButton">
-                    <property name="visible">True</property>
-                    <property name="tooltip-text" translatable="yes">Default</property>
-                    <signal name="clicked" handler="on_default_rooms"/>
-                    <child>
-                      <object class="GtkBox">
-                        <property name="visible">True</property>
-                        <property name="spacing">6</property>
-                        <child>
-                          <object class="GtkImage">
-                            <property name="visible">True</property>
-                            <property name="icon-name">edit-clear-symbolic</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkLabel">
-                            <property name="visible">True</property>
-                            <property name="ellipsize">end</property>
-                            <property name="label" translatable="yes">Default</property>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="visible">True</property>
-            <property name="spacing">12</property>
-            <child>
               <object class="GtkLabel" id="PrivateMessageLabel">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
@@ -613,11 +553,67 @@
             </child>
           </object>
         </child>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">True</property>
+            <property name="spacing">12</property>
+            <child>
+              <object class="GtkLabel" id="RoomMessageLabel">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="label" translatable="yes">Chat room message:</property>
+                <property name="wrap">True</property>
+                <property name="mnemonic_widget">RoomMessage</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="spacing">12</property>
+                <property name="valign">center</property>
+                <child>
+                  <object class="GtkEntry" id="RoomMessage">
+                    <property name="visible">True</property>
+                    <property name="hexpand">True</property>
+                    <property name="width-chars">20</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton">
+                    <property name="visible">True</property>
+                    <property name="tooltip-text" translatable="yes">Default</property>
+                    <signal name="clicked" handler="on_default_rooms"/>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="visible">True</property>
+                        <property name="spacing">6</property>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="visible">True</property>
+                            <property name="icon-name">edit-clear-symbolic</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="ellipsize">end</property>
+                            <property name="label" translatable="yes">Default</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
       </object>
     </child>
     <child>
       <object class="GtkFlowBox">
         <property name="visible">True</property>
+        <property name="vexpand">True</property>
         <property name="homogeneous">True</property>
         <property name="column-spacing">18</property>
         <property name="row-spacing">24</property>
@@ -691,6 +687,7 @@
                     <property name="visible">True</property>
                     <property name="spacing">12</property>
                     <property name="orientation">vertical</property>
+                    <property name="vexpand">True</property>
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">0</property>
@@ -705,6 +702,7 @@
                     <child>
                       <object class="GtkFrame">
                         <property name="visible">True</property>
+                        <property name="vexpand">True</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
@@ -845,6 +843,7 @@
                     <property name="visible">True</property>
                     <property name="spacing">12</property>
                     <property name="orientation">vertical</property>
+                    <property name="vexpand">True</property>
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">0</property>
@@ -859,6 +858,7 @@
                     <child>
                       <object class="GtkFrame">
                         <property name="visible">True</property>
+                        <property name="vexpand">True</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>

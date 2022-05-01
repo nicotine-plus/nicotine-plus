@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# COPYRIGHT (C) 2020-2022 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2009-2010 Quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2009 Hedonist <ak@sensi.org>
@@ -64,8 +64,8 @@ functionality while keeping current with the Soulseek protocol."""
     PACKAGE_DATA = {package: ["*.bin", "*.md", "*.py", "*.svg", "*.ui", "PLUGININFO"] for package in PACKAGES}
 
     DATA_FILES = [
-        ("share/applications", ["data/" + config.application_id + ".desktop"]),
-        ("share/metainfo", ["data/" + config.application_id + ".metainfo.xml"]),
+        ("share/applications", ["data/%s.desktop" % config.application_id]),
+        ("share/metainfo", ["data/%s.appdata.xml" % config.application_id]),
         ("share/icons/hicolor/scalable/apps", glob.glob("pynicotine/gtkgui/icons/hicolor/scalable/apps/*.svg")),
         ("share/icons/hicolor/scalable/intl", glob.glob("pynicotine/gtkgui/icons/hicolor/scalable/intl/*.svg")),
         ("share/icons/hicolor/symbolic/apps", glob.glob("pynicotine/gtkgui/icons/hicolor/symbolic/apps/*.svg")),
@@ -80,7 +80,7 @@ functionality while keeping current with the Soulseek protocol."""
         license="GPLv3+",
         description="Graphical client for the Soulseek peer-to-peer network",
         long_description=LONG_DESCRIPTION,
-        author="Nicotine+ Team",
+        author=config.author,
         author_email="nicotine-team@lists.launchpad.net",
         url=config.website_url,
         platforms="any",

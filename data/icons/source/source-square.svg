@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="128"
    height="128"
    version="1.1"
    id="svg893"
    sodipodi:docname="source-square.svg"
-   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)">
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
   <metadata
      id="metadata899">
     <rdf:RDF>
@@ -21,7 +21,6 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -37,26 +36,27 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:window-width="1920"
-     inkscape:window-height="1016"
+     inkscape:window-height="1011"
      id="namedview895"
      showgrid="true"
      inkscape:zoom="4.3862718"
-     inkscape:cx="86.166575"
-     inkscape:cy="76.752305"
+     inkscape:cx="86.063978"
+     inkscape:cy="76.830624"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg893"
-     inkscape:document-rotation="0">
+     inkscape:document-rotation="0"
+     inkscape:pagecheckerboard="0">
     <inkscape:grid
        type="xygrid"
        id="grid1549" />
   </sodipodi:namedview>
   <path
-     d="M 8,12 V 116 H 28 V 36 h 8 c 8,0 12,4 12,12 v 68 h 20 v -16 h 16 v 16 h 20 v -16 h 16 V 80 H 104 V 60 H 84 V 80 H 68 V 48 C 68,32 56,12 40,12 Z"
+     d="M 8,12 V 116 H 28 V 36 h 8 c 8,0 12,4 12,12 v 68 h 20 v -16 h 16 v 16 h 20 v -16 h 16 V 80 H 104 V 60 H 84 V 80 H 68 V 48 C 40,12 68,48 40,12 Z"
      fill="#d38c2d"
      id="path889"
-     sodipodi:nodetypes="ccccssccccccccccccccssc"
+     sodipodi:nodetypes="ccccssccccccccccccccccc"
      style="stroke-width:1" />
   <path
      d="M 8,12 V 112 H 28 V 32 h 8 c 8,0 12,4 12,12 v 68 H 68 V 96 h 16 v 16 h 20 V 96 h 16 V 80 H 104 V 60 H 84 V 80 H 68 V 44 C 68,28 56,12 40,12 Z"

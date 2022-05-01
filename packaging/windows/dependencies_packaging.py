@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -29,9 +29,8 @@ ARCH = os.environ.get("ARCH") or "x86_64"
 def install_pacman():
     """ Install dependencies from the main MinGW repos """
 
-    prefix = "mingw-w64-" + str(ARCH) + "-"
-    packages = [prefix + "python-cx-freeze",
-                prefix + "python-pywin32"]
+    prefix = "mingw-w64-" + ARCH + "-"
+    packages = [prefix + "python-cx-freeze"]
 
     subprocess.check_call(["pacman", "--noconfirm", "-S", "--needed"] + packages)
 

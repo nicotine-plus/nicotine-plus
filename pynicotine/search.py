@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2011 Quinox <quinox@users.sf.net>
@@ -107,9 +107,11 @@ class Search:
 
         if search["term"] in self.config.sections["server"]["autosearch"]:
             search["ignore"] = True
-            return
+        else:
+            del self.searches[token]
 
-        del self.searches[token]
+        if self.ui_callback:
+            self.ui_callback.remove_search(token)
 
     def process_search_term(self, text, mode, room, user):
 
@@ -330,6 +332,12 @@ class Search:
 
         username = msg.init.target_user
         ip_address = msg.init.addr[0]
+
+        if self.core.network_filter.is_user_ignored(username):
+            return
+
+        if self.core.network_filter.is_ip_ignored(ip_address):
+            return
 
         if ip_address:
             country = self.geoip.get_country_code(ip_address)

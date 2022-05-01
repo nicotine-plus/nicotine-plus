@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2021 Nicotine+ Team
+# COPYRIGHT (C) 2021-2022 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -45,7 +45,11 @@ class UserInfo:
             self.users.add(user)
 
     def remove_user(self, user):
+
         self.users.remove(user)
+
+        if self.ui_callback:
+            self.ui_callback.remove_user(user)
 
     def show_user(self, user, switch_page=True):
         if self.ui_callback:
@@ -55,6 +59,10 @@ class UserInfo:
 
         self.add_user(user)
         self.show_user(user, switch_page)
+
+        if not self.core.logged_in:
+            self.show_connection_error(user)
+            return
 
         # Request user description, picture and queue information
         self.core.send_message_to_peer(user, slskmessages.UserInfoRequest(None))

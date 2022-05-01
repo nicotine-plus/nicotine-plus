@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -28,16 +28,20 @@ def install_pacman():
     """ Install dependencies from the main MinGW repos """
 
     arch = os.environ.get("ARCH") or "x86_64"
-    prefix = "mingw-w64-" + str(arch) + "-"
-    gtk_version = os.environ.get("NICOTINE_GTK_VERSION") or 3
+    prefix = "mingw-w64-" + arch + "-"
+    gtk_version = os.environ.get("NICOTINE_GTK_VERSION") or '3'
+    use_libadwaita = gtk_version == '4' and os.environ.get("NICOTINE_LIBADWAITA") == '1'
+
     packages = [prefix + "gettext",
-                prefix + "gspell",
-                prefix + "gtk" + str(gtk_version),
+                prefix + "gtk" + gtk_version,
                 prefix + "python-chardet",
                 prefix + "python-flake8",
                 prefix + "python-pip",
                 prefix + "python-pylint",
                 prefix + "python-gobject"]
+
+    if use_libadwaita:
+        packages.append(prefix + "libadwaita")
 
     subprocess.check_call(["pacman", "--noconfirm", "-S", "--needed"] + packages)
 

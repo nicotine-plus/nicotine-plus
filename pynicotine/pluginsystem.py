@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (C) 2008-2011 Quinox <quinox@users.sf.net>
@@ -35,6 +35,298 @@ returncode = {
     'zap': 1,    # don't give other plugins the event, don't let n+ process it
     'pass': 2    # do give other plugins the event, do let n+ process it
 }                # returning nothing is the same as 'pass'
+
+
+class BasePlugin:
+
+    # Attributes that can be modified, see examples in the pynicotine/plugins/ folder
+    __publiccommands__ = []
+    __privatecommands__ = []
+    settings = {}
+    metasettings = {}
+
+    # Attributes that are assigned when the plugin loads, do not modify these
+    internal_name = None  # Technical plugin name based on plugin folder name
+    human_name = None     # Friendly plugin name specified in the PLUGININFO file
+    parent = None         # Reference to PluginHandler
+    config = None         # Reference to global Config handler
+    core = None           # Reference to NicotineCore
+    frame = None          # Reference to NicotineFrame (GUI). Not accessible in headless/non-GUI mode. Use sparsely!
+
+    def __init__(self):
+        # The plugin class is initializing, plugin settings are not available yet
+        pass
+
+    def init(self):
+        # Called after __init__() when plugin settings have loaded
+        pass
+
+    def loaded_notification(self):
+        # The plugin has finished loaded (settings are loaded at this stage)
+        pass
+
+    def disable(self):
+        # The plugin has started unloading
+        pass
+
+    def unloaded_notification(self):
+        # The plugin has finished unloading
+        pass
+
+    def shutdown_notification(self):
+        # Application is shutting down
+        pass
+
+    def public_room_message_notification(self, room, user, line):
+        pass
+
+    def search_request_notification(self, searchterm, user, token):
+        pass
+
+    def distrib_search_notification(self, searchterm, user, token):
+        pass
+
+    def incoming_private_chat_event(self, user, line):
+        pass
+
+    def incoming_private_chat_notification(self, user, line):
+        pass
+
+    def incoming_public_chat_event(self, room, user, line):
+        pass
+
+    def incoming_public_chat_notification(self, room, user, line):
+        pass
+
+    def outgoing_private_chat_event(self, user, line):
+        pass
+
+    def outgoing_private_chat_notification(self, user, line):
+        pass
+
+    def outgoing_public_chat_event(self, room, line):
+        pass
+
+    def outgoing_public_chat_notification(self, room, line):
+        pass
+
+    def outgoing_global_search_event(self, text):
+        pass
+
+    def outgoing_room_search_event(self, rooms, text):
+        pass
+
+    def outgoing_buddy_search_event(self, text):
+        pass
+
+    def outgoing_user_search_event(self, users, text):
+        pass
+
+    def user_resolve_notification(self, user, ip_address, port, country):
+        pass
+
+    def server_connect_notification(self):
+        pass
+
+    def server_disconnect_notification(self, userchoice):
+        pass
+
+    def join_chatroom_notification(self, room):
+        pass
+
+    def leave_chatroom_notification(self, room):
+        pass
+
+    def user_join_chatroom_notification(self, room, user):
+        pass
+
+    def user_leave_chatroom_notification(self, room, user):
+        pass
+
+    def user_stats_notification(self, user, stats):
+        pass
+
+    def user_status_notification(self, user, status, privileged):
+        pass
+
+    def upload_queued_notification(self, user, virtual_path, real_path):
+        pass
+
+    def upload_started_notification(self, user, virtual_path, real_path):
+        pass
+
+    def upload_finished_notification(self, user, virtual_path, real_path):
+        pass
+
+    def download_started_notification(self, user, virtual_path, real_path):
+        pass
+
+    def download_finished_notification(self, user, virtual_path, real_path):
+        pass
+
+    # The following are functions to make your life easier,
+    # you shouldn't override them.
+
+    def log(self, msg, msg_args=None):
+        log.add(self.human_name + ": " + msg, msg_args)
+
+    def send_public(self, room, text):
+        self.core.queue.append(slskmessages.SayChatroom(room, text))
+
+    def send_private(self, user, text, show_ui=True, switch_page=True):
+        """ Send user message in private.
+        show_ui controls if the UI opens a private chat view for the user.
+        switch_page controls whether the user's private chat view should be opened. """
+
+        if show_ui:
+            self.core.privatechats.show_user(user, switch_page)
+
+        self.core.privatechats.send_message(user, text)
+
+    def echo_public(self, room, text, message_type="local"):
+        """ Display a raw message in chat rooms (not sent to others).
+        message_type changes the type (and color) of the message in the UI.
+        available message_type values: action, remote, local, hilite """
+
+        self.core.chatrooms.echo_message(room, text, message_type)
+
+    def echo_private(self, user, text, message_type="local"):
+        """ Display a raw message in private (not sent to others).
+        message_type changes the type (and color) of the message in the UI.
+        available message_type values: action, remote, local, hilite """
+
+        self.core.privatechats.show_user(user)
+        self.core.privatechats.echo_message(user, text, message_type)
+
+    def send_message(self, text):
+        """ Convenience function to send a message to the same user/room
+        a plugin command runs for """
+
+        if self.parent.command_source is None:  # pylint: disable=no-member
+            # Function was not called from a command
+            return
+
+        public_command, source = self.parent.command_source  # pylint: disable=no-member
+        function = self.send_public if public_command else self.send_private
+
+        function(source, text)
+
+    def echo_message(self, text, message_type="local"):
+        """ Convenience function to display a raw message the same window
+        a plugin command runs from """
+
+        if self.parent.command_source is None:  # pylint: disable=no-member
+            # Function was not called from a command
+            return
+
+        public_command, source = self.parent.command_source  # pylint: disable=no-member
+        function = self.echo_public if public_command else self.echo_private
+
+        function(source, text, message_type)
+
+    # Obsolete functions
+
+    def saypublic(self, _room, _text):
+        self.log("saypublic(room, text) is obsolete, please use send_public(room, text)")
+
+    def sayprivate(self, _user, _text):
+        self.log("sayprivate(user, text) is obsolete, please use send_private(user, text)")
+
+    def sendprivate(self, _user, _text):
+        self.log("sendprivate(user, text) is obsolete, please use send_private(user, text, show_ui=False)")
+
+    def fakepublic(self, _room, _user, _text):
+        self.log("fakepublic(room, user, text) is obsolete, please use echo_public(room, text)")
+
+
+class ResponseThrottle:
+
+    """
+    ResponseThrottle - Mutnick 2016
+
+    See 'reddit' and my other plugins for example use
+
+    Purpose: Avoid flooding chat room with plugin responses
+        Some plugins respond based on user requests and we do not want
+        to respond too much and encounter a temporary server chat ban
+
+    Some of the throttle logic is guesswork as server code is closed source, but works adequately.
+    """
+
+    def __init__(self, core, plugin_name, logging=False):
+
+        self.core = core
+        self.plugin_name = plugin_name
+        self.logging = logging
+        self.plugin_usage = {}
+
+        self.room = None
+        self.nick = None
+        self.request = None
+
+    def ok_to_respond(self, room, nick, request, seconds_limit_min=30):
+
+        self.room = room
+        self.nick = nick
+        self.request = request
+
+        willing_to_respond = True
+        current_time = time()
+
+        if room not in self.plugin_usage:
+            self.plugin_usage[room] = {'last_time': 0, 'last_request': "", 'last_nick': ""}
+
+        last_time = self.plugin_usage[room]['last_time']
+        last_nick = self.plugin_usage[room]['last_nick']
+        last_request = self.plugin_usage[room]['last_request']
+
+        port = False
+        try:
+            _ip_address, port = self.core.protothread.user_addresses[nick]
+        except Exception:
+            port = True
+
+        if self.core.network_filter.is_user_ignored(nick):
+            willing_to_respond, reason = False, "The nick is ignored"
+
+        elif self.core.network_filter.is_user_ip_ignored(nick):
+            willing_to_respond, reason = False, "The nick's Ip is ignored"
+
+        elif not port:
+            willing_to_respond, reason = False, "Request likely from simple PHP based griefer bot"
+
+        elif [nick, request] == [last_nick, last_request]:
+            if (current_time - last_time) < 12 * seconds_limit_min:
+                willing_to_respond, reason = False, "Too soon for same nick to request same resource in room"
+
+        elif request == last_request:
+            if (current_time - last_time) < 3 * seconds_limit_min:
+                willing_to_respond, reason = False, "Too soon for different nick to request same resource in room"
+
+        else:
+            recent_responses = 0
+
+            for responded_room, room_dict in self.plugin_usage.items():
+                if (current_time - room_dict['last_time']) < seconds_limit_min:
+                    recent_responses += 1
+
+                    if responded_room == room:
+                        willing_to_respond, reason = False, "Responded in specified room too recently"
+                        break
+
+            if recent_responses > 3:
+                willing_to_respond, reason = False, "Responded in multiple rooms enough"
+
+        if self.logging and not willing_to_respond:
+            base_log_msg = "{} plugin request rejected - room '{}', nick '{}'".format(self.plugin_name, room, nick)
+            log.add_debug("{} - {}".format(base_log_msg, reason))
+
+        return willing_to_respond
+
+    def responded(self):
+        # possible TODO's: we could actually say public the msg here
+        # make more stateful - track past msg's as additional responder willingness criteria, etc
+        self.plugin_usage[self.room] = {'last_time': time(), 'last_request': self.request, 'last_nick': self.nick}
 
 
 class PluginHandler:
@@ -531,293 +823,3 @@ class PluginHandler:
 
     def shutdown_notification(self):
         self.trigger_event("shutdown_notification", (),)
-
-
-class ResponseThrottle:
-
-    """
-    ResponseThrottle - Mutnick 2016
-
-    See 'reddit' and my other plugins for example use
-
-    Purpose: Avoid flooding chat room with plugin responses
-        Some plugins respond based on user requests and we do not want
-        to respond too much and encounter a temporary server chat ban
-
-    Some of the throttle logic is guesswork as server code is closed source, but works adequately.
-    """
-
-    def __init__(self, core, plugin_name, logging=False):
-
-        self.core = core
-        self.plugin_name = plugin_name
-        self.logging = logging
-        self.plugin_usage = {}
-
-        self.room = None
-        self.nick = None
-        self.request = None
-
-    def ok_to_respond(self, room, nick, request, seconds_limit_min=30):
-
-        self.room = room
-        self.nick = nick
-        self.request = request
-
-        willing_to_respond = True
-        current_time = time()
-
-        if room not in self.plugin_usage:
-            self.plugin_usage[room] = {'last_time': 0, 'last_request': "", 'last_nick': ""}
-
-        last_time = self.plugin_usage[room]['last_time']
-        last_nick = self.plugin_usage[room]['last_nick']
-        last_request = self.plugin_usage[room]['last_request']
-
-        port = False
-        try:
-            _ip_address, port = self.core.protothread.user_addresses[nick]
-        except Exception:
-            port = True
-
-        if self.core.network_filter.is_user_ignored(nick):
-            willing_to_respond, reason = False, "The nick is ignored"
-
-        elif self.core.network_filter.is_user_ip_ignored(nick):
-            willing_to_respond, reason = False, "The nick's Ip is ignored"
-
-        elif not port:
-            willing_to_respond, reason = False, "Request likely from simple PHP based griefer bot"
-
-        elif [nick, request] == [last_nick, last_request]:
-            if (current_time - last_time) < 12 * seconds_limit_min:
-                willing_to_respond, reason = False, "Too soon for same nick to request same resource in room"
-
-        elif request == last_request:
-            if (current_time - last_time) < 3 * seconds_limit_min:
-                willing_to_respond, reason = False, "Too soon for different nick to request same resource in room"
-
-        else:
-            recent_responses = 0
-
-            for responded_room, room_dict in self.plugin_usage.items():
-                if (current_time - room_dict['last_time']) < seconds_limit_min:
-                    recent_responses += 1
-
-                    if responded_room == room:
-                        willing_to_respond, reason = False, "Responded in specified room too recently"
-                        break
-
-            if recent_responses > 3:
-                willing_to_respond, reason = False, "Responded in multiple rooms enough"
-
-        if self.logging and not willing_to_respond:
-            base_log_msg = "{} plugin request rejected - room '{}', nick '{}'".format(self.plugin_name, room, nick)
-            log.add_debug("{} - {}".format(base_log_msg, reason))
-
-        return willing_to_respond
-
-    def responded(self):
-        # possible TODO's: we could actually say public the msg here
-        # make more stateful - track past msg's as additional responder willingness criteria, etc
-        self.plugin_usage[self.room] = {'last_time': time(), 'last_request': self.request, 'last_nick': self.nick}
-
-
-class BasePlugin:
-
-    __publiccommands__ = []
-    __privatecommands__ = []
-    settings = {}
-    metasettings = {}
-
-    internal_name = None
-    human_name = None
-    parent = None
-    config = None
-    core = None
-    frame = None
-
-    def __init__(self):
-        # The plugin class is initializing, plugin settings are not available yet
-        pass
-
-    def init(self):
-        # Called after __init__() when plugin settings have loaded
-        pass
-
-    def loaded_notification(self):
-        # The plugin has finished loaded (settings are loaded at this stage)
-        pass
-
-    def disable(self):
-        # The plugin has started unloading
-        pass
-
-    def unloaded_notification(self):
-        # The plugin has finished unloading
-        pass
-
-    def shutdown_notification(self):
-        # Application is shutting down
-        pass
-
-    def public_room_message_notification(self, room, user, line):
-        pass
-
-    def search_request_notification(self, searchterm, user, token):
-        pass
-
-    def distrib_search_notification(self, searchterm, user, token):
-        pass
-
-    def incoming_private_chat_event(self, user, line):
-        pass
-
-    def incoming_private_chat_notification(self, user, line):
-        pass
-
-    def incoming_public_chat_event(self, room, user, line):
-        pass
-
-    def incoming_public_chat_notification(self, room, user, line):
-        pass
-
-    def outgoing_private_chat_event(self, user, line):
-        pass
-
-    def outgoing_private_chat_notification(self, user, line):
-        pass
-
-    def outgoing_public_chat_event(self, room, line):
-        pass
-
-    def outgoing_public_chat_notification(self, room, line):
-        pass
-
-    def outgoing_global_search_event(self, text):
-        pass
-
-    def outgoing_room_search_event(self, rooms, text):
-        pass
-
-    def outgoing_buddy_search_event(self, text):
-        pass
-
-    def outgoing_user_search_event(self, users, text):
-        pass
-
-    def user_resolve_notification(self, user, ip_address, port, country):
-        pass
-
-    def server_connect_notification(self):
-        pass
-
-    def server_disconnect_notification(self, userchoice):
-        pass
-
-    def join_chatroom_notification(self, room):
-        pass
-
-    def leave_chatroom_notification(self, room):
-        pass
-
-    def user_join_chatroom_notification(self, room, user):
-        pass
-
-    def user_leave_chatroom_notification(self, room, user):
-        pass
-
-    def user_stats_notification(self, user, stats):
-        pass
-
-    def user_status_notification(self, user, status, privileged):
-        pass
-
-    def upload_queued_notification(self, user, virtual_path, real_path):
-        pass
-
-    def upload_started_notification(self, user, virtual_path, real_path):
-        pass
-
-    def upload_finished_notification(self, user, virtual_path, real_path):
-        pass
-
-    def download_started_notification(self, user, virtual_path, real_path):
-        pass
-
-    def download_finished_notification(self, user, virtual_path, real_path):
-        pass
-
-    # The following are functions to make your life easier,
-    # you shouldn't override them.
-
-    def log(self, msg, msg_args=None):
-        log.add(self.human_name + ": " + msg, msg_args)
-
-    def send_public(self, room, text):
-        self.core.queue.append(slskmessages.SayChatroom(room, text))
-
-    def send_private(self, user, text, show_ui=True, switch_page=True):
-        """ Send user message in private.
-        show_ui controls if the UI opens a private chat view for the user.
-        switch_page controls whether the user's private chat view should be opened. """
-
-        if show_ui:
-            self.core.privatechats.show_user(user, switch_page)
-
-        self.core.privatechats.send_message(user, text)
-
-    def echo_public(self, room, text, message_type="local"):
-        """ Display a raw message in chat rooms (not sent to others).
-        message_type changes the type (and color) of the message in the UI.
-        available message_type values: action, remote, local, hilite """
-
-        self.core.chatrooms.echo_message(room, text, message_type)
-
-    def echo_private(self, user, text, message_type="local"):
-        """ Display a raw message in private (not sent to others).
-        message_type changes the type (and color) of the message in the UI.
-        available message_type values: action, remote, local, hilite """
-
-        self.core.privatechats.show_user(user)
-        self.core.privatechats.echo_message(user, text, message_type)
-
-    def send_message(self, text):
-        """ Convenience function to send a message to the same user/room
-        a plugin command runs for """
-
-        if self.parent.command_source is None:
-            # Function was not called from a command
-            return
-
-        public_command, source = self.parent.command_source
-        function = self.send_public if public_command else self.send_private
-
-        function(source, text)
-
-    def echo_message(self, text, message_type="local"):
-        """ Convenience function to display a raw message the same window
-        a plugin command runs from """
-
-        if self.parent.command_source is None:
-            # Function was not called from a command
-            return
-
-        public_command, source = self.parent.command_source
-        function = self.echo_public if public_command else self.echo_private
-
-        function(source, text, message_type)
-
-    # Obsolete functions
-
-    def saypublic(self, _room, _text):
-        self.log("saypublic(room, text) is obsolete, please use send_public(room, text)")
-
-    def sayprivate(self, _user, _text):
-        self.log("sayprivate(user, text) is obsolete, please use send_private(user, text)")
-
-    def sendprivate(self, _user, _text):
-        self.log("sendprivate(user, text) is obsolete, please use send_private(user, text, show_ui=False)")
-
-    def fakepublic(self, _room, _user, _text):
-        self.log("fakepublic(room, user, text) is obsolete, please use echo_public(room, text)")

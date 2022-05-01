@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.0"/>
-  <object class="GtkBox" id="main">
+  <object class="GtkBox" id="container">
     <property name="visible">True</property>
     <property name="orientation">vertical</property>
     <property name="height-request">300</property>
@@ -23,7 +23,6 @@
     <child>
       <object class="GtkEntry" id="wish_entry">
         <property name="visible">True</property>
-        <property name="hexpand">True</property>
         <property name="placeholder-text" translatable="yes">Add Wish…</property>
         <property name="primary-icon-name">list-add-symbolic</property>
         <signal name="activate" handler="on_add_wish"/>
@@ -33,6 +32,7 @@
     <child>
       <object class="GtkFrame">
         <property name="visible">True</property>
+        <property name="vexpand">True</property>
         <child>
           <object class="GtkBox">
             <property name="visible">True</property>

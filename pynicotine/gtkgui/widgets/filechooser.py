@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -31,107 +31,109 @@ from gi.repository import Pango
 ACTIVE_CHOOSER = None
 
 
-def _on_selected(dialog, response_id, callback, callback_data):
+class FileChooser:
 
-    if dialog.get_select_multiple():
+    def __init__(self, parent, callback, callback_data=None, title=_("Select a File"),
+                 initial_folder='~', action=Gtk.FileChooserAction.OPEN, buttons=None, multiple=False):
+
+        global ACTIVE_CHOOSER  # pylint:disable=global-statement
+        try:
+            self.file_chooser = ACTIVE_CHOOSER = Gtk.FileChooserNative(
+                transient_for=parent,
+                title=title,
+                action=action
+            )
+        except AttributeError:
+            self.file_chooser = ACTIVE_CHOOSER = Gtk.FileChooserDialog(
+                transient_for=parent,
+                title=title,
+                action=action
+            )
+
+            if not buttons:
+                buttons = [(_("_Cancel"), Gtk.ResponseType.CLOSE),
+                           (_("_Open"), Gtk.ResponseType.ACCEPT)]
+
+            for button_label, response_type in buttons:
+                self.file_chooser.add_button(button_label, response_type)
+
+        self.file_chooser.connect("response", self.on_selected, callback, callback_data)
+        self.file_chooser.set_modal(True)
+        self.file_chooser.set_select_multiple(multiple)
+
+        initial_folder = os.path.expanduser(initial_folder)
+
+        if not os.path.isdir(initial_folder):
+            initial_folder = os.path.expanduser("~")
+
         if Gtk.get_major_version() == 4:
-            selected = [i.get_path() for i in dialog.get_files()]
+            initial_folder = Gio.File.new_for_path(initial_folder)
+
         else:
-            selected = dialog.get_filenames()
+            # Display network shares
+            self.file_chooser.set_local_only(False)  # pylint: disable=no-member
 
-    else:
-        if Gtk.get_major_version() == 4:
-            selected_file = dialog.get_file()
+        self.file_chooser.set_current_folder(initial_folder)
 
-            if selected_file:
-                selected = selected_file.get_path()
+    @staticmethod
+    def on_selected(dialog, response_id, callback, callback_data):
+
+        if dialog.get_select_multiple():
+            if Gtk.get_major_version() == 4:
+                selected = [i.get_path() for i in dialog.get_files()]
+            else:
+                selected = dialog.get_filenames()
+
         else:
-            selected = dialog.get_filename()
+            if Gtk.get_major_version() == 4:
+                selected_file = dialog.get_file()
 
-    dialog.destroy()
+                if selected_file:
+                    selected = selected_file.get_path()
+            else:
+                selected = dialog.get_filename()
 
-    if response_id != Gtk.ResponseType.ACCEPT or not selected:
-        return
+        dialog.destroy()
 
-    callback(selected, callback_data)
+        if response_id != Gtk.ResponseType.ACCEPT or not selected:
+            return
 
+        callback(selected, callback_data)
 
-def _set_filechooser_folder(dialog, folder_path):
-
-    folder_path = os.path.expanduser(folder_path)
-
-    if not os.path.isdir(folder_path):
-        folder_path = os.path.expanduser("~")
-
-    if Gtk.get_major_version() == 4:
-        folder_path = Gio.File.new_for_path(folder_path)
-
-    dialog.set_current_folder(folder_path)
+    def show(self):
+        self.file_chooser.show()
 
 
-def choose_dir(parent, callback, callback_data=None, initialdir="~", title=_("Select a Folder"), multichoice=True):
+class FolderChooser(FileChooser):
 
-    global ACTIVE_CHOOSER  # pylint:disable=global-statement
-    try:
-        self = ACTIVE_CHOOSER = Gtk.FileChooserNative(
-            transient_for=parent,
-            title=title,
-            action=Gtk.FileChooserAction.SELECT_FOLDER
-        )
-    except AttributeError:
-        self = ACTIVE_CHOOSER = Gtk.FileChooserDialog(
-            transient_for=parent,
-            title=title,
-            action=Gtk.FileChooserAction.SELECT_FOLDER
-        )
-        self.add_buttons(_("_Cancel"), Gtk.ResponseType.CANCEL, _("_Open"), Gtk.ResponseType.ACCEPT)
+    def __init__(self, parent, callback, callback_data=None, title=_("Select a Folder"),
+                 initial_folder='~', multiple=False):
 
-    self.connect("response", _on_selected, callback, callback_data)
-    self.set_modal(True)
-
-    if Gtk.get_major_version() == 3:
-        # Display network shares
-        self.set_local_only(False)
-
-    if multichoice:
-        self.set_select_multiple(True)
-
-    _set_filechooser_folder(self, initialdir)
-    self.show()
+        super().__init__(parent, callback, callback_data, title, initial_folder,
+                         action=Gtk.FileChooserAction.SELECT_FOLDER, multiple=multiple)
 
 
-def choose_file(parent, callback, callback_data=None, initialdir="~", title=_("Select a File"), multiple=False):
+class ImageChooser(FileChooser):
 
-    global ACTIVE_CHOOSER  # pylint:disable=global-statement
-    try:
-        self = ACTIVE_CHOOSER = Gtk.FileChooserNative(
-            transient_for=parent,
-            title=title,
-            action=Gtk.FileChooserAction.OPEN
-        )
-    except AttributeError:
-        self = ACTIVE_CHOOSER = Gtk.FileChooserDialog(
-            transient_for=parent,
-            title=title,
-            action=Gtk.FileChooserAction.OPEN
-        )
-        self.add_buttons(_("_Cancel"), Gtk.ResponseType.CANCEL, _("_Open"), Gtk.ResponseType.ACCEPT)
+    def __init__(self, parent, callback, callback_data=None, title=_("Select an Image"),
+                 initial_folder='~', multiple=False):
 
-    self.connect("response", _on_selected, callback, callback_data)
-    self.set_modal(True)
-    self.set_select_multiple(multiple)
+        super().__init__(parent, callback, callback_data, title, initial_folder)
 
-    if Gtk.get_major_version() == 3:
-        # Display network shares
-        self.set_local_only(False)
+        # Only show image files
+        file_filter = Gtk.FileFilter()
+        file_filter.add_pixbuf_formats()
+        self.file_chooser.set_filter(file_filter)
 
-    _set_filechooser_folder(self, initialdir)
-    self.show()
+        if Gtk.get_major_version() == 3:
+            # Image preview
+            self.file_chooser.connect("update-preview", self.on_update_image_preview)
 
+            self.preview = Gtk.Image()
+            self.file_chooser.set_preview_widget(self.preview)  # pylint: disable=no-member
 
-def choose_image(parent, callback, callback_data=None, initialdir="~", title=_("Select an Image"), multiple=False):
+    def on_update_image_preview(self, chooser):
 
-    def on_update_image_preview(chooser):
         path = chooser.get_preview_filename()
 
         try:
@@ -145,77 +147,29 @@ def choose_image(parent, callback, callback_data=None, initialdir="~", title=_("
                 width, height = int(width * scale), int(height * scale)
                 image_data = image_data.scale_simple(width, height, GdkPixbuf.InterpType.BILINEAR)
 
-            preview.set_from_pixbuf(image_data)
+            self.preview.set_from_pixbuf(image_data)
             chooser.set_preview_widget_active(True)
 
         except Exception:
             chooser.set_preview_widget_active(False)
 
-    global ACTIVE_CHOOSER  # pylint:disable=global-statement
-    try:
-        self = ACTIVE_CHOOSER = Gtk.FileChooserNative(
-            transient_for=parent,
-            title=title,
-            action=Gtk.FileChooserAction.OPEN
-        )
-    except AttributeError:
-        self = ACTIVE_CHOOSER = Gtk.FileChooserDialog(
-            transient_for=parent,
-            title=title,
-            action=Gtk.FileChooserAction.OPEN
-        )
-        self.add_buttons(_("_Cancel"), Gtk.ResponseType.CANCEL, _("_Open"), Gtk.ResponseType.ACCEPT)
 
-    self.connect("response", _on_selected, callback, callback_data)
-    self.set_modal(True)
+class FileChooserSave(FileChooser):
 
-    if Gtk.get_major_version() == 3:
-        # Display network shares
-        self.set_local_only(False)
+    def __init__(self, parent, callback, callback_data=None, title=_("Save as…"),
+                 initial_folder='~', initial_file='', multiple=False):
 
-        # Image preview
-        self.connect("update-preview", on_update_image_preview)
+        super().__init__(parent, callback, callback_data, title, initial_folder,
+                         action=Gtk.FileChooserAction.SAVE, multiple=multiple,
+                         buttons=[
+                             (_("_Cancel"), Gtk.ResponseType.CANCEL),
+                             (_("_Save"), Gtk.ResponseType.ACCEPT)])
 
-        preview = Gtk.Image()
-        self.set_preview_widget(preview)
+        if Gtk.get_major_version() == 3:
+            # Display hidden files
+            self.file_chooser.set_show_hidden(True)  # pylint: disable=no-member
 
-    self.set_select_multiple(multiple)
-
-    _set_filechooser_folder(self, initialdir)
-    self.show()
-
-
-def save_file(parent, callback, callback_data=None, initialdir="~", initialfile="", title=None):
-
-    global ACTIVE_CHOOSER  # pylint:disable=global-statement
-    try:
-        self = ACTIVE_CHOOSER = Gtk.FileChooserNative(
-            transient_for=parent,
-            title=title,
-            action=Gtk.FileChooserAction.SAVE
-        )
-    except AttributeError:
-        self = ACTIVE_CHOOSER = Gtk.FileChooserDialog(
-            transient_for=parent,
-            title=title,
-            action=Gtk.FileChooserAction.SAVE
-        )
-        self.add_buttons(_("_Cancel"), Gtk.ResponseType.CANCEL, _("_Save"), Gtk.ResponseType.ACCEPT)
-
-    self.connect("response", _on_selected, callback, callback_data)
-    self.set_modal(True)
-    self.set_select_multiple(False)
-
-    if Gtk.get_major_version() == 3:
-        # Display network shares
-        self.set_local_only(False)
-
-        # Display hidden files
-        self.set_show_hidden(True)
-
-    _set_filechooser_folder(self, initialdir)
-    self.set_current_name(initialfile)
-    self.show()
+        self.file_chooser.set_current_name(initial_file)
 
 
 class FileChooserButton:
@@ -239,19 +193,20 @@ class FileChooserButton:
         else:
             icon_name = "text-x-generic-symbolic"
 
-        self.icon = Gtk.Image(icon_name=icon_name)
-        self.label = Gtk.Label(label=_("(None)"), ellipsize=Pango.EllipsizeMode.END, width_chars=6, xalign=0)
+        self.icon = Gtk.Image(icon_name=icon_name, visible=True)
+        self.label = Gtk.Label(label=_("(None)"), ellipsize=Pango.EllipsizeMode.END, width_chars=6,
+                               xalign=0, visible=True)
 
-        box = Gtk.Box(spacing=6)
-        box.add(self.icon)
-        box.add(self.label)
+        box = Gtk.Box(spacing=6, visible=True)
 
         if Gtk.get_major_version() == 4:
-            self.button.set_child(box)
+            box.append(self.icon)   # pylint: disable=no-member
+            box.append(self.label)  # pylint: disable=no-member
         else:
-            self.button.add(box)
-            self.button.show_all()
+            box.add(self.icon)   # pylint: disable=no-member
+            box.add(self.label)  # pylint: disable=no-member
 
+        self.button.set_property("child", box)
         self.button.connect("clicked", self.open_file_chooser)
 
     def open_file_chooser_response(self, selected, _data):
@@ -268,12 +223,11 @@ class FileChooserButton:
     def open_file_chooser(self, *_args):
 
         if self.chooser_type == "folder":
-            choose_dir(
+            FolderChooser(
                 parent=self.parent,
                 callback=self.open_file_chooser_response,
-                initialdir=self.path,
-                multichoice=False
-            )
+                initial_folder=self.path
+            ).show()
             return
 
         if self.path:
@@ -282,18 +236,18 @@ class FileChooserButton:
             folder_path = ""
 
         if self.chooser_type == "image":
-            choose_image(
+            ImageChooser(
                 parent=self.parent,
                 callback=self.open_file_chooser_response,
-                initialdir=folder_path
-            )
+                initial_folder=folder_path
+            ).show()
             return
 
-        choose_file(
+        FileChooser(
             parent=self.parent,
             callback=self.open_file_chooser_response,
-            initialdir=folder_path
-        )
+            initial_folder=folder_path
+        ).show()
 
     def get_path(self):
         return self.path

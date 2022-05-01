@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.0"/>
-  <object class="GtkBox" id="Main">
-    <property name="visible">False</property>
+  <object class="GtkBox" id="container">
+    <property name="visible">True</property>
     <property name="orientation">vertical</property>
     <property name="hexpand">True</property>
     <child>
       <object class="GtkBox">
         <property name="visible">True</property>
+        <property name="vexpand">True</property>
         <child>
           <object class="GtkScrolledWindow">
             <property name="visible">True</property>
-            <property name="vexpand">True</property>
+            <property name="hexpand">True</property>
             <child>
-              <object class="GtkTreeView" id="Transfers">
+              <object class="GtkTreeView" id="tree_view">
                 <property name="visible">True</property>
-                <property name="hexpand">True</property>
                 <property name="has-tooltip">True</property>
                 <property name="enable-tree-lines">True</property>
                 <property name="rubber-banding">True</property>
@@ -37,7 +37,7 @@
       </object>
     </child>
     <child>
-      <object class="GtkBox" id="TransferButtons">
+      <object class="GtkBox">
         <property name="visible">True</property>
         <property name="margin-start">6</property>
         <property name="margin-end">6</property>
@@ -143,7 +143,7 @@
             <child>
               <object class="GtkButton">
                 <property name="visible">True</property>
-                <property name="tooltip-text">Clear every download that has finished transferring or been caught by a filter.</property>
+                <property name="tooltip-text" translatable="yes">Clear all finished and filtered downloads.</property>
                 <signal name="clicked" handler="on_clear_finished_filtered"/>
                 <child>
                   <object class="GtkBox">
@@ -169,18 +169,18 @@
               </object>
             </child>
             <child>
-              <object class="GtkMenuButton" id="ClearTransfers">
+              <object class="GtkMenuButton" id="clear_all_button">
                 <property name="visible">True</property>
                 <property name="direction">up</property>
-                <property name="tooltip-text">Clear every download marked with a specific status.</property>
+                <property name="tooltip-text" translatable="yes">Clear all downloads marked with a specific status.</property>
                 <child>
-                  <object class="GtkBox" id="ClearTransfersLabel">
+                  <object class="GtkBox">
                     <property name="visible">True</property>
                     <property name="spacing">6</property>
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">Clear _Downloads…</property>
+                        <property name="label" translatable="yes">Clear _All…</property>
                         <property name="use-underline">True</property>
                       </object>
                     </child>

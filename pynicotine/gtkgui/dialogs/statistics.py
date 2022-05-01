@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -16,25 +16,45 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from gi.repository import Gtk
+
 from pynicotine.config import config
 from pynicotine.gtkgui.widgets.dialogs import dialog_hide
 from pynicotine.gtkgui.widgets.dialogs import dialog_show
 from pynicotine.gtkgui.widgets.dialogs import generic_dialog
-from pynicotine.gtkgui.widgets.dialogs import option_dialog
+from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.utils import human_size
 
 
 class Statistics(UserInterface):
 
-    def __init__(self, frame):
+    def __init__(self, frame, core):
 
         super().__init__("ui/dialogs/statistics.ui")
+        (
+            self.completed_downloads_session_label,
+            self.completed_downloads_total_label,
+            self.completed_uploads_session_label,
+            self.completed_uploads_total_label,
+            self.container,
+            self.downloaded_size_session_label,
+            self.downloaded_size_total_label,
+            self.reset_button,
+            self.started_downloads_session_label,
+            self.started_downloads_total_label,
+            self.started_uploads_session_label,
+            self.started_uploads_total_label,
+            self.uploaded_size_session_label,
+            self.uploaded_size_total_label
+        ) = self.widgets
 
         self.frame = frame
+        self.core = core
         self.dialog = generic_dialog(
-            parent=frame.MainWindow,
-            content_box=self.Main,
+            parent=frame.window,
+            content_box=self.container,
+            buttons=[(self.reset_button, Gtk.ResponseType.HELP)],
             quit_callback=self.hide,
             title=_("Transfer Statistics"),
             width=450
@@ -55,24 +75,24 @@ class Statistics(UserInterface):
             session_value = str(session_value)
             total_value = str(total_value)
 
-        getattr(self, stat_id + "_session").set_text(session_value)
-        getattr(self, stat_id + "_total").set_text(total_value)
+        getattr(self, stat_id + "_session_label").set_text(session_value)
+        getattr(self, stat_id + "_total_label").set_text(total_value)
 
     def on_reset_statistics_response(self, dialog, response_id, _data):
 
         dialog.destroy()
 
         if response_id == 2:
-            self.frame.np.statistics.reset_stats()
+            self.core.statistics.reset_stats()
 
     def on_reset_statistics(self, *_args):
 
-        option_dialog(
+        OptionDialog(
             parent=self.dialog,
             title=_('Reset Transfer Statistics?'),
             message=_('Do you really want to reset transfer statistics?'),
             callback=self.on_reset_statistics_response
-        )
+        ).show()
 
     def hide(self, *_args):
         dialog_hide(self.dialog)

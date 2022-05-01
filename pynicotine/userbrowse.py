@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -23,7 +23,8 @@ import threading
 from pynicotine import slskmessages
 from pynicotine import utils
 from pynicotine.logfacility import log
-from pynicotine.utils import get_path
+from pynicotine.utils import clean_file
+from pynicotine.utils import get_result_bitrate_length
 from pynicotine.utils import RestrictedUnpickler
 
 
@@ -60,7 +61,11 @@ class UserBrowse:
             self.users.add(user)
 
     def remove_user(self, user):
+
         self.users.remove(user)
+
+        if self.ui_callback:
+            self.ui_callback.remove_user(user)
 
     def show_user(self, user, path=None, local_shares_type=None, indeterminate_progress=False, switch_page=True):
 
@@ -119,10 +124,15 @@ class UserBrowse:
             self.browse_local_buddy_shares(path, new_request)
             return
 
-        if username not in self.users or new_request:
-            self.core.send_message_to_peer(username, slskmessages.GetSharedFileList(None))
-
+        user_exists = (username in self.users)
         self.show_user(username, path=path, switch_page=switch_page)
+
+        if not self.core.logged_in:
+            self.show_connection_error(username)
+            return
+
+        if not user_exists or new_request:
+            self.core.send_message_to_peer(username, slskmessages.GetSharedFileList(None))
 
     def load_shares_list_from_disk(self, filename):
 
@@ -157,11 +167,6 @@ class UserBrowse:
 
         self.shared_file_list(username, msg)
 
-    @staticmethod
-    def _save_shares_list_to_file(path, shares_list):
-        with open(path, "w", encoding="utf-8") as file_handle:
-            json.dump(shares_list, file_handle, ensure_ascii=False)
-
     def save_shares_list_to_disk(self, user, shares_list):
 
         sharesdir = os.path.join(self.config.data_dir, "usershares")
@@ -175,13 +180,104 @@ class UserBrowse:
                     {'folder': sharesdir, 'error': msg})
 
         try:
-            get_path(sharesdir, user, self._save_shares_list_to_file, shares_list)
+            path = os.path.join(sharesdir, clean_file(user))
+
+            with open(path, "w", encoding="utf-8") as file_handle:
+                json.dump(shares_list, file_handle, ensure_ascii=False)
 
             log.add(_("Saved list of shared files for user '%(user)s' to %(dir)s"),
                     {'user': user, 'dir': sharesdir})
 
         except Exception as msg:
             log.add(_("Can't save shares, '%(user)s', reported error: %(error)s"), {'user': user, 'error': msg})
+
+    def download_file(self, user, folder, file_data, prefix=""):
+
+        virtualpath = "\\".join([folder, file_data[1]])
+        size = file_data[2]
+        h_bitrate, _bitrate, h_length, _length = get_result_bitrate_length(size, file_data[4])
+
+        self.core.transfers.get_file(user, virtualpath, prefix,
+                                     size=size, bitrate=h_bitrate, length=h_length)
+
+    def download_folder(self, user, requested_folder, shares_list, prefix="", recurse=False):
+
+        if requested_folder is None:
+            return
+
+        old_parent_folder = destination = None
+
+        for folder, files in shares_list.items():
+            if not recurse and requested_folder != folder:
+                continue
+
+            if requested_folder not in folder:
+                # Not a subfolder of the requested folder, skip
+                continue
+
+            parent_folder = folder.rsplit("\\", 1)[0]
+
+            if parent_folder != old_parent_folder:
+                if destination:
+                    prefix = os.path.join(destination, "")
+
+                old_parent_folder = parent_folder
+
+            # Remember custom download location
+            self.core.transfers.requested_folders[user][folder] = prefix
+
+            # Get final download destination
+            destination = self.core.transfers.get_folder_destination(user, folder)
+
+            if files:
+                if self.config.sections["transfers"]["reverseorder"]:
+                    files.sort(key=lambda x: x[1], reverse=True)
+
+                for file_data in files:
+                    virtualpath = "\\".join([folder, file_data[1]])
+                    size = file_data[2]
+                    h_bitrate, _bitrate, h_length, _length = get_result_bitrate_length(size, file_data[4])
+
+                    self.core.transfers.get_file(user, virtualpath, destination,
+                                                 size=size, bitrate=h_bitrate, length=h_length)
+
+            if not recurse:
+                # Downloading a single folder, no need to continue
+                return
+
+    def upload_file(self, user, folder, file_data, locally_queued=False):
+
+        virtualpath = "\\".join([folder, file_data[1]])
+        size = file_data[2]
+
+        self.core.transfers.push_file(user, virtualpath, size, locally_queued=locally_queued)
+
+    def upload_folder(self, user, requested_folder, shares_list, recurse=False):
+
+        if not requested_folder or not user:
+            return
+
+        for folder, files in shares_list.items():
+            if not recurse and requested_folder != folder:
+                continue
+
+            if requested_folder not in folder:
+                # Not a subfolder of the requested folder, skip
+                continue
+
+            if files:
+                locally_queued = False
+
+                for file_data in files:
+                    filename = "\\".join([folder, file_data[1]])
+                    size = file_data[2]
+
+                    self.core.transfers.push_file(user, filename, size, locally_queued=locally_queued)
+                    locally_queued = True
+
+            if not recurse:
+                # Uploading a single folder, no need to continue
+                return
 
     @staticmethod
     def get_soulseek_url(user, path):

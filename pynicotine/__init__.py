@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -153,38 +153,9 @@ def rescan_shares():
     return 0
 
 
-def run_headless(core, ci_mode):
-    """ Run application in headless (no GUI) mode """
-
-    import time
-
-    from pynicotine.config import config
-    from pynicotine.logfacility import log
-
-    config.load_config()
-    log.log_levels = set(["download", "upload"] + config.sections["logging"]["debugmodes"])
-
-    connect_ready = core.start()
-
-    if not connect_ready and not ci_mode:
-        return 1
-
-    connect_success = core.connect()
-
-    if not connect_success and not ci_mode:
-        return 1
-
-    while not core.shutdown:
-        time.sleep(0.2)
-
-    config.write_configuration()
-    return 0
-
-
 def run():
     """ Run application and return its exit code """
 
-    import importlib.util
     import io
     import sys
 
@@ -196,22 +167,16 @@ def run():
         import os
         import multiprocessing
 
-        # Support SSL in frozen Windows binaries
-        if sys.platform == "win32":
-            os.environ["SSL_CERT_FILE"] = os.path.join(os.path.dirname(sys.executable), "share/ssl/cert.pem")
+        # Set up paths for frozen binaries (Windows and macOS)
+        executable_folder = os.path.dirname(sys.executable)
+        os.environ["XDG_DATA_DIRS"] = os.path.join(executable_folder, "share")
+        os.environ["GDK_PIXBUF_MODULE_FILE"] = os.path.join(executable_folder,
+                                                            "lib/gdk-pixbuf-2.0/2.10.0/loaders.cache")
+        os.environ["GI_TYPELIB_PATH"] = os.path.join(executable_folder, "lib/girepository-1.0")
+        os.environ["SSL_CERT_FILE"] = os.path.join(executable_folder, "share/ssl/cert.pem")
 
-        # Support file scanning process in frozen Windows and macOS binaries
+        # Support file scanning process in frozen binaries
         multiprocessing.freeze_support()
-
-    # Require pynicotine module
-    if not importlib.util.find_spec("pynicotine"):
-        print("""Cannot find application modules.
-Perhaps they're installed in a directory which is not
-in an interpreter's module search path.
-(there could be a version mismatch between
-what version of Python was used to build the application
-binary package and what you try to run the application with).""")
-        return 1
 
     from pynicotine.logfacility import log
     from pynicotine.utils import rename_process
@@ -241,7 +206,8 @@ binary package and what you try to run the application with).""")
 
     # Run without a GUI
     if headless:
-        return run_headless(core, ci_mode)
+        from pynicotine.cli import run_cli
+        return run_cli(core, ci_mode)
 
     # Initialize GTK-based GUI
     from pynicotine.gtkgui import run_gui

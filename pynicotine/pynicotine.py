@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 # COPYRIGHT (C) 2020-2022 Mathias <mail@mathias.is>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
@@ -127,7 +127,7 @@ class NicotineCore:
             slskmessages.UserInfoReply: self.user_info_reply,
             slskmessages.UserInfoRequest: self.user_info_request,
             slskmessages.PierceFireWall: self.dummy_message,
-            slskmessages.ConnectToPeer: self.dummy_message,
+            slskmessages.ConnectToPeer: self.connect_to_peer,
             slskmessages.CantConnectToPeer: self.dummy_message,
             slskmessages.MessageProgress: self.message_progress,
             slskmessages.SharedFileList: self.shared_file_list,
@@ -142,15 +142,18 @@ class NicotineCore:
             slskmessages.CheckUploadQueue: self.check_upload_queue,
             slskmessages.DownloadFile: self.file_download,
             slskmessages.UploadFile: self.file_upload,
-            slskmessages.FileRequest: self.file_request,
+            slskmessages.FileDownloadInit: self.file_download_init,
+            slskmessages.FileUploadInit: self.file_upload_init,
             slskmessages.TransferRequest: self.transfer_request,
             slskmessages.TransferResponse: self.transfer_response,
             slskmessages.QueueUpload: self.queue_upload,
             slskmessages.UploadDenied: self.upload_denied,
             slskmessages.UploadFailed: self.upload_failed,
             slskmessages.PlaceInQueue: self.place_in_queue,
-            slskmessages.FileError: self.file_error,
-            slskmessages.FileConnClose: self.file_conn_close,
+            slskmessages.DownloadFileError: self.download_file_error,
+            slskmessages.UploadFileError: self.upload_file_error,
+            slskmessages.DownloadConnClose: self.download_conn_close,
+            slskmessages.UploadConnClose: self.upload_conn_close,
             slskmessages.FolderContentsResponse: self.folder_contents_response,
             slskmessages.FolderContentsRequest: self.folder_contents_request,
             slskmessages.RoomList: self.room_list,
@@ -217,10 +220,10 @@ class NicotineCore:
             slskmessages.UnknownPeerMessage: self.ignore
         }
 
-    def start(self, ui_callback=None, network_callback=None):
+    def start(self, ui_callback, network_callback):
 
         self.ui_callback = ui_callback
-        self.network_callback = network_callback if network_callback else self.network_event
+        self.network_callback = network_callback
         script_dir = os.path.dirname(__file__)
 
         log.add(_("Loading %(program)s %(version)s"), {"program": "Python", "version": config.python_version})
@@ -234,7 +237,7 @@ class NicotineCore:
         self.now_playing = NowPlaying(config)
         self.statistics = Statistics(config, ui_callback)
 
-        self.shares = Shares(self, config, self.queue, ui_callback=ui_callback)
+        self.shares = Shares(self, config, self.queue, self.network_callback, ui_callback)
         self.search = Search(self, config, self.queue, self.shares.share_dbs, self.geoip, ui_callback)
         self.transfers = Transfers(self, config, self.queue, self.network_callback, ui_callback)
         self.interests = Interests(self, config, self.queue, ui_callback)
@@ -294,8 +297,6 @@ class NicotineCore:
 
         if self.ui_callback:
             self.ui_callback.quit()
-
-        config.write_configuration()
 
         log.add(_("Quit %(program)s %(version)s, %(status)s!"), {
             "program": config.application_name,
@@ -369,9 +370,7 @@ class NicotineCore:
         self.userinfo.server_disconnect()
         self.userbrowse.server_disconnect()
         self.interests.server_disconnect()
-
-        if self.ui_callback:
-            self.ui_callback.server_disconnect()
+        self.ui_callback.server_disconnect()
 
         self.login_username = None
 
@@ -389,8 +388,9 @@ class NicotineCore:
         self.away = is_away
         self.request_set_status(is_away and 1 or 2)
 
-        if self.ui_callback:
-            self.ui_callback.set_away_mode(is_away)
+        # Reset away message users
+        self.privatechats.set_away_mode(is_away)
+        self.ui_callback.set_away_mode(is_away)
 
     def request_change_password(self, password):
         self.queue.append(slskmessages.ChangePassword(password))
@@ -460,12 +460,14 @@ class NicotineCore:
             else:
                 log.add("No handler for class %s %s", (i.__class__, dir(i)))
 
+        msgs.clear()
+
     def show_connection_error_message(self, msg):
         """ Request UI to show error messages related to connectivity """
 
         for i in msg.msgs:
-            if i.__class__ in (slskmessages.FileRequest, slskmessages.TransferRequest):
-                self.transfers.get_cant_connect_request(i.token)
+            if i.__class__ in (slskmessages.TransferRequest, slskmessages.FileUploadInit):
+                self.transfers.get_cant_connect_upload(i.token)
 
             elif i.__class__ is slskmessages.QueueUpload:
                 self.transfers.get_cant_connect_queue_file(msg.user, i.file)
@@ -502,20 +504,27 @@ class NicotineCore:
         log.add_msg_contents(msg)
         self.transfers.file_upload(msg)
 
-    def file_error(self, msg):
+    def download_file_error(self, msg):
         log.add_msg_contents(msg)
-        self.transfers.file_error(msg)
+        self.transfers.download_file_error(msg)
 
-    def file_conn_close(self, msg):
+    def upload_file_error(self, msg):
         log.add_msg_contents(msg)
-        self.transfers.file_conn_close(msg.sock)
+        self.transfers.upload_file_error(msg)
+
+    def download_conn_close(self, msg):
+        log.add_msg_contents(msg)
+        self.transfers.download_conn_close(msg)
+
+    def upload_conn_close(self, msg):
+        log.add_msg_contents(msg)
+        self.transfers.upload_conn_close(msg)
 
     def transfer_timeout(self, msg):
         self.transfers.transfer_timeout(msg)
 
     def set_connection_stats(self, msg):
-        if self.ui_callback:
-            self.ui_callback.set_connection_stats(msg)
+        self.ui_callback.set_connection_stats(msg)
 
     """
     Incoming Server Messages
@@ -543,9 +552,7 @@ class NicotineCore:
             self.userlist.server_login()
             self.privatechats.server_login()
             self.chatrooms.server_login()
-
-            if self.ui_callback:
-                self.ui_callback.server_login()
+            self.ui_callback.server_login()
 
             if msg.banner:
                 log.add(msg.banner)
@@ -692,6 +699,17 @@ class NicotineCore:
 
         log.add_msg_contents(msg)
         self.chatrooms.user_left_room(msg)
+
+    def connect_to_peer(self, msg):
+        """ Server code: 18 """
+
+        log.add_msg_contents(msg)
+
+        if msg.privileged == 1:
+            self.transfers.add_to_privileged(msg.user)
+
+        elif msg.privileged == 0:
+            self.transfers.remove_from_privileged(msg.user)
 
     def message_user(self, msg):
         """ Server code: 22 """
@@ -1178,10 +1196,17 @@ class NicotineCore:
         log.add_msg_contents(msg)
         self.transfers.place_in_queue_request(msg)
 
-    def file_request(self, msg):
+    """
+    Incoming File Messages
+    """
 
+    def file_download_init(self, msg):
         log.add_msg_contents(msg)
-        self.transfers.file_request(msg)
+        self.transfers.file_download_init(msg)
+
+    def file_upload_init(self, msg):
+        log.add_msg_contents(msg)
+        self.transfers.file_upload_init(msg)
 
     """
     Incoming Distributed Messages

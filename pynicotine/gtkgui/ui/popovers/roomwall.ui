@@ -25,19 +25,19 @@
         <child>
           <object class="GtkFrame">
             <property name="visible">True</property>
+            <property name="vexpand">True</property>
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
                 <child>
                   <object class="GtkScrolledWindow">
                     <property name="visible">True</property>
+                    <property name="hexpand">True</property>
                     <property name="height-request">380</property>
                     <property name="width-request">500</property>
-                    <property name="vexpand">True</property>
                     <child>
                       <object class="GtkTextView" id="message_view">
                         <property name="visible">True</property>
-                        <property name="hexpand">True</property>
                         <property name="editable">False</property>
                         <property name="wrap-mode">word-char</property>
                         <property name="cursor-visible">False</property>

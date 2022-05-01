@@ -5,7 +5,7 @@
    version="1.1"
    id="svg10"
    sodipodi:docname="source-square-24.svg"
-   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -39,9 +39,9 @@
      inkscape:window-height="1011"
      id="namedview12"
      showgrid="true"
-     inkscape:zoom="64"
-     inkscape:cx="14.445312"
-     inkscape:cy="15.703125"
+     inkscape:zoom="32"
+     inkscape:cx="13.640625"
+     inkscape:cy="7.0625"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
@@ -53,10 +53,10 @@
        id="grid841" />
   </sodipodi:namedview>
   <path
-     d="M 1,2.9166666 V 22 H 5 V 7 h 1 c 2,0 3,1 3,3 v 12 h 4 v -3 h 3 v 3 h 4 v -3 h 3 v -3 h -3 v -4 h -4 v 4 H 13 L 12.91667,10.25 C 12.89674,8.8751444 12,2.9166666 6.5,2.9166666 Z"
+     d="M 1,2 V 22 H 5 V 7 h 1 c 2,0 3,1 3,3 v 12 h 4 v -3 h 3 v 3 h 4 v -3 h 3 v -4 h -3 v -4 h -4 v 4 H 13 V 10 C 6.5,2 13,10 6.5,2 Z"
      fill="#d38c2d"
      id="path2"
-     sodipodi:nodetypes="ccccssccccccccccccccssc"
+     sodipodi:nodetypes="ccccssccccccccccccccccc"
      style="stroke-width:0.458334" />
   <path
      d="M 1,2 V 21 H 5 V 6 h 1 c 2,0 3,1 3,3 v 12 h 4 v -3 h 3 v 3 h 4 v -3 h 3 v -3 h -3 v -4 h -4 v 4 H 13 V 9 C 13,7 12,2 6.5,2 Z"

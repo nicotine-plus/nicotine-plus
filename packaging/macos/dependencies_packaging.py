@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -23,22 +23,12 @@ import sys
 """ Script used to install packaging dependencies in Homebrew """
 
 
-def install_brew():
-    """ Install dependencies from the main Homebrew repos """
-
-    packages = ["create-dmg"]
-    subprocess.check_call(["brew", "install"] + packages)
-
-
 def install_pypi():
     """ Install dependencies from PyPi """
 
-    packages = ["certifi",
-                "pyinstaller==4.7",
-                "stdlib_list"]
+    packages = ["cx_Freeze"]
     subprocess.check_call([sys.executable, "-m", "pip", "install"] + packages)
 
 
 if __name__ == '__main__':
-    install_brew()
     install_pypi()

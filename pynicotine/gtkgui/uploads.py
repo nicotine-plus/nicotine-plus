@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2009-2011 Quinox <quinox@users.sf.net>
@@ -24,16 +24,18 @@
 
 import os
 
+from gi.repository import Gtk
+
 from pynicotine.config import config
 from pynicotine.gtkgui.transferlist import TransferList
 from pynicotine.gtkgui.utils import copy_text
-from pynicotine.gtkgui.widgets.dialogs import option_dialog
+from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.utils import open_file_path
 
 
 class Uploads(TransferList):
 
-    def __init__(self, frame):
+    def __init__(self, frame, core):
 
         self.path_separator = '\\'
         self.path_label = _("Folder")
@@ -41,7 +43,19 @@ class Uploads(TransferList):
         self.abort_label = _("_Abort")
         self.aborted_status = "Aborted"
 
-        TransferList.__init__(self, frame, transfer_type="upload")
+        self.transfer_page = frame.uploads_page
+        self.user_counter = frame.upload_users_label
+        self.file_counter = frame.upload_files_label
+        self.expand_button = frame.uploads_expand_button
+        self.expand_icon = frame.uploads_expand_icon
+        self.grouping_button = frame.uploads_grouping_button
+
+        TransferList.__init__(self, frame, core, transfer_type="upload")
+
+        if Gtk.get_major_version() == 4:
+            frame.uploads_content.append(self.container)
+        else:
+            frame.uploads_content.add(self.container)
 
         self.popup_menu_clear.add_items(
             ("#" + _("Finished / Aborted / Failed"), self.on_clear_finished_failed),
@@ -52,29 +66,33 @@ class Uploads(TransferList):
             ("#" + _("Failed"), self.on_clear_failed),
             ("#" + _("Queued…"), self.on_try_clear_queued),
             ("", None),
-            ("#" + _("Clear All…"), self.on_try_clear_all),
+            ("#" + _("Everything…"), self.on_try_clear_all),
         )
         self.popup_menu_clear.update_model()
 
+    def retry_transfers(self):
+        for transfer in self.selected_transfers:
+            self.core.transfers.retry_upload(transfer)
+
     def on_try_clear_queued(self, *_args):
 
-        option_dialog(
-            parent=self.frame.MainWindow,
+        OptionDialog(
+            parent=self.frame.window,
             title=_('Clear Queued Uploads'),
             message=_('Do you really want to clear all queued uploads?'),
             callback=self.on_clear_response,
             callback_data="queued"
-        )
+        ).show()
 
     def on_try_clear_all(self, *_args):
 
-        option_dialog(
-            parent=self.frame.MainWindow,
+        OptionDialog(
+            parent=self.frame.window,
             title=_('Clear All Uploads'),
             message=_('Do you really want to clear all uploads?'),
             callback=self.on_clear_response,
             callback_data="all"
-        )
+        ).show()
 
     def on_copy_url(self, *_args):
 
@@ -82,7 +100,7 @@ class Uploads(TransferList):
 
         if transfer:
             user = config.sections["server"]["login"]
-            url = self.frame.np.userbrowse.get_soulseek_url(user, transfer.filename)
+            url = self.core.userbrowse.get_soulseek_url(user, transfer.filename)
             copy_text(url)
 
     def on_copy_dir_url(self, *_args):
@@ -91,7 +109,7 @@ class Uploads(TransferList):
 
         if transfer:
             user = config.sections["server"]["login"]
-            url = self.frame.np.userbrowse.get_soulseek_url(user, transfer.filename.rsplit('\\', 1)[0] + '\\')
+            url = self.core.userbrowse.get_soulseek_url(user, transfer.filename.rsplit('\\', 1)[0] + '\\')
             copy_text(url)
 
     def on_open_file_manager(self, *_args):
@@ -125,7 +143,7 @@ class Uploads(TransferList):
         user = config.sections["server"]["login"]
         folder = transfer.filename.rsplit('\\', 1)[0] + '\\'
 
-        self.frame.np.userbrowse.browse_user(user, path=folder)
+        self.core.userbrowse.browse_user(user, path=folder)
 
     def on_abort_user(self, *_args):
 
@@ -142,11 +160,11 @@ class Uploads(TransferList):
         self.clear_transfers(["Aborted", "Cancelled", "Disallowed extension", "User logged off"])
 
     def on_clear_failed(self, *_args):
-        self.clear_transfers(["Cannot connect", "Local file error", "Remote file error"])
+        self.clear_transfers(["Connection timeout", "Local file error", "Remote file error"])
 
     def on_clear_finished_aborted(self, *_args):
         self.clear_transfers(["Aborted", "Cancelled", "Disallowed extension", "User logged off", "Finished"])
 
     def on_clear_finished_failed(self, *_args):
         self.clear_transfers(["Aborted", "Cancelled", "Disallowed extension", "User logged off", "Finished",
-                              "Cannot connect", "Local file error", "Remote file error"])
+                              "Connection timeout", "Local file error", "Remote file error"])

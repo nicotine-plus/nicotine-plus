@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2011 Quinox <quinox@users.sf.net>
@@ -36,9 +36,11 @@ from pynicotine.gtkgui.dialogs.fileproperties import FileProperties
 from pynicotine.gtkgui.dialogs.wishlist import WishList
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
-from pynicotine.gtkgui.widgets.filechooser import choose_dir
+from pynicotine.gtkgui.widgets.filechooser import FolderChooser
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
+from pynicotine.gtkgui.widgets.popupmenu import FilePopupMenu
+from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
 from pynicotine.gtkgui.widgets.theme import set_widget_fg_bg_css
@@ -61,9 +63,9 @@ from pynicotine.utils import human_speed
 
 class Searches(IconNotebook):
 
-    def __init__(self, frame):
+    def __init__(self, frame, core):
 
-        IconNotebook.__init__(self, frame, frame.search_notebook, "search")
+        IconNotebook.__init__(self, frame, core, frame.search_notebook, frame.search_page)
         self.notebook.connect("switch-page", self.on_switch_search_page)
 
         self.modes = {
@@ -81,22 +83,22 @@ class Searches(IconNotebook):
             ("O" + self.modes["user"], "win.searchmode", "user")
         )
         mode_menu.update_model()
-        frame.SearchMode.set_menu_model(mode_menu.model)
-        frame.SearchModeLabel.set_label(self.modes["global"])
+        frame.search_mode_button.set_menu_model(mode_menu.model)
+        frame.search_mode_label.set_label(self.modes["global"])
 
         if Gtk.get_major_version() == 4:
-            frame.SearchMode.get_first_child().get_style_context().add_class("arrow-button")
+            frame.search_mode_button.get_first_child().get_style_context().add_class("arrow-button")
 
-        CompletionEntry(frame.RoomSearchEntry, frame.RoomSearchCombo.get_model())
-        CompletionEntry(frame.SearchEntry, frame.SearchCombo.get_model())
+        CompletionEntry(frame.room_search_entry, frame.room_search_combobox.get_model())
+        CompletionEntry(frame.search_entry, frame.search_combobox.get_model())
 
-        self.wish_list = WishList(frame, self)
+        self.wish_list = WishList(frame, core, self)
         self.populate_search_history()
         self.update_visuals()
 
     def on_switch_search_page(self, _notebook, page, _page_num):
 
-        if self.frame.current_page_id != self.page_id:
+        if self.frame.current_page_id != self.frame.search_page.id:
             return
 
         for tab in self.pages.values():
@@ -110,36 +112,36 @@ class Searches(IconNotebook):
         action.set_state(state)
         search_mode = state.get_string()
 
-        self.frame.SearchModeLabel.set_label(self.modes[search_mode])
+        self.frame.search_mode_label.set_label(self.modes[search_mode])
 
-        self.frame.UserSearchCombo.set_visible(search_mode == "user")
-        self.frame.RoomSearchCombo.set_visible(search_mode == "rooms")
+        self.frame.user_search_combobox.set_visible(search_mode == "user")
+        self.frame.room_search_combobox.set_visible(search_mode == "rooms")
 
         # Hide popover after click
-        self.frame.SearchMode.get_popover().hide()
+        self.frame.search_mode_button.get_popover().hide()
 
     def on_search(self):
 
-        text = self.frame.SearchEntry.get_text().strip()
+        text = self.frame.search_entry.get_text().strip()
 
         if not text:
             return
 
         mode = self.frame.search_mode_action.get_state().get_string()
-        room = self.frame.RoomSearchEntry.get_text()
-        user = self.frame.UserSearchEntry.get_text()
+        room = self.frame.room_search_entry.get_text()
+        user = self.frame.user_search_entry.get_text()
 
-        self.frame.np.search.do_search(text, mode, room=room, user=user)
+        self.core.search.do_search(text, mode, room=room, user=user)
 
     def populate_search_history(self):
 
-        self.frame.SearchCombo.remove_all()
+        self.frame.search_combobox.remove_all()
 
         if not config.sections["searches"]["enable_history"]:
             return
 
         for term in config.sections["searches"]["history"]:
-            self.frame.SearchCombo.append_text(str(term))
+            self.frame.search_combobox.append_text(str(term))
 
     def do_search(self, token, search_term, mode, room=None, user=None):
 
@@ -160,14 +162,25 @@ class Searches(IconNotebook):
         # Repopulate the combo list
         self.populate_search_history()
 
+    def remove_search(self, token):
+
+        page = self.pages.get(token)
+
+        if page is None:
+            return
+
+        page.clear_model(stored_results=True)
+        self.remove_page(page.Main)
+        del self.pages[token]
+
     def clear_search_history(self):
 
-        self.frame.SearchEntry.set_text("")
+        self.frame.search_entry.set_text("")
 
         config.sections["searches"]["history"] = []
         config.write_configuration()
 
-        self.frame.SearchCombo.remove_all()
+        self.frame.search_combobox.remove_all()
 
     def clear_filter_history(self):
 
@@ -212,14 +225,14 @@ class Searches(IconNotebook):
         tab = self.pages.get(msg.token)
 
         if tab is None:
-            search_term = self.frame.np.search.searches[msg.token]["term"]
+            search_term = self.core.search.searches[msg.token]["term"]
             mode = "wishlist"
             mode_label = _("Wish")
             tab = self.create_tab(msg.token, search_term, mode, mode_label, showtab=False)
 
         # No more things to add because we've reached the result limit
         if tab.num_results_found >= tab.max_limit:
-            self.frame.np.search.remove_allowed_token(msg.token)
+            self.core.search.remove_allowed_token(msg.token)
             tab.max_limited = True
             tab.update_result_counter()
             return
@@ -255,8 +268,33 @@ class Search(UserInterface):
 
         super().__init__("ui/search.ui")
 
+        # pylint: disable=invalid-name
+        (
+            self.AddWish,
+            self.AddWishIcon,
+            self.AddWishLabel,
+            self.Counter,
+            self.CounterButton,
+            self.ExpandButton,
+            self.FilterBitrate,
+            self.FilterCountry,
+            self.FilterFreeSlot,
+            self.FilterIn,
+            self.FilterLabel,
+            self.FilterOut,
+            self.FilterSize,
+            self.FilterType,
+            self.FiltersContainer,
+            self.Main,
+            self.ResultGrouping,
+            self.ResultsList,
+            self.ShowFilters,
+            self.expand
+        ) = self.widgets
+
         self.searches = searches
         self.frame = searches.frame
+        self.core = searches.core
         self.filter_help = UserInterface("ui/popovers/searchfilters.ui")
 
         self.text = text
@@ -307,7 +345,7 @@ class Search(UserInterface):
         # Columns
         self.treeview_name = "file_search"
         self.resultsmodel = Gtk.TreeStore(
-            GObject.TYPE_UINT64,  # (0)  num
+            int,                  # (0)  num
             str,                  # (1)  user
             str,                  # (2)  flag
             str,                  # (3)  h_speed
@@ -317,13 +355,13 @@ class Search(UserInterface):
             str,                  # (7)  h_size
             str,                  # (8)  h_bitrate
             str,                  # (9)  h_length
-            GObject.TYPE_UINT64,  # (10) bitrate
+            GObject.TYPE_UINT,    # (10) bitrate
             str,                  # (11) fullpath
             str,                  # (12) country
             GObject.TYPE_UINT64,  # (13) size
-            GObject.TYPE_UINT64,  # (14) speed
-            GObject.TYPE_UINT64,  # (15) queue
-            GObject.TYPE_UINT64,  # (16) length
+            GObject.TYPE_UINT,    # (14) speed
+            GObject.TYPE_UINT,    # (15) queue
+            GObject.TYPE_UINT,    # (16) length
             str                   # (17) color
         )
 
@@ -366,7 +404,7 @@ class Search(UserInterface):
         self.update_visuals()
 
         # Popup menus
-        self.popup_menu_users = PopupMenu(self.frame)
+        self.popup_menu_users = UserPopupMenu(self.frame)
 
         self.popup_menu_copy = PopupMenu(self.frame)
         self.popup_menu_copy.add_items(
@@ -375,7 +413,7 @@ class Search(UserInterface):
             ("#" + _("Copy Folder U_RL"), self.on_copy_dir_url)
         )
 
-        self.popup_menu = PopupMenu(self.frame, self.ResultsList, self.on_popup_menu)
+        self.popup_menu = FilePopupMenu(self.frame, self.ResultsList, self.on_popup_menu)
         self.popup_menu.add_items(
             ("#" + "selected_files", None),
             ("", None),
@@ -408,7 +446,7 @@ class Search(UserInterface):
         Accelerator("<Alt>Return", self.ResultsList, self.on_file_properties_accelerator)
 
         # Grouping
-        menu = create_grouping_menu(self.frame.MainWindow, config.sections["searches"]["group_searches"], self.on_group)
+        menu = create_grouping_menu(self.frame.window, config.sections["searches"]["group_searches"], self.on_group)
         self.ResultGrouping.set_menu_model(menu)
 
         self.ExpandButton.set_active(config.sections["searches"]["expand_searches"])
@@ -579,7 +617,7 @@ class Search(UserInterface):
 
             is_result_visible = self.append(
                 [
-                    GObject.Value(GObject.TYPE_UINT64, self.num_results_found),
+                    self.num_results_found,
                     user,
                     get_flag_icon_name(country),
                     h_speed,
@@ -589,13 +627,13 @@ class Search(UserInterface):
                     h_size,
                     h_bitrate,
                     h_length,
-                    GObject.Value(GObject.TYPE_UINT64, bitrate),
+                    GObject.Value(GObject.TYPE_UINT, bitrate),
                     fullpath,
                     country,
                     GObject.Value(GObject.TYPE_UINT64, size),
-                    GObject.Value(GObject.TYPE_UINT64, ulspeed),
-                    GObject.Value(GObject.TYPE_UINT64, inqueue),
-                    GObject.Value(GObject.TYPE_UINT64, length),
+                    GObject.Value(GObject.TYPE_UINT, ulspeed),
+                    GObject.Value(GObject.TYPE_UINT, inqueue),
+                    GObject.Value(GObject.TYPE_UINT, length),
                     GObject.Value(GObject.TYPE_STRING, color)
                 ]
             )
@@ -887,13 +925,13 @@ class Search(UserInterface):
         if filters["filterout"] and filters["filterout"].search(row[11].lower()):
             return False
 
-        if filters["filtersize"] and not self.check_digit(filters["filtersize"], row[13].get_uint64()):
+        if filters["filtersize"] and not self.check_digit(filters["filtersize"], row[13].get_value()):
             return False
 
-        if filters["filterbr"] and not self.check_digit(filters["filterbr"], row[10].get_uint64(), False):
+        if filters["filterbr"] and not self.check_digit(filters["filterbr"], row[10].get_value(), False):
             return False
 
-        if filters["filterslot"] and row[15].get_uint64() > 0:
+        if filters["filterslot"] and row[15].get_value() > 0:
             return False
 
         if filters["filtercc"] and not self.check_country(filters["filtercc"], row[12]):
@@ -916,6 +954,19 @@ class Search(UserInterface):
 
         self.FilterLabel.set_tooltip_text("%d active filter(s)" % count)
 
+    def clear_model(self, stored_results=False):
+
+        if stored_results:
+            self.all_data.clear()
+            self.num_results_found = 0
+            self.max_limited = False
+            self.max_limit = config.sections["searches"]["max_displayed_results"]
+
+        self.usersiters.clear()
+        self.directoryiters.clear()
+        self.resultsmodel.clear()
+        self.num_results_visible = 0
+
     def update_results_model(self):
 
         # Temporarily disable sorting for increased performance
@@ -923,10 +974,7 @@ class Search(UserInterface):
         self.resultsmodel.set_default_sort_func(lambda *_args: 0)
         self.resultsmodel.set_sort_column_id(-1, Gtk.SortType.ASCENDING)
 
-        self.usersiters.clear()
-        self.directoryiters.clear()
-        self.resultsmodel.clear()
-        self.num_results_visible = 0
+        self.clear_model()
 
         for row in self.all_data:
             if self.check_filter(row):
@@ -953,7 +1001,7 @@ class Search(UserInterface):
             self.AddWish.hide()
             return
 
-        if not self.frame.np.search.is_wish(self.text):
+        if not self.core.search.is_wish(self.text):
             self.AddWishIcon.set_property("icon-name", "list-add-symbolic")
             self.AddWishLabel.set_label(_("Add Wi_sh"))
             return
@@ -963,10 +1011,10 @@ class Search(UserInterface):
 
     def on_add_wish(self, *_args):
 
-        if self.frame.np.search.is_wish(self.text):
-            self.frame.np.search.remove_wish(self.text)
+        if self.core.search.is_wish(self.text):
+            self.core.search.remove_wish(self.text)
         else:
-            self.frame.np.search.add_wish(self.text)
+            self.core.search.add_wish(self.text)
 
     def add_popup_menu_user(self, popup, user):
 
@@ -988,7 +1036,7 @@ class Search(UserInterface):
         # Multiple users, create submenus for each user
         if len(self.selected_users) > 1:
             for user in self.selected_users:
-                popup = PopupMenu(self.frame)
+                popup = UserPopupMenu(self.frame)
                 self.add_popup_menu_user(popup, user)
                 self.popup_menu_users.add_items((">" + user, popup))
                 self.popup_menu_users.update_model()
@@ -1114,7 +1162,12 @@ class Search(UserInterface):
         self.select_results()
 
         iterator = self.resultsmodel.get_iter(path)
+        folder = self.resultsmodel.get_value(iterator, 5)
         filename = self.resultsmodel.get_value(iterator, 6)
+
+        if not folder and not filename:
+            # Don't activate user rows
+            return
 
         if not filename:
             self.on_download_folders()
@@ -1141,7 +1194,7 @@ class Search(UserInterface):
             folder = self.resultsmodel.get_value(iterator, 11).rsplit('\\', 1)[0] + '\\'
 
             if user not in requested_users and folder not in requested_folders:
-                self.frame.np.userbrowse.browse_user(user, path=folder)
+                self.core.userbrowse.browse_user(user, path=folder)
 
                 requested_users.add(user)
                 requested_folders.add(folder)
@@ -1161,7 +1214,7 @@ class Search(UserInterface):
             selected_size += file_size
             selected_length += self.resultsmodel.get_value(iterator, 16)
             country_code = self.resultsmodel.get_value(iterator, 12)
-            country = "%s (%s)" % (self.frame.np.geoip.country_code_to_name(country_code), country_code)
+            country = "%s (%s)" % (self.core.geoip.country_code_to_name(country_code), country_code)
 
             data.append({
                 "user": self.resultsmodel.get_value(iterator, 1),
@@ -1177,7 +1230,7 @@ class Search(UserInterface):
             })
 
         if data:
-            FileProperties(self.frame, data, selected_size, selected_length).show()
+            FileProperties(self.frame, self.core, data, selected_size, selected_length).show()
 
     def on_download_files(self, *_args, prefix=""):
 
@@ -1190,7 +1243,7 @@ class Search(UserInterface):
             bitrate = self.resultsmodel.get_value(iterator, 8)
             length = self.resultsmodel.get_value(iterator, 9)
 
-            self.frame.np.transfers.get_file(
+            self.core.transfers.get_file(
                 user, filepath, prefix, size=size, bitrate=bitrate, length=length)
 
     def on_download_files_to_selected(self, selected, _data):
@@ -1198,13 +1251,12 @@ class Search(UserInterface):
 
     def on_download_files_to(self, *_args):
 
-        choose_dir(
-            parent=self.frame.MainWindow,
+        FolderChooser(
+            parent=self.frame.window,
             title=_("Select Destination Folder for File(s)"),
             callback=self.on_download_files_to_selected,
-            initialdir=config.sections["transfers"]["downloaddir"],
-            multichoice=False
-        )
+            initial_folder=config.sections["transfers"]["downloaddir"]
+        ).show()
 
     def on_download_folders(self, *_args, download_location=""):
 
@@ -1212,7 +1264,7 @@ class Search(UserInterface):
             """ Custom download location specified, remember it when peer sends a folder
             contents reply """
 
-            requested_folders = self.frame.np.transfers.requested_folders
+            requested_folders = self.core.transfers.requested_folders
         else:
             requested_folders = defaultdict(dict)
 
@@ -1236,27 +1288,26 @@ class Search(UserInterface):
                 if folder != row[11].rsplit('\\', 1)[0]:
                     continue
 
-                destination = self.frame.np.transfers.get_folder_destination(user, folder)
+                destination = self.core.transfers.get_folder_destination(user, folder)
                 (_counter, user, _flag, _h_speed, _h_queue, _directory, _filename,
                     _h_size, h_bitrate, h_length, _bitrate, fullpath, _country, size, _speed,
                     _queue, _length, _color) = row
                 visible_files.append(
-                    (user, fullpath, destination, size.get_uint64(), h_bitrate, h_length))
+                    (user, fullpath, destination, size.get_value(), h_bitrate, h_length))
 
-            self.frame.np.search.request_folder_download(user, folder, visible_files)
+            self.core.search.request_folder_download(user, folder, visible_files)
 
     def on_download_folders_to_selected(self, selected, _data):
         self.on_download_folders(download_location=selected)
 
     def on_download_folders_to(self, *_args):
 
-        choose_dir(
-            parent=self.frame.MainWindow,
+        FolderChooser(
+            parent=self.frame.window,
             title=_("Select Destination Folder"),
             callback=self.on_download_folders_to_selected,
-            initialdir=config.sections["transfers"]["downloaddir"],
-            multichoice=False
-        )
+            initial_folder=config.sections["transfers"]["downloaddir"]
+        ).show()
 
     def on_copy_file_path(self, *_args):
 
@@ -1274,7 +1325,7 @@ class Search(UserInterface):
 
             user = self.resultsmodel.get_value(iterator, 1)
             filepath = self.resultsmodel.get_value(iterator, 11)
-            url = self.frame.np.userbrowse.get_soulseek_url(user, filepath)
+            url = self.core.userbrowse.get_soulseek_url(user, filepath)
             copy_text(url)
             return
 
@@ -1285,7 +1336,7 @@ class Search(UserInterface):
 
             user = self.resultsmodel.get_value(iterator, 1)
             filepath = self.resultsmodel.get_value(iterator, 11)
-            url = self.frame.np.userbrowse.get_soulseek_url(user, filepath.rsplit('\\', 1)[0] + '\\')
+            url = self.core.userbrowse.get_soulseek_url(user, filepath.rsplit('\\', 1)[0] + '\\')
             copy_text(url)
             return
 
@@ -1448,26 +1499,16 @@ class Search(UserInterface):
 
     def on_clear(self, *_args):
 
-        self.all_data = []
-        self.usersiters.clear()
-        self.directoryiters.clear()
-        self.resultsmodel.clear()
-        self.num_results_found = 0
-        self.num_results_visible = 0
-        self.max_limited = False
-        self.max_limit = config.sections["searches"]["max_displayed_results"]
+        self.clear_model(stored_results=True)
 
         # Allow parsing search result messages again
-        self.frame.np.search.add_allowed_token(self.token)
+        self.core.search.add_allowed_token(self.token)
 
         # Update number of results widget
         self.update_result_counter()
 
     def on_close(self, *_args):
-
-        del self.searches.pages[self.token]
-        self.frame.np.search.remove_search(self.token)
-        self.searches.remove_page(self.Main)
+        self.core.search.remove_search(self.token)
 
     def on_close_all_tabs(self, *_args):
         self.searches.remove_all_pages()

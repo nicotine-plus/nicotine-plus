@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# COPYRIGHT (C) 2021 Nicotine+ Team
+# COPYRIGHT (C) 2021-2022 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -17,8 +17,22 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import importlib.util
 import sys
-from pynicotine import run
+
+def load_module():
+
+    if not importlib.util.find_spec("pynicotine"):
+        print("""Cannot find the pynicotine module.
+Perhaps it is installed in a folder which is not in Python's module search
+path. There could be a version mismatch between the Python version that was
+used to build the application binary package and the version you try to run
+the application with.""")
+        return 1
+
+    from pynicotine import run
+    return run()
+
 
 if __name__ == '__main__':
-    sys.exit(run())
+    sys.exit(load_module())

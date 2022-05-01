@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -24,7 +24,7 @@ from pynicotine.config import config
 """ Dialogs """
 
 
-def generic_dialog(parent=None, content_box=None, quit_callback=None,
+def generic_dialog(parent=None, content_box=None, buttons=None, quit_callback=None,
                    title="Dialog", width=400, height=400, modal=True):
 
     dialog = Gtk.Dialog(
@@ -33,9 +33,17 @@ def generic_dialog(parent=None, content_box=None, quit_callback=None,
         default_width=width,
         default_height=height
     )
+    dialog.get_style_context().add_class("generic-dialog")
 
     if content_box:
-        dialog.get_content_area().add(content_box)
+        if Gtk.get_major_version() == 4:
+            dialog.get_content_area().append(content_box)
+        else:
+            dialog.get_content_area().add(content_box)
+
+    if buttons:
+        for button, response_type in buttons:
+            dialog.add_action_widget(button, response_type)
 
     set_dialog_properties(dialog, parent, quit_callback, modal)
     return dialog
@@ -109,114 +117,125 @@ def dialog_hide(dialog):
 """ Message Dialogs """
 
 
-def entry_dialog(parent, title, message, callback, callback_data=None, default="",
-                 optionmessage="", optionvalue=False, visibility=True, droplist=None):
+class MessageDialog:
 
-    self = Gtk.MessageDialog(
-        transient_for=parent,
-        default_width=500,
-        message_type=Gtk.MessageType.OTHER,
-        buttons=Gtk.ButtonsType.OK_CANCEL,
-        destroy_with_parent=True,
-        modal=True,
-        text=title,
-        secondary_text=message
-    )
-    self.connect("response", callback, callback_data)
+    def __init__(self, parent, title, message, callback=None, callback_data=None,
+                 message_type=Gtk.MessageType.OTHER, buttons=None, width=-1):
 
-    if Gtk.get_major_version() == 4:
-        label = self.get_message_area().get_last_child()
-    else:
-        label = self.get_message_area().get_children()[-1]
+        self.dialog = Gtk.MessageDialog(
+            transient_for=parent, destroy_with_parent=True, modal=True,
+            message_type=message_type, default_width=width,
+            text=title, secondary_text=message
+        )
+        self.container = self.dialog.get_message_area()
 
-    label.set_selectable(True)
+        if not callback:
+            def callback(dialog, *_args):
+                dialog.destroy()
 
-    if droplist:
-        dropdown = Gtk.ComboBoxText(has_entry=True, visible=True)
-        entry = dropdown.get_child()
+        self.callback = callback
+        self.callback_data = callback_data
 
-        for i in droplist:
-            dropdown.append_text(i)
+        self.dialog.connect("response", self.on_response)
 
-        self.get_message_area().add(dropdown)
-    else:
-        entry = Gtk.Entry(visible=True)
-        self.get_message_area().add(entry)
+        if not buttons:
+            buttons = [(_("Close"), Gtk.ResponseType.CLOSE)]
 
-    self.get_response_value = entry.get_text
-    entry.connect("activate", lambda x: self.response(Gtk.ResponseType.OK))
-    entry.set_activates_default(True)
-    entry.set_text(default)
-    entry.set_visibility(visibility)
+        for button_label, response_type in buttons:
+            self.dialog.add_button(button_label, response_type)
 
-    if optionmessage:
-        self.option = Gtk.CheckButton(label=optionmessage, active=optionvalue, visible=True)
-        self.get_message_area().add(self.option)
-        self.get_second_response_value = self.option.get_active
+        if Gtk.get_major_version() == 4:
+            label = self.container.get_last_child()
+        else:
+            label = self.container.get_children()[-1]
 
-    self.present_with_time(Gdk.CURRENT_TIME)
+        label.set_selectable(True)
+
+    def on_response(self, _dialog, response_id):
+        self.callback(self, response_id, self.callback_data)
+
+    def show(self):
+        self.dialog.present_with_time(Gdk.CURRENT_TIME)
+
+    def destroy(self):
+        self.dialog.destroy()
 
 
-def message_dialog(parent, title, message, callback=None):
+class EntryDialog(MessageDialog):
 
-    self = Gtk.MessageDialog(
-        transient_for=parent,
-        message_type=Gtk.MessageType.INFO,
-        buttons=Gtk.ButtonsType.OK,
-        destroy_with_parent=True,
-        modal=True,
-        text=title,
-        secondary_text=message
-    )
+    def __init__(self, parent, title, message, callback, callback_data=None, default="",
+                 option_label="", option_value=False, visibility=True, droplist=None):
 
-    if not callback:
-        def callback(dialog, *_args):
-            dialog.destroy()
+        super().__init__(parent=parent, title=title, message=message, message_type=Gtk.MessageType.OTHER,
+                         callback=callback, callback_data=callback_data, width=500,
+                         buttons=[
+                             (_("Cancel"), Gtk.ResponseType.CANCEL),
+                             (_("OK"), Gtk.ResponseType.OK)])
 
-    self.connect("response", callback)
+        if droplist:
+            dropdown = Gtk.ComboBoxText(has_entry=True, visible=True)
+            self.entry = dropdown.get_child()
+            self.entry.set_visibility(visibility)
 
-    if Gtk.get_major_version() == 4:
-        label = self.get_message_area().get_last_child()
-    else:
-        label = self.get_message_area().get_children()[-1]
+            for i in droplist:
+                dropdown.append_text(i)
 
-    label.set_selectable(True)
+            if Gtk.get_major_version() == 4:
+                self.container.append(dropdown)
+            else:
+                self.container.add(dropdown)
+        else:
+            if Gtk.get_major_version() == 4 and not visibility:
+                self.entry = Gtk.PasswordEntry(show_peek_icon=True, visible=True)
+            else:
+                self.entry = Gtk.Entry(visibility=visibility, visible=True)
 
-    self.present_with_time(Gdk.CURRENT_TIME)
+            if Gtk.get_major_version() == 4:
+                self.container.append(self.entry)
+            else:
+                self.container.add(self.entry)
+
+        self.entry.connect("activate", lambda x: self.dialog.response(Gtk.ResponseType.OK))
+        self.entry.set_text(default)
+
+        self.option = Gtk.CheckButton(label=option_label, active=option_value, visible=bool(option_label))
+
+        if option_label:
+            if Gtk.get_major_version() == 4:
+                self.container.append(self.option)
+            else:
+                self.container.add(self.option)
+
+    def get_response_value(self):
+        return self.entry.get_text()
+
+    def get_second_response_value(self):
+        return self.option.get_active()
 
 
-def option_dialog(parent, title, message, callback, callback_data=None, checkbox_label="",
-                  first_button=_("_No"), second_button=_("_Yes"), third_button=""):
+class OptionDialog(MessageDialog):
 
-    self = Gtk.MessageDialog(
-        transient_for=parent,
-        message_type=Gtk.MessageType.QUESTION,
-        destroy_with_parent=True,
-        modal=True,
-        text=title,
-        secondary_text=message
-    )
-    self.connect("response", callback, callback_data)
+    def __init__(self, parent, title, message, callback, callback_data=None, option_label="", option_value=False,
+                 first_button=_("_No"), second_button=_("_Yes"), third_button=""):
 
-    if Gtk.get_major_version() == 4:
-        label = self.get_message_area().get_last_child()
-    else:
-        label = self.get_message_area().get_children()[-1]
+        buttons = []
 
-    label.set_selectable(True)
+        if first_button:
+            buttons.append((first_button, 1))
 
-    self.checkbox = Gtk.CheckButton(label=checkbox_label, visible=bool(checkbox_label))
+        if second_button:
+            buttons.append((second_button, 2))
 
-    if checkbox_label:
-        self.get_message_area().add(self.checkbox)
+        if third_button:
+            buttons.append((third_button, 3))
 
-    if first_button:
-        self.add_button(first_button, 1)
+        super().__init__(parent=parent, title=title, message=message, message_type=Gtk.MessageType.OTHER,
+                         callback=callback, callback_data=callback_data, buttons=buttons)
 
-    if second_button:
-        self.add_button(second_button, 2)
+        self.option = Gtk.CheckButton(label=option_label, active=option_value, visible=bool(option_label))
 
-    if third_button:
-        self.add_button(third_button, 3)
-
-    self.present_with_time(Gdk.CURRENT_TIME)
+        if option_label:
+            if Gtk.get_major_version() == 4:
+                self.container.append(self.option)
+            else:
+                self.container.add(self.option)

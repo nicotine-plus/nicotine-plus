@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -26,15 +26,22 @@ from pynicotine.gtkgui.widgets.ui import UserInterface
 
 class RoomWall(UserInterface):
 
-    def __init__(self, frame, room):
+    def __init__(self, frame, core, room):
 
         super().__init__("ui/popovers/roomwall.ui")
+        (
+            self.list_view,
+            self.message_entry,
+            self.message_view,
+            self.popover
+        ) = self.widgets
 
         self.frame = frame
+        self.core = core
         self.room = room
         self.room_wall_textview = TextView(self.message_view)
 
-        room.ShowRoomWall.set_popover(self.popover)
+        room.room_wall_button.set_popover(self.popover)
 
     def update_message_list(self):
 
@@ -48,11 +55,11 @@ class RoomWall(UserInterface):
         entry_text = self.message_entry.get_text()
         self.message_entry.set_text("")
 
-        self.room.tickers.remove_ticker(self.frame.np.login_username)
+        self.room.tickers.remove_ticker(self.core.login_username)
         self.room_wall_textview.clear()
 
         if update_list:
-            self.frame.np.queue.append(slskmessages.RoomTickerSet(self.room.room, ""))
+            self.core.queue.append(slskmessages.RoomTickerSet(self.room.room, ""))
             self.update_message_list()
 
         return entry_text
@@ -60,10 +67,10 @@ class RoomWall(UserInterface):
     def on_set_room_wall_message(self, *_args):
 
         entry_text = self.clear_room_wall_message(update_list=False)
-        self.frame.np.queue.append(slskmessages.RoomTickerSet(self.room.room, entry_text))
+        self.core.queue.append(slskmessages.RoomTickerSet(self.room.room, entry_text))
 
         if entry_text:
-            login_username = self.frame.np.login_username
+            login_username = self.core.login_username
             self.room_wall_textview.append_line("[%s] %s" % (login_username, entry_text), showstamp=False, scroll=False)
 
         self.update_message_list()
@@ -89,7 +96,7 @@ class RoomWall(UserInterface):
         self.room_wall_textview.clear()
         self.update_message_list()
 
-        login_username = self.frame.np.login_username
+        login_username = self.core.login_username
 
         for user, msg in self.room.tickers.get_tickers():
             if user == login_username:

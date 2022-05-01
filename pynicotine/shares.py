@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (C) 2009-2011 Quinox <quinox@users.sf.net>
@@ -400,7 +400,7 @@ class Scanner:
 
         message = slskmessages.FileSearchResult()
         stream = bytearray()
-        stream.extend(message.pack_object(len(folder)))
+        stream.extend(message.pack_uint32(len(folder)))
 
         for fileinfo in folder:
             stream.extend(message.pack_file_info(fileinfo))
@@ -456,14 +456,16 @@ class Scanner:
 
 class Shares:
 
-    def __init__(self, core, config, queue, init_shares=True, ui_callback=None):
+    def __init__(self, core, config, queue, network_callback=None, ui_callback=None, init_shares=True):
 
         self.core = core
+        self.network_callback = network_callback
         self.ui_callback = ui_callback
         self.config = config
         self.queue = queue
         self.translatepunctuation = str.maketrans(dict.fromkeys(PUNCTUATION, ' '))
         self.share_dbs = {}
+        self.pending_network_msgs = []
         self.rescanning = False
         self.should_compress_shares = False
         self.compressed_shares_normal = slskmessages.SharedFileList(None, None)
@@ -568,6 +570,7 @@ class Shares:
     def load_shares(cls, shares, dbs, reset_shares=False):
 
         errors = []
+        exception = None
 
         for destination, shelvefile in dbs:
             try:
@@ -728,7 +731,7 @@ class Shares:
 
         import multiprocessing
 
-        multiprocessing.set_start_method("spawn", force=True)
+        multiprocessing.set_start_method("fork" if sys.platform == "darwin" else "spawn", force=True)
 
         scanner_queue = multiprocessing.Queue()
         scanner = Scanner(
@@ -829,6 +832,11 @@ class Shares:
             self.send_num_shared_folders_files()
 
         self.rescanning = False
+
+        # Process any file transfer queue requests that arrived while scanning
+        if self.network_callback:
+            self.network_callback(self.pending_network_msgs)
+
         return error
 
     """ Quit """

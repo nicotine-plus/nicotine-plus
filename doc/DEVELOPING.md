@@ -22,11 +22,11 @@ We aim to support the oldest minor Python 3 version still used by supported rele
 
 Nicotine+ and its predecessors PySoulSeek and Nicotine were originally developed with GNU/Linux in mind, at a time when the official Soulseek client only supported Windows. The Nicotine project opted to use GTK as the GUI toolkit, as opposed to wxPython previously used by PySoulSeek. This decision was made due to various issues encountered in wxPython at the time, such as large memory overhead and long compile/build times.
 
-We are content with GTK, and have no plans of switching to another toolkit.
+GTK fits our needs, and we have no plans of switching to another toolkit.
 
 # Dependencies
 
-Nicotine+ aims to be as portable as possible, providing access to the Soulseek network for people who cannot run the official Soulseek client. Nicotine+ runs on almost any architecture and system available, and has active users on a plethora of different systems. This also means that the introduction of an external software depencency can cause issues for both packagers and users.
+Nicotine+ aims to be as portable as possible, providing access to the Soulseek network for people who cannot run the official Soulseek client. Nicotine+ runs on almost any architecture and system available, and has active users on a plethora of different systems. This also means that the introduction of an external software dependency can cause issues for both packagers and users.
 
 Dependencies preinstalled on most systems, as well as modules included in the Python Standard Library, should be preferred whenever possible. Avoid introducing "convenient" and "new hotness" dependencies, if the standard library already includes the required functionality to some degree. If a new dependency is necessary, think about the following points:
 
@@ -44,9 +44,9 @@ Due to Python's interpreted nature, addressing performance issues can be a chall
 
  * Use different data structures and algorithms.
 
- * Use functionality included in the Python Standard Library when possible, instead of reimplementing the wheel. This is especially important when it comes to algorithms.
+ * Use functionality included in the Python Standard Library when possible, instead of reimplementing the wheel. Certain modules in the standard library are written in C, and can perform better than pure-Python counterparts, especially in hot code paths.
 
- * Look for alterative ways of accomplishing a task. Search engines help a lot here. Certain modules in the standard library are written in C, and can perform better than pure-Python counterparts, especially in hot code paths.
+ * Look for alternative ways of accomplishing a task, and compare the performance. Search engines help a lot here.
 
 [py-spy](https://github.com/benfred/py-spy) is an excellent tool for profiling Python applications in real time, and will save a lot of time in the long run.
 
@@ -61,6 +61,7 @@ The key thing to remember is that in order to do this properly, this all needs t
 There are [different ways](https://wiki.debian.org/qa.debian.org#Other_distributions) of performing CI on different distros. The most common one is via the international [DEP-8](https://dep-team.pages.debian.net/deps/dep8/) standard as used by hundreds of different operating systems.
 
 ## Autopkgtest
+
 On Debian based distributions, `autopkgtest` implements the DEP-8 standard. To create and use a build image environment for Ubuntu, follow these steps. First install the autopkgtest(1) tools:
 
 ```sh
@@ -81,7 +82,7 @@ autopkgtest --shell-fail --apt-upgrade . -- \
       --qemu-options='-enable-kvm'
 ```
 
-## Creating tests
+## Creating Tests
 
 Tests are defined in the *[test/](/test/)* folder, and should be expanded to cover larger parts of the client when possible.
 
@@ -105,7 +106,7 @@ Release dates are not set in stone, as Nicotine+ development is done by voluntee
 
  * Releasing large updates can make it more difficult to pinpoint eventual issues that were introduced since the previous release.
 
-## Creating a new Nicotine+ release
+## Creating a Nicotine+ Release
 
 The following is a step-by-step guide detailing what a Nicotine+ maintainer should do when releasing a new version of Nicotine+.
 
@@ -126,7 +127,7 @@ python3 setup.py sdist
  5. Increase the Nicotine+ version number / add new version entries in the master branch. Nicotine+ uses [Semantic Versioning](https://semver.org/). The following files need to be modified:
     * [NEWS.md](/NEWS.md)
     * [README.md](/README.md)
-    * [data/org.nicotine_plus.Nicotine.metainfo.xml.in](/data/org.nicotine_plus.Nicotine.metainfo.xml.in)
+    * [data/org.nicotine_plus.Nicotine.appdata.xml.in](/data/org.nicotine_plus.Nicotine.appdata.xml.in)
     * [debian/changelog](/debian/changelog)
     * [pynicotine/config.py](/pynicotine/config.py)
 

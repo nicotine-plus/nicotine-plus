@@ -45,18 +45,19 @@
         <child>
           <object class="GtkFrame">
             <property name="visible">True</property>
+            <property name="vexpand">True</property>
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
                 <child>
                   <object class="GtkScrolledWindow">
                     <property name="visible">True</property>
+                    <property name="hexpand">True</property>
                     <property name="height-request">400</property>
                     <property name="width-request">350</property>
                     <child>
                       <object class="GtkTreeView" id="list_view">
                         <property name="visible">True</property>
-                        <property name="hexpand">True</property>
                         <signal name="row-activated" handler="on_row_activated"/>
                       </object>
                     </child>
@@ -76,11 +77,11 @@
                 <property name="visible">True</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkCheckButton" id="feed_check">
+                  <object class="GtkCheckButton" id="public_feed_toggle">
                     <property name="label" translatable="yes">_Show feed of public chat room messages</property>
                     <property name="visible">True</property>
                     <property name="use-underline">True</property>
-                    <signal name="toggled" handler="on_show_chat_feed"/>
+                    <signal name="toggled" handler="on_toggle_public_feed"/>
                   </object>
                 </child>
               </object>
@@ -90,7 +91,7 @@
                 <property name="visible">True</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkCheckButton" id="private_room_check">
+                  <object class="GtkCheckButton" id="private_room_toggle">
                     <property name="label" translatable="yes">_Accept private room invitations</property>
                     <property name="visible">True</property>
                     <property name="use-underline">True</property>

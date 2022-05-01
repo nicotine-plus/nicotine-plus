@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -72,6 +72,7 @@ def apply_translations():
     falling back to the system path does not work."""
 
     libintl_path = None
+    executable_folder = os.path.dirname(sys.executable)
     _set_default_system_language()
 
     # Local path where to find translation (mo) files
@@ -82,8 +83,14 @@ def apply_translations():
     if sys.platform == "win32":
         libintl_path = "libintl-8.dll"
 
+        if getattr(sys, 'frozen', False):
+            libintl_path = os.path.join(executable_folder, "lib", libintl_path)
+
     elif sys.platform == "darwin":
         libintl_path = "libintl.8.dylib"
+
+        if getattr(sys, 'frozen', False):
+            libintl_path = os.path.join(executable_folder, libintl_path)
 
     if libintl_path is not None:
         import ctypes
@@ -93,7 +100,7 @@ def apply_translations():
             mo_path = local_mo_path
 
         elif getattr(sys, 'frozen', False):
-            mo_path = os.path.join(os.path.dirname(sys.executable), "share", "locale")
+            mo_path = os.path.join(executable_folder, "share", "locale")
 
         else:
             mo_path = os.path.join(sys.prefix, "share", "locale")
@@ -121,6 +128,7 @@ def apply_translations():
 def build_translations():
     """ Builds .mo translation files in the 'mo' folder of the project repository """
 
+    import subprocess
     languages = []
 
     for po_file in glob.glob(os.path.join(BASE_FOLDER, "po", "*.po")):
@@ -133,17 +141,15 @@ def build_translations():
         if not os.path.exists(mo_dir):
             os.makedirs(mo_dir)
 
-        exit_code = os.system("msgfmt --check " + po_file + " -o " + mo_file)
+        subprocess.check_call(["msgfmt", "--check", po_file, "-o", mo_file])
 
-        if exit_code > 0:
-            sys.exit(exit_code)
-
-    # Merge translations into .desktop and metainfo files
+    # Merge translations into .desktop and appdata files
     for desktop_file in glob.glob(os.path.join(BASE_FOLDER, "data", "*.desktop.in")):
-        os.system("msgfmt --desktop --template=" + desktop_file + " -d po -o " + desktop_file[:-3])
+        subprocess.check_call(["msgfmt", "--desktop", "--template=" + desktop_file, "-d", "po",
+                               "-o", desktop_file[:-3]])
 
-    for metainfo_file in glob.glob(os.path.join(BASE_FOLDER, "data", "*.metainfo.xml.in")):
-        os.system("msgfmt --xml --template=" + metainfo_file + " -d po -o " + metainfo_file[:-3])
+    for appdata_file in glob.glob(os.path.join(BASE_FOLDER, "data", "*.appdata.xml.in")):
+        subprocess.check_call(["msgfmt", "--xml", "--template=" + appdata_file, "-d", "po", "-o", appdata_file[:-3]])
 
     return languages
 

@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2009 Quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2006-2009 Daelstorm <daelstorm@gmail.com>
@@ -29,7 +29,6 @@ from collections import OrderedDict
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
-from gi.repository import Pango
 
 from pynicotine.config import config
 from pynicotine.geoip.geoip import GeoIP
@@ -148,7 +147,7 @@ def initialise_columns(frame, treeview_name, treeview, *args):
         xalign = 0
 
         if column_type == "text":
-            renderer = Gtk.CellRendererText(ellipsize=Pango.EllipsizeMode.END, xpad=width_padding, ypad=height_padding)
+            renderer = Gtk.CellRendererText(xpad=width_padding, ypad=height_padding)
             column = Gtk.TreeViewColumn(column_id, renderer, text=i)
 
         elif column_type == "number":
@@ -176,7 +175,7 @@ def initialise_columns(frame, treeview_name, treeview, *args):
             if column_id == "country":
                 if Gtk.get_major_version() == 4:
                     # Custom icon size defined in theme.py
-                    renderer.set_property("icon-size", Gtk.IconSize.NORMAL)
+                    renderer.set_property("icon-size", Gtk.IconSize.NORMAL)  # pylint: disable=no-member
                 else:
                     # Use the same size as the original icon
                     renderer.set_property("stock-size", 0)
@@ -209,7 +208,7 @@ def initialise_columns(frame, treeview_name, treeview, *args):
             column.add_attribute(renderer, "underline", underline)
 
         # Allow individual cells to receive visual focus
-        if num_cols > 1:
+        if num_cols > 1 and column_type != "edit":
             renderer.set_property("mode", Gtk.CellRendererMode.ACTIVATABLE)
 
         column.set_reorderable(True)

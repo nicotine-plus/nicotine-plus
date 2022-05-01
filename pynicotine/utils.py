@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 # COPYRIGHT (C) 2020 Lene Preuss <lene.preuss@gmail.com>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2007 Daelstorm <daelstorm@gmail.com>
@@ -25,7 +25,6 @@
 This module contains utility functions.
 """
 
-import errno
 import json
 import os
 import pickle
@@ -34,6 +33,7 @@ import webbrowser
 
 from pynicotine.config import config
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import UINT_LIMIT
 
 FILE_SIZE_SUFFIXES = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
 PUNCTUATION = ['!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>',
@@ -65,8 +65,8 @@ def rename_process(new_name, debug_info=False):
             libc = ctypes.CDLL(None)
             libc.setproctitle(new_name)
 
-        except Exception as error:
-            errors.append(error)
+        except Exception as second_error:
+            errors.append(second_error)
             errors.append("Failed BSD style")
 
     if debug_info and errors:
@@ -105,24 +105,6 @@ def clean_path(path, absolute=False):
     return path
 
 
-def get_path(folder_name, base_name, callback, data=None):
-    """ Call a specified function, supplying an optimal file path depending on
-    which path characters the target file system supports """
-
-    try:
-        filepath = os.path.join(folder_name, base_name)
-        callback(filepath, data)
-
-    except OSError as error:
-        if error.errno != errno.EINVAL:
-            # The issue is not caused by invalid path characters, raise error as usual
-            raise OSError from error
-
-        # Use path with forbidden characters removed (NTFS/FAT)
-        filepath = os.path.join(folder_name, clean_file(base_name))
-        callback(filepath, data)
-
-
 def open_file_path(file_path, command=None):
     """ Currently used to either open a folder or play an audio file
     Tries to run a user-specified command first, and falls back to
@@ -135,7 +117,7 @@ def open_file_path(file_path, command=None):
             execute_command(command, file_path)
 
         elif sys.platform == "win32":
-            os.startfile(file_path)
+            os.startfile(file_path)  # pylint: disable=no-member
 
         elif sys.platform == "darwin":
             execute_command("open $", file_path)
@@ -195,13 +177,14 @@ def _handle_log(folder, filename, callback):
             os.makedirs(folder)
 
         filename = clean_file(filename) + ".log"
-        get_path(folder, filename, callback)
+        path = os.path.join(folder, filename)
+        callback(path)
 
     except Exception as error:
         log.add("Failed to process log file: %s", error)
 
 
-def open_log_callback(path, _data):
+def open_log_callback(path):
 
     if not os.path.exists(path):
         with open(path, "w", encoding="utf-8"):
@@ -211,7 +194,7 @@ def open_log_callback(path, _data):
     open_file_path(path)
 
 
-def delete_log_callback(path, _data):
+def delete_log_callback(path):
 
     with open(path, "w", encoding="utf-8"):
         # Check if path should contain special characters
@@ -272,124 +255,46 @@ def get_result_bitrate_length(filesize, attributes):
     """ Used to get the audio bitrate and length of search results and
     user browse files """
 
-    h_bitrate = ""
-    h_length = ""
+    bitrate = attributes.get(0)
+    length = attributes.get(1)
+    vbr = attributes.get(2)
+    sample_rate = attributes.get(4)
+    bit_depth = attributes.get(5)
 
-    bitrate = 0
-    length = 0
-
-    # If there are 3 entries in the attribute list
-    if len(attributes) == 3:
-
-        first = attributes[0]
-        second = attributes[1]
-        third = attributes[2]
-
-        # Sometimes the vbr indicator is in third position
-        # Known clients: Soulseek NS, Nicotine+, Museek+, SoulSeeX
-        if third in (0, 1):
-
-            if third == 1:
-                h_bitrate = " (vbr)"
-
-            bitrate = first
-            h_bitrate = str(bitrate) + h_bitrate
-
-            length = second
-            h_length = human_length(second)
-
-        # Sometimes the vbr indicator is in second position
-        # Known clients: unknown (does this actually exist?)
-        elif second in (0, 1):
-
-            if second == 1:
-                h_bitrate = " (vbr)"
-
-            bitrate = first
-            h_bitrate = str(bitrate) + h_bitrate
-
-            length = third
-            h_length = human_length(third)
-
-        # Lossless audio, length is in first position
-        # Known clients: SoulseekQt 2015-6-12 and later
-        elif third > 1:
-
-            length = first
-            h_length = human_length(first)
-
+    if bitrate is None:
+        if sample_rate and bit_depth:
             # Bitrate = sample rate (Hz) * word length (bits) * channel count
             # Bitrate = 44100 * 16 * 2
-            bitrate = (second * third * 2) // 1000
-            h_bitrate = str(bitrate)
+            bitrate = (sample_rate * bit_depth * 2) // 1000
 
         else:
+            bitrate = -1
 
-            bitrate = first
-            h_bitrate = str(bitrate) + h_bitrate
+    if length is None:
+        if bitrate > 0:
+            # Dividing the file size by the bitrate in Bytes should give us a good enough approximation
+            length = filesize / (bitrate * 125)
 
-    # If there are 2 entries in the attribute list
-    # Known clients: SoulseekQt
-    elif len(attributes) == 2:
-
-        first = attributes[0]
-        second = attributes[1]
-
-        # Sometimes the vbr indicator is in second position
-        # Known clients: SoulseekQt 2015-2-21 and earlier
-        if second in (0, 1):
-
-            # If it's a vbr file we can't deduce the length
-            if second == 1:
-
-                h_bitrate = " (vbr)"
-
-                bitrate = first
-                h_bitrate = str(bitrate) + h_bitrate
-
-            # If it's a constant bitrate we can deduce the length
-            else:
-
-                bitrate = first
-                h_bitrate = str(bitrate) + h_bitrate
-
-                if bitrate > 0:
-                    # Dividing the file size by the bitrate in Bytes should give us a good enough approximation
-                    length = filesize / (bitrate * 125)
-                    h_length = human_length(length)
-
-        # Lossless audio without length attribute
-        # Known clients: SoulseekQt 2015-6-12 and later
-        elif first >= 8000 and second <= 64:
-
-            # Bitrate = sample rate (Hz) * word length (bits) * channel count
-            # Bitrate = 44100 * 16 * 2
-            bitrate = (first * second * 2) // 1000
-            h_bitrate = str(bitrate)
-
-            if bitrate > 0:
-                # Dividing the file size by the bitrate in Bytes should give us a good enough approximation
-                length = filesize / (bitrate * 125)
-                h_length = human_length(length)
-
-        # Sometimes the bitrate is in first position and the length in second position
-        # Known clients: SoulseekQt 2015-6-12 and later
         else:
-
-            bitrate = first
-            h_bitrate = str(bitrate) + h_bitrate
-
-            length = second
-            h_length = human_length(second)
+            length = -1
 
     # Ignore invalid values
-    if bitrate <= 0:
-        h_bitrate = ""
+    if bitrate <= 0 or bitrate > UINT_LIMIT:
         bitrate = 0
+        h_bitrate = ""
 
-    if length < 0:
-        h_length = ""
+    else:
+        h_bitrate = str(bitrate)
+
+        if vbr == 1:
+            h_bitrate += " (vbr)"
+
+    if length < 0 or length > UINT_LIMIT:
         length = 0
+        h_length = ""
+
+    else:
+        h_length = human_length(length)
 
     return h_bitrate, bitrate, h_length, length
 
@@ -559,14 +464,20 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
 
     try:
         if len(subcommands) == 1:  # no need to fool around with pipes
-            procs.append(Popen(subcommands[0], stdout=finalstdout))
+            procs.append(Popen(subcommands[0], stdout=finalstdout))      # pylint: disable=consider-using-with
         else:
-            procs.append(Popen(subcommands[0], stdout=PIPE))
+            procs.append(Popen(subcommands[0], stdout=PIPE))             # pylint: disable=consider-using-with
+
             for subcommand in subcommands[1:-1]:
-                procs.append(Popen(subcommand, stdin=procs[-1].stdout, stdout=PIPE))
-            procs.append(Popen(subcommands[-1], stdin=procs[-1].stdout, stdout=finalstdout))
+                procs.append(Popen(subcommand, stdin=procs[-1].stdout,   # pylint: disable=consider-using-with
+                                   stdout=PIPE))
+
+            procs.append(Popen(subcommands[-1], stdin=procs[-1].stdout,  # pylint: disable=consider-using-with
+                               stdout=finalstdout))
+
         if not background and not returnoutput:
             procs[-1].wait()
+
     except Exception as error:
         raise RuntimeError("Problem while executing command %s (%s of %s)" %
                            (subcommands[len(procs)], len(procs) + 1, len(subcommands))) from error
@@ -641,10 +552,10 @@ def write_file_and_backup(path, callback, protect=False):
             if os.path.exists(path + ".old"):
                 os.rename(path + ".old", path)
 
-        except Exception as error:
+        except Exception as second_error:
             log.add(_("Unable to restore previous file %(path)s: %(error)s"), {
                 "path": path,
-                "error": error
+                "error": second_error
             })
 
     if protect:

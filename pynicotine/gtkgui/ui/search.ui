@@ -6,8 +6,9 @@
     <property name="orientation">vertical</property>
     <child>
       <object class="GtkBox">
-        <property name="visible">False</property>
+        <property name="visible">True</property>
         <property name="orientation">vertical</property>
+        <property name="vexpand">True</property>
         <child>
           <object class="GtkBox">
             <property name="visible">True</property>
@@ -161,6 +162,7 @@
                 <child>
                   <object class="GtkFlowBox">
                     <property name="visible">True</property>
+                    <property name="hexpand">True</property>
                     <property name="column-spacing">12</property>
                     <property name="row-spacing">6</property>
                     <property name="max-children-per-line">7</property>
@@ -432,14 +434,14 @@
         <child>
           <object class="GtkBox">
             <property name="visible">True</property>
+            <property name="vexpand">True</property>
             <child>
               <object class="GtkScrolledWindow">
                 <property name="visible">True</property>
-                <property name="vexpand">True</property>
+                <property name="hexpand">True</property>
                 <child>
                   <object class="GtkTreeView" id="ResultsList">
                     <property name="visible">True</property>
-                    <property name="hexpand">True</property>
                     <property name="has-tooltip">True</property>
                     <property name="enable-search">False</property>
                     <property name="enable-tree-lines">True</property>

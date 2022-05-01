@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -15,8 +15,6 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-import time
 
 from pynicotine import slskmessages
 from pynicotine.utils import get_completion_list
@@ -42,7 +40,7 @@ class PrivateChats:
         self.queue = queue
         self.completion_list = []
         self.private_message_queue = {}
-        self.automatic_message_times = {}
+        self.away_message_users = set()
         self.users = set()
         self.ui_callback = None
 
@@ -62,8 +60,17 @@ class PrivateChats:
             self.ui_callback.server_login()
 
     def server_disconnect(self):
+
+        self.away_message_users.clear()
+
         if self.ui_callback:
             self.ui_callback.server_disconnect()
+
+    def set_away_mode(self, is_away):
+
+        if not is_away:
+            # Reset list of users we've sent away messages to when the away session ends
+            self.away_message_users.clear()
 
     def add_user(self, user):
 
@@ -82,6 +89,9 @@ class PrivateChats:
             self.config.sections["privatechat"]["users"].remove(user)
 
         self.users.remove(user)
+
+        if self.ui_callback:
+            self.ui_callback.remove_user(user)
 
     def show_user(self, user, switch_page=True):
 
@@ -142,16 +152,7 @@ class PrivateChats:
             self.message_user(msg)
 
     def send_automatic_message(self, user, message):
-        """ Sends a private message with the prefix 'Automatic Message' to a user.
-        No message is sent if less than five seconds have passed since the last one. """
-
-        send_time = time.time()
-
-        if user in self.automatic_message_times and (send_time - self.automatic_message_times[user]) < 5:
-            return
-
-        self.queue.append(slskmessages.MessageUser(user, "[Automatic Message] " + message))
-        self.automatic_message_times[user] = send_time
+        self.send_message(user, "[Automatic Message] " + message)
 
     def echo_message(self, user, message, message_type="local"):
         if self.ui_callback:
@@ -219,13 +220,6 @@ class PrivateChats:
         if self.ui_callback:
             self.ui_callback.message_user(msg)
 
-        self.core.notifications.new_tts(
-            self.config.sections["ui"]["speechprivate"], {
-                "user": msg.user,
-                "message": msg.msg
-            }
-        )
-
         self.core.pluginhandler.incoming_private_chat_notification(msg.user, msg.msg)
 
         if ctcpversion and not self.config.sections["server"]["ctcpmsgs"]:
@@ -233,8 +227,9 @@ class PrivateChats:
 
         autoreply = self.config.sections["server"]["autoreply"]
 
-        if self.core.away and msg.user not in self.automatic_message_times and autoreply:
+        if autoreply and self.core.away and msg.user not in self.away_message_users:
             self.send_automatic_message(msg.user, autoreply)
+            self.away_message_users.add(msg.user)
 
     def update_completions(self):
 
