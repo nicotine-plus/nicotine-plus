@@ -106,7 +106,7 @@
                         <property name="visible">True</property>
                         <property name="xalign">0</property>
                         <property name="margin-start">12</property>
-                        <property name="label" translatable="yes">Case is insensitive, but word order is important: &apos;Twin Aphex&apos; will not show any &apos;Aphex Twin&apos;</property>
+                        <property name="label" translatable="yes">Case is insensitive, but word order is important: &apos;Instrumental Remix&apos; will not show any &apos;Remix Instrumental&apos;</property>
                         <property name="selectable">True</property>
                         <property name="wrap">True</property>
                       </object>
@@ -117,7 +117,7 @@
                         <property name="xalign">0</property>
                         <property name="margin-start">12</property>
                         <property name="label" translatable="yes">For order-insensitive filtering, as well as filtering several exact phrases, vertical bars can be used to separate phrases and words.
-    Example: Twin|Aphex|Analogue Bubblebath|Digeridoo</property>
+    Example: Remix|Instrumental|Dub Mix</property>
                         <property name="selectable">True</property>
                         <property name="wrap">True</property>
                       </object>
