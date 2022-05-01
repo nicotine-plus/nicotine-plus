@@ -284,6 +284,7 @@ class Search(UserInterface):
             self.FilterOut,
             self.FilterSize,
             self.FilterType,
+            self.FilterLength,
             self.FiltersContainer,
             self.Main,
             self.ResultGrouping,
