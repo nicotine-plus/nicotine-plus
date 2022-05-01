@@ -1847,7 +1847,7 @@ class SearchesFrame(UserInterface):
         (self.ClearFilterHistory, self.ClearFilterHistorySuccess, self.ClearSearchHistory,
          self.ClearSearchHistorySuccess, self.EnableFilters, self.EnableSearchHistory, self.FilterBR, self.FilterCC,
          self.FilterFree, self.FilterHelpLabel, self.FilterIn, self.FilterOut, self.FilterSize, self.FilterType,
-         self.Main, self.MaxDisLabel, self.MaxDisplayedResults, self.MaxResults, self.MinSearchChars,
+         self.FilterLength, self.Main, self.MaxDisLabel, self.MaxDisplayedResults, self.MaxResults, self.MinSearchChars,
          self.RemoveSpecialChars, self.ShowPrivateSearchResults, self.ShowSearchHelp, self.ToggleResults) = self.widgets
 
         self.preferences = preferences
