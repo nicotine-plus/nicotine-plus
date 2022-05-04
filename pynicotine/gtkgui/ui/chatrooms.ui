@@ -247,7 +247,7 @@
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="use-underline">True</property>
-                                <property name="label">Room _Wall</property>
+                                <property name="label">R_oom Wall</property>
                               </object>
                             </child>
                           </object>
