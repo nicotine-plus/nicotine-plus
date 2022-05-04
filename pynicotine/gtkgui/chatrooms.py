@@ -532,8 +532,7 @@ class ChatRoom(UserInterface):
         if self.room != "Public ":
             return
 
-        for widget in (self.activity_container, self.users_container, self.chat_entry,
-                       self.room_wall_button, self.help_button):
+        for widget in (self.activity_container, self.users_container, self.chat_entry, self.help_button):
             widget.hide()
 
         for widget in (self.auto_join_toggle, self.log_toggle):
