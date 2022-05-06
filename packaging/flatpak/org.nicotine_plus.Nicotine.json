@@ -88,7 +88,7 @@
         },
         {
             "name": "libayatana-appindicator",
-            "buildsystem": "cmake",
+            "buildsystem": "cmake-ninja",
             "config-opts": [
                 "-DENABLE_BINDINGS_MONO=OFF",
                 "-DENABLE_BINDINGS_VALA=OFF",
@@ -105,7 +105,7 @@
             "modules": [
                 {
                     "name": "libayatana-indicator",
-                    "buildsystem": "cmake",
+                    "buildsystem": "cmake-ninja",
                     "config-opts": [
                         "-DENABLE_IDO=OFF",
                         "-DENABLE_TESTS=OFF",
