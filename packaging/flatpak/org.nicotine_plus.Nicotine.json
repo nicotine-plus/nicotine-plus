@@ -97,8 +97,8 @@
             ],
             "sources": [
                 {
-                    "url": "https://github.com/AyatanaIndicators/libayatana-appindicator/archive/refs/tags/0.5.90.tar.gz",
-                    "sha256": "15319ca7fda90c6bd85311bbe83eefe1e322de32df2c7f5174b0d5a7537c27b4",
+                    "url": "https://github.com/AyatanaIndicators/libayatana-appindicator/archive/refs/tags/0.5.91.tar.gz",
+                    "sha256": "52eb5d0c0de07177833e50fbaee592dcb3939e96c6b789921e2a8caf40a1ed26",
                     "type": "archive"
                 }
             ],
@@ -136,8 +136,8 @@
             ],
             "sources": [
                 {
-                    "url": "https://download.gnome.org/sources/gspell/1.9/gspell-1.9.1.tar.xz",
-                    "sha256": "dcbb769dfdde8e3c0a8ed3102ce7e661abbf7ddf85df08b29915e92cd723abdd",
+                    "url": "https://download.gnome.org/sources/gspell/1.10/gspell-1.10.0.tar.xz",
+                    "sha256": "803bb884c0215d3fd22a85d7f30423aff88d9792f05a5199d8a489a2ffaae1da",
                     "type": "archive"
                 }
             ]
