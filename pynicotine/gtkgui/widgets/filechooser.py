@@ -34,28 +34,15 @@ ACTIVE_CHOOSER = None
 class FileChooser:
 
     def __init__(self, parent, callback, callback_data=None, title=_("Select a File"),
-                 initial_folder='~', action=Gtk.FileChooserAction.OPEN, buttons=None, multiple=False):
+                 initial_folder='~', action=Gtk.FileChooserAction.OPEN, multiple=False):
 
         global ACTIVE_CHOOSER  # pylint:disable=global-statement
-        try:
-            self.file_chooser = ACTIVE_CHOOSER = Gtk.FileChooserNative(
-                transient_for=parent,
-                title=title,
-                action=action
-            )
-        except AttributeError:
-            self.file_chooser = ACTIVE_CHOOSER = Gtk.FileChooserDialog(
-                transient_for=parent,
-                title=title,
-                action=action
-            )
 
-            if not buttons:
-                buttons = [(_("_Cancel"), Gtk.ResponseType.CLOSE),
-                           (_("_Open"), Gtk.ResponseType.ACCEPT)]
-
-            for button_label, response_type in buttons:
-                self.file_chooser.add_button(button_label, response_type)
+        self.file_chooser = ACTIVE_CHOOSER = Gtk.FileChooserNative(
+            transient_for=parent,
+            title=title,
+            action=action
+        )
 
         self.file_chooser.connect("response", self.on_selected, callback, callback_data)
         self.file_chooser.set_modal(True)
@@ -160,10 +147,7 @@ class FileChooserSave(FileChooser):
                  initial_folder='~', initial_file='', multiple=False):
 
         super().__init__(parent, callback, callback_data, title, initial_folder,
-                         action=Gtk.FileChooserAction.SAVE, multiple=multiple,
-                         buttons=[
-                             (_("_Cancel"), Gtk.ResponseType.CANCEL),
-                             (_("_Save"), Gtk.ResponseType.ACCEPT)])
+                         action=Gtk.FileChooserAction.SAVE, multiple=multiple)
 
         if Gtk.get_major_version() == 3:
             # Display hidden files

@@ -5,7 +5,7 @@
 ### Required
 
 - [python3](https://www.python.org/) >= 3.5;
-- [gtk3](https://gtk.org/) >= 3.18 for graphical interface;
+- [gtk3](https://gtk.org/) >= 3.22 for graphical interface;
 - [pygobject](https://pygobject.readthedocs.io/) for Python bindings for GTK;
 - [gdbm](https://www.gnu.org/software/gdbm/) for scanning shared files.
 

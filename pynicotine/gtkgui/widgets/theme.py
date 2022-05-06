@@ -141,6 +141,12 @@ def set_global_css():
         padding: 0;
     }
 
+    flowboxchild:disabled label {
+        /* Reset 'sensitive' widget style for preferences dialog */
+        color: inherit;
+        opacity: inherit;
+    }
+
     scrollbar {
         /* Workaround for themes breaking scrollbar hitbox with margins */
         margin: 0;
@@ -176,6 +182,7 @@ def set_global_css():
     /* Buttons */
 
     .count {
+        min-width: 12px;
         padding-left: 10px;
         padding-right: 10px;
     }
@@ -190,20 +197,6 @@ def set_global_css():
     .title-2 {
         font-weight: 800;
         font-size: 15pt;
-    }
-    """
-
-    css_gtk3_20 = b"""
-    /* Tweaks (GTK 3.20+) */
-
-    flowboxchild:disabled label {
-        /* Reset 'sensitive' widget style for preferences dialog */
-        color: inherit;
-        opacity: inherit;
-    }
-
-    .count {
-        min-width: 12px;
     }
     """
 
@@ -239,7 +232,7 @@ def set_global_css():
     global_css_provider = Gtk.CssProvider()
 
     if Gtk.get_major_version() == 4:
-        css = css + css_gtk3_20 + css_gtk4
+        css = css + css_gtk4
 
         global_css_provider.load_from_data(css)
 
@@ -248,9 +241,6 @@ def set_global_css():
         )
 
     else:
-        if not Gtk.check_version(3, 20, 0):
-            css = css + css_gtk3_20
-
         global_css_provider.load_from_data(css)
 
         Gtk.StyleContext.add_provider_for_screen(  # pylint: disable=no-member

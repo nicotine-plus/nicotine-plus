@@ -885,7 +885,6 @@ class NicotineFrame(UserInterface):
 
         action = Gio.SimpleAction(name="keyboardshortcuts")
         action.connect("activate", self.on_keyboard_shortcuts)
-        action.set_enabled(hasattr(Gtk, "ShortcutsWindow"))  # Not supported in Gtk <3.20
         self.application.add_action(action)
         self.application.set_accels_for_action("app.keyboardshortcuts", ["<Primary>question", "F1"])
 

@@ -159,14 +159,7 @@ class TextView:
 
         buf_x, buf_y = self.textview.window_to_buffer_coords(Gtk.TextWindowType.WIDGET,
                                                              self.pressed_x, self.pressed_y)
-        iterator_data = self.textview.get_iter_at_position(buf_x, buf_y)
-
-        try:
-            _over_text, iterator, _trailing = iterator_data
-
-        except ValueError:
-            # GTK 3.18
-            iterator, _trailing = iterator_data
+        _over_text, iterator, _trailing = self.textview.get_iter_at_position(buf_x, buf_y)
 
         return iterator.get_tags()
 

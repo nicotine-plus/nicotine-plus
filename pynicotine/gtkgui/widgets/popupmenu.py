@@ -219,7 +219,7 @@ class PopupMenu:
         self.menu_section = None
         self.useritem = None
 
-    def popup(self, pos_x, pos_y, controller=None, button=3, menu=None):
+    def popup(self, pos_x, pos_y, controller=None, menu=None):
 
         if menu is None:
             menu = self.create_context_menu(self.parent)
@@ -233,18 +233,13 @@ class PopupMenu:
             menu.popup()
             return
 
-        try:
-            if controller:
-                sequence = controller.get_current_sequence()
-                event = controller.get_last_event(sequence)
-            else:
-                event = None
+        if controller:
+            sequence = controller.get_current_sequence()
+            event = controller.get_last_event(sequence)
+        else:
+            event = None
 
-            menu.popup_at_pointer(event)
-
-        except (AttributeError, TypeError):
-            time = Gtk.get_current_event_time()
-            menu.popup(None, None, None, None, button, time)
+        menu.popup_at_pointer(event)
 
     """ Events """
 

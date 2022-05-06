@@ -982,7 +982,7 @@ class ChatRoom(UserInterface):
         menu = self.popup_menu_user_chat
         menu.update_model()
         self.populate_user_menu(user, menu, self.popup_menu_private_rooms_chat)
-        menu.popup(pos_x, pos_y, button=1)
+        menu.popup(pos_x, pos_y)
 
     def create_tags(self):
 

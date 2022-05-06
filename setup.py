@@ -89,6 +89,6 @@ functionality while keeping current with the Soulseek protocol."""
         scripts=["nicotine"],
         data_files=DATA_FILES,
         python_requires=">=3.5",
-        install_requires=["PyGObject>=3.18"],
+        install_requires=["PyGObject>=3.22"],
         cmdclass={"build_py": BuildPyCommand}
     )

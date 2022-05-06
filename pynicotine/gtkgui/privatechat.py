@@ -457,7 +457,7 @@ class PrivateChat(UserInterface):
         self.popup_menu_user_chat.update_model()
         self.popup_menu_user_chat.set_user(user)
         self.popup_menu_user_chat.toggle_user_items()
-        self.popup_menu_user_chat.popup(pos_x, pos_y, button=1)
+        self.popup_menu_user_chat.popup(pos_x, pos_y)
 
     def create_tags(self):
 
