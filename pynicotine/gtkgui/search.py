@@ -821,60 +821,57 @@ class Search(UserInterface):
 
         return iterator
 
-    def check_digit(self, sfilter, value, factorize=True):
+    def check_digit(self, result_filter, value, factorize=True):
 
         used_operator = ">="
-        if sfilter.startswith((">", "<", "=")):
-            used_operator, sfilter = sfilter[:1] + "=", sfilter[1:]
+        if result_filter.startswith((">", "<", "=")):
+            used_operator, result_filter = result_filter[:1] + "=", result_filter[1:]
 
-        if not sfilter:
+        if not result_filter:
             return True
 
         factor = 1
         if factorize:
             base = 1024  # Default to binary for "k", "m", "g" suffixes
 
-            if sfilter[-1:].lower() == 'b':
+            if result_filter[-1:].lower() == 'b':
                 base = 1000  # Byte suffix detected, prepare to use decimal if necessary
-                sfilter = sfilter[:-1]
+                result_filter = result_filter[:-1]
 
-            if sfilter[-1:].lower() == 'i':
+            if result_filter[-1:].lower() == 'i':
                 base = 1024  # Binary requested, stop using decimal
-                sfilter = sfilter[:-1]
+                result_filter = result_filter[:-1]
 
-            if sfilter.lower()[-1:] == "g":
+            if result_filter.lower()[-1:] == "g":
                 factor = pow(base, 3)
-                sfilter = sfilter[:-1]
+                result_filter = result_filter[:-1]
 
-            elif sfilter.lower()[-1:] == "m":
+            elif result_filter.lower()[-1:] == "m":
                 factor = pow(base, 2)
-                sfilter = sfilter[:-1]
+                result_filter = result_filter[:-1]
 
-            elif sfilter.lower()[-1:] == "k":
+            elif result_filter.lower()[-1:] == "k":
                 factor = base
-                sfilter = sfilter[:-1]
+                result_filter = result_filter[:-1]
 
-        if not sfilter:
+        if not result_filter:
             return True
 
         try:
-            sfilter = int(sfilter) * factor
+            result_filter = int(result_filter) * factor
         except ValueError:
             return True
 
         operation = self.operators.get(used_operator)
-        return operation(value, sfilter)
+        return operation(value, result_filter)
 
     @staticmethod
-    def check_country(sfilter, value):
-
-        if not isinstance(value, str):
-            return False
+    def check_country(result_filter, value):
 
         value = value.upper()
         allowed = False
 
-        for country_code in sfilter.split("|"):
+        for country_code in result_filter.split("|"):
             if country_code == value:
                 allowed = True
 
@@ -887,15 +884,12 @@ class Search(UserInterface):
         return allowed
 
     @staticmethod
-    def check_file_type(sfilter, value):
-
-        if not isinstance(value, str):
-            return False
+    def check_file_type(result_filter, value):
 
         value = value.lower()
         allowed = False
 
-        for ext in sfilter.split("|"):
+        for ext in result_filter.split("|"):
             exclude_ext = None
 
             if ext.startswith("!"):
@@ -936,7 +930,7 @@ class Search(UserInterface):
         if filters["filtersize"] and not self.check_digit(filters["filtersize"], row[13].get_value()):
             return False
 
-        if filters["filterbr"] and not self.check_digit(filters["filterbr"], row[10].get_value(), False):
+        if filters["filterbr"] and not self.check_digit(filters["filterbr"], row[10].get_value(), factorize=False):
             return False
 
         if filters["filterslot"] and row[15].get_value() > 0:
