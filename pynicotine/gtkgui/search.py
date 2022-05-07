@@ -380,7 +380,7 @@ class Search(UserInterface):
             ["filename", _("Filename"), 400, "text", color_col],
             ["size", _("Size"), 100, "number", color_col],
             ["bitrate", _("Bitrate"), 100, "number", color_col],
-            ["length", _("Length"), 100, "number", color_col]
+            ["length", _("Duration"), 100, "number", color_col]
         )
 
         cols["id"].set_sort_column_id(0)
@@ -825,7 +825,7 @@ class Search(UserInterface):
                     factor = 1
                     sdigit = int(sdigit)  # Bitrate (or raw size, or seconds)
                 except ValueError:
-                    if ":" in sdigit:  # Length
+                    if ":" in sdigit:  # Duration
                         try:
                             # Convert string from HH:MM:SS or MM:SS into Seconds as integer
                             sdigit = sum(x * int(t) for x, t in zip([1, 60, 3600], reversed(sdigit.split(":"))))

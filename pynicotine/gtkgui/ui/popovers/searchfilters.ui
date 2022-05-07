@@ -336,7 +336,7 @@
                   <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
-                    <property name="label" translatable="yes">Length</property>
+                    <property name="label" translatable="yes">Duration</property>
                     <property name="selectable">True</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
@@ -363,7 +363,7 @@
                         <property name="visible">True</property>
                         <property name="xalign">0</property>
                         <property name="margin-start">12</property>
-                        <property name="label" translatable="yes">By default, files longer than or equal to the entered length will be matched, unless an operator (=, !, &lt;, or &gt;) is used.</property>
+                        <property name="label" translatable="yes">By default, files longer than or equal to the entered duration will be matched, unless an operator (=, !, &lt;, or &gt;) is used.</property>
                         <property name="selectable">True</property>
                         <property name="wrap">True</property>
                       </object>
@@ -388,7 +388,7 @@
                         <property name="label" translatable="yes">Multiple conditions can be specified with | pipe seperators:
     &gt;6:00|&lt;12:00 to show files between 6 and 12 minutes long.
     !9:54|!8:43|!7:32 to hide some specific files from the results.
-    =5:34|=4:23|=3:05 to include files with specific lengths.</property>
+    =5:34|=4:23|=3:05 to include files with specific durations.</property>
                         <property name="selectable">True</property>
                         <property name="wrap">True</property>
                       </object>
@@ -398,7 +398,7 @@
                         <property name="visible">True</property>
                         <property name="xalign">0</property>
                         <property name="margin-start">12</property>
-                        <property name="label" translatable="yes">To exclude non-audio files use !0 in the length filter.</property>
+                        <property name="label" translatable="yes">To exclude non-audio files use !0 in the duration filter.</property>
                         <property name="selectable">True</property>
                         <property name="wrap">True</property>
                       </object>

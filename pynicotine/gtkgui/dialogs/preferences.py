@@ -2198,7 +2198,7 @@ class NowPlayingFrame(UserInterface):
                 legend += _("Now Playing (typically \"%(artist)s - %(title)s\")") % {
                     'artist': _("Artist"), 'title': _("Title")}
             elif item == "$l":
-                legend += _("Length")
+                legend += _("Duration")
             elif item == "$r":
                 legend += _("Bitrate")
             elif item == "$c":

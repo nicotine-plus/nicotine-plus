@@ -293,7 +293,7 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">Length:</property>
+                <property name="label" translatable="yes">Duration:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
                 <property name="mnemonic_widget">FilterLength</property>

@@ -248,7 +248,7 @@ class UserBrowse(UserInterface):
             ["filename", _("Filename"), 600, "text", None],
             ["size", _("Size"), 100, "number", None],
             ["bitrate", _("Bitrate"), 100, "number", None],
-            ["length", _("Length"), 100, "number", None]
+            ["length", _("Duration"), 100, "number", None]
         )
         cols["filename"].set_sort_column_id(0)
         cols["size"].set_sort_column_id(4)

@@ -324,8 +324,8 @@
                             <child internal-child="entry">
                               <object class="GtkEntry">
                                 <property name="width-chars">10</property>
-                                <property name="placeholder-text" translatable="yes">Length…</property>
-                                <property name="tooltip-text" translatable="yes">Length, e.g. 2:20|!3:30|=4:40</property>
+                                <property name="placeholder-text" translatable="yes">Duration…</property>
+                                <property name="tooltip-text" translatable="yes">Duration, e.g. 2:20|!3:30|=4:40</property>
                                 <property name="primary-icon-name">media-playback-start-symbolic</property>
                                 <signal name="activate" handler="on_refilter"/>
                                 <signal name="changed" handler="on_filter_entry_changed"/>
