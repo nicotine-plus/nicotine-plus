@@ -293,6 +293,33 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">True</property>
+                <property name="label" translatable="yes">Length:</property>
+                <property name="xalign">0</property>
+                <property name="wrap">True</property>
+                <property name="mnemonic_widget">FilterLength</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <child>
+                  <object class="GtkEntry" id="FilterLength">
+                    <property name="visible">True</property>
+                    <property name="valign">center</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">True</property>
+            <property name="homogeneous">True</property>
+            <property name="spacing">12</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
                 <property name="label" translatable="yes">Country Code:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
@@ -327,7 +354,6 @@
               <object class="GtkCheckButton" id="FilterFree">
                 <property name="label" translatable="yes">Free Slot</property>
                 <property name="visible">True</property>
-
                 <property name="tooltip_text" translatable="yes">Only show results from users with an available upload slot.</property>
                 <property name="use-underline">True</property>
               </object>

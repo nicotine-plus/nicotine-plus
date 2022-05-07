@@ -55,6 +55,7 @@ from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
 from pynicotine.utils import get_result_bitrate_length
+from pynicotine.utils import factorize
 from pynicotine.utils import humanize
 from pynicotine.utils import human_size
 from pynicotine.utils import human_speed
@@ -189,6 +190,7 @@ class Searches(IconNotebook):
         config.sections["searches"]["filtertype"] = []
         config.sections["searches"]["filtersize"] = []
         config.sections["searches"]["filterbr"] = []
+        config.sections["searches"]["filterlength"] = []
         config.sections["searches"]["filtercc"] = []
         config.write_configuration()
 
@@ -282,6 +284,7 @@ class Search(UserInterface):
             self.FilterOut,
             self.FilterSize,
             self.FilterType,
+            self.FilterLength,
             self.FiltersContainer,
             self.Main,
             self.ResultGrouping,
@@ -456,7 +459,8 @@ class Search(UserInterface):
             "filtersize": self.FilterSize,
             "filterbr": self.FilterBitrate,
             "filtercc": self.FilterCountry,
-            "filtertype": self.FilterType
+            "filtertype": self.FilterType,
+            "filterlength": self.FilterLength
         }
 
         self.ShowFilters.set_active(config.sections["searches"]["filters_visible"])
@@ -548,6 +552,9 @@ class Search(UserInterface):
 
         if num_filters > 6:
             self.FilterType.get_child().set_text(str(sfilter[6]))
+
+        if num_filters > 7:
+            self.FilterLength.get_child().set_text(str(sfilter[7]))
 
         self.on_refilter()
 
@@ -798,49 +805,58 @@ class Search(UserInterface):
 
         return iterator
 
-    def check_digit(self, sfilter, value, factorize=True):
+    """ Result Filters """
 
-        used_operator = ">="
-        if sfilter.startswith((">", "<", "=")):
-            used_operator, sfilter = sfilter[:1] + "=", sfilter[1:]
+    def check_digit(self, sfilter, value, filesize=True):
 
-        if not sfilter:
-            return True
+        allowed = blocked = False
 
-        factor = 1
-        if factorize:
-            base = 1024  # Default to binary for "k", "m", "g" suffixes
+        for condition in sfilter.split("|"):
 
-            if sfilter[-1:].lower() == 'b':
-                base = 1000  # Byte suffix detected, prepare to use decimal if necessary
-                sfilter = sfilter[:-1]
+            if condition.strip().startswith((">", "<", "=", "!")):
+                used_operator, sdigit = condition[:1] + "=", condition[1:]
+            else:
+                used_operator, sdigit = ">=", condition
 
-            if sfilter[-1:].lower() == 'i':
-                base = 1024  # Binary requested, stop using decimal
-                sfilter = sfilter[:-1]
+            if sdigit and filesize:
+                sdigit, factor = factorize(sdigit)  # File Size
+            elif sdigit:
+                try:
+                    factor = 1
+                    sdigit = int(sdigit)  # Bitrate (or raw size, or seconds)
+                except ValueError:
+                    if ":" in sdigit:  # Length
+                        try:
+                            # Convert string from HH:MM:SS or MM:SS into Seconds as integer
+                            sdigit = sum(x * int(t) for x, t in zip([1, 60, 3600], reversed(sdigit.split(":"))))
+                        except ValueError:
+                            continue
 
-            if sfilter.lower()[-1:] == "g":
-                factor = pow(base, 3)
-                sfilter = sfilter[:-1]
+            if not isinstance(sdigit, int):
+                continue
 
-            elif sfilter.lower()[-1:] == "m":
-                factor = pow(base, 2)
-                sfilter = sfilter[:-1]
+            if factor > 1 and used_operator in ("==", "!="):
+                # Exact match is unlikely, so approximate within +/- 0.1 MiB or 1 MiB if over 100 MiB
+                adjust = factor / 8 if factor > 1024 and sdigit < 104857600 else factor  # TODO: GiB
 
-            elif sfilter.lower()[-1:] == "k":
-                factor = base
-                sfilter = sfilter[:-1]
+                if (sdigit - adjust) <= value <= (sdigit + adjust):
+                    if used_operator == "!=":
+                        return False
 
-        if not sfilter:
-            return True
+                    return True
 
-        try:
-            sfilter = int(sfilter) * factor
-        except ValueError:
-            return True
+                allowed = used_operator == "!="
+                continue
 
-        operation = self.operators.get(used_operator)
-        return operation(value, sfilter)
+            operation = self.operators.get(used_operator)
+
+            if operation(value, sdigit) and not blocked:
+                allowed = True
+                continue
+
+            blocked = True
+
+        return False if blocked else allowed
 
     @staticmethod
     def check_country(sfilter, value):
@@ -923,6 +939,9 @@ class Search(UserInterface):
             return False
 
         if filters["filtertype"] and not self.check_file_type(filters["filtertype"], row[11]):
+            return False
+
+        if filters["filterlength"] and not self.check_digit(filters["filterlength"], row[16].get_uint(), False):
             return False
 
         return True
@@ -1419,7 +1438,8 @@ class Search(UserInterface):
             "filterbr": self.FilterBitrate.get_active_text().strip(),
             "filterslot": self.FilterFreeSlot.get_active(),
             "filtercc": self.FilterCountry.get_active_text().strip().upper(),
-            "filtertype": self.FilterType.get_active_text().strip().lower()
+            "filtertype": self.FilterType.get_active_text().strip().lower(),
+            "filterlength": self.FilterLength.get_active_text().strip(),
         }
 
         if self.filters == filters:

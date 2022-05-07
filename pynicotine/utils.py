@@ -330,6 +330,42 @@ def humanize(number):
     return "{:n}".format(number)
 
 
+def factorize(filesize, base=1024):
+    """ Converts filesize string with a given unit into raw integer size,
+        defaults to binary for "k", "m", "g" suffixes (KiB, MiB, GiB) """
+
+    if not filesize:
+        return None, None
+
+    if filesize[-1:].lower() == 'b':
+        base = 1000  # Byte suffix detected, prepare to use decimal if necessary
+        filesize = filesize[:-1]
+
+    if filesize[-1:].lower() == 'i':
+        base = 1024  # Binary requested, stop using decimal
+        filesize = filesize[:-1]
+
+    if filesize.lower()[-1:] == "g":
+        factor = pow(base, 3)
+        filesize = filesize[:-1]
+
+    elif filesize.lower()[-1:] == "m":
+        factor = pow(base, 2)
+        filesize = filesize[:-1]
+
+    elif filesize.lower()[-1:] == "k":
+        factor = base
+        filesize = filesize[:-1]
+
+    else:
+        factor = 1
+
+    try:
+        return int(float(filesize) * factor), factor
+    except ValueError:
+        return None, factor
+
+
 def unescape(string):
     """Removes quotes from the beginning and end of strings, and unescapes it."""
 

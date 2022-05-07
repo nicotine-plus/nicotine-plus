@@ -49,7 +49,7 @@
                   <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
-                    <property name="label" translatable="yes">Each list of search results has its own filter which can be revealed by toggling the Result Filters button. A filter is made up of multiple fields, all of which are applied when pressing Enter in any one of its fields. Filtering is applied immediately to results already received, and also to those yet to arrive. To view the full results again, simply clear the filter of all terms and re-apply it. As the name suggests, a search result filter cannot expand your original search, it can only narrow it down. To broaden or change your search terms, perform a new search.</property>
+                    <property name="label" translatable="yes">Each list of search results has its own filter which can be revealed by toggling the Result Filters button. A filter is made up of multiple fields, all of which are applied when pressing Enter in any one of its fields. Filtering is applied immediately to results already received, and also to those yet to arrive.</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
                   </object>
@@ -58,7 +58,16 @@
                   <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
-                    <property name="label" translatable="yes">Result Filter List</property>
+                    <property name="label" translatable="yes">As the name suggests, a search result filter cannot expand your original search, it can only narrow it down. To broaden or change your search terms, perform a new search.</property>
+                    <property name="selectable">True</property>
+                    <property name="wrap">True</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="label" translatable="yes">Result Filter Usage</property>
                     <property name="margin-top">6</property>
                     <property name="selectable">True</property>
                     <attributes>
@@ -97,7 +106,7 @@
                         <property name="visible">True</property>
                         <property name="xalign">0</property>
                         <property name="margin-start">12</property>
-                        <property name="label" translatable="yes">Case is insensitive, but word order is important: &apos;Spears Brittany&apos; will not show any &apos;Brittany Spears&apos;</property>
+                        <property name="label" translatable="yes">Case is insensitive, but word order is important: &apos;Instrumental Remix&apos; will not show any &apos;Remix Instrumental&apos;</property>
                         <property name="selectable">True</property>
                         <property name="wrap">True</property>
                       </object>
@@ -108,7 +117,7 @@
                         <property name="xalign">0</property>
                         <property name="margin-start">12</property>
                         <property name="label" translatable="yes">For order-insensitive filtering, as well as filtering several exact phrases, vertical bars can be used to separate phrases and words.
-    Example: Spears|Brittany|My beautiful album|hello</property>
+    Example: Remix|Instrumental|Dub Mix</property>
                         <property name="selectable">True</property>
                         <property name="wrap">True</property>
                       </object>
@@ -220,29 +229,8 @@
                         <property name="visible">True</property>
                         <property name="xalign">0</property>
                         <property name="margin-start">12</property>
-                        <property name="label" translatable="yes">Prepend = to a value to specify an exact match:
-    =1024 only matches files that are 1024 bytes in size (i.e. 1 kibibyte).</property>
-                        <property name="selectable">True</property>
-                        <property name="wrap">True</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="xalign">0</property>
-                        <property name="margin-start">12</property>
-                        <property name="label" translatable="yes">Prepend &lt; or &gt; to find files less/greater than the given value.</property>
-                        <property name="selectable">True</property>
-                        <property name="wrap">True</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="xalign">0</property>
-                        <property name="margin-start">12</property>
                         <property name="label" translatable="yes">Append b, k, m, or g (alternatively kib, mib, or gib) to specify byte, kibibyte, mebibyte, or gibibyte units:
-    &lt;1024k will find files 1024 kibibytes (i.e. 1 mebibyte) or smaller.</property>
+    20m to show files larger than 20 MiB (mebibytes).</property>
                         <property name="selectable">True</property>
                         <property name="wrap">True</property>
                       </object>
@@ -252,7 +240,41 @@
                         <property name="visible">True</property>
                         <property name="xalign">0</property>
                         <property name="margin-start">12</property>
-                        <property name="label" translatable="yes">For convenience, the variants kb, mb, and gb for the better-known kilo-, mega-, and gigabyte units can also be used.</property>
+                        <property name="label" translatable="yes">Prepend = to a value to specify an exact match:
+    =1024 only matches files that are 1 KiB (kibibyte).</property>
+                        <property name="selectable">True</property>
+                        <property name="wrap">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="xalign">0</property>
+                        <property name="margin-start">12</property>
+                        <property name="label" translatable="yes">Prepend ! to a value to exclude files of a specific size:
+    !30.5m to hide files that are 30.5 MiB (mebibytes).</property>
+                        <property name="selectable">True</property>
+                        <property name="wrap">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="xalign">0</property>
+                        <property name="margin-start">12</property>
+                        <property name="label" translatable="yes">Prepend &lt; or &gt; to find files smaller/larger than the given value:
+    &gt;10.5m|&lt;1g to show files larger than 10.5 MiB (mebibytes),
+    but smaller than 1 GiB (gibibytes), use a | between conditions.</property>
+                        <property name="selectable">True</property>
+                        <property name="wrap">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="xalign">0</property>
+                        <property name="margin-start">12</property>
+                        <property name="label" translatable="yes">The better-known variants kb, mb, and gb can also be used for kilobyte, megabyte, and gigabyte units.</property>
                         <property name="selectable">True</property>
                         <property name="wrap">True</property>
                       </object>
@@ -290,7 +312,7 @@
                         <property name="visible">True</property>
                         <property name="xalign">0</property>
                         <property name="margin-start">12</property>
-                        <property name="label" translatable="yes">VBR files display their average bitrate and are typically lower in bitrate than a compressed 320 kbps CBR file of the same audio quality.</property>
+                        <property name="label" translatable="yes">Values must be entered as numeric digits only. The unit is always Kb/s (Kilobits per second).</property>
                         <property name="selectable">True</property>
                         <property name="wrap">True</property>
                       </object>
@@ -300,7 +322,83 @@
                         <property name="visible">True</property>
                         <property name="xalign">0</property>
                         <property name="margin-start">12</property>
-                        <property name="label" translatable="yes">Like Size above, =, &lt;, and &gt; can be used.</property>
+                        <property name="label" translatable="yes">Like File Size (above), operators =, !, &lt;, and &gt; can be used, and multiple conditions can be specified with | pipes:
+    &gt;256|&lt;1411 to show files with a bitrate of at least 256 Kb/s
+    with a maximum bitrate of 1411 Kb/s.</property>
+                        <property name="selectable">True</property>
+                        <property name="wrap">True</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="label" translatable="yes">Length</property>
+                    <property name="selectable">True</property>
+                    <attributes>
+                      <attribute name="style" value="italic"/>
+                    </attributes>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">8</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="xalign">0</property>
+                        <property name="margin-start">12</property>
+                        <property name="label" translatable="yes">Filters files based upon their duration.</property>
+                        <property name="selectable">True</property>
+                        <property name="wrap">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="xalign">0</property>
+                        <property name="margin-start">12</property>
+                        <property name="label" translatable="yes">By default, files longer than or equal to the entered length will be matched, unless an operator (=, !, &lt;, or &gt;) is used.</property>
+                        <property name="selectable">True</property>
+                        <property name="wrap">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="xalign">0</property>
+                        <property name="margin-start">12</property>
+                        <property name="label" translatable="yes">Enter a raw value in seconds or use the MM:SS and HH:MM:SS time formats:
+    &gt;5:30 to show files at least 5 and a half minutes long.
+    &lt;5:30:00 shows files less than 5 and a half hours long.</property>
+                        <property name="selectable">True</property>
+                        <property name="wrap">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="xalign">0</property>
+                        <property name="margin-start">12</property>
+                        <property name="label" translatable="yes">Multiple conditions can be specified with | pipe seperators:
+    &gt;6:00|&lt;12:00 to show files between 6 and 12 minutes long.
+    !9:54|!8:43|!7:32 to hide some specific files from the results.
+    =5:34|=4:23|=3:05 to include files with specific lengths.</property>
+                        <property name="selectable">True</property>
+                        <property name="wrap">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="xalign">0</property>
+                        <property name="margin-start">12</property>
+                        <property name="label" translatable="yes">To exclude non-audio files use !0 in the length filter.</property>
                         <property name="selectable">True</property>
                         <property name="wrap">True</property>
                       </object>
@@ -323,7 +421,7 @@
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="margin-start">12</property>
-                    <property name="label" translatable="yes">Filters files based upon users&apos; countries.</property>
+                    <property name="label" translatable="yes">Filters files based upon users&apos; geographical location.</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
                   </object>
@@ -333,8 +431,8 @@
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="margin-start">12</property>
-                    <property name="label" translatable="yes">Uses country codes defined by ISO 3166-2 (see Wikipedia):
-    &apos;US&apos; will only return files from users connected via the United States. Similarly, &apos;GB&apos; returns files from users with IPs in the United Kingdom.</property>
+                    <property name="label" translatable="yes">Uses country codes defined by ISO 3166-2:
+    US will only show results from users with IP addresses in the United States. !GB will hide results that come from users in the United Kingdom (Great Britain).</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
                   </object>
@@ -355,7 +453,7 @@
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="margin-start">12</property>
-                    <property name="label" translatable="yes">Show only those results from users which have at least one upload slot free. This filter is applied immediately.</property>
+                    <property name="label" translatable="yes">Show only those results from users which have at least one upload slot free, i.e. files that are availiable immediately.</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
                   </object>
@@ -364,7 +462,28 @@
                   <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
-                    <property name="label" translatable="yes">See the preferences for more filter options.</property>
+                    <property name="label" translatable="yes">Clear</property>
+                    <property name="selectable">True</property>
+                    <attributes>
+                      <attribute name="style" value="italic"/>
+                    </attributes>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="margin-start">12</property>
+                    <property name="label" translatable="yes">To view the full results again, simply clear all active filters.</property>
+                    <property name="selectable">True</property>
+                    <property name="wrap">True</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="label" translatable="yes">See the preferences to set default search result filter options.</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
                   </object>
