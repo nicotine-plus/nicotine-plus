@@ -61,11 +61,7 @@ class PrivateChats(IconNotebook):
         self.history = ChatHistory(frame, core)
 
         self.command_help = UserInterface("ui/popovers/privatechatcommands.ui")
-        self.command_help.container, self.command_help.popover = self.command_help.widgets
-
-        if Gtk.get_major_version() == 4:
-            # Scroll to the focused widget
-            self.command_help.container.get_child().set_scroll_to_focus(True)
+        self.command_help.popover, = self.command_help.widgets
 
         self.update_visuals()
 

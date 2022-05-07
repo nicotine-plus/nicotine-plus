@@ -1855,12 +1855,8 @@ class SearchesFrame(UserInterface):
         self.search_required = False
 
         self.filter_help = UserInterface("ui/popovers/searchfilters.ui")
-        self.filter_help.container, self.filter_help.popover = self.filter_help.widgets
+        self.filter_help.popover, = self.filter_help.widgets
         self.ShowSearchHelp.set_popover(self.filter_help.popover)
-
-        if Gtk.get_major_version() == 4:
-            # Scroll to the focused widget
-            self.filter_help.container.get_child().set_scroll_to_focus(True)
 
         self.options = {
             "searches": {
@@ -2284,7 +2280,6 @@ class PluginsFrame(UserInterface):
             scrolled_window.set_property("child", self.primary_container)
 
             if Gtk.get_major_version() == 4:
-                scrolled_window.get_child().set_scroll_to_focus(True)
                 self.get_content_area().append(scrolled_window)  # pylint: disable=no-member
             else:
                 self.get_content_area().add(scrolled_window)     # pylint: disable=no-member
@@ -2736,9 +2731,7 @@ class Preferences(UserInterface):
         )
 
         # Scroll to focused widgets
-        if Gtk.get_major_version() == 4:
-            self.viewport.set_scroll_to_focus(True)
-        else:
+        if Gtk.get_major_version() == 3:
             self.viewport.set_focus_vadjustment(self.content.get_vadjustment())
             self.ok_button.set_can_default(True)
 

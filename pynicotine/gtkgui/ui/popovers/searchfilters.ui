@@ -3,7 +3,7 @@
   <requires lib="gtk+" version="3.0"/>
   <object class="GtkPopover" id="popover">
     <child>
-      <object class="GtkScrolledWindow" id="container">
+      <object class="GtkScrolledWindow">
         <property name="visible">True</property>
         <property name="height-request">350</property>
         <property name="width-request">400</property>
