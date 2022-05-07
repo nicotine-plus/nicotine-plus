@@ -36,10 +36,10 @@ def check_gui_dependencies():
 
     # Require minor version of GTK
     if os.getenv("NICOTINE_GTK_VERSION") == '4':
-        gtk_version = (4, 6, 0)
-        pygobject_version = (3, 40, 0)
+        gtk_version = (4, 6, 2)
+        pygobject_version = (3, 42, 0)
     else:
-        gtk_version = pygobject_version = (3, 18, 0)
+        gtk_version = pygobject_version = (3, 22, 0)
 
     try:
         import gi
