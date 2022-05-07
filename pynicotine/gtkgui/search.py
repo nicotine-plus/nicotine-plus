@@ -480,21 +480,14 @@ class Search(UserInterface):
 
         return False
 
-    def focus_combobox(self, button):
+    @staticmethod
+    def focus_combobox(button):
 
-        # We have the button of a combobox, find the entry
-        parent = button.get_parent()
+        parent = button.get_ancestor(Gtk.ComboBox)
+        entry = parent.get_child()
 
-        if parent is None:
-            return
-
-        if isinstance(parent, Gtk.ComboBox):
-            entry = parent.get_child()
-            entry.grab_focus()
-            GLib.idle_add(entry.emit, "activate")
-            return
-
-        self.focus_combobox(parent)
+        entry.grab_focus()
+        GLib.idle_add(entry.emit, "activate")
 
     def update_filter_comboboxes(self):
 
