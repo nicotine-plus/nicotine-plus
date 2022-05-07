@@ -80,7 +80,7 @@ class PrivateChats(IconNotebook):
 
             if self.command_help is None:
                 self.command_help = UserInterface("ui/popovers/privatechatcommands.ui")
-                self.command_help.container, self.command_help.popover = self.command_help.widgets
+                (self.command_help.popover,) = self.command_help.widgets
 
                 if GTK_API_VERSION >= 4:
                     # Scroll to the focused widget

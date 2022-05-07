@@ -1820,12 +1820,8 @@ class SearchesFrame(UserInterface):
         self.search_required = False
 
         self.filter_help = UserInterface("ui/popovers/searchfilters.ui")
-        self.filter_help.container, self.filter_help.popover = self.filter_help.widgets
+        self.filter_help.popover, = self.filter_help.widgets
         self.ShowSearchHelp.set_popover(self.filter_help.popover)
-
-        if GTK_API_VERSION >= 4:
-            # Scroll to the focused widget
-            self.filter_help.container.get_child().set_scroll_to_focus(True)
 
         self.options = {
             "searches": {
@@ -2408,9 +2404,7 @@ class Preferences(UserInterface, Dialog):
         )
 
         # Scroll to focused widgets
-        if GTK_API_VERSION >= 4:
-            self.viewport.set_scroll_to_focus(True)
-        else:
+        if GTK_API_VERSION == 3:
             self.viewport.set_focus_vadjustment(self.content.get_vadjustment())
 
         self.dialog.get_style_context().add_class("preferences-border")
