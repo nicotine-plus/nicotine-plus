@@ -281,10 +281,10 @@ class Search(UserInterface):
             self.FilterFreeSlot,
             self.FilterIn,
             self.FilterLabel,
+            self.FilterLength,
             self.FilterOut,
             self.FilterSize,
             self.FilterType,
-            self.FilterLength,
             self.FiltersContainer,
             self.Main,
             self.ResultGrouping,
@@ -807,39 +807,42 @@ class Search(UserInterface):
 
     """ Result Filters """
 
-    def check_digit(self, sfilter, value, filesize=True):
+    def check_digit(self, result_filter, value, file_size=False):
 
         allowed = blocked = False
 
-        for condition in sfilter.split("|"):
+        for condition in result_filter.split("|"):
 
             if condition.strip().startswith((">", "<", "=", "!")):
-                used_operator, sdigit = condition[:1] + "=", condition[1:]
+                used_operator, digit = condition[:1] + "=", condition[1:]
             else:
-                used_operator, sdigit = ">=", condition
+                used_operator, digit = ">=", condition
 
-            if sdigit and filesize:
-                sdigit, factor = factorize(sdigit)  # File Size
-            elif sdigit:
+            if file_size:
+                digit, factor = factorize(digit)  # File Size
+            else:
                 try:
                     factor = 1
-                    sdigit = int(sdigit)  # Bitrate (or raw size, or seconds)
-                except ValueError:
-                    if ":" in sdigit:  # Duration
-                        try:
-                            # Convert string from HH:MM:SS or MM:SS into Seconds as integer
-                            sdigit = sum(x * int(t) for x, t in zip([1, 60, 3600], reversed(sdigit.split(":"))))
-                        except ValueError:
-                            continue
+                    digit = int(digit)  # Bitrate (or raw size, or seconds)
 
-            if not isinstance(sdigit, int):
+                except ValueError:
+                    if ":" not in digit:  # Duration
+                        continue
+
+                    try:
+                        # Convert string from HH:MM:SS or MM:SS into Seconds as integer
+                        digit = sum(x * int(t) for x, t in zip([1, 60, 3600], reversed(digit.split(":"))))
+                    except ValueError:
+                        continue
+
+            if digit is None:
                 continue
 
             if factor > 1 and used_operator in ("==", "!="):
                 # Exact match is unlikely, so approximate within +/- 0.1 MiB or 1 MiB if over 100 MiB
-                adjust = factor / 8 if factor > 1024 and sdigit < 104857600 else factor  # TODO: GiB
+                adjust = factor / 8 if factor > 1024 and digit < 104857600 else factor  # TODO: GiB
 
-                if (sdigit - adjust) <= value <= (sdigit + adjust):
+                if (digit - adjust) <= value <= (digit + adjust):
                     if used_operator == "!=":
                         return False
 
@@ -850,7 +853,7 @@ class Search(UserInterface):
 
             operation = self.operators.get(used_operator)
 
-            if operation(value, sdigit) and not blocked:
+            if operation(value, digit) and not blocked:
                 allowed = True
                 continue
 
@@ -859,15 +862,12 @@ class Search(UserInterface):
         return False if blocked else allowed
 
     @staticmethod
-    def check_country(sfilter, value):
-
-        if not isinstance(value, str):
-            return False
+    def check_country(result_filter, value):
 
         value = value.upper()
         allowed = False
 
-        for country_code in sfilter.split("|"):
+        for country_code in result_filter.split("|"):
             if country_code == value:
                 allowed = True
 
@@ -880,15 +880,12 @@ class Search(UserInterface):
         return allowed
 
     @staticmethod
-    def check_file_type(sfilter, value):
-
-        if not isinstance(value, str):
-            return False
+    def check_file_type(result_filter, value):
 
         value = value.lower()
         allowed = False
 
-        for ext in sfilter.split("|"):
+        for ext in result_filter.split("|"):
             exclude_ext = None
 
             if ext.startswith("!"):
@@ -926,10 +923,10 @@ class Search(UserInterface):
         if filters["filterout"] and filters["filterout"].search(row[11].lower()):
             return False
 
-        if filters["filtersize"] and not self.check_digit(filters["filtersize"], row[13].get_value()):
+        if filters["filtersize"] and not self.check_digit(filters["filtersize"], row[13].get_value(), file_size=True):
             return False
 
-        if filters["filterbr"] and not self.check_digit(filters["filterbr"], row[10].get_value(), False):
+        if filters["filterbr"] and not self.check_digit(filters["filterbr"], row[10].get_value()):
             return False
 
         if filters["filterslot"] and row[15].get_value() > 0:
@@ -941,7 +938,7 @@ class Search(UserInterface):
         if filters["filtertype"] and not self.check_file_type(filters["filtertype"], row[11]):
             return False
 
-        if filters["filterlength"] and not self.check_digit(filters["filterlength"], row[16].get_uint(), False):
+        if filters["filterlength"] and not self.check_digit(filters["filterlength"], row[16].get_value()):
             return False
 
         return True
