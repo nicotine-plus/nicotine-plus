@@ -24,7 +24,7 @@ Package: nicotine
 Architecture: all
 Depends: ${python3:Depends},
          ${misc:Depends},
-         gir1.2-gtk-3.0 (>= 3.22),
+         gir1.2-gtk-3.0 (>= 3.22.11),
          python3-gdbm,
          python3-gi (>= 3.22)
 Recommends: gir1.2-ayatanaappindicator3-0.1 | gir1.2-appindicator3-0.1,
