@@ -340,11 +340,6 @@ class PluginHandler:
         self.enabled_plugins = {}
         self.command_source = None
 
-        try:
-            os.makedirs(config.plugin_dir.encode("utf-8"))
-        except Exception:
-            pass
-
         # Load system-wide plugins
         prefix = os.path.dirname(os.path.realpath(__file__))
         self.plugindirs.append(os.path.join(prefix, "plugins"))
@@ -379,12 +374,13 @@ class PluginHandler:
         if plugin.__privatecommands__:
             self.core.privatechats.update_completions()
 
-    def findplugin(self, plugin_name):
-        for directory in self.plugindirs:
-            fullpath = os.path.join(directory, plugin_name)
+    def get_plugin_path(self, plugin_name):
 
-            if os.path.exists(fullpath.encode("utf-8")):
-                return fullpath
+        for folder_path in self.plugindirs:
+            file_path = os.path.join(folder_path, plugin_name)
+
+            if os.path.isdir(file_path.encode("utf-8")):
+                return file_path
 
         return None
 
@@ -406,7 +402,7 @@ class PluginHandler:
 
         except Exception:
             # Import user plugin
-            path = self.findplugin(plugin_name)
+            path = self.get_plugin_path(plugin_name)
 
             if path is None:
                 log.add(_("Failed to load plugin '%s', could not find it."), plugin_name)
@@ -483,23 +479,30 @@ class PluginHandler:
         return True
 
     def list_installed_plugins(self):
-        pluginlist = []
 
-        for folder in self.plugindirs:
-            if os.path.isdir(folder.encode("utf-8")):
-                for file in os.listdir(folder.encode("utf-8")):
-                    file = file.decode("utf-8")
-                    if file not in pluginlist and os.path.isdir(os.path.join(folder, file).encode("utf-8")):
-                        pluginlist.append(file)
+        plugin_list = []
 
-        return pluginlist
+        for folder_path in self.plugindirs:
+            try:
+                for entry in os.scandir(folder_path.encode("utf-8")):
+                    file_path = entry.name.decode("utf-8")
+
+                    if entry.is_dir() and file_path not in plugin_list:
+                        plugin_list.append(file_path)
+
+            except OSError:
+                # Folder error, skip
+                continue
+
+        return plugin_list
 
     def disable_plugin(self, plugin_name):
+
         if plugin_name not in self.enabled_plugins:
             return False
 
         plugin = self.enabled_plugins[plugin_name]
-        path = self.findplugin(plugin_name)
+        path = self.get_plugin_path(plugin_name)
 
         try:
             plugin.disable()
@@ -541,6 +544,7 @@ class PluginHandler:
         return True
 
     def get_plugin_settings(self, plugin_name):
+
         if plugin_name in self.enabled_plugins:
             plugin = self.enabled_plugins[plugin_name]
 
@@ -551,13 +555,13 @@ class PluginHandler:
 
     def get_plugin_info(self, plugin_name):
 
-        infodict = {}
-        plugin_folder = self.findplugin(plugin_name)
+        plugin_info = {}
+        plugin_path = self.get_plugin_path(plugin_name)
 
-        if plugin_folder is None:
-            return infodict
+        if plugin_path is None:
+            return plugin_info
 
-        info_path = os.path.join(self.findplugin(plugin_name), 'PLUGININFO')
+        info_path = os.path.join(plugin_path, 'PLUGININFO')
 
         with open(info_path.encode("utf-8"), encoding="utf-8") as file_handle:
             for line in file_handle:
@@ -568,15 +572,15 @@ class PluginHandler:
 
                     # Translatable string
                     if value.startswith("_(") and value.endswith(")"):
-                        infodict[key] = _(literal_eval(value[2:-1]))
+                        plugin_info[key] = _(literal_eval(value[2:-1]))
                         continue
 
-                    infodict[key] = literal_eval(value)
+                    plugin_info[key] = literal_eval(value)
 
                 except Exception:
                     pass  # this can happen on blank lines
 
-        return infodict
+        return plugin_info
 
     @staticmethod
     def show_plugin_error(plugin_name, exc_type, exc_value, exc_traceback):
@@ -609,7 +613,9 @@ class PluginHandler:
             self.enable_plugin(plugin)
 
     def plugin_settings(self, plugin_name, plugin):
+
         plugin_name = plugin_name.lower()
+
         try:
             if not plugin.settings:
                 return
