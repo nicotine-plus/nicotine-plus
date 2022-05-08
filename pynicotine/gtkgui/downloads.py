@@ -23,8 +23,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-
 from gi.repository import Gtk
 
 from pynicotine.config import config
@@ -132,42 +130,34 @@ class Downloads(TransferList):
 
     def on_open_file_manager(self, *_args):
 
-        downloaddir = config.sections["transfers"]["downloaddir"]
-        incompletedir = config.sections["transfers"]["incompletedir"] or downloaddir
+        download_folder = config.sections["transfers"]["downloaddir"]
+        incomplete_folder = config.sections["transfers"]["incompletedir"] or download_folder
 
         for transfer in self.selected_transfers:
             if transfer.status == "Finished":
-                final_path = transfer.path if os.path.exists(transfer.path.encode("utf-8")) else downloaddir
+                folder_path = transfer.path or download_folder
                 break
         else:
-            final_path = incompletedir
+            folder_path = incomplete_folder
 
-        # Finally, try to open the directory we got...
-        command = config.sections["ui"]["filemanager"]
-        open_file_path(final_path, command)
+        open_file_path(folder_path, command=config.sections["ui"]["filemanager"])
 
     def on_play_files(self, *_args):
 
         for transfer in self.selected_transfers:
+            file_path = None
 
-            playfile = None
-
-            if transfer.file is not None and os.path.exists(transfer.file.name):
-                playfile = transfer.file.name
+            if transfer.file is not None:
+                file_path = transfer.file.name
 
             else:
                 # If this file doesn't exist anymore, it may have finished downloading and have been renamed.
                 # Try looking in the download directory and match the original filename and size.
 
-                download_path = self.core.transfers.get_existing_download_path(
+                file_path = self.core.transfers.get_existing_download_path(
                     transfer.user, transfer.filename, transfer.path, transfer.size)
 
-                if download_path:
-                    playfile = download_path
-
-            if playfile:
-                command = config.sections["players"]["default"]
-                open_file_path(playfile, command)
+            open_file_path(file_path, command=config.sections["players"]["default"])
 
     def on_browse_folder(self, *_args):
 

@@ -116,22 +116,16 @@ class Uploads(TransferList):
 
         transfer = next(iter(self.selected_transfers), None)
 
-        if not transfer or not os.path.exists(transfer.path.encode("utf-8")):
-            return
-
-        # Finally, try to open the directory we got...
-        command = config.sections["ui"]["filemanager"]
-        open_file_path(transfer.path, command)
+        if transfer:
+            open_file_path(file_path=transfer.path, command=config.sections["ui"]["filemanager"])
 
     def on_play_files(self, *_args):
 
         for transfer in self.selected_transfers:
-            basename = str.split(transfer.filename, '\\')[-1]
-            playfile = os.path.join(transfer.path, basename)
+            base_name = str.split(transfer.filename, '\\')[-1]
 
-            if os.path.exists(playfile.encode("utf-8")):
-                command = config.sections["players"]["default"]
-                open_file_path(playfile, command)
+            open_file_path(file_path=os.path.join(transfer.path, base_name),
+                           command=config.sections["players"]["default"])
 
     def on_browse_folder(self, *_args):
 

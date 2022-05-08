@@ -105,13 +105,22 @@ def clean_path(path, absolute=False):
     return path
 
 
-def open_file_path(file_path, command=None):
+def open_file_path(file_path, command=None, create_folder=False):
     """ Currently used to either open a folder or play an audio file
     Tries to run a user-specified command first, and falls back to
     the system default. """
 
+    if file_path is None:
+        return
+
     try:
         file_path = os.path.normpath(file_path)
+
+        if not os.path.exists(file_path.encode("utf-8")):
+            if create_folder:
+                os.makedirs(file_path.encode("utf-8"))
+            else:
+                raise FileNotFoundError("File path does not exist")
 
         if command and "$" in command:
             execute_command(command, file_path)
@@ -123,10 +132,10 @@ def open_file_path(file_path, command=None):
             execute_command("open $", file_path)
 
         elif not webbrowser.open(file_path):
-            raise webbrowser.Error("no known URL provider available")
+            raise webbrowser.Error("No known URL provider available")
 
     except Exception as error:
-        log.add(_("Failed to open file path: %s"), error)
+        log.add(_("Cannot open file path %(path)s: %(error)s"), {"path": file_path, "error": error})
 
 
 def open_uri(uri):
