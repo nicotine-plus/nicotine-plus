@@ -105,15 +105,11 @@ def clean_path(path, absolute=False):
     return path
 
 
-def _try_open_uri(uri, is_file=False):
+def _try_open_uri(uri):
 
     if sys.platform not in ("darwin", "win32"):
         try:
             from gi.repository import Gio  # pylint: disable=import-error
-
-            if is_file:
-                uri = "file:///" + uri
-
             Gio.AppInfo.launch_default_for_uri(uri)
             return
 
@@ -157,7 +153,7 @@ def open_file_path(file_path, command=None, create_folder=False, create_file=Fal
             execute_command("open $", file_path)
 
         else:
-            _try_open_uri(file_path, is_file=True)
+            _try_open_uri("file:///" + file_path)
 
     except Exception as error:
         log.add(_("Cannot open file path %(path)s: %(error)s"), {"path": file_path, "error": error})
