@@ -231,7 +231,7 @@ def set_global_css():
 
     global_css_provider = Gtk.CssProvider()
 
-    if Gtk.get_major_version() == 4:
+    if Gtk.get_major_version() >= 4:
         css = css + css_gtk4
 
         global_css_provider.load_from_data(css)
@@ -258,7 +258,7 @@ def set_global_style():
 
 ICONS = {}
 
-if Gtk.get_major_version() == 4:
+if Gtk.get_major_version() >= 4:
     ICON_THEME = Gtk.IconTheme.get_for_display(Gdk.Display.get_default())  # pylint: disable=no-member
 else:
     ICON_THEME = Gtk.IconTheme.get_default()  # pylint: disable=no-member
@@ -369,7 +369,7 @@ def load_icons():
     )
 
     for path in paths:
-        if Gtk.get_major_version() == 4:
+        if Gtk.get_major_version() >= 4:
             ICON_THEME.add_search_path(path)
         else:
             ICON_THEME.append_search_path(path)

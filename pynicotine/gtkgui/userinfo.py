@@ -155,7 +155,7 @@ class UserInfo(UserInterface):
         self.description_view = TextView(self.description_view)
         self.user_label.set_text(user)
 
-        if Gtk.get_major_version() == 4:
+        if Gtk.get_major_version() >= 4:
             self.picture = Gtk.Picture(can_shrink=False, halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER)
 
             self.scroll_controller = Gtk.EventControllerScroll(flags=Gtk.EventControllerScrollFlags.VERTICAL)
@@ -255,7 +255,7 @@ class UserInfo(UserInterface):
     def load_picture(self, data):
 
         if not data:
-            if Gtk.get_major_version() == 4:
+            if Gtk.get_major_version() >= 4:
                 self.picture.set_paintable(None)
             else:
                 self.picture.clear()
@@ -285,7 +285,7 @@ class UserInfo(UserInterface):
                 self.picture_data = self.picture_data.scale_simple(
                     ratio * picture_width, ratio * picture_height, GdkPixbuf.InterpType.BILINEAR)
 
-                if Gtk.get_major_version() == 4:
+                if Gtk.get_major_version() >= 4:
                     self.picture.set_pixbuf(self.picture_data)
                 else:
                     self.picture.set_from_pixbuf(self.picture_data)
@@ -326,7 +326,7 @@ class UserInfo(UserInterface):
             picture_zoomed = self.picture_data.scale_simple(
                 calc_zoom_in(width), calc_zoom_in(height), GdkPixbuf.InterpType.BILINEAR)
 
-        if Gtk.get_major_version() == 4:
+        if Gtk.get_major_version() >= 4:
             self.picture.set_pixbuf(picture_zoomed)
         else:
             self.picture.set_from_pixbuf(picture_zoomed)
@@ -356,7 +356,7 @@ class UserInfo(UserInterface):
         picture_zoomed = self.picture_data.scale_simple(
             calc_zoom_out(width), calc_zoom_out(height), GdkPixbuf.InterpType.BILINEAR)
 
-        if Gtk.get_major_version() == 4:
+        if Gtk.get_major_version() >= 4:
             self.picture.set_pixbuf(picture_zoomed)
         else:
             self.picture.set_from_pixbuf(picture_zoomed)

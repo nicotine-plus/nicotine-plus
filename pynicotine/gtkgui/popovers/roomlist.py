@@ -85,7 +85,7 @@ class RoomList(UserInterface):
         Accelerator("<Primary>f", self.popover, self.on_search_accelerator)
         CompletionEntry(frame.chatrooms_entry, self.room_model, column=0)
 
-        if Gtk.get_major_version() == 4:
+        if Gtk.get_major_version() >= 4:
             frame.room_list_button.get_first_child().get_style_context().add_class("arrow-button")
 
         frame.room_list_button.set_popover(self.popover)

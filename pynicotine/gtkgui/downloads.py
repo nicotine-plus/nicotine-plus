@@ -51,7 +51,7 @@ class Downloads(TransferList):
 
         TransferList.__init__(self, frame, core, transfer_type="download")
 
-        if Gtk.get_major_version() == 4:
+        if Gtk.get_major_version() >= 4:
             frame.downloads_content.append(self.container)
         else:
             frame.downloads_content.add(self.container)

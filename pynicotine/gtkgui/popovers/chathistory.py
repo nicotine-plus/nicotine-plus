@@ -55,7 +55,7 @@ class ChatHistory(UserInterface):
 
         CompletionEntry(frame.private_entry, self.model, column=0)
 
-        if Gtk.get_major_version() == 4:
+        if Gtk.get_major_version() >= 4:
             frame.private_history_button.get_first_child().get_style_context().add_class("arrow-button")
 
         frame.private_history_button.set_popover(self.popover)

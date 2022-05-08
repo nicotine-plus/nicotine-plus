@@ -47,7 +47,7 @@ class TextView:
         self.pressed_x = 0
         self.pressed_y = 0
 
-        if Gtk.get_major_version() == 4:
+        if Gtk.get_major_version() >= 4:
             self.gesture_click_primary = Gtk.GestureClick()
             scrollable_container.add_controller(self.gesture_click_primary)
 

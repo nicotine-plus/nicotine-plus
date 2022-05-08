@@ -346,7 +346,7 @@ Ukrainian
         if not main_icon:
             self.dialog.set_logo_icon_name(config.application_id)
 
-        if Gtk.get_major_version() == 4:
+        if Gtk.get_major_version() >= 4:
             self.dialog.connect("close-request", lambda x: x.destroy())
 
             if main_icon:

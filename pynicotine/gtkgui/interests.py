@@ -52,7 +52,7 @@ class Interests(UserInterface):
             self.similar_users_list_view
         ) = self.widgets
 
-        if Gtk.get_major_version() == 4:
+        if Gtk.get_major_version() >= 4:
             frame.interests_container.append(self.container)
         else:
             frame.interests_container.add(self.container)
