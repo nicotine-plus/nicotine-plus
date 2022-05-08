@@ -105,6 +105,26 @@ def clean_path(path, absolute=False):
     return path
 
 
+def _try_open_uri(uri, is_file=False):
+
+    if sys.platform not in ("darwin", "win32"):
+        try:
+            from gi.repository import Gio  # pylint: disable=import-error
+
+            if is_file:
+                uri = "file:///" + uri
+
+            Gio.AppInfo.launch_default_for_uri(uri)
+            return
+
+        except Exception:
+            # Fall back to webbrowser module
+            pass
+
+    if not webbrowser.open(uri):
+        raise webbrowser.Error("No known URI provider available")
+
+
 def open_file_path(file_path, command=None, create_folder=False, create_file=False):
     """ Currently used to either open a folder or play an audio file
     Tries to run a user-specified command first, and falls back to
@@ -131,13 +151,13 @@ def open_file_path(file_path, command=None, create_folder=False, create_file=Fal
             execute_command(command, file_path)
 
         elif sys.platform == "win32":
-            os.startfile(file_path)  # pylint: disable=no-member
+            os.startfile(file_path.encode("utf-8"))  # pylint: disable=no-member
 
         elif sys.platform == "darwin":
             execute_command("open $", file_path)
 
-        elif not webbrowser.open(file_path):
-            raise webbrowser.Error("No known URL provider available")
+        else:
+            _try_open_uri(file_path, is_file=True)
 
     except Exception as error:
         log.add(_("Cannot open file path %(path)s: %(error)s"), {"path": file_path, "error": error})
@@ -164,8 +184,7 @@ def open_uri(uri):
             return True
 
         # Situation 2, user did not define a way of handling the protocol
-        if not webbrowser.open(uri):
-            raise webbrowser.Error("No known URL provider available")
+        _try_open_uri(uri)
 
         return True
 
