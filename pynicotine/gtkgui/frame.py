@@ -22,7 +22,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
 import sys
 import threading
 import time
@@ -1583,20 +1582,13 @@ class NicotineFrame(UserInterface):
 
     def on_load_from_disk(self, *_args):
 
-        sharesdir = os.path.join(config.data_dir, "usershares")
-        try:
-            if not os.path.exists(sharesdir.encode("utf-8")):
-                os.makedirs(sharesdir.encode("utf-8"))
-
-        except Exception as msg:
-            log.add(_("Can't create directory '%(folder)s', reported error: %(error)s"),
-                    {'folder': sharesdir, 'error': msg})
+        shares_folder = self.core.userbrowse.create_user_shares_folder()
 
         FileChooser(
             parent=self.window,
             title=_("Select a Saved Shares List File"),
             callback=self.on_load_from_disk_selected,
-            initial_folder=sharesdir,
+            initial_folder=shares_folder,
             multiple=True
         ).show()
 
@@ -1789,17 +1781,7 @@ class NicotineFrame(UserInterface):
 
     @staticmethod
     def on_view_debug_logs(*_args):
-
-        log_path = config.sections["logging"]["debuglogsdir"]
-
-        try:
-            if not os.path.isdir(log_path.encode("utf-8")):
-                os.makedirs(log_path.encode("utf-8"))
-
-            open_file_path(config.sections["logging"]["debuglogsdir"])
-
-        except Exception as error:
-            log.add("Failed to open debug log folder: %s", error)
+        open_file_path(config.sections["logging"]["debuglogsdir"], create_folder=True)
 
     @staticmethod
     def on_view_transfer_log(*_args):

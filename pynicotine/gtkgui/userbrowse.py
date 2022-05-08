@@ -970,7 +970,7 @@ class UserBrowse(UserInterface):
         download_folder = config.sections["transfers"]["downloaddir"]
         path = os.path.join(download_folder, folder)
 
-        if not os.path.exists(path.encode("utf-8")) or not os.path.isdir(path.encode("utf-8")):
+        if not os.path.isdir(path.encode("utf-8")):
             path = download_folder
 
         FolderChooser(
@@ -1019,22 +1019,17 @@ class UserBrowse(UserInterface):
 
         path = self.core.shares.virtual2real(self.selected_folder)
 
-        for basename in self.selected_files:
-            playfile = os.sep.join([path, basename])
-
-            if os.path.exists(playfile.encode("utf-8")):
-                command = config.sections["players"]["default"]
-                open_file_path(playfile, command)
+        for base_name in self.selected_files:
+            open_file_path(file_path=os.path.join(path, base_name),
+                           command=config.sections["players"]["default"])
 
     def on_file_manager(self, *_args):
 
         if self.selected_folder is None:
             return
 
-        path = self.core.shares.virtual2real(self.selected_folder)
-        command = config.sections["ui"]["filemanager"]
-
-        open_file_path(path, command)
+        open_file_path(file_path=self.core.shares.virtual2real(self.selected_folder),
+                       command=config.sections["ui"]["filemanager"])
 
     def on_file_properties(self, _action, _state, all_files=False):
 

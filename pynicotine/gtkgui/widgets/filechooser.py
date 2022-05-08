@@ -145,7 +145,8 @@ class FileChooserSave(FileChooser):
 
         if Gtk.get_major_version() == 3:
             # Display hidden files
-            self.file_chooser.set_show_hidden(True)  # pylint: disable=no-member
+            self.file_chooser.set_show_hidden(True)                # pylint: disable=no-member
+            self.file_chooser.set_do_overwrite_confirmation(True)  # pylint: disable=no-member
 
         self.file_chooser.set_current_name(initial_file)
 

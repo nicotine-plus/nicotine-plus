@@ -134,6 +134,20 @@ class UserBrowse:
         if not user_exists or new_request:
             self.core.send_message_to_peer(username, slskmessages.GetSharedFileList(None))
 
+    def create_user_shares_folder(self):
+
+        shares_folder = os.path.join(self.config.data_dir, "usershares")
+        try:
+            if not os.path.isdir(shares_folder.encode("utf-8")):
+                os.makedirs(shares_folder.encode("utf-8"))
+
+        except Exception as error:
+            log.add(_("Can't create directory '%(folder)s', reported error: %(error)s"),
+                    {'folder': shares_folder, 'error': error})
+            return None
+
+        return shares_folder
+
     def load_shares_list_from_disk(self, filename):
 
         try:
@@ -169,27 +183,22 @@ class UserBrowse:
 
     def save_shares_list_to_disk(self, user, shares_list):
 
-        sharesdir = os.path.join(self.config.data_dir, "usershares")
+        shares_folder = self.create_user_shares_folder()
+
+        if not shares_folder:
+            return
 
         try:
-            if not os.path.exists(sharesdir.encode("utf-8")):
-                os.makedirs(sharesdir.encode("utf-8"))
-
-        except Exception as msg:
-            log.add(_("Can't create directory '%(folder)s', reported error: %(error)s"),
-                    {'folder': sharesdir, 'error': msg})
-
-        try:
-            path = os.path.join(sharesdir, clean_file(user))
+            path = os.path.join(shares_folder, clean_file(user))
 
             with open(path.encode("utf-8"), "w", encoding="utf-8") as file_handle:
                 json.dump(shares_list, file_handle, ensure_ascii=False)
 
             log.add(_("Saved list of shared files for user '%(user)s' to %(dir)s"),
-                    {'user': user, 'dir': sharesdir})
+                    {'user': user, 'dir': shares_folder})
 
-        except Exception as msg:
-            log.add(_("Can't save shares, '%(user)s', reported error: %(error)s"), {'user': user, 'error': msg})
+        except Exception as error:
+            log.add(_("Can't save shares, '%(user)s', reported error: %(error)s"), {'user': user, 'error': error})
 
     def download_file(self, user, folder, file_data, prefix=""):
 
