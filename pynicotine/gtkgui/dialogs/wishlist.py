@@ -218,7 +218,7 @@ class WishList(UserInterface):
         text = None
 
         for tab in self.searches.pages.values():
-            if tab is not None and tab.Main == page:
+            if tab is not None and tab.container == page:
                 text = tab.text
                 break
 
