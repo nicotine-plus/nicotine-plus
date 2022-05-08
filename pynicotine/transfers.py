@@ -1016,8 +1016,9 @@ class Transfers:
                     incompletedir = self.get_default_download_folder(i.user)
 
             try:
-                if not os.access(incompletedir, os.F_OK):
-                    os.makedirs(incompletedir)
+                if not os.path.isdir(incompletedir.encode("utf-8")):
+                    os.makedirs(incompletedir.encode("utf-8"))
+
                 if not os.access(incompletedir, os.R_OK | os.W_OK | os.X_OK):
                     raise OSError("Download directory %s Permissions error.\nDir Permissions: %s" %
                                   (incompletedir, oct(os.stat(incompletedir)[stat.ST_MODE] & 0o777)))
@@ -1860,7 +1861,7 @@ class Transfers:
         newname = self.get_renamed(os.path.join(folder, basename))
 
         try:
-            if not os.access(folder.encode('utf-8'), os.F_OK):
+            if not os.path.isdir(folder.encode('utf-8')):
                 os.makedirs(folder.encode('utf-8'))
 
             import shutil
