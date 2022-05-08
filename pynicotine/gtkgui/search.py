@@ -102,9 +102,9 @@ class Searches(IconNotebook):
             return
 
         for tab in self.pages.values():
-            if tab.Main == page:
+            if tab.container == page:
                 tab.update_filter_comboboxes()
-                GLib.idle_add(lambda: tab.ResultsList.grab_focus() == -1)  # pylint:disable=cell-var-from-loop
+                GLib.idle_add(lambda: tab.tree_view.grab_focus() == -1)  # pylint:disable=cell-var-from-loop
                 break
 
     def on_search_mode(self, action, state):
@@ -157,7 +157,7 @@ class Searches(IconNotebook):
             mode_label = _("Buddies")
 
         tab = self.create_tab(token, search_term, mode, mode_label)
-        self.set_current_page(self.page_num(tab.Main))
+        self.set_current_page(self.page_num(tab.container))
 
         # Repopulate the combo list
         self.populate_search_history()
@@ -170,7 +170,7 @@ class Searches(IconNotebook):
             return
 
         page.clear_model(stored_results=True)
-        self.remove_page(page.Main)
+        self.remove_page(page.container)
         del self.pages[token]
 
     def clear_search_history(self):
@@ -217,8 +217,8 @@ class Searches(IconNotebook):
             length = 20
 
         label = full_text[:length]
-        self.append_page(tab.Main, label, tab.on_close, full_text=full_text)
-        tab.set_label(self.get_tab_label_inner(tab.Main))
+        self.append_page(tab.container, label, tab.on_close, full_text=full_text)
+        tab.set_label(self.get_tab_label_inner(tab.container))
 
     def show_search_result(self, msg, username, country):
 
@@ -267,30 +267,28 @@ class Search(UserInterface):
     def __init__(self, searches, text, token, mode, mode_label, showtab):
 
         super().__init__("ui/search.ui")
-
-        # pylint: disable=invalid-name
         (
-            self.AddWish,
-            self.AddWishIcon,
-            self.AddWishLabel,
-            self.Counter,
-            self.CounterButton,
-            self.ExpandButton,
-            self.FilterBitrate,
-            self.FilterCountry,
-            self.FilterFreeSlot,
-            self.FilterIn,
-            self.FilterLabel,
-            self.FilterLength,
-            self.FilterOut,
-            self.FilterSize,
-            self.FilterType,
-            self.FiltersContainer,
-            self.Main,
-            self.ResultGrouping,
-            self.ResultsList,
-            self.ShowFilters,
-            self.expand
+            self.add_wish_button,
+            self.add_wish_icon,
+            self.add_wish_label,
+            self.container,
+            self.expand_button,
+            self.expand_icon,
+            self.filter_bitrate_combobox,
+            self.filter_country_combobox,
+            self.filter_exclude_combobox,
+            self.filter_file_size_combobox,
+            self.filter_file_type_combobox,
+            self.filter_free_slot_button,
+            self.filter_include_combobox,
+            self.filter_length_combobox,
+            self.filters_button,
+            self.filters_container,
+            self.filters_label,
+            self.grouping_button,
+            self.results_button,
+            self.results_label,
+            self.tree_view
         ) = self.widgets
 
         self.searches = searches
@@ -370,7 +368,7 @@ class Search(UserInterface):
         self.column_numbers = list(range(self.resultsmodel.get_n_columns()))
         color_col = 17
         self.cols = cols = initialise_columns(
-            self.frame, "file_search", self.ResultsList,
+            self.frame, "file_search", self.tree_view,
             ["id", _("ID"), 50, "number", color_col],
             ["user", _("User"), 200, "text", color_col],
             ["country", _("Country"), 25, "icon", None],
@@ -396,9 +394,9 @@ class Search(UserInterface):
 
         cols["country"].get_widget().hide()
 
-        self.ResultsList.set_model(self.resultsmodel)
+        self.tree_view.set_model(self.resultsmodel)
 
-        for column in self.ResultsList.get_columns():
+        for column in self.tree_view.get_columns():
             self.column_offsets[column.get_title()] = 0
             column.connect("notify::x-offset", self.on_column_position_changed)
 
@@ -414,7 +412,7 @@ class Search(UserInterface):
             ("#" + _("Copy Folder U_RL"), self.on_copy_dir_url)
         )
 
-        self.popup_menu = FilePopupMenu(self.frame, self.ResultsList, self.on_popup_menu)
+        self.popup_menu = FilePopupMenu(self.frame, self.tree_view, self.on_popup_menu)
         self.popup_menu.add_items(
             ("#" + "selected_files", None),
             ("", None),
@@ -440,30 +438,30 @@ class Search(UserInterface):
         )
 
         # Key bindings
-        for widget in (self.Main, self.ResultsList):
+        for widget in (self.container, self.tree_view):
             Accelerator("<Primary>f", widget, self.on_show_filter_bar_accelerator)
 
-        Accelerator("Escape", self.FiltersContainer, self.on_close_filter_bar_accelerator)
-        Accelerator("<Alt>Return", self.ResultsList, self.on_file_properties_accelerator)
+        Accelerator("Escape", self.filters_container, self.on_close_filter_bar_accelerator)
+        Accelerator("<Alt>Return", self.tree_view, self.on_file_properties_accelerator)
 
         # Grouping
         menu = create_grouping_menu(self.frame.window, config.sections["searches"]["group_searches"], self.on_group)
-        self.ResultGrouping.set_menu_model(menu)
+        self.grouping_button.set_menu_model(menu)
 
-        self.ExpandButton.set_active(config.sections["searches"]["expand_searches"])
+        self.expand_button.set_active(config.sections["searches"]["expand_searches"])
 
         # Filters
         self.filter_comboboxes = {
-            "filterin": self.FilterIn,
-            "filterout": self.FilterOut,
-            "filtersize": self.FilterSize,
-            "filterbr": self.FilterBitrate,
-            "filtercc": self.FilterCountry,
-            "filtertype": self.FilterType,
-            "filterlength": self.FilterLength
+            "filterin": self.filter_include_combobox,
+            "filterout": self.filter_exclude_combobox,
+            "filtersize": self.filter_file_size_combobox,
+            "filterbr": self.filter_bitrate_combobox,
+            "filtercc": self.filter_country_combobox,
+            "filtertype": self.filter_file_type_combobox,
+            "filterlength": self.filter_length_combobox
         }
 
-        self.ShowFilters.set_active(config.sections["searches"]["filters_visible"])
+        self.filters_button.set_active(config.sections["searches"]["filters_visible"])
         self.populate_filters()
 
         # Wishlist
@@ -526,28 +524,28 @@ class Search(UserInterface):
         num_filters = len(sfilter)
 
         if num_filters > 0:
-            self.FilterIn.get_child().set_text(str(sfilter[0]))
+            self.filter_include_combobox.get_child().set_text(str(sfilter[0]))
 
         if num_filters > 1:
-            self.FilterOut.get_child().set_text(str(sfilter[1]))
+            self.filter_exclude_combobox.get_child().set_text(str(sfilter[1]))
 
         if num_filters > 2:
-            self.FilterSize.get_child().set_text(str(sfilter[2]))
+            self.filter_file_size_combobox.get_child().set_text(str(sfilter[2]))
 
         if num_filters > 3:
-            self.FilterBitrate.get_child().set_text(str(sfilter[3]))
+            self.filter_bitrate_combobox.get_child().set_text(str(sfilter[3]))
 
         if num_filters > 4:
-            self.FilterFreeSlot.set_active(bool(sfilter[4]))
+            self.filter_free_slot_button.set_active(bool(sfilter[4]))
 
         if num_filters > 5:
-            self.FilterCountry.get_child().set_text(str(sfilter[5]))
+            self.filter_country_combobox.get_child().set_text(str(sfilter[5]))
 
         if num_filters > 6:
-            self.FilterType.get_child().set_text(str(sfilter[6]))
+            self.filter_file_type_combobox.get_child().set_text(str(sfilter[6]))
 
         if num_filters > 7:
-            self.FilterLength.get_child().set_text(str(sfilter[7]))
+            self.filter_length_combobox.get_child().set_text(str(sfilter[7]))
 
         self.on_refilter()
 
@@ -675,7 +673,7 @@ class Search(UserInterface):
                 self.searches.show_tab(self, self.text)
                 self.showtab = True
 
-            self.searches.request_tab_hilite(self.Main)
+            self.searches.request_tab_hilite(self.container)
 
         # Update number of results, even if they are all filtered
         self.update_result_counter()
@@ -731,7 +729,7 @@ class Search(UserInterface):
                 if self.grouping_mode == "folder_grouping":
                     expand_user = True
                 else:
-                    expand_user = self.ExpandButton.get_active()
+                    expand_user = self.expand_button.get_active()
 
             parent = self.usersiters[user]
 
@@ -764,7 +762,7 @@ class Search(UserInterface):
                             color
                         ]
                     )
-                    expand_folder = self.ExpandButton.get_active()
+                    expand_folder = self.expand_button.get_active()
 
                 row = row[:]
                 row[5] = ""  # Directory not visible for file row if "group by folder" is enabled
@@ -780,10 +778,10 @@ class Search(UserInterface):
             iterator = self.resultsmodel.insert_with_values(parent, -1, self.column_numbers, row)
 
             if expand_user:
-                self.ResultsList.expand_row(self.resultsmodel.get_path(self.usersiters[user]), False)
+                self.tree_view.expand_row(self.resultsmodel.get_path(self.usersiters[user]), False)
 
             if expand_folder:
-                self.ResultsList.expand_row(self.resultsmodel.get_path(self.directoryiters[user_directory]), False)
+                self.tree_view.expand_row(self.resultsmodel.get_path(self.directoryiters[user_directory]), False)
 
             self.num_results_visible += 1
 
@@ -939,11 +937,11 @@ class Search(UserInterface):
     def update_filter_counter(self, count):
 
         if count > 0:
-            self.FilterLabel.set_label(_("_Result Filters [%d]") % count)
+            self.filters_label.set_label(_("_Result Filters [%d]") % count)
         else:
-            self.FilterLabel.set_label(_("_Result Filters"))
+            self.filters_label.set_label(_("_Result Filters"))
 
-        self.FilterLabel.set_tooltip_text("%d active filter(s)" % count)
+        self.filters_label.set_tooltip_text("%d active filter(s)" % count)
 
     def clear_model(self, stored_results=False):
 
@@ -981,24 +979,24 @@ class Search(UserInterface):
         if self.grouping_mode != "ungrouped":
             # Group by folder or user
 
-            if self.ExpandButton.get_active():
-                self.ResultsList.expand_all()
+            if self.expand_button.get_active():
+                self.tree_view.expand_all()
             else:
-                collapse_treeview(self.ResultsList, self.grouping_mode)
+                collapse_treeview(self.tree_view, self.grouping_mode)
 
     def update_wish_button(self):
 
         if self.mode not in ("global", "wishlist"):
-            self.AddWish.hide()
+            self.add_wish_button.hide()
             return
 
         if not self.core.search.is_wish(self.text):
-            self.AddWishIcon.set_property("icon-name", "list-add-symbolic")
-            self.AddWishLabel.set_label(_("Add Wi_sh"))
+            self.add_wish_icon.set_property("icon-name", "list-add-symbolic")
+            self.add_wish_label.set_label(_("Add Wi_sh"))
             return
 
-        self.AddWishIcon.set_property("icon-name", "list-remove-symbolic")
-        self.AddWishLabel.set_label(_("Remove Wi_sh"))
+        self.add_wish_icon.set_property("icon-name", "list-remove-symbolic")
+        self.add_wish_label.set_label(_("Remove Wi_sh"))
 
     def on_add_wish(self, *_args):
 
@@ -1039,14 +1037,14 @@ class Search(UserInterface):
     def on_close_filter_bar_accelerator(self, *_args):
         """ Escape: hide filter bar """
 
-        self.ShowFilters.set_active(False)
+        self.filters_button.set_active(False)
         return True
 
     def on_show_filter_bar_accelerator(self, *_args):
         """ Ctrl+F: show filter bar """
 
-        self.ShowFilters.set_active(True)
-        self.FilterIn.grab_focus()
+        self.filters_button.set_active(True)
+        self.filter_include_combobox.grab_focus()
         return True
 
     def on_file_properties_accelerator(self, *_args):
@@ -1062,8 +1060,8 @@ class Search(UserInterface):
 
         selected_user = args[-1]
 
-        sel = self.ResultsList.get_selection()
-        fmodel = self.ResultsList.get_model()
+        sel = self.tree_view.get_selection()
+        fmodel = self.tree_view.get_model()
         sel.unselect_all()
 
         iterator = fmodel.get_iter_first()
@@ -1104,7 +1102,7 @@ class Search(UserInterface):
         self.selected_users.clear()
         self.selected_files_count = 0
 
-        model, paths = self.ResultsList.get_selection().get_selected_rows()
+        model, paths = self.tree_view.get_selection().get_selected_rows()
 
         for path in paths:
             iterator = model.get_iter(path)
@@ -1123,13 +1121,13 @@ class Search(UserInterface):
             else:
                 total = self.num_results_found
 
-            self.CounterButton.set_tooltip_text(_("Total: %s") % total)
+            self.results_button.set_tooltip_text(_("Total: %s") % total)
 
         else:  # Hide the tooltip if there are no hidden results
             str_plus = ""
-            self.CounterButton.set_has_tooltip(False)
+            self.results_button.set_has_tooltip(False)
 
-        self.Counter.set_text(str(self.num_results_visible) + str_plus)
+        self.results_label.set_text(str(self.num_results_visible) + str_plus)
 
     def update_visuals(self):
 
@@ -1146,7 +1144,7 @@ class Search(UserInterface):
             return
 
         self.column_offsets[col_title] = offset
-        save_columns(self.treeview_name, self.ResultsList.get_columns())
+        save_columns(self.treeview_name, self.tree_view.get_columns())
 
     def on_row_activated(self, treeview, path, _column):
 
@@ -1345,8 +1343,8 @@ class Search(UserInterface):
 
         config.sections["searches"]["group_searches"] = mode
         self.cols["id"].set_visible(not active)
-        self.ResultsList.set_show_expanders(active)
-        self.ExpandButton.set_visible(active)
+        self.tree_view.set_show_expanders(active)
+        self.expand_button.set_visible(active)
 
         self.grouping_mode = mode
         self.update_results_model()
@@ -1355,28 +1353,28 @@ class Search(UserInterface):
 
     def on_toggle_expand_all(self, *_args):
 
-        active = self.ExpandButton.get_active()
+        active = self.expand_button.get_active()
 
         if active:
-            self.ResultsList.expand_all()
-            self.expand.set_property("icon-name", "go-up-symbolic")
+            self.tree_view.expand_all()
+            self.expand_icon.set_property("icon-name", "go-up-symbolic")
         else:
-            collapse_treeview(self.ResultsList, self.grouping_mode)
-            self.expand.set_property("icon-name", "go-down-symbolic")
+            collapse_treeview(self.tree_view, self.grouping_mode)
+            self.expand_icon.set_property("icon-name", "go-down-symbolic")
 
         config.sections["searches"]["expand_searches"] = active
 
     def on_toggle_filters(self, widget):
 
         visible = widget.get_active()
-        self.FiltersContainer.set_reveal_child(visible)
+        self.filters_container.set_reveal_child(visible)
         config.sections["searches"]["filters_visible"] = visible
 
         if visible:
-            self.FilterIn.grab_focus()
+            self.filter_include_combobox.grab_focus()
             return
 
-        self.ResultsList.grab_focus()
+        self.tree_view.grab_focus()
 
     def on_copy_search_term(self, *_args):
         copy_text(self.text)
@@ -1406,8 +1404,8 @@ class Search(UserInterface):
         if self.clearing_filters:
             return
 
-        filter_in = self.FilterIn.get_active_text().strip().lower()
-        filter_out = self.FilterOut.get_active_text().strip().lower()
+        filter_in = self.filter_include_combobox.get_active_text().strip().lower()
+        filter_out = self.filter_exclude_combobox.get_active_text().strip().lower()
 
         if filter_in:
             try:
@@ -1424,12 +1422,12 @@ class Search(UserInterface):
         filters = {
             "filterin": filter_in,
             "filterout": filter_out,
-            "filtersize": self.FilterSize.get_active_text().strip(),
-            "filterbr": self.FilterBitrate.get_active_text().strip(),
-            "filterslot": self.FilterFreeSlot.get_active(),
-            "filtercc": self.FilterCountry.get_active_text().strip().upper(),
-            "filtertype": self.FilterType.get_active_text().strip().lower(),
-            "filterlength": self.FilterLength.get_active_text().strip(),
+            "filtersize": self.filter_file_size_combobox.get_active_text().strip(),
+            "filterbr": self.filter_bitrate_combobox.get_active_text().strip(),
+            "filterslot": self.filter_free_slot_button.get_active(),
+            "filtercc": self.filter_country_combobox.get_active_text().strip().upper(),
+            "filtertype": self.filter_file_type_combobox.get_active_text().strip().lower(),
+            "filterlength": self.filter_length_combobox.get_active_text().strip(),
         }
 
         if self.filters == filters:
@@ -1440,14 +1438,14 @@ class Search(UserInterface):
 
         # Set red background if invalid regex pattern is detected
         if filter_in is None:
-            set_widget_fg_bg_css(self.FilterIn.get_child(), bg_color="#e04f5e", fg_color="white")
+            set_widget_fg_bg_css(self.filter_include_combobox.get_child(), bg_color="#e04f5e", fg_color="white")
         else:
-            update_widget_visuals(self.FilterIn.get_child())
+            update_widget_visuals(self.filter_include_combobox.get_child())
 
         if filter_out is None:
-            set_widget_fg_bg_css(self.FilterOut.get_child(), bg_color="#e04f5e", fg_color="white")
+            set_widget_fg_bg_css(self.filter_exclude_combobox.get_child(), bg_color="#e04f5e", fg_color="white")
         else:
-            update_widget_visuals(self.FilterOut.get_child())
+            update_widget_visuals(self.filter_exclude_combobox.get_child())
 
         # Add filters to history
         for filter_id, value in filters.items():
@@ -1478,12 +1476,12 @@ class Search(UserInterface):
         for widget in self.filter_comboboxes.values():
             widget.get_child().set_text("")
 
-        self.FilterFreeSlot.set_active(False)
+        self.filter_free_slot_button.set_active(False)
 
-        if self.ShowFilters.get_active():
-            self.FilterIn.get_child().grab_focus()
+        if self.filters_button.get_active():
+            self.filter_include_combobox.get_child().grab_focus()
         else:
-            self.ResultsList.grab_focus()
+            self.tree_view.grab_focus()
 
         self.clearing_filters = False
         self.on_refilter()
