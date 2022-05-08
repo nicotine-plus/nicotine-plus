@@ -172,8 +172,8 @@ class BaseImplementation:
             icon_scheme = "trayicon_" + icon_name + "."
 
         try:
-            for entry in os.scandir(icon_path):
-                if entry.is_file() and entry.name.startswith(icon_scheme):
+            for entry in os.scandir(icon_path.encode("utf-8")):
+                if entry.is_file() and entry.name.decode("utf-8").startswith(icon_scheme):
                     return True
 
         except OSError as error:

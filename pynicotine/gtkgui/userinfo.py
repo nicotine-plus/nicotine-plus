@@ -488,8 +488,8 @@ class UserInfo(UserInterface):
 
     def on_save_picture_response(self, selected, _data):
 
-        if not os.path.exists(selected):
-            self.picture_data.savev(selected, "jpeg", ["quality"], ["100"])
+        if not os.path.exists(selected.encode("utf-8")):
+            self.picture_data.savev(selected.encode("utf-8"), "jpeg", ["quality"], ["100"])
             log.add(_("Picture saved to %s"), selected)
         else:
             log.add(_("Picture not saved, %s already exists."), selected)

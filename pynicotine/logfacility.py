@@ -163,8 +163,8 @@ class Logger:
             path = os.path.join(logsdir, filename)
             oldumask = os.umask(0o077)
 
-            if not os.path.exists(logsdir):
-                os.makedirs(logsdir)
+            if not os.path.exists(logsdir.encode("utf-8")):
+                os.makedirs(logsdir.encode("utf-8"))
 
             with open(path, 'ab', 0) as logfile:
                 os.umask(oldumask)

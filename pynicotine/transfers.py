@@ -176,15 +176,15 @@ class Transfers:
         downloads_file_1_4_2 = os.path.join(data_dir, 'config.transfers.pickle')
         downloads_file_1_4_1 = os.path.join(data_dir, 'transfers.pickle')
 
-        if os.path.exists(downloads_file_json):
+        if os.path.exists(downloads_file_json.encode("utf-8")):
             # New file format
             return downloads_file_json
 
-        if os.path.exists(downloads_file_1_4_2):
+        if os.path.exists(downloads_file_1_4_2.encode("utf-8")):
             # Nicotine+ 1.4.2+
             return downloads_file_1_4_2
 
-        if os.path.exists(downloads_file_1_4_1):
+        if os.path.exists(downloads_file_1_4_1.encode("utf-8")):
             # Nicotine <=1.4.1
             return downloads_file_1_4_1
 
@@ -202,6 +202,8 @@ class Transfers:
     def load_transfers_file(transfers_file):
         """ Loads a file of transfers in json format """
 
+        transfers_file = transfers_file.encode("utf-8")
+
         if not os.path.isfile(transfers_file):
             return None
 
@@ -211,6 +213,8 @@ class Transfers:
     @staticmethod
     def load_legacy_transfers_file(transfers_file):
         """ Loads a download queue file in pickle format (legacy) """
+
+        transfers_file = transfers_file.encode("utf-8")
 
         if not os.path.isfile(transfers_file):
             return None
@@ -390,7 +394,7 @@ class Transfers:
     def get_file_size(filename):
 
         try:
-            size = os.path.getsize(filename)
+            size = os.path.getsize(filename.encode("utf-8"))
         except Exception:
             # file doesn't exist (remote files are always this)
             size = 0
@@ -1035,7 +1039,7 @@ class Transfers:
                     # Ensure file name doesn't exceed 255 characters in length
                     incomplete_name = os.path.join(
                         incompletedir, prefix + base_name[:255 - len(prefix) - len(extension)] + extension)
-                    file_handle = open(incomplete_name, 'ab+')  # pylint: disable=consider-using-with
+                    file_handle = open(incomplete_name.encode('utf-8'), 'ab+')  # pylint: disable=consider-using-with
 
                     if self.config.sections["transfers"]["lock"]:
                         try:
@@ -1128,7 +1132,7 @@ class Transfers:
             try:
                 # Open File
                 real_path = self.core.shares.virtual2real(i.filename)
-                file_handle = open(real_path, "rb")  # pylint: disable=consider-using-with
+                file_handle = open(real_path.encode("utf-8"), "rb")  # pylint: disable=consider-using-with
                 offset = file_handle.tell()
 
             except OSError as error:
@@ -1737,8 +1741,8 @@ class Transfers:
             try:
                 downloaddir = os.path.join(downloaddir, clean_file(user))
 
-                if not os.path.isdir(downloaddir):
-                    os.makedirs(downloaddir)
+                if not os.path.isdir(downloaddir.encode("utf-8")):
+                    os.makedirs(downloaddir.encode("utf-8"))
 
             except Exception as error:
                 log.add(_("Unable to save download to username subfolder, falling back "
@@ -1762,8 +1766,8 @@ class Transfers:
         download_path = os.path.join(folder, basename)
         counter = 1
 
-        while os.path.isfile(download_path):
-            if os.stat(download_path).st_size == size:
+        while os.path.isfile(download_path.encode("utf-8")):
+            if os.stat(download_path.encode("utf-8")).st_size == size:
                 # Found a previous download with a matching file size
                 return download_path
 
@@ -1784,7 +1788,7 @@ class Transfers:
         filename, extension = os.path.splitext(name)
         counter = 1
 
-        while os.path.exists(name):
+        while os.path.exists(name.encode("utf-8")):
             name = filename + " (" + str(counter) + ")" + extension
             counter += 1
 
@@ -1856,11 +1860,11 @@ class Transfers:
         newname = self.get_renamed(os.path.join(folder, basename))
 
         try:
-            if not os.access(folder, os.F_OK):
-                os.makedirs(folder)
+            if not os.access(folder.encode('utf-8'), os.F_OK):
+                os.makedirs(folder.encode('utf-8'))
 
             import shutil
-            shutil.move(file.name, newname)
+            shutil.move(file.name, newname.encode('utf-8'))
 
         except OSError as inst:
             log.add(

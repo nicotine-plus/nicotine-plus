@@ -116,7 +116,7 @@ class Uploads(TransferList):
 
         transfer = next(iter(self.selected_transfers), None)
 
-        if not transfer or not os.path.exists(transfer.path):
+        if not transfer or not os.path.exists(transfer.path.encode("utf-8")):
             return
 
         # Finally, try to open the directory we got...
@@ -129,7 +129,7 @@ class Uploads(TransferList):
             basename = str.split(transfer.filename, '\\')[-1]
             playfile = os.path.join(transfer.path, basename)
 
-            if os.path.exists(playfile):
+            if os.path.exists(playfile.encode("utf-8")):
                 command = config.sections["players"]["default"]
                 open_file_path(playfile, command)
 

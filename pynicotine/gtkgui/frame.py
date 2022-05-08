@@ -1585,8 +1585,9 @@ class NicotineFrame(UserInterface):
 
         sharesdir = os.path.join(config.data_dir, "usershares")
         try:
-            if not os.path.exists(sharesdir):
-                os.makedirs(sharesdir)
+            if not os.path.exists(sharesdir.encode("utf-8")):
+                os.makedirs(sharesdir.encode("utf-8"))
+
         except Exception as msg:
             log.add(_("Can't create directory '%(folder)s', reported error: %(error)s"),
                     {'folder': sharesdir, 'error': msg})
@@ -1792,8 +1793,8 @@ class NicotineFrame(UserInterface):
         log_path = config.sections["logging"]["debuglogsdir"]
 
         try:
-            if not os.path.isdir(log_path):
-                os.makedirs(log_path)
+            if not os.path.isdir(log_path.encode("utf-8")):
+                os.makedirs(log_path.encode("utf-8"))
 
             open_file_path(config.sections["logging"]["debuglogsdir"])
 
