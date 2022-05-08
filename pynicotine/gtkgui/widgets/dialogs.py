@@ -75,25 +75,23 @@ def dialog_show(dialog):
 
     # Shrink the dialog if it's larger than the main window
     if Gtk.get_major_version() == 4:
-        main_width = parent.get_width()
-        main_height = parent.get_height()
+        main_window_width, main_window_height = parent.get_default_size()
+        dialog_width, dialog_height = dialog.get_default_size()
     else:
-        main_width, main_height = parent.get_size()
+        main_window_width, main_window_height = parent.get_size()
+        dialog_width, dialog_height = dialog.get_size()
 
-    new_width = dialog_width = dialog.get_property("default-width")
-    new_height = dialog_height = dialog.get_property("default-height")
+    if dialog_width > main_window_width:
+        dialog_width = main_window_width - 30
 
-    if dialog_width > main_width:
-        new_width = main_width - 30
+    if dialog_height > main_window_height:
+        dialog_height = main_window_height - 30
 
-    if dialog_height > main_height:
-        new_height = main_height - 30
-
-    if new_width > 0 and new_height > 0:
+    if dialog_width > 0 and dialog_height > 0:
         if Gtk.get_major_version() == 4:
-            dialog.set_default_size(new_width, new_height)
+            dialog.set_default_size(dialog_width, dialog_height)
         else:
-            dialog.resize(new_width, new_height)
+            dialog.resize(dialog_width, dialog_height)
 
     # Show the dialog
     dialog.present()

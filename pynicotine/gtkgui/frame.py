@@ -27,7 +27,6 @@ import threading
 import time
 
 import gi
-from gi.repository import Gdk
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
@@ -351,23 +350,18 @@ class NicotineFrame(UserInterface):
             self.window.set_default_icon_name(config.application_id)
 
         # Set main window size
-        width = config.sections["ui"]["width"]
-        height = config.sections["ui"]["height"]
-
-        if Gtk.get_major_version() == 4:
-            self.window.set_default_size(width, height)
-        else:
-            self.window.resize(width, height)
+        self.window.set_default_size(width=config.sections["ui"]["width"],
+                                     height=config.sections["ui"]["height"])
 
         # Set main window position
         if Gtk.get_major_version() == 3:
-            xpos = config.sections["ui"]["xposition"]
-            ypos = config.sections["ui"]["yposition"]
+            x_pos = config.sections["ui"]["xposition"]
+            y_pos = config.sections["ui"]["yposition"]
 
-            if min(xpos, ypos) < 0:
+            if min(x_pos, y_pos) < 0:
                 self.window.set_position(Gtk.WindowPosition.CENTER)
             else:
-                self.window.move(xpos, ypos)
+                self.window.move(x_pos, y_pos)
 
         # Maximize main window if necessary
         if config.sections["ui"]["maximized"]:
@@ -474,13 +468,13 @@ class NicotineFrame(UserInterface):
             width, height = self.window.get_default_size()
         else:
             width, height = self.window.get_size()
-            xpos, ypos = self.window.get_position()
+            x_pos, y_pos = self.window.get_position()
 
-            config.sections["ui"]["xposition"] = xpos
-            config.sections["ui"]["yposition"] = ypos
+            config.sections["ui"]["xposition"] = x_pos
+            config.sections["ui"]["yposition"] = y_pos
 
-        config.sections["ui"]["height"] = height
         config.sections["ui"]["width"] = width
+        config.sections["ui"]["height"] = height
 
         config.sections["ui"]["maximized"] = self.window.is_maximized()
         config.sections["ui"]["last_tab_id"] = self.current_page_id
