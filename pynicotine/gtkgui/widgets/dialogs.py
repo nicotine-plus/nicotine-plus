@@ -96,7 +96,7 @@ def dialog_show(dialog):
             dialog.resize(new_width, new_height)
 
     # Show the dialog
-    dialog.present_with_time(Gdk.CURRENT_TIME)
+    dialog.present()
 
     if Gtk.get_major_version() == 3:
         dialog.get_window().set_functions(
@@ -155,7 +155,7 @@ class MessageDialog:
         self.callback(self, response_id, self.callback_data)
 
     def show(self):
-        self.dialog.present_with_time(Gdk.CURRENT_TIME)
+        self.dialog.present()
 
     def destroy(self):
         self.dialog.destroy()

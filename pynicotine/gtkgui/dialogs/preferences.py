@@ -3105,7 +3105,7 @@ class Preferences(UserInterface):
         self.hide()
 
         if not config.sections["ui"]["trayicon"]:
-            self.frame.window.present_with_time(Gdk.CURRENT_TIME)
+            self.frame.show()
 
     @staticmethod
     def on_back_up_config_response(selected, _data):
