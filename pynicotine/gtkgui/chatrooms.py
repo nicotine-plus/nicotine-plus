@@ -77,7 +77,7 @@ class ChatRooms(IconNotebook):
         self.command_help = UserInterface("ui/popovers/chatroomcommands.ui")
         self.command_help.container, self.command_help.popover = self.command_help.widgets
 
-        if Gtk.get_major_version() == 4:
+        if Gtk.get_major_version() >= 4:
             self.frame.chatrooms_paned.set_resize_start_child(True)
 
             # Scroll to the focused widget
@@ -381,7 +381,7 @@ class ChatRoom(UserInterface):
         self.core = chatrooms.core
         self.room = room
 
-        if Gtk.get_major_version() == 4:
+        if Gtk.get_major_version() >= 4:
             self.users_paned.set_resize_start_child(True)
             self.users_paned.set_shrink_start_child(False)
             self.users_paned.set_resize_end_child(False)

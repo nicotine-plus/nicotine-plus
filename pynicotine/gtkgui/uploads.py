@@ -52,7 +52,7 @@ class Uploads(TransferList):
 
         TransferList.__init__(self, frame, core, transfer_type="upload")
 
-        if Gtk.get_major_version() == 4:
+        if Gtk.get_major_version() >= 4:
             frame.uploads_content.append(self.container)
         else:
             frame.uploads_content.add(self.container)

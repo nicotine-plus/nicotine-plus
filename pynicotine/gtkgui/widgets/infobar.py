@@ -32,7 +32,7 @@ class InfoBar:
         self.revealer = self.info_bar.get_ancestor(Gtk.Revealer)
         self.label = Gtk.Label(wrap=True, visible=True, xalign=0)
 
-        if Gtk.get_major_version() == 4:
+        if Gtk.get_major_version() >= 4:
             self.info_bar.add_child(self.label)
         else:
             self.info_bar.get_content_area().add(self.label)
@@ -44,7 +44,7 @@ class InfoBar:
 
     def set_visible(self, visible):
 
-        if Gtk.get_major_version() == 4:
+        if Gtk.get_major_version() >= 4:
             # Workaround for infinite gtk_widget_measure loop when hiding info bar
             self.revealer.set_visible(visible)
 

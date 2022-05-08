@@ -219,7 +219,7 @@ class NicotineFrame(UserInterface):
 
         self.header_bar.pack_end(self.header_end)
 
-        if Gtk.get_major_version() == 4:
+        if Gtk.get_major_version() >= 4:
             self.header_bar.set_show_title_buttons(True)
 
             self.horizontal_paned.set_resize_start_child(True)
@@ -315,7 +315,7 @@ class NicotineFrame(UserInterface):
         self.window.connect("notify::visible", self.on_window_visible_changed)
 
         # Auto-away mode
-        if Gtk.get_major_version() == 4:
+        if Gtk.get_major_version() >= 4:
             self.gesture_click = Gtk.GestureClick()
             self.window.add_controller(self.gesture_click)
 
@@ -333,7 +333,7 @@ class NicotineFrame(UserInterface):
         self.gesture_click.connect("pressed", self.on_cancel_auto_away)
 
         # System window close (X)
-        if Gtk.get_major_version() == 4:
+        if Gtk.get_major_version() >= 4:
             self.window.connect("close-request", self.on_close_request)
         else:
             self.window.connect("delete-event", self.on_close_request)
@@ -464,7 +464,7 @@ class NicotineFrame(UserInterface):
 
     def save_window_state(self):
 
-        if Gtk.get_major_version() == 4:
+        if Gtk.get_major_version() >= 4:
             width, height = self.window.get_default_size()
         else:
             width, height = self.window.get_size()
@@ -664,7 +664,7 @@ class NicotineFrame(UserInterface):
 
         if mode == "always":
 
-            if Gtk.get_major_version() == 4:
+            if Gtk.get_major_version() >= 4:
                 self.buddy_list_container.append(self.userlist.container)
             else:
                 self.buddy_list_container.add(self.userlist.container)
@@ -675,7 +675,7 @@ class NicotineFrame(UserInterface):
 
         if mode == "chatrooms":
 
-            if Gtk.get_major_version() == 4:
+            if Gtk.get_major_version() >= 4:
                 self.chatrooms_buddy_list_container.append(self.userlist.container)
             else:
                 self.chatrooms_buddy_list_container.add(self.userlist.container)
@@ -686,7 +686,7 @@ class NicotineFrame(UserInterface):
 
         self.userlist.toolbar.hide()
 
-        if Gtk.get_major_version() == 4:
+        if Gtk.get_major_version() >= 4:
             self.userlist_content.append(self.userlist.container)
         else:
             self.userlist_content.add(self.userlist.container)
@@ -1142,7 +1142,7 @@ class NicotineFrame(UserInterface):
 
     def on_menu(self, *_args):
 
-        if Gtk.get_major_version() == 4:
+        if Gtk.get_major_version() >= 4:
             self.header_menu.popup()
         else:
             self.header_menu.set_active(not self.header_menu.get_active())
@@ -1168,7 +1168,7 @@ class NicotineFrame(UserInterface):
         end_widget = getattr(self, page_id + "_end")
         end_widget.get_parent().remove(end_widget)
 
-        if Gtk.get_major_version() == 4:
+        if Gtk.get_major_version() >= 4:
             self.header_title.append(title_widget)
             self.header_end_container.append(end_widget)
         else:
@@ -1188,7 +1188,7 @@ class NicotineFrame(UserInterface):
 
         toolbar = getattr(self, self.current_page_id + "_toolbar_contents")
 
-        if Gtk.get_major_version() == 4:
+        if Gtk.get_major_version() >= 4:
             toolbar.append(title_widget)
             toolbar.append(end_widget)
         else:
@@ -1272,7 +1272,7 @@ class NicotineFrame(UserInterface):
         current_page = notebook.get_nth_page(notebook.get_current_page())
 
         # Hide container widget on previous page for a performance boost
-        if Gtk.get_major_version() == 4:
+        if Gtk.get_major_version() >= 4:
             current_page.get_first_child().hide()
             page.get_first_child().show()
         else:
@@ -1507,7 +1507,7 @@ class NicotineFrame(UserInterface):
         tab_position = config.sections["ui"]["tabmain"]
         expand = tab_position in ("Top", "Bottom")
 
-        if Gtk.get_major_version() == 4:
+        if Gtk.get_major_version() >= 4:
             self.notebook.get_page(page).set_property("tab-expand", expand)
         else:
             self.notebook.child_set_property(page, "tab-expand", expand)

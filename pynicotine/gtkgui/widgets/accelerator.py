@@ -27,7 +27,7 @@ class Accelerator:
 
     def __init__(self, accelerator, widget, callback, user_data=None):
 
-        if Gtk.get_major_version() == 4:
+        if Gtk.get_major_version() >= 4:
             shortcut_controller = Gtk.ShortcutController()
             shortcut_controller.set_scope(Gtk.ShortcutScope.LOCAL)
             shortcut_controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
@@ -56,7 +56,7 @@ class Accelerator:
         if not key:
             return keycodes, mods
 
-        if Gtk.get_major_version() == 4:
+        if Gtk.get_major_version() >= 4:
             _valid, keys = Gdk.Display.get_default().map_keyval(key)
         else:
             keymap = Gdk.Keymap.get_for_display(Gdk.Display.get_default())

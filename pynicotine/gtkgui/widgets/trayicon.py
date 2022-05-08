@@ -79,7 +79,7 @@ class TrayIcon:
 
     def create_menu(self):
 
-        if Gtk.get_major_version() == 4:
+        if Gtk.get_major_version() >= 4:
             return
 
         self.tray_popup_menu = Gtk.Menu()

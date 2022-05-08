@@ -66,7 +66,7 @@ class FileChooser:
         if not os.path.isdir(initial_folder):
             initial_folder = os.path.expanduser("~")
 
-        if Gtk.get_major_version() == 4:
+        if Gtk.get_major_version() >= 4:
             initial_folder = Gio.File.new_for_path(initial_folder)
 
         else:
@@ -194,7 +194,7 @@ class FileChooserButton:
 
         box = Gtk.Box(spacing=6, visible=True)
 
-        if Gtk.get_major_version() == 4:
+        if Gtk.get_major_version() >= 4:
             box.append(self.icon)   # pylint: disable=no-member
             box.append(self.label)  # pylint: disable=no-member
         else:

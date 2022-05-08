@@ -119,7 +119,7 @@ def initialise_columns(frame, treeview_name, treeview, *args):
     column_config = None
 
     # GTK 4 rows need more padding to match GTK 3
-    if Gtk.get_major_version() == 4:
+    if Gtk.get_major_version() >= 4:
         progress_padding = 1
         height_padding = 5
     else:
@@ -173,7 +173,7 @@ def initialise_columns(frame, treeview_name, treeview, *args):
             renderer = Gtk.CellRendererPixbuf()
 
             if column_id == "country":
-                if Gtk.get_major_version() == 4:
+                if Gtk.get_major_version() >= 4:
                     # Custom icon size defined in theme.py
                     renderer.set_property("icon-size", Gtk.IconSize.NORMAL)  # pylint: disable=no-member
                 else:
@@ -217,7 +217,7 @@ def initialise_columns(frame, treeview_name, treeview, *args):
         label = Gtk.Label(label=title, margin_start=5, margin_end=5, visible=True)
         column.set_widget(label)
 
-        if xalign == 1 and Gtk.get_major_version() == 4:
+        if xalign == 1 and Gtk.get_major_version() >= 4:
             # Gtk.TreeViewColumn.set_alignment() only changes the sort arrow position in GTK 4
             # Actually align the label to the right here instead
             label.get_parent().set_halign(Gtk.Align.END)
@@ -235,7 +235,7 @@ def initialise_columns(frame, treeview_name, treeview, *args):
     Accelerator("<Primary>c", treeview, on_copy_cell_data_accelerator)
     treeview.column_menu = PopupMenu(frame, treeview, callback=press_header, connect_events=False)
 
-    if Gtk.get_major_version() == 4:
+    if Gtk.get_major_version() >= 4:
         # Hotfix: disable rubber-band selection in GTK 4 to avoid crash bug
         # when clicking column headers
         treeview.set_rubber_banding(False)

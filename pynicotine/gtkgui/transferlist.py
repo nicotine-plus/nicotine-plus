@@ -67,7 +67,7 @@ class TransferList(UserInterface):
         self.core = core
         self.type = transfer_type
 
-        if Gtk.get_major_version() == 4:
+        if Gtk.get_major_version() >= 4:
             self.clear_all_button.set_has_frame(False)
 
         Accelerator("t", self.tree_view, self.on_abort_transfers_accelerator)

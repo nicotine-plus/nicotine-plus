@@ -51,7 +51,7 @@ class PopupMenu:
         self.popup_menu = None
         self.gesture_click = None
         self.gesture_press = None
-        self.valid_parent_widgets = Gtk.Box if Gtk.get_major_version() == 4 else (Gtk.Box, Gtk.EventBox)
+        self.valid_parent_widgets = Gtk.Box if Gtk.get_major_version() >= 4 else (Gtk.Box, Gtk.EventBox)
 
         if connect_events and parent:
             self.connect_events(parent)
@@ -84,7 +84,7 @@ class PopupMenu:
         while not isinstance(parent, self.valid_parent_widgets):
             parent = parent.get_parent()
 
-        if Gtk.get_major_version() == 4:
+        if Gtk.get_major_version() >= 4:
             self.popup_menu = Gtk.PopoverMenu.new_from_model_full(self.model,  # pylint: disable=no-member
                                                                   Gtk.PopoverMenuFlags.NESTED)
             self.popup_menu.set_parent(parent)
@@ -343,7 +343,7 @@ class PopupMenu:
         if menu is None:
             menu = self.create_context_menu(self.parent)
 
-        if Gtk.get_major_version() == 4:
+        if Gtk.get_major_version() >= 4:
             if not pos_x and not pos_y:
                 pos_x = pos_y = 0
 
@@ -410,7 +410,7 @@ class PopupMenu:
 
     def connect_events(self, parent):
 
-        if Gtk.get_major_version() == 4:
+        if Gtk.get_major_version() >= 4:
             self.gesture_click = Gtk.GestureClick()
             parent.add_controller(self.gesture_click)
 

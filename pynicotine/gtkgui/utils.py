@@ -25,7 +25,7 @@ from gi.repository import Gtk
 
 def copy_text(text):
 
-    if Gtk.get_major_version() == 4:
+    if Gtk.get_major_version() >= 4:
         clipboard = Gdk.Display.get_default().get_clipboard()
         clipboard.set(text)
         return
