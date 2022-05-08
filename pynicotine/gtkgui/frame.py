@@ -415,7 +415,7 @@ class NicotineFrame(UserInterface):
 
         if active_window:
             # Show the window of the running application instance
-            active_window.present_with_time(Gdk.CURRENT_TIME)
+            active_window.present()
             return
 
         self.init_window_properties()
@@ -423,7 +423,7 @@ class NicotineFrame(UserInterface):
 
         # Check command line option and config option
         if not self.start_hidden and not config.sections["ui"]["startup_hidden"]:
-            self.window.present_with_time(Gdk.CURRENT_TIME)
+            self.show()
 
         if not self.connect_action.get_enabled():
             # Set up fast configure dialog
@@ -490,7 +490,7 @@ class NicotineFrame(UserInterface):
 
     def show(self):
 
-        self.window.present_with_time(Gdk.CURRENT_TIME)
+        self.window.present()
 
         if Gtk.get_major_version() == 3:
             # Fix for Windows where minimized window is not shown when unhiding from tray
