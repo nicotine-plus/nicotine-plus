@@ -957,7 +957,7 @@ class UserBrowse(UserInterface):
         download_folder = config.sections["transfers"]["downloaddir"]
         path = os.path.join(download_folder, folder)
 
-        if not os.path.exists(path) or not os.path.isdir(path):
+        if not os.path.exists(path.encode("utf-8")) or not os.path.isdir(path.encode("utf-8")):
             path = download_folder
 
         FolderChooser(
@@ -1009,7 +1009,7 @@ class UserBrowse(UserInterface):
         for basename in self.selected_files:
             playfile = os.sep.join([path, basename])
 
-            if os.path.exists(playfile):
+            if os.path.exists(playfile.encode("utf-8")):
                 command = config.sections["players"]["default"]
                 open_file_path(playfile, command)
 

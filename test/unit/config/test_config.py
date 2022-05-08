@@ -48,11 +48,11 @@ class ConfigTest(unittest.TestCase):
         config.sections["server"]["login"] = "newname"
         config.write_configuration()
 
-        with open(config.filename, encoding="utf-8") as file_handle:
+        with open(config.filename.encode("utf-8"), encoding="utf-8") as file_handle:
             self.assertIn("newname", file_handle.read())
 
         # Verify that the backup is valid
-        old_config = config.filename + ".old"
+        old_config = (config.filename + ".old").encode("utf-8")
         self.assertTrue(os.path.exists(old_config))
 
         with open(old_config, encoding="utf-8") as file_handle:

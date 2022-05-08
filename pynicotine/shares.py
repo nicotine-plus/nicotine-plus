@@ -264,18 +264,6 @@ class Scanner:
 
         return False
 
-    @staticmethod
-    def get_utf8_path(path):
-        """ Convert a path to utf-8, if necessary """
-
-        try:
-            # latin-1 to utf-8
-            return path.encode('latin-1').decode('utf-8')
-
-        except Exception:
-            # fix any remaining oddities (e.g. surrogates)
-            return path.encode('utf-8', 'replace').decode('utf-8')
-
     def get_files_list(self, folder, oldmtimes, oldfiles, oldstreams, rebuild=False, folder_stat=None):
         """ Get a list of files with their filelength, bitrate and track length in seconds """
 
@@ -309,19 +297,19 @@ class Scanner:
                 }, "miscellaneous"))
 
         try:
-            for entry in os.scandir(folder):
+            for entry in os.scandir(folder.encode("utf-8")):
                 entry_stat = entry.stat()
 
                 if entry.is_file():
                     try:
                         if not folder_unchanged:
-                            filename = self.get_utf8_path(entry.name)
+                            filename = entry.name.decode("utf-8", "replace")
 
                             if self.is_hidden(folder, filename, entry_stat):
                                 continue
 
                             # Get the metadata of the file
-                            path = self.get_utf8_path(entry.path)
+                            path = entry.path.decode("utf-8", "replace")
                             data = self.get_file_info(filename, path, self.tinytag, entry_stat)
                             file_list.append(data)
 
@@ -331,7 +319,7 @@ class Scanner:
 
                     continue
 
-                path = self.get_utf8_path(entry.path).replace('\\', os.sep)
+                path = entry.path.decode("utf-8", "replace").replace('\\', os.sep)
 
                 if self.is_hidden(path, entry_stat=entry_stat):
                     continue

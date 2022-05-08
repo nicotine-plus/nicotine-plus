@@ -49,7 +49,7 @@ class MockSocket(Mock):
 
         file_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), datafile)
 
-        with open(file_path, 'rb') as file_handle:
+        with open(file_path.encode("utf-8"), 'rb') as file_handle:
             content = file_handle.read()
 
         content = content.replace(windows_line_ending, unix_line_ending)

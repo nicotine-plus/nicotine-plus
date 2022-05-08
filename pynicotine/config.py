@@ -97,7 +97,7 @@ class Config:
 
         legacy_dir = os.path.join(home, '.nicotine')
 
-        if os.path.isdir(legacy_dir):
+        if os.path.isdir(legacy_dir.encode("utf-8")):
             return legacy_dir, legacy_dir
 
         def xdg_path(xdg, default):
@@ -123,8 +123,8 @@ class Config:
             return True
 
         try:
-            if not os.path.isdir(path):
-                os.makedirs(path)
+            if not os.path.isdir(path.encode("utf-8")):
+                os.makedirs(path.encode("utf-8"))
 
         except OSError as msg:
             from pynicotine.logfacility import log
@@ -140,8 +140,8 @@ class Config:
         if the folder doesn't exist """
 
         try:
-            if not os.path.isdir(self.data_dir):
-                os.makedirs(self.data_dir)
+            if not os.path.isdir(self.data_dir.encode("utf-8")):
+                os.makedirs(self.data_dir.encode("utf-8"))
 
         except OSError as msg:
             from pynicotine.logfacility import log
@@ -573,8 +573,9 @@ class Config:
 
         # Load command aliases from legacy file
         try:
-            if not self.sections["server"]["command_aliases"] and os.path.exists(self.filename + ".alias"):
-                with open(self.filename + ".alias", 'rb') as file_handle:
+            if (not self.sections["server"]["command_aliases"]
+                    and os.path.exists((self.filename + ".alias").encode("utf-8"))):
+                with open((self.filename + ".alias").encode("utf-8"), 'rb') as file_handle:
                     from pynicotine.utils import RestrictedUnpickler
                     self.sections["server"]["command_aliases"] = RestrictedUnpickler(
                         file_handle, encoding='utf-8').load()
@@ -591,7 +592,7 @@ class Config:
         """ Parses the config file """
 
         try:
-            with open(filename, 'a+', encoding="utf-8") as file_handle:
+            with open(filename.encode("utf-8"), 'a+', encoding="utf-8") as file_handle:
                 file_handle.seek(0)
                 self.parser.read_file(file_handle)
 
@@ -613,19 +614,20 @@ class Config:
                     "the application again.")
             sys.exit()
 
-        os.rename(self.filename, self.filename + ".conv")
+        conv_filename = (self.filename + ".conv").encode("utf-8")
+        os.rename(self.filename, conv_filename)
 
-        with open(self.filename + ".conv", 'rb') as file_handle:
+        with open(conv_filename, 'rb') as file_handle:
             rawdata = file_handle.read()
 
         from_encoding = detect(rawdata)['encoding']
 
-        with open(self.filename + ".conv", encoding=from_encoding) as file_read:
-            with open(self.filename, 'w', encoding="utf-8") as file_write:
+        with open(conv_filename, encoding=from_encoding) as file_read:
+            with open(self.filename.encode("utf-8"), 'w', encoding="utf-8") as file_write:
                 for line in file_read:
                     file_write.write(line[:-1] + '\r\n')
 
-        os.remove(self.filename + ".conv")
+        os.remove(conv_filename)
 
     def need_config(self):
 
@@ -763,12 +765,12 @@ class Config:
             filename += ".tar.bz2"
 
         try:
-            if os.path.exists(filename):
+            if os.path.exists(filename.encode("utf-8")):
                 raise FileExistsError("File %s exists" % filename)
 
             import tarfile
-            with tarfile.open(filename, "w:bz2") as tar:
-                if not os.path.exists(self.filename):
+            with tarfile.open(filename.encode("utf-8"), "w:bz2") as tar:
+                if not os.path.exists(self.filename.encode("utf-8")):
                     raise FileNotFoundError("Config file missing")
 
                 tar.add(self.filename)

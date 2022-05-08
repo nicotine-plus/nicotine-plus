@@ -141,13 +141,13 @@ class UserBrowse:
                 # Try legacy format first
                 import bz2
 
-                with bz2.BZ2File(filename) as file_handle:
+                with bz2.BZ2File(filename.encode("utf-8")) as file_handle:
                     shares_list = RestrictedUnpickler(file_handle, encoding='utf-8').load()
 
             except Exception:
                 # Try new format
 
-                with open(filename, encoding="utf-8") as file_handle:
+                with open(filename.encode("utf-8"), encoding="utf-8") as file_handle:
                     shares_list = json.load(file_handle)
 
             # Basic sanity check
@@ -172,8 +172,8 @@ class UserBrowse:
         sharesdir = os.path.join(self.config.data_dir, "usershares")
 
         try:
-            if not os.path.exists(sharesdir):
-                os.makedirs(sharesdir)
+            if not os.path.exists(sharesdir.encode("utf-8")):
+                os.makedirs(sharesdir.encode("utf-8"))
 
         except Exception as msg:
             log.add(_("Can't create directory '%(folder)s', reported error: %(error)s"),
@@ -182,7 +182,7 @@ class UserBrowse:
         try:
             path = os.path.join(sharesdir, clean_file(user))
 
-            with open(path, "w", encoding="utf-8") as file_handle:
+            with open(path.encode("utf-8"), "w", encoding="utf-8") as file_handle:
                 json.dump(shares_list, file_handle, ensure_ascii=False)
 
             log.add(_("Saved list of shared files for user '%(user)s' to %(dir)s"),

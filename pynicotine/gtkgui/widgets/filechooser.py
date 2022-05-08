@@ -79,19 +79,13 @@ class FileChooser:
     def on_selected(dialog, response_id, callback, callback_data):
 
         if dialog.get_select_multiple():
-            if Gtk.get_major_version() == 4:
-                selected = [i.get_path() for i in dialog.get_files()]
-            else:
-                selected = dialog.get_filenames()
+            selected = [i.get_parse_name() for i in dialog.get_files()]
 
         else:
-            if Gtk.get_major_version() == 4:
-                selected_file = dialog.get_file()
+            selected_file = dialog.get_file()
 
-                if selected_file:
-                    selected = selected_file.get_path()
-            else:
-                selected = dialog.get_filename()
+            if selected_file:
+                selected = selected_file.get_parse_name()
 
         dialog.destroy()
 

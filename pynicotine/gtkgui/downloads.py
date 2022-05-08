@@ -137,7 +137,7 @@ class Downloads(TransferList):
 
         for transfer in self.selected_transfers:
             if transfer.status == "Finished":
-                final_path = transfer.path if os.path.exists(transfer.path) else downloaddir
+                final_path = transfer.path if os.path.exists(transfer.path.encode("utf-8")) else downloaddir
                 break
         else:
             final_path = incompletedir

@@ -383,7 +383,7 @@ class PluginHandler:
         for directory in self.plugindirs:
             fullpath = os.path.join(directory, plugin_name)
 
-            if os.path.exists(fullpath):
+            if os.path.exists(fullpath.encode("utf-8")):
                 return fullpath
 
         return None
@@ -486,9 +486,10 @@ class PluginHandler:
         pluginlist = []
 
         for folder in self.plugindirs:
-            if os.path.isdir(folder):
-                for file in os.listdir(folder):
-                    if file not in pluginlist and os.path.isdir(os.path.join(folder, file)):
+            if os.path.isdir(folder.encode("utf-8")):
+                for file in os.listdir(folder.encode("utf-8")):
+                    file = file.decode("utf-8")
+                    if file not in pluginlist and os.path.isdir(os.path.join(folder, file).encode("utf-8")):
                         pluginlist.append(file)
 
         return pluginlist
@@ -558,7 +559,7 @@ class PluginHandler:
 
         info_path = os.path.join(self.findplugin(plugin_name), 'PLUGININFO')
 
-        with open(info_path, encoding="utf-8") as file_handle:
+        with open(info_path.encode("utf-8"), encoding="utf-8") as file_handle:
             for line in file_handle:
                 try:
                     key, value = line.split("=", 1)

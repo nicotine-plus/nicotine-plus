@@ -307,7 +307,7 @@ def load_ui_icon(name):
 
     path = os.path.join(GUI_DIR, "icons", name + ".svg")
 
-    if os.path.isfile(path):
+    if os.path.isfile(path.encode("utf-8")):
         return Gio.Icon.new_for_string(path)
 
     return None
@@ -332,7 +332,7 @@ def load_custom_icons(names):
             path = os.path.expanduser(os.path.join(icon_theme_path, "%s.%s" % (name, exts.pop())))
 
             try:
-                if os.path.isfile(path):
+                if os.path.isfile(path.encode("utf-8")):
                     ICONS[name] = Gio.Icon.new_for_string(path)
                     loaded = True
 

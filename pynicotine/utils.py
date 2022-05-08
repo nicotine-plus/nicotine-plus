@@ -186,8 +186,8 @@ def _handle_log(folder, filename, callback):
 
 def open_log_callback(path):
 
-    if not os.path.exists(path):
-        with open(path, "w", encoding="utf-8"):
+    if not os.path.exists(path.encode("utf-8")):
+        with open(path.encode("utf-8"), "w", encoding="utf-8"):
             # No logs, create empty file
             pass
 
@@ -196,7 +196,7 @@ def open_log_callback(path):
 
 def delete_log_callback(path):
 
-    with open(path, "w", encoding="utf-8"):
+    with open(path.encode("utf-8"), "w", encoding="utf-8"):
         # Check if path should contain special characters
         pass
 
@@ -484,12 +484,12 @@ def write_file_and_backup(path, callback, protect=False):
 
     # Back up old file to path.old
     try:
-        if os.path.exists(path):
+        if os.path.exists(path.encode("utf-8")):
             from shutil import copy2
-            copy2(path, path + ".old")
+            copy2(path, (path + ".old").encode("utf-8"))
 
             if protect:
-                os.chmod(path + ".old", 0o600)
+                os.chmod((path + ".old").encode("utf-8"), 0o600)
 
     except Exception as error:
         log.add(_("Unable to back up file %(path)s: %(error)s"), {
@@ -502,7 +502,7 @@ def write_file_and_backup(path, callback, protect=False):
         oldumask = os.umask(0o077)
 
     try:
-        with open(path, "w", encoding="utf-8") as file_handle:
+        with open(path.encode("utf-8"), "w", encoding="utf-8") as file_handle:
             callback(file_handle)
 
     except Exception as error:
@@ -513,8 +513,8 @@ def write_file_and_backup(path, callback, protect=False):
 
         # Attempt to restore file
         try:
-            if os.path.exists(path + ".old"):
-                os.rename(path + ".old", path)
+            if os.path.exists((path + ".old").encode("utf-8")):
+                os.rename((path + ".old").encode("utf-8"), path)
 
         except Exception as second_error:
             log.add(_("Unable to restore previous file %(path)s: %(error)s"), {
