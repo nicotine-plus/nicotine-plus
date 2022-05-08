@@ -1930,7 +1930,7 @@ class NicotineFrame(UserInterface):
                 filename = traceback.tb_frame.f_code.co_filename
 
                 for plugin_name in self.core.pluginhandler.enabled_plugins:
-                    path = self.core.pluginhandler.findplugin(plugin_name)
+                    path = self.core.pluginhandler.get_plugin_path(plugin_name)
 
                     if filename.startswith(path):
                         self.core.pluginhandler.show_plugin_error(

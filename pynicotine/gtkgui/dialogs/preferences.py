@@ -2683,15 +2683,7 @@ class PluginsFrame(UserInterface):
 
     @staticmethod
     def on_add_plugins(*_args):
-
-        try:
-            if not os.path.isdir(config.plugin_dir):
-                os.makedirs(config.plugin_dir)
-
-            open_file_path(config.plugin_dir)
-
-        except Exception as error:
-            log.add("Failed to open folder containing user plugins: %s", error)
+        open_file_path(config.plugin_dir, create_folder=True)
 
     def on_plugin_properties(self, *_args):
 
