@@ -341,7 +341,7 @@ class PluginHandler:
         self.command_source = None
 
         try:
-            os.makedirs(config.plugin_dir)
+            os.makedirs(config.plugin_dir.encode("utf-8"))
         except Exception:
             pass
 

@@ -105,13 +105,13 @@ def clean_path(path, absolute=False):
     return path
 
 
-def open_file_path(file_path, command=None, create_folder=False):
+def open_file_path(file_path, command=None, create_folder=False, create_file=False):
     """ Currently used to either open a folder or play an audio file
     Tries to run a user-specified command first, and falls back to
     the system default. """
 
     if file_path is None:
-        return
+        return False
 
     try:
         file_path = os.path.normpath(file_path)
@@ -119,6 +119,11 @@ def open_file_path(file_path, command=None, create_folder=False):
         if not os.path.exists(file_path.encode("utf-8")):
             if create_folder:
                 os.makedirs(file_path.encode("utf-8"))
+
+            elif create_file:
+                with open(file_path.encode("utf-8"), "w", encoding="utf-8"):
+                    # Create empty file
+                    pass
             else:
                 raise FileNotFoundError("File path does not exist")
 
@@ -136,37 +141,36 @@ def open_file_path(file_path, command=None, create_folder=False):
 
     except Exception as error:
         log.add(_("Cannot open file path %(path)s: %(error)s"), {"path": file_path, "error": error})
+        return False
+
+    return True
 
 
 def open_uri(uri):
     """ Open a URI in an external (web) browser. The given argument has
     to be a properly formed URI including the scheme (fe. HTTP). """
 
-    # Situation 1, user defined a way of handling the protocol
-    protocol = uri[:uri.find(":")]
-    protocol_handlers = config.sections["urls"]["protocols"]
+    try:
+        # Situation 1, user defined a way of handling the protocol
+        protocol = uri[:uri.find(":")]
+        protocol_handlers = config.sections["urls"]["protocols"]
 
-    if protocol in protocol_handlers and protocol_handlers[protocol]:
-        try:
+        if protocol in protocol_handlers and protocol_handlers[protocol]:
             execute_command(protocol_handlers[protocol], uri)
             return True
 
-        except RuntimeError as error:
-            log.add(error)
+        if protocol == "slsk":
+            OPEN_SOULSEEK_URL(uri.strip())  # pylint:disable=not-callable
+            return True
 
-    if protocol == "slsk":
-        OPEN_SOULSEEK_URL(uri.strip())  # pylint:disable=not-callable
-        return True
-
-    # Situation 2, user did not define a way of handling the protocol
-    try:
+        # Situation 2, user did not define a way of handling the protocol
         if not webbrowser.open(uri):
-            raise webbrowser.Error("no known URL provider available")
+            raise webbrowser.Error("No known URL provider available")
 
         return True
 
     except Exception as error:
-        log.add(_("Failed to open URL: %s"), error)
+        log.add(_("Cannot open URL %(url)s: %(error)s"), {"url": uri, "error": error})
 
     return False
 
@@ -181,35 +185,24 @@ def delete_log(folder, filename):
 
 def _handle_log(folder, filename, callback):
 
-    try:
-        if not os.path.isdir(folder):
-            os.makedirs(folder)
+    path = os.path.join(folder, clean_file(filename) + ".log")
 
-        filename = clean_file(filename) + ".log"
-        path = os.path.join(folder, filename)
+    try:
+        if not os.path.isdir(folder.encode("utf-8")):
+            os.makedirs(folder.encode("utf-8"))
+
         callback(path)
 
     except Exception as error:
-        log.add("Failed to process log file: %s", error)
+        log.add(_("Cannot access log file %(path)s: %(error)s"), {"path": path, "error": error})
 
 
 def open_log_callback(path):
-
-    if not os.path.exists(path.encode("utf-8")):
-        with open(path.encode("utf-8"), "w", encoding="utf-8"):
-            # No logs, create empty file
-            pass
-
-    open_file_path(path)
+    open_file_path(path, create_file=True)
 
 
 def delete_log_callback(path):
-
-    with open(path.encode("utf-8"), "w", encoding="utf-8"):
-        # Check if path should contain special characters
-        pass
-
-    os.remove(path)
+    os.remove(path.encode("utf-8"))
 
 
 def get_latest_version():

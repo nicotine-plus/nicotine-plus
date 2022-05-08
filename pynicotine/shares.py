@@ -566,11 +566,11 @@ class Shares:
                     shares[destination] = shelve.open(shelvefile, protocol=pickle.HIGHEST_PROTOCOL)
                 else:
                     try:
-                        os.remove(shelvefile)
+                        os.remove(shelvefile.encode("utf-8"))
 
                     except IsADirectoryError:
                         # Potentially trying to use gdbm with a semidbm database
-                        os.rmdir(shelvefile)
+                        os.rmdir(shelvefile.encode("utf-8"))
 
                     shares[destination] = shelve.open(shelvefile, flag='n', protocol=pickle.HIGHEST_PROTOCOL)
 
