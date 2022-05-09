@@ -100,7 +100,7 @@ class WishList(UserInterface):
 
     def on_edit_wish_response(self, dialog, response_id, old_wish):
 
-        wish = dialog.get_response_value()
+        wish = dialog.get_entry_value()
         dialog.destroy()
 
         if response_id != Gtk.ResponseType.OK:

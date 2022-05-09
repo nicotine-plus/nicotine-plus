@@ -683,7 +683,7 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkBox" id="CensorContainer">
+                  <object class="GtkBox">
                     <property name="visible">True</property>
                     <property name="spacing">12</property>
                     <property name="orientation">vertical</property>
@@ -716,6 +716,7 @@
                                   <object class="GtkTreeView" id="CensorList">
                                     <property name="visible">True</property>
                                     <property name="rubber-banding">True</property>
+                                    <signal name="row-activated" handler="on_edit_censored"/>
                                     <child internal-child="selection">
                                       <object class="GtkTreeSelection">
                                         <property name="mode">multiple</property>
@@ -737,7 +738,7 @@
                                 <property name="margin-bottom">6</property>
                                 <property name="spacing">6</property>
                                 <child>
-                                  <object class="GtkButton" id="AddCensor">
+                                  <object class="GtkButton">
                                     <property name="visible">True</property>
                                     <property name="tooltip-text" translatable="yes">Add…</property>
                                     <signal name="clicked" handler="on_add_censored"/>
@@ -766,7 +767,37 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkButton" id="RemoveCensor">
+                                  <object class="GtkButton">
+                                    <property name="visible">True</property>
+                                    <property name="tooltip-text" translatable="yes">Edit…</property>
+                                    <signal name="clicked" handler="on_edit_censored"/>
+                                    <child>
+                                      <object class="GtkBox">
+                                        <property name="visible">True</property>
+                                        <property name="spacing">6</property>
+                                        <child>
+                                          <object class="GtkImage">
+                                            <property name="visible">True</property>
+                                            <property name="icon-name">document-edit-symbolic</property>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkLabel">
+                                            <property name="visible">True</property>
+                                            <property name="ellipsize">end</property>
+                                            <property name="label" translatable="yes">Edit…</property>
+                                            <property name="use-underline">True</property>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                    <style>
+                                      <class name="flat"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkButton">
                                     <property name="visible">True</property>
                                     <property name="tooltip-text" translatable="yes">Remove</property>
                                     <signal name="clicked" handler="on_remove_censored"/>
@@ -839,7 +870,7 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkBox" id="ReplacementsContainer">
+                  <object class="GtkBox">
                     <property name="visible">True</property>
                     <property name="spacing">12</property>
                     <property name="orientation">vertical</property>
@@ -873,6 +904,7 @@
                                   <object class="GtkTreeView" id="ReplacementList">
                                     <property name="visible">True</property>
                                     <property name="rubber-banding">True</property>
+                                    <signal name="row-activated" handler="on_edit_replacement"/>
                                     <child internal-child="selection">
                                       <object class="GtkTreeSelection">
                                         <property name="mode">multiple</property>
@@ -894,7 +926,7 @@
                                 <property name="margin-bottom">6</property>
                                 <property name="spacing">6</property>
                                 <child>
-                                  <object class="GtkButton" id="AddReplacement">
+                                  <object class="GtkButton">
                                     <property name="visible">True</property>
                                     <property name="tooltip-text" translatable="yes">Add…</property>
                                     <signal name="clicked" handler="on_add_replacement"/>
@@ -923,7 +955,37 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkButton" id="RemoveReplacement">
+                                  <object class="GtkButton">
+                                    <property name="visible">True</property>
+                                    <property name="tooltip-text" translatable="yes">Edit…</property>
+                                    <signal name="clicked" handler="on_edit_replacement"/>
+                                    <child>
+                                      <object class="GtkBox">
+                                        <property name="visible">True</property>
+                                        <property name="spacing">6</property>
+                                        <child>
+                                          <object class="GtkImage">
+                                            <property name="visible">True</property>
+                                            <property name="icon-name">document-edit-symbolic</property>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkLabel">
+                                            <property name="visible">True</property>
+                                            <property name="ellipsize">end</property>
+                                            <property name="label" translatable="yes">Edit…</property>
+                                            <property name="use-underline">True</property>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                    <style>
+                                      <class name="flat"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkButton">
                                     <property name="visible">True</property>
                                     <property name="tooltip-text" translatable="yes">Remove</property>
                                     <signal name="clicked" handler="on_remove_replacement"/>

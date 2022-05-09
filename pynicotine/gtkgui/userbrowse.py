@@ -730,7 +730,7 @@ class UserBrowse(UserInterface):
 
     def on_upload_directory_to_response(self, dialog, response_id, recurse):
 
-        user = dialog.get_response_value()
+        user = dialog.get_entry_value()
         folder = self.selected_folder
         dialog.destroy()
 
@@ -982,7 +982,7 @@ class UserBrowse(UserInterface):
 
     def on_upload_files_response(self, dialog, response_id, _data):
 
-        user = dialog.get_response_value()
+        user = dialog.get_entry_value()
         folder = self.selected_folder
         dialog.destroy()
 

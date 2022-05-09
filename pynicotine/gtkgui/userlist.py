@@ -510,7 +510,7 @@ class UserList(UserInterface):
         if iterator is None:
             return
 
-        note = dialog.get_response_value()
+        note = dialog.get_entry_value()
         dialog.destroy()
 
         if note is None:

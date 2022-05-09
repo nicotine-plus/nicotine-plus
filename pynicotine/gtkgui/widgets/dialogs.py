@@ -161,8 +161,9 @@ class MessageDialog:
 
 class EntryDialog(MessageDialog):
 
-    def __init__(self, parent, title, message, callback, callback_data=None, default="",
-                 option_label="", option_value=False, visibility=True, droplist=None):
+    def __init__(self, parent, title, callback, message=None, callback_data=None, default="", use_second_entry=False,
+                 second_default="", option_label="", option_value=False, visibility=True,
+                 droplist=None, second_droplist=None):
 
         super().__init__(parent=parent, title=title, message=message, message_type=Gtk.MessageType.OTHER,
                          callback=callback, callback_data=callback_data, width=500,
@@ -171,30 +172,21 @@ class EntryDialog(MessageDialog):
                              (_("OK"), Gtk.ResponseType.OK)])
 
         if droplist:
-            dropdown = Gtk.ComboBoxText(has_entry=True, visible=True)
-            self.entry = dropdown.get_child()
-            self.entry.set_visibility(visibility)
-
-            for i in droplist:
-                dropdown.append_text(i)
-
-            if Gtk.get_major_version() >= 4:
-                self.container.append(dropdown)
-            else:
-                self.container.add(dropdown)
+            self.entry = self._add_combobox(droplist, visibility)
         else:
-            if Gtk.get_major_version() >= 4 and not visibility:
-                self.entry = Gtk.PasswordEntry(show_peek_icon=True, visible=True)
-            else:
-                self.entry = Gtk.Entry(visibility=visibility, visible=True)
-
-            if Gtk.get_major_version() >= 4:
-                self.container.append(self.entry)
-            else:
-                self.container.add(self.entry)
+            self.entry = self._add_entry(visibility)
 
         self.entry.connect("activate", lambda x: self.dialog.response(Gtk.ResponseType.OK))
         self.entry.set_text(default)
+
+        if use_second_entry:
+            if second_droplist:
+                self.second_entry = self._add_combobox(second_droplist, visibility)
+            else:
+                self.second_entry = self._add_entry(visibility)
+
+            self.second_entry.connect("activate", lambda x: self.dialog.response(Gtk.ResponseType.OK))
+            self.second_entry.set_text(second_default)
 
         self.option = Gtk.CheckButton(label=option_label, active=option_value, visible=bool(option_label))
 
@@ -204,11 +196,44 @@ class EntryDialog(MessageDialog):
             else:
                 self.container.add(self.option)
 
-    def get_response_value(self):
+    def _add_combobox(self, items, visibility=True):
+
+        dropdown = Gtk.ComboBoxText(has_entry=True, visible=True)
+        entry = dropdown.get_child()
+        entry.set_visibility(visibility)
+
+        for item in items:
+            dropdown.append_text(item)
+
+        if Gtk.get_major_version() >= 4:
+            self.container.append(dropdown)
+        else:
+            self.container.add(dropdown)
+
+        return entry
+
+    def _add_entry(self, visibility=True):
+
+        if Gtk.get_major_version() >= 4 and not visibility:
+            entry = Gtk.PasswordEntry(show_peek_icon=True, visible=True)
+        else:
+            entry = Gtk.Entry(visibility=visibility, visible=True)
+
+        if Gtk.get_major_version() >= 4:
+            self.container.append(entry)
+        else:
+            self.container.add(entry)
+
+        return entry
+
+    def get_entry_value(self):
         return self.entry.get_text()
 
-    def get_second_response_value(self):
-        return self.option.get_active()
+    def get_second_entry_value(self):
+        return self.second_entry.get_text()
+
+    def get_option_value(self):
+        return self.entry.get_text()
 
 
 class OptionDialog(MessageDialog):

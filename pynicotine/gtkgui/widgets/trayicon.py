@@ -218,7 +218,7 @@ class BaseImplementation:
 
     def on_open_private_chat_response(self, dialog, response_id, _data):
 
-        user = dialog.get_response_value()
+        user = dialog.get_entry_value()
         dialog.destroy()
 
         if response_id != Gtk.ResponseType.OK or not user:
@@ -241,7 +241,7 @@ class BaseImplementation:
 
     def on_get_a_users_info_response(self, dialog, response_id, _data):
 
-        user = dialog.get_response_value()
+        user = dialog.get_entry_value()
         dialog.destroy()
 
         if response_id != Gtk.ResponseType.OK or not user:
@@ -263,7 +263,7 @@ class BaseImplementation:
 
     def on_get_a_users_shares_response(self, dialog, response_id, _data):
 
-        user = dialog.get_response_value()
+        user = dialog.get_entry_value()
         dialog.destroy()
 
         if response_id != Gtk.ResponseType.OK or not user:

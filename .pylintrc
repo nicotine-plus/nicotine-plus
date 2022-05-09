@@ -276,7 +276,7 @@ indent-string='    '
 max-line-length=120
 
 # Maximum number of lines in a module.
-max-module-lines=3300
+max-module-lines=3400
 
 # Allow the body of a class to be on the same line as the declaration if body
 # contains single statement.
@@ -489,7 +489,7 @@ exclude-too-few-public-methods=
 ignored-parents=
 
 # Maximum number of arguments for function / method.
-max-args=12
+max-args=14
 
 # Maximum number of attributes for a class (see R0902).
 max-attributes=150

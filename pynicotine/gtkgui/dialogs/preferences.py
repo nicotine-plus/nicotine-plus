@@ -170,7 +170,7 @@ class NetworkFrame(UserInterface):
 
     def on_change_password_response(self, dialog, response_id, logged_in):
 
-        password = dialog.get_response_value()
+        password = dialog.get_entry_value()
         dialog.destroy()
 
         if response_id != Gtk.ResponseType.OK:
@@ -333,8 +333,8 @@ class DownloadsFrame(UserInterface):
 
     def on_add_filter_response(self, dialog, response_id, _data):
 
-        dfilter = dialog.get_response_value()
-        escaped = dialog.get_second_response_value()
+        dfilter = dialog.get_entry_value()
+        escaped = dialog.get_option_value()
         dialog.destroy()
 
         if response_id != Gtk.ResponseType.OK:
@@ -377,8 +377,8 @@ class DownloadsFrame(UserInterface):
 
     def on_edit_filter_response(self, dialog, response_id, _data):
 
-        new_dfilter = dialog.get_response_value()
-        escaped = dialog.get_second_response_value()
+        new_dfilter = dialog.get_entry_value()
+        escaped = dialog.get_option_value()
         dialog.destroy()
 
         if response_id != Gtk.ResponseType.OK:
@@ -690,8 +690,8 @@ class SharesFrame(UserInterface):
 
     def on_edit_shared_dir_response(self, dialog, response_id, path):
 
-        virtual = dialog.get_response_value()
-        buddy_only = dialog.get_second_response_value()
+        virtual = dialog.get_entry_value()
+        buddy_only = dialog.get_option_value()
         dialog.destroy()
 
         if response_id != Gtk.ResponseType.OK:
@@ -946,7 +946,7 @@ class IgnoredUsersFrame(UserInterface):
 
     def on_add_ignored_response(self, dialog, response_id, _data):
 
-        user = dialog.get_response_value()
+        user = dialog.get_entry_value()
         dialog.destroy()
 
         if response_id != Gtk.ResponseType.OK:
@@ -978,7 +978,7 @@ class IgnoredUsersFrame(UserInterface):
 
     def on_add_ignored_ip_response(self, dialog, response_id, _data):
 
-        ip_address = dialog.get_response_value()
+        ip_address = dialog.get_entry_value()
         dialog.destroy()
 
         if response_id != Gtk.ResponseType.OK:
@@ -1122,7 +1122,7 @@ class BannedUsersFrame(UserInterface):
 
     def on_add_banned_response(self, dialog, response_id, _data):
 
-        user = dialog.get_response_value()
+        user = dialog.get_entry_value()
         dialog.destroy()
 
         if response_id != Gtk.ResponseType.OK:
@@ -1154,7 +1154,7 @@ class BannedUsersFrame(UserInterface):
 
     def on_add_blocked_response(self, dialog, response_id, _data):
 
-        ip_address = dialog.get_response_value()
+        ip_address = dialog.get_entry_value()
         dialog.destroy()
 
         if response_id != Gtk.ResponseType.OK:
@@ -1209,14 +1209,14 @@ class ChatsFrame(UserInterface):
         super().__init__("ui/settings/chats.ui")
 
         # pylint: disable=invalid-name
-        (self.AddCensor, self.AddReplacement, self.CensorCheck, self.CensorContainer, self.CensorList,
+        (self.CensorCheck, self.CensorList,
          self.CensorReplaceCombo, self.CharactersCompletion, self.ChatRoomFormat, self.ChatRoomFormatLabel,
          self.CompleteAliasesCheck, self.CompleteBuddiesCheck, self.CompleteCommandsCheck, self.CompleteRoomNamesCheck,
          self.CompleteUsersInRoomsCheck, self.CompletionCycleCheck, self.CompletionDropdownCheck,
          self.CompletionTabCheck, self.Main, self.OneMatchCheck, self.PrivateChatFormat, self.PrivateChatFormatLabel,
-         self.PrivateLogLines, self.PrivateMessage, self.PrivateMessageLabel, self.RemoveCensor,
-         self.RemoveReplacement, self.ReopenPrivateChats, self.ReplaceCheck, self.ReplacementList,
-         self.ReplacementsContainer, self.RoomLogLines, self.RoomMessage, self.RoomMessageLabel, self.SpellCheck,
+         self.PrivateLogLines, self.PrivateMessage, self.PrivateMessageLabel,
+         self.ReopenPrivateChats, self.ReplaceCheck, self.ReplacementList,
+         self.RoomLogLines, self.RoomMessage, self.RoomMessageLabel, self.SpellCheck,
          self.TTSCommand, self.TTSCommandLabel, self.TextToSpeech) = self.widgets
 
         self.preferences = preferences
@@ -1263,36 +1263,24 @@ class ChatsFrame(UserInterface):
 
         cols = initialise_columns(
             self.frame, None, self.CensorList,
-            ["pattern", _("Pattern"), -1, "edit", None]
+            ["pattern", _("Pattern"), -1, "text", None]
         )
         cols["pattern"].set_sort_column_id(0)
 
         self.CensorList.set_model(self.censor_list_model)
-
-        renderers = cols["pattern"].get_cells()
-        for render in renderers:
-            render.connect('edited', self.censor_cell_edited_callback, self.CensorList, 0)
 
         self.replace_list_model = Gtk.ListStore(str, str)
 
         self.column_numbers = list(range(self.replace_list_model.get_n_columns()))
         cols = initialise_columns(
             self.frame, None, self.ReplacementList,
-            ["pattern", _("Pattern"), 150, "edit", None],
-            ["replacement", _("Replacement"), -1, "edit", None]
+            ["pattern", _("Pattern"), 150, "text", None],
+            ["replacement", _("Replacement"), -1, "text", None]
         )
         cols["pattern"].set_sort_column_id(0)
         cols["replacement"].set_sort_column_id(1)
 
         self.ReplacementList.set_model(self.replace_list_model)
-
-        pos = 0
-        for column in cols.values():
-            renderers = column.get_cells()
-            for render in renderers:
-                render.connect('edited', self.replace_cell_edited_callback, self.ReplacementList, pos)
-
-            pos += 1
 
     def on_completion_changed(self, *_args):
         self.completion_required = True
@@ -1312,27 +1300,9 @@ class ChatsFrame(UserInterface):
     def on_private_default_timestamp(self, *_args):
         self.PrivateChatFormat.set_text(config.defaults["logging"]["private_timestamp"])
 
-    @staticmethod
-    def censor_cell_edited_callback(_widget, index, value, treeview, pos):
-
-        store = treeview.get_model()
-        iterator = store.get_iter(index)
-
-        if value != "" and not value.isspace() and len(value) > 2:
-            store.set(iterator, pos, value)
-        else:
-            store.remove(iterator)
-
-    @staticmethod
-    def replace_cell_edited_callback(_widget, index, value, treeview, pos):
-
-        store = treeview.get_model()
-        iterator = store.get_iter(index)
-        store.set(iterator, pos, value)
-
     def on_add_censored_response(self, dialog, response_id, _data):
 
-        pattern = dialog.get_response_value()
+        pattern = dialog.get_entry_value()
         dialog.destroy()
 
         if response_id != Gtk.ResponseType.OK:
@@ -1351,6 +1321,39 @@ class ChatsFrame(UserInterface):
             callback=self.on_add_censored_response
         ).show()
 
+    def on_edit_censored_response(self, dialog, response_id, path):
+
+        pattern = dialog.get_entry_value()
+        dialog.destroy()
+
+        if response_id != Gtk.ResponseType.OK:
+            return
+
+        if not pattern:
+            return
+
+        iterator = self.censor_list_model.get_iter(path)
+        self.censor_list_model.set_value(iterator, 0, pattern)
+
+    def on_edit_censored(self, *_args):
+
+        model, paths = self.CensorList.get_selection().get_selected_rows()
+
+        for path in paths:
+            iterator = model.get_iter(path)
+            pattern = model.get_value(iterator, 0)
+
+            EntryDialog(
+                parent=self.preferences.dialog,
+                title=_("Edit Censored Pattern"),
+                message=_("Enter a pattern you want to censor. Add spaces around the pattern if you don't "
+                          "want to match strings inside words (may fail at the beginning and end of lines)."),
+                callback=self.on_edit_censored_response,
+                callback_data=path,
+                default=pattern
+            ).show()
+            return
+
     def on_remove_censored(self, *_args):
 
         model, paths = self.CensorList.get_selection().get_selected_rows()
@@ -1359,14 +1362,67 @@ class ChatsFrame(UserInterface):
             iterator = model.get_iter(path)
             model.remove(iterator)
 
+    def on_add_replacement_response(self, dialog, response_id, _data):
+
+        pattern = dialog.get_entry_value()
+        replacement = dialog.get_second_entry_value()
+        dialog.destroy()
+
+        if response_id != Gtk.ResponseType.OK:
+            return
+
+        if not pattern or not replacement:
+            return
+
+        iterator = self.replace_list_model.insert_with_valuesv(-1, self.column_numbers, [pattern, replacement])
+        self.ReplacementList.set_cursor(self.replace_list_model.get_path(iterator))
+
     def on_add_replacement(self, *_args):
 
-        iterator = self.replace_list_model.insert_with_valuesv(-1, self.column_numbers, ["", ""])
-        selection = self.ReplacementList.get_selection()
-        selection.select_iter(iterator)
-        col = self.ReplacementList.get_column(0)
+        EntryDialog(
+            parent=self.preferences.dialog,
+            title=_("Add Replacement"),
+            message=_("Enter the text pattern and replacement, respectively:"),
+            callback=self.on_add_replacement_response,
+            use_second_entry=True
+        ).show()
 
-        self.ReplacementList.set_cursor(self.replace_list_model.get_path(iterator), col, True)
+    def on_edit_replacement_response(self, dialog, response_id, path):
+
+        pattern = dialog.get_entry_value()
+        replacement = dialog.get_second_entry_value()
+        dialog.destroy()
+
+        if response_id != Gtk.ResponseType.OK:
+            return
+
+        if not pattern or not replacement:
+            return
+
+        iterator = self.replace_list_model.get_iter(path)
+        self.replace_list_model.set_value(iterator, 0, pattern)
+        self.replace_list_model.set_value(iterator, 1, replacement)
+
+    def on_edit_replacement(self, *_args):
+
+        model, paths = self.ReplacementList.get_selection().get_selected_rows()
+
+        for path in paths:
+            iterator = model.get_iter(path)
+            pattern = model.get_value(iterator, 0)
+            replacement = model.get_value(iterator, 1)
+
+            EntryDialog(
+                parent=self.preferences.dialog,
+                title=_("Edit Replacement"),
+                message=_("Enter the text pattern and replacement, respectively:"),
+                callback=self.on_edit_replacement_response,
+                callback_data=path,
+                use_second_entry=True,
+                default=pattern,
+                second_default=replacement
+            ).show()
+            return
 
     def on_remove_replacement(self, *_args):
 
@@ -1954,8 +2010,7 @@ class UrlHandlersFrame(UserInterface):
         super().__init__("ui/settings/urlhandlers.ui")
 
         # pylint: disable=invalid-name
-        (self.FileManagerCombo, self.Handler, self.Main, self.ProtocolCombo, self.ProtocolHandlers,
-         self.RemoveHandler, self.addButton, self.audioPlayerCombo) = self.widgets
+        (self.FileManagerCombo, self.Main, self.ProtocolHandlers, self.audioPlayerCombo) = self.widgets
 
         self.preferences = preferences
         self.frame = preferences.frame
@@ -1972,6 +2027,28 @@ class UrlHandlersFrame(UserInterface):
             }
         }
 
+        self.default_protocols = [
+            "http",
+            "https",
+            "ftp",
+            "sftp",
+            "news",
+            "irc"
+        ]
+
+        self.default_commands = [
+            "xdg-open $",
+            "firefox $",
+            "firefox --new-tab $",
+            "epiphany $",
+            "chromium-browser $",
+            "falkon $",
+            "links -g $",
+            "dillo $",
+            "konqueror $",
+            "\"c:\\Program Files\\Mozilla Firefox\\Firefox.exe\" $"
+        ]
+
         self.protocolmodel = Gtk.ListStore(str, str)
         self.protocols = {}
 
@@ -1979,17 +2056,13 @@ class UrlHandlersFrame(UserInterface):
         cols = initialise_columns(
             self.frame, None, self.ProtocolHandlers,
             ["protocol", _("Protocol"), -1, "text", None],
-            ["command", _("Command"), -1, "edit", None]
+            ["command", _("Command"), -1, "text", None]
         )
 
         cols["protocol"].set_sort_column_id(0)
         cols["command"].set_sort_column_id(1)
 
         self.ProtocolHandlers.set_model(self.protocolmodel)
-
-        renderers = cols["command"].get_cells()
-        for render in renderers:
-            render.connect('edited', self.cell_edited_callback, self.ProtocolHandlers, 1)
 
     def set_settings(self):
 
@@ -2032,29 +2105,72 @@ class UrlHandlersFrame(UserInterface):
             }
         }
 
-    @staticmethod
-    def cell_edited_callback(_widget, index, value, treeview, pos):
+    def on_add_handler_response(self, dialog, response_id, _data):
 
-        store = treeview.get_model()
-        iterator = store.get_iter(index)
-        store.set(iterator, pos, value)
+        protocol = dialog.get_entry_value()
+        command = dialog.get_second_entry_value()
+        dialog.destroy()
 
-    def on_add(self, *_args):
+        if response_id != Gtk.ResponseType.OK:
+            return
 
-        protocol = self.ProtocolCombo.get_active_text()
-        command = self.Handler.get_active_text()
-
-        self.ProtocolCombo.get_child().set_text("")
-        self.Handler.get_child().set_text("")
+        if not protocol or not command:
+            return
 
         if protocol in self.protocols:
-            self.protocolmodel.set(self.protocols[protocol], 1, command)
+            self.protocolmodel.set_value(self.protocols[protocol], 1, command)
         else:
             self.protocols[protocol] = self.protocolmodel.insert_with_valuesv(
                 -1, self.column_numbers, [protocol, command]
             )
 
-    def on_remove(self, *_args):
+    def on_add_handler(self, *_args):
+
+        EntryDialog(
+            parent=self.preferences.dialog,
+            title=_("Add URL Handler"),
+            message=_("Enter the protocol and command for the URL hander, respectively:"),
+            callback=self.on_add_handler_response,
+            use_second_entry=True,
+            droplist=self.default_protocols,
+            second_droplist=self.default_commands
+        ).show()
+
+    def on_edit_handler_response(self, dialog, response_id, path):
+
+        command = dialog.get_entry_value()
+        dialog.destroy()
+
+        if response_id != Gtk.ResponseType.OK:
+            return
+
+        if not command:
+            return
+
+        iterator = self.protocolmodel.get_iter(path)
+        self.protocolmodel.set_value(iterator, 1, command)
+
+    def on_edit_handler(self, *_args):
+
+        model, paths = self.ProtocolHandlers.get_selection().get_selected_rows()
+
+        for path in paths:
+            iterator = model.get_iter(path)
+            protocol = model.get_value(iterator, 0)
+            command = model.get_value(iterator, 1)
+
+            EntryDialog(
+                parent=self.preferences.dialog,
+                title=_("Edit Command"),
+                message=_("Enter a new command for protocol %s:") % protocol,
+                callback=self.on_edit_handler_response,
+                callback_data=path,
+                droplist=self.default_commands,
+                default=command
+            ).show()
+            return
+
+    def on_remove_handler(self, *_args):
 
         model, paths = self.ProtocolHandlers.get_selection().get_selected_rows()
 
@@ -2326,31 +2442,31 @@ class PluginsFrame(UserInterface):
                 hscrollbar_policy=Gtk.PolicyType.AUTOMATIC, vscrollbar_policy=Gtk.PolicyType.AUTOMATIC, visible=True
             )
 
-            self.option_widgets[name] = Gtk.TreeView(model=Gtk.ListStore(str), visible=True)
+            self.option_widgets[name] = treeview = Gtk.TreeView(model=Gtk.ListStore(str), visible=True)
 
-            scrolled_window.set_property("child", self.option_widgets[name])
+            scrolled_window.set_property("child", treeview)
             frame_container.set_property("child", scrolled_window)
 
-            cols = initialise_columns(
+            initialise_columns(
                 self.settings.frame, None, self.option_widgets[name],
-                [description, description, -1, "edit", None]
+                [description, description, -1, "text", None]
             )
-            self.settings.set_widget(self.option_widgets[name], value)
-
-            add_button = Gtk.Button(label=_("Add"), visible=True)
-            remove_button = Gtk.Button(label=_("Remove"), visible=True)
+            self.settings.set_widget(treeview, value)
 
             box = Gtk.Box(spacing=6, visible=True)
 
-            renderers = cols[description].get_cells()
-            for render in renderers:
-                render.connect('edited', self.cell_edited_callback, self.option_widgets[name])
+            add_button = Gtk.Button(label=_("Add…"), visible=True)
+            add_button.connect("clicked", self.on_add, treeview, description)
 
-            add_button.connect("clicked", self.on_add, self.option_widgets[name])
-            remove_button.connect("clicked", self.on_remove, self.option_widgets[name])
+            edit_button = Gtk.Button(label=_("Edit…"), visible=True)
+            edit_button.connect("clicked", self.on_edit, treeview, description)
+
+            remove_button = Gtk.Button(label=_("Remove"), visible=True)
+            remove_button.connect("clicked", self.on_remove, treeview)
 
             if Gtk.get_major_version() >= 4:
                 box.append(add_button)                    # pylint: disable=no-member
+                box.append(edit_button)                   # pylint: disable=no-member
                 box.append(remove_button)                 # pylint: disable=no-member
 
                 self.primary_container.append(container)  # pylint: disable=no-member
@@ -2359,19 +2475,13 @@ class PluginsFrame(UserInterface):
                 container.append(frame_container)         # pylint: disable=no-member
             else:
                 box.add(add_button)                    # pylint: disable=no-member
+                box.add(edit_button)                   # pylint: disable=no-member
                 box.add(remove_button)                 # pylint: disable=no-member
 
                 self.primary_container.add(container)  # pylint: disable=no-member
                 self.primary_container.add(box)        # pylint: disable=no-member
 
                 container.add(frame_container)         # pylint: disable=no-member
-
-        @staticmethod
-        def cell_edited_callback(_widget, index, value, treeview):
-
-            store = treeview.get_model()
-            iterator = store.get_iter(index)
-            store.set(iterator, 0, value)
 
         def add_options(self, plugin, options=None):
 
@@ -2503,12 +2613,62 @@ class PluginsFrame(UserInterface):
                     log.add_debug("Unknown setting type '%s', data '%s'", (name, data))
 
         @staticmethod
-        def on_add(_widget, treeview):
+        def on_add_response(dialog, response_id, treeview):
 
-            iterator = treeview.get_model().append([""])
-            col = treeview.get_column(0)
+            value = dialog.get_entry_value()
+            dialog.destroy()
 
-            treeview.set_cursor(treeview.get_model().get_path(iterator), col, True)
+            if response_id != Gtk.ResponseType.OK:
+                return
+
+            if not value:
+                return
+
+            model = treeview.get_model()
+            iterator = model.append([value])
+            treeview.set_cursor(model.get_path(iterator))
+
+        def on_add(self, _widget, treeview, description):
+
+            EntryDialog(
+                parent=self,
+                title=description,
+                callback=self.on_add_response,
+                callback_data=treeview
+            ).show()
+
+        @staticmethod
+        def on_edit_response(dialog, response_id, data):
+
+            value = dialog.get_entry_value()
+            dialog.destroy()
+
+            if response_id != Gtk.ResponseType.OK:
+                return
+
+            if not value:
+                return
+
+            treeview, path = data
+            model = treeview.get_model()
+            model.set_value(model.get_iter(path), 0, value)
+
+        def on_edit(self, _widget, treeview, description):
+
+            model, paths = treeview.get_selection().get_selected_rows()
+
+            for path in paths:
+                iterator = model.get_iter(path)
+                value = model.get_value(iterator, 0)
+
+                EntryDialog(
+                    parent=self,
+                    title=description,
+                    callback=self.on_edit_response,
+                    callback_data=(treeview, path),
+                    default=value
+                ).show()
+                return
 
         @staticmethod
         def on_remove(_widget, treeview):

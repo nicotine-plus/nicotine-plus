@@ -156,10 +156,6 @@ def initialise_columns(frame, treeview_name, treeview, *args):
             column = Gtk.TreeViewColumn(column_id, renderer, text=i)
             column.set_alignment(xalign)
 
-        elif column_type == "edit":
-            renderer = Gtk.CellRendererText(editable=True, xpad=width_padding, ypad=height_padding)
-            column = Gtk.TreeViewColumn(column_id, renderer, text=i)
-
         elif column_type == "progress":
             renderer = Gtk.CellRendererProgress(ypad=progress_padding)
             column = Gtk.TreeViewColumn(column_id, renderer, value=i)
