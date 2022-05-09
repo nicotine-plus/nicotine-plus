@@ -458,7 +458,7 @@
                     <property name="margin-bottom">6</property>
                     <property name="spacing">6</property>
                     <child>
-                      <object class="GtkButton" id="AddFilter">
+                      <object class="GtkButton">
                         <property name="visible">True</property>
                         <property name="tooltip-text" translatable="yes">Add</property>
                         <signal name="clicked" handler="on_add_filter"/>
@@ -488,7 +488,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkButton" id="EditFilter">
+                      <object class="GtkButton">
                         <property name="visible">True</property>
                         <property name="tooltip-text" translatable="yes">Edit…</property>
                         <signal name="clicked" handler="on_edit_filter"/>
@@ -518,7 +518,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkButton" id="RemoveFilter">
+                      <object class="GtkButton">
                         <property name="visible">True</property>
                         <property name="tooltip-text" translatable="yes">Remove</property>
                         <signal name="clicked" handler="on_remove_filter"/>
@@ -553,7 +553,7 @@
                         <property name="halign">end</property>
                         <property name="hexpand">True</property>
                         <child>
-                          <object class="GtkButton" id="DefaultFilters">
+                          <object class="GtkButton">
                             <property name="visible">True</property>
                             <property name="tooltip-text" translatable="yes">Load Defaults</property>
                             <signal name="clicked" handler="on_default_filters"/>

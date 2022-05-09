@@ -78,7 +78,7 @@
                         <property name="visible">True</property>
                         <property name="sensitive">False</property>
                         <child>
-                          <object class="GtkLabel" id="MainTabsLabel">
+                          <object class="GtkLabel">
                             <property name="visible">True</property>
                             <property name="xalign">0</property>
                             <property name="label" translatable="yes">Tab bar position:</property>
@@ -455,7 +455,7 @@
                 <property name="visible">True</property>
                 <property name="sensitive">False</property>
                 <child>
-                  <object class="GtkLabel" id="ChatRoomsLabel">
+                  <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Chat room tab bar position:</property>
@@ -481,7 +481,7 @@
                 <property name="visible">True</property>
                 <property name="sensitive">False</property>
                 <child>
-                  <object class="GtkLabel" id="PrivateChatLabel">
+                  <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Private chat tab bar position:</property>
@@ -507,7 +507,7 @@
                 <property name="visible">True</property>
                 <property name="sensitive">False</property>
                 <child>
-                  <object class="GtkLabel" id="SearchLabel">
+                  <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Search tab bar position:</property>
@@ -533,7 +533,7 @@
                 <property name="visible">True</property>
                 <property name="sensitive">False</property>
                 <child>
-                  <object class="GtkLabel" id="UserInfoLabel">
+                  <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">User info tab bar position:</property>
@@ -559,7 +559,7 @@
                 <property name="visible">True</property>
                 <property name="sensitive">False</property>
                 <child>
-                  <object class="GtkLabel" id="UserBrowseLabel">
+                  <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">User browse tab bar position:</property>

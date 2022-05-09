@@ -85,7 +85,7 @@
                 <property name="margin-bottom">6</property>
                 <property name="spacing">6</property>
                 <child>
-                  <object class="GtkButton" id="addSharesButton">
+                  <object class="GtkButton">
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Add…</property>
                     <signal name="clicked" handler="on_add_shared_dir"/>
@@ -115,7 +115,7 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton" id="renameVirtualsButton">
+                  <object class="GtkButton">
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Edit…</property>
                     <signal name="clicked" handler="on_edit_shared_dir"/>
@@ -145,7 +145,7 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton" id="removeSharesButton">
+                  <object class="GtkButton">
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Remove</property>
                     <signal name="clicked" handler="on_remove_shared_dir"/>

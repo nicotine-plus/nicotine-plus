@@ -74,7 +74,7 @@
             <property name="visible">True</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkLabel" id="MaxDisLabel">
+              <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="hexpand">True</property>
                 <property name="xalign">0</property>
@@ -99,7 +99,7 @@
             <property name="visible">True</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkButton" id="ClearSearchHistory">
+              <object class="GtkButton">
                 <property name="visible">True</property>
                 <signal name="clicked" handler="on_clear_search_history"/>
                 <child>
@@ -368,7 +368,7 @@
               <object class="GtkMenuButton" id="ShowSearchHelp">
                 <property name="visible">True</property>
                 <child>
-                  <object class="GtkBox" id="FilterHelpLabel">
+                  <object class="GtkBox">
                     <property name="visible">True</property>
                     <property name="spacing">6</property>
                     <child>
@@ -390,7 +390,7 @@
               </object>
             </child>
             <child>
-              <object class="GtkButton" id="ClearFilterHistory">
+              <object class="GtkButton">
                 <property name="visible">True</property>
                 <signal name="clicked" handler="on_clear_filter_history"/>
                 <child>

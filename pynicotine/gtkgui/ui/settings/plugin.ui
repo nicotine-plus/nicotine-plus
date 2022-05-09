@@ -82,7 +82,7 @@
                             <property name="margin-bottom">6</property>
                             <property name="spacing">6</property>
                             <child>
-                              <object class="GtkButton" id="PluginFolder">
+                              <object class="GtkButton">
                                 <property name="visible">True</property>
                                 <property name="tooltip-text" translatable="yes">Add Plugins</property>
                                 <signal name="clicked" handler="on_add_plugins"/>
