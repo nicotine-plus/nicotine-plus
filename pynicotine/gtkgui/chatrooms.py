@@ -365,9 +365,9 @@ class ChatRoom(UserInterface):
             self.container,
             self.help_button,
             self.log_toggle,
-            self.room_options_container,
             self.room_wall_button,
             self.speech_toggle,
+            self.users_action_row,
             self.users_button,
             self.users_container,
             self.users_label,
@@ -534,9 +534,12 @@ class ChatRoom(UserInterface):
                        self.room_wall_button, self.help_button):
             widget.hide()
 
-        for widget in (self.auto_join_toggle, self.log_toggle):
-            self.room_options_container.remove(widget)
-            self.chat_entry_row.add(widget)
+        self.users_action_row.remove(self.auto_join_toggle)
+
+        if GTK_API_VERSION >= 4:
+            self.chat_entry_row.append(self.auto_join_toggle)  # pylint: disable=no-member
+        else:
+            self.chat_entry_row.add(self.auto_join_toggle)     # pylint: disable=no-member
 
         self.speech_toggle.set_active(False)  # Public feed is jibberish and too fast for TTS
         self.chat_entry.set_sensitive(False)
