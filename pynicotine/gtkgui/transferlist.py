@@ -380,10 +380,9 @@ class TransferList(UserInterface):
     def update_parent_row(self, initer, key, folder=False):
 
         speed = 0.0
-        totalsize = current_bytes = 0
+        total_size = current_bytes = 0
         elapsed = 0
-        left = 0
-        salientstatus = ""
+        salient_status = ""
 
         iterator = self.transfersmodel.iter_children(initer)
 
@@ -398,8 +397,8 @@ class TransferList(UserInterface):
             transfer = self.transfersmodel.get_value(iterator, 16)
             status = transfer.status
 
-            if status == "Transferring" or salientstatus in self.deprioritized_statuses:
-                salientstatus = status
+            if status == "Transferring" or salient_status in self.deprioritized_statuses:
+                salient_status = status
 
             if status == "Filtered":
                 # We don't want to count filtered files when calculating the progress
@@ -407,8 +406,7 @@ class TransferList(UserInterface):
                 continue
 
             elapsed += transfer.time_elapsed or 0
-            left += transfer.time_left or 0
-            totalsize += self.get_size(transfer.size)
+            total_size += self.get_size(transfer.size)
             current_bytes += transfer.current_byte_offset or 0
             speed += transfer.speed or 0
 
@@ -416,9 +414,9 @@ class TransferList(UserInterface):
 
         transfer = self.transfersmodel.get_value(initer, 16)
 
-        if transfer.status != salientstatus:
-            self.transfersmodel.set_value(initer, 3, self.translate_status(salientstatus))
-            transfer.status = salientstatus
+        if transfer.status != salient_status:
+            self.transfersmodel.set_value(initer, 3, self.translate_status(salient_status))
+            transfer.status = salient_status
 
         if transfer.speed != speed:
             self.transfersmodel.set_value(initer, 7, self.get_hspeed(speed))
@@ -426,23 +424,24 @@ class TransferList(UserInterface):
             transfer.speed = speed
 
         if transfer.time_elapsed != elapsed:
+            left = (total_size - current_bytes) / speed if speed > 0 else 0
+
             self.transfersmodel.set_value(initer, 8, self.get_helapsed(elapsed))
             self.transfersmodel.set_value(initer, 9, self.get_hleft(left))
             self.transfersmodel.set_value(initer, 14, elapsed)
             self.transfersmodel.set_value(initer, 15, left)
             transfer.time_elapsed = elapsed
-            transfer.time_left = left
 
         if transfer.current_byte_offset != current_bytes:
-            self.transfersmodel.set_value(initer, 5, self.get_percent(current_bytes, totalsize))
-            self.transfersmodel.set_value(initer, 6, "%s / %s" % (human_size(current_bytes), human_size(totalsize)))
+            self.transfersmodel.set_value(initer, 5, self.get_percent(current_bytes, total_size))
+            self.transfersmodel.set_value(initer, 6, "%s / %s" % (human_size(current_bytes), human_size(total_size)))
             self.transfersmodel.set_value(initer, 11, GObject.Value(GObject.TYPE_UINT64, current_bytes))
             transfer.current_byte_offset = current_bytes
 
-        if transfer.size != totalsize:
-            self.transfersmodel.set_value(initer, 6, "%s / %s" % (human_size(current_bytes), human_size(totalsize)))
-            self.transfersmodel.set_value(initer, 10, GObject.Value(GObject.TYPE_UINT64, totalsize))
-            transfer.size = totalsize
+        if transfer.size != total_size:
+            self.transfersmodel.set_value(initer, 6, "%s / %s" % (human_size(current_bytes), human_size(total_size)))
+            self.transfersmodel.set_value(initer, 10, GObject.Value(GObject.TYPE_UINT64, total_size))
+            transfer.size = total_size
 
     def update_specific(self, transfer=None):
 
