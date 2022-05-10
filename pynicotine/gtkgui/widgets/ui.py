@@ -21,6 +21,8 @@ import sys
 
 from gi.repository import Gtk
 
+from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.application import GTK_GUI_DIR
 from pynicotine.i18n import TRANSLATION_DOMAIN
 from pynicotine.logfacility import log
 
@@ -28,7 +30,6 @@ from pynicotine.logfacility import log
 """ UI Builder """
 
 
-GUI_DIR = os.path.normpath(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 UI_DATA = {}
 
 
@@ -38,14 +39,14 @@ class UserInterface:
 
         try:
             if filename not in UI_DATA:
-                with open(os.path.join(GUI_DIR, filename).encode("utf-8"), encoding="utf-8") as file_handle:
-                    if Gtk.get_major_version() >= 4:
+                with open(os.path.join(GTK_GUI_DIR, filename).encode("utf-8"), encoding="utf-8") as file_handle:
+                    if GTK_API_VERSION >= 4:
                         UI_DATA[filename] = file_handle.read().replace(
                             "GtkRadioButton", "GtkCheckButton").replace("\"can-focus\"", "\"focusable\"")
                     else:
                         UI_DATA[filename] = file_handle.read()
 
-            if Gtk.get_major_version() >= 4:
+            if GTK_API_VERSION >= 4:
                 self.builder = Gtk.Builder(self)
                 self.builder.set_translation_domain(TRANSLATION_DOMAIN)
                 self.builder.add_from_string(UI_DATA[filename])

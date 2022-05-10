@@ -23,9 +23,10 @@ import gi
 from gi.repository import Gtk
 
 from pynicotine.config import config
+from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.application import GTK_GUI_DIR
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.theme import get_icon
-from pynicotine.gtkgui.widgets.ui import GUI_DIR
 from pynicotine.logfacility import log
 
 
@@ -79,7 +80,7 @@ class TrayIcon:
 
     def create_menu(self):
 
-        if Gtk.get_major_version() >= 4:
+        if GTK_API_VERSION >= 4:
             return
 
         self.tray_popup_menu = Gtk.Menu()
@@ -232,7 +233,7 @@ class TrayIcon:
             local_icon_path = os.path.join(sys.prefix, "share", "icons", "hicolor", "scalable", "apps")
         else:
             # Git folder
-            local_icon_path = os.path.join(GUI_DIR, "icons", "hicolor", "scalable", "apps")
+            local_icon_path = os.path.join(GTK_GUI_DIR, "icons", "hicolor", "scalable", "apps")
 
         for icon_name in ("away", "connect", "disconnect", "msg"):
 
@@ -249,7 +250,7 @@ class TrayIcon:
 
     def load(self, use_trayicon=None):
 
-        if Gtk.get_major_version() == 4:
+        if GTK_API_VERSION >= 4:
             return
 
         if sys.platform == "darwin":

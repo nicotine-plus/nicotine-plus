@@ -32,6 +32,7 @@ from gi.repository import GObject
 from gi.repository import Gtk
 
 from pynicotine.config import config
+from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.dialogs.fileproperties import FileProperties
 from pynicotine.gtkgui.dialogs.wishlist import WishList
 from pynicotine.gtkgui.utils import copy_text
@@ -83,7 +84,7 @@ class Searches(IconNotebook):
         frame.search_mode_button.set_menu_model(mode_menu.model)
         frame.search_mode_label.set_label(self.modes["global"])
 
-        if Gtk.get_major_version() >= 4:
+        if GTK_API_VERSION >= 4:
             frame.search_mode_button.get_first_child().get_style_context().add_class("arrow-button")
 
         CompletionEntry(frame.room_search_entry, frame.room_search_combobox.get_model())

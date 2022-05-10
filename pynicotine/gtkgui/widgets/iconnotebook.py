@@ -25,6 +25,7 @@ import sys
 from gi.repository import Gdk
 from gi.repository import Gtk
 
+from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.theme import get_icon
@@ -47,7 +48,7 @@ class TabLabel(Gtk.Box):
         self.centered = False
         self.gesture_click = None
 
-        if Gtk.get_major_version() >= 4:
+        if GTK_API_VERSION >= 4:
             self.eventbox = Gtk.Box()
         else:
             self.eventbox = Gtk.EventBox(visible=True)
@@ -90,7 +91,7 @@ class TabLabel(Gtk.Box):
         if not self.close_button_visible:
             return
 
-        if Gtk.get_major_version() >= 4:
+        if GTK_API_VERSION >= 4:
             self.close_button = Gtk.Button.new_from_icon_name("window-close-symbolic")
             self.append(self.close_button)  # pylint: disable=no-member
 
@@ -129,7 +130,7 @@ class TabLabel(Gtk.Box):
             # Left align close button on macOS
             self._add_close_button()
 
-        if Gtk.get_major_version() >= 4:
+        if GTK_API_VERSION >= 4:
             self.append(self.eventbox)        # pylint: disable=no-member
             self.eventbox.append(self.box)    # pylint: disable=no-member
 
@@ -271,7 +272,7 @@ class IconNotebook:
         )
         self.pages = {}
 
-        if Gtk.get_major_version() >= 4:
+        if GTK_API_VERSION >= 4:
             self.window = self.notebook.get_root()
             self.unread_button.set_has_frame(False)                        # pylint: disable=no-member
             self.unread_button.set_icon_name("emblem-important-symbolic")  # pylint: disable=no-member
@@ -344,7 +345,7 @@ class IconNotebook:
         label_tab = TabLabel(text, full_text, config.sections["ui"]["tabclosers"], close_callback)
         label_tab.set_tooltip_text(full_text)
 
-        if Gtk.get_major_version() >= 4:
+        if GTK_API_VERSION >= 4:
             label_tab.gesture_click = Gtk.GestureClick()
             label_tab.add_controller(label_tab.gesture_click)  # pylint: disable=no-member
         else:
@@ -521,7 +522,7 @@ class IconNotebook:
         # Hide container widget on previous page for a performance boost
         current_page = self.get_nth_page(self.get_current_page())
 
-        if Gtk.get_major_version() >= 4:
+        if GTK_API_VERSION >= 4:
             current_page.get_first_child().hide()
             new_page.get_first_child().show()
         else:

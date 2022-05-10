@@ -24,9 +24,8 @@
 
 import os
 
-from gi.repository import Gtk
-
 from pynicotine.config import config
+from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.transferlist import TransferList
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
@@ -52,7 +51,7 @@ class Uploads(TransferList):
 
         TransferList.__init__(self, frame, core, transfer_type="upload")
 
-        if Gtk.get_major_version() >= 4:
+        if GTK_API_VERSION >= 4:
             frame.uploads_content.append(self.container)
         else:
             frame.uploads_content.add(self.container)

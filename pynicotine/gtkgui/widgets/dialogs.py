@@ -20,6 +20,7 @@ from gi.repository import Gdk
 from gi.repository import Gtk
 
 from pynicotine.config import config
+from pynicotine.gtkgui.application import GTK_API_VERSION
 
 """ Dialogs """
 
@@ -36,7 +37,7 @@ def generic_dialog(parent=None, content_box=None, buttons=None, quit_callback=No
     dialog.get_style_context().add_class("generic-dialog")
 
     if content_box:
-        if Gtk.get_major_version() >= 4:
+        if GTK_API_VERSION >= 4:
             dialog.get_content_area().append(content_box)
         else:
             dialog.get_content_area().add(content_box)
@@ -51,7 +52,7 @@ def generic_dialog(parent=None, content_box=None, buttons=None, quit_callback=No
 
 def set_dialog_properties(dialog, parent, quit_callback=None, modal=True):
 
-    if Gtk.get_major_version() >= 4:
+    if GTK_API_VERSION >= 4:
         if quit_callback:
             dialog.connect("close-request", quit_callback)
     else:
@@ -74,7 +75,7 @@ def dialog_show(dialog):
     parent = dialog.get_transient_for()
 
     # Shrink the dialog if it's larger than the main window
-    if Gtk.get_major_version() >= 4:
+    if GTK_API_VERSION >= 4:
         main_window_width, main_window_height = parent.get_default_size()
         dialog_width, dialog_height = dialog.get_default_size()
     else:
@@ -88,7 +89,7 @@ def dialog_show(dialog):
         dialog_height = main_window_height - 30
 
     if dialog_width > 0 and dialog_height > 0:
-        if Gtk.get_major_version() >= 4:
+        if GTK_API_VERSION >= 4:
             dialog.set_default_size(dialog_width, dialog_height)
         else:
             dialog.resize(dialog_width, dialog_height)
@@ -96,7 +97,7 @@ def dialog_show(dialog):
     # Show the dialog
     dialog.present()
 
-    if Gtk.get_major_version() == 3:
+    if GTK_API_VERSION == 3:
         dialog.get_window().set_functions(
             Gdk.WMFunction.RESIZE | Gdk.WMFunction.MOVE | Gdk.WMFunction.CLOSE
         )
@@ -142,7 +143,7 @@ class MessageDialog:
         for button_label, response_type in buttons:
             self.dialog.add_button(button_label, response_type)
 
-        if Gtk.get_major_version() >= 4:
+        if GTK_API_VERSION >= 4:
             label = self.container.get_last_child()
         else:
             label = self.container.get_children()[-1]
@@ -178,17 +179,17 @@ class EntryDialog(MessageDialog):
             for i in droplist:
                 dropdown.append_text(i)
 
-            if Gtk.get_major_version() >= 4:
+            if GTK_API_VERSION >= 4:
                 self.container.append(dropdown)
             else:
                 self.container.add(dropdown)
         else:
-            if Gtk.get_major_version() >= 4 and not visibility:
+            if GTK_API_VERSION >= 4 and not visibility:
                 self.entry = Gtk.PasswordEntry(show_peek_icon=True, visible=True)
             else:
                 self.entry = Gtk.Entry(visibility=visibility, visible=True)
 
-            if Gtk.get_major_version() >= 4:
+            if GTK_API_VERSION >= 4:
                 self.container.append(self.entry)
             else:
                 self.container.add(self.entry)
@@ -199,7 +200,7 @@ class EntryDialog(MessageDialog):
         self.option = Gtk.CheckButton(label=option_label, active=option_value, visible=bool(option_label))
 
         if option_label:
-            if Gtk.get_major_version() >= 4:
+            if GTK_API_VERSION >= 4:
                 self.container.append(self.option)
             else:
                 self.container.add(self.option)
@@ -233,7 +234,7 @@ class OptionDialog(MessageDialog):
         self.option = Gtk.CheckButton(label=option_label, active=option_value, visible=bool(option_label))
 
         if option_label:
-            if Gtk.get_major_version() >= 4:
+            if GTK_API_VERSION >= 4:
                 self.container.append(self.option)
             else:
                 self.container.add(self.option)

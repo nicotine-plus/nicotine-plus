@@ -30,6 +30,7 @@ from gi.repository import Gtk
 
 from pynicotine import slskmessages
 from pynicotine.config import config
+from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
@@ -51,7 +52,7 @@ class PopupMenu:
         self.popup_menu = None
         self.gesture_click = None
         self.gesture_press = None
-        self.valid_parent_widgets = Gtk.Box if Gtk.get_major_version() >= 4 else (Gtk.Box, Gtk.EventBox)
+        self.valid_parent_widgets = Gtk.Box if GTK_API_VERSION >= 4 else (Gtk.Box, Gtk.EventBox)
 
         if connect_events and parent:
             self.connect_events(parent)
@@ -84,7 +85,7 @@ class PopupMenu:
         while not isinstance(parent, self.valid_parent_widgets):
             parent = parent.get_parent()
 
-        if Gtk.get_major_version() >= 4:
+        if GTK_API_VERSION >= 4:
             self.popup_menu = Gtk.PopoverMenu.new_from_model_full(self.model,  # pylint: disable=no-member
                                                                   Gtk.PopoverMenuFlags.NESTED)
             self.popup_menu.set_parent(parent)
@@ -152,7 +153,7 @@ class PopupMenu:
             menuitem.set_submenu(item[1].model)
             self.submenus.append(item[1])
 
-            if Gtk.get_major_version() == 3:
+            if GTK_API_VERSION == 3:
                 # Ideally, we wouldn't hide disabled submenus, but a GTK limitation forces us to
                 # https://discourse.gnome.org/t/question-how-do-i-disable-a-menubar-menu-in-gtk-is-it-even-possible/906/9
                 menuitem.set_attribute_value("hidden-when", GLib.Variant("s", "action-disabled"))
@@ -343,7 +344,7 @@ class PopupMenu:
         if menu is None:
             menu = self.create_context_menu(self.parent)
 
-        if Gtk.get_major_version() >= 4:
+        if GTK_API_VERSION >= 4:
             if not pos_x and not pos_y:
                 pos_x = pos_y = 0
 
@@ -410,7 +411,7 @@ class PopupMenu:
 
     def connect_events(self, parent):
 
-        if Gtk.get_major_version() >= 4:
+        if GTK_API_VERSION >= 4:
             self.gesture_click = Gtk.GestureClick()
             parent.add_controller(self.gesture_click)
 

@@ -26,7 +26,8 @@ from gi.repository import Gtk
 from gi.repository import Pango
 
 from pynicotine.config import config
-from pynicotine.gtkgui.widgets.ui import GUI_DIR
+from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.application import GTK_GUI_DIR
 from pynicotine.logfacility import log
 
 
@@ -238,7 +239,7 @@ def set_global_css():
 
     global_css_provider = Gtk.CssProvider()
 
-    if Gtk.get_major_version() >= 4:
+    if GTK_API_VERSION >= 4:
         css = css + css_gtk3_20 + css_gtk4
 
         global_css_provider.load_from_data(css)
@@ -268,7 +269,7 @@ def set_global_style():
 
 ICONS = {}
 
-if Gtk.get_major_version() >= 4:
+if GTK_API_VERSION >= 4:
     ICON_THEME = Gtk.IconTheme.get_for_display(Gdk.Display.get_default())  # pylint: disable=no-member
 else:
     ICON_THEME = Gtk.IconTheme.get_default()  # pylint: disable=no-member
@@ -305,7 +306,7 @@ def get_status_icon(status):
 def load_ui_icon(name):
     """ Load icon required by the UI """
 
-    path = os.path.join(GUI_DIR, "icons", name + ".svg")
+    path = os.path.join(GTK_GUI_DIR, "icons", name + ".svg")
 
     if os.path.isfile(path.encode("utf-8")):
         return Gio.Icon.new_for_string(path)
@@ -374,12 +375,12 @@ def load_icons():
     """ Load local app and tray icons, if available """
 
     paths = (
-        os.path.join(GUI_DIR, "icons"),  # Support running from folder, as well as macOS and Windows
+        os.path.join(GTK_GUI_DIR, "icons"),  # Support running from folder, as well as macOS and Windows
         os.path.join(sys.prefix, "share", "icons")  # Support Python venv
     )
 
     for path in paths:
-        if Gtk.get_major_version() >= 4:
+        if GTK_API_VERSION >= 4:
             ICON_THEME.add_search_path(path)
         else:
             ICON_THEME.append_search_path(path)

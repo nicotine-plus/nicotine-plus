@@ -24,6 +24,7 @@ from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine.config import config
+from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.widgets.theme import update_tag_visuals
 from pynicotine.utils import open_uri
@@ -47,7 +48,7 @@ class TextView:
         self.pressed_x = 0
         self.pressed_y = 0
 
-        if Gtk.get_major_version() >= 4:
+        if GTK_API_VERSION >= 4:
             self.gesture_click_primary = Gtk.GestureClick()
             scrollable_container.add_controller(self.gesture_click_primary)
 

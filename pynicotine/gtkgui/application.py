@@ -16,12 +16,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
+
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine.config import config
-from pynicotine.gtkgui.frame import NicotineFrame
+
+GTK_API_VERSION = Gtk.get_major_version()
+GTK_GUI_DIR = os.path.normpath(os.path.dirname(os.path.realpath(__file__)))
 
 
 class Application(Gtk.Application):
@@ -54,6 +58,7 @@ class Application(Gtk.Application):
 
         Gtk.Application.do_startup(self)
 
+        from pynicotine.gtkgui.frame import NicotineFrame
         self.frame = NicotineFrame(self, self.core, self.tray_icon, self.start_hidden,
                                    self.bindip, self.port, self.ci_mode)
         self.frame.on_startup()

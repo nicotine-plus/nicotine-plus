@@ -30,6 +30,7 @@ from gi.repository import GObject
 from gi.repository import Gtk
 
 from pynicotine.config import config
+from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.dialogs.fileproperties import FileProperties
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
@@ -67,7 +68,7 @@ class TransferList(UserInterface):
         self.core = core
         self.type = transfer_type
 
-        if Gtk.get_major_version() >= 4:
+        if GTK_API_VERSION >= 4:
             self.clear_all_button.set_has_frame(False)
 
         Accelerator("t", self.tree_view, self.on_abort_transfers_accelerator)

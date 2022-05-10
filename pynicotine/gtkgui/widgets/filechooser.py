@@ -23,6 +23,8 @@ from gi.repository import Gio
 from gi.repository import Gtk
 from gi.repository import Pango
 
+from pynicotine.gtkgui.application import GTK_API_VERSION
+
 
 """ File Choosers """
 
@@ -66,7 +68,7 @@ class FileChooser:
         if not os.path.isdir(initial_folder):
             initial_folder = os.path.expanduser("~")
 
-        if Gtk.get_major_version() >= 4:
+        if GTK_API_VERSION >= 4:
             initial_folder = Gio.File.new_for_path(initial_folder)
 
         else:
@@ -119,7 +121,7 @@ class ImageChooser(FileChooser):
         file_filter.add_pixbuf_formats()
         self.file_chooser.set_filter(file_filter)
 
-        if Gtk.get_major_version() == 3:
+        if GTK_API_VERSION == 3:
             # Image preview
             self.file_chooser.connect("update-preview", self.on_update_image_preview)
 
@@ -159,7 +161,7 @@ class FileChooserSave(FileChooser):
                              (_("_Cancel"), Gtk.ResponseType.CANCEL),
                              (_("_Save"), Gtk.ResponseType.ACCEPT)])
 
-        if Gtk.get_major_version() == 3:
+        if GTK_API_VERSION == 3:
             # Display hidden files
             self.file_chooser.set_show_hidden(True)                # pylint: disable=no-member
             self.file_chooser.set_do_overwrite_confirmation(True)  # pylint: disable=no-member
@@ -194,7 +196,7 @@ class FileChooserButton:
 
         box = Gtk.Box(spacing=6, visible=True)
 
-        if Gtk.get_major_version() >= 4:
+        if GTK_API_VERSION >= 4:
             box.append(self.icon)   # pylint: disable=no-member
             box.append(self.label)  # pylint: disable=no-member
         else:
