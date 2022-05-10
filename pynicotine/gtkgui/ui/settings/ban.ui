@@ -151,22 +151,11 @@
                         <property name="visible">True</property>
                         <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkScrolledWindow">
+                          <object class="GtkScrolledWindow" id="BannedList">
                             <property name="visible">True</property>
                             <property name="height-request">200</property>
                             <property name="hexpand">True</property>
                             <property name="vexpand">True</property>
-                            <child>
-                              <object class="GtkTreeView" id="BannedList">
-                                <property name="visible">True</property>
-                                <property name="rubber-banding">True</property>
-                                <child internal-child="selection">
-                                  <object class="GtkTreeSelection">
-                                    <property name="mode">multiple</property>
-                                  </object>
-                                </child>
-                              </object>
-                            </child>
                             <style>
                               <class name="border-bottom"/>
                             </style>
@@ -279,22 +268,11 @@
                         <property name="visible">True</property>
                         <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkScrolledWindow">
+                          <object class="GtkScrolledWindow" id="BlockedList">
                             <property name="visible">True</property>
                             <property name="height-request">200</property>
                             <property name="hexpand">True</property>
                             <property name="vexpand">True</property>
-                            <child>
-                              <object class="GtkTreeView" id="BlockedList">
-                                <property name="visible">True</property>
-                                <property name="rubber-banding">True</property>
-                                <child internal-child="selection">
-                                  <object class="GtkTreeSelection">
-                                    <property name="mode">multiple</property>
-                                  </object>
-                                </child>
-                              </object>
-                            </child>
                             <style>
                               <class name="border-bottom"/>
                             </style>

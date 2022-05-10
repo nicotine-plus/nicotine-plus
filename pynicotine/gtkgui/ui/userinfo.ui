@@ -322,14 +322,9 @@
                             <property name="visible">True</property>
                             <property name="vexpand">True</property>
                             <child>
-                              <object class="GtkScrolledWindow">
+                              <object class="GtkScrolledWindow" id="likes_list_container">
                                 <property name="visible">True</property>
                                 <property name="hexpand">True</property>
-                                <child>
-                                  <object class="GtkTreeView" id="likes_list_view">
-                                    <property name="visible">True</property>
-                                  </object>
-                                </child>
                               </object>
                             </child>
                           </object>
@@ -339,14 +334,9 @@
                             <property name="visible">True</property>
                             <property name="vexpand">True</property>
                             <child>
-                              <object class="GtkScrolledWindow">
+                              <object class="GtkScrolledWindow" id="dislikes_list_container">
                                 <property name="visible">True</property>
                                 <property name="hexpand">True</property>
-                                <child>
-                                  <object class="GtkTreeView" id="dislikes_list_view">
-                                    <property name="visible">True</property>
-                                  </object>
-                                </child>
                               </object>
                             </child>
                           </object>

@@ -309,20 +309,9 @@
               <object class="GtkFrame">
                 <property name="visible">True</property>
                 <child>
-                  <object class="GtkScrolledWindow">
+                  <object class="GtkScrolledWindow" id="shares_list_container">
                     <property name="visible">True</property>
-                    <child>
-                      <object class="GtkTreeView" id="shares_list_view">
-                        <property name="visible">True</property>
-                        <property name="rubber-banding">True</property>
-                        <property name="vexpand">True</property>
-                        <child internal-child="selection">
-                          <object class="GtkTreeSelection">
-                            <property name="mode">multiple</property>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
+                    <property name="vexpand">True</property>
                   </object>
                 </child>
               </object>

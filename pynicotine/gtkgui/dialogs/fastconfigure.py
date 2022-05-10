@@ -29,7 +29,7 @@ from pynicotine.gtkgui.widgets.dialogs import dialog_hide
 from pynicotine.gtkgui.widgets.dialogs import dialog_show
 from pynicotine.gtkgui.widgets.dialogs import generic_dialog
 from pynicotine.gtkgui.widgets.theme import get_icon
-from pynicotine.gtkgui.widgets.treeview import initialise_columns
+from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.utils import open_uri
 
@@ -50,7 +50,7 @@ class FastConfigure(UserInterface):
             self.previous_button,
             self.privileges_label,
             self.share_page,
-            self.shares_list_view,
+            self.shares_list_container,
             self.stack,
             self.summary_page,
             self.username_entry,
@@ -90,18 +90,15 @@ class FastConfigure(UserInterface):
             self.download_folder_button, self.dialog, "folder")
 
         self.shared_folders = None
-        self.sharelist = Gtk.ListStore(
-            str,
-            str
+        self.shares_list_view = TreeView(
+            frame, parent=self.shares_list_container, multi_select=True,
+            columns=[
+                {"column_id": "virtual_folder", "column_type": "text", "title": _("Virtual Folder"), "width": 0,
+                 "sort_column": 0},
+                {"column_id": "folder", "column_type": "text", "title": _("Folder"), "width": 0,
+                 "sort_column": 1}
+            ]
         )
-
-        self.column_numbers = list(range(self.sharelist.get_n_columns()))
-        initialise_columns(
-            frame, None, self.shares_list_view,
-            ["virtual_folder", _("Virtual Folder"), 0, "text", None],
-            ["folder", _("Folder"), 0, "text", None]
-        )
-        self.shares_list_view.set_model(self.sharelist)
 
         self.reset_completeness()
 
@@ -158,7 +155,7 @@ class FastConfigure(UserInterface):
                 counter += 1
 
             # The share is unique: we can add it
-            self.sharelist.insert_with_valuesv(-1, self.column_numbers, [virtual, folder])
+            self.shares_list_view.add_row([virtual, folder])
             self.shared_folders.append((virtual, folder))
 
     def on_add_share(self, *_args):
@@ -171,11 +168,8 @@ class FastConfigure(UserInterface):
         ).show()
 
     def on_remove_share(self, *_args):
-
-        model, paths = self.shares_list_view.get_selection().get_selected_rows()
-
-        for path in reversed(paths):
-            model.remove(model.get_iter(path))
+        for iterator in reversed(self.shares_list_view.get_selected_rows()):
+            self.shares_list_view.remove_row(iterator)
 
     def on_page_change(self, *_args):
         self.reset_completeness()
@@ -240,11 +234,11 @@ class FastConfigure(UserInterface):
                 config.sections['transfers']['downloaddir']
             )
 
-        self.sharelist.clear()
+        self.shares_list_view.clear()
 
         for entry in self.shared_folders:
             virtual_name, path = entry
-            self.sharelist.insert_with_valuesv(-1, self.column_numbers, [str(virtual_name), str(path)])
+            self.shares_list_view.add_row([str(virtual_name), str(path)])
 
         # completepage
         import urllib.parse

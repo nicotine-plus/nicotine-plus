@@ -51,23 +51,11 @@
                         <property name="visible">True</property>
                         <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkScrolledWindow">
+                          <object class="GtkScrolledWindow" id="PluginTreeView">
                             <property name="visible">True</property>
                             <property name="hexpand">True</property>
                             <property name="vexpand">True</property>
-                            <child>
-                              <object class="GtkTreeView" id="PluginTreeView">
-                                <property name="visible">True</property>
-                                <property name="search-column">1</property>
-                                <property name="sensitive" bind-source="PluginsEnable" bind-property="active" bind-flags="bidirectional|sync-create"/>
-                                <child internal-child="selection">
-                                  <object class="GtkTreeSelection">
-                                    <property name="mode">browse</property>
-                                    <signal name="changed" handler="on_select_plugin"/>
-                                  </object>
-                                </child>
-                              </object>
-                            </child>
+                            <property name="sensitive" bind-source="PluginsEnable" bind-property="active" bind-flags="bidirectional|sync-create"/>
                             <style>
                               <class name="border-bottom"/>
                             </style>

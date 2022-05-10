@@ -49,6 +49,7 @@ from pynicotine.gtkgui.widgets.theme import set_dark_mode
 from pynicotine.gtkgui.widgets.theme import set_global_font
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
+from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
 from pynicotine.utils import open_file_path
@@ -544,27 +545,17 @@ class SharesFrame(UserInterface):
         self.shareddirs = []
         self.bshareddirs = []
 
-        self.shareslist = Gtk.ListStore(
-            str,
-            str,
-            bool
+        self.shares_list_view = TreeView(
+            self.frame, parent=self.Shares, multi_select=True, activate_row_callback=self.on_edit_shared_dir,
+            columns=[
+                {"column_id": "virtual_folder", "column_type": "text", "title": _("Virtual Folder"), "width": 165,
+                 "sort_column": 0},
+                {"column_id": "folder", "column_type": "text", "title": _("Folder"), "width": -1,
+                 "sort_column": 1},
+                {"column_id": "buddies", "column_type": "toggle", "title": _("Buddy-only"), "width": 0,
+                 "sort_column": 2, "toggle_callback": self.cell_toggle_callback},
+            ]
         )
-
-        self.Shares.set_model(self.shareslist)
-        self.column_numbers = list(range(self.shareslist.get_n_columns()))
-        cols = initialise_columns(
-            self.frame, None, self.Shares,
-            ["virtual_folder", _("Virtual Folder"), 165, "text", None],
-            ["folder", _("Folder"), -1, "text", None],
-            ["buddies", _("Buddy-only"), 0, "toggle", None],
-        )
-
-        cols["virtual_folder"].set_sort_column_id(0)
-        cols["folder"].set_sort_column_id(1)
-        cols["buddies"].set_sort_column_id(2)
-
-        for render in cols["buddies"].get_cells():
-            render.connect('toggled', self.cell_toggle_callback, self.Shares)
 
         self.options = {
             "transfers": {
@@ -575,29 +566,18 @@ class SharesFrame(UserInterface):
 
     def set_settings(self):
 
-        transfers = config.sections["transfers"]
-        self.shareslist.clear()
+        self.shares_list_view.clear()
 
         self.preferences.set_widgets_data(self.options)
 
-        for virtual, actual, *_unused in transfers["buddyshared"]:
+        self.shareddirs = config.sections["transfers"]["shared"][:]
+        self.bshareddirs = config.sections["transfers"]["buddyshared"][:]
 
-            self.shareslist.insert_with_valuesv(-1, self.column_numbers, [
-                str(virtual),
-                str(actual),
-                True
-            ])
+        for virtual, actual, *_unused in self.bshareddirs:
+            self.shares_list_view.add_row([str(virtual), str(actual), True])
 
-        for virtual, actual, *_unused in transfers["shared"]:
-
-            self.shareslist.insert_with_valuesv(-1, self.column_numbers, [
-                str(virtual),
-                str(actual),
-                False
-            ])
-
-        self.shareddirs = transfers["shared"][:]
-        self.bshareddirs = transfers["buddyshared"][:]
+        for virtual, actual, *_unused in self.shareddirs:
+            self.shares_list_view.add_row([str(virtual), str(actual), False])
 
         self.rescan_required = False
 
@@ -614,15 +594,15 @@ class SharesFrame(UserInterface):
 
     def set_shared_dir_buddy_only(self, iterator, buddy_only):
 
-        if buddy_only == self.shareslist.get_value(iterator, 2):
+        if buddy_only == self.shares_list_view.get_row_value(iterator, 2):
             return
 
-        virtual = self.shareslist.get_value(iterator, 0)
-        directory = self.shareslist.get_value(iterator, 1)
+        virtual = self.shares_list_view.get_row_value(iterator, 0)
+        directory = self.shares_list_view.get_row_value(iterator, 1)
         share = (virtual, directory)
         self.rescan_required = True
 
-        self.shareslist.set_value(iterator, 2, buddy_only)
+        self.shares_list_view.set_row_value(iterator, 2, buddy_only)
 
         if buddy_only:
             self.shareddirs.remove(share)
@@ -632,12 +612,8 @@ class SharesFrame(UserInterface):
         self.bshareddirs.remove(share)
         self.shareddirs.append(share)
 
-    def cell_toggle_callback(self, _widget, index, treeview):
-
-        store = treeview.get_model()
-        iterator = store.get_iter(index)
-
-        buddy_only = not self.shareslist.get_value(iterator, 2)
+    def cell_toggle_callback(self, list_view, iterator):
+        buddy_only = not list_view.get_row_value(iterator, 2)
         self.set_shared_dir_buddy_only(iterator, buddy_only)
 
     def add_shared_dir(self, folder):
@@ -661,14 +637,8 @@ class SharesFrame(UserInterface):
             virtual_final = virtual + str(counter)
             counter += 1
 
-        iterator = self.shareslist.insert_with_valuesv(-1, self.column_numbers, [
-            virtual_final,
-            folder,
-            False
-        ])
-
-        self.Shares.set_cursor(self.shareslist.get_path(iterator))
-        self.Shares.grab_focus()
+        iterator = self.shares_list_view.add_row([virtual_final, folder, False])
+        self.shares_list_view.select_row(iterator)
 
         self.shareddirs.append((virtual_final, folder))
         self.rescan_required = True
@@ -687,7 +657,7 @@ class SharesFrame(UserInterface):
             multiple=True
         ).show()
 
-    def on_edit_shared_dir_response(self, dialog, response_id, path):
+    def on_edit_shared_dir_response(self, dialog, response_id, iterator):
 
         virtual = dialog.get_entry_value()
         buddy_only = dialog.get_option_value()
@@ -700,15 +670,14 @@ class SharesFrame(UserInterface):
             return
 
         # Remove slashes from share name to avoid path conflicts
-        iterator = self.shareslist.get_iter(path)
         virtual = virtual.replace('/', '_').replace('\\', '_')
-        directory = self.shareslist.get_value(iterator, 1)
-        oldvirtual = self.shareslist.get_value(iterator, 0)
+        directory = self.shares_list_view.get_row_value(iterator, 1)
+        oldvirtual = self.shares_list_view.get_row_value(iterator, 0)
         oldmapping = (oldvirtual, directory)
         newmapping = (virtual, directory)
 
         self.set_shared_dir_buddy_only(iterator, buddy_only)
-        self.shareslist.set_value(iterator, 0, virtual)
+        self.shares_list_view.set_row_value(iterator, 0, virtual)
 
         if oldmapping in self.bshareddirs:
             shared_dirs = self.bshareddirs
@@ -722,13 +691,10 @@ class SharesFrame(UserInterface):
 
     def on_edit_shared_dir(self, *_args):
 
-        model, paths = self.Shares.get_selection().get_selected_rows()
-
-        for path in paths:
-            iterator = model.get_iter(path)
-            virtual_name = model.get_value(iterator, 0)
-            folder = model.get_value(iterator, 1)
-            buddy_only = model.get_value(iterator, 2)
+        for iterator in self.shares_list_view.get_selected_rows():
+            virtual_name = self.shares_list_view.get_row_value(iterator, 0)
+            folder = self.shares_list_view.get_row_value(iterator, 1)
+            buddy_only = self.shares_list_view.get_row_value(iterator, 2)
 
             EntryDialog(
                 parent=self.preferences.dialog,
@@ -738,18 +704,17 @@ class SharesFrame(UserInterface):
                 option_value=buddy_only,
                 option_label="Share with buddies only?",
                 callback=self.on_edit_shared_dir_response,
-                callback_data=path
+                callback_data=iterator
             ).show()
             return
 
     def on_remove_shared_dir(self, *_args):
 
-        model, paths = self.Shares.get_selection().get_selected_rows()
+        iterators = reversed(self.shares_list_view.get_selected_rows())
 
-        for path in reversed(paths):
-            iterator = model.get_iter(path)
-            virtual = model.get_value(iterator, 0)
-            actual = model.get_value(iterator, 1)
+        for iterator in iterators:
+            virtual = self.shares_list_view.get_row_value(iterator, 0)
+            actual = self.shares_list_view.get_row_value(iterator, 1)
             mapping = (virtual, actual)
 
             if mapping in self.bshareddirs:
@@ -757,9 +722,9 @@ class SharesFrame(UserInterface):
             else:
                 self.shareddirs.remove(mapping)
 
-            model.remove(iterator)
+            self.shares_list_view.remove_row(iterator)
 
-        if paths:
+        if iterators:
             self.rescan_required = True
 
 
@@ -883,57 +848,44 @@ class IgnoredUsersFrame(UserInterface):
         self.preferences = preferences
         self.frame = self.preferences.frame
 
+        self.ignored_users = []
+        self.ignored_users_list_view = TreeView(
+            self.frame, parent=self.IgnoredUsers, multi_select=True,
+            columns=[
+                {"column_id": "username", "column_type": "text", "title": _("Username"), "width": -1,
+                 "sort_column": 0}
+            ]
+        )
+
+        self.ignored_ips = {}
+        self.ignored_ips_list_view = TreeView(
+            self.frame, parent=self.IgnoredIPs, multi_select=True,
+            columns=[
+                {"column_id": "ip_address", "column_type": "text", "title": _("IP Address"), "width": -1,
+                 "sort_column": 0},
+                {"column_id": "user", "column_type": "text", "title": _("User"), "width": -1,
+                 "sort_column": 1}
+            ]
+        )
+
         self.options = {
             "server": {
-                "ignorelist": self.IgnoredUsers,
-                "ipignorelist": self.IgnoredIPs
+                "ignorelist": self.ignored_users_list_view,
+                "ipignorelist": self.ignored_ips_list_view
             }
         }
 
-        self.ignored_users = []
-        self.ignorelist = Gtk.ListStore(str)
-
-        self.user_column_numbers = list(range(self.ignorelist.get_n_columns()))
-        cols = initialise_columns(
-            self.frame, None, self.IgnoredUsers,
-            ["username", _("Username"), -1, "text", None]
-        )
-        cols["username"].set_sort_column_id(0)
-
-        self.IgnoredUsers.set_model(self.ignorelist)
-
-        self.ignored_ips = {}
-        self.ignored_ips_list = Gtk.ListStore(str, str)
-
-        self.ip_column_numbers = list(range(self.ignored_ips_list.get_n_columns()))
-        cols = initialise_columns(
-            self.frame, None, self.IgnoredIPs,
-            ["ip_address", _("IP Address"), -1, "text", None],
-            ["user", _("User"), -1, "text", None]
-        )
-        cols["ip_address"].set_sort_column_id(0)
-        cols["user"].set_sort_column_id(1)
-
-        self.IgnoredIPs.set_model(self.ignored_ips_list)
-
     def set_settings(self):
-        server = config.sections["server"]
 
-        self.ignorelist.clear()
-        self.ignored_ips_list.clear()
-        self.ignored_users = []
-        self.ignored_ips = {}
+        self.ignored_users_list_view.clear()
+        self.ignored_ips_list_view.clear()
+        self.ignored_users.clear()
+        self.ignored_ips.clear()
+
         self.preferences.set_widgets_data(self.options)
 
-        if server["ignorelist"] is not None:
-            self.ignored_users = server["ignorelist"][:]
-
-        if server["ipignorelist"] is not None:
-            self.ignored_ips = server["ipignorelist"].copy()
-            for ip_address, user in self.ignored_ips.items():
-                self.ignored_ips_list.insert_with_valuesv(-1, self.ip_column_numbers, [
-                    str(ip_address), str(user)
-                ])
+        self.ignored_users = config.sections["server"]["ignorelist"][:]
+        self.ignored_ips = config.sections["server"]["ipignorelist"].copy()
 
     def get_settings(self):
         return {
@@ -953,7 +905,7 @@ class IgnoredUsersFrame(UserInterface):
 
         if user and user not in self.ignored_users:
             self.ignored_users.append(user)
-            self.ignorelist.insert_with_valuesv(-1, self.user_column_numbers, [str(user)])
+            self.ignored_users_list_view.add_row([str(user)])
 
     def on_add_ignored(self, *_args):
 
@@ -966,13 +918,10 @@ class IgnoredUsersFrame(UserInterface):
 
     def on_remove_ignored(self, *_args):
 
-        model, paths = self.IgnoredUsers.get_selection().get_selected_rows()
+        for iterator in reversed(self.ignored_users_list_view.get_selected_rows()):
+            user = self.ignored_users_list_view.get_row_value(iterator, 0)
 
-        for path in reversed(paths):
-            iterator = model.get_iter(path)
-            user = model.get_value(iterator, 0)
-
-            model.remove(iterator)
+            self.ignored_users_list_view.remove_row(iterator)
             self.ignored_users.remove(user)
 
     def on_add_ignored_ip_response(self, dialog, response_id, _data):
@@ -1001,7 +950,7 @@ class IgnoredUsersFrame(UserInterface):
 
         if ip_address not in self.ignored_ips:
             self.ignored_ips[ip_address] = ""
-            self.ignored_ips_list.insert_with_valuesv(-1, self.ip_column_numbers, [ip_address, ""])
+            self.ignored_ips_list_view.add_row([ip_address, ""])
 
     def on_add_ignored_ip(self, *_args):
 
@@ -1014,13 +963,10 @@ class IgnoredUsersFrame(UserInterface):
 
     def on_remove_ignored_ip(self, *_args):
 
-        model, paths = self.IgnoredIPs.get_selection().get_selected_rows()
+        for iterator in reversed(self.ignored_ips_list_view.get_selected_rows()):
+            ip_address = self.ignored_ips_list_view.get_row_value(iterator, 0)
 
-        for path in reversed(paths):
-            iterator = model.get_iter(path)
-            ip_address = model.get_value(iterator, 0)
-
-            model.remove(iterator)
+            self.ignored_ips_list_view.remove_row(iterator)
             del self.ignored_ips[ip_address]
 
 
@@ -1038,10 +984,30 @@ class BannedUsersFrame(UserInterface):
         self.frame = preferences.frame
         self.ip_block_required = False
 
+        self.banned_users = []
+        self.banned_users_list_view = TreeView(
+            self.frame, parent=self.BannedList, multi_select=True,
+            columns=[
+                {"column_id": "username", "column_type": "text", "title": _("Username"), "width": -1,
+                 "sort_column": 0}
+            ]
+        )
+
+        self.banned_ips = {}
+        self.banned_ips_list_view = TreeView(
+            self.frame, parent=self.BlockedList, multi_select=True,
+            columns=[
+                {"column_id": "ip_address", "column_type": "text", "title": _("IP Address"), "width": -1,
+                 "sort_column": 0},
+                {"column_id": "user", "column_type": "text", "title": _("User"), "width": -1,
+                 "sort_column": 1}
+            ]
+        )
+
         self.options = {
             "server": {
-                "banlist": self.BannedList,
-                "ipblocklist": self.BlockedList
+                "banlist": self.banned_users_list_view,
+                "ipblocklist": self.banned_ips_list_view
             },
             "transfers": {
                 "usecustomban": self.UseCustomBan,
@@ -1053,50 +1019,18 @@ class BannedUsersFrame(UserInterface):
             }
         }
 
-        self.banlist = []
-        self.banlist_model = Gtk.ListStore(str)
-
-        self.ban_column_numbers = list(range(self.banlist_model.get_n_columns()))
-        cols = initialise_columns(
-            self.frame, None, self.BannedList,
-            ["username", _("Username"), -1, "text", None]
-        )
-        cols["username"].set_sort_column_id(0)
-
-        self.BannedList.set_model(self.banlist_model)
-
-        self.blocked_list = {}
-        self.blocked_list_model = Gtk.ListStore(str, str)
-
-        self.block_column_numbers = list(range(self.blocked_list_model.get_n_columns()))
-        cols = initialise_columns(
-            self.frame, None, self.BlockedList,
-            ["ip_address", _("IP Address"), -1, "text", None],
-            ["user", _("User"), -1, "text", None]
-        )
-        cols["ip_address"].set_sort_column_id(0)
-        cols["user"].set_sort_column_id(1)
-
-        self.BlockedList.set_model(self.blocked_list_model)
-
     def set_settings(self):
 
-        self.banlist_model.clear()
-        self.blocked_list_model.clear()
+        self.banned_users_list_view.clear()
+        self.banned_ips_list_view.clear()
+        self.banned_users.clear()
+        self.banned_ips.clear()
 
-        self.banlist = config.sections["server"]["banlist"][:]
         self.preferences.set_widgets_data(self.options)
 
-        if config.sections["transfers"]["geoblockcc"] is not None:
-            self.GeoBlockCC.set_text(config.sections["transfers"]["geoblockcc"][0])
-
-        if config.sections["server"]["ipblocklist"] is not None:
-            self.blocked_list = config.sections["server"]["ipblocklist"].copy()
-            for blocked, user in config.sections["server"]["ipblocklist"].items():
-                self.blocked_list_model.insert_with_valuesv(-1, self.block_column_numbers, [
-                    str(blocked),
-                    str(user)
-                ])
+        self.banned_users = config.sections["server"]["banlist"][:]
+        self.banned_ips = config.sections["server"]["ipblocklist"].copy()
+        self.GeoBlockCC.set_text(config.sections["transfers"]["geoblockcc"][0])
 
         self.ip_block_required = False
 
@@ -1106,8 +1040,8 @@ class BannedUsersFrame(UserInterface):
 
         return {
             "server": {
-                "banlist": self.banlist[:],
-                "ipblocklist": self.blocked_list.copy()
+                "banlist": self.banned_users[:],
+                "ipblocklist": self.banned_ips.copy()
             },
             "transfers": {
                 "usecustomban": self.UseCustomBan.get_active(),
@@ -1127,9 +1061,9 @@ class BannedUsersFrame(UserInterface):
         if response_id != Gtk.ResponseType.OK:
             return
 
-        if user and user not in self.banlist:
-            self.banlist.append(user)
-            self.banlist_model.insert_with_valuesv(-1, self.ban_column_numbers, [user])
+        if user and user not in self.banned_users:
+            self.banned_users.append(user)
+            self.banned_users_list_view.add_row([user])
 
     def on_add_banned(self, *_args):
 
@@ -1142,14 +1076,11 @@ class BannedUsersFrame(UserInterface):
 
     def on_remove_banned(self, *_args):
 
-        model, paths = self.BannedList.get_selection().get_selected_rows()
+        for iterator in reversed(self.banned_users_list_view.get_selected_rows()):
+            user = self.banned_users_list_view.get_row_value(iterator, 0)
 
-        for path in reversed(paths):
-            iterator = model.get_iter(path)
-            user = model.get_value(iterator, 0)
-
-            model.remove(iterator)
-            self.banlist.remove(user)
+            self.banned_users_list_view.remove_row(iterator)
+            self.banned_users.remove(user)
 
     def on_add_blocked_response(self, dialog, response_id, _data):
 
@@ -1175,9 +1106,9 @@ class BannedUsersFrame(UserInterface):
             except Exception:
                 return
 
-        if ip_address not in self.blocked_list:
-            self.blocked_list[ip_address] = ""
-            self.blocked_list_model.insert_with_valuesv(-1, self.block_column_numbers, [ip_address, ""])
+        if ip_address not in self.banned_ips:
+            self.banned_ips[ip_address] = ""
+            self.banned_ips_list_view.add_row([ip_address, ""])
             self.ip_block_required = True
 
     def on_add_blocked(self, *_args):
@@ -1191,14 +1122,11 @@ class BannedUsersFrame(UserInterface):
 
     def on_remove_blocked(self, *_args):
 
-        model, paths = self.BlockedList.get_selection().get_selected_rows()
+        for iterator in reversed(self.banned_ips_list_view.get_selected_rows()):
+            ip_address = self.banned_ips_list_view.get_row_value(iterator, 0)
 
-        for path in reversed(paths):
-            iterator = model.get_iter(path)
-            ip_address = model.get_value(iterator, 0)
-
-            self.blocked_list_model.remove(iterator)
-            del self.blocked_list[ip_address]
+            self.banned_ips_list_view.remove_row(iterator)
+            del self.banned_ips[ip_address]
 
 
 class ChatsFrame(UserInterface):
@@ -1222,6 +1150,26 @@ class ChatsFrame(UserInterface):
         self.frame = preferences.frame
         self.completion_required = False
 
+        self.censored_patterns = []
+        self.censor_list_view = TreeView(
+            self.frame, parent=self.CensorList, multi_select=True, activate_row_callback=self.on_edit_censored,
+            columns=[
+                {"column_id": "pattern", "column_type": "text", "title": _("Pattern"), "width": -1,
+                 "sort_column": 0}
+            ]
+        )
+
+        self.replacements = {}
+        self.replacement_list_view = TreeView(
+            self.frame, parent=self.ReplacementList, multi_select=True, activate_row_callback=self.on_edit_replacement,
+            columns=[
+                {"column_id": "pattern", "column_type": "text", "title": _("Pattern"), "width": 150,
+                 "sort_column": 0},
+                {"column_id": "replacement", "column_type": "text", "title": _("Replacement"), "width": -1,
+                 "sort_column": 1}
+            ]
+        )
+
         self.options = {
             "logging": {
                 "readroomlines": self.RoomLogLines,
@@ -1243,10 +1191,10 @@ class ChatsFrame(UserInterface):
                 "commands": self.CompleteCommandsCheck,
                 "aliases": self.CompleteAliasesCheck,
                 "onematch": self.OneMatchCheck,
-                "censored": self.CensorList,
+                "censored": self.censor_list_view,
                 "censorwords": self.CensorCheck,
                 "censorfill": self.CensorReplaceCombo,
-                "autoreplaced": self.ReplacementList,
+                "autoreplaced": self.replacement_list_view,
                 "replacewords": self.ReplaceCheck
             },
             "ui": {
@@ -1258,28 +1206,66 @@ class ChatsFrame(UserInterface):
             }
         }
 
-        self.censor_list_model = Gtk.ListStore(str)
+    def set_settings(self):
 
-        cols = initialise_columns(
-            self.frame, None, self.CensorList,
-            ["pattern", _("Pattern"), -1, "text", None]
-        )
-        cols["pattern"].set_sort_column_id(0)
+        self.censor_list_view.clear()
+        self.replacement_list_view.clear()
+        self.censored_patterns.clear()
+        self.replacements.clear()
 
-        self.CensorList.set_model(self.censor_list_model)
+        self.preferences.set_widgets_data(self.options)
 
-        self.replace_list_model = Gtk.ListStore(str, str)
+        try:
+            gi.require_version('Gspell', '1')
+            from gi.repository import Gspell  # noqa: F401; pylint:disable=unused-import
 
-        self.column_numbers = list(range(self.replace_list_model.get_n_columns()))
-        cols = initialise_columns(
-            self.frame, None, self.ReplacementList,
-            ["pattern", _("Pattern"), 150, "text", None],
-            ["replacement", _("Replacement"), -1, "text", None]
-        )
-        cols["pattern"].set_sort_column_id(0)
-        cols["replacement"].set_sort_column_id(1)
+        except (ImportError, ValueError):
+            self.SpellCheck.hide()
 
-        self.ReplacementList.set_model(self.replace_list_model)
+        self.censored_patterns = config.sections["words"]["censored"][:]
+        self.replacements = config.sections["words"]["autoreplaced"].copy()
+
+        self.completion_required = False
+
+    def get_settings(self):
+
+        self.completion_required = False
+
+        return {
+            "logging": {
+                "readroomlines": self.RoomLogLines.get_value_as_int(),
+                "readprivatelines": self.PrivateLogLines.get_value_as_int(),
+                "private_timestamp": self.PrivateChatFormat.get_text(),
+                "rooms_timestamp": self.ChatRoomFormat.get_text()
+            },
+            "privatechat": {
+                "store": self.ReopenPrivateChats.get_active()
+            },
+            "words": {
+                "tab": self.CompletionTabCheck.get_active(),
+                "cycle": self.CompletionCycleCheck.get_active(),
+                "dropdown": self.CompletionDropdownCheck.get_active(),
+                "characters": self.CharactersCompletion.get_value_as_int(),
+                "roomnames": self.CompleteRoomNamesCheck.get_active(),
+                "buddies": self.CompleteBuddiesCheck.get_active(),
+                "roomusers": self.CompleteUsersInRoomsCheck.get_active(),
+                "commands": self.CompleteCommandsCheck.get_active(),
+                "aliases": self.CompleteAliasesCheck.get_active(),
+                "onematch": self.OneMatchCheck.get_active(),
+                "censored": self.censored_patterns[:],
+                "censorwords": self.CensorCheck.get_active(),
+                "censorfill": self.CensorReplaceCombo.get_active_id(),
+                "autoreplaced": self.replacements.copy(),
+                "replacewords": self.ReplaceCheck.get_active()
+            },
+            "ui": {
+                "spellcheck": self.SpellCheck.get_active(),
+                "speechenabled": self.TextToSpeech.get_active(),
+                "speechcommand": self.TTSCommand.get_active_text(),
+                "speechrooms": self.RoomMessage.get_text(),
+                "speechprivate": self.PrivateMessage.get_text()
+            }
+        }
 
     def on_completion_changed(self, *_args):
         self.completion_required = True
@@ -1307,8 +1293,10 @@ class ChatsFrame(UserInterface):
         if response_id != Gtk.ResponseType.OK:
             return
 
-        if pattern:
-            self.censor_list_model.insert_with_valuesv(-1, [0], [pattern])
+        if pattern and pattern not in self.censored_patterns:
+            self.censored_patterns.append(pattern)
+            iterator = self.censor_list_view.add_row([pattern])
+            self.censor_list_view.select_row(iterator)
 
     def on_add_censored(self, *_args):
 
@@ -1320,7 +1308,7 @@ class ChatsFrame(UserInterface):
             callback=self.on_add_censored_response
         ).show()
 
-    def on_edit_censored_response(self, dialog, response_id, path):
+    def on_edit_censored_response(self, dialog, response_id, iterator):
 
         pattern = dialog.get_entry_value()
         dialog.destroy()
@@ -1331,16 +1319,16 @@ class ChatsFrame(UserInterface):
         if not pattern:
             return
 
-        iterator = self.censor_list_model.get_iter(path)
-        self.censor_list_model.set_value(iterator, 0, pattern)
+        old_pattern = self.censor_list_view.get_row_value(iterator, 0)
+        self.censored_patterns.remove(old_pattern)
+
+        self.censor_list_view.set_row_value(iterator, 0, pattern)
+        self.censored_patterns.append(pattern)
 
     def on_edit_censored(self, *_args):
 
-        model, paths = self.CensorList.get_selection().get_selected_rows()
-
-        for path in paths:
-            iterator = model.get_iter(path)
-            pattern = model.get_value(iterator, 0)
+        for iterator in self.censor_list_view.get_selected_rows():
+            pattern = self.censor_list_view.get_row_value(iterator, 0)
 
             EntryDialog(
                 parent=self.preferences.dialog,
@@ -1348,18 +1336,18 @@ class ChatsFrame(UserInterface):
                 message=_("Enter a pattern you want to censor. Add spaces around the pattern if you don't "
                           "want to match strings inside words (may fail at the beginning and end of lines)."),
                 callback=self.on_edit_censored_response,
-                callback_data=path,
+                callback_data=iterator,
                 default=pattern
             ).show()
             return
 
     def on_remove_censored(self, *_args):
 
-        model, paths = self.CensorList.get_selection().get_selected_rows()
+        for iterator in reversed(self.censor_list_view.get_selected_rows()):
+            censor = self.censor_list_view.get_row_value(iterator, 0)
 
-        for path in reversed(paths):
-            iterator = model.get_iter(path)
-            model.remove(iterator)
+            self.censor_list_view.remove_row(iterator)
+            self.censored_patterns.remove(censor)
 
     def on_add_replacement_response(self, dialog, response_id, _data):
 
@@ -1373,8 +1361,9 @@ class ChatsFrame(UserInterface):
         if not pattern or not replacement:
             return
 
-        iterator = self.replace_list_model.insert_with_valuesv(-1, self.column_numbers, [pattern, replacement])
-        self.ReplacementList.set_cursor(self.replace_list_model.get_path(iterator))
+        self.replacements[pattern] = replacement
+        iterator = self.replacement_list_view.add_row([pattern, replacement])
+        self.replacement_list_view.select_row(iterator)
 
     def on_add_replacement(self, *_args):
 
@@ -1386,7 +1375,7 @@ class ChatsFrame(UserInterface):
             use_second_entry=True
         ).show()
 
-    def on_edit_replacement_response(self, dialog, response_id, path):
+    def on_edit_replacement_response(self, dialog, response_id, iterator):
 
         pattern = dialog.get_entry_value()
         replacement = dialog.get_second_entry_value()
@@ -1398,25 +1387,25 @@ class ChatsFrame(UserInterface):
         if not pattern or not replacement:
             return
 
-        iterator = self.replace_list_model.get_iter(path)
-        self.replace_list_model.set_value(iterator, 0, pattern)
-        self.replace_list_model.set_value(iterator, 1, replacement)
+        old_pattern = self.replacement_list_view.get_row_value(iterator, 0)
+        del self.replacements[old_pattern]
+
+        self.replacements[pattern] = replacement
+        self.replacement_list_view.set_row_value(iterator, 0, pattern)
+        self.replacement_list_view.set_row_value(iterator, 1, replacement)
 
     def on_edit_replacement(self, *_args):
 
-        model, paths = self.ReplacementList.get_selection().get_selected_rows()
-
-        for path in paths:
-            iterator = model.get_iter(path)
-            pattern = model.get_value(iterator, 0)
-            replacement = model.get_value(iterator, 1)
+        for iterator in self.replacement_list_view.get_selected_rows():
+            pattern = self.replacement_list_view.get_row_value(iterator, 0)
+            replacement = self.replacement_list_view.get_row_value(iterator, 1)
 
             EntryDialog(
                 parent=self.preferences.dialog,
                 title=_("Edit Replacement"),
                 message=_("Enter the text pattern and replacement, respectively:"),
                 callback=self.on_edit_replacement_response,
-                callback_data=path,
+                callback_data=iterator,
                 use_second_entry=True,
                 default=pattern,
                 second_default=replacement
@@ -1425,90 +1414,11 @@ class ChatsFrame(UserInterface):
 
     def on_remove_replacement(self, *_args):
 
-        model, paths = self.ReplacementList.get_selection().get_selected_rows()
+        for iterator in reversed(self.replacement_list_view.get_selected_rows()):
+            replacement = self.replacement_list_view.get_row_value(iterator, 0)
 
-        for path in reversed(paths):
-            iterator = model.get_iter(path)
-            model.remove(iterator)
-
-    def set_settings(self):
-
-        self.censor_list_model.clear()
-        self.replace_list_model.clear()
-
-        self.preferences.set_widgets_data(self.options)
-
-        try:
-            gi.require_version('Gspell', '1')
-            from gi.repository import Gspell  # noqa: F401; pylint:disable=unused-import
-
-        except (ImportError, ValueError):
-            self.SpellCheck.hide()
-
-        for word, replacement in config.sections["words"]["autoreplaced"].items():
-            self.replace_list_model.insert_with_valuesv(-1, self.column_numbers, [
-                str(word),
-                str(replacement)
-            ])
-
-        self.completion_required = False
-
-    def get_settings(self):
-
-        self.completion_required = False
-        censored = []
-        autoreplaced = {}
-
-        iterator = self.censor_list_model.get_iter_first()
-
-        while iterator is not None:
-            word = self.censor_list_model.get_value(iterator, 0)
-            censored.append(word)
-            iterator = self.censor_list_model.iter_next(iterator)
-
-        iterator = self.replace_list_model.get_iter_first()
-
-        while iterator is not None:
-            word = self.replace_list_model.get_value(iterator, 0)
-            replacement = self.replace_list_model.get_value(iterator, 1)
-            autoreplaced[word] = replacement
-            iterator = self.replace_list_model.iter_next(iterator)
-
-        return {
-            "logging": {
-                "readroomlines": self.RoomLogLines.get_value_as_int(),
-                "readprivatelines": self.PrivateLogLines.get_value_as_int(),
-                "private_timestamp": self.PrivateChatFormat.get_text(),
-                "rooms_timestamp": self.ChatRoomFormat.get_text()
-            },
-            "privatechat": {
-                "store": self.ReopenPrivateChats.get_active()
-            },
-            "words": {
-                "tab": self.CompletionTabCheck.get_active(),
-                "cycle": self.CompletionCycleCheck.get_active(),
-                "dropdown": self.CompletionDropdownCheck.get_active(),
-                "characters": self.CharactersCompletion.get_value_as_int(),
-                "roomnames": self.CompleteRoomNamesCheck.get_active(),
-                "buddies": self.CompleteBuddiesCheck.get_active(),
-                "roomusers": self.CompleteUsersInRoomsCheck.get_active(),
-                "commands": self.CompleteCommandsCheck.get_active(),
-                "aliases": self.CompleteAliasesCheck.get_active(),
-                "onematch": self.OneMatchCheck.get_active(),
-                "censored": censored,
-                "censorwords": self.CensorCheck.get_active(),
-                "censorfill": self.CensorReplaceCombo.get_active_id(),
-                "autoreplaced": autoreplaced,
-                "replacewords": self.ReplaceCheck.get_active()
-            },
-            "ui": {
-                "spellcheck": self.SpellCheck.get_active(),
-                "speechenabled": self.TextToSpeech.get_active(),
-                "speechcommand": self.TTSCommand.get_active_text(),
-                "speechrooms": self.RoomMessage.get_text(),
-                "speechprivate": self.PrivateMessage.get_text()
-            }
-        }
+            self.replacement_list_view.remove_row(iterator)
+            del self.replacements[replacement]
 
 
 class UserInterfaceFrame(UserInterface):
@@ -2047,53 +1957,39 @@ class UrlHandlersFrame(UserInterface):
             "\"c:\\Program Files\\Mozilla Firefox\\Firefox.exe\" $"
         ]
 
-        self.protocolmodel = Gtk.ListStore(str, str)
         self.protocols = {}
-
-        self.column_numbers = list(range(self.protocolmodel.get_n_columns()))
-        cols = initialise_columns(
-            self.frame, None, self.ProtocolHandlers,
-            ["protocol", _("Protocol"), -1, "text", None],
-            ["command", _("Command"), -1, "text", None]
+        self.protocol_iters = {}
+        self.protocol_list_view = TreeView(
+            self.frame, parent=self.ProtocolHandlers, multi_select=True, activate_row_callback=self.on_edit_handler,
+            columns=[
+                {"column_id": "protocol", "column_type": "text", "title": _("Protocol"), "width": -1,
+                 "sort_column": 0},
+                {"column_id": "command", "column_type": "text", "title": _("Command"), "width": -1,
+                 "sort_column": 1}
+            ]
         )
-
-        cols["protocol"].set_sort_column_id(0)
-        cols["command"].set_sort_column_id(1)
-
-        self.ProtocolHandlers.set_model(self.protocolmodel)
 
     def set_settings(self):
 
-        self.protocolmodel.clear()
+        self.protocol_list_view.clear()
+        self.protocol_iters.clear()
         self.protocols.clear()
 
         self.preferences.set_widgets_data(self.options)
 
-        for key in config.sections["urls"]["protocols"].keys():
-            if config.sections["urls"]["protocols"][key][-1:] == "&":
-                command = config.sections["urls"]["protocols"][key][:-1].rstrip()
-            else:
-                command = config.sections["urls"]["protocols"][key]
+        self.protocols = config.sections["urls"]["protocols"].copy()
 
-            self.protocols[key] = self.protocolmodel.insert_with_valuesv(-1, self.column_numbers, [
-                str(key), str(command)
-            ])
+        for protocol, command in self.protocols.items():
+            if command[-1:] == "&":
+                command = command[:-1].rstrip()
+
+            self.protocol_iters[protocol] = self.protocol_list_view.add_row([str(protocol), str(command)])
 
     def get_settings(self):
 
-        protocols = {}
-        iterator = self.protocolmodel.get_iter_first()
-
-        while iterator is not None:
-            protocol = self.protocolmodel.get_value(iterator, 0)
-            handler = self.protocolmodel.get_value(iterator, 1)
-            protocols[protocol] = handler
-
-            iterator = self.protocolmodel.iter_next(iterator)
-
         return {
             "urls": {
-                "protocols": protocols
+                "protocols": self.protocols.copy()
             },
             "ui": {
                 "filemanager": self.FileManagerCombo.get_active_text()
@@ -2115,12 +2011,14 @@ class UrlHandlersFrame(UserInterface):
         if not protocol or not command:
             return
 
-        if protocol in self.protocols:
-            self.protocolmodel.set_value(self.protocols[protocol], 1, command)
-        else:
-            self.protocols[protocol] = self.protocolmodel.insert_with_valuesv(
-                -1, self.column_numbers, [protocol, command]
-            )
+        iterator = self.protocol_iters.get(protocol)
+        self.protocols[protocol] = command
+
+        if iterator:
+            self.protocol_list_view.set_row_value(iterator, 1, command)
+            return
+
+        self.protocol_iters[protocol] = self.protocol_list_view.add_row([protocol, command])
 
     def on_add_handler(self, *_args):
 
@@ -2134,7 +2032,7 @@ class UrlHandlersFrame(UserInterface):
             second_droplist=self.default_commands
         ).show()
 
-    def on_edit_handler_response(self, dialog, response_id, path):
+    def on_edit_handler_response(self, dialog, response_id, iterator):
 
         command = dialog.get_entry_value()
         dialog.destroy()
@@ -2145,24 +2043,23 @@ class UrlHandlersFrame(UserInterface):
         if not command:
             return
 
-        iterator = self.protocolmodel.get_iter(path)
-        self.protocolmodel.set_value(iterator, 1, command)
+        protocol = self.protocol_list_view.get_row_value(iterator, 0)
+
+        self.protocols[protocol] = command
+        self.protocol_list_view.set_row_value(iterator, 1, command)
 
     def on_edit_handler(self, *_args):
 
-        model, paths = self.ProtocolHandlers.get_selection().get_selected_rows()
-
-        for path in paths:
-            iterator = model.get_iter(path)
-            protocol = model.get_value(iterator, 0)
-            command = model.get_value(iterator, 1)
+        for iterator in self.protocol_list_view.get_selected_rows():
+            protocol = self.protocol_list_view.get_row_value(iterator, 0)
+            command = self.protocol_list_view.get_row_value(iterator, 1)
 
             EntryDialog(
                 parent=self.preferences.dialog,
                 title=_("Edit Command"),
                 message=_("Enter a new command for protocol %s:") % protocol,
                 callback=self.on_edit_handler_response,
-                callback_data=path,
+                callback_data=iterator,
                 droplist=self.default_commands,
                 default=command
             ).show()
@@ -2170,13 +2067,11 @@ class UrlHandlersFrame(UserInterface):
 
     def on_remove_handler(self, *_args):
 
-        model, paths = self.ProtocolHandlers.get_selection().get_selected_rows()
+        for iterator in reversed(self.protocol_list_view.get_selected_rows()):
+            protocol = self.protocol_list_view.get_row_value(iterator, 0)
 
-        for path in reversed(paths):
-            iterator = model.get_iter(path)
-            protocol = self.protocolmodel.get_value(iterator, 0)
-
-            model.remove(iterator)
+            self.protocol_list_view.remove_row(iterator)
+            del self.protocol_iters[protocol]
             del self.protocols[protocol]
 
 
@@ -2709,87 +2604,62 @@ class PluginsFrame(UserInterface):
             }
         }
 
-        self.plugins_model = Gtk.ListStore(bool, str, str)
-        self.plugins = []
-        self.pluginsiters = {}
+        self.enabled_plugins = []
         self.selected_plugin = None
         self.descr_textview = TextView(self.PluginDescription)
+        self.plugin_list_view = TreeView(
+            self.frame, parent=self.PluginTreeView, search_column=1, always_select=True,
+            select_row_callback=self.on_select_plugin,
+            columns=[
+                # Visible columns
+                {"column_id": "enabled", "column_type": "toggle", "title": _("Enabled"), "width": 0,
+                 "sort_column": 0, "toggle_callback": self.on_plugin_toggle, "hide_header": True},
+                {"column_id": "plugin", "column_type": "text", "title": _("Plugin"), "width": -1,
+                 "sort_column": 1},
 
-        self.column_numbers = list(range(self.plugins_model.get_n_columns()))
-        cols = initialise_columns(
-            self.frame, None, self.PluginTreeView,
-            ["enabled", _("Enabled"), 0, "toggle", None],
-            ["plugin", _("Plugin"), -1, "text", None]
+                # Hidden data columns
+                {"column_id": "plugin_hidden", "data_type": str}
+            ]
         )
-
-        cols["enabled"].set_sort_column_id(0)
-        cols["plugin"].set_sort_column_id(1)
-
-        cols["enabled"].get_widget().hide()
-
-        renderers = cols["enabled"].get_cells()
-
-        for render in renderers:
-            render.connect('toggled', self.cell_toggle_callback, self.PluginTreeView)
-
-        self.PluginTreeView.set_model(self.plugins_model)
 
     def set_settings(self):
 
+        self.plugin_list_view.clear()
+
         self.preferences.set_widgets_data(self.options)
 
-        self.on_plugins_enable()
-        self.pluginsiters = {}
-        self.plugins_model.clear()
-        plugins = sorted(self.core.pluginhandler.list_installed_plugins())
-
-        for plugin in plugins:
+        for plugin_id in sorted(self.core.pluginhandler.list_installed_plugins()):
             try:
-                info = self.core.pluginhandler.get_plugin_info(plugin)
+                info = self.core.pluginhandler.get_plugin_info(plugin_id)
             except OSError:
                 continue
 
-            enabled = (plugin in config.sections["plugins"]["enabled"])
-            self.pluginsiters[filter] = self.plugins_model.insert_with_valuesv(
-                -1, self.column_numbers, [enabled, info.get('Name', plugin), plugin]
-            )
-
-        return {}
-
-    def get_enabled_plugins(self):
-
-        enabled_plugins = []
-
-        for plugin in self.plugins_model:
-            enabled = self.plugins_model.get_value(plugin.iter, 0)
+            plugin_name = info.get('Name', plugin_id)
+            enabled = (plugin_id in config.sections["plugins"]["enabled"])
+            self.plugin_list_view.add_row([enabled, plugin_name, plugin_id])
 
             if enabled:
-                plugin_name = self.plugins_model.get_value(plugin.iter, 2)
-                enabled_plugins.append(plugin_name)
-
-        return enabled_plugins
+                self.enabled_plugins.append(plugin_id)
 
     def get_settings(self):
 
         return {
             "plugins": {
                 "enable": self.PluginsEnable.get_active(),
-                "enabled": self.get_enabled_plugins()
+                "enabled": self.enabled_plugins[:]
             }
         }
 
     def check_properties_button(self, plugin):
         self.PluginProperties.set_sensitive(bool(self.core.pluginhandler.get_plugin_settings(plugin)))
 
-    def on_select_plugin(self, selection):
-
-        model, iterator = selection.get_selected()
+    def on_select_plugin(self, list_view, iterator):
 
         if iterator is None:
             self.selected_plugin = _("No Plugin Selected")
             info = {}
         else:
-            self.selected_plugin = model.get_value(iterator, 2)
+            self.selected_plugin = list_view.get_row_value(iterator, 2)
             info = self.core.pluginhandler.get_plugin_info(self.selected_plugin)
 
         self.PluginName.set_markup("<b>%(name)s</b>" % {"name": info.get("Name", self.selected_plugin)})
@@ -2803,26 +2673,27 @@ class PluginsFrame(UserInterface):
 
         self.check_properties_button(self.selected_plugin)
 
-    def cell_toggle_callback(self, _widget, index, _treeview):
+    def on_plugin_toggle(self, list_view, iterator):
 
-        iterator = self.plugins_model.get_iter(index)
-        plugin = self.plugins_model.get_value(iterator, 2)
-        value = self.plugins_model.get_value(iterator, 0)
-        self.plugins_model.set(iterator, 0, not value)
+        plugin_id = list_view.get_row_value(iterator, 2)
+        value = list_view.get_row_value(iterator, 0)
+        list_view.set_row_value(iterator, 0, not value)
 
         if not value:
-            self.core.pluginhandler.enable_plugin(plugin)
+            self.core.pluginhandler.enable_plugin(plugin_id)
+            self.enabled_plugins.append(plugin_id)
         else:
-            self.core.pluginhandler.disable_plugin(plugin)
+            self.core.pluginhandler.disable_plugin(plugin_id)
+            self.enabled_plugins.remove(plugin_id)
 
-        self.check_properties_button(plugin)
+        self.check_properties_button(plugin_id)
 
     def on_plugins_enable(self, *_args):
 
         if self.PluginsEnable.get_active():
             # Enable all selected plugins
-            for plugin in self.get_enabled_plugins():
-                self.core.pluginhandler.enable_plugin(plugin)
+            for plugin_id in self.enabled_plugins:
+                self.core.pluginhandler.enable_plugin(plugin_id)
 
             self.check_properties_button(self.selected_plugin)
             return
@@ -3098,6 +2969,15 @@ class Preferences(UserInterface):
 
             for item in value:
                 model.insert_with_valuesv(-1, column_numbers, [str(item)])
+
+        elif isinstance(widget, TreeView):
+            if isinstance(value, list):
+                for item in value:
+                    widget.add_row([str(item)])
+
+            elif isinstance(value, dict):
+                for item1, item2 in value.items():
+                    widget.add_row([str(item1), str(item2)])
 
         elif isinstance(widget, FileChooserButton):
             widget.set_path(value)

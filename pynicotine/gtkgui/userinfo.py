@@ -35,7 +35,7 @@ from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
-from pynicotine.gtkgui.widgets.treeview import initialise_columns
+from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
 from pynicotine.utils import humanize
@@ -130,11 +130,11 @@ class UserInfo(UserInterface):
             self.container,
             self.country_label,
             self.description_view,
-            self.dislikes_list_view,
+            self.dislikes_list_container,
             self.free_upload_slots_label,
             self.horizontal_paned,
             self.info_bar,
-            self.likes_list_view,
+            self.likes_list_container,
             self.picture_container,
             self.picture_view,
             self.placeholder_picture,
@@ -174,30 +174,22 @@ class UserInfo(UserInterface):
         self.actual_zoom = 0
 
         # Set up likes list
-        self.likes_store = Gtk.ListStore(str)
-
-        self.like_column_numbers = list(range(self.likes_store.get_n_columns()))
-        cols = initialise_columns(
-            self.frame, None, self.likes_list_view,
-            ["likes", _("Likes"), 0, "text", None]
+        self.likes_list_view = TreeView(
+            self.frame, parent=self.likes_list_container,
+            columns=[
+                {"column_id": "likes", "column_type": "text", "title": _("Likes"), "width": 0,
+                 "sort_column": 0, "default_sort_column": "ascending"}
+            ]
         )
-        cols["likes"].set_sort_column_id(0)
-
-        self.likes_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
-        self.likes_list_view.set_model(self.likes_store)
 
         # Set up dislikes list
-        self.dislikes_store = Gtk.ListStore(str)
-
-        self.hate_column_numbers = list(range(self.dislikes_store.get_n_columns()))
-        cols = initialise_columns(
-            self.frame, None, self.dislikes_list_view,
-            ["dislikes", _("Dislikes"), 0, "text", None]
+        self.dislikes_list_view = TreeView(
+            self.frame, parent=self.dislikes_list_container,
+            columns=[
+                {"column_id": "dislikes", "column_type": "text", "title": _("Dislikes"), "width": 0,
+                 "sort_column": 0, "default_sort_column": "ascending"}
+            ]
         )
-        cols["dislikes"].set_sort_column_id(0)
-
-        self.dislikes_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
-        self.dislikes_list_view.set_model(self.dislikes_store)
 
         # Popup menus
         self.user_popup = popup = UserPopupMenu(self.frame, None, self.on_tab_popup)
@@ -208,17 +200,17 @@ class UserInfo(UserInterface):
             ("#" + _("_Close Tab"), self.on_close)
         )
 
-        def get_interest_items(popup):
-            return (("$" + _("I _Like This"), self.on_like_recommendation, popup),
-                    ("$" + _("I _Dislike This"), self.on_dislike_recommendation, popup),
+        def get_interest_items(list_view):
+            return (("$" + _("I _Like This"), self.on_like_recommendation, list_view),
+                    ("$" + _("I _Dislike This"), self.on_dislike_recommendation, list_view),
                     ("", None),
-                    ("#" + _("_Search for Item"), self.on_interest_recommend_search, popup))
+                    ("#" + _("_Search for Item"), self.on_interest_recommend_search, list_view))
 
-        popup = PopupMenu(self.frame, self.likes_list_view, self.on_popup_interest_menu)
-        popup.add_items(*get_interest_items(popup))
+        popup = PopupMenu(self.frame, self.likes_list_view.widget, self.on_popup_interest_menu)
+        popup.add_items(*get_interest_items(self.likes_list_view))
 
-        popup = PopupMenu(self.frame, self.dislikes_list_view, self.on_popup_interest_menu)
-        popup.add_items(*get_interest_items(popup))
+        popup = PopupMenu(self.frame, self.dislikes_list_view.widget, self.on_popup_interest_menu)
+        popup.add_items(*get_interest_items(self.dislikes_list_view))
 
         popup = PopupMenu(self.frame, self.picture_view)
         popup.add_items(
@@ -234,8 +226,8 @@ class UserInfo(UserInterface):
     def clear(self):
 
         self.description_view.clear()
-        self.likes_store.clear()
-        self.dislikes_store.clear()
+        self.likes_list_view.clear()
+        self.dislikes_list_view.clear()
         self.load_picture(None)
 
     def set_label(self, label):
@@ -429,23 +421,23 @@ class UserInfo(UserInterface):
 
     def user_interests(self, msg):
 
-        self.likes_store.clear()
-        self.dislikes_store.clear()
+        self.likes_list_view.clear()
+        self.dislikes_list_view.clear()
 
         for like in msg.likes:
-            self.likes_store.insert_with_valuesv(-1, self.like_column_numbers, [like])
+            self.likes_list_view.add_row([like])
 
         for hate in msg.hates:
-            self.dislikes_store.insert_with_valuesv(-1, self.hate_column_numbers, [hate])
+            self.dislikes_list_view.add_row([hate])
 
     """ Callbacks """
 
     def on_tab_popup(self, *_args):
         self.user_popup.toggle_user_items()
 
-    def on_popup_interest_menu(self, menu, widget):
+    def on_popup_interest_menu(self, menu, list_view):
 
-        item = self.frame.interests.get_selected_item(widget, column=0)
+        item = self.frame.interests.get_selected_item(list_view, column=0)
 
         menu.actions[_("I _Like This")].set_state(
             GLib.Variant("b", item in config.sections["interests"]["likes"])

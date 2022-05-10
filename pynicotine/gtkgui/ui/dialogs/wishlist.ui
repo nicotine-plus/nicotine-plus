@@ -17,7 +17,7 @@
         <property name="label" translatable="yes">Wishlist items are auto-searched at regular intervals, for discovering uncommon files.</property>
         <property name="max-width-chars">55</property>
         <property name="wrap">True</property>
-        <property name="mnemonic_widget">list_view</property>
+        <property name="mnemonic_widget">list_container</property>
       </object>
     </child>
     <child>
@@ -38,21 +38,9 @@
             <property name="visible">True</property>
             <property name="orientation">vertical</property>
             <child>
-              <object class="GtkScrolledWindow">
+              <object class="GtkScrolledWindow" id="list_container">
                 <property name="visible">True</property>
                 <property name="vexpand">True</property>
-                <child>
-                  <object class="GtkTreeView" id="list_view">
-                    <property name="visible">True</property>
-                    <property name="rubber-banding">True</property>
-                    <signal name="row-activated" handler="on_edit_wish"/>
-                    <child internal-child="selection">
-                      <object class="GtkTreeSelection">
-                        <property name="mode">multiple</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
                 <style>
                   <class name="border-bottom"/>
                 </style>

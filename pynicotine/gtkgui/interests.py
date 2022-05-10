@@ -18,7 +18,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
@@ -26,8 +25,7 @@ from gi.repository import Gtk
 from pynicotine.config import config
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
-from pynicotine.gtkgui.widgets.treeview import initialise_columns
-from pynicotine.gtkgui.widgets.treeview import show_user_status_tooltip
+from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.theme import get_status_icon
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.ui import UserInterface
@@ -42,14 +40,14 @@ class Interests(UserInterface):
         super().__init__("ui/interests.ui")
         (
             self.container,
-            self.dislikes_list_view,
-            self.likes_list_view,
+            self.dislikes_list_container,
+            self.likes_list_container,
             self.recommendations_button,
             self.recommendations_label,
-            self.recommendations_list_view,
+            self.recommendations_list_container,
             self.similar_users_button,
             self.similar_users_label,
-            self.similar_users_list_view
+            self.similar_users_list_container
         ) = self.widgets
 
         if Gtk.get_major_version() >= 4:
@@ -63,121 +61,96 @@ class Interests(UserInterface):
         self.populated_recommends = False
 
         # Columns
-        self.likes = {}
-        self.likes_model = Gtk.ListStore(str)
-        self.likes_model.set_sort_column_id(0, Gtk.SortType.ASCENDING)
-
-        self.likes_column_numbers = list(range(self.likes_model.get_n_columns()))
-        cols = initialise_columns(
-            frame, None, self.likes_list_view,
-            ["likes", _("Likes"), -1, "text", None]
+        self.likes_iters = {}
+        self.likes_list_view = TreeView(
+            frame, parent=self.likes_list_container,
+            columns=[
+                {"column_id": "likes", "column_type": "text", "title": _("Likes"), "width": -1,
+                 "sort_column": 0, "default_sort_column": "ascending"}
+            ]
         )
 
-        cols["likes"].set_sort_column_id(0)
-        self.likes_list_view.set_model(self.likes_model)
-
-        self.dislikes = {}
-        self.dislikes_model = Gtk.ListStore(str)
-        self.dislikes_model.set_sort_column_id(0, Gtk.SortType.ASCENDING)
-
-        self.dislikes_column_numbers = list(range(self.dislikes_model.get_n_columns()))
-        cols = initialise_columns(
-            frame, None, self.dislikes_list_view,
-            ["dislikes", _("Dislikes"), -1, "text", None]
+        self.dislikes_iters = {}
+        self.dislikes_list_view = TreeView(
+            frame, parent=self.dislikes_list_container,
+            columns=[
+                {"column_id": "dislikes", "column_type": "text", "title": _("Dislikes"), "width": -1,
+                 "sort_column": 0, "default_sort_column": "ascending"}
+            ]
         )
 
-        cols["dislikes"].set_sort_column_id(0)
-        self.dislikes_list_view.set_model(self.dislikes_model)
+        self.recommendations_list_view = TreeView(
+            frame, parent=self.recommendations_list_container,
+            search_column=1, activate_row_callback=self.on_r_row_activated,
+            columns=[
+                # Visible columns
+                {"column_id": "rating", "column_type": "number", "title": _("Rating"), "width": 0,
+                 "sort_column": 2, "default_sort_column": "descending"},
+                {"column_id": "item", "column_type": "text", "title": _("Item"), "width": -1,
+                 "sort_column": 1},
 
-        self.recommendations_model = Gtk.ListStore(
-            str,  # (0) hrating
-            str,  # (1) item
-            int   # (2) rating
+                # Hidden data columns
+                {"column_id": "rating_hidden", "data_type": int}
+            ]
         )
 
-        self.recommendations_column_numbers = list(range(self.recommendations_model.get_n_columns()))
-        cols = initialise_columns(
-            frame, None, self.recommendations_list_view,
-            ["rating", _("Rating"), 0, "number", None],
-            ["item", _("Item"), -1, "text", None]
+        self.similar_users_iters = {}
+        self.similar_users_list_view = TreeView(
+            frame, parent=self.similar_users_list_container,
+            search_column=1, activate_row_callback=self.on_ru_row_activated, tooltip_callback=self.on_tooltip,
+            columns=[
+                # Visible columns
+                {"column_id": "status", "title": _("Status"), "width": 25,
+                 "column_type": "icon", "sort_column": 4, "hide_header": True},
+                {"column_id": "user", "title": _("User"), "width": 135,
+                 "column_type": "text", "sort_column": 1, "expand_header": True},
+                {"column_id": "speed", "title": _("Speed"), "width": 60,
+                 "column_type": "number", "sort_column": 5, "expand_header": True},
+                {"column_id": "files", "title": _("Files"), "width": -1,
+                 "column_type": "number", "sort_column": 6, "expand_header": True},
+
+                # Hidden data columns
+                {"column_id": "status_hidden", "data_type": int},
+                {"column_id": "speed_hidden", "data_type": GObject.TYPE_UINT},
+                {"column_id": "files_hidden", "data_type": GObject.TYPE_UINT}
+            ]
         )
-
-        cols["rating"].set_sort_column_id(2)
-        cols["item"].set_sort_column_id(1)
-
-        self.recommendations_list_view.set_model(self.recommendations_model)
-        self.recommendations_model.set_sort_column_id(2, Gtk.SortType.DESCENDING)
-
-        self.recommendation_users = {}
-        self.recommendation_users_model = Gtk.ListStore(
-            Gio.Icon,             # (0) status icon
-            str,                  # (1) user
-            str,                  # (2) hspeed
-            str,                  # (3) hfiles
-            int,                  # (4) status
-            GObject.TYPE_UINT,    # (5) speed
-            GObject.TYPE_UINT     # (6) file count
-        )
-
-        self.recommendation_users_column_numbers = list(range(self.recommendation_users_model.get_n_columns()))
-        cols = initialise_columns(
-            frame, None, self.similar_users_list_view,
-            ["status", _("Status"), 25, "icon", None],
-            ["user", _("User"), 135, "text", None],
-            ["speed", _("Speed"), 60, "number", None],
-            ["files", _("Files"), -1, "number", None],
-        )
-
-        cols["status"].set_sort_column_id(4)
-        cols["user"].set_sort_column_id(1)
-        cols["speed"].set_sort_column_id(5)
-        cols["files"].set_sort_column_id(6)
-
-        cols["user"].set_expand(True)
-        cols["speed"].set_expand(True)
-        cols["files"].set_expand(True)
-
-        cols["status"].get_widget().hide()
-
-        self.similar_users_list_view.set_model(self.recommendation_users_model)
-        self.recommendation_users_model.set_sort_column_id(1, Gtk.SortType.ASCENDING)
 
         for thing in config.sections["interests"]["likes"]:
             if thing and isinstance(thing, str):
-                self.likes[thing] = self.likes_model.insert_with_valuesv(-1, self.likes_column_numbers, [thing])
+                self.likes_iters[thing] = self.likes_list_view.add_row([thing])
 
         for thing in config.sections["interests"]["dislikes"]:
             if thing and isinstance(thing, str):
-                self.dislikes[thing] = self.dislikes_model.insert_with_valuesv(
-                    -1, self.dislikes_column_numbers, [thing])
+                self.dislikes_iters[thing] = self.dislikes_list_view.add_row([thing])
 
         # Popup menus
-        self.til_popup_menu = popup = PopupMenu(self.frame, self.likes_list_view)
+        self.til_popup_menu = popup = PopupMenu(self.frame, self.likes_list_view.widget)
         popup.add_items(
-            ("#" + _("Re_commendations for Item"), self.on_recommend_item, popup),
-            ("#" + _("_Search for Item"), self.on_recommend_search, popup),
+            ("#" + _("Re_commendations for Item"), self.on_recommend_item, self.likes_list_view),
+            ("#" + _("_Search for Item"), self.on_recommend_search, self.likes_list_view),
             ("", None),
             ("#" + _("_Remove Item"), self.on_remove_thing_i_like)
         )
 
-        self.tidl_popup_menu = popup = PopupMenu(self.frame, self.dislikes_list_view)
+        self.tidl_popup_menu = popup = PopupMenu(self.frame, self.dislikes_list_view.widget)
         popup.add_items(
-            ("#" + _("Re_commendations for Item"), self.on_recommend_item, popup),
-            ("#" + _("_Search for Item"), self.on_recommend_search, popup),
+            ("#" + _("Re_commendations for Item"), self.on_recommend_item, self.dislikes_list_view),
+            ("#" + _("_Search for Item"), self.on_recommend_search, self.dislikes_list_view),
             ("", None),
             ("#" + _("_Remove Item"), self.on_remove_thing_i_dislike)
         )
 
-        self.r_popup_menu = popup = PopupMenu(self.frame, self.recommendations_list_view, self.on_popup_r_menu)
+        self.r_popup_menu = popup = PopupMenu(self.frame, self.recommendations_list_view.widget, self.on_popup_r_menu)
         popup.add_items(
             ("$" + _("I _Like This"), self.on_like_recommendation),
             ("$" + _("I _Dislike This"), self.on_dislike_recommendation),
             ("", None),
-            ("#" + _("_Recommendations for Item"), self.on_recommend_item, popup),
-            ("#" + _("_Search for Item"), self.on_recommend_search, popup)
+            ("#" + _("_Recommendations for Item"), self.on_recommend_item, self.recommendations_list_view),
+            ("#" + _("_Search for Item"), self.on_recommend_search, self.recommendations_list_view)
         )
 
-        popup = UserPopupMenu(self.frame, self.similar_users_list_view, self.on_popup_ru_menu)
+        popup = UserPopupMenu(self.frame, self.similar_users_list_view.widget, self.on_popup_ru_menu)
         popup.setup_user_menu()
 
         self.update_visuals()
@@ -218,7 +191,7 @@ class Interests(UserInterface):
         widget.set_text("")
 
         if self.core.interests.add_thing_i_like(thing):
-            self.likes[thing] = self.likes_model.insert_with_valuesv(-1, self.likes_column_numbers, [thing])
+            self.likes_iters[thing] = self.likes_list_view.add_row([thing])
 
     def on_add_thing_i_dislike(self, widget, *_args):
 
@@ -226,7 +199,7 @@ class Interests(UserInterface):
         widget.set_text("")
 
         if self.core.interests.add_thing_i_hate(thing):
-            self.dislikes[thing] = self.dislikes_model.insert_with_valuesv(-1, self.dislikes_column_numbers, [thing])
+            self.dislikes_iters[thing] = self.dislikes_list_view.add_row([thing])
 
     def on_remove_thing_i_like(self, *_args):
 
@@ -235,8 +208,8 @@ class Interests(UserInterface):
         if not self.core.interests.remove_thing_i_like(thing):
             return
 
-        self.likes_model.remove(self.likes[thing])
-        del self.likes[thing]
+        self.likes_list_view.remove_row(self.likes_iters[thing])
+        del self.likes_iters[thing]
 
     def on_remove_thing_i_dislike(self, *_args):
 
@@ -245,8 +218,8 @@ class Interests(UserInterface):
         if not self.core.interests.remove_thing_i_hate(thing):
             return
 
-        self.dislikes_model.remove(self.dislikes[thing])
-        del self.dislikes[thing]
+        self.dislikes_list_view.remove_row(self.dislikes_iters[thing])
+        del self.dislikes_iters[thing]
 
     def on_like_recommendation(self, action, state, thing=None):
 
@@ -254,11 +227,11 @@ class Interests(UserInterface):
             thing = self.get_selected_item(self.recommendations_list_view, column=1)
 
         if state.get_boolean() and self.core.interests.add_thing_i_like(thing):
-            self.likes[thing] = self.likes_model.insert_with_valuesv(-1, self.likes_column_numbers, [thing])
+            self.likes_iters[thing] = self.likes_list_view.add_row([thing])
 
         elif not state.get_boolean() and self.core.interests.remove_thing_i_like(thing):
-            self.likes_model.remove(self.likes[thing])
-            del self.likes[thing]
+            self.likes_list_view.remove_row(self.likes_iters[thing])
+            del self.likes_iters[thing]
 
         action.set_state(state)
 
@@ -268,30 +241,30 @@ class Interests(UserInterface):
             thing = self.get_selected_item(self.recommendations_list_view, column=1)
 
         if state.get_boolean() and thing and self.core.interests.add_thing_i_hate(thing):
-            self.dislikes[thing] = self.dislikes_model.insert_with_valuesv(-1, self.dislikes_column_numbers, [thing])
+            self.dislikes_iters[thing] = self.dislikes_list_view.add_row([thing])
 
         elif not state.get_boolean() and self.core.interests.remove_thing_i_hate(thing):
-            self.dislikes_model.remove(self.dislikes[thing])
-            del self.dislikes[thing]
+            self.dislikes_list_view.remove_row(self.dislikes_iters[thing])
+            del self.dislikes_iters[thing]
 
         action.set_state(state)
 
-    def on_recommend_item(self, _action, _state, menu):
+    def on_recommend_item(self, _action, _state, list_view):
 
-        column = 1 if menu.parent == self.recommendations_list_view else 0
-        item = self.get_selected_item(menu.parent, column)
+        column = 1 if list_view == self.recommendations_list_view else 0
+        item = self.get_selected_item(list_view, column)
         self.core.interests.request_item_recommendations(item)
         self.core.interests.request_item_similar_users(item)
 
-    def on_recommend_search(self, _action, _state, menu):
+    def on_recommend_search(self, _action, _state, list_view):
 
-        column = 1 if menu.parent == self.recommendations_list_view else 0
-        item = self.get_selected_item(menu.parent, column)
+        column = 1 if list_view == self.recommendations_list_view else 0
+        item = self.get_selected_item(list_view, column)
         self.recommend_search(item)
 
     def on_recommendations_clicked(self, *_args):
 
-        if not self.likes and not self.dislikes:
+        if not self.likes_iters and not self.dislikes_iters:
             self.core.interests.request_global_recommendations()
             return
 
@@ -307,12 +280,10 @@ class Interests(UserInterface):
         else:
             self.recommendations_label.set_label(_("Recommendations"))
 
-        self.recommendations_model.clear()
+        self.recommendations_list_view.clear()
 
         for thing, rating in recommendations:
-            self.recommendations_model.insert_with_valuesv(
-                -1, self.recommendations_column_numbers, [humanize(rating), thing, rating]
-            )
+            self.recommendations_list_view.add_row([humanize(rating), thing, rating])
 
     def global_recommendations(self, msg):
         self.set_recommendations(msg.recommendations + msg.unrecommendations)
@@ -330,15 +301,12 @@ class Interests(UserInterface):
         else:
             self.similar_users_label.set_label(_("Similar Users"))
 
-        self.recommendation_users_model.clear()
-        self.recommendation_users = {}
+        self.similar_users_list_view.clear()
+        self.similar_users_iters.clear()
 
         for user in users:
-            iterator = self.recommendation_users_model.insert_with_valuesv(
-                -1, self.recommendation_users_column_numbers,
-                [get_status_icon(0), user, "", "0", 0, 0, 0]
-            )
-            self.recommendation_users[user] = iterator
+            iterator = self.similar_users_list_view.add_row([get_status_icon(0), user, "", "0", 0, 0, 0])
+            self.similar_users_iters[user] = iterator
 
             # Request user status, speed and number of shared files
             self.core.watch_user(user, force_update=True)
@@ -351,7 +319,7 @@ class Interests(UserInterface):
 
     def get_user_status(self, msg):
 
-        iterator = self.recommendation_users.get(msg.user)
+        iterator = self.similar_users_iters.get(msg.user)
 
         if iterator is None:
             return
@@ -361,12 +329,12 @@ class Interests(UserInterface):
         if status_icon is None:
             return
 
-        self.recommendation_users_model.set_value(iterator, 0, status_icon)
-        self.recommendation_users_model.set_value(iterator, 4, msg.status)
+        self.similar_users_list_view.set_row_value(iterator, 0, status_icon)
+        self.similar_users_list_view.set_row_value(iterator, 4, msg.status)
 
     def get_user_stats(self, msg):
 
-        iterator = self.recommendation_users.get(msg.user)
+        iterator = self.similar_users_iters.get(msg.user)
 
         if iterator is None:
             return
@@ -380,24 +348,24 @@ class Interests(UserInterface):
         files = msg.files
         h_files = humanize(msg.files)
 
-        self.recommendation_users_model.set_value(iterator, 2, h_speed)
-        self.recommendation_users_model.set_value(iterator, 3, h_files)
-        self.recommendation_users_model.set_value(iterator, 5, GObject.Value(GObject.TYPE_UINT, avgspeed))
-        self.recommendation_users_model.set_value(iterator, 6, GObject.Value(GObject.TYPE_UINT, files))
+        self.similar_users_list_view.set_row_value(iterator, 2, h_speed)
+        self.similar_users_list_view.set_row_value(iterator, 3, h_files)
+        self.similar_users_list_view.set_row_value(iterator, 5, GObject.Value(GObject.TYPE_UINT, avgspeed))
+        self.similar_users_list_view.set_row_value(iterator, 6, GObject.Value(GObject.TYPE_UINT, files))
 
     @staticmethod
     def get_selected_item(treeview, column=0):
 
-        model, iterator = treeview.get_selection().get_selected()
+        iterators = treeview.get_selected_rows()
 
-        if iterator is None:
+        if not iterators:
             return None
 
-        return model.get_value(iterator, column)
+        return treeview.get_row_value(iterators[0], column)
 
-    def on_popup_r_menu(self, menu, widget):
+    def on_popup_r_menu(self, menu, *_args):
 
-        item = self.get_selected_item(widget, column=1)
+        item = self.get_selected_item(self.recommendations_list_view, column=1)
 
         menu.actions[_("I _Like This")].set_state(
             GLib.Variant("b", item in config.sections["interests"]["likes"])
@@ -406,31 +374,31 @@ class Interests(UserInterface):
             GLib.Variant("b", item in config.sections["interests"]["dislikes"])
         )
 
-    def on_r_row_activated(self, treeview, _path, _column):
+    def on_r_row_activated(self, *_args):
 
-        item = self.get_selected_item(treeview, column=1)
+        item = self.get_selected_item(self.recommendations_list_view, column=1)
 
         if item is not None:
             self.core.interests.request_item_recommendations(item)
             self.core.interests.request_item_similar_users(item)
 
-    def on_popup_ru_menu(self, menu, widget):
+    def on_popup_ru_menu(self, menu, *_args):
 
-        user = self.get_selected_item(widget, column=1)
+        user = self.get_selected_item(self.similar_users_list_view, column=1)
         menu.set_user(user)
         menu.toggle_user_items()
 
-    def on_ru_row_activated(self, treeview, _path, _column):
+    def on_ru_row_activated(self, *_args):
 
-        user = self.get_selected_item(treeview, column=1)
+        user = self.get_selected_item(self.similar_users_list_view, column=1)
 
         if user is not None:
             self.core.privatechats.show_user(user)
             self.frame.change_main_page(self.frame.private_page)
 
     @staticmethod
-    def on_tooltip(widget, pos_x, pos_y, _keyboard_mode, tooltip):
-        return show_user_status_tooltip(widget, pos_x, pos_y, tooltip, 4)
+    def on_tooltip(list_view, pos_x, pos_y, _keyboard_mode, tooltip):
+        return list_view.show_user_status_tooltip(pos_x, pos_y, tooltip, column=4)
 
     def update_visuals(self):
 
