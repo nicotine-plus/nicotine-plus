@@ -120,7 +120,7 @@ class ChatHistory(Popover):
         for widget in self.__dict__.values():
             update_widget_visuals(widget)
 
-    def on_row_activated(self, list_view, iterator):
+    def on_row_activated(self, list_view, iterator, _column_id):
         username = list_view.get_row_value(iterator, 0)
 
         self.core.privatechat.show_user(username)
