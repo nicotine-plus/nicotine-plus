@@ -133,21 +133,6 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkMenuButton" id="room_wall_button">
-                            <property name="visible">True</property>
-                            <property name="tooltip-text" translatable="yes">Room wall</property>
-                            <child>
-                              <object class="GtkImage">
-                                <property name="visible">True</property>
-                                <property name="icon-name">view-list-symbolic</property>
-                              </object>
-                            </child>
-                            <style>
-                              <class name="image-button"/>
-                            </style>
-                          </object>
-                        </child>
-                        <child>
                           <object class="GtkMenuButton" id="help_button">
                             <property name="visible">True</property>
                             <property name="tooltip-text" translatable="yes">Chat room command help</property>
@@ -160,6 +145,14 @@
                             <style>
                               <class name="image-button"/>
                             </style>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkCheckButton" id="log_toggle">
+                            <property name="label" translatable="yes">_Log</property>
+                            <property name="visible">True</property>
+                            <property name="use-underline">True</property>
+                            <signal name="toggled" handler="on_log_toggled"/>
                           </object>
                         </child>
                       </object>
@@ -236,27 +229,46 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkBox" id="room_options_container">
+                  <object class="GtkBox" id="users_action_row">
                     <property name="visible">True</property>
-                    <property name="orientation">vertical</property>
                     <property name="margin-start">8</property>
-                    <property name="margin-end">6</property>
-                    <property name="margin-top">6</property>
-                    <property name="margin-bottom">6</property>
-                    <property name="spacing">4</property>
+                    <property name="margin-end">8</property>
+                    <property name="margin-top">8</property>
+                    <property name="margin-bottom">8</property>
+                    <property name="spacing">6</property>
                     <child>
                       <object class="GtkCheckButton" id="auto_join_toggle">
                         <property name="label" translatable="yes">_Auto-join Room</property>
                         <property name="visible">True</property>
+                        <property name="hexpand">True</property>
                         <property name="use-underline">True</property>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkCheckButton" id="log_toggle">
-                        <property name="label" translatable="yes">_Log Conversation</property>
+                      <object class="GtkMenuButton" id="room_wall_button">
                         <property name="visible">True</property>
-                        <property name="use-underline">True</property>
-                        <signal name="toggled" handler="on_log_toggled"/>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="visible">True</property>
+                            <property name="spacing">6</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="visible">True</property>
+                                <property name="icon-name">view-list-symbolic</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">R_oom Wall</property>
+                                <property name="use-underline">True</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <style>
+                          <class name="image-text-button"/>
+                        </style>
                       </object>
                     </child>
                   </object>
