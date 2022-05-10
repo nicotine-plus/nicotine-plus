@@ -23,9 +23,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk
-
 from pynicotine.config import config
+from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.transferlist import TransferList
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
@@ -51,7 +50,7 @@ class Downloads(TransferList):
 
         TransferList.__init__(self, frame, core, transfer_type="download")
 
-        if Gtk.get_major_version() >= 4:
+        if GTK_API_VERSION >= 4:
             frame.downloads_content.append(self.container)
         else:
             frame.downloads_content.add(self.container)

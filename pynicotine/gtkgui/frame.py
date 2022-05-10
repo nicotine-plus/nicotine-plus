@@ -32,6 +32,7 @@ from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine.config import config
+from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.chatrooms import ChatRooms
 from pynicotine.gtkgui.dialogs.about import About
 from pynicotine.gtkgui.dialogs.fastconfigure import FastConfigure
@@ -219,7 +220,7 @@ class NicotineFrame(UserInterface):
 
         self.header_bar.pack_end(self.header_end)
 
-        if Gtk.get_major_version() >= 4:
+        if GTK_API_VERSION >= 4:
             self.header_bar.set_show_title_buttons(True)
 
             self.horizontal_paned.set_resize_start_child(True)
@@ -254,7 +255,7 @@ class NicotineFrame(UserInterface):
         """ Configuration """
 
         config.load_config()
-        config.gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())
+        config.gtk_version = "%s.%s.%s" % (GTK_API_VERSION, Gtk.get_minor_version(), Gtk.get_micro_version())
         log.add(_("Loading %(program)s %(version)s"), {"program": "GTK", "version": config.gtk_version})
 
         """ Icons """
@@ -313,7 +314,7 @@ class NicotineFrame(UserInterface):
         self.window.connect("notify::visible", self.on_window_visible_changed)
 
         # Auto-away mode
-        if Gtk.get_major_version() >= 4:
+        if GTK_API_VERSION >= 4:
             self.gesture_click = Gtk.GestureClick()
             self.window.add_controller(self.gesture_click)
 
@@ -331,7 +332,7 @@ class NicotineFrame(UserInterface):
         self.gesture_click.connect("pressed", self.on_cancel_auto_away)
 
         # System window close (X)
-        if Gtk.get_major_version() >= 4:
+        if GTK_API_VERSION >= 4:
             self.window.connect("close-request", self.on_close_request)
         else:
             self.window.connect("delete-event", self.on_close_request)
@@ -341,7 +342,7 @@ class NicotineFrame(UserInterface):
 
         main_icon = get_icon("n")
 
-        if main_icon and Gtk.get_major_version() == 3:
+        if main_icon and GTK_API_VERSION == 3:
             icon_data = ICON_THEME.lookup_by_gicon(main_icon, 128, 0).load_icon()
             self.window.set_default_icon(icon_data)
         else:
@@ -352,7 +353,7 @@ class NicotineFrame(UserInterface):
                                      height=config.sections["ui"]["height"])
 
         # Set main window position
-        if Gtk.get_major_version() == 3:
+        if GTK_API_VERSION == 3:
             x_pos = config.sections["ui"]["xposition"]
             y_pos = config.sections["ui"]["yposition"]
 
@@ -454,7 +455,7 @@ class NicotineFrame(UserInterface):
         self.privatechat.clear_notifications()
         self.on_cancel_auto_away()
 
-        if Gtk.get_major_version() == 3 and window.get_urgency_hint():
+        if GTK_API_VERSION == 3 and window.get_urgency_hint():
             window.set_urgency_hint(False)
 
     def on_window_visible_changed(self, *_args):
@@ -462,7 +463,7 @@ class NicotineFrame(UserInterface):
 
     def save_window_state(self):
 
-        if Gtk.get_major_version() >= 4:
+        if GTK_API_VERSION >= 4:
             width, height = self.window.get_default_size()
         else:
             width, height = self.window.get_size()
@@ -484,7 +485,7 @@ class NicotineFrame(UserInterface):
 
         self.window.present()
 
-        if Gtk.get_major_version() == 3:
+        if GTK_API_VERSION == 3:
             # Fix for Windows where minimized window is not shown when unhiding from tray
             self.window.deiconify()
 
@@ -662,7 +663,7 @@ class NicotineFrame(UserInterface):
 
         if mode == "always":
 
-            if Gtk.get_major_version() >= 4:
+            if GTK_API_VERSION >= 4:
                 self.buddy_list_container.append(self.userlist.container)
             else:
                 self.buddy_list_container.add(self.userlist.container)
@@ -673,7 +674,7 @@ class NicotineFrame(UserInterface):
 
         if mode == "chatrooms":
 
-            if Gtk.get_major_version() >= 4:
+            if GTK_API_VERSION >= 4:
                 self.chatrooms_buddy_list_container.append(self.userlist.container)
             else:
                 self.chatrooms_buddy_list_container.add(self.userlist.container)
@@ -684,7 +685,7 @@ class NicotineFrame(UserInterface):
 
         self.userlist.toolbar.hide()
 
-        if Gtk.get_major_version() >= 4:
+        if GTK_API_VERSION >= 4:
             self.userlist_content.append(self.userlist.container)
         else:
             self.userlist_content.add(self.userlist.container)
@@ -1138,7 +1139,7 @@ class NicotineFrame(UserInterface):
 
     def on_menu(self, *_args):
 
-        if Gtk.get_major_version() >= 4:
+        if GTK_API_VERSION >= 4:
             self.header_menu.popup()
         else:
             self.header_menu.set_active(not self.header_menu.get_active())
@@ -1154,7 +1155,7 @@ class NicotineFrame(UserInterface):
             self.application.set_accels_for_action("app.menu", ["F10"])
             self.window.set_show_menubar(False)
 
-            if Gtk.get_major_version() == 3:
+            if GTK_API_VERSION == 3:
                 # Avoid "Untitled window" in certain desktop environments
                 self.header_bar.set_title(self.window.get_title())
 
@@ -1164,7 +1165,7 @@ class NicotineFrame(UserInterface):
         end_widget = getattr(self, page_id + "_end")
         end_widget.get_parent().remove(end_widget)
 
-        if Gtk.get_major_version() >= 4:
+        if GTK_API_VERSION >= 4:
             self.header_title.append(title_widget)
             self.header_end_container.append(end_widget)
         else:
@@ -1184,7 +1185,7 @@ class NicotineFrame(UserInterface):
 
         toolbar = getattr(self, self.current_page_id + "_toolbar_contents")
 
-        if Gtk.get_major_version() >= 4:
+        if GTK_API_VERSION >= 4:
             toolbar.append(title_widget)
             toolbar.append(end_widget)
         else:
@@ -1268,7 +1269,7 @@ class NicotineFrame(UserInterface):
         current_page = notebook.get_nth_page(notebook.get_current_page())
 
         # Hide container widget on previous page for a performance boost
-        if Gtk.get_major_version() >= 4:
+        if GTK_API_VERSION >= 4:
             current_page.get_first_child().hide()
             page.get_first_child().show()
         else:
@@ -1503,7 +1504,7 @@ class NicotineFrame(UserInterface):
         tab_position = config.sections["ui"]["tabmain"]
         expand = tab_position in ("Top", "Bottom")
 
-        if Gtk.get_major_version() >= 4:
+        if GTK_API_VERSION >= 4:
             self.notebook.get_page(page).set_property("tab-expand", expand)
         else:
             self.notebook.child_set_property(page, "tab-expand", expand)

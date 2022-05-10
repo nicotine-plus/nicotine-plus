@@ -34,6 +34,7 @@ from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine.config import config
+from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
 from pynicotine.gtkgui.widgets.filechooser import FileChooserSave
 from pynicotine.gtkgui.widgets.filechooser import FolderChooser
@@ -1500,7 +1501,7 @@ class UserInterfaceFrame(UserInterface):
             icon = Gtk.Image(gicon=icon_data, pixel_size=pixel_size, visible=True)
             label = Gtk.Label(label=label, visible=True)
 
-            if Gtk.get_major_version() >= 4:
+            if GTK_API_VERSION >= 4:
                 box.append(icon)   # pylint: disable=no-member
                 box.append(label)  # pylint: disable=no-member
             else:
@@ -2292,7 +2293,7 @@ class PluginsFrame(UserInterface):
             )
             scrolled_window.set_property("child", self.primary_container)
 
-            if Gtk.get_major_version() >= 4:
+            if GTK_API_VERSION >= 4:
                 self.get_content_area().append(scrolled_window)  # pylint: disable=no-member
             else:
                 self.get_content_area().add(scrolled_window)     # pylint: disable=no-member
@@ -2314,7 +2315,7 @@ class PluginsFrame(UserInterface):
 
             label = self.generate_label(description)
 
-            if Gtk.get_major_version() >= 4:
+            if GTK_API_VERSION >= 4:
                 container.append(label)                   # pylint: disable=no-member
                 container.append(child_widget)            # pylint: disable=no-member
                 self.primary_container.append(container)  # pylint: disable=no-member
@@ -2357,7 +2358,7 @@ class PluginsFrame(UserInterface):
             remove_button = Gtk.Button(label=_("Remove"), visible=True)
             remove_button.connect("clicked", self.on_remove, treeview)
 
-            if Gtk.get_major_version() >= 4:
+            if GTK_API_VERSION >= 4:
                 box.append(add_button)                    # pylint: disable=no-member
                 box.append(edit_button)                   # pylint: disable=no-member
                 box.append(remove_button)                 # pylint: disable=no-member
@@ -2420,7 +2421,7 @@ class PluginsFrame(UserInterface):
                     self.generate_widget_container("", button)
                     self.settings.set_widget(button, config.sections["plugins"][config_name][name])
 
-                    if Gtk.get_major_version() >= 4:
+                    if GTK_API_VERSION >= 4:
                         button.get_last_child().set_wrap(True)  # pylint: disable=no-member
                     else:
                         button.get_child().set_line_wrap(True)  # pylint: disable=no-member
@@ -2433,7 +2434,7 @@ class PluginsFrame(UserInterface):
                     group_radios = []
 
                     for option_label in data["options"]:
-                        widget_class = Gtk.CheckButton if Gtk.get_major_version() >= 4 else Gtk.RadioButton
+                        widget_class = Gtk.CheckButton if GTK_API_VERSION >= 4 else Gtk.RadioButton
                         radio = widget_class(group=last_radio, label=option_label, visible=True)
 
                         if not last_radio:
@@ -2442,7 +2443,7 @@ class PluginsFrame(UserInterface):
                         last_radio = radio
                         group_radios.append(radio)
 
-                        if Gtk.get_major_version() >= 4:
+                        if GTK_API_VERSION >= 4:
                             box.append(radio)  # pylint: disable=no-member
                         else:
                             box.add(radio)     # pylint: disable=no-member
@@ -2756,7 +2757,7 @@ class Preferences(UserInterface):
         )
 
         # Scroll to focused widgets
-        if Gtk.get_major_version() == 3:
+        if GTK_API_VERSION == 3:
             self.viewport.set_focus_vadjustment(self.content.get_vadjustment())
             self.ok_button.set_can_default(True)
 
@@ -2785,7 +2786,7 @@ class Preferences(UserInterface):
             icon = Gtk.Image(icon_name=icon_name, visible=True)
             label = Gtk.Label(label=label, xalign=0, visible=True)
 
-            if Gtk.get_major_version() >= 4:
+            if GTK_API_VERSION >= 4:
                 box.append(icon)   # pylint: disable=no-member
                 box.append(label)  # pylint: disable=no-member
             else:
@@ -3187,7 +3188,7 @@ class Preferences(UserInterface):
         old_page = self.viewport.get_child()
 
         if old_page:
-            if Gtk.get_major_version() >= 4:
+            if GTK_API_VERSION >= 4:
                 self.viewport.set_child(None)
             else:
                 self.viewport.remove(old_page)
@@ -3198,13 +3199,13 @@ class Preferences(UserInterface):
 
             for obj in page.__dict__.values():
                 if isinstance(obj, Gtk.CheckButton):
-                    if Gtk.get_major_version() >= 4:
+                    if GTK_API_VERSION >= 4:
                         obj.get_last_child().set_wrap(True)
                     else:
                         obj.get_child().set_line_wrap(True)
 
                 elif isinstance(obj, (Gtk.ComboBoxText, Gtk.SpinButton)):
-                    if Gtk.get_major_version() >= 4:
+                    if GTK_API_VERSION >= 4:
                         scroll_controller = Gtk.EventControllerScroll(flags=Gtk.EventControllerScrollFlags.VERTICAL)
                         scroll_controller.connect("scroll", self.on_widget_scroll)
                         obj.add_controller(scroll_controller)

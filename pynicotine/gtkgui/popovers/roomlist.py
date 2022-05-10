@@ -20,6 +20,7 @@ from gi.repository import Gtk
 from gi.repository import Pango
 
 from pynicotine.config import config
+from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
@@ -85,7 +86,7 @@ class RoomList(UserInterface):
         Accelerator("<Primary>f", self.popover, self.on_search_accelerator)
         CompletionEntry(frame.chatrooms_entry, self.room_model, column=0)
 
-        if Gtk.get_major_version() >= 4:
+        if GTK_API_VERSION >= 4:
             frame.room_list_button.get_first_child().get_style_context().add_class("arrow-button")
 
         frame.room_list_button.set_popover(self.popover)

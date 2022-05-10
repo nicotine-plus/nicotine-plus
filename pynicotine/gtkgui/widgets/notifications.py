@@ -24,9 +24,9 @@ from ctypes import Structure, byref, sizeof
 
 from gi.repository import Gdk
 from gi.repository import Gio
-from gi.repository import Gtk
 
 from pynicotine.config import config
+from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.theme import get_icon
 from pynicotine.logfacility import log
 
@@ -49,7 +49,7 @@ class Notifications:
         if self.core.notifications.add_hilite_item(location, item):
             self.frame.tray_icon.set_icon()
 
-        if (Gtk.get_major_version() == 3 and config.sections["ui"]["urgencyhint"]
+        if (GTK_API_VERSION == 3 and config.sections["ui"]["urgencyhint"]
                 and not self.frame.window.is_active()):
             self.frame.window.set_urgency_hint(True)
 

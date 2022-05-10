@@ -19,6 +19,7 @@
 from gi.repository import Gtk
 
 from pynicotine.config import config
+from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.dialogs import dialog_show
 from pynicotine.gtkgui.widgets.dialogs import set_dialog_properties
 from pynicotine.gtkgui.widgets.theme import get_icon
@@ -346,7 +347,7 @@ Ukrainian
         if not main_icon:
             self.dialog.set_logo_icon_name(config.application_id)
 
-        if Gtk.get_major_version() >= 4:
+        if GTK_API_VERSION >= 4:
             self.dialog.connect("close-request", lambda x: x.destroy())
 
             if main_icon:

@@ -20,9 +20,9 @@
 
 from gi.repository import GLib
 from gi.repository import GObject
-from gi.repository import Gtk
 
 from pynicotine.config import config
+from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.treeview import TreeView
@@ -50,7 +50,7 @@ class Interests(UserInterface):
             self.similar_users_list_container
         ) = self.widgets
 
-        if Gtk.get_major_version() >= 4:
+        if GTK_API_VERSION >= 4:
             frame.interests_container.append(self.container)
         else:
             frame.interests_container.add(self.container)

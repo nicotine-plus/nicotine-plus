@@ -19,6 +19,8 @@
 from gi.repository import Gdk
 from gi.repository import Gtk
 
+from pynicotine.gtkgui.application import GTK_API_VERSION
+
 
 """ Accelerator """
 
@@ -27,7 +29,7 @@ class Accelerator:
 
     def __init__(self, accelerator, widget, callback, user_data=None):
 
-        if Gtk.get_major_version() >= 4:
+        if GTK_API_VERSION >= 4:
             shortcut_controller = Gtk.ShortcutController()
             shortcut_controller.set_scope(Gtk.ShortcutScope.LOCAL)
             shortcut_controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
@@ -56,7 +58,7 @@ class Accelerator:
         if not key:
             return keycodes, mods
 
-        if Gtk.get_major_version() >= 4:
+        if GTK_API_VERSION >= 4:
             _valid, keys = Gdk.Display.get_default().map_keyval(key)
         else:
             keymap = Gdk.Keymap.get_for_display(Gdk.Display.get_default())
@@ -86,7 +88,7 @@ class Accelerator:
         return self.callback(widget, None, self.user_data)
 
 
-if Gtk.get_major_version() != 4:
+if GTK_API_VERSION != 4:
     ALL_MODIFIERS = (Accelerator.parse_accelerator("<Primary>")[1]
                      | Accelerator.parse_accelerator("<Shift>")[1]
                      | Accelerator.parse_accelerator("<Alt>")[1])
