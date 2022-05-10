@@ -57,7 +57,7 @@ class TreeView:
         self.initialise_columns(columns)
 
         Accelerator("<Primary>c", self.widget, self.on_copy_cell_data_accelerator)
-        PopupMenu(self.frame, self.widget, callback=self._press_header, connect_events=False)
+        self.widget.column_menu = PopupMenu(self.frame, self.widget, callback=self._press_header, connect_events=False)
 
         if multi_select:
             if Gtk.get_major_version() >= 4:
