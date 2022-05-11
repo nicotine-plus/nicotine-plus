@@ -372,7 +372,7 @@ class AppIndicatorImplementation(BaseImplementation):
 
     def hide(self):
 
-        if self.is_visible():
+        if not self.is_visible():
             return
 
         self.tray_icon.set_status(self.implementation_class.IndicatorStatus.PASSIVE)
@@ -417,7 +417,7 @@ class StatusIconImplementation(BaseImplementation):
 
     def hide(self):
 
-        if self.is_visible():
+        if not self.is_visible():
             return
 
         self.tray_icon.set_visible(False)
@@ -456,8 +456,8 @@ class TrayIcon:
                     self.implementation = StatusIconImplementation(self.frame, self.core)
 
                 except AttributeError:
-                    self.implementation = BaseImplementation(self.frame, self.core)
                     self.available = False
+                    return
 
             self.set_server_actions_sensitive(False)
             self.set_alternative_speed_limit(config.sections["transfers"]["usealtlimits"])
@@ -473,34 +473,48 @@ class TrayIcon:
         self.hide()
 
     def update_show_hide_label(self):
-        self.implementation.update_show_hide_label()
+        if self.implementation:
+            self.implementation.update_show_hide_label()
 
     def set_away(self, enable):
-        self.implementation.set_away(enable)
+        if self.implementation:
+            self.implementation.set_away(enable)
 
     def set_connected(self, enable):
-        self.implementation.set_connected(enable)
+        if self.implementation:
+            self.implementation.set_connected(enable)
 
     def set_server_actions_sensitive(self, status):
-        self.implementation.set_server_actions_sensitive(status)
+        if self.implementation:
+            self.implementation.set_server_actions_sensitive(status)
 
     def set_download_status(self, status):
-        self.implementation.set_download_status(status)
+        if self.implementation:
+            self.implementation.set_download_status(status)
 
     def set_upload_status(self, status):
-        self.implementation.set_upload_status(status)
+        if self.implementation:
+            self.implementation.set_upload_status(status)
 
     def set_alternative_speed_limit(self, enable):
-        self.implementation.set_alternative_speed_limit(enable)
+        if self.implementation:
+            self.implementation.set_alternative_speed_limit(enable)
 
     def set_icon(self, status=None, force_update=False):
-        self.implementation.set_icon(status, force_update)
+        if self.implementation:
+            self.implementation.set_icon(status, force_update)
 
     def is_visible(self):
-        return self.implementation.is_visible()
+
+        if self.implementation:
+            return self.implementation.is_visible()
+
+        return False
 
     def show(self):
-        self.implementation.show()
+        if self.implementation:
+            self.implementation.show()
 
     def hide(self):
-        self.implementation.hide()
+        if self.implementation:
+            self.implementation.hide()
