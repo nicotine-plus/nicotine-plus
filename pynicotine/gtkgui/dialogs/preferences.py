@@ -49,7 +49,6 @@ from pynicotine.gtkgui.widgets.theme import get_icon
 from pynicotine.gtkgui.widgets.theme import set_dark_mode
 from pynicotine.gtkgui.widgets.theme import set_global_font
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
-from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
@@ -2187,6 +2186,7 @@ class PluginsFrame(UserInterface):
         def __init__(self, parent, name):
 
             self.settings = parent.preferences
+            self.frame = parent.frame
 
             # Build the window
             Gtk.Dialog.__init__(
@@ -2261,15 +2261,14 @@ class PluginsFrame(UserInterface):
                 hscrollbar_policy=Gtk.PolicyType.AUTOMATIC, vscrollbar_policy=Gtk.PolicyType.AUTOMATIC, visible=True
             )
 
-            self.option_widgets[name] = treeview = Gtk.TreeView(model=Gtk.ListStore(str), visible=True)
-
-            scrolled_window.set_property("child", treeview)
-            frame_container.set_property("child", scrolled_window)
-
-            initialise_columns(
-                self.settings.frame, None, self.option_widgets[name],
-                [description, description, -1, "text", None]
+            self.option_widgets[name] = treeview = TreeView(
+                self.frame, parent=scrolled_window,
+                columns=[
+                    {"column_id": description, "column_type": "text", "title": description, "width": -1,
+                     "sort_column": 0}
+                ]
             )
+            frame_container.set_property("child", scrolled_window)
             self.settings.set_widget(treeview, value)
 
             box = Gtk.Box(spacing=6, visible=True)
@@ -2443,9 +2442,7 @@ class PluginsFrame(UserInterface):
             if not value:
                 return
 
-            model = treeview.get_model()
-            iterator = model.append([value])
-            treeview.set_cursor(model.get_path(iterator))
+            treeview.add_row([value])
 
         def on_add(self, _widget, treeview, description):
 
@@ -2468,34 +2465,27 @@ class PluginsFrame(UserInterface):
             if not value:
                 return
 
-            treeview, path = data
-            model = treeview.get_model()
-            model.set_value(model.get_iter(path), 0, value)
+            treeview, iterator = data
+            treeview.set_row_value(iterator, 0, value)
 
         def on_edit(self, _widget, treeview, description):
 
-            model, paths = treeview.get_selection().get_selected_rows()
-
-            for path in paths:
-                iterator = model.get_iter(path)
-                value = model.get_value(iterator, 0)
+            for iterator in treeview.get_selected_rows():
+                value = treeview.get_row_value(iterator, 0)
 
                 EntryDialog(
                     parent=self,
                     title=description,
                     callback=self.on_edit_response,
-                    callback_data=(treeview, path),
+                    callback_data=(treeview, iterator),
                     default=value
                 ).show()
                 return
 
         @staticmethod
         def on_remove(_widget, treeview):
-
-            selection = treeview.get_selection()
-            iterator = selection.get_selected()[1]
-            if iterator is not None:
-                treeview.get_model().remove(iterator)
+            for iterator in reversed(treeview.get_selected_rows()):
+                treeview.remove_row(iterator)
 
         def on_response(self, _dialog, response_id):
 
@@ -2803,19 +2793,8 @@ class Preferences(UserInterface):
         if isinstance(widget, Gtk.FontButton):
             return widget.get_font()
 
-        if isinstance(widget, Gtk.TreeView) and widget.get_model().get_n_columns() == 1:
-            wlist = []
-            iterator = widget.get_model().get_iter_first()
-
-            while iterator:
-                word = widget.get_model().get_value(iterator, 0)
-
-                if word is not None:
-                    wlist.append(word)
-
-                iterator = widget.get_model().iter_next(iterator)
-
-            return wlist
+        if isinstance(widget, TreeView):
+            return list(widget.iterators)
 
         if isinstance(widget, FileChooserButton):
             return widget.get_path()
@@ -2888,13 +2867,6 @@ class Preferences(UserInterface):
 
         elif isinstance(widget, Gtk.FontButton):
             widget.set_font(value)
-
-        elif isinstance(widget, Gtk.TreeView) and isinstance(value, list) and widget.get_model().get_n_columns() == 1:
-            model = widget.get_model()
-            column_numbers = list(range(model.get_n_columns()))
-
-            for item in value:
-                model.insert_with_valuesv(-1, column_numbers, [str(item)])
 
         elif isinstance(widget, TreeView):
             if isinstance(value, list):
