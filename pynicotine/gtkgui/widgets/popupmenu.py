@@ -235,11 +235,13 @@ class PopupMenu:
             return
 
         try:
+            event = None
+
             if controller:
                 sequence = controller.get_current_sequence()
-                event = controller.get_last_event(sequence)
-            else:
-                event = None
+
+                if sequence:
+                    event = controller.get_last_event(sequence)
 
             menu.popup_at_pointer(event)
 
@@ -249,7 +251,7 @@ class PopupMenu:
 
     """ Events """
 
-    def _callback(self, controller, pos_x, pos_y):
+    def _callback(self, controller=None, pos_x=None, pos_y=None):
 
         menu = None
         menu_model = self
@@ -287,7 +289,7 @@ class PopupMenu:
         return self._callback(controller, pos_x, pos_y)
 
     def _callback_menu(self, *_args):
-        self._callback(None, None, None)
+        self._callback()
         return True
 
     def connect_events(self, parent):
