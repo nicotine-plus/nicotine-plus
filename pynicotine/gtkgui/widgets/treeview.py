@@ -141,7 +141,6 @@ class TreeView:
 
             if columns[i].get_visible():
                 column = columns[i]
-                column.set_sizing(Gtk.TreeViewColumnSizing.AUTOSIZE)
                 column.set_resizable(False)
                 column.set_fixed_width(-1)
                 break
@@ -152,7 +151,6 @@ class TreeView:
         and make it resizable again. """
 
         prev_column = columns[prev_index]
-        prev_column.set_sizing(Gtk.TreeViewColumnSizing.FIXED)
         prev_column.set_resizable(True)
 
     def _header_toggle(self, _action, _state, columns, index):
@@ -245,11 +243,11 @@ class TreeView:
                 # All visible columns processed
                 break
 
-            width = column_data["width"]
             column_type = column_data["column_type"]
             sort_column = column_data["sort_column"]
             default_sort_type = column_data.get("default_sort_column")
             iterator_key = column_data.get("iterator_key")
+            width = column_data.get("width")
 
             if default_sort_type:
                 default_sort_column = i
@@ -270,7 +268,7 @@ class TreeView:
                     pass
 
             if not isinstance(width, int):
-                width = 0
+                width = None
 
             xalign = 0
 
@@ -310,13 +308,8 @@ class TreeView:
                 else:
                     column = Gtk.TreeViewColumn(column_id, renderer, gicon=i)
 
-            if width == -1:
-                column.set_resizable(False)
-                column.set_sizing(Gtk.TreeViewColumnSizing.AUTOSIZE)
-
-            else:
+            if width is not None:
                 column.set_resizable(True)
-                column.set_min_width(0)
 
                 if width == 0:
                     column.set_sizing(Gtk.TreeViewColumnSizing.GROW_ONLY)
@@ -736,7 +729,6 @@ def set_last_column_autosize(treeview):
 
         if columns[i].get_visible():
             column = columns[i]
-            column.set_sizing(Gtk.TreeViewColumnSizing.AUTOSIZE)
             column.set_resizable(False)
             column.set_fixed_width(-1)
             break
@@ -747,7 +739,6 @@ def set_last_column_autosize(treeview):
     and make it resizable again. """
 
     prev_column = columns[prev_index]
-    prev_column.set_sizing(Gtk.TreeViewColumnSizing.FIXED)
     prev_column.set_resizable(True)
 
 

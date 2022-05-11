@@ -44,8 +44,7 @@ class ChatHistory(UserInterface):
             columns=[
                 {"column_id": "user", "column_type": "text", "title": _("User"), "width": 175,
                  "sort_column": 0},
-                {"column_id": "latest_message", "column_type": "text", "title": _("Latest Message"), "width": -1,
-                 "sort_column": 1}
+                {"column_id": "latest_message", "column_type": "text", "title": _("Latest Message"), "sort_column": 1}
             ]
         )
 

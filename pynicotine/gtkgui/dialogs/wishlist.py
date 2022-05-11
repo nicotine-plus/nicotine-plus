@@ -61,8 +61,8 @@ class WishList(UserInterface):
         self.list_view = TreeView(
             frame, parent=self.list_container, multi_select=True, activate_row_callback=self.on_edit_wish,
             columns=[
-                {"column_id": "wish", "column_type": "text", "title": _("Wish"), "width": -1,
-                 "sort_column": 0, "default_sort_column": "ascending"}
+                {"column_id": "wish", "column_type": "text", "title": _("Wish"), "sort_column": 0,
+                 "default_sort_column": "ascending"}
             ]
         )
 

@@ -245,8 +245,8 @@ class DownloadsFrame(UserInterface):
         self.filter_list_view = TreeView(
             self.frame, parent=self.FilterView, multi_select=True, activate_row_callback=self.on_edit_filter,
             columns=[
-                {"column_id": "filter", "column_type": "text", "title": _("Filter"), "width": -1,
-                 "sort_column": 0, "expand_column": True},
+                {"column_id": "filter", "column_type": "text", "title": _("Filter"), "sort_column": 0,
+                 "expand_column": True},
                 {"column_id": "escaped", "column_type": "toggle", "title": _("Escaped"), "width": 0,
                  "sort_column": 1, "toggle_callback": self.on_toggle_escaped}
             ]
@@ -782,8 +782,7 @@ class IgnoredUsersFrame(UserInterface):
         self.ignored_users_list_view = TreeView(
             self.frame, parent=self.IgnoredUsers, multi_select=True,
             columns=[
-                {"column_id": "username", "column_type": "text", "title": _("Username"), "width": -1,
-                 "sort_column": 0}
+                {"column_id": "username", "column_type": "text", "title": _("Username"), "sort_column": 0}
             ]
         )
 
@@ -791,10 +790,10 @@ class IgnoredUsersFrame(UserInterface):
         self.ignored_ips_list_view = TreeView(
             self.frame, parent=self.IgnoredIPs, multi_select=True,
             columns=[
-                {"column_id": "ip_address", "column_type": "text", "title": _("IP Address"), "width": -1,
-                 "sort_column": 0, "expand_column": True},
-                {"column_id": "user", "column_type": "text", "title": _("User"), "width": -1,
-                 "sort_column": 1, "expand_column": True}
+                {"column_id": "ip_address", "column_type": "text", "title": _("IP Address"), "sort_column": 0,
+                 "expand_column": True},
+                {"column_id": "user", "column_type": "text", "title": _("User"), "sort_column": 1,
+                 "expand_column": True}
             ]
         )
 
@@ -918,8 +917,7 @@ class BannedUsersFrame(UserInterface):
         self.banned_users_list_view = TreeView(
             self.frame, parent=self.BannedList, multi_select=True,
             columns=[
-                {"column_id": "username", "column_type": "text", "title": _("Username"), "width": -1,
-                 "sort_column": 0}
+                {"column_id": "username", "column_type": "text", "title": _("Username"), "sort_column": 0}
             ]
         )
 
@@ -927,10 +925,10 @@ class BannedUsersFrame(UserInterface):
         self.banned_ips_list_view = TreeView(
             self.frame, parent=self.BlockedList, multi_select=True,
             columns=[
-                {"column_id": "ip_address", "column_type": "text", "title": _("IP Address"), "width": -1,
-                 "sort_column": 0, "expand_column": True},
-                {"column_id": "user", "column_type": "text", "title": _("User"), "width": -1,
-                 "sort_column": 1, "expand_column": True}
+                {"column_id": "ip_address", "column_type": "text", "title": _("IP Address"), "sort_column": 0,
+                 "expand_column": True},
+                {"column_id": "user", "column_type": "text", "title": _("User"), "sort_column": 1,
+                 "expand_column": True}
             ]
         )
 
@@ -1084,8 +1082,7 @@ class ChatsFrame(UserInterface):
         self.censor_list_view = TreeView(
             self.frame, parent=self.CensorList, multi_select=True, activate_row_callback=self.on_edit_censored,
             columns=[
-                {"column_id": "pattern", "column_type": "text", "title": _("Pattern"), "width": -1,
-                 "sort_column": 0}
+                {"column_id": "pattern", "column_type": "text", "title": _("Pattern"), "sort_column": 0}
             ]
         )
 
@@ -1093,10 +1090,10 @@ class ChatsFrame(UserInterface):
         self.replacement_list_view = TreeView(
             self.frame, parent=self.ReplacementList, multi_select=True, activate_row_callback=self.on_edit_replacement,
             columns=[
-                {"column_id": "pattern", "column_type": "text", "title": _("Pattern"), "width": -1,
-                 "sort_column": 0, "expand_column": True},
-                {"column_id": "replacement", "column_type": "text", "title": _("Replacement"), "width": -1,
-                 "sort_column": 1, "expand_column": True}
+                {"column_id": "pattern", "column_type": "text", "title": _("Pattern"), "sort_column": 0,
+                 "expand_column": True},
+                {"column_id": "replacement", "column_type": "text", "title": _("Replacement"), "sort_column": 1,
+                 "expand_column": True}
             ]
         )
 
@@ -1889,10 +1886,10 @@ class UrlHandlersFrame(UserInterface):
         self.protocol_list_view = TreeView(
             self.frame, parent=self.ProtocolHandlers, multi_select=True, activate_row_callback=self.on_edit_handler,
             columns=[
-                {"column_id": "protocol", "column_type": "text", "title": _("Protocol"), "width": -1,
-                 "sort_column": 0, "expand_column": True, "iterator_key": True},
-                {"column_id": "command", "column_type": "text", "title": _("Command"), "width": -1,
-                 "sort_column": 1, "expand_column": True}
+                {"column_id": "protocol", "column_type": "text", "title": _("Protocol"), "sort_column": 0,
+                 "expand_column": True, "iterator_key": True},
+                {"column_id": "command", "column_type": "text", "title": _("Command"), "sort_column": 1,
+                 "expand_column": True}
             ]
         )
 
@@ -2264,8 +2261,7 @@ class PluginsFrame(UserInterface):
             self.option_widgets[name] = treeview = TreeView(
                 self.frame, parent=scrolled_window,
                 columns=[
-                    {"column_id": description, "column_type": "text", "title": description, "width": -1,
-                     "sort_column": 0}
+                    {"column_id": description, "column_type": "text", "title": description, "sort_column": 0}
                 ]
             )
             frame_container.set_property("child", scrolled_window)
@@ -2530,8 +2526,7 @@ class PluginsFrame(UserInterface):
                 # Visible columns
                 {"column_id": "enabled", "column_type": "toggle", "title": _("Enabled"), "width": 0,
                  "sort_column": 0, "toggle_callback": self.on_plugin_toggle, "hide_header": True},
-                {"column_id": "plugin", "column_type": "text", "title": _("Plugin"), "width": -1,
-                 "sort_column": 1},
+                {"column_id": "plugin", "column_type": "text", "title": _("Plugin"), "sort_column": 1},
 
                 # Hidden data columns
                 {"column_id": "plugin_hidden", "data_type": str}

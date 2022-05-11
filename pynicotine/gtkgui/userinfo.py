@@ -178,8 +178,8 @@ class UserInfo(UserInterface):
         self.likes_list_view = TreeView(
             self.frame, parent=self.likes_list_container,
             columns=[
-                {"column_id": "likes", "column_type": "text", "title": _("Likes"), "width": -1,
-                 "sort_column": 0, "default_sort_column": "ascending"}
+                {"column_id": "likes", "column_type": "text", "title": _("Likes"), "sort_column": 0,
+                 "default_sort_column": "ascending"}
             ]
         )
 
@@ -187,8 +187,8 @@ class UserInfo(UserInterface):
         self.dislikes_list_view = TreeView(
             self.frame, parent=self.dislikes_list_container,
             columns=[
-                {"column_id": "dislikes", "column_type": "text", "title": _("Dislikes"), "width": -1,
-                 "sort_column": 0, "default_sort_column": "ascending"}
+                {"column_id": "dislikes", "column_type": "text", "title": _("Dislikes"), "sort_column": 0,
+                 "default_sort_column": "ascending"}
             ]
         )
 

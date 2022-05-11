@@ -64,16 +64,16 @@ class Interests(UserInterface):
         self.likes_list_view = TreeView(
             frame, parent=self.likes_list_container,
             columns=[
-                {"column_id": "likes", "column_type": "text", "title": _("Likes"), "width": -1,
-                 "sort_column": 0, "default_sort_column": "ascending"}
+                {"column_id": "likes", "column_type": "text", "title": _("Likes"), "sort_column": 0,
+                 "default_sort_column": "ascending"}
             ]
         )
 
         self.dislikes_list_view = TreeView(
             frame, parent=self.dislikes_list_container,
             columns=[
-                {"column_id": "dislikes", "column_type": "text", "title": _("Dislikes"), "width": -1,
-                 "sort_column": 0, "default_sort_column": "ascending"}
+                {"column_id": "dislikes", "column_type": "text", "title": _("Dislikes"), "sort_column": 0,
+                 "default_sort_column": "ascending"}
             ]
         )
 
@@ -84,8 +84,7 @@ class Interests(UserInterface):
                 # Visible columns
                 {"column_id": "rating", "column_type": "number", "title": _("Rating"), "width": 0,
                  "sort_column": 2, "default_sort_column": "descending"},
-                {"column_id": "item", "column_type": "text", "title": _("Item"), "width": -1,
-                 "sort_column": 1},
+                {"column_id": "item", "column_type": "text", "title": _("Item"), "sort_column": 1},
 
                 # Hidden data columns
                 {"column_id": "rating_hidden", "data_type": int}
@@ -97,14 +96,14 @@ class Interests(UserInterface):
             search_column=1, activate_row_callback=self.on_ru_row_activated, tooltip_callback=self.on_tooltip,
             columns=[
                 # Visible columns
-                {"column_id": "status", "title": _("Status"), "width": 25,
-                 "column_type": "icon", "sort_column": 4, "hide_header": True},
-                {"column_id": "user", "title": _("User"), "width": 135,
-                 "column_type": "text", "sort_column": 1, "expand_column": True, "iterator_key": True},
-                {"column_id": "speed", "title": _("Speed"), "width": 60,
-                 "column_type": "number", "sort_column": 5, "expand_column": True},
-                {"column_id": "files", "title": _("Files"), "width": -1,
-                 "column_type": "number", "sort_column": 6, "expand_column": True},
+                {"column_id": "status", "column_type": "icon", "title": _("Status"), "width": 25,
+                 "sort_column": 4, "hide_header": True},
+                {"column_id": "user", "column_type": "text", "title": _("User"), "width": 135,
+                 "sort_column": 1, "expand_column": True, "iterator_key": True},
+                {"column_id": "speed", "column_type": "number", "title": _("Speed"), "width": 60,
+                 "sort_column": 5, "expand_column": True},
+                {"column_id": "files", "column_type": "number", "title": _("Files"), "sort_column": 6,
+                 "expand_column": True},
 
                 # Hidden data columns
                 {"column_id": "status_hidden", "data_type": int},
