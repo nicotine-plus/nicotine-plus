@@ -247,7 +247,7 @@ class DownloadsFrame(UserInterface):
             columns=[
                 {"column_id": "filter", "column_type": "text", "title": _("Filter"), "width": -1,
                  "sort_column": 0},
-                {"column_id": "escaped", "column_type": "toggle", "title": _("Escaped"), "width": 40,
+                {"column_id": "escaped", "column_type": "toggle", "title": _("Escaped"), "width": 0,
                  "sort_column": 1, "toggle_callback": self.on_toggle_escaped}
             ]
         )
@@ -480,10 +480,10 @@ class SharesFrame(UserInterface):
         self.shares_list_view = TreeView(
             self.frame, parent=self.Shares, multi_select=True, activate_row_callback=self.on_edit_shared_dir,
             columns=[
-                {"column_id": "virtual_folder", "column_type": "text", "title": _("Virtual Folder"), "width": 165,
-                 "sort_column": 0},
-                {"column_id": "folder", "column_type": "text", "title": _("Folder"), "width": -1,
-                 "sort_column": 1},
+                {"column_id": "virtual_folder", "column_type": "text", "title": _("Virtual Folder"), "width": 1,
+                 "sort_column": 0, "expand_column": True},
+                {"column_id": "folder", "column_type": "text", "title": _("Folder"), "width": 150,
+                 "sort_column": 1, "expand_column": True},
                 {"column_id": "buddies", "column_type": "toggle", "title": _("Buddy-only"), "width": 0,
                  "sort_column": 2, "toggle_callback": self.cell_toggle_callback},
             ]
@@ -1093,7 +1093,7 @@ class ChatsFrame(UserInterface):
         self.replacement_list_view = TreeView(
             self.frame, parent=self.ReplacementList, multi_select=True, activate_row_callback=self.on_edit_replacement,
             columns=[
-                {"column_id": "pattern", "column_type": "text", "title": _("Pattern"), "width": 150,
+                {"column_id": "pattern", "column_type": "text", "title": _("Pattern"), "width": -1,
                  "sort_column": 0},
                 {"column_id": "replacement", "column_type": "text", "title": _("Replacement"), "width": -1,
                  "sort_column": 1}
