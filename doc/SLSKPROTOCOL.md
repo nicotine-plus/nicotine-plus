@@ -75,35 +75,35 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
 
 ### File Attribute Types
 
-| Code | Attribute (unit) |
-| ---- | ---------------- |
-| 0    | Bitrate (kbps)   |
-| 1    | Length (seconds) |
-| 2    | VBR (0 or 1)     |
-| 3    | Encoder (unused) |
-| 4    | Sample Rate (Hz) |
-| 5    | Bit Depth (bits) |
+| Code | Attribute (unit)   |
+| ---- | ------------------ |
+| 0    | Bitrate (kbps)     |
+| 1    | Duration (seconds) |
+| 2    | VBR (0 or 1)       |
+| 3    | Encoder (unused)   |
+| 4    | Sample Rate (Hz)   |
+| 5    | Bit Depth (bits)   |
 
 #### File Attribute Combinations
 
 These combinations are actively used by clients. Other combinations are discouraged, unless the official client makes changes.
 
   - Soulseek NS, SoulseekQt (2015-2-21 and earlier), Nicotine+, Museek+, SoulSeeX, slskd (lossy formats):
-      - {0: *bitrate*, 1: *length*, 2: *VBR*}
+      - {0: *bitrate*, 1: *duration*, 2: *VBR*}
 
   - SoulseekQt (2015-2-21 and earlier):
       - {0: *bitrate*, 2: *VBR*}
 
   - SoulseekQt (2015-6-12 and later):
       - {0: *bitrate*}
-      - {1: *length*}
-      - {0: *bitrate*, 1: *length*} (MP3, OGG, WMA, M4A)
+      - {1: *duration*}
+      - {0: *bitrate*, 1: *duration*} (MP3, OGG, WMA, M4A)
       - {4: *sample rate*, 5: *bit depth*}
-      - {1: *length*, 4: *sample rate*, 5: *bit depth*} (FLAC, WAV, APE)
-      - {0: *bitrate*, 1: *length*, 4: *sample rate*, 5: *bit depth*} (WV)
+      - {1: *duration*, 4: *sample rate*, 5: *bit depth*} (FLAC, WAV, APE)
+      - {0: *bitrate*, 1: *duration*, 4: *sample rate*, 5: *bit depth*} (WV)
 
   - slskd (lossless formats):
-      - {1: *length*, 4: *sample rate*, 5: *bit depth*}
+      - {1: *duration*, 4: *sample rate*, 5: *bit depth*}
 
 # Server Messages
 
