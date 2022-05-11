@@ -197,11 +197,11 @@ class TreeView:
         default_sort_type = None
         data_types = []
 
-        for column in columns:
-            data_type = column.get("data_type")
+        for column_data in columns:
+            data_type = column_data.get("data_type")
 
             if not data_type:
-                column_type = column["column_type"]
+                column_type = column_data["column_type"]
 
                 if column_type == "icon":
                     data_type = Gio.Icon
@@ -245,12 +245,13 @@ class TreeView:
 
             column_type = column_data["column_type"]
             sort_column = column_data["sort_column"]
-            default_sort_type = column_data.get("default_sort_column")
             iterator_key = column_data.get("iterator_key")
             width = column_data.get("width")
+            sort_type = column_data.get("default_sort_column")
 
-            if default_sort_type:
-                default_sort_column = i
+            if sort_type:
+                default_sort_column = sort_column
+                default_sort_type = Gtk.SortType.DESCENDING if sort_type == "descending" else Gtk.SortType.ASCENDING
 
             if iterator_key:
                 self.iterator_key_column = i
@@ -349,9 +350,8 @@ class TreeView:
         self.widget.connect("columns-changed", self._set_last_column_autosize)
         self.widget.emit("columns-changed")
 
-        if default_sort_type is not None:
-            sort_type = Gtk.SortType.DESCENDING if default_sort_type == "descending" else Gtk.SortType.ASCENDING
-            self.model.set_sort_column_id(default_sort_column, sort_type)
+        if default_sort_column is not None:
+            self.model.set_sort_column_id(default_sort_column, default_sort_type)
 
         self.widget.set_model(self.model)
 
