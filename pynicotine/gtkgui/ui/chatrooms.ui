@@ -219,7 +219,6 @@
                     <property name="visible">True</property>
                     <child>
                       <object class="GtkScrolledWindow">
-                        <property name="width-request">400</property>
                         <property name="visible">True</property>
                         <property name="vexpand">True</property>
                         <child>
