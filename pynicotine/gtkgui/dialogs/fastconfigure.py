@@ -94,10 +94,10 @@ class FastConfigure(UserInterface):
         self.shares_list_view = TreeView(
             frame, parent=self.shares_list_container, multi_select=True,
             columns=[
-                {"column_id": "virtual_folder", "column_type": "text", "title": _("Virtual Folder"), "width": 0,
-                 "sort_column": 0},
-                {"column_id": "folder", "column_type": "text", "title": _("Folder"), "width": 0,
-                 "sort_column": 1}
+                {"column_id": "virtual_folder", "column_type": "text", "title": _("Virtual Folder"), "width": 125,
+                 "sort_column": 0, "expand_column": True},
+                {"column_id": "folder", "column_type": "text", "title": _("Folder"), "sort_column": 1,
+                 "expand_column": True}
             ]
         )
 
@@ -169,7 +169,12 @@ class FastConfigure(UserInterface):
         ).show()
 
     def on_remove_share(self, *_args):
+
         for iterator in reversed(self.shares_list_view.get_selected_rows()):
+            virtual = self.shares_list_view.get_row_value(iterator, 0)
+            folder = self.shares_list_view.get_row_value(iterator, 1)
+
+            self.shared_folders.remove((virtual, folder))
             self.shares_list_view.remove_row(iterator)
 
     def on_page_change(self, *_args):
