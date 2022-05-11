@@ -243,6 +243,16 @@ class DownloadsFrame(UserInterface):
         self.download_dir = FileChooserButton(self.DownloadDir, preferences.dialog, "folder")
         self.upload_dir = FileChooserButton(self.UploadDir, preferences.dialog, "folder")
 
+        self.filter_list_view = TreeView(
+            self.frame, parent=self.FilterView, multi_select=True, activate_row_callback=self.on_edit_filter,
+            columns=[
+                {"column_id": "filter", "column_type": "text", "title": _("Filter"), "width": -1,
+                 "sort_column": 0},
+                {"column_id": "escaped", "column_type": "toggle", "title": _("Escaped"), "width": 40,
+                 "sort_column": 1, "toggle_callback": self.on_toggle_escaped}
+            ]
+        )
+
         self.options = {
             "transfers": {
                 "autoclear_downloads": self.AutoclearFinished,
@@ -253,7 +263,7 @@ class DownloadsFrame(UserInterface):
                 "incompletedir": self.incomplete_dir,
                 "downloaddir": self.download_dir,
                 "uploaddir": self.upload_dir,
-                "downloadfilters": self.FilterView,
+                "downloadfilters": self.filter_list_view,
                 "enablefilters": self.DownloadFilter,
                 "downloadlimit": self.DownloadSpeed,
                 "downloadlimitalt": self.DownloadSpeedAlternative,
@@ -264,43 +274,10 @@ class DownloadsFrame(UserInterface):
             }
         }
 
-        self.filterlist = Gtk.ListStore(
-            str,
-            bool
-        )
-
-        self.filtersiters = {}
-        self.downloadfilters = []
-
-        self.column_numbers = list(range(self.filterlist.get_n_columns()))
-        cols = initialise_columns(
-            self.frame, None, self.FilterView,
-            ["filter", _("Filter"), -1, "text", None],
-            ["escaped", _("Escaped"), 40, "toggle", None]
-        )
-
-        cols["filter"].set_sort_column_id(0)
-        cols["escaped"].set_sort_column_id(1)
-        renderers = cols["escaped"].get_cells()
-
-        for render in renderers:
-            render.connect('toggled', self.cell_toggle_callback, self.filterlist, 1)
-
-        self.FilterView.set_model(self.filterlist)
-
     def set_settings(self):
 
+        self.filter_list_view.clear()
         self.preferences.set_widgets_data(self.options)
-
-        self.filtersiters.clear()
-        self.filterlist.clear()
-
-        if config.sections["transfers"]["downloadfilters"]:
-            for dfilter in config.sections["transfers"]["downloadfilters"]:
-                dfilter, escaped = dfilter
-                self.filtersiters[dfilter] = self.filterlist.insert_with_valuesv(
-                    -1, self.column_numbers, [str(dfilter), bool(escaped)]
-                )
 
     def get_settings(self):
 
@@ -312,6 +289,14 @@ class DownloadsFrame(UserInterface):
         if not self.RemoteDownloads.get_active():
             uploadallowed = 0
 
+        download_filters = []
+
+        for dfilter, iterator in self.filter_list_view.iterators.items():
+            escaped = self.filter_list_view.get_row_value(iterator, 1)
+            download_filters.append([dfilter, int(escaped)])
+
+        download_filters.sort()
+
         return {
             "transfers": {
                 "autoclear_downloads": self.AutoclearFinished.get_active(),
@@ -322,7 +307,7 @@ class DownloadsFrame(UserInterface):
                 "incompletedir": self.incomplete_dir.get_path(),
                 "downloaddir": self.download_dir.get_path(),
                 "uploaddir": self.upload_dir.get_path(),
-                "downloadfilters": self.get_filter_list(),
+                "downloadfilters": download_filters,
                 "enablefilters": self.DownloadFilter.get_active(),
                 "downloadlimit": self.DownloadSpeed.get_value_as_int(),
                 "downloadlimitalt": self.DownloadSpeedAlternative.get_value_as_int(),
@@ -333,6 +318,13 @@ class DownloadsFrame(UserInterface):
             }
         }
 
+    def on_toggle_escaped(self, list_view, iterator):
+
+        value = list_view.get_row_value(iterator, 1)
+        list_view.set_row_value(iterator, 1, not value)
+
+        self.on_verify_filter()
+
     def on_add_filter_response(self, dialog, response_id, _data):
 
         dfilter = dialog.get_entry_value()
@@ -342,12 +334,13 @@ class DownloadsFrame(UserInterface):
         if response_id != Gtk.ResponseType.OK:
             return
 
-        if dfilter in self.filtersiters:
-            self.filterlist.set(self.filtersiters[dfilter], 0, dfilter, 1, escaped)
+        iterator = self.filter_list_view.iterators.get(dfilter)
+
+        if iterator is not None:
+            self.filter_list_view.set_row_value(iterator, 0, dfilter)
+            self.filter_list_view.set_row_value(iterator, 1, escaped)
         else:
-            self.filtersiters[dfilter] = self.filterlist.insert_with_valuesv(
-                -1, self.column_numbers, [dfilter, escaped]
-            )
+            self.filter_list_view.add_row([dfilter, escaped])
 
         self.on_verify_filter()
 
@@ -360,24 +353,10 @@ class DownloadsFrame(UserInterface):
             callback=self.on_add_filter_response,
             option_value=True,
             option_label="Escape this filter?",
-            droplist=list(self.filtersiters.keys())
+            droplist=self.filter_list_view.iterators
         ).show()
 
-    def get_filter_list(self):
-
-        self.downloadfilters = []
-
-        download_filters = sorted(self.filtersiters.keys())
-
-        for dfilter in download_filters:
-            iterator = self.filtersiters[dfilter]
-            dfilter = self.filterlist.get_value(iterator, 0)
-            escaped = self.filterlist.get_value(iterator, 1)
-            self.downloadfilters.append([dfilter, int(escaped)])
-
-        return self.downloadfilters
-
-    def on_edit_filter_response(self, dialog, response_id, _data):
+    def on_edit_filter_response(self, dialog, response_id, iterator):
 
         new_dfilter = dialog.get_entry_value()
         escaped = dialog.get_option_value()
@@ -386,96 +365,58 @@ class DownloadsFrame(UserInterface):
         if response_id != Gtk.ResponseType.OK:
             return
 
-        dfilter = self.get_selected_filter()
-
-        if not dfilter:
-            return
-
-        iterator = self.filtersiters[dfilter]
-
-        if new_dfilter in self.filtersiters:
-            self.filterlist.set(self.filtersiters[new_dfilter], 0, new_dfilter, 1, escaped)
+        if new_dfilter in self.filter_list_view.iterators:
+            self.filter_list_view.set_row_value(iterator, 0, new_dfilter)
+            self.filter_list_view.set_row_value(iterator, 1, escaped)
         else:
-            self.filtersiters[new_dfilter] = self.filterlist.insert_with_valuesv(
-                -1, self.column_numbers, [new_dfilter, escaped]
-            )
-            del self.filtersiters[dfilter]
-            self.filterlist.remove(iterator)
+            self.filter_list_view.remove_row(iterator)
+            self.filter_list_view.add_row([new_dfilter, escaped])
 
         self.on_verify_filter()
 
     def on_edit_filter(self, *_args):
 
-        dfilter = self.get_selected_filter()
+        for iterator in self.filter_list_view.get_selected_rows():
+            dfilter = self.filter_list_view.get_row_value(iterator, 0)
+            escaped = self.filter_list_view.get_row_value(iterator, 1)
 
-        if not dfilter:
+            EntryDialog(
+                parent=self.preferences.dialog,
+                title=_("Edit Download Filter"),
+                message=_("Modify the following download filter:"),
+                callback=self.on_edit_filter_response,
+                callback_data=iterator,
+                default=dfilter,
+                option_value=escaped,
+                option_label="Escape this filter?",
+                droplist=self.filter_list_view.iterators
+            ).show()
             return
-
-        iterator = self.filtersiters[dfilter]
-        escapedvalue = self.filterlist.get_value(iterator, 1)
-
-        EntryDialog(
-            parent=self.preferences.dialog,
-            title=_("Edit Download Filter"),
-            message=_("Modify the following download filter:"),
-            callback=self.on_edit_filter_response,
-            default=dfilter,
-            option_value=escapedvalue,
-            option_label="Escape this filter?",
-            droplist=list(self.filtersiters.keys())
-        ).show()
-
-    def get_selected_filter(self):
-
-        model, paths = self.FilterView.get_selection().get_selected_rows()
-
-        for path in paths:
-            iterator = model.get_iter(path)
-            return model.get_value(iterator, 0)
-
-        return None
 
     def on_remove_filter(self, *_args):
 
-        dfilter = self.get_selected_filter()
-
-        if not dfilter:
-            return
-
-        iterator = self.filtersiters[dfilter]
-        self.filterlist.remove(iterator)
-
-        del self.filtersiters[dfilter]
+        for iterator in reversed(self.filter_list_view.get_selected_rows()):
+            self.filter_list_view.remove_row(iterator)
 
         self.on_verify_filter()
 
     def on_default_filters(self, *_args):
 
-        self.filtersiters = {}
-        self.filterlist.clear()
+        self.filter_list_view.clear()
 
-        for dfilter in config.defaults["transfers"]["downloadfilters"]:
-            dfilter, escaped = dfilter
-            self.filtersiters[dfilter] = self.filterlist.insert_with_valuesv(
-                -1, self.column_numbers, [dfilter, escaped]
-            )
+        for filter_row in config.defaults["transfers"]["downloadfilters"]:
+            self.filter_list_view.add_row(filter_row, select_row=False)
 
         self.on_verify_filter()
 
     def on_verify_filter(self, *_args):
 
+        failed = {}
         outfilter = "(\\\\("
 
-        download_filters = sorted(self.filtersiters.keys())
-
-        proccessedfilters = []
-        failed = {}
-
-        for dfilter in download_filters:
-
-            iterator = self.filtersiters[dfilter]
-            dfilter = self.filterlist.get_value(iterator, 0)
-            escaped = self.filterlist.get_value(iterator, 1)
+        for dfilter, iterator in self.filter_list_view.iterators.items():
+            dfilter = self.filter_list_view.get_row_value(iterator, 0)
+            escaped = self.filter_list_view.get_row_value(iterator, 1)
 
             if escaped:
                 dfilter = re.escape(dfilter)
@@ -487,11 +428,11 @@ class DownloadsFrame(UserInterface):
             try:
                 re.compile("(" + dfilter + ")")
                 outfilter += dfilter
-                proccessedfilters.append(dfilter)
+
             except Exception as error:
                 failed[dfilter] = error
 
-            if filter is not download_filters[-1]:
+            if filter is not list(self.filter_list_view.iterators.keys())[-1]:
                 outfilter += "|"
 
         outfilter += ")$)"
@@ -519,15 +460,6 @@ class DownloadsFrame(UserInterface):
             self.VerifiedLabel.set_markup("<span foreground=\"#e04f5e\">%s</span>" % error)
         else:
             self.VerifiedLabel.set_text(_("Filters Successful"))
-
-    def cell_toggle_callback(self, _widget, index, _treeview, pos):
-
-        iterator = self.filterlist.get_iter(index)
-        value = self.filterlist.get_value(iterator, pos)
-
-        self.filterlist.set(iterator, pos, not value)
-
-        self.on_verify_filter()
 
 
 class SharesFrame(UserInterface):
@@ -575,10 +507,10 @@ class SharesFrame(UserInterface):
         self.bshareddirs = config.sections["transfers"]["buddyshared"][:]
 
         for virtual, actual, *_unused in self.bshareddirs:
-            self.shares_list_view.add_row([str(virtual), str(actual), True])
+            self.shares_list_view.add_row([str(virtual), str(actual), True], select_row=False)
 
         for virtual, actual, *_unused in self.shareddirs:
-            self.shares_list_view.add_row([str(virtual), str(actual), False])
+            self.shares_list_view.add_row([str(virtual), str(actual), False], select_row=False)
 
         self.rescan_required = False
 
@@ -638,9 +570,7 @@ class SharesFrame(UserInterface):
             virtual_final = virtual + str(counter)
             counter += 1
 
-        iterator = self.shares_list_view.add_row([virtual_final, folder, False])
-        self.shares_list_view.select_row(iterator)
-
+        self.shares_list_view.add_row([virtual_final, folder, False])
         self.shareddirs.append((virtual_final, folder))
         self.rescan_required = True
 
@@ -1296,8 +1226,7 @@ class ChatsFrame(UserInterface):
 
         if pattern and pattern not in self.censored_patterns:
             self.censored_patterns.append(pattern)
-            iterator = self.censor_list_view.add_row([pattern])
-            self.censor_list_view.select_row(iterator)
+            self.censor_list_view.add_row([pattern])
 
     def on_add_censored(self, *_args):
 
@@ -1363,8 +1292,7 @@ class ChatsFrame(UserInterface):
             return
 
         self.replacements[pattern] = replacement
-        iterator = self.replacement_list_view.add_row([pattern, replacement])
-        self.replacement_list_view.select_row(iterator)
+        self.replacement_list_view.add_row([pattern, replacement])
 
     def on_add_replacement(self, *_args):
 
@@ -1959,12 +1887,11 @@ class UrlHandlersFrame(UserInterface):
         ]
 
         self.protocols = {}
-        self.protocol_iters = {}
         self.protocol_list_view = TreeView(
             self.frame, parent=self.ProtocolHandlers, multi_select=True, activate_row_callback=self.on_edit_handler,
             columns=[
                 {"column_id": "protocol", "column_type": "text", "title": _("Protocol"), "width": -1,
-                 "sort_column": 0},
+                 "sort_column": 0, "iterator_key": True},
                 {"column_id": "command", "column_type": "text", "title": _("Command"), "width": -1,
                  "sort_column": 1}
             ]
@@ -1973,7 +1900,6 @@ class UrlHandlersFrame(UserInterface):
     def set_settings(self):
 
         self.protocol_list_view.clear()
-        self.protocol_iters.clear()
         self.protocols.clear()
 
         self.preferences.set_widgets_data(self.options)
@@ -1984,7 +1910,7 @@ class UrlHandlersFrame(UserInterface):
             if command[-1:] == "&":
                 command = command[:-1].rstrip()
 
-            self.protocol_iters[protocol] = self.protocol_list_view.add_row([str(protocol), str(command)])
+            self.protocol_list_view.add_row([str(protocol), str(command)], select_row=False)
 
     def get_settings(self):
 
@@ -2012,14 +1938,14 @@ class UrlHandlersFrame(UserInterface):
         if not protocol or not command:
             return
 
-        iterator = self.protocol_iters.get(protocol)
+        iterator = self.protocol_list_view.iterators.get(protocol)
         self.protocols[protocol] = command
 
         if iterator:
             self.protocol_list_view.set_row_value(iterator, 1, command)
             return
 
-        self.protocol_iters[protocol] = self.protocol_list_view.add_row([protocol, command])
+        self.protocol_list_view.add_row([protocol, command])
 
     def on_add_handler(self, *_args):
 
@@ -2072,7 +1998,6 @@ class UrlHandlersFrame(UserInterface):
             protocol = self.protocol_list_view.get_row_value(iterator, 0)
 
             self.protocol_list_view.remove_row(iterator)
-            del self.protocol_iters[protocol]
             del self.protocols[protocol]
 
 
@@ -2637,7 +2562,7 @@ class PluginsFrame(UserInterface):
 
             plugin_name = info.get('Name', plugin_id)
             enabled = (plugin_id in config.sections["plugins"]["enabled"])
-            self.plugin_list_view.add_row([enabled, plugin_name, plugin_id])
+            self.plugin_list_view.add_row([enabled, plugin_name, plugin_id], select_row=False)
 
             if enabled:
                 self.enabled_plugins.append(plugin_id)
@@ -2974,11 +2899,16 @@ class Preferences(UserInterface):
         elif isinstance(widget, TreeView):
             if isinstance(value, list):
                 for item in value:
-                    widget.add_row([str(item)])
+                    if isinstance(item, list):
+                        row = item
+                    else:
+                        row = [item]
+
+                    widget.add_row(row, select_row=False)
 
             elif isinstance(value, dict):
                 for item1, item2 in value.items():
-                    widget.add_row([str(item1), str(item2)])
+                    widget.add_row([str(item1), str(item2)], select_row=False)
 
         elif isinstance(widget, FileChooserButton):
             widget.set_path(value)

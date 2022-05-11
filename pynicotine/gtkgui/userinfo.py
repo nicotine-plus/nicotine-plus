@@ -202,15 +202,15 @@ class UserInfo(UserInterface):
         )
 
         def get_interest_items(list_view):
-            return (("$" + _("I _Like This"), self.on_like_recommendation, list_view),
-                    ("$" + _("I _Dislike This"), self.on_dislike_recommendation, list_view),
+            return (("$" + _("I _Like This"), self.frame.interests.on_like_recommendation, list_view),
+                    ("$" + _("I _Dislike This"), self.frame.interests.on_dislike_recommendation, list_view),
                     ("", None),
-                    ("#" + _("_Search for Item"), self.on_interest_recommend_search, list_view))
+                    ("#" + _("_Search for Item"), self.frame.interests.on_recommend_search, list_view))
 
-        popup = PopupMenu(self.frame, self.likes_list_view.widget, self.on_popup_interest_menu)
+        popup = PopupMenu(self.frame, self.likes_list_view.widget, self.on_popup_likes_menu)
         popup.add_items(*get_interest_items(self.likes_list_view))
 
-        popup = PopupMenu(self.frame, self.dislikes_list_view.widget, self.on_popup_interest_menu)
+        popup = PopupMenu(self.frame, self.dislikes_list_view.widget, self.on_popup_dislikes_menu)
         popup.add_items(*get_interest_items(self.dislikes_list_view))
 
         popup = PopupMenu(self.frame, self.picture_view)
@@ -426,38 +426,21 @@ class UserInfo(UserInterface):
         self.dislikes_list_view.clear()
 
         for like in msg.likes:
-            self.likes_list_view.add_row([like])
+            self.likes_list_view.add_row([like], select_row=False)
 
         for hate in msg.hates:
-            self.dislikes_list_view.add_row([hate])
+            self.dislikes_list_view.add_row([hate], select_row=False)
 
     """ Callbacks """
 
     def on_tab_popup(self, *_args):
         self.user_popup.toggle_user_items()
 
-    def on_popup_interest_menu(self, menu, list_view):
+    def on_popup_likes_menu(self, menu, *_args):
+        self.frame.interests.toggle_menu_items(menu, self.likes_list_view, column=0)
 
-        item = self.frame.interests.get_selected_item(list_view, column=0)
-
-        menu.actions[_("I _Like This")].set_state(
-            GLib.Variant("b", item in config.sections["interests"]["likes"])
-        )
-        menu.actions[_("I _Dislike This")].set_state(
-            GLib.Variant("b", item in config.sections["interests"]["dislikes"])
-        )
-
-    def on_like_recommendation(self, action, state, popup):
-        item = self.frame.interests.get_selected_item(popup.parent, column=0)
-        self.frame.interests.on_like_recommendation(action, state, item)
-
-    def on_dislike_recommendation(self, action, state, popup):
-        item = self.frame.interests.get_selected_item(popup.parent, column=0)
-        self.frame.interests.on_dislike_recommendation(action, state, item)
-
-    def on_interest_recommend_search(self, _action, _state, popup):
-        item = self.frame.interests.get_selected_item(popup.parent, column=0)
-        self.frame.interests.recommend_search(item)
+    def on_popup_dislikes_menu(self, menu, *_args):
+        self.frame.interests.toggle_menu_items(menu, self.dislikes_list_view, column=0)
 
     def on_send_message(self, *_args):
         self.core.privatechats.show_user(self.user)

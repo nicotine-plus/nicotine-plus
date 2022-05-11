@@ -433,17 +433,11 @@
                 <property name="visible">True</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkScrolledWindow">
+                  <object class="GtkScrolledWindow" id="FilterView">
                     <property name="visible">True</property>
                     <property name="height-request">200</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
-                    <child>
-                      <object class="GtkTreeView" id="FilterView">
-                        <property name="visible">True</property>
-                        <signal name="row-activated" handler="on_edit_filter"/>
-                      </object>
-                    </child>
                     <style>
                       <class name="border-bottom"/>
                     </style>

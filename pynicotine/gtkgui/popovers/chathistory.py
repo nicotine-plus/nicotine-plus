@@ -38,7 +38,6 @@ class ChatHistory(UserInterface):
 
         self.frame = frame
         self.core = core
-        self.iters = {}
 
         self.list_view = TreeView(
             frame, parent=self.list_container, activate_row_callback=self.on_row_activated,
@@ -86,14 +85,14 @@ class ChatHistory(UserInterface):
 
     def remove_user(self, username):
 
-        iterator = self.iters.get(username)
+        iterator = self.list_view.iterators.get(username)
 
         if iterator is not None:
             self.list_view.remove_row(iterator)
 
     def update_user(self, username, message):
         self.remove_user(username)
-        self.iters[username] = self.list_view.add_row([username, message])
+        self.list_view.add_row([username, message], select_row=False)
 
     def update_visuals(self):
         for widget in list(self.__dict__.values()):

@@ -57,7 +57,6 @@ class WishList(UserInterface):
         self.core = core
         self.searches = searches
         self.timer = None
-        self.wishes = {}
 
         self.list_view = TreeView(
             frame, parent=self.list_container, multi_select=True, activate_row_callback=self.on_edit_wish,
@@ -69,7 +68,7 @@ class WishList(UserInterface):
 
         for wish in config.sections["server"]["autosearch"]:
             wish = str(wish)
-            self.wishes[wish] = self.list_view.add_row([wish])
+            self.list_view.add_row([wish], select_row=False)
 
         CompletionEntry(self.wish_entry, self.list_view.model)
 
@@ -83,7 +82,7 @@ class WishList(UserInterface):
     def on_add_wish(self, *_args):
 
         wish = self.wish_entry.get_text()
-        wish_exists = (wish in self.wishes)
+        wish_exists = (wish in self.list_view.iterators)
         self.wish_entry.set_text("")
 
         self.core.search.add_wish(wish)
@@ -137,7 +136,7 @@ class WishList(UserInterface):
         dialog.destroy()
 
         if response_id == 2:
-            for wish in self.wishes.copy():
+            for wish in self.list_view.iterators.copy():
                 self.core.search.remove_wish(wish)
 
         self.wish_entry.grab_focus()
@@ -153,26 +152,26 @@ class WishList(UserInterface):
 
     def add_wish(self, wish):
 
-        if wish not in self.wishes:
+        if wish not in self.list_view.iterators:
             self.list_view.add_row([wish])
 
         self.update_wish_button(wish)
 
     def remove_wish(self, wish):
 
-        if wish in self.wishes:
-            self.list_view.remove_row(self.wishes[wish])
-            del self.wishes[wish]
+        iterator = self.list_view.iterators.get(wish)
+
+        if iterator is not None:
+            self.list_view.remove_row(iterator)
 
         self.update_wish_button(wish)
 
     def select_wish(self, wish):
 
-        wish_iterator = self.wishes.get(wish)
-        if wish_iterator is None:
-            return
+        iterator = self.list_view.iterators.get(wish)
 
-        self.list_view.select_row(wish_iterator)
+        if iterator is not None:
+            self.list_view.select_row(iterator)
 
     def set_interval(self, msg):
         self.core.search.do_wishlist_search_interval()
@@ -214,10 +213,11 @@ class WishList(UserInterface):
             self.list_view.unselect_all_rows()
             return
 
-        if text in self.wishes:
+        iterator = self.list_view.iterators.get(text)
+
+        if iterator is not None:
             # Highlight existing wish row
 
-            iterator = self.wishes[text]
             self.list_view.select_row(iterator)
             self.wish_entry.set_text("")
             return

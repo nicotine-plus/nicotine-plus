@@ -61,7 +61,6 @@ class Interests(UserInterface):
         self.populated_recommends = False
 
         # Columns
-        self.likes_iters = {}
         self.likes_list_view = TreeView(
             frame, parent=self.likes_list_container,
             columns=[
@@ -70,7 +69,6 @@ class Interests(UserInterface):
             ]
         )
 
-        self.dislikes_iters = {}
         self.dislikes_list_view = TreeView(
             frame, parent=self.dislikes_list_container,
             columns=[
@@ -94,7 +92,6 @@ class Interests(UserInterface):
             ]
         )
 
-        self.similar_users_iters = {}
         self.similar_users_list_view = TreeView(
             frame, parent=self.similar_users_list_container,
             search_column=1, activate_row_callback=self.on_ru_row_activated, tooltip_callback=self.on_tooltip,
@@ -103,7 +100,7 @@ class Interests(UserInterface):
                 {"column_id": "status", "title": _("Status"), "width": 25,
                  "column_type": "icon", "sort_column": 4, "hide_header": True},
                 {"column_id": "user", "title": _("User"), "width": 135,
-                 "column_type": "text", "sort_column": 1, "expand_header": True},
+                 "column_type": "text", "sort_column": 1, "expand_header": True, "iterator_key": True},
                 {"column_id": "speed", "title": _("Speed"), "width": 60,
                  "column_type": "number", "sort_column": 5, "expand_header": True},
                 {"column_id": "files", "title": _("Files"), "width": -1,
@@ -118,11 +115,11 @@ class Interests(UserInterface):
 
         for thing in config.sections["interests"]["likes"]:
             if thing and isinstance(thing, str):
-                self.likes_iters[thing] = self.likes_list_view.add_row([thing])
+                self.likes_list_view.add_row([thing], select_row=False)
 
         for thing in config.sections["interests"]["dislikes"]:
             if thing and isinstance(thing, str):
-                self.dislikes_iters[thing] = self.dislikes_list_view.add_row([thing])
+                self.dislikes_list_view.add_row([thing], select_row=False)
 
         # Popup menus
         self.til_popup_menu = popup = PopupMenu(self.frame, self.likes_list_view.widget)
@@ -143,8 +140,8 @@ class Interests(UserInterface):
 
         self.r_popup_menu = popup = PopupMenu(self.frame, self.recommendations_list_view.widget, self.on_popup_r_menu)
         popup.add_items(
-            ("$" + _("I _Like This"), self.on_like_recommendation),
-            ("$" + _("I _Dislike This"), self.on_dislike_recommendation),
+            ("$" + _("I _Like This"), self.on_like_recommendation, self.recommendations_list_view),
+            ("$" + _("I _Dislike This"), self.on_dislike_recommendation, self.recommendations_list_view),
             ("", None),
             ("#" + _("_Recommendations for Item"), self.on_recommend_item, self.recommendations_list_view),
             ("#" + _("_Search for Item"), self.on_recommend_search, self.recommendations_list_view)
@@ -181,90 +178,122 @@ class Interests(UserInterface):
 
         self.populated_recommends = True
 
+    def add_thing_i_like(self, item):
+
+        iterator = self.likes_list_view.iterators.get(item)
+
+        if iterator is None:
+            self.likes_list_view.add_row([item])
+
+    def add_thing_i_hate(self, item):
+
+        iterator = self.dislikes_list_view.iterators.get(item)
+
+        if iterator is None:
+            self.dislikes_list_view.add_row([item])
+
+    def remove_thing_i_like(self, item):
+
+        iterator = self.likes_list_view.iterators.get(item)
+
+        if iterator is not None:
+            self.likes_list_view.remove_row(iterator)
+
+    def remove_thing_i_hate(self, item):
+
+        iterator = self.dislikes_list_view.iterators.get(item)
+
+        if iterator is not None:
+            self.dislikes_list_view.remove_row(iterator)
+
     def recommend_search(self, item):
         self.frame.search_entry.set_text(item)
         self.frame.change_main_page(self.frame.search_page)
 
     def on_add_thing_i_like(self, widget, *_args):
 
-        thing = widget.get_text().lower()
+        item = widget.get_text().lower()
         widget.set_text("")
 
-        if self.core.interests.add_thing_i_like(thing):
-            self.likes_iters[thing] = self.likes_list_view.add_row([thing])
+        self.core.interests.add_thing_i_like(item)
 
     def on_add_thing_i_dislike(self, widget, *_args):
 
-        thing = widget.get_text().lower()
+        item = widget.get_text().lower()
         widget.set_text("")
 
-        if self.core.interests.add_thing_i_hate(thing):
-            self.dislikes_iters[thing] = self.dislikes_list_view.add_row([thing])
+        self.core.interests.add_thing_i_hate(item)
 
     def on_remove_thing_i_like(self, *_args):
 
-        thing = self.get_selected_item(self.likes_list_view, column=0)
+        for iterator in self.likes_list_view.get_selected_rows():
+            item = self.likes_list_view.get_row_value(iterator, 0)
 
-        if not self.core.interests.remove_thing_i_like(thing):
+            self.core.interests.remove_thing_i_like(item)
             return
-
-        self.likes_list_view.remove_row(self.likes_iters[thing])
-        del self.likes_iters[thing]
 
     def on_remove_thing_i_dislike(self, *_args):
 
-        thing = self.get_selected_item(self.dislikes_list_view, column=0)
+        for iterator in self.dislikes_list_view.get_selected_rows():
+            item = self.dislikes_list_view.get_row_value(iterator, 0)
 
-        if not self.core.interests.remove_thing_i_hate(thing):
+            self.core.interests.remove_thing_i_hate(item)
             return
 
-        self.dislikes_list_view.remove_row(self.dislikes_iters[thing])
-        del self.dislikes_iters[thing]
+    def on_like_recommendation(self, action, state, list_view):
 
-    def on_like_recommendation(self, action, state, thing=None):
+        column = 1 if list_view == self.recommendations_list_view else 0
 
-        if thing is None:
-            thing = self.get_selected_item(self.recommendations_list_view, column=1)
+        for iterator in list_view.get_selected_rows():
+            item = list_view.get_row_value(iterator, column)
 
-        if state.get_boolean() and self.core.interests.add_thing_i_like(thing):
-            self.likes_iters[thing] = self.likes_list_view.add_row([thing])
+            if state.get_boolean():
+                self.core.interests.add_thing_i_like(item)
+            else:
+                self.core.interests.remove_thing_i_like(item)
 
-        elif not state.get_boolean() and self.core.interests.remove_thing_i_like(thing):
-            self.likes_list_view.remove_row(self.likes_iters[thing])
-            del self.likes_iters[thing]
+            action.set_state(state)
+            return
 
-        action.set_state(state)
+    def on_dislike_recommendation(self, action, state, list_view):
 
-    def on_dislike_recommendation(self, action, state, thing=None):
+        column = 1 if list_view == self.recommendations_list_view else 0
 
-        if thing is None:
-            thing = self.get_selected_item(self.recommendations_list_view, column=1)
+        for iterator in list_view.get_selected_rows():
+            item = list_view.get_row_value(iterator, column)
 
-        if state.get_boolean() and thing and self.core.interests.add_thing_i_hate(thing):
-            self.dislikes_iters[thing] = self.dislikes_list_view.add_row([thing])
+            if state.get_boolean():
+                self.core.interests.add_thing_i_hate(item)
+            else:
+                self.core.interests.remove_thing_i_hate(item)
 
-        elif not state.get_boolean() and self.core.interests.remove_thing_i_hate(thing):
-            self.dislikes_list_view.remove_row(self.dislikes_iters[thing])
-            del self.dislikes_iters[thing]
-
-        action.set_state(state)
+            action.set_state(state)
+            return
 
     def on_recommend_item(self, _action, _state, list_view):
 
         column = 1 if list_view == self.recommendations_list_view else 0
-        item = self.get_selected_item(list_view, column)
-        self.core.interests.request_item_recommendations(item)
-        self.core.interests.request_item_similar_users(item)
+
+        for iterator in list_view.get_selected_rows():
+            item = list_view.get_row_value(iterator, column)
+
+            self.core.interests.request_item_recommendations(item)
+            self.core.interests.request_item_similar_users(item)
+            return
 
     def on_recommend_search(self, _action, _state, list_view):
 
         column = 1 if list_view == self.recommendations_list_view else 0
-        item = self.get_selected_item(list_view, column)
-        self.recommend_search(item)
+
+        for iterator in list_view.get_selected_rows():
+            item = list_view.get_row_value(iterator, column)
+
+            self.recommend_search(item)
+            return
 
     def on_recommendations_clicked(self, *_args):
 
-        if not self.likes_iters and not self.dislikes_iters:
+        if not self.likes_list_view.iterators and not self.dislikes_list_view.iterators:
             self.core.interests.request_global_recommendations()
             return
 
@@ -283,7 +312,7 @@ class Interests(UserInterface):
         self.recommendations_list_view.clear()
 
         for thing, rating in recommendations:
-            self.recommendations_list_view.add_row([humanize(rating), thing, rating])
+            self.recommendations_list_view.add_row([humanize(rating), thing, rating], select_row=False)
 
     def global_recommendations(self, msg):
         self.set_recommendations(msg.recommendations + msg.unrecommendations)
@@ -302,11 +331,9 @@ class Interests(UserInterface):
             self.similar_users_label.set_label(_("Similar Users"))
 
         self.similar_users_list_view.clear()
-        self.similar_users_iters.clear()
 
         for user in users:
-            iterator = self.similar_users_list_view.add_row([get_status_icon(0), user, "", "0", 0, 0, 0])
-            self.similar_users_iters[user] = iterator
+            self.similar_users_list_view.add_row([get_status_icon(0), user, "", "0", 0, 0, 0], select_row=False)
 
             # Request user status, speed and number of shared files
             self.core.watch_user(user, force_update=True)
@@ -319,7 +346,7 @@ class Interests(UserInterface):
 
     def get_user_status(self, msg):
 
-        iterator = self.similar_users_iters.get(msg.user)
+        iterator = self.similar_users_list_view.iterators.get(msg.user)
 
         if iterator is None:
             return
@@ -334,7 +361,7 @@ class Interests(UserInterface):
 
     def get_user_stats(self, msg):
 
-        iterator = self.similar_users_iters.get(msg.user)
+        iterator = self.similar_users_list_view.iterators.get(msg.user)
 
         if iterator is None:
             return
@@ -354,47 +381,48 @@ class Interests(UserInterface):
         self.similar_users_list_view.set_row_value(iterator, 6, GObject.Value(GObject.TYPE_UINT, files))
 
     @staticmethod
-    def get_selected_item(treeview, column=0):
+    def toggle_menu_items(menu, list_view, column=0):
 
-        iterators = treeview.get_selected_rows()
+        for iterator in list_view.get_selected_rows():
+            item = list_view.get_row_value(iterator, column)
 
-        if not iterators:
-            return None
-
-        return treeview.get_row_value(iterators[0], column)
+            menu.actions[_("I _Like This")].set_state(
+                GLib.Variant("b", item in config.sections["interests"]["likes"])
+            )
+            menu.actions[_("I _Dislike This")].set_state(
+                GLib.Variant("b", item in config.sections["interests"]["dislikes"])
+            )
+            return
 
     def on_popup_r_menu(self, menu, *_args):
-
-        item = self.get_selected_item(self.recommendations_list_view, column=1)
-
-        menu.actions[_("I _Like This")].set_state(
-            GLib.Variant("b", item in config.sections["interests"]["likes"])
-        )
-        menu.actions[_("I _Dislike This")].set_state(
-            GLib.Variant("b", item in config.sections["interests"]["dislikes"])
-        )
+        self.toggle_menu_items(menu, self.recommendations_list_view, column=1)
 
     def on_r_row_activated(self, *_args):
 
-        item = self.get_selected_item(self.recommendations_list_view, column=1)
+        for iterator in self.recommendations_list_view.get_selected_rows():
+            item = self.recommendations_list_view.get_row_value(iterator, 1)
 
-        if item is not None:
             self.core.interests.request_item_recommendations(item)
             self.core.interests.request_item_similar_users(item)
+            return
 
     def on_popup_ru_menu(self, menu, *_args):
 
-        user = self.get_selected_item(self.similar_users_list_view, column=1)
-        menu.set_user(user)
-        menu.toggle_user_items()
+        for iterator in self.similar_users_list_view.get_selected_rows():
+            user = self.similar_users_list_view.get_row_value(iterator, 1)
+
+            menu.set_user(user)
+            menu.toggle_user_items()
+            return
 
     def on_ru_row_activated(self, *_args):
 
-        user = self.get_selected_item(self.similar_users_list_view, column=1)
+        for iterator in self.similar_users_list_view.get_selected_rows():
+            user = self.similar_users_list_view.get_row_value(iterator, 1)
 
-        if user is not None:
             self.core.privatechats.show_user(user)
             self.frame.change_main_page(self.frame.private_page)
+            return
 
     @staticmethod
     def on_tooltip(list_view, pos_x, pos_y, _keyboard_mode, tooltip):

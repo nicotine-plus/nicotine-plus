@@ -51,56 +51,62 @@ class Interests:
     def add_thing_i_like(self, item):
 
         if not item and not isinstance(item, str):
-            return False
+            return
 
         if item in self.config.sections["interests"]["likes"]:
-            return False
+            return
 
         self.config.sections["interests"]["likes"].append(item)
         self.config.write_configuration()
-
         self.queue.append(slskmessages.AddThingILike(item))
-        return True
+
+        if self.ui_callback:
+            self.ui_callback.add_thing_i_like(item)
 
     def add_thing_i_hate(self, item):
 
         if not item and not isinstance(item, str):
-            return False
+            return
 
         if item in self.config.sections["interests"]["dislikes"]:
-            return False
+            return
 
         self.config.sections["interests"]["dislikes"].append(item)
         self.config.write_configuration()
-
         self.queue.append(slskmessages.AddThingIHate(item))
-        return True
+
+        if self.ui_callback:
+            self.ui_callback.add_thing_i_hate(item)
 
     def remove_thing_i_like(self, item):
 
         if not item and not isinstance(item, str):
-            return False
+            return
 
         if item not in self.config.sections["interests"]["likes"]:
-            return False
+            return
 
         self.config.sections["interests"]["likes"].remove(item)
         self.config.write_configuration()
         self.queue.append(slskmessages.RemoveThingILike(item))
-        return True
+
+        if self.ui_callback:
+            self.ui_callback.remove_thing_i_like(item)
 
     def remove_thing_i_hate(self, item):
 
         if not item and not isinstance(item, str):
-            return False
+            return
 
         if item not in self.config.sections["interests"]["dislikes"]:
-            return False
+            return
 
         self.config.sections["interests"]["dislikes"].remove(item)
         self.config.write_configuration()
         self.queue.append(slskmessages.RemoveThingIHate(item))
-        return True
+
+        if self.ui_callback:
+            self.ui_callback.remove_thing_i_hate(item)
 
     def request_global_recommendations(self):
         self.queue.append(slskmessages.GlobalRecommendations())

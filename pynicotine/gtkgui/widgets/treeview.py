@@ -52,7 +52,9 @@ class TreeView:
         self.columns = columns
         self.column_numbers = None
         self.model = None
+        self.iterator_key_column = 0
         self.iterators = {}
+        self._iter_keys = {}
 
         parent.set_property("child", self.widget)
         self.initialise_columns(columns)
@@ -247,9 +249,13 @@ class TreeView:
             column_type = column_data["column_type"]
             sort_column = column_data["sort_column"]
             default_sort_type = column_data.get("default_sort_column")
+            iterator_key = column_data.get("iterator_key")
 
             if default_sort_type:
                 default_sort_column = i
+
+            if iterator_key:
+                self.iterator_key_column = i
 
             if self.widget_name:
                 try:
@@ -357,8 +363,16 @@ class TreeView:
 
         self.widget.set_model(self.model)
 
-    def add_row(self, values):
-        return self.model.insert_with_valuesv(-1, self.column_numbers, values)
+    def add_row(self, values, select_row=True):
+
+        key = values[self.iterator_key_column]
+        self.iterators[key] = iterator = self.model.insert_with_valuesv(-1, self.column_numbers, values)
+        self._iter_keys[iterator.user_data] = key
+
+        if select_row:
+            self.select_row(iterator)
+
+        return iterator
 
     def get_selected_rows(self):
 
@@ -381,6 +395,7 @@ class TreeView:
         self.widget.grab_focus()
 
     def remove_row(self, iterator):
+        del self.iterators[self._iter_keys[iterator.user_data]]
         self.model.remove(iterator)
 
     def unselect_all_rows(self):
@@ -391,6 +406,7 @@ class TreeView:
 
     def clear(self):
         self.model.clear()
+        self.iterators.clear()
 
     def show_tooltip(self, pos_x, pos_y, tooltip, sourcecolumn, column_titles, text_function, strip_prefix=""):
 

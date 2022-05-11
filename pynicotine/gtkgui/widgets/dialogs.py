@@ -234,7 +234,7 @@ class EntryDialog(MessageDialog):
         return self.second_entry.get_text()
 
     def get_option_value(self):
-        return self.entry.get_text()
+        return self.option.get_active()
 
 
 class OptionDialog(MessageDialog):
