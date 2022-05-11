@@ -385,11 +385,20 @@ class ChatRoom(UserInterface):
             self.users_paned.set_shrink_start_child(False)
             self.users_paned.set_resize_end_child(False)
             self.chat_paned.set_shrink_end_child(False)
+
+            window_width = self.frame.window.get_width()
         else:
             self.users_paned.child_set_property(self.chat_paned, "resize", True)
             self.users_paned.child_set_property(self.chat_paned, "shrink", False)
             self.users_paned.child_set_property(self.users_container, "resize", False)
             self.chat_paned.child_set_property(self.chat_container, "shrink", False)
+
+            window_width, _window_height = self.frame.window.get_size()
+
+        # Get the X position of the rightmost edge of the user list, and set the width to 400
+        position = (self.frame.chatrooms_paned.get_position() or self.frame.horizontal_paned.get_position()
+                    or window_width)
+        self.users_paned.set_position(position - 400)
 
         self.tickers = Tickers()
         self.room_wall = RoomWall(self.frame, self.core, self)
