@@ -246,7 +246,7 @@ class DownloadsFrame(UserInterface):
             self.frame, parent=self.FilterView, multi_select=True, activate_row_callback=self.on_edit_filter,
             columns=[
                 {"column_id": "filter", "column_type": "text", "title": _("Filter"), "width": -1,
-                 "sort_column": 0},
+                 "sort_column": 0, "expand_column": True},
                 {"column_id": "escaped", "column_type": "toggle", "title": _("Escaped"), "width": 0,
                  "sort_column": 1, "toggle_callback": self.on_toggle_escaped}
             ]
@@ -792,9 +792,9 @@ class IgnoredUsersFrame(UserInterface):
             self.frame, parent=self.IgnoredIPs, multi_select=True,
             columns=[
                 {"column_id": "ip_address", "column_type": "text", "title": _("IP Address"), "width": -1,
-                 "sort_column": 0},
+                 "sort_column": 0, "expand_column": True},
                 {"column_id": "user", "column_type": "text", "title": _("User"), "width": -1,
-                 "sort_column": 1}
+                 "sort_column": 1, "expand_column": True}
             ]
         )
 
@@ -928,9 +928,9 @@ class BannedUsersFrame(UserInterface):
             self.frame, parent=self.BlockedList, multi_select=True,
             columns=[
                 {"column_id": "ip_address", "column_type": "text", "title": _("IP Address"), "width": -1,
-                 "sort_column": 0},
+                 "sort_column": 0, "expand_column": True},
                 {"column_id": "user", "column_type": "text", "title": _("User"), "width": -1,
-                 "sort_column": 1}
+                 "sort_column": 1, "expand_column": True}
             ]
         )
 
@@ -1094,9 +1094,9 @@ class ChatsFrame(UserInterface):
             self.frame, parent=self.ReplacementList, multi_select=True, activate_row_callback=self.on_edit_replacement,
             columns=[
                 {"column_id": "pattern", "column_type": "text", "title": _("Pattern"), "width": -1,
-                 "sort_column": 0},
+                 "sort_column": 0, "expand_column": True},
                 {"column_id": "replacement", "column_type": "text", "title": _("Replacement"), "width": -1,
-                 "sort_column": 1}
+                 "sort_column": 1, "expand_column": True}
             ]
         )
 
@@ -1890,9 +1890,9 @@ class UrlHandlersFrame(UserInterface):
             self.frame, parent=self.ProtocolHandlers, multi_select=True, activate_row_callback=self.on_edit_handler,
             columns=[
                 {"column_id": "protocol", "column_type": "text", "title": _("Protocol"), "width": -1,
-                 "sort_column": 0, "iterator_key": True},
+                 "sort_column": 0, "expand_column": True, "iterator_key": True},
                 {"column_id": "command", "column_type": "text", "title": _("Command"), "width": -1,
-                 "sort_column": 1}
+                 "sort_column": 1, "expand_column": True}
             ]
         )
 
