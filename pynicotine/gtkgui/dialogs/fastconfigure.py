@@ -176,7 +176,12 @@ class FastConfigure(UserInterface):
         model, paths = self.shares_list_view.get_selection().get_selected_rows()
 
         for path in reversed(paths):
-            model.remove(model.get_iter(path))
+            iterator = model.get_iter(path)
+            virtual = model.get_value(iterator, 0)
+            folder = model.get_value(iterator, 1)
+
+            self.shared_folders.remove((virtual, folder))
+            model.remove(iterator)
 
     def on_page_change(self, *_args):
         self.reset_completeness()
