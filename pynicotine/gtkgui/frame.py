@@ -296,10 +296,6 @@ class NicotineFrame(UserInterface):
         self.set_main_tabs_visibility()
         self.set_last_session_tab()
 
-        """ Tab Signals """
-
-        self.notebook.connect("page-reordered", self.on_page_reordered)
-
         """ Apply UI Customizations """
 
         set_global_style()
@@ -308,34 +304,6 @@ class NicotineFrame(UserInterface):
     """ Initialize """
 
     def init_window_properties(self):
-
-        # Clear notifications when main window is focused
-        self.window.connect("notify::is-active", self.on_window_active_changed)
-        self.window.connect("notify::visible", self.on_window_visible_changed)
-
-        # Auto-away mode
-        if GTK_API_VERSION >= 4:
-            self.gesture_click = Gtk.GestureClick()
-            self.window.add_controller(self.gesture_click)
-
-            key_controller = Gtk.EventControllerKey()
-            key_controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
-            key_controller.connect("key-released", self.on_cancel_auto_away)
-            self.window.add_controller(key_controller)
-
-        else:
-            self.gesture_click = Gtk.GestureMultiPress(widget=self.window)
-            self.window.connect("key-release-event", self.on_cancel_auto_away)
-
-        self.gesture_click.set_button(0)
-        self.gesture_click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
-        self.gesture_click.connect("pressed", self.on_cancel_auto_away)
-
-        # System window close (X)
-        if GTK_API_VERSION >= 4:
-            self.window.connect("close-request", self.on_close_request)
-        else:
-            self.window.connect("delete-event", self.on_close_request)
 
         # Set main window title and icon
         self.window.set_title(config.application_name)
@@ -365,6 +333,42 @@ class NicotineFrame(UserInterface):
         # Maximize main window if necessary
         if config.sections["ui"]["maximized"]:
             self.window.maximize()
+
+        # Auto-away mode
+        if GTK_API_VERSION >= 4:
+            self.gesture_click = Gtk.GestureClick()
+            self.window.add_controller(self.gesture_click)
+
+            key_controller = Gtk.EventControllerKey()
+            key_controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+            key_controller.connect("key-released", self.on_cancel_auto_away)
+            self.window.add_controller(key_controller)
+
+        else:
+            self.gesture_click = Gtk.GestureMultiPress(widget=self.window)
+            self.window.connect("key-release-event", self.on_cancel_auto_away)
+
+        self.gesture_click.set_button(0)
+        self.gesture_click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+        self.gesture_click.connect("pressed", self.on_cancel_auto_away)
+
+        # Clear notifications when main window is focused
+        self.window.connect("notify::is-active", self.on_window_active_changed)
+        self.window.connect("notify::visible", self.on_window_visible_changed)
+
+        # System window close (X) and window state
+        if GTK_API_VERSION >= 4:
+            self.window.connect("close-request", self.on_close_request)
+
+            self.window.connect("notify::default-width", self.on_window_property_changed, "width")
+            self.window.connect("notify::default-height", self.on_window_property_changed, "height")
+            self.window.connect("notify::maximized", self.on_window_property_changed, "maximized")
+
+        else:
+            self.window.connect("delete-event", self.on_close_request)
+
+            self.window.connect("size-allocate", self.on_window_size_changed)
+            self.window.connect("notify::is-maximized", self.on_window_property_changed, "maximized")
 
     def init_exception_handler(self):
 
@@ -438,14 +442,6 @@ class NicotineFrame(UserInterface):
 
     """ Window State """
 
-    def on_window_hide_unhide(self, *_args):
-
-        if self.window.get_property("visible"):
-            self.window.hide()
-            return
-
-        self.show()
-
     def on_window_active_changed(self, window, param):
 
         if not window.get_property(param.name):
@@ -458,26 +454,37 @@ class NicotineFrame(UserInterface):
         if GTK_API_VERSION == 3 and window.get_urgency_hint():
             window.set_urgency_hint(False)
 
-    def on_window_visible_changed(self, *_args):
-        self.tray_icon.update_show_hide_label()
+    @staticmethod
+    def on_window_property_changed(window, param, config_property):
+        config.sections["ui"][config_property] = window.get_property(param.name)
 
-    def save_window_state(self):
+    def on_window_size_changed(self, window, _allocation):
 
-        if GTK_API_VERSION >= 4:
-            width, height = self.window.get_default_size()
-        else:
-            width, height = self.window.get_size()
-            x_pos, y_pos = self.window.get_position()
+        if window.is_maximized():
+            return
 
-            config.sections["ui"]["xposition"] = x_pos
-            config.sections["ui"]["yposition"] = y_pos
+        width, height = window.get_size()
 
         config.sections["ui"]["width"] = width
         config.sections["ui"]["height"] = height
 
-        config.sections["ui"]["maximized"] = self.window.is_maximized()
-        config.sections["ui"]["last_tab_id"] = self.current_page_id
+        x_pos, y_pos = self.window.get_position()
 
+        config.sections["ui"]["xposition"] = x_pos
+        config.sections["ui"]["yposition"] = y_pos
+
+    def on_window_visible_changed(self, *_args):
+        self.tray_icon.update_show_hide_label()
+
+    def on_window_hide_unhide(self, *_args):
+
+        if self.window.get_property("visible"):
+            self.window.hide()
+            return
+
+        self.show()
+
+    def save_columns(self, *_args):
         for page in (self.userlist, self.chatrooms, self.downloads, self.uploads):
             page.save_columns()
 
@@ -1232,6 +1239,9 @@ class NicotineFrame(UserInterface):
 
         self.current_page_id = page_id
 
+        if self.application.get_active_window():
+            config.sections["ui"]["last_tab_id"] = page_id
+
     """ Main Notebook """
 
     def initialize_main_tabs(self):
@@ -1348,6 +1358,10 @@ class NicotineFrame(UserInterface):
             GLib.idle_add(lambda: self.interests.likes_list_view.grab_focus() == -1)
 
     def on_page_reordered(self, *_args):
+
+        if not self.application.get_active_window():
+            # Don't save the tab order until the window is ready
+            return
 
         page_ids = []
 
@@ -2017,8 +2031,8 @@ class NicotineFrame(UserInterface):
         # Explicitly hide tray icon, otherwise it will not disappear on Windows
         self.tray_icon.hide()
 
-        # Save window state (window size, position, columns)
-        self.save_window_state()
+        # Save visible columns
+        self.save_columns()
 
         log.remove_listener(self.log_callback)
         config.write_configuration()
@@ -2028,8 +2042,8 @@ class NicotineFrame(UserInterface):
         if not self.window.get_property("visible"):
             return
 
-        # Save window state, incase application is killed later
-        self.save_window_state()
+        # Save visible columns, incase application is killed later
+        self.save_columns()
 
         if not self.tray_icon.is_visible():
             log.add(_("Nicotine+ is running in the background"))
