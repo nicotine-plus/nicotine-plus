@@ -325,7 +325,7 @@ class NicotineFrame(UserInterface):
             x_pos = config.sections["ui"]["xposition"]
             y_pos = config.sections["ui"]["yposition"]
 
-            if min(x_pos, y_pos) < 0:
+            if x_pos == -1 and y_pos == -1:
                 self.window.set_position(Gtk.WindowPosition.CENTER)
             else:
                 self.window.move(x_pos, y_pos)
