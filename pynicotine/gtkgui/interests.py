@@ -100,11 +100,11 @@ class Interests(UserInterface):
                 {"column_id": "status", "title": _("Status"), "width": 25,
                  "column_type": "icon", "sort_column": 4, "hide_header": True},
                 {"column_id": "user", "title": _("User"), "width": 135,
-                 "column_type": "text", "sort_column": 1, "expand_header": True, "iterator_key": True},
+                 "column_type": "text", "sort_column": 1, "expand_column": True, "iterator_key": True},
                 {"column_id": "speed", "title": _("Speed"), "width": 60,
-                 "column_type": "number", "sort_column": 5, "expand_header": True},
+                 "column_type": "number", "sort_column": 5, "expand_column": True},
                 {"column_id": "files", "title": _("Files"), "width": -1,
-                 "column_type": "number", "sort_column": 6, "expand_header": True},
+                 "column_type": "number", "sort_column": 6, "expand_column": True},
 
                 # Hidden data columns
                 {"column_id": "status_hidden", "data_type": int},

@@ -343,7 +343,7 @@ class TreeView:
             if column_data.get("hide_header"):
                 column.get_widget().hide()
 
-            if column_data.get("expand_header"):
+            if column_data.get("expand_column"):
                 column.set_expand(True)
 
             column.set_sort_column_id(sort_column)
