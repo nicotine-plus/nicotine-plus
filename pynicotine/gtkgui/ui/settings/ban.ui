@@ -269,6 +269,7 @@
                           <object class="GtkScrolledWindow" id="BlockedList">
                             <property name="visible">True</property>
                             <property name="height-request">200</property>
+                            <property name="width-request">260</property>
                             <property name="hexpand">True</property>
                             <property name="vexpand">True</property>
                             <style>

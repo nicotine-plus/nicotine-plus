@@ -198,6 +198,7 @@
                         <child>
                           <object class="GtkScrolledWindow" id="IgnoredIPs">
                             <property name="visible">True</property>
+                            <property name="width-request">260</property>
                             <property name="hexpand">True</property>
                             <property name="vexpand">True</property>
                             <style>

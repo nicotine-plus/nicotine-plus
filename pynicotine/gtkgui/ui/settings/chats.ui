@@ -755,6 +755,7 @@
                                         <child>
                                           <object class="GtkLabel">
                                             <property name="visible">True</property>
+                                            <property name="ellipsize">end</property>
                                             <property name="label" translatable="yes">Add…</property>
                                             <property name="use-underline">True</property>
                                           </object>
@@ -814,6 +815,7 @@
                                         <child>
                                           <object class="GtkLabel">
                                             <property name="visible">True</property>
+                                            <property name="ellipsize">end</property>
                                             <property name="label" translatable="yes">Remove</property>
                                             <property name="use-underline">True</property>
                                           </object>
@@ -933,6 +935,7 @@
                                         <child>
                                           <object class="GtkLabel">
                                             <property name="visible">True</property>
+                                            <property name="ellipsize">end</property>
                                             <property name="label" translatable="yes">Add…</property>
                                             <property name="use-underline">True</property>
                                           </object>
@@ -992,6 +995,7 @@
                                         <child>
                                           <object class="GtkLabel">
                                             <property name="visible">True</property>
+                                            <property name="ellipsize">end</property>
                                             <property name="label" translatable="yes">Remove</property>
                                             <property name="use-underline">True</property>
                                           </object>
