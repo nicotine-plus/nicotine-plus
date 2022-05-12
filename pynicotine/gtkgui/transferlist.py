@@ -210,7 +210,7 @@ class TransferList(UserInterface):
 
     def init_transfers(self, transfer_list):
         self.transfer_list = transfer_list
-        self.update(forceupdate=True)
+        self.update_model(forceupdate=True)
 
     def server_login(self):
         pass
@@ -219,8 +219,8 @@ class TransferList(UserInterface):
         pass
 
     def rebuild_transfers(self):
-        self.clear()
-        self.update()
+        self.clear_model()
+        self.update_model()
 
     def save_columns(self):
         save_columns(self.type, self.tree_view.get_columns())
@@ -296,7 +296,7 @@ class TransferList(UserInterface):
         self.user_counter.set_text(str(len(self.users)))
         self.file_counter.set_text(str(len(self.transfer_list)))
 
-    def update(self, transfer=None, forceupdate=False, update_parent=True):
+    def update_model(self, transfer=None, forceupdate=False, update_parent=True):
 
         if not forceupdate and self.frame.current_page_id != self.transfer_page.id:
             # No need to do unnecessary work if transfers are not visible
@@ -626,6 +626,17 @@ class TransferList(UserInterface):
         if expand_folder:
             self.tree_view.expand_row(self.transfersmodel.get_path(self.paths[user_path]), False)
 
+    def clear_model(self):
+
+        self.users.clear()
+        self.paths.clear()
+        self.selected_transfers.clear()
+        self.selected_users.clear()
+        self.transfersmodel.clear()
+
+        for transfer in self.transfer_list:
+            transfer.iterator = None
+
     def retry_transfers(self):
         pass
 
@@ -637,7 +648,7 @@ class TransferList(UserInterface):
 
                 if not clear:
                     transfer.status = self.aborted_status
-                    self.update(transfer)
+                    self.update_model(transfer)
 
             if clear:
                 self.remove_specific(transfer, update_parent=False)
@@ -669,23 +680,12 @@ class TransferList(UserInterface):
             self.update_parent_rows(transfer)
             self.update_num_users_files()
 
-    def clear_transfers(self, status):
+    def clear_transfers(self, statuses=None):
 
         for transfer in self.transfer_list.copy():
-            if transfer.status in status:
+            if statuses is None or transfer.status in statuses:
                 self.core.transfers.abort_transfer(transfer, send_fail_message=True)
                 self.remove_specific(transfer)
-
-    def clear(self):
-
-        self.users.clear()
-        self.paths.clear()
-        self.selected_transfers.clear()
-        self.selected_users.clear()
-        self.transfersmodel.clear()
-
-        for transfer in self.transfer_list:
-            transfer.iterator = None
 
     def add_popup_menu_user(self, popup, user):
 
@@ -895,16 +895,19 @@ class TransferList(UserInterface):
         self.select_transfers()
         self.abort_transfers(clear=True)
 
-    def on_clear_response(self, dialog, response_id, data):
+    def on_clear_queued_response(self, dialog, response_id, _data):
 
         dialog.destroy()
 
         if response_id == 2:
-            if data == "queued":
-                self.clear_transfers(["Queued"])
+            self.clear_transfers(["Queued"])
 
-            elif data == "all":
-                self.clear()
+    def on_clear_all_response(self, dialog, response_id, _data):
+
+        dialog.destroy()
+
+        if response_id == 2:
+            self.clear_transfers()
 
     def on_clear_queued(self, *_args):
         self.clear_transfers(["Queued"])

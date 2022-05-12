@@ -78,8 +78,7 @@ class Downloads(TransferList):
             parent=self.frame.window,
             title=_('Clear Queued Downloads'),
             message=_('Do you really want to clear all queued downloads?'),
-            callback=self.on_clear_response,
-            callback_data="queued"
+            callback=self.on_clear_queued_response
         ).show()
 
     def on_try_clear_all(self, *_args):
@@ -88,8 +87,7 @@ class Downloads(TransferList):
             parent=self.frame.window,
             title=_('Clear All Downloads'),
             message=_('Do you really want to clear all downloads?'),
-            callback=self.on_clear_response,
-            callback_data="all"
+            callback=self.on_clear_all_response
         ).show()
 
     def folder_download_response(self, dialog, response_id, msg):

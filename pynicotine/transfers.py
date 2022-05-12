@@ -571,7 +571,7 @@ class Transfers:
                     update = True
 
         if self.downloadsview and update:
-            self.downloadsview.update()
+            self.downloadsview.update_model()
 
         update = False
 
@@ -590,7 +590,7 @@ class Transfers:
                     update = True
 
         if self.uploadsview and update:
-            self.uploadsview.update()
+            self.uploadsview.update_model()
 
     def get_cant_connect_queue_file(self, username, filename):
         """ We can't connect to the user, either way (QueueUpload). """
@@ -1969,14 +1969,14 @@ class Transfers:
         self.save_transfers("downloads", force_save)
 
         if self.downloadsview:
-            self.downloadsview.update(transfer, update_parent=update_parent)
+            self.downloadsview.update_model(transfer, update_parent=update_parent)
 
     def update_upload(self, transfer, force_save=False, update_parent=True):
 
         self.save_transfers("uploads", force_save)
 
         if self.uploadsview:
-            self.uploadsview.update(transfer, update_parent=update_parent)
+            self.uploadsview.update_model(transfer, update_parent=update_parent)
 
     def _check_transfer_timeouts(self):
 
@@ -2405,7 +2405,7 @@ class Transfers:
                 update = True
 
         if self.downloadsview and update:
-            self.downloadsview.update()
+            self.downloadsview.update_model()
 
         update = False
 
@@ -2418,7 +2418,7 @@ class Transfers:
                     self.uploadsview.remove_specific(i, True, update_parent=False)
 
         if self.uploadsview and update:
-            self.uploadsview.update()
+            self.uploadsview.update_model()
 
         self.privileged_users.clear()
         self.requested_folders.clear()
