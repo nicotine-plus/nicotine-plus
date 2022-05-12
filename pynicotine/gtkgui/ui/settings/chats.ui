@@ -309,6 +309,7 @@
             <child>
               <object class="GtkLabel" id="PrivateChatFormatLabel">
                 <property name="visible">True</property>
+                <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Private chat format:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
@@ -325,7 +326,7 @@
                     <property name="visible">True</property>
                     <property name="hexpand">True</property>
                     <property name="tooltip-text">https://docs.python.org/3/library/time.html</property>
-                    <property name="width-chars">12</property>
+                    <property name="width-chars">14</property>
                   </object>
                 </child>
                 <child>
@@ -365,6 +366,7 @@
             <child>
               <object class="GtkLabel" id="ChatRoomFormatLabel">
                 <property name="visible">True</property>
+                <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Chat room format:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
@@ -381,7 +383,7 @@
                     <property name="visible">True</property>
                     <property name="hexpand">True</property>
                     <property name="tooltip-text">https://docs.python.org/3/library/time.html</property>
-                    <property name="width-chars">12</property>
+                    <property name="width-chars">14</property>
                   </object>
                 </child>
                 <child>
@@ -446,6 +448,7 @@
               <object class="GtkLabel" id="TTSCommandLabel">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
+                <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Text-to-Speech command:</property>
                 <property name="wrap">True</property>
                 <property name="mnemonic_widget">TTSCommand</property>
@@ -468,7 +471,7 @@
                     <child internal-child="entry">
                       <object class="GtkEntry">
                         <property name="visible">True</property>
-                        <property name="width-chars">16</property>
+                        <property name="width-chars">12</property>
                       </object>
                     </child>
                   </object>
@@ -511,6 +514,7 @@
               <object class="GtkLabel" id="PrivateMessageLabel">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
+                <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Private chat message:</property>
                 <property name="wrap">True</property>
                 <property name="mnemonic_widget">PrivateMessage</property>
@@ -525,7 +529,7 @@
                   <object class="GtkEntry" id="PrivateMessage">
                     <property name="visible">True</property>
                     <property name="hexpand">True</property>
-                    <property name="width-chars">20</property>
+                    <property name="width-chars">14</property>
                   </object>
                 </child>
                 <child>
@@ -566,6 +570,7 @@
               <object class="GtkLabel" id="RoomMessageLabel">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
+                <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Chat room message:</property>
                 <property name="wrap">True</property>
                 <property name="mnemonic_widget">RoomMessage</property>
@@ -580,7 +585,7 @@
                   <object class="GtkEntry" id="RoomMessage">
                     <property name="visible">True</property>
                     <property name="hexpand">True</property>
-                    <property name="width-chars">20</property>
+                    <property name="width-chars">14</property>
                   </object>
                 </child>
                 <child>

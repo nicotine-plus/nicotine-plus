@@ -142,12 +142,6 @@ def set_global_css():
         padding: 0;
     }
 
-    flowboxchild:disabled label {
-        /* Reset 'sensitive' widget style for preferences dialog */
-        color: inherit;
-        opacity: inherit;
-    }
-
     scrollbar {
         /* Workaround for themes breaking scrollbar hitbox with margins */
         margin: 0;
@@ -203,11 +197,6 @@ def set_global_css():
 
     css_gtk4 = b"""
     /* Tweaks (GTK 4+) */
-
-    flowboxchild:disabled label {
-        /* Reset 'sensitive' widget style for preferences dialog */
-        filter: inherit;
-    }
 
     treeview.normal-icons {
         /* Country flag icon size in treeviews */
