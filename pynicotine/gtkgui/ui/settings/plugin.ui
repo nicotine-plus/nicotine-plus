@@ -157,7 +157,7 @@
                 <property name="visible">True</property>
                 <property name="spacing">18</property>
                 <property name="orientation">vertical</property>
-                <property name="width-request">320</property>
+                <property name="width-request">260</property>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
