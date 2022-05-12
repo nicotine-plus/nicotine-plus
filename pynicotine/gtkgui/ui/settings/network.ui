@@ -41,6 +41,7 @@
             <property name="visible">True</property>
             <property name="label" translatable="yes">Network</property>
             <property name="xalign">0</property>
+            <property name="wrap">True</property>
             <attributes>
               <attribute name="weight" value="bold"/>
             </attributes>
@@ -80,6 +81,7 @@
                             <property name="hexpand">True</property>
                             <property name="label" translatable="yes">Username:</property>
                             <property name="xalign">0</property>
+                            <property name="wrap">True</property>
                             <property name="mnemonic_widget">Login</property>
                           </object>
                         </child>
@@ -219,6 +221,7 @@
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Away Status</property>
                 <property name="xalign">0</property>
+                <property name="wrap">True</property>
                 <attributes>
                   <attribute name="weight" value="bold"/>
                 </attributes>
@@ -292,6 +295,7 @@
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Miscellaneous</property>
                 <property name="xalign">0</property>
+                <property name="wrap">True</property>
                 <attributes>
                   <attribute name="weight" value="bold"/>
                 </attributes>

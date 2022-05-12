@@ -13,8 +13,8 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
-            <property name="halign">start</property>
             <property name="label" translatable="yes">User Interface</property>
+            <property name="xalign">0</property>
             <property name="wrap">True</property>
             <attributes>
               <attribute name="weight" value="bold"/>
@@ -557,6 +557,7 @@
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Lists</property>
                 <property name="xalign">0</property>
+                <property name="wrap">True</property>
                 <attributes>
                   <attribute name="weight" value="bold"/>
                 </attributes>
@@ -1543,6 +1544,7 @@
             <property name="visible">True</property>
             <property name="label" translatable="yes">Tab Labels</property>
             <property name="xalign">0</property>
+            <property name="wrap">True</property>
             <attributes>
               <attribute name="weight" value="bold"/>
             </attributes>
@@ -1784,8 +1786,9 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
-            <property name="halign">start</property>
             <property name="label" translatable="yes">Fonts</property>
+            <property name="xalign">0</property>
+            <property name="wrap">True</property>
             <attributes>
               <attribute name="weight" value="bold"/>
             </attributes>
@@ -2173,6 +2176,7 @@
             <property name="visible">True</property>
             <property name="label" translatable="yes">Icons</property>
             <property name="xalign">0</property>
+            <property name="wrap">True</property>
             <attributes>
               <attribute name="weight" value="bold"/>
             </attributes>

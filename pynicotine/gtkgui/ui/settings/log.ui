@@ -15,6 +15,7 @@
             <property name="visible">True</property>
             <property name="label" translatable="yes">Logging</property>
             <property name="xalign">0</property>
+            <property name="wrap">True</property>
             <attributes>
               <attribute name="weight" value="bold"/>
             </attributes>
@@ -118,6 +119,7 @@
             <property name="visible">True</property>
             <property name="label" translatable="yes">Folder Locations</property>
             <property name="xalign">0</property>
+            <property name="wrap">True</property>
             <attributes>
               <attribute name="weight" value="bold"/>
             </attributes>

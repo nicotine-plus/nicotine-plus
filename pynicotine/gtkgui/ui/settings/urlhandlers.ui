@@ -15,6 +15,7 @@
             <property name="visible">True</property>
             <property name="label" translatable="yes">URL Handlers</property>
             <property name="xalign">0</property>
+            <property name="wrap">True</property>
             <property name="mnemonic_widget">ProtocolHandlers</property>
             <attributes>
               <attribute name="weight" value="bold"/>
