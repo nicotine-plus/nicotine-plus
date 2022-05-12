@@ -98,14 +98,11 @@ class NetworkFrame(UserInterface):
         if server["server"] is not None:
             self.Server.set_text("%s:%i" % (server["server"][0], server["server"][1]))
 
-        if self.core.protothread.listenport is None:
-            self.CurrentPort.set_text(_("Listening port is not set"))
-        else:
-            text = _("Public IP address is <b>%(ip)s</b> and active listening port is <b>%(port)s</b>") % {
-                "ip": self.core.user_ip_address or _("unknown"),
-                "port": self.core.protothread.listenport
-            }
-            self.CurrentPort.set_markup(text)
+        text = _("<b>%(ip)s</b>, port %(port)s") % {
+            "ip": self.core.user_ip_address or _("Unknown"),
+            "port": self.core.protothread.listenport or _("Unknown")
+        }
+        self.CurrentPort.set_markup(text)
 
         url = config.portchecker_url % str(self.core.protothread.listenport)
         text = "<a href='" + url + "' title='" + url + "'>" + _("Check Port Status") + "</a>"

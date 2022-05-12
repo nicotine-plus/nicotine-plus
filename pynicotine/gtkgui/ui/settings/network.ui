@@ -175,29 +175,45 @@
                         </child>
                       </object>
                     </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="spacing">6</property>
-                <child>
-                  <object class="GtkLabel" id="CurrentPort">
-                    <property name="visible">True</property>
-                    <property name="hexpand">True</property>
-                    <property name="xalign">0</property>
-                    <property name="label" translatable="yes">Listening port is not set</property>
-                    <property name="selectable">True</property>
-                    <property name="wrap">True</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel" id="CheckPortLabel">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">Check Port Status</property>
-                    <property name="use-markup">True</property>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="visible">True</property>
+                        <property name="spacing">12</property>
+                        <property name="margin-top">6</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="hexpand">True</property>
+                            <property name="xalign">0</property>
+                            <property name="label" translatable="yes">IP address:</property>
+                            <property name="wrap">True</property>
+                            <property name="mnemonic_widget">FirstPort</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="visible">True</property>
+                            <property name="spacing">18</property>
+                            <child>
+                              <object class="GtkLabel" id="CurrentPort">
+                                <property name="visible">True</property>
+                                <property name="xalign">0</property>
+                                <property name="label" translatable="yes">Unknown</property>
+                                <property name="selectable">True</property>
+                                <property name="wrap">True</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="CheckPortLabel">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Check Port Status</property>
+                                <property name="use-markup">True</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>
@@ -309,6 +325,13 @@
               </object>
             </child>
             <child>
+              <object class="GtkCheckButton" id="ctcptogglebutton">
+                <property name="label" translatable="yes">Enable CTCP-like private message responses (client version)</property>
+                <property name="visible">True</property>
+                <property name="use-underline">True</property>
+              </object>
+            </child>
+            <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
                 <property name="spacing">12</property>
@@ -332,13 +355,6 @@
                     <signal name="value-changed" handler="on_modify_upnp_interval"/>
                   </object>
                 </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkCheckButton" id="ctcptogglebutton">
-                <property name="label" translatable="yes">Enable CTCP-like private message responses (client version)</property>
-                <property name="visible">True</property>
-                <property name="use-underline">True</property>
               </object>
             </child>
             <child>
