@@ -1307,14 +1307,14 @@ class NicotineFrame(UserInterface):
                 GLib.idle_add(lambda: self.private_entry.grab_focus() == -1)
 
         elif page == self.uploads_page:
-            self.uploads.update(forceupdate=True)
+            self.uploads.update_model(forceupdate=True)
             self.remove_tab_hilite(self.uploads_page)
 
             if self.uploads.container.get_visible():
                 GLib.idle_add(lambda: self.uploads.tree_view.grab_focus() == -1)
 
         elif page == self.downloads_page:
-            self.downloads.update(forceupdate=True)
+            self.downloads.update_model(forceupdate=True)
             self.remove_tab_hilite(self.downloads_page)
 
             if self.downloads.container.get_visible():
