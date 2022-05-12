@@ -76,7 +76,8 @@ def dialog_show(dialog):
 
     # Shrink the dialog if it's larger than the main window
     if GTK_API_VERSION >= 4:
-        main_window_width, main_window_height = parent.get_default_size()
+        main_window_width = parent.get_width()
+        main_window_height = parent.get_height()
         dialog_width, dialog_height = dialog.get_default_size()
     else:
         main_window_width, main_window_height = parent.get_size()
