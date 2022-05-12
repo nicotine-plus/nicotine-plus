@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.0"/>
+  <object class="GtkSizeGroup">
+    <property name="mode">horizontal</property>
+    <widgets>
+      <widget name="audioPlayerLabel"/>
+      <widget name="FileManagerLabel"/>
+    </widgets>
+  </object>
   <object class="GtkBox" id="Main">
     <property name="visible">True</property>
     <property name="spacing">18</property>
@@ -33,35 +40,30 @@
       </object>
     </child>
     <child>
-      <object class="GtkFlowBox">
+      <object class="GtkBox">
         <property name="visible">True</property>
-        <property name="row-spacing">12</property>
-        <property name="column-spacing">12</property>
-        <property name="max-children-per-line">2</property>
-        <property name="selection-mode">none</property>
+        <property name="spacing">12</property>
+        <property name="orientation">vertical</property>
         <child>
-          <object class="GtkFlowBoxChild">
+          <object class="GtkBox">
             <property name="visible">True</property>
-            <property name="sensitive">False</property>
+            <property name="spacing">12</property>
             <child>
-              <object class="GtkLabel">
+              <object class="GtkLabel" id="audioPlayerLabel">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Media player command:</property>
                 <property name="wrap">True</property>
+                <property name="hexpand">True</property>
                 <property name="xalign">0</property>
                 <property name="mnemonic_widget">audioPlayerCombo</property>
               </object>
             </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkFlowBoxChild">
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
             <child>
               <object class="GtkComboBoxText" id="audioPlayerCombo">
                 <property name="visible">True</property>
                 <property name="has-entry">True</property>
+                <property name="hexpand">True</property>
+                <property name="valign">center</property>
                 <items>
                   <item>xdg-open $</item>
                   <item>amarok -a $</item>
@@ -75,28 +77,25 @@
           </object>
         </child>
         <child>
-          <object class="GtkFlowBoxChild">
+          <object class="GtkBox">
             <property name="visible">True</property>
-            <property name="sensitive">False</property>
+            <property name="spacing">12</property>
             <child>
-              <object class="GtkLabel">
+              <object class="GtkLabel" id="FileManagerLabel">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
+                <property name="hexpand">True</property>
                 <property name="label" translatable="yes">File manager command:</property>
                 <property name="wrap">True</property>
                 <property name="mnemonic_widget">FileManagerCombo</property>
               </object>
             </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkFlowBoxChild">
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
             <child>
               <object class="GtkComboBoxText" id="FileManagerCombo">
                 <property name="visible">True</property>
                 <property name="has-entry">True</property>
+                <property name="hexpand">True</property>
+                <property name="valign">center</property>
                 <items>
                   <item>xdg-open $</item>
                   <item>explorer $</item>

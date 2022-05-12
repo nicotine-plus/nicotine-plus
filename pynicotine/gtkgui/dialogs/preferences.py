@@ -1843,7 +1843,8 @@ class UrlHandlersFrame(UserInterface):
         super().__init__("ui/settings/urlhandlers.ui")
 
         # pylint: disable=invalid-name
-        (self.FileManagerCombo, self.Main, self.ProtocolHandlers, self.audioPlayerCombo) = self.widgets
+        (self.FileManagerCombo, self.FileManagerLabel, self.Main, self.ProtocolHandlers, self.audioPlayerCombo,
+         self.audioPlayerLabel) = self.widgets
 
         self.preferences = preferences
         self.frame = preferences.frame
