@@ -249,6 +249,7 @@
                     <child>
                       <object class="GtkMenuButton" id="room_wall_button">
                         <property name="visible">True</property>
+                        <property name="tooltip-text" translatable="yes">Room wall</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
@@ -262,6 +263,7 @@
                             <child>
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
+                                <property name="ellipsize">end</property>
                                 <property name="label" translatable="yes">R_oom Wall</property>
                                 <property name="use-underline">True</property>
                               </object>

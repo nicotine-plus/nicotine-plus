@@ -384,6 +384,7 @@ class ChatRoom(UserInterface):
             self.users_paned.set_resize_start_child(True)
             self.users_paned.set_shrink_start_child(False)
             self.users_paned.set_resize_end_child(False)
+            self.users_paned.set_shrink_end_child(False)
             self.chat_paned.set_shrink_end_child(False)
 
             window_width = self.frame.window.get_width()
@@ -391,6 +392,7 @@ class ChatRoom(UserInterface):
             self.users_paned.child_set_property(self.chat_paned, "resize", True)
             self.users_paned.child_set_property(self.chat_paned, "shrink", False)
             self.users_paned.child_set_property(self.users_container, "resize", False)
+            self.users_paned.child_set_property(self.users_container, "shrink", False)
             self.chat_paned.child_set_property(self.chat_container, "shrink", False)
 
             window_width, _window_height = self.frame.window.get_size()
