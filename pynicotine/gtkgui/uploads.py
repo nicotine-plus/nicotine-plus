@@ -79,8 +79,7 @@ class Uploads(TransferList):
             parent=self.frame.window,
             title=_('Clear Queued Uploads'),
             message=_('Do you really want to clear all queued uploads?'),
-            callback=self.on_clear_response,
-            callback_data="queued"
+            callback=self.on_clear_queued_response
         ).show()
 
     def on_try_clear_all(self, *_args):
@@ -89,8 +88,7 @@ class Uploads(TransferList):
             parent=self.frame.window,
             title=_('Clear All Uploads'),
             message=_('Do you really want to clear all uploads?'),
-            callback=self.on_clear_response,
-            callback_data="all"
+            callback=self.on_clear_all_response
         ).show()
 
     def on_copy_url(self, *_args):
