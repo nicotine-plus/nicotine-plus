@@ -402,6 +402,11 @@
                     <property name="has-entry">True</property>
                     <property name="tooltip-text" translatable="yes">Binds connections to a specific network interface, useful for e.g. ensuring a VPN is used at all times. Leave empty to use any available interface. Only change this value if you know what you are doing.</property>
                     <property name="valign">center</property>
+                    <child internal-child="entry">
+                      <object class="GtkEntry">
+                        <property name="width-chars">12</property>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>

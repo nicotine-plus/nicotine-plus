@@ -65,6 +65,11 @@
                   <item>rhythmbox $</item>
                   <item>xmms2 add -f $</item>
                 </items>
+                <child internal-child="entry">
+                  <object class="GtkEntry">
+                    <property name="width-chars">12</property>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
@@ -100,6 +105,11 @@
                   <item>krusader --left $</item>
                   <item>xterm -e mc $</item>
                 </items>
+                <child internal-child="entry">
+                  <object class="GtkEntry">
+                    <property name="width-chars">12</property>
+                  </object>
+                </child>
               </object>
             </child>
           </object>

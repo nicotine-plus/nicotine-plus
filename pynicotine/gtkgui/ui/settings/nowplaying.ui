@@ -135,6 +135,11 @@
                 <property name="visible">True</property>
                 <property name="has-entry">True</property>
                 <property name="valign">center</property>
+                <child internal-child="entry">
+                  <object class="GtkEntry">
+                    <property name="width-chars">12</property>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
