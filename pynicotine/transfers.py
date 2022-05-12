@@ -1042,15 +1042,14 @@ class Transfers:
                         incompletedir, prefix + base_name[:255 - len(prefix) - len(extension)] + extension)
                     file_handle = open(incomplete_name.encode('utf-8'), 'ab+')  # pylint: disable=consider-using-with
 
-                    if self.config.sections["transfers"]["lock"]:
+                    try:
+                        import fcntl
                         try:
-                            import fcntl
-                            try:
-                                fcntl.lockf(file_handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
-                            except OSError as error:
-                                log.add(_("Can't get an exclusive lock on file - I/O error: %s"), error)
-                        except ImportError:
-                            pass
+                            fcntl.lockf(file_handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                        except OSError as error:
+                            log.add(_("Can't get an exclusive lock on file - I/O error: %s"), error)
+                    except ImportError:
+                        pass
 
                     if i.size_changed:
                         # Remote user sent a different file size than we originally requested,

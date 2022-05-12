@@ -52,13 +52,6 @@
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="LockIncoming">
-            <property name="label" translatable="yes">Prevent write access by other programs for files being downloaded (turn off for NFS)</property>
-            <property name="visible">True</property>
-            <property name="use-underline">True</property>
-          </object>
-        </child>
-        <child>
           <object class="GtkBox">
             <property name="visible">True</property>
             <property name="homogeneous">True</property>

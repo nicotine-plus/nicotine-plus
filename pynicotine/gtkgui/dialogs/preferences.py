@@ -230,7 +230,7 @@ class DownloadsFrame(UserInterface):
         (self.AfterDownload, self.AfterFolder, self.AutoclearFinished,
          self.DownloadDir, self.DownloadDoubleClick, self.DownloadFilter, self.DownloadReverseOrder,
          self.DownloadSpeed, self.DownloadSpeedAlternative, self.FilterView, self.IncompleteDir,
-         self.LockIncoming, self.Main, self.RemoteDownloads, self.UploadDir, self.UploadsAllowed,
+         self.Main, self.RemoteDownloads, self.UploadDir, self.UploadsAllowed,
          self.UsernameSubfolders, self.VerifiedLabel, self.VerifyFilters) = self.widgets
 
         self.preferences = preferences
@@ -253,7 +253,6 @@ class DownloadsFrame(UserInterface):
         self.options = {
             "transfers": {
                 "autoclear_downloads": self.AutoclearFinished,
-                "lock": self.LockIncoming,
                 "reverseorder": self.DownloadReverseOrder,
                 "remotedownloads": self.RemoteDownloads,
                 "uploadallowed": self.UploadsAllowed,
@@ -297,7 +296,6 @@ class DownloadsFrame(UserInterface):
         return {
             "transfers": {
                 "autoclear_downloads": self.AutoclearFinished.get_active(),
-                "lock": self.LockIncoming.get_active(),
                 "reverseorder": self.DownloadReverseOrder.get_active(),
                 "remotedownloads": self.RemoteDownloads.get_active(),
                 "uploadallowed": uploadallowed,
