@@ -32,6 +32,7 @@ import gi
 from gi.repository import Gdk
 from gi.repository import GLib
 from gi.repository import Gtk
+from gi.repository import Pango
 
 from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
@@ -3109,6 +3110,10 @@ class Preferences(UserInterface):
                         obj.add_controller(scroll_controller)
                     else:
                         obj.connect("scroll-event", self.on_widget_scroll_event)
+
+                    if isinstance(obj, Gtk.ComboBoxText):
+                        for cell in obj.get_cells():
+                            cell.set_property("ellipsize", Pango.EllipsizeMode.END)
 
             page.Main.set_margin_start(18)
             page.Main.set_margin_end(18)
