@@ -1,24 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.0"/>
-  <object class="GtkSizeGroup">
-    <property name="mode">horizontal</property>
-    <widgets>
-      <widget name="RoomLogDirLabel"/>
-      <widget name="PrivateLogDirLabel"/>
-      <widget name="TransfersLogDirLabel"/>
-      <widget name="DebugLogDirLabel"/>
-    </widgets>
-  </object>
-  <object class="GtkSizeGroup">
-    <property name="mode">horizontal</property>
-    <widgets>
-      <widget name="RoomLogDir"/>
-      <widget name="PrivateLogDir"/>
-      <widget name="TransfersLogDir"/>
-      <widget name="DebugLogDir"/>
-    </widgets>
-  </object>
   <object class="GtkBox" id="Main">
     <property name="visible">True</property>
     <property name="spacing">30</property>
@@ -144,11 +126,11 @@
         <child>
           <object class="GtkBox">
             <property name="visible">True</property>
+            <property name="homogeneous">True</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkLabel" id="RoomLogDirLabel">
+              <object class="GtkLabel">
                 <property name="visible">True</property>
-                <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Chatroom logs folder:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
@@ -158,7 +140,6 @@
             <child>
               <object class="GtkButton" id="RoomLogDir">
                 <property name="visible">True</property>
-                <property name="hexpand">True</property>
                 <property name="valign">center</property>
               </object>
             </child>
@@ -167,11 +148,11 @@
         <child>
           <object class="GtkBox">
             <property name="visible">True</property>
+            <property name="homogeneous">True</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkLabel" id="PrivateLogDirLabel">
+              <object class="GtkLabel">
                 <property name="visible">True</property>
-                <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Private chat logs folder:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
@@ -181,7 +162,6 @@
             <child>
               <object class="GtkButton" id="PrivateLogDir">
                 <property name="visible">True</property>
-                <property name="hexpand">True</property>
                 <property name="valign">center</property>
               </object>
             </child>
@@ -190,11 +170,11 @@
         <child>
           <object class="GtkBox">
             <property name="visible">True</property>
+            <property name="homogeneous">True</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkLabel" id="TransfersLogDirLabel">
+              <object class="GtkLabel">
                 <property name="visible">True</property>
-                <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Transfer logs folder:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
@@ -204,7 +184,6 @@
             <child>
               <object class="GtkButton" id="TransfersLogDir">
                 <property name="visible">True</property>
-                <property name="hexpand">True</property>
                 <property name="valign">center</property>
               </object>
             </child>
@@ -213,11 +192,11 @@
         <child>
           <object class="GtkBox">
             <property name="visible">True</property>
+            <property name="homogeneous">True</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkLabel" id="DebugLogDirLabel">
+              <object class="GtkLabel">
                 <property name="visible">True</property>
-                <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Debug logs folder:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
@@ -227,7 +206,6 @@
             <child>
               <object class="GtkButton" id="DebugLogDir">
                 <property name="visible">True</property>
-                <property name="hexpand">True</property>
                 <property name="valign">center</property>
               </object>
             </child>

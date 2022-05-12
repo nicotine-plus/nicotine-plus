@@ -1678,9 +1678,9 @@ class LoggingFrame(UserInterface):
         super().__init__("ui/settings/log.ui")
 
         # pylint: disable=invalid-name
-        (self.DebugLogDir, self.DebugLogDirLabel, self.DefaultTimestamp, self.LogDebug, self.LogFileFormat,
-         self.LogPrivate, self.LogRooms, self.LogTransfers, self.Main, self.PrivateLogDir, self.PrivateLogDirLabel,
-         self.RoomLogDir, self.RoomLogDirLabel, self.TransfersLogDir, self.TransfersLogDirLabel) = self.widgets
+        (self.DebugLogDir, self.DefaultTimestamp, self.LogDebug, self.LogFileFormat,
+         self.LogPrivate, self.LogRooms, self.LogTransfers, self.Main, self.PrivateLogDir,
+         self.RoomLogDir, self.TransfersLogDir) = self.widgets
 
         self.preferences = preferences
         self.frame = preferences.frame

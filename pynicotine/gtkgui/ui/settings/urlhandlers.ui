@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.0"/>
-  <object class="GtkSizeGroup">
-    <property name="mode">horizontal</property>
-    <widgets>
-      <widget name="audioPlayerLabel"/>
-      <widget name="FileManagerLabel"/>
-    </widgets>
-  </object>
   <object class="GtkBox" id="Main">
     <property name="visible">True</property>
     <property name="spacing">18</property>
@@ -47,13 +40,13 @@
         <child>
           <object class="GtkBox">
             <property name="visible">True</property>
+            <property name="homogeneous">True</property>
             <property name="spacing">12</property>
             <child>
               <object class="GtkLabel" id="audioPlayerLabel">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Media player command:</property>
                 <property name="wrap">True</property>
-                <property name="hexpand">True</property>
                 <property name="xalign">0</property>
                 <property name="mnemonic_widget">audioPlayerCombo</property>
               </object>
@@ -62,7 +55,6 @@
               <object class="GtkComboBoxText" id="audioPlayerCombo">
                 <property name="visible">True</property>
                 <property name="has-entry">True</property>
-                <property name="hexpand">True</property>
                 <property name="valign">center</property>
                 <items>
                   <item>xdg-open $</item>
@@ -79,12 +71,12 @@
         <child>
           <object class="GtkBox">
             <property name="visible">True</property>
+            <property name="homogeneous">True</property>
             <property name="spacing">12</property>
             <child>
               <object class="GtkLabel" id="FileManagerLabel">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
-                <property name="hexpand">True</property>
                 <property name="label" translatable="yes">File manager command:</property>
                 <property name="wrap">True</property>
                 <property name="mnemonic_widget">FileManagerCombo</property>
@@ -94,7 +86,6 @@
               <object class="GtkComboBoxText" id="FileManagerCombo">
                 <property name="visible">True</property>
                 <property name="has-entry">True</property>
-                <property name="hexpand">True</property>
                 <property name="valign">center</property>
                 <items>
                   <item>xdg-open $</item>

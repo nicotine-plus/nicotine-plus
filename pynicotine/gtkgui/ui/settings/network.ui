@@ -252,6 +252,7 @@
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
+                <property name="homogeneous">True</property>
                 <property name="spacing">12</property>
                 <child>
                   <object class="GtkLabel">
@@ -339,6 +340,7 @@
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
+                <property name="homogeneous">True</property>
                 <property name="spacing">12</property>
                 <child>
                   <object class="GtkLabel">
@@ -362,6 +364,7 @@
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
+                <property name="homogeneous">True</property>
                 <property name="spacing">12</property>
                 <child>
                   <object class="GtkLabel" id="InterfaceLabel">
