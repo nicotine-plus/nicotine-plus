@@ -70,11 +70,11 @@
         <child>
           <object class="GtkBox">
             <property name="visible">True</property>
+            <property name="homogeneous">True</property>
             <property name="spacing">12</property>
             <child>
               <object class="GtkLabel" id="player_input">
                 <property name="visible">True</property>
-                <property name="hexpand">True</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
                 <property name="mnemonic_widget">NPCommand</property>
@@ -83,7 +83,6 @@
             <child>
               <object class="GtkEntry" id="NPCommand">
                 <property name="visible">True</property>
-                <property name="hexpand">True</property>
                 <property name="valign">center</property>
               </object>
             </child>
@@ -117,11 +116,11 @@
         <child>
           <object class="GtkBox">
             <property name="visible">True</property>
+            <property name="homogeneous">True</property>
             <property name="spacing">12</property>
             <child>
               <object class="GtkLabel">
                 <property name="visible">True</property>
-                <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Now Playing message format:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
@@ -132,7 +131,6 @@
               <object class="GtkComboBoxText" id="NPFormat">
                 <property name="visible">True</property>
                 <property name="has-entry">True</property>
-                <property name="hexpand">True</property>
                 <property name="valign">center</property>
               </object>
             </child>

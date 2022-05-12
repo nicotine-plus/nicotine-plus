@@ -72,6 +72,7 @@
             <child>
               <object class="GtkComboBoxText" id="UploadsAllowed">
                 <property name="visible">True</property>
+                <property name="sensitive" bind-source="RemoteDownloads" bind-property="active" bind-flags="bidirectional|sync-create"/>
                 <property name="valign">center</property>
                 <items>
                   <item translatable="yes">No one</item>
