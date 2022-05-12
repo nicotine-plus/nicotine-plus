@@ -2207,6 +2207,7 @@
                     <property name="visible">True</property>
                     <property name="hexpand">True</property>
                     <property name="spacing">12</property>
+                    <property name="valign">center</property>
                     <child>
                       <object class="GtkButton" id="ThemeDir">
                         <property name="visible">True</property>

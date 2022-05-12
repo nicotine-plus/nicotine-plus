@@ -324,6 +324,7 @@
             <child>
               <object class="GtkComboBoxText" id="FirstInFirstOut">
                 <property name="visible">True</property>
+                <property name="valign">center</property>
                 <property name="tooltip-text" translatable="yes">Round Robin: Files will be uploaded in cyclical fashion to the users waiting in queue.
 First In, First Out: Files will be uploaded in the order they were queued.</property>
                 <items>
