@@ -67,36 +67,22 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkFlowBox">
+                  <object class="GtkBox">
                     <property name="visible">True</property>
-                    <property name="column-spacing">24</property>
-                    <property name="row-spacing">12</property>
-                    <property name="max-children-per-line">2</property>
-                    <property name="selection-mode">none</property>
+                    <property name="homogeneous">True</property>
+                    <property name="spacing">12</property>
                     <child>
-                      <object class="GtkFlowBoxChild">
+                      <object class="GtkLabel">
                         <property name="visible">True</property>
-                        <property name="sensitive">False</property>
-                        <child>
-                          <object class="GtkLabel">
-                            <property name="visible">True</property>
-                            <property name="xalign">0</property>
-                            <property name="label" translatable="yes">Tab bar position:</property>
-                            <property name="mnemonic_widget">MainPosition</property>
-                          </object>
-                        </child>
+                        <property name="xalign">0</property>
+                        <property name="label" translatable="yes">Tab bar position:</property>
+                        <property name="mnemonic_widget">MainPosition</property>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkFlowBoxChild">
+                      <object class="GtkComboBoxText" id="MainPosition">
                         <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <child>
-                          <object class="GtkComboBoxText" id="MainPosition">
-                            <property name="visible">True</property>
-                            <property name="hexpand">True</property>
-                          </object>
-                        </child>
+                        <property name="valign">center</property>
                       </object>
                     </child>
                   </object>
@@ -238,40 +224,27 @@
               </object>
             </child>
             <child>
-              <object class="GtkFlowBox">
+              <object class="GtkBox">
                 <property name="visible">True</property>
-                <property name="column-spacing">24</property>
-                <property name="row-spacing">12</property>
-                <property name="max-children-per-line">2</property>
-                <property name="selection-mode">none</property>
+                <property name="homogeneous">True</property>
+                <property name="spacing">12</property>
                 <child>
-                  <object class="GtkFlowBoxChild">
+                  <object class="GtkLabel">
                     <property name="visible">True</property>
-                    <property name="sensitive">False</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">When closing Nicotine+:</property>
-                        <property name="xalign">0</property>
-                        <property name="mnemonic_widget">CloseAction</property>
-                      </object>
-                    </child>
+                    <property name="label" translatable="yes">When closing Nicotine+:</property>
+                    <property name="xalign">0</property>
+                    <property name="mnemonic_widget">CloseAction</property>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkFlowBoxChild">
+                  <object class="GtkComboBoxText" id="CloseAction">
                     <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <child>
-                      <object class="GtkComboBoxText" id="CloseAction">
-                        <property name="visible">True</property>
-                        <items>
-                          <item translatable="yes">Quit program</item>
-                          <item translatable="yes">Show confirmation dialog</item>
-                          <item translatable="yes">Run in the background</item>
-                        </items>
-                      </object>
-                    </child>
+                    <property name="valign">center</property>
+                    <items>
+                      <item translatable="yes">Quit program</item>
+                      <item translatable="yes">Show confirmation dialog</item>
+                      <item translatable="yes">Run in the background</item>
+                    </items>
                   </object>
                 </child>
               </object>
@@ -444,16 +417,15 @@
           </object>
         </child>
         <child>
-          <object class="GtkFlowBox">
+          <object class="GtkBox">
             <property name="visible">True</property>
-            <property name="column-spacing">12</property>
-            <property name="row-spacing">12</property>
-            <property name="max-children-per-line">2</property>
-            <property name="selection-mode">none</property>
+            <property name="spacing">12</property>
+            <property name="orientation">vertical</property>
             <child>
-              <object class="GtkFlowBoxChild">
+              <object class="GtkBox">
                 <property name="visible">True</property>
-                <property name="sensitive">False</property>
+                <property name="homogeneous">True</property>
+                <property name="spacing">12</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">True</property>
@@ -462,24 +434,19 @@
                     <property name="mnemonic_widget">ChatRoomsPosition</property>
                   </object>
                 </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
                 <child>
                   <object class="GtkComboBoxText" id="ChatRoomsPosition">
                     <property name="visible">True</property>
-                    <property name="hexpand">True</property>
+                    <property name="valign">center</property>
                   </object>
                 </child>
               </object>
             </child>
             <child>
-              <object class="GtkFlowBoxChild">
+              <object class="GtkBox">
                 <property name="visible">True</property>
-                <property name="sensitive">False</property>
+                <property name="homogeneous">True</property>
+                <property name="spacing">12</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">True</property>
@@ -488,24 +455,19 @@
                     <property name="mnemonic_widget">PrivateChatPosition</property>
                   </object>
                 </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
                 <child>
                   <object class="GtkComboBoxText" id="PrivateChatPosition">
                     <property name="visible">True</property>
-                    <property name="hexpand">True</property>
+                    <property name="valign">center</property>
                   </object>
                 </child>
               </object>
             </child>
             <child>
-              <object class="GtkFlowBoxChild">
+              <object class="GtkBox">
                 <property name="visible">True</property>
-                <property name="sensitive">False</property>
+                <property name="homogeneous">True</property>
+                <property name="spacing">12</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">True</property>
@@ -514,24 +476,19 @@
                     <property name="mnemonic_widget">SearchPosition</property>
                   </object>
                 </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
                 <child>
                   <object class="GtkComboBoxText" id="SearchPosition">
                     <property name="visible">True</property>
-                    <property name="hexpand">True</property>
+                    <property name="valign">center</property>
                   </object>
                 </child>
               </object>
             </child>
             <child>
-              <object class="GtkFlowBoxChild">
+              <object class="GtkBox">
                 <property name="visible">True</property>
-                <property name="sensitive">False</property>
+                <property name="homogeneous">True</property>
+                <property name="spacing">12</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">True</property>
@@ -540,24 +497,19 @@
                     <property name="mnemonic_widget">UserInfoPosition</property>
                   </object>
                 </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
                 <child>
                   <object class="GtkComboBoxText" id="UserInfoPosition">
                     <property name="visible">True</property>
-                    <property name="hexpand">True</property>
+                    <property name="valign">center</property>
                   </object>
                 </child>
               </object>
             </child>
             <child>
-              <object class="GtkFlowBoxChild">
+              <object class="GtkBox">
                 <property name="visible">True</property>
-                <property name="sensitive">False</property>
+                <property name="homogeneous">True</property>
+                <property name="spacing">12</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">True</property>
@@ -566,16 +518,10 @@
                     <property name="mnemonic_widget">UserBrowsePosition</property>
                   </object>
                 </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
                 <child>
                   <object class="GtkComboBoxText" id="UserBrowsePosition">
                     <property name="visible">True</property>
-                    <property name="hexpand">True</property>
+                    <property name="valign">center</property>
                   </object>
                 </child>
               </object>
@@ -621,18 +567,15 @@
           </object>
         </child>
         <child>
-          <object class="GtkFlowBox">
+          <object class="GtkBox">
             <property name="visible">True</property>
-            <property name="homogeneous">True</property>
-            <property name="column-spacing">12</property>
-            <property name="row-spacing">12</property>
-            <property name="min-children-per-line">1</property>
-            <property name="max-children-per-line">2</property>
-            <property name="selection-mode">none</property>
+            <property name="spacing">12</property>
+            <property name="orientation">vertical</property>
             <child>
-              <object class="GtkFlowBoxChild">
+              <object class="GtkBox">
                 <property name="visible">True</property>
-                <property name="can-focus">False</property>
+                <property name="homogeneous">True</property>
+                <property name="spacing">12</property>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
@@ -650,33 +593,29 @@
                     <child>
                       <object class="GtkColorButton" id="PickImmediate">
                         <property name="visible">True</property>
+                        <property name="valign">center</property>
                         <signal name="color-set" handler="on_color_set"/>
                       </object>
                     </child>
                   </object>
                 </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
                     <property name="spacing">12</property>
+                    <property name="valign">center</property>
                     <child>
                       <object class="GtkEntry" id="EntryImmediate">
                         <property name="visible">True</property>
                         <property name="hexpand">True</property>
-                        <property name="width-chars">16</property>
+                        <property name="width-chars">6</property>
                         <signal name="changed" handler="on_colors_changed"/>
                       </object>
                     </child>
                     <child>
                       <object class="GtkButton" id="DefaultImmediate">
                         <property name="visible">True</property>
-                        <property name="halign">start</property>
+                        <property name="tooltip-text" translatable="yes">Default</property>
                         <signal name="clicked" handler="on_default_color"/>
                         <child>
                           <object class="GtkBox">
@@ -685,14 +624,14 @@
                             <child>
                               <object class="GtkImage">
                                 <property name="visible">True</property>
-                                <property name="icon-name">view-refresh-symbolic</property>
+                                <property name="icon-name">edit-clear-symbolic</property>
                               </object>
                             </child>
                             <child>
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
+                                <property name="ellipsize">end</property>
                                 <property name="label" translatable="yes">Default</property>
-                                <property name="use-underline">True</property>
                               </object>
                             </child>
                           </object>
@@ -704,9 +643,10 @@
               </object>
             </child>
             <child>
-              <object class="GtkFlowBoxChild">
+              <object class="GtkBox">
                 <property name="visible">True</property>
-                <property name="can-focus">False</property>
+                <property name="homogeneous">True</property>
+                <property name="spacing">12</property>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
@@ -724,33 +664,29 @@
                     <child>
                       <object class="GtkColorButton" id="PickQueue">
                         <property name="visible">True</property>
+                        <property name="valign">center</property>
                         <signal name="color-set" handler="on_color_set"/>
                       </object>
                     </child>
                   </object>
                 </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
                     <property name="spacing">12</property>
+                    <property name="valign">center</property>
                     <child>
                       <object class="GtkEntry" id="EntryQueue">
                         <property name="visible">True</property>
                         <property name="hexpand">True</property>
-                        <property name="width-chars">16</property>
+                        <property name="width-chars">6</property>
                         <signal name="changed" handler="on_colors_changed"/>
                       </object>
                     </child>
                     <child>
                       <object class="GtkButton" id="DefaultQueue">
                         <property name="visible">True</property>
-                        <property name="halign">start</property>
+                        <property name="tooltip-text" translatable="yes">Default</property>
                         <signal name="clicked" handler="on_default_color"/>
                         <child>
                           <object class="GtkBox">
@@ -759,14 +695,14 @@
                             <child>
                               <object class="GtkImage">
                                 <property name="visible">True</property>
-                                <property name="icon-name">view-refresh-symbolic</property>
+                                <property name="icon-name">edit-clear-symbolic</property>
                               </object>
                             </child>
                             <child>
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
+                                <property name="ellipsize">end</property>
                                 <property name="label" translatable="yes">Default</property>
-                                <property name="use-underline">True</property>
                               </object>
                             </child>
                           </object>
@@ -811,43 +747,30 @@
               </object>
             </child>
             <child>
-              <object class="GtkFlowBox">
+              <object class="GtkBox">
                 <property name="visible">True</property>
-                <property name="column-spacing">12</property>
-                <property name="row-spacing">12</property>
-                <property name="max-children-per-line">2</property>
-                <property name="selection-mode">none</property>
+                <property name="homogeneous">True</property>
+                <property name="spacing">12</property>
                 <child>
-                  <object class="GtkFlowBoxChild">
+                  <object class="GtkLabel">
                     <property name="visible">True</property>
-                    <property name="sensitive">False</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Chat username appearance:</property>
-                        <property name="xalign">0</property>
-                        <property name="wrap">True</property>
-                        <property name="mnemonic_widget">UsernameStyle</property>
-                      </object>
-                    </child>
+                    <property name="label" translatable="yes">Chat username appearance:</property>
+                    <property name="xalign">0</property>
+                    <property name="wrap">True</property>
+                    <property name="mnemonic_widget">UsernameStyle</property>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkFlowBoxChild">
+                  <object class="GtkComboBoxText" id="UsernameStyle">
                     <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <child>
-                      <object class="GtkComboBoxText" id="UsernameStyle">
-                        <property name="visible">True</property>
-                        <signal name="changed" handler="on_colors_changed"/>
-                        <items>
-                          <item id="bold" translatable="yes">bold</item>
-                          <item id="italic" translatable="yes">italic</item>
-                          <item id="underline" translatable="yes">underline</item>
-                          <item id="normal" translatable="yes">normal</item>
-                        </items>
-                      </object>
-                    </child>
+                    <property name="valign">center</property>
+                    <signal name="changed" handler="on_colors_changed"/>
+                    <items>
+                      <item id="bold" translatable="yes">bold</item>
+                      <item id="italic" translatable="yes">italic</item>
+                      <item id="underline" translatable="yes">underline</item>
+                      <item id="normal" translatable="yes">normal</item>
+                    </items>
                   </object>
                 </child>
               </object>
