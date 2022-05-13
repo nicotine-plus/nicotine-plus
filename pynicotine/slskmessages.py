@@ -2472,6 +2472,7 @@ class FileSearchResult(PeerMessage):
         if message[pos:] and config.sections["searches"]["private_search_results"]:
             pos, self.privatelist = self._parse_result_list(message, pos)
 
+
 class UserInfoRequest(PeerMessage):
     """ Peer code: 15 """
     """ We ask the other peer to send us their user information, picture and all. """
