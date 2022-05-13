@@ -59,7 +59,7 @@ class ChatHistory(UserInterface):
     def load_users(self):
 
         log_path = os.path.join(config.sections["logging"]["privatelogsdir"], "*.log")
-        user_logs = sorted(glob.glob(log_path.encode("utf-8")), key=os.path.getmtime)
+        user_logs = sorted(glob.glob(log_path.encode("utf-8")), key=os.path.getmtime, reverse=True)
 
         for file_path in user_logs:
             username = os.path.basename(file_path[:-4]).decode("utf-8", "replace")
