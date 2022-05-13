@@ -101,6 +101,30 @@
             <property name="visible">True</property>
             <property name="spacing">12</property>
             <child>
+              <object class="GtkLabel" id="filesize_label">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">File Size</property>
+                <property name="xalign">1</property>
+                <property name="mnemonic_widget">filesize_value_label</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="filesize_value_label">
+                <property name="visible">True</property>
+                <property name="selectable">True</property>
+                <property name="ellipsize">end</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">True</property>
+            <property name="spacing">12</property>
+            <child>
               <object class="GtkLabel" id="folder_label">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Folder</property>
@@ -146,30 +170,6 @@
         </child>
         <child>
           <object class="GtkBox" id="length_row">
-            <property name="visible">True</property>
-            <property name="spacing">12</property>
-            <child>
-              <object class="GtkLabel" id="filesize_label">
-                <property name="visible">True</property>
-                <property name="label" translatable="yes">File Size</property>
-                <property name="xalign">1</property>
-                <property name="mnemonic_widget">filesize_value</property>
-                <style>
-                  <class name="dim-label"/>
-                </style>
-              </object>
-            </child>
-            <child>
-              <object class="GtkLabel" id="filesize_value_label">
-                <property name="visible">True</property>
-                <property name="selectable">True</property>
-                <property name="ellipsize">end</property>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkBox">
             <property name="visible">True</property>
             <property name="spacing">12</property>
             <child>
