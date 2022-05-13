@@ -22,11 +22,9 @@ import os
 import pkgutil
 import re
 import ssl
-import subprocess
 import sys
 import tempfile
 
-from pkgutil import walk_packages
 from cx_Freeze import Executable, setup
 
 

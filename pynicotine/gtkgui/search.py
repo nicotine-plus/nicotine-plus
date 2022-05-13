@@ -277,7 +277,7 @@ class Search(UserInterface):
             self.filter_file_size_combobox,
             self.filter_file_type_combobox,
             self.filter_free_slot_button,
-            self.filter_include_combobox
+            self.filter_include_combobox,
             self.filters_button,
             self.filters_container,
             self.filters_label,
