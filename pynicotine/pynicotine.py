@@ -491,10 +491,10 @@ class NicotineCore:
             self.connect()
 
     def check_download_queue(self, _msg):
-        self.transfers.check_download_queue()
+        self.transfers.check_download_queue_callback()
 
     def check_upload_queue(self, _msg):
-        self.transfers.check_upload_queue()
+        self.transfers.check_upload_queue_callback()
 
     def file_download(self, msg):
         log.add_msg_contents(msg)

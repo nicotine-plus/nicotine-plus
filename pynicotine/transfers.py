@@ -100,7 +100,6 @@ class Transfers:
         self.uploads = deque()
         self.privileged_users = set()
         self.requested_folders = defaultdict(dict)
-        self.last_save_times = {"downloads": 0, "uploads": 0}
         self.transfer_request_times = {}
         self.upload_speed = 0
         self.token = 0
@@ -113,6 +112,7 @@ class Transfers:
 
         self.network_callback = network_callback
         self.download_queue_timer_count = -1
+        self.upload_queue_timer_count = -1
         self.downloadsview = None
         self.uploadsview = None
 
@@ -1895,8 +1895,8 @@ class Transfers:
             self.downloadsview.new_transfer_notification(finished=True)
 
         # Attempt to autoclear this download, if configured
-        if not self.auto_clear_download(i, force_save=True):
-            self.update_download(i, force_save=True)
+        if not self.auto_clear_download(i):
+            self.update_download(i)
 
         self.core.pluginhandler.download_finished_notification(i.user, i.filename, newname)
 
@@ -1930,19 +1930,18 @@ class Transfers:
         self.core.statistics.append_stat_value("completed_uploads", 1)
 
         # Autoclear this upload
-        if not self.auto_clear_upload(i, force_save=True):
-            self.update_upload(i, force_save=True)
+        if not self.auto_clear_upload(i):
+            self.update_upload(i)
 
         real_path = self.core.shares.virtual2real(i.filename)
         self.core.pluginhandler.upload_finished_notification(i.user, i.filename, real_path)
 
         self.check_upload_queue()
 
-    def auto_clear_download(self, transfer, force_save=False):
+    def auto_clear_download(self, transfer):
 
         if self.config.sections["transfers"]["autoclear_downloads"]:
             self.downloads.remove(transfer)
-            self.save_transfers("downloads", force_save)
 
             if self.downloadsview:
                 self.downloadsview.remove_specific(transfer, True)
@@ -1951,11 +1950,10 @@ class Transfers:
 
         return False
 
-    def auto_clear_upload(self, transfer, force_save=False):
+    def auto_clear_upload(self, transfer):
 
         if self.config.sections["transfers"]["autoclear_uploads"]:
             self.uploads.remove(transfer)
-            self.save_transfers("uploads", force_save)
 
             if self.uploadsview:
                 self.uploadsview.remove_specific(transfer, True)
@@ -1964,16 +1962,12 @@ class Transfers:
 
         return False
 
-    def update_download(self, transfer, force_save=False, update_parent=True):
-
-        self.save_transfers("downloads", force_save)
+    def update_download(self, transfer, update_parent=True):
 
         if self.downloadsview:
             self.downloadsview.update_model(transfer, update_parent=update_parent)
 
-    def update_upload(self, transfer, force_save=False, update_parent=True):
-
-        self.save_transfers("uploads", force_save)
+    def update_upload(self, transfer, update_parent=True):
 
         if self.uploadsview:
             self.uploadsview.update_model(transfer, update_parent=update_parent)
@@ -2001,7 +1995,10 @@ class Transfers:
 
     def _check_upload_queue_timer(self):
 
+        self.upload_queue_timer_count = -1
+
         while True:
+            self.upload_queue_timer_count += 1
             self.network_callback([slskmessages.CheckUploadQueue()])
 
             if self.core.protothread.exit.wait(10):
@@ -2016,7 +2013,7 @@ class Transfers:
             self.download_queue_timer_count += 1
             self.network_callback([slskmessages.CheckDownloadQueue()])
 
-            if self.core.protothread.exit.wait(180):
+            if self.core.protothread.exit.wait(60):
                 # Event set, we're exiting
                 return
 
@@ -2058,7 +2055,7 @@ class Transfers:
 
         return True, None
 
-    def check_download_queue(self):
+    def check_download_queue_callback(self):
         """ Find failed or stuck downloads and attempt to queue them. Also ask for the queue
         position of downloads. """
 
@@ -2069,7 +2066,7 @@ class Transfers:
         for transfer in reversed(self.downloads):
             status = transfer.status
 
-            if (self.download_queue_timer_count >= 4
+            if (self.download_queue_timer_count >= 12
                     and (status in statuslist_limited or status.startswith("User limit of"))):
                 # Re-queue limited downloads every 12 minutes
 
@@ -2082,19 +2079,23 @@ class Transfers:
                 self.abort_transfer(transfer)
                 self.get_file(transfer.user, transfer.filename, transfer.path, transfer)
 
-            if status in statuslist_failed:
-                # Retry failed downloads every 3 minutes
+            if self.download_queue_timer_count % 3 == 0:
+                if status in statuslist_failed:
+                    # Retry failed downloads every 3 minutes
 
-                self.abort_transfer(transfer)
-                self.get_file(transfer.user, transfer.filename, transfer.path, transfer)
+                    self.abort_transfer(transfer)
+                    self.get_file(transfer.user, transfer.filename, transfer.path, transfer)
 
-            if status == "Queued":
-                # Request queue position every 3 minutes
+                if status == "Queued":
+                    # Request queue position every 3 minutes
 
-                self.core.send_message_to_peer(
-                    transfer.user,
-                    slskmessages.PlaceInQueueRequest(None, transfer.filename, transfer.legacy_attempt)
-                )
+                    self.core.send_message_to_peer(
+                        transfer.user,
+                        slskmessages.PlaceInQueueRequest(None, transfer.filename, transfer.legacy_attempt)
+                    )
+
+        # Save list of downloads to file every one minute
+        self.save_transfers("downloads")
 
         if reset_count:
             self.download_queue_timer_count = 0
@@ -2217,6 +2218,15 @@ class Transfers:
                 user=user, filename=upload_candidate.filename, size=upload_candidate.size, transfer=upload_candidate
             )
             return
+
+    def check_upload_queue_callback(self):
+
+        if self.upload_queue_timer_count >= 6:
+            # Save list of uploads to file every one minute
+            self.save_transfers("uploads")
+            self.upload_queue_timer_count = 0
+
+        self.check_upload_queue()
 
     def update_user_counter(self, user):
         """ Called when an upload associated with a user has changed. The user update counter
@@ -2441,17 +2451,11 @@ class Transfers:
     def save_uploads_callback(self, filename):
         json.dump(self.get_uploads(), filename, ensure_ascii=False)
 
-    def save_transfers(self, transfer_type, force_save=False):
+    def save_transfers(self, transfer_type):
         """ Save list of transfers """
 
         if not self.allow_saving_transfers:
             # Don't save if transfers didn't load properly!
-            return
-
-        current_time = time.time()
-
-        if not force_save and (current_time - self.last_save_times[transfer_type]) < 15:
-            # Save list of transfers to file every 15 seconds
             return
 
         if transfer_type == "uploads":
@@ -2463,7 +2467,6 @@ class Transfers:
 
         self.config.create_data_folder()
         write_file_and_backup(transfers_file, callback)
-        self.last_save_times[transfer_type] = current_time
 
     def server_disconnect(self):
 
@@ -2477,8 +2480,8 @@ class Transfers:
 
     def quit(self):
 
-        self.save_transfers("downloads", force_save=True)
-        self.save_transfers("uploads", force_save=True)
+        self.save_transfers("downloads")
+        self.save_transfers("uploads")
 
 
 class Statistics:
