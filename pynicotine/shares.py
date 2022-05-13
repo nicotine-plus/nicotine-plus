@@ -570,6 +570,7 @@ class Shares:
     def load_shares(cls, shares, dbs, reset_shares=False):
 
         errors = []
+        exception = None
 
         for destination, shelvefile in dbs:
             try:

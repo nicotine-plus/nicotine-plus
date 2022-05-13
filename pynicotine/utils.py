@@ -64,8 +64,8 @@ def rename_process(new_name, debug_info=False):
             libc = ctypes.CDLL(None)
             libc.setproctitle(new_name)
 
-        except Exception as error:
-            errors.append(error)
+        except Exception as second_error:
+            errors.append(second_error)
             errors.append("Failed BSD style")
 
     if debug_info and errors:
@@ -509,10 +509,10 @@ def write_file_and_backup(path, callback, protect=False):
             if os.path.exists(path + ".old"):
                 os.rename(path + ".old", path)
 
-        except Exception as error:
+        except Exception as second_error:
             log.add(_("Unable to restore previous file %(path)s: %(error)s"), {
                 "path": path,
-                "error": error
+                "error": second_error
             })
 
     if protect:
