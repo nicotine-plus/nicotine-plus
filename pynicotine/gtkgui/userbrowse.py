@@ -277,7 +277,6 @@ class UserBrowse(UserInterface):
         Accelerator("<Primary>Return", self.folder_tree_view, self.on_folder_transfer_to_accelerator)  # w/to prompt
         Accelerator("<Shift><Primary>Return", self.folder_tree_view, self.on_folder_transfer_accelerator)  # no prmt
         Accelerator("<Primary><Alt>Return", self.folder_tree_view, self.on_folder_open_manager_accelerator)
-        Accelerator("<Alt>Return", self.folder_tree_view, self.on_file_properties_accelerator, True)
 
         # Key Bindings (file_list_view)
         for accelerator in ("<Shift>Tab", "BackSpace", "backslash"):  # Avoid header, navigate up, "\"
@@ -1000,14 +999,13 @@ class UserBrowse(UserInterface):
     def on_file_properties(self, *_args):
 
         data = []
-        model, paths = self.FileTreeView.get_selection().get_selected_rows()
+        model, paths = self.file_list_view.get_selection().get_selected_rows()
 
         for path in paths:
             iterator = model.get_iter(path)
             filename = model.get_value(iterator, 0)
             virtual_path = "\\".join([self.selected_folder, filename])
 
-<<<<<<< HEAD
             data.append({
                 "user": self.user,
                 "fn": virtual_path,
@@ -1017,36 +1015,6 @@ class UserBrowse(UserInterface):
                 "bitrate": model.get_value(iterator, 2),
                 "length": model.get_value(iterator, 3)
             })
-=======
-            if not files:
-                return
-
-            for file_data in files:
-                filename = file_data[1]
-                file_size = file_data[2]
-                virtual_path = "\\".join([folder, filename])
-                h_bitrate, _bitrate, h_length, length = get_result_bitrate_length(file_size, file_data[4])
-                selected_size += file_size
-                selected_length += length
-
-                data.append({"user": self.user, "fn": virtual_path, "filename": filename,
-                             "directory": folder, "size": file_size, "bitrate": h_bitrate, "length": h_length})
-
-        else:
-            model, paths = self.file_list_view.get_selection().get_selected_rows()
-
-            for path in paths:
-                iterator = model.get_iter(path)
-                filename = model.get_value(iterator, 0)
-                file_size = model.get_value(iterator, 4)
-                virtual_path = "\\".join([folder, filename])
-                selected_size += file_size
-                selected_length += model.get_value(iterator, 6)
-
-                data.append({"user": self.user, "fn": virtual_path, "filename": filename,
-                             "directory": folder, "size": file_size, "bitrate": model.get_value(iterator, 2),
-                             "length": model.get_value(iterator, 3)})
->>>>>>> b7ec5d2d (userbrowse.ui: use snake case widget names)
 
         if data:
             FileProperties(self.frame, self.core, data).show()

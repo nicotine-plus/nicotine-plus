@@ -347,7 +347,7 @@ class PrivateChat(UserInterface):
 
             if not self.offline_message:
                 self.chat_view.append_line(_("* Message(s) sent while you were offline. Timestamps are reported by "
-                                                 "the server and can be off."), tag, timestamp_format=timestamp_format)
+                                             "the server and can be off."), tag, timestamp_format=timestamp_format)
                 self.offline_message = True
 
         else:
@@ -359,7 +359,6 @@ class PrivateChat(UserInterface):
         if self.log_toggle.get_active():
             timestamp_format = config.sections["logging"]["log_timestamp"]
 
-            self.chats.history.update_user(self.user, "%s %s" % (time.strftime(timestamp_format), line))
             log.write_log(config.sections["logging"]["privatelogsdir"], self.user, line, timestamp, timestamp_format)
 
     def echo_message(self, text, message_type):
@@ -387,8 +386,6 @@ class PrivateChat(UserInterface):
                                    username=my_username, usertag=self.tag_my_username)
 
         if self.log_toggle.get_active():
-            timestamp_format = config.sections["logging"]["log_timestamp"]
-
             log.write_log(config.sections["logging"]["privatelogsdir"], self.user, line,
                           timestamp_format=config.sections["logging"]["log_timestamp"])
 

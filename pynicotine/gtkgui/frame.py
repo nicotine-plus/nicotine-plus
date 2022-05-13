@@ -207,11 +207,11 @@ class NicotineFrame(UserInterface):
         """ Show Window """
 
         self.update_window_properties()
-        self.application.add_window(self.MainWindow)
+        self.application.add_window(self.window)
 
         # Check command line option and config option
         if not start_hidden and not config.sections["ui"]["startup_hidden"]:
-            self.MainWindow.present_with_time(Gdk.CURRENT_TIME)
+            self.window.present_with_time(Gdk.CURRENT_TIME)
 
         if not connect_ready:
             # Set up fast configure dialog
@@ -221,8 +221,8 @@ class NicotineFrame(UserInterface):
 
     def on_window_hide_unhide(self, *_args):
 
-        if self.MainWindow.get_property("visible"):
-            self.MainWindow.hide()
+        if self.window.get_property("visible"):
+            self.window.hide()
             return
 
         self.show()
@@ -245,10 +245,10 @@ class NicotineFrame(UserInterface):
     def save_window_state(self):
 
         if Gtk.get_major_version() == 4:
-            width, height = self.MainWindow.get_default_size()
+            width, height = self.window.get_default_size()
         else:
-            width, height = self.MainWindow.get_size()
-            xpos, ypos = self.MainWindow.get_position()
+            width, height = self.window.get_size()
+            xpos, ypos = self.window.get_position()
 
             config.sections["ui"]["xposition"] = xpos
             config.sections["ui"]["yposition"] = ypos
@@ -256,7 +256,7 @@ class NicotineFrame(UserInterface):
         config.sections["ui"]["height"] = height
         config.sections["ui"]["width"] = width
 
-        config.sections["ui"]["maximized"] = self.MainWindow.is_maximized()
+        config.sections["ui"]["maximized"] = self.window.is_maximized()
         config.sections["ui"]["last_tab_id"] = self.current_page_id
 
         for page in (self.userlist, self.chatrooms, self.downloads, self.uploads):
@@ -264,11 +264,11 @@ class NicotineFrame(UserInterface):
 
     def show(self):
 
-        self.MainWindow.present_with_time(Gdk.CURRENT_TIME)
+        self.window.present_with_time(Gdk.CURRENT_TIME)
 
         if Gtk.get_major_version() == 3:
             # Fix for Windows where minimized window is not shown when unhiding from tray
-            self.MainWindow.deiconify()
+            self.window.deiconify()
 
     """ Init UI """
 
@@ -344,19 +344,10 @@ class NicotineFrame(UserInterface):
             threading.excepthook = self.on_critical_error_threading
             return
 
-<<<<<<< HEAD
         # Workaround for Python <= 3.7
         init_thread = threading.Thread.__init__
 
         def init_thread_excepthook(self, *args, **kwargs):
-=======
-        self.init_window_properties()
-        self.application.add_window(self.window)
-
-        # Check command line option and config option
-        if not self.start_hidden and not config.sections["ui"]["startup_hidden"]:
-            self.window.present_with_time(Gdk.CURRENT_TIME)
->>>>>>> 2d755ca9 (mainwindow.ui: use snake case widget names (part 2))
 
             init_thread(self, *args, **kwargs)
             run_thread = self.run
@@ -385,62 +376,6 @@ class NicotineFrame(UserInterface):
         for widget in list(self.__dict__.values()):
             update_widget_visuals(widget)
 
-<<<<<<< HEAD
-=======
-    """ Window State """
-
-    def on_window_hide_unhide(self, *_args):
-
-        if self.window.get_property("visible"):
-            self.window.hide()
-            return
-
-        self.show()
-
-    def on_window_active_changed(self, window, param):
-
-        if not window.get_property(param.name):
-            return
-
-        self.chatrooms.clear_notifications()
-        self.privatechat.clear_notifications()
-        self.on_cancel_auto_away()
-
-        if Gtk.get_major_version() == 3 and window.get_urgency_hint():
-            window.set_urgency_hint(False)
-
-    def on_window_visible_changed(self, *_args):
-        self.tray_icon.update_show_hide_label()
-
-    def save_window_state(self):
-
-        if Gtk.get_major_version() == 4:
-            width, height = self.window.get_default_size()
-        else:
-            width, height = self.window.get_size()
-            xpos, ypos = self.window.get_position()
-
-            config.sections["ui"]["xposition"] = xpos
-            config.sections["ui"]["yposition"] = ypos
-
-        config.sections["ui"]["height"] = height
-        config.sections["ui"]["width"] = width
-
-        config.sections["ui"]["maximized"] = self.window.is_maximized()
-        config.sections["ui"]["last_tab_id"] = self.current_page_id
-
-        for page in (self.userlist, self.chatrooms, self.downloads, self.uploads):
-            page.save_columns()
-
-    def show(self):
-
-        self.window.present_with_time(Gdk.CURRENT_TIME)
-
-        if Gtk.get_major_version() == 3:
-            # Fix for Windows where minimized window is not shown when unhiding from tray
-            self.window.deiconify()
-
->>>>>>> 2d755ca9 (mainwindow.ui: use snake case widget names (part 2))
     """ Connection """
 
     def network_callback(self, msgs):
