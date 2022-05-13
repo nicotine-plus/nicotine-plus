@@ -156,7 +156,7 @@ def open_file_path(file_path, command=None, create_folder=False, create_file=Fal
             _try_open_uri("file:///" + file_path)
 
     except Exception as error:
-        log.add(_("Cannot open file path %(path)s: %(error)s"), {"path": file_path, "error": error})
+        log.add(_("Failed to open file path: %s"), error)
         return False
 
     return True
@@ -185,7 +185,7 @@ def open_uri(uri):
         return True
 
     except Exception as error:
-        log.add(_("Cannot open URL %(url)s: %(error)s"), {"url": uri, "error": error})
+        log.add(_("Failed to open URL: %s"), error)
 
     return False
 
@@ -209,7 +209,7 @@ def _handle_log(folder, filename, callback):
         callback(path)
 
     except Exception as error:
-        log.add(_("Cannot access log file %(path)s: %(error)s"), {"path": path, "error": error})
+        log.add("Failed to process log file: %s", error)
 
 
 def open_log_callback(path):

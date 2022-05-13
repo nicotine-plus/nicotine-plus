@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-13 17:05+0300\n"
+"POT-Creation-Date: 2022-05-13 17:28+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3634,17 +3634,12 @@ msgstr ""
 
 #: pynicotine/utils.py:159
 #, python-format
-msgid "Cannot open file path %(path)s: %(error)s"
+msgid "Failed to open file path: %s"
 msgstr ""
 
 #: pynicotine/utils.py:188
 #, python-format
-msgid "Cannot open URL %(url)s: %(error)s"
-msgstr ""
-
-#: pynicotine/utils.py:212
-#, python-format
-msgid "Cannot access log file %(path)s: %(error)s"
+msgid "Failed to open URL: %s"
 msgstr ""
 
 #: pynicotine/utils.py:489
