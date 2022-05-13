@@ -1,3 +1,9 @@
+nicotine (3.2.3-dev1) jammy; urgency=medium
+
+  * Development version.
+
+ -- Mat <mail@mathias.is>  Fri, 13 May 2022 13:09:32 +0300
+
 nicotine (3.2.2-1) impish; urgency=medium
 
   * Latest upstream.
