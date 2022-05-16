@@ -5,27 +5,21 @@ on: [push, pull_request]
 jobs:
 
   debian:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-18.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.10'
-
       - name: Install dependencies
         run: |
-          sudo sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list
           sudo apt update
           sudo apt build-dep .
 
       - name: Build Debian package
         run: |
-          python setup.py sdist
+          python3 setup.py sdist
           mk-origtargz dist/nicotine-plus-*.tar.gz
           debuild -sa -us -uc
 
