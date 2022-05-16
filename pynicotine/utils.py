@@ -475,11 +475,11 @@ def load_file(path, load_func, use_old_file=False):
         if use_old_file:
             path = path + ".old"
 
-        elif os.path.isfile(path + ".old"):
-            if not os.path.isfile(path):
+        elif os.path.isfile((path + ".old").encode("utf-8")):
+            if not os.path.isfile(path.encode("utf-8")):
                 raise OSError("*.old file is present but main file is missing")
 
-            if os.path.getsize(path) == 0:
+            if os.path.getsize(path.encode("utf-8")) == 0:
                 # Empty files should be considered broken/corrupted
                 raise OSError("*.old file is present but main file is empty")
 

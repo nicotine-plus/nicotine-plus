@@ -256,9 +256,9 @@ class Scanner:
 
             if entry_stat is None:
                 if filename is not None:
-                    entry_stat = os.stat(folder + '\\' + filename)
+                    entry_stat = os.stat((folder + '\\' + filename).encode("utf-8"))
                 else:
-                    entry_stat = os.stat(folder)
+                    entry_stat = os.stat(folder.encode("utf-8"))
 
             return entry_stat.st_file_attributes & stat.FILE_ATTRIBUTE_HIDDEN
 
@@ -268,7 +268,7 @@ class Scanner:
         """ Get a list of files with their filelength, bitrate and track length in seconds """
 
         if folder_stat is None:
-            folder_stat = os.stat(folder)
+            folder_stat = os.stat(folder.encode("utf-8"))
 
         folder_unchanged = False
         virtual_folder = Shares.real2virtual_cls(folder, self.config)
@@ -352,7 +352,7 @@ class Scanner:
         duration_info = None
 
         if file_stat is None:
-            file_stat = os.stat(pathname)
+            file_stat = os.stat(pathname.encode("utf-8"))
 
         size = file_stat.st_size
 
@@ -638,7 +638,7 @@ class Shares:
             return False
 
         try:
-            if not os.access(realfilename, os.R_OK):
+            if not os.access(realfilename.encode("utf-8"), os.R_OK):
                 log.add_transfer("Cannot access file, not sharing: %(virtual_name)s with real path %(path)s", {
                     "virtual_name": virtualfilename,
                     "path": realfilename
