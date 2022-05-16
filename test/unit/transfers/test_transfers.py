@@ -20,6 +20,7 @@ import os
 import unittest
 
 from collections import deque
+from collections import OrderedDict
 from unittest.mock import MagicMock
 from unittest.mock import Mock
 
@@ -155,28 +156,28 @@ class TransfersTest(unittest.TestCase):
         user = "random"
         target_folder = "share\\Soulseek"
 
-        shares_list = {
-            'share\\Music': [
+        shares_list = OrderedDict([
+            ('share\\Music', [
                 (1, 'music1.mp3', 1000000, '', {}),
                 (1, 'music2.mp3', 2000000, '', {})
-            ],
-            'share\\Soulseek': [
+            ]),
+            ('share\\Soulseek', [
                 (1, 'file1.mp3', 3000000, '', {}),
                 (1, 'file2.mp3', 4000000, '', {})
-            ],
-            'share\\Soulseek\\folder1': [
+            ]),
+            ('share\\Soulseek\\folder1', [
                 (1, 'file3.mp3', 5000000, '', {})
-            ],
-            'share\\Soulseek\\folder1\\folder': [
+            ]),
+            ('share\\Soulseek\\folder1\\folder', [
                 (1, 'file4.mp3', 6000000, '', {})
-            ],
-            'share\\Soulseek\\folder2': [
+            ]),
+            ('share\\Soulseek\\folder2', [
                 (1, 'file5.mp3', 7000000, '', {})
-            ],
-            'share\\Soulseek\\folder2\\folder3': [
+            ]),
+            ('share\\Soulseek\\folder2\\folder3', [
                 (1, 'file6.mp3', 8000000, '', {})
-            ]
-        }
+            ])
+        ])
 
         self.transfers.downloads.clear()
         self.userbrowse.download_folder(user, target_folder, shares_list, prefix="test", recurse=True)
