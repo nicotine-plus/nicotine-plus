@@ -549,6 +549,7 @@ def write_file_and_backup(path, callback, protect=False):
             "path": path,
             "error": error
         })
+        return
 
     # Save new file
     if protect:
