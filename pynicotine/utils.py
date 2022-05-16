@@ -532,7 +532,7 @@ def write_file_and_backup(path, callback, protect=False):
         # Attempt to restore file
         try:
             if os.path.exists((path + ".old").encode("utf-8")):
-                os.rename((path + ".old").encode("utf-8"), path)
+                os.replace((path + ".old").encode("utf-8"), path)
 
         except Exception as second_error:
             log.add(_("Unable to restore previous file %(path)s: %(error)s"), {

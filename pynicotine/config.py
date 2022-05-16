@@ -615,7 +615,7 @@ class Config:
             sys.exit()
 
         conv_filename = (self.filename + ".conv").encode("utf-8")
-        os.rename(self.filename, conv_filename)
+        os.replace(self.filename, conv_filename)
 
         with open(conv_filename, 'rb') as file_handle:
             rawdata = file_handle.read()
