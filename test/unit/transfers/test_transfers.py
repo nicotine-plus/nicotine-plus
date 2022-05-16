@@ -24,6 +24,7 @@ from unittest.mock import MagicMock
 from unittest.mock import Mock
 
 from pynicotine.config import config
+from pynicotine.userbrowse import UserBrowse
 from pynicotine.transfers import Transfers
 
 
@@ -35,11 +36,15 @@ class TransfersTest(unittest.TestCase):
         config.filename = os.path.join(config.data_dir, "temp_config")
 
         config.load_config()
+        config.sections["transfers"]["downloaddir"] = config.data_dir
 
         self.transfers = Transfers(MagicMock(), config, deque(), Mock())
         self.transfers.init_transfers()
         self.transfers.server_login()
         self.transfers.allow_saving_transfers = False
+
+        self.userbrowse = UserBrowse(MagicMock(), config, Mock())
+        self.userbrowse.core.transfers = self.transfers
 
     def test_load_downloads(self):
         """ Test loading a downloads.json file """
@@ -126,3 +131,61 @@ class TransfersTest(unittest.TestCase):
         self.assertEqual(transfer.user, "newuser2")
         self.assertEqual(transfer.filename, "Hello\\Upload\\File.mp3")
         self.assertEqual(transfer.path, "/home/test")
+
+    def test_download_folder_destination(self):
+        """ Verify that the correct download destination is used """
+
+        user = "newuser"
+        folder = "Hello\\Path"
+        destination_default = self.transfers.get_folder_destination(user, folder)
+
+        self.transfers.requested_folders[user][folder] = "test"
+        destination_custom = self.transfers.get_folder_destination(user, folder)
+
+        config.sections["transfers"]["usernamesubfolders"] = True
+        destination_user = self.transfers.get_folder_destination(user, folder)
+
+        self.assertEqual(destination_default, os.path.join(config.data_dir, "Path"))
+        self.assertEqual(destination_custom, os.path.join("test", "Path"))
+        self.assertEqual(destination_user, os.path.join(config.data_dir, "newuser", "Path"))
+
+    def test_download_subfolders(self):
+        """ Verify that subfolders are downloaded to the correct location """
+
+        user = "random"
+        target_folder = "share\\Soulseek"
+
+        shares_list = {
+            'share\\Music': [
+                (1, 'music1.mp3', 1000000, '', {}),
+                (1, 'music2.mp3', 2000000, '', {})
+            ],
+            'share\\Soulseek': [
+                (1, 'file1.mp3', 3000000, '', {}),
+                (1, 'file2.mp3', 4000000, '', {})
+            ],
+            'share\\Soulseek\\folder1': [
+                (1, 'file3.mp3', 5000000, '', {})
+            ],
+            'share\\Soulseek\\folder1\\folder': [
+                (1, 'file4.mp3', 6000000, '', {})
+            ],
+            'share\\Soulseek\\folder2': [
+                (1, 'file5.mp3', 7000000, '', {})
+            ],
+            'share\\Soulseek\\folder2\\folder3': [
+                (1, 'file6.mp3', 8000000, '', {})
+            ]
+        }
+
+        self.transfers.downloads.clear()
+        self.userbrowse.download_folder(user, target_folder, shares_list, prefix="test", recurse=True)
+
+        self.assertEqual(len(self.transfers.downloads), 6)
+
+        self.assertEqual(self.transfers.downloads[0].path, os.path.join("test", "Soulseek", "folder2", "folder3"))
+        self.assertEqual(self.transfers.downloads[1].path, os.path.join("test", "Soulseek", "folder2"))
+        self.assertEqual(self.transfers.downloads[2].path, os.path.join("test", "Soulseek", "folder1", "folder"))
+        self.assertEqual(self.transfers.downloads[3].path, os.path.join("test", "Soulseek", "folder1"))
+        self.assertEqual(self.transfers.downloads[4].path, os.path.join("test", "Soulseek"))
+        self.assertEqual(self.transfers.downloads[5].path, os.path.join("test", "Soulseek"))

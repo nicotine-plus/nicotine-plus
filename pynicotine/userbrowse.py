@@ -214,7 +214,7 @@ class UserBrowse:
         if requested_folder is None:
             return
 
-        old_parent_folder = destination = None
+        remove_prefix = requested_folder.rsplit('\\', 1)[0]
 
         for folder, files in shares_list.items():
             if not recurse and requested_folder != folder:
@@ -224,19 +224,12 @@ class UserBrowse:
                 # Not a subfolder of the requested folder, skip
                 continue
 
-            parent_folder = folder.rsplit("\\", 1)[0]
-
-            if parent_folder != old_parent_folder:
-                if destination:
-                    prefix = os.path.join(destination, "")
-
-                old_parent_folder = parent_folder
-
             # Remember custom download location
-            self.core.transfers.requested_folders[user][folder] = prefix
+            if prefix:
+                self.core.transfers.requested_folders[user][folder] = prefix
 
             # Get final download destination
-            destination = self.core.transfers.get_folder_destination(user, folder)
+            destination = self.core.transfers.get_folder_destination(user, folder, remove_prefix)
 
             if files:
                 if self.config.sections["transfers"]["reverseorder"]:

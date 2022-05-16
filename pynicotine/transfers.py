@@ -1684,23 +1684,23 @@ class Transfers:
         except (KeyError, TypeError):
             return False
 
-    def get_folder_destination(self, user, directory):
+    def get_folder_destination(self, user, directory, remove_prefix=""):
+
+        if not remove_prefix:
+            remove_prefix = directory.rsplit('\\', 1)[0]
+
+        # Get the last folders in directory path, excluding remove_prefix
+        target_folders = directory.replace(remove_prefix, "").lstrip('\\').replace('\\', os.sep)
 
         # Check if a custom download location was specified
         if (user in self.requested_folders and directory in self.requested_folders[user]
                 and self.requested_folders[user][directory]):
-            download_location = self.requested_folders[user][directory]
-
+            download_location = self.requested_folders[user].pop(directory)
         else:
             download_location = self.get_default_download_folder(user)
 
-        # Get the last folder in directory path
-        target_name = directory.rstrip('\\').split('\\')[-1]
-
         # Merge download path with target folder name
-        destination = os.path.join(download_location, target_name)
-
-        return destination
+        return os.path.join(download_location, target_folders)
 
     def get_total_uploads_allowed(self):
 
