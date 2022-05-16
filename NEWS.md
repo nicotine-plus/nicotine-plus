@@ -3,6 +3,29 @@ News
 
 As per GCS § 6.7, this file contains a list of user-visible, noteworthy changes. Note that this is not the same as a changelog.
 
+Version 3.2.3 (Unreleased)
+------------------------------
+
+Changes
+
+ * ...
+
+Corrections
+
+ * ...
+
+Issues closed on GitHub
+
+ * UnicodeEncodeError when downloading file ([#1980](https://github.com/nicotine-plus/nicotine-plus/issues/1980))
+ * Nicotine+ always on dark mode regardless of my settings ([#1983](https://github.com/nicotine-plus/nicotine-plus/issues/1983))
+ * Weird behavior when I download a whole folder with multiple subdirectories ([#2004](https://github.com/nicotine-plus/nicotine-plus/issues/2004))
+ * Don't freeze/crash without xdg-open ([#2005](https://github.com/nicotine-plus/nicotine-plus/issues/2005))
+ * Unicode encode error ([#2015](https://github.com/nicotine-plus/nicotine-plus/issues/2015))
+ * Russian translation updated ([#2016](https://github.com/nicotine-plus/nicotine-plus/issues/2016))
+ * Time Left for folder and user same as for currently active file ([#2018](https://github.com/nicotine-plus/nicotine-plus/issues/2018))
+ * Time Left column regression ([#2020](https://github.com/nicotine-plus/nicotine-plus/issues/2020))
+ * Clear ALL downloads, Clear ALL uploads not working ([#2023](https://github.com/nicotine-plus/nicotine-plus/issues/2023))
+
 Version 3.2.2 (March 19, 2022)
 ------------------------------
 
