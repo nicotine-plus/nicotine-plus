@@ -1016,12 +1016,14 @@ class Transfers:
                     incompletedir = self.get_default_download_folder(i.user)
 
             try:
-                if not os.path.isdir(incompletedir.encode("utf-8")):
-                    os.makedirs(incompletedir.encode("utf-8"))
+                incompletedir_encoded = incompletedir.encode("utf-8")
 
-                if not os.access(incompletedir, os.R_OK | os.W_OK | os.X_OK):
+                if not os.path.isdir(incompletedir_encoded):
+                    os.makedirs(incompletedir_encoded)
+
+                if not os.access(incompletedir_encoded, os.R_OK | os.W_OK | os.X_OK):
                     raise OSError("Download directory %s Permissions error.\nDir Permissions: %s" %
-                                  (incompletedir, oct(os.stat(incompletedir)[stat.ST_MODE] & 0o777)))
+                                  (incompletedir, oct(os.stat(incompletedir_encoded)[stat.ST_MODE] & 0o777)))
 
             except OSError as error:
                 log.add(_("OS error: %s"), error)
