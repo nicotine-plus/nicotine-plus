@@ -207,7 +207,7 @@ def run():
     # Initialize GTK-based GUI
     if not headless:
         from pynicotine.gtkgui import run_gui
-        exit_code = run_gui(core, trayicon, hidden, bindip, port, ci_mode, multi_instance)
+        exit_code = run_gui(core, trayicon, hidden, ci_mode, multi_instance)
 
         if exit_code is not None:
             return exit_code
