@@ -197,14 +197,17 @@ def run():
     from pynicotine.pynicotine import NicotineCore
     core = NicotineCore(bindip, port)
 
-    # Run without a GUI
-    if headless:
-        from pynicotine.cli import run_cli
-        return run_cli(core, ci_mode)
-
     # Initialize GTK-based GUI
-    from pynicotine.gtkgui import run_gui
-    return run_gui(core, trayicon, hidden, bindip, port, ci_mode, multi_instance)
+    if not headless:
+        from pynicotine.gtkgui import run_gui
+        exit_code = run_gui(core, trayicon, hidden, bindip, port, ci_mode, multi_instance)
+
+        if exit_code is not None:
+            return exit_code
+
+    # Run without a GUI
+    from pynicotine.cli import run_cli
+    return run_cli(core, ci_mode)
 
 
 apply_translations()
