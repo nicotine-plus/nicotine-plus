@@ -91,5 +91,11 @@ def run_gui(core, trayicon, hidden, bindip, port, ci_mode, multi_instance):
         log.add(error)
         return 1
 
+    from gi.repository import Gdk
+
+    if Gdk.Display.get_default() is None:
+        log.add(_("No graphical environment available, using headless (no GUI) mode"))
+        return None
+
     from pynicotine.gtkgui.application import Application
     return Application(core, trayicon, hidden, bindip, port, ci_mode, multi_instance).run()
