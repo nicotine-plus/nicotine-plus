@@ -2491,7 +2491,7 @@ class Statistics:
     def __init__(self, config, ui_callback=None):
 
         self.config = config
-        self.ui_callback = ui_callback
+        self.ui_callback = None
         self.session_stats = {}
 
         if hasattr(ui_callback, "statistics"):
