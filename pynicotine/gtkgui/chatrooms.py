@@ -415,11 +415,12 @@ class ChatRoom(UserInterface):
         self.chat_view = TextView(self.chat_view, font="chatfont")
 
         # Event Text Search
-        TextSearchBar(self.activity_view.textview, self.activity_search_bar, self.activity_search_entry)
+        self.activity_search_bar = TextSearchBar(self.activity_view.textview, self.activity_search_bar,
+                                                 self.activity_search_entry)
 
         # Chat Text Search
-        TextSearchBar(self.chat_view.textview, self.chat_search_bar, self.chat_search_entry,
-                      controller_widget=self.chat_container, focus_widget=self.chat_entry)
+        self.chat_search_bar = TextSearchBar(self.chat_view.textview, self.chat_search_bar, self.chat_search_entry,
+                                             controller_widget=self.chat_container, focus_widget=self.chat_entry)
 
         # Chat Entry
         ChatEntry(self.frame, self.chat_entry, chatrooms.completion, room, slskmessages.SayChatroom,
