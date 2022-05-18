@@ -1771,7 +1771,6 @@ class NicotineFrame(UserInterface):
         if level and level.startswith("important"):
             title = "Information" if level == "important_info" else "Error"
             MessageDialog(parent=self.application.get_active_window(), title=title, message=msg).show()
-            return False
 
         # Keep verbose debug messages out of statusbar to make it more useful
         if level not in ("transfer", "connection", "message", "miscellaneous"):
