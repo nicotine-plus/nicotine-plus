@@ -920,8 +920,7 @@ class NicotineCore:
         config.sections["server"]["passw"] = password
         config.write_configuration()
 
-        log.add_important_info(
-            _("Your password has been changed. Password is %s"), password)
+        log.add_important_info(_("Your password has been changed"))
 
     def private_room_add_operator(self, msg):
         """ Server code: 143 """
