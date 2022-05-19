@@ -24,20 +24,20 @@ def check_arguments():
 
     import argparse
     from pynicotine.config import config
-    parser = argparse.ArgumentParser(description=_("Nicotine+ is a Soulseek client"), add_help=False)
+
+    parser = argparse.ArgumentParser(
+        description="%s %s - %s" % (config.application_name, config.version, config.summary),
+        epilog="%s <%s>" % (config.author, config.website_url)
+    )
 
     # Visible arguments
-    parser.add_argument(
-        "-h", "--help", action="help",
-        help=_("show this help message and exit")
-    )
     parser.add_argument(
         "-c", "--config", metavar=_("file"),
         help=_("use non-default configuration file")
     )
     parser.add_argument(
         "-u", "--user-data", metavar=_("dir"),
-        help=_("use non-default user data directory for e.g. list of downloads")
+        help=_("use non-default user data directory")
     )
     parser.add_argument(
         "-p", "--plugins", metavar=_("dir"),
