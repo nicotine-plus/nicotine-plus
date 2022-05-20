@@ -239,18 +239,21 @@ We send this to the server right after the connection has been established. Serv
 ### Sending Login Example
 
 *Message:*
-| *Data*    | Message Length | Message Code | Username Length | Username                | Password Length | Password                |
+
+| Data      | Message Length | Message Code | Username Length | Username                | Password Length | Password                |
 | --------- | -------------- | ------------ | --------------- | ----------------------- | --------------- | ----------------------- |
 | **Human** | 72             | 1            | 8               | username                | 8               | password                |
 | **Hex**   | 48 00 00 00    | 01 00 00 00  | 08 00 00 00     | 75 73 65 72 6e 61 6d 65 | 08 00 00 00     | 70 61 73 73 77 6f 72 64 |
 
 *... continued:*
-| *Data*    | Version     | Hash Length | Hash                                                                                            | Minor Version |
+
+| Data      | Version     | Hash Length | Hash                                                                                            | Minor Version |
 | --------- | ----------- | ----------- | ----------------------------------------------------------------------------------------------- | ------------- |
 | **Human** | 160         | 32          | d51c9a7e9353746a6020f9602d452929                                                                | 1             |
 | **Hex**   | a0 00 00 00 | 20 00 00 00 | 64 35 31 63 39 61 37 65 39 33 35 33 37 34 36 61 36 30 32 30 66 39 36 30 32 64 34 35 32 39 32 39 | 01 00 00 00   |
 
 *Message as a Hex Stream:*
+
   - **48 00 00 00 01 00 00 00 08 00 00 00 75 73 65 72 6e 61 6d 65 08 00 00 00 70 61 73 73 77 6f 72 64 a0 00 00 00 20 00
       00 00 64 35 31 63 39 61 37 65 39 33 35 33 37 34 36 61 36 30 32 30 66 39 36 30 32 64 34 35 32 39 32 39 01 00 00 00**
 
