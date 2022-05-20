@@ -59,10 +59,13 @@ pip install git+https://github.com/nicotine-plus/nicotine-plus.git
 Nicotine+ will now be available in your list of programs.
 
 To update to the latest unstable build of Nicotine+, run the following:
+
 ```sh
 pip install --upgrade git+https://github.com/nicotine-plus/nicotine-plus.git
 ```
+
 To uninstall Nicotine+, run:
+
 ```sh
 pip uninstall nicotine-plus
 ```
