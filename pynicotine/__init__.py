@@ -44,14 +44,6 @@ def check_arguments():
         help=_("use non-default directory for plugins")
     )
     parser.add_argument(
-        "-t", "--enable-trayicon", action="store_true",
-        help=_("enable the tray icon")
-    )
-    parser.add_argument(
-        "-d", "--disable-trayicon", action="store_true",
-        help=_("disable the tray icon")
-    )
-    parser.add_argument(
         "-s", "--hidden", action="store_true",
         help=_("start the program without showing window")
     )
@@ -78,6 +70,11 @@ def check_arguments():
 
     # Disables critical error dialog; used for integration tests
     parser.add_argument("--ci-mode", action="store_true", help=argparse.SUPPRESS)
+
+    # Override config setting ["ui"]["trayicon"] for this session only
+    group_trayicon = parser.add_mutually_exclusive_group()
+    group_trayicon.add_argument("--enable-trayicon", action="store_true", help=argparse.SUPPRESS)   # deprecated "-t"
+    group_trayicon.add_argument("--disable-trayicon", action="store_true", help=argparse.SUPPRESS)  # deprecated "-d"
 
     args = parser.parse_args()
     trayicon = None
