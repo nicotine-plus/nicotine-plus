@@ -18,7 +18,7 @@ sudo apt update
 sudo apt install nicotine
 ```
 
-If you prefer to install a .deb package directly, you can [download one here](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/debian-package.zip).
+If you prefer to install a .deb package directly, you can [download one here](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/debian-package.zip) [[Info](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/debian-package)].
 
 Unlike the repository installation method, you need to download and install Nicotine+ from the link above every time you want to update to the latest unstable build.
 
@@ -26,7 +26,27 @@ Unlike the repository installation method, you need to download and install Nico
 
 Unstable [Flatpak](https://www.flatpak.org/setup/) packages are built after every commit to the master branch.
 
-- [Download Unstable Flatpak Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/flatpak-package.zip)
+- [Download Unstable Flatpak Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/flatpak-package.zip) [[Info](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/flatpak-package)]
+
+## Windows
+
+Unstable Windows packages are built after every commit to the master branch.
+
+- [Download Unstable 64-bit Windows Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-installer.zip) [[Info](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-installer)]
+- [Download Unstable 32-bit Windows Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-i686-installer.zip) [[Info](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-i686-installer)]
+
+Portable packages are also available. They can be run from your home directory, and do not require installation or administrator privileges.
+
+- [Download Unstable 64-bit Windows Portable Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-package.zip) [[Info](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-package)]
+- [Download Unstable 32-bit Windows Portable Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-i686-package.zip) [[Info](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-i686-package)]
+
+## macOS (Catalina/10.15 and newer)
+
+Unstable macOS installers are built after every commit to the master branch.
+
+- [Download Unstable macOS Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-installer.zip) [[Info](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-installer)]
+
+## Source
 
 ### pip
 
@@ -39,13 +59,10 @@ pip install git+https://github.com/nicotine-plus/nicotine-plus.git
 Nicotine+ will now be available in your list of programs.
 
 To update to the latest unstable build of Nicotine+, run the following:
-
 ```sh
 pip install --upgrade git+https://github.com/nicotine-plus/nicotine-plus.git
 ```
-
 To uninstall Nicotine+, run:
-
 ```sh
 pip uninstall nicotine-plus
 ```
@@ -66,21 +83,3 @@ To update to the latest unstable build of Nicotine+, run the following:
 cd nicotine-plus
 git pull
 ```
-
-## Windows
-
-Unstable Windows packages are built after every commit to the master branch.
-
-- [Download Unstable 64-bit Windows Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-installer.zip)
-- [Download Unstable 32-bit Windows Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-i686-installer.zip)
-
-Portable packages are also available. They can be run from your home directory, and do not require installation or administrator privileges.
-
-- [Download Unstable 64-bit Windows Portable Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-package.zip)
-- [Download Unstable 32-bit Windows Portable Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-i686-package.zip)
-
-## macOS (Catalina/10.15 and newer)
-
-Unstable macOS installers are built after every commit to the master branch.
-
-- [Download Unstable macOS Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-installer.zip)
