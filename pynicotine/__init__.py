@@ -26,11 +26,14 @@ def check_arguments():
     from pynicotine.config import config
 
     parser = argparse.ArgumentParser(
-        description="%s %s - %s" % (config.application_name, config.version, config.summary),
-        epilog="%s <%s>" % (config.author, config.website_url)
+        description=config.summary, epilog="%s <%s>" % (config.author, config.website_url), add_help=False
     )
 
     # Visible arguments
+    parser.add_argument(
+        "-h", "--help", action="help",
+        help=_("show this help message and exit")
+    )
     parser.add_argument(
         "-c", "--config", metavar=_("file"),
         help=_("use non-default configuration file")
