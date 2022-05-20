@@ -40,10 +40,6 @@ def check_arguments():
         help=_("use non-default user data directory for e.g. list of downloads")
     )
     parser.add_argument(
-        "-p", "--plugins", metavar=_("dir"),
-        help=_("use non-default directory for plugins")
-    )
-    parser.add_argument(
         "-t", "--enable-trayicon", action="store_true",
         help=_("enable the tray icon")
     )
@@ -78,6 +74,9 @@ def check_arguments():
 
     # Disables critical error dialog; used for integration tests
     parser.add_argument("--ci-mode", action="store_true", help=argparse.SUPPRESS)
+
+    # Use non-default directory for plugins
+    parser.add_argument("--plugins", metavar=_("dir"), help=argparse.SUPPRESS)  # command line option deprecated "-p"
 
     args = parser.parse_args()
     trayicon = None
