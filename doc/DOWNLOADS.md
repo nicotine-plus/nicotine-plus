@@ -60,20 +60,6 @@ To install Nicotine+ on FreeBSD, run the following:
 pkg install py-nicotine-plus
 ```
 
-### pip
-
-If Nicotine+ is not packaged for your system, the current stable version can be installed using [pip](https://pip.pypa.io/). Ensure the [runtime dependencies](DEPENDENCIES.md) are installed, and run the following:
-
-```sh
-pip3 install nicotine-plus
-```
-
-Keep in mind that Nicotine+ will not update automatically. When a new release is available, run the following:
-
-```sh
-pip3 install --upgrade nicotine-plus
-```
-
 ## Windows
 
 ### Official Release
@@ -128,3 +114,19 @@ A stable macOS installer for Nicotine+ is available on macOS Catalina 10.15 and 
 *NOTE: You have to follow [these instructions](https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unidentified-developer-mh40616/mac) the first time you open Nicotine+ on macOS.*
 
 - [Download Nicotine+ macOS Installer](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/macos-installer.zip)  [[SHA256](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/macos-installer.zip.sha256)]
+
+## Source
+
+### pip
+
+If Nicotine+ is not packaged for your system, the current stable version can be installed using [pip](https://pip.pypa.io/). Ensure the [runtime dependencies](DEPENDENCIES.md) are installed, and run the following:
+
+```sh
+pip3 install nicotine-plus
+```
+
+Keep in mind that Nicotine+ will not update automatically. When a new release is available, run the following:
+
+```sh
+pip3 install --upgrade nicotine-plus
+```
