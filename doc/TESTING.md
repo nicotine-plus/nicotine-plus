@@ -6,6 +6,12 @@ If you want to download the current stable version of Nicotine+, see [DOWNLOADS.
 
 ## GNU/Linux, *BSD, Solaris
 
+### Flatpak
+
+Unstable [Flatpak](https://www.flatpak.org/setup/) packages are built after every commit to the master branch.
+
+- [Download Unstable Flatpak Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/flatpak-package.zip)
+
 ### Ubuntu/Debian
 
 [Daily unstable snapshots](https://code.launchpad.net/~nicotine-team/+recipe/nicotine+-daily) are built in a separate [unstable PPA repository](https://code.launchpad.net/~nicotine-team/+archive/ubuntu/unstable). To install the latest unstable build of Nicotine+, run the following:
@@ -18,15 +24,9 @@ sudo apt update
 sudo apt install nicotine
 ```
 
-If you prefer to install a .deb package directly, you can [download one here](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/debian-package.zip) [[Info](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/debian-package)].
+If you prefer to install a .deb package directly, you can [download one here](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/debian-package.zip).
 
 Unlike the repository installation method, you need to download and install Nicotine+ from the link above every time you want to update to the latest unstable build.
-
-### Flatpak
-
-Unstable [Flatpak](https://www.flatpak.org/setup/) packages are built after every commit to the master branch.
-
-- [Download Unstable Flatpak Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/flatpak-package.zip) [[Info](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/flatpak-package)]
 
 ## Windows
 
@@ -46,9 +46,11 @@ Unstable macOS installers are built after every commit to the master branch.
 
 - [Download Unstable macOS Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-installer.zip) [[Info](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-installer)]
 
-## Source
+## Cross-Platform
 
 ### pip
+
+Running Nicotine+ using pip requires a [MinGW environment](https://en.wikipedia.org/wiki/MinGW) on Windows and [Homebrew](https://brew.sh/) on macOS. Note that problems encountered using this installation method on OSes other than GNU/Linux variants are unlikely to receive support.
 
 To install the latest unstable build of Nicotine+ using [pip](https://pip.pypa.io/), ensure the [runtime dependencies](DEPENDENCIES.md) are installed, and run the following:
 
@@ -70,7 +72,11 @@ To uninstall Nicotine+, run:
 pip uninstall nicotine-plus
 ```
 
+## Source
+
 ### Git
+
+Running Nicotine+ using Git requires a [MinGW environment](https://en.wikipedia.org/wiki/MinGW) on Windows and [Homebrew](https://brew.sh/) on macOS. Note that problems encountered using this installation method on OSes other than GNU/Linux variants are unlikely to receive support.
 
 To run Nicotine+ directly from a local [Git](https://git-scm.com/) folder, ensure the [runtime dependencies](DEPENDENCIES.md) are installed, and run the following:
 
