@@ -30,7 +30,7 @@ GTK_GUI_DIR = os.path.normpath(os.path.dirname(os.path.realpath(__file__)))
 
 class Application(Gtk.Application):
 
-    def __init__(self, core, tray_icon, start_hidden, ci_mode, multi_instance):
+    def __init__(self, core, start_hidden, ci_mode, multi_instance):
 
         super().__init__(application_id=config.application_id)
         GLib.set_application_name(config.application_name)
@@ -41,7 +41,6 @@ class Application(Gtk.Application):
 
         self.core = core
         self.frame = None
-        self.tray_icon = tray_icon
         self.start_hidden = start_hidden
         self.ci_mode = ci_mode
 
@@ -57,7 +56,7 @@ class Application(Gtk.Application):
         Gtk.Application.do_startup(self)
 
         from pynicotine.gtkgui.frame import NicotineFrame
-        self.frame = NicotineFrame(self, self.core, self.tray_icon, self.start_hidden, self.ci_mode)
+        self.frame = NicotineFrame(self, self.core, self.start_hidden, self.ci_mode)
         self.frame.on_startup()
 
     def do_activate(self):  # pylint:disable=arguments-differ

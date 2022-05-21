@@ -44,14 +44,6 @@ def check_arguments():
         help=_("use non-default directory for plugins")
     )
     parser.add_argument(
-        "-t", "--enable-trayicon", action="store_true",
-        help=_("enable the tray icon")
-    )
-    parser.add_argument(
-        "-d", "--disable-trayicon", action="store_true",
-        help=_("disable the tray icon")
-    )
-    parser.add_argument(
         "-s", "--hidden", action="store_true",
         help=_("start the program without showing window")
     )
@@ -80,7 +72,6 @@ def check_arguments():
     parser.add_argument("--ci-mode", action="store_true", help=argparse.SUPPRESS)
 
     args = parser.parse_args()
-    trayicon = None
     multi_instance = False
 
     if args.config:
@@ -95,13 +86,7 @@ def check_arguments():
     if args.plugins:
         config.plugin_dir = args.plugins
 
-    if args.enable_trayicon:
-        trayicon = True
-
-    if args.disable_trayicon:
-        trayicon = False
-
-    return trayicon, args.headless, args.hidden, args.bindip, args.port, args.ci_mode, args.rescan, multi_instance
+    return args.headless, args.hidden, args.bindip, args.port, args.ci_mode, args.rescan, multi_instance
 
 
 def check_core_dependencies():
@@ -182,7 +167,7 @@ def run():
     from pynicotine.utils import rename_process
     rename_process(b"nicotine")
 
-    trayicon, headless, hidden, bindip, port, ci_mode, rescan, multi_instance = check_arguments()
+    headless, hidden, bindip, port, ci_mode, rescan, multi_instance = check_arguments()
     error = check_core_dependencies()
 
     if error:
@@ -207,7 +192,7 @@ def run():
     # Initialize GTK-based GUI
     if not headless:
         from pynicotine.gtkgui import run_gui
-        exit_code = run_gui(core, trayicon, hidden, ci_mode, multi_instance)
+        exit_code = run_gui(core, hidden, ci_mode, multi_instance)
 
         if exit_code is not None:
             return exit_code

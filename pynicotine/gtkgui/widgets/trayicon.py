@@ -425,26 +425,23 @@ class StatusIconImplementation(BaseImplementation):
 
 class TrayIcon:
 
-    def __init__(self, frame, core, use_trayicon):
+    def __init__(self, frame, core):
 
         self.frame = frame
         self.core = core
         self.available = True
         self.implementation = None
 
-        self.load(use_trayicon)
+        self.load()
 
-    def load(self, use_trayicon=None):
+    def load(self):
 
         if sys.platform == "win32":
-            # Always keep tray icon loaded for notification support
+            # Always keep tray icon loaded for Windows notification support
             pass
 
-        elif use_trayicon is None:
-            if not config.sections["ui"]["trayicon"]:
-                return
-
-        elif not use_trayicon:
+        elif not config.sections["ui"]["trayicon"]:
+            # No need to have tray icon loaded now (unless this is Windows)
             return
 
         if self.implementation is None:
