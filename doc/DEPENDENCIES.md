@@ -89,4 +89,6 @@ sudo dnf install gtk3 pylint python3-flake8 python3-gobject
 
 ### Windows and macOS
 
-Since Windows and macOS builds bundle all required dependencies, no action is required from a regular user. For developers who need to install dependencies in a development environment, see [PACKAGING.md](PACKAGING.md).
+All required dependencies are included in the [Nicotine+ Windows Installer](DOWNLOADS.md#windows) and [Nicotine+ macOS Installer](DOWNLOADS.md#macos) official release packages, no additional steps are required by a regular user in order to install stable versions of Nicotine+.
+
+For developers who need to build packages with dependencies in a development environment, see [PACKAGING.md](PACKAGING.md).
