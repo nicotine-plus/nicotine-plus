@@ -271,7 +271,7 @@ We send this to the server right after the connection has been established. Serv
     4.  **string** <ins>hash</ins> *MD5 hex digest of the password string*
   - Receive Login Failure
     1.  **bool** <ins>failure</ins> **0**
-    2.  **string** <ins>reason</ins> *Almost always:* **Bad Password** *(sometimes it's a banned message or another error).*
+    2.  **string** <ins>reason</ins> *Almost always:* **INVALIDPASS** *(sometimes it's a banned message or another error).*
 
 ## Server Code 2
 
