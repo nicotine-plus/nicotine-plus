@@ -72,7 +72,6 @@ def check_arguments():
     parser.add_argument("--ci-mode", action="store_true", help=argparse.SUPPRESS)
 
     args = parser.parse_args()
-    trayicon = None
     multi_instance = False
 
     if args.config:
