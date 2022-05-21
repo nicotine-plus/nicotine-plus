@@ -503,7 +503,7 @@ class UserList(UserInterface):
         self.save_user_list()
         action.set_state(state)
 
-    def on_add_note_response(self, dialog, _response_id, user):
+    def on_add_note_response(self, dialog, response_id, user):
 
         iterator = self.user_iterators.get(user)
 
@@ -513,7 +513,7 @@ class UserList(UserInterface):
         note = dialog.get_response_value()
         dialog.destroy()
 
-        if note is None:
+        if response_id != Gtk.ResponseType.OK or note is None:
             return
 
         self.usersmodel.set_value(iterator, 9, note)
