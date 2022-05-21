@@ -91,7 +91,6 @@ class TransferList(UserInterface):
             "Queued": _("Queued"),
             "Queued (prioritized)": _("Queued (prioritized)"),
             "Queued (privileged)": _("Queued (privileged)"),
-            "Getting status": _("Getting status"),
             "Transferring": _("Transferring"),
             "Connection timeout": _("Connection timeout"),
             "Pending shutdown.": _("Pending shutdown"),
