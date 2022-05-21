@@ -513,7 +513,10 @@ class UserList(UserInterface):
         note = dialog.get_response_value()
         dialog.destroy()
 
-        if response_id != Gtk.ResponseType.OK or note is None:
+        if response_id != Gtk.ResponseType.OK:
+            return
+
+        if note is None:
             return
 
         self.usersmodel.set_value(iterator, 9, note)
