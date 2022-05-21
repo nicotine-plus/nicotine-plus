@@ -40,7 +40,7 @@ def check_arguments():
     )
     parser.add_argument(
         "-u", "--user-data", metavar=_("dir"),
-        help=_("use non-default user data directory")
+         help=_("use non-default user data directory for e.g. list of downloads")
     )
     parser.add_argument(
         "-p", "--plugins", metavar=_("dir"),
