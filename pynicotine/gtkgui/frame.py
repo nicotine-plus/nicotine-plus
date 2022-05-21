@@ -76,7 +76,7 @@ from pynicotine.utils import open_uri
 
 class NicotineFrame(UserInterface):
 
-    def __init__(self, application, core, use_trayicon, start_hidden, ci_mode):
+    def __init__(self, application, core, start_hidden, ci_mode):
 
         if not ci_mode:
             # Show errors in the GUI from here on
@@ -262,7 +262,7 @@ class NicotineFrame(UserInterface):
 
         """ Tray Icon/Notifications """
 
-        self.tray_icon = TrayIcon(self, core, use_trayicon)
+        self.tray_icon = TrayIcon(self, core)
         self.notifications = Notifications(self, core)
         self.statistics = Statistics(self, core)
 
