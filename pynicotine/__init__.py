@@ -71,11 +71,6 @@ def check_arguments():
     # Disables critical error dialog; used for integration tests
     parser.add_argument("--ci-mode", action="store_true", help=argparse.SUPPRESS)
 
-    # Override config setting ["ui"]["trayicon"] for this session only
-    group_trayicon = parser.add_mutually_exclusive_group()
-    group_trayicon.add_argument("--enable-trayicon", action="store_true", help=argparse.SUPPRESS)   # deprecated "-t"
-    group_trayicon.add_argument("--disable-trayicon", action="store_true", help=argparse.SUPPRESS)  # deprecated "-d"
-
     args = parser.parse_args()
     trayicon = None
     multi_instance = False
@@ -92,13 +87,7 @@ def check_arguments():
     if args.plugins:
         config.plugin_dir = args.plugins
 
-    if args.enable_trayicon:
-        trayicon = True
-
-    if args.disable_trayicon:
-        trayicon = False
-
-    return trayicon, args.headless, args.hidden, args.bindip, args.port, args.ci_mode, args.rescan, multi_instance
+    return args.headless, args.hidden, args.bindip, args.port, args.ci_mode, args.rescan, multi_instance
 
 
 def check_core_dependencies():
@@ -179,7 +168,7 @@ def run():
     from pynicotine.utils import rename_process
     rename_process(b"nicotine")
 
-    trayicon, headless, hidden, bindip, port, ci_mode, rescan, multi_instance = check_arguments()
+    headless, hidden, bindip, port, ci_mode, rescan, multi_instance = check_arguments()
     error = check_core_dependencies()
 
     if error:
@@ -204,7 +193,7 @@ def run():
     # Initialize GTK-based GUI
     if not headless:
         from pynicotine.gtkgui import run_gui
-        exit_code = run_gui(core, trayicon, hidden, ci_mode, multi_instance)
+        exit_code = run_gui(core, hidden, ci_mode, multi_instance)
 
         if exit_code is not None:
             return exit_code
