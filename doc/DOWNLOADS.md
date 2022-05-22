@@ -6,12 +6,6 @@ If you want to download the latest unstable build and help test Nicotine+, see [
 
 ## GNU/Linux, *BSD, Solaris
 
-### Flatpak
-
-If your Linux distribution supports [Flatpak](https://www.flatpak.org/setup/), you can install the current stable version of Nicotine+ from Flathub.
-
-- [Download Nicotine+ from Flathub](https://flathub.org/apps/details/org.nicotine_plus.Nicotine)
-
 ### Ubuntu/Debian
 
 To use [stable packages](https://launchpad.net/~nicotine-team/+archive/ubuntu/stable) on Ubuntu and Debian, add the *nicotine-team/stable* PPA repository by running the following:
@@ -60,9 +54,29 @@ To install Nicotine+ on FreeBSD, run the following:
 pkg install py-nicotine-plus
 ```
 
-### Other
+### Other Distributions
 
-If Nicotine+ is not packaged for your system, the current stable version can be installed using pip ([see below](DOWNLOADS.md#pip)).
+#### Flatpak
+
+If your Linux distribution supports [Flatpak](https://www.flatpak.org/setup/), you can install the current stable version of Nicotine+ from Flathub.
+
+- [Download Nicotine+ from Flathub](https://flathub.org/apps/details/org.nicotine_plus.Nicotine)
+
+#### pip
+
+If Nicotine+ is not packaged for your system, the current stable version can be installed using [pip](https://pip.pypa.io/).
+
+Ensure the [runtime dependencies](DEPENDENCIES.md) are installed, and run the following:
+
+```sh
+pip3 install nicotine-plus
+```
+
+Keep in mind that Nicotine+ will not update automatically. When a new release is available, run the following:
+
+```sh
+pip3 install --upgrade nicotine-plus
+```
 
 ## Windows
 
@@ -86,7 +100,7 @@ Nicotine+ can be installed using [Scoop](https://scoop.sh/). Run the following:
 
 ```sh
 scoop bucket add extras
-scoop install nicotine-plus
+scoop install extras/nicotine-plus
 ```
 
 In order to upgrade Nicotine+ to a newer release, run the following:
@@ -118,47 +132,3 @@ A stable macOS installer for Nicotine+ is available on macOS Catalina 10.15 and 
 *NOTE: You have to follow [these instructions](https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unidentified-developer-mh40616/mac) the first time you open Nicotine+ on macOS.*
 
 - [Download Nicotine+ macOS Installer](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/macos-installer.zip)  [[SHA256](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/macos-installer.zip.sha256)]
-
-## Cross-Platform
-
-### pip
-
-Running Nicotine+ using pip requires a [MinGW environment](https://en.wikipedia.org/wiki/MinGW) on Windows and [Homebrew](https://brew.sh/) on macOS. Note that problems encountered using this method on OSes other than GNU/Linux variants are unlikely to receive support.
-
-To install the latest stable build of Nicotine+ using [pip](https://pip.pypa.io/), ensure the [runtime dependencies](DEPENDENCIES.md) are installed, and run the following:
-
-```sh
-pip3 install nicotine-plus
-```
-
-Keep in mind that Nicotine+ will not update automatically. When a new release is available, run the following:
-
-```sh
-pip3 install --upgrade nicotine-plus
-```
-
-## Source
-
-### Git
-
-Running Nicotine+ using Git requires a [MinGW environment](https://en.wikipedia.org/wiki/MinGW) on Windows and [Homebrew](https://brew.sh/) on macOS. Note that problems encountered using this method on OSes other than GNU/Linux variants are unlikely to receive support.
-
-To run Nicotine+ directly from a local [Git](https://git-scm.com/) folder, ensure the [runtime dependencies](DEPENDENCIES.md) are installed, and run the following:
-
-```sh
-git clone https://github.com/nicotine-plus/nicotine-plus.git
-cd nicotine-plus
-```
-
-Next take note of the latest tag (i.e. the latest stable version):
-
-```sh
-git tag --sort=-version:refname
-```
-
-Finally switch to the tag's branch and run Nicotine+ (remembering to replace `<tag>`):
-
-```sh
-git checkout <tag> -b "<tag>-release"
-./nicotine
-```
