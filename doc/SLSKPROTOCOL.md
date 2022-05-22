@@ -78,24 +78,16 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
 | String                | Comments                                    |
 | --------------------- | ------------------------------------------- |
 | Queued                |                                             |
-| Transferring          |                                             |
-| Connection timeout    |                                             |
 | Pending shutdown.     |                                             |
-| User logged off       |                                             |
 | Disallowed extension  | Sent by Soulseek NS for filtered extensions |
-| Aborted               |                                             |
 | Cancelled             |                                             |
-| Paused                |                                             |
-| Finished              |                                             |
-| Filtered              |                                             |
+| Complete              |                                             |
 | Banned                |                                             |
 | Blocked country       |                                             |
 | Too many files        |                                             |
 | Too many megabytes    |                                             |
 | File not shared       |                                             |
 | File not shared.      | Newer variant containing a dot              |
-| Download folder error |                                             |
-| Local file error      | Usually disk I/O, or Soulseek NS files >2GB |
 | Remote file error     |                                             |
 
 ### File Attribute Types
@@ -2229,13 +2221,13 @@ This message was formely used to send a download request (direction 0) as well, 
 ### Data Order
 
   - Send
-    1.  **uint32** <ins>direction</ins> **0 or 1** ; *see [Transfer Directions](#transfer-directions)*
+    1.  **uint32** <ins>direction</ins> **0 or 1** *see [Transfer Directions](#transfer-directions)*
     2.  **uint32** <ins>token</ins>
     3.  **string** <ins>filename</ins>
     4.  Check contents of <ins>direction</ins>
           - **uint64** <ins>filesize</ins> *if direction == 1 (upload)*
   - Receive
-    1.  **uint32** <ins>direction</ins> **0 or 1** ; *see [Transfer Directions](#transfer-directions)*
+    1.  **uint32** <ins>direction</ins> **0 or 1** *see [Transfer Directions](#transfer-directions)*
     2.  **uint32** <ins>token</ins>
     3.  **string** <ins>filename</ins>
     4.  Check contents of <ins>direction</ins>
