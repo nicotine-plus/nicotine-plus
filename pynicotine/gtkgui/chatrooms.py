@@ -643,17 +643,18 @@ class ChatRoom(UserInterface):
                     start = line.find(" [") + 2
                     end = line.find("] ", start)
 
-                    user = line[start:end]
-                    usertag = self.get_user_tag(user)
+                    if end > start:
+                        user = line[start:end]
+                        usertag = self.get_user_tag(user)
 
-                    if user == login:
-                        tag = self.tag_local
+                        if user == login:
+                            tag = self.tag_local
 
-                    elif self.find_whole_word(login.lower(), line.lower(), after=end) > -1:
-                        tag = self.tag_hilite
+                        elif self.find_whole_word(login.lower(), line.lower(), after=end) > -1:
+                            tag = self.tag_hilite
 
-                    else:
-                        tag = self.tag_remote
+                        else:
+                            tag = self.tag_remote
 
                 elif "* " in line:
                     tag = self.tag_action
