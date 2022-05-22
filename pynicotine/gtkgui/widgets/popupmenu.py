@@ -533,13 +533,9 @@ class PopupMenu:
     def on_copy_user(self, *_args):
         copy_text(self.user)
 
-    def on_give_privileges_response(self, dialog, response_id, _data):
+    def on_give_privileges_response(self, dialog, _response_id, _data):
 
         days = dialog.get_response_value()
-        dialog.destroy()
-
-        if response_id != Gtk.ResponseType.OK:
-            return
 
         if not days:
             return

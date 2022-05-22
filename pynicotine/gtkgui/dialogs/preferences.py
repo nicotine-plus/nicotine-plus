@@ -169,13 +169,9 @@ class NetworkFrame(UserInterface):
             }
         }
 
-    def on_change_password_response(self, dialog, response_id, logged_in):
+    def on_change_password_response(self, dialog, _response_id, logged_in):
 
         password = dialog.get_response_value()
-        dialog.destroy()
-
-        if response_id != Gtk.ResponseType.OK:
-            return
 
         if logged_in != self.core.logged_in:
             MessageDialog(
@@ -332,14 +328,10 @@ class DownloadsFrame(UserInterface):
             }
         }
 
-    def on_add_filter_response(self, dialog, response_id, _data):
+    def on_add_filter_response(self, dialog, _response_id, _data):
 
         dfilter = dialog.get_response_value()
         escaped = dialog.get_second_response_value()
-        dialog.destroy()
-
-        if response_id != Gtk.ResponseType.OK:
-            return
 
         if dfilter in self.filtersiters:
             self.filterlist.set(self.filtersiters[dfilter], 0, dfilter, 1, escaped)
@@ -376,14 +368,10 @@ class DownloadsFrame(UserInterface):
 
         return self.downloadfilters
 
-    def on_edit_filter_response(self, dialog, response_id, _data):
+    def on_edit_filter_response(self, dialog, _response_id, _data):
 
         new_dfilter = dialog.get_response_value()
         escaped = dialog.get_second_response_value()
-        dialog.destroy()
-
-        if response_id != Gtk.ResponseType.OK:
-            return
 
         dfilter = self.get_selected_filter()
 
@@ -689,14 +677,10 @@ class SharesFrame(UserInterface):
             multiple=True
         ).show()
 
-    def on_edit_shared_dir_response(self, dialog, response_id, path):
+    def on_edit_shared_dir_response(self, dialog, _response_id, path):
 
         virtual = dialog.get_response_value()
         buddy_only = dialog.get_second_response_value()
-        dialog.destroy()
-
-        if response_id != Gtk.ResponseType.OK:
-            return
 
         if not virtual:
             return
@@ -945,13 +929,9 @@ class IgnoredUsersFrame(UserInterface):
             }
         }
 
-    def on_add_ignored_response(self, dialog, response_id, _data):
+    def on_add_ignored_response(self, dialog, _response_id, _data):
 
         user = dialog.get_response_value()
-        dialog.destroy()
-
-        if response_id != Gtk.ResponseType.OK:
-            return
 
         if user and user not in self.ignored_users:
             self.ignored_users.append(user)
@@ -977,13 +957,9 @@ class IgnoredUsersFrame(UserInterface):
             model.remove(iterator)
             self.ignored_users.remove(user)
 
-    def on_add_ignored_ip_response(self, dialog, response_id, _data):
+    def on_add_ignored_ip_response(self, dialog, _response_id, _data):
 
         ip_address = dialog.get_response_value()
-        dialog.destroy()
-
-        if response_id != Gtk.ResponseType.OK:
-            return
 
         if ip_address is None or ip_address == "" or ip_address.count(".") != 3:
             return
@@ -1121,13 +1097,9 @@ class BannedUsersFrame(UserInterface):
             }
         }
 
-    def on_add_banned_response(self, dialog, response_id, _data):
+    def on_add_banned_response(self, dialog, _response_id, _data):
 
         user = dialog.get_response_value()
-        dialog.destroy()
-
-        if response_id != Gtk.ResponseType.OK:
-            return
 
         if user and user not in self.banlist:
             self.banlist.append(user)
@@ -1153,13 +1125,9 @@ class BannedUsersFrame(UserInterface):
             model.remove(iterator)
             self.banlist.remove(user)
 
-    def on_add_blocked_response(self, dialog, response_id, _data):
+    def on_add_blocked_response(self, dialog, _response_id, _data):
 
         ip_address = dialog.get_response_value()
-        dialog.destroy()
-
-        if response_id != Gtk.ResponseType.OK:
-            return
 
         if ip_address is None or ip_address == "" or ip_address.count(".") != 3:
             return
@@ -1333,13 +1301,9 @@ class ChatsFrame(UserInterface):
         iterator = store.get_iter(index)
         store.set(iterator, pos, value)
 
-    def on_add_censored_response(self, dialog, response_id, _data):
+    def on_add_censored_response(self, dialog, _response_id, _data):
 
         pattern = dialog.get_response_value()
-        dialog.destroy()
-
-        if response_id != Gtk.ResponseType.OK:
-            return
 
         if pattern:
             self.censor_list_model.insert_with_valuesv(-1, [0], [pattern])

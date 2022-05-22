@@ -381,8 +381,6 @@ class IconNotebook:
 
     def remove_all_pages_response(self, dialog, response_id, _data):
 
-        dialog.destroy()
-
         if response_id == 2:
             for i in reversed(range(self.notebook.get_n_pages())):
                 page = self.notebook.get_nth_page(i)

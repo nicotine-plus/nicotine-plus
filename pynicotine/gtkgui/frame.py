@@ -497,12 +497,9 @@ class NicotineFrame(UserInterface):
         self.set_widget_online_status(False)
         self.tray_icon.set_connected(False)
 
-    def invalid_password_response(self, dialog, response_id, _data):
-
+    def invalid_password_response(self, _dialog, response_id, _data):
         if response_id == 2:
             self.on_settings(page='Network')
-
-        dialog.destroy()
 
     def invalid_password(self):
 
@@ -1598,7 +1595,6 @@ class NicotineFrame(UserInterface):
     def on_create_room_response(self, dialog, response_id, room):
 
         private = dialog.option.get_active()
-        dialog.destroy()
 
         if response_id == 2:
             # Create a new room
@@ -1885,7 +1881,7 @@ class NicotineFrame(UserInterface):
 
     """ Termination """
 
-    def on_critical_error_response(self, dialog, response_id, data):
+    def on_critical_error_response(self, _dialog, response_id, data):
 
         loop, error = data
 
@@ -1894,7 +1890,6 @@ class NicotineFrame(UserInterface):
             self.on_report_bug()
             return
 
-        dialog.destroy()
         loop.quit()
         self.core.quit()
 
@@ -1960,7 +1955,6 @@ class NicotineFrame(UserInterface):
     def show_exit_dialog_response(self, dialog, response_id, _data):
 
         remember = dialog.option.get_active()
-        dialog.destroy()
 
         if response_id == 2:  # 'Quit'
             if remember:

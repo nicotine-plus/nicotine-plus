@@ -98,13 +98,9 @@ class WishList(UserInterface):
 
         self.select_wish(wish)
 
-    def on_edit_wish_response(self, dialog, response_id, old_wish):
+    def on_edit_wish_response(self, dialog, _response_id, old_wish):
 
         wish = dialog.get_response_value()
-        dialog.destroy()
-
-        if response_id != Gtk.ResponseType.OK:
-            return
 
         if not wish:
             return
@@ -143,9 +139,7 @@ class WishList(UserInterface):
         self.wish_entry.grab_focus()
         return True
 
-    def clear_wishlist_response(self, dialog, response_id, _data):
-
-        dialog.destroy()
+    def clear_wishlist_response(self, _dialog, response_id, _data):
 
         if response_id == 2:
             for wish in self.wishes.copy():

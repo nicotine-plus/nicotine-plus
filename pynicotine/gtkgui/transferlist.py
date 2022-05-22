@@ -890,17 +890,11 @@ class TransferList(UserInterface):
         self.select_transfers()
         self.abort_transfers(clear=True)
 
-    def on_clear_queued_response(self, dialog, response_id, _data):
-
-        dialog.destroy()
-
+    def on_clear_queued_response(self, _dialog, response_id, _data):
         if response_id == 2:
             self.clear_transfers(["Queued"])
 
-    def on_clear_all_response(self, dialog, response_id, _data):
-
-        dialog.destroy()
-
+    def on_clear_all_response(self, _dialog, response_id, _data):
         if response_id == 2:
             self.clear_transfers()
 
