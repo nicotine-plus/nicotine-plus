@@ -1142,9 +1142,7 @@ class ChatRoom(UserInterface):
     def on_view_room_log(self, *_args):
         open_log(config.sections["logging"]["roomlogsdir"], self.room)
 
-    def on_delete_room_log_response(self, dialog, response_id, _data):
-
-        dialog.destroy()
+    def on_delete_room_log_response(self, _dialog, response_id, _data):
 
         if response_id == 2:
             delete_log(config.sections["logging"]["roomlogsdir"], self.room)
