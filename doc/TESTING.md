@@ -30,6 +30,8 @@ Unstable [Flatpak](https://www.flatpak.org/setup/) packages are built after ever
 
 - [Download Unstable Flatpak Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/flatpak-package.zip)
 
+If Nicotine+ is not packaged for your system, the latest unstable build can be [installed using pip (see below)](#pip).
+
 ## Windows
 
 Unstable Windows packages are built after every commit to the master branch.
@@ -37,7 +39,7 @@ Unstable Windows packages are built after every commit to the master branch.
 - [Download Unstable 64-bit Windows Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-installer.zip) [[Info](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-installer)]
 - [Download Unstable 32-bit Windows Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-i686-installer.zip) [[Info](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-i686-installer)]
 
-Portable packages are also available. They can be run from your home directory, and do not require installation or administrator privileges.
+Portable packages are also available. They can be run from any folder and do not require installation or administrator privileges.
 
 - [Download Unstable 64-bit Windows Portable Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-package.zip) [[Info](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-package)]
 - [Download Unstable 32-bit Windows Portable Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-i686-package.zip) [[Info](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-i686-package)]
@@ -52,9 +54,11 @@ Unstable installers for macOS Catalina 10.15 and newer are built after every com
 
 ### pip
 
+If Nicotine+ is not packaged for your system, the latest unstable build can be installed using [pip](https://pip.pypa.io/).
+
 Installing Nicotine+ using pip on Windows requires a [MinGW environment](https://www.mingw-w64.org/). On macOS, this requires [Homebrew](https://brew.sh/). In other words, a Python installation from Python's website will not work for these platforms, therefore, it is recommended to use a supported Nicotine+ installer for [Windows](#windows) or [macOS](#macos) instead.
 
-To install the latest unstable build of Nicotine+ using [pip](https://pip.pypa.io/), ensure the [runtime dependencies](DEPENDENCIES.md) are installed, and run the following:
+Ensure the [runtime dependencies](DEPENDENCIES.md) are installed, and run the following:
 
 ```sh
 pip3 install git+https://github.com/nicotine-plus/nicotine-plus.git
@@ -94,3 +98,5 @@ To update to the latest unstable build of Nicotine+, run the following:
 cd nicotine-plus
 git pull
 ```
+
+For information about Nicotine+ development procedures for maintainers, developers and code contributors, see [DEVELOPING.md](DEVELOPING.md).
