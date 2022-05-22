@@ -52,9 +52,6 @@ class Config:
 
     def __init__(self):
 
-        config_dir, self.data_dir = self.get_user_directories()
-        self.filename = os.path.join(config_dir, "config")
-        self.plugin_dir = os.path.join(self.data_dir, "plugins")
         self.version = "3.3.0.dev1"
         self.python_version = sys.version
         self.gtk_version = ""
@@ -73,6 +70,12 @@ class Config:
         self.issue_tracker_url = "https://github.com/nicotine-plus/nicotine-plus/issues"
         self.translations_url = "https://nicotine-plus.org/doc/TRANSLATIONS"
 
+        # Set defaults to use if nothing is specified on command line
+        self.config_dir, self.data_dir = self.get_user_directories()
+        self.plugin_dir = None
+        self.set_user_data_folder(self.data_dir)  # contains plugin_dir
+
+        self.filename = os.path.join(self.config_dir, "config")
         self.config_loaded = False
         self.parser = configparser.ConfigParser(strict=False, interpolation=None)
         self.sections = defaultdict(dict)
@@ -113,6 +116,18 @@ class Config:
 
         return config_dir, data_dir
 
+    def set_user_data_folder(self, data_dir):
+        """ Set from init default or specified --user-data argument """
+
+        self.data_dir = data_dir
+        self.plugin_dir = os.path.join(data_dir, "plugins")
+
+    def set_profile_folder(self, profile_dir="User Data"):
+        """ Set a portable --profile for config data and plugins """
+
+        self.set_user_data_folder(profile_dir)
+        self.filename = os.path.join(profile_dir, "config")
+
     def create_config_folder(self):
         """ Create the folder for storing the config file in, if the folder
         doesn't exist """
@@ -137,12 +152,16 @@ class Config:
         return True
 
     def create_data_folder(self):
-        """ Create the folder for storing data in (aliases, shared files etc.),
-        if the folder doesn't exist """
+        """ Make the base folder structure if it doesn't exist """
 
         try:
             if not os.path.isdir(self.data_dir.encode("utf-8")):
+                # Create the folder for storing data in (aliases, shared files etc.)
                 os.makedirs(self.data_dir.encode("utf-8"))
+
+            if not os.path.isdir(self.plugin_dir.encode("utf-8")):
+                # Create the empty plugins folder to help the user
+                os.makedirs(self.plugin_dir.encode("utf-8"))
 
         except OSError as msg:
             from pynicotine.logfacility import log
