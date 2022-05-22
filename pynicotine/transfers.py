@@ -1036,7 +1036,7 @@ class Transfers:
                     md5sum = md5()
                     md5sum.update((i.filename + i.user).encode('utf-8'))
 
-                    filename = i.filename.replace('/', '\\').split('\\')[-1]
+                    filename = clean_file(i.filename.replace('/', '\\').split('\\')[-1])
                     prefix = "INCOMPLETE" + md5sum.hexdigest()
 
                     # Ensure filename doesn't exceed 255 bytes in length
