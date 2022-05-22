@@ -88,7 +88,7 @@ def check_arguments():
     if args.config:
         config.filename = args.config
 
-    # Since a custom config was specified, allow another instance of the application to open 
+    # Since a custom config was specified, allow another instance of the application to open
     multi_instance = True if (args.profile or args.config) else False
 
     return args.headless, args.hidden, args.bindip, args.port, args.ci_mode, args.rescan, multi_instance
