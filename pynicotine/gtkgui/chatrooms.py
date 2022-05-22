@@ -637,26 +637,23 @@ class ChatRoom(UserInterface):
                 except UnicodeDecodeError:
                     line = line.decode("latin-1")
 
-                user = None
-                tag = None
-                usertag = None
+                user = tag = usertag = None
 
-                if "[" in line and "] " in line:
-                    start = line.find("[")
-                    end = line.find("] ")
+                if " [" in line and "] " in line:
+                    start = line.find(" [") + 2
+                    end = line.find("] ", start)
 
-                    if end > start:
-                        user = line[start + 1:end].strip()
-                        usertag = self.get_user_tag(user)
+                    user = line[start:end]
+                    usertag = self.get_user_tag(user)
 
-                        if user == login:
-                            tag = self.tag_local
+                    if user == login:
+                        tag = self.tag_local
 
-                        elif login.lower() in line[end:].lower():
-                            tag = self.tag_hilite
+                    elif self.find_whole_word(login.lower(), line.lower(), after=end) > -1:
+                        tag = self.tag_hilite
 
-                        else:
-                            tag = self.tag_remote
+                    else:
+                        tag = self.tag_remote
 
                 elif "* " in line:
                     tag = self.tag_action
@@ -779,7 +776,7 @@ class ChatRoom(UserInterface):
 
     @staticmethod
     def find_whole_word(word, text, after=0):
-        """ Return the position of the first mention of word that is not a subword """
+        """ Returns start position of a whole word that is not in a subword """
 
         if word not in text:
             return -1
