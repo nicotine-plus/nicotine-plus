@@ -1036,12 +1036,12 @@ class Transfers:
                     md5sum = md5()
                     md5sum.update((i.filename + i.user).encode('utf-8'))
 
-                    base_name, extension = os.path.splitext(clean_file(i.filename.replace('/', '\\').split('\\')[-1]))
+                    filename = i.filename.replace('/', '\\').split('\\')[-1]
                     prefix = "INCOMPLETE" + md5sum.hexdigest()
 
-                    # Ensure file name doesn't exceed 255 characters in length
+                    # Ensure filename doesn't exceed 255 bytes in length
                     incomplete_name = os.path.join(
-                        incompletedir, prefix + base_name[:255 - len(prefix) - len(extension)] + extension)
+                        incompletedir, prefix + filename.encode('utf-8')[:213].decode('utf-8', 'ignore'))
                     file_handle = open(incomplete_name.encode('utf-8'), 'ab+')  # pylint: disable=consider-using-with
 
                     try:
