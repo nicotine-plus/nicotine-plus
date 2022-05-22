@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-22 02:04+0300\n"
-"PO-Revision-Date: 2022-05-13 21:02+0000\n"
+"PO-Revision-Date: 2022-05-22 17:52+0000\n"
 "Last-Translator: Mariusz <wisniowy@g.pl>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/pl/>\n"
@@ -1369,7 +1369,6 @@ msgid "_Finish"
 msgstr "Zakończ"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:114
-#, fuzzy
 msgid "_Next"
 msgstr "_Następny"
 
@@ -2102,7 +2101,7 @@ msgstr "_Konfiguracja udostępnionych zasobów"
 
 #: pynicotine/gtkgui/frame.py:1050
 msgid "_Browse Public Shares"
-msgstr "_Przeglądaj publiczne udostępnione zasoby"
+msgstr "_Przeglądaj publicznie udostępnione zasoby"
 
 #: pynicotine/gtkgui/frame.py:1051
 msgid "Bro_wse Buddy Shares"
@@ -3853,9 +3852,8 @@ msgid "_Log Conversation"
 msgstr "_Log konwersacji"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:6
-#, fuzzy
 msgid "_Previous"
-msgstr "Poprzedni plik"
+msgstr "_Wstecz"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:44
 msgid "Welcome to Nicotine+"
