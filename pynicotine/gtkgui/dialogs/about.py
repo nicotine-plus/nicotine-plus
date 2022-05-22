@@ -218,6 +218,9 @@ Third-Party Attributions
     TRANSLATORS = """Nicotine+ Translators
 –––––––––––––––––––––––––––––––––––––––>
 
+Catalan
+ - Maite Guix (2022)
+
 Chinese (Simplified)
  - hadwin (2022)
 

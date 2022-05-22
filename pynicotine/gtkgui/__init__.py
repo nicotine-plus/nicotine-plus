@@ -81,7 +81,7 @@ def check_gui_dependencies():
     return None
 
 
-def run_gui(core, trayicon, hidden, ci_mode, multi_instance):
+def run_gui(core, hidden, ci_mode, multi_instance):
     """ Run Nicotine+ GTK GUI """
 
     from pynicotine.logfacility import log
@@ -98,4 +98,4 @@ def run_gui(core, trayicon, hidden, ci_mode, multi_instance):
         return None
 
     from pynicotine.gtkgui.application import Application
-    return Application(core, trayicon, hidden, ci_mode, multi_instance).run()
+    return Application(core, hidden, ci_mode, multi_instance).run()
