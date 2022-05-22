@@ -90,10 +90,7 @@ class Downloads(TransferList):
             callback=self.on_clear_all_response
         ).show()
 
-    def folder_download_response(self, dialog, response_id, msg):
-
-        dialog.destroy()
-
+    def folder_download_response(self, _dialog, response_id, msg):
         if response_id == 2:
             self.core.transfers.folder_contents_response(msg)
 

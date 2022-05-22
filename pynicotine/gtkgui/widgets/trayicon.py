@@ -217,12 +217,11 @@ class BaseImplementation:
         self.frame.change_main_page(self.frame.uploads_page)
         self.frame.show()
 
-    def on_open_private_chat_response(self, dialog, response_id, _data):
+    def on_open_private_chat_response(self, dialog, _response_id, _data):
 
         user = dialog.get_entry_value()
-        dialog.destroy()
 
-        if response_id != Gtk.ResponseType.OK or not user:
+        if not user:
             return
 
         self.core.privatechats.show_user(user)
@@ -240,12 +239,11 @@ class BaseImplementation:
             droplist=users
         ).show()
 
-    def on_get_a_users_info_response(self, dialog, response_id, _data):
+    def on_get_a_users_info_response(self, dialog, _response_id, _data):
 
         user = dialog.get_entry_value()
-        dialog.destroy()
 
-        if response_id != Gtk.ResponseType.OK or not user:
+        if not user:
             return
 
         self.core.userinfo.request_user_info(user)
@@ -262,12 +260,11 @@ class BaseImplementation:
             droplist=users
         ).show()
 
-    def on_get_a_users_shares_response(self, dialog, response_id, _data):
+    def on_get_a_users_shares_response(self, dialog, _response_id, _data):
 
         user = dialog.get_entry_value()
-        dialog.destroy()
 
-        if response_id != Gtk.ResponseType.OK or not user:
+        if not user:
             return
 
         self.core.userbrowse.browse_user(user)

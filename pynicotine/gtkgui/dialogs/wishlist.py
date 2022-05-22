@@ -17,7 +17,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gi.repository import GLib
-from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
@@ -92,13 +91,9 @@ class WishList(UserInterface):
 
         self.select_wish(wish)
 
-    def on_edit_wish_response(self, dialog, response_id, old_wish):
+    def on_edit_wish_response(self, dialog, _response_id, old_wish):
 
         wish = dialog.get_entry_value()
-        dialog.destroy()
-
-        if response_id != Gtk.ResponseType.OK:
-            return
 
         if not wish:
             return
@@ -131,9 +126,7 @@ class WishList(UserInterface):
         self.wish_entry.grab_focus()
         return True
 
-    def clear_wishlist_response(self, dialog, response_id, _data):
-
-        dialog.destroy()
+    def clear_wishlist_response(self, _dialog, response_id, _data):
 
         if response_id == 2:
             for wish in self.list_view.iterators.copy():
