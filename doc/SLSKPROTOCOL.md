@@ -77,18 +77,18 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
 
 | String                | Comments                                    |
 | --------------------- | ------------------------------------------- |
-| Queued                |                                             |
-| Pending shutdown.     |                                             |
-| Disallowed extension  | Sent by Soulseek NS for filtered extensions |
-| Cancelled             |                                             |
-| Complete              |                                             |
 | Banned                |                                             |
 | Blocked country       |                                             |
-| Too many files        |                                             |
-| Too many megabytes    |                                             |
+| Cancelled             |                                             |
+| Complete              |                                             |
+| Disallowed extension  | Sent by Soulseek NS for filtered extensions |
 | File not shared       |                                             |
 | File not shared.      | Newer variant containing a dot              |
+| Pending shutdown.     |                                             |
+| Queued                |                                             |
 | Remote file error     |                                             |
+| Too many files        |                                             |
+| Too many megabytes    |                                             |
 
 ### File Attribute Types
 
