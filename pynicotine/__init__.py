@@ -67,29 +67,17 @@ def check_arguments():
     # Disables critical error dialog; used for integration tests
     parser.add_argument("--ci-mode", action="store_true", help=argparse.SUPPRESS)
 
-    # Experiemental 3.3.0.dev1 (ideally, we could auto sense it)
-    parser.add_argument("--portable", action="store_true", help=argparse.SUPPRESS)
-
-    # Experiemental 3.3.0.dev1 to combine all three -c -u -p args
-    parser.add_argument("--profile", metavar=_("dir"), help=argparse.SUPPRESS)
-
     args = parser.parse_args()
 
-    if args.portable:
-        config.set_profile_folder()
-
-    if args.profile:
-        config.set_profile_folder(args.profile)
-
     if args.user_data:
-        # Since v3.3.0 it now also inlcudes plugins
+        # Since v3.3.0 it now also includes plugins
         config.set_user_data_folder(args.user_data)
 
     if args.config:
         config.filename = args.config
 
     # If a custom config was specified, allow another instance of the application to open
-    multi_instance = bool(args.profile or args.config)
+    multi_instance = bool(args.config)
 
     return args.headless, args.hidden, args.bindip, args.port, args.ci_mode, args.rescan, multi_instance
 
