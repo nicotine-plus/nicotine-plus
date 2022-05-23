@@ -280,8 +280,8 @@ class Config:
                 "roomlogsdir": os.path.join(log_dir, "rooms"),
                 "privatelogsdir": os.path.join(log_dir, "private"),
                 "readroomlogs": True,
-                "readroomlines": 15,
-                "readprivatelines": 15,
+                "readroomlines": 200,
+                "readprivatelines": 200,
                 "rooms": []
             },
             "privatechat": {
