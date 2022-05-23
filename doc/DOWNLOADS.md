@@ -89,7 +89,7 @@ Stable Windows installers for Nicotine+ are available for download. Installing N
 - [Download Nicotine+ 64-bit Windows Installer](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-x86_64-installer.zip)  [[SHA256](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-x86_64-installer.zip.sha256)]
 - [Download Nicotine+ 32-bit Windows Installer](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-i686-installer.zip)  [[SHA256](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-i686-installer.zip.sha256)]
 
-Portable packages are also available. They can be run from your home directory, and do not require installation or administrator privileges.
+Portable packages are also available. They can be run from any folder and do not require installation or administrator privileges.
 
 - [Download Nicotine+ 64-bit Windows Portable Package](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-x86_64-package.zip)  [[SHA256](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-x86_64-package.zip.sha256)]
 - [Download Nicotine+ 32-bit Windows Portable Package](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-i686-package.zip)  [[SHA256](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-i686-package.zip.sha256)]
