@@ -122,12 +122,6 @@ class Config:
         self.data_dir = data_dir
         self.plugin_dir = os.path.join(data_dir, "plugins")
 
-    def set_profile_folder(self, profile_dir="User Data"):
-        """ Set a portable --profile for config data and plugins """
-
-        self.set_user_data_folder(profile_dir)
-        self.filename = os.path.join(profile_dir, "config")
-
     def create_config_folder(self):
         """ Create the folder for storing the config file in, if the folder
         doesn't exist """
