@@ -52,6 +52,7 @@ from pynicotine.gtkgui.widgets.filechooser import FileChooser
 from pynicotine.gtkgui.widgets.iconnotebook import TabLabel
 from pynicotine.gtkgui.widgets.dialogs import MessageDialog
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
+from pynicotine.gtkgui.widgets.infobar import InfoBar
 from pynicotine.gtkgui.widgets.notifications import Notifications
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
@@ -137,6 +138,7 @@ class NicotineFrame(UserInterface):
             self.header_menu,
             self.header_title,
             self.horizontal_paned,
+            self.info_bar,
             self.interests_container,
             self.interests_end,
             self.interests_page,
@@ -246,6 +248,7 @@ class NicotineFrame(UserInterface):
 
         self.log_view = TextView(self.log_view)
         self.log_search_bar = TextSearchBar(self.log_view.textview, self.log_search_bar, self.log_search_entry)
+        self.info_bar = InfoBar(self.info_bar, Gtk.MessageType.WARNING)  # "important_*" log level messages
 
         self.create_log_context_menu()
         log.add_listener(self.log_callback)
@@ -1764,15 +1767,17 @@ class NicotineFrame(UserInterface):
 
     def update_log(self, msg, level):
 
+        self.log_view.append_line(msg, find_urls=False)
+
         if level and level.startswith("important"):
             title = "Information" if level == "important_info" else "Error"
-            MessageDialog(parent=self.application.get_active_window(), title=title, message=msg).show()
+            self.show_important_message(title, msg)
+            return False
 
         # Keep verbose debug messages out of statusbar to make it more useful
         if level not in ("transfer", "connection", "message", "miscellaneous"):
             self.set_status_text(msg)
 
-        self.log_view.append_line(msg, find_urls=False)
         return False
 
     def on_popup_menu_log(self, menu, _textview):
@@ -1833,6 +1838,9 @@ class NicotineFrame(UserInterface):
         self.set_debug_level(action, state, "miscellaneous")
 
     """ Status Bar """
+
+    def show_important_message(self, title, message):
+        self.info_bar.show_message("%s: %s" % (title, message))
 
     def set_status_text(self, msg):
         self.status_label.set_text(msg)
