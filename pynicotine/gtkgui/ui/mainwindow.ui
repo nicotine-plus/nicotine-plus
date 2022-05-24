@@ -1683,29 +1683,15 @@
         <child>
           <object class="GtkBox">
             <property name="visible">True</property>
-            <property name="spacing">6</property>
+            <property name="hexpand">True</property>
+            <property name="orientation">vertical</property>
             <child>
-              <object class="GtkLabel" id="status_label">
+              <object class="GtkRevealer">
                 <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="hexpand">True</property>
-                <property name="margin-start">12</property>
-                <property name="margin-end">12</property>
-                <property name="ellipsize">end</property>
-                <property name="single-line-mode">True</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="spacing">18</property>
+                <property name="transition-type">slide-up</property>
                 <child>
-                  <object class="GtkProgressBar" id="scan_progress_bar">
-                    <property name="visible">False</property>
-                    <property name="valign">center</property>
-                    <property name="pulse-step">0.8</property>
-                    <property name="text" translatable="yes">Scanning Shares</property>
-                    <property name="show-text">True</property>
+                  <object class="GtkInfoBar" id="info_bar">
+                    <property name="visible">True</property>
                   </object>
                 </child>
               </object>
@@ -1713,161 +1699,193 @@
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
-                <property name="margin-top">2</property>
-                <property name="margin-bottom">2</property>
-                <property name="margin-start">2</property>
-                <property name="margin-end">2</property>
                 <property name="spacing">6</property>
                 <child>
-                  <object class="GtkButton">
+                  <object class="GtkLabel" id="status_label">
                     <property name="visible">True</property>
-                    <property name="tooltip-text" translatable="yes">Connections</property>
-                    <property name="action-name">app.transferstatistics</property>
+                    <property name="xalign">0</property>
+                    <property name="hexpand">True</property>
+                    <property name="margin-start">12</property>
+                    <property name="margin-end">12</property>
+                    <property name="ellipsize">end</property>
+                    <property name="single-line-mode">True</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="spacing">18</property>
                     <child>
-                      <object class="GtkBox">
+                      <object class="GtkProgressBar" id="scan_progress_bar">
+                        <property name="visible">False</property>
+                        <property name="valign">center</property>
+                        <property name="pulse-step">0.8</property>
+                        <property name="text" translatable="yes">Scanning Shares</property>
+                        <property name="show-text">True</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="margin-top">2</property>
+                    <property name="margin-bottom">2</property>
+                    <property name="margin-start">2</property>
+                    <property name="margin-end">2</property>
+                    <property name="spacing">6</property>
+                    <child>
+                      <object class="GtkButton">
                         <property name="visible">True</property>
-                        <property name="spacing">6</property>
+                        <property name="tooltip-text" translatable="yes">Connections</property>
+                        <property name="action-name">app.transferstatistics</property>
                         <child>
-                          <object class="GtkImage">
+                          <object class="GtkBox">
                             <property name="visible">True</property>
-                            <property name="icon-name">network-wireless-symbolic</property>
+                            <property name="spacing">6</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="visible">True</property>
+                                <property name="icon-name">network-wireless-symbolic</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="connections_label">
+                                <property name="visible">True</property>
+                                <property name="label">0</property>
+                                <attributes>
+                                  <attribute name="weight" value="normal"/>
+                                </attributes>
+                              </object>
+                            </child>
                           </object>
                         </child>
+                        <style>
+                          <class name="flat"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkButton">
+                        <property name="visible">True</property>
+                        <property name="tooltip-text" translatable="yes">Downloading (speed / active users)</property>
+                        <signal name="clicked" handler="on_settings_downloads"/>
                         <child>
-                          <object class="GtkLabel" id="connections_label">
+                          <object class="GtkBox">
                             <property name="visible">True</property>
-                            <property name="label">0</property>
+                            <property name="spacing">6</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="visible">True</property>
+                                <property name="icon-name">go-down-symbolic</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="download_status_label">
+                                <property name="visible">True</property>
+                                <attributes>
+                                  <attribute name="weight" value="normal"/>
+                                </attributes>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <style>
+                          <class name="flat"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkButton">
+                        <property name="visible">True</property>
+                        <property name="tooltip-text" translatable="yes">Uploading (speed / active users)</property>
+                        <signal name="clicked" handler="on_settings_uploads"/>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="visible">True</property>
+                            <property name="spacing">6</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="visible">True</property>
+                                <property name="icon-name">go-up-symbolic</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="upload_status_label">
+                                <property name="visible">True</property>
+                                <attributes>
+                                  <attribute name="weight" value="normal"/>
+                                </attributes>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <style>
+                          <class name="flat"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="user_status_button">
+                        <property name="visible">True</property>
+                        <property name="action-name">win.away</property>
+                        <child>
+                          <object class="GtkLabel" id="user_status_label">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">Offline</property>
                             <attributes>
-                              <attribute name="weight" value="normal"/>
+                              <attribute name="weight" value="bold"/>
                             </attributes>
                           </object>
                         </child>
+                        <style>
+                          <class name="flat"/>
+                        </style>
                       </object>
                     </child>
-                    <style>
-                      <class name="flat"/>
-                    </style>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkButton">
-                    <property name="visible">True</property>
-                    <property name="tooltip-text" translatable="yes">Downloading (speed / active users)</property>
-                    <signal name="clicked" handler="on_settings_downloads"/>
                     <child>
-                      <object class="GtkBox">
+                      <object class="GtkToggleButton">
                         <property name="visible">True</property>
-                        <property name="spacing">6</property>
+                        <property name="tooltip-text" translatable="yes">Enable alternative download and upload speed limits</property>
+                        <property name="action-name">app.altspeedlimit</property>
+                        <child>
+                          <object class="GtkImage" id="alt_speed_icon">
+                            <property name="visible">True</property>
+                            <property name="icon-name">media-seek-backward-symbolic</property>
+                          </object>
+                        </child>
+                        <style>
+                          <class name="circular"/>
+                          <class name="flat"/>
+                          <class name="image-button"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkToggleButton" id="log_history_button">
+                        <property name="visible">True</property>
+                        <property name="tooltip-text" translatable="yes">Show log history</property>
+                        <property name="action-name">win.showlog</property>
                         <child>
                           <object class="GtkImage">
                             <property name="visible">True</property>
-                            <property name="icon-name">go-down-symbolic</property>
+                            <property name="icon-name">view-more-symbolic</property>
                           </object>
                         </child>
-                        <child>
-                          <object class="GtkLabel" id="download_status_label">
-                            <property name="visible">True</property>
-                            <attributes>
-                              <attribute name="weight" value="normal"/>
-                            </attributes>
-                          </object>
-                        </child>
+                        <style>
+                          <class name="circular"/>
+                          <class name="flat"/>
+                          <class name="image-button"/>
+                        </style>
                       </object>
                     </child>
-                    <style>
-                      <class name="flat"/>
-                    </style>
                   </object>
                 </child>
-                <child>
-                  <object class="GtkButton">
-                    <property name="visible">True</property>
-                    <property name="tooltip-text" translatable="yes">Uploading (speed / active users)</property>
-                    <signal name="clicked" handler="on_settings_uploads"/>
-                    <child>
-                      <object class="GtkBox">
-                        <property name="visible">True</property>
-                        <property name="spacing">6</property>
-                        <child>
-                          <object class="GtkImage">
-                            <property name="visible">True</property>
-                            <property name="icon-name">go-up-symbolic</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkLabel" id="upload_status_label">
-                            <property name="visible">True</property>
-                            <attributes>
-                              <attribute name="weight" value="normal"/>
-                            </attributes>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                    <style>
-                      <class name="flat"/>
-                    </style>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkButton" id="user_status_button">
-                    <property name="visible">True</property>
-                    <property name="action-name">win.away</property>
-                    <child>
-                      <object class="GtkLabel" id="user_status_label">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Offline</property>
-                        <attributes>
-                          <attribute name="weight" value="bold"/>
-                        </attributes>
-                      </object>
-                    </child>
-                    <style>
-                      <class name="flat"/>
-                    </style>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkToggleButton">
-                    <property name="visible">True</property>
-                    <property name="tooltip-text" translatable="yes">Enable alternative download and upload speed limits</property>
-                    <property name="action-name">app.altspeedlimit</property>
-                    <child>
-                      <object class="GtkImage" id="alt_speed_icon">
-                        <property name="visible">True</property>
-                        <property name="icon-name">media-seek-backward-symbolic</property>
-                      </object>
-                    </child>
-                    <style>
-                      <class name="circular"/>
-                      <class name="flat"/>
-                      <class name="image-button"/>
-                    </style>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkToggleButton" id="log_history_button">
-                    <property name="visible">True</property>
-                    <property name="tooltip-text" translatable="yes">Show log history</property>
-                    <property name="action-name">win.showlog</property>
-                    <child>
-                      <object class="GtkImage">
-                        <property name="visible">True</property>
-                        <property name="icon-name">view-more-symbolic</property>
-                      </object>
-                    </child>
-                    <style>
-                      <class name="circular"/>
-                      <class name="flat"/>
-                      <class name="image-button"/>
-                    </style>
-                  </object>
-                </child>
+                <style>
+                  <class name="border-top"/>
+                </style>
               </object>
             </child>
-            <style>
-              <class name="border-top"/>
-            </style>
           </object>
         </child>
       </object>
