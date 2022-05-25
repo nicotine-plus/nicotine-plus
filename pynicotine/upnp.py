@@ -385,6 +385,15 @@ class UPnP:
         self._start_timer()
 
     def _add_port_mapping(self):
+
+        while self.config.need_config():
+            # On first run, wait until we have specified a username and password
+            import time
+            time.sleep(1)
+
+            if self.core.shutdown:
+                return
+
         self._update_port_mapping(self.core.protothread.listenport)
 
     def _start_timer(self):
