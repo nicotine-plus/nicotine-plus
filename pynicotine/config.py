@@ -70,8 +70,9 @@ class Config:
         self.issue_tracker_url = "https://github.com/nicotine-plus/nicotine-plus/issues"
         self.translations_url = "https://nicotine-plus.org/doc/TRANSLATIONS"
 
-        self.config_dir, self.data_dir = self.get_user_directories()
-        self.set_user_data_folder(self.data_dir)
+        self.config_dir, self.data_dir = self.get_user_directories()  # defaults
+        self.set_user_data_folder(self.data_dir)  # either use defaults or args
+        self.plugin_dir = None  # set in PluginHandler() to be within data_dir
 
         self.filename = os.path.join(self.config_dir, "config")
         self.config_loaded = False
@@ -115,8 +116,8 @@ class Config:
         return config_dir, data_dir
 
     def set_user_data_folder(self, data_dir):
-        """ Set to default, or by specified --user-data argument, since
-        3.3.0 this also sets the user home "plugins" directory path) """
+        """ Set to default, or can set with --user-data argument (since
+        3.3.0 this also sets path for user's home "plugins" folder) """
 
         self.data_dir = data_dir
 
