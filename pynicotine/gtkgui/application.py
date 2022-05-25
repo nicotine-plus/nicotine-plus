@@ -51,17 +51,33 @@ class Application(Gtk.Application):
             # GTK 4 replacement
             Gtk.ListStore.insert_with_valuesv = Gtk.ListStore.insert_with_values  # pylint: disable=no-member
 
+    def network_callback(self, msgs):
+        # High priority to ensure there are no delays
+        GLib.idle_add(self.core.network_event, msgs, priority=GLib.PRIORITY_HIGH_IDLE)
+
     def do_startup(self):  # pylint:disable=arguments-differ
 
         Gtk.Application.do_startup(self)
 
         from pynicotine.gtkgui.frame import NicotineFrame
         self.frame = NicotineFrame(self, self.core, self.start_hidden, self.ci_mode)
-        self.frame.on_startup()
+
+        self.core.start(ui_callback=self.frame, network_callback=self.network_callback)
 
     def do_activate(self):  # pylint:disable=arguments-differ
+
+        active_window = self.get_active_window()
+
+        if active_window:
+            # Show the window of the running application instance
+            active_window.present()
+            return
+
         if self.frame:
-            self.frame.on_activate()
+            self.frame.init_window()
+
+        if config.sections["server"]["auto_connect_startup"]:
+            self.core.connect()
 
     def do_shutdown(self):  # pylint:disable=arguments-differ
 

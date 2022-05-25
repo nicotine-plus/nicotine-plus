@@ -332,12 +332,8 @@ class NicotineCore:
 
         if config.need_config():
             log.add(_("You need to specify a username and password before connecting…"))
-
-            if self.ui_callback:
-                self.ui_callback.on_fast_configure()
-
-            if config.need_config():
-                return False
+            self.ui_callback.setup()
+            return False
 
         self.protothread.server_connect()
 
