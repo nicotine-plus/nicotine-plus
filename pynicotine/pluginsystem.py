@@ -345,6 +345,7 @@ class PluginHandler:
         self.plugindirs.append(os.path.join(prefix, "plugins"))
 
         # Load home directory plugins
+        self.set_plugins_folder()
         self.plugindirs.append(config.plugin_dir)
 
         BasePlugin.parent = self
@@ -353,6 +354,14 @@ class PluginHandler:
         BasePlugin.frame = self.core.ui_callback
 
         self.load_enabled()
+
+    def set_plugins_folder(self):
+
+        self.config.plugin_dir = os.path.join(self.config.data_dir, "plugins")
+
+        # For user convienience, make sure an empty plugins folder exists
+        if not os.path.isdir(self.config.plugin_dir.encode("utf-8")):
+            os.makedirs(self.config.plugin_dir.encode("utf-8"))
 
     def quit(self):
 
