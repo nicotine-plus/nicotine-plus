@@ -8,11 +8,21 @@ Version 3.2.3 (Unreleased)
 
 Changes
 
- * ...
+ * Implemented scrolling on tabs to change the active tab
+ * Added text-to-speech toggle for private chats
+ * Minor performance improvements when saving list of downloads and uploads
+ * Minor GUI consistency improvements
+ * Various translation updates (thanks to our [many contributors](https://nicotine-plus.org/TRANSLATORS) on [Weblate](https://hosted.weblate.org/engage/nicotine-plus))
 
 Corrections
 
- * ...
+ * Fixed an issue where dark mode was used when light mode was enabled on the system
+ * Fixed an issue where clearing all file transfers did not remove transfers completely
+ * Fixed an issue where the estimated time remaining for file transfers was incorrect
+ * Fixed an issue where subfolder downloads did not always save in the correct location
+ * Unmaximized size of the main window is now remembered after the window is maximized
+ * Reduced memory usage after closing search tabs with many results
+ * Various smaller bug fixes
 
 Issues closed on GitHub
 
@@ -25,6 +35,7 @@ Issues closed on GitHub
  * Time Left for folder and user same as for currently active file ([#2018](https://github.com/nicotine-plus/nicotine-plus/issues/2018))
  * Time Left column regression ([#2020](https://github.com/nicotine-plus/nicotine-plus/issues/2020))
  * Clear ALL downloads, Clear ALL uploads not working ([#2023](https://github.com/nicotine-plus/nicotine-plus/issues/2023))
+ * User note saves when pressing Cancel ([#2036](https://github.com/nicotine-plus/nicotine-plus/issues/2036))
 
 Version 3.2.2 (March 19, 2022)
 ------------------------------
