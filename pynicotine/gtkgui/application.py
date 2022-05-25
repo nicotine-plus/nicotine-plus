@@ -60,8 +60,7 @@ class Application(Gtk.Application):
         Gtk.Application.do_startup(self)
 
         from pynicotine.gtkgui.frame import NicotineFrame
-        self.frame = NicotineFrame(self, self.core, self.tray_icon, self.start_hidden,
-                                   self.bindip, self.port, self.ci_mode)
+        self.frame = NicotineFrame(self, self.core, self.start_hidden, self.ci_mode)
 
         self.core.start(ui_callback=self.frame, network_callback=self.network_callback)
 
