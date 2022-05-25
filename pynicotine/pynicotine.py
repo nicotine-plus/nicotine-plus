@@ -258,12 +258,6 @@ class NicotineCore:
         self.pluginhandler = PluginHandler(self, config)
 
         self.set_connection_stats(slskmessages.SetConnectionStats())
-        connect_ready = not config.need_config()
-
-        if not connect_ready:
-            log.add(_("You need to specify a username and password before connecting…"))
-
-        return connect_ready
 
     def quit(self, signal_type=None, _frame=None):
 
@@ -334,6 +328,11 @@ class NicotineCore:
                     " most operating systems with the exception of Windows."
                 )
             log.add_important_error(message)
+            return False
+
+        if config.need_config():
+            log.add(_("You need to specify a username and password before connecting…"))
+            self.ui_callback.setup()
             return False
 
         self.protothread.server_connect()

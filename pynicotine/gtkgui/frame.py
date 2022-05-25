@@ -305,7 +305,17 @@ class NicotineFrame(UserInterface):
 
     """ Initialize """
 
-    def init_window_properties(self):
+    def setup(self):
+
+        if self.preferences is not None and self.preferences.dialog.get_property("visible"):
+            return
+
+        if self.fast_configure is None:
+            self.fast_configure = FastConfigure(self, self.core)
+
+        self.fast_configure.show()
+
+    def init_window(self):
 
         # Set main window title and icon
         self.window.set_title(config.application_name)
@@ -372,6 +382,12 @@ class NicotineFrame(UserInterface):
             self.window.connect("size-allocate", self.on_window_size_changed)
             self.window.connect("notify::is-maximized", self.on_window_property_changed, "maximized")
 
+        self.application.add_window(self.window)
+
+        # Check command line option and config option
+        if not self.start_hidden and not config.sections["ui"]["startup_hidden"]:
+            self.show()
+
     def init_exception_handler(self):
 
         sys.excepthook = self.on_critical_error
@@ -397,36 +413,6 @@ class NicotineFrame(UserInterface):
             self.run = run_with_excepthook
 
         threading.Thread.__init__ = init_thread_excepthook
-
-    def on_startup(self):
-
-        connect_ready = self.core.start(self, self.network_callback)
-
-        if not connect_ready:
-            self.connect_action.set_enabled(False)
-
-        elif config.sections["server"]["auto_connect_startup"]:
-            self.core.connect()
-
-    def on_activate(self):
-
-        active_window = self.application.get_active_window()
-
-        if active_window:
-            # Show the window of the running application instance
-            active_window.present()
-            return
-
-        self.init_window_properties()
-        self.application.add_window(self.window)
-
-        # Check command line option and config option
-        if not self.start_hidden and not config.sections["ui"]["startup_hidden"]:
-            self.show()
-
-        if not self.connect_action.get_enabled():
-            # Set up fast configure dialog
-            self.on_fast_configure()
 
     def init_spell_checker(self):
 
@@ -499,10 +485,6 @@ class NicotineFrame(UserInterface):
             self.window.deiconify()
 
     """ Connection """
-
-    def network_callback(self, msgs):
-        # High priority to ensure there are no delays
-        GLib.idle_add(self.core.network_event, msgs, priority=GLib.PRIORITY_HIGH_IDLE)
 
     def server_login(self):
         self.set_widget_online_status(True)
@@ -579,14 +561,7 @@ class NicotineFrame(UserInterface):
         self.core.request_check_privileges()
 
     def on_fast_configure(self, *_args):
-
-        if self.preferences is not None and self.preferences.dialog.get_property("visible"):
-            return
-
-        if self.fast_configure is None:
-            self.fast_configure = FastConfigure(self, self.core)
-
-        self.fast_configure.show()
+        self.setup()
 
     def on_settings(self, *_args, page=None):
 
