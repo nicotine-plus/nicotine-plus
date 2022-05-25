@@ -20,6 +20,7 @@ Corrections
  * Fixed an issue where clearing all file transfers did not remove transfers completely
  * Fixed an issue where the estimated time remaining for file transfers was incorrect
  * Fixed an issue where subfolder downloads did not always save in the correct location
+ * Fixed a rare crash when downloading files on certain systems
  * Unmaximized size of the main window is now remembered after the window is maximized
  * Reduced memory usage after closing search tabs with many results
  * Various smaller bug fixes
