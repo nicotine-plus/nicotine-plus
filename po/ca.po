@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-22 02:04+0300\n"
-"PO-Revision-Date: 2022-05-20 21:14+0000\n"
+"PO-Revision-Date: 2022-05-22 17:52+0000\n"
 "Last-Translator: Maite Guix <maite.guix@gmail.com>\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ca/>\n"
@@ -114,9 +114,8 @@ msgid "port"
 msgstr "port"
 
 #: pynicotine/__init__.py:64
-#, fuzzy
 msgid "listen on the given port"
-msgstr "escolta al port donat"
+msgstr "escolta al port indicat"
 
 #: pynicotine/__init__.py:68
 msgid "rescan shared files"
@@ -1447,12 +1446,12 @@ msgstr ""
 "gobject?"
 
 #: pynicotine/gtkgui/__init__.py:51
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "You are using an unsupported version of GTK %(major_version)s. You should "
 "install GTK %(complete_version)s or newer."
 msgstr ""
-"Estàs utilitzant una versió no compatible de GTK %(major_version)s. Hauríeu "
+"Estàs utilitzant una versió no compatible de GTK %(major_version)s. Hauríes "
 "d'instal·lar GTK %(complete_version)s o més recent."
 
 #: pynicotine/gtkgui/chatrooms.py:446 pynicotine/gtkgui/interests.py:125
@@ -1494,9 +1493,8 @@ msgid "Files"
 msgstr "Fitxers"
 
 #: pynicotine/gtkgui/chatrooms.py:480
-#, fuzzy
 msgid "Sear_ch User's Files"
-msgstr "Cerca els fitxers d'usuari"
+msgstr "Cer_car fitxers de l'usuari"
 
 #: pynicotine/gtkgui/chatrooms.py:481 pynicotine/gtkgui/chatrooms.py:663
 #: pynicotine/gtkgui/userlist.py:145 pynicotine/gtkgui/userlist.py:327
@@ -1633,7 +1631,6 @@ msgstr "Afegeix una carpeta compartida"
 #: pynicotine/gtkgui/dialogs/preferences.py:109
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:242
 #: pynicotine/gtkgui/ui/settings/network.ui:197
-#, fuzzy
 msgid "Check Port Status"
 msgstr "Comprova l'estat del port"
 
@@ -1709,7 +1706,6 @@ msgid "Filter"
 msgstr "Filtre"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:277
-#, fuzzy
 msgid "Escaped"
 msgstr "Escapada"
 
@@ -1718,7 +1714,6 @@ msgid "Add Download Filter"
 msgstr "Afegeix un filtre de descàrrega"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:357
-#, fuzzy
 msgid "Enter a new download filter:"
 msgstr "Introdueix un filtre de descàrrega nou:"
 
@@ -1727,7 +1722,6 @@ msgid "Edit Download Filter"
 msgstr "Edita el filtre de descàrrega"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:418
-#, fuzzy
 msgid "Modify the following download filter:"
 msgstr "Modifica el següent filtre de descàrrega:"
 
@@ -1749,7 +1743,7 @@ msgid "Edit Shared Folder"
 msgstr "Edita la carpeta compartida"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:737
-#, fuzzy, python-format
+#, python-format
 msgid "Enter new virtual name for '%(dir)s':"
 msgstr "Introdueix un nom virtual nou per a \"%(dir)s\":"
 
@@ -1888,17 +1882,14 @@ msgid "Disconnected (Tray)"
 msgstr "Desconnectat (safata)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1530
-#, fuzzy
 msgid "Away (Tray)"
 msgstr "Absent (safata)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1531
-#, fuzzy
 msgid "Message (Tray)"
 msgstr "Missatge (safata)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1981
-#, fuzzy
 msgid "Protocol"
 msgstr "Protocol"
 
@@ -1907,19 +1898,16 @@ msgid "Command"
 msgstr "Ordre"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2176
-#, fuzzy
 msgid "Username;APIKEY:"
 msgstr "Nom d'usuari;APIKEY:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2180
-#, fuzzy
 msgid "Client name (e.g. amarok, audacious, exaile) or empty for auto:"
 msgstr ""
-"Nom del client (p. ex., amarok, audacious, exaile) o buit per a automàtic:"
+"Nom del client (p. ex., amarok, audacious, exaile) o buit per a un automàtic:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2184
 #: pynicotine/gtkgui/ui/settings/network.ui:81
-#, fuzzy
 msgid "Username:"
 msgstr "Nom d'usuari:"
 
@@ -1930,7 +1918,6 @@ msgstr "Ordre:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2196
 #: pynicotine/gtkgui/dialogs/preferences.py:2199
-#, fuzzy
 msgid "Title"
 msgstr "Títol"
 
@@ -1941,77 +1928,65 @@ msgstr "Reproduint ara (normalment «%(artist)s - %(title)s»)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2199
 #: pynicotine/gtkgui/dialogs/preferences.py:2207
-#, fuzzy
 msgid "Artist"
 msgstr "Artista"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2201
 #: pynicotine/gtkgui/search.py:369 pynicotine/gtkgui/userbrowse.py:240
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:177
-#, fuzzy
 msgid "Length"
-msgstr "Llargada"
+msgstr "Duració"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2203
 #: pynicotine/gtkgui/search.py:368 pynicotine/gtkgui/userbrowse.py:239
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:203
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:266
 #: pynicotine/gtkgui/ui/search.ui:299
-#, fuzzy
 msgid "Bitrate"
 msgstr "Taxa de bits"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2205
-#, fuzzy
 msgid "Comment"
-msgstr "Comenta"
+msgstr "Comentaris"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2209
-#, fuzzy
 msgid "Album"
 msgstr "Àlbum"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2211
-#, fuzzy
 msgid "Track Number"
 msgstr "Número de pista"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2213
-#, fuzzy
 msgid "Year"
-msgstr "Curs"
+msgstr "Any"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2215
-#, fuzzy
 msgid "Filename (URI)"
 msgstr "Nom del fitxer (URI)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2217
-#, fuzzy
 msgid "Program"
 msgstr "Programa"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2259
-#, fuzzy, python-format
+#, python-format
 msgid "%s Settings"
 msgstr "%s Configuració"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2269
 #: pynicotine/gtkgui/widgets/dialogs.py:172
-#, fuzzy
 msgid "Cancel"
 msgstr "Cancel · lar"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2269
 #: pynicotine/gtkgui/widgets/dialogs.py:173
-#, fuzzy
 msgid "OK"
-msgstr "D'acord"
+msgstr "Acceptar"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2341
 #: pynicotine/gtkgui/ui/settings/downloads.ui:463
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:135
-#, fuzzy
 msgid "Add"
 msgstr "Afegeix"
 
@@ -2036,41 +2011,34 @@ msgstr "Afegeix"
 #: pynicotine/gtkgui/ui/settings/shares.ui:166
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:189
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:205
-#, fuzzy
 msgid "Remove"
 msgstr "Eliminar"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2564
-#, fuzzy
 msgid "Enabled"
 msgstr "Habilitat"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2565
-#, fuzzy
 msgid "Plugin"
-msgstr "Connectar"
+msgstr "Connector"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2632
-#, fuzzy
 msgid "No Plugin Selected"
 msgstr "No s'ha seleccionat cap connector"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2733
 #: pynicotine/gtkgui/widgets/trayicon.py:92
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:62
-#, fuzzy
 msgid "Preferences"
 msgstr "Preferències"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2750
 #: pynicotine/gtkgui/ui/settings/network.ui:42
-#, fuzzy
 msgid "Network"
 msgstr "Xarxa"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2751
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:17
-#, fuzzy
 msgid "User Interface"
 msgstr "Interfície d'usuari"
 
@@ -2085,7 +2053,6 @@ msgstr "Compartits"
 #: pynicotine/gtkgui/ui/mainwindow.ui:514
 #: pynicotine/gtkgui/ui/settings/downloads.ui:27
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:146
-#, fuzzy
 msgid "Downloads"
 msgstr "Descàrregues"
 
@@ -2095,26 +2062,22 @@ msgstr "Descàrregues"
 #: pynicotine/gtkgui/ui/mainwindow.ui:755
 #: pynicotine/gtkgui/ui/settings/uploads.ui:48
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:158
-#, fuzzy
 msgid "Uploads"
 msgstr "Càrregues"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2755
 #: pynicotine/gtkgui/ui/settings/search.ui:42
-#, fuzzy
 msgid "Searches"
 msgstr "Recerques"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2756
 #: pynicotine/gtkgui/frame.py:1228 pynicotine/gtkgui/ui/mainwindow.ui:1094
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:182
-#, fuzzy
 msgid "User Info"
 msgstr "Informació d'usuari"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2757
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:799
-#, fuzzy
 msgid "Chats"
 msgstr "Xats"
 
@@ -2125,48 +2088,40 @@ msgstr "Reproduint ara"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2759
 #: pynicotine/gtkgui/ui/settings/log.ui:34
-#, fuzzy
 msgid "Logging"
 msgstr "Enregistrament"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2760
 #: pynicotine/gtkgui/ui/settings/ban.ui:24
-#, fuzzy
 msgid "Banned Users"
 msgstr "Usuaris prohibits"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2761
 #: pynicotine/gtkgui/ui/settings/ignore.ui:16
-#, fuzzy
 msgid "Ignored Users"
 msgstr "Usuaris ignorats"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2762
 #: pynicotine/gtkgui/ui/settings/plugin.ui:29
-#, fuzzy
 msgid "Plugins"
 msgstr "Connectors"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2763
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:16
-#, fuzzy
 msgid "URL Handlers"
 msgstr "Gestors d'URL"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3132
-#, fuzzy
 msgid "Pick a File Name for Config Backup"
-msgstr "Trieu un nom de fitxer per a la còpia de seguretat de la configuració"
+msgstr "Tria un nom de fitxer per a la còpia de seguretat de la configuració"
 
 #: pynicotine/gtkgui/dialogs/statistics.py:59
-#, fuzzy
 msgid "Transfer Statistics"
 msgstr "Estadístiques de transferència"
 
 #: pynicotine/gtkgui/dialogs/statistics.py:92
-#, fuzzy
 msgid "Reset Transfer Statistics?"
-msgstr "Restableix les estadístiques de transferència?"
+msgstr "Restablir les estadístiques de transferència?"
 
 #: pynicotine/gtkgui/dialogs/statistics.py:93
 msgid "Do you really want to reset transfer statistics?"
@@ -2174,27 +2129,23 @@ msgstr "Vols restablir les estadístiques de transferència?"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:51
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:177
-#, fuzzy
 msgid "Wishlist"
 msgstr "Llista de desitjos"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:67 pynicotine/gtkgui/search.py:217
-#, fuzzy
 msgid "Wish"
-msgstr "Desitjar"
+msgstr "Desitjos"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:126
-#, fuzzy
 msgid "Edit Wish"
 msgstr "Edita el desig"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:127
-#, fuzzy, python-format
+#, python-format
 msgid "Enter new value for wish '%s':"
 msgstr "Introdueix un valor nou per al desig \"%s\":"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:160
-#, fuzzy
 msgid "Clear Wishlist?"
 msgstr "Esborrar la llista de desitjos?"
 
@@ -2204,12 +2155,10 @@ msgstr "Vols esborrar la teva llista de desitjos?"
 
 #: pynicotine/gtkgui/downloads.py:42
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:153
-#, fuzzy
 msgid "Path"
-msgstr "Camí"
+msgstr "Ruta"
 
 #: pynicotine/gtkgui/downloads.py:43
-#, fuzzy
 msgid "_Resume"
 msgstr "_Resum"
 
@@ -2218,43 +2167,35 @@ msgid "P_ause"
 msgstr "P_ausar"
 
 #: pynicotine/gtkgui/downloads.py:62
-#, fuzzy
 msgid "Finished / Filtered"
-msgstr "Acabat / filtrat"
+msgstr "Acabades / filtrades"
 
 #: pynicotine/gtkgui/downloads.py:64 pynicotine/gtkgui/transferlist.py:102
 #: pynicotine/gtkgui/uploads.py:64
-#, fuzzy
 msgid "Finished"
-msgstr "Acabat"
+msgstr "Acabada"
 
 #: pynicotine/gtkgui/downloads.py:65 pynicotine/gtkgui/transferlist.py:101
-#, fuzzy
 msgid "Paused"
 msgstr "En pausa"
 
 #: pynicotine/gtkgui/downloads.py:66 pynicotine/gtkgui/uploads.py:66
-#, fuzzy
 msgid "Failed"
 msgstr "Fracassat"
 
 #: pynicotine/gtkgui/downloads.py:67 pynicotine/gtkgui/transferlist.py:103
-#, fuzzy
 msgid "Filtered"
-msgstr "Filtrat"
+msgstr "Filtrada"
 
 #: pynicotine/gtkgui/downloads.py:68 pynicotine/gtkgui/uploads.py:67
-#, fuzzy
 msgid "Queued…"
 msgstr "A la cua…"
 
 #: pynicotine/gtkgui/downloads.py:70 pynicotine/gtkgui/uploads.py:69
-#, fuzzy
 msgid "Everything…"
 msgstr "Tot…"
 
 #: pynicotine/gtkgui/downloads.py:82
-#, fuzzy
 msgid "Clear Queued Downloads"
 msgstr "Esborra les baixades a la cua"
 
@@ -2263,7 +2204,6 @@ msgid "Do you really want to clear all queued downloads?"
 msgstr "Vols esborrar totes les baixades a la cua?"
 
 #: pynicotine/gtkgui/downloads.py:92
-#, fuzzy
 msgid "Clear All Downloads"
 msgstr "Esborra totes les baixades"
 
@@ -2272,9 +2212,9 @@ msgid "Do you really want to clear all downloads?"
 msgstr "Vols esborrar totes les baixades?"
 
 #: pynicotine/gtkgui/downloads.py:109
-#, fuzzy, python-format
+#, python-format
 msgid "Download %(num)i files?"
-msgstr "Baixar fitxers %(num)i?"
+msgstr "Baixar %(num)i fitxers?"
 
 #: pynicotine/gtkgui/downloads.py:110
 #, python-format
@@ -2285,21 +2225,19 @@ msgstr "Vols descarregar %(num)i fitxers de la carpeta %(folder)s de %(user)s?"
 
 #: pynicotine/gtkgui/frame.py:261 pynicotine/pynicotine.py:229
 #: pynicotine/pynicotine.py:232
-#, fuzzy, python-format
+#, python-format
 msgid "Loading %(program)s %(version)s"
 msgstr "S'està carregant %(program)s %(version)s"
 
 #: pynicotine/gtkgui/frame.py:485 pynicotine/gtkgui/widgets/iconnotebook.py:490
 #: pynicotine/gtkgui/widgets/treeview.py:491
 #: pynicotine/gtkgui/ui/mainwindow.ui:1818
-#, fuzzy
 msgid "Offline"
 msgstr "Fora de línia"
 
 #: pynicotine/gtkgui/frame.py:499
-#, fuzzy
 msgid "Invalid Password"
-msgstr "contrasenya invàlida"
+msgstr "Contrasenya no vàlida"
 
 #: pynicotine/gtkgui/frame.py:500
 #, python-format
@@ -2314,114 +2252,94 @@ msgstr ""
 #: pynicotine/gtkgui/frame.py:507 pynicotine/gtkgui/widgets/filechooser.py:54
 #: pynicotine/gtkgui/widgets/filechooser.py:165
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:6
-#, fuzzy
 msgid "_Cancel"
 msgstr "_Cancel · lar"
 
 #: pynicotine/gtkgui/frame.py:508
-#, fuzzy
 msgid "Change _Login Details"
-msgstr "Canvia els detalls d'inici de sessió"
+msgstr "Canvia els detalls d'_inici de sessió"
 
 #: pynicotine/gtkgui/frame.py:731
-#, fuzzy
 msgid "Error retrieving latest version"
 msgstr "S'ha produït un error en recuperar la darrera versió"
 
 #: pynicotine/gtkgui/frame.py:736
-#, fuzzy, python-format
+#, python-format
 msgid "Version %s is available"
 msgstr "La versió %s està disponible"
 
 #: pynicotine/gtkgui/frame.py:739
-#, fuzzy, python-format
+#, python-format
 msgid "released on %s"
 msgstr "publicat el %s"
 
 #: pynicotine/gtkgui/frame.py:741
-#, fuzzy
 msgid "Out of date"
 msgstr "Obsolet"
 
 #: pynicotine/gtkgui/frame.py:744 pynicotine/gtkgui/frame.py:748
-#, fuzzy
 msgid "Up to date"
 msgstr "Actualitzat"
 
 #: pynicotine/gtkgui/frame.py:745
-#, fuzzy
 msgid "You appear to be using a development version of Nicotine+."
-msgstr "Sembla que fas servir una versió de desenvolupament de Nicotine+."
+msgstr "Sembla que fas servir una versió en desenvolupament de Nicotine+."
 
 #: pynicotine/gtkgui/frame.py:748
-#, fuzzy
 msgid "You are using the latest version of Nicotine+."
 msgstr "Estàs utilitzant la darrera versió de Nicotine+."
 
 #: pynicotine/gtkgui/frame.py:992
-#, fuzzy
 msgid "_Connect"
-msgstr "_Connecta"
+msgstr "_Connectar"
 
 #: pynicotine/gtkgui/frame.py:993
-#, fuzzy
 msgid "_Disconnect"
 msgstr "_Desconnectar"
 
 #: pynicotine/gtkgui/frame.py:994
-#, fuzzy
 msgid "_Away"
-msgstr "_Lluny"
+msgstr "_Absent"
 
 #: pynicotine/gtkgui/frame.py:995
-#, fuzzy
 msgid "Soulseek _Privileges"
-msgstr "Soulseek _Privilegis"
+msgstr "_Privilegis Soulseek"
 
 #: pynicotine/gtkgui/frame.py:1001
-#, fuzzy
 msgid "_Preferences"
 msgstr "_Preferències"
 
 #: pynicotine/gtkgui/frame.py:1006
-#, fuzzy
 msgid "_Quit…"
-msgstr "_Surt…"
+msgstr "_Sortir…"
 
 #: pynicotine/gtkgui/frame.py:1006 pynicotine/gtkgui/frame.py:1998
-#, fuzzy
 msgid "_Quit"
 msgstr "_Surt"
 
 #: pynicotine/gtkgui/frame.py:1026
-#, fuzzy
 msgid "Prefer Dark _Mode"
 msgstr "Prefereix el mode _fosc"
 
 #: pynicotine/gtkgui/frame.py:1027
-#, fuzzy
 msgid "Use _Header Bar"
-msgstr "Utilitzeu la barra de capçaleres"
+msgstr "Utilitzeu la barra de _capçaleres"
 
 #: pynicotine/gtkgui/frame.py:1028
-#, fuzzy
 msgid "Show _Log History Pane"
-msgstr "Mostra el panell _Historial de registres"
+msgstr "Mostra el panell de l'_historial del registre"
 
 #: pynicotine/gtkgui/frame.py:1030
-#, fuzzy
 msgid "Buddy List in Separate Tab"
 msgstr "Llista d'amics a una pestanya separada"
 
 #: pynicotine/gtkgui/frame.py:1031
-#, fuzzy
 msgid "Buddy List in Chat Rooms"
 msgstr "Llista d'amics a les sales de xat"
 
 #: pynicotine/gtkgui/frame.py:1032
-#, fuzzy
 msgid "Buddy List Always Visible"
-msgstr "La llista d'amics sempre visible"
+msgstr "Llista d'amics sempre visible"
 
 #: pynicotine/gtkgui/frame.py:1041
 msgid "_Rescan Shares"
@@ -2440,54 +2358,44 @@ msgid "Bro_wse Buddy Shares"
 msgstr "Navegar pels compartits d'amics"
 
 #: pynicotine/gtkgui/frame.py:1067
-#, fuzzy
 msgid "_Keyboard Shortcuts"
 msgstr "_Dreceres de teclat"
 
 #: pynicotine/gtkgui/frame.py:1068
-#, fuzzy
 msgid "_Setup Assistant"
 msgstr "_Assistent de configuració"
 
 #: pynicotine/gtkgui/frame.py:1069
-#, fuzzy
 msgid "_Transfer Statistics"
 msgstr "_Estadístiques de transferència"
 
 #: pynicotine/gtkgui/frame.py:1071
-#, fuzzy
 msgid "Report a _Bug"
 msgstr "Informa d'un _error"
 
 #: pynicotine/gtkgui/frame.py:1072
-#, fuzzy
 msgid "Improve T_ranslations"
 msgstr "Millora les traduccions"
 
 #: pynicotine/gtkgui/frame.py:1073
-#, fuzzy
 msgid "Check _Latest Version"
 msgstr "Comprova la _última versió"
 
 #: pynicotine/gtkgui/frame.py:1075
-#, fuzzy
 msgid "_About Nicotine+"
-msgstr "_Sobre la nicotina+"
+msgstr "_Sobre Nicotine +"
 
 #: pynicotine/gtkgui/frame.py:1087 pynicotine/gtkgui/frame.py:1107
-#, fuzzy
 msgid "_View"
-msgstr "_Vista"
+msgstr "_Visualització"
 
 #: pynicotine/gtkgui/frame.py:1094 pynicotine/gtkgui/frame.py:1109
-#, fuzzy
 msgid "_Help"
 msgstr "_Ajuda"
 
 #: pynicotine/gtkgui/frame.py:1106
-#, fuzzy
 msgid "_File"
-msgstr "_Dossier"
+msgstr "_Fitxer"
 
 #: pynicotine/gtkgui/frame.py:1108
 msgid "_Shares"
@@ -2495,7 +2403,6 @@ msgstr "_Compartits"
 
 #: pynicotine/gtkgui/frame.py:1224 pynicotine/gtkgui/ui/mainwindow.ui:271
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:134
-#, fuzzy
 msgid "Search Files"
 msgstr "Cerca fitxers"
 
@@ -2509,7 +2416,6 @@ msgstr "Explorar els compartits"
 #: pynicotine/gtkgui/frame.py:1229 pynicotine/gtkgui/ui/mainwindow.ui:1258
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:699
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:194
-#, fuzzy
 msgid "Private Chat"
 msgstr "Xat privat"
 
@@ -2517,29 +2423,25 @@ msgstr "Xat privat"
 #: pynicotine/gtkgui/ui/buddylist.ui:19 pynicotine/gtkgui/ui/mainwindow.ui:1380
 #: pynicotine/gtkgui/ui/settings/downloads.ui:91
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:206
-#, fuzzy
 msgid "Buddies"
 msgstr "Amics"
 
 #: pynicotine/gtkgui/frame.py:1231 pynicotine/gtkgui/ui/mainwindow.ui:1546
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:667
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:218
-#, fuzzy
 msgid "Chat Rooms"
 msgstr "Sales de xat"
 
 #: pynicotine/gtkgui/frame.py:1232 pynicotine/gtkgui/ui/mainwindow.ui:1604
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:230
 #: pynicotine/gtkgui/ui/userinfo.ui:314
-#, fuzzy
 msgid "Interests"
 msgstr "Interessos"
 
 #: pynicotine/gtkgui/frame.py:1568 pynicotine/userbrowse.py:175
-#, fuzzy, python-format
+#, python-format
 msgid "Can't create directory '%(folder)s', reported error: %(error)s"
-msgstr ""
-"No es pot crear el directori \"%(folder)s\", error notificat: %(error)s"
+msgstr "No es pot crear el directori \"%(folder)s\", error: %(error)s"
 
 #: pynicotine/gtkgui/frame.py:1573
 msgid "Select a Saved Shares List File"
@@ -2561,7 +2463,6 @@ msgstr "Fes la sala privada"
 #: pynicotine/gtkgui/frame.py:1635
 #: pynicotine/gtkgui/widgets/iconnotebook.py:488
 #: pynicotine/gtkgui/widgets/treeview.py:489
-#, fuzzy
 msgid "Online"
 msgstr "En línia"
 
@@ -2570,205 +2471,171 @@ msgstr "En línia"
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:547
 #: pynicotine/gtkgui/ui/settings/downloads.ui:123
 #: pynicotine/gtkgui/ui/settings/uploads.ui:92
-#, fuzzy
 msgid "Search"
 msgstr "Cerca"
 
 #: pynicotine/gtkgui/frame.py:1728
-#, fuzzy
 msgid "Chat"
-msgstr "Xatejar"
+msgstr "Xat"
 
 #: pynicotine/gtkgui/frame.py:1730
-#, fuzzy
 msgid "[Debug] Connections"
-msgstr "[Depuració] Connexions"
+msgstr "[Debug] Connexions"
 
 #: pynicotine/gtkgui/frame.py:1731
-#, fuzzy
 msgid "[Debug] Messages"
-msgstr "[Depuració] Missatges"
+msgstr "[Debug] Missatges"
 
 #: pynicotine/gtkgui/frame.py:1732
-#, fuzzy
 msgid "[Debug] Transfers"
-msgstr "[Depuració] Transferències"
+msgstr "[Debug] Transferències"
 
 #: pynicotine/gtkgui/frame.py:1733
-#, fuzzy
 msgid "[Debug] Miscellaneous"
-msgstr "[Depuració] Diversos"
+msgstr "[Debug] Miscel·lània"
 
 #: pynicotine/gtkgui/frame.py:1737
 msgid "_Find…"
 msgstr "_Cercar…"
 
 #: pynicotine/gtkgui/frame.py:1739 pynicotine/gtkgui/frame.py:1768
-#, fuzzy
 msgid "_Copy"
 msgstr "_Còpia"
 
 #: pynicotine/gtkgui/frame.py:1740
-#, fuzzy
 msgid "Copy _All"
 msgstr "Copia _Tot"
 
 #: pynicotine/gtkgui/frame.py:1742
-#, fuzzy
 msgid "_Open Log Folder"
 msgstr "_Obre la carpeta de registre"
 
 #: pynicotine/gtkgui/frame.py:1743
-#, fuzzy
 msgid "Open _Transfer Log"
 msgstr "Obriu _Registre de transferència"
 
 #: pynicotine/gtkgui/frame.py:1745
-#, fuzzy
 msgid "_Log Categories"
-msgstr "_Registre de categories"
+msgstr "_ Categories de registre"
 
 #: pynicotine/gtkgui/frame.py:1747
-#, fuzzy
 msgid "Clear Log View"
 msgstr "Esborra la vista de registre"
 
 #: pynicotine/gtkgui/frame.py:1853
-#, fuzzy, python-format
+#, python-format
 msgid "Downloads: %(speed)s"
 msgstr "Descàrregues: %(speed)s"
 
 #: pynicotine/gtkgui/frame.py:1858
-#, fuzzy, python-format
+#, python-format
 msgid "Uploads: %(speed)s"
 msgstr "Càrregues: %(speed)s"
 
 #: pynicotine/gtkgui/frame.py:1948
-#, fuzzy
 msgid "Critical Error"
 msgstr "Error crític"
 
 #: pynicotine/gtkgui/frame.py:1949
-#, fuzzy
 msgid ""
 "Nicotine+ has encountered a critical error and needs to exit. Please copy "
 "the following message and include it in a bug report:"
 msgstr ""
 "Nicotine+ ha trobat un error crític i ha de sortir. Copia el missatge "
-"següent i incloeu-lo en un informe d'error:"
+"següent i inclou-lo en un informe d'error:"
 
 #: pynicotine/gtkgui/frame.py:1951
-#, fuzzy
 msgid "_Quit Nicotine+"
-msgstr "_Deixa la nicotina+"
+msgstr "_Deixa la Nicotine +"
 
 #: pynicotine/gtkgui/frame.py:1952
-#, fuzzy
 msgid "_Copy & Report Bug"
 msgstr "_Copia i informa d'error"
 
 #: pynicotine/gtkgui/frame.py:1996
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:246
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:214
-#, fuzzy
 msgid "Quit Nicotine+"
 msgstr "Deixa la nicotina+"
 
 #: pynicotine/gtkgui/frame.py:1997
-#, fuzzy
 msgid "Do you really want to exit?"
 msgstr "Realment vols sortir?"
 
 #: pynicotine/gtkgui/frame.py:1999
-#, fuzzy
 msgid "_Run in Background"
 msgstr "_Executar en segon pla"
 
 #: pynicotine/gtkgui/frame.py:2000
-#, fuzzy
 msgid "Remember choice"
 msgstr "Recordeu l'elecció"
 
 #: pynicotine/gtkgui/frame.py:2041
-#, fuzzy
 msgid "Nicotine+ is running in the background"
 msgstr "Nicotine+ s'està executant en segon pla"
 
 #: pynicotine/gtkgui/interests.py:73 pynicotine/gtkgui/userinfo.py:172
-#, fuzzy
 msgid "Likes"
-msgstr "M'agrada"
+msgstr "Li agrada"
 
 #: pynicotine/gtkgui/interests.py:86 pynicotine/gtkgui/userinfo.py:185
-#, fuzzy
 msgid "Dislikes"
 msgstr "No li agrada"
 
 #: pynicotine/gtkgui/interests.py:101
-#, fuzzy
 msgid "Rating"
 msgstr "Valoració"
 
 #: pynicotine/gtkgui/interests.py:102
-#, fuzzy
 msgid "Item"
-msgstr "Article"
+msgstr "Ítem"
 
 #: pynicotine/gtkgui/interests.py:157 pynicotine/gtkgui/interests.py:165
-#, fuzzy
 msgid "Re_commendations for Item"
 msgstr "Recomanacions per a l'element"
 
 #: pynicotine/gtkgui/interests.py:158 pynicotine/gtkgui/interests.py:166
 #: pynicotine/gtkgui/interests.py:177 pynicotine/gtkgui/userinfo.py:205
-#, fuzzy
 msgid "_Search for Item"
 msgstr "_Cerca l'element"
 
 #: pynicotine/gtkgui/interests.py:160 pynicotine/gtkgui/interests.py:168
-#, fuzzy
 msgid "_Remove Item"
 msgstr "_Elimina l'element"
 
 #: pynicotine/gtkgui/interests.py:173 pynicotine/gtkgui/interests.py:402
 #: pynicotine/gtkgui/userinfo.py:202 pynicotine/gtkgui/userinfo.py:427
-#, fuzzy
 msgid "I _Like This"
-msgstr "M'agrada"
+msgstr "M'agrada això"
 
 #: pynicotine/gtkgui/interests.py:174 pynicotine/gtkgui/interests.py:405
 #: pynicotine/gtkgui/userinfo.py:203 pynicotine/gtkgui/userinfo.py:430
-#, fuzzy
 msgid "I _Dislike This"
 msgstr "No m'agrada això"
 
 #: pynicotine/gtkgui/interests.py:176
-#, fuzzy
 msgid "_Recommendations for Item"
 msgstr "_Recomanacions per a l'ítem"
 
 #: pynicotine/gtkgui/interests.py:306
-#, fuzzy, python-format
+#, python-format
 msgid "Recommendations (%s)"
 msgstr "Recomanacions (%s)"
 
 #: pynicotine/gtkgui/interests.py:308 pynicotine/gtkgui/ui/interests.ui:152
-#, fuzzy
 msgid "Recommendations"
 msgstr "Recomanacions"
 
 #: pynicotine/gtkgui/interests.py:329
-#, fuzzy, python-format
+#, python-format
 msgid "Similar Users (%s)"
 msgstr "Usuaris similars (%s)"
 
 #: pynicotine/gtkgui/interests.py:331 pynicotine/gtkgui/ui/interests.ui:228
-#, fuzzy
 msgid "Similar Users"
 msgstr "Usuaris similars"
 
 #: pynicotine/gtkgui/popovers/chathistory.py:51
-#, fuzzy
 msgid "Latest Message"
 msgstr "Últim missatge"
 
@@ -2782,7 +2649,6 @@ msgstr "Sala"
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:261
 #: pynicotine/gtkgui/ui/settings/ban.ui:138
 #: pynicotine/gtkgui/ui/settings/ignore.ui:64
-#, fuzzy
 msgid "Users"
 msgstr "Usuaris"
 
@@ -2798,9 +2664,8 @@ msgstr "Sortir de la sala"
 
 #: pynicotine/gtkgui/popovers/roomlist.py:78
 #: pynicotine/gtkgui/popovers/roomlist.py:198
-#, fuzzy
 msgid "Disown Private Room"
-msgstr "Sala Privada Disown"
+msgstr "Fer pública la sala privada"
 
 #: pynicotine/gtkgui/popovers/roomlist.py:79
 #: pynicotine/gtkgui/popovers/roomlist.py:199
@@ -2809,23 +2674,19 @@ msgstr "Cancel·lar la subscripció a la sala"
 
 #: pynicotine/gtkgui/privatechat.py:230 pynicotine/gtkgui/search.py:424
 #: pynicotine/gtkgui/userbrowse.py:187 pynicotine/gtkgui/userinfo.py:197
-#, fuzzy
 msgid "Close All Tabs…"
 msgstr "Tanca totes les pestanyes…"
 
 #: pynicotine/gtkgui/privatechat.py:231 pynicotine/gtkgui/search.py:425
 #: pynicotine/gtkgui/userbrowse.py:188 pynicotine/gtkgui/userinfo.py:198
-#, fuzzy
 msgid "_Close Tab"
 msgstr "_Tancar la pestanya"
 
 #: pynicotine/gtkgui/privatechat.py:242
-#, fuzzy
 msgid "View Chat Log"
 msgstr "Veure el registre de xat"
 
 #: pynicotine/gtkgui/privatechat.py:243
-#, fuzzy
 msgid "Delete Chat Log…"
 msgstr "Suprimeix el registre de xat…"
 
@@ -2837,22 +2698,19 @@ msgstr ""
 "usuari?"
 
 #: pynicotine/gtkgui/privatechat.py:355
-#, fuzzy, python-format
+#, python-format
 msgid "Private message from %s"
 msgstr "Missatge privat de %s"
 
 #: pynicotine/gtkgui/privatechat.py:383
-#, fuzzy
 msgid "* Message(s) sent while you were offline."
 msgstr "* Missatges enviats mentre estaves fora de línia."
 
 #: pynicotine/gtkgui/search.py:71
-#, fuzzy
 msgid "_Global"
 msgstr "_Global"
 
 #: pynicotine/gtkgui/search.py:72
-#, fuzzy
 msgid "_Buddies"
 msgstr "_Amics"
 
@@ -2861,74 +2719,61 @@ msgid "_Rooms"
 msgstr "_Sales"
 
 #: pynicotine/gtkgui/search.py:74
-#, fuzzy
 msgid "_User"
 msgstr "_Usuari"
 
 #: pynicotine/gtkgui/search.py:360
-#, fuzzy
 msgid "ID"
 msgstr "ID"
 
 #: pynicotine/gtkgui/search.py:364
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:253
-#, fuzzy
 msgid "In Queue"
 msgstr "A la cua"
 
 #: pynicotine/gtkgui/search.py:366 pynicotine/gtkgui/transferlist.py:141
 #: pynicotine/gtkgui/userbrowse.py:237
-#, fuzzy
 msgid "Filename"
 msgstr "Nom de l'arxiu"
 
 #: pynicotine/gtkgui/search.py:367 pynicotine/gtkgui/transferlist.py:145
 #: pynicotine/gtkgui/userbrowse.py:238
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:105
-#, fuzzy
 msgid "Size"
 msgstr "Mida"
 
 #: pynicotine/gtkgui/search.py:398 pynicotine/gtkgui/transferlist.py:183
 #: pynicotine/gtkgui/userbrowse.py:268 pynicotine/gtkgui/userbrowse.py:285
-#, fuzzy
 msgid "Copy _File Path"
-msgstr "Copia _Camí del fitxer"
+msgstr "Copia _ruta del fitxer"
 
 #: pynicotine/gtkgui/search.py:399 pynicotine/gtkgui/transferlist.py:184
 #: pynicotine/gtkgui/userbrowse.py:202 pynicotine/gtkgui/userbrowse.py:216
 #: pynicotine/gtkgui/userbrowse.py:269 pynicotine/gtkgui/userbrowse.py:286
-#, fuzzy
 msgid "Copy _URL"
 msgstr "Copia _URL"
 
 #: pynicotine/gtkgui/search.py:400 pynicotine/gtkgui/transferlist.py:185
-#, fuzzy
 msgid "Copy Folder U_RL"
 msgstr "Copia la carpeta U_RL"
 
 #: pynicotine/gtkgui/search.py:407 pynicotine/gtkgui/userbrowse.py:277
-#, fuzzy
 msgid "_Download File(s)"
 msgstr "_Baixa fitxers"
 
 #: pynicotine/gtkgui/search.py:408 pynicotine/gtkgui/userbrowse.py:278
-#, fuzzy
 msgid "Download File(s) _To…"
 msgstr "Baixa fitxers _a…"
 
 #: pynicotine/gtkgui/search.py:409
-#, fuzzy
 msgid "Download _Folder(s)"
 msgstr "Baixa _carpetes"
 
 #: pynicotine/gtkgui/search.py:410
-#, fuzzy
 msgid "Download F_older(s) To…"
-msgstr "Baixar F_older(s) a…"
+msgstr "Baixar car_petes a…"
 
 #: pynicotine/gtkgui/search.py:412 pynicotine/gtkgui/transferlist.py:197
-#, fuzzy
 msgid "_Browse Folder(s)"
 msgstr "_Examina les carpetes"
 
@@ -2936,245 +2781,202 @@ msgstr "_Examina les carpetes"
 #: pynicotine/gtkgui/userbrowse.py:199 pynicotine/gtkgui/userbrowse.py:213
 #: pynicotine/gtkgui/userbrowse.py:266 pynicotine/gtkgui/userbrowse.py:283
 #: pynicotine/gtkgui/userbrowse.py:684
-#, fuzzy
 msgid "F_ile Properties"
-msgstr "Propietats de fitxer"
+msgstr "Propietats de _fitxer"
 
 #: pynicotine/gtkgui/search.py:416 pynicotine/gtkgui/transferlist.py:205
-#, fuzzy
 msgid "User(s)"
 msgstr "Usuari(s)"
 
 #: pynicotine/gtkgui/search.py:421
-#, fuzzy
 msgid "Copy Search Term"
 msgstr "Copia el terme de cerca"
 
 #: pynicotine/gtkgui/search.py:423
-#, fuzzy
 msgid "Clear All Results"
 msgstr "Esborra tots els resultats"
 
 #: pynicotine/gtkgui/search.py:570
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Filtered out incorrect search result %(filepath)s from user %(user)s for "
 "search query \"%(query)s\""
 msgstr ""
-"S'ha filtrat el resultat de cerca incorrecte %(filepath)s d'usuari %(user)s "
-"per a la consulta de cerca \"%(query)s\""
+"S'ha filtrat el resultat de cerca incorrecte %(filepath)s de l'usuari %(user)"
+"s per a la consulta de cerca \"%(query)s\""
 
 #: pynicotine/gtkgui/search.py:599 pynicotine/gtkgui/userbrowse.py:432
-#, fuzzy, python-format
+#, python-format
 msgid "[PRIVATE]  %s"
-msgstr "[PRIVAT] %s"
+msgstr "[PRIVATE]  %s"
 
 #: pynicotine/gtkgui/search.py:922
-#, fuzzy, python-format
+#, python-format
 msgid "_Result Filters [%d]"
 msgstr "_Filtres de resultats [%d]"
 
 #: pynicotine/gtkgui/search.py:924 pynicotine/gtkgui/ui/search.ui:104
-#, fuzzy
 msgid "_Result Filters"
 msgstr "_Filtres de resultats"
 
 #: pynicotine/gtkgui/search.py:967
-#, fuzzy
 msgid "Add Wi_sh"
-msgstr "Afegeix Wi_sh"
+msgstr "Afegeix _desig"
 
 #: pynicotine/gtkgui/search.py:971
-#, fuzzy
 msgid "Remove Wi_sh"
-msgstr "Elimina Wi_sh"
+msgstr "Elimina _desig"
 
 #: pynicotine/gtkgui/search.py:985
 msgid "Select User's Results"
 msgstr "Seleccionar Resultats de l'usuari"
 
 #: pynicotine/gtkgui/search.py:1096
-#, fuzzy, python-format
+#, python-format
 msgid "Total: %s"
 msgstr "Total: %s"
 
 #: pynicotine/gtkgui/search.py:1217 pynicotine/gtkgui/userbrowse.py:967
-#, fuzzy
 msgid "Select Destination Folder for File(s)"
 msgstr "Selecciona la carpeta de destinació per als fitxers"
 
 #: pynicotine/gtkgui/search.py:1268 pynicotine/gtkgui/userbrowse.py:707
-#, fuzzy
 msgid "Select Destination Folder"
 msgstr "Selecciona Carpeta de destinació"
 
 #: pynicotine/gtkgui/transferlist.py:90
-#, fuzzy
 msgid "Queued"
 msgstr "En cua"
 
 #: pynicotine/gtkgui/transferlist.py:91
-#, fuzzy
 msgid "Queued (prioritized)"
 msgstr "En cua (prioritzat)"
 
 #: pynicotine/gtkgui/transferlist.py:92
-#, fuzzy
 msgid "Queued (privileged)"
 msgstr "En cua (privilegiat)"
 
 #: pynicotine/gtkgui/transferlist.py:93
-#, fuzzy
 msgid "Getting status"
 msgstr "Obtenció d'estatus"
 
 #: pynicotine/gtkgui/transferlist.py:94
-#, fuzzy
 msgid "Transferring"
-msgstr "Transferència"
+msgstr "Transferint"
 
 #: pynicotine/gtkgui/transferlist.py:95
-#, fuzzy
 msgid "Connection timeout"
 msgstr "Temps d'espera de connexió"
 
 #: pynicotine/gtkgui/transferlist.py:96
-#, fuzzy
 msgid "Pending shutdown"
-msgstr "Tancament pendent"
+msgstr "Tancament en curs"
 
 #: pynicotine/gtkgui/transferlist.py:97
-#, fuzzy
 msgid "User logged off"
-msgstr "Usuari tancat"
+msgstr "Usuari desconnectat"
 
 #: pynicotine/gtkgui/transferlist.py:98
-#, fuzzy
 msgid "Disallowed extension"
 msgstr "Extensió no permesa"
 
 #: pynicotine/gtkgui/transferlist.py:99 pynicotine/gtkgui/uploads.py:65
-#, fuzzy
 msgid "Aborted"
 msgstr "Avortat"
 
 #: pynicotine/gtkgui/transferlist.py:100
-#, fuzzy
 msgid "Cancelled"
 msgstr "Cancel·lat"
 
 #: pynicotine/gtkgui/transferlist.py:104
-#, fuzzy
 msgid "Banned"
 msgstr "Prohibit"
 
 #: pynicotine/gtkgui/transferlist.py:105
-#, fuzzy
 msgid "Blocked country"
 msgstr "País bloquejat"
 
 #: pynicotine/gtkgui/transferlist.py:106
-#, fuzzy
 msgid "Too many files"
 msgstr "Massa fitxers"
 
 #: pynicotine/gtkgui/transferlist.py:107
-#, fuzzy
 msgid "Too many megabytes"
 msgstr "Massa megabytes"
 
 #: pynicotine/gtkgui/transferlist.py:108 pynicotine/gtkgui/transferlist.py:109
-#, fuzzy
 msgid "File not shared"
 msgstr "Fitxer no compartit"
 
 #: pynicotine/gtkgui/transferlist.py:110 pynicotine/transfers.py:1849
-#, fuzzy
 msgid "Download folder error"
 msgstr "Error de baixada de la carpeta"
 
 #: pynicotine/gtkgui/transferlist.py:111
-#, fuzzy
 msgid "Local file error"
 msgstr "Error de fitxer local"
 
 #: pynicotine/gtkgui/transferlist.py:112
-#, fuzzy
 msgid "Remote file error"
 msgstr "Error de fitxer remot"
 
 #: pynicotine/gtkgui/transferlist.py:143
-#, fuzzy
 msgid "Queue"
-msgstr "Cua"
+msgstr "En cua"
 
 #: pynicotine/gtkgui/transferlist.py:144
-#, fuzzy
 msgid "Percent"
-msgstr "Per cent"
+msgstr "Percentatge"
 
 #: pynicotine/gtkgui/transferlist.py:147
-#, fuzzy
 msgid "Time Elapsed"
 msgstr "Temps transcorregut"
 
 #: pynicotine/gtkgui/transferlist.py:148
-#, fuzzy
 msgid "Time Left"
 msgstr "Temps restant"
 
 #: pynicotine/gtkgui/transferlist.py:192 pynicotine/gtkgui/userbrowse.py:264
-#, fuzzy
 msgid "Send to _Player"
-msgstr "Envia a _Player"
+msgstr "Envia al _Reproductor"
 
 #: pynicotine/gtkgui/transferlist.py:193
-#, fuzzy
 msgid "_Open in File Manager"
 msgstr "_Obre al Gestor de fitxers"
 
 #: pynicotine/gtkgui/transferlist.py:196
-#, fuzzy
 msgid "_Search"
 msgstr "_Cerca"
 
 #: pynicotine/gtkgui/transferlist.py:201
-#, fuzzy
 msgid "_Clear"
-msgstr "_Esclar"
+msgstr "_Netejar"
 
 #: pynicotine/gtkgui/transferlist.py:203
-#, fuzzy
 msgid "Clear All"
 msgstr "Esborra-ho tot"
 
 #: pynicotine/gtkgui/transferlist.py:695
-#, fuzzy
 msgid "Select User's Transfers"
-msgstr "Selecciona Transferències d'usuari"
+msgstr "Selecciona Transferències de l'usuari"
 
 #: pynicotine/gtkgui/uploads.py:42
-#, fuzzy
 msgid "_Retry"
 msgstr "_Torna-ho a provar"
 
 #: pynicotine/gtkgui/uploads.py:43
-#, fuzzy
 msgid "_Abort"
 msgstr "_Avortar"
 
 #: pynicotine/gtkgui/uploads.py:61
-#, fuzzy
 msgid "Finished / Aborted / Failed"
 msgstr "Finalitzat / Avortat / Error"
 
 #: pynicotine/gtkgui/uploads.py:62
-#, fuzzy
 msgid "Finished / Aborted"
 msgstr "Acabat / Avortat"
 
 #: pynicotine/gtkgui/uploads.py:81
-#, fuzzy
 msgid "Clear Queued Uploads"
 msgstr "Esborra les càrregues a la cua"
 
@@ -3183,12 +2985,10 @@ msgid "Do you really want to clear all queued uploads?"
 msgstr "Vols esborrar totes les càrregues a la cua?"
 
 #: pynicotine/gtkgui/uploads.py:91
-#, fuzzy
 msgid "Clear All Uploads"
 msgstr "Esborra totes les càrregues"
 
 #: pynicotine/gtkgui/uploads.py:92
-#, fuzzy
 msgid "Do you really want to clear all uploads?"
 msgstr "Realment vols esborrar totes les pujades?"
 
@@ -3197,52 +2997,42 @@ msgid "_Save Shares List to Disk"
 msgstr "_Desa la llista de recursos compartits al disc"
 
 #: pynicotine/gtkgui/userbrowse.py:195 pynicotine/gtkgui/userbrowse.py:262
-#, fuzzy
 msgid "Upload Folder…"
 msgstr "Carrega la carpeta…"
 
 #: pynicotine/gtkgui/userbrowse.py:196
-#, fuzzy
 msgid "Upload Folder & Subfolder(s)…"
 msgstr "Carrega carpetes i subcarpetes…"
 
 #: pynicotine/gtkgui/userbrowse.py:198 pynicotine/gtkgui/userbrowse.py:265
-#, fuzzy
 msgid "Open in File _Manager"
-msgstr "Obre a File_Manager"
+msgstr "Obre al Gestor de _fitxers"
 
 #: pynicotine/gtkgui/userbrowse.py:201 pynicotine/gtkgui/userbrowse.py:215
-#, fuzzy
 msgid "Copy _Folder Path"
 msgstr "Copia el camí de la _carpeta"
 
 #: pynicotine/gtkgui/userbrowse.py:208 pynicotine/gtkgui/userbrowse.py:280
-#, fuzzy
 msgid "_Download Folder"
 msgstr "_Descarregueu la carpeta"
 
 #: pynicotine/gtkgui/userbrowse.py:209 pynicotine/gtkgui/userbrowse.py:281
-#, fuzzy
 msgid "Download Folder _To…"
 msgstr "Descarrega la carpeta _a…"
 
 #: pynicotine/gtkgui/userbrowse.py:210
-#, fuzzy
 msgid "Download Folder & Subfolder(s)"
 msgstr "Descarrega carpetes i subcarpetes"
 
 #: pynicotine/gtkgui/userbrowse.py:211
-#, fuzzy
 msgid "Download Folder & Subfolder(s) To…"
 msgstr "Baixar carpetes i subcarpetes a…"
 
 #: pynicotine/gtkgui/userbrowse.py:261
-#, fuzzy
 msgid "Up_load File(s)…"
-msgstr "Puja_carrega fitxers…"
+msgstr "_Enviar els fitxers…"
 
 #: pynicotine/gtkgui/userbrowse.py:483
-#, fuzzy
 msgid ""
 "User's list of shared files is empty. Either the user is not sharing "
 "anything, or they are sharing files privately."
@@ -3251,7 +3041,6 @@ msgstr ""
 "comparteix res o està compartint fitxers de manera privada."
 
 #: pynicotine/gtkgui/userbrowse.py:492
-#, fuzzy
 msgid ""
 "Unable to request shared files from user. Either the user is offline, you "
 "both have a closed listening port, or there's a temporary connectivity issue."
@@ -3265,12 +3054,10 @@ msgid "Select Destination for Downloading Multiple Folders"
 msgstr "Selecciona Destinació per a baixar diverses carpetes"
 
 #: pynicotine/gtkgui/userbrowse.py:751
-#, fuzzy
 msgid "Upload Folder (with Subfolders) To User"
 msgstr "Carregar la carpeta (amb subcarpetes) a l'usuari"
 
 #: pynicotine/gtkgui/userbrowse.py:753
-#, fuzzy
 msgid "Upload Folder To User"
 msgstr "Carregar la carpeta a l'usuari"
 
@@ -3279,34 +3066,29 @@ msgid "Enter the name of the user you want to upload to:"
 msgstr "Introdueix el nom d'usuari que vols pujar:"
 
 #: pynicotine/gtkgui/userbrowse.py:1001
-#, fuzzy
 msgid "Upload File(s) To User"
 msgstr "Carregar fitxers a l'usuari"
 
 #: pynicotine/gtkgui/userinfo.py:215
-#, fuzzy
 msgid "Zoom 1:1"
 msgstr "Zoom 1:1"
 
 #: pynicotine/gtkgui/userinfo.py:216
-#, fuzzy
 msgid "Zoom In"
-msgstr "Ampliar"
+msgstr "Apropar-se"
 
 #: pynicotine/gtkgui/userinfo.py:217
-#, fuzzy
 msgid "Zoom Out"
-msgstr "Disminuir el zoom"
+msgstr "Allunyar-se"
 
 #: pynicotine/gtkgui/userinfo.py:219
-#, fuzzy
 msgid "Save Picture"
 msgstr "Desa la imatge"
 
 #: pynicotine/gtkgui/userinfo.py:276
-#, fuzzy, python-format
+#, python-format
 msgid "Failed to load picture for user %(user)s: %(error)s"
-msgstr "No s'ha pogut carregar la imatge per a l'usuari %(user)s: %(error)s"
+msgstr "No s'ha pogut carregar la imatge de l'usuari %(user)s: %(error)s"
 
 #: pynicotine/gtkgui/userinfo.py:347
 #, fuzzy
@@ -5153,7 +4935,6 @@ msgid "Search a user's shares for 'query'"
 msgstr "Cercar «consulta» als compartits d'un usuari"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:715
-#, fuzzy
 msgid "/msg 'user' 'message'"
 msgstr "/msg «usuari» «missatge»"
 
@@ -5599,7 +5380,7 @@ msgstr "Completar el xat"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:136
 msgid "Enable spell checker (requires a restart)"
-msgstr "Activa el corrector ortogràfic (requereix reiniciar)"
+msgstr "Activa el corrector ortogràfic (cal reiniciar)"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:142
 msgid "Enable tab-key completion"
@@ -5706,93 +5487,77 @@ msgid "Text-to-Speech command:"
 msgstr "Ordre text a veu:"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:509
-#, fuzzy
 msgid "Private chat message:"
 msgstr "Missatge de xat privat:"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:564
-#, fuzzy
 msgid "Chat room message:"
 msgstr "Missatge de la sala de xat:"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:639
-#, fuzzy
 msgid "Censor"
 msgstr "Censurar"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:648
-#, fuzzy
 msgid "Enable censoring of text patterns"
-msgstr "Activa la censura dels patrons de text"
+msgstr "Activa la censura de patrons de text"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:661
-#, fuzzy
 msgid "Replace censored letters with:"
 msgstr "Substitueix les lletres censurades per:"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:694
-#, fuzzy
 msgid "Censored Patterns"
 msgstr "Patrons censurats"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:826
-#, fuzzy
 msgid "Auto-Replace"
 msgstr "Substitució automàtica"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:836
-#, fuzzy
 msgid "Enable automatic replacement of words"
 msgstr "Activa la substitució automàtica de paraules"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:850
-#, fuzzy
 msgid "Replacements"
 msgstr "Substitucions"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:35
-#, fuzzy
 msgid "Autoclear finished/filtered downloads from transfer list"
 msgstr ""
 "Esborra automàticament les descàrregues acabades/filtrades de la llista de "
 "transferència"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:42
-#, fuzzy
 msgid "Download folders in reverse alphanumerical order"
 msgstr "Descarrega les carpetes en ordre alfanumèric invers"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:48
-#, fuzzy
 msgid "Store completed downloads in username subfolders"
-msgstr "Emmagatzema les baixades completades a les subcarpetes de noms d'usuari"
+msgstr ""
+"Emmagatzema les baixades completades a les subcarpetes amb els noms d'usuari"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:55
-#, fuzzy
 msgid ""
 "Prevent write access by other programs for files being downloaded (turn off "
 "for NFS)"
 msgstr ""
-"Eviteu l'accés d'escriptura d'altres programes per als fitxers que es "
+"Eviteu l'accés d'escriptura d'altres programes als fitxers que es "
 "descarreguen (desactivar per a NFS)"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:73
-#, fuzzy
 msgid "Allow these users to send you files:"
-msgstr "Permet que aquests usuaris us enviïn fitxers:"
+msgstr "Permet que aquests usuaris t'enviïn fitxers:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:89
-#, fuzzy
 msgid "No one"
 msgstr "Ningú"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:90
-#, fuzzy
 msgid "Everyone"
 msgstr "Tothom"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:92
-#, fuzzy
 msgid "Trusted Buddies"
 msgstr "Amics de confiança"
 
@@ -5802,35 +5567,29 @@ msgstr "Acció de doble clic per a les baixades:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:120
 #: pynicotine/gtkgui/ui/settings/uploads.ui:89
-#, fuzzy
 msgid "Nothing"
 msgstr "Res"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:121
 #: pynicotine/gtkgui/ui/settings/uploads.ui:90
-#, fuzzy
 msgid "Send to Player"
-msgstr "Enviar al jugador"
+msgstr "Enviar al reproductor"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:122
 #: pynicotine/gtkgui/ui/settings/uploads.ui:91
-#, fuzzy
 msgid "Open in File Manager"
 msgstr "Obre al Gestor de fitxers"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:127
 #: pynicotine/gtkgui/ui/settings/uploads.ui:96
-#, fuzzy
 msgid "Browse Folder"
 msgstr "Explora la carpeta"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:146
-#, fuzzy
 msgid "Download Speed Limits"
 msgstr "Descarrega els límits de velocitat"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:166
-#, fuzzy
 msgid "Limit download speed to (KiB/s):"
 msgstr "Limiteu la velocitat de descàrrega a (KiB/s):"
 
@@ -5839,43 +5598,35 @@ msgstr "Limiteu la velocitat de descàrrega a (KiB/s):"
 #: pynicotine/gtkgui/ui/settings/uploads.ui:149
 #: pynicotine/gtkgui/ui/settings/uploads.ui:179
 #: pynicotine/gtkgui/ui/settings/uploads.ui:429
-#, fuzzy
 msgid "Kibibytes (2^10 bytes) per second."
 msgstr "Kibibytes (2^10 bytes) per segon."
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:195
-#, fuzzy
 msgid "Alternative download speed limit (KiB/s):"
 msgstr "Límit de velocitat de descàrrega alternatiu (KiB/s):"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:230
 #: pynicotine/gtkgui/ui/userbrowse.ui:65
-#, fuzzy
 msgid "Folders"
 msgstr "Carpetes"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:250
-#, fuzzy
 msgid "Incomplete file folder:"
-msgstr "Carpeta de fitxers incompleta:"
+msgstr "Carpeta de fitxers incomplets:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:265
-#, fuzzy
 msgid "Where incomplete downloads are temporarily stored."
-msgstr "On les descàrregues incompletes s'emmagatzemen temporalment."
+msgstr "On s'emmagatzemen temporalment les baixades incompletes."
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:277
-#, fuzzy
 msgid "Download folder:"
 msgstr "Descarrega la carpeta:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:303
-#, fuzzy
 msgid "Save buddies' uploads to:"
 msgstr "Desa les càrregues dels amics a:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:318
-#, fuzzy
 msgid ""
 "Where buddies' uploads will be stored (with a subfolder created for each "
 "buddy)."
@@ -5884,7 +5635,6 @@ msgstr ""
 "a cada amic)."
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:335
-#, fuzzy
 msgid "Events"
 msgstr "Esdeveniments"
 
@@ -5901,45 +5651,38 @@ msgstr ""
 "camí de la carpeta):"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:403
-#, fuzzy
 msgid "Download Filters"
-msgstr "Descarrega Filtres"
+msgstr "Filtres de descàrrega"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:412
-#, fuzzy
 msgid "Enable download filters"
 msgstr "Activa els filtres de baixada"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:421
-#, fuzzy
 msgid ""
 "<b>Syntax:</b> Letters are case-insensitive. All Python regular expressions "
 "are supported if escaping is disabled. For simple filters, keeping escaping "
 "enabled is recommended."
 msgstr ""
-"<b>Sintaxi:</b> Les lletres no distingeixen entre majúscules i minúscules. "
-"Totes les expressions regulars de Python són compatibles si l'escapament "
-"està desactivat. Per als filtres senzills, es recomana mantenir l'escapada "
-"activada."
+"<b>Sintaxi:</b> No es distingeixen entre majúscules i minúscules. Totes les "
+"expressions regulars de Python són compatibles si l'escapament està "
+"desactivat. Per als filtres senzills, es recomana mantenir l'escapament "
+"actiu."
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:558
 #: pynicotine/gtkgui/ui/settings/downloads.ui:574
-#, fuzzy
 msgid "Load Defaults"
 msgstr "Carrega els valors per defecte"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:614
-#, fuzzy
 msgid "Verify Filters"
 msgstr "Verifica els filtres"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:625
-#, fuzzy
 msgid "Unverified"
 msgstr "Sense verificar"
 
 #: pynicotine/gtkgui/ui/settings/ignore.ui:32
-#, fuzzy
 msgid ""
 "Ignore chat messages and search results from users, based on username or IP "
 "address."
@@ -5948,56 +5691,46 @@ msgstr ""
 "segons el nom d'usuari o l'adreça IP."
 
 #: pynicotine/gtkgui/ui/settings/log.ui:43
-#, fuzzy
 msgid "Log chatrooms by default"
-msgstr "Registra les sales de xat per defecte"
+msgstr "Enregistrar les sales de xat per defecte"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:50
-#, fuzzy
 msgid "Log private chat by default"
-msgstr "Registreu el xat privat de manera predeterminada"
+msgstr "Enregistrar el xat privat de manera predeterminada"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:57
-#, fuzzy
 msgid "Log transfers to file"
-msgstr "Transferències de registre al fitxer"
+msgstr "Enregistrar les transferències a un fitxer"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:64
-#, fuzzy
 msgid "Log debug messages to file"
-msgstr "Registre els missatges de depuració al fitxer"
+msgstr "Enregistrar els missatges de depuració a un fitxer"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:77
 msgid "Log file timestamp format:"
 msgstr "Format de la marca horària del fitxer de registre:"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:137
-#, fuzzy
 msgid "Folder Locations"
 msgstr "Ubicacions de carpetes"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:152
-#, fuzzy
 msgid "Chatroom logs folder:"
 msgstr "Carpeta de registres de la sala de xat:"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:175
-#, fuzzy
 msgid "Private chat logs folder:"
 msgstr "Carpeta de registres de xat privat:"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:198
-#, fuzzy
 msgid "Transfer logs folder:"
-msgstr "Carpeta de registres de transferència:"
+msgstr "Carpeta de registres de transferències:"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:221
-#, fuzzy
 msgid "Debug logs folder:"
 msgstr "Carpeta de registres de depuració:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:63
-#, fuzzy
 msgid ""
 "Log in to an existing Soulseek account or create a new one. Usernames are "
 "case-sensitive and unique."
@@ -6006,82 +5739,68 @@ msgstr ""
 "noms d'usuari distingeixen entre majúscules i minúscules i són únics."
 
 #: pynicotine/gtkgui/ui/settings/network.ui:138
-#, fuzzy
 msgid "Listening port range (requires a restart):"
-msgstr "Interval de ports d'escolta (requereix un reinici):"
+msgstr "Interval de ports d'escolta (cal reiniciar):"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:154
-#, fuzzy
 msgid "First port"
 msgstr "Primer port"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:160
-#, fuzzy
 msgid "to"
 msgstr "a"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:169
-#, fuzzy
 msgid "Last port"
 msgstr "Últim port"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:220
-#, fuzzy
 msgid "Away Status"
 msgstr "Estat Ausente"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:235
-#, fuzzy
 msgid "Toggle away status after minutes of inactivity:"
 msgstr "Commuta l'estat després de minuts d'inactivitat:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:260
-#, fuzzy
 msgid "Auto-reply message when away:"
-msgstr "Missatge de resposta automàtica quan no estiguis:"
+msgstr "Missatge de resposta automàtica quan estiguis ausent:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:292
-#, fuzzy
 msgid "Miscellaneous"
-msgstr "Divers"
+msgstr "Miscel·lània"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:301
-#, fuzzy
 msgid "Auto-connect to server on startup"
-msgstr "Connecteu-vos automàticament al servidor a l'inici"
+msgstr "Connectar-se automàticament al servidor a l'inici"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:312
-#, fuzzy
 msgid "Use UPnP to forward listening port (interval in hours):"
-msgstr "Utilitzeu UPnP per a reenviar el port d'escolta (interval en hores):"
+msgstr "Utilitza UPnP per a reenviar el port d'escolta (interval en hores):"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:334
-#, fuzzy
 msgid "Enable CTCP-like private message responses (client version)"
 msgstr ""
 "Activa les respostes de missatges privats semblants a CTCP (versió client)"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:347
-#, fuzzy
 msgid "Soulseek server:"
 msgstr "Servidor Soulseek:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:370
-#, fuzzy
 msgid "Network interface (requires a restart):"
-msgstr "Interfície de xarxa (requereix un reinici):"
+msgstr "Interfície de xarxa (cal reiniciar):"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:380
-#, fuzzy
 msgid ""
 "Binds connections to a specific network interface, useful for e.g. ensuring "
 "a VPN is used at all times. Leave empty to use any available interface. Only "
 "change this value if you know what you are doing."
 msgstr ""
-"Enllaça connexions a una interfície de xarxa específica, útil per, p. "
-"assegurant-se que s'utilitza una VPN en tot moment. Deixeu-lo en blanc per a "
-"utilitzar qualsevol interfície disponible. Canvieu aquest valor només si "
-"sabeu el que estàs fent."
+"Enllaça connexions a una interfície de xarxa específica, útil, per ex. per a "
+"assegurar-se que s'utilitza una VPN en tot moment. Deixa'l en blanc per a "
+"utilitzar qualsevol interfície disponible. Canvia aquest valor només si saps "
+"el que estàs fent."
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:27
 msgid ""
@@ -6092,7 +5811,6 @@ msgstr ""
 "multimèdia mitjançant l'ordre /now al xat."
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:62
-#, fuzzy
 msgid "Other"
 msgstr "Altres"
 
@@ -6105,57 +5823,46 @@ msgid "Now Playing message format:"
 msgstr "Format de missatge Reproduint ara:"
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:163
-#, fuzzy
 msgid "Test Configuration"
-msgstr "Prova de configuració"
+msgstr "Provar la configuració"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:39
-#, fuzzy
 msgid "Enable plugins"
 msgstr "Activa els connectors"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:87
-#, fuzzy
 msgid "Add Plugins"
 msgstr "Afegeix connectors"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:103
-#, fuzzy
 msgid "_Add Plugins"
 msgstr "_Afegiu connectors"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:123
-#, fuzzy
 msgid "Settings"
 msgstr "Configuració"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:139
-#, fuzzy
 msgid "_Settings"
 msgstr "_Configuració"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:209
-#, fuzzy
 msgid "Version:"
 msgstr "Versió:"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:230
-#, fuzzy
 msgid "Author(s):"
 msgstr "Autor(s):"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:51
-#, fuzzy
 msgid "Enable search history"
 msgstr "Activa l'historial de cerques"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:58
-#, fuzzy
 msgid "Remove special characters from search terms"
 msgstr "Elimina els caràcters especials dels termes de cerca"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:60
-#, fuzzy
 msgid ""
 "Certain clients don't send search results if special characters are included."
 msgstr ""
@@ -6163,67 +5870,56 @@ msgstr ""
 "especials."
 
 #: pynicotine/gtkgui/ui/settings/search.ui:66
-#, fuzzy
 msgid "Show privately shared files in search results"
 msgstr ""
 "Mostra els fitxers compartits de manera privada als resultats de la cerca"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:68
-#, fuzzy
 msgid ""
 "Other Soulseek clients may have the option to share files privately. If so, "
 "these files will be prefixed with '[PRIVATE]', and can not be downloaded "
 "until the uploader gives explicit permission. Ask them kindly."
 msgstr ""
 "Altres clients de Soulseek poden tenir l'opció de compartir fitxers de "
-"manera privada. En cas afirmatiu, aquests fitxers tindran el prefix \""
-"[PRIVAT]\" i no es podran baixar fins que l'autor de la càrrega no doni "
-"permís explícit. Pregunteu-los amablement."
+"manera privada. En cas afirmatiu, aquests fitxers tindran el prefix "
+"«[PRIVATE]» i no es podran baixar fins que l'autor de la càrrega no doni "
+"permís explícit. Pregunta'ls amablement."
 
 #: pynicotine/gtkgui/ui/settings/search.ui:81
-#, fuzzy
 msgid "Limit number of results per search:"
 msgstr "Limiteu el nombre de resultats per cerca:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:119
-#, fuzzy
 msgid "Clear Search History"
 msgstr "Esborrar l'historial de cerques"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:153
-#, fuzzy
 msgid "Enable search result filters by default"
 msgstr "Activa els filtres de resultats de cerca de manera predeterminada"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:167
-#, fuzzy
 msgid "Include:"
 msgstr "Incloure:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:191
-#, fuzzy
 msgid "Exclude:"
 msgstr "Excloure:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:214
-#, fuzzy
 msgid "File Type:"
 msgstr "Tipus d'arxiu:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:242
-#, fuzzy
 msgid "Size:"
 msgstr "Mida:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:269
-#, fuzzy
 msgid "Bitrate:"
 msgstr "Taxa de bits:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:296
-#, fuzzy
 msgid "Country Code:"
-msgstr "Codi del país:"
+msgstr "Codi de país:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:331
 msgid "Only show results from users with an available upload slot."
@@ -6231,22 +5927,18 @@ msgstr ""
 "Mostra només els resultats dels usuaris amb un lloc de pujada disponible."
 
 #: pynicotine/gtkgui/ui/settings/search.ui:358
-#, fuzzy
 msgid "Result Filter Help"
 msgstr "Ajuda del filtre de resultats"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:384
-#, fuzzy
 msgid "Clear Filter History"
 msgstr "Esborra l'historial de filtres"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:409
-#, fuzzy
 msgid "Network Searches"
 msgstr "Recerques en xarxa"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:423
-#, fuzzy
 msgid "Respond to search requests from other users"
 msgstr "Respon a les sol·licituds de cerca d'altres usuaris"
 
@@ -6259,17 +5951,14 @@ msgstr ""
 "compartits, els resultats de la cerca s'enviaran a l'usuari."
 
 #: pynicotine/gtkgui/ui/settings/search.ui:437
-#, fuzzy
 msgid "Searches shorter than this number of characters will be ignored:"
 msgstr "Les cerques més curtes que aquest nombre de caràcters s'ignoraran:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:462
-#, fuzzy
 msgid "Maximum search results to send per search request:"
-msgstr "Màxim resultats de cerca per enviar per sol·licitud de cerca:"
+msgstr "Nombre màxim de resultats de cerca a enviar per sol·licitud de cerca:"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:22
-#, fuzzy
 msgid ""
 "Share folders with every Soulseek user or buddies, allowing contents to be "
 "downloaded directly from your device. Hidden files are never shared."
@@ -6296,7 +5985,6 @@ msgid "Limit buddy-only shares to trusted buddies"
 msgstr "Limita els recursos compartits només per a amics a amics de confiança"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:57
-#, fuzzy
 msgid "Autoclear finished/cancelled uploads from transfer list"
 msgstr ""
 "Esborra automàticament les càrregues acabades/cancel·lades de la llista de "
@@ -6308,57 +5996,46 @@ msgstr "Acció de doble clic per a a càrregues:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:93
 #: pynicotine/gtkgui/ui/uploads.ui:68
-#, fuzzy
 msgid "Abort"
 msgstr "Avortar"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:95
-#, fuzzy
 msgid "Retry"
 msgstr "Torna-ho a provar"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:115
-#, fuzzy
 msgid "Upload Speed Limits"
-msgstr "Límits de velocitat de càrrega"
+msgstr "Límit de velocitat de càrrega"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:134
-#, fuzzy
 msgid "Limit upload speed to (KiB/s):"
 msgstr "Limiteu la velocitat de pujada a (KiB/s):"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:164
-#, fuzzy
 msgid "Alternative upload speed limit (KiB/s):"
-msgstr "Límit de velocitat de pujada alternatiu (KiB/s):"
+msgstr "Límit alternatiu de velocitat de pujada (KiB/s):"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:194
-#, fuzzy
 msgid "Limit upload speed:"
 msgstr "Limitar la velocitat de càrrega:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:212
-#, fuzzy
 msgid "Per transfer"
 msgstr "Per transferència"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:220
-#, fuzzy
 msgid "Total transfers"
-msgstr "Transferències totals"
+msgstr "Total de transferències"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:243
-#, fuzzy
 msgid "Queue Limits"
 msgstr "Límits de cua"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:252
-#, fuzzy
 msgid "Queue limits do not apply to buddies"
 msgstr "Els límits de la cua no s'apliquen als amics"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:269
-#, fuzzy
 msgid "Each user may queue a maximum of either:"
 msgstr "Cada usuari pot posar en cua un màxim de:"
 
@@ -6367,27 +6044,22 @@ msgid "Mebibytes (2^20 bytes)."
 msgstr "Mebibytes (2^20 bytes)."
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:297
-#, fuzzy
 msgid "MiB"
 msgstr "MiB"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:335
-#, fuzzy
 msgid "files"
-msgstr "Fitxers"
+msgstr "fitxers"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:357
-#, fuzzy
 msgid "Queue Behavior"
 msgstr "Comportament de la cua"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:366
-#, fuzzy
 msgid "Prioritize all buddies"
-msgstr "Prioritza tots els amics"
+msgstr "Prioritzar els amics"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:383
-#, fuzzy
 msgid "Upload queue type:"
 msgstr "Tipus de cua de càrrega:"
 
@@ -6407,15 +6079,14 @@ msgid "Round Robin"
 msgstr "Round Robin"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:402
-#, fuzzy
 msgid "First In, First Out"
 msgstr "Primer a entrar, primer a sortir"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:415
-#, fuzzy
 msgid "Queue uploads if total transfer speed reaches (KiB/s):"
 msgstr ""
-"Càrregues a la cua si la velocitat de transferència total arriba a (KiB/s):"
+"Posar a la cua les càrregues si la velocitat de transferència total arriba a "
+"(KiB/s):"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:444
 msgid "Limit number of upload slots to:"
@@ -6430,7 +6101,6 @@ msgstr ""
 "limitacions d'amplada de banda disponibles."
 
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:28
-#, fuzzy
 msgid ""
 "Instances of $ are replaced by the URL. Default system applications are used "
 "in cases where a protocol has not been configured."
@@ -6440,7 +6110,6 @@ msgstr ""
 "protocol."
 
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:49
-#, fuzzy
 msgid "Protocol:"
 msgstr "Protocol:"
 
@@ -6453,229 +6122,185 @@ msgid "File manager command:"
 msgstr "Ordre del gestor de fitxers:"
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:12
-#, fuzzy
 msgid "Self Description"
-msgstr "Descripció pròpia"
+msgstr "Presentació"
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:62
-#, fuzzy
 msgid "Picture:"
 msgstr "Imatge:"
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:82
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:98
-#, fuzzy
 msgid "Reset Picture"
 msgstr "Restableix la imatge"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:35
-#, fuzzy
 msgid "Prefer dark mode"
 msgstr "Prefereix el mode fosc"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:37
-#, fuzzy
 msgid "Note that the operating system's theme may take precedence."
-msgstr "Tingueu en compte que el tema del sistema operatiu pot tenir prioritat."
+msgstr "Tingues en compte que el tema del sistema operatiu pot tenir prioritat."
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:47
-#, fuzzy
 msgid "Display tray icon"
 msgstr "Mostra la icona de la safata"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:55
-#, fuzzy
 msgid "Minimize to tray on startup"
 msgstr "Minimitzar a la safata a l'inici"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:64
-#, fuzzy
 msgid "Restore the previously active main tab at startup"
-msgstr "Restaura la pestanya principal activada anteriorment a l'inici"
+msgstr "Restaurar a l'arrencada la pestanya principal prèviament activa"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:65
-#, fuzzy
 msgid "By default the leftmost tab is activated at startup"
 msgstr "Per defecte, la pestanya més a l'esquerra s'activa a l'inici"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:84
-#, fuzzy
 msgid "Tab bar position:"
 msgstr "Posició de la barra de pestanyes:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:114
-#, fuzzy
 msgid "Visible main tabs:"
 msgstr "Pestanyes principals visibles:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:254
-#, fuzzy
 msgid "When closing Nicotine+:"
-msgstr "Quan tanqueu Nicotine+:"
+msgstr "En tancar Nicotine+:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:269
-#, fuzzy
 msgid "Quit program"
 msgstr "Surt del programa"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:270
-#, fuzzy
 msgid "Show confirmation dialog"
 msgstr "Mostra el diàleg de confirmació"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:271
-#, fuzzy
 msgid "Run in the background"
-msgstr "Córrer en segon pla"
+msgstr "Executar en segon pla"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:291
-#, fuzzy
 msgid "Notifications"
 msgstr "Notificacions"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:311
-#, fuzzy
 msgid "Enable sound for notifications"
 msgstr "Activa el so per a les notificacions"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:317
-#, fuzzy
 msgid "Show notification for private chats and mentions in the window title"
 msgstr ""
 "Mostra la notificació de xats privats i mencions al títol de la finestra"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:330
-#, fuzzy
 msgid "Show notifications for:"
 msgstr "Mostra les notificacions per a:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:350
-#, fuzzy
 msgid "Finished file downloads"
 msgstr "Descàrregues de fitxers acabades"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:362
-#, fuzzy
 msgid "Finished folder downloads"
 msgstr "Descàrregues de carpetes acabades"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:374
-#, fuzzy
 msgid "Private messages"
 msgstr "Missatges privats"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:386
-#, fuzzy
 msgid "Chat room messages"
 msgstr "Missatges de la sala de xat"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:398
-#, fuzzy
 msgid "Chat room mentions"
 msgstr "Mencions a la sala de xat"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:425
-#, fuzzy
 msgid "Secondary Tabs"
 msgstr "Pestanyes secundàries"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:434
-#, fuzzy
 msgid "Close-buttons on secondary tabs"
 msgstr "Botons de tancament a les pestanyes secundàries"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:440
-#, fuzzy
 msgid "Tabs show user status icons instead of status text"
-msgstr "Les pestanyes mostren icones d'estat d'usuari en lloc de text d'estat"
+msgstr "Les pestanyes mostren icones d'estat d'usuari en lloc del text d'estat"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:461
-#, fuzzy
 msgid "Chat room tab bar position:"
 msgstr "Posició de la barra de pestanyes de la sala de xat:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:487
-#, fuzzy
 msgid "Private chat tab bar position:"
-msgstr "Posició de la barra de pestanyes de xat privada:"
+msgstr "Posició de la barra de pestanyes del xat privat:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:513
-#, fuzzy
 msgid "Search tab bar position:"
 msgstr "Posició de la barra de pestanyes de cerca:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:539
-#, fuzzy
 msgid "User info tab bar position:"
 msgstr "Posició de la barra d'informació d'usuari:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:565
-#, fuzzy
 msgid "User browse tab bar position:"
 msgstr "Posició de la barra de pestanyes de navegació d'usuari:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:609
-#, fuzzy
 msgid "Show file path tooltips in file list views"
 msgstr ""
 "Mostra els consells sobre ruta de fitxers a les visualitzacions de la llista "
 "de fitxers"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:616
-#, fuzzy
 msgid ""
 "Show reverse file paths in search and transfer views (requires a restart)"
 msgstr ""
 "Mostra els camins inversos dels fitxers a les visualitzacions de cerca i "
-"transferència (requereix un reinici)"
+"transferència (cal reiniciar)"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:643
-#, fuzzy
 msgid "List text color:"
 msgstr "Color del text de la llista:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:717
-#, fuzzy
 msgid "Queued search result text color:"
-msgstr "Color del text del resultat de la cerca a la cua:"
+msgstr "Color del text dels resultats de cerca en cua:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:808
-#, fuzzy
 msgid "Colored and clickable usernames"
 msgstr "Noms d'usuari de colors i clicables"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:827
-#, fuzzy
 msgid "Chat username appearance:"
 msgstr "Aparença del nom d'usuari del xat:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:844
-#, fuzzy
 msgid "bold"
-msgstr "agosarat"
+msgstr "negreta"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:845
-#, fuzzy
 msgid "italic"
 msgstr "cursiva"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:846
-#, fuzzy
 msgid "underline"
-msgstr "subratllar"
+msgstr "subratllat"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:847
-#, fuzzy
 msgid "normal"
 msgstr "normal"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:877
-#, fuzzy
 msgid "Remote text color:"
 msgstr "Color del text remot:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:951
-#, fuzzy
 msgid "Local text color:"
 msgstr "Color del text local:"
 
@@ -6684,67 +6309,54 @@ msgid "/me action text color:"
 msgstr "Color del text de l'acció /me:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1099
-#, fuzzy
 msgid "Highlighted text color:"
 msgstr "Color del text ressaltat:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1173
-#, fuzzy
 msgid "URL link text color:"
-msgstr "Color del text de l'enllaç URL:"
+msgstr "Color del text dels enllaços URL:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1247
-#, fuzzy
 msgid "Online text color:"
 msgstr "Color del text en línia:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1321
-#, fuzzy
 msgid "Offline text color:"
 msgstr "Color del text fora de línia:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1395
-#, fuzzy
 msgid "Away text color:"
-msgstr "Color del text absent:"
+msgstr "Color del text d'absència:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1471
-#, fuzzy
 msgid "Text Entries"
 msgstr "Entrades de text"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1498
-#, fuzzy
 msgid "Text entry background color:"
 msgstr "Color de fons de l'entrada de text:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1572
-#, fuzzy
 msgid "Text entry text color:"
-msgstr "Color del text d'entrada de text:"
+msgstr "Color del text de l'entrada de text:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1647
-#, fuzzy
 msgid "Tab Labels"
 msgstr "Etiquetes de pestanyes"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1657
-#, fuzzy
 msgid "Notification changes the tab's text color"
 msgstr "La notificació canvia el color del text de la pestanya"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1680
-#, fuzzy
 msgid "Regular tab label color:"
 msgstr "Color de l'etiqueta de la pestanya normal:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1754
-#, fuzzy
 msgid "Changed tab label color:"
-msgstr "S'ha canviat el color de l'etiqueta de la pestanya:"
+msgstr "Color de l'etiqueta de la pestanya canviada:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1828
-#, fuzzy
 msgid "Highlighted tab label color:"
 msgstr "Color de l'etiqueta de la pestanya destacada:"
 
@@ -6753,72 +6365,58 @@ msgid "Fonts"
 msgstr "Tipus de lletra"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1924
-#, fuzzy
 msgid "Global font:"
 msgstr "Tipus de lletra global:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1984
-#, fuzzy
 msgid "Chat font:"
 msgstr "Tipus de lletra del xat:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:2044
-#, fuzzy
 msgid "List font:"
 msgstr "Tipus de lletra de la llista:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:2104
-#, fuzzy
 msgid "Transfers font:"
 msgstr "Tipus de lletra de transferència:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:2164
-#, fuzzy
 msgid "Search font:"
 msgstr "Font de cerca:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:2224
-#, fuzzy
 msgid "Browse font:"
 msgstr "Explora el tipus de lletra:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:2290
-#, fuzzy
 msgid "Icons"
 msgstr "Icones"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:2318
-#, fuzzy
 msgid "Icon theme folder (requires restart):"
 msgstr "Carpeta de temes d'icones (cal reiniciar):"
 
 #: pynicotine/gtkgui/ui/uploads.ui:96
-#, fuzzy
 msgid "Abort User(s)"
-msgstr "Avorta els usuaris"
+msgstr "Avorta els usuari(s)"
 
 #: pynicotine/gtkgui/ui/uploads.ui:123
-#, fuzzy
 msgid "Ban User(s)"
-msgstr "Prohibir els usuaris"
+msgstr "Prohibir usuari(s)"
 
 #: pynicotine/gtkgui/ui/uploads.ui:144
-#, fuzzy
 msgid "Clear all finished and cancelled uploads."
 msgstr "Esborra totes les càrregues acabades i cancel·lades."
 
 #: pynicotine/gtkgui/ui/uploads.ui:173
-#, fuzzy
 msgid "Clear all uploads marked with a specific status."
 msgstr "Esborra totes les pujades marcades amb un estat específic."
 
 #: pynicotine/gtkgui/ui/userbrowse.ui:104
-#, fuzzy
 msgid "Shared"
 msgstr "Compartit"
 
 #: pynicotine/gtkgui/ui/userbrowse.ui:150
-#, fuzzy
 msgid "Search files and folders (exact match)"
 msgstr "Cerca fitxers i carpetes (coincidència exacta)"
 
@@ -6827,17 +6425,14 @@ msgid "Save shares list to disk"
 msgstr "Desa la llista de recursos compartits al disc"
 
 #: pynicotine/gtkgui/ui/userbrowse.ui:174
-#, fuzzy
 msgid "Refresh files"
 msgstr "Actualitzar fitxers"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:105
-#, fuzzy
 msgid "Shared Files"
 msgstr "Fitxers compartits"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:132
-#, fuzzy
 msgid "Shared Folders"
 msgstr "Carpetes compartides"
 
@@ -6846,25 +6441,21 @@ msgid "Upload Slots"
 msgstr "Llocs de pujada"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:186
-#, fuzzy
 msgid "Queued Uploads"
-msgstr "Càrregues a la cua"
+msgstr "Càrregues en cua"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:213
 msgid "Free Upload Slots"
 msgstr "Lloc de pujades lliures"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:240
-#, fuzzy
 msgid "Upload Speed"
 msgstr "Velocitat de pujada"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:595
-#, fuzzy
 msgid "Save _Picture"
 msgstr "Desa la _imatge"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:632
-#, fuzzy
 msgid "_Refresh Info"
 msgstr "_Actualitzar la informació"

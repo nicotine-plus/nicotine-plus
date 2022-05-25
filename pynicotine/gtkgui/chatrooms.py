@@ -637,22 +637,20 @@ class ChatRoom(UserInterface):
                 except UnicodeDecodeError:
                     line = line.decode("latin-1")
 
-                user = None
-                tag = None
-                usertag = None
+                user = tag = usertag = None
 
-                if "[" in line and "] " in line:
-                    start = line.find("[")
-                    end = line.find("] ")
+                if " [" in line and "] " in line:
+                    start = line.find(" [") + 2
+                    end = line.find("] ", start)
 
                     if end > start:
-                        user = line[start + 1:end].strip()
+                        user = line[start:end]
                         usertag = self.get_user_tag(user)
 
                         if user == login:
                             tag = self.tag_local
 
-                        elif login.lower() in line[end:].lower():
+                        elif self.find_whole_word(login.lower(), line.lower(), after=end) > -1:
                             tag = self.tag_hilite
 
                         else:
@@ -779,7 +777,7 @@ class ChatRoom(UserInterface):
 
     @staticmethod
     def find_whole_word(word, text, after=0):
-        """ Return the position of the first mention of word that is not a subword """
+        """ Returns start position of a whole word that is not in a subword """
 
         if word not in text:
             return -1
@@ -1142,9 +1140,7 @@ class ChatRoom(UserInterface):
     def on_view_room_log(self, *_args):
         open_log(config.sections["logging"]["roomlogsdir"], self.room)
 
-    def on_delete_room_log_response(self, dialog, response_id, _data):
-
-        dialog.destroy()
+    def on_delete_room_log_response(self, _dialog, response_id, _data):
 
         if response_id == 2:
             delete_log(config.sections["logging"]["roomlogsdir"], self.room)

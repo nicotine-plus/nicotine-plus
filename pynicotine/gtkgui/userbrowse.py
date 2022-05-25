@@ -728,14 +728,10 @@ class UserBrowse(UserInterface):
     def on_download_directory_recursive_to(self, *_args):
         self.on_download_directory_to(recurse=True)
 
-    def on_upload_directory_to_response(self, dialog, response_id, recurse):
+    def on_upload_directory_to_response(self, dialog, _response_id, recurse):
 
         user = dialog.get_entry_value()
         folder = self.selected_folder
-        dialog.destroy()
-
-        if response_id != Gtk.ResponseType.OK:
-            return
 
         if not user or folder is None:
             return
@@ -980,14 +976,10 @@ class UserBrowse(UserInterface):
             initial_folder=path
         ).show()
 
-    def on_upload_files_response(self, dialog, response_id, _data):
+    def on_upload_files_response(self, dialog, _response_id, _data):
 
         user = dialog.get_entry_value()
         folder = self.selected_folder
-        dialog.destroy()
-
-        if response_id != Gtk.ResponseType.OK:
-            return
 
         if not user or folder is None:
             return

@@ -152,7 +152,11 @@ class MessageDialog:
         label.set_selectable(True)
 
     def on_response(self, _dialog, response_id):
-        self.callback(self, response_id, self.callback_data)
+
+        if response_id not in (Gtk.ResponseType.CANCEL, Gtk.ResponseType.CLOSE, Gtk.ResponseType.DELETE_EVENT):
+            self.callback(self, response_id, self.callback_data)
+
+        self.destroy()
 
     def show(self):
         self.dialog.present()
@@ -178,7 +182,7 @@ class EntryDialog(MessageDialog):
         else:
             self.entry = self._add_entry(visibility)
 
-        self.entry.connect("activate", lambda x: self.dialog.response(Gtk.ResponseType.OK))
+        self.entry.connect("activate", lambda x: self.on_response(self.dialog, Gtk.ResponseType.OK))
         self.entry.set_text(default)
 
         if use_second_entry:
@@ -187,7 +191,7 @@ class EntryDialog(MessageDialog):
             else:
                 self.second_entry = self._add_entry(visibility)
 
-            self.second_entry.connect("activate", lambda x: self.dialog.response(Gtk.ResponseType.OK))
+            self.second_entry.connect("activate", lambda x: self.on_response(self.dialog, Gtk.ResponseType.OK))
             self.second_entry.set_text(second_default)
 
         self.option = Gtk.CheckButton(label=option_label, active=option_value, visible=bool(option_label))

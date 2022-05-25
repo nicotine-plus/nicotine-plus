@@ -78,10 +78,7 @@ class Statistics(UserInterface):
         getattr(self, stat_id + "_session_label").set_text(session_value)
         getattr(self, stat_id + "_total_label").set_text(total_value)
 
-    def on_reset_statistics_response(self, dialog, response_id, _data):
-
-        dialog.destroy()
-
+    def on_reset_statistics_response(self, _dialog, response_id, _data):
         if response_id == 2:
             self.core.statistics.reset_stats()
 

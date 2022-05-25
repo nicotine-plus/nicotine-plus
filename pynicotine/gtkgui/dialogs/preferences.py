@@ -167,13 +167,9 @@ class NetworkFrame(UserInterface):
             }
         }
 
-    def on_change_password_response(self, dialog, response_id, logged_in):
+    def on_change_password_response(self, dialog, _response_id, logged_in):
 
         password = dialog.get_entry_value()
-        dialog.destroy()
-
-        if response_id != Gtk.ResponseType.OK:
-            return
 
         if logged_in != self.core.logged_in:
             MessageDialog(
@@ -320,14 +316,10 @@ class DownloadsFrame(UserInterface):
 
         self.on_verify_filter()
 
-    def on_add_filter_response(self, dialog, response_id, _data):
+    def on_add_filter_response(self, dialog, _response_id, _data):
 
         dfilter = dialog.get_entry_value()
         escaped = dialog.get_option_value()
-        dialog.destroy()
-
-        if response_id != Gtk.ResponseType.OK:
-            return
 
         iterator = self.filter_list_view.iterators.get(dfilter)
 
@@ -351,14 +343,10 @@ class DownloadsFrame(UserInterface):
             droplist=self.filter_list_view.iterators
         ).show()
 
-    def on_edit_filter_response(self, dialog, response_id, iterator):
+    def on_edit_filter_response(self, dialog, _response_id, iterator):
 
         new_dfilter = dialog.get_entry_value()
         escaped = dialog.get_option_value()
-        dialog.destroy()
-
-        if response_id != Gtk.ResponseType.OK:
-            return
 
         if new_dfilter in self.filter_list_view.iterators:
             self.filter_list_view.set_row_value(iterator, 0, new_dfilter)
@@ -583,14 +571,10 @@ class SharesFrame(UserInterface):
             multiple=True
         ).show()
 
-    def on_edit_shared_dir_response(self, dialog, response_id, iterator):
+    def on_edit_shared_dir_response(self, dialog, _response_id, iterator):
 
         virtual = dialog.get_entry_value()
         buddy_only = dialog.get_option_value()
-        dialog.destroy()
-
-        if response_id != Gtk.ResponseType.OK:
-            return
 
         if not virtual:
             return
@@ -820,13 +804,9 @@ class IgnoredUsersFrame(UserInterface):
             }
         }
 
-    def on_add_ignored_response(self, dialog, response_id, _data):
+    def on_add_ignored_response(self, dialog, _response_id, _data):
 
         user = dialog.get_entry_value()
-        dialog.destroy()
-
-        if response_id != Gtk.ResponseType.OK:
-            return
 
         if user and user not in self.ignored_users:
             self.ignored_users.append(user)
@@ -849,13 +829,9 @@ class IgnoredUsersFrame(UserInterface):
             self.ignored_users_list_view.remove_row(iterator)
             self.ignored_users.remove(user)
 
-    def on_add_ignored_ip_response(self, dialog, response_id, _data):
+    def on_add_ignored_ip_response(self, dialog, _response_id, _data):
 
         ip_address = dialog.get_entry_value()
-        dialog.destroy()
-
-        if response_id != Gtk.ResponseType.OK:
-            return
 
         if ip_address is None or ip_address == "" or ip_address.count(".") != 3:
             return
@@ -977,13 +953,9 @@ class BannedUsersFrame(UserInterface):
             }
         }
 
-    def on_add_banned_response(self, dialog, response_id, _data):
+    def on_add_banned_response(self, dialog, _response_id, _data):
 
         user = dialog.get_entry_value()
-        dialog.destroy()
-
-        if response_id != Gtk.ResponseType.OK:
-            return
 
         if user and user not in self.banned_users:
             self.banned_users.append(user)
@@ -1006,13 +978,9 @@ class BannedUsersFrame(UserInterface):
             self.banned_users_list_view.remove_row(iterator)
             self.banned_users.remove(user)
 
-    def on_add_blocked_response(self, dialog, response_id, _data):
+    def on_add_blocked_response(self, dialog, _response_id, _data):
 
         ip_address = dialog.get_entry_value()
-        dialog.destroy()
-
-        if response_id != Gtk.ResponseType.OK:
-            return
 
         if ip_address is None or ip_address == "" or ip_address.count(".") != 3:
             return
@@ -1208,13 +1176,9 @@ class ChatsFrame(UserInterface):
     def on_private_default_timestamp(self, *_args):
         self.PrivateChatFormat.set_text(config.defaults["logging"]["private_timestamp"])
 
-    def on_add_censored_response(self, dialog, response_id, _data):
+    def on_add_censored_response(self, dialog, _response_id, _data):
 
         pattern = dialog.get_entry_value()
-        dialog.destroy()
-
-        if response_id != Gtk.ResponseType.OK:
-            return
 
         if pattern and pattern not in self.censored_patterns:
             self.censored_patterns.append(pattern)
@@ -1230,13 +1194,9 @@ class ChatsFrame(UserInterface):
             callback=self.on_add_censored_response
         ).show()
 
-    def on_edit_censored_response(self, dialog, response_id, iterator):
+    def on_edit_censored_response(self, dialog, _response_id, iterator):
 
         pattern = dialog.get_entry_value()
-        dialog.destroy()
-
-        if response_id != Gtk.ResponseType.OK:
-            return
 
         if not pattern:
             return
@@ -1271,14 +1231,10 @@ class ChatsFrame(UserInterface):
             self.censor_list_view.remove_row(iterator)
             self.censored_patterns.remove(censor)
 
-    def on_add_replacement_response(self, dialog, response_id, _data):
+    def on_add_replacement_response(self, dialog, _response_id, _data):
 
         pattern = dialog.get_entry_value()
         replacement = dialog.get_second_entry_value()
-        dialog.destroy()
-
-        if response_id != Gtk.ResponseType.OK:
-            return
 
         if not pattern or not replacement:
             return
@@ -1296,14 +1252,10 @@ class ChatsFrame(UserInterface):
             use_second_entry=True
         ).show()
 
-    def on_edit_replacement_response(self, dialog, response_id, iterator):
+    def on_edit_replacement_response(self, dialog, _response_id, iterator):
 
         pattern = dialog.get_entry_value()
         replacement = dialog.get_second_entry_value()
-        dialog.destroy()
-
-        if response_id != Gtk.ResponseType.OK:
-            return
 
         if not pattern or not replacement:
             return
@@ -1919,14 +1871,10 @@ class UrlHandlersFrame(UserInterface):
             }
         }
 
-    def on_add_handler_response(self, dialog, response_id, _data):
+    def on_add_handler_response(self, dialog, _response_id, _data):
 
         protocol = dialog.get_entry_value()
         command = dialog.get_second_entry_value()
-        dialog.destroy()
-
-        if response_id != Gtk.ResponseType.OK:
-            return
 
         if not protocol or not command:
             return
@@ -1952,13 +1900,9 @@ class UrlHandlersFrame(UserInterface):
             second_droplist=self.default_commands
         ).show()
 
-    def on_edit_handler_response(self, dialog, response_id, iterator):
+    def on_edit_handler_response(self, dialog, _response_id, iterator):
 
         command = dialog.get_entry_value()
-        dialog.destroy()
-
-        if response_id != Gtk.ResponseType.OK:
-            return
 
         if not command:
             return
@@ -2424,13 +2368,9 @@ class PluginsFrame(UserInterface):
                     log.add_debug("Unknown setting type '%s', data '%s'", (name, data))
 
         @staticmethod
-        def on_add_response(dialog, response_id, treeview):
+        def on_add_response(dialog, _response_id, treeview):
 
             value = dialog.get_entry_value()
-            dialog.destroy()
-
-            if response_id != Gtk.ResponseType.OK:
-                return
 
             if not value:
                 return
@@ -2447,13 +2387,9 @@ class PluginsFrame(UserInterface):
             ).show()
 
         @staticmethod
-        def on_edit_response(dialog, response_id, data):
+        def on_edit_response(dialog, _response_id, data):
 
             value = dialog.get_entry_value()
-            dialog.destroy()
-
-            if response_id != Gtk.ResponseType.OK:
-                return
 
             if not value:
                 return
@@ -3023,11 +2959,7 @@ class Preferences(UserInterface):
         config.write_configuration()
 
         if config.need_config():
-            self.frame.connect_action.set_enabled(False)
-            self.frame.on_fast_configure()
-
-        elif self.core.protothread.server_disconnected:
-            self.frame.connect_action.set_enabled(True)
+            self.frame.setup()
 
         if not settings_closed:
             return
