@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-22 02:04+0300\n"
-"PO-Revision-Date: 2022-05-22 17:52+0000\n"
+"PO-Revision-Date: 2022-05-25 19:17+0000\n"
 "Last-Translator: Maite Guix <maite.guix@gmail.com>\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ca/>\n"
@@ -57,7 +57,7 @@ msgstr ""
 
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:54
 msgid "Nicotine+ Team"
-msgstr "Equip de Nicotina+"
+msgstr "Equip de Nicotine+"
 
 #: pynicotine/__init__.py:27
 msgid "Nicotine+ is a Soulseek client"
@@ -182,192 +182,154 @@ msgid "Config backed up to: %s"
 msgstr "S'ha fet una còpia de seguretat de la configuració a: %s"
 
 #: pynicotine/geoip/geoip.py:22
-#, fuzzy
 msgid "Andorra"
 msgstr "Andorra"
 
 #: pynicotine/geoip/geoip.py:23
-#, fuzzy
 msgid "United Arab Emirates"
 msgstr "Emirats Àrabs Units"
 
 #: pynicotine/geoip/geoip.py:24
-#, fuzzy
 msgid "Afghanistan"
 msgstr "Afganistan"
 
 #: pynicotine/geoip/geoip.py:25
-#, fuzzy
 msgid "Antigua & Barbuda"
 msgstr "Antigua i Barbuda"
 
 #: pynicotine/geoip/geoip.py:26
-#, fuzzy
 msgid "Anguilla"
 msgstr "Anguilla"
 
 #: pynicotine/geoip/geoip.py:27
-#, fuzzy
 msgid "Albania"
 msgstr "Albània"
 
 #: pynicotine/geoip/geoip.py:28
-#, fuzzy
 msgid "Armenia"
 msgstr "Armènia"
 
 #: pynicotine/geoip/geoip.py:29
-#, fuzzy
 msgid "Angola"
 msgstr "Angola"
 
 #: pynicotine/geoip/geoip.py:30
-#, fuzzy
 msgid "Antarctica"
 msgstr "Antàrtida"
 
 #: pynicotine/geoip/geoip.py:31
-#, fuzzy
 msgid "Argentina"
 msgstr "Argentina"
 
 #: pynicotine/geoip/geoip.py:32
-#, fuzzy
 msgid "American Samoa"
 msgstr "Samoa Americana"
 
 #: pynicotine/geoip/geoip.py:33
-#, fuzzy
 msgid "Austria"
 msgstr "Àustria"
 
 #: pynicotine/geoip/geoip.py:34
-#, fuzzy
 msgid "Australia"
 msgstr "Austràlia"
 
 #: pynicotine/geoip/geoip.py:35
-#, fuzzy
 msgid "Aruba"
 msgstr "Aruba"
 
 #: pynicotine/geoip/geoip.py:36
-#, fuzzy
 msgid "Åland Islands"
 msgstr "Illes Åland"
 
 #: pynicotine/geoip/geoip.py:37
-#, fuzzy
 msgid "Azerbaijan"
 msgstr "Azerbaidjan"
 
 #: pynicotine/geoip/geoip.py:38
-#, fuzzy
 msgid "Bosnia & Herzegovina"
 msgstr "Bòsnia i Hercegovina"
 
 #: pynicotine/geoip/geoip.py:39
-#, fuzzy
 msgid "Barbados"
 msgstr "Barbados"
 
 #: pynicotine/geoip/geoip.py:40
-#, fuzzy
 msgid "Bangladesh"
 msgstr "Bangla Desh"
 
 #: pynicotine/geoip/geoip.py:41
-#, fuzzy
 msgid "Belgium"
 msgstr "Bèlgica"
 
 #: pynicotine/geoip/geoip.py:42
-#, fuzzy
 msgid "Burkina Faso"
 msgstr "Burkina Faso"
 
 #: pynicotine/geoip/geoip.py:43
-#, fuzzy
 msgid "Bulgaria"
 msgstr "Bulgària"
 
 #: pynicotine/geoip/geoip.py:44
-#, fuzzy
 msgid "Bahrain"
 msgstr "Bahrain"
 
 #: pynicotine/geoip/geoip.py:45
-#, fuzzy
 msgid "Burundi"
 msgstr "Burundi"
 
 #: pynicotine/geoip/geoip.py:46
-#, fuzzy
 msgid "Benin"
 msgstr "Benín"
 
 #: pynicotine/geoip/geoip.py:47
-#, fuzzy
 msgid "Saint Barthelemy"
 msgstr "Sant Barthelemy"
 
 #: pynicotine/geoip/geoip.py:48
-#, fuzzy
 msgid "Bermuda"
 msgstr "Bermudes"
 
 #: pynicotine/geoip/geoip.py:49
-#, fuzzy
 msgid "Brunei Darussalam"
 msgstr "Brunei Darussalam"
 
 #: pynicotine/geoip/geoip.py:50
-#, fuzzy
 msgid "Bolivia"
 msgstr "Bolívia"
 
 #: pynicotine/geoip/geoip.py:51
-#, fuzzy
 msgid "Bonaire, Sint Eustatius and Saba"
 msgstr "Bonaire, Sint Eustatius i Saba"
 
 #: pynicotine/geoip/geoip.py:52
-#, fuzzy
 msgid "Brazil"
 msgstr "Brasil"
 
 #: pynicotine/geoip/geoip.py:53
-#, fuzzy
 msgid "Bahamas"
 msgstr "Bahames"
 
 #: pynicotine/geoip/geoip.py:54
-#, fuzzy
 msgid "Bhutan"
 msgstr "Bhutan"
 
 #: pynicotine/geoip/geoip.py:55
-#, fuzzy
 msgid "Bouvet Island"
 msgstr "Illa Bouvet"
 
 #: pynicotine/geoip/geoip.py:56
-#, fuzzy
 msgid "Botswana"
 msgstr "Botswana"
 
 #: pynicotine/geoip/geoip.py:57
-#, fuzzy
 msgid "Belarus"
 msgstr "Bielorússia"
 
 #: pynicotine/geoip/geoip.py:58
-#, fuzzy
 msgid "Belize"
 msgstr "Belize"
 
 #: pynicotine/geoip/geoip.py:59
-#, fuzzy
 msgid "Canada"
 msgstr "Canadà"
 
@@ -376,547 +338,438 @@ msgid "Cocos (Keeling) Islands"
 msgstr "Illes Cocos (Keeling)"
 
 #: pynicotine/geoip/geoip.py:61
-#, fuzzy
 msgid "Democratic Republic of Congo"
 msgstr "República Democràtica del Congo"
 
 #: pynicotine/geoip/geoip.py:62
-#, fuzzy
 msgid "Central African Republic"
 msgstr "República Centreafricana"
 
 #: pynicotine/geoip/geoip.py:63
-#, fuzzy
 msgid "Congo"
 msgstr "Congo"
 
 #: pynicotine/geoip/geoip.py:64
-#, fuzzy
 msgid "Switzerland"
 msgstr "Suïssa"
 
 #: pynicotine/geoip/geoip.py:65
-#, fuzzy
 msgid "Ivory Coast"
 msgstr "Costa d'Ivori"
 
 #: pynicotine/geoip/geoip.py:66
-#, fuzzy
 msgid "Cook Islands"
 msgstr "Illes Cook"
 
 #: pynicotine/geoip/geoip.py:67
-#, fuzzy
 msgid "Chile"
 msgstr "Xile"
 
 #: pynicotine/geoip/geoip.py:68
-#, fuzzy
 msgid "Cameroon"
 msgstr "Camerun"
 
 #: pynicotine/geoip/geoip.py:69
-#, fuzzy
 msgid "China"
 msgstr "Xina"
 
 #: pynicotine/geoip/geoip.py:70
-#, fuzzy
 msgid "Colombia"
 msgstr "Colòmbia"
 
 #: pynicotine/geoip/geoip.py:71
-#, fuzzy
 msgid "Costa Rica"
 msgstr "Costa Rica"
 
 #: pynicotine/geoip/geoip.py:72
-#, fuzzy
 msgid "Cuba"
 msgstr "Cuba"
 
 #: pynicotine/geoip/geoip.py:73
-#, fuzzy
 msgid "Cabo Verde"
 msgstr "Cap Verd"
 
 #: pynicotine/geoip/geoip.py:74
-#, fuzzy
 msgid "Curaçao"
 msgstr "Curaçao"
 
 #: pynicotine/geoip/geoip.py:75
-#, fuzzy
 msgid "Christmas Island"
-msgstr "Illa de Nadal"
+msgstr "Illa Christmas"
 
 #: pynicotine/geoip/geoip.py:76
-#, fuzzy
 msgid "Cyprus"
 msgstr "Xipre"
 
 #: pynicotine/geoip/geoip.py:77
-#, fuzzy
 msgid "Czech Republic"
 msgstr "República Txeca"
 
 #: pynicotine/geoip/geoip.py:78
-#, fuzzy
 msgid "Germany"
 msgstr "Alemanya"
 
 #: pynicotine/geoip/geoip.py:79
-#, fuzzy
 msgid "Djibouti"
 msgstr "Djibouti"
 
 #: pynicotine/geoip/geoip.py:80
-#, fuzzy
 msgid "Denmark"
 msgstr "Dinamarca"
 
 #: pynicotine/geoip/geoip.py:81
-#, fuzzy
 msgid "Dominica"
 msgstr "Dominica"
 
 #: pynicotine/geoip/geoip.py:82
-#, fuzzy
 msgid "Dominican Republic"
 msgstr "República Dominicana"
 
 #: pynicotine/geoip/geoip.py:83
-#, fuzzy
 msgid "Algeria"
 msgstr "Algèria"
 
 #: pynicotine/geoip/geoip.py:84
-#, fuzzy
 msgid "Ecuador"
 msgstr "Equador"
 
 #: pynicotine/geoip/geoip.py:85
-#, fuzzy
 msgid "Estonia"
 msgstr "Estònia"
 
 #: pynicotine/geoip/geoip.py:86
-#, fuzzy
 msgid "Egypt"
 msgstr "Egipte"
 
 #: pynicotine/geoip/geoip.py:87
-#, fuzzy
 msgid "Western Sahara"
 msgstr "Sàhara Occidental"
 
 #: pynicotine/geoip/geoip.py:88
-#, fuzzy
 msgid "Eritrea"
 msgstr "Eritrea"
 
 #: pynicotine/geoip/geoip.py:89
-#, fuzzy
 msgid "Spain"
 msgstr "Espanya"
 
 #: pynicotine/geoip/geoip.py:90
-#, fuzzy
 msgid "Ethiopia"
 msgstr "Etiòpia"
 
 #: pynicotine/geoip/geoip.py:91
-#, fuzzy
 msgid "Europe"
 msgstr "Europa"
 
 #: pynicotine/geoip/geoip.py:92
-#, fuzzy
 msgid "Finland"
 msgstr "Finlàndia"
 
 #: pynicotine/geoip/geoip.py:93
-#, fuzzy
 msgid "Fiji"
 msgstr "Fiji"
 
 #: pynicotine/geoip/geoip.py:94
-#, fuzzy
 msgid "Falkland Islands (Malvinas)"
 msgstr "Illes Falkland (Malvines)"
 
 #: pynicotine/geoip/geoip.py:95
-#, fuzzy
 msgid "Micronesia"
 msgstr "Micronèsia"
 
 #: pynicotine/geoip/geoip.py:96
-#, fuzzy
 msgid "Faroe Islands"
 msgstr "Illes Faroe"
 
 #: pynicotine/geoip/geoip.py:97
-#, fuzzy
 msgid "France"
 msgstr "França"
 
 #: pynicotine/geoip/geoip.py:98
-#, fuzzy
 msgid "Gabon"
 msgstr "Gabon"
 
 #: pynicotine/geoip/geoip.py:99
-#, fuzzy
 msgid "Great Britain"
 msgstr "Gran Bretanya"
 
 #: pynicotine/geoip/geoip.py:100
-#, fuzzy
 msgid "Grenada"
 msgstr "Granada"
 
 #: pynicotine/geoip/geoip.py:101
-#, fuzzy
 msgid "Georgia"
 msgstr "Geòrgia"
 
 #: pynicotine/geoip/geoip.py:102
-#, fuzzy
 msgid "French Guiana"
 msgstr "Guaiana Francesa"
 
 #: pynicotine/geoip/geoip.py:103
-#, fuzzy
 msgid "Guernsey"
 msgstr "Guernsey"
 
 #: pynicotine/geoip/geoip.py:104
-#, fuzzy
 msgid "Ghana"
 msgstr "Ghana"
 
 #: pynicotine/geoip/geoip.py:105
-#, fuzzy
 msgid "Gibraltar"
 msgstr "Gibraltar"
 
 #: pynicotine/geoip/geoip.py:106
-#, fuzzy
 msgid "Greenland"
 msgstr "Groenlàndia"
 
 #: pynicotine/geoip/geoip.py:107
-#, fuzzy
 msgid "Gambia"
 msgstr "Gàmbia"
 
 #: pynicotine/geoip/geoip.py:108
-#, fuzzy
 msgid "Guinea"
 msgstr "Guinea"
 
 #: pynicotine/geoip/geoip.py:109
-#, fuzzy
 msgid "Guadeloupe"
 msgstr "Guadalupe"
 
 #: pynicotine/geoip/geoip.py:110
-#, fuzzy
 msgid "Equatorial Guinea"
 msgstr "Guinea Equatorial"
 
 #: pynicotine/geoip/geoip.py:111
-#, fuzzy
 msgid "Greece"
 msgstr "Grècia"
 
 #: pynicotine/geoip/geoip.py:112
-#, fuzzy
 msgid "South Georgia & South Sandwich Islands"
 msgstr "Illes Geòrgia del Sud i Sandwich del Sud"
 
 #: pynicotine/geoip/geoip.py:113
-#, fuzzy
 msgid "Guatemala"
 msgstr "Guatemala"
 
 #: pynicotine/geoip/geoip.py:114
-#, fuzzy
 msgid "Guam"
 msgstr "Guam"
 
 #: pynicotine/geoip/geoip.py:115
-#, fuzzy
 msgid "Guinea-Bissau"
 msgstr "Guinea Bissau"
 
 #: pynicotine/geoip/geoip.py:116
-#, fuzzy
 msgid "Guyana"
 msgstr "Guyana"
 
 #: pynicotine/geoip/geoip.py:117
-#, fuzzy
 msgid "Hong Kong"
 msgstr "Hong Kong"
 
 #: pynicotine/geoip/geoip.py:118
-#, fuzzy
 msgid "Heard & McDonald Islands"
 msgstr "Illes Heard i McDonald"
 
 #: pynicotine/geoip/geoip.py:119
-#, fuzzy
 msgid "Honduras"
 msgstr "Hondures"
 
 #: pynicotine/geoip/geoip.py:120
-#, fuzzy
 msgid "Croatia"
 msgstr "Croàcia"
 
 #: pynicotine/geoip/geoip.py:121
-#, fuzzy
 msgid "Haiti"
 msgstr "Haití"
 
 #: pynicotine/geoip/geoip.py:122
-#, fuzzy
 msgid "Hungary"
 msgstr "Hongria"
 
 #: pynicotine/geoip/geoip.py:123
-#, fuzzy
 msgid "Indonesia"
 msgstr "Indonèsia"
 
 #: pynicotine/geoip/geoip.py:124
-#, fuzzy
 msgid "Ireland"
 msgstr "Irlanda"
 
 #: pynicotine/geoip/geoip.py:125
-#, fuzzy
 msgid "Israel"
 msgstr "Israel"
 
 #: pynicotine/geoip/geoip.py:126
-#, fuzzy
 msgid "Isle of Man"
-msgstr "illa de l'home"
+msgstr "illa de Man"
 
 #: pynicotine/geoip/geoip.py:127
-#, fuzzy
 msgid "India"
 msgstr "Índia"
 
 #: pynicotine/geoip/geoip.py:128
-#, fuzzy
 msgid "British Indian Ocean Territory"
 msgstr "Territori Britànic de l'Oceà Índic"
 
 #: pynicotine/geoip/geoip.py:129
-#, fuzzy
 msgid "Iraq"
 msgstr "Iraq"
 
 #: pynicotine/geoip/geoip.py:130
-#, fuzzy
 msgid "Iran"
 msgstr "Iran"
 
 #: pynicotine/geoip/geoip.py:131
-#, fuzzy
 msgid "Iceland"
 msgstr "Islàndia"
 
 #: pynicotine/geoip/geoip.py:132
-#, fuzzy
 msgid "Italy"
 msgstr "Itàlia"
 
 #: pynicotine/geoip/geoip.py:133
-#, fuzzy
 msgid "Jersey"
 msgstr "Jersey"
 
 #: pynicotine/geoip/geoip.py:134
-#, fuzzy
 msgid "Jamaica"
 msgstr "Jamaica"
 
 #: pynicotine/geoip/geoip.py:135
-#, fuzzy
 msgid "Jordan"
 msgstr "Jordània"
 
 #: pynicotine/geoip/geoip.py:136
-#, fuzzy
 msgid "Japan"
 msgstr "Japó"
 
 #: pynicotine/geoip/geoip.py:137
-#, fuzzy
 msgid "Kenya"
 msgstr "Kenya"
 
 #: pynicotine/geoip/geoip.py:138
-#, fuzzy
 msgid "Kyrgyzstan"
 msgstr "Kirguizistan"
 
 #: pynicotine/geoip/geoip.py:139
-#, fuzzy
 msgid "Cambodia"
 msgstr "Cambodja"
 
 #: pynicotine/geoip/geoip.py:140
-#, fuzzy
 msgid "Kiribati"
 msgstr "Kiribati"
 
 #: pynicotine/geoip/geoip.py:141
-#, fuzzy
 msgid "Comoros"
 msgstr "Comores"
 
 #: pynicotine/geoip/geoip.py:142
-#, fuzzy
 msgid "Saint Kitts & Nevis"
 msgstr "Saint Kitts i Nevis"
 
 #: pynicotine/geoip/geoip.py:143
-#, fuzzy
 msgid "North Korea"
 msgstr "Corea del Nord"
 
 #: pynicotine/geoip/geoip.py:144
-#, fuzzy
 msgid "South Korea"
 msgstr "Corea del Sud"
 
 #: pynicotine/geoip/geoip.py:145
-#, fuzzy
 msgid "Kuwait"
 msgstr "Kuwait"
 
 #: pynicotine/geoip/geoip.py:146
-#, fuzzy
 msgid "Cayman Islands"
 msgstr "Illes Caiman"
 
 #: pynicotine/geoip/geoip.py:147
-#, fuzzy
 msgid "Kazakhstan"
 msgstr "Kazakhstan"
 
 #: pynicotine/geoip/geoip.py:148
-#, fuzzy
 msgid "Laos"
 msgstr "Laos"
 
 #: pynicotine/geoip/geoip.py:149
-#, fuzzy
 msgid "Lebanon"
 msgstr "Líban"
 
 #: pynicotine/geoip/geoip.py:150
-#, fuzzy
 msgid "Saint Lucia"
 msgstr "Santa Llúcia"
 
 #: pynicotine/geoip/geoip.py:151
-#, fuzzy
 msgid "Liechtenstein"
 msgstr "Liechtenstein"
 
 #: pynicotine/geoip/geoip.py:152
-#, fuzzy
 msgid "Sri Lanka"
 msgstr "Sri Lanka"
 
 #: pynicotine/geoip/geoip.py:153
-#, fuzzy
 msgid "Liberia"
 msgstr "Libèria"
 
 #: pynicotine/geoip/geoip.py:154
-#, fuzzy
 msgid "Lesotho"
 msgstr "Lesotho"
 
 #: pynicotine/geoip/geoip.py:155
-#, fuzzy
 msgid "Lithuania"
 msgstr "Lituània"
 
 #: pynicotine/geoip/geoip.py:156
-#, fuzzy
 msgid "Luxembourg"
 msgstr "Luxemburg"
 
 #: pynicotine/geoip/geoip.py:157
-#, fuzzy
 msgid "Latvia"
 msgstr "Letònia"
 
 #: pynicotine/geoip/geoip.py:158
-#, fuzzy
 msgid "Libya"
 msgstr "Líbia"
 
 #: pynicotine/geoip/geoip.py:159
-#, fuzzy
 msgid "Morocco"
-msgstr "el Marroc"
+msgstr "Marroc"
 
 #: pynicotine/geoip/geoip.py:160
-#, fuzzy
 msgid "Monaco"
 msgstr "Mònaco"
 
 #: pynicotine/geoip/geoip.py:161
-#, fuzzy
 msgid "Moldova"
 msgstr "Moldàvia"
 
 #: pynicotine/geoip/geoip.py:162
-#, fuzzy
 msgid "Montenegro"
 msgstr "Montenegro"
 
 #: pynicotine/geoip/geoip.py:163
-#, fuzzy
 msgid "Saint Martin"
 msgstr "Sant Martí"
 
 #: pynicotine/geoip/geoip.py:164
-#, fuzzy
 msgid "Madagascar"
 msgstr "Madagascar"
 
 #: pynicotine/geoip/geoip.py:165
-#, fuzzy
 msgid "Marshall Islands"
 msgstr "Illes Marshall"
 
 #: pynicotine/geoip/geoip.py:166
-#, fuzzy
 msgid "North Macedonia"
 msgstr "Macedònia del Nord"
 
 #: pynicotine/geoip/geoip.py:167
-#, fuzzy
 msgid "Mali"
 msgstr "Mali"
 
 #: pynicotine/geoip/geoip.py:168
-#, fuzzy
 msgid "Myanmar"
 msgstr "Myanmar"
 
 #: pynicotine/geoip/geoip.py:169
-#, fuzzy
 msgid "Mongolia"
 msgstr "Mongòlia"
 
@@ -925,512 +778,410 @@ msgid "Macau"
 msgstr "Macau"
 
 #: pynicotine/geoip/geoip.py:171
-#, fuzzy
 msgid "Northern Mariana Islands"
 msgstr "Illes Mariannes del Nord"
 
 #: pynicotine/geoip/geoip.py:172
-#, fuzzy
 msgid "Martinique"
 msgstr "Martinica"
 
 #: pynicotine/geoip/geoip.py:173
-#, fuzzy
 msgid "Mauritania"
 msgstr "Mauritània"
 
 #: pynicotine/geoip/geoip.py:174
-#, fuzzy
 msgid "Montserrat"
 msgstr "Montserrat"
 
 #: pynicotine/geoip/geoip.py:175
-#, fuzzy
 msgid "Malta"
 msgstr "Malta"
 
 #: pynicotine/geoip/geoip.py:176
-#, fuzzy
 msgid "Mauritius"
 msgstr "Maurici"
 
 #: pynicotine/geoip/geoip.py:177
-#, fuzzy
 msgid "Maldives"
 msgstr "Maldives"
 
 #: pynicotine/geoip/geoip.py:178
-#, fuzzy
 msgid "Malawi"
 msgstr "Malawi"
 
 #: pynicotine/geoip/geoip.py:179
-#, fuzzy
 msgid "Mexico"
 msgstr "Mèxic"
 
 #: pynicotine/geoip/geoip.py:180
-#, fuzzy
 msgid "Malaysia"
 msgstr "Malàisia"
 
 #: pynicotine/geoip/geoip.py:181
-#, fuzzy
 msgid "Mozambique"
 msgstr "Moçambic"
 
 #: pynicotine/geoip/geoip.py:182
-#, fuzzy
 msgid "Namibia"
 msgstr "Namíbia"
 
 #: pynicotine/geoip/geoip.py:183
-#, fuzzy
 msgid "New Caledonia"
 msgstr "Nova Caledònia"
 
 #: pynicotine/geoip/geoip.py:184
-#, fuzzy
 msgid "Niger"
 msgstr "Níger"
 
 #: pynicotine/geoip/geoip.py:185
-#, fuzzy
 msgid "Norfolk Island"
 msgstr "Illa Norfolk"
 
 #: pynicotine/geoip/geoip.py:186
-#, fuzzy
 msgid "Nigeria"
 msgstr "Nigèria"
 
 #: pynicotine/geoip/geoip.py:187
-#, fuzzy
 msgid "Nicaragua"
 msgstr "Nicaragua"
 
 #: pynicotine/geoip/geoip.py:188
-#, fuzzy
 msgid "Netherlands"
 msgstr "Països Baixos"
 
 #: pynicotine/geoip/geoip.py:189
-#, fuzzy
 msgid "Norway"
 msgstr "Noruega"
 
 #: pynicotine/geoip/geoip.py:190
-#, fuzzy
 msgid "Nepal"
 msgstr "Nepal"
 
 #: pynicotine/geoip/geoip.py:191
-#, fuzzy
 msgid "Nauru"
 msgstr "Nauru"
 
 #: pynicotine/geoip/geoip.py:192
-#, fuzzy
 msgid "Niue"
 msgstr "Niue"
 
 #: pynicotine/geoip/geoip.py:193
-#, fuzzy
 msgid "New Zealand"
 msgstr "Nova Zelanda"
 
 #: pynicotine/geoip/geoip.py:194
-#, fuzzy
 msgid "Oman"
 msgstr "Oman"
 
 #: pynicotine/geoip/geoip.py:195
-#, fuzzy
 msgid "Panama"
 msgstr "Panamà"
 
 #: pynicotine/geoip/geoip.py:196
-#, fuzzy
 msgid "Peru"
 msgstr "Perú"
 
 #: pynicotine/geoip/geoip.py:197
-#, fuzzy
 msgid "French Polynesia"
 msgstr "Polinèsia Francesa"
 
 #: pynicotine/geoip/geoip.py:198
-#, fuzzy
 msgid "Papua New Guinea"
 msgstr "Papua Nova Guinea"
 
 #: pynicotine/geoip/geoip.py:199
-#, fuzzy
 msgid "Philippines"
 msgstr "Filipines"
 
 #: pynicotine/geoip/geoip.py:200
-#, fuzzy
 msgid "Pakistan"
 msgstr "Pakistan"
 
 #: pynicotine/geoip/geoip.py:201
-#, fuzzy
 msgid "Poland"
 msgstr "Polònia"
 
 #: pynicotine/geoip/geoip.py:202
-#, fuzzy
 msgid "Saint Pierre & Miquelon"
-msgstr "Sant Pere i Miqueló"
+msgstr "Saint-Pierre i Miquelon"
 
 #: pynicotine/geoip/geoip.py:203
-#, fuzzy
 msgid "Pitcairn"
 msgstr "Pitcairn"
 
 #: pynicotine/geoip/geoip.py:204
-#, fuzzy
 msgid "Puerto Rico"
 msgstr "Puerto Rico"
 
 #: pynicotine/geoip/geoip.py:205
-#, fuzzy
 msgid "State of Palestine"
 msgstr "Estat de Palestina"
 
 #: pynicotine/geoip/geoip.py:206
-#, fuzzy
 msgid "Portugal"
 msgstr "Portugal"
 
 #: pynicotine/geoip/geoip.py:207
-#, fuzzy
 msgid "Palau"
 msgstr "Palau"
 
 #: pynicotine/geoip/geoip.py:208
-#, fuzzy
 msgid "Paraguay"
 msgstr "Paraguai"
 
 #: pynicotine/geoip/geoip.py:209
-#, fuzzy
 msgid "Qatar"
 msgstr "Qatar"
 
 #: pynicotine/geoip/geoip.py:210
-#, fuzzy
 msgid "Réunion"
 msgstr "Reunió"
 
 #: pynicotine/geoip/geoip.py:211
-#, fuzzy
 msgid "Romania"
 msgstr "Romania"
 
 #: pynicotine/geoip/geoip.py:212
-#, fuzzy
 msgid "Serbia"
 msgstr "Sèrbia"
 
 #: pynicotine/geoip/geoip.py:213
-#, fuzzy
 msgid "Russia"
 msgstr "Rússia"
 
 #: pynicotine/geoip/geoip.py:214
-#, fuzzy
 msgid "Rwanda"
 msgstr "Ruanda"
 
 #: pynicotine/geoip/geoip.py:215
-#, fuzzy
 msgid "Saudi Arabia"
 msgstr "Aràbia Saudita"
 
 #: pynicotine/geoip/geoip.py:216
-#, fuzzy
 msgid "Solomon Islands"
 msgstr "Illes Salomó"
 
 #: pynicotine/geoip/geoip.py:217
-#, fuzzy
 msgid "Seychelles"
 msgstr "Seychelles"
 
 #: pynicotine/geoip/geoip.py:218
-#, fuzzy
 msgid "Sudan"
 msgstr "Sudan"
 
 #: pynicotine/geoip/geoip.py:219
-#, fuzzy
 msgid "Sweden"
 msgstr "Suècia"
 
 #: pynicotine/geoip/geoip.py:220
-#, fuzzy
 msgid "Singapore"
 msgstr "Singapur"
 
 #: pynicotine/geoip/geoip.py:221
-#, fuzzy
 msgid "Saint Helena"
 msgstr "Santa Helena"
 
 #: pynicotine/geoip/geoip.py:222
-#, fuzzy
 msgid "Slovenia"
 msgstr "Eslovènia"
 
 #: pynicotine/geoip/geoip.py:223
-#, fuzzy
 msgid "Svalbard & Jan Mayen Islands"
 msgstr "Illes Svalbard i Jan Mayen"
 
 #: pynicotine/geoip/geoip.py:224
-#, fuzzy
 msgid "Slovak Republic"
-msgstr "República de Eslovàquia"
+msgstr "República d'Eslovàquia"
 
 #: pynicotine/geoip/geoip.py:225
-#, fuzzy
 msgid "Sierra Leone"
 msgstr "Sierra Leone"
 
 #: pynicotine/geoip/geoip.py:226
-#, fuzzy
 msgid "San Marino"
 msgstr "San Marino"
 
 #: pynicotine/geoip/geoip.py:227
-#, fuzzy
 msgid "Senegal"
 msgstr "Senegal"
 
 #: pynicotine/geoip/geoip.py:228
-#, fuzzy
 msgid "Somalia"
 msgstr "Somàlia"
 
 #: pynicotine/geoip/geoip.py:229
-#, fuzzy
 msgid "Suriname"
 msgstr "Surinam"
 
 #: pynicotine/geoip/geoip.py:230
-#, fuzzy
 msgid "South Sudan"
 msgstr "Sudan del Sud"
 
 #: pynicotine/geoip/geoip.py:231
-#, fuzzy
 msgid "Sao Tome & Principe"
 msgstr "Santo Tomé i Príncipe"
 
 #: pynicotine/geoip/geoip.py:232
-#, fuzzy
 msgid "El Salvador"
 msgstr "El Salvador"
 
 #: pynicotine/geoip/geoip.py:233
-#, fuzzy
 msgid "Sint Maarten"
 msgstr "Sint Maarten"
 
 #: pynicotine/geoip/geoip.py:234
-#, fuzzy
 msgid "Syria"
 msgstr "Síria"
 
 #: pynicotine/geoip/geoip.py:235
-#, fuzzy
 msgid "Eswatini"
 msgstr "Eswatini"
 
 #: pynicotine/geoip/geoip.py:236
-#, fuzzy
 msgid "Turks & Caicos Islands"
 msgstr "Illes Turks i Caicos"
 
 #: pynicotine/geoip/geoip.py:237
-#, fuzzy
 msgid "Chad"
 msgstr "Txad"
 
 #: pynicotine/geoip/geoip.py:238
-#, fuzzy
 msgid "French Southern Territories"
 msgstr "Territoris del Sud francesos"
 
 #: pynicotine/geoip/geoip.py:239
-#, fuzzy
 msgid "Togo"
-msgstr "Anar"
+msgstr "Togo"
 
 #: pynicotine/geoip/geoip.py:240
-#, fuzzy
 msgid "Thailand"
 msgstr "Tailàndia"
 
 #: pynicotine/geoip/geoip.py:241
-#, fuzzy
 msgid "Tajikistan"
 msgstr "Tadjikistan"
 
 #: pynicotine/geoip/geoip.py:242
-#, fuzzy
 msgid "Tokelau"
 msgstr "Tokelau"
 
 #: pynicotine/geoip/geoip.py:243
-#, fuzzy
 msgid "Timor-Leste"
 msgstr "Timor-Leste"
 
 #: pynicotine/geoip/geoip.py:244
-#, fuzzy
 msgid "Turkmenistan"
 msgstr "Turkmenistan"
 
 #: pynicotine/geoip/geoip.py:245
-#, fuzzy
 msgid "Tunisia"
 msgstr "Tunísia"
 
 #: pynicotine/geoip/geoip.py:246
-#, fuzzy
 msgid "Tonga"
 msgstr "Tonga"
 
 #: pynicotine/geoip/geoip.py:247
-#, fuzzy
 msgid "Turkey"
 msgstr "Turquia"
 
 #: pynicotine/geoip/geoip.py:248
-#, fuzzy
 msgid "Trinidad & Tobago"
 msgstr "Trinitat i Tobago"
 
 #: pynicotine/geoip/geoip.py:249
-#, fuzzy
 msgid "Tuvalu"
 msgstr "Tuvalu"
 
 #: pynicotine/geoip/geoip.py:250
-#, fuzzy
 msgid "Taiwan"
 msgstr "Taiwan"
 
 #: pynicotine/geoip/geoip.py:251
-#, fuzzy
 msgid "Tanzania"
 msgstr "Tanzània"
 
 #: pynicotine/geoip/geoip.py:252
-#, fuzzy
 msgid "Ukraine"
 msgstr "Ucraïna"
 
 #: pynicotine/geoip/geoip.py:253
-#, fuzzy
 msgid "Uganda"
 msgstr "Uganda"
 
 #: pynicotine/geoip/geoip.py:254
-#, fuzzy
 msgid "U.S. Minor Outlying Islands"
 msgstr "Illes menors perifèriques dels EUA"
 
 #: pynicotine/geoip/geoip.py:255
-#, fuzzy
 msgid "United States"
 msgstr "Estats Units"
 
 #: pynicotine/geoip/geoip.py:256
-#, fuzzy
 msgid "Uruguay"
 msgstr "Uruguai"
 
 #: pynicotine/geoip/geoip.py:257
-#, fuzzy
 msgid "Uzbekistan"
 msgstr "Uzbekistan"
 
 #: pynicotine/geoip/geoip.py:258
-#, fuzzy
 msgid "Holy See (Vatican City State)"
 msgstr "Santa Seu (Estat de la Ciutat del Vatican)"
 
 #: pynicotine/geoip/geoip.py:259
-#, fuzzy
 msgid "Saint Vincent & The Grenadines"
 msgstr "Sant Vicenç i les Granadines"
 
 #: pynicotine/geoip/geoip.py:260
-#, fuzzy
 msgid "Venezuela"
 msgstr "Veneçuela"
 
 #: pynicotine/geoip/geoip.py:261
-#, fuzzy
 msgid "British Virgin Islands"
 msgstr "Illes Verges Britàniques"
 
 #: pynicotine/geoip/geoip.py:262
-#, fuzzy
 msgid "U.S. Virgin Islands"
 msgstr "Illes Verges dels EUA"
 
 #: pynicotine/geoip/geoip.py:263
-#, fuzzy
 msgid "Viet Nam"
 msgstr "Vietnam"
 
 #: pynicotine/geoip/geoip.py:264
-#, fuzzy
 msgid "Vanuatu"
 msgstr "Vanuatu"
 
 #: pynicotine/geoip/geoip.py:265
-#, fuzzy
 msgid "Wallis & Futuna"
 msgstr "Wallis i Futuna"
 
 #: pynicotine/geoip/geoip.py:266
-#, fuzzy
 msgid "Samoa"
 msgstr "Samoa"
 
 #: pynicotine/geoip/geoip.py:267
-#, fuzzy
 msgid "Kosovo"
 msgstr "Kosovo"
 
 #: pynicotine/geoip/geoip.py:268
-#, fuzzy
 msgid "Yemen"
 msgstr "Iemen"
 
 #: pynicotine/geoip/geoip.py:269
-#, fuzzy
 msgid "Mayotte"
 msgstr "Mayotte"
 
 #: pynicotine/geoip/geoip.py:270
-#, fuzzy
 msgid "South Africa"
 msgstr "Sud-Àfrica"
 
 #: pynicotine/geoip/geoip.py:271
-#, fuzzy
 msgid "Zambia"
 msgstr "Zàmbia"
 
 #: pynicotine/geoip/geoip.py:272
-#, fuzzy
 msgid "Zimbabwe"
 msgstr "Zimbabwe"
 
@@ -2383,7 +2134,7 @@ msgstr "Comprova la _última versió"
 
 #: pynicotine/gtkgui/frame.py:1075
 msgid "_About Nicotine+"
-msgstr "_Sobre Nicotine +"
+msgstr "_Sobre Nicotine+"
 
 #: pynicotine/gtkgui/frame.py:1087 pynicotine/gtkgui/frame.py:1107
 msgid "_View"
@@ -2546,7 +2297,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/frame.py:1951
 msgid "_Quit Nicotine+"
-msgstr "_Deixa la Nicotine +"
+msgstr "_Deixa la Nicotine+"
 
 #: pynicotine/gtkgui/frame.py:1952
 msgid "_Copy & Report Bug"
@@ -2556,7 +2307,7 @@ msgstr "_Copia i informa d'error"
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:246
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:214
 msgid "Quit Nicotine+"
-msgstr "Deixa la nicotina+"
+msgstr "Deixa la Nicotine+"
 
 #: pynicotine/gtkgui/frame.py:1997
 msgid "Do you really want to exit?"
@@ -3091,23 +2842,20 @@ msgid "Failed to load picture for user %(user)s: %(error)s"
 msgstr "No s'ha pogut carregar la imatge de l'usuari %(user)s: %(error)s"
 
 #: pynicotine/gtkgui/userinfo.py:347
-#, fuzzy
 msgid ""
 "Unable to request information from user. Either you both have a closed "
 "listening port, the user is offline, or there's a temporary connectivity "
 "issue."
 msgstr ""
-"No es pot demanar informació a l'usuari. O tots dos teniu un port d'escolta "
-"tancat, l'usuari està fora de línia o hi ha un problema de connectivitat "
-"temporal."
+"No s'ha pogut demanar informació de l'usuari. O tots dos teniu un port "
+"d'escolta tancat, l'usuari està fora de línia o hi ha un problema de "
+"connectivitat temporal."
 
 #: pynicotine/gtkgui/userinfo.py:381
-#, fuzzy
 msgid "Yes"
 msgstr "Sí"
 
 #: pynicotine/gtkgui/userinfo.py:381
-#, fuzzy
 msgid "No"
 msgstr "No"
 
@@ -3117,149 +2865,126 @@ msgstr "No"
 #: pynicotine/gtkgui/ui/userinfo.ui:170 pynicotine/gtkgui/ui/userinfo.ui:197
 #: pynicotine/gtkgui/ui/userinfo.ui:224 pynicotine/gtkgui/ui/userinfo.ui:251
 #: pynicotine/gtkgui/ui/userinfo.ui:278
-#, fuzzy
 msgid "Unknown"
 msgstr "Desconegut"
 
 #: pynicotine/gtkgui/userinfo.py:469
-#, fuzzy, python-format
+#, python-format
 msgid "Picture saved to %s"
 msgstr "La imatge s'ha desat a %s"
 
 #: pynicotine/gtkgui/userinfo.py:471
-#, fuzzy, python-format
+#, python-format
 msgid "Picture not saved, %s already exists."
 msgstr "La imatge no s'ha desat, %s ja existeix."
 
 #: pynicotine/gtkgui/userlist.py:89
-#, fuzzy
 msgid "Trusted"
 msgstr "De confiança"
 
 #: pynicotine/gtkgui/userlist.py:90
-#, fuzzy
 msgid "Notify"
 msgstr "Notificar"
 
 #: pynicotine/gtkgui/userlist.py:91
-#, fuzzy
 msgid "Prioritized"
 msgstr "Prioritzat"
 
 #: pynicotine/gtkgui/userlist.py:92
-#, fuzzy
 msgid "Last Seen"
 msgstr "Vist per últim cop"
 
 #: pynicotine/gtkgui/userlist.py:93
-#, fuzzy
 msgid "Note"
 msgstr "Nota"
 
 #: pynicotine/gtkgui/userlist.py:144
-#, fuzzy
 msgid "Add User _Note…"
 msgstr "Afegeix una _nota d'usuari…"
 
 #: pynicotine/gtkgui/userlist.py:146
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:346
-#, fuzzy
 msgid "_Remove"
 msgstr "_Eliminar"
 
 #: pynicotine/gtkgui/userlist.py:189 pynicotine/gtkgui/userlist.py:425
-#, fuzzy
 msgid "Never seen"
 msgstr "Mai vist"
 
 #: pynicotine/gtkgui/userlist.py:351
-#, fuzzy, python-format
+#, python-format
 msgid "User %s is away"
 msgstr "L'usuari %s és absent"
 
 #: pynicotine/gtkgui/userlist.py:353
-#, fuzzy, python-format
+#, python-format
 msgid "User %s is online"
 msgstr "L'usuari %s està en línia"
 
 #: pynicotine/gtkgui/userlist.py:355
-#, fuzzy, python-format
+#, python-format
 msgid "User %s is offline"
 msgstr "L'usuari %s està fora de línia"
 
 #: pynicotine/gtkgui/userlist.py:534
-#, fuzzy
 msgid "Add User Note"
 msgstr "Afegeix una nota d'usuari"
 
 #: pynicotine/gtkgui/userlist.py:535
-#, fuzzy, python-format
+#, python-format
 msgid "Add a note about user %s:"
 msgstr "Afegiu una nota sobre l'usuari %s:"
 
 #: pynicotine/gtkgui/widgets/dialogs.py:142
-#, fuzzy
 msgid "Close"
 msgstr "Tanca"
 
 #: pynicotine/gtkgui/widgets/dialogs.py:219
-#, fuzzy
 msgid "_No"
 msgstr "_No"
 
 #: pynicotine/gtkgui/widgets/dialogs.py:219
-#, fuzzy
 msgid "_Yes"
 msgstr "_Sí"
 
 #: pynicotine/gtkgui/widgets/filechooser.py:36
-#, fuzzy
 msgid "Select a File"
 msgstr "Selecciona un fitxer"
 
 #: pynicotine/gtkgui/widgets/filechooser.py:55
-#, fuzzy
 msgid "_Open"
-msgstr "_Obert"
+msgstr "_Obrir"
 
 #: pynicotine/gtkgui/widgets/filechooser.py:109
-#, fuzzy
 msgid "Select a Folder"
 msgstr "Selecciona una carpeta"
 
 #: pynicotine/gtkgui/widgets/filechooser.py:118
-#, fuzzy
 msgid "Select an Image"
 msgstr "Selecciona una imatge"
 
 #: pynicotine/gtkgui/widgets/filechooser.py:159
-#, fuzzy
 msgid "Save as…"
 msgstr "Guardar com…"
 
 #: pynicotine/gtkgui/widgets/filechooser.py:166
-#, fuzzy
 msgid "_Save"
 msgstr "_Desa"
 
 #: pynicotine/gtkgui/widgets/filechooser.py:197
 #: pynicotine/gtkgui/widgets/filechooser.py:265
-#, fuzzy
 msgid "(None)"
 msgstr "(Cap)"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:109
-#, fuzzy
 msgid "Close tab"
 msgstr "Tanca la pestanya"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:267
-#, fuzzy
 msgid "Unread Tabs"
 msgstr "Pestanyes no llegides"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:388
-#, fuzzy
 msgid "Close All Tabs?"
 msgstr "Tanqueu totes les pestanyes?"
 
@@ -3268,7 +2993,7 @@ msgid "Do you really want to close all tabs?"
 msgstr "Vols tancar totes les pestanyes?"
 
 #: pynicotine/gtkgui/widgets/notifications.py:84
-#, fuzzy, python-format
+#, python-format
 msgid "Private Message from %(user)s"
 msgstr "Missatge privat de %(user)s"
 
@@ -3278,101 +3003,92 @@ msgid "You've been mentioned in the %(room)s room"
 msgstr "T'han esmentat a la sala %(room)s"
 
 #: pynicotine/gtkgui/widgets/notifications.py:136
-#, fuzzy, python-format
+#, python-format
 msgid "Unable to show notification: %s"
 msgstr "No es pot mostrar la notificació: %s"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:324
-#, fuzzy, python-format
+#, python-format
 msgid "%s File(s) Selected"
 msgstr "%s Fitxers seleccionats"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:345
 #: pynicotine/gtkgui/ui/userinfo.ui:410
-#, fuzzy
 msgid "Send M_essage"
-msgstr "Enviar missatge"
+msgstr "Enviar m_issatge"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:348
-#, fuzzy
 msgid "Show User I_nfo"
 msgstr "Mostra la I_nfo d'usuari"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:351
 #: pynicotine/gtkgui/ui/userinfo.ui:441
-#, fuzzy
 msgid "_Browse Files"
 msgstr "_Examinar fitxers"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:354
 #: pynicotine/gtkgui/widgets/popupmenu.py:389
 #: pynicotine/gtkgui/ui/userinfo.ui:472
-#, fuzzy
 msgid "_Add to Buddy List"
 msgstr "_Afegeix a la llista d'amics"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:357
 #: pynicotine/gtkgui/widgets/popupmenu.py:387
-#, fuzzy
 msgid "_Gift Privileges…"
-msgstr "_Privilegis de regal…"
+msgstr "_Regalar privilegis…"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:362
 #: pynicotine/gtkgui/widgets/popupmenu.py:399
-#, fuzzy
 msgid "Ban IP Address"
 msgstr "Prohibir l'adreça IP"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:364
 #: pynicotine/gtkgui/ui/userinfo.ui:563
-#, fuzzy
 msgid "Show IP A_ddress"
 msgstr "Mostra l'adreça_IP"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:424
-#, fuzzy, python-format
+#, python-format
 msgid "Remove from Private Room %s"
 msgstr "Suprimeix de la sala privada %s"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:426
-#, fuzzy, python-format
+#, python-format
 msgid "Add to Private Room %s"
 msgstr "Afegeix a la sala privada %s"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:433
-#, fuzzy, python-format
+#, python-format
 msgid "Remove as Operator of %s"
 msgstr "Elimina com a operador de %s"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:435
-#, fuzzy, python-format
+#, python-format
 msgid "Add as Operator of %s"
 msgstr "Afegeix com a operador de %s"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:554
-#, fuzzy
 msgid "Please enter number of days!"
 msgstr "Introdueix el nombre de dies!"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:565
-#, fuzzy, python-format
+#, python-format
 msgid "Gift days of your Soulseek privileges to user %(user)s (%(days_left)s):"
 msgstr ""
 "Regala dies dels teus privilegis de Soulseek a l'usuari %(user)s "
 "(%(days_left)s):"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:566
-#, fuzzy, python-format
+#, python-format
 msgid "%(days)s days left"
 msgstr "Queden %(days)s dies"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:573
-#, fuzzy
 msgid "Gift Privileges"
-msgstr "Privilegis de regal"
+msgstr "Regalar privilegis"
 
 #: pynicotine/gtkgui/widgets/textentry.py:89
-#, fuzzy, python-format
+#, python-format
 msgid "Alias \"%s\" returned nothing"
 msgstr "L'àlies \"%s\" no ha retornat res"
 
@@ -3382,19 +3098,17 @@ msgid "Command %s is not recognized"
 msgstr "L'ordre %s no es reconeix"
 
 #: pynicotine/gtkgui/widgets/theme.py:346
-#, fuzzy, python-format
+#, python-format
 msgid "Error loading custom icon %(path)s: %(error)s"
 msgstr ""
 "S'ha produït un error en carregar la icona personalitzada %(path)s: %(error)s"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:69
 #: pynicotine/gtkgui/widgets/trayicon.py:103
-#, fuzzy
 msgid "Show Nicotine+"
-msgstr "Mostra Nicotina+"
+msgstr "Mostra Nicotine+"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:71
-#, fuzzy
 msgid "Alternative Speed Limits"
 msgstr "Límits de velocitat alternatius"
 
