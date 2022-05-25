@@ -396,12 +396,9 @@ class NicotineFrame(UserInterface):
 
     def on_startup(self):
 
-        connect_ready = self.core.start(self, self.network_callback)
+        self.core.start(self, self.network_callback)
 
-        if not connect_ready:
-            self.connect_action.set_enabled(False)
-
-        elif config.sections["server"]["auto_connect_startup"]:
+        if config.sections["server"]["auto_connect_startup"]:
             self.core.connect()
 
     def on_activate(self):
@@ -416,13 +413,10 @@ class NicotineFrame(UserInterface):
         self.init_window_properties()
         self.application.add_window(self.window)
 
-        # Check command line option and config option
-        if not self.start_hidden and not config.sections["ui"]["startup_hidden"]:
-            self.show()
+        if self.start_hidden or config.sections["ui"]["startup_hidden"]:
+            return
 
-        if not self.connect_action.get_enabled():
-            # Set up fast configure dialog
-            self.on_fast_configure()
+        self.show()
 
     def init_spell_checker(self):
 
