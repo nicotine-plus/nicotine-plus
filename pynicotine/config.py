@@ -70,10 +70,8 @@ class Config:
         self.issue_tracker_url = "https://github.com/nicotine-plus/nicotine-plus/issues"
         self.translations_url = "https://nicotine-plus.org/doc/TRANSLATIONS"
 
-        # Set defaults to use if nothing is specified on command line
         self.config_dir, self.data_dir = self.get_user_directories()
-        self.plugin_dir = None
-        self.set_user_data_folder(self.data_dir)  # contains plugin_dir
+        self.set_user_data_folder(self.data_dir)
 
         self.filename = os.path.join(self.config_dir, "config")
         self.config_loaded = False
@@ -117,14 +115,13 @@ class Config:
         return config_dir, data_dir
 
     def set_user_data_folder(self, data_dir):
-        """ Set from init default or specified --user-data argument """
+        """ Set to default, or by specified --user-data argument, since
+        3.3.0 this also sets the user home "plugins" directory path) """
 
         self.data_dir = data_dir
-        self.plugin_dir = os.path.join(data_dir, "plugins")
 
     def create_config_folder(self):
-        """ Create the folder for storing the config file in, if the folder
-        doesn't exist """
+        """ Create the folder for the config file, if it doesn't exist """
 
         path, _filename = os.path.split(self.filename)
 
@@ -146,16 +143,11 @@ class Config:
         return True
 
     def create_data_folder(self):
-        """ Make the base folder structure if it doesn't exist """
+        """ Create the folder for storing data in (aliases, shared files etc.) """
 
         try:
             if not os.path.isdir(self.data_dir.encode("utf-8")):
-                # Create the folder for storing data in (aliases, shared files etc.)
                 os.makedirs(self.data_dir.encode("utf-8"))
-
-            if not os.path.isdir(self.plugin_dir.encode("utf-8")):
-                # Create the empty plugins folder to help the user
-                os.makedirs(self.plugin_dir.encode("utf-8"))
 
         except OSError as msg:
             from pynicotine.logfacility import log
