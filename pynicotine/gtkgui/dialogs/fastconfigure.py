@@ -189,6 +189,12 @@ class FastConfigure(UserInterface):
         page = self.stack.get_visible_child()
         page_index = self.pages.index(page)
 
+        if page == self.account_page:
+            # During first run UPnP() waits while need_config, so set prior to
+            # "port" page such that UPnP status_bar message appears in context
+            config.sections["server"]["login"] = self.username_entry.get_text()
+            config.sections["server"]["passw"] = self.password_entry.get_text()
+
         self.stack.set_visible_child(self.pages[page_index + 1])
 
     def on_previous(self, *_args):
@@ -204,10 +210,6 @@ class FastConfigure(UserInterface):
 
         if not self.finished:
             return True
-
-        # account_page
-        config.sections["server"]["login"] = self.username_entry.get_text()
-        config.sections["server"]["passw"] = self.password_entry.get_text()
 
         # share_page
         config.sections['transfers']['downloaddir'] = self.download_folder_button.get_path()
