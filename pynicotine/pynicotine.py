@@ -258,12 +258,6 @@ class NicotineCore:
         self.pluginhandler = PluginHandler(self, config)
 
         self.set_connection_stats(slskmessages.SetConnectionStats())
-        connect_ready = not config.need_config()
-
-        if not connect_ready:
-            log.add(_("You need to specify a username and password before connecting…"))
-
-        return connect_ready
 
     def quit(self, signal_type=None, _frame=None):
 
@@ -335,6 +329,15 @@ class NicotineCore:
                 )
             log.add_important_error(message)
             return False
+
+        if config.need_config():
+            log.add(_("You need to specify a username and password before connecting…"))
+
+            if self.ui_callback:
+                self.ui_callback.on_fast_configure()
+
+            if config.need_config():
+                return False
 
         self.protothread.server_connect()
 
@@ -568,7 +571,7 @@ class NicotineCore:
                 self.ui_callback.invalid_password()
                 return
 
-            log.add_important_error(_("Unable to connect to the server. Reason: %s"), msg.reason)
+            log.add(_("Unable to connect to the server. Reason: %s"), msg.reason)
 
     def get_peer_address(self, msg):
         """ Server code: 3 """
