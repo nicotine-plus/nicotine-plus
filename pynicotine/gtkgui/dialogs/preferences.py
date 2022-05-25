@@ -2959,11 +2959,7 @@ class Preferences(UserInterface):
         config.write_configuration()
 
         if config.need_config():
-            self.frame.connect_action.set_enabled(False)
-            self.frame.on_fast_configure()
-
-        elif self.core.protothread.server_disconnected:
-            self.frame.connect_action.set_enabled(True)
+            self.frame.setup()
 
         if not settings_closed:
             return

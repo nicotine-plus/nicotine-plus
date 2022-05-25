@@ -35,12 +35,7 @@ class Application:
 
     def run(self):
 
-        connect_ready = self.core.start(self, self.network_callback)
-
-        if not connect_ready and not self.ci_mode:
-            # No username or password specified, exit code 1
-            return 1
-
+        self.core.start(self, self.network_callback)
         connect_success = self.core.connect()
 
         if not connect_success and not self.ci_mode:
@@ -88,6 +83,9 @@ class Application:
         pass
 
     def server_disconnect(self):
+        pass
+
+    def setup(self):
         pass
 
     def quit(self):
