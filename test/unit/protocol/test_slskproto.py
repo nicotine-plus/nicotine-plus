@@ -85,7 +85,7 @@ class SlskProtoTest(unittest.TestCase):
 
         with patch('socket.socket') as mock_socket:
             mock_socket.set_data(LOGIN_DATAFILE)
-            proto.server_connect()
+            proto.server_disconnected = False
 
             queue.append(ServerConnect(addr=('0.0.0.0', 0), login=('dummy', 'dummy')))
             sleep(SLSKPROTO_RUN_TIME)
@@ -114,7 +114,7 @@ class SlskProtoTest(unittest.TestCase):
             core_callback=Mock(), queue=queue, interface='', bindip='',
             port=None, port_range=(1024, 65535), eventprocessor=Mock()
         )
-        proto.server_connect()
+        proto.server_disconnected = False
         queue.append(ServerConnect(addr=('0.0.0.0', 0), login=('username', 'password')))
 
         sleep(SLSKPROTO_RUN_TIME / 2)
