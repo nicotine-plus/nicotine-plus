@@ -8,22 +8,22 @@ Version 3.2.3 (Unreleased)
 
 Changes
 
- * Implemented scrolling on tabs to change the active tab
- * Added text-to-speech toggle for private chats
+ * Implemented mouse wheel scrolling on tabs to change the active tab
+ * Added text-to-speech toggle buttons for individual private chats
  * Minor performance improvements when saving list of downloads and uploads
  * Minor GUI consistency improvements
  * Various translation updates (thanks to our [many contributors](https://nicotine-plus.org/TRANSLATORS) on [Weblate](https://hosted.weblate.org/engage/nicotine-plus))
 
 Corrections
 
- * Fixed an issue where dark mode was used when light mode was enabled on the system
+ * Fixed an issue where dark mode was used when light mode was enabled on some systems
  * Fixed an issue where clearing all file transfers did not remove transfers completely
- * Fixed an issue where the estimated time remaining for file transfers was incorrect
+ * Fixed an issue where the estimated time remaining for folder transfers was incorrect
  * Fixed an issue where subfolder downloads did not always save in the correct location
  * Fixed a rare crash when downloading files on certain systems
  * Unmaximized size of the main window is now remembered after the window is maximized
  * Reduced memory usage after closing search tabs with many results
- * Various smaller bug fixes
+ * Various minor bug fixes
 
 Issues closed on GitHub
 
