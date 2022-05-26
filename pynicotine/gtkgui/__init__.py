@@ -24,8 +24,8 @@ def check_gui_dependencies():
 
     # Defaults for different operating systems
     components = {
-        "gtk": {"win32": '4', "darwin": '3'},
-        "libadwaita": {"win32": '1', "darwin": '0'}
+        "gtk": {"win32": '3', "darwin": '3'},
+        "libadwaita": {"win32": '0', "darwin": '0'}
     }
 
     if os.getenv("NICOTINE_GTK_VERSION") is None:
