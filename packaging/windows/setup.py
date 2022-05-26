@@ -284,7 +284,7 @@ setup(
             icon=os.path.join(PYNICOTINE_PATH, "packaging/windows/nicotine.ico"),
             copyright=config.copyright,
             shortcut_name=config.application_name,
-            shortcut_dir="StartMenuFolder"
+            shortcut_dir="ProgramMenuFolder"
         )
     ],
 )
