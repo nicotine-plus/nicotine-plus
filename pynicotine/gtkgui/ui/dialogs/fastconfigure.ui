@@ -403,18 +403,6 @@
             </child>
           </object>
         </child>
-        <child>
-          <object class="GtkLabel" id="privileges_label">
-            <property name="visible">True</property>
-            <property name="label" translatable="yes">Get Soulseek Privileges…</property>
-            <property name="margin-start">14</property>
-            <property name="margin-end">14</property>
-            <property name="use-markup">True</property>
-            <attributes>
-              <attribute name="weight" value="bold"/>
-            </attributes>
-          </object>
-        </child>
       </object>
     </child>
   </object>
