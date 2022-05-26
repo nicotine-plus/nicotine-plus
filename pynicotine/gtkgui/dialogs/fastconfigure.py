@@ -49,7 +49,6 @@ class FastConfigure(UserInterface):
             self.password_entry,
             self.port_page,
             self.previous_button,
-            self.privileges_label,
             self.share_page,
             self.shares_list_container,
             self.stack,
@@ -252,14 +251,5 @@ class FastConfigure(UserInterface):
         for entry in self.shared_folders:
             virtual_name, path = entry
             self.shares_list_view.add_row([str(virtual_name), str(path)], select_row=False)
-
-        # completepage
-        import urllib.parse
-
-        login = urllib.parse.quote(config.sections["server"]["login"])
-        url = config.privileges_url % login
-        text = "<a href='" + url + "' title='" + url + "'>" + _("Get Soulseek Privileges…") + "</a>"
-        self.privileges_label.set_markup(text)
-        self.privileges_label.connect("activate-link", lambda x, url: open_uri(url))
 
         dialog_show(self.dialog)
