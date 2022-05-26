@@ -186,17 +186,21 @@ class FastConfigure(UserInterface):
             self.hide()
             return
 
-        page = self.stack.get_visible_child()
-        page_index = self.pages.index(page)
+        start_page_index = self.pages.index(self.stack.get_visible_child()) + 1
 
-        self.stack.set_visible_child(self.pages[page_index + 1])
+        for page in self.pages[start_page_index:]:
+            if page.get_visible():
+                self.stack.set_visible_child(page)
+                return
 
     def on_previous(self, *_args):
 
-        page = self.stack.get_visible_child()
-        page_index = self.pages.index(page)
+        start_page_index = self.pages.index(self.stack.get_visible_child())
 
-        self.stack.set_visible_child(self.pages[page_index - 1])
+        for page in reversed(self.pages[:start_page_index]):
+            if page.get_visible():
+                self.stack.set_visible_child(page)
+                return
 
     def hide(self, *_args):
 
@@ -206,8 +210,9 @@ class FastConfigure(UserInterface):
             return True
 
         # account_page
-        config.sections["server"]["login"] = self.username_entry.get_text()
-        config.sections["server"]["passw"] = self.password_entry.get_text()
+        if config.need_config():
+            config.sections["server"]["login"] = self.username_entry.get_text()
+            config.sections["server"]["passw"] = self.password_entry.get_text()
 
         # share_page
         config.sections['transfers']['downloaddir'] = self.download_folder_button.get_path()
@@ -223,6 +228,8 @@ class FastConfigure(UserInterface):
         self.stack.set_visible_child(self.welcome_page)
 
         # account_page
+        self.account_page.set_visible(config.need_config())
+
         self.username_entry.set_text(config.sections["server"]["login"])
         self.password_entry.set_text(config.sections["server"]["passw"])
 
