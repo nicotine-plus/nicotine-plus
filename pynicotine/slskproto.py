@@ -430,7 +430,6 @@ class SlskProtoThread(threading.Thread):
         self._callback_msgs = []
         self._init_msgs = {}
         self._want_abort = False
-        self.server_disconnected = True
         self.bindip = bindip
         self.listenport = None
         self.portrange = (port, port) if port else port_range
@@ -460,7 +459,10 @@ class SlskProtoThread(threading.Thread):
         self.listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.listen_socket.setblocking(0)
 
+        self.server_disconnected = True
         self.manual_server_disconnect = False
+        self._server_relogged = False
+
         self.server_socket = None
         self.server_address = None
         self.server_username = None
@@ -585,8 +587,11 @@ class SlskProtoThread(threading.Thread):
                 log.add_debug("Cannot listen on port %(port)s: %(error)s", {"port": listenport, "error": error})
                 continue
 
-    def server_connect(self):
-        """ We've connected to the server """
+    def server_connect(self, msg_obj):
+        """ We're connecting to the server """
+
+        if self.server_socket:
+            return
 
         self.server_disconnected = False
         self.manual_server_disconnect = False
@@ -594,6 +599,11 @@ class SlskProtoThread(threading.Thread):
         if self.server_timer is not None:
             self.server_timer.cancel()
             self.server_timer = None
+
+        ip_address, port = msg_obj.addr
+        log.add(_("Connecting to %(host)s:%(port)s"), {'host': ip_address, 'port': port})
+
+        self.init_server_conn(msg_obj)
 
     def server_disconnect(self):
         """ We're disconnecting from the server, clean up """
@@ -631,6 +641,10 @@ class SlskProtoThread(threading.Thread):
                 'host': ip_address,
                 'port': port
             })
+
+        if self._server_relogged:
+            log.add(_("Someone logged in to your Soulseek account elsewhere"))
+            self._server_relogged = False
 
         if not self.manual_server_disconnect:
             self.set_server_timer()
@@ -1373,6 +1387,7 @@ class SlskProtoThread(threading.Thread):
 
                     elif msg_class is Relogged:
                         self.manual_server_disconnect = True
+                        self._server_relogged = True
 
                     elif msg_class is PossibleParents:
                         # Server sent a list of 10 potential parents, whose purpose is to forward us search requests.
@@ -1985,8 +2000,7 @@ class SlskProtoThread(threading.Thread):
                 self.close_connection_by_ip(msg_obj.addr)
 
             elif msg_class is ServerConnect:
-                if self._numsockets < MAXSOCKETS:
-                    self.init_server_conn(msg_obj)
+                self.server_connect(msg_obj)
 
             elif msg_class is ServerDisconnect:
                 self.manual_server_disconnect = True
