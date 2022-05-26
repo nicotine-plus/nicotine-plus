@@ -136,7 +136,7 @@ class NicotineCore:
             slskmessages.FileSearchResult: self.file_search_result,
             slskmessages.GetUserStatus: self.get_user_status,
             slskmessages.GetUserStats: self.get_user_stats,
-            slskmessages.Relogged: self.relogged,
+            slskmessages.Relogged: self.dummy_message,
             slskmessages.PeerInit: self.dummy_message,
             slskmessages.CheckDownloadQueue: self.check_download_queue,
             slskmessages.CheckUploadQueue: self.check_upload_queue,
@@ -303,6 +303,11 @@ class NicotineCore:
         if not self.protothread.server_disconnected:
             return True
 
+        if config.need_config():
+            log.add(_("You need to specify a username and password before connecting…"))
+            self.ui_callback.setup()
+            return False
+
         valid_network_interface = self.protothread.validate_network_interface()
 
         if not valid_network_interface:
@@ -330,13 +335,6 @@ class NicotineCore:
             log.add_important_error(message)
             return False
 
-        if config.need_config():
-            log.add(_("You need to specify a username and password before connecting…"))
-            self.ui_callback.setup()
-            return False
-
-        self.protothread.server_connect()
-
         # Clear any potential messages queued up while offline
         self.queue.clear()
 
@@ -344,7 +342,7 @@ class NicotineCore:
         login = config.sections["server"]["login"]
         password = config.sections["server"]["passw"]
 
-        log.add(_("Connecting to %(host)s:%(port)s"), {'host': addr[0], 'port': addr[1]})
+        self.protothread.server_disconnected = False
         self.queue.append(slskmessages.ServerConnect(addr, login=(login, password)))
         return True
 
@@ -751,12 +749,6 @@ class NicotineCore:
         }
 
         self.pluginhandler.user_stats_notification(msg.user, stats)
-
-    @staticmethod
-    def relogged(_msg):
-        """ Server code: 41 """
-
-        log.add_important_info(_("Someone logged in to your Soulseek account elsewhere"))
 
     def recommendations(self, msg):
         """ Server code: 54 """
