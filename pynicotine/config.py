@@ -62,6 +62,7 @@ class Config:
         self.application_name = "Nicotine+"
         self.application_id = "org.nicotine_plus.Nicotine"
         self.summary = _("Graphical client for the Soulseek peer-to-peer network")
+        self.author = "Nicotine+ Team"
         self.copyright = """© 2004–2022 Nicotine+ Team
 © 2003–2004 Nicotine Team
 © 2001–2003 PySoulSeek Contributors"""

@@ -80,7 +80,7 @@ functionality while keeping current with the Soulseek protocol."""
         license="GPLv3+",
         description="Graphical client for the Soulseek peer-to-peer network",
         long_description=LONG_DESCRIPTION,
-        author="Nicotine+ Team",
+        author=config.author,
         author_email="nicotine-team@lists.launchpad.net",
         url=config.website_url,
         platforms="any",
