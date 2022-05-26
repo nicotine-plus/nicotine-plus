@@ -160,8 +160,14 @@ add_plugin_packages()
 from pynicotine.config import config  # noqa: E402
 
 setup(
+<<<<<<< HEAD
     name="Nicotine+",
     author="Nicotine+ Team",
+=======
+    name=config.application_name,
+    description=config.application_name,
+    author=config.author,
+>>>>>>> 8ecb3d60 (packaging/windows/setup.py: set description and copyright)
     version=re.sub(r".(dev|rc)(.*)", "", config.version),
     options={
         "build_exe": dict(
@@ -178,13 +184,23 @@ setup(
             upgrade_code="{8ffb9dbb-7106-41fc-9e8a-b2469aa1fe9f}"
         )
     },
+    packages=[],
     executables=[
         Executable(
+<<<<<<< HEAD
             script=os.path.join(pynicotine_path, "nicotine"),
             target_name="Nicotine+",
             base=gui_base,
             icon=os.path.join(pynicotine_path, "packaging/windows/nicotine.ico"),
             shortcut_name="Nicotine+",
+=======
+            script=os.path.join(PYNICOTINE_PATH, "nicotine"),
+            target_name=config.application_name,
+            base=GUI_BASE,
+            icon=os.path.join(PYNICOTINE_PATH, "packaging/windows/nicotine.ico"),
+            copyright=config.copyright,
+            shortcut_name=config.application_name,
+>>>>>>> 8ecb3d60 (packaging/windows/setup.py: set description and copyright)
             shortcut_dir="StartMenuFolder"
         )
     ],
