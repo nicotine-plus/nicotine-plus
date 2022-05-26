@@ -49,7 +49,6 @@ class FastConfigure(UserInterface):
             self.password_entry,
             self.port_page,
             self.previous_button,
-            self.privileges_label,
             self.share_page,
             self.shares_list_container,
             self.stack,
@@ -186,23 +185,21 @@ class FastConfigure(UserInterface):
             self.hide()
             return
 
-        page = self.stack.get_visible_child()
-        page_index = self.pages.index(page)
+        start_page_index = self.pages.index(self.stack.get_visible_child()) + 1
 
-        if page == self.account_page:
-            # During first run UPnP() waits while need_config, so set prior to
-            # "port" page such that UPnP status_bar message appears in context
-            config.sections["server"]["login"] = self.username_entry.get_text()
-            config.sections["server"]["passw"] = self.password_entry.get_text()
-
-        self.stack.set_visible_child(self.pages[page_index + 1])
+        for page in self.pages[start_page_index:]:
+            if page.get_visible():
+                self.stack.set_visible_child(page)
+                return
 
     def on_previous(self, *_args):
 
-        page = self.stack.get_visible_child()
-        page_index = self.pages.index(page)
+        start_page_index = self.pages.index(self.stack.get_visible_child())
 
-        self.stack.set_visible_child(self.pages[page_index - 1])
+        for page in reversed(self.pages[:start_page_index]):
+            if page.get_visible():
+                self.stack.set_visible_child(page)
+                return
 
     def hide(self, *_args):
 
@@ -210,6 +207,11 @@ class FastConfigure(UserInterface):
 
         if not self.finished:
             return True
+
+        # account_page
+        if config.need_config():
+            config.sections["server"]["login"] = self.username_entry.get_text()
+            config.sections["server"]["passw"] = self.password_entry.get_text()
 
         # share_page
         config.sections['transfers']['downloaddir'] = self.download_folder_button.get_path()
@@ -225,6 +227,8 @@ class FastConfigure(UserInterface):
         self.stack.set_visible_child(self.welcome_page)
 
         # account_page
+        self.account_page.set_visible(config.need_config())
+
         self.username_entry.set_text(config.sections["server"]["login"])
         self.password_entry.set_text(config.sections["server"]["passw"])
 
@@ -247,14 +251,5 @@ class FastConfigure(UserInterface):
         for entry in self.shared_folders:
             virtual_name, path = entry
             self.shares_list_view.add_row([str(virtual_name), str(path)], select_row=False)
-
-        # completepage
-        import urllib.parse
-
-        login = urllib.parse.quote(config.sections["server"]["login"])
-        url = config.privileges_url % login
-        text = "<a href='" + url + "' title='" + url + "'>" + _("Get Soulseek Privileges…") + "</a>"
-        self.privileges_label.set_markup(text)
-        self.privileges_label.connect("activate-link", lambda x, url: open_uri(url))
 
         dialog_show(self.dialog)
