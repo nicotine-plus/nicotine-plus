@@ -128,15 +128,7 @@ class MessageDialog:
             text=title, secondary_text=message
         )
         self.container = self.dialog.get_message_area()
-
-        if not callback:
-            def callback(dialog, *_args):
-                dialog.destroy()
-
-        self.callback = callback
-        self.callback_data = callback_data
-
-        self.dialog.connect("response", self.on_response)
+        self.dialog.connect("response", self.on_response, callback, callback_data)
 
         if not buttons:
             buttons = [(_("Close"), Gtk.ResponseType.CLOSE)]
@@ -151,18 +143,16 @@ class MessageDialog:
 
         label.set_selectable(True)
 
-    def on_response(self, _dialog, response_id):
+    def on_response(self, dialog, response_id, callback, callback_data):
 
-        if response_id not in (Gtk.ResponseType.CANCEL, Gtk.ResponseType.CLOSE, Gtk.ResponseType.DELETE_EVENT):
-            self.callback(self, response_id, self.callback_data)
+        if callback and response_id not in (Gtk.ResponseType.CANCEL, Gtk.ResponseType.CLOSE,
+                                            Gtk.ResponseType.DELETE_EVENT):
+            callback(self, response_id, callback_data)
 
-        self.destroy()
+        dialog.destroy()
 
     def show(self):
         self.dialog.present()
-
-    def destroy(self):
-        self.dialog.destroy()
 
 
 class EntryDialog(MessageDialog):
@@ -199,7 +189,7 @@ class EntryDialog(MessageDialog):
             else:
                 self.container.add(self.entry)
 
-        self.entry.connect("activate", lambda x: self.on_response(self.dialog, Gtk.ResponseType.OK))
+        self.entry.connect("activate", lambda x: self.dialog.response(Gtk.ResponseType.OK))
         self.entry.set_text(default)
 
         self.option = Gtk.CheckButton(label=option_label, active=option_value, visible=bool(option_label))
