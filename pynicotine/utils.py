@@ -241,7 +241,7 @@ def get_latest_version():
 
 def make_version(version):
 
-    major, minor, patch = (int(i) for i in version.split(".")[:3])
+    major, minor, patch = version.split(".")[:3]
     stable = 1
 
     if "dev" in version or "rc" in version:
@@ -249,7 +249,7 @@ def make_version(version):
         # A dev version will be one less than a stable version
         stable = 0
 
-    return (major << 24) + (minor << 16) + (patch << 8) + stable
+    return (int(major) << 24) + (int(minor) << 16) + (int(patch.split("rc", 1)[0]) << 8) + stable
 
 
 def human_length(seconds):

@@ -9,6 +9,7 @@ Version 3.2.3 (Unreleased)
 Changes
 
  * Implemented mouse wheel scrolling on tabs to change the active tab
+ * Added total file size and duration of selected files to the File Properties dialog
  * Added text-to-speech toggle buttons for individual private chats
  * Minor performance improvements when saving list of downloads and uploads
  * Minor GUI consistency improvements
