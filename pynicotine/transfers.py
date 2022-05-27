@@ -48,6 +48,7 @@ from pynicotine.utils import clean_file
 from pynicotine.utils import clean_path
 from pynicotine.utils import get_result_bitrate_length
 from pynicotine.utils import load_file
+from pynicotine.utils import truncate_string_byte
 from pynicotine.utils import write_file_and_backup
 
 
@@ -1035,13 +1036,17 @@ class Transfers:
                     from hashlib import md5
                     md5sum = md5()
                     md5sum.update((i.filename + i.user).encode('utf-8'))
-
-                    base_name, extension = os.path.splitext(clean_file(i.filename.replace('/', '\\').split('\\')[-1]))
                     prefix = "INCOMPLETE" + md5sum.hexdigest()
 
-                    # Ensure file name doesn't exceed 255 characters in length
-                    incomplete_name = os.path.join(
-                        incompletedir, prefix + base_name[:255 - len(prefix) - len(extension)] + extension)
+                    # Ensure file name doesn't exceed 255 bytes in length
+                    base_name, extension = os.path.splitext(clean_file(i.filename.replace('/', '\\').split('\\')[-1]))
+                    base_name_limit = 255 - len(prefix) - len(extension.encode('utf-8'))
+                    base_name = truncate_string_byte(base_name, base_name_limit)
+
+                    if base_name_limit < 0:
+                        extension = truncate_string_byte(extension, 255 - len(prefix))
+
+                    incomplete_name = os.path.join(incompletedir, prefix + base_name + extension)
                     file_handle = open(incomplete_name.encode('utf-8'), 'ab+')  # pylint: disable=consider-using-with
 
                     try:
