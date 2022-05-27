@@ -1591,7 +1591,11 @@ class Transfers:
         if self.user_logged_out(user):
             transfer.status = "User logged off"
 
-        elif not locally_queued:
+            if not self.auto_clear_upload(transfer):
+                self.update_upload(transfer)
+            return
+
+        if not locally_queued:
             self.token = increment_token(self.token)
             transfer.token = self.token
             transfer.status = "Getting status"
@@ -2185,42 +2189,30 @@ class Transfers:
     def check_upload_queue(self):
         """ Find next file to upload """
 
-        while True:
-            if not self.uploads:
-                # No uploads exist
-                return
-
-            if not self.allow_new_uploads():
-                return
-
-            upload_candidate = self.get_upload_candidate()
-
-            if upload_candidate is None:
-                return
-
-            user = upload_candidate.user
-
-            log.add_transfer(
-                "Checked upload queue, attempting to upload file %(file)s to user %(user)s", {
-                    'file': upload_candidate.filename,
-                    'user': user
-                }
-            )
-
-            if self.user_logged_out(user):
-                upload_candidate.status = "User logged off"
-                self.abort_transfer(upload_candidate)
-
-                if not self.auto_clear_upload(upload_candidate):
-                    self.update_upload(upload_candidate)
-
-                # Check queue again
-                continue
-
-            self.push_file(
-                user=user, filename=upload_candidate.filename, size=upload_candidate.size, transfer=upload_candidate
-            )
+        if not self.uploads:
+            # No uploads exist
             return
+
+        if not self.allow_new_uploads():
+            return
+
+        upload_candidate = self.get_upload_candidate()
+
+        if upload_candidate is None:
+            return
+
+        user = upload_candidate.user
+
+        log.add_transfer(
+            "Checked upload queue, attempting to upload file %(file)s to user %(user)s", {
+                'file': upload_candidate.filename,
+                'user': user
+            }
+        )
+
+        self.push_file(
+            user=user, filename=upload_candidate.filename, size=upload_candidate.size, transfer=upload_candidate
+        )
 
     def check_upload_queue_callback(self):
 
@@ -2269,12 +2261,6 @@ class Transfers:
 
         user = transfer.user
 
-        if self.user_logged_out(user):
-            transfer.status = "User logged off"
-            self.abort_transfer(transfer)
-            self.update_download(transfer)
-            return
-
         self.abort_transfer(transfer)
         self.get_file(user, transfer.filename, transfer.path, transfer)
 
@@ -2298,14 +2284,6 @@ class Transfers:
                     transfer.status = "Queued"
                     self.update_upload(transfer)
                 return
-
-        if self.user_logged_out(user):
-            transfer.status = "User logged off"
-            self.abort_transfer(transfer)
-
-            if not self.auto_clear_upload(transfer):
-                self.update_upload(transfer)
-            return
 
         self.push_file(user, transfer.filename, transfer.size, transfer.path, transfer=transfer)
 
