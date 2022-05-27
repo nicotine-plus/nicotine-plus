@@ -440,7 +440,7 @@ class UserBrowse(UserInterface):
                     subfolder = '\\'
 
                 if private:
-                    subfolder = "[PRIVATE FOLDER]  " + subfolder
+                    subfolder = _("[PRIVATE] %s") % subfolder
 
                 self.dir_iters[current_path] = iterator = self.dir_store.insert_with_values(
                     parent, -1, self.dir_column_numbers, [subfolder]
