@@ -3,16 +3,16 @@ News
 
 As per GCS § 6.7, this file contains a list of user-visible, noteworthy changes. Note that this is not the same as a changelog.
 
-Version 3.2.3 (Unreleased)
-------------------------------
+Version 3.2.3rc1 (Release Candidate 1)
+--------------------------------------
 
 Changes
 
- * Implemented mouse wheel scrolling on tabs to change the active tab
+ * Implemented mouse wheel scrolling on secondary tabs to change the active page
  * Added total file size and duration of selected files to the File Properties dialog
- * Added text-to-speech toggle buttons for individual private chats
- * Minor performance improvements when saving list of downloads and uploads
- * Minor GUI consistency improvements
+ * Added text-to-speech toggle buttons for individual private chats when TTS is enabled
+ * Minor performance improvement when saving the history of downloads and uploads
+ * Minor usability improvements to several main window components and dialogs
  * Various translation updates (thanks to our [many contributors](https://nicotine-plus.org/TRANSLATORS) on [Weblate](https://hosted.weblate.org/engage/nicotine-plus))
 
 Corrections
