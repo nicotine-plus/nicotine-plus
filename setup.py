@@ -61,7 +61,7 @@ functionality while keeping current with the Soulseek protocol."""
     PACKAGES = ["pynicotine"] + \
         [name for importer, name, ispkg in walk_packages(path=pynicotine.__path__, prefix="pynicotine.") if ispkg]
 
-    PACKAGE_DATA = {package: ["*.bin", "*.md", "*.py", "*.svg", "*.ui", "PLUGININFO"] for package in PACKAGES}
+    PACKAGE_DATA = {package: ["*.bin", "*.py", "*.svg", "*.ui", "PLUGININFO"] for package in PACKAGES}
 
     DATA_FILES = [
         ("share/applications", ["data/%s.desktop" % config.application_id]),
