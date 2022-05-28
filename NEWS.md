@@ -17,11 +17,12 @@ Changes
 
 Corrections
 
- * Fixed an issue where dark mode was used when light mode was enabled on some systems
+ * IMPORTANT: Fixed a rare but severe CPU hogging issue in the Uploads list view on certain systems
+ * Fixed an issue where folder downloads did not always save subfolders to the correct location
+ * Fixed an issue where the estimated total time remaining for folder transfers was incorrect
  * Fixed an issue where clearing all file transfers did not remove transfers completely
- * Fixed an issue where the estimated time remaining for folder transfers was incorrect
- * Fixed an issue where subfolder downloads did not always save in the correct location
- * Fixed a rare crash when downloading files on certain systems
+ * Fixed a rare crash when downloading files onto certain (latin-1) filesystems
+ * Fixed an issue where dark mode was used when light mode was enabled on some systems
  * Unmaximized size of the main window is now remembered after the window is maximized
  * Reduced memory usage after closing search tabs with many results
  * Various minor bug fixes
@@ -38,6 +39,7 @@ Issues closed on GitHub
  * Time Left column regression ([#2020](https://github.com/nicotine-plus/nicotine-plus/issues/2020))
  * Clear ALL downloads, Clear ALL uploads not working ([#2023](https://github.com/nicotine-plus/nicotine-plus/issues/2023))
  * User note saves when pressing Cancel ([#2036](https://github.com/nicotine-plus/nicotine-plus/issues/2036))
+ * High CPU Usage (pegs a single core) ([#1998](https://github.com/nicotine-plus/nicotine-plus/issues/1998))
 
 Version 3.2.2 (March 19, 2022)
 ------------------------------
