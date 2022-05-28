@@ -135,21 +135,16 @@ class TreeView:
 
         prev_index = col_count - 1
 
-        # Make sure the width of the last visible column isn't fixed
+        # Make sure the last visible column isn't resizable
         for i in reversed(range(len(columns))):
             prev_index -= 1
 
             if columns[i].get_visible():
                 column = columns[i]
                 column.set_resizable(False)
-                column.set_fixed_width(-1)
                 break
 
-        """ If the column we toggled the visibility of is now the last visible one,
-        the previously last visible column should've resized to fit properly now,
-        since it was set to AUTOSIZE. We can now set the previous column to FIXED,
-        and make it resizable again. """
-
+        # Make the previously last column resizable again
         prev_column = columns[prev_index]
         prev_column.set_resizable(True)
 
@@ -614,8 +609,6 @@ def initialise_columns(frame, treeview_name, treeview, *args):
         if width == -1:
             column.set_resizable(False)
             column.set_expand(True)
-            column.set_sizing(Gtk.TreeViewColumnSizing.AUTOSIZE)
-
         else:
             column.set_resizable(True)
             column.set_min_width(0)
@@ -723,21 +716,16 @@ def set_last_column_autosize(treeview):
 
     prev_index = col_count - 1
 
-    # Make sure the width of the last visible column isn't fixed
+    # Make sure the last visible column isn't resizable
     for i in reversed(range(len(columns))):
         prev_index -= 1
 
         if columns[i].get_visible():
             column = columns[i]
             column.set_resizable(False)
-            column.set_fixed_width(-1)
             break
 
-    """ If the column we toggled the visibility of is now the last visible one,
-    the previously last visible column should've resized to fit properly now,
-    since it was set to AUTOSIZE. We can now set the previous column to FIXED,
-    and make it resizable again. """
-
+    # Make the previously last column resizable again
     prev_column = columns[prev_index]
     prev_column.set_resizable(True)
 
