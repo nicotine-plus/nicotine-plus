@@ -551,7 +551,11 @@ class ChatRoom(UserInterface):
 
         for widget in (self.auto_join_toggle, self.log_toggle):
             self.room_options_container.remove(widget)
-            self.chat_entry_row.add(widget)
+
+            if GTK_API_VERSION >= 4:
+                self.chat_entry_row.append(widget)  # pylint: disable=no-member
+            else:
+                self.chat_entry_row.add(widget)     # pylint: disable=no-member
 
         self.speech_toggle.set_active(False)  # Public feed is jibberish and too fast for TTS
         self.chat_entry.set_sensitive(False)
