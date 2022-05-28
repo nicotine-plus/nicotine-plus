@@ -133,6 +133,43 @@ class TransfersTest(unittest.TestCase):
         self.assertEqual(transfer.filename, "Hello\\Upload\\File.mp3")
         self.assertEqual(transfer.path, "/home/test")
 
+    def test_incomplete_download_path(self):
+        """ Verify that the basename in incomplete download paths doesn't exceed 255 bytes.
+        The basename can be shorter than 255 bytes when a truncated multi-byte character is discarded. """
+
+        user = "abc"
+        incomplete_folder = "incomplete_downloads"
+
+        # Short file extension
+        virtual_path = ("Music\\Test\\片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片"
+                        + "片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片.mp3")
+        incomplete_path = self.transfers.get_incomplete_file_path(incomplete_folder, user, virtual_path)
+
+        self.assertEqual(len(os.path.basename(incomplete_path).encode('utf-8')), 253)
+        self.assertEqual(
+            incomplete_path,
+            os.path.join(
+                incomplete_folder,
+                ("INCOMPLETEeded5d7eb6768cac99e7575549a45126片片片片片片片片片片片片片片片片片片片片片片片片"
+                 "片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片.mp3")
+            )
+        )
+
+        # Long file extension
+        virtual_path = ("Music\\Test\\abc123456.片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片"
+                        + "片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片")
+        incomplete_path = self.transfers.get_incomplete_file_path(incomplete_folder, user, virtual_path)
+
+        self.assertEqual(len(os.path.basename(incomplete_path).encode('utf-8')), 253)
+        self.assertEqual(
+            incomplete_path,
+            os.path.join(
+                incomplete_folder,
+                ("INCOMPLETEcc5054eeb2a488b3a0287fda4c938ef2.片片片片片片片片片片片片片片片片片片片片片片片"
+                 "片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片")
+            )
+        )
+
     def test_download_folder_destination(self):
         """ Verify that the correct download destination is used """
 
