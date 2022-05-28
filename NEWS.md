@@ -17,11 +17,13 @@ Changes
 
 Corrections
 
- * Fixed an issue where dark mode was used when light mode was enabled on some systems
+ * IMPORTANT: Fixed a rare but severe CPU hogging issue in the Uploads list view on certain systems
+ * Fixed an issue where folder downloads did not always save subfolders to the correct location
+ * Fixed an issue where the estimated total time remaining for folder transfers was incorrect
  * Fixed an issue where clearing all file transfers did not remove transfers completely
- * Fixed an issue where the estimated time remaining for folder transfers was incorrect
- * Fixed an issue where subfolder downloads did not always save in the correct location
- * Fixed a rare crash when downloading files on certain systems
+ * Fixed an issue where downloads failed if the filename was very long (thank you @AtticFinder65536)
+ * Fixed a rare crash when downloading files onto certain (latin-1) filesystems
+ * Fixed an issue where dark mode was used when light mode was enabled on some systems
  * Unmaximized size of the main window is now remembered after the window is maximized
  * Reduced memory usage after closing search tabs with many results
  * Various minor bug fixes
@@ -30,6 +32,7 @@ Issues closed on GitHub
 
  * UnicodeEncodeError when downloading file ([#1980](https://github.com/nicotine-plus/nicotine-plus/issues/1980))
  * Nicotine+ always on dark mode regardless of my settings ([#1983](https://github.com/nicotine-plus/nicotine-plus/issues/1983))
+ * High CPU Usage (pegs a single core) ([#1998](https://github.com/nicotine-plus/nicotine-plus/issues/1998))
  * Weird behavior when I download a whole folder with multiple subdirectories ([#2004](https://github.com/nicotine-plus/nicotine-plus/issues/2004))
  * Don't freeze/crash without xdg-open ([#2005](https://github.com/nicotine-plus/nicotine-plus/issues/2005))
  * Unicode encode error ([#2015](https://github.com/nicotine-plus/nicotine-plus/issues/2015))
