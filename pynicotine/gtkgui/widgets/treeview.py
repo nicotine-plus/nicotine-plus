@@ -142,6 +142,7 @@ class TreeView:
             if columns[i].get_visible():
                 column = columns[i]
                 column.set_resizable(False)
+                column.set_fixed_width(-1)
                 break
 
         # Make the previously last column resizable again
@@ -723,6 +724,7 @@ def set_last_column_autosize(treeview):
         if columns[i].get_visible():
             column = columns[i]
             column.set_resizable(False)
+            column.set_fixed_width(-1)
             break
 
     # Make the previously last column resizable again
