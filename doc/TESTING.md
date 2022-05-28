@@ -14,7 +14,7 @@ You need to download and install Nicotine+ from the link above every time you wa
 
 ### Flatpak
 
-Unstable [Flatpak](https://www.flatpak.org/setup/) packages are built after every commit to the master branch.
+Unstable [Flatpak](https://www.flatpak.org/setup/) packages are built after every commit to the 3.2.x branch.
 
 - [Download Unstable Flatpak Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/3.2.x/flatpak-package.zip)
 
@@ -59,7 +59,7 @@ git pull
 
 ## Windows
 
-Unstable Windows packages are built after every commit to the master branch.
+Unstable Windows packages are built after every commit to the 3.2.x branch.
 
 - [Download Unstable 64-bit Windows Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/3.2.x/windows-x86_64-installer.zip)
 - [Download Unstable 32-bit Windows Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/3.2.x/windows-i686-installer.zip)
@@ -71,6 +71,6 @@ Portable packages are also available. They can be run from your home directory, 
 
 ## macOS (Catalina/10.15 and newer)
 
-Unstable macOS installers are built after every commit to the master branch.
+Unstable macOS installers are built after every commit to the 3.2.x branch.
 
 - [Download Unstable macOS Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/3.2.x/macos-installer.zip)
