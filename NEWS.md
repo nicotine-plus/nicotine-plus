@@ -31,6 +31,7 @@ Issues closed on GitHub
 
  * UnicodeEncodeError when downloading file ([#1980](https://github.com/nicotine-plus/nicotine-plus/issues/1980))
  * Nicotine+ always on dark mode regardless of my settings ([#1983](https://github.com/nicotine-plus/nicotine-plus/issues/1983))
+ * High CPU Usage (pegs a single core) ([#1998](https://github.com/nicotine-plus/nicotine-plus/issues/1998))
  * Weird behavior when I download a whole folder with multiple subdirectories ([#2004](https://github.com/nicotine-plus/nicotine-plus/issues/2004))
  * Don't freeze/crash without xdg-open ([#2005](https://github.com/nicotine-plus/nicotine-plus/issues/2005))
  * Unicode encode error ([#2015](https://github.com/nicotine-plus/nicotine-plus/issues/2015))
@@ -39,7 +40,6 @@ Issues closed on GitHub
  * Time Left column regression ([#2020](https://github.com/nicotine-plus/nicotine-plus/issues/2020))
  * Clear ALL downloads, Clear ALL uploads not working ([#2023](https://github.com/nicotine-plus/nicotine-plus/issues/2023))
  * User note saves when pressing Cancel ([#2036](https://github.com/nicotine-plus/nicotine-plus/issues/2036))
- * High CPU Usage (pegs a single core) ([#1998](https://github.com/nicotine-plus/nicotine-plus/issues/1998))
 
 Version 3.2.2 (March 19, 2022)
 ------------------------------
