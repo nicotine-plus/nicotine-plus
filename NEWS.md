@@ -21,6 +21,7 @@ Corrections
  * Fixed an issue where folder downloads did not always save subfolders to the correct location
  * Fixed an issue where the estimated total time remaining for folder transfers was incorrect
  * Fixed an issue where clearing all file transfers did not remove transfers completely
+ * Fixed an issue where downloads failed if the filename was very long (thank you @AtticFinder65536)
  * Fixed a rare crash when downloading files onto certain (latin-1) filesystems
  * Fixed an issue where dark mode was used when light mode was enabled on some systems
  * Unmaximized size of the main window is now remembered after the window is maximized
