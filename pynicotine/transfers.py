@@ -48,6 +48,7 @@ from pynicotine.utils import clean_file
 from pynicotine.utils import clean_path
 from pynicotine.utils import get_result_bitrate_length
 from pynicotine.utils import load_file
+from pynicotine.utils import truncate_string_byte
 from pynicotine.utils import write_file_and_backup
 
 
@@ -1001,7 +1002,7 @@ class Transfers:
                 self.queue.append(slskmessages.ConnClose(msg.init.sock))
                 continue
 
-            incompletedir = self.config.sections["transfers"]["incompletedir"]
+            incomplete_folder = self.config.sections["transfers"]["incompletedir"]
             needupdate = True
             i.sock = msg.init.sock
             i.token = None
@@ -1009,21 +1010,21 @@ class Transfers:
             if i in self.transfer_request_times:
                 del self.transfer_request_times[i]
 
-            if not incompletedir:
+            if not incomplete_folder:
                 if i.path:
-                    incompletedir = i.path
+                    incomplete_folder = i.path
                 else:
-                    incompletedir = self.get_default_download_folder(i.user)
+                    incomplete_folder = self.get_default_download_folder(i.user)
 
             try:
-                incompletedir_encoded = incompletedir.encode("utf-8")
+                incomplete_folder_encoded = incomplete_folder.encode("utf-8")
 
-                if not os.path.isdir(incompletedir_encoded):
-                    os.makedirs(incompletedir_encoded)
+                if not os.path.isdir(incomplete_folder_encoded):
+                    os.makedirs(incomplete_folder_encoded)
 
-                if not os.access(incompletedir_encoded, os.R_OK | os.W_OK | os.X_OK):
+                if not os.access(incomplete_folder_encoded, os.R_OK | os.W_OK | os.X_OK):
                     raise OSError("Download directory %s Permissions error.\nDir Permissions: %s" %
-                                  (incompletedir, oct(os.stat(incompletedir_encoded)[stat.ST_MODE] & 0o777)))
+                                  (incomplete_folder, oct(os.stat(incomplete_folder_encoded)[stat.ST_MODE] & 0o777)))
 
             except OSError as error:
                 log.add(_("OS error: %s"), error)
@@ -1032,17 +1033,8 @@ class Transfers:
             else:
                 file_handle = None
                 try:
-                    from hashlib import md5
-                    md5sum = md5()
-                    md5sum.update((i.filename + i.user).encode('utf-8'))
-
-                    base_name, extension = os.path.splitext(clean_file(i.filename.replace('/', '\\').split('\\')[-1]))
-                    prefix = "INCOMPLETE" + md5sum.hexdigest()
-
-                    # Ensure file name doesn't exceed 255 characters in length
-                    incomplete_name = os.path.join(
-                        incompletedir, prefix + base_name[:255 - len(prefix) - len(extension)] + extension)
-                    file_handle = open(incomplete_name.encode('utf-8'), 'ab+')  # pylint: disable=consider-using-with
+                    incomplete_path = self.get_incomplete_file_path(incomplete_folder, i.user, i.filename)
+                    file_handle = open(incomplete_path.encode('utf-8'), 'ab+')  # pylint: disable=consider-using-with
 
                     try:
                         import fcntl
@@ -1073,7 +1065,7 @@ class Transfers:
                     i.queue_position = 0
 
                     self.core.statistics.append_stat_value("started_downloads", 1)
-                    self.core.pluginhandler.download_started_notification(i.user, i.filename, incomplete_name)
+                    self.core.pluginhandler.download_started_notification(i.user, i.filename, incomplete_path)
 
                     if i.size > offset:
                         i.status = "Transferring"
@@ -1782,6 +1774,25 @@ class Transfers:
             counter += 1
 
         return None
+
+    @staticmethod
+    def get_incomplete_file_path(incomplete_folder, username, virtual_path):
+        """ Returns the path to store a download while it's still transferring """
+
+        from hashlib import md5
+        md5sum = md5()
+        md5sum.update((virtual_path + username).encode('utf-8'))
+        prefix = "INCOMPLETE" + md5sum.hexdigest()
+
+        # Ensure file name doesn't exceed 255 bytes in length
+        base_name, extension = os.path.splitext(clean_file(virtual_path.replace('/', '\\').split('\\')[-1]))
+        base_name_limit = 255 - len(prefix) - len(extension.encode('utf-8'))
+        base_name = truncate_string_byte(base_name, base_name_limit)
+
+        if base_name_limit < 0:
+            extension = truncate_string_byte(extension, 255 - len(prefix))
+
+        return os.path.join(incomplete_folder, prefix + base_name + extension)
 
     @staticmethod
     def get_renamed(name):
