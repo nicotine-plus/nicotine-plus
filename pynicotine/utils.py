@@ -347,6 +347,12 @@ def humanize(number):
     return "{:n}".format(number)
 
 
+def truncate_string_byte(string, byte_limit, encoding='utf-8'):
+    """ Truncates a string to fit inside a byte limit """
+
+    return string.encode(encoding)[:max(byte_limit, 0)].decode(encoding, 'ignore')
+
+
 def unescape(string):
     """Removes quotes from the beginning and end of strings, and unescapes it."""
 
