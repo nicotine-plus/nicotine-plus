@@ -406,7 +406,7 @@ class PluginHandler:
             path = self.get_plugin_path(plugin_name)
 
             if path is None:
-                log.add(_("Failed to load plugin '%s', could not find it."), plugin_name)
+                log.add_debug("Failed to load plugin '%s', could not find it", plugin_name)
                 return None
 
             # Add plugin folder to path in order to support relative imports
