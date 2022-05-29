@@ -456,7 +456,7 @@ class NicotineFrame(UserInterface):
         config.sections["ui"]["width"] = width
         config.sections["ui"]["height"] = height
 
-        x_pos, y_pos = self.window.get_position()
+        x_pos, y_pos = window.get_position()
 
         config.sections["ui"]["xposition"] = x_pos
         config.sections["ui"]["yposition"] = y_pos
