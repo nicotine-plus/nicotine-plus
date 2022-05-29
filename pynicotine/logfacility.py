@@ -159,12 +159,15 @@ class Logger:
 
         try:
             from pynicotine.utils import clean_file
+            from pynicotine.utils import encode_path
+
             filename = clean_file(filename) + ".log"
             path = os.path.join(logsdir, filename)
+            logsdir_encoded = encode_path(logsdir)
             oldumask = os.umask(0o077)
 
-            if not os.path.exists(logsdir.encode("utf-8")):
-                os.makedirs(logsdir.encode("utf-8"))
+            if not os.path.exists(logsdir_encoded):
+                os.makedirs(logsdir_encoded)
 
             with open(path, 'ab', 0) as logfile:
                 os.umask(oldumask)

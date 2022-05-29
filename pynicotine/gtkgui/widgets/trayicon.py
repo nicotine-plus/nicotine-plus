@@ -28,6 +28,7 @@ from pynicotine.gtkgui.application import GTK_GUI_DIR
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.theme import get_icon
 from pynicotine.logfacility import log
+from pynicotine.utils import encode_path
 
 
 """ Status Icon / AppIndicator """
@@ -208,7 +209,7 @@ class TrayIcon:
             icon_scheme = "trayicon_" + icon_name + "."
 
         try:
-            for entry in os.scandir(icon_path.encode("utf-8")):
+            for entry in os.scandir(encode_path(icon_path)):
                 if entry.is_file() and entry.name.decode("utf-8").startswith(icon_scheme):
                     return True
 

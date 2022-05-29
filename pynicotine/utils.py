@@ -40,6 +40,7 @@ PUNCTUATION = ['!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-',
                '?', '@', '[', '\\', ']', '^', '_', '`', '{', '|', '}', '~', '–', '—', '‐', '’', '“', '”', '…']
 ILLEGALPATHCHARS = ['?', ':', '>', '<', '|', '*', '"']
 ILLEGALFILECHARS = ILLEGALPATHCHARS + ['\\', '/']
+LONG_PATH_PREFIX = "\\\\?\\"
 REPLACEMENTCHAR = '_'
 OPEN_SOULSEEK_URL = None
 
@@ -105,6 +106,21 @@ def clean_path(path, absolute=False):
     return path
 
 
+def encode_path(path, prefix=True):
+    """ Converts a file path to bytes for processing by the system.
+    On Windows, also append prefix to enable extended-length path. """
+
+    if sys.platform == "win32" and prefix:
+        path = path.replace('/', '\\')
+
+        if path.startswith('\\\\'):
+            path = "UNC" + path[1:]
+
+        path = LONG_PATH_PREFIX + path
+
+    return path.encode("utf-8")
+
+
 def _try_open_uri(uri):
 
     if sys.platform not in ("darwin", "win32"):
@@ -131,13 +147,14 @@ def open_file_path(file_path, command=None, create_folder=False, create_file=Fal
 
     try:
         file_path = os.path.normpath(file_path)
+        file_path_encoded = encode_path(file_path)
 
-        if not os.path.exists(file_path.encode("utf-8")):
+        if not os.path.exists(file_path_encoded):
             if create_folder:
-                os.makedirs(file_path.encode("utf-8"))
+                os.makedirs(file_path_encoded)
 
             elif create_file:
-                with open(file_path.encode("utf-8"), "w", encoding="utf-8"):
+                with open(file_path_encoded, "w", encoding="utf-8"):
                     # Create empty file
                     pass
             else:
@@ -147,7 +164,7 @@ def open_file_path(file_path, command=None, create_folder=False, create_file=Fal
             execute_command(command, file_path)
 
         elif sys.platform == "win32":
-            os.startfile(file_path.encode("utf-8"))  # pylint: disable=no-member
+            os.startfile(file_path_encoded)  # pylint: disable=no-member
 
         elif sys.platform == "darwin":
             execute_command("open $", file_path)
@@ -200,11 +217,12 @@ def delete_log(folder, filename):
 
 def _handle_log(folder, filename, callback):
 
+    folder_encoded = encode_path(folder)
     path = os.path.join(folder, clean_file(filename) + ".log")
 
     try:
-        if not os.path.isdir(folder.encode("utf-8")):
-            os.makedirs(folder.encode("utf-8"))
+        if not os.path.isdir(folder_encoded):
+            os.makedirs(folder_encoded)
 
         callback(path)
 
@@ -217,7 +235,7 @@ def open_log_callback(path):
 
 
 def delete_log_callback(path):
-    os.remove(path.encode("utf-8"))
+    os.remove(encode_path(path))
 
 
 def get_latest_version():
@@ -481,11 +499,13 @@ def load_file(path, load_func, use_old_file=False):
         if use_old_file:
             path = path + ".old"
 
-        elif os.path.isfile((path + ".old").encode("utf-8")):
-            if not os.path.isfile(path.encode("utf-8")):
+        elif os.path.isfile(encode_path(path + ".old")):
+            path_encoded = encode_path(path)
+
+            if not os.path.isfile(path_encoded):
                 raise OSError("*.old file is present but main file is missing")
 
-            if os.path.getsize(path.encode("utf-8")) == 0:
+            if os.path.getsize(path_encoded) == 0:
                 # Empty files should be considered broken/corrupted
                 raise OSError("*.old file is present but main file is empty")
 
@@ -505,14 +525,17 @@ def load_file(path, load_func, use_old_file=False):
 
 def write_file_and_backup(path, callback, protect=False):
 
+    path_encoded = encode_path(path)
+    path_old_encoded = encode_path(path + ".old")
+
     # Back up old file to path.old
     try:
-        if os.path.exists(path.encode("utf-8")):
+        if os.path.exists(path_encoded):
             from shutil import copy2
-            copy2(path, (path + ".old").encode("utf-8"))
+            copy2(path, path_old_encoded)
 
             if protect:
-                os.chmod((path + ".old").encode("utf-8"), 0o600)
+                os.chmod(path_old_encoded, 0o600)
 
     except Exception as error:
         log.add(_("Unable to back up file %(path)s: %(error)s"), {
@@ -526,7 +549,7 @@ def write_file_and_backup(path, callback, protect=False):
         oldumask = os.umask(0o077)
 
     try:
-        with open(path.encode("utf-8"), "w", encoding="utf-8") as file_handle:
+        with open(path_encoded, "w", encoding="utf-8") as file_handle:
             callback(file_handle)
 
     except Exception as error:
@@ -537,8 +560,8 @@ def write_file_and_backup(path, callback, protect=False):
 
         # Attempt to restore file
         try:
-            if os.path.exists((path + ".old").encode("utf-8")):
-                os.replace((path + ".old").encode("utf-8"), path)
+            if os.path.exists(path_old_encoded):
+                os.replace(path_old_encoded, path)
 
         except Exception as second_error:
             log.add(_("Unable to restore previous file %(path)s: %(error)s"), {

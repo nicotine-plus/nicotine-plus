@@ -39,6 +39,7 @@ from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
+from pynicotine.utils import encode_path
 from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
 
@@ -487,7 +488,7 @@ class UserInfo(UserInterface):
         self.core.network_filter.ignore_user(self.user)
 
     def on_save_picture_response(self, selected, _data):
-        self.picture_data.savev(selected.encode("utf-8"), "jpeg", ["quality"], ["100"])
+        self.picture_data.savev(encode_path(selected, prefix=False), "jpeg", ["quality"], ["100"])
         log.add(_("Picture saved to %s"), selected)
 
     def on_save_picture(self, *_args):

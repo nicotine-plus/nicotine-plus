@@ -46,6 +46,7 @@ from pynicotine.slskmessages import increment_token
 from pynicotine.utils import execute_command
 from pynicotine.utils import clean_file
 from pynicotine.utils import clean_path
+from pynicotine.utils import encode_path
 from pynicotine.utils import get_result_bitrate_length
 from pynicotine.utils import load_file
 from pynicotine.utils import truncate_string_byte
@@ -177,15 +178,15 @@ class Transfers:
         downloads_file_1_4_2 = os.path.join(data_dir, 'config.transfers.pickle')
         downloads_file_1_4_1 = os.path.join(data_dir, 'transfers.pickle')
 
-        if os.path.exists(downloads_file_json.encode("utf-8")):
+        if os.path.exists(encode_path(downloads_file_json)):
             # New file format
             return downloads_file_json
 
-        if os.path.exists(downloads_file_1_4_2.encode("utf-8")):
+        if os.path.exists(encode_path(downloads_file_1_4_2)):
             # Nicotine+ 1.4.2+
             return downloads_file_1_4_2
 
-        if os.path.exists(downloads_file_1_4_1.encode("utf-8")):
+        if os.path.exists(encode_path(downloads_file_1_4_1)):
             # Nicotine <=1.4.1
             return downloads_file_1_4_1
 
@@ -203,7 +204,7 @@ class Transfers:
     def load_transfers_file(transfers_file):
         """ Loads a file of transfers in json format """
 
-        transfers_file = transfers_file.encode("utf-8")
+        transfers_file = encode_path(transfers_file)
 
         if not os.path.isfile(transfers_file):
             return None
@@ -215,7 +216,7 @@ class Transfers:
     def load_legacy_transfers_file(transfers_file):
         """ Loads a download queue file in pickle format (legacy) """
 
-        transfers_file = transfers_file.encode("utf-8")
+        transfers_file = encode_path(transfers_file)
 
         if not os.path.isfile(transfers_file):
             return None
@@ -395,7 +396,7 @@ class Transfers:
     def get_file_size(filename):
 
         try:
-            size = os.path.getsize(filename.encode("utf-8"))
+            size = os.path.getsize(encode_path(filename))
         except Exception:
             # file doesn't exist (remote files are always this)
             size = 0
@@ -1017,7 +1018,7 @@ class Transfers:
                     incomplete_folder = self.get_default_download_folder(i.user)
 
             try:
-                incomplete_folder_encoded = incomplete_folder.encode("utf-8")
+                incomplete_folder_encoded = encode_path(incomplete_folder)
 
                 if not os.path.isdir(incomplete_folder_encoded):
                     os.makedirs(incomplete_folder_encoded)
@@ -1034,7 +1035,7 @@ class Transfers:
                 file_handle = None
                 try:
                     incomplete_path = self.get_incomplete_file_path(incomplete_folder, i.user, i.filename)
-                    file_handle = open(incomplete_path.encode('utf-8'), 'ab+')  # pylint: disable=consider-using-with
+                    file_handle = open(encode_path(incomplete_path), 'ab+')  # pylint: disable=consider-using-with
 
                     if self.config.sections["transfers"]["lock"]:
                         try:
@@ -1127,7 +1128,7 @@ class Transfers:
             try:
                 # Open File
                 real_path = self.core.shares.virtual2real(i.filename)
-                file_handle = open(real_path.encode("utf-8"), "rb")  # pylint: disable=consider-using-with
+                file_handle = open(encode_path(real_path), "rb")  # pylint: disable=consider-using-with
                 offset = file_handle.tell()
 
             except OSError as error:
@@ -1738,9 +1739,10 @@ class Transfers:
         if self.config.sections["transfers"]["usernamesubfolders"]:
             try:
                 downloaddir = os.path.join(downloaddir, clean_file(user))
+                downloaddir_encoded = encode_path(downloaddir)
 
-                if not os.path.isdir(downloaddir.encode("utf-8")):
-                    os.makedirs(downloaddir.encode("utf-8"))
+                if not os.path.isdir(downloaddir_encoded):
+                    os.makedirs(downloaddir_encoded)
 
             except Exception as error:
                 log.add(_("Unable to save download to username subfolder, falling back "
@@ -1762,10 +1764,11 @@ class Transfers:
         folder, basename = self.get_download_destination(user, virtual_path, target_path)
         basename_root, extension = os.path.splitext(basename)
         download_path = os.path.join(folder, basename)
+        download_path_encoded = encode_path(download_path)
         counter = 1
 
-        while os.path.isfile(download_path.encode("utf-8")):
-            if os.stat(download_path.encode("utf-8")).st_size == size:
+        while os.path.isfile(download_path_encoded):
+            if os.stat(download_path_encoded).st_size == size:
                 # Found a previous download with a matching file size
                 return download_path
 
@@ -1805,7 +1808,7 @@ class Transfers:
         filename, extension = os.path.splitext(name)
         counter = 1
 
-        while os.path.exists(name.encode("utf-8")):
+        while os.path.exists(encode_path(name)):
             name = filename + " (" + str(counter) + ")" + extension
             counter += 1
 
@@ -1874,14 +1877,15 @@ class Transfers:
         self.close_file(file, i)
 
         folder, basename = self.get_download_destination(i.user, i.filename, i.path)
+        folder_encoded = encode_path(folder)
         newname = self.get_renamed(os.path.join(folder, basename))
 
         try:
-            if not os.path.isdir(folder.encode('utf-8')):
-                os.makedirs(folder.encode('utf-8'))
+            if not os.path.isdir(folder_encoded):
+                os.makedirs(folder_encoded)
 
             import shutil
-            shutil.move(file.name, newname.encode('utf-8'))
+            shutil.move(file.name, encode_path(newname))
 
         except OSError as inst:
             log.add(

@@ -30,6 +30,7 @@ from unittest.mock import patch
 
 from pynicotine.slskproto import SlskProtoThread
 from pynicotine.slskmessages import ServerConnect, Login, SetWaitPort
+from pynicotine.utils import encode_path
 
 # Time (in s) needed for SlskProtoThread main loop to run at least once
 SLSKPROTO_RUN_TIME = 1.5
@@ -49,7 +50,7 @@ class MockSocket(Mock):
 
         file_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), datafile)
 
-        with open(file_path.encode("utf-8"), 'rb') as file_handle:
+        with open(encode_path(file_path), 'rb') as file_handle:
             content = file_handle.read()
 
         content = content.replace(windows_line_ending, unix_line_ending)
