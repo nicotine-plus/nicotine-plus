@@ -149,6 +149,8 @@ Issues closed on GitHub
 Version 3.2.0 (December 18, 2021)
 ---------------------------------
 
+WINDOWS USERS: The installer format has changed in Nicotine+ 3.2.0 and above. If you are upgrading from Nicotine+ 3.1.1 or earlier, please uninstall Nicotine+ first (this will not remove your existing settings).
+
 Changes
 
  * Performance improvements across the entire application, including file searching, transfers, user shares and chats
