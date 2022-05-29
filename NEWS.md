@@ -18,11 +18,12 @@ Changes
 Corrections
 
  * IMPORTANT: Fixed a rare but severe CPU hogging issue in the Uploads list view on certain systems
- * Fixed an issue where folder downloads did not always save subfolders to the correct location
+ * Fixed an issue where downloads failed if the filename was very long (thank you @AtticFinder65536)
+ * Fixed an issue where folder downloads did not always save subfolders into the correct location
  * Fixed an issue where the estimated total time remaining for folder transfers was incorrect
  * Fixed an issue where clearing all file transfers did not remove transfers completely
- * Fixed an issue where downloads failed if the filename was very long (thank you @AtticFinder65536)
  * Fixed a rare crash when downloading files onto certain (latin-1) filesystems
+ * Fixed a discrepancy between the speed reported in outgoing search results compared to user info
  * Fixed an issue where dark mode was used when light mode was enabled on some systems
  * Unmaximized size of the main window is now remembered after the window is maximized
  * Reduced memory usage after closing search tabs with many results
