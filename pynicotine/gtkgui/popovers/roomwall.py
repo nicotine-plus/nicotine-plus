@@ -70,8 +70,8 @@ class RoomWall(UserInterface):
         self.core.queue.append(slskmessages.RoomTickerSet(self.room.room, entry_text))
 
         if entry_text:
-            login_username = self.core.login_username
-            self.room_wall_textview.append_line("[%s] %s" % (login_username, entry_text), showstamp=False, scroll=False)
+            user = self.core.login_username
+            self.room_wall_textview.append_line("> [%s] %s" % (user, entry_text), showstamp=False, scroll=False)
 
         self.update_message_list()
 
