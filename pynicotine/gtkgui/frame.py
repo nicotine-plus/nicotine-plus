@@ -446,7 +446,8 @@ class NicotineFrame(UserInterface):
     def on_window_property_changed(window, param, config_property):
         config.sections["ui"][config_property] = window.get_property(param.name)
 
-    def on_window_size_changed(self, window, _allocation):
+    @staticmethod
+    def on_window_size_changed(window, _allocation):
 
         if window.is_maximized():
             return
