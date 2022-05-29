@@ -18,11 +18,12 @@ Changes
 Corrections
 
  * IMPORTANT: Fixed a rare but severe CPU hogging issue in the Uploads list view on certain systems
- * Fixed an issue where folder downloads did not always save subfolders to the correct location
+ * Fixed issues where downloads failed if the path or file name was very long (thank you @AtticFinder65536)
+ * Fixed an issue where folder downloads did not always save subfolders into the correct location
  * Fixed an issue where the estimated total time remaining for folder transfers was incorrect
  * Fixed an issue where clearing all file transfers did not remove transfers completely
- * Fixed an issue where downloads failed if the filename was very long (thank you @AtticFinder65536)
  * Fixed a rare crash when downloading files onto certain (latin-1) filesystems
+ * Fixed a discrepancy between the speed reported in outgoing search results compared to user info
  * Fixed an issue where dark mode was used when light mode was enabled on some systems
  * Unmaximized size of the main window is now remembered after the window is maximized
  * Reduced memory usage after closing search tabs with many results
@@ -30,9 +31,10 @@ Corrections
 
 Issues closed on GitHub
 
+ * Support paths longer than 260 characters on Windows ([#1728](https://github.com/nicotine-plus/nicotine-plus/issues/1728))
  * UnicodeEncodeError when downloading file ([#1980](https://github.com/nicotine-plus/nicotine-plus/issues/1980))
  * Nicotine+ always on dark mode regardless of my settings ([#1983](https://github.com/nicotine-plus/nicotine-plus/issues/1983))
- * High CPU Usage (pegs a single core) ([#1998](https://github.com/nicotine-plus/nicotine-plus/issues/1998))
+ * High CPU Usage pegs a single core ([#1998](https://github.com/nicotine-plus/nicotine-plus/issues/1998))
  * Weird behavior when I download a whole folder with multiple subdirectories ([#2004](https://github.com/nicotine-plus/nicotine-plus/issues/2004))
  * Don't freeze/crash without xdg-open ([#2005](https://github.com/nicotine-plus/nicotine-plus/issues/2005))
  * Unicode encode error ([#2015](https://github.com/nicotine-plus/nicotine-plus/issues/2015))
