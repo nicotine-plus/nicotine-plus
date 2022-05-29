@@ -1342,7 +1342,6 @@ class Transfers:
 
             elif i.speed is not None:
                 # Inform the server about the last upload speed for this transfer
-                self.upload_speed = i.speed
                 self.queue.append(slskmessages.SendUploadSpeed(i.speed))
 
                 i.speed = None
