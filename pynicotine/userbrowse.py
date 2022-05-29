@@ -24,6 +24,7 @@ from pynicotine import slskmessages
 from pynicotine import utils
 from pynicotine.logfacility import log
 from pynicotine.utils import clean_file
+from pynicotine.utils import encode_path
 from pynicotine.utils import get_result_bitrate_length
 from pynicotine.utils import RestrictedUnpickler
 
@@ -137,9 +138,11 @@ class UserBrowse:
     def create_user_shares_folder(self):
 
         shares_folder = os.path.join(self.config.data_dir, "usershares")
+        shares_folder_encoded = encode_path(shares_folder)
+
         try:
-            if not os.path.isdir(shares_folder.encode("utf-8")):
-                os.makedirs(shares_folder.encode("utf-8"))
+            if not os.path.isdir(shares_folder_encoded):
+                os.makedirs(shares_folder_encoded)
 
         except Exception as error:
             log.add(_("Can't create directory '%(folder)s', reported error: %(error)s"),
@@ -150,18 +153,20 @@ class UserBrowse:
 
     def load_shares_list_from_disk(self, filename):
 
+        filename_encoded = encode_path(filename)
+
         try:
             try:
                 # Try legacy format first
                 import bz2
 
-                with bz2.BZ2File(filename.encode("utf-8")) as file_handle:
+                with bz2.BZ2File(filename_encoded) as file_handle:
                     shares_list = RestrictedUnpickler(file_handle, encoding='utf-8').load()
 
             except Exception:
                 # Try new format
 
-                with open(filename.encode("utf-8"), encoding="utf-8") as file_handle:
+                with open(filename_encoded, encoding="utf-8") as file_handle:
                     shares_list = json.load(file_handle)
 
             # Basic sanity check
@@ -191,7 +196,7 @@ class UserBrowse:
         try:
             path = os.path.join(shares_folder, clean_file(user))
 
-            with open(path.encode("utf-8"), "w", encoding="utf-8") as file_handle:
+            with open(encode_path(path), "w", encoding="utf-8") as file_handle:
                 json.dump(shares_list, file_handle, ensure_ascii=False)
 
             log.add(_("Saved list of shared files for user '%(user)s' to %(dir)s"),

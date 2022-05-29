@@ -29,6 +29,7 @@ from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.application import GTK_GUI_DIR
 from pynicotine.logfacility import log
+from pynicotine.utils import encode_path
 
 
 """ Global Style """
@@ -287,7 +288,7 @@ def load_ui_icon(name):
 
     path = os.path.join(GTK_GUI_DIR, "icons", name + ".svg")
 
-    if os.path.isfile(path.encode("utf-8")):
+    if os.path.isfile(encode_path(path)):
         return Gio.Icon.new_for_string(path)
 
     return None
@@ -312,7 +313,7 @@ def load_custom_icons(names):
             path = os.path.expanduser(os.path.join(icon_theme_path, "%s.%s" % (name, exts.pop())))
 
             try:
-                if os.path.isfile(path.encode("utf-8")):
+                if os.path.isfile(encode_path(path)):
                     ICONS[name] = Gio.Icon.new_for_string(path)
                     loaded = True
 

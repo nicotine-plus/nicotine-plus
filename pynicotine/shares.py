@@ -34,6 +34,7 @@ from pynicotine import slskmessages
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import UINT_LIMIT
 from pynicotine.utils import PUNCTUATION
+from pynicotine.utils import encode_path
 from pynicotine.utils import rename_process
 
 """ Check if there's an appropriate (performant) database type for shelves """
@@ -256,9 +257,9 @@ class Scanner:
 
             if entry_stat is None:
                 if filename is not None:
-                    entry_stat = os.stat((folder + '\\' + filename).encode("utf-8"))
+                    entry_stat = os.stat(encode_path(folder + '\\' + filename))
                 else:
-                    entry_stat = os.stat(folder.encode("utf-8"))
+                    entry_stat = os.stat(encode_path(folder))
 
             return entry_stat.st_file_attributes & stat.FILE_ATTRIBUTE_HIDDEN
 
@@ -268,7 +269,7 @@ class Scanner:
         """ Get a list of files with their filelength, bitrate and track length in seconds """
 
         if folder_stat is None:
-            folder_stat = os.stat(folder.encode("utf-8"))
+            folder_stat = os.stat(encode_path(folder))
 
         folder_unchanged = False
         virtual_folder = Shares.real2virtual_cls(folder, self.config)
@@ -297,7 +298,7 @@ class Scanner:
                 }, "miscellaneous"))
 
         try:
-            for entry in os.scandir(folder.encode("utf-8")):
+            for entry in os.scandir(encode_path(folder, prefix=False)):
                 entry_stat = entry.stat()
 
                 if entry.is_file():
@@ -352,14 +353,14 @@ class Scanner:
         duration_info = None
 
         if file_stat is None:
-            file_stat = os.stat(pathname.encode("utf-8"))
+            file_stat = os.stat(encode_path(pathname))
 
         size = file_stat.st_size
 
         """ We skip metadata scanning of files without meaningful content """
         if size > 128:
             try:
-                audio = tinytag.get(pathname, size, tags=False)
+                audio = tinytag.get(encode_path(pathname), size, tags=False)
 
             except Exception as error:
                 self.queue.put((_("Error while scanning metadata for file %(path)s: %(error)s"),
@@ -561,16 +562,18 @@ class Shares:
         exception = None
 
         for destination, shelvefile in dbs:
+            shelvefile_encoded = encode_path(shelvefile)
+
             try:
                 if not reset_shares:
                     shares[destination] = shelve.open(shelvefile, protocol=pickle.HIGHEST_PROTOCOL)
                 else:
                     try:
-                        os.remove(shelvefile.encode("utf-8"))
+                        os.remove(shelvefile_encoded)
 
                     except IsADirectoryError:
                         # Potentially trying to use gdbm with a semidbm database
-                        os.rmdir(shelvefile.encode("utf-8"))
+                        os.rmdir(shelvefile_encoded)
 
                     shares[destination] = shelve.open(shelvefile, flag='n', protocol=pickle.HIGHEST_PROTOCOL)
 
@@ -638,7 +641,7 @@ class Shares:
             return False
 
         try:
-            if not os.access(realfilename.encode("utf-8"), os.R_OK):
+            if not os.access(encode_path(realfilename), os.R_OK):
                 log.add_transfer("Cannot access file, not sharing: %(virtual_name)s with real path %(path)s", {
                     "virtual_name": virtualfilename,
                     "path": realfilename

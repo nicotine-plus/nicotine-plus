@@ -28,6 +28,7 @@ from time import time
 
 from pynicotine import slskmessages
 from pynicotine.logfacility import log
+from pynicotine.utils import encode_path
 
 
 returncode = {
@@ -379,7 +380,7 @@ class PluginHandler:
         for folder_path in self.plugindirs:
             file_path = os.path.join(folder_path, plugin_name)
 
-            if os.path.isdir(file_path.encode("utf-8")):
+            if os.path.isdir(encode_path(file_path)):
                 return file_path
 
         return None
@@ -484,7 +485,7 @@ class PluginHandler:
 
         for folder_path in self.plugindirs:
             try:
-                for entry in os.scandir(folder_path.encode("utf-8")):
+                for entry in os.scandir(encode_path(folder_path)):
                     file_path = entry.name.decode("utf-8")
 
                     if entry.is_dir() and file_path not in plugin_list:
@@ -563,7 +564,7 @@ class PluginHandler:
 
         info_path = os.path.join(plugin_path, 'PLUGININFO')
 
-        with open(info_path.encode("utf-8"), encoding="utf-8") as file_handle:
+        with open(encode_path(info_path), encoding="utf-8") as file_handle:
             for line in file_handle:
                 try:
                     key, value = line.split("=", 1)

@@ -27,6 +27,7 @@ from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.ui import UserInterface
+from pynicotine.utils import encode_path
 
 
 class ChatHistory(UserInterface):
@@ -59,7 +60,7 @@ class ChatHistory(UserInterface):
     def load_users(self):
 
         log_path = os.path.join(config.sections["logging"]["privatelogsdir"], "*.log")
-        user_logs = sorted(glob.glob(log_path.encode("utf-8")), key=os.path.getmtime, reverse=True)
+        user_logs = sorted(glob.glob(encode_path(log_path)), key=os.path.getmtime, reverse=True)
 
         for file_path in user_logs:
             username = os.path.basename(file_path[:-4]).decode("utf-8", "replace")
