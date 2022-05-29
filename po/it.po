@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-22 02:04+0300\n"
-"PO-Revision-Date: 2022-04-21 23:51+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2022-05-29 15:53+0000\n"
+"Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/it/>\n"
 "Language: it\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.12-dev\n"
+"X-Generator: Weblate 4.13-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:8
@@ -3987,7 +3987,7 @@ msgstr "Ultima Velocità"
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:12
 #, fuzzy
 msgid "_Export…"
-msgstr "Esporta"
+msgstr "_Esporta…"
 
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:18
 #, fuzzy
@@ -4141,7 +4141,7 @@ msgstr "Cerca Corrispondenza Precedente"
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:6
 #, fuzzy
 msgid "_Reset…"
-msgstr "_Riprendi"
+msgstr "_Riprendi…"
 
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:29
 msgid "Current Session"
@@ -4227,7 +4227,7 @@ msgstr "Pulisci"
 #: pynicotine/gtkgui/ui/downloads.ui:146
 #, fuzzy
 msgid "Clear all finished and filtered downloads."
-msgstr "Pulisci tutti i download finiti e filtrati"
+msgstr "Pulisci tutti i download finiti e filtrati."
 
 #: pynicotine/gtkgui/ui/downloads.ui:161 pynicotine/gtkgui/ui/uploads.ui:159
 msgid "Clear Finished"
@@ -6116,7 +6116,7 @@ msgstr "Blocca Utente(i)"
 #: pynicotine/gtkgui/ui/uploads.ui:144
 #, fuzzy
 msgid "Clear all finished and cancelled uploads."
-msgstr "Auto-pulisci upload completati/annullati dalla lista trasferimenti"
+msgstr "Auto-pulisci upload completati/annullati dalla lista trasferimenti."
 
 #: pynicotine/gtkgui/ui/uploads.ui:173
 #, fuzzy
