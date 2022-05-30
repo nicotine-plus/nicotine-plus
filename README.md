@@ -25,25 +25,14 @@ Downloads are available for:
 
 ## Get Involved
 
-If you feel like contributing to Nicotine+, there are several ways to help:
+If you feel like contributing to Nicotine+, there are several ways to get involved:
 
- * [Issue Tracker](https://github.com/nicotine-plus/nicotine-plus/issues)  
-   Report a problem or suggest improvements
-
- * [Testing](doc/TESTING.md)  
-   Download the latest unstable build and help test Nicotine+
-
- * [Translations](doc/TRANSLATIONS.md)  
-   Translate Nicotine+ into another language with [Weblate](https://hosted.weblate.org/engage/nicotine-plus)
-
- * [Packaging](doc/PACKAGING.md)  
-   Package Nicotine+ for a distribution or operating system
-
- * [Development](doc/DEVELOPING.md)  
-   Implement bug fixes, enhancements or new features
-
- * [IRC Channel](https://web.libera.chat/?channel=#nicotine+)  
-   Chat in the #nicotine+ IRC channel on [Libera.Chat](https://libera.chat/)
+ * [**Issue Tracker**](https://github.com/nicotine-plus/nicotine-plus/issues) - Report a problem or suggest improvements
+ * [**Testing**](doc/TESTING.md) - Download the latest unstable build and help test Nicotine+
+ * [**Translations**](doc/TRANSLATIONS.md) - Translate Nicotine+ into another language with [Weblate](https://hosted.weblate.org/engage/nicotine-plus)
+ * [**Packaging**](doc/PACKAGING.md) - Package Nicotine+ for a distribution or operating system
+ * [**Development**](doc/DEVELOPING.md) - Implement bug fixes, enhancements or new features
+ * [**IRC Channel**](https://web.libera.chat/?channel=#nicotine+) - Chat in the #nicotine+ IRC channel on [Libera.Chat](https://libera.chat/)
 
 
 ## Where did the name Nicotine come from?
