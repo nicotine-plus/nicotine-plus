@@ -8,6 +8,7 @@ This document contains important information about Nicotine+ design decisions an
  * [Dependencies](#dependencies)
  * [Profiling](#profiling)
  * [Continuous Integration Testing](#continuous-integration-testing)
+ * [Soulseek Protocol](#soulseek-protocol)
  * [Releases](#releases)
 
 # Language and Toolkit
@@ -85,6 +86,12 @@ autopkgtest --shell-fail --apt-upgrade . -- \
 ## Creating Tests
 
 Tests are defined in the *[test/](/test/)* folder, and should be expanded to cover larger parts of the client when possible.
+
+# Soulseek Protocol
+
+The Soulseek network uses its own protocol for interoperability between clients. The protocol is proprietary, and no official documentation is available. Nicotine+'s protocol implementation is developed by observing the behavior of the official Soulseek NS and SoulseekQt clients.
+
+[SLSKPROTOCOL.md](SLSKPROTOCOL.md) contains unofficial documentation maintained by the Nicotine+ team.
 
 # Releases
 
