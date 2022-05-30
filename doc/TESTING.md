@@ -1,4 +1,4 @@
-# Testing Nicotine+
+# Testing
 
 For those who like living on the bleeding edge, you can run the latest unstable build of Nicotine+ to test recent changes and bug fixes.
 

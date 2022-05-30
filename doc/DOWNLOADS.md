@@ -1,4 +1,4 @@
-# Download Nicotine+
+# Download
 
 Download the current stable version of Nicotine+ for your operating system. For the release notes, see [NEWS.md](/NEWS.md).
 

@@ -1,4 +1,4 @@
-# Developing
+# Development
 
 This document contains important information about Nicotine+ design decisions and development procedures for maintainers, developers and code contributors alike.
 
