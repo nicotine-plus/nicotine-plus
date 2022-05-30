@@ -15,32 +15,32 @@ Check out the [screenshots](data/screenshots/SCREENSHOTS.md) and [source code](h
 
 The current stable version of Nicotine+ is 3.2.2, released on March 19, 2022.
 
-[Download Nicotine+](doc/DOWNLOADS.md)  
+* [Download Nicotine+](doc/DOWNLOADS.md)  
 Nicotine+ is available for GNU/Linux, *BSD, Windows and macOS
 
-[Release Notes](NEWS.md)  
+* [Release Notes](NEWS.md)  
 See what's new in the latest version of Nicotine+
 
 ## Get Involved
 
 If you feel like contributing to Nicotine+, there are several ways to help:
 
-[Issue Tracker](https://github.com/nicotine-plus/nicotine-plus/issues)  
+* [Issue Tracker](https://github.com/nicotine-plus/nicotine-plus/issues)  
 Report a problem or suggest improvements
 
-[Testing](doc/TESTING.md)  
+* [Testing](doc/TESTING.md)  
 Download the latest unstable build and help test Nicotine+
 
-[Translations](doc/TRANSLATIONS.md)  
+* [Translations](doc/TRANSLATIONS.md)  
 Translate Nicotine+ into another language with [Weblate](https://hosted.weblate.org/engage/nicotine-plus)
 
-[Packaging](doc/PACKAGING.md)  
+* [Packaging](doc/PACKAGING.md)  
 Package Nicotine+ for a distribution or operating system
 
-[Development](doc/DEVELOPING.md)  
+* [Development](doc/DEVELOPING.md)  
 Implement bug fixes, enhancements or new features
 
-[IRC Channel](https://web.libera.chat/?channel=#nicotine+)  
+* [IRC Channel](https://web.libera.chat/?channel=#nicotine+)  
 Chat in the #nicotine+ IRC channel on [Libera.Chat](https://libera.chat/)
 
 ## Where did the name Nicotine come from?
