@@ -1818,9 +1818,10 @@ Issues closed on GitHub
  * Portuguese-Brazilian translation finished (SuicideSolution)
  * Slovak Translation Updated (Jozef)
 
+
 ## Version 1.2.5.1 (September 18, 2006)
 
-### Bugfix Release
+Bugfix release
 
  * Made TrayIcon not attempt to load on 'win32' operating systems
  * Fixed trayicon bug that caused error messages everytime the Settings
@@ -1905,7 +1906,7 @@ Issues closed on GitHub
 
 ## Version 1.2.4.1 (August 18, 2006)
 
-### Bugfix Release
+Bugfix release
 
  * Disabled use of 'pwd' module on windows
  * Fixed bug with Buddylist tab not appearing on startup.
@@ -2328,3 +2329,615 @@ the middle-click one
 ## Version 0.4.2 (August 5, 2003)
 
  * First changelog entry.. Basically everything implemented :)
+
+
+# Release Notes (PySoulSeek)
+
+## Version 1.2.4 (August 16, 2003)
+
+The final version
+
+ * Workaround for corrupted shares database problem which many Mac users seem to
+   have
+ * Notification for incomplete configuration
+ * Fix for a subtle race condition between starting transfers and getting a
+   list of privileged users
+ * It's now possible to give download privileges to users from the userlist
+ * Password entry box now uses ***
+ * Search responses are now buffered - less flicker, less stress on the client
+ * If log window is collapsed, messages are now duplicated in the status bar
+ * It's now possible to track status changes for the individual users from
+   the userlist
+
+
+## Version 1.2.3 (July 23, 2003)
+
+### Added Features from Hyriand's Patch
+
+ * Pyslsk will ping the server every 30 seconds (rewrote it to be
+   gui-independent)
+ * Search history (remembers 10 last searches)
+ * Log window is now collapsable (state is remembered between sessions),
+   rewrote it to look prettier than hyriand's version
+ * Resizable panels aren't deleted anymore when made really small
+ * Userinfo and browse tabs show user status
+ * /clear /c will clear a chat screen
+ * version in the window title
+
+### Other Fixes
+
+ * the default "queue if" limit is now 10 kb/s to avoid "how do I limit the
+   number of uploads" questions
+ * errors when decompressing filelists and search results no longer
+   cause a crash
+ * if locking a file is not possible, a download will continue anyway
+   with a warning
+
+
+## Version 1.2.2 (June 24, 2003)
+
+ * wxPython 2.4.1 fixes; this version is now required, because it fixes
+the "crash-on-tab in an empty notebook" problem and handles ctrl-c gracefully
+ * Ugly but working fix for the "cannot install idle handler twice" crash
+
+
+## Version 1.2.1 (June 18, 2003)
+
+ * Python 2.3 fixes
+ * Python 2.2.0 fixes
+ * Fix for "too many open files problem"
+ * Aborted files are now not restarted when a user logs back on
+ * New address for postcards
+
+
+## Version 1.2.0 (May 17, 2003)
+
+ * Tweaks for reducing CPU usage
+
+
+## Version 1.2.0pre4 (May 13, 2003)
+
+ * Fix for silly queue bug
+ * Split the file index into two - primary index of files and secondary index
+   of words. This should improve performance.
+
+
+## Version 1.2.0pre3 (May 12, 2003)
+
+ * Fixes for transfer bugs
+
+
+## Version 1.2.0pre2 (May 12, 2003)
+
+ * Changing options without rescanning caused a traceback
+
+
+## Version 1.2.0pre1 (May 12, 2003)
+
+ * Per user upload queue limit (specified in megabytes)
+ * Switched to bsd db for storing shared files information
+ * Contents of unknown messages is now printed in the log window
+ * Improved performance of searches lookup (should help with ui freezes)
+ * Improved the (*) in window title behaviour
+
+
+## Version 1.1.2 (April 29, 2003)
+
+ * Fixed a race condition occuring on SMP machines
+ * Added remembered/wishlist searches from Hyriand's patch
+ * Fixed stuck "Requesting file"
+ * Sometimes transfer timers were not cancelled properly
+
+
+## Version 1.1.1 (April 28, 2003)
+
+ * Improved transfer status messages
+ * Fixed a couple of potential transfer problems
+
+
+## Version 1.1.0 (April 26, 2003)
+
+ * Removed all references to wxPythonOSX - it's too instable
+ * Updated pyslsk-import-winconfig
+ * Pressing OK in settings now disables the config window when a
+   rescan is happening
+ * Aborted downloads are now kept in the downloads list
+ * When there's a new private message or a public message that contains your
+   username, the window title is marked with a (*)
+
+
+## Version 1.1.0pre5 (April 19, 2003)
+
+ * Fixes for two embarrassing bugs in pre4
+
+
+## Version 1.1.0pre4 (April 18, 2003)
+
+ * Improved userinfo and userbrowse gauges behavior
+ * Fixed a bug where index of shared files was corrupted
+ * Fixes for some tracebacks introduced in pre3
+ * Old index is not anymore used for building a new one, as it doesn't
+   improve speed
+ * If a user already exists in the userslist, adding him edits the comments
+ * Messages from the networking thread are now printed in the log window, not
+   on stdout
+ * Fixed the 100% CPU usage problem that happened occasionally
+
+
+## Version 1.1.0pre3 (April 17, 2003)
+
+ * pyslsk now switches to the new server automatically, if the old one is
+   found in the settings
+ * File errors when transferring files are now reported in the log window
+ * If a peer does not do a proper initialization procedure, the connection is
+   closed
+ * It was not possible to edit userlist comments
+ * Updated OS X instructions
+
+
+## Version 1.1.0pre2 (April 14, 2003)
+
+ * The new more efficient distributed network is now supported
+ * The server location is now hardcoded, still possible to correct it
+ * Files in 'Cannot connect' state are now retried once, just in case the
+   server forgot to tell us the user status
+ * Added autojoin checkbox in room windows
+ * If the logs directory does not exist, it is created
+ * Config window is now non-modal
+ * If status was set to away manually, auto-return does not happen
+ * Sorting the userlist now works properly
+
+
+## Version 1.1.0pre1 (April 5, 2003)
+
+ * Code cleanups (with suggestions from Alexey Vyskubov)
+ * Added ignore list (by SmackleFunky)
+ * Added autoaway (with configurable timeout)
+ * If the server reports port 0 for a user, try again, up to 10 times
+ * Fixed stuck "Waiting for transfer"
+ * Rescan on startup now happens in background
+ * Userlist is now in its own tab, you can now add comments to entries
+ * A private message is sent as a workaround for windows client bug
+   with "download containing folder"
+ * If a parent node in the distributed network starts sending garbage, close
+   the connection and find another parent
+ * File errors are now written in the log window, not on stdout
+ * It is now possible to download two files with the same name simultaneously
+ * If a file already exists, pyslsk does not overwrite it with a just
+   finished file, it renames it to file.1 (file.2 and so on)
+ * It is now possible to abort a transfer and remove the incomplete file
+ * Added popup menu in private chat tabs
+ * It is now possible to sort search list by order of arrival and by
+   possibility of immediate download
+ * Search and browse lists now have bitrate and length as separate columns
+ * Menu items in transfers panels were not always working
+ * Reduced flicker in the chatroom userlist
+ * Queue sizes are now reported more accurately
+
+
+## Version 1.0.4 (March 26, 2003)
+
+ * If your name was mentioned in a chat room, the chat tab will be
+   highlighted with a yellow bird, not with the blue one. Also, the line
+   containing  your username will be red. (based on patch from Hyriand)
+ * pyslsk now sends speed statistics to the server after a successfull download
+ * Fixed the GUI freeze when someone is queueing a lot of files
+ * "Download containing folder" was not working in all cases
+ * Reduced rescan time
+ * Added /rsearch, /bsearch, /usearch
+ * Status bar now shows the number of users downloading/uploading
+ * /unban was not working
+
+
+## Version 1.0.3 (March 23, 2003)
+
+ * Fixed a few bugs in the new shares rescanning code
+ * Sorting transfers list sometimes caused a traceback
+
+
+## Version 1.0.2 (March 21, 2003)
+
+ * Configurable port range (patch from Hyriand)
+ * Room and userlist searches (based on patch from Hyriand)
+ * Online/Away/Offline status in the statusbar (patch from Hyriand)
+
+
+## Version 1.0.1 (March 20, 2003)
+
+ * Rescanning of shares now skips over directories that have not changed
+   (inspired by hyriand's patch)
+ * It is possible to optionally rescan shares on startup
+ * Rescanning of shares now does not freeze the GUI
+
+
+## Version 1.0.0 (March 12, 2003)
+
+ * Fixes for possible temporary UI freezes
+ * Removed "user phrases turn grey" feature, because it triggers gtk bug
+   causing a segfault
+ * Fixed a problem with clearing transfers
+ * Rescanning of shares wasn't possible under gtk2
+ * If we send search results to someone this is now always displayed in the
+   log window
+ * Fixes for "Download containing folder"
+ * Added missing menu entries to search tabs, filelist tabs and userlists
+ * It is now possible to refresh the filelist of the other user
+ * Buttons on the user-info rearranged and some new added
+ * Show ip address now does reverse DNS lookup
+ * Unrecognized commands in chat are no longer sent as chat phrases
+
+
+## Version 1.0.0pre6 (March 10, 2003)
+
+ * Added script for importing configuration from the windows version
+   (provided by geertk)
+ * It is now possible to change the path for writing log files
+ * Bogus config sections no longer cause a traceback
+ * pyslsk now resumes files left over by the official windows client
+ * phrases said by users no longer present in the room turn grey now
+ * wxPython 2.4.0.4 is now supported
+ * Sorting is now case-insensitive
+
+
+## Version 1.0.0pre5a (March 2, 2003)
+
+ * Fixed a silly bug with searching
+
+
+## Version 1.0.0pre5 (March 2, 2003)
+
+ * Banning (patch from Hyriand)
+ * Upload bandwidth management (patch from Hyriand)
+ * Numbers are now formatted according to locale rules
+ * Total upload and download bandwidth usage is shown in the status bar
+ * Various / commands in chat (see Help menu for full description)
+   (patch from Hyriand)
+ * Nickname completion in chat (patch from Hyriand)
+
+
+## Version 1.0.0pre4 (February 28, 2003)
+
+ * Config files are now saved every time a configurration is changed, not
+   just on exit
+ * Fixed a silly typo in FolderContentsResponse
+ * Fix against potential distributed network attack
+ * Fix for Unicode support in settings window
+
+
+## Version 1.0.0pre3 (February 26, 2003)
+
+ * Fixed handling of "Download containing folder" requests from other peers
+ * Fixed stuck "Establishing connection"
+ * Administrative messages are now supported
+ * Fixes for distributed network support
+ * Hopefully fixed the exit problem (where pyslsk waits for a while and
+   then prints a bunch of tracebacks)
+ * Fixed a DoS vulnerability found by hyriand
+
+
+## Version 1.0.0pre2 (February 23, 2003)
+
+ * Fixes for bugs in 1.0.0pre1
+ * "Download containing folder" should now be possible for search
+   results that pyslsk returns
+
+
+## Version 1.0.0pre1 (February 22, 2003)
+
+ * Pysoulseek is now searchable; it does not however support being a parent node
+   in the distributed network
+ * Unicode support that allows using pyslsk with Unicode builds of wxPython,
+   such as Gtk2 build
+ * Reduced flicker in transfers panels
+ * Reduced CPU/memory consumption when uploading big files
+ * Shared files database is now stored in a pickled format in a separate file
+   \<config\>.shares
+ * Fixed a problem with broken VBR mp3 files
+ * A situation when someone else logs in under our nickname is now handled
+   gracefully
+ * pyslsk now responds to place in queue requests
+ * It is now possible to exit pyslsk when a server connection is in progress
+ * Download directory is now created when the transfer starts
+ * Inverse colour gtk themes are now usable with pyslsk
+ * A bunch of smaller bugfixes
+
+
+## Version 0.4.11 (January 15, 2003)
+
+ * wxPython 2.3.4 at least is now required as the previous versions had trouble
+   displaying user info picture
+ * Chatrooms and private chat conversations can now be written to files
+   (patch by Zip)
+ * Fixed a problem with transfers stuck in "Waiting for peer to connect"
+ * Fixed a problem with changes in userlist or the whole userlist being
+   lost sometimes
+ * Fixed potential problems with asynchronous connect()
+ * Empty files are now uploaded and downloaded correctly
+ * Fixed a problem with scanning unreadable directories
+ * It is now possible to exit during the auto-reconnect
+ * pyslsk was autoreconnecting when the server did not let us in due
+   to the wrong password or other valid reason
+ * Away state is now preserved during the reconnect
+
+
+## Version 0.4.10d (January 2, 2003)
+
+ * ID3 mp3s are now scanned quicker
+ * Retrying aborted transfers if the user has logged off is now handled
+   correctly
+ * If a transfer is negotiated and new transfer requests arrive, they are
+   queued
+ * Disconnecting now correctly handles changes in downloads and user list
+ * Clicking on column header outside the titles no longer produces a traceback
+
+
+## Version 0.4.10c (December 31, 2002)
+
+ * Fixed a few tracebacks
+ * wxPython 2.3.3 has a problem with displaying user info, so 2.3.4 is
+   now required
+
+
+## Version 0.4.10b (December 25, 2002)
+
+ * Backed out the 0.4.10a fix, as it does not fix every case; you have to
+   rescan the shared folders through the settings window to upgrade properly
+ * Added a postcards statement
+
+
+## Version 0.4.10a (December 24, 2002)
+
+ * Fixed a problem with upgarding shared files list to the new format
+
+
+## Version 0.4.10 (December 23, 2002)
+
+Christmas release
+
+ * pyslsk now tries to reuse the same address when opening a listening socket
+   (patch from waxed)
+ * Bitrate and length of VBR mp3s are now correctly determined
+ * Length and bitrate of shared Ogg Vorbis files are now determined,
+   if Python Vorbis bindings are installed
+ * Updated subtabs are now marked with icons, like the main tabs.
+ * It is possible to close/open rooms list, like the user list
+ * Further reduced the CPU usage during sending the list of shared files
+   to other peers	
+ * Added "Close and ignore" button to search tabs (it closes a search tab and
+   discards further search results)
+ * Updated Mac OS X instructions
+ * pyslsk now uses commandline switches: --help for help, -c for an alternative
+   config file
+ * pyslsk now correctly shutdowns on SIGTERM
+ * "Waiting for peer to connect" states now timeout after 5 minutes to "Cannot
+   connect" state (untested)
+ * pyslsk now tries to reconnect to a server if the server closes the
+   connection
+ * a problem with dynamic ip addresses was fixed
+ * pyslsk now locks files when writing to them
+ * colours in chat: blue for own phrases, green for /me things, black
+   for everything else
+ * picture in user info tab can be scrolled now
+
+
+## Version 0.4.9b (November 24, 2002)
+
+ * Fixed an obscure problem with reading config files
+ * It's now again possible to save users' pictures
+
+
+## Version 0.4.9a (November 23, 2002)
+
+ * The number of the shared files is now updated on the server after a rescan
+   of the shared folders
+ * Increased the default width of the directory column in the Search tab
+ * wxWindows is not actually required, only wxPython
+ * Not all debug messages were filtered out
+ * Away/returned/joined/left messages are now only displayed once
+
+
+## Version 0.4.9 (November 22, 2002)
+
+ * Errors in the config file are not anymore silently ignored
+ * It is now possible to switch off debug messages in the log window
+ * The number of the shared files is now updated on the server after each
+   successful download
+ * The main window resize is now handled correctly
+ * Significantly reduced CPU usage during transfers, and during sending
+   the list of shared files to other peers
+ * A few cosmetic fixes
+
+
+## Version 0.4.8 (November 9, 2002)
+
+ * Binary RPM is now provided
+ * Added RPM building tips to the installation instrictions
+ * It is now possible to join selected rooms automatically on startup
+ * If possible, the client connects automatically on startup
+ * User's status is now shown in private chat window
+ * It is now possible to toggle status between Online and Away
+ * A bug that caused some uploads to fail is fixed
+ * Added "Leave" button to the chatroom window
+
+
+## Version 0.4.7 (October 26, 2002)
+
+ * Added User List (Buddy List) capability
+ * Fixed a few potential tracebacks
+ * A correct response to a queue request that cannot be served is now given
+ * Newly created subfolders in download folder were not added to shared list
+ * Updated Mac OS X instructions
+ * It is now possible to download all selected files and not just the
+   focused one
+
+
+## Version 0.4.6b (October 12, 2002)
+
+ * It was not possible to create a configuration from scratch (new users)
+
+
+## Version 0.4.6a (October 12, 2002)
+
+ * It was necessary to provide a picture in order to connect
+ * Self-description was corrupted each time the settings window was reopened
+
+
+## Version 0.4.6 (October 11, 2002)
+
+Dedicated to the memory of my father.
+
+ * All lists are now sortable
+ * Fixed a problem with non-blocking sockets on FreeBSD
+ * Fixed a possible crash when closing a socket
+ * Fixed a few potential transfer problems
+ * Fixed a few GUI problems with wxPython 2.3.3; this version is now
+   required
+ * It is now possible to save pictures from users' information.
+ * Added locale-aware timestamps in chat
+ * Optional sharing of download folder is now possible
+ * It is now possible to provide personal information (description and
+   picture) to others
+
+
+## Version 0.4.5 (September 12, 2002)
+
+ * Removed the Global Users List function, because the server no longer
+   supports it
+ * "Uploads are stuck in the queued state forever" problem should now really
+   be gone
+ * Idle peer connections are now closed after a timeout of two minutes
+ * The client no longer crashes if it reaches a limit of open sockets or files
+ * Fixed a problem with duplicate upload requests (the second one has no effect
+   now)
+ * Ogg Vorbis files are now uploaded before any other files (but after files
+   requested by privileged users)
+ * Fixed a problem with accelerator keys
+ * The search results tabs now open immediately after the search request
+   is made
+ * It is now possible to send private messages from the transfers window
+ * Retrying uploads now has no effect
+ * If an upload is aborted or cleared, the upload queue is now checked
+   for queued uploads that could be started
+
+
+## Version 0.4.4 (August 27, 2002)
+
+ * The situation when either the uploader or the downloader logs off or back on
+   should be handled gracefully now
+ * "Uploads are stuck in the queued state forever" and "The bandwidth
+   limitation has no effect" problems should be gone
+ * Fixed a problem with accelerator keys
+
+
+## Version 0.4.3 (August 23, 2002)
+
+ * When the uploaded file was not the last one in the upload queue, the upload
+   went horribly wrong
+
+
+## Version 0.4.2 (August 23, 2002)
+
+ * Fixed a couple of locale problems
+ * Fixed a problem with a notification of a download failure
+ * It is now possible to get place in line for queued downloads
+
+
+## Version 0.4.1 (August 21, 2002)
+
+ * Fixed a bug where subsequent upload requests from the same user
+   or notifications of a download failure caused a crash
+ * Failed downloads are now retried if there's an explicit notification from
+   the uploader
+ * Reduced flicker in the transfers tabs
+ * Binary RPM packages should now include GUI modules
+
+
+## Version 0.4.0 (August 19, 2002)
+
+ * Added files sharing and uploads
+ * Updated OS X instructions
+ * Renamed the main executable to pyslsk
+ * Added download privileges checking
+ * Fixed a bug where users with no locale setting were not able to chat
+ * Added speed, time elapsed/left to transfers lists
+ * Search results now show how much files users have in queue
+ * Clearing transfers should now work correctly
+
+
+## Version 0.3.4a (August 8, 2002)
+
+ * Updated pyslsk to use the new server list location on slsk.org
+
+
+## Version 0.3.4 (August 4, 2002)
+
+ * Added Mac OS X instructions in README.OSX file
+ * Reworked the INSTALL file somewhat
+ * Added timestamps to private chat messages
+ * Added network character encoding selection (users in Russia will greatly
+   appreciate this)
+ * Separated UI classes from high-level logic to allow for other UI frontends
+   in the future
+ * Added searching within a specific user's files and folders
+ * Windows that have been updated but not yet switched into are now
+   marked with an icon on the tab
+
+
+## Version 0.3.3 (June 30, 2002)
+
+ * The official client and server reverted back to the old protocol to
+   save bandwidth, and so do we.
+
+
+## Version 0.3.2 (June 15, 2002)
+
+ * Added a few startup checks of the environment (libs versions etc.)
+ * Transfer requests now go through the same connection
+ * Queued transfers now work again
+
+
+## Version 0.3.1 (June 7, 2002)
+
+ * A few crashes have been fixed
+ * Yet another protocol tweak has been implemented (on login the client
+   sends its version to the server, as pyslsk version numbers have no relation to
+   official client versions, we send a bogus high number).
+
+
+## Version 0.3.0 (May 27, 2002)
+
+ * The new backwards-incompatible (but nuch better) file transfer
+   protocol is now supported
+ * Changes in peer-to-peer protocol are now supported
+
+
+## Version 0.2.0 (April 28, 2002)
+
+ * The new backwards-incompatible protocol introduced in v117
+   of the official client is now supported.
+ * Added multiple chatrooms capability.
+ * Added global users list window.
+
+
+## Version 0.1.1 (April 3, 2002)
+
+ * Fixed an embarrasing bug where clicking OK in settings window did
+   not actually change the settings
+ * Active transfers are now correctly saved and resumed
+
+
+## Version 0.1.0 (March 31, 2002)
+
+ * Online/away status is now shown in users list
+ * Added About dialog box
+ * Added the list of official servers to choose from, taken from official
+   website
+ * Added downloads. Remotely queued downloads, 'Download folder' in user
+   browse window, 'Download containing folder' in search result window,
+   saving/restoring download list on exit/startup are all supported.
+
+
+## Version 0.0.0 (February 10, 2002)
+
+  * Initial release. Supports public chat, private chat, file searches,
+    filelists browsing, users info browsing.
