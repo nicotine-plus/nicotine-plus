@@ -11,37 +11,40 @@ Nicotine+ uses GTK for its graphical user interface, and is written in Python.
 Check out the [screenshots](data/screenshots/SCREENSHOTS.md) and [source code](https://github.com/nicotine-plus/nicotine-plus).
 <br clear="right">
 
+
 ## Download
 
-The current stable version of Nicotine+ is 3.2.2, released on March 19, 2022.
+The current stable version of Nicotine+ is 3.2.2, released on March 19, 2022. See the [release notes](NEWS.md).
 
-* [Download Nicotine+](doc/DOWNLOADS.md)  
-Nicotine+ is available for GNU/Linux, *BSD, Windows and macOS
+Downloads are available for:
 
-* [Release Notes](NEWS.md)  
-See what's new in the latest version of Nicotine+
+ * [GNU/Linux, *BSD and Solaris](doc/DOWNLOADS.md#gnulinux-bsd-solaris)
+ * [Windows](doc/DOWNLOADS.md#windows)
+ * [macOS](doc/DOWNLOADS.md#macos)
+
 
 ## Get Involved
 
 If you feel like contributing to Nicotine+, there are several ways to help:
 
-* [Issue Tracker](https://github.com/nicotine-plus/nicotine-plus/issues)  
-Report a problem or suggest improvements
+ * [Issue Tracker](https://github.com/nicotine-plus/nicotine-plus/issues)  
+   Report a problem or suggest improvements
 
-* [Testing](doc/TESTING.md)  
-Download the latest unstable build and help test Nicotine+
+ * [Testing](doc/TESTING.md)  
+   Download the latest unstable build and help test Nicotine+
 
-* [Translations](doc/TRANSLATIONS.md)  
-Translate Nicotine+ into another language with [Weblate](https://hosted.weblate.org/engage/nicotine-plus)
+ * [Translations](doc/TRANSLATIONS.md)  
+   Translate Nicotine+ into another language with [Weblate](https://hosted.weblate.org/engage/nicotine-plus)
 
-* [Packaging](doc/PACKAGING.md)  
-Package Nicotine+ for a distribution or operating system
+ * [Packaging](doc/PACKAGING.md)  
+   Package Nicotine+ for a distribution or operating system
 
-* [Development](doc/DEVELOPING.md)  
-Implement bug fixes, enhancements or new features
+ * [Development](doc/DEVELOPING.md)  
+   Implement bug fixes, enhancements or new features
 
-* [IRC Channel](https://web.libera.chat/?channel=#nicotine+)  
-Chat in the #nicotine+ IRC channel on [Libera.Chat](https://libera.chat/)
+ * [IRC Channel](https://web.libera.chat/?channel=#nicotine+)  
+   Chat in the #nicotine+ IRC channel on [Libera.Chat](https://libera.chat/)
+
 
 ## Where did the name Nicotine come from?
 
@@ -54,11 +57,13 @@ I stumbled across [this quote](http://www.bash.org/?10159):
 
 <p align="right">Hyriand, <i>former Nicotine maintainer</i>, 2003</p>
 
+
 ## Legal and Privacy
 
 Nicotine+ does not collect any user data. Different policies may apply to the default Soulseek server, which is not operated by the Nicotine+ Team.
 
 When connecting to the default Soulseek server, you agree to abide by the Soulseek [rules](https://www.slsknet.org/news/node/681) and [terms of service](https://www.slsknet.org/news/node/682).
+
 
 ## Authors
 
