@@ -11,31 +11,39 @@ Nicotine+ uses GTK for its graphical user interface, and is written in Python.
 Check out the [screenshots](data/screenshots/SCREENSHOTS.md) and [source code](https://github.com/nicotine-plus/nicotine-plus).
 <br clear="right">
 
-# Download Nicotine+
+## Download
 
-The current stable version of Nicotine+ is 3.2.2, released on March 19, 2022. See the [release notes](NEWS.md).
+The current stable version of Nicotine+ is 3.2.2, released on March 19, 2022.
 
-Downloads are available for:
+[**Download Nicotine+**](doc/DOWNLOADS.md)  
+Nicotine+ is available for GNU/Linux, *BSD, Windows and macOS
 
-- [GNU/Linux, *BSD and Solaris](doc/DOWNLOADS.md#gnulinux-bsd-solaris)
-- [Windows](doc/DOWNLOADS.md#windows)
-- [macOS](doc/DOWNLOADS.md#macos)
+[**Release Notes**](NEWS.md)  
+See what's new in the latest version of Nicotine+
 
-# Getting Involved
+## Get Involved
 
 If you feel like contributing to Nicotine+, there are several ways to help:
 
-* Report a problem or suggest improvements by
-  * discussing your findings in the [#nicotine+ IRC channel](https://web.libera.chat/?channel=#nicotine+) on [Libera.Chat](https://libera.chat/), or
-  * [creating a new issue](https://github.com/nicotine-plus/nicotine-plus/issues) on GitHub.
-* Install the latest unstable build and test Nicotine+, see [TESTING.md](doc/TESTING.md).
-* Translate Nicotine+ into another language with [Hosted Weblate](https://hosted.weblate.org/engage/nicotine-plus), see [TRANSLATIONS.md](doc/TRANSLATIONS.md).
-* Package Nicotine+ for a distribution or operating system, see [PACKAGING.md](doc/PACKAGING.md).
-* Implement bug fixes and features, see [DEVELOPING.md](doc/DEVELOPING.md).
-  * For a list of tasks, see the [issue tracker](https://github.com/nicotine-plus/nicotine-plus/issues).
-  * For documentation on the Soulseek protocol, see [SLSKPROTOCOL.md](doc/SLSKPROTOCOL.md).
+[**Issue Tracker**](https://github.com/nicotine-plus/nicotine-plus/issues)  
+Report a problem or suggest improvements
 
-# Where did the name Nicotine come from?
+[**Testing**](doc/TESTING.md)  
+Download the latest unstable build and help test Nicotine+
+
+[**Translations**](doc/TRANSLATIONS.md)  
+Translate Nicotine+ into another language with [Weblate](https://hosted.weblate.org/engage/nicotine-plus)
+
+[**Packaging**](doc/PACKAGING.md)  
+Package Nicotine+ for a distribution or operating system
+
+[**Development**](doc/DEVELOPING.md)  
+Implement bug fixes, enhancements or new features
+
+[**IRC Channel**](https://web.libera.chat/?channel=#nicotine+)  
+Chat in the #nicotine+ IRC channel on [Libera.Chat](https://libera.chat/)
+
+## Where did the name Nicotine come from?
 
 > I was in a geeky mood and was browsing [http://www.bash.org](http://www.bash.org)'s QDB.  
 I stumbled across [this quote](http://www.bash.org/?10159):  
@@ -46,11 +54,12 @@ I stumbled across [this quote](http://www.bash.org/?10159):
 
 <p align="right">Hyriand, <i>former Nicotine maintainer</i>, 2003</p>
 
-# Legal and Privacy
+## Legal and Privacy
 
-- When connecting to the default Soulseek server, you agree to abide by the Soulseek [rules](https://www.slsknet.org/news/node/681) and [terms of service](https://www.slsknet.org/news/node/682).
-- Nicotine+ does not collect any user data. Different policies may apply to the default Soulseek server, which is not operated by the Nicotine+ Team.
+Nicotine+ does not collect any user data. Different policies may apply to the default Soulseek server, which is not operated by the Nicotine+ Team.
 
-# Authors
+When connecting to the default Soulseek server, you agree to abide by the Soulseek [rules](https://www.slsknet.org/news/node/681) and [terms of service](https://www.slsknet.org/news/node/682).
 
-Nicotine+ exists thanks to the [core contributors](AUTHORS.md), [translators](TRANSLATORS.md) and [other contributions](https://github.com/nicotine-plus/nicotine-plus/graphs/contributors). Nicotine+ is free and open source software, released under the terms of the [GNU Public License v3](https://www.gnu.org/licenses/gpl-3.0-standalone.html) or later.
+## Authors
+
+Nicotine+ is free and open source software, released under the terms of the [GNU Public License v3](https://www.gnu.org/licenses/gpl-3.0-standalone.html) or later. Nicotine+ exists thanks to its [core contributors](AUTHORS.md), [translators](TRANSLATORS.md) and [other contributions](https://github.com/nicotine-plus/nicotine-plus/graphs/contributors).
