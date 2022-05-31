@@ -2752,20 +2752,18 @@ class Preferences(UserInterface):
         for widget in list(scope.__dict__.values()):
             update_widget_visuals(widget)
 
-    def set_active_page(self, page):
+    def set_active_page(self, page_id):
 
-        if page is None:
+        if page_id is None:
             return
 
-        pos = 0
-        for page_id, _label, _icon_name in self.page_ids:
-            if page_id == page:
-                break
+        for index, (n_page_id, _label, _icon_name) in enumerate(self.page_ids):
+            if n_page_id != page_id:
+                continue
 
-            pos += 1
-
-        row = self.preferences_list.get_row_at_index(pos)
-        self.preferences_list.select_row(row)
+            row = self.preferences_list.get_row_at_index(index)
+            self.preferences_list.select_row(row)
+            break
 
     def set_widgets_data(self, options):
 
