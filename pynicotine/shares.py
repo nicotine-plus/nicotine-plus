@@ -396,7 +396,7 @@ class Scanner:
 
         return stream
 
-    def get_files_index(self, sharedfiles, fileindex_dest):
+    def get_files_index(self, shared_files, fileindex_dest):
         """ Update Search index with new files """
 
         """ We dump data directly into the file index database to save memory.
@@ -407,38 +407,32 @@ class Scanner:
         self.share_dbs[fileindex_dest] = shelve.open(os.path.join(self.config.data_dir, fileindex_dest + ".db"),
                                                      flag='n', protocol=pickle.HIGHEST_PROTOCOL)
         wordindex = {}
+        num_shared_files = len(shared_files)
+        last_percent = 0.0
 
-        index = 0
-        count = 0
-        lastpercent = 0.0
-
-        for folder in sharedfiles:
-            count += 1
-
+        for file_num, folder in enumerate(shared_files, start=1):
             # Truncate the percentage to two decimal places to avoid sending data to the GUI thread too often
-            percent = float("%.2f" % (count / len(sharedfiles)))
+            percent = float("%.2f" % (file_num / num_shared_files))
 
-            if lastpercent < percent <= 1.0:
+            if last_percent < percent <= 1.0:
                 self.queue.put(percent)
-                lastpercent = percent
+                last_percent = percent
 
-            for fileinfo in sharedfiles[folder]:
+            for file_index, fileinfo in enumerate(shared_files[folder]):
                 fileinfo = list(fileinfo)
                 filename = fileinfo[0]
 
                 # Add to file index
                 fileinfo[0] = folder + '\\' + filename
-                self.share_dbs[fileindex_dest][repr(index)] = fileinfo
+                self.share_dbs[fileindex_dest][repr(file_index)] = fileinfo
 
                 # Collect words from filenames for Search index
                 # Use set to prevent duplicates
                 for k in set((folder + " " + filename).lower().translate(self.translatepunctuation).split()):
                     try:
-                        wordindex[k].append(index)
+                        wordindex[k].append(file_index)
                     except KeyError:
-                        wordindex[k] = [index]
-
-                index += 1
+                        wordindex[k] = [file_index]
 
         return wordindex
 
