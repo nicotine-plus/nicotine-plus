@@ -509,7 +509,7 @@ class NicotineFrame(UserInterface):
                 "if this is your first time logging in.") % config.sections["server"]["login"]
 
         OptionDialog(
-            parent=self.application.get_active_window(),
+            parent=self.window,
             title=title,
             message=msg,
             first_button=_("_Cancel"),
@@ -1747,8 +1747,9 @@ class NicotineFrame(UserInterface):
     def update_log(self, msg, level):
 
         if level and level.startswith("important"):
+            parent = self.preferences.dialog if self.preferences.dialog.get_visible() else self.window
             title = "Information" if level == "important_info" else "Error"
-            MessageDialog(parent=self.application.get_active_window(), title=title, message=msg).show()
+            MessageDialog(parent=parent, title=title, message=msg).show()
 
         # Keep verbose debug messages out of statusbar to make it more useful
         if level not in ("transfer", "connection", "message", "miscellaneous"):
@@ -1926,7 +1927,7 @@ class NicotineFrame(UserInterface):
                   exc_value, ''.join(format_tb(exc_traceback))))
 
         OptionDialog(
-            parent=self.application.get_active_window(),
+            parent=self.window,
             title=_("Critical Error"),
             message=_("Nicotine+ has encountered a critical error and needs to exit. "
                       "Please copy the following message and include it in a bug report:") + error,
