@@ -89,27 +89,25 @@ class TreeView:
 
         # Column order not supported in Python 3.5
         if not column_config or sys.version_info[:2] <= (3, 5):
-            for column_id, column in cols.items():
+            for column in cols.values():
                 self.widget.append_column(column)
             return
 
         # Restore column order from config
         for column_id in column_config:
-            try:
-                self.widget.append_column(cols[column_id])
-            except Exception:
-                # Invalid column
+            column = cols.get(column_id)
+
+            if column is None:
                 continue
+
+            self.widget.append_column(column)
 
         added_columns = self.widget.get_columns()
 
         # If any columns were missing in the config, append them
-        pos = 0
-        for column_id, column in cols.items():
+        for index, column in enumerate(cols.values()):
             if column not in added_columns:
-                self.widget.insert_column(column, pos)
-
-            pos += 1
+                self.widget.insert_column(column, index)
 
     @staticmethod
     def _hide_columns(cols, column_config):
@@ -128,26 +126,23 @@ class TreeView:
     def _set_last_column_autosize(self, *_args):
 
         columns = self.widget.get_columns()
-        col_count = len(columns)
+        resizable_set = False
 
-        if col_count == 0:
-            return
+        for column in reversed(columns):
+            if not column.get_visible():
+                continue
 
-        prev_index = col_count - 1
-
-        # Make sure the last visible column isn't resizable
-        for i in reversed(range(len(columns))):
-            prev_index -= 1
-
-            if columns[i].get_visible():
-                column = columns[i]
+            if not resizable_set:
+                # Make sure the last visible column isn't resizable
                 column.set_resizable(False)
                 column.set_fixed_width(-1)
-                break
 
-        # Make the previously last column resizable again
-        prev_column = columns[prev_index]
-        prev_column.set_resizable(True)
+                resizable_set = True
+                continue
+
+            # Make the previously last column resizable again
+            column.set_resizable(True)
+            break
 
     def _header_toggle(self, _action, _state, columns, index):
 
@@ -165,13 +160,12 @@ class TreeView:
 
         visible_columns = [column for column in columns if column.get_visible()]
         menu.clear()
-        pos = 1
 
-        for column in columns:
+        for column_num, column in enumerate(columns, start=1):
             title = column.get_widget().get_text()
 
             if title == "":
-                title = _("Column #%i") % pos
+                title = _("Column #%i") % column_num
 
             menu.add_items(
                 ("$" + title, None)
@@ -182,8 +176,7 @@ class TreeView:
             if column in visible_columns:
                 menu.actions[title].set_enabled(len(visible_columns) > 1)
 
-            menu.actions[title].connect("activate", self._header_toggle, columns, pos - 1)
-            pos += 1
+            menu.actions[title].connect("activate", self._header_toggle, columns, column_num - 1)
 
         return False
 
@@ -226,12 +219,11 @@ class TreeView:
 
         width_padding = 10
 
-        i = 0
         cols = OrderedDict()
         num_cols = len(columns)
         column_config = None
 
-        for column_data in columns:
+        for column_index, column_data in enumerate(columns):
             column_id = column_data["column_id"]
             title = column_data.get("title")
 
@@ -250,7 +242,7 @@ class TreeView:
                 default_sort_type = Gtk.SortType.DESCENDING if sort_type == "descending" else Gtk.SortType.ASCENDING
 
             if iterator_key:
-                self.iterator_key_column = i
+                self.iterator_key_column = column_index
 
             if self.widget_name:
                 try:
@@ -271,24 +263,24 @@ class TreeView:
 
             if column_type == "text":
                 renderer = Gtk.CellRendererText(xpad=width_padding, ypad=height_padding)
-                column = Gtk.TreeViewColumn(column_id, renderer, text=i)
+                column = Gtk.TreeViewColumn(column_id, renderer, text=column_index)
 
             elif column_type == "number":
                 xalign = 1
                 renderer = Gtk.CellRendererText(xalign=xalign, xpad=width_padding, ypad=height_padding)
-                column = Gtk.TreeViewColumn(column_id, renderer, text=i)
+                column = Gtk.TreeViewColumn(column_id, renderer, text=column_index)
                 column.set_alignment(xalign)
 
             elif column_type == "progress":
                 renderer = Gtk.CellRendererProgress(ypad=progress_padding)
-                column = Gtk.TreeViewColumn(column_id, renderer, value=i)
+                column = Gtk.TreeViewColumn(column_id, renderer, value=column_index)
 
             elif column_type == "toggle":
                 xalign = 0.5
                 renderer = Gtk.CellRendererToggle(xalign=xalign, xpad=13)
                 renderer.connect("toggled", self.on_toggle, column_data["toggle_callback"])
 
-                column = Gtk.TreeViewColumn(column_id, renderer, active=i)
+                column = Gtk.TreeViewColumn(column_id, renderer, active=column_index)
 
             elif column_type == "icon":
                 renderer = Gtk.CellRendererPixbuf()
@@ -301,9 +293,9 @@ class TreeView:
                         # Use the same size as the original icon
                         renderer.set_property("stock-size", 0)
 
-                    column = Gtk.TreeViewColumn(column_id, renderer, icon_name=i)
+                    column = Gtk.TreeViewColumn(column_id, renderer, icon_name=column_index)
                 else:
-                    column = Gtk.TreeViewColumn(column_id, renderer, gicon=i)
+                    column = Gtk.TreeViewColumn(column_id, renderer, gicon=column_index)
 
             if width is not None:
                 column.set_resizable(True)
@@ -337,8 +329,6 @@ class TreeView:
 
             column.set_sort_column_id(sort_column)
             cols[column_id] = column
-
-            i += 1
 
         self._append_columns(cols, column_config)
         self._hide_columns(cols, column_config)
@@ -540,7 +530,6 @@ def collapse_treeview(treeview, grouping_mode):
 
 def initialise_columns(frame, treeview_name, treeview, *args):
 
-    i = 0
     cols = OrderedDict()
     num_cols = len(args)
     column_config = None
@@ -555,7 +544,7 @@ def initialise_columns(frame, treeview_name, treeview, *args):
 
     width_padding = 10
 
-    for column_id, title, width, column_type, extra in args:
+    for column_index, (column_id, title, width, column_type, extra) in enumerate(args):
         if treeview_name:
             try:
                 column_config = config.sections["columns"][treeview_name[0]][treeview_name[1]]
@@ -575,22 +564,22 @@ def initialise_columns(frame, treeview_name, treeview, *args):
 
         if column_type == "text":
             renderer = Gtk.CellRendererText(xpad=width_padding, ypad=height_padding)
-            column = Gtk.TreeViewColumn(column_id, renderer, text=i)
+            column = Gtk.TreeViewColumn(column_id, renderer, text=column_index)
 
         elif column_type == "number":
             xalign = 1
             renderer = Gtk.CellRendererText(xalign=xalign, xpad=width_padding, ypad=height_padding)
-            column = Gtk.TreeViewColumn(column_id, renderer, text=i)
+            column = Gtk.TreeViewColumn(column_id, renderer, text=column_index)
             column.set_alignment(xalign)
 
         elif column_type == "progress":
             renderer = Gtk.CellRendererProgress(ypad=progress_padding)
-            column = Gtk.TreeViewColumn(column_id, renderer, value=i)
+            column = Gtk.TreeViewColumn(column_id, renderer, value=column_index)
 
         elif column_type == "toggle":
             xalign = 0.5
             renderer = Gtk.CellRendererToggle(xalign=xalign, xpad=13)
-            column = Gtk.TreeViewColumn(column_id, renderer, active=i)
+            column = Gtk.TreeViewColumn(column_id, renderer, active=column_index)
 
         elif column_type == "icon":
             renderer = Gtk.CellRendererPixbuf()
@@ -603,9 +592,9 @@ def initialise_columns(frame, treeview_name, treeview, *args):
                     # Use the same size as the original icon
                     renderer.set_property("stock-size", 0)
 
-                column = Gtk.TreeViewColumn(column_id, renderer, icon_name=i)
+                column = Gtk.TreeViewColumn(column_id, renderer, icon_name=column_index)
             else:
-                column = Gtk.TreeViewColumn(column_id, renderer, gicon=i)
+                column = Gtk.TreeViewColumn(column_id, renderer, gicon=column_index)
 
         if width == -1:
             column.set_resizable(False)
@@ -645,8 +634,6 @@ def initialise_columns(frame, treeview_name, treeview, *args):
 
         cols[column_id] = column
 
-        i += 1
-
     append_columns(treeview, cols, column_config)
     hide_columns(treeview, cols, column_config)
 
@@ -684,52 +671,47 @@ def append_columns(treeview, cols, column_config):
 
     # Column order not supported in Python 3.5
     if not column_config or sys.version_info[:2] <= (3, 5):
-        for column_id, column in cols.items():
+        for column in cols.values():
             treeview.append_column(column)
         return
 
     # Restore column order from config
     for column_id in column_config:
-        try:
-            treeview.append_column(cols[column_id])
-        except Exception:
-            # Invalid column
+        column = cols.get(column_id)
+
+        if column is None:
             continue
+
+        treeview.append_column(column)
 
     added_columns = treeview.get_columns()
 
     # If any columns were missing in the config, append them
-    pos = 0
-    for column_id, column in cols.items():
+    for column_index, column in enumerate(cols.values()):
         if column not in added_columns:
-            treeview.insert_column(column, pos)
-
-        pos += 1
+            treeview.insert_column(column, column_index)
 
 
 def set_last_column_autosize(treeview):
 
     columns = treeview.get_columns()
-    col_count = len(columns)
+    resizable_set = False
 
-    if col_count == 0:
-        return
+    for column in reversed(columns):
+        if not column.get_visible():
+            continue
 
-    prev_index = col_count - 1
-
-    # Make sure the last visible column isn't resizable
-    for i in reversed(range(len(columns))):
-        prev_index -= 1
-
-        if columns[i].get_visible():
-            column = columns[i]
+        if not resizable_set:
+            # Make sure the last visible column isn't resizable
             column.set_resizable(False)
             column.set_fixed_width(-1)
-            break
 
-    # Make the previously last column resizable again
-    prev_column = columns[prev_index]
-    prev_column.set_resizable(True)
+            resizable_set = True
+            continue
+
+        # Make the previously last column resizable again
+        column.set_resizable(True)
+        break
 
 
 def hide_columns(_treeview, cols, column_config):
@@ -798,13 +780,12 @@ def press_header(menu, treeview):
 
     visible_columns = [column for column in columns if column.get_visible()]
     menu.clear()
-    pos = 1
 
-    for column in columns:
+    for column_num, column in enumerate(columns, start=1):
         title = column.get_widget().get_text()
 
         if title == "":
-            title = _("Column #%i") % pos
+            title = _("Column #%i") % column_num
 
         menu.add_items(
             ("$" + title, None)
@@ -815,8 +796,7 @@ def press_header(menu, treeview):
         if column in visible_columns:
             menu.actions[title].set_enabled(len(visible_columns) > 1)
 
-        menu.actions[title].connect("activate", header_toggle, treeview, columns, pos - 1)
-        pos += 1
+        menu.actions[title].connect("activate", header_toggle, treeview, columns, column_num - 1)
 
     return False
 
