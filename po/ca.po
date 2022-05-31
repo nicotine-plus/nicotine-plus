@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-22 02:04+0300\n"
-"PO-Revision-Date: 2022-05-29 17:55+0000\n"
+"PO-Revision-Date: 2022-05-30 19:19+0000\n"
 "Last-Translator: Maite Guix <maite.guix@gmail.com>\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ca/>\n"
@@ -1653,7 +1653,7 @@ msgstr "Nom d'usuari;APIKEY:"
 #: pynicotine/gtkgui/dialogs/preferences.py:2180
 msgid "Client name (e.g. amarok, audacious, exaile) or empty for auto:"
 msgstr ""
-"Nom del client (p. ex., amarok, audacious, exaile) o buit per a un automàtic:"
+"Nom del client (per ex. amarok, audacious, exaile) o buit per a un automàtic:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2184
 #: pynicotine/gtkgui/ui/settings/network.ui:81
@@ -1812,7 +1812,7 @@ msgstr "Descàrregues"
 #: pynicotine/gtkgui/ui/settings/uploads.ui:48
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:158
 msgid "Uploads"
-msgstr "Càrregues"
+msgstr "Pujades"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2755
 #: pynicotine/gtkgui/ui/settings/search.ui:42
@@ -1917,7 +1917,7 @@ msgstr "P_ausar"
 
 #: pynicotine/gtkgui/downloads.py:62
 msgid "Finished / Filtered"
-msgstr "Acabades / filtrades"
+msgstr "Acabada / filtrada"
 
 #: pynicotine/gtkgui/downloads.py:64 pynicotine/gtkgui/transferlist.py:102
 #: pynicotine/gtkgui/uploads.py:64
@@ -1938,7 +1938,7 @@ msgstr "Filtrada"
 
 #: pynicotine/gtkgui/downloads.py:68 pynicotine/gtkgui/uploads.py:67
 msgid "Queued…"
-msgstr "A la cua…"
+msgstr "En cua…"
 
 #: pynicotine/gtkgui/downloads.py:70 pynicotine/gtkgui/uploads.py:69
 msgid "Everything…"
@@ -1946,24 +1946,24 @@ msgstr "Tot…"
 
 #: pynicotine/gtkgui/downloads.py:82
 msgid "Clear Queued Downloads"
-msgstr "Netejar les baixades a la cua"
+msgstr "Netejar les descàrregues en cua"
 
 #: pynicotine/gtkgui/downloads.py:83
 msgid "Do you really want to clear all queued downloads?"
-msgstr "Vols netejar totes les baixades a la cua?"
+msgstr "Vols netejar totes les descàrregues en cua?"
 
 #: pynicotine/gtkgui/downloads.py:92
 msgid "Clear All Downloads"
-msgstr "Netejar totes les baixades"
+msgstr "Netejar totes les descàrregues"
 
 #: pynicotine/gtkgui/downloads.py:93
 msgid "Do you really want to clear all downloads?"
-msgstr "Vols netejar totes les baixades?"
+msgstr "Vols netejar totes les descàrregues?"
 
 #: pynicotine/gtkgui/downloads.py:109
 #, python-format
 msgid "Download %(num)i files?"
-msgstr "Baixar %(num)i fitxers?"
+msgstr "Descarregar %(num)i fitxers?"
 
 #: pynicotine/gtkgui/downloads.py:110
 #, python-format
@@ -2072,7 +2072,7 @@ msgstr "Preferir el mode _fosc"
 
 #: pynicotine/gtkgui/frame.py:1027
 msgid "Use _Header Bar"
-msgstr "Utilitzeu la barra de _capçaleres"
+msgstr "Utilitzar la barra de _capçaleres"
 
 #: pynicotine/gtkgui/frame.py:1028
 msgid "Show _Log History Pane"
@@ -2279,7 +2279,7 @@ msgstr "Descàrregues: %(speed)s"
 #: pynicotine/gtkgui/frame.py:1858
 #, python-format
 msgid "Uploads: %(speed)s"
-msgstr "Càrregues: %(speed)s"
+msgstr "Pujades: %(speed)s"
 
 #: pynicotine/gtkgui/frame.py:1948
 msgid "Critical Error"
@@ -2478,7 +2478,7 @@ msgstr "ID"
 #: pynicotine/gtkgui/search.py:364
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:253
 msgid "In Queue"
-msgstr "A la cua"
+msgstr "En cua"
 
 #: pynicotine/gtkgui/search.py:366 pynicotine/gtkgui/transferlist.py:141
 #: pynicotine/gtkgui/userbrowse.py:237
@@ -2508,19 +2508,19 @@ msgstr "Copiar la carpeta U_RL"
 
 #: pynicotine/gtkgui/search.py:407 pynicotine/gtkgui/userbrowse.py:277
 msgid "_Download File(s)"
-msgstr "_Baixa fitxers"
+msgstr "_Descarregar fitxers"
 
 #: pynicotine/gtkgui/search.py:408 pynicotine/gtkgui/userbrowse.py:278
 msgid "Download File(s) _To…"
-msgstr "Baixa fitxers _a…"
+msgstr "Descarregar fitxers _a…"
 
 #: pynicotine/gtkgui/search.py:409
 msgid "Download _Folder(s)"
-msgstr "Baixa _carpetes"
+msgstr "Descarregar _carpetes"
 
 #: pynicotine/gtkgui/search.py:410
 msgid "Download F_older(s) To…"
-msgstr "Baixar car_petes a…"
+msgstr "Descarregar car_petes a…"
 
 #: pynicotine/gtkgui/search.py:412 pynicotine/gtkgui/transferlist.py:197
 msgid "_Browse Folder(s)"
@@ -2659,7 +2659,7 @@ msgstr "Fitxer no compartit"
 
 #: pynicotine/gtkgui/transferlist.py:110 pynicotine/transfers.py:1849
 msgid "Download folder error"
-msgstr "Error de baixada de la carpeta"
+msgstr "Error en la carpeta de descàrrega"
 
 #: pynicotine/gtkgui/transferlist.py:111
 msgid "Local file error"
@@ -2727,15 +2727,15 @@ msgstr "Acabat / Avortat"
 
 #: pynicotine/gtkgui/uploads.py:81
 msgid "Clear Queued Uploads"
-msgstr "Netejar les càrregues a la cua"
+msgstr "Netejar les pujades en cua"
 
 #: pynicotine/gtkgui/uploads.py:82
 msgid "Do you really want to clear all queued uploads?"
-msgstr "Vols netejar totes les càrregues a la cua?"
+msgstr "Vols netejar totes les pujades en cua?"
 
 #: pynicotine/gtkgui/uploads.py:91
 msgid "Clear All Uploads"
-msgstr "Netejar totes les càrregues"
+msgstr "Netejar totes les pujades"
 
 #: pynicotine/gtkgui/uploads.py:92
 msgid "Do you really want to clear all uploads?"
@@ -2747,11 +2747,11 @@ msgstr "_Desar la llista de recursos compartits al disc"
 
 #: pynicotine/gtkgui/userbrowse.py:195 pynicotine/gtkgui/userbrowse.py:262
 msgid "Upload Folder…"
-msgstr "Carrega la carpeta…"
+msgstr "Pujar carpeta…"
 
 #: pynicotine/gtkgui/userbrowse.py:196
 msgid "Upload Folder & Subfolder(s)…"
-msgstr "Carrega carpetes i subcarpetes…"
+msgstr "Pujar carpetes i subcarpetes…"
 
 #: pynicotine/gtkgui/userbrowse.py:198 pynicotine/gtkgui/userbrowse.py:265
 msgid "Open in File _Manager"
@@ -2759,23 +2759,23 @@ msgstr "Obrir al Gestor de _fitxers"
 
 #: pynicotine/gtkgui/userbrowse.py:201 pynicotine/gtkgui/userbrowse.py:215
 msgid "Copy _Folder Path"
-msgstr "Copiar el camí de la _carpeta"
+msgstr "Copiar la ruta de la _carpeta"
 
 #: pynicotine/gtkgui/userbrowse.py:208 pynicotine/gtkgui/userbrowse.py:280
 msgid "_Download Folder"
-msgstr "_Descarregueu la carpeta"
+msgstr "_Descarregar la carpeta"
 
 #: pynicotine/gtkgui/userbrowse.py:209 pynicotine/gtkgui/userbrowse.py:281
 msgid "Download Folder _To…"
-msgstr "Descarrega la carpeta _a…"
+msgstr "Descarregar la carpeta _a…"
 
 #: pynicotine/gtkgui/userbrowse.py:210
 msgid "Download Folder & Subfolder(s)"
-msgstr "Descarrega carpetes i subcarpetes"
+msgstr "Descarregar carpetes i subcarpetes"
 
 #: pynicotine/gtkgui/userbrowse.py:211
 msgid "Download Folder & Subfolder(s) To…"
-msgstr "Baixar carpetes i subcarpetes a…"
+msgstr "Descarregar carpetes i subcarpetes a…"
 
 #: pynicotine/gtkgui/userbrowse.py:261
 msgid "Up_load File(s)…"
@@ -2800,23 +2800,23 @@ msgstr ""
 
 #: pynicotine/gtkgui/userbrowse.py:705
 msgid "Select Destination for Downloading Multiple Folders"
-msgstr "Selecciona Destinació per a baixar diverses carpetes"
+msgstr "Selecciona Destinació per a descarregar diverses carpetes"
 
 #: pynicotine/gtkgui/userbrowse.py:751
 msgid "Upload Folder (with Subfolders) To User"
-msgstr "Carregar la carpeta (amb subcarpetes) a l'usuari"
+msgstr "Pujar la carpeta (amb subcarpetes) a l'usuari"
 
 #: pynicotine/gtkgui/userbrowse.py:753
 msgid "Upload Folder To User"
-msgstr "Carregar la carpeta a l'usuari"
+msgstr "Pujar la carpeta a l'usuari"
 
 #: pynicotine/gtkgui/userbrowse.py:758 pynicotine/gtkgui/userbrowse.py:1002
 msgid "Enter the name of the user you want to upload to:"
-msgstr "Introdueix el nom d'usuari que vols pujar:"
+msgstr "Introdueix el nom de l'usuari al qual vols pujar fitxers:"
 
 #: pynicotine/gtkgui/userbrowse.py:1001
 msgid "Upload File(s) To User"
-msgstr "Carregar fitxers a l'usuari"
+msgstr "Pujar fitxers a l'usuari"
 
 #: pynicotine/gtkgui/userinfo.py:215
 msgid "Zoom 1:1"
@@ -2998,7 +2998,7 @@ msgstr "Missatge privat de %(user)s"
 #: pynicotine/gtkgui/widgets/notifications.py:93
 #, python-format
 msgid "You've been mentioned in the %(room)s room"
-msgstr "T'han esmentat a la sala %(room)s"
+msgstr "T'han mencionat a la sala %(room)s"
 
 #: pynicotine/gtkgui/widgets/notifications.py:136
 #, python-format
@@ -3429,7 +3429,7 @@ msgid ""
 "downloads to be queued ahead of non-privileged users."
 msgstr ""
 "No tens privilegis. Els privilegis no són necessaris, però permeten que les "
-"baixades es posin a la cua abans que els usuaris no privilegiats."
+"teves descàrregues es posin en cua abans que els usuaris no privilegiats."
 
 #: pynicotine/pynicotine.py:819
 #, python-format
@@ -3438,7 +3438,7 @@ msgid ""
 "download privileges left."
 msgstr ""
 "Queden %(days)i dies, %(hours)i hores, %(minutes)i minuts, %(seconds)i "
-"segons de privilegis de baixada."
+"segons de privilegis de descàrrega."
 
 #: pynicotine/pynicotine.py:924
 #, python-format
@@ -3618,7 +3618,7 @@ msgstr "No es pot obtenir un bloqueig exclusiu al fitxer - Error d'E/S: %s"
 #: pynicotine/transfers.py:1059 pynicotine/transfers.py:1297
 #, python-format
 msgid "Download I/O error: %s"
-msgstr "Error d'E/S de baixada: %s"
+msgstr "Error d'E/S a la descàrrega: %s"
 
 #: pynicotine/transfers.py:1078
 #, python-format
@@ -3628,13 +3628,13 @@ msgstr "Descàrrega començada: usuari %(user)s, fitxer %(file)s"
 #: pynicotine/transfers.py:1135
 #, python-format
 msgid "Upload I/O error: %s"
-msgstr "Error de càrrega d'E/S: %s"
+msgstr "Error d'E/S a la pujada: %s"
 
 #: pynicotine/transfers.py:1154
 #, python-format
 msgid "Upload started: user %(user)s, IP address %(ip)s, file %(file)s"
 msgstr ""
-"La càrrega ha començat: usuari %(user)s, adreça IP %(ip)s, fitxer %(file)s"
+"La pujada ha començat: usuari %(user)s, adreça IP %(ip)s, fitxer %(file)s"
 
 #: pynicotine/transfers.py:1744
 #, python-format
@@ -3642,13 +3642,13 @@ msgid ""
 "Unable to save download to username subfolder, falling back to default "
 "download folder. Error: %s"
 msgstr ""
-"No es pot desar la baixada a la subcarpeta del nom d'usuari, tornant a la "
+"No es pot desar la descàrrega a la subcarpeta del nom d'usuari, tornant a la "
 "carpeta de descàrrega predeterminada. Error: %s"
 
 #: pynicotine/transfers.py:1799
 #, python-format
 msgid "%(file)s downloaded from %(user)s"
-msgstr "%(file)s baixat de %(user)s"
+msgstr "%(file)s descarregat de %(user)s"
 
 #: pynicotine/transfers.py:1803
 msgid "File downloaded"
@@ -3667,11 +3667,11 @@ msgstr "S'ha produït un problema en executar «%s»"
 #: pynicotine/transfers.py:1828
 #, python-format
 msgid "%(folder)s downloaded from %(user)s"
-msgstr "%(folder)s baixades de %(user)s"
+msgstr "%(folder)s descarregat de %(user)s"
 
 #: pynicotine/transfers.py:1832
 msgid "Folder downloaded"
-msgstr "Carpeta baixada"
+msgstr "Carpeta descarregada"
 
 #: pynicotine/transfers.py:1838
 #, python-format
@@ -3706,13 +3706,12 @@ msgstr "Pujada avortada, fitxer d'usuari %(user)s %(file)s"
 #: pynicotine/transfers.py:2325
 #, python-format
 msgid "Download aborted, user %(user)s file %(file)s"
-msgstr "Baixada avortada, fitxer d'usuari %(user)s %(file)s"
+msgstr "Descàrrega avortada, fitxer d'usuari %(user)s %(file)s"
 
 #: pynicotine/transfers.py:2383
 #, python-format
 msgid "Error: %(num)d Download filters failed! %(error)s "
-msgstr ""
-"Error: %(num)d S'han produït un error en la baixada dels filtres! %(error)s "
+msgstr "Error: %(num)d filtres de descàrrega han fallat! %(error)s "
 
 #: pynicotine/transfers.py:2387
 #, python-format
@@ -3952,7 +3951,8 @@ msgid ""
 "will be faster, while others will be slow."
 msgstr ""
 "La velocitat de transferència de fitxers depèn dels usuaris dels quals estàs "
-"baixant. Alguns usuaris seran més ràpids, mentre que altres seran lents."
+"desencarregant. Alguns usuaris seran més ràpids, mentre que altres seran "
+"lents."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:397
 msgid ""
@@ -3960,7 +3960,7 @@ msgid ""
 "have privileges, your downloads will be queued ahead of non-privileged users."
 msgstr ""
 "Donar a Soulseek t'atorga privilegis durant un període de temps determinat. "
-"Si tens privilegis, les teves descàrregues es posaran a la cua abans que els "
+"Si tens privilegis, les teves descàrregues es posaran en cua abans que els "
 "usuaris no privilegiats."
 
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:21
@@ -4083,7 +4083,7 @@ msgstr "Pausar/Avortar la transferència"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:210
 msgid "Download / Upload To"
-msgstr "Descarregar / Carregar a"
+msgstr "Descarregar / Pujar a"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:224
 msgid "Save List to Disk"
@@ -4155,22 +4155,22 @@ msgstr "Descàrregues completades"
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:97
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:274
 msgid "Downloaded Size"
-msgstr "Mida descarregada"
+msgstr "Mida de la descàrrega"
 
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:128
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:305
 msgid "Started Uploads"
-msgstr "Càrregues iniciades"
+msgstr "Pujades iniciades"
 
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:154
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:331
 msgid "Completed Uploads"
-msgstr "Càrregues completades"
+msgstr "Pujades completades"
 
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:180
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:357
 msgid "Uploaded Size"
-msgstr "Mida carregada"
+msgstr "Mida de la pujada"
 
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:206
 msgid "Total"
@@ -4229,7 +4229,7 @@ msgstr "Netejar finalitzades"
 
 #: pynicotine/gtkgui/ui/downloads.ui:175
 msgid "Clear all downloads marked with a specific status."
-msgstr "Netejar totes les baixades marcades amb un estat específic."
+msgstr "Netejar totes les descàrregues marcades amb un estat específic."
 
 #: pynicotine/gtkgui/ui/downloads.ui:183 pynicotine/gtkgui/ui/uploads.ui:181
 msgid "Clear _All…"
@@ -4326,19 +4326,19 @@ msgid ""
 "Files you download from other users are queued here, and can be paused and "
 "resumed on demand"
 msgstr ""
-"Els fitxers que baixes d'altres usuaris es posen a la cua aquí i es poden "
-"posar en pausa i reprendre a petició"
+"Els fitxers que descarreguis d'altres usuaris es posen en cua aquí i es "
+"poden posar en pausa i reprendre a petició"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:699
 msgid "Configure uploads"
-msgstr "Configurar les càrregues"
+msgstr "Configurar les pujades"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:766
 msgid ""
 "Users' attempts to download your shared files are queued and managed here"
 msgstr ""
-"Els intents dels usuaris de baixar els teus fitxers compartits es posen a la "
-"cua i es gestionen aquí"
+"Els intents dels usuaris de descarregar els teus fitxers compartits es posen "
+"en cua i es gestionen aquí"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:824
 msgid "Enter the username of the person whose files you want to see"
@@ -4451,11 +4451,11 @@ msgstr "Descàrrega (velocitat/usuaris actius)"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1784
 msgid "Uploading (speed / active users)"
-msgstr "Càrrega (velocitat/usuaris actius)"
+msgstr "Pujada (velocitat/usuaris actius)"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1832
 msgid "Enable alternative download and upload speed limits"
-msgstr "Habilitar els límits de velocitat de càrrega i descàrrega alternatius"
+msgstr "Habilitar els límits de velocitat de descàrrega i pujada alternatius"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1850
 msgid "Show log history"
@@ -4897,7 +4897,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:303
 msgid "Like Size above, =, <, and > can be used."
-msgstr "Com al cas anterior, es pot utilitzar =, < i >."
+msgstr "Com en el cas de la mida de dalt, es poden utilitzar =, < i >."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:326
 msgid "Filters files based upon users' countries."
@@ -4910,7 +4910,7 @@ msgid ""
 "Similarly, 'GB' returns files from users with IPs in the United Kingdom."
 msgstr ""
 "Utilitza codis de país definits per ISO 3166-2 (vegeu la Viquipèdia):\n"
-"    \"EUA\" només retornarà fitxers dels usuaris connectats a través dels "
+"    \"US\" només retornarà fitxers dels usuaris connectats a través dels "
 "Estats Units. De la mateixa manera, \"GB\" retorna fitxers d'usuaris amb IP "
 "al Regne Unit."
 
@@ -4958,7 +4958,7 @@ msgid ""
 "phrases and words can be specified, e.g. exact phrase|music|term|exact "
 "phrase two"
 msgstr ""
-"Filtra els resultats els camins de fitxer dels quals continguin el text "
+"Filtra els resultats les rutes de fitxer dels quals continguin el text "
 "especificat. Es poden especificar diverses frases i paraules, per ex. frase "
 "exacta|música|terme|frase exacta dos"
 
@@ -4973,8 +4973,8 @@ msgid ""
 "phrases and words can be specified, e.g. exact phrase|music|term|exact "
 "phrase two"
 msgstr ""
-"Filtra els resultats els camins de fitxer dels quals continguin el text "
-"especificat. Es poden especificar diverses frases i paraules, p. frase "
+"Filtra els resultats les rutes de fitxer dels quals continguin el text "
+"especificat. Es poden especificar diverses frases i paraules, per ex. frase "
 "exacta|música|terme|frase exacta dos"
 
 #: pynicotine/gtkgui/ui/search.ui:240
@@ -5033,7 +5033,7 @@ msgstr "Els codis han d'estar en format ISO 3166-2."
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:75
 msgid "Use custom geo block message:"
-msgstr "Utilitza el missatge de bloc geogràfic personalitzat:"
+msgstr "Utilitzar el missatge de bloc geogràfic personalitzat:"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:76
 msgid "Sent to users as the reason for being geo blocked."
@@ -5242,12 +5242,13 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:42
 msgid "Download folders in reverse alphanumerical order"
-msgstr "Descarrega les carpetes en ordre alfanumèric invers"
+msgstr "Descarregar les carpetes en ordre alfanumèric invers"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:48
 msgid "Store completed downloads in username subfolders"
 msgstr ""
-"Emmagatzema les baixades completades a les subcarpetes amb els noms d'usuari"
+"Emmagatzema les descàrregues completades a les subcarpetes amb els noms "
+"d'usuari"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:55
 msgid ""
@@ -5275,7 +5276,7 @@ msgstr "Amics de confiança"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:105
 msgid "Double-click action for downloads:"
-msgstr "Acció de doble clic per a les baixades:"
+msgstr "Acció de doble clic per a les descàrreges:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:120
 #: pynicotine/gtkgui/ui/settings/uploads.ui:89
@@ -5299,7 +5300,7 @@ msgstr "Examinar la carpeta"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:146
 msgid "Download Speed Limits"
-msgstr "Descarrega els límits de velocitat"
+msgstr "Límits de velocitat de descàrrega"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:166
 msgid "Limit download speed to (KiB/s):"
@@ -5328,23 +5329,23 @@ msgstr "Carpeta de fitxers incomplets:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:265
 msgid "Where incomplete downloads are temporarily stored."
-msgstr "On s'emmagatzemen temporalment les baixades incompletes."
+msgstr "On s'emmagatzemen temporalment les descàrregues incompletes."
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:277
 msgid "Download folder:"
-msgstr "Descarrega la carpeta:"
+msgstr "Carpeta de descàrrega:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:303
 msgid "Save buddies' uploads to:"
-msgstr "Desar les càrregues dels amics a:"
+msgstr "Desar les pujades dels amics a:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:318
 msgid ""
 "Where buddies' uploads will be stored (with a subfolder created for each "
 "buddy)."
 msgstr ""
-"On s'emmagatzemaran les càrregues dels amics (amb una subcarpeta creada per "
-"a cada amic)."
+"On s'emmagatzemaran les pujades dels amics (amb una subcarpeta creada per a "
+"cada amic)."
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:335
 msgid "Events"
@@ -5359,8 +5360,8 @@ msgstr ""
 #: pynicotine/gtkgui/ui/settings/downloads.ui:377
 msgid "Run command after folder download finishes ($ for folder path):"
 msgstr ""
-"Executar l'ordre després que finalitzi la descàrrega de la carpeta ($ per al "
-"camí de la carpeta):"
+"Executar l'ordre després que finalitzi la descàrrega de la carpeta ($ per a "
+"la ruta de la carpeta):"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:403
 msgid "Download Filters"
@@ -5368,7 +5369,7 @@ msgstr "Filtres de descàrrega"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:412
 msgid "Enable download filters"
-msgstr "Habilitar els filtres de baixada"
+msgstr "Habilitar els filtres de descàrrega"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:421
 msgid ""
@@ -5594,7 +5595,7 @@ msgid ""
 msgstr ""
 "Altres clients de Soulseek poden tenir l'opció de compartir fitxers de "
 "manera privada. En cas afirmatiu, aquests fitxers tindran el prefix "
-"«[PRIVATE]» i no es podran baixar fins que l'autor de la càrrega no doni "
+"«[PRIVATE]» i no es podran descarregar fins que l'autor de la pujada no doni "
 "permís explícit. Pregunta'ls amablement."
 
 #: pynicotine/gtkgui/ui/settings/search.ui:81
@@ -5676,8 +5677,8 @@ msgid ""
 "downloaded directly from your device. Hidden files are never shared."
 msgstr ""
 "Comparteix carpetes amb tots els usuaris o amics de Soulseek, permetent que "
-"el contingut es baixi directament des del teu dispositiu. Els fitxers ocults "
-"no es comparteixen mai."
+"el contingut es descarregui directament des del teu dispositiu. Els fitxers "
+"ocults no es comparteixen mai."
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:34
 msgid "Rescan shares on startup"
@@ -5699,12 +5700,12 @@ msgstr "Limitar els recursos compartits només per a amics a amics de confiança
 #: pynicotine/gtkgui/ui/settings/uploads.ui:57
 msgid "Autoclear finished/cancelled uploads from transfer list"
 msgstr ""
-"Netejar automàticament les càrregues acabades/cancel·lades de la llista de "
+"Netejar automàticament les pujada acabades/cancel·lades de la llista de "
 "transferència"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:74
 msgid "Double-click action for uploads:"
-msgstr "Acció de doble clic per a a càrregues:"
+msgstr "Acció de doble clic per a pujades:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:93
 #: pynicotine/gtkgui/ui/uploads.ui:68
@@ -5717,7 +5718,7 @@ msgstr "Torna-ho a provar"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:115
 msgid "Upload Speed Limits"
-msgstr "Límit de velocitat de càrrega"
+msgstr "Límit de velocitat de pujada"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:134
 msgid "Limit upload speed to (KiB/s):"
@@ -5729,7 +5730,7 @@ msgstr "Límit alternatiu de velocitat de pujada (KiB/s):"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:194
 msgid "Limit upload speed:"
-msgstr "Limitar la velocitat de càrrega:"
+msgstr "Limitar la velocitat de pujada:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:212
 msgid "Per transfer"
@@ -5773,7 +5774,7 @@ msgstr "Prioritzar els amics"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:383
 msgid "Upload queue type:"
-msgstr "Tipus de cua de càrrega:"
+msgstr "Tipus de cua de pujada:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:398
 msgid ""
@@ -5781,10 +5782,10 @@ msgid ""
 "in queue.\n"
 "First In, First Out: Files will be uploaded in the order they were queued."
 msgstr ""
-"Round Robin: Els fitxers es penjaran de manera cíclica als usuaris que "
-"esperen a la cua.\n"
-"Primer en entrar, primer en sortir: els fitxers es penjaran en l'ordre en "
-"què es van posar a la cua."
+"Round Robin: Els fitxers es pujaran de manera cíclica als usuaris que "
+"esperen en cua.\n"
+"Primer en entrar, primer en sortir: els fitxers es pujaran en l'ordre en què "
+"es van posar en cua."
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:401
 msgid "Round Robin"
@@ -5797,8 +5798,8 @@ msgstr "Primer a entrar, primer a sortir"
 #: pynicotine/gtkgui/ui/settings/uploads.ui:415
 msgid "Queue uploads if total transfer speed reaches (KiB/s):"
 msgstr ""
-"Posar a la cua les càrregues si la velocitat de transferència total arriba a "
-"(KiB/s):"
+"Posar en cua les pujades si la velocitat de transferència total arriba a ("
+"KiB/s):"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:444
 msgid "Limit number of upload slots to:"
@@ -5974,7 +5975,7 @@ msgstr ""
 msgid ""
 "Show reverse file paths in search and transfer views (requires a restart)"
 msgstr ""
-"Mostrar els camins inversos dels fitxers a les visualitzacions de cerca i "
+"Mostrar les rutes inverses dels fitxers a les visualitzacions de cerca i "
 "transferència (cal reiniciar)"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:643
@@ -6119,7 +6120,7 @@ msgstr "Bloquejar usuari(s)"
 
 #: pynicotine/gtkgui/ui/uploads.ui:144
 msgid "Clear all finished and cancelled uploads."
-msgstr "Netejar totes les càrregues acabades i cancel·lades."
+msgstr "Netejar totes les pujades acabades i cancel·lades."
 
 #: pynicotine/gtkgui/ui/uploads.ui:173
 msgid "Clear all uploads marked with a specific status."
@@ -6155,11 +6156,11 @@ msgstr "Llocs de pujada"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:186
 msgid "Queued Uploads"
-msgstr "Càrregues en cua"
+msgstr "Pujades en cua"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:213
 msgid "Free Upload Slots"
-msgstr "Lloc de pujades lliures"
+msgstr "Llocs de pujades lliures"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:240
 msgid "Upload Speed"
