@@ -407,6 +407,7 @@ class Scanner:
         self.share_dbs[fileindex_dest] = shelve.open(os.path.join(self.config.data_dir, fileindex_dest + ".db"),
                                                      flag='n', protocol=pickle.HIGHEST_PROTOCOL)
         wordindex = {}
+        file_index = -1
         num_shared_files = len(shared_files)
         last_percent = 0.0
 
@@ -418,7 +419,7 @@ class Scanner:
                 self.queue.put(percent)
                 last_percent = percent
 
-            for file_index, fileinfo in enumerate(shared_files[folder]):
+            for file_index, fileinfo in enumerate(shared_files[folder], start=file_index + 1):
                 fileinfo = list(fileinfo)
                 filename = fileinfo[0]
 
