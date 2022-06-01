@@ -401,6 +401,13 @@ class Search(UserInterface):
             self.column_offsets[column.get_title()] = 0
             column.connect("notify::x-offset", self.on_column_position_changed)
 
+        if GTK_API_VERSION >= 4:
+            focus_controller = Gtk.EventControllerFocus()
+            focus_controller.connect("enter", self.on_refilter)
+            self.tree_view.add_controller(focus_controller)
+        else:
+            self.tree_view.connect("focus-in-event", self.on_refilter)
+
         self.update_visuals()
 
         # Popup menus
