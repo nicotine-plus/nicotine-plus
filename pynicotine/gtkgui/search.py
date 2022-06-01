@@ -804,8 +804,9 @@ class Search(UserInterface):
         allowed = blocked = False
 
         for condition in result_filter.split("|"):
+            condition = condition.strip()
 
-            if condition.strip().startswith((">", "<", "=", "!")):
+            if condition.startswith((">", "<", "=", "!")):
                 used_operator, digit = condition[:1] + "=", condition[1:]
             else:
                 used_operator, digit = ">=", condition
@@ -1423,12 +1424,12 @@ class Search(UserInterface):
         filters = {
             "filterin": filter_in,
             "filterout": filter_out,
-            "filtersize": self.filter_file_size_combobox.get_active_text().strip(),
-            "filterbr": self.filter_bitrate_combobox.get_active_text().strip(),
+            "filtersize": self.filter_file_size_combobox.get_active_text(),
+            "filterbr": self.filter_bitrate_combobox.get_active_text(),
             "filterslot": self.filter_free_slot_button.get_active(),
             "filtercc": self.filter_country_combobox.get_active_text().strip().upper(),
             "filtertype": self.filter_file_type_combobox.get_active_text().strip().lower(),
-            "filterlength": self.filter_length_combobox.get_active_text().strip(),
+            "filterlength": self.filter_length_combobox.get_active_text(),
         }
 
         if self.filters == filters:
