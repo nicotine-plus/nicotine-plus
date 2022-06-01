@@ -874,10 +874,12 @@ class Search(UserInterface):
     @staticmethod
     def check_file_type(result_filter, value):
 
+        result_filter = result_filter.lower()
         value = value.lower()
         allowed = False
 
         for ext in result_filter.split("|"):
+            ext = ext.strip()
             exclude_ext = None
 
             if ext.startswith("!"):
@@ -1427,7 +1429,7 @@ class Search(UserInterface):
             "filterbr": self.filter_bitrate_combobox.get_active_text().strip(),
             "filterslot": self.filter_free_slot_button.get_active(),
             "filtercc": self.filter_country_combobox.get_active_text().strip().upper(),
-            "filtertype": self.filter_file_type_combobox.get_active_text().strip().lower(),
+            "filtertype": self.filter_file_type_combobox.get_active_text(),
             "filterlength": self.filter_length_combobox.get_active_text().strip(),
         }
 
