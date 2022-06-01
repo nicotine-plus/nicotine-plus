@@ -332,7 +332,7 @@ class SlskMessage:
 
     def debug(self, message=None):
         from pynicotine.utils import debug
-        debug(type(self).__name__, self.__dict__, message.__repr__())
+        debug(type(self).__name__, self.__dict__, repr(message))
 
 
 """

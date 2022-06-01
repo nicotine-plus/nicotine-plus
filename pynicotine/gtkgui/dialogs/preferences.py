@@ -733,7 +733,7 @@ class UserInfoFrame(UserInterface):
         start = buffer.get_start_iter()
         end = buffer.get_end_iter()
 
-        descr = buffer.get_text(start, end, True).replace("; ", ", ").__repr__()
+        descr = repr(buffer.get_text(start, end, True).replace("; ", ", "))
 
         return {
             "userinfo": {
