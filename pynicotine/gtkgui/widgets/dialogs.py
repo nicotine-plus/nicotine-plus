@@ -189,7 +189,7 @@ class EntryDialog(MessageDialog):
             else:
                 self.container.add(self.entry)
 
-        self.entry.connect("activate", lambda x: self.dialog.response(Gtk.ResponseType.OK))
+        self.entry.connect("activate", self.on_activate_entry)
         self.entry.set_text(default)
 
         self.option = Gtk.CheckButton(label=option_label, active=option_value, visible=bool(option_label))
@@ -199,6 +199,9 @@ class EntryDialog(MessageDialog):
                 self.container.append(self.option)
             else:
                 self.container.add(self.option)
+
+    def on_activate_entry(self, *_args):
+        self.dialog.response(Gtk.ResponseType.OK)
 
     def get_response_value(self):
         return self.entry.get_text()
