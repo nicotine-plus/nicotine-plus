@@ -1405,18 +1405,18 @@ class Search(UserInterface):
         if self.clearing_filters:
             return
 
-        filter_in = self.filter_include_combobox.get_active_text().strip().lower()
-        filter_out = self.filter_exclude_combobox.get_active_text().strip().lower()
+        filter_in = self.filter_include_combobox.get_active_text()
+        filter_out = self.filter_exclude_combobox.get_active_text()
 
         if filter_in:
             try:
-                filter_in = re.compile(filter_in)
+                filter_in = re.compile(filter_in.strip().lower())
             except sre_constants.error:
                 filter_in = None
 
         if filter_out:
             try:
-                filter_out = re.compile(filter_out)
+                filter_out = re.compile(filter_out.strip().lower())
             except sre_constants.error:
                 filter_out = None
 
