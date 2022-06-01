@@ -172,7 +172,7 @@ class EntryDialog(MessageDialog):
         else:
             self.entry = self._add_entry(visibility)
 
-        self.entry.connect("activate", lambda x: self.dialog.response(Gtk.ResponseType.OK))
+        self.entry.connect("activate", self.on_activate_entry)
         self.entry.set_text(default)
 
         if use_second_entry:
@@ -181,7 +181,7 @@ class EntryDialog(MessageDialog):
             else:
                 self.second_entry = self._add_entry(visibility)
 
-            self.second_entry.connect("activate", lambda x: self.dialog.response(Gtk.ResponseType.OK))
+            self.second_entry.connect("activate", self.on_activate_entry)
             self.second_entry.set_text(second_default)
 
         self.option = Gtk.CheckButton(label=option_label, active=option_value, visible=bool(option_label))
@@ -221,6 +221,9 @@ class EntryDialog(MessageDialog):
             self.container.add(entry)
 
         return entry
+
+    def on_activate_entry(self, *_args):
+        self.dialog.response(Gtk.ResponseType.OK)
 
     def get_entry_value(self):
         return self.entry.get_text()
