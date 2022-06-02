@@ -2333,6 +2333,7 @@
                             <property name="visible">True</property>
                             <property name="hexpand">True</property>
                             <property name="width-request">160</property>
+                            <signal name="clicked" handler="on_theme_changed"/>
                           </object>
                         </child>
                         <child>
