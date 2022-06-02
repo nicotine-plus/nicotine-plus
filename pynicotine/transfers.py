@@ -2229,9 +2229,17 @@ class Transfers:
 
     def check_upload_queue_callback(self):
 
-        if self.upload_queue_timer_count >= 6:
+        if self.upload_queue_timer_count % 6 == 0:
             # Save list of uploads to file every one minute
             self.save_transfers("uploads")
+
+        if self.upload_queue_timer_count >= 18:
+            # Re-queue timed out uploads every 3 minutes
+            for transfer in reversed(self.uploads):
+                if transfer.status == "Connection timeout":
+                    transfer.status = "Queued"
+                    self.update_upload(transfer)
+
             self.upload_queue_timer_count = 0
 
         self.check_upload_queue()
