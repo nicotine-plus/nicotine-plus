@@ -29,7 +29,7 @@ from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.treeview import show_user_status_tooltip
-from pynicotine.gtkgui.widgets.theme import get_status_icon
+from pynicotine.gtkgui.widgets.theme import get_status_icon_name
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.utils import humanize
@@ -337,7 +337,7 @@ class Interests(UserInterface):
         for user in users:
             iterator = self.recommendation_users_model.insert_with_valuesv(
                 -1, self.recommendation_users_column_numbers,
-                [get_status_icon(0), user, "", "0", 0, 0, 0]
+                [get_status_icon_name(0), user, "", "0", 0, 0, 0]
             )
             self.recommendation_users[user] = iterator
 
@@ -357,7 +357,7 @@ class Interests(UserInterface):
         if iterator is None:
             return
 
-        status_icon = get_status_icon(msg.status)
+        status_icon = get_status_icon_name(msg.status)
 
         if status_icon is None:
             return

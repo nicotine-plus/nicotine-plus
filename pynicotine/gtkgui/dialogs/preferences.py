@@ -45,7 +45,7 @@ from pynicotine.gtkgui.widgets.dialogs import generic_dialog
 from pynicotine.gtkgui.widgets.dialogs import MessageDialog
 from pynicotine.gtkgui.widgets.dialogs import set_dialog_properties
 from pynicotine.gtkgui.widgets.textview import TextView
-from pynicotine.gtkgui.widgets.theme import get_icon
+from pynicotine.gtkgui.widgets.theme import load_custom_icons
 from pynicotine.gtkgui.widgets.theme import set_dark_mode
 from pynicotine.gtkgui.widgets.theme import set_global_font
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
@@ -1483,24 +1483,23 @@ class UserInterfaceFrame(UserInterface):
 
         # Icon preview
         icon_list = [
-            (get_icon("online"), _("Connected"), 16),
-            (get_icon("offline"), _("Disconnected"), 16),
-            (get_icon("away"), _("Away"), 16),
-            (get_icon("hilite"), _("Highlight"), 16),
-            (get_icon("hilite3"), _("Highlight"), 16),
-            (get_icon("n"), _("Window"), 64),
-            (get_icon("notify"), _("Notification"), 64)]
+            ("nplus-status-online", _("Connected"), 16),
+            ("nplus-status-offline", _("Disconnected"), 16),
+            ("nplus-status-away", _("Away"), 16),
+            ("nplus-hilite", _("Highlight"), 16),
+            ("nplus-hilite3", _("Highlight"), 16),
+            (config.application_id, _("Window"), 64)]
 
         if self.frame.tray_icon.available:
             icon_list += [
-                (get_icon("trayicon_connect"), _("Connected (Tray)"), 16),
-                (get_icon("trayicon_disconnect"), _("Disconnected (Tray)"), 16),
-                (get_icon("trayicon_away"), _("Away (Tray)"), 16),
-                (get_icon("trayicon_msg"), _("Message (Tray)"), 16)]
+                (config.application_id + "-connect", _("Connected (Tray)"), 16),
+                (config.application_id + "-disconnect", _("Disconnected (Tray)"), 16),
+                (config.application_id + "-away", _("Away (Tray)"), 16),
+                (config.application_id + "-msg", _("Message (Tray)"), 16)]
 
-        for icon_data, label, pixel_size in icon_list:
+        for icon_name, label, pixel_size in icon_list:
             box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, valign=Gtk.Align.CENTER, spacing=6, visible=True)
-            icon = Gtk.Image(gicon=icon_data, pixel_size=pixel_size, visible=True)
+            icon = Gtk.Image(icon_name=icon_name, pixel_size=pixel_size, visible=True)
             label = Gtk.Label(label=label, visible=True)
 
             if GTK_API_VERSION >= 4:
@@ -1676,6 +1675,7 @@ class UserInterfaceFrame(UserInterface):
 
     def on_default_theme(self, *_args):
         self.theme_dir.clear()
+        self.theme_required = True
 
     """ Fonts """
 
@@ -3009,6 +3009,7 @@ class Preferences(UserInterface):
 
             self.frame.update_visuals()
             self.update_visuals()
+            load_custom_icons(update=True)
 
         if completion_required:
             self.frame.update_completions()

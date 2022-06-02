@@ -47,7 +47,7 @@ from pynicotine.gtkgui.widgets.textentry import ChatEntry
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
-from pynicotine.gtkgui.widgets.theme import get_status_icon
+from pynicotine.gtkgui.widgets.theme import get_status_icon_name
 from pynicotine.gtkgui.widgets.theme import get_user_status_color
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
@@ -439,7 +439,7 @@ class ChatRoom(UserInterface):
             config.sections["columns"]["chat_room"][room] = {}
 
         self.usersmodel = Gtk.ListStore(
-            Gio.Icon,             # (0)  status_icon
+            str,                  # (0)  status_icon
             str,                  # (1)  flag
             str,                  # (2)  username
             str,                  # (3)  h_speed
@@ -566,7 +566,7 @@ class ChatRoom(UserInterface):
         username = userdata.username
         status = userdata.status
         country = userdata.country or ""  # country can be None, ensure string is used
-        status_icon = get_status_icon(status) or get_status_icon(0)
+        status_icon = get_status_icon_name(status) or get_status_icon_name(0)
         flag_icon = get_flag_icon_name(country)
 
         # Request user's IP address, so we can get the country and ignore messages by IP
@@ -942,7 +942,7 @@ class ChatRoom(UserInterface):
         if status == self.usersmodel.get_value(iterator, 5):
             return
 
-        status_icon = get_status_icon(status)
+        status_icon = get_status_icon_name(status)
 
         if status_icon is None:
             return

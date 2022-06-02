@@ -56,8 +56,6 @@ from pynicotine.gtkgui.widgets.notifications import Notifications
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
 from pynicotine.gtkgui.widgets.textview import TextView
-from pynicotine.gtkgui.widgets.theme import get_icon
-from pynicotine.gtkgui.widgets.theme import ICON_THEME
 from pynicotine.gtkgui.widgets.theme import load_icons
 from pynicotine.gtkgui.widgets.theme import set_dark_mode
 from pynicotine.gtkgui.widgets.theme import set_global_style
@@ -317,14 +315,7 @@ class NicotineFrame(UserInterface):
 
         # Set main window title and icon
         self.window.set_title(config.application_name)
-
-        main_icon = get_icon("n")
-
-        if main_icon and GTK_API_VERSION == 3:
-            icon_data = ICON_THEME.lookup_by_gicon(main_icon, 128, 0).load_icon()
-            self.window.set_default_icon(icon_data)
-        else:
-            self.window.set_default_icon_name(config.application_id)
+        self.window.set_default_icon_name(config.application_id)
 
         # Set main window size
         self.window.set_default_size(width=config.sections["ui"]["width"],

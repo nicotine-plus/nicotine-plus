@@ -26,7 +26,6 @@ from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.application import GTK_GUI_DIR
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
-from pynicotine.gtkgui.widgets.theme import get_icon
 from pynicotine.logfacility import log
 from pynicotine.utils import encode_path
 
@@ -192,10 +191,10 @@ class BaseImplementation:
 
         if hasattr(sys, "real_prefix") or sys.base_prefix != sys.prefix:
             # Virtual environment
-            local_icon_path = os.path.join(sys.prefix, "share", "icons", "hicolor", "scalable", "apps")
+            local_icon_path = os.path.join(sys.prefix, "share", "icons", "hicolor", "scalable", "status")
         else:
             # Git folder
-            local_icon_path = os.path.join(GTK_GUI_DIR, "icons", "hicolor", "scalable", "apps")
+            local_icon_path = os.path.join(GTK_GUI_DIR, "icons", "hicolor", "scalable", "status")
 
         for icon_name in ("away", "connect", "disconnect", "msg"):
 
@@ -397,11 +396,7 @@ class StatusIconImplementation(BaseImplementation):
             self.menu.popup(None, None, None, None, button, time)
 
     def set_icon_name(self, icon_name):
-
-        if self.custom_icons:
-            self.tray_icon.set_from_gicon(get_icon(icon_name))
-        else:
-            self.tray_icon.set_from_icon_name(icon_name)
+        self.tray_icon.set_from_icon_name(icon_name)
 
     def is_visible(self):
         return self.tray_icon.get_visible() and self.tray_icon.is_embedded()

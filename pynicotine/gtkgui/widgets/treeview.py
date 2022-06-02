@@ -180,9 +180,7 @@ def initialise_columns(frame, treeview_name, treeview, *args):
                     # Use the same size as the original icon
                     renderer.set_property("stock-size", 0)
 
-                column = Gtk.TreeViewColumn(column_id, renderer, icon_name=column_index)
-            else:
-                column = Gtk.TreeViewColumn(column_id, renderer, gicon=column_index)
+            column = Gtk.TreeViewColumn(column_id, renderer, icon_name=column_index)
 
         if width == -1:
             column.set_resizable(False)
