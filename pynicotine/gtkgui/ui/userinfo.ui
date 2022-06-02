@@ -38,17 +38,28 @@
                         <property name="spacing">12</property>
                         <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkLabel" id="user_label">
+                          <object class="GtkBox">
                             <property name="visible">True</property>
-                            <property name="xalign">0</property>
                             <property name="margin-start">12</property>
                             <property name="margin-end">12</property>
                             <property name="margin-top">12</property>
-                            <property name="wrap-mode">word-char</property>
-                            <property name="wrap">True</property>
-                            <style>
-                              <class name="title-2"/>
-                            </style>
+                            <property name="spacing">12</property>
+                            <child>
+                              <object class="GtkLabel" id="user_label">
+                                <property name="visible">True</property>
+                                <property name="xalign">0</property>
+                                <property name="wrap-mode">word-char</property>
+                                <property name="wrap">True</property>
+                                <style>
+                                  <class name="title-2"/>
+                                </style>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkImage" id="country_icon">
+                                <property name="visible">False</property>
+                              </object>
+                            </child>
                           </object>
                         </child>
                         <child>

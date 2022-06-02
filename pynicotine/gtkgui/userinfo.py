@@ -35,6 +35,7 @@ from pynicotine.gtkgui.widgets.infobar import InfoBar
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.textview import TextView
+from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.ui import UserInterface
@@ -130,6 +131,7 @@ class UserInfo(UserInterface):
         super().__init__("ui/userinfo.ui")
         (
             self.container,
+            self.country_icon,
             self.country_label,
             self.description_view,
             self.dislikes_list_view,
@@ -158,13 +160,16 @@ class UserInfo(UserInterface):
         self.user_label.set_text(user)
 
         if GTK_API_VERSION >= 4:
-            self.picture = Gtk.Picture(can_shrink=False, halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER)
+            self.country_icon.set_pixel_size(21)
 
+            self.picture = Gtk.Picture(can_shrink=False, halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER)
             self.scroll_controller = Gtk.EventControllerScroll(flags=Gtk.EventControllerScrollFlags.VERTICAL)
             self.scroll_controller.connect("scroll", self.on_scroll)
             self.picture_view.add_controller(self.scroll_controller)
-
         else:
+            # Setting a pixel size of 21 results in a misaligned country flag
+            self.country_icon.set_pixel_size(0)
+
             self.picture = Gtk.Image(visible=True)
             self.picture_view.connect("scroll-event", self.on_scroll_event)
 
@@ -428,6 +433,11 @@ class UserInfo(UserInterface):
             country_text = _("Unknown")
 
         self.country_label.set_text(country_text)
+
+        icon_name = get_flag_icon_name(country_code or "")
+
+        self.country_icon.set_property("icon-name", icon_name)
+        self.country_icon.set_visible(bool(icon_name))
 
     def user_interests(self, msg):
 
