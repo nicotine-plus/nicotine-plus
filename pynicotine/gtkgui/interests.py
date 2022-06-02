@@ -357,13 +357,16 @@ class Interests(UserInterface):
         if iterator is None:
             return
 
-        status_icon = get_status_icon_name(msg.status)
+        status = msg.status
 
-        if status_icon is None:
+        if status < 0 or status > 2:
+            # Unknown status
             return
 
+        status_icon = get_status_icon_name(status)
+
         self.recommendation_users_model.set_value(iterator, 0, status_icon)
-        self.recommendation_users_model.set_value(iterator, 4, msg.status)
+        self.recommendation_users_model.set_value(iterator, 4, status)
 
     def get_user_stats(self, msg):
 

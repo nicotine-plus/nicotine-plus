@@ -208,7 +208,7 @@ class TabLabel(Gtk.Box):
         self.end_icon.hide()
 
     def set_status_icon(self, status):
-        icon_name = get_status_icon_name(status) or get_status_icon_name(0)
+        icon_name = get_status_icon_name(status)
         self.set_start_icon_name(icon_name, visible=config.sections["ui"]["tab_status_icons"])
 
     def set_start_icon_name(self, icon_name, visible=True):
