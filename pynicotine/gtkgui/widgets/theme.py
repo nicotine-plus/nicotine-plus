@@ -329,9 +329,13 @@ def load_custom_icons(update=False):
         ("offline", "nplus-status-offline"),
         ("hilite", "nplus-hilite"),
         ("hilite3", "nplus-hilite3"),
+        ("trayicon_away", "nplus-tray-away"),
         ("trayicon_away", config.application_id + "-away"),
+        ("trayicon_connect", "nplus-tray-connect"),
         ("trayicon_connect", config.application_id + "-connect"),
+        ("trayicon_disconnect", "nplus-tray-disconnect"),
         ("trayicon_disconnect", config.application_id + "-disconnect"),
+        ("trayicon_msg", "nplus-tray-msg"),
         ("trayicon_msg", config.application_id + "-msg"),
         ("n", config.application_id),
         ("n", config.application_id + "-symbolic")

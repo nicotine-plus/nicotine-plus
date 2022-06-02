@@ -151,51 +151,6 @@ class BaseImplementation:
             # Temporarily disable handler, we only want to change the visual checkbox appearance
             self.alt_speed_item.set_active(enable)
 
-    @staticmethod
-    def check_icon_path(icon_name, icon_path):
-        """ Check if tray icons exist in the specified icon path """
-
-        if not icon_path:
-            return False
-
-        icon_scheme = config.application_id + "-" + icon_name + "."
-
-        try:
-            for entry in os.scandir(encode_path(icon_path)):
-                if entry.is_file() and entry.name.decode("utf-8").startswith(icon_scheme):
-                    return True
-
-        except OSError as error:
-            log.add_debug("Error accessing tray icon path %(path)s: %(error)s" %
-                          {"path": icon_path, "error": error})
-
-        return False
-
-    def get_icon_path(self):
-        """ Returns an icon path to use for tray icons, or None to fall back to
-        system-wide icons. """
-
-        custom_icon_path = os.path.join(config.data_dir, ".nicotine-icon-theme")
-
-        if hasattr(sys, "real_prefix") or sys.base_prefix != sys.prefix:
-            # Virtual environment
-            local_icon_path = os.path.join(sys.prefix, "share", "icons", "hicolor", "scalable", "status")
-        else:
-            # Git folder
-            local_icon_path = os.path.join(GTK_GUI_DIR, "icons", "hicolor", "scalable", "status")
-
-        for icon_name in ("away", "connect", "disconnect", "msg"):
-
-            # Check if custom icons exist
-            if self.check_icon_path(icon_name, custom_icon_path):
-                return custom_icon_path
-
-            # Check if local icons exist
-            if self.check_icon_path(icon_name, local_icon_path):
-                return local_icon_path
-
-        return None
-
     def on_downloads(self, *_args):
         self.frame.change_main_page(self.frame.downloads_page)
         self.frame.show()
@@ -326,6 +281,7 @@ class AppIndicatorImplementation(BaseImplementation):
             except (ImportError, ValueError) as error:
                 raise AttributeError("AppIndicator implementation not available") from error
 
+        self.custom_icons = False
         self.tray_icon = self.implementation_class.Indicator.new(
             id=config.application_name,
             icon_name="",
@@ -338,7 +294,59 @@ class AppIndicatorImplementation(BaseImplementation):
 
         self.update_icon_theme()
 
+    @staticmethod
+    def check_icon_path(icon_name, icon_path):
+        """ Check if tray icons exist in the specified icon path """
+
+        if not icon_path:
+            return False
+
+        icon_scheme = config.application_id + "-" + icon_name + "."
+
+        try:
+            for entry in os.scandir(encode_path(icon_path)):
+                if entry.is_file() and entry.name.decode("utf-8").startswith(icon_scheme):
+                    return True
+
+        except OSError as error:
+            log.add_debug("Error accessing tray icon path %(path)s: %(error)s" %
+                          {"path": icon_path, "error": error})
+
+        return False
+
+    def get_icon_path(self):
+        """ Returns an icon path to use for tray icons, or None to fall back to
+        system-wide icons. """
+
+        self.custom_icons = False
+        custom_icon_path = os.path.join(config.data_dir, ".nicotine-icon-theme")
+
+        if hasattr(sys, "real_prefix") or sys.base_prefix != sys.prefix:
+            # Virtual environment
+            local_icon_path = os.path.join(sys.prefix, "share", "icons", "hicolor", "scalable", "status")
+        else:
+            # Git folder
+            local_icon_path = os.path.join(GTK_GUI_DIR, "icons", "hicolor", "scalable", "status")
+
+        for icon_name in ("away", "connect", "disconnect", "msg"):
+
+            # Check if custom icons exist
+            if self.check_icon_path(icon_name, custom_icon_path):
+                self.custom_icons = True
+                return custom_icon_path
+
+            # Check if local icons exist
+            if self.check_icon_path(icon_name, local_icon_path):
+                return local_icon_path
+
+        return None
+
     def set_icon_name(self, icon_name):
+
+        if self.custom_icons:
+            # Use alternative icon names to enforce custom icons, since system-wide icons take precedence
+            icon_name = icon_name.replace(config.application_id, "nplus-tray")
+
         self.tray_icon.set_icon_full(icon_name, config.application_name)
 
     def update_icon_theme(self):
@@ -346,6 +354,7 @@ class AppIndicatorImplementation(BaseImplementation):
         # If custom icon path was found, use it, otherwise we fall back to system icons
         icon_path = self.get_icon_path()
         self.tray_icon.set_property("icon-theme-path", icon_path)
+        self.set_icon()
 
         if icon_path:
             log.add_debug("Using tray icon path %s", icon_path)
