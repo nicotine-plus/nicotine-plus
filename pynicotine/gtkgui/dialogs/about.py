@@ -22,8 +22,6 @@ from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.dialogs import dialog_show
 from pynicotine.gtkgui.widgets.dialogs import set_dialog_properties
-from pynicotine.gtkgui.widgets.theme import get_icon
-from pynicotine.gtkgui.widgets.theme import ICON_THEME
 from pynicotine.utils import open_uri
 
 
@@ -345,17 +343,10 @@ Ukrainian
             translator_credits=self.TRANSLATORS + config.translations_url
         )
         set_dialog_properties(self.dialog, frame.window)
-        main_icon = get_icon("n")
-
-        if not main_icon:
-            self.dialog.set_logo_icon_name(config.application_id)
+        self.dialog.set_logo_icon_name(config.application_id)
 
         if GTK_API_VERSION >= 4:
             self.dialog.connect("close-request", lambda x: x.destroy())
-
-            if main_icon:
-                icon_data = ICON_THEME.lookup_by_gicon(main_icon, 128, 2, 0, 0)
-                self.dialog.set_logo(icon_data)
         else:
             self.dialog.connect("response", lambda x, _y: x.destroy())
 

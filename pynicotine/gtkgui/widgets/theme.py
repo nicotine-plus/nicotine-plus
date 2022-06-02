@@ -84,6 +84,10 @@ if "gi.repository.Adw" not in sys.modules:
 
 GTK_SETTINGS = Gtk.Settings.get_default()
 
+if not hasattr(GTK_SETTINGS, "reset_property"):
+    SYSTEM_FONT = GTK_SETTINGS.get_property("gtk-font-name")
+    SYSTEM_ICON_THEME = GTK_SETTINGS.get_property("gtk-icon-theme-name")
+
 
 def set_dark_mode(enabled):
 
@@ -106,8 +110,11 @@ def set_dark_mode(enabled):
 def set_global_font(font_name):
 
     if font_name == "Normal":
-        GTK_SETTINGS.reset_property("gtk-font-name")
-        return
+        if hasattr(GTK_SETTINGS, "reset_property"):
+            GTK_SETTINGS.reset_property("gtk-font-name")
+            return
+
+        font_name = SYSTEM_FONT
 
     GTK_SETTINGS.set_property("gtk-font-name", font_name)
 
@@ -247,16 +254,136 @@ def set_global_style():
 """ Icons """
 
 
-ICONS = {}
-
 if GTK_API_VERSION >= 4:
     ICON_THEME = Gtk.IconTheme.get_for_display(Gdk.Display.get_default())  # pylint: disable=no-member
 else:
     ICON_THEME = Gtk.IconTheme.get_default()  # pylint: disable=no-member
 
 
-def get_icon(icon_name):
-    return ICONS.get(icon_name)
+def load_custom_icons(update=False):
+    """ Load custom icon theme if one is selected """
+
+    if update:
+        if hasattr(GTK_SETTINGS, "reset_property"):
+            GTK_SETTINGS.reset_property("gtk-icon-theme-name")
+        else:
+            GTK_SETTINGS.set_property("gtk-icon-theme-name", SYSTEM_ICON_THEME)
+
+    icon_theme_name = ".nicotine-icon-theme"
+    icon_theme_path = os.path.join(config.data_dir, icon_theme_name)
+    icon_theme_path_encoded = encode_path(icon_theme_path)
+
+    parent_icon_theme_name = GTK_SETTINGS.get_property("gtk-icon-theme-name")
+
+    if icon_theme_name == parent_icon_theme_name:
+        return
+
+    try:
+        # Create internal icon theme folder
+        if os.path.exists(icon_theme_path_encoded):
+            import shutil
+            shutil.rmtree(icon_theme_path_encoded)
+
+    except Exception as error:
+        log.add_debug("Failed to remove custom icon theme folder %(theme)s: %(error)s",
+                      {"theme": icon_theme_path, "error": error})
+        return
+
+    user_icon_theme_path = config.sections["ui"]["icontheme"]
+
+    if not user_icon_theme_path:
+        return
+
+    log.add_debug("Loading custom icon theme from %s", user_icon_theme_path)
+
+    theme_file_path = os.path.join(icon_theme_path, "index.theme")
+    theme_file_contents = (
+        "[Icon Theme]\n"
+        "Name=Nicotine+ Icon Theme\n"
+        "Inherits=" + parent_icon_theme_name + "\n"
+        "Directories=.\n"
+        "\n"
+        "[.]\n"
+        "Size=16\n"
+        "MinSize=8\n"
+        "MaxSize=512\n"
+        "Type=Scalable"
+    )
+
+    try:
+        # Create internal icon theme folder
+        os.makedirs(icon_theme_path_encoded)
+
+        # Create icon theme index file
+        with open(encode_path(theme_file_path), "w", encoding="utf-8") as file_handle:
+            file_handle.write(theme_file_contents)
+
+    except Exception as error:
+        log.add_debug("Failed to enable custom icon theme %(theme)s: %(error)s",
+                      {"theme": user_icon_theme_path, "error": error})
+        return
+
+    icon_names = (
+        ("away", "nplus-status-away"),
+        ("online", "nplus-status-online"),
+        ("offline", "nplus-status-offline"),
+        ("hilite", "nplus-hilite"),
+        ("hilite3", "nplus-hilite3"),
+        ("trayicon_away", config.application_id + "-away"),
+        ("trayicon_connect", config.application_id + "-connect"),
+        ("trayicon_disconnect", config.application_id + "-disconnect"),
+        ("trayicon_msg", config.application_id + "-msg"),
+        ("n", config.application_id),
+        ("n", config.application_id + "-symbolic")
+    )
+    extensions = ["jpg", "jpeg", "bmp", "png", "svg"]
+
+    # Move custom icons to internal icon theme location
+    for (original_name, replacement_name) in icon_names:
+        path = None
+        exts = extensions[:]
+        loaded = False
+
+        while not path or (exts and not loaded):
+            extension = exts.pop()
+            path = os.path.join(user_icon_theme_path, "%s.%s" % (original_name, extension))
+
+            try:
+                path_encoded = encode_path(path)
+
+                if os.path.isfile(path_encoded):
+                    os.symlink(
+                        path_encoded,
+                        encode_path(os.path.join(icon_theme_path, "%s.%s" % (replacement_name, extension)))
+                    )
+                    loaded = True
+
+            except Exception as error:
+                log.add(_("Error loading custom icon %(path)s: %(error)s"), {
+                    "path": path,
+                    "error": error
+                })
+
+    # Enable custom icon theme
+    GTK_SETTINGS.set_property("gtk-icon-theme-name", icon_theme_name)
+
+
+def load_icons():
+    """ Load custom icons necessary for the application to function """
+
+    paths = (
+        config.data_dir,  # Custom internal icon theme
+        os.path.join(GTK_GUI_DIR, "icons"),  # Support running from folder, as well as macOS and Windows
+        os.path.join(sys.prefix, "share", "icons")  # Support Python venv
+    )
+
+    for path in paths:
+        if GTK_API_VERSION >= 4:
+            ICON_THEME.add_search_path(path)
+        else:
+            ICON_THEME.append_search_path(path)
+
+    load_custom_icons()
 
 
 def get_flag_icon_name(country):
@@ -269,101 +396,22 @@ def get_flag_icon_name(country):
     return "nplus-flag-" + country
 
 
-def get_status_icon(status):
-
-    if status == 0:
-        return get_icon("offline")
+def get_status_icon_name(status):
 
     if status == 1:
-        return get_icon("away")
+        return "nplus-status-away"
 
     if status == 2:
-        return get_icon("online")
+        return "nplus-status-online"
 
-    return None
-
-
-def load_ui_icon(name):
-    """ Load icon required by the UI """
-
-    path = os.path.join(GTK_GUI_DIR, "icons", name + ".svg")
-
-    if os.path.isfile(encode_path(path)):
-        return Gio.Icon.new_for_string(path)
-
-    return None
+    return "nplus-status-offline"
 
 
-def load_custom_icons(names):
-    """ Load custom icon theme if one is selected """
-
-    if not config.sections["ui"].get("icontheme"):
-        return False
-
-    icon_theme_path = config.sections["ui"]["icontheme"]
-    log.add_debug("Loading custom icon theme from %s", icon_theme_path)
-    extensions = ["jpg", "jpeg", "bmp", "png", "svg"]
-
-    for name in names:
-        path = None
-        exts = extensions[:]
-        loaded = False
-
-        while not path or (exts and not loaded):
-            path = os.path.expanduser(os.path.join(icon_theme_path, "%s.%s" % (name, exts.pop())))
-
-            try:
-                if os.path.isfile(encode_path(path)):
-                    ICONS[name] = Gio.Icon.new_for_string(path)
-                    loaded = True
-
-            except Exception as error:
-                log.add(_("Error loading custom icon %(path)s: %(error)s"), {
-                    "path": path,
-                    "error": error
-                })
-
-        if name not in ICONS:
-            ICONS[name] = load_ui_icon(name)
-
-    return True
+def on_icon_theme_changed(*_args):
+    load_custom_icons()
 
 
-def load_icons():
-    """ Load custom icons necessary for the application to function """
-
-    names = (
-        "away",
-        "online",
-        "offline",
-        "hilite",
-        "hilite3",
-        "trayicon_away",
-        "trayicon_connect",
-        "trayicon_disconnect",
-        "trayicon_msg",
-        "n",
-        "notify"
-    )
-
-    """ Load icons required by the application, such as status icons """
-
-    if not load_custom_icons(names):
-        for name in names:
-            ICONS[name] = load_ui_icon(name)
-
-    """ Load local app and tray icons, if available """
-
-    paths = (
-        os.path.join(GTK_GUI_DIR, "icons"),  # Support running from folder, as well as macOS and Windows
-        os.path.join(sys.prefix, "share", "icons")  # Support Python venv
-    )
-
-    for path in paths:
-        if GTK_API_VERSION >= 4:
-            ICON_THEME.add_search_path(path)
-        else:
-            ICON_THEME.append_search_path(path)
+ICON_THEME.connect("changed", on_icon_theme_changed)
 
 
 """ Widget Fonts and Colors """
