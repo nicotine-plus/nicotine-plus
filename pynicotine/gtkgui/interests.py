@@ -350,13 +350,16 @@ class Interests(UserInterface):
         if iterator is None:
             return
 
-        status_icon = get_status_icon_name(msg.status)
+        status = msg.status
 
-        if status_icon is None:
+        if status < 0 or status > 2:
+            # Unknown status
             return
 
+        status_icon = get_status_icon_name(status)
+
         self.similar_users_list_view.set_row_value(iterator, 0, status_icon)
-        self.similar_users_list_view.set_row_value(iterator, 4, msg.status)
+        self.similar_users_list_view.set_row_value(iterator, 4, status)
 
     def get_user_stats(self, msg):
 

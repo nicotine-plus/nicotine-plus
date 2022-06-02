@@ -398,16 +398,13 @@ def get_flag_icon_name(country):
 
 def get_status_icon_name(status):
 
-    if status == 0:
-        return "nplus-status-offline"
-
     if status == 1:
         return "nplus-status-away"
 
     if status == 2:
         return "nplus-status-online"
 
-    return None
+    return "nplus-status-offline"
 
 
 def on_icon_theme_changed(*_args):

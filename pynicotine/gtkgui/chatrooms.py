@@ -562,7 +562,7 @@ class ChatRoom(UserInterface):
         username = userdata.username
         status = userdata.status
         country = userdata.country or ""  # country can be None, ensure string is used
-        status_icon = get_status_icon_name(status) or get_status_icon_name(0)
+        status_icon = get_status_icon_name(status)
         flag_icon = get_flag_icon_name(country)
 
         # Request user's IP address, so we can get the country and ignore messages by IP
@@ -939,11 +939,6 @@ class ChatRoom(UserInterface):
         if status == self.usersmodel.get_value(iterator, 5):
             return
 
-        status_icon = get_status_icon_name(status)
-
-        if status_icon is None:
-            return
-
         if status == 1:
             action = _("%s has gone away")
         elif status == 2:
@@ -956,6 +951,8 @@ class ChatRoom(UserInterface):
         if not self.core.network_filter.is_user_ignored(user) and \
                 not self.core.network_filter.is_user_ip_ignored(user):
             self.activity_view.append_line(action % user, self.tag_log)
+
+        status_icon = get_status_icon_name(status)
 
         self.usersmodel.set_value(iterator, 0, status_icon)
         self.usersmodel.set_value(iterator, 5, status)

@@ -338,9 +338,8 @@ class UserList(UserInterface):
         if status == self.usersmodel.get_value(iterator, 10):
             return
 
-        status_icon = get_status_icon_name(status)
-
-        if status_icon is None:
+        if status < 0 or status > 2:
+            # Unknown status
             return
 
         notify = self.usersmodel.get_value(iterator, 6)
@@ -355,6 +354,8 @@ class UserList(UserInterface):
 
             log.add(status_text, user)
             self.frame.notifications.new_text_notification(status_text % user)
+
+        status_icon = get_status_icon_name(status)
 
         self.usersmodel.set_value(iterator, 0, status_icon)
         self.usersmodel.set_value(iterator, 10, status)
