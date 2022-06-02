@@ -27,7 +27,6 @@ from gi.repository import Gio
 
 from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
-from pynicotine.gtkgui.widgets.theme import get_icon
 from pynicotine.logfacility import log
 
 
@@ -120,11 +119,6 @@ class Notifications:
 
             notification_popup = Gio.Notification.new(title)
             notification_popup.set_body(message)
-
-            icon = get_icon("notify")
-            if icon:
-                notification_popup.set_icon(icon)
-
             notification_popup.set_priority(priority)
 
             self.application.send_notification(None, notification_popup)

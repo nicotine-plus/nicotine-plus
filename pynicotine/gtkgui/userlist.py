@@ -23,7 +23,6 @@
 
 import time
 
-from gi.repository import Gio
 from gi.repository import GObject
 from gi.repository import Gtk
 
@@ -32,7 +31,7 @@ from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
-from pynicotine.gtkgui.widgets.theme import get_status_icon
+from pynicotine.gtkgui.widgets.theme import get_status_icon_name
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.treeview import save_columns
@@ -61,7 +60,7 @@ class UserList(UserInterface):
         # Columns
         self.user_iterators = {}
         self.usersmodel = Gtk.ListStore(
-            Gio.Icon,             # (0)  status icon
+            str,                  # (0)  status icon
             str,                  # (1)  flag
             str,                  # (2)  username
             str,                  # (3)  hspeed
@@ -195,7 +194,7 @@ class UserList(UserInterface):
             country = ""
 
         row = [
-            get_status_icon(0),
+            get_status_icon_name(0),
             get_flag_icon_name(country),
             username,
             "",
@@ -339,7 +338,7 @@ class UserList(UserInterface):
         if status == self.usersmodel.get_value(iterator, 10):
             return
 
-        status_icon = get_status_icon(status)
+        status_icon = get_status_icon_name(status)
 
         if status_icon is None:
             return
@@ -414,7 +413,7 @@ class UserList(UserInterface):
         self.user_iterators[user] = self.usersmodel.insert_with_valuesv(
             -1, self.column_numbers,
             [
-                get_status_icon(0),
+                get_status_icon_name(0),
                 empty_str,
                 user,
                 empty_str,
@@ -545,7 +544,7 @@ class UserList(UserInterface):
         for i in self.usersmodel:
             iterator = i.iter
 
-            self.usersmodel.set_value(iterator, 0, get_status_icon(0))
+            self.usersmodel.set_value(iterator, 0, get_status_icon_name(0))
             self.usersmodel.set_value(iterator, 3, "")
             self.usersmodel.set_value(iterator, 4, "")
             self.usersmodel.set_value(iterator, 10, 0)

@@ -28,8 +28,7 @@ from gi.repository import Gtk
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
-from pynicotine.gtkgui.widgets.theme import get_icon
-from pynicotine.gtkgui.widgets.theme import get_status_icon
+from pynicotine.gtkgui.widgets.theme import get_status_icon_name
 from pynicotine.gtkgui.widgets.theme import parse_color_string
 from pynicotine.config import config
 
@@ -65,10 +64,7 @@ class TabLabel(Gtk.Box):
         self.close_callback = close_callback
 
         self.start_icon = Gtk.Image(visible=False)
-        self.start_icon_data = None
-
         self.end_icon = Gtk.Image(visible=False)
-        self.end_icon_data = None
 
         self._pack_children()
 
@@ -197,16 +193,8 @@ class TabLabel(Gtk.Box):
 
         self._set_text_color(color)
 
-        if self.mentioned:
-            icon_data = get_icon("hilite")
-        else:
-            icon_data = get_icon("hilite3")
-
-        if icon_data is self.end_icon_data:
-            return
-
-        self.end_icon_data = icon_data
-        self.end_icon.set_property("gicon", icon_data)
+        icon_name = "nplus-hilite" if self.mentioned else "nplus-hilite3"
+        self.end_icon.set_property("icon-name", icon_name)
         self.end_icon.show()
 
     def remove_hilite(self):
@@ -216,24 +204,16 @@ class TabLabel(Gtk.Box):
 
         self._set_text_color(config.sections["ui"]["tab_default"])
 
-        self.end_icon_data = None
-        self.end_icon.set_property("gicon", None)
+        self.end_icon.set_property("icon-name", None)
         self.end_icon.hide()
 
     def set_status_icon(self, status):
+        icon_name = get_status_icon_name(status) or get_status_icon_name(0)
+        self.set_start_icon_name(icon_name, visible=config.sections["ui"]["tab_status_icons"])
 
-        icon_data = get_status_icon(status) or get_status_icon(0)
-
-        if icon_data is self.start_icon_data:
-            return
-
-        self.start_icon_data = icon_data
-        self.start_icon.set_property("gicon", icon_data)
-        self.start_icon.set_visible(config.sections["ui"]["tab_status_icons"])
-
-    def set_start_icon_name(self, icon_name):
+    def set_start_icon_name(self, icon_name, visible=True):
         self.start_icon.set_property("icon-name", icon_name)
-        self.start_icon.show()
+        self.start_icon.set_visible(visible)
 
     def set_text(self, text):
 
