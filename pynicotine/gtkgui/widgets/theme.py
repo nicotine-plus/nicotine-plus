@@ -290,21 +290,32 @@ def load_custom_icons(update=False):
         else:
             GTK_SETTINGS.set_property("gtk-icon-theme-name", SYSTEM_ICON_THEME)
 
-    user_icon_theme_path = config.sections["ui"]["icontheme"]
-
-    if not user_icon_theme_path:
-        return
-
     icon_theme_name = ".nicotine-icon-theme"
+    icon_theme_path = os.path.join(config.data_dir, icon_theme_name)
+    icon_theme_path_encoded = encode_path(icon_theme_path)
+
     parent_icon_theme_name = GTK_SETTINGS.get_property("gtk-icon-theme-name")
 
     if icon_theme_name == parent_icon_theme_name:
         return
 
-    log.add_debug("Loading custom icon theme from %s", user_icon_theme_path)
+    try:
+        # Create internal icon theme folder
+        if os.path.exists(icon_theme_path_encoded):
+            import shutil
+            shutil.rmtree(icon_theme_path_encoded)
 
-    icon_theme_path = os.path.join(config.data_dir, icon_theme_name)
-    icon_theme_path_encoded = encode_path(icon_theme_path)
+    except Exception as error:
+        log.add_debug("Failed to remove custom icon theme folder %(theme)s: %(error)s",
+                      {"theme": icon_theme_path, "error": error})
+        return
+
+    user_icon_theme_path = config.sections["ui"]["icontheme"]
+
+    if not user_icon_theme_path:
+        return
+
+    log.add_debug("Loading custom icon theme from %s", user_icon_theme_path)
 
     theme_file_path = os.path.join(icon_theme_path, "index.theme")
     theme_file_contents = (
@@ -322,10 +333,6 @@ def load_custom_icons(update=False):
 
     try:
         # Create internal icon theme folder
-        if os.path.isdir(icon_theme_path_encoded):
-            import shutil
-            shutil.rmtree(icon_theme_path_encoded)
-
         os.makedirs(icon_theme_path_encoded)
 
         # Create icon theme index file

@@ -3009,7 +3009,10 @@ class Preferences(UserInterface):
 
             self.frame.update_visuals()
             self.update_visuals()
+
+            # Icons
             load_custom_icons(update=True)
+            self.frame.tray_icon.update_icon_theme()
 
         if completion_required:
             self.frame.update_completions()
