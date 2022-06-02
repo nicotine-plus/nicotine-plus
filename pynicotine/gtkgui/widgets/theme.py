@@ -333,7 +333,8 @@ def load_custom_icons(update=False):
         ("trayicon_connect", config.application_id + "-connect"),
         ("trayicon_disconnect", config.application_id + "-disconnect"),
         ("trayicon_msg", config.application_id + "-msg"),
-        ("n", config.application_id)
+        ("n", config.application_id),
+        ("n", config.application_id + "-symbolic")
     )
     extensions = ["jpg", "jpeg", "bmp", "png", "svg"]
 
