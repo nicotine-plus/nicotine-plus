@@ -448,7 +448,6 @@
                     <property name="rubber-banding">True</property>
                     <signal name="query-tooltip" handler="on_tooltip"/>
                     <signal name="row-activated" handler="on_row_activated"/>
-                    <signal name="notify::has-focus" handler="on_refilter"/>
                     <child internal-child="selection">
                       <object class="GtkTreeSelection">
                         <property name="mode">multiple</property>

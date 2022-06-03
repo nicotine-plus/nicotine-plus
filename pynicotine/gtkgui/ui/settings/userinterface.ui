@@ -2180,7 +2180,7 @@
                   <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="hexpand">True</property>
-                    <property name="label" translatable="yes">Icon theme folder (requires restart):</property>
+                    <property name="label" translatable="yes">Icon theme folder:</property>
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
                     <property name="mnemonic_widget">ThemeDir</property>
@@ -2197,6 +2197,7 @@
                         <property name="visible">True</property>
                         <property name="hexpand">True</property>
                         <property name="width-request">160</property>
+                        <signal name="clicked" handler="on_theme_changed"/>
                       </object>
                     </child>
                     <child>

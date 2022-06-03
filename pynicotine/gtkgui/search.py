@@ -401,6 +401,13 @@ class Search(UserInterface):
             self.column_offsets[column.get_title()] = 0
             column.connect("notify::x-offset", self.on_column_position_changed)
 
+        if GTK_API_VERSION >= 4:
+            focus_controller = Gtk.EventControllerFocus()
+            focus_controller.connect("enter", self.on_refilter)
+            self.tree_view.add_controller(focus_controller)
+        else:
+            self.tree_view.connect("focus-in-event", self.on_refilter)
+
         self.update_visuals()
 
         # Popup menus
@@ -857,10 +864,13 @@ class Search(UserInterface):
     @staticmethod
     def check_country(result_filter, value):
 
+        result_filter = result_filter.upper()
         value = value.upper()
         allowed = False
 
         for country_code in result_filter.split("|"):
+            country_code = country_code.strip()
+
             if country_code == value:
                 allowed = True
 
@@ -875,10 +885,12 @@ class Search(UserInterface):
     @staticmethod
     def check_file_type(result_filter, value):
 
+        result_filter = result_filter.lower()
         value = value.lower()
         allowed = False
 
         for ext in result_filter.split("|"):
+            ext = ext.strip()
             exclude_ext = None
 
             if ext.startswith("!"):
@@ -1427,8 +1439,8 @@ class Search(UserInterface):
             "filtersize": self.filter_file_size_combobox.get_active_text(),
             "filterbr": self.filter_bitrate_combobox.get_active_text(),
             "filterslot": self.filter_free_slot_button.get_active(),
-            "filtercc": self.filter_country_combobox.get_active_text().strip().upper(),
-            "filtertype": self.filter_file_type_combobox.get_active_text().strip().lower(),
+            "filtercc": self.filter_country_combobox.get_active_text(),
+            "filtertype": self.filter_file_type_combobox.get_active_text(),
             "filterlength": self.filter_length_combobox.get_active_text(),
         }
 

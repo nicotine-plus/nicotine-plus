@@ -640,9 +640,6 @@ class NicotineCore:
         if log_contents:
             log.add_msg_contents(msg)
 
-        if msg.status is None:
-            msg.status = -1
-
         self.user_statuses[msg.user] = msg.status
 
         if msg.privileged == 1:

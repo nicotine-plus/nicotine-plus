@@ -29,7 +29,6 @@ from pynicotine.gtkgui.widgets.filechooser import FolderChooser
 from pynicotine.gtkgui.widgets.dialogs import dialog_hide
 from pynicotine.gtkgui.widgets.dialogs import dialog_show
 from pynicotine.gtkgui.widgets.dialogs import generic_dialog
-from pynicotine.gtkgui.widgets.theme import get_icon
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.utils import open_uri
@@ -77,13 +76,7 @@ class FastConfigure(UserInterface):
             self.next_button.set_can_default(True)
 
         self.dialog.set_default_response(Gtk.ResponseType.APPLY)
-
-        logo = get_icon("n")
-
-        if logo:
-            self.main_icon.set_property("gicon", logo)
-        else:
-            self.main_icon.set_property("icon-name", config.application_id)
+        self.main_icon.set_property("icon-name", config.application_id)
 
         # Page specific, share_page
         self.download_folder_button = FileChooserButton(
