@@ -1431,8 +1431,8 @@ class Search(UserInterface):
         filters = {
             "filterin": filter_in,
             "filterout": filter_out,
-            "filtersize": self.filter_file_size_combobox.get_active_text().strip(),
-            "filterbr": self.filter_bitrate_combobox.get_active_text().strip(),
+            "filtersize": self.filter_file_size_combobox.get_active_text(),
+            "filterbr": self.filter_bitrate_combobox.get_active_text(),
             "filterslot": self.filter_free_slot_button.get_active(),
             "filtercc": self.filter_country_combobox.get_active_text(),
             "filtertype": self.filter_file_type_combobox.get_active_text(),
