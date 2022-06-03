@@ -111,7 +111,7 @@ class Interests(UserInterface):
 
         self.recommendation_users = {}
         self.recommendation_users_model = Gtk.ListStore(
-            Gio.Icon,             # (0) status icon
+            str,                  # (0) status icon
             str,                  # (1) user
             str,                  # (2) hspeed
             str,                  # (3) hfiles
