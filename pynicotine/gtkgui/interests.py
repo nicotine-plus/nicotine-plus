@@ -26,7 +26,7 @@ from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.treeview import TreeView
-from pynicotine.gtkgui.widgets.theme import get_status_icon
+from pynicotine.gtkgui.widgets.theme import get_status_icon_name
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.utils import humanize
@@ -332,7 +332,7 @@ class Interests(UserInterface):
         self.similar_users_list_view.clear()
 
         for user in users:
-            self.similar_users_list_view.add_row([get_status_icon(0), user, "", "0", 0, 0, 0], select_row=False)
+            self.similar_users_list_view.add_row([get_status_icon_name(0), user, "", "0", 0, 0, 0], select_row=False)
 
             # Request user status, speed and number of shared files
             self.core.watch_user(user, force_update=True)
@@ -350,13 +350,16 @@ class Interests(UserInterface):
         if iterator is None:
             return
 
-        status_icon = get_status_icon(msg.status)
+        status = msg.status
 
-        if status_icon is None:
+        if status < 0 or status > 2:
+            # Unknown status
             return
 
+        status_icon = get_status_icon_name(status)
+
         self.similar_users_list_view.set_row_value(iterator, 0, status_icon)
-        self.similar_users_list_view.set_row_value(iterator, 4, msg.status)
+        self.similar_users_list_view.set_row_value(iterator, 4, status)
 
     def get_user_stats(self, msg):
 
