@@ -667,7 +667,8 @@ class ChatRoom(UserInterface):
                                                timestamp_format="", scroll=False)
 
             if lines:
-                self.chat_view.append_line(_("--- old messages above ---"), self.tag_hilite, scroll=False)
+                timestamp_format = config.sections["logging"]["rooms_timestamp"]
+                self.chat_view.append_line(_("--- old messages above ---"), self.tag_hilite, scroll=False, timestamp_format=timestamp_format)
 
     def populate_user_menu(self, user, menu, menu_private_rooms):
 
@@ -1045,7 +1046,8 @@ class ChatRoom(UserInterface):
                 and self.room in config.sections["columns"]["chat_room"]):
             del config.sections["columns"]["chat_room"][self.room]
 
-        self.chat_view.append_line(_("--- disconnected ---"), self.tag_hilite)
+        timestamp_format = config.sections["logging"]["rooms_timestamp"]
+        self.chat_view.append_line(_("--- disconnected ---"), self.tag_hilite, timestamp_format)
 
         for username in self.tag_users:
             self.update_user_tag(username)
@@ -1069,7 +1071,8 @@ class ChatRoom(UserInterface):
             self.usersmodel.set_sort_column_id(sort_column, sort_type)
 
         # Spit this line into chat log
-        self.chat_view.append_line(_("--- reconnected ---"), self.tag_hilite)
+        timestamp_format = config.sections["logging"]["rooms_timestamp"]
+        self.chat_view.append_line(_("--- reconnected ---"), self.tag_hilite, timestamp_format)
 
         # Update user count
         self.count_users()
