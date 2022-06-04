@@ -1411,11 +1411,11 @@ class Search(UserInterface):
 
         filter_in = self.filter_include_combobox.get_active_text().strip()
         filter_out = self.filter_exclude_combobox.get_active_text().strip()
-        filter_size = self.filter_file_size_combobox.get_active_text().strip()
-        filter_bitrate = self.filter_bitrate_combobox.get_active_text().strip()
-        filter_country = self.filter_country_combobox.get_active_text().strip()
-        filter_file_type = self.filter_file_type_combobox.get_active_text().strip()
-        filter_length = self.filter_length_combobox.get_active_text().strip()
+        filter_size = self.filter_file_size_combobox.get_active_text().replace(" ", "")
+        filter_bitrate = self.filter_bitrate_combobox.get_active_text().replace(" ", "")
+        filter_country = self.filter_country_combobox.get_active_text().replace(" ", "")
+        filter_file_type = self.filter_file_type_combobox.get_active_text().replace(" ", "")
+        filter_length = self.filter_length_combobox.get_active_text().replace(" ", "")
         filter_free_slot = self.filter_free_slot_button.get_active()
 
         if filter_in:
@@ -1431,19 +1431,19 @@ class Search(UserInterface):
                 filter_out = None
 
         if filter_size:
-            filter_size = filter_size.replace(" ", "").split("|")
+            filter_size = filter_size.split("|")
 
         if filter_bitrate:
-            filter_bitrate = filter_bitrate.replace(" ", "").split("|")
+            filter_bitrate = filter_bitrate.split("|")
 
         if filter_country:
-            filter_country = filter_country.replace(" ", "").upper().split("|")
+            filter_country = filter_country.upper().split("|")
 
         if filter_file_type:
-            filter_file_type = filter_file_type.replace(" ", "").lower().split("|")
+            filter_file_type = filter_file_type.lower().split("|")
 
         if filter_length:
-            filter_length = filter_length.replace(" ", "").split("|")
+            filter_length = filter_length.split("|")
 
         filters = {
             "filterin": filter_in,
