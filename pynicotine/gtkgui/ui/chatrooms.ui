@@ -249,7 +249,6 @@
                         <property name="label" translatable="yes">_Auto-join Room</property>
                         <property name="visible">True</property>
                         <property name="use-underline">True</property>
-                        <signal name="toggled" handler="on_autojoin"/>
                       </object>
                     </child>
                     <child>
