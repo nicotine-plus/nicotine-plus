@@ -7,13 +7,12 @@
  * Implemented mouse wheel scrolling on secondary tabs to change the active page
  * Added total file size and duration of selected files to the File Properties dialog
  * Added text-to-speech toggle buttons for individual private chats when TTS is enabled
- * Minor performance improvement when saving the history of downloads and uploads
  * Minor usability improvements to several main window components and dialogs
  * Various translation updates (thanks to our [many contributors](https://nicotine-plus.org/TRANSLATORS) on [Weblate](https://hosted.weblate.org/engage/nicotine-plus))
 
 ### Corrections
 
- * IMPORTANT: Fixed a rare but severe CPU hogging issue in the Uploads list view on certain systems
+ * IMPORTANT: Fixed a CPU hogging issue when thousands of file transfers were present
  * Fixed issues where downloads failed if the path or file name was very long (thank you @AtticFinder65536)
  * Fixed an issue where folder downloads did not always save subfolders into the correct location
  * Fixed an issue where the estimated total time remaining for folder transfers was incorrect
@@ -27,6 +26,7 @@
 
 ### Issues closed on GitHub
 
+ * Forcibly re-queue uploads that stop due to an error such as "Can't connect" ([#1563](https://github.com/nicotine-plus/nicotine-plus/issues/1563))
  * Support paths longer than 260 characters on Windows ([#1728](https://github.com/nicotine-plus/nicotine-plus/issues/1728))
  * UnicodeEncodeError when downloading file ([#1980](https://github.com/nicotine-plus/nicotine-plus/issues/1980))
  * Nicotine+ always on dark mode regardless of my settings ([#1983](https://github.com/nicotine-plus/nicotine-plus/issues/1983))
