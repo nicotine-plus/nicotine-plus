@@ -868,13 +868,9 @@ class Search(UserInterface):
     @staticmethod
     def check_country(result_filter, value):
 
-        result_filter = result_filter.upper()
-        value = value.upper()
         allowed = False
 
-        for country_code in result_filter.split("|"):
-            country_code = country_code.strip()
-
+        for country_code in result_filter:
             if country_code == value:
                 allowed = True
 
@@ -889,12 +885,9 @@ class Search(UserInterface):
     @staticmethod
     def check_file_type(result_filter, value):
 
-        result_filter = result_filter.lower()
-        value = value.lower()
         allowed = False
 
-        for ext in result_filter.split("|"):
-            ext = ext.strip()
+        for ext in result_filter:
             exclude_ext = None
 
             if ext.startswith("!"):
@@ -922,30 +915,30 @@ class Search(UserInterface):
         if self.active_filter_count == 0:
             return True
 
-        filters = self.filters
+        for filter_id, filter_value in self.filters.items():
+            if not filter_value:
+                continue
 
-        # "Included text"-filter, check full file path (located at index 11 in row)
-        if filters["filterin"] and not filters["filterin"].search(row[11].lower()):
-            return False
+            if filter_id == "filtertype" and not self.check_file_type(filter_value, row[11].lower()):
+                return False
 
-        # "Excluded text"-filter, check full file path (located at index 11 in row)
-        if filters["filterout"] and filters["filterout"].search(row[11].lower()):
-            return False
+            if filter_id == "filtercc" and not self.check_country(filter_value, row[12].upper()):
+                return False
 
-        if filters["filtersize"] and not self.check_digit(filters["filtersize"], row[13].get_value()):
-            return False
+            if filter_id == "filterin" and not filter_value.search(row[11]):
+                return False
 
-        if filters["filterbr"] and not self.check_digit(filters["filterbr"], row[10].get_value(), factorize=False):
-            return False
+            if filter_id == "filterout" and filter_value.search(row[11]):
+                return False
 
-        if filters["filterslot"] and row[15].get_value() > 0:
-            return False
+            if filter_id == "filterslot" and row[15].get_value() > 0:
+                return False
 
-        if filters["filtercc"] and not self.check_country(filters["filtercc"], row[12]):
-            return False
+            if filter_id == "filtersize" and not self.check_digit(filter_value, row[13].get_value()):
+                return False
 
-        if filters["filtertype"] and not self.check_file_type(filters["filtertype"], row[11]):
-            return False
+            if filter_id == "filterbr" and not self.check_digit(filter_value, row[10].get_value(), factorize=False):
+                return False
 
         return True
 
@@ -1413,29 +1406,40 @@ class Search(UserInterface):
         if self.clearing_filters:
             return
 
-        filter_in = self.filter_include_combobox.get_active_text().strip().lower()
-        filter_out = self.filter_exclude_combobox.get_active_text().strip().lower()
+        filter_in = self.filter_include_combobox.get_active_text().strip()
+        filter_out = self.filter_exclude_combobox.get_active_text().strip()
+        filter_size = self.filter_file_size_combobox.get_active_text().replace(" ", "")
+        filter_bitrate = self.filter_bitrate_combobox.get_active_text().replace(" ", "")
+        filter_country = self.filter_country_combobox.get_active_text().replace(" ", "")
+        filter_file_type = self.filter_file_type_combobox.get_active_text().replace(" ", "")
+        filter_free_slot = self.filter_free_slot_button.get_active()
 
         if filter_in:
             try:
-                filter_in = re.compile(filter_in)
+                filter_in = re.compile(filter_in, flags=re.IGNORECASE)
             except sre_constants.error:
                 filter_in = None
 
         if filter_out:
             try:
-                filter_out = re.compile(filter_out)
+                filter_out = re.compile(filter_out, flags=re.IGNORECASE)
             except sre_constants.error:
                 filter_out = None
+
+        if filter_country:
+            filter_country = filter_country.upper().split("|")
+
+        if filter_file_type:
+            filter_file_type = filter_file_type.lower().split("|")
 
         filters = {
             "filterin": filter_in,
             "filterout": filter_out,
-            "filtersize": self.filter_file_size_combobox.get_active_text(),
-            "filterbr": self.filter_bitrate_combobox.get_active_text(),
-            "filterslot": self.filter_free_slot_button.get_active(),
-            "filtercc": self.filter_country_combobox.get_active_text(),
-            "filtertype": self.filter_file_type_combobox.get_active_text(),
+            "filtersize": filter_size,
+            "filterbr": filter_bitrate,
+            "filterslot": filter_free_slot,
+            "filtercc": filter_country,
+            "filtertype": filter_file_type,
         }
 
         if self.filters == filters:
@@ -1457,13 +1461,14 @@ class Search(UserInterface):
 
         # Add filters to history
         for filter_id, value in filters.items():
-            try:
-                value = value.pattern
-            except AttributeError:
-                pass
-
             if not value:
                 continue
+
+            if filter_id in ("filterin", "filterout"):
+                value = value.pattern
+
+            elif filter_id in ("filtercc", "filtertype"):
+                value = "|".join(value)
 
             self.push_history(filter_id, value)
             self.active_filter_count += 1
