@@ -8,8 +8,10 @@ This document contains important information about Nicotine+ design decisions an
  * [Dependencies](#dependencies)
  * [Profiling](#profiling)
  * [Continuous Integration Testing](#continuous-integration-testing)
+ * [Translations](#translations)
  * [Soulseek Protocol](#soulseek-protocol)
  * [Releases](#releases)
+
 
 ## Language and Toolkit
 
@@ -37,6 +39,7 @@ Dependencies preinstalled on most systems, as well as modules included in the Py
 
 The current dependencies for Nicotine+ are described in [DEPENDENCIES.md](DEPENDENCIES.md).
 
+
 ## Profiling
 
 Profiling code changes from time to time is important, to ensure that Nicotine+ performs well and uses few resources. Our goal is to develop a lightweight client than runs well on older hardware, as well as servers, which can be quite constrained.
@@ -50,6 +53,7 @@ Due to Python's interpreted nature, addressing performance issues can be a chall
  * Look for alternative ways of accomplishing a task, and compare the performance. Search engines help a lot here.
 
 [py-spy](https://github.com/benfred/py-spy) is an excellent tool for profiling Python applications in real time, and will save a lot of time in the long run.
+
 
 ## Continuous Integration Testing
 
@@ -87,11 +91,46 @@ autopkgtest --shell-fail --apt-upgrade . -- \
 
 Tests are defined in the *[test/](/test/)* folder, and should be expanded to cover larger parts of the client when possible.
 
+
+## Translations
+
+Translations are largely handled by [Weblate](https://weblate.org/), but certain manual operations need to be performed at times.
+
+### Adding a Language
+
+When Nicotine+ is translated into a new language, the following should be done:
+
+ * Update the copyright header of the XX.po file:
+```
+# Copyright (C) 20XX Nicotine+ Translators
+# This file is distributed under the same license as the Nicotine+ package.
+```
+ * Remove the `PACKAGE VERSION` value of `Project-Id-Version` in the XX.po file:
+```
+"Project-Id-Version: \n"
+```
+ * Add the language code to the [po/LINGUAS](/po/LINGUAS) and [test/unit/test_i18n.py](/test/unit/test_i18n.py) files
+ * Add the translator's name to the [debian/copyright](/debian/copyright) file
+
+### Updating Translation Template
+
+The translation template file [po/nicotine.pot](/po/nicotine.pot) should be updated after modifying strings in the codebase. To update the template, run the following command:
+
+```sh
+python3 po/update_pot.py
+```
+
+### Merging Translation Updates
+
+When translations are modified, Weblate creates a pull request with the changes within 24 hours. In order to preserve author information for commits, use the `Create a merge commit` option when merging the pull request.
+
+
 ## Soulseek Protocol
 
 The Soulseek network uses its own protocol for interoperability between clients. The protocol is proprietary, and no official documentation is available. Nicotine+'s protocol implementation is developed by observing the behavior of the official Soulseek NS and SoulseekQt clients.
 
 [SLSKPROTOCOL.md](SLSKPROTOCOL.md) contains unofficial documentation maintained by the Nicotine+ team.
+
 
 ## Releases
 
