@@ -909,22 +909,20 @@ class Search(UserInterface):
         if self.active_filter_count == 0:
             return True
 
-        file_path = row[11].lower()
-
         for filter_id, filter_value in self.filters.items():
             if not filter_value:
                 continue
 
-            if filter_id == "filtertype" and not self.check_file_type(filter_value, file_path):
+            if filter_id == "filtertype" and not self.check_file_type(filter_value, row[11].lower()):
                 return False
 
             if filter_id == "filtercc" and not self.check_country(filter_value, row[12].upper()):
                 return False
 
-            if filter_id == "filterin" and not filter_value.search(file_path):
+            if filter_id == "filterin" and not filter_value.search(row[11].lower()):
                 return False
 
-            if filter_id == "filterout" and filter_value.search(file_path):
+            if filter_id == "filterout" and filter_value.search(row[11].lower()):
                 return False
 
             if filter_id == "filterslot" and row[15].get_value() > 0:
