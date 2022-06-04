@@ -1744,7 +1744,8 @@ class NicotineFrame(UserInterface):
         if level not in ("transfer", "connection", "message", "miscellaneous"):
             self.set_status_text(msg)
 
-        self.log_view.append_line(msg, find_urls=False)
+        timestamp_format = config.sections["logging"]["log_timestamp"]
+        self.log_view.append_line(msg, find_urls=False, timestamp_format=timestamp_format)
         return False
 
     def on_popup_menu_log(self, menu, _textview):
