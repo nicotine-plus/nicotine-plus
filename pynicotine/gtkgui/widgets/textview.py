@@ -44,9 +44,10 @@ class TextView:
         self.font = font
         self.url_regex = re.compile("(\\w+\\://[^\\s]+)|(www\\.\\w+\\.[^\\s]+)|(mailto\\:[^\\s]+)")
 
-        self.tag_urls = []
+        self.tag_urls = {}
         self.pressed_x = 0
         self.pressed_y = 0
+        self.max_num_lines = 50000
 
         if GTK_API_VERSION >= 4:
             self.gesture_click_primary = Gtk.GestureClick()
@@ -91,8 +92,8 @@ class TextView:
             buffer.insert(iterator, text)
 
             if tag is not None:
-                start = buffer.get_iter_at_offset(start_offset)
-                buffer.apply_tag(tag, start, iterator)
+                start_iter = buffer.get_iter_at_offset(start_offset)
+                buffer.apply_tag(tag, start_iter, iterator)
 
         def _usertag(buffer, section):
 
@@ -111,7 +112,7 @@ class TextView:
 
         line = str(line).strip("\n")
         buffer = self.textbuffer
-        linenr = buffer.get_line_count()
+        num_lines = buffer.get_line_count()
 
         if showstamp and timestamp_format:
             if timestamp:
@@ -134,7 +135,7 @@ class TextView:
 
                 url = match.group()
                 urltag = self.create_tag("urlcolor", url=url)
-                self.tag_urls.append(urltag)
+                self.tag_urls[buffer.get_end_iter()] = urltag
                 _append(buffer, url, urltag)
 
                 # Match remaining url
@@ -144,6 +145,14 @@ class TextView:
         if line:
             _usertag(buffer, line)
 
+        if num_lines >= self.max_num_lines:
+            # Limit number of lines in textview
+            start_iter = buffer.get_start_iter()
+            end_iter = buffer.get_iter_at_line(num_lines - self.max_num_lines)
+
+            self.tag_urls.pop(end_iter, None)
+            buffer.delete(start_iter, end_iter)
+
         if scroll:
             alignment = self.scrollable.get_vadjustment()
 
@@ -151,7 +160,7 @@ class TextView:
             if (alignment.get_value() + alignment.get_page_size()) >= alignment.get_upper() - 40:
                 GLib.idle_add(self.scroll_bottom, priority=GLib.PRIORITY_LOW)
 
-        return linenr
+        return num_lines
 
     def get_has_selection(self):
         return self.textbuffer.get_has_selection()
@@ -180,7 +189,10 @@ class TextView:
         return ""
 
     def clear(self):
-        self.textbuffer.set_text("")
+
+        start_iter, end_iter = self.textbuffer.get_bounds()
+
+        self.textbuffer.delete(start_iter, end_iter)
         self.tag_urls.clear()
 
     """ Text Tags (usernames, URLs) """
@@ -216,7 +228,7 @@ class TextView:
         update_tag_visuals(tag, tag.color, self.font)
 
     def update_tags(self):
-        for tag in self.tag_urls:
+        for tag in self.tag_urls.values():
             self.update_tag(tag)
 
     """ Events """
@@ -265,8 +277,8 @@ class TextView:
     def on_copy_all_text(self, *_args):
 
         textbuffer = self.textview.get_buffer()
-        start, end = textbuffer.get_bounds()
-        text = textbuffer.get_text(start, end, True)
+        start_iter, end_iter = textbuffer.get_bounds()
+        text = textbuffer.get_text(start_iter, end_iter, True)
 
         copy_text(text)
 
