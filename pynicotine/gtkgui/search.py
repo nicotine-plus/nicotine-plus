@@ -919,10 +919,10 @@ class Search(UserInterface):
             if filter_id == "filtercc" and not self.check_country(filter_value, row[12].upper()):
                 return False
 
-            if filter_id == "filterin" and not filter_value.search(row[11].lower()):
+            if filter_id == "filterin" and not filter_value.search(row[11]):
                 return False
 
-            if filter_id == "filterout" and filter_value.search(row[11].lower()):
+            if filter_id == "filterout" and filter_value.search(row[11]):
                 return False
 
             if filter_id == "filterslot" and row[15].get_value() > 0:
@@ -1420,13 +1420,13 @@ class Search(UserInterface):
 
         if filter_in:
             try:
-                filter_in = re.compile(filter_in.lower())
+                filter_in = re.compile(filter_in, flags=re.IGNORECASE)
             except sre_constants.error:
                 filter_in = None
 
         if filter_out:
             try:
-                filter_out = re.compile(filter_out.lower())
+                filter_out = re.compile(filter_out, flags=re.IGNORECASE)
             except sre_constants.error:
                 filter_out = None
 
