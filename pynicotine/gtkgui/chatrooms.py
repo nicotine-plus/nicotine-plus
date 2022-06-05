@@ -668,7 +668,8 @@ class ChatRoom(UserInterface):
 
             if lines:
                 timestamp_format = config.sections["logging"]["rooms_timestamp"]
-                self.chat_view.append_line(_("--- old messages above ---"), self.tag_hilite, scroll=False, timestamp_format=timestamp_format)
+                self.chat_view.append_line(_("--- old messages above ---"), self.tag_hilite, scroll=False,
+                                           timestamp_format=timestamp_format)
 
     def populate_user_menu(self, user, menu, menu_private_rooms):
 
