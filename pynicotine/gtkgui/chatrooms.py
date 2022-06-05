@@ -429,6 +429,7 @@ class ChatRoom(UserInterface):
             self.log_toggle.set_active(self.room in config.sections["logging"]["rooms"])
 
         self.auto_join_toggle.set_active(room in config.sections["server"]["autojoin"])
+        self.auto_join_toggle.connect("toggled", self.on_autojoin)
 
         self.toggle_chat_buttons()
 

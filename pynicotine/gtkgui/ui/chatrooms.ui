@@ -243,7 +243,6 @@
                         <property name="visible">True</property>
                         <property name="hexpand">True</property>
                         <property name="use-underline">True</property>
-                        <signal name="toggled" handler="on_autojoin"/>
                       </object>
                     </child>
                     <child>

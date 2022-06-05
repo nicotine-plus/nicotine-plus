@@ -278,7 +278,6 @@ class Config:
                 "rooms_timestamp": "%H:%M:%S",
                 "private_timestamp": "%Y-%m-%d %H:%M:%S",
                 "log_timestamp": "%Y-%m-%d %H:%M:%S",
-                "timestamps": True,
                 "privatechat": True,
                 "chatrooms": True,
                 "transfers": False,
@@ -530,7 +529,8 @@ class Config:
                 "enabled"
             ),
             "logging": (
-                "logsdir"
+                "logsdir",
+                "timestamps"
             ),
             "ticker": (
                 "default",
