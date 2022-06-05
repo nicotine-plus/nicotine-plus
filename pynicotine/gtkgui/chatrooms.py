@@ -662,10 +662,9 @@ class ChatRoom(UserInterface):
 
                 if user != login:
                     self.chat_view.append_line(self.core.privatechats.censor_chat(line), tag, username=user,
-                                               usertag=usertag, timestamp_format="", scroll=False)
+                                               usertag=usertag, scroll=False)
                 else:
-                    self.chat_view.append_line(line, tag, username=user, usertag=usertag,
-                                               timestamp_format="", scroll=False)
+                    self.chat_view.append_line(line, tag, username=user, usertag=usertag, scroll=False)
 
             if lines:
                 timestamp_format = config.sections["logging"]["rooms_timestamp"]

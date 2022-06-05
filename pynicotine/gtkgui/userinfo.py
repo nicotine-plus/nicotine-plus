@@ -396,7 +396,7 @@ class UserInfo(UserInterface):
 
         if msg.descr:
             self.description_view.clear()
-            self.description_view.append_line(msg.descr, showstamp=False, scroll=False)
+            self.description_view.append_line(msg.descr, scroll=False)
 
         self.upload_slots_label.set_text(humanize(msg.totalupl))
         self.queued_uploads_label.set_text(humanize(msg.queuesize))
