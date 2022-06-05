@@ -79,7 +79,7 @@ class TextView:
         adjustment.set_value(adjustment.get_upper() - adjustment.get_page_size())
         return False
 
-    def append_line(self, line, tag=None, timestamp=None, showstamp=True, timestamp_format="%H:%M:%S",
+    def append_line(self, line, tag=None, timestamp=None, timestamp_format=None,
                     username=None, usertag=None, scroll=True, find_urls=True):
 
         def _append(buffer, text, tag):
@@ -114,7 +114,7 @@ class TextView:
         buffer = self.textbuffer
         num_lines = buffer.get_line_count()
 
-        if showstamp and timestamp_format:
+        if timestamp_format:
             if timestamp:
                 final_timestamp = time.strftime(timestamp_format, time.localtime(timestamp)) + " "
             else:
