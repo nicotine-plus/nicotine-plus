@@ -883,7 +883,9 @@ class ChatRoom(UserInterface):
 
         if not self.core.network_filter.is_user_ignored(username) and \
                 not self.core.network_filter.is_user_ip_ignored(username):
-            self.activity_view.append_line(_("%s joined the room") % username, self.tag_log)
+            timestamp_format = config.sections["logging"]["rooms_timestamp"]
+            self.activity_view.append_line(_("%s joined the room") % username, self.tag_log,
+                                           timestamp_format=timestamp_format)
 
         self.add_user_row(userdata)
 
@@ -901,7 +903,9 @@ class ChatRoom(UserInterface):
 
         if not self.core.network_filter.is_user_ignored(username) and \
                 not self.core.network_filter.is_user_ip_ignored(username):
-            self.activity_view.append_line(_("%s left the room") % username, self.tag_log)
+            timestamp_format = config.sections["logging"]["rooms_timestamp"]
+            self.activity_view.append_line(_("%s left the room") % username, self.tag_log,
+                                           timestamp_format=timestamp_format)
 
         self.usersmodel.remove(self.users[username])
         del self.users[username]
@@ -956,7 +960,8 @@ class ChatRoom(UserInterface):
 
         if not self.core.network_filter.is_user_ignored(user) and \
                 not self.core.network_filter.is_user_ip_ignored(user):
-            self.activity_view.append_line(action % user, self.tag_log)
+            timestamp_format = config.sections["logging"]["rooms_timestamp"]
+            self.activity_view.append_line(action % user, self.tag_log, timestamp_format=timestamp_format)
 
         status_icon = get_status_icon_name(status)
 
