@@ -81,13 +81,13 @@ class FileChooser:
     def on_selected(dialog, response_id, callback, callback_data):
 
         if dialog.get_select_multiple():
-            selected = [i.get_parse_name() for i in dialog.get_files()]
+            selected = [i.get_path() for i in dialog.get_files()]
 
         else:
             selected_file = dialog.get_file()
 
             if selected_file:
-                selected = selected_file.get_parse_name()
+                selected = selected_file.get_path()
 
         dialog.destroy()
 
