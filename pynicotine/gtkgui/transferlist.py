@@ -213,9 +213,11 @@ class TransferList(UserInterface):
         self.update_model(forceupdate=True)
 
     def server_login(self):
+        # Not needed
         pass
 
     def server_disconnect(self):
+        # Not needed
         pass
 
     def rebuild_transfers(self):
@@ -638,6 +640,7 @@ class TransferList(UserInterface):
             transfer.iterator = None
 
     def retry_transfers(self):
+        # Implemented in subclasses
         pass
 
     def abort_transfers(self, clear=False):
@@ -862,9 +865,11 @@ class TransferList(UserInterface):
             FileProperties(self.frame, self.core, data, total_size=selected_size, download_button=False).show()
 
     def on_copy_url(self, *_args):
+        # Implemented in subclasses
         pass
 
     def on_copy_dir_url(self, *_args):
+        # Implemented in subclasses
         pass
 
     def on_copy_file_path(self, *_args):
@@ -875,12 +880,15 @@ class TransferList(UserInterface):
             copy_text(transfer.filename)
 
     def on_play_files(self, *_args):
+        # Implemented in subclasses
         pass
 
     def on_open_file_manager(self, *_args):
+        # Implemented in subclasses
         pass
 
     def on_browse_folder(self, *_args):
+        # Implemented in subclasses
         pass
 
     def on_retry_transfer(self, *_args):

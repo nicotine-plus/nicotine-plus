@@ -257,6 +257,7 @@ class Searches(IconNotebook):
         self.wish_list.update_visuals()
 
     def server_login(self):
+        # Not needed
         pass
 
     def server_disconnect(self):
