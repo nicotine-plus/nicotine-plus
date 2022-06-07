@@ -122,7 +122,7 @@ class ChatRooms(IconNotebook):
 
         for room, tab in self.pages.items():
             if tab.container == page:
-                GLib.idle_add(lambda: tab.chat_entry.grab_focus() == -1)  # pylint:disable=cell-var-from-loop
+                GLib.idle_add(lambda tab: tab.chat_entry.grab_focus() == -1, tab)
 
                 self.completion.set_entry(tab.chat_entry)
                 tab.set_completion_list(list(self.core.chatrooms.completion_list))

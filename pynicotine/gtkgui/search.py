@@ -105,7 +105,7 @@ class Searches(IconNotebook):
         for tab in self.pages.values():
             if tab.container == page:
                 tab.update_filter_comboboxes()
-                GLib.idle_add(lambda: tab.tree_view.grab_focus() == -1)  # pylint:disable=cell-var-from-loop
+                GLib.idle_add(lambda tab: tab.tree_view.grab_focus() == -1, tab)
                 break
 
     def on_search_mode(self, action, state):
