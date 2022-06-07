@@ -1650,13 +1650,11 @@ class NicotineFrame(UserInterface):
 
     def create_away_timer(self):
 
-        if self.core.away or not self.core.logged_in:
+        if self.core.away or not self.core.logged_in or not config.sections["server"]["autoaway"]:
             return
 
-        away_interval = config.sections["server"]["autoaway"]
-
-        if away_interval > 0:
-            self.away_timer = GLib.timeout_add_seconds(60 * away_interval, self.set_auto_away, True)
+        away_interval = config.sections["server"]["autoawayinterval"]
+        self.away_timer = GLib.timeout_add_seconds(60 * away_interval, self.set_auto_away, True)
 
     def remove_away_timer(self):
 

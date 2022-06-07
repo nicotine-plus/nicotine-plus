@@ -65,9 +65,9 @@ class NetworkFrame(UserInterface):
         super().__init__("ui/settings/network.ui")
 
         # pylint: disable=invalid-name
-        (self.AutoAway, self.AutoConnectStartup, self.AutoReply, self.CheckPortLabel,
+        (self.AutoAwayInterval, self.AutoConnectStartup, self.AutoReply, self.CheckPortLabel,
          self.CurrentPort, self.FirstPort, self.Interface, self.InterfaceLabel, self.LastPort, self.Login, self.Main,
-         self.Server, self.UPnPInterval, self.UseUPnP, self.ctcptogglebutton) = self.widgets
+         self.Server, self.UPnPInterval, self.UseAutoAway, self.UseUPnP, self.ctcptogglebutton) = self.widgets
 
         self.preferences = preferences
         self.frame = preferences.frame
@@ -79,7 +79,8 @@ class NetworkFrame(UserInterface):
                 "server": None,
                 "login": self.Login,
                 "portrange": None,
-                "autoaway": self.AutoAway,
+                "autoaway": self.UseAutoAway,
+                "autoawayinterval": self.AutoAwayInterval,
                 "autoreply": self.AutoReply,
                 "interface": self.Interface,
                 "upnp": self.UseUPnP,
@@ -157,7 +158,8 @@ class NetworkFrame(UserInterface):
                 "server": server,
                 "login": self.Login.get_text(),
                 "portrange": portrange,
-                "autoaway": self.AutoAway.get_value_as_int(),
+                "autoaway": self.UseAutoAway.get_active(),
+                "autoawayinterval": self.AutoAwayInterval.get_value_as_int(),
                 "autoreply": self.AutoReply.get_text(),
                 "interface": self.Interface.get_active_text(),
                 "upnp": self.UseUPnP.get_active(),

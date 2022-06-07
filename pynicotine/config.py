@@ -180,7 +180,8 @@ class Config:
                 "ipignorelist": {},
                 "ipblocklist": {},
                 "autojoin": ["nicotine"],
-                "autoaway": 15,
+                "autoaway": True,
+                "autoawayinterval": 15,
                 "away": False,
                 "private_chatrooms": False,
                 "command_aliases": {}

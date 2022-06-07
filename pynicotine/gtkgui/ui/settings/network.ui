@@ -21,7 +21,8 @@
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
-  <object class="GtkAdjustment" id="adjustment_AutoAway">
+  <object class="GtkAdjustment" id="adjustment_AutoAwayInterval">
+    <property name="lower">1</property>
     <property name="upper">10000</property>
     <property name="value">15</property>
     <property name="step-increment">1</property>
@@ -248,22 +249,20 @@
                 <property name="visible">True</property>
                 <property name="spacing">12</property>
                 <child>
-                  <object class="GtkLabel">
+                  <object class="GtkCheckButton" id="UseAutoAway">
+                    <property name="label" translatable="yes">Automatically set user status to away during inactivity (after inactive time in minutes):</property>
                     <property name="visible">True</property>
                     <property name="hexpand">True</property>
-                    <property name="label" translatable="yes">Toggle away status after minutes of inactivity:</property>
-                    <property name="wrap">True</property>
-                    <property name="xalign">0</property>
-                    <property name="mnemonic_widget">AutoAway</property>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkSpinButton" id="AutoAway">
+                  <object class="GtkSpinButton" id="AutoAwayInterval">
                     <property name="visible">True</property>
-                    <property name="adjustment">adjustment_AutoAway</property>
+                    <property name="adjustment">adjustment_AutoAwayInterval</property>
                     <property name="numeric">True</property>
                     <property name="valign">center</property>
                     <property name="width-chars">6</property>
+                    <property name="sensitive" bind-source="UseAutoAway" bind-property="active" bind-flags="bidirectional|sync-create"/>
                   </object>
                 </child>
               </object>
