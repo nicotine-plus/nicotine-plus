@@ -172,7 +172,11 @@ class TextView:
         iterator_data = self.textview.get_iter_at_position(buf_x, buf_y)
 
         try:
-            _over_text, iterator, _trailing = iterator_data
+            over_text, iterator, _trailing = iterator_data
+
+            if not over_text:
+                # Iterators are returned for whitespace after the last character, avoid accidental URL clicks
+                return []
 
         except ValueError:
             # GTK 3.18
