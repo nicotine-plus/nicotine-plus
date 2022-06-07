@@ -130,11 +130,8 @@ class ChatRooms(IconNotebook):
                 self.command_help.popover.unparent()
                 tab.help_button.set_popover(self.command_help.popover)
 
-                # If the tab hasn't been opened previously, scroll chat to bottom
-                if not tab.opened:
-                    GLib.idle_add(tab.activity_view.scroll_bottom)
-                    GLib.idle_add(tab.chat_view.scroll_bottom)
-                    tab.opened = True
+                if not tab.loaded:
+                    tab.load()
 
                 # Remove hilite
                 self.frame.notifications.clear("rooms", None, room)
@@ -396,8 +393,6 @@ class ChatRoom(UserInterface):
             self.users_paned.set_resize_end_child(False)
             self.users_paned.set_shrink_end_child(False)
             self.chat_paned.set_shrink_end_child(False)
-
-            window_width = self.frame.window.get_width()
         else:
             self.users_paned.child_set_property(self.chat_paned, "resize", True)
             self.users_paned.child_set_property(self.chat_paned, "shrink", False)
@@ -405,17 +400,10 @@ class ChatRoom(UserInterface):
             self.users_paned.child_set_property(self.users_container, "shrink", False)
             self.chat_paned.child_set_property(self.chat_container, "shrink", False)
 
-            window_width, _window_height = self.frame.window.get_size()
-
-        # Get the X position of the rightmost edge of the user list, and set the width to 400
-        position = (self.frame.chatrooms_paned.get_position() or self.frame.horizontal_paned.get_position()
-                    or window_width)
-        self.users_paned.set_position(position - 400)
-
         self.tickers = Tickers()
         self.room_wall = RoomWall(self.frame, self.core, self)
         self.leaving = False
-        self.opened = False
+        self.loaded = False
 
         self.users = {}
 
@@ -540,6 +528,23 @@ class ChatRoom(UserInterface):
         self.create_tags()
         self.update_visuals()
         self.read_room_logs()
+
+    def load(self):
+
+        # Get the X position of the rightmost edge of the user list, and set the width to 400
+        if GTK_API_VERSION >= 4:
+            window_width = self.frame.window.get_width()
+        else:
+            window_width, _window_height = self.frame.window.get_size()
+
+        position = (self.frame.chatrooms_paned.get_position() or self.frame.horizontal_paned.get_position()
+                    or window_width)
+        self.users_paned.set_position(position - 400)
+
+        # Scroll chat to bottom
+        GLib.idle_add(self.activity_view.scroll_bottom)
+        GLib.idle_add(self.chat_view.scroll_bottom)
+        self.loaded = self.activity_view.auto_scroll = self.chat_view.auto_scroll = True
 
     def clear(self):
         self.activity_view.clear()
