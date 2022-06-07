@@ -59,8 +59,7 @@ class UserInfos(IconNotebook):
 
         for tab in self.pages.values():
             if tab.container == page:
-                GLib.idle_add(
-                    lambda: tab.description_view.textview.grab_focus() == -1)  # pylint:disable=cell-var-from-loop
+                GLib.idle_add(lambda tab: tab.description_view.textview.grab_focus() == -1, tab)
                 break
 
     def show_user(self, user, switch_page=True):
