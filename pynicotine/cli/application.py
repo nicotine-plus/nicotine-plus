@@ -59,34 +59,45 @@ class Application:
         self.network_msgs += msgs
 
     def show_scan_progress(self):
+        # Not implemented
         pass
 
     def set_scan_progress(self, value):
+        # Not implemented
         pass
 
     def set_scan_indeterminate(self):
+        # Not implemented
         pass
 
     def hide_scan_progress(self):
+        # Not implemented
         pass
 
     def invalid_password(self):
+        # Not implemented
         pass
 
     def server_login(self):
+        # Not implemented
         pass
 
     def set_away_mode(self, is_away):
+        # Not implemented
         pass
 
     def set_connection_stats(self, msg):
+        # Not implemented
         pass
 
     def server_disconnect(self):
+        # Not implemented
         pass
 
     def setup(self):
+        # Not implemented
         pass
 
     def quit(self):
+        # Not implemented
         pass

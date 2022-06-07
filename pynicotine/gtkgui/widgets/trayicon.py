@@ -244,18 +244,23 @@ class BaseImplementation:
         self.set_icon_name(icon_name)
 
     def set_icon_name(self, icon_name):
+        # Implemented in subclasses
         pass
 
     def update_icon_theme(self):
+        # Implemented in subclasses
         pass
 
     def is_visible(self):  # pylint:disable=no-self-use
+        # Implemented in subclasses
         return False
 
     def show(self):
+        # Implemented in subclasses
         pass
 
     def hide(self):
+        # Implemented in subclasses
         pass
 
 

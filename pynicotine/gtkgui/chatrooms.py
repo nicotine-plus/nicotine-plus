@@ -209,27 +209,35 @@ class ChatRooms(IconNotebook):
                 self.frame.room_search_combobox.append_text(room)
 
     def private_room_users(self, msg):
+        # Not needed
         pass
 
     def private_room_owned(self, msg):
+        # Not needed
         pass
 
     def private_room_add_user(self, msg):
+        # Not needed
         pass
 
     def private_room_remove_user(self, msg):
+        # Not needed
         pass
 
     def private_room_operator_added(self, msg):
+        # Not needed
         pass
 
     def private_room_operator_removed(self, msg):
+        # Not needed
         pass
 
     def private_room_add_operator(self, msg):
+        # Not needed
         pass
 
     def private_room_remove_operator(self, msg):
+        # Not needed
         pass
 
     def private_room_added(self, msg):
@@ -237,9 +245,11 @@ class ChatRooms(IconNotebook):
         self.roomlist.update_room(msg.room, user_count)
 
     def private_room_removed(self, msg):
+        # Not needed
         pass
 
     def private_room_disown(self, msg):
+        # Not needed
         pass
 
     def get_user_stats(self, msg):
