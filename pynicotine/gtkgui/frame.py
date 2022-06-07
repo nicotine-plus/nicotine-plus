@@ -242,7 +242,7 @@ class NicotineFrame(UserInterface):
 
         """ Logging """
 
-        self.log_view = TextView(self.log_view)
+        self.log_view = TextView(self.log_view, auto_scroll=True)
         self.log_search_bar = TextSearchBar(self.log_view.textview, self.log_search_bar, self.log_search_entry)
 
         self.create_log_context_menu()

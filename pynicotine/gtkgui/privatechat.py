@@ -82,7 +82,7 @@ class PrivateChats(IconNotebook):
                 # If the tab hasn't been opened previously, scroll chat to bottom
                 if not tab.opened:
                     GLib.idle_add(tab.chat_view.scroll_bottom)
-                    tab.opened = True
+                    tab.opened = tab.chat_view.auto_scroll = True
 
                 # Remove hilite if selected tab belongs to a user in the hilite list
                 self.frame.notifications.clear("private", user)
@@ -286,7 +286,7 @@ class PrivateChat(UserInterface):
                 except UnicodeDecodeError:
                     line = line.decode("latin-1")
 
-                self.chat_view.append_line(line, self.tag_hilite, scroll=False)
+                self.chat_view.append_line(line, self.tag_hilite)
 
     def server_login(self):
         timestamp_format = config.sections["logging"]["private_timestamp"]
