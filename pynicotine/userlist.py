@@ -59,6 +59,8 @@ class UserList:
         self.config.write_configuration()
 
     def get_user_status(self, msg):
+        """ Server code: 7 """
+
         if self.ui_callback:
             self.ui_callback.get_user_status(msg)
 
@@ -67,5 +69,7 @@ class UserList:
             self.ui_callback.set_user_country(user, country_code)
 
     def get_user_stats(self, msg):
+        """ Server code: 36 """
+
         if self.ui_callback:
             self.ui_callback.get_user_stats(msg)

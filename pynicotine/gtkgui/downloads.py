@@ -92,7 +92,7 @@ class Downloads(TransferList):
 
     def folder_download_response(self, _dialog, response_id, msg):
         if response_id == 2:
-            self.core.transfers.folder_contents_response(msg)
+            self.core.transfers.folder_contents_response(msg, check_num_files=False)
 
     def download_large_folder(self, username, folder, numfiles, msg):
 

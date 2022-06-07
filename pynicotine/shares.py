@@ -449,6 +449,7 @@ class Shares:
         self.queue = queue
         self.translatepunctuation = str.maketrans(dict.fromkeys(PUNCTUATION, ' '))
         self.share_dbs = {}
+        self.requested_share_times = {}
         self.pending_network_msgs = []
         self.rescanning = False
         self.should_compress_shares = False
@@ -824,6 +825,91 @@ class Shares:
             self.network_callback(self.pending_network_msgs)
 
         return error
+
+    """ Network Messages """
+
+    def get_shared_file_list(self, msg):
+        """ Peer code: 4 """
+
+        log.add_msg_contents(msg)
+
+        user = msg.init.target_user
+        request_time = time.time()
+
+        if user in self.requested_share_times and request_time < self.requested_share_times[user] + 0.4:
+            # Ignoring request, because it's less than half a second since the
+            # last one by this user
+            return
+
+        self.requested_share_times[user] = request_time
+
+        log.add(_("User %(user)s is browsing your list of shared files"), {'user': user})
+
+        ip_address, _port = msg.init.addr
+        checkuser, reason = self.core.network_filter.check_user(user, ip_address)
+
+        if not checkuser:
+            message = self.core.ban_message % reason
+            self.core.privatechats.send_automatic_message(user, message)
+
+        shares_list = None
+
+        if checkuser == 1:
+            # Send Normal Shares
+            shares_list = self.get_compressed_shares_message("normal")
+
+        elif checkuser == 2:
+            # Send Buddy Shares
+            shares_list = self.get_compressed_shares_message("buddy")
+
+        if not shares_list:
+            # Nyah, Nyah
+            shares_list = slskmessages.SharedFileList(msg.init, {})
+
+        shares_list.init = msg.init
+        self.queue.append(shares_list)
+
+    def folder_contents_request(self, msg):
+        """ Peer code: 36 """
+
+        log.add_msg_contents(msg)
+
+        init = msg.init
+        ip_address, _port = msg.init.addr
+        username = msg.init.target_user
+        checkuser, reason = self.core.network_filter.check_user(username, ip_address)
+
+        if not checkuser:
+            message = self.core.ban_message % reason
+            self.core.privatechats.send_automatic_message(username, message)
+
+        normalshares = self.share_dbs.get("streams")
+        buddyshares = self.share_dbs.get("buddystreams")
+
+        if checkuser == 1 and normalshares is not None:
+            shares = normalshares
+
+        elif checkuser == 2 and buddyshares is not None:
+            shares = buddyshares
+
+        else:
+            shares = {}
+
+        if checkuser:
+            try:
+                if msg.dir in shares:
+                    self.queue.append(slskmessages.FolderContentsResponse(init, msg.dir, shares[msg.dir]))
+                    return
+
+                if msg.dir.rstrip('\\') in shares:
+                    self.queue.append(slskmessages.FolderContentsResponse(init, msg.dir, shares[msg.dir.rstrip('\\')]))
+                    return
+
+            except Exception as error:
+                log.add(_("Failed to fetch the shared folder %(folder)s: %(error)s"),
+                        {"folder": msg.dir, "error": error})
+
+            self.queue.append(slskmessages.FolderContentsResponse(init, msg.dir, None))
 
     """ Quit """
 

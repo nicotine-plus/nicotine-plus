@@ -245,7 +245,6 @@ class UserList(UserInterface):
         self.frame.userlist_content.set_visible(self.user_iterators)
 
     def update_visuals(self):
-
         for widget in list(self.__dict__.values()):
             update_widget_visuals(widget)
 

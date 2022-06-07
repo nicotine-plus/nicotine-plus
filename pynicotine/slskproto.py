@@ -501,6 +501,7 @@ class SlskProtoThread(threading.Thread):
         self.last_cycle_loop_count = 0
         self.loops_per_second = 0
 
+        core_callback([SetConnectionStats()])
         self.bind_listen_port()
 
         self.daemon = True
