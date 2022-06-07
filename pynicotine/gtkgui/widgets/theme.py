@@ -545,6 +545,7 @@ def update_tag_visuals(tag, color=None, font=None):
 def update_widget_visuals(widget, list_font_target="listfont"):
 
     from pynicotine.gtkgui.widgets.textview import TextView
+
     config_ui = config.sections["ui"]
 
     if isinstance(widget, Gtk.ComboBox) and widget.get_has_entry() or isinstance(widget, Gtk.Entry):

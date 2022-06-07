@@ -551,6 +551,7 @@ class Transfers:
     """ Network Events """
 
     def get_user_status(self, msg):
+        """ Server code: 7 """
         """ We get a status of a user and if he's online, we request a file from him """
 
         update = False
@@ -626,7 +627,8 @@ class Transfers:
             self.check_upload_queue()
             return
 
-    def folder_contents_response(self, msg):
+    def folder_contents_response(self, msg, check_num_files=True):
+        """ Peer code: 37 """
         """ When we got a contents of a folder, get all the files in it, but
         skip the files in subfolders """
 
@@ -641,6 +643,12 @@ class Transfers:
                     continue
 
                 files = file_list[i][directory][:]
+                num_files = len(files)
+
+                if check_num_files and num_files > 100 and self.downloadsview:
+                    self.downloadsview.download_large_folder(username, directory, num_files, msg)
+                    return
+
                 destination = self.get_folder_destination(username, directory)
 
                 if self.config.sections["transfers"]["reverseorder"]:
@@ -666,9 +674,12 @@ class Transfers:
                     del self.requested_folders[username][directory]
 
     def queue_upload(self, msg):
+        """ Peer code: 43 """
         """ Peer remotely queued a download (upload here). This is the modern replacement to
         a TransferRequest with direction 0 (download request). We will initiate the upload of
         the queued file later. """
+
+        log.add_msg_contents(msg)
 
         user = msg.init.target_user
         filename = msg.file
@@ -707,6 +718,9 @@ class Transfers:
         self.check_upload_queue()
 
     def transfer_request(self, msg):
+        """ Peer code: 40 """
+
+        log.add_msg_contents(msg)
 
         user = msg.init.target_user
         response = None
@@ -873,7 +887,10 @@ class Transfers:
         return slskmessages.TransferResponse(None, 1, token=msg.token, filesize=size)
 
     def transfer_response(self, msg):
+        """ Peer code: 41 """
         """ Received a response to the file request from the peer """
+
+        log.add_msg_contents(msg)
 
         log.add_transfer(("Received response for upload request %(token)s: allowed: %(allowed)s, "
                           "reason: %(reason)s, file size: %(size)s"), {
@@ -956,6 +973,8 @@ class Transfers:
     def download_file_error(self, msg):
         """ Networking thread encountered a local file error for download """
 
+        log.add_msg_contents(msg)
+
         for i in self.downloads:
             if i.sock != msg.sock:
                 continue
@@ -969,6 +988,8 @@ class Transfers:
 
     def upload_file_error(self, msg):
         """ Networking thread encountered a local file error for upload """
+
+        log.add_msg_contents(msg)
 
         for i in self.uploads:
             if i.sock != msg.sock:
@@ -984,6 +1005,8 @@ class Transfers:
 
     def file_download_init(self, msg):
         """ A peer is requesting to start uploading a file to us """
+
+        log.add_msg_contents(msg)
 
         token = msg.token
 
@@ -1099,6 +1122,8 @@ class Transfers:
     def file_upload_init(self, msg):
         """ We are requesting to start uploading a file to a peer """
 
+        log.add_msg_contents(msg)
+
         token = msg.token
 
         for i in self.uploads:
@@ -1172,6 +1197,9 @@ class Transfers:
         self.queue.append(slskmessages.ConnClose(msg.init.sock))
 
     def upload_denied(self, msg):
+        """ Peer code: 50 """
+
+        log.add_msg_contents(msg)
 
         user = msg.init.target_user
         filename = msg.file
@@ -1214,6 +1242,9 @@ class Transfers:
             return
 
     def upload_failed(self, msg):
+        """ Peer code: 46 """
+
+        log.add_msg_contents(msg)
 
         user = msg.init.target_user
         filename = msg.file
@@ -1249,6 +1280,8 @@ class Transfers:
 
     def file_download(self, msg):
         """ A file download is in progress """
+
+        log.add_msg_contents(msg)
 
         needupdate = True
 
@@ -1306,6 +1339,8 @@ class Transfers:
     def file_upload(self, msg):
         """ A file upload is in progress """
 
+        log.add_msg_contents(msg)
+
         needupdate = True
 
         for i in self.uploads:
@@ -1359,6 +1394,8 @@ class Transfers:
     def download_conn_close(self, msg):
         """ The remote peer has closed a file transfer connection """
 
+        log.add_msg_contents(msg)
+
         sock = msg.sock
 
         for i in self.downloads:
@@ -1378,6 +1415,8 @@ class Transfers:
 
     def upload_conn_close(self, msg):
         """ The remote peer has closed a file transfer connection """
+
+        log.add_msg_contents(msg)
 
         sock = msg.sock
 
@@ -1413,6 +1452,9 @@ class Transfers:
             return
 
     def place_in_queue_request(self, msg):
+        """ Peer code: 51 """
+
+        log.add_msg_contents(msg)
 
         user = msg.init.target_user
         filename = msg.file
@@ -1463,7 +1505,10 @@ class Transfers:
         self.update_upload(transfer, update_parent=False)
 
     def place_in_queue(self, msg):
+        """ Peer code: 44 """
         """ The peer tells us our place in queue for a particular transfer """
+
+        log.add_msg_contents(msg)
 
         username = msg.init.target_user
         filename = msg.filename
@@ -2075,7 +2120,7 @@ class Transfers:
 
         return True, None
 
-    def check_download_queue_callback(self):
+    def check_download_queue_callback(self, _msg):
         """ Find failed or stuck downloads and attempt to queue them. Also ask for the queue
         position of downloads. """
 
@@ -2227,7 +2272,7 @@ class Transfers:
             user=user, filename=upload_candidate.filename, size=upload_candidate.size, transfer=upload_candidate
         )
 
-    def check_upload_queue_callback(self):
+    def check_upload_queue_callback(self, _msg):
 
         if self.upload_queue_timer_count % 6 == 0:
             # Save list of uploads to file every one minute

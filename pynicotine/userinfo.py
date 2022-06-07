@@ -16,7 +16,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import time
+
 from pynicotine import slskmessages
+from pynicotine.logfacility import log
+from pynicotine.utils import unescape
 
 
 class UserInfo:
@@ -27,6 +31,7 @@ class UserInfo:
         self.config = config
         self.queue = queue
         self.users = set()
+        self.requested_info_times = {}
         self.ui_callback = None
 
         if hasattr(ui_callback, "userinfo"):
@@ -85,10 +90,14 @@ class UserInfo:
             self.ui_callback.message_progress(msg)
 
     def get_user_stats(self, msg):
+        """ Server code: 36 """
+
         if self.ui_callback:
             self.ui_callback.get_user_stats(msg)
 
     def get_user_status(self, msg):
+        """ Server code: 7 """
+
         if self.ui_callback:
             self.ui_callback.get_user_status(msg)
 
@@ -96,10 +105,70 @@ class UserInfo:
         if self.ui_callback:
             self.ui_callback.set_user_country(user, country_code)
 
-    def user_info_reply(self, user, msg):
+    def user_info_request(self, msg):
+        """ Peer code: 15 """
+
+        log.add_msg_contents(msg)
+
+        user = msg.init.target_user
+        ip_address, _port = msg.init.addr
+        request_time = time.time()
+
+        if user in self.requested_info_times and request_time < self.requested_info_times[user] + 0.4:
+            # Ignoring request, because it's less than half a second since the
+            # last one by this user
+            return
+
+        self.requested_info_times[user] = request_time
+
+        if self.core.login_username != user:
+            log.add(_("User %(user)s is reading your user info"), {'user': user})
+
+        status, reason = self.core.network_filter.check_user(user, ip_address)
+
+        if not status:
+            pic = None
+            descr = self.core.ban_message % reason
+            descr += "\n\n----------------------------------------------\n\n"
+            descr += unescape(self.config.sections["userinfo"]["descr"])
+
+        else:
+            try:
+                userpic = self.config.sections["userinfo"]["pic"]
+
+                with open(userpic, 'rb') as file_handle:
+                    pic = file_handle.read()
+
+            except Exception:
+                pic = None
+
+            descr = unescape(self.config.sections["userinfo"]["descr"])
+
+        totalupl = self.core.transfers.get_total_uploads_allowed()
+        queuesize = self.core.transfers.get_upload_queue_size()
+        slotsavail = self.core.transfers.allow_new_uploads()
+
+        if self.config.sections["transfers"]["remotedownloads"]:
+            uploadallowed = self.config.sections["transfers"]["uploadallowed"]
+        else:
+            uploadallowed = 0
+
+        self.queue.append(
+            slskmessages.UserInfoReply(msg.init, descr, pic, totalupl, queuesize, slotsavail, uploadallowed))
+
+    def user_info_reply(self, msg):
+        """ Peer code: 16 """
+
+        log.add_msg_contents(msg)
+
         if self.ui_callback:
+            user = msg.init.target_user
             self.ui_callback.user_info_reply(user, msg)
 
     def user_interests(self, msg):
+        """ Server code: 57 """
+
+        log.add_msg_contents(msg)
+
         if self.ui_callback:
             self.ui_callback.user_interests(msg)

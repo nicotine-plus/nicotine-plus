@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from pynicotine import slskmessages
+from pynicotine.logfacility import log
 
 
 class Interests:
@@ -124,29 +125,53 @@ class Interests:
         self.queue.append(slskmessages.SimilarUsers())
 
     def global_recommendations(self, msg):
+        """ Server code: 56 """
+
+        log.add_msg_contents(msg)
+
         if self.ui_callback:
             self.ui_callback.global_recommendations(msg)
 
     def item_recommendations(self, msg):
+        """ Server code: 111 """
+
+        log.add_msg_contents(msg)
+
         if self.ui_callback:
             self.ui_callback.item_recommendations(msg)
 
     def recommendations(self, msg):
+        """ Server code: 54 """
+
+        log.add_msg_contents(msg)
+
         if self.ui_callback:
             self.ui_callback.recommendations(msg)
 
     def similar_users(self, msg):
+        """ Server code: 110 """
+
+        log.add_msg_contents(msg)
+
         if self.ui_callback:
             self.ui_callback.similar_users(msg)
 
     def item_similar_users(self, msg):
+        """ Server code: 112 """
+
+        log.add_msg_contents(msg)
+
         if self.ui_callback:
             self.ui_callback.item_similar_users(msg)
 
     def get_user_status(self, msg):
+        """ Server code: 7 """
+
         if self.ui_callback:
             self.ui_callback.get_user_status(msg)
 
     def get_user_stats(self, msg):
+        """ Server code: 36 """
+
         if self.ui_callback:
             self.ui_callback.get_user_stats(msg)

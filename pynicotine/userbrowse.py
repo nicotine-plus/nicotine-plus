@@ -81,7 +81,7 @@ class UserBrowse:
         built = msg.make_network_message()
         msg.parse_network_message(built)
 
-        self.shared_file_list(username, msg)
+        self.shared_file_list(msg, username)
 
     def browse_local_public_shares(self, path=None, new_request=None):
         """ Browse your own public shares """
@@ -184,7 +184,7 @@ class UserBrowse:
         msg = slskmessages.SharedFileList(None)
         msg.list = shares_list
 
-        self.shared_file_list(username, msg)
+        self.shared_file_list(msg, username)
 
     def save_shares_list_to_disk(self, user, shares_list):
 
@@ -311,9 +311,16 @@ class UserBrowse:
             self.ui_callback.message_progress(msg)
 
     def get_user_status(self, msg):
+        """ Server code: 7 """
+
         if self.ui_callback:
             self.ui_callback.get_user_status(msg)
 
-    def shared_file_list(self, user, msg):
+    def shared_file_list(self, msg, user=None):
+        """ Peer code: 5 """
+
+        if user is None:
+            user = msg.init.target_user
+
         if self.ui_callback:
             self.ui_callback.shared_file_list(user, msg)
