@@ -169,7 +169,11 @@ class TextView:
 
         buf_x, buf_y = self.textview.window_to_buffer_coords(Gtk.TextWindowType.WIDGET,
                                                              self.pressed_x, self.pressed_y)
-        _over_text, iterator, _trailing = self.textview.get_iter_at_position(buf_x, buf_y)
+        over_text, iterator, _trailing = self.textview.get_iter_at_position(buf_x, buf_y)
+
+        if not over_text:
+            # Iterators are returned for whitespace after the last character, avoid accidental URL clicks
+            return []
 
         return iterator.get_tags()
 
