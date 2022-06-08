@@ -353,6 +353,10 @@ class PluginHandler:
         self.enabled_plugins = {}
         self.command_source = None
 
+        self.public_commands = {}
+        self.private_commands = {}
+        self.cli_commands = {}
+
         # Load system-wide plugins
         prefix = os.path.dirname(os.path.realpath(__file__))
         self.plugindirs.append(os.path.join(prefix, "plugins"))
@@ -472,11 +476,22 @@ class PluginHandler:
 
             plugin.init()
 
-            for trigger, _func in plugin.__publiccommands__:
+            for trigger, _func, *extra in plugin.__publiccommands__:
                 self.core.chatrooms.CMDS.add('/' + trigger + ' ')
 
-            for trigger, _func in plugin.__privatecommands__:
+            for trigger, _func, *extra in plugin.__privatecommands__:
                 self.core.privatechats.CMDS.add('/' + trigger + ' ')
+
+            for trigger, _func, *extra in plugin.__clicommands__:
+                description = usage = ""
+
+                if len(extra) >= 2:
+                    description, usage = extra
+
+                elif len(extra) == 1:
+                    description = extra[0]
+
+                self.cli_commands['/' + trigger] = (description, usage)
 
             self.update_completions(plugin)
 
@@ -534,6 +549,9 @@ class PluginHandler:
 
             for trigger, _func in plugin.__privatecommands__:
                 self.core.privatechats.CMDS.remove('/' + trigger + ' ')
+
+            for trigger, _func in plugin.__clicommands__:
+                self.cli_commands.pop('/' + trigger, None)
 
             self.update_completions(plugin)
             plugin.unloaded_notification()
@@ -676,13 +694,10 @@ class PluginHandler:
     def _trigger_command(self, command, source, args, command_type):
 
         self.command_source = (command_type, source)
-        command_found = False
 
         for module, plugin in self.enabled_plugins.items():
             if plugin is None:
                 continue
-
-            return_value = None
 
             if command_type == "public":
                 commands = plugin.__publiccommands__
@@ -694,34 +709,27 @@ class PluginHandler:
                 commands = plugin.__clicommands__
 
             try:
-                for trigger, func in commands:
+                for trigger, func, *extra in commands:
                     if trigger == command:
-                        command_found = True
-                        return_value = getattr(plugin, func.__name__)(source, args)
+                        if len(extra) >= 2:
+                            usage = extra[1]
+                            num_usage = len(list(x for x in usage if x.startswith("<")))
+                            num_args = len(args.split())
+
+                            if num_usage != num_args:
+                                plugin.echo_message("Usage: %s %s" % ('/' + command, " ".join(usage)))
+                                return
+
+                        getattr(plugin, func.__name__)(source, args)
+                        return
 
             except Exception:
                 self.show_plugin_error(module, sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
-                continue
+                return
 
-            if not return_value:
-                # Nothing changed, continue to the next plugin
-                continue
-
-            if return_value == returncode['zap']:
-                self.command_source = None
-                return True
-
-            if return_value == returncode['pass']:
-                continue
-
-            log.add_debug("Plugin %(module)s returned something weird, '%(value)s', ignoring",
-                          {'module': module, 'value': str(return_value)})
-
-        if not command_found:
-            log.add(_("Command %s is not recognized"), "/" + command)
-
+        log.add(_("Command %s is not recognized"), "/" + command)
         self.command_source = None
-        return False
+        return
 
     def trigger_event(self, function_name, args):
         """ Triggers an event for the plugins. Since events and notifications

@@ -24,21 +24,34 @@ class Plugin(BasePlugin):
     def __init__(self, *args, **kwargs):
 
         super().__init__(*args, **kwargs)
-        self.__publiccommands__ = [('rescan', self.rescan_command)]
-        self.__privatecommands__ = self.__clicommands__ = [
-            ('rescan', self.rescan_command),
-            ('hello', self.hello_command)
+
+        commands = [
+            ('rescan', self.rescan_command, _("Rescan shares")),
+            ('hello', self.hello_command, "Print message", ["<user>"])
         ]
+
+        self.__publiccommands__ = commands[:] + [('help', self.help_command_public, "Show commands")]
+        self.__privatecommands__ = commands[:] + [('help', self.help_command_private, "Show commands")]
+        self.__clicommands__ = commands[:] + [('help', self.help_command_cli, "Show commands")]
+
+    def help_output(self, command_list):
+
+        self.echo_message("List of commands:")
+
+        for command, (description, usage) in command_list.items():
+            self.echo_message("%s %s - %s" % (command, " ".join(usage), description))
+
+    def help_command_public(self, _source, _args):
+        self.help_output(self.core.chatrooms.CMDS)
+
+    def help_command_private(self, _source, _args):
+        self.help_output(self.core.privatechats.CMDS)
+
+    def help_command_cli(self, _source, _args):
+        self.help_output(self.parent.cli_commands)
 
     def rescan_command(self, _source, _args):
         self.core.shares.rescan_shares()
-        return True
 
     def hello_command(self, _source, args):
-
-        if args:
-            self.echo_message("Hello there, %s" % args)
-        else:
-            self.echo_message("Provide a user name as parameter.")
-
-        return True
+        self.echo_message("Hello there, %s" % args)
