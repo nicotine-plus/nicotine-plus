@@ -213,7 +213,7 @@ class BasePlugin:
         if command_type == "cli":
             return
 
-        function = self.send_public if command_type == "public" else self.send_private
+        function = self.send_public if command_type == "chatroom" else self.send_private
         function(source, text)
 
     def echo_message(self, text, message_type="local"):
@@ -230,10 +230,10 @@ class BasePlugin:
             print(text)
             return
 
-        if command_type == "public":
+        if command_type == "chatroom":
             function = self.echo_public
 
-        elif command_type == "private":
+        elif command_type == "private_chat":
             function = self.echo_private
 
         function(source, text, message_type)
@@ -673,14 +673,14 @@ class PluginHandler:
         except KeyError:
             log.add_debug("No stored settings found for %s", plugin.human_name)
 
-    def trigger_public_command_event(self, room, command, args):
-        return self._trigger_command(command, room, args, command_type="public")
+    def trigger_chatroom_command_event(self, room, command, args):
+        return self._trigger_command(command, room, args, command_type="chatroom")
 
-    def trigger_private_command_event(self, user, command, args):
-        return self._trigger_command(command, user, args, command_type="private")
+    def trigger_private_chat_command_event(self, user, command, args):
+        return self._trigger_command(command, user, args, command_type="private_chat")
 
     def trigger_cli_command_event(self, command, args):
-        return self._trigger_command(command, "cli", args, command_type="cli")
+        return self._trigger_command(command, self.core.login_username, args, command_type="cli")
 
     def _trigger_command(self, command, source, args, command_type):
 
@@ -691,10 +691,10 @@ class PluginHandler:
             if plugin is None:
                 continue
 
-            if command_type == "public":
+            if command_type == "chatroom":
                 commands = plugin.chatroom_commands
 
-            elif command_type == "private":
+            elif command_type == "private_chat":
                 commands = plugin.private_chat_commands
 
             elif command_type == "cli":

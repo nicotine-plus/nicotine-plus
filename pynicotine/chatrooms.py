@@ -430,7 +430,7 @@ class ChatRooms:
 
     def update_completions(self):
 
-        self.completion_list = get_completion_list(list(self.core.pluginhandler.public_commands), self.server_rooms)
+        self.completion_list = get_completion_list(list(self.core.pluginhandler.chatroom_commands), self.server_rooms)
 
         if self.ui_callback:
             self.ui_callback.set_completion_list(self.completion_list)

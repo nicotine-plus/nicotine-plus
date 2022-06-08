@@ -263,7 +263,7 @@ class PrivateChats:
     def update_completions(self):
 
         self.completion_list = get_completion_list(
-            list(self.core.pluginhandler.private_commands), self.core.chatrooms.server_rooms)
+            list(self.core.pluginhandler.private_chat_commands), self.core.chatrooms.server_rooms)
 
         if self.ui_callback:
             self.ui_callback.set_completion_list(self.completion_list)
