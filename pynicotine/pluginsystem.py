@@ -712,6 +712,11 @@ class PluginHandler:
                             num_args = len(args.split())
 
                             if num_usage != num_args:
+                                description = data.get("description")
+
+                                if description:
+                                    plugin.echo_message(description)
+
                                 plugin.echo_message("Usage: %s %s" % ('/' + command, " ".join(usage)))
                                 return
 
