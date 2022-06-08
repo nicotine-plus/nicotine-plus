@@ -28,7 +28,7 @@ class Plugin(BasePlugin):
         commands = {
             "rescan": {
                 "callback": self.rescan_command,
-                "description": _("Rescan shares")
+                "description": _("Rescan shares"),
             },
             "hello": {
                 "callback": self.hello_command,
@@ -66,19 +66,23 @@ class Plugin(BasePlugin):
         self.echo_message("List of commands:")
 
         for command, data in command_list.items():
-            aliases = data.get("aliases", [])
-            aliases.insert(0, command)
-
-            commands = ", ".join(aliases)
+            command_message = command
             usage = " ".join(data.get("usage", []))
-            description = data.get("description", "No description")
+            aliases = data.get("aliases", [])
 
+            if aliases:
+                command_message = command_message + ", " + ", ".join(aliases)
+
+            if usage:
+                command_message += " " + usage
+
+            description = data.get("description", "No description")
             group = data.get("group", _("General"))
 
             if group not in command_groups:
                 command_groups[group] = []
 
-            command_groups[group].append("%s %s - %s" % (commands, usage, description))
+            command_groups[group].append("%s - %s" % (command_message, description))
 
         for group, commands in command_groups.items():
             self.echo_message("")
@@ -88,10 +92,10 @@ class Plugin(BasePlugin):
                 self.echo_message(command)
 
     def help_command_public(self, _source, _args):
-        self.help_output(self.parent.public_commands)
+        self.help_output(self.parent.chatroom_commands)
 
     def help_command_private(self, _source, _args):
-        self.help_output(self.parent.private_commands)
+        self.help_output(self.parent.private_chat_commands)
 
     def help_command_cli(self, _source, _args):
         self.help_output(self.parent.cli_commands)

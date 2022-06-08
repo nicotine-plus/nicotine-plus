@@ -353,8 +353,8 @@ class PluginHandler:
         self.enabled_plugins = {}
         self.command_source = None
 
-        self.public_commands = {}
-        self.private_commands = {}
+        self.chatroom_commands = {}
+        self.private_chat_commands = {}
         self.cli_commands = {}
 
         # Load system-wide plugins
@@ -473,14 +473,14 @@ class PluginHandler:
 
             plugin.init()
 
-            for trigger, data in plugin.chatroom_commands.items():
-                self.public_commands["/" + trigger] = data
+            for command, data in plugin.chatroom_commands.items():
+                self.chatroom_commands["/" + command] = data
 
-            for trigger, data in plugin.private_chat_commands.items():
-                self.private_commands["/" + trigger] = data
+            for command, data in plugin.private_chat_commands.items():
+                self.private_chat_commands["/" + command] = data
 
-            for trigger, data in plugin.cli_commands.items():
-                self.cli_commands["/" + trigger] = data
+            for command, data in plugin.cli_commands.items():
+                self.cli_commands["/" + command] = data
 
             self.update_completions(plugin)
 
@@ -533,14 +533,14 @@ class PluginHandler:
         try:
             plugin.disable()
 
-            for trigger in plugin.chatroom_commands:
-                self.public_commands.pop('/' + trigger, None)
+            for command in plugin.chatroom_commands:
+                self.chatroom_commands.pop('/' + command, None)
 
-            for trigger in plugin.private_chat_commands:
-                self.private_commands.pop('/' + trigger, None)
+            for command in plugin.private_chat_commands:
+                self.private_chat_commands.pop('/' + command, None)
 
-            for trigger in plugin.cli_commands:
-                self.cli_commands.pop('/' + trigger, None)
+            for command in plugin.cli_commands:
+                self.cli_commands.pop('/' + command, None)
 
             self.update_completions(plugin)
             plugin.unloaded_notification()
@@ -704,31 +704,33 @@ class PluginHandler:
                 for trigger, data in commands.items():
                     aliases = data.get("aliases", [])
 
-                    if command == trigger or command in aliases:
-                        usage = data.get("usage")
+                    if command != trigger and command not in aliases:
+                        continue
 
-                        if usage:
-                            num_usage = len(list(x for x in usage if x.startswith("<")))
-                            num_args = len(args.split())
+                    usage = data.get("usage")
 
-                            if num_usage != num_args:
-                                description = data.get("description")
+                    if usage:
+                        num_usage = len(list(x for x in usage if x.startswith("<")))
+                        num_args = len(args.split())
 
-                                if description:
-                                    plugin.echo_message(description)
+                        if num_args < num_usage:
+                            description = data.get("description")
 
-                                plugin.echo_message("Usage: %s %s" % ('/' + command, " ".join(usage)))
-                                return
+                            if description:
+                                plugin.echo_message(description)
 
-                        getattr(plugin, data.get("callback").__name__)(source, args)
-                        return
+                            plugin.echo_message("Usage: %s %s" % ('/' + command, " ".join(usage)))
+                            return
+
+                    getattr(plugin, data.get("callback").__name__)(source, args)
+                    return
 
             except Exception:
                 self.show_plugin_error(module, sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
                 return
 
         if plugin is not None:
-            plugin.echo_message(_("Command %s is not recognized") % ("/" + command))
+            plugin.echo_message(_("Unknown command %s. Type /help for a list of commands.") % ("/" + command))
 
         self.command_source = None
         return
