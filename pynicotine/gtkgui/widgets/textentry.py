@@ -245,9 +245,6 @@ class ChatEntry:
             self.core.now_playing.display_now_playing(
                 callback=lambda np_message: self.send_message(self.entity, np_message))
 
-        elif cmd == "/rescan":
-            self.core.shares.rescan_shares()
-
         elif cmd == "/toggle":
             if args:
                 self.core.pluginhandler.toggle_plugin(args)

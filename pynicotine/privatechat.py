@@ -30,7 +30,7 @@ class PrivateChats:
         "/s ", "/search ", "/us ", "/usearch ", "/rs ", "/rsearch ", "/bs ", "/bsearch ", "/j ", "/join ",
         "/ad ", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/ignoreip ", "/unban ",
         "/unignore ", "/c ", "/close ", "/clear ", "/cl ", "/me ", "/a ", "/away ", "/q ", "/quit ", "/exit ",
-        "/now ", "/rescan ", "/info ", "/toggle ", "/ctcpversion "
+        "/now ", "/info ", "/toggle ", "/ctcpversion "
     }
 
     CTCP_VERSION = "\x01VERSION\x01"

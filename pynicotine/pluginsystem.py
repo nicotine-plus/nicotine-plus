@@ -43,6 +43,7 @@ class BasePlugin:
     # Attributes that can be modified, see examples in the pynicotine/plugins/ folder
     __publiccommands__ = []
     __privatecommands__ = []
+    __clicommands__ = []
     settings = {}
     metasettings = {}
 
@@ -207,9 +208,12 @@ class BasePlugin:
             # Function was not called from a command
             return
 
-        public_command, source = self.parent.command_source  # pylint: disable=no-member
-        function = self.send_public if public_command else self.send_private
+        command_type, source = self.parent.command_source  # pylint: disable=no-member
 
+        if command_type == "cli":
+            return
+
+        function = self.send_public if command_type == "public" else self.send_private
         function(source, text)
 
     def echo_message(self, text, message_type="local"):
@@ -220,8 +224,17 @@ class BasePlugin:
             # Function was not called from a command
             return
 
-        public_command, source = self.parent.command_source  # pylint: disable=no-member
-        function = self.echo_public if public_command else self.echo_private
+        command_type, source = self.parent.command_source  # pylint: disable=no-member
+
+        if command_type == "cli":
+            print(text)
+            return
+
+        if command_type == "public":
+            function = self.echo_public
+
+        elif command_type == "private":
+            function = self.echo_private
 
         function(source, text, message_type)
 
@@ -353,6 +366,7 @@ class PluginHandler:
         BasePlugin.frame = self.core.ui_callback
 
         self.load_enabled()
+        self.enable_plugin("core_commands")
 
     def quit(self):
 
@@ -468,7 +482,9 @@ class PluginHandler:
 
             self.enabled_plugins[plugin_name] = plugin
             plugin.loaded_notification()
-            log.add(_("Loaded plugin %s"), plugin.human_name)
+
+            if plugin_name != "core_commands":
+                log.add(_("Loaded plugin %s"), plugin.human_name)
 
         except Exception:
             from traceback import format_exc
@@ -487,6 +503,9 @@ class PluginHandler:
                 for entry in os.scandir(encode_path(folder_path)):
                     file_path = entry.name.decode("utf-8", "replace")
 
+                    if file_path == "core_commands":
+                        continue
+
                     if entry.is_dir() and file_path not in plugin_list:
                         plugin_list.append(file_path)
 
@@ -497,6 +516,9 @@ class PluginHandler:
         return plugin_list
 
     def disable_plugin(self, plugin_name):
+
+        if plugin_name == "core_commands":
+            return False
 
         if plugin_name not in self.enabled_plugins:
             return False
@@ -643,32 +665,45 @@ class PluginHandler:
             log.add_debug("No stored settings found for %s", plugin.human_name)
 
     def trigger_public_command_event(self, room, command, args):
-        return self._trigger_command(command, room, args, public_command=True)
+        return self._trigger_command(command, room, args, command_type="public")
 
     def trigger_private_command_event(self, user, command, args):
-        return self._trigger_command(command, user, args, public_command=False)
+        return self._trigger_command(command, user, args, command_type="private")
 
-    def _trigger_command(self, command, source, args, public_command):
+    def trigger_cli_command_event(self, command, args):
+        return self._trigger_command(command, "cli", args, command_type="cli")
 
-        self.command_source = (public_command, source)
+    def _trigger_command(self, command, source, args, command_type):
+
+        self.command_source = (command_type, source)
+        command_found = False
 
         for module, plugin in self.enabled_plugins.items():
             if plugin is None:
                 continue
 
             return_value = None
-            commands = plugin.__publiccommands__ if public_command else plugin.__privatecommands__
+
+            if command_type == "public":
+                commands = plugin.__publiccommands__
+
+            elif command_type == "private":
+                commands = plugin.__privatecommands__
+
+            elif command_type == "cli":
+                commands = plugin.__clicommands__
 
             try:
                 for trigger, func in commands:
                     if trigger == command:
+                        command_found = True
                         return_value = getattr(plugin, func.__name__)(source, args)
 
             except Exception:
                 self.show_plugin_error(module, sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
                 continue
 
-            if return_value is None:
+            if not return_value:
                 # Nothing changed, continue to the next plugin
                 continue
 
@@ -681,6 +716,9 @@ class PluginHandler:
 
             log.add_debug("Plugin %(module)s returned something weird, '%(value)s', ignoring",
                           {'module': module, 'value': str(return_value)})
+
+        if not command_found:
+            log.add(_("Command %s is not recognized"), "/" + command)
 
         self.command_source = None
         return False
