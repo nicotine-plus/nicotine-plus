@@ -312,7 +312,7 @@ class NicotineCore:
 
         if config.need_config():
             log.add(_("You need to specify a username and password before connecting…"))
-            self.ui_callback.setup()
+            self.setup()
             return False
 
         valid_network_interface = self.protothread.validate_network_interface()
@@ -355,6 +355,10 @@ class NicotineCore:
 
     def disconnect(self):
         self.queue.append(slskmessages.ServerDisconnect())
+
+    def setup(self):
+        if self.ui_callback:
+            self.ui_callback.setup()
 
     def send_message_to_peer(self, user, message):
         """ Sends message to a peer. Used when we know the username of a peer,

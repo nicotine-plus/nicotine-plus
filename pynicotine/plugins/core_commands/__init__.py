@@ -56,9 +56,29 @@ class Plugin(BasePlugin):
             }
         }
 
+        cli_commands = {
+            "addshare": {
+                "callback": self.add_share_command,
+                "description": _("Add share"),
+                "usage": ["<public|private>", "<virtual_name>", "<path>"],
+                "group": _("Shares")
+            },
+            "removeshare": {
+                "callback": self.remove_share_command,
+                "description": _("Remove share"),
+                "usage": ["<public|private>", "<virtual_name>"],
+                "group": _("Shares")
+            },
+            "listshares": {
+                "callback": self.list_shares_command,
+                "description": _("List shares"),
+                "group": _("Shares")
+            }
+        }
+
         self.chatroom_commands = {**commands, **chat_commands}
         self.private_chat_commands = {**commands, **chat_commands}
-        self.cli_commands = commands
+        self.cli_commands = {**commands, **cli_commands}
 
     def help_command(self, _args, command_type, _source):
 
@@ -108,6 +128,21 @@ class Plugin(BasePlugin):
 
     def hello_command(self, args, _command_type, _source):
         self.echo_message("Hello there, %s" % args)
+
+    def add_share_command(self, args, _command_type, _source):
+
+        share_type, virtual_name, path = args.split(maxsplit=3)
+
+        self.core.shares.rescan_shares()
+
+    def remove_share_command(self, args, _command_type, _source):
+
+        share_type, virtual_name, *_unused = args.split(maxsplit=2)
+
+        self.core.shares.rescan_shares()
+
+    def list_shares_command(self, _args, _command_type, _source):
+        self.echo_message("nothing here yet")
 
     def quit_command(self, _args, _command_type, _source):
         self.core.quit()
