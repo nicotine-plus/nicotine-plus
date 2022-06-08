@@ -697,6 +697,7 @@ class PluginHandler:
     def _trigger_command(self, command, source, args, command_type):
 
         self.command_source = (command_type, source)
+        plugin = None
 
         for module, plugin in self.enabled_plugins.items():
             if plugin is None:
@@ -730,7 +731,9 @@ class PluginHandler:
                 self.show_plugin_error(module, sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
                 return
 
-        log.add(_("Command %s is not recognized"), "/" + command)
+        if plugin is not None:
+            plugin.echo_message(_("Command %s is not recognized") % ("/" + command))
+
         self.command_source = None
         return
 
