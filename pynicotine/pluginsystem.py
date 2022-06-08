@@ -41,9 +41,9 @@ returncode = {
 class BasePlugin:
 
     # Attributes that can be modified, see examples in the pynicotine/plugins/ folder
-    __publiccommands__ = []
-    __privatecommands__ = []
-    __clicommands__ = []
+    chatroom_commands = {}
+    private_chat_commands = {}
+    cli_commands = {}
     settings = {}
     metasettings = {}
 
@@ -383,10 +383,10 @@ class PluginHandler:
         if not self.config.sections["words"]["commands"]:
             return
 
-        if plugin.__publiccommands__:
+        if plugin.chatroom_commands:
             self.core.chatrooms.update_completions()
 
-        if plugin.__privatecommands__:
+        if plugin.private_chat_commands:
             self.core.privatechats.update_completions()
 
     def get_plugin_path(self, plugin_name):
@@ -448,18 +448,6 @@ class PluginHandler:
 
         return instance
 
-    def add_command(self, command, extra, command_list):
-
-        description = usage = ""
-
-        if len(extra) >= 2:
-            description, usage = extra
-
-        elif len(extra) == 1:
-            description = extra[0]
-
-        command_list['/' + command] = (description, usage)
-
     def enable_plugin(self, plugin_name):
 
         # Our config file doesn't play nicely with some characters
@@ -485,14 +473,14 @@ class PluginHandler:
 
             plugin.init()
 
-            for trigger, _func, *extra in plugin.__publiccommands__:
-                self.add_command(trigger, extra, self.public_commands)
+            for trigger, data in plugin.chatroom_commands.items():
+                self.public_commands["/" + trigger] = data
 
-            for trigger, _func, *extra in plugin.__privatecommands__:
-                self.add_command(trigger, extra, self.private_commands)
+            for trigger, data in plugin.private_chat_commands.items():
+                self.private_commands["/" + trigger] = data
 
-            for trigger, _func, *extra in plugin.__clicommands__:
-                self.add_command(trigger, extra, self.cli_commands)
+            for trigger, data in plugin.cli_commands.items():
+                self.cli_commands["/" + trigger] = data
 
             self.update_completions(plugin)
 
@@ -545,13 +533,13 @@ class PluginHandler:
         try:
             plugin.disable()
 
-            for trigger, _func in plugin.__publiccommands__:
+            for trigger in plugin.chatroom_commands:
                 self.public_commands.pop('/' + trigger, None)
 
-            for trigger, _func in plugin.__privatecommands__:
+            for trigger in plugin.private_chat_commands:
                 self.private_commands.pop('/' + trigger, None)
 
-            for trigger, _func in plugin.__clicommands__:
+            for trigger in plugin.cli_commands:
                 self.cli_commands.pop('/' + trigger, None)
 
             self.update_completions(plugin)
@@ -704,19 +692,22 @@ class PluginHandler:
                 continue
 
             if command_type == "public":
-                commands = plugin.__publiccommands__
+                commands = plugin.chatroom_commands
 
             elif command_type == "private":
-                commands = plugin.__privatecommands__
+                commands = plugin.private_chat_commands
 
             elif command_type == "cli":
-                commands = plugin.__clicommands__
+                commands = plugin.cli_commands
 
             try:
-                for trigger, func, *extra in commands:
-                    if trigger == command:
-                        if len(extra) >= 2:
-                            usage = extra[1]
+                for trigger, data in commands.items():
+                    aliases = data.get("aliases", [])
+
+                    if command == trigger or command in aliases:
+                        usage = data.get("usage")
+
+                        if usage:
                             num_usage = len(list(x for x in usage if x.startswith("<")))
                             num_args = len(args.split())
 
@@ -724,7 +715,7 @@ class PluginHandler:
                                 plugin.echo_message("Usage: %s %s" % ('/' + command, " ".join(usage)))
                                 return
 
-                        getattr(plugin, func.__name__)(source, args)
+                        getattr(plugin, data.get("callback").__name__)(source, args)
                         return
 
             except Exception:

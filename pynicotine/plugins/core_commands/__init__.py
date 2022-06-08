@@ -25,21 +25,64 @@ class Plugin(BasePlugin):
 
         super().__init__(*args, **kwargs)
 
-        commands = [
-            ('rescan', self.rescan_command, _("Rescan shares")),
-            ('hello', self.hello_command, "Print message", ["<user>"])
-        ]
+        new_commands = {
+            "rescan": {
+                "callback": self.rescan_command,
+                "description": _("Rescan shares"),
+                "group": _("General")
+            },
+            "hello": {
+                "callback": self.hello_command,
+                "description": "Print message",
+                "usage": ["<user>"],
+                "aliases": ["say", "greet"],
+                "group": _("Message")
+            }
+        }
 
-        self.__publiccommands__ = commands[:] + [('help', self.help_command_public, "Show commands")]
-        self.__privatecommands__ = commands[:] + [('help', self.help_command_private, "Show commands")]
-        self.__clicommands__ = commands[:] + [('help', self.help_command_cli, "Show commands")]
+        separate_commands = {
+            "help": {
+                "callback": None,
+                "description": "Show commands",
+                "group": _("General")
+            }
+        }
+
+        separate_commands["help"]["callback"] = self.help_command_public
+        self.chatroom_commands = {**new_commands, **separate_commands}
+
+        separate_commands["help"]["callback"] = self.help_command_private
+        self.private_chat_commands = {**new_commands, **separate_commands}
+
+        separate_commands["help"]["callback"] = self.help_command_cli
+        self.cli_commands = {**new_commands, **separate_commands}
 
     def help_output(self, command_list):
 
+        command_groups = {}
         self.echo_message("List of commands:")
 
-        for command, (description, usage) in command_list.items():
-            self.echo_message("%s %s - %s" % (command, " ".join(usage), description))
+        for command, data in command_list.items():
+            aliases = data.get("aliases", [])
+            aliases.insert(0, command)
+
+            commands = ", ".join(aliases)
+            usage = " ".join(data.get("usage", []))
+            description = data.get("description", "No description")
+
+            group = data.get("group", _("General"))
+
+            if group not in command_groups:
+                command_groups[group] = []
+
+            command_groups[group].append("%s %s - %s" % (commands, usage, description))
+
+        for group, commands in command_groups.items():
+            self.echo_message("")
+            self.echo_message(group + ":")
+
+            for command in commands:
+                self.echo_message(command)
 
     def help_command_public(self, _source, _args):
         self.help_output(self.parent.public_commands)
