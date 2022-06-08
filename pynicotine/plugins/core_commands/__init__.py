@@ -26,6 +26,10 @@ class Plugin(BasePlugin):
         super().__init__(*args, **kwargs)
 
         commands = {
+            "help": {
+                "callback": self.help_command,
+                "description": "Show commands"
+            },
             "rescan": {
                 "callback": self.rescan_command,
                 "description": _("Rescan shares"),
@@ -44,23 +48,28 @@ class Plugin(BasePlugin):
             }
         }
 
-        separate_commands = {
-            "help": {
-                "callback": None,
-                "description": "Show commands"
+        chat_commands = {
+            "me": {
+                "callback": self.me_command,
+                "description": _("Say something in the third-person"),
+                "usage": ["<message..>"]
             }
         }
 
-        separate_commands["help"]["callback"] = self.help_command_public
-        self.chatroom_commands = {**separate_commands, **commands}
+        self.chatroom_commands = {**commands, **chat_commands}
+        self.private_chat_commands = {**commands, **chat_commands}
+        self.cli_commands = commands
 
-        separate_commands["help"]["callback"] = self.help_command_private
-        self.private_chat_commands = {**separate_commands, **commands}
+    def help_command(self, _args, command_type, _source):
 
-        separate_commands["help"]["callback"] = self.help_command_cli
-        self.cli_commands = {**separate_commands, **commands}
+        if command_type == "chatroom":
+            command_list = self.parent.chatroom_commands
 
-    def help_output(self, command_list):
+        elif command_type == "private_chat":
+            command_list = self.parent.private_chat_commands
+
+        elif command_type == "cli":
+            command_list = self.parent.cli_commands
 
         command_groups = {}
         self.echo_message("List of commands:")
@@ -91,20 +100,14 @@ class Plugin(BasePlugin):
             for command in commands:
                 self.echo_message(command)
 
-    def help_command_public(self, _source, _args):
-        self.help_output(self.parent.chatroom_commands)
+    def me_command(self, args, _command_type, _source):
+        self.send_message("/me " + args)
 
-    def help_command_private(self, _source, _args):
-        self.help_output(self.parent.private_chat_commands)
-
-    def help_command_cli(self, _source, _args):
-        self.help_output(self.parent.cli_commands)
-
-    def rescan_command(self, _source, _args):
+    def rescan_command(self, _args, _command_type, _source):
         self.core.shares.rescan_shares()
 
-    def hello_command(self, _source, args):
+    def hello_command(self, args, _command_type, _source):
         self.echo_message("Hello there, %s" % args)
 
-    def quit_command(self, _source, _args):
+    def quit_command(self, _args, _command_type, _source):
         self.core.quit()

@@ -726,7 +726,7 @@ class PluginHandler:
                             plugin.echo_message("Usage: %s %s" % ('/' + command, " ".join(usage)))
                             return
 
-                    getattr(plugin, data.get("callback").__name__)(source, args)
+                    getattr(plugin, data.get("callback").__name__)(args, command_type, source)
                     return
 
             except Exception:

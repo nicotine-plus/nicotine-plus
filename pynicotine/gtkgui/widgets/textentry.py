@@ -89,7 +89,7 @@ class ChatEntry:
         is_double_slash_cmd = text.startswith("//")
         is_single_slash_cmd = (text.startswith("/") and not is_double_slash_cmd)
 
-        if not is_single_slash_cmd or text.startswith("/me"):
+        if not is_single_slash_cmd:
             # Regular chat message (/me is sent as plain text)
 
             self.entry.set_text("")
