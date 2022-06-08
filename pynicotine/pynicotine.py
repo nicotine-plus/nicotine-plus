@@ -143,6 +143,7 @@ class NicotineCore:
         self.privatechats.load_users()
 
         self.pluginhandler = PluginHandler(self, config)
+        self.pluginhandler.load_enabled()
 
         # Callback handlers for messages
         self.events = {

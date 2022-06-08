@@ -103,8 +103,6 @@ class PrivateChats:
             if isinstance(user, str) and user not in self.users:
                 self.show_user(user, switch_page=False)
 
-        self.update_completions()
-
     def clear_messages(self, user):
         if self.ui_callback:
             self.ui_callback.clear_messages(user)
@@ -264,7 +262,8 @@ class PrivateChats:
 
     def update_completions(self):
 
-        self.completion_list = get_completion_list([], self.core.chatrooms.server_rooms)
+        self.completion_list = get_completion_list(
+            list(self.core.pluginhandler.private_commands), self.core.chatrooms.server_rooms)
 
         if self.ui_callback:
             self.ui_callback.set_completion_list(self.completion_list)

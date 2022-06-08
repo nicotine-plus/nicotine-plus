@@ -369,9 +369,6 @@ class PluginHandler:
         BasePlugin.core = self.core
         BasePlugin.frame = self.core.ui_callback
 
-        self.load_enabled()
-        self.enable_plugin("core_commands")
-
     def quit(self):
 
         # Notify plugins
@@ -655,6 +652,8 @@ class PluginHandler:
 
         for plugin in to_enable:
             self.enable_plugin(plugin)
+
+        self.enable_plugin("core_commands")
 
     def plugin_settings(self, plugin_name, plugin):
 
