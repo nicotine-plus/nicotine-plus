@@ -592,22 +592,26 @@ class PluginHandler:
 
         info_path = os.path.join(plugin_path, 'PLUGININFO')
 
-        with open(encode_path(info_path), encoding="utf-8") as file_handle:
-            for line in file_handle:
-                try:
-                    key, value = line.split("=", 1)
-                    key = key.strip()
-                    value = value.strip()
+        try:
+            with open(encode_path(info_path), encoding="utf-8") as file_handle:
+                for line in file_handle:
+                    try:
+                        key, value = line.split("=", 1)
+                        key = key.strip()
+                        value = value.strip()
 
-                    # Translatable string
-                    if value.startswith("_(") and value.endswith(")"):
-                        plugin_info[key] = _(literal_eval(value[2:-1]))
-                        continue
+                        # Translatable string
+                        if value.startswith("_(") and value.endswith(")"):
+                            plugin_info[key] = _(literal_eval(value[2:-1]))
+                            continue
 
-                    plugin_info[key] = literal_eval(value)
+                        plugin_info[key] = literal_eval(value)
 
-                except Exception:
-                    pass  # this can happen on blank lines
+                    except Exception:
+                        pass  # this can happen on blank lines
+
+        except OSError:
+            pass
 
         return plugin_info
 
