@@ -451,6 +451,18 @@ class PluginHandler:
 
         return instance
 
+    def add_command(self, command, extra, command_list):
+
+        description = usage = ""
+
+        if len(extra) >= 2:
+            description, usage = extra
+
+        elif len(extra) == 1:
+            description = extra[0]
+
+        command_list['/' + command] = (description, usage)
+
     def enable_plugin(self, plugin_name):
 
         # Our config file doesn't play nicely with some characters
@@ -478,20 +490,14 @@ class PluginHandler:
 
             for trigger, _func, *extra in plugin.__publiccommands__:
                 self.core.chatrooms.CMDS.add('/' + trigger + ' ')
+                self.add_command(trigger, extra, self.public_commands)
 
             for trigger, _func, *extra in plugin.__privatecommands__:
                 self.core.privatechats.CMDS.add('/' + trigger + ' ')
+                self.add_command(trigger, extra, self.private_commands)
 
             for trigger, _func, *extra in plugin.__clicommands__:
-                description = usage = ""
-
-                if len(extra) >= 2:
-                    description, usage = extra
-
-                elif len(extra) == 1:
-                    description = extra[0]
-
-                self.cli_commands['/' + trigger] = (description, usage)
+                self.add_command(trigger, extra, self.cli_commands)
 
             self.update_completions(plugin)
 

@@ -42,10 +42,10 @@ class Plugin(BasePlugin):
             self.echo_message("%s %s - %s" % (command, " ".join(usage), description))
 
     def help_command_public(self, _source, _args):
-        self.help_output(self.core.chatrooms.CMDS)
+        self.help_output(self.parent.public_commands)
 
     def help_command_private(self, _source, _args):
-        self.help_output(self.core.privatechats.CMDS)
+        self.help_output(self.parent.private_commands)
 
     def help_command_cli(self, _source, _args):
         self.help_output(self.parent.cli_commands)
