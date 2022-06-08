@@ -489,11 +489,9 @@ class PluginHandler:
             plugin.init()
 
             for trigger, _func, *extra in plugin.__publiccommands__:
-                self.core.chatrooms.CMDS.add('/' + trigger + ' ')
                 self.add_command(trigger, extra, self.public_commands)
 
             for trigger, _func, *extra in plugin.__privatecommands__:
-                self.core.privatechats.CMDS.add('/' + trigger + ' ')
                 self.add_command(trigger, extra, self.private_commands)
 
             for trigger, _func, *extra in plugin.__clicommands__:
@@ -551,10 +549,10 @@ class PluginHandler:
             plugin.disable()
 
             for trigger, _func in plugin.__publiccommands__:
-                self.core.chatrooms.CMDS.remove('/' + trigger + ' ')
+                self.public_commands.pop('/' + trigger, None)
 
             for trigger, _func in plugin.__privatecommands__:
-                self.core.privatechats.CMDS.remove('/' + trigger + ' ')
+                self.private_commands.pop('/' + trigger, None)
 
             for trigger, _func in plugin.__clicommands__:
                 self.cli_commands.pop('/' + trigger, None)

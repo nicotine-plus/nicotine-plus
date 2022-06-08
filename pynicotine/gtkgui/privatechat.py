@@ -240,7 +240,7 @@ class PrivateChat:
 
         # Chat Entry
         ChatEntry(self.frame, self.chat_entry, chats.completion, user, slskmessages.MessageUser,
-                  self.core.privatechats.send_message, self.core.privatechats.CMDS)
+                  self.core.privatechats.send_message)
 
         self.log_toggle.set_active(config.sections["logging"]["privatechat"])
 
