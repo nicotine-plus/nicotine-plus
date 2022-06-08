@@ -25,11 +25,10 @@ class Plugin(BasePlugin):
 
         super().__init__(*args, **kwargs)
 
-        new_commands = {
+        commands = {
             "rescan": {
                 "callback": self.rescan_command,
-                "description": _("Rescan shares"),
-                "group": _("General")
+                "description": _("Rescan shares")
             },
             "hello": {
                 "callback": self.hello_command,
@@ -37,25 +36,29 @@ class Plugin(BasePlugin):
                 "usage": ["<user>"],
                 "aliases": ["say", "greet"],
                 "group": _("Message")
+            },
+            "quit": {
+                "callback": self.quit_command,
+                "description": _("Quit Nicotine+"),
+                "aliases": ["q", "exit"]
             }
         }
 
         separate_commands = {
             "help": {
                 "callback": None,
-                "description": "Show commands",
-                "group": _("General")
+                "description": "Show commands"
             }
         }
 
         separate_commands["help"]["callback"] = self.help_command_public
-        self.chatroom_commands = {**new_commands, **separate_commands}
+        self.chatroom_commands = {**separate_commands, **commands}
 
         separate_commands["help"]["callback"] = self.help_command_private
-        self.private_chat_commands = {**new_commands, **separate_commands}
+        self.private_chat_commands = {**separate_commands, **commands}
 
         separate_commands["help"]["callback"] = self.help_command_cli
-        self.cli_commands = {**new_commands, **separate_commands}
+        self.cli_commands = {**separate_commands, **commands}
 
     def help_output(self, command_list):
 
@@ -98,3 +101,6 @@ class Plugin(BasePlugin):
 
     def hello_command(self, _source, args):
         self.echo_message("Hello there, %s" % args)
+
+    def quit_command(self, _source, _args):
+        self.core.quit()
