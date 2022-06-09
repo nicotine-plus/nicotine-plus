@@ -70,7 +70,6 @@ functionality while keeping current with the Soulseek protocol."""
         ("share/icons/hicolor/scalable/intl", glob.glob("pynicotine/gtkgui/icons/hicolor/scalable/intl/*.svg")),
         ("share/icons/hicolor/scalable/status", glob.glob("pynicotine/gtkgui/icons/hicolor/scalable/status/*.svg")),
         ("share/icons/hicolor/symbolic/apps", glob.glob("pynicotine/gtkgui/icons/hicolor/symbolic/apps/*.svg")),
-        ("share/doc/nicotine", glob.glob("[!404.md]*.md") + glob.glob("doc/*.md")),
         ("share/man/man1", glob.glob("data/*.1"))
     ] + get_translation_paths()
 
