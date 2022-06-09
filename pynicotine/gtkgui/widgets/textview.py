@@ -278,7 +278,7 @@ class TextView:
     def on_clear_all_text(self, *_args):
         self.clear()
 
-    def on_adjustment_upper_changed(self, adjustment, *_args):
+    def on_adjustment_upper_changed(self, *_args):
         if self.should_auto_scroll:
             GLib.idle_add(self.scroll_bottom, priority=GLib.PRIORITY_LOW)
 
