@@ -2512,7 +2512,7 @@ class PluginsFrame(UserInterface):
 
         self.descr_textview.clear()
         self.descr_textview.append_line("%(description)s" % {
-            "description": info.get("Description", '').replace(r'\n', '\n')}, scroll=False)
+            "description": info.get("Description", '').replace(r'\n', '\n')})
 
         self.check_properties_button(self.selected_plugin)
 

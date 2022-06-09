@@ -35,11 +35,12 @@ from pynicotine.utils import open_uri
 
 class TextView:
 
-    def __init__(self, textview, font=None):
+    def __init__(self, textview, font=None, auto_scroll=False):
 
         self.textview = textview
         self.textbuffer = textview.get_buffer()
         self.scrollable = textview.get_ancestor(Gtk.ScrolledWindow)
+        self.adjustment = self.scrollable.get_vadjustment()
         scrollable_container = self.scrollable.get_ancestor(Gtk.Box)
         self.font = font
         self.url_regex = re.compile("(\\w+\\://[^\\s]+)|(www\\.\\w+\\.[^\\s]+)|(mailto\\:[^\\s]+)")
@@ -48,6 +49,11 @@ class TextView:
         self.pressed_x = 0
         self.pressed_y = 0
         self.max_num_lines = 50000
+
+        self.auto_scroll = self.should_auto_scroll = auto_scroll
+
+        self.adjustment.connect("notify::upper", self.on_adjustment_upper_changed)
+        self.adjustment.connect("notify::value", self.on_adjustment_value_changed)
 
         if GTK_API_VERSION >= 4:
             self.gesture_click_primary = Gtk.GestureClick()
@@ -67,20 +73,17 @@ class TextView:
         self.gesture_click_secondary.set_button(Gdk.BUTTON_SECONDARY)
         self.gesture_click_secondary.connect("pressed", self._callback_pressed_secondary)
 
-        self.textview.connect("realize", self.on_realize)
-
-    def scroll_bottom(self):
+    def scroll_bottom(self, *_args):
 
         if not self.textview.get_realized():
             # Avoid GTK warnings
             return False
 
-        adjustment = self.scrollable.get_vadjustment()
-        adjustment.set_value(adjustment.get_upper() - adjustment.get_page_size())
+        self.adjustment.set_value(self.adjustment.get_upper() - self.adjustment.get_page_size())
         return False
 
-    def append_line(self, line, tag=None, timestamp=None, timestamp_format=None,
-                    username=None, usertag=None, scroll=True, find_urls=True):
+    def append_line(self, line, tag=None, timestamp=None, timestamp_format=None, username=None,
+                    usertag=None, find_urls=True):
 
         def _append(buffer, text, tag):
 
@@ -152,13 +155,6 @@ class TextView:
 
             self.tag_urls.pop(end_iter, None)
             buffer.delete(start_iter, end_iter)
-
-        if scroll:
-            alignment = self.scrollable.get_vadjustment()
-
-            # Scroll to bottom if we had scrolled up less than ~2 lines previously
-            if (alignment.get_value() + alignment.get_page_size()) >= alignment.get_upper() - 40:
-                GLib.idle_add(self.scroll_bottom, priority=GLib.PRIORITY_LOW)
 
         return num_lines
 
@@ -282,5 +278,16 @@ class TextView:
     def on_clear_all_text(self, *_args):
         self.clear()
 
-    def on_realize(self, *_args):
-        self.scroll_bottom()
+    def on_adjustment_upper_changed(self, *_args):
+        if self.should_auto_scroll:
+            GLib.idle_add(self.scroll_bottom, priority=GLib.PRIORITY_LOW)
+
+    def on_adjustment_value_changed(self, adjustment, *_args):
+
+        if not self.auto_scroll:
+            self.should_auto_scroll = False
+            return
+
+        # Scroll to bottom if we had scrolled up less than ~2 lines previously
+        bottom = adjustment.get_upper() - adjustment.get_page_size()
+        self.should_auto_scroll = (bottom - adjustment.get_value() < 40)
