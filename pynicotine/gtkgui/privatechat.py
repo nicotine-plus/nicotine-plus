@@ -285,7 +285,7 @@ class PrivateChat(UserInterface):
                 except UnicodeDecodeError:
                     line = line.decode("latin-1")
 
-                self.chat_view.append_line(line, self.tag_hilite, scroll=False)
+                self.chat_view.append_line(line, self.tag_hilite)
 
     def server_login(self):
         timestamp_format = config.sections["logging"]["private_timestamp"]

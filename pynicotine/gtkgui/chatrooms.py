@@ -680,13 +680,13 @@ class ChatRoom(UserInterface):
 
                 if user != login:
                     self.chat_view.append_line(self.core.privatechats.censor_chat(line), tag, username=user,
-                                               usertag=usertag, scroll=False)
+                                               usertag=usertag)
                 else:
-                    self.chat_view.append_line(line, tag, username=user, usertag=usertag, scroll=False)
+                    self.chat_view.append_line(line, tag, username=user, usertag=usertag)
 
             if lines:
                 timestamp_format = config.sections["logging"]["rooms_timestamp"]
-                self.chat_view.append_line(_("--- old messages above ---"), self.tag_hilite, scroll=False,
+                self.chat_view.append_line(_("--- old messages above ---"), self.tag_hilite,
                                            timestamp_format=timestamp_format)
 
     def populate_user_menu(self, user, menu, menu_private_rooms):

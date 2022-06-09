@@ -47,7 +47,7 @@ class RoomWall(UserInterface):
 
         tickers = self.room.tickers.get_tickers()
         self.room_wall_textview.append_line(
-            "%s" % ("\n".join(["> [%s] %s" % (user, msg) for user, msg in tickers])), scroll=False)
+            "%s" % ("\n".join(["> [%s] %s" % (user, msg) for user, msg in tickers])))
 
     def clear_room_wall_message(self, update_list=True):
 
@@ -70,7 +70,7 @@ class RoomWall(UserInterface):
 
         if entry_text:
             user = self.core.login_username
-            self.room_wall_textview.append_line("> [%s] %s" % (user, entry_text), scroll=False)
+            self.room_wall_textview.append_line("> [%s] %s" % (user, entry_text))
 
         self.update_message_list()
 
