@@ -79,10 +79,8 @@ class PrivateChats(IconNotebook):
                 self.command_help.popover.unparent()
                 tab.help_button.set_popover(self.command_help.popover)
 
-                # If the tab hasn't been opened previously, scroll chat to bottom
-                if not tab.opened:
-                    GLib.idle_add(tab.chat_view.scroll_bottom)
-                    tab.opened = tab.chat_view.auto_scroll = True
+                if not tab.loaded:
+                    tab.load()
 
                 # Remove hilite if selected tab belongs to a user in the hilite list
                 self.frame.notifications.clear("private", user)
@@ -205,7 +203,7 @@ class PrivateChat(UserInterface):
         self.frame = chats.frame
         self.core = chats.core
 
-        self.opened = False
+        self.loaded = False
         self.offline_message = False
         self.status = 0
 
@@ -257,6 +255,12 @@ class PrivateChat(UserInterface):
         self.update_visuals()
 
         self.read_private_log()
+
+    def load(self):
+
+        # Scroll chat to bottom
+        GLib.idle_add(self.chat_view.scroll_bottom)
+        self.loaded = self.chat_view.auto_scroll = True
 
     def read_private_log(self):
 

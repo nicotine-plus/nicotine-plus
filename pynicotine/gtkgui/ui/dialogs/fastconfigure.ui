@@ -65,14 +65,15 @@
           <object class="GtkButton">
             <property name="visible">True</property>
             <property name="halign">center</property>
+            <property name="height-request">42</property>
             <property name="margin-top">6</property>
             <signal name="clicked" handler="on_next"/>
             <child>
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">_Set Up…</property>
-                <property name="margin-start">14</property>
-                <property name="margin-end">14</property>
+                <property name="margin-start">24</property>
+                <property name="margin-end">24</property>
                 <property name="use-underline">True</property>
               </object>
             </child>
