@@ -126,25 +126,30 @@ class Search:
                     text = feedback[0]
 
         elif mode == "rooms":
+            if not room:
+                room = _("Joined Rooms ")
+
             if self.core:
                 feedback = self.core.pluginhandler.outgoing_room_search_event(room, text)
 
                 if feedback is not None:
                     room, text = feedback
 
-        elif mode == "buddies" and self.core:
-            feedback = self.core.pluginhandler.outgoing_buddy_search_event(text)
+        elif mode == "buddies":
+            if self.core:
+                feedback = self.core.pluginhandler.outgoing_buddy_search_event(text)
 
-            if feedback is not None:
-                text = feedback[0]
+                if feedback is not None:
+                    text = feedback[0]
 
         elif mode == "user":
             if user:
-                users = [user]
-            else:
-                return None
+                users.append(user)
 
             if self.core:
+                if not users:
+                    users.append(self.core.login_username)
+
                 feedback = self.core.pluginhandler.outgoing_user_search_event(users, text)
 
                 if feedback is not None:
@@ -158,12 +163,7 @@ class Search:
     def do_search(self, text, mode, room=None, user=None):
 
         # Validate search term and run it through plugins
-        processed_search = self.process_search_term(text, mode, room, user)
-
-        if not processed_search:
-            return None
-
-        text, room, users = processed_search
+        text, room, users = self.process_search_term(text, mode, room, user)
 
         # Get a new search token
         self.token = increment_token(self.token)
@@ -220,7 +220,7 @@ class Search:
         self.add_search(searchterm, mode, ignore=False)
 
         if self.ui_callback:
-            self.ui_callback.do_search(self.token, searchterm, mode, room, user)
+            self.ui_callback.do_search(self.token, searchterm, mode, room, users)
 
         return (self.token, searchterm, searchterm_without_special)
 
