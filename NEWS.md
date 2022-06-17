@@ -9,7 +9,7 @@
  * Added text-to-speech toggle buttons for individual private chats when TTS is enabled
  * Minor usability improvements to several main window components and dialogs
  * Reddit and Test Replier plugins are no longer installed by default
-   - The plugins are [available on GitHub](/pynicotine/plugins/examplars/) and can be installed in the plugin preferences
+   - The plugins are [available on GitHub](https://github.com/nicotine-plus/nicotine-plus/tree/HEAD/pynicotine/plugins/examplars) and can be installed in the plugin preferences
  * Various translation updates (thanks to our [many contributors](https://nicotine-plus.org/TRANSLATORS) on [Weblate](https://hosted.weblate.org/engage/nicotine-plus))
 
 ### Corrections
