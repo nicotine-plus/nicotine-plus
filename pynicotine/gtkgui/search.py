@@ -144,7 +144,7 @@ class Searches(IconNotebook):
         for term in config.sections["searches"]["history"]:
             self.frame.search_combobox.append_text(str(term))
 
-    def do_search(self, token, search_term, mode, room=None, user=None):
+    def do_search(self, token, search_term, mode, room=None, users=None):
 
         mode_label = None
 
@@ -152,7 +152,7 @@ class Searches(IconNotebook):
             mode_label = room.strip()
 
         elif mode == "user":
-            mode_label = user.strip()
+            mode_label = ",".join(users)
 
         elif mode == "buddies":
             mode_label = _("Buddies")
