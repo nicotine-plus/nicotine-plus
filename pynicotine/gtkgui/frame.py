@@ -1736,8 +1736,12 @@ class NicotineFrame(UserInterface):
     def update_log(self, msg, level):
 
         if level and level.startswith("important"):
-            parent = self.preferences.dialog if self.preferences.dialog.get_visible() else self.window
+            parent = self.window
             title = "Information" if level == "important_info" else "Error"
+
+            if self.preferences is not None and self.preferences.dialog.get_property("visible"):
+                parent = self.preferences.dialog
+
             MessageDialog(parent=parent, title=title, message=msg).show()
 
         # Keep verbose debug messages out of statusbar to make it more useful
