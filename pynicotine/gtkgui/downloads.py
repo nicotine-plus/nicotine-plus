@@ -149,7 +149,7 @@ class Downloads(TransferList):
                 # Try looking in the download directory and match the original filename and size.
 
                 file_path = self.core.transfers.get_existing_download_path(
-                    transfer.user, transfer.filename, transfer.path, transfer.size)
+                    transfer.user, transfer.filename, transfer.path, transfer.size, always_return=True)
 
             open_file_path(file_path, command=config.sections["players"]["default"])
 

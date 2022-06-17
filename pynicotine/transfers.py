@@ -1802,7 +1802,7 @@ class Transfers:
 
         return folder_path, basename
 
-    def get_existing_download_path(self, user, virtual_path, target_path, size):
+    def get_existing_download_path(self, user, virtual_path, target_path, size, always_return=False):
         """ Returns the download path of a previous download, if available """
 
         folder, basename = self.get_download_destination(user, virtual_path, target_path)
@@ -1819,6 +1819,10 @@ class Transfers:
             basename = basename_root + " (" + str(counter) + ")" + extension
             download_path = os.path.join(folder, basename)
             counter += 1
+
+        if always_return:
+            # Get a download path even if it doesn't exist anymore
+            return download_path
 
         return None
 
