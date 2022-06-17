@@ -77,26 +77,26 @@ jobs:
 
       - name: Install build dependencies
         run: |
+          sed -i s'/SigLevel.*/SigLevel = Never/'g /etc/pacman.conf
           pacman --noconfirm -S --needed mingw-w64-$ARCH-python
           python3 packaging/windows/dependencies_core.py
           python3 packaging/windows/dependencies_packaging.py
 
-      - name: Build installer
+      - name: Freeze application
         run: |
           python3 packaging/windows/setup.py bdist_msi
-          mv build/exe.* build/Nicotine+
 
       - name: Archive installer artifacts
         uses: actions/upload-artifact@v2
         with:
           name: windows-${{ matrix.arch }}-installer
-          path: dist
+          path: dist/*.msi
 
       - name: Archive package artifacts
         uses: actions/upload-artifact@v2
         with:
           name: windows-${{ matrix.arch }}-package
-          path: build
+          path: build/package
 
   macos:
     runs-on: macos-10.15
@@ -120,11 +120,9 @@ jobs:
       - name: Freeze application
         run: |
           python3 packaging/macos/setup.py bdist_dmg
-          mkdir build/dmg/
-          mv build/*.dmg build/dmg/
 
       - name: Archive installer artifacts
         uses: actions/upload-artifact@v2
         with:
           name: macos-installer
-          path: build/dmg
+          path: build/*.dmg
