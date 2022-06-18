@@ -21,6 +21,7 @@ from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
 
 """ Dialogs """
 
@@ -236,3 +237,312 @@ class OptionDialog(MessageDialog):
                 self.container.append(self.option)
             else:
                 self.container.add(self.option)
+
+
+""" Plugin Settings Dialog """
+
+
+class PluginSettingsDialog:
+
+    def __init__(self, frame, preferences, plugin_id, plugin_settings):
+
+        self.frame = frame
+        self.preferences = preferences
+        self.plugin_id = plugin_id
+        self.plugin_settings = plugin_settings
+        self.option_widgets = {}
+
+        plugin_name = frame.core.pluginhandler.get_plugin_info(plugin_id).get("Name", plugin_id)
+
+        cancel_button = Gtk.Button(label=_("_Cancel"), use_underline=True, visible=True)
+        cancel_button.connect("clicked", self.on_cancel)
+
+        ok_button = Gtk.Button(label=_("_OK"), use_underline=True, visible=True)
+        ok_button.connect("clicked", self.on_ok)
+
+        if GTK_API_VERSION == 3:
+            ok_button.set_can_default(True)  # pylint: disable=no-member
+
+        self.primary_container = Gtk.Box(
+            orientation=Gtk.Orientation.VERTICAL, width_request=340, visible=True,
+            margin_top=14, margin_bottom=14, margin_start=18, margin_end=18, spacing=12
+        )
+        scrolled_window = Gtk.ScrolledWindow(
+            hexpand=True, vexpand=True, min_content_height=300,
+            hscrollbar_policy=Gtk.PolicyType.NEVER, vscrollbar_policy=Gtk.PolicyType.AUTOMATIC, visible=True
+        )
+        scrolled_window.set_property("child", self.primary_container)
+
+        self.dialog = generic_dialog(
+            parent=preferences.dialog,
+            content_box=scrolled_window,
+            buttons=[(cancel_button, Gtk.ResponseType.CANCEL),
+                     (ok_button, Gtk.ResponseType.OK)],
+            quit_callback=self.on_cancel,
+            title=_("%s Settings") % plugin_name,
+            width=600,
+            height=425
+        )
+        self.dialog.get_style_context().add_class("preferences")
+        self.dialog.set_default_response(Gtk.ResponseType.OK)
+
+        self._add_options()
+
+    @staticmethod
+    def _generate_label(text):
+        return Gtk.Label(label=text, use_markup=True, hexpand=True, wrap=True, xalign=0, visible=bool(text))
+
+    def _generate_widget_container(self, description, child_widget, vertical=False):
+
+        container = Gtk.Box(spacing=12, visible=True)
+
+        if vertical:
+            container.set_orientation(Gtk.Orientation.VERTICAL)
+
+        label = self._generate_label(description)
+
+        if GTK_API_VERSION >= 4:
+            container.append(label)                   # pylint: disable=no-member
+            container.append(child_widget)            # pylint: disable=no-member
+            self.primary_container.append(container)  # pylint: disable=no-member
+        else:
+            container.add(label)                   # pylint: disable=no-member
+            container.add(child_widget)            # pylint: disable=no-member
+            self.primary_container.add(container)  # pylint: disable=no-member
+
+        return label
+
+    def _add_numerical_option(self, option_name, option_value, description, minimum, maximum, stepsize, decimals):
+
+        self.option_widgets[option_name] = button = Gtk.SpinButton(
+            adjustment=Gtk.Adjustment(
+                value=0, lower=minimum, upper=maximum, step_increment=stepsize, page_increment=10,
+                page_size=0
+            ),
+            climb_rate=1, digits=decimals, valign=Gtk.Align.CENTER, visible=True
+        )
+
+        label = self._generate_widget_container(description, button)
+        label.set_mnemonic_widget(button)
+        self.preferences.set_widget(button, option_value)
+
+    def _add_boolean_option(self, option_name, option_value, description):
+
+        self.option_widgets[option_name] = button = Gtk.CheckButton(label=description, visible=True)
+        self._generate_widget_container("", button)
+        self.preferences.set_widget(button, option_value)
+
+        if GTK_API_VERSION >= 4:
+            button.get_last_child().set_wrap(True)  # pylint: disable=no-member
+        else:
+            button.get_child().set_line_wrap(True)  # pylint: disable=no-member
+
+    def _add_radio_option(self, option_name, option_value, description, items):
+
+        box = Gtk.Box(spacing=6, orientation=Gtk.Orientation.VERTICAL, visible=True)
+        label = self._generate_widget_container(description, box)
+
+        last_radio = None
+        group_radios = []
+
+        for option_label in items:
+            widget_class = Gtk.CheckButton if GTK_API_VERSION >= 4 else Gtk.RadioButton
+            radio = widget_class(group=last_radio, label=option_label, visible=True)
+
+            if not last_radio:
+                self.option_widgets[option_name] = radio
+
+            last_radio = radio
+            group_radios.append(radio)
+
+            if GTK_API_VERSION >= 4:
+                box.append(radio)  # pylint: disable=no-member
+            else:
+                box.add(radio)     # pylint: disable=no-member
+
+        label.set_mnemonic_widget(self.option_widgets[option_name])
+        self.option_widgets[option_name].group_radios = group_radios
+        self.preferences.set_widget(self.option_widgets[option_name], option_value)
+
+    def _add_dropdown_option(self, option_name, option_value, description, items):
+
+        self.option_widgets[option_name] = combobox = Gtk.ComboBoxText(valign=Gtk.Align.CENTER, visible=True)
+        label = self._generate_widget_container(description, combobox)
+        label.set_mnemonic_widget(combobox)
+
+        for text_label in items:
+            combobox.append(id=text_label, text=text_label)
+
+        self.preferences.set_widget(combobox, option_value)
+
+    def _add_entry_option(self, option_name, option_value, description):
+
+        self.option_widgets[option_name] = entry = Gtk.Entry(hexpand=True, valign=Gtk.Align.CENTER,
+                                                             visible=True)
+        label = self._generate_widget_container(description, entry)
+        label.set_mnemonic_widget(entry)
+
+        self.preferences.set_widget(entry, option_value)
+
+    def _add_textview_option(self, option_name, option_value, description):
+
+        frame_container = Gtk.Frame(visible=True)
+        self.option_widgets[option_name] = textview = Gtk.TextView(
+            accepts_tab=False, pixels_above_lines=1, pixels_below_lines=1,
+            left_margin=8, right_margin=8, top_margin=5, bottom_margin=5,
+            wrap_mode=Gtk.WrapMode.WORD_CHAR, visible=True
+        )
+        label = self._generate_widget_container(description, frame_container, vertical=True)
+        label.set_mnemonic_widget(textview)
+        self.preferences.set_widget(textview, option_value)
+
+        scrolled_window = Gtk.ScrolledWindow(hexpand=True, vexpand=True, min_content_height=125,
+                                             visible=True)
+
+        frame_container.set_property("child", scrolled_window)
+        scrolled_window.set_property("child", textview)
+
+    def _add_list_option(self, option_name, option_value, description):
+
+        container = Gtk.Box(spacing=6, visible=True)
+        frame_container = Gtk.Frame(visible=True)
+
+        scrolled_window = Gtk.ScrolledWindow(
+            hexpand=True, vexpand=True, min_content_height=125,
+            hscrollbar_policy=Gtk.PolicyType.AUTOMATIC, vscrollbar_policy=Gtk.PolicyType.AUTOMATIC, visible=True
+        )
+
+        self.option_widgets[option_name] = treeview = Gtk.TreeView(model=Gtk.ListStore(str), visible=True)
+
+        scrolled_window.set_property("child", treeview)
+        frame_container.set_property("child", scrolled_window)
+
+        from pynicotine.gtkgui.widgets.treeview import initialise_columns
+        cols = initialise_columns(
+            self.frame, None, treeview,
+            [description, description, -1, "edit", None]
+        )
+        self.preferences.set_widget(treeview, option_value)
+
+        renderers = cols[description].get_cells()
+        for render in renderers:
+            render.connect('edited', self.cell_edited_callback, treeview)
+
+        box = Gtk.Box(spacing=6, visible=True)
+
+        add_button = Gtk.Button(label=_("Add…"), visible=True)
+        add_button.connect("clicked", self.on_add, treeview)
+
+        remove_button = Gtk.Button(label=_("Remove"), visible=True)
+        remove_button.connect("clicked", self.on_remove, treeview)
+
+        if GTK_API_VERSION >= 4:
+            box.append(add_button)                    # pylint: disable=no-member
+            box.append(remove_button)                 # pylint: disable=no-member
+
+            self.primary_container.append(container)  # pylint: disable=no-member
+            self.primary_container.append(box)        # pylint: disable=no-member
+
+            container.append(frame_container)         # pylint: disable=no-member
+        else:
+            box.add(add_button)                    # pylint: disable=no-member
+            box.add(remove_button)                 # pylint: disable=no-member
+
+            self.primary_container.add(container)  # pylint: disable=no-member
+            self.primary_container.add(box)        # pylint: disable=no-member
+
+            container.add(frame_container)         # pylint: disable=no-member
+
+    def _add_file_option(self, option_name, option_value, description, file_chooser_type):
+
+        button_widget = Gtk.Button(hexpand=True, valign=Gtk.Align.CENTER, visible=True)
+        label = self._generate_widget_container(description, button_widget)
+
+        self.option_widgets[option_name] = FileChooserButton(button_widget, self.dialog, file_chooser_type)
+        label.set_mnemonic_widget(button_widget)
+
+        self.preferences.set_widget(self.option_widgets[option_name], option_value)
+
+    def _add_options(self):
+
+        for option_name, data in self.plugin_settings.items():
+            option_type = data.get("type")
+
+            if not option_type:
+                continue
+
+            description = data.get("description", "")
+            option_value = config.sections["plugins"][self.plugin_id.lower()][option_name]
+
+            if option_type in ("integer", "int", "float"):
+                self._add_numerical_option(
+                    option_name, option_value, description, minimum=data.get("minimum", 0),
+                    maximum=data.get("maximum", 99999), stepsize=data.get("stepsize", 1),
+                    decimals=(0 if option_type in ("integer", "int") else 2)
+                )
+
+            elif option_type in ("bool",):
+                self._add_boolean_option(option_name, option_value, description)
+
+            elif option_type in ("radio",):
+                self._add_radio_option(
+                    option_name, option_value, description, items=data.get("options", []))
+
+            elif option_type in ("dropdown",):
+                self._add_dropdown_option(
+                    option_name, option_value, description, items=data.get("options", []))
+
+            elif option_type in ("str", "string"):
+                self._add_entry_option(option_name, option_value, description)
+
+            elif option_type in ("textview",):
+                self._add_textview_option(option_name, option_value, description)
+
+            elif option_type in ("list string",):
+                self._add_list_option(option_name, option_value, description)
+
+            elif option_type in ("file",):
+                self._add_file_option(
+                    option_name, option_value, description, file_chooser_type=data.get("chooser"))
+
+    @staticmethod
+    def cell_edited_callback(_widget, index, value, treeview):
+
+        store = treeview.get_model()
+        iterator = store.get_iter(index)
+        store.set(iterator, 0, value)
+
+    @staticmethod
+    def on_add(_widget, treeview):
+
+        iterator = treeview.get_model().append([""])
+        col = treeview.get_column(0)
+
+        treeview.set_cursor(treeview.get_model().get_path(iterator), col, True)
+
+    @staticmethod
+    def on_remove(_widget, treeview):
+
+        selection = treeview.get_selection()
+        iterator = selection.get_selected()[1]
+        if iterator is not None:
+            treeview.get_model().remove(iterator)
+
+    def on_cancel(self, *_args):
+        self.dialog.destroy()
+
+    def on_ok(self, *_args):
+
+        for name in self.plugin_settings:
+            value = self.preferences.get_widget_data(self.option_widgets[name])
+
+            if value is not None:
+                config.sections["plugins"][self.plugin_id.lower()][name] = value
+
+        self.frame.core.pluginhandler.plugin_settings(
+            self.plugin_id, self.frame.core.pluginhandler.enabled_plugins[self.plugin_id])
+
+        self.dialog.destroy()
+
+    def show(self):
+        dialog_show(self.dialog)
