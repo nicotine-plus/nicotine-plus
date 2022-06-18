@@ -249,7 +249,7 @@ class ServerConnection(Connection):
 
 class PeerConnection(Connection):
 
-    __slots__ = ("init", "indirect", "fileinit", "filedown", "fileupl", "filereadbytes", "bytestoread", "lastcallback")
+    __slots__ = ("init", "indirect", "fileinit", "filedown", "fileupl", "lastcallback")
 
     def __init__(self, sock=None, addr=None, events=None, init=None, indirect=False):
 
@@ -260,8 +260,6 @@ class PeerConnection(Connection):
         self.fileinit = None
         self.filedown = None
         self.fileupl = None
-        self.filereadbytes = 0
-        self.bytestoread = 0
         self.lastcallback = time.time()
 
 
@@ -1722,10 +1720,11 @@ class SlskProtoThread(threading.Thread):
             msg_buffer = msg_buffer[msgsize:]
 
         elif conn_obj.filedown is not None:
-            leftbytes = conn_obj.bytestoread - conn_obj.filereadbytes
+            leftbytes = conn_obj.filedown.leftbytes
             addedbytes = msg_buffer[:leftbytes]
+            addedbytes_len = len(addedbytes)
 
-            if leftbytes > 0:
+            if addedbytes_len > 0:
                 try:
                     conn_obj.filedown.file.write(addedbytes)
 
@@ -1733,22 +1732,21 @@ class SlskProtoThread(threading.Thread):
                     self._callback_msgs.append(DownloadFileError(conn_obj.sock, conn_obj.filedown.file, error))
                     self.close_connection(self._conns, conn_obj.sock)
 
-            addedbyteslen = len(addedbytes)
             current_time = time.time()
-            finished = ((leftbytes - addedbyteslen) == 0)
+            finished = ((leftbytes - addedbytes_len) == 0)
 
             if finished or (current_time - conn_obj.lastcallback) > 1:
                 # We save resources by not sending data back to the NicotineCore
                 # every time a part of a file is downloaded
 
-                self._callback_msgs.append(DownloadFile(conn_obj.sock, conn_obj.filedown.file))
+                self._callback_msgs.append(conn_obj.filedown)
                 conn_obj.lastcallback = current_time
 
             if finished:
                 self.close_connection(self._conns, conn_obj.sock)
 
-            conn_obj.filereadbytes += addedbyteslen
             msg_buffer = msg_buffer[leftbytes:]
+            conn_obj.filedown.leftbytes -= addedbytes_len
 
         elif conn_obj.fileupl is not None and conn_obj.fileupl.offset is None:
             msgsize = 8
@@ -1801,7 +1799,6 @@ class SlskProtoThread(threading.Thread):
                 return
 
             conn_obj = self._conns[msg_obj.init.sock]
-            conn_obj.bytestoread = msg_obj.filesize - msg_obj.offset
             conn_obj.obuf.extend(msg)
 
         self.modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)

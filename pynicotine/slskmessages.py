@@ -147,11 +147,12 @@ class DownloadFile(InternalMessage):
     """ Sent by networking thread to indicate file transfer progress.
     Sent by UI to pass the file object to write. """
 
-    __slots__ = ("sock", "file")
+    __slots__ = ("sock", "file", "leftbytes")
 
-    def __init__(self, sock=None, file=None):
+    def __init__(self, sock=None, file=None, leftbytes=None):
         self.sock = sock
         self.file = file
+        self.leftbytes = leftbytes
 
 
 class UploadFile(InternalMessage):
@@ -2889,9 +2890,8 @@ class FileOffset(FileMessage):
     to tell them how many bytes of the file we've previously downloaded. If none,
     the offset is 0. """
 
-    def __init__(self, init, filesize=None, offset=None):
+    def __init__(self, init, offset=None):
         self.init = init
-        self.filesize = filesize
         self.offset = offset
 
     def make_network_message(self):
