@@ -58,7 +58,7 @@
           <object class="GtkCheckButton" id="RemoveSpecialChars">
             <property name="label" translatable="yes">Remove special characters from search terms</property>
             <property name="visible">True</property>
-            <property name="tooltip-text" translatable="yes">Certain clients don&apos;t send search results if special characters are included.</property>
+            <property name="tooltip-text" translatable="yes">Certain clients don't send search results if special characters are included.</property>
             <property name="use-underline">True</property>
           </object>
         </child>
