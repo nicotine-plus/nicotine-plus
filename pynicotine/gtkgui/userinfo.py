@@ -302,7 +302,7 @@ class UserInfo(UserInterface):
         self.actual_zoom = 0
         self.set_pixbuf(self.picture_data)
 
-    def make_zoom_in(self, *_args, zoom=None):
+    def make_zoom_in(self, *_args):
 
         def calc_zoom_in(w_h):
             return w_h + w_h * self.actual_zoom / 100 + w_h * self.zoom_factor / 100
