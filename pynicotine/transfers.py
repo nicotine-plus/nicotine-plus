@@ -1094,8 +1094,8 @@ class Transfers:
 
                     if i.size > offset:
                         i.status = "Transferring"
-                        self.queue.append(slskmessages.DownloadFile(i.sock, file_handle))
-                        self.queue.append(slskmessages.FileOffset(msg.init, i.size, offset))
+                        self.queue.append(slskmessages.DownloadFile(i.sock, file_handle, leftbytes=(i.size - offset)))
+                        self.queue.append(slskmessages.FileOffset(msg.init, offset))
 
                         log.add_download(
                             _("Download started: user %(user)s, file %(file)s"), {
@@ -1295,7 +1295,7 @@ class Transfers:
                     del self.transfer_request_times[i]
 
                 current_time = time.time()
-                i.current_byte_offset = msg.file.tell()
+                i.current_byte_offset = i.size - msg.leftbytes
 
                 if i.start_time is None:
                     i.start_time = current_time
