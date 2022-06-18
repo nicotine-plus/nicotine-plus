@@ -255,8 +255,11 @@ class FileChooserButton:
             return
 
         self.path = path
+        self.button.set_tooltip_text(path)
         self.label.set_label(os.path.basename(path))
 
     def clear(self):
+
         self.path = ""
+        self.button.set_tooltip_text(None)
         self.label.set_label(_("(None)"))
