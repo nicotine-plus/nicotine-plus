@@ -218,7 +218,7 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">The default listening port &apos;2234&apos; works fine in most cases. If you need to use a different port, you will be able to modify it in the preferences later.</property>
+                <property name="label" translatable="yes">The default listening port '2234' works fine in most cases. If you need to use a different port, you will be able to modify it in the preferences later.</property>
                 <property name="justify">center</property>
                 <property name="wrap">True</property>
                 <property name="width-chars">36</property>

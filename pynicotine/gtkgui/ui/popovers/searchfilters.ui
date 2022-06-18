@@ -97,7 +97,7 @@
                         <property name="visible">True</property>
                         <property name="xalign">0</property>
                         <property name="margin-start">12</property>
-                        <property name="label" translatable="yes">Case is insensitive, but word order is important: &apos;Spears Brittany&apos; will not show any &apos;Brittany Spears&apos;</property>
+                        <property name="label" translatable="yes">Case is insensitive, but word order is important: 'Spears Brittany' will not show any 'Brittany Spears'</property>
                         <property name="selectable">True</property>
                         <property name="wrap">True</property>
                       </object>
@@ -173,7 +173,7 @@
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="margin-start">12</property>
-                    <property name="label" translatable="yes">It is also possible to invert the filter, specifying file extensions you don&apos;t want in your results.
+                    <property name="label" translatable="yes">It is also possible to invert the filter, specifying file extensions you don't want in your results.
     Example: !mp3|!jpg</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
@@ -323,7 +323,7 @@
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="margin-start">12</property>
-                    <property name="label" translatable="yes">Filters files based upon users&apos; countries.</property>
+                    <property name="label" translatable="yes">Filters files based upon users' countries.</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
                   </object>
@@ -334,7 +334,7 @@
                     <property name="xalign">0</property>
                     <property name="margin-start">12</property>
                     <property name="label" translatable="yes">Uses country codes defined by ISO 3166-2 (see Wikipedia):
-    &apos;US&apos; will only return files from users connected via the United States. Similarly, &apos;GB&apos; returns files from users with IPs in the United Kingdom.</property>
+    'US' will only return files from users connected via the United States. Similarly, 'GB' returns files from users with IPs in the United Kingdom.</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
                   </object>

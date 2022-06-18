@@ -74,7 +74,7 @@ Inactive
    - Developer
    - Debianization
 
-> gallows (aka &apos;burp O&apos;)
+> gallows (aka 'burp O')
    - Developer
    - Packager
    - Submitted Slack.Build file
@@ -92,7 +92,7 @@ Inactive
 
 > suser-guru
    - Suse Linux packager
-   - Nicotine+ RPM&apos;s for Suse 9.1, 9.2, 9.3, 10.0, 10.1
+   - Nicotine+ RPM's for Suse 9.1, 9.2, 9.3, 10.0, 10.1
 
 > osiris
    - Handy-man

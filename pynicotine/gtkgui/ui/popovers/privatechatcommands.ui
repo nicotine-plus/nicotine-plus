@@ -96,7 +96,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">/me &apos;message&apos;</property>
+                        <property name="label" translatable="yes">/me 'message'</property>
                         <property name="selectable">True</property>
                         <property name="xalign">0</property>
                         <attributes>
@@ -133,7 +133,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">Display the Now Playing script&apos;s output</property>
+                        <property name="label" translatable="yes">Display the Now Playing script's output</property>
                         <property name="selectable">True</property>
                         <property name="xalign">0</property>
                       </object>
@@ -492,7 +492,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">/alias /al &apos;command&apos; &apos;definition&apos;</property>
+                        <property name="label" translatable="yes">/alias /al 'command' 'definition'</property>
                         <property name="selectable">True</property>
                         <property name="xalign">0</property>
                         <attributes>
@@ -518,7 +518,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">/unalias /un &apos;command&apos;</property>
+                        <property name="label" translatable="yes">/unalias /un 'command'</property>
                         <property name="selectable">True</property>
                         <property name="xalign">0</property>
                         <attributes>
@@ -560,7 +560,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">/search /s &apos;query&apos;</property>
+                        <property name="label" translatable="yes">/search /s 'query'</property>
                         <property name="selectable">True</property>
                         <property name="xalign">0</property>
                         <attributes>
@@ -571,7 +571,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">Start a new search for &apos;query&apos;</property>
+                        <property name="label" translatable="yes">Start a new search for 'query'</property>
                         <property name="selectable">True</property>
                         <property name="xalign">0</property>
                       </object>
@@ -586,7 +586,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">/rsearch /rs &apos;query&apos;</property>
+                        <property name="label" translatable="yes">/rsearch /rs 'query'</property>
                         <property name="selectable">True</property>
                         <property name="xalign">0</property>
                         <attributes>
@@ -597,7 +597,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">Search the joined rooms for &apos;query&apos;</property>
+                        <property name="label" translatable="yes">Search the joined rooms for 'query'</property>
                         <property name="selectable">True</property>
                         <property name="xalign">0</property>
                       </object>
@@ -612,7 +612,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">/bsearch /bs &apos;query&apos;</property>
+                        <property name="label" translatable="yes">/bsearch /bs 'query'</property>
                         <property name="selectable">True</property>
                         <property name="xalign">0</property>
                         <attributes>
@@ -623,7 +623,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">Search the buddy list for &apos;query&apos;</property>
+                        <property name="label" translatable="yes">Search the buddy list for 'query'</property>
                         <property name="selectable">True</property>
                         <property name="xalign">0</property>
                       </object>
@@ -638,7 +638,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">/usearch /us &apos;user&apos; &apos;query&apos;</property>
+                        <property name="label" translatable="yes">/usearch /us 'user' 'query'</property>
                         <property name="selectable">True</property>
                         <property name="xalign">0</property>
                         <attributes>
@@ -649,7 +649,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">Search a user&apos;s shares for &apos;query&apos;</property>
+                        <property name="label" translatable="yes">Search a user's shares for 'query'</property>
                         <property name="selectable">True</property>
                         <property name="xalign">0</property>
                       </object>
@@ -680,7 +680,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">/join /j &apos;room&apos;</property>
+                        <property name="label" translatable="yes">/join /j 'room'</property>
                         <property name="selectable">True</property>
                         <property name="xalign">0</property>
                         <attributes>
@@ -691,7 +691,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">Join room &apos;room&apos;</property>
+                        <property name="label" translatable="yes">Join room 'room'</property>
                         <property name="selectable">True</property>
                         <property name="xalign">0</property>
                       </object>

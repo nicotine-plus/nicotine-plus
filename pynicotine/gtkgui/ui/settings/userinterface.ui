@@ -34,7 +34,7 @@
                   <object class="GtkCheckButton" id="DarkMode">
                     <property name="label" translatable="yes">Prefer dark mode</property>
                     <property name="visible">True</property>
-                    <property name="tooltip-text" translatable="yes">Note that the operating system&apos;s theme may take precedence.</property>
+                    <property name="tooltip-text" translatable="yes">Note that the operating system's theme may take precedence.</property>
                     <signal name="toggled" handler="on_theme_changed"/>
                   </object>
                 </child>
@@ -1654,7 +1654,7 @@
         <child>
           <object class="GtkCheckButton" id="NotificationTabColors">
             <property name="visible">True</property>
-            <property name="label" translatable="yes">Notification changes the tab&apos;s text color</property>
+            <property name="label" translatable="yes">Notification changes the tab's text color</property>
           </object>
         </child>
         <child>
