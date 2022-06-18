@@ -82,7 +82,7 @@
                             <property name="label" translatable="yes">Username:</property>
                             <property name="xalign">0</property>
                             <property name="wrap">True</property>
-                            <property name="mnemonic_widget">Login</property>
+                            <property name="mnemonic-widget">Login</property>
                           </object>
                         </child>
                         <child>
@@ -139,7 +139,7 @@
                             <property name="xalign">0</property>
                             <property name="label" translatable="yes">Listening port range (requires a restart):</property>
                             <property name="wrap">True</property>
-                            <property name="mnemonic_widget">FirstPort</property>
+                            <property name="mnemonic-widget">FirstPort</property>
                           </object>
                         </child>
                         <child>
@@ -187,7 +187,7 @@
                             <property name="xalign">0</property>
                             <property name="label" translatable="yes">Public IP address:</property>
                             <property name="wrap">True</property>
-                            <property name="mnemonic_widget">FirstPort</property>
+                            <property name="mnemonic-widget">FirstPort</property>
                           </object>
                         </child>
                         <child>
@@ -254,7 +254,7 @@
                     <property name="label" translatable="yes">Toggle away status after minutes of inactivity:</property>
                     <property name="wrap">True</property>
                     <property name="xalign">0</property>
-                    <property name="mnemonic_widget">AutoAway</property>
+                    <property name="mnemonic-widget">AutoAway</property>
                   </object>
                 </child>
                 <child>
@@ -280,7 +280,7 @@
                     <property name="label" translatable="yes">Auto-reply message when away:</property>
                     <property name="wrap">True</property>
                     <property name="xalign">0</property>
-                    <property name="mnemonic_widget">AutoReply</property>
+                    <property name="mnemonic-widget">AutoReply</property>
                   </object>
                 </child>
                 <child>
@@ -369,7 +369,7 @@
                     <property name="label" translatable="yes">Soulseek server:</property>
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
-                    <property name="mnemonic_widget">Server</property>
+                    <property name="mnemonic-widget">Server</property>
                   </object>
                 </child>
                 <child>
@@ -393,7 +393,7 @@
                     <property name="label" translatable="yes">Network interface (requires a restart):</property>
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
-                    <property name="mnemonic_widget">Interface</property>
+                    <property name="mnemonic-widget">Interface</property>
                   </object>
                 </child>
                 <child>

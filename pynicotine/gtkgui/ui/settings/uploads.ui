@@ -69,7 +69,7 @@
                 <property name="label" translatable="yes">Double-click action for uploads:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic_widget">UploadDoubleClick</property>
+                <property name="mnemonic-widget">UploadDoubleClick</property>
               </object>
             </child>
             <child>
@@ -119,7 +119,7 @@
                 <property name="hexpand">True</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic_widget">LimitPerTransfer</property>
+                <property name="mnemonic-widget">LimitPerTransfer</property>
               </object>
             </child>
             <child>
@@ -161,7 +161,7 @@
               <object class="GtkSpinButton" id="LimitSpeed">
                 <property name="visible">True</property>
                 <property name="sensitive" bind-source="Limit" bind-property="active" bind-flags="bidirectional|sync-create"/>
-                <property name="tooltip_text" translatable="yes">Kibibytes (2^10 bytes) per second.</property>
+                <property name="tooltip-text" translatable="yes">Kibibytes (2^10 bytes) per second.</property>
                 <property name="adjustment">adjustment_LimitSpeed</property>
                 <property name="numeric">True</property>
                 <property name="valign">center</property>
@@ -180,14 +180,14 @@
                 <property name="label" translatable="yes">Alternative upload speed limit (KiB/s):</property>
                 <property name="hexpand">True</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic_widget">LimitSpeedAlternative</property>
+                <property name="mnemonic-widget">LimitSpeedAlternative</property>
                 <property name="xalign">0</property>
               </object>
             </child>
             <child>
               <object class="GtkSpinButton" id="LimitSpeedAlternative">
                 <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">Kibibytes (2^10 bytes) per second.</property>
+                <property name="tooltip-text" translatable="yes">Kibibytes (2^10 bytes) per second.</property>
                 <property name="adjustment">adjustment_LimitSpeedAlternative</property>
                 <property name="numeric">True</property>
                 <property name="valign">center</property>
@@ -231,7 +231,7 @@
                 <property name="label" translatable="yes">Each user may queue a maximum of either:</property>
                 <property name="wrap">True</property>
                 <property name="xalign">0</property>
-                <property name="mnemonic_widget">MaxUserQueue</property>
+                <property name="mnemonic-widget">MaxUserQueue</property>
               </object>
             </child>
             <child>
@@ -241,7 +241,7 @@
                 <child>
                   <object class="GtkSpinButton" id="MaxUserQueue">
                     <property name="visible">True</property>
-                    <property name="tooltip_text" translatable="yes">Mebibytes (2^20 bytes).</property>
+                    <property name="tooltip-text" translatable="yes">Mebibytes (2^20 bytes).</property>
                     <property name="adjustment">adjustment_MaxUserQueue</property>
                     <property name="numeric">True</property>
                     <property name="valign">center</property>
@@ -278,7 +278,7 @@
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">files</property>
                 <property name="xalign">0</property>
-                <property name="mnemonic_widget">MaxUserFiles</property>
+                <property name="mnemonic-widget">MaxUserFiles</property>
               </object>
             </child>
           </object>
@@ -318,7 +318,7 @@
                 <property name="label" translatable="yes">Upload queue type:</property>
                 <property name="wrap">True</property>
                 <property name="xalign">0</property>
-                <property name="mnemonic_widget">FirstInFirstOut</property>
+                <property name="mnemonic-widget">FirstInFirstOut</property>
               </object>
             </child>
             <child>
@@ -351,7 +351,7 @@ First In, First Out: Files will be uploaded in the order they were queued.</prop
               <object class="GtkSpinButton" id="QueueBandwidth">
                 <property name="visible">True</property>
                 <property name="sensitive" bind-source="QueueUseSlots" bind-property="active" bind-flags="bidirectional|invert-boolean|sync-create"/>
-                <property name="tooltip_text" translatable="yes">Kibibytes (2^10 bytes) per second.</property>
+                <property name="tooltip-text" translatable="yes">Kibibytes (2^10 bytes) per second.</property>
                 <property name="adjustment">adjustment_QueueBandwidth</property>
                 <property name="numeric">True</property>
                 <property name="valign">center</property>

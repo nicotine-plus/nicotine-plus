@@ -52,7 +52,7 @@
                     <property name="visible">True</property>
                     <property name="hexpand">True</property>
                     <property name="width-chars">15</property>
-                    <property name="tooltip_text" translatable="yes">Codes must be in ISO 3166-2 format.</property>
+                    <property name="tooltip-text" translatable="yes">Codes must be in ISO 3166-2 format.</property>
                     <property name="sensitive" bind-source="GeoBlock" bind-property="active" bind-flags="bidirectional|sync-create"/>
                     <property name="valign">center</property>
                   </object>
@@ -68,7 +68,7 @@
                   <object class="GtkCheckButton" id="UseCustomGeoBlock">
                     <property name="visible">True</property>
                     <property name="label" translatable="yes">Use custom geo block message:</property>
-                    <property name="tooltip_text" translatable="yes">Sent to users as the reason for being geo blocked.</property>
+                    <property name="tooltip-text" translatable="yes">Sent to users as the reason for being geo blocked.</property>
                   </object>
                 </child>
                 <child>
@@ -91,7 +91,7 @@
                   <object class="GtkCheckButton" id="UseCustomBan">
                     <property name="label" translatable="yes">Use custom ban message:</property>
                     <property name="visible">True</property>
-                    <property name="tooltip_text" translatable="yes">Sent to users as the reason for being banned.</property>
+                    <property name="tooltip-text" translatable="yes">Sent to users as the reason for being banned.</property>
                   </object>
                 </child>
                 <child>
@@ -133,7 +133,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Users</property>
                     <property name="wrap">True</property>
-                    <property name="mnemonic_widget">BannedList</property>
+                    <property name="mnemonic-widget">BannedList</property>
                     <attributes>
                       <attribute name="weight" value="bold"/>
                     </attributes>
@@ -251,7 +251,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">IP Addresses</property>
                     <property name="wrap">True</property>
-                    <property name="mnemonic_widget">BlockedList</property>
+                    <property name="mnemonic-widget">BlockedList</property>
                     <attributes>
                       <attribute name="weight" value="bold"/>
                     </attributes>

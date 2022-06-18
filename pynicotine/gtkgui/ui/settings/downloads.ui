@@ -89,7 +89,7 @@
                 <property name="label" translatable="yes">Double-click action for downloads:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic_widget">DownloadDoubleClick</property>
+                <property name="mnemonic-widget">DownloadDoubleClick</property>
               </object>
             </child>
             <child>
@@ -139,13 +139,13 @@
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic_widget">DownloadSpeed</property>
+                <property name="mnemonic-widget">DownloadSpeed</property>
               </object>
             </child>
             <child>
               <object class="GtkSpinButton" id="DownloadSpeed">
                 <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">Kibibytes (2^10 bytes) per second.</property>
+                <property name="tooltip-text" translatable="yes">Kibibytes (2^10 bytes) per second.</property>
                 <property name="adjustment">adjustment_DownloadSpeed</property>
                 <property name="numeric">True</property>
                 <property name="valign">center</property>
@@ -165,13 +165,13 @@
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic_widget">DownloadSpeedAlternative</property>
+                <property name="mnemonic-widget">DownloadSpeedAlternative</property>
               </object>
             </child>
             <child>
               <object class="GtkSpinButton" id="DownloadSpeedAlternative">
                 <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">Kibibytes (2^10 bytes) per second.</property>
+                <property name="tooltip-text" translatable="yes">Kibibytes (2^10 bytes) per second.</property>
                 <property name="adjustment">adjustment_DownloadSpeedAlternative</property>
                 <property name="numeric">True</property>
                 <property name="valign">center</property>
@@ -209,7 +209,7 @@
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic_widget">IncompleteDir</property>
+                <property name="mnemonic-widget">IncompleteDir</property>
               </object>
             </child>
             <child>
@@ -231,7 +231,7 @@
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic_widget">DownloadDir</property>
+                <property name="mnemonic-widget">DownloadDir</property>
               </object>
             </child>
             <child>
@@ -253,7 +253,7 @@
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic_widget">UploadDir</property>
+                <property name="mnemonic-widget">UploadDir</property>
               </object>
             </child>
             <child>
@@ -298,7 +298,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Run command after file download finishes ($ for file path):</property>
                     <property name="wrap">True</property>
-                    <property name="mnemonic_widget">AfterDownload</property>
+                    <property name="mnemonic-widget">AfterDownload</property>
                   </object>
                 </child>
                 <child>
@@ -319,7 +319,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Run command after folder download finishes ($ for folder path):</property>
                     <property name="wrap">True</property>
-                    <property name="mnemonic_widget">AfterFolder</property>
+                    <property name="mnemonic-widget">AfterFolder</property>
                   </object>
                 </child>
                 <child>
@@ -345,7 +345,7 @@
             <property name="label" translatable="yes">Download Filters</property>
             <property name="xalign">0</property>
             <property name="wrap">True</property>
-            <property name="mnemonic_widget">FilterView</property>
+            <property name="mnemonic-widget">FilterView</property>
             <attributes>
               <attribute name="weight" value="bold"/>
             </attributes>
@@ -563,7 +563,7 @@
                 <property name="label" translatable="yes">Unverified</property>
                 <property name="wrap">True</property>
                 <property name="xalign">0</property>
-                <property name="mnemonic_widget">VerifyFilters</property>
+                <property name="mnemonic-widget">VerifyFilters</property>
                 <attributes>
                   <attribute name="weight" value="bold"/>
                 </attributes>

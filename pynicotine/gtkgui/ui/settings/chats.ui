@@ -66,7 +66,7 @@
                 <property name="label" translatable="yes">Number of recent private chat messages to show:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic_widget">PrivateLogLines</property>
+                <property name="mnemonic-widget">PrivateLogLines</property>
               </object>
             </child>
             <child>
@@ -91,7 +91,7 @@
                 <property name="label" translatable="yes">Number of recent chat room messages to show:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic_widget">RoomLogLines</property>
+                <property name="mnemonic-widget">RoomLogLines</property>
               </object>
             </child>
             <child>
@@ -179,7 +179,7 @@
                         <property name="label" translatable="yes">Minimum characters required to display drop-down:</property>
                         <property name="xalign">0</property>
                         <property name="wrap">True</property>
-                        <property name="mnemonic_widget">CharactersCompletion</property>
+                        <property name="mnemonic-widget">CharactersCompletion</property>
                       </object>
                     </child>
                     <child>
@@ -201,7 +201,7 @@
                     <property name="margin-top">12</property>
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
-                    <property name="mnemonic_widget">CompleteBuddiesCheck</property>
+                    <property name="mnemonic-widget">CompleteBuddiesCheck</property>
                   </object>
                 </child>
                 <child>
@@ -313,7 +313,7 @@
                 <property name="label" translatable="yes">Private chat format:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic_widget">PrivateChatFormat</property>
+                <property name="mnemonic-widget">PrivateChatFormat</property>
               </object>
             </child>
             <child>
@@ -370,7 +370,7 @@
                 <property name="label" translatable="yes">Chat room format:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic_widget">ChatRoomFormat</property>
+                <property name="mnemonic-widget">ChatRoomFormat</property>
               </object>
             </child>
             <child>
@@ -451,7 +451,7 @@
                 <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Text-to-Speech command:</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic_widget">TTSCommand</property>
+                <property name="mnemonic-widget">TTSCommand</property>
               </object>
             </child>
             <child>
@@ -517,7 +517,7 @@
                 <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Private chat message:</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic_widget">PrivateMessage</property>
+                <property name="mnemonic-widget">PrivateMessage</property>
               </object>
             </child>
             <child>
@@ -573,7 +573,7 @@
                 <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Chat room message:</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic_widget">RoomMessage</property>
+                <property name="mnemonic-widget">RoomMessage</property>
               </object>
             </child>
             <child>
@@ -671,7 +671,7 @@
                             <property name="xalign">0</property>
                             <property name="label" translatable="yes">Replace censored letters with:</property>
                             <property name="wrap">True</property>
-                            <property name="mnemonic_widget">CensorReplaceCombo</property>
+                            <property name="mnemonic-widget">CensorReplaceCombo</property>
                           </object>
                         </child>
                         <child>
@@ -705,7 +705,7 @@
                         <property name="label" translatable="yes">Censored Patterns</property>
                         <property name="xalign">0</property>
                         <property name="wrap">True</property>
-                        <property name="mnemonic_widget">CensorList</property>
+                        <property name="mnemonic-widget">CensorList</property>
                         <attributes>
                           <attribute name="weight" value="bold"/>
                         </attributes>
@@ -884,7 +884,7 @@
                         <property name="label" translatable="yes">Replacements</property>
                         <property name="xalign">0</property>
                         <property name="wrap">True</property>
-                        <property name="mnemonic_widget">ReplacementList</property>
+                        <property name="mnemonic-widget">ReplacementList</property>
                         <attributes>
                           <attribute name="weight" value="bold"/>
                         </attributes>

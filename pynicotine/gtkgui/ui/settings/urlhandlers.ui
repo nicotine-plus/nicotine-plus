@@ -16,7 +16,7 @@
             <property name="label" translatable="yes">URL Handlers</property>
             <property name="xalign">0</property>
             <property name="wrap">True</property>
-            <property name="mnemonic_widget">ProtocolHandlers</property>
+            <property name="mnemonic-widget">ProtocolHandlers</property>
             <attributes>
               <attribute name="weight" value="bold"/>
             </attributes>
@@ -49,7 +49,7 @@
                 <property name="label" translatable="yes">Media player command:</property>
                 <property name="wrap">True</property>
                 <property name="xalign">0</property>
-                <property name="mnemonic_widget">audioPlayerCombo</property>
+                <property name="mnemonic-widget">audioPlayerCombo</property>
               </object>
             </child>
             <child>
@@ -85,7 +85,7 @@
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">File manager command:</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic_widget">FileManagerCombo</property>
+                <property name="mnemonic-widget">FileManagerCombo</property>
               </object>
             </child>
             <child>

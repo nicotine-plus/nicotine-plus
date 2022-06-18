@@ -81,7 +81,7 @@
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Name</property>
                 <property name="xalign">1</property>
-                <property name="mnemonic_widget">filename_value_label</property>
+                <property name="mnemonic-widget">filename_value_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
@@ -105,7 +105,7 @@
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Size</property>
                 <property name="xalign">1</property>
-                <property name="mnemonic_widget">filesize_value_label</property>
+                <property name="mnemonic-widget">filesize_value_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
@@ -129,7 +129,7 @@
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Folder</property>
                 <property name="xalign">1</property>
-                <property name="mnemonic_widget">folder_value_label</property>
+                <property name="mnemonic-widget">folder_value_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
@@ -153,7 +153,7 @@
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Path</property>
                 <property name="xalign">1</property>
-                <property name="mnemonic_widget">path_value_label</property>
+                <property name="mnemonic-widget">path_value_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
@@ -178,7 +178,7 @@
                 <property name="label" translatable="yes">Duration</property>
                 <property name="margin-top">12</property>
                 <property name="xalign">1</property>
-                <property name="mnemonic_widget">length_value_label</property>
+                <property name="mnemonic-widget">length_value_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
@@ -203,7 +203,7 @@
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Bitrate</property>
                 <property name="xalign">1</property>
-                <property name="mnemonic_widget">bitrate_value_label</property>
+                <property name="mnemonic-widget">bitrate_value_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
@@ -228,7 +228,7 @@
                 <property name="label" translatable="yes">Username</property>
                 <property name="margin-top">12</property>
                 <property name="xalign">1</property>
-                <property name="mnemonic_widget">username_value_label</property>
+                <property name="mnemonic-widget">username_value_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
@@ -253,7 +253,7 @@
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">In Queue</property>
                 <property name="xalign">1</property>
-                <property name="mnemonic_widget">queue_value_label</property>
+                <property name="mnemonic-widget">queue_value_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
@@ -277,7 +277,7 @@
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Last Speed</property>
                 <property name="xalign">1</property>
-                <property name="mnemonic_widget">speed_value_label</property>
+                <property name="mnemonic-widget">speed_value_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
@@ -301,7 +301,7 @@
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Country</property>
                 <property name="xalign">1</property>
-                <property name="mnemonic_widget">country_value_label</property>
+                <property name="mnemonic-widget">country_value_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>

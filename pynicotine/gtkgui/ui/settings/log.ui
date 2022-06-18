@@ -60,7 +60,7 @@
                 <property name="label" translatable="yes">Log timestamp format:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic_widget">LogFileFormat</property>
+                <property name="mnemonic-widget">LogFileFormat</property>
               </object>
             </child>
             <child>
@@ -136,7 +136,7 @@
                 <property name="label" translatable="yes">Chatroom logs folder:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic_widget">RoomLogDir</property>
+                <property name="mnemonic-widget">RoomLogDir</property>
               </object>
             </child>
             <child>
@@ -158,7 +158,7 @@
                 <property name="label" translatable="yes">Private chat logs folder:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic_widget">PrivateLogDir</property>
+                <property name="mnemonic-widget">PrivateLogDir</property>
               </object>
             </child>
             <child>
@@ -180,7 +180,7 @@
                 <property name="label" translatable="yes">Transfer logs folder:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic_widget">TransfersLogDir</property>
+                <property name="mnemonic-widget">TransfersLogDir</property>
               </object>
             </child>
             <child>
@@ -202,7 +202,7 @@
                 <property name="label" translatable="yes">Debug logs folder:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic_widget">DebugLogDir</property>
+                <property name="mnemonic-widget">DebugLogDir</property>
               </object>
             </child>
             <child>

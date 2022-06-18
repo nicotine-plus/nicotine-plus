@@ -46,7 +46,7 @@
                   <object class="GtkCheckButton" id="DarkMode">
                     <property name="label" translatable="yes">Prefer dark mode</property>
                     <property name="visible">True</property>
-                    <property name="tooltip_text" translatable="yes">Note that the operating system&apos;s theme may take precedence.</property>
+                    <property name="tooltip-text" translatable="yes">Note that the operating system&apos;s theme may take precedence.</property>
                     <signal name="toggled" handler="on_theme_changed"/>
                   </object>
                 </child>
@@ -74,7 +74,7 @@
                 <child>
                   <object class="GtkCheckButton" id="TabSelectPrevious">
                     <property name="label" translatable="yes">Restore the previously active main tab at startup</property>
-                    <property name="tooltip_text" translatable="yes">By default the leftmost tab is activated at startup</property>
+                    <property name="tooltip-text" translatable="yes">By default the leftmost tab is activated at startup</property>
                     <property name="visible">True</property>
                   </object>
                 </child>
@@ -89,7 +89,7 @@
                         <property name="xalign">0</property>
                         <property name="label" translatable="yes">Tab bar position:</property>
                         <property name="wrap">True</property>
-                        <property name="mnemonic_widget">MainPosition</property>
+                        <property name="mnemonic-widget">MainPosition</property>
                       </object>
                     </child>
                     <child>
@@ -113,7 +113,7 @@
                     <property name="label" translatable="yes">Visible main tabs:</property>
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
-                    <property name="mnemonic_widget">EnableSearchTab</property>
+                    <property name="mnemonic-widget">EnableSearchTab</property>
                   </object>
                 </child>
                 <child>
@@ -248,7 +248,7 @@
                     <property name="label" translatable="yes">When closing Nicotine+:</property>
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
-                    <property name="mnemonic_widget">CloseAction</property>
+                    <property name="mnemonic-widget">CloseAction</property>
                   </object>
                 </child>
                 <child>
@@ -319,7 +319,7 @@
                     <property name="label" translatable="yes">Show notifications for:</property>
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
-                    <property name="mnemonic_widget">NotificationPopupFile</property>
+                    <property name="mnemonic-widget">NotificationPopupFile</property>
                   </object>
                 </child>
                 <child>
@@ -449,7 +449,7 @@
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Chat room tab bar position:</property>
-                    <property name="mnemonic_widget">ChatRoomsPosition</property>
+                    <property name="mnemonic-widget">ChatRoomsPosition</property>
                     <property name="wrap">True</property>
                   </object>
                 </child>
@@ -471,7 +471,7 @@
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Private chat tab bar position:</property>
-                    <property name="mnemonic_widget">PrivateChatPosition</property>
+                    <property name="mnemonic-widget">PrivateChatPosition</property>
                     <property name="wrap">True</property>
                   </object>
                 </child>
@@ -493,7 +493,7 @@
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Search tab bar position:</property>
-                    <property name="mnemonic_widget">SearchPosition</property>
+                    <property name="mnemonic-widget">SearchPosition</property>
                     <property name="wrap">True</property>
                   </object>
                 </child>
@@ -515,7 +515,7 @@
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">User info tab bar position:</property>
-                    <property name="mnemonic_widget">UserInfoPosition</property>
+                    <property name="mnemonic-widget">UserInfoPosition</property>
                     <property name="wrap">True</property>
                   </object>
                 </child>
@@ -537,7 +537,7 @@
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">User browse tab bar position:</property>
-                    <property name="mnemonic_widget">UserBrowsePosition</property>
+                    <property name="mnemonic-widget">UserBrowsePosition</property>
                     <property name="wrap">True</property>
                   </object>
                 </child>
@@ -611,7 +611,7 @@
                         <property name="hexpand">True</property>
                         <property name="xalign">0</property>
                         <property name="wrap">True</property>
-                        <property name="mnemonic_widget">PickImmediate</property>
+                        <property name="mnemonic-widget">PickImmediate</property>
                       </object>
                     </child>
                     <child>
@@ -682,7 +682,7 @@
                         <property name="hexpand">True</property>
                         <property name="xalign">0</property>
                         <property name="wrap">True</property>
-                        <property name="mnemonic_widget">PickQueue</property>
+                        <property name="mnemonic-widget">PickQueue</property>
                       </object>
                     </child>
                     <child>
@@ -781,7 +781,7 @@
                     <property name="label" translatable="yes">Chat username appearance:</property>
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
-                    <property name="mnemonic_widget">UsernameStyle</property>
+                    <property name="mnemonic-widget">UsernameStyle</property>
                   </object>
                 </child>
                 <child>
@@ -822,7 +822,7 @@
                         <property name="hexpand">True</property>
                         <property name="xalign">0</property>
                         <property name="wrap">True</property>
-                        <property name="mnemonic_widget">PickRemote</property>
+                        <property name="mnemonic-widget">PickRemote</property>
                       </object>
                     </child>
                     <child>
@@ -893,7 +893,7 @@
                         <property name="hexpand">True</property>
                         <property name="xalign">0</property>
                         <property name="wrap">True</property>
-                        <property name="mnemonic_widget">PickLocal</property>
+                        <property name="mnemonic-widget">PickLocal</property>
                       </object>
                     </child>
                     <child>
@@ -964,7 +964,7 @@
                         <property name="hexpand">True</property>
                         <property name="xalign">0</property>
                         <property name="wrap">True</property>
-                        <property name="mnemonic_widget">PickMe</property>
+                        <property name="mnemonic-widget">PickMe</property>
                       </object>
                     </child>
                     <child>
@@ -1035,7 +1035,7 @@
                         <property name="hexpand">True</property>
                         <property name="xalign">0</property>
                         <property name="wrap">True</property>
-                        <property name="mnemonic_widget">PickHighlight</property>
+                        <property name="mnemonic-widget">PickHighlight</property>
                       </object>
                     </child>
                     <child>
@@ -1106,7 +1106,7 @@
                         <property name="hexpand">True</property>
                         <property name="xalign">0</property>
                         <property name="wrap">True</property>
-                        <property name="mnemonic_widget">PickURL</property>
+                        <property name="mnemonic-widget">PickURL</property>
                       </object>
                     </child>
                     <child>
@@ -1177,7 +1177,7 @@
                         <property name="hexpand">True</property>
                         <property name="xalign">0</property>
                         <property name="wrap">True</property>
-                        <property name="mnemonic_widget">PickOnline</property>
+                        <property name="mnemonic-widget">PickOnline</property>
                       </object>
                     </child>
                     <child>
@@ -1248,7 +1248,7 @@
                         <property name="hexpand">True</property>
                         <property name="xalign">0</property>
                         <property name="wrap">True</property>
-                        <property name="mnemonic_widget">PickOffline</property>
+                        <property name="mnemonic-widget">PickOffline</property>
                       </object>
                     </child>
                     <child>
@@ -1319,7 +1319,7 @@
                         <property name="hexpand">True</property>
                         <property name="xalign">0</property>
                         <property name="wrap">True</property>
-                        <property name="mnemonic_widget">PickAway</property>
+                        <property name="mnemonic-widget">PickAway</property>
                       </object>
                     </child>
                     <child>
@@ -1415,7 +1415,7 @@
                         <property name="hexpand">True</property>
                         <property name="xalign">0</property>
                         <property name="wrap">True</property>
-                        <property name="mnemonic_widget">PickBackground</property>
+                        <property name="mnemonic-widget">PickBackground</property>
                       </object>
                     </child>
                     <child>
@@ -1486,7 +1486,7 @@
                         <property name="hexpand">True</property>
                         <property name="xalign">0</property>
                         <property name="wrap">True</property>
-                        <property name="mnemonic_widget">PickInput</property>
+                        <property name="mnemonic-widget">PickInput</property>
                       </object>
                     </child>
                     <child>
@@ -1588,7 +1588,7 @@
                         <property name="hexpand">True</property>
                         <property name="xalign">0</property>
                         <property name="wrap">True</property>
-                        <property name="mnemonic_widget">PickRegularTab</property>
+                        <property name="mnemonic-widget">PickRegularTab</property>
                       </object>
                     </child>
                     <child>
@@ -1659,7 +1659,7 @@
                         <property name="hexpand">True</property>
                         <property name="xalign">0</property>
                         <property name="wrap">True</property>
-                        <property name="mnemonic_widget">PickChangedTab</property>
+                        <property name="mnemonic-widget">PickChangedTab</property>
                       </object>
                     </child>
                     <child>
@@ -1730,7 +1730,7 @@
                         <property name="hexpand">True</property>
                         <property name="xalign">0</property>
                         <property name="wrap">True</property>
-                        <property name="mnemonic_widget">PickHighlightTab</property>
+                        <property name="mnemonic-widget">PickHighlightTab</property>
                       </object>
                     </child>
                     <child>
@@ -1816,7 +1816,7 @@
                 <property name="label" translatable="yes">Global font:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic_widget">SelectGlobalFont</property>
+                <property name="mnemonic-widget">SelectGlobalFont</property>
               </object>
             </child>
             <child>
@@ -1873,7 +1873,7 @@
                 <property name="label" translatable="yes">Chat font:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic_widget">SelectChatFont</property>
+                <property name="mnemonic-widget">SelectChatFont</property>
               </object>
             </child>
             <child>
@@ -1930,7 +1930,7 @@
                 <property name="label" translatable="yes">List font:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic_widget">SelectListFont</property>
+                <property name="mnemonic-widget">SelectListFont</property>
               </object>
             </child>
             <child>
@@ -1987,7 +1987,7 @@
                 <property name="label" translatable="yes">Transfers font:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic_widget">SelectTransfersFont</property>
+                <property name="mnemonic-widget">SelectTransfersFont</property>
               </object>
             </child>
             <child>
@@ -2044,7 +2044,7 @@
                 <property name="label" translatable="yes">Search font:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic_widget">SelectSearchFont</property>
+                <property name="mnemonic-widget">SelectSearchFont</property>
               </object>
             </child>
             <child>
@@ -2101,7 +2101,7 @@
                 <property name="label" translatable="yes">Browse font:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic_widget">SelectBrowserFont</property>
+                <property name="mnemonic-widget">SelectBrowserFont</property>
               </object>
             </child>
             <child>
@@ -2183,7 +2183,7 @@
                     <property name="label" translatable="yes">Icon theme folder:</property>
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
-                    <property name="mnemonic_widget">ThemeDir</property>
+                    <property name="mnemonic-widget">ThemeDir</property>
                   </object>
                 </child>
                 <child>

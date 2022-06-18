@@ -116,7 +116,7 @@
                                     <property name="hexpand">True</property>
                                     <property name="label" translatable="yes">Shared Files</property>
                                     <property name="xalign">0</property>
-                                    <property name="mnemonic_widget">shared_files_label</property>
+                                    <property name="mnemonic-widget">shared_files_label</property>
                                     <style>
                                       <class name="dim-label"/>
                                     </style>
@@ -143,7 +143,7 @@
                                     <property name="hexpand">True</property>
                                     <property name="label" translatable="yes">Shared Folders</property>
                                     <property name="xalign">0</property>
-                                    <property name="mnemonic_widget">shared_folders_label</property>
+                                    <property name="mnemonic-widget">shared_folders_label</property>
                                     <style>
                                       <class name="dim-label"/>
                                     </style>
@@ -170,7 +170,7 @@
                                     <property name="hexpand">True</property>
                                     <property name="label" translatable="yes">Upload Slots</property>
                                     <property name="xalign">0</property>
-                                    <property name="mnemonic_widget">upload_slots_label</property>
+                                    <property name="mnemonic-widget">upload_slots_label</property>
                                     <style>
                                       <class name="dim-label"/>
                                     </style>
@@ -197,7 +197,7 @@
                                     <property name="hexpand">True</property>
                                     <property name="label" translatable="yes">Queued Uploads</property>
                                     <property name="xalign">0</property>
-                                    <property name="mnemonic_widget">queued_uploads_label</property>
+                                    <property name="mnemonic-widget">queued_uploads_label</property>
                                     <style>
                                       <class name="dim-label"/>
                                     </style>
@@ -224,7 +224,7 @@
                                     <property name="hexpand">True</property>
                                     <property name="label" translatable="yes">Free Upload Slots</property>
                                     <property name="xalign">0</property>
-                                    <property name="mnemonic_widget">free_upload_slots_label</property>
+                                    <property name="mnemonic-widget">free_upload_slots_label</property>
                                     <style>
                                       <class name="dim-label"/>
                                     </style>
@@ -251,7 +251,7 @@
                                     <property name="hexpand">True</property>
                                     <property name="label" translatable="yes">Upload Speed</property>
                                     <property name="xalign">0</property>
-                                    <property name="mnemonic_widget">upload_speed_label</property>
+                                    <property name="mnemonic-widget">upload_speed_label</property>
                                     <style>
                                       <class name="dim-label"/>
                                     </style>
@@ -278,7 +278,7 @@
                                     <property name="hexpand">True</property>
                                     <property name="label" translatable="yes">Country</property>
                                     <property name="xalign">0</property>
-                                    <property name="mnemonic_widget">country_label</property>
+                                    <property name="mnemonic-widget">country_label</property>
                                     <style>
                                       <class name="dim-label"/>
                                     </style>

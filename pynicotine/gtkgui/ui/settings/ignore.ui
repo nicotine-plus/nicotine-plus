@@ -64,7 +64,7 @@
                     <property name="label" translatable="yes">Users</property>
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
-                    <property name="mnemonic_widget">IgnoredUsers</property>
+                    <property name="mnemonic-widget">IgnoredUsers</property>
                     <attributes>
                       <attribute name="weight" value="bold"/>
                     </attributes>
@@ -181,7 +181,7 @@
                     <property name="label" translatable="yes">IP Addresses</property>
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
-                    <property name="mnemonic_widget">IgnoredIPs</property>
+                    <property name="mnemonic-widget">IgnoredIPs</property>
                     <attributes>
                       <attribute name="weight" value="bold"/>
                     </attributes>
