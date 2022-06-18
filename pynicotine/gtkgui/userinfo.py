@@ -23,6 +23,7 @@
 import time
 
 from gi.repository import GdkPixbuf
+from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
 
@@ -271,29 +272,25 @@ class UserInfo(UserInterface):
 
         try:
             import gc
-            import tempfile
 
-            with tempfile.NamedTemporaryFile() as file_handle:
-                file_handle.write(data)
-                del data
+            data_stream = Gio.MemoryInputStream.new_from_data(data, None)
+            self.picture_data = GdkPixbuf.Pixbuf.new_from_stream(data_stream, None)
+            picture_width = self.picture_data.get_width()
+            picture_height = self.picture_data.get_height()
 
-                self.picture_data = GdkPixbuf.Pixbuf.new_from_file(file_handle.name)
-                picture_width = self.picture_data.get_width()
-                picture_height = self.picture_data.get_height()
+            allocation = self.picture_container.get_allocation()
+            max_width = allocation.width - 72
+            max_height = allocation.height - 72
 
-                allocation = self.picture_container.get_allocation()
-                max_width = allocation.width - 72
-                max_height = allocation.height - 72
+            # Resize picture to fit container
+            ratio = min(max_width / picture_width, max_height / picture_height)
+            self.picture_data = self.picture_data.scale_simple(
+                ratio * picture_width, ratio * picture_height, GdkPixbuf.InterpType.BILINEAR)
 
-                # Resize picture to fit container
-                ratio = min(max_width / picture_width, max_height / picture_height)
-                self.picture_data = self.picture_data.scale_simple(
-                    ratio * picture_width, ratio * picture_height, GdkPixbuf.InterpType.BILINEAR)
-
-                if GTK_API_VERSION >= 4:
-                    self.picture.set_pixbuf(self.picture_data)
-                else:
-                    self.picture.set_from_pixbuf(self.picture_data)
+            if GTK_API_VERSION >= 4:
+                self.picture.set_pixbuf(self.picture_data)
+            else:
+                self.picture.set_from_pixbuf(self.picture_data)
 
             gc.collect()
 
