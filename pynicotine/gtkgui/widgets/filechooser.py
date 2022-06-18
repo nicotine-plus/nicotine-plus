@@ -133,16 +133,7 @@ class ImageChooser(FileChooser):
         path = chooser.get_preview_filename()
 
         try:
-            image_data = GdkPixbuf.Pixbuf.new_from_file(path)
-
-            maxwidth, maxheight = 300.0, 700.0
-            width, height = image_data.get_width(), image_data.get_height()
-            scale = min(maxwidth / width, maxheight / height)
-
-            if scale < 1:
-                width, height = int(width * scale), int(height * scale)
-                image_data = image_data.scale_simple(width, height, GdkPixbuf.InterpType.BILINEAR)
-
+            image_data = GdkPixbuf.Pixbuf.new_from_file_at_size(path, width=300, height=700)
             self.preview.set_from_pixbuf(image_data)
             chooser.set_preview_widget_active(True)
 
