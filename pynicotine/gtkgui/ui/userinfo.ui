@@ -58,6 +58,7 @@
                             <child>
                               <object class="GtkImage" id="country_icon">
                                 <property name="visible">False</property>
+                                <property name="tooltip-text" bind-source="country_label" bind-property="label" bind-flags="bidirectional|sync-create"/>
                               </object>
                             </child>
                           </object>

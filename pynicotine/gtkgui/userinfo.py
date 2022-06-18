@@ -431,7 +431,6 @@ class UserInfo(UserInterface):
             country_text = _("Unknown")
 
         self.country_label.set_text(country_text)
-        self.country_icon.set_tooltip_text(country_text)
 
         icon_name = get_flag_icon_name(country_code or "")
 
