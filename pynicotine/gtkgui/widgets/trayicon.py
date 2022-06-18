@@ -310,7 +310,7 @@ class AppIndicatorImplementation(BaseImplementation):
 
         try:
             for entry in os.scandir(encode_path(icon_path)):
-                if entry.is_file() and entry.name.decode("utf-8").startswith(icon_scheme):
+                if entry.is_file() and entry.name.decode("utf-8", "replace").startswith(icon_scheme):
                     return True
 
         except OSError as error:
