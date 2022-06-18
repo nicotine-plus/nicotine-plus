@@ -83,7 +83,7 @@
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
-                    <property name="mnemonic_widget">NPCommand</property>
+                    <property name="mnemonic-widget">NPCommand</property>
                   </object>
                 </child>
               </object>
@@ -113,7 +113,7 @@
             <property name="visible">True</property>
             <property name="label" translatable="yes">Now Playing Format</property>
             <property name="xalign">0</property>
-            <property name="mnemonic_widget">Legend</property>
+            <property name="mnemonic-widget">Legend</property>
             <attributes>
               <attribute name="weight" value="bold"/>
             </attributes>
@@ -143,7 +143,7 @@
                     <property name="label" translatable="yes">Now Playing message format:</property>
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
-                    <property name="mnemonic_widget">NPFormat</property>
+                    <property name="mnemonic-widget">NPFormat</property>
                   </object>
                 </child>
               </object>
@@ -211,7 +211,7 @@
                     <property name="selectable">True</property>
                     <property name="xalign">1</property>
                     <property name="wrap">True</property>
-                    <property name="mnemonic_widget">test_now_playing</property>
+                    <property name="mnemonic-widget">test_now_playing</property>
                   </object>
                 </child>
               </object>

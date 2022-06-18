@@ -57,7 +57,7 @@
           <object class="GtkCheckButton" id="RemoveSpecialChars">
             <property name="label" translatable="yes">Remove special characters from search terms</property>
             <property name="visible">True</property>
-            <property name="tooltip_text" translatable="yes">Certain clients don&apos;t send search results if special characters are included.</property>
+            <property name="tooltip-text" translatable="yes">Certain clients don&apos;t send search results if special characters are included.</property>
             <property name="use-underline">True</property>
           </object>
         </child>
@@ -86,7 +86,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Limit number of results per search:</property>
                     <property name="wrap">True</property>
-                    <property name="mnemonic_widget">MaxDisplayedResults</property>
+                    <property name="mnemonic-widget">MaxDisplayedResults</property>
                   </object>
                 </child>
               </object>
@@ -184,7 +184,7 @@
                     <property name="label" translatable="yes">Include:</property>
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
-                    <property name="mnemonic_widget">FilterIn</property>
+                    <property name="mnemonic-widget">FilterIn</property>
                   </object>
                 </child>
               </object>
@@ -211,7 +211,7 @@
                     <property name="label" translatable="yes">Exclude:</property>
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
-                    <property name="mnemonic_widget">FilterOut</property>
+                    <property name="mnemonic-widget">FilterOut</property>
                   </object>
                 </child>
               </object>
@@ -238,7 +238,7 @@
                     <property name="label" translatable="yes">File Type:</property>
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
-                    <property name="mnemonic_widget">FilterType</property>
+                    <property name="mnemonic-widget">FilterType</property>
                   </object>
                 </child>
               </object>
@@ -270,7 +270,7 @@
                     <property name="label" translatable="yes">Size:</property>
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
-                    <property name="mnemonic_widget">FilterSize</property>
+                    <property name="mnemonic-widget">FilterSize</property>
                   </object>
                 </child>
               </object>
@@ -301,7 +301,7 @@
                     <property name="label" translatable="yes">Bitrate:</property>
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
-                    <property name="mnemonic_widget">FilterBR</property>
+                    <property name="mnemonic-widget">FilterBR</property>
                   </object>
                 </child>
               </object>
@@ -332,7 +332,7 @@
                     <property name="label" translatable="yes">Country Code:</property>
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
-                    <property name="mnemonic_widget">FilterCC</property>
+                    <property name="mnemonic-widget">FilterCC</property>
                   </object>
                 </child>
               </object>
@@ -373,7 +373,7 @@
                   <object class="GtkCheckButton" id="FilterFree">
                     <property name="label" translatable="yes">Free Slot</property>
                     <property name="visible">True</property>
-                    <property name="tooltip_text" translatable="yes">Only show results from users with an available upload slot.</property>
+                    <property name="tooltip-text" translatable="yes">Only show results from users with an available upload slot.</property>
                     <property name="use-underline">True</property>
                   </object>
                 </child>
@@ -486,7 +486,7 @@
                         <property name="xalign">0</property>
                         <property name="label" translatable="yes">Searches shorter than this number of characters will be ignored:</property>
                         <property name="wrap">True</property>
-                        <property name="mnemonic_widget">MinSearchChars</property>
+                        <property name="mnemonic-widget">MinSearchChars</property>
                       </object>
                     </child>
                   </object>
@@ -515,7 +515,7 @@
                         <property name="xalign">0</property>
                         <property name="label" translatable="yes">Maximum search results to send per search request:</property>
                         <property name="wrap">True</property>
-                        <property name="mnemonic_widget">MaxResults</property>
+                        <property name="mnemonic-widget">MaxResults</property>
                       </object>
                     </child>
                   </object>

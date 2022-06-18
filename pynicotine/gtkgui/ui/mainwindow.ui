@@ -339,7 +339,7 @@
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
                                                 <property name="label" translatable="yes">Users</property>
-                                                <property name="mnemonic_widget">download_users_button</property>
+                                                <property name="mnemonic-widget">download_users_button</property>
                                                 <attributes>
                                                   <attribute name="weight" value="bold"/>
                                                 </attributes>
@@ -379,7 +379,7 @@
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
                                                 <property name="label" translatable="yes">Files</property>
-                                                <property name="mnemonic_widget">download_files_button</property>
+                                                <property name="mnemonic-widget">download_files_button</property>
                                                 <attributes>
                                                   <attribute name="weight" value="bold"/>
                                                 </attributes>
@@ -579,7 +579,7 @@
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
                                                 <property name="label" translatable="yes">Users</property>
-                                                <property name="mnemonic_widget">upload_users_button</property>
+                                                <property name="mnemonic-widget">upload_users_button</property>
                                                 <attributes>
                                                   <attribute name="weight" value="bold"/>
                                                 </attributes>
@@ -619,7 +619,7 @@
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
                                                 <property name="label" translatable="yes">Files</property>
-                                                <property name="mnemonic_widget">upload_files_button</property>
+                                                <property name="mnemonic-widget">upload_files_button</property>
                                                 <attributes>
                                                   <attribute name="weight" value="bold"/>
                                                 </attributes>

@@ -184,7 +184,7 @@
                       <object class="GtkLabel">
                         <property name="visible">True</property>
                         <property name="label" translatable="yes">Users</property>
-                        <property name="mnemonic_widget">users_button</property>
+                        <property name="mnemonic-widget">users_button</property>
                         <attributes>
                           <attribute name="weight" value="bold"/>
                         </attributes>

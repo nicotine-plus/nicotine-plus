@@ -27,7 +27,7 @@
                   <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="label" translatable="yes">Results</property>
-                    <property name="mnemonic_widget">results_button</property>
+                    <property name="mnemonic-widget">results_button</property>
                     <attributes>
                       <attribute name="weight" value="bold"/>
                     </attributes>

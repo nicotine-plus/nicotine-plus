@@ -18,7 +18,7 @@
         <property name="label" translatable="yes">Wishlist items are auto-searched at regular intervals, for discovering uncommon files.</property>
         <property name="max-width-chars">55</property>
         <property name="wrap">True</property>
-        <property name="mnemonic_widget">list_view</property>
+        <property name="mnemonic-widget">list_view</property>
       </object>
     </child>
     <child>
