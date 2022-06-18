@@ -486,7 +486,7 @@ class PluginHandler:
         for folder_path in self.plugindirs:
             try:
                 for entry in os.scandir(encode_path(folder_path)):
-                    file_path = entry.name.decode("utf-8")
+                    file_path = entry.name.decode("utf-8", "replace")
 
                     if entry.is_dir() and file_path not in plugin_list:
                         plugin_list.append(file_path)

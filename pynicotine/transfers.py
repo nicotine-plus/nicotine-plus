@@ -416,7 +416,7 @@ class Transfers:
 
         except Exception as error:
             log.add_transfer("Failed to close file %(filename)s: %(error)s", {
-                "filename": file_handle.name,
+                "filename": file_handle.name.decode("utf-8", "replace"),
                 "error": error
             })
 
@@ -1099,7 +1099,7 @@ class Transfers:
                         log.add_download(
                             _("Download started: user %(user)s, file %(file)s"), {
                                 "user": i.user,
-                                "file": "%s" % file_handle.name
+                                "file": file_handle.name.decode("utf-8", "replace")
                             }
                         )
                     else:
@@ -1938,7 +1938,7 @@ class Transfers:
         except OSError as inst:
             log.add(
                 _("Couldn't move '%(tempfile)s' to '%(file)s': %(error)s"), {
-                    'tempfile': "%s" % file.name,
+                    'tempfile': file.name.decode("utf-8", "replace"),
                     'file': newname,
                     'error': inst
                 }
