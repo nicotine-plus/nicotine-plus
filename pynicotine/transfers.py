@@ -1808,11 +1808,10 @@ class Transfers:
         folder, basename = self.get_download_destination(user, virtual_path, target_path)
         basename_root, extension = os.path.splitext(basename)
         download_path = os.path.join(folder, basename)
-        download_path_encoded = encode_path(download_path)
         counter = 1
 
-        while os.path.isfile(download_path_encoded):
-            if os.stat(download_path_encoded).st_size == size:
+        while os.path.isfile(encode_path(download_path)):
+            if os.stat(encode_path(download_path)).st_size == size:
                 # Found a previous download with a matching file size
                 return download_path
 
