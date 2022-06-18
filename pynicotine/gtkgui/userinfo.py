@@ -258,6 +258,15 @@ class UserInfo(UserInterface):
 
     """ General """
 
+    def set_pixbuf(self, pixbuf):
+
+        if GTK_API_VERSION >= 4:
+            self.picture.set_pixbuf(pixbuf)
+        else:
+            self.picture.set_from_pixbuf(pixbuf)
+
+        del pixbuf
+
     def load_picture(self, data):
 
         if not data:
@@ -271,28 +280,14 @@ class UserInfo(UserInterface):
             return
 
         try:
-            import gc
-
-            data_stream = Gio.MemoryInputStream.new_from_data(data, None)
-            self.picture_data = GdkPixbuf.Pixbuf.new_from_stream(data_stream, None)
-            picture_width = self.picture_data.get_width()
-            picture_height = self.picture_data.get_height()
-
             allocation = self.picture_container.get_allocation()
             max_width = allocation.width - 72
             max_height = allocation.height - 72
 
-            # Resize picture to fit container
-            ratio = min(max_width / picture_width, max_height / picture_height)
-            self.picture_data = self.picture_data.scale_simple(
-                ratio * picture_width, ratio * picture_height, GdkPixbuf.InterpType.BILINEAR)
-
-            if GTK_API_VERSION >= 4:
-                self.picture.set_pixbuf(self.picture_data)
-            else:
-                self.picture.set_from_pixbuf(self.picture_data)
-
-            gc.collect()
+            data_stream = Gio.MemoryInputStream.new_from_data(data, None)
+            self.picture_data = GdkPixbuf.Pixbuf.new_from_stream_at_scale(
+                data_stream, max_width, max_height, preserve_aspect_ratio=True, cancellable=None)
+            self.set_pixbuf(self.picture_data)
 
             self.actual_zoom = 0
             self.picture_view.show()
@@ -304,67 +299,42 @@ class UserInfo(UserInterface):
             })
 
     def make_zoom_normal(self, *_args):
-        self.make_zoom_in(zoom=True)
+        self.actual_zoom = 0
+        self.set_pixbuf(self.picture_data)
 
     def make_zoom_in(self, *_args, zoom=None):
 
         def calc_zoom_in(w_h):
             return w_h + w_h * self.actual_zoom / 100 + w_h * self.zoom_factor / 100
 
-        import gc
-
-        if self.picture is None or self.picture_data is None or self.actual_zoom > 100:
+        if self.picture is None or self.picture_data is None or self.actual_zoom >= 100:
             return
 
-        width = self.picture_data.get_width()
-        height = self.picture_data.get_height()
+        self.actual_zoom += self.zoom_factor
+        width = calc_zoom_in(self.picture_data.get_width())
+        height = calc_zoom_in(self.picture_data.get_height())
 
-        if zoom:
-            self.actual_zoom = 0
-            picture_zoomed = self.picture_data
-
-        else:
-            self.actual_zoom += self.zoom_factor
-            picture_zoomed = self.picture_data.scale_simple(
-                calc_zoom_in(width), calc_zoom_in(height), GdkPixbuf.InterpType.BILINEAR)
-
-        if GTK_API_VERSION >= 4:
-            self.picture.set_pixbuf(picture_zoomed)
-        else:
-            self.picture.set_from_pixbuf(picture_zoomed)
-
-        del picture_zoomed
-        gc.collect()
+        picture_zoomed = self.picture_data.scale_simple(width, height, GdkPixbuf.InterpType.NEAREST)
+        self.set_pixbuf(picture_zoomed)
 
     def make_zoom_out(self, *_args):
 
         def calc_zoom_out(w_h):
             return w_h + w_h * self.actual_zoom / 100 - w_h * self.zoom_factor / 100
 
-        import gc
-
         if self.picture is None or self.picture_data is None:
             return
 
-        width = self.picture_data.get_width()
-        height = self.picture_data.get_height()
-
         self.actual_zoom -= self.zoom_factor
+        width = calc_zoom_out(self.picture_data.get_width())
+        height = calc_zoom_out(self.picture_data.get_height())
 
-        if calc_zoom_out(width) < 10 or calc_zoom_out(height) < 10:
+        if width < 42 or height < 42:
             self.actual_zoom += self.zoom_factor
             return
 
-        picture_zoomed = self.picture_data.scale_simple(
-            calc_zoom_out(width), calc_zoom_out(height), GdkPixbuf.InterpType.BILINEAR)
-
-        if GTK_API_VERSION >= 4:
-            self.picture.set_pixbuf(picture_zoomed)
-        else:
-            self.picture.set_from_pixbuf(picture_zoomed)
-
-        del picture_zoomed
-        gc.collect()
+        picture_zoomed = self.picture_data.scale_simple(width, height, GdkPixbuf.InterpType.NEAREST)
+        self.set_pixbuf(picture_zoomed)
 
     def show_connection_error(self):
 
@@ -493,7 +463,7 @@ class UserInfo(UserInterface):
         self.core.network_filter.ignore_user(self.user)
 
     def on_save_picture_response(self, selected, _data):
-        self.picture_data.savev(encode_path(selected, prefix=False), "jpeg", ["quality"], ["100"])
+        self.picture_data.savev(encode_path(selected, prefix=False), "png")
         log.add(_("Picture saved to %s"), selected)
 
     def on_save_picture(self, *_args):
@@ -505,7 +475,7 @@ class UserInfo(UserInterface):
             parent=self.frame.window,
             callback=self.on_save_picture_response,
             initial_folder=config.sections["transfers"]["downloaddir"],
-            initial_file="%s %s.jpg" % (self.user, time.strftime("%Y-%m-%d %H_%M_%S"))
+            initial_file="%s %s.png" % (self.user, time.strftime("%Y-%m-%d %H_%M_%S"))
         ).show()
 
     def on_scroll(self, _controller, _scroll_x, scroll_y):
