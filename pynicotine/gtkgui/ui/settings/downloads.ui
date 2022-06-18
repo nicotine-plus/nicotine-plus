@@ -215,7 +215,6 @@
             <child>
               <object class="GtkButton" id="IncompleteDir">
                 <property name="visible">True</property>
-                <property name="tooltip-text" translatable="yes">Where incomplete downloads are temporarily stored.</property>
                 <property name="valign">center</property>
               </object>
             </child>
@@ -260,7 +259,6 @@
             <child>
               <object class="GtkButton" id="UploadDir">
                 <property name="visible">True</property>
-                <property name="tooltip-text" translatable="yes">Where buddies&apos; uploads will be stored (with a subfolder created for each buddy).</property>
                 <property name="valign">center</property>
               </object>
             </child>
