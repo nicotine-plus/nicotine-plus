@@ -79,9 +79,9 @@ Build the application:
 python3 packaging/windows/setup.py bdist_msi
 ```
 
-When the application has finished building, it is located in the `build\exe.*\` subfolder. The installer is located in the `dist\` subfolder.
+When the application has finished building, it is located in the `build\package\` subfolder. The installer is located in the `dist\` subfolder.
 
-If you want to run the application, you can launch the executable `build\exe.*\Nicotine+.exe`.
+If you want to run the application, you can launch the executable `build\package\Nicotine+.exe`.
 
 ### Building a 32-bit (i686) Application and Installer
 
