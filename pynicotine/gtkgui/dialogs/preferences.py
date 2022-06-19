@@ -570,19 +570,19 @@ class SharesFrame(UserInterface):
 
         self.preferences.set_widgets_data(self.options)
 
-        for virtual, actual, *_unused in transfers["buddyshared"]:
+        for virtual, folder, *_unused in transfers["buddyshared"]:
 
             self.shareslist.insert_with_valuesv(-1, self.column_numbers, [
                 str(virtual),
-                str(actual),
+                str(folder),
                 True
             ])
 
-        for virtual, actual, *_unused in transfers["shared"]:
+        for virtual, folder, *_unused in transfers["shared"]:
 
             self.shareslist.insert_with_valuesv(-1, self.column_numbers, [
                 str(virtual),
-                str(actual),
+                str(folder),
                 False
             ])
 
@@ -601,6 +601,20 @@ class SharesFrame(UserInterface):
                 "buddysharestrustedonly": self.BuddySharesTrustedOnly.get_active()
             }
         }
+
+    def get_normalized_virtual_name(self, virtual_name):
+
+        # Remove slashes from share name to avoid path conflicts
+        virtual_name = virtual_name.replace('/', '_').replace('\\', '_')
+        new_virtual_name = str(virtual_name)
+
+        # Check if virtual share name is already in use
+        counter = 1
+        while new_virtual_name in (x[0] for x in self.shareddirs + self.bshareddirs):
+            new_virtual_name = virtual_name + str(counter)
+            counter += 1
+
+        return new_virtual_name
 
     def set_shared_dir_buddy_only(self, iterator, buddy_only):
 
@@ -639,20 +653,9 @@ class SharesFrame(UserInterface):
         if folder in (x[1] for x in self.shareddirs + self.bshareddirs):
             return
 
-        virtual = os.path.basename(os.path.normpath(folder))
-
-        # Remove slashes from share name to avoid path conflicts
-        virtual = virtual.replace('/', '_').replace('\\', '_')
-        virtual_final = virtual
-
-        # If the virtual share name is not already used
-        counter = 1
-        while virtual_final in (x[0] for x in self.shareddirs + self.bshareddirs):
-            virtual_final = virtual + str(counter)
-            counter += 1
-
+        virtual = self.get_normalized_virtual_name(os.path.basename(os.path.normpath(folder)))
         iterator = self.shareslist.insert_with_valuesv(-1, self.column_numbers, [
-            virtual_final,
+            virtual,
             folder,
             False
         ])
@@ -660,7 +663,7 @@ class SharesFrame(UserInterface):
         self.Shares.set_cursor(self.shareslist.get_path(iterator))
         self.Shares.grab_focus()
 
-        self.shareddirs.append((virtual_final, folder))
+        self.shareddirs.append((virtual, folder))
         self.rescan_required = True
 
     def on_add_shared_dir_selected(self, selected, _data):
@@ -685,25 +688,23 @@ class SharesFrame(UserInterface):
         if not virtual:
             return
 
-        # Remove slashes from share name to avoid path conflicts
+        virtual = self.get_normalized_virtual_name(virtual)
         iterator = self.shareslist.get_iter(path)
-        virtual = virtual.replace('/', '_').replace('\\', '_')
-        directory = self.shareslist.get_value(iterator, 1)
-        oldvirtual = self.shareslist.get_value(iterator, 0)
-        oldmapping = (oldvirtual, directory)
-        newmapping = (virtual, directory)
+        folder = self.shareslist.get_value(iterator, 1)
+        old_virtual = self.shareslist.get_value(iterator, 0)
+        old_mapping = (old_virtual, folder)
+        new_mapping = (virtual, folder)
 
-        self.set_shared_dir_buddy_only(iterator, buddy_only)
-        self.shareslist.set_value(iterator, 0, virtual)
-
-        if oldmapping in self.bshareddirs:
+        if old_mapping in self.bshareddirs:
             shared_dirs = self.bshareddirs
         else:
             shared_dirs = self.shareddirs
 
-        shared_dirs.remove(oldmapping)
-        shared_dirs.append(newmapping)
+        shared_dirs.remove(old_mapping)
+        shared_dirs.append(new_mapping)
 
+        self.shareslist.set_value(iterator, 0, virtual)
+        self.set_shared_dir_buddy_only(iterator, buddy_only)
         self.rescan_required = True
 
     def on_edit_shared_dir(self, *_args):
@@ -735,8 +736,8 @@ class SharesFrame(UserInterface):
         for path in reversed(paths):
             iterator = model.get_iter(path)
             virtual = model.get_value(iterator, 0)
-            actual = model.get_value(iterator, 1)
-            mapping = (virtual, actual)
+            folder = model.get_value(iterator, 1)
+            mapping = (virtual, folder)
 
             if mapping in self.bshareddirs:
                 self.bshareddirs.remove(mapping)
