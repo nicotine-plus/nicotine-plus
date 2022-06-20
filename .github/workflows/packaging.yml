@@ -89,13 +89,13 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: windows-${{ matrix.arch }}-installer
-          path: dist/*.msi
+          path: packaging/windows/build/*.msi
 
       - name: Archive package artifacts
         uses: actions/upload-artifact@v2
         with:
           name: windows-${{ matrix.arch }}-package
-          path: build/package
+          path: packaging/windows/build/package
 
   macos:
     runs-on: macos-10.15
