@@ -53,6 +53,7 @@ sys.path.append(PROJECT_PATH)
 from pynicotine.config import config  # noqa: E402  # pylint: disable=import-error,wrong-import-position
 
 APPLICATION_NAME = config.application_name
+APPLICATION_ID = config.application_id
 VERSION = config.version
 AUTHOR = config.author
 COPYRIGHT = config.copyright
@@ -269,7 +270,15 @@ setup(
         ),
         "bdist_mac": dict(
             bundle_name=APPLICATION_NAME,
-            iconfile=os.path.join(CURRENT_PATH, ICON_NAME)
+            iconfile=os.path.join(CURRENT_PATH, ICON_NAME),
+            plist_items=[
+                ("CFBundleName", APPLICATION_NAME),
+                ("CFBundleIdentifier", APPLICATION_ID),
+                ("CFBundleShortVersionString", VERSION),
+                ("CFBundleVersion", VERSION),
+                ("CFBundleInfoDictionaryVersion", "6.0"),
+                ("NSHumanReadableCopyright", COPYRIGHT)
+            ]
         ),
         "bdist_dmg": dict(
             applications_shortcut=True
