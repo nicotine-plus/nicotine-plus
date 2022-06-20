@@ -30,3 +30,5 @@ debian/files
 nicotine_plus.egg-info/
 packaging/flatpak/build-dir/
 packaging/flatpak/.flatpak-builder/
+packaging/macos/build/
+packaging/windows/build/
