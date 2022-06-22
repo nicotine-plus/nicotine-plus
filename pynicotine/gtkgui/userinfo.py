@@ -22,6 +22,7 @@
 
 import time
 
+from gi.repository import Gdk
 from gi.repository import GdkPixbuf
 from gi.repository import Gio
 from gi.repository import GLib
@@ -453,7 +454,7 @@ class UserInfo(UserInterface):
             initial_file="%s %s.png" % (self.user, time.strftime("%Y-%m-%d %H_%M_%S"))
         ).show()
 
-    def on_scroll(self, _controller, _scroll_x, scroll_y):
+    def on_scroll(self, _controller=None, _scroll_x=0, scroll_y=0):
 
         if scroll_y < 0:
             self.make_zoom_in()
@@ -464,10 +465,14 @@ class UserInfo(UserInterface):
 
     def on_scroll_event(self, _widget, event):
 
-        if event.get_scroll_deltas().delta_y < 0:
-            self.make_zoom_in()
-        else:
+        if event.direction == Gdk.ScrollDirection.SMOOTH:
+            return self.on_scroll(scroll_y=event.delta_y)
+
+        if event.direction == Gdk.ScrollDirection.DOWN:
             self.make_zoom_out()
+
+        elif event.direction == Gdk.ScrollDirection.UP:
+            self.make_zoom_in()
 
         return True
 
