@@ -151,11 +151,7 @@ def run():
 
         # Set up paths for frozen binaries (Windows and macOS)
         executable_folder = os.path.dirname(sys.executable)
-        os.environ["XDG_DATA_DIRS"] = os.path.join(executable_folder, "share")
-        os.environ["GDK_PIXBUF_MODULE_FILE"] = os.path.join(executable_folder,
-                                                            "lib/gdk-pixbuf-2.0/2.10.0/loaders.cache")
-        os.environ["GI_TYPELIB_PATH"] = os.path.join(executable_folder, "lib/girepository-1.0")
-        os.environ["SSL_CERT_FILE"] = os.path.join(executable_folder, "share/ssl/cert.pem")
+        os.environ["SSL_CERT_FILE"] = os.path.join(executable_folder, "lib/cert.pem")
 
         # Support file scanning process in frozen binaries
         multiprocessing.freeze_support()
