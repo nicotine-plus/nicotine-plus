@@ -83,6 +83,19 @@ def check_gui_dependencies():
 def run_gui(core, trayicon, hidden, bindip, port, ci_mode, multi_instance):
     """ Run Nicotine+ GTK GUI """
 
+    if getattr(sys, 'frozen', False):
+        # Set up paths for frozen binaries (Windows and macOS)
+        executable_folder = os.path.dirname(sys.executable)
+        resources_folder = executable_folder
+
+        if sys.platform == "darwin":
+            resources_folder = os.path.abspath(os.path.join(executable_folder, "..", "Resources"))
+
+        os.environ["XDG_DATA_DIRS"] = os.path.join(resources_folder, "share")
+        os.environ["GDK_PIXBUF_MODULE_FILE"] = os.path.join(executable_folder, "lib/pixbuf-loaders.cache")
+        os.environ["GI_TYPELIB_PATH"] = os.path.join(executable_folder, "lib/typelibs")
+        os.environ["GSETTINGS_SCHEMA_DIR"] = os.path.join(executable_folder, "lib/schemas")
+
     from pynicotine.logfacility import log
     error = check_gui_dependencies()
 

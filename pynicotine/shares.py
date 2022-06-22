@@ -718,7 +718,13 @@ class Shares:
 
         import multiprocessing
 
-        multiprocessing.set_start_method("fork" if sys.platform == "darwin" else "spawn", force=True)
+        # Frozen binaries only support fork (if not on Windows)
+        if sys.platform != "win32" and getattr(sys, 'frozen', False):
+            start_method = "fork"
+        else:
+            start_method = "spawn"
+
+        multiprocessing.set_start_method(start_method, force=True)
 
         scanner_queue = multiprocessing.Queue()
         scanner = Scanner(

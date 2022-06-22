@@ -73,11 +73,8 @@ def apply_translations():
 
     libintl_path = None
     executable_folder = os.path.dirname(sys.executable)
+    resources_folder = executable_folder
     _set_default_system_language()
-
-    # Local path where to find translation (mo) files
-    local_mo_path = os.path.join(BASE_FOLDER, "mo")
-    use_local_path = gettext.find(TRANSLATION_DOMAIN, localedir=local_mo_path)
 
     # Load library for translating non-Python content, e.g. GTK ui files
     if sys.platform == "win32":
@@ -91,38 +88,34 @@ def apply_translations():
 
         if getattr(sys, 'frozen', False):
             libintl_path = os.path.join(executable_folder, libintl_path)
+            resources_folder = os.path.abspath(os.path.join(executable_folder, "..", "Resources"))
+
+    # Local path where to find translation (mo) files
+    local_mo_path = os.path.join(BASE_FOLDER, "mo")
+    use_local_path = gettext.find(TRANSLATION_DOMAIN, localedir=local_mo_path)
+
+    if use_local_path:
+        mo_path = local_mo_path
+
+    elif getattr(sys, 'frozen', False):
+        mo_path = os.path.join(resources_folder, "share", "locale")
+
+    else:
+        mo_path = os.path.join(sys.prefix, "share", "locale")
 
     if libintl_path is not None:
         import ctypes
         libintl = ctypes.cdll.LoadLibrary(libintl_path)
-
-        if use_local_path:
-            mo_path = local_mo_path
-
-        elif getattr(sys, 'frozen', False):
-            mo_path = os.path.join(executable_folder, "share", "locale")
-
-        else:
-            mo_path = os.path.join(sys.prefix, "share", "locale")
 
         # Arguments need to be encoded, otherwise translations fail
         libintl.bindtextdomain(TRANSLATION_DOMAIN.encode(), mo_path.encode(sys.getfilesystemencoding()))
         libintl.bind_textdomain_codeset(TRANSLATION_DOMAIN.encode(), b"UTF-8")
 
     elif hasattr(locale, "bindtextdomain") and hasattr(locale, "textdomain"):
-        if use_local_path:
-            locale.bindtextdomain(TRANSLATION_DOMAIN, local_mo_path)
+        locale.bindtextdomain(TRANSLATION_DOMAIN, mo_path)
 
     # Install translations for Python
-    if use_local_path:
-        # Locales are in the current dir, use them
-        gettext.install(TRANSLATION_DOMAIN, local_mo_path)
-        return
-
-    # Locales are not in the current dir
-    # We let gettext handle the situation: if found them in the system dir
-    # the app will be translated, if not, it will be untranslated
-    gettext.install(TRANSLATION_DOMAIN)
+    gettext.install(TRANSLATION_DOMAIN, mo_path)
 
 
 def build_translations():
