@@ -121,11 +121,9 @@ jobs:
       - name: Freeze application
         run: |
           python3 packaging/macos/setup.py bdist_dmg
-          mkdir build/dmg/
-          mv build/*.dmg build/dmg/
 
       - name: Archive installer artifacts
         uses: actions/upload-artifact@v2
         with:
           name: macos-installer
-          path: build/dmg
+          path: packaging/macos/build/*.dmg
