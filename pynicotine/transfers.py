@@ -1074,8 +1074,8 @@ class Transfers:
                         # wipe any existing data in the incomplete file to avoid corruption
                         file_handle.truncate(0)
 
-                    file_handle.seek(0, 2)
-                    offset = file_handle.tell()
+                    # Seek to the end of the file for resuming the download
+                    offset = file_handle.seek(0, os.SEEK_END)
 
                 except OSError as error:
                     log.add(_("Download I/O error: %s"), error)
