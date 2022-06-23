@@ -1,6 +1,6 @@
 # Release Notes
 
-## Version 3.2.3rc1 (Release Candidate 1)
+## Version 3.2.3rc2 (Release Candidate 2)
 
 ### Changes
 
@@ -24,6 +24,7 @@
  * Fixed an issue where dark mode was used when light mode was enabled on some systems
  * Unmaximized size of the main window is now remembered after the window is maximized
  * Reduced memory usage after closing search tabs with many results
+ * Flatpak: network folders can now be shared
  * Various minor bug fixes
 
 ### Issues closed on GitHub
@@ -41,6 +42,7 @@
  * Time Left column regression ([#2020](https://github.com/nicotine-plus/nicotine-plus/issues/2020))
  * Clear ALL downloads, Clear ALL uploads not working ([#2023](https://github.com/nicotine-plus/nicotine-plus/issues/2023))
  * User note saves when pressing Cancel ([#2036](https://github.com/nicotine-plus/nicotine-plus/issues/2036))
+ * Column headings overlapping in the downloads tab ([#2090](https://github.com/nicotine-plus/nicotine-plus/issues/2090))
 
 
 ## Version 3.2.2 (March 19, 2022)

@@ -55,7 +55,7 @@ class Config:
         config_dir, self.data_dir = self.get_user_directories()
         self.filename = os.path.join(config_dir, "config")
         self.plugin_dir = os.path.join(self.data_dir, "plugins")
-        self.version = "3.2.3rc1"
+        self.version = "3.2.3rc2"
         self.python_version = sys.version
         self.gtk_version = ""
 
