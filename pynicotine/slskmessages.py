@@ -54,7 +54,7 @@ def increment_token(token):
 
 
 class InternalMessage:
-    pass
+    msgtype = "internal"
 
 
 class ServerConnect(InternalMessage):
@@ -2125,7 +2125,7 @@ Peer Init Messages
 
 
 class PeerInitMessage(SlskMessage):
-    pass
+    msgtype = "init"
 
 
 class PierceFireWall(PeerInitMessage):
