@@ -1153,7 +1153,6 @@ class Transfers:
                 # Open File
                 real_path = self.core.shares.virtual2real(i.filename)
                 file_handle = open(encode_path(real_path), "rb")  # pylint: disable=consider-using-with
-                offset = file_handle.tell()
 
             except OSError as error:
                 log.add(_("Upload I/O error: %s"), error)
@@ -1164,13 +1163,13 @@ class Transfers:
 
             else:
                 i.file = file_handle
-                i.last_byte_offset = offset
+                i.last_byte_offset = 0
                 i.queue_position = 0
 
                 self.core.statistics.append_stat_value("started_uploads", 1)
                 self.core.pluginhandler.upload_started_notification(i.user, i.filename, real_path)
 
-                if i.size > offset:
+                if i.size > 0:
                     i.status = "Transferring"
                     self.queue.append(slskmessages.UploadFile(i.sock, file=file_handle, size=i.size))
 
