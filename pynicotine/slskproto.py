@@ -914,7 +914,7 @@ class SlskProtoThread(threading.Thread):
             self.user_addresses[user] = addr = address
 
         if addr is None:
-            if self._init_msgs.get(user) is None:
+            if user not in self._init_msgs:
                 self._init_msgs[user] = []
 
             self._init_msgs[user].append(init)
