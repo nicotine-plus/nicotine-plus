@@ -1487,26 +1487,26 @@ class SlskProtoThread(threading.Thread):
                         log.add_conn("List of stored PeerInit messages: %s", str(self._init_msgs))
                         log.add_conn("Attempting to fetch PeerInit message for token %s", msg.token)
 
-                        conn_obj.init = self._init_msgs.pop(msg.token, None)
+                        conn_obj.init = init = self._init_msgs.pop(msg.token, None)
 
-                        if conn_obj.init is None:
+                        if init is None:
                             log.add_conn(("Indirect connection attempt with token %s previously expired, "
                                           "closing connection"), msg.token)
                             conn_obj.ibuf = bytearray()
                             self.close_connection(self._conns, conn_obj.sock)
                             return
 
-                        self._init_msgs[conn_obj.init.target_user + conn_obj.init.conn_type] = conn_obj.init
-                        conn_obj.init.sock = conn_obj.sock
-                        self._out_indirect_conn_request_times.pop(conn_obj.init, None)
+                        self._init_msgs[init.target_user + init.conn_type] = init
+                        init.sock = conn_obj.sock
+                        self._out_indirect_conn_request_times.pop(init, None)
 
                         log.add_conn("Indirect connection to user %(user)s with token %(token)s established", {
-                            "user": conn_obj.init.target_user,
+                            "user": init.target_user,
                             "token": msg.token
                         })
 
                         conn_obj.indirect = True
-                        self.process_conn_messages(conn_obj.init)
+                        self.process_conn_messages(init)
 
                     elif msg_class is PeerInit:
                         user = msg.target_user
@@ -1933,26 +1933,26 @@ class SlskProtoThread(threading.Thread):
 
     """ Connection I/O """
 
-    def process_conn_input(self, connection, conn_obj):
+    def process_conn_input(self, conn_obj):
 
-        if connection is self.server_socket:
+        if conn_obj.sock is self.server_socket:
             self.process_server_input(conn_obj, conn_obj.ibuf)
+            return
 
-        elif conn_obj.init is None:
+        init = conn_obj.init
+
+        if init is None:
             self.process_peer_init_input(conn_obj, conn_obj.ibuf)
+            return
 
-        elif conn_obj.init is not None and conn_obj.init.conn_type == 'P':
+        if init.conn_type == 'P':
             self.process_peer_input(conn_obj, conn_obj.ibuf)
 
-        elif conn_obj.init is not None and conn_obj.init.conn_type == 'F':
+        elif init.conn_type == 'F':
             self.process_file_input(conn_obj, conn_obj.ibuf)
 
-        elif conn_obj.init is not None and conn_obj.init.conn_type == 'D':
+        elif init.conn_type == 'D':
             self.process_distrib_input(conn_obj, conn_obj.ibuf)
-
-        else:
-            # Unknown message type
-            log.add("Can't handle connection type %s", conn_obj.init.conn_type)
 
     def process_conn_output(self):
         """ Processes messages sent by the main thread. queue holds the messages,
@@ -2268,7 +2268,7 @@ class SlskProtoThread(threading.Thread):
                         continue
 
                 if conn_obj.ibuf:
-                    self.process_conn_input(sock, conn_obj)
+                    self.process_conn_input(conn_obj)
 
                 if sock in output_list:
                     if self._is_upload(conn_obj):
