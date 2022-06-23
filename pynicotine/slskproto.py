@@ -53,14 +53,12 @@ from pynicotine.slskmessages import DistribBranchLevel
 from pynicotine.slskmessages import DistribBranchRoot
 from pynicotine.slskmessages import DistribChildDepth
 from pynicotine.slskmessages import DistribEmbeddedMessage
-from pynicotine.slskmessages import DistribMessage
 from pynicotine.slskmessages import DistribSearch
 from pynicotine.slskmessages import DownloadConnClose
 from pynicotine.slskmessages import DownloadFile
 from pynicotine.slskmessages import DownloadFileError
 from pynicotine.slskmessages import EmbeddedMessage
 from pynicotine.slskmessages import ExactFileSearch
-from pynicotine.slskmessages import FileMessage
 from pynicotine.slskmessages import FileOffset
 from pynicotine.slskmessages import FileDownloadInit
 from pynicotine.slskmessages import FileUploadInit
@@ -97,8 +95,6 @@ from pynicotine.slskmessages import ParentInactivityTimeout
 from pynicotine.slskmessages import ParentMinSpeed
 from pynicotine.slskmessages import ParentSpeedRatio
 from pynicotine.slskmessages import PeerInit
-from pynicotine.slskmessages import PeerInitMessage
-from pynicotine.slskmessages import PeerMessage
 from pynicotine.slskmessages import PierceFireWall
 from pynicotine.slskmessages import PlaceholdUpload
 from pynicotine.slskmessages import PlaceInLineResponse
@@ -148,7 +144,6 @@ from pynicotine.slskmessages import SendNetworkMessage
 from pynicotine.slskmessages import SendUploadSpeed
 from pynicotine.slskmessages import ServerConnect
 from pynicotine.slskmessages import ServerDisconnect
-from pynicotine.slskmessages import ServerMessage
 from pynicotine.slskmessages import ServerPing
 from pynicotine.slskmessages import ServerTimeout
 from pynicotine.slskmessages import SetConnectionStats
@@ -370,6 +365,8 @@ class SlskProtoThread(threading.Thread):
         CantConnectToPeer: 1001,
         CantCreateRoom: 1003
     }
+
+    peerconntypes = ('P', 'F', 'D')
 
     peerinitcodes = {
         PierceFireWall: 0,
@@ -863,6 +860,9 @@ class SlskProtoThread(threading.Thread):
 
         init = None
         conn_type = message.msgtype
+
+        if conn_type not in self.peerconntypes:
+            return
 
         if conn_type != 'F':
             # Check if there's already a connection for the specified username
@@ -1931,9 +1931,66 @@ class SlskProtoThread(threading.Thread):
 
         self.modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
 
-    """ Connection I/O """
+    """ Internal Messages """
 
-    def process_conn_input(self, conn_obj):
+    def process_internal_messages(self, msg_obj):
+
+        msg_class = msg_obj.__class__
+
+        if msg_class is InitPeerConn:
+            if self._numsockets < MAXSOCKETS:
+                self.init_peer_conn(msg_obj)
+            else:
+                # Connection limit reached, re-queue
+                self._queue.append(msg_obj)
+
+        elif msg_class is ConnClose and msg_obj.sock in self._conns:
+            sock = msg_obj.sock
+            self.close_connection(self._conns, sock)
+
+        elif msg_class is ConnCloseIP:
+            self.close_connection_by_ip(msg_obj.addr)
+
+        elif msg_class is ServerConnect:
+            self.server_connect(msg_obj)
+
+        elif msg_class is ServerDisconnect:
+            self.manual_server_disconnect = True
+            self.server_disconnect()
+
+        elif msg_class is DownloadFile and msg_obj.sock in self._conns:
+            self._conns[msg_obj.sock].filedown = msg_obj
+            self.total_downloads += 1
+            self._calc_download_limit()
+
+        elif msg_class is UploadFile and msg_obj.sock in self._conns:
+            self._conns[msg_obj.sock].fileupl = msg_obj
+            self.total_uploads += 1
+            self._calc_upload_limit_function()
+
+        elif msg_class is SetDownloadLimit:
+            self._download_limit = msg_obj.limit * 1024
+            self._calc_download_limit()
+
+        elif msg_class is SetUploadLimit:
+            if msg_obj.uselimit:
+                if msg_obj.limitby:
+                    self._calc_upload_limit_function = self._calc_upload_limit
+                else:
+                    self._calc_upload_limit_function = self._calc_upload_limit_by_transfer
+
+            else:
+                self._calc_upload_limit_function = self._calc_upload_limit_none
+
+            self._upload_limit = msg_obj.limit * 1024
+            self._calc_upload_limit_function()
+
+        elif msg_class is SendNetworkMessage:
+            self.send_message_to_peer(msg_obj.user, msg_obj.message, msg_obj.addr)
+
+    """ Input/Output """
+
+    def process_conn_incoming_messages(self, conn_obj):
 
         if conn_obj.sock is self.server_socket:
             self.process_server_input(conn_obj, conn_obj.ibuf)
@@ -1954,9 +2011,7 @@ class SlskProtoThread(threading.Thread):
         elif init.conn_type == 'D':
             self.process_distrib_input(conn_obj, conn_obj.ibuf)
 
-    def process_conn_output(self):
-        """ Processes messages sent by the main thread. queue holds the messages,
-        conns and connsinprogress are dictionaries holding Connection messages. """
+    def process_queue_messages(self):
 
         msg_list = self._queue.copy()
         self._queue.clear()
@@ -1966,73 +2021,25 @@ class SlskProtoThread(threading.Thread):
                 # Disconnected from server, stop processing queue
                 return
 
-            msg_class = msg_obj.__class__
+            msg_type = msg_obj.msgtype
 
-            if msg_class is InitPeerConn:
-                if self._numsockets < MAXSOCKETS:
-                    self.init_peer_conn(msg_obj)
-                else:
-                    # Connection limit reached, re-queue
-                    self._queue.append(msg_obj)
-
-            elif issubclass(msg_class, PeerInitMessage):
+            if msg_type == "init":
                 self.process_peer_init_output(msg_obj)
 
-            elif issubclass(msg_class, PeerMessage):
+            elif msg_type == "internal":
+                self.process_internal_messages(msg_obj)
+
+            elif msg_type == 'P':
                 self.process_peer_output(msg_obj)
 
-            elif issubclass(msg_class, DistribMessage):
+            elif msg_type == 'D':
                 self.process_distrib_output(msg_obj)
 
-            elif issubclass(msg_class, FileMessage):
+            elif msg_type == 'F':
                 self.process_file_output(msg_obj)
 
-            elif issubclass(msg_class, ServerMessage):
+            elif msg_type == 'S':
                 self.process_server_output(msg_obj)
-
-            elif msg_class is ConnClose and msg_obj.sock in self._conns:
-                sock = msg_obj.sock
-                self.close_connection(self._conns, sock)
-
-            elif msg_class is ConnCloseIP:
-                self.close_connection_by_ip(msg_obj.addr)
-
-            elif msg_class is ServerConnect:
-                self.server_connect(msg_obj)
-
-            elif msg_class is ServerDisconnect:
-                self.manual_server_disconnect = True
-                self.server_disconnect()
-
-            elif msg_class is DownloadFile and msg_obj.sock in self._conns:
-                self._conns[msg_obj.sock].filedown = msg_obj
-                self.total_downloads += 1
-                self._calc_download_limit()
-
-            elif msg_class is UploadFile and msg_obj.sock in self._conns:
-                self._conns[msg_obj.sock].fileupl = msg_obj
-                self.total_uploads += 1
-                self._calc_upload_limit_function()
-
-            elif msg_class is SetDownloadLimit:
-                self._download_limit = msg_obj.limit * 1024
-                self._calc_download_limit()
-
-            elif msg_class is SetUploadLimit:
-                if msg_obj.uselimit:
-                    if msg_obj.limitby:
-                        self._calc_upload_limit_function = self._calc_upload_limit
-                    else:
-                        self._calc_upload_limit_function = self._calc_upload_limit_by_transfer
-
-                else:
-                    self._calc_upload_limit_function = self._calc_upload_limit_none
-
-                self._upload_limit = msg_obj.limit * 1024
-                self._calc_upload_limit_function()
-
-            elif msg_class is SendNetworkMessage:
-                self.send_message_to_peer(msg_obj.user, msg_obj.message, msg_obj.addr)
 
     def read_data(self, conn_obj):
 
@@ -2152,9 +2159,9 @@ class SlskProtoThread(threading.Thread):
                 self.total_upload_bandwidth = 0
                 self._last_conn_stat_time = current_time
 
-            # Process outgoing messages
+            # Process queue messages
             if self._queue:
-                self.process_conn_output()
+                self.process_queue_messages()
 
             # Check which connections are ready to send/receive data
             try:
@@ -2268,7 +2275,7 @@ class SlskProtoThread(threading.Thread):
                         continue
 
                 if conn_obj.ibuf:
-                    self.process_conn_input(conn_obj)
+                    self.process_conn_incoming_messages(conn_obj)
 
                 if sock in output_list:
                     if self._is_upload(conn_obj):
