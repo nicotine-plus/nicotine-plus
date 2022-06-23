@@ -267,6 +267,8 @@ class SlskProtoThread(threading.Thread):
     with length and message code followed by the actual message data.
     The codes are listed below. """
 
+    peerconntypes = ('P', 'F', 'D')
+
     servercodes = {
         Login: 1,
         SetWaitPort: 2,
@@ -365,14 +367,10 @@ class SlskProtoThread(threading.Thread):
         CantConnectToPeer: 1001,
         CantCreateRoom: 1003
     }
-
-    peerconntypes = ('P', 'F', 'D')
-
     peerinitcodes = {
         PierceFireWall: 0,
         PeerInit: 1
     }
-
     peercodes = {
         GetSharedFileList: 4,
         SharedFileList: 5,
@@ -394,7 +392,6 @@ class SlskProtoThread(threading.Thread):
         UploadQueueNotification: 52,  # Deprecated
         UnknownPeerMessage: 12547
     }
-
     distribcodes = {
         DistribAlive: 0,
         DistribSearch: 3,
@@ -403,6 +400,11 @@ class SlskProtoThread(threading.Thread):
         DistribChildDepth: 7,         # Deprecated
         DistribEmbeddedMessage: 93
     }
+
+    serverclasses = {v: k for k, v in servercodes.items()}
+    peerinitclasses = {v: k for k, v in peerinitcodes.items()}
+    peerclasses = {v: k for k, v in peercodes.items()}
+    distribclasses = {v: k for k, v in distribcodes.items()}
 
     IN_PROGRESS_STALE_AFTER = 2
     CONNECTION_MAX_IDLE = 60
@@ -430,22 +432,6 @@ class SlskProtoThread(threading.Thread):
         self.portrange = (port, port) if port else port_range
         self.interface = interface
         self._eventprocessor = eventprocessor
-
-        self.serverclasses = {}
-        for code_class, code_id in self.servercodes.items():
-            self.serverclasses[code_id] = code_class
-
-        self.peerinitclasses = {}
-        for code_class, code_id in self.peerinitcodes.items():
-            self.peerinitclasses[code_id] = code_class
-
-        self.peerclasses = {}
-        for code_class, code_id in self.peercodes.items():
-            self.peerclasses[code_id] = code_class
-
-        self.distribclasses = {}
-        for code_class, code_id in self.distribcodes.items():
-            self.distribclasses[code_id] = code_class
 
         # Select Networking Input and Output sockets
         self.selector = selectors.DefaultSelector()
