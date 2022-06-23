@@ -21,6 +21,7 @@
 This module implements Soulseek networking protocol.
 """
 
+import copy
 import selectors
 import socket
 import struct
@@ -1725,7 +1726,7 @@ class SlskProtoThread(threading.Thread):
                 # We save resources by not sending data back to the NicotineCore
                 # every time a part of a file is downloaded
 
-                self._callback_msgs.append(conn_obj.filedown)
+                self._callback_msgs.append(copy.copy(conn_obj.filedown))
                 conn_obj.lastcallback = current_time
 
             if finished:
@@ -1748,7 +1749,7 @@ class SlskProtoThread(threading.Thread):
                     self.close_connection(self._conns, conn_obj.sock)
 
                 conn_obj.fileupl.offset = msg.offset
-                self._callback_msgs.append(conn_obj.fileupl)
+                self._callback_msgs.append(copy.copy(conn_obj.fileupl))
 
             msg_buffer = msg_buffer[msgsize:]
 
@@ -2110,7 +2111,7 @@ class SlskProtoThread(threading.Thread):
                     # We save resources by not sending data back to the NicotineCore
                     # every time a part of a file is uploaded
 
-                    self._callback_msgs.append(conn_obj.fileupl)
+                    self._callback_msgs.append(copy.copy(conn_obj.fileupl))
                     conn_obj.lastcallback = current_time
 
         if not conn_obj.obuf:
