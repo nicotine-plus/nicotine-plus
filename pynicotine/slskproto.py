@@ -1734,6 +1734,7 @@ class SlskProtoThread(threading.Thread):
 
             msg_buffer = msg_buffer[leftbytes:]
             conn_obj.filedown.leftbytes -= addedbytes_len
+            self.total_download_bandwidth += addedbytes_len
 
         elif conn_obj.fileupl is not None and conn_obj.fileupl.offset is None:
             msgsize = 8
@@ -2053,9 +2054,6 @@ class SlskProtoThread(threading.Thread):
 
         if not data:
             return False
-
-        if self._is_download(conn_obj):
-            self.total_download_bandwidth += len(data)
 
         return True
 
