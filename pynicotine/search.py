@@ -254,7 +254,7 @@ class Search:
 
     def do_wishlist_search(self, token, text):
 
-        log.add_debug("Performing wishlist search for \"%s\"", text)
+        log.add_search(_("Searching for wishlist item \"%s\""), text)
 
         self.add_allowed_token(token)
         self.queue.append(slskmessages.WishlistSearch(token, text))
@@ -320,11 +320,10 @@ class Search:
         log.add_msg_contents(msg)
 
         self.wishlist_interval = msg.seconds
+        log.add_search(_("Wishlist wait period set to %s seconds"), msg.seconds)
 
         if self.ui_callback:
             self.ui_callback.set_wishlist_interval(msg)
-
-        log.add_search(_("Wishlist wait period set to %s seconds"), msg.seconds)
 
     def file_search_result(self, msg):
         """ Peer message: 9 """
