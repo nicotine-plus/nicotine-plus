@@ -1696,31 +1696,36 @@ class SlskProtoThread(threading.Thread):
         from the msg_buffer, creates message objects and returns them
         and the rest of the msg_buffer. """
 
+        msg_buffer_mem = memoryview(msg_buffer)
+        idx = 0
+
         if conn_obj.fileinit is None:
-            msgsize = 4
-            msg = self.unpack_network_message(FileDownloadInit, msg_buffer[:msgsize], msgsize, "file", conn_obj.init)
+            msgsize = idx = 4
+            msg = self.unpack_network_message(
+                FileDownloadInit, msg_buffer_mem[:msgsize], msgsize, "file", conn_obj.init)
 
             if msg is not None and msg.token is not None:
                 self._callback_msgs.append(msg)
                 conn_obj.fileinit = msg
 
-            msg_buffer = msg_buffer[msgsize:]
-
         elif conn_obj.filedown is not None:
-            leftbytes = conn_obj.filedown.leftbytes
-            addedbytes = msg_buffer[:leftbytes]
-            addedbytes_len = len(addedbytes)
+            idx = conn_obj.filedown.leftbytes
+            added_bytes = msg_buffer_mem[:idx]
 
-            if addedbytes_len > 0:
+            if added_bytes:
                 try:
-                    conn_obj.filedown.file.write(addedbytes)
+                    conn_obj.filedown.file.write(added_bytes)
 
                 except (OSError, ValueError) as error:
                     self._callback_msgs.append(DownloadFileError(conn_obj.sock, conn_obj.filedown.file, error))
                     self.close_connection(self._conns, conn_obj.sock)
 
+                added_bytes_len = len(added_bytes)
+                self.total_download_bandwidth += added_bytes_len
+                conn_obj.filedown.leftbytes -= added_bytes_len
+
             current_time = time.time()
-            finished = ((leftbytes - addedbytes_len) == 0)
+            finished = (conn_obj.filedown.leftbytes == 0)
 
             if finished or (current_time - conn_obj.lastcallback) > 1:
                 # We save resources by not sending data back to the NicotineCore
@@ -1732,13 +1737,9 @@ class SlskProtoThread(threading.Thread):
             if finished:
                 self.close_connection(self._conns, conn_obj.sock)
 
-            msg_buffer = msg_buffer[leftbytes:]
-            conn_obj.filedown.leftbytes -= addedbytes_len
-            self.total_download_bandwidth += addedbytes_len
-
         elif conn_obj.fileupl is not None and conn_obj.fileupl.offset is None:
-            msgsize = 8
-            msg = self.unpack_network_message(FileOffset, msg_buffer[:msgsize], msgsize, "file", conn_obj.init)
+            msgsize = idx = 8
+            msg = self.unpack_network_message(FileOffset, msg_buffer_mem[:msgsize], msgsize, "file", conn_obj.init)
 
             if msg is not None and msg.offset is not None:
                 try:
@@ -1752,9 +1753,7 @@ class SlskProtoThread(threading.Thread):
                 conn_obj.fileupl.offset = msg.offset
                 self._callback_msgs.append(copy.copy(conn_obj.fileupl))
 
-            msg_buffer = msg_buffer[msgsize:]
-
-        conn_obj.ibuf = msg_buffer
+        conn_obj.ibuf = msg_buffer[idx:]
 
     def process_file_output(self, msg_obj):
 
