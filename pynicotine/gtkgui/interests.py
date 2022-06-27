@@ -140,7 +140,6 @@ class Interests(UserInterface):
         cols["status"].get_widget().hide()
 
         self.similar_users_list_view.set_model(self.recommendation_users_model)
-        self.recommendation_users_model.set_sort_column_id(1, Gtk.SortType.ASCENDING)
 
         for thing in config.sections["interests"]["likes"]:
             if thing and isinstance(thing, str):
@@ -344,7 +343,8 @@ class Interests(UserInterface):
             self.core.watch_user(user, force_update=True)
 
     def similar_users(self, msg):
-        self.set_similar_users(msg.users)
+        # Sort users by rating (largest number of identical likes)
+        self.set_similar_users(sorted(msg.users.keys(), key=msg.users.get, reverse=True))
 
     def item_similar_users(self, msg):
         self.set_similar_users(msg.users, msg.thing)
