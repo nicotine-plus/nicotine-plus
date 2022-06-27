@@ -253,6 +253,9 @@ class Search:
             self.queue.append(slskmessages.UserSearch(user, self.token, text))
 
     def do_wishlist_search(self, token, text):
+
+        log.add_debug("Performing wishlist search for \"%s\"", text)
+
         self.add_allowed_token(token)
         self.queue.append(slskmessages.WishlistSearch(token, text))
 
