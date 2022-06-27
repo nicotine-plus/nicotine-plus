@@ -1548,7 +1548,7 @@ class EmbeddedMessage(ServerMessage):
 
     def parse_network_message(self, message):
         pos, self.distrib_code = self.unpack_uint8(message)
-        self.distrib_message = message[pos:]
+        self.distrib_message = message[pos:].tobytes()
 
 
 class AcceptChildren(ServerMessage):
@@ -3259,7 +3259,7 @@ class DistribSearch(DistribMessage):
     """ Search request that arrives through the distributed network.
     We transmit the search request to our child peers. """
 
-    __slots__ = ("unknown", "init", "user", "token", "searchterm")
+    __slots__ = ("init", "unknown", "user", "token", "searchterm")
 
     def __init__(self, init=None, unknown=None, user=None, token=None, searchterm=None):
         self.init = init
@@ -3287,25 +3287,30 @@ class DistribSearch(DistribMessage):
 class DistribBranchLevel(DistribMessage):
     """ Distrib code: 4 """
     """ We tell our distributed children what our position is in our branch (xth
-    generation) on the distributed network. """
+    generation) on the distributed network.
 
-    __slots__ = ("init", "value")
+    If we receive a branch level of 0 from a parent, we should mark the parent as
+    our branch root, since they won't send a DistribBranchRoot message in this case. """
 
-    def __init__(self, init=None, value=None):
+    __slots__ = ("init", "level")
+
+    def __init__(self, init=None, level=None):
         self.init = init
-        self.value = value
+        self.level = level
 
     def make_network_message(self):
-        return self.pack_int32(self.value)
+        return self.pack_int32(self.level)
 
     def parse_network_message(self, message):
-        _pos, self.value = self.unpack_int32(message)
+        _pos, self.level = self.unpack_int32(message)
 
 
 class DistribBranchRoot(DistribMessage):
     """ Distrib code: 5 """
     """ We tell our distributed children the username of the root of the branch
-    we’re in on the distributed network. """
+    we’re in on the distributed network.
+
+    This message should not be sent when we're the branch root. """
 
     __slots__ = ("init", "user")
 
@@ -3361,7 +3366,7 @@ class DistribEmbeddedMessage(DistribMessage):
 
     def parse_network_message(self, message):
         pos, self.distrib_code = self.unpack_uint8(message, 3)
-        self.distrib_message = message[pos:]
+        self.distrib_message = message[pos:].tobytes()
 
 
 """
