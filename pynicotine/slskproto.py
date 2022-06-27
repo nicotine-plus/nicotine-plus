@@ -1532,7 +1532,8 @@ class SlskProtoThread(threading.Thread):
             idx += msgsize_total
             buffer_len -= msgsize_total
 
-        conn_obj.ibuf = msg_buffer[idx:]
+        if idx:
+            conn_obj.ibuf = msg_buffer[idx:]
 
     def process_peer_init_output(self, msg_obj):
 
@@ -1656,7 +1657,8 @@ class SlskProtoThread(threading.Thread):
             idx += msgsize_total
             buffer_len -= msgsize_total
 
-        conn_obj.ibuf = msg_buffer[idx:]
+        if idx:
+            conn_obj.ibuf = msg_buffer[idx:]
 
         if search_result_received and not self.socket_still_active(sock):
             # Forcibly close peer connection. Only used after receiving a search result,
@@ -1753,7 +1755,8 @@ class SlskProtoThread(threading.Thread):
                 conn_obj.fileupl.offset = msg.offset
                 self._callback_msgs.append(copy.copy(conn_obj.fileupl))
 
-        conn_obj.ibuf = msg_buffer[idx:]
+        if idx:
+            conn_obj.ibuf = msg_buffer[idx:]
 
     def process_file_output(self, msg_obj):
 
@@ -1892,7 +1895,8 @@ class SlskProtoThread(threading.Thread):
             idx += msgsize_total
             buffer_len -= msgsize_total
 
-        conn_obj.ibuf = msg_buffer[idx:]
+        if idx:
+            conn_obj.ibuf = msg_buffer[idx:]
 
     def process_distrib_output(self, msg_obj):
 
