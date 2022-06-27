@@ -1523,7 +1523,7 @@ class SimilarUsers(ServerMessage):
     """ DEPRECATED, used in Soulseek NS but not SoulseekQt """
 
     def __init__(self):
-        self.users = []
+        self.users = {}
 
     def make_network_message(self):
         return b""
@@ -1533,9 +1533,9 @@ class SimilarUsers(ServerMessage):
 
         for _ in range(num):
             pos, user = self.unpack_string(message, pos)
-            pos, _rating = self.unpack_uint32(message, pos)
+            pos, rating = self.unpack_uint32(message, pos)
 
-            self.users.append(user)
+            self.users[user] = rating
 
 
 class ItemRecommendations(Recommendations):

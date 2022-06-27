@@ -1221,7 +1221,7 @@ The server sends us a list of similar users related to our interests.
     1.  **uint32** <ins>number of users</ins>
     2.  Iterate for <ins>number of user</ins>
         1.  **string** <ins>username</ins>
-        2.  **uint32** <ins>status</ins>
+        2.  **uint32** <ins>rating</ins>
 
 ## Server Code 111
 
