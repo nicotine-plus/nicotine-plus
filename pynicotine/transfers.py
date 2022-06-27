@@ -1728,7 +1728,7 @@ class Transfers:
 
     def get_folder_destination(self, user, directory, remove_prefix=""):
 
-        if not remove_prefix:
+        if not remove_prefix and '\\' in directory:
             remove_prefix = directory.rsplit('\\', 1)[0]
 
         # Get the last folders in directory path, excluding remove_prefix

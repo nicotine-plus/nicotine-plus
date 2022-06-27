@@ -183,9 +183,17 @@ class TransfersTest(unittest.TestCase):
         config.sections["transfers"]["usernamesubfolders"] = True
         destination_user = self.transfers.get_folder_destination(user, folder)
 
+        folder = "Hello"
+        destination_root = self.transfers.get_folder_destination(user, folder)
+
+        folder = "Hello\\Path\\Depth\\Test"
+        destination_depth = self.transfers.get_folder_destination(user, folder)
+
         self.assertEqual(destination_default, os.path.join(config.data_dir, "Path"))
         self.assertEqual(destination_custom, os.path.join("test", "Path"))
         self.assertEqual(destination_user, os.path.join(config.data_dir, "newuser", "Path"))
+        self.assertEqual(destination_root, os.path.join(config.data_dir, "newuser", "Hello"))
+        self.assertEqual(destination_depth, os.path.join(config.data_dir, "newuser", "Test"))
 
     def test_download_subfolders(self):
         """ Verify that subfolders are downloaded to the correct location """
