@@ -23,6 +23,11 @@ from pynicotine.logfacility import log
 from pynicotine.utils import http_request
 
 
+MULTICAST_HOST = "239.255.255.250"
+MULTICAST_PORT = 1900
+RESPONSE_TIME_SECONDS = 2
+
+
 class Router:
     def __init__(self, wan_ip_type, url_scheme, base_url, root_url, service_type, control_url):
         self.search_target = wan_ip_type
@@ -55,10 +60,10 @@ class SSDPRequest:
     def __init__(self, search_target):
 
         self.headers = {
-            "HOST": "%s:%s" % (SSDP.multicast_host, SSDP.multicast_port),
+            "HOST": "%s:%s" % (MULTICAST_HOST, MULTICAST_PORT),
             "ST": search_target,
             "MAN": '"ssdp:discover"',
-            "MX": str(SSDP.response_time_secs)
+            "MX": str(RESPONSE_TIME_SECONDS)
         }
 
     def sendto(self, sock, addr):
@@ -79,9 +84,6 @@ class SSDPRequest:
 
 
 class SSDP:
-    multicast_host = "239.255.255.250"
-    multicast_port = 1900
-    response_time_secs = 2
 
     @staticmethod
     def get_router_control_url(url_scheme, base_url, root_url):
@@ -147,13 +149,13 @@ class SSDP:
     @staticmethod
     def get_routers(private_ip):
 
-        log.add_debug("UPnP: Discovering... delay=%s seconds", SSDP.response_time_secs)
+        log.add_debug("UPnP: Discovering... delay=%s seconds", RESPONSE_TIME_SECONDS)
 
         # Create a UDP socket and set its timeout
         with socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM, proto=socket.IPPROTO_UDP) as sock:
-            sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, SSDP.response_time_secs)
+            sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, RESPONSE_TIME_SECONDS)
             sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-            sock.settimeout(SSDP.response_time_secs)
+            sock.settimeout(RESPONSE_TIME_SECONDS)
             sock.bind((private_ip, 0))
 
             # Protocol 1
@@ -161,23 +163,23 @@ class SSDP:
             wan_ppp1 = SSDPRequest("urn:schemas-upnp-org:service:WANPPPConnection:1")
             wan_igd1 = SSDPRequest("urn:schemas-upnp-org:device:InternetGatewayDevice:1")
 
-            wan_ip1.sendto(sock, (SSDP.multicast_host, SSDP.multicast_port))
+            wan_ip1.sendto(sock, (MULTICAST_HOST, MULTICAST_PORT))
             log.add_debug("UPnP: Sent M-SEARCH IP request 1")
 
-            wan_ppp1.sendto(sock, (SSDP.multicast_host, SSDP.multicast_port))
+            wan_ppp1.sendto(sock, (MULTICAST_HOST, MULTICAST_PORT))
             log.add_debug("UPnP: Sent M-SEARCH PPP request 1")
 
-            wan_igd1.sendto(sock, (SSDP.multicast_host, SSDP.multicast_port))
+            wan_igd1.sendto(sock, (MULTICAST_HOST, MULTICAST_PORT))
             log.add_debug("UPnP: Sent M-SEARCH IGD request 1")
 
             # Protocol 2
             wan_ip2 = SSDPRequest("urn:schemas-upnp-org:service:WANIPConnection:2")
             wan_igd2 = SSDPRequest("urn:schemas-upnp-org:device:InternetGatewayDevice:2")
 
-            wan_ip2.sendto(sock, (SSDP.multicast_host, SSDP.multicast_port))
+            wan_ip2.sendto(sock, (MULTICAST_HOST, MULTICAST_PORT))
             log.add_debug("UPnP: Sent M-SEARCH IP request 2")
 
-            wan_igd2.sendto(sock, (SSDP.multicast_host, SSDP.multicast_port))
+            wan_igd2.sendto(sock, (MULTICAST_HOST, MULTICAST_PORT))
             log.add_debug("UPnP: Sent M-SEARCH IGD request 2")
 
             routers = []
@@ -198,23 +200,6 @@ class SSDP:
 class UPnP:
     """ Class that handles UPnP Port Mapping """
 
-    request_body = ('<?xml version="1.0"?>\r\n'
-                    + '<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" '
-                    + 's:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">'
-                    + '<s:Body>'
-                    + '<u:AddPortMapping xmlns:u="%s">'
-                    + '<NewRemoteHost></NewRemoteHost>'
-                    + '<NewExternalPort>%s</NewExternalPort>'
-                    + '<NewProtocol>%s</NewProtocol>'
-                    + '<NewInternalPort>%s</NewInternalPort>'
-                    + '<NewInternalClient>%s</NewInternalClient>'
-                    + '<NewEnabled>1</NewEnabled>'
-                    + '<NewPortMappingDescription>%s</NewPortMappingDescription>'
-                    + '<NewLeaseDuration>%s</NewLeaseDuration>'
-                    + '</u:AddPortMapping>'
-                    + '</s:Body>'
-                    + '</s:Envelope>\r\n')
-
     def __init__(self, core, config):
 
         self.core = core
@@ -223,7 +208,8 @@ class UPnP:
 
         self.add_port_mapping()
 
-    def _request_port_mapping(self, router, protocol, public_port, private_ip, private_port,
+    @staticmethod
+    def _request_port_mapping(router, protocol, public_port, private_ip, private_port,
                               mapping_description, lease_duration):
         """
         Function that adds a port mapping to the router.
@@ -242,8 +228,26 @@ class UPnP:
             "SOAPACTION": '"%s#AddPortMapping"' % router.service_type
         }
 
-        body = (self.request_body % (router.service_type, public_port, protocol, private_port, private_ip,
-                                     mapping_description, lease_duration)).encode('utf-8')
+        body = (
+            ('<?xml version="1.0"?>\r\n'
+             + '<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" '
+             + 's:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">'
+             + '<s:Body>'
+             + '<u:AddPortMapping xmlns:u="%s">'
+             + '<NewRemoteHost></NewRemoteHost>'
+             + '<NewExternalPort>%s</NewExternalPort>'
+             + '<NewProtocol>%s</NewProtocol>'
+             + '<NewInternalPort>%s</NewInternalPort>'
+             + '<NewInternalClient>%s</NewInternalClient>'
+             + '<NewEnabled>1</NewEnabled>'
+             + '<NewPortMappingDescription>%s</NewPortMappingDescription>'
+             + '<NewLeaseDuration>%s</NewLeaseDuration>'
+             + '</u:AddPortMapping>'
+             + '</s:Body>'
+             + '</s:Envelope>\r\n') %
+            (router.service_type, public_port, protocol, private_port, private_ip,
+             mapping_description, lease_duration)
+        ).encode('utf-8')
 
         log.add_debug("UPnP: Add port mapping request headers: %s", headers)
         log.add_debug("UPnP: Add port mapping request contents: %s", body)
