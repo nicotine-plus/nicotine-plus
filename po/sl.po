@@ -8,18 +8,22 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-22 02:04+0300\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2022-06-23 21:58+0000\n"
+"Last-Translator: Han Boetes <hboetes@gmail.com>\n"
+"Language-Team: Slovenian <https://hosted.weblate.org/projects/nicotine-plus/"
+"nicotine-plus/sl/>\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n"
+"%100==4 ? 2 : 3;\n"
+"X-Generator: Weblate 4.13.1-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:8
 msgid "Nicotine+"
-msgstr "nikotin+"
+msgstr "Nicotine+"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:6
 #, fuzzy
