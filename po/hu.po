@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-22 02:04+0300\n"
-"PO-Revision-Date: 2022-06-15 22:14+0000\n"
+"PO-Revision-Date: 2022-06-28 01:18+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.13-dev\n"
+"X-Generator: Weblate 4.13.1-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:8
@@ -113,7 +113,7 @@ msgstr "port"
 
 #: pynicotine/__init__.py:64
 msgid "listen on the given port"
-msgstr "hallgatni a megadott porton"
+msgstr "a megadott porton hallgatni (figyelni)"
 
 #: pynicotine/__init__.py:68
 msgid "rescan shared files"
@@ -140,7 +140,7 @@ msgstr ""
 #, python-format
 msgid "Cannot find %(option1)s or %(option2)s, please install either one."
 msgstr ""
-"Nem található a(z) %(option1)s vagy a(z) %(option2)s program, kérjük "
+"Nem található a(z) %(option1)s vagy a(z) %(option2)s program, kérem "
 "telepítse valamelyiket."
 
 #: pynicotine/__init__.py:150
@@ -1284,7 +1284,7 @@ msgstr "Zimbabve"
 #: pynicotine/gtkgui/__init__.py:35 pynicotine/gtkgui/__init__.py:42
 #, python-format
 msgid "Cannot find %s, please install it."
-msgstr "Nem található a %s , kérjük telepítse."
+msgstr "Nem található a(z) %s , kérem telepítse."
 
 #: pynicotine/gtkgui/__init__.py:48
 msgid "Cannot import the Gtk module. Bad install of the python-gobject module?"
@@ -3609,7 +3609,7 @@ msgid ""
 msgstr ""
 "Súlyos hiba történt a megosztások újraellenőrzése közben. Ha a probléma "
 "továbbra is fennáll törölje a(z) %(dir)s/*.db fájlt és próbálja meg újra. Ha "
-"ez sem segít, kérjük küldjön hibajelentést, amelyben szerepel ez a verem-"
+"ez sem segít, kérem küldjön hibajelentést, amelyben szerepel ez a verem-"
 "nyomkövető: %(trace)s"
 
 #: pynicotine/shares.py:173
@@ -4339,9 +4339,8 @@ msgid "Add something you like…"
 msgstr "Adj hozzá valamit, amit tetszik…"
 
 #: pynicotine/gtkgui/ui/interests.ui:76
-#, fuzzy
 msgid "Personal Dislikes"
-msgstr "Személyes kellemetlenségek"
+msgstr "Személyes ellenszenv"
 
 #: pynicotine/gtkgui/ui/interests.ui:95
 msgid "Add something you dislike…"
@@ -4379,13 +4378,12 @@ msgid "Search term…"
 msgstr "Keresési kifejezés…"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:164
-#, fuzzy
 msgid ""
 "Search patterns: with a word = term, without a word = -term, partial word = "
 "*erm"
 msgstr ""
 "Keresési minták: tartalmaz egy szót = kifejezés, ne tartalmazza a szót = -"
-"kifejezés"
+"kifejezés, szórésszel = *ifejezés"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:201
 #, fuzzy
