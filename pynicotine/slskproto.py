@@ -666,12 +666,12 @@ class SlskProtoThread(threading.Thread):
     """ File Transfers """
 
     @staticmethod
-    def _is_upload(conn):
-        return conn.__class__ is PeerConnection and conn.fileupl is not None
+    def _is_upload(conn_obj):
+        return conn_obj.__class__ is PeerConnection and conn_obj.fileupl is not None
 
     @staticmethod
-    def _is_download(conn):
-        return conn.__class__ is PeerConnection and conn.filedown is not None
+    def _is_download(conn_obj):
+        return conn_obj.__class__ is PeerConnection and conn_obj.filedown is not None
 
     def _calc_upload_limit(self, limit_disabled=False, limit_per_transfer=False):
 
@@ -1259,7 +1259,7 @@ class SlskProtoThread(threading.Thread):
             server_socket.close()
             self.server_disconnect()
 
-    def process_server_input(self, conn, msg_buffer):
+    def process_server_input(self, conn_obj, msg_buffer):
         """ Server has sent us something, this function retrieves messages
         from the msg_buffer, creates message objects and returns them and the rest
         of the msg_buffer. """
@@ -1413,7 +1413,8 @@ class SlskProtoThread(threading.Thread):
             idx += msgsize_total
             buffer_len -= msgsize_total
 
-        conn.ibuf = msg_buffer[idx:]
+        if idx:
+            conn_obj.ibuf = msg_buffer[idx:]
 
     def process_server_output(self, msg_obj):
 
