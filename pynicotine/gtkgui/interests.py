@@ -329,6 +329,8 @@ class Interests(UserInterface):
         else:
             self.similar_users_label.set_label(_("Similar Users"))
 
+        self.recommendation_users_model.set_default_sort_func(lambda *_args: 0)
+        self.recommendation_users_model.set_sort_column_id(-1, Gtk.SortType.ASCENDING)
         self.recommendation_users_model.clear()
         self.recommendation_users = {}
 
