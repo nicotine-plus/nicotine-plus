@@ -548,6 +548,27 @@ class Transfers:
 
         return False
 
+    @staticmethod
+    def file_is_readable(filename, real_path):
+
+        try:
+            if os.access(encode_path(real_path), os.R_OK):
+                return True
+
+            log.add_transfer("Cannot access file, not sharing: %(virtual_name)s with real path %(path)s", {
+                "virtual_name": filename,
+                "path": real_path
+            })
+
+        except Exception:
+            log.add_transfer(("Requested file path contains invalid characters or other errors, not sharing: "
+                              "%(virtual_name)s with real path %(path)s"), {
+                "virtual_name": filename,
+                "path": real_path
+            })
+
+        return False
+
     """ Network Events """
 
     def get_user_status(self, msg):
@@ -1154,7 +1175,7 @@ class Transfers:
             except OSError as error:
                 log.add(_("Upload I/O error: %s"), error)
 
-                self.abort_transfer(i)
+                self.abort_transfer(i, reason="Remote file error", send_fail_message=True)
                 i.status = "Local file error"
                 self.check_upload_queue()
 
@@ -2119,6 +2140,9 @@ class Transfers:
         if limits and self.file_limit_reached(user):
             return False, "Too many files"
 
+        if not self.file_is_readable(filename, real_path):
+            return False, "File not shared."
+
         return True, None
 
     def check_download_queue_callback(self, _msg):
@@ -2390,7 +2414,7 @@ class Transfers:
                     }
                 )
 
-        elif send_fail_message and transfer in self.uploads and transfer.status == "Queued":
+        elif send_fail_message and transfer in self.uploads and transfer.status in ("Queued", "Getting status"):
             self.core.send_message_to_peer(
                 transfer.user, slskmessages.UploadDenied(None, file=transfer.filename, reason=reason))
 
