@@ -2838,6 +2838,7 @@ class Preferences(UserInterface):
                         obj.get_last_child().set_wrap(True)
                     else:
                         obj.get_child().set_line_wrap(True)
+                        obj.set_receives_default(True)
 
                 elif isinstance(obj, (Gtk.ComboBoxText, Gtk.SpinButton)):
                     if GTK_API_VERSION >= 4:
