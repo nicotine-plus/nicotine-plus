@@ -63,14 +63,14 @@
                                       <object class="GtkLabel">
                                         <property name="visible">True</property>
                                         <property name="label" translatable="yes">Folders</property>
-                                        <property name="mnemonic-widget">num_folders_button</property>
+                                        <property name="mnemonic-widget">_num_folders_button</property>
                                         <attributes>
                                           <attribute name="weight" value="bold"/>
                                         </attributes>
                                       </object>
                                     </child>
                                     <child>
-                                      <object class="GtkButton" id="num_folders_button">
+                                      <object class="GtkButton" id="_num_folders_button">
                                         <property name="visible">True</property>
                                         <child>
                                           <object class="GtkLabel" id="num_folders_label">
@@ -102,14 +102,14 @@
                                       <object class="GtkLabel">
                                         <property name="visible">True</property>
                                         <property name="label" translatable="yes">Shared</property>
-                                        <property name="mnemonic-widget">share_size_button</property>
+                                        <property name="mnemonic-widget">_share_size_button</property>
                                         <attributes>
                                           <attribute name="weight" value="bold"/>
                                         </attributes>
                                       </object>
                                     </child>
                                     <child>
-                                      <object class="GtkButton" id="share_size_button">
+                                      <object class="GtkButton" id="_share_size_button">
                                         <property name="visible">True</property>
                                         <child>
                                           <object class="GtkLabel" id="share_size_label">

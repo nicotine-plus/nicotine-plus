@@ -142,12 +142,10 @@ class UserBrowse(UserInterface):
             self.file_list_view,
             self.folder_tree_view,
             self.info_bar,
-            self.num_folders_button,
             self.num_folders_label,
             self.progress_bar,
             self.refresh_button,
             self.search_entry,
-            self.share_size_button,
             self.share_size_label
         ) = self.widgets
 

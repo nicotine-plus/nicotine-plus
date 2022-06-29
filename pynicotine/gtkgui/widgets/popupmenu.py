@@ -376,9 +376,6 @@ class UserPopupMenu(PopupMenu):
         self.model.remove(0)
         self.model.prepend_item(self.useritem)
 
-    def get_user(self):
-        return self.user
-
     def toggle_user_items(self):
 
         self.editing = True

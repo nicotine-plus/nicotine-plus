@@ -375,7 +375,6 @@ class ChatRoom(UserInterface):
             self.room_wall_button,
             self.speech_toggle,
             self.users_action_row,
-            self.users_button,
             self.users_container,
             self.users_label,
             self.users_list_view,
