@@ -543,7 +543,7 @@ class Transfers:
         statuses = ("Queued", "Getting status", "Transferring")
 
         for i in self.uploads:
-            if i.user == user and i.filename == filename and i.status in statuses:
+            if i.filename == filename and i.status in statuses and i.user == user:
                 return True
 
         return False
@@ -1468,7 +1468,7 @@ class Transfers:
                     queue_position += 1
 
                 # Stop counting on the matching file
-                if i.user == user and i.filename == filename:
+                if i.filename == filename and i.user == user:
                     transfer = i
                     break
 
@@ -1510,7 +1510,7 @@ class Transfers:
         filename = msg.filename
 
         for i in self.downloads:
-            if i.user == username and i.filename == filename and i.status == "Queued":
+            if i.filename == filename and i.status == "Queued" and i.user == username:
                 i.queue_position = msg.place
                 self.update_download(i, update_parent=False)
                 return
@@ -1526,7 +1526,7 @@ class Transfers:
 
         if transfer is None:
             for i in self.downloads:
-                if i.user == user and i.filename == filename and i.path == path:
+                if i.filename == filename and i.path == path and i.user == user:
                     if i.status == "Finished":
                         # Duplicate finished download found, verify that it's still present on disk later
                         transfer = i
@@ -1653,7 +1653,7 @@ class Transfers:
             transferobj.modifier = "privileged" if user in self.privileged_users else "prioritized"
 
         for i in self.uploads:
-            if i.user == user and i.filename == filename:
+            if i.filename == filename and i.user == user:
                 if i.status == "Queued":
                     # This upload was queued previously
                     # Use the previous queue position
