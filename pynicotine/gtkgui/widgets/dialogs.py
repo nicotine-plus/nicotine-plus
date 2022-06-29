@@ -331,7 +331,8 @@ class PluginSettingsDialog:
 
     def _add_boolean_option(self, option_name, option_value, description):
 
-        self.option_widgets[option_name] = button = Gtk.CheckButton(label=description, visible=True)
+        self.option_widgets[option_name] = button = Gtk.CheckButton(label=description, receives_default=True,
+                                                                    visible=True)
         self._generate_widget_container("", button)
         self.preferences.set_widget(button, option_value)
 
@@ -350,7 +351,7 @@ class PluginSettingsDialog:
 
         for option_label in items:
             widget_class = Gtk.CheckButton if GTK_API_VERSION >= 4 else Gtk.RadioButton
-            radio = widget_class(group=last_radio, label=option_label, visible=True)
+            radio = widget_class(group=last_radio, label=option_label, receives_default=True, visible=True)
 
             if not last_radio:
                 self.option_widgets[option_name] = radio
