@@ -38,6 +38,7 @@ class Statistics(UserInterface):
             self.completed_uploads_session_label,
             self.completed_uploads_total_label,
             self.container,
+            self.current_session_label,
             self.downloaded_size_session_label,
             self.downloaded_size_total_label,
             self.reset_button,
@@ -96,4 +97,5 @@ class Statistics(UserInterface):
         return True
 
     def show(self):
+        self.current_session_label.grab_focus()
         dialog_show(self.dialog)
