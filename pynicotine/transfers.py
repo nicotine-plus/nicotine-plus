@@ -548,27 +548,6 @@ class Transfers:
 
         return False
 
-    @staticmethod
-    def file_is_readable(filename, real_path):
-
-        try:
-            if os.access(encode_path(real_path), os.R_OK):
-                return True
-
-            log.add_transfer("Cannot access file, not sharing: %(virtual_name)s with real path %(path)s", {
-                "virtual_name": filename,
-                "path": real_path
-            })
-
-        except Exception:
-            log.add_transfer(("Requested file path contains invalid characters or other errors, not sharing: "
-                              "%(virtual_name)s with real path %(path)s"), {
-                "virtual_name": filename,
-                "path": real_path
-            })
-
-        return False
-
     """ Network Events """
 
     def get_user_status(self, msg):
@@ -2116,10 +2095,6 @@ class Transfers:
             self.core.shares.pending_network_msgs.append(msg)
             return False, None
 
-        # Do we actually share that file with the world?
-        if not self.core.shares.file_is_shared(user, filename, real_path):
-            return False, "File not shared."
-
         # Is that file already in the queue?
         if self.file_is_upload_queued(user, filename):
             return False, "Queued"
@@ -2139,7 +2114,8 @@ class Transfers:
         if limits and self.file_limit_reached(user):
             return False, "Too many files"
 
-        if not self.file_is_readable(filename, real_path):
+        # Do we actually share that file with the world?
+        if not self.core.shares.file_is_shared(user, filename, real_path):
             return False, "File not shared."
 
         return True, None
