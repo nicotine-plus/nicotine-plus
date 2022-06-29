@@ -701,7 +701,7 @@ class Transfers:
         })
 
         if not allowed:
-            if reason != "Queued":
+            if reason and reason != "Queued":
                 self.core.send_message_to_peer(user, slskmessages.UploadDenied(None, filename, reason))
 
             return
