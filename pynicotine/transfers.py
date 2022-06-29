@@ -599,7 +599,7 @@ class Transfers:
         """ We can't connect to the user, either way (QueueUpload). """
 
         for i in self.downloads:
-            if i.user != username or i.filename != filename:
+            if i.filename != filename or i.user != username:
                 continue
 
             i.status = "Connection timeout"
@@ -857,12 +857,11 @@ class Transfers:
         active_statuses = ("Getting status", "Transferring")
 
         for i in self.uploads:
-            if i.user != user:
+            if i.status not in active_statuses or i.user != user:
                 continue
 
-            if i.status in active_statuses:
-                already_downloading = True
-                break
+            already_downloading = True
+            break
 
         if not self.allow_new_uploads() or already_downloading:
             transfer = Transfer(user=user, filename=filename, path=os.path.dirname(real_path),
@@ -1021,7 +1020,7 @@ class Transfers:
             if i.sock is not None:
                 log.add_transfer("Download already has an existing file connection, ignoring init message")
                 self.queue.append(slskmessages.ConnClose(msg.init.sock))
-                continue
+                return
 
             incomplete_folder = self.config.sections["transfers"]["incompletedir"]
             needupdate = True
@@ -1136,7 +1135,7 @@ class Transfers:
             if i.sock is not None:
                 log.add_transfer("Upload already has an existing file connection, ignoring init message")
                 self.queue.append(slskmessages.ConnClose(msg.init.sock))
-                continue
+                return
 
             needupdate = True
             i.sock = msg.init.sock
@@ -1201,7 +1200,7 @@ class Transfers:
         filename = msg.file
 
         for i in self.downloads:
-            if i.user != user or i.filename != filename:
+            if i.filename != filename or i.user != user:
                 continue
 
             if i.status in ("Finished", "Paused"):
@@ -1246,7 +1245,7 @@ class Transfers:
         filename = msg.file
 
         for i in self.downloads:
-            if i.user != user or i.filename != filename:
+            if i.filename != filename or i.user != user:
                 continue
 
             if i.status in ("Finished", "Paused", "Download folder error", "Local file error", "User logged off"):
@@ -1881,8 +1880,10 @@ class Transfers:
     def folder_downloaded_actions(self, user, folderpath):
 
         # walk through downloads and break if any file in the same folder exists, else execute
+        statuses = ("Finished", "Paused", "Filtered")
+
         for i in self.downloads:
-            if i.status not in ("Finished", "Paused", "Filtered") and i.path == folderpath:
+            if i.path == folderpath and i.status not in statuses:
                 return
 
         config = self.config.sections
