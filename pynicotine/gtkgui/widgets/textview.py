@@ -153,6 +153,9 @@ class TextView:
             start_iter = buffer.get_start_iter()
             end_iter = buffer.get_iter_at_line(num_lines - self.max_num_lines)
 
+            if GTK_API_VERSION >= 4:
+                _position_found, end_iter = end_iter
+
             self.tag_urls.pop(end_iter, None)
             buffer.delete(start_iter, end_iter)
 
