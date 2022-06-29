@@ -636,6 +636,22 @@ class Shares:
             })
             return False
 
+        try:
+            if not os.access(encode_path(realfilename), os.R_OK):
+                log.add_transfer("Cannot access file, not sharing: %(virtual_name)s with real path %(path)s", {
+                    "virtual_name": virtualfilename,
+                    "path": realfilename
+                })
+                return False
+
+        except Exception:
+            log.add_transfer(("Requested file path contains invalid characters or other errors, not sharing: "
+                              "%(virtual_name)s with real path %(path)s"), {
+                "virtual_name": virtualfilename,
+                "path": realfilename
+            })
+            return False
+
         return True
 
     def get_compressed_shares_message(self, share_type):
