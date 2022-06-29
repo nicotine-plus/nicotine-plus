@@ -45,12 +45,12 @@ def generic_dialog(parent=None, content_box=None, buttons=None, default_response
 
     if buttons:
         for button, response_type in buttons:
-            if GTK_API_VERSION == 3 and response_type == default_response:
-                button.set_can_default(True)
-
             dialog.add_action_widget(button, response_type)
 
     if default_response:
+        if GTK_API_VERSION == 3:
+            dialog.get_widget_for_response(default_response).set_can_default(True)
+
         dialog.set_default_response(default_response)
 
     set_dialog_properties(dialog, parent, quit_callback, modal)
