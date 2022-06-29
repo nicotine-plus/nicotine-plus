@@ -26,7 +26,7 @@ from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
 """ Dialogs """
 
 
-def generic_dialog(parent=None, content_box=None, buttons=None, quit_callback=None,
+def generic_dialog(parent=None, content_box=None, buttons=None, default_response=None, quit_callback=None,
                    title="Dialog", width=400, height=400, modal=True):
 
     dialog = Gtk.Dialog(
@@ -45,7 +45,13 @@ def generic_dialog(parent=None, content_box=None, buttons=None, quit_callback=No
 
     if buttons:
         for button, response_type in buttons:
+            if GTK_API_VERSION == 3 and response_type == default_response:
+                button.set_can_default(True)
+
             dialog.add_action_widget(button, response_type)
+
+    if default_response:
+        dialog.set_default_response(default_response)
 
     set_dialog_properties(dialog, parent, quit_callback, modal)
     return dialog
@@ -260,9 +266,6 @@ class PluginSettingsDialog:
         ok_button = Gtk.Button(label=_("_OK"), use_underline=True, visible=True)
         ok_button.connect("clicked", self.on_ok)
 
-        if GTK_API_VERSION == 3:
-            ok_button.set_can_default(True)  # pylint: disable=no-member
-
         self.primary_container = Gtk.Box(
             orientation=Gtk.Orientation.VERTICAL, width_request=340, visible=True,
             margin_top=14, margin_bottom=14, margin_start=18, margin_end=18, spacing=12
@@ -278,13 +281,13 @@ class PluginSettingsDialog:
             content_box=scrolled_window,
             buttons=[(cancel_button, Gtk.ResponseType.CANCEL),
                      (ok_button, Gtk.ResponseType.OK)],
+            default_response=Gtk.ResponseType.OK,
             quit_callback=self.on_cancel,
             title=_("%s Settings") % plugin_name,
             width=600,
             height=425
         )
         self.dialog.get_style_context().add_class("preferences")
-        self.dialog.set_default_response(Gtk.ResponseType.OK)
 
         self._add_options()
 

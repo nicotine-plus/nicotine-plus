@@ -66,16 +66,13 @@ class FastConfigure(UserInterface):
             content_box=self.stack,
             buttons=[(self.previous_button, Gtk.ResponseType.HELP),
                      (self.next_button, Gtk.ResponseType.APPLY)],
+            default_response=Gtk.ResponseType.APPLY,
             quit_callback=self.hide,
             title=_("Setup Assistant"),
             width=720,
             height=450
         )
 
-        if GTK_API_VERSION == 3:
-            self.next_button.set_can_default(True)
-
-        self.dialog.set_default_response(Gtk.ResponseType.APPLY)
         self.main_icon.set_property("icon-name", config.application_id)
 
         # Page specific, share_page
