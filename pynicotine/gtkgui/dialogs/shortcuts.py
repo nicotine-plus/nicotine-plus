@@ -33,6 +33,7 @@ class Shortcuts(UserInterface):
 
         self.frame = frame
         set_dialog_properties(self.dialog, frame.window, quit_callback=self.hide)
+        frame.window.set_help_overlay(self.dialog)
 
         if hasattr(Gtk.Entry.props, "show-emoji-icon"):
             # Emoji picker only available in GTK 3.24+
