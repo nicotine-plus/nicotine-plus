@@ -184,14 +184,14 @@
                       <object class="GtkLabel">
                         <property name="visible">True</property>
                         <property name="label" translatable="yes">Users</property>
-                        <property name="mnemonic-widget">users_button</property>
+                        <property name="mnemonic-widget">_users_button</property>
                         <attributes>
                           <attribute name="weight" value="bold"/>
                         </attributes>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkButton" id="users_button">
+                      <object class="GtkButton" id="_users_button">
                         <property name="visible">True</property>
                         <signal name="clicked" handler="on_ignore_users_settings"/>
                         <child>

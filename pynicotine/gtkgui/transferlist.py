@@ -78,7 +78,6 @@ class TransferList(UserInterface):
         Accelerator("Delete", self.tree_view, self.on_clear_transfers_accelerator)
         Accelerator("<Alt>Return", self.tree_view, self.on_file_properties_accelerator)
 
-        self.last_ui_update = 0
         self.transfer_list = []
         self.users = {}
         self.paths = {}

@@ -410,7 +410,7 @@ class SlskProtoThread(threading.Thread):
     IN_PROGRESS_STALE_AFTER = 2
     CONNECTION_MAX_IDLE = 60
 
-    def __init__(self, core_callback, queue, bindip, interface, port, port_range, eventprocessor):
+    def __init__(self, core_callback, queue, bindip, interface, port, port_range):
         """ core_callback is a NicotineCore callback function to be called with messages
         list as a parameter. queue is deque object that holds network messages from
         NicotineCore. """
@@ -432,7 +432,6 @@ class SlskProtoThread(threading.Thread):
         self.listenport = None
         self.portrange = (port, port) if port else port_range
         self.interface = interface
-        self._eventprocessor = eventprocessor
 
         # Select Networking Input and Output sockets
         self.selector = selectors.DefaultSelector()

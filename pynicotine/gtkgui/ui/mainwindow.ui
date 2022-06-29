@@ -153,7 +153,7 @@
                                         <child>
                                           <object class="GtkComboBoxText" id="search_combobox">
                                             <property name="visible">True</property>
-                                            <property name="sensitive" bind-source="user_status_button" bind-property="sensitive" bind-flags="sync-create"/>
+                                            <property name="sensitive" bind-source="_user_status_button" bind-property="sensitive" bind-flags="sync-create"/>
                                             <property name="hexpand">True</property>
                                             <property name="has-entry">True</property>
                                             <child internal-child="entry">
@@ -339,14 +339,14 @@
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
                                                 <property name="label" translatable="yes">Users</property>
-                                                <property name="mnemonic-widget">download_users_button</property>
+                                                <property name="mnemonic-widget">_download_users_button</property>
                                                 <attributes>
                                                   <attribute name="weight" value="bold"/>
                                                 </attributes>
                                               </object>
                                             </child>
                                             <child>
-                                              <object class="GtkButton" id="download_users_button">
+                                              <object class="GtkButton" id="_download_users_button">
                                                 <property name="visible">True</property>
                                                 <property name="action-name">app.transferstatistics</property>
                                                 <child>
@@ -379,14 +379,14 @@
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
                                                 <property name="label" translatable="yes">Files</property>
-                                                <property name="mnemonic-widget">download_files_button</property>
+                                                <property name="mnemonic-widget">_download_files_button</property>
                                                 <attributes>
                                                   <attribute name="weight" value="bold"/>
                                                 </attributes>
                                               </object>
                                             </child>
                                             <child>
-                                              <object class="GtkButton" id="download_files_button">
+                                              <object class="GtkButton" id="_download_files_button">
                                                 <property name="visible">True</property>
                                                 <property name="action-name">app.transferstatistics</property>
                                                 <child>
@@ -579,14 +579,14 @@
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
                                                 <property name="label" translatable="yes">Users</property>
-                                                <property name="mnemonic-widget">upload_users_button</property>
+                                                <property name="mnemonic-widget">_upload_users_button</property>
                                                 <attributes>
                                                   <attribute name="weight" value="bold"/>
                                                 </attributes>
                                               </object>
                                             </child>
                                             <child>
-                                              <object class="GtkButton" id="upload_users_button">
+                                              <object class="GtkButton" id="_upload_users_button">
                                                 <property name="visible">True</property>
                                                 <property name="action-name">app.transferstatistics</property>
                                                 <child>
@@ -619,14 +619,14 @@
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
                                                 <property name="label" translatable="yes">Files</property>
-                                                <property name="mnemonic-widget">upload_files_button</property>
+                                                <property name="mnemonic-widget">_upload_files_button</property>
                                                 <attributes>
                                                   <attribute name="weight" value="bold"/>
                                                 </attributes>
                                               </object>
                                             </child>
                                             <child>
-                                              <object class="GtkButton" id="upload_files_button">
+                                              <object class="GtkButton" id="_upload_files_button">
                                                 <property name="visible">True</property>
                                                 <property name="action-name">app.transferstatistics</property>
                                                 <child>
@@ -805,7 +805,7 @@
                                     <child>
                                       <object class="GtkBox" id="userbrowse_title">
                                         <property name="visible">True</property>
-                                        <property name="sensitive" bind-source="user_status_button" bind-property="sensitive" bind-flags="sync-create"/>
+                                        <property name="sensitive" bind-source="_user_status_button" bind-property="sensitive" bind-flags="sync-create"/>
                                         <property name="hexpand">True</property>
                                         <property name="halign">start</property>
                                         <property name="valign">center</property>
@@ -983,7 +983,7 @@
                                     <child>
                                       <object class="GtkBox" id="userinfo_title">
                                         <property name="visible">True</property>
-                                        <property name="sensitive" bind-source="user_status_button" bind-property="sensitive" bind-flags="sync-create"/>
+                                        <property name="sensitive" bind-source="_user_status_button" bind-property="sensitive" bind-flags="sync-create"/>
                                         <property name="hexpand">True</property>
                                         <property name="halign">start</property>
                                         <property name="valign">center</property>
@@ -1414,7 +1414,7 @@
                                         <child>
                                           <object class="GtkBox" id="chatrooms_title">
                                             <property name="visible">True</property>
-                                            <property name="sensitive" bind-source="user_status_button" bind-property="sensitive" bind-flags="sync-create"/>
+                                            <property name="sensitive" bind-source="_user_status_button" bind-property="sensitive" bind-flags="sync-create"/>
                                             <property name="hexpand">True</property>
                                             <property name="halign">start</property>
                                             <property name="spacing">4</property>
@@ -1604,7 +1604,7 @@
                 <!-- Log Pane -->
                 <child>
                   <object class="GtkBox" id="log_container">
-                    <property name="visible" bind-source="log_history_button" bind-property="active" bind-flags="bidirectional|sync-create"/>
+                    <property name="visible" bind-source="_log_history_button" bind-property="active" bind-flags="bidirectional|sync-create"/>
                     <property name="orientation">vertical</property>
                     <child>
                       <object class="GtkSearchBar" id="log_search_bar">
@@ -1787,7 +1787,7 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton" id="user_status_button">
+                  <object class="GtkButton" id="_user_status_button">
                     <property name="visible">True</property>
                     <property name="action-name">win.away</property>
                     <child>
@@ -1823,7 +1823,7 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkToggleButton" id="log_history_button">
+                  <object class="GtkToggleButton" id="_log_history_button">
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Show log history</property>
                     <property name="action-name">win.showlog</property>

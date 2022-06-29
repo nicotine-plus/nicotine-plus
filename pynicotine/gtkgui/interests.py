@@ -151,7 +151,7 @@ class Interests(UserInterface):
                     -1, self.dislikes_column_numbers, [thing])
 
         # Popup menus
-        self.til_popup_menu = popup = PopupMenu(self.frame, self.likes_list_view)
+        popup = PopupMenu(self.frame, self.likes_list_view)
         popup.add_items(
             ("#" + _("Re_commendations for Item"), self.on_recommend_item, popup),
             ("#" + _("_Search for Item"), self.on_recommend_search, popup),
@@ -159,7 +159,7 @@ class Interests(UserInterface):
             ("#" + _("_Remove Item"), self.on_remove_thing_i_like)
         )
 
-        self.tidl_popup_menu = popup = PopupMenu(self.frame, self.dislikes_list_view)
+        popup = PopupMenu(self.frame, self.dislikes_list_view)
         popup.add_items(
             ("#" + _("Re_commendations for Item"), self.on_recommend_item, popup),
             ("#" + _("_Search for Item"), self.on_recommend_search, popup),
@@ -167,7 +167,7 @@ class Interests(UserInterface):
             ("#" + _("_Remove Item"), self.on_remove_thing_i_dislike)
         )
 
-        self.r_popup_menu = popup = PopupMenu(self.frame, self.recommendations_list_view, self.on_popup_r_menu)
+        popup = PopupMenu(self.frame, self.recommendations_list_view, self.on_popup_r_menu)
         popup.add_items(
             ("$" + _("I _Like This"), self.on_like_recommendation),
             ("$" + _("I _Dislike This"), self.on_dislike_recommendation),
