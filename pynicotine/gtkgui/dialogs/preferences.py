@@ -2275,6 +2275,7 @@ class Preferences(UserInterface):
                      (self.export_button, Gtk.ResponseType.HELP),
                      (self.apply_button, Gtk.ResponseType.APPLY),
                      (self.ok_button, Gtk.ResponseType.OK)],
+            default_response=Gtk.ResponseType.OK,
             quit_callback=self.on_cancel,
             title=_("Preferences"),
             width=960,
@@ -2284,9 +2285,7 @@ class Preferences(UserInterface):
         # Scroll to focused widgets
         if GTK_API_VERSION == 3:
             self.viewport.set_focus_vadjustment(self.content.get_vadjustment())
-            self.ok_button.set_can_default(True)
 
-        self.dialog.set_default_response(Gtk.ResponseType.OK)
         self.dialog.get_style_context().add_class("preferences-border")
 
         self.pages = {}
