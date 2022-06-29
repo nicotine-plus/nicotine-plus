@@ -548,6 +548,27 @@ class Transfers:
 
         return False
 
+    @staticmethod
+    def file_is_readable(filename, real_path):
+
+        try:
+            if os.access(encode_path(real_path), os.R_OK):
+                return True
+
+            log.add_transfer("Cannot access file, not sharing: %(virtual_name)s with real path %(path)s", {
+                "virtual_name": filename,
+                "path": real_path
+            })
+
+        except Exception:
+            log.add_transfer(("Requested file path contains invalid characters or other errors, not sharing: "
+                              "%(virtual_name)s with real path %(path)s"), {
+                "virtual_name": filename,
+                "path": real_path
+            })
+
+        return False
+
     """ Network Events """
 
     def get_user_status(self, msg):
@@ -1145,16 +1166,25 @@ class Transfers:
             if i in self.transfer_request_times:
                 del self.transfer_request_times[i]
 
+            real_path = self.core.shares.virtual2real(i.filename)
+
+            if not self.core.shares.file_is_shared(i.user, i.filename, real_path):
+                i.status = "File not shared."
+
+                self.abort_transfer(i)
+                self.update_upload(i)
+                self.check_upload_queue()
+                return
+
             try:
                 # Open File
-                real_path = self.core.shares.virtual2real(i.filename)
                 file_handle = open(encode_path(real_path), "rb")  # pylint: disable=consider-using-with
 
             except OSError as error:
                 log.add(_("Upload I/O error: %s"), error)
-
-                self.abort_transfer(i, reason="Remote file error", send_fail_message=True)
                 i.status = "Local file error"
+
+                self.abort_transfer(i)
                 self.check_upload_queue()
 
             else:
@@ -2115,7 +2145,8 @@ class Transfers:
             return False, "Too many files"
 
         # Do we actually share that file with the world?
-        if not self.core.shares.file_is_shared(user, filename, real_path):
+        if (not self.core.shares.file_is_shared(user, filename, real_path)
+                or not self.file_is_readable(filename, real_path)):
             return False, "File not shared."
 
         return True, None
@@ -2389,7 +2420,7 @@ class Transfers:
                     }
                 )
 
-        elif send_fail_message and transfer in self.uploads and transfer.status in ("Queued", "Getting status"):
+        elif send_fail_message and transfer in self.uploads and transfer.status == "Queued":
             self.core.send_message_to_peer(
                 transfer.user, slskmessages.UploadDenied(None, file=transfer.filename, reason=reason))
 

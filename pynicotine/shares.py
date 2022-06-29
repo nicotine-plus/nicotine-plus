@@ -608,44 +608,29 @@ class Shares:
         bshared_files = self.share_dbs.get("buddyfiles")
         file_is_shared = False
 
-        if bshared_files is not None:
-            for row in self.config.sections["server"]["userlist"]:
-                if row[0] != user:
-                    continue
+        if not realfilename.startswith("__INTERNAL_ERROR__"):
+            if bshared_files is not None:
+                for row in self.config.sections["server"]["userlist"]:
+                    if row[0] != user:
+                        continue
 
-                # Check if buddy is trusted
-                if self.config.sections["transfers"]["buddysharestrustedonly"] and not row[4]:
-                    break
+                    # Check if buddy is trusted
+                    if self.config.sections["transfers"]["buddysharestrustedonly"] and not row[4]:
+                        break
 
-                for fileinfo in bshared_files.get(str(folder), ""):
+                    for fileinfo in bshared_files.get(str(folder), ""):
+                        if file == fileinfo[0]:
+                            file_is_shared = True
+                            break
+
+            if not file_is_shared and shared_files is not None:
+                for fileinfo in shared_files.get(str(folder), ""):
                     if file == fileinfo[0]:
                         file_is_shared = True
                         break
 
-        if not file_is_shared and shared_files is not None:
-            for fileinfo in shared_files.get(str(folder), ""):
-                if file == fileinfo[0]:
-                    file_is_shared = True
-                    break
-
         if not file_is_shared:
             log.add_transfer(("File is not present in the database of shared files, not sharing: "
-                              "%(virtual_name)s with real path %(path)s"), {
-                "virtual_name": virtualfilename,
-                "path": realfilename
-            })
-            return False
-
-        try:
-            if not os.access(encode_path(realfilename), os.R_OK):
-                log.add_transfer("Cannot access file, not sharing: %(virtual_name)s with real path %(path)s", {
-                    "virtual_name": virtualfilename,
-                    "path": realfilename
-                })
-                return False
-
-        except Exception:
-            log.add_transfer(("Requested file path contains invalid characters or other errors, not sharing: "
                               "%(virtual_name)s with real path %(path)s"), {
                 "virtual_name": virtualfilename,
                 "path": realfilename
