@@ -23,7 +23,6 @@ import os
 from gi.repository import Gtk
 
 from pynicotine.config import config
-from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
 from pynicotine.gtkgui.widgets.filechooser import FolderChooser
 from pynicotine.gtkgui.widgets.dialogs import dialog_hide

@@ -24,7 +24,7 @@
         <property name="hexpand">True</property>
         <property name="orientation">vertical</property>
         <child>
-          <object class="GtkLabel">
+          <object class="GtkLabel" id="current_session_label">
             <property name="visible">True</property>
             <property name="label" translatable="yes">Current Session</property>
             <property name="selectable">True</property>
