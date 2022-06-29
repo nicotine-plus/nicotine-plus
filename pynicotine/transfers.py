@@ -689,9 +689,6 @@ class Transfers:
             "filename": filename,
         })
 
-        if self.file_is_upload_queued(user, filename):
-            return
-
         real_path = self.core.shares.virtual2real(filename)
         allowed, reason = self.check_queue_upload_allowed(user, msg.init.addr, filename, real_path, msg)
 
@@ -704,7 +701,7 @@ class Transfers:
         })
 
         if not allowed:
-            if reason:
+            if reason != "Queued":
                 self.core.send_message_to_peer(user, slskmessages.UploadDenied(None, filename, reason))
 
             return
