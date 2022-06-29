@@ -226,7 +226,7 @@ class DownloadsFrame(UserInterface):
          self.DownloadDir, self.DownloadDoubleClick, self.DownloadFilter, self.DownloadReverseOrder,
          self.DownloadSpeed, self.DownloadSpeedAlternative, self.FilterView, self.IncompleteDir,
          self.Main, self.RemoteDownloads, self.UploadDir, self.UploadsAllowed,
-         self.UsernameSubfolders, self.VerifiedLabel, self.VerifyFilters) = self.widgets
+         self.UsernameSubfolders, self.VerifiedLabel) = self.widgets
 
         self.preferences = preferences
         self.frame = preferences.frame
@@ -646,9 +646,9 @@ class UploadsFrame(UserInterface):
         super().__init__("ui/settings/uploads.ui")
 
         # pylint: disable=invalid-name
-        (self.AutoclearFinished, self.FirstInFirstOut, self.FriendsNoLimits, self.Limit, self.LimitPerTransfer,
+        (self.AutoclearFinished, self.FirstInFirstOut, self.FriendsNoLimits, self.Limit,
          self.LimitSpeed, self.LimitSpeedAlternative, self.LimitTotalTransfers, self.Main, self.MaxUserFiles,
-         self.MaxUserQueue, self.PreferFriends, self.QueueBandwidth, self.QueueSlots, self.QueueUseBandwidth,
+         self.MaxUserQueue, self.PreferFriends, self.QueueBandwidth, self.QueueSlots,
          self.QueueUseSlots, self.UploadDoubleClick) = self.widgets
 
         self.preferences = preferences
@@ -1030,14 +1030,14 @@ class ChatsFrame(UserInterface):
 
         # pylint: disable=invalid-name
         (self.CensorCheck, self.CensorList,
-         self.CensorReplaceCombo, self.CharactersCompletion, self.ChatRoomFormat, self.ChatRoomFormatLabel,
+         self.CensorReplaceCombo, self.CharactersCompletion, self.ChatRoomFormat,
          self.CompleteAliasesCheck, self.CompleteBuddiesCheck, self.CompleteCommandsCheck, self.CompleteRoomNamesCheck,
          self.CompleteUsersInRoomsCheck, self.CompletionCycleCheck, self.CompletionDropdownCheck,
-         self.CompletionTabCheck, self.Main, self.OneMatchCheck, self.PrivateChatFormat, self.PrivateChatFormatLabel,
-         self.PrivateLogLines, self.PrivateMessage, self.PrivateMessageLabel,
+         self.CompletionTabCheck, self.Main, self.OneMatchCheck, self.PrivateChatFormat,
+         self.PrivateLogLines, self.PrivateMessage,
          self.ReopenPrivateChats, self.ReplaceCheck, self.ReplacementList,
-         self.RoomLogLines, self.RoomMessage, self.RoomMessageLabel, self.SpellCheck,
-         self.TTSCommand, self.TTSCommandLabel, self.TextToSpeech) = self.widgets
+         self.RoomLogLines, self.RoomMessage, self.SpellCheck,
+         self.TTSCommand, self.TextToSpeech) = self.widgets
 
         self.preferences = preferences
         self.frame = preferences.frame
@@ -1302,7 +1302,7 @@ class UserInterfaceFrame(UserInterface):
         super().__init__("ui/settings/userinterface.ui")
 
         # pylint: disable=invalid-name
-        (self.BrowserFontLabel, self.ChatFontLabel, self.ChatRoomsPosition, self.CloseAction, self.DarkMode,
+        (self.ChatRoomsPosition, self.CloseAction, self.DarkMode,
          self.DefaultAway, self.DefaultBackground, self.DefaultBrowserFont, self.DefaultChangedTab,
          self.DefaultChatFont, self.DefaultGlobalFont, self.DefaultHighlight, self.DefaultHighlightTab,
          self.DefaultImmediate, self.DefaultInput, self.DefaultListFont, self.DefaultLocal, self.DefaultMe,
@@ -1313,16 +1313,16 @@ class UserInterfaceFrame(UserInterface):
          self.EntryAway, self.EntryBackground, self.EntryChangedTab, self.EntryHighlight, self.EntryHighlightTab,
          self.EntryImmediate, self.EntryInput, self.EntryLocal, self.EntryMe, self.EntryOffline, self.EntryOnline,
          self.EntryQueue, self.EntryRegularTab, self.EntryRemote, self.EntryURL, self.FilePathTooltips,
-         self.GlobalFontLabel, self.IconView, self.ListFontLabel, self.Main, self.MainPosition,
+         self.IconView, self.Main, self.MainPosition,
          self.NotificationPopupChatroom, self.NotificationPopupChatroomMention, self.NotificationPopupFile,
          self.NotificationPopupFolder, self.NotificationPopupPrivateMessage, self.NotificationPopupSound,
          self.NotificationTabColors, self.NotificationWindowTitle, self.PickAway, self.PickBackground,
          self.PickChangedTab, self.PickHighlight, self.PickHighlightTab, self.PickImmediate, self.PickInput,
          self.PickLocal, self.PickMe, self.PickOffline, self.PickOnline, self.PickQueue, self.PickRegularTab,
-         self.PickRemote, self.PickURL, self.PrivateChatPosition, self.ReverseFilePaths, self.SearchFontLabel,
+         self.PickRemote, self.PickURL, self.PrivateChatPosition, self.ReverseFilePaths,
          self.SearchPosition, self.SelectBrowserFont, self.SelectChatFont, self.SelectGlobalFont, self.SelectListFont,
          self.SelectSearchFont, self.SelectTransfersFont, self.StartupHidden, self.TabClosers, self.TabSelectPrevious,
-         self.TabStatusIcons, self.ThemeDir, self.TransfersFontLabel, self.TraySettings, self.TrayiconCheck,
+         self.TabStatusIcons, self.ThemeDir, self.TraySettings, self.TrayiconCheck,
          self.UserBrowsePosition, self.UserInfoPosition, self.UsernameHotspots,
          self.UsernameStyle) = self.widgets
 
@@ -1627,7 +1627,7 @@ class LoggingFrame(UserInterface):
         super().__init__("ui/settings/log.ui")
 
         # pylint: disable=invalid-name
-        (self.DebugLogDir, self.DefaultTimestamp, self.LogDebug, self.LogFileFormat,
+        (self.DebugLogDir, self.LogDebug, self.LogFileFormat,
          self.LogPrivate, self.LogRooms, self.LogTransfers, self.Main, self.PrivateLogDir,
          self.RoomLogDir, self.TransfersLogDir) = self.widgets
 
@@ -1792,8 +1792,7 @@ class UrlHandlersFrame(UserInterface):
         super().__init__("ui/settings/urlhandlers.ui")
 
         # pylint: disable=invalid-name
-        (self.FileManagerCombo, self.FileManagerLabel, self.Main, self.ProtocolHandlers, self.audioPlayerCombo,
-         self.audioPlayerLabel) = self.widgets
+        (self.FileManagerCombo, self.Main, self.ProtocolHandlers, self.audioPlayerCombo) = self.widgets
 
         self.preferences = preferences
         self.frame = preferences.frame

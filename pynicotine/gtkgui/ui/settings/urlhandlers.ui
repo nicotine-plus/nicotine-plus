@@ -44,7 +44,7 @@
             <property name="homogeneous">True</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkLabel" id="audioPlayerLabel">
+              <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Media player command:</property>
                 <property name="wrap">True</property>
@@ -80,7 +80,7 @@
             <property name="homogeneous">True</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkLabel" id="FileManagerLabel">
+              <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">File manager command:</property>

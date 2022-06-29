@@ -4,12 +4,12 @@
   <object class="GtkSizeGroup">
     <property name="mode">horizontal</property>
     <widgets>
-      <widget name="GlobalFontLabel"/>
-      <widget name="ChatFontLabel"/>
-      <widget name="ListFontLabel"/>
-      <widget name="TransfersFontLabel"/>
-      <widget name="SearchFontLabel"/>
-      <widget name="BrowserFontLabel"/>
+      <widget name="_GlobalFontLabel"/>
+      <widget name="_ChatFontLabel"/>
+      <widget name="_ListFontLabel"/>
+      <widget name="_TransfersFontLabel"/>
+      <widget name="_SearchFontLabel"/>
+      <widget name="_BrowserFontLabel"/>
     </widgets>
   </object>
   <object class="GtkBox" id="Main">
@@ -1810,7 +1810,7 @@
             <property name="visible">True</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkLabel" id="GlobalFontLabel">
+              <object class="GtkLabel" id="_GlobalFontLabel">
                 <property name="visible">True</property>
                 <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Global font:</property>
@@ -1867,7 +1867,7 @@
             <property name="visible">True</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkLabel" id="ChatFontLabel">
+              <object class="GtkLabel" id="_ChatFontLabel">
                 <property name="visible">True</property>
                 <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Chat font:</property>
@@ -1924,7 +1924,7 @@
             <property name="visible">True</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkLabel" id="ListFontLabel">
+              <object class="GtkLabel" id="_ListFontLabel">
                 <property name="visible">True</property>
                 <property name="hexpand">True</property>
                 <property name="label" translatable="yes">List font:</property>
@@ -1981,7 +1981,7 @@
             <property name="visible">True</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkLabel" id="TransfersFontLabel">
+              <object class="GtkLabel" id="_TransfersFontLabel">
                 <property name="visible">True</property>
                 <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Transfers font:</property>
@@ -2038,7 +2038,7 @@
             <property name="visible">True</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkLabel" id="SearchFontLabel">
+              <object class="GtkLabel" id="_SearchFontLabel">
                 <property name="visible">True</property>
                 <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Search font:</property>
@@ -2095,7 +2095,7 @@
             <property name="visible">True</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkLabel" id="BrowserFontLabel">
+              <object class="GtkLabel" id="_BrowserFontLabel">
                 <property name="visible">True</property>
                 <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Browse font:</property>

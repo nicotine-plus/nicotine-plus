@@ -533,7 +533,7 @@
             <property name="visible">True</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkButton" id="VerifyFilters">
+              <object class="GtkButton" id="_VerifyFilters">
                 <property name="visible">True</property>
                 <signal name="clicked" handler="on_verify_filter"/>
                 <child>
@@ -563,7 +563,7 @@
                 <property name="label" translatable="yes">Unverified</property>
                 <property name="wrap">True</property>
                 <property name="xalign">0</property>
-                <property name="mnemonic-widget">VerifyFilters</property>
+                <property name="mnemonic-widget">_VerifyFilters</property>
                 <attributes>
                   <attribute name="weight" value="bold"/>
                 </attributes>

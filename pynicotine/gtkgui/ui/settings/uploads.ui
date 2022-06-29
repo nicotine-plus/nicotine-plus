@@ -119,7 +119,7 @@
                 <property name="hexpand">True</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic-widget">LimitPerTransfer</property>
+                <property name="mnemonic-widget">_LimitPerTransfer</property>
               </object>
             </child>
             <child>
@@ -127,7 +127,7 @@
                 <property name="visible">True</property>
                 <property name="spacing">6</property>
                 <child>
-                  <object class="GtkRadioButton" id="LimitPerTransfer">
+                  <object class="GtkRadioButton" id="_LimitPerTransfer">
                     <property name="label" translatable="yes">Per transfer</property>
                     <property name="visible">True</property>
                     <property name="use-underline">True</property>
@@ -139,7 +139,7 @@
                     <property name="label" translatable="yes">Total transfers</property>
                     <property name="visible">True</property>
                     <property name="use-underline">True</property>
-                    <property name="group">LimitPerTransfer</property>
+                    <property name="group">_LimitPerTransfer</property>
                   </object>
                 </child>
               </object>
@@ -340,7 +340,7 @@ First In, First Out: Files will be uploaded in the order they were queued.</prop
             <property name="visible">True</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkRadioButton" id="QueueUseBandwidth">
+              <object class="GtkRadioButton" id="_QueueUseBandwidth">
                 <property name="visible">True</property>
                 <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Queue uploads if total transfer speed reaches (KiB/s):</property>
@@ -370,7 +370,7 @@ First In, First Out: Files will be uploaded in the order they were queued.</prop
                 <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Limit number of upload slots to:</property>
                 <property name="tooltip-text" translatable="yes">If disabled, slots will automatically be determined by available bandwidth limitations.</property>
-                <property name="group">QueueUseBandwidth</property>
+                <property name="group">_QueueUseBandwidth</property>
               </object>
             </child>
             <child>

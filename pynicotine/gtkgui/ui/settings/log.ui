@@ -78,7 +78,7 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton" id="DefaultTimestamp">
+                  <object class="GtkButton">
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Default</property>
                     <signal name="clicked" handler="on_default_timestamp"/>
