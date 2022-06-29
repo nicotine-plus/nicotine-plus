@@ -666,11 +666,11 @@ class SlskProtoThread(threading.Thread):
 
     @staticmethod
     def _is_upload(conn_obj):
-        return conn_obj.__class__ is PeerConnection and conn_obj.fileupl is not None
+        return conn_obj.__class__ is PeerConnection and conn_obj.fileinit.__class__ is FileUploadInit
 
     @staticmethod
     def _is_download(conn_obj):
-        return conn_obj.__class__ is PeerConnection and conn_obj.filedown is not None
+        return conn_obj.__class__ is PeerConnection and conn_obj.fileinit.__class__ is FileDownloadInit
 
     def _calc_upload_limit(self, limit_disabled=False, limit_per_transfer=False):
 
@@ -1710,6 +1710,9 @@ class SlskProtoThread(threading.Thread):
                 self._callback_msgs.append(msg)
                 conn_obj.fileinit = msg
 
+                self.total_downloads += 1
+                self._calc_download_limit()
+
         elif conn_obj.filedown is not None:
             idx = conn_obj.filedown.leftbytes
             added_bytes = msg_buffer_mem[:idx]
@@ -1779,6 +1782,9 @@ class SlskProtoThread(threading.Thread):
             conn_obj = self._conns[msg_obj.init.sock]
             conn_obj.fileinit = msg_obj
             conn_obj.obuf.extend(msg)
+
+            self.total_uploads += 1
+            self._calc_upload_limit_function()
 
             self._callback_msgs.append(msg_obj)
 
@@ -1951,13 +1957,9 @@ class SlskProtoThread(threading.Thread):
 
         elif msg_class is DownloadFile and msg_obj.sock in self._conns:
             self._conns[msg_obj.sock].filedown = msg_obj
-            self.total_downloads += 1
-            self._calc_download_limit()
 
         elif msg_class is UploadFile and msg_obj.sock in self._conns:
             self._conns[msg_obj.sock].fileupl = msg_obj
-            self.total_uploads += 1
-            self._calc_upload_limit_function()
 
         elif msg_class is SetDownloadLimit:
             self._download_limit = msg_obj.limit * 1024
@@ -2082,7 +2084,7 @@ class SlskProtoThread(threading.Thread):
         else:
             bytes_send = 0
 
-        if self._is_upload(conn_obj) and conn_obj.fileupl.offset is not None:
+        if self._is_upload(conn_obj) and conn_obj.fileupl is not None and conn_obj.fileupl.offset is not None:
             conn_obj.fileupl.sentbytes += bytes_send
             totalsentbytes = conn_obj.fileupl.offset + conn_obj.fileupl.sentbytes + len(conn_obj.obuf)
 
