@@ -452,39 +452,32 @@ class Transfers:
 
     def queue_limit_reached(self, user):
 
+        file_limit = self.config.sections["transfers"]["filelimit"]
         queue_size_limit = self.config.sections["transfers"]["queuelimit"] * 1024 * 1024
 
-        if not queue_size_limit:
-            return False
+        if not file_limit and not queue_size_limit:
+            return False, None
 
+        num_files = 0
         queue_size = 0
 
         for i in self.uploads:
-            if i.user == user and i.status == "Queued":
-                queue_size += i.size
+            if i.user != user or i.status != "Queued":
+                continue
 
-                if queue_size >= queue_size_limit:
-                    return True
-
-        return False
-
-    def file_limit_reached(self, user):
-
-        file_limit = self.config.sections["transfers"]["filelimit"]
-
-        if not file_limit:
-            return False
-
-        num_files = 0
-
-        for i in self.uploads:
-            if i.user == user and i.status == "Queued":
+            if file_limit:
                 num_files += 1
 
                 if num_files >= file_limit:
-                    return True
+                    return True, "Too many files"
 
-        return False
+            if queue_size_limit:
+                queue_size += i.size
+
+                if queue_size >= queue_size_limit:
+                    return True, "Too many megabytes"
+
+        return False, None
 
     def slot_limit_reached(self):
 
@@ -2131,19 +2124,19 @@ class Transfers:
             return False, "Queued"
 
         # Has user hit queue limit?
-        limits = True
+        enable_limits = True
 
         if self.config.sections["transfers"]["friendsnolimits"]:
             friend = user in (i[0] for i in self.config.sections["server"]["userlist"])
 
             if friend:
-                limits = False
+                enable_limits = False
 
-        if limits and self.queue_limit_reached(user):
-            return False, "Too many megabytes"
+        if enable_limits:
+            limit_reached, reason = self.queue_limit_reached(user)
 
-        if limits and self.file_limit_reached(user):
-            return False, "Too many files"
+            if limit_reached:
+                return False, reason
 
         # Do we actually share that file with the world?
         if (not self.core.shares.file_is_shared(user, filename, real_path)
