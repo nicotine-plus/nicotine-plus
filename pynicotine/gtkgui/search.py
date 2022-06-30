@@ -955,10 +955,14 @@ class Search(UserInterface):
             self.max_limited = False
             self.max_limit = config.sections["searches"]["max_displayed_results"]
 
+        self.tree_view.set_model(None)
+
         self.usersiters.clear()
         self.directoryiters.clear()
         self.resultsmodel.clear()
         self.num_results_visible = 0
+
+        self.tree_view.set_model(self.resultsmodel)
 
     def update_model(self):
 
