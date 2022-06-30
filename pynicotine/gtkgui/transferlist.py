@@ -257,7 +257,7 @@ class TransferList(UserInterface):
 
         transfer = model.get_value(iterator, 16)
 
-        if transfer.filename is not None and transfer not in self.selected_transfers:
+        if transfer.filename is not None:
             self.selected_transfers.append(transfer)
 
         if select_user and transfer.user not in self.selected_users:
@@ -759,8 +759,7 @@ class TransferList(UserInterface):
     def on_popup_menu(self, menu, _widget):
 
         self.select_transfers()
-        num_selected_transfers = len(self.selected_transfers)
-        menu.set_num_selected_files(num_selected_transfers)
+        menu.set_num_selected_files(len(self.selected_transfers))
 
         self.populate_popup_menu_users()
 

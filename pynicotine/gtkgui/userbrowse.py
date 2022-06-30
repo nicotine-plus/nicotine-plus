@@ -623,24 +623,24 @@ class UserBrowse(UserInterface):
         result_files = []
         found_first_match = False
 
-        for filepath in self.file_iters:
+        for filepath, iterator in self.file_iters.items():
             if self.query in filepath.lower():
-                result_files.append(filepath)
+                result_files.append(iterator)
 
         result_files.sort()
 
         selection = self.file_list_view.get_selection()
         selection.unselect_all()
 
-        for filepath in result_files:
+        for iterator in result_files:
             # Select each matching file in folder
-            path = self.file_store.get_path(self.file_iters[filepath])
-            selection.select_path(path)
+            selection.select_iter(iterator)
 
             if found_first_match:
                 continue
 
             # Position cursor at first match
+            path = self.file_store.get_path(iterator)
             self.file_list_view.scroll_to_cell(path, None, True, 0.5, 0.5)
             found_first_match = True
 
