@@ -786,7 +786,7 @@ class Search(UserInterface):
             overhead by bypassing useless row conversion to GObject.Value in PyGObject. """
 
             if parent is None:
-                iterator = self.resultsmodel.insert_with_values(-1, self.column_numbers, row)
+                iterator = self.resultsmodel.insert_with_valuesv(-1, self.column_numbers, row)
             else:
                 iterator = self.resultsmodel.insert_with_values(parent, -1, self.column_numbers, row)
 
