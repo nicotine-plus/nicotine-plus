@@ -341,26 +341,7 @@ class Search(UserInterface):
 
         # Columns
         self.treeview_name = "file_search"
-        self.resultsmodel = Gtk.TreeStore(
-            int,                  # (0)  num
-            str,                  # (1)  user
-            str,                  # (2)  flag
-            str,                  # (3)  h_speed
-            str,                  # (4)  h_queue
-            str,                  # (5)  directory
-            str,                  # (6)  filename
-            str,                  # (7)  h_size
-            str,                  # (8)  h_bitrate
-            str,                  # (9)  h_length
-            GObject.TYPE_UINT,    # (10) bitrate
-            str,                  # (11) fullpath
-            str,                  # (12) country
-            GObject.TYPE_UINT64,  # (13) size
-            GObject.TYPE_UINT,    # (14) speed
-            GObject.TYPE_UINT,    # (15) queue
-            GObject.TYPE_UINT,    # (16) length
-            str                   # (17) color
-        )
+        self.create_model()
 
         self.column_offsets = {}
         self.column_numbers = list(range(self.resultsmodel.get_n_columns()))
@@ -391,8 +372,6 @@ class Search(UserInterface):
         cols["length"].set_sort_column_id(16)
 
         cols["country"].get_widget().hide()
-
-        self.tree_view.set_model(self.resultsmodel)
 
         for column in self.tree_view.get_columns():
             self.column_offsets[column.get_title()] = 0
@@ -470,6 +449,36 @@ class Search(UserInterface):
 
         # Wishlist
         self.update_wish_button()
+
+    def create_model(self):
+        """ Create a tree model based on the grouping mode. Scrolling performance of Gtk.TreeStore
+        is bad with large plain lists, so use Gtk.ListStore in ungrouped mode where no tree structure
+        is necessary. """
+
+        tree_model_class = Gtk.ListStore if self.grouping_mode == "ungrouped" else Gtk.TreeStore
+        self.resultsmodel = tree_model_class(
+            int,                  # (0)  num
+            str,                  # (1)  user
+            str,                  # (2)  flag
+            str,                  # (3)  h_speed
+            str,                  # (4)  h_queue
+            str,                  # (5)  directory
+            str,                  # (6)  filename
+            str,                  # (7)  h_size
+            str,                  # (8)  h_bitrate
+            str,                  # (9)  h_length
+            GObject.TYPE_UINT,    # (10) bitrate
+            str,                  # (11) fullpath
+            str,                  # (12) country
+            GObject.TYPE_UINT64,  # (13) size
+            GObject.TYPE_UINT,    # (14) speed
+            GObject.TYPE_UINT,    # (15) queue
+            GObject.TYPE_UINT,    # (16) length
+            str                   # (17) color
+        )
+
+        if self.grouping_mode is not None:
+            self.tree_view.set_model(self.resultsmodel)
 
     def set_label(self, label):
         self.tab_menu.set_parent(label)
@@ -776,7 +785,10 @@ class Search(UserInterface):
             """ Note that we use insert_with_values instead of append, as this reduces
             overhead by bypassing useless row conversion to GObject.Value in PyGObject. """
 
-            iterator = self.resultsmodel.insert_with_values(parent, -1, self.column_numbers, row)
+            if parent is None:
+                iterator = self.resultsmodel.insert_with_values(-1, self.column_numbers, row)
+            else:
+                iterator = self.resultsmodel.insert_with_values(parent, -1, self.column_numbers, row)
 
             if expand_user:
                 self.tree_view.expand_row(self.resultsmodel.get_path(self.usersiters[user]), False)
@@ -948,14 +960,12 @@ class Search(UserInterface):
         self.resultsmodel.clear()
         self.num_results_visible = 0
 
-    def update_results_model(self):
+    def update_model(self):
 
         # Temporarily disable sorting for increased performance
         sort_column, sort_type = self.resultsmodel.get_sort_column_id()
         self.resultsmodel.set_default_sort_func(lambda *_args: 0)
         self.resultsmodel.set_sort_column_id(-1, Gtk.SortType.ASCENDING)
-
-        self.clear_model()
 
         for row in self.all_data:
             if self.check_filter(row):
@@ -1320,7 +1330,10 @@ class Search(UserInterface):
         self.expand_button.set_visible(active)
 
         self.grouping_mode = mode
-        self.update_results_model()
+
+        self.clear_model()
+        self.create_model()
+        self.update_model()
 
         action.set_state(state)
 
@@ -1435,7 +1448,8 @@ class Search(UserInterface):
         # Apply the new filters
         self.filters = filters
         self.update_filter_comboboxes()
-        self.update_results_model()
+        self.clear_model()
+        self.update_model()
 
     def on_filter_entry_changed(self, widget):
         if not widget.get_text():

@@ -24,8 +24,6 @@
 
 from sys import maxsize
 
-from gi.repository import Gio
-from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
 
@@ -44,7 +42,6 @@ from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.treeview import save_columns
 from pynicotine.gtkgui.widgets.treeview import select_user_row_iter
 from pynicotine.gtkgui.widgets.treeview import show_file_path_tooltip
-from pynicotine.gtkgui.widgets.treeview import verify_grouping_mode
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.transfers import Transfer
 from pynicotine.utils import human_length
@@ -113,25 +110,7 @@ class TransferList(UserInterface):
         }
         self.deprioritized_statuses = ("", "Paused", "Aborted", "Finished", "Filtered")
 
-        self.transfersmodel = Gtk.TreeStore(
-            str,                   # (0)  user
-            str,                   # (1)  path
-            str,                   # (2)  file name
-            str,                   # (3)  translated status
-            str,                   # (4)  hqueue position
-            int,                   # (5)  percent
-            str,                   # (6)  hsize
-            str,                   # (7)  hspeed
-            str,                   # (8)  htime elapsed
-            str,                   # (9)  htime left
-            GObject.TYPE_UINT64,   # (10) size
-            GObject.TYPE_UINT64,   # (11) current bytes
-            GObject.TYPE_UINT64,   # (12) speed
-            GObject.TYPE_UINT,     # (13) queue position
-            int,                   # (14) time elapsed
-            int,                   # (15) time left
-            GObject.TYPE_PYOBJECT  # (16) transfer object
-        )
+        self.create_model()
 
         self.column_numbers = list(range(self.transfersmodel.get_n_columns()))
         self.cols = cols = initialise_columns(
@@ -158,14 +137,6 @@ class TransferList(UserInterface):
         cols["speed"].set_sort_column_id(12)
         cols["time_elapsed"].set_sort_column_id(14)
         cols["time_left"].set_sort_column_id(15)
-
-        self.tree_view.set_model(self.transfersmodel)
-
-        state = GLib.Variant("s", verify_grouping_mode(config.sections["transfers"]["group%ss" % transfer_type]))
-        action = Gio.SimpleAction(name="%sgrouping" % transfer_type, parameter_type=GLib.VariantType("s"), state=state)
-        action.connect("change-state", self.on_toggle_tree)
-        frame.window.add_action(action)
-        action.change_state(state)
 
         menu = create_grouping_menu(
             frame.window, config.sections["transfers"]["group%ss" % transfer_type], self.on_toggle_tree)
@@ -207,6 +178,35 @@ class TransferList(UserInterface):
 
         self.update_visuals()
 
+    def create_model(self):
+        """ Create a tree model based on the grouping mode. Scrolling performance of Gtk.TreeStore
+        is bad with large plain lists, so use Gtk.ListStore in ungrouped mode where no tree structure
+        is necessary. """
+
+        tree_model_class = Gtk.ListStore if self.tree_users == "ungrouped" else Gtk.TreeStore
+        self.transfersmodel = tree_model_class(
+            str,                   # (0)  user
+            str,                   # (1)  path
+            str,                   # (2)  file name
+            str,                   # (3)  translated status
+            str,                   # (4)  hqueue position
+            int,                   # (5)  percent
+            str,                   # (6)  hsize
+            str,                   # (7)  hspeed
+            str,                   # (8)  htime elapsed
+            str,                   # (9)  htime left
+            GObject.TYPE_UINT64,   # (10) size
+            GObject.TYPE_UINT64,   # (11) current bytes
+            GObject.TYPE_UINT64,   # (12) speed
+            GObject.TYPE_UINT,     # (13) queue position
+            int,                   # (14) time elapsed
+            int,                   # (15) time left
+            GObject.TYPE_PYOBJECT  # (16) transfer object
+        )
+
+        if self.tree_users is not None:
+            self.tree_view.set_model(self.transfersmodel)
+
     def init_transfers(self, transfer_list):
         self.transfer_list = transfer_list
         self.update_model(forceupdate=True)
@@ -218,10 +218,6 @@ class TransferList(UserInterface):
     def server_disconnect(self):
         # Not needed
         pass
-
-    def rebuild_transfers(self):
-        self.clear_model()
-        self.update_model()
 
     def save_columns(self):
         save_columns(self.type, self.tree_view.get_columns())
@@ -596,29 +592,31 @@ class TransferList(UserInterface):
             if config.sections["ui"]["reverse_file_paths"]:
                 path = self.path_separator.join(reversed(path.split(self.path_separator)))
 
-        iterator = self.transfersmodel.insert_with_values(
-            parent, -1, self.column_numbers,
-            (
-                user,
-                path,
-                shortfn,
-                self.translate_status(status),
-                self.get_hqueue_position(queue_position),
-                self.get_percent(current_byte_offset, size),
-                self.get_hsize(current_byte_offset, size),
-                hspeed,
-                helapsed,
-                self.get_hleft(left),
-                GObject.Value(GObject.TYPE_UINT64, size),
-                GObject.Value(GObject.TYPE_UINT64, current_byte_offset),
-                GObject.Value(GObject.TYPE_UINT64, speed),
-                GObject.Value(GObject.TYPE_UINT, queue_position),
-                elapsed,
-                left,
-                transfer
-            )
+        row = (
+            user,
+            path,
+            shortfn,
+            self.translate_status(status),
+            self.get_hqueue_position(queue_position),
+            self.get_percent(current_byte_offset, size),
+            self.get_hsize(current_byte_offset, size),
+            hspeed,
+            helapsed,
+            self.get_hleft(left),
+            GObject.Value(GObject.TYPE_UINT64, size),
+            GObject.Value(GObject.TYPE_UINT64, current_byte_offset),
+            GObject.Value(GObject.TYPE_UINT64, speed),
+            GObject.Value(GObject.TYPE_UINT, queue_position),
+            elapsed,
+            left,
+            transfer
         )
-        transfer.iterator = iterator
+
+        if parent is None:
+            transfer.iterator = self.transfersmodel.insert_with_values(-1, self.column_numbers, row)
+        else:
+            transfer.iterator = self.transfersmodel.insert_with_values(parent, -1, self.column_numbers, row)
+
         self.update_num_users_files()
 
         if expand_user:
@@ -747,8 +745,11 @@ class TransferList(UserInterface):
 
         self.tree_users = mode
 
+        self.clear_model()
+        self.create_model()
+
         if self.transfer_list:
-            self.rebuild_transfers()
+            self.update_model()
 
         action.set_state(state)
 
