@@ -378,8 +378,13 @@ class TreeView:
         self.widget.grab_focus()
 
     def clear(self):
+
+        self.widget.set_model(None)
+
         self.model.clear()
         self.iterators.clear()
+
+        self.widget.set_model(self.model)
 
     def show_tooltip(self, pos_x, pos_y, tooltip, sourcecolumn, column_titles, text_function, strip_prefix=""):
 

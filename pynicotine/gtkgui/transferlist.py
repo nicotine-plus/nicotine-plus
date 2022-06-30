@@ -627,11 +627,15 @@ class TransferList(UserInterface):
 
     def clear_model(self):
 
+        self.tree_view.set_model(None)
+
         self.users.clear()
         self.paths.clear()
         self.selected_transfers.clear()
         self.selected_users.clear()
         self.transfersmodel.clear()
+
+        self.tree_view.set_model(self.transfersmodel)
 
         for transfer in self.transfer_list:
             transfer.iterator = None

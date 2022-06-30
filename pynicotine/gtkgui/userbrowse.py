@@ -360,12 +360,18 @@ class UserBrowse(UserInterface):
 
         self.shares.clear()
 
+        self.folder_tree_view.set_model(None)
+        self.file_list_view.set_model(None)
+
         self.dir_iters.clear()
         self.dir_user_data.clear()
         self.dir_store.clear()
 
         self.file_iters.clear()
         self.file_store.clear()
+
+        self.folder_tree_view.set_model(self.dir_store)
+        self.file_list_view.set_model(self.file_store)
 
     def make_new_model(self, shares, private_shares=None):
 
@@ -535,10 +541,14 @@ class UserBrowse(UserInterface):
         if directory is None or self.selected_folder == directory:
             return
 
-        self.selected_folder = directory
+        self.file_list_view.set_model(None)
+
         self.file_store.clear()
         self.file_iters.clear()
 
+        self.file_list_view.set_model(self.file_store)
+
+        self.selected_folder = directory
         files = self.shares.get(directory)
 
         if not files:
