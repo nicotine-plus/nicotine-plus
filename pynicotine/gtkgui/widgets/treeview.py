@@ -90,7 +90,7 @@ def select_user_row_iter(fmodel, sel, user_index, selected_user, iterator):
         user = fmodel.get_value(iterator, user_index)
 
         if selected_user == user:
-            sel.select_path(fmodel.get_path(iterator))
+            sel.select_iter(iterator)
 
         child = fmodel.iter_children(iterator)
         select_user_row_iter(fmodel, sel, user_index, selected_user, child)

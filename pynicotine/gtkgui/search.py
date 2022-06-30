@@ -321,7 +321,6 @@ class Search(UserInterface):
         self.all_data = []
         self.selected_results = []
         self.selected_users = []
-        self.selected_files_count = 0
         self.grouping_mode = None
         self.filters = None
         self.clearing_filters = False
@@ -1075,11 +1074,7 @@ class Search(UserInterface):
         if not filename:
             return
 
-        path = self.resultsmodel.get_path(iterator)
-
-        if path not in self.selected_results:
-            self.selected_files_count += 1
-            self.selected_results.append(path)
+        self.selected_results.append(iterator)
 
     def select_child_results(self, model, iterator):
 
@@ -1093,7 +1088,6 @@ class Search(UserInterface):
 
         self.selected_results.clear()
         self.selected_users.clear()
-        self.selected_files_count = 0
 
         model, paths = self.tree_view.get_selection().get_selected_rows()
 
@@ -1162,16 +1156,14 @@ class Search(UserInterface):
 
         self.select_results()
         self.populate_popup_menu_users()
-        menu.set_num_selected_files(self.selected_files_count)
+        menu.set_num_selected_files(len(self.selected_results))
 
     def on_browse_folder(self, *_args):
 
         requested_users = set()
         requested_folders = set()
 
-        for path in self.selected_results:
-            iterator = self.resultsmodel.get_iter(path)
-
+        for iterator in self.selected_results:
             user = self.resultsmodel.get_value(iterator, 1)
             folder = self.resultsmodel.get_value(iterator, 11).rsplit('\\', 1)[0] + '\\'
 
@@ -1187,9 +1179,7 @@ class Search(UserInterface):
         selected_size = 0
         selected_length = 0
 
-        for path in self.selected_results:
-            iterator = self.resultsmodel.get_iter(path)
-
+        for iterator in self.selected_results:
             virtual_path = self.resultsmodel.get_value(iterator, 11)
             directory, filename = virtual_path.rsplit('\\', 1)
             file_size = self.resultsmodel.get_value(iterator, 13)
@@ -1216,9 +1206,7 @@ class Search(UserInterface):
 
     def on_download_files(self, *_args, prefix=""):
 
-        for path in self.selected_results:
-            iterator = self.resultsmodel.get_iter(path)
-
+        for iterator in self.selected_results:
             user = self.resultsmodel.get_value(iterator, 1)
             filepath = self.resultsmodel.get_value(iterator, 11)
             size = self.resultsmodel.get_value(iterator, 13)
@@ -1250,9 +1238,7 @@ class Search(UserInterface):
         else:
             requested_folders = defaultdict(dict)
 
-        for path in self.selected_results:
-            iterator = self.resultsmodel.get_iter(path)
-
+        for iterator in self.selected_results:
             user = self.resultsmodel.get_value(iterator, 1)
             folder = self.resultsmodel.get_value(iterator, 11).rsplit('\\', 1)[0]
 
@@ -1293,18 +1279,14 @@ class Search(UserInterface):
 
     def on_copy_file_path(self, *_args):
 
-        for path in self.selected_results:
-            iterator = self.resultsmodel.get_iter(path)
-
+        for iterator in self.selected_results:
             filepath = self.resultsmodel.get_value(iterator, 11)
             copy_text(filepath)
             return
 
     def on_copy_url(self, *_args):
 
-        for path in self.selected_results:
-            iterator = self.resultsmodel.get_iter(path)
-
+        for iterator in self.selected_results:
             user = self.resultsmodel.get_value(iterator, 1)
             filepath = self.resultsmodel.get_value(iterator, 11)
             url = self.core.userbrowse.get_soulseek_url(user, filepath)
@@ -1313,9 +1295,7 @@ class Search(UserInterface):
 
     def on_copy_dir_url(self, *_args):
 
-        for path in self.selected_results:
-            iterator = self.resultsmodel.get_iter(path)
-
+        for iterator in self.selected_results:
             user = self.resultsmodel.get_value(iterator, 1)
             filepath = self.resultsmodel.get_value(iterator, 11)
             url = self.core.userbrowse.get_soulseek_url(user, filepath.rsplit('\\', 1)[0] + '\\')
