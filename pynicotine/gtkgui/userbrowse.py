@@ -167,7 +167,6 @@ class UserBrowse(UserInterface):
         self.selected_folder = None
         self.selected_folder_size = 0
         self.selected_files = {}
-        self.num_selected_files = 0
 
         self.search_list = []
         self.query = None
@@ -253,7 +252,6 @@ class UserBrowse(UserInterface):
         cols["bitrate"].set_sort_column_id(5)
         cols["length"].set_sort_column_id(6)
 
-        self.file_list_view.get_selection().connect("changed", self.on_select_file)
         self.file_list_view.set_model(self.file_store)
 
         for column in self.file_list_view.get_columns():
@@ -586,7 +584,7 @@ class UserBrowse(UserInterface):
 
     def grab_view_focus(self):
 
-        if self.num_selected_files >= 1:
+        if self.file_list_view.get_selection().count_selected_rows() >= 1:
             self.file_list_view.grab_focus()
             return
 
@@ -597,18 +595,19 @@ class UserBrowse(UserInterface):
     def rebuild_search_matches(self):
 
         self.search_list.clear()
+        temp_list = set()
 
         for directory, files in self.shares.items():
 
-            if self.query in directory.lower() and directory not in self.search_list:
-                self.search_list.append(directory)
+            if self.query in directory.lower():
+                temp_list.add(directory)
                 continue
 
             for file_data in files:
-                if self.query in file_data[1].lower() and directory not in self.search_list:
-                    self.search_list.append(directory)
+                if self.query in file_data[1].lower():
+                    temp_list.add(directory)
 
-        self.search_list.sort()
+        self.search_list = sorted(temp_list)
 
     def select_search_match_folder(self):
 
@@ -921,14 +920,10 @@ class UserBrowse(UserInterface):
         self.file_column_offsets[col_title] = offset
         save_columns(self.treeview_name, self.file_list_view.get_columns())
 
-    def on_select_file(self, selection):
-        self.num_selected_files = selection.count_selected_rows()
-
     def on_file_popup_menu(self, menu, _widget):
 
         self.select_files()
-        self.num_selected_files = len(self.selected_files)
-        menu.set_num_selected_files(self.num_selected_files)
+        menu.set_num_selected_files(len(self.selected_files))
 
         self.user_popup.toggle_user_items()
 
@@ -1117,7 +1112,7 @@ class UserBrowse(UserInterface):
             self.folder_tree_view.grab_focus()
             return True
 
-        if self.num_selected_files <= 0:  # do folder instead
+        if self.file_list_view.get_selection().count_selected_rows() <= 0:  # do folder instead
             self.on_folder_transfer_to_accelerator()
             return True
 
@@ -1141,17 +1136,15 @@ class UserBrowse(UserInterface):
         self.select_files()
 
         if self.user == config.sections["server"]["login"]:
-            if self.num_selected_files >= 1:
+            if self.file_list_view.get_selection().count_selected_rows() >= 1:
                 self.on_upload_files()
-
-            elif self.num_selected_files <= 0:
+            else:
                 self.on_upload_directory_to()
 
         else:  # [user is not self]
-            if self.num_selected_files >= 1:
+            if self.file_list_view.get_selection().count_selected_rows() >= 1:
                 self.on_download_files()  # (no prompt, Single or Multi-selection)
-
-            elif self.num_selected_files <= 0:
+            else:
                 self.on_download_directory()  # (without prompt, No-selection=All)
 
         return True
@@ -1287,7 +1280,7 @@ class UserBrowse(UserInterface):
     def on_search_escape_accelerator(self, *_args):
         """ Escape: navigate out of search_entry """
 
-        if self.num_selected_files >= 1:
+        if self.file_list_view.get_selection().count_selected_rows() >= 1:
             self.file_list_view.grab_focus()
         else:
             self.folder_tree_view.grab_focus()
