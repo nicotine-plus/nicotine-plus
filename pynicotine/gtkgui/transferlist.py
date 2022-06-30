@@ -613,7 +613,7 @@ class TransferList(UserInterface):
         )
 
         if parent is None:
-            transfer.iterator = self.transfersmodel.insert_with_values(-1, self.column_numbers, row)
+            transfer.iterator = self.transfersmodel.insert_with_valuesv(-1, self.column_numbers, row)
         else:
             transfer.iterator = self.transfersmodel.insert_with_values(parent, -1, self.column_numbers, row)
 
