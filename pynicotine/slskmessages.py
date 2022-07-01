@@ -2308,7 +2308,7 @@ class SharedFileList(PeerMessage):
                 for _ in range(numattr):
                     pos, attrnum = self.unpack_uint32(message, pos)
                     pos, attr = self.unpack_uint32(message, pos)
-                    attrs[attrnum] = attr
+                    attrs[str(attrnum)] = attr
 
                 files.append((code, name, size, ext, attrs))
 

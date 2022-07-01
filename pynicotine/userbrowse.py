@@ -171,8 +171,8 @@ class UserBrowse:
 
             # Basic sanity check
             for _folder, files in shares_list:
-                for _file_data in files:
-                    pass
+                for _code, _filename, _size, _ext, _attrs, *_unused in files:
+                    break
 
         except Exception as msg:
             log.add(_("Loading Shares from disk failed: %(error)s"), {'error': msg})
