@@ -105,6 +105,7 @@ class ImageChooser(FileChooser):
 
         # Only show image files
         file_filter = Gtk.FileFilter()
+        file_filter.set_name(_("All images"))
         file_filter.add_pixbuf_formats()
         self.file_chooser.set_filter(file_filter)
 
