@@ -52,8 +52,8 @@ class TextView:
 
         self.auto_scroll = self.should_auto_scroll = auto_scroll
 
-        self.adjustment.connect("notify::upper", self.on_adjustment_upper_changed)
-        self.adjustment.connect("notify::value", self.on_adjustment_value_changed)
+        self.adjustment.connect("notify::upper", self.on_adjustment_changed)
+        self.adjustment.connect("notify::value", self.on_adjustment_changed, True)
 
         if GTK_API_VERSION >= 4:
             self.gesture_click_primary = Gtk.GestureClick()
@@ -288,16 +288,15 @@ class TextView:
     def on_clear_all_text(self, *_args):
         self.clear()
 
-    def on_adjustment_upper_changed(self, *_args):
-        if self.should_auto_scroll:
-            GLib.idle_add(self.scroll_bottom, priority=GLib.PRIORITY_LOW)
-
-    def on_adjustment_value_changed(self, adjustment, *_args):
+    def on_adjustment_changed(self, adjustment, _param, force_scroll=False):
 
         if not self.auto_scroll:
-            self.should_auto_scroll = False
             return
 
-        # Scroll to bottom if we had scrolled up less than ~2 lines previously
-        bottom = adjustment.get_upper() - adjustment.get_page_size()
-        self.should_auto_scroll = (bottom - adjustment.get_value() < 40)
+        if force_scroll or not self.should_auto_scroll:
+            # Scroll to bottom if we were at the bottom previously
+            bottom = adjustment.get_upper() - adjustment.get_page_size()
+            self.should_auto_scroll = (bottom - adjustment.get_value() <= 0)
+
+        if self.should_auto_scroll:
+            GLib.idle_add(self.scroll_bottom, priority=GLib.PRIORITY_LOW)
