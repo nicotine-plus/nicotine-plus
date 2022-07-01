@@ -561,12 +561,9 @@ class UserBrowse(UserInterface):
 
         selected_folder_size = 0
 
-        for file in files:
-            # Filename, HSize, Bitrate, HLength, Size, Length
-            filename = file[1]
-            size = file[2]
+        for _code, filename, size, _ext, attrs, *_unused in files:
             selected_folder_size += size
-            h_bitrate, bitrate, h_length, length = get_result_bitrate_length(size, file[4])
+            h_bitrate, bitrate, h_length, length = get_result_bitrate_length(size, attrs)
 
             file_row = [filename, human_size(size), h_bitrate, h_length,
                         GObject.Value(GObject.TYPE_UINT64, size),

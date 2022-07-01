@@ -286,15 +286,55 @@ def human_length(seconds):
     return ret
 
 
+def get_file_attributes(attributes):
+
+    try:
+        bitrate = attributes.get('0')
+        length = attributes.get('1')
+        vbr = attributes.get('2')
+        sample_rate = attributes.get('4')
+        bit_depth = attributes.get('5')
+
+    except AttributeError:
+        # Legacy attribute list format used for shares lists saved in Nicotine+ 3.2.2 and earlier
+        bitrate = length = vbr = sample_rate = bit_depth = None
+
+        if len(attributes) == 3:
+            attribute1, attribute2, attribute3 = attributes
+
+            if attribute3 in (0, 1):
+                bitrate = attribute1
+                length = attribute2
+                vbr = attribute3
+
+            elif attribute3 > 1:
+                length = attribute1
+                sample_rate = attribute2
+                bit_depth = attribute3
+
+        elif len(attributes) == 2:
+            attribute1, attribute2 = attributes
+
+            if attribute2 in (0, 1):
+                bitrate = attribute1
+                vbr = attribute2
+
+            elif attribute1 >= 8000 and attribute2 <= 64:
+                sample_rate = attribute1
+                bit_depth = attribute2
+
+            else:
+                bitrate = attribute1
+                length = attribute2
+
+    return bitrate, length, vbr, sample_rate, bit_depth
+
+
 def get_result_bitrate_length(filesize, attributes):
     """ Used to get the audio bitrate and length of search results and
     user browse files """
 
-    bitrate = attributes.get(0)
-    length = attributes.get(1)
-    vbr = attributes.get(2)
-    sample_rate = attributes.get(4)
-    bit_depth = attributes.get(5)
+    bitrate, length, vbr, sample_rate, bit_depth = get_file_attributes(attributes)
 
     if bitrate is None:
         if sample_rate and bit_depth:
