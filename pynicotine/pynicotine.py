@@ -416,15 +416,15 @@ class NicotineCore:
 
     def network_event(self, msgs):
 
-        for i in msgs:
+        for msg in msgs:
             if self.shutdown:
                 return
 
-            if i.__class__ in self.events:
-                self.events[i.__class__](i)
+            try:
+                self.events[msg.__class__](msg)
 
-            else:
-                log.add("No handler for class %s %s", (i.__class__, dir(i)))
+            except KeyError:
+                log.add("No handler for class %s %s", (msg.__class__, dir(msg)))
 
         msgs.clear()
 
