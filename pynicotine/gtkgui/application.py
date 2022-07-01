@@ -77,8 +77,10 @@ class Application(Gtk.Application):
             active_window.present()
             return
 
-        if self.frame:
-            self.frame.init_window()
+        if self.frame is None:
+            return
+
+        self.frame.init_window()
 
         if config.sections["server"]["auto_connect_startup"]:
             self.core.connect()
