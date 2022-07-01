@@ -2446,7 +2446,7 @@ class FileSearchResult(PeerMessage):
                 for _ in range(numattr):
                     pos, attrnum = self.unpack_uint32(message, pos)
                     pos, attr = self.unpack_uint32(message, pos)
-                    attrs[attrnum] = attr
+                    attrs[str(attrnum)] = attr
 
             shares.append((code, name.replace('/', '\\'), size, ext, attrs))
 
@@ -2637,7 +2637,7 @@ class FolderContentsResponse(PeerMessage):
                     for _ in range(numattr):
                         pos, attrnum = self.unpack_uint32(message, pos)
                         pos, attr = self.unpack_uint32(message, pos)
-                        attrs[attrnum] = attr
+                        attrs[str(attrnum)] = attr
 
                     shares[folder][directory].append((code, name, size, ext, attrs))
 
