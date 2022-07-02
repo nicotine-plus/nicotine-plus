@@ -25,6 +25,7 @@ from pynicotine.gtkgui.widgets.dialogs import generic_dialog
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.utils import human_size
+from pynicotine.utils import humanize
 
 
 class Statistics(UserInterface):
@@ -73,8 +74,8 @@ class Statistics(UserInterface):
             session_value = human_size(session_value)
             total_value = human_size(total_value)
         else:
-            session_value = str(session_value)
-            total_value = str(total_value)
+            session_value = humanize(session_value)
+            total_value = humanize(total_value)
 
         getattr(self, stat_id + "_session_label").set_text(session_value)
         getattr(self, stat_id + "_total_label").set_text(total_value)
