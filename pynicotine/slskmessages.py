@@ -2130,9 +2130,9 @@ class PeerInitMessage(SlskMessage):
 
 class PierceFireWall(PeerInitMessage):
     """ Peer init code: 0 """
-    """ This is the very first message sent by the peer that established a
-    connection, if it has been asked by the other peer to do so. The token
-    is taken from the ConnectToPeer server message. """
+    """ This message is sent in response to an indirect connection request
+    from another user. If the message goes through to the user, the connection
+    is ready. The token is taken from the ConnectToPeer server message. """
 
     def __init__(self, sock=None, token=None):
         self.sock = sock
@@ -2143,16 +2143,17 @@ class PierceFireWall(PeerInitMessage):
 
     def parse_network_message(self, message):
         if message:
-            # A token is not guaranteed to be sent
+            # A token is not guaranteed to be sent (buggy client?)
             _pos, self.token = self.unpack_uint32(message)
 
 
 class PeerInit(PeerInitMessage):
     """ Peer init code: 1 """
-    """ This message is sent by the peer that initiated a connection,
-    not necessarily a peer that actually established it. Token apparently
-    can be anything. Type is 'P' if it's anything but filetransfer,
-    'F' otherwise. """
+    """ This message is sent to initiate a direct connection to another
+    peer. The token is apparently always 0 and ignored.
+
+    Nicotine+ extends the PeerInit class to reuse and keep track of peer
+    connections internally. """
 
     __slots__ = ("sock", "addr", "init_user", "target_user", "conn_type", "indirect", "token")
 

@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on April 15, 2022
+Last updated on July 2, 2022
 
 Since the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify or extend the protocol in ways that negatively impact the network.
 
@@ -464,7 +464,7 @@ The server tells us someone has just left a room we're in.
 
 Either we ask server to tell someone else we want to establish a connection with them, or server tells us someone wants to connect with us. Used when the side that wants a connection can't establish it, and tries to go the other way around (direct connection has failed).
 
-See also: [Peer Connection Message Order](#peer-connection-message-order)
+See also: [Peer Connection Message Order](#modern-peer-connection-message-order)
 
 ### Data Order
 
@@ -1799,7 +1799,7 @@ The server returns a list of related search terms for a search query.
 
 We send this to say we can't connect to peer after it has asked us to connect. We receive this if we asked peer to connect and it can't do this. This message means a connection can't be established either way.
 
-See also: [Peer Connection Message Order](#peer-connection-message-order)
+See also: [Peer Connection Message Order](#modern-peer-connection-message-order)
 
 ### Data Order
 
@@ -1882,35 +1882,35 @@ If this fails, User B retries for ~1 minute. If this still fails, no connection 
 
 ### PierceFireWall
 
-This is the very first message sent by the peer that established a connection, if it has been asked by the other peer to do so.
+This message is sent in response to an indirect connection request from another user. If the message goes through to the user, the connection is ready. The token is taken from the [ConnectToPeer](#server-code-18) server message.
 
-The token is taken from the [ConnectToPeer](#server-code-18) server message. See also: [Peer Connection Message Order](#peer-connection-message-order)
+See also: [Peer Connection Message Order](#modern-peer-connection-message-order)
 
 ### Data Order
 
   - Send
-      - **uint32** <ins>token</ins> *Unique Number*
+      - **uint32** <ins>token</ins>
   - Receive
-      - **uint32** <ins>token</ins> *Unique Number*
+      - **uint32** <ins>token</ins>
 
 ## Peer Init Code 1
 
 ### PeerInit
 
-This message is sent by the peer that initiated a connection, not necessarily a peer that actually established it. Token apparently can be anything. Type is 'P' if it's anything but filetransfer, 'F' otherwise.
+This message is sent to initiate a direct connection to another peer. The token is apparently always 0 and ignored.
 
-See also: [Peer Connection Message Order](#peer-connection-message-order)
+See also: [Peer Connection Message Order](#modern-peer-connection-message-order)
 
 ### Data Order
 
   - Send
-      - **string** <ins>username</ins> *Local Username*
+      - **string** <ins>username</ins> *local username*
       - **string** <ins>type</ins> **P, F or D** *see [Connection Types](#connection-types)*
-      - **uint32** <ins>token</ins> *Unique Number*
+      - **uint32** <ins>token</ins> *value is always* **0**
   - Receive
-      - **string** <ins>username</ins> *Remote Username*
+      - **string** <ins>username</ins> *remote username*
       - **string** <ins>type</ins> **P, F or D** *see [Connection Types](#connection-types)*
-      - **uint32** <ins>token</ins> *Unique Number*
+      - **uint32** <ins>token</ins> *value is always* **0**
 
 # Peer Messages
 
