@@ -508,7 +508,7 @@ class Transfers:
         bandwidth_sum = 0
 
         for i in self.uploads:
-            if i.speed is not None and i.sock is not None:
+            if i.sock is not None and i.speed is not None:
                 bandwidth_sum += i.speed
 
                 if bandwidth_sum >= bandwidth_limit:
@@ -1392,9 +1392,6 @@ class Transfers:
                 # Inform the server about the last upload speed for this transfer
                 self.queue.append(slskmessages.SendUploadSpeed(i.speed))
 
-                i.speed = None
-                i.time_left = 0
-
             i.last_byte_offset = i.current_byte_offset
             i.last_update = current_time
 
@@ -1962,7 +1959,6 @@ class Transfers:
 
         i.status = "Finished"
         i.current_byte_offset = i.size
-        i.speed = None
         i.time_left = 0
         i.sock = None
 
@@ -1995,7 +1991,6 @@ class Transfers:
 
         i.status = "Finished"
         i.current_byte_offset = i.size
-        i.speed = None
         i.time_left = 0
         i.sock = None
 
@@ -2376,9 +2371,7 @@ class Transfers:
         transfer.legacy_attempt = False
         transfer.size_changed = False
         transfer.token = None
-        transfer.speed = None
         transfer.queue_position = 0
-        transfer.time_left = 0
 
         if transfer.sock is not None:
             self.queue.append(slskmessages.ConnClose(transfer.sock))
