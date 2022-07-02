@@ -771,13 +771,22 @@ class SlskProtoThread(threading.Thread):
 
     def has_existing_user_socket(self, user, conn_type):
 
-        if conn_type != 'F':
-            prev_init = self._init_msgs.get(user + conn_type)
+        prev_init = self._init_msgs.get(user + conn_type)
 
-            if prev_init is not None and prev_init.sock is not None:
-                return True
+        if prev_init is not None and prev_init.sock is not None:
+            return True
 
         return False
+
+    def add_init_message(self, init):
+
+        conn_type = init.conn_type
+
+        if conn_type == 'F':
+            # File transfer connections are not unique or reused later
+            return
+
+        self._init_msgs[init.target_user + conn_type] = init
 
     @staticmethod
     def pack_network_message(msg_obj):
@@ -850,18 +859,17 @@ class SlskProtoThread(threading.Thread):
         if conn_type not in self.peerconntypes:
             return
 
-        if conn_type != 'F':
-            # Check if there's already a connection for the specified username
-            init = self._init_msgs.get(user + conn_type)
+        # Check if there's already a connection for the specified username
+        init = self._init_msgs.get(user + conn_type)
 
-            if init is None:
-                # Check if we have a pending PeerInit message (currently requesting user IP address)
-                pending_init_msgs = self._init_msgs.get(user, [])
+        if init is None and conn_type != 'F':
+            # Check if we have a pending PeerInit message (currently requesting user IP address)
+            pending_init_msgs = self._init_msgs.get(user, [])
 
-                for msg in pending_init_msgs:
-                    if msg.conn_type == conn_type:
-                        init = msg
-                        break
+            for msg in pending_init_msgs:
+                if msg.conn_type == conn_type:
+                    init = msg
+                    break
 
         log.add_conn("Sending message of type %(type)s to user %(user)s", {
             'type': message.__class__,
@@ -930,7 +938,7 @@ class SlskProtoThread(threading.Thread):
             # Also request indirect connection in case the user's port is closed
             self.connect_to_peer_indirect(init)
 
-        self._init_msgs[user + init.conn_type] = init
+        self.add_init_message(init)
         self._queue.append(InitPeerConn(addr, init))
 
         log.add_conn("Attempting direct connection of type %(type)s to user %(user)s %(addr)s", {
@@ -1025,7 +1033,7 @@ class SlskProtoThread(threading.Thread):
             self._queue.append(init)
 
             # Direct and indirect connections are attempted at the same time, clean up
-            self._init_msgs.pop(init.token, None)
+            self._init_msgs.pop(token, None)
 
             if self._out_indirect_conn_request_times.pop(init, None):
                 log.add_conn(("Stopping indirect connection attempt of type %(type)s to user "
@@ -1087,9 +1095,11 @@ class SlskProtoThread(threading.Thread):
             "type": init.conn_type,
             "user": user
         })
-        prev_init = self._init_msgs.get(user + conn_type)
+
+        prev_init = self._init_msgs[user + conn_type]
         init.outgoing_msgs = prev_init.outgoing_msgs
         prev_init.outgoing_msgs = []
+
         self.close_connection(self._conns, prev_init.sock)
 
     def close_connection(self, connection_list, sock, callback=True):
@@ -1151,6 +1161,9 @@ class SlskProtoThread(threading.Thread):
 
         init_key = user + conn_type
         init = self._init_msgs.get(init_key)
+
+        if init is None:
+            return
 
         log.add_conn("Removing PeerInit message of type %(type)s for user %(user)s %(addr)s", {
             'type': conn_type,
@@ -1483,7 +1496,8 @@ class SlskProtoThread(threading.Thread):
                             self.close_connection(self._conns, conn_obj.sock)
                             return
 
-                        self._init_msgs[init.target_user + init.conn_type] = init
+                        self.add_init_message(init)
+
                         init.sock = conn_obj.sock
                         self._out_indirect_conn_request_times.pop(init, None)
 
@@ -1511,8 +1525,8 @@ class SlskProtoThread(threading.Thread):
 
                         conn_obj.init = msg
                         conn_obj.init.addr = addr
-                        self._init_msgs[user + conn_type] = msg
 
+                        self.add_init_message(msg)
                         self.process_conn_messages(msg)
 
                     self._callback_msgs.append(msg)
