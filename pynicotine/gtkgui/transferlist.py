@@ -394,7 +394,11 @@ class TransferList(UserInterface):
             transfer = self.transfersmodel.get_value(iterator, 16)
             status = transfer.status
 
-            if status == "Transferring" or salient_status in self.deprioritized_statuses:
+            if status == "Transferring":
+                speed += transfer.speed or 0
+                salient_status = status
+
+            elif salient_status in self.deprioritized_statuses:
                 salient_status = status
 
             if status == "Filtered":
@@ -405,7 +409,6 @@ class TransferList(UserInterface):
             elapsed += transfer.time_elapsed or 0
             total_size += self.get_size(transfer.size)
             current_bytes += transfer.current_byte_offset or 0
-            speed += transfer.speed or 0
 
             iterator = self.transfersmodel.iter_next(iterator)
 
