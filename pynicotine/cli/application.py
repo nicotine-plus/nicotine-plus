@@ -18,6 +18,8 @@
 
 import time
 
+from collections import deque
+
 from pynicotine.config import config
 from pynicotine.logfacility import log
 
@@ -28,7 +30,7 @@ class Application:
 
         self.core = core
         self.ci_mode = ci_mode
-        self.network_msgs = []
+        self.network_msgs = deque()
 
         config.load_config()
         log.log_levels = set(["download", "upload"] + config.sections["logging"]["debugmodes"])
@@ -45,8 +47,11 @@ class Application:
         # Main loop, process messages from networking thread
         while not self.core.shutdown:
             if self.network_msgs:
-                msgs = list(self.network_msgs)
-                self.network_msgs.clear()
+                msgs = []
+
+                while self.network_msgs:
+                    msgs.append(self.network_msgs.popleft())
+
                 self.core.network_event(msgs)
 
             time.sleep(1 / 60)
@@ -56,7 +61,7 @@ class Application:
         return 0
 
     def network_callback(self, msgs):
-        self.network_msgs += msgs
+        self.network_msgs.extend(msgs)
 
     def show_scan_progress(self):
         # Not implemented
