@@ -532,8 +532,12 @@ class Transfers:
         return True
 
     def file_is_upload_queued(self, user, filename):
+
         statuses = ("Queued", "Getting status", "Transferring")
-        return next(i.filename == filename and i.status in statuses and i.user == user for i in self.uploads)
+
+        return next(
+            (i.filename == filename and i.status in statuses and i.user == user for i in self.uploads), False
+        )
 
     @staticmethod
     def file_is_readable(filename, real_path):
