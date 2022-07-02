@@ -2020,10 +2020,12 @@ class SlskProtoThread(threading.Thread):
 
     def process_queue_messages(self):
 
-        msg_list = self._queue.copy()
-        self._queue.clear()
+        msgs = []
 
-        for msg_obj in msg_list:
+        while self._queue:
+            msgs.append(self._queue.popleft())
+
+        for msg_obj in msgs:
             if self.server_disconnected:
                 # Disconnected from server, stop processing queue
                 return
@@ -2298,7 +2300,7 @@ class SlskProtoThread(threading.Thread):
 
             # Inform the main thread
             if self._callback_msgs:
-                self._core_callback(list(self._callback_msgs))
+                self._core_callback(self._callback_msgs)
                 self._callback_msgs.clear()
 
             # Reset transfer speed limits
