@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-22 02:04+0300\n"
-"PO-Revision-Date: 2022-06-28 01:18+0000\n"
+"PO-Revision-Date: 2022-07-03 21:37+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -1077,7 +1077,6 @@ msgid "Saint Helena"
 msgstr "Saint Helena"
 
 #: pynicotine/geoip/geoip.py:222
-#, fuzzy
 msgid "Slovenia"
 msgstr "Szlovénia"
 
