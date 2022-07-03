@@ -716,7 +716,7 @@ class Transfers:
 
         if not allowed:
             if reason and reason != "Queued":
-                self.core.send_message_to_peer(user, slskmessages.UploadDenied(None, filename, reason))
+                self.core.send_message_to_peer(user, slskmessages.UploadDenied(file=filename, reason=reason))
 
             return
 
@@ -810,7 +810,7 @@ class Transfers:
             self.transfer_request_times[download] = time.time()
 
             self.update_download(download)
-            return slskmessages.TransferResponse(None, allowed=True, token=token)
+            return slskmessages.TransferResponse(allowed=True, token=token)
 
         # Check if download exists in our default download folder
         if self.get_existing_download_path(user, filename, "", size):
@@ -831,14 +831,14 @@ class Transfers:
             self.update_download(transfer)
             self.core.watch_user(user)
 
-            return slskmessages.TransferResponse(None, allowed=False, reason="Queued", token=transfer.token)
+            return slskmessages.TransferResponse(allowed=False, reason="Queued", token=transfer.token)
 
         log.add_transfer("Denied file request: User %(user)s, %(msg)s", {
             'user': user,
             'msg': str(vars(msg))
         })
 
-        return slskmessages.TransferResponse(None, allowed=False, reason=cancel_reason, token=msg.token)
+        return slskmessages.TransferResponse(allowed=False, reason=cancel_reason, token=msg.token)
 
     def transfer_request_uploads(self, msg):
         """ Remote peer is requesting to download a file through your upload queue.
@@ -860,7 +860,7 @@ class Transfers:
 
         if not allowed:
             if reason:
-                return slskmessages.TransferResponse(None, allowed=False, reason=reason, token=msg.token)
+                return slskmessages.TransferResponse(allowed=False, reason=reason, token=msg.token)
 
             return None
 
@@ -884,7 +884,7 @@ class Transfers:
             self.append_upload(user, filename, transfer)
             self.update_upload(transfer)
 
-            return slskmessages.TransferResponse(None, allowed=False, reason="Queued", token=msg.token)
+            return slskmessages.TransferResponse(allowed=False, reason="Queued", token=msg.token)
 
         # All checks passed, starting a new upload.
         size = self.get_file_size(real_path)
@@ -895,7 +895,7 @@ class Transfers:
         self.append_upload(user, filename, transfer)
         self.update_upload(transfer)
 
-        return slskmessages.TransferResponse(None, allowed=True, token=msg.token, filesize=size)
+        return slskmessages.TransferResponse(allowed=True, token=msg.token, filesize=size)
 
     def transfer_response(self, msg):
         """ Peer code: 41 """
@@ -1477,7 +1477,7 @@ class Transfers:
 
                 # Transfer ended abruptly. Tell the peer to re-queue the file. If the transfer was
                 # intentionally cancelled, the peer should ignore this message.
-                self.core.send_message_to_peer(upload.user, slskmessages.UploadFailed(None, file=upload.filename))
+                self.core.send_message_to_peer(upload.user, slskmessages.UploadFailed(file=upload.filename))
 
             if not self.auto_clear_upload(upload):
                 self.update_upload(upload)
@@ -1556,7 +1556,7 @@ class Transfers:
     """ Transfer Actions """
 
     def get_folder(self, user, folder):
-        self.core.send_message_to_peer(user, slskmessages.FolderContentsRequest(None, folder))
+        self.core.send_message_to_peer(user, slskmessages.FolderContentsRequest(directory=folder))
 
     def get_file(self, user, filename, path="", transfer=None, size=0, bitrate=None, length=None, ui_callback=True):
 
@@ -1620,7 +1620,7 @@ class Transfers:
                     "user": user
                 })
                 self.core.send_message_to_peer(
-                    user, slskmessages.QueueUpload(None, filename, transfer.legacy_attempt))
+                    user, slskmessages.QueueUpload(file=filename, legacy_client=transfer.legacy_attempt))
 
         if ui_callback:
             self.update_download(transfer)
@@ -1678,7 +1678,8 @@ class Transfers:
             })
 
             self.core.send_message_to_peer(
-                user, slskmessages.TransferRequest(None, 1, transfer.token, filename, size, real_path))
+                user, slskmessages.TransferRequest(
+                    direction=1, token=transfer.token, file=filename, filesize=size, realfile=real_path))
 
         self.update_upload(transfer)
 
@@ -2194,9 +2195,7 @@ class Transfers:
 
                     self.core.send_message_to_peer(
                         download.user,
-                        slskmessages.PlaceInQueueRequest(
-                            None, file=download.filename, legacy_client=download.legacy_attempt
-                        )
+                        slskmessages.PlaceInQueueRequest(file=download.filename, legacy_client=download.legacy_attempt)
                     )
 
         # Save list of downloads to file every one minute
@@ -2429,7 +2428,7 @@ class Transfers:
 
         elif send_fail_message and transfer in self.uploads and transfer.status == "Queued":
             self.core.send_message_to_peer(
-                transfer.user, slskmessages.UploadDenied(None, file=transfer.filename, reason=reason))
+                transfer.user, slskmessages.UploadDenied(file=transfer.filename, reason=reason))
 
     """ Filters """
 

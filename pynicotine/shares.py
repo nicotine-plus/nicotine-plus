@@ -133,7 +133,7 @@ class Scanner:
         else:
             streams = self.share_dbs.get("buddystreams")
 
-        compressed_shares = slskmessages.SharedFileList(None, streams)
+        compressed_shares = slskmessages.SharedFileList(shares=streams)
         compressed_shares.make_network_message()
         compressed_shares.list = None
         compressed_shares.type = share_type
@@ -453,8 +453,8 @@ class Shares:
         self.pending_network_msgs = []
         self.rescanning = False
         self.should_compress_shares = False
-        self.compressed_shares_normal = slskmessages.SharedFileList(None, None)
-        self.compressed_shares_buddy = slskmessages.SharedFileList(None, None)
+        self.compressed_shares_normal = slskmessages.SharedFileList()
+        self.compressed_shares_buddy = slskmessages.SharedFileList()
 
         self.convert_shares()
         self.share_db_paths = [
@@ -855,7 +855,7 @@ class Shares:
 
         if not shares_list:
             # Nyah, Nyah
-            shares_list = slskmessages.SharedFileList(msg.init, {})
+            shares_list = slskmessages.SharedFileList(init=msg.init)
 
         shares_list.init = msg.init
         self.queue.append(shares_list)
@@ -889,18 +889,20 @@ class Shares:
         if checkuser:
             try:
                 if msg.dir in shares:
-                    self.queue.append(slskmessages.FolderContentsResponse(init, msg.dir, shares[msg.dir]))
+                    self.queue.append(slskmessages.FolderContentsResponse(
+                        init=init, directory=msg.dir, shares=shares[msg.dir]))
                     return
 
                 if msg.dir.rstrip('\\') in shares:
-                    self.queue.append(slskmessages.FolderContentsResponse(init, msg.dir, shares[msg.dir.rstrip('\\')]))
+                    self.queue.append(slskmessages.FolderContentsResponse(
+                        init=init, directory=msg.dir, shares=shares[msg.dir.rstrip('\\')]))
                     return
 
             except Exception as error:
                 log.add(_("Failed to fetch the shared folder %(folder)s: %(error)s"),
                         {"folder": msg.dir, "error": error})
 
-            self.queue.append(slskmessages.FolderContentsResponse(init, msg.dir, None))
+            self.queue.append(slskmessages.FolderContentsResponse(init=init, directory=msg.dir))
 
     """ Quit """
 
