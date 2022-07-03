@@ -828,7 +828,7 @@ class SlskProtoThread(threading.Thread):
             return None
 
         distrib_class = self.distribclasses[msg.distrib_code]
-        distrib_msg = distrib_class(None)
+        distrib_msg = distrib_class()
         distrib_msg.parse_network_message(msg.distrib_message)
 
         return distrib_msg
@@ -1855,6 +1855,12 @@ class SlskProtoThread(threading.Thread):
 
                 if msg is not None:
                     if msg_class is DistribEmbeddedMessage:
+                        if conn_obj.sock != self.parent_socket:
+                            # Unwanted connection, close it
+                            conn_obj.ibuf = bytearray()
+                            self.close_connection(self._conns, conn_obj.sock)
+                            return
+
                         msg = self.unpack_embedded_message(msg)
 
                     elif msg_class is DistribBranchLevel:
