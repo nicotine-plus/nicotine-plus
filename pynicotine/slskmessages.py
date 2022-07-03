@@ -2215,7 +2215,7 @@ class GetSharedFileList(PeerMessage):
     """ Peer code: 4 """
     """ We send this to a peer to ask for a list of shared files. """
 
-    def __init__(self, init):
+    def __init__(self, init=None):
         self.init = init
 
     def make_network_message(self):
@@ -2231,7 +2231,7 @@ class SharedFileList(PeerMessage):
     """ A peer responds with a list of shared files when we've sent
     a GetSharedFileList. """
 
-    def __init__(self, init, shares=None):
+    def __init__(self, init=None, shares=None):
         self.init = init
         self.list = shares
         self.unknown = 0
@@ -2334,7 +2334,7 @@ class FileSearchRequest(PeerMessage):
     searching for a file. """
     """ OBSOLETE, use UserSearch server message """
 
-    def __init__(self, init, token=None, text=None):
+    def __init__(self, init=None, token=None, text=None):
         self.init = init
         self.token = token
         self.text = text
@@ -2479,7 +2479,7 @@ class UserInfoRequest(PeerMessage):
     """ Peer code: 15 """
     """ We ask the other peer to send us their user information, picture and all. """
 
-    def __init__(self, init):
+    def __init__(self, init=None):
         self.init = init
 
     def make_network_message(self):
@@ -2494,7 +2494,8 @@ class UserInfoReply(PeerMessage):
     """ Peer code: 16 """
     """ A peer responds with this after we've sent a UserInfoRequest. """
 
-    def __init__(self, init, descr=None, pic=None, totalupl=None, queuesize=None, slotsavail=None, uploadallowed=None):
+    def __init__(self, init=None, descr=None, pic=None, totalupl=None, queuesize=None,
+                 slotsavail=None, uploadallowed=None):
         self.init = init
         self.descr = descr
         self.pic = pic
@@ -2571,7 +2572,7 @@ class FolderContentsRequest(PeerMessage):
     """ Peer code: 36 """
     """ We ask the peer to send us the contents of a single folder. """
 
-    def __init__(self, init, directory=None):
+    def __init__(self, init=None, directory=None):
         self.init = init
         self.dir = directory
         self.something = None
@@ -2593,7 +2594,7 @@ class FolderContentsResponse(PeerMessage):
     """ A peer responds with the contents of a particular folder
     (with all subfolders) after we've sent a FolderContentsRequest. """
 
-    def __init__(self, init, directory=None, shares=None):
+    def __init__(self, init=None, directory=None, shares=None):
         self.init = init
         self.dir = directory
         self.list = shares
@@ -2671,7 +2672,7 @@ class TransferRequest(PeerMessage):
     but Nicotine+, Museek+ and the official clients use the QueueUpload message for
     this purpose today. """
 
-    def __init__(self, init, direction=None, token=None, file=None, filesize=None, realfile=None):
+    def __init__(self, init=None, direction=None, token=None, file=None, filesize=None, realfile=None):
         self.init = init
         self.direction = direction
         self.token = token
@@ -2704,7 +2705,7 @@ class TransferResponse(PeerMessage):
     """ Response to TransferRequest - We (or the other peer) either agrees,
     or tells the reason for rejecting the file transfer. """
 
-    def __init__(self, init, allowed=None, reason=None, token=None, filesize=None):
+    def __init__(self, init=None, allowed=None, reason=None, token=None, filesize=None):
         self.init = init
         self.allowed = allowed
         self.token = token
@@ -2739,7 +2740,7 @@ class PlaceholdUpload(PeerMessage):
     """ Peer code: 42 """
     """ OBSOLETE, no longer used """
 
-    def __init__(self, init, file=None):
+    def __init__(self, init=None, file=None):
         self.init = init
         self.file = file
 
@@ -2756,7 +2757,7 @@ class QueueUpload(PeerMessage):
     their end. Once the recipient is ready to transfer the requested file, they
     will send a TransferRequest to us. """
 
-    def __init__(self, init, file=None, legacy_client=False):
+    def __init__(self, init=None, file=None, legacy_client=False):
         self.init = init
         self.file = file
         self.legacy_client = legacy_client
@@ -2772,7 +2773,7 @@ class PlaceInQueue(PeerMessage):
     """ Peer code: 44 """
     """ The peer replies with the upload queue placement of the requested file. """
 
-    def __init__(self, init, filename=None, place=None):
+    def __init__(self, init=None, filename=None, place=None):
         self.init = init
         self.filename = filename
         self.place = place
@@ -2802,7 +2803,7 @@ class UploadDenied(PeerMessage):
     """ This message is sent to reject QueueUpload attempts and previously queued
     files. The reason for rejection will appear in the transfer list of the recipient. """
 
-    def __init__(self, init, file=None, reason=None):
+    def __init__(self, init=None, file=None, reason=None):
         self.init = init
         self.file = file
         self.reason = reason
@@ -2829,7 +2830,7 @@ class UploadQueueNotification(PeerMessage):
     """ This message is sent to inform a peer about an upload attempt initiated by us. """
     """ DEPRECATED, sent by Soulseek NS but not SoulseekQt """
 
-    def __init__(self, init):
+    def __init__(self, init=None):
         self.init = init
 
     def make_network_message(self):
@@ -2843,7 +2844,7 @@ class UnknownPeerMessage(PeerMessage):
     """ Peer code: 12547 """
     """ UNKNOWN """
 
-    def __init__(self, init):
+    def __init__(self, init=None):
         self.init = init
 
     def parse_network_message(self, message):
@@ -2865,7 +2866,7 @@ class FileDownloadInit(FileMessage):
     uploading a file to us. The token is the same as the one previously included
     in the TransferRequest peer message. """
 
-    def __init__(self, init, token=None):
+    def __init__(self, init=None, token=None):
         self.init = init
         self.token = token
 
@@ -2878,7 +2879,7 @@ class FileUploadInit(FileMessage):
     start uploading a file. The token is the same as the one previously included
     in the TransferRequest peer message. """
 
-    def __init__(self, init, token=None):
+    def __init__(self, init=None, token=None):
         self.init = init
         self.token = token
 
@@ -2891,7 +2892,7 @@ class FileOffset(FileMessage):
     to tell them how many bytes of the file we've previously downloaded. If none,
     the offset is 0. """
 
-    def __init__(self, init, offset=None):
+    def __init__(self, init=None, offset=None):
         self.init = init
         self.offset = offset
 
@@ -2914,7 +2915,7 @@ class DistribMessage(SlskMessage):
 class DistribAlive(DistribMessage):
     """ Distrib code: 0 """
 
-    def __init__(self, init):
+    def __init__(self, init=None):
         self.init = init
 
     def make_network_message(self):
@@ -2932,7 +2933,7 @@ class DistribSearch(DistribMessage):
 
     __slots__ = ("unknown", "init", "user", "token", "searchterm")
 
-    def __init__(self, init):
+    def __init__(self, init=None):
         self.init = init
         self.unknown = None
         self.user = None
@@ -2959,7 +2960,7 @@ class DistribBranchLevel(DistribMessage):
     """ We tell our distributed children what our position is in our branch (xth
     generation) on the distributed network. """
 
-    def __init__(self, init, value=None):
+    def __init__(self, init=None, value=None):
         self.init = init
         self.value = value
 
@@ -2975,7 +2976,7 @@ class DistribBranchRoot(DistribMessage):
     """ We tell our distributed children the username of the root of the branch
     we’re in on the distributed network. """
 
-    def __init__(self, init, user=None):
+    def __init__(self, init=None, user=None):
         self.init = init
         self.user = user
 
@@ -2992,7 +2993,7 @@ class DistribChildDepth(DistribMessage):
     we have on the distributed network. """
     """ DEPRECATED, sent by Soulseek NS but not SoulseekQt """
 
-    def __init__(self, init, value=None):
+    def __init__(self, init=None, value=None):
         self.init = init
         self.value = value
 
@@ -3011,7 +3012,7 @@ class DistribEmbeddedMessage(DistribMessage):
 
     __slots__ = ("init", "distrib_code", "distrib_message")
 
-    def __init__(self, init, distrib_code=None, distrib_message=None):
+    def __init__(self, init=None, distrib_code=None, distrib_message=None):
         self.init = init
         self.distrib_code = distrib_code
         self.distrib_message = distrib_message

@@ -53,7 +53,7 @@ class UserBrowse:
     def send_upload_attempt_notification(self, username):
         """ Send notification to user when attempting to initiate upload from our end """
 
-        self.core.send_message_to_peer(username, slskmessages.UploadQueueNotification(None))
+        self.core.send_message_to_peer(username, slskmessages.UploadQueueNotification())
 
     def add_user(self, user):
 
@@ -133,7 +133,7 @@ class UserBrowse:
             return
 
         if not user_exists or new_request:
-            self.core.send_message_to_peer(username, slskmessages.GetSharedFileList(None))
+            self.core.send_message_to_peer(username, slskmessages.GetSharedFileList())
 
     def create_user_shares_folder(self):
 
@@ -181,7 +181,7 @@ class UserBrowse:
         username = filename.replace('\\', os.sep).split(os.sep)[-1]
         self.show_user(username)
 
-        msg = slskmessages.SharedFileList(None)
+        msg = slskmessages.SharedFileList()
         msg.list = shares_list
 
         self.shared_file_list(msg, username)

@@ -70,7 +70,7 @@ class UserInfo:
             return
 
         # Request user description, picture and queue information
-        self.core.send_message_to_peer(user, slskmessages.UserInfoRequest(None))
+        self.core.send_message_to_peer(user, slskmessages.UserInfoRequest())
 
         # Request user status, speed and number of shared files
         self.core.watch_user(user, force_update=True)
