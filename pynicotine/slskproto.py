@@ -1855,7 +1855,7 @@ class SlskProtoThread(threading.Thread):
 
                 if msg is not None:
                     if msg_class is DistribEmbeddedMessage:
-                        if conn_obj.sock != self.parent_socket:
+                        if self.parent_socket is not None and conn_obj.sock != self.parent_socket:
                             # Unwanted connection, close it
                             conn_obj.ibuf = bytearray()
                             self.close_connection(self._conns, conn_obj.sock)
@@ -1897,7 +1897,7 @@ class SlskProtoThread(threading.Thread):
                                          msg.value + 1)
 
                     elif msg_class is DistribBranchRoot:
-                        if conn_obj.sock != self.parent_socket:
+                        if self.parent_socket is not None and conn_obj.sock != self.parent_socket:
                             # Unwanted connection, close it
                             conn_obj.ibuf = bytearray()
                             self.close_connection(self._conns, conn_obj.sock)
