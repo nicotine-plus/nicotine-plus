@@ -529,7 +529,7 @@ class PluginHandler:
             if path in sys.path:
                 sys.path.remove(path)
 
-            for name, module in list(sys.modules.items()):
+            for name, module in sys.modules.copy().items():
                 try:
                     if module.__file__.startswith(path):
                         sys.modules.pop(name, None)
@@ -597,7 +597,7 @@ class PluginHandler:
         })
 
     def save_enabled(self):
-        self.config.sections["plugins"]["enabled"] = list(self.enabled_plugins.keys())
+        self.config.sections["plugins"]["enabled"] = list(self.enabled_plugins)
 
     def load_enabled(self):
         enable = self.config.sections["plugins"]["enable"]

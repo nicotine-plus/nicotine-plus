@@ -2452,7 +2452,7 @@ class Preferences(UserInterface):
 
             scope = self
 
-        for widget in list(scope.__dict__.values()):
+        for widget in scope.__dict__.values():
             update_widget_visuals(widget)
 
     def set_active_page(self, page_id):

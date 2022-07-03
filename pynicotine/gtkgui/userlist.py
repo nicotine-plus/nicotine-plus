@@ -245,7 +245,7 @@ class UserList(UserInterface):
         self.frame.userlist_content.set_visible(self.user_iterators)
 
     def update_visuals(self):
-        for widget in list(self.__dict__.values()):
+        for widget in self.__dict__.values():
             update_widget_visuals(widget)
 
     def cell_toggle_callback(self, _widget, index, treeview, pos):

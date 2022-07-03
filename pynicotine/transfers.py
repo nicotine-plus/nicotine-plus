@@ -2261,7 +2261,7 @@ class Transfers:
                 target_user = user
                 break
 
-        for user, update_time in list(self.user_update_counters.items()):
+        for user, update_time in self.user_update_counters.copy().items():
             if user not in queued_users:
                 del self.user_update_counters[user]
                 continue

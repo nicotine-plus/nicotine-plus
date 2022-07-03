@@ -1131,8 +1131,7 @@ class Search(UserInterface):
         self.results_label.set_text(str(self.num_results_visible) + str_plus)
 
     def update_visuals(self):
-
-        for widget in list(self.__dict__.values()):
+        for widget in self.__dict__.values():
             update_widget_visuals(widget, list_font_target="searchfont")
 
     def on_column_position_changed(self, column, _param):

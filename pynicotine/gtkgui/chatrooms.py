@@ -110,7 +110,7 @@ class ChatRooms(IconNotebook):
                 pos += 1
 
         # Sort by "position"
-        rto = sorted(room_tab_order.keys())
+        rto = sorted(room_tab_order)
         new_autojoin = []
         for roomplace in rto:
             new_autojoin.append(room_tab_order[roomplace])
@@ -128,7 +128,7 @@ class ChatRooms(IconNotebook):
                 GLib.idle_add(lambda tab: tab.chat_entry.grab_focus() == -1, tab)
 
                 self.completion.set_entry(tab.chat_entry)
-                tab.set_completion_list(list(self.core.chatrooms.completion_list))
+                tab.set_completion_list(self.core.chatrooms.completion_list[:])
 
                 self.command_help.popover.unparent()
                 tab.help_button.set_popover(self.command_help.popover)
@@ -319,7 +319,7 @@ class ChatRooms(IconNotebook):
 
         for tab in self.pages.values():
             if tab.container == page:
-                tab.set_completion_list(list(completion_list))
+                tab.set_completion_list(completion_list[:])
                 break
 
     def update_visuals(self):
@@ -332,7 +332,7 @@ class ChatRooms(IconNotebook):
 
     def save_columns(self):
 
-        for room in list(config.sections["columns"]["chat_room"].keys())[:]:
+        for room in config.sections["columns"]["chat_room"].copy():
             if room not in self.pages:
                 del config.sections["columns"]["chat_room"][room]
 
@@ -1004,7 +1004,7 @@ class ChatRoom(UserInterface):
 
     def update_visuals(self):
 
-        for widget in list(self.__dict__.values()):
+        for widget in self.__dict__.values():
             update_widget_visuals(widget)
 
         self.room_wall.update_visuals()
@@ -1101,7 +1101,7 @@ class ChatRoom(UserInterface):
         self.count_users()
 
         # Build completion list
-        self.set_completion_list(list(self.core.chatrooms.completion_list))
+        self.set_completion_list(self.core.chatrooms.completion_list[:])
 
         # Update all username tags in chat log
         for username in self.tag_users:
@@ -1186,7 +1186,7 @@ class ChatRoom(UserInterface):
 
         # We want to include users for this room only
         if config.sections["words"]["roomusers"]:
-            completion_list += self.users.keys()
+            completion_list += self.users
 
         # No duplicates
         completion_list = list(set(completion_list))

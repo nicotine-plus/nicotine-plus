@@ -223,8 +223,7 @@ class TransferList(UserInterface):
         save_columns(self.type, self.tree_view.get_columns())
 
     def update_visuals(self):
-
-        for widget in list(self.__dict__.values()):
+        for widget in self.__dict__.values():
             update_widget_visuals(widget, list_font_target="transfersfont")
 
     def select_transfers(self):
@@ -327,10 +326,10 @@ class TransferList(UserInterface):
                     self.update_parent_row(user_iter, username)
 
             else:
-                for user_path, user_path_iter in list(self.paths.items()):
+                for user_path, user_path_iter in self.paths.copy().items():
                     self.update_parent_row(user_path_iter, user_path, folder=True)
 
-                for username, user_iter in list(self.users.items()):
+                for username, user_iter in self.users.copy().items():
                     self.update_parent_row(user_iter, username)
 
         # Show tab description if necessary

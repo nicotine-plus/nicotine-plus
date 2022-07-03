@@ -420,7 +420,7 @@ class Scanner:
                 last_percent = percent
 
             for file_index, fileinfo in enumerate(shared_files[folder], start=file_index + 1):
-                fileinfo = list(fileinfo)
+                fileinfo = fileinfo[:]
                 filename = fileinfo[0]
 
                 # Add to file index
