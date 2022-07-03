@@ -1815,6 +1815,16 @@ class SlskProtoThread(threading.Thread):
 
     """ Distributed Connection """
 
+    def verify_parent_connection(self, conn_obj):
+        """ Verify that a connection is our current parent connection """
+
+        if self.parent_socket is not None and conn_obj.sock != self.parent_socket:
+            conn_obj.ibuf = bytearray()
+            self.close_connection(self._conns, conn_obj.sock)
+            return False
+
+        return True
+
     def send_have_no_parent(self):
         """ Inform the server we have no parent. The server should either send
         us a PossibleParents message, or start sending us search requests. """
@@ -1854,11 +1864,11 @@ class SlskProtoThread(threading.Thread):
                     msg_class, msg_buffer_mem[idx + 5:idx + msgsize_total], msgsize - 1, "distrib", conn_obj.init)
 
                 if msg is not None:
+                    if msg_class is DistribSearch and not self.verify_parent_connection(conn_obj):
+                        return
+
                     if msg_class is DistribEmbeddedMessage:
-                        if self.parent_socket is not None and conn_obj.sock != self.parent_socket:
-                            # Unwanted connection, close it
-                            conn_obj.ibuf = bytearray()
-                            self.close_connection(self._conns, conn_obj.sock)
+                        if not self.verify_parent_connection(conn_obj):
                             return
 
                         msg = self.unpack_embedded_message(msg)
@@ -1897,10 +1907,7 @@ class SlskProtoThread(threading.Thread):
                                          msg.value + 1)
 
                     elif msg_class is DistribBranchRoot:
-                        if self.parent_socket is not None and conn_obj.sock != self.parent_socket:
-                            # Unwanted connection, close it
-                            conn_obj.ibuf = bytearray()
-                            self.close_connection(self._conns, conn_obj.sock)
+                        if not self.verify_parent_connection(conn_obj):
                             return
 
                         # Inform the server of our branch root
