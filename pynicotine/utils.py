@@ -868,7 +868,7 @@ def get_completion_list(commands, rooms):
                 completion_list.append(user)
 
     if config_words["aliases"]:
-        for k in config.sections["server"]["command_aliases"].keys():
+        for k in config.sections["server"]["command_aliases"]:
             completion_list.append("/" + str(k))
 
     if config_words["commands"]:

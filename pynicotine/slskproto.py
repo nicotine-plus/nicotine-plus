@@ -737,7 +737,7 @@ class SlskProtoThread(threading.Thread):
             curtime = time.time()
 
             if self._out_indirect_conn_request_times:
-                for init, request_time in list(self._out_indirect_conn_request_times.items()):
+                for init, request_time in self._out_indirect_conn_request_times.copy().items():
                     username = init.target_user
                     conn_type = init.conn_type
 
@@ -749,7 +749,7 @@ class SlskProtoThread(threading.Thread):
                             'token': init.token
                         })
 
-                        self._callback_msgs.append(ShowConnectionErrorMessage(username, list(init.outgoing_msgs)))
+                        self._callback_msgs.append(ShowConnectionErrorMessage(username, init.outgoing_msgs[:]))
 
                         self._init_msgs.pop(init.token, None)
                         init.outgoing_msgs.clear()
@@ -1373,7 +1373,7 @@ class SlskProtoThread(threading.Thread):
                             # We now have the IP address for a user we previously didn't know,
                             # attempt a direct connection to the peer/user
                             if user_offline:
-                                self._callback_msgs.append(ShowConnectionErrorMessage(user, list(init.outgoing_msgs)))
+                                self._callback_msgs.append(ShowConnectionErrorMessage(user, init.outgoing_msgs[:]))
                             else:
                                 init.addr = addr
                                 self.connect_to_peer(user, addr, init)

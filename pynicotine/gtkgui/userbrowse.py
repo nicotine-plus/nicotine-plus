@@ -344,8 +344,7 @@ class UserBrowse(UserInterface):
         self.user_popup.set_parent(label)
 
     def update_visuals(self):
-
-        for widget in list(self.__dict__.values()):
+        for widget in self.__dict__.values():
             update_widget_visuals(widget, list_font_target="browserfont")
 
     """ Folder/File Views """

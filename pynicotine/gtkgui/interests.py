@@ -339,7 +339,7 @@ class Interests(UserInterface):
 
     def similar_users(self, msg):
         # Sort users by rating (largest number of identical likes)
-        self.set_similar_users(sorted(msg.users.keys(), key=msg.users.get, reverse=True))
+        self.set_similar_users(sorted(msg.users, key=msg.users.get, reverse=True))
 
     def item_similar_users(self, msg):
         self.set_similar_users(msg.users, msg.thing)
@@ -432,6 +432,5 @@ class Interests(UserInterface):
         return list_view.show_user_status_tooltip(pos_x, pos_y, tooltip, column=4)
 
     def update_visuals(self):
-
-        for widget in list(self.__dict__.values()):
+        for widget in self.__dict__.values():
             update_widget_visuals(widget)

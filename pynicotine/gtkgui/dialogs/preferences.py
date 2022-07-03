@@ -414,7 +414,7 @@ class DownloadsFrame(UserInterface):
             except Exception as error:
                 failed[dfilter] = error
 
-            if filter is not list(self.filter_list_view.iterators.keys())[-1]:
+            if filter is not list(self.filter_list_view.iterators)[-1]:
                 outfilter += "|"
 
         outfilter += ")$)"
@@ -2329,7 +2329,7 @@ class Preferences(UserInterface):
 
             scope = self
 
-        for widget in list(scope.__dict__.values()):
+        for widget in scope.__dict__.values():
             update_widget_visuals(widget)
 
     def set_active_page(self, page_id):
