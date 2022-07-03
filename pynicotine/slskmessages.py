@@ -2933,12 +2933,21 @@ class DistribSearch(DistribMessage):
 
     __slots__ = ("unknown", "init", "user", "token", "searchterm")
 
-    def __init__(self, init=None):
+    def __init__(self, init=None, unknown=None, user=None, token=None, searchterm=None):
         self.init = init
-        self.unknown = None
-        self.user = None
-        self.token = None
-        self.searchterm = None
+        self.unknown = unknown
+        self.user = user
+        self.token = token
+        self.searchterm = searchterm
+
+    def make_network_message(self):
+        msg = bytearray()
+        msg.extend(self.pack_uint32(self.unknown))
+        msg.extend(self.pack_string(self.user))
+        msg.extend(self.pack_uint32(self.token))
+        msg.extend(self.pack_string(self.searchterm))
+
+        return msg
 
     def parse_network_message(self, message):
         try:
