@@ -1819,6 +1819,8 @@ class SlskProtoThread(threading.Thread):
         """ Verify that a connection is our current parent connection """
 
         if self.parent_socket is not None and conn_obj.sock != self.parent_socket:
+            log.add_conn("Received a distributed message from user %s, who is not our parent. Closing connection.",
+                         conn_obj.init.target_user)
             conn_obj.ibuf = bytearray()
             self.close_connection(self._conns, conn_obj.sock)
             return False
