@@ -1104,18 +1104,17 @@ class SlskProtoThread(threading.Thread):
 
     def close_connection(self, connection_list, sock, callback=True):
 
-        if sock not in connection_list:
+        conn_obj = connection_list.pop(sock, None)
+
+        if conn_obj is None:
             # Already removed
             return
-
-        conn_obj = connection_list[sock]
 
         # If we're shutting down, we've already closed the selector in abort()
         if not self._want_abort:
             self.selector.unregister(sock)
 
         sock.close()
-        del connection_list[sock]
         self._numsockets -= 1
 
         if sock is self.server_socket:
@@ -1185,10 +1184,8 @@ class SlskProtoThread(threading.Thread):
 
     def close_connection_by_ip(self, ip_address):
 
-        for sock in self._conns.copy():
-            conn_obj = self._conns.get(sock)
-
-            if not conn_obj or sock is self.server_socket:
+        for sock, conn_obj in self._conns.copy().items():
+            if conn_obj is None or sock is self.server_socket:
                 continue
 
             addr = conn_obj.addr
@@ -2225,14 +2222,7 @@ class SlskProtoThread(threading.Thread):
                     self.selector.register(incsock, events)
 
             # Manage outgoing connections in progress
-            for sock_in_progress in self._connsinprogress.copy():
-                try:
-                    conn_obj = self._connsinprogress[sock_in_progress]
-
-                except KeyError:
-                    # Connection was removed, possibly disconnecting from the server
-                    continue
-
+            for sock_in_progress, conn_obj in self._connsinprogress.copy().items():
                 if (current_time - conn_obj.lastactive) > self.IN_PROGRESS_STALE_AFTER:
                     # Connection failed
 
@@ -2262,14 +2252,7 @@ class SlskProtoThread(threading.Thread):
                     self.close_connection(self._connsinprogress, sock_in_progress, callback=False)
 
             # Process read/write for active connections
-            for sock in self._conns.copy():
-                try:
-                    conn_obj = self._conns[sock]
-
-                except KeyError:
-                    # Connection was removed, possibly disconnecting from the server
-                    continue
-
+            for sock, conn_obj in self._conns.copy().items():
                 if (sock is not self.server_socket
                         and (current_time - conn_obj.lastactive) > self.CONNECTION_MAX_IDLE):
                     # No recent activity, peer connection is stale
