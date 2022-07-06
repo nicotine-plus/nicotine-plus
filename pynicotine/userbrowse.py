@@ -197,7 +197,8 @@ class UserBrowse:
             path = os.path.join(shares_folder, clean_file(user))
 
             with open(encode_path(path), "w", encoding="utf-8") as file_handle:
-                json.dump(shares_list, file_handle, ensure_ascii=False)
+                # Add line breaks for readability, but avoid indentation to decrease file size
+                json.dump(shares_list, file_handle, ensure_ascii=False, indent=0)
 
             log.add(_("Saved list of shared files for user '%(user)s' to %(dir)s"),
                     {'user': user, 'dir': shares_folder})
