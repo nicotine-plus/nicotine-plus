@@ -438,7 +438,7 @@ class SlskProtoThread(threading.Thread):
 
         self.listen_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.listen_socket.setblocking(0)
+        self.listen_socket.setblocking(False)
 
         self.server_disconnected = True
         self.manual_server_disconnect = False
@@ -1246,7 +1246,7 @@ class SlskProtoThread(threading.Thread):
             events = selectors.EVENT_READ | selectors.EVENT_WRITE
             conn_obj = ServerConnection(sock=server_socket, addr=msg_obj.addr, events=events, login=msg_obj.login)
 
-            server_socket.setblocking(0)
+            server_socket.setblocking(False)
 
             # Detect if our connection to the server is still alive
             self.set_server_socket_keepalive(server_socket)
@@ -1315,7 +1315,7 @@ class SlskProtoThread(threading.Thread):
                             # TODO: We can currently receive search requests from a parent connection, but
                             # redirecting results to children is not implemented yet. Tell the server we don't accept
                             # children for now.
-                            self._queue.append(AcceptChildren(0))
+                            self._queue.append(AcceptChildren(False))
 
                             # Request a complete room list. A limited room list not including blacklisted rooms and
                             # rooms with few users is automatically sent when logging in, but subsequent room list
@@ -1596,7 +1596,7 @@ class SlskProtoThread(threading.Thread):
             events = selectors.EVENT_READ | selectors.EVENT_WRITE
             conn_obj = PeerConnection(sock=sock, addr=msg_obj.addr, events=events, init=msg_obj.init)
 
-            sock.setblocking(0)
+            sock.setblocking(False)
 
             if self.bindip:
                 sock.bind((self.bindip, 0))
@@ -1831,7 +1831,7 @@ class SlskProtoThread(threading.Thread):
         self.parent_socket = None
         log.add_conn("We have no parent, requesting a new one")
 
-        self._queue.append(HaveNoParent(1))
+        self._queue.append(HaveNoParent(True))
         self._queue.append(BranchRoot(self.server_username))
         self._queue.append(BranchLevel(0))
 
@@ -1887,7 +1887,7 @@ class SlskProtoThread(threading.Thread):
                             # our parent is, and stop requesting new potential parents.
                             self.parent_socket = conn_obj.sock
 
-                            self._queue.append(HaveNoParent(0))
+                            self._queue.append(HaveNoParent(False))
                             self._queue.append(BranchLevel(msg.value + 1))
 
                             log.add_conn("Adopting user %s as parent", msg.init.target_user)
@@ -2211,7 +2211,7 @@ class SlskProtoThread(threading.Thread):
                     time.sleep(0.01)
                 else:
                     events = selectors.EVENT_READ
-                    incsock.setblocking(0)
+                    incsock.setblocking(False)
 
                     self._conns[incsock] = PeerConnection(sock=incsock, addr=incaddr, events=events)
                     self._numsockets += 1
