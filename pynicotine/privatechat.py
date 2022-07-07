@@ -238,6 +238,10 @@ class PrivateChats:
         if ctcpversion and not self.config.sections["server"]["ctcpmsgs"]:
             self.send_message(user, "%s %s" % (self.config.application_name, self.config.version))
 
+        if not msg.newmessage:
+            # Message was sent while offline, don't auto-reply
+            return
+
         autoreply = self.config.sections["server"]["autoreply"]
 
         if autoreply and self.core.away and user not in self.away_message_users:
