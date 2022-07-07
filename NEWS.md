@@ -1,6 +1,6 @@
 # Release Notes
 
-## Version 3.2.3rc2 (Release Candidate 2)
+## Version 3.2.3rc3 (Release Candidate 3)
 
 ### Changes
 
