@@ -742,7 +742,7 @@ class Transfers:
             log.add_transfer(("Responding to download request %(token)s for file %(filename)s "
                               "from user %(user)s: allowed: %(allowed)s, reason: %(reason)s"), {
                 "token": response.token, "filename": msg.file, "user": user,
-                "allowed": bool(response.allowed), "reason": response.reason
+                "allowed": response.allowed, "reason": response.reason
             })
 
         else:
@@ -754,7 +754,7 @@ class Transfers:
             log.add_transfer(("Responding to legacy upload request %(token)s for file %(filename)s "
                               "from user %(user)s: allowed: %(allowed)s, reason: %(reason)s"), {
                 "token": response.token, "filename": msg.file, "user": user,
-                "allowed": bool(response.allowed), "reason": response.reason
+                "allowed": response.allowed, "reason": response.reason
             })
 
         self.core.send_message_to_peer(user, response)
@@ -908,7 +908,7 @@ class Transfers:
         log.add_transfer(("Received response for upload request %(token)s: allowed: %(allowed)s, "
                           "reason: %(reason)s, file size: %(size)s"), {
             "token": token,
-            "allowed": bool(msg.allowed),
+            "allowed": msg.allowed,
             "reason": reason,
             "size": msg.filesize
         })

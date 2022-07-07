@@ -605,11 +605,11 @@ class NicotineCore:
 
         self.user_statuses[msg.user] = msg.status
 
-        if msg.privileged == 1:
-            self.transfers.add_to_privileged(msg.user)
-
-        elif msg.privileged == 0:
-            self.transfers.remove_from_privileged(msg.user)
+        if msg.privileged is not None:
+            if msg.privileged:
+                self.transfers.add_to_privileged(msg.user)
+            else:
+                self.transfers.remove_from_privileged(msg.user)
 
         self.interests.get_user_status(msg)
         self.transfers.get_user_status(msg)
@@ -619,17 +619,19 @@ class NicotineCore:
         self.privatechats.get_user_status(msg)
         self.chatrooms.get_user_status(msg)
 
-        self.pluginhandler.user_status_notification(msg.user, msg.status, bool(msg.privileged))
+        self.pluginhandler.user_status_notification(msg.user, msg.status, msg.privileged)
 
     def connect_to_peer(self, msg):
         """ Server code: 18 """
 
         log.add_msg_contents(msg)
 
-        if msg.privileged == 1:
-            self.transfers.add_to_privileged(msg.user)
+        if msg.privileged is None:
+            return
 
-        elif msg.privileged == 0:
+        if msg.privileged:
+            self.transfers.add_to_privileged(msg.user)
+        else:
             self.transfers.remove_from_privileged(msg.user)
 
     def get_user_stats(self, msg, log_contents=True):

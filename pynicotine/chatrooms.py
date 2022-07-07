@@ -279,7 +279,7 @@ class ChatRooms:
         """ Server code: 141 """
 
         log.add_msg_contents(msg)
-        self.config.sections["server"]["private_chatrooms"] = bool(msg.enabled)
+        self.config.sections["server"]["private_chatrooms"] = msg.enabled
 
     def private_room_add_operator(self, msg):
         """ Server code: 143 """
