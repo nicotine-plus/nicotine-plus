@@ -677,14 +677,14 @@ class ChatRoom(UserInterface):
                     tag = self.tag_action
 
                 if user != login:
-                    self.chat_view.append_line(self.core.privatechats.censor_chat(line), tag, username=user,
+                    self.chat_view.append_line(self.core.privatechats.censor_chat(line), tag=tag, username=user,
                                                usertag=usertag)
                 else:
-                    self.chat_view.append_line(line, tag, username=user, usertag=usertag)
+                    self.chat_view.append_line(line, tag=tag, username=user, usertag=usertag)
 
             if lines:
                 timestamp_format = config.sections["logging"]["rooms_timestamp"]
-                self.chat_view.append_line(_("--- old messages above ---"), self.tag_hilite,
+                self.chat_view.append_line(_("--- old messages above ---"), tag=self.tag_hilite,
                                            timestamp_format=timestamp_format)
 
     def populate_user_menu(self, user, menu, menu_private_rooms):
@@ -850,7 +850,7 @@ class ChatRoom(UserInterface):
 
         if user != login_username:
             self.chat_view.append_line(
-                self.core.privatechats.censor_chat(line), tag,
+                self.core.privatechats.censor_chat(line), tag=tag,
                 username=user, usertag=usertag, timestamp_format=timestamp_format
             )
 
@@ -861,7 +861,7 @@ class ChatRoom(UserInterface):
 
         else:
             self.chat_view.append_line(
-                line, tag,
+                line, tag=tag,
                 username=user, usertag=usertag, timestamp_format=timestamp_format
             )
 
@@ -896,7 +896,7 @@ class ChatRoom(UserInterface):
         if not self.core.network_filter.is_user_ignored(username) and \
                 not self.core.network_filter.is_user_ip_ignored(username):
             timestamp_format = config.sections["logging"]["rooms_timestamp"]
-            self.activity_view.append_line(_("%s joined the room") % username, self.tag_log,
+            self.activity_view.append_line(_("%s joined the room") % username, tag=self.tag_log,
                                            timestamp_format=timestamp_format)
 
         self.add_user_row(userdata)
@@ -916,7 +916,7 @@ class ChatRoom(UserInterface):
         if not self.core.network_filter.is_user_ignored(username) and \
                 not self.core.network_filter.is_user_ip_ignored(username):
             timestamp_format = config.sections["logging"]["rooms_timestamp"]
-            self.activity_view.append_line(_("%s left the room") % username, self.tag_log,
+            self.activity_view.append_line(_("%s left the room") % username, tag=self.tag_log,
                                            timestamp_format=timestamp_format)
 
         self.usersmodel.remove(self.users[username])
@@ -973,7 +973,7 @@ class ChatRoom(UserInterface):
         if not self.core.network_filter.is_user_ignored(user) and \
                 not self.core.network_filter.is_user_ip_ignored(user):
             timestamp_format = config.sections["logging"]["rooms_timestamp"]
-            self.activity_view.append_line(action % user, self.tag_log, timestamp_format=timestamp_format)
+            self.activity_view.append_line(action % user, tag=self.tag_log, timestamp_format=timestamp_format)
 
         status_icon = get_status_icon_name(status)
 
@@ -1069,7 +1069,7 @@ class ChatRoom(UserInterface):
             del config.sections["columns"]["chat_room"][self.room]
 
         timestamp_format = config.sections["logging"]["rooms_timestamp"]
-        self.chat_view.append_line(_("--- disconnected ---"), self.tag_hilite, timestamp_format)
+        self.chat_view.append_line(_("--- disconnected ---"), tag=self.tag_hilite, timestamp_format=timestamp_format)
 
         for username in self.tag_users:
             self.update_user_tag(username)
@@ -1094,7 +1094,7 @@ class ChatRoom(UserInterface):
 
         # Spit this line into chat log
         timestamp_format = config.sections["logging"]["rooms_timestamp"]
-        self.chat_view.append_line(_("--- reconnected ---"), self.tag_hilite, timestamp_format)
+        self.chat_view.append_line(_("--- reconnected ---"), tag=self.tag_hilite, timestamp_format=timestamp_format)
 
         # Update user count
         self.count_users()
