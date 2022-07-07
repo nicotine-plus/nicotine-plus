@@ -290,16 +290,16 @@ class PrivateChat(UserInterface):
                 except UnicodeDecodeError:
                     line = line.decode("latin-1")
 
-                self.chat_view.append_line(line, self.tag_hilite)
+                self.chat_view.append_line(line, tag=self.tag_hilite)
 
     def server_login(self):
         timestamp_format = config.sections["logging"]["private_timestamp"]
-        self.chat_view.append_line(_("--- reconnected ---"), self.tag_hilite, timestamp_format=timestamp_format)
+        self.chat_view.append_line(_("--- reconnected ---"), tag=self.tag_hilite, timestamp_format=timestamp_format)
 
     def server_disconnect(self):
 
         timestamp_format = config.sections["logging"]["private_timestamp"]
-        self.chat_view.append_line(_("--- disconnected ---"), self.tag_hilite, timestamp_format=timestamp_format)
+        self.chat_view.append_line(_("--- disconnected ---"), tag=self.tag_hilite, timestamp_format=timestamp_format)
         self.status = -1
         self.offline_message = False
 
@@ -392,14 +392,14 @@ class PrivateChat(UserInterface):
             tag = usertag = self.tag_hilite
 
             if not self.offline_message:
-                self.chat_view.append_line(_("* Message(s) sent while you were offline."), tag,
+                self.chat_view.append_line(_("* Message(s) sent while you were offline."), tag=tag,
                                            timestamp_format=timestamp_format)
                 self.offline_message = True
 
         else:
             self.offline_message = False
 
-        self.chat_view.append_line(line, tag, timestamp=timestamp, timestamp_format=timestamp_format,
+        self.chat_view.append_line(line, tag=tag, timestamp=timestamp, timestamp_format=timestamp_format,
                                    username=self.user, usertag=usertag)
 
         if self.speech_toggle.get_active():
@@ -421,7 +421,7 @@ class PrivateChat(UserInterface):
         if hasattr(self, "tag_" + str(message_type)):
             tag = getattr(self, "tag_" + str(message_type))
 
-        self.chat_view.append_line(text, tag, timestamp_format=timestamp_format)
+        self.chat_view.append_line(text, tag=tag, timestamp_format=timestamp_format)
 
     def send_message(self, text):
 
@@ -434,7 +434,7 @@ class PrivateChat(UserInterface):
             line = "[%s] %s" % (my_username, text)
             tag = self.tag_local
 
-        self.chat_view.append_line(line, tag, timestamp_format=config.sections["logging"]["private_timestamp"],
+        self.chat_view.append_line(line, tag=tag, timestamp_format=config.sections["logging"]["private_timestamp"],
                                    username=my_username, usertag=self.tag_my_username)
 
         if self.log_toggle.get_active():
