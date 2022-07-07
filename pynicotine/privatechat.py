@@ -210,7 +210,7 @@ class PrivateChats:
                 if self.core.network_filter.is_ip_ignored(ip_address):
                     return
 
-            elif msg.newmessage:
+            else:
                 self.queue.append(slskmessages.GetPeerAddress(user))
                 self.private_message_queue_add(msg)
                 return
