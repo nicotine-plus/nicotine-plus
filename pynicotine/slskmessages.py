@@ -303,7 +303,7 @@ class SlskMessage:
 
     @staticmethod
     def unpack_bool(message, start=0):
-        return start + 1, message[start]
+        return start + 1, bool(message[start])
 
     @staticmethod
     def unpack_ip(message, start=0):
@@ -727,7 +727,7 @@ class MessageUser(ServerMessage):
         if message[pos:]:
             pos, self.newmessage = self.unpack_bool(message, pos)
         else:
-            self.newmessage = 1
+            self.newmessage = True
 
 
 class MessageAcked(ServerMessage):
@@ -1721,7 +1721,7 @@ class UserPrivileged(ServerMessage):
         return self.pack_string(self.user)
 
     def parse_network_message(self, message):
-        pos, self.user = self.unpack_string(message, 0)
+        pos, self.user = self.unpack_string(message)
         pos, self.privileged = self.unpack_bool(message, pos)
 
 
