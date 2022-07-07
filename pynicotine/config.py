@@ -262,7 +262,7 @@ class Config:
                 "cycle": False,
                 "dropdown": False,
                 "characters": 3,
-                "roomnames": True,
+                "roomnames": False,
                 "buddies": True,
                 "roomusers": True,
                 "commands": True,
