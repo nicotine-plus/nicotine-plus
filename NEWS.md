@@ -1,6 +1,6 @@
 # Release Notes
 
-## Version 3.2.3rc4 (Release Candidate 4)
+## Version 3.2.3 (August 5, 2022)
 
 ### Changes
 

@@ -1,8 +1,8 @@
-nicotine (3.2.3-rc4) jammy; urgency=medium
+nicotine (3.2.3-1) jammy; urgency=medium
 
-  * Release candidate 4.
+  * Latest upstream.
 
- -- Mat <mail@mathias.is>  Mon, 01 Aug 2022 20:33:53 +0300
+ -- Mat <mail@mathias.is>  Fri, 05 Aug 2022 18:20:47 +0300
 
 nicotine (3.2.2-1) impish; urgency=medium
 
