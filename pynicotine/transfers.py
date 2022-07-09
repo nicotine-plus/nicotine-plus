@@ -1120,6 +1120,13 @@ class Transfers:
                     self.core.statistics.append_stat_value("started_downloads", 1)
                     self.core.pluginhandler.download_started_notification(username, filename, incomplete_path)
 
+                    log.add_download(
+                        _("Download started: user %(user)s, file %(file)s"), {
+                            "user": username,
+                            "file": file_handle.name.decode("utf-8", "replace")
+                        }
+                    )
+
                     if download.size > offset:
                         download.status = "Transferring"
                         self.queue.append(slskmessages.DownloadFile(
@@ -1127,12 +1134,6 @@ class Transfers:
                         ))
                         self.queue.append(slskmessages.FileOffset(init=msg.init, offset=offset))
 
-                        log.add_download(
-                            _("Download started: user %(user)s, file %(file)s"), {
-                                "user": username,
-                                "file": file_handle.name.decode("utf-8", "replace")
-                            }
-                        )
                     else:
                         self.download_finished(download, file_handle=file_handle)
                         need_update = False
@@ -1346,7 +1347,7 @@ class Transfers:
                 download.current_byte_offset = current_byte_offset = (download.size - msg.leftbytes)
 
                 if download.start_time is None:
-                    download.start_time = current_time
+                    download.start_time = download.last_update = current_time
 
                 download.status = "Transferring"
                 old_elapsed = download.time_elapsed
@@ -1357,7 +1358,7 @@ class Transfers:
                     self.core.statistics.append_stat_value("downloaded_size", byte_difference)
 
                 if download.size > current_byte_offset or download.speed is None:
-                    if current_time > download.start_time and current_byte_offset > download.last_byte_offset:
+                    if current_byte_offset > download.last_byte_offset:
                         download.speed = int(max(0, byte_difference // max(1, current_time - download.last_update)))
 
                         if download.speed <= 0:
@@ -1367,9 +1368,6 @@ class Transfers:
 
                     if old_elapsed == download.time_elapsed:
                         need_update = False
-                else:
-                    self.download_finished(download, file_handle=msg.file)
-                    need_update = False
 
                 download.last_byte_offset = current_byte_offset
                 download.last_update = current_time
@@ -1404,7 +1402,7 @@ class Transfers:
             upload.current_byte_offset = current_byte_offset = (msg.offset + msg.sentbytes)
 
             if upload.start_time is None:
-                upload.start_time = current_time
+                upload.start_time = upload.last_update = current_time
 
             upload.status = "Transferring"
             old_elapsed = upload.time_elapsed
@@ -1415,7 +1413,7 @@ class Transfers:
                 self.core.statistics.append_stat_value("uploaded_size", byte_difference)
 
             if upload.size > current_byte_offset or upload.speed is None:
-                if current_time > upload.start_time and current_byte_offset > upload.last_byte_offset:
+                if current_byte_offset > upload.last_byte_offset:
                     upload.speed = int(max(0, byte_difference // max(1, current_time - upload.last_update)))
 
                     if upload.speed <= 0:
@@ -1444,6 +1442,10 @@ class Transfers:
         for download in self.downloads:
             if download.sock != sock:
                 continue
+
+            if download.current_byte_offset is not None and download.current_byte_offset >= download.size:
+                self.download_finished(download, file_handle=download.file)
+                return
 
             self.abort_transfer(download)
 
