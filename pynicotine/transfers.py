@@ -518,6 +518,9 @@ class Transfers:
 
     def allow_new_uploads(self):
 
+        if self.core.shares.rescanning:
+            return False
+
         if self.config.sections["transfers"]["useupslots"]:
             # Limit by upload slots
             if self.slot_limit_reached():
