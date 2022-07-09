@@ -1798,7 +1798,7 @@ class Transfers:
         if self.allow_new_uploads():
             return lstlen + 1
 
-        return lstlen
+        return lstlen or 1
 
     def get_upload_queue_size(self, username=None):
 
