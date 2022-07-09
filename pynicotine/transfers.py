@@ -48,6 +48,7 @@ from pynicotine.utils import clean_file
 from pynicotine.utils import clean_path
 from pynicotine.utils import encode_path
 from pynicotine.utils import get_result_bitrate_length
+from pynicotine.utils import human_speed
 from pynicotine.utils import load_file
 from pynicotine.utils import truncate_string_byte
 from pynicotine.utils import write_file_and_backup
@@ -1355,7 +1356,7 @@ class Transfers:
                 if byte_difference:
                     self.core.statistics.append_stat_value("downloaded_size", byte_difference)
 
-                if download.size > current_byte_offset:
+                if download.size > current_byte_offset or download.speed is None:
                     if current_time > download.start_time and current_byte_offset > download.last_byte_offset:
                         download.speed = int(max(0, byte_difference // max(1, current_time - download.last_update)))
 
@@ -1413,7 +1414,7 @@ class Transfers:
             if byte_difference:
                 self.core.statistics.append_stat_value("uploaded_size", byte_difference)
 
-            if upload.size > current_byte_offset:
+            if upload.size > current_byte_offset or upload.speed is None:
                 if current_time > upload.start_time and current_byte_offset > upload.last_byte_offset:
                     upload.speed = int(max(0, byte_difference // max(1, current_time - upload.last_update)))
 
@@ -1424,10 +1425,6 @@ class Transfers:
 
                 if old_elapsed == upload.time_elapsed:
                     need_update = False
-
-            elif upload.speed is not None:
-                # Inform the server about the last upload speed for this transfer
-                self.queue.append(slskmessages.SendUploadSpeed(upload.speed))
 
             upload.last_byte_offset = current_byte_offset
             upload.last_update = current_time
@@ -1474,6 +1471,12 @@ class Transfers:
             if upload.current_byte_offset is not None and upload.current_byte_offset >= upload.size:
                 # We finish the upload here in case the downloading peer has a slow/limited download
                 # speed and finishes later than us
+
+                if upload.speed is not None:
+                    # Inform the server about the last upload speed for this transfer
+                    log.add_transfer("Sending upload speed %s to the server", human_speed(upload.speed))
+                    self.queue.append(slskmessages.SendUploadSpeed(upload.speed))
+
                 self.upload_finished(upload, file_handle=upload.file)
                 return
 
