@@ -181,6 +181,9 @@ class Scanner:
         or, if rebuild is True, all directories
         """
 
+        # Reset progress
+        self.queue.put("indeterminate")
+
         if share_type == "buddy":
             shared_folders = (x[1] for x in self.shared_buddy_folders)
             prefix = "buddy"
@@ -757,6 +760,10 @@ class Shares:
                     else:
                         log.add(_("Rescan progress: %s"), str(int(item * 100)) + " %")
 
+                elif item == "indeterminate" and self.ui_callback:
+                    self.ui_callback.show_scan_progress()
+                    self.ui_callback.set_scan_indeterminate()
+
                 elif isinstance(item, slskmessages.SharedFileList):
                     if item.type == "normal":
                         self.compressed_shares_normal = item
@@ -792,10 +799,6 @@ class Shares:
         return self._process_scanner(scanner, scanner_queue)
 
     def _process_scanner(self, scanner, scanner_queue):
-
-        if self.ui_callback:
-            self.ui_callback.show_scan_progress()
-            self.ui_callback.set_scan_indeterminate()
 
         # Let the scanner process do its thing
         error = self.process_scanner_messages(scanner, scanner_queue)
