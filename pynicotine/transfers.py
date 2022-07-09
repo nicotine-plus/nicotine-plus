@@ -916,7 +916,11 @@ class Transfers:
             "size": msg.filesize
         })
 
-        if msg.reason is not None:
+        if reason is not None:
+            if reason in ("Getting status", "Transferring", "Paused", "Filtered", "User logged off"):
+                # Don't allow internal statuses as reason
+                reason = "Cancelled"
+
             for upload in self.uploads:
                 if upload.token != token:
                     continue
@@ -932,7 +936,7 @@ class Transfers:
 
                 self.update_user_counter(upload.user)
 
-                if reason == "Complete":
+                if reason in ("Complete", "Finished"):
                     # A complete download of this file already exists on the user's end
                     self.upload_finished(upload)
 
@@ -1242,6 +1246,10 @@ class Transfers:
         filename = msg.file
         reason = msg.reason
 
+        if reason in ("Getting status", "Transferring", "Paused", "Filtered", "User logged off", "Finished"):
+            # Don't allow internal statuses as reason
+            reason = "Cancelled"
+
         for download in self.downloads:
             if download.filename != filename or download.user != user:
                 continue
@@ -1267,7 +1275,7 @@ class Transfers:
                 break
 
             if download.status == "Transferring":
-                self.abort_transfer(download, reason=msg.reason)
+                self.abort_transfer(download, reason=reason)
 
             download.status = reason
             self.update_download(download)
@@ -1275,7 +1283,7 @@ class Transfers:
             log.add_transfer("Download request denied by user %(user)s for file %(filename)s. Reason: %(reason)s", {
                 "user": user,
                 "filename": filename,
-                "reason": reason
+                "reason": msg.reason
             })
             return
 
