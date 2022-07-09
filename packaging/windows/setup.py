@@ -152,7 +152,8 @@ def add_typelibs():
         "GObject-",
         "GdkPixbuf-",
         "cairo-",
-        "GModule-"
+        "GModule-",
+        "freetype2-"
     ]
 
     if GTK_VERSION == '4':
