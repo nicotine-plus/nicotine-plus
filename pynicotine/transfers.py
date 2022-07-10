@@ -1716,6 +1716,7 @@ class Transfers:
 
                 if upload.status != "Finished":
                     transferobj.current_byte_offset = upload.current_byte_offset
+                    transferobj.time_elapsed = upload.time_elapsed
 
                 if upload in self.transfer_request_times:
                     del self.transfer_request_times[upload]
