@@ -142,7 +142,7 @@ class Downloads(TransferList):
             file_path = None
 
             if transfer.file is not None:
-                file_path = transfer.file.name
+                file_path = transfer.file.name.decode("utf-8", "replace")
 
             else:
                 # If this file doesn't exist anymore, it may have finished downloading and have been renamed.
