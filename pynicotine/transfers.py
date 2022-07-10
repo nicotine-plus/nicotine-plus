@@ -83,7 +83,7 @@ class Transfer:
         self.last_update = None
         self.last_byte_offset = None
         self.speed = None
-        self.time_elapsed = None
+        self.time_elapsed = 0
         self.time_left = None
         self.iterator = None
         self.legacy_attempt = False
@@ -1116,6 +1116,8 @@ class Transfers:
                     download.file = file_handle
                     download.last_byte_offset = offset
                     download.queue_position = 0
+                    download.last_update = time.time()
+                    download.start_time = download.last_update - download.time_elapsed
 
                     self.core.statistics.append_stat_value("started_downloads", 1)
                     self.core.pluginhandler.download_started_notification(username, filename, incomplete_path)
@@ -1209,21 +1211,24 @@ class Transfers:
                 upload.file = file_handle
                 upload.last_byte_offset = 0
                 upload.queue_position = 0
+                upload.last_update = time.time()
+                upload.start_time = upload.last_update - upload.time_elapsed
 
                 self.core.statistics.append_stat_value("started_uploads", 1)
                 self.core.pluginhandler.upload_started_notification(username, filename, real_path)
+
+                log.add_upload(
+                    _("Upload started: user %(user)s, IP address %(ip)s, file %(file)s"), {
+                        "user": username,
+                        "ip": self.core.protothread.user_addresses.get(username),
+                        "file": filename
+                    }
+                )
 
                 if upload.size > 0:
                     upload.status = "Transferring"
                     self.queue.append(slskmessages.UploadFile(upload.sock, file=file_handle, size=upload.size))
 
-                    log.add_upload(
-                        _("Upload started: user %(user)s, IP address %(ip)s, file %(file)s"), {
-                            "user": username,
-                            "ip": self.core.protothread.user_addresses.get(username),
-                            "file": filename
-                        }
-                    )
                 else:
                     self.upload_finished(upload, file_handle=file_handle)
                     need_update = False
@@ -1346,9 +1351,6 @@ class Transfers:
                 current_time = time.time()
                 download.current_byte_offset = current_byte_offset = (download.size - msg.leftbytes)
 
-                if download.start_time is None:
-                    download.start_time = download.last_update = current_time
-
                 download.status = "Transferring"
                 old_elapsed = download.time_elapsed
                 download.time_elapsed = current_time - download.start_time
@@ -1400,9 +1402,6 @@ class Transfers:
 
             current_time = time.time()
             upload.current_byte_offset = current_byte_offset = (msg.offset + msg.sentbytes)
-
-            if upload.start_time is None:
-                upload.start_time = upload.last_update = current_time
 
             upload.status = "Transferring"
             old_elapsed = upload.time_elapsed
