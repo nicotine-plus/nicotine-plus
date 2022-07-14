@@ -2352,7 +2352,7 @@ class Transfers:
         self.user_update_counter += 1
         self.user_update_counters[user] = self.user_update_counter
 
-    def ban_user(self, user, ban_message=None):
+    def ban_users(self, users, ban_message=None):
         """ Ban a user, cancel all the user's uploads, send a 'Banned'
         message via the transfers, and clear the transfers from the
         uploads list. """
@@ -2365,7 +2365,7 @@ class Transfers:
             banmsg = "Banned"
 
         for upload in self.uploads.copy():
-            if upload.user != user:
+            if upload.user not in users:
                 continue
 
             self.abort_transfer(upload, reason=banmsg, send_fail_message=True)
@@ -2373,7 +2373,8 @@ class Transfers:
             if self.uploadsview:
                 self.uploadsview.remove_specific(upload)
 
-        self.core.network_filter.ban_user(user)
+        for user in users:
+            self.core.network_filter.ban_user(user)
 
     def retry_download(self, transfer):
 
