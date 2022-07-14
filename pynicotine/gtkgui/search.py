@@ -26,6 +26,7 @@ import re
 import sre_constants
 
 from collections import defaultdict
+from collections import OrderedDict
 
 from gi.repository import GLib
 from gi.repository import GObject
@@ -322,8 +323,6 @@ class Search(UserInterface):
         self.directoryiters = {}
         self.users = set()
         self.all_data = []
-        self.selected_results = []
-        self.selected_users = []
         self.grouping_mode = None
         self.filters = None
         self.clearing_filters = False
@@ -332,6 +331,10 @@ class Search(UserInterface):
         self.num_results_visible = 0
         self.max_limit = config.sections["searches"]["max_displayed_results"]
         self.max_limited = False
+
+        # Use dict instead of list for faster membership checks
+        self.selected_users = OrderedDict()
+        self.selected_results = OrderedDict()
 
         self.operators = {
             '<': operator.lt,
@@ -1051,7 +1054,8 @@ class Search(UserInterface):
             return
 
         # Single user, add items directly to "User(s)" submenu
-        self.add_popup_menu_user(self.popup_menu_users, self.selected_users[0])
+        user = next(iter(self.selected_users), None)
+        self.add_popup_menu_user(self.popup_menu_users, user)
 
     def on_close_filter_bar_accelerator(self, *_args):
         """ Escape: hide filter bar """
@@ -1094,14 +1098,17 @@ class Search(UserInterface):
         user = model.get_value(iterator, 1)
 
         if user not in self.selected_users:
-            self.selected_users.append(user)
+            self.selected_users[user] = None
 
         filename = model.get_value(iterator, 6)
 
         if not filename:
             return
 
-        self.selected_results.append(iterator)
+        iter_key = iterator.user_data
+
+        if iter_key not in self.selected_results:
+            self.selected_results[iter_key] = iterator
 
     def select_child_results(self, model, iterator):
 
@@ -1189,7 +1196,7 @@ class Search(UserInterface):
         requested_users = set()
         requested_folders = set()
 
-        for iterator in self.selected_results:
+        for iterator in self.selected_results.values():
             user = self.resultsmodel.get_value(iterator, 1)
             folder = self.resultsmodel.get_value(iterator, 11).rsplit('\\', 1)[0] + '\\'
 
@@ -1205,7 +1212,7 @@ class Search(UserInterface):
         selected_size = 0
         selected_length = 0
 
-        for iterator in self.selected_results:
+        for iterator in self.selected_results.values():
             virtual_path = self.resultsmodel.get_value(iterator, 11)
             directory, filename = virtual_path.rsplit('\\', 1)
             file_size = self.resultsmodel.get_value(iterator, 13)
@@ -1232,7 +1239,7 @@ class Search(UserInterface):
 
     def on_download_files(self, *_args, prefix=""):
 
-        for iterator in self.selected_results:
+        for iterator in self.selected_results.values():
             user = self.resultsmodel.get_value(iterator, 1)
             filepath = self.resultsmodel.get_value(iterator, 11)
             size = self.resultsmodel.get_value(iterator, 13)
@@ -1264,7 +1271,7 @@ class Search(UserInterface):
         else:
             requested_folders = defaultdict(dict)
 
-        for iterator in self.selected_results:
+        for iterator in self.selected_results.values():
             user = self.resultsmodel.get_value(iterator, 1)
             folder = self.resultsmodel.get_value(iterator, 11).rsplit('\\', 1)[0]
 
@@ -1305,14 +1312,14 @@ class Search(UserInterface):
 
     def on_copy_file_path(self, *_args):
 
-        for iterator in self.selected_results:
+        for iterator in self.selected_results.values():
             filepath = self.resultsmodel.get_value(iterator, 11)
             copy_text(filepath)
             return
 
     def on_copy_url(self, *_args):
 
-        for iterator in self.selected_results:
+        for iterator in self.selected_results.values():
             user = self.resultsmodel.get_value(iterator, 1)
             filepath = self.resultsmodel.get_value(iterator, 11)
             url = self.core.userbrowse.get_soulseek_url(user, filepath)
@@ -1321,7 +1328,7 @@ class Search(UserInterface):
 
     def on_copy_dir_url(self, *_args):
 
-        for iterator in self.selected_results:
+        for iterator in self.selected_results.values():
             user = self.resultsmodel.get_value(iterator, 1)
             filepath = self.resultsmodel.get_value(iterator, 11)
             url = self.core.userbrowse.get_soulseek_url(user, filepath.rsplit('\\', 1)[0] + '\\')

@@ -22,6 +22,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from collections import OrderedDict
 from sys import maxsize
 
 from gi.repository import GObject
@@ -78,9 +79,11 @@ class TransferList(UserInterface):
         self.transfer_list = []
         self.users = {}
         self.paths = {}
-        self.selected_users = []
-        self.selected_transfers = []
         self.tree_users = None
+
+        # Use dict instead of list for faster membership checks
+        self.selected_users = OrderedDict()
+        self.selected_transfers = OrderedDict()
 
         # Status list
         self.statuses = {
@@ -252,11 +255,11 @@ class TransferList(UserInterface):
 
         transfer = model.get_value(iterator, 16)
 
-        if transfer.filename is not None:
-            self.selected_transfers.append(transfer)
+        if transfer.filename is not None and transfer not in self.selected_transfers:
+            self.selected_transfers[transfer] = None
 
         if select_user and transfer.user not in self.selected_users:
-            self.selected_users.append(transfer.user)
+            self.selected_users[transfer.user] = None
 
     def new_transfer_notification(self, finished=False):
         if self.frame.current_page_id != self.transfer_page.id:
