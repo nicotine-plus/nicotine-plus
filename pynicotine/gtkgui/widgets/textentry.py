@@ -565,6 +565,9 @@ class TextSearchBar:
 
     def on_search_match(self, search_type, restarted=False):
 
+        if not self.search_bar.get_search_mode():
+            return
+
         buffer = self.textview.get_buffer()
         query = self.entry.get_text()
 
