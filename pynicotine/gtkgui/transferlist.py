@@ -265,13 +265,6 @@ class TransferList(UserInterface):
         if self.frame.current_page_id != self.transfer_page.id:
             self.frame.request_tab_hilite(self.transfer_page, mentioned=finished)
 
-    def on_ban(self, *_args):
-
-        self.select_transfers()
-
-        for user in self.selected_users:
-            self.core.network_filter.ban_user(user)
-
     def on_file_search(self, *_args):
 
         transfer = next(iter(self.selected_transfers), None)
