@@ -223,6 +223,7 @@ def initialise_columns(frame, treeview_name, treeview, *args):
     append_columns(treeview, cols, column_config)
     hide_columns(treeview, cols, column_config)
 
+    treeview.set_search_equal_func(on_search_match, treeview)
     treeview.connect("columns-changed", set_last_column_autosize)
     treeview.emit("columns-changed")
 
@@ -235,6 +236,21 @@ def initialise_columns(frame, treeview_name, treeview, *args):
         treeview.set_rubber_banding(False)
 
     return cols
+
+
+def on_search_match(model, column, search_term, iterator, treeview):
+
+    if not search_term:
+        return True
+
+    if search_term.lower() in model.get_value(iterator, column).lower():
+        if GTK_API_VERSION >= 4:
+            # Hack: Disable scrolling animation, since it doesn't work in GTK 4
+            treeview.queue_allocate()
+
+        return False
+
+    return True
 
 
 def on_copy_cell_data_accelerator(treeview, *_args):
