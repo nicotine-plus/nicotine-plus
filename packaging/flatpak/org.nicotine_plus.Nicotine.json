@@ -150,16 +150,10 @@
             ]
         },
         {
-            "name": "nicotine+",
+            "name": "nicotine-plus",
             "buildsystem": "simple",
-            "sources": [
-                {
-                    "path": "../../",
-                    "type": "dir"
-                }
-            ],
             "build-commands": [
-                "pip3 install . --prefix=\"${FLATPAK_DEST}\""
+                "pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} . --no-build-isolation"
             ]
         }
     ]
