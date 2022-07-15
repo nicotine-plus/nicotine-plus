@@ -16,19 +16,6 @@
         "--talk-name=org.kde.StatusNotifierWatcher",
         "--talk-name=org.mpris.MediaPlayer2.*"
     ],
-    "cleanup": [
-        "/etc",
-        "/include",
-        "/lib/debug",
-        "/lib/pkgconfig",
-        "/libexec",
-        "/share/aclocal",
-        "/share/info",
-        "/share/gtk-doc",
-        "/share/vala",
-        "*.a",
-        "*.la"
-    ],
     "modules": [
         {
             "name": "libdbusmenu",
@@ -48,13 +35,17 @@
                 }
             },
             "cleanup": [
-                "/share/doc",
-                "/share/libdbusmenu"
+                "/include",
+                "/libexec",
+                "/lib/debug",
+                "/lib/pkgconfig",
+                "/lib/*.la",
+                "/share"
             ],
             "sources": [
                 {
-                    "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libdbusmenu/16.04.1+18.10.20180917-0ubuntu6/libdbusmenu_16.04.1+18.10.20180917.orig.tar.gz",
-                    "sha256": "9be5dc0f2657a9eb76b02d2cdfafa4490652c70bcdfafba5574c505afd2bbe79",
+                    "url": "https://salsa.debian.org/debian-ayatana-team/libdbusmenu/-/archive/debian/18.10.20180917_bzr492+repack1-2/libdbusmenu-debian-18.10.20180917_bzr492+repack1-2.tar.gz",
+                    "sha256": "c623e94fb9396a26c9793aa62a3f2fc2c14629642a242e34b319e4550acd0286",
                     "type": "archive"
                 }
             ],
@@ -93,8 +84,14 @@
             "config-opts": [
                 "-DENABLE_BINDINGS_MONO=OFF",
                 "-DENABLE_BINDINGS_VALA=OFF",
+                "-DENABLE_GTKDOC=OFF",
                 "-DENABLE_TESTS=OFF",
                 "-DFLAVOUR_GTK3=ON"
+            ],
+            "cleanup": [
+                "/include",
+                "/lib/debug",
+                "/lib/pkgconfig"
             ],
             "sources": [
                 {
@@ -109,11 +106,14 @@
                     "buildsystem": "cmake-ninja",
                     "config-opts": [
                         "-DENABLE_IDO=OFF",
+                        "-DENABLE_LOADER=OFF",
                         "-DENABLE_TESTS=OFF",
                         "-DFLAVOUR_GTK3=ON"
                     ],
                     "cleanup": [
-                        "/share/libayatana-indicator"
+                        "/include",
+                        "/lib/debug",
+                        "/lib/pkgconfig"
                     ],
                     "sources": [
                         {
@@ -130,10 +130,16 @@
             "config-opts": [
                 "--disable-gtk-doc",
                 "--disable-static",
+                "--disable-vala",
                 "--disable-valgrind"
             ],
             "cleanup": [
-                "/bin"
+                "/bin",
+                "/include",
+                "/lib/debug",
+                "/lib/pkgconfig",
+                "/lib/*.la",
+                "/share/gtk-doc"
             ],
             "sources": [
                 {
