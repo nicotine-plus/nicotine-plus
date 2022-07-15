@@ -78,13 +78,13 @@ functionality while keeping current with the Soulseek protocol.""",
         package_data={"": ["*.bin", "*.ui", "PLUGININFO"]},
         scripts=["nicotine"],
         data_files=[
-            ("share/applications", glob.glob("data/*.desktop")),
-            ("share/metainfo", glob.glob("data/*.appdata.xml")),
+            ("share/applications", ["data/%s.desktop" % config.application_id]),
+            ("share/metainfo", ["data/%s.appdata.xml" % config.application_id]),
+            ("share/man/man1", ["data/nicotine.1"]),
             ("share/icons/hicolor/scalable/apps", glob.glob("pynicotine/gtkgui/icons/hicolor/scalable/apps/*.svg")),
             ("share/icons/hicolor/scalable/intl", glob.glob("pynicotine/gtkgui/icons/hicolor/scalable/intl/*.svg")),
             ("share/icons/hicolor/scalable/status", glob.glob("pynicotine/gtkgui/icons/hicolor/scalable/status/*.svg")),
-            ("share/icons/hicolor/symbolic/apps", glob.glob("pynicotine/gtkgui/icons/hicolor/symbolic/apps/*.svg")),
-            ("share/man/man1", glob.glob("data/*.1"))
+            ("share/icons/hicolor/symbolic/apps", glob.glob("pynicotine/gtkgui/icons/hicolor/symbolic/apps/*.svg"))
         ] + get_translation_paths(),
         python_requires=">=3.5",
         install_requires=["PyGObject>=3.22"],
