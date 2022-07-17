@@ -468,7 +468,7 @@ class UserBrowse(UserInterface):
         self.queued_path = None
 
         if GTK_API_VERSION >= 4:
-            # Hack: Disable scrolling animation, since it doesn't work in GTK 4
+            # Workaround: Disable scrolling animation, since it doesn't work in GTK 4
             self.folder_tree_view.queue_allocate()
 
         # Scroll to the requested folder
@@ -626,7 +626,7 @@ class UserBrowse(UserInterface):
         path = self.dir_store.get_path(self.dir_iters[directory])
 
         if GTK_API_VERSION >= 4:
-            # Hack: Disable scrolling animation, since it doesn't work in GTK 4
+            # Workaround: Disable scrolling animation, since it doesn't work in GTK 4
             self.folder_tree_view.queue_allocate()
 
         self.folder_tree_view.expand_to_path(path)

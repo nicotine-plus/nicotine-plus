@@ -245,7 +245,7 @@ def on_search_match(model, column, search_term, iterator, treeview):
 
     if search_term.lower() in model.get_value(iterator, column).lower():
         if GTK_API_VERSION >= 4:
-            # Hack: Disable scrolling animation, since it doesn't work in GTK 4
+            # Workaround: Disable scrolling animation, since it doesn't work in GTK 4
             treeview.queue_allocate()
 
         return False
