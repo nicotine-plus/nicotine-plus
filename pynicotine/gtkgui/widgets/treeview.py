@@ -63,13 +63,7 @@ class TreeView:
         self.widget.column_menu = PopupMenu(self.frame, self.widget, callback=self._press_header, connect_events=False)
 
         if multi_select:
-            if GTK_API_VERSION >= 4:
-                # Hotfix: disable rubber-band selection in GTK 4 to avoid crash bug
-                # when clicking column headers
-                self.widget.set_rubber_banding(False)
-            else:
-                self.widget.set_rubber_banding(True)
-
+            self.widget.set_rubber_banding(True)
             self.widget.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
 
         elif always_select:
@@ -657,11 +651,6 @@ def initialise_columns(frame, treeview_name, treeview, *args):
 
     Accelerator("<Primary>c", treeview, on_copy_cell_data_accelerator)
     treeview.column_menu = PopupMenu(frame, treeview, callback=press_header, connect_events=False)
-
-    if GTK_API_VERSION >= 4:
-        # Hotfix: disable rubber-band selection in GTK 4 to avoid crash bug
-        # when clicking column headers
-        treeview.set_rubber_banding(False)
 
     return cols
 
