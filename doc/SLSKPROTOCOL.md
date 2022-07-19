@@ -2536,5 +2536,5 @@ This documentation exists thanks to efforts from the following projects:
 - Nicotine+ (Hyriand, daelstorm, mathiascode)
 - slskd (jpdillingham)
 - Museek+ (lbponey)
-- SoleSeek
-- PySoulSeek
+- SoleSeek (BriEnigma)
+- PySoulSeek (Alexander Kanavin)
