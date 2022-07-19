@@ -663,7 +663,7 @@ class Config:
                     log.add(_("Unknown config section '%s'"), i)
 
                 # Check if config option exists in defaults
-                elif (j not in self.defaults.get(i, "") and j not in self.removed_options.get(i, "")
+                elif (j not in self.defaults.get(i, {}) and j not in self.removed_options.get(i, {})
                         and i != "plugins" and j != "filter"):
                     log.add(_("Unknown config option '%(option)s' in section '%(section)s'"),
                             {'option': j, 'section': i})
