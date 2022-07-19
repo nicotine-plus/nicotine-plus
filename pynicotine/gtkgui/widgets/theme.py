@@ -29,6 +29,7 @@ from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.application import GTK_GUI_DIR
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import encode_path
 
 
@@ -407,10 +408,10 @@ def get_flag_icon_name(country):
 
 def get_status_icon_name(status):
 
-    if status == 1:
+    if status == UserStatus.AWAY:
         return "nplus-status-away"
 
-    if status == 2:
+    if status == UserStatus.ONLINE:
         return "nplus-status-online"
 
     return "nplus-status-offline"
@@ -431,14 +432,13 @@ COLOR_RGBA = Gdk.RGBA()
 
 def get_user_status_color(status):
 
-    if status == 1:
-        color = "useraway"
-    elif status == 2:
-        color = "useronline"
-    else:
-        color = "useroffline"
+    if status == UserStatus.AWAY:
+        return "useraway"
 
-    return color
+    if status == UserStatus.ONLINE:
+        return "useronline"
+
+    return "useroffline"
 
 
 def parse_color_string(color_string):

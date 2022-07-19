@@ -47,6 +47,7 @@ from pynicotine.slskmessages import CheckPrivileges
 from pynicotine.slskmessages import ChildDepth
 from pynicotine.slskmessages import ConnClose
 from pynicotine.slskmessages import ConnCloseIP
+from pynicotine.slskmessages import ConnectionType
 from pynicotine.slskmessages import ConnectToPeer
 from pynicotine.slskmessages import DistribAlive
 from pynicotine.slskmessages import DistribAliveInterval
@@ -87,6 +88,7 @@ from pynicotine.slskmessages import LeaveRoom
 from pynicotine.slskmessages import Login
 from pynicotine.slskmessages import MessageAcked
 from pynicotine.slskmessages import MessageProgress
+from pynicotine.slskmessages import MessageType
 from pynicotine.slskmessages import MessageUser
 from pynicotine.slskmessages import MessageUsers
 from pynicotine.slskmessages import MinParentsInCache
@@ -172,6 +174,7 @@ from pynicotine.slskmessages import UserJoinedRoom
 from pynicotine.slskmessages import UserLeftRoom
 from pynicotine.slskmessages import UserPrivileged
 from pynicotine.slskmessages import UserSearch
+from pynicotine.slskmessages import UserStatus
 from pynicotine.slskmessages import WishlistInterval
 from pynicotine.slskmessages import WishlistSearch
 from pynicotine.slskmessages import increment_token
@@ -267,8 +270,6 @@ class SlskProtoThread(threading.Thread):
     """ The server and peers send each other small binary messages that start
     with length and message code followed by the actual message data.
     The codes are listed below. """
-
-    peerconntypes = ('P', 'F', 'D')
 
     servercodes = {
         Login: 1,
@@ -782,7 +783,7 @@ class SlskProtoThread(threading.Thread):
 
         conn_type = init.conn_type
 
-        if conn_type == 'F':
+        if conn_type == ConnectionType.FILE:
             # File transfer connections are not unique or reused later
             return
 
@@ -856,13 +857,13 @@ class SlskProtoThread(threading.Thread):
         init = None
         conn_type = message.msgtype
 
-        if conn_type not in self.peerconntypes:
+        if conn_type not in (ConnectionType.PEER, ConnectionType.FILE, ConnectionType.DISTRIBUTED):
             return
 
         # Check if there's already a connection for the specified username
         init = self._init_msgs.get(user + conn_type)
 
-        if init is None and conn_type != 'F':
+        if init is None and conn_type != ConnectionType.FILE:
             # Check if we have a pending PeerInit message (currently requesting user IP address)
             pending_init_msgs = self._init_msgs.get(user, [])
 
@@ -1343,7 +1344,7 @@ class SlskProtoThread(threading.Thread):
                         self.connect_to_peer(user, addr, init)
 
                     elif msg_class is GetUserStatus:
-                        if msg.status <= 0:
+                        if msg.status == UserStatus.OFFLINE:
                             # User went offline, reset stored IP address
                             if msg.user in self.user_addresses:
                                 del self.user_addresses[msg.user]
@@ -1396,7 +1397,7 @@ class SlskProtoThread(threading.Thread):
                                 addr = self.potential_parents[user]
 
                                 log.add_conn("Attempting parent connection to user %s", user)
-                                self.initiate_connection_to_peer(user, 'D', address=addr)
+                                self.initiate_connection_to_peer(user, ConnectionType.DISTRIBUTED, address=addr)
 
                     elif msg_class is ParentMinSpeed:
                         self.distrib_parent_min_speed = msg.speed
@@ -2021,13 +2022,13 @@ class SlskProtoThread(threading.Thread):
             self.process_peer_init_input(conn_obj, conn_obj.ibuf)
             return
 
-        if init.conn_type == 'P':
+        if init.conn_type == ConnectionType.PEER:
             self.process_peer_input(conn_obj, conn_obj.ibuf)
 
-        elif init.conn_type == 'F':
+        elif init.conn_type == ConnectionType.FILE:
             self.process_file_input(conn_obj, conn_obj.ibuf)
 
-        elif init.conn_type == 'D':
+        elif init.conn_type == ConnectionType.DISTRIBUTED:
             self.process_distrib_input(conn_obj, conn_obj.ibuf)
 
     def process_queue_messages(self):
@@ -2044,22 +2045,22 @@ class SlskProtoThread(threading.Thread):
 
             msg_type = msg_obj.msgtype
 
-            if msg_type == "init":
+            if msg_type == MessageType.INIT:
                 self.process_peer_init_output(msg_obj)
 
-            elif msg_type == "internal":
+            elif msg_type == MessageType.INTERNAL:
                 self.process_internal_messages(msg_obj)
 
-            elif msg_type == 'P':
+            elif msg_type == MessageType.PEER:
                 self.process_peer_output(msg_obj)
 
-            elif msg_type == 'D':
+            elif msg_type == MessageType.DISTRIBUTED:
                 self.process_distrib_output(msg_obj)
 
-            elif msg_type == 'F':
+            elif msg_type == MessageType.FILE:
                 self.process_file_output(msg_obj)
 
-            elif msg_type == 'S':
+            elif msg_type == MessageType.SERVER:
                 self.process_server_output(msg_obj)
 
     def read_data(self, conn_obj):

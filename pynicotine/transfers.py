@@ -43,6 +43,8 @@ from collections import OrderedDict
 from pynicotine import slskmessages
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import increment_token
+from pynicotine.slskmessages import TransferDirection
+from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import execute_command
 from pynicotine.utils import clean_file
 from pynicotine.utils import clean_path
@@ -573,7 +575,7 @@ class Transfers:
 
         update = False
         username = msg.user
-        user_offline = (msg.status <= 0)
+        user_offline = (msg.status == UserStatus.OFFLINE)
         download_statuses = ("Queued", "Getting status", "Too many files", "Too many megabytes", "Pending shutdown.",
                              "User logged off", "Connection timeout", "Remote file error", "Cancelled")
         upload_statuses = ("Getting status", "Disallowed extension", "User logged off", "Connection timeout",
@@ -740,7 +742,7 @@ class Transfers:
         user = msg.init.target_user
         response = None
 
-        if msg.direction == 1:
+        if msg.direction == TransferDirection.UPLOAD:
             response = self.transfer_request_downloads(msg)
 
             log.add_transfer(("Responding to download request %(token)s for file %(filename)s "
@@ -749,7 +751,7 @@ class Transfers:
                 "allowed": response.allowed, "reason": response.reason
             })
 
-        else:
+        elif msg.direction == TransferDirection.DOWNLOAD:
             response = self.transfer_request_uploads(msg)
 
             if response is None:
@@ -760,6 +762,13 @@ class Transfers:
                 "token": response.token, "filename": msg.file, "user": user,
                 "allowed": response.allowed, "reason": response.reason
             })
+
+        else:
+            log.add_transfer(("Received unknown transfer direction %(direction)s for file %(filename)s "
+                              "from user %(user)s"), {
+                "direction": msg.direction, "filename": msg.file, "user": user
+            })
+            return
 
         self.core.send_message_to_peer(user, response)
 
@@ -1694,7 +1703,8 @@ class Transfers:
 
             self.core.send_message_to_peer(
                 user, slskmessages.TransferRequest(
-                    direction=1, token=transfer.token, file=filename, filesize=size, realfile=real_path))
+                    direction=TransferDirection.UPLOAD, token=transfer.token, file=filename, filesize=size,
+                    realfile=real_path))
 
         self.update_upload(transfer)
 
@@ -1772,11 +1782,10 @@ class Transfers:
         if not self.core.logged_in:
             return True
 
-        try:
-            return self.core.user_statuses[user] <= 0
-
-        except (KeyError, TypeError):
+        if user not in self.core.user_statuses:
             return False
+
+        return self.core.user_statuses[user] == UserStatus.OFFLINE
 
     def get_folder_destination(self, user, directory, remove_prefix=""):
 

@@ -25,12 +25,13 @@ import sys
 from gi.repository import Gdk
 from gi.repository import Gtk
 
+from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.theme import get_status_icon_name
 from pynicotine.gtkgui.widgets.theme import parse_color_string
-from pynicotine.config import config
+from pynicotine.slskmessages import UserStatus
 
 
 """ Icon Notebook """
@@ -344,11 +345,7 @@ class IconNotebook:
         self.notebook.append_page_menu(page, label_tab, label_tab_menu)
 
         if user is not None:
-            status = 0
-
-            if user in self.core.user_statuses:
-                status = self.core.user_statuses[user] or 0
-
+            status = self.core.user_statuses.get(user, UserStatus.OFFLINE)
             self.set_user_status(page, text, status)
 
         self.notebook.set_tab_reorderable(page, True)
@@ -469,13 +466,12 @@ class IconNotebook:
 
     def set_user_status(self, page, user, status):
 
-        if status is None:
-            return
-
-        if status == 1:
+        if status == UserStatus.AWAY:
             status_text = _("Away")
-        elif status == 2:
+
+        elif status == UserStatus.ONLINE:
             status_text = _("Online")
+
         else:
             status_text = _("Offline")
 

@@ -33,6 +33,7 @@ import webbrowser
 
 from pynicotine.config import config
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import FileAttribute
 from pynicotine.slskmessages import UINT_LIMIT
 
 FILE_SIZE_SUFFIXES = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
@@ -289,11 +290,11 @@ def human_length(seconds):
 def get_file_attributes(attributes):
 
     try:
-        bitrate = attributes.get('0')
-        length = attributes.get('1')
-        vbr = attributes.get('2')
-        sample_rate = attributes.get('4')
-        bit_depth = attributes.get('5')
+        bitrate = attributes.get(str(FileAttribute.BITRATE))
+        length = attributes.get(str(FileAttribute.DURATION))
+        vbr = attributes.get(str(FileAttribute.VBR))
+        sample_rate = attributes.get(str(FileAttribute.SAMPLE_RATE))
+        bit_depth = attributes.get(str(FileAttribute.BIT_DEPTH))
 
     except AttributeError:
         # Legacy attribute list format used for shares lists saved in Nicotine+ 3.2.2 and earlier

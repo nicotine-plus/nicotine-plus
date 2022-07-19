@@ -56,6 +56,7 @@ from pynicotine.gtkgui.widgets.treeview import show_country_tooltip
 from pynicotine.gtkgui.widgets.treeview import show_user_status_tooltip
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import clean_file
 from pynicotine.utils import delete_log
 from pynicotine.utils import encode_path
@@ -960,9 +961,9 @@ class ChatRoom(UserInterface):
         if status == self.usersmodel.get_value(iterator, 5):
             return
 
-        if status == 1:
+        if status == UserStatus.AWAY:
             action = _("%s has gone away")
-        elif status == 2:
+        elif status == UserStatus.ONLINE:
             action = _("%s has returned")
         else:
             # If we reach this point, the server did something wrong. The user should have
