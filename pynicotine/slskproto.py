@@ -30,153 +30,65 @@ import threading
 import time
 
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import DISTRIBUTED_MESSAGE_CLASSES
+from pynicotine.slskmessages import DISTRIBUTED_MESSAGE_CODES
+from pynicotine.slskmessages import PEER_MESSAGE_CLASSES
+from pynicotine.slskmessages import PEER_MESSAGE_CODES
+from pynicotine.slskmessages import PEER_INIT_MESSAGE_CLASSES
+from pynicotine.slskmessages import PEER_INIT_MESSAGE_CODES
+from pynicotine.slskmessages import SERVER_MESSAGE_CLASSES
+from pynicotine.slskmessages import SERVER_MESSAGE_CODES
 from pynicotine.slskmessages import AcceptChildren
-from pynicotine.slskmessages import AckNotifyPrivileges
-from pynicotine.slskmessages import AddThingIHate
-from pynicotine.slskmessages import AddThingILike
-from pynicotine.slskmessages import AddToPrivileged
-from pynicotine.slskmessages import AddUser
-from pynicotine.slskmessages import AdminCommand
-from pynicotine.slskmessages import AdminMessage
 from pynicotine.slskmessages import BranchLevel
 from pynicotine.slskmessages import BranchRoot
-from pynicotine.slskmessages import CantConnectToPeer
-from pynicotine.slskmessages import CantCreateRoom
-from pynicotine.slskmessages import ChangePassword
 from pynicotine.slskmessages import CheckPrivileges
-from pynicotine.slskmessages import ChildDepth
 from pynicotine.slskmessages import ConnClose
 from pynicotine.slskmessages import ConnCloseIP
 from pynicotine.slskmessages import ConnectionType
 from pynicotine.slskmessages import ConnectToPeer
-from pynicotine.slskmessages import DistribAlive
-from pynicotine.slskmessages import DistribAliveInterval
 from pynicotine.slskmessages import DistribBranchLevel
 from pynicotine.slskmessages import DistribBranchRoot
-from pynicotine.slskmessages import DistribChildDepth
 from pynicotine.slskmessages import DistribEmbeddedMessage
 from pynicotine.slskmessages import DistribSearch
 from pynicotine.slskmessages import DownloadConnClose
 from pynicotine.slskmessages import DownloadFile
 from pynicotine.slskmessages import DownloadFileError
 from pynicotine.slskmessages import EmbeddedMessage
-from pynicotine.slskmessages import ExactFileSearch
 from pynicotine.slskmessages import FileOffset
 from pynicotine.slskmessages import FileDownloadInit
 from pynicotine.slskmessages import FileUploadInit
-from pynicotine.slskmessages import FileSearch
-from pynicotine.slskmessages import FileSearchRoom
-from pynicotine.slskmessages import FileSearchRequest
 from pynicotine.slskmessages import FileSearchResult
-from pynicotine.slskmessages import FolderContentsRequest
-from pynicotine.slskmessages import FolderContentsResponse
 from pynicotine.slskmessages import GetPeerAddress
-from pynicotine.slskmessages import GetSharedFileList
 from pynicotine.slskmessages import GetUserStats
 from pynicotine.slskmessages import GetUserStatus
-from pynicotine.slskmessages import GivePrivileges
-from pynicotine.slskmessages import GlobalRecommendations
-from pynicotine.slskmessages import GlobalUserList
 from pynicotine.slskmessages import HaveNoParent
 from pynicotine.slskmessages import InitPeerConn
-from pynicotine.slskmessages import ItemRecommendations
-from pynicotine.slskmessages import ItemSimilarUsers
-from pynicotine.slskmessages import JoinPublicRoom
-from pynicotine.slskmessages import JoinRoom
-from pynicotine.slskmessages import LeavePublicRoom
-from pynicotine.slskmessages import LeaveRoom
 from pynicotine.slskmessages import Login
-from pynicotine.slskmessages import MessageAcked
 from pynicotine.slskmessages import MessageProgress
 from pynicotine.slskmessages import MessageType
-from pynicotine.slskmessages import MessageUser
-from pynicotine.slskmessages import MessageUsers
-from pynicotine.slskmessages import MinParentsInCache
 from pynicotine.slskmessages import PossibleParents
-from pynicotine.slskmessages import NotifyPrivileges
-from pynicotine.slskmessages import ParentInactivityTimeout
 from pynicotine.slskmessages import ParentMinSpeed
 from pynicotine.slskmessages import ParentSpeedRatio
 from pynicotine.slskmessages import PeerInit
 from pynicotine.slskmessages import PierceFireWall
-from pynicotine.slskmessages import PlaceholdUpload
-from pynicotine.slskmessages import PlaceInLineResponse
-from pynicotine.slskmessages import PlaceInQueue
-from pynicotine.slskmessages import PlaceInQueueRequest
-from pynicotine.slskmessages import PMessageUser
-from pynicotine.slskmessages import PrivateRoomAdded
-from pynicotine.slskmessages import PrivateRoomAddOperator
-from pynicotine.slskmessages import PrivateRoomAddUser
-from pynicotine.slskmessages import PrivateRoomDismember
-from pynicotine.slskmessages import PrivateRoomDisown
-from pynicotine.slskmessages import PrivateRoomOperatorAdded
-from pynicotine.slskmessages import PrivateRoomOperatorRemoved
-from pynicotine.slskmessages import PrivateRoomOwned
-from pynicotine.slskmessages import PrivateRoomRemoved
-from pynicotine.slskmessages import PrivateRoomRemoveOperator
-from pynicotine.slskmessages import PrivateRoomRemoveUser
-from pynicotine.slskmessages import PrivateRoomSomething
-from pynicotine.slskmessages import PrivateRoomToggle
-from pynicotine.slskmessages import PrivateRoomUsers
-from pynicotine.slskmessages import PrivilegedUsers
-from pynicotine.slskmessages import PublicRoomMessage
-from pynicotine.slskmessages import QueuedDownloads
-from pynicotine.slskmessages import UploadDenied
-from pynicotine.slskmessages import QueueUpload
-from pynicotine.slskmessages import Recommendations
-from pynicotine.slskmessages import RelatedSearch
 from pynicotine.slskmessages import Relogged
-from pynicotine.slskmessages import RemoveThingIHate
-from pynicotine.slskmessages import RemoveThingILike
-from pynicotine.slskmessages import RemoveUser
 from pynicotine.slskmessages import ResetDistributed
-from pynicotine.slskmessages import RoomAdded
 from pynicotine.slskmessages import RoomList
-from pynicotine.slskmessages import RoomRemoved
-from pynicotine.slskmessages import RoomSearch
-from pynicotine.slskmessages import RoomTickerAdd
-from pynicotine.slskmessages import RoomTickerRemove
-from pynicotine.slskmessages import RoomTickerSet
-from pynicotine.slskmessages import RoomTickerState
-from pynicotine.slskmessages import SayChatroom
-from pynicotine.slskmessages import SearchInactivityTimeout
-from pynicotine.slskmessages import SearchParent
-from pynicotine.slskmessages import SendConnectToken
-from pynicotine.slskmessages import SendDownloadSpeed
 from pynicotine.slskmessages import SendNetworkMessage
-from pynicotine.slskmessages import SendUploadSpeed
 from pynicotine.slskmessages import ServerConnect
 from pynicotine.slskmessages import ServerDisconnect
-from pynicotine.slskmessages import ServerPing
 from pynicotine.slskmessages import ServerTimeout
 from pynicotine.slskmessages import SetConnectionStats
 from pynicotine.slskmessages import SetDownloadLimit
-from pynicotine.slskmessages import SetStatus
 from pynicotine.slskmessages import SetUploadLimit
 from pynicotine.slskmessages import SetWaitPort
 from pynicotine.slskmessages import SharedFileList
-from pynicotine.slskmessages import SharedFoldersFiles
 from pynicotine.slskmessages import ShowConnectionErrorMessage
-from pynicotine.slskmessages import SimilarUsers
-from pynicotine.slskmessages import TransferRequest
-from pynicotine.slskmessages import TransferResponse
-from pynicotine.slskmessages import TunneledMessage
-from pynicotine.slskmessages import UnknownPeerMessage
 from pynicotine.slskmessages import UploadConnClose
-from pynicotine.slskmessages import UploadFailed
 from pynicotine.slskmessages import UploadFile
 from pynicotine.slskmessages import UploadFileError
-from pynicotine.slskmessages import UploadQueueNotification
 from pynicotine.slskmessages import UserInfoReply
-from pynicotine.slskmessages import UserInfoRequest
-from pynicotine.slskmessages import UserInterests
-from pynicotine.slskmessages import UserJoinedRoom
-from pynicotine.slskmessages import UserLeftRoom
-from pynicotine.slskmessages import UserPrivileged
-from pynicotine.slskmessages import UserSearch
 from pynicotine.slskmessages import UserStatus
-from pynicotine.slskmessages import WishlistInterval
-from pynicotine.slskmessages import WishlistSearch
 from pynicotine.slskmessages import increment_token
 
 
@@ -268,145 +180,7 @@ class SlskProtoThread(threading.Thread):
     data via a deque object. """
 
     """ The server and peers send each other small binary messages that start
-    with length and message code followed by the actual message data.
-    The codes are listed below. """
-
-    servercodes = {
-        Login: 1,
-        SetWaitPort: 2,
-        GetPeerAddress: 3,
-        AddUser: 5,
-        RemoveUser: 6,
-        GetUserStatus: 7,
-        SayChatroom: 13,
-        JoinRoom: 14,
-        LeaveRoom: 15,
-        UserJoinedRoom: 16,
-        UserLeftRoom: 17,
-        ConnectToPeer: 18,
-        MessageUser: 22,
-        MessageAcked: 23,
-        FileSearchRoom: 25,           # Obsolete
-        FileSearch: 26,
-        SetStatus: 28,
-        ServerPing: 32,               # Deprecated
-        SendConnectToken: 33,         # Obsolete
-        SendDownloadSpeed: 34,        # Obsolete
-        SharedFoldersFiles: 35,
-        GetUserStats: 36,
-        QueuedDownloads: 40,          # Obsolete
-        Relogged: 41,
-        UserSearch: 42,
-        AddThingILike: 51,            # Deprecated
-        RemoveThingILike: 52,         # Deprecated
-        Recommendations: 54,          # Deprecated
-        GlobalRecommendations: 56,    # Deprecated
-        UserInterests: 57,            # Deprecated
-        AdminCommand: 58,             # Obsolete
-        PlaceInLineResponse: 60,      # Obsolete
-        RoomAdded: 62,                # Obsolete
-        RoomRemoved: 63,              # Obsolete
-        RoomList: 64,
-        ExactFileSearch: 65,          # Obsolete
-        AdminMessage: 66,
-        GlobalUserList: 67,           # Obsolete
-        TunneledMessage: 68,          # Obsolete
-        PrivilegedUsers: 69,
-        HaveNoParent: 71,
-        SearchParent: 73,             # Deprecated
-        ParentMinSpeed: 83,
-        ParentSpeedRatio: 84,
-        ParentInactivityTimeout: 86,  # Obsolete
-        SearchInactivityTimeout: 87,  # Obsolete
-        MinParentsInCache: 88,        # Obsolete
-        DistribAliveInterval: 90,     # Obsolete
-        AddToPrivileged: 91,          # Obsolete
-        CheckPrivileges: 92,
-        EmbeddedMessage: 93,
-        AcceptChildren: 100,
-        PossibleParents: 102,
-        WishlistSearch: 103,
-        WishlistInterval: 104,
-        SimilarUsers: 110,            # Deprecated
-        ItemRecommendations: 111,     # Deprecated
-        ItemSimilarUsers: 112,        # Deprecated
-        RoomTickerState: 113,
-        RoomTickerAdd: 114,
-        RoomTickerRemove: 115,
-        RoomTickerSet: 116,
-        AddThingIHate: 117,           # Deprecated
-        RemoveThingIHate: 118,        # Deprecated
-        RoomSearch: 120,
-        SendUploadSpeed: 121,
-        UserPrivileged: 122,          # Deprecated
-        GivePrivileges: 123,
-        NotifyPrivileges: 124,        # Deprecated
-        AckNotifyPrivileges: 125,     # Deprecated
-        BranchLevel: 126,
-        BranchRoot: 127,
-        ChildDepth: 129,              # Deprecated
-        ResetDistributed: 130,
-        PrivateRoomUsers: 133,
-        PrivateRoomAddUser: 134,
-        PrivateRoomRemoveUser: 135,
-        PrivateRoomDismember: 136,
-        PrivateRoomDisown: 137,
-        PrivateRoomSomething: 138,    # Obsolete
-        PrivateRoomAdded: 139,
-        PrivateRoomRemoved: 140,
-        PrivateRoomToggle: 141,
-        ChangePassword: 142,
-        PrivateRoomAddOperator: 143,
-        PrivateRoomRemoveOperator: 144,
-        PrivateRoomOperatorAdded: 145,
-        PrivateRoomOperatorRemoved: 146,
-        PrivateRoomOwned: 148,
-        MessageUsers: 149,
-        JoinPublicRoom: 150,          # Deprecated
-        LeavePublicRoom: 151,         # Deprecated
-        PublicRoomMessage: 152,       # Deprecated
-        RelatedSearch: 153,           # Obsolete
-        CantConnectToPeer: 1001,
-        CantCreateRoom: 1003
-    }
-    peerinitcodes = {
-        PierceFireWall: 0,
-        PeerInit: 1
-    }
-    peercodes = {
-        GetSharedFileList: 4,
-        SharedFileList: 5,
-        FileSearchRequest: 8,         # Obsolete
-        FileSearchResult: 9,
-        UserInfoRequest: 15,
-        UserInfoReply: 16,
-        PMessageUser: 22,             # Deprecated
-        FolderContentsRequest: 36,
-        FolderContentsResponse: 37,
-        TransferRequest: 40,
-        TransferResponse: 41,
-        PlaceholdUpload: 42,          # Obsolete
-        QueueUpload: 43,
-        PlaceInQueue: 44,
-        UploadFailed: 46,
-        UploadDenied: 50,
-        PlaceInQueueRequest: 51,
-        UploadQueueNotification: 52,  # Deprecated
-        UnknownPeerMessage: 12547
-    }
-    distribcodes = {
-        DistribAlive: 0,
-        DistribSearch: 3,
-        DistribBranchLevel: 4,
-        DistribBranchRoot: 5,
-        DistribChildDepth: 7,         # Deprecated
-        DistribEmbeddedMessage: 93
-    }
-
-    serverclasses = {v: k for k, v in servercodes.items()}
-    peerinitclasses = {v: k for k, v in peerinitcodes.items()}
-    peerclasses = {v: k for k, v in peercodes.items()}
-    distribclasses = {v: k for k, v in distribcodes.items()}
+    with length and message code followed by the actual message data. """
 
     IN_PROGRESS_STALE_AFTER = 2
     CONNECTION_MAX_IDLE = 60
@@ -826,13 +600,14 @@ class SlskProtoThread(threading.Thread):
 
         return None
 
-    def unpack_embedded_message(self, msg):
+    @staticmethod
+    def unpack_embedded_message(msg):
         """ This message embeds a distributed message. We unpack the distributed message and process it. """
 
-        if msg.distrib_code not in self.distribclasses:
+        if msg.distrib_code not in DISTRIBUTED_MESSAGE_CLASSES:
             return None
 
-        distrib_class = self.distribclasses[msg.distrib_code]
+        distrib_class = DISTRIBUTED_MESSAGE_CLASSES[msg.distrib_code]
         distrib_msg = distrib_class()
         distrib_msg.parse_network_message(msg.distrib_message)
 
@@ -1292,8 +1067,8 @@ class SlskProtoThread(threading.Thread):
                 break
 
             # Unpack server messages
-            if msgtype in self.serverclasses:
-                msg_class = self.serverclasses[msgtype]
+            if msgtype in SERVER_MESSAGE_CLASSES:
+                msg_class = SERVER_MESSAGE_CLASSES[msgtype]
                 msg = self.unpack_network_message(
                     msg_class, msg_buffer_mem[idx + 8:idx + msgsize_total], msgsize - 4, "server")
 
@@ -1451,7 +1226,7 @@ class SlskProtoThread(threading.Thread):
 
         conn_obj = self._conns[self.server_socket]
         conn_obj.obuf.extend(msg_obj.pack_uint32(len(msg) + 4))
-        conn_obj.obuf.extend(msg_obj.pack_uint32(self.servercodes[msg_class]))
+        conn_obj.obuf.extend(msg_obj.pack_uint32(SERVER_MESSAGE_CODES[msg_class]))
         conn_obj.obuf.extend(msg)
 
         self.modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
@@ -1476,8 +1251,8 @@ class SlskProtoThread(threading.Thread):
             msgtype = msg_buffer_mem[idx + 4]
 
             # Unpack peer init messages
-            if msgtype in self.peerinitclasses:
-                msg_class = self.peerinitclasses[msgtype]
+            if msgtype in PEER_INIT_MESSAGE_CLASSES:
+                msg_class = PEER_INIT_MESSAGE_CLASSES[msgtype]
                 msg = self.unpack_network_message(
                     msg_class, msg_buffer_mem[idx + 5:idx + msgsize_total], msgsize - 1, "peer init", conn_obj.sock)
 
@@ -1576,7 +1351,7 @@ class SlskProtoThread(threading.Thread):
                 return
 
             conn_obj.obuf.extend(msg_obj.pack_uint32(len(msg) + 1))
-            conn_obj.obuf.extend(msg_obj.pack_uint8(self.peerinitcodes[msg_class]))
+            conn_obj.obuf.extend(msg_obj.pack_uint8(PEER_INIT_MESSAGE_CODES[msg_class]))
             conn_obj.obuf.extend(msg)
 
         elif msg_class is PeerInit:
@@ -1590,7 +1365,7 @@ class SlskProtoThread(threading.Thread):
                 return
 
             conn_obj.obuf.extend(msg_obj.pack_uint32(len(msg) + 1))
-            conn_obj.obuf.extend(msg_obj.pack_uint8(self.peerinitcodes[msg_class]))
+            conn_obj.obuf.extend(msg_obj.pack_uint8(PEER_INIT_MESSAGE_CODES[msg_class]))
             conn_obj.obuf.extend(msg)
 
         self.modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
@@ -1642,7 +1417,7 @@ class SlskProtoThread(threading.Thread):
             msgsize_total = msgsize + 4
 
             try:
-                peer_class = self.peerclasses[msgtype]
+                peer_class = PEER_MESSAGE_CLASSES[msgtype]
 
                 if peer_class in (SharedFileList, UserInfoReply):
                     # Send progress to the main thread
@@ -1657,8 +1432,8 @@ class SlskProtoThread(threading.Thread):
                 break
 
             # Unpack peer messages
-            if msgtype in self.peerclasses:
-                msg_class = self.peerclasses[msgtype]
+            if msgtype in PEER_MESSAGE_CLASSES:
+                msg_class = PEER_MESSAGE_CLASSES[msgtype]
                 msg = self.unpack_network_message(
                     msg_class, msg_buffer_mem[idx + 8:idx + msgsize_total], msgsize - 4, "peer", conn_obj.init)
 
@@ -1711,7 +1486,7 @@ class SlskProtoThread(threading.Thread):
 
         conn_obj = self._conns[msg_obj.init.sock]
         conn_obj.obuf.extend(msg_obj.pack_uint32(len(msg) + 4))
-        conn_obj.obuf.extend(msg_obj.pack_uint32(self.peercodes[msg_class]))
+        conn_obj.obuf.extend(msg_obj.pack_uint32(PEER_MESSAGE_CODES[msg_class]))
         conn_obj.obuf.extend(msg)
 
         self.modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
@@ -1872,8 +1647,8 @@ class SlskProtoThread(threading.Thread):
             msgtype = msg_buffer_mem[idx + 4]
 
             # Unpack distributed messages
-            if msgtype in self.distribclasses:
-                msg_class = self.distribclasses[msgtype]
+            if msgtype in DISTRIBUTED_MESSAGE_CLASSES:
+                msg_class = DISTRIBUTED_MESSAGE_CLASSES[msgtype]
                 msg = self.unpack_network_message(
                     msg_class, msg_buffer_mem[idx + 5:idx + msgsize_total], msgsize - 1, "distrib", conn_obj.init)
 
@@ -1967,7 +1742,7 @@ class SlskProtoThread(threading.Thread):
 
         conn_obj = self._conns[msg_obj.init.sock]
         conn_obj.obuf.extend(msg_obj.pack_uint32(len(msg) + 1))
-        conn_obj.obuf.extend(msg_obj.pack_uint8(self.distribcodes[msg_class]))
+        conn_obj.obuf.extend(msg_obj.pack_uint8(DISTRIBUTED_MESSAGE_CODES[msg_class]))
         conn_obj.obuf.extend(msg)
 
         self.modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)

@@ -276,7 +276,7 @@ indent-string='    '
 max-line-length=120
 
 # Maximum number of lines in a module.
-max-module-lines=3100
+max-module-lines=3300
 
 # Allow the body of a class to be on the same line as the declaration if body
 # contains single statement.
