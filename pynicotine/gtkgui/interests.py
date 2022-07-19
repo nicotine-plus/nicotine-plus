@@ -354,11 +354,6 @@ class Interests(UserInterface):
             return
 
         status = msg.status
-
-        if status not in (UserStatus.OFFLINE, UserStatus.ONLINE, UserStatus.AWAY):
-            # Unknown status
-            return
-
         status_icon = get_status_icon_name(status)
 
         self.similar_users_list_view.set_row_value(iterator, 0, status_icon)

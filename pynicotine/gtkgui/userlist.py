@@ -338,10 +338,6 @@ class UserList(UserInterface):
         if status == self.usersmodel.get_value(iterator, 10):
             return
 
-        if status not in (UserStatus.OFFLINE, UserStatus.ONLINE, UserStatus.AWAY):
-            # Unknown status
-            return
-
         notify = self.usersmodel.get_value(iterator, 6)
 
         if notify:
