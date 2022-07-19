@@ -1724,10 +1724,10 @@ class NicotineFrame(UserInterface):
             ("#" + _("Clear Log View"), self.log_view.on_clear_all_text)
         )
 
-    def log_callback(self, _timestamp_format, msg, level):
-        GLib.idle_add(self.update_log, msg, level, priority=GLib.PRIORITY_LOW)
+    def log_callback(self, timestamp_format, msg, level):
+        GLib.idle_add(self.update_log, timestamp_format, msg, level, priority=GLib.PRIORITY_LOW)
 
-    def update_log(self, msg, level):
+    def update_log(self, timestamp_format, msg, level):
 
         if level and level.startswith("important"):
             parent = self.window
@@ -1742,7 +1742,6 @@ class NicotineFrame(UserInterface):
         if level not in ("transfer", "connection", "message", "miscellaneous"):
             self.set_status_text(msg)
 
-        timestamp_format = config.sections["logging"]["log_timestamp"]
         self.log_view.append_line(msg, find_urls=False, timestamp_format=timestamp_format)
         return False
 

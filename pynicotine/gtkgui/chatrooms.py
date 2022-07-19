@@ -870,10 +870,10 @@ class ChatRoom(UserInterface):
         self.show_notification(login_username, user, speech, tag, public)
 
         if self.log_toggle.get_active():
-            timestamp_format = config.sections["logging"]["log_timestamp"]
-
-            log.write_log(config.sections["logging"]["roomlogsdir"], self.room, line,
-                          timestamp_format=timestamp_format)
+            log.write_log_file(
+                folder_path=config.sections["logging"]["roomlogsdir"],
+                base_name=clean_file(self.room) + ".log", text=line
+            )
 
     def echo_message(self, text, message_type):
 

@@ -400,9 +400,10 @@ class PrivateChat(UserInterface):
             )
 
         if self.log_toggle.get_active():
-            timestamp_format = config.sections["logging"]["log_timestamp"]
-
-            log.write_log(config.sections["logging"]["privatelogsdir"], self.user, line, timestamp, timestamp_format)
+            log.write_log_file(
+                folder_path=config.sections["logging"]["privatelogsdir"], base_name=clean_file(self.user) + ".log",
+                text=line, timestamp=timestamp
+            )
 
     def echo_message(self, text, message_type):
 
@@ -429,8 +430,10 @@ class PrivateChat(UserInterface):
                                    username=my_username, usertag=self.tag_my_username)
 
         if self.log_toggle.get_active():
-            log.write_log(config.sections["logging"]["privatelogsdir"], self.user, line,
-                          timestamp_format=config.sections["logging"]["log_timestamp"])
+            log.write_log_file(
+                folder_path=config.sections["logging"]["privatelogsdir"],
+                base_name=clean_file(self.user) + ".log", text=line
+            )
 
     def update_visuals(self):
         for widget in self.__dict__.values():
