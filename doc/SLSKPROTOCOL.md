@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on July 2, 2022
+Last updated on July 19, 2022
 
 Since the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify or extend the protocol in ways that negatively impact the network.
 
@@ -58,7 +58,7 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
 | F    | File Transfer       |
 | D    | Distributed Network |
 
-### Status Codes
+### User Status Codes
 
 | Code | Status  |
 | ---- | ------- |
@@ -111,17 +111,11 @@ These combinations are actively used by clients. Other combinations are discoura
 | -------------- | ------------------- |
 | Send to Server | Receive from Server |
 
-These messages are used by clients to interface with the server.
-Internal Server messages are spooky and not understood, since the OSS
-crowd doesn't have access to its source code. If you want a Soulseek
-server, check out
-[Soulfind](https://github.com/seeschloss/soulfind).
-Soulfind is obviously not the exact same the official Soulseek server,
-but it handles the protocol well enough (and can be modified).
+Server messages are used by clients to interface with the server. In Nicotine+, these messages are defined in slskmessages.py.
 
-In Nicotine+, these messages are matched to their message number in
-slskproto.py in the SlskProtoThread function, defined in slskmessages.py
-and callbacks for the messages are set in pynicotine.py.
+If you want a Soulseek server, check out [Soulfind](https://github.com/seeschloss/soulfind).
+Soulfind is obviously not the exact same the official, proprietary Soulseek server,
+but it handles the protocol well enough (and can be modified).
 
 ### Server Message Format
 
@@ -1831,7 +1825,7 @@ This message only seems to be sent if you try to create a room with the same nam
 | ------------ | ----------------- |
 | Send to Peer | Receive from Peer |
 
-In Nicotine+, these messages are matched to their message number in slskproto.py in the SlskProtoThread function, defined in slskmessages.py and callbacks for the messages are set in pynicotine.py.
+Peer init messages are used to initiate a 'P', 'F' or 'D' connection to a peer. In Nicotine+, these messages are defined in slskmessages.py.
 
 ### Peer Init Message Format
 
@@ -1918,7 +1912,7 @@ See also: [Peer Connection Message Order](#modern-peer-connection-message-order)
 | ------------ | ----------------- |
 | Send to Peer | Receive from Peer |
 
-In Nicotine, these messages are matched to their message number in slskproto.py in the SlskProtoThread function, defined in slskmessages.py and callbacks for the messages are set in pynicotine.py.
+Peer messages are sent to peers over a 'P' connection. Only a single active connection to a peer is allowed. In Nicotine+, these messages are defined in slskmessages.py.
 
 ### Peer Message Format
 
@@ -2365,7 +2359,7 @@ This message is sent to inform a peer about an upload attempt initiated by us.
 | ------------ | ----------------- |
 | Send to Peer | Receive from Peer |
 
-These messages are sent to peers over a 'F' connection, and do not have messages codes associated with them.
+File messages are sent to peers over a 'F' connection, and do not have messages codes associated with them.
 
 ### File Connection Message Format
 
@@ -2426,7 +2420,7 @@ We send this to the uploading peer at the beginning of a 'F' connection, to tell
 | ------------ | ----------------- |
 | Send to Node | Receive from Node |
 
-In Nicotine+, these messages are matched to their message number in slskproto.py in the SlskProtoThread function, defined in slskmessages.py and callbacks for the messages are set in pynicotine.py.
+Distributed messages are sent to peers over a 'D' connection, and are used for the distributed search network. Only a single active connection to a peer is allowed. In Nicotine+, these messages are defined in slskmessages.py.
 
 ### Distributed Message Format
 
