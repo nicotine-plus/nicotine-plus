@@ -65,13 +65,9 @@ class Logger:
 
         folder_path_encoded = encode_path(folder_path)
         file_path_encoded = encode_path(file_path)
-        old_log_file = self.log_files.get(file_path)
 
         if not os.path.exists(folder_path_encoded):
             os.makedirs(folder_path_encoded)
-
-        if old_log_file is not None:
-            old_log_file.handle.close()
 
         log_file = self.log_files[file_path] = LogFile(
             path=file_path, handle=open(encode_path(file_path), 'ab'))
