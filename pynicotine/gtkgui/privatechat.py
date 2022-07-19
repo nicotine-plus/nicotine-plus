@@ -22,7 +22,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import time
 
 from collections import deque
 
@@ -405,10 +404,11 @@ class PrivateChat(UserInterface):
             )
 
         if self.log_toggle.get_active():
-            timestamp_format = config.sections["logging"]["log_timestamp"]
-
-            self.chats.history.update_user(self.user, "%s %s" % (time.strftime(timestamp_format), line))
-            log.write_log(config.sections["logging"]["privatelogsdir"], self.user, line, timestamp, timestamp_format)
+            log.write_log_file(
+                folder_path=config.sections["logging"]["privatelogsdir"], base_name=clean_file(self.user) + ".log",
+                text=line, timestamp=timestamp
+            )
+            self.chats.history.update_user(self.user, line, add_timestamp=True)
 
     def echo_message(self, text, message_type):
 
@@ -435,11 +435,11 @@ class PrivateChat(UserInterface):
                                    username=my_username, usertag=self.tag_my_username)
 
         if self.log_toggle.get_active():
-            timestamp_format = config.sections["logging"]["log_timestamp"]
-
-            self.chats.history.update_user(self.user, "%s %s" % (time.strftime(timestamp_format), line))
-            log.write_log(config.sections["logging"]["privatelogsdir"], self.user, line,
-                          timestamp_format=timestamp_format)
+            log.write_log_file(
+                folder_path=config.sections["logging"]["privatelogsdir"],
+                base_name=clean_file(self.user) + ".log", text=line
+            )
+            self.chats.history.update_user(self.user, line, add_timestamp=True)
 
     def update_visuals(self):
         for widget in self.__dict__.values():

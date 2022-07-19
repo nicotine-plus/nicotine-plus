@@ -295,6 +295,7 @@ class NicotineCore:
             "version": config.version,
             "status": _("terminated") if signal_type == signal.SIGTERM else _("done")
         })
+        log.close_log_files()
 
     def connect(self):
 

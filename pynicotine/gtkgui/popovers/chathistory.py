@@ -18,6 +18,7 @@
 
 import glob
 import os
+import time
 
 from collections import deque
 
@@ -90,8 +91,14 @@ class ChatHistory(UserInterface):
         if iterator is not None:
             self.list_view.remove_row(iterator)
 
-    def update_user(self, username, message):
+    def update_user(self, username, message, add_timestamp=False):
+
         self.remove_user(username)
+
+        if add_timestamp:
+            timestamp_format = config.sections["logging"]["log_timestamp"]
+            message = "%s %s" % (time.strftime(timestamp_format), message)
+
         self.list_view.add_row([username, message], select_row=False)
 
     def update_visuals(self):
