@@ -114,7 +114,7 @@ These combinations are actively used by clients. Other combinations are discoura
 Server messages are used by clients to interface with the server. In Nicotine+, these messages are defined in slskmessages.py.
 
 If you want a Soulseek server, check out [Soulfind](https://github.com/seeschloss/soulfind).
-Soulfind is obviously not the exact same the official, proprietary Soulseek server,
+Soulfind is obviously not exactly the same as the official proprietary Soulseek server,
 but it handles the protocol well enough (and can be modified).
 
 ### Server Message Format
