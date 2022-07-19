@@ -815,10 +815,14 @@ class SlskProtoThread(threading.Thread):
             return msg
 
         except Exception as error:
-            log.add(("Unable to parse %(conn_type)s message type %(msg_type)s size %(size)i "
-                    "contents %(msg_buffer)s: %(error)s"),
-                    {'conn_type': conn_type, 'msg_type': msg_class, 'size': msg_size,
-                     'msg_buffer': msg_buffer, 'error': error})
+            log.add_debug(("Unable to parse %(conn_type)s message type %(msg_type)s size %(size)i "
+                           "contents %(msg_buffer)s: %(error)s"), {
+                'conn_type': conn_type,
+                'msg_type': msg_class,
+                'size': msg_size,
+                'msg_buffer': msg_buffer,
+                'error': error
+            })
 
         return None
 
@@ -1417,8 +1421,11 @@ class SlskProtoThread(threading.Thread):
                         self._callback_msgs.append(msg)
 
             else:
-                log.add("Server message type %(type)i size %(size)i contents %(msg_buffer)s unknown",
-                        {'type': msgtype, 'size': msgsize - 4, 'msg_buffer': msg_buffer[idx + 8:idx + msgsize_total]})
+                log.add_debug("Server message type %(type)i size %(size)i contents %(msg_buffer)s unknown", {
+                    'type': msgtype,
+                    'size': msgsize - 4,
+                    'msg_buffer': msg_buffer[idx + 8:idx + msgsize_total]
+                })
 
             idx += msgsize_total
             buffer_len -= msgsize_total
@@ -1531,9 +1538,11 @@ class SlskProtoThread(threading.Thread):
 
             else:
                 if not conn_obj.indirect:
-                    log.add("Peer init message type %(type)i size %(size)i contents %(msg_buffer)s unknown",
-                            {'type': msgtype, 'size': msgsize - 1,
-                             'msg_buffer': msg_buffer[idx + 5:idx + msgsize_total]})
+                    log.add_debug("Peer init message type %(type)i size %(size)i contents %(msg_buffer)s unknown", {
+                        'type': msgtype,
+                        'size': msgsize - 1,
+                        'msg_buffer': msg_buffer[idx + 5:idx + msgsize_total]
+                    })
 
                     conn_obj.ibuf = bytearray()
                     self.close_connection(self._conns, conn_obj.sock)
@@ -1661,10 +1670,15 @@ class SlskProtoThread(threading.Thread):
 
             else:
                 host, port = conn_obj.addr
-                log.add(("Peer message type %(type)s size %(size)i contents %(msg_buffer)s unknown, "
-                         "from user: %(user)s, %(host)s:%(port)s"),
-                        {'type': msgtype, 'size': msgsize - 4, 'msg_buffer': msg_buffer[idx + 8:idx + msgsize_total],
-                         'user': conn_obj.init.target_user, 'host': host, 'port': port})
+                log.add_debug(("Peer message type %(type)s size %(size)i contents %(msg_buffer)s unknown, "
+                               "from user: %(user)s, %(host)s:%(port)s"), {
+                    'type': msgtype,
+                    'size': msgsize - 4,
+                    'msg_buffer': msg_buffer[idx + 8:idx + msgsize_total],
+                    'user': conn_obj.init.target_user,
+                    'host': host,
+                    'port': port
+                })
 
             idx += msgsize_total
             buffer_len -= msgsize_total
@@ -1918,8 +1932,11 @@ class SlskProtoThread(threading.Thread):
                         self._callback_msgs.append(msg)
 
             else:
-                log.add("Distrib message type %(type)i size %(size)i contents %(msg_buffer)s unknown",
-                        {'type': msgtype, 'size': msgsize - 1, 'msg_buffer': msg_buffer[idx + 5:idx + msgsize_total]})
+                log.add_debug("Distrib message type %(type)i size %(size)i contents %(msg_buffer)s unknown", {
+                    'type': msgtype,
+                    'size': msgsize - 1,
+                    'msg_buffer': msg_buffer[idx + 5:idx + msgsize_total]
+                })
 
                 conn_obj.ibuf = bytearray()
                 self.close_connection(self._conns, conn_obj.sock)
