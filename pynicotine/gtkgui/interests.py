@@ -360,11 +360,6 @@ class Interests(UserInterface):
             return
 
         status = msg.status
-
-        if status not in (UserStatus.OFFLINE, UserStatus.ONLINE, UserStatus.AWAY):
-            # Unknown status
-            return
-
         status_icon = get_status_icon_name(status)
 
         self.recommendation_users_model.set_value(iterator, 0, status_icon)

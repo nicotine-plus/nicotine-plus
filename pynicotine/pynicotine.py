@@ -49,6 +49,7 @@ from pynicotine.pluginsystem import PluginHandler
 from pynicotine.privatechat import PrivateChats
 from pynicotine.search import Search
 from pynicotine.shares import Shares
+from pynicotine.slskmessages import UserStatus
 from pynicotine.transfers import Statistics
 from pynicotine.transfers import Transfers
 from pynicotine.upnp import UPnP
@@ -603,13 +604,24 @@ class NicotineCore:
         if log_contents:
             log.add_msg_contents(msg)
 
-        self.user_statuses[msg.user] = msg.status
+        user = msg.user
+        status = msg.status
+        privileged = msg.privileged
 
-        if msg.privileged is not None:
-            if msg.privileged:
-                self.transfers.add_to_privileged(msg.user)
+        if privileged is not None:
+            if privileged:
+                self.transfers.add_to_privileged(user)
             else:
-                self.transfers.remove_from_privileged(msg.user)
+                self.transfers.remove_from_privileged(user)
+
+        if status not in (UserStatus.OFFLINE, UserStatus.ONLINE, UserStatus.AWAY):
+            log.add_debug("Received an unknown status %(status)s for user %(user)s from the server", {
+                "status": status,
+                "user": user
+            })
+            return
+
+        self.user_statuses[user] = status
 
         self.interests.get_user_status(msg)
         self.transfers.get_user_status(msg)
@@ -619,7 +631,7 @@ class NicotineCore:
         self.privatechats.get_user_status(msg)
         self.chatrooms.get_user_status(msg)
 
-        self.pluginhandler.user_status_notification(msg.user, msg.status, msg.privileged)
+        self.pluginhandler.user_status_notification(user, status, privileged)
 
     def connect_to_peer(self, msg):
         """ Server code: 18 """
