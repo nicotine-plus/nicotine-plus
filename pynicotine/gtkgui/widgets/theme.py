@@ -38,14 +38,17 @@ from pynicotine.utils import encode_path
 SETTINGS_PORTAL = None
 
 if "gi.repository.Adw" not in sys.modules:
-    # GNOME 42+ system-wide dark mode for vanilla GTK (no libadwaita)
+    # GNOME 42+ system-wide dark mode for GTK without libadwaita
+
+    class ColorScheme:
+        NO_PREFERENCE = 0
+        PREFER_DARK = 1
+        PREFER_LIGHT = 2
 
     def read_color_scheme():
-        """ Available color schemes:
-        - 0: No preference
-        - 1: Prefer dark appearance
-        - 2: Prefer light appearance
-        """
+
+        if SETTINGS_PORTAL is None:
+            return None
 
         try:
             result = SETTINGS_PORTAL.call_sync(
@@ -55,7 +58,8 @@ if "gi.repository.Adw" not in sys.modules:
 
             return result.unpack()[0]
 
-        except Exception:
+        except Exception as error:
+            log.add_debug("Cannot read color scheme, falling back to GTK theme preference: %s", error)
             return None
 
     def on_color_scheme_changed(_proxy, _sender_name, signal_name, parameters):
@@ -69,7 +73,7 @@ if "gi.repository.Adw" not in sys.modules:
                 or namespace != "org.freedesktop.appearance" or name != "color-scheme"):
             return
 
-        set_dark_mode(color_scheme == 1)
+        set_dark_mode(color_scheme == ColorScheme.PREFER_DARK)
 
     try:
         SETTINGS_PORTAL = Gio.DBusProxy.new_for_bus_sync(
@@ -79,8 +83,9 @@ if "gi.repository.Adw" not in sys.modules:
         )
         SETTINGS_PORTAL.connect("g-signal", on_color_scheme_changed)
 
-    except Exception:
-        pass
+    except Exception as portal_error:
+        log.add_debug("Cannot start color scheme settings portal, falling back to GTK theme preference: %s",
+                      portal_error)
 
 GTK_SETTINGS = Gtk.Settings.get_default()
 
@@ -102,7 +107,7 @@ def set_dark_mode(enabled):
         color_scheme = read_color_scheme()
 
         if color_scheme is not None:
-            enabled = (color_scheme == 1)
+            enabled = (color_scheme == ColorScheme.PREFER_DARK)
 
     GTK_SETTINGS.set_property("gtk-application-prefer-dark-theme", enabled)
 
