@@ -43,6 +43,7 @@ from pynicotine.gtkgui.widgets.theme import get_user_status_color
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import clean_file
 from pynicotine.utils import delete_log
 from pynicotine.utils import encode_path
@@ -178,7 +179,7 @@ class PrivateChats(IconNotebook):
 
         for user, page in self.pages.items():
             page.server_disconnect()
-            self.set_user_status(page.container, user, 0)
+            self.set_user_status(page.container, user, UserStatus.OFFLINE)
 
 
 class PrivateChat(UserInterface):
@@ -204,10 +205,7 @@ class PrivateChat(UserInterface):
 
         self.loaded = False
         self.offline_message = False
-        self.status = 0
-
-        if user in self.core.user_statuses:
-            self.status = self.core.user_statuses[user] or 0
+        self.status = self.core.user_statuses.get(user, UserStatus.OFFLINE)
 
         self.chat_view = TextView(self.chat_view, font="chatfont")
 
@@ -296,12 +294,10 @@ class PrivateChat(UserInterface):
 
         timestamp_format = config.sections["logging"]["private_timestamp"]
         self.chat_view.append_line(_("--- disconnected ---"), tag=self.tag_hilite, timestamp_format=timestamp_format)
-        self.status = -1
         self.offline_message = False
 
-        # Offline color for usernames
-        self.update_remote_username_tag(status=0)
-        self.update_local_username_tag(status=0)
+        self.update_remote_username_tag(status=UserStatus.OFFLINE)
+        self.update_local_username_tag(status=UserStatus.OFFLINE)
 
     def clear(self):
         self.chat_view.clear()

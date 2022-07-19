@@ -53,8 +53,54 @@ def increment_token(token):
     return token
 
 
+"""
+Constants
+"""
+
+
+class MessageType:
+    INTERNAL = 0
+    INIT = 1
+    SERVER = 2
+    PEER = 3
+    FILE = 4
+    DISTRIBUTED = 5
+
+
+class ConnectionType:
+    SERVER = 'S'
+    PEER = 'P'
+    FILE = 'F'
+    DISTRIBUTED = 'D'
+
+
+class UserStatus:
+    OFFLINE = 0
+    AWAY = 1
+    ONLINE = 2
+
+
+class TransferDirection:
+    DOWNLOAD = 0
+    UPLOAD = 1
+
+
+class FileAttribute:
+    BITRATE = 0
+    DURATION = 1
+    VBR = 2
+    ENCODER = 3
+    SAMPLE_RATE = 4
+    BIT_DEPTH = 5
+
+
+"""
+Internal Messages
+"""
+
+
 class InternalMessage:
-    msgtype = "internal"
+    msgtype = MessageType.INTERNAL
 
 
 class ServerConnect(InternalMessage):
@@ -342,7 +388,7 @@ Server Messages
 
 
 class ServerMessage(SlskMessage):
-    msgtype = 'S'
+    msgtype = MessageType.SERVER
 
 
 class Login(ServerMessage):
@@ -2125,7 +2171,7 @@ Peer Init Messages
 
 
 class PeerInitMessage(SlskMessage):
-    msgtype = "init"
+    msgtype = MessageType.INIT
 
 
 class PierceFireWall(PeerInitMessage):
@@ -2191,7 +2237,7 @@ Peer Messages
 
 class PeerMessage(SlskMessage):
 
-    msgtype = 'P'
+    msgtype = MessageType.PEER
 
     def parse_file_size(self, message, pos):
 
@@ -2686,7 +2732,7 @@ class TransferRequest(PeerMessage):
         msg.extend(self.pack_uint32(self.token))
         msg.extend(self.pack_string(self.file))
 
-        if self.direction == 1:
+        if self.direction == TransferDirection.UPLOAD:
             msg.extend(self.pack_uint64(self.filesize))
 
         return msg
@@ -2696,7 +2742,7 @@ class TransferRequest(PeerMessage):
         pos, self.token = self.unpack_uint32(message, pos)
         pos, self.file = self.unpack_string(message, pos)
 
-        if self.direction == 1:
+        if self.direction == TransferDirection.UPLOAD:
             pos, self.filesize = self.unpack_uint64(message, pos)
 
 
@@ -2858,7 +2904,7 @@ File Messages
 
 
 class FileMessage(SlskMessage):
-    msgtype = 'F'
+    msgtype = MessageType.FILE
 
 
 class FileDownloadInit(FileMessage):
@@ -2909,7 +2955,7 @@ Distributed Messages
 
 
 class DistribMessage(SlskMessage):
-    msgtype = 'D'
+    msgtype = MessageType.DISTRIBUTED
 
 
 class DistribAlive(DistribMessage):

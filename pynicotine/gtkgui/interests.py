@@ -31,6 +31,7 @@ from pynicotine.gtkgui.widgets.treeview import show_user_status_tooltip
 from pynicotine.gtkgui.widgets.theme import get_status_icon_name
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.ui import UserInterface
+from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
 
@@ -337,7 +338,7 @@ class Interests(UserInterface):
         for user in users:
             iterator = self.recommendation_users_model.insert_with_valuesv(
                 -1, self.recommendation_users_column_numbers,
-                [get_status_icon_name(0), user, "", "0", 0, 0, 0]
+                [get_status_icon_name(UserStatus.OFFLINE), user, "", "0", 0, 0, 0]
             )
             self.recommendation_users[user] = iterator
 
@@ -360,7 +361,7 @@ class Interests(UserInterface):
 
         status = msg.status
 
-        if status < 0 or status > 2:
+        if status not in (UserStatus.OFFLINE, UserStatus.ONLINE, UserStatus.AWAY):
             # Unknown status
             return
 
