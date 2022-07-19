@@ -549,7 +549,7 @@ class ID3(TinyTag):
         if header_flags & 2:  # BYTES FLAG
             byte_count = struct.unpack('>i', fh.read(4))[0]
         if header_flags & 4:  # TOC FLAG
-            toc = [struct.unpack('>i', fh.read(4))[0] for _ in range(100)]
+            toc = [struct.unpack('>i', fh.read(4))[0] for _ in range(25)]  # 100 bytes
         if header_flags & 8:  # VBR SCALE FLAG
             vbr_scale = struct.unpack('>i', fh.read(4))[0]
         return frames, byte_count, toc, vbr_scale
