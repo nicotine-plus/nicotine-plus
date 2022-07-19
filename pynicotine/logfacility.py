@@ -70,7 +70,7 @@ class Logger:
             os.makedirs(folder_path_encoded)
 
         log_file = self.log_files[file_path] = LogFile(
-            path=file_path, handle=open(encode_path(file_path), 'ab'))
+            path=file_path, handle=open(encode_path(file_path), 'ab'))  # pylint: disable=consider-using-with
 
         # Disable file access for outsiders
         os.chmod(file_path_encoded, 0o600)
