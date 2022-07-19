@@ -20,6 +20,7 @@ import time
 
 from pynicotine import slskmessages
 from pynicotine.logfacility import log
+from pynicotine.utils import encode_path
 from pynicotine.utils import unescape
 
 
@@ -136,7 +137,7 @@ class UserInfo:
             try:
                 userpic = self.config.sections["userinfo"]["pic"]
 
-                with open(userpic, 'rb') as file_handle:
+                with open(encode_path(userpic), 'rb') as file_handle:
                     pic = file_handle.read()
 
             except Exception:

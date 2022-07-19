@@ -169,7 +169,7 @@ class Logger:
             if not os.path.exists(logsdir_encoded):
                 os.makedirs(logsdir_encoded)
 
-            with open(path, 'ab', 0) as logfile:
+            with open(encode_path(path), 'ab', buffering=0) as logfile:
                 os.umask(oldumask)
 
                 text = "%s %s\n" % (time.strftime(timestamp_format, time.localtime(timestamp)), msg)

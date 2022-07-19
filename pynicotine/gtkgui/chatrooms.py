@@ -58,6 +58,7 @@ from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
 from pynicotine.utils import clean_file
 from pynicotine.utils import delete_log
+from pynicotine.utils import encode_path
 from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
 from pynicotine.utils import open_log
@@ -642,7 +643,7 @@ class ChatRoom(UserInterface):
 
     def append_log_lines(self, path, numlines):
 
-        with open(path, "rb") as lines:
+        with open(encode_path(path), "rb") as lines:
             # Only show as many log lines as specified in config
             lines = deque(lines, numlines)
             login = config.sections["server"]["login"]
