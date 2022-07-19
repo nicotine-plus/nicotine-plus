@@ -62,7 +62,7 @@ class Logger:
         if self.log_levels:
             levels = self.log_levels
         else:
-            levels = config.sections["logging"].get("debugmodes", "")
+            levels = config.sections["logging"].get("debugmodes", [])
 
         # Important messages are always visible
         if level and not level.startswith("important") and level not in levels:

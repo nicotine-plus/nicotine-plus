@@ -621,13 +621,13 @@ class Shares:
                     if self.config.sections["transfers"]["buddysharestrustedonly"] and not row[4]:
                         break
 
-                    for fileinfo in bshared_files.get(str(folder), ""):
+                    for fileinfo in bshared_files.get(str(folder), []):
                         if file == fileinfo[0]:
                             file_is_shared = True
                             break
 
             if not file_is_shared and shared_files is not None:
-                for fileinfo in shared_files.get(str(folder), ""):
+                for fileinfo in shared_files.get(str(folder), []):
                     if file == fileinfo[0]:
                         file_is_shared = True
                         break
