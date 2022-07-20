@@ -187,9 +187,6 @@ class RoomList(UserInterface):
 
     def on_popup_menu(self, menu, widget):
 
-        if self.room_model is None:
-            return True
-
         room = self.get_selected_room(widget)
         self.popup_room = room
 
@@ -198,7 +195,6 @@ class RoomList(UserInterface):
 
         menu.actions[_("Disown Private Room")].set_enabled(self.core.chatrooms.is_private_room_owned(room))
         menu.actions[_("Cancel Room Membership")].set_enabled(self.core.chatrooms.is_private_room_member(room))
-        return False
 
     def on_popup_join(self, *_args):
         self.core.chatrooms.request_join_room(self.popup_room)

@@ -77,10 +77,9 @@ class TextView:
 
         if not self.textview.get_realized():
             # Avoid GTK warnings
-            return False
+            return
 
         self.adjustment.set_value(self.adjustment.get_upper() - self.adjustment.get_page_size())
-        return False
 
     def append_line(self, line, tag=None, timestamp=None, timestamp_format=None, username=None,
                     usertag=None, find_urls=True):
@@ -230,11 +229,8 @@ class TextView:
     """ Events """
 
     def _callback_pressed_primary(self, _controller, _num_p, pressed_x, pressed_y):
-
         self.pressed_x = pressed_x
         self.pressed_y = pressed_y
-
-        return False
 
     def _callback_released_primary(self, _controller, _num_p, pressed_x, pressed_y):
 
