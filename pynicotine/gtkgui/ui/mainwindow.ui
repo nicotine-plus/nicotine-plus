@@ -112,6 +112,7 @@
                                           <object class="GtkComboBoxText" id="room_search_combobox">
                                             <property name="visible">False</property>
                                             <property name="has-entry">True</property>
+                                            <signal name="notify::popup-shown" handler="on_combobox_popup_shown"/>
                                             <items>
                                               <item translatable="yes" id="joined">Joined Rooms </item>
                                             </items>
@@ -124,17 +125,16 @@
                                                 <signal name="activate" handler="on_search"/>
                                               </object>
                                             </child>
-                                            <child internal-child="button">
-                                              <object class="GtkButton">
-                                                <signal name="clicked" handler="focus_combobox"/>
-                                              </object>
-                                            </child>
+                                            <style>
+                                              <class name="dropdown-scrollbar"/>
+                                            </style>
                                           </object>
                                         </child>
                                         <child>
                                           <object class="GtkComboBoxText" id="user_search_combobox">
                                             <property name="visible">False</property>
                                             <property name="has-entry">True</property>
+                                            <signal name="notify::popup-shown" handler="on_combobox_popup_shown"/>
                                             <child internal-child="entry">
                                               <object class="GtkEntry" id="user_search_entry">
                                                 <property name="max-width-chars">20</property>
@@ -143,11 +143,9 @@
                                                 <signal name="activate" handler="on_search"/>
                                               </object>
                                             </child>
-                                            <child internal-child="button">
-                                              <object class="GtkButton">
-                                                <signal name="clicked" handler="focus_combobox"/>
-                                              </object>
-                                            </child>
+                                            <style>
+                                              <class name="dropdown-scrollbar"/>
+                                            </style>
                                           </object>
                                         </child>
                                         <child>
@@ -156,6 +154,7 @@
                                             <property name="sensitive" bind-source="_user_status_button" bind-property="sensitive" bind-flags="sync-create"/>
                                             <property name="hexpand">True</property>
                                             <property name="has-entry">True</property>
+                                            <signal name="notify::popup-shown" handler="on_combobox_popup_shown"/>
                                             <child internal-child="entry">
                                               <object class="GtkEntry" id="search_entry">
                                                 <property name="max-width-chars">75</property>
@@ -165,11 +164,6 @@
                                                 <property name="primary-icon-name">system-search-symbolic</property>
                                                 <signal name="activate" handler="on_search"/>
                                                 <signal name="icon-press" handler="on_search"/>
-                                              </object>
-                                            </child>
-                                            <child internal-child="button">
-                                              <object class="GtkButton">
-                                                <signal name="clicked" handler="focus_combobox"/>
                                               </object>
                                             </child>
                                             <style>
@@ -816,6 +810,7 @@
                                           <object class="GtkComboBoxText" id="userbrowse_combobox">
                                             <property name="visible">True</property>
                                             <property name="has-entry">True</property>
+                                            <signal name="notify::popup-shown" handler="on_combobox_popup_shown"/>
                                             <child internal-child="entry">
                                               <object class="GtkEntry" id="userbrowse_entry">
                                                 <property name="max-width-chars">45</property>
@@ -825,11 +820,6 @@
                                                 <property name="primary-icon-name">avatar-default-symbolic</property>
                                                 <signal name="activate" handler="on_get_shares"/>
                                                 <signal name="icon-press" handler="on_get_shares"/>
-                                              </object>
-                                            </child>
-                                            <child internal-child="button">
-                                              <object class="GtkButton">
-                                                <signal name="clicked" handler="focus_combobox"/>
                                               </object>
                                             </child>
                                             <style>
@@ -997,6 +987,7 @@
                                           <object class="GtkComboBoxText" id="userinfo_combobox">
                                             <property name="visible">True</property>
                                             <property name="has-entry">True</property>
+                                            <signal name="notify::popup-shown" handler="on_combobox_popup_shown"/>
                                             <child internal-child="entry">
                                               <object class="GtkEntry" id="userinfo_entry">
                                                 <property name="max-width-chars">45</property>
@@ -1006,11 +997,6 @@
                                                 <property name="primary-icon-name">avatar-default-symbolic</property>
                                                 <signal name="activate" handler="on_get_user_info"/>
                                                 <signal name="icon-press" handler="on_get_user_info"/>
-                                              </object>
-                                            </child>
-                                            <child internal-child="button">
-                                              <object class="GtkButton">
-                                                <signal name="clicked" handler="focus_combobox"/>
                                               </object>
                                             </child>
                                             <style>
