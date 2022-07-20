@@ -31,7 +31,6 @@ from collections import OrderedDict
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
-from gi.repository import Pango
 
 from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
