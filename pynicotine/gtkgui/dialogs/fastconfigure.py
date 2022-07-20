@@ -94,21 +94,14 @@ class FastConfigure(UserInterface):
     def reset_completeness(self):
         """ Turns on the complete flag if everything required is filled in. """
 
-        page_complete = False
         page = self.stack.get_visible_child()
+        page_complete = (
+            (page in (self.welcome_page, self.port_page, self.summary_page))
+            or (page == self.account_page and self.username_entry.get_text() and self.password_entry.get_text())
+            or (page == self.share_page and self.download_folder_button.get_path())
+        )
         self.finished = (page == self.summary_page)
         next_label = _("_Finish") if page == self.summary_page else _("_Next")
-
-        if page in (self.welcome_page, self.port_page, self.summary_page):
-            page_complete = True
-
-        elif page == self.account_page:
-            if len(self.username_entry.get_text()) > 0 and len(self.password_entry.get_text()) > 0:
-                page_complete = True
-
-        elif page == self.share_page:
-            if self.download_folder_button.get_path():
-                page_complete = True
 
         if self.next_button.get_label() != next_label:
             self.next_button.set_label(next_label)

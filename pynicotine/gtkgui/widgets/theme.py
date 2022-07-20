@@ -444,11 +444,10 @@ def get_user_status_color(status):
 def parse_color_string(color_string):
     """ Take a color string, e.g. BLUE, and return a HEX color code """
 
-    if color_string:
-        if COLOR_RGBA.parse(color_string):
-            color_hex = "#%02X%02X%02X" % (
-                round(COLOR_RGBA.red * 255), round(COLOR_RGBA.green * 255), round(COLOR_RGBA.blue * 255))
-            return color_hex
+    if color_string and COLOR_RGBA.parse(color_string):
+        color_hex = "#%02X%02X%02X" % (
+            round(COLOR_RGBA.red * 255), round(COLOR_RGBA.green * 255), round(COLOR_RGBA.blue * 255))
+        return color_hex
 
     return None
 
