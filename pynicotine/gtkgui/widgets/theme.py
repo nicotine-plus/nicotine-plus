@@ -229,11 +229,6 @@ def set_global_css():
         -GtkTreeView-horizontal-separator: 0;
         -GtkTreeView-vertical-separator: 0;
     }
-
-    .dropdown-scrollbar {
-        /* Enable dropdown list with a scrollbar */
-        -GtkComboBox-appears-as-list: 1;
-    }
     """
 
     css_gtk3_20 = b"""
@@ -247,6 +242,15 @@ def set_global_css():
 
     .count {
         min-width: 12px;
+    }
+    """
+
+    css_gtk3_22_28 = b"""
+    /* Tweaks (GTK 3.22.28+) */
+
+    .dropdown-scrollbar {
+        /* Enable dropdown list with a scrollbar */
+        -GtkComboBox-appears-as-list: 1;
     }
     """
 
@@ -294,6 +298,9 @@ def set_global_css():
 
         if not Gtk.check_version(3, 20, 0):
             css = css + css_gtk3_20
+
+        if not Gtk.check_version(3, 22, 28):
+            css = css + css_gtk3_22_28
 
         global_css_provider.load_from_data(css)
 
