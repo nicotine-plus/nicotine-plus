@@ -1389,7 +1389,7 @@ class Search(UserInterface):
         if value in history:
             history.remove(value)
 
-        elif len(history) >= 5:
+        elif len(history) >= 50:
             del history[-1]
 
         history.insert(0, value)
