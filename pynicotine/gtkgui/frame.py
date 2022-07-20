@@ -1808,18 +1808,18 @@ class NicotineFrame(UserInterface):
         total_conns = repr(msg.total_conns)
         download_bandwidth = human_speed(msg.download_bandwidth)
         upload_bandwidth = human_speed(msg.upload_bandwidth)
+        download_bandwidth_label = "%(speed)s (%(num)i)" % {'num': msg.download_conns, 'speed': download_bandwidth}
+        upload_bandwidth_label = "%(speed)s (%(num)i)" % {'num': msg.upload_conns, 'speed': upload_bandwidth}
 
         if self.connections_label.get_text() != total_conns:
             self.connections_label.set_text(total_conns)
 
-        if self.download_status_label.get_text() != download_bandwidth:
-            self.download_status_label.set_text("%(speed)s (%(num)i)" % {
-                'num': msg.download_conns, 'speed': download_bandwidth})
+        if self.download_status_label.get_text() != download_bandwidth_label:
+            self.download_status_label.set_text(download_bandwidth_label)
             self.tray_icon.set_download_status(_("Downloads: %(speed)s") % {'speed': download_bandwidth})
 
-        if self.upload_status_label.get_text() != upload_bandwidth:
-            self.upload_status_label.set_text("%(speed)s (%(num)i)" % {
-                'num': msg.upload_conns, 'speed': upload_bandwidth})
+        if self.upload_status_label.get_text() != upload_bandwidth_label:
+            self.upload_status_label.set_text(upload_bandwidth_label)
             self.tray_icon.set_upload_status(_("Uploads: %(speed)s") % {'speed': upload_bandwidth})
 
     def show_scan_progress(self):
