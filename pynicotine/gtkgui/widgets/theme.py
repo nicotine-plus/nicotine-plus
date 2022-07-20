@@ -208,6 +208,29 @@ def set_global_css():
     }
     """
 
+    css_gtk3 = b"""
+    /* Tweaks (GTK 3) */
+
+    treeview {
+        /* Set spacing for entry completion items */
+        -GtkTreeView-horizontal-separator: 12;
+        -GtkTreeView-vertical-separator: 5;
+    }
+
+    filechooser treeview,
+    fontchooser treeview {
+        /* Restore default item spacing in GTK choosers */
+        -GtkTreeView-horizontal-separator: 2;
+        -GtkTreeView-vertical-separator: 2;
+    }
+
+    .treeview-spacing {
+        /* Disable GTK's built-in item spacing in custom treeviews */
+        -GtkTreeView-horizontal-separator: 0;
+        -GtkTreeView-vertical-separator: 0;
+    }
+    """
+
     css_gtk3_20 = b"""
     /* Tweaks (GTK 3.20+) */
 
@@ -255,7 +278,6 @@ def set_global_css():
 
     if GTK_API_VERSION >= 4:
         css = css + css_gtk3_20 + css_gtk4
-
         global_css_provider.load_from_data(css)
 
         Gtk.StyleContext.add_provider_for_display(  # pylint: disable=no-member
@@ -263,6 +285,8 @@ def set_global_css():
         )
 
     else:
+        css = css + css_gtk3
+
         if not Gtk.check_version(3, 20, 0):
             css = css + css_gtk3_20
 
