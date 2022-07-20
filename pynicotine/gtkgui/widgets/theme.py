@@ -213,9 +213,9 @@ def set_global_css():
     /* Tweaks (GTK 3) */
 
     treeview {
-        /* Set spacing for dropdown menu items */
+        /* Set spacing for dropdown menu/entry completion items */
         -GtkTreeView-horizontal-separator: 12;
-        -GtkTreeView-vertical-separator: 6;
+        -GtkTreeView-vertical-separator: 5;
     }
 
     filechooser treeview,
