@@ -30,6 +30,7 @@ import gi
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
+from gi.repository import Pango
 
 from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
@@ -1673,12 +1674,19 @@ class NicotineFrame(UserInterface):
     """ Various """
 
     @staticmethod
-    def focus_combobox(button):
+    def on_combobox_popup_shown(combobox, param):
 
-        parent = button.get_ancestor(Gtk.ComboBox)
-        entry = parent.get_child()
+        visible = combobox.get_property(param.name)
 
+        if visible:
+            for cell in combobox.get_cells():
+                if not cell.get_property("ellipsize") == Pango.EllipsizeMode.END:
+                    cell.set_property("ellipsize", Pango.EllipsizeMode.END)
+            return
+
+        entry = combobox.get_child()
         entry.grab_focus()
+        entry.set_position(-1)
 
     def on_settings_downloads(self, *_args):
         self.on_settings(page='Downloads')

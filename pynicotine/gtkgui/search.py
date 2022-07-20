@@ -31,6 +31,7 @@ from collections import OrderedDict
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
+from gi.repository import Pango
 
 from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
@@ -504,14 +505,12 @@ class Search(UserInterface):
 
         return False
 
-    @staticmethod
-    def focus_combobox(button):
+    def on_combobox_popup_shown(self, combobox, param):
 
-        parent = button.get_ancestor(Gtk.ComboBox)
-        entry = parent.get_child()
+        self.frame.on_combobox_popup_shown(combobox, param)
 
-        entry.grab_focus()
-        GLib.idle_add(entry.emit, "activate")
+        entry = combobox.get_child()
+        entry.emit("activate")
 
     def update_filter_comboboxes(self):
 

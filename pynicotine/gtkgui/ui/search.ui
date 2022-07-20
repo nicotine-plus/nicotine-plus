@@ -176,6 +176,7 @@
                             <property name="visible">True</property>
                             <property name="has-entry">True</property>
                             <property name="hexpand">True</property>
+                            <signal name="notify::popup-shown" handler="on_combobox_popup_shown"/>
                             <child internal-child="entry">
                               <object class="GtkEntry">
                                 <property name="width-chars">14</property>
@@ -187,11 +188,9 @@
                                 <signal name="icon-press" handler="on_refilter"/>
                               </object>
                             </child>
-                            <child internal-child="button">
-                              <object class="GtkButton">
-                                <signal name="clicked" handler="focus_combobox"/>
-                              </object>
-                            </child>
+                            <style>
+                              <class name="dropdown-scrollbar"/>
+                            </style>
                           </object>
                         </child>
                       </object>
@@ -205,6 +204,7 @@
                             <property name="visible">True</property>
                             <property name="has-entry">True</property>
                             <property name="hexpand">True</property>
+                            <signal name="notify::popup-shown" handler="on_combobox_popup_shown"/>
                             <child internal-child="entry">
                               <object class="GtkEntry">
                                 <property name="width-chars">14</property>
@@ -216,11 +216,9 @@
                                 <signal name="icon-press" handler="on_refilter"/>
                               </object>
                             </child>
-                            <child internal-child="button">
-                              <object class="GtkButton">
-                                <signal name="clicked" handler="focus_combobox"/>
-                              </object>
-                            </child>
+                            <style>
+                              <class name="dropdown-scrollbar"/>
+                            </style>
                           </object>
                         </child>
                       </object>
@@ -234,6 +232,7 @@
                             <property name="visible">True</property>
                             <property name="has-entry">True</property>
                             <property name="hexpand">True</property>
+                            <signal name="notify::popup-shown" handler="on_combobox_popup_shown"/>
                             <child internal-child="entry">
                               <object class="GtkEntry">
                                 <property name="width-chars">12</property>
@@ -245,11 +244,9 @@
                                 <signal name="icon-press" handler="on_refilter"/>
                               </object>
                             </child>
-                            <child internal-child="button">
-                              <object class="GtkButton">
-                                <signal name="clicked" handler="focus_combobox"/>
-                              </object>
-                            </child>
+                            <style>
+                              <class name="dropdown-scrollbar"/>
+                            </style>
                           </object>
                         </child>
                       </object>
@@ -263,6 +260,7 @@
                             <property name="visible">True</property>
                             <property name="has-entry">True</property>
                             <property name="hexpand">True</property>
+                            <signal name="notify::popup-shown" handler="on_combobox_popup_shown"/>
                             <child internal-child="entry">
                               <object class="GtkEntry">
                                 <property name="width-chars">10</property>
@@ -274,11 +272,9 @@
                                 <signal name="icon-press" handler="on_refilter"/>
                               </object>
                             </child>
-                            <child internal-child="button">
-                              <object class="GtkButton">
-                                <signal name="clicked" handler="focus_combobox"/>
-                              </object>
-                            </child>
+                            <style>
+                              <class name="dropdown-scrollbar"/>
+                            </style>
                           </object>
                         </child>
                       </object>
@@ -292,6 +288,7 @@
                             <property name="visible">True</property>
                             <property name="has-entry">True</property>
                             <property name="hexpand">True</property>
+                            <signal name="notify::popup-shown" handler="on_combobox_popup_shown"/>
                             <child internal-child="entry">
                               <object class="GtkEntry">
                                 <property name="width-chars">10</property>
@@ -303,11 +300,9 @@
                                 <signal name="icon-press" handler="on_refilter"/>
                               </object>
                             </child>
-                            <child internal-child="button">
-                              <object class="GtkButton">
-                                <signal name="clicked" handler="focus_combobox"/>
-                              </object>
-                            </child>
+                            <style>
+                              <class name="dropdown-scrollbar"/>
+                            </style>
                           </object>
                         </child>
                       </object>
@@ -321,6 +316,7 @@
                             <property name="visible">True</property>
                             <property name="has-entry">True</property>
                             <property name="hexpand">True</property>
+                            <signal name="notify::popup-shown" handler="on_combobox_popup_shown"/>
                             <child internal-child="entry">
                               <object class="GtkEntry">
                                 <property name="width-chars">10</property>
@@ -332,11 +328,9 @@
                                 <signal name="icon-press" handler="on_refilter"/>
                               </object>
                             </child>
-                            <child internal-child="button">
-                              <object class="GtkButton">
-                                <signal name="clicked" handler="focus_combobox"/>
-                              </object>
-                            </child>
+                            <style>
+                              <class name="dropdown-scrollbar"/>
+                            </style>
                           </object>
                         </child>
                       </object>
@@ -354,6 +348,7 @@
                                 <property name="visible">True</property>
                                 <property name="has-entry">True</property>
                                 <property name="hexpand">True</property>
+                                <signal name="notify::popup-shown" handler="on_combobox_popup_shown"/>
                                 <child internal-child="entry">
                                   <object class="GtkEntry">
                                     <property name="width-chars">12</property>
@@ -365,11 +360,9 @@
                                     <signal name="icon-press" handler="on_refilter"/>
                                   </object>
                                 </child>
-                                <child internal-child="button">
-                                  <object class="GtkButton">
-                                    <signal name="clicked" handler="focus_combobox"/>
-                                  </object>
-                                </child>
+                                <style>
+                                  <class name="dropdown-scrollbar"/>
+                                </style>
                               </object>
                             </child>
                             <child>
