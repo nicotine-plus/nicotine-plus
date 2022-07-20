@@ -1146,6 +1146,7 @@
                                           <object class="GtkComboBoxText" id="private_combobox">
                                             <property name="visible">True</property>
                                             <property name="has-entry">True</property>
+                                            <signal name="notify::popup-shown" handler="on_combobox_popup_shown"/>
                                             <child internal-child="entry">
                                               <object class="GtkEntry" id="private_entry">
                                                 <property name="max-width-chars">45</property>
@@ -1157,11 +1158,9 @@
                                                 <signal name="icon-press" handler="on_get_private_chat"/>
                                               </object>
                                             </child>
-                                            <child internal-child="button">
-                                              <object class="GtkButton">
-                                                <signal name="clicked" handler="focus_combobox"/>
-                                              </object>
-                                            </child>
+                                            <style>
+                                              <class name="dropdown-scrollbar"/>
+                                            </style>
                                           </object>
                                         </child>
                                       </object>
