@@ -80,6 +80,7 @@ class TreeView:
             self.widget.connect("query-tooltip", self.on_tooltip, tooltip_callback)
 
         self.widget.set_search_equal_func(self.on_search_match)
+        self.widget.get_style_context().add_class("treeview-spacing")
 
     def _append_columns(self, cols, column_config):
 
@@ -195,14 +196,8 @@ class TreeView:
         self.model = Gtk.ListStore(*data_types)
         self.column_numbers = list(range(self.model.get_n_columns()))
 
-        # GTK 4 rows need more padding to match GTK 3
-        if GTK_API_VERSION >= 4:
-            progress_padding = 1
-            height_padding = 5
-        else:
-            progress_padding = 0
-            height_padding = 3
-
+        progress_padding = 1
+        height_padding = 4
         width_padding = 10
 
         cols = OrderedDict()
@@ -537,14 +532,8 @@ def initialise_columns(frame, treeview_name, treeview, *args):
     num_cols = len(args)
     column_config = None
 
-    # GTK 4 rows need more padding to match GTK 3
-    if GTK_API_VERSION >= 4:
-        progress_padding = 1
-        height_padding = 5
-    else:
-        progress_padding = 0
-        height_padding = 3
-
+    progress_padding = 1
+    height_padding = 4
     width_padding = 10
 
     for column_index, (column_id, title, width, column_type, extra) in enumerate(args):
@@ -637,6 +626,7 @@ def initialise_columns(frame, treeview_name, treeview, *args):
 
     append_columns(treeview, cols, column_config)
     hide_columns(treeview, cols, column_config)
+    treeview.get_style_context().add_class("treeview-spacing")
 
     treeview.set_search_equal_func(on_search_match, treeview)
     treeview.connect("columns-changed", set_last_column_autosize)
