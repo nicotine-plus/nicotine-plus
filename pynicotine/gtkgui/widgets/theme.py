@@ -212,9 +212,9 @@ def set_global_css():
     /* Tweaks (GTK 3) */
 
     treeview {
-        /* Set spacing for entry completion items */
+        /* Set spacing for dropdown menu items */
         -GtkTreeView-horizontal-separator: 12;
-        -GtkTreeView-vertical-separator: 5;
+        -GtkTreeView-vertical-separator: 6;
     }
 
     filechooser treeview,
@@ -228,6 +228,11 @@ def set_global_css():
         /* Disable GTK's built-in item spacing in custom treeviews */
         -GtkTreeView-horizontal-separator: 0;
         -GtkTreeView-vertical-separator: 0;
+    }
+
+    .dropdown-scrollbar {
+        /* Enable dropdown list with a scrollbar */
+        -GtkComboBox-appears-as-list: 1;
     }
     """
 

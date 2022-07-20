@@ -172,6 +172,9 @@
                                                 <signal name="clicked" handler="focus_combobox"/>
                                               </object>
                                             </child>
+                                            <style>
+                                              <class name="dropdown-scrollbar"/>
+                                            </style>
                                           </object>
                                         </child>
                                       </object>
@@ -829,6 +832,9 @@
                                                 <signal name="clicked" handler="focus_combobox"/>
                                               </object>
                                             </child>
+                                            <style>
+                                              <class name="dropdown-scrollbar"/>
+                                            </style>
                                           </object>
                                         </child>
                                       </object>
@@ -1007,6 +1013,9 @@
                                                 <signal name="clicked" handler="focus_combobox"/>
                                               </object>
                                             </child>
+                                            <style>
+                                              <class name="dropdown-scrollbar"/>
+                                            </style>
                                           </object>
                                         </child>
                                       </object>
