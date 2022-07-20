@@ -230,6 +230,10 @@ def set_global_css():
         -GtkTreeView-horizontal-separator: 0;
         -GtkTreeView-vertical-separator: 0;
     }
+    """
+
+    css_gtk3_22_28 = b"""
+    /* Tweaks (GTK 3.22.28+) */
 
     .dropdown-scrollbar {
         /* Enable dropdown list with a scrollbar */
@@ -273,6 +277,10 @@ def set_global_css():
 
     else:
         css = css + css_gtk3
+
+        if not Gtk.check_version(3, 22, 28):
+            css = css + css_gtk3_22_28
+
         global_css_provider.load_from_data(css)
 
         Gtk.StyleContext.add_provider_for_screen(  # pylint: disable=no-member
