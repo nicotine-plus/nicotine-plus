@@ -31,7 +31,6 @@ from collections import OrderedDict
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
-from gi.repository import Pango
 
 from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
@@ -1401,7 +1400,7 @@ class Search(UserInterface):
         if value in history:
             history.remove(value)
 
-        elif len(history) >= 5:
+        elif len(history) >= 50:
             del history[-1]
 
         history.insert(0, value)
