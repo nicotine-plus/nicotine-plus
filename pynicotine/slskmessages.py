@@ -59,12 +59,12 @@ Constants
 
 
 class MessageType:
-    INTERNAL = 0
-    INIT = 1
-    SERVER = 2
-    PEER = 3
-    FILE = 4
-    DISTRIBUTED = 5
+    INTERNAL = 'N'
+    INIT = 'I'
+    SERVER = 'S'
+    PEER = 'P'
+    FILE = 'F'
+    DISTRIBUTED = 'D'
 
 
 class ConnectionType:
