@@ -1589,7 +1589,7 @@ class NicotineFrame(UserInterface):
         room = widget.get_text()
 
         if not room:
-            return False
+            return
 
         if room not in self.core.chatrooms.server_rooms and room not in self.core.chatrooms.private_rooms:
             OptionDialog(
@@ -1605,7 +1605,6 @@ class NicotineFrame(UserInterface):
             self.core.chatrooms.request_join_room(room)
 
         widget.set_text("")
-        return True
 
     def update_completions(self):
         self.core.chatrooms.update_completions()
@@ -1669,8 +1668,6 @@ class NicotineFrame(UserInterface):
         if (current_time - self.away_cooldown_time) >= 5:
             self.set_auto_away(False)
             self.away_cooldown_time = current_time
-
-        return False
 
     """ User Actions """
 
@@ -1743,7 +1740,6 @@ class NicotineFrame(UserInterface):
             self.set_status_text(msg)
 
         self.log_view.append_line(msg, find_urls=False, timestamp_format=timestamp_format)
-        return False
 
     def on_popup_menu_log(self, menu, _textview):
         menu.actions[_("_Copy")].set_enabled(self.log_view.get_has_selection())

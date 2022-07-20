@@ -375,11 +375,6 @@ def save_columns(treeview_name, columns, subpage=None):
 def press_header(menu, treeview):
 
     columns = treeview.get_columns()
-
-    if len(columns) <= 1:
-        # Only a single column, don't show menu
-        return True
-
     visible_columns = [column for column in columns if column.get_visible()]
     menu.clear()
 
@@ -399,8 +394,6 @@ def press_header(menu, treeview):
             menu.actions[title].set_enabled(len(visible_columns) > 1)
 
         menu.actions[title].connect("activate", header_toggle, treeview, columns, column_num - 1)
-
-    return False
 
 
 def header_toggle(_action, _state, treeview, columns, index):

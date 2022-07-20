@@ -2862,15 +2862,12 @@ class Preferences(UserInterface):
 
     def on_cancel(self, *_args):
         self.hide()
-        return True
 
     def on_apply(self, *_args):
         self.update_settings()
-        return True
 
     def on_ok(self, *_args):
         self.update_settings(settings_closed=True)
-        return True
 
     def hide(self):
 
