@@ -166,6 +166,9 @@
                                                 <signal name="icon-press" handler="on_search"/>
                                               </object>
                                             </child>
+                                            <child internal-child="button">
+                                              <object class="GtkButton" id="search_combobox_button"/>
+                                            </child>
                                             <style>
                                               <class name="dropdown-scrollbar"/>
                                             </style>

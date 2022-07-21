@@ -136,9 +136,12 @@ class Searches(IconNotebook):
 
     def populate_search_history(self):
 
-        self.frame.search_combobox.remove_all()
+        should_enable_history = config.sections["searches"]["enable_history"]
 
-        if not config.sections["searches"]["enable_history"]:
+        self.frame.search_combobox.remove_all()
+        self.frame.search_combobox_button.set_visible(should_enable_history)
+
+        if not should_enable_history:
             return
 
         for term in config.sections["searches"]["history"]:

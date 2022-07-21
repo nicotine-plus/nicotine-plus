@@ -160,6 +160,7 @@ class NicotineFrame(UserInterface):
             self.room_search_entry,
             self.scan_progress_bar,
             self.search_combobox,
+            self.search_combobox_button,
             self.search_end,
             self.search_entry,
             self.search_mode_button,
