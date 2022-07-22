@@ -1584,7 +1584,7 @@ class NicotineFrame(UserInterface):
 
     def on_create_room(self, widget, *_args):
 
-        room = widget.get_text()
+        room = widget.get_text().strip()
 
         if not room:
             return
