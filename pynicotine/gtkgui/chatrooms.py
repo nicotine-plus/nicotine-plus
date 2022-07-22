@@ -960,7 +960,7 @@ class ChatRoom(UserInterface):
     def count_users(self):
 
         user_count = len(self.users)
-        self.users_label.set_text(str(user_count))
+        self.users_label.set_text(humanize(user_count))
         self.chatrooms.roomlist.update_room(self.room, user_count)
 
     def get_user_stats(self, user, avgspeed, files):

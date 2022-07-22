@@ -104,12 +104,12 @@ class FileProperties(UserInterface):
 
         index = self.current_index + 1
         total_files = len(self.properties)
-        total_size = str(human_size(self.total_size))
+        total_size = human_size(self.total_size)
 
         if self.total_length:
             self.dialog.set_title(_("File Properties (%(num)i of %(total)i  /  %(size)s  /  %(length)s)") % {
                 'num': index, 'total': total_files, 'size': total_size,
-                'length': str(human_length(self.total_length))
+                'length': human_length(self.total_length)
             })
             return
 
@@ -145,10 +145,10 @@ class FileProperties(UserInterface):
         self.length_value_label.set_text(str(length))
         self.length_row.set_visible(bool(length))
 
-        self.queue_value_label.set_text(str(humanize(queue_position)))
+        self.queue_value_label.set_text(humanize(queue_position))
         self.queue_row.set_visible(bool(queue_position))
 
-        self.speed_value_label.set_text(str(human_speed(speed)))
+        self.speed_value_label.set_text(human_speed(speed))
         self.speed_row.set_visible(bool(speed))
 
         self.country_value_label.set_text(str(country))

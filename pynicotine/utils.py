@@ -391,7 +391,7 @@ def _human_speed_or_size(unit):
     except TypeError:
         pass
 
-    return unit
+    return str(unit)
 
 
 def human_speed(speed):
