@@ -87,7 +87,11 @@ class WishList(UserInterface):
 
     def on_add_wish(self, *_args):
 
-        wish = self.wish_entry.get_text()
+        wish = self.wish_entry.get_text().strip()
+
+        if not wish:
+            return
+
         wish_exists = (wish in self.wishes)
         self.wish_entry.set_text("")
 
@@ -100,7 +104,7 @@ class WishList(UserInterface):
 
     def on_edit_wish_response(self, dialog, _response_id, old_wish):
 
-        wish = dialog.get_response_value()
+        wish = dialog.get_response_value().strip()
 
         if not wish:
             return

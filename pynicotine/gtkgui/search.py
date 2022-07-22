@@ -132,6 +132,7 @@ class Searches(IconNotebook):
         room = self.frame.room_search_entry.get_text()
         user = self.frame.user_search_entry.get_text()
 
+        self.frame.search_entry.set_text("")
         self.core.search.do_search(text, mode, room=room, user=user)
 
     def populate_search_history(self):

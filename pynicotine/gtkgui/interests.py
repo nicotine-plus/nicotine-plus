@@ -214,7 +214,7 @@ class Interests(UserInterface):
 
     def on_add_thing_i_like(self, widget, *_args):
 
-        thing = widget.get_text().lower()
+        thing = widget.get_text().strip().lower()
         widget.set_text("")
 
         if self.core.interests.add_thing_i_like(thing):
@@ -222,7 +222,7 @@ class Interests(UserInterface):
 
     def on_add_thing_i_dislike(self, widget, *_args):
 
-        thing = widget.get_text().lower()
+        thing = widget.get_text().strip().lower()
         widget.set_text("")
 
         if self.core.interests.add_thing_i_hate(thing):

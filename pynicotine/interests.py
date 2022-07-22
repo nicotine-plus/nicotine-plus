@@ -34,13 +34,23 @@ class Interests:
 
     def server_login(self):
 
-        for thing in self.config.sections["interests"]["likes"]:
-            if thing and isinstance(thing, str):
-                self.queue.append(slskmessages.AddThingILike(thing))
+        for item in self.config.sections["interests"]["likes"]:
+            if not isinstance(item, str):
+                continue
 
-        for thing in self.config.sections["interests"]["dislikes"]:
-            if thing and isinstance(thing, str):
-                self.queue.append(slskmessages.AddThingIHate(thing))
+            item = item.strip().lower()
+
+            if item:
+                self.queue.append(slskmessages.AddThingILike(item))
+
+        for item in self.config.sections["interests"]["dislikes"]:
+            if not isinstance(item, str):
+                continue
+
+            item = item.strip().lower()
+
+            if item:
+                self.queue.append(slskmessages.AddThingIHate(item))
 
         if self.ui_callback:
             self.ui_callback.server_login()
@@ -51,7 +61,9 @@ class Interests:
 
     def add_thing_i_like(self, item):
 
-        if not item and not isinstance(item, str):
+        item = item.strip().lower()
+
+        if not item:
             return False
 
         if item in self.config.sections["interests"]["likes"]:
@@ -65,7 +77,9 @@ class Interests:
 
     def add_thing_i_hate(self, item):
 
-        if not item and not isinstance(item, str):
+        item = item.strip().lower()
+
+        if not item:
             return False
 
         if item in self.config.sections["interests"]["dislikes"]:

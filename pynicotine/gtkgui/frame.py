@@ -1514,7 +1514,6 @@ class NicotineFrame(UserInterface):
 
     def on_search(self, *_args):
         self.search.on_search()
-        self.search_entry.set_text("")
 
     """ User Info """
 
@@ -1523,7 +1522,7 @@ class NicotineFrame(UserInterface):
 
     def on_get_user_info(self, widget, *_args):
 
-        username = widget.get_text()
+        username = widget.get_text().strip()
 
         if not username:
             return
@@ -1535,7 +1534,7 @@ class NicotineFrame(UserInterface):
 
     def on_get_shares(self, widget, *_args):
 
-        entry_text = widget.get_text()
+        entry_text = widget.get_text().strip()
 
         if not entry_text:
             return
@@ -1570,7 +1569,7 @@ class NicotineFrame(UserInterface):
 
     def on_get_private_chat(self, widget, *_args):
 
-        username = widget.get_text()
+        username = widget.get_text().strip()
 
         if not username:
             return

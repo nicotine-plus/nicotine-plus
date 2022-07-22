@@ -254,6 +254,11 @@ class Search:
 
     def do_wishlist_search(self, token, text):
 
+        text = text.strip()
+
+        if not text:
+            return
+
         log.add_search(_("Searching for wishlist item \"%s\""), text)
 
         self.add_allowed_token(token)
