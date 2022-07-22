@@ -32,6 +32,7 @@ from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.dialogs.fileproperties import FileProperties
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
+from pynicotine.gtkgui.widgets.filechooser import FileChooser
 from pynicotine.gtkgui.widgets.filechooser import FolderChooser
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.infobar import InfoBar
@@ -68,6 +69,36 @@ class UserBrowses(IconNotebook):
             if tab.container == page:
                 GLib.idle_add(tab.grab_view_focus)
                 break
+
+    def on_get_shares(self, widget, *_args):
+
+        entry_text = widget.get_text().strip()
+
+        if not entry_text:
+            return
+
+        widget.set_text("")
+
+        if entry_text.startswith("slsk://"):
+            self.core.userbrowse.open_soulseek_url(entry_text)
+        else:
+            self.core.userbrowse.browse_user(entry_text)
+
+    def on_load_from_disk_selected(self, selected, _data):
+        for filename in selected:
+            self.core.userbrowse.load_shares_list_from_disk(filename)
+
+    def on_load_from_disk(self, *_args):
+
+        shares_folder = self.core.userbrowse.create_user_shares_folder()
+
+        FileChooser(
+            parent=self.frame.window,
+            title=_("Select a Saved Shares List File"),
+            callback=self.on_load_from_disk_selected,
+            initial_folder=shares_folder,
+            multiple=True
+        ).show()
 
     def show_user(self, user, path=None, local_shares_type=None, indeterminate_progress=False, switch_page=True):
 

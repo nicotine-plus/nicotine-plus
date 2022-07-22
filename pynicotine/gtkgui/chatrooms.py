@@ -139,6 +139,36 @@ class ChatRooms(IconNotebook):
                 self.frame.notifications.clear("rooms", None, room)
                 break
 
+    def on_create_room_response(self, dialog, response_id, room):
+
+        private = dialog.option.get_active()
+
+        if response_id == 2:
+            # Create a new room
+            self.core.chatrooms.request_join_room(room, private)
+
+    def on_create_room(self, widget, *_args):
+
+        room = widget.get_text().strip()
+
+        if not room:
+            return
+
+        if room not in self.core.chatrooms.server_rooms and room not in self.core.chatrooms.private_rooms:
+            OptionDialog(
+                parent=self.frame.window,
+                title=_('Create New Room?'),
+                message=_('Do you really want to create a new room "%s"?') % room,
+                option_label=_("Make room private"),
+                callback=self.on_create_room_response,
+                callback_data=room
+            ).show()
+
+        else:
+            self.core.chatrooms.request_join_room(room)
+
+        widget.set_text("")
+
     def clear_notifications(self):
 
         if self.frame.current_page_id != self.frame.chatrooms_page.id:
