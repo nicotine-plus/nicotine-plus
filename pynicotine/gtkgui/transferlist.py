@@ -167,15 +167,15 @@ class TransferList(UserInterface):
             ("#" + _("_Open in File Manager"), self.on_open_file_manager),
             ("#" + _("F_ile Properties"), self.on_file_properties),
             ("", None),
-            ("#" + _("_Search"), self.on_file_search),
-            ("#" + _("_Browse Folder(s)"), self.on_browse_folder),
-            ("", None),
             ("#" + self.retry_label, self.on_retry_transfer),
             ("#" + self.abort_label, self.on_abort_transfer),
             ("#" + _("_Clear"), self.on_clear_transfer),
             ("", None),
-            (">" + _("Clear All"), self.popup_menu_clear),
+            ("#" + _("_Browse Folder(s)"), self.on_browse_folder),
+            ("#" + _("_Search"), self.on_file_search),
+            ("", None),
             (">" + _("Copy"), self.popup_menu_copy),
+            (">" + _("Clear All"), self.popup_menu_clear),
             (">" + _("User(s)"), self.popup_menu_users)
         )
 
