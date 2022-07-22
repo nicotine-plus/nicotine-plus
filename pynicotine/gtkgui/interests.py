@@ -113,13 +113,13 @@ class Interests(UserInterface):
             ]
         )
 
-        for thing in config.sections["interests"]["likes"]:
-            if thing and isinstance(thing, str):
-                self.likes_list_view.add_row([thing], select_row=False)
+        for item in config.sections["interests"]["likes"]:
+            if isinstance(item, str):
+                self.add_thing_i_like(item)
 
-        for thing in config.sections["interests"]["dislikes"]:
-            if thing and isinstance(thing, str):
-                self.dislikes_list_view.add_row([thing], select_row=False)
+        for item in config.sections["interests"]["dislikes"]:
+            if isinstance(item, str):
+                self.add_thing_i_hate(item)
 
         # Popup menus
         popup = PopupMenu(self.frame, self.likes_list_view.widget)
@@ -180,17 +180,27 @@ class Interests(UserInterface):
 
     def add_thing_i_like(self, item):
 
+        item = item.strip().lower()
+
+        if not item:
+            return
+
         iterator = self.likes_list_view.iterators.get(item)
 
         if iterator is None:
-            self.likes_list_view.add_row([item])
+            self.likes_list_view.add_row([item], select_row=False)
 
     def add_thing_i_hate(self, item):
+
+        item = item.strip().lower()
+
+        if not item:
+            return
 
         iterator = self.dislikes_list_view.iterators.get(item)
 
         if iterator is None:
-            self.dislikes_list_view.add_row([item])
+            self.dislikes_list_view.add_row([item], select_row=False)
 
     def remove_thing_i_like(self, item):
 
