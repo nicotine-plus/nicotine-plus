@@ -176,6 +176,9 @@ def initialise_columns(frame, treeview_name, treeview, *args):
 
             column = Gtk.TreeViewColumn(column_id, renderer, icon_name=column_index)
 
+        # Required for fixed height mode
+        column.set_sizing(Gtk.TreeViewColumnSizing.FIXED)
+
         if width == -1:
             column.set_resizable(False)
             column.set_expand(True)
@@ -183,10 +186,7 @@ def initialise_columns(frame, treeview_name, treeview, *args):
             column.set_resizable(True)
             column.set_min_width(0)
 
-            if width == 0:
-                column.set_sizing(Gtk.TreeViewColumnSizing.GROW_ONLY)
-            else:
-                column.set_sizing(Gtk.TreeViewColumnSizing.FIXED)
+            if width > 0:
                 column.set_fixed_width(width)
 
         if isinstance(extra, int):
@@ -217,6 +217,7 @@ def initialise_columns(frame, treeview_name, treeview, *args):
     append_columns(treeview, cols, column_config)
     hide_columns(treeview, cols, column_config)
     treeview.get_style_context().add_class("treeview-spacing")
+    treeview.set_fixed_height_mode(True)
 
     treeview.set_search_equal_func(on_search_match, treeview)
     treeview.connect("columns-changed", set_last_column_autosize)
