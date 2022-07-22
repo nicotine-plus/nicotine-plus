@@ -230,7 +230,7 @@ class UserList(UserInterface):
 
     def on_add_user(self, widget, *_args):
 
-        username = widget.get_text()
+        username = widget.get_text().strip()
 
         if not username:
             return
