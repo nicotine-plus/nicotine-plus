@@ -49,7 +49,6 @@ from pynicotine.gtkgui.userbrowse import UserBrowses
 from pynicotine.gtkgui.userinfo import UserInfos
 from pynicotine.gtkgui.userlist import UserList
 from pynicotine.gtkgui.utils import copy_text
-from pynicotine.gtkgui.widgets.filechooser import FileChooser
 from pynicotine.gtkgui.widgets.iconnotebook import TabLabel
 from pynicotine.gtkgui.widgets.dialogs import MessageDialog
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
@@ -1521,46 +1520,15 @@ class NicotineFrame(UserInterface):
         self.on_settings(page='UserInfo')
 
     def on_get_user_info(self, widget, *_args):
-
-        username = widget.get_text().strip()
-
-        if not username:
-            return
-
-        self.core.userinfo.request_user_info(username)
-        widget.set_text("")
+        self.userinfo.on_get_user_info(widget)
 
     """ Browse Shares """
 
     def on_get_shares(self, widget, *_args):
-
-        entry_text = widget.get_text().strip()
-
-        if not entry_text:
-            return
-
-        if entry_text.startswith("slsk://"):
-            self.core.userbrowse.open_soulseek_url(entry_text)
-        else:
-            self.core.userbrowse.browse_user(entry_text)
-
-        widget.set_text("")
-
-    def on_load_from_disk_selected(self, selected, _data):
-        for filename in selected:
-            self.core.userbrowse.load_shares_list_from_disk(filename)
+        self.userbrowse.on_get_shares(widget)
 
     def on_load_from_disk(self, *_args):
-
-        shares_folder = self.core.userbrowse.create_user_shares_folder()
-
-        FileChooser(
-            parent=self.window,
-            title=_("Select a Saved Shares List File"),
-            callback=self.on_load_from_disk_selected,
-            initial_folder=shares_folder,
-            multiple=True
-        ).show()
+        self.userbrowse.on_load_from_disk()
 
     """ Chat """
 
@@ -1568,44 +1536,10 @@ class NicotineFrame(UserInterface):
         self.on_settings(page="Chats")
 
     def on_get_private_chat(self, widget, *_args):
-
-        username = widget.get_text().strip()
-
-        if not username:
-            return
-
-        self.core.privatechats.show_user(username)
-        widget.set_text("")
-
-    def on_create_room_response(self, dialog, response_id, room):
-
-        private = dialog.option.get_active()
-
-        if response_id == 2:
-            # Create a new room
-            self.core.chatrooms.request_join_room(room, private)
+        self.privatechat.on_get_private_chat(widget)
 
     def on_create_room(self, widget, *_args):
-
-        room = widget.get_text().strip()
-
-        if not room:
-            return
-
-        if room not in self.core.chatrooms.server_rooms and room not in self.core.chatrooms.private_rooms:
-            OptionDialog(
-                parent=self.window,
-                title=_('Create New Room?'),
-                message=_('Do you really want to create a new room "%s"?') % room,
-                option_label=_("Make room private"),
-                callback=self.on_create_room_response,
-                callback_data=room
-            ).show()
-
-        else:
-            self.core.chatrooms.request_join_room(room)
-
-        widget.set_text("")
+        self.chatrooms.on_create_room(widget)
 
     def update_completions(self):
         self.core.chatrooms.update_completions()
