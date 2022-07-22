@@ -48,6 +48,7 @@ from pynicotine.transfers import Transfer
 from pynicotine.utils import human_length
 from pynicotine.utils import human_size
 from pynicotine.utils import human_speed
+from pynicotine.utils import humanize
 
 
 class TransferList(UserInterface):
@@ -285,8 +286,8 @@ class TransferList(UserInterface):
         return status
 
     def update_num_users_files(self):
-        self.user_counter.set_text(str(len(self.users)))
-        self.file_counter.set_text(str(len(self.transfer_list)))
+        self.user_counter.set_text(humanize(len(self.users)))
+        self.file_counter.set_text(humanize(len(self.transfer_list)))
 
     def update_model(self, transfer=None, forceupdate=False, update_parent=True):
 

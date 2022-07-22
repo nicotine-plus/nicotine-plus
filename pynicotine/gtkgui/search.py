@@ -1150,7 +1150,7 @@ class Search(UserInterface):
             str_plus = ""
             self.results_button.set_has_tooltip(False)
 
-        self.results_label.set_text(str(self.num_results_visible) + str_plus)
+        self.results_label.set_text(humanize(self.num_results_visible) + str_plus)
 
     def update_visuals(self):
         for widget in self.__dict__.values():
