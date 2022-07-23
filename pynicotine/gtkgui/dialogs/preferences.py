@@ -2841,10 +2841,15 @@ class Preferences(UserInterface):
             for obj in page.widgets:
                 if isinstance(obj, Gtk.CheckButton):
                     if GTK_API_VERSION >= 4:
-                        obj.get_last_child().set_wrap(True)
+                        check_button_label = obj.get_last_child()
                     else:
-                        obj.get_child().set_line_wrap(True)
+                        check_button_label = obj.get_child()
                         obj.set_receives_default(True)
+
+                    try:
+                        check_button_label.set_property("wrap", True)
+                    except AttributeError:
+                        pass
 
                 elif isinstance(obj, (Gtk.ComboBoxText, Gtk.SpinButton)):
                     if GTK_API_VERSION >= 4:
@@ -2857,6 +2862,17 @@ class Preferences(UserInterface):
                     if isinstance(obj, Gtk.ComboBoxText):
                         for cell in obj.get_cells():
                             cell.set_property("ellipsize", Pango.EllipsizeMode.END)
+
+                elif isinstance(obj, Gtk.FontButton):
+                    if GTK_API_VERSION >= 4:
+                        font_button_label = obj.get_first_child().get_first_child().get_first_child()
+                    else:
+                        font_button_label = obj.get_child().get_children()[0]
+
+                    try:
+                        font_button_label.set_ellipsize(Pango.EllipsizeMode.END)
+                    except AttributeError:
+                        pass
 
             page.Main.set_margin_start(18)
             page.Main.set_margin_end(18)
