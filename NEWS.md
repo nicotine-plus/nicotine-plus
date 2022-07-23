@@ -5,7 +5,7 @@
 ### Changes
 
  * Optimized performance when many shared files and file transfers are present
- * Implemented mouse wheel scrolling on secondary tabs to change the active page
+ * Implemented mouse wheel scrolling on tabs to change the active page
  * Added total file size and duration of selected files to the File Properties dialog
  * Added text-to-speech toggle buttons for individual private chats when TTS is enabled
  * Minor usability improvements to several main window components and dialogs
@@ -48,6 +48,7 @@
  * Sort similar users by interest ([#2096](https://github.com/nicotine-plus/nicotine-plus/issues/2096))
  * \[3.2.3.rc2\] Critical error (UI window with bug report) ([#2116](https://github.com/nicotine-plus/nicotine-plus/issues/2116))
  * Lists of shared files not human-readable ([#2118](https://github.com/nicotine-plus/nicotine-plus/issues/2118))
+ * \[3.2.3.rc2\] Exception thrown when highlighting several uploads & selecting "Clear" ([#2124](https://github.com/nicotine-plus/nicotine-plus/issues/2124))
 
 
 ## Version 3.2.2 (March 19, 2022)
