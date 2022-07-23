@@ -744,6 +744,10 @@ class TransferList(UserInterface):
         mode = state.get_string()
         active = mode != "ungrouped"
         grouping_button_style = self.grouping_button.get_parent().get_style_context()
+        popover = self.grouping_button.get_popover()
+
+        if popover is not None:
+            popover.hide()
 
         # Ensure buttons are flat in libadwaita
         if active:
