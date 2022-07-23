@@ -8,6 +8,7 @@
     <child>
       <object class="GtkFlowBox">
         <property name="visible">True</property>
+        <property name="vexpand">True</property>
         <property name="homogeneous">True</property>
         <property name="column-spacing">18</property>
         <property name="row-spacing">24</property>
@@ -27,6 +28,7 @@
                     <property name="visible">True</property>
                     <property name="label" translatable="yes">Plugins</property>
                     <property name="xalign">0</property>
+                    <property name="wrap">True</property>
                     <property name="mnemonic-widget">PluginTreeView</property>
                     <attributes>
                       <attribute name="weight" value="bold"/>
@@ -44,6 +46,7 @@
                 <child>
                   <object class="GtkFrame">
                     <property name="visible">True</property>
+                    <property name="vexpand">True</property>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
@@ -53,6 +56,7 @@
                             <property name="visible">True</property>
                             <property name="hexpand">True</property>
                             <property name="vexpand">True</property>
+                            <property name="sensitive" bind-source="PluginsEnable" bind-property="active" bind-flags="bidirectional|sync-create"/>
                             <child>
                               <object class="GtkTreeView" id="PluginTreeView">
                                 <property name="visible">True</property>
@@ -80,7 +84,7 @@
                             <property name="margin-bottom">6</property>
                             <property name="spacing">6</property>
                             <child>
-                              <object class="GtkButton" id="PluginFolder">
+                              <object class="GtkButton">
                                 <property name="visible">True</property>
                                 <signal name="clicked" handler="on_add_plugins"/>
                                 <child>
@@ -96,6 +100,7 @@
                                     <child>
                                       <object class="GtkLabel">
                                         <property name="visible">True</property>
+                                        <property name="ellipsize">end</property>
                                         <property name="label" translatable="yes">_Add Plugins</property>
                                         <property name="use-underline">True</property>
                                       </object>
@@ -116,7 +121,6 @@
                                   <object class="GtkButton" id="PluginProperties">
                                     <property name="visible">True</property>
                                     <property name="sensitive">False</property>
-                                    <property name="valign">center</property>
                                     <signal name="clicked" handler="on_plugin_properties"/>
                                     <child>
                                       <object class="GtkBox">
@@ -131,6 +135,7 @@
                                         <child>
                                           <object class="GtkLabel">
                                             <property name="visible">True</property>
+                                            <property name="ellipsize">end</property>
                                             <property name="label" translatable="yes">_Settings</property>
                                             <property name="use-underline">True</property>
                                           </object>
@@ -181,6 +186,7 @@
                               <object class="GtkLabel" id="PluginName">
                                 <property name="visible">True</property>
                                 <property name="xalign">0</property>
+                                <property name="wrap">True</property>
                                 <property name="hexpand">True</property>
                                 <attributes>
                                   <attribute name="weight" value="bold"/>
@@ -211,6 +217,7 @@
                                     <property name="visible">True</property>
                                     <property name="selectable">True</property>
                                     <property name="xalign">0</property>
+                                    <property name="wrap">True</property>
                                   </object>
                                 </child>
                               </object>
@@ -232,6 +239,7 @@
                                     <property name="visible">True</property>
                                     <property name="selectable">True</property>
                                     <property name="xalign">0</property>
+                                    <property name="wrap">True</property>
                                   </object>
                                 </child>
                               </object>
@@ -245,17 +253,18 @@
                 <child>
                   <object class="GtkFrame">
                     <property name="visible">True</property>
+                    <property name="vexpand">True</property>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
                         <child>
                           <object class="GtkScrolledWindow">
                             <property name="visible">True</property>
+                            <property name="hexpand">True</property>
                             <property name="vexpand">True</property>
                             <child>
                               <object class="GtkTextView" id="PluginDescription">
                                 <property name="visible">True</property>
-                                <property name="hexpand">True</property>
                                 <property name="editable">False</property>
                                 <property name="cursor-visible">False</property>
                                 <property name="pixels-above-lines">1</property>

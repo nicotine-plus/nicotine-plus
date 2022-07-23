@@ -63,9 +63,9 @@ class NetworkFrame(UserInterface):
         super().__init__("ui/settings/network.ui")
 
         # pylint: disable=invalid-name
-        (self.AutoAway, self.AutoConnectStartup, self.AutoReply, self.ChangePassword, self.CheckPortLabel,
+        (self.AutoAway, self.AutoConnectStartup, self.AutoReply, self.CheckPortLabel,
          self.CurrentPort, self.FirstPort, self.Interface, self.InterfaceLabel, self.LastPort, self.Login, self.Main,
-         self.Server, self.ServerDescription, self.UPnPInterval, self.UseUPnP, self.ctcptogglebutton) = self.widgets
+         self.Server, self.UPnPInterval, self.UseUPnP, self.ctcptogglebutton) = self.widgets
 
         self.preferences = preferences
         self.frame = preferences.frame
@@ -224,11 +224,11 @@ class DownloadsFrame(UserInterface):
         super().__init__("ui/settings/downloads.ui")
 
         # pylint: disable=invalid-name
-        (self.AddFilter, self.AfterDownload, self.AfterFolder, self.AutoclearFinished, self.DefaultFilters,
+        (self.AfterDownload, self.AfterFolder, self.AutoclearFinished,
          self.DownloadDir, self.DownloadDoubleClick, self.DownloadFilter, self.DownloadReverseOrder,
-         self.DownloadSpeed, self.DownloadSpeedAlternative, self.EditFilter, self.FilterView, self.IncompleteDir,
-         self.LockIncoming, self.Main, self.RemoteDownloads, self.RemoveFilter, self.UploadDir, self.UploadsAllowed,
-         self.UsernameSubfolders, self.VerifiedLabel, self.VerifyFilters) = self.widgets
+         self.DownloadSpeed, self.DownloadSpeedAlternative, self.FilterView, self.IncompleteDir,
+         self.LockIncoming, self.Main, self.RemoteDownloads, self.UploadDir, self.UploadsAllowed,
+         self.UsernameSubfolders, self.VerifiedLabel) = self.widgets
 
         self.preferences = preferences
         self.frame = preferences.frame
@@ -526,8 +526,7 @@ class SharesFrame(UserInterface):
         super().__init__("ui/settings/shares.ui")
 
         # pylint: disable=invalid-name
-        (self.BuddySharesTrustedOnly, self.Main, self.RescanOnStartup, self.Shares, self.addSharesButton,
-         self.removeSharesButton, self.renameVirtualsButton) = self.widgets
+        self.BuddySharesTrustedOnly, self.Main, self.RescanOnStartup, self.Shares = self.widgets
 
         self.preferences = preferences
         self.frame = preferences.frame
@@ -762,9 +761,9 @@ class UploadsFrame(UserInterface):
         super().__init__("ui/settings/uploads.ui")
 
         # pylint: disable=invalid-name
-        (self.AutoclearFinished, self.FirstInFirstOut, self.FriendsNoLimits, self.Limit, self.LimitPerTransfer,
+        (self.AutoclearFinished, self.FirstInFirstOut, self.FriendsNoLimits, self.Limit,
          self.LimitSpeed, self.LimitSpeedAlternative, self.LimitTotalTransfers, self.Main, self.MaxUserFiles,
-         self.MaxUserQueue, self.PreferFriends, self.QueueBandwidth, self.QueueSlots, self.QueueUseBandwidth,
+         self.MaxUserQueue, self.PreferFriends, self.QueueBandwidth, self.QueueSlots,
          self.QueueUseSlots, self.UploadDoubleClick) = self.widgets
 
         self.preferences = preferences
@@ -821,7 +820,7 @@ class UserInfoFrame(UserInterface):
         super().__init__("ui/settings/userinfo.ui")
 
         # pylint: disable=invalid-name
-        self.DefaultImage, self.Description, self.ImageChooser, self.Main = self.widgets
+        self.Description, self.ImageChooser, self.Main = self.widgets
 
         self.preferences = preferences
         self.frame = preferences.frame
@@ -1188,15 +1187,14 @@ class ChatsFrame(UserInterface):
         super().__init__("ui/settings/chats.ui")
 
         # pylint: disable=invalid-name
-        (self.AddCensor, self.AddReplacement, self.CensorCheck, self.CensorContainer, self.CensorList,
+        (self.CensorCheck, self.CensorList,
          self.CensorReplaceCombo, self.CharactersCompletion, self.ChatRoomFormat,
          self.CompleteAliasesCheck, self.CompleteBuddiesCheck, self.CompleteCommandsCheck, self.CompleteRoomNamesCheck,
-         self.CompleteUsersInRoomsCheck, self.CompletionCycleCheck, self.CompletionDropdownCheck,
-         self.CompletionTabCheck, self.DefaultPrivateMessage, self.DefaultRoomMessage, self.DefaultTTSCommand,
-         self.Main, self.OneMatchCheck, self.PrivateChatFormat, self.PrivateDefaultTimestamp,
-         self.PrivateLogLines, self.PrivateMessage, self.ReadRoomLogs, self.RemoveCensor,
-         self.RemoveReplacement, self.ReopenPrivateChats, self.ReplaceCheck, self.ReplacementList,
-         self.ReplacementsContainer, self.RoomDefaultTimestamp, self.RoomLogLines, self.RoomMessage, self.SpellCheck,
+         self.CompleteUsersInRoomsCheck, self.CompletionCycleCheck, self.CompletionDropdownCheck, self.CompletionTabCheck,
+         self.Main, self.OneMatchCheck, self.PrivateChatFormat,
+         self.PrivateLogLines, self.PrivateMessage, self.ReadRoomLogs,
+         self.ReopenPrivateChats, self.ReplaceCheck, self.ReplacementList,
+         self.RoomLogLines, self.RoomMessage, self.SpellCheck,
          self.TTSCommand, self.TextToSpeech) = self.widgets
 
         self.preferences = preferences
@@ -1443,28 +1441,28 @@ class UserInterfaceFrame(UserInterface):
         super().__init__("ui/settings/userinterface.ui")
 
         # pylint: disable=invalid-name
-        (self.ChatRoomsLabel, self.ChatRoomsPosition, self.CloseAction, self.DarkMode, self.DefaultAway,
-         self.DefaultBackground, self.DefaultBrowserFont, self.DefaultChangedTab, self.DefaultChatFont,
-         self.DefaultGlobalFont, self.DefaultHighlight, self.DefaultHighlightTab, self.DefaultImmediate,
-         self.DefaultInput, self.DefaultListFont, self.DefaultLocal, self.DefaultMe, self.DefaultOffline,
-         self.DefaultOnline, self.DefaultQueue, self.DefaultRegularTab, self.DefaultRemote, self.DefaultSearchFont,
-         self.DefaultTheme, self.DefaultTransfersFont, self.DefaultURL, self.EnableChatroomsTab,
+        (self.ChatRoomsPosition, self.CloseAction, self.DarkMode,
+         self.DefaultAway, self.DefaultBackground, self.DefaultBrowserFont, self.DefaultChangedTab,
+         self.DefaultChatFont, self.DefaultGlobalFont, self.DefaultHighlight, self.DefaultHighlightTab,
+         self.DefaultImmediate, self.DefaultInput, self.DefaultListFont, self.DefaultLocal, self.DefaultMe,
+         self.DefaultOffline, self.DefaultOnline, self.DefaultQueue, self.DefaultRegularTab, self.DefaultRemote,
+         self.DefaultSearchFont, self.DefaultTheme, self.DefaultTransfersFont, self.DefaultURL, self.EnableChatroomsTab,
          self.EnableDownloadsTab, self.EnableInterestsTab, self.EnablePrivateTab, self.EnableSearchTab,
          self.EnableUploadsTab, self.EnableUserBrowseTab, self.EnableUserInfoTab, self.EnableUserListTab,
          self.EntryAway, self.EntryBackground, self.EntryChangedTab, self.EntryHighlight, self.EntryHighlightTab,
          self.EntryImmediate, self.EntryInput, self.EntryLocal, self.EntryMe, self.EntryOffline, self.EntryOnline,
-         self.EntryQueue, self.EntryRegularTab, self.EntryRemote, self.EntryURL, self.FilePathTooltips, self.IconView,
-         self.Main, self.MainPosition, self.MainTabsLabel, self.NotificationPopupChatroom,
-         self.NotificationPopupChatroomMention, self.NotificationPopupFile, self.NotificationPopupFolder,
-         self.NotificationPopupPrivateMessage, self.NotificationPopupSound, self.NotificationTabColors,
-         self.NotificationWindowTitle, self.PickAway, self.PickBackground, self.PickChangedTab, self.PickHighlight,
-         self.PickHighlightTab, self.PickImmediate, self.PickInput, self.PickLocal, self.PickMe, self.PickOffline,
-         self.PickOnline, self.PickQueue, self.PickRegularTab, self.PickRemote, self.PickURL, self.PrivateChatLabel,
-         self.PrivateChatPosition, self.ReverseFilePaths, self.SearchLabel, self.SearchPosition,
-         self.SelectBrowserFont, self.SelectChatFont, self.SelectGlobalFont, self.SelectListFont,
+         self.EntryQueue, self.EntryRegularTab, self.EntryRemote, self.EntryURL, self.FilePathTooltips,
+         self.IconView, self.Main, self.MainPosition,
+         self.NotificationPopupChatroom, self.NotificationPopupChatroomMention, self.NotificationPopupFile,
+         self.NotificationPopupFolder, self.NotificationPopupPrivateMessage, self.NotificationPopupSound,
+         self.NotificationTabColors, self.NotificationWindowTitle, self.PickAway, self.PickBackground,
+         self.PickChangedTab, self.PickHighlight, self.PickHighlightTab, self.PickImmediate, self.PickInput,
+         self.PickLocal, self.PickMe, self.PickOffline, self.PickOnline, self.PickQueue, self.PickRegularTab,
+         self.PickRemote, self.PickURL, self.PrivateChatPosition, self.ReverseFilePaths,
+         self.SearchPosition, self.SelectBrowserFont, self.SelectChatFont, self.SelectGlobalFont, self.SelectListFont,
          self.SelectSearchFont, self.SelectTransfersFont, self.StartupHidden, self.TabClosers, self.TabSelectPrevious,
-         self.TabStatusIcons, self.ThemeDir, self.TraySettings, self.TrayiconCheck, self.UserBrowseLabel,
-         self.UserBrowsePosition, self.UserInfoLabel, self.UserInfoPosition, self.UsernameHotspots,
+         self.TabStatusIcons, self.ThemeDir, self.TraySettings, self.TrayiconCheck,
+         self.UserBrowsePosition, self.UserInfoPosition, self.UsernameHotspots,
          self.UsernameStyle) = self.widgets
 
         self.preferences = preferences
@@ -1768,9 +1766,9 @@ class LoggingFrame(UserInterface):
         super().__init__("ui/settings/log.ui")
 
         # pylint: disable=invalid-name
-        (self.DebugLogDir, self.DebugLogDirLabel, self.DefaultTimestamp, self.LogDebug, self.LogFileFormat,
-         self.LogPrivate, self.LogRooms, self.LogTransfers, self.Main, self.PrivateLogDir, self.PrivateLogDirLabel,
-         self.RoomLogDir, self.RoomLogDirLabel, self.TransfersLogDir, self.TransfersLogDirLabel) = self.widgets
+        (self.DebugLogDir, self.LogDebug, self.LogFileFormat,
+         self.LogPrivate, self.LogRooms, self.LogTransfers, self.Main, self.PrivateLogDir,
+         self.RoomLogDir, self.TransfersLogDir) = self.widgets
 
         self.preferences = preferences
         self.frame = preferences.frame
@@ -1824,10 +1822,10 @@ class SearchesFrame(UserInterface):
         super().__init__("ui/settings/search.ui")
 
         # pylint: disable=invalid-name
-        (self.ClearFilterHistory, self.ClearFilterHistorySuccess, self.ClearSearchHistory,
+        (self.ClearFilterHistorySuccess,
          self.ClearSearchHistorySuccess, self.EnableFilters, self.EnableSearchHistory, self.FilterBR, self.FilterCC,
-         self.FilterFree, self.FilterHelpLabel, self.FilterIn, self.FilterOut, self.FilterSize, self.FilterType,
-         self.Main, self.MaxDisLabel, self.MaxDisplayedResults, self.MaxResults, self.MinSearchChars,
+         self.FilterFree, self.FilterIn, self.FilterOut, self.FilterSize, self.FilterType,
+         self.Main, self.MaxDisplayedResults, self.MaxResults, self.MinSearchChars,
          self.RemoveSpecialChars, self.ShowPrivateSearchResults, self.ShowSearchHelp, self.ToggleResults) = self.widgets
 
         self.preferences = preferences
@@ -1935,7 +1933,7 @@ class UrlHandlersFrame(UserInterface):
 
         # pylint: disable=invalid-name
         (self.FileManagerCombo, self.Handler, self.Main, self.ProtocolCombo, self.ProtocolHandlers,
-         self.RemoveHandler, self.addButton, self.audioPlayerCombo) = self.widgets
+         self.RemoveHandler, self.audioPlayerCombo) = self.widgets
 
         self.preferences = preferences
         self.frame = preferences.frame
@@ -2231,7 +2229,7 @@ class PluginsFrame(UserInterface):
         super().__init__("ui/settings/plugin.ui")
 
         # pylint: disable=invalid-name
-        (self.Main, self.PluginAuthor, self.PluginDescription, self.PluginFolder, self.PluginName,
+        (self.Main, self.PluginAuthor, self.PluginDescription, self.PluginName,
          self.PluginProperties, self.PluginTreeView, self.PluginVersion, self.PluginsEnable) = self.widgets
 
         self.preferences = preferences

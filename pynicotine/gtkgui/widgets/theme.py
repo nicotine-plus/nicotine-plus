@@ -234,12 +234,6 @@ def set_global_css():
     css_gtk3_20 = b"""
     /* Tweaks (GTK 3.20+) */
 
-    flowboxchild:disabled label {
-        /* Reset 'sensitive' widget style for preferences dialog */
-        color: inherit;
-        opacity: inherit;
-    }
-
     .count {
         min-width: 12px;
     }
@@ -256,11 +250,6 @@ def set_global_css():
 
     css_gtk4 = b"""
     /* Tweaks (GTK 4+) */
-
-    flowboxchild:disabled label {
-        /* Reset 'sensitive' widget style for preferences dialog */
-        filter: inherit;
-    }
 
     treeview.normal-icons {
         /* Country flag icon size in treeviews */

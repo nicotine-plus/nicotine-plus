@@ -15,6 +15,7 @@
             <property name="visible">True</property>
             <property name="label" translatable="yes">Banned Users</property>
             <property name="xalign">0</property>
+            <property name="wrap">True</property>
             <attributes>
               <attribute name="weight" value="bold"/>
             </attributes>
@@ -23,104 +24,83 @@
         <child>
           <object class="GtkBox">
             <property name="visible">True</property>
-            <property name="spacing">6</property>
+            <property name="spacing">12</property>
             <property name="orientation">vertical</property>
             <child>
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">Prohibit users from accessing your shared files, based on username, IP address or country.</property>
-                <property name="margin-bottom">12</property>
+                <property name="margin-bottom">6</property>
                 <property name="selectable">True</property>
                 <property name="wrap">True</property>
               </object>
             </child>
             <child>
-              <object class="GtkFlowBox">
+              <object class="GtkBox">
                 <property name="visible">True</property>
-                <property name="row-spacing">12</property>
-                <property name="column-spacing">12</property>
-                <property name="max-children-per-line">2</property>
-                <property name="selection-mode">none</property>
+                <property name="homogeneous">True</property>
+                <property name="spacing">12</property>
                 <child>
-                  <object class="GtkFlowBoxChild">
+                  <object class="GtkCheckButton" id="GeoBlock">
                     <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <child>
-                      <object class="GtkCheckButton" id="GeoBlock">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Country codes to block (comma separated):</property>
-                      </object>
-                    </child>
+                    <property name="label" translatable="yes">Country codes to block (comma separated):</property>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkFlowBoxChild">
+                  <object class="GtkEntry" id="GeoBlockCC">
                     <property name="visible">True</property>
-                    <property name="can-focus">False</property>
+                    <property name="hexpand">True</property>
+                    <property name="width-chars">15</property>
+                    <property name="tooltip-text" translatable="yes">Codes must be in ISO 3166-2 format.</property>
                     <property name="sensitive" bind-source="GeoBlock" bind-property="active" bind-flags="bidirectional|sync-create"/>
-                    <child>
-                      <object class="GtkEntry" id="GeoBlockCC">
-                        <property name="visible">True</property>
-                        <property name="tooltip-text" translatable="yes">Codes must be in ISO 3166-2 format.</property>
-                      </object>
-                    </child>
+                    <property name="valign">center</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="homogeneous">True</property>
+                <property name="spacing">12</property>
+                <child>
+                  <object class="GtkCheckButton" id="UseCustomGeoBlock">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Use custom geo block message:</property>
+                    <property name="tooltip-text" translatable="yes">Sent to users as the reason for being geo blocked.</property>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkFlowBoxChild">
+                  <object class="GtkEntry" id="CustomGeoBlock">
                     <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <child>
-                      <object class="GtkCheckButton" id="UseCustomGeoBlock">
-                        <property name="label" translatable="yes">Use custom geo block message:</property>
-                        <property name="visible">True</property>
-                        <property name="tooltip-text" translatable="yes">Sent to users as the reason for being geo blocked.</property>
-                        <property name="use-underline">True</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkFlowBoxChild">
-                    <property name="visible">True</property>
-                    <property name="can-focus">False</property>
+                    <property name="hexpand">True</property>
+                    <property name="width-chars">15</property>
                     <property name="sensitive" bind-source="UseCustomGeoBlock" bind-property="active" bind-flags="bidirectional|sync-create"/>
-                    <child>
-                      <object class="GtkEntry" id="CustomGeoBlock">
-                        <property name="visible">True</property>
-                        <property name="hexpand">True</property>
-                        <property name="width-chars">24</property>
-                      </object>
-                    </child>
+                    <property name="valign">center</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="homogeneous">True</property>
+                <property name="spacing">12</property>
+                <child>
+                  <object class="GtkCheckButton" id="UseCustomBan">
+                    <property name="label" translatable="yes">Use custom ban message:</property>
+                    <property name="visible">True</property>
+                    <property name="tooltip-text" translatable="yes">Sent to users as the reason for being banned.</property>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkFlowBoxChild">
+                  <object class="GtkEntry" id="CustomBan">
                     <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <child>
-                      <object class="GtkCheckButton" id="UseCustomBan">
-                        <property name="label" translatable="yes">Use custom ban message:</property>
-                        <property name="visible">True</property>
-                        <property name="tooltip-text" translatable="yes">Sent to users as the reason for being banned.</property>
-                        <property name="use-underline">True</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkFlowBoxChild">
-                    <property name="visible">True</property>
-                    <property name="can-focus">False</property>
+                    <property name="hexpand">True</property>
+                    <property name="width-chars">15</property>
                     <property name="sensitive" bind-source="UseCustomBan" bind-property="active" bind-flags="bidirectional|sync-create"/>
-                    <child>
-                      <object class="GtkEntry" id="CustomBan">
-                        <property name="visible">True</property>
-                        <property name="hexpand">True</property>
-                        <property name="width-chars">24</property>
-                      </object>
-                    </child>
+                    <property name="valign">center</property>
                   </object>
                 </child>
               </object>
@@ -132,6 +112,7 @@
     <child>
       <object class="GtkFlowBox">
         <property name="visible">True</property>
+        <property name="vexpand">True</property>
         <property name="homogeneous">True</property>
         <property name="column-spacing">18</property>
         <property name="row-spacing">24</property>
@@ -151,6 +132,7 @@
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Users</property>
+                    <property name="wrap">True</property>
                     <property name="mnemonic-widget">BannedList</property>
                     <attributes>
                       <attribute name="weight" value="bold"/>
@@ -160,6 +142,7 @@
                 <child>
                   <object class="GtkFrame">
                     <property name="visible">True</property>
+                    <property name="vexpand">True</property>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
@@ -197,6 +180,7 @@
                             <child>
                               <object class="GtkButton">
                                 <property name="visible">True</property>
+                                <property name="tooltip-text" translatable="yes">Add…</property>
                                 <signal name="clicked" handler="on_add_banned"/>
                                 <child>
                                   <object class="GtkBox">
@@ -211,6 +195,7 @@
                                     <child>
                                       <object class="GtkLabel">
                                         <property name="visible">True</property>
+                                        <property name="ellipsize">end</property>
                                         <property name="label" translatable="yes">Add…</property>
                                         <property name="use-underline">True</property>
                                       </object>
@@ -225,6 +210,7 @@
                             <child>
                               <object class="GtkButton">
                                 <property name="visible">True</property>
+                                <property name="tooltip-text" translatable="yes">Remove</property>
                                 <signal name="clicked" handler="on_remove_banned"/>
                                 <child>
                                   <object class="GtkBox">
@@ -239,6 +225,7 @@
                                     <child>
                                       <object class="GtkLabel">
                                         <property name="visible">True</property>
+                                        <property name="ellipsize">end</property>
                                         <property name="label" translatable="yes">Remove</property>
                                         <property name="use-underline">True</property>
                                       </object>
@@ -274,6 +261,7 @@
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">IP Addresses</property>
+                    <property name="wrap">True</property>
                     <property name="mnemonic-widget">BlockedList</property>
                     <attributes>
                       <attribute name="weight" value="bold"/>
@@ -283,6 +271,7 @@
                 <child>
                   <object class="GtkFrame">
                     <property name="visible">True</property>
+                    <property name="vexpand">True</property>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
@@ -291,6 +280,7 @@
                           <object class="GtkScrolledWindow">
                             <property name="visible">True</property>
                             <property name="height-request">200</property>
+                            <property name="width-request">260</property>
                             <property name="hexpand">True</property>
                             <property name="vexpand">True</property>
                             <child>
@@ -320,6 +310,7 @@
                             <child>
                               <object class="GtkButton">
                                 <property name="visible">True</property>
+                                <property name="tooltip-text" translatable="yes">Add…</property>
                                 <signal name="clicked" handler="on_add_blocked"/>
                                 <child>
                                   <object class="GtkBox">
@@ -334,6 +325,7 @@
                                     <child>
                                       <object class="GtkLabel">
                                         <property name="visible">True</property>
+                                        <property name="ellipsize">end</property>
                                         <property name="label" translatable="yes">Add…</property>
                                         <property name="use-underline">True</property>
                                       </object>
@@ -348,6 +340,7 @@
                             <child>
                               <object class="GtkButton">
                                 <property name="visible">True</property>
+                                <property name="tooltip-text" translatable="yes">Remove</property>
                                 <signal name="clicked" handler="on_remove_blocked"/>
                                 <child>
                                   <object class="GtkBox">
@@ -362,6 +355,7 @@
                                     <child>
                                       <object class="GtkLabel">
                                         <property name="visible">True</property>
+                                        <property name="ellipsize">end</property>
                                         <property name="label" translatable="yes">Remove</property>
                                         <property name="use-underline">True</property>
                                       </object>
