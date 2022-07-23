@@ -56,7 +56,7 @@ class TabLabel(Gtk.Box):
 
         self.box = Gtk.Box(spacing=6, visible=True)
 
-        self.label = Gtk.Label(halign=Gtk.Align.START, hexpand=True, visible=True)
+        self.label = Gtk.Label(halign=Gtk.Align.START, hexpand=True, single_line_mode=True, visible=True)
         self.full_text = full_text
         self.set_text(label)
 
