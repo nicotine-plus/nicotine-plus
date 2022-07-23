@@ -87,7 +87,7 @@ class RoomList(UserInterface):
         CompletionEntry(frame.chatrooms_entry, self.room_model, column=0)
 
         if GTK_API_VERSION >= 4:
-            frame.room_list_button.get_first_child().get_style_context().add_class("arrow-button")
+            frame.room_list_button.get_first_child().add_css_class("arrow-button")
 
         frame.room_list_button.set_popover(self.popover)
 
