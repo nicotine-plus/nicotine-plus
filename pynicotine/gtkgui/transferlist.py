@@ -146,6 +146,9 @@ class TransferList(UserInterface):
             frame.window, config.sections["transfers"]["group%ss" % transfer_type], self.on_toggle_tree)
         self.grouping_button.set_menu_model(menu)
 
+        if GTK_API_VERSION >= 4:
+            self.grouping_button.get_first_child().add_css_class("image-button")
+
         self.expand_button.connect("toggled", self.on_expand_tree)
         self.expand_button.set_active(config.sections["transfers"]["%ssexpanded" % transfer_type])
 
@@ -740,6 +743,13 @@ class TransferList(UserInterface):
 
         mode = state.get_string()
         active = mode != "ungrouped"
+        grouping_button_style = self.grouping_button.get_parent().get_style_context()
+
+        # Ensure buttons are flat in libadwaita
+        if active:
+            grouping_button_style.add_class("linked")
+        else:
+            grouping_button_style.remove_class("linked")
 
         config.sections["transfers"]["group%ss" % self.type] = mode
         self.tree_view.set_show_expanders(active)
