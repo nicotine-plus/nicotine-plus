@@ -1934,7 +1934,7 @@ class UrlHandlersFrame(UserInterface):
 
         # pylint: disable=invalid-name
         (self.FileManagerCombo, self.Handler, self.Main, self.ProtocolCombo, self.ProtocolHandlers,
-         self.RemoveHandler, self.audioPlayerCombo) = self.widgets
+         self.audioPlayerCombo) = self.widgets
 
         self.preferences = preferences
         self.frame = preferences.frame

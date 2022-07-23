@@ -46,25 +46,30 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">Protocol:</property>
-                <property name="xalign">0</property>
+                <property name="label" translatable="yes">Media player command:</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic-widget">ProtocolCombo</property>
+                <property name="xalign">0</property>
+                <property name="mnemonic-widget">audioPlayerCombo</property>
               </object>
             </child>
             <child>
-              <object class="GtkComboBoxText" id="ProtocolCombo">
+              <object class="GtkComboBoxText" id="audioPlayerCombo">
                 <property name="visible">True</property>
-                <property name="hexpand">True</property>
                 <property name="has-entry">True</property>
+                <property name="valign">center</property>
                 <items>
-                  <item>http</item>
-                  <item>https</item>
-                  <item>ftp</item>
-                  <item>sftp</item>
-                  <item>news</item>
-                  <item>irc</item>
+                  <item>xdg-open $</item>
+                  <item>amarok -a $</item>
+                  <item>audacious -e $</item>
+                  <item>exaile $</item>
+                  <item>rhythmbox $</item>
+                  <item>xmms2 add -f $</item>
                 </items>
+                <child internal-child="entry">
+                  <object class="GtkEntry">
+                    <property name="width-chars">12</property>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
@@ -77,58 +82,32 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">Command:</property>
                 <property name="xalign">0</property>
+                <property name="label" translatable="yes">File manager command:</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic-widget">Handler</property>
+                <property name="mnemonic-widget">FileManagerCombo</property>
               </object>
             </child>
             <child>
-              <object class="GtkBox">
+              <object class="GtkComboBoxText" id="FileManagerCombo">
                 <property name="visible">True</property>
-                <property name="spacing">12</property>
-                <child>
-                  <object class="GtkComboBoxText" id="Handler">
-                    <property name="visible">True</property>
-                    <property name="hexpand">True</property>
-                    <property name="has-entry">True</property>
-                    <items>
-                      <item>xdg-open $</item>
-                      <item>firefox $</item>
-                      <item>firefox --new-tab $</item>
-                      <item>epiphany $</item>
-                      <item>chromium-browser $</item>
-                      <item>falkon $</item>
-                      <item>links -g $</item>
-                      <item>dillo $</item>
-                      <item>konqueror $</item>
-                      <item>&quot;c:\Program Files\Mozilla Firefox\Firefox.exe&quot; $</item>
-                    </items>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkButton" id="addButton">
-                    <property name="visible">True</property>
-                    <signal name="clicked" handler="on_add"/>
-                    <child>
-                      <object class="GtkBox">
-                        <property name="visible">True</property>
-                        <property name="spacing">6</property>
-                        <child>
-                          <object class="GtkImage">
-                            <property name="visible">True</property>
-                            <property name="icon-name">list-add-symbolic</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkLabel">
-                            <property name="visible">True</property>
-                            <property name="label" translatable="yes">Add</property>
-                            <property name="use-underline">True</property>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
+                <property name="has-entry">True</property>
+                <property name="valign">center</property>
+                <items>
+                  <item>xdg-open $</item>
+                  <item>explorer $</item>
+                  <item>nautilus $</item>
+                  <item>nemo $</item>
+                  <item>caja $</item>
+                  <item>thunar $</item>
+                  <item>dolphin $</item>
+                  <item>konqueror $</item>
+                  <item>krusader --left $</item>
+                  <item>xterm -e mc $</item>
+                </items>
+                <child internal-child="entry">
+                  <object class="GtkEntry">
+                    <property name="width-chars">12</property>
                   </object>
                 </child>
               </object>
@@ -218,33 +197,33 @@
         <child>
           <object class="GtkBox">
             <property name="visible">True</property>
-            <property name="homogeneous">True</property>
             <property name="spacing">12</property>
             <child>
               <object class="GtkLabel">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">Media player command:</property>
-                <property name="wrap">True</property>
+                <property name="label" translatable="yes">Protocol:</property>
+                <property name="hexpand">True</property>
                 <property name="xalign">0</property>
-                <property name="mnemonic-widget">audioPlayerCombo</property>
+                <property name="wrap">True</property>
+                <property name="mnemonic-widget">ProtocolCombo</property>
               </object>
             </child>
             <child>
-              <object class="GtkComboBoxText" id="audioPlayerCombo">
+              <object class="GtkComboBoxText" id="ProtocolCombo">
                 <property name="visible">True</property>
+                <property name="hexpand">True</property>
                 <property name="has-entry">True</property>
-                <property name="valign">center</property>
                 <items>
-                  <item>xdg-open $</item>
-                  <item>amarok -a $</item>
-                  <item>audacious -e $</item>
-                  <item>exaile $</item>
-                  <item>rhythmbox $</item>
-                  <item>xmms2 add -f $</item>
+                  <item>http</item>
+                  <item>https</item>
+                  <item>ftp</item>
+                  <item>sftp</item>
+                  <item>news</item>
+                  <item>irc</item>
                 </items>
                 <child internal-child="entry">
                   <object class="GtkEntry">
-                    <property name="width-chars">12</property>
+                    <property name="width-chars">20</property>
                   </object>
                 </child>
               </object>
@@ -254,37 +233,68 @@
         <child>
           <object class="GtkBox">
             <property name="visible">True</property>
-            <property name="homogeneous">True</property>
             <property name="spacing">12</property>
             <child>
               <object class="GtkLabel">
                 <property name="visible">True</property>
+                <property name="label" translatable="yes">Command:</property>
+                <property name="hexpand">True</property>
                 <property name="xalign">0</property>
-                <property name="label" translatable="yes">File manager command:</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic-widget">FileManagerCombo</property>
+                <property name="mnemonic-widget">Handler</property>
               </object>
             </child>
             <child>
-              <object class="GtkComboBoxText" id="FileManagerCombo">
+              <object class="GtkBox">
                 <property name="visible">True</property>
-                <property name="has-entry">True</property>
-                <property name="valign">center</property>
-                <items>
-                  <item>xdg-open $</item>
-                  <item>explorer $</item>
-                  <item>nautilus $</item>
-                  <item>nemo $</item>
-                  <item>caja $</item>
-                  <item>thunar $</item>
-                  <item>dolphin $</item>
-                  <item>konqueror $</item>
-                  <item>krusader --left $</item>
-                  <item>xterm -e mc $</item>
-                </items>
-                <child internal-child="entry">
-                  <object class="GtkEntry">
-                    <property name="width-chars">12</property>
+                <property name="spacing">12</property>
+                <child>
+                  <object class="GtkComboBoxText" id="Handler">
+                    <property name="visible">True</property>
+                    <property name="hexpand">True</property>
+                    <property name="has-entry">True</property>
+                    <items>
+                      <item>xdg-open $</item>
+                      <item>firefox $</item>
+                      <item>firefox --new-tab $</item>
+                      <item>epiphany $</item>
+                      <item>chromium-browser $</item>
+                      <item>falkon $</item>
+                      <item>links -g $</item>
+                      <item>dillo $</item>
+                      <item>konqueror $</item>
+                      <item>&quot;c:\Program Files\Mozilla Firefox\Firefox.exe&quot; $</item>
+                    </items>
+                    <child internal-child="entry">
+                      <object class="GtkEntry">
+                        <property name="width-chars">12</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton">
+                    <property name="visible">True</property>
+                    <signal name="clicked" handler="on_add"/>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="visible">True</property>
+                        <property name="spacing">6</property>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="visible">True</property>
+                            <property name="icon-name">list-add-symbolic</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">Add</property>
+                            <property name="use-underline">True</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>
