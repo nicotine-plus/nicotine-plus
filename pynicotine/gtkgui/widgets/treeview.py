@@ -141,7 +141,7 @@ def initialise_columns(frame, treeview_name, treeview, *args):
         xalign = 0
 
         if column_type == "text":
-            renderer = Gtk.CellRendererText(xpad=width_padding, ypad=height_padding)
+            renderer = Gtk.CellRendererText(single_paragraph_mode=True, xpad=width_padding, ypad=height_padding)
             column = Gtk.TreeViewColumn(column_id, renderer, text=column_index)
 
         elif column_type == "number":
