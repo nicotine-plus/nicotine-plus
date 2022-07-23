@@ -187,93 +187,116 @@
                     </child>
                   </object>
                 </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFrame">
+                <property name="visible">True</property>
+                <property name="vexpand">True</property>
                 <child>
-                  <object class="GtkLabel">
+                  <object class="GtkBox">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">Allowed chat completions:</property>
+                    <property name="spacing">18</property>
+                    <property name="margin-start">12</property>
+                    <property name="margin-end">12</property>
                     <property name="margin-top">12</property>
-                    <property name="xalign">0</property>
-                    <property name="wrap">True</property>
-                    <property name="wrap-mode">word-char</property>
-                    <property name="mnemonic-widget">CompleteBuddiesCheck</property>
+                    <property name="margin-bottom">12</property>
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Allowed chat completions:</property>
+                        <property name="xalign">0</property>
+                        <property name="opacity">0.6</property>
+                        <property name="wrap">True</property>
+                        <property name="wrap-mode">word-char</property>
+                        <property name="mnemonic-widget">CompleteBuddiesCheck</property>
+                        <attributes>
+                          <attribute name="weight" value="bold"/>
+                        </attributes>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkFlowBox">
+                        <property name="visible">True</property>
+                        <property name="homogeneous">True</property>
+                        <property name="column-spacing">18</property>
+                        <property name="row-spacing">12</property>
+                        <property name="min-children-per-line">1</property>
+                        <property name="max-children-per-line">3</property>
+                        <property name="selection-mode">none</property>
+                        <child>
+                          <object class="GtkFlowBoxChild">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <child>
+                              <object class="GtkCheckButton" id="CompleteBuddiesCheck">
+                                <property name="label" translatable="yes">Buddy names</property>
+                                <property name="visible">True</property>
+                                <signal name="toggled" handler="on_completion_changed"/>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkFlowBoxChild">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <child>
+                              <object class="GtkCheckButton" id="CompleteUsersInRoomsCheck">
+                                <property name="label" translatable="yes">Chat room usernames</property>
+                                <property name="visible">True</property>
+                                <signal name="toggled" handler="on_completion_changed"/>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkFlowBoxChild">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <child>
+                              <object class="GtkCheckButton" id="CompleteRoomNamesCheck">
+                                <property name="label" translatable="yes">Room names</property>
+                                <property name="visible">True</property>
+                                <signal name="toggled" handler="on_completion_changed"/>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkFlowBoxChild">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <child>
+                              <object class="GtkCheckButton" id="CompleteCommandsCheck">
+                                <property name="label" translatable="yes">Built-in commands</property>
+                                <property name="visible">True</property>
+                                <signal name="toggled" handler="on_completion_changed"/>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkFlowBoxChild">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <child>
+                              <object class="GtkCheckButton" id="CompleteAliasesCheck">
+                                <property name="label" translatable="yes">Command aliases</property>
+                                <property name="visible">True</property>
+                                <signal name="toggled" handler="on_completion_changed"/>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
                   </object>
                 </child>
-                <child>
-                  <object class="GtkFlowBox">
-                    <property name="visible">True</property>
-                    <property name="homogeneous">True</property>
-                    <property name="column-spacing">18</property>
-                    <property name="row-spacing">12</property>
-                    <property name="min-children-per-line">1</property>
-                    <property name="max-children-per-line">3</property>
-                    <property name="selection-mode">none</property>
-                    <child>
-                      <object class="GtkFlowBoxChild">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <child>
-                          <object class="GtkCheckButton" id="CompleteBuddiesCheck">
-                            <property name="label" translatable="yes">Buddy names</property>
-                            <property name="visible">True</property>
-                            <signal name="toggled" handler="on_completion_changed"/>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkFlowBoxChild">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <child>
-                          <object class="GtkCheckButton" id="CompleteUsersInRoomsCheck">
-                            <property name="label" translatable="yes">Chat room usernames</property>
-                            <property name="visible">True</property>
-                            <signal name="toggled" handler="on_completion_changed"/>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkFlowBoxChild">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <child>
-                          <object class="GtkCheckButton" id="CompleteRoomNamesCheck">
-                            <property name="label" translatable="yes">Room names</property>
-                            <property name="visible">True</property>
-                            <signal name="toggled" handler="on_completion_changed"/>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkFlowBoxChild">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <child>
-                          <object class="GtkCheckButton" id="CompleteCommandsCheck">
-                            <property name="label" translatable="yes">Built-in commands</property>
-                            <property name="visible">True</property>
-                            <signal name="toggled" handler="on_completion_changed"/>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkFlowBoxChild">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <child>
-                          <object class="GtkCheckButton" id="CompleteAliasesCheck">
-                            <property name="label" translatable="yes">Command aliases</property>
-                            <property name="visible">True</property>
-                            <signal name="toggled" handler="on_completion_changed"/>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                  </object>
-                </child>
+                <style>
+                  <class name="view"/>
+                </style>
               </object>
             </child>
           </object>
