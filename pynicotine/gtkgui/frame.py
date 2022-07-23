@@ -52,6 +52,7 @@ from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.widgets.iconnotebook import TabLabel
 from pynicotine.gtkgui.widgets.dialogs import MessageDialog
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
+from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.notifications import Notifications
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
@@ -264,6 +265,7 @@ class NicotineFrame(UserInterface):
         """ Notebook Tabs """
 
         # Initialize main notebook
+        self.notebook = IconNotebook(self, core, self.notebook)
         self.initialize_main_tabs()
 
         # Initialize other notebooks
@@ -1226,12 +1228,12 @@ class NicotineFrame(UserInterface):
             page = self.notebook.get_nth_page(i)
             page.id = tab_id
 
+            menu_label = TabLabel(tab_text)
             tab_label = TabLabel(tab_text)
             tab_label.set_start_icon_name(tab_icon_name)
-            tab_label.show()
 
             # Apply tab label
-            self.notebook.set_tab_label(page, tab_label)
+            self.notebook.set_labels(page, tab_label, menu_label)
             self.notebook.set_tab_reorderable(page, True)
             self.set_tab_expand(page)
 
@@ -1269,14 +1271,14 @@ class NicotineFrame(UserInterface):
 
         elif page == self.uploads_page:
             self.uploads.update_model(forceupdate=True)
-            self.remove_tab_hilite(self.uploads_page)
+            self.notebook.remove_tab_hilite(self.uploads_page)
 
             if self.uploads.container.get_visible():
                 GLib.idle_add(lambda: self.uploads.tree_view.grab_focus() == -1)
 
         elif page == self.downloads_page:
             self.downloads.update_model(forceupdate=True)
-            self.remove_tab_hilite(self.downloads_page)
+            self.notebook.remove_tab_hilite(self.downloads_page)
 
             if self.downloads.container.get_visible():
                 GLib.idle_add(lambda: self.downloads.tree_view.grab_focus() == -1)
@@ -1395,14 +1397,6 @@ class NicotineFrame(UserInterface):
         self.notebook.set_current_page(page_num)
         return True
 
-    def request_tab_hilite(self, page, mentioned=False):
-        tab_label = self.notebook.get_tab_label(page)
-        tab_label.request_hilite(mentioned)
-
-    def remove_tab_hilite(self, page):
-        tab_label = self.notebook.get_tab_label(page)
-        tab_label.remove_hilite()
-
     def change_main_page(self, page):
 
         self.show_tab(page)
@@ -1475,16 +1469,9 @@ class NicotineFrame(UserInterface):
 
     def set_tab_expand(self, page):
 
-        tab_label = self.notebook.get_tab_label(page)
         tab_position = config.sections["ui"]["tabmain"]
         expand = tab_position in ("Top", "Bottom")
-
-        if GTK_API_VERSION >= 4:
-            self.notebook.get_page(page).set_property("tab-expand", expand)
-        else:
-            self.notebook.child_set_property(page, "tab-expand", expand)
-
-        tab_label.set_centered(expand)
+        self.notebook.set_tab_expand(page, expand)
 
     def set_tab_positions(self):
 

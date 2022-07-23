@@ -237,10 +237,9 @@ class IconNotebook:
     - Dropdown menu for unread tabs
     """
 
-    def __init__(self, frame, core, notebook, parent_page):
+    def __init__(self, frame, core, notebook, parent_page=None):
 
         self.notebook = notebook
-        self.notebook.set_show_tabs(False)
         self.notebook.connect("page-removed", self.on_remove_page)
         self.notebook.connect("switch-page", self.on_switch_page)
 
@@ -252,6 +251,7 @@ class IconNotebook:
             halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER, visible=False
         )
         self.pages = {}
+        self.set_show_tabs(False)
 
         if GTK_API_VERSION >= 4:
             self.window = self.notebook.get_root()
@@ -304,17 +304,21 @@ class IconNotebook:
     def get_tab_label_inner(self, page):
         return self.notebook.get_tab_label(page).eventbox
 
+    def set_labels(self, page, tab_label, menu_label):
+        self.notebook.set_tab_label(page, tab_label)
+        self.notebook.set_menu_label(page, menu_label)
+
     def set_tab_closers(self):
 
-        for i in range(self.notebook.get_n_pages()):
-            page = self.notebook.get_nth_page(i)
+        for i in range(self.get_n_pages()):
+            page = self.get_nth_page(i)
             tab_label, _menu_label = self.get_labels(page)
             tab_label.set_close_button_visibility(config.sections["ui"]["tabclosers"])
 
     def set_tab_text_colors(self):
 
-        for i in range(self.notebook.get_n_pages()):
-            page = self.notebook.get_nth_page(i)
+        for i in range(self.get_n_pages()):
+            page = self.get_nth_page(i)
             tab_label, _menu_label = self.get_labels(page)
             tab_label.set_text(tab_label.get_text())
 
@@ -344,8 +348,8 @@ class IconNotebook:
             status = self.core.user_statuses.get(user, UserStatus.OFFLINE)
             self.set_user_status(page, text, status)
 
-        self.notebook.set_tab_reorderable(page, True)
-        self.notebook.set_show_tabs(True)
+        self.set_tab_reorderable(page, True)
+        self.set_show_tabs(True)
 
     def remove_page(self, page):
 
@@ -353,14 +357,14 @@ class IconNotebook:
 
         self.remove_unread_page(page)
 
-        if self.notebook.get_n_pages() == 0:
-            self.notebook.set_show_tabs(False)
+        if self.get_n_pages() == 0:
+            self.set_show_tabs(False)
 
     def remove_all_pages_response(self, dialog, response_id, _data):
 
         if response_id == 2:
-            for i in reversed(range(self.notebook.get_n_pages())):
-                page = self.notebook.get_nth_page(i)
+            for i in reversed(range(self.get_n_pages())):
+                page = self.get_nth_page(i)
                 tab_label, _menu_label = self.get_labels(page)
                 tab_label.close_callback(dialog)
 
@@ -378,6 +382,23 @@ class IconNotebook:
 
     def set_current_page(self, page_num):
         return self.notebook.set_current_page(page_num)
+
+    def set_show_tabs(self, visible):
+        self.notebook.set_show_tabs(visible)
+
+    def set_tab_expand(self, page, expand):
+
+        tab_label, _menu_label = self.get_labels(page)
+
+        if GTK_API_VERSION >= 4:
+            self.notebook.get_page(page).set_property("tab-expand", expand)
+        else:
+            self.notebook.child_set_property(page, "tab-expand", expand)
+
+        tab_label.set_centered(expand)
+
+    def set_tab_reorderable(self, page, reorderable):
+        self.notebook.set_tab_reorderable(page, reorderable)
 
     def set_tab_pos(self, pos):
         self.notebook.set_tab_pos(pos)
@@ -397,24 +418,28 @@ class IconNotebook:
     def prev_page(self):
         return self.notebook.prev_page()
 
+    def reorder_child(self, page, order):
+        self.notebook.reorder_child(page, order)
+
     """ Tab Highlights """
 
     def request_tab_hilite(self, page, mentioned=False):
 
-        page_active = (self.get_nth_page(self.get_current_page()) == page)
+        if self.parent_page is not None:
+            page_active = (self.get_nth_page(self.get_current_page()) == page)
 
-        if self.frame.current_page_id != self.parent_page.id or not page_active:
-            # Highlight top-level tab
-            self.frame.request_tab_hilite(self.parent_page, mentioned)
+            if self.frame.current_page_id != self.parent_page.id or not page_active:
+                # Highlight top-level tab
+                self.frame.notebook.request_tab_hilite(self.parent_page, mentioned)
 
-        if page_active:
-            return
+            if page_active:
+                return
+
+            self.append_unread_page(page)
 
         tab_label, menu_label = self.get_labels(page)
         tab_label.request_hilite(mentioned)
         menu_label.request_hilite(mentioned)
-
-        self.append_unread_page(page)
 
     def remove_tab_hilite(self, page):
 
@@ -422,7 +447,8 @@ class IconNotebook:
         tab_label.remove_hilite()
         menu_label.remove_hilite()
 
-        self.remove_unread_page(page)
+        if self.parent_page is not None:
+            self.remove_unread_page(page)
 
     def append_unread_page(self, page):
 
@@ -439,12 +465,16 @@ class IconNotebook:
             self.unread_pages.remove(page)
             self.update_unread_pages_menu()
 
-        if not self.unread_pages:
-            self.unread_button.hide()
-            self.frame.remove_tab_hilite(self.parent_page)
+        if self.unread_pages:
+            return
+
+        self.unread_button.hide()
+
+        if self.parent_page is not None:
+            self.frame.notebook.remove_tab_hilite(self.parent_page)
 
     def set_unread_page(self, _action, _state, page):
-        self.notebook.set_current_page(self.page_num(page))
+        self.set_current_page(self.page_num(page))
 
     def update_unread_pages_menu(self):
 
@@ -504,7 +534,8 @@ class IconNotebook:
             new_page.get_children()[0].show()
 
         # Dismiss tab highlight
-        self.remove_tab_hilite(new_page)
+        if self.parent_page is not None:
+            self.remove_tab_hilite(new_page)
 
     def on_tab_scroll_event(self, _widget, event):
 
