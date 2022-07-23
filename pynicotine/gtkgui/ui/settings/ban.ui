@@ -40,6 +40,7 @@
               <object class="GtkBox">
                 <property name="visible">True</property>
                 <property name="spacing">12</property>
+                <property name="homogeneous">True</property>
                 <child>
                   <object class="GtkCheckButton" id="GeoBlock">
                     <property name="visible">True</property>
@@ -63,6 +64,7 @@
               <object class="GtkBox">
                 <property name="visible">True</property>
                 <property name="spacing">12</property>
+                <property name="homogeneous">True</property>
                 <child>
                   <object class="GtkCheckButton" id="UseCustomGeoBlock">
                     <property name="visible">True</property>
@@ -86,6 +88,7 @@
               <object class="GtkBox">
                 <property name="visible">True</property>
                 <property name="spacing">12</property>
+                <property name="homogeneous">True</property>
                 <child>
                   <object class="GtkCheckButton" id="UseCustomBan">
                     <property name="label" translatable="yes">Use custom ban message:</property>
