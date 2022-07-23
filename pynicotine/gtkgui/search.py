@@ -1348,6 +1348,10 @@ class Search(UserInterface):
 
         mode = state.get_string()
         active = mode != "ungrouped"
+        popover = self.grouping_button.get_popover()
+
+        if popover is not None:
+            popover.hide()
 
         config.sections["searches"]["group_searches"] = mode
         self.cols["id"].set_visible(not active)
