@@ -272,6 +272,7 @@
                     <property name="visible">True</property>
                     <property name="hexpand">True</property>
                     <property name="valign">center</property>
+                    <property name="width-chars">16</property>
                   </object>
                 </child>
               </object>
@@ -361,6 +362,7 @@
                     <property name="visible">True</property>
                     <property name="hexpand">True</property>
                     <property name="valign">center</property>
+                    <property name="width-chars">16</property>
                   </object>
                 </child>
               </object>

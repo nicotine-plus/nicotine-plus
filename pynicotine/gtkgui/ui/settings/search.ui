@@ -177,6 +177,7 @@
                 <property name="visible">True</property>
                 <property name="tooltip-text" translatable="yes">Filter in results whose file paths contain the specified text. Multiple phrases and words can be specified, e.g. exact phrase|music|term|exact phrase two</property>
                 <property name="valign">center</property>
+                <property name="width-chars">16</property>
               </object>
             </child>
           </object>
@@ -201,6 +202,7 @@
                 <property name="visible">True</property>
                 <property name="tooltip-text" translatable="yes">Filter out results whose file paths contain the specified text. Multiple phrases and words can be specified, e.g. exact phrase|music|term|exact phrase two</property>
                 <property name="valign">center</property>
+                <property name="width-chars">16</property>
               </object>
             </child>
           </object>
@@ -227,6 +229,7 @@
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">File type, e.g. flac|wav|ape or !mp3|!m4a</property>
                     <property name="valign">center</property>
+                    <property name="width-chars">16</property>
                   </object>
                 </child>
               </object>
@@ -254,6 +257,7 @@
                   <object class="GtkEntry" id="FilterSize">
                     <property name="visible">True</property>
                     <property name="valign">center</property>
+                    <property name="width-chars">16</property>
                   </object>
                 </child>
               </object>
@@ -281,6 +285,7 @@
                   <object class="GtkEntry" id="FilterBR">
                     <property name="visible">True</property>
                     <property name="valign">center</property>
+                    <property name="width-chars">16</property>
                   </object>
                 </child>
               </object>
@@ -309,6 +314,7 @@
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Country code, e.g. US|GB|ES or !DE|!GB</property>
                     <property name="valign">center</property>
+                    <property name="width-chars">16</property>
                   </object>
                 </child>
               </object>

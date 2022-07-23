@@ -311,6 +311,7 @@
                 <child>
                   <object class="GtkEntry" id="AfterDownload">
                     <property name="visible">True</property>
+                    <property name="width-chars">16</property>
                   </object>
                 </child>
               </object>
@@ -332,6 +333,7 @@
                 <child>
                   <object class="GtkEntry" id="AfterFolder">
                     <property name="visible">True</property>
+                    <property name="width-chars">16</property>
                   </object>
                 </child>
               </object>
