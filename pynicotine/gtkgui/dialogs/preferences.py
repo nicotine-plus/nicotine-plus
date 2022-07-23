@@ -269,12 +269,15 @@ class DownloadsFrame(UserInterface):
         self.column_numbers = list(range(self.filterlist.get_n_columns()))
         cols = initialise_columns(
             self.frame, None, self.FilterView,
-            ["filter", _("Filter"), -1, "text", None],
+            ["filter", _("Filter"), 1, "text", None],
             ["escaped", _("Escaped"), 40, "toggle", None]
         )
 
         cols["filter"].set_sort_column_id(0)
         cols["escaped"].set_sort_column_id(1)
+
+        cols["filter"].set_expand(True)
+
         renderers = cols["escaped"].get_cells()
 
         for render in renderers:
@@ -543,14 +546,17 @@ class SharesFrame(UserInterface):
         self.column_numbers = list(range(self.shareslist.get_n_columns()))
         cols = initialise_columns(
             self.frame, None, self.Shares,
-            ["virtual_folder", _("Virtual Folder"), 165, "text", None],
-            ["folder", _("Folder"), -1, "text", None],
+            ["virtual_folder", _("Virtual Folder"), 1, "text", None],
+            ["folder", _("Folder"), 150, "text", None],
             ["buddies", _("Buddy-only"), 0, "toggle", None],
         )
 
         cols["virtual_folder"].set_sort_column_id(0)
         cols["folder"].set_sort_column_id(1)
         cols["buddies"].set_sort_column_id(2)
+
+        cols["virtual_folder"].set_expand(True)
+        cols["folder"].set_expand(True)
 
         for render in cols["buddies"].get_cells():
             render.connect('toggled', self.cell_toggle_callback, self.Shares)
@@ -894,11 +900,13 @@ class IgnoredUsersFrame(UserInterface):
         self.ip_column_numbers = list(range(self.ignored_ips_list.get_n_columns()))
         cols = initialise_columns(
             self.frame, None, self.IgnoredIPs,
-            ["ip_address", _("IP Address"), -1, "text", None],
+            ["ip_address", _("IP Address"), 20, "text", None],
             ["user", _("User"), -1, "text", None]
         )
         cols["ip_address"].set_sort_column_id(0)
         cols["user"].set_sort_column_id(1)
+
+        cols["ip_address"].set_expand(True)
 
         self.IgnoredIPs.set_model(self.ignored_ips_list)
 
@@ -1049,11 +1057,13 @@ class BannedUsersFrame(UserInterface):
         self.block_column_numbers = list(range(self.blocked_list_model.get_n_columns()))
         cols = initialise_columns(
             self.frame, None, self.BlockedList,
-            ["ip_address", _("IP Address"), -1, "text", None],
+            ["ip_address", _("IP Address"), 20, "text", None],
             ["user", _("User"), -1, "text", None]
         )
         cols["ip_address"].set_sort_column_id(0)
         cols["user"].set_sort_column_id(1)
+
+        cols["ip_address"].set_expand(True)
 
         self.BlockedList.set_model(self.blocked_list_model)
 
@@ -1249,11 +1259,13 @@ class ChatsFrame(UserInterface):
         self.column_numbers = list(range(self.replace_list_model.get_n_columns()))
         cols = initialise_columns(
             self.frame, None, self.ReplacementList,
-            ["pattern", _("Pattern"), 150, "edit", None],
+            ["pattern", _("Pattern"), 50, "edit", None],
             ["replacement", _("Replacement"), -1, "edit", None]
         )
         cols["pattern"].set_sort_column_id(0)
         cols["replacement"].set_sort_column_id(1)
+
+        cols["pattern"].set_expand(True)
 
         self.ReplacementList.set_model(self.replace_list_model)
 
@@ -1946,12 +1958,14 @@ class UrlHandlersFrame(UserInterface):
         self.column_numbers = list(range(self.protocolmodel.get_n_columns()))
         cols = initialise_columns(
             self.frame, None, self.ProtocolHandlers,
-            ["protocol", _("Protocol"), -1, "text", None],
+            ["protocol", _("Protocol"), 1, "text", None],
             ["command", _("Command"), -1, "edit", None]
         )
 
         cols["protocol"].set_sort_column_id(0)
         cols["command"].set_sort_column_id(1)
+
+        cols["protocol"].set_expand(True)
 
         self.ProtocolHandlers.set_model(self.protocolmodel)
 
