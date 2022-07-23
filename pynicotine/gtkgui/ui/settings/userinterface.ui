@@ -659,7 +659,7 @@
                       <object class="GtkEntry" id="EntryImmediate">
                         <property name="visible">True</property>
                         <property name="hexpand">True</property>
-                        <property name="width-chars">8</property>
+                        <property name="width-chars">7</property>
                         <property name="secondary-icon-name">edit-undo-symbolic</property>
                         <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                         <signal name="icon-press" handler="on_default_color"/>
@@ -702,7 +702,7 @@
                       <object class="GtkEntry" id="EntryQueue">
                         <property name="visible">True</property>
                         <property name="hexpand">True</property>
-                        <property name="width-chars">8</property>
+                        <property name="width-chars">7</property>
                         <property name="secondary-icon-name">edit-undo-symbolic</property>
                         <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                         <signal name="icon-press" handler="on_default_color"/>
@@ -815,7 +815,7 @@
                       <object class="GtkEntry" id="EntryRemote">
                         <property name="visible">True</property>
                         <property name="hexpand">True</property>
-                        <property name="width-chars">8</property>
+                        <property name="width-chars">7</property>
                         <property name="secondary-icon-name">edit-undo-symbolic</property>
                         <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                         <signal name="icon-press" handler="on_default_color"/>
@@ -858,7 +858,7 @@
                       <object class="GtkEntry" id="EntryLocal">
                         <property name="visible">True</property>
                         <property name="hexpand">True</property>
-                        <property name="width-chars">8</property>
+                        <property name="width-chars">7</property>
                         <property name="secondary-icon-name">edit-undo-symbolic</property>
                         <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                         <signal name="icon-press" handler="on_default_color"/>
@@ -901,7 +901,7 @@
                       <object class="GtkEntry" id="EntryMe">
                         <property name="visible">True</property>
                         <property name="hexpand">True</property>
-                        <property name="width-chars">8</property>
+                        <property name="width-chars">7</property>
                         <property name="secondary-icon-name">edit-undo-symbolic</property>
                         <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                         <signal name="icon-press" handler="on_default_color"/>
@@ -944,7 +944,7 @@
                       <object class="GtkEntry" id="EntryHighlight">
                         <property name="visible">True</property>
                         <property name="hexpand">True</property>
-                        <property name="width-chars">8</property>
+                        <property name="width-chars">7</property>
                         <property name="secondary-icon-name">edit-undo-symbolic</property>
                         <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                         <signal name="icon-press" handler="on_default_color"/>
@@ -987,7 +987,7 @@
                       <object class="GtkEntry" id="EntryURL">
                         <property name="visible">True</property>
                         <property name="hexpand">True</property>
-                        <property name="width-chars">8</property>
+                        <property name="width-chars">7</property>
                         <property name="secondary-icon-name">edit-undo-symbolic</property>
                         <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                         <signal name="icon-press" handler="on_default_color"/>
@@ -1030,7 +1030,7 @@
                       <object class="GtkEntry" id="EntryOnline">
                         <property name="visible">True</property>
                         <property name="hexpand">True</property>
-                        <property name="width-chars">8</property>
+                        <property name="width-chars">7</property>
                         <property name="secondary-icon-name">edit-undo-symbolic</property>
                         <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                         <signal name="icon-press" handler="on_default_color"/>
@@ -1073,7 +1073,7 @@
                       <object class="GtkEntry" id="EntryOffline">
                         <property name="visible">True</property>
                         <property name="hexpand">True</property>
-                        <property name="width-chars">8</property>
+                        <property name="width-chars">7</property>
                         <property name="secondary-icon-name">edit-undo-symbolic</property>
                         <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                         <signal name="icon-press" handler="on_default_color"/>
@@ -1116,7 +1116,7 @@
                       <object class="GtkEntry" id="EntryAway">
                         <property name="visible">True</property>
                         <property name="hexpand">True</property>
-                        <property name="width-chars">8</property>
+                        <property name="width-chars">7</property>
                         <property name="secondary-icon-name">edit-undo-symbolic</property>
                         <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                         <signal name="icon-press" handler="on_default_color"/>
@@ -1184,7 +1184,7 @@
                       <object class="GtkEntry" id="EntryBackground">
                         <property name="visible">True</property>
                         <property name="hexpand">True</property>
-                        <property name="width-chars">8</property>
+                        <property name="width-chars">7</property>
                         <property name="secondary-icon-name">edit-undo-symbolic</property>
                         <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                         <signal name="icon-press" handler="on_default_color"/>
@@ -1227,7 +1227,7 @@
                       <object class="GtkEntry" id="EntryInput">
                         <property name="visible">True</property>
                         <property name="hexpand">True</property>
-                        <property name="width-chars">8</property>
+                        <property name="width-chars">7</property>
                         <property name="secondary-icon-name">edit-undo-symbolic</property>
                         <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                         <signal name="icon-press" handler="on_default_color"/>
@@ -1301,7 +1301,7 @@
                       <object class="GtkEntry" id="EntryRegularTab">
                         <property name="visible">True</property>
                         <property name="hexpand">True</property>
-                        <property name="width-chars">8</property>
+                        <property name="width-chars">7</property>
                         <property name="secondary-icon-name">edit-undo-symbolic</property>
                         <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                         <signal name="icon-press" handler="on_default_color"/>
@@ -1344,7 +1344,7 @@
                       <object class="GtkEntry" id="EntryChangedTab">
                         <property name="visible">True</property>
                         <property name="hexpand">True</property>
-                        <property name="width-chars">8</property>
+                        <property name="width-chars">7</property>
                         <property name="secondary-icon-name">edit-undo-symbolic</property>
                         <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                         <signal name="icon-press" handler="on_default_color"/>
@@ -1387,7 +1387,7 @@
                       <object class="GtkEntry" id="EntryHighlightTab">
                         <property name="visible">True</property>
                         <property name="hexpand">True</property>
-                        <property name="width-chars">8</property>
+                        <property name="width-chars">7</property>
                         <property name="secondary-icon-name">edit-undo-symbolic</property>
                         <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                         <signal name="icon-press" handler="on_default_color"/>
