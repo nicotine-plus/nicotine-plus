@@ -92,6 +92,7 @@
                 <property name="visible">True</property>
                 <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
+                <property name="single-line-mode">True</property>
               </object>
             </child>
           </object>
@@ -116,6 +117,7 @@
                 <property name="visible">True</property>
                 <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
+                <property name="single-line-mode">True</property>
               </object>
             </child>
           </object>
@@ -140,6 +142,7 @@
                 <property name="visible">True</property>
                 <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
+                <property name="single-line-mode">True</property>
               </object>
             </child>
           </object>
@@ -164,6 +167,7 @@
                 <property name="visible">True</property>
                 <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
+                <property name="single-line-mode">True</property>
               </object>
             </child>
           </object>
@@ -190,6 +194,7 @@
                 <property name="margin-top">12</property>
                 <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
+                <property name="single-line-mode">True</property>
               </object>
             </child>
           </object>
@@ -214,6 +219,7 @@
                 <property name="visible">True</property>
                 <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
+                <property name="single-line-mode">True</property>
               </object>
             </child>
           </object>
@@ -240,6 +246,7 @@
                 <property name="margin-top">12</property>
                 <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
+                <property name="single-line-mode">True</property>
               </object>
             </child>
           </object>
@@ -264,6 +271,7 @@
                 <property name="visible">True</property>
                 <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
+                <property name="single-line-mode">True</property>
               </object>
             </child>
           </object>
@@ -288,6 +296,7 @@
                 <property name="visible">True</property>
                 <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
+                <property name="single-line-mode">True</property>
               </object>
             </child>
           </object>
@@ -312,6 +321,7 @@
                 <property name="visible">True</property>
                 <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
+                <property name="single-line-mode">True</property>
               </object>
             </child>
           </object>
