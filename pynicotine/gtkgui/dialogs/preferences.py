@@ -2624,11 +2624,10 @@ class Preferences(UserInterface):
         # Main notebook
         self.frame.set_tab_positions()
         self.frame.set_main_tabs_visibility()
+        self.frame.notebook.set_tab_text_colors()
 
         for i in range(self.frame.notebook.get_n_pages()):
             page = self.frame.notebook.get_nth_page(i)
-            tab_label = self.frame.notebook.get_tab_label(page)
-            tab_label.set_text(tab_label.get_text())
             self.frame.set_tab_expand(page)
 
         # Other notebooks

@@ -264,7 +264,7 @@ class TransferList(UserInterface):
 
     def new_transfer_notification(self, finished=False):
         if self.frame.current_page_id != self.transfer_page.id:
-            self.frame.request_tab_hilite(self.transfer_page, mentioned=finished)
+            self.frame.notebook.request_tab_hilite(self.transfer_page, mentioned=finished)
 
     def on_file_search(self, *_args):
 
