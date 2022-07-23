@@ -96,6 +96,7 @@
                 <property name="label" translatable="yes">Double-click action for downloads:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
+                <property name="wrap-mode">word-char</property>
                 <property name="mnemonic-widget">DownloadDoubleClick</property>
               </object>
             </child>
@@ -146,6 +147,7 @@
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
+                <property name="wrap-mode">word-char</property>
                 <property name="mnemonic-widget">DownloadSpeed</property>
               </object>
             </child>
@@ -172,6 +174,7 @@
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
+                <property name="wrap-mode">word-char</property>
                 <property name="mnemonic-widget">DownloadSpeedAlternative</property>
               </object>
             </child>
@@ -216,6 +219,7 @@
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
+                <property name="wrap-mode">word-char</property>
                 <property name="mnemonic-widget">IncompleteDir</property>
               </object>
             </child>
@@ -238,6 +242,7 @@
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
+                <property name="wrap-mode">word-char</property>
                 <property name="mnemonic-widget">DownloadDir</property>
               </object>
             </child>
@@ -260,6 +265,7 @@
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
+                <property name="wrap-mode">word-char</property>
                 <property name="mnemonic-widget">UploadDir</property>
               </object>
             </child>
@@ -305,6 +311,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Run command after file download finishes ($ for file path):</property>
                     <property name="wrap">True</property>
+                    <property name="wrap-mode">word-char</property>
                     <property name="mnemonic-widget">AfterDownload</property>
                   </object>
                 </child>
@@ -327,6 +334,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Run command after folder download finishes ($ for folder path):</property>
                     <property name="wrap">True</property>
+                    <property name="wrap-mode">word-char</property>
                     <property name="mnemonic-widget">AfterFolder</property>
                   </object>
                 </child>

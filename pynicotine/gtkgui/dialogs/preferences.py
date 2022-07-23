@@ -1511,7 +1511,7 @@ class UserInterfaceFrame(UserInterface):
         for icon_name, label, pixel_size in icon_list:
             box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, valign=Gtk.Align.CENTER, spacing=6, visible=True)
             icon = Gtk.Image(icon_name=icon_name, pixel_size=pixel_size, visible=True)
-            label = Gtk.Label(label=label, visible=True)
+            label = Gtk.Label(label=label, xalign=0.5, wrap=True, visible=True)
 
             if GTK_API_VERSION >= 4:
                 box.append(icon)   # pylint: disable=no-member

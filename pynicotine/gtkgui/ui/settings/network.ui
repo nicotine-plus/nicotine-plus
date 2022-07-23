@@ -82,6 +82,7 @@
                             <property name="label" translatable="yes">Username:</property>
                             <property name="xalign">0</property>
                             <property name="wrap">True</property>
+                            <property name="wrap-mode">word-char</property>
                             <property name="mnemonic-widget">Login</property>
                           </object>
                         </child>
@@ -139,36 +140,62 @@
                             <property name="xalign">0</property>
                             <property name="label" translatable="yes">Listening port range (requires a restart):</property>
                             <property name="wrap">True</property>
+                            <property name="wrap-mode">word-char</property>
                             <property name="mnemonic-widget">FirstPort</property>
                           </object>
                         </child>
                         <child>
-                          <object class="GtkBox">
+                          <object class="GtkFlowBox">
                             <property name="visible">True</property>
-                            <property name="spacing">12</property>
-                            <property name="valign">center</property>
+                            <property name="homogeneous">True</property>
+                            <property name="column-spacing">12</property>
+                            <property name="row-spacing">12</property>
+                            <property name="max-children-per-line">2</property>
+                            <property name="selection-mode">none</property>
                             <child>
-                              <object class="GtkSpinButton" id="FirstPort">
+                              <object class="GtkFlowBoxChild">
                                 <property name="visible">True</property>
-                                <property name="adjustment">adjustment_FirstPort</property>
-                                <property name="numeric">True</property>
-                                <property name="width-chars">6</property>
-                                <property name="tooltip-text" translatable="yes">First port</property>
+                                <property name="can-focus">False</property>
+                                <child>
+                                  <object class="GtkSpinButton" id="FirstPort">
+                                    <property name="visible">True</property>
+                                    <property name="halign">end</property>
+                                    <property name="valign">center</property>
+                                    <property name="adjustment">adjustment_FirstPort</property>
+                                    <property name="numeric">True</property>
+                                    <property name="width-chars">6</property>
+                                    <property name="tooltip-text" translatable="yes">First port</property>
+                                  </object>
+                                </child>
                               </object>
                             </child>
                             <child>
-                              <object class="GtkLabel">
+                              <object class="GtkFlowBoxChild">
                                 <property name="visible">True</property>
-                                <property name="label" translatable="yes">to</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkSpinButton" id="LastPort">
-                                <property name="visible">True</property>
-                                <property name="adjustment">adjustment_LastPort</property>
-                                <property name="numeric">True</property>
-                                <property name="width-chars">6</property>
-                                <property name="tooltip-text" translatable="yes">Last port</property>
+                                <property name="can-focus">False</property>
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="visible">True</property>
+                                    <property name="spacing">12</property>
+                                    <property name="halign">end</property>
+                                    <property name="valign">center</property>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="visible">True</property>
+                                        <property name="label" translatable="yes">to</property>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkSpinButton" id="LastPort">
+                                        <property name="visible">True</property>
+                                        <property name="adjustment">adjustment_LastPort</property>
+                                        <property name="numeric">True</property>
+                                        <property name="width-chars">6</property>
+                                        <property name="tooltip-text" translatable="yes">Last port</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
                               </object>
                             </child>
                           </object>
@@ -191,12 +218,15 @@
                     <property name="label" translatable="yes">Listening port is not set</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
+                    <property name="wrap-mode">word-char</property>
                   </object>
                 </child>
                 <child>
                   <object class="GtkLabel" id="CheckPortLabel">
                     <property name="visible">True</property>
                     <property name="label" translatable="yes">Check Port Status</property>
+                    <property name="wrap">True</property>
+                    <property name="wrap-mode">word-char</property>
                     <property name="use-markup">True</property>
                   </object>
                 </child>
@@ -237,6 +267,7 @@
                     <property name="hexpand">True</property>
                     <property name="label" translatable="yes">Toggle away status after minutes of inactivity:</property>
                     <property name="wrap">True</property>
+                    <property name="wrap-mode">word-char</property>
                     <property name="xalign">0</property>
                     <property name="mnemonic-widget">AutoAway</property>
                   </object>
@@ -263,6 +294,7 @@
                     <property name="hexpand">True</property>
                     <property name="label" translatable="yes">Auto-reply message when away:</property>
                     <property name="wrap">True</property>
+                    <property name="wrap-mode">word-char</property>
                     <property name="xalign">0</property>
                     <property name="mnemonic-widget">AutoReply</property>
                   </object>
@@ -354,6 +386,7 @@
                     <property name="label" translatable="yes">Soulseek server:</property>
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
+                    <property name="wrap-mode">word-char</property>
                     <property name="mnemonic-widget">Server</property>
                   </object>
                 </child>
@@ -379,6 +412,7 @@
                     <property name="label" translatable="yes">Network interface (requires a restart):</property>
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
+                    <property name="wrap-mode">word-char</property>
                     <property name="mnemonic-widget">Interface</property>
                   </object>
                 </child>
