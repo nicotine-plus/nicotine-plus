@@ -18,16 +18,6 @@
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
-  <object class="GtkSizeGroup">
-    <property name="mode">horizontal</property>
-    <widgets>
-      <widget name="_ChatRoomFormatLabel"/>
-      <widget name="_PrivateChatFormatLabel"/>
-      <widget name="_TTSCommandLabel"/>
-      <widget name="_RoomMessageLabel"/>
-      <widget name="_PrivateMessageLabel"/>
-    </widgets>
-  </object>
   <object class="GtkBox" id="Main">
     <property name="visible">True</property>
     <property name="spacing">30</property>
@@ -316,8 +306,9 @@
           <object class="GtkBox">
             <property name="visible">True</property>
             <property name="spacing">12</property>
+            <property name="homogeneous">True</property>
             <child>
-              <object class="GtkLabel" id="_PrivateChatFormatLabel">
+              <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Private chat format:</property>
@@ -328,44 +319,15 @@
               </object>
             </child>
             <child>
-              <object class="GtkBox">
+              <object class="GtkEntry" id="PrivateChatFormat">
                 <property name="visible">True</property>
-                <property name="spacing">12</property>
+                <property name="hexpand">True</property>
                 <property name="valign">center</property>
-                <child>
-                  <object class="GtkEntry" id="PrivateChatFormat">
-                    <property name="visible">True</property>
-                    <property name="hexpand">True</property>
-                    <property name="tooltip-text">https://docs.python.org/3/library/time.html</property>
-                    <property name="width-chars">14</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkButton">
-                    <property name="visible">True</property>
-                    <property name="tooltip-text" translatable="yes">Default</property>
-                    <signal name="clicked" handler="on_private_default_timestamp"/>
-                    <child>
-                      <object class="GtkBox">
-                        <property name="visible">True</property>
-                        <property name="spacing">6</property>
-                        <child>
-                          <object class="GtkImage">
-                            <property name="visible">True</property>
-                            <property name="icon-name">edit-clear-symbolic</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkLabel">
-                            <property name="visible">True</property>
-                            <property name="ellipsize">end</property>
-                            <property name="label" translatable="yes">Default</property>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                  </object>
-                </child>
+                <property name="tooltip-text">https://docs.python.org/3/library/time.html</property>
+                <property name="width-chars">14</property>
+                <property name="secondary-icon-name">edit-undo-symbolic</property>
+                <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
+                <signal name="icon-press" handler="on_private_default_timestamp"/>
               </object>
             </child>
           </object>
@@ -374,8 +336,9 @@
           <object class="GtkBox">
             <property name="visible">True</property>
             <property name="spacing">12</property>
+            <property name="homogeneous">True</property>
             <child>
-              <object class="GtkLabel" id="_ChatRoomFormatLabel">
+              <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Chat room format:</property>
@@ -386,44 +349,15 @@
               </object>
             </child>
             <child>
-              <object class="GtkBox">
+              <object class="GtkEntry" id="ChatRoomFormat">
                 <property name="visible">True</property>
-                <property name="spacing">12</property>
+                <property name="hexpand">True</property>
                 <property name="valign">center</property>
-                <child>
-                  <object class="GtkEntry" id="ChatRoomFormat">
-                    <property name="visible">True</property>
-                    <property name="hexpand">True</property>
-                    <property name="tooltip-text">https://docs.python.org/3/library/time.html</property>
-                    <property name="width-chars">14</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkButton">
-                    <property name="visible">True</property>
-                    <property name="tooltip-text" translatable="yes">Default</property>
-                    <signal name="clicked" handler="on_room_default_timestamp"/>
-                    <child>
-                      <object class="GtkBox">
-                        <property name="visible">True</property>
-                        <property name="spacing">6</property>
-                        <child>
-                          <object class="GtkImage">
-                            <property name="visible">True</property>
-                            <property name="icon-name">edit-clear-symbolic</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkLabel">
-                            <property name="visible">True</property>
-                            <property name="ellipsize">end</property>
-                            <property name="label" translatable="yes">Default</property>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                  </object>
-                </child>
+                <property name="tooltip-text">https://docs.python.org/3/library/time.html</property>
+                <property name="width-chars">14</property>
+                <property name="secondary-icon-name">edit-undo-symbolic</property>
+                <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
+                <signal name="icon-press" handler="on_room_default_timestamp"/>
               </object>
             </child>
           </object>
@@ -456,8 +390,9 @@
           <object class="GtkBox">
             <property name="visible">True</property>
             <property name="spacing">12</property>
+            <property name="homogeneous">True</property>
             <child>
-              <object class="GtkLabel" id="_TTSCommandLabel">
+              <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="hexpand">True</property>
@@ -468,51 +403,19 @@
               </object>
             </child>
             <child>
-              <object class="GtkBox">
+              <object class="GtkComboBoxText" id="TTSCommand">
                 <property name="visible">True</property>
-                <property name="spacing">12</property>
+                <property name="hexpand">True</property>
                 <property name="valign">center</property>
-                <child>
-                  <object class="GtkComboBoxText" id="TTSCommand">
+                <property name="has-entry">True</property>
+                <items>
+                  <item>flite -t $</item>
+                  <item>echo $ | festival --tts</item>
+                </items>
+                <child internal-child="entry">
+                  <object class="GtkEntry">
                     <property name="visible">True</property>
-                    <property name="hexpand">True</property>
-                    <property name="has-entry">True</property>
-                    <items>
-                      <item>echo $ | festival --tts</item>
-                      <item>flite -t $</item>
-                    </items>
-                    <child internal-child="entry">
-                      <object class="GtkEntry">
-                        <property name="visible">True</property>
-                        <property name="width-chars">12</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkButton">
-                    <property name="visible">True</property>
-                    <property name="tooltip-text" translatable="yes">Default</property>
-                    <signal name="clicked" handler="on_default_tts"/>
-                    <child>
-                      <object class="GtkBox">
-                        <property name="visible">True</property>
-                        <property name="spacing">6</property>
-                        <child>
-                          <object class="GtkImage">
-                            <property name="visible">True</property>
-                            <property name="icon-name">edit-clear-symbolic</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkLabel">
-                            <property name="visible">True</property>
-                            <property name="ellipsize">end</property>
-                            <property name="label" translatable="yes">Default</property>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
+                    <property name="width-chars">12</property>
                   </object>
                 </child>
               </object>
@@ -523,8 +426,9 @@
           <object class="GtkBox">
             <property name="visible">True</property>
             <property name="spacing">12</property>
+            <property name="homogeneous">True</property>
             <child>
-              <object class="GtkLabel" id="_PrivateMessageLabel">
+              <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="hexpand">True</property>
@@ -535,43 +439,14 @@
               </object>
             </child>
             <child>
-              <object class="GtkBox">
+              <object class="GtkEntry" id="PrivateMessage">
                 <property name="visible">True</property>
-                <property name="spacing">12</property>
+                <property name="hexpand">True</property>
                 <property name="valign">center</property>
-                <child>
-                  <object class="GtkEntry" id="PrivateMessage">
-                    <property name="visible">True</property>
-                    <property name="hexpand">True</property>
-                    <property name="width-chars">14</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkButton">
-                    <property name="visible">True</property>
-                    <property name="tooltip-text" translatable="yes">Default</property>
-                    <signal name="clicked" handler="on_default_private"/>
-                    <child>
-                      <object class="GtkBox">
-                        <property name="visible">True</property>
-                        <property name="spacing">6</property>
-                        <child>
-                          <object class="GtkImage">
-                            <property name="visible">True</property>
-                            <property name="icon-name">edit-clear-symbolic</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkLabel">
-                            <property name="visible">True</property>
-                            <property name="ellipsize">end</property>
-                            <property name="label" translatable="yes">Default</property>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                  </object>
-                </child>
+                <property name="width-chars">14</property>
+                <property name="secondary-icon-name">edit-undo-symbolic</property>
+                <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
+                <signal name="icon-press" handler="on_default_private"/>
               </object>
             </child>
           </object>
@@ -580,8 +455,9 @@
           <object class="GtkBox">
             <property name="visible">True</property>
             <property name="spacing">12</property>
+            <property name="homogeneous">True</property>
             <child>
-              <object class="GtkLabel" id="_RoomMessageLabel">
+              <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="hexpand">True</property>
@@ -592,43 +468,14 @@
               </object>
             </child>
             <child>
-              <object class="GtkBox">
+              <object class="GtkEntry" id="RoomMessage">
                 <property name="visible">True</property>
-                <property name="spacing">12</property>
+                <property name="hexpand">True</property>
                 <property name="valign">center</property>
-                <child>
-                  <object class="GtkEntry" id="RoomMessage">
-                    <property name="visible">True</property>
-                    <property name="hexpand">True</property>
-                    <property name="width-chars">14</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkButton">
-                    <property name="visible">True</property>
-                    <property name="tooltip-text" translatable="yes">Default</property>
-                    <signal name="clicked" handler="on_default_rooms"/>
-                    <child>
-                      <object class="GtkBox">
-                        <property name="visible">True</property>
-                        <property name="spacing">6</property>
-                        <child>
-                          <object class="GtkImage">
-                            <property name="visible">True</property>
-                            <property name="icon-name">edit-clear-symbolic</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkLabel">
-                            <property name="visible">True</property>
-                            <property name="ellipsize">end</property>
-                            <property name="label" translatable="yes">Default</property>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                  </object>
-                </child>
+                <property name="width-chars">14</property>
+                <property name="secondary-icon-name">edit-undo-symbolic</property>
+                <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
+                <signal name="icon-press" handler="on_default_rooms"/>
               </object>
             </child>
           </object>
