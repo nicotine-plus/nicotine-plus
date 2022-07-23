@@ -1168,9 +1168,6 @@ class ChatsFrame(UserInterface):
     def on_default_rooms(self, *_args):
         self.RoomMessage.set_text(config.defaults["ui"]["speechrooms"])
 
-    def on_default_tts(self, *_args):
-        self.TTSCommand.get_child().set_text(config.defaults["ui"]["speechcommand"])
-
     def on_room_default_timestamp(self, *_args):
         self.ChatRoomFormat.set_text(config.defaults["logging"]["rooms_timestamp"])
 
@@ -1303,11 +1300,8 @@ class UserInterfaceFrame(UserInterface):
 
         # pylint: disable=invalid-name
         (self.ChatRoomsPosition, self.CloseAction, self.DarkMode,
-         self.DefaultAway, self.DefaultBackground, self.DefaultBrowserFont, self.DefaultChangedTab,
-         self.DefaultChatFont, self.DefaultGlobalFont, self.DefaultHighlight, self.DefaultHighlightTab,
-         self.DefaultImmediate, self.DefaultInput, self.DefaultListFont, self.DefaultLocal, self.DefaultMe,
-         self.DefaultOffline, self.DefaultOnline, self.DefaultQueue, self.DefaultRegularTab, self.DefaultRemote,
-         self.DefaultSearchFont, self.DefaultTheme, self.DefaultTransfersFont, self.DefaultURL, self.EnableChatroomsTab,
+         self.DefaultBrowserFont, self.DefaultChatFont, self.DefaultGlobalFont, self.DefaultListFont,
+         self.DefaultSearchFont, self.DefaultTheme, self.DefaultTransfersFont, self.EnableChatroomsTab,
          self.EnableDownloadsTab, self.EnableInterestsTab, self.EnablePrivateTab, self.EnableSearchTab,
          self.EnableUploadsTab, self.EnableUserBrowseTab, self.EnableUserInfoTab, self.EnableUserListTab,
          self.EntryAway, self.EntryBackground, self.EntryChangedTab, self.EntryHighlight, self.EntryHighlightTab,
@@ -1596,9 +1590,9 @@ class UserInterfaceFrame(UserInterface):
         entry = getattr(self, Gtk.Buildable.get_name(widget).replace("Pick", "Entry"))
         entry.set_text(color)
 
-    def on_default_color(self, widget):
+    def on_default_color(self, widget, *_args):
 
-        entry = getattr(self, Gtk.Buildable.get_name(widget).replace("Default", "Entry"))
+        entry = getattr(self, Gtk.Buildable.get_name(widget))
 
         for section, section_options in self.options.items():
             for key, value in section_options.items():

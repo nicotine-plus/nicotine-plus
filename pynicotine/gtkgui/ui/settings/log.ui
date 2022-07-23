@@ -53,6 +53,7 @@
           <object class="GtkBox">
             <property name="visible">True</property>
             <property name="spacing">12</property>
+            <property name="homogeneous">True</property>
             <child>
               <object class="GtkLabel">
                 <property name="visible">True</property>
@@ -65,45 +66,15 @@
               </object>
             </child>
             <child>
-              <object class="GtkBox">
+              <object class="GtkEntry" id="LogFileFormat">
                 <property name="visible">True</property>
                 <property name="hexpand">True</property>
-                <property name="spacing">12</property>
                 <property name="valign">center</property>
-                <child>
-                  <object class="GtkEntry" id="LogFileFormat">
-                    <property name="visible">True</property>
-                    <property name="hexpand">True</property>
-                    <property name="tooltip-text">https://docs.python.org/3/library/time.html</property>
-                    <property name="width-chars">16</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkButton">
-                    <property name="visible">True</property>
-                    <property name="tooltip-text" translatable="yes">Default</property>
-                    <signal name="clicked" handler="on_default_timestamp"/>
-                    <child>
-                      <object class="GtkBox">
-                        <property name="visible">True</property>
-                        <property name="spacing">6</property>
-                        <child>
-                          <object class="GtkImage">
-                            <property name="visible">True</property>
-                            <property name="icon-name">edit-clear-symbolic</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkLabel">
-                            <property name="visible">True</property>
-                            <property name="ellipsize">end</property>
-                            <property name="label" translatable="yes">Default</property>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                  </object>
-                </child>
+                <property name="tooltip-text">https://docs.python.org/3/library/time.html</property>
+                <property name="width-chars">14</property>
+                <property name="secondary-icon-name">edit-undo-symbolic</property>
+                <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
+                <signal name="icon-press" handler="on_default_timestamp"/>
               </object>
             </child>
           </object>
