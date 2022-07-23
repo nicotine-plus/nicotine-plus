@@ -763,7 +763,7 @@ class UploadsFrame(UserInterface):
         # pylint: disable=invalid-name
         (self.AutoclearFinished, self.FirstInFirstOut, self.FriendsNoLimits, self.Limit,
          self.LimitSpeed, self.LimitSpeedAlternative, self.LimitTotalTransfers, self.Main, self.MaxUserFiles,
-         self.MaxUserQueue, self.PreferFriends, self.QueueBandwidth, self.QueueSlots,
+         self.MaxUserQueue, self.PreferFriends, self.QueueBandwidth, self.QueueSlots, self.QueueUseBandwidth,
          self.QueueUseSlots, self.UploadDoubleClick) = self.widgets
 
         self.preferences = preferences
@@ -1190,8 +1190,8 @@ class ChatsFrame(UserInterface):
         (self.CensorCheck, self.CensorList,
          self.CensorReplaceCombo, self.CharactersCompletion, self.ChatRoomFormat,
          self.CompleteAliasesCheck, self.CompleteBuddiesCheck, self.CompleteCommandsCheck, self.CompleteRoomNamesCheck,
-         self.CompleteUsersInRoomsCheck, self.CompletionCycleCheck, self.CompletionDropdownCheck, self.CompletionTabCheck,
-         self.Main, self.OneMatchCheck, self.PrivateChatFormat,
+         self.CompleteUsersInRoomsCheck, self.CompletionCycleCheck, self.CompletionDropdownCheck,
+         self.CompletionTabCheck, self.Main, self.OneMatchCheck, self.PrivateChatFormat,
          self.PrivateLogLines, self.PrivateMessage, self.ReadRoomLogs,
          self.ReopenPrivateChats, self.ReplaceCheck, self.ReplacementList,
          self.RoomLogLines, self.RoomMessage, self.SpellCheck,
@@ -2844,7 +2844,7 @@ class Preferences(UserInterface):
             self.pages[page_id] = page = getattr(sys.modules[__name__], page_id + "Frame")(self)
             page.set_settings()
 
-            for obj in page.__dict__.values():
+            for obj in page.widgets:
                 if isinstance(obj, Gtk.CheckButton):
                     if GTK_API_VERSION >= 4:
                         obj.get_last_child().set_wrap(True)
