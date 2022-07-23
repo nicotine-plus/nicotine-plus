@@ -107,10 +107,10 @@ class TextView:
 
                 _append(buffer, section[:start], tag)
                 _append(buffer, username, usertag)
-                _append(buffer, section[end:], tag)
-                return
+                return section[end:]
 
             _append(buffer, section, tag)
+            return ""
 
         line = str(line).strip("\n")
         buffer = self.textbuffer
@@ -126,6 +126,9 @@ class TextView:
 
         if buffer.get_char_count() > 0:
             line = "\n" + line
+
+        if line:
+            line = _usertag(buffer, line)
 
         if find_urls and ("://" in line or "www." in line or "mailto:" in line):
             # Match first url
@@ -145,7 +148,7 @@ class TextView:
                 match = self.url_regex.search(line)
 
         if line:
-            _usertag(buffer, line)
+            _append(buffer, line, tag)
 
         if num_lines >= self.max_num_lines:
             # Limit number of lines in textview
