@@ -343,7 +343,7 @@ class DownloadsFrame(UserInterface):
                 -1, self.column_numbers, [dfilter, escaped]
             )
 
-        self.on_verify_filter(self.VerifyFilters)
+        self.on_verify_filter()
 
     def on_add_filter(self, *_args):
 
@@ -392,7 +392,7 @@ class DownloadsFrame(UserInterface):
             del self.filtersiters[dfilter]
             self.filterlist.remove(iterator)
 
-        self.on_verify_filter(self.VerifyFilters)
+        self.on_verify_filter()
 
     def on_edit_filter(self, *_args):
 
@@ -437,7 +437,7 @@ class DownloadsFrame(UserInterface):
 
         del self.filtersiters[dfilter]
 
-        self.on_verify_filter(self.VerifyFilters)
+        self.on_verify_filter()
 
     def on_default_filters(self, *_args):
 
@@ -450,7 +450,7 @@ class DownloadsFrame(UserInterface):
                 -1, self.column_numbers, [dfilter, escaped]
             )
 
-        self.on_verify_filter(self.VerifyFilters)
+        self.on_verify_filter()
 
     def on_verify_filter(self, *_args):
 
@@ -517,7 +517,7 @@ class DownloadsFrame(UserInterface):
 
         self.filterlist.set(iterator, pos, not value)
 
-        self.on_verify_filter(self.VerifyFilters)
+        self.on_verify_filter()
 
 
 class SharesFrame(UserInterface):
