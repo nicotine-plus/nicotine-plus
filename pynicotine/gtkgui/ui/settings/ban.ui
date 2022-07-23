@@ -39,11 +39,11 @@
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
-                <property name="homogeneous">True</property>
                 <property name="spacing">12</property>
                 <child>
                   <object class="GtkCheckButton" id="GeoBlock">
                     <property name="visible">True</property>
+                    <property name="hexpand">True</property>
                     <property name="label" translatable="yes">Country codes to block (comma separated):</property>
                   </object>
                 </child>
@@ -62,11 +62,11 @@
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
-                <property name="homogeneous">True</property>
                 <property name="spacing">12</property>
                 <child>
                   <object class="GtkCheckButton" id="UseCustomGeoBlock">
                     <property name="visible">True</property>
+                    <property name="hexpand">True</property>
                     <property name="label" translatable="yes">Use custom geo block message:</property>
                     <property name="tooltip-text" translatable="yes">Sent to users as the reason for being geo blocked.</property>
                   </object>
@@ -85,12 +85,12 @@
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
-                <property name="homogeneous">True</property>
                 <property name="spacing">12</property>
                 <child>
                   <object class="GtkCheckButton" id="UseCustomBan">
                     <property name="label" translatable="yes">Use custom ban message:</property>
                     <property name="visible">True</property>
+                    <property name="hexpand">True</property>
                     <property name="tooltip-text" translatable="yes">Sent to users as the reason for being banned.</property>
                   </object>
                 </child>
