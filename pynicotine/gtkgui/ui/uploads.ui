@@ -51,6 +51,7 @@
             <child>
               <object class="GtkButton">
                 <property name="visible">True</property>
+                <property name="tooltip-text" bind-source="_abort_label" bind-property="label" bind-flags="bidirectional|sync-create"/>
                 <signal name="clicked" handler="on_abort_transfer"/>
                 <child>
                   <object class="GtkBox">
@@ -63,10 +64,10 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkLabel">
+                      <object class="GtkLabel" id="_abort_label">
                         <property name="visible">True</property>
+                        <property name="ellipsize">end</property>
                         <property name="label" translatable="yes">Abort</property>
-                        <property name="use-underline">True</property>
                       </object>
                     </child>
                   </object>
@@ -79,6 +80,7 @@
             <child>
               <object class="GtkButton">
                 <property name="visible">True</property>
+                <property name="tooltip-text" bind-source="_abort_users_label" bind-property="label" bind-flags="bidirectional|sync-create"/>
                 <signal name="clicked" handler="on_abort_users"/>
                 <child>
                   <object class="GtkBox">
@@ -91,8 +93,9 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkLabel">
+                      <object class="GtkLabel" id="_abort_users_label">
                         <property name="visible">True</property>
+                        <property name="ellipsize">end</property>
                         <property name="label" translatable="yes">Abort User(s)</property>
                       </object>
                     </child>
@@ -106,6 +109,7 @@
             <child>
               <object class="GtkButton">
                 <property name="visible">True</property>
+                <property name="tooltip-text" bind-source="_ban_users_label" bind-property="label" bind-flags="bidirectional|sync-create"/>
                 <signal name="clicked" handler="on_ban_users"/>
                 <child>
                   <object class="GtkBox">
@@ -118,8 +122,9 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkLabel">
+                      <object class="GtkLabel" id="_ban_users_label">
                         <property name="visible">True</property>
+                        <property name="ellipsize">end</property>
                         <property name="label" translatable="yes">Ban User(s)</property>
                       </object>
                     </child>
@@ -156,6 +161,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">True</property>
+                        <property name="ellipsize">end</property>
                         <property name="label" translatable="yes">Clear Finished</property>
                       </object>
                     </child>
@@ -178,6 +184,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">True</property>
+                        <property name="ellipsize">end</property>
                         <property name="label" translatable="yes">Clear _All…</property>
                         <property name="use-underline">True</property>
                       </object>
