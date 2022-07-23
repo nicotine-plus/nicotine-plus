@@ -66,6 +66,7 @@
                 <property name="label" translatable="yes">Number of recent private chat messages to show:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
+                <property name="wrap-mode">word-char</property>
                 <property name="mnemonic-widget">PrivateLogLines</property>
               </object>
             </child>
@@ -91,6 +92,7 @@
                 <property name="label" translatable="yes">Number of recent chat room messages to show:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
+                <property name="wrap-mode">word-char</property>
                 <property name="mnemonic-widget">RoomLogLines</property>
               </object>
             </child>
@@ -179,6 +181,7 @@
                         <property name="label" translatable="yes">Minimum characters required to display drop-down:</property>
                         <property name="xalign">0</property>
                         <property name="wrap">True</property>
+                        <property name="wrap-mode">word-char</property>
                         <property name="mnemonic-widget">CharactersCompletion</property>
                       </object>
                     </child>
@@ -201,6 +204,7 @@
                     <property name="margin-top">12</property>
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
+                    <property name="wrap-mode">word-char</property>
                     <property name="mnemonic-widget">CompleteBuddiesCheck</property>
                   </object>
                 </child>
@@ -313,6 +317,7 @@
                 <property name="label" translatable="yes">Private chat format:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
+                <property name="wrap-mode">word-char</property>
                 <property name="mnemonic-widget">PrivateChatFormat</property>
               </object>
             </child>
@@ -370,6 +375,7 @@
                 <property name="label" translatable="yes">Chat room format:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
+                <property name="wrap-mode">word-char</property>
                 <property name="mnemonic-widget">ChatRoomFormat</property>
               </object>
             </child>
@@ -451,6 +457,7 @@
                 <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Text-to-Speech command:</property>
                 <property name="wrap">True</property>
+                <property name="wrap-mode">word-char</property>
                 <property name="mnemonic-widget">TTSCommand</property>
               </object>
             </child>
@@ -517,6 +524,7 @@
                 <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Private chat message:</property>
                 <property name="wrap">True</property>
+                <property name="wrap-mode">word-char</property>
                 <property name="mnemonic-widget">PrivateMessage</property>
               </object>
             </child>
@@ -573,6 +581,7 @@
                 <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Chat room message:</property>
                 <property name="wrap">True</property>
+                <property name="wrap-mode">word-char</property>
                 <property name="mnemonic-widget">RoomMessage</property>
               </object>
             </child>
@@ -671,6 +680,7 @@
                             <property name="xalign">0</property>
                             <property name="label" translatable="yes">Replace censored letters with:</property>
                             <property name="wrap">True</property>
+                            <property name="wrap-mode">word-char</property>
                             <property name="mnemonic-widget">CensorReplaceCombo</property>
                           </object>
                         </child>
