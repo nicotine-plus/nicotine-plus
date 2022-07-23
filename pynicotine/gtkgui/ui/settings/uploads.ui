@@ -340,7 +340,7 @@ First In, First Out: Files will be uploaded in the order they were queued.</prop
             <property name="visible">True</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkRadioButton" id="_QueueUseBandwidth">
+              <object class="GtkRadioButton" id="QueueUseBandwidth">
                 <property name="visible">True</property>
                 <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Queue uploads if total transfer speed reaches (KiB/s):</property>
@@ -370,7 +370,7 @@ First In, First Out: Files will be uploaded in the order they were queued.</prop
                 <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Limit number of upload slots to:</property>
                 <property name="tooltip-text" translatable="yes">If disabled, slots will automatically be determined by available bandwidth limitations.</property>
-                <property name="group">_QueueUseBandwidth</property>
+                <property name="group">QueueUseBandwidth</property>
               </object>
             </child>
             <child>
