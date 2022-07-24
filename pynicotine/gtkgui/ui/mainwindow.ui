@@ -1635,6 +1635,7 @@
                           <object class="GtkSearchEntry" id="log_search_entry">
                             <property name="visible">True</property>
                             <property name="max-width-chars">75</property>
+                            <property name="width-chars">24</property>
                           </object>
                         </child>
                       </object>
