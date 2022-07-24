@@ -2019,6 +2019,9 @@ class UrlHandlersFrame(UserInterface):
         protocol = self.ProtocolCombo.get_active_text()
         command = self.Handler.get_active_text()
 
+        if not command:
+            return
+
         self.ProtocolCombo.get_child().set_text("")
         self.Handler.get_child().set_text("")
 
