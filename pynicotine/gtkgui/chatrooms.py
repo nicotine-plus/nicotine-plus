@@ -150,9 +150,9 @@ class ChatRooms(IconNotebook):
             # Create a new room
             self.core.chatrooms.request_join_room(room, private)
 
-    def on_create_room(self, widget, *_args):
+    def on_create_room(self, *_args):
 
-        room = widget.get_text().strip()
+        room = self.frame.chatrooms_entry.get_text().strip()
 
         if not room:
             return
@@ -170,7 +170,7 @@ class ChatRooms(IconNotebook):
         else:
             self.core.chatrooms.request_join_room(room)
 
-        widget.set_text("")
+        self.frame.chatrooms_entry.set_text("")
 
     def clear_notifications(self):
 
@@ -1138,10 +1138,10 @@ class ChatRoom(UserInterface):
         for username in self.tag_users:
             self.update_user_tag(username)
 
-    def on_autojoin(self, widget):
+    def on_autojoin(self, *_args):
 
         autojoin = config.sections["server"]["autojoin"]
-        active = widget.get_active()
+        active = self.auto_join_toggle.get_active()
 
         if not active and self.room in autojoin:
             autojoin.remove(self.room)
@@ -1181,9 +1181,9 @@ class ChatRoom(UserInterface):
 
         return None
 
-    def on_log_toggled(self, widget):
+    def on_log_toggled(self, *_args):
 
-        if not widget.get_active():
+        if not self.log_toggle.get_active():
             if self.room in config.sections["logging"]["rooms"]:
                 config.sections["logging"]["rooms"].remove(self.room)
             return

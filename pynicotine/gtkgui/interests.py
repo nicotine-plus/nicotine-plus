@@ -214,18 +214,18 @@ class Interests(UserInterface):
         self.frame.search_entry.set_text(item)
         self.frame.change_main_page(self.frame.search_page)
 
-    def on_add_thing_i_like(self, widget, *_args):
+    def on_add_thing_i_like(self, *_args):
 
-        thing = widget.get_text().strip().lower()
-        widget.set_text("")
+        thing = self.add_like_entry.get_text().strip().lower()
+        self.add_like_entry.set_text("")
 
         if self.core.interests.add_thing_i_like(thing):
             self.likes[thing] = self.likes_model.insert_with_valuesv(-1, self.likes_column_numbers, [thing])
 
-    def on_add_thing_i_dislike(self, widget, *_args):
+    def on_add_thing_i_dislike(self, *_args):
 
-        thing = widget.get_text().strip().lower()
-        widget.set_text("")
+        thing = self.add_dislike_entry.get_text().strip().lower()
+        self.add_dislike_entry.set_text("")
 
         if self.core.interests.add_thing_i_hate(thing):
             self.dislikes[thing] = self.dislikes_model.insert_with_valuesv(-1, self.dislikes_column_numbers, [thing])

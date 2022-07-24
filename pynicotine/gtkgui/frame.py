@@ -1507,13 +1507,13 @@ class NicotineFrame(UserInterface):
     def on_settings_userinfo(self, *_args):
         self.on_settings(page='UserInfo')
 
-    def on_get_user_info(self, widget, *_args):
-        self.userinfo.on_get_user_info(widget)
+    def on_get_user_info(self, *_args):
+        self.userinfo.on_get_user_info()
 
     """ Browse Shares """
 
-    def on_get_shares(self, widget, *_args):
-        self.userbrowse.on_get_shares(widget)
+    def on_get_shares(self, *_args):
+        self.userbrowse.on_get_shares()
 
     def on_load_from_disk(self, *_args):
         self.userbrowse.on_load_from_disk()
@@ -1523,11 +1523,11 @@ class NicotineFrame(UserInterface):
     def on_settings_chat(self, *_args):
         self.on_settings(page="Chats")
 
-    def on_get_private_chat(self, widget, *_args):
-        self.privatechat.on_get_private_chat(widget)
+    def on_get_private_chat(self, *_args):
+        self.privatechat.on_get_private_chat()
 
-    def on_create_room(self, widget, *_args):
-        self.chatrooms.on_create_room(widget)
+    def on_create_room(self, *_args):
+        self.chatrooms.on_create_room()
 
     def update_completions(self):
         self.core.chatrooms.update_completions()
@@ -1594,8 +1594,8 @@ class NicotineFrame(UserInterface):
 
     """ User Actions """
 
-    def on_add_user(self, widget, *_args):
-        self.userlist.on_add_user(widget)
+    def on_add_user(self, *_args):
+        self.userlist.on_add_user()
 
     """ Various """
 

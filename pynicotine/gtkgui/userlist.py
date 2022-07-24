@@ -228,14 +228,14 @@ class UserList(UserInterface):
 
         return False
 
-    def on_add_user(self, widget, *_args):
+    def on_add_user(self, *_args):
 
-        username = widget.get_text().strip()
+        username = self.frame.add_buddy_entry.get_text().strip()
 
         if not username:
             return
 
-        widget.set_text("")
+        self.frame.add_buddy_entry.set_text("")
         self.core.userlist.add_user(username)
 
     def update(self):

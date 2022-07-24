@@ -65,14 +65,14 @@ class UserInfos(IconNotebook):
                 GLib.idle_add(lambda tab: tab.description_view.textview.grab_focus() == -1, tab)
                 break
 
-    def on_get_user_info(self, widget, *_args):
+    def on_get_user_info(self, *_args):
 
-        username = widget.get_text().strip()
+        username = self.frame.userinfo_entry.get_text().strip()
 
         if not username:
             return
 
-        widget.set_text("")
+        self.frame.userinfo_entry.set_text("")
         self.core.userinfo.request_user_info(username)
 
     def show_user(self, user, switch_page=True):

@@ -70,14 +70,14 @@ class UserBrowses(IconNotebook):
                 GLib.idle_add(tab.grab_view_focus)
                 break
 
-    def on_get_shares(self, widget, *_args):
+    def on_get_shares(self, *_args):
 
-        entry_text = widget.get_text().strip()
+        entry_text = self.frame.userbrowse_entry.get_text().strip()
 
         if not entry_text:
             return
 
-        widget.set_text("")
+        self.frame.userbrowse_entry.set_text("")
 
         if entry_text.startswith("slsk://"):
             self.core.userbrowse.open_soulseek_url(entry_text)

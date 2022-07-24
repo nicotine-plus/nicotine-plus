@@ -722,9 +722,9 @@ class TransferList(UserInterface):
         user = next(iter(self.selected_users), None)
         self.add_popup_menu_user(self.popup_menu_users, user)
 
-    def on_expand_tree(self, widget):
+    def on_expand_tree(self, *_args):
 
-        expanded = widget.get_active()
+        expanded = self.expand_button.get_active()
 
         if expanded:
             icon_name = "go-up-symbolic"
