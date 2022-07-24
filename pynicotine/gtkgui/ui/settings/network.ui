@@ -304,7 +304,6 @@
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">True</property>
-                    <property name="hexpand">True</property>
                     <property name="label" translatable="yes">Auto-reply message when away:</property>
                     <property name="wrap">True</property>
                     <property name="wrap-mode">word-char</property>
@@ -315,7 +314,6 @@
                 <child>
                   <object class="GtkEntry" id="AutoReply">
                     <property name="visible">True</property>
-                    <property name="hexpand">True</property>
                     <property name="valign">center</property>
                     <property name="width-chars">16</property>
                   </object>
@@ -395,7 +393,6 @@
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">True</property>
-                    <property name="hexpand">True</property>
                     <property name="label" translatable="yes">Soulseek server:</property>
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
@@ -406,7 +403,6 @@
                 <child>
                   <object class="GtkEntry" id="Server">
                     <property name="visible">True</property>
-                    <property name="hexpand">True</property>
                     <property name="valign">center</property>
                     <property name="width-chars">16</property>
                   </object>
@@ -421,7 +417,6 @@
                 <child>
                   <object class="GtkLabel" id="InterfaceLabel">
                     <property name="visible">True</property>
-                    <property name="hexpand">True</property>
                     <property name="label" translatable="yes">Network interface (requires a restart):</property>
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>

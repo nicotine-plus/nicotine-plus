@@ -44,14 +44,12 @@
                 <child>
                   <object class="GtkCheckButton" id="GeoBlock">
                     <property name="visible">True</property>
-                    <property name="hexpand">True</property>
                     <property name="label" translatable="yes">Country codes to block (comma separated):</property>
                   </object>
                 </child>
                 <child>
                   <object class="GtkEntry" id="GeoBlockCC">
                     <property name="visible">True</property>
-                    <property name="hexpand">True</property>
                     <property name="width-chars">15</property>
                     <property name="tooltip-text" translatable="yes">Codes must be in ISO 3166-2 format.</property>
                     <property name="sensitive" bind-source="GeoBlock" bind-property="active" bind-flags="bidirectional|sync-create"/>
@@ -68,7 +66,6 @@
                 <child>
                   <object class="GtkCheckButton" id="UseCustomGeoBlock">
                     <property name="visible">True</property>
-                    <property name="hexpand">True</property>
                     <property name="label" translatable="yes">Use custom geo block message:</property>
                     <property name="tooltip-text" translatable="yes">Sent to users as the reason for being geo blocked.</property>
                   </object>
@@ -76,7 +73,6 @@
                 <child>
                   <object class="GtkEntry" id="CustomGeoBlock">
                     <property name="visible">True</property>
-                    <property name="hexpand">True</property>
                     <property name="width-chars">15</property>
                     <property name="sensitive" bind-source="UseCustomGeoBlock" bind-property="active" bind-flags="bidirectional|sync-create"/>
                     <property name="valign">center</property>
@@ -93,14 +89,12 @@
                   <object class="GtkCheckButton" id="UseCustomBan">
                     <property name="label" translatable="yes">Use custom ban message:</property>
                     <property name="visible">True</property>
-                    <property name="hexpand">True</property>
                     <property name="tooltip-text" translatable="yes">Sent to users as the reason for being banned.</property>
                   </object>
                 </child>
                 <child>
                   <object class="GtkEntry" id="CustomBan">
                     <property name="visible">True</property>
-                    <property name="hexpand">True</property>
                     <property name="width-chars">15</property>
                     <property name="sensitive" bind-source="UseCustomBan" bind-property="active" bind-flags="bidirectional|sync-create"/>
                     <property name="valign">center</property>

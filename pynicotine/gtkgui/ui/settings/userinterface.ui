@@ -636,7 +636,6 @@
                   <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="label" translatable="yes">List text color:</property>
-                    <property name="hexpand">True</property>
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
                     <property name="wrap-mode">word-char</property>
@@ -679,7 +678,6 @@
                   <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="label" translatable="yes">Queued search result text color:</property>
-                    <property name="hexpand">True</property>
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
                     <property name="wrap-mode">word-char</property>
@@ -792,7 +790,6 @@
                   <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="label" translatable="yes">Remote text color:</property>
-                    <property name="hexpand">True</property>
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
                     <property name="wrap-mode">word-char</property>
@@ -835,7 +832,6 @@
                   <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="label" translatable="yes">Local text color:</property>
-                    <property name="hexpand">True</property>
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
                     <property name="wrap-mode">word-char</property>
@@ -878,7 +874,6 @@
                   <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="label" translatable="yes">/me action text color:</property>
-                    <property name="hexpand">True</property>
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
                     <property name="wrap-mode">word-char</property>
@@ -921,7 +916,6 @@
                   <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="label" translatable="yes">Highlighted text color:</property>
-                    <property name="hexpand">True</property>
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
                     <property name="wrap-mode">word-char</property>
@@ -964,7 +958,6 @@
                   <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="label" translatable="yes">URL link text color:</property>
-                    <property name="hexpand">True</property>
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
                     <property name="wrap-mode">word-char</property>
@@ -1007,7 +1000,6 @@
                   <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="label" translatable="yes">Online text color:</property>
-                    <property name="hexpand">True</property>
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
                     <property name="wrap-mode">word-char</property>
@@ -1050,7 +1042,6 @@
                   <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="label" translatable="yes">Offline text color:</property>
-                    <property name="hexpand">True</property>
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
                     <property name="wrap-mode">word-char</property>
@@ -1093,7 +1084,6 @@
                   <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="label" translatable="yes">Away text color:</property>
-                    <property name="hexpand">True</property>
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
                     <property name="wrap-mode">word-char</property>
@@ -1161,14 +1151,13 @@
                   <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="label" translatable="yes">Text entry background color:</property>
-                    <property name="hexpand">True</property>
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
                     <property name="wrap-mode">word-char</property>
                     <property name="mnemonic-widget">PickBackground</property>
                   </object>
                 </child>
-                                <child>
+                <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
                     <property name="spacing">12</property>
@@ -1204,7 +1193,6 @@
                   <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="label" translatable="yes">Text entry text color:</property>
-                    <property name="hexpand">True</property>
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
                     <property name="wrap-mode">word-char</property>
@@ -1278,7 +1266,6 @@
                   <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="label" translatable="yes">Regular tab label color:</property>
-                    <property name="hexpand">True</property>
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
                     <property name="wrap-mode">word-char</property>
@@ -1321,7 +1308,6 @@
                   <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="label" translatable="yes">Changed tab label color:</property>
-                    <property name="hexpand">True</property>
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
                     <property name="wrap-mode">word-char</property>
@@ -1364,7 +1350,6 @@
                   <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="label" translatable="yes">Highlighted tab label color:</property>
-                    <property name="hexpand">True</property>
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
                     <property name="wrap-mode">word-char</property>
@@ -1426,7 +1411,6 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">True</property>
-                <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Global font:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
@@ -1474,7 +1458,6 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">True</property>
-                <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Chat font:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
@@ -1522,7 +1505,6 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">True</property>
-                <property name="hexpand">True</property>
                 <property name="label" translatable="yes">List font:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
@@ -1570,7 +1552,6 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">True</property>
-                <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Transfers font:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
@@ -1618,7 +1599,6 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">True</property>
-                <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Search font:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
@@ -1666,7 +1646,6 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">True</property>
-                <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Browse font:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
@@ -1739,7 +1718,6 @@
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">True</property>
-                    <property name="hexpand">True</property>
                     <property name="label" translatable="yes">Icon theme folder:</property>
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
@@ -1750,7 +1728,6 @@
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
-                    <property name="hexpand">True</property>
                     <property name="valign">center</property>
                     <child>
                       <object class="GtkButton" id="ThemeDir">

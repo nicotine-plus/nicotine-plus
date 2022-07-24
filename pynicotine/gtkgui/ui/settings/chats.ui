@@ -326,7 +326,6 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">True</property>
-                <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Private chat format:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
@@ -337,7 +336,6 @@
             <child>
               <object class="GtkEntry" id="PrivateChatFormat">
                 <property name="visible">True</property>
-                <property name="hexpand">True</property>
                 <property name="valign">center</property>
                 <property name="tooltip-text">https://docs.python.org/3/library/time.html</property>
                 <property name="width-chars">14</property>
@@ -356,7 +354,6 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">True</property>
-                <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Chat room format:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
@@ -367,7 +364,6 @@
             <child>
               <object class="GtkEntry" id="ChatRoomFormat">
                 <property name="visible">True</property>
-                <property name="hexpand">True</property>
                 <property name="valign">center</property>
                 <property name="tooltip-text">https://docs.python.org/3/library/time.html</property>
                 <property name="width-chars">14</property>
@@ -411,7 +407,6 @@
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
-                <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Text-to-Speech command:</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
@@ -421,7 +416,6 @@
             <child>
               <object class="GtkComboBoxText" id="TTSCommand">
                 <property name="visible">True</property>
-                <property name="hexpand">True</property>
                 <property name="valign">center</property>
                 <property name="has-entry">True</property>
                 <items>
@@ -447,7 +441,6 @@
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
-                <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Private chat message:</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
@@ -457,7 +450,6 @@
             <child>
               <object class="GtkEntry" id="PrivateMessage">
                 <property name="visible">True</property>
-                <property name="hexpand">True</property>
                 <property name="valign">center</property>
                 <property name="width-chars">14</property>
                 <property name="secondary-icon-name">edit-undo-symbolic</property>
@@ -476,7 +468,6 @@
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
-                <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Chat room message:</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
@@ -486,7 +477,6 @@
             <child>
               <object class="GtkEntry" id="RoomMessage">
                 <property name="visible">True</property>
-                <property name="hexpand">True</property>
                 <property name="valign">center</property>
                 <property name="width-chars">14</property>
                 <property name="secondary-icon-name">edit-undo-symbolic</property>
