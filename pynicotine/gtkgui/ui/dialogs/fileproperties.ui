@@ -149,7 +149,7 @@
         </child>
         <child>
           <object class="GtkBox" id="path_row">
-            <property name="visible">True</property>
+            <property name="visible">False</property>
             <property name="spacing">12</property>
             <child>
               <object class="GtkLabel" id="_path_label">
@@ -174,7 +174,7 @@
         </child>
         <child>
           <object class="GtkBox" id="length_row">
-            <property name="visible">True</property>
+            <property name="visible">False</property>
             <property name="spacing">12</property>
             <child>
               <object class="GtkLabel" id="_length_label">
@@ -201,7 +201,7 @@
         </child>
         <child>
           <object class="GtkBox" id="bitrate_row">
-            <property name="visible">True</property>
+            <property name="visible">False</property>
             <property name="spacing">12</property>
             <child>
               <object class="GtkLabel" id="_bitrate_label">
@@ -253,7 +253,7 @@
         </child>
         <child>
           <object class="GtkBox" id="queue_row">
-            <property name="visible">True</property>
+            <property name="visible">False</property>
             <property name="spacing">12</property>
             <child>
               <object class="GtkLabel" id="_queue_label">
@@ -278,7 +278,7 @@
         </child>
         <child>
           <object class="GtkBox" id="speed_row">
-            <property name="visible">True</property>
+            <property name="visible">False</property>
             <property name="spacing">12</property>
             <child>
               <object class="GtkLabel" id="_speed_label">
@@ -303,7 +303,7 @@
         </child>
         <child>
           <object class="GtkBox" id="country_row">
-            <property name="visible">True</property>
+            <property name="visible">False</property>
             <property name="spacing">12</property>
             <child>
               <object class="GtkLabel" id="_country_label">

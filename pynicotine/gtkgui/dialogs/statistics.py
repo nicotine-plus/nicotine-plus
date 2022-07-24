@@ -19,20 +19,18 @@
 from gi.repository import Gtk
 
 from pynicotine.config import config
-from pynicotine.gtkgui.widgets.dialogs import dialog_hide
-from pynicotine.gtkgui.widgets.dialogs import dialog_show
-from pynicotine.gtkgui.widgets.dialogs import generic_dialog
+from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.utils import human_size
 from pynicotine.utils import humanize
 
 
-class Statistics(UserInterface):
+class Statistics(UserInterface, Dialog):
 
     def __init__(self, frame, core):
 
-        super().__init__("ui/dialogs/statistics.ui")
+        UserInterface.__init__(self, "ui/dialogs/statistics.ui")
         (
             self.completed_downloads_session_label,
             self.completed_downloads_total_label,
@@ -51,17 +49,19 @@ class Statistics(UserInterface):
             self.uploaded_size_total_label
         ) = self.widgets
 
-        self.frame = frame
-        self.core = core
-        self.dialog = generic_dialog(
+        Dialog.__init__(
+            self,
             parent=frame.window,
             content_box=self.container,
             buttons=[(self.reset_button, Gtk.ResponseType.HELP)],
-            quit_callback=self.hide,
+            show_callback=self.on_show,
             title=_("Transfer Statistics"),
             width=450,
-            resizable=False
+            resizable=False,
+            close_destroy=False
         )
+
+        self.core = core
 
         # Initialize stats
         for stat_id in config.defaults["statistics"]:
@@ -94,10 +94,5 @@ class Statistics(UserInterface):
             callback=self.on_reset_statistics_response
         ).show()
 
-    def hide(self, *_args):
-        dialog_hide(self.dialog)
-        return True
-
-    def show(self):
+    def on_show(self, *_args):
         self.current_session_label.grab_focus()
-        dialog_show(self.dialog)

@@ -39,10 +39,8 @@ from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
 from pynicotine.gtkgui.widgets.filechooser import FileChooserSave
 from pynicotine.gtkgui.widgets.filechooser import FolderChooser
-from pynicotine.gtkgui.widgets.dialogs import dialog_hide
-from pynicotine.gtkgui.widgets.dialogs import dialog_show
+from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
-from pynicotine.gtkgui.widgets.dialogs import generic_dialog
 from pynicotine.gtkgui.widgets.dialogs import MessageDialog
 from pynicotine.gtkgui.widgets.dialogs import PluginSettingsDialog
 from pynicotine.gtkgui.widgets.textview import TextView
@@ -2243,11 +2241,11 @@ class PluginsFrame(UserInterface):
         ).show()
 
 
-class Preferences(UserInterface):
+class Preferences(UserInterface, Dialog):
 
     def __init__(self, frame, core):
 
-        super().__init__("ui/dialogs/preferences.ui")
+        UserInterface.__init__(self, "ui/dialogs/preferences.ui")
         (
             self.apply_button,
             self.cancel_button,
@@ -2259,9 +2257,8 @@ class Preferences(UserInterface):
             self.viewport
         ) = self.widgets
 
-        self.frame = frame
-        self.core = core
-        self.dialog = generic_dialog(
+        Dialog.__init__(
+            self,
             parent=frame.window,
             content_box=self.container,
             buttons=[(self.cancel_button, Gtk.ResponseType.CANCEL),
@@ -2269,11 +2266,15 @@ class Preferences(UserInterface):
                      (self.apply_button, Gtk.ResponseType.APPLY),
                      (self.ok_button, Gtk.ResponseType.OK)],
             default_response=Gtk.ResponseType.OK,
-            quit_callback=self.on_cancel,
+            close_callback=self.on_close,
             title=_("Preferences"),
             width=960,
-            height=650
+            height=650,
+            close_destroy=False
         )
+
+        self.frame = frame
+        self.core = core
 
         # Scroll to focused widgets
         if GTK_API_VERSION == 3:
@@ -2642,7 +2643,7 @@ class Preferences(UserInterface):
         if rescan_required:
             self.core.shares.rescan_shares()
 
-        self.hide()
+        self.close()
 
         if not config.sections["ui"]["trayicon"]:
             self.frame.show()
@@ -2747,7 +2748,7 @@ class Preferences(UserInterface):
         self.content.get_vadjustment().set_value(0)
 
     def on_cancel(self, *_args):
-        self.hide()
+        self.close()
 
     def on_apply(self, *_args):
         self.update_settings()
@@ -2755,12 +2756,5 @@ class Preferences(UserInterface):
     def on_ok(self, *_args):
         self.update_settings(settings_closed=True)
 
-    def hide(self):
-
-        # Scroll to the top
+    def on_close(self, *_args):
         self.content.get_vadjustment().set_value(0)
-
-        dialog_hide(self.dialog)
-
-    def show(self, *_args):
-        dialog_show(self.dialog)

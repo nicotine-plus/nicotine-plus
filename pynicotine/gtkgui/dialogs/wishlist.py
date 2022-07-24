@@ -20,10 +20,8 @@ from gi.repository import GLib
 
 from pynicotine.config import config
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
-from pynicotine.gtkgui.widgets.dialogs import dialog_hide
-from pynicotine.gtkgui.widgets.dialogs import dialog_show
+from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
-from pynicotine.gtkgui.widgets.dialogs import generic_dialog
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
@@ -31,28 +29,29 @@ from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.ui import UserInterface
 
 
-class WishList(UserInterface):
+class WishList(UserInterface, Dialog):
 
     def __init__(self, frame, core, searches):
 
-        super().__init__("ui/dialogs/wishlist.ui")
+        UserInterface.__init__(self, "ui/dialogs/wishlist.ui")
         (
             self.container,
             self.list_container,
             self.wish_entry
         ) = self.widgets
 
-        self.dialog = generic_dialog(
+        Dialog.__init__(
+            self,
             parent=frame.window,
             modal=False,
             content_box=self.container,
-            quit_callback=self.hide,
+            show_callback=self.on_show,
             title=_("Wishlist"),
             width=600,
-            height=600
+            height=600,
+            close_destroy=False
         )
 
-        self.frame = frame
         self.core = core
         self.searches = searches
         self.timer = None
@@ -191,9 +190,8 @@ class WishList(UserInterface):
         for widget in self.__dict__.values():
             update_widget_visuals(widget)
 
-    def show(self, *_args):
+    def on_show(self, *_args):
 
-        dialog_show(self.dialog)
         page = self.searches.get_nth_page(self.searches.get_current_page())
 
         if page is None:
@@ -223,7 +221,3 @@ class WishList(UserInterface):
         self.list_view.unselect_all_rows()
         self.wish_entry.set_text(text)
         self.wish_entry.grab_focus()
-
-    def hide(self, *_args):
-        dialog_hide(self.dialog)
-        return True

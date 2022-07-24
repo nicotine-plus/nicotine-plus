@@ -25,19 +25,17 @@ from gi.repository import Gtk
 from pynicotine.config import config
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
 from pynicotine.gtkgui.widgets.filechooser import FolderChooser
-from pynicotine.gtkgui.widgets.dialogs import dialog_hide
-from pynicotine.gtkgui.widgets.dialogs import dialog_show
-from pynicotine.gtkgui.widgets.dialogs import generic_dialog
+from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.utils import open_uri
 
 
-class FastConfigure(UserInterface):
+class FastConfigure(UserInterface, Dialog):
 
     def __init__(self, frame, core):
 
-        super().__init__("ui/dialogs/fastconfigure.ui")
+        UserInterface.__init__(self, "ui/dialogs/fastconfigure.ui")
         (
             self.account_page,
             self.check_port_label,
@@ -55,23 +53,25 @@ class FastConfigure(UserInterface):
             self.welcome_page
         ) = self.widgets
 
-        self.frame = frame
-        self.core = core
-        self.pages = [self.welcome_page, self.account_page, self.port_page, self.share_page, self.summary_page]
-        self.finished = False
-
-        self.dialog = generic_dialog(
+        Dialog.__init__(
+            self,
             parent=frame.window,
             content_box=self.stack,
             buttons=[(self.previous_button, Gtk.ResponseType.HELP),
                      (self.next_button, Gtk.ResponseType.APPLY)],
             default_response=Gtk.ResponseType.APPLY,
-            quit_callback=self.hide,
+            show_callback=self.on_show,
+            close_callback=self.on_close,
             title=_("Setup Assistant"),
             width=720,
             height=450,
-            resizable=False
+            resizable=False,
+            close_destroy=False
         )
+
+        self.core = core
+        self.pages = [self.welcome_page, self.account_page, self.port_page, self.share_page, self.summary_page]
+        self.finished = False
 
         self.main_icon.set_property("icon-name", config.application_id)
 
@@ -165,7 +165,7 @@ class FastConfigure(UserInterface):
     def on_next(self, *_args):
 
         if self.finished:
-            self.hide()
+            self.close()
             return
 
         start_page_index = self.pages.index(self.stack.get_visible_child()) + 1
@@ -184,9 +184,7 @@ class FastConfigure(UserInterface):
                 self.stack.set_visible_child(page)
                 return
 
-    def hide(self, *_args):
-
-        dialog_hide(self.dialog)
+    def on_close(self, *_args):
 
         if not self.finished:
             return True
@@ -205,7 +203,7 @@ class FastConfigure(UserInterface):
         self.core.connect()
         return True
 
-    def show(self):
+    def on_show(self, *_args):
 
         self.stack.set_visible_child(self.welcome_page)
 
@@ -234,5 +232,3 @@ class FastConfigure(UserInterface):
         for entry in self.shared_folders:
             virtual_name, path = entry
             self.shares_list_view.add_row([str(virtual_name), str(path)], select_row=False)
-
-        dialog_show(self.dialog)

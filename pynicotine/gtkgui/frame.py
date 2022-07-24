@@ -543,6 +543,9 @@ class NicotineFrame(UserInterface):
         open_uri(config.privileges_url % login)
         self.core.request_check_privileges()
 
+    def on_wishlist(self, *_args):
+        self.search.wish_list.show()
+
     def on_fast_configure(self, *_args):
         self.setup()
 
@@ -877,7 +880,7 @@ class NicotineFrame(UserInterface):
         self.window.add_action(self.search_mode_action)
 
         action = Gio.SimpleAction(name="wishlist")
-        action.connect("activate", self.search.wish_list.show)
+        action.connect("activate", self.on_wishlist)
         self.application.add_action(action)
         self.application.set_accels_for_action("app.wishlist", ["<Shift><Primary>w"])
 

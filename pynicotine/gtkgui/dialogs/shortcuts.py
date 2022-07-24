@@ -18,21 +18,23 @@
 
 from gi.repository import Gtk
 
-from pynicotine.gtkgui.widgets.dialogs import dialog_hide
-from pynicotine.gtkgui.widgets.dialogs import dialog_show
-from pynicotine.gtkgui.widgets.dialogs import set_dialog_properties
+from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.gtkgui.widgets.ui import UserInterface
 
 
-class Shortcuts(UserInterface):
+class Shortcuts(UserInterface, Dialog):
 
     def __init__(self, frame):
 
-        super().__init__("ui/dialogs/shortcuts.ui")
+        UserInterface.__init__(self, "ui/dialogs/shortcuts.ui")
         self.dialog, self.emoji_shortcut = self.widgets
 
-        self.frame = frame
-        set_dialog_properties(self.dialog, frame.window, quit_callback=self.hide)
+        Dialog.__init__(
+            self,
+            dialog=self.dialog,
+            parent=frame.window,
+            close_destroy=False
+        )
         frame.window.set_help_overlay(self.dialog)
 
         if hasattr(Gtk.Entry.props, "show-emoji-icon"):
@@ -40,12 +42,5 @@ class Shortcuts(UserInterface):
             self.emoji_shortcut.show()
 
         # Workaround for off-centered dialog on first run
-        dialog_show(self.dialog)
-        dialog_hide(self.dialog)
-
-    def hide(self, *_args):
-        dialog_hide(self.dialog)
-        return True
-
-    def show(self):
-        dialog_show(self.dialog)
+        self.dialog.show()
+        self.dialog.hide()

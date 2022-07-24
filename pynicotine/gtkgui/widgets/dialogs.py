@@ -26,100 +26,116 @@ from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
 """ Dialogs """
 
 
-def generic_dialog(parent=None, content_box=None, buttons=None, default_response=None, quit_callback=None,
-                   title="Dialog", width=400, height=400, modal=True, resizable=True):
+class Dialog:
 
-    dialog = Gtk.Dialog(
-        use_header_bar=config.sections["ui"]["header_bar"],
-        title=title,
-        default_width=width,
-        default_height=height,
-        resizable=resizable
-    )
-    dialog.get_style_context().add_class("generic-dialog")
+    def __init__(self, dialog=None, parent=None, content_box=None, buttons=None, default_response=None,
+                 show_callback=None, close_callback=None, title="Dialog", width=400, height=400,
+                 modal=True, resizable=True, close_destroy=True):
 
-    if content_box:
-        if GTK_API_VERSION >= 4:
-            dialog.get_content_area().append(content_box)
-        else:
-            dialog.get_content_area().add(content_box)
+        if dialog:
+            self.dialog = dialog
+            self._set_dialog_properties(parent, modal, close_destroy, show_callback, close_callback)
+            return
 
-    if buttons:
-        for button, response_type in buttons:
-            dialog.add_action_widget(button, response_type)
-
-    if default_response:
-        if GTK_API_VERSION == 3:
-            dialog.get_widget_for_response(default_response).set_can_default(True)
-
-        dialog.set_default_response(default_response)
-
-    set_dialog_properties(dialog, parent, quit_callback, modal)
-    return dialog
-
-
-def set_dialog_properties(dialog, parent, quit_callback=None, modal=True):
-
-    if GTK_API_VERSION >= 4:
-        if quit_callback:
-            dialog.connect("close-request", quit_callback)
-    else:
-        dialog.set_property("window-position", Gtk.WindowPosition.CENTER_ON_PARENT)
-        dialog.set_type_hint(Gdk.WindowTypeHint.DIALOG)
-
-        if quit_callback:
-            dialog.connect("delete-event", quit_callback)
-
-        if isinstance(dialog, Gtk.Dialog):
-            content_area = dialog.get_content_area()
-            content_area.set_border_width(0)
-
-    dialog.set_modal(modal)
-    dialog.set_transient_for(parent)
-
-
-def dialog_show(dialog):
-
-    parent = dialog.get_transient_for()
-
-    # Shrink the dialog if it's larger than the main window
-    if GTK_API_VERSION >= 4:
-        main_window_width = parent.get_width()
-        main_window_height = parent.get_height()
-        dialog_width, dialog_height = dialog.get_default_size()
-    else:
-        main_window_width, main_window_height = parent.get_size()
-        dialog_width, dialog_height = dialog.get_size()
-
-    if dialog_width > main_window_width:
-        dialog_width = main_window_width - 30
-
-    if dialog_height > main_window_height:
-        dialog_height = main_window_height - 30
-
-    if dialog_width > 0 and dialog_height > 0:
-        if GTK_API_VERSION >= 4:
-            dialog.set_default_size(dialog_width, dialog_height)
-        else:
-            dialog.resize(dialog_width, dialog_height)
-
-    # Show the dialog
-    dialog.present()
-
-    if GTK_API_VERSION == 3:
-        dialog.get_window().set_functions(
-            Gdk.WMFunction.RESIZE | Gdk.WMFunction.MOVE | Gdk.WMFunction.CLOSE
+        self.dialog = Gtk.Dialog(
+            use_header_bar=config.sections["ui"]["header_bar"],
+            title=title,
+            default_width=width,
+            default_height=height,
+            resizable=resizable
         )
+        dialog_content_area = self.dialog.get_content_area()
+        self.dialog.get_style_context().add_class("generic-dialog")
 
+        if buttons:
+            for button, response_type in buttons:
+                self.dialog.add_action_widget(button, response_type)
 
-def dialog_hide(dialog):
+        if GTK_API_VERSION >= 4:
+            if content_box:
+                dialog_content_area.append(content_box)
+        else:
+            if content_box:
+                dialog_content_area.add(content_box)
 
-    # Hide the dialog
-    dialog.hide()
+            if default_response:
+                self.dialog.get_widget_for_response(default_response).set_can_default(True)
 
-    # "Soft-delete" the dialog. This is necessary to prevent the dialog from
-    # appearing in window peek on Windows
-    dialog.unrealize()
+            dialog_content_area.set_border_width(0)
+
+        if default_response:
+            self.dialog.set_default_response(default_response)
+
+        self._set_dialog_properties(parent, modal, close_destroy, show_callback, close_callback)
+
+    def on_close_hide(self, *_args):
+
+        # Hide the dialog
+        self.dialog.hide()
+
+        # "Soft-delete" the dialog. This is necessary to prevent the dialog from
+        # appearing in window peek on Windows
+        self.dialog.unrealize()
+
+        return True
+
+    def _set_dialog_properties(self, parent, modal=True, close_destroy=False,
+                               show_callback=None, close_callback=None):
+
+        if GTK_API_VERSION >= 4:
+            if not close_destroy:
+                self.dialog.connect("close-request", self.on_close_hide)
+        else:
+            self.dialog.set_property("window-position", Gtk.WindowPosition.CENTER_ON_PARENT)
+            self.dialog.set_type_hint(Gdk.WindowTypeHint.DIALOG)
+
+            if not close_destroy:
+                self.dialog.connect("delete-event", self.on_close_hide)
+
+        if show_callback:
+            self.dialog.connect("show", show_callback)
+
+        if close_callback:
+            self.dialog.connect("hide", close_callback)
+
+        self.dialog.set_modal(modal)
+        self.dialog.set_transient_for(parent)
+
+    def show(self):
+
+        parent = self.dialog.get_transient_for()
+
+        # Shrink the dialog if it's larger than the main window
+        if GTK_API_VERSION >= 4:
+            main_window_width = parent.get_width()
+            main_window_height = parent.get_height()
+            dialog_width, dialog_height = self.dialog.get_default_size()
+        else:
+            main_window_width, main_window_height = parent.get_size()
+            dialog_width, dialog_height = self.dialog.get_size()
+
+        if dialog_width > main_window_width:
+            dialog_width = main_window_width - 30
+
+        if dialog_height > main_window_height:
+            dialog_height = main_window_height - 30
+
+        if dialog_width > 0 and dialog_height > 0:
+            if GTK_API_VERSION >= 4:
+                self.dialog.set_default_size(dialog_width, dialog_height)
+            else:
+                self.dialog.resize(dialog_width, dialog_height)
+
+        # Show the dialog
+        self.dialog.present()
+
+        if GTK_API_VERSION == 3:
+            self.dialog.get_window().set_functions(
+                Gdk.WMFunction.RESIZE | Gdk.WMFunction.MOVE | Gdk.WMFunction.CLOSE
+            )
+
+    def close(self):
+        self.dialog.close()
 
 
 """ Message Dialogs """
@@ -274,7 +290,7 @@ class OptionDialog(MessageDialog):
 """ Plugin Settings Dialog """
 
 
-class PluginSettingsDialog:
+class PluginSettingsDialog(Dialog):
 
     def __init__(self, frame, preferences, plugin_id, plugin_settings):
 
@@ -302,16 +318,16 @@ class PluginSettingsDialog:
         )
         scrolled_window.set_property("child", self.primary_container)
 
-        self.dialog = generic_dialog(
+        super().__init__(
             parent=preferences.dialog,
             content_box=scrolled_window,
             buttons=[(cancel_button, Gtk.ResponseType.CANCEL),
                      (ok_button, Gtk.ResponseType.OK)],
             default_response=Gtk.ResponseType.OK,
-            quit_callback=self.on_cancel,
             title=_("%s Settings") % plugin_name,
             width=600,
-            height=425
+            height=425,
+            close_destroy=True
         )
         self.dialog.get_style_context().add_class("preferences")
 
@@ -584,7 +600,7 @@ class PluginSettingsDialog:
             treeview.remove_row(iterator)
 
     def on_cancel(self, *_args):
-        self.dialog.destroy()
+        self.close()
 
     def on_ok(self, *_args):
 
@@ -597,7 +613,4 @@ class PluginSettingsDialog:
         self.frame.core.pluginhandler.plugin_settings(
             self.plugin_id, self.frame.core.pluginhandler.enabled_plugins[self.plugin_id])
 
-        self.dialog.destroy()
-
-    def show(self):
-        dialog_show(self.dialog)
+        self.close()
