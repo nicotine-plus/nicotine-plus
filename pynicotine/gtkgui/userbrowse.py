@@ -60,6 +60,8 @@ class UserBrowses(IconNotebook):
         IconNotebook.__init__(self, frame, core, frame.userbrowse_notebook, frame.userbrowse_page)
         self.notebook.connect("switch-page", self.on_switch_browse_page)
 
+        self.file_properties = FileProperties(frame, core)
+
     def on_switch_browse_page(self, _notebook, page, _page_num):
 
         if self.frame.current_page_id != self.frame.userbrowse_page.id:
@@ -1103,7 +1105,8 @@ class UserBrowse(UserInterface):
                              "length": model.get_value(iterator, 3)})
 
         if data:
-            FileProperties(self.frame, self.core, data, selected_size, selected_length).show()
+            self.userbrowses.file_properties.update_properties(data, selected_size, selected_length)
+            self.userbrowses.file_properties.show()
 
     def on_copy_file_path(self, *_args):
 
