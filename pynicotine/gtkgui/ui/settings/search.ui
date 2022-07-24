@@ -224,6 +224,7 @@
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">File type, e.g. flac|wav|ape or !mp3|!m4a</property>
                     <property name="valign">center</property>
+                    <property name="max-width-chars">26</property>
                     <property name="width-chars">16</property>
                   </object>
                 </child>
@@ -253,6 +254,7 @@
                   <object class="GtkEntry" id="FilterSize">
                     <property name="visible">True</property>
                     <property name="valign">center</property>
+                    <property name="max-width-chars">26</property>
                     <property name="width-chars">16</property>
                   </object>
                 </child>
@@ -282,6 +284,7 @@
                   <object class="GtkEntry" id="FilterBR">
                     <property name="visible">True</property>
                     <property name="valign">center</property>
+                    <property name="max-width-chars">26</property>
                     <property name="width-chars">16</property>
                   </object>
                 </child>
@@ -312,6 +315,7 @@
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Country code, e.g. US|GB|ES or !DE|!GB</property>
                     <property name="valign">center</property>
+                    <property name="max-width-chars">26</property>
                     <property name="width-chars">16</property>
                   </object>
                 </child>
