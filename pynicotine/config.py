@@ -192,7 +192,7 @@ class Config:
                 "usernamesubfolders": False,
                 "shared": [],
                 "buddyshared": [],
-                "uploadbandwidth": 10,
+                "uploadbandwidth": 50,
                 "uselimit": False,
                 "usealtlimits": False,
                 "uploadlimit": 1000,
@@ -235,8 +235,8 @@ class Config:
                     ["thumbs.db", 1],
                     ["albumart(_{........-....-....-....-............}_)?(_?(large|small))?\\.jpg", 0]
                 ],
-                "download_doubleclick": 1,
-                "upload_doubleclick": 1,
+                "download_doubleclick": 2,
+                "upload_doubleclick": 2,
                 "downloadsexpanded": True,
                 "uploadsexpanded": True
             },
@@ -304,7 +304,7 @@ class Config:
             "searches": {
                 "expand_searches": True,
                 "group_searches": "folder_grouping",
-                "maxresults": 50,
+                "maxresults": 100,
                 "enable_history": True,
                 "history": [],
                 "enablefilters": False,
@@ -391,7 +391,7 @@ class Config:
                 "speechprivate": "User %(user)s told you: %(message)s",
                 "speechrooms": "In room %(room)s, user %(user)s said: %(message)s",
                 "speechcommand": "flite -t $",
-                "width": 1000,
+                "width": 800,
                 "height": 600,
                 "xposition": -1,
                 "yposition": -1,
