@@ -33,6 +33,10 @@ class WishList(UserInterface, Dialog):
 
     def __init__(self, frame, core, searches):
 
+        self.core = core
+        self.searches = searches
+        self.timer = None
+
         UserInterface.__init__(self, "ui/dialogs/wishlist.ui")
         (
             self.container,
@@ -51,10 +55,6 @@ class WishList(UserInterface, Dialog):
             height=600,
             close_destroy=False
         )
-
-        self.core = core
-        self.searches = searches
-        self.timer = None
 
         self.list_view = TreeView(
             frame, parent=self.list_container, multi_select=True, activate_row_callback=self.on_edit_wish,

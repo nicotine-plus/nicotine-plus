@@ -30,6 +30,12 @@ class FileProperties(UserInterface, Dialog):
 
     def __init__(self, frame, core, properties, total_size=0, total_length=0, download_button=True):
 
+        self.core = core
+        self.properties = properties
+        self.total_size = total_size
+        self.total_length = total_length
+        self.current_index = 0
+
         UserInterface.__init__(self, "ui/dialogs/fileproperties.ui")
         (
             self.bitrate_row,
@@ -53,12 +59,6 @@ class FileProperties(UserInterface, Dialog):
             self.speed_value_label,
             self.username_value_label
         ) = self.widgets
-
-        self.core = core
-        self.properties = properties
-        self.total_size = total_size
-        self.total_length = total_length
-        self.current_index = 0
 
         buttons = [(self.previous_button, Gtk.ResponseType.HELP),
                    (self.next_button, Gtk.ResponseType.HELP)]

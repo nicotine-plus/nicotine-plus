@@ -2245,6 +2245,9 @@ class Preferences(UserInterface, Dialog):
 
     def __init__(self, frame, core):
 
+        self.frame = frame
+        self.core = core
+
         UserInterface.__init__(self, "ui/dialogs/preferences.ui")
         (
             self.apply_button,
@@ -2272,9 +2275,6 @@ class Preferences(UserInterface, Dialog):
             height=650,
             close_destroy=False
         )
-
-        self.frame = frame
-        self.core = core
 
         # Scroll to focused widgets
         if GTK_API_VERSION == 3:

@@ -30,6 +30,8 @@ class Statistics(UserInterface, Dialog):
 
     def __init__(self, frame, core):
 
+        self.core = core
+
         UserInterface.__init__(self, "ui/dialogs/statistics.ui")
         (
             self.completed_downloads_session_label,
@@ -60,8 +62,6 @@ class Statistics(UserInterface, Dialog):
             resizable=False,
             close_destroy=False
         )
-
-        self.core = core
 
         # Initialize stats
         for stat_id in config.defaults["statistics"]:

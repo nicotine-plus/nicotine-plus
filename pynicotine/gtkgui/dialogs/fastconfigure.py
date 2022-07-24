@@ -35,6 +35,9 @@ class FastConfigure(UserInterface, Dialog):
 
     def __init__(self, frame, core):
 
+        self.core = core
+        self.finished = False
+
         UserInterface.__init__(self, "ui/dialogs/fastconfigure.ui")
         (
             self.account_page,
@@ -53,6 +56,8 @@ class FastConfigure(UserInterface, Dialog):
             self.welcome_page
         ) = self.widgets
 
+        self.pages = [self.welcome_page, self.account_page, self.port_page, self.share_page, self.summary_page]
+
         Dialog.__init__(
             self,
             parent=frame.window,
@@ -68,10 +73,6 @@ class FastConfigure(UserInterface, Dialog):
             resizable=False,
             close_destroy=False
         )
-
-        self.core = core
-        self.pages = [self.welcome_page, self.account_page, self.port_page, self.share_page, self.summary_page]
-        self.finished = False
 
         self.main_icon.set_property("icon-name", config.application_id)
 
