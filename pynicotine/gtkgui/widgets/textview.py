@@ -81,82 +81,76 @@ class TextView:
 
         self.adjustment.set_value(self.adjustment.get_upper() - self.adjustment.get_page_size())
 
+    def _insert_text(self, text, tag=None):
+
+        if not text:
+            return
+
+        iterator = self.textbuffer.get_end_iter()
+
+        if tag is not None:
+            start_offset = iterator.get_offset()
+
+        self.textbuffer.insert(iterator, text)
+
+        if tag is not None:
+            start_iter = self.textbuffer.get_iter_at_offset(start_offset)
+            self.textbuffer.apply_tag(tag, start_iter, iterator)
+
+    def _remove_old_lines(self, num_lines):
+
+        if num_lines < self.max_num_lines:
+            return
+
+        start_iter = self.textbuffer.get_start_iter()
+        end_iter = self.textbuffer.get_iter_at_line(num_lines - self.max_num_lines)
+
+        if GTK_API_VERSION >= 4:
+            _position_found, end_iter = end_iter
+
+        self.tag_urls.pop(end_iter, None)
+        self.textbuffer.delete(start_iter, end_iter)
+
     def append_line(self, line, tag=None, timestamp=None, timestamp_format=None, username=None,
                     usertag=None, find_urls=True):
 
-        def _append(buffer, text, tag):
-
-            iterator = buffer.get_end_iter()
-
-            if tag is not None:
-                start_offset = iterator.get_offset()
-
-            buffer.insert(iterator, text)
-
-            if tag is not None:
-                start_iter = buffer.get_iter_at_offset(start_offset)
-                buffer.apply_tag(tag, start_iter, iterator)
-
-        def _usertag(buffer, section):
-
-            # Tag usernames with popup menu creating tag, and away/online/offline colors
-            if (username is not None and usertag is not None and config.sections["ui"]["usernamehotspots"]
-                    and username in section):
-                start = section.find(username)
-                end = start + len(username)
-
-                _append(buffer, section[:start], tag)
-                _append(buffer, username, usertag)
-                _append(buffer, section[end:], tag)
-                return
-
-            _append(buffer, section, tag)
-
+        num_lines = self.textbuffer.get_line_count()
         line = str(line).strip("\n")
-        buffer = self.textbuffer
-        num_lines = buffer.get_line_count()
 
         if timestamp_format:
-            if timestamp:
-                final_timestamp = time.strftime(timestamp_format, time.localtime(timestamp)) + " "
-            else:
-                final_timestamp = time.strftime(timestamp_format) + " "
+            line = time.strftime(timestamp_format, time.localtime(timestamp)) + " " + line
 
-            line = final_timestamp + line
-
-        if buffer.get_char_count() > 0:
+        if self.textbuffer.get_char_count() > 0:
             line = "\n" + line
 
+        # Tag usernames with popup menu creating tag, and away/online/offline colors
+        if username and config.sections["ui"]["usernamehotspots"] and username in line:
+            start = line.find(username)
+
+            self._insert_text(line[:start], tag)
+            self._insert_text(username, usertag)
+
+            line = line[start + len(username):]
+
+        # Highlight urls, if found and tag them
         if find_urls and ("://" in line or "www." in line or "mailto:" in line):
             # Match first url
             match = self.url_regex.search(line)
 
-            # Highlight urls, if found and tag them
             while match:
-                _usertag(buffer, line[:match.start()])
+                self._insert_text(line[:match.start()], tag)
 
                 url = match.group()
                 urltag = self.create_tag("urlcolor", url=url)
-                self.tag_urls[buffer.get_end_iter()] = urltag
-                _append(buffer, url, urltag)
+                self.tag_urls[self.textbuffer.get_end_iter()] = urltag
+                self._insert_text(url, urltag)
 
                 # Match remaining url
                 line = line[match.end():]
                 match = self.url_regex.search(line)
 
-        if line:
-            _usertag(buffer, line)
-
-        if num_lines >= self.max_num_lines:
-            # Limit number of lines in textview
-            start_iter = buffer.get_start_iter()
-            end_iter = buffer.get_iter_at_line(num_lines - self.max_num_lines)
-
-            if GTK_API_VERSION >= 4:
-                _position_found, end_iter = end_iter
-
-            self.tag_urls.pop(end_iter, None)
-            buffer.delete(start_iter, end_iter)
+        self._insert_text(line, tag)
+        self._remove_old_lines(num_lines)
 
         return num_lines
 
