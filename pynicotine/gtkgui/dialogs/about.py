@@ -332,6 +332,7 @@ Ukrainian
     def __init__(self, frame):
 
         dialog = Gtk.AboutDialog(
+            logo_icon_name=config.application_id,
             comments=config.summary,
             copyright=config.copyright,
             license_type=Gtk.License.GPL_3_0,
@@ -340,12 +341,10 @@ Ukrainian
             authors=self.AUTHORS.splitlines(),
             translator_credits=self.TRANSLATORS + config.translations_url
         )
-        dialog.set_logo_icon_name(config.application_id)
-
-        if GTK_API_VERSION == 3:
-            dialog.connect("response", lambda x, _y: x.destroy())
+        super().__init__(dialog=dialog, parent=frame.window)
 
         # Override link handler with our own
         dialog.connect("activate-link", lambda x, url: open_uri(url))
 
-        super().__init__(dialog=dialog, parent=frame.window)
+        if GTK_API_VERSION == 3:
+            dialog.connect("response", lambda x, _y: x.destroy())
