@@ -218,6 +218,16 @@ def set_global_css():
         -GtkTreeView-vertical-separator: 5;
     }
 
+    treeview:selected {
+        /* Dim selected but unfocused list items */
+        background-color: alpha(@theme_selected_bg_color, 0.5);
+    }
+
+    treeview:selected:focus {
+        /* Highlight selected list item with focus */
+        background-color: @theme_selected_bg_color;
+    }
+
     filechooser treeview,
     fontchooser treeview {
         /* Restore default item spacing in GTK choosers */
