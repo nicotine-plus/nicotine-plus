@@ -87,14 +87,14 @@ class PrivateChats(IconNotebook):
                 self.frame.notifications.clear("private", user)
                 break
 
-    def on_get_private_chat(self, widget, *_args):
+    def on_get_private_chat(self, *_args):
 
-        username = widget.get_text().strip()
+        username = self.frame.private_entry.get_text().strip()
 
         if not username:
             return
 
-        widget.set_text("")
+        self.frame.private_entry.set_text("")
         self.core.privatechats.show_user(username)
 
     def clear_notifications(self):

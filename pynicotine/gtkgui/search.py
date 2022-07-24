@@ -1379,9 +1379,9 @@ class Search(UserInterface):
 
         config.sections["searches"]["expand_searches"] = active
 
-    def on_toggle_filters(self, widget):
+    def on_toggle_filters(self, *_args):
 
-        visible = widget.get_active()
+        visible = self.filters_button.get_active()
         self.filters_container.set_reveal_child(visible)
         config.sections["searches"]["filters_visible"] = visible
 

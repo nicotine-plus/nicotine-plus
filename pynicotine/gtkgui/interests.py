@@ -222,24 +222,24 @@ class Interests(UserInterface):
         self.frame.search_entry.set_text(item)
         self.frame.change_main_page(self.frame.search_page)
 
-    def on_add_thing_i_like(self, widget, *_args):
+    def on_add_thing_i_like(self, *_args):
 
-        item = widget.get_text().strip()
+        item = self.add_like_entry.get_text().strip()
 
         if not item:
             return
 
-        widget.set_text("")
+        self.add_like_entry.set_text("")
         self.core.interests.add_thing_i_like(item)
 
-    def on_add_thing_i_dislike(self, widget, *_args):
+    def on_add_thing_i_dislike(self, *_args):
 
-        item = widget.get_text().strip()
+        item = self.add_dislike_entry.get_text().strip()
 
         if not item:
             return
 
-        widget.set_text("")
+        self.add_dislike_entry.set_text("")
         self.core.interests.add_thing_i_hate(item)
 
     def on_remove_thing_i_like(self, *_args):
