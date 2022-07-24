@@ -4,27 +4,23 @@
   <object class="GtkAdjustment" id="adjustment_FirstPort">
     <property name="lower">1024</property>
     <property name="upper">65535</property>
-    <property name="value">2234</property>
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
   <object class="GtkAdjustment" id="adjustment_LastPort">
     <property name="lower">1024</property>
     <property name="upper">65535</property>
-    <property name="value">2239</property>
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
   <object class="GtkAdjustment" id="adjustment_UPnPInterval">
     <property name="upper">148</property>
-    <property name="value">4</property>
     <property name="step-increment">1</property>
-    <property name="page-increment">10</property>
+    <property name="page-increment">1</property>
   </object>
   <object class="GtkAdjustment" id="adjustment_AutoAway">
     <property name="upper">10000</property>
-    <property name="value">15</property>
-    <property name="step-increment">1</property>
+    <property name="step-increment">5</property>
     <property name="page-increment">10</property>
   </object>
   <object class="GtkBox" id="Main">

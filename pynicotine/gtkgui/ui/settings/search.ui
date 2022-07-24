@@ -4,28 +4,19 @@
   <object class="GtkAdjustment" id="adjustment_MaxDisplayedResults">
     <property name="lower">100</property>
     <property name="upper">25000</property>
-    <property name="value">1000</property>
-    <property name="step-increment">10</property>
+    <property name="step-increment">50</property>
     <property name="page-increment">100</property>
   </object>
   <object class="GtkAdjustment" id="adjustment_MinSearchChars">
     <property name="upper">1000</property>
-    <property name="value">3</property>
     <property name="step-increment">1</property>
     <property name="page-increment">5</property>
   </object>
   <object class="GtkAdjustment" id="adjustment_MaxResults">
+    <property name="lower">50</property>
     <property name="upper">100000</property>
-    <property name="value">50</property>
-    <property name="step-increment">1</property>
-    <property name="page-increment">10</property>
-  </object>
-  <object class="GtkAdjustment" id="adjustment_MaxStoredResults">
-    <property name="lower">100</property>
-    <property name="upper">25000</property>
-    <property name="value">1500</property>
     <property name="step-increment">10</property>
-    <property name="page-increment">100</property>
+    <property name="page-increment">50</property>
   </object>
   <object class="GtkBox" id="Main">
     <property name="visible">True</property>
