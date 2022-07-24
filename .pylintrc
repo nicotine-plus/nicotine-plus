@@ -490,7 +490,7 @@ exclude-too-few-public-methods=
 ignored-parents=
 
 # Maximum number of arguments for function / method.
-max-args=12
+max-args=14
 
 # Maximum number of attributes for a class (see R0902).
 max-attributes=150
