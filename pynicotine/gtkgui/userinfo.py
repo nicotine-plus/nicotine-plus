@@ -43,7 +43,6 @@ from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import UserStatus
-from pynicotine.utils import encode_path
 from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
 
@@ -319,7 +318,7 @@ class UserInfo(UserInterface):
         def calc_zoom_in(w_h):
             return w_h + w_h * self.actual_zoom / 100 + w_h * self.zoom_factor / 100
 
-        if self.picture is None or self.picture_data is None or self.actual_zoom >= 100:
+        if self.picture_data is None or self.actual_zoom >= 100:
             return
 
         self.actual_zoom += self.zoom_factor
@@ -334,7 +333,7 @@ class UserInfo(UserInterface):
         def calc_zoom_out(w_h):
             return w_h + w_h * self.actual_zoom / 100 - w_h * self.zoom_factor / 100
 
-        if self.picture is None or self.picture_data is None:
+        if self.picture_data is None:
             return
 
         self.actual_zoom -= self.zoom_factor
@@ -474,13 +473,13 @@ class UserInfo(UserInterface):
     def on_ignore_user(self, *_args):
         self.core.network_filter.ignore_user(self.user)
 
-    def on_save_picture_response(self, selected, _data):
-        self.picture_data.savev(encode_path(selected, prefix=False), "png")
-        log.add(_("Picture saved to %s"), selected)
+    def on_save_picture_response(self, file_path, *_args):
+        _success, picture_bytes = self.picture_data.save_to_bufferv(type="png", option_keys=[], option_values=[])
+        self.core.userinfo.save_user_picture(file_path, picture_bytes)
 
     def on_save_picture(self, *_args):
 
-        if self.picture is None or self.picture_data is None:
+        if self.picture_data is None:
             return
 
         FileChooserSave(
