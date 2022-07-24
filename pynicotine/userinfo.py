@@ -86,6 +86,21 @@ class UserInfo:
         if self.ui_callback:
             self.ui_callback.show_connection_error(username)
 
+    @staticmethod
+    def save_user_picture(file_path, picture_bytes):
+
+        try:
+            with open(encode_path(file_path), "wb") as file_handle:
+                file_handle.write(picture_bytes)
+
+            log.add(_("Picture saved to %s"), file_path)
+
+        except Exception as error:
+            log.add(_("Cannot save picture to %(filename)s: %(error)s"), {
+                "filename": file_path,
+                "error": error
+            })
+
     def message_progress(self, msg):
         if self.ui_callback:
             self.ui_callback.message_progress(msg)
