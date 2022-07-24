@@ -167,7 +167,7 @@
                 <property name="adjustment">adjustment_LimitSpeed</property>
                 <property name="numeric">True</property>
                 <property name="valign">center</property>
-                <property name="width-chars">8</property>
+                <property name="max-width-chars">8</property>
               </object>
             </child>
           </object>
@@ -194,7 +194,7 @@
                 <property name="adjustment">adjustment_LimitSpeedAlternative</property>
                 <property name="numeric">True</property>
                 <property name="valign">center</property>
-                <property name="width-chars">8</property>
+                <property name="max-width-chars">8</property>
               </object>
             </child>
           </object>
@@ -249,7 +249,7 @@
                     <property name="adjustment">adjustment_MaxUserQueue</property>
                     <property name="numeric">True</property>
                     <property name="valign">center</property>
-                    <property name="width-chars">10</property>
+                    <property name="max-width-chars">10</property>
                   </object>
                 </child>
                 <child>
@@ -274,7 +274,7 @@
                 <property name="adjustment">adjustment_MaxUserFiles</property>
                 <property name="numeric">True</property>
                 <property name="valign">center</property>
-                <property name="width-chars">10</property>
+                <property name="max-width-chars">10</property>
               </object>
             </child>
             <child>
@@ -360,7 +360,7 @@ First In, First Out: Files will be uploaded in the order they were queued.</prop
                 <property name="adjustment">adjustment_QueueBandwidth</property>
                 <property name="numeric">True</property>
                 <property name="valign">center</property>
-                <property name="width-chars">8</property>
+                <property name="max-width-chars">8</property>
               </object>
             </child>
           </object>
@@ -385,7 +385,7 @@ First In, First Out: Files will be uploaded in the order they were queued.</prop
                 <property name="adjustment">adjustment_QueueSlots</property>
                 <property name="numeric">True</property>
                 <property name="valign">center</property>
-                <property name="width-chars">8</property>
+                <property name="max-width-chars">8</property>
               </object>
             </child>
           </object>

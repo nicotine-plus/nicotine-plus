@@ -159,7 +159,7 @@
                                     <property name="valign">center</property>
                                     <property name="adjustment">adjustment_FirstPort</property>
                                     <property name="numeric">True</property>
-                                    <property name="width-chars">6</property>
+                                    <property name="max-width-chars">6</property>
                                     <property name="tooltip-text" translatable="yes">First port</property>
                                   </object>
                                 </child>
@@ -186,7 +186,7 @@
                                         <property name="visible">True</property>
                                         <property name="adjustment">adjustment_LastPort</property>
                                         <property name="numeric">True</property>
-                                        <property name="width-chars">6</property>
+                                        <property name="max-width-chars">6</property>
                                         <property name="tooltip-text" translatable="yes">Last port</property>
                                       </object>
                                     </child>
@@ -274,7 +274,7 @@
                     <property name="adjustment">adjustment_AutoAway</property>
                     <property name="numeric">True</property>
                     <property name="valign">center</property>
-                    <property name="width-chars">6</property>
+                    <property name="max-width-chars">6</property>
                   </object>
                 </child>
               </object>
@@ -351,7 +351,7 @@
                 <child>
                   <object class="GtkSpinButton" id="UPnPInterval">
                     <property name="visible">True</property>
-                    <property name="width-chars">6</property>
+                    <property name="max-width-chars">6</property>
                     <property name="adjustment">adjustment_UPnPInterval</property>
                     <property name="numeric">True</property>
                     <property name="valign">center</property>
