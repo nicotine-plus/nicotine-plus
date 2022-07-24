@@ -79,7 +79,7 @@
             <child>
               <object class="GtkSpinButton" id="MaxDisplayedResults">
                 <property name="visible">True</property>
-                <property name="width-chars">9</property>
+                <property name="max-width-chars">9</property>
                 <property name="adjustment">adjustment_MaxDisplayedResults</property>
                 <property name="numeric">True</property>
                 <property name="valign">center</property>
@@ -481,7 +481,7 @@
                 <child>
                   <object class="GtkSpinButton" id="MinSearchChars">
                     <property name="visible">True</property>
-                    <property name="width-chars">9</property>
+                    <property name="max-width-chars">9</property>
                     <property name="adjustment">adjustment_MinSearchChars</property>
                     <property name="numeric">True</property>
                     <property name="valign">center</property>
@@ -507,7 +507,7 @@
                 <child>
                   <object class="GtkSpinButton" id="MaxResults">
                     <property name="visible">True</property>
-                    <property name="width-chars">9</property>
+                    <property name="max-width-chars">9</property>
                     <property name="adjustment">adjustment_MaxResults</property>
                     <property name="numeric">True</property>
                     <property name="valign">center</property>

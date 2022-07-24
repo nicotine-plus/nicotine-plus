@@ -151,7 +151,7 @@
                 <property name="adjustment">adjustment_DownloadSpeed</property>
                 <property name="numeric">True</property>
                 <property name="valign">center</property>
-                <property name="width-chars">8</property>
+                <property name="max-width-chars">8</property>
               </object>
             </child>
           </object>
@@ -178,7 +178,7 @@
                 <property name="adjustment">adjustment_DownloadSpeedAlternative</property>
                 <property name="numeric">True</property>
                 <property name="valign">center</property>
-                <property name="width-chars">8</property>
+                <property name="max-width-chars">8</property>
               </object>
             </child>
           </object>
