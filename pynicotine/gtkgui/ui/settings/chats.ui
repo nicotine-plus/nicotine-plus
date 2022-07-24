@@ -14,9 +14,8 @@
   <object class="GtkAdjustment" id="adjustment_CharactersCompletion">
     <property name="lower">1</property>
     <property name="upper">10</property>
-    <property name="value">2</property>
     <property name="step-increment">1</property>
-    <property name="page-increment">1</property>
+    <property name="page-increment">2</property>
   </object>
   <object class="GtkBox" id="Main">
     <property name="visible">True</property>

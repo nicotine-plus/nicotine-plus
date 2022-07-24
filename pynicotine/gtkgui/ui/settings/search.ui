@@ -15,7 +15,7 @@
   <object class="GtkAdjustment" id="adjustment_MaxResults">
     <property name="lower">50</property>
     <property name="upper">100000</property>
-    <property name="step-increment">10</property>
+    <property name="step-increment">25</property>
     <property name="page-increment">50</property>
   </object>
   <object class="GtkBox" id="Main">
