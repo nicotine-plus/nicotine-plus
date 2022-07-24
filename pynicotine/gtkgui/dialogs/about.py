@@ -347,4 +347,7 @@ Ukrainian
         dialog.connect("activate-link", lambda x, url: open_uri(url))
 
         if GTK_API_VERSION == 3:
-            dialog.connect("response", lambda x, _y: x.destroy())
+            dialog.connect("response", self.on_close)
+
+    def on_close(self, *_args):
+        self.dialog.close()
