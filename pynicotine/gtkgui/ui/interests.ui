@@ -34,7 +34,7 @@
                 <property name="spacing">12</property>
                 <property name="vexpand">True</property>
                 <child>
-                  <object class="GtkEntry">
+                  <object class="GtkEntry" id="add_like_entry">
                     <property name="visible">True</property>
                     <property name="hexpand">True</property>
                     <property name="margin-start">6</property>
@@ -86,7 +86,7 @@
                 <property name="spacing">12</property>
                 <property name="vexpand">True</property>
                 <child>
-                  <object class="GtkEntry">
+                  <object class="GtkEntry" id="add_dislike_entry">
                     <property name="visible">True</property>
                     <property name="hexpand">True</property>
                     <property name="margin-start">6</property>

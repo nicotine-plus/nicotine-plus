@@ -105,6 +105,7 @@ class NicotineFrame(UserInterface):
 
         super().__init__("ui/mainwindow.ui")
         (
+            self.add_buddy_entry,
             self.alt_speed_icon,
             self.buddy_list_container,
             self.chatrooms_buddy_list_container,

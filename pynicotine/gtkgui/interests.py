@@ -42,6 +42,8 @@ class Interests(UserInterface):
 
         super().__init__("ui/interests.ui")
         (
+            self.add_dislike_entry,
+            self.add_like_entry,
             self.container,
             self.dislikes_list_view,
             self.likes_list_view,
