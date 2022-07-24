@@ -71,10 +71,11 @@ class FileProperties(UserInterface, Dialog):
             parent=frame.window,
             content_box=self.container,
             buttons=buttons,
-            show_callback=self.on_show,
             title=_("File Properties"),
             width=600
         )
+
+        self.update_current_file()
 
     def on_previous(self, *_args):
 
@@ -154,6 +155,3 @@ class FileProperties(UserInterface, Dialog):
         self.country_row.set_visible(bool(country))
 
         self.update_title()
-
-    def on_show(self, *_args):
-        self.update_current_file()
