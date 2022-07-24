@@ -20,12 +20,11 @@ from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
-from pynicotine.gtkgui.widgets.dialogs import dialog_show
-from pynicotine.gtkgui.widgets.dialogs import set_dialog_properties
+from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.utils import open_uri
 
 
-class About:
+class About(Dialog):
 
     AUTHORS = """Nicotine+ Team
 –––––––––––––––––––––––––––––––––––––––>
@@ -332,8 +331,7 @@ Ukrainian
 
     def __init__(self, frame):
 
-        self.frame = frame
-        self.dialog = Gtk.AboutDialog(
+        dialog = Gtk.AboutDialog(
             comments=config.summary,
             copyright=config.copyright,
             license_type=Gtk.License.GPL_3_0,
@@ -342,16 +340,12 @@ Ukrainian
             authors=self.AUTHORS.splitlines(),
             translator_credits=self.TRANSLATORS + config.translations_url
         )
-        set_dialog_properties(self.dialog, frame.window)
-        self.dialog.set_logo_icon_name(config.application_id)
+        dialog.set_logo_icon_name(config.application_id)
 
-        if GTK_API_VERSION >= 4:
-            self.dialog.connect("close-request", lambda x: x.destroy())
-        else:
-            self.dialog.connect("response", lambda x, _y: x.destroy())
+        if GTK_API_VERSION == 3:
+            dialog.connect("response", lambda x, _y: x.destroy())
 
         # Override link handler with our own
-        self.dialog.connect("activate-link", lambda x, url: open_uri(url))
+        dialog.connect("activate-link", lambda x, url: open_uri(url))
 
-    def show(self):
-        dialog_show(self.dialog)
+        super().__init__(dialog=dialog, parent=frame.window)

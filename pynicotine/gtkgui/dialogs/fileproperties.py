@@ -19,19 +19,18 @@
 from gi.repository import Gtk
 
 from pynicotine.gtkgui.widgets.ui import UserInterface
-from pynicotine.gtkgui.widgets.dialogs import dialog_show
-from pynicotine.gtkgui.widgets.dialogs import generic_dialog
+from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.utils import human_length
 from pynicotine.utils import human_size
 from pynicotine.utils import human_speed
 from pynicotine.utils import humanize
 
 
-class FileProperties(UserInterface):
+class FileProperties(UserInterface, Dialog):
 
     def __init__(self, frame, core, properties, total_size=0, total_length=0, download_button=True):
 
-        super().__init__("ui/dialogs/fileproperties.ui")
+        UserInterface.__init__(self, "ui/dialogs/fileproperties.ui")
         (
             self.bitrate_row,
             self.bitrate_value_label,
@@ -55,7 +54,6 @@ class FileProperties(UserInterface):
             self.username_value_label
         ) = self.widgets
 
-        self.frame = frame
         self.core = core
         self.properties = properties
         self.total_size = total_size
@@ -68,10 +66,12 @@ class FileProperties(UserInterface):
         if download_button:
             buttons.append((self.download_button, Gtk.ResponseType.NONE))
 
-        self.dialog = generic_dialog(
+        Dialog.__init__(
+            self,
             parent=frame.window,
             content_box=self.container,
             buttons=buttons,
+            show_callback=self.on_show,
             title=_("File Properties"),
             width=600,
             height=0
@@ -156,6 +156,5 @@ class FileProperties(UserInterface):
 
         self.update_title()
 
-    def show(self):
+    def on_show(self, *_args):
         self.update_current_file()
-        dialog_show(self.dialog)
