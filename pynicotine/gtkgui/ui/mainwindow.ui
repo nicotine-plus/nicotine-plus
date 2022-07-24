@@ -1316,7 +1316,7 @@
                                         <property name="halign">start</property>
                                         <property name="valign">center</property>
                                         <child>
-                                          <object class="GtkEntry">
+                                          <object class="GtkEntry" id="add_buddy_entry">
                                             <property name="visible">True</property>
                                             <property name="max-width-chars">45</property>
                                             <property name="width-chars">5</property>
