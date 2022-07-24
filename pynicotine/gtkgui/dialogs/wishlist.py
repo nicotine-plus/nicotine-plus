@@ -103,7 +103,7 @@ class WishList(UserInterface, Dialog):
 
     def on_edit_wish_response(self, dialog, _response_id, old_wish):
 
-        wish = dialog.get_response_value().strip()
+        wish = dialog.get_entry_value().strip()
 
         if not wish:
             return

@@ -238,10 +238,10 @@ class EntryDialog(MessageDialog):
     def on_activate_entry(self, *_args):
         self.dialog.response(Gtk.ResponseType.OK)
 
-    def get_response_value(self):
+    def get_entry_value(self):
         return self.entry.get_text()
 
-    def get_second_response_value(self):
+    def get_option_value(self):
         return self.option.get_active()
 
 

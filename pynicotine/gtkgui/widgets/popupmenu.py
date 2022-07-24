@@ -536,7 +536,7 @@ class UserPopupMenu(PopupMenu):
 
     def on_give_privileges_response(self, dialog, _response_id, _data):
 
-        days = dialog.get_response_value()
+        days = dialog.get_entry_value()
 
         if not days:
             return

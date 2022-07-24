@@ -169,7 +169,7 @@ class NetworkFrame(UserInterface):
 
     def on_change_password_response(self, dialog, _response_id, logged_in):
 
-        password = dialog.get_response_value()
+        password = dialog.get_entry_value()
 
         if logged_in != self.core.logged_in:
             MessageDialog(
@@ -331,8 +331,8 @@ class DownloadsFrame(UserInterface):
 
     def on_add_filter_response(self, dialog, _response_id, _data):
 
-        dfilter = dialog.get_response_value()
-        escaped = dialog.get_second_response_value()
+        dfilter = dialog.get_entry_value()
+        escaped = dialog.get_option_value()
 
         if dfilter in self.filtersiters:
             self.filterlist.set(self.filtersiters[dfilter], 0, dfilter, 1, escaped)
@@ -371,8 +371,8 @@ class DownloadsFrame(UserInterface):
 
     def on_edit_filter_response(self, dialog, _response_id, _data):
 
-        new_dfilter = dialog.get_response_value()
-        escaped = dialog.get_second_response_value()
+        new_dfilter = dialog.get_entry_value()
+        escaped = dialog.get_option_value()
 
         dfilter = self.get_selected_filter()
 
@@ -685,8 +685,8 @@ class SharesFrame(UserInterface):
 
     def on_edit_shared_dir_response(self, dialog, _response_id, path):
 
-        virtual = dialog.get_response_value()
-        buddy_only = dialog.get_second_response_value()
+        virtual = dialog.get_entry_value()
+        buddy_only = dialog.get_option_value()
 
         if not virtual:
             return
@@ -937,7 +937,7 @@ class IgnoredUsersFrame(UserInterface):
 
     def on_add_ignored_response(self, dialog, _response_id, _data):
 
-        user = dialog.get_response_value()
+        user = dialog.get_entry_value()
 
         if user and user not in self.ignored_users:
             self.ignored_users.append(user)
@@ -965,7 +965,7 @@ class IgnoredUsersFrame(UserInterface):
 
     def on_add_ignored_ip_response(self, dialog, _response_id, _data):
 
-        ip_address = dialog.get_response_value()
+        ip_address = dialog.get_entry_value()
 
         if ip_address is None or ip_address == "" or ip_address.count(".") != 3:
             return
@@ -1107,7 +1107,7 @@ class BannedUsersFrame(UserInterface):
 
     def on_add_banned_response(self, dialog, _response_id, _data):
 
-        user = dialog.get_response_value()
+        user = dialog.get_entry_value()
 
         if user and user not in self.banlist:
             self.banlist.append(user)
@@ -1135,7 +1135,7 @@ class BannedUsersFrame(UserInterface):
 
     def on_add_blocked_response(self, dialog, _response_id, _data):
 
-        ip_address = dialog.get_response_value()
+        ip_address = dialog.get_entry_value()
 
         if ip_address is None or ip_address == "" or ip_address.count(".") != 3:
             return
@@ -1309,7 +1309,7 @@ class ChatsFrame(UserInterface):
 
     def on_add_censored_response(self, dialog, _response_id, _data):
 
-        pattern = dialog.get_response_value()
+        pattern = dialog.get_entry_value()
 
         if pattern:
             self.censor_list_model.insert_with_valuesv(-1, [0], [pattern])
