@@ -27,13 +27,14 @@ from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
 
 
 def generic_dialog(parent=None, content_box=None, buttons=None, default_response=None, quit_callback=None,
-                   title="Dialog", width=400, height=400, modal=True):
+                   title="Dialog", width=400, height=400, modal=True, resizable=True):
 
     dialog = Gtk.Dialog(
         use_header_bar=config.sections["ui"]["header_bar"],
         title=title,
         default_width=width,
-        default_height=height
+        default_height=height,
+        resizable=resizable
     )
     dialog.get_style_context().add_class("generic-dialog")
 
