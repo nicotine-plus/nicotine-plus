@@ -73,8 +73,7 @@ class FileProperties(UserInterface, Dialog):
             buttons=buttons,
             show_callback=self.on_show,
             title=_("File Properties"),
-            width=600,
-            height=0
+            width=600
         )
 
     def on_previous(self, *_args):

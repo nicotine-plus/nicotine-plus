@@ -29,8 +29,11 @@ from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
 class Dialog:
 
     def __init__(self, dialog=None, parent=None, content_box=None, buttons=None, default_response=None,
-                 show_callback=None, close_callback=None, title="Dialog", width=400, height=400,
+                 show_callback=None, close_callback=None, title="Dialog", width=0, height=0,
                  modal=True, resizable=True, close_destroy=True):
+
+        self.default_width = width
+        self.default_height = height
 
         if dialog:
             self.dialog = dialog
@@ -44,8 +47,8 @@ class Dialog:
             default_height=height,
             resizable=resizable
         )
-        dialog_content_area = self.dialog.get_content_area()
         self.dialog.get_style_context().add_class("generic-dialog")
+        dialog_content_area = self.dialog.get_content_area()
 
         if buttons:
             for button, response_type in buttons:
@@ -103,28 +106,26 @@ class Dialog:
 
     def show(self):
 
-        parent = self.dialog.get_transient_for()
+        dialog_width = self.default_width
+        dialog_height = self.default_height
 
         # Shrink the dialog if it's larger than the main window
-        if GTK_API_VERSION >= 4:
-            main_window_width = parent.get_width()
-            main_window_height = parent.get_height()
-            dialog_width, dialog_height = self.dialog.get_default_size()
-        else:
-            main_window_width, main_window_height = parent.get_size()
-            dialog_width, dialog_height = self.dialog.get_size()
+        if dialog_width or dialog_height:
+            parent = self.dialog.get_transient_for()
 
-        if dialog_width > main_window_width:
-            dialog_width = main_window_width - 30
-
-        if dialog_height > main_window_height:
-            dialog_height = main_window_height - 30
-
-        if dialog_width > 0 and dialog_height > 0:
             if GTK_API_VERSION >= 4:
-                self.dialog.set_default_size(dialog_width, dialog_height)
+                main_window_width = parent.get_width()
+                main_window_height = parent.get_height()
             else:
-                self.dialog.resize(dialog_width, dialog_height)
+                main_window_width, main_window_height = parent.get_size()
+
+            if dialog_width > main_window_width:
+                dialog_width = main_window_width - 30
+
+            if dialog_height > main_window_height:
+                dialog_height = main_window_height - 30
+
+            self.dialog.set_default_size(dialog_width, dialog_height)
 
         # Show the dialog
         self.dialog.present()
