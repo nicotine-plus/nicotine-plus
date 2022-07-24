@@ -69,7 +69,8 @@ class FastConfigure(UserInterface):
             quit_callback=self.hide,
             title=_("Setup Assistant"),
             width=720,
-            height=450
+            height=450,
+            resizable=False
         )
 
         self.main_icon.set_property("icon-name", config.application_id)

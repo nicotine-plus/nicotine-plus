@@ -59,7 +59,8 @@ class Statistics(UserInterface):
             buttons=[(self.reset_button, Gtk.ResponseType.HELP)],
             quit_callback=self.hide,
             title=_("Transfer Statistics"),
-            width=450
+            width=450,
+            resizable=False
         )
 
         # Initialize stats
