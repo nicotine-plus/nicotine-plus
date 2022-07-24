@@ -183,6 +183,7 @@ class TransferList(UserInterface):
             (">" + _("User(s)"), self.popup_menu_users)
         )
 
+        self.file_properties = FileProperties(self.frame, self.core, download_button=False)
         self.update_visuals()
 
     def create_model(self):
@@ -877,7 +878,8 @@ class TransferList(UserInterface):
             })
 
         if data:
-            FileProperties(self.frame, self.core, data, total_size=selected_size, download_button=False).show()
+            self.file_properties.update_properties(data, total_size=selected_size)
+            self.file_properties.show()
 
     def on_copy_url(self, *_args):
         # Implemented in subclasses
