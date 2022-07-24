@@ -29,24 +29,21 @@ from pynicotine.gtkgui.application import GTK_API_VERSION
 """ File Choosers """
 
 
-# We need to keep a reference to GtkFileChooserNative, as GTK does not keep it alive
-ACTIVE_CHOOSER = None
-
-
 class FileChooser:
+
+    active_chooser = None  # Class variable keeping the file chooser object alive
 
     def __init__(self, parent, callback, callback_data=None, title=_("Select a File"),
                  initial_folder='~', action=Gtk.FileChooserAction.OPEN, buttons=None, multiple=False):
 
-        global ACTIVE_CHOOSER  # pylint:disable=global-statement
         try:
-            self.file_chooser = ACTIVE_CHOOSER = Gtk.FileChooserNative(
+            self.file_chooser = Gtk.FileChooserNative(
                 transient_for=parent,
                 title=title,
                 action=action
             )
         except AttributeError:
-            self.file_chooser = ACTIVE_CHOOSER = Gtk.FileChooserDialog(
+            self.file_chooser = Gtk.FileChooserDialog(
                 transient_for=parent,
                 title=title,
                 action=action
@@ -59,7 +56,7 @@ class FileChooser:
             for button_label, response_type in buttons:
                 self.file_chooser.add_button(button_label, response_type)
 
-        self.file_chooser.connect("response", self.on_selected, callback, callback_data)
+        self.file_chooser.connect("response", self.on_response, callback, callback_data)
         self.file_chooser.set_modal(True)
         self.file_chooser.set_select_multiple(multiple)
 
@@ -77,8 +74,7 @@ class FileChooser:
 
         self.file_chooser.set_current_folder(initial_folder)
 
-    @staticmethod
-    def on_selected(dialog, response_id, callback, callback_data):
+    def on_response(self, dialog, response_id, callback, callback_data):
 
         if dialog.get_select_multiple():
             selected = [i.get_path() for i in dialog.get_files()]
@@ -89,6 +85,7 @@ class FileChooser:
             if selected_file:
                 selected = selected_file.get_path()
 
+        self.active_chooser = None
         dialog.destroy()
 
         if response_id != Gtk.ResponseType.ACCEPT or not selected:
@@ -97,6 +94,7 @@ class FileChooser:
         callback(selected, callback_data)
 
     def show(self):
+        self.active_chooser = self
         self.file_chooser.show()
 
 
