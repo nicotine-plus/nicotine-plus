@@ -35,7 +35,7 @@ from pynicotine.utils import open_uri
 
 class TextView:
 
-    def __init__(self, textview, font=None, auto_scroll=False):
+    def __init__(self, textview, font=None, auto_scroll=False, parse_urls=True):
 
         self.textview = textview
         self.textbuffer = textview.get_buffer()
@@ -43,6 +43,7 @@ class TextView:
         self.adjustment = self.scrollable.get_vadjustment()
         scrollable_container = self.scrollable.get_ancestor(Gtk.Box)
         self.font = font
+        self.parse_urls = parse_urls
         self.url_regex = re.compile("(\\w+\\://[^\\s]+)|(www\\.\\w+\\.[^\\s]+)|(mailto\\:[^\\s]+)")
 
         self.tag_urls = {}
@@ -111,8 +112,7 @@ class TextView:
         self.tag_urls.pop(end_iter, None)
         self.textbuffer.delete(start_iter, end_iter)
 
-    def append_line(self, line, tag=None, timestamp=None, timestamp_format=None, username=None,
-                    usertag=None, find_urls=True):
+    def append_line(self, line, tag=None, timestamp=None, timestamp_format=None, username=None, usertag=None):
 
         num_lines = self.textbuffer.get_line_count()
         line = str(line).strip("\n")
@@ -133,7 +133,7 @@ class TextView:
             line = line[start + len(username):]
 
         # Highlight urls, if found and tag them
-        if find_urls and ("://" in line or "www." in line or "mailto:" in line):
+        if self.parse_urls and ("://" in line or "www." in line or "mailto:" in line):
             # Match first url
             match = self.url_regex.search(line)
 

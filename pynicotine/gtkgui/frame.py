@@ -241,7 +241,7 @@ class NicotineFrame(UserInterface):
 
         """ Logging """
 
-        self.log_view = TextView(self.log_view, auto_scroll=True)
+        self.log_view = TextView(self.log_view, auto_scroll=True, parse_urls=False)
         self.log_search_bar = TextSearchBar(self.log_view.textview, self.log_search_bar, self.log_search_entry)
 
         self.create_log_context_menu()
@@ -1672,7 +1672,7 @@ class NicotineFrame(UserInterface):
         if level not in ("transfer", "connection", "message", "miscellaneous"):
             self.set_status_text(msg)
 
-        self.log_view.append_line(msg, find_urls=False, timestamp_format=timestamp_format)
+        self.log_view.append_line(msg, timestamp_format=timestamp_format)
 
     def on_popup_menu_log(self, menu, _textview):
         menu.actions[_("_Copy")].set_enabled(self.log_view.get_has_selection())
