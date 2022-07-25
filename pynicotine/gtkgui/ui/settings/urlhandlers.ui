@@ -14,6 +14,8 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="label" translatable="yes">URL Handlers</property>
+            <property name="halign">start</property>
+            <property name="selectable">True</property>
             <property name="xalign">0</property>
             <property name="wrap">True</property>
             <property name="mnemonic-widget">ProtocolHandlers</property>

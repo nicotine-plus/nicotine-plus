@@ -30,6 +30,8 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="label" translatable="yes">Chat History</property>
+            <property name="halign">start</property>
+            <property name="selectable">True</property>
             <property name="xalign">0</property>
             <property name="wrap">True</property>
             <attributes>
@@ -107,6 +109,8 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="label" translatable="yes">Chat Completion</property>
+            <property name="halign">start</property>
+            <property name="selectable">True</property>
             <property name="xalign">0</property>
             <property name="wrap">True</property>
             <attributes>
@@ -205,6 +209,8 @@
                       <object class="GtkLabel">
                         <property name="visible">True</property>
                         <property name="label" translatable="yes">Allowed chat completions:</property>
+                        <property name="halign">start</property>
+                        <property name="selectable">True</property>
                         <property name="xalign">0</property>
                         <property name="opacity">0.6</property>
                         <property name="wrap">True</property>
@@ -311,6 +317,8 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="label" translatable="yes">Timestamps</property>
+            <property name="halign">start</property>
+            <property name="selectable">True</property>
             <property name="xalign">0</property>
             <property name="wrap">True</property>
             <attributes>
@@ -515,6 +523,8 @@
                       <object class="GtkLabel">
                         <property name="visible">True</property>
                         <property name="label" translatable="yes">Censor</property>
+                        <property name="halign">start</property>
+                        <property name="selectable">True</property>
                         <property name="xalign">0</property>
                         <property name="wrap">True</property>
                         <attributes>
@@ -572,9 +582,10 @@
                       <object class="GtkLabel">
                         <property name="visible">0</property>
                         <property name="label" translatable="yes">Censored Patterns</property>
+                        <property name="halign">start</property>
+                        <property name="selectable">True</property>
                         <property name="xalign">0</property>
                         <property name="wrap">True</property>
-                        <property name="mnemonic-widget">CensorList</property>
                         <attributes>
                           <attribute name="weight" value="bold"/>
                         </attributes>
@@ -726,6 +737,8 @@
                       <object class="GtkLabel">
                         <property name="visible">True</property>
                         <property name="label" translatable="yes">Auto-Replace</property>
+                        <property name="halign">start</property>
+                        <property name="selectable">True</property>
                         <property name="xalign">0</property>
                         <property name="wrap">True</property>
                         <attributes>
@@ -751,9 +764,10 @@
                       <object class="GtkLabel">
                         <property name="visible">0</property>
                         <property name="label" translatable="yes">Replacements</property>
+                        <property name="halign">start</property>
+                        <property name="selectable">True</property>
                         <property name="xalign">0</property>
                         <property name="wrap">True</property>
-                        <property name="mnemonic-widget">ReplacementList</property>
                         <attributes>
                           <attribute name="weight" value="bold"/>
                         </attributes>

@@ -24,6 +24,8 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="label" translatable="yes">Downloads</property>
+            <property name="halign">start</property>
+            <property name="selectable">True</property>
             <property name="xalign">0</property>
             <property name="wrap">True</property>
             <attributes>
@@ -122,6 +124,8 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="label" translatable="yes">Download Speed Limits</property>
+            <property name="halign">start</property>
+            <property name="selectable">True</property>
             <property name="xalign">0</property>
             <property name="wrap">True</property>
             <attributes>
@@ -194,6 +198,8 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="label" translatable="yes">Folders</property>
+            <property name="halign">start</property>
+            <property name="selectable">True</property>
             <property name="xalign">0</property>
             <property name="wrap">True</property>
             <attributes>
@@ -281,6 +287,8 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="label" translatable="yes">Events</property>
+            <property name="halign">start</property>
+            <property name="selectable">True</property>
             <property name="xalign">0</property>
             <property name="wrap">True</property>
             <attributes>
@@ -353,9 +361,10 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="label" translatable="yes">Download Filters</property>
+            <property name="halign">start</property>
+            <property name="selectable">True</property>
             <property name="xalign">0</property>
             <property name="wrap">True</property>
-            <property name="mnemonic-widget">FilterView</property>
             <attributes>
               <attribute name="weight" value="bold"/>
             </attributes>

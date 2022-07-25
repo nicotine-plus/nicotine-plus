@@ -161,6 +161,12 @@ class FastConfigure(UserInterface, Dialog):
             self.shares_list_view.remove_row(iterator)
 
     def on_page_change(self, *_args):
+
+        page = self.stack.get_visible_child()
+
+        if page == self.account_page:
+            self.username_entry.grab_focus()
+
         self.reset_completeness()
 
     def on_next(self, *_args):
@@ -173,6 +179,7 @@ class FastConfigure(UserInterface, Dialog):
 
         for page in self.pages[start_page_index:]:
             if page.get_visible():
+                self.next_button.grab_focus()
                 self.stack.set_visible_child(page)
                 return
 
@@ -182,6 +189,7 @@ class FastConfigure(UserInterface, Dialog):
 
         for page in reversed(self.pages[:start_page_index]):
             if page.get_visible():
+                self.previous_button.grab_focus()
                 self.stack.set_visible_child(page)
                 return
 

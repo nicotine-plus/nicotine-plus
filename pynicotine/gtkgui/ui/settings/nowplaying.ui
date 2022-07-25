@@ -14,6 +14,8 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="label" translatable="yes">Now Playing</property>
+            <property name="halign">start</property>
+            <property name="selectable">True</property>
             <property name="xalign">0</property>
             <property name="wrap">True</property>
             <attributes>
@@ -102,9 +104,10 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="label" translatable="yes">Now Playing Format</property>
+            <property name="halign">start</property>
+            <property name="selectable">True</property>
             <property name="xalign">0</property>
             <property name="wrap">True</property>
-            <property name="mnemonic-widget">Legend</property>
             <attributes>
               <attribute name="weight" value="bold"/>
             </attributes>
