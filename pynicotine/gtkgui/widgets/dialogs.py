@@ -28,16 +28,19 @@ from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
 
 class Dialog:
 
+    active_dialog = None  # Class variable keeping the dialog object alive
+
     def __init__(self, dialog=None, parent=None, content_box=None, buttons=None, default_response=None,
                  show_callback=None, close_callback=None, title="Dialog", width=0, height=0,
                  modal=True, resizable=True, close_destroy=True):
 
         self.default_width = width
         self.default_height = height
+        self.close_destroy = close_destroy
 
         if dialog:
             self.dialog = dialog
-            self._set_dialog_properties(parent, modal, close_destroy, show_callback, close_callback)
+            self._set_dialog_properties(parent, modal, show_callback, close_callback)
             return
 
         self.dialog = Gtk.Dialog(
@@ -69,9 +72,14 @@ class Dialog:
         if default_response:
             self.dialog.set_default_response(default_response)
 
-        self._set_dialog_properties(parent, modal, close_destroy, show_callback, close_callback)
+        self._set_dialog_properties(parent, modal, show_callback, close_callback)
 
-    def on_close_hide(self, *_args):
+    def on_close_request(self, *_args):
+
+        Dialog.active_dialog = None
+
+        if self.close_destroy:
+            return False
 
         # Hide the dialog
         self.dialog.hide()
@@ -82,18 +90,15 @@ class Dialog:
 
         return True
 
-    def _set_dialog_properties(self, parent, modal=True, close_destroy=False,
-                               show_callback=None, close_callback=None):
+    def _set_dialog_properties(self, parent, modal=True, show_callback=None, close_callback=None):
 
         if GTK_API_VERSION >= 4:
-            if not close_destroy:
-                self.dialog.connect("close-request", self.on_close_hide)
+            self.dialog.connect("close-request", self.on_close_request)
         else:
+            self.dialog.connect("delete-event", self.on_close_request)
+
             self.dialog.set_property("window-position", Gtk.WindowPosition.CENTER_ON_PARENT)
             self.dialog.set_type_hint(Gdk.WindowTypeHint.DIALOG)
-
-            if not close_destroy:
-                self.dialog.connect("delete-event", self.on_close_hide)
 
         if show_callback:
             self.dialog.connect("show", show_callback)
@@ -128,6 +133,7 @@ class Dialog:
             self.dialog.set_default_size(dialog_width, dialog_height)
 
         # Show the dialog
+        Dialog.active_dialog = self
         self.dialog.present()
 
         if GTK_API_VERSION == 3:
@@ -143,6 +149,8 @@ class Dialog:
 
 
 class MessageDialog:
+
+    active_dialog = None  # Class variable keeping the dialog object alive
 
     def __init__(self, parent, title, message, callback=None, callback_data=None,
                  message_type=Gtk.MessageType.OTHER, buttons=None, width=-1):
@@ -174,9 +182,11 @@ class MessageDialog:
                                             Gtk.ResponseType.DELETE_EVENT):
             callback(self, response_id, callback_data)
 
+        MessageDialog.active_dialog = None
         dialog.destroy()
 
     def show(self):
+        MessageDialog.active_dialog = self
         self.dialog.present()
 
 

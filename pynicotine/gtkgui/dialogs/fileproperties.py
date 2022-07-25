@@ -28,12 +28,12 @@ from pynicotine.utils import humanize
 
 class FileProperties(UserInterface, Dialog):
 
-    def __init__(self, frame, core, properties, total_size=0, total_length=0, download_button=True):
+    def __init__(self, frame, core, download_button=True):
 
         self.core = core
-        self.properties = properties
-        self.total_size = total_size
-        self.total_length = total_length
+        self.properties = {}
+        self.total_size = 0
+        self.total_length = 0
         self.current_index = 0
 
         UserInterface.__init__(self, "ui/dialogs/fileproperties.ui")
@@ -72,10 +72,9 @@ class FileProperties(UserInterface, Dialog):
             content_box=self.container,
             buttons=buttons,
             title=_("File Properties"),
-            width=600
+            width=600,
+            close_destroy=False
         )
-
-        self.update_current_file()
 
     def on_previous(self, *_args):
 
@@ -155,3 +154,12 @@ class FileProperties(UserInterface, Dialog):
         self.country_row.set_visible(bool(country))
 
         self.update_title()
+
+    def update_properties(self, properties, total_size=0, total_length=0):
+
+        self.properties = properties
+        self.total_size = total_size
+        self.total_length = total_length
+        self.current_index = 0
+
+        self.update_current_file()

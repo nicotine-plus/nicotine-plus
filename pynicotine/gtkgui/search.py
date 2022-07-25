@@ -94,6 +94,7 @@ class Searches(IconNotebook):
         CompletionEntry(frame.room_search_entry, frame.room_search_combobox.get_model())
         CompletionEntry(frame.search_entry, frame.search_combobox.get_model())
 
+        self.file_properties = FileProperties(frame, core)
         self.wish_list = WishList(frame, core, self)
         self.populate_search_history()
         self.update_visuals()
@@ -1237,7 +1238,8 @@ class Search(UserInterface):
             })
 
         if data:
-            FileProperties(self.frame, self.core, data, selected_size, selected_length).show()
+            self.searches.file_properties.update_properties(data, selected_size, selected_length)
+            self.searches.file_properties.show()
 
     def on_download_files(self, *_args, prefix=""):
 
