@@ -76,7 +76,7 @@ class Dialog:
 
     def on_close_request(self, *_args):
 
-        self.active_dialog = None
+        Dialog.active_dialog = None
 
         if self.close_destroy:
             return False
@@ -133,7 +133,7 @@ class Dialog:
             self.dialog.set_default_size(dialog_width, dialog_height)
 
         # Show the dialog
-        self.active_dialog = self
+        Dialog.active_dialog = self
         self.dialog.present()
 
         if GTK_API_VERSION == 3:
@@ -182,11 +182,11 @@ class MessageDialog:
                                             Gtk.ResponseType.DELETE_EVENT):
             callback(self, response_id, callback_data)
 
-        self.active_dialog = None
+        MessageDialog.active_dialog = None
         dialog.destroy()
 
     def show(self):
-        self.active_dialog = self
+        MessageDialog.active_dialog = self
         self.dialog.present()
 
 
