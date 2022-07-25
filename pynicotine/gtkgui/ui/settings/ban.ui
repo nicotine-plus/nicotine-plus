@@ -14,6 +14,8 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="label" translatable="yes">Banned Users</property>
+            <property name="halign">start</property>
+            <property name="selectable">True</property>
             <property name="xalign">0</property>
             <property name="wrap">True</property>
             <attributes>
@@ -129,8 +131,9 @@
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Users</property>
+                    <property name="halign">start</property>
+                    <property name="selectable">True</property>
                     <property name="wrap">True</property>
-                    <property name="mnemonic-widget">BannedList</property>
                     <attributes>
                       <attribute name="weight" value="bold"/>
                     </attributes>
@@ -258,8 +261,9 @@
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">IP Addresses</property>
+                    <property name="halign">start</property>
+                    <property name="selectable">True</property>
                     <property name="wrap">True</property>
-                    <property name="mnemonic-widget">BlockedList</property>
                     <attributes>
                       <attribute name="weight" value="bold"/>
                     </attributes>

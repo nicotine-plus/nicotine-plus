@@ -36,6 +36,8 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="label" translatable="yes">Network</property>
+            <property name="halign">start</property>
+            <property name="selectable">True</property>
             <property name="xalign">0</property>
             <property name="wrap">True</property>
             <attributes>
@@ -235,72 +237,67 @@
     <child>
       <object class="GtkBox">
         <property name="visible">True</property>
-        <property name="spacing">18</property>
+        <property name="spacing">12</property>
         <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">Away Status</property>
+            <property name="halign">start</property>
+            <property name="selectable">True</property>
+            <property name="xalign">0</property>
+            <property name="wrap">True</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
+          </object>
+        </child>
         <child>
           <object class="GtkBox">
             <property name="visible">True</property>
             <property name="spacing">12</property>
-            <property name="orientation">vertical</property>
             <child>
               <object class="GtkLabel">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">Away Status</property>
-                <property name="xalign">0</property>
+                <property name="hexpand">True</property>
+                <property name="label" translatable="yes">Toggle away status after minutes of inactivity:</property>
                 <property name="wrap">True</property>
-                <attributes>
-                  <attribute name="weight" value="bold"/>
-                </attributes>
+                <property name="wrap-mode">word-char</property>
+                <property name="xalign">0</property>
+                <property name="mnemonic-widget">AutoAway</property>
               </object>
             </child>
             <child>
-              <object class="GtkBox">
+              <object class="GtkSpinButton" id="AutoAway">
                 <property name="visible">True</property>
-                <property name="spacing">12</property>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="hexpand">True</property>
-                    <property name="label" translatable="yes">Toggle away status after minutes of inactivity:</property>
-                    <property name="wrap">True</property>
-                    <property name="wrap-mode">word-char</property>
-                    <property name="xalign">0</property>
-                    <property name="mnemonic-widget">AutoAway</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkSpinButton" id="AutoAway">
-                    <property name="visible">True</property>
-                    <property name="adjustment">adjustment_AutoAway</property>
-                    <property name="numeric">True</property>
-                    <property name="valign">center</property>
-                    <property name="max-width-chars">6</property>
-                  </object>
-                </child>
+                <property name="adjustment">adjustment_AutoAway</property>
+                <property name="numeric">True</property>
+                <property name="valign">center</property>
+                <property name="max-width-chars">6</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">True</property>
+            <property name="homogeneous">True</property>
+            <property name="spacing">12</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Auto-reply message when away:</property>
+                <property name="wrap">True</property>
+                <property name="wrap-mode">word-char</property>
+                <property name="xalign">0</property>
+                <property name="mnemonic-widget">AutoReply</property>
               </object>
             </child>
             <child>
-              <object class="GtkBox">
+              <object class="GtkEntry" id="AutoReply">
                 <property name="visible">True</property>
-                <property name="homogeneous">True</property>
-                <property name="spacing">12</property>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">Auto-reply message when away:</property>
-                    <property name="wrap">True</property>
-                    <property name="wrap-mode">word-char</property>
-                    <property name="xalign">0</property>
-                    <property name="mnemonic-widget">AutoReply</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkEntry" id="AutoReply">
-                    <property name="visible">True</property>
-                    <property name="valign">center</property>
-                    <property name="width-chars">16</property>
-                  </object>
-                </child>
+                <property name="valign">center</property>
+                <property name="width-chars">16</property>
               </object>
             </child>
           </object>
@@ -310,32 +307,102 @@
     <child>
       <object class="GtkBox">
         <property name="visible">True</property>
-        <property name="spacing">24</property>
+        <property name="spacing">12</property>
         <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">Miscellaneous</property>
+            <property name="halign">start</property>
+            <property name="selectable">True</property>
+            <property name="xalign">0</property>
+            <property name="wrap">True</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
+          </object>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="AutoConnectStartup">
+            <property name="label" translatable="yes">Auto-connect to server on startup</property>
+            <property name="visible">True</property>
+            <property name="use-underline">True</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="ctcptogglebutton">
+            <property name="label" translatable="yes">Enable CTCP-like private message responses (client version)</property>
+            <property name="visible">True</property>
+            <property name="use-underline">True</property>
+          </object>
+        </child>
         <child>
           <object class="GtkBox">
             <property name="visible">True</property>
             <property name="spacing">12</property>
-            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkCheckButton" id="UseUPnP">
+                <property name="label" translatable="yes">Use UPnP to forward listening port (interval in hours):</property>
+                <property name="visible">True</property>
+                <property name="hexpand">True</property>
+                <property name="use-underline">True</property>
+                <signal name="toggled" handler="on_toggle_upnp"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkSpinButton" id="UPnPInterval">
+                <property name="visible">True</property>
+                <property name="max-width-chars">6</property>
+                <property name="adjustment">adjustment_UPnPInterval</property>
+                <property name="numeric">True</property>
+                <property name="valign">center</property>
+                <property name="sensitive" bind-source="UseUPnP" bind-property="active" bind-flags="bidirectional|sync-create"/>
+                <signal name="value-changed" handler="on_modify_upnp_interval"/>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">True</property>
+            <property name="homogeneous">True</property>
+            <property name="spacing">12</property>
             <child>
               <object class="GtkLabel">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">Miscellaneous</property>
+                <property name="label" translatable="yes">Soulseek server:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
-                <attributes>
-                  <attribute name="weight" value="bold"/>
-                </attributes>
+                <property name="wrap-mode">word-char</property>
+                <property name="mnemonic-widget">Server</property>
               </object>
             </child>
             <child>
-              <object class="GtkCheckButton" id="AutoConnectStartup">
-                <property name="label" translatable="yes">Auto-connect to server on startup</property>
+              <object class="GtkEntry" id="Server">
                 <property name="visible">True</property>
-                <property name="use-underline">True</property>
+                <property name="valign">center</property>
+                <property name="width-chars">16</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">True</property>
+            <property name="homogeneous">True</property>
+            <property name="spacing">12</property>
+            <child>
+              <object class="GtkLabel" id="InterfaceLabel">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Network interface (requires a restart):</property>
+                <property name="xalign">0</property>
+                <property name="wrap">True</property>
+                <property name="wrap-mode">word-char</property>
+                <property name="mnemonic-widget">Interface</property>
               </object>
             </child>
             <child>
+<<<<<<< HEAD
               <object class="GtkBox">
                 <property name="visible">True</property>
                 <property name="spacing">12</property>
@@ -418,6 +485,16 @@
                         <property name="width-chars">12</property>
                       </object>
                     </child>
+=======
+              <object class="GtkComboBoxText" id="Interface">
+                <property name="visible">True</property>
+                <property name="has-entry">True</property>
+                <property name="tooltip-text" translatable="yes">Binds connections to a specific network interface, useful for e.g. ensuring a VPN is used at all times. Leave empty to use any available interface. Only change this value if you know what you are doing.</property>
+                <property name="valign">center</property>
+                <child internal-child="entry">
+                  <object class="GtkEntry">
+                    <property name="width-chars">12</property>
+>>>>>>> 91819320 (GUI: improve screen reader accessibility)
                   </object>
                 </child>
               </object>

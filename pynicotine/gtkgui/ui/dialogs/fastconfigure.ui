@@ -44,6 +44,8 @@
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Welcome to Nicotine+</property>
+                <property name="selectable">True</property>
+                <property name="halign">center</property>
                 <property name="justify">center</property>
                 <property name="wrap">True</property>
                 <style>
@@ -55,6 +57,8 @@
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Graphical client for the Soulseek peer-to-peer network</property>
+                <property name="selectable">True</property>
+                <property name="halign">center</property>
                 <property name="justify">center</property>
                 <property name="wrap">True</property>
                 <property name="max-width-chars">60</property>
@@ -100,6 +104,7 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="label" translatable="yes">To create a new Soulseek account, fill in your desired username and password. If you already have an account, fill in your existing login details.</property>
+            <property name="selectable">True</property>
             <property name="justify">center</property>
             <property name="wrap">True</property>
             <property name="max-width-chars">60</property>
@@ -109,6 +114,7 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="label" translatable="yes">If your desired username is already taken, you will be prompted to change it.</property>
+            <property name="selectable">True</property>
             <property name="justify">center</property>
             <property name="wrap">True</property>
             <property name="max-width-chars">60</property>
@@ -136,6 +142,7 @@
                         <property name="visible">True</property>
                         <property name="xalign">0</property>
                         <property name="label" translatable="yes">Username</property>
+                        <property name="mnemonic-widget">username_entry</property>
                         <attributes>
                           <attribute name="weight" value="bold"/>
                         </attributes>
@@ -167,6 +174,7 @@
                         <property name="visible">True</property>
                         <property name="xalign">0</property>
                         <property name="label" translatable="yes">Password</property>
+                        <property name="mnemonic-widget">password_entry</property>
                         <attributes>
                           <attribute name="weight" value="bold"/>
                         </attributes>
@@ -208,6 +216,7 @@
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Nicotine+ uses peer-to-peer networking to connect to other users. In order to allow users to connect to you without trouble, an open listening port is crucial.</property>
+                <property name="selectable">True</property>
                 <property name="justify">center</property>
                 <property name="wrap">True</property>
                 <property name="max-width-chars">60</property>
@@ -217,6 +226,7 @@
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">The default listening port '2234' works fine in most cases. If you need to use a different port, you will be able to modify it in the preferences later.</property>
+                <property name="selectable">True</property>
                 <property name="justify">center</property>
                 <property name="wrap">True</property>
                 <property name="max-width-chars">60</property>
@@ -226,6 +236,7 @@
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">If your listening port is closed, you will only be able to connect to users whose listening ports are open.</property>
+                <property name="selectable">True</property>
                 <property name="justify">center</property>
                 <property name="wrap">True</property>
                 <property name="max-width-chars">60</property>
@@ -265,6 +276,8 @@
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Download Files to Folder</property>
+                <property name="halign">center</property>
+                <property name="selectable">True</property>
                 <attributes>
                   <attribute name="weight" value="bold"/>
                 </attributes>
@@ -287,6 +300,8 @@
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Share Folders</property>
+                <property name="halign">center</property>
+                <property name="selectable">True</property>
                 <attributes>
                   <attribute name="weight" value="bold"/>
                 </attributes>
@@ -296,6 +311,7 @@
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Users on the Soulseek network will be able to download files from folders you share. Sharing files is crucial for the health of the Soulseek network.</property>
+                <property name="selectable">True</property>
                 <property name="justify">center</property>
                 <property name="wrap">True</property>
                 <property name="max-width-chars">60</property>
@@ -365,6 +381,8 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="label" translatable="yes">You are ready to use Nicotine+!</property>
+            <property name="selectable">True</property>
+            <property name="halign">center</property>
             <property name="justify">center</property>
             <property name="wrap">True</property>
             <style>
@@ -381,6 +399,7 @@
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">File transfer speeds depend on users you are downloading from. Certain users will be faster, while others will be slow.</property>
+                <property name="selectable">True</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
                 <property name="max-width-chars">60</property>
@@ -390,6 +409,7 @@
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Donating to Soulseek grants you privileges for a certain time period. If you have privileges, your downloads will be queued ahead of non-privileged users.</property>
+                <property name="selectable">True</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
                 <property name="max-width-chars">60</property>
