@@ -264,6 +264,7 @@
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">R_oom Wall</property>
                                 <property name="use-underline">True</property>
+                                <property name="mnemonic-widget">room_wall_button</property>
                               </object>
                             </child>
                           </object>
