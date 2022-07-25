@@ -97,6 +97,7 @@
                                                   <object class="GtkLabel" id="search_mode_label">
                                                     <property name="visible">True</property>
                                                     <property name="use-underline">True</property>
+                                                    <property name="mnemonic-widget">search_mode_button</property>
                                                   </object>
                                                 </child>
                                                 <child>
@@ -185,7 +186,7 @@
                                         <property name="spacing">6</property>
                                         <property name="valign">center</property>
                                         <child>
-                                          <object class="GtkButton">
+                                          <object class="GtkButton" id="_wishlist_button">
                                             <property name="visible">True</property>
                                             <property name="action-name">app.wishlist</property>
                                             <child>
@@ -203,6 +204,7 @@
                                                     <property name="visible">True</property>
                                                     <property name="label" translatable="yes">_Wishlist</property>
                                                     <property name="use-underline">True</property>
+                                                    <property name="mnemonic-widget">_wishlist_button</property>
                                                   </object>
                                                 </child>
                                               </object>
@@ -844,7 +846,7 @@
                                         <property name="spacing">6</property>
                                         <property name="valign">center</property>
                                         <child>
-                                          <object class="GtkButton">
+                                          <object class="GtkButton" id="_load_from_disk_button">
                                             <property name="visible">True</property>
                                             <signal name="clicked" handler="on_load_from_disk"/>
                                             <child>
@@ -863,6 +865,7 @@
                                                     <property name="tooltip-text" translatable="yes">Opens a local list of shared files that was previously saved to disk</property>
                                                     <property name="label" translatable="yes">_Open List</property>
                                                     <property name="use-underline">True</property>
+                                                    <property name="mnemonic-widget">_load_from_disk_button</property>
                                                   </object>
                                                 </child>
                                               </object>
@@ -1022,7 +1025,7 @@
                                         <property name="spacing">6</property>
                                         <property name="valign">center</property>
                                         <child>
-                                          <object class="GtkButton">
+                                          <object class="GtkButton" id="_update_info_button">
                                             <property name="visible">True</property>
                                             <signal name="clicked" handler="on_settings_userinfo"/>
                                             <child>
@@ -1040,6 +1043,7 @@
                                                     <property name="visible">True</property>
                                                     <property name="label" translatable="yes">Update I_nfo</property>
                                                     <property name="use-underline">True</property>
+                                                    <property name="mnemonic-widget">_update_info_button</property>
                                                   </object>
                                                 </child>
                                               </object>
@@ -1178,6 +1182,7 @@
                                                     <property name="visible">True</property>
                                                     <property name="label" translatable="yes">Chat _History</property>
                                                     <property name="use-underline">True</property>
+                                                    <property name="mnemonic-widget">private_history_button</property>
                                                   </object>
                                                 </child>
                                                 <child>
@@ -1466,6 +1471,7 @@
                                                         <property name="visible">True</property>
                                                         <property name="label" translatable="yes">_Room List</property>
                                                         <property name="use-underline">True</property>
+                                                        <property name="mnemonic-widget">room_list_button</property>
                                                       </object>
                                                     </child>
                                                     <child>
@@ -1720,7 +1726,7 @@
                 <property name="margin-end">2</property>
                 <property name="spacing">6</property>
                 <child>
-                  <object class="GtkButton">
+                  <object class="GtkButton" id="_connections_button">
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Connections</property>
                     <property name="action-name">app.transferstatistics</property>
@@ -1738,6 +1744,7 @@
                           <object class="GtkLabel" id="connections_label">
                             <property name="visible">True</property>
                             <property name="label">0</property>
+                            <property name="mnemonic-widget">_connections_button</property>
                             <attributes>
                               <attribute name="weight" value="normal"/>
                             </attributes>
@@ -1751,7 +1758,7 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton">
+                  <object class="GtkButton" id="_download_status_button">
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Downloading (speed / active users)</property>
                     <signal name="clicked" handler="on_settings_downloads"/>
@@ -1768,6 +1775,7 @@
                         <child>
                           <object class="GtkLabel" id="download_status_label">
                             <property name="visible">True</property>
+                            <property name="mnemonic-widget">_download_status_button</property>
                             <attributes>
                               <attribute name="weight" value="normal"/>
                             </attributes>
@@ -1781,7 +1789,7 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton">
+                  <object class="GtkButton" id="_upload_status_button">
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Uploading (speed / active users)</property>
                     <signal name="clicked" handler="on_settings_uploads"/>
@@ -1798,6 +1806,7 @@
                         <child>
                           <object class="GtkLabel" id="upload_status_label">
                             <property name="visible">True</property>
+                            <property name="mnemonic-widget">_upload_status_button</property>
                             <attributes>
                               <attribute name="weight" value="normal"/>
                             </attributes>
@@ -1818,6 +1827,7 @@
                       <object class="GtkLabel" id="user_status_label">
                         <property name="visible">True</property>
                         <property name="label" translatable="yes">Offline</property>
+                        <property name="mnemonic-widget">_user_status_button</property>
                         <attributes>
                           <attribute name="weight" value="bold"/>
                         </attributes>
