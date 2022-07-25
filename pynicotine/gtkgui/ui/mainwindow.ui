@@ -344,8 +344,7 @@
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
-                                                <property name="label" translatable="yes">Users</property>
-                                                <property name="mnemonic-widget">_download_users_button</property>
+                                                <property name="label" bind-source="_download_users_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
                                                 <attributes>
                                                   <attribute name="weight" value="bold"/>
                                                 </attributes>
@@ -355,10 +354,12 @@
                                               <object class="GtkButton" id="_download_users_button">
                                                 <property name="visible">True</property>
                                                 <property name="action-name">app.transferstatistics</property>
+                                                <property name="tooltip-text" translatable="yes">Users</property>
                                                 <child>
                                                   <object class="GtkLabel" id="download_users_label">
                                                     <property name="visible">True</property>
                                                     <property name="label">0</property>
+                                                    <property name="mnemonic-widget">_download_users_button</property>
                                                     <attributes>
                                                       <attribute name="weight" value="bold"/>
                                                     </attributes>
@@ -384,8 +385,7 @@
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
-                                                <property name="label" translatable="yes">Files</property>
-                                                <property name="mnemonic-widget">_download_files_button</property>
+                                                <property name="label" bind-source="_download_files_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
                                                 <attributes>
                                                   <attribute name="weight" value="bold"/>
                                                 </attributes>
@@ -395,10 +395,12 @@
                                               <object class="GtkButton" id="_download_files_button">
                                                 <property name="visible">True</property>
                                                 <property name="action-name">app.transferstatistics</property>
+                                                <property name="tooltip-text" translatable="yes">Files</property>
                                                 <child>
                                                   <object class="GtkLabel" id="download_files_label">
                                                     <property name="visible">True</property>
                                                     <property name="label">0</property>
+                                                    <property name="mnemonic-widget">_download_files_button</property>
                                                     <attributes>
                                                       <attribute name="weight" value="bold"/>
                                                     </attributes>
@@ -585,8 +587,7 @@
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
-                                                <property name="label" translatable="yes">Users</property>
-                                                <property name="mnemonic-widget">_upload_users_button</property>
+                                                <property name="label" bind-source="_upload_users_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
                                                 <attributes>
                                                   <attribute name="weight" value="bold"/>
                                                 </attributes>
@@ -596,10 +597,12 @@
                                               <object class="GtkButton" id="_upload_users_button">
                                                 <property name="visible">True</property>
                                                 <property name="action-name">app.transferstatistics</property>
+                                                <property name="tooltip-text" translatable="yes">Users</property>
                                                 <child>
                                                   <object class="GtkLabel" id="upload_users_label">
                                                     <property name="visible">True</property>
                                                     <property name="label">0</property>
+                                                    <property name="mnemonic-widget">_upload_users_button</property>
                                                     <attributes>
                                                       <attribute name="weight" value="bold"/>
                                                     </attributes>
@@ -625,8 +628,7 @@
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
-                                                <property name="label" translatable="yes">Files</property>
-                                                <property name="mnemonic-widget">_upload_files_button</property>
+                                                <property name="label" bind-source="_upload_files_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
                                                 <attributes>
                                                   <attribute name="weight" value="bold"/>
                                                 </attributes>
@@ -636,10 +638,12 @@
                                               <object class="GtkButton" id="_upload_files_button">
                                                 <property name="visible">True</property>
                                                 <property name="action-name">app.transferstatistics</property>
+                                                <property name="tooltip-text" translatable="yes">Files</property>
                                                 <child>
                                                   <object class="GtkLabel" id="upload_files_label">
                                                     <property name="visible">True</property>
                                                     <property name="label">0</property>
+                                                    <property name="mnemonic-widget">_upload_files_button</property>
                                                     <attributes>
                                                       <attribute name="weight" value="bold"/>
                                                     </attributes>
