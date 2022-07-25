@@ -74,7 +74,8 @@ class FileChooser:
 
         self.file_chooser.set_current_folder(initial_folder)
 
-    def on_response(self, dialog, response_id, callback, callback_data):
+    @staticmethod
+    def on_response(dialog, response_id, callback, callback_data):
 
         if dialog.get_select_multiple():
             selected = [i.get_path() for i in dialog.get_files()]
