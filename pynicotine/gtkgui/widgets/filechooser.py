@@ -71,7 +71,7 @@ class FileChooser:
             if selected_file:
                 selected = selected_file.get_path()
 
-        self.active_chooser = None
+        FileChooser.active_chooser = None
         dialog.destroy()
 
         if response_id != Gtk.ResponseType.ACCEPT or not selected:
@@ -80,7 +80,7 @@ class FileChooser:
         callback(selected, callback_data)
 
     def show(self):
-        self.active_chooser = self
+        FileChooser.active_chooser = self
         self.file_chooser.show()
 
 

@@ -50,6 +50,7 @@ from pynicotine.gtkgui.userinfo import UserInfos
 from pynicotine.gtkgui.userlist import UserList
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.widgets.iconnotebook import TabLabel
+from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.gtkgui.widgets.dialogs import MessageDialog
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
@@ -1657,10 +1658,11 @@ class NicotineFrame(UserInterface):
 
         if level and level.startswith("important"):
             parent = self.window
+            active_dialog = Dialog.active_dialog
             title = "Information" if level == "important_info" else "Error"
 
-            if self.preferences is not None and self.preferences.dialog.get_property("visible"):
-                parent = self.preferences.dialog
+            if active_dialog is not None:
+                parent = active_dialog.dialog
 
             MessageDialog(parent=parent, title=title, message=msg).show()
 
