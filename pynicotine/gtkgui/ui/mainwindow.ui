@@ -119,6 +119,7 @@
                                             <property name="active-id">joined</property>
                                             <child internal-child="entry">
                                               <object class="GtkEntry" id="room_search_entry">
+                                                <property name="hexpand">False</property>
                                                 <property name="max-width-chars">20</property>
                                                 <property name="width-chars">5</property>
                                                 <property name="placeholder-text" translatable="yes">Room…</property>
@@ -137,6 +138,7 @@
                                             <signal name="notify::popup-shown" handler="on_combobox_popup_shown"/>
                                             <child internal-child="entry">
                                               <object class="GtkEntry" id="user_search_entry">
+                                                <property name="hexpand">False</property>
                                                 <property name="max-width-chars">20</property>
                                                 <property name="width-chars">5</property>
                                                 <property name="placeholder-text" translatable="yes">Username…</property>
