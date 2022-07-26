@@ -183,7 +183,7 @@ class FileChooserButton:
 
         self.icon = Gtk.Image(icon_name=icon_name, visible=True)
         self.label = Gtk.Label(label=_("(None)"), ellipsize=Pango.EllipsizeMode.END, width_chars=6,
-                               xalign=0, visible=True)
+                               mnemonic_widget=button, xalign=0, visible=True)
 
         box = Gtk.Box(spacing=6, visible=True)
 

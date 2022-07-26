@@ -176,6 +176,8 @@ def initialise_columns(frame, treeview_name, treeview, *args):
 
             column = Gtk.TreeViewColumn(column_id, renderer, icon_name=column_index)
 
+        column_header = column.get_button()
+
         # Required for fixed height mode
         column.set_sizing(Gtk.TreeViewColumnSizing.FIXED)
 
@@ -204,7 +206,7 @@ def initialise_columns(frame, treeview_name, treeview, *args):
         column.set_reorderable(True)
         column.set_min_width(20)
 
-        label = Gtk.Label(label=title, margin_start=5, margin_end=5, visible=True)
+        label = Gtk.Label(label=title, margin_start=5, margin_end=5, mnemonic_widget=column_header, visible=True)
         column.set_widget(label)
 
         if xalign == 1 and GTK_API_VERSION >= 4:

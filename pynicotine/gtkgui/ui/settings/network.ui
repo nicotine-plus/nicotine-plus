@@ -97,7 +97,7 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkButton">
+                              <object class="GtkButton" id="_change_password_button">
                                 <property name="halign">end</property>
                                 <property name="visible">True</property>
                                 <property name="tooltip-text" translatable="yes">Change Password</property>
@@ -117,6 +117,7 @@
                                         <property name="visible">True</property>
                                         <property name="label" translatable="yes">Change Password</property>
                                         <property name="ellipsize">end</property>
+                                        <property name="mnemonic-widget">_change_password_button</property>
                                       </object>
                                     </child>
                                   </object>

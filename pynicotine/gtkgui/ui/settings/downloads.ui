@@ -428,7 +428,7 @@
                     <property name="margin-bottom">6</property>
                     <property name="spacing">6</property>
                     <child>
-                      <object class="GtkButton">
+                      <object class="GtkButton" id="_add_filter_button">
                         <property name="visible">True</property>
                         <property name="tooltip-text" translatable="yes">Add</property>
                         <signal name="clicked" handler="on_add_filter"/>
@@ -448,6 +448,7 @@
                                 <property name="ellipsize">end</property>
                                 <property name="label" translatable="yes">Add…</property>
                                 <property name="use-underline">True</property>
+                                <property name="mnemonic-widget">_add_filter_button</property>
                               </object>
                             </child>
                           </object>
@@ -458,7 +459,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkButton">
+                      <object class="GtkButton" id="_edit_filter_button">
                         <property name="visible">True</property>
                         <property name="tooltip-text" translatable="yes">Edit…</property>
                         <signal name="clicked" handler="on_edit_filter"/>
@@ -478,6 +479,7 @@
                                 <property name="ellipsize">end</property>
                                 <property name="label" translatable="yes">Edit…</property>
                                 <property name="use-underline">True</property>
+                                <property name="mnemonic-widget">_edit_filter_button</property>
                               </object>
                             </child>
                           </object>
@@ -488,7 +490,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkButton">
+                      <object class="GtkButton" id="_remove_filter_button">
                         <property name="visible">True</property>
                         <property name="tooltip-text" translatable="yes">Remove</property>
                         <signal name="clicked" handler="on_remove_filter"/>
@@ -508,6 +510,7 @@
                                 <property name="ellipsize">end</property>
                                 <property name="label" translatable="yes">Remove</property>
                                 <property name="use-underline">True</property>
+                                <property name="mnemonic-widget">_remove_filter_button</property>
                               </object>
                             </child>
                           </object>
@@ -523,7 +526,7 @@
                         <property name="halign">end</property>
                         <property name="hexpand">True</property>
                         <child>
-                          <object class="GtkButton">
+                          <object class="GtkButton" id="_default_filters_button">
                             <property name="visible">True</property>
                             <property name="tooltip-text" translatable="yes">Load Defaults</property>
                             <signal name="clicked" handler="on_default_filters"/>
@@ -543,6 +546,7 @@
                                     <property name="ellipsize">end</property>
                                     <property name="label" translatable="yes">Load Defaults</property>
                                     <property name="use-underline">True</property>
+                                    <property name="mnemonic-widget">_default_filters_button</property>
                                   </object>
                                 </child>
                               </object>
@@ -583,6 +587,7 @@
                         <property name="visible">True</property>
                         <property name="label" translatable="yes">Verify Filters</property>
                         <property name="use-underline">True</property>
+                        <property name="mnemonic-widget">_VerifyFilters</property>
                       </object>
                     </child>
                   </object>
@@ -593,9 +598,9 @@
               <object class="GtkLabel" id="VerifiedLabel">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Unverified</property>
+                <property name="selectable">True</property>
                 <property name="wrap">True</property>
                 <property name="xalign">0</property>
-                <property name="mnemonic-widget">_VerifyFilters</property>
                 <attributes>
                   <attribute name="weight" value="bold"/>
                 </attributes>

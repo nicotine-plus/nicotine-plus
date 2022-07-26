@@ -173,6 +173,7 @@
                       <object class="GtkLabel">
                         <property name="visible">True</property>
                         <property name="label" translatable="yes">Test Configuration</property>
+                        <property name="mnemonic-widget">test_now_playing</property>
                       </object>
                     </child>
                   </object>
@@ -186,7 +187,6 @@
                 <property name="selectable">True</property>
                 <property name="xalign">1</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic-widget">test_now_playing</property>
               </object>
             </child>
           </object>
