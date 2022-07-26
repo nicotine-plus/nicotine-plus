@@ -158,7 +158,7 @@
                 <property name="margin-bottom">6</property>
                 <property name="spacing">6</property>
                 <child>
-                  <object class="GtkButton" id="_add_handler_button">
+                  <object class="GtkButton" id="_remove_handler_button">
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Remove</property>
                     <signal name="clicked" handler="on_remove"/>

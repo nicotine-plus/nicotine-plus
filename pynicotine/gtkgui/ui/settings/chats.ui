@@ -666,7 +666,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkButton" id="_edit_censored_button">
+                                  <object class="GtkButton" id="_remove_censored_button">
                                     <property name="visible">True</property>
                                     <property name="tooltip-text" translatable="yes">Remove</property>
                                     <signal name="clicked" handler="on_remove_censored"/>
@@ -832,7 +832,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkButton" id="_edit_replacement_button">
+                                  <object class="GtkButton" id="_remove_replacement_button">
                                     <property name="visible">True</property>
                                     <property name="tooltip-text" translatable="yes">Remove</property>
                                     <signal name="clicked" handler="on_remove_replacement"/>
