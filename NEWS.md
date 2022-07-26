@@ -8,9 +8,8 @@
  * Implemented mouse wheel scrolling on tabs to change the active page
  * Added total file size and duration of selected files to the File Properties dialog
  * Added text-to-speech toggle buttons for individual private chats when TTS is enabled
- * Minor usability improvements to several main window components and dialogs
- * Reddit and Test Replier plugins are no longer installed by default
-   - The plugins are [available on GitHub](https://github.com/nicotine-plus/nicotine-plus/tree/HEAD/pynicotine/plugins/examplars) and can be installed in the plugin preferences
+ * Usability improvements to several main window components and dialogs
+ * Reddit and Test Replier plugins no longer included by default, moved to examplars on [GitHub](https://github.com/nicotine-plus/nicotine-plus/tree/HEAD/pynicotine/plugins/examplars)
  * Various translation updates (thanks to our [many contributors](https://nicotine-plus.org/TRANSLATORS) on [Weblate](https://hosted.weblate.org/engage/nicotine-plus))
 
 ### Corrections
@@ -21,7 +20,7 @@
  * Fixed an issue where the estimated total time remaining for folder transfers was incorrect
  * Fixed an issue where clearing all file transfers did not remove transfers completely
  * Fixed a rare crash when downloading files onto certain (latin-1) filesystems
- * Fixed a discrepancy between the speed reported in outgoing search results compared to user info
+ * Fixed a discrepancy between the upload speed reported in outgoing search results compared to user info
  * Fixed an issue where dark mode was used when light mode was enabled on some systems
  * Unmaximized size of the main window is now remembered after the window is maximized
  * Reduced memory usage after closing search tabs with many results
