@@ -54,8 +54,12 @@ class PrivateChats(IconNotebook):
 
     def __init__(self, frame, core):
 
-        IconNotebook.__init__(self, frame, core, frame.private_notebook, frame.private_page)
-        self.notebook.connect("switch-page", self.on_switch_chat)
+        super().__init__(
+            frame, core,
+            widget=frame.private_notebook,
+            parent_page=frame.private_page,
+            switch_page_callback=self.on_switch_chat
+        )
 
         self.completion = ChatCompletion()
         self.history = ChatHistory(frame, core)
@@ -71,21 +75,23 @@ class PrivateChats(IconNotebook):
             return
 
         for user, tab in self.pages.items():
-            if tab.container == page:
-                GLib.idle_add(lambda tab: tab.chat_entry.grab_focus() == -1, tab)
+            if tab.container != page:
+                continue
 
-                self.completion.set_entry(tab.chat_entry)
-                tab.set_completion_list(self.core.privatechats.completion_list[:])
+            GLib.idle_add(lambda tab: tab.chat_entry.grab_focus() == -1, tab)
 
-                self.command_help.popover.unparent()
-                tab.help_button.set_popover(self.command_help.popover)
+            self.completion.set_entry(tab.chat_entry)
+            tab.set_completion_list(self.core.privatechats.completion_list[:])
 
-                if not tab.loaded:
-                    tab.load()
+            self.command_help.popover.unparent()
+            tab.help_button.set_popover(self.command_help.popover)
 
-                # Remove hilite if selected tab belongs to a user in the hilite list
-                self.frame.notifications.clear("private", user)
-                break
+            if not tab.loaded:
+                tab.load()
+
+            # Remove hilite if selected tab belongs to a user in the hilite list
+            self.frame.notifications.clear("private", user)
+            break
 
     def on_get_private_chat(self, *_args):
 
@@ -102,7 +108,7 @@ class PrivateChats(IconNotebook):
         if self.frame.current_page_id != self.frame.private_page.id:
             return
 
-        page = self.get_nth_page(self.get_current_page())
+        page = self.get_current_page()
 
         for user, tab in self.pages.items():
             if tab.container == page:
@@ -129,8 +135,8 @@ class PrivateChats(IconNotebook):
             self.append_page(page.container, user, page.on_close, user=user)
             page.set_label(self.get_tab_label_inner(page.container))
 
-        if switch_page and self.get_current_page() != self.page_num(self.pages[user].container):
-            self.set_current_page(self.page_num(self.pages[user].container))
+        if switch_page and self.get_current_page() != self.pages[user].container:
+            self.set_current_page(self.pages[user].container)
 
     def remove_user(self, user):
 
@@ -167,7 +173,7 @@ class PrivateChats(IconNotebook):
 
     def set_completion_list(self, completion_list):
 
-        page = self.get_nth_page(self.get_current_page())
+        page = self.get_current_page()
 
         for tab in self.pages.values():
             if tab.container == page:
@@ -359,7 +365,7 @@ class PrivateChat(UserInterface):
 
         self.chats.request_tab_hilite(self.container)
 
-        if (self.chats.get_current_page() == self.chats.page_num(self.container)
+        if (self.chats.get_current_page() == self.container
                 and self.frame.current_page_id == self.frame.private_page.id and self.frame.window.is_active()):
             # Don't show notifications if the chat is open and the window is in use
             return

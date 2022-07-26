@@ -56,8 +56,6 @@
                     <property name="visible">True</property>
                     <property name="show-border">False</property>
                     <property name="scrollable">True</property>
-                    <signal name="page-reordered" handler="on_page_reordered"/>
-                    <signal name="switch-page" handler="on_switch_page"/>
                     <!-- Search -->
                     <child>
                       <object class="GtkBox" id="search_page">

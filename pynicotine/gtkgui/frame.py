@@ -265,7 +265,12 @@ class NicotineFrame(UserInterface):
         """ Notebook Tabs """
 
         # Initialize main notebook
-        self.notebook = IconNotebook(self, core, self.notebook)
+        self.notebook = IconNotebook(
+            self, core,
+            widget=self.notebook,
+            switch_page_callback=self.on_switch_page,
+            reorder_page_callback=self.on_page_reordered
+        )
         self.initialize_main_tabs()
 
         # Initialize other notebooks
@@ -1238,9 +1243,9 @@ class NicotineFrame(UserInterface):
             self.notebook.set_tab_reorderable(page, True)
             self.set_tab_expand(page)
 
-    def on_switch_page(self, notebook, page, _page_num):
+    def on_switch_page(self, _notebook, page, _page_num):
 
-        current_page = notebook.get_nth_page(notebook.get_current_page())
+        current_page = self.notebook.get_current_page()
 
         # Hide container widget on previous page for a performance boost
         if GTK_API_VERSION >= 4:
@@ -1253,21 +1258,11 @@ class NicotineFrame(UserInterface):
         self.set_active_header_bar(page.id)
 
         if page == self.chatrooms_page:
-            curr_page_num = self.chatrooms.get_current_page()
-            curr_page = self.chatrooms.get_nth_page(curr_page_num)
-
-            if curr_page is not None:
-                self.chatrooms.notebook.emit("switch-page", curr_page, curr_page_num)
-            else:
+            if not self.chatrooms.get_n_pages():
                 GLib.idle_add(lambda: self.chatrooms_entry.grab_focus() == -1)
 
         elif page == self.private_page:
-            curr_page_num = self.privatechat.get_current_page()
-            curr_page = self.privatechat.get_nth_page(curr_page_num)
-
-            if curr_page is not None:
-                self.privatechat.notebook.emit("switch-page", curr_page, curr_page_num)
-            else:
+            if not self.privatechat.get_n_pages():
                 GLib.idle_add(lambda: self.private_entry.grab_focus() == -1)
 
         elif page == self.uploads_page:
@@ -1285,30 +1280,14 @@ class NicotineFrame(UserInterface):
                 GLib.idle_add(lambda: self.downloads.tree_view.grab_focus() == -1)
 
         elif page == self.search_page:
-            curr_page_num = self.search.get_current_page()
-            curr_page = self.search.get_nth_page(curr_page_num)
-
-            if curr_page is not None:
-                self.search.notebook.emit("switch-page", curr_page, curr_page_num)
-
             GLib.idle_add(lambda: self.search_entry.grab_focus() == -1)
 
         elif page == self.userinfo_page:
-            curr_page_num = self.userinfo.get_current_page()
-            curr_page = self.userinfo.get_nth_page(curr_page_num)
-
-            if curr_page is not None:
-                self.userinfo.notebook.emit("switch-page", curr_page, curr_page_num)
-            else:
+            if not self.userinfo.get_n_pages():
                 GLib.idle_add(lambda: self.userinfo_entry.grab_focus() == -1)
 
         elif page == self.userbrowse_page:
-            curr_page_num = self.userbrowse.get_current_page()
-            curr_page = self.userbrowse.get_nth_page(curr_page_num)
-
-            if curr_page is not None:
-                self.userbrowse.notebook.emit("switch-page", curr_page, curr_page_num)
-            else:
+            if not self.userbrowse.get_n_pages():
                 GLib.idle_add(lambda: self.userbrowse_entry.grab_focus() == -1)
 
         elif page == self.userlist_page:
@@ -1339,17 +1318,17 @@ class NicotineFrame(UserInterface):
         """ Ctrl+W and Ctrl+F4: close current secondary tab """
 
         try:
-            notebook = getattr(self, self.current_page_id + "_notebook")
+            notebook = getattr(self, self.current_page_id)
 
         except AttributeError:
             return False
 
-        page = notebook.get_nth_page(notebook.get_current_page())
+        page = notebook.get_current_page()
 
         if page is None:
             return False
 
-        tab_label = notebook.get_tab_label(page)
+        tab_label, _menu_label = notebook.get_labels(page)
         tab_label.close_callback()
         return True
 
@@ -1357,24 +1336,24 @@ class NicotineFrame(UserInterface):
         """ Ctrl+Tab and Shift+Ctrl+Tab: cycle through secondary tabs """
 
         try:
-            notebook = getattr(self, self.current_page_id + "_notebook")
+            notebook = getattr(self, self.current_page_id)
 
         except AttributeError:
             return False
 
         num_pages = notebook.get_n_pages()
-        current_page = notebook.get_current_page()
+        current_page_num = notebook.get_current_page_num()
 
         if backwards:
-            if current_page == 0:
-                notebook.set_current_page(num_pages - 1)
+            if current_page_num == 0:
+                notebook.set_current_page_num(num_pages - 1)
             else:
                 notebook.prev_page()
 
             return True
 
-        if current_page == (num_pages - 1):
-            notebook.set_current_page(0)
+        if current_page_num == (num_pages - 1):
+            notebook.set_current_page_num(0)
         else:
             notebook.next_page()
 
@@ -1395,15 +1374,12 @@ class NicotineFrame(UserInterface):
             return False
 
         page_num = self.notebook.page_num(visible_pages[tab_num - 1])
-        self.notebook.set_current_page(page_num)
+        self.notebook.set_current_page_num(page_num)
         return True
 
     def change_main_page(self, page):
-
         self.show_tab(page)
-
-        page_num = self.notebook.page_num(page)
-        self.notebook.set_current_page(page_num)
+        self.notebook.set_current_page(page)
 
     def show_tab(self, page):
 
@@ -1466,7 +1442,7 @@ class NicotineFrame(UserInterface):
             return
 
         if page.get_visible():
-            self.notebook.set_current_page(self.notebook.page_num(page))
+            self.notebook.set_current_page(page)
 
     def set_tab_expand(self, page):
 

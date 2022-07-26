@@ -70,9 +70,13 @@ class ChatRooms(IconNotebook):
 
     def __init__(self, frame, core):
 
-        IconNotebook.__init__(self, frame, core, frame.chatrooms_notebook, frame.chatrooms_page)
-        self.notebook.connect("switch-page", self.on_switch_chat)
-        self.notebook.connect("page-reordered", self.on_reordered_page)
+        super().__init__(
+            frame, core,
+            widget=frame.chatrooms_notebook,
+            parent_page=frame.chatrooms_page,
+            switch_page_callback=self.on_switch_chat,
+            reorder_page_callback=self.on_reordered_page
+        )
 
         self.autojoin_rooms = set()
         self.completion = ChatCompletion()
@@ -123,21 +127,23 @@ class ChatRooms(IconNotebook):
             return
 
         for room, tab in self.pages.items():
-            if tab.container == page:
-                GLib.idle_add(lambda tab: tab.chat_entry.grab_focus() == -1, tab)
+            if tab.container != page:
+                continue
 
-                self.completion.set_entry(tab.chat_entry)
-                tab.set_completion_list(self.core.chatrooms.completion_list[:])
+            GLib.idle_add(lambda tab: tab.chat_entry.grab_focus() == -1, tab)
 
-                self.command_help.popover.unparent()
-                tab.help_button.set_popover(self.command_help.popover)
+            self.completion.set_entry(tab.chat_entry)
+            tab.set_completion_list(self.core.chatrooms.completion_list[:])
 
-                if not tab.loaded:
-                    tab.load()
+            self.command_help.popover.unparent()
+            tab.help_button.set_popover(self.command_help.popover)
 
-                # Remove hilite
-                self.frame.notifications.clear("rooms", None, room)
-                break
+            if not tab.loaded:
+                tab.load()
+
+            # Remove hilite
+            self.frame.notifications.clear("rooms", None, room)
+            break
 
     def on_create_room_response(self, dialog, response_id, room):
 
@@ -174,7 +180,7 @@ class ChatRooms(IconNotebook):
         if self.frame.current_page_id != self.frame.chatrooms_page.id:
             return
 
-        page = self.get_nth_page(self.get_current_page())
+        page = self.get_current_page()
 
         for room, tab in self.pages.items():
             if tab.container == page:
@@ -206,8 +212,7 @@ class ChatRooms(IconNotebook):
             self.autojoin_rooms.remove(msg.room)
         else:
             # Did not auto-join room, switch to tab
-            page_num = self.page_num(tab.container)
-            self.set_current_page(page_num)
+            self.set_current_page(tab.container)
 
         if msg.room == "Public ":
             self.roomlist.toggle_public_feed(True)
@@ -344,7 +349,7 @@ class ChatRooms(IconNotebook):
 
     def set_completion_list(self, completion_list):
 
-        page = self.get_nth_page(self.get_current_page())
+        page = self.get_current_page()
 
         for tab in self.pages.values():
             if tab.container == page:
@@ -805,7 +810,7 @@ class ChatRoom(UserInterface):
 
         self.chatrooms.request_tab_hilite(self.container, mentioned)
 
-        if (self.chatrooms.get_current_page() == self.chatrooms.page_num(self.container)
+        if (self.chatrooms.get_current_page() == self.container
                 and self.frame.current_page_id == self.frame.chatrooms_page.id and self.frame.window.is_active()):
             # Don't show notifications if the chat is open and the window is in use
             return
