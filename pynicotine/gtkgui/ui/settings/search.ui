@@ -94,7 +94,7 @@
             <property name="visible">True</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkButton">
+              <object class="GtkButton" id="_clear_search_history_button">
                 <property name="visible">True</property>
                 <signal name="clicked" handler="on_clear_search_history"/>
                 <child>
@@ -113,6 +113,7 @@
                         <property name="ellipsize">end</property>
                         <property name="label" translatable="yes">Clear Search History</property>
                         <property name="xalign">0</property>
+                        <property name="mnemonic-widget">_clear_search_history_button</property>
                       </object>
                     </child>
                   </object>
@@ -398,6 +399,7 @@
                         <property name="ellipsize">end</property>
                         <property name="label" translatable="yes">Result Filter Help</property>
                         <property name="xalign">0</property>
+                        <property name="mnemonic-widget">ShowSearchHelp</property>
                       </object>
                     </child>
                   </object>
@@ -405,7 +407,7 @@
               </object>
             </child>
             <child>
-              <object class="GtkButton">
+              <object class="GtkButton" id="_clear_filter_history_button">
                 <property name="visible">True</property>
                 <signal name="clicked" handler="on_clear_filter_history"/>
                 <child>
@@ -424,6 +426,7 @@
                         <property name="ellipsize">end</property>
                         <property name="label" translatable="yes">Clear Filter History</property>
                         <property name="xalign">0</property>
+                        <property name="mnemonic-widget">_clear_filter_history_button</property>
                       </object>
                     </child>
                   </object>

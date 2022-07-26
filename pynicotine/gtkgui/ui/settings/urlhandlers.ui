@@ -147,7 +147,7 @@
                 <property name="margin-bottom">6</property>
                 <property name="spacing">6</property>
                 <child>
-                  <object class="GtkButton">
+                  <object class="GtkButton" id="_add_handler_button">
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Add…</property>
                     <signal name="clicked" handler="on_add_handler"/>
@@ -167,6 +167,7 @@
                             <property name="ellipsize">end</property>
                             <property name="label" translatable="yes">Add…</property>
                             <property name="use-underline">True</property>
+                            <property name="mnemonic-widget">_add_handler_button</property>
                           </object>
                         </child>
                       </object>
@@ -177,7 +178,7 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton">
+                  <object class="GtkButton" id="_edit_handler_button">
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Edit…</property>
                     <signal name="clicked" handler="on_edit_handler"/>
@@ -197,6 +198,7 @@
                             <property name="ellipsize">end</property>
                             <property name="label" translatable="yes">Edit…</property>
                             <property name="use-underline">True</property>
+                            <property name="mnemonic-widget">_edit_handler_button</property>
                           </object>
                         </child>
                       </object>
@@ -207,7 +209,7 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton">
+                  <object class="GtkButton" id="_remove_handler_button">
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Remove</property>
                     <signal name="clicked" handler="on_remove_handler"/>
@@ -227,6 +229,7 @@
                             <property name="ellipsize">end</property>
                             <property name="label" translatable="yes">Remove</property>
                             <property name="use-underline">True</property>
+                            <property name="mnemonic-widget">_remove_handler_button</property>
                           </object>
                         </child>
                       </object>

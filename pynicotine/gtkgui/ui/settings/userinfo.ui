@@ -80,7 +80,7 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton">
+                  <object class="GtkButton" id="_reset_picture_button">
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Reset Picture</property>
                     <signal name="clicked" handler="on_default_image"/>
@@ -100,6 +100,7 @@
                             <property name="ellipsize">end</property>
                             <property name="label" translatable="yes">Reset Picture</property>
                             <property name="use-underline">True</property>
+                            <property name="mnemonic-widget">_reset_picture_button</property>
                           </object>
                         </child>
                       </object>
