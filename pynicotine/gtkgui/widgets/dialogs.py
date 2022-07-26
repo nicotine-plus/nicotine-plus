@@ -142,6 +142,9 @@ class Dialog:
 
         self.dialog.set_default_size(dialog_width, dialog_height)
 
+    def set_title(self, title):
+        self.dialog.set_title(title)
+
     def show(self):
 
         # Shrink the dialog if it's larger than the main window
