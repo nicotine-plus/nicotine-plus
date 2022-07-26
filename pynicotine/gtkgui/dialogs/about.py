@@ -350,4 +350,4 @@ Ukrainian
             dialog.connect("response", self.on_close)
 
     def on_close(self, *_args):
-        self.dialog.close()
+        self.close()
