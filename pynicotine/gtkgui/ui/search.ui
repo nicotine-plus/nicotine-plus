@@ -74,6 +74,7 @@
                     <child>
                       <object class="GtkLabel" id="add_wish_label">
                         <property name="visible">True</property>
+                        <property name="ellipsize">end</property>
                         <property name="use-underline">True</property>
                         <property name="mnemonic-widget">add_wish_button</property>
                       </object>
@@ -103,6 +104,7 @@
                       <object class="GtkLabel" id="filters_label">
                         <property name="visible">True</property>
                         <property name="label" translatable="yes">_Result Filters</property>
+                        <property name="ellipsize">end</property>
                         <property name="use-underline">True</property>
                         <property name="mnemonic-widget">filters_button</property>
                       </object>
