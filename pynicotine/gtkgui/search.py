@@ -66,8 +66,12 @@ class Searches(IconNotebook):
 
     def __init__(self, frame, core):
 
-        IconNotebook.__init__(self, frame, core, frame.search_notebook, frame.search_page)
-        self.notebook.connect("switch-page", self.on_switch_search_page)
+        super().__init__(
+            frame, core,
+            widget=frame.search_notebook,
+            parent_page=frame.search_page,
+            switch_page_callback=self.on_switch_search_page
+        )
 
         self.modes = {
             "global": _("_Global"),
@@ -104,10 +108,12 @@ class Searches(IconNotebook):
             return
 
         for tab in self.pages.values():
-            if tab.container == page:
-                tab.update_filter_comboboxes()
-                GLib.idle_add(lambda tab: tab.tree_view.grab_focus() == -1, tab)
-                break
+            if tab.container != page:
+                continue
+
+            tab.update_filter_comboboxes()
+            GLib.idle_add(lambda tab: tab.tree_view.grab_focus() == -1, tab)
+            break
 
     def on_search_mode(self, action, state):
 
@@ -163,7 +169,7 @@ class Searches(IconNotebook):
             mode_label = _("Buddies")
 
         tab = self.create_tab(token, search_term, mode, mode_label)
-        self.set_current_page(self.page_num(tab.container))
+        self.set_current_page(tab.container)
 
         # Repopulate the combo list
         self.populate_search_history()

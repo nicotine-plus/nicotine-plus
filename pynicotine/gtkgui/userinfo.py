@@ -51,8 +51,12 @@ class UserInfos(IconNotebook):
 
     def __init__(self, frame, core):
 
-        IconNotebook.__init__(self, frame, core, frame.userinfo_notebook, frame.userinfo_page)
-        self.notebook.connect("switch-page", self.on_switch_info_page)
+        super().__init__(
+            frame, core,
+            widget=frame.userinfo_notebook,
+            parent_page=frame.userinfo_page,
+            switch_page_callback=self.on_switch_info_page
+        )
 
     def on_switch_info_page(self, _notebook, page, _page_num):
 
@@ -82,7 +86,7 @@ class UserInfos(IconNotebook):
             page.set_label(self.get_tab_label_inner(page.container))
 
         if switch_page:
-            self.set_current_page(self.page_num(self.pages[user].container))
+            self.set_current_page(self.pages[user].container)
             self.frame.change_main_page(self.frame.userinfo_page)
 
     def remove_user(self, user):

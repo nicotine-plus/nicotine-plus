@@ -206,7 +206,7 @@ class WishList(UserInterface, Dialog):
 
     def on_show(self, *_args):
 
-        page = self.searches.get_nth_page(self.searches.get_current_page())
+        page = self.searches.get_current_page()
 
         if page is None:
             return
