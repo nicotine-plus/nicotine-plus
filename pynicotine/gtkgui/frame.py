@@ -1239,16 +1239,6 @@ class NicotineFrame(UserInterface):
 
     def on_switch_page(self, _notebook, page, _page_num):
 
-        current_page = self.notebook.get_current_page()
-
-        # Hide container widget on previous page for a performance boost
-        if GTK_API_VERSION >= 4:
-            current_page.get_first_child().hide()
-            page.get_first_child().show()
-        else:
-            current_page.get_children()[0].hide()
-            page.get_children()[0].show()
-
         self.set_active_header_bar(page.id)
 
         if page == self.chatrooms_page:

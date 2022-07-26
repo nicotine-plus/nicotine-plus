@@ -552,6 +552,9 @@ class IconNotebook:
 
     def on_switch_page(self, _notebook, new_page, page_num):
 
+        if self.switch_page_callback is not None:
+            self.switch_page_callback(self, new_page, page_num)
+
         # Hide container widget on previous page for a performance boost
         current_page = self.get_current_page()
 
@@ -562,15 +565,11 @@ class IconNotebook:
             current_page.get_children()[0].hide()
             new_page.get_children()[0].show()
 
-        if self.switch_page_callback is not None:
-            self.switch_page_callback(self, new_page, page_num)
-
         # Dismiss tab highlight
         if self.parent_page is not None:
             self.remove_tab_hilite(new_page)
 
     def on_reorder_page(self, _notebook, page, page_num):
-
         if self.reorder_page_callback is not None:
             self.reorder_page_callback(self, page, page_num)
 
