@@ -252,6 +252,7 @@ class TextView:
     def on_released_primary(self, _controller, _num_p, pressed_x, pressed_y):
 
         if self.textbuffer.get_has_selection():
+            self.pressed_x = self.pressed_y = -1
             return False
 
         self.pressed_x = pressed_x
@@ -271,6 +272,7 @@ class TextView:
     def on_pressed_secondary(self, _controller, _num_p, pressed_x, pressed_y):
 
         if self.textbuffer.get_has_selection():
+            self.pressed_x = self.pressed_y = -1
             return False
 
         self.pressed_x = pressed_x
