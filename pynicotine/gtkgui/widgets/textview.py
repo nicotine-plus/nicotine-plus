@@ -65,6 +65,7 @@ class TextView:
 
             self.pointer_cursor = Gdk.Cursor(name="pointer")
             self.text_cursor = Gdk.Cursor(name="text")
+            self.cursor_window = self.textview
 
             self.motion_controller = Gtk.EventControllerMotion()
             self.motion_controller.connect("motion", self.on_move_cursor)
@@ -75,6 +76,7 @@ class TextView:
 
             self.pointer_cursor = Gdk.Cursor.new_from_name(textview.get_display(), "pointer")
             self.text_cursor = Gdk.Cursor.new_from_name(textview.get_display(), "text")
+            self.cursor_window = None
 
             textview.connect("motion-notify-event", self.on_move_cursor_event)
 
@@ -197,17 +199,18 @@ class TextView:
 
     def update_cursor(self, pos_x, pos_y):
 
-        target = self.textview if GTK_API_VERSION >= 4 else self.textview.get_window(Gtk.TextWindowType.TEXT)
+        if self.cursor_window is None:
+            self.cursor_window = self.textview.get_window(Gtk.TextWindowType.TEXT)
 
         for tag in self.get_tags_for_pos(pos_x, pos_y):
-            if hasattr(tag, "url"):
+            if hasattr(tag, "url") or hasattr(tag, "username"):
                 cursor = self.pointer_cursor
                 break
         else:
             cursor = self.text_cursor
 
-        if cursor != target.get_cursor():
-            target.set_cursor(cursor)
+        if cursor != self.cursor_window.get_cursor():
+            self.cursor_window.set_cursor(cursor)
 
     def clear(self):
 
