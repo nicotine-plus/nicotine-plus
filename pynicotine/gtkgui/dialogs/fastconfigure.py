@@ -67,7 +67,6 @@ class FastConfigure(UserInterface, Dialog):
             default_response=Gtk.ResponseType.APPLY,
             show_callback=self.on_show,
             close_callback=self.on_close,
-            title=_("Setup Assistant"),
             width=720,
             height=450,
             resizable=False,
@@ -84,10 +83,10 @@ class FastConfigure(UserInterface, Dialog):
         self.shares_list_view = TreeView(
             frame, parent=self.shares_list_container, multi_select=True,
             columns=[
-                {"column_id": "virtual_folder", "column_type": "text", "title": _("Virtual Folder"), "width": 125,
+                {"column_id": "virtual_folder", "column_type": "text", "title": _("Virtual Folder"), "width": 1,
                  "sort_column": 0, "expand_column": True},
-                {"column_id": "folder", "column_type": "text", "title": _("Folder"), "sort_column": 1,
-                 "expand_column": True}
+                {"column_id": "folder", "column_type": "text", "title": _("Folder"), "width": 125,
+                 "sort_column": 1, "expand_column": True}
             ]
         )
 

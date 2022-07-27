@@ -31,7 +31,7 @@ class Dialog:
     active_dialog = None  # Class variable keeping the dialog object alive
 
     def __init__(self, dialog=None, parent=None, content_box=None, buttons=None, default_response=None,
-                 show_callback=None, close_callback=None, title="Dialog", width=0, height=0,
+                 show_callback=None, close_callback=None, title="", width=0, height=0,
                  modal=True, resizable=True, close_destroy=True):
 
         self.default_width = width
