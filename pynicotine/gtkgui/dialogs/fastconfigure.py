@@ -67,7 +67,6 @@ class FastConfigure(UserInterface, Dialog):
             default_response=Gtk.ResponseType.APPLY,
             show_callback=self.on_show,
             close_callback=self.on_close,
-            title=_("Setup Assistant"),
             width=720,
             height=450,
             resizable=False,
@@ -87,13 +86,16 @@ class FastConfigure(UserInterface, Dialog):
         )
 
         self.column_numbers = list(range(self.sharelist.get_n_columns()))
-        initialise_columns(
+        cols = initialise_columns(
             frame, None, self.shares_list_view,
-            ["virtual_folder", _("Virtual Folder"), 0, "text", None],
-            ["folder", _("Folder"), 0, "text", None]
+            ["virtual_folder", _("Virtual Folder"), 1, "text", None],
+            ["folder", _("Folder"), 150, "text", None]
         )
-        self.shares_list_view.set_model(self.sharelist)
 
+        cols["virtual_folder"].set_expand(True)
+        cols["folder"].set_expand(True)
+
+        self.shares_list_view.set_model(self.sharelist)
         self.reset_completeness()
 
     def reset_completeness(self):
