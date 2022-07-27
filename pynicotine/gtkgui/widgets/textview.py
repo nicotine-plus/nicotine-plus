@@ -42,16 +42,16 @@ class TextView:
         self.scrollable = textview.get_ancestor(Gtk.ScrolledWindow)
         self.adjustment = self.scrollable.get_vadjustment()
         scrollable_container = self.scrollable.get_ancestor(Gtk.Box)
+
         self.font = font
+        self.auto_scroll = self.should_auto_scroll = auto_scroll
         self.parse_urls = parse_urls
+        self.tag_urls = {}
         self.url_regex = re.compile("(\\w+\\://[^\\s]+)|(www\\.\\w+\\.[^\\s]+)|(mailto\\:[^\\s]+)")
 
-        self.tag_urls = {}
         self.pressed_x = 0
         self.pressed_y = 0
         self.max_num_lines = 50000
-
-        self.auto_scroll = self.should_auto_scroll = auto_scroll
 
         self.adjustment.connect("notify::upper", self.on_adjustment_changed)
         self.adjustment.connect("notify::value", self.on_adjustment_changed, True)
@@ -62,17 +62,29 @@ class TextView:
 
             self.gesture_click_secondary = Gtk.GestureClick()
             scrollable_container.add_controller(self.gesture_click_secondary)
+
+            self.pointer_cursor = Gdk.Cursor(name="pointer")
+            self.text_cursor = Gdk.Cursor(name="text")
+
+            self.motion_controller = Gtk.EventControllerMotion()
+            self.motion_controller.connect("motion", self.on_move_cursor)
+            textview.add_controller(self.motion_controller)
         else:
             self.gesture_click_primary = Gtk.GestureMultiPress(widget=scrollable_container)
             self.gesture_click_secondary = Gtk.GestureMultiPress(widget=scrollable_container)
 
+            self.pointer_cursor = Gdk.Cursor.new_from_name(textview.get_display(), "pointer")
+            self.text_cursor = Gdk.Cursor.new_from_name(textview.get_display(), "text")
+
+            textview.connect("motion-notify-event", self.on_move_cursor_event)
+
         self.gesture_click_primary.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
-        self.gesture_click_primary.connect("pressed", self._callback_pressed_primary)
-        self.gesture_click_primary.connect("released", self._callback_released_primary)
+        self.gesture_click_primary.connect("pressed", self.on_pressed_primary)
+        self.gesture_click_primary.connect("released", self.on_released_primary)
 
         self.gesture_click_secondary.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
         self.gesture_click_secondary.set_button(Gdk.BUTTON_SECONDARY)
-        self.gesture_click_secondary.connect("pressed", self._callback_pressed_secondary)
+        self.gesture_click_secondary.connect("pressed", self.on_pressed_secondary)
 
     def scroll_bottom(self, *_args):
 
@@ -157,10 +169,9 @@ class TextView:
     def get_has_selection(self):
         return self.textbuffer.get_has_selection()
 
-    def get_tags_for_selected_pos(self):
+    def get_tags_for_pos(self, pos_x, pos_y):
 
-        buf_x, buf_y = self.textview.window_to_buffer_coords(Gtk.TextWindowType.WIDGET,
-                                                             self.pressed_x, self.pressed_y)
+        buf_x, buf_y = self.textview.window_to_buffer_coords(Gtk.TextWindowType.WIDGET, pos_x, pos_y)
         iterator_data = self.textview.get_iter_at_position(buf_x, buf_y)
 
         try:
@@ -178,11 +189,25 @@ class TextView:
 
     def get_url_for_selected_pos(self):
 
-        for tag in self.get_tags_for_selected_pos():
+        for tag in self.get_tags_for_pos(self.pressed_x, self.pressed_y):
             if hasattr(tag, "url"):
                 return tag.url
 
         return ""
+
+    def update_cursor(self, pos_x, pos_y):
+
+        target = self.textview if GTK_API_VERSION >= 4 else self.textview.get_window(Gtk.TextWindowType.TEXT)
+
+        for tag in self.get_tags_for_pos(pos_x, pos_y):
+            if hasattr(tag, "url"):
+                cursor = self.pointer_cursor
+                break
+        else:
+            cursor = self.text_cursor
+
+        if cursor != target.get_cursor():
+            target.set_cursor(cursor)
 
     def clear(self):
 
@@ -229,16 +254,16 @@ class TextView:
 
     """ Events """
 
-    def _callback_pressed_primary(self, _controller, _num_p, pressed_x, pressed_y):
+    def on_pressed_primary(self, _controller, _num_p, pressed_x, pressed_y):
         self.pressed_x = pressed_x
         self.pressed_y = pressed_y
 
-    def _callback_released_primary(self, _controller, _num_p, pressed_x, pressed_y):
+    def on_released_primary(self, _controller, _num_p, pressed_x, pressed_y):
 
         if pressed_x != self.pressed_x or pressed_y != self.pressed_y:
             return False
 
-        for tag in self.get_tags_for_selected_pos():
+        for tag in self.get_tags_for_pos(pressed_x, pressed_y):
             if hasattr(tag, "url"):
                 open_uri(tag.url)
                 return True
@@ -249,17 +274,23 @@ class TextView:
 
         return False
 
-    def _callback_pressed_secondary(self, _controller, _num_p, pressed_x, pressed_y):
+    def on_pressed_secondary(self, _controller, _num_p, pressed_x, pressed_y):
 
         self.pressed_x = pressed_x
         self.pressed_y = pressed_y
 
-        for tag in self.get_tags_for_selected_pos():
+        for tag in self.get_tags_for_pos(pressed_x, pressed_y):
             if hasattr(tag, "username"):
                 tag.callback(pressed_x, pressed_y, tag.username)
                 return True
 
         return False
+
+    def on_move_cursor(self, _controller, pos_x, pos_y):
+        self.update_cursor(pos_x, pos_y)
+
+    def on_move_cursor_event(self, _widget, event):
+        self.update_cursor(event.x, event.y)
 
     def on_copy_text(self, *_args):
         self.textview.emit("copy-clipboard")
