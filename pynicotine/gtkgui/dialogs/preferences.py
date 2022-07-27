@@ -568,7 +568,9 @@ class SharesFrame(UserInterface):
         if not virtual:
             return
 
-        virtual = self.get_normalized_virtual_name(virtual)
+        virtual = self.core.shares.get_normalized_virtual_name(
+            virtual, shared_folders=(self.shareddirs + self.bshareddirs)
+        )
         folder = self.shares_list_view.get_row_value(iterator, 1)
         old_virtual = self.shares_list_view.get_row_value(iterator, 0)
         old_mapping = (old_virtual, folder)
