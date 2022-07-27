@@ -84,6 +84,7 @@
             </child>
             <style>
               <class name="circular"/>
+              <class name="suggested-action"/>
             </style>
           </object>
         </child>
