@@ -21,6 +21,8 @@ import socket
 import struct
 import zlib
 
+from operator import itemgetter
+
 from pynicotine.config import config
 from pynicotine.logfacility import log
 
@@ -2359,8 +2361,10 @@ class SharedFileList(PeerMessage):
 
                 files.append((code, name, size, ext, attrs))
 
+            files.sort(key=itemgetter(1))
             shares.append((directory, files))
 
+        shares.sort(key=itemgetter(0))
         return pos, shares
 
     def _parse_network_message(self, message):
@@ -2479,7 +2483,7 @@ class FileSearchResult(PeerMessage):
     def _parse_result_list(self, message, pos):
         pos, nfiles = self.unpack_uint32(message, pos)
 
-        shares = []
+        results = []
         for _ in range(nfiles):
             pos, code = self.unpack_uint8(message, pos)
             pos, name = self.unpack_string(message, pos)
@@ -2495,9 +2499,10 @@ class FileSearchResult(PeerMessage):
                     pos, attr = self.unpack_uint32(message, pos)
                     attrs[str(attrnum)] = attr
 
-            shares.append((code, name.replace('/', '\\'), size, ext, attrs))
+            results.append((code, name.replace('/', '\\'), size, ext, attrs))
 
-        return pos, shares
+        results.sort(key=itemgetter(1))
+        return pos, results
 
     def _parse_network_message(self, message):
         pos, self.user = self.unpack_string(message)

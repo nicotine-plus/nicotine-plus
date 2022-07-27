@@ -20,6 +20,8 @@ import json
 import os
 import threading
 
+from operator import itemgetter
+
 from pynicotine import slskmessages
 from pynicotine import utils
 from pynicotine.logfacility import log
@@ -239,7 +241,7 @@ class UserBrowse:
 
             if files:
                 if self.config.sections["transfers"]["reverseorder"]:
-                    files.sort(key=lambda x: x[1], reverse=True)
+                    files.sort(key=itemgetter(1), reverse=True)
 
                 for file_data in files:
                     virtualpath = "\\".join([folder, file_data[1]])
