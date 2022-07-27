@@ -513,6 +513,6 @@ class PrivateChat(UserInterface):
 
         # No duplicates
         completion_list = list(set(completion_list))
-        completion_list.sort(key=lambda v: v.lower())
+        completion_list.sort(key=str.lower)
 
         self.chats.completion.set_completion_list(completion_list)
