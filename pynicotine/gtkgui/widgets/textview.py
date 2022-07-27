@@ -188,7 +188,7 @@ class TextView:
 
         return iterator.get_tags()
 
-    def get_url_for_selected_pos(self):
+    def get_url_for_current_pos(self):
 
         for tag in self.get_tags_for_pos(self.pressed_x, self.pressed_y):
             if hasattr(tag, "url"):
@@ -258,12 +258,11 @@ class TextView:
 
     def on_released_primary(self, _controller, _num_p, pressed_x, pressed_y):
 
-        if self.textbuffer.get_has_selection():
-            self.pressed_x = self.pressed_y = -1
-            return False
-
         self.pressed_x = pressed_x
         self.pressed_y = pressed_y
+
+        if self.textbuffer.get_has_selection():
+            return False
 
         for tag in self.get_tags_for_pos(pressed_x, pressed_y):
             if hasattr(tag, "url"):
@@ -278,12 +277,11 @@ class TextView:
 
     def on_pressed_secondary(self, _controller, _num_p, pressed_x, pressed_y):
 
-        if self.textbuffer.get_has_selection():
-            self.pressed_x = self.pressed_y = -1
-            return False
-
         self.pressed_x = pressed_x
         self.pressed_y = pressed_y
+
+        if self.textbuffer.get_has_selection():
+            return False
 
         for tag in self.get_tags_for_pos(pressed_x, pressed_y):
             if hasattr(tag, "username"):
@@ -302,7 +300,7 @@ class TextView:
         self.textview.emit("copy-clipboard")
 
     def on_copy_link(self, *_args):
-        copy_text(self.get_url_for_selected_pos())
+        copy_text(self.get_url_for_current_pos())
 
     def on_copy_all_text(self, *_args):
 

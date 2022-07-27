@@ -327,7 +327,7 @@ class PrivateChat(UserInterface):
         self.popup_menu_user_tab.toggle_user_items()
 
         menu.actions[_("Copy")].set_enabled(self.chat_view.get_has_selection())
-        menu.actions[_("Copy Link")].set_enabled(bool(self.chat_view.get_url_for_selected_pos()))
+        menu.actions[_("Copy Link")].set_enabled(bool(self.chat_view.get_url_for_current_pos()))
 
     def on_popup_menu_user(self, _menu, _widget):
         self.popup_menu_user_tab.toggle_user_items()

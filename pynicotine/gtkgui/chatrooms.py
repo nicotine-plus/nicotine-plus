@@ -766,7 +766,7 @@ class ChatRoom(UserInterface):
 
     def on_popup_menu_chat(self, menu, _textview):
         menu.actions[_("Copy")].set_enabled(self.chat_view.get_has_selection())
-        menu.actions[_("Copy Link")].set_enabled(bool(self.chat_view.get_url_for_selected_pos()))
+        menu.actions[_("Copy Link")].set_enabled(bool(self.chat_view.get_url_for_current_pos()))
 
     def toggle_chat_buttons(self):
         self.speech_toggle.set_visible(config.sections["ui"]["speechenabled"])
