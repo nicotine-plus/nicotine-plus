@@ -125,14 +125,12 @@ class Downloads(TransferList):
     def on_open_file_manager(self, *_args):
 
         download_folder = config.sections["transfers"]["downloaddir"]
-        incomplete_folder = config.sections["transfers"]["incompletedir"] or download_folder
+        folder_path = config.sections["transfers"]["incompletedir"] or download_folder
 
         for transfer in self.selected_transfers:
             if transfer.status == "Finished":
                 folder_path = transfer.path or download_folder
                 break
-        else:
-            folder_path = incomplete_folder
 
         open_file_path(folder_path, command=config.sections["ui"]["filemanager"])
 
