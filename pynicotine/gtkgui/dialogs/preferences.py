@@ -529,6 +529,7 @@ class SharesFrame(UserInterface):
 
         self.preferences = preferences
         self.frame = preferences.frame
+        self.core = preferences.core
 
         self.rescan_required = False
         self.shareddirs = []
@@ -605,20 +606,6 @@ class SharesFrame(UserInterface):
             }
         }
 
-    def get_normalized_virtual_name(self, virtual_name):
-
-        # Remove slashes from share name to avoid path conflicts
-        virtual_name = virtual_name.replace('/', '_').replace('\\', '_')
-        new_virtual_name = str(virtual_name)
-
-        # Check if virtual share name is already in use
-        counter = 1
-        while new_virtual_name in (x[0] for x in self.shareddirs + self.bshareddirs):
-            new_virtual_name = virtual_name + str(counter)
-            counter += 1
-
-        return new_virtual_name
-
     def set_shared_dir_buddy_only(self, iterator, buddy_only):
 
         if buddy_only == self.shareslist.get_value(iterator, 2):
@@ -656,7 +643,9 @@ class SharesFrame(UserInterface):
         if folder in (x[1] for x in self.shareddirs + self.bshareddirs):
             return
 
-        virtual = self.get_normalized_virtual_name(os.path.basename(os.path.normpath(folder)))
+        virtual = self.core.shares.get_normalized_virtual_name(
+            os.path.basename(os.path.normpath(folder)), shared_folders=(self.shareddirs + self.bshareddirs)
+        )
         iterator = self.shareslist.insert_with_valuesv(-1, self.column_numbers, [
             virtual,
             folder,
@@ -665,8 +654,6 @@ class SharesFrame(UserInterface):
 
         self.Shares.set_cursor(self.shareslist.get_path(iterator))
         self.Shares.grab_focus()
-
-        self.shareddirs.append((virtual, folder))
         self.rescan_required = True
 
     def on_add_shared_dir_selected(self, selected, _data):

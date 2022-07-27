@@ -537,6 +537,20 @@ class Shares:
 
         return mapping
 
+    def get_normalized_virtual_name(self, virtual_name, shared_folders):
+
+        # Remove slashes from share name to avoid path conflicts
+        virtual_name = virtual_name.replace('/', '_').replace('\\', '_')
+        new_virtual_name = str(virtual_name)
+
+        # Check if virtual share name is already in use
+        counter = 1
+        while new_virtual_name in (x[0] for x in shared_folders):
+            new_virtual_name = virtual_name + str(counter)
+            counter += 1
+
+        return new_virtual_name
+
     def convert_shares(self):
         """ Convert fs-based shared to virtual shared (pre 1.4.0) """
 

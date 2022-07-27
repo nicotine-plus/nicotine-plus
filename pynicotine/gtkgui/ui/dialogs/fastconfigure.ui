@@ -358,6 +358,7 @@
                             <property name="visible">True</property>
                             <property name="rubber-banding">True</property>
                             <property name="vexpand">True</property>
+                            <signal name="row-activated" handler="on_edit_share"/>
                             <child internal-child="selection">
                               <object class="GtkTreeSelection">
                                 <property name="mode">multiple</property>
@@ -400,6 +401,37 @@
                                     <property name="label" translatable="yes">Add…</property>
                                     <property name="use-underline">True</property>
                                     <property name="mnemonic-widget">_add_share_button</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                            <style>
+                              <class name="flat"/>
+                            </style>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="_edit_share_button">
+                            <property name="visible">True</property>
+                            <property name="tooltip-text" translatable="yes">Edit…</property>
+                            <signal name="clicked" handler="on_edit_share"/>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="visible">True</property>
+                                <property name="spacing">6</property>
+                                <child>
+                                  <object class="GtkImage">
+                                    <property name="visible">True</property>
+                                    <property name="icon-name">document-edit-symbolic</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="visible">True</property>
+                                    <property name="ellipsize">end</property>
+                                    <property name="label" translatable="yes">Edit…</property>
+                                    <property name="use-underline">True</property>
+                                    <property name="mnemonic-widget">_edit_share_button</property>
                                   </object>
                                 </child>
                               </object>
