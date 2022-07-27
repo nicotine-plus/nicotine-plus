@@ -161,9 +161,15 @@ def set_global_css():
         margin: 0;
     }
 
-    .generic-dialog .dialog-action-box {
+    .generic-dialog .dialog-action-area {
         /* Add missing spacing to dialog action buttons */
-        padding: 6px;
+        padding: 0;
+        margin: 0 6px;
+    }
+
+    .generic-dialog .dialog-action-area button {
+        /* Add missing spacing to dialog action buttons */
+        margin: 6px 0;
     }
 
     /* Borders */
@@ -256,14 +262,9 @@ def set_global_css():
         -gtk-icon-size: 21px;
     }
 
-    .dialog-action-area {
+    window.dialog:not(.message) .dialog-action-area {
         /* Add missing spacing to dialog action buttons */
         border-spacing: 6px;
-    }
-
-    window.dialog.message .dialog-action-area {
-        /* Undo spacing change for message dialogs */
-        border-spacing: unset;
     }
 
     .image-text-button box {
