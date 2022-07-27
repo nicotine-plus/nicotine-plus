@@ -26,6 +26,7 @@ from pynicotine.config import config
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
 from pynicotine.gtkgui.widgets.filechooser import FolderChooser
 from pynicotine.gtkgui.widgets.dialogs import Dialog
+from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.utils import open_uri
@@ -36,6 +37,7 @@ class FastConfigure(UserInterface, Dialog):
     def __init__(self, frame, core):
 
         self.core = core
+        self.rescan_required = False
         self.finished = False
 
         UserInterface.__init__(self, "ui/dialogs/fastconfigure.ui")
@@ -77,11 +79,10 @@ class FastConfigure(UserInterface, Dialog):
 
         # Page specific, share_page
         self.download_folder_button = FileChooserButton(
-            self.download_folder_button, self.dialog, "folder")
+            self.download_folder_button, self.dialog, "folder", selected_function=self.on_download_folder_selected)
 
-        self.shared_folders = None
         self.shares_list_view = TreeView(
-            frame, parent=self.shares_list_container, multi_select=True,
+            frame, parent=self.shares_list_container, multi_select=True, activate_row_callback=self.on_edit_share,
             columns=[
                 {"column_id": "virtual_folder", "column_type": "text", "title": _("Virtual Folder"), "width": 1,
                  "sort_column": 0, "expand_column": True},
@@ -115,6 +116,9 @@ class FastConfigure(UserInterface, Dialog):
     def on_entry_changed(self, *_args):
         self.reset_completeness()
 
+    def on_download_folder_selected(self):
+        config.sections['transfers']['downloaddir'] = self.download_folder_button.get_path()
+
     def on_add_share_selected(self, selected, _data):
 
         shared = config.sections["transfers"]["shared"]
@@ -139,7 +143,9 @@ class FastConfigure(UserInterface, Dialog):
 
             # The share is unique: we can add it
             self.shares_list_view.add_row([virtual, folder])
-            self.shared_folders.append((virtual, folder))
+            config.sections["transfers"]["shared"].append((virtual, folder))
+
+            self.rescan_required = True
 
     def on_add_share(self, *_args):
 
@@ -150,14 +156,53 @@ class FastConfigure(UserInterface, Dialog):
             multiple=True
         ).show()
 
+    def on_edit_share_response(self, dialog, _response_id, iterator):
+
+        virtual = dialog.get_entry_value()
+
+        if not virtual:
+            return
+
+        shared = config.sections["transfers"]["shared"]
+        buddy_shared = config.sections["transfers"]["buddyshared"]
+
+        virtual = self.core.shares.get_normalized_virtual_name(virtual, shared_folders=(shared + buddy_shared))
+        folder = self.shares_list_view.get_row_value(iterator, 1)
+        old_virtual = self.shares_list_view.get_row_value(iterator, 0)
+        old_mapping = (old_virtual, folder)
+        new_mapping = (virtual, folder)
+
+        shared.remove(old_mapping)
+        shared.append(new_mapping)
+
+        self.shares_list_view.set_row_value(iterator, 0, virtual)
+        self.rescan_required = True
+
+    def on_edit_share(self, *_args):
+
+        for iterator in self.shares_list_view.get_selected_rows():
+            virtual_name = self.shares_list_view.get_row_value(iterator, 0)
+            folder = self.shares_list_view.get_row_value(iterator, 1)
+
+            EntryDialog(
+                parent=self.dialog,
+                title=_("Edit Shared Folder"),
+                message=_("Enter new virtual name for '%(dir)s':") % {'dir': folder},
+                default=virtual_name,
+                callback=self.on_edit_share_response,
+                callback_data=iterator
+            ).show()
+            return
+
     def on_remove_share(self, *_args):
 
         for iterator in reversed(self.shares_list_view.get_selected_rows()):
             virtual = self.shares_list_view.get_row_value(iterator, 0)
             folder = self.shares_list_view.get_row_value(iterator, 1)
 
-            self.shared_folders.remove((virtual, folder))
+            config.sections["transfers"]["shared"].remove((virtual, folder))
             self.shares_list_view.remove_row(iterator)
+            self.rescan_required = True
 
     def on_page_change(self, *_args):
 
@@ -194,6 +239,9 @@ class FastConfigure(UserInterface, Dialog):
 
     def on_close(self, *_args):
 
+        if self.rescan_required:
+            self.core.shares.rescan_shares()
+
         if not self.finished:
             return True
 
@@ -202,17 +250,12 @@ class FastConfigure(UserInterface, Dialog):
             config.sections["server"]["login"] = self.username_entry.get_text()
             config.sections["server"]["passw"] = self.password_entry.get_text()
 
-        # share_page
-        config.sections['transfers']['downloaddir'] = self.download_folder_button.get_path()
-        config.sections["transfers"]["shared"] = self.shared_folders
-
-        # Rescan shares
-        self.core.shares.rescan_shares()
         self.core.connect()
         return True
 
     def on_show(self, *_args):
 
+        self.rescan_required = False
         self.stack.set_visible_child(self.welcome_page)
 
         # account_page
@@ -228,8 +271,6 @@ class FastConfigure(UserInterface, Dialog):
         self.check_port_label.connect("activate-link", lambda x, url: open_uri(url))
 
         # share_page
-        self.shared_folders = config.sections["transfers"]["shared"][:]
-
         if config.sections['transfers']['downloaddir']:
             self.download_folder_button.set_path(
                 config.sections['transfers']['downloaddir']
@@ -237,6 +278,6 @@ class FastConfigure(UserInterface, Dialog):
 
         self.shares_list_view.clear()
 
-        for entry in self.shared_folders:
+        for entry in config.sections["transfers"]["shared"]:
             virtual_name, path = entry
             self.shares_list_view.add_row([str(virtual_name), str(path)], select_row=False)
