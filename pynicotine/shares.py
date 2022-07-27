@@ -537,7 +537,8 @@ class Shares:
 
         return mapping
 
-    def get_normalized_virtual_name(self, virtual_name, shared_folders):
+    @staticmethod
+    def get_normalized_virtual_name(virtual_name, shared_folders):
 
         # Remove slashes from share name to avoid path conflicts
         virtual_name = virtual_name.replace('/', '_').replace('\\', '_')
