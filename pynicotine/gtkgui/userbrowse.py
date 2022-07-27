@@ -423,10 +423,6 @@ class UserBrowse(UserInterface):
             shares = shares + private_shares
             private_size, num_private_folders = self.create_folder_tree(private_shares, private=True)
 
-        # Sort files
-        for _folder, files in shares:
-            files.sort()
-
         self.shares = dict(shares)
         self.share_size = size + private_size
         self.num_folders = num_folders + num_private_folders
@@ -454,9 +450,6 @@ class UserBrowse(UserInterface):
         if not shares:
             num_folders = 0
             return total_size, num_folders
-
-        # Sort folders
-        shares.sort()
 
         for folder, files in shares:
             current_path = None
@@ -678,8 +671,6 @@ class UserBrowse(UserInterface):
         for filepath, iterator in self.file_iters.items():
             if self.query in filepath.lower():
                 result_files.append(iterator)
-
-        result_files.sort()
 
         selection = self.file_list_view.get_selection()
         selection.unselect_all()

@@ -39,6 +39,7 @@ import time
 from collections import defaultdict
 from collections import deque
 from collections import OrderedDict
+from operator import itemgetter
 
 from pynicotine import slskmessages
 from pynicotine.logfacility import log
@@ -670,9 +671,7 @@ class Transfers:
                     return
 
                 destination = self.get_folder_destination(username, directory)
-
-                if self.config.sections["transfers"]["reverseorder"]:
-                    files.sort(key=lambda x: x[1], reverse=True)
+                files.sort(key=itemgetter(1), reverse=self.config.sections["transfers"]["reverseorder"])
 
                 log.add_transfer(("Attempting to download files in folder %(folder)s for user %(user)s. "
                                   "Destination path: %(destination)s"), {

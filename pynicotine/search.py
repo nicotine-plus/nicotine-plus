@@ -24,6 +24,7 @@
 import random
 
 from itertools import islice
+from operator import itemgetter
 
 from pynicotine import slskmessages
 from pynicotine.logfacility import log
@@ -68,8 +69,7 @@ class Search:
     def request_folder_download(self, user, folder, visible_files):
 
         # First queue the visible search results
-        if self.config.sections["transfers"]["reverseorder"]:
-            visible_files.sort(key=lambda x: x[1], reverse=True)
+        visible_files.sort(key=itemgetter(1), reverse=self.config.sections["transfers"]["reverseorder"])
 
         for file in visible_files:
             user, fullpath, destination, size, bitrate, length = file
@@ -542,6 +542,8 @@ class Search:
 
         if not numresults:
             return
+
+        fileinfos.sort(key=itemgetter(1))
 
         uploadspeed = self.core.transfers.upload_speed
         queuesize = self.core.transfers.get_upload_queue_size()
