@@ -93,3 +93,27 @@ class SearchTest(unittest.TestCase):
         self.search.add_wish(new_item)
         self.assertEqual(config.sections["server"]["autosearch"][0], SEARCH_TEXT)
         self.assertEqual(config.sections["server"]["autosearch"][1], new_item)
+
+    def test_create_search_result_list(self):
+        """ Test creating search result lists from the word index """
+
+        word_index = {
+            "iso": [34, 35, 36, 37, 38],
+            "lts": [63, 68, 73],
+            "system": [37, 38],
+            "linux": [35, 36]
+        }
+
+        search_term = "linux game iso stem"
+        excluded_words = ["linux", "game"]
+        partial_words = ["stem"]
+
+        results = self.search.create_search_result_list(search_term, word_index, excluded_words, partial_words)
+        self.assertEqual(results, {37, 38})
+
+        search_term = "linux game lts music iso cd"
+        excluded_words = ["linux", "game", "music", "cd"]
+        partial_words = []
+
+        results = self.search.create_search_result_list(search_term, word_index, excluded_words, partial_words)
+        self.assertEqual(results, set())
