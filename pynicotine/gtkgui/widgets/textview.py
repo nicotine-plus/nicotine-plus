@@ -81,7 +81,6 @@ class TextView:
             textview.connect("motion-notify-event", self.on_move_cursor_event)
 
         self.gesture_click_primary.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
-        self.gesture_click_primary.connect("pressed", self.on_pressed_primary)
         self.gesture_click_primary.connect("released", self.on_released_primary)
 
         self.gesture_click_secondary.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
@@ -250,14 +249,13 @@ class TextView:
 
     """ Events """
 
-    def on_pressed_primary(self, _controller, _num_p, pressed_x, pressed_y):
-        self.pressed_x = pressed_x
-        self.pressed_y = pressed_y
-
     def on_released_primary(self, _controller, _num_p, pressed_x, pressed_y):
 
-        if pressed_x != self.pressed_x or pressed_y != self.pressed_y:
+        if self.textbuffer.get_has_selection():
             return False
+
+        self.pressed_x = pressed_x
+        self.pressed_y = pressed_y
 
         for tag in self.get_tags_for_pos(pressed_x, pressed_y):
             if hasattr(tag, "url"):
@@ -271,6 +269,9 @@ class TextView:
         return False
 
     def on_pressed_secondary(self, _controller, _num_p, pressed_x, pressed_y):
+
+        if self.textbuffer.get_has_selection():
+            return False
 
         self.pressed_x = pressed_x
         self.pressed_y = pressed_y
