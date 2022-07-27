@@ -191,6 +191,8 @@ class TextView:
 
     def update_cursor(self, pos_x, pos_y):
 
+        cursor = self.text_cursor
+
         if self.cursor_window is None:
             self.cursor_window = self.textview.get_window(Gtk.TextWindowType.TEXT)
 
@@ -198,8 +200,6 @@ class TextView:
             if hasattr(tag, "url") or hasattr(tag, "username"):
                 cursor = self.pointer_cursor
                 break
-        else:
-            cursor = self.text_cursor
 
         if cursor != self.cursor_window.get_cursor():
             self.cursor_window.set_cursor(cursor)
