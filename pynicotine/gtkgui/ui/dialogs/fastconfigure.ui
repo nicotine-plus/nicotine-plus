@@ -166,7 +166,6 @@
                     <child>
                       <object class="GtkEntry" id="username_entry">
                         <property name="visible">True</property>
-                        <property name="placeholder-text" translatable="yes">Username</property>
                         <property name="width-chars">20</property>
                         <signal name="changed" handler="on_entry_changed"/>
                       </object>
