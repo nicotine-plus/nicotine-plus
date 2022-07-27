@@ -453,10 +453,7 @@ class DownloadsFrame(UserInterface):
     def on_verify_filter(self, *_args):
 
         outfilter = "(\\\\("
-
         download_filters = sorted(self.filtersiters.keys())
-
-        proccessedfilters = []
         failed = {}
 
         for dfilter in download_filters:
@@ -468,26 +465,23 @@ class DownloadsFrame(UserInterface):
             if escaped:
                 dfilter = re.escape(dfilter)
                 dfilter = dfilter.replace("\\*", ".*")
-            else:
-                # Avoid "Nothing to repeat" error
-                dfilter = dfilter.replace("*", "\\*").replace("+", "\\+")
 
             try:
                 re.compile("(" + dfilter + ")")
                 outfilter += dfilter
-                proccessedfilters.append(dfilter)
-            except Exception as error:
-                failed[dfilter] = error
 
-            if filter is not download_filters[-1]:
-                outfilter += "|"
+                if dfilter is not download_filters[-1]:
+                    outfilter += "|"
+
+            except re.error as error:
+                failed[dfilter] = error
 
         outfilter += ")$)"
 
         try:
             re.compile(outfilter)
 
-        except Exception as error:
+        except re.error as error:
             failed[outfilter] = error
 
         if failed:
