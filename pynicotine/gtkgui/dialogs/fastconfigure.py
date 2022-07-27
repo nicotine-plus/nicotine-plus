@@ -187,9 +187,12 @@ class FastConfigure(UserInterface, Dialog):
 
     def on_edit_share(self, *_args):
 
-        for iterator in self.shares_list_view.get_selected_rows():
-            virtual_name = self.shares_list_view.get_row_value(iterator, 0)
-            folder = self.shares_list_view.get_row_value(iterator, 1)
+        model, paths = self.shares_list_view.get_selection().get_selected_rows()
+
+        for path in reversed(paths):
+            iterator = model.get_iter(path)
+            virtual_name = model.get_value(iterator, 0)
+            folder = model.get_value(iterator, 1)
 
             EntryDialog(
                 parent=self.dialog,
