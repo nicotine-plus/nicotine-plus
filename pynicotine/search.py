@@ -408,19 +408,16 @@ class Search:
 
         try:
             words = searchterm.split()
-            original_length = len(words)
+            num_words = len(words)
             results = None
-            i = 0
 
-            while i < len(words):
-                word = words[i]
+            for current_index, word in enumerate(words):
                 exclude_word = False
-                i += 1
 
                 if word in excluded_words:
                     # Excluded search words (e.g. -hello)
 
-                    if results is None and i < original_length:
+                    if results is None and current_index < num_words:
                         # Re-append the word so we can re-process it once we've found a match
                         words.append(word)
                         continue
