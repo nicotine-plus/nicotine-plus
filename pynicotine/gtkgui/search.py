@@ -23,7 +23,6 @@
 
 import operator
 import re
-import sre_constants
 
 from collections import defaultdict
 from collections import OrderedDict
@@ -1439,13 +1438,13 @@ class Search(UserInterface):
         if filter_in:
             try:
                 filter_in = re.compile(filter_in, flags=re.IGNORECASE)
-            except sre_constants.error:
+            except re.error:
                 filter_in = None
 
         if filter_out:
             try:
                 filter_out = re.compile(filter_out, flags=re.IGNORECASE)
-            except sre_constants.error:
+            except re.error:
                 filter_out = None
 
         if filter_size:

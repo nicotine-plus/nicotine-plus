@@ -401,26 +401,23 @@ class DownloadsFrame(UserInterface):
             if escaped:
                 dfilter = re.escape(dfilter)
                 dfilter = dfilter.replace("\\*", ".*")
-            else:
-                # Avoid "Nothing to repeat" error
-                dfilter = dfilter.replace("*", "\\*").replace("+", "\\+")
 
             try:
                 re.compile("(" + dfilter + ")")
                 outfilter += dfilter
 
-            except Exception as error:
-                failed[dfilter] = error
+                if dfilter != list(self.filter_list_view.iterators)[-1]:
+                    outfilter += "|"
 
-            if filter is not list(self.filter_list_view.iterators)[-1]:
-                outfilter += "|"
+            except re.error as error:
+                failed[dfilter] = error
 
         outfilter += ")$)"
 
         try:
             re.compile(outfilter)
 
-        except Exception as error:
+        except re.error as error:
             failed[outfilter] = error
 
         if failed:
