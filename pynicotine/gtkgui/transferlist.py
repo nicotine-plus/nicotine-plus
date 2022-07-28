@@ -781,7 +781,13 @@ class TransferList(UserInterface):
 
         self.populate_popup_menu_users()
 
-    def on_row_activated(self, _treeview, _path, _column):
+    def on_row_activated(self, _treeview, path, _column):
+
+        if self.tree_view.collapse_row(path):
+            return
+
+        if self.tree_view.expand_row(path, open_all=False):
+            return
 
         self.select_transfers()
         action = config.sections["transfers"]["%s_doubleclick" % self.type]
