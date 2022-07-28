@@ -387,7 +387,7 @@ class NicotineCore:
         user's IP address to determine country """
 
         if not self.logged_in:
-            return
+            return None
 
         user_address = self.protothread.user_addresses.get(user)
 
