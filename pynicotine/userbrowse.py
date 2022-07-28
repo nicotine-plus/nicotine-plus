@@ -58,9 +58,7 @@ class UserBrowse:
         self.core.send_message_to_peer(username, slskmessages.UploadQueueNotification())
 
     def add_user(self, user):
-
         if user not in self.users:
-            self.core.watch_user(user, force_update=True)
             self.users.add(user)
 
     def remove_user(self, user):
@@ -133,6 +131,8 @@ class UserBrowse:
         if not self.core.logged_in:
             self.show_connection_error(username)
             return
+
+        self.core.watch_user(username, force_update=True)
 
         if not user_exists or new_request:
             self.core.send_message_to_peer(username, slskmessages.GetSharedFileList())

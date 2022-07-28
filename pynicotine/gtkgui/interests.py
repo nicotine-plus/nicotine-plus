@@ -354,9 +354,6 @@ class Interests(UserInterface):
             self.similar_users_list_view.add_row(
                 [get_status_icon_name(UserStatus.OFFLINE), user, "", "0", 0, 0, 0], select_row=False)
 
-            # Request user status, speed and number of shared files
-            self.core.watch_user(user, force_update=True)
-
     def similar_users(self, msg):
         # Sort users by rating (largest number of identical likes)
         self.set_similar_users(sorted(msg.users, key=msg.users.get, reverse=True))

@@ -386,6 +386,9 @@ class NicotineCore:
         """ Retrieve a user's country code if previously cached, otherwise request
         user's IP address to determine country """
 
+        if not self.logged_in:
+            return
+
         user_address = self.protothread.user_addresses.get(user)
 
         if user_address and user != self.protothread.server_username:
@@ -402,7 +405,7 @@ class NicotineCore:
         """ Tell the server we want to be notified of status/stat updates
         for a user """
 
-        if not isinstance(user, str):
+        if not self.logged_in:
             return
 
         if not force_update and user in self.watched_users:
@@ -413,6 +416,8 @@ class NicotineCore:
 
         # Get privilege status
         self.queue.append(slskmessages.GetUserStatus(user))
+
+        self.watched_users.add(user)
 
     """ Network Events """
 
@@ -590,20 +595,13 @@ class NicotineCore:
 
         log.add_msg_contents(msg)
 
-        self.watched_users.add(msg.user)
-
-        if msg.userexists and msg.status is None:
-            # Legacy support (Soulfind server)
-            self.queue.append(slskmessages.GetUserStatus(msg.user))
-
         if msg.files is not None:
             self.get_user_stats(msg, log_contents=False)
 
-    def get_user_status(self, msg, log_contents=True):
+    def get_user_status(self, msg):
         """ Server code: 7 """
 
-        if log_contents:
-            log.add_msg_contents(msg)
+        log.add_msg_contents(msg)
 
         user = msg.user
         status = msg.status
@@ -622,15 +620,18 @@ class NicotineCore:
             })
             return
 
-        self.user_statuses[user] = status
-
-        self.interests.get_user_status(msg)
-        self.transfers.get_user_status(msg)
-        self.userbrowse.get_user_status(msg)
-        self.userinfo.get_user_status(msg)
-        self.userlist.get_user_status(msg)
-        self.privatechats.get_user_status(msg)
+        # We get status updates for room users even if we don't watch them
         self.chatrooms.get_user_status(msg)
+
+        if user in self.watched_users:
+            self.user_statuses[user] = status
+
+            self.transfers.get_user_status(msg)
+            self.interests.get_user_status(msg)
+            self.userbrowse.get_user_status(msg)
+            self.userinfo.get_user_status(msg)
+            self.userlist.get_user_status(msg)
+            self.privatechats.get_user_status(msg)
 
         self.pluginhandler.user_status_notification(user, status, privileged)
 
@@ -653,13 +654,18 @@ class NicotineCore:
         if log_contents:
             log.add_msg_contents(msg)
 
-        if msg.user == self.login_username:
+        user = msg.user
+
+        if user == self.login_username:
             self.transfers.upload_speed = msg.avgspeed
 
-        self.interests.get_user_stats(msg)
-        self.userinfo.get_user_stats(msg)
-        self.userlist.get_user_stats(msg)
+        # We get stat updates for room users even if we don't watch them
         self.chatrooms.get_user_stats(msg)
+
+        if user in self.watched_users:
+            self.interests.get_user_stats(msg)
+            self.userinfo.get_user_stats(msg)
+            self.userlist.get_user_stats(msg)
 
         stats = {
             'avgspeed': msg.avgspeed,
@@ -668,7 +674,7 @@ class NicotineCore:
             'dirs': msg.dirs,
         }
 
-        self.pluginhandler.user_stats_notification(msg.user, stats)
+        self.pluginhandler.user_stats_notification(user, stats)
 
     @staticmethod
     def admin_message(msg):
