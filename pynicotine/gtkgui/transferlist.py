@@ -412,7 +412,6 @@ class TransferList(UserInterface):
 
             iterator = self.transfersmodel.iter_next(iterator)
 
-        left = (total_size - current_bytes) / speed if speed > 0 else 0
         transfer = self.transfersmodel.get_value(initer, 16)
 
         if transfer.status != salient_status:
@@ -424,7 +423,8 @@ class TransferList(UserInterface):
             self.transfersmodel.set_value(initer, 12, GObject.Value(GObject.TYPE_UINT64, speed))
             transfer.speed = speed
 
-        if transfer.time_left != left:
+        if transfer.time_elapsed != elapsed:
+            left = (total_size - current_bytes) / speed if speed > 0 else 0
             self.transfersmodel.set_value(initer, 8, self.get_helapsed(elapsed))
             self.transfersmodel.set_value(initer, 9, self.get_hleft(left))
             self.transfersmodel.set_value(initer, 14, elapsed)
@@ -457,8 +457,8 @@ class TransferList(UserInterface):
         speed = transfer.speed or 0
         hspeed = self.get_hspeed(speed)
         elapsed = transfer.time_elapsed or 0
+        helapsed = self.get_helapsed(elapsed)
         left = transfer.time_left or 0
-        hleft = self.get_hleft(left)
         initer = transfer.iterator
 
         # Modify old transfer
@@ -472,9 +472,9 @@ class TransferList(UserInterface):
                 self.transfersmodel.set_value(initer, 7, hspeed)
                 self.transfersmodel.set_value(initer, 12, GObject.Value(GObject.TYPE_UINT64, speed))
 
-            if self.transfersmodel.get_value(initer, 9) != hleft:
-                self.transfersmodel.set_value(initer, 8, self.get_helapsed(elapsed))
-                self.transfersmodel.set_value(initer, 9, hleft)
+            if self.transfersmodel.get_value(initer, 8) != helapsed:
+                self.transfersmodel.set_value(initer, 8, helapsed)
+                self.transfersmodel.set_value(initer, 9, self.get_hleft(left))
                 self.transfersmodel.set_value(initer, 14, elapsed)
                 self.transfersmodel.set_value(initer, 15, left)
 
@@ -603,8 +603,8 @@ class TransferList(UserInterface):
             self.get_percent(current_byte_offset, size),
             self.get_hsize(current_byte_offset, size),
             hspeed,
-            self.get_helapsed(elapsed),
-            hleft,
+            helapsed,
+            self.get_hleft(left),
             GObject.Value(GObject.TYPE_UINT64, size),
             GObject.Value(GObject.TYPE_UINT64, current_byte_offset),
             GObject.Value(GObject.TYPE_UINT64, speed),
