@@ -161,6 +161,10 @@ class Interests:
 
         log.add_msg_contents(msg)
 
+        for user in msg.users:
+            # Request user status, speed and number of shared files
+            self.core.watch_user(user, force_update=True)
+
         if self.ui_callback:
             self.ui_callback.similar_users(msg)
 
@@ -168,6 +172,10 @@ class Interests:
         """ Server code: 112 """
 
         log.add_msg_contents(msg)
+
+        for user in msg.users:
+            # Request user status, speed and number of shared files
+            self.core.watch_user(user, force_update=True)
 
         if self.ui_callback:
             self.ui_callback.item_similar_users(msg)

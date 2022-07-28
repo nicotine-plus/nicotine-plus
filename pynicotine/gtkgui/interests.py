@@ -344,9 +344,6 @@ class Interests(UserInterface):
             )
             self.recommendation_users[user] = iterator
 
-            # Request user status, speed and number of shared files
-            self.core.watch_user(user, force_update=True)
-
     def similar_users(self, msg):
         # Sort users by rating (largest number of identical likes)
         self.set_similar_users(sorted(msg.users, key=msg.users.get, reverse=True))
