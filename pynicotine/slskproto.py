@@ -1557,7 +1557,6 @@ class SlskProtoThread(threading.Thread):
                     self.close_connection(self._conns, conn_obj.sock)
 
                 conn_obj.fileupl.offset = msg.offset
-                self._callback_msgs.append(copy.copy(conn_obj.fileupl))
 
         if idx:
             conn_obj.ibuf = msg_buffer[idx:]

@@ -1013,7 +1013,7 @@ class Transfers:
             self.abort_transfer(download)
             download.status = "Local file error"
 
-            log.add(_("I/O error: %s"), msg.error)
+            log.add(_("Download I/O error: %s"), msg.error)
             self.update_download(download)
             return
 
@@ -1031,7 +1031,7 @@ class Transfers:
             self.abort_transfer(upload)
             upload.status = "Local file error"
 
-            log.add(_("I/O error: %s"), msg.error)
+            log.add(_("Upload I/O error: %s"), msg.error)
             self.update_upload(upload)
             self.check_upload_queue()
             return
@@ -1346,51 +1346,36 @@ class Transfers:
         log.add_msg_contents(msg)
 
         sock = msg.sock
-        need_update = True
 
         for download in self.downloads:
             if download.sock != sock:
                 continue
 
-            try:
-                if download in self.transfer_request_times:
-                    del self.transfer_request_times[download]
+            if download in self.transfer_request_times:
+                del self.transfer_request_times[download]
 
-                current_time = time.time()
-                download.current_byte_offset = current_byte_offset = (download.size - msg.leftbytes)
+            current_time = time.time()
 
-                download.status = "Transferring"
-                old_elapsed = download.time_elapsed
-                download.time_elapsed = current_time - download.start_time
-                byte_difference = current_byte_offset - download.last_byte_offset
+            download.status = "Transferring"
+            download.time_elapsed = current_time - download.start_time
+            download.current_byte_offset = current_byte_offset = (download.size - msg.leftbytes)
+            byte_difference = current_byte_offset - download.last_byte_offset
 
-                if byte_difference:
-                    self.core.statistics.append_stat_value("downloaded_size", byte_difference)
+            if byte_difference:
+                self.core.statistics.append_stat_value("downloaded_size", byte_difference)
 
                 if download.size > current_byte_offset or download.speed is None:
-                    if current_byte_offset > download.last_byte_offset:
-                        download.speed = int(max(0, byte_difference // max(1, current_time - download.last_update)))
+                    download.speed = int(max(0, byte_difference // max(1, current_time - download.last_update)))
 
-                        if download.speed <= 0:
-                            download.time_left = 0
-                        else:
-                            download.time_left = (download.size - download.current_byte_offset) / download.speed
+                    if download.speed <= 0:
+                        download.time_left = 0
+                    else:
+                        download.time_left = (download.size - current_byte_offset) // download.speed
 
-                    if old_elapsed == download.time_elapsed:
-                        need_update = False
+            download.last_byte_offset = current_byte_offset
+            download.last_update = current_time
 
-                download.last_byte_offset = current_byte_offset
-                download.last_update = current_time
-
-            except OSError as error:
-                log.add(_("Download I/O error: %s"), error)
-
-                self.abort_transfer(download)
-                download.status = "Local file error"
-
-            if need_update:
-                self.update_download(download)
-
+            self.update_download(download)
             return
 
     def file_upload(self, msg):
@@ -1399,7 +1384,6 @@ class Transfers:
         log.add_msg_contents(msg)
 
         sock = msg.sock
-        need_update = True
 
         for upload in self.uploads:
             if upload.sock != sock:
@@ -1409,34 +1393,27 @@ class Transfers:
                 del self.transfer_request_times[upload]
 
             current_time = time.time()
-            upload.current_byte_offset = current_byte_offset = (msg.offset + msg.sentbytes)
 
             upload.status = "Transferring"
-            old_elapsed = upload.time_elapsed
             upload.time_elapsed = current_time - upload.start_time
+            upload.current_byte_offset = current_byte_offset = (msg.offset + msg.sentbytes)
             byte_difference = current_byte_offset - upload.last_byte_offset
 
             if byte_difference:
                 self.core.statistics.append_stat_value("uploaded_size", byte_difference)
 
-            if upload.size > current_byte_offset or upload.speed is None:
-                if current_byte_offset > upload.last_byte_offset:
+                if upload.size > current_byte_offset or upload.speed is None:
                     upload.speed = int(max(0, byte_difference // max(1, current_time - upload.last_update)))
 
                     if upload.speed <= 0:
                         upload.time_left = 0
                     else:
-                        upload.time_left = (upload.size - current_byte_offset) / upload.speed
-
-                if old_elapsed == upload.time_elapsed:
-                    need_update = False
+                        upload.time_left = (upload.size - current_byte_offset) // upload.speed
 
             upload.last_byte_offset = current_byte_offset
             upload.last_update = current_time
 
-            if need_update:
-                self.update_upload(upload)
-
+            self.update_upload(upload)
             return
 
     def download_conn_close(self, msg):
