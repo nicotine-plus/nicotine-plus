@@ -78,7 +78,6 @@ class PrivateChats:
         if user in self.users:
             return
 
-        self.core.watch_user(user)
         self.users.add(user)
 
         if user not in self.config.sections["privatechat"]["users"]:
@@ -100,6 +99,8 @@ class PrivateChats:
 
         if self.ui_callback:
             self.ui_callback.show_user(user, switch_page)
+
+        self.core.watch_user(user)
 
     def load_users(self):
 
