@@ -596,8 +596,10 @@ class NicotineFrame(UserInterface):
 
     def set_show_log(self, show):
 
+        self.log_view.auto_scroll = show
+
         if show:
-            self.log_view.scroll_bottom()
+            GLib.idle_add(self.log_view.scroll_bottom)
 
     def on_show_log(self, action, *_args):
 
