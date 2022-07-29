@@ -48,22 +48,23 @@ class SearchTest(unittest.TestCase):
         # Try a search with special characters removed
 
         config.sections["searches"]["remove_special_chars"] = True
-        token, searchterm, searchterm_without_special = self.search.do_search(SEARCH_TEXT, SEARCH_MODE)
+        search_term, search_term_without_special, *_unused = self.search.process_search_term(SEARCH_TEXT, SEARCH_MODE)
+        self.search.do_search(SEARCH_TEXT, SEARCH_MODE)
 
-        self.assertEqual(token, self.search.token)
-        self.assertEqual(token, old_token + 1)
-        self.assertEqual(searchterm, "70 gwen test a b c d auto yes -mp3 -nothanks *ello -no")
-        self.assertEqual(searchterm_without_special, "70 gwen test a b c d auto yes")
-        self.assertEqual(config.sections["searches"]["history"][0], searchterm)
+        self.assertEqual(self.search.token, old_token + 1)
+        self.assertEqual(search_term, "70 gwen test a b c d auto yes -mp3 -nothanks *ello -no")
+        self.assertEqual(search_term_without_special, "70 gwen test a b c d auto yes")
+        self.assertEqual(config.sections["searches"]["history"][0], search_term)
 
         # Try a search without special characters removed
 
         config.sections["searches"]["remove_special_chars"] = False
-        token, searchterm, searchterm_without_special = self.search.do_search(SEARCH_TEXT, SEARCH_MODE)
+        search_term, search_term_without_special, *_unused = self.search.process_search_term(SEARCH_TEXT, SEARCH_MODE)
+        self.search.do_search(SEARCH_TEXT, SEARCH_MODE)
 
-        self.assertEqual(searchterm, '70 gwen "test" a:b;c+d +++---}[ [[ @@ auto yes -mp3 -nothanks *ello -no')
-        self.assertEqual(searchterm_without_special, '70 gwen "test" a:b;c+d +++---}[ [[ @@ auto yes')
-        self.assertEqual(config.sections["searches"]["history"][0], searchterm)
+        self.assertEqual(search_term, '70 gwen "test" a:b;c+d +++---}[ [[ @@ auto yes -mp3 -nothanks *ello -no')
+        self.assertEqual(search_term_without_special, '70 gwen "test" a:b;c+d +++---}[ [[ @@ auto yes')
+        self.assertEqual(config.sections["searches"]["history"][0], search_term)
         self.assertEqual(config.sections["searches"]["history"][1],
                          "70 gwen test a b c d auto yes -mp3 -nothanks *ello -no")
 
