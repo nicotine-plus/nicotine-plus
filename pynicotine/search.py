@@ -113,34 +113,34 @@ class Search:
         if self.ui_callback:
             self.ui_callback.remove_search(token)
 
-    def process_search_term(self, text, mode, room, user):
+    def process_search_term(self, search_term, mode, room=None, user=None):
 
         users = []
         feedback = None
 
         if mode == "global":
             if self.core:
-                feedback = self.core.pluginhandler.outgoing_global_search_event(text)
+                feedback = self.core.pluginhandler.outgoing_global_search_event(search_term)
 
                 if feedback is not None:
-                    text = feedback[0]
+                    search_term = feedback[0]
 
         elif mode == "rooms":
             if not room:
                 room = _("Joined Rooms ")
 
             if self.core:
-                feedback = self.core.pluginhandler.outgoing_room_search_event(room, text)
+                feedback = self.core.pluginhandler.outgoing_room_search_event(room, search_term)
 
                 if feedback is not None:
-                    room, text = feedback
+                    room, search_term = feedback
 
         elif mode == "buddies":
             if self.core:
-                feedback = self.core.pluginhandler.outgoing_buddy_search_event(text)
+                feedback = self.core.pluginhandler.outgoing_buddy_search_event(search_term)
 
                 if feedback is not None:
-                    text = feedback[0]
+                    search_term = feedback[0]
 
         elif mode == "user":
             if user:
@@ -150,79 +150,77 @@ class Search:
                 if not users:
                     users.append(self.core.login_username)
 
-                feedback = self.core.pluginhandler.outgoing_user_search_event(users, text)
+                feedback = self.core.pluginhandler.outgoing_user_search_event(users, search_term)
 
                 if feedback is not None:
-                    users, text = feedback
+                    users, search_term = feedback
 
         else:
             log.add("Unknown search mode, not using plugin system. Fix me!")
 
-        return text, room, users
-
-    def do_search(self, text, mode, room=None, user=None):
-
-        # Validate search term and run it through plugins
-        text, room, users = self.process_search_term(text, mode, room, user)
-
-        # Get a new search token
-        self.token = increment_token(self.token)
-
         # Get excluded words (starting with "-")
-        searchterm_words = text.split()
-        searchterm_words_special = (p for p in searchterm_words if p.startswith(('-', '*')) and len(p) > 1)
+        search_term_words = search_term.split()
+        search_term_words_special = [p for p in search_term_words if p.startswith(('-', '*')) and len(p) > 1]
 
         # Remove words starting with "-", results containing these are excluded by us later
-        searchterm_without_special = ' '.join(p for p in searchterm_words if not p.startswith(('-', '*')))
+        search_term_without_special = ' '.join(p for p in search_term_words if p not in search_term_words_special)
 
         if self.config.sections["searches"]["remove_special_chars"]:
             """
             Remove special characters from search term
             SoulseekQt doesn't seem to send search results if special characters are included (July 7, 2020)
             """
-            stripped_searchterm = ' '.join(searchterm_without_special.translate(self.translatepunctuation).split())
+            stripped_search_term = ' '.join(search_term_without_special.translate(self.translatepunctuation).split())
 
             # Only modify search term if string also contains non-special characters
-            if stripped_searchterm:
-                searchterm_without_special = stripped_searchterm
+            if stripped_search_term:
+                search_term_without_special = stripped_search_term
 
         # Remove trailing whitespace
-        searchterm = searchterm_without_special.strip()
+        search_term = search_term_without_special.strip()
 
         # Append excluded words
-        for word in searchterm_words_special:
-            searchterm += " " + word
+        for word in search_term_words_special:
+            search_term += " " + word
+
+        return search_term, search_term_without_special, room, users
+
+    def do_search(self, search_term, mode, room=None, user=None):
+
+        # Validate search term and run it through plugins
+        search_term, _search_term_without_special, room, users = self.process_search_term(search_term, mode, room, user)
+
+        # Get a new search token
+        self.token = increment_token(self.token)
 
         if self.config.sections["searches"]["enable_history"]:
             items = self.config.sections["searches"]["history"]
 
-            if searchterm in items:
-                items.remove(searchterm)
+            if search_term in items:
+                items.remove(search_term)
 
-            items.insert(0, searchterm)
+            items.insert(0, search_term)
 
             # Clear old items
             del items[200:]
             self.config.write_configuration()
 
         if mode == "global":
-            self.do_global_search(searchterm)
+            self.do_global_search(search_term)
 
         elif mode == "rooms":
-            self.do_rooms_search(searchterm, room)
+            self.do_rooms_search(search_term, room)
 
         elif mode == "buddies":
-            self.do_buddies_search(searchterm)
+            self.do_buddies_search(search_term)
 
         elif mode == "user":
-            self.do_peer_search(searchterm, users)
+            self.do_peer_search(search_term, users)
 
-        self.add_search(searchterm, mode, ignore=False)
+        self.add_search(search_term, mode, ignore=False)
 
         if self.ui_callback:
-            self.ui_callback.do_search(self.token, searchterm, mode, room, users)
-
-        return (self.token, searchterm, searchterm_without_special)
+            self.ui_callback.do_search(self.token, search_term, mode, room, users)
 
     def do_global_search(self, text):
         self.queue.append(slskmessages.FileSearch(self.token, text))
