@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on July 19, 2022
+Last updated on July 29, 2022
 
 Since the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify or extend the protocol in ways that negatively impact the network.
 
@@ -57,6 +57,13 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
 | P    | Peer To Peer        |
 | F    | File Transfer       |
 | D    | Distributed Network |
+
+### Login Failure Reasons
+
+| Reason          | Description                                                                      |
+| --------------- | -------------------------------------------------------------------------------- |
+| INVALIDUSERNAME | Username is longer than 30 characters or contains invalid characters (non-ASCII) |
+| INVALIDPASS     | Password for existing user is incorrect                                          |
 
 ### User Status Codes
 
@@ -265,7 +272,7 @@ We send this to the server right after the connection has been established. Serv
     4.  **string** <ins>hash</ins> *MD5 hex digest of the password string*
   - Receive Login Failure
     1.  **bool** <ins>failure</ins> **0**
-    2.  **string** <ins>reason</ins> *Almost always:* **INVALIDPASS** *(sometimes it's a banned message or another error).*
+    2.  **string** <ins>reason</ins> *see [Login Failure Reasons](#login-failure-reasons)*
 
 ## Server Code 2
 
