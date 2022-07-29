@@ -1355,22 +1355,21 @@ class Transfers:
                 del self.transfer_request_times[download]
 
             current_time = time.time()
+            size = download.size
 
             download.status = "Transferring"
             download.time_elapsed = current_time - download.start_time
-            download.current_byte_offset = current_byte_offset = (download.size - msg.leftbytes)
+            download.current_byte_offset = current_byte_offset = (size - msg.leftbytes)
             byte_difference = current_byte_offset - download.last_byte_offset
 
             if byte_difference:
                 self.core.statistics.append_stat_value("downloaded_size", byte_difference)
 
-                if download.size > current_byte_offset or download.speed is None:
+                if size > current_byte_offset or download.speed is None:
                     download.speed = int(max(0, byte_difference // max(1, current_time - download.last_update)))
-
-                    if download.speed <= 0:
-                        download.time_left = 0
-                    else:
-                        download.time_left = (download.size - current_byte_offset) // download.speed
+                    download.time_left = (size - current_byte_offset) // download.speed if download.speed else 0
+                else:
+                    download.time_left = 0
 
             download.last_byte_offset = current_byte_offset
             download.last_update = current_time
@@ -1393,6 +1392,7 @@ class Transfers:
                 del self.transfer_request_times[upload]
 
             current_time = time.time()
+            size = upload.size
 
             upload.status = "Transferring"
             upload.time_elapsed = current_time - upload.start_time
@@ -1402,13 +1402,11 @@ class Transfers:
             if byte_difference:
                 self.core.statistics.append_stat_value("uploaded_size", byte_difference)
 
-                if upload.size > current_byte_offset or upload.speed is None:
+                if size > current_byte_offset or upload.speed is None:
                     upload.speed = int(max(0, byte_difference // max(1, current_time - upload.last_update)))
-
-                    if upload.speed <= 0:
-                        upload.time_left = 0
-                    else:
-                        upload.time_left = (upload.size - current_byte_offset) // upload.speed
+                    upload.time_left = (size - current_byte_offset) // upload.speed if upload.speed else 0
+                else:
+                    upload.time_left = 0
 
             upload.last_byte_offset = current_byte_offset
             upload.last_update = current_time
@@ -1987,7 +1985,6 @@ class Transfers:
 
         transfer.status = "Finished"
         transfer.current_byte_offset = transfer.size
-        transfer.time_left = 0
         transfer.sock = None
 
         self.core.statistics.append_stat_value("completed_downloads", 1)
@@ -2019,7 +2016,6 @@ class Transfers:
 
         transfer.status = "Finished"
         transfer.current_byte_offset = transfer.size
-        transfer.time_left = 0
         transfer.sock = None
 
         self.update_user_counter(transfer.user)
