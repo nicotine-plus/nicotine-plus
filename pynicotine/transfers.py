@@ -1216,7 +1216,6 @@ class Transfers:
 
             else:
                 upload.file = file_handle
-                upload.last_byte_offset = 0
                 upload.queue_position = 0
                 upload.last_update = time.time()
                 upload.start_time = upload.last_update - upload.time_elapsed
@@ -1392,6 +1391,9 @@ class Transfers:
 
             current_time = time.time()
             size = upload.size
+
+            if not upload.last_byte_offset:
+                upload.last_byte_offset = msg.offset
 
             upload.status = "Transferring"
             upload.time_elapsed = current_time - upload.start_time
