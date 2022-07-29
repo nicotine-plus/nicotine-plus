@@ -75,6 +75,11 @@ class ConnectionType:
     DISTRIBUTED = 'D'
 
 
+class LoginFailure:
+    USERNAME = "INVALIDUSERNAME"
+    PASSWORD = "INVALIDPASS"
+
+
 class UserStatus:
     OFFLINE = 0
     AWAY = 1

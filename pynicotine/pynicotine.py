@@ -49,6 +49,7 @@ from pynicotine.pluginsystem import PluginHandler
 from pynicotine.privatechat import PrivateChats
 from pynicotine.search import Search
 from pynicotine.shares import Shares
+from pynicotine.slskmessages import LoginFailure
 from pynicotine.slskmessages import UserStatus
 from pynicotine.transfers import Statistics
 from pynicotine.transfers import Transfers
@@ -525,7 +526,7 @@ class NicotineCore:
             self.pluginhandler.server_connect_notification()
 
         else:
-            if msg.reason == "INVALIDPASS":
+            if msg.reason == LoginFailure.PASSWORD:
                 self.ui_callback.invalid_password()
                 return
 
