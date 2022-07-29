@@ -433,7 +433,7 @@ class SlskProtoThread(threading.Thread):
         """ Call this to abort the thread """
         self._want_abort = True
 
-        self.listen_socket.close()
+        self.close_socket(self.listen_socket)
         self.selector.close()
         self.server_disconnect()
 
@@ -882,6 +882,18 @@ class SlskProtoThread(threading.Thread):
 
         self.close_connection(self._conns, prev_init.sock)
 
+    def close_socket(self, sock):
+
+        try:
+            sock.shutdown(socket.SHUT_RDWR)
+        except OSError:
+            pass
+
+        try:
+            sock.close()
+        except OSError:
+            pass
+
     def close_connection(self, connection_list, sock, callback=True):
 
         conn_obj = connection_list.pop(sock, None)
@@ -894,7 +906,7 @@ class SlskProtoThread(threading.Thread):
         if not self._want_abort:
             self.selector.unregister(sock)
 
-        sock.close()
+        self.close_socket(sock)
         self._numsockets -= 1
 
         if sock is self.server_socket:
@@ -1045,7 +1057,7 @@ class SlskProtoThread(threading.Thread):
 
         except OSError as error:
             self.connect_error(error, conn_obj)
-            server_socket.close()
+            self.close_socket(server_socket)
             self.server_disconnect()
 
     def process_server_input(self, conn_obj, msg_buffer):
@@ -1397,7 +1409,7 @@ class SlskProtoThread(threading.Thread):
 
         except OSError as error:
             self.connect_error(error, conn_obj)
-            sock.close()
+            self.close_socket(sock)
 
     def process_peer_input(self, conn_obj, msg_buffer):
         """ We have a "P" connection (p2p exchange), peer has sent us
