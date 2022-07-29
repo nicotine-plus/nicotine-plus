@@ -191,7 +191,6 @@ class PrivateChats:
         user = msg.user
 
         if should_log:
-            log.add_msg_contents(msg)
             log.add_chat(_("Private message from user '%(user)s': %(message)s"), {
                 "user": user,
                 "message": msg.msg

@@ -322,8 +322,6 @@ class Search:
     def set_wishlist_interval(self, msg):
         """ Server code: 104 """
 
-        log.add_msg_contents(msg)
-
         self.wishlist_interval = msg.seconds
         log.add_search(_("Wishlist wait period set to %s seconds"), msg.seconds)
 
@@ -332,8 +330,6 @@ class Search:
 
     def file_search_result(self, msg):
         """ Peer message: 9 """
-
-        log.add_msg_contents(msg)
 
         if not self.ui_callback or msg.token not in slskmessages.SEARCH_TOKENS_ALLOWED:
             return
@@ -365,15 +361,11 @@ class Search:
     def search_request(self, msg):
         """ Server code: 26, 42 and 120 """
 
-        log.add_msg_contents(msg)
-
         self.process_search_request(msg.searchterm, msg.user, msg.token, direct=True)
         self.core.pluginhandler.search_request_notification(msg.searchterm, msg.user, msg.token)
 
     def distrib_search(self, msg):
         """ Distrib code: 3 """
-
-        # Verbose: log.add_msg_contents(msg)
 
         self.process_search_request(msg.searchterm, msg.user, msg.token, direct=False)
         self.core.pluginhandler.distrib_search_notification(msg.searchterm, msg.user, msg.token)

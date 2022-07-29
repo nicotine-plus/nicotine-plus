@@ -2102,6 +2102,9 @@ class SlskProtoThread(threading.Thread):
 
             # Inform the main thread
             if self._callback_msgs:
+                for msg in self._callback_msgs:
+                    log.add_msg_contents(msg)
+
                 self._core_callback(self._callback_msgs)
                 self._callback_msgs.clear()
 

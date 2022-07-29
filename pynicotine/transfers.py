@@ -698,8 +698,6 @@ class Transfers:
         a TransferRequest with direction 0 (download request). We will initiate the upload of
         the queued file later. """
 
-        log.add_msg_contents(msg)
-
         user = msg.init.target_user
         filename = msg.file
 
@@ -735,8 +733,6 @@ class Transfers:
 
     def transfer_request(self, msg):
         """ Peer code: 40 """
-
-        log.add_msg_contents(msg)
 
         user = msg.init.target_user
         response = None
@@ -916,7 +912,6 @@ class Transfers:
         token = msg.token
         reason = msg.reason
 
-        log.add_msg_contents(msg)
         log.add_transfer(("Received response for upload request %(token)s: allowed: %(allowed)s, "
                           "reason: %(reason)s, file size: %(size)s"), {
             "token": token,
@@ -1002,8 +997,6 @@ class Transfers:
     def download_file_error(self, msg):
         """ Networking thread encountered a local file error for download """
 
-        log.add_msg_contents(msg)
-
         sock = msg.sock
 
         for download in self.downloads:
@@ -1019,8 +1012,6 @@ class Transfers:
 
     def upload_file_error(self, msg):
         """ Networking thread encountered a local file error for upload """
-
-        log.add_msg_contents(msg)
 
         sock = msg.sock
 
@@ -1038,8 +1029,6 @@ class Transfers:
 
     def file_download_init(self, msg):
         """ A peer is requesting to start uploading a file to us """
-
-        log.add_msg_contents(msg)
 
         token = msg.token
 
@@ -1163,8 +1152,6 @@ class Transfers:
     def file_upload_init(self, msg):
         """ We are requesting to start uploading a file to a peer """
 
-        log.add_msg_contents(msg)
-
         token = msg.token
 
         for upload in self.uploads:
@@ -1253,8 +1240,6 @@ class Transfers:
     def upload_denied(self, msg):
         """ Peer code: 50 """
 
-        log.add_msg_contents(msg)
-
         user = msg.init.target_user
         filename = msg.file
         reason = msg.reason
@@ -1303,8 +1288,6 @@ class Transfers:
     def upload_failed(self, msg):
         """ Peer code: 46 """
 
-        log.add_msg_contents(msg)
-
         user = msg.init.target_user
         filename = msg.file
 
@@ -1341,8 +1324,6 @@ class Transfers:
     def file_download(self, msg):
         """ A file download is in progress """
 
-        log.add_msg_contents(msg)
-
         sock = msg.sock
 
         for download in self.downloads:
@@ -1377,8 +1358,6 @@ class Transfers:
 
     def file_upload(self, msg):
         """ A file upload is in progress """
-
-        log.add_msg_contents(msg)
 
         sock = msg.sock
 
@@ -1418,8 +1397,6 @@ class Transfers:
     def download_conn_close(self, msg):
         """ The remote peer has closed a file transfer connection """
 
-        log.add_msg_contents(msg)
-
         sock = msg.sock
 
         for download in self.downloads:
@@ -1443,8 +1420,6 @@ class Transfers:
 
     def upload_conn_close(self, msg):
         """ The remote peer has closed a file transfer connection """
-
-        log.add_msg_contents(msg)
 
         sock = msg.sock
 
@@ -1487,8 +1462,6 @@ class Transfers:
 
     def place_in_queue_request(self, msg):
         """ Peer code: 51 """
-
-        log.add_msg_contents(msg)
 
         user = msg.init.target_user
         filename = msg.file
@@ -1541,8 +1514,6 @@ class Transfers:
     def place_in_queue(self, msg):
         """ Peer code: 44 """
         """ The peer tells us our place in queue for a particular transfer """
-
-        log.add_msg_contents(msg)
 
         username = msg.init.target_user
         filename = msg.filename

@@ -24,7 +24,6 @@ import zlib
 from operator import itemgetter
 
 from pynicotine.config import config
-from pynicotine.logfacility import log
 
 """ This module contains message classes, that networking and UI thread
 exchange. Basically there are three types of messages: internal messages,
@@ -328,6 +327,7 @@ class SlskMessage:
     def make_network_message(self):
         """ Returns binary array, that can be sent over the network"""
 
+        from pynicotine.logfacility import log
         log.add_debug("Empty message made, class %s", self.__class__)
         return b""
 
@@ -345,6 +345,7 @@ class SlskMessage:
             try:
                 string = str(string, "latin-1")
             except Exception as error:
+                from pynicotine.logfacility import log
                 log.add_debug("Error trying to decode string '%s': %s", (string, error))
 
         return start + 4 + length, string
@@ -377,6 +378,7 @@ class SlskMessage:
         """ Extracts information from the message and sets up fields
         in an object"""
 
+        from pynicotine.logfacility import log
         log.add_debug("Can't parse incoming messages, class %s", self.__class__)
 
     def debug(self, message=None):
@@ -436,11 +438,7 @@ class Login(ServerMessage):
         if not message[pos:]:
             return
 
-        try:
-            pos, self.ip_address = self.unpack_ip(message, pos)
-
-        except Exception as error:
-            log.add_debug("Error unpacking IP address: %s", error)
+        pos, self.ip_address = self.unpack_ip(message, pos)
 
         # MD5 hexdigest of the password you sent
         if len(message[pos:]) >= 4:
@@ -2312,6 +2310,7 @@ class SharedFileList(PeerMessage):
                     msg_list.extend(self.list[key])
 
             except Exception as error:
+                from pynicotine.logfacility import log
                 msg_list = self.pack_uint32(0)
                 log.add(_("Unable to read shares database. Please rescan your shares. Error: %s"), error)
 
@@ -2324,15 +2323,8 @@ class SharedFileList(PeerMessage):
         return self.built
 
     def parse_network_message(self, message):
-        try:
-            message = memoryview(zlib.decompress(message))
-            self._parse_network_message(message)
-
-        except Exception as error:
-            log.add_debug("Exception during parsing %(area)s: %(exception)s",
-                          {'area': 'SharedFileList', 'exception': error})
-            self.list = []
-            self.privatelist = []
+        message = memoryview(zlib.decompress(message))
+        self._parse_network_message(message)
 
     def _parse_result_list(self, message, pos=0):
         pos, ndir = self.unpack_uint32(message, pos)
@@ -2470,15 +2462,8 @@ class FileSearchResult(PeerMessage):
         return zlib.compress(msg)
 
     def parse_network_message(self, message):
-        try:
-            message = memoryview(zlib.decompress(message))
-            self._parse_network_message(message)
-
-        except Exception as error:
-            log.add_debug("Exception during parsing %(area)s: %(exception)s",
-                          {'area': 'FileSearchResult', 'exception': error})
-            self.list = []
-            self.privatelist = []
+        message = memoryview(zlib.decompress(message))
+        self._parse_network_message(message)
 
     def _parse_result_list(self, message, pos):
         pos, nfiles = self.unpack_uint32(message, pos)
@@ -2651,14 +2636,8 @@ class FolderContentsResponse(PeerMessage):
         self.list = shares
 
     def parse_network_message(self, message):
-        try:
-            message = memoryview(zlib.decompress(message))
-            self._parse_network_message(message)
-
-        except Exception as error:
-            log.add_debug("Exception during parsing %(area)s: %(exception)s",
-                          {'area': 'FolderContentsResponse', 'exception': error})
-            self.list = {}
+        message = memoryview(zlib.decompress(message))
+        self._parse_network_message(message)
 
     def _parse_network_message(self, message):
         shares = {}
@@ -3001,14 +2980,6 @@ class DistribSearch(DistribMessage):
         return msg
 
     def parse_network_message(self, message):
-        try:
-            self._parse_network_message(message)
-
-        except Exception as error:
-            log.add_debug("Exception during parsing %(area)s: %(exception)s",
-                          {'area': 'DistribSearch', 'exception': error})
-
-    def _parse_network_message(self, message):
         pos, self.unknown = self.unpack_uint32(message)
         pos, self.user = self.unpack_string(message, pos)
         pos, self.token = self.unpack_uint32(message, pos)

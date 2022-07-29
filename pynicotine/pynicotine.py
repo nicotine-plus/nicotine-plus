@@ -254,7 +254,7 @@ class NicotineCore:
             slskmessages.PrivateRoomRemoveOperator: self.chatrooms.private_room_remove_operator,
             slskmessages.PublicRoomMessage: self.chatrooms.public_room_message,
             slskmessages.ShowConnectionErrorMessage: self.show_connection_error_message,
-            slskmessages.UnknownPeerMessage: self.ignore
+            slskmessages.UnknownPeerMessage: self.dummy_message
         }
 
     def quit(self, signal_type=None, _frame=None):
@@ -436,13 +436,9 @@ class NicotineCore:
         msgs.clear()
 
     @staticmethod
-    def ignore(msg):
+    def dummy_message(msg):
         # Ignore received message
         pass
-
-    @staticmethod
-    def dummy_message(msg):
-        log.add_msg_contents(msg)
 
     def show_connection_error_message(self, msg):
         """ Request UI to show error messages related to connectivity """
@@ -500,8 +496,6 @@ class NicotineCore:
     def login(self, msg):
         """ Server code: 1 """
 
-        log.add_msg_contents(msg)
-
         if msg.success:
             self.logged_in = True
             self.login_username = msg.username
@@ -539,8 +533,6 @@ class NicotineCore:
 
     def get_peer_address(self, msg):
         """ Server code: 3 """
-
-        log.add_msg_contents(msg)
 
         user = msg.user
 
@@ -593,15 +585,11 @@ class NicotineCore:
     def add_user(self, msg):
         """ Server code: 5 """
 
-        log.add_msg_contents(msg)
-
         if msg.files is not None:
-            self.get_user_stats(msg, log_contents=False)
+            self.get_user_stats(msg)
 
     def get_user_status(self, msg):
         """ Server code: 7 """
-
-        log.add_msg_contents(msg)
 
         user = msg.user
         status = msg.status
@@ -638,8 +626,6 @@ class NicotineCore:
     def connect_to_peer(self, msg):
         """ Server code: 18 """
 
-        log.add_msg_contents(msg)
-
         if msg.privileged is None:
             return
 
@@ -648,11 +634,8 @@ class NicotineCore:
         else:
             self.transfers.remove_from_privileged(msg.user)
 
-    def get_user_stats(self, msg, log_contents=True):
+    def get_user_stats(self, msg):
         """ Server code: 36 """
-
-        if log_contents:
-            log.add_msg_contents(msg)
 
         user = msg.user
 
@@ -685,7 +668,6 @@ class NicotineCore:
     def privileged_users(self, msg):
         """ Server code: 69 """
 
-        log.add_msg_contents(msg)
         self.transfers.set_privileged_users(msg.users)
         log.add(_("%i privileged users"), (len(msg.users)))
 
@@ -693,13 +675,10 @@ class NicotineCore:
         """ Server code: 91 """
         """ DEPRECATED """
 
-        log.add_msg_contents(msg)
         self.transfers.add_to_privileged(msg.user)
 
     def check_privileges(self, msg):
         """ Server code: 92 """
-
-        log.add_msg_contents(msg)
 
         mins = msg.seconds // 60
         hours = mins // 60
@@ -722,8 +701,6 @@ class NicotineCore:
     @staticmethod
     def change_password(msg):
         """ Server code: 142 """
-
-        log.add_msg_contents(msg)
 
         password = msg.password
         config.sections["server"]["passw"] = password

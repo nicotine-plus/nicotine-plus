@@ -840,8 +840,6 @@ class Shares:
     def get_shared_file_list(self, msg):
         """ Peer code: 4 """
 
-        log.add_msg_contents(msg)
-
         user = msg.init.target_user
         request_time = time.time()
 
@@ -880,8 +878,6 @@ class Shares:
 
     def folder_contents_request(self, msg):
         """ Peer code: 36 """
-
-        log.add_msg_contents(msg)
 
         init = msg.init
         ip_address, _port = msg.init.addr
