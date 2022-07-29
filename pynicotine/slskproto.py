@@ -882,7 +882,8 @@ class SlskProtoThread(threading.Thread):
 
         self.close_connection(self._conns, prev_init.sock)
 
-    def close_socket(self, sock):
+    @staticmethod
+    def close_socket(sock):
 
         try:
             sock.shutdown(socket.SHUT_RDWR)
