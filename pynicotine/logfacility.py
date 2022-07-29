@@ -20,6 +20,7 @@ import os
 import threading
 import time
 
+from pynicotine import slskmessages
 from pynicotine.config import config
 
 
@@ -33,22 +34,33 @@ class LogFile:
 
 class Logger:
 
+    PREFIXES = {
+        "download": "Download",
+        "upload": "Upload",
+        "search": "Search",
+        "chat": "Chat",
+        "connection": "Conn",
+        "message": "Msg",
+        "transfer": "Transfer",
+        "miscellaneous": "Misc"
+    }
+
+    EXCLUDED_MSGS = {
+        slskmessages.ChangePassword,
+        slskmessages.DistribEmbeddedMessage,
+        slskmessages.DistribSearch,
+        slskmessages.EmbeddedMessage,
+        slskmessages.SetConnectionStats,
+        slskmessages.SharedFileList,
+        slskmessages.UnknownPeerMessage
+    }
+
     def __init__(self):
 
         self.listeners = set()
         self.log_levels = None
         self.file_name = "debug_" + str(int(time.time())) + ".log"
         self.log_files = {}
-        self.prefixes = {
-            "download": "Download",
-            "upload": "Upload",
-            "search": "Search",
-            "chat": "Chat",
-            "connection": "Conn",
-            "message": "Msg",
-            "transfer": "Transfer",
-            "miscellaneous": "Misc"
-        }
 
         self.add_listener(self.log_console)
         self.start_log_file_timer()
@@ -136,7 +148,7 @@ class Logger:
 
     def set_msg_prefix(self, level, msg):
 
-        prefix = self.prefixes.get(level)
+        prefix = self.PREFIXES.get(level)
 
         if prefix:
             msg = "[%s] %s" % (prefix, msg)
@@ -153,10 +165,6 @@ class Logger:
         # Important messages are always visible
         if level and not level.startswith("important") and level not in levels:
             return
-
-        if not msg_args and level == "message":
-            # Compile message contents
-            msg = "%s %s" % (msg.__class__, self.contents(msg))
 
         msg = self.set_msg_prefix(level, msg)
 
@@ -196,6 +204,14 @@ class Logger:
         self.add(msg, msg_args=msg_args, level="connection")
 
     def add_msg_contents(self, msg):
+
+        # Compile message contents
+        msg_class = msg.__class__
+
+        if msg_class in self.EXCLUDED_MSGS:
+            return
+
+        msg = "%s %s" % (msg_class, self.contents(msg))
         self.add(msg, msg_args=None, level="message")
 
     def add_transfer(self, msg, msg_args=None):

@@ -124,8 +124,6 @@ class UserInfo:
     def user_info_request(self, msg):
         """ Peer code: 15 """
 
-        log.add_msg_contents(msg)
-
         user = msg.init.target_user
         ip_address, _port = msg.init.addr
         request_time = time.time()
@@ -175,16 +173,12 @@ class UserInfo:
     def user_info_reply(self, msg):
         """ Peer code: 16 """
 
-        log.add_msg_contents(msg)
-
         if self.ui_callback:
             user = msg.init.target_user
             self.ui_callback.user_info_reply(user, msg)
 
     def user_interests(self, msg):
         """ Server code: 57 """
-
-        log.add_msg_contents(msg)
 
         if self.ui_callback:
             self.ui_callback.user_interests(msg)

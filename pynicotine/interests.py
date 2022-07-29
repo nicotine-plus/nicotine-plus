@@ -17,7 +17,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from pynicotine import slskmessages
-from pynicotine.logfacility import log
 
 
 class Interests:
@@ -135,15 +134,11 @@ class Interests:
     def global_recommendations(self, msg):
         """ Server code: 56 """
 
-        log.add_msg_contents(msg)
-
         if self.ui_callback:
             self.ui_callback.global_recommendations(msg)
 
     def item_recommendations(self, msg):
         """ Server code: 111 """
-
-        log.add_msg_contents(msg)
 
         if self.ui_callback:
             self.ui_callback.item_recommendations(msg)
@@ -151,15 +146,11 @@ class Interests:
     def recommendations(self, msg):
         """ Server code: 54 """
 
-        log.add_msg_contents(msg)
-
         if self.ui_callback:
             self.ui_callback.recommendations(msg)
 
     def similar_users(self, msg):
         """ Server code: 110 """
-
-        log.add_msg_contents(msg)
 
         if self.ui_callback:
             self.ui_callback.similar_users(msg)
@@ -170,8 +161,6 @@ class Interests:
 
     def item_similar_users(self, msg):
         """ Server code: 112 """
-
-        log.add_msg_contents(msg)
 
         if self.ui_callback:
             self.ui_callback.item_similar_users(msg)

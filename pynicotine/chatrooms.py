@@ -167,8 +167,6 @@ class ChatRooms:
     def join_room(self, msg):
         """ Server code: 14 """
 
-        log.add_msg_contents(msg)
-
         self.joined_rooms.add(msg.room)
 
         if msg.private:
@@ -181,8 +179,6 @@ class ChatRooms:
 
     def leave_room(self, msg):
         """ Server code: 15 """
-
-        log.add_msg_contents(msg)
 
         self.joined_rooms.discard(msg.room)
 
@@ -200,8 +196,6 @@ class ChatRooms:
     def private_room_users(self, msg):
         """ Server code: 133 """
 
-        log.add_msg_contents(msg)
-
         private_room = self.private_rooms.get(msg.room)
 
         if private_room is None:
@@ -216,8 +210,6 @@ class ChatRooms:
     def private_room_add_user(self, msg):
         """ Server code: 134 """
 
-        log.add_msg_contents(msg)
-
         private_room = self.private_rooms.get(msg.room)
 
         if private_room is not None and msg.user not in private_room["users"]:
@@ -228,8 +220,6 @@ class ChatRooms:
 
     def private_room_remove_user(self, msg):
         """ Server code: 135 """
-
-        log.add_msg_contents(msg)
 
         private_room = self.private_rooms.get(msg.room)
 
@@ -242,8 +232,6 @@ class ChatRooms:
     def private_room_disown(self, msg):
         """ Server code: 137 """
 
-        log.add_msg_contents(msg)
-
         private_room = self.private_rooms.get(msg.room)
 
         if private_room is not None and private_room["owner"] == self.core.login_username:
@@ -255,8 +243,6 @@ class ChatRooms:
     def private_room_added(self, msg):
         """ Server code: 139 """
 
-        log.add_msg_contents(msg)
-
         if msg.room not in self.private_rooms:
             self.create_private_room(msg.room)
             log.add(_("You have been added to a private room: %(room)s"), {"room": msg.room})
@@ -267,8 +253,6 @@ class ChatRooms:
     def private_room_removed(self, msg):
         """ Server code: 140 """
 
-        log.add_msg_contents(msg)
-
         if msg.room in self.private_rooms:
             del self.private_rooms[msg.room]
 
@@ -278,13 +262,10 @@ class ChatRooms:
     def private_room_toggle(self, msg):
         """ Server code: 141 """
 
-        log.add_msg_contents(msg)
         self.config.sections["server"]["private_chatrooms"] = msg.enabled
 
     def private_room_add_operator(self, msg):
         """ Server code: 143 """
-
-        log.add_msg_contents(msg)
 
         private_room = self.private_rooms.get(msg.room)
 
@@ -297,8 +278,6 @@ class ChatRooms:
     def private_room_remove_operator(self, msg):
         """ Server code: 144 """
 
-        log.add_msg_contents(msg)
-
         private_room = self.private_rooms.get(msg.room)
 
         if private_room is not None and msg.user in private_room["operators"]:
@@ -309,8 +288,6 @@ class ChatRooms:
 
     def private_room_operator_added(self, msg):
         """ Server code: 145 """
-
-        log.add_msg_contents(msg)
 
         private_room = self.private_rooms.get(msg.room)
 
@@ -323,8 +300,6 @@ class ChatRooms:
     def private_room_operator_removed(self, msg):
         """ Server code: 146 """
 
-        log.add_msg_contents(msg)
-
         private_room = self.private_rooms.get(msg.room)
 
         if private_room is not None and self.core.login_username in private_room["operators"]:
@@ -335,8 +310,6 @@ class ChatRooms:
 
     def private_room_owned(self, msg):
         """ Server code: 148 """
-
-        log.add_msg_contents(msg)
 
         private_room = self.private_rooms.get(msg.room)
 
@@ -351,8 +324,6 @@ class ChatRooms:
     def public_room_message(self, msg):
         """ Server code: 152 """
 
-        log.add_msg_contents(msg)
-
         if self.ui_callback:
             self.ui_callback.public_room_message(msg)
 
@@ -360,8 +331,6 @@ class ChatRooms:
 
     def room_list(self, msg):
         """ Server code: 64 """
-
-        log.add_msg_contents(msg)
 
         login_username = self.core.login_username
 
@@ -396,7 +365,6 @@ class ChatRooms:
     def say_chat_room(self, msg):
         """ Server code: 13 """
 
-        log.add_msg_contents(msg)
         log.add_chat(_("Chat message from user '%(user)s' in room '%(room)s': %(message)s"), {
             "user": msg.user,
             "room": msg.room,
@@ -421,15 +389,11 @@ class ChatRooms:
     def ticker_add(self, msg):
         """ Server code: 114 """
 
-        log.add_msg_contents(msg)
-
         if self.ui_callback:
             self.ui_callback.ticker_add(msg)
 
     def ticker_remove(self, msg):
         """ Server code: 115 """
-
-        log.add_msg_contents(msg)
 
         if self.ui_callback:
             self.ui_callback.ticker_remove(msg)
@@ -437,15 +401,11 @@ class ChatRooms:
     def ticker_set(self, msg):
         """ Server code: 113 """
 
-        log.add_msg_contents(msg)
-
         if self.ui_callback:
             self.ui_callback.ticker_set(msg)
 
     def user_joined_room(self, msg):
         """ Server code: 16 """
-
-        log.add_msg_contents(msg)
 
         if self.ui_callback:
             self.ui_callback.user_joined_room(msg)
@@ -454,8 +414,6 @@ class ChatRooms:
 
     def user_left_room(self, msg):
         """ Server code: 17 """
-
-        log.add_msg_contents(msg)
 
         if self.ui_callback:
             self.ui_callback.user_left_room(msg)
