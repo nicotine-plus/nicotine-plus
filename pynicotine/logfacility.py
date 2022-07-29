@@ -157,14 +157,20 @@ class Logger:
 
     def add(self, msg, msg_args=None, level=None):
 
-        if self.log_levels:
-            levels = self.log_levels
-        else:
-            levels = config.sections["logging"].get("debugmodes", [])
+        levels = self.log_levels if self.log_levels else config.sections["logging"].get("debugmodes", [])
 
         # Important messages are always visible
-        if level and not level.startswith("important") and level not in levels:
+        if level and level not in levels and not level.startswith("important"):
             return
+
+        if level == "message":
+            # Compile message contents
+            msg_class = msg.__class__
+
+            if msg_class in self.EXCLUDED_MSGS:
+                return
+
+            msg = "%s %s" % (msg_class, self.contents(msg))
 
         msg = self.set_msg_prefix(level, msg)
 
@@ -204,14 +210,6 @@ class Logger:
         self.add(msg, msg_args=msg_args, level="connection")
 
     def add_msg_contents(self, msg):
-
-        # Compile message contents
-        msg_class = msg.__class__
-
-        if msg_class in self.EXCLUDED_MSGS:
-            return
-
-        msg = "%s %s" % (msg_class, self.contents(msg))
         self.add(msg, msg_args=None, level="message")
 
     def add_transfer(self, msg, msg_args=None):
