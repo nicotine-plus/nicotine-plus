@@ -114,7 +114,6 @@ jobs:
 
       - name: Install build dependencies
         run: |
-          brew update
           python3 packaging/macos/dependencies_core.py
           python3 packaging/macos/dependencies_packaging.py
 
