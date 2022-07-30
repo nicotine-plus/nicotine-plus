@@ -244,6 +244,9 @@ class Config:
                 "descr": "''",
                 "pic": ""
             },
+            "userbrowse": {
+                "expand_folders": True
+            },
             "words": {
                 "censored": [],
                 "autoreplaced": {
