@@ -299,10 +299,17 @@ class UserInfo(UserInterface):
             max_width = allocation.width - 72
             max_height = allocation.height - 72
 
+            # Keep the original picture size for zoom and save
             data_stream = Gio.MemoryInputStream.new_from_data(data, None)
-            self.picture_data = GdkPixbuf.Pixbuf.new_from_stream_at_scale(
-                data_stream, max_width, max_height, preserve_aspect_ratio=True, cancellable=None)
-            self.set_pixbuf(self.picture_data)
+            self.picture_data = GdkPixbuf.Pixbuf.new_from_stream(data_stream, cancellable=None)
+            picture_width = self.picture_data.get_width()
+            picture_height = self.picture_data.get_height()
+
+            # Scale picture before displaying
+            ratio = min(max_width / picture_width, max_height / picture_height)
+            picture_data_scaled = self.picture_data.scale_simple(
+                ratio * picture_width, ratio * picture_height, GdkPixbuf.InterpType.BILINEAR)
+            self.set_pixbuf(picture_data_scaled)
 
             self.actual_zoom = 0
             self.picture_view.show()
