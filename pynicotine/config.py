@@ -240,12 +240,12 @@ class Config:
                 "downloadsexpanded": True,
                 "uploadsexpanded": True
             },
+            "userbrowse": {
+                "expand_folders": True
+            },
             "userinfo": {
                 "descr": "''",
                 "pic": ""
-            },
-            "userbrowse": {
-                "expand_folders": True
             },
             "words": {
                 "censored": [],
