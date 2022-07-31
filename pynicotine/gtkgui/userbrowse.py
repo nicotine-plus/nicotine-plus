@@ -376,7 +376,7 @@ class UserBrowse(UserInterface):
         Accelerator("<Primary>r", self.container, self.on_refresh_accelerator)  # Refresh
         Accelerator("<Primary>s", self.container, self.on_save_accelerator)  # Save Shares List
 
-        self.expand_button.set_active(config.sections["userbrowse"]["expand_folders"])
+        self.expand_button.set_active(True)
         self.update_visuals()
 
     def set_label(self, label):
@@ -1245,16 +1245,12 @@ class UserBrowse(UserInterface):
 
     def on_expand(self, *_args):
 
-        active = self.expand_button.get_active()
-
-        if active:
+        if self.expand_button.get_active():
             self.folder_tree_view.expand_all()
             self.expand_icon.set_property("icon-name", "go-up-symbolic")
         else:
             self.folder_tree_view.collapse_all()
             self.expand_icon.set_property("icon-name", "go-down-symbolic")
-
-        config.sections["userbrowse"]["expand_folders"] = active
 
     def on_tab_popup(self, *_args):
         self.user_popup.toggle_user_items()
