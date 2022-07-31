@@ -975,6 +975,23 @@ class SlskProtoThread(threading.Thread):
 
         del self._init_msgs[init_key]
 
+    def close_connection_if_inactive(self, conn_obj, sock, current_time, num_sockets):
+
+        if sock is self.server_socket:
+            return False
+
+        if num_sockets >= MAXSOCKETS and not self.socket_still_active(sock):
+            # Connection limit reached, close connection if inactive
+            self.close_connection(self._conns, sock)
+            return True
+
+        if (current_time - conn_obj.lastactive) > self.CONNECTION_MAX_IDLE:
+            # No recent activity, peer connection is stale
+            self.close_connection(self._conns, sock)
+            return True
+
+        return False
+
     def close_connection_by_ip(self, ip_address):
 
         for sock, conn_obj in self._conns.copy().items():
@@ -1970,6 +1987,7 @@ class SlskProtoThread(threading.Thread):
                 continue
 
             current_time = time.time()
+            num_sockets = self._numsockets
 
             # Send updated connection count to NicotineCore. Avoid sending too many
             # updates at once, if there are a lot of connections.
@@ -2058,10 +2076,7 @@ class SlskProtoThread(threading.Thread):
 
             # Process read/write for active connections
             for sock, conn_obj in self._conns.copy().items():
-                if (sock is not self.server_socket
-                        and (current_time - conn_obj.lastactive) > self.CONNECTION_MAX_IDLE):
-                    # No recent activity, peer connection is stale
-                    self.close_connection(self._conns, sock)
+                if self.close_connection_if_inactive(conn_obj, sock, current_time, num_sockets):
                     continue
 
                 if sock in input_list:
