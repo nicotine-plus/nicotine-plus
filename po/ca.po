@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-31 00:11+0300\n"
+"POT-Creation-Date: 2022-08-01 18:31+0300\n"
 "PO-Revision-Date: 2022-05-30 19:19+0000\n"
 "Last-Translator: Maite Guix <maite.guix@gmail.com>\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -1808,6 +1808,7 @@ msgid "Banned Users"
 msgstr "Usuaris bloquejats"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2420
+#: pynicotine/gtkgui/ui/settings/ignore.ui:16
 msgid "Ignored Users"
 msgstr "Usuaris ignorats"
 
@@ -2293,12 +2294,12 @@ msgid "_Remove Item"
 msgstr "_Eliminar element"
 
 #: pynicotine/gtkgui/interests.py:175 pynicotine/gtkgui/interests.py:402
-#: pynicotine/gtkgui/userinfo.py:234 pynicotine/gtkgui/userinfo.py:442
+#: pynicotine/gtkgui/userinfo.py:234 pynicotine/gtkgui/userinfo.py:449
 msgid "I _Like This"
 msgstr "M'agrada això"
 
 #: pynicotine/gtkgui/interests.py:176 pynicotine/gtkgui/interests.py:405
-#: pynicotine/gtkgui/userinfo.py:235 pynicotine/gtkgui/userinfo.py:445
+#: pynicotine/gtkgui/userinfo.py:235 pynicotine/gtkgui/userinfo.py:452
 msgid "I _Dislike This"
 msgstr "No m'agrada això"
 
@@ -2333,7 +2334,7 @@ msgstr "Sala"
 #: pynicotine/gtkgui/ui/mainwindow.ui:595
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:261
 #: pynicotine/gtkgui/ui/settings/ban.ui:133
-#: pynicotine/gtkgui/ui/settings/ignore.ui:29
+#: pynicotine/gtkgui/ui/settings/ignore.ui:66
 msgid "Users"
 msgstr "Usuaris"
 
@@ -2593,7 +2594,7 @@ msgstr "Massa megabytes"
 msgid "File not shared"
 msgstr "Fitxer no compartit"
 
-#: pynicotine/gtkgui/transferlist.py:111 pynicotine/transfers.py:1930
+#: pynicotine/gtkgui/transferlist.py:111 pynicotine/transfers.py:1933
 msgid "Download folder error"
 msgstr "Error en la carpeta de descàrrega"
 
@@ -2774,12 +2775,12 @@ msgstr "Allunyar-se"
 msgid "Save Picture"
 msgstr "Desar imatge"
 
-#: pynicotine/gtkgui/userinfo.py:311
+#: pynicotine/gtkgui/userinfo.py:318
 #, python-format
 msgid "Failed to load picture for user %(user)s: %(error)s"
 msgstr "No s'ha pogut carregar la imatge de l'usuari %(user)s: %(error)s"
 
-#: pynicotine/gtkgui/userinfo.py:357
+#: pynicotine/gtkgui/userinfo.py:364
 msgid ""
 "Unable to request information from user. Either you both have a closed "
 "listening port, the user is offline, or there's a temporary connectivity "
@@ -2789,15 +2790,15 @@ msgstr ""
 "d'escolta tancat, l'usuari està fora de línia o hi ha un problema de "
 "connectivitat temporal."
 
-#: pynicotine/gtkgui/userinfo.py:391
+#: pynicotine/gtkgui/userinfo.py:398
 msgid "Yes"
 msgstr "Sí"
 
-#: pynicotine/gtkgui/userinfo.py:391
+#: pynicotine/gtkgui/userinfo.py:398
 msgid "No"
 msgstr "No"
 
-#: pynicotine/gtkgui/userinfo.py:413 pynicotine/gtkgui/widgets/popupmenu.py:556
+#: pynicotine/gtkgui/userinfo.py:420 pynicotine/gtkgui/widgets/popupmenu.py:556
 #: pynicotine/gtkgui/widgets/treeview.py:452
 #: pynicotine/gtkgui/ui/userinfo.ui:127 pynicotine/gtkgui/ui/userinfo.ui:154
 #: pynicotine/gtkgui/ui/userinfo.ui:181 pynicotine/gtkgui/ui/userinfo.ui:208
@@ -2904,10 +2905,10 @@ msgstr "%s Configuració"
 #: pynicotine/gtkgui/ui/settings/chats.ui:806
 #: pynicotine/gtkgui/ui/settings/chats.ui:822
 #: pynicotine/gtkgui/ui/settings/downloads.ui:449
-#: pynicotine/gtkgui/ui/settings/ignore.ui:79
-#: pynicotine/gtkgui/ui/settings/ignore.ui:95
-#: pynicotine/gtkgui/ui/settings/ignore.ui:211
-#: pynicotine/gtkgui/ui/settings/ignore.ui:227
+#: pynicotine/gtkgui/ui/settings/ignore.ui:116
+#: pynicotine/gtkgui/ui/settings/ignore.ui:132
+#: pynicotine/gtkgui/ui/settings/ignore.ui:248
+#: pynicotine/gtkgui/ui/settings/ignore.ui:264
 #: pynicotine/gtkgui/ui/settings/shares.ui:93
 #: pynicotine/gtkgui/ui/settings/shares.ui:109
 msgid "Add…"
@@ -2928,10 +2929,10 @@ msgstr "Afegir…"
 #: pynicotine/gtkgui/ui/settings/chats.ui:853
 #: pynicotine/gtkgui/ui/settings/downloads.ui:495
 #: pynicotine/gtkgui/ui/settings/downloads.ui:511
-#: pynicotine/gtkgui/ui/settings/ignore.ui:110
-#: pynicotine/gtkgui/ui/settings/ignore.ui:126
-#: pynicotine/gtkgui/ui/settings/ignore.ui:242
-#: pynicotine/gtkgui/ui/settings/ignore.ui:258
+#: pynicotine/gtkgui/ui/settings/ignore.ui:147
+#: pynicotine/gtkgui/ui/settings/ignore.ui:163
+#: pynicotine/gtkgui/ui/settings/ignore.ui:279
+#: pynicotine/gtkgui/ui/settings/ignore.ui:295
 #: pynicotine/gtkgui/ui/settings/shares.ui:155
 #: pynicotine/gtkgui/ui/settings/shares.ui:171
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:163
@@ -3427,49 +3428,49 @@ msgstr ""
 msgid "Your password has been changed"
 msgstr "La teva contrasenya ha estat canviada"
 
-#: pynicotine/search.py:130 pynicotine/search.py:235
+#: pynicotine/search.py:129 pynicotine/search.py:234
 #: pynicotine/gtkgui/ui/mainwindow.ui:116
 msgid "Joined Rooms "
 msgstr "Sales Unides "
 
-#: pynicotine/search.py:260
+#: pynicotine/search.py:259
 #, python-format
 msgid "Searching for wishlist item \"%s\""
 msgstr ""
 
-#: pynicotine/search.py:268
+#: pynicotine/search.py:267
 msgid "Server does not permit performing wishlist searches at this time"
 msgstr ""
 "El servidor no permet fer cerques a la llista de desitjos en aquest moment"
 
-#: pynicotine/search.py:324
+#: pynicotine/search.py:323
 #, python-format
 msgid "Wishlist wait period set to %s seconds"
 msgstr ""
 "El període d'espera de la llista de desitjos s'ha establert en %s segons"
 
-#: pynicotine/search.py:549
+#: pynicotine/search.py:554
 #, python-format
 msgid "User %(user)s is searching for \"%(query)s\", found %(num)i results"
 msgstr ""
 "L'usuari %(user)s està cercant «%(query)s», ha trobat %(num)i resultats"
 
-#: pynicotine/shares.py:100
+#: pynicotine/shares.py:99
 msgid "Rescanning shares…"
 msgstr "Tornant a examinar compartits…"
 
-#: pynicotine/shares.py:101
+#: pynicotine/shares.py:100
 #, python-format
 msgid "%(num)s folders found before rescan, rebuilding…"
 msgstr ""
 "S'han trobat %(num)s carpetes abans de tornar a examinar, reconstruint…"
 
-#: pynicotine/shares.py:108
+#: pynicotine/shares.py:107
 #, python-format
 msgid "Rescan complete: %(num)s folders found"
 msgstr "Examen completat: s'han trobat %(num)s carpetes"
 
-#: pynicotine/shares.py:116
+#: pynicotine/shares.py:115
 #, python-format
 msgid ""
 "Serious error occurred while rescanning shares. If this problem persists, "
@@ -3481,32 +3482,32 @@ msgstr ""
 "això no ajuda, envia un informe d'error amb aquesta traça de pila inclosa: "
 "%(trace)s"
 
-#: pynicotine/shares.py:174
+#: pynicotine/shares.py:173
 #, python-format
 msgid "Can't save %(filename)s: %(error)s"
 msgstr "No es pot desar %(filename)s: %(error)s"
 
-#: pynicotine/shares.py:219 pynicotine/shares.py:340
+#: pynicotine/shares.py:218 pynicotine/shares.py:339
 #, python-format
 msgid "Error while scanning folder %(path)s: %(error)s"
 msgstr "Error en examinar la carpeta %(path)s: %(error)s"
 
-#: pynicotine/shares.py:321
+#: pynicotine/shares.py:320
 #, python-format
 msgid "Error while scanning file %(path)s: %(error)s"
 msgstr "Error en examinar el fitxer %(path)s: %(error)s"
 
-#: pynicotine/shares.py:369
+#: pynicotine/shares.py:368
 #, python-format
 msgid "Error while scanning metadata for file %(path)s: %(error)s"
 msgstr "Error en examinar les metadades del fitxer %(path)s: %(error)s"
 
-#: pynicotine/shares.py:604
+#: pynicotine/shares.py:602
 #, python-format
 msgid "Failed to process the following databases: %(names)s"
 msgstr "No s'han pogut processar les bases de dades següents: %(names)s"
 
-#: pynicotine/shares.py:610
+#: pynicotine/shares.py:608
 msgid ""
 "Attempting to reset index of shared files due to an error. Please rescan "
 "your shares."
@@ -3514,7 +3515,7 @@ msgstr ""
 "S'està intentant restablir l'índex dels fitxers compartits a causa d'un "
 "error. Torna a examinar els teus compartits."
 
-#: pynicotine/shares.py:614
+#: pynicotine/shares.py:612
 msgid ""
 "File index of shared files could not be accessed. This could occur due to "
 "several instances of Nicotine+ being active simultaneously, file permission "
@@ -3524,28 +3525,28 @@ msgstr ""
 "causa de diversos casos en què Nicotine+ està actiu simultàniament, "
 "problemes de permís de fitxers o un altre problema a Nicotine+."
 
-#: pynicotine/shares.py:716
+#: pynicotine/shares.py:714
 #, python-format
 msgid "Failed to send number of shared files to the server: %s"
 msgstr "No s'ha pogut enviar el nombre de fitxers compartits al servidor: %s"
 
-#: pynicotine/shares.py:776
+#: pynicotine/shares.py:774
 #, python-format
 msgid "Rescan progress: %s"
 msgstr "Progrés de l'examen: %s"
 
-#: pynicotine/shares.py:853
+#: pynicotine/shares.py:851
 #, python-format
 msgid "User %(user)s is browsing your list of shared files"
 msgstr ""
 "L'usuari %(user)s està navegant per la teva llista de fitxers compartits"
 
-#: pynicotine/shares.py:916
+#: pynicotine/shares.py:914
 #, python-format
 msgid "Failed to fetch the shared folder %(folder)s: %(error)s"
 msgstr "No s'ha pogut recuperar la carpeta compartida %(folder)s: %(error)s"
 
-#: pynicotine/slskmessages.py:2320
+#: pynicotine/slskmessages.py:2325
 #, python-format
 msgid "Unable to read shares database. Please rescan your shares. Error: %s"
 msgstr ""
@@ -3578,12 +3579,12 @@ msgstr ""
 "Sembla que el servidor està inactiu o no respon, torna a intentar-ho en %i "
 "segons"
 
-#: pynicotine/slskproto.py:736
+#: pynicotine/slskproto.py:737
 #, python-format
 msgid "Cannot connect to server %(host)s:%(port)s: %(error)s"
 msgstr "No es pot connectar al servidor %(host)s:%(port)s: %(error)s"
 
-#: pynicotine/slskproto.py:833
+#: pynicotine/slskproto.py:834
 #, python-format
 msgid "Connected to server %(host)s:%(port)s, logging in…"
 msgstr "Connectat al servidor %(host)s:%(port)s, iniciant sessió…"
@@ -3598,7 +3599,7 @@ msgstr "Error d'E/S a la descàrrega: %s"
 msgid "Upload I/O error: %s"
 msgstr "Error d'E/S a la pujada: %s"
 
-#: pynicotine/transfers.py:1079 pynicotine/transfers.py:1930
+#: pynicotine/transfers.py:1079 pynicotine/transfers.py:1933
 #, python-format
 msgid "OS error: %s"
 msgstr "Error del sistema operatiu: %s"
@@ -3619,7 +3620,7 @@ msgid "Upload started: user %(user)s, IP address %(ip)s, file %(file)s"
 msgstr ""
 "La pujada ha començat: usuari %(user)s, adreça IP %(ip)s, fitxer %(file)s"
 
-#: pynicotine/transfers.py:1800
+#: pynicotine/transfers.py:1803
 #, python-format
 msgid ""
 "Unable to save download to username subfolder, falling back to default "
@@ -3628,77 +3629,77 @@ msgstr ""
 "No es pot desar la descàrrega a la subcarpeta del nom d'usuari, tornant a la "
 "carpeta de descàrrega predeterminada. Error: %s"
 
-#: pynicotine/transfers.py:1878
+#: pynicotine/transfers.py:1881
 #, python-format
 msgid "%(file)s downloaded from %(user)s"
 msgstr "%(file)s descarregat de %(user)s"
 
-#: pynicotine/transfers.py:1882
+#: pynicotine/transfers.py:1885
 msgid "File downloaded"
 msgstr "Fitxer descarregat"
 
-#: pynicotine/transfers.py:1888
+#: pynicotine/transfers.py:1891
 #, python-format
 msgid "Executed: %s"
 msgstr "Executat: %s"
 
-#: pynicotine/transfers.py:1891
+#: pynicotine/transfers.py:1894
 #, python-format
 msgid "Trouble executing '%s'"
 msgstr "S'ha produït un problema en executar «%s»"
 
-#: pynicotine/transfers.py:1909
+#: pynicotine/transfers.py:1912
 #, python-format
 msgid "%(folder)s downloaded from %(user)s"
 msgstr "%(folder)s descarregat de %(user)s"
 
-#: pynicotine/transfers.py:1913
+#: pynicotine/transfers.py:1916
 msgid "Folder downloaded"
 msgstr "Carpeta descarregada"
 
-#: pynicotine/transfers.py:1919
+#: pynicotine/transfers.py:1922
 #, python-format
 msgid "Executed on folder: %s"
 msgstr "S'ha executat a la carpeta: %s"
 
-#: pynicotine/transfers.py:1922
+#: pynicotine/transfers.py:1925
 #, python-format
 msgid "Trouble executing on folder: %s"
 msgstr "Problemes d'execució a la carpeta: %s"
 
-#: pynicotine/transfers.py:1949
+#: pynicotine/transfers.py:1952
 #, python-format
 msgid "Couldn't move '%(tempfile)s' to '%(file)s': %(error)s"
 msgstr "No s'ha pogut moure '%(tempfile)s' a '%(file)s': %(error)s"
 
-#: pynicotine/transfers.py:1980
+#: pynicotine/transfers.py:1983
 #, python-format
 msgid "Download finished: user %(user)s, file %(file)s"
 msgstr "Descàrrega acabada: usuari %(user)s, fitxer %(file)s"
 
-#: pynicotine/transfers.py:1997
+#: pynicotine/transfers.py:2000
 #, python-format
 msgid "Upload finished: user %(user)s, IP address %(ip)s, file %(file)s"
 msgstr "Pujada acabada: usuari %(user)s, adreça IP %(ip)s, fitxer %(file)s"
 
-#: pynicotine/transfers.py:2388
+#: pynicotine/transfers.py:2391
 #, python-format
 msgid "Upload aborted, user %(user)s file %(file)s"
 msgstr "Pujada avortada, fitxer d'usuari %(user)s %(file)s"
 
-#: pynicotine/transfers.py:2395
+#: pynicotine/transfers.py:2398
 #, python-format
 msgid "Download aborted, user %(user)s file %(file)s"
 msgstr "Descàrrega avortada, fitxer d'usuari %(user)s %(file)s"
 
-#: pynicotine/transfers.py:2438
+#: pynicotine/transfers.py:2441
 #, python-format
 msgid "Error: Download Filter failed! Verify your filters. Reason: %s"
 msgstr ""
 "Error: el filtre de descàrrega ha fallat! Verifica els teus filtres. Motiu: "
 "%s"
 
-#: pynicotine/transfers.py:2453
+#: pynicotine/transfers.py:2456
 #, python-format
 msgid "Error: %(num)d Download filters failed! %(error)s "
 msgstr "Error: %(num)d filtres de descàrrega han fallat! %(error)s "
@@ -3781,56 +3782,56 @@ msgstr "No es pot desar %(filename)s: %(error)s"
 msgid "User %(user)s is reading your user info"
 msgstr "L'usuari %(user)s està llegint la teva informació d'usuari"
 
-#: pynicotine/utils.py:177
+#: pynicotine/utils.py:178
 #, python-format
 msgid "Failed to open file path: %s"
 msgstr "No s'ha pogut obrir la ruta del fitxer: %s"
 
-#: pynicotine/utils.py:206
+#: pynicotine/utils.py:207
 #, python-format
 msgid "Failed to open URL: %s"
 msgstr "No s'ha pogut obrir l'URL: %s"
 
-#: pynicotine/utils.py:550
+#: pynicotine/utils.py:551
 #, python-format
 msgid "Something went wrong while reading file %(filename)s: %(error)s"
 msgstr "S'ha produït un error en llegir el fitxer %(filename)s: %(error)s"
 
-#: pynicotine/utils.py:555
+#: pynicotine/utils.py:556
 #, python-format
 msgid "Attempting to load backup of file %s"
 msgstr "S'està intentant carregar una còpia de seguretat del fitxer %s"
 
-#: pynicotine/utils.py:576
+#: pynicotine/utils.py:577
 #, python-format
 msgid "Unable to back up file %(path)s: %(error)s"
 msgstr "No es pot fer una còpia de seguretat del fitxer %(path)s: %(error)s"
 
-#: pynicotine/utils.py:591
+#: pynicotine/utils.py:592
 #, python-format
 msgid "Unable to save file %(path)s: %(error)s"
 msgstr "No es pot desar el fitxer %(path)s: %(error)s"
 
-#: pynicotine/utils.py:602
+#: pynicotine/utils.py:603
 #, python-format
 msgid "Unable to restore previous file %(path)s: %(error)s"
 msgstr "No es pot restaurar el fitxer anterior %(path)s: %(error)s"
 
-#: pynicotine/utils.py:680
+#: pynicotine/utils.py:681
 #, python-format
 msgid "No such alias (%s)"
 msgstr "No hi ha aquest àlies (%s)"
 
-#: pynicotine/utils.py:682
+#: pynicotine/utils.py:683
 msgid "Aliases:"
 msgstr "Àlies:"
 
-#: pynicotine/utils.py:698
+#: pynicotine/utils.py:699
 #, python-format
 msgid "Removed alias %(alias)s: %(action)s\n"
 msgstr "S'ha eliminat l'àlies %(alias)s: %(action)s\n"
 
-#: pynicotine/utils.py:700
+#: pynicotine/utils.py:701
 #, python-format
 msgid "No such alias (%(alias)s)\n"
 msgstr "No hi ha aquest àlies (%(alias)s)\n"
@@ -5043,7 +5044,7 @@ msgid "Sent to users as the reason for being banned."
 msgstr "S'envia als usuaris el motiu del bloqueig."
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:265
-#: pynicotine/gtkgui/ui/settings/ignore.ui:160
+#: pynicotine/gtkgui/ui/settings/ignore.ui:197
 msgid "IP Addresses"
 msgstr "Adreces IP"
 
@@ -5355,6 +5356,14 @@ msgstr "Verifica els filtres"
 #: pynicotine/gtkgui/ui/settings/downloads.ui:600
 msgid "Unverified"
 msgstr "Sense verificar"
+
+#: pynicotine/gtkgui/ui/settings/ignore.ui:35
+msgid ""
+"Ignore chat messages and search results from users, based on username or IP "
+"address."
+msgstr ""
+"Ignorar els missatges de xat i els resultats de la cerca dels usuaris, "
+"segons el nom d'usuari o l'adreça IP."
 
 #: pynicotine/gtkgui/ui/settings/log.ui:28
 msgid "Log chatrooms by default"

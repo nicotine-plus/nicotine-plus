@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-31 00:11+0300\n"
+"POT-Creation-Date: 2022-08-01 18:31+0300\n"
 "PO-Revision-Date: 2022-04-21 23:51+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Lithuanian <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -2144,6 +2144,7 @@ msgid "Banned Users"
 msgstr "Užblokuoti naudotoją(us)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2420
+#: pynicotine/gtkgui/ui/settings/ignore.ui:16
 #, fuzzy
 msgid "Ignored Users"
 msgstr "Nepaisomi naudotojai:"
@@ -2703,13 +2704,13 @@ msgid "_Remove Item"
 msgstr "_Remove elementas"
 
 #: pynicotine/gtkgui/interests.py:175 pynicotine/gtkgui/interests.py:402
-#: pynicotine/gtkgui/userinfo.py:234 pynicotine/gtkgui/userinfo.py:442
+#: pynicotine/gtkgui/userinfo.py:234 pynicotine/gtkgui/userinfo.py:449
 #, fuzzy
 msgid "I _Like This"
 msgstr "Aš _Like Tai"
 
 #: pynicotine/gtkgui/interests.py:176 pynicotine/gtkgui/interests.py:405
-#: pynicotine/gtkgui/userinfo.py:235 pynicotine/gtkgui/userinfo.py:445
+#: pynicotine/gtkgui/userinfo.py:235 pynicotine/gtkgui/userinfo.py:452
 #, fuzzy
 msgid "I _Dislike This"
 msgstr "Aš _Dislike Tai"
@@ -2748,7 +2749,7 @@ msgstr "Kambarys"
 #: pynicotine/gtkgui/ui/mainwindow.ui:595
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:261
 #: pynicotine/gtkgui/ui/settings/ban.ui:133
-#: pynicotine/gtkgui/ui/settings/ignore.ui:29
+#: pynicotine/gtkgui/ui/settings/ignore.ui:66
 msgid "Users"
 msgstr "Naudotojai"
 
@@ -3050,7 +3051,7 @@ msgstr "Per daug megabaitų"
 msgid "File not shared"
 msgstr "Failas neviešinamas"
 
-#: pynicotine/gtkgui/transferlist.py:111 pynicotine/transfers.py:1930
+#: pynicotine/gtkgui/transferlist.py:111 pynicotine/transfers.py:1933
 #, fuzzy
 msgid "Download folder error"
 msgstr "Atsiuntimo aplanko klaida"
@@ -3266,12 +3267,12 @@ msgstr "Atitraukti"
 msgid "Save Picture"
 msgstr "Įrašyti paveikslėlį"
 
-#: pynicotine/gtkgui/userinfo.py:311
+#: pynicotine/gtkgui/userinfo.py:318
 #, fuzzy, python-format
 msgid "Failed to load picture for user %(user)s: %(error)s"
 msgstr "Nepavyko įkelti vartotojo %(user)s: %(error)s"
 
-#: pynicotine/gtkgui/userinfo.py:357
+#: pynicotine/gtkgui/userinfo.py:364
 #, fuzzy
 msgid ""
 "Unable to request information from user. Either you both have a closed "
@@ -3281,15 +3282,15 @@ msgstr ""
 "Neįmanoma prašyti informacijos iš vartotojo. Abu turite uždarytą klausymosi "
 "prievadą, vartotojas yra neprisijungęs arba yra laikina ryšio problema."
 
-#: pynicotine/gtkgui/userinfo.py:391
+#: pynicotine/gtkgui/userinfo.py:398
 msgid "Yes"
 msgstr "Taip"
 
-#: pynicotine/gtkgui/userinfo.py:391
+#: pynicotine/gtkgui/userinfo.py:398
 msgid "No"
 msgstr "Ne"
 
-#: pynicotine/gtkgui/userinfo.py:413 pynicotine/gtkgui/widgets/popupmenu.py:556
+#: pynicotine/gtkgui/userinfo.py:420 pynicotine/gtkgui/widgets/popupmenu.py:556
 #: pynicotine/gtkgui/widgets/treeview.py:452
 #: pynicotine/gtkgui/ui/userinfo.ui:127 pynicotine/gtkgui/ui/userinfo.ui:154
 #: pynicotine/gtkgui/ui/userinfo.ui:181 pynicotine/gtkgui/ui/userinfo.ui:208
@@ -3405,10 +3406,10 @@ msgstr "%s Nustatymai"
 #: pynicotine/gtkgui/ui/settings/chats.ui:806
 #: pynicotine/gtkgui/ui/settings/chats.ui:822
 #: pynicotine/gtkgui/ui/settings/downloads.ui:449
-#: pynicotine/gtkgui/ui/settings/ignore.ui:79
-#: pynicotine/gtkgui/ui/settings/ignore.ui:95
-#: pynicotine/gtkgui/ui/settings/ignore.ui:211
-#: pynicotine/gtkgui/ui/settings/ignore.ui:227
+#: pynicotine/gtkgui/ui/settings/ignore.ui:116
+#: pynicotine/gtkgui/ui/settings/ignore.ui:132
+#: pynicotine/gtkgui/ui/settings/ignore.ui:248
+#: pynicotine/gtkgui/ui/settings/ignore.ui:264
 #: pynicotine/gtkgui/ui/settings/shares.ui:93
 #: pynicotine/gtkgui/ui/settings/shares.ui:109
 #, fuzzy
@@ -3430,10 +3431,10 @@ msgstr "Pridėti…"
 #: pynicotine/gtkgui/ui/settings/chats.ui:853
 #: pynicotine/gtkgui/ui/settings/downloads.ui:495
 #: pynicotine/gtkgui/ui/settings/downloads.ui:511
-#: pynicotine/gtkgui/ui/settings/ignore.ui:110
-#: pynicotine/gtkgui/ui/settings/ignore.ui:126
-#: pynicotine/gtkgui/ui/settings/ignore.ui:242
-#: pynicotine/gtkgui/ui/settings/ignore.ui:258
+#: pynicotine/gtkgui/ui/settings/ignore.ui:147
+#: pynicotine/gtkgui/ui/settings/ignore.ui:163
+#: pynicotine/gtkgui/ui/settings/ignore.ui:279
+#: pynicotine/gtkgui/ui/settings/ignore.ui:295
 #: pynicotine/gtkgui/ui/settings/shares.ui:155
 #: pynicotine/gtkgui/ui/settings/shares.ui:171
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:163
@@ -3970,47 +3971,47 @@ msgstr ""
 msgid "Your password has been changed"
 msgstr "Jūsų slaptažodis buvo pakeistas"
 
-#: pynicotine/search.py:130 pynicotine/search.py:235
+#: pynicotine/search.py:129 pynicotine/search.py:234
 #: pynicotine/gtkgui/ui/mainwindow.ui:116
 msgid "Joined Rooms "
 msgstr "Kambariai, kuriuose esate "
 
-#: pynicotine/search.py:260
+#: pynicotine/search.py:259
 #, python-format
 msgid "Searching for wishlist item \"%s\""
 msgstr ""
 
-#: pynicotine/search.py:268
+#: pynicotine/search.py:267
 #, fuzzy
 msgid "Server does not permit performing wishlist searches at this time"
 msgstr "Serveris šiuo metu neleidžia atlikti pageidavimų sąrašo paieškų"
 
-#: pynicotine/search.py:324
+#: pynicotine/search.py:323
 #, fuzzy, python-format
 msgid "Wishlist wait period set to %s seconds"
 msgstr "Pageidavimų sąrašo laukimo laikotarpis nustatytas kaip %s sekundės"
 
-#: pynicotine/search.py:549
+#: pynicotine/search.py:554
 #, fuzzy, python-format
 msgid "User %(user)s is searching for \"%(query)s\", found %(num)i results"
 msgstr "Vartotojas %(user)s ieško \"%(query)s\", grąžina %(num)i rezultatus"
 
-#: pynicotine/shares.py:100
+#: pynicotine/shares.py:99
 #, fuzzy
 msgid "Rescanning shares…"
 msgstr "Skenuojami bičiulių viešiniai"
 
-#: pynicotine/shares.py:101
+#: pynicotine/shares.py:100
 #, fuzzy, python-format
 msgid "%(num)s folders found before rescan, rebuilding…"
 msgstr "%(num)s aplankai rasti prieš rescan, atstatyti …"
 
-#: pynicotine/shares.py:108
+#: pynicotine/shares.py:107
 #, fuzzy, python-format
 msgid "Rescan complete: %(num)s folders found"
 msgstr "Pakartotinis nuskaitymas baigtas: rasta %(num)s aplankų"
 
-#: pynicotine/shares.py:116
+#: pynicotine/shares.py:115
 #, fuzzy, python-format
 msgid ""
 "Serious error occurred while rescanning shares. If this problem persists, "
@@ -4021,32 +4022,32 @@ msgstr ""
 "panaikinkite %(dir)s/*.db ir bandykite dar kartą. Jei tai nepadeda, "
 "pateikite klaidos ataskaitą su šiuo rietuvės sekimas įtrauktas: %(trace)s"
 
-#: pynicotine/shares.py:174
+#: pynicotine/shares.py:173
 #, fuzzy, python-format
 msgid "Can't save %(filename)s: %(error)s"
 msgstr "Nepavyko perkelti „%(tempfile)s“ į „%(file)s“: %(error)s"
 
-#: pynicotine/shares.py:219 pynicotine/shares.py:340
+#: pynicotine/shares.py:218 pynicotine/shares.py:339
 #, fuzzy, python-format
 msgid "Error while scanning folder %(path)s: %(error)s"
 msgstr "Klaida nuskaitant aplanką %(path)s: %(error)s"
 
-#: pynicotine/shares.py:321
+#: pynicotine/shares.py:320
 #, fuzzy, python-format
 msgid "Error while scanning file %(path)s: %(error)s"
 msgstr "Klaida nuskaitant failą %(path)s: %(error)s"
 
-#: pynicotine/shares.py:369
+#: pynicotine/shares.py:368
 #, fuzzy, python-format
 msgid "Error while scanning metadata for file %(path)s: %(error)s"
 msgstr "Klaida nuskaitant failo %(path)s metaduomenis: %(error)s"
 
-#: pynicotine/shares.py:604
+#: pynicotine/shares.py:602
 #, fuzzy, python-format
 msgid "Failed to process the following databases: %(names)s"
 msgstr "Nepavyko apdoroti šių duomenų bazių: %(names)s"
 
-#: pynicotine/shares.py:610
+#: pynicotine/shares.py:608
 #, fuzzy
 msgid ""
 "Attempting to reset index of shared files due to an error. Please rescan "
@@ -4055,7 +4056,7 @@ msgstr ""
 "Bandoma iš naujo nustatyti bendrinamų failų rodyklę dėl klaidos. Prašome "
 "perskirstyti savo akcijas."
 
-#: pynicotine/shares.py:614
+#: pynicotine/shares.py:612
 msgid ""
 "File index of shared files could not be accessed. This could occur due to "
 "several instances of Nicotine+ being active simultaneously, file permission "
@@ -4065,27 +4066,27 @@ msgstr ""
 "kelių atvejų, kai Nicotine+ yra aktyvus vienu metu, failų teisių problemos "
 "arba kita Nicotine+ problema."
 
-#: pynicotine/shares.py:716
+#: pynicotine/shares.py:714
 #, fuzzy, python-format
 msgid "Failed to send number of shared files to the server: %s"
 msgstr "Nepavyko nusiųsti bendrai naudojamų failų skaičiaus į serverį: %s"
 
-#: pynicotine/shares.py:776
+#: pynicotine/shares.py:774
 #, fuzzy, python-format
 msgid "Rescan progress: %s"
 msgstr "Pažanga: %s"
 
-#: pynicotine/shares.py:853
+#: pynicotine/shares.py:851
 #, fuzzy, python-format
 msgid "User %(user)s is browsing your list of shared files"
 msgstr "Vartotojas %(user)s naršo jūsų bendrinamų failų sąrašą"
 
-#: pynicotine/shares.py:916
+#: pynicotine/shares.py:914
 #, fuzzy, python-format
 msgid "Failed to fetch the shared folder %(folder)s: %(error)s"
 msgstr "Nepavyko iškviesti bendrai naudojamo aplanko %(folder)s: %(error)s"
 
-#: pynicotine/slskmessages.py:2320
+#: pynicotine/slskmessages.py:2325
 #, fuzzy, python-format
 msgid "Unable to read shares database. Please rescan your shares. Error: %s"
 msgstr ""
@@ -4117,12 +4118,12 @@ msgstr "Kažkas prisijungęs prie jūsų Soulseek paskyros kitur"
 msgid "The server seems to be down or not responding, retrying in %i seconds"
 msgstr "Arba serveris neveikia, arba neatsako, kitas bandymas po %i sek"
 
-#: pynicotine/slskproto.py:736
+#: pynicotine/slskproto.py:737
 #, fuzzy, python-format
 msgid "Cannot connect to server %(host)s:%(port)s: %(error)s"
 msgstr "Nepavyko prisijungti prie serverio %(host)s:%(port)s: %(error)s"
 
-#: pynicotine/slskproto.py:833
+#: pynicotine/slskproto.py:834
 #, fuzzy, python-format
 msgid "Connected to server %(host)s:%(port)s, logging in…"
 msgstr "Prisijungta prie serverio %(host)s:%(port)s, registruojamasi..."
@@ -4137,7 +4138,7 @@ msgstr "Atsiuntimo I/O klaida: %s"
 msgid "Upload I/O error: %s"
 msgstr "Išsiuntimo I/O klaida: %s"
 
-#: pynicotine/transfers.py:1079 pynicotine/transfers.py:1930
+#: pynicotine/transfers.py:1079 pynicotine/transfers.py:1933
 #, python-format
 msgid "OS error: %s"
 msgstr "OS klaida: %s"
@@ -4158,7 +4159,7 @@ msgid "Upload started: user %(user)s, IP address %(ip)s, file %(file)s"
 msgstr ""
 "Įkelti prasidėjo: vartotojas %(user)s, IP adresas %(ip)s, failas %(file)s"
 
-#: pynicotine/transfers.py:1800
+#: pynicotine/transfers.py:1803
 #, fuzzy, python-format
 msgid ""
 "Unable to save download to username subfolder, falling back to default "
@@ -4167,79 +4168,79 @@ msgstr ""
 "Neįmanoma įrašyti atsisiuntimo į vartotojo vardo poaplankį, grįžtant į "
 "numatytąjį atsisiuntimo aplanką. Klaida: %s"
 
-#: pynicotine/transfers.py:1878
+#: pynicotine/transfers.py:1881
 #, python-format
 msgid "%(file)s downloaded from %(user)s"
 msgstr "%(file)s atsiųsta iš %(user)s"
 
-#: pynicotine/transfers.py:1882
+#: pynicotine/transfers.py:1885
 #, fuzzy
 msgid "File downloaded"
 msgstr "Atsisiųstas failas"
 
-#: pynicotine/transfers.py:1888
+#: pynicotine/transfers.py:1891
 #, python-format
 msgid "Executed: %s"
 msgstr "Įvykdyta: %s"
 
-#: pynicotine/transfers.py:1891
+#: pynicotine/transfers.py:1894
 #, python-format
 msgid "Trouble executing '%s'"
 msgstr "Nesėkmė vykdant „%s“"
 
-#: pynicotine/transfers.py:1909
+#: pynicotine/transfers.py:1912
 #, python-format
 msgid "%(folder)s downloaded from %(user)s"
 msgstr "%(folder)s atsiųsta iš %(user)s"
 
-#: pynicotine/transfers.py:1913
+#: pynicotine/transfers.py:1916
 #, fuzzy
 msgid "Folder downloaded"
 msgstr "Aplankas atsisiųstas"
 
-#: pynicotine/transfers.py:1919
+#: pynicotine/transfers.py:1922
 #, python-format
 msgid "Executed on folder: %s"
 msgstr "Įvykdyta aplanke: %s"
 
-#: pynicotine/transfers.py:1922
+#: pynicotine/transfers.py:1925
 #, python-format
 msgid "Trouble executing on folder: %s"
 msgstr "Klaida vykdant aplanke: %s"
 
-#: pynicotine/transfers.py:1949
+#: pynicotine/transfers.py:1952
 #, python-format
 msgid "Couldn't move '%(tempfile)s' to '%(file)s': %(error)s"
 msgstr "Nepavyko perkelti „%(tempfile)s“ į „%(file)s“: %(error)s"
 
-#: pynicotine/transfers.py:1980
+#: pynicotine/transfers.py:1983
 #, python-format
 msgid "Download finished: user %(user)s, file %(file)s"
 msgstr "Atsiųsta: naudotojas %(user)s, failas %(file)s"
 
-#: pynicotine/transfers.py:1997
+#: pynicotine/transfers.py:2000
 #, fuzzy, python-format
 msgid "Upload finished: user %(user)s, IP address %(ip)s, file %(file)s"
 msgstr ""
 "Įkelti baigtas: vartotojas %(user)s, IP adresas %(ip)s, failas %(file)s"
 
-#: pynicotine/transfers.py:2388
+#: pynicotine/transfers.py:2391
 #, python-format
 msgid "Upload aborted, user %(user)s file %(file)s"
 msgstr "Išsiuntimas nutrauktas, naudotojas %(user)s failas %(file)s"
 
-#: pynicotine/transfers.py:2395
+#: pynicotine/transfers.py:2398
 #, python-format
 msgid "Download aborted, user %(user)s file %(file)s"
 msgstr "Atsiuntimas nutrauktas, naudotojas %(user)s failas %(file)s"
 
-#: pynicotine/transfers.py:2438
+#: pynicotine/transfers.py:2441
 #, python-format
 msgid "Error: Download Filter failed! Verify your filters. Reason: %s"
 msgstr ""
 "Klaida: Atsiuntimų filtravimas nepavyko! Patikrinkite filtrus: Priežastis: %s"
 
-#: pynicotine/transfers.py:2453
+#: pynicotine/transfers.py:2456
 #, python-format
 msgid "Error: %(num)d Download filters failed! %(error)s "
 msgstr "Klaida: %(num)d Atsiuntimų filtravimas nesėkmingas! %(error)s "
@@ -4319,56 +4320,56 @@ msgstr "Nepavyko perkelti „%(tempfile)s“ į „%(file)s“: %(error)s"
 msgid "User %(user)s is reading your user info"
 msgstr "%(user)s daro UserInfo užklausą"
 
-#: pynicotine/utils.py:177
+#: pynicotine/utils.py:178
 #, fuzzy, python-format
 msgid "Failed to open file path: %s"
 msgstr "Nepavyko atidaryti failo maršruto: %s"
 
-#: pynicotine/utils.py:206
+#: pynicotine/utils.py:207
 #, fuzzy, python-format
 msgid "Failed to open URL: %s"
 msgstr "Nepavyko atidaryti URL: %s"
 
-#: pynicotine/utils.py:550
+#: pynicotine/utils.py:551
 #, fuzzy, python-format
 msgid "Something went wrong while reading file %(filename)s: %(error)s"
 msgstr "Skaitant failą %(filename)s kažkas negerai: %(error)s"
 
-#: pynicotine/utils.py:555
+#: pynicotine/utils.py:556
 #, fuzzy, python-format
 msgid "Attempting to load backup of file %s"
 msgstr "Bandoma įkelti atsarginę failo kopiją %s"
 
-#: pynicotine/utils.py:576
+#: pynicotine/utils.py:577
 #, fuzzy, python-format
 msgid "Unable to back up file %(path)s: %(error)s"
 msgstr "Neįmanoma sukurti atsarginės failo %(path)s nuotraukos: %(error)s"
 
-#: pynicotine/utils.py:591
+#: pynicotine/utils.py:592
 #, fuzzy, python-format
 msgid "Unable to save file %(path)s: %(error)s"
 msgstr "Neįmanoma įrašyti failo %(path)s: %(error)s"
 
-#: pynicotine/utils.py:602
+#: pynicotine/utils.py:603
 #, fuzzy, python-format
 msgid "Unable to restore previous file %(path)s: %(error)s"
 msgstr "Neįmanoma atkurti ankstesnio failo %(path)s: %(error)s"
 
-#: pynicotine/utils.py:680
+#: pynicotine/utils.py:681
 #, python-format
 msgid "No such alias (%s)"
 msgstr "Nėra tokio alternatyvaus vardo (%s)"
 
-#: pynicotine/utils.py:682
+#: pynicotine/utils.py:683
 msgid "Aliases:"
 msgstr "Alternatyvūs vardai:"
 
-#: pynicotine/utils.py:698
+#: pynicotine/utils.py:699
 #, python-format
 msgid "Removed alias %(alias)s: %(action)s\n"
 msgstr "Pašalintas alternatyvus vardas %(alias)s: %(action)s\n"
 
-#: pynicotine/utils.py:700
+#: pynicotine/utils.py:701
 #, python-format
 msgid "No such alias (%(alias)s)\n"
 msgstr "Nėra tokio alternatyvaus vardo (%(alias)s)\n"
@@ -5769,7 +5770,7 @@ msgid "Sent to users as the reason for being banned."
 msgstr "Siunčiama vartotojams kaip priežastis, dėl kurios buvo uždrausta."
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:265
-#: pynicotine/gtkgui/ui/settings/ignore.ui:160
+#: pynicotine/gtkgui/ui/settings/ignore.ui:197
 #, fuzzy
 msgid "IP Addresses"
 msgstr "Adresai"
@@ -6118,6 +6119,15 @@ msgstr "Patikrinti filtrus"
 #, fuzzy
 msgid "Unverified"
 msgstr "Nepatikrintas"
+
+#: pynicotine/gtkgui/ui/settings/ignore.ui:35
+#, fuzzy
+msgid ""
+"Ignore chat messages and search results from users, based on username or IP "
+"address."
+msgstr ""
+"Nepaisykite vartotojų pokalbių pranešimų ir paieškos rezultatų pagal "
+"naudotojo vardą arba IP adresą."
 
 #: pynicotine/gtkgui/ui/settings/log.ui:28
 msgid "Log chatrooms by default"

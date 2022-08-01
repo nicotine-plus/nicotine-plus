@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-31 00:11+0300\n"
+"POT-Creation-Date: 2022-08-01 18:31+0300\n"
 "PO-Revision-Date: 2022-04-21 23:51+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -2175,6 +2175,7 @@ msgid "Banned Users"
 msgstr "Banna"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2420
+#: pynicotine/gtkgui/ui/settings/ignore.ui:16
 #, fuzzy
 msgid "Ignored Users"
 msgstr "Ignorerade användare:"
@@ -2748,13 +2749,13 @@ msgid "_Remove Item"
 msgstr "Ta bort objekt"
 
 #: pynicotine/gtkgui/interests.py:175 pynicotine/gtkgui/interests.py:402
-#: pynicotine/gtkgui/userinfo.py:234 pynicotine/gtkgui/userinfo.py:442
+#: pynicotine/gtkgui/userinfo.py:234 pynicotine/gtkgui/userinfo.py:449
 #, fuzzy
 msgid "I _Like This"
 msgstr "Jag _gillar det här"
 
 #: pynicotine/gtkgui/interests.py:176 pynicotine/gtkgui/interests.py:405
-#: pynicotine/gtkgui/userinfo.py:235 pynicotine/gtkgui/userinfo.py:445
+#: pynicotine/gtkgui/userinfo.py:235 pynicotine/gtkgui/userinfo.py:452
 #, fuzzy
 msgid "I _Dislike This"
 msgstr "Jag _Obillar mig detta"
@@ -2793,7 +2794,7 @@ msgstr "Rum"
 #: pynicotine/gtkgui/ui/mainwindow.ui:595
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:261
 #: pynicotine/gtkgui/ui/settings/ban.ui:133
-#: pynicotine/gtkgui/ui/settings/ignore.ui:29
+#: pynicotine/gtkgui/ui/settings/ignore.ui:66
 msgid "Users"
 msgstr "Användare"
 
@@ -3100,7 +3101,7 @@ msgstr "För många megabyte"
 msgid "File not shared"
 msgstr "Filen är inte delad"
 
-#: pynicotine/gtkgui/transferlist.py:111 pynicotine/transfers.py:1930
+#: pynicotine/gtkgui/transferlist.py:111 pynicotine/transfers.py:1933
 #, fuzzy
 msgid "Download folder error"
 msgstr "Fel på nedladdningskatalog"
@@ -3321,12 +3322,12 @@ msgstr "Zooma ut"
 msgid "Save Picture"
 msgstr "Spara bild"
 
-#: pynicotine/gtkgui/userinfo.py:311
+#: pynicotine/gtkgui/userinfo.py:318
 #, fuzzy, python-format
 msgid "Failed to load picture for user %(user)s: %(error)s"
 msgstr "Det gick inte att läsa in bilden för användaren %(user)s: %(error)s"
 
-#: pynicotine/gtkgui/userinfo.py:357
+#: pynicotine/gtkgui/userinfo.py:364
 #, fuzzy
 msgid ""
 "Unable to request information from user. Either you both have a closed "
@@ -3337,17 +3338,17 @@ msgstr ""
 "stängd lyssnarport, användaren är offline eller så är det ett tillfälligt "
 "anslutningsproblem."
 
-#: pynicotine/gtkgui/userinfo.py:391
+#: pynicotine/gtkgui/userinfo.py:398
 #, fuzzy
 msgid "Yes"
 msgstr "Ja"
 
-#: pynicotine/gtkgui/userinfo.py:391
+#: pynicotine/gtkgui/userinfo.py:398
 #, fuzzy
 msgid "No"
 msgstr "Nej"
 
-#: pynicotine/gtkgui/userinfo.py:413 pynicotine/gtkgui/widgets/popupmenu.py:556
+#: pynicotine/gtkgui/userinfo.py:420 pynicotine/gtkgui/widgets/popupmenu.py:556
 #: pynicotine/gtkgui/widgets/treeview.py:452
 #: pynicotine/gtkgui/ui/userinfo.ui:127 pynicotine/gtkgui/ui/userinfo.ui:154
 #: pynicotine/gtkgui/ui/userinfo.ui:181 pynicotine/gtkgui/ui/userinfo.ui:208
@@ -3469,10 +3470,10 @@ msgstr "%s Inställningar"
 #: pynicotine/gtkgui/ui/settings/chats.ui:806
 #: pynicotine/gtkgui/ui/settings/chats.ui:822
 #: pynicotine/gtkgui/ui/settings/downloads.ui:449
-#: pynicotine/gtkgui/ui/settings/ignore.ui:79
-#: pynicotine/gtkgui/ui/settings/ignore.ui:95
-#: pynicotine/gtkgui/ui/settings/ignore.ui:211
-#: pynicotine/gtkgui/ui/settings/ignore.ui:227
+#: pynicotine/gtkgui/ui/settings/ignore.ui:116
+#: pynicotine/gtkgui/ui/settings/ignore.ui:132
+#: pynicotine/gtkgui/ui/settings/ignore.ui:248
+#: pynicotine/gtkgui/ui/settings/ignore.ui:264
 #: pynicotine/gtkgui/ui/settings/shares.ui:93
 #: pynicotine/gtkgui/ui/settings/shares.ui:109
 #, fuzzy
@@ -3494,10 +3495,10 @@ msgstr "Lägg till…"
 #: pynicotine/gtkgui/ui/settings/chats.ui:853
 #: pynicotine/gtkgui/ui/settings/downloads.ui:495
 #: pynicotine/gtkgui/ui/settings/downloads.ui:511
-#: pynicotine/gtkgui/ui/settings/ignore.ui:110
-#: pynicotine/gtkgui/ui/settings/ignore.ui:126
-#: pynicotine/gtkgui/ui/settings/ignore.ui:242
-#: pynicotine/gtkgui/ui/settings/ignore.ui:258
+#: pynicotine/gtkgui/ui/settings/ignore.ui:147
+#: pynicotine/gtkgui/ui/settings/ignore.ui:163
+#: pynicotine/gtkgui/ui/settings/ignore.ui:279
+#: pynicotine/gtkgui/ui/settings/ignore.ui:295
 #: pynicotine/gtkgui/ui/settings/shares.ui:155
 #: pynicotine/gtkgui/ui/settings/shares.ui:171
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:163
@@ -4045,49 +4046,49 @@ msgstr ""
 msgid "Your password has been changed"
 msgstr "Ditt lösenord har ändrats. Lösenordet är %s"
 
-#: pynicotine/search.py:130 pynicotine/search.py:235
+#: pynicotine/search.py:129 pynicotine/search.py:234
 #: pynicotine/gtkgui/ui/mainwindow.ui:116
 #, fuzzy
 msgid "Joined Rooms "
 msgstr "Sammanfogade rum "
 
-#: pynicotine/search.py:260
+#: pynicotine/search.py:259
 #, python-format
 msgid "Searching for wishlist item \"%s\""
 msgstr ""
 
-#: pynicotine/search.py:268
+#: pynicotine/search.py:267
 #, fuzzy
 msgid "Server does not permit performing wishlist searches at this time"
 msgstr "Servern tillåter inte sökningar i önskelistan för närvarande."
 
-#: pynicotine/search.py:324
+#: pynicotine/search.py:323
 #, fuzzy, python-format
 msgid "Wishlist wait period set to %s seconds"
 msgstr "Väntetiden för önskelistan är inställd på %s sekunder."
 
-#: pynicotine/search.py:549
+#: pynicotine/search.py:554
 #, fuzzy, python-format
 msgid "User %(user)s is searching for \"%(query)s\", found %(num)i results"
 msgstr ""
 "Användaren %(user)s söker efter \"%(query)s\" och får %(num)i resultat."
 
-#: pynicotine/shares.py:100
+#: pynicotine/shares.py:99
 #, fuzzy
 msgid "Rescanning shares…"
 msgstr "Indexering påbörjad"
 
-#: pynicotine/shares.py:101
+#: pynicotine/shares.py:100
 #, fuzzy, python-format
 msgid "%(num)s folders found before rescan, rebuilding…"
 msgstr "%(num)s mappar hittades före omskanning, återuppbyggnad…"
 
-#: pynicotine/shares.py:108
+#: pynicotine/shares.py:107
 #, fuzzy, python-format
 msgid "Rescan complete: %(num)s folders found"
 msgstr "Omsökning slutförd: %(num)s mappar hittades"
 
-#: pynicotine/shares.py:116
+#: pynicotine/shares.py:115
 #, fuzzy, python-format
 msgid ""
 "Serious error occurred while rescanning shares. If this problem persists, "
@@ -4098,32 +4099,32 @@ msgstr ""
 "kvarstår tar du bort %(dir)s/*.db och försöker igen. Om det inte hjälper kan "
 "du skicka in en felrapport med denna stacktrace inkluderad: %(trace)s"
 
-#: pynicotine/shares.py:174
+#: pynicotine/shares.py:173
 #, fuzzy, python-format
 msgid "Can't save %(filename)s: %(error)s"
 msgstr "Kunde inte skapa katalogen '%(user)s', rapporterat fel: %(error)s"
 
-#: pynicotine/shares.py:219 pynicotine/shares.py:340
+#: pynicotine/shares.py:218 pynicotine/shares.py:339
 #, fuzzy, python-format
 msgid "Error while scanning folder %(path)s: %(error)s"
 msgstr "Fel vid skanning av mapp %(path)s: %(error)s"
 
-#: pynicotine/shares.py:321
+#: pynicotine/shares.py:320
 #, fuzzy, python-format
 msgid "Error while scanning file %(path)s: %(error)s"
 msgstr "Fel vid skanning av filen %(path)s: %(error)s"
 
-#: pynicotine/shares.py:369
+#: pynicotine/shares.py:368
 #, fuzzy, python-format
 msgid "Error while scanning metadata for file %(path)s: %(error)s"
 msgstr "Fel vid skanning av metadata för filen %(path)s: %(error)s"
 
-#: pynicotine/shares.py:604
+#: pynicotine/shares.py:602
 #, fuzzy, python-format
 msgid "Failed to process the following databases: %(names)s"
 msgstr "Följande databaser kunde inte bearbetas: %(names)s"
 
-#: pynicotine/shares.py:610
+#: pynicotine/shares.py:608
 #, fuzzy
 msgid ""
 "Attempting to reset index of shared files due to an error. Please rescan "
@@ -4132,7 +4133,7 @@ msgstr ""
 "Försöker återställa indexet för delade filer på grund av ett fel. Skanna om "
 "dina delningar."
 
-#: pynicotine/shares.py:614
+#: pynicotine/shares.py:612
 #, fuzzy
 msgid ""
 "File index of shared files could not be accessed. This could occur due to "
@@ -4143,27 +4144,27 @@ msgstr ""
 "instanser av Nicotine+ är aktiva samtidigt, problem med filbehörighet eller "
 "ett annat problem i Nicotine+."
 
-#: pynicotine/shares.py:716
+#: pynicotine/shares.py:714
 #, fuzzy, python-format
 msgid "Failed to send number of shared files to the server: %s"
 msgstr "Det gick inte att skicka antalet delade filer till servern: %s"
 
-#: pynicotine/shares.py:776
+#: pynicotine/shares.py:774
 #, fuzzy, python-format
 msgid "Rescan progress: %s"
 msgstr "Framsteg: %s"
 
-#: pynicotine/shares.py:853
+#: pynicotine/shares.py:851
 #, fuzzy, python-format
 msgid "User %(user)s is browsing your list of shared files"
 msgstr "Användaren %(user)s bläddrar i din lista över delade filer"
 
-#: pynicotine/shares.py:916
+#: pynicotine/shares.py:914
 #, fuzzy, python-format
 msgid "Failed to fetch the shared folder %(folder)s: %(error)s"
 msgstr "Det gick inte att hämta den delade mappen %(folder)s: %(error)s"
 
-#: pynicotine/slskmessages.py:2320
+#: pynicotine/slskmessages.py:2325
 #, fuzzy, python-format
 msgid "Unable to read shares database. Please rescan your shares. Error: %s"
 msgstr ""
@@ -4195,12 +4196,12 @@ msgid "The server seems to be down or not responding, retrying in %i seconds"
 msgstr ""
 "Servern verkar vara nere eller svarar inte, försöker igen om %i sekunder"
 
-#: pynicotine/slskproto.py:736
+#: pynicotine/slskproto.py:737
 #, fuzzy, python-format
 msgid "Cannot connect to server %(host)s:%(port)s: %(error)s"
 msgstr "Kunde inte ansluta till servern %(host)s:%(port)s: %(error)s"
 
-#: pynicotine/slskproto.py:833
+#: pynicotine/slskproto.py:834
 #, fuzzy, python-format
 msgid "Connected to server %(host)s:%(port)s, logging in…"
 msgstr "Ansluten till servern %(host)s:%(port)s, loggar in..."
@@ -4215,7 +4216,7 @@ msgstr "Fel i nedladdningen av I/O: %s"
 msgid "Upload I/O error: %s"
 msgstr "Fel vid uppladdning av I/O: %s"
 
-#: pynicotine/transfers.py:1079 pynicotine/transfers.py:1930
+#: pynicotine/transfers.py:1079 pynicotine/transfers.py:1933
 #, python-format
 msgid "OS error: %s"
 msgstr "OS-fel: %s"
@@ -4236,7 +4237,7 @@ msgid "Upload started: user %(user)s, IP address %(ip)s, file %(file)s"
 msgstr ""
 "Uppladdning påbörjad: användare %(user)s, IP-adress %(ip)s, fil %(file)s"
 
-#: pynicotine/transfers.py:1800
+#: pynicotine/transfers.py:1803
 #, fuzzy, python-format
 msgid ""
 "Unable to save download to username subfolder, falling back to default "
@@ -4245,79 +4246,79 @@ msgstr ""
 "Det går inte att spara nedladdningen i en undermapp för användarnamn, utan "
 "den faller tillbaka till standardmappen för nedladdningar. Fel: %s"
 
-#: pynicotine/transfers.py:1878
+#: pynicotine/transfers.py:1881
 #, fuzzy, python-format
 msgid "%(file)s downloaded from %(user)s"
 msgstr "%(file)s hämtad från %(user)s"
 
-#: pynicotine/transfers.py:1882
+#: pynicotine/transfers.py:1885
 #, fuzzy
 msgid "File downloaded"
 msgstr "Fil nerladdad"
 
-#: pynicotine/transfers.py:1888
+#: pynicotine/transfers.py:1891
 #, python-format
 msgid "Executed: %s"
 msgstr "Körde: %s"
 
-#: pynicotine/transfers.py:1891
+#: pynicotine/transfers.py:1894
 #, fuzzy, python-format
 msgid "Trouble executing '%s'"
 msgstr "Problem med att exekvera '%s'."
 
-#: pynicotine/transfers.py:1909
+#: pynicotine/transfers.py:1912
 #, fuzzy, python-format
 msgid "%(folder)s downloaded from %(user)s"
 msgstr "%(folder)s hämtad från %(user)s"
 
-#: pynicotine/transfers.py:1913
+#: pynicotine/transfers.py:1916
 #, fuzzy
 msgid "Folder downloaded"
 msgstr "Hämtad mapp"
 
-#: pynicotine/transfers.py:1919
+#: pynicotine/transfers.py:1922
 #, python-format
 msgid "Executed on folder: %s"
 msgstr "Körde på mapp: %s"
 
-#: pynicotine/transfers.py:1922
+#: pynicotine/transfers.py:1925
 #, fuzzy, python-format
 msgid "Trouble executing on folder: %s"
 msgstr "Problem med att köra på mappen: %s"
 
-#: pynicotine/transfers.py:1949
+#: pynicotine/transfers.py:1952
 #, fuzzy, python-format
 msgid "Couldn't move '%(tempfile)s' to '%(file)s': %(error)s"
 msgstr "Kunde inte flytta \"%(tempfile)s\" till \"%(file)s\": %(error)s"
 
-#: pynicotine/transfers.py:1980
+#: pynicotine/transfers.py:1983
 #, python-format
 msgid "Download finished: user %(user)s, file %(file)s"
 msgstr "Nedladdning slutförd: användare %(user)s, fil %(file)s"
 
-#: pynicotine/transfers.py:1997
+#: pynicotine/transfers.py:2000
 #, fuzzy, python-format
 msgid "Upload finished: user %(user)s, IP address %(ip)s, file %(file)s"
 msgstr ""
 "Uppladdning slutförd: användare %(user)s, IP-adress %(ip)s, fil %(file)s"
 
-#: pynicotine/transfers.py:2388
+#: pynicotine/transfers.py:2391
 #, python-format
 msgid "Upload aborted, user %(user)s file %(file)s"
 msgstr "Uppladdning avbruten: användare %(user)s, fil %(file)s"
 
-#: pynicotine/transfers.py:2395
+#: pynicotine/transfers.py:2398
 #, python-format
 msgid "Download aborted, user %(user)s file %(file)s"
 msgstr "Nedladdning avbruten: användare %(user)s, fil %(file)s"
 
-#: pynicotine/transfers.py:2438
+#: pynicotine/transfers.py:2441
 #, fuzzy, python-format
 msgid "Error: Download Filter failed! Verify your filters. Reason: %s"
 msgstr ""
 "Fel: Download Filter misslyckades! Kontrollera dina filter. Anledning: %s"
 
-#: pynicotine/transfers.py:2453
+#: pynicotine/transfers.py:2456
 #, fuzzy, python-format
 msgid "Error: %(num)d Download filters failed! %(error)s "
 msgstr "Fel: %(num)d Nedladdningsfilter misslyckades! %(error)s "
@@ -4399,56 +4400,56 @@ msgstr "Kunde inte skapa katalogen '%(user)s', rapporterat fel: %(error)s"
 msgid "User %(user)s is reading your user info"
 msgstr "Användaren %(user)s läser din användarinformation"
 
-#: pynicotine/utils.py:177
+#: pynicotine/utils.py:178
 #, fuzzy, python-format
 msgid "Failed to open file path: %s"
 msgstr "Det gick inte att öppna filsökvägen: %s"
 
-#: pynicotine/utils.py:206
+#: pynicotine/utils.py:207
 #, fuzzy, python-format
 msgid "Failed to open URL: %s"
 msgstr "Misslyckades med att öppna URL: %s"
 
-#: pynicotine/utils.py:550
+#: pynicotine/utils.py:551
 #, fuzzy, python-format
 msgid "Something went wrong while reading file %(filename)s: %(error)s"
 msgstr "Något gick fel när du läste filen %(filename)s: %(error)s"
 
-#: pynicotine/utils.py:555
+#: pynicotine/utils.py:556
 #, fuzzy, python-format
 msgid "Attempting to load backup of file %s"
 msgstr "Försök att ladda säkerhetskopiering av fil %s"
 
-#: pynicotine/utils.py:576
+#: pynicotine/utils.py:577
 #, fuzzy, python-format
 msgid "Unable to back up file %(path)s: %(error)s"
 msgstr "Det går inte att säkerhetskopiera filen %(path)s: %(error)s"
 
-#: pynicotine/utils.py:591
+#: pynicotine/utils.py:592
 #, fuzzy, python-format
 msgid "Unable to save file %(path)s: %(error)s"
 msgstr "Det går inte att spara filen %(path)s: %(error)s"
 
-#: pynicotine/utils.py:602
+#: pynicotine/utils.py:603
 #, fuzzy, python-format
 msgid "Unable to restore previous file %(path)s: %(error)s"
 msgstr "Det går inte att återställa tidigare fil %(path)s: %(error)s"
 
-#: pynicotine/utils.py:680
+#: pynicotine/utils.py:681
 #, python-format
 msgid "No such alias (%s)"
 msgstr "Kunde inte hitta alias (%s)"
 
-#: pynicotine/utils.py:682
+#: pynicotine/utils.py:683
 msgid "Aliases:"
 msgstr "Alias:"
 
-#: pynicotine/utils.py:698
+#: pynicotine/utils.py:699
 #, python-format
 msgid "Removed alias %(alias)s: %(action)s\n"
 msgstr "Tog bort aliaset %(alias)s: %(action)s\n"
 
-#: pynicotine/utils.py:700
+#: pynicotine/utils.py:701
 #, python-format
 msgid "No such alias (%(alias)s)\n"
 msgstr "Kunde inte hitta alias (%(alias)s)\n"
@@ -5859,7 +5860,7 @@ msgid "Sent to users as the reason for being banned."
 msgstr "Skickas till användarna som skäl för att de blivit bannlysta."
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:265
-#: pynicotine/gtkgui/ui/settings/ignore.ui:160
+#: pynicotine/gtkgui/ui/settings/ignore.ui:197
 #, fuzzy
 msgid "IP Addresses"
 msgstr "Adresser"
@@ -6227,6 +6228,15 @@ msgstr "Verifiera filter"
 #, fuzzy
 msgid "Unverified"
 msgstr "Obekräftad"
+
+#: pynicotine/gtkgui/ui/settings/ignore.ui:35
+#, fuzzy
+msgid ""
+"Ignore chat messages and search results from users, based on username or IP "
+"address."
+msgstr ""
+"Ignorera chattmeddelanden och sökresultat från användare, baserat på "
+"användarnamn eller IP-adress."
 
 #: pynicotine/gtkgui/ui/settings/log.ui:28
 msgid "Log chatrooms by default"

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-31 00:11+0300\n"
+"POT-Creation-Date: 2022-08-01 18:31+0300\n"
 "PO-Revision-Date: 2022-04-22 04:11+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -1805,6 +1805,7 @@ msgid "Banned Users"
 msgstr "Verbannen gebruikers"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2420
+#: pynicotine/gtkgui/ui/settings/ignore.ui:16
 msgid "Ignored Users"
 msgstr "Genegeerde gebruikers"
 
@@ -2291,12 +2292,12 @@ msgid "_Remove Item"
 msgstr "_Verwijder voorwerp"
 
 #: pynicotine/gtkgui/interests.py:175 pynicotine/gtkgui/interests.py:402
-#: pynicotine/gtkgui/userinfo.py:234 pynicotine/gtkgui/userinfo.py:442
+#: pynicotine/gtkgui/userinfo.py:234 pynicotine/gtkgui/userinfo.py:449
 msgid "I _Like This"
 msgstr "Vind ik leuk"
 
 #: pynicotine/gtkgui/interests.py:176 pynicotine/gtkgui/interests.py:405
-#: pynicotine/gtkgui/userinfo.py:235 pynicotine/gtkgui/userinfo.py:445
+#: pynicotine/gtkgui/userinfo.py:235 pynicotine/gtkgui/userinfo.py:452
 msgid "I _Dislike This"
 msgstr "Vind ik niet leuk"
 
@@ -2331,7 +2332,7 @@ msgstr "Kamer"
 #: pynicotine/gtkgui/ui/mainwindow.ui:595
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:261
 #: pynicotine/gtkgui/ui/settings/ban.ui:133
-#: pynicotine/gtkgui/ui/settings/ignore.ui:29
+#: pynicotine/gtkgui/ui/settings/ignore.ui:66
 msgid "Users"
 msgstr "Gebruikers"
 
@@ -2590,7 +2591,7 @@ msgstr "Te veel megabytes"
 msgid "File not shared"
 msgstr "Bestand niet gedeeld"
 
-#: pynicotine/gtkgui/transferlist.py:111 pynicotine/transfers.py:1930
+#: pynicotine/gtkgui/transferlist.py:111 pynicotine/transfers.py:1933
 msgid "Download folder error"
 msgstr "Download map fout"
 
@@ -2771,12 +2772,12 @@ msgstr "Zoom Uit"
 msgid "Save Picture"
 msgstr "Sla de afbeelding op"
 
-#: pynicotine/gtkgui/userinfo.py:311
+#: pynicotine/gtkgui/userinfo.py:318
 #, python-format
 msgid "Failed to load picture for user %(user)s: %(error)s"
 msgstr "Kan gebruikers afbeelding niet laden %(user)s: %(error)s"
 
-#: pynicotine/gtkgui/userinfo.py:357
+#: pynicotine/gtkgui/userinfo.py:364
 msgid ""
 "Unable to request information from user. Either you both have a closed "
 "listening port, the user is offline, or there's a temporary connectivity "
@@ -2786,15 +2787,15 @@ msgstr ""
 "gesloten luisterpoort, is de gebruiker offline of is er een tijdelijk "
 "verbindingsprobleem."
 
-#: pynicotine/gtkgui/userinfo.py:391
+#: pynicotine/gtkgui/userinfo.py:398
 msgid "Yes"
 msgstr "Ja"
 
-#: pynicotine/gtkgui/userinfo.py:391
+#: pynicotine/gtkgui/userinfo.py:398
 msgid "No"
 msgstr "Nee"
 
-#: pynicotine/gtkgui/userinfo.py:413 pynicotine/gtkgui/widgets/popupmenu.py:556
+#: pynicotine/gtkgui/userinfo.py:420 pynicotine/gtkgui/widgets/popupmenu.py:556
 #: pynicotine/gtkgui/widgets/treeview.py:452
 #: pynicotine/gtkgui/ui/userinfo.ui:127 pynicotine/gtkgui/ui/userinfo.ui:154
 #: pynicotine/gtkgui/ui/userinfo.ui:181 pynicotine/gtkgui/ui/userinfo.ui:208
@@ -2901,10 +2902,10 @@ msgstr "%s Instellingen"
 #: pynicotine/gtkgui/ui/settings/chats.ui:806
 #: pynicotine/gtkgui/ui/settings/chats.ui:822
 #: pynicotine/gtkgui/ui/settings/downloads.ui:449
-#: pynicotine/gtkgui/ui/settings/ignore.ui:79
-#: pynicotine/gtkgui/ui/settings/ignore.ui:95
-#: pynicotine/gtkgui/ui/settings/ignore.ui:211
-#: pynicotine/gtkgui/ui/settings/ignore.ui:227
+#: pynicotine/gtkgui/ui/settings/ignore.ui:116
+#: pynicotine/gtkgui/ui/settings/ignore.ui:132
+#: pynicotine/gtkgui/ui/settings/ignore.ui:248
+#: pynicotine/gtkgui/ui/settings/ignore.ui:264
 #: pynicotine/gtkgui/ui/settings/shares.ui:93
 #: pynicotine/gtkgui/ui/settings/shares.ui:109
 msgid "Add…"
@@ -2925,10 +2926,10 @@ msgstr "Voeg toe…"
 #: pynicotine/gtkgui/ui/settings/chats.ui:853
 #: pynicotine/gtkgui/ui/settings/downloads.ui:495
 #: pynicotine/gtkgui/ui/settings/downloads.ui:511
-#: pynicotine/gtkgui/ui/settings/ignore.ui:110
-#: pynicotine/gtkgui/ui/settings/ignore.ui:126
-#: pynicotine/gtkgui/ui/settings/ignore.ui:242
-#: pynicotine/gtkgui/ui/settings/ignore.ui:258
+#: pynicotine/gtkgui/ui/settings/ignore.ui:147
+#: pynicotine/gtkgui/ui/settings/ignore.ui:163
+#: pynicotine/gtkgui/ui/settings/ignore.ui:279
+#: pynicotine/gtkgui/ui/settings/ignore.ui:295
 #: pynicotine/gtkgui/ui/settings/shares.ui:155
 #: pynicotine/gtkgui/ui/settings/shares.ui:171
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:163
@@ -3422,47 +3423,47 @@ msgstr ""
 msgid "Your password has been changed"
 msgstr "Uw wachtwoord is gewijzigd"
 
-#: pynicotine/search.py:130 pynicotine/search.py:235
+#: pynicotine/search.py:129 pynicotine/search.py:234
 #: pynicotine/gtkgui/ui/mainwindow.ui:116
 msgid "Joined Rooms "
 msgstr "Betreden kamers "
 
-#: pynicotine/search.py:260
+#: pynicotine/search.py:259
 #, python-format
 msgid "Searching for wishlist item \"%s\""
 msgstr ""
 
-#: pynicotine/search.py:268
+#: pynicotine/search.py:267
 msgid "Server does not permit performing wishlist searches at this time"
 msgstr ""
 "De server staat het uitvoeren van zoekopdrachten op verlanglijsten op dit "
 "moment niet toe"
 
-#: pynicotine/search.py:324
+#: pynicotine/search.py:323
 #, python-format
 msgid "Wishlist wait period set to %s seconds"
 msgstr "Verlanglijstje wachttijd ingesteld op %s seconden"
 
-#: pynicotine/search.py:549
+#: pynicotine/search.py:554
 #, python-format
 msgid "User %(user)s is searching for \"%(query)s\", found %(num)i results"
 msgstr "Gebruiker %(user)s zoekt naar \"%(query)s\", vond %(num)i resultaten"
 
-#: pynicotine/shares.py:100
+#: pynicotine/shares.py:99
 msgid "Rescanning shares…"
 msgstr "Shares worden opnieuw gescand…"
 
-#: pynicotine/shares.py:101
+#: pynicotine/shares.py:100
 #, python-format
 msgid "%(num)s folders found before rescan, rebuilding…"
 msgstr "%(num)s mappen gevonden vóór opnieuw scannen, opnieuw doorzoeken…"
 
-#: pynicotine/shares.py:108
+#: pynicotine/shares.py:107
 #, python-format
 msgid "Rescan complete: %(num)s folders found"
 msgstr "Herscannen voltooid: %(num)s mappen gevonden"
 
-#: pynicotine/shares.py:116
+#: pynicotine/shares.py:115
 #, python-format
 msgid ""
 "Serious error occurred while rescanning shares. If this problem persists, "
@@ -3474,32 +3475,32 @@ msgstr ""
 "het opnieuw. Als dat niet helpt, dien dan een bugrapport in met deze "
 "stacktracering: %(trace)s"
 
-#: pynicotine/shares.py:174
+#: pynicotine/shares.py:173
 #, python-format
 msgid "Can't save %(filename)s: %(error)s"
 msgstr "Kan %(filename)s: %(error)s niet opslaan"
 
-#: pynicotine/shares.py:219 pynicotine/shares.py:340
+#: pynicotine/shares.py:218 pynicotine/shares.py:339
 #, python-format
 msgid "Error while scanning folder %(path)s: %(error)s"
 msgstr "Fout tijdens het scannen van map %(path)s: %(error)s"
 
-#: pynicotine/shares.py:321
+#: pynicotine/shares.py:320
 #, python-format
 msgid "Error while scanning file %(path)s: %(error)s"
 msgstr "Fout tijdens het scannen van bestand %(path)s: %(error)s"
 
-#: pynicotine/shares.py:369
+#: pynicotine/shares.py:368
 #, python-format
 msgid "Error while scanning metadata for file %(path)s: %(error)s"
 msgstr "Fout bij het scannen van metadata voor bestand %(path)s: %(error)s"
 
-#: pynicotine/shares.py:604
+#: pynicotine/shares.py:602
 #, python-format
 msgid "Failed to process the following databases: %(names)s"
 msgstr "Kan de volgende databases niet verwerken: %(names)s"
 
-#: pynicotine/shares.py:610
+#: pynicotine/shares.py:608
 msgid ""
 "Attempting to reset index of shared files due to an error. Please rescan "
 "your shares."
@@ -3507,7 +3508,7 @@ msgstr ""
 "Poging om index van gedeelde bestanden te resetten vanwege een fout. "
 "Herindexeer je gedeelde bestanden."
 
-#: pynicotine/shares.py:614
+#: pynicotine/shares.py:612
 msgid ""
 "File index of shared files could not be accessed. This could occur due to "
 "several instances of Nicotine+ being active simultaneously, file permission "
@@ -3517,29 +3518,29 @@ msgstr ""
 "gebeuren als meerder instanties van Nicotine+ tegelijkertijd actief zijn, "
 "problemen met bestandsrechten of een ander probleem in Nicotine+."
 
-#: pynicotine/shares.py:716
+#: pynicotine/shares.py:714
 #, python-format
 msgid "Failed to send number of shared files to the server: %s"
 msgstr ""
 "Het is niet gelukt om het aantal gedeelde bestanden naar de server te "
 "sturen: %s"
 
-#: pynicotine/shares.py:776
+#: pynicotine/shares.py:774
 #, python-format
 msgid "Rescan progress: %s"
 msgstr "Voortgang herscannen: %s"
 
-#: pynicotine/shares.py:853
+#: pynicotine/shares.py:851
 #, python-format
 msgid "User %(user)s is browsing your list of shared files"
 msgstr "Gebruiker %(user)s doorzoekt je lijst met gedeelde bestanden"
 
-#: pynicotine/shares.py:916
+#: pynicotine/shares.py:914
 #, python-format
 msgid "Failed to fetch the shared folder %(folder)s: %(error)s"
 msgstr "Kan mapinhoud van gedeelde map %(folder)s niet ophalen: %(error)s"
 
-#: pynicotine/slskmessages.py:2320
+#: pynicotine/slskmessages.py:2325
 #, python-format
 msgid "Unable to read shares database. Please rescan your shares. Error: %s"
 msgstr ""
@@ -3572,12 +3573,12 @@ msgstr ""
 "De server lijkt uitgevallen of antwoordt niet, over %i seconden wordt een "
 "nieuwe poging gedaan"
 
-#: pynicotine/slskproto.py:736
+#: pynicotine/slskproto.py:737
 #, python-format
 msgid "Cannot connect to server %(host)s:%(port)s: %(error)s"
 msgstr "Kan niet met server %(host)s:%(port)s verbinden: %(error)s"
 
-#: pynicotine/slskproto.py:833
+#: pynicotine/slskproto.py:834
 #, python-format
 msgid "Connected to server %(host)s:%(port)s, logging in…"
 msgstr "Verbonden met server %(host)s:%(port)s, bezig met inloggen…"
@@ -3592,7 +3593,7 @@ msgstr "Download I/O fout: %s"
 msgid "Upload I/O error: %s"
 msgstr "Upload I/O fout: %s"
 
-#: pynicotine/transfers.py:1079 pynicotine/transfers.py:1930
+#: pynicotine/transfers.py:1079 pynicotine/transfers.py:1933
 #, python-format
 msgid "OS error: %s"
 msgstr "OS fout: %s"
@@ -3612,7 +3613,7 @@ msgstr "Download gestart: gebruiker %(user)s, bestand %(file)s"
 msgid "Upload started: user %(user)s, IP address %(ip)s, file %(file)s"
 msgstr "Upload gestart: gebruiker %(user)s, IP-adres %(ip)s, bestand %(file)s"
 
-#: pynicotine/transfers.py:1800
+#: pynicotine/transfers.py:1803
 #, python-format
 msgid ""
 "Unable to save download to username subfolder, falling back to default "
@@ -3621,75 +3622,75 @@ msgstr ""
 "Kan download niet opslaan in gebruikersnaam submap, valt terug op standaard "
 "download map. Fout: %s"
 
-#: pynicotine/transfers.py:1878
+#: pynicotine/transfers.py:1881
 #, python-format
 msgid "%(file)s downloaded from %(user)s"
 msgstr "%(file)s gedownload van %(user)s"
 
-#: pynicotine/transfers.py:1882
+#: pynicotine/transfers.py:1885
 msgid "File downloaded"
 msgstr "Bestand gedownload"
 
-#: pynicotine/transfers.py:1888
+#: pynicotine/transfers.py:1891
 #, python-format
 msgid "Executed: %s"
 msgstr "Uitgevoerd: %s"
 
-#: pynicotine/transfers.py:1891
+#: pynicotine/transfers.py:1894
 #, python-format
 msgid "Trouble executing '%s'"
 msgstr "Problemen bij het uitvoeren van '%s'"
 
-#: pynicotine/transfers.py:1909
+#: pynicotine/transfers.py:1912
 #, python-format
 msgid "%(folder)s downloaded from %(user)s"
 msgstr "%(folder)s gedownload van %(user)s"
 
-#: pynicotine/transfers.py:1913
+#: pynicotine/transfers.py:1916
 msgid "Folder downloaded"
 msgstr "Map gedownload"
 
-#: pynicotine/transfers.py:1919
+#: pynicotine/transfers.py:1922
 #, python-format
 msgid "Executed on folder: %s"
 msgstr "Uitgevoerd op map: %s"
 
-#: pynicotine/transfers.py:1922
+#: pynicotine/transfers.py:1925
 #, python-format
 msgid "Trouble executing on folder: %s"
 msgstr "Problemen bij het uitvoeren op map: %s"
 
-#: pynicotine/transfers.py:1949
+#: pynicotine/transfers.py:1952
 #, python-format
 msgid "Couldn't move '%(tempfile)s' to '%(file)s': %(error)s"
 msgstr "Kon '%(tempfile)s' niet naar '%(file)s' verplaatsen: %(error)s"
 
-#: pynicotine/transfers.py:1980
+#: pynicotine/transfers.py:1983
 #, python-format
 msgid "Download finished: user %(user)s, file %(file)s"
 msgstr "Download voltooid: gebruiker %(user)s, bestand %(file)s"
 
-#: pynicotine/transfers.py:1997
+#: pynicotine/transfers.py:2000
 #, python-format
 msgid "Upload finished: user %(user)s, IP address %(ip)s, file %(file)s"
 msgstr "Upload voltooid: gebruiker %(user)s, IP-adres %(ip)s, bestand %(file)s"
 
-#: pynicotine/transfers.py:2388
+#: pynicotine/transfers.py:2391
 #, python-format
 msgid "Upload aborted, user %(user)s file %(file)s"
 msgstr "Upload afgebroken: gebruiker %(user)s, bestand %(file)s"
 
-#: pynicotine/transfers.py:2395
+#: pynicotine/transfers.py:2398
 #, python-format
 msgid "Download aborted, user %(user)s file %(file)s"
 msgstr "Download afgebroken: gebruiker %(user)s, bestand %(file)s"
 
-#: pynicotine/transfers.py:2438
+#: pynicotine/transfers.py:2441
 #, python-format
 msgid "Error: Download Filter failed! Verify your filters. Reason: %s"
 msgstr "Fout: downloadfilter faalde! Kijk de filters na. Oorzaak: %s"
 
-#: pynicotine/transfers.py:2453
+#: pynicotine/transfers.py:2456
 #, python-format
 msgid "Error: %(num)d Download filters failed! %(error)s "
 msgstr "Fout: %(num)d Downloadfilters gefaald! %(error)s "
@@ -3767,57 +3768,57 @@ msgstr "Kan %(filename)s: %(error)s niet opslaan"
 msgid "User %(user)s is reading your user info"
 msgstr "Gebruiker %(user)s leest je gebruikersinfo"
 
-#: pynicotine/utils.py:177
+#: pynicotine/utils.py:178
 #, python-format
 msgid "Failed to open file path: %s"
 msgstr "Mislukt om bestandspad te openen: %s"
 
-#: pynicotine/utils.py:206
+#: pynicotine/utils.py:207
 #, python-format
 msgid "Failed to open URL: %s"
 msgstr "Kan URL niet openen: %s"
 
-#: pynicotine/utils.py:550
+#: pynicotine/utils.py:551
 #, python-format
 msgid "Something went wrong while reading file %(filename)s: %(error)s"
 msgstr ""
 "Er is iets misgegaan tijdens het lezen van bestand %(filename)s: %(error)s"
 
-#: pynicotine/utils.py:555
+#: pynicotine/utils.py:556
 #, python-format
 msgid "Attempting to load backup of file %s"
 msgstr "Poging om backup van bestand te laden %s"
 
-#: pynicotine/utils.py:576
+#: pynicotine/utils.py:577
 #, python-format
 msgid "Unable to back up file %(path)s: %(error)s"
 msgstr "Kan geen back-up maken van bestand %(path)s: %(error)s"
 
-#: pynicotine/utils.py:591
+#: pynicotine/utils.py:592
 #, python-format
 msgid "Unable to save file %(path)s: %(error)s"
 msgstr "Kan bestand %(path)s niet opslaan: %(error)s"
 
-#: pynicotine/utils.py:602
+#: pynicotine/utils.py:603
 #, python-format
 msgid "Unable to restore previous file %(path)s: %(error)s"
 msgstr "Kan vorig bestand niet herstellen %(path)s: %(error)s"
 
-#: pynicotine/utils.py:680
+#: pynicotine/utils.py:681
 #, python-format
 msgid "No such alias (%s)"
 msgstr "Onbekende alias (%s)"
 
-#: pynicotine/utils.py:682
+#: pynicotine/utils.py:683
 msgid "Aliases:"
 msgstr "Aliassen:"
 
-#: pynicotine/utils.py:698
+#: pynicotine/utils.py:699
 #, python-format
 msgid "Removed alias %(alias)s: %(action)s\n"
 msgstr "Alias %(alias)s gewist: %(action)s\n"
 
-#: pynicotine/utils.py:700
+#: pynicotine/utils.py:701
 #, python-format
 msgid "No such alias (%(alias)s)\n"
 msgstr "Onbekende alias (%(alias)s)\n"
@@ -5028,7 +5029,7 @@ msgid "Sent to users as the reason for being banned."
 msgstr "Wordt naar gebruikers gestuurd als reden voor verbanning."
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:265
-#: pynicotine/gtkgui/ui/settings/ignore.ui:160
+#: pynicotine/gtkgui/ui/settings/ignore.ui:197
 msgid "IP Addresses"
 msgstr "IP-adressen"
 
@@ -5338,6 +5339,14 @@ msgstr "Controleer filters"
 #: pynicotine/gtkgui/ui/settings/downloads.ui:600
 msgid "Unverified"
 msgstr "Niet-gecontroleerd"
+
+#: pynicotine/gtkgui/ui/settings/ignore.ui:35
+msgid ""
+"Ignore chat messages and search results from users, based on username or IP "
+"address."
+msgstr ""
+"Negeer chatberichten en zoekresultaten van gebruikers op basis van "
+"gebruikersnaam of IP-adres."
 
 #: pynicotine/gtkgui/ui/settings/log.ui:28
 msgid "Log chatrooms by default"

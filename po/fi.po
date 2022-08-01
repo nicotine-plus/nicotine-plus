@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-31 00:11+0300\n"
+"POT-Creation-Date: 2022-08-01 18:31+0300\n"
 "PO-Revision-Date: 2022-04-21 23:51+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -2165,6 +2165,7 @@ msgid "Banned Users"
 msgstr "Estetyt käyttäjät:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2420
+#: pynicotine/gtkgui/ui/settings/ignore.ui:16
 #, fuzzy
 msgid "Ignored Users"
 msgstr "Huomioimatta jätettävät käyttäjät:"
@@ -2736,13 +2737,13 @@ msgid "_Remove Item"
 msgstr "_Poista tämä"
 
 #: pynicotine/gtkgui/interests.py:175 pynicotine/gtkgui/interests.py:402
-#: pynicotine/gtkgui/userinfo.py:234 pynicotine/gtkgui/userinfo.py:442
+#: pynicotine/gtkgui/userinfo.py:234 pynicotine/gtkgui/userinfo.py:449
 #, fuzzy
 msgid "I _Like This"
 msgstr "Pidän tästä"
 
 #: pynicotine/gtkgui/interests.py:176 pynicotine/gtkgui/interests.py:405
-#: pynicotine/gtkgui/userinfo.py:235 pynicotine/gtkgui/userinfo.py:445
+#: pynicotine/gtkgui/userinfo.py:235 pynicotine/gtkgui/userinfo.py:452
 #, fuzzy
 msgid "I _Dislike This"
 msgstr "Pidän tästä"
@@ -2781,7 +2782,7 @@ msgstr "Huone"
 #: pynicotine/gtkgui/ui/mainwindow.ui:595
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:261
 #: pynicotine/gtkgui/ui/settings/ban.ui:133
-#: pynicotine/gtkgui/ui/settings/ignore.ui:29
+#: pynicotine/gtkgui/ui/settings/ignore.ui:66
 msgid "Users"
 msgstr "Käyttäjää"
 
@@ -3085,7 +3086,7 @@ msgstr "Liian monta megatavua"
 msgid "File not shared"
 msgstr "Tiedostoa ei jaettu"
 
-#: pynicotine/gtkgui/transferlist.py:111 pynicotine/transfers.py:1930
+#: pynicotine/gtkgui/transferlist.py:111 pynicotine/transfers.py:1933
 #, fuzzy
 msgid "Download folder error"
 msgstr "Lataushakemistovirhe"
@@ -3303,12 +3304,12 @@ msgstr "Loitonna"
 msgid "Save Picture"
 msgstr "Tallenna kuva"
 
-#: pynicotine/gtkgui/userinfo.py:311
+#: pynicotine/gtkgui/userinfo.py:318
 #, fuzzy, python-format
 msgid "Failed to load picture for user %(user)s: %(error)s"
 msgstr "Kuvan lataaminen käyttäjälle epäonnistui %(user)s: %(error)s"
 
-#: pynicotine/gtkgui/userinfo.py:357
+#: pynicotine/gtkgui/userinfo.py:364
 #, fuzzy
 msgid ""
 "Unable to request information from user. Either you both have a closed "
@@ -3318,16 +3319,16 @@ msgstr ""
 "Tietoja ei voi pyytää käyttäjältä. Joko teillä molemmilla on suljettu "
 "kuunteluportti, käyttäjä on offline-tilassa tai yhteysongelma on tilapäinen."
 
-#: pynicotine/gtkgui/userinfo.py:391
+#: pynicotine/gtkgui/userinfo.py:398
 msgid "Yes"
 msgstr "Kyllä"
 
-#: pynicotine/gtkgui/userinfo.py:391
+#: pynicotine/gtkgui/userinfo.py:398
 #, fuzzy
 msgid "No"
 msgstr "Ei"
 
-#: pynicotine/gtkgui/userinfo.py:413 pynicotine/gtkgui/widgets/popupmenu.py:556
+#: pynicotine/gtkgui/userinfo.py:420 pynicotine/gtkgui/widgets/popupmenu.py:556
 #: pynicotine/gtkgui/widgets/treeview.py:452
 #: pynicotine/gtkgui/ui/userinfo.ui:127 pynicotine/gtkgui/ui/userinfo.ui:154
 #: pynicotine/gtkgui/ui/userinfo.ui:181 pynicotine/gtkgui/ui/userinfo.ui:208
@@ -3446,10 +3447,10 @@ msgstr "Asetukset"
 #: pynicotine/gtkgui/ui/settings/chats.ui:806
 #: pynicotine/gtkgui/ui/settings/chats.ui:822
 #: pynicotine/gtkgui/ui/settings/downloads.ui:449
-#: pynicotine/gtkgui/ui/settings/ignore.ui:79
-#: pynicotine/gtkgui/ui/settings/ignore.ui:95
-#: pynicotine/gtkgui/ui/settings/ignore.ui:211
-#: pynicotine/gtkgui/ui/settings/ignore.ui:227
+#: pynicotine/gtkgui/ui/settings/ignore.ui:116
+#: pynicotine/gtkgui/ui/settings/ignore.ui:132
+#: pynicotine/gtkgui/ui/settings/ignore.ui:248
+#: pynicotine/gtkgui/ui/settings/ignore.ui:264
 #: pynicotine/gtkgui/ui/settings/shares.ui:93
 #: pynicotine/gtkgui/ui/settings/shares.ui:109
 #, fuzzy
@@ -3471,10 +3472,10 @@ msgstr "Lisätä…"
 #: pynicotine/gtkgui/ui/settings/chats.ui:853
 #: pynicotine/gtkgui/ui/settings/downloads.ui:495
 #: pynicotine/gtkgui/ui/settings/downloads.ui:511
-#: pynicotine/gtkgui/ui/settings/ignore.ui:110
-#: pynicotine/gtkgui/ui/settings/ignore.ui:126
-#: pynicotine/gtkgui/ui/settings/ignore.ui:242
-#: pynicotine/gtkgui/ui/settings/ignore.ui:258
+#: pynicotine/gtkgui/ui/settings/ignore.ui:147
+#: pynicotine/gtkgui/ui/settings/ignore.ui:163
+#: pynicotine/gtkgui/ui/settings/ignore.ui:279
+#: pynicotine/gtkgui/ui/settings/ignore.ui:295
 #: pynicotine/gtkgui/ui/settings/shares.ui:155
 #: pynicotine/gtkgui/ui/settings/shares.ui:171
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:163
@@ -4016,49 +4017,49 @@ msgstr ""
 msgid "Your password has been changed"
 msgstr "Salasanasi on vaihdettu. Salasana on %s"
 
-#: pynicotine/search.py:130 pynicotine/search.py:235
+#: pynicotine/search.py:129 pynicotine/search.py:234
 #: pynicotine/gtkgui/ui/mainwindow.ui:116
 #, fuzzy
 msgid "Joined Rooms "
 msgstr "Yhdistetyt huoneet "
 
-#: pynicotine/search.py:260
+#: pynicotine/search.py:259
 #, python-format
 msgid "Searching for wishlist item \"%s\""
 msgstr ""
 
-#: pynicotine/search.py:268
+#: pynicotine/search.py:267
 #, fuzzy
 msgid "Server does not permit performing wishlist searches at this time"
 msgstr "Palvelin ei salli toivelistahakujen suorittamista tällä hetkellä"
 
-#: pynicotine/search.py:324
+#: pynicotine/search.py:323
 #, fuzzy, python-format
 msgid "Wishlist wait period set to %s seconds"
 msgstr "Toivelistan odotusajaksi on määritetty %s sekuntia"
 
-#: pynicotine/search.py:549
+#: pynicotine/search.py:554
 #, fuzzy, python-format
 msgid "User %(user)s is searching for \"%(query)s\", found %(num)i results"
 msgstr "Käyttäjä %(user)s etsii \"%(query)s\", palauttaa %(num)i tulokset"
 
-#: pynicotine/shares.py:100
+#: pynicotine/shares.py:99
 #, fuzzy
 msgid "Rescanning shares…"
 msgstr "Kaverijakoja skannataan"
 
-#: pynicotine/shares.py:101
+#: pynicotine/shares.py:100
 #, fuzzy, python-format
 msgid "%(num)s folders found before rescan, rebuilding…"
 msgstr ""
 "%(num)s-kansiot löytyivät ennen uudelleenskannaamista, uudelleenrakentamista…"
 
-#: pynicotine/shares.py:108
+#: pynicotine/shares.py:107
 #, fuzzy, python-format
 msgid "Rescan complete: %(num)s folders found"
 msgstr "Uudelleenskannaus valmis: %(num)s kansioita löydetty"
 
-#: pynicotine/shares.py:116
+#: pynicotine/shares.py:115
 #, fuzzy, python-format
 msgid ""
 "Serious error occurred while rescanning shares. If this problem persists, "
@@ -4069,32 +4070,32 @@ msgstr ""
 "%(dir)s/*.db yritä uudelleen. Jos tämä ei auta, tee virheilmoitus, jossa on "
 "tämä pinon jälki: %(trace)s"
 
-#: pynicotine/shares.py:174
+#: pynicotine/shares.py:173
 #, fuzzy, python-format
 msgid "Can't save %(filename)s: %(error)s"
 msgstr "Ei voi tallentaa asetustiedostoa, I/O -virhe: %s"
 
-#: pynicotine/shares.py:219 pynicotine/shares.py:340
+#: pynicotine/shares.py:218 pynicotine/shares.py:339
 #, fuzzy, python-format
 msgid "Error while scanning folder %(path)s: %(error)s"
 msgstr "Virhe skannattaessa kansiota %(path)s: %(error)s"
 
-#: pynicotine/shares.py:321
+#: pynicotine/shares.py:320
 #, fuzzy, python-format
 msgid "Error while scanning file %(path)s: %(error)s"
 msgstr "Virhe skannattaessa tiedostoa %(path)s: %(error)s"
 
-#: pynicotine/shares.py:369
+#: pynicotine/shares.py:368
 #, fuzzy, python-format
 msgid "Error while scanning metadata for file %(path)s: %(error)s"
 msgstr "Virhe etsittäessä tiedoston %(path)s metatietoja: %(error)s"
 
-#: pynicotine/shares.py:604
+#: pynicotine/shares.py:602
 #, fuzzy, python-format
 msgid "Failed to process the following databases: %(names)s"
 msgstr "Seuraavien tietokantojen käsitteleminen epäonnistui: %(names)s"
 
-#: pynicotine/shares.py:610
+#: pynicotine/shares.py:608
 #, fuzzy
 msgid ""
 "Attempting to reset index of shared files due to an error. Please rescan "
@@ -4103,7 +4104,7 @@ msgstr ""
 "Yritetään palauttaa jaettujen tiedostojen indeksi virheen vuoksi. Tarkista "
 "osakkeesi uudelleen."
 
-#: pynicotine/shares.py:614
+#: pynicotine/shares.py:612
 #, fuzzy
 msgid ""
 "File index of shared files could not be accessed. This could occur due to "
@@ -4114,27 +4115,27 @@ msgstr ""
 "useista Nicotine+  -tapauksista, jotka ovat aktiivisia samanaikaisesti, "
 "tiedostojen käyttöoikeusongelmista tai toisesta Nicotine+ -ongelmasta."
 
-#: pynicotine/shares.py:716
+#: pynicotine/shares.py:714
 #, fuzzy, python-format
 msgid "Failed to send number of shared files to the server: %s"
 msgstr "Jaettujen tiedostojen lähettäminen palvelimeen epäonnistui: %s"
 
-#: pynicotine/shares.py:776
+#: pynicotine/shares.py:774
 #, fuzzy, python-format
 msgid "Rescan progress: %s"
 msgstr "Hakemistoja:  %s"
 
-#: pynicotine/shares.py:853
+#: pynicotine/shares.py:851
 #, fuzzy, python-format
 msgid "User %(user)s is browsing your list of shared files"
 msgstr "Käyttäjä %(user)s selaa jaettujen tiedostojen luetteloa"
 
-#: pynicotine/shares.py:916
+#: pynicotine/shares.py:914
 #, fuzzy, python-format
 msgid "Failed to fetch the shared folder %(folder)s: %(error)s"
 msgstr "Jaetun kansion %(folder)s nouta epäonnistui: %(error)s"
 
-#: pynicotine/slskmessages.py:2320
+#: pynicotine/slskmessages.py:2325
 #, fuzzy, python-format
 msgid "Unable to read shares database. Please rescan your shares. Error: %s"
 msgstr "Jaetietokantaa ei voi lukea. Tarkista osakkeesi uudelleen. Virhe: %s"
@@ -4166,12 +4167,12 @@ msgstr ""
 "Palvelin näyttää olevan kaatunut tai se ei vastaa, yritetään uudelleen %i "
 "sekunnin kuluttua"
 
-#: pynicotine/slskproto.py:736
+#: pynicotine/slskproto.py:737
 #, fuzzy, python-format
 msgid "Cannot connect to server %(host)s:%(port)s: %(error)s"
 msgstr "Ei voi yhdistää palvelimeen %(host)s:%(port)s: %(error)s"
 
-#: pynicotine/slskproto.py:833
+#: pynicotine/slskproto.py:834
 #, fuzzy, python-format
 msgid "Connected to server %(host)s:%(port)s, logging in…"
 msgstr "Yhdistetty palvelimeen %(host)s:%(port)s, kirjaudutaan sisään..."
@@ -4186,7 +4187,7 @@ msgstr "Lataa I/O-virhe: %s"
 msgid "Upload I/O error: %s"
 msgstr "Lataa I/O-virhe: %s"
 
-#: pynicotine/transfers.py:1079 pynicotine/transfers.py:1930
+#: pynicotine/transfers.py:1079 pynicotine/transfers.py:1933
 #, python-format
 msgid "OS error: %s"
 msgstr "Käyttöjärjestelmävirhe: %s"
@@ -4206,7 +4207,7 @@ msgstr "Lataus aloitettu: käyttäjä %(user)s, tiedosto %(file)s"
 msgid "Upload started: user %(user)s, IP address %(ip)s, file %(file)s"
 msgstr "Lähetys aloitettu: käyttäjä %(user)s, tiedosto %(file)s"
 
-#: pynicotine/transfers.py:1800
+#: pynicotine/transfers.py:1803
 #, fuzzy, python-format
 msgid ""
 "Unable to save download to username subfolder, falling back to default "
@@ -4215,77 +4216,77 @@ msgstr ""
 "Latausta ei voi tallentaa käyttäjänimen alikansioon, joka palaa "
 "oletuslatauksen kansioon. Virhe: %s"
 
-#: pynicotine/transfers.py:1878
+#: pynicotine/transfers.py:1881
 #, fuzzy, python-format
 msgid "%(file)s downloaded from %(user)s"
 msgstr "%(file)s ladattu kohteesta %(user)s"
 
-#: pynicotine/transfers.py:1882
+#: pynicotine/transfers.py:1885
 #, fuzzy
 msgid "File downloaded"
 msgstr "Tiedosto ladattu"
 
-#: pynicotine/transfers.py:1888
+#: pynicotine/transfers.py:1891
 #, python-format
 msgid "Executed: %s"
 msgstr "Suoritettu: %s"
 
-#: pynicotine/transfers.py:1891
+#: pynicotine/transfers.py:1894
 #, fuzzy, python-format
 msgid "Trouble executing '%s'"
 msgstr "Ongelmia %s-"
 
-#: pynicotine/transfers.py:1909
+#: pynicotine/transfers.py:1912
 #, fuzzy, python-format
 msgid "%(folder)s downloaded from %(user)s"
 msgstr "%(folder)s ladattu kohteesta %(user)s"
 
-#: pynicotine/transfers.py:1913
+#: pynicotine/transfers.py:1916
 #, fuzzy
 msgid "Folder downloaded"
 msgstr "Kansio ladattu"
 
-#: pynicotine/transfers.py:1919
+#: pynicotine/transfers.py:1922
 #, python-format
 msgid "Executed on folder: %s"
 msgstr "Suoritettu kansiolle: %s"
 
-#: pynicotine/transfers.py:1922
+#: pynicotine/transfers.py:1925
 #, fuzzy, python-format
 msgid "Trouble executing on folder: %s"
 msgstr "Ongelmia suorittamisessa kansiossa: %s"
 
-#: pynicotine/transfers.py:1949
+#: pynicotine/transfers.py:1952
 #, fuzzy, python-format
 msgid "Couldn't move '%(tempfile)s' to '%(file)s': %(error)s"
 msgstr "Ei voinut siirtää %(tempfile)s-tiedostoa %(file)s-kansioon: %(error)s"
 
-#: pynicotine/transfers.py:1980
+#: pynicotine/transfers.py:1983
 #, python-format
 msgid "Download finished: user %(user)s, file %(file)s"
 msgstr "Lataus valmis: käyttäjä %(user)s, tiedosto %(file)s"
 
-#: pynicotine/transfers.py:1997
+#: pynicotine/transfers.py:2000
 #, fuzzy, python-format
 msgid "Upload finished: user %(user)s, IP address %(ip)s, file %(file)s"
 msgstr "Lataus valmis: käyttäjä %(user)s, tiedosto %(file)s"
 
-#: pynicotine/transfers.py:2388
+#: pynicotine/transfers.py:2391
 #, python-format
 msgid "Upload aborted, user %(user)s file %(file)s"
 msgstr "Lähtevä keskeytetty, käyttäjä %(user)s, tiedosto %(file)s"
 
-#: pynicotine/transfers.py:2395
+#: pynicotine/transfers.py:2398
 #, python-format
 msgid "Download aborted, user %(user)s file %(file)s"
 msgstr "Lataus keskeytetty, käyttäjä %(user)s, tiedosto %(file)s"
 
-#: pynicotine/transfers.py:2438
+#: pynicotine/transfers.py:2441
 #, python-format
 msgid "Error: Download Filter failed! Verify your filters. Reason: %s"
 msgstr "Virhe: Lataussuodin epäonnistui! Tarkista suotimet. Syy: %s"
 
-#: pynicotine/transfers.py:2453
+#: pynicotine/transfers.py:2456
 #, python-format
 msgid "Error: %(num)d Download filters failed! %(error)s "
 msgstr "Virhe: %(num)d Lataussuotimet epäonnistuivat! %(error)s "
@@ -4364,56 +4365,56 @@ msgstr "Ei voi tallentaa asetustiedostoa, I/O -virhe: %s"
 msgid "User %(user)s is reading your user info"
 msgstr "%(user)s tekee Käyttäjätieto-pyynnön"
 
-#: pynicotine/utils.py:177
+#: pynicotine/utils.py:178
 #, fuzzy, python-format
 msgid "Failed to open file path: %s"
 msgstr "Tiedostopolun avaaminen epäonnistui: %s"
 
-#: pynicotine/utils.py:206
+#: pynicotine/utils.py:207
 #, fuzzy, python-format
 msgid "Failed to open URL: %s"
 msgstr "URL-osoitteen avaaminen epäonnistui: %s"
 
-#: pynicotine/utils.py:550
+#: pynicotine/utils.py:551
 #, fuzzy, python-format
 msgid "Something went wrong while reading file %(filename)s: %(error)s"
 msgstr "Jokin meni vikaan tiedostoa luettäessä %(filename)s: %(error)s"
 
-#: pynicotine/utils.py:555
+#: pynicotine/utils.py:556
 #, fuzzy, python-format
 msgid "Attempting to load backup of file %s"
 msgstr "Yritetään ladata tiedoston varmuuskopiointia %s"
 
-#: pynicotine/utils.py:576
+#: pynicotine/utils.py:577
 #, fuzzy, python-format
 msgid "Unable to back up file %(path)s: %(error)s"
 msgstr "Tiedostoa %(path)s ei voi varmuuskopioida: %(error)s"
 
-#: pynicotine/utils.py:591
+#: pynicotine/utils.py:592
 #, fuzzy, python-format
 msgid "Unable to save file %(path)s: %(error)s"
 msgstr "Tiedostoa %(path)s ei voi tallentaa: %(error)s"
 
-#: pynicotine/utils.py:602
+#: pynicotine/utils.py:603
 #, fuzzy, python-format
 msgid "Unable to restore previous file %(path)s: %(error)s"
 msgstr "Aiempaa tiedostoa %(path)s ei voi palauttaa: %(error)s"
 
-#: pynicotine/utils.py:680
+#: pynicotine/utils.py:681
 #, python-format
 msgid "No such alias (%s)"
 msgstr "Ei sellaista aliasta (%s)"
 
-#: pynicotine/utils.py:682
+#: pynicotine/utils.py:683
 msgid "Aliases:"
 msgstr "Aliakset:"
 
-#: pynicotine/utils.py:698
+#: pynicotine/utils.py:699
 #, python-format
 msgid "Removed alias %(alias)s: %(action)s\n"
 msgstr "Poistettu alias %(alias)s: %(action)s\n"
 
-#: pynicotine/utils.py:700
+#: pynicotine/utils.py:701
 #, python-format
 msgid "No such alias (%(alias)s)\n"
 msgstr "Ei sellaista aliasta (%(alias)s)\n"
@@ -5827,7 +5828,7 @@ msgid "Sent to users as the reason for being banned."
 msgstr "Lähetetään käyttäjille porttikiellon syyksi."
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:265
-#: pynicotine/gtkgui/ui/settings/ignore.ui:160
+#: pynicotine/gtkgui/ui/settings/ignore.ui:197
 #, fuzzy
 msgid "IP Addresses"
 msgstr "Osoitteet"
@@ -6192,6 +6193,15 @@ msgstr "Varmenna suotimet"
 #, fuzzy
 msgid "Unverified"
 msgstr "<b>Varmistamaton</b>"
+
+#: pynicotine/gtkgui/ui/settings/ignore.ui:35
+#, fuzzy
+msgid ""
+"Ignore chat messages and search results from users, based on username or IP "
+"address."
+msgstr ""
+"Ohita käyttäjien chat-viestit ja hakutulokset käyttäjänimen tai IP-osoitteen "
+"perusteella."
 
 #: pynicotine/gtkgui/ui/settings/log.ui:28
 msgid "Log chatrooms by default"

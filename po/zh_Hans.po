@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-31 00:11+0300\n"
+"POT-Creation-Date: 2022-08-01 18:31+0300\n"
 "PO-Revision-Date: 2022-04-21 23:51+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
@@ -2046,6 +2046,7 @@ msgid "Banned Users"
 msgstr "已禁止的用户"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2420
+#: pynicotine/gtkgui/ui/settings/ignore.ui:16
 msgid "Ignored Users"
 msgstr "已忽略的用户"
 
@@ -2537,12 +2538,12 @@ msgid "_Remove Item"
 msgstr "_除去项目"
 
 #: pynicotine/gtkgui/interests.py:175 pynicotine/gtkgui/interests.py:402
-#: pynicotine/gtkgui/userinfo.py:234 pynicotine/gtkgui/userinfo.py:442
+#: pynicotine/gtkgui/userinfo.py:234 pynicotine/gtkgui/userinfo.py:449
 msgid "I _Like This"
 msgstr "我_喜欢这个"
 
 #: pynicotine/gtkgui/interests.py:176 pynicotine/gtkgui/interests.py:405
-#: pynicotine/gtkgui/userinfo.py:235 pynicotine/gtkgui/userinfo.py:445
+#: pynicotine/gtkgui/userinfo.py:235 pynicotine/gtkgui/userinfo.py:452
 msgid "I _Dislike This"
 msgstr "我_不喜欢这个"
 
@@ -2578,7 +2579,7 @@ msgstr "房间"
 #: pynicotine/gtkgui/ui/mainwindow.ui:595
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:261
 #: pynicotine/gtkgui/ui/settings/ban.ui:133
-#: pynicotine/gtkgui/ui/settings/ignore.ui:29
+#: pynicotine/gtkgui/ui/settings/ignore.ui:66
 msgid "Users"
 msgstr "用户"
 
@@ -2836,7 +2837,7 @@ msgstr "太多兆字节"
 msgid "File not shared"
 msgstr "文件未共享"
 
-#: pynicotine/gtkgui/transferlist.py:111 pynicotine/transfers.py:1930
+#: pynicotine/gtkgui/transferlist.py:111 pynicotine/transfers.py:1933
 msgid "Download folder error"
 msgstr "下载文件夹出错"
 
@@ -3016,12 +3017,12 @@ msgstr "缩小"
 msgid "Save Picture"
 msgstr "保存图片"
 
-#: pynicotine/gtkgui/userinfo.py:311
+#: pynicotine/gtkgui/userinfo.py:318
 #, python-format
 msgid "Failed to load picture for user %(user)s: %(error)s"
 msgstr "加载用户 %(user)s 图片失败：%(error)s"
 
-#: pynicotine/gtkgui/userinfo.py:357
+#: pynicotine/gtkgui/userinfo.py:364
 msgid ""
 "Unable to request information from user. Either you both have a closed "
 "listening port, the user is offline, or there's a temporary connectivity "
@@ -3030,15 +3031,15 @@ msgstr ""
 "无法向用户请求信息。可能是你们有个关闭的监听端口，可能是用户离线，也可能是临"
 "时的连接问题。"
 
-#: pynicotine/gtkgui/userinfo.py:391
+#: pynicotine/gtkgui/userinfo.py:398
 msgid "Yes"
 msgstr "是的"
 
-#: pynicotine/gtkgui/userinfo.py:391
+#: pynicotine/gtkgui/userinfo.py:398
 msgid "No"
 msgstr "不"
 
-#: pynicotine/gtkgui/userinfo.py:413 pynicotine/gtkgui/widgets/popupmenu.py:556
+#: pynicotine/gtkgui/userinfo.py:420 pynicotine/gtkgui/widgets/popupmenu.py:556
 #: pynicotine/gtkgui/widgets/treeview.py:452
 #: pynicotine/gtkgui/ui/userinfo.ui:127 pynicotine/gtkgui/ui/userinfo.ui:154
 #: pynicotine/gtkgui/ui/userinfo.ui:181 pynicotine/gtkgui/ui/userinfo.ui:208
@@ -3155,10 +3156,10 @@ msgstr "%s 设置"
 #: pynicotine/gtkgui/ui/settings/chats.ui:806
 #: pynicotine/gtkgui/ui/settings/chats.ui:822
 #: pynicotine/gtkgui/ui/settings/downloads.ui:449
-#: pynicotine/gtkgui/ui/settings/ignore.ui:79
-#: pynicotine/gtkgui/ui/settings/ignore.ui:95
-#: pynicotine/gtkgui/ui/settings/ignore.ui:211
-#: pynicotine/gtkgui/ui/settings/ignore.ui:227
+#: pynicotine/gtkgui/ui/settings/ignore.ui:116
+#: pynicotine/gtkgui/ui/settings/ignore.ui:132
+#: pynicotine/gtkgui/ui/settings/ignore.ui:248
+#: pynicotine/gtkgui/ui/settings/ignore.ui:264
 #: pynicotine/gtkgui/ui/settings/shares.ui:93
 #: pynicotine/gtkgui/ui/settings/shares.ui:109
 #, fuzzy
@@ -3180,10 +3181,10 @@ msgstr "添加…"
 #: pynicotine/gtkgui/ui/settings/chats.ui:853
 #: pynicotine/gtkgui/ui/settings/downloads.ui:495
 #: pynicotine/gtkgui/ui/settings/downloads.ui:511
-#: pynicotine/gtkgui/ui/settings/ignore.ui:110
-#: pynicotine/gtkgui/ui/settings/ignore.ui:126
-#: pynicotine/gtkgui/ui/settings/ignore.ui:242
-#: pynicotine/gtkgui/ui/settings/ignore.ui:258
+#: pynicotine/gtkgui/ui/settings/ignore.ui:147
+#: pynicotine/gtkgui/ui/settings/ignore.ui:163
+#: pynicotine/gtkgui/ui/settings/ignore.ui:279
+#: pynicotine/gtkgui/ui/settings/ignore.ui:295
 #: pynicotine/gtkgui/ui/settings/shares.ui:155
 #: pynicotine/gtkgui/ui/settings/shares.ui:171
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:163
@@ -3714,48 +3715,48 @@ msgstr ""
 msgid "Your password has been changed"
 msgstr "您的密码已被更改。密码是 %s"
 
-#: pynicotine/search.py:130 pynicotine/search.py:235
+#: pynicotine/search.py:129 pynicotine/search.py:234
 #: pynicotine/gtkgui/ui/mainwindow.ui:116
 #, fuzzy
 msgid "Joined Rooms "
 msgstr "连接的房间 "
 
-#: pynicotine/search.py:260
+#: pynicotine/search.py:259
 #, python-format
 msgid "Searching for wishlist item \"%s\""
 msgstr ""
 
-#: pynicotine/search.py:268
+#: pynicotine/search.py:267
 #, fuzzy
 msgid "Server does not permit performing wishlist searches at this time"
 msgstr "服务器目前不允许执行愿望清单搜索"
 
-#: pynicotine/search.py:324
+#: pynicotine/search.py:323
 #, fuzzy, python-format
 msgid "Wishlist wait period set to %s seconds"
 msgstr "愿望清单等待时间设置为 %s 秒"
 
-#: pynicotine/search.py:549
+#: pynicotine/search.py:554
 #, fuzzy, python-format
 msgid "User %(user)s is searching for \"%(query)s\", found %(num)i results"
 msgstr "用户 %(user)s 正在搜索“%(query)s”，找到了 %(num)i 结果"
 
-#: pynicotine/shares.py:100
+#: pynicotine/shares.py:99
 #, fuzzy
 msgid "Rescanning shares…"
 msgstr "正在重新扫描共享…"
 
-#: pynicotine/shares.py:101
+#: pynicotine/shares.py:100
 #, fuzzy, python-format
 msgid "%(num)s folders found before rescan, rebuilding…"
 msgstr "%(num)s 在重新扫描、重建之前找到的文件夹…"
 
-#: pynicotine/shares.py:108
+#: pynicotine/shares.py:107
 #, fuzzy, python-format
 msgid "Rescan complete: %(num)s folders found"
 msgstr "重新扫描完成：找到 %(num)s 文件夹"
 
-#: pynicotine/shares.py:116
+#: pynicotine/shares.py:115
 #, fuzzy, python-format
 msgid ""
 "Serious error occurred while rescanning shares. If this problem persists, "
@@ -3765,39 +3766,39 @@ msgstr ""
 "重新扫描共享时出现严重错误。如果此问题仍然存在，请删除 %(dir)s/*.db 并重试。"
 "如果这没有帮助，请提交包含此堆栈跟踪的错误报告：%(trace)s"
 
-#: pynicotine/shares.py:174
+#: pynicotine/shares.py:173
 #, fuzzy, python-format
 msgid "Can't save %(filename)s: %(error)s"
 msgstr "无法保存 %(filename)s：%(error)s"
 
-#: pynicotine/shares.py:219 pynicotine/shares.py:340
+#: pynicotine/shares.py:218 pynicotine/shares.py:339
 #, fuzzy, python-format
 msgid "Error while scanning folder %(path)s: %(error)s"
 msgstr "扫描文件夹 %(path)s 时出错：%(error)s"
 
-#: pynicotine/shares.py:321
+#: pynicotine/shares.py:320
 #, fuzzy, python-format
 msgid "Error while scanning file %(path)s: %(error)s"
 msgstr "扫描文件 %(path)s 时出错：%(error)s"
 
-#: pynicotine/shares.py:369
+#: pynicotine/shares.py:368
 #, fuzzy, python-format
 msgid "Error while scanning metadata for file %(path)s: %(error)s"
 msgstr "扫描文件 %(path)s 的元数据时出错：%(error)s"
 
-#: pynicotine/shares.py:604
+#: pynicotine/shares.py:602
 #, fuzzy, python-format
 msgid "Failed to process the following databases: %(names)s"
 msgstr "无法处理以下数据库：%(names)s"
 
-#: pynicotine/shares.py:610
+#: pynicotine/shares.py:608
 #, fuzzy
 msgid ""
 "Attempting to reset index of shared files due to an error. Please rescan "
 "your shares."
 msgstr "由于错误而尝试重置共享文件的索引。请重新扫描您的股票。"
 
-#: pynicotine/shares.py:614
+#: pynicotine/shares.py:612
 #, fuzzy
 msgid ""
 "File index of shared files could not be accessed. This could occur due to "
@@ -3807,27 +3808,27 @@ msgstr ""
 "无法访问共享文件的文件索引。这可能是由于多个 Nicotine+ 实例同时处于活动状态、"
 "文件权限问题或 Nicotine+ 中的另一个问题。"
 
-#: pynicotine/shares.py:716
+#: pynicotine/shares.py:714
 #, fuzzy, python-format
 msgid "Failed to send number of shared files to the server: %s"
 msgstr "向服务器发送共享文件数失败：%s"
 
-#: pynicotine/shares.py:776
+#: pynicotine/shares.py:774
 #, fuzzy, python-format
 msgid "Rescan progress: %s"
 msgstr "重新扫描进度：%s"
 
-#: pynicotine/shares.py:853
+#: pynicotine/shares.py:851
 #, fuzzy, python-format
 msgid "User %(user)s is browsing your list of shared files"
 msgstr "用户 %(user)s 正在浏览您的共享文件列表"
 
-#: pynicotine/shares.py:916
+#: pynicotine/shares.py:914
 #, fuzzy, python-format
 msgid "Failed to fetch the shared folder %(folder)s: %(error)s"
 msgstr "获取共享文件夹失败 %(folder)s: %(error)s"
 
-#: pynicotine/slskmessages.py:2320
+#: pynicotine/slskmessages.py:2325
 #, fuzzy, python-format
 msgid "Unable to read shares database. Please rescan your shares. Error: %s"
 msgstr "无法读取共享数据库。请重新扫描您的股票。错误：%s"
@@ -3857,12 +3858,12 @@ msgstr "有人在其他地方登录了您的 Soulseek 帐户"
 msgid "The server seems to be down or not responding, retrying in %i seconds"
 msgstr "服务器似乎已关闭或没有响应，在 %i 秒后重试"
 
-#: pynicotine/slskproto.py:736
+#: pynicotine/slskproto.py:737
 #, fuzzy, python-format
 msgid "Cannot connect to server %(host)s:%(port)s: %(error)s"
 msgstr "无法连接到服务器 %(host)s：%(port)s：%(error)s"
 
-#: pynicotine/slskproto.py:833
+#: pynicotine/slskproto.py:834
 #, fuzzy, python-format
 msgid "Connected to server %(host)s:%(port)s, logging in…"
 msgstr "已连接到服务器 %(host)s:%(port)s，正在登录…"
@@ -3877,7 +3878,7 @@ msgstr "下载 I/O 错误：%s"
 msgid "Upload I/O error: %s"
 msgstr "上传 I/O 错误：%s"
 
-#: pynicotine/transfers.py:1079 pynicotine/transfers.py:1930
+#: pynicotine/transfers.py:1079 pynicotine/transfers.py:1933
 #, fuzzy, python-format
 msgid "OS error: %s"
 msgstr "操作系统错误：%s"
@@ -3897,84 +3898,84 @@ msgstr "下载开始：用户 %(user)s，文件 %(file)s"
 msgid "Upload started: user %(user)s, IP address %(ip)s, file %(file)s"
 msgstr "上传开始：用户 %(user)s，IP 地址 %(ip)s，文件 %(file)s"
 
-#: pynicotine/transfers.py:1800
+#: pynicotine/transfers.py:1803
 #, fuzzy, python-format
 msgid ""
 "Unable to save download to username subfolder, falling back to default "
 "download folder. Error: %s"
 msgstr "无法将下载保存到用户名子文件夹，回退到默认下载文件夹。错误：%s"
 
-#: pynicotine/transfers.py:1878
+#: pynicotine/transfers.py:1881
 #, fuzzy, python-format
 msgid "%(file)s downloaded from %(user)s"
 msgstr "%(file)s 从 %(user)s 下载"
 
-#: pynicotine/transfers.py:1882
+#: pynicotine/transfers.py:1885
 #, fuzzy
 msgid "File downloaded"
 msgstr "文件下载"
 
-#: pynicotine/transfers.py:1888
+#: pynicotine/transfers.py:1891
 #, fuzzy, python-format
 msgid "Executed: %s"
 msgstr "执行：%s"
 
-#: pynicotine/transfers.py:1891
+#: pynicotine/transfers.py:1894
 #, fuzzy, python-format
 msgid "Trouble executing '%s'"
 msgstr "执行“%s”时遇到问题"
 
-#: pynicotine/transfers.py:1909
+#: pynicotine/transfers.py:1912
 #, fuzzy, python-format
 msgid "%(folder)s downloaded from %(user)s"
 msgstr "%(folder)s 从 %(user)s 下载"
 
-#: pynicotine/transfers.py:1913
+#: pynicotine/transfers.py:1916
 #, fuzzy
 msgid "Folder downloaded"
 msgstr "已下载文件夹"
 
-#: pynicotine/transfers.py:1919
+#: pynicotine/transfers.py:1922
 #, fuzzy, python-format
 msgid "Executed on folder: %s"
 msgstr "在文件夹上执行：%s"
 
-#: pynicotine/transfers.py:1922
+#: pynicotine/transfers.py:1925
 #, fuzzy, python-format
 msgid "Trouble executing on folder: %s"
 msgstr "在文件夹上执行时遇到问题：%s"
 
-#: pynicotine/transfers.py:1949
+#: pynicotine/transfers.py:1952
 #, fuzzy, python-format
 msgid "Couldn't move '%(tempfile)s' to '%(file)s': %(error)s"
 msgstr "无法将“%(tempfile)s”移动到“%(file)s”：%(error)s"
 
-#: pynicotine/transfers.py:1980
+#: pynicotine/transfers.py:1983
 #, fuzzy, python-format
 msgid "Download finished: user %(user)s, file %(file)s"
 msgstr "下载完成：用户%(user)s，文件%(file)s"
 
-#: pynicotine/transfers.py:1997
+#: pynicotine/transfers.py:2000
 #, fuzzy, python-format
 msgid "Upload finished: user %(user)s, IP address %(ip)s, file %(file)s"
 msgstr "上传完成：用户%(user)s，IP地址%(ip)s，文件%(file)s"
 
-#: pynicotine/transfers.py:2388
+#: pynicotine/transfers.py:2391
 #, fuzzy, python-format
 msgid "Upload aborted, user %(user)s file %(file)s"
 msgstr "上传中止，用户 %(user)s 文件 %(file)s"
 
-#: pynicotine/transfers.py:2395
+#: pynicotine/transfers.py:2398
 #, fuzzy, python-format
 msgid "Download aborted, user %(user)s file %(file)s"
 msgstr "下载中止，用户 %(user)s 文件 %(file)s"
 
-#: pynicotine/transfers.py:2438
+#: pynicotine/transfers.py:2441
 #, fuzzy, python-format
 msgid "Error: Download Filter failed! Verify your filters. Reason: %s"
 msgstr "错误：下载过滤器失败！验证您的过滤器。原因：%s"
 
-#: pynicotine/transfers.py:2453
+#: pynicotine/transfers.py:2456
 #, fuzzy, python-format
 msgid "Error: %(num)d Download filters failed! %(error)s "
 msgstr "错误：%(num)d 下载过滤器失败！ %(error)s "
@@ -4053,57 +4054,57 @@ msgstr "无法保存 %(filename)s：%(error)s"
 msgid "User %(user)s is reading your user info"
 msgstr "用户 %(user)s 正在读取您的用户信息"
 
-#: pynicotine/utils.py:177
+#: pynicotine/utils.py:178
 #, fuzzy, python-format
 msgid "Failed to open file path: %s"
 msgstr "打开文件路径失败：%s"
 
-#: pynicotine/utils.py:206
+#: pynicotine/utils.py:207
 #, fuzzy, python-format
 msgid "Failed to open URL: %s"
 msgstr "打开网址失败：%s"
 
-#: pynicotine/utils.py:550
+#: pynicotine/utils.py:551
 #, fuzzy, python-format
 msgid "Something went wrong while reading file %(filename)s: %(error)s"
 msgstr "读取文件 %(filename)s 时出现问题：%(error)s"
 
-#: pynicotine/utils.py:555
+#: pynicotine/utils.py:556
 #, fuzzy, python-format
 msgid "Attempting to load backup of file %s"
 msgstr "尝试加载文件的备份 %s"
 
-#: pynicotine/utils.py:576
+#: pynicotine/utils.py:577
 #, fuzzy, python-format
 msgid "Unable to back up file %(path)s: %(error)s"
 msgstr "无法备份文件 %(path)s：%(error)s"
 
-#: pynicotine/utils.py:591
+#: pynicotine/utils.py:592
 #, fuzzy, python-format
 msgid "Unable to save file %(path)s: %(error)s"
 msgstr "无法保存文件 %(path)s：%(error)s"
 
-#: pynicotine/utils.py:602
+#: pynicotine/utils.py:603
 #, fuzzy, python-format
 msgid "Unable to restore previous file %(path)s: %(error)s"
 msgstr "无法恢复以前的文件 %(path)s：%(error)s"
 
-#: pynicotine/utils.py:680
+#: pynicotine/utils.py:681
 #, fuzzy, python-format
 msgid "No such alias (%s)"
 msgstr "没有这样的别名 (%s)"
 
-#: pynicotine/utils.py:682
+#: pynicotine/utils.py:683
 #, fuzzy
 msgid "Aliases:"
 msgstr "别名："
 
-#: pynicotine/utils.py:698
+#: pynicotine/utils.py:699
 #, fuzzy, python-format
 msgid "Removed alias %(alias)s: %(action)s\n"
 msgstr "移除别名 %(alias)s: %(action)s\n"
 
-#: pynicotine/utils.py:700
+#: pynicotine/utils.py:701
 #, fuzzy, python-format
 msgid "No such alias (%(alias)s)\n"
 msgstr "没有这样的别名 (%(alias)s)\n"
@@ -5489,7 +5490,7 @@ msgid "Sent to users as the reason for being banned."
 msgstr "发送给用户作为被禁止的原因。"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:265
-#: pynicotine/gtkgui/ui/settings/ignore.ui:160
+#: pynicotine/gtkgui/ui/settings/ignore.ui:197
 #, fuzzy
 msgid "IP Addresses"
 msgstr "IP 地址"
@@ -5833,6 +5834,13 @@ msgstr "验证过滤器"
 #, fuzzy
 msgid "Unverified"
 msgstr "未经验证"
+
+#: pynicotine/gtkgui/ui/settings/ignore.ui:35
+#, fuzzy
+msgid ""
+"Ignore chat messages and search results from users, based on username or IP "
+"address."
+msgstr "根据用户名或 IP 地址忽略来自用户的聊天消息和搜索结果。"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:28
 #, fuzzy
