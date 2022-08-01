@@ -43,6 +43,7 @@ ILLEGALPATHCHARS = ['?', ':', '>', '<', '|', '*', '"']
 ILLEGALFILECHARS = ILLEGALPATHCHARS + ['\\', '/']
 LONG_PATH_PREFIX = "\\\\?\\"
 REPLACEMENTCHAR = '_'
+TRANSLATE_PUNCTUATION = str.maketrans(dict.fromkeys(PUNCTUATION, ' '))
 OPEN_SOULSEEK_URL = None
 
 

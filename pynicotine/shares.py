@@ -33,7 +33,7 @@ import time
 from pynicotine import slskmessages
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import UINT_LIMIT
-from pynicotine.utils import PUNCTUATION
+from pynicotine.utils import TRANSLATE_PUNCTUATION
 from pynicotine.utils import encode_path
 from pynicotine.utils import rename_process
 
@@ -78,7 +78,6 @@ class Scanner:
         self.rescan = rescan
         self.rebuild = rebuild
         self.tinytag = None
-        self.translatepunctuation = str.maketrans(dict.fromkeys(PUNCTUATION, ' '))
         self.version = 2
 
     def run(self):
@@ -432,7 +431,7 @@ class Scanner:
 
                 # Collect words from filenames for Search index
                 # Use set to prevent duplicates
-                for k in set((folder + " " + filename).lower().translate(self.translatepunctuation).split()):
+                for k in set((folder + " " + filename).lower().translate(TRANSLATE_PUNCTUATION).split()):
                     try:
                         wordindex[k].append(file_index)
                     except KeyError:
@@ -450,7 +449,6 @@ class Shares:
         self.ui_callback = ui_callback
         self.config = config
         self.queue = queue
-        self.translatepunctuation = str.maketrans(dict.fromkeys(PUNCTUATION, ' '))
         self.share_dbs = {}
         self.requested_share_times = {}
         self.pending_network_msgs = []
