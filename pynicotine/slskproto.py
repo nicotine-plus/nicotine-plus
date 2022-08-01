@@ -534,13 +534,13 @@ class SlskProtoThread(threading.Thread):
                 # Event set, we're exiting
                 return
 
-    def socket_still_active(self, sock):
+    def connection_still_active(self, conn_obj):
 
-        try:
-            conn_obj = self._conns[sock]
+        init = conn_obj.init
 
-        except KeyError:
-            return False
+        if init is not None and init.conn_type != 'P':
+            # Distributed and file connections are critical, always assume they are active
+            return True
 
         return len(conn_obj.obuf) > 0 or len(conn_obj.ibuf) > 0
 
@@ -980,7 +980,7 @@ class SlskProtoThread(threading.Thread):
         if sock is self.server_socket:
             return False
 
-        if num_sockets >= MAXSOCKETS and not self.socket_still_active(sock):
+        if num_sockets >= MAXSOCKETS and not self.connection_still_active(conn_obj):
             # Connection limit reached, close connection if inactive
             self.close_connection(self._conns, sock)
             return True
@@ -1439,7 +1439,6 @@ class SlskProtoThread(threading.Thread):
         buffer_len = len(msg_buffer_mem)
         idx = 0
         search_result_received = False
-        sock = conn_obj.sock
 
         # Peer messages are 8 bytes or greater in length
         while buffer_len >= 8:
@@ -1491,11 +1490,11 @@ class SlskProtoThread(threading.Thread):
         if idx:
             conn_obj.ibuf = msg_buffer[idx:]
 
-        if search_result_received and not self.socket_still_active(sock):
+        if search_result_received and not self.connection_still_active(conn_obj):
             # Forcibly close peer connection. Only used after receiving a search result,
             # as we need to get rid of peer connections before they pile up.
 
-            self.close_connection(self._conns, sock)
+            self.close_connection(self._conns, conn_obj.sock)
 
     def process_peer_output(self, msg_obj):
 
