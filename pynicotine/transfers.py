@@ -1422,13 +1422,14 @@ class Transfers:
         """ The remote peer has closed a file transfer connection """
 
         sock = msg.sock
+        timed_out = msg.timed_out
 
         # We need a copy due to upload auto-clearing modifying the deque during iteration
         for upload in self.uploads.copy():
             if upload.sock != sock:
                 continue
 
-            if upload.current_byte_offset is not None and upload.current_byte_offset >= upload.size:
+            if not timed_out and upload.current_byte_offset is not None and upload.current_byte_offset >= upload.size:
                 # We finish the upload here in case the downloading peer has a slow/limited download
                 # speed and finishes later than us
 
@@ -1674,6 +1675,8 @@ class Transfers:
                 if upload.status != "Finished":
                     transferobj.current_byte_offset = upload.current_byte_offset
                     transferobj.time_elapsed = upload.time_elapsed
+                    transferobj.time_left = upload.time_left
+                    transferobj.speed = upload.speed
 
                 if upload in self.transfer_request_times:
                     del self.transfer_request_times[upload]
