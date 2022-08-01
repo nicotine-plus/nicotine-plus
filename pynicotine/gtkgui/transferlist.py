@@ -350,7 +350,7 @@ class TransferList(UserInterface):
 
     @staticmethod
     def get_helapsed(elapsed):
-        return human_length(elapsed) if elapsed >= 1 else ""
+        return human_length(elapsed) if elapsed > 0 else ""
 
     @staticmethod
     def get_hleft(left):
