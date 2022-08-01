@@ -191,7 +191,7 @@ class UserInfo(UserInterface):
         self.picture_view.set_property("child", self.picture)
 
         self.user = user
-        self.picture_data = None
+        self.picture_data_original = self.picture_data_scaled = None
         self.zoom_factor = 5
         self.actual_zoom = 0
 
@@ -282,7 +282,7 @@ class UserInfo(UserInterface):
             else:
                 self.picture.clear()
 
-            self.picture_data = None
+            self.picture_data_original = self.picture_data_scaled = None
             self.placeholder_picture.show()
             return
 
@@ -291,17 +291,17 @@ class UserInfo(UserInterface):
             max_width = allocation.width - 72
             max_height = allocation.height - 72
 
-            # Keep the original picture size for zoom and save
+            # Keep the original picture size for saving to disk
             data_stream = Gio.MemoryInputStream.new_from_data(data, None)
-            self.picture_data = GdkPixbuf.Pixbuf.new_from_stream(data_stream, cancellable=None)
-            picture_width = self.picture_data.get_width()
-            picture_height = self.picture_data.get_height()
+            self.picture_data_original = GdkPixbuf.Pixbuf.new_from_stream(data_stream, cancellable=None)
+            picture_width = self.picture_data_original.get_width()
+            picture_height = self.picture_data_original.get_height()
 
             # Scale picture before displaying
             ratio = min(max_width / picture_width, max_height / picture_height)
-            picture_data_scaled = self.picture_data.scale_simple(
+            self.picture_data_scaled = self.picture_data_original.scale_simple(
                 ratio * picture_width, ratio * picture_height, GdkPixbuf.InterpType.BILINEAR)
-            self.set_pixbuf(picture_data_scaled)
+            self.set_pixbuf(self.picture_data_scaled)
 
             self.actual_zoom = 0
             self.picture_view.show()
@@ -314,21 +314,21 @@ class UserInfo(UserInterface):
 
     def make_zoom_normal(self, *_args):
         self.actual_zoom = 0
-        self.set_pixbuf(self.picture_data)
+        self.set_pixbuf(self.picture_data_scaled)
 
     def make_zoom_in(self, *_args):
 
         def calc_zoom_in(w_h):
             return w_h + w_h * self.actual_zoom / 100 + w_h * self.zoom_factor / 100
 
-        if self.picture_data is None or self.actual_zoom >= 100:
+        if self.picture_data_scaled is None or self.actual_zoom >= 100:
             return
 
         self.actual_zoom += self.zoom_factor
-        width = calc_zoom_in(self.picture_data.get_width())
-        height = calc_zoom_in(self.picture_data.get_height())
+        width = calc_zoom_in(self.picture_data_scaled.get_width())
+        height = calc_zoom_in(self.picture_data_scaled.get_height())
 
-        picture_zoomed = self.picture_data.scale_simple(width, height, GdkPixbuf.InterpType.NEAREST)
+        picture_zoomed = self.picture_data_scaled.scale_simple(width, height, GdkPixbuf.InterpType.NEAREST)
         self.set_pixbuf(picture_zoomed)
 
     def make_zoom_out(self, *_args):
@@ -336,18 +336,18 @@ class UserInfo(UserInterface):
         def calc_zoom_out(w_h):
             return w_h + w_h * self.actual_zoom / 100 - w_h * self.zoom_factor / 100
 
-        if self.picture_data is None:
+        if self.picture_data_scaled is None:
             return
 
         self.actual_zoom -= self.zoom_factor
-        width = calc_zoom_out(self.picture_data.get_width())
-        height = calc_zoom_out(self.picture_data.get_height())
+        width = calc_zoom_out(self.picture_data_scaled.get_width())
+        height = calc_zoom_out(self.picture_data_scaled.get_height())
 
         if width < 42 or height < 42:
             self.actual_zoom += self.zoom_factor
             return
 
-        picture_zoomed = self.picture_data.scale_simple(width, height, GdkPixbuf.InterpType.NEAREST)
+        picture_zoomed = self.picture_data_scaled.scale_simple(width, height, GdkPixbuf.InterpType.NEAREST)
         self.set_pixbuf(picture_zoomed)
 
     def show_connection_error(self):
@@ -389,7 +389,7 @@ class UserInfo(UserInterface):
         self.queued_uploads_label.set_text(humanize(msg.queuesize))
         self.free_upload_slots_label.set_text(_("Yes") if msg.slotsavail else _("No"))
 
-        self.picture_data = None
+        self.picture_data_original = self.picture_data_scaled = None
         self.load_picture(msg.pic)
 
         self.info_bar.set_visible(False)
@@ -460,12 +460,13 @@ class UserInfo(UserInterface):
         self.core.network_filter.ignore_user(self.user)
 
     def on_save_picture_response(self, file_path, *_args):
-        _success, picture_bytes = self.picture_data.save_to_bufferv(type="png", option_keys=[], option_values=[])
+        _success, picture_bytes = self.picture_data_original.save_to_bufferv(
+            type="png", option_keys=[], option_values=[])
         self.core.userinfo.save_user_picture(file_path, picture_bytes)
 
     def on_save_picture(self, *_args):
 
-        if self.picture_data is None:
+        if self.picture_data_original is None:
             return
 
         FileChooserSave(
