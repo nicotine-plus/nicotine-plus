@@ -586,8 +586,12 @@ class NicotineCore:
     def add_user(self, msg):
         """ Server code: 5 """
 
-        if msg.files is not None:
+        if msg.userexists:
             self.get_user_stats(msg)
+            return
+
+        # User does not exist, server will not keep us informed if the user is created later
+        self.watched_users.discard(msg.user)
 
     def get_user_status(self, msg):
         """ Server code: 7 """
