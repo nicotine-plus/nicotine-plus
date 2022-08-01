@@ -29,7 +29,7 @@ from operator import itemgetter
 from pynicotine import slskmessages
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import increment_token
-from pynicotine.utils import PUNCTUATION
+from pynicotine.utils import TRANSLATE_PUNCTUATION
 
 
 class Search:
@@ -45,7 +45,6 @@ class Search:
         self.wishlist_interval = 0
         self.share_dbs = share_dbs
         self.geoip = geoip
-        self.translatepunctuation = str.maketrans(dict.fromkeys(PUNCTUATION, ' '))
 
         # Create wishlist searches
         for term in config.sections["server"]["autosearch"]:
@@ -170,7 +169,7 @@ class Search:
             Remove special characters from search term
             SoulseekQt doesn't seem to send search results if special characters are included (July 7, 2020)
             """
-            stripped_search_term = ' '.join(search_term_without_special.translate(self.translatepunctuation).split())
+            stripped_search_term = ' '.join(search_term_without_special.translate(TRANSLATE_PUNCTUATION).split())
 
             # Only modify search term if string also contains non-special characters
             if stripped_search_term:
@@ -476,16 +475,16 @@ class Search:
                     continue
 
                 if word.startswith('-'):
-                    for subword in word.translate(self.translatepunctuation).split():
+                    for subword in word.translate(TRANSLATE_PUNCTUATION).split():
                         excluded_words.append(subword)
 
                 elif word.startswith('*'):
-                    for subword in word.translate(self.translatepunctuation).split():
+                    for subword in word.translate(TRANSLATE_PUNCTUATION).split():
                         partial_words.append(subword)
 
         # Strip punctuation
         searchterm_old = searchterm
-        searchterm = searchterm.lower().translate(self.translatepunctuation).strip()
+        searchterm = searchterm.lower().translate(TRANSLATE_PUNCTUATION).strip()
 
         if len(searchterm) < self.config.sections["searches"]["min_search_chars"]:
             # Don't send search response if search term contains too few characters
