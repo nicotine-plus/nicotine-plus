@@ -212,6 +212,9 @@ class TransferList(UserInterface):
             GObject.TYPE_PYOBJECT  # (16) transfer object
         )
 
+        if GTK_API_VERSION == 3:
+            self.transfersmodel.connect("row-changed", self.on_row_changed)
+
         if self.tree_users is not None:
             self.tree_view.set_model(self.transfersmodel)
 
@@ -812,6 +815,15 @@ class TransferList(UserInterface):
 
         elif action == 7:  # Browse Folder
             self.on_browse_folder()
+
+    def on_row_changed(self, *_args):
+
+        if self.frame.current_page_id != self.transfer_page.id:
+            return
+
+        # Workaround for GTK 3 issue where GtkTreeView doesn't refresh changed values
+        # if horizontal scrolling is present while fixed-height mode is enabled
+        self.tree_view.queue_draw()
 
     def on_select_user_transfers(self, *args):
 
