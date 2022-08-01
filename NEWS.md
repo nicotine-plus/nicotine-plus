@@ -6,10 +6,11 @@
 
  * Optimized performance when many shared files and file transfers are present
  * Implemented mouse wheel scrolling on tabs to change the active page
+ * Search results from ignored users are no longer shown
  * Added total file size and duration of selected files to the File Properties dialog
  * Added text-to-speech toggle buttons for individual private chats when TTS is enabled
  * Usability improvements to several main window components and dialogs
- * Reddit and Test Replier plugins no longer included by default, moved to examplars on [GitHub](https://github.com/nicotine-plus/nicotine-plus/tree/HEAD/pynicotine/plugins/examplars)
+ * Reddit and Test Replier plugins are no longer included by default, moved to examplars on [GitHub](https://github.com/nicotine-plus/nicotine-plus/tree/HEAD/pynicotine/plugins/examplars)
  * Various translation updates (thanks to our [many contributors](https://nicotine-plus.org/TRANSLATORS) on [Weblate](https://hosted.weblate.org/engage/nicotine-plus))
 
 ### Corrections
@@ -45,6 +46,7 @@
  * Please show completed transfer speeds in the upload tab. ([#2082](https://github.com/nicotine-plus/nicotine-plus/issues/2082))
  * Column headings overlapping in the downloads tab ([#2090](https://github.com/nicotine-plus/nicotine-plus/issues/2090))
  * Sort similar users by interest ([#2096](https://github.com/nicotine-plus/nicotine-plus/issues/2096))
+ * Change the cursor to a finger when it's over links ([#2101](https://github.com/nicotine-plus/nicotine-plus/issues/2101))
  * \[3.2.3.rc2\] Critical error (UI window with bug report) ([#2116](https://github.com/nicotine-plus/nicotine-plus/issues/2116))
  * Lists of shared files not human-readable ([#2118](https://github.com/nicotine-plus/nicotine-plus/issues/2118))
  * \[3.2.3.rc2\] Exception thrown when highlighting several uploads & selecting "Clear" ([#2124](https://github.com/nicotine-plus/nicotine-plus/issues/2124))
