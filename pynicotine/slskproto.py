@@ -936,7 +936,8 @@ class SlskProtoThread(threading.Thread):
                 self.total_upload_bandwidth = 0
 
             if callback:
-                self._callback_msgs.append(UploadConnClose(sock))
+                timed_out = (time.time() - conn_obj.lastactive) > self.CONNECTION_MAX_IDLE
+                self._callback_msgs.append(UploadConnClose(sock, timed_out))
 
             self._calc_upload_limit_function()
 

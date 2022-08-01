@@ -244,8 +244,13 @@ class DownloadConnClose(InternalMessage):
         self.sock = sock
 
 
-class UploadConnClose(DownloadConnClose):
-    pass
+class UploadConnClose(InternalMessage):
+
+    __slots__ = ("sock", "timed_out")
+
+    def __init__(self, sock=None, timed_out=None):
+        self.sock = sock
+        self.timed_out = timed_out
 
 
 class SetUploadLimit(InternalMessage):
