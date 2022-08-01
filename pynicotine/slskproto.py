@@ -534,7 +534,8 @@ class SlskProtoThread(threading.Thread):
                 # Event set, we're exiting
                 return
 
-    def connection_still_active(self, conn_obj):
+    @staticmethod
+    def connection_still_active(conn_obj):
 
         init = conn_obj.init
 
