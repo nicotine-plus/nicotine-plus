@@ -1309,11 +1309,10 @@ class NicotineFrame(UserInterface):
 
         try:
             notebook = getattr(self, self.current_page_id)
+            page = notebook.get_current_page()
 
         except AttributeError:
             return False
-
-        page = notebook.get_current_page()
 
         if page is None:
             return False
@@ -1327,12 +1326,11 @@ class NicotineFrame(UserInterface):
 
         try:
             notebook = getattr(self, self.current_page_id)
+            num_pages = notebook.get_n_pages()
+            current_page_num = notebook.get_current_page_num()
 
         except AttributeError:
             return False
-
-        num_pages = notebook.get_n_pages()
-        current_page_num = notebook.get_current_page_num()
 
         if backwards:
             if current_page_num == 0:
