@@ -706,8 +706,7 @@ class Transfers:
             "filename": filename,
         })
 
-        real_path = self.core.shares.virtual2real(filename)
-        allowed, reason = self.check_queue_upload_allowed(user, msg.init.addr, filename, real_path, msg)
+        allowed, reason, real_path = self.check_queue_upload_allowed(user, msg.init.addr, filename, msg)
 
         log.add_transfer(("Upload request for file %(filename)s from user %(user)s: "
                           "allowed: %(allowed)s, reason: %(reason)s"), {
@@ -863,8 +862,7 @@ class Transfers:
         })
 
         # Is user allowed to download?
-        real_path = self.core.shares.virtual2real(filename)
-        allowed, reason = self.check_queue_upload_allowed(user, msg.init.addr, filename, real_path, msg)
+        allowed, reason, real_path = self.check_queue_upload_allowed(user, msg.init.addr, filename, msg)
 
         if not allowed:
             if reason:
@@ -1180,9 +1178,9 @@ class Transfers:
             if upload in self.transfer_request_times:
                 del self.transfer_request_times[upload]
 
-            real_path = self.core.shares.virtual2real(filename)
+            real_path = self.core.shares.virtual2real(filename, username)
 
-            if not self.core.shares.file_is_shared(username, filename, real_path):
+            if real_path is None:
                 upload.status = "File not shared."
 
                 self.abort_transfer(upload)
@@ -2093,22 +2091,22 @@ class Transfers:
                 # Event set, we're exiting
                 return
 
-    def check_queue_upload_allowed(self, user, addr, filename, real_path, msg):
+    def check_queue_upload_allowed(self, user, addr, filename, msg):
 
         # Is user allowed to download?
         ip_address, _port = addr
         checkuser, reason = self.core.network_filter.check_user(user, ip_address)
 
         if not checkuser:
-            return False, reason
+            return False, reason, None
 
         if self.core.shares.rescanning:
             self.core.shares.pending_network_msgs.append(msg)
-            return False, None
+            return False, None, None
 
         # Is that file already in the queue?
         if self.file_is_upload_queued(user, filename):
-            return False, "Queued"
+            return False, "Queued", None
 
         # Has user hit queue limit?
         enable_limits = True
@@ -2123,14 +2121,15 @@ class Transfers:
             limit_reached, reason = self.queue_limit_reached(user)
 
             if limit_reached:
-                return False, reason
+                return False, reason, None
 
         # Do we actually share that file with the world?
-        if (not self.core.shares.file_is_shared(user, filename, real_path)
-                or not self.file_is_readable(filename, real_path)):
-            return False, "File not shared."
+        real_path = self.core.shares.virtual2real(filename, user)
 
-        return True, None
+        if real_path is None or not self.file_is_readable(filename, real_path):
+            return False, "File not shared.", None
+
+        return True, None, real_path
 
     def check_download_queue_callback(self, _msg):
         """ Find failed or stuck downloads and attempt to queue them. Also ask for the queue
