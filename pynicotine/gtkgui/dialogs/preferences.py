@@ -648,6 +648,8 @@ class SharesFrame(UserInterface):
 
         self.Shares.set_cursor(self.shareslist.get_path(iterator))
         self.Shares.grab_focus()
+
+        self.shareddirs.append((virtual, folder))
         self.rescan_required = True
 
     def on_add_shared_dir_selected(self, selected, _data):
