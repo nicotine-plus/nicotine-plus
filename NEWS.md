@@ -1,5 +1,12 @@
 # Release Notes
 
+## Version 3.2.4 (Release Candidate 1)
+
+### Corrections
+
+ * Fixed a regression where new folders could not be shared
+
+
 ## Version 3.2.3 (August 5, 2022)
 
 ### Changes
