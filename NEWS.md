@@ -1,5 +1,56 @@
 # Release Notes
 
+## Version 3.2.3 (August 5, 2022)
+
+### Changes
+
+ * Optimized performance when many shared files and file transfers are present
+ * Implemented mouse wheel scrolling on tabs to change the active page
+ * Search results from ignored users are no longer shown
+ * Added total file size and duration of selected files to the File Properties dialog
+ * Added text-to-speech toggle buttons for individual private chats when TTS is enabled
+ * Usability improvements to several main window components and dialogs
+ * Reddit and Test Replier plugins are no longer included by default, moved to examplars on [GitHub](https://github.com/nicotine-plus/nicotine-plus/tree/HEAD/pynicotine/plugins/examplars)
+ * Various translation updates (thanks to our [many contributors](https://nicotine-plus.org/TRANSLATORS) on [Weblate](https://hosted.weblate.org/engage/nicotine-plus))
+
+### Corrections
+
+ * IMPORTANT: Fixed a CPU hogging issue when thousands of file transfers were present
+ * Fixed issues where downloads failed if the path or file name was very long (thank you @AtticFinder65536)
+ * Fixed an issue where folder downloads did not always save subfolders into the correct location
+ * Fixed an issue where the estimated total time remaining for folder transfers was incorrect
+ * Fixed an issue where clearing all file transfers did not remove transfers completely
+ * Fixed a rare crash when downloading files onto certain (latin-1) filesystems
+ * Fixed a discrepancy between the upload speed reported in outgoing search results compared to user info
+ * Fixed an issue where dark mode was used when light mode was enabled on some systems
+ * Unmaximized size of the main window is now remembered after the window is maximized
+ * Reduced memory usage after closing search tabs with many results
+ * Flatpak: network folders can now be shared
+ * Various minor bug fixes
+
+### Issues closed on GitHub
+
+ * Forcibly re-queue uploads that stop due to an error such as "Can't connect" ([#1563](https://github.com/nicotine-plus/nicotine-plus/issues/1563))
+ * Support paths longer than 260 characters on Windows ([#1728](https://github.com/nicotine-plus/nicotine-plus/issues/1728))
+ * UnicodeEncodeError when downloading file ([#1980](https://github.com/nicotine-plus/nicotine-plus/issues/1980))
+ * Nicotine+ always on dark mode regardless of my settings ([#1983](https://github.com/nicotine-plus/nicotine-plus/issues/1983))
+ * High CPU Usage pegs a single core ([#1998](https://github.com/nicotine-plus/nicotine-plus/issues/1998))
+ * Weird behavior when I download a whole folder with multiple subdirectories ([#2004](https://github.com/nicotine-plus/nicotine-plus/issues/2004))
+ * Don't freeze/crash without xdg-open ([#2005](https://github.com/nicotine-plus/nicotine-plus/issues/2005))
+ * Unicode encode error ([#2015](https://github.com/nicotine-plus/nicotine-plus/issues/2015))
+ * Russian translation updated ([#2016](https://github.com/nicotine-plus/nicotine-plus/issues/2016))
+ * Time Left for folder and user same as for currently active file ([#2018](https://github.com/nicotine-plus/nicotine-plus/issues/2018))
+ * Time Left column regression ([#2020](https://github.com/nicotine-plus/nicotine-plus/issues/2020))
+ * Clear ALL downloads, Clear ALL uploads not working ([#2023](https://github.com/nicotine-plus/nicotine-plus/issues/2023))
+ * User note saves when pressing Cancel ([#2036](https://github.com/nicotine-plus/nicotine-plus/issues/2036))
+ * Please show completed transfer speeds in the upload tab. ([#2082](https://github.com/nicotine-plus/nicotine-plus/issues/2082))
+ * Column headings overlapping in the downloads tab ([#2090](https://github.com/nicotine-plus/nicotine-plus/issues/2090))
+ * Sort similar users by interest ([#2096](https://github.com/nicotine-plus/nicotine-plus/issues/2096))
+ * Change the cursor to a finger when it's over links ([#2101](https://github.com/nicotine-plus/nicotine-plus/issues/2101))
+ * \[3.2.3.rc2\] Critical error (UI window with bug report) ([#2116](https://github.com/nicotine-plus/nicotine-plus/issues/2116))
+ * Lists of shared files not human-readable ([#2118](https://github.com/nicotine-plus/nicotine-plus/issues/2118))
+ * \[3.2.3.rc2\] Exception thrown when highlighting several uploads & selecting "Clear" ([#2124](https://github.com/nicotine-plus/nicotine-plus/issues/2124))
+
 ## Version 3.2.2 (March 19, 2022)
 
 ### Changes
