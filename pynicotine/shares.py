@@ -203,11 +203,18 @@ class Scanner:
         if mtimes is not None:
             new_mtimes = {**mtimes, **new_mtimes}
 
+        old_mtimes = self.share_dbs[prefix + "mtimes"]
+        share_version = old_mtimes.get("__NICOTINE_SHARE_VERSION__")
+
+        # Rebuild shares if share version is outdated
+        if share_version is None or share_version < self.version:
+            rebuild = True
+
         for folder in shared_folders:
             # Get mtimes for top-level shared folders, then every subfolder
             try:
                 files, streams, mtimes = self.get_files_list(
-                    folder, self.share_dbs[prefix + "mtimes"], self.share_dbs[prefix + "files"],
+                    folder, old_mtimes, self.share_dbs[prefix + "files"],
                     self.share_dbs[prefix + "streams"], rebuild
                 )
                 new_files = {**new_files, **files}
@@ -221,6 +228,7 @@ class Scanner:
                 }, None))
 
         # Save data to databases
+        new_mtimes["__NICOTINE_SHARE_VERSION__"] = self.version
         self.set_shares(share_type, files=new_files, streams=new_streams, mtimes=new_mtimes)
 
         # Update Search Index
@@ -281,11 +289,6 @@ class Scanner:
         files = {}
         streams = {}
         mtimes = {folder: mtime}
-        share_version = oldmtimes.get("__NICOTINE_SHARE_VERSION__")
-
-        # Rebuild shares if share version is outdated
-        if share_version is None or share_version < self.version:
-            rebuild = True
 
         if not rebuild and folder in oldmtimes and mtime == oldmtimes[folder]:
             try:
@@ -343,7 +346,6 @@ class Scanner:
             files[virtual_folder] = file_list
             streams[virtual_folder] = self.get_dir_stream(file_list)
 
-        mtimes["__NICOTINE_SHARE_VERSION__"] = self.version
         return files, streams, mtimes
 
     def get_file_info(self, name, pathname, tinytag, file_stat=None):
