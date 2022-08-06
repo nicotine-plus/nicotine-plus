@@ -449,7 +449,7 @@ class TransferList(UserInterface):
             self.transfersmodel.set_value(initer, 8, self.get_helapsed(elapsed))
             self.transfersmodel.set_value(initer, 9, self.get_hleft(left))
             self.transfersmodel.set_value(initer, 14, elapsed)
-            self.transfersmodel.set_value(initer, 15, left)
+            self.transfersmodel.set_value(initer, 15, GObject.Value(GObject.TYPE_UINT64, left))
             transfer.time_elapsed = elapsed
 
         if transfer.current_byte_offset != current_bytes:
@@ -631,7 +631,7 @@ class TransferList(UserInterface):
             GObject.Value(GObject.TYPE_UINT64, speed),
             GObject.Value(GObject.TYPE_UINT, queue_position),
             elapsed,
-            left,
+            GObject.Value(GObject.TYPE_UINT64, left),
             transfer
         )
 
