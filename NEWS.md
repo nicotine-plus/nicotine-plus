@@ -5,6 +5,7 @@
 ### Corrections
 
  * Fixed a regression where new folders could not be shared
+ * Fixed a performance regression when updating file transfer lists
 
 
 ## Version 3.2.3 (August 5, 2022)
