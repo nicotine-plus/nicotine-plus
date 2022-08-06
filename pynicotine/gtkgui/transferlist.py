@@ -212,7 +212,7 @@ class TransferList(UserInterface):
             GObject.TYPE_UINT64,   # (12) speed
             GObject.TYPE_UINT,     # (13) queue position
             int,                   # (14) time elapsed
-            int,                   # (15) time left
+            GObject.TYPE_UINT64,   # (15) time left
             GObject.TYPE_PYOBJECT  # (16) transfer object
         )
 
@@ -497,7 +497,7 @@ class TransferList(UserInterface):
                 self.transfersmodel.set_value(initer, 8, helapsed)
                 self.transfersmodel.set_value(initer, 9, self.get_hleft(left))
                 self.transfersmodel.set_value(initer, 14, elapsed)
-                self.transfersmodel.set_value(initer, 15, left)
+                self.transfersmodel.set_value(initer, 15, GObject.Value(GObject.TYPE_UINT64, left))
 
             if self.transfersmodel.get_value(initer, 11) != current_byte_offset:
                 percent = self.get_percent(current_byte_offset, size)
