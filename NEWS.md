@@ -4,7 +4,7 @@
 
 ### Corrections
 
- * Fixed a regression where new folders could not be shared
+ * Fixed a regression where shared folders could not be added using the Preferences dialog
  * Fixed a performance regression when updating file transfer lists
 
 
