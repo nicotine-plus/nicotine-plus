@@ -22,6 +22,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import time
+
 from collections import OrderedDict
 from sys import maxsize
 
@@ -81,6 +83,7 @@ class TransferList(UserInterface):
         self.users = {}
         self.paths = {}
         self.tree_users = None
+        self.last_redraw_time = 0
 
         # Use dict instead of list for faster membership checks
         self.selected_users = OrderedDict()
@@ -116,6 +119,7 @@ class TransferList(UserInterface):
 
         self.create_model()
 
+        self.h_adjustment = self.tree_view.get_parent().get_hadjustment()
         self.column_numbers = list(range(self.transfersmodel.get_n_columns()))
         self.cols = cols = initialise_columns(
             frame, transfer_type, self.tree_view,
@@ -293,6 +297,21 @@ class TransferList(UserInterface):
         self.user_counter.set_text(humanize(len(self.users)))
         self.file_counter.set_text(humanize(len(self.transfer_list)))
 
+    def redraw_treeview(self):
+        """ Workaround for GTK 3 issue where GtkTreeView doesn't refresh changed values
+        if horizontal scrolling is present while fixed-height mode is enabled """
+
+        if GTK_API_VERSION != 3 or self.h_adjustment.get_value() <= 0:
+            return
+
+        current_time = time.time()
+
+        if (current_time - self.last_redraw_time) < 1:
+            return
+
+        self.last_redraw_time = current_time
+        self.tree_view.queue_draw()
+
     def update_model(self, transfer=None, forceupdate=False, update_parent=True):
 
         if not forceupdate and self.frame.current_page_id != self.transfer_page.id:
@@ -309,10 +328,7 @@ class TransferList(UserInterface):
         if update_parent:
             self.update_parent_rows(transfer)
 
-        # Workaround for GTK 3 issue where GtkTreeView doesn't refresh changed values
-        # if horizontal scrolling is present while fixed-height mode is enabled
-        if GTK_API_VERSION == 3:
-            self.tree_view.queue_draw()
+        self.redraw_treeview()
 
     def update_parent_rows(self, transfer=None):
 
