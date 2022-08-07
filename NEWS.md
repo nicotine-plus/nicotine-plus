@@ -1,5 +1,18 @@
 # Release Notes
 
+## Version 3.2.4 (August 7, 2022)
+
+### Corrections
+
+ * Fixed a regression where shared folders could not be added using the Preferences dialog
+ * Fixed a performance regression when updating file transfer lists
+ * Fixed a potential crash when displaying the estimated time of a very large download
+
+### Issues closed on GitHub
+
+ * File sharing error ([#2142](https://github.com/nicotine-plus/nicotine-plus/issues/2142))
+
+
 ## Version 3.2.3 (August 5, 2022)
 
 ### Changes
