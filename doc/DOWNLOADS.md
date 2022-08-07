@@ -1,6 +1,6 @@
 # Downloads
 
-Download the current stable version of Nicotine+ for your operating system. For the release notes, see [NEWS.md](/NEWS.md).
+Download the current stable version of Nicotine+ for your operating system. For the release notes, see [NEWS.md](../NEWS.md).
 
 If you want to download the latest unstable build and help test Nicotine+, see [TESTING.md](TESTING.md).
 
