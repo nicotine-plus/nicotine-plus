@@ -516,7 +516,7 @@ class SlskProtoThread(threading.Thread):
                     username = init.target_user
                     conn_type = init.conn_type
 
-                    if (curtime - request_time) >= 20:
+                    if (curtime - request_time) >= 20 and self._out_indirect_conn_request_times.pop(init, None):
                         log.add_conn(("Indirect connect request of type %(type)s to user %(user)s with "
                                       "token %(token)s expired, giving up"), {
                             'type': conn_type,
@@ -528,7 +528,6 @@ class SlskProtoThread(threading.Thread):
 
                         self._init_msgs.pop(init.token, None)
                         init.outgoing_msgs.clear()
-                        del self._out_indirect_conn_request_times[init]
 
             if self.exit.wait(1):
                 # Event set, we're exiting
