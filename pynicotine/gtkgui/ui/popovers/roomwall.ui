@@ -19,7 +19,7 @@
             <property name="label" translatable="yes">The room wall feature allows users in a room to specify a unique message to display to others. Recent messages are shown at the top.</property>
             <property name="max-width-chars">55</property>
             <property name="wrap">True</property>
-            <property name="mnemonic_widget">message_view</property>
+            <property name="mnemonic-widget">message_view</property>
           </object>
         </child>
         <child>

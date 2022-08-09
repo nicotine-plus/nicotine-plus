@@ -25,36 +25,35 @@ from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.application import GTK_GUI_DIR
 from pynicotine.i18n import TRANSLATION_DOMAIN
 from pynicotine.logfacility import log
+from pynicotine.utils import encode_path
 
 
 """ UI Builder """
 
 
-UI_DATA = {}
-
-
 class UserInterface:
+
+    ui_data = {}
 
     def __init__(self, filename):
 
         try:
-            if filename not in UI_DATA:
-                with open(os.path.join(GTK_GUI_DIR, filename).encode("utf-8"), encoding="utf-8") as file_handle:
+            if filename not in self.ui_data:
+                with open(encode_path(os.path.join(GTK_GUI_DIR, filename)), encoding="utf-8") as file_handle:
                     if GTK_API_VERSION >= 4:
-                        UI_DATA[filename] = file_handle.read().replace(
+                        self.ui_data[filename] = file_handle.read().replace(
                             "GtkRadioButton", "GtkCheckButton").replace("\"can-focus\"", "\"focusable\"")
                     else:
-                        UI_DATA[filename] = file_handle.read()
+                        self.ui_data[filename] = file_handle.read()
 
             if GTK_API_VERSION >= 4:
                 self.builder = Gtk.Builder(self)
                 self.builder.set_translation_domain(TRANSLATION_DOMAIN)
-                self.builder.add_from_string(UI_DATA[filename])
+                self.builder.add_from_string(self.ui_data[filename])
                 Gtk.Buildable.get_name = Gtk.Buildable.get_buildable_id  # pylint: disable=no-member
             else:
-                self.builder = Gtk.Builder()
-                self.builder.set_translation_domain(TRANSLATION_DOMAIN)
-                self.builder.add_from_string(UI_DATA[filename])
+                self.builder = Gtk.Builder(translation_domain=TRANSLATION_DOMAIN)
+                self.builder.add_from_string(self.ui_data[filename])
                 self.builder.connect_signals(self)                       # pylint: disable=no-member
 
             self.widgets = self.builder.get_objects()

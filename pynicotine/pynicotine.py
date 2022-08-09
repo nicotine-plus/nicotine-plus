@@ -32,7 +32,6 @@ This is the actual client code. Actual GUI classes are in the separate modules
 import os
 import signal
 import sys
-import time
 
 from collections import deque
 
@@ -50,13 +49,14 @@ from pynicotine.pluginsystem import PluginHandler
 from pynicotine.privatechat import PrivateChats
 from pynicotine.search import Search
 from pynicotine.shares import Shares
+from pynicotine.slskmessages import LoginFailure
+from pynicotine.slskmessages import UserStatus
 from pynicotine.transfers import Statistics
 from pynicotine.transfers import Transfers
 from pynicotine.upnp import UPnP
 from pynicotine.userbrowse import UserBrowse
 from pynicotine.userinfo import UserInfo
 from pynicotine.userlist import UserList
-from pynicotine.utils import unescape
 
 
 class NicotineCore:
@@ -100,125 +100,13 @@ class NicotineCore:
         self.privileges_left = None
         self.ban_message = "You are banned from downloading my shared files. Ban message: \"%s\""
 
+        self.events = {}
         self.queue = deque()
         self.user_statuses = {}
         self.watched_users = set()
         self.ip_requested = set()
-        self.requested_info_times = {}
-        self.requested_share_times = {}
 
-        # Callback handlers for messages
-        self.events = {
-            slskmessages.ServerDisconnect: self.server_disconnect,
-            slskmessages.Login: self.login,
-            slskmessages.ChangePassword: self.change_password,
-            slskmessages.MessageUser: self.message_user,
-            slskmessages.PMessageUser: self.p_message_user,
-            slskmessages.ExactFileSearch: self.dummy_message,
-            slskmessages.RoomAdded: self.dummy_message,
-            slskmessages.RoomRemoved: self.dummy_message,
-            slskmessages.UserJoinedRoom: self.user_joined_room,
-            slskmessages.SayChatroom: self.say_chat_room,
-            slskmessages.JoinRoom: self.join_room,
-            slskmessages.UserLeftRoom: self.user_left_room,
-            slskmessages.CantCreateRoom: self.dummy_message,
-            slskmessages.QueuedDownloads: self.dummy_message,
-            slskmessages.GetPeerAddress: self.get_peer_address,
-            slskmessages.UserInfoReply: self.user_info_reply,
-            slskmessages.UserInfoRequest: self.user_info_request,
-            slskmessages.PierceFireWall: self.dummy_message,
-            slskmessages.ConnectToPeer: self.connect_to_peer,
-            slskmessages.CantConnectToPeer: self.dummy_message,
-            slskmessages.MessageProgress: self.message_progress,
-            slskmessages.SharedFileList: self.shared_file_list,
-            slskmessages.GetSharedFileList: self.get_shared_file_list,
-            slskmessages.FileSearchRequest: self.dummy_message,
-            slskmessages.FileSearchResult: self.file_search_result,
-            slskmessages.GetUserStatus: self.get_user_status,
-            slskmessages.GetUserStats: self.get_user_stats,
-            slskmessages.Relogged: self.relogged,
-            slskmessages.PeerInit: self.dummy_message,
-            slskmessages.CheckDownloadQueue: self.check_download_queue,
-            slskmessages.CheckUploadQueue: self.check_upload_queue,
-            slskmessages.DownloadFile: self.file_download,
-            slskmessages.UploadFile: self.file_upload,
-            slskmessages.FileDownloadInit: self.file_download_init,
-            slskmessages.FileUploadInit: self.file_upload_init,
-            slskmessages.TransferRequest: self.transfer_request,
-            slskmessages.TransferResponse: self.transfer_response,
-            slskmessages.QueueUpload: self.queue_upload,
-            slskmessages.UploadDenied: self.upload_denied,
-            slskmessages.UploadFailed: self.upload_failed,
-            slskmessages.PlaceInQueue: self.place_in_queue,
-            slskmessages.DownloadFileError: self.download_file_error,
-            slskmessages.UploadFileError: self.upload_file_error,
-            slskmessages.DownloadConnClose: self.download_conn_close,
-            slskmessages.UploadConnClose: self.upload_conn_close,
-            slskmessages.FolderContentsResponse: self.folder_contents_response,
-            slskmessages.FolderContentsRequest: self.folder_contents_request,
-            slskmessages.RoomList: self.room_list,
-            slskmessages.LeaveRoom: self.leave_room,
-            slskmessages.GlobalUserList: self.dummy_message,
-            slskmessages.AddUser: self.add_user,
-            slskmessages.PrivilegedUsers: self.privileged_users,
-            slskmessages.AddToPrivileged: self.add_to_privileged,
-            slskmessages.CheckPrivileges: self.check_privileges,
-            slskmessages.ServerPing: self.dummy_message,
-            slskmessages.ParentMinSpeed: self.dummy_message,
-            slskmessages.ParentSpeedRatio: self.dummy_message,
-            slskmessages.ParentInactivityTimeout: self.dummy_message,
-            slskmessages.SearchInactivityTimeout: self.dummy_message,
-            slskmessages.MinParentsInCache: self.dummy_message,
-            slskmessages.WishlistInterval: self.wishlist_interval,
-            slskmessages.DistribAliveInterval: self.dummy_message,
-            slskmessages.DistribChildDepth: self.dummy_message,
-            slskmessages.DistribBranchLevel: self.dummy_message,
-            slskmessages.DistribBranchRoot: self.dummy_message,
-            slskmessages.AdminMessage: self.admin_message,
-            slskmessages.TunneledMessage: self.dummy_message,
-            slskmessages.PlaceholdUpload: self.dummy_message,
-            slskmessages.PlaceInQueueRequest: self.place_in_queue_request,
-            slskmessages.UploadQueueNotification: self.dummy_message,
-            slskmessages.FileSearch: self.search_request,
-            slskmessages.RoomSearch: self.search_request,
-            slskmessages.UserSearch: self.search_request,
-            slskmessages.RelatedSearch: self.dummy_message,
-            slskmessages.PossibleParents: self.dummy_message,
-            slskmessages.DistribAlive: self.dummy_message,
-            slskmessages.DistribSearch: self.distrib_search,
-            slskmessages.ResetDistributed: self.dummy_message,
-            slskmessages.ServerTimeout: self.server_timeout,
-            slskmessages.TransferTimeout: self.transfer_timeout,
-            slskmessages.SetConnectionStats: self.set_connection_stats,
-            slskmessages.GlobalRecommendations: self.global_recommendations,
-            slskmessages.Recommendations: self.recommendations,
-            slskmessages.ItemRecommendations: self.item_recommendations,
-            slskmessages.SimilarUsers: self.similar_users,
-            slskmessages.ItemSimilarUsers: self.item_similar_users,
-            slskmessages.UserInterests: self.user_interests,
-            slskmessages.RoomTickerState: self.room_ticker_state,
-            slskmessages.RoomTickerAdd: self.room_ticker_add,
-            slskmessages.RoomTickerRemove: self.room_ticker_remove,
-            slskmessages.UserPrivileged: self.dummy_message,
-            slskmessages.AckNotifyPrivileges: self.dummy_message,
-            slskmessages.NotifyPrivileges: self.dummy_message,
-            slskmessages.PrivateRoomUsers: self.private_room_users,
-            slskmessages.PrivateRoomOwned: self.private_room_owned,
-            slskmessages.PrivateRoomAddUser: self.private_room_add_user,
-            slskmessages.PrivateRoomRemoveUser: self.private_room_remove_user,
-            slskmessages.PrivateRoomAdded: self.private_room_added,
-            slskmessages.PrivateRoomRemoved: self.private_room_removed,
-            slskmessages.PrivateRoomDisown: self.private_room_disown,
-            slskmessages.PrivateRoomToggle: self.private_room_toggle,
-            slskmessages.PrivateRoomSomething: self.dummy_message,
-            slskmessages.PrivateRoomOperatorAdded: self.private_room_operator_added,
-            slskmessages.PrivateRoomOperatorRemoved: self.private_room_operator_removed,
-            slskmessages.PrivateRoomAddOperator: self.private_room_add_operator,
-            slskmessages.PrivateRoomRemoveOperator: self.private_room_remove_operator,
-            slskmessages.PublicRoomMessage: self.public_room_message,
-            slskmessages.ShowConnectionErrorMessage: self.show_connection_error_message,
-            slskmessages.UnknownPeerMessage: self.ignore
-        }
+    """ Actions """
 
     def start(self, ui_callback, network_callback):
 
@@ -253,11 +141,122 @@ class NicotineCore:
         port_range = config.sections["server"]["portrange"]
         interface = config.sections["server"]["interface"]
         self.protothread = slskproto.SlskProtoThread(
-            self.network_callback, self.queue, self.bindip, interface, self.port, port_range, self)
+            self.network_callback, self.queue, self.bindip, interface, self.port, port_range)
         self.upnp = UPnP(self, config)
         self.pluginhandler = PluginHandler(self, config)
 
-        self.set_connection_stats(slskmessages.SetConnectionStats())
+        # Callback handlers for messages
+        self.events = {
+            slskmessages.ServerDisconnect: self.server_disconnect,
+            slskmessages.Login: self.login,
+            slskmessages.ChangePassword: self.change_password,
+            slskmessages.MessageUser: self.privatechats.message_user,
+            slskmessages.PMessageUser: self.privatechats.p_message_user,
+            slskmessages.ExactFileSearch: self.dummy_message,
+            slskmessages.RoomAdded: self.dummy_message,
+            slskmessages.RoomRemoved: self.dummy_message,
+            slskmessages.UserJoinedRoom: self.chatrooms.user_joined_room,
+            slskmessages.SayChatroom: self.chatrooms.say_chat_room,
+            slskmessages.JoinRoom: self.chatrooms.join_room,
+            slskmessages.UserLeftRoom: self.chatrooms.user_left_room,
+            slskmessages.CantCreateRoom: self.dummy_message,
+            slskmessages.QueuedDownloads: self.dummy_message,
+            slskmessages.GetPeerAddress: self.get_peer_address,
+            slskmessages.UserInfoReply: self.userinfo.user_info_reply,
+            slskmessages.UserInfoRequest: self.userinfo.user_info_request,
+            slskmessages.PierceFireWall: self.dummy_message,
+            slskmessages.ConnectToPeer: self.connect_to_peer,
+            slskmessages.CantConnectToPeer: self.dummy_message,
+            slskmessages.MessageProgress: self.message_progress,
+            slskmessages.SharedFileList: self.userbrowse.shared_file_list,
+            slskmessages.GetSharedFileList: self.shares.get_shared_file_list,
+            slskmessages.FileSearchRequest: self.dummy_message,
+            slskmessages.FileSearchResult: self.search.file_search_result,
+            slskmessages.GetUserStatus: self.get_user_status,
+            slskmessages.GetUserStats: self.get_user_stats,
+            slskmessages.Relogged: self.dummy_message,
+            slskmessages.PeerInit: self.dummy_message,
+            slskmessages.CheckDownloadQueue: self.transfers.check_download_queue_callback,
+            slskmessages.CheckUploadQueue: self.transfers.check_upload_queue_callback,
+            slskmessages.DownloadFile: self.transfers.file_download,
+            slskmessages.UploadFile: self.transfers.file_upload,
+            slskmessages.FileDownloadInit: self.transfers.file_download_init,
+            slskmessages.FileUploadInit: self.transfers.file_upload_init,
+            slskmessages.TransferRequest: self.transfers.transfer_request,
+            slskmessages.TransferResponse: self.transfers.transfer_response,
+            slskmessages.QueueUpload: self.transfers.queue_upload,
+            slskmessages.UploadDenied: self.transfers.upload_denied,
+            slskmessages.UploadFailed: self.transfers.upload_failed,
+            slskmessages.PlaceInQueue: self.transfers.place_in_queue,
+            slskmessages.DownloadFileError: self.transfers.download_file_error,
+            slskmessages.UploadFileError: self.transfers.upload_file_error,
+            slskmessages.DownloadConnClose: self.transfers.download_conn_close,
+            slskmessages.UploadConnClose: self.transfers.upload_conn_close,
+            slskmessages.FolderContentsResponse: self.transfers.folder_contents_response,
+            slskmessages.FolderContentsRequest: self.shares.folder_contents_request,
+            slskmessages.RoomList: self.chatrooms.room_list,
+            slskmessages.LeaveRoom: self.chatrooms.leave_room,
+            slskmessages.GlobalUserList: self.dummy_message,
+            slskmessages.AddUser: self.add_user,
+            slskmessages.PrivilegedUsers: self.privileged_users,
+            slskmessages.AddToPrivileged: self.add_to_privileged,
+            slskmessages.CheckPrivileges: self.check_privileges,
+            slskmessages.ServerPing: self.dummy_message,
+            slskmessages.ParentMinSpeed: self.dummy_message,
+            slskmessages.ParentSpeedRatio: self.dummy_message,
+            slskmessages.ParentInactivityTimeout: self.dummy_message,
+            slskmessages.SearchInactivityTimeout: self.dummy_message,
+            slskmessages.MinParentsInCache: self.dummy_message,
+            slskmessages.WishlistInterval: self.search.set_wishlist_interval,
+            slskmessages.DistribAliveInterval: self.dummy_message,
+            slskmessages.DistribChildDepth: self.dummy_message,
+            slskmessages.DistribBranchLevel: self.dummy_message,
+            slskmessages.DistribBranchRoot: self.dummy_message,
+            slskmessages.AdminMessage: self.admin_message,
+            slskmessages.TunneledMessage: self.dummy_message,
+            slskmessages.PlaceholdUpload: self.dummy_message,
+            slskmessages.PlaceInQueueRequest: self.transfers.place_in_queue_request,
+            slskmessages.UploadQueueNotification: self.dummy_message,
+            slskmessages.FileSearch: self.search.search_request,
+            slskmessages.RoomSearch: self.search.search_request,
+            slskmessages.UserSearch: self.search.search_request,
+            slskmessages.RelatedSearch: self.dummy_message,
+            slskmessages.PossibleParents: self.dummy_message,
+            slskmessages.DistribAlive: self.dummy_message,
+            slskmessages.DistribSearch: self.search.distrib_search,
+            slskmessages.ResetDistributed: self.dummy_message,
+            slskmessages.ServerTimeout: self.server_timeout,
+            slskmessages.TransferTimeout: self.transfers.transfer_timeout,
+            slskmessages.SetConnectionStats: self.set_connection_stats,
+            slskmessages.GlobalRecommendations: self.interests.global_recommendations,
+            slskmessages.Recommendations: self.interests.recommendations,
+            slskmessages.ItemRecommendations: self.interests.item_recommendations,
+            slskmessages.SimilarUsers: self.interests.similar_users,
+            slskmessages.ItemSimilarUsers: self.interests.item_similar_users,
+            slskmessages.UserInterests: self.userinfo.user_interests,
+            slskmessages.RoomTickerState: self.chatrooms.ticker_set,
+            slskmessages.RoomTickerAdd: self.chatrooms.ticker_add,
+            slskmessages.RoomTickerRemove: self.chatrooms.ticker_remove,
+            slskmessages.UserPrivileged: self.dummy_message,
+            slskmessages.AckNotifyPrivileges: self.dummy_message,
+            slskmessages.NotifyPrivileges: self.dummy_message,
+            slskmessages.PrivateRoomUsers: self.chatrooms.private_room_users,
+            slskmessages.PrivateRoomOwned: self.chatrooms.private_room_owned,
+            slskmessages.PrivateRoomAddUser: self.chatrooms.private_room_add_user,
+            slskmessages.PrivateRoomRemoveUser: self.chatrooms.private_room_remove_user,
+            slskmessages.PrivateRoomAdded: self.chatrooms.private_room_added,
+            slskmessages.PrivateRoomRemoved: self.chatrooms.private_room_removed,
+            slskmessages.PrivateRoomDisown: self.chatrooms.private_room_disown,
+            slskmessages.PrivateRoomToggle: self.chatrooms.private_room_toggle,
+            slskmessages.PrivateRoomSomething: self.dummy_message,
+            slskmessages.PrivateRoomOperatorAdded: self.chatrooms.private_room_operator_added,
+            slskmessages.PrivateRoomOperatorRemoved: self.chatrooms.private_room_operator_removed,
+            slskmessages.PrivateRoomAddOperator: self.chatrooms.private_room_add_operator,
+            slskmessages.PrivateRoomRemoveOperator: self.chatrooms.private_room_remove_operator,
+            slskmessages.PublicRoomMessage: self.chatrooms.public_room_message,
+            slskmessages.ShowConnectionErrorMessage: self.show_connection_error_message,
+            slskmessages.UnknownPeerMessage: self.dummy_message
+        }
 
     def quit(self, signal_type=None, _frame=None):
 
@@ -297,11 +296,17 @@ class NicotineCore:
             "version": config.version,
             "status": _("terminated") if signal_type == signal.SIGTERM else _("done")
         })
+        log.close_log_files()
 
     def connect(self):
 
         if not self.protothread.server_disconnected:
             return True
+
+        if config.need_config():
+            log.add(_("You need to specify a username and password before connecting…"))
+            self.ui_callback.setup()
+            return False
 
         valid_network_interface = self.protothread.validate_network_interface()
 
@@ -330,13 +335,6 @@ class NicotineCore:
             log.add_important_error(message)
             return False
 
-        if config.need_config():
-            log.add(_("You need to specify a username and password before connecting…"))
-            self.ui_callback.setup()
-            return False
-
-        self.protothread.server_connect()
-
         # Clear any potential messages queued up while offline
         self.queue.clear()
 
@@ -344,34 +342,12 @@ class NicotineCore:
         login = config.sections["server"]["login"]
         password = config.sections["server"]["passw"]
 
-        log.add(_("Connecting to %(host)s:%(port)s"), {'host': addr[0], 'port': addr[1]})
+        self.protothread.server_disconnected = False
         self.queue.append(slskmessages.ServerConnect(addr, login=(login, password)))
         return True
 
     def disconnect(self):
         self.queue.append(slskmessages.ServerDisconnect())
-
-    def server_disconnect(self, msg=None):
-
-        self.logged_in = False
-
-        # Clean up connections
-        self.user_statuses.clear()
-        self.watched_users.clear()
-
-        self.pluginhandler.server_disconnect_notification(msg.manual_disconnect if msg else True)
-
-        self.transfers.server_disconnect()
-        self.search.server_disconnect()
-        self.userlist.server_disconnect()
-        self.chatrooms.server_disconnect()
-        self.privatechats.server_disconnect()
-        self.userinfo.server_disconnect()
-        self.userbrowse.server_disconnect()
-        self.interests.server_disconnect()
-        self.ui_callback.server_disconnect()
-
-        self.login_username = None
 
     def send_message_to_peer(self, user, message, address=None):
         """ Sends message to a peer. Used when we know the username of a peer,
@@ -411,6 +387,9 @@ class NicotineCore:
         """ Retrieve a user's country code if previously cached, otherwise request
         user's IP address to determine country """
 
+        if not self.logged_in:
+            return None
+
         user_address = self.protothread.user_addresses.get(user)
 
         if user_address and user != self.protothread.server_username:
@@ -427,7 +406,7 @@ class NicotineCore:
         """ Tell the server we want to be notified of status/stat updates
         for a user """
 
-        if not isinstance(user, str):
+        if not self.logged_in:
             return
 
         if not force_update and user in self.watched_users:
@@ -439,27 +418,28 @@ class NicotineCore:
         # Get privilege status
         self.queue.append(slskmessages.GetUserStatus(user))
 
-    @staticmethod
-    def dummy_message(msg):
-        log.add_msg_contents(msg)
+        self.watched_users.add(user)
 
-    def ignore(self, msg):
-        # Ignore received message
-        pass
+    """ Network Events """
 
     def network_event(self, msgs):
 
-        for i in msgs:
+        for msg in msgs:
             if self.shutdown:
                 return
 
-            if i.__class__ in self.events:
-                self.events[i.__class__](i)
+            try:
+                self.events[msg.__class__](msg)
 
-            else:
-                log.add("No handler for class %s %s", (i.__class__, dir(i)))
+            except KeyError:
+                log.add("No handler for class %s %s", (msg.__class__, dir(msg)))
 
         msgs.clear()
+
+    @staticmethod
+    def dummy_message(msg):
+        # Ignore received message
+        pass
 
     def show_connection_error_message(self, msg):
         """ Request UI to show error messages related to connectivity """
@@ -485,54 +465,37 @@ class NicotineCore:
         elif msg.msg_type is slskmessages.UserInfoReply:
             self.userinfo.message_progress(msg)
 
-    def server_timeout(self, *_args):
+    def server_timeout(self, _msg):
         if not config.need_config():
             self.connect()
 
-    def check_download_queue(self, _msg):
-        self.transfers.check_download_queue_callback()
+    def server_disconnect(self, msg=None):
 
-    def check_upload_queue(self, _msg):
-        self.transfers.check_upload_queue_callback()
+        self.logged_in = False
 
-    def file_download(self, msg):
-        log.add_msg_contents(msg)
-        self.transfers.file_download(msg)
+        # Clean up connections
+        self.user_statuses.clear()
+        self.watched_users.clear()
 
-    def file_upload(self, msg):
-        log.add_msg_contents(msg)
-        self.transfers.file_upload(msg)
+        self.pluginhandler.server_disconnect_notification(msg.manual_disconnect if msg else True)
 
-    def download_file_error(self, msg):
-        log.add_msg_contents(msg)
-        self.transfers.download_file_error(msg)
+        self.transfers.server_disconnect()
+        self.search.server_disconnect()
+        self.userlist.server_disconnect()
+        self.chatrooms.server_disconnect()
+        self.privatechats.server_disconnect()
+        self.userinfo.server_disconnect()
+        self.userbrowse.server_disconnect()
+        self.interests.server_disconnect()
+        self.ui_callback.server_disconnect()
 
-    def upload_file_error(self, msg):
-        log.add_msg_contents(msg)
-        self.transfers.upload_file_error(msg)
-
-    def download_conn_close(self, msg):
-        log.add_msg_contents(msg)
-        self.transfers.download_conn_close(msg)
-
-    def upload_conn_close(self, msg):
-        log.add_msg_contents(msg)
-        self.transfers.upload_conn_close(msg)
-
-    def transfer_timeout(self, msg):
-        self.transfers.transfer_timeout(msg)
+        self.login_username = None
 
     def set_connection_stats(self, msg):
         self.ui_callback.set_connection_stats(msg)
 
-    """
-    Incoming Server Messages
-    """
-
     def login(self, msg):
         """ Server code: 1 """
-
-        log.add_msg_contents(msg)
 
         if msg.success:
             self.logged_in = True
@@ -563,7 +526,7 @@ class NicotineCore:
             self.pluginhandler.server_connect_notification()
 
         else:
-            if msg.reason == "INVALIDPASS":
+            if msg.reason == LoginFailure.PASSWORD:
                 self.ui_callback.invalid_password()
                 return
 
@@ -571,8 +534,6 @@ class NicotineCore:
 
     def get_peer_address(self, msg):
         """ Server code: 3 """
-
-        log.add_msg_contents(msg)
 
         user = msg.user
 
@@ -625,123 +586,74 @@ class NicotineCore:
     def add_user(self, msg):
         """ Server code: 5 """
 
-        log.add_msg_contents(msg)
+        if msg.userexists:
+            self.get_user_stats(msg)
+            return
 
-        self.watched_users.add(msg.user)
+        # User does not exist, server will not keep us informed if the user is created later
+        self.watched_users.discard(msg.user)
 
-        if msg.userexists and msg.status is None:
-            # Legacy support (Soulfind server)
-            self.queue.append(slskmessages.GetUserStatus(msg.user))
-
-        if msg.files is not None:
-            self.get_user_stats(msg, log_contents=False)
-
-    def get_user_status(self, msg, log_contents=True):
+    def get_user_status(self, msg):
         """ Server code: 7 """
 
-        if log_contents:
-            log.add_msg_contents(msg)
+        user = msg.user
+        status = msg.status
+        privileged = msg.privileged
 
-        if msg.status is None:
-            msg.status = -1
+        if privileged is not None:
+            if privileged:
+                self.transfers.add_to_privileged(user)
+            else:
+                self.transfers.remove_from_privileged(user)
 
-        self.user_statuses[msg.user] = msg.status
+        if status not in (UserStatus.OFFLINE, UserStatus.ONLINE, UserStatus.AWAY):
+            log.add_debug("Received an unknown status %(status)s for user %(user)s from the server", {
+                "status": status,
+                "user": user
+            })
+            return
 
-        if msg.privileged == 1:
-            self.transfers.add_to_privileged(msg.user)
-
-        elif msg.privileged == 0:
-            self.transfers.remove_from_privileged(msg.user)
-
-        self.interests.get_user_status(msg)
-        self.transfers.get_user_status(msg)
-        self.userbrowse.get_user_status(msg)
-        self.userinfo.get_user_status(msg)
-        self.userlist.get_user_status(msg)
-        self.privatechats.get_user_status(msg)
+        # We get status updates for room users even if we don't watch them
         self.chatrooms.get_user_status(msg)
 
-        self.pluginhandler.user_status_notification(msg.user, msg.status, bool(msg.privileged))
+        if user in self.watched_users:
+            self.user_statuses[user] = status
 
-    def say_chat_room(self, msg):
-        """ Server code: 13 """
+            self.transfers.get_user_status(msg)
+            self.interests.get_user_status(msg)
+            self.userbrowse.get_user_status(msg)
+            self.userinfo.get_user_status(msg)
+            self.userlist.get_user_status(msg)
+            self.privatechats.get_user_status(msg)
 
-        log.add_msg_contents(msg)
-        log.add_chat(_("Chat message from user '%(user)s' in room '%(room)s': %(message)s"), {
-            "user": msg.user,
-            "room": msg.room,
-            "message": msg.msg
-        })
-
-        self.chatrooms.say_chat_room(msg)
-
-    def join_room(self, msg):
-        """ Server code: 14 """
-
-        log.add_msg_contents(msg)
-        self.chatrooms.join_room(msg)
-
-    def leave_room(self, msg):
-        """ Server code: 15 """
-
-        log.add_msg_contents(msg)
-        self.chatrooms.leave_room(msg)
-
-    def user_joined_room(self, msg):
-        """ Server code: 16 """
-
-        log.add_msg_contents(msg)
-        self.chatrooms.user_joined_room(msg)
-
-    def user_left_room(self, msg):
-        """ Server code: 17 """
-
-        log.add_msg_contents(msg)
-        self.chatrooms.user_left_room(msg)
+        self.pluginhandler.user_status_notification(user, status, privileged)
 
     def connect_to_peer(self, msg):
         """ Server code: 18 """
 
-        log.add_msg_contents(msg)
+        if msg.privileged is None:
+            return
 
-        if msg.privileged == 1:
+        if msg.privileged:
             self.transfers.add_to_privileged(msg.user)
-
-        elif msg.privileged == 0:
+        else:
             self.transfers.remove_from_privileged(msg.user)
 
-    def message_user(self, msg):
-        """ Server code: 22 """
-
-        log.add_msg_contents(msg)
-        log.add_chat(_("Private message from user '%(user)s': %(message)s"), {
-            "user": msg.user,
-            "message": msg.msg
-        })
-
-        self.privatechats.message_user(msg)
-
-    def search_request(self, msg):
-        """ Server code: 26, 42 and 120 """
-
-        log.add_msg_contents(msg)
-
-        self.search.process_search_request(msg.searchterm, msg.user, msg.token, direct=True)
-        self.pluginhandler.search_request_notification(msg.searchterm, msg.user, msg.token)
-
-    def get_user_stats(self, msg, log_contents=True):
+    def get_user_stats(self, msg):
         """ Server code: 36 """
 
-        if log_contents:
-            log.add_msg_contents(msg)
+        user = msg.user
 
-        if msg.user == self.login_username:
+        if user == self.login_username:
             self.transfers.upload_speed = msg.avgspeed
 
-        self.interests.get_user_stats(msg)
-        self.userinfo.get_user_stats(msg)
-        self.userlist.get_user_stats(msg)
+        # We get stat updates for room users even if we don't watch them
         self.chatrooms.get_user_stats(msg)
+
+        if user in self.watched_users:
+            self.interests.get_user_stats(msg)
+            self.userinfo.get_user_stats(msg)
+            self.userlist.get_user_stats(msg)
 
         stats = {
             'avgspeed': msg.avgspeed,
@@ -750,37 +662,7 @@ class NicotineCore:
             'dirs': msg.dirs,
         }
 
-        self.pluginhandler.user_stats_notification(msg.user, stats)
-
-    @staticmethod
-    def relogged(_msg):
-        """ Server code: 41 """
-
-        log.add_important_info(_("Someone logged in to your Soulseek account elsewhere"))
-
-    def recommendations(self, msg):
-        """ Server code: 54 """
-
-        log.add_msg_contents(msg)
-        self.interests.recommendations(msg)
-
-    def global_recommendations(self, msg):
-        """ Server code: 56 """
-
-        log.add_msg_contents(msg)
-        self.interests.global_recommendations(msg)
-
-    def user_interests(self, msg):
-        """ Server code: 57 """
-
-        log.add_msg_contents(msg)
-        self.userinfo.user_interests(msg)
-
-    def room_list(self, msg):
-        """ Server code: 64 """
-
-        log.add_msg_contents(msg)
-        self.chatrooms.room_list(msg)
+        self.pluginhandler.user_stats_notification(user, stats)
 
     @staticmethod
     def admin_message(msg):
@@ -791,7 +673,6 @@ class NicotineCore:
     def privileged_users(self, msg):
         """ Server code: 69 """
 
-        log.add_msg_contents(msg)
         self.transfers.set_privileged_users(msg.users)
         log.add(_("%i privileged users"), (len(msg.users)))
 
@@ -799,13 +680,10 @@ class NicotineCore:
         """ Server code: 91 """
         """ DEPRECATED """
 
-        log.add_msg_contents(msg)
         self.transfers.add_to_privileged(msg.user)
 
     def check_privileges(self, msg):
         """ Server code: 92 """
-
-        log.add_msg_contents(msg)
 
         mins = msg.seconds // 60
         hours = mins // 60
@@ -825,395 +703,12 @@ class NicotineCore:
 
         self.privileges_left = msg.seconds
 
-    def wishlist_interval(self, msg):
-        """ Server code: 104 """
-
-        log.add_msg_contents(msg)
-        self.search.set_wishlist_interval(msg)
-
-    def similar_users(self, msg):
-        """ Server code: 110 """
-
-        log.add_msg_contents(msg)
-        self.interests.similar_users(msg)
-
-    def item_recommendations(self, msg):
-        """ Server code: 111 """
-
-        log.add_msg_contents(msg)
-        self.interests.item_recommendations(msg)
-
-    def item_similar_users(self, msg):
-        """ Server code: 112 """
-
-        log.add_msg_contents(msg)
-        self.interests.item_similar_users(msg)
-
-    def room_ticker_state(self, msg):
-        """ Server code: 113 """
-
-        log.add_msg_contents(msg)
-        self.chatrooms.ticker_set(msg)
-
-    def room_ticker_add(self, msg):
-        """ Server code: 114 """
-
-        log.add_msg_contents(msg)
-        self.chatrooms.ticker_add(msg)
-
-    def room_ticker_remove(self, msg):
-        """ Server code: 115 """
-
-        log.add_msg_contents(msg)
-        self.chatrooms.ticker_remove(msg)
-
-    def private_room_users(self, msg):
-        """ Server code: 133 """
-
-        log.add_msg_contents(msg)
-        self.chatrooms.private_room_users(msg)
-
-    def private_room_add_user(self, msg):
-        """ Server code: 134 """
-
-        log.add_msg_contents(msg)
-        self.chatrooms.private_room_add_user(msg)
-
-    def private_room_remove_user(self, msg):
-        """ Server code: 135 """
-
-        log.add_msg_contents(msg)
-        self.chatrooms.private_room_remove_user(msg)
-
-    def private_room_disown(self, msg):
-        """ Server code: 137 """
-
-        log.add_msg_contents(msg)
-        self.chatrooms.private_room_disown(msg)
-
-    def private_room_added(self, msg):
-        """ Server code: 139 """
-
-        log.add_msg_contents(msg)
-        self.chatrooms.private_room_added(msg)
-
-    def private_room_removed(self, msg):
-        """ Server code: 140 """
-
-        log.add_msg_contents(msg)
-        self.chatrooms.private_room_removed(msg)
-
-    def private_room_toggle(self, msg):
-        """ Server code: 141 """
-
-        log.add_msg_contents(msg)
-        self.chatrooms.private_room_toggle(msg)
-
     @staticmethod
     def change_password(msg):
         """ Server code: 142 """
-
-        log.add_msg_contents(msg)
 
         password = msg.password
         config.sections["server"]["passw"] = password
         config.write_configuration()
 
         log.add_important_info(_("Your password has been changed"))
-
-    def private_room_add_operator(self, msg):
-        """ Server code: 143 """
-
-        log.add_msg_contents(msg)
-        self.chatrooms.private_room_add_operator(msg)
-
-    def private_room_remove_operator(self, msg):
-        """ Server code: 144 """
-
-        log.add_msg_contents(msg)
-        self.chatrooms.private_room_remove_operator(msg)
-
-    def private_room_operator_added(self, msg):
-        """ Server code: 145 """
-
-        log.add_msg_contents(msg)
-        self.chatrooms.private_room_operator_added(msg)
-
-    def private_room_operator_removed(self, msg):
-        """ Server code: 146 """
-
-        log.add_msg_contents(msg)
-        self.chatrooms.private_room_operator_removed(msg)
-
-    def private_room_owned(self, msg):
-        """ Server code: 148 """
-
-        log.add_msg_contents(msg)
-        self.chatrooms.private_room_owned(msg)
-
-    def public_room_message(self, msg):
-        """ Server code: 152 """
-
-        log.add_msg_contents(msg)
-        self.chatrooms.public_room_message(msg)
-
-    """
-    Incoming Peer Messages
-    """
-
-    def get_shared_file_list(self, msg):
-        """ Peer code: 4 """
-
-        log.add_msg_contents(msg)
-
-        user = msg.init.target_user
-        request_time = time.time()
-
-        if user in self.requested_share_times and request_time < self.requested_share_times[user] + 0.4:
-            # Ignoring request, because it's less than half a second since the
-            # last one by this user
-            return
-
-        self.requested_share_times[user] = request_time
-
-        log.add(_("User %(user)s is browsing your list of shared files"), {'user': user})
-
-        ip_address, _port = msg.init.addr
-        checkuser, reason = self.network_filter.check_user(user, ip_address)
-
-        if not checkuser:
-            message = self.ban_message % reason
-            self.privatechats.send_automatic_message(user, message)
-
-        shares_list = None
-
-        if checkuser == 1:
-            # Send Normal Shares
-            shares_list = self.shares.get_compressed_shares_message("normal")
-
-        elif checkuser == 2:
-            # Send Buddy Shares
-            shares_list = self.shares.get_compressed_shares_message("buddy")
-
-        if not shares_list:
-            # Nyah, Nyah
-            shares_list = slskmessages.SharedFileList(msg.init, {})
-
-        shares_list.init = msg.init
-        self.queue.append(shares_list)
-
-    def shared_file_list(self, msg):
-        """ Peer code: 5 """
-
-        username = msg.init.target_user
-        self.userbrowse.shared_file_list(username, msg)
-
-    def file_search_result(self, msg):
-        """ Peer message: 9 """
-
-        log.add_msg_contents(msg)
-        self.search.file_search_result(msg)
-
-    def user_info_request(self, msg):
-        """ Peer code: 15 """
-
-        log.add_msg_contents(msg)
-
-        user = msg.init.target_user
-        ip_address, _port = msg.init.addr
-        request_time = time.time()
-
-        if user in self.requested_info_times and request_time < self.requested_info_times[user] + 0.4:
-            # Ignoring request, because it's less than half a second since the
-            # last one by this user
-            return
-
-        self.requested_info_times[user] = request_time
-
-        if self.login_username != user:
-            log.add(_("User %(user)s is reading your user info"), {'user': user})
-
-        status, reason = self.network_filter.check_user(user, ip_address)
-
-        if not status:
-            pic = None
-            descr = self.ban_message % reason
-            descr += "\n\n----------------------------------------------\n\n"
-            descr += unescape(config.sections["userinfo"]["descr"])
-
-        else:
-            try:
-                userpic = config.sections["userinfo"]["pic"]
-
-                with open(userpic, 'rb') as file_handle:
-                    pic = file_handle.read()
-
-            except Exception:
-                pic = None
-
-            descr = unescape(config.sections["userinfo"]["descr"])
-
-        totalupl = self.transfers.get_total_uploads_allowed()
-        queuesize = self.transfers.get_upload_queue_size()
-        slotsavail = self.transfers.allow_new_uploads()
-
-        if config.sections["transfers"]["remotedownloads"]:
-            uploadallowed = config.sections["transfers"]["uploadallowed"]
-        else:
-            uploadallowed = 0
-
-        self.queue.append(
-            slskmessages.UserInfoReply(msg.init, descr, pic, totalupl, queuesize, slotsavail, uploadallowed))
-
-    def user_info_reply(self, msg):
-        """ Peer code: 16 """
-
-        log.add_msg_contents(msg)
-
-        username = msg.init.target_user
-        self.userinfo.user_info_reply(username, msg)
-
-    def p_message_user(self, msg):
-        """ Peer code: 22 """
-
-        log.add_msg_contents(msg)
-
-        username = msg.init.target_user
-
-        if username != msg.user:
-            msg.msg = _("(Warning: %(realuser)s is attempting to spoof %(fakeuser)s) ") % {
-                "realuser": username, "fakeuser": msg.user} + msg.msg
-            msg.user = username
-
-        self.privatechats.message_user(msg)
-
-    def folder_contents_request(self, msg):
-        """ Peer code: 36 """
-
-        log.add_msg_contents(msg)
-
-        init = msg.init
-        ip_address, _port = msg.init.addr
-        username = msg.init.target_user
-        checkuser, reason = self.network_filter.check_user(username, ip_address)
-
-        if not checkuser:
-            message = self.ban_message % reason
-            self.privatechats.send_automatic_message(username, message)
-
-        normalshares = self.shares.share_dbs.get("streams")
-        buddyshares = self.shares.share_dbs.get("buddystreams")
-
-        if checkuser == 1 and normalshares is not None:
-            shares = normalshares
-
-        elif checkuser == 2 and buddyshares is not None:
-            shares = buddyshares
-
-        else:
-            shares = {}
-
-        if checkuser:
-            try:
-                if msg.dir in shares:
-                    self.queue.append(slskmessages.FolderContentsResponse(init, msg.dir, shares[msg.dir]))
-                    return
-
-                if msg.dir.rstrip('\\') in shares:
-                    self.queue.append(slskmessages.FolderContentsResponse(init, msg.dir, shares[msg.dir.rstrip('\\')]))
-                    return
-
-            except Exception as error:
-                log.add(_("Failed to fetch the shared folder %(folder)s: %(error)s"),
-                        {"folder": msg.dir, "error": error})
-
-            self.queue.append(slskmessages.FolderContentsResponse(init, msg.dir, None))
-
-    def folder_contents_response(self, msg):
-        """ Peer code: 37 """
-
-        file_list = msg.list
-
-        # Check for a large number of files
-        many = False
-        folder = ""
-
-        for i in file_list:
-            for j in file_list[i]:
-                if os.path.commonprefix([i, j]) == j:
-                    numfiles = len(file_list[i][j])
-                    if numfiles > 100:
-                        many = True
-                        folder = j
-
-        if many:
-            username = msg.init.target_user
-            self.transfers.downloadsview.download_large_folder(username, folder, numfiles, msg)
-        else:
-            self.transfers.folder_contents_response(msg)
-
-    def transfer_request(self, msg):
-        """ Peer code: 40 """
-
-        log.add_msg_contents(msg)
-        self.transfers.transfer_request(msg)
-
-    def transfer_response(self, msg):
-        """ Peer code: 41 """
-
-        log.add_msg_contents(msg)
-        self.transfers.transfer_response(msg)
-
-    def queue_upload(self, msg):
-        """ Peer code: 43 """
-
-        log.add_msg_contents(msg)
-        self.transfers.queue_upload(msg)
-
-    def place_in_queue(self, msg):
-        """ Peer code: 44 """
-
-        log.add_msg_contents(msg)
-        self.transfers.place_in_queue(msg)
-
-    def upload_failed(self, msg):
-        """ Peer code: 46 """
-
-        log.add_msg_contents(msg)
-        self.transfers.upload_failed(msg)
-
-    def upload_denied(self, msg):
-        """ Peer code: 50 """
-
-        log.add_msg_contents(msg)
-        self.transfers.upload_denied(msg)
-
-    def place_in_queue_request(self, msg):
-        """ Peer code: 51 """
-
-        log.add_msg_contents(msg)
-        self.transfers.place_in_queue_request(msg)
-
-    """
-    Incoming File Messages
-    """
-
-    def file_download_init(self, msg):
-        log.add_msg_contents(msg)
-        self.transfers.file_download_init(msg)
-
-    def file_upload_init(self, msg):
-        log.add_msg_contents(msg)
-        self.transfers.file_upload_init(msg)
-
-    """
-    Incoming Distributed Messages
-    """
-
-    def distrib_search(self, msg):
-        """ Distrib code: 3 """
-
-        # Verbose: log.add_msg_contents(msg)
-
-        self.search.process_search_request(msg.searchterm, msg.user, msg.token, direct=False)
-        self.pluginhandler.distrib_search_notification(msg.searchterm, msg.user, msg.token)

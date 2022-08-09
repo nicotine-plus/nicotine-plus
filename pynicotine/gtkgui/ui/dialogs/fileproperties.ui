@@ -4,16 +4,16 @@
   <object class="GtkSizeGroup">
     <property name="mode">horizontal</property>
     <widgets>
-      <widget name="filename_label"/>
-      <widget name="folder_label"/>
-      <widget name="path_label"/>
-      <widget name="filesize_label"/>
-      <widget name="length_label"/>
-      <widget name="bitrate_label"/>
-      <widget name="username_label"/>
-      <widget name="queue_label"/>
-      <widget name="speed_label"/>
-      <widget name="country_label"/>
+      <widget name="_filename_label"/>
+      <widget name="_folder_label"/>
+      <widget name="_path_label"/>
+      <widget name="_filesize_label"/>
+      <widget name="_length_label"/>
+      <widget name="_bitrate_label"/>
+      <widget name="_username_label"/>
+      <widget name="_queue_label"/>
+      <widget name="_speed_label"/>
+      <widget name="_country_label"/>
     </widgets>
   </object>
   <object class="GtkButton" id="previous_button">
@@ -77,11 +77,11 @@
             <property name="visible">True</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkLabel" id="filename_label">
+              <object class="GtkLabel" id="_filename_label">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Name</property>
                 <property name="xalign">1</property>
-                <property name="mnemonic_widget">filename_value_label</property>
+                <property name="mnemonic-widget">filename_value_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
@@ -92,6 +92,7 @@
                 <property name="visible">True</property>
                 <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
+                <property name="single-line-mode">True</property>
               </object>
             </child>
           </object>
@@ -101,11 +102,11 @@
             <property name="visible">True</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkLabel" id="filesize_label">
+              <object class="GtkLabel" id="_filesize_label">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Size</property>
                 <property name="xalign">1</property>
-                <property name="mnemonic_widget">filesize_value_label</property>
+                <property name="mnemonic-widget">filesize_value_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
@@ -116,6 +117,7 @@
                 <property name="visible">True</property>
                 <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
+                <property name="single-line-mode">True</property>
               </object>
             </child>
           </object>
@@ -125,11 +127,11 @@
             <property name="visible">True</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkLabel" id="folder_label">
+              <object class="GtkLabel" id="_folder_label">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Folder</property>
                 <property name="xalign">1</property>
-                <property name="mnemonic_widget">folder_value_label</property>
+                <property name="mnemonic-widget">folder_value_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
@@ -140,20 +142,21 @@
                 <property name="visible">True</property>
                 <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
+                <property name="single-line-mode">True</property>
               </object>
             </child>
           </object>
         </child>
         <child>
           <object class="GtkBox" id="path_row">
-            <property name="visible">True</property>
+            <property name="visible">False</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkLabel" id="path_label">
+              <object class="GtkLabel" id="_path_label">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Path</property>
                 <property name="xalign">1</property>
-                <property name="mnemonic_widget">path_value_label</property>
+                <property name="mnemonic-widget">path_value_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
@@ -164,21 +167,22 @@
                 <property name="visible">True</property>
                 <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
+                <property name="single-line-mode">True</property>
               </object>
             </child>
           </object>
         </child>
         <child>
           <object class="GtkBox" id="length_row">
-            <property name="visible">True</property>
+            <property name="visible">False</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkLabel" id="length_label">
+              <object class="GtkLabel" id="_length_label">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Duration</property>
                 <property name="margin-top">12</property>
                 <property name="xalign">1</property>
-                <property name="mnemonic_widget">length_value_label</property>
+                <property name="mnemonic-widget">length_value_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
@@ -190,20 +194,21 @@
                 <property name="margin-top">12</property>
                 <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
+                <property name="single-line-mode">True</property>
               </object>
             </child>
           </object>
         </child>
         <child>
           <object class="GtkBox" id="bitrate_row">
-            <property name="visible">True</property>
+            <property name="visible">False</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkLabel" id="bitrate_label">
+              <object class="GtkLabel" id="_bitrate_label">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Bitrate</property>
                 <property name="xalign">1</property>
-                <property name="mnemonic_widget">bitrate_value_label</property>
+                <property name="mnemonic-widget">bitrate_value_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
@@ -214,6 +219,7 @@
                 <property name="visible">True</property>
                 <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
+                <property name="single-line-mode">True</property>
               </object>
             </child>
           </object>
@@ -223,12 +229,12 @@
             <property name="visible">True</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkLabel" id="username_label">
+              <object class="GtkLabel" id="_username_label">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Username</property>
                 <property name="margin-top">12</property>
                 <property name="xalign">1</property>
-                <property name="mnemonic_widget">username_value_label</property>
+                <property name="mnemonic-widget">username_value_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
@@ -240,20 +246,21 @@
                 <property name="margin-top">12</property>
                 <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
+                <property name="single-line-mode">True</property>
               </object>
             </child>
           </object>
         </child>
         <child>
           <object class="GtkBox" id="queue_row">
-            <property name="visible">True</property>
+            <property name="visible">False</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkLabel" id="queue_label">
+              <object class="GtkLabel" id="_queue_label">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">In Queue</property>
                 <property name="xalign">1</property>
-                <property name="mnemonic_widget">queue_value_label</property>
+                <property name="mnemonic-widget">queue_value_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
@@ -264,20 +271,21 @@
                 <property name="visible">True</property>
                 <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
+                <property name="single-line-mode">True</property>
               </object>
             </child>
           </object>
         </child>
         <child>
           <object class="GtkBox" id="speed_row">
-            <property name="visible">True</property>
+            <property name="visible">False</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkLabel" id="speed_label">
+              <object class="GtkLabel" id="_speed_label">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Last Speed</property>
                 <property name="xalign">1</property>
-                <property name="mnemonic_widget">speed_value_label</property>
+                <property name="mnemonic-widget">speed_value_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
@@ -288,20 +296,21 @@
                 <property name="visible">True</property>
                 <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
+                <property name="single-line-mode">True</property>
               </object>
             </child>
           </object>
         </child>
         <child>
           <object class="GtkBox" id="country_row">
-            <property name="visible">True</property>
+            <property name="visible">False</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkLabel" id="country_label">
+              <object class="GtkLabel" id="_country_label">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Country</property>
                 <property name="xalign">1</property>
-                <property name="mnemonic_widget">country_value_label</property>
+                <property name="mnemonic-widget">country_value_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
@@ -312,6 +321,7 @@
                 <property name="visible">True</property>
                 <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
+                <property name="single-line-mode">True</property>
               </object>
             </child>
           </object>

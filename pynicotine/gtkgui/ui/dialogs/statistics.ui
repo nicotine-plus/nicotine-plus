@@ -24,7 +24,7 @@
         <property name="hexpand">True</property>
         <property name="orientation">vertical</property>
         <child>
-          <object class="GtkLabel">
+          <object class="GtkLabel" id="current_session_label">
             <property name="visible">True</property>
             <property name="label" translatable="yes">Current Session</property>
             <property name="selectable">True</property>
@@ -44,7 +44,7 @@
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Started Downloads</property>
                 <property name="xalign">1</property>
-                <property name="mnemonic_widget">started_downloads_session_label</property>
+                <property name="mnemonic-widget">started_downloads_session_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
@@ -70,7 +70,7 @@
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Completed Downloads</property>
                 <property name="xalign">1</property>
-                <property name="mnemonic_widget">completed_downloads_session_label</property>
+                <property name="mnemonic-widget">completed_downloads_session_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
@@ -96,7 +96,7 @@
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Downloaded Size</property>
                 <property name="xalign">1</property>
-                <property name="mnemonic_widget">downloaded_size_session_label</property>
+                <property name="mnemonic-widget">downloaded_size_session_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
@@ -127,7 +127,7 @@
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Started Uploads</property>
                 <property name="xalign">1</property>
-                <property name="mnemonic_widget">started_uploads_session_label</property>
+                <property name="mnemonic-widget">started_uploads_session_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
@@ -153,7 +153,7 @@
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Completed Uploads</property>
                 <property name="xalign">1</property>
-                <property name="mnemonic_widget">completed_uploads_session_label</property>
+                <property name="mnemonic-widget">completed_uploads_session_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
@@ -179,7 +179,7 @@
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Uploaded Size</property>
                 <property name="xalign">1</property>
-                <property name="mnemonic_widget">uploaded_size_session_label</property>
+                <property name="mnemonic-widget">uploaded_size_session_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
@@ -221,7 +221,7 @@
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Started Downloads</property>
                 <property name="xalign">1</property>
-                <property name="mnemonic_widget">started_downloads_total_label</property>
+                <property name="mnemonic-widget">started_downloads_total_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
@@ -247,7 +247,7 @@
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Completed Downloads</property>
                 <property name="xalign">1</property>
-                <property name="mnemonic_widget">completed_downloads_total_label</property>
+                <property name="mnemonic-widget">completed_downloads_total_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
@@ -273,7 +273,7 @@
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Downloaded Size</property>
                 <property name="xalign">1</property>
-                <property name="mnemonic_widget">downloaded_size_total_label</property>
+                <property name="mnemonic-widget">downloaded_size_total_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
@@ -304,7 +304,7 @@
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Started Uploads</property>
                 <property name="xalign">1</property>
-                <property name="mnemonic_widget">started_uploads_total_label</property>
+                <property name="mnemonic-widget">started_uploads_total_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
@@ -330,7 +330,7 @@
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Completed Uploads</property>
                 <property name="xalign">1</property>
-                <property name="mnemonic_widget">completed_uploads_total_label</property>
+                <property name="mnemonic-widget">completed_uploads_total_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
@@ -356,7 +356,7 @@
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Uploaded Size</property>
                 <property name="xalign">1</property>
-                <property name="mnemonic_widget">uploaded_size_total_label</property>
+                <property name="mnemonic-widget">uploaded_size_total_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>

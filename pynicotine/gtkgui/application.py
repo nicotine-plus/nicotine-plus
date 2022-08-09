@@ -53,7 +53,7 @@ class Application(Gtk.Application):
 
     def network_callback(self, msgs):
         # High priority to ensure there are no delays
-        GLib.idle_add(self.core.network_event, msgs, priority=GLib.PRIORITY_HIGH_IDLE)
+        GLib.idle_add(self.core.network_event, msgs[:], priority=GLib.PRIORITY_HIGH_IDLE)
 
     def do_startup(self):  # pylint:disable=arguments-differ
 
@@ -73,8 +73,10 @@ class Application(Gtk.Application):
             active_window.present()
             return
 
-        if self.frame:
-            self.frame.init_window()
+        if self.frame is None:
+            return
+
+        self.frame.init_window()
 
         if config.sections["server"]["auto_connect_startup"]:
             self.core.connect()

@@ -272,20 +272,16 @@ class PopupMenu:
                 return False
 
         if callback:
-            cancel = callback(menu_model, self.parent)
-
-            if cancel:
-                return False
+            callback(menu_model, self.parent)
 
         self.popup(pos_x, pos_y, controller, menu=menu)
-        return False
+        return True
 
     def _callback_click(self, controller, _num_p, pos_x, pos_y):
         return self._callback(controller, pos_x, pos_y)
 
     def _callback_menu(self, *_args):
-        self._callback()
-        return True
+        return self._callback()
 
     def connect_events(self, parent):
 
@@ -372,12 +368,9 @@ class UserPopupMenu(PopupMenu):
         if not self.useritem:
             return
 
-        self.useritem.set_label(user)
+        self.useritem.set_label(user.replace('_', '__'))  # Escape underscores to disable mnemonics
         self.model.remove(0)
         self.model.prepend_item(self.useritem)
-
-    def get_user(self):
-        return self.user
 
     def toggle_user_items(self):
 

@@ -136,16 +136,19 @@ class Uploads(TransferList):
 
         self.core.userbrowse.browse_user(user, path=folder)
 
-    def on_abort_user(self, *_args):
+    def on_abort_users(self, *_args):
 
         self.select_transfers()
 
-        for user in self.selected_users:
-            for transfer in self.transfer_list:
-                if transfer.user == user and transfer not in self.selected_transfers:
-                    self.selected_transfers.append(transfer)
+        for transfer in self.transfer_list:
+            if transfer.user in self.selected_users and transfer not in self.selected_transfers:
+                self.selected_transfers[transfer] = None
 
         self.abort_transfers()
+
+    def on_ban_users(self, *_args):
+        self.select_transfers()
+        self.core.transfers.ban_users(self.selected_users)
 
     def on_clear_aborted(self, *_args):
         self.clear_transfers(["Aborted", "Cancelled", "Disallowed extension", "User logged off"])

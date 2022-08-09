@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from pynicotine import slskmessages
+from pynicotine.logfacility import log
 from pynicotine.utils import get_completion_list
 
 
@@ -77,7 +78,6 @@ class PrivateChats:
         if user in self.users:
             return
 
-        self.core.watch_user(user)
         self.users.add(user)
 
         if user not in self.config.sections["privatechat"]["users"]:
@@ -99,6 +99,8 @@ class PrivateChats:
 
         if self.ui_callback:
             self.ui_callback.show_user(user, switch_page)
+
+        self.core.watch_user(user)
 
     def load_users(self):
 
@@ -149,7 +151,7 @@ class PrivateChats:
 
         for msg in self.private_message_queue[user][:]:
             self.private_message_queue[user].remove(msg)
-            self.message_user(msg)
+            self.message_user(msg, should_log=False)
 
     def send_automatic_message(self, user, message):
         self.send_message(user, "[Automatic Message] " + message)
@@ -178,37 +180,48 @@ class PrivateChats:
             self.ui_callback.send_message(user, ui_message)
 
     def get_user_status(self, msg):
+        """ Server code: 7 """
+
         if self.ui_callback:
             self.ui_callback.get_user_status(msg)
 
-    def message_user(self, msg):
+    def message_user(self, msg, should_log=True):
+        """ Server code: 22 """
+
+        user = msg.user
+
+        if should_log:
+            log.add_chat(_("Private message from user '%(user)s': %(message)s"), {
+                "user": user,
+                "message": msg.msg
+            })
 
         self.queue.append(slskmessages.MessageAcked(msg.msgid))
 
-        if msg.user != "server":
+        if user != "server":
             # Check ignore status for all other users except "server"
-            if self.core.network_filter.is_user_ignored(msg.user):
+            if self.core.network_filter.is_user_ignored(user):
                 return
 
-            user_address = self.core.protothread.user_addresses.get(msg.user)
+            user_address = self.core.protothread.user_addresses.get(user)
 
             if user_address is not None:
                 ip_address, _port = user_address
                 if self.core.network_filter.is_ip_ignored(ip_address):
                     return
 
-            elif msg.newmessage:
-                self.queue.append(slskmessages.GetPeerAddress(msg.user))
+            else:
+                self.queue.append(slskmessages.GetPeerAddress(user))
                 self.private_message_queue_add(msg)
                 return
 
-        user_text = self.core.pluginhandler.incoming_private_chat_event(msg.user, msg.msg)
+        user_text = self.core.pluginhandler.incoming_private_chat_event(user, msg.msg)
         if user_text is None:
             return
 
-        self.show_user(msg.user, switch_page=False)
+        self.show_user(user, switch_page=False)
 
-        _, msg.msg = user_text
+        _user, msg.msg = user_text
         msg.msg = self.censor_chat(msg.msg)
 
         # SEND CLIENT VERSION to user if the following string is sent
@@ -220,16 +233,32 @@ class PrivateChats:
         if self.ui_callback:
             self.ui_callback.message_user(msg)
 
-        self.core.pluginhandler.incoming_private_chat_notification(msg.user, msg.msg)
+        self.core.pluginhandler.incoming_private_chat_notification(user, msg.msg)
 
         if ctcpversion and not self.config.sections["server"]["ctcpmsgs"]:
-            self.send_message(msg.user, "%s %s" % (self.config.application_name, self.config.version))
+            self.send_message(user, "%s %s" % (self.config.application_name, self.config.version))
+
+        if not msg.newmessage:
+            # Message was sent while offline, don't auto-reply
+            return
 
         autoreply = self.config.sections["server"]["autoreply"]
 
-        if autoreply and self.core.away and msg.user not in self.away_message_users:
-            self.send_automatic_message(msg.user, autoreply)
-            self.away_message_users.add(msg.user)
+        if autoreply and self.core.away and user not in self.away_message_users:
+            self.send_automatic_message(user, autoreply)
+            self.away_message_users.add(user)
+
+    def p_message_user(self, msg):
+        """ Peer code: 22 """
+
+        username = msg.init.target_user
+
+        if username != msg.user:
+            msg.msg = _("(Warning: %(realuser)s is attempting to spoof %(fakeuser)s) ") % {
+                "realuser": username, "fakeuser": msg.user} + msg.msg
+            msg.user = username
+
+        self.message_user(msg)
 
     def update_completions(self):
 

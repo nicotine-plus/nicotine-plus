@@ -39,20 +39,17 @@ from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
 from pynicotine.gtkgui.widgets.filechooser import FileChooserSave
 from pynicotine.gtkgui.widgets.filechooser import FolderChooser
-from pynicotine.gtkgui.widgets.dialogs import dialog_hide
-from pynicotine.gtkgui.widgets.dialogs import dialog_show
+from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
-from pynicotine.gtkgui.widgets.dialogs import generic_dialog
 from pynicotine.gtkgui.widgets.dialogs import MessageDialog
-from pynicotine.gtkgui.widgets.dialogs import set_dialog_properties
+from pynicotine.gtkgui.widgets.dialogs import PluginSettingsDialog
 from pynicotine.gtkgui.widgets.textview import TextView
-from pynicotine.gtkgui.widgets.theme import get_icon
+from pynicotine.gtkgui.widgets.theme import load_custom_icons
 from pynicotine.gtkgui.widgets.theme import set_dark_mode
 from pynicotine.gtkgui.widgets.theme import set_global_font
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.ui import UserInterface
-from pynicotine.logfacility import log
 from pynicotine.utils import open_file_path
 from pynicotine.utils import open_uri
 from pynicotine.utils import unescape
@@ -227,7 +224,7 @@ class DownloadsFrame(UserInterface):
          self.DownloadDir, self.DownloadDoubleClick, self.DownloadFilter, self.DownloadReverseOrder,
          self.DownloadSpeed, self.DownloadSpeedAlternative, self.FilterView, self.IncompleteDir,
          self.Main, self.RemoteDownloads, self.UploadDir, self.UploadsAllowed,
-         self.UsernameSubfolders, self.VerifiedLabel, self.VerifyFilters) = self.widgets
+         self.UsernameSubfolders, self.VerifiedLabel) = self.widgets
 
         self.preferences = preferences
         self.frame = preferences.frame
@@ -240,7 +237,7 @@ class DownloadsFrame(UserInterface):
             self.frame, parent=self.FilterView, multi_select=True, activate_row_callback=self.on_edit_filter,
             columns=[
                 {"column_id": "filter", "column_type": "text", "title": _("Filter"), "sort_column": 0,
-                 "expand_column": True},
+                 "width": 1, "expand_column": True},
                 {"column_id": "escaped", "column_type": "toggle", "title": _("Escaped"), "width": 0,
                  "sort_column": 1, "toggle_callback": self.on_toggle_escaped}
             ]
@@ -404,26 +401,23 @@ class DownloadsFrame(UserInterface):
             if escaped:
                 dfilter = re.escape(dfilter)
                 dfilter = dfilter.replace("\\*", ".*")
-            else:
-                # Avoid "Nothing to repeat" error
-                dfilter = dfilter.replace("*", "\\*").replace("+", "\\+")
 
             try:
                 re.compile("(" + dfilter + ")")
                 outfilter += dfilter
 
-            except Exception as error:
-                failed[dfilter] = error
+                if dfilter != list(self.filter_list_view.iterators)[-1]:
+                    outfilter += "|"
 
-            if filter is not list(self.filter_list_view.iterators.keys())[-1]:
-                outfilter += "|"
+            except re.error as error:
+                failed[dfilter] = error
 
         outfilter += ")$)"
 
         try:
             re.compile(outfilter)
 
-        except Exception as error:
+        except re.error as error:
             failed[outfilter] = error
 
         if failed:
@@ -456,6 +450,7 @@ class SharesFrame(UserInterface):
 
         self.preferences = preferences
         self.frame = preferences.frame
+        self.core = preferences.core
 
         self.rescan_required = False
         self.shareddirs = []
@@ -489,11 +484,11 @@ class SharesFrame(UserInterface):
         self.shareddirs = config.sections["transfers"]["shared"][:]
         self.bshareddirs = config.sections["transfers"]["buddyshared"][:]
 
-        for virtual, actual, *_unused in self.bshareddirs:
-            self.shares_list_view.add_row([str(virtual), str(actual), True], select_row=False)
+        for virtual, folder, *_unused in self.bshareddirs:
+            self.shares_list_view.add_row([str(virtual), str(folder), True], select_row=False)
 
-        for virtual, actual, *_unused in self.shareddirs:
-            self.shares_list_view.add_row([str(virtual), str(actual), False], select_row=False)
+        for virtual, folder, *_unused in self.shareddirs:
+            self.shares_list_view.add_row([str(virtual), str(folder), False], select_row=False)
 
         self.rescan_required = False
 
@@ -541,20 +536,11 @@ class SharesFrame(UserInterface):
         if folder in (x[1] for x in self.shareddirs + self.bshareddirs):
             return
 
-        virtual = os.path.basename(os.path.normpath(folder))
-
-        # Remove slashes from share name to avoid path conflicts
-        virtual = virtual.replace('/', '_').replace('\\', '_')
-        virtual_final = virtual
-
-        # If the virtual share name is not already used
-        counter = 1
-        while virtual_final in (x[0] for x in self.shareddirs + self.bshareddirs):
-            virtual_final = virtual + str(counter)
-            counter += 1
-
-        self.shares_list_view.add_row([virtual_final, folder, False])
-        self.shareddirs.append((virtual_final, folder))
+        virtual = self.core.shares.get_normalized_virtual_name(
+            os.path.basename(os.path.normpath(folder)), shared_folders=(self.shareddirs + self.bshareddirs)
+        )
+        self.shares_list_view.add_row([virtual, folder, False])
+        self.shareddirs.append((virtual, folder))
         self.rescan_required = True
 
     def on_add_shared_dir_selected(self, selected, _data):
@@ -579,24 +565,24 @@ class SharesFrame(UserInterface):
         if not virtual:
             return
 
-        # Remove slashes from share name to avoid path conflicts
-        virtual = virtual.replace('/', '_').replace('\\', '_')
-        directory = self.shares_list_view.get_row_value(iterator, 1)
-        oldvirtual = self.shares_list_view.get_row_value(iterator, 0)
-        oldmapping = (oldvirtual, directory)
-        newmapping = (virtual, directory)
+        virtual = self.core.shares.get_normalized_virtual_name(
+            virtual, shared_folders=(self.shareddirs + self.bshareddirs)
+        )
+        folder = self.shares_list_view.get_row_value(iterator, 1)
+        old_virtual = self.shares_list_view.get_row_value(iterator, 0)
+        old_mapping = (old_virtual, folder)
+        new_mapping = (virtual, folder)
 
-        self.set_shared_dir_buddy_only(iterator, buddy_only)
-        self.shares_list_view.set_row_value(iterator, 0, virtual)
-
-        if oldmapping in self.bshareddirs:
+        if old_mapping in self.bshareddirs:
             shared_dirs = self.bshareddirs
         else:
             shared_dirs = self.shareddirs
 
-        shared_dirs.remove(oldmapping)
-        shared_dirs.append(newmapping)
+        shared_dirs.remove(old_mapping)
+        shared_dirs.append(new_mapping)
 
+        self.shares_list_view.set_row_value(iterator, 0, virtual)
+        self.set_shared_dir_buddy_only(iterator, buddy_only)
         self.rescan_required = True
 
     def on_edit_shared_dir(self, *_args):
@@ -624,8 +610,8 @@ class SharesFrame(UserInterface):
 
         for iterator in iterators:
             virtual = self.shares_list_view.get_row_value(iterator, 0)
-            actual = self.shares_list_view.get_row_value(iterator, 1)
-            mapping = (virtual, actual)
+            folder = self.shares_list_view.get_row_value(iterator, 1)
+            mapping = (virtual, folder)
 
             if mapping in self.bshareddirs:
                 self.bshareddirs.remove(mapping)
@@ -645,7 +631,7 @@ class UploadsFrame(UserInterface):
         super().__init__("ui/settings/uploads.ui")
 
         # pylint: disable=invalid-name
-        (self.AutoclearFinished, self.FirstInFirstOut, self.FriendsNoLimits, self.Limit, self.LimitPerTransfer,
+        (self.AutoclearFinished, self.FirstInFirstOut, self.FriendsNoLimits, self.Limit,
          self.LimitSpeed, self.LimitSpeedAlternative, self.LimitTotalTransfers, self.Main, self.MaxUserFiles,
          self.MaxUserQueue, self.PreferFriends, self.QueueBandwidth, self.QueueSlots, self.QueueUseBandwidth,
          self.QueueUseSlots, self.UploadDoubleClick) = self.widgets
@@ -733,7 +719,7 @@ class UserInfoFrame(UserInterface):
         start = buffer.get_start_iter()
         end = buffer.get_end_iter()
 
-        descr = buffer.get_text(start, end, True).replace("; ", ", ").__repr__()
+        descr = repr(buffer.get_text(start, end, True).replace("; ", ", "))
 
         return {
             "userinfo": {
@@ -771,7 +757,7 @@ class IgnoredUsersFrame(UserInterface):
             self.frame, parent=self.IgnoredIPs, multi_select=True,
             columns=[
                 {"column_id": "ip_address", "column_type": "text", "title": _("IP Address"), "sort_column": 0,
-                 "expand_column": True},
+                 "width": 50, "expand_column": True},
                 {"column_id": "user", "column_type": "text", "title": _("User"), "sort_column": 1,
                  "expand_column": True}
             ]
@@ -898,7 +884,7 @@ class BannedUsersFrame(UserInterface):
             self.frame, parent=self.BlockedList, multi_select=True,
             columns=[
                 {"column_id": "ip_address", "column_type": "text", "title": _("IP Address"), "sort_column": 0,
-                 "expand_column": True},
+                 "width": 50, "expand_column": True},
                 {"column_id": "user", "column_type": "text", "title": _("User"), "sort_column": 1,
                  "expand_column": True}
             ]
@@ -1029,14 +1015,14 @@ class ChatsFrame(UserInterface):
 
         # pylint: disable=invalid-name
         (self.CensorCheck, self.CensorList,
-         self.CensorReplaceCombo, self.CharactersCompletion, self.ChatRoomFormat, self.ChatRoomFormatLabel,
+         self.CensorReplaceCombo, self.CharactersCompletion, self.ChatRoomFormat,
          self.CompleteAliasesCheck, self.CompleteBuddiesCheck, self.CompleteCommandsCheck, self.CompleteRoomNamesCheck,
          self.CompleteUsersInRoomsCheck, self.CompletionCycleCheck, self.CompletionDropdownCheck,
-         self.CompletionTabCheck, self.Main, self.OneMatchCheck, self.PrivateChatFormat, self.PrivateChatFormatLabel,
-         self.PrivateLogLines, self.PrivateMessage, self.PrivateMessageLabel,
+         self.CompletionTabCheck, self.Main, self.OneMatchCheck, self.PrivateChatFormat,
+         self.PrivateLogLines, self.PrivateMessage,
          self.ReopenPrivateChats, self.ReplaceCheck, self.ReplacementList,
-         self.RoomLogLines, self.RoomMessage, self.RoomMessageLabel, self.SpellCheck,
-         self.TTSCommand, self.TTSCommandLabel, self.TextToSpeech) = self.widgets
+         self.RoomLogLines, self.RoomMessage, self.SpellCheck,
+         self.TTSCommand, self.TextToSpeech) = self.widgets
 
         self.preferences = preferences
         self.frame = preferences.frame
@@ -1055,7 +1041,7 @@ class ChatsFrame(UserInterface):
             self.frame, parent=self.ReplacementList, multi_select=True, activate_row_callback=self.on_edit_replacement,
             columns=[
                 {"column_id": "pattern", "column_type": "text", "title": _("Pattern"), "sort_column": 0,
-                 "expand_column": True},
+                 "width": 100, "expand_column": True},
                 {"column_id": "replacement", "column_type": "text", "title": _("Replacement"), "sort_column": 1,
                  "expand_column": True}
             ]
@@ -1166,9 +1152,6 @@ class ChatsFrame(UserInterface):
 
     def on_default_rooms(self, *_args):
         self.RoomMessage.set_text(config.defaults["ui"]["speechrooms"])
-
-    def on_default_tts(self, *_args):
-        self.TTSCommand.get_child().set_text(config.defaults["ui"]["speechcommand"])
 
     def on_room_default_timestamp(self, *_args):
         self.ChatRoomFormat.set_text(config.defaults["logging"]["rooms_timestamp"])
@@ -1301,27 +1284,24 @@ class UserInterfaceFrame(UserInterface):
         super().__init__("ui/settings/userinterface.ui")
 
         # pylint: disable=invalid-name
-        (self.BrowserFontLabel, self.ChatFontLabel, self.ChatRoomsPosition, self.CloseAction, self.DarkMode,
-         self.DefaultAway, self.DefaultBackground, self.DefaultBrowserFont, self.DefaultChangedTab,
-         self.DefaultChatFont, self.DefaultGlobalFont, self.DefaultHighlight, self.DefaultHighlightTab,
-         self.DefaultImmediate, self.DefaultInput, self.DefaultListFont, self.DefaultLocal, self.DefaultMe,
-         self.DefaultOffline, self.DefaultOnline, self.DefaultQueue, self.DefaultRegularTab, self.DefaultRemote,
-         self.DefaultSearchFont, self.DefaultTheme, self.DefaultTransfersFont, self.DefaultURL, self.EnableChatroomsTab,
+        (self.ChatRoomsPosition, self.CloseAction, self.DarkMode,
+         self.DefaultBrowserFont, self.DefaultChatFont, self.DefaultGlobalFont, self.DefaultListFont,
+         self.DefaultSearchFont, self.DefaultTheme, self.DefaultTransfersFont, self.EnableChatroomsTab,
          self.EnableDownloadsTab, self.EnableInterestsTab, self.EnablePrivateTab, self.EnableSearchTab,
          self.EnableUploadsTab, self.EnableUserBrowseTab, self.EnableUserInfoTab, self.EnableUserListTab,
          self.EntryAway, self.EntryBackground, self.EntryChangedTab, self.EntryHighlight, self.EntryHighlightTab,
          self.EntryImmediate, self.EntryInput, self.EntryLocal, self.EntryMe, self.EntryOffline, self.EntryOnline,
          self.EntryQueue, self.EntryRegularTab, self.EntryRemote, self.EntryURL, self.FilePathTooltips,
-         self.GlobalFontLabel, self.IconView, self.ListFontLabel, self.Main, self.MainPosition,
+         self.IconView, self.Main, self.MainPosition,
          self.NotificationPopupChatroom, self.NotificationPopupChatroomMention, self.NotificationPopupFile,
          self.NotificationPopupFolder, self.NotificationPopupPrivateMessage, self.NotificationPopupSound,
          self.NotificationTabColors, self.NotificationWindowTitle, self.PickAway, self.PickBackground,
          self.PickChangedTab, self.PickHighlight, self.PickHighlightTab, self.PickImmediate, self.PickInput,
          self.PickLocal, self.PickMe, self.PickOffline, self.PickOnline, self.PickQueue, self.PickRegularTab,
-         self.PickRemote, self.PickURL, self.PrivateChatPosition, self.ReverseFilePaths, self.SearchFontLabel,
+         self.PickRemote, self.PickURL, self.PrivateChatPosition, self.ReverseFilePaths,
          self.SearchPosition, self.SelectBrowserFont, self.SelectChatFont, self.SelectGlobalFont, self.SelectListFont,
          self.SelectSearchFont, self.SelectTransfersFont, self.StartupHidden, self.TabClosers, self.TabSelectPrevious,
-         self.TabStatusIcons, self.ThemeDir, self.TransfersFontLabel, self.TraySettings, self.TrayiconCheck,
+         self.TabStatusIcons, self.ThemeDir, self.TraySettings, self.TrayiconCheck,
          self.UserBrowsePosition, self.UserInfoPosition, self.UsernameHotspots,
          self.UsernameStyle) = self.widgets
 
@@ -1353,25 +1333,24 @@ class UserInterfaceFrame(UserInterface):
 
         # Icon preview
         icon_list = [
-            (get_icon("online"), _("Connected"), 16),
-            (get_icon("offline"), _("Disconnected"), 16),
-            (get_icon("away"), _("Away"), 16),
-            (get_icon("hilite"), _("Highlight"), 16),
-            (get_icon("hilite3"), _("Highlight"), 16),
-            (get_icon("n"), _("Window"), 64),
-            (get_icon("notify"), _("Notification"), 64)]
+            ("nplus-status-online", _("Connected"), 16),
+            ("nplus-status-offline", _("Disconnected"), 16),
+            ("nplus-status-away", _("Away"), 16),
+            ("nplus-hilite", _("Highlight"), 16),
+            ("nplus-hilite3", _("Highlight"), 16),
+            (config.application_id, _("Window"), 64)]
 
         if self.frame.tray_icon.available:
             icon_list += [
-                (get_icon("trayicon_connect"), _("Connected (Tray)"), 16),
-                (get_icon("trayicon_disconnect"), _("Disconnected (Tray)"), 16),
-                (get_icon("trayicon_away"), _("Away (Tray)"), 16),
-                (get_icon("trayicon_msg"), _("Message (Tray)"), 16)]
+                (config.application_id + "-connect", _("Connected (Tray)"), 16),
+                (config.application_id + "-disconnect", _("Disconnected (Tray)"), 16),
+                (config.application_id + "-away", _("Away (Tray)"), 16),
+                (config.application_id + "-msg", _("Message (Tray)"), 16)]
 
-        for icon_data, label, pixel_size in icon_list:
+        for icon_name, label, pixel_size in icon_list:
             box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, valign=Gtk.Align.CENTER, spacing=6, visible=True)
-            icon = Gtk.Image(gicon=icon_data, pixel_size=pixel_size, visible=True)
-            label = Gtk.Label(label=label, visible=True)
+            icon = Gtk.Image(icon_name=icon_name, pixel_size=pixel_size, visible=True)
+            label = Gtk.Label(label=label, xalign=0.5, wrap=True, visible=True)
 
             if GTK_API_VERSION >= 4:
                 box.append(icon)   # pylint: disable=no-member
@@ -1546,6 +1525,7 @@ class UserInterfaceFrame(UserInterface):
 
     def on_default_theme(self, *_args):
         self.theme_dir.clear()
+        self.theme_required = True
 
     """ Fonts """
 
@@ -1595,9 +1575,9 @@ class UserInterfaceFrame(UserInterface):
         entry = getattr(self, Gtk.Buildable.get_name(widget).replace("Pick", "Entry"))
         entry.set_text(color)
 
-    def on_default_color(self, widget):
+    def on_default_color(self, widget, *_args):
 
-        entry = getattr(self, Gtk.Buildable.get_name(widget).replace("Default", "Entry"))
+        entry = getattr(self, Gtk.Buildable.get_name(widget))
 
         for section, section_options in self.options.items():
             for key, value in section_options.items():
@@ -1626,7 +1606,7 @@ class LoggingFrame(UserInterface):
         super().__init__("ui/settings/log.ui")
 
         # pylint: disable=invalid-name
-        (self.DebugLogDir, self.DefaultTimestamp, self.LogDebug, self.LogFileFormat,
+        (self.DebugLogDir, self.LogDebug, self.LogFileFormat,
          self.LogPrivate, self.LogRooms, self.LogTransfers, self.Main, self.PrivateLogDir,
          self.RoomLogDir, self.TransfersLogDir) = self.widgets
 
@@ -1791,8 +1771,7 @@ class UrlHandlersFrame(UserInterface):
         super().__init__("ui/settings/urlhandlers.ui")
 
         # pylint: disable=invalid-name
-        (self.FileManagerCombo, self.FileManagerLabel, self.Main, self.ProtocolHandlers, self.audioPlayerCombo,
-         self.audioPlayerLabel) = self.widgets
+        (self.FileManagerCombo, self.Main, self.ProtocolHandlers, self.audioPlayerCombo) = self.widgets
 
         self.preferences = preferences
         self.frame = preferences.frame
@@ -1836,7 +1815,7 @@ class UrlHandlersFrame(UserInterface):
             self.frame, parent=self.ProtocolHandlers, multi_select=True, activate_row_callback=self.on_edit_handler,
             columns=[
                 {"column_id": "protocol", "column_type": "text", "title": _("Protocol"), "sort_column": 0,
-                 "expand_column": True, "iterator_key": True},
+                 "width": 1, "expand_column": True, "iterator_key": True},
                 {"column_id": "command", "column_type": "text", "title": _("Command"), "sort_column": 1,
                  "expand_column": True}
             ]
@@ -2116,321 +2095,6 @@ class NowPlayingFrame(UserInterface):
 
 class PluginsFrame(UserInterface):
 
-    """ Plugin preferences dialog """
-
-    class PluginPreferencesDialog(Gtk.Dialog):
-        """ Class used to build a custom dialog for the plugins """
-
-        def __init__(self, parent, name):
-
-            self.settings = parent.preferences
-            self.frame = parent.frame
-
-            # Build the window
-            Gtk.Dialog.__init__(
-                self,
-                title=_("%s Settings") % name,
-                modal=True,
-                default_width=600,
-                default_height=425,
-                use_header_bar=config.sections["ui"]["header_bar"]
-            )
-            set_dialog_properties(self, self.settings.dialog)
-            self.get_style_context().add_class("preferences")
-
-            self.add_buttons(
-                _("Cancel"), Gtk.ResponseType.CANCEL, _("OK"), Gtk.ResponseType.OK
-            )
-
-            self.set_default_response(Gtk.ResponseType.OK)
-            self.connect("response", self.on_response)
-
-            self.primary_container = Gtk.Box(
-                orientation=Gtk.Orientation.VERTICAL, width_request=340, visible=True,
-                margin_top=14, margin_bottom=14, margin_start=18, margin_end=18, spacing=12
-            )
-
-            scrolled_window = Gtk.ScrolledWindow(
-                hexpand=True, vexpand=True, min_content_height=300,
-                hscrollbar_policy=Gtk.PolicyType.NEVER, vscrollbar_policy=Gtk.PolicyType.AUTOMATIC, visible=True
-            )
-            scrolled_window.set_property("child", self.primary_container)
-
-            if GTK_API_VERSION >= 4:
-                self.get_content_area().append(scrolled_window)  # pylint: disable=no-member
-            else:
-                self.get_content_area().add(scrolled_window)     # pylint: disable=no-member
-
-            self.option_widgets = {}
-            self.options = {}
-            self.plugin = None
-
-        @staticmethod
-        def generate_label(text):
-            return Gtk.Label(label=text, use_markup=True, hexpand=True, wrap=True, xalign=0, visible=bool(text))
-
-        def generate_widget_container(self, description, child_widget, vertical=False):
-
-            container = Gtk.Box(spacing=12, visible=True)
-
-            if vertical:
-                container.set_orientation(Gtk.Orientation.VERTICAL)
-
-            label = self.generate_label(description)
-
-            if GTK_API_VERSION >= 4:
-                container.append(label)                   # pylint: disable=no-member
-                container.append(child_widget)            # pylint: disable=no-member
-                self.primary_container.append(container)  # pylint: disable=no-member
-            else:
-                container.add(label)                   # pylint: disable=no-member
-                container.add(child_widget)            # pylint: disable=no-member
-                self.primary_container.add(container)  # pylint: disable=no-member
-
-            return label
-
-        def generate_tree_view(self, name, description, value):
-
-            container = Gtk.Box(spacing=6, visible=True)
-            frame_container = Gtk.Frame(visible=True)
-
-            scrolled_window = Gtk.ScrolledWindow(
-                hexpand=True, vexpand=True, min_content_height=125,
-                hscrollbar_policy=Gtk.PolicyType.AUTOMATIC, vscrollbar_policy=Gtk.PolicyType.AUTOMATIC, visible=True
-            )
-
-            self.option_widgets[name] = treeview = TreeView(
-                self.frame, parent=scrolled_window,
-                columns=[
-                    {"column_id": description, "column_type": "text", "title": description, "sort_column": 0}
-                ]
-            )
-            frame_container.set_property("child", scrolled_window)
-            self.settings.set_widget(treeview, value)
-
-            box = Gtk.Box(spacing=6, visible=True)
-
-            add_button = Gtk.Button(label=_("Add…"), visible=True)
-            add_button.connect("clicked", self.on_add, treeview, description)
-
-            edit_button = Gtk.Button(label=_("Edit…"), visible=True)
-            edit_button.connect("clicked", self.on_edit, treeview, description)
-
-            remove_button = Gtk.Button(label=_("Remove"), visible=True)
-            remove_button.connect("clicked", self.on_remove, treeview)
-
-            if GTK_API_VERSION >= 4:
-                box.append(add_button)                    # pylint: disable=no-member
-                box.append(edit_button)                   # pylint: disable=no-member
-                box.append(remove_button)                 # pylint: disable=no-member
-
-                self.primary_container.append(container)  # pylint: disable=no-member
-                self.primary_container.append(box)        # pylint: disable=no-member
-
-                container.append(frame_container)         # pylint: disable=no-member
-            else:
-                box.add(add_button)                    # pylint: disable=no-member
-                box.add(edit_button)                   # pylint: disable=no-member
-                box.add(remove_button)                 # pylint: disable=no-member
-
-                self.primary_container.add(container)  # pylint: disable=no-member
-                self.primary_container.add(box)        # pylint: disable=no-member
-
-                container.add(frame_container)         # pylint: disable=no-member
-
-        def add_options(self, plugin, options=None):
-
-            if options is None:
-                options = {}
-
-            self.options = options
-            self.plugin = plugin
-            config_name = plugin.lower()
-
-            for name, data in options.items():
-                if config_name not in config.sections["plugins"]:
-                    continue
-
-                if name not in config.sections["plugins"][config_name]:
-                    continue
-
-                value = config.sections["plugins"][config_name][name]
-
-                if data["type"] in ("integer", "int", "float"):
-                    minimum = data.get("minimum") or 0
-                    maximum = data.get("maximum") or 99999
-                    stepsize = data.get("stepsize") or 1
-                    decimals = 2
-
-                    if data["type"] in ("integer", "int"):
-                        decimals = 0
-
-                    self.option_widgets[name] = button = Gtk.SpinButton(
-                        adjustment=Gtk.Adjustment(
-                            value=0, lower=minimum, upper=maximum, step_increment=stepsize, page_increment=10,
-                            page_size=0
-                        ),
-                        climb_rate=1, digits=decimals, valign=Gtk.Align.CENTER, visible=True
-                    )
-
-                    label = self.generate_widget_container(data["description"], button)
-                    label.set_mnemonic_widget(button)
-                    self.settings.set_widget(button, config.sections["plugins"][config_name][name])
-
-                elif data["type"] in ("bool",):
-                    self.option_widgets[name] = button = Gtk.CheckButton(label=data["description"], visible=True)
-                    self.generate_widget_container("", button)
-                    self.settings.set_widget(button, config.sections["plugins"][config_name][name])
-
-                    if GTK_API_VERSION >= 4:
-                        button.get_last_child().set_wrap(True)  # pylint: disable=no-member
-                    else:
-                        button.get_child().set_line_wrap(True)  # pylint: disable=no-member
-
-                elif data["type"] in ("radio",):
-                    box = Gtk.Box(spacing=6, orientation=Gtk.Orientation.VERTICAL, visible=True)
-                    label = self.generate_widget_container(data["description"], box)
-
-                    last_radio = None
-                    group_radios = []
-
-                    for option_label in data["options"]:
-                        widget_class = Gtk.CheckButton if GTK_API_VERSION >= 4 else Gtk.RadioButton
-                        radio = widget_class(group=last_radio, label=option_label, visible=True)
-
-                        if not last_radio:
-                            self.option_widgets[name] = radio
-
-                        last_radio = radio
-                        group_radios.append(radio)
-
-                        if GTK_API_VERSION >= 4:
-                            box.append(radio)  # pylint: disable=no-member
-                        else:
-                            box.add(radio)     # pylint: disable=no-member
-
-                    label.set_mnemonic_widget(self.option_widgets[name])
-                    self.option_widgets[name].group_radios = group_radios
-                    self.settings.set_widget(self.option_widgets[name], config.sections["plugins"][config_name][name])
-
-                elif data["type"] in ("dropdown",):
-                    self.option_widgets[name] = combobox = Gtk.ComboBoxText(valign=Gtk.Align.CENTER, visible=True)
-                    label = self.generate_widget_container(data["description"], combobox)
-                    label.set_mnemonic_widget(combobox)
-
-                    for text_label in data["options"]:
-                        combobox.append_text(text_label)
-
-                    self.settings.set_widget(combobox, config.sections["plugins"][config_name][name])
-
-                elif data["type"] in ("str", "string"):
-                    self.option_widgets[name] = entry = Gtk.Entry(hexpand=True, valign=Gtk.Align.CENTER, visible=True)
-                    label = self.generate_widget_container(data["description"], entry)
-                    label.set_mnemonic_widget(entry)
-
-                    self.settings.set_widget(entry, config.sections["plugins"][config_name][name])
-
-                elif data["type"] in ("textview",):
-                    frame_container = Gtk.Frame(visible=True)
-                    self.option_widgets[name] = textview = Gtk.TextView(
-                        accepts_tab=False, pixels_above_lines=1, pixels_below_lines=1,
-                        left_margin=8, right_margin=8, top_margin=5, bottom_margin=5,
-                        wrap_mode=Gtk.WrapMode.WORD_CHAR, visible=True
-                    )
-                    label = self.generate_widget_container(data["description"], frame_container, vertical=True)
-                    label.set_mnemonic_widget(textview)
-                    self.settings.set_widget(textview, config.sections["plugins"][config_name][name])
-
-                    scrolled_window = Gtk.ScrolledWindow(hexpand=True, vexpand=True, min_content_height=125,
-                                                         visible=True)
-
-                    frame_container.set_property("child", scrolled_window)
-                    scrolled_window.set_property("child", textview)
-
-                elif data["type"] in ("list string",):
-                    self.generate_tree_view(name, data["description"], value)
-
-                elif data["type"] in ("file",):
-                    button_widget = Gtk.Button(hexpand=True, valign=Gtk.Align.CENTER, visible=True)
-                    label = self.generate_widget_container(data["description"], button_widget)
-
-                    try:
-                        chooser = data["chooser"]
-                    except KeyError:
-                        chooser = None
-
-                    self.option_widgets[name] = FileChooserButton(button_widget, self, chooser)
-                    label.set_mnemonic_widget(button_widget)
-
-                    self.settings.set_widget(self.option_widgets[name], config.sections["plugins"][config_name][name])
-
-                else:
-                    log.add_debug("Unknown setting type '%s', data '%s'", (name, data))
-
-        @staticmethod
-        def on_add_response(dialog, _response_id, treeview):
-
-            value = dialog.get_entry_value()
-
-            if not value:
-                return
-
-            treeview.add_row([value])
-
-        def on_add(self, _widget, treeview, description):
-
-            EntryDialog(
-                parent=self,
-                title=description,
-                callback=self.on_add_response,
-                callback_data=treeview
-            ).show()
-
-        @staticmethod
-        def on_edit_response(dialog, _response_id, data):
-
-            value = dialog.get_entry_value()
-
-            if not value:
-                return
-
-            treeview, iterator = data
-            treeview.set_row_value(iterator, 0, value)
-
-        def on_edit(self, _widget, treeview, description):
-
-            for iterator in treeview.get_selected_rows():
-                value = treeview.get_row_value(iterator, 0)
-
-                EntryDialog(
-                    parent=self,
-                    title=description,
-                    callback=self.on_edit_response,
-                    callback_data=(treeview, iterator),
-                    default=value
-                ).show()
-                return
-
-        @staticmethod
-        def on_remove(_widget, treeview):
-            for iterator in reversed(treeview.get_selected_rows()):
-                treeview.remove_row(iterator)
-
-        def on_response(self, _dialog, response_id):
-
-            if response_id == Gtk.ResponseType.OK:
-                for name in self.options:
-                    value = self.settings.get_widget_data(self.option_widgets[name])
-                    if value is not None:
-                        config.sections["plugins"][self.plugin.lower()][name] = value
-
-                self.settings.core.pluginhandler.plugin_settings(
-                    self.plugin, self.settings.core.pluginhandler.enabled_plugins[self.plugin])
-
-            self.destroy()
-
-    """ Initialize plugin list """
-
     def __init__(self, preferences):
 
         super().__init__("ui/settings/plugin.ui")
@@ -2512,8 +2176,7 @@ class PluginsFrame(UserInterface):
 
         self.descr_textview.clear()
         self.descr_textview.append_line("%(description)s" % {
-            "description": info.get("Description", '').replace(r'\n', '\n')},
-            showstamp=False, scroll=False)
+            "description": info.get("Description", '').replace(r'\n', '\n')})
 
         self.check_properties_button(self.selected_plugin)
 
@@ -2557,22 +2220,22 @@ class PluginsFrame(UserInterface):
         if self.selected_plugin is None:
             return
 
-        plugin_info = self.core.pluginhandler.get_plugin_info(self.selected_plugin)
-        dialog = self.PluginPreferencesDialog(self, plugin_info.get("Name", self.selected_plugin))
-
-        dialog.add_options(
-            self.selected_plugin,
-            self.core.pluginhandler.get_plugin_settings(self.selected_plugin)
-        )
-
-        dialog_show(dialog)
+        PluginSettingsDialog(
+            self.frame,
+            self.preferences,
+            plugin_id=self.selected_plugin,
+            plugin_settings=self.core.pluginhandler.get_plugin_settings(self.selected_plugin)
+        ).show()
 
 
-class Preferences(UserInterface):
+class Preferences(UserInterface, Dialog):
 
     def __init__(self, frame, core):
 
-        super().__init__("ui/dialogs/preferences.ui")
+        self.frame = frame
+        self.core = core
+
+        UserInterface.__init__(self, "ui/dialogs/preferences.ui")
         (
             self.apply_button,
             self.cancel_button,
@@ -2584,27 +2247,26 @@ class Preferences(UserInterface):
             self.viewport
         ) = self.widgets
 
-        self.frame = frame
-        self.core = core
-        self.dialog = generic_dialog(
+        Dialog.__init__(
+            self,
             parent=frame.window,
             content_box=self.container,
             buttons=[(self.cancel_button, Gtk.ResponseType.CANCEL),
                      (self.export_button, Gtk.ResponseType.HELP),
                      (self.apply_button, Gtk.ResponseType.APPLY),
                      (self.ok_button, Gtk.ResponseType.OK)],
-            quit_callback=self.on_cancel,
+            default_response=Gtk.ResponseType.OK,
+            close_callback=self.on_close,
             title=_("Preferences"),
             width=960,
-            height=650
+            height=650,
+            close_destroy=False
         )
 
         # Scroll to focused widgets
         if GTK_API_VERSION == 3:
             self.viewport.set_focus_vadjustment(self.content.get_vadjustment())
-            self.ok_button.set_can_default(True)
 
-        self.dialog.set_default_response(Gtk.ResponseType.OK)
         self.dialog.get_style_context().add_class("preferences-border")
 
         self.pages = {}
@@ -2649,23 +2311,21 @@ class Preferences(UserInterface):
 
             scope = self
 
-        for widget in list(scope.__dict__.values()):
+        for widget in scope.__dict__.values():
             update_widget_visuals(widget)
 
-    def set_active_page(self, page):
+    def set_active_page(self, page_id):
 
-        if page is None:
+        if page_id is None:
             return
 
-        pos = 0
-        for page_id, _label, _icon_name in self.page_ids:
-            if page_id == page:
-                break
+        for index, (n_page_id, _label, _icon_name) in enumerate(self.page_ids):
+            if n_page_id != page_id:
+                continue
 
-            pos += 1
-
-        row = self.preferences_list.get_row_at_index(pos)
-        self.preferences_list.select_row(row)
+            row = self.preferences_list.get_row_at_index(index)
+            self.preferences_list.select_row(row)
+            break
 
     def set_widgets_data(self, options):
 
@@ -2910,6 +2570,10 @@ class Preferences(UserInterface):
             self.frame.update_visuals()
             self.update_visuals()
 
+            # Icons
+            load_custom_icons(update=True)
+            self.frame.tray_icon.update_icon_theme()
+
         if completion_required:
             self.frame.update_completions()
 
@@ -2942,11 +2606,10 @@ class Preferences(UserInterface):
         # Main notebook
         self.frame.set_tab_positions()
         self.frame.set_main_tabs_visibility()
+        self.frame.notebook.set_tab_text_colors()
 
         for i in range(self.frame.notebook.get_n_pages()):
             page = self.frame.notebook.get_nth_page(i)
-            tab_label = self.frame.notebook.get_tab_label(page)
-            tab_label.set_text(tab_label.get_text())
             self.frame.set_tab_expand(page)
 
         # Other notebooks
@@ -2967,7 +2630,7 @@ class Preferences(UserInterface):
         if rescan_required:
             self.core.shares.rescan_shares()
 
-        self.hide()
+        self.close()
 
         if not config.sections["ui"]["trayicon"]:
             self.frame.show()
@@ -3023,12 +2686,18 @@ class Preferences(UserInterface):
             self.pages[page_id] = page = getattr(sys.modules[__name__], page_id + "Frame")(self)
             page.set_settings()
 
-            for obj in page.__dict__.values():
+            for obj in page.widgets:
                 if isinstance(obj, Gtk.CheckButton):
                     if GTK_API_VERSION >= 4:
-                        obj.get_last_child().set_wrap(True)
+                        check_button_label = obj.get_last_child()
                     else:
-                        obj.get_child().set_line_wrap(True)
+                        check_button_label = obj.get_child()
+                        obj.set_receives_default(True)
+
+                    try:
+                        check_button_label.set_property("wrap", True)
+                    except AttributeError:
+                        pass
 
                 elif isinstance(obj, (Gtk.ComboBoxText, Gtk.SpinButton)):
                     if GTK_API_VERSION >= 4:
@@ -3041,6 +2710,17 @@ class Preferences(UserInterface):
                     if isinstance(obj, Gtk.ComboBoxText):
                         for cell in obj.get_cells():
                             cell.set_property("ellipsize", Pango.EllipsizeMode.END)
+
+                elif isinstance(obj, Gtk.FontButton):
+                    if GTK_API_VERSION >= 4:
+                        font_button_label = obj.get_first_child().get_first_child().get_first_child()
+                    else:
+                        font_button_label = obj.get_child().get_children()[0]
+
+                    try:
+                        font_button_label.set_ellipsize(Pango.EllipsizeMode.END)
+                    except AttributeError:
+                        pass
 
             page.Main.set_margin_start(18)
             page.Main.set_margin_end(18)
@@ -3055,23 +2735,13 @@ class Preferences(UserInterface):
         self.content.get_vadjustment().set_value(0)
 
     def on_cancel(self, *_args):
-        self.hide()
-        return True
+        self.close()
 
     def on_apply(self, *_args):
         self.update_settings()
-        return True
 
     def on_ok(self, *_args):
         self.update_settings(settings_closed=True)
-        return True
 
-    def hide(self):
-
-        # Scroll to the top
+    def on_close(self, *_args):
         self.content.get_vadjustment().set_value(0)
-
-        dialog_hide(self.dialog)
-
-    def show(self, *_args):
-        dialog_show(self.dialog)

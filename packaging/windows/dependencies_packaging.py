@@ -24,6 +24,7 @@ import subprocess
 
 
 ARCH = os.environ.get("ARCH") or "x86_64"
+CURRENT_PATH = os.path.dirname(os.path.abspath(__file__))
 
 
 def install_pacman():

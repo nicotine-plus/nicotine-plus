@@ -27,6 +27,7 @@
                           <object class="GtkSearchEntry" id="activity_search_entry">
                             <property name="visible">True</property>
                             <property name="max-width-chars">75</property>
+                            <property name="width-chars">24</property>
                           </object>
                         </child>
                       </object>
@@ -72,6 +73,7 @@
                           <object class="GtkSearchEntry" id="chat_search_entry">
                             <property name="visible">True</property>
                             <property name="max-width-chars">75</property>
+                            <property name="width-chars">24</property>
                           </object>
                         </child>
                       </object>
@@ -177,21 +179,22 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">Users</property>
-                        <property name="mnemonic_widget">users_button</property>
+                        <property name="label" bind-source="_users_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
                         <attributes>
                           <attribute name="weight" value="bold"/>
                         </attributes>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkButton" id="users_button">
+                      <object class="GtkButton" id="_users_button">
                         <property name="visible">True</property>
+                        <property name="tooltip-text" translatable="yes">Users</property>
                         <signal name="clicked" handler="on_ignore_users_settings"/>
                         <child>
                           <object class="GtkLabel" id="users_label">
                             <property name="visible">True</property>
                             <property name="label">0</property>
+                            <property name="mnemonic-widget">_users_button</property>
                             <attributes>
                               <attribute name="weight" value="bold"/>
                             </attributes>
@@ -243,7 +246,6 @@
                         <property name="visible">True</property>
                         <property name="hexpand">True</property>
                         <property name="use-underline">True</property>
-                        <signal name="toggled" handler="on_autojoin"/>
                       </object>
                     </child>
                     <child>
@@ -266,6 +268,7 @@
                                 <property name="ellipsize">end</property>
                                 <property name="label" translatable="yes">R_oom Wall</property>
                                 <property name="use-underline">True</property>
+                                <property name="mnemonic-widget">room_wall_button</property>
                               </object>
                             </child>
                           </object>

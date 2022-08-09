@@ -18,6 +18,7 @@
 
 import glob
 import os
+import time
 
 from collections import deque
 
@@ -27,6 +28,7 @@ from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.ui import UserInterface
+from pynicotine.utils import encode_path
 
 
 class ChatHistory(UserInterface):
@@ -51,7 +53,7 @@ class ChatHistory(UserInterface):
         CompletionEntry(frame.private_entry, self.list_view.model, column=0)
 
         if GTK_API_VERSION >= 4:
-            frame.private_history_button.get_first_child().get_style_context().add_class("arrow-button")
+            frame.private_history_button.get_first_child().add_css_class("arrow-button")
 
         frame.private_history_button.set_popover(self.popover)
         self.load_users()
@@ -59,7 +61,7 @@ class ChatHistory(UserInterface):
     def load_users(self):
 
         log_path = os.path.join(config.sections["logging"]["privatelogsdir"], "*.log")
-        user_logs = sorted(glob.glob(log_path.encode("utf-8")), key=os.path.getmtime, reverse=True)
+        user_logs = sorted(glob.glob(encode_path(log_path)), key=os.path.getmtime, reverse=True)
 
         for file_path in user_logs:
             username = os.path.basename(file_path[:-4]).decode("utf-8", "replace")
@@ -89,12 +91,18 @@ class ChatHistory(UserInterface):
         if iterator is not None:
             self.list_view.remove_row(iterator)
 
-    def update_user(self, username, message):
+    def update_user(self, username, message, add_timestamp=False):
+
         self.remove_user(username)
+
+        if add_timestamp:
+            timestamp_format = config.sections["logging"]["log_timestamp"]
+            message = "%s %s" % (time.strftime(timestamp_format), message)
+
         self.list_view.add_row([username, message], select_row=False)
 
     def update_visuals(self):
-        for widget in list(self.__dict__.values()):
+        for widget in self.__dict__.values():
             update_widget_visuals(widget)
 
     def on_row_activated(self, list_view, iterator):

@@ -29,24 +29,20 @@ from pynicotine.gtkgui.application import GTK_API_VERSION
 """ File Choosers """
 
 
-# We need to keep a reference to GtkFileChooserNative, as GTK does not keep it alive
-ACTIVE_CHOOSER = None
-
-
 class FileChooser:
+
+    active_chooser = None  # Class variable keeping the file chooser object alive
 
     def __init__(self, parent, callback, callback_data=None, title=_("Select a File"),
                  initial_folder='~', action=Gtk.FileChooserAction.OPEN, multiple=False):
 
-        global ACTIVE_CHOOSER  # pylint:disable=global-statement
-
-        self.file_chooser = ACTIVE_CHOOSER = Gtk.FileChooserNative(
+        self.file_chooser = Gtk.FileChooserNative(
             transient_for=parent,
             title=title,
             action=action
         )
 
-        self.file_chooser.connect("response", self.on_selected, callback, callback_data)
+        self.file_chooser.connect("response", self.on_response, callback, callback_data)
         self.file_chooser.set_modal(True)
         self.file_chooser.set_select_multiple(multiple)
 
@@ -65,17 +61,18 @@ class FileChooser:
         self.file_chooser.set_current_folder(initial_folder)
 
     @staticmethod
-    def on_selected(dialog, response_id, callback, callback_data):
+    def on_response(dialog, response_id, callback, callback_data):
 
         if dialog.get_select_multiple():
-            selected = [i.get_parse_name() for i in dialog.get_files()]
+            selected = [i.get_path() for i in dialog.get_files()]
 
         else:
             selected_file = dialog.get_file()
 
             if selected_file:
-                selected = selected_file.get_parse_name()
+                selected = selected_file.get_path()
 
+        FileChooser.active_chooser = None
         dialog.destroy()
 
         if response_id != Gtk.ResponseType.ACCEPT or not selected:
@@ -84,6 +81,7 @@ class FileChooser:
         callback(selected, callback_data)
 
     def show(self):
+        FileChooser.active_chooser = self
         self.file_chooser.show()
 
 
@@ -105,6 +103,7 @@ class ImageChooser(FileChooser):
 
         # Only show image files
         file_filter = Gtk.FileFilter()
+        file_filter.set_name(_("All images"))
         file_filter.add_pixbuf_formats()
         self.file_chooser.set_filter(file_filter)
 
@@ -120,16 +119,7 @@ class ImageChooser(FileChooser):
         path = chooser.get_preview_filename()
 
         try:
-            image_data = GdkPixbuf.Pixbuf.new_from_file(path)
-
-            maxwidth, maxheight = 300.0, 700.0
-            width, height = image_data.get_width(), image_data.get_height()
-            scale = min(maxwidth / width, maxheight / height)
-
-            if scale < 1:
-                width, height = int(width * scale), int(height * scale)
-                image_data = image_data.scale_simple(width, height, GdkPixbuf.InterpType.BILINEAR)
-
+            image_data = GdkPixbuf.Pixbuf.new_from_file_at_size(path, width=300, height=700)
             self.preview.set_from_pixbuf(image_data)
             chooser.set_preview_widget_active(True)
 
@@ -176,7 +166,7 @@ class FileChooserButton:
 
         self.icon = Gtk.Image(icon_name=icon_name, visible=True)
         self.label = Gtk.Label(label=_("(None)"), ellipsize=Pango.EllipsizeMode.END, width_chars=6,
-                               xalign=0, visible=True)
+                               mnemonic_widget=button, xalign=0, visible=True)
 
         box = Gtk.Box(spacing=6, visible=True)
 
@@ -239,8 +229,11 @@ class FileChooserButton:
             return
 
         self.path = path
+        self.button.set_tooltip_text(path)
         self.label.set_label(os.path.basename(path))
 
     def clear(self):
+
         self.path = ""
+        self.button.set_tooltip_text(None)
         self.label.set_label(_("(None)"))

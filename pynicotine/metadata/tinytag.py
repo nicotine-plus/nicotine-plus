@@ -125,13 +125,13 @@ class TinyTag(object):
         parser_class = None
         if self._mapping is None:
             self._mapping = {
-                ('.mp1', '.mp2', '.mp3'): ID3,
-                ('.oga', '.ogg', '.opus'): Ogg,
-                ('.wav',): Wave,
-                ('.flac',): Flac,
-                ('.wma',): Wma,
-                ('.m4b', '.m4a', '.m4r', '.m4v', '.mp4'): MP4,
-                ('.aiff', '.aifc', '.aif', '.afc'): Aiff,
+                (b'.mp1', b'.mp2', b'.mp3'): ID3,
+                (b'.oga', b'.ogg', b'.opus'): Ogg,
+                (b'.wav',): Wave,
+                (b'.flac',): Flac,
+                (b'.wma',): Wma,
+                (b'.m4b', b'.m4a', b'.m4r', b'.m4v', b'.mp4'): MP4,
+                (b'.aiff', b'.aifc', b'.aif', b'.afc'): Aiff,
             }
         for ext, tagclass in self._mapping.items():
             if filename.lower().endswith(ext):
@@ -549,7 +549,7 @@ class ID3(TinyTag):
         if header_flags & 2:  # BYTES FLAG
             byte_count = struct.unpack('>i', fh.read(4))[0]
         if header_flags & 4:  # TOC FLAG
-            toc = [struct.unpack('>i', fh.read(4))[0] for _ in range(100)]
+            toc = [struct.unpack('>i', fh.read(4))[0] for _ in range(25)]  # 100 bytes
         if header_flags & 8:  # VBR SCALE FLAG
             vbr_scale = struct.unpack('>i', fh.read(4))[0]
         return frames, byte_count, toc, vbr_scale

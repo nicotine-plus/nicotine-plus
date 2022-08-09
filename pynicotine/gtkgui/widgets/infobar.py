@@ -45,11 +45,6 @@ class InfoBar:
         self.set_visible(False)
 
     def set_visible(self, visible):
-
-        if GTK_API_VERSION >= 4:
-            # Workaround for infinite gtk_widget_measure loop when hiding info bar
-            self.revealer.set_visible(visible)
-
         self.revealer.set_reveal_child(visible)
 
     def show_message(self, message):

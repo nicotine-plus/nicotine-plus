@@ -62,20 +62,21 @@
                                     <child>
                                       <object class="GtkLabel">
                                         <property name="visible">True</property>
-                                        <property name="label" translatable="yes">Folders</property>
-                                        <property name="mnemonic_widget">num_folders_button</property>
+                                        <property name="label" bind-source="_num_folders_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
                                         <attributes>
                                           <attribute name="weight" value="bold"/>
                                         </attributes>
                                       </object>
                                     </child>
                                     <child>
-                                      <object class="GtkButton" id="num_folders_button">
+                                      <object class="GtkButton" id="_num_folders_button">
                                         <property name="visible">True</property>
+                                        <property name="tooltip-text" translatable="yes">Folders</property>
                                         <child>
                                           <object class="GtkLabel" id="num_folders_label">
                                             <property name="visible">True</property>
                                             <property name="label">0</property>
+                                            <property name="mnemonic-widget">_num_folders_button</property>
                                             <attributes>
                                               <attribute name="weight" value="bold"/>
                                             </attributes>
@@ -101,20 +102,21 @@
                                     <child>
                                       <object class="GtkLabel">
                                         <property name="visible">True</property>
-                                        <property name="label" translatable="yes">Shared</property>
-                                        <property name="mnemonic_widget">share_size_button</property>
+                                        <property name="label" bind-source="_share_size_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
                                         <attributes>
                                           <attribute name="weight" value="bold"/>
                                         </attributes>
                                       </object>
                                     </child>
                                     <child>
-                                      <object class="GtkButton" id="share_size_button">
+                                      <object class="GtkButton" id="_share_size_button">
                                         <property name="visible">True</property>
+                                        <property name="tooltip-text" translatable="yes">Shared</property>
                                         <child>
                                           <object class="GtkLabel" id="share_size_label">
                                             <property name="visible">True</property>
                                             <property name="label">0.0 B</property>
+                                            <property name="mnemonic-widget">_share_size_button</property>
                                             <attributes>
                                               <attribute name="weight" value="bold"/>
                                             </attributes>

@@ -63,13 +63,7 @@ class TreeView:
         self.widget.column_menu = PopupMenu(self.frame, self.widget, callback=self._press_header, connect_events=False)
 
         if multi_select:
-            if GTK_API_VERSION >= 4:
-                # Hotfix: disable rubber-band selection in GTK 4 to avoid crash bug
-                # when clicking column headers
-                self.widget.set_rubber_banding(False)
-            else:
-                self.widget.set_rubber_banding(True)
-
+            self.widget.set_rubber_banding(True)
             self.widget.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
 
         elif always_select:
@@ -85,31 +79,33 @@ class TreeView:
             self.widget.set_has_tooltip(True)
             self.widget.connect("query-tooltip", self.on_tooltip, tooltip_callback)
 
+        self.widget.set_fixed_height_mode(True)
+        self.widget.set_search_equal_func(self.on_search_match)
+        self.widget.get_style_context().add_class("treeview-spacing")
+
     def _append_columns(self, cols, column_config):
 
         # Column order not supported in Python 3.5
         if not column_config or sys.version_info[:2] <= (3, 5):
-            for column_id, column in cols.items():
+            for column in cols.values():
                 self.widget.append_column(column)
             return
 
         # Restore column order from config
         for column_id in column_config:
-            try:
-                self.widget.append_column(cols[column_id])
-            except Exception:
-                # Invalid column
+            column = cols.get(column_id)
+
+            if column is None:
                 continue
+
+            self.widget.append_column(column)
 
         added_columns = self.widget.get_columns()
 
         # If any columns were missing in the config, append them
-        pos = 0
-        for column_id, column in cols.items():
+        for index, column in enumerate(cols.values()):
             if column not in added_columns:
-                self.widget.insert_column(column, pos)
-
-            pos += 1
+                self.widget.insert_column(column, index)
 
     @staticmethod
     def _hide_columns(cols, column_config):
@@ -128,30 +124,23 @@ class TreeView:
     def _set_last_column_autosize(self, *_args):
 
         columns = self.widget.get_columns()
-        col_count = len(columns)
+        resizable_set = False
 
-        if col_count == 0:
-            return
+        for column in reversed(columns):
+            if not column.get_visible():
+                continue
 
-        prev_index = col_count - 1
-
-        # Make sure the width of the last visible column isn't fixed
-        for i in reversed(range(len(columns))):
-            prev_index -= 1
-
-            if columns[i].get_visible():
-                column = columns[i]
+            if not resizable_set:
+                # Make sure the last visible column isn't resizable
                 column.set_resizable(False)
                 column.set_fixed_width(-1)
-                break
 
-        """ If the column we toggled the visibility of is now the last visible one,
-        the previously last visible column should've resized to fit properly now,
-        since it was set to AUTOSIZE. We can now set the previous column to FIXED,
-        and make it resizable again. """
+                resizable_set = True
+                continue
 
-        prev_column = columns[prev_index]
-        prev_column.set_resizable(True)
+            # Make the previously last column resizable again
+            column.set_resizable(True)
+            break
 
     def _header_toggle(self, _action, _state, columns, index):
 
@@ -162,20 +151,14 @@ class TreeView:
     def _press_header(self, menu, _treeview):
 
         columns = self.widget.get_columns()
-
-        if len(columns) <= 1:
-            # Only a single column, don't show menu
-            return True
-
         visible_columns = [column for column in columns if column.get_visible()]
         menu.clear()
-        pos = 1
 
-        for column in columns:
+        for column_num, column in enumerate(columns, start=1):
             title = column.get_widget().get_text()
 
             if title == "":
-                title = _("Column #%i") % pos
+                title = _("Column #%i") % column_num
 
             menu.add_items(
                 ("$" + title, None)
@@ -186,10 +169,7 @@ class TreeView:
             if column in visible_columns:
                 menu.actions[title].set_enabled(len(visible_columns) > 1)
 
-            menu.actions[title].connect("activate", self._header_toggle, columns, pos - 1)
-            pos += 1
-
-        return False
+            menu.actions[title].connect("activate", self._header_toggle, columns, column_num - 1)
 
     def initialise_columns(self, columns):
 
@@ -203,10 +183,7 @@ class TreeView:
             if not data_type:
                 column_type = column_data["column_type"]
 
-                if column_type == "icon":
-                    data_type = Gio.Icon
-
-                elif column_type == "progress":
+                if column_type == "progress":
                     data_type = int
 
                 elif column_type == "toggle":
@@ -220,22 +197,15 @@ class TreeView:
         self.model = Gtk.ListStore(*data_types)
         self.column_numbers = list(range(self.model.get_n_columns()))
 
-        # GTK 4 rows need more padding to match GTK 3
-        if GTK_API_VERSION >= 4:
-            progress_padding = 1
-            height_padding = 5
-        else:
-            progress_padding = 0
-            height_padding = 3
-
+        progress_padding = 1
+        height_padding = 4
         width_padding = 10
 
-        i = 0
         cols = OrderedDict()
         num_cols = len(columns)
         column_config = None
 
-        for column_data in columns:
+        for column_index, column_data in enumerate(columns):
             column_id = column_data["column_id"]
             title = column_data.get("title")
 
@@ -254,7 +224,7 @@ class TreeView:
                 default_sort_type = Gtk.SortType.DESCENDING if sort_type == "descending" else Gtk.SortType.ASCENDING
 
             if iterator_key:
-                self.iterator_key_column = i
+                self.iterator_key_column = column_index
 
             if self.widget_name:
                 try:
@@ -274,25 +244,25 @@ class TreeView:
             xalign = 0
 
             if column_type == "text":
-                renderer = Gtk.CellRendererText(xpad=width_padding, ypad=height_padding)
-                column = Gtk.TreeViewColumn(column_id, renderer, text=i)
+                renderer = Gtk.CellRendererText(single_paragraph_mode=True, xpad=width_padding, ypad=height_padding)
+                column = Gtk.TreeViewColumn(column_id, renderer, text=column_index)
 
             elif column_type == "number":
                 xalign = 1
                 renderer = Gtk.CellRendererText(xalign=xalign, xpad=width_padding, ypad=height_padding)
-                column = Gtk.TreeViewColumn(column_id, renderer, text=i)
+                column = Gtk.TreeViewColumn(column_id, renderer, text=column_index)
                 column.set_alignment(xalign)
 
             elif column_type == "progress":
                 renderer = Gtk.CellRendererProgress(ypad=progress_padding)
-                column = Gtk.TreeViewColumn(column_id, renderer, value=i)
+                column = Gtk.TreeViewColumn(column_id, renderer, value=column_index)
 
             elif column_type == "toggle":
                 xalign = 0.5
                 renderer = Gtk.CellRendererToggle(xalign=xalign, xpad=13)
                 renderer.connect("toggled", self.on_toggle, column_data["toggle_callback"])
 
-                column = Gtk.TreeViewColumn(column_id, renderer, active=i)
+                column = Gtk.TreeViewColumn(column_id, renderer, active=column_index)
 
             elif column_type == "icon":
                 renderer = Gtk.CellRendererPixbuf()
@@ -305,17 +275,17 @@ class TreeView:
                         # Use the same size as the original icon
                         renderer.set_property("stock-size", 0)
 
-                    column = Gtk.TreeViewColumn(column_id, renderer, icon_name=i)
-                else:
-                    column = Gtk.TreeViewColumn(column_id, renderer, gicon=i)
+                column = Gtk.TreeViewColumn(column_id, renderer, icon_name=column_index)
+
+            column_header = column.get_button()
+
+            # Required for fixed height mode
+            column.set_sizing(Gtk.TreeViewColumnSizing.FIXED)
 
             if width is not None:
                 column.set_resizable(True)
 
-                if width == 0:
-                    column.set_sizing(Gtk.TreeViewColumnSizing.GROW_ONLY)
-                else:
-                    column.set_sizing(Gtk.TreeViewColumnSizing.FIXED)
+                if width > 0:
                     column.set_fixed_width(width)
 
             # Allow individual cells to receive visual focus
@@ -325,7 +295,7 @@ class TreeView:
             column.set_reorderable(True)
             column.set_min_width(20)
 
-            label = Gtk.Label(label=title, margin_start=5, margin_end=5, visible=True)
+            label = Gtk.Label(label=title, margin_start=5, margin_end=5, mnemonic_widget=column_header, visible=True)
             column.set_widget(label)
 
             if xalign == 1 and GTK_API_VERSION >= 4:
@@ -341,8 +311,6 @@ class TreeView:
 
             column.set_sort_column_id(sort_column)
             cols[column_id] = column
-
-            i += 1
 
         self._append_columns(cols, column_config)
         self._hide_columns(cols, column_config)
@@ -397,8 +365,13 @@ class TreeView:
         self.widget.grab_focus()
 
     def clear(self):
+
+        self.widget.set_model(None)
+
         self.model.clear()
         self.iterators.clear()
+
+        self.widget.set_model(self.model)
 
     def show_tooltip(self, pos_x, pos_y, tooltip, sourcecolumn, column_titles, text_function, strip_prefix=""):
 
@@ -448,6 +421,20 @@ class TreeView:
     def on_select_row(self, selection, callback):
         _model, iterator = selection.get_selected()
         callback(self, iterator)
+
+    def on_search_match(self, model, column, search_term, iterator):
+
+        if not search_term:
+            return True
+
+        if search_term.lower() in model.get_value(iterator, column).lower():
+            if GTK_API_VERSION >= 4:
+                # Workaround: Disable scrolling animation, since it doesn't work in GTK 4
+                self.widget.queue_allocate()
+
+            return False
+
+        return True
 
     def on_tooltip(self, _widget, pos_x, pos_y, keyboard_mode, tooltip, callback):
         return callback(self, pos_x, pos_y, keyboard_mode, tooltip)
@@ -520,7 +507,7 @@ def select_user_row_iter(fmodel, sel, user_index, selected_user, iterator):
         user = fmodel.get_value(iterator, user_index)
 
         if selected_user == user:
-            sel.select_path(fmodel.get_path(iterator))
+            sel.select_iter(iterator)
 
         child = fmodel.iter_children(iterator)
         select_user_row_iter(fmodel, sel, user_index, selected_user, child)
@@ -544,22 +531,15 @@ def collapse_treeview(treeview, grouping_mode):
 
 def initialise_columns(frame, treeview_name, treeview, *args):
 
-    i = 0
     cols = OrderedDict()
     num_cols = len(args)
     column_config = None
 
-    # GTK 4 rows need more padding to match GTK 3
-    if GTK_API_VERSION >= 4:
-        progress_padding = 1
-        height_padding = 5
-    else:
-        progress_padding = 0
-        height_padding = 3
-
+    progress_padding = 1
+    height_padding = 4
     width_padding = 10
 
-    for column_id, title, width, column_type, extra in args:
+    for column_index, (column_id, title, width, column_type, extra) in enumerate(args):
         if treeview_name:
             try:
                 column_config = config.sections["columns"][treeview_name[0]][treeview_name[1]]
@@ -578,23 +558,23 @@ def initialise_columns(frame, treeview_name, treeview, *args):
         xalign = 0
 
         if column_type == "text":
-            renderer = Gtk.CellRendererText(xpad=width_padding, ypad=height_padding)
-            column = Gtk.TreeViewColumn(column_id, renderer, text=i)
+            renderer = Gtk.CellRendererText(single_paragraph_mode=True, xpad=width_padding, ypad=height_padding)
+            column = Gtk.TreeViewColumn(column_id, renderer, text=column_index)
 
         elif column_type == "number":
             xalign = 1
             renderer = Gtk.CellRendererText(xalign=xalign, xpad=width_padding, ypad=height_padding)
-            column = Gtk.TreeViewColumn(column_id, renderer, text=i)
+            column = Gtk.TreeViewColumn(column_id, renderer, text=column_index)
             column.set_alignment(xalign)
 
         elif column_type == "progress":
             renderer = Gtk.CellRendererProgress(ypad=progress_padding)
-            column = Gtk.TreeViewColumn(column_id, renderer, value=i)
+            column = Gtk.TreeViewColumn(column_id, renderer, value=column_index)
 
         elif column_type == "toggle":
             xalign = 0.5
             renderer = Gtk.CellRendererToggle(xalign=xalign, xpad=13)
-            column = Gtk.TreeViewColumn(column_id, renderer, active=i)
+            column = Gtk.TreeViewColumn(column_id, renderer, active=column_index)
 
         elif column_type == "icon":
             renderer = Gtk.CellRendererPixbuf()
@@ -607,23 +587,21 @@ def initialise_columns(frame, treeview_name, treeview, *args):
                     # Use the same size as the original icon
                     renderer.set_property("stock-size", 0)
 
-                column = Gtk.TreeViewColumn(column_id, renderer, icon_name=i)
-            else:
-                column = Gtk.TreeViewColumn(column_id, renderer, gicon=i)
+            column = Gtk.TreeViewColumn(column_id, renderer, icon_name=column_index)
+
+        column_header = column.get_button()
+
+        # Required for fixed height mode
+        column.set_sizing(Gtk.TreeViewColumnSizing.FIXED)
 
         if width == -1:
             column.set_resizable(False)
             column.set_expand(True)
-            column.set_sizing(Gtk.TreeViewColumnSizing.AUTOSIZE)
-
         else:
             column.set_resizable(True)
             column.set_min_width(0)
 
-            if width == 0:
-                column.set_sizing(Gtk.TreeViewColumnSizing.GROW_ONLY)
-            else:
-                column.set_sizing(Gtk.TreeViewColumnSizing.FIXED)
+            if width > 0:
                 column.set_fixed_width(width)
 
         if isinstance(extra, int):
@@ -641,7 +619,7 @@ def initialise_columns(frame, treeview_name, treeview, *args):
         column.set_reorderable(True)
         column.set_min_width(20)
 
-        label = Gtk.Label(label=title, margin_start=5, margin_end=5, visible=True)
+        label = Gtk.Label(label=title, margin_start=5, margin_end=5, mnemonic_widget=column_header, visible=True)
         column.set_widget(label)
 
         if xalign == 1 and GTK_API_VERSION >= 4:
@@ -651,23 +629,34 @@ def initialise_columns(frame, treeview_name, treeview, *args):
 
         cols[column_id] = column
 
-        i += 1
-
     append_columns(treeview, cols, column_config)
     hide_columns(treeview, cols, column_config)
+    treeview.get_style_context().add_class("treeview-spacing")
+    treeview.set_fixed_height_mode(True)
 
+    treeview.set_search_equal_func(on_search_match, treeview)
     treeview.connect("columns-changed", set_last_column_autosize)
     treeview.emit("columns-changed")
 
     Accelerator("<Primary>c", treeview, on_copy_cell_data_accelerator)
     treeview.column_menu = PopupMenu(frame, treeview, callback=press_header, connect_events=False)
 
-    if GTK_API_VERSION >= 4:
-        # Hotfix: disable rubber-band selection in GTK 4 to avoid crash bug
-        # when clicking column headers
-        treeview.set_rubber_banding(False)
-
     return cols
+
+
+def on_search_match(model, column, search_term, iterator, treeview):
+
+    if not search_term:
+        return True
+
+    if search_term.lower() in model.get_value(iterator, column).lower():
+        if GTK_API_VERSION >= 4:
+            # Workaround: Disable scrolling animation, since it doesn't work in GTK 4
+            treeview.queue_allocate()
+
+        return False
+
+    return True
 
 
 def on_copy_cell_data_accelerator(treeview, *_args):
@@ -690,56 +679,47 @@ def append_columns(treeview, cols, column_config):
 
     # Column order not supported in Python 3.5
     if not column_config or sys.version_info[:2] <= (3, 5):
-        for column_id, column in cols.items():
+        for column in cols.values():
             treeview.append_column(column)
         return
 
     # Restore column order from config
     for column_id in column_config:
-        try:
-            treeview.append_column(cols[column_id])
-        except Exception:
-            # Invalid column
+        column = cols.get(column_id)
+
+        if column is None:
             continue
+
+        treeview.append_column(column)
 
     added_columns = treeview.get_columns()
 
     # If any columns were missing in the config, append them
-    pos = 0
-    for column_id, column in cols.items():
+    for column_index, column in enumerate(cols.values()):
         if column not in added_columns:
-            treeview.insert_column(column, pos)
-
-        pos += 1
+            treeview.insert_column(column, column_index)
 
 
 def set_last_column_autosize(treeview):
 
     columns = treeview.get_columns()
-    col_count = len(columns)
+    resizable_set = False
 
-    if col_count == 0:
-        return
+    for column in reversed(columns):
+        if not column.get_visible():
+            continue
 
-    prev_index = col_count - 1
-
-    # Make sure the width of the last visible column isn't fixed
-    for i in reversed(range(len(columns))):
-        prev_index -= 1
-
-        if columns[i].get_visible():
-            column = columns[i]
+        if not resizable_set:
+            # Make sure the last visible column isn't resizable
             column.set_resizable(False)
             column.set_fixed_width(-1)
-            break
 
-    """ If the column we toggled the visibility of is now the last visible one,
-    the previously last visible column should've resized to fit properly now,
-    since it was set to AUTOSIZE. We can now set the previous column to FIXED,
-    and make it resizable again. """
+            resizable_set = True
+            continue
 
-    prev_column = columns[prev_index]
-    prev_column.set_resizable(True)
+        # Make the previously last column resizable again
+        column.set_resizable(True)
+        break
 
 
 def hide_columns(_treeview, cols, column_config):
@@ -801,20 +781,14 @@ def save_columns(treeview_name, columns, subpage=None):
 def press_header(menu, treeview):
 
     columns = treeview.get_columns()
-
-    if len(columns) <= 1:
-        # Only a single column, don't show menu
-        return True
-
     visible_columns = [column for column in columns if column.get_visible()]
     menu.clear()
-    pos = 1
 
-    for column in columns:
+    for column_num, column in enumerate(columns, start=1):
         title = column.get_widget().get_text()
 
         if title == "":
-            title = _("Column #%i") % pos
+            title = _("Column #%i") % column_num
 
         menu.add_items(
             ("$" + title, None)
@@ -825,10 +799,7 @@ def press_header(menu, treeview):
         if column in visible_columns:
             menu.actions[title].set_enabled(len(visible_columns) > 1)
 
-        menu.actions[title].connect("activate", header_toggle, treeview, columns, pos - 1)
-        pos += 1
-
-    return False
+        menu.actions[title].connect("activate", header_toggle, treeview, columns, column_num - 1)
 
 
 def header_toggle(_action, _state, treeview, columns, index):

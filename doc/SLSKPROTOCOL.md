@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on April 15, 2022
+Last updated on July 29, 2022
 
 Since the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify or extend the protocol in ways that negatively impact the network.
 
@@ -58,7 +58,14 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
 | F    | File Transfer       |
 | D    | Distributed Network |
 
-### Status Codes
+### Login Failure Reasons
+
+| Reason          | Description                                                                      |
+| --------------- | -------------------------------------------------------------------------------- |
+| INVALIDUSERNAME | Username is longer than 30 characters or contains invalid characters (non-ASCII) |
+| INVALIDPASS     | Password for existing user is incorrect                                          |
+
+### User Status Codes
 
 | Code | Status  |
 | ---- | ------- |
@@ -111,17 +118,11 @@ These combinations are actively used by clients. Other combinations are discoura
 | -------------- | ------------------- |
 | Send to Server | Receive from Server |
 
-These messages are used by clients to interface with the server.
-Internal Server messages are spooky and not understood, since the OSS
-crowd doesn't have access to its source code. If you want a Soulseek
-server, check out
-[Soulfind](https://github.com/seeschloss/soulfind).
-Soulfind is obviously not the exact same the official Soulseek server,
-but it handles the protocol well enough (and can be modified).
+Server messages are used by clients to interface with the server. In Nicotine+, these messages are defined in slskmessages.py.
 
-In Nicotine+, these messages are matched to their message number in
-slskproto.py in the SlskProtoThread function, defined in slskmessages.py
-and callbacks for the messages are set in pynicotine.py.
+If you want a Soulseek server, check out [Soulfind](https://github.com/seeschloss/soulfind).
+Soulfind is obviously not exactly the same as the official proprietary Soulseek server,
+but it handles the protocol well enough (and can be modified).
 
 ### Server Message Format
 
@@ -271,7 +272,7 @@ We send this to the server right after the connection has been established. Serv
     4.  **string** <ins>hash</ins> *MD5 hex digest of the password string*
   - Receive Login Failure
     1.  **bool** <ins>failure</ins> **0**
-    2.  **string** <ins>reason</ins> *Almost always:* **INVALIDPASS** *(sometimes it's a banned message or another error).*
+    2.  **string** <ins>reason</ins> *see [Login Failure Reasons](#login-failure-reasons)*
 
 ## Server Code 2
 
@@ -464,7 +465,7 @@ The server tells us someone has just left a room we're in.
 
 Either we ask server to tell someone else we want to establish a connection with them, or server tells us someone wants to connect with us. Used when the side that wants a connection can't establish it, and tries to go the other way around (direct connection has failed).
 
-See also: [Peer Connection Message Order](#peer-connection-message-order)
+See also: [Peer Connection Message Order](#modern-peer-connection-message-order)
 
 ### Data Order
 
@@ -1221,7 +1222,7 @@ The server sends us a list of similar users related to our interests.
     1.  **uint32** <ins>number of users</ins>
     2.  Iterate for <ins>number of user</ins>
         1.  **string** <ins>username</ins>
-        2.  **uint32** <ins>status</ins>
+        2.  **uint32** <ins>rating</ins>
 
 ## Server Code 111
 
@@ -1799,7 +1800,7 @@ The server returns a list of related search terms for a search query.
 
 We send this to say we can't connect to peer after it has asked us to connect. We receive this if we asked peer to connect and it can't do this. This message means a connection can't be established either way.
 
-See also: [Peer Connection Message Order](#peer-connection-message-order)
+See also: [Peer Connection Message Order](#modern-peer-connection-message-order)
 
 ### Data Order
 
@@ -1831,7 +1832,7 @@ This message only seems to be sent if you try to create a room with the same nam
 | ------------ | ----------------- |
 | Send to Peer | Receive from Peer |
 
-In Nicotine+, these messages are matched to their message number in slskproto.py in the SlskProtoThread function, defined in slskmessages.py and callbacks for the messages are set in pynicotine.py.
+Peer init messages are used to initiate a 'P', 'F' or 'D' connection to a peer. In Nicotine+, these messages are defined in slskmessages.py.
 
 ### Peer Init Message Format
 
@@ -1882,35 +1883,35 @@ If this fails, User B retries for ~1 minute. If this still fails, no connection 
 
 ### PierceFireWall
 
-This is the very first message sent by the peer that established a connection, if it has been asked by the other peer to do so.
+This message is sent in response to an indirect connection request from another user. If the message goes through to the user, the connection is ready. The token is taken from the [ConnectToPeer](#server-code-18) server message.
 
-The token is taken from the [ConnectToPeer](#server-code-18) server message. See also: [Peer Connection Message Order](#peer-connection-message-order)
+See also: [Peer Connection Message Order](#modern-peer-connection-message-order)
 
 ### Data Order
 
   - Send
-      - **uint32** <ins>token</ins> *Unique Number*
+      - **uint32** <ins>token</ins>
   - Receive
-      - **uint32** <ins>token</ins> *Unique Number*
+      - **uint32** <ins>token</ins>
 
 ## Peer Init Code 1
 
 ### PeerInit
 
-This message is sent by the peer that initiated a connection, not necessarily a peer that actually established it. Token apparently can be anything. Type is 'P' if it's anything but filetransfer, 'F' otherwise.
+This message is sent to initiate a direct connection to another peer. The token is apparently always 0 and ignored.
 
-See also: [Peer Connection Message Order](#peer-connection-message-order)
+See also: [Peer Connection Message Order](#modern-peer-connection-message-order)
 
 ### Data Order
 
   - Send
-      - **string** <ins>username</ins> *Local Username*
+      - **string** <ins>username</ins> *local username*
       - **string** <ins>type</ins> **P, F or D** *see [Connection Types](#connection-types)*
-      - **uint32** <ins>token</ins> *Unique Number*
+      - **uint32** <ins>token</ins> *value is always* **0**
   - Receive
-      - **string** <ins>username</ins> *Remote Username*
+      - **string** <ins>username</ins> *remote username*
       - **string** <ins>type</ins> **P, F or D** *see [Connection Types](#connection-types)*
-      - **uint32** <ins>token</ins> *Unique Number*
+      - **uint32** <ins>token</ins> *value is always* **0**
 
 # Peer Messages
 
@@ -1918,7 +1919,7 @@ See also: [Peer Connection Message Order](#peer-connection-message-order)
 | ------------ | ----------------- |
 | Send to Peer | Receive from Peer |
 
-In Nicotine, these messages are matched to their message number in slskproto.py in the SlskProtoThread function, defined in slskmessages.py and callbacks for the messages are set in pynicotine.py.
+Peer messages are sent to peers over a 'P' connection. Only a single active connection to a peer is allowed. In Nicotine+, these messages are defined in slskmessages.py.
 
 ### Peer Message Format
 
@@ -2365,7 +2366,7 @@ This message is sent to inform a peer about an upload attempt initiated by us.
 | ------------ | ----------------- |
 | Send to Peer | Receive from Peer |
 
-These messages are sent to peers over a 'F' connection, and do not have messages codes associated with them.
+File messages are sent to peers over a 'F' connection, and do not have messages codes associated with them.
 
 ### File Connection Message Format
 
@@ -2426,7 +2427,7 @@ We send this to the uploading peer at the beginning of a 'F' connection, to tell
 | ------------ | ----------------- |
 | Send to Node | Receive from Node |
 
-In Nicotine+, these messages are matched to their message number in slskproto.py in the SlskProtoThread function, defined in slskmessages.py and callbacks for the messages are set in pynicotine.py.
+Distributed messages are sent to peers over a 'D' connection, and are used for the distributed search network. Only a single active connection to a peer is allowed. In Nicotine+, these messages are defined in slskmessages.py.
 
 ### Distributed Message Format
 
@@ -2542,5 +2543,5 @@ This documentation exists thanks to efforts from the following projects:
 - Nicotine+ (Hyriand, daelstorm, mathiascode)
 - slskd (jpdillingham)
 - Museek+ (lbponey)
-- SoleSeek
-- PySoulSeek
+- SoleSeek (BriEnigma)
+- PySoulSeek (Alexander Kanavin)

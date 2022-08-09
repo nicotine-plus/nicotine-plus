@@ -106,7 +106,7 @@
                         <property name="visible">True</property>
                         <property name="xalign">0</property>
                         <property name="margin-start">12</property>
-                        <property name="label" translatable="yes">Case is insensitive, but word order is important: &apos;Instrumental Remix&apos; will not show any &apos;Remix Instrumental&apos;</property>
+                        <property name="label" translatable="yes">Case is insensitive, but word order is important: 'Instrumental Remix' will not show any 'Remix Instrumental'</property>
                         <property name="selectable">True</property>
                         <property name="wrap">True</property>
                       </object>
@@ -182,7 +182,7 @@
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="margin-start">12</property>
-                    <property name="label" translatable="yes">It is also possible to invert the filter, specifying file extensions you don&apos;t want in your results.
+                    <property name="label" translatable="yes">It is also possible to invert the filter, specifying file extensions you don't want in your results.
     Example: !mp3|!jpg</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
@@ -421,7 +421,7 @@
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="margin-start">12</property>
-                    <property name="label" translatable="yes">Filters files based upon users&apos; geographical location.</property>
+                    <property name="label" translatable="yes">Filters files based upon users' geographical location.</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
                   </object>

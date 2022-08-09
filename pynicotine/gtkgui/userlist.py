@@ -23,7 +23,6 @@
 
 import time
 
-from gi.repository import Gio
 from gi.repository import GObject
 from gi.repository import Gtk
 
@@ -32,7 +31,7 @@ from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
-from pynicotine.gtkgui.widgets.theme import get_status_icon
+from pynicotine.gtkgui.widgets.theme import get_status_icon_name
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.treeview import save_columns
@@ -40,6 +39,7 @@ from pynicotine.gtkgui.widgets.treeview import show_country_tooltip
 from pynicotine.gtkgui.widgets.treeview import show_user_status_tooltip
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
 
@@ -61,7 +61,7 @@ class UserList(UserInterface):
         # Columns
         self.user_iterators = {}
         self.usersmodel = Gtk.ListStore(
-            Gio.Icon,             # (0)  status icon
+            str,                  # (0)  status icon
             str,                  # (1)  flag
             str,                  # (2)  username
             str,                  # (3)  hspeed
@@ -195,7 +195,7 @@ class UserList(UserInterface):
             country = ""
 
         row = [
-            get_status_icon(0),
+            get_status_icon_name(UserStatus.OFFLINE),
             get_flag_icon_name(country),
             username,
             "",
@@ -228,14 +228,14 @@ class UserList(UserInterface):
 
         return False
 
-    def on_add_user(self, widget, *_args):
+    def on_add_user(self, *_args):
 
-        username = widget.get_text()
+        username = self.frame.add_buddy_entry.get_text().strip()
 
         if not username:
             return
 
-        widget.set_text("")
+        self.frame.add_buddy_entry.set_text("")
         self.core.userlist.add_user(username)
 
     def update(self):
@@ -246,8 +246,7 @@ class UserList(UserInterface):
         self.frame.userlist_content.set_visible(self.user_iterators)
 
     def update_visuals(self):
-
-        for widget in list(self.__dict__.values()):
+        for widget in self.__dict__.values():
             update_widget_visuals(widget)
 
     def cell_toggle_callback(self, _widget, index, treeview, pos):
@@ -339,17 +338,12 @@ class UserList(UserInterface):
         if status == self.usersmodel.get_value(iterator, 10):
             return
 
-        status_icon = get_status_icon(status)
-
-        if status_icon is None:
-            return
-
         notify = self.usersmodel.get_value(iterator, 6)
 
         if notify:
-            if status == 1:
+            if status == UserStatus.AWAY:
                 status_text = _("User %s is away")
-            elif status == 2:
+            elif status == UserStatus.ONLINE:
                 status_text = _("User %s is online")
             else:
                 status_text = _("User %s is offline")
@@ -357,13 +351,15 @@ class UserList(UserInterface):
             log.add(status_text, user)
             self.frame.notifications.new_text_notification(status_text % user)
 
+        status_icon = get_status_icon_name(status)
+
         self.usersmodel.set_value(iterator, 0, status_icon)
         self.usersmodel.set_value(iterator, 10, status)
 
-        if status:  # online
+        if status in (UserStatus.ONLINE, UserStatus.AWAY):
             self.set_last_seen(user, online=True)
 
-        elif not self.usersmodel.get_value(iterator, 8):  # disconnected
+        elif not self.usersmodel.get_value(iterator, 8):
             self.set_last_seen(user)
 
     def get_user_stats(self, msg):
@@ -414,7 +410,7 @@ class UserList(UserInterface):
         self.user_iterators[user] = self.usersmodel.insert_with_valuesv(
             -1, self.column_numbers,
             [
-                get_status_icon(0),
+                get_status_icon_name(UserStatus.OFFLINE),
                 empty_str,
                 user,
                 empty_str,
@@ -545,7 +541,7 @@ class UserList(UserInterface):
         for i in self.usersmodel:
             iterator = i.iter
 
-            self.usersmodel.set_value(iterator, 0, get_status_icon(0))
+            self.usersmodel.set_value(iterator, 0, get_status_icon_name(UserStatus.OFFLINE))
             self.usersmodel.set_value(iterator, 3, "")
             self.usersmodel.set_value(iterator, 4, "")
             self.usersmodel.set_value(iterator, 10, 0)

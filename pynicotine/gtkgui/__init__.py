@@ -24,8 +24,8 @@ def check_gui_dependencies():
 
     # Defaults for different operating systems
     components = {
-        "gtk": {"win32": '4', "darwin": '4'},
-        "libadwaita": {"win32": '1', "darwin": '1'}
+        "gtk": {"win32": '3', "darwin": '4'},
+        "libadwaita": {"win32": '0', "darwin": '1'}
     }
 
     if os.getenv("NICOTINE_GTK_VERSION") is None:
@@ -36,7 +36,7 @@ def check_gui_dependencies():
 
     # Require minor version of GTK
     if os.getenv("NICOTINE_GTK_VERSION") == '4':
-        gtk_version = (4, 6, 2)
+        gtk_version = (4, 6, 5)
         pygobject_version = (3, 42, 0)
     else:
         gtk_version = (3, 22, 11)
@@ -83,6 +83,19 @@ def check_gui_dependencies():
 
 def run_gui(core, hidden, ci_mode, multi_instance):
     """ Run Nicotine+ GTK GUI """
+
+    if getattr(sys, 'frozen', False):
+        # Set up paths for frozen binaries (Windows and macOS)
+        executable_folder = os.path.dirname(sys.executable)
+        resources_folder = executable_folder
+
+        if sys.platform == "darwin":
+            resources_folder = os.path.abspath(os.path.join(executable_folder, "..", "Resources"))
+
+        os.environ["XDG_DATA_DIRS"] = os.path.join(resources_folder, "share")
+        os.environ["GDK_PIXBUF_MODULE_FILE"] = os.path.join(executable_folder, "lib/pixbuf-loaders.cache")
+        os.environ["GI_TYPELIB_PATH"] = os.path.join(executable_folder, "lib/typelibs")
+        os.environ["GSETTINGS_SCHEMA_DIR"] = os.path.join(executable_folder, "lib/schemas")
 
     from pynicotine.logfacility import log
     error = check_gui_dependencies()

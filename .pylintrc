@@ -276,7 +276,7 @@ indent-string='    '
 max-line-length=120
 
 # Maximum number of lines in a module.
-max-module-lines=3400
+max-module-lines=3300
 
 # Allow the body of a class to be on the same line as the declaration if body
 # contains single statement.
@@ -357,7 +357,7 @@ check-quote-consistency=no
 
 # This flag controls whether the implicit-str-concat should generate a warning
 # on implicit string concatenation in sequences defined over several lines.
-check-str-concat-over-line-jumps=yes
+check-str-concat-over-line-jumps=no
 
 
 [TYPECHECK]

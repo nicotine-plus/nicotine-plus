@@ -49,8 +49,9 @@
             <property name="visible">True</property>
             <property name="spacing">6</property>
             <child>
-              <object class="GtkButton">
+              <object class="GtkButton" id="_resume_button">
                 <property name="visible">True</property>
+                <property name="tooltip-text" bind-source="_resume_label" bind-property="label" bind-flags="bidirectional|sync-create"/>
                 <signal name="clicked" handler="on_retry_transfer"/>
                 <child>
                   <object class="GtkBox">
@@ -63,10 +64,11 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkLabel">
+                      <object class="GtkLabel" id="_resume_label">
                         <property name="visible">True</property>
+                        <property name="ellipsize">end</property>
                         <property name="label" translatable="yes">Resume</property>
-                        <property name="use-underline">True</property>
+                        <property name="mnemonic-widget">_resume_button</property>
                       </object>
                     </child>
                   </object>
@@ -77,8 +79,9 @@
               </object>
             </child>
             <child>
-              <object class="GtkButton">
+              <object class="GtkButton" id="_pause_button">
                 <property name="visible">True</property>
+                <property name="tooltip-text" bind-source="_pause_label" bind-property="label" bind-flags="bidirectional|sync-create"/>
                 <signal name="clicked" handler="on_abort_transfer"/>
                 <child>
                   <object class="GtkBox">
@@ -91,10 +94,11 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkLabel">
+                      <object class="GtkLabel" id="_pause_label">
                         <property name="visible">True</property>
+                        <property name="ellipsize">end</property>
                         <property name="label" translatable="yes">Pause</property>
-                        <property name="use-underline">True</property>
+                        <property name="mnemonic-widget">_pause_button</property>
                       </object>
                     </child>
                   </object>
@@ -105,8 +109,9 @@
               </object>
             </child>
             <child>
-              <object class="GtkButton">
+              <object class="GtkButton" id="_clear_button">
                 <property name="visible">True</property>
+                <property name="tooltip-text" bind-source="_clear_label" bind-property="label" bind-flags="bidirectional|sync-create"/>
                 <signal name="clicked" handler="on_clear_transfer"/>
                 <child>
                   <object class="GtkBox">
@@ -119,10 +124,11 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkLabel">
+                      <object class="GtkLabel" id="_clear_label">
                         <property name="visible">True</property>
+                        <property name="ellipsize">end</property>
                         <property name="label" translatable="yes">Clear</property>
-                        <property name="use-underline">True</property>
+                        <property name="mnemonic-widget">_clear_button</property>
                       </object>
                     </child>
                   </object>
@@ -141,7 +147,7 @@
             <property name="halign">end</property>
             <property name="hexpand">True</property>
             <child>
-              <object class="GtkButton">
+              <object class="GtkButton" id="_clear_finished_button">
                 <property name="visible">True</property>
                 <property name="tooltip-text" translatable="yes">Clear all finished and filtered downloads.</property>
                 <signal name="clicked" handler="on_clear_finished_filtered"/>
@@ -158,7 +164,9 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">True</property>
+                        <property name="ellipsize">end</property>
                         <property name="label" translatable="yes">Clear Finished</property>
+                        <property name="mnemonic-widget">_clear_finished_button</property>
                       </object>
                     </child>
                   </object>
@@ -180,8 +188,10 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">True</property>
+                        <property name="ellipsize">end</property>
                         <property name="label" translatable="yes">Clear _All…</property>
                         <property name="use-underline">True</property>
+                        <property name="mnemonic-widget">clear_all_button</property>
                       </object>
                     </child>
                     <child>

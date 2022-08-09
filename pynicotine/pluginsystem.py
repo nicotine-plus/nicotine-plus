@@ -28,6 +28,7 @@ from time import time
 
 from pynicotine import slskmessages
 from pynicotine.logfacility import log
+from pynicotine.utils import encode_path
 
 
 returncode = {
@@ -388,7 +389,7 @@ class PluginHandler:
         for folder_path in self.plugindirs:
             file_path = os.path.join(folder_path, plugin_name)
 
-            if os.path.isdir(file_path.encode("utf-8")):
+            if os.path.isdir(encode_path(file_path)):
                 return file_path
 
         return None
@@ -414,7 +415,7 @@ class PluginHandler:
             path = self.get_plugin_path(plugin_name)
 
             if path is None:
-                log.add(_("Failed to load plugin '%s', could not find it."), plugin_name)
+                log.add_debug("Failed to load plugin '%s', could not find it", plugin_name)
                 return None
 
             # Add plugin folder to path in order to support relative imports
@@ -493,8 +494,8 @@ class PluginHandler:
 
         for folder_path in self.plugindirs:
             try:
-                for entry in os.scandir(folder_path.encode("utf-8")):
-                    file_path = entry.name.decode("utf-8")
+                for entry in os.scandir(encode_path(folder_path)):
+                    file_path = entry.name.decode("utf-8", "replace")
 
                     if entry.is_dir() and file_path not in plugin_list:
                         plugin_list.append(file_path)
@@ -537,7 +538,7 @@ class PluginHandler:
             if path in sys.path:
                 sys.path.remove(path)
 
-            for name, module in list(sys.modules.items()):
+            for name, module in sys.modules.copy().items():
                 try:
                     if module.__file__.startswith(path):
                         sys.modules.pop(name, None)
@@ -572,7 +573,7 @@ class PluginHandler:
 
         info_path = os.path.join(plugin_path, 'PLUGININFO')
 
-        with open(info_path.encode("utf-8"), encoding="utf-8") as file_handle:
+        with open(encode_path(info_path), encoding="utf-8") as file_handle:
             for line in file_handle:
                 try:
                     key, value = line.split("=", 1)
@@ -605,7 +606,7 @@ class PluginHandler:
         })
 
     def save_enabled(self):
-        self.config.sections["plugins"]["enabled"] = list(self.enabled_plugins.keys())
+        self.config.sections["plugins"]["enabled"] = list(self.enabled_plugins)
 
     def load_enabled(self):
         enable = self.config.sections["plugins"]["enable"]

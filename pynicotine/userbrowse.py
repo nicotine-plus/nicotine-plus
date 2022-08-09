@@ -20,10 +20,13 @@ import json
 import os
 import threading
 
+from operator import itemgetter
+
 from pynicotine import slskmessages
 from pynicotine import utils
 from pynicotine.logfacility import log
 from pynicotine.utils import clean_file
+from pynicotine.utils import encode_path
 from pynicotine.utils import get_result_bitrate_length
 from pynicotine.utils import RestrictedUnpickler
 
@@ -52,12 +55,10 @@ class UserBrowse:
     def send_upload_attempt_notification(self, username):
         """ Send notification to user when attempting to initiate upload from our end """
 
-        self.core.send_message_to_peer(username, slskmessages.UploadQueueNotification(None))
+        self.core.send_message_to_peer(username, slskmessages.UploadQueueNotification())
 
     def add_user(self, user):
-
         if user not in self.users:
-            self.core.watch_user(user, force_update=True)
             self.users.add(user)
 
     def remove_user(self, user):
@@ -80,7 +81,7 @@ class UserBrowse:
         built = msg.make_network_message()
         msg.parse_network_message(built)
 
-        self.shared_file_list(username, msg)
+        self.shared_file_list(msg, username)
 
     def browse_local_public_shares(self, path=None, new_request=None):
         """ Browse your own public shares """
@@ -131,15 +132,19 @@ class UserBrowse:
             self.show_connection_error(username)
             return
 
+        self.core.watch_user(username, force_update=True)
+
         if not user_exists or new_request:
-            self.core.send_message_to_peer(username, slskmessages.GetSharedFileList(None))
+            self.core.send_message_to_peer(username, slskmessages.GetSharedFileList())
 
     def create_user_shares_folder(self):
 
         shares_folder = os.path.join(self.config.data_dir, "usershares")
+        shares_folder_encoded = encode_path(shares_folder)
+
         try:
-            if not os.path.isdir(shares_folder.encode("utf-8")):
-                os.makedirs(shares_folder.encode("utf-8"))
+            if not os.path.isdir(shares_folder_encoded):
+                os.makedirs(shares_folder_encoded)
 
         except Exception as error:
             log.add(_("Can't create directory '%(folder)s', reported error: %(error)s"),
@@ -150,24 +155,26 @@ class UserBrowse:
 
     def load_shares_list_from_disk(self, filename):
 
+        filename_encoded = encode_path(filename)
+
         try:
             try:
                 # Try legacy format first
                 import bz2
 
-                with bz2.BZ2File(filename.encode("utf-8")) as file_handle:
+                with bz2.BZ2File(filename_encoded) as file_handle:
                     shares_list = RestrictedUnpickler(file_handle, encoding='utf-8').load()
 
             except Exception:
                 # Try new format
 
-                with open(filename.encode("utf-8"), encoding="utf-8") as file_handle:
+                with open(filename_encoded, encoding="utf-8") as file_handle:
                     shares_list = json.load(file_handle)
 
             # Basic sanity check
             for _folder, files in shares_list:
-                for _file_data in files:
-                    pass
+                for _code, _filename, _size, _ext, _attrs, *_unused in files:
+                    break
 
         except Exception as msg:
             log.add(_("Loading Shares from disk failed: %(error)s"), {'error': msg})
@@ -176,10 +183,10 @@ class UserBrowse:
         username = filename.replace('\\', os.sep).split(os.sep)[-1]
         self.show_user(username)
 
-        msg = slskmessages.SharedFileList(None)
+        msg = slskmessages.SharedFileList()
         msg.list = shares_list
 
-        self.shared_file_list(username, msg)
+        self.shared_file_list(msg, username)
 
     def save_shares_list_to_disk(self, user, shares_list):
 
@@ -191,8 +198,9 @@ class UserBrowse:
         try:
             path = os.path.join(shares_folder, clean_file(user))
 
-            with open(path.encode("utf-8"), "w", encoding="utf-8") as file_handle:
-                json.dump(shares_list, file_handle, ensure_ascii=False)
+            with open(encode_path(path), "w", encoding="utf-8") as file_handle:
+                # Add line breaks for readability, but avoid indentation to decrease file size
+                json.dump(shares_list, file_handle, ensure_ascii=False, indent=0)
 
             log.add(_("Saved list of shared files for user '%(user)s' to %(dir)s"),
                     {'user': user, 'dir': shares_folder})
@@ -233,7 +241,7 @@ class UserBrowse:
 
             if files:
                 if self.config.sections["transfers"]["reverseorder"]:
-                    files.sort(key=lambda x: x[1], reverse=True)
+                    files.sort(key=itemgetter(1), reverse=True)
 
                 for file_data in files:
                     virtualpath = "\\".join([folder, file_data[1]])
@@ -306,9 +314,16 @@ class UserBrowse:
             self.ui_callback.message_progress(msg)
 
     def get_user_status(self, msg):
+        """ Server code: 7 """
+
         if self.ui_callback:
             self.ui_callback.get_user_status(msg)
 
-    def shared_file_list(self, user, msg):
+    def shared_file_list(self, msg, user=None):
+        """ Peer code: 5 """
+
+        if user is None:
+            user = msg.init.target_user
+
         if self.ui_callback:
             self.ui_callback.shared_file_list(user, msg)

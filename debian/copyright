@@ -97,6 +97,7 @@ Copyright: 2003-2004 Ingmar K. Steen (Hyriand)
                 hadwin
                 Gabboxl
                 Szia Tomi
+                Maite Guix
 License: GPL-3+
 
 Files: pynicotine/geoip/ip2location.py

@@ -29,11 +29,9 @@
 
 import glob
 
-from pkgutil import walk_packages
+from setuptools import find_packages
 from setuptools import setup
 from setuptools.command.build_py import build_py
-
-import pynicotine
 
 from pynicotine.config import config
 from pynicotine.i18n import build_translations
@@ -49,45 +47,61 @@ class BuildPyCommand(build_py):
 
 if __name__ == '__main__':
 
-    # Specify a description for the PyPi project page
-    LONG_DESCRIPTION = """Nicotine+ is a graphical client for the Soulseek peer-to-peer
-network.
-
-Nicotine+ aims to be a pleasant, free and open source (FOSS)
-alternative to the official Soulseek client, providing additional
-functionality while keeping current with the Soulseek protocol."""
-
-    # Specify included files
-    PACKAGES = ["pynicotine"] + \
-        [name for importer, name, ispkg in walk_packages(path=pynicotine.__path__, prefix="pynicotine.") if ispkg]
-
-    PACKAGE_DATA = {package: ["*.bin", "*.md", "*.py", "*.svg", "*.ui", "PLUGININFO"] for package in PACKAGES}
-
-    DATA_FILES = [
-        ("share/applications", ["data/%s.desktop" % config.application_id]),
-        ("share/metainfo", ["data/%s.appdata.xml" % config.application_id]),
-        ("share/icons/hicolor/scalable/apps", glob.glob("pynicotine/gtkgui/icons/hicolor/scalable/apps/*.svg")),
-        ("share/icons/hicolor/scalable/intl", glob.glob("pynicotine/gtkgui/icons/hicolor/scalable/intl/*.svg")),
-        ("share/icons/hicolor/symbolic/apps", glob.glob("pynicotine/gtkgui/icons/hicolor/symbolic/apps/*.svg")),
-        ("share/doc/nicotine", glob.glob("[!404.md]*.md") + glob.glob("doc/*.md")),
-        ("share/man/man1", glob.glob("data/*.1"))
-    ] + get_translation_paths()
-
-    # Run setup
     setup(
         name="nicotine-plus",
         version=config.version,
         license="GPLv3+",
         description="Graphical client for the Soulseek peer-to-peer network",
-        long_description=LONG_DESCRIPTION,
+        long_description="""Nicotine+ is a graphical client for the Soulseek peer-to-peer
+network.
+
+Nicotine+ aims to be a pleasant, free and open source (FOSS)
+alternative to the official Soulseek client, providing additional
+functionality while keeping current with the Soulseek protocol.""",
         author=config.author,
         author_email="nicotine-team@lists.launchpad.net",
         url=config.website_url,
         platforms="any",
-        packages=PACKAGES,
-        package_data=PACKAGE_DATA,
+        classifiers=[
+            "Development Status :: 5 - Production/Stable",
+            "Environment :: X11 Applications :: GTK",
+            "Intended Audience :: End Users/Desktop",
+            "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+            "Operating System :: OS Independent",
+            "Programming Language :: Python",
+            "Topic :: Communications :: Chat",
+            "Topic :: Communications :: File Sharing",
+            "Topic :: Internet",
+            "Topic :: System :: Networking"
+        ],
+        packages=find_packages(include=["pynicotine", "pynicotine.*"]),
+        package_data={"": ["*.bin", "*.ui", "PLUGININFO"]},
         scripts=["nicotine"],
-        data_files=DATA_FILES,
+        data_files=[
+            ("share/applications", ["data/%s.desktop" % config.application_id]),
+            ("share/metainfo", ["data/%s.appdata.xml" % config.application_id]),
+            ("share/man/man1", ["data/nicotine.1"]),
+            ("share/icons/hicolor/16x16/apps",
+                ["pynicotine/gtkgui/icons/hicolor/16x16/apps/%s.png" % config.application_id]),
+            ("share/icons/hicolor/24x24/apps",
+                ["pynicotine/gtkgui/icons/hicolor/24x24/apps/%s.png" % config.application_id]),
+            ("share/icons/hicolor/32x32/apps",
+                ["pynicotine/gtkgui/icons/hicolor/32x32/apps/%s.png" % config.application_id]),
+            ("share/icons/hicolor/48x48/apps",
+                ["pynicotine/gtkgui/icons/hicolor/48x48/apps/%s.png" % config.application_id]),
+            ("share/icons/hicolor/64x64/apps",
+                ["pynicotine/gtkgui/icons/hicolor/64x64/apps/%s.png" % config.application_id]),
+            ("share/icons/hicolor/128x128/apps",
+                ["pynicotine/gtkgui/icons/hicolor/128x128/apps/%s.png" % config.application_id]),
+            ("share/icons/hicolor/256x256/apps",
+                ["pynicotine/gtkgui/icons/hicolor/256x256/apps/%s.png" % config.application_id]),
+            ("share/icons/hicolor/scalable/apps",
+                ["pynicotine/gtkgui/icons/hicolor/scalable/apps/%s.svg" % config.application_id]),
+            ("share/icons/hicolor/symbolic/apps",
+                ["pynicotine/gtkgui/icons/hicolor/symbolic/apps/%s-symbolic.svg" % config.application_id]),
+            ("share/icons/hicolor/scalable/intl", glob.glob("pynicotine/gtkgui/icons/hicolor/scalable/intl/*.svg")),
+            ("share/icons/hicolor/scalable/status", glob.glob("pynicotine/gtkgui/icons/hicolor/scalable/status/*.svg"))
+        ] + get_translation_paths(),
         python_requires=">=3.5",
         install_requires=["PyGObject>=3.22"],
         cmdclass={"build_py": BuildPyCommand}

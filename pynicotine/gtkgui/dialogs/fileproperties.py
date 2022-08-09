@@ -19,58 +19,46 @@
 from gi.repository import Gtk
 
 from pynicotine.gtkgui.widgets.ui import UserInterface
-from pynicotine.gtkgui.widgets.dialogs import dialog_show
-from pynicotine.gtkgui.widgets.dialogs import generic_dialog
+from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.utils import human_length
 from pynicotine.utils import human_size
 from pynicotine.utils import human_speed
 from pynicotine.utils import humanize
 
 
-class FileProperties(UserInterface):
+class FileProperties(UserInterface, Dialog):
 
-    def __init__(self, frame, core, properties, total_size=0, total_length=0, download_button=True):
+    def __init__(self, frame, core, download_button=True):
 
-        super().__init__("ui/dialogs/fileproperties.ui")
+        self.core = core
+        self.properties = {}
+        self.total_size = 0
+        self.total_length = 0
+        self.current_index = 0
+
+        UserInterface.__init__(self, "ui/dialogs/fileproperties.ui")
         (
-            self.bitrate_label,
             self.bitrate_row,
             self.bitrate_value_label,
             self.container,
-            self.country_label,
             self.country_row,
             self.country_value_label,
             self.download_button,
-            self.filename_label,
             self.filename_value_label,
-            self.filesize_label,
             self.filesize_value_label,
-            self.folder_label,
             self.folder_value_label,
-            self.length_label,
             self.length_row,
             self.length_value_label,
             self.next_button,
-            self.path_label,
             self.path_row,
             self.path_value_label,
             self.previous_button,
-            self.queue_label,
             self.queue_row,
             self.queue_value_label,
-            self.speed_label,
             self.speed_row,
             self.speed_value_label,
-            self.username_label,
             self.username_value_label
         ) = self.widgets
-
-        self.frame = frame
-        self.core = core
-        self.properties = properties
-        self.total_size = total_size
-        self.total_length = total_length
-        self.current_index = 0
 
         buttons = [(self.previous_button, Gtk.ResponseType.HELP),
                    (self.next_button, Gtk.ResponseType.HELP)]
@@ -78,13 +66,14 @@ class FileProperties(UserInterface):
         if download_button:
             buttons.append((self.download_button, Gtk.ResponseType.NONE))
 
-        self.dialog = generic_dialog(
+        Dialog.__init__(
+            self,
             parent=frame.window,
             content_box=self.container,
             buttons=buttons,
             title=_("File Properties"),
             width=600,
-            height=0
+            close_destroy=False
         )
 
     def on_previous(self, *_args):
@@ -114,17 +103,17 @@ class FileProperties(UserInterface):
 
         index = self.current_index + 1
         total_files = len(self.properties)
-        total_size = str(human_size(self.total_size))
+        total_size = human_size(self.total_size)
 
         if self.total_length:
-            self.dialog.set_title(_("File Properties (%(num)i of %(total)i  /  %(size)s  /  %(length)s)") % {
+            self.set_title(_("File Properties (%(num)i of %(total)i  /  %(size)s  /  %(length)s)") % {
                 'num': index, 'total': total_files, 'size': total_size,
-                'length': str(human_length(self.total_length))
+                'length': human_length(self.total_length)
             })
             return
 
-        self.dialog.set_title(_("File Properties (%(num)i of %(total)i  /  %(size)s)") % {
-                              'num': index, 'total': total_files, 'size': total_size})
+        self.set_title(_("File Properties (%(num)i of %(total)i  /  %(size)s)") % {
+                       'num': index, 'total': total_files, 'size': total_size})
 
     def update_current_file(self):
         """ Updates the UI with properties for the selected file """
@@ -155,10 +144,10 @@ class FileProperties(UserInterface):
         self.length_value_label.set_text(str(length))
         self.length_row.set_visible(bool(length))
 
-        self.queue_value_label.set_text(str(humanize(queue_position)))
+        self.queue_value_label.set_text(humanize(queue_position))
         self.queue_row.set_visible(bool(queue_position))
 
-        self.speed_value_label.set_text(str(human_speed(speed)))
+        self.speed_value_label.set_text(human_speed(speed))
         self.speed_row.set_visible(bool(speed))
 
         self.country_value_label.set_text(str(country))
@@ -166,6 +155,11 @@ class FileProperties(UserInterface):
 
         self.update_title()
 
-    def show(self):
+    def update_properties(self, properties, total_size=0, total_length=0):
+
+        self.properties = properties
+        self.total_size = total_size
+        self.total_length = total_length
+        self.current_index = 0
+
         self.update_current_file()
-        dialog_show(self.dialog)

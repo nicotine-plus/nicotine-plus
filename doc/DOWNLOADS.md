@@ -1,6 +1,6 @@
-# Download Nicotine+
+# Downloads
 
-Download the current stable version of Nicotine+ for your operating system. For the release notes, see [NEWS.md](/NEWS.md).
+Download the current stable version of Nicotine+ for your operating system. For the release notes, see [NEWS.md](../NEWS.md).
 
 If you want to download the latest unstable build and help test Nicotine+, see [TESTING.md](TESTING.md).
 
@@ -18,7 +18,7 @@ sudo apt update
 sudo apt install nicotine
 ```
 
-If you prefer to install a .deb package directly, you can [download one here](http://ppa.launchpad.net/nicotine-team/stable/ubuntu/pool/main/n/nicotine/).
+If you prefer to install a .deb package directly, you can [download one here](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/debian-package.zip).
 
 Unlike the repository installation method, you need to download and install Nicotine+ from the link above every time you want to update to the latest version.
 
@@ -29,12 +29,6 @@ To install Nicotine+ on Fedora, run the following:
 ```sh
 sudo dnf install nicotine+
 ```
-
-### Flatpak
-
-If your Linux distribution supports [Flatpak](https://www.flatpak.org/setup/), you can install the current stable version of Nicotine+ from Flathub.
-
-- [Download Nicotine+ from Flathub](https://flathub.org/apps/details/org.nicotine_plus.Nicotine)
 
 ### Arch Linux/Manjaro/Parabola
 
@@ -60,9 +54,19 @@ To install Nicotine+ on FreeBSD, run the following:
 pkg install py-nicotine-plus
 ```
 
-### pip
+### Other Distributions
 
-If Nicotine+ is not packaged for your system, the current stable version can be installed using [pip](https://pip.pypa.io/). Ensure the [runtime dependencies](DEPENDENCIES.md) are installed, and run the following:
+#### Flatpak
+
+If your Linux distribution supports [Flatpak](https://www.flatpak.org/setup/), you can install the current stable version of Nicotine+ from Flathub.
+
+- [Download Nicotine+ from Flathub](https://flathub.org/apps/details/org.nicotine_plus.Nicotine)
+
+#### pip
+
+If Nicotine+ is not packaged for your system, the current stable version can be installed using [pip](https://pip.pypa.io/).
+
+Ensure the [runtime dependencies](DEPENDENCIES.md) are installed, and run the following:
 
 ```sh
 pip3 install nicotine-plus
@@ -85,7 +89,7 @@ Stable Windows installers for Nicotine+ are available for download. Installing N
 - [Download Nicotine+ 64-bit Windows Installer](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-x86_64-installer.zip)  [[SHA256](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-x86_64-installer.zip.sha256)]
 - [Download Nicotine+ 32-bit Windows Installer](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-i686-installer.zip)  [[SHA256](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-i686-installer.zip.sha256)]
 
-Portable packages are also available. They can be run from your home directory, and do not require installation or administrator privileges.
+Portable packages are also available. They can be run from any folder and do not require installation or administrator privileges.
 
 - [Download Nicotine+ 64-bit Windows Portable Package](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-x86_64-package.zip)  [[SHA256](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-x86_64-package.zip.sha256)]
 - [Download Nicotine+ 32-bit Windows Portable Package](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-i686-package.zip)  [[SHA256](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-i686-package.zip.sha256)]
@@ -96,7 +100,7 @@ Nicotine+ can be installed using [Scoop](https://scoop.sh/). Run the following:
 
 ```sh
 scoop bucket add extras
-scoop install nicotine-plus
+scoop install extras/nicotine-plus
 ```
 
 In order to upgrade Nicotine+ to a newer release, run the following:

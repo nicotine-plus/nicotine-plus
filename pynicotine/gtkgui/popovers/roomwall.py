@@ -47,8 +47,7 @@ class RoomWall(UserInterface):
 
         tickers = self.room.tickers.get_tickers()
         self.room_wall_textview.append_line(
-            "%s" % ("\n".join(["> [%s] %s" % (user, msg) for user, msg in tickers])),
-            showstamp=False, scroll=False)
+            "%s" % ("\n".join(["> [%s] %s" % (user, msg) for user, msg in tickers])))
 
     def clear_room_wall_message(self, update_list=True):
 
@@ -70,8 +69,8 @@ class RoomWall(UserInterface):
         self.core.queue.append(slskmessages.RoomTickerSet(self.room.room, entry_text))
 
         if entry_text:
-            login_username = self.core.login_username
-            self.room_wall_textview.append_line("[%s] %s" % (login_username, entry_text), showstamp=False, scroll=False)
+            user = self.core.login_username
+            self.room_wall_textview.append_line("> [%s] %s" % (user, entry_text))
 
         self.update_message_list()
 
@@ -84,8 +83,7 @@ class RoomWall(UserInterface):
         self.clear_room_wall_message()
 
     def update_visuals(self):
-
-        for widget in list(self.__dict__.values()):
+        for widget in self.__dict__.values():
             update_widget_visuals(widget)
 
     def on_show(self, popover, param):

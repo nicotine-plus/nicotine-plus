@@ -30,6 +30,7 @@ from unittest.mock import patch
 
 from pynicotine.slskproto import SlskProtoThread
 from pynicotine.slskmessages import ServerConnect, Login, SetWaitPort
+from pynicotine.utils import encode_path
 
 # Time (in s) needed for SlskProtoThread main loop to run at least once
 SLSKPROTO_RUN_TIME = 1.5
@@ -49,7 +50,7 @@ class MockSocket(Mock):
 
         file_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), datafile)
 
-        with open(file_path.encode("utf-8"), 'rb') as file_handle:
+        with open(encode_path(file_path), 'rb') as file_handle:
             content = file_handle.read()
 
         content = content.replace(windows_line_ending, unix_line_ending)
@@ -77,7 +78,7 @@ class SlskProtoTest(unittest.TestCase):
         queue = deque()
         proto = SlskProtoThread(
             core_callback=Mock(), queue=queue, interface='', bindip='',
-            port=None, port_range=(1024, 65535), eventprocessor=Mock()
+            port=None, port_range=(1024, 65535)
         )
 
         # Windows doesn't accept mock_socket in select() calls
@@ -85,7 +86,7 @@ class SlskProtoTest(unittest.TestCase):
 
         with patch('socket.socket') as mock_socket:
             mock_socket.set_data(LOGIN_DATAFILE)
-            proto.server_connect()
+            proto.server_disconnected = False
 
             queue.append(ServerConnect(addr=('0.0.0.0', 0), login=('dummy', 'dummy')))
             sleep(SLSKPROTO_RUN_TIME)
@@ -112,9 +113,9 @@ class SlskProtoTest(unittest.TestCase):
         queue = deque()
         proto = SlskProtoThread(
             core_callback=Mock(), queue=queue, interface='', bindip='',
-            port=None, port_range=(1024, 65535), eventprocessor=Mock()
+            port=None, port_range=(1024, 65535)
         )
-        proto.server_connect()
+        proto.server_disconnected = False
         queue.append(ServerConnect(addr=('0.0.0.0', 0), login=('username', 'password')))
 
         sleep(SLSKPROTO_RUN_TIME / 2)

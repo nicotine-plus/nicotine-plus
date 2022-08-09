@@ -87,7 +87,7 @@ class RoomList(UserInterface):
         CompletionEntry(frame.chatrooms_entry, self.room_model, column=0)
 
         if GTK_API_VERSION >= 4:
-            frame.room_list_button.get_first_child().get_style_context().add_class("arrow-button")
+            frame.room_list_button.get_first_child().add_css_class("arrow-button")
 
         frame.room_list_button.set_popover(self.popover)
 
@@ -187,9 +187,6 @@ class RoomList(UserInterface):
 
     def on_popup_menu(self, menu, widget):
 
-        if self.room_model is None:
-            return True
-
         room = self.get_selected_room(widget)
         self.popup_room = room
 
@@ -198,7 +195,6 @@ class RoomList(UserInterface):
 
         menu.actions[_("Disown Private Room")].set_enabled(self.core.chatrooms.is_private_room_owned(room))
         menu.actions[_("Cancel Room Membership")].set_enabled(self.core.chatrooms.is_private_room_member(room))
-        return False
 
     def on_popup_join(self, *_args):
         self.core.chatrooms.request_join_room(self.popup_room)
@@ -241,7 +237,7 @@ class RoomList(UserInterface):
         return True
 
     def update_visuals(self):
-        for widget in list(self.__dict__.values()):
+        for widget in self.__dict__.values():
             update_widget_visuals(widget)
 
     def clear(self):

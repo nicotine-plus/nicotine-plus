@@ -14,9 +14,11 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="label" translatable="yes">URL Handlers</property>
+            <property name="halign">start</property>
+            <property name="selectable">True</property>
             <property name="xalign">0</property>
             <property name="wrap">True</property>
-            <property name="mnemonic_widget">ProtocolHandlers</property>
+            <property name="mnemonic-widget">ProtocolHandlers</property>
             <attributes>
               <attribute name="weight" value="bold"/>
             </attributes>
@@ -44,12 +46,13 @@
             <property name="homogeneous">True</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkLabel" id="audioPlayerLabel">
+              <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Media player command:</property>
                 <property name="wrap">True</property>
+                <property name="wrap-mode">word-char</property>
                 <property name="xalign">0</property>
-                <property name="mnemonic_widget">audioPlayerCombo</property>
+                <property name="mnemonic-widget">audioPlayerCombo</property>
               </object>
             </child>
             <child>
@@ -80,12 +83,13 @@
             <property name="homogeneous">True</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkLabel" id="FileManagerLabel">
+              <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">File manager command:</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic_widget">FileManagerCombo</property>
+                <property name="wrap-mode">word-char</property>
+                <property name="mnemonic-widget">FileManagerCombo</property>
               </object>
             </child>
             <child>
@@ -143,7 +147,7 @@
                 <property name="margin-bottom">6</property>
                 <property name="spacing">6</property>
                 <child>
-                  <object class="GtkButton">
+                  <object class="GtkButton" id="_add_handler_button">
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Add…</property>
                     <signal name="clicked" handler="on_add_handler"/>
@@ -163,6 +167,7 @@
                             <property name="ellipsize">end</property>
                             <property name="label" translatable="yes">Add…</property>
                             <property name="use-underline">True</property>
+                            <property name="mnemonic-widget">_add_handler_button</property>
                           </object>
                         </child>
                       </object>
@@ -173,7 +178,7 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton">
+                  <object class="GtkButton" id="_edit_handler_button">
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Edit…</property>
                     <signal name="clicked" handler="on_edit_handler"/>
@@ -193,6 +198,7 @@
                             <property name="ellipsize">end</property>
                             <property name="label" translatable="yes">Edit…</property>
                             <property name="use-underline">True</property>
+                            <property name="mnemonic-widget">_edit_handler_button</property>
                           </object>
                         </child>
                       </object>
@@ -203,7 +209,7 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton">
+                  <object class="GtkButton" id="_remove_handler_button">
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Remove</property>
                     <signal name="clicked" handler="on_remove_handler"/>
@@ -223,6 +229,7 @@
                             <property name="ellipsize">end</property>
                             <property name="label" translatable="yes">Remove</property>
                             <property name="use-underline">True</property>
+                            <property name="mnemonic-widget">_remove_handler_button</property>
                           </object>
                         </child>
                       </object>

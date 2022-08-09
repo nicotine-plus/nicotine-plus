@@ -22,7 +22,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import time
 
 from collections import deque
 
@@ -44,8 +43,10 @@ from pynicotine.gtkgui.widgets.theme import get_user_status_color
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import clean_file
 from pynicotine.utils import delete_log
+from pynicotine.utils import encode_path
 from pynicotine.utils import open_log
 
 
@@ -53,8 +54,12 @@ class PrivateChats(IconNotebook):
 
     def __init__(self, frame, core):
 
-        IconNotebook.__init__(self, frame, core, frame.private_notebook, frame.private_page)
-        self.notebook.connect("switch-page", self.on_switch_chat)
+        super().__init__(
+            frame, core,
+            widget=frame.private_notebook,
+            parent_page=frame.private_page,
+            switch_page_callback=self.on_switch_chat
+        )
 
         self.completion = ChatCompletion()
         self.history = ChatHistory(frame, core)
@@ -70,30 +75,40 @@ class PrivateChats(IconNotebook):
             return
 
         for user, tab in self.pages.items():
-            if tab.container == page:
-                GLib.idle_add(lambda: tab.chat_entry.grab_focus() == -1)  # pylint:disable=cell-var-from-loop
+            if tab.container != page:
+                continue
 
-                self.completion.set_entry(tab.chat_entry)
-                tab.set_completion_list(list(self.core.privatechats.completion_list))
+            GLib.idle_add(lambda tab: tab.chat_entry.grab_focus() == -1, tab)
 
-                self.command_help.popover.unparent()
-                tab.help_button.set_popover(self.command_help.popover)
+            self.completion.set_entry(tab.chat_entry)
+            tab.set_completion_list(self.core.privatechats.completion_list[:])
 
-                # If the tab hasn't been opened previously, scroll chat to bottom
-                if not tab.opened:
-                    GLib.idle_add(tab.chat_view.scroll_bottom)
-                    tab.opened = True
+            self.command_help.popover.unparent()
+            tab.help_button.set_popover(self.command_help.popover)
 
-                # Remove hilite if selected tab belongs to a user in the hilite list
-                self.frame.notifications.clear("private", user)
-                break
+            if not tab.loaded:
+                tab.load()
+
+            # Remove hilite if selected tab belongs to a user in the hilite list
+            self.frame.notifications.clear("private", user)
+            break
+
+    def on_get_private_chat(self, *_args):
+
+        username = self.frame.private_entry.get_text().strip()
+
+        if not username:
+            return
+
+        self.frame.private_entry.set_text("")
+        self.core.privatechats.show_user(username)
 
     def clear_notifications(self):
 
         if self.frame.current_page_id != self.frame.private_page.id:
             return
 
-        page = self.get_nth_page(self.get_current_page())
+        page = self.get_current_page()
 
         for user, tab in self.pages.items():
             if tab.container == page:
@@ -120,8 +135,8 @@ class PrivateChats(IconNotebook):
             self.append_page(page.container, user, page.on_close, user=user)
             page.set_label(self.get_tab_label_inner(page.container))
 
-        if switch_page and self.get_current_page() != self.page_num(self.pages[user].container):
-            self.set_current_page(self.page_num(self.pages[user].container))
+        if switch_page and self.get_current_page() != self.pages[user].container:
+            self.set_current_page(self.pages[user].container)
 
     def remove_user(self, user):
 
@@ -158,11 +173,11 @@ class PrivateChats(IconNotebook):
 
     def set_completion_list(self, completion_list):
 
-        page = self.get_nth_page(self.get_current_page())
+        page = self.get_current_page()
 
         for tab in self.pages.values():
             if tab.container == page:
-                tab.set_completion_list(list(completion_list))
+                tab.set_completion_list(completion_list[:])
                 break
 
     def update_visuals(self):
@@ -181,7 +196,7 @@ class PrivateChats(IconNotebook):
 
         for user, page in self.pages.items():
             page.server_disconnect()
-            self.set_user_status(page.container, user, 0)
+            self.set_user_status(page.container, user, UserStatus.OFFLINE)
 
 
 class PrivateChat(UserInterface):
@@ -205,12 +220,9 @@ class PrivateChat(UserInterface):
         self.frame = chats.frame
         self.core = chats.core
 
-        self.opened = False
+        self.loaded = False
         self.offline_message = False
-        self.status = 0
-
-        if user in self.core.user_statuses:
-            self.status = self.core.user_statuses[user] or 0
+        self.status = self.core.user_statuses.get(user, UserStatus.OFFLINE)
 
         self.chat_view = TextView(self.chat_view, font="chatfont")
 
@@ -258,6 +270,12 @@ class PrivateChat(UserInterface):
 
         self.read_private_log()
 
+    def load(self):
+
+        # Scroll chat to bottom
+        GLib.idle_add(self.chat_view.scroll_bottom)
+        self.loaded = self.chat_view.auto_scroll = True
+
     def read_private_log(self):
 
         numlines = config.sections["logging"]["readprivatelines"]
@@ -275,7 +293,7 @@ class PrivateChat(UserInterface):
 
     def append_log_lines(self, path, numlines):
 
-        with open(path, "rb") as lines:
+        with open(encode_path(path), "rb") as lines:
             # Only show as many log lines as specified in config
             lines = deque(lines, numlines)
 
@@ -286,22 +304,20 @@ class PrivateChat(UserInterface):
                 except UnicodeDecodeError:
                     line = line.decode("latin-1")
 
-                self.chat_view.append_line(line, self.tag_hilite, timestamp_format="", scroll=False)
+                self.chat_view.append_line(line, tag=self.tag_hilite)
 
     def server_login(self):
         timestamp_format = config.sections["logging"]["private_timestamp"]
-        self.chat_view.append_line(_("--- reconnected ---"), self.tag_hilite, timestamp_format=timestamp_format)
+        self.chat_view.append_line(_("--- reconnected ---"), tag=self.tag_hilite, timestamp_format=timestamp_format)
 
     def server_disconnect(self):
 
         timestamp_format = config.sections["logging"]["private_timestamp"]
-        self.chat_view.append_line(_("--- disconnected ---"), self.tag_hilite, timestamp_format=timestamp_format)
-        self.status = -1
+        self.chat_view.append_line(_("--- disconnected ---"), tag=self.tag_hilite, timestamp_format=timestamp_format)
         self.offline_message = False
 
-        # Offline color for usernames
-        self.update_remote_username_tag(status=0)
-        self.update_local_username_tag(status=0)
+        self.update_remote_username_tag(status=UserStatus.OFFLINE)
+        self.update_local_username_tag(status=UserStatus.OFFLINE)
 
     def clear(self):
         self.chat_view.clear()
@@ -315,7 +331,7 @@ class PrivateChat(UserInterface):
         self.popup_menu_user_tab.toggle_user_items()
 
         menu.actions[_("Copy")].set_enabled(self.chat_view.get_has_selection())
-        menu.actions[_("Copy Link")].set_enabled(bool(self.chat_view.get_url_for_selected_pos()))
+        menu.actions[_("Copy Link")].set_enabled(bool(self.chat_view.get_url_for_current_pos()))
 
     def on_popup_menu_user(self, _menu, _widget):
         self.popup_menu_user_tab.toggle_user_items()
@@ -349,7 +365,7 @@ class PrivateChat(UserInterface):
 
         self.chats.request_tab_hilite(self.container)
 
-        if (self.chats.get_current_page() == self.chats.page_num(self.container)
+        if (self.chats.get_current_page() == self.container
                 and self.frame.current_page_id == self.frame.private_page.id and self.frame.window.is_active()):
             # Don't show notifications if the chat is open and the window is in use
             return
@@ -388,14 +404,14 @@ class PrivateChat(UserInterface):
             tag = usertag = self.tag_hilite
 
             if not self.offline_message:
-                self.chat_view.append_line(_("* Message(s) sent while you were offline."), tag,
+                self.chat_view.append_line(_("* Message(s) sent while you were offline."), tag=tag,
                                            timestamp_format=timestamp_format)
                 self.offline_message = True
 
         else:
             self.offline_message = False
 
-        self.chat_view.append_line(line, tag, timestamp=timestamp, timestamp_format=timestamp_format,
+        self.chat_view.append_line(line, tag=tag, timestamp=timestamp, timestamp_format=timestamp_format,
                                    username=self.user, usertag=usertag)
 
         if self.speech_toggle.get_active():
@@ -404,10 +420,11 @@ class PrivateChat(UserInterface):
             )
 
         if self.log_toggle.get_active():
-            timestamp_format = config.sections["logging"]["log_timestamp"]
-
-            self.chats.history.update_user(self.user, "%s %s" % (time.strftime(timestamp_format), line))
-            log.write_log(config.sections["logging"]["privatelogsdir"], self.user, line, timestamp, timestamp_format)
+            log.write_log_file(
+                folder_path=config.sections["logging"]["privatelogsdir"], base_name=clean_file(self.user) + ".log",
+                text=line, timestamp=timestamp
+            )
+            self.chats.history.update_user(self.user, line, add_timestamp=True)
 
     def echo_message(self, text, message_type):
 
@@ -417,7 +434,7 @@ class PrivateChat(UserInterface):
         if hasattr(self, "tag_" + str(message_type)):
             tag = getattr(self, "tag_" + str(message_type))
 
-        self.chat_view.append_line(text, tag, timestamp_format=timestamp_format)
+        self.chat_view.append_line(text, tag=tag, timestamp_format=timestamp_format)
 
     def send_message(self, text):
 
@@ -430,19 +447,18 @@ class PrivateChat(UserInterface):
             line = "[%s] %s" % (my_username, text)
             tag = self.tag_local
 
-        self.chat_view.append_line(line, tag, timestamp_format=config.sections["logging"]["private_timestamp"],
+        self.chat_view.append_line(line, tag=tag, timestamp_format=config.sections["logging"]["private_timestamp"],
                                    username=my_username, usertag=self.tag_my_username)
 
         if self.log_toggle.get_active():
-            timestamp_format = config.sections["logging"]["log_timestamp"]
-
-            self.chats.history.update_user(self.user, "%s %s" % (time.strftime(timestamp_format), line))
-            log.write_log(config.sections["logging"]["privatelogsdir"], self.user, line,
-                          timestamp_format=timestamp_format)
+            log.write_log_file(
+                folder_path=config.sections["logging"]["privatelogsdir"],
+                base_name=clean_file(self.user) + ".log", text=line
+            )
+            self.chats.history.update_user(self.user, line, add_timestamp=True)
 
     def update_visuals(self):
-
-        for widget in list(self.__dict__.values()):
+        for widget in self.__dict__.values():
             update_widget_visuals(widget)
 
     def user_name_event(self, pos_x, pos_y, user):
@@ -503,6 +519,6 @@ class PrivateChat(UserInterface):
 
         # No duplicates
         completion_list = list(set(completion_list))
-        completion_list.sort(key=lambda v: v.lower())
+        completion_list.sort(key=str.lower)
 
         self.chats.completion.set_completion_list(completion_list)

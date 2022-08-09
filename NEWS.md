@@ -1,12 +1,72 @@
-News
-====
+# Release Notes
 
-As per GCS § 6.7, this file contains a list of user-visible, noteworthy changes. Note that this is not the same as a changelog.
+## Version 3.2.4 (August 7, 2022)
 
-Version 3.2.2 (March 19, 2022)
-------------------------------
+### Corrections
 
-Changes
+ * Fixed a regression where shared folders could not be added using the Preferences dialog
+ * Fixed a performance regression when updating file transfer lists
+ * Fixed a potential crash when displaying the estimated time of a very large download
+
+### Issues closed on GitHub
+
+ * File sharing error ([#2142](https://github.com/nicotine-plus/nicotine-plus/issues/2142))
+
+
+## Version 3.2.3 (August 5, 2022)
+
+### Changes
+
+ * Optimized performance when many shared files and file transfers are present
+ * Implemented mouse wheel scrolling on tabs to change the active page
+ * Search results from ignored users are no longer shown
+ * Added total file size and duration of selected files to the File Properties dialog
+ * Added text-to-speech toggle buttons for individual private chats when TTS is enabled
+ * Usability improvements to several main window components and dialogs
+ * Reddit and Test Replier plugins are no longer included by default, moved to examplars on [GitHub](https://github.com/nicotine-plus/nicotine-plus/tree/HEAD/pynicotine/plugins/examplars)
+ * Various translation updates (thanks to our [many contributors](https://nicotine-plus.org/TRANSLATORS) on [Weblate](https://hosted.weblate.org/engage/nicotine-plus))
+
+### Corrections
+
+ * IMPORTANT: Fixed a CPU hogging issue when thousands of file transfers were present
+ * Fixed issues where downloads failed if the path or file name was very long (thank you @AtticFinder65536)
+ * Fixed an issue where folder downloads did not always save subfolders into the correct location
+ * Fixed an issue where the estimated total time remaining for folder transfers was incorrect
+ * Fixed an issue where clearing all file transfers did not remove transfers completely
+ * Fixed a rare crash when downloading files onto certain (latin-1) filesystems
+ * Fixed a discrepancy between the upload speed reported in outgoing search results compared to user info
+ * Fixed an issue where dark mode was used when light mode was enabled on some systems
+ * Unmaximized size of the main window is now remembered after the window is maximized
+ * Reduced memory usage after closing search tabs with many results
+ * Flatpak: network folders can now be shared
+ * Various minor bug fixes
+
+### Issues closed on GitHub
+
+ * Forcibly re-queue uploads that stop due to an error such as "Can't connect" ([#1563](https://github.com/nicotine-plus/nicotine-plus/issues/1563))
+ * Support paths longer than 260 characters on Windows ([#1728](https://github.com/nicotine-plus/nicotine-plus/issues/1728))
+ * UnicodeEncodeError when downloading file ([#1980](https://github.com/nicotine-plus/nicotine-plus/issues/1980))
+ * Nicotine+ always on dark mode regardless of my settings ([#1983](https://github.com/nicotine-plus/nicotine-plus/issues/1983))
+ * High CPU Usage pegs a single core ([#1998](https://github.com/nicotine-plus/nicotine-plus/issues/1998))
+ * Weird behavior when I download a whole folder with multiple subdirectories ([#2004](https://github.com/nicotine-plus/nicotine-plus/issues/2004))
+ * Don't freeze/crash without xdg-open ([#2005](https://github.com/nicotine-plus/nicotine-plus/issues/2005))
+ * Unicode encode error ([#2015](https://github.com/nicotine-plus/nicotine-plus/issues/2015))
+ * Russian translation updated ([#2016](https://github.com/nicotine-plus/nicotine-plus/issues/2016))
+ * Time Left for folder and user same as for currently active file ([#2018](https://github.com/nicotine-plus/nicotine-plus/issues/2018))
+ * Time Left column regression ([#2020](https://github.com/nicotine-plus/nicotine-plus/issues/2020))
+ * Clear ALL downloads, Clear ALL uploads not working ([#2023](https://github.com/nicotine-plus/nicotine-plus/issues/2023))
+ * User note saves when pressing Cancel ([#2036](https://github.com/nicotine-plus/nicotine-plus/issues/2036))
+ * Please show completed transfer speeds in the upload tab. ([#2082](https://github.com/nicotine-plus/nicotine-plus/issues/2082))
+ * Column headings overlapping in the downloads tab ([#2090](https://github.com/nicotine-plus/nicotine-plus/issues/2090))
+ * Sort similar users by interest ([#2096](https://github.com/nicotine-plus/nicotine-plus/issues/2096))
+ * Change the cursor to a finger when it's over links ([#2101](https://github.com/nicotine-plus/nicotine-plus/issues/2101))
+ * \[3.2.3.rc2\] Critical error (UI window with bug report) ([#2116](https://github.com/nicotine-plus/nicotine-plus/issues/2116))
+ * Lists of shared files not human-readable ([#2118](https://github.com/nicotine-plus/nicotine-plus/issues/2118))
+ * \[3.2.3.rc2\] Exception thrown when highlighting several uploads & selecting "Clear" ([#2124](https://github.com/nicotine-plus/nicotine-plus/issues/2124))
+
+## Version 3.2.2 (March 19, 2022)
+
+### Changes
 
  * Show file size in bytes in addition to factorized size in the File Properties dialog
  * Disallow setting listening ports below 1024, which is in the operating system privileged range
@@ -15,7 +75,7 @@ Changes
  * Simplify the Public room feed layout and mention the actual room name in text-to-speech messages
  * Check whole words for username mentions in chat rooms to avoid raising notifications for subwords
 
-Corrections
+### Corrections
 
  * IMPORTANT: Prevent random upload timeouts of large files if the remote user has a slow or limited download speed
  * Incomplete downloads are restarted if the file contents change on the uploader's end
@@ -34,7 +94,7 @@ Corrections
  * Fixed an issue that prevented automatic column width sizing when double clicking column separators
  * Fixed the sort order of the Time Elapsed and Time Remaining columns in the Downloads and Uploads views
 
-Issues closed on GitHub
+### Issues closed on GitHub
 
  * Chat mentions with 1 character username ([#1790](https://github.com/nicotine-plus/nicotine-plus/issues/1790))
  * Sort order time elapsed is off for uploads over an hour ([#1795](https://github.com/nicotine-plus/nicotine-plus/issues/1795))
@@ -49,10 +109,10 @@ Issues closed on GitHub
  * Note editing no longer opens by double-clicking? 3.3.0.dev1 ([#1939](https://github.com/nicotine-plus/nicotine-plus/issues/1939))
  * Nicotine+ does not preserve the folder structure when downloading ([#1940](https://github.com/nicotine-plus/nicotine-plus/issues/1940))
 
-Version 3.2.1 (February 10, 2022)
----------------------------------
 
-Changes
+## Version 3.2.1 (February 10, 2022)
+
+### Changes
 
  * Optimized overall performance and stability related to Soulseek server and peer connections
  * Optimized performance and improve robustness of the round robin queue system (thank you @toofar)
@@ -68,7 +128,7 @@ Changes
  * Added new Ukrainian translation (thank you @uniss2209)
  * Lots of updates to the translations (thanks to our [many contributors](https://nicotine-plus.org/TRANSLATORS) on [Weblate](https://hosted.weblate.org/engage/nicotine-plus))
 
-Corrections
+### Corrections
 
  * CRITICAL: Fixed a crash vulnerability when receiving a download request with a malformed file path (affects version 3.0.3 and later)
  * IMPORTANT: Fixed an issue where uploads could become stuck in the transfer queue forever
@@ -80,7 +140,7 @@ Corrections
  * Fixed broken scrollbar when changing active page in the Preferences dialog
  * Fixed labels of UI elements in the Russian translation (thank you @SnIPeRSnIPeR)
 
-Issues closed on GitHub
+### Issues closed on GitHub
 
  * After using Clear on an uploaded item, it gets removed, but then returns ([#1745](https://github.com/nicotine-plus/nicotine-plus/issues/1745))
  * Direct Connection Fails ([#1748](https://github.com/nicotine-plus/nicotine-plus/issues/1748))
@@ -107,10 +167,12 @@ Issues closed on GitHub
  * \[3.2.1.rc2\] Crash when resuming transfers ([#1853](https://github.com/nicotine-plus/nicotine-plus/issues/1853))
  * Way to handle lots of small files on your upload queue ([#1865](https://github.com/nicotine-plus/nicotine-plus/issues/1865))
 
-Version 3.2.0 (December 18, 2021)
----------------------------------
 
-Changes
+## Version 3.2.0 (December 18, 2021)
+
+WINDOWS USERS: The installer format has changed in Nicotine+ 3.2.0 and above. If you are upgrading from Nicotine+ 3.1.1 or earlier, please uninstall Nicotine+ first (this will not remove your existing settings).
+
+### Changes
 
  * Performance improvements across the entire application, including file searching, transfers, user shares and chats
  * Accessibility improvements to various components, including result filters, browse shares, wishlist and chat rooms
@@ -130,7 +192,7 @@ Changes
  * New and improved translations for many languages
  * Lowered Python version requirement to 3.5 for Debian Stretch LTS based distros
 
-Corrections
+### Corrections
 
  * Several stability improvements related to file scanning
  * Fixed issues where UPnP did not work with certain routers
@@ -156,7 +218,7 @@ Corrections
  * Windows: improved compatibility with Windows 11
  * Windows: reduced the number of false antivirus positives
 
-Issues closed on GitHub
+### Issues closed on GitHub
 
  * It's possible to open more than one instance of Nicotine+ ([#1418](https://github.com/nicotine-plus/nicotine-plus/issues/1418))
  * Nicotine+ database needs recovery ([#1467](https://github.com/nicotine-plus/nicotine-plus/issues/1467))
@@ -258,15 +320,15 @@ Issues closed on GitHub
  * UI hangs for seconds at a time in the Search Files view ([#1734](https://github.com/nicotine-plus/nicotine-plus/issues/1734))
  * Scrolling on a Preferences field changes the field's value ([#1735](https://github.com/nicotine-plus/nicotine-plus/issues/1735))
 
-Version 3.1.1 (August 2, 2021)
------------------------------
 
-Changes
+## Version 3.1.1 (August 2, 2021)
+
+### Changes
 
  * Downloads denied with 'Too many files' or 'Too many megabytes' are now re-queued every 12 minutes
  * Leech detector plugin opens private chat user tabs by default when sending complaints
 
-Corrections
+### Corrections
 
  * IMPORTANT: Fixed an issue where recently queued files were uploaded before older files (LIFO queue behavior)
  * Fixed a crash when attempting to search files in joined rooms
@@ -275,15 +337,15 @@ Corrections
  * Fixed an issue where decimals were truncated before being saved (e.g. in the 'Anti SHOUT' plugin)
  * Fixed an issue where an incorrect user tab was opened when issuing the /msg command
 
-Issues closed on GitHub
+### Issues closed on GitHub
 
  * non US locale float type variables in plugins cannot be filled ([#1462](https://github.com/nicotine-plus/nicotine-plus/issues/1462))
  * Files uploaded in a random order ([#1463](https://github.com/nicotine-plus/nicotine-plus/issues/1463))
 
-Version 3.1.0 (July 23, 2021)
------------------------------
 
-Changes
+## Version 3.1.0 (July 23, 2021)
+
+### Changes
 
  * Added alternative transfer speed limits for downloads and uploads, toggleable with a quick access button in the status bar
  * Added an option to save downloads to subfolders based on the uploader's username
@@ -314,7 +376,7 @@ Changes
  * Removed option to rotate tab labels, due to various issues with its implementation
  * Removed support for Ubuntu 16.04 and Python 3.5
 
-Corrections
+### Corrections
 
  * Fixed an issue where file transfers did not reach maximum speeds on slow connections
  * Fixed an issue where incorrect upload speeds were sent to the server
@@ -332,7 +394,7 @@ Corrections
  * Windows: fixed an issue where closed windows would appear in window peek
  * Windows: fixed an issue where minimized windows were not displayed when restoring Nicotine+ from tray
 
-Issues closed on GitHub
+### Issues closed on GitHub
 
  * Is there a way to exclude a file/directory from a share? + Some feedback ([#924](https://github.com/nicotine-plus/nicotine-plus/issues/924))
  * Feature Request: Improve folder folding behavior + Add Collapse/Expand All ([#981](https://github.com/nicotine-plus/nicotine-plus/issues/981))
@@ -396,21 +458,21 @@ Issues closed on GitHub
  * select ValueError: too many file descriptors in select() (Windows) ([#1456](https://github.com/nicotine-plus/nicotine-plus/issues/1456))
  * UPnP not working ([#1457](https://github.com/nicotine-plus/nicotine-plus/issues/1457))
 
-Version 3.0.6 (May 1, 2021)
------------------------------
 
-Changes
+## Version 3.0.6 (May 1, 2021)
+
+### Changes
 
  * The message sent to users attempting to access geo-blocked content can now be customized
 
-Corrections
+### Corrections
 
  * Fixed a few critical errors related to uploads and file selections
  * Chat search commands and the /ctcpversion command now work properly
  * Fixed Python 3.5 compatibility
  * Windows: fixed an issue where duplicate notification icons would appear in the tray
 
-Issues closed on GitHub
+### Issues closed on GitHub
 
  * Geoblock Options ([#1028](https://github.com/nicotine-plus/nicotine-plus/issues/1028))
  * Notifications tray icons aren't removed automatically ([#1354](https://github.com/nicotine-plus/nicotine-plus/issues/1354))
@@ -419,10 +481,10 @@ Issues closed on GitHub
  * Unable to search chat room ([#1359](https://github.com/nicotine-plus/nicotine-plus/issues/1359))
  * Critical error ([#1361](https://github.com/nicotine-plus/nicotine-plus/issues/1361))
 
-Version 3.0.5 (April 24, 2021)
------------------------------
 
-Changes
+## Version 3.0.5 (April 24, 2021)
+
+### Changes
 
  * Replaced previous country flag icons with clearer ones
  * Improved performance when selecting a large number of transfers
@@ -430,7 +492,7 @@ Changes
  * Performance improvements for long buddy lists
  * Added a dropdown menu button in tab bars for unread notifications
 
-Corrections
+### Corrections
 
  * Custom media player and file manager commands no longer reset after a restart
  * Fixed an issue where scanning of shared files malfunctioned if the UI didn't load in time
@@ -449,7 +511,7 @@ Corrections
  * Text-To-Speech messages no longer overlap each other
  * Minor behavioral corrections related to file transfers
 
-Issues closed on GitHub
+### Issues closed on GitHub
 
  * Download Folder function doesn't work from search when uploader is offline ([#511](https://github.com/nicotine-plus/nicotine-plus/issues/511))
  * nicotine crash, ([#1040](https://github.com/nicotine-plus/nicotine-plus/issues/1040))
@@ -465,10 +527,10 @@ Issues closed on GitHub
  * copy search team Bug ([#1348](https://github.com/nicotine-plus/nicotine-plus/issues/1348))
  * Can't save files.db: [Errno 13] ([#1352](https://github.com/nicotine-plus/nicotine-plus/issues/1352))
 
-Version 3.0.4 (April 7, 2021)
------------------------------
 
-Corrections
+## Version 3.0.4 (April 7, 2021)
+
+### Corrections
 
  * Invalid file names no longer break scanning of shared folders
  * Configuration changes are now saved if Nicotine+ is terminated (SIGTERM)
@@ -476,23 +538,23 @@ Corrections
  * Action buttons in the file properties dialog now stick to the bottom as intended
  * Windows: Nicotine+ no longer crashes on startup when translations are used
 
-Issues closed on GitHub
+### Issues closed on GitHub
 
  * Critical UnicodeDecodeError on startup: 'utf-8' codec can't decode byte 0x92 in position 12: invalid start byte ([#1038](https://github.com/nicotine-plus/nicotine-plus/issues/1038))
  * You have no privileges left. They are not necessary, but allow your downloads to be queued ahead of non-privileged users. [Question] ([#1039](https://github.com/nicotine-plus/nicotine-plus/issues/1039))
  * line 642 ([#1042](https://github.com/nicotine-plus/nicotine-plus/issues/1042))
  * 'utf-8' codec can't encode characters(surrogates not allowed) ([#1043](https://github.com/nicotine-plus/nicotine-plus/issues/1043))
 
-Version 3.0.3 (April 1, 2021)
------------------------------
 
-Changes
+## Version 3.0.3 (April 1, 2021)
+
+### Changes
 
  * Refactored download queuing to use the same system as the official client
  * Improved reliability and performance of the upload queue
  * Added a popup that appears whenever a critial error occurs in the program
 
-Corrections
+### Corrections
 
  * Nicotine+ now starts properly when invalid download filters are detected
  * The configuration file no longer resets when running out of disk space
@@ -511,7 +573,7 @@ Corrections
  * Avoid unnecessary network traffic related to number of shared folders and files
  * Reduced memory usage on Windows and macOS
 
-Issues closed on GitHub
+### Issues closed on GitHub
 
  * Version 3.0.1 and 3.0.2's Nicotine+.exe detected as a virus by Malwarebytes ([#1012](https://github.com/nicotine-plus/nicotine-plus/issues/1012))
  * Username Wrong Color in Chat ([#1013](https://github.com/nicotine-plus/nicotine-plus/issues/1013))
@@ -526,30 +588,30 @@ Issues closed on GitHub
  * Problems with new interface in 3.0 ([#1033](https://github.com/nicotine-plus/nicotine-plus/issues/1033))
  * line 642 ([#1037](https://github.com/nicotine-plus/nicotine-plus/issues/1037))
 
-Version 3.0.2 (March 1, 2021)
------------------------------
 
-Corrections
+## Version 3.0.2 (March 1, 2021)
+
+### Corrections
 
  * Fixed a regression where users could not be added to the buddy list
  * Fixed an issue where file extension info could appear incorrectly in the transfer list
  * Fixed an issue where root directories were not shared properly
 
-Issues closed on GitHub
+### Issues closed on GitHub
 
  * Cannot Add Users to Buddy List ([#1011](https://github.com/nicotine-plus/nicotine-plus/issues/1011))
 
-Version 3.0.1 (February 26, 2021)
------------------------------
 
-Changes
+## Version 3.0.1 (February 26, 2021)
+
+### Changes
 
  * Improved UI performance when loading many search results
  * Main menu can now be opened using the F10 key
  * The list of keyboard shortcuts can now be opened using Ctrl+?
  * Away status is now remembered between sessions
 
-Corrections
+### Corrections
 
  * Fixed several issues causing the status of an upload to be stuck if the user logged out
  * Fixed a few chat room commands that did not work previously
@@ -559,7 +621,7 @@ Corrections
  * Windows: fixed an issue where root directories could not be shared
  * macOS: fixed an issue where Nicotine+ would crash on startup on some systems
 
-Issues closed on GitHub
+### Issues closed on GitHub
 
  * New installation in Big Sur. Doesn't scan shared folders. ([#899](https://github.com/nicotine-plus/nicotine-plus/issues/899))
  * Download speed after restart ([#918](https://github.com/nicotine-plus/nicotine-plus/issues/918))
@@ -572,10 +634,10 @@ Issues closed on GitHub
  * Make opening of Window's file manager (File Explorer) more generic ([#1004](https://github.com/nicotine-plus/nicotine-plus/issues/1004))
  * missing python req in setup.py ([#1006](https://github.com/nicotine-plus/nicotine-plus/issues/1006))
 
-Version 3.0.0 (February 12, 2021)
------------------------------
 
-Changes
+## Version 3.0.0 (February 12, 2021)
+
+### Changes
 
  * Introduced a new design utilizing header bars (to use the old design, uncheck Menu -> View -> Use Header Bar)
  * Improved UI responsiveness when scanning shares
@@ -599,7 +661,7 @@ Changes
  * Improved the default color scheme
  * Several other minor improvements
 
-Corrections
+### Corrections
 
  * Fixed an issue where upload speed limits were not applied on startup
  * Fixed an issue where UPnP portforwarding did not succeed with certain routers
@@ -610,7 +672,7 @@ Corrections
  * Fixed an issue where custom commands registered in plugins did not work
  * Several other minor corrections
 
-Issues closed on GitHub
+### Issues closed on GitHub
 
  * Nicotine will not login to server ([#904](https://github.com/nicotine-plus/nicotine-plus/issues/904))
  * File not shared ! ([#905](https://github.com/nicotine-plus/nicotine-plus/issues/905))
@@ -654,15 +716,15 @@ Issues closed on GitHub
  * Feature Request: Log Viewer / Context menu items to browse logs in system text editor ([#986](https://github.com/nicotine-plus/nicotine-plus/issues/986))
  * Failure to report buddy shares ([#988](https://github.com/nicotine-plus/nicotine-plus/issues/988))
 
-Version 2.2.2 (December 15, 2020)
------------------------------
 
-Changes
+## Version 2.2.2 (December 15, 2020)
+
+### Changes
 
  * Fixed an issue where the list of queued downloads would not be restored on startup
 
-Version 2.2.1 (December 14, 2020)
------------------------------
+
+## Version 2.2.1 (December 14, 2020)
 
 Changes
 
@@ -679,10 +741,10 @@ Issues closed on GitHub
  * GeoBlock Not Blocking ([#891](https://github.com/nicotine-plus/nicotine-plus/issues/891))
  * Nicotine v2.2.0 immediately crashes on startup on Windows 10 v19042.630 ([#893](https://github.com/nicotine-plus/nicotine-plus/issues/893))
 
-Version 2.2.0 (December 4, 2020)
------------------------------
 
-Changes
+## Version 2.2.0 (December 4, 2020)
+
+### Changes
 
  * Modernized the default icon theme and several parts of the UI
  * Searching for file names containing special characters returns more search results than previously
@@ -708,7 +770,7 @@ Changes
  * Removed dbus-python, libnotify, miniupnpc, pytaglib and xdg-utils dependencies, as functionality is now handled by Nicotine+
  * Multiple under-the-hood code improvements and code style changes, as well as smaller bug fixes
 
-Issues closed on GitHub
+### Issues closed on GitHub
 
  * Brew OSX Install ([#58](https://github.com/nicotine-plus/nicotine-plus/issues/58))
  * a separate program for database scanning ([#443](https://github.com/nicotine-plus/nicotine-plus/issues/443))
@@ -737,10 +799,10 @@ Issues closed on GitHub
  * Missing application icon from window list ([#879](https://github.com/nicotine-plus/nicotine-plus/issues/879))
  * Python 3.8 Crashes ([#882](https://github.com/nicotine-plus/nicotine-plus/issues/882))
 
-Version 2.1.2 (12 October 2020)
------------------------------
 
-Changes
+## Version 2.1.2 (October 12, 2020)
+
+### Changes
 
  * Contents of a shared folder are now properly sent to other users
  * Improved performance and memory usage when scanning shares
@@ -750,17 +812,17 @@ Changes
  * Added transfer speeds and shortcuts to downloads/uploads in the tray
  * Multiple under-the-hood code improvements and code style changes
 
-Issues closed on GitHub
+### Issues closed on GitHub
 
  * Improve code style/consistency ([#377](https://github.com/nicotine-plus/nicotine-plus/issues/377))
  * debian packages ([#530](https://github.com/nicotine-plus/nicotine-plus/issues/530))
  * running from source - missing reqs ([#531](https://github.com/nicotine-plus/nicotine-plus/issues/531))
  * SIGABRT when scanning corrupt/empty FLAC file ([#730](https://github.com/nicotine-plus/nicotine-plus/issues/730))
 
-Version 2.1.1 (26 September 2020)
------------------------------
 
-Changes
+## Version 2.1.1 (September 26, 2020)
+
+### Changes
 
  * Improved speed limit calculations for file transfers
  * Added option to enable dark mode theme
@@ -772,7 +834,7 @@ Changes
  * Added option to log debug messages to file
  * Several minor bug fixes
 
-Issues closed on GitHub
+### Issues closed on GitHub
 
  * Please put whole search string after/before "results: x/y" ([#383](https://github.com/nicotine-plus/nicotine-plus/issues/383))
  * replace log search function with search/filter thingybob, send logs to logfile. ([#387](https://github.com/nicotine-plus/nicotine-plus/issues/387))
@@ -782,10 +844,10 @@ Issues closed on GitHub
  * Wrap filters into one line ([#669](https://github.com/nicotine-plus/nicotine-plus/issues/669))
  * Public room cannot be auto-joined ([#672](https://github.com/nicotine-plus/nicotine-plus/issues/672))
 
-Version 2.1.0 (12 September 2020)
------------------------------
 
-Changes
+## Version 2.1.0 (September 12, 2020)
+
+### Changes
 
  * Major performance improvements when rescanning shared files and sending user browse responses to others
  * Several performance and stability improvements related to connections and file transfers
@@ -811,7 +873,7 @@ Changes
  * Removed support for detachable tabs due to low usage and bugs
  * Replaced Mutagen with pytaglib for audio file metadata scanning due to performance issues
 
-Issues closed on GitHub
+### Issues closed on GitHub
 
  * Brew OSX Install ([#58](https://github.com/nicotine-plus/nicotine-plus/issues/58))
  * Flatpak build ([#102](https://github.com/nicotine-plus/nicotine-plus/issues/102))
@@ -854,18 +916,18 @@ Issues closed on GitHub
  * arrows are missing from the tree view collapse/expand ([#594](https://github.com/nicotine-plus/nicotine-plus/issues/594))
  * Nicotine Freezes With Too Many Transfers ([#609](https://github.com/nicotine-plus/nicotine-plus/issues/609))
 
-Version 2.0.1 (16 July 2020)
------------------------------
 
-Changes
+## Version 2.0.1 (July 16, 2020)
+
+### Changes
 
  * Fixed an issue where search requests from others weren't processed
  * The update checker now shows the latest version properly
 
-Version 2.0.0 (14 July 2020)
------------------------------
 
-Changes
+## Version 2.0.0 (July 14, 2020)
+
+### Changes
 
  * Ported from Python 2 to Python 3
  * Ported from GTK2 to GTK3 (PyGTK to PyGObject)
@@ -890,7 +952,7 @@ Changes
  * General code cleanups, removed dead code
  * Replaced non-free sound effects
 
-Bugs closed on GitHub
+### Issues closed on GitHub
 
  * Columns Position Not Being Maintained ([#8](https://github.com/nicotine-plus/nicotine-plus/issues/8))
  * Add "Group by folder" option to search results ([#17](https://github.com/nicotine-plus/nicotine-plus/issues/17))
@@ -984,23 +1046,23 @@ Bugs closed on GitHub
  * Search log window case insensitive. ([#384](https://github.com/nicotine-plus/nicotine-plus/issues/384))
  * Gentoo upnp errors, failed to map the external wan port. ([#385](https://github.com/nicotine-plus/nicotine-plus/issues/385))
 
-Version 1.4.3 (unstable)
------------------------------
+
+## Version 1.4.3 Unstable
 
 * Rolling development release in preparation for 2.0.0
 
-Version 1.4.2 (17 February 2018)
------------------------------
 
-Bugs closed on Github
+## Version 1.4.2 (February 17, 2018)
+
+### Issues closed on GitHub
 
  * Bitrate - Length - Speed ([#45](https://github.com/nicotine-plus/nicotine-plus/issues/45))
  * bug or feature ? ([#47](https://github.com/nicotine-plus/nicotine-plus/issues/47))
 
-Version 1.4.1 (12 February 2017)
------------------------------
 
-Bugs closed on Github
+## Version 1.4.1 (February 12, 2017)
+
+### Issues closed on GitHub
 
  * 1.4.0 /usr/bin empty ([#38](https://github.com/nicotine-plus/nicotine-plus/issues/38))
  * Configure - Directories Page 4 of 5 ([#39](https://github.com/nicotine-plus/nicotine-plus/issues/39))
@@ -1008,46 +1070,46 @@ Bugs closed on Github
  * 1.4.0 Text Off Set Under Columns ([#41](https://github.com/nicotine-plus/nicotine-plus/issues/41))
  * Make nicotine work with FreeBSD (PR [#44](https://github.com/nicotine-plus/nicotine-plus/issues/44))
 
-Version 1.4.0 (31th January 2017)
------------------------------
 
-Miscellaneous bugs fixed
+## Version 1.4.0 (January 31, 2017)
+
+### Miscellaneous bugs fixed
 
  * Some files were not shown in shares due to broken metadata of these files.
  * Fix a bug preventing the offline help to open.
 
-Features
+### Features
 
  * Windows installer refreshed.
 
-Bugs closed on Github
+### Issues closed on GitHub
 
  * Make proper release ([#26](https://github.com/nicotine-plus/nicotine-plus/issues/26))
 
-Bug closed on Trac (readonly)
+### Issues closed on Trac
 
  * File Manager / "Open Directory" function in Windows (#717)
  * Open Directory not working (#945)
 
-Version 1.3.2 unstable (14th January 2017)
------------------------------
 
-Bugs closed on Github
+## Version 1.3.2 Unstable (January 14, 2017)
+
+### Issues closed on GitHub
 
  * Uploads stop working after a while ([#35](https://github.com/nicotine-plus/nicotine-plus/issues/35))
  * Can't download from certain users ([#37](https://github.com/nicotine-plus/nicotine-plus/issues/37))
 
-Bug closed on Trac (readonly)
+### Issues closed on Trac
 
  * shared files appear not shared to some peers (#744)
  * Stops Downloading After About 15 Minutes (#759)
  * Browse Files from Friemds (#762)
  * Download issue.... (#903)
 
-Version 1.3.1 unstable (10th January 2017)
------------------------------
 
-Behavior
+## Version 1.3.1 Unstable (January 10, 2017)
+
+### Behavior
 
  * Displaying results of searches should now be faster and not blocking the UI.
  * Send a private message to users who queue a directory has been removed.
@@ -1060,7 +1122,7 @@ Behavior
  * Blinking of the trayicon is not recommended and has been removed.
  * Menu icons have been dropped since they are deprecated by GTK.
 
-Features
+### Features
 
  * Translations works on Windows.
  * UPnP support out of the box on Windows.
@@ -1077,7 +1139,7 @@ Features
  * NowPlaying: Banshee support has been updated.
  * NowPlaying: Foobar support has been updated.
 
-Bugs closed on Github
+### Issues closed on GitHub
 
  * Question - Nicotine Still Being Developed? ([#1](https://github.com/nicotine-plus/nicotine-plus/issues/1))
  * bug in userbrowse.py ([#2](https://github.com/nicotine-plus/nicotine-plus/issues/2))
@@ -1098,7 +1160,7 @@ Bugs closed on Github
  * Clear Finished/Aborted button problem ([#33](https://github.com/nicotine-plus/nicotine-plus/issues/33))
  * Settings window slow to open ([#36](https://github.com/nicotine-plus/nicotine-plus/issues/36))
 
-Bug closed on Trac (readonly)
+### Issues closed on Trac
 
  * "Abort & Delete" button is mislabeled (#194)
  * No icon found in nicotine.exe (#512)
@@ -1127,20 +1189,19 @@ Bug closed on Trac (readonly)
  A bunch of outdated bug reports have been closed on Trac.
 
 
-Version 1.2.16 (31th October 2010)
-----------------------------------
+## Version 1.2.16 (October 31, 2010)
 
-Behaviour
+### Behaviour
 
  * Updated most country flags (#599)
  * All messages should now be properly timestamped in the log (#602)
  * Saving user pictures now appends a timestamp so pictures aren't overwritten
 
-Features
+### Features
 
  * Foobar support for NowPlaying (#644)
 
-Bugs
+### Bugs
 
  * Division-by-zero errors broke transfers (#561)
  * Some packets were packed incorrectly (#570)
@@ -1159,10 +1220,9 @@ Bugs
  * nicotine.desktop was missing P2P and Network sub categories (#660)
 
 
-Version 1.2.15 (16th February 2010)
------------------------------------
+## Version 1.2.15 (February 16, 2010)
 
-Behaviour
+### Behaviour
 
  * Changed the description for our .exe files so it shows up as Nicotine+ in
    firewalls (ticket #498)
@@ -1174,14 +1234,14 @@ Behaviour
  * Transfer views update less frequently reducing the amount of CPU needed.
  * xdg-open is now used by default to open folders and play music
 
-Features
+### Features
 
  * Now-Playing support for Amarok2 (Ticket #423)
  * FastConfigure dialog for new users (Ticket #482)
  * Country flags now have tooltips (Ticket #521)
  * Now-Playing support for Banshee
 
-Bugs
+### Bugs
 
  * Collapse mode in upload/download didn't work for newly added files, wasn't
    remembered with restart (ticket #205)
@@ -1195,25 +1255,24 @@ Bugs
    disabled and the user closed the search tab (Ticket #552)
  * Incoming RoomSearch raised exceptions
 
-Translations
+### Translations
 
  * ><((((*> updated the French translation
  * djbaloo updated the Hungarian translation
 
 
-Version 1.2.14 (4th October 2009)
----------------------------------
+## Version 1.2.14 (October 4, 2009)
 
-Behaviour
+### Behaviour
 
  * A corrupt configuration file will no longer make Nicotine+ fail on startup (ticket #483)
  * Multiple shares can now be loaded from the harddrive at the same time
 
-Features
+### Features
 
  * Support for UPnP through MiniUPnPc (ticket #230)
 
-Bugs
+### Bugs
 
  * Search failed to work on certain combinations of OS and processor (ticket #486)
  * Implemented our own filelist iterator, dramatically reducing the amount of
@@ -1223,15 +1282,14 @@ Bugs
  * Filesize was incorrect for files around 2 gigabytes and up in userbrowse.
 
 
-Version 1.2.13 (22 Sept 2009)
------------------------------
+## Version 1.2.13 (September 22, 2009)
 
-Behaviour
+### Behaviour
 
  * Download queue is stored independently from the normal configuration file (ticket #467)
  * Non-working connections are cleaned up more aggressively (ticket #473)
 
-Features
+### Features
 
  * Themes can now use a range of image types, including SVG
  * Ownership of private rooms is now displayed
@@ -1241,7 +1299,7 @@ Features
  * Rudimentary download rate limiter
  * The NowPlaying code for Audacious now supports audtool2 as well
 
-Bugs
+### Bugs
 
  * Notifications failed when a user had <> in the name
  * Highlight icon kept on blinking with detached windows
@@ -1252,17 +1310,16 @@ Bugs
    "Abort User's Upload(s)"
  * ...and lots of tiny bugs
 
-Translations
+### Translations
 
  * Žygimantas updated Lithuanian translation
  * Kenny updated Dutch translation
  * Nils updated Hungarian translation
 
 
-Version 1.2.12 (26 May 2009)
-----------------------------
+## Version 1.2.12 (May 26, 2009)
 
-Behaviour
+### Behaviour
 
  * RGBA mode is no longer on by default, to use it pass the --enable-rgba flag when starting Nicotine+
  * On Windows, configuration files are now stored in the user's Application Data folder instead of the installation folder (bug #330)
@@ -1274,7 +1331,7 @@ Behaviour
  * The dependency for PyVorbis has been removed in favour of Mutagen (bug #409)
  * Notification popups will no longer stack but a single popup will be updated
 
-Features
+### Features
 
  * Built-in Webbrowser (MozEmbed)
  * Ignore by IP
@@ -1302,7 +1359,7 @@ Features
  * Tab completion can be done by in-line replacement instead of dropdown list
  * Transfer views now have a 'Place in line' column
 
-Bugs
+### Bugs
 
  * The Danish translation is now stored under 'da'
  * Fixed sorting of percentage (bug #322)
@@ -1316,15 +1373,14 @@ Bugs
  * Private Room handling has improved (bug #432)
 
 
-Version 1.2.10 (30 December 2008)
----------------------------------
+## Version 1.2.10 (December 30, 2008)
 
-Features
+### Features
 
  * Added support for RGBA, enabling Murrine users to use transparency and round menus
  * Tabs can be reorderen and can be hidden
 
-Bugs
+### Bugs
 
  * Fixed bug #177, notification popups are now split into file and directory notifications
  * Fixed bug #274, cancelling and disowning private rooms bug (fr3shpr1nc3)
@@ -1334,10 +1390,9 @@ Bugs
  * Room searches work again (was broken in 1.2.10alpha)
 
 
-Version 1.2.10 alpha (9 November 2008)
---------------------------------------
+## Version 1.2.10 Alpha (November 9, 2008)
 
-Features
+### Features
 
  * Added last.fm to the now-player (gallows)
  * Added first version of the plugin system
@@ -1348,7 +1403,7 @@ Features
  * Connections will be dropped when the maximum is approached, decreasing the
    chance for "IOError" messages
 
-Bugs
+### Bugs
 
  * 'Send to player' failed because of missing quotes for finished downloads
  * Fixed a bug with tuple error message causing a traceback
@@ -1361,19 +1416,19 @@ Bugs
  * A inverted port range no longer causes connection failures
  * Removed deprecated GTK calls
 
-Buddylist
+### Buddylist
 
  * Radio buttons now allow the buddylist to be toggled as always visible, in own
    tab, or in the chatroom tab.
 
-General Changes
+### General Changes
 
  * The Edit menu has been broken into Edit, View and Shares menus
    (similar to Enr1X's patch http://nicotine-plus.org/ticket/231 )
    Also fixed the duplicate Alt-B hotkey (hide flags is now Alt-G).
  * Committed QuinoX's patch for case-insensitive nick completion (#252)
 
-Chat Rooms
+### Chat Rooms
 
  * Added Server Message 141, enables Private Chat Room Invitations and thus
    allows those you invite to get past the annoying server message that warning
@@ -1385,11 +1440,11 @@ Chat Rooms
    also drop ownership of a private room and drop membership of another person's
    private room. This feature is currently available on the testing server only.
 
-Search
+### Search
 
  * Country flags are shown in search results, metadata dialogs
 
-Settings
+### Settings
 
  * Upload and Download transfer lists now have customizable double-click options
    in Transfers->Events.
@@ -1402,20 +1457,18 @@ Settings
  * Separate fonts for Search, Transfers, Browse and a font for all other lists
    can now be set.
 
-
-Translations
+### Translations
 
  * Slovak Translation Updated (Jozef)
 
 
-Version 1.2.9 Release (22 September 2007)
------------------------------------------
+## Version 1.2.9 (September 22, 2007)
 
-Licensing
+### Licensing
 
  * Relicensed all code under GPLv3 and LGPLv3
 
-General Changes
+### General Changes
 
  * Config menu items that were in the File menu moved to the new Edit menu
  * Added credits and license note to About Nicotine dialog.
@@ -1437,18 +1490,18 @@ General Changes
    used instead of GeoIP if they are available.
  * Simplified GeoIP module loading
 
-Userinfo
+### User Info
 
  * Added popups to user's interests lists (search, add and remove interests)
  * Added a zoom and save popup menu to the Userinfo image.
 
-Shares
+### Shares
 
  * Shares are precompressed, before they're sent (Nicotine will recover faster
    from many shares requests)
  * Unicode filenames on Win32 are now read and shared properly (should be)
 
-Settings
+### Settings
 
  * Tooltips can be disabled
  * Settings widgets will now be colored red if their values are invalid.
@@ -1468,7 +1521,7 @@ Settings
  * New options to to determine what happens when destroying the main window
    (show a dialog, close to tray, or quit)
 
-Search
+### Search
 
  * Search is now a genuine TreeView that supports group-by-user and
    has a expand/collapse all toggle when grouping is enabled.
@@ -1483,7 +1536,7 @@ Search
  * Search results turn red when a user goes offline (configurable)
  * Added a 'multiple users' submenu to search results popup
 
-Transfers
+### Transfers
 
  * Show total time elapsed and remaining in user's parent row instead of the
    current transfer's time elapsed and time remaining.
@@ -1496,7 +1549,7 @@ Transfers
  * Notify popups for completed files and completed directories (toggleable)
  * Added a 'multiple users' submenus
 
-Chat
+### Chat
 
  * Whitespace is now limited to two spaces
  * Show icon, sound, speech and title notifications for "current" chat tab
@@ -1532,7 +1585,7 @@ Chat
  * Added settings for tab completion and dropdown completion list
  * Added a completion dropdown list (gtk.EntryCompletion) to chat entries
 
-Bug Fixes
+### Bug Fixes
 
  * Renabled the 'if i.size is None' check which should fix some upload issues
  * Fixed a error message printed after aborting an upload directory popup
@@ -1542,10 +1595,9 @@ Bug Fixes
  * Reading slsk.exe's cfg files should now work on Windows
 
 
-Version 1.2.8 Release (1st June 2007)
--------------------------------------
+## Version 1.2.8 (June 1, 2007)
 
-GENERAL CHANGES
+### General Changes
 
  * Support for Spell Checking in chat added (libsexy and python-sexy required)
  * Other users Interests are now shown in the User Info tab, with expanders
@@ -1564,30 +1616,30 @@ GENERAL CHANGES
  * Userlist Columns are hidable and hidden status is saved.
 
 
-TRANSFERS
+### Transfers
 
  * Added a "Group by users" check box
  * Added Expand/Collapse all toggle button to transfers
  * Added a popup dialog to the "Clear Queued" transfers buttons
 
-PRIVATE CHAT
+### Private Chat
 
  * Added gallows' patch for including your username in the private chat log.
    (ticket #161)
  * Direct private messages (currently only supported by Nicotine+ >= 1.2.7.1)
 
-SEARCH
+### Search
 
  * Search now has combo boxes, per-room searching and per-user searching.
  * Added Wishlist and changed remembered search tabs to only display
    when new search results arrive
  * Switch to newly started search tab (ticket #157)
 
-USERINFO
+### User Info
 
  * gallows added userinfo image zooming via the scrollwheel (ticket #160)
 
-SETTINGS
+### Settings
 
  * Changed Audio Player Syntax it now uses "$" as the filename
  * Exit dialog can be disabled in Settings->UI
@@ -1596,14 +1648,14 @@ SETTINGS
  * Move sound effect and audio player settings to a seperate frame
  * Reopen Settings dialog, if a setting is not set.
 
-NETWORKING
+### Networking
 
  * On Win32, hyriand's multithreaded socket selector is used. This will allow
    a larger number of sockets to be used, thus increasing stability.
  * Added Server Message 57 (User Interests)
  * Send \r\n with userinfo description instead of just \n
 
-BUGFIXES
+### Bug Fixes
 
  * Uploads to other Nicotine+ users work better
  * Userinfo Description does not scroll to the bottom of the window
@@ -1611,22 +1663,21 @@ BUGFIXES
  * Fixed server reconnection not actually trying to reconnect (and giving up
    on the first try)
 
-TRANSLATIONS
+### Translations
 
  * Lithuanian translation updated
  * Euskara translation updated
 
 
-Version 1.2.7.1 Release (6th March 2007)
-----------------------------------------
+## Version 1.2.7.1 (March 6, 2007)
 
-GENERAL CHANGES
+### General Changes
 
  * The About Nicotine+ dialog now shows the versions of Python, PyGTK and GTK+
  * Copy was added to the right-click menus in chat status and
    debug logs.
 
-BUGFIXES
+### Bug Fixes
 
  * The shares scanning progress bar now disappears after scanning shares a
    little more frequently.
@@ -1638,14 +1689,14 @@ BUGFIXES
  * Username hotspots for users who are offline or have left the room aren't
    disabled anymore.
 
-TRANSFERS
+### Transfers
 
  * Downloads have a metadata popup dialog with bitrate / length
  * Right-clicking when nothing is selected will select a row
  * In parent row, display the current transfer's time elapsed and time left.
  * Transfer popups work better on parent rows
 
-TRANSLATIONS
+### Translations
 
  * Silvio Orta updated the Spanish translation
  * ><((((*> and ManWell updated the French translation
@@ -1654,10 +1705,9 @@ TRANSLATIONS
  * Žygimantas updated the Lithuanian translation
 
 
-Version 1.2.7 Release (25th February 2007)
-------------------------------------------
+## Version 1.2.7 (February 25, 2007)
 
-GENERAL CHANGES
+### General Changes
 
  * Window size is restored on startup
  * Background color of entry boxes, text views and list views is now changeable
@@ -1668,7 +1718,7 @@ GENERAL CHANGES
  * Per-file identation consistancy was drastically improved. transfers.py,
    slskproto.py and a few others were really bad.
 
-SETTINGS
+### Settings
 
  * Added an Import Config frame to Settings, which duplicates the functionality
    of nicotine-import-winconfig. User can now easily import config options
@@ -1682,14 +1732,14 @@ SETTINGS
  * Added several tooltips to Settings' transfer widgets in hopes of providing
    better explanations of some of the more complex functionality.
 
-USERLIST
+### User List
 
  * Comments in Buddy List can now be edited in-list by clicking twice on the
    comment column, not by double-clicking (which would open Private Chat).
  * Trusted checkbox column added to the buddy list. Trusted users are an
    optional selection of users to whom remote uploads can be limited.
 
-CHAT
+### Chat
 
  * Usernames in the chat room log now have hotspots associated with them,
    meaning they can be left-clicked on to load the same popup as you have in
@@ -1699,7 +1749,7 @@ CHAT
  * "User is away/online/offline" messages removed from Private Chat
 
 
-TRANSFERS
+### Transfers
 
  * Transfers are now sub-items in a one-step tree with the user as a parent
  * QuinoX's patch, a download filter: ( http://qtea.nl/tmp/nicotine+ ) was
@@ -1716,12 +1766,12 @@ TRANSFERS
    Nicotine+ earlier than 1.2.5 will not be able to initiate sending you files,
    no matter what your allowed uploaders is set to.
 
-USER INFO
+### User Info
 
  * Stats were rearrange and the status of who is allowed to initiate uploads to
    the user was added.
 
-USER BROWSE
+### User Browse
 
  * The browsetreemodels functions were disabled, and file and folder treeviews
    were reimplemented with code from the PyGTK2 museek client, Murmur.
@@ -1733,21 +1783,21 @@ USER BROWSE
  * Recursive downloads in User Browse now checks from > 100 files and displays
    a Warning dialog that gives you a chance to cancel downloading.
 
-SEARCH
+### Search
 
  * Search has a new popup window for displaying the metadata of search results.
    This popup is accessible after selecting 1 or more files and clicking on the
    "View Metadata of File(s)" popup menu item. From this window, you can also
    download file(s) or initiate browsing of the current file's user's shares.
 
-NETWORKING
+### Networking
 
  * Handle all peer message unpacking with an exception handler. Should make us
    safer from malformed data sent by users.
  * Close peer connection when userinfo's or browse's close buttons are pressed.
    (This is to save bandwidth)
 
-TRANSLATIONS
+### Translations
 
  * ><((((*> updated the French translation
  * (._.) and Meokater updated the German translation
@@ -1757,7 +1807,7 @@ TRANSLATIONS
  * Added Lithuanian Translation by Žygimantas
  * Added Euskara (Basque) translation by Julen of librezale.org
 
-BUGFIXES
+### Bug Fixes
 
  * Various minor bugs killed
  * Userlist selection bug fixed
@@ -1768,10 +1818,9 @@ BUGFIXES
  * Fixed large-file (>4GB) file scanning and shares browsing issue
 
 
-Version 1.2.6
--------------
+## Version 1.2.6 (October 21, 2006)
 
-INTERFACE CHANGES
+### Interface Changes
 
  * Added a GUI for new built-in NowPlaying scripts and new /now command to use
    them. Supported players: Amarok, Rhythmbox, BMPx, XMMS/Infopipe, MPD/mpc.
@@ -1793,23 +1842,23 @@ INTERFACE CHANGES
  * Enlarged number entry boxes in Transfer Settings
  * Added thread protection to File/Directory Chooser (was getting freezes)
 
-SEARCH
+### Search
 
  * Search's Close button also "ignores" the search, like the X button the tab.
  * Fixed bug in "Download file(s) to..." causing the path to be corrupted.
 
-CONFIG
+### Config
 
  * Use a safer method to save the config file. Create 'config.new', move old
    'config' to 'config.old', rename 'config.new' to 'config' (from 1.1.0pre1)
 
-PACKAGING
+### Packaging
 
  * Added 4 nicotine-plus-??px.png icons 16px, 32px, 64px and 96px.
  * nicotine.desktop and nicotine-plus-32px.png are installed to
    $PREFIX/share/applications and $PREFIX/share/pixmaps
 
-WINDOWS
+### Windows
 
  * Added elaborate Unicode filename-reading hack. This should allow
    non-latin files/directories to be added to the shares. (Since this feature
@@ -1817,28 +1866,28 @@ WINDOWS
    converting strings to unicode and back.
  * Always load dbhash module on Windows
 
-NETWORKING
+### Networking
 
  * Re-enable Server Ping (120 sec) and Timeout for Connection Close (120 sec)
  * Spoof warning now includes the IP and port of the user sending the message.
 
-TRAY ICON
+### Tray Icon
 
  * Hacked apart Systraywin32 from Gajim to work with Nicotine+ on Windows
    requires pywin32 which you can download from here:
    http://sourceforge.net/project/showfiles.php?group_id=78018
  * Fixed a bug with the Trayicon intially being icon-less
 
-TRANSLATIONS
+### Translations
 
  * Hungarian translation updated (djbaloo)
  * Portuguese-Brazilian translation finished (SuicideSolution)
  * Slovak Translation Updated (Jozef)
 
-1.2.5.1 September 18th 2006
----------------------------
 
-Bugfix Release
+## Version 1.2.5.1 (September 18, 2006)
+
+Bugfix release
 
  * Made TrayIcon not attempt to load on 'win32' operating systems
  * Fixed trayicon bug that caused error messages everytime the Settings
@@ -1850,10 +1899,9 @@ Bugfix Release
  * Made the Directory Chooser start with the predefined directory set.
 
 
-Version 1.2.5 September 17th 2006
----------------------------------
+## Version 1.2.5 (September 17, 2006)
 
-GENERAL CHANGES
+### General Changes
 
  * Made columns reorderable (temporarily, they return to the default order
    after a restart)
@@ -1875,13 +1923,13 @@ GENERAL CHANGES
  * Added confirmation exit popup dialog when quitting with the window manager.
  * Made the main window's minimum size to be 500x500 px
 
-BUGFIXES
+### Bug Fixes
 
  * Fixed a typo in transferlist.py that caused some transfers to get stuck
    in the Initializing state, even though transfers still work.
  * Fixed the Chatrooms tab hilite bug (reported by Offhand, xrc)
 
-TRAY ICON
+### Tray Icon
 
  * Made the Tray Icon's popup menu disable menu options based on connection
    status. Also simplified its code to match the way Nicotine normally
@@ -1889,14 +1937,14 @@ TRAY ICON
  * Made Trayicon toggleable while running from the UI settings or at startup
    with --enable-trayicon, -t  and --disable-trayicon, -d
 
-SEARCH
+### Search
 
  * Made /search commands modify the search history
  * Added 'clear search history' button to search
  * Shortened Search tab length and added a label containing the full query
    next to the "Enable filters" checkbox.
 
-AUDIO
+### Audio
 
  * Notifications: Now testing 'flite' support, a text-to-speech engine.
    This may or may not be removed. The option is 'speechenabled'
@@ -1908,7 +1956,7 @@ AUDIO
    and audio players can be selected, as well. Ogg files are installed into
    $PREFIX/share/nicotine/$THEMEDIR/
 
-NETWORKING
+### Networking
 
  * Added support for sending and receiving Soulseek peer message 52, Upload
    Queue Notification, which allows users to notify upload recipients that
@@ -1922,10 +1970,9 @@ NETWORKING
  * Modified CheckVersion function to allow for milli ( X.X.X.X  ) versioning.
 
 
-Version 1.2.4.1 August 18th 2006
---------------------------------
+## Version 1.2.4.1 (August 18, 2006)
 
-Bugfix Release
+Bugfix release
 
  * Disabled use of 'pwd' module on windows
  * Fixed bug with Buddylist tab not appearing on startup.
@@ -1933,8 +1980,7 @@ Bugfix Release
    correct private chat tab.
 
 
-Version 1.2.4 August 17th 2006
-------------------------------
+## Version 1.2.4 (August 17, 2006)
 
  * Added new translations for Hungarian (djbaloo) and Slovak (Josef Riha)
  * Made Buddylist toggleable between its own tab and pane on the right side
@@ -1960,8 +2006,7 @@ the middle-click one
  * Fixed an problem with upload percentages not working properly
 
 
-Version 1.2.3 July 7th 2006
----------------------------
+## Version 1.2.3 (July 7, 2006)
 
  * Added abort, retry, ban, clear queued, and clear finished/aborted buttons
    to transfers.
@@ -1973,8 +2018,7 @@ Version 1.2.3 July 7th 2006
    to fail.
 
 
-Version 1.2.2 June 15th 2006
-----------------------------
+## Version 1.2.2 (June 15, 2006)
 
  * Renamed "User list" to "Buddy list"
  * Added Double-clicking on a user starts a private message in the chatrooms,
@@ -1986,8 +2030,7 @@ Version 1.2.2 June 15th 2006
  * Added Buddy-only shares
 
 
-Version 1.2.1 June 10th 2006
-----------------------------
+## Version 1.2.1 (June 10, 2006)
 
  * Added a bunch of hotkeys to the popup menus and normal menus.
  * Added a new menu for Modes (Chat Rooms, Private Chat, etc)
@@ -2003,14 +2046,12 @@ Version 1.2.1 June 10th 2006
    player.
 
 
-Version 1.2.0b May 11th 2006
-----------------------------
+## Version 1.2.0b (May 11, 2006)
 
  * Added a "Send to Player" popup menu item for downloads and personal shares
 
 
-Version 1.2.0 May 10th 2006
----------------------------
+## Version 1.2.0 (May 10, 2006)
 
  * Added New Room and User search messages, and use them instead of sending out
    direct peer searches
@@ -2033,8 +2074,7 @@ Version 1.2.0 May 10th 2006
    or with the command: /ctcpversion
 
 
-Version 1.0.8-e March 25 2006
------------------------------
+## Version 1.0.8-e (March 25, 2006)
 
  * Made password to be starred like ***** via cravings' patch
  * Added a Give Privileges popup menu item (taken from the development 1.1.0pre1
@@ -2042,8 +2082,7 @@ Version 1.0.8-e March 25 2006
  * Changed the Upload Files dialog from a textentry to a scrollbox
 
 
-Version 1.0.8-d Aug 17 2004
----------------------------
+## Version 1.0.8-d (August 17, 2004)
 
  * 1.0.8-d is a combo of 1.0.8z and some new stuff, listing it all here.
  * Added GTK2-Fileselector (Works nicely for Win32)
@@ -2054,20 +2093,17 @@ Version 1.0.8-d Aug 17 2004
  * Fixed some of the many PyGTK warning messages
  * Removed the PING-OF-BAN
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Forked
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Version 1.0.8rc1 May 1 2004
----------------------------
+# Release Notes (Nicotine)
+
+## Version 1.0.8rc1 (May 1, 2004)
 
  * Added the missing handler for server-pushed searches
  * Allow users to have negative speed-ratings
  * Double click downloads in searches and browsers, join room in room list
 
 
-Version 1.0.7 Jan 11 2004
--------------------------
+## Version 1.0.7 (January 11, 2004)
 
  * Changed hate-list to be network-driven instead of being a filter
  * Updated translations
@@ -2075,8 +2111,7 @@ Version 1.0.7 Jan 11 2004
    haven't been configured
 
 
-Version 1.0.7rc2 Jan 07 2004
-----------------------------
+## Version 1.0.7rc2 (January 7, 2004)
 
  * Moved encoding dropdown-list out of the scrolled area in userinfo tabs
  * Transfer logs (enable in settings->logging)
@@ -2093,23 +2128,20 @@ Version 1.0.7rc2 Jan 07 2004
  * Fixed /tick
 
 
-Version 1.0.7rc1 Jan 02 2004
-----------------------------
+## Version 1.0.7rc1 (January 2, 2004)
 
  * Added room ticker support
  * Alt-A fixed
 
 
-Version 1.0.6 - Dec 05 2003
----------------------------
+## Version 1.0.6 (December 5, 2003)
 
  * Probable fix for GUI freeze (thanks stillbirth)
  * Bye bye total queue limit
  * Translations updated
 
 
-Version 1.0.6rc1 - Nov 18 2003
-------------------------------
+## Version 1.0.6rc1 (November 18, 2003)
 
  * Files that are downloaded should now be encoded
  * Possible fix for a threading race condition
@@ -2124,22 +2156,19 @@ Version 1.0.6rc1 - Nov 18 2003
  * Fix for the version checking bug
 
 
-Version 1.0.5 - Nov 7 2003
---------------------------
+## Version 1.0.5 (November 7, 2003)
 
  * Quickfix for protocol change
 
 
-Version 1.0.4.1 - Sep 26 2003
------------------------------
+## Version 1.0.4.1 (September 26, 2003)
 
  * Changed default server
  * Fix for online notify
  * Added french translation (thanks flashfr)
 
 
-Version 1.0.4 - Sep 17 2003
----------------------------
+## Version 1.0.4 (Sepember 17, 2003)
 
  ---> Can you find the EASTER EGG? <---
 
@@ -2164,8 +2193,7 @@ Version 1.0.4 - Sep 17 2003
  * Fix for invalid server traceback (in settings window)
 
 
-Version 1.0.3 - Aug 28 2003
----------------------------
+## Version 1.0.3 (August 28, 2003)
 
  * PyGTK version check (Nicotine requires 1.99.16 or higher)
  * Hide room list menu option (is remembered between sessions)
@@ -2192,8 +2220,7 @@ Version 1.0.3 - Aug 28 2003
  * Now really included Carlos Laviola's debian control files
 
 
-Version 1.0.2 - Aug 23 2003
----------------------------
+## Version 1.0.2 (August 23, 2003)
 
  * Possible fix for freezes
  * Fix for GTK-Critical at startup with hidden log
@@ -2217,64 +2244,56 @@ Version 1.0.2 - Aug 23 2003
  * Should work on OSX again
  * Threading issue with rescanning fixed
  * Focus chat line input widget on tab change (chat rooms and private chat)
- * <insert stuff I forgot to add to changelog here>
+ * \<insert stuff I forgot to add to changelog here\>
 
 
-Version 1.0.1 - Aug 19 2003
----------------------------
+## Version 1.0.1 (August 19, 2003)
 
  * UTF8 fixes for settings window
  * UTF8 fixes for directory dialog
  * UTF8 fix for private chats in some locales (fr_FR for example)
 
 
-Version 1.0.0 - Aug 18 2003 (INITIAL PUBLIC RELEASE)
-----------------------------------------------------
+## Version 1.0.0 (August 18, 2003) (Initial Public Release)
 
  * Changed URL to the Nicotine homepage to http://nicotine.thegraveyard.org/
  * Added Alt-H accelerator to hide log
 
 
-Version 1.0.0rc8 - Aug 18 2003
-------------------------------
+## Version 1.0.0rc8 (August 18, 2003)
 
  * New MP3 header engine (shouldn't crash anymore, and should be faster)
  * Made the default handler for the http protocol more compatible (added
    quotes)
 
 
-Version 1.0.0rc7 - Aug 17 2003
-------------------------------
+## Version 1.0.0rc7 (August 17, 2003)
 
  * Fixed check privileges (thanks hednod)
  * Userlist context menu issues fixed
  * Several win32 fixups / custom-hacks made for upcoming win32 release
 
 
-Version 1.0.0rc6 - Aug 16 2003
-------------------------------
+## Version 1.0.0rc6 (August 16 2003)
 
  * Merged PySoulSeek 1.2.4 core changes
-  * Privileged users in userlist
-  * Online notify
+ * Privileged users in userlist
+ * Online notify
 
 
-Version 1.0.0rc5 - Aug 16 2003
-------------------------------
+## Version 1.0.0rc5 (August 16 2003)
 
  * pytgtk-1.99.16 compatibility fix (thanks alexbk)
 
 
-Version 1.0.0rc4 - Aug 16 2003
-------------------------------
+## Version 1.0.0rc4 (August 16, 2003)
 
  * Fixed private-chat-shows-status-change-a-million-times
  * Fixed bug concerning GeoIP not being able to look up country code
  * Fixed email address in nicotine "binary"
 
 
-Version 1.0.0rc3 - Aug 16 2003
-------------------------------
+## Version 1.0.0rc3 (August 16, 2003)
 
  * Geographical blocking works for search results too
  * Geographical blocking settings now automatically uppercased
@@ -2288,14 +2307,12 @@ Version 1.0.0rc3 - Aug 16 2003
  * Image data now encapsulated in imagedata.py
 
 
-Version 1.0.0rc2 - Aug 13 2003
-------------------------------
+## Version 1.0.0rc2 (August 13, 2003)
 
  * Fixed typo
 
 
-Version 1.0.0rc1 - Aug 13 2003
-------------------------------
+## Version 1.0.0rc1 (August 13, 2003)
 
  * Nasty Bug(tm) fixed
  * URL catcher fixup
@@ -2304,8 +2321,7 @@ Version 1.0.0rc1 - Aug 13 2003
  * Win32 fixups
 
 
-Version 0.5.1 - Ayg 13 2003
----------------------------
+## Version 0.5.1 (August 13, 2003)
 
  * URL catching
  * Bugfix: /ip no longer shows None
@@ -2313,8 +2329,7 @@ Version 0.5.1 - Ayg 13 2003
  * Fixed date for 0.5.0
 
 
-Version 0.5.0 - Aug 13 2003
----------------------------
+## Version 0.5.0 (August 13, 2003)
 
  * Geographical blocking using GeoIP (optional)
  * Userlist only sharing
@@ -2324,8 +2339,7 @@ Version 0.5.0 - Aug 13 2003
    it now sends a private message to hyriand instead
 
 
-Version 0.4.9 - Aug 11 2003
----------------------------
+## Version 0.4.9 (August 11, 2003)
 
  * Python 2,2,0 compatibility
  * Python 2.3 deprecation warning fixed
@@ -2337,22 +2351,19 @@ Version 0.4.9 - Aug 11 2003
    of 1000 KB)
 
 
-Version 0.4.8 - Aug 10 2003
----------------------------
+## Version 0.4.8 (August 10, 2003)
 
  * Minor bugfixes and de-glitchifications
 
 
-Version 0.4.7 - Aug 9 2003
---------------------------
+## Version 0.4.7 (August 9, 2003)
 
  * New logo and icon (thanks (va)*10^3)
  * Generate profiler log when using nicotine --profile
    (profiler log will be saved as <configfile>.profile)
 
 
-Version 0.4.6 - Aug 8 2003
---------------------------
+## Version 0.4.6 (August 8, 2003)
 
  * Room user lists are filled again when reconnected
  * User is offline/away/online in private chats
@@ -2361,8 +2372,7 @@ Version 0.4.6 - Aug 8 2003
  * Added *1000 factor for auto-search interval *oops*
 
 
-Version 0.4.5 - Aug 7 2003
---------------------------
+## Version 0.4.5 (August 7, 2003)
 
  * Page Up / Down scrolls chats
  * // at the start of a chat line will "escape" the / used by commands
@@ -2371,20 +2381,629 @@ Version 0.4.5 - Aug 7 2003
  * Search filter history
 
 
-Version 0.4.4 - Aug 7 2003
---------------------------
+## Version 0.4.4 (August 7, 2003)
 
  * Bugfixes
  * About dialogs
 
 
-Version 0.4.3 - Aug 5 2003
---------------------------
+## Version 0.4.3 (August 5, 2003)
 
  * Small bugfixes (sorting, UpdateColours, ChooseDir)
 
 
-Version 0.4.2 - Aug 5 2003
---------------------------
+## Version 0.4.2 (August 5, 2003)
 
  * First changelog entry.. Basically everything implemented :)
+
+
+# Release Notes (PySoulSeek)
+
+## Version 1.2.4 (August 16, 2003)
+
+The final version
+
+ * Workaround for corrupted shares database problem which many Mac users seem to
+   have
+ * Notification for incomplete configuration
+ * Fix for a subtle race condition between starting transfers and getting a
+   list of privileged users
+ * It's now possible to give download privileges to users from the userlist
+ * Password entry box now uses ***
+ * Search responses are now buffered - less flicker, less stress on the client
+ * If log window is collapsed, messages are now duplicated in the status bar
+ * It's now possible to track status changes for the individual users from
+   the userlist
+
+
+## Version 1.2.3 (July 23, 2003)
+
+### Added Features from Hyriand's Patch
+
+ * Pyslsk will ping the server every 30 seconds (rewrote it to be
+   gui-independent)
+ * Search history (remembers 10 last searches)
+ * Log window is now collapsable (state is remembered between sessions),
+   rewrote it to look prettier than hyriand's version
+ * Resizable panels aren't deleted anymore when made really small
+ * Userinfo and browse tabs show user status
+ * /clear /c will clear a chat screen
+ * version in the window title
+
+### Other Fixes
+
+ * the default "queue if" limit is now 10 kb/s to avoid "how do I limit the
+   number of uploads" questions
+ * errors when decompressing filelists and search results no longer
+   cause a crash
+ * if locking a file is not possible, a download will continue anyway
+   with a warning
+
+
+## Version 1.2.2 (June 24, 2003)
+
+ * wxPython 2.4.1 fixes; this version is now required, because it fixes
+the "crash-on-tab in an empty notebook" problem and handles ctrl-c gracefully
+ * Ugly but working fix for the "cannot install idle handler twice" crash
+
+
+## Version 1.2.1 (June 18, 2003)
+
+ * Python 2.3 fixes
+ * Python 2.2.0 fixes
+ * Fix for "too many open files problem"
+ * Aborted files are now not restarted when a user logs back on
+ * New address for postcards
+
+
+## Version 1.2.0 (May 17, 2003)
+
+ * Tweaks for reducing CPU usage
+
+
+## Version 1.2.0pre4 (May 13, 2003)
+
+ * Fix for silly queue bug
+ * Split the file index into two - primary index of files and secondary index
+   of words. This should improve performance.
+
+
+## Version 1.2.0pre3 (May 12, 2003)
+
+ * Fixes for transfer bugs
+
+
+## Version 1.2.0pre2 (May 12, 2003)
+
+ * Changing options without rescanning caused a traceback
+
+
+## Version 1.2.0pre1 (May 12, 2003)
+
+ * Per user upload queue limit (specified in megabytes)
+ * Switched to bsd db for storing shared files information
+ * Contents of unknown messages is now printed in the log window
+ * Improved performance of searches lookup (should help with ui freezes)
+ * Improved the (*) in window title behaviour
+
+
+## Version 1.1.2 (April 29, 2003)
+
+ * Fixed a race condition occuring on SMP machines
+ * Added remembered/wishlist searches from Hyriand's patch
+ * Fixed stuck "Requesting file"
+ * Sometimes transfer timers were not cancelled properly
+
+
+## Version 1.1.1 (April 28, 2003)
+
+ * Improved transfer status messages
+ * Fixed a couple of potential transfer problems
+
+
+## Version 1.1.0 (April 26, 2003)
+
+ * Removed all references to wxPythonOSX - it's too instable
+ * Updated pyslsk-import-winconfig
+ * Pressing OK in settings now disables the config window when a
+   rescan is happening
+ * Aborted downloads are now kept in the downloads list
+ * When there's a new private message or a public message that contains your
+   username, the window title is marked with a (*)
+
+
+## Version 1.1.0pre5 (April 19, 2003)
+
+ * Fixes for two embarrassing bugs in pre4
+
+
+## Version 1.1.0pre4 (April 18, 2003)
+
+ * Improved userinfo and userbrowse gauges behavior
+ * Fixed a bug where index of shared files was corrupted
+ * Fixes for some tracebacks introduced in pre3
+ * Old index is not anymore used for building a new one, as it doesn't
+   improve speed
+ * If a user already exists in the userslist, adding him edits the comments
+ * Messages from the networking thread are now printed in the log window, not
+   on stdout
+ * Fixed the 100% CPU usage problem that happened occasionally
+
+
+## Version 1.1.0pre3 (April 17, 2003)
+
+ * pyslsk now switches to the new server automatically, if the old one is
+   found in the settings
+ * File errors when transferring files are now reported in the log window
+ * If a peer does not do a proper initialization procedure, the connection is
+   closed
+ * It was not possible to edit userlist comments
+ * Updated OS X instructions
+
+
+## Version 1.1.0pre2 (April 14, 2003)
+
+ * The new more efficient distributed network is now supported
+ * The server location is now hardcoded, still possible to correct it
+ * Files in 'Cannot connect' state are now retried once, just in case the
+   server forgot to tell us the user status
+ * Added autojoin checkbox in room windows
+ * If the logs directory does not exist, it is created
+ * Config window is now non-modal
+ * If status was set to away manually, auto-return does not happen
+ * Sorting the userlist now works properly
+
+
+## Version 1.1.0pre1 (April 5, 2003)
+
+ * Code cleanups (with suggestions from Alexey Vyskubov)
+ * Added ignore list (by SmackleFunky)
+ * Added autoaway (with configurable timeout)
+ * If the server reports port 0 for a user, try again, up to 10 times
+ * Fixed stuck "Waiting for transfer"
+ * Rescan on startup now happens in background
+ * Userlist is now in its own tab, you can now add comments to entries
+ * A private message is sent as a workaround for windows client bug
+   with "download containing folder"
+ * If a parent node in the distributed network starts sending garbage, close
+   the connection and find another parent
+ * File errors are now written in the log window, not on stdout
+ * It is now possible to download two files with the same name simultaneously
+ * If a file already exists, pyslsk does not overwrite it with a just
+   finished file, it renames it to file.1 (file.2 and so on)
+ * It is now possible to abort a transfer and remove the incomplete file
+ * Added popup menu in private chat tabs
+ * It is now possible to sort search list by order of arrival and by
+   possibility of immediate download
+ * Search and browse lists now have bitrate and length as separate columns
+ * Menu items in transfers panels were not always working
+ * Reduced flicker in the chatroom userlist
+ * Queue sizes are now reported more accurately
+
+
+## Version 1.0.4 (March 26, 2003)
+
+ * If your name was mentioned in a chat room, the chat tab will be
+   highlighted with a yellow bird, not with the blue one. Also, the line
+   containing  your username will be red. (based on patch from Hyriand)
+ * pyslsk now sends speed statistics to the server after a successfull download
+ * Fixed the GUI freeze when someone is queueing a lot of files
+ * "Download containing folder" was not working in all cases
+ * Reduced rescan time
+ * Added /rsearch, /bsearch, /usearch
+ * Status bar now shows the number of users downloading/uploading
+ * /unban was not working
+
+
+## Version 1.0.3 (March 23, 2003)
+
+ * Fixed a few bugs in the new shares rescanning code
+ * Sorting transfers list sometimes caused a traceback
+
+
+## Version 1.0.2 (March 21, 2003)
+
+ * Configurable port range (patch from Hyriand)
+ * Room and userlist searches (based on patch from Hyriand)
+ * Online/Away/Offline status in the statusbar (patch from Hyriand)
+
+
+## Version 1.0.1 (March 20, 2003)
+
+ * Rescanning of shares now skips over directories that have not changed
+   (inspired by hyriand's patch)
+ * It is possible to optionally rescan shares on startup
+ * Rescanning of shares now does not freeze the GUI
+
+
+## Version 1.0.0 (March 12, 2003)
+
+ * Fixes for possible temporary UI freezes
+ * Removed "user phrases turn grey" feature, because it triggers gtk bug
+   causing a segfault
+ * Fixed a problem with clearing transfers
+ * Rescanning of shares wasn't possible under gtk2
+ * If we send search results to someone this is now always displayed in the
+   log window
+ * Fixes for "Download containing folder"
+ * Added missing menu entries to search tabs, filelist tabs and userlists
+ * It is now possible to refresh the filelist of the other user
+ * Buttons on the user-info rearranged and some new added
+ * Show ip address now does reverse DNS lookup
+ * Unrecognized commands in chat are no longer sent as chat phrases
+
+
+## Version 1.0.0pre6 (March 10, 2003)
+
+ * Added script for importing configuration from the windows version
+   (provided by geertk)
+ * It is now possible to change the path for writing log files
+ * Bogus config sections no longer cause a traceback
+ * pyslsk now resumes files left over by the official windows client
+ * phrases said by users no longer present in the room turn grey now
+ * wxPython 2.4.0.4 is now supported
+ * Sorting is now case-insensitive
+
+
+## Version 1.0.0pre5a (March 2, 2003)
+
+ * Fixed a silly bug with searching
+
+
+## Version 1.0.0pre5 (March 2, 2003)
+
+ * Banning (patch from Hyriand)
+ * Upload bandwidth management (patch from Hyriand)
+ * Numbers are now formatted according to locale rules
+ * Total upload and download bandwidth usage is shown in the status bar
+ * Various / commands in chat (see Help menu for full description)
+   (patch from Hyriand)
+ * Nickname completion in chat (patch from Hyriand)
+
+
+## Version 1.0.0pre4 (February 28, 2003)
+
+ * Config files are now saved every time a configurration is changed, not
+   just on exit
+ * Fixed a silly typo in FolderContentsResponse
+ * Fix against potential distributed network attack
+ * Fix for Unicode support in settings window
+
+
+## Version 1.0.0pre3 (February 26, 2003)
+
+ * Fixed handling of "Download containing folder" requests from other peers
+ * Fixed stuck "Establishing connection"
+ * Administrative messages are now supported
+ * Fixes for distributed network support
+ * Hopefully fixed the exit problem (where pyslsk waits for a while and
+   then prints a bunch of tracebacks)
+ * Fixed a DoS vulnerability found by hyriand
+
+
+## Version 1.0.0pre2 (February 23, 2003)
+
+ * Fixes for bugs in 1.0.0pre1
+ * "Download containing folder" should now be possible for search
+   results that pyslsk returns
+
+
+## Version 1.0.0pre1 (February 22, 2003)
+
+ * Pysoulseek is now searchable; it does not however support being a parent node
+   in the distributed network
+ * Unicode support that allows using pyslsk with Unicode builds of wxPython,
+   such as Gtk2 build
+ * Reduced flicker in transfers panels
+ * Reduced CPU/memory consumption when uploading big files
+ * Shared files database is now stored in a pickled format in a separate file
+   \<config\>.shares
+ * Fixed a problem with broken VBR mp3 files
+ * A situation when someone else logs in under our nickname is now handled
+   gracefully
+ * pyslsk now responds to place in queue requests
+ * It is now possible to exit pyslsk when a server connection is in progress
+ * Download directory is now created when the transfer starts
+ * Inverse colour gtk themes are now usable with pyslsk
+ * A bunch of smaller bugfixes
+
+
+## Version 0.4.11 (January 15, 2003)
+
+ * wxPython 2.3.4 at least is now required as the previous versions had trouble
+   displaying user info picture
+ * Chatrooms and private chat conversations can now be written to files
+   (patch by Zip)
+ * Fixed a problem with transfers stuck in "Waiting for peer to connect"
+ * Fixed a problem with changes in userlist or the whole userlist being
+   lost sometimes
+ * Fixed potential problems with asynchronous connect()
+ * Empty files are now uploaded and downloaded correctly
+ * Fixed a problem with scanning unreadable directories
+ * It is now possible to exit during the auto-reconnect
+ * pyslsk was autoreconnecting when the server did not let us in due
+   to the wrong password or other valid reason
+ * Away state is now preserved during the reconnect
+
+
+## Version 0.4.10d (January 2, 2003)
+
+ * ID3 mp3s are now scanned quicker
+ * Retrying aborted transfers if the user has logged off is now handled
+   correctly
+ * If a transfer is negotiated and new transfer requests arrive, they are
+   queued
+ * Disconnecting now correctly handles changes in downloads and user list
+ * Clicking on column header outside the titles no longer produces a traceback
+
+
+## Version 0.4.10c (December 31, 2002)
+
+ * Fixed a few tracebacks
+ * wxPython 2.3.3 has a problem with displaying user info, so 2.3.4 is
+   now required
+
+
+## Version 0.4.10b (December 25, 2002)
+
+ * Backed out the 0.4.10a fix, as it does not fix every case; you have to
+   rescan the shared folders through the settings window to upgrade properly
+ * Added a postcards statement
+
+
+## Version 0.4.10a (December 24, 2002)
+
+ * Fixed a problem with upgarding shared files list to the new format
+
+
+## Version 0.4.10 (December 23, 2002)
+
+Christmas release
+
+ * pyslsk now tries to reuse the same address when opening a listening socket
+   (patch from waxed)
+ * Bitrate and length of VBR mp3s are now correctly determined
+ * Length and bitrate of shared Ogg Vorbis files are now determined,
+   if Python Vorbis bindings are installed
+ * Updated subtabs are now marked with icons, like the main tabs.
+ * It is possible to close/open rooms list, like the user list
+ * Further reduced the CPU usage during sending the list of shared files
+   to other peers	
+ * Added "Close and ignore" button to search tabs (it closes a search tab and
+   discards further search results)
+ * Updated Mac OS X instructions
+ * pyslsk now uses commandline switches: --help for help, -c for an alternative
+   config file
+ * pyslsk now correctly shutdowns on SIGTERM
+ * "Waiting for peer to connect" states now timeout after 5 minutes to "Cannot
+   connect" state (untested)
+ * pyslsk now tries to reconnect to a server if the server closes the
+   connection
+ * a problem with dynamic ip addresses was fixed
+ * pyslsk now locks files when writing to them
+ * colours in chat: blue for own phrases, green for /me things, black
+   for everything else
+ * picture in user info tab can be scrolled now
+
+
+## Version 0.4.9b (November 24, 2002)
+
+ * Fixed an obscure problem with reading config files
+ * It's now again possible to save users' pictures
+
+
+## Version 0.4.9a (November 23, 2002)
+
+ * The number of the shared files is now updated on the server after a rescan
+   of the shared folders
+ * Increased the default width of the directory column in the Search tab
+ * wxWindows is not actually required, only wxPython
+ * Not all debug messages were filtered out
+ * Away/returned/joined/left messages are now only displayed once
+
+
+## Version 0.4.9 (November 22, 2002)
+
+ * Errors in the config file are not anymore silently ignored
+ * It is now possible to switch off debug messages in the log window
+ * The number of the shared files is now updated on the server after each
+   successful download
+ * The main window resize is now handled correctly
+ * Significantly reduced CPU usage during transfers, and during sending
+   the list of shared files to other peers
+ * A few cosmetic fixes
+
+
+## Version 0.4.8 (November 9, 2002)
+
+ * Binary RPM is now provided
+ * Added RPM building tips to the installation instrictions
+ * It is now possible to join selected rooms automatically on startup
+ * If possible, the client connects automatically on startup
+ * User's status is now shown in private chat window
+ * It is now possible to toggle status between Online and Away
+ * A bug that caused some uploads to fail is fixed
+ * Added "Leave" button to the chatroom window
+
+
+## Version 0.4.7 (October 26, 2002)
+
+ * Added User List (Buddy List) capability
+ * Fixed a few potential tracebacks
+ * A correct response to a queue request that cannot be served is now given
+ * Newly created subfolders in download folder were not added to shared list
+ * Updated Mac OS X instructions
+ * It is now possible to download all selected files and not just the
+   focused one
+
+
+## Version 0.4.6b (October 12, 2002)
+
+ * It was not possible to create a configuration from scratch (new users)
+
+
+## Version 0.4.6a (October 12, 2002)
+
+ * It was necessary to provide a picture in order to connect
+ * Self-description was corrupted each time the settings window was reopened
+
+
+## Version 0.4.6 (October 11, 2002)
+
+Dedicated to the memory of my father.
+
+ * All lists are now sortable
+ * Fixed a problem with non-blocking sockets on FreeBSD
+ * Fixed a possible crash when closing a socket
+ * Fixed a few potential transfer problems
+ * Fixed a few GUI problems with wxPython 2.3.3; this version is now
+   required
+ * It is now possible to save pictures from users' information.
+ * Added locale-aware timestamps in chat
+ * Optional sharing of download folder is now possible
+ * It is now possible to provide personal information (description and
+   picture) to others
+
+
+## Version 0.4.5 (September 12, 2002)
+
+ * Removed the Global Users List function, because the server no longer
+   supports it
+ * "Uploads are stuck in the queued state forever" problem should now really
+   be gone
+ * Idle peer connections are now closed after a timeout of two minutes
+ * The client no longer crashes if it reaches a limit of open sockets or files
+ * Fixed a problem with duplicate upload requests (the second one has no effect
+   now)
+ * Ogg Vorbis files are now uploaded before any other files (but after files
+   requested by privileged users)
+ * Fixed a problem with accelerator keys
+ * The search results tabs now open immediately after the search request
+   is made
+ * It is now possible to send private messages from the transfers window
+ * Retrying uploads now has no effect
+ * If an upload is aborted or cleared, the upload queue is now checked
+   for queued uploads that could be started
+
+
+## Version 0.4.4 (August 27, 2002)
+
+ * The situation when either the uploader or the downloader logs off or back on
+   should be handled gracefully now
+ * "Uploads are stuck in the queued state forever" and "The bandwidth
+   limitation has no effect" problems should be gone
+ * Fixed a problem with accelerator keys
+
+
+## Version 0.4.3 (August 23, 2002)
+
+ * When the uploaded file was not the last one in the upload queue, the upload
+   went horribly wrong
+
+
+## Version 0.4.2 (August 23, 2002)
+
+ * Fixed a couple of locale problems
+ * Fixed a problem with a notification of a download failure
+ * It is now possible to get place in line for queued downloads
+
+
+## Version 0.4.1 (August 21, 2002)
+
+ * Fixed a bug where subsequent upload requests from the same user
+   or notifications of a download failure caused a crash
+ * Failed downloads are now retried if there's an explicit notification from
+   the uploader
+ * Reduced flicker in the transfers tabs
+ * Binary RPM packages should now include GUI modules
+
+
+## Version 0.4.0 (August 19, 2002)
+
+ * Added files sharing and uploads
+ * Updated OS X instructions
+ * Renamed the main executable to pyslsk
+ * Added download privileges checking
+ * Fixed a bug where users with no locale setting were not able to chat
+ * Added speed, time elapsed/left to transfers lists
+ * Search results now show how much files users have in queue
+ * Clearing transfers should now work correctly
+
+
+## Version 0.3.4a (August 8, 2002)
+
+ * Updated pyslsk to use the new server list location on slsk.org
+
+
+## Version 0.3.4 (August 4, 2002)
+
+ * Added Mac OS X instructions in README.OSX file
+ * Reworked the INSTALL file somewhat
+ * Added timestamps to private chat messages
+ * Added network character encoding selection (users in Russia will greatly
+   appreciate this)
+ * Separated UI classes from high-level logic to allow for other UI frontends
+   in the future
+ * Added searching within a specific user's files and folders
+ * Windows that have been updated but not yet switched into are now
+   marked with an icon on the tab
+
+
+## Version 0.3.3 (June 30, 2002)
+
+ * The official client and server reverted back to the old protocol to
+   save bandwidth, and so do we.
+
+
+## Version 0.3.2 (June 15, 2002)
+
+ * Added a few startup checks of the environment (libs versions etc.)
+ * Transfer requests now go through the same connection
+ * Queued transfers now work again
+
+
+## Version 0.3.1 (June 7, 2002)
+
+ * A few crashes have been fixed
+ * Yet another protocol tweak has been implemented (on login the client
+   sends its version to the server, as pyslsk version numbers have no relation to
+   official client versions, we send a bogus high number).
+
+
+## Version 0.3.0 (May 27, 2002)
+
+ * The new backwards-incompatible (but nuch better) file transfer
+   protocol is now supported
+ * Changes in peer-to-peer protocol are now supported
+
+
+## Version 0.2.0 (April 28, 2002)
+
+ * The new backwards-incompatible protocol introduced in v117
+   of the official client is now supported.
+ * Added multiple chatrooms capability.
+ * Added global users list window.
+
+
+## Version 0.1.1 (April 3, 2002)
+
+ * Fixed an embarrasing bug where clicking OK in settings window did
+   not actually change the settings
+ * Active transfers are now correctly saved and resumed
+
+
+## Version 0.1.0 (March 31, 2002)
+
+ * Online/away status is now shown in users list
+ * Added About dialog box
+ * Added the list of official servers to choose from, taken from official
+   website
+ * Added downloads. Remotely queued downloads, 'Download folder' in user
+   browse window, 'Download containing folder' in search result window,
+   saving/restoring download list on exit/startup are all supported.
+
+
+## Version 0.0.0 (February 10, 2002)
+
+  * Initial release. Supports public chat, private chat, file searches,
+    filelists browsing, users info browsing.
