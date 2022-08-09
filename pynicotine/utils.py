@@ -566,7 +566,7 @@ def write_file_and_backup(path, callback, protect=False):
 
     # Back up old file to path.old
     try:
-        if os.path.exists(path_encoded):
+        if os.path.exists(path_encoded) and os.stat(path_encoded).st_size > 0:
             from shutil import copy2
             copy2(path, path_old_encoded)
 
