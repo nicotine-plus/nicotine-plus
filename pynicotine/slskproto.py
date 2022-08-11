@@ -201,7 +201,9 @@ class SlskProtoThread(threading.Thread):
         self._core_callback = core_callback
         self._queue = queue
         self._callback_msgs = []
-        self._init_msgs = {}
+        self._pending_init_msgs = {}
+        self._token_init_msgs = {}
+        self._username_init_msgs = {}
         self._want_abort = False
         self.bindip = bindip
         self.listenport = None
@@ -375,7 +377,9 @@ class SlskProtoThread(threading.Thread):
             self.close_connection(self._connsinprogress, sock, callback=False)
 
         self._queue.clear()
-        self._init_msgs.clear()
+        self._pending_init_msgs.clear()
+        self._token_init_msgs.clear()
+        self._username_init_msgs.clear()
 
         # Inform threads we've disconnected
         self.exit.set()
@@ -526,7 +530,7 @@ class SlskProtoThread(threading.Thread):
 
                         self._callback_msgs.append(ShowConnectionErrorMessage(username, init.outgoing_msgs[:]))
 
-                        self._init_msgs.pop(init.token, None)
+                        self._token_init_msgs.pop(init.token, None)
                         init.outgoing_msgs.clear()
 
             if self.exit.wait(1):
@@ -546,7 +550,7 @@ class SlskProtoThread(threading.Thread):
 
     def has_existing_user_socket(self, user, conn_type):
 
-        prev_init = self._init_msgs.get(user + conn_type)
+        prev_init = self._username_init_msgs.get(user + conn_type)
 
         if prev_init is not None and prev_init.sock is not None:
             return True
@@ -561,7 +565,7 @@ class SlskProtoThread(threading.Thread):
             # File transfer connections are not unique or reused later
             return
 
-        self._init_msgs[init.target_user + conn_type] = init
+        self._username_init_msgs[init.target_user + conn_type] = init
 
     @staticmethod
     def pack_network_message(msg_obj):
@@ -640,11 +644,11 @@ class SlskProtoThread(threading.Thread):
             return
 
         # Check if there's already a connection for the specified username
-        init = self._init_msgs.get(user + conn_type)
+        init = self._username_init_msgs.get(user + conn_type)
 
         if init is None and conn_type != ConnectionType.FILE:
             # Check if we have a pending PeerInit message (currently requesting user IP address)
-            pending_init_msgs = self._init_msgs.get(user, [])
+            pending_init_msgs = self._pending_init_msgs.get(user, [])
 
             for msg in pending_init_msgs:
                 if msg.conn_type == conn_type:
@@ -688,10 +692,10 @@ class SlskProtoThread(threading.Thread):
             self.user_addresses[user] = addr = address
 
         if addr is None:
-            if user not in self._init_msgs:
-                self._init_msgs[user] = []
+            if user not in self._pending_init_msgs:
+                self._pending_init_msgs[user] = []
 
-            self._init_msgs[user].append(init)
+            self._pending_init_msgs[user].append(init)
             self._queue.append(GetPeerAddress(user))
 
             log.add_conn("Requesting address for user %(user)s", {
@@ -768,7 +772,7 @@ class SlskProtoThread(threading.Thread):
         conn_type = init.conn_type
         init.token = self._token
 
-        self._init_msgs[self._token] = init
+        self._token_init_msgs[self._token] = init
         self._out_indirect_conn_request_times[init] = time.time()
         self._queue.append(ConnectToPeer(self._token, username, conn_type))
 
@@ -813,7 +817,7 @@ class SlskProtoThread(threading.Thread):
             self._queue.append(init)
 
             # Direct and indirect connections are attempted at the same time, clean up
-            self._init_msgs.pop(token, None)
+            self._token_init_msgs.pop(token, None)
 
             if self._out_indirect_conn_request_times.pop(init, None):
                 log.add_conn(("Stopping indirect connection attempt of type %(type)s to user "
@@ -876,7 +880,7 @@ class SlskProtoThread(threading.Thread):
             "user": user
         })
 
-        prev_init = self._init_msgs[user + conn_type]
+        prev_init = self._username_init_msgs[user + conn_type]
         init.outgoing_msgs = prev_init.outgoing_msgs
         prev_init.outgoing_msgs = []
 
@@ -953,7 +957,7 @@ class SlskProtoThread(threading.Thread):
         })
 
         init_key = user + conn_type
-        init = self._init_msgs.get(init_key)
+        init = self._username_init_msgs.get(init_key)
 
         if init is None:
             return
@@ -974,7 +978,7 @@ class SlskProtoThread(threading.Thread):
             log.add_conn("Cannot remove PeerInit message, an indirect connection was already established previously")
             return
 
-        del self._init_msgs[init_key]
+        del self._username_init_msgs[init_key]
 
     def close_connection_if_inactive(self, conn_obj, sock, current_time, num_sockets):
 
@@ -1165,7 +1169,7 @@ class SlskProtoThread(threading.Thread):
 
                     elif msg_class is GetPeerAddress:
                         user = msg.user
-                        pending_init_msgs = self._init_msgs.pop(msg.user, [])
+                        pending_init_msgs = self._pending_init_msgs.pop(msg.user, [])
 
                         if msg.port == 0:
                             log.add_conn(
@@ -1295,10 +1299,10 @@ class SlskProtoThread(threading.Thread):
                             "addr": conn_obj.addr
                         })
 
-                        log.add_conn("List of stored PeerInit messages: %s", str(self._init_msgs))
+                        log.add_conn("List of stored PeerInit messages: %s", str(self._token_init_msgs))
                         log.add_conn("Attempting to fetch PeerInit message for token %s", msg.token)
 
-                        conn_obj.init = init = self._init_msgs.pop(msg.token, None)
+                        conn_obj.init = init = self._token_init_msgs.pop(msg.token, None)
 
                         if init is None:
                             log.add_conn(("Indirect connection attempt with token %s previously expired, "
