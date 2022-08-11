@@ -601,25 +601,10 @@ def load_file(path, load_func, use_old_file=False):
     return None
 
 
-def write_file_and_backup(path, callback, protect=False):
+def write_file(path, callback, protect=False):
 
     path_encoded = encode_path(path)
     path_old_encoded = encode_path(path + ".old")
-
-    # Back up old file to path.old
-    try:
-        if os.path.exists(path_encoded) and os.stat(path_encoded).st_size > 0:
-            os.replace(path_encoded, path_old_encoded)
-
-            if protect:
-                os.chmod(path_old_encoded, 0o600)
-
-    except Exception as error:
-        log.add(_("Unable to back up file %(path)s: %(error)s"), {
-            "path": path,
-            "error": error
-        })
-        return
 
     # Save new file
     if protect:
@@ -652,6 +637,26 @@ def write_file_and_backup(path, callback, protect=False):
 
     if protect:
         os.umask(oldumask)
+
+
+def backup_file(path, protect=False):
+
+    path_encoded = encode_path(path)
+    path_old_encoded = encode_path(path + ".old")
+
+    # Back up old file to path.old
+    try:
+        if os.path.exists(path_encoded) and os.stat(path_encoded).st_size > 0:
+            os.replace(path_encoded, path_old_encoded)
+
+            if protect:
+                os.chmod(path_old_encoded, 0o600)
+
+    except Exception as error:
+        log.add(_("Unable to back up file %(path)s: %(error)s"), {
+            "path": path,
+            "error": error
+        })
 
 
 def http_request(url_scheme, base_url, path, request_type="GET", body="", headers=None, timeout=10, redirect_depth=0):
