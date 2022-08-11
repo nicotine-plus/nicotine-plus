@@ -635,12 +635,21 @@ class SlskProtoThread(threading.Thread):
 
         msgs.clear()
 
+    @staticmethod
+    def verify_peer_connection_type(conn_type):
+
+        if conn_type not in (ConnectionType.PEER, ConnectionType.FILE, ConnectionType.DISTRIBUTED):
+            log.add_conn("Unknown connection type %s", str(conn_type))
+            return False
+
+        return True
+
     def send_message_to_peer(self, user, message, address=None):
 
         init = None
         conn_type = message.msgtype
 
-        if conn_type not in (ConnectionType.PEER, ConnectionType.FILE, ConnectionType.DISTRIBUTED):
+        if not self.verify_peer_connection_type(conn_type):
             return
 
         # Check if there's already a connection for the specified username
@@ -709,10 +718,15 @@ class SlskProtoThread(threading.Thread):
     def connect_to_peer(self, user, addr, init):
         """ Initiate a connection with a peer """
 
-        if self.has_existing_user_socket(user, init.conn_type):
+        conn_type = init.conn_type
+
+        if not self.verify_peer_connection_type(conn_type):
+            return
+
+        if self.has_existing_user_socket(user, conn_type):
             log.add_conn(("Direct connection of type %(type)s to user %(user)s %(addr)s requested, "
                           "but existing connection already exists"), {
-                'type': init.conn_type,
+                'type': conn_type,
                 'user': user,
                 'addr': addr
             })
@@ -726,7 +740,7 @@ class SlskProtoThread(threading.Thread):
         self._queue.append(InitPeerConn(addr, init))
 
         log.add_conn("Attempting direct connection of type %(type)s to user %(user)s %(addr)s", {
-            'type': init.conn_type,
+            'type': conn_type,
             'user': user,
             'addr': addr
         })
@@ -1153,6 +1167,7 @@ class SlskProtoThread(threading.Thread):
                             "token": token,
                             "addr": addr
                         })
+
                         init = PeerInit(addr=addr, init_user=user, target_user=user,
                                         conn_type=conn_type, indirect=True, token=token)
                         self.connect_to_peer(user, addr, init)
@@ -1335,6 +1350,11 @@ class SlskProtoThread(threading.Thread):
                             'user': user,
                             'addr': addr
                         })
+
+                        if not self.verify_peer_connection_type(conn_type):
+                            conn_obj.ibuf = bytearray()
+                            self.close_connection(self._conns, conn_obj.sock)
+                            return
 
                         self.replace_existing_connection(msg)
 
