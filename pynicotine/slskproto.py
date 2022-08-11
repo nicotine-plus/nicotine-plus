@@ -160,14 +160,13 @@ class ServerConnection(Connection):
 
 class PeerConnection(Connection):
 
-    __slots__ = ("init", "indirect", "fileinit", "filedown", "fileupl", "lastcallback")
+    __slots__ = ("init", "fileinit", "filedown", "fileupl", "lastcallback")
 
-    def __init__(self, sock=None, addr=None, events=None, init=None, indirect=False):
+    def __init__(self, sock=None, addr=None, events=None, init=None):
 
         super().__init__(sock, addr, events)
 
         self.init = init
-        self.indirect = indirect
         self.fileinit = None
         self.filedown = None
         self.fileupl = None
@@ -1336,7 +1335,6 @@ class SlskProtoThread(threading.Thread):
                             "token": msg.token
                         })
 
-                        conn_obj.indirect = True
                         self.process_conn_messages(init)
 
                     elif msg_class is PeerInit:
@@ -1367,18 +1365,15 @@ class SlskProtoThread(threading.Thread):
                     self._callback_msgs.append(msg)
 
             else:
-                if not conn_obj.indirect:
-                    log.add_debug("Peer init message type %(type)i size %(size)i contents %(msg_buffer)s unknown", {
-                        'type': msgtype,
-                        'size': msgsize - 1,
-                        'msg_buffer': msg_buffer[idx + 5:idx + msgsize_total]
-                    })
+                log.add_debug("Peer init message type %(type)i size %(size)i contents %(msg_buffer)s unknown", {
+                    'type': msgtype,
+                    'size': msgsize - 1,
+                    'msg_buffer': msg_buffer[idx + 5:idx + msgsize_total]
+                })
 
-                    conn_obj.ibuf = bytearray()
-                    self.close_connection(self._conns, conn_obj.sock)
-                    return
-
-                break
+                conn_obj.ibuf = bytearray()
+                self.close_connection(self._conns, conn_obj.sock)
+                return
 
             idx += msgsize_total
             buffer_len -= msgsize_total
@@ -1414,9 +1409,6 @@ class SlskProtoThread(threading.Thread):
             msg = self.pack_network_message(msg_obj)
 
             if msg is None:
-                return
-
-            if conn_obj.indirect:
                 return
 
             conn_obj.obuf.extend(msg_obj.pack_uint32(len(msg) + 1))
