@@ -242,8 +242,7 @@ class Transfers:
         if transfer_type == "downloads" and not transfers_file.endswith("downloads.json"):
             load_func = self.load_legacy_transfers_file
 
-        # Make a backup of the previous session
-        backup_file(transfers_file, protect=True)
+        self.config.create_data_folder()
 
         return load_file(transfers_file, load_func)
 
@@ -256,8 +255,10 @@ class Transfers:
 
         if transfer_type == "uploads":
             transfer_list = self.uploads
+            backup_file(self.get_upload_list_file_name(), protect=True)
         else:
             transfer_list = self.downloads
+            backup_file(self.get_download_queue_file_name(), protect=True)
 
         for transfer_row in transfers:
             # User / filename / path
@@ -2534,7 +2535,6 @@ class Transfers:
             transfers_file = self.downloads_file_name
             callback = self.save_downloads_callback
 
-        self.config.create_data_folder()
         write_file(transfers_file, callback)
 
     def server_disconnect(self):
