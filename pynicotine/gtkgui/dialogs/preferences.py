@@ -2132,6 +2132,7 @@ class PluginsFrame(UserInterface):
 
     def set_settings(self):
 
+        self.enabled_plugins.clear()
         self.plugin_list_view.clear()
 
         self.preferences.set_widgets_data(self.options)
