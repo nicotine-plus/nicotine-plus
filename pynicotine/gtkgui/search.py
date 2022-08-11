@@ -1298,7 +1298,10 @@ class Search(UserInterface):
                 if folder != row[11].rsplit('\\', 1)[0]:
                     continue
 
-                destination = self.core.transfers.get_folder_destination(user, folder)
+                # remove_destination is False because we need the destination for the full folder
+                # contents response later
+                destination = self.core.transfers.get_folder_destination(user, folder, remove_destination=False)
+
                 (_counter, user, _flag, _h_speed, _h_queue, _directory, _filename,
                     _h_size, h_bitrate, h_length, _bitrate, fullpath, _country, size, _speed,
                     _queue, _length, _color) = row
