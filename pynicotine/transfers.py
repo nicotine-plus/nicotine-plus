@@ -52,9 +52,10 @@ from pynicotine.utils import clean_path
 from pynicotine.utils import encode_path
 from pynicotine.utils import get_result_bitrate_length
 from pynicotine.utils import human_speed
-from pynicotine.utils import load_file
 from pynicotine.utils import truncate_string_byte
-from pynicotine.utils import write_file_and_backup
+from pynicotine.utils import load_file
+from pynicotine.utils import write_file
+from pynicotine.utils import backup_file
 
 
 class Transfer:
@@ -240,6 +241,9 @@ class Transfers:
 
         if transfer_type == "downloads" and not transfers_file.endswith("downloads.json"):
             load_func = self.load_legacy_transfers_file
+
+        # Make a backup of the previous session
+        backup_file(transfers_file, protect=True)
 
         return load_file(transfers_file, load_func)
 
@@ -2531,7 +2535,7 @@ class Transfers:
             callback = self.save_downloads_callback
 
         self.config.create_data_folder()
-        write_file_and_backup(transfers_file, callback)
+        write_file(transfers_file, callback)
 
     def server_disconnect(self):
 
