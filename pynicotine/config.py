@@ -569,6 +569,11 @@ class Config:
         # Update config values from file
         self.set_config()
 
+        # Make a backup of the previous session if valid
+        if not self.need_config():
+            from pynicotine.utils import backup_file
+            backup_file(self.filename, protect=True)
+
         # Convert special download folder share to regular share
         if self.sections["transfers"].get("sharedownloaddir", False):
             shares = self.sections["transfers"]["shared"]
@@ -765,9 +770,9 @@ class Config:
             return
 
         from pynicotine.logfacility import log
-        from pynicotine.utils import write_file_and_backup
+        from pynicotine.utils import write_file
 
-        write_file_and_backup(self.filename, self.write_config_callback, protect=True)
+        write_file(self.filename, self.write_config_callback, protect=True)
         log.add_debug("Saved configuration: %(file)s", {"file": self.filename})
 
     def write_config_backup(self, filename):
