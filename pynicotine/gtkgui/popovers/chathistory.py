@@ -61,7 +61,7 @@ class ChatHistory(UserInterface):
     def load_users(self):
 
         log_path = os.path.join(config.sections["logging"]["privatelogsdir"], "*.log")
-        user_logs = sorted(glob.glob(encode_path(log_path)), key=os.path.getmtime, reverse=True)
+        user_logs = sorted(glob.glob(encode_path(log_path)), key=os.path.getmtime)
 
         for file_path in user_logs:
             username = os.path.basename(file_path[:-4]).decode("utf-8", "replace")
@@ -99,7 +99,7 @@ class ChatHistory(UserInterface):
             timestamp_format = config.sections["logging"]["log_timestamp"]
             message = "%s %s" % (time.strftime(timestamp_format), message)
 
-        self.list_view.add_row([username, message], select_row=False)
+        self.list_view.add_row([username, message], select_row=False, prepend=True)
 
     def update_visuals(self):
         for widget in self.__dict__.values():

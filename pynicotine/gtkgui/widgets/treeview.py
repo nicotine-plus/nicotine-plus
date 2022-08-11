@@ -323,10 +323,12 @@ class TreeView:
 
         self.widget.set_model(self.model)
 
-    def add_row(self, values, select_row=True):
+    def add_row(self, values, select_row=True, prepend=False):
 
+        position = 0 if prepend else -1
         key = values[self.iterator_key_column]
-        self.iterators[key] = iterator = self.model.insert_with_valuesv(-1, self.column_numbers, values)
+
+        self.iterators[key] = iterator = self.model.insert_with_valuesv(position, self.column_numbers, values)
         self._iter_keys[iterator.user_data] = key
 
         if select_row:
