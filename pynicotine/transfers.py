@@ -641,7 +641,6 @@ class Transfers:
             upload.token = None
             upload.queue_position = 0
 
-            self.update_user_counter(upload.user)
             self.update_upload(upload)
 
             self.core.watch_user(upload.user)
@@ -935,8 +934,6 @@ class Transfers:
                 if upload in self.transfer_request_times:
                     del self.transfer_request_times[upload]
 
-                self.update_user_counter(upload.user)
-
                 if reason in ("Complete", "Finished"):
                     # A complete download of this file already exists on the user's end
                     self.upload_finished(upload)
@@ -983,7 +980,6 @@ class Transfers:
 
         elif transfer in self.uploads:
             transfer.queue_position = 0
-            self.update_user_counter(transfer.user)
             self.update_upload(transfer)
 
         if transfer in self.transfer_request_times:
@@ -1692,9 +1688,6 @@ class Transfers:
             self.uploads.insert(old_index, transferobj)
             return
 
-        if user not in self.user_update_counters:
-            self.update_user_counter(user)
-
         self.uploads.appendleft(transferobj)
 
     def can_upload(self, user):
@@ -1994,8 +1987,6 @@ class Transfers:
         transfer.current_byte_offset = transfer.size
         transfer.sock = None
 
-        self.update_user_counter(transfer.user)
-
         log.add_upload(
             _("Upload finished: user %(user)s, IP address %(ip)s, file %(file)s"), {
                 'user': transfer.user,
@@ -2030,6 +2021,7 @@ class Transfers:
     def auto_clear_upload(self, transfer):
 
         if self.config.sections["transfers"]["autoclear_uploads"]:
+            self.update_user_counter(transfer.user)
             self.uploads.remove(transfer)
 
             if self.uploadsview:
@@ -2046,8 +2038,22 @@ class Transfers:
 
     def update_upload(self, transfer, update_parent=True):
 
+        user = transfer.user
+        status = transfer.status
+
         if self.uploadsview:
             self.uploadsview.update_model(transfer, update_parent=update_parent)
+
+        if status == "Queued" and user in self.user_update_counters:
+            # Don't update existing user counter for queued uploads
+            # We don't want to push the user back in the queue if they enqueued new files
+            return
+
+        if status == "Transferring":
+            # Avoid unnecessary updates while transferring
+            return
+
+        self.update_user_counter(user)
 
     def _check_transfer_timeouts(self):
 
@@ -2334,6 +2340,8 @@ class Transfers:
         for user in users:
             self.core.network_filter.ban_user(user)
 
+        self.check_upload_queue()
+
     def retry_download(self, transfer):
 
         if transfer.status in ("Transferring", "Finished"):
@@ -2385,8 +2393,6 @@ class Transfers:
             self.close_file(transfer.file, transfer)
 
             if transfer in self.uploads:
-                self.update_user_counter(transfer.user)
-                self.check_upload_queue()
                 log.add_upload(
                     _("Upload aborted, user %(user)s file %(file)s"), {
                         "user": transfer.user,
