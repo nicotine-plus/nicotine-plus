@@ -689,9 +689,6 @@ class Transfers:
                         username, virtualpath, path=destination,
                         size=size, bitrate=h_bitrate, length=h_length)
 
-                if directory in self.requested_folders.get(username, []):
-                    del self.requested_folders[username][directory]
-
     def queue_upload(self, msg):
         """ Peer code: 43 """
         """ Peer remotely queued a download (upload here). This is the modern replacement to
@@ -1738,18 +1735,21 @@ class Transfers:
 
         return self.core.user_statuses[user] == UserStatus.OFFLINE
 
-    def get_folder_destination(self, user, directory, remove_prefix=""):
+    def get_folder_destination(self, user, folder, remove_prefix="", remove_destination=True):
 
-        if not remove_prefix and '\\' in directory:
-            remove_prefix = directory.rsplit('\\', 1)[0]
+        if not remove_prefix and '\\' in folder:
+            remove_prefix = folder.rsplit('\\', 1)[0]
 
-        # Get the last folders in directory path, excluding remove_prefix
-        target_folders = directory.replace(remove_prefix, "").lstrip('\\').replace('\\', os.sep)
+        # Get the last folders in folder path, excluding remove_prefix
+        target_folders = folder.replace(remove_prefix, "").lstrip('\\').replace('\\', os.sep)
 
         # Check if a custom download location was specified
-        if (user in self.requested_folders and directory in self.requested_folders[user]
-                and self.requested_folders[user][directory]):
-            download_location = self.requested_folders[user].pop(directory)
+        if (user in self.requested_folders and folder in self.requested_folders[user]
+                and self.requested_folders[user][folder]):
+            download_location = self.requested_folders[user][folder]
+
+            if remove_destination:
+                del self.requested_folders[user][folder]
         else:
             download_location = self.get_default_download_folder(user)
 
