@@ -100,10 +100,13 @@ class Logger:
             log_file.last_active = time.time()
 
         except Exception as error:
+            # Avoid infinite recursion
+            should_log_file = (folder_path != config.sections["logging"]["debuglogsdir"])
+
             self.add(_("Couldn't write to log file \"%(filename)s\": %(error)s"), {
                 "filename": os.path.join(folder_path, base_name),
                 "error": error
-            })
+            }, should_log_file=should_log_file)
 
     def close_log_file(self, log_file):
 
@@ -155,7 +158,7 @@ class Logger:
 
         return msg
 
-    def add(self, msg, msg_args=None, level=None):
+    def add(self, msg, msg_args=None, level=None, should_log_file=True):
 
         levels = self.log_levels if self.log_levels else config.sections["logging"].get("debugmodes", [])
 
@@ -177,7 +180,7 @@ class Logger:
         if msg_args:
             msg = msg % msg_args
 
-        if config.sections["logging"].get("debug_file_output", False):
+        if should_log_file and config.sections["logging"].get("debug_file_output", False):
             self.write_log_file(
                 folder_path=config.sections["logging"]["debuglogsdir"], base_name=self.file_name, text=msg)
 
