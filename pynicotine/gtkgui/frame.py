@@ -76,7 +76,7 @@ from pynicotine.utils import open_uri
 
 class NicotineFrame(UserInterface):
 
-    def __init__(self, application, core, use_trayicon, start_hidden, bindip, port, ci_mode):
+    def __init__(self, application, core, use_trayicon, start_hidden, ci_mode):
 
         if not ci_mode:
             # Show errors in the GUI from here on
@@ -93,8 +93,6 @@ class NicotineFrame(UserInterface):
         self.away_cooldown_time = 0
         self.gesture_click = None
         self.scan_progress_indeterminate = False
-        self.bindip = bindip
-        self.port = port
 
         # Initialize these windows/dialogs later when necessary
         self.fast_configure = None
