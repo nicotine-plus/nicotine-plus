@@ -221,7 +221,7 @@ class TransferList(UserInterface):
 
     def init_transfers(self, transfer_list):
         self.transfer_list = transfer_list
-        self.update_model(forceupdate=True)
+        self.update_model()
 
     def server_login(self):
         # Not needed
