@@ -62,13 +62,7 @@ class PrivateChats(IconNotebook):
         )
 
         self.completion = ChatCompletion()
-
-        self.command_help = UserInterface("ui/popovers/privatechatcommands.ui")
-        self.command_help.container, self.command_help.popover = self.command_help.widgets
-
-        if GTK_API_VERSION >= 4:
-            # Scroll to the focused widget
-            self.command_help.container.get_child().set_scroll_to_focus(True)
+        self.command_help = None
 
     def on_switch_chat(self, _notebook, page, _page_num):
 
@@ -83,6 +77,14 @@ class PrivateChats(IconNotebook):
 
             self.completion.set_entry(tab.chat_entry)
             tab.set_completion_list(self.core.privatechats.completion_list[:])
+
+            if self.command_help is None:
+                self.command_help = UserInterface("ui/popovers/privatechatcommands.ui")
+                self.command_help.container, self.command_help.popover = self.command_help.widgets
+
+                if GTK_API_VERSION >= 4:
+                    # Scroll to the focused widget
+                    self.command_help.container.get_child().set_scroll_to_focus(True)
 
             self.command_help.popover.unparent()
             tab.help_button.set_popover(self.command_help.popover)

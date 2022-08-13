@@ -81,15 +81,10 @@ class ChatRooms(IconNotebook):
         self.autojoin_rooms = set()
         self.completion = ChatCompletion()
         self.roomlist = RoomList(frame, core)
-
-        self.command_help = UserInterface("ui/popovers/chatroomcommands.ui")
-        self.command_help.container, self.command_help.popover = self.command_help.widgets
+        self.command_help = None
 
         if GTK_API_VERSION >= 4:
             self.frame.chatrooms_paned.set_resize_start_child(True)
-
-            # Scroll to the focused widget
-            self.command_help.container.get_child().set_scroll_to_focus(True)
         else:
             self.frame.chatrooms_paned.child_set_property(self.frame.chatrooms_container, "resize", True)
 
@@ -137,6 +132,14 @@ class ChatRooms(IconNotebook):
 
             self.completion.set_entry(tab.chat_entry)
             tab.set_completion_list(self.core.chatrooms.completion_list[:])
+
+            if self.command_help is None:
+                self.command_help = UserInterface("ui/popovers/chatroomcommands.ui")
+                self.command_help.container, self.command_help.popover = self.command_help.widgets
+
+                if GTK_API_VERSION >= 4:
+                    # Scroll to the focused widget
+                    self.command_help.container.get_child().set_scroll_to_focus(True)
 
             self.command_help.popover.unparent()
             tab.help_button.set_popover(self.command_help.popover)
