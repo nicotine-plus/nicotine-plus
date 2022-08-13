@@ -64,7 +64,7 @@ class UserBrowses(IconNotebook):
             switch_page_callback=self.on_switch_browse_page
         )
 
-        self.file_properties = FileProperties(frame, core)
+        self.file_properties = None
 
     def on_switch_browse_page(self, _notebook, page, _page_num):
 
@@ -1100,6 +1100,9 @@ class UserBrowse(UserInterface):
                              "length": model.get_value(iterator, 3)})
 
         if data:
+            if self.userbrowses.file_properties is None:
+                self.userbrowses.file_properties = FileProperties(self.frame, self.core)
+
             self.userbrowses.file_properties.update_properties(data, selected_size, selected_length)
             self.userbrowses.file_properties.show()
 

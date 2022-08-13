@@ -63,9 +63,7 @@ class PrivateChats(IconNotebook):
 
         self.completion = ChatCompletion()
         self.history = ChatHistory(frame, core)
-
-        self.command_help = UserInterface("ui/popovers/privatechatcommands.ui")
-        self.command_help.popover, = self.command_help.widgets
+        self.command_help = None
 
         self.update_visuals()
 
@@ -82,6 +80,10 @@ class PrivateChats(IconNotebook):
 
             self.completion.set_entry(tab.chat_entry)
             tab.set_completion_list(self.core.privatechats.completion_list[:])
+
+            if self.command_help is None:
+                self.command_help = UserInterface("ui/popovers/privatechatcommands.ui")
+                self.command_help.popover, = self.command_help.widgets
 
             self.command_help.popover.unparent()
             tab.help_button.set_popover(self.command_help.popover)

@@ -84,6 +84,7 @@ class TransferList(UserInterface):
         self.paths = {}
         self.tree_users = None
         self.last_redraw_time = 0
+        self.file_properties = None
 
         # Use dict instead of list for faster membership checks
         self.selected_users = OrderedDict()
@@ -187,7 +188,6 @@ class TransferList(UserInterface):
             (">" + _("User(s)"), self.popup_menu_users)
         )
 
-        self.file_properties = FileProperties(self.frame, self.core, download_button=False)
         self.update_visuals()
 
     def create_model(self):
@@ -905,6 +905,9 @@ class TransferList(UserInterface):
             })
 
         if data:
+            if self.file_properties is None:
+                self.file_properties = FileProperties(self.frame, self.core, download_button=False)
+
             self.file_properties.update_properties(data, total_size=selected_size)
             self.file_properties.show()
 
