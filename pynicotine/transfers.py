@@ -256,11 +256,12 @@ class Transfers:
             transfer_list = self.downloads
 
         for transfer_row in transfers:
-            # User / filename / path
+            num_attributes = len(transfer_row)
 
-            if len(transfer_row) < 3:
+            if num_attributes < 3:
                 continue
 
+            # User / filename / path
             user = transfer_row[0]
 
             if not isinstance(user, str):
@@ -277,11 +278,10 @@ class Transfers:
                 continue
 
             # Status
+            loaded_status = None
 
-            try:
+            if num_attributes >= 4:
                 loaded_status = str(transfer_row[3])
-            except IndexError:
-                loaded_status = None
 
             if transfer_type == "uploads" and loaded_status != "Finished":
                 # Only finished uploads are supposed to be restored
@@ -297,36 +297,35 @@ class Transfers:
                 status = "User logged off"
 
             # Size / offset
+            size = 0
+            current_byte_offset = None
 
-            try:
-                size = int(transfer_row[4])
-            except Exception:
-                size = 0
+            if num_attributes >= 5:
+                loaded_size = transfer_row[4]
 
-            try:
-                current_byte_offset = int(transfer_row[5])
-            except Exception:
-                current_byte_offset = None
+                if loaded_size and isinstance(loaded_size, (int, float)):
+                    size = int(loaded_size)
+
+            if num_attributes >= 6:
+                loaded_byte_offset = transfer_row[5]
+
+                if loaded_byte_offset and isinstance(loaded_byte_offset, (int, float)):
+                    current_byte_offset = int(loaded_byte_offset)
 
             # Bitrate / length
-
             bitrate = length = None
 
-            try:
+            if num_attributes >= 7:
                 loaded_bitrate = transfer_row[6]
 
                 if loaded_bitrate is not None:
                     bitrate = str(loaded_bitrate)
-            except IndexError:
-                pass
 
-            try:
+            if num_attributes >= 8:
                 loaded_length = transfer_row[7]
 
                 if loaded_length is not None:
                     length = str(loaded_length)
-            except IndexError:
-                pass
 
             transfer_list.appendleft(
                 Transfer(
