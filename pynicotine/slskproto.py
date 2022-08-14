@@ -903,14 +903,24 @@ class SlskProtoThread(threading.Thread):
     def close_socket(sock):
 
         try:
+            log.add_conn("Shutting down socket %s", sock)
             sock.shutdown(socket.SHUT_RDWR)
-        except OSError:
-            pass
+
+        except OSError as error:
+            log.add_conn("Failed to shut down socket %(sock)s: %(error)s", {
+                "sock": sock,
+                "error": error
+            })
 
         try:
+            log.add_conn("Closing socket %s", sock)
             sock.close()
-        except OSError:
-            pass
+
+        except OSError as error:
+            log.add_conn("Failed to close socket %(sock)s: %(error)s", {
+                "sock": sock,
+                "error": error
+            })
 
     def close_connection(self, connection_list, sock, callback=True):
 
