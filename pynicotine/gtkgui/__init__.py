@@ -96,6 +96,10 @@ def run_gui(core, trayicon, hidden, bindip, port, ci_mode, multi_instance):
         os.environ["GI_TYPELIB_PATH"] = os.path.join(executable_folder, "lib/typelibs")
         os.environ["GSETTINGS_SCHEMA_DIR"] = os.path.join(executable_folder, "lib/schemas")
 
+    if sys.platform == "win32":
+        # 'win32' PangoCairo backend on Windows is too slow, use 'fontconfig' instead
+        os.environ["PANGOCAIRO_BACKEND"] = "fontconfig"
+
     from pynicotine.logfacility import log
     error = check_gui_dependencies()
 
