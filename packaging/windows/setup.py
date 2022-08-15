@@ -218,8 +218,8 @@ def add_gtk():
 
     # Fontconfig
     add_files(
-        folder_path=os.path.join(SYS_BASE, "etc/fonts"), output_path="lib/fonts",
-        ends_with=".conf", recursive=True
+        folder_path=os.path.join(SYS_BASE, "etc/fonts"), output_path="share/fonts",
+        ends_with=".conf", recursive=True, resource=True
     )
 
     # Pixbuf loaders
