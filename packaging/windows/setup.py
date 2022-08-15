@@ -210,9 +210,16 @@ def add_gtk():
             starts_with="libadwaita-", ends_with=LIB_EXTENSION
         )
 
+    # Schemas
     add_file(
         file_path=os.path.join(SYS_BASE, "share/glib-2.0/schemas/gschemas.compiled"),
         output_path="lib/schemas/gschemas.compiled"
+    )
+
+    # Fontconfig
+    add_files(
+        folder_path=os.path.join(SYS_BASE, "etc/fonts"), output_path="lib/fonts",
+        ends_with=".conf", recursive=True
     )
 
     # Pixbuf loaders
