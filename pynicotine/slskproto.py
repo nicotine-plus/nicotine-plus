@@ -436,7 +436,7 @@ class SlskProtoThread(threading.Thread):
         """ Call this to abort the thread """
         self._want_abort = True
 
-        self.close_socket(self.listen_socket)
+        self.close_socket(self.listen_socket, shutdown=False)
         self.selector.close()
         self.server_disconnect()
 
@@ -900,17 +900,19 @@ class SlskProtoThread(threading.Thread):
         self.close_connection(self._conns, prev_init.sock)
 
     @staticmethod
-    def close_socket(sock):
+    def close_socket(sock, shutdown=True):
 
-        try:
-            log.add_conn("Shutting down socket %s", sock)
-            sock.shutdown(socket.SHUT_RDWR)
+        # In certain cases, a shutdown isn't possible, e.g. if a connection wasn't established
+        if shutdown:
+            try:
+                log.add_conn("Shutting down socket %s", sock)
+                sock.shutdown(socket.SHUT_RDWR)
 
-        except OSError as error:
-            log.add_conn("Failed to shut down socket %(sock)s: %(error)s", {
-                "sock": sock,
-                "error": error
-            })
+            except OSError as error:
+                log.add_conn("Failed to shut down socket %(sock)s: %(error)s", {
+                    "sock": sock,
+                    "error": error
+                })
 
         try:
             log.add_conn("Closing socket %s", sock)
@@ -934,7 +936,7 @@ class SlskProtoThread(threading.Thread):
         if not self._want_abort:
             self.selector.unregister(sock)
 
-        self.close_socket(sock)
+        self.close_socket(sock, shutdown=(connection_list != self._connsinprogress))
         self._numsockets -= 1
 
         if sock is self.server_socket:
@@ -1103,7 +1105,7 @@ class SlskProtoThread(threading.Thread):
 
         except OSError as error:
             self.connect_error(error, conn_obj)
-            self.close_socket(server_socket)
+            self.close_socket(server_socket, shutdown=False)
             self.server_disconnect()
 
     def process_server_input(self, conn_obj, msg_buffer):
@@ -1454,7 +1456,7 @@ class SlskProtoThread(threading.Thread):
 
         except OSError as error:
             self.connect_error(error, conn_obj)
-            self.close_socket(sock)
+            self.close_socket(sock, shutdown=False)
 
     def process_peer_input(self, conn_obj, msg_buffer):
         """ We have a "P" connection (p2p exchange), peer has sent us
