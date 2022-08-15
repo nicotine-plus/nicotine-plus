@@ -93,8 +93,8 @@ def run_gui(core, hidden, ci_mode, multi_instance):
             resources_folder = os.path.abspath(os.path.join(executable_folder, "..", "Resources"))
 
         os.environ["XDG_DATA_DIRS"] = os.path.join(resources_folder, "share")
-        os.environ["FONTCONFIG_FILE"] = os.path.join(executable_folder, "lib/fonts/fonts.conf")
-        os.environ["FONTCONFIG_PATH"] = os.path.join(executable_folder, "lib/fonts")
+        os.environ["FONTCONFIG_FILE"] = os.path.join(resources_folder, "share/fonts/fonts.conf")
+        os.environ["FONTCONFIG_PATH"] = os.path.join(resources_folder, "share/fonts")
         os.environ["GDK_PIXBUF_MODULE_FILE"] = os.path.join(executable_folder, "lib/pixbuf-loaders.cache")
         os.environ["GI_TYPELIB_PATH"] = os.path.join(executable_folder, "lib/typelibs")
         os.environ["GSETTINGS_SCHEMA_DIR"] = os.path.join(executable_folder, "lib/schemas")
