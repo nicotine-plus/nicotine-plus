@@ -105,6 +105,7 @@ class SlskProtoTest(unittest.TestCase):
             self.assertEqual(proto.server_socket.connect_ex.call_count, 1)      # pylint: disable=no-member
 
             proto.abort()
+            sleep(SLSKPROTO_RUN_TIME / 2)
             self.assertIsNone(proto.server_socket)
 
     @staticmethod
