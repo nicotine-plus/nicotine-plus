@@ -209,22 +209,17 @@ class SlskProtoThread(threading.Thread):
         self.portrange = (port, port) if port else port_range
         self.interface = interface
 
-        # Select Networking Input and Output sockets
-        self.selector = selectors.DefaultSelector()
-
-        self.listen_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.listen_socket.setblocking(False)
-
-        self.server_disconnected = True
-        self.manual_server_disconnect = False
-        self._server_relogged = False
+        self.selector = None
+        self.listen_socket = None
 
         self.server_socket = None
         self.server_address = None
         self.server_username = None
         self.server_timer = None
         self.server_timeout_value = -1
+        self.server_disconnected = True
+        self.manual_server_disconnect = False
+        self._server_relogged = False
 
         self.parent_socket = None
         self.potential_parents = {}
@@ -257,11 +252,6 @@ class SlskProtoThread(threading.Thread):
         self.current_cycle_loop_count = 0
         self.last_cycle_loop_count = 0
         self.loops_per_second = 0
-
-        core_callback([SetConnectionStats()])
-        self.bind_listen_port()
-
-        self.start()
 
     """ General """
 
@@ -1995,9 +1985,16 @@ class SlskProtoThread(threading.Thread):
 
     def run(self):
 
-        # Listen socket needs to be registered for selection here instead of __init__,
-        # otherwise connections break on certain systems (OpenBSD confirmed)
+        # Select Networking Input and Output sockets
+        self.selector = selectors.DefaultSelector()
+
+        self.listen_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.listen_socket.setblocking(False)
         self.selector.register(self.listen_socket, selectors.EVENT_READ)
+
+        self._core_callback([SetConnectionStats()])
+        self.bind_listen_port()
 
         while not self._want_abort:
 

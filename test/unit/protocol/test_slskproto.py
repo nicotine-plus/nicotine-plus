@@ -19,6 +19,7 @@
 
 import os
 import pickle
+import selectors
 import socket
 import unittest
 
@@ -73,6 +74,10 @@ class MockSocket(Mock):
 
 class SlskProtoTest(unittest.TestCase):
 
+    def setUp(self):
+        # Windows doesn't accept mock_socket in select() calls
+        selectors.DefaultSelector = MagicMock()
+
     def test_server_conn(self):
 
         queue = deque()
@@ -80,9 +85,7 @@ class SlskProtoTest(unittest.TestCase):
             core_callback=Mock(), queue=queue, interface='', bindip='',
             port=None, port_range=(1024, 65535)
         )
-
-        # Windows doesn't accept mock_socket in select() calls
-        proto.selector = MagicMock()
+        proto.start()
 
         with patch('socket.socket') as mock_socket:
             mock_socket.set_data(LOGIN_DATAFILE)
@@ -116,6 +119,7 @@ class SlskProtoTest(unittest.TestCase):
             core_callback=Mock(), queue=queue, interface='', bindip='',
             port=None, port_range=(1024, 65535)
         )
+        proto.start()
         proto.server_disconnected = False
         queue.append(ServerConnect(addr=('0.0.0.0', 0), login=('username', 'password')))
 

@@ -138,10 +138,13 @@ class NicotineCore:
         self.transfers.init_transfers()
         self.privatechats.load_users()
 
-        port_range = config.sections["server"]["portrange"]
-        interface = config.sections["server"]["interface"]
         self.protothread = slskproto.SlskProtoThread(
-            self.network_callback, self.queue, self.bindip, interface, self.port, port_range)
+            core_callback=self.network_callback, queue=self.queue, bindip=self.bindip, port=self.port,
+            interface=config.sections["server"]["interface"],
+            port_range=config.sections["server"]["portrange"]
+        )
+        self.protothread.start()
+
         self.upnp = UPnP(self, config)
         self.pluginhandler = PluginHandler(self, config)
 
