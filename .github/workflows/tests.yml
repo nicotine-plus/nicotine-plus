@@ -1,11 +1,11 @@
-name: In-Tree Unit Tests
+name: Tests
 
 on: [push, pull_request]
 
 jobs:
 
   ubuntu:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     strategy:
       matrix:
         python: ['3.5', '3.6', '3.7', '3.8', '3.9', '3.10', 'pypy-3.6', 'pypy-3.7', 'pypy-3.8', 'pypy-3.9']
@@ -36,7 +36,7 @@ jobs:
         run: xvfb-run python -m unittest
 
   windows:
-    runs-on: windows-latest
+    runs-on: windows-2019
     defaults:
       run:
         shell: msys2 {0}
@@ -73,7 +73,7 @@ jobs:
         run: python3 -m unittest
 
   macos:
-    runs-on: macos-latest
+    runs-on: macos-10.15
     strategy:
       matrix:
         gtk: [3, 4]

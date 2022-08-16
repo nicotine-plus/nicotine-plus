@@ -1,11 +1,11 @@
-name: Packaging (Debian, Windows and macOS)
+name: Packaging
 
 on: [push, pull_request]
 
 jobs:
 
   debian:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
