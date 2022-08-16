@@ -927,10 +927,7 @@ class SlskProtoThread(threading.Thread):
             # Already removed
             return
 
-        # If we're shutting down, we've already closed the selector in abort()
-        if not self._want_abort:
-            self.selector.unregister(sock)
-
+        self.selector.unregister(sock)
         self.close_socket(sock, shutdown=(connection_list != self._connsinprogress))
         self._numsockets -= 1
 
@@ -2157,8 +2154,9 @@ class SlskProtoThread(threading.Thread):
             time.sleep(1 / 60)
 
         # Networking thread aborted
-        self.manual_server_disconnect = True
-
+        self.selector.unregister(self.listen_socket)
         self.close_socket(self.listen_socket, shutdown=False)
-        self.selector.close()
+
+        self.manual_server_disconnect = True
         self.server_disconnect()
+        self.selector.close()
