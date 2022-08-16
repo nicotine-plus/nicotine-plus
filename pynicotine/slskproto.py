@@ -261,7 +261,6 @@ class SlskProtoThread(threading.Thread):
         core_callback([SetConnectionStats()])
         self.bind_listen_port()
 
-        self.daemon = True
         self.start()
 
     """ General """
@@ -435,10 +434,6 @@ class SlskProtoThread(threading.Thread):
     def abort(self):
         """ Call this to abort the thread """
         self._want_abort = True
-
-        self.close_socket(self.listen_socket, shutdown=False)
-        self.selector.close()
-        self.server_disconnect()
 
     """ File Transfers """
 
@@ -2162,3 +2157,8 @@ class SlskProtoThread(threading.Thread):
             time.sleep(1 / 60)
 
         # Networking thread aborted
+        self.manual_server_disconnect = True
+
+        self.close_socket(self.listen_socket, shutdown=False)
+        self.selector.close()
+        self.server_disconnect()

@@ -274,10 +274,6 @@ class NicotineCore:
 
         # Shut down networking thread
         if self.protothread:
-            if not self.protothread.server_disconnected:
-                self.protothread.manual_server_disconnect = True
-                self.server_disconnect()
-
             self.protothread.abort()
 
         # Save download/upload list to file
