@@ -35,6 +35,25 @@ jobs:
       - name: Integration and unit tests
         run: xvfb-run python -m unittest
 
+  ubuntu-dep8:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-18.04, ubuntu-20.04, ubuntu-22.04]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Install autopkgtest dependencies
+        run: |
+          sudo apt update
+          sudo apt -y install autopkgtest
+
+      - name: Run autopkgtest
+        run: sudo autopkgtest . -- null
+
   windows:
     runs-on: windows-2019
     defaults:
