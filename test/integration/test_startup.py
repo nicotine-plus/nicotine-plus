@@ -32,22 +32,6 @@ COMMANDS = (
 
 class StartupTest(unittest.TestCase):
 
-    def test_startup(self):
-        """ Verify that regular startup works """
-
-        for command in COMMANDS:
-            # Assume failure by default
-            is_success = False
-
-            try:
-                subprocess.check_call(command, timeout=5)
-
-            except subprocess.TimeoutExpired:
-                # Program was still running, success!
-                is_success = True
-
-            self.assertTrue(is_success)
-
     def test_cli(self):
         """ Verify that CLI-exclusive functionality works """
 
@@ -64,3 +48,19 @@ class StartupTest(unittest.TestCase):
 
         output = subprocess.check_output(["python3", "-m", "pynicotine", "--version"], timeout=3)
         self.assertTrue(str(output).find("Nicotine+") > -1)
+
+    def test_startup(self):
+        """ Verify that regular startup works """
+
+        for command in COMMANDS:
+            # Assume failure by default
+            is_success = False
+
+            try:
+                subprocess.check_call(command, timeout=5)
+
+            except subprocess.TimeoutExpired:
+                # Program was still running, success!
+                is_success = True
+
+            self.assertTrue(is_success)
