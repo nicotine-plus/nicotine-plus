@@ -95,7 +95,7 @@ class SlskProtoTest(unittest.TestCase):
         self.assertIsNone(self.protothread.server_socket)
 
     @unittest.mock.patch('socket.socket')
-    def test_server_conn(self, mock_socket):
+    def test_server_conn(self, _mock_socket):
 
         self.protothread.server_disconnected = False
 
