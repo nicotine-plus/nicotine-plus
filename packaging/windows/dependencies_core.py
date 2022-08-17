@@ -29,6 +29,7 @@ def install_pacman():
 
     arch = os.environ.get("ARCH") or "x86_64"
     prefix = "mingw-w64-" + arch + "-"
+    mingw_type = "mingw32" if arch == "i686" else "mingw64"
     gtk_version = os.environ.get("NICOTINE_GTK_VERSION") or '3'
     use_libadwaita = gtk_version == '4' and os.environ.get("NICOTINE_LIBADWAITA") == '1'
 
@@ -44,6 +45,14 @@ def install_pacman():
         packages.append(prefix + "libadwaita")
 
     subprocess.check_call(["pacman", "--noconfirm", "-S", "--needed"] + packages)
+
+    # Downgrade Cairo for now due to text rendering performance issues
+    downgrade_packages = [prefix + "cairo-1.17.4-4-any.pkg.tar.zst"]
+
+    for package in downgrade_packages:
+        subprocess.check_call(["curl", "-O", "https://repo.msys2.org/mingw/%s/%s" % (mingw_type, package)])
+
+    subprocess.check_call(["pacman", "--noconfirm", "-U"] + downgrade_packages)
 
 
 def install_pypi():
