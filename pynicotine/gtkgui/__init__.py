@@ -112,7 +112,7 @@ def run_gui(core, hidden, ci_mode, multi_instance):
 
     from gi.repository import Gdk
 
-    if Gdk.Display.get_default() is None:
+    if not ci_mode and Gdk.Display.get_default() is None:
         log.add(_("No graphical environment available, using headless (no GUI) mode"))
         return None
 
