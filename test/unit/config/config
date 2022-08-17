@@ -143,7 +143,6 @@ min_search_chars = 3
 remove_special_chars = True
 enable_history = True
 private_search_results = True
-filterlength = []
 
 [ui]
 dark_mode = False
