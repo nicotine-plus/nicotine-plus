@@ -27,7 +27,6 @@ from collections import deque
 from time import sleep
 from unittest.mock import MagicMock
 from unittest.mock import Mock
-from unittest.mock import patch
 
 from pynicotine.slskproto import SlskProtoThread
 from pynicotine.slskmessages import ServerConnect, Login, SetWaitPort
@@ -86,6 +85,9 @@ class SlskProtoTest(unittest.TestCase):
         )
         self.protothread.start()
 
+        # Slight delay to allow the network thread to fully start
+        sleep(SLSKPROTO_RUN_TIME / 2)
+
     def tearDown(self):
 
         self.protothread.abort()
@@ -93,27 +95,27 @@ class SlskProtoTest(unittest.TestCase):
         sleep(SLSKPROTO_RUN_TIME / 2)
         self.assertIsNone(self.protothread.server_socket)
 
-    def test_server_conn(self):
+    @unittest.mock.patch('socket.socket')
+    def test_server_conn(self, mock_socket):
 
-        with patch('socket.socket') as mock_socket:
-            mock_socket.set_data(LOGIN_DATAFILE)
-            self.protothread.server_disconnected = False
+        mock_socket.set_data(LOGIN_DATAFILE)
+        self.protothread.server_disconnected = False
 
-            self.queue.append(ServerConnect(addr=('0.0.0.0', 0), login=('dummy', 'dummy')))
-            sleep(SLSKPROTO_RUN_TIME)
+        self.queue.append(ServerConnect(addr=('0.0.0.0', 0), login=('dummy', 'dummy')))
+        sleep(SLSKPROTO_RUN_TIME)
 
-            if hasattr(socket, 'TCP_KEEPIDLE'):
-                self.assertEqual(self.protothread.server_socket.setsockopt.call_count, 4)  # pylint: disable=no-member
+        if hasattr(socket, 'TCP_KEEPIDLE'):
+            self.assertEqual(self.protothread.server_socket.setsockopt.call_count, 4)  # pylint: disable=no-member
 
-            elif hasattr(socket, 'TCP_KEEPALIVE'):
-                self.assertEqual(self.protothread.server_socket.setsockopt.call_count, 3)  # pylint: disable=no-member
+        elif hasattr(socket, 'TCP_KEEPALIVE'):
+            self.assertEqual(self.protothread.server_socket.setsockopt.call_count, 3)  # pylint: disable=no-member
 
-            elif hasattr(socket, 'SIO_KEEPALIVE_VALS'):
-                self.assertEqual(self.protothread.server_socket.ioctl.call_count, 1)       # pylint: disable=no-member
-                self.assertEqual(self.protothread.server_socket.setsockopt.call_count, 1)  # pylint: disable=no-member
+        elif hasattr(socket, 'SIO_KEEPALIVE_VALS'):
+            self.assertEqual(self.protothread.server_socket.ioctl.call_count, 1)       # pylint: disable=no-member
+            self.assertEqual(self.protothread.server_socket.setsockopt.call_count, 1)  # pylint: disable=no-member
 
-            self.assertEqual(self.protothread.server_socket.setblocking.call_count, 1)     # pylint: disable=no-member
-            self.assertEqual(self.protothread.server_socket.connect_ex.call_count, 1)      # pylint: disable=no-member
+        self.assertEqual(self.protothread.server_socket.setblocking.call_count, 1)     # pylint: disable=no-member
+        self.assertEqual(self.protothread.server_socket.connect_ex.call_count, 1)      # pylint: disable=no-member
 
     def test_login(self):
 
