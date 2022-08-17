@@ -34,7 +34,6 @@ from pynicotine.utils import encode_path
 
 # Time (in s) needed for SlskProtoThread main loop to run at least once
 SLSKPROTO_RUN_TIME = 1.5
-LOGIN_DATAFILE = 'socket_localhost_22420.log'
 
 
 class MockSocket(Mock):
@@ -98,7 +97,6 @@ class SlskProtoTest(unittest.TestCase):
     @unittest.mock.patch('socket.socket')
     def test_server_conn(self, mock_socket):
 
-        mock_socket.set_data(LOGIN_DATAFILE)
         self.protothread.server_disconnected = False
 
         self.queue.append(ServerConnect(addr=('0.0.0.0', 0), login=('dummy', 'dummy')))

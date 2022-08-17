@@ -38,6 +38,7 @@ jobs:
           sudo apt update
           sudo apt install gettext gir1.2-gtk-${{ matrix.gtk }}.0 libgirepository1.0-dev
           python -m pip install flake8 pygobject pylint
+
       - name: Flake8 linter
         run: python -m flake8
 
