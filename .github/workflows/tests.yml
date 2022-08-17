@@ -68,7 +68,7 @@ jobs:
         run: sudo autopkgtest . -- null
 
   windows:
-    runs-on: windows-2019
+    runs-on: windows-latest
     defaults:
       run:
         shell: msys2 {0}
