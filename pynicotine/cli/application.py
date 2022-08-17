@@ -93,7 +93,7 @@ class Application:
 
         threading.Thread.__init__ = init_thread_excepthook
 
-    def on_critical_error(self, exc_type, exc_value, exc_traceback):
+    def on_critical_error(self, _exc_type, exc_value, _exc_traceback):
         self.core.quit()
         raise exc_value
 
