@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-22 02:04+0300\n"
-"PO-Revision-Date: 2022-08-06 07:49+0000\n"
+"PO-Revision-Date: 2022-08-15 11:11+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -1373,7 +1373,7 @@ msgstr "Aktivitásnézet törlése"
 #: pynicotine/gtkgui/chatrooms.py:492 pynicotine/gtkgui/chatrooms.py:506
 #: pynicotine/gtkgui/chatrooms.py:511
 msgid "_Leave Room"
-msgstr "Ki_lépés a szobából"
+msgstr "Kilé_pés a szobából"
 
 #: pynicotine/gtkgui/chatrooms.py:499 pynicotine/gtkgui/chatrooms.py:698
 #: pynicotine/gtkgui/privatechat.py:239 pynicotine/gtkgui/privatechat.py:308
@@ -2081,7 +2081,7 @@ msgstr "%(program)s %(version)s betöltése"
 #: pynicotine/gtkgui/widgets/treeview.py:491
 #: pynicotine/gtkgui/ui/mainwindow.ui:1818
 msgid "Offline"
-msgstr "Nem elérhető"
+msgstr "Nincs bejelentkezve"
 
 #: pynicotine/gtkgui/frame.py:499
 msgid "Invalid Password"
@@ -2130,7 +2130,7 @@ msgstr "Naprakész"
 
 #: pynicotine/gtkgui/frame.py:745
 msgid "You appear to be using a development version of Nicotine+."
-msgstr "Úgy tűnik, hogy a Nicotine+ fejlesztői verzióját használja."
+msgstr "Úgy tűnik a Nicotine+ fejlesztői verzióját használja."
 
 #: pynicotine/gtkgui/frame.py:748
 msgid "You are using the latest version of Nicotine+."
@@ -2150,7 +2150,7 @@ msgstr "_Távol"
 
 #: pynicotine/gtkgui/frame.py:995
 msgid "Soulseek _Privileges"
-msgstr "Soulseek _Kiváltságok"
+msgstr "Soulseek kiváltságok"
 
 #: pynicotine/gtkgui/frame.py:1001
 msgid "_Preferences"
@@ -2562,11 +2562,11 @@ msgstr "_Barátok"
 
 #: pynicotine/gtkgui/search.py:73
 msgid "_Rooms"
-msgstr "Szobák (_R)"
+msgstr "_Szobák"
 
 #: pynicotine/gtkgui/search.py:74
 msgid "_User"
-msgstr "Felhasználó (_U)"
+msgstr "F_elhasználó"
 
 #: pynicotine/gtkgui/search.py:360
 msgid "ID"
@@ -2605,30 +2605,30 @@ msgstr "Könyvtár U_RL másolása"
 
 #: pynicotine/gtkgui/search.py:407 pynicotine/gtkgui/userbrowse.py:277
 msgid "_Download File(s)"
-msgstr "Fájl(ok) letöltése (_D)"
+msgstr "Fájl(ok) _letöltése"
 
 #: pynicotine/gtkgui/search.py:408 pynicotine/gtkgui/userbrowse.py:278
 msgid "Download File(s) _To…"
-msgstr "Fájl(ok) letöltése ide (_T)…"
+msgstr "Fájl(ok) le_töltése ide…"
 
 #: pynicotine/gtkgui/search.py:409
 msgid "Download _Folder(s)"
-msgstr "Könyvtár(ak) letöltése (_F)"
+msgstr "Könyvtár(ak) letöltése"
 
 #: pynicotine/gtkgui/search.py:410
 msgid "Download F_older(s) To…"
-msgstr "Könyvtár(ak) letöltése ide (_o)…"
+msgstr "Könyvtár(ak) letöltése ide…"
 
 #: pynicotine/gtkgui/search.py:412 pynicotine/gtkgui/transferlist.py:197
 msgid "_Browse Folder(s)"
-msgstr "Könyvtár(ak) tallózása (_B)"
+msgstr "Könyvtár(ak) _böngészése"
 
 #: pynicotine/gtkgui/search.py:413 pynicotine/gtkgui/transferlist.py:194
 #: pynicotine/gtkgui/userbrowse.py:199 pynicotine/gtkgui/userbrowse.py:213
 #: pynicotine/gtkgui/userbrowse.py:266 pynicotine/gtkgui/userbrowse.py:283
 #: pynicotine/gtkgui/userbrowse.py:684
 msgid "F_ile Properties"
-msgstr "(_i) Fájl tulajdonságai"
+msgstr "Fájl tulajdonsága_i"
 
 #: pynicotine/gtkgui/search.py:416 pynicotine/gtkgui/transferlist.py:205
 msgid "User(s)"
@@ -2649,7 +2649,7 @@ msgid ""
 "search query \"%(query)s\""
 msgstr ""
 "A helytelen keresési eredmény %(filepath)s kiszűrve a %(user)s "
-"felhasználótól a \"%(query)s\" keresési lekérdezésre"
+"felhasználótól, a \"%(query)s\" keresési lekérdezésre"
 
 #: pynicotine/gtkgui/search.py:599 pynicotine/gtkgui/userbrowse.py:432
 #, python-format
@@ -2659,19 +2659,19 @@ msgstr "[MAGÁN]  %s"
 #: pynicotine/gtkgui/search.py:922
 #, python-format
 msgid "_Result Filters [%d]"
-msgstr "(_R) Szűrési eredmény [%d]"
+msgstr "Szűrési e_redmény [%d]"
 
 #: pynicotine/gtkgui/search.py:924 pynicotine/gtkgui/ui/search.ui:104
 msgid "_Result Filters"
-msgstr "Szűrési eredmény (_R)"
+msgstr "Szűrési e_redmény"
 
 #: pynicotine/gtkgui/search.py:967
 msgid "Add Wi_sh"
-msgstr "Kívánság hozzáadása (_s)"
+msgstr "Kíván_ság hozzáadása"
 
 #: pynicotine/gtkgui/search.py:971
 msgid "Remove Wi_sh"
-msgstr "Kívánság eltávolítása (_s)"
+msgstr "Kíván_ság eltávolítása"
 
 #: pynicotine/gtkgui/search.py:985
 msgid "Select User's Results"
@@ -2784,19 +2784,19 @@ msgstr "Hátralévő idő"
 
 #: pynicotine/gtkgui/transferlist.py:192 pynicotine/gtkgui/userbrowse.py:264
 msgid "Send to _Player"
-msgstr "Küldés a lejátszónak (_P)"
+msgstr "Küldés a le_játszónak"
 
 #: pynicotine/gtkgui/transferlist.py:193
 msgid "_Open in File Manager"
-msgstr "Megnyitás a fájlkezelőben (_O)"
+msgstr "Meg_nyitás a fájlkezelőben"
 
 #: pynicotine/gtkgui/transferlist.py:196
 msgid "_Search"
-msgstr "Keresés (_S)"
+msgstr "Keresé_s"
 
 #: pynicotine/gtkgui/transferlist.py:201
 msgid "_Clear"
-msgstr "Tis_ztít"
+msgstr "_Töröl"
 
 #: pynicotine/gtkgui/transferlist.py:203
 msgid "Clear All"
@@ -2804,7 +2804,7 @@ msgstr "Mindent töröl"
 
 #: pynicotine/gtkgui/transferlist.py:695
 msgid "Select User's Transfers"
-msgstr "User átvitelének kiválasztása"
+msgstr "Felhasználó átvitelének kiválasztása"
 
 #: pynicotine/gtkgui/uploads.py:42
 msgid "_Retry"
@@ -2812,7 +2812,7 @@ msgstr "_Ismét"
 
 #: pynicotine/gtkgui/uploads.py:43
 msgid "_Abort"
-msgstr "Megszakít (_A)"
+msgstr "Megsz_akítás"
 
 #: pynicotine/gtkgui/uploads.py:61
 msgid "Finished / Aborted / Failed"
@@ -2840,7 +2840,7 @@ msgstr "Tényleg törölni szeretné az összes feltöltést?"
 
 #: pynicotine/gtkgui/userbrowse.py:186
 msgid "_Save Shares List to Disk"
-msgstr "Megosztási lista lemezre mentése (_S)"
+msgstr "Megosztási lista lemezre menté_se"
 
 #: pynicotine/gtkgui/userbrowse.py:195 pynicotine/gtkgui/userbrowse.py:262
 msgid "Upload Folder…"
@@ -2848,31 +2848,31 @@ msgstr "Mappa feltöltése…"
 
 #: pynicotine/gtkgui/userbrowse.py:196
 msgid "Upload Folder & Subfolder(s)…"
-msgstr "Mappa & Almappái feltöltése…"
+msgstr "Mappa és almappáinak feltöltése…"
 
 #: pynicotine/gtkgui/userbrowse.py:198 pynicotine/gtkgui/userbrowse.py:265
 msgid "Open in File _Manager"
-msgstr "Megnyitás fájlkezelőben (_M)"
+msgstr "Megnyitás fájl_kezelőben"
 
 #: pynicotine/gtkgui/userbrowse.py:201 pynicotine/gtkgui/userbrowse.py:215
 msgid "Copy _Folder Path"
-msgstr "(_F) Mappa elérési útjának másolása"
+msgstr "_Mappaelérési út másolása"
 
 #: pynicotine/gtkgui/userbrowse.py:208 pynicotine/gtkgui/userbrowse.py:280
 msgid "_Download Folder"
-msgstr "(_D) Mappa letöltése"
+msgstr "Mappa _letöltése"
 
 #: pynicotine/gtkgui/userbrowse.py:209 pynicotine/gtkgui/userbrowse.py:281
 msgid "Download Folder _To…"
-msgstr "Mappa letöltése _ide…"
+msgstr "Mappa le_töltése ide…"
 
 #: pynicotine/gtkgui/userbrowse.py:210
 msgid "Download Folder & Subfolder(s)"
-msgstr "Mappa & almappáinak letöltése"
+msgstr "Mappa és almappáinak letöltése"
 
 #: pynicotine/gtkgui/userbrowse.py:211
 msgid "Download Folder & Subfolder(s) To…"
-msgstr "Mappa és almappái letöltése ide…"
+msgstr "Mappa és almappáinak letöltése ide…"
 
 #: pynicotine/gtkgui/userbrowse.py:261
 msgid "Up_load File(s)…"
@@ -2883,16 +2883,16 @@ msgid ""
 "User's list of shared files is empty. Either the user is not sharing "
 "anything, or they are sharing files privately."
 msgstr ""
-"A felhasználó megosztott fájljainak listája üres. Vagy a felhasználó nem "
-"oszt meg semmit, vagy a fájlokat magánjelleggel osztja meg."
+"A felhasználó által megosztott fájlok listája üres. A felhasználó nem oszt "
+"meg semmit, vagy a fájlokat magánjelleggel osztja meg."
 
 #: pynicotine/gtkgui/userbrowse.py:492
 msgid ""
 "Unable to request shared files from user. Either the user is offline, you "
 "both have a closed listening port, or there's a temporary connectivity issue."
 msgstr ""
-"Nem lehet megosztott fájlokat kérni a felhasználótól. Vagy a felhasználó "
-"offline, vagy mindkettőtöknek zárt a figyelőportja, vagy átmeneti "
+"Nem lehet megosztott fájlokat kérni a felhasználótól. A felhasználó nincs "
+"bejelentkezve, vagy mindkettőtöknek zárt a figyelőportja, vagy átmeneti "
 "kapcsolódási probléma áll fenn."
 
 #: pynicotine/gtkgui/userbrowse.py:705
@@ -2905,11 +2905,11 @@ msgstr "Mappa feltöltése (az almappákkal) a felhasználóhoz"
 
 #: pynicotine/gtkgui/userbrowse.py:753
 msgid "Upload Folder To User"
-msgstr "Mappa feltöltése a Felhasználóhoz"
+msgstr "Mappa feltöltése a felhasználóhoz"
 
 #: pynicotine/gtkgui/userbrowse.py:758 pynicotine/gtkgui/userbrowse.py:1002
 msgid "Enter the name of the user you want to upload to:"
-msgstr "Írja be a felhasználó nevét akinek fel szeretne tölteni:"
+msgstr "Írja be a felhasználó nevét akinek szeretne feltölteni:"
 
 #: pynicotine/gtkgui/userbrowse.py:1001
 msgid "Upload File(s) To User"
@@ -2917,7 +2917,7 @@ msgstr "Fájl(ok) feltöltése a felhasználónak"
 
 #: pynicotine/gtkgui/userinfo.py:215
 msgid "Zoom 1:1"
-msgstr "Nagyít 1:1"
+msgstr "Nagyítás 1:1"
 
 #: pynicotine/gtkgui/userinfo.py:216
 msgid "Zoom In"
@@ -2943,8 +2943,8 @@ msgid ""
 "issue."
 msgstr ""
 "Nem sikerült információt kérni a felhasználótól. Vagy mindkettőtöknek zárt a "
-"figyelőportja, vagy a felhasználó offline, vagy átmeneti kapcsolati probléma "
-"áll fenn."
+"figyelőportja, vagy a felhasználó nincs bejelentkezve, vagy átmeneti "
+"kapcsolati probléma áll fenn."
 
 #: pynicotine/gtkgui/userinfo.py:381
 msgid "Yes"
@@ -2995,12 +2995,12 @@ msgstr "Megjegyzés"
 
 #: pynicotine/gtkgui/userlist.py:144
 msgid "Add User _Note…"
-msgstr "(_N) Felhasználói megjegyzés hozzáadása…"
+msgstr "Felhasz_nálói megjegyzés hozzáadása…"
 
 #: pynicotine/gtkgui/userlist.py:146
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:346
 msgid "_Remove"
-msgstr "Eltávolít (_R)"
+msgstr "_Eltávolít"
 
 #: pynicotine/gtkgui/userlist.py:189 pynicotine/gtkgui/userlist.py:425
 msgid "Never seen"
@@ -3009,17 +3009,17 @@ msgstr "Soha nem látott"
 #: pynicotine/gtkgui/userlist.py:351
 #, python-format
 msgid "User %s is away"
-msgstr "Felhasználó %s távol van"
+msgstr "%s felhasználó távol van"
 
 #: pynicotine/gtkgui/userlist.py:353
 #, python-format
 msgid "User %s is online"
-msgstr "Felhasználó %s elérhető"
+msgstr "%s felhasználó elérhető"
 
 #: pynicotine/gtkgui/userlist.py:355
 #, python-format
 msgid "User %s is offline"
-msgstr "Felhasználó %s nem elérhető"
+msgstr "%s felhasználó nincs bejelentkezve"
 
 #: pynicotine/gtkgui/userlist.py:534
 msgid "Add User Note"
@@ -3028,7 +3028,7 @@ msgstr "Felhasználói megjegyzés hozzáadása"
 #: pynicotine/gtkgui/userlist.py:535
 #, python-format
 msgid "Add a note about user %s:"
-msgstr "Megjegyzés hozzáadása %s felhasználóhoz:"
+msgstr "Megjegyzés hozzáadása a(z) %s felhasználóhoz:"
 
 #: pynicotine/gtkgui/widgets/dialogs.py:142
 msgid "Close"
