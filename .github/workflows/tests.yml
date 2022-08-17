@@ -5,10 +5,23 @@ on: [push, pull_request]
 jobs:
 
   ubuntu:
-    runs-on: ubuntu-20.04
     strategy:
       matrix:
+        os: [ubuntu-20.04, ubuntu-22.04]
         python: ['3.5', '3.6', '3.7', '3.8', '3.9', '3.10', 'pypy-3.6', 'pypy-3.7', 'pypy-3.8', 'pypy-3.9']
+        gtk: [3, 4]
+        exclude:
+          - os: ubuntu-20.04
+            gtk: 4
+          - os: ubuntu-22.04
+            gtk: 3
+          - os: ubuntu-22.04
+            python: '3.5'
+          - os: ubuntu-22.04
+            python: '3.6'
+    runs-on: ${{ matrix.os }}
+    env:
+      NICOTINE_GTK_VERSION: ${{ matrix.gtk }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -23,9 +36,8 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install gettext gir1.2-gtk-3.0 libgirepository1.0-dev
+          sudo apt install gettext gir1.2-gtk-${{ matrix.gtk }}.0 libgirepository1.0-dev
           python -m pip install flake8 pygobject pylint
-
       - name: Flake8 linter
         run: python -m flake8
 
