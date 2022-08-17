@@ -8,13 +8,17 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-22 02:04+0300\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2022-08-17 17:29+0000\n"
+"Last-Translator: Pagal3 <p4gal3@protonmail.com>\n"
+"Language-Team: Latvian <https://hosted.weblate.org/projects/nicotine-plus/"
+"nicotine-plus/lv/>\n"
 "Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n % 10 == 0 || n % 100 >= 11 && n % 100 <= "
+"19) ? 0 : ((n % 10 == 1 && n % 100 != 11) ? 1 : 2);\n"
+"X-Generator: Weblate 4.14-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:8
@@ -775,512 +779,410 @@ msgid "Macau"
 msgstr "Makao"
 
 #: pynicotine/geoip/geoip.py:171
-#, fuzzy
 msgid "Northern Mariana Islands"
-msgstr "Ziemeļu Marianas salas"
+msgstr "Ziemeļu Marianas Salas"
 
 #: pynicotine/geoip/geoip.py:172
-#, fuzzy
 msgid "Martinique"
 msgstr "Martinika"
 
 #: pynicotine/geoip/geoip.py:173
-#, fuzzy
 msgid "Mauritania"
 msgstr "Mauritānija"
 
 #: pynicotine/geoip/geoip.py:174
-#, fuzzy
 msgid "Montserrat"
 msgstr "Montserrata"
 
 #: pynicotine/geoip/geoip.py:175
-#, fuzzy
 msgid "Malta"
 msgstr "Malta"
 
 #: pynicotine/geoip/geoip.py:176
-#, fuzzy
 msgid "Mauritius"
 msgstr "Maurīcija"
 
 #: pynicotine/geoip/geoip.py:177
-#, fuzzy
 msgid "Maldives"
 msgstr "Maldīvija"
 
 #: pynicotine/geoip/geoip.py:178
-#, fuzzy
 msgid "Malawi"
 msgstr "Malāvija"
 
 #: pynicotine/geoip/geoip.py:179
-#, fuzzy
 msgid "Mexico"
 msgstr "Meksika"
 
 #: pynicotine/geoip/geoip.py:180
-#, fuzzy
 msgid "Malaysia"
 msgstr "Malaizija"
 
 #: pynicotine/geoip/geoip.py:181
-#, fuzzy
 msgid "Mozambique"
 msgstr "Mozambika"
 
 #: pynicotine/geoip/geoip.py:182
-#, fuzzy
 msgid "Namibia"
 msgstr "Namībija"
 
 #: pynicotine/geoip/geoip.py:183
-#, fuzzy
 msgid "New Caledonia"
 msgstr "Jaunkaledonija"
 
 #: pynicotine/geoip/geoip.py:184
-#, fuzzy
 msgid "Niger"
 msgstr "Nigēra"
 
 #: pynicotine/geoip/geoip.py:185
-#, fuzzy
 msgid "Norfolk Island"
-msgstr "Norfolkas sala"
+msgstr "Norfolkas Sala"
 
 #: pynicotine/geoip/geoip.py:186
-#, fuzzy
 msgid "Nigeria"
 msgstr "Nigērija"
 
 #: pynicotine/geoip/geoip.py:187
-#, fuzzy
 msgid "Nicaragua"
 msgstr "Nikaragva"
 
 #: pynicotine/geoip/geoip.py:188
-#, fuzzy
 msgid "Netherlands"
 msgstr "Nīderlande"
 
 #: pynicotine/geoip/geoip.py:189
-#, fuzzy
 msgid "Norway"
 msgstr "Norvēģija"
 
 #: pynicotine/geoip/geoip.py:190
-#, fuzzy
 msgid "Nepal"
 msgstr "Nepāla"
 
 #: pynicotine/geoip/geoip.py:191
-#, fuzzy
 msgid "Nauru"
 msgstr "Nauru"
 
 #: pynicotine/geoip/geoip.py:192
-#, fuzzy
 msgid "Niue"
 msgstr "Niue"
 
 #: pynicotine/geoip/geoip.py:193
-#, fuzzy
 msgid "New Zealand"
 msgstr "Jaunzēlande"
 
 #: pynicotine/geoip/geoip.py:194
-#, fuzzy
 msgid "Oman"
 msgstr "Omāna"
 
 #: pynicotine/geoip/geoip.py:195
-#, fuzzy
 msgid "Panama"
 msgstr "Panama"
 
 #: pynicotine/geoip/geoip.py:196
-#, fuzzy
 msgid "Peru"
 msgstr "Peru"
 
 #: pynicotine/geoip/geoip.py:197
-#, fuzzy
 msgid "French Polynesia"
 msgstr "Franču Polinēzija"
 
 #: pynicotine/geoip/geoip.py:198
-#, fuzzy
 msgid "Papua New Guinea"
 msgstr "Papua Jaungvineja"
 
 #: pynicotine/geoip/geoip.py:199
-#, fuzzy
 msgid "Philippines"
 msgstr "Filipīnas"
 
 #: pynicotine/geoip/geoip.py:200
-#, fuzzy
 msgid "Pakistan"
 msgstr "Pakistāna"
 
 #: pynicotine/geoip/geoip.py:201
-#, fuzzy
 msgid "Poland"
 msgstr "Polija"
 
 #: pynicotine/geoip/geoip.py:202
-#, fuzzy
 msgid "Saint Pierre & Miquelon"
 msgstr "Senpjēra un Mikelona"
 
 #: pynicotine/geoip/geoip.py:203
-#, fuzzy
 msgid "Pitcairn"
 msgstr "Pitkērna"
 
 #: pynicotine/geoip/geoip.py:204
-#, fuzzy
 msgid "Puerto Rico"
 msgstr "Puertoriko"
 
 #: pynicotine/geoip/geoip.py:205
-#, fuzzy
 msgid "State of Palestine"
-msgstr "Palestīnas valsts"
+msgstr "Palestīnas Valsts"
 
 #: pynicotine/geoip/geoip.py:206
-#, fuzzy
 msgid "Portugal"
 msgstr "Portugāle"
 
 #: pynicotine/geoip/geoip.py:207
-#, fuzzy
 msgid "Palau"
 msgstr "Palau"
 
 #: pynicotine/geoip/geoip.py:208
-#, fuzzy
 msgid "Paraguay"
 msgstr "Paragvaja"
 
 #: pynicotine/geoip/geoip.py:209
-#, fuzzy
 msgid "Qatar"
 msgstr "Katara"
 
 #: pynicotine/geoip/geoip.py:210
-#, fuzzy
 msgid "Réunion"
 msgstr "Reinjona"
 
 #: pynicotine/geoip/geoip.py:211
-#, fuzzy
 msgid "Romania"
 msgstr "Rumānija"
 
 #: pynicotine/geoip/geoip.py:212
-#, fuzzy
 msgid "Serbia"
 msgstr "Serbija"
 
 #: pynicotine/geoip/geoip.py:213
-#, fuzzy
 msgid "Russia"
 msgstr "Krievija"
 
 #: pynicotine/geoip/geoip.py:214
-#, fuzzy
 msgid "Rwanda"
 msgstr "Ruanda"
 
 #: pynicotine/geoip/geoip.py:215
-#, fuzzy
 msgid "Saudi Arabia"
 msgstr "Saūda Arābija"
 
 #: pynicotine/geoip/geoip.py:216
-#, fuzzy
 msgid "Solomon Islands"
-msgstr "Zālamana salas"
+msgstr "Zālamana Salas"
 
 #: pynicotine/geoip/geoip.py:217
-#, fuzzy
 msgid "Seychelles"
-msgstr "Seišelu salas"
+msgstr "Seišelas"
 
 #: pynicotine/geoip/geoip.py:218
-#, fuzzy
 msgid "Sudan"
 msgstr "Sudāna"
 
 #: pynicotine/geoip/geoip.py:219
-#, fuzzy
 msgid "Sweden"
 msgstr "Zviedrija"
 
 #: pynicotine/geoip/geoip.py:220
-#, fuzzy
 msgid "Singapore"
 msgstr "Singapūra"
 
 #: pynicotine/geoip/geoip.py:221
-#, fuzzy
 msgid "Saint Helena"
-msgstr "Svētā Helēna"
+msgstr "Svētās Helēnas Sala"
 
 #: pynicotine/geoip/geoip.py:222
-#, fuzzy
 msgid "Slovenia"
 msgstr "Slovēnija"
 
 #: pynicotine/geoip/geoip.py:223
-#, fuzzy
 msgid "Svalbard & Jan Mayen Islands"
-msgstr "Svalbāra un Jana Majena salas"
+msgstr "Svalbāra un Jana Majena Salas"
 
 #: pynicotine/geoip/geoip.py:224
-#, fuzzy
 msgid "Slovak Republic"
 msgstr "Slovākijas Republika"
 
 #: pynicotine/geoip/geoip.py:225
-#, fuzzy
 msgid "Sierra Leone"
 msgstr "Sjerraleone"
 
 #: pynicotine/geoip/geoip.py:226
-#, fuzzy
 msgid "San Marino"
 msgstr "Sanmarīno"
 
 #: pynicotine/geoip/geoip.py:227
-#, fuzzy
 msgid "Senegal"
 msgstr "Senegāla"
 
 #: pynicotine/geoip/geoip.py:228
-#, fuzzy
 msgid "Somalia"
 msgstr "Somālija"
 
 #: pynicotine/geoip/geoip.py:229
-#, fuzzy
 msgid "Suriname"
 msgstr "Surinama"
 
 #: pynicotine/geoip/geoip.py:230
-#, fuzzy
 msgid "South Sudan"
 msgstr "Dienvidsudāna"
 
 #: pynicotine/geoip/geoip.py:231
-#, fuzzy
 msgid "Sao Tome & Principe"
 msgstr "Santome un Prinsipi"
 
 #: pynicotine/geoip/geoip.py:232
-#, fuzzy
 msgid "El Salvador"
 msgstr "Salvadora"
 
 #: pynicotine/geoip/geoip.py:233
-#, fuzzy
 msgid "Sint Maarten"
 msgstr "Sintmartena"
 
 #: pynicotine/geoip/geoip.py:234
-#, fuzzy
 msgid "Syria"
 msgstr "Sīrija"
 
 #: pynicotine/geoip/geoip.py:235
-#, fuzzy
 msgid "Eswatini"
 msgstr "Esvatīni"
 
 #: pynicotine/geoip/geoip.py:236
-#, fuzzy
 msgid "Turks & Caicos Islands"
-msgstr "Tērksas un Kaikosas salas"
+msgstr "Tērksas un Kaikosas Salas"
 
 #: pynicotine/geoip/geoip.py:237
-#, fuzzy
 msgid "Chad"
 msgstr "Čada"
 
 #: pynicotine/geoip/geoip.py:238
-#, fuzzy
 msgid "French Southern Territories"
-msgstr "Francijas dienvidu teritorijas"
+msgstr "Francijas Dienvidjūru Zemes"
 
 #: pynicotine/geoip/geoip.py:239
-#, fuzzy
 msgid "Togo"
-msgstr "Iet"
+msgstr "Togo"
 
 #: pynicotine/geoip/geoip.py:240
-#, fuzzy
 msgid "Thailand"
 msgstr "Taizeme"
 
 #: pynicotine/geoip/geoip.py:241
-#, fuzzy
 msgid "Tajikistan"
 msgstr "Tadžikistāna"
 
 #: pynicotine/geoip/geoip.py:242
-#, fuzzy
 msgid "Tokelau"
 msgstr "Tokelau"
 
 #: pynicotine/geoip/geoip.py:243
-#, fuzzy
 msgid "Timor-Leste"
 msgstr "Austrumtimora"
 
 #: pynicotine/geoip/geoip.py:244
-#, fuzzy
 msgid "Turkmenistan"
 msgstr "Turkmenistāna"
 
 #: pynicotine/geoip/geoip.py:245
-#, fuzzy
 msgid "Tunisia"
 msgstr "Tunisija"
 
 #: pynicotine/geoip/geoip.py:246
-#, fuzzy
 msgid "Tonga"
 msgstr "Tonga"
 
 #: pynicotine/geoip/geoip.py:247
-#, fuzzy
 msgid "Turkey"
 msgstr "Turcija"
 
 #: pynicotine/geoip/geoip.py:248
-#, fuzzy
 msgid "Trinidad & Tobago"
 msgstr "Trinidāda un Tobāgo"
 
 #: pynicotine/geoip/geoip.py:249
-#, fuzzy
 msgid "Tuvalu"
 msgstr "Tuvalu"
 
 #: pynicotine/geoip/geoip.py:250
-#, fuzzy
 msgid "Taiwan"
 msgstr "Taivāna"
 
 #: pynicotine/geoip/geoip.py:251
-#, fuzzy
 msgid "Tanzania"
 msgstr "Tanzānija"
 
 #: pynicotine/geoip/geoip.py:252
-#, fuzzy
 msgid "Ukraine"
 msgstr "Ukraina"
 
 #: pynicotine/geoip/geoip.py:253
-#, fuzzy
 msgid "Uganda"
 msgstr "Uganda"
 
 #: pynicotine/geoip/geoip.py:254
-#, fuzzy
 msgid "U.S. Minor Outlying Islands"
-msgstr "ASV mazās attālās salas"
+msgstr "ASV Mazās aizjūras salas"
 
 #: pynicotine/geoip/geoip.py:255
-#, fuzzy
 msgid "United States"
-msgstr "Savienotās Valstis"
+msgstr "Amerikas Savienotās Valstis"
 
 #: pynicotine/geoip/geoip.py:256
-#, fuzzy
 msgid "Uruguay"
 msgstr "Urugvaja"
 
 #: pynicotine/geoip/geoip.py:257
-#, fuzzy
 msgid "Uzbekistan"
 msgstr "Uzbekistāna"
 
 #: pynicotine/geoip/geoip.py:258
-#, fuzzy
 msgid "Holy See (Vatican City State)"
 msgstr "Svētais Krēsls (Vatikāna Pilsētvalsts)"
 
 #: pynicotine/geoip/geoip.py:259
-#, fuzzy
 msgid "Saint Vincent & The Grenadines"
 msgstr "Sentvinsenta un Grenadīnas"
 
 #: pynicotine/geoip/geoip.py:260
-#, fuzzy
 msgid "Venezuela"
 msgstr "Venecuēla"
 
 #: pynicotine/geoip/geoip.py:261
-#, fuzzy
 msgid "British Virgin Islands"
-msgstr "Britu Virdžīnu salas"
+msgstr "Britu Virdžīnu Salas"
 
 #: pynicotine/geoip/geoip.py:262
-#, fuzzy
 msgid "U.S. Virgin Islands"
-msgstr "ASV Virdžīnu salas"
+msgstr "ASV Virdžīnu Salas"
 
 #: pynicotine/geoip/geoip.py:263
-#, fuzzy
 msgid "Viet Nam"
 msgstr "Vjetnama"
 
 #: pynicotine/geoip/geoip.py:264
-#, fuzzy
 msgid "Vanuatu"
 msgstr "Vanuatu"
 
 #: pynicotine/geoip/geoip.py:265
-#, fuzzy
 msgid "Wallis & Futuna"
 msgstr "Volisa un Futuna"
 
 #: pynicotine/geoip/geoip.py:266
-#, fuzzy
 msgid "Samoa"
 msgstr "Samoa"
 
 #: pynicotine/geoip/geoip.py:267
-#, fuzzy
 msgid "Kosovo"
 msgstr "Kosova"
 
 #: pynicotine/geoip/geoip.py:268
-#, fuzzy
 msgid "Yemen"
 msgstr "Jemena"
 
 #: pynicotine/geoip/geoip.py:269
-#, fuzzy
 msgid "Mayotte"
 msgstr "Majota"
 
 #: pynicotine/geoip/geoip.py:270
-#, fuzzy
 msgid "South Africa"
 msgstr "Dienvidāfrika"
 
 #: pynicotine/geoip/geoip.py:271
-#, fuzzy
 msgid "Zambia"
 msgstr "Zambija"
 
 #: pynicotine/geoip/geoip.py:272
-#, fuzzy
 msgid "Zimbabwe"
 msgstr "Zimbabve"
 
@@ -2125,7 +2027,6 @@ msgid "Out of date"
 msgstr "Novecojis"
 
 #: pynicotine/gtkgui/frame.py:744 pynicotine/gtkgui/frame.py:748
-#, fuzzy
 msgid "Up to date"
 msgstr "Aktuāli"
 
@@ -2328,19 +2229,19 @@ msgstr "Tērzēšana"
 
 #: pynicotine/gtkgui/frame.py:1730
 msgid "[Debug] Connections"
-msgstr "[Atkļūdošana] Savienojumi"
+msgstr "[Debug] Savienojumi"
 
 #: pynicotine/gtkgui/frame.py:1731
 msgid "[Debug] Messages"
-msgstr "[Atkļūdošana] Ziņas"
+msgstr "[Debug] Ziņas"
 
 #: pynicotine/gtkgui/frame.py:1732
 msgid "[Debug] Transfers"
-msgstr "[Atkļūdošana] Pārsūtījumi"
+msgstr "[Debug] Pārsūtījumi"
 
 #: pynicotine/gtkgui/frame.py:1733
 msgid "[Debug] Miscellaneous"
-msgstr "[Atkļūdošana] Dažādi"
+msgstr "[Debug] Dažādi"
 
 #: pynicotine/gtkgui/frame.py:1737
 msgid "_Find…"
@@ -3107,7 +3008,7 @@ msgstr "Nevar parādīt paziņojumu: %s"
 #: pynicotine/gtkgui/widgets/popupmenu.py:324
 #, python-format
 msgid "%s File(s) Selected"
-msgstr "Atlasīts(-i) %s fails(-i)."
+msgstr "Atlasīts(-i) %s fails(-i)"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:345
 #: pynicotine/gtkgui/ui/userinfo.ui:410
@@ -4852,8 +4753,8 @@ msgid ""
 "Case is insensitive, but word order is important: 'Spears Brittany' will not "
 "show any 'Brittany Spears'"
 msgstr ""
-"Lielo/mazo burtu lietojums ir nebūtisks, taču vārdu secība ir svarīga: "
-"“Spears Brittany” nerādīs nevienu “Brittany Spears”."
+"Lielo/mazo burtu lietojums ir nebūtisks, taču vārdu secība ir svarīga: “"
+"Spears Brittany” nerādīs nevienu “Brittany Spears”"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:110
 msgid ""
@@ -5326,7 +5227,7 @@ msgid ""
 "for NFS)"
 msgstr ""
 "Neļaut citām programmām piekļūt lejupielādējamo failu rakstīšanai (izslēgt "
-"NFS gadījumā)."
+"NFS gadījumā)"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:73
 msgid "Allow these users to send you files:"
@@ -5931,7 +5832,7 @@ msgstr "Startēšanas laikā atjaunot iepriekš aktīvo galveno cilni"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:65
 msgid "By default the leftmost tab is activated at startup"
-msgstr "Pēc noklusējuma galējā kreisā cilne tiek aktivizēta startēšanas laikā."
+msgstr "Pēc noklusējuma galējā kreisā cilne tiek aktivizēta startēšanas laikā"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:84
 msgid "Tab bar position:"
