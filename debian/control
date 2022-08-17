@@ -2,7 +2,7 @@ Source: nicotine
 Section: net
 Priority: optional
 Maintainer: Nicotine+ Team <nicotine-team@lists.launchpad.net>
-Standards-Version: 4.6.0
+Standards-Version: 4.6.1
 Build-Depends: debhelper-compat (= 10),
                devscripts,
                dh-python,
