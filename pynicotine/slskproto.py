@@ -90,6 +90,7 @@ from pynicotine.slskmessages import UploadFileError
 from pynicotine.slskmessages import UserInfoReply
 from pynicotine.slskmessages import UserStatus
 from pynicotine.slskmessages import increment_token
+from pynicotine.upnp import UPnP
 
 
 # Set the maximum number of open files to the hard limit reported by the OS.
@@ -211,6 +212,7 @@ class SlskProtoThread(threading.Thread):
 
         self.selector = None
         self.listen_socket = None
+        self.upnp = None
 
         self.server_socket = None
         self.server_address = None
@@ -1995,6 +1997,7 @@ class SlskProtoThread(threading.Thread):
 
         self._core_callback([SetConnectionStats()])
         self.bind_listen_port()
+        self.upnp = UPnP(self.listenport)
 
         while not self._want_abort:
 

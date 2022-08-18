@@ -53,7 +53,6 @@ from pynicotine.slskmessages import LoginFailure
 from pynicotine.slskmessages import UserStatus
 from pynicotine.transfers import Statistics
 from pynicotine.transfers import Transfers
-from pynicotine.upnp import UPnP
 from pynicotine.userbrowse import UserBrowse
 from pynicotine.userinfo import UserInfo
 from pynicotine.userlist import UserList
@@ -81,7 +80,6 @@ class NicotineCore:
         self.pluginhandler = None
         self.now_playing = None
         self.protothread = None
-        self.upnp = None
         self.geoip = None
         self.notifications = None
 
@@ -144,8 +142,6 @@ class NicotineCore:
             port_range=config.sections["server"]["portrange"]
         )
         self.protothread.start()
-
-        self.upnp = UPnP(self, config)
         self.pluginhandler = PluginHandler(self, config)
 
         # Callback handlers for messages
