@@ -28,6 +28,7 @@ from time import sleep
 from unittest.mock import MagicMock
 from unittest.mock import Mock
 
+from pynicotine.config import config
 from pynicotine.slskproto import SlskProtoThread
 from pynicotine.slskmessages import ServerConnect, Login, SetWaitPort
 from pynicotine.utils import encode_path
@@ -78,6 +79,7 @@ class SlskProtoTest(unittest.TestCase):
         selectors.DefaultSelector = MagicMock()
 
         self.queue = deque()
+        config.sections["server"]["upnp"] = False
         self.protothread = SlskProtoThread(
             core_callback=Mock(), queue=self.queue, interface='', bindip='',
             port=None, port_range=(1024, 65535)
