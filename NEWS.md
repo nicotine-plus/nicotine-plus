@@ -1,5 +1,26 @@
 # Release Notes
 
+## Version 3.2.5 (Unreleased)
+
+### Corrections
+
+ * Fixed an issue where user settings would reset after an operating system crash or power outage
+ * Fixed an issue where certain uploads were stuck in "Queued" status
+ * Fixed an issue where files did not download to custom folders
+ * Fixed a performance regression when loading downloads/uploads on startup
+ * Fixed an issue where Nicotine+ connected to the server before UPnP port forwarding completed
+ * Fixed a rare crash related to peer connections
+ * Fixed a crash when an invalid debug log folder was set
+ * Windows: Fixed a regression in scrolling and text rendering performance
+
+### Issues closed on GitHub
+
+ * Settings are reset to application defaults when a system crash occurs ([#2147](https://github.com/nicotine-plus/nicotine-plus/issues/2147))
+ * Critical Error ([#2148](https://github.com/nicotine-plus/nicotine-plus/issues/2148))
+ * 3.2.4 performs worse on Windows than previous stable version (3.2.2) ([#2150](https://github.com/nicotine-plus/nicotine-plus/issues/2150))
+ * Left unattended just crashed on win 11 beta slow ring ([#2151](https://github.com/nicotine-plus/nicotine-plus/issues/2151))
+
+
 ## Version 3.2.4 (August 7, 2022)
 
 ### Corrections
