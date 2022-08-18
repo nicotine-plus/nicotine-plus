@@ -26,7 +26,7 @@ from pynicotine.utils import http_request
 
 MULTICAST_HOST = "239.255.255.250"
 MULTICAST_PORT = 1900
-RESPONSE_TIME_SECONDS = 2
+RESPONSE_TIME_SECONDS = 1  # At least 1 second is sufficient according to UPnP specification
 
 
 class Router:
