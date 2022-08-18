@@ -117,6 +117,13 @@ class NicotineCore:
         log.add_debug("Using %(program)s executable: %(exe)s", {"program": config.application_name, "exe": script_dir})
         log.add(_("Loading %(program)s %(version)s"), {"program": config.application_name, "version": config.version})
 
+        self.protothread = slskproto.SlskProtoThread(
+            core_callback=self.network_callback, queue=self.queue, bindip=self.bindip, port=self.port,
+            interface=config.sections["server"]["interface"],
+            port_range=config.sections["server"]["portrange"]
+        )
+        self.protothread.start()
+
         self.geoip = GeoIP(os.path.join(script_dir, "geoip/ipcountrydb.bin"))
         self.notifications = Notifications(config, ui_callback)
         self.network_filter = NetworkFilter(self, config, self.queue, self.geoip)
@@ -136,12 +143,6 @@ class NicotineCore:
         self.transfers.init_transfers()
         self.privatechats.load_users()
 
-        self.protothread = slskproto.SlskProtoThread(
-            core_callback=self.network_callback, queue=self.queue, bindip=self.bindip, port=self.port,
-            interface=config.sections["server"]["interface"],
-            port_range=config.sections["server"]["portrange"]
-        )
-        self.protothread.start()
         self.pluginhandler = PluginHandler(self, config)
 
         # Callback handlers for messages
