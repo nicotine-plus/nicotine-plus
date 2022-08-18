@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-22 02:04+0300\n"
-"PO-Revision-Date: 2022-08-17 17:29+0000\n"
+"PO-Revision-Date: 2022-08-18 20:14+0000\n"
 "Last-Translator: Pagal3 <p4gal3@protonmail.com>\n"
 "Language-Team: Latvian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/lv/>\n"
@@ -1244,7 +1244,7 @@ msgstr "Faili"
 
 #: pynicotine/gtkgui/chatrooms.py:480
 msgid "Sear_ch User's Files"
-msgstr "Mekl_ēt lietotāja failus"
+msgstr "Meklēt lietotāja failos"
 
 #: pynicotine/gtkgui/chatrooms.py:481 pynicotine/gtkgui/chatrooms.py:663
 #: pynicotine/gtkgui/userlist.py:145 pynicotine/gtkgui/userlist.py:327
