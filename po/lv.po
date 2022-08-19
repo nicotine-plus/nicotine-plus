@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-22 02:04+0300\n"
-"PO-Revision-Date: 2022-08-18 20:14+0000\n"
+"PO-Revision-Date: 2022-08-19 20:01+0000\n"
 "Last-Translator: Pagal3 <p4gal3@protonmail.com>\n"
 "Language-Team: Latvian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/lv/>\n"
@@ -1244,7 +1244,7 @@ msgstr "Faili"
 
 #: pynicotine/gtkgui/chatrooms.py:480
 msgid "Sear_ch User's Files"
-msgstr "Meklēt lietotāja failos"
+msgstr "_Meklēt lietotāja failus"
 
 #: pynicotine/gtkgui/chatrooms.py:481 pynicotine/gtkgui/chatrooms.py:663
 #: pynicotine/gtkgui/userlist.py:145 pynicotine/gtkgui/userlist.py:327
@@ -1909,7 +1909,7 @@ msgstr "Ceļš"
 
 #: pynicotine/gtkgui/downloads.py:43
 msgid "_Resume"
-msgstr "_Turpināt"
+msgstr "Tu_rpināt"
 
 #: pynicotine/gtkgui/downloads.py:44
 msgid "P_ause"
@@ -2002,7 +2002,7 @@ msgstr ""
 #: pynicotine/gtkgui/widgets/filechooser.py:165
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:6
 msgid "_Cancel"
-msgstr "_Atcelt"
+msgstr "At_celt"
 
 #: pynicotine/gtkgui/frame.py:508
 msgid "Change _Login Details"
@@ -2064,11 +2064,11 @@ msgstr "_Iziet…"
 
 #: pynicotine/gtkgui/frame.py:1006 pynicotine/gtkgui/frame.py:1998
 msgid "_Quit"
-msgstr "_ Iziet"
+msgstr "_Iziet"
 
 #: pynicotine/gtkgui/frame.py:1026
 msgid "Prefer Dark _Mode"
-msgstr "Dot priekšroku tumšajam _režīmam"
+msgstr "Dot priekšroku tumšajam režīma_m"
 
 #: pynicotine/gtkgui/frame.py:1027
 msgid "Use _Header Bar"
@@ -2076,7 +2076,7 @@ msgstr "Izmantot _galvenes joslu"
 
 #: pynicotine/gtkgui/frame.py:1028
 msgid "Show _Log History Pane"
-msgstr "Rādīt _žurnāla vēstures paneli"
+msgstr "Rādīt žurnā_la vēstures paneli"
 
 #: pynicotine/gtkgui/frame.py:1030
 msgid "Buddy List in Separate Tab"
@@ -2092,7 +2092,7 @@ msgstr "Draugu saraksts vienmēr redzams"
 
 #: pynicotine/gtkgui/frame.py:1041
 msgid "_Rescan Shares"
-msgstr "_Pārskenēt koplietojumus"
+msgstr "Pā_rskenēt koplietojumus"
 
 #: pynicotine/gtkgui/frame.py:1042
 msgid "_Configure Shares"
@@ -2100,11 +2100,11 @@ msgstr "_Konfigurēt koplietojumus"
 
 #: pynicotine/gtkgui/frame.py:1050
 msgid "_Browse Public Shares"
-msgstr "_Pārlūkot publiskos koplietojumus"
+msgstr "Pārlūkot pu_bliskos koplietojumus"
 
 #: pynicotine/gtkgui/frame.py:1051
 msgid "Bro_wse Buddy Shares"
-msgstr "Pār_lūkot draugu koplietojumus"
+msgstr "Pārlūkot _draugu koplietojumus"
 
 #: pynicotine/gtkgui/frame.py:1067
 msgid "_Keyboard Shortcuts"
@@ -2112,11 +2112,11 @@ msgstr "_Tastatūras īsinājumtaustiņi"
 
 #: pynicotine/gtkgui/frame.py:1068
 msgid "_Setup Assistant"
-msgstr "_Uzstādīšanas palīgs"
+msgstr "Uz_stādīšanas palīgs"
 
 #: pynicotine/gtkgui/frame.py:1069
 msgid "_Transfer Statistics"
-msgstr "_Pārsūtīšanas statistika"
+msgstr "Pārsū_tīšanas statistika"
 
 #: pynicotine/gtkgui/frame.py:1071
 msgid "Report a _Bug"
@@ -2128,15 +2128,15 @@ msgstr "Uzlabot T_ulkojumus"
 
 #: pynicotine/gtkgui/frame.py:1073
 msgid "Check _Latest Version"
-msgstr "Pārbaudiet _jaunāko versiju"
+msgstr "Pārbaudīt _jaunāko versiju"
 
 #: pynicotine/gtkgui/frame.py:1075
 msgid "_About Nicotine+"
-msgstr "_Par Nicotine+"
+msgstr "P_ar Nicotine+"
 
 #: pynicotine/gtkgui/frame.py:1087 pynicotine/gtkgui/frame.py:1107
 msgid "_View"
-msgstr "_Skats"
+msgstr "Ska_ts"
 
 #: pynicotine/gtkgui/frame.py:1094 pynicotine/gtkgui/frame.py:1109
 msgid "_Help"
@@ -2253,7 +2253,7 @@ msgstr "_Kopēt"
 
 #: pynicotine/gtkgui/frame.py:1740
 msgid "Copy _All"
-msgstr "Kopēt _Visu"
+msgstr "Kopēt _visu"
 
 #: pynicotine/gtkgui/frame.py:1742
 msgid "_Open Log Folder"
@@ -2261,11 +2261,11 @@ msgstr "_Atvērt žurnāla mapi"
 
 #: pynicotine/gtkgui/frame.py:1743
 msgid "Open _Transfer Log"
-msgstr "Atvērt _Pārsūtījumu žurnālu"
+msgstr "Atvēr_t pārsūtījumu žurnālu"
 
 #: pynicotine/gtkgui/frame.py:1745
 msgid "_Log Categories"
-msgstr "_Žurnāla kategorijas"
+msgstr "Žurnā_la kategorijas"
 
 #: pynicotine/gtkgui/frame.py:1747
 msgid "Clear Log View"
@@ -2341,7 +2341,7 @@ msgstr "Vienums"
 
 #: pynicotine/gtkgui/interests.py:157 pynicotine/gtkgui/interests.py:165
 msgid "Re_commendations for Item"
-msgstr "Ie_teikumi vienumam"
+msgstr "Ietei_kumi vienumam"
 
 #: pynicotine/gtkgui/interests.py:158 pynicotine/gtkgui/interests.py:166
 #: pynicotine/gtkgui/interests.py:177 pynicotine/gtkgui/userinfo.py:205
@@ -2409,7 +2409,7 @@ msgstr "Pievienojieties istabai"
 #: pynicotine/gtkgui/popovers/roomlist.py:76
 #: pynicotine/gtkgui/popovers/roomlist.py:196
 msgid "Leave Room"
-msgstr "Atstāt istabu"
+msgstr "Iziet no Istabas"
 
 #: pynicotine/gtkgui/popovers/roomlist.py:78
 #: pynicotine/gtkgui/popovers/roomlist.py:198
@@ -2429,7 +2429,7 @@ msgstr "Aizvērt visas cilnes…"
 #: pynicotine/gtkgui/privatechat.py:231 pynicotine/gtkgui/search.py:425
 #: pynicotine/gtkgui/userbrowse.py:188 pynicotine/gtkgui/userinfo.py:198
 msgid "_Close Tab"
-msgstr "_Aizvērt cilni"
+msgstr "Aizvērt _cilni"
 
 #: pynicotine/gtkgui/privatechat.py:242
 msgid "View Chat Log"
@@ -4450,7 +4450,7 @@ msgstr "Pievienoties istabai \"istaba\""
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:85
 msgid "Leave current room"
-msgstr "Atstāt pašreizējo istabu"
+msgstr "Iziet no pašreizējās istabas"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:111
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:84
