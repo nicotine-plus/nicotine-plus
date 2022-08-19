@@ -2586,7 +2586,7 @@ class Preferences(UserInterface, Dialog):
 
         # UPnP
         if not config.sections["server"]["upnp"]:
-            self.core.upnp.cancel_timer()
+            self.core.protothread.upnp.cancel_timer()
 
         # Chatrooms
         self.frame.chatrooms.toggle_chat_buttons()
