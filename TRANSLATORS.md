@@ -1,5 +1,8 @@
 # Nicotine+ Translators
 
+## Latvian
+ - Pagal3 (2022)
+
 ## Catalan
  - Maite Guix (2022)
 
