@@ -215,9 +215,6 @@ Third-Party Attributions
     TRANSLATORS = """Nicotine+ Translators
 –––––––––––––––––––––––––––––––––––––––>
 
-Latvian
- - Pagal3 (2022)
-
 Catalan
  - Maite Guix (2022)
 
@@ -278,6 +275,9 @@ Italian
  - Gianluca Boiano (2020–2022)
  - nicola (2007)
  - dbazza (2003–2004)
+
+Latvian
+ - Pagal3 (2022)
 
 Lithuanian
  - mantas (2020)
