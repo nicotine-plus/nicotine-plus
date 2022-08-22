@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-22 02:04+0300\n"
-"PO-Revision-Date: 2022-05-22 17:52+0000\n"
+"PO-Revision-Date: 2022-08-14 15:50+0000\n"
 "Last-Translator: Mariusz <wisniowy@g.pl>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/pl/>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.13-dev\n"
+"X-Generator: Weblate 4.14-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:8
@@ -3861,7 +3861,7 @@ msgstr "Witaj w Nicotine+"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:73
 msgid "_Set Up…"
-msgstr "Ustaw…"
+msgstr "Konfiguruj…"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:100
 msgid ""
@@ -3948,9 +3948,9 @@ msgid ""
 "Donating to Soulseek grants you privileges for a certain time period. If you "
 "have privileges, your downloads will be queued ahead of non-privileged users."
 msgstr ""
-"Darowizna dla Soulseek daje Ci przywileje na określony czas. Przywileje "
-"pozwalają na umieszczenie Twoich plików w kolejce przed nieuprzywilejowanymi "
-"użytkownikami."
+"Darowizna dla Soulseek daje Ci przywileje na określony czas. Jeśli posiadasz "
+"przywileje, Twoje pobrania zostaną ustawione w kolejce przed "
+"nieuprzywilejowanymi użytkownikami."
 
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:21
 msgid "Previous file"
