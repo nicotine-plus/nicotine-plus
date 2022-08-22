@@ -1997,7 +1997,9 @@ class SlskProtoThread(threading.Thread):
 
         self._core_callback([SetConnectionStats()])
         self.bind_listen_port()
+
         self.upnp = UPnP(self.listenport)
+        self.upnp.add_port_mapping(blocking=True)
 
         while not self._want_abort:
 

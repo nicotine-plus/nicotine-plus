@@ -2548,7 +2548,9 @@ class Preferences(UserInterface, Dialog):
             config.sections[key].update(data)
 
         if portmap_required:
-            self.core.upnp.add_port_mapping()
+            self.core.protothread.upnp.add_port_mapping()
+        else:
+            self.core.protothread.upnp.cancel_timer()
 
         if theme_required:
             # Dark mode
@@ -2583,10 +2585,6 @@ class Preferences(UserInterface, Dialog):
 
         if search_required:
             self.frame.search.populate_search_history()
-
-        # UPnP
-        if not config.sections["server"]["upnp"]:
-            self.core.protothread.upnp.cancel_timer()
 
         # Chatrooms
         self.frame.chatrooms.toggle_chat_buttons()
