@@ -276,6 +276,9 @@ Italian
  - nicola (2007)
  - dbazza (2003–2004)
 
+Latvian
+ - Pagal3 (2022)
+
 Lithuanian
  - mantas (2020)
  - Žygimantas Beručka (2006–2009)
