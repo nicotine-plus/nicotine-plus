@@ -202,11 +202,8 @@ class UPnP:
     """ Class that handles UPnP Port Mapping """
 
     def __init__(self, port):
-
         self.port = port
         self.timer = None
-
-        self.add_port_mapping()
 
     @staticmethod
     def _request_port_mapping(router, protocol, public_port, private_ip, private_port,
@@ -373,14 +370,20 @@ class UPnP:
             "local_port": self.port
         })
 
-    def add_port_mapping(self):
+    def add_port_mapping(self, blocking=False):
 
         # Test if we want to do a port mapping
         if not config.sections["server"]["upnp"]:
             return
 
         # Do the port mapping
-        self._update_port_mapping()
+        if blocking:
+            self._update_port_mapping()
+        else:
+            thread = threading.Thread(target=self._update_port_mapping)
+            thread.name = "UPnPAddPortmapping"
+            thread.daemon = True
+            thread.start()
 
         # Repeat
         self._start_timer()
