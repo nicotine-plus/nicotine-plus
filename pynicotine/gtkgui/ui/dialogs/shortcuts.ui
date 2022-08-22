@@ -58,7 +58,7 @@
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">True</property>
-                <property name="action-name">app.settings</property>
+                <property name="action-name">app.preferences</property>
                 <property name="title" translatable="yes">Preferences</property>
               </object>
             </child>

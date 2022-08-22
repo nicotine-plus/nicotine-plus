@@ -757,10 +757,10 @@ class NicotineFrame(UserInterface):
         action.connect("activate", self.on_fast_configure)
         self.application.add_action(action)
 
-        action = Gio.SimpleAction(name="settings")
+        action = Gio.SimpleAction(name="preferences")
         action.connect("activate", self.on_settings)
         self.application.add_action(action)
-        self.application.set_accels_for_action("app.settings", ["<Primary>comma", "<Primary>p"])
+        self.application.set_accels_for_action("app.preferences", ["<Primary>comma", "<Primary>p"])
 
         action = Gio.SimpleAction(name="quit")  # Menu 'Quit' always Quits
         action.connect("activate", self.on_quit)
@@ -955,7 +955,7 @@ class NicotineFrame(UserInterface):
 
     @staticmethod
     def add_preferences_item(menu):
-        menu.add_items(("#" + _("_Preferences"), "app.settings"))
+        menu.add_items(("#" + _("_Preferences"), "app.preferences"))
 
     @staticmethod
     def add_quit_item(menu):
