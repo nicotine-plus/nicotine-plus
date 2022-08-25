@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.0"/>
+  <object class="GtkButton" id="retry_button">
+    <property name="visible">True</property>
+    <property name="label" translatable="yes">_Retry</property>
+    <property name="use-underline">True</property>
+    <signal name="clicked" handler="on_refresh"/>
+  </object>
   <object class="GtkBox" id="container">
     <property name="visible">True</property>
     <child>
