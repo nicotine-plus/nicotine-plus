@@ -20,6 +20,7 @@
 
 from pynicotine.pluginsystem import BasePlugin
 from pynicotine.pluginsystem import returncode
+from collections import deque
 
 
 class Plugin(BasePlugin):
@@ -32,6 +33,7 @@ class Plugin(BasePlugin):
             'minlength': 200,
             'maxlength': 400,
             'maxdiffcharacters': 10,
+            'repeatlines': 3,
             'badprivatephrases': ['buy viagra now', 'mybrute.com', 'mybrute.es', '0daymusic.biz']
         }
         self.metasettings = {
@@ -47,17 +49,35 @@ class Plugin(BasePlugin):
                 'description': 'The maximum length of a line before it\'s considered as spam.',
                 'type': 'integer'
             },
+            'repeatlines': {
+                'description': 'Consider a line to be spam if it was already said within previous lines:',
+                'type': 'integer'
+            },
             'badprivatephrases': {
                 'description': 'Filter chat room and private messages containing the following phrases:',
                 'type': 'list string'
             }
         }
+        self.lines = {}
 
     def loaded_notification(self):
 
         self.log('A line should be at least %s long with a maximum of %s different characters '
                  'before it\'s considered ASCII spam.',
                  (self.settings['minlength'], self.settings['maxdiffcharacters']))
+
+        if self.settings['repeatlines']:
+            self.log("Consider a line to be spam if it was already said within %i previous lines",
+                     (self.settings['repeatlines']))
+
+        for room in self.core.chatrooms.joined_rooms:
+            self.join_chatroom_notification(room)
+
+    def join_chatroom_notification(self, room):
+        self.lines[room] = deque("", maxlen=self.settings['repeatlines'])
+
+    def leave_chatroom_notification(self, room):
+        self.lines[room].clear()
 
     def check_phrases(self, user, line):
 
@@ -69,6 +89,12 @@ class Plugin(BasePlugin):
         return None
 
     def incoming_public_chat_event(self, room, user, line):
+
+        if line in self.lines[room]:
+            self.log('Filtered repeated line from "%s" in room "%s": %s', (user, room, line))
+            return returncode['zap']
+
+        self.lines[room].append(line)
 
         if len(line) >= self.settings['minlength'] and len(set(line)) < self.settings['maxdiffcharacters']:
             self.log('Filtered ASCII spam from "%s" in room "%s"', (user, room))
