@@ -552,7 +552,7 @@ class UserBrowse(UserInterface):
         if not indeterminate_progress:
             self.progress_bar.set_fraction(0.0)
         else:
-            self.progress_bar.set_fraction(0.5)
+            self.set_indeterminate_progress()
 
         self.refresh_button.set_sensitive(False)
 
@@ -567,8 +567,17 @@ class UserBrowse(UserInterface):
 
         self.progress_bar.set_fraction(fraction)
 
+    def set_indeterminate_progress(self):
+        self.progress_bar.pulse()
+        GLib.timeout_add(500, self.pulse_progress)
+
+    def pulse_progress(self):
+        if self.indeterminate_progress:
+            self.set_indeterminate_progress()
+
     def set_finished(self):
 
+        self.indeterminate_progress = False
         self.userbrowses.request_tab_hilite(self.container)
         self.progress_bar.set_fraction(1.0)
         self.refresh_button.set_sensitive(True)
