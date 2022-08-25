@@ -1,4 +1,4 @@
-Version = "2021-05-11r00"
+Version = "2022-08-25r00"
 Authors = ["Nicotine+"]
 Name = "Spamfilter"
-Description = "The plugin blocks a number of different kind of spam:\n1) It blocks ASCII art spam. These are messages in chatrooms that are made up of a few different characters that together form pictures like a christmas tree or a middle finger.\n2) It blocks extremely long sentences uttered in chatrooms, filtering out copy/paste spam like long rants\n3) It blocks chat room and private messages containing sentences you consider spam, for example messages trying to sell you foobar."
+Description = "The plugin blocks a number of different kind of spam:\n\n1) It blocks ASCII art spam. These are messages in chatrooms that are made up of a few different characters that together form pictures like a christmas tree or a middle finger.\n\n2) It blocks extremely long sentences uttered in chatrooms, filtering out copy/paste spam like long rants.\n\n3) It can block messages that are exact repeats of recent messages, such as when multiple user's plugins all respond automatically to a chat room command.\n\n4) It blocks chat room and private messages containing sentences you consider spam, for example messages trying to sell you foobar."
