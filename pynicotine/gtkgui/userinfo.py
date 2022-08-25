@@ -159,6 +159,7 @@ class UserInfo(UserInterface):
             self.placeholder_picture,
             self.progress_bar,
             self.queued_uploads_label,
+            self.retry_button,
             self.shared_files_label,
             self.shared_folders_label,
             self.upload_slots_label,
@@ -170,7 +171,7 @@ class UserInfo(UserInterface):
         self.frame = userinfos.frame
         self.core = userinfos.core
 
-        self.info_bar = InfoBar(self.info_bar)
+        self.info_bar = InfoBar(self.info_bar, button=self.retry_button)
         self.description_view = TextView(self.description_view)
         self.user_label.set_text(user)
 
