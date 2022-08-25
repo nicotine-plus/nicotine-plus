@@ -444,11 +444,11 @@ class UserInfo(UserInterface):
 
     def set_user_country(self, country_code):
 
-        if country_code:
-            country = GeoIP.country_code_to_name(country_code)
-            country_text = "%s (%s)" % (country, country_code)
-        else:
-            country_text = _("Unknown")
+        if not country_code:
+            return
+
+        country = GeoIP.country_code_to_name(country_code)
+        country_text = "%s (%s)" % (country, country_code)
 
         self.country_label.set_text(country_text)
 
