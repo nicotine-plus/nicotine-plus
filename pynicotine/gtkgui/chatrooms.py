@@ -805,7 +805,7 @@ class ChatRoom(UserInterface):
 
         self.chatrooms.request_tab_hilite(self.container, mentioned)
 
-        if public and room in self.chatrooms.pages:
+        if public and room in self.core.chatrooms.joined_rooms:
             # Don't show notifications about the Public feed that's duplicated in an open tab
             return
 
