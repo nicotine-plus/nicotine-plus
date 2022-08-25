@@ -68,7 +68,7 @@ class UserBrowse:
         if self.ui_callback:
             self.ui_callback.remove_user(user)
 
-    def show_user(self, user, path=None, local_shares_type=None, indeterminate_progress=False, switch_page=True):
+    def show_user(self, user, path=None, local_shares_type=None, indeterminate_progress=True, switch_page=True):
 
         self.add_user(user)
 
