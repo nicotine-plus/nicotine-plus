@@ -92,7 +92,7 @@ class Plugin(BasePlugin):
 
         if self.settings['repeatlines']:
             if line in self.lines[room]:
-                self.log('Filtered repeated line from "%s" in room "%s": %s', (user, room, line))
+                self.log('Filtered repeated line from "%s" in room "%s"', (user, line))
                 return returncode['zap']
 
             self.lines[room].append(line)
