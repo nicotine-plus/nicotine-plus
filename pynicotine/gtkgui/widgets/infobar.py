@@ -27,7 +27,8 @@ class InfoBar:
 
         self.info_bar = info_bar
         self.revealer = self.info_bar.get_ancestor(Gtk.Revealer)
-        self.label = Gtk.Label(height_request=24, margin_start=3, margin_end=3, wrap=True, visible=True, xalign=0)
+        self.label = Gtk.Label(height_request=24, margin_start=3, margin_end=3, selectable=True, wrap=True,
+                               visible=True, xalign=0)
 
         if button is not None:
             self.info_bar.add_action_widget(button, Gtk.ResponseType.NONE)
