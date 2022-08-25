@@ -22,17 +22,15 @@ from pynicotine.gtkgui.application import GTK_API_VERSION
 
 
 class InfoBar:
-    """ Wrapper for setting up a GtkInfoBar """
 
-    def __init__(self, info_bar, message_type):
+    def __init__(self, info_bar):
 
         self.info_bar = info_bar
-        self.info_bar.set_message_type(message_type)
         self.info_bar.set_show_close_button(True)
-        self.info_bar.connect("response", self._hide)
+        self.info_bar.connect("response", self.on_response)
 
         self.revealer = self.info_bar.get_ancestor(Gtk.Revealer)
-        self.label = Gtk.Label(wrap=True, visible=True, xalign=0)
+        self.label = Gtk.Label(margin_start=3, margin_end=3, wrap=True, visible=True, xalign=0)
 
         if GTK_API_VERSION >= 4:
             self.info_bar.add_child(self.label)
@@ -41,7 +39,7 @@ class InfoBar:
 
         self.set_visible(False)
 
-    def _hide(self, *_args):
+    def on_response(self, *_args):
         self.set_visible(False)
 
     def set_visible(self, visible):
@@ -52,6 +50,8 @@ class InfoBar:
 
         self.revealer.set_reveal_child(visible)
 
-    def show_message(self, message):
+    def show_message(self, message, message_type=Gtk.MessageType.INFO):
+
         self.label.set_text(message)
+        self.info_bar.set_message_type(message_type)
         self.set_visible(True)
