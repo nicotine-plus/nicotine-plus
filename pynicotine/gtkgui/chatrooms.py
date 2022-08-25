@@ -799,21 +799,25 @@ class ChatRoom(UserInterface):
     def ticker_remove(self, msg):
         self.tickers.remove_ticker(msg.user)
 
-    def show_notification(self, login, user, text, tag, public=False):
+    def show_notification(self, login, room, user, text, tag, public=False):
 
         if user == login:
             return
 
         mentioned = (tag == self.tag_hilite)
 
+        self.chatrooms.request_tab_hilite(self.container, mentioned)
+
+        if public and room in self.core.chatrooms.joined_rooms:
+            # Don't show notifications about the Public feed that's duplicated in an open tab
+            return
+
         if mentioned and config.sections["notifications"]["notification_popup_chatroom_mention"]:
             self.frame.notifications.new_text_notification(
                 text,
-                title=_("%(user)s mentioned you in the %(room)s room") % {"user": user, "room": self.room},
+                title=_("%(user)s mentioned you in the %(room)s room") % {"user": user, "room": room},
                 priority=Gio.NotificationPriority.HIGH
             )
-
-        self.chatrooms.request_tab_hilite(self.container, mentioned)
 
         if (self.chatrooms.get_current_page() == self.container
                 and self.frame.current_page_id == self.frame.chatrooms_page.id and self.frame.window.is_active()):
@@ -822,14 +826,14 @@ class ChatRoom(UserInterface):
 
         if mentioned:
             # We were mentioned, update tray icon and show urgency hint
-            self.frame.notifications.add("rooms", user, self.room)
+            self.frame.notifications.add("rooms", user, room)
             return
 
         if not public and config.sections["notifications"]["notification_popup_chatroom"]:
             # Don't show notifications for "Public " room, they're too noisy
             self.frame.notifications.new_text_notification(
                 text,
-                title=_("Message by %(user)s in the %(room)s room") % {"user": user, "room": self.room},
+                title=_("Message by %(user)s in the %(room)s room") % {"user": user, "room": room},
                 priority=Gio.NotificationPriority.HIGH
             )
 
@@ -865,6 +869,7 @@ class ChatRoom(UserInterface):
 
         login_username = self.core.login_username
         text = msg.msg
+        room = msg.room
 
         if user == login_username:
             tag = self.tag_local
@@ -882,7 +887,7 @@ class ChatRoom(UserInterface):
             speech = text
 
         if public:
-            line = "%s | %s" % (msg.room, line)
+            line = "%s | %s" % (room, line)
 
         line = "\n-- ".join(line.split("\n"))
         usertag = self.get_user_tag(user)
@@ -896,7 +901,7 @@ class ChatRoom(UserInterface):
 
             if self.speech_toggle.get_active():
                 self.core.notifications.new_tts(
-                    config.sections["ui"]["speechrooms"], {"room": msg.room, "user": user, "message": speech}
+                    config.sections["ui"]["speechrooms"], {"room": room, "user": user, "message": speech}
                 )
 
         else:
@@ -905,7 +910,7 @@ class ChatRoom(UserInterface):
                 username=user, usertag=usertag, timestamp_format=timestamp_format
             )
 
-        self.show_notification(login_username, user, speech, tag, public)
+        self.show_notification(login_username, room, user, speech, tag, public)
 
         if self.log_toggle.get_active():
             log.write_log_file(
