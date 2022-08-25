@@ -1686,7 +1686,6 @@ class NicotineFrame(UserInterface):
             self.tray_icon.set_upload_status(_("Uploads: %(speed)s") % {'speed': upload_bandwidth})
 
     def show_scan_progress(self):
-        self.scan_progress_indeterminate = True
         GLib.idle_add(self.scan_progress_bar.show)
 
     def set_scan_progress(self, value):
@@ -1694,12 +1693,19 @@ class NicotineFrame(UserInterface):
         GLib.idle_add(self.scan_progress_bar.set_fraction, value)
 
     def set_scan_indeterminate(self):
+
+        self.scan_progress_indeterminate = True
+
         self.scan_progress_bar.pulse()
         GLib.timeout_add(500, self.pulse_scan_progress)
 
     def pulse_scan_progress(self):
-        if self.scan_progress_indeterminate:
-            self.set_scan_indeterminate()
+
+        if not self.scan_progress_indeterminate:
+            return False
+
+        self.scan_progress_bar.pulse()
+        return True
 
     def hide_scan_progress(self):
         self.scan_progress_indeterminate = False

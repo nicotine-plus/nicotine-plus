@@ -106,17 +106,15 @@ class UserBrowses(IconNotebook):
             multiple=True
         ).show()
 
-    def show_user(self, user, path=None, local_shares_type=None, indeterminate_progress=False, switch_page=True):
+    def show_user(self, user, path=None, local_shares_type=None, switch_page=True):
 
         if user not in self.pages:
             self.pages[user] = page = UserBrowse(self, user)
-            page.set_in_progress(indeterminate_progress)
 
             self.append_page(page.container, user, page.on_close, user=user)
             page.set_label(self.get_tab_label_inner(page.container))
 
         page = self.pages[user]
-        page.indeterminate_progress = indeterminate_progress
         page.local_shares_type = local_shares_type
         page.queued_path = path
 
@@ -193,7 +191,7 @@ class UserBrowse(UserInterface):
         self.frame = userbrowses.frame
         self.core = userbrowses.core
         self.user = user
-        self.indeterminate_progress = False
+        self.indeterminate_progress = True
         self.local_shares_type = None
         self.queued_path = None
         self.num_folders = 0
@@ -379,6 +377,7 @@ class UserBrowse(UserInterface):
 
         self.expand_button.set_active(config.sections["userbrowse"]["expand_folders"])
         self.update_visuals()
+        self.set_in_progress()
 
     def set_label(self, label):
         self.user_popup.set_parent(label)
@@ -547,16 +546,27 @@ class UserBrowse(UserInterface):
 
         self.set_finished()
 
-    def set_in_progress(self, indeterminate_progress):
+    def pulse_progress(self):
 
-        if not indeterminate_progress:
-            self.progress_bar.set_fraction(0.0)
-        else:
-            self.progress_bar.set_fraction(0.5)
+        if not self.indeterminate_progress:
+            return False
+
+        self.progress_bar.pulse()
+        return True
+
+    def set_in_progress(self):
+
+        self.indeterminate_progress = True
+
+        self.progress_bar.pulse()
+        GLib.timeout_add(320, self.progress_bar.pulse)
+        GLib.timeout_add(1000, self.pulse_progress)
 
         self.refresh_button.set_sensitive(False)
 
     def message_progress(self, msg):
+
+        self.indeterminate_progress = False
 
         if msg.total == 0 or msg.position == 0:
             fraction = 0.0
@@ -568,6 +578,8 @@ class UserBrowse(UserInterface):
         self.progress_bar.set_fraction(fraction)
 
     def set_finished(self):
+
+        self.indeterminate_progress = False
 
         self.userbrowses.request_tab_hilite(self.container)
         self.progress_bar.set_fraction(1.0)
@@ -1282,7 +1294,7 @@ class UserBrowse(UserInterface):
         self.folder_tree_view.grab_focus()
         self.info_bar.set_visible(False)
 
-        self.set_in_progress(self.indeterminate_progress)
+        self.set_in_progress()
         self.core.userbrowse.browse_user(self.user, local_shares_type=self.local_shares_type, new_request=True)
 
     def on_close(self, *_args):
