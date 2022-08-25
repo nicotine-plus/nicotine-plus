@@ -70,8 +70,8 @@ class Plugin(BasePlugin):
             self.log("Consider a line to be spam if it was already said within %i previous lines",
                      (self.settings['repeatlines']))
 
-        for room in self.core.chatrooms.joined_rooms:
-            self.join_chatroom_notification(room)
+            for room in self.core.chatrooms.joined_rooms:
+                self.join_chatroom_notification(room)
 
     def join_chatroom_notification(self, room):
         self.lines[room] = deque("", maxlen=self.settings['repeatlines'])
@@ -90,11 +90,12 @@ class Plugin(BasePlugin):
 
     def incoming_public_chat_event(self, room, user, line):
 
-        if line in self.lines[room]:
-            self.log('Filtered repeated line from "%s" in room "%s": %s', (user, room, line))
-            return returncode['zap']
+        if self.settings['repeatlines']:
+            if line in self.lines[room]:
+                self.log('Filtered repeated line from "%s" in room "%s": %s', (user, room, line))
+                return returncode['zap']
 
-        self.lines[room].append(line)
+            self.lines[room].append(line)
 
         if len(line) >= self.settings['minlength'] and len(set(line)) < self.settings['maxdiffcharacters']:
             self.log('Filtered ASCII spam from "%s" in room "%s"', (user, room))
