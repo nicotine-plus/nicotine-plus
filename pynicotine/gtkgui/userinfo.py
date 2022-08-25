@@ -159,6 +159,7 @@ class UserInfo(UserInterface):
             self.placeholder_picture,
             self.progress_bar,
             self.queued_uploads_label,
+            self.refresh_button,
             self.retry_button,
             self.shared_files_label,
             self.shared_folders_label,
@@ -195,6 +196,7 @@ class UserInfo(UserInterface):
         self.picture_data_original = self.picture_data_scaled = None
         self.zoom_factor = 5
         self.actual_zoom = 0
+        self.indeterminate_progress = True
 
         # Set up likes list
         self.likes_store = Gtk.ListStore(str)
@@ -253,6 +255,7 @@ class UserInfo(UserInterface):
         )
 
         self.update_visuals()
+        self.set_in_progress()
 
     def clear(self):
 
@@ -370,10 +373,36 @@ class UserInfo(UserInterface):
         self.set_finished()
 
     def set_finished(self):
+
+        self.indeterminate_progress = False
+
         self.userinfos.request_tab_hilite(self.container)
         self.progress_bar.set_fraction(1.0)
 
+        self.refresh_button.set_sensitive(True)
+
+    def pulse_progress(self):
+
+        if not self.indeterminate_progress:
+            return False
+
+        self.progress_bar.pulse()
+        return True
+
+    def set_in_progress(self):
+
+        self.indeterminate_progress = True
+
+        self.progress_bar.pulse()
+        GLib.timeout_add(320, self.progress_bar.pulse)
+        GLib.timeout_add(1000, self.pulse_progress)
+
+        self.info_bar.set_visible(False)
+        self.refresh_button.set_sensitive(False)
+
     def message_progress(self, msg):
+
+        self.indeterminate_progress = False
 
         if msg.total == 0 or msg.position == 0:
             fraction = 0.0
@@ -526,10 +555,7 @@ class UserInfo(UserInterface):
         return True
 
     def on_refresh(self, *_args):
-
-        self.info_bar.set_visible(False)
-        self.progress_bar.set_fraction(0.0)
-
+        self.set_in_progress()
         self.core.userinfo.request_user_info(self.user)
 
     def on_close(self, *_args):

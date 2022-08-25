@@ -247,6 +247,7 @@
                         <property name="margin-end">6</property>
                         <property name="margin-top">6</property>
                         <property name="margin-bottom">6</property>
+                        <property name="pulse-step">0.72</property>
                       </object>
                     </child>
                     <style>

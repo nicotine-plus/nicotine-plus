@@ -304,6 +304,7 @@
                         <child>
                           <object class="GtkProgressBar" id="progress_bar">
                             <property name="visible">True</property>
+                            <property name="pulse-step">0.98</property>
                           </object>
                         </child>
                       </object>
@@ -636,7 +637,7 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton" id="_refresh_button">
+                  <object class="GtkButton" id="refresh_button">
                     <property name="visible">True</property>
                     <signal name="clicked" handler="on_refresh"/>
                     <child>
@@ -654,7 +655,7 @@
                             <property name="visible">True</property>
                             <property name="label" translatable="yes">_Refresh Info</property>
                             <property name="use-underline">True</property>
-                            <property name="mnemonic-widget">_refresh_button</property>
+                            <property name="mnemonic-widget">refresh_button</property>
                             <attributes>
                               <attribute name="weight" value="normal"/>
                             </attributes>

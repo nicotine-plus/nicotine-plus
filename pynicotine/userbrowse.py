@@ -68,12 +68,12 @@ class UserBrowse:
         if self.ui_callback:
             self.ui_callback.remove_user(user)
 
-    def show_user(self, user, path=None, local_shares_type=None, indeterminate_progress=False, switch_page=True):
+    def show_user(self, user, path=None, local_shares_type=None, switch_page=True):
 
         self.add_user(user)
 
         if self.ui_callback:
-            self.ui_callback.show_user(user, path, local_shares_type, indeterminate_progress, switch_page)
+            self.ui_callback.show_user(user, path, local_shares_type, switch_page)
 
     def parse_local_shares(self, username, msg):
         """ Parse a local shares list and show it in the UI """
@@ -95,7 +95,7 @@ class UserBrowse:
             thread.daemon = True
             thread.start()
 
-        self.show_user(username, path=path, local_shares_type="normal", indeterminate_progress=True)
+        self.show_user(username, path=path, local_shares_type="normal")
 
     def browse_local_buddy_shares(self, path=None, new_request=False):
         """ Browse your own buddy shares """
@@ -109,7 +109,7 @@ class UserBrowse:
             thread.daemon = True
             thread.start()
 
-        self.show_user(username, path=path, local_shares_type="buddy", indeterminate_progress=True)
+        self.show_user(username, path=path, local_shares_type="buddy")
 
     def browse_user(self, username, path=None, local_shares_type=None, new_request=False, switch_page=True):
         """ Browse a user's shares """
