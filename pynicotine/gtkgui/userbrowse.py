@@ -211,7 +211,7 @@ class UserBrowse(UserInterface):
         self.query = None
         self.search_position = 0
 
-        self.info_bar = InfoBar(self.info_bar, Gtk.MessageType.INFO)
+        self.info_bar = InfoBar(self.info_bar)
 
         # Setup folder_tree_view
         self.dir_store = Gtk.TreeStore(str)
@@ -538,7 +538,8 @@ class UserBrowse(UserInterface):
 
         self.info_bar.show_message(
             _("Unable to request shared files from user. Either the user is offline, you both have "
-              "a closed listening port, or there's a temporary connectivity issue.")
+              "a closed listening port, or there's a temporary connectivity issue."),
+            message_type=Gtk.MessageType.ERROR
         )
 
         self.set_finished()

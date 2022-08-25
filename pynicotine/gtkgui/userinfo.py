@@ -170,7 +170,7 @@ class UserInfo(UserInterface):
         self.frame = userinfos.frame
         self.core = userinfos.core
 
-        self.info_bar = InfoBar(self.info_bar, Gtk.MessageType.INFO)
+        self.info_bar = InfoBar(self.info_bar)
         self.description_view = TextView(self.description_view)
         self.user_label.set_text(user)
 
@@ -354,7 +354,8 @@ class UserInfo(UserInterface):
 
         self.info_bar.show_message(
             _("Unable to request information from user. Either you both have a closed listening "
-              "port, the user is offline, or there's a temporary connectivity issue.")
+              "port, the user is offline, or there's a temporary connectivity issue."),
+            message_type=Gtk.MessageType.ERROR
         )
 
         self.set_finished()
