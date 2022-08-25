@@ -2424,7 +2424,7 @@ class Preferences(UserInterface, Dialog):
             ("UrlHandlers", _("URL Handlers"), "insert-link-symbolic")]
 
         for _page_id, label, icon_name in self.page_ids:
-            box = Gtk.Box(margin_top=8, margin_bottom=8, margin_start=12, margin_end=42, spacing=12, visible=True)
+            box = Gtk.Box(margin_top=8, margin_bottom=8, margin_start=12, margin_end=12, spacing=12, visible=True)
             icon = Gtk.Image(icon_name=icon_name, visible=True)
             label = Gtk.Label(label=label, xalign=0, visible=True)
 
