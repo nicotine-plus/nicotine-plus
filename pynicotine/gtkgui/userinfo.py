@@ -373,20 +373,20 @@ class UserInfo(UserInterface):
 
         self.refresh_button.set_sensitive(True)
 
-    def pulse_progress(self):
+    def pulse_progress(self, repeat=True):
 
         if not self.indeterminate_progress:
             return False
 
         self.progress_bar.pulse()
-        return True
+        return repeat
 
     def set_in_progress(self):
 
         self.indeterminate_progress = True
 
         self.progress_bar.pulse()
-        GLib.timeout_add(320, self.progress_bar.pulse)
+        GLib.timeout_add(320, self.pulse_progress, False)
         GLib.timeout_add(1000, self.pulse_progress)
 
         self.info_bar.set_visible(False)
