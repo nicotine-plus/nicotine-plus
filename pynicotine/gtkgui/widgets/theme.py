@@ -36,10 +36,19 @@ from pynicotine.utils import encode_path
 """ Global Style """
 
 
-SETTINGS_PORTAL = None
+GTK_SETTINGS = Gtk.Settings.get_default()
 
-if "gi.repository.Adw" not in sys.modules:
+if not hasattr(GTK_SETTINGS, "reset_property"):
+    SYSTEM_FONT = GTK_SETTINGS.get_property("gtk-font-name")
+    SYSTEM_ICON_THEME = GTK_SETTINGS.get_property("gtk-icon-theme-name")
+
+USE_LIBADWAITA = ("gi.repository.Adw" in sys.modules)
+USE_COLOR_SCHEME_PORTAL = (sys.platform not in ("win32", "darwin") and not USE_LIBADWAITA)
+
+
+if USE_COLOR_SCHEME_PORTAL:
     # GNOME 42+ system-wide dark mode for GTK without libadwaita
+    SETTINGS_PORTAL = None
 
     class ColorScheme:
         NO_PREFERENCE = 0
@@ -47,9 +56,6 @@ if "gi.repository.Adw" not in sys.modules:
         PREFER_LIGHT = 2
 
     def read_color_scheme():
-
-        if SETTINGS_PORTAL is None:
-            return None
 
         try:
             result = SETTINGS_PORTAL.call_sync(
@@ -87,24 +93,19 @@ if "gi.repository.Adw" not in sys.modules:
     except Exception as portal_error:
         log.add_debug("Cannot start color scheme settings portal, falling back to GTK theme preference: %s",
                       portal_error)
-
-GTK_SETTINGS = Gtk.Settings.get_default()
-
-if not hasattr(GTK_SETTINGS, "reset_property"):
-    SYSTEM_FONT = GTK_SETTINGS.get_property("gtk-font-name")
-    SYSTEM_ICON_THEME = GTK_SETTINGS.get_property("gtk-icon-theme-name")
+        USE_PORTAL_COLOR_SCHEME = None
 
 
 def set_dark_mode(enabled):
 
-    if "gi.repository.Adw" in sys.modules:
+    if USE_LIBADWAITA:
         from gi.repository import Adw  # pylint:disable=no-name-in-module
 
         color_scheme = Adw.ColorScheme.FORCE_DARK if enabled else Adw.ColorScheme.DEFAULT
         Adw.StyleManager.get_default().set_color_scheme(color_scheme)
         return
 
-    if not enabled:
+    if USE_COLOR_SCHEME_PORTAL and not enabled:
         color_scheme = read_color_scheme()
 
         if color_scheme is not None:
