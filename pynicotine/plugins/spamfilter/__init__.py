@@ -34,7 +34,7 @@ class Plugin(BasePlugin):
             'minlength': 200,
             'maxlength': 400,
             'maxdiffcharacters': 10,
-            'repeatlines': 3,
+            'repeatlinks': 3,
             'badprivatephrases': ['buy viagra now', 'mybrute.com', 'mybrute.es', '0daymusic.biz']
         }
         self.metasettings = {
@@ -50,8 +50,8 @@ class Plugin(BasePlugin):
                 'description': 'The maximum length of a line before it\'s considered as spam.',
                 'type': 'integer'
             },
-            'repeatlines': {
-                'description': 'Consider a line to be spam if it was already said within previous lines:',
+            'repeatlinks': {
+                'description': 'Consider a hyperlink to be spam if it was already said within previous lines:',
                 'type': 'integer'
             },
             'badprivatephrases': {
@@ -59,7 +59,7 @@ class Plugin(BasePlugin):
                 'type': 'list string'
             }
         }
-        self.lines = {}
+        self.links = {}
 
     def loaded_notification(self):
 
@@ -67,18 +67,18 @@ class Plugin(BasePlugin):
                  'before it\'s considered ASCII spam.',
                  (self.settings['minlength'], self.settings['maxdiffcharacters']))
 
-        if self.settings['repeatlines']:
-            self.log("Consider a line to be spam if it was already said within %i previous lines",
-                     (self.settings['repeatlines']))
+        if self.settings['repeatlinks']:
+            self.log("Consider a hyperlink to be spam if it was already said within %i previous lines",
+                     (self.settings['repeatlinks']))
 
             for room in self.core.chatrooms.joined_rooms:
                 self.join_chatroom_notification(room)
 
     def join_chatroom_notification(self, room):
-        self.lines[room] = deque("", maxlen=self.settings['repeatlines'])
+        self.links[room] = deque("", maxlen=self.settings['repeatlinks'])
 
     def leave_chatroom_notification(self, room):
-        self.lines[room].clear()
+        self.links[room].clear()
 
     def check_phrases(self, user, line):
 
@@ -91,12 +91,12 @@ class Plugin(BasePlugin):
 
     def incoming_public_chat_event(self, room, user, line):
 
-        if self.settings['repeatlines']:
-            if line in self.lines[room]:
-                self.log('Filtered repeated line from "%s" in room "%s"', (user, room))
+        if self.settings['repeatlinks']:
+            if line in self.links[room]:
+                self.log('Filtered repeated hyperlink from "%s" in room "%s"', (user, room))
                 return returncode['zap']
 
-            self.lines[room].append(line)
+            self.links[room].append(line if any(links in line for links in ("https://", "http://")) else "")
 
         if len(line) >= self.settings['minlength'] and len(set(line)) < self.settings['maxdiffcharacters']:
             self.log('Filtered ASCII spam from "%s" in room "%s"', (user, room))
