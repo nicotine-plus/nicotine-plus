@@ -268,8 +268,8 @@ class DownloadsFrame(UserInterface):
         self.column_numbers = list(range(self.filterlist.get_n_columns()))
         cols = initialise_columns(
             self.frame, None, self.FilterView,
-            ["filter", _("Filter"), 1, "text", None],
-            ["escaped", _("Escaped"), 40, "toggle", None]
+            ["filter", _("Filter"), 150, "text", None],
+            ["escaped", _("Escaped"), 0, "toggle", None]
         )
 
         cols["filter"].set_sort_column_id(0)
@@ -539,7 +539,7 @@ class SharesFrame(UserInterface):
         self.column_numbers = list(range(self.shareslist.get_n_columns()))
         cols = initialise_columns(
             self.frame, None, self.Shares,
-            ["virtual_folder", _("Virtual Folder"), 1, "text", None],
+            ["virtual_folder", _("Virtual Folder"), 65, "text", None],
             ["folder", _("Folder"), 150, "text", None],
             ["buddies", _("Buddy-only"), 0, "toggle", None],
         )
@@ -1934,7 +1934,7 @@ class UrlHandlersFrame(UserInterface):
         self.column_numbers = list(range(self.protocolmodel.get_n_columns()))
         cols = initialise_columns(
             self.frame, None, self.ProtocolHandlers,
-            ["protocol", _("Protocol"), 1, "text", None],
+            ["protocol", _("Protocol"), 120, "text", None],
             ["command", _("Command"), -1, "edit", None]
         )
 
