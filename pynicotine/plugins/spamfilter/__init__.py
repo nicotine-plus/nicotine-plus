@@ -18,9 +18,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from collections import deque
+
 from pynicotine.pluginsystem import BasePlugin
 from pynicotine.pluginsystem import returncode
-from collections import deque
 
 
 class Plugin(BasePlugin):
