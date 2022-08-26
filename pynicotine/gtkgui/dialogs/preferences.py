@@ -237,7 +237,7 @@ class DownloadsFrame(UserInterface):
             self.frame, parent=self.FilterView, multi_select=True, activate_row_callback=self.on_edit_filter,
             columns=[
                 {"column_id": "filter", "column_type": "text", "title": _("Filter"), "sort_column": 0,
-                 "width": 1, "expand_column": True},
+                 "width": 150, "expand_column": True},
                 {"column_id": "escaped", "column_type": "toggle", "title": _("Escaped"), "width": 0,
                  "sort_column": 1, "toggle_callback": self.on_toggle_escaped}
             ]
@@ -459,7 +459,7 @@ class SharesFrame(UserInterface):
         self.shares_list_view = TreeView(
             self.frame, parent=self.Shares, multi_select=True, activate_row_callback=self.on_edit_shared_dir,
             columns=[
-                {"column_id": "virtual_folder", "column_type": "text", "title": _("Virtual Folder"), "width": 1,
+                {"column_id": "virtual_folder", "column_type": "text", "title": _("Virtual Folder"), "width": 65,
                  "sort_column": 0, "expand_column": True},
                 {"column_id": "folder", "column_type": "text", "title": _("Folder"), "width": 150,
                  "sort_column": 1, "expand_column": True},
@@ -1815,7 +1815,7 @@ class UrlHandlersFrame(UserInterface):
             self.frame, parent=self.ProtocolHandlers, multi_select=True, activate_row_callback=self.on_edit_handler,
             columns=[
                 {"column_id": "protocol", "column_type": "text", "title": _("Protocol"), "sort_column": 0,
-                 "width": 1, "expand_column": True, "iterator_key": True},
+                 "width": 120, "expand_column": True, "iterator_key": True},
                 {"column_id": "command", "column_type": "text", "title": _("Command"), "sort_column": 1,
                  "expand_column": True}
             ]
