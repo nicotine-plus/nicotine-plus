@@ -937,7 +937,7 @@ class SlskProtoThread(threading.Thread):
                 self.total_download_bandwidth = 0
 
             if callback:
-                self._callback_msgs.append(DownloadConnClose(sock))
+                self._callback_msgs.append(DownloadConnClose(conn_obj.fileinit.token))
 
             self._calc_download_limit()
 
@@ -949,7 +949,7 @@ class SlskProtoThread(threading.Thread):
 
             if callback:
                 timed_out = (time.time() - conn_obj.lastactive) > self.CONNECTION_MAX_IDLE
-                self._callback_msgs.append(UploadConnClose(sock, timed_out))
+                self._callback_msgs.append(UploadConnClose(conn_obj.fileinit.token, timed_out))
 
             self._calc_upload_limit_function()
 
@@ -1565,7 +1565,9 @@ class SlskProtoThread(threading.Thread):
                     conn_obj.filedown.file.write(added_bytes)
 
                 except (OSError, ValueError) as error:
-                    self._callback_msgs.append(DownloadFileError(conn_obj.sock, conn_obj.filedown.file, error))
+                    self._callback_msgs.append(
+                        DownloadFileError(conn_obj.filedown.token, conn_obj.filedown.file, error)
+                    )
                     self.close_connection(self._conns, conn_obj.sock)
 
                 added_bytes_len = len(added_bytes)
@@ -1964,7 +1966,7 @@ class SlskProtoThread(threading.Thread):
                         self.modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
 
             except (OSError, ValueError) as error:
-                self._callback_msgs.append(UploadFileError(sock, conn_obj.fileupl.file, error))
+                self._callback_msgs.append(UploadFileError(conn_obj.fileupl.token, conn_obj.fileupl.file, error))
                 self.close_connection(self._conns, sock)
 
             if bytes_send > 0:

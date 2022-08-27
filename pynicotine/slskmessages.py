@@ -199,20 +199,22 @@ class DownloadFile(InternalMessage):
     """ Sent by networking thread to indicate file transfer progress.
     Sent by UI to pass the file object to write. """
 
-    __slots__ = ("sock", "file", "leftbytes")
+    __slots__ = ("sock", "token", "file", "leftbytes")
 
-    def __init__(self, sock=None, file=None, leftbytes=None):
+    def __init__(self, sock=None, token=None, file=None, leftbytes=None):
         self.sock = sock
+        self.token = token
         self.file = file
         self.leftbytes = leftbytes
 
 
 class UploadFile(InternalMessage):
 
-    __slots__ = ("sock", "file", "size", "sentbytes", "offset")
+    __slots__ = ("sock", "token", "file", "size", "sentbytes", "offset")
 
-    def __init__(self, sock=None, file=None, size=None, sentbytes=0, offset=None):
+    def __init__(self, sock=None, token=None, file=None, size=None, sentbytes=0, offset=None):
         self.sock = sock
+        self.token = token
         self.file = file
         self.size = size
         self.sentbytes = sentbytes
@@ -223,10 +225,10 @@ class DownloadFileError(InternalMessage):
     """ Sent by networking thread to indicate that a file error occurred during
     filetransfer. """
 
-    __slots__ = ("sock", "file", "error")
+    __slots__ = ("token", "file", "error")
 
-    def __init__(self, sock=None, file=None, error=None):
-        self.sock = sock
+    def __init__(self, token=None, file=None, error=None):
+        self.token = token
         self.file = file
         self.error = error
 
@@ -238,18 +240,18 @@ class UploadFileError(DownloadFileError):
 class DownloadConnClose(InternalMessage):
     """ Sent by networking thread to indicate a file transfer connection has been closed """
 
-    __slots__ = ("sock",)
+    __slots__ = ("token",)
 
-    def __init__(self, sock=None):
-        self.sock = sock
+    def __init__(self, token=None):
+        self.token = token
 
 
 class UploadConnClose(InternalMessage):
 
-    __slots__ = ("sock", "timed_out")
+    __slots__ = ("token", "timed_out")
 
-    def __init__(self, sock=None, timed_out=None):
-        self.sock = sock
+    def __init__(self, token=None, timed_out=None):
+        self.token = token
         self.timed_out = timed_out
 
 
