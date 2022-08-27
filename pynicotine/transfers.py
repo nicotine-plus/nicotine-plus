@@ -622,6 +622,11 @@ class Transfers:
             if download.filename != filename or download.user != username:
                 continue
 
+            log.add_transfer("Download attempt for file %(filename)s from user %(user)s timed out", {
+                "filename": filename,
+                "user": username
+            })
+
             download.status = "Connection timeout"
             download.token = None
 
@@ -635,6 +640,16 @@ class Transfers:
         for upload in self.uploads:
             if upload.token != token:
                 continue
+
+            log.add_transfer("Upload attempt for file %(filename)s with token %(token)s to user %(user)s timed out", {
+                "filename": upload.filename,
+                "token": token,
+                "user": upload.user
+            })
+
+            if upload.sock is not None:
+                log.add_transfer("Existing file connection for upload with token %s already exists?", token)
+                return
 
             upload.status = "Connection timeout"
             upload.token = None
@@ -924,6 +939,10 @@ class Transfers:
                 if upload.token != token:
                     continue
 
+                if upload.sock is not None:
+                    log.add_transfer("Upload with token %s already has an existing file connection", token)
+                    return
+
                 upload.status = reason
                 upload.token = None
                 upload.queue_position = 0
@@ -948,6 +967,10 @@ class Transfers:
         for upload in self.uploads:
             if upload.token != token:
                 continue
+
+            if upload.sock is not None:
+                log.add_transfer("Upload with token %s already has an existing file connection", token)
+                return
 
             self.core.send_message_to_peer(upload.user, slskmessages.FileUploadInit(None, token=token))
             self.check_upload_queue()
@@ -989,10 +1012,10 @@ class Transfers:
     def download_file_error(self, msg):
         """ Networking thread encountered a local file error for download """
 
-        sock = msg.sock
+        token = msg.token
 
         for download in self.downloads:
-            if download.sock != sock:
+            if download.token != token:
                 continue
 
             self.abort_transfer(download)
@@ -1005,10 +1028,10 @@ class Transfers:
     def upload_file_error(self, msg):
         """ Networking thread encountered a local file error for upload """
 
-        sock = msg.sock
+        token = msg.token
 
         for upload in self.uploads:
-            if upload.sock != sock:
+            if upload.token != token:
                 continue
 
             self.abort_transfer(upload)
@@ -1046,7 +1069,6 @@ class Transfers:
             incomplete_folder = self.config.sections["transfers"]["incompletedir"]
             need_update = True
             download.sock = msg.init.sock
-            download.token = None
 
             if download in self.transfer_request_times:
                 del self.transfer_request_times[download]
@@ -1121,7 +1143,8 @@ class Transfers:
                     if download.size > offset:
                         download.status = "Transferring"
                         self.queue.append(slskmessages.DownloadFile(
-                            sock=download.sock, file=file_handle, leftbytes=(download.size - offset)
+                            sock=download.sock, token=download.token, file=file_handle,
+                            leftbytes=(download.size - offset)
                         ))
                         self.queue.append(slskmessages.FileOffset(init=msg.init, offset=offset))
 
@@ -1167,7 +1190,6 @@ class Transfers:
 
             need_update = True
             upload.sock = msg.init.sock
-            upload.token = None
             file_handle = None
 
             if upload in self.transfer_request_times:
@@ -1213,7 +1235,9 @@ class Transfers:
 
                 if upload.size > 0:
                     upload.status = "Transferring"
-                    self.queue.append(slskmessages.UploadFile(upload.sock, file=file_handle, size=upload.size))
+                    self.queue.append(slskmessages.UploadFile(
+                        sock=upload.sock, token=upload.token, file=file_handle, size=upload.size
+                    ))
 
                 else:
                     self.upload_finished(upload, file_handle=file_handle)
@@ -1317,10 +1341,10 @@ class Transfers:
     def file_download(self, msg):
         """ A file download is in progress """
 
-        sock = msg.sock
+        token = msg.token
 
         for download in self.downloads:
-            if download.sock != sock:
+            if download.token != token:
                 continue
 
             if download in self.transfer_request_times:
@@ -1352,10 +1376,10 @@ class Transfers:
     def file_upload(self, msg):
         """ A file upload is in progress """
 
-        sock = msg.sock
+        token = msg.token
 
         for upload in self.uploads:
-            if upload.sock != sock:
+            if upload.token != token:
                 continue
 
             if upload in self.transfer_request_times:
@@ -1390,10 +1414,10 @@ class Transfers:
     def download_conn_close(self, msg):
         """ The remote peer has closed a file transfer connection """
 
-        sock = msg.sock
+        token = msg.token
 
         for download in self.downloads:
-            if download.sock != sock:
+            if download.token != token:
                 continue
 
             if download.current_byte_offset is not None and download.current_byte_offset >= download.size:
@@ -1414,12 +1438,12 @@ class Transfers:
     def upload_conn_close(self, msg):
         """ The remote peer has closed a file transfer connection """
 
-        sock = msg.sock
+        token = msg.token
         timed_out = msg.timed_out
 
         # We need a copy due to upload auto-clearing modifying the deque during iteration
         for upload in self.uploads.copy():
-            if upload.sock != sock:
+            if upload.token != token:
                 continue
 
             if not timed_out and upload.current_byte_offset is not None and upload.current_byte_offset >= upload.size:
@@ -1569,6 +1593,7 @@ class Transfers:
 
         if self.user_logged_out(user):
             transfer.status = "User logged off"
+            transfer.token = None
 
         elif transfer.status != "Filtered":
             download_path = self.get_existing_download_path(user, filename, path, size)
@@ -1625,6 +1650,7 @@ class Transfers:
 
         if self.user_logged_out(user):
             transfer.status = "User logged off"
+            transfer.token = None
 
             if not self.auto_clear_upload(transfer):
                 self.update_upload(transfer)
@@ -1954,6 +1980,7 @@ class Transfers:
         transfer.status = "Finished"
         transfer.current_byte_offset = transfer.size
         transfer.sock = None
+        transfer.token = None
 
         self.core.statistics.append_stat_value("completed_downloads", 1)
 
@@ -1985,6 +2012,7 @@ class Transfers:
         transfer.status = "Finished"
         transfer.current_byte_offset = transfer.size
         transfer.sock = None
+        transfer.token = None
 
         log.add_upload(
             _("Upload finished: user %(user)s, IP address %(ip)s, file %(file)s"), {
