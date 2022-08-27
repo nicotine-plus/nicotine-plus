@@ -1749,7 +1749,7 @@ class Transfers:
             return True
 
         if user not in self.core.user_statuses:
-            return False
+            return True
 
         return self.core.user_statuses[user] == UserStatus.OFFLINE
 
