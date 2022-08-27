@@ -1571,6 +1571,7 @@ class Transfers:
         else:
             transfer.filename = filename
             transfer.status = "Queued"
+            transfer.token = None
 
         self.core.watch_user(user)
 
@@ -1592,7 +1593,6 @@ class Transfers:
 
         if self.user_logged_out(user):
             transfer.status = "User logged off"
-            transfer.token = None
 
         elif transfer.status != "Filtered":
             download_path = self.get_existing_download_path(user, filename, path, size)
@@ -1639,6 +1639,7 @@ class Transfers:
             transfer.filename = filename
             transfer.size = size
             transfer.status = "Queued"
+            transfer.token = None
 
         log.add_transfer("Initializing upload request for file %(file)s to user %(user)s", {
             'file': filename,
@@ -1649,7 +1650,6 @@ class Transfers:
 
         if self.user_logged_out(user):
             transfer.status = "User logged off"
-            transfer.token = None
 
             if not self.auto_clear_upload(transfer):
                 self.update_upload(transfer)
