@@ -17,20 +17,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""
-Example uses:
-!reddit soulseek
-!reddit news/new
-!reddit news/top
-
-"""
-
 import json
 
 from itertools import islice
 
 from pynicotine.pluginsystem import BasePlugin
-from pynicotine.pluginsystem import ResponseThrottle
+from pynicotine.pluginsystem import returncode
 from pynicotine.utils import http_request
 
 
@@ -49,20 +41,9 @@ class Plugin(BasePlugin):
                 'type': 'integer'
             }
         }
+        self.__publiccommands__ = self.__privatecommands__ = [('reddit', self.reddit_command)]
 
-        self.plugin_command = "!reddit"
-        self.responder = ResponseThrottle(self.core, self.human_name)
-
-    def incoming_public_chat_notification(self, room, user, line):
-        line = line.lower().strip()
-
-        if not line.startswith(self.plugin_command) or " " not in line:
-            return
-
-        subreddit = line.split(" ")[1].strip("/")
-
-        if not self.responder.ok_to_respond(room, user, subreddit):
-            return
+    def reddit_command(self, _source, subreddit):
 
         try:
             response = http_request('https', 'www.reddit.com', '/r/' + subreddit + '/.json',
@@ -70,17 +51,16 @@ class Plugin(BasePlugin):
 
         except Exception as error:
             self.log("Could not connect to Reddit: %(error)s", {"error": error})
-            return
+            return returncode['zap']
 
         try:
             response = json.loads(response)
 
             for post in islice(response['data']['children'], self.settings['reddit_links']):
                 post_data = post['data']
-                self.send_public(room, "/me {}: {}".format(post_data['title'], post_data['url']))
+                self.echo_message("{}: {}".format(post_data['title'], post_data['url']))
 
         except Exception as error:
             self.log("Failed to parse response from Reddit: %(error)s", {"error": error})
-            return
 
-        self.responder.responded()
+        return returncode['zap']
