@@ -5,7 +5,7 @@
 ### Corrections
 
  * Fixed an issue where user settings would reset after an operating system crash or power outage
- * Fixed an issue where certain uploads were stuck in "Queued" status
+ * Fixed an issue where certain uploads were stuck in "Queued" or "Transferring" status
  * Fixed an issue where files did not download to custom folders
  * Fixed a performance regression when loading downloads/uploads on startup
  * Fixed an issue where Nicotine+ connected to the server before UPnP port forwarding completed
