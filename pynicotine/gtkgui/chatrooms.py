@@ -533,7 +533,8 @@ class ChatRoom(UserInterface):
                 (">" + _("Private Rooms"), menu_private_rooms)
             )
 
-        PopupMenu(self.frame, self.activity_view.textview, self.on_popup_menu_log).add_items(
+        self.popup_menu_activity_view = PopupMenu(self.frame, self.activity_view.textview, self.on_popup_menu_log)
+        self.popup_menu_activity_view.add_items(
             ("#" + _("Find…"), self.on_find_activity_log),
             ("", None),
             ("#" + _("Copy"), self.activity_view.on_copy_text),
@@ -544,7 +545,8 @@ class ChatRoom(UserInterface):
             ("#" + _("_Leave Room"), self.on_leave_room)
         )
 
-        PopupMenu(self.frame, self.chat_view.textview, self.on_popup_menu_chat).add_items(
+        self.popup_menu_chat_view = PopupMenu(self.frame, self.chat_view.textview, self.on_popup_menu_chat)
+        self.popup_menu_chat_view.add_items(
             ("#" + _("Find…"), self.on_find_room_log),
             ("", None),
             ("#" + _("Copy"), self.chat_view.on_copy_text),
@@ -589,8 +591,14 @@ class ChatRoom(UserInterface):
         self.loaded = self.activity_view.auto_scroll = self.chat_view.auto_scroll = True
 
     def clear(self):
+
         self.activity_view.clear()
         self.chat_view.clear()
+
+        for menu in (self.popup_menu_private_rooms_chat, self.popup_menu_private_rooms_list,
+                     self.popup_menu_user_chat, self.popup_menu_user_list, self.users_list_view.column_menu,
+                     self.popup_menu_activity_view, self.popup_menu_chat_view, self.tab_menu):
+            menu.clear()
 
     def set_label(self, label):
         self.tab_menu.set_parent(label)

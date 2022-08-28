@@ -180,7 +180,7 @@ class Searches(IconNotebook):
         if page is None:
             return
 
-        page.clear_model(stored_results=True)
+        page.clear()
         self.remove_page(page.container)
         del self.pages[token]
 
@@ -492,6 +492,14 @@ class Search(UserInterface):
 
         if self.grouping_mode is not None:
             self.tree_view.set_model(self.resultsmodel)
+
+    def clear(self):
+
+        self.clear_model(stored_results=True)
+
+        for menu in (self.popup_menu_users, self.popup_menu_copy, self.popup_menu, self.tab_menu,
+                     self.tree_view.column_menu):
+            menu.clear()
 
     def set_label(self, label):
         self.tab_menu.set_parent(label)

@@ -132,7 +132,7 @@ class UserBrowses(IconNotebook):
         if page is None:
             return
 
-        page.clear_model()
+        page.clear()
         self.remove_page(page.container)
         del self.pages[user]
 
@@ -225,9 +225,9 @@ class UserBrowse(UserInterface):
         self.folder_tree_view.set_model(self.dir_store)
 
         # Popup Menu (folder_tree_view)
-        self.user_popup = popup = UserPopupMenu(self.frame, None, self.on_tab_popup)
-        popup.setup_user_menu(user, page="userbrowse")
-        popup.add_items(
+        self.user_popup_menu = UserPopupMenu(self.frame, None, self.on_tab_popup)
+        self.user_popup_menu.setup_user_menu(user, page="userbrowse")
+        self.user_popup_menu.add_items(
             ("", None),
             ("#" + _("_Save Shares List to Disk"), self.on_save),
             ("#" + _("Close All Tabs…"), self.on_close_all_tabs),
@@ -247,7 +247,7 @@ class UserBrowse(UserInterface):
                 ("#" + _("Copy _Folder Path"), self.on_copy_folder_path),
                 ("#" + _("Copy _URL"), self.on_copy_dir_url),
                 ("", None),
-                (">" + _("User"), self.user_popup)
+                (">" + _("User"), self.user_popup_menu)
             )
         else:
             self.folder_popup_menu.add_items(
@@ -261,7 +261,7 @@ class UserBrowse(UserInterface):
                 ("#" + _("Copy _Folder Path"), self.on_copy_folder_path),
                 ("#" + _("Copy _URL"), self.on_copy_dir_url),
                 ("", None),
-                (">" + _("User"), self.user_popup)
+                (">" + _("User"), self.user_popup_menu)
             )
 
         # Setup file_list_view
@@ -313,7 +313,7 @@ class UserBrowse(UserInterface):
                 ("#" + _("Copy _File Path"), self.on_copy_file_path),
                 ("#" + _("Copy _URL"), self.on_copy_url),
                 ("", None),
-                (">" + _("User"), self.user_popup)
+                (">" + _("User"), self.user_popup_menu)
             )
         else:
             self.file_popup_menu.add_items(
@@ -330,7 +330,7 @@ class UserBrowse(UserInterface):
                 ("#" + _("Copy _File Path"), self.on_copy_file_path),
                 ("#" + _("Copy _URL"), self.on_copy_url),
                 ("", None),
-                (">" + _("User"), self.user_popup)
+                (">" + _("User"), self.user_popup_menu)
             )
 
         # Key Bindings (folder_tree_view)
@@ -379,8 +379,16 @@ class UserBrowse(UserInterface):
         self.update_visuals()
         self.set_in_progress()
 
+    def clear(self):
+
+        self.clear_model()
+
+        for menu in (self.user_popup_menu, self.folder_popup_menu, self.file_popup_menu,
+                     self.folder_tree_view.column_menu, self.file_list_view.column_menu):
+            menu.clear()
+
     def set_label(self, label):
-        self.user_popup.set_parent(label)
+        self.user_popup_menu.set_parent(label)
 
     def update_visuals(self):
         for widget in self.__dict__.values():
@@ -748,7 +756,7 @@ class UserBrowse(UserInterface):
         self.set_directory(iterator.user_data)
 
     def on_folder_popup_menu(self, menu, _treeview):
-        self.user_popup.toggle_user_items()
+        self.user_popup_menu.toggle_user_items()
         menu.actions[_("F_ile Properties")].set_enabled(bool(self.shares.get(self.selected_folder)))
 
     def on_download_directory(self, *_args):
@@ -985,7 +993,7 @@ class UserBrowse(UserInterface):
         self.select_files()
         menu.set_num_selected_files(len(self.selected_files))
 
-        self.user_popup.toggle_user_items()
+        self.user_popup_menu.toggle_user_items()
 
     def on_download_files(self, *_args, prefix=""):
 
@@ -1272,7 +1280,7 @@ class UserBrowse(UserInterface):
             self.expand_icon.set_property("icon-name", "go-down-symbolic")
 
     def on_tab_popup(self, *_args):
-        self.user_popup.toggle_user_items()
+        self.user_popup_menu.toggle_user_items()
 
     def on_search(self, *_args):
         self.find_search_matches()
