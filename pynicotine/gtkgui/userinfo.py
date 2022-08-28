@@ -217,9 +217,9 @@ class UserInfo(UserInterface):
         )
 
         # Popup menus
-        self.user_popup = popup = UserPopupMenu(self.frame, None, self.on_tab_popup)
-        popup.setup_user_menu(user, page="userinfo")
-        popup.add_items(
+        self.user_popup_menu = UserPopupMenu(self.frame, None, self.on_tab_popup)
+        self.user_popup_menu.setup_user_menu(user, page="userinfo")
+        self.user_popup_menu.add_items(
             ("", None),
             ("#" + _("Close All Tabs…"), self.on_close_all_tabs),
             ("#" + _("_Close Tab"), self.on_close)
@@ -231,14 +231,14 @@ class UserInfo(UserInterface):
                     ("", None),
                     ("#" + _("_Search for Item"), self.frame.interests.on_recommend_search, list_view))
 
-        popup = PopupMenu(self.frame, self.likes_list_view.widget, self.on_popup_likes_menu)
-        popup.add_items(*get_interest_items(self.likes_list_view))
+        self.likes_popup_menu = PopupMenu(self.frame, self.likes_list_view.widget, self.on_popup_likes_menu)
+        self.likes_popup_menu.add_items(*get_interest_items(self.likes_list_view))
 
-        popup = PopupMenu(self.frame, self.dislikes_list_view.widget, self.on_popup_dislikes_menu)
-        popup.add_items(*get_interest_items(self.dislikes_list_view))
+        self.dislikes_popup_menu = PopupMenu(self.frame, self.dislikes_list_view.widget, self.on_popup_dislikes_menu)
+        self.dislikes_popup_menu.add_items(*get_interest_items(self.dislikes_list_view))
 
-        popup = PopupMenu(self.frame, self.picture_view)
-        popup.add_items(
+        self.picture_popup_menu = PopupMenu(self.frame, self.picture_view)
+        self.picture_popup_menu.add_items(
             ("#" + _("Zoom 1:1"), self.make_zoom_normal),
             ("#" + _("Zoom In"), self.make_zoom_in),
             ("#" + _("Zoom Out"), self.make_zoom_out),
@@ -256,8 +256,12 @@ class UserInfo(UserInterface):
         self.dislikes_list_view.clear()
         self.load_picture(None)
 
+        for menu in (self.user_popup_menu, self.likes_popup_menu, self.dislikes_popup_menu,
+                     self.likes_list_view.column_menu, self.dislikes_list_view.column_menu, self.picture_popup_menu):
+            menu.clear()
+
     def set_label(self, label):
-        self.user_popup.set_parent(label)
+        self.user_popup_menu.set_parent(label)
 
     def save_columns(self):
         # Unused
@@ -463,7 +467,7 @@ class UserInfo(UserInterface):
     """ Callbacks """
 
     def on_tab_popup(self, *_args):
-        self.user_popup.toggle_user_items()
+        self.user_popup_menu.toggle_user_items()
 
     def on_popup_likes_menu(self, menu, *_args):
         self.frame.interests.toggle_menu_items(menu, self.likes_list_view, column=0)

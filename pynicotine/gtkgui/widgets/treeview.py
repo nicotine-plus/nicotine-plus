@@ -60,7 +60,8 @@ class TreeView:
         self.initialise_columns(columns)
 
         Accelerator("<Primary>c", self.widget, self.on_copy_cell_data_accelerator)
-        self.widget.column_menu = PopupMenu(self.frame, self.widget, callback=self._press_header, connect_events=False)
+        self.column_menu = self.widget.column_menu = PopupMenu(self.frame, self.widget, callback=self._press_header,
+                                                               connect_events=False)
 
         if multi_select:
             self.widget.set_rubber_banding(True)

@@ -211,8 +211,8 @@ class PopupMenu:
         self.submenus.clear()
         self.model.remove_all()
 
-        for action in self.actions:
-            self.frame.window.remove_action(action)
+        for action in self.actions.values():
+            self.frame.window.remove_action(action.get_name())
 
         self.actions.clear()
         self.items.clear()

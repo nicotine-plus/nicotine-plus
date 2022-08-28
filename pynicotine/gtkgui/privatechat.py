@@ -251,8 +251,8 @@ class PrivateChat(UserInterface):
                 ("#" + _("_Close Tab"), self.on_close)
             )
 
-        popup = PopupMenu(self.frame, self.chat_view.textview, self.on_popup_menu_chat)
-        popup.add_items(
+        self.popup_menu = PopupMenu(self.frame, self.chat_view.textview, self.on_popup_menu_chat)
+        self.popup_menu.add_items(
             ("#" + _("Find…"), self.on_find_chat_log),
             ("", None),
             ("#" + _("Copy"), self.chat_view.on_copy_text),
@@ -322,8 +322,12 @@ class PrivateChat(UserInterface):
         self.update_local_username_tag(status=UserStatus.OFFLINE)
 
     def clear(self):
+
         self.chat_view.clear()
         self.frame.notifications.clear("private", self.user)
+
+        for menu in (self.popup_menu_user_chat, self.popup_menu_user_tab, self.popup_menu):
+            menu.clear()
 
     def set_label(self, label):
         self.popup_menu_user_tab.set_parent(label)
