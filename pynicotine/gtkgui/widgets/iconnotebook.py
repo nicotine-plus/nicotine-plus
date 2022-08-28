@@ -90,15 +90,9 @@ class TabLabel(Gtk.Box):
 
         if GTK_API_VERSION >= 4:
             self.close_button = Gtk.Button.new_from_icon_name("window-close-symbolic")
+            self.close_button.is_close_button = True
+            self.close_button.get_child().is_close_button = True
             self.append(self.close_button)  # pylint: disable=no-member
-
-            # GTK 4 workaround to prevent notebook tabs from being activated when pressing close button
-            gesture_click = Gtk.GestureClick()
-            gesture_click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
-            gesture_click.connect(
-                "pressed", lambda controller, *args: controller.set_state(Gtk.EventSequenceState.CLAIMED))
-            self.close_button.add_controller(gesture_click)
-
         else:
             self.close_button = Gtk.Button.new_from_icon_name("window-close-symbolic",
                                                               Gtk.IconSize.BUTTON)  # pylint: disable=no-member
@@ -266,21 +260,24 @@ class IconNotebook:
             self.unread_button.set_has_frame(False)                        # pylint: disable=no-member
             self.unread_button.set_icon_name("emblem-important-symbolic")  # pylint: disable=no-member
 
-            # GTK 4 workaround to prevent notebook tabs from being activated when pressing close button
-            controllers = self.widget.observe_controllers()
-
-            for num in range(controllers.get_n_items()):
-                item = controllers.get_item(num)
-
-                if isinstance(item, Gtk.GestureClick):
-                    item.set_propagation_phase(Gtk.PropagationPhase.BUBBLE)
-                    break
-
             self.scroll_controller = Gtk.EventControllerScroll(flags=Gtk.EventControllerScrollFlags.BOTH_AXES)
             self.scroll_controller.connect("scroll", self.on_tab_scroll)
 
             tab_bar = self.widget.get_first_child()
             tab_bar.add_controller(self.scroll_controller)
+
+            # GTK 4 workaround to prevent notebook tabs from being activated when pressing close button
+            # https://gitlab.gnome.org/GNOME/gtk/-/issues/4046
+
+            self.close_button_pressed = False
+
+            self.gesture_click = Gtk.GestureClick()
+            self.gesture_click.set_button(Gdk.BUTTON_PRIMARY)
+            self.gesture_click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+            self.gesture_click.connect("pressed", self.on_notebook_click_pressed)
+            self.gesture_click.connect("released", self.on_notebook_click_released)
+
+            self.widget.add_controller(self.gesture_click)
 
         else:
             if parent_page is not None:
@@ -293,6 +290,8 @@ class IconNotebook:
             self.widget.add_events(Gdk.EventMask.SCROLL_MASK | Gdk.EventMask.SMOOTH_SCROLL_MASK)
             self.widget.connect("scroll-event", self.on_tab_scroll_event)
 
+            self.widget.popup_enable()
+
         style_context = self.unread_button.get_style_context()
         for style_class in ("circular", "flat"):
             style_context.add_class(style_class)
@@ -302,8 +301,6 @@ class IconNotebook:
         self.popup_menu_unread = PopupMenu(self.frame, connect_events=False)
         self.unread_button.set_menu_model(self.popup_menu_unread.model)
         self.unread_pages = []
-
-        self.widget.popup_enable()
 
     """ Tabs """
 
@@ -611,3 +608,33 @@ class IconNotebook:
     def on_tab_popup(self, widget, page):
         # Dummy implementation
         pass
+
+    """ Signals (GTK 4) """
+
+    def on_notebook_click_pressed(self, controller, _num_p, pressed_x, pressed_y):
+
+        widget = self.widget.pick(pressed_x, pressed_y, Gtk.PickFlags.DEFAULT)
+
+        if not hasattr(widget, "is_close_button"):
+            return False
+
+        self.close_button_pressed = True
+        controller.set_state(Gtk.EventSequenceState.CLAIMED)
+        return True
+
+    def on_notebook_click_released(self, _controller, _num_p, pressed_x, pressed_y):
+
+        if not self.close_button_pressed:
+            return False
+
+        widget = self.widget.pick(pressed_x, pressed_y, Gtk.PickFlags.DEFAULT)
+        self.close_button_pressed = False
+
+        if not hasattr(widget, "is_close_button"):
+            return False
+
+        if isinstance(widget, Gtk.Image):
+            widget = widget.get_parent()
+
+        widget.emit("clicked")
+        return True
