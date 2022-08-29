@@ -630,6 +630,9 @@ class Transfers:
             download.status = "Connection timeout"
             download.token = None
 
+            if download in self.transfer_request_times:
+                del self.transfer_request_times[download]
+
             self.update_download(download)
             self.core.watch_user(username)
             break
@@ -654,6 +657,9 @@ class Transfers:
             upload.status = "Connection timeout"
             upload.token = None
             upload.queue_position = 0
+
+            if upload in self.transfer_request_times:
+                del self.transfer_request_times[upload]
 
             self.update_upload(upload)
 
