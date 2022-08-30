@@ -442,7 +442,7 @@ class NicotineCore:
 
         for i in msg.msgs:
             if i.__class__ in (slskmessages.TransferRequest, slskmessages.FileUploadInit):
-                self.transfers.get_cant_connect_upload(i.token)
+                self.transfers.get_cant_connect_upload(msg.user, i.token)
 
             elif i.__class__ is slskmessages.QueueUpload:
                 self.transfers.get_cant_connect_queue_file(msg.user, i.file)
