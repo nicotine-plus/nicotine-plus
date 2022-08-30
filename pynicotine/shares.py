@@ -904,19 +904,19 @@ class Shares:
             try:
                 if msg.dir in shares:
                     self.queue.append(slskmessages.FolderContentsResponse(
-                        init=init, directory=msg.dir, shares=shares[msg.dir]))
+                        init=init, directory=msg.dir, token=msg.token, shares=shares[msg.dir]))
                     return
 
                 if msg.dir.rstrip('\\') in shares:
                     self.queue.append(slskmessages.FolderContentsResponse(
-                        init=init, directory=msg.dir, shares=shares[msg.dir.rstrip('\\')]))
+                        init=init, directory=msg.dir, token=msg.token, shares=shares[msg.dir.rstrip('\\')]))
                     return
 
             except Exception as error:
                 log.add(_("Failed to fetch the shared folder %(folder)s: %(error)s"),
                         {"folder": msg.dir, "error": error})
 
-            self.queue.append(slskmessages.FolderContentsResponse(init=init, directory=msg.dir))
+            self.queue.append(slskmessages.FolderContentsResponse(init=init, directory=msg.dir, token=msg.token))
 
     """ Quit """
 
