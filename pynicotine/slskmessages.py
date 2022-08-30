@@ -2623,20 +2623,20 @@ class FolderContentsRequest(PeerMessage):
     """ Peer code: 36 """
     """ We ask the peer to send us the contents of a single folder. """
 
-    def __init__(self, init=None, directory=None):
+    def __init__(self, init=None, directory=None, token=None):
         self.init = init
         self.dir = directory
-        self.something = None
+        self.token = token
 
     def make_network_message(self):
         msg = bytearray()
-        msg.extend(self.pack_uint32(1))
+        msg.extend(self.pack_uint32(self.token))
         msg.extend(self.pack_string(self.dir, latin1=True))
 
         return msg
 
     def parse_network_message(self, message):
-        pos, self.something = self.unpack_uint32(message)
+        pos, self.token = self.unpack_uint32(message)
         pos, self.dir = self.unpack_string(message, pos)
 
 
@@ -2645,9 +2645,10 @@ class FolderContentsResponse(PeerMessage):
     """ A peer responds with the contents of a particular folder
     (with all subfolders) after we've sent a FolderContentsRequest. """
 
-    def __init__(self, init=None, directory=None, shares=None):
+    def __init__(self, init=None, directory=None, token=None, shares=None):
         self.init = init
         self.dir = directory
+        self.token = token
         self.list = shares
 
     def parse_network_message(self, message):
@@ -2656,43 +2657,41 @@ class FolderContentsResponse(PeerMessage):
 
     def _parse_network_message(self, message):
         shares = {}
-        pos, nfolders = self.unpack_uint32(message)
+        pos, self.token = self.unpack_uint32(message)
+        pos, folder = self.unpack_string(message, pos)
 
-        for _ in range(nfolders):
-            pos, folder = self.unpack_string(message, pos)
+        shares[folder] = {}
 
-            shares[folder] = {}
+        pos, ndir = self.unpack_uint32(message, pos)
 
-            pos, ndir = self.unpack_uint32(message, pos)
+        for _ in range(ndir):
+            pos, directory = self.unpack_string(message, pos)
+            directory = directory.replace('/', '\\')
+            pos, nfiles = self.unpack_uint32(message, pos)
 
-            for _ in range(ndir):
-                pos, directory = self.unpack_string(message, pos)
-                directory = directory.replace('/', '\\')
-                pos, nfiles = self.unpack_uint32(message, pos)
+            shares[folder][directory] = []
 
-                shares[folder][directory] = []
+            for _ in range(nfiles):
+                pos, code = self.unpack_uint8(message, pos)
+                pos, name = self.unpack_string(message, pos)
+                pos, size = self.unpack_uint64(message, pos)
+                pos, ext = self.unpack_string(message, pos)
+                pos, numattr = self.unpack_uint32(message, pos)
 
-                for _ in range(nfiles):
-                    pos, code = self.unpack_uint8(message, pos)
-                    pos, name = self.unpack_string(message, pos)
-                    pos, size = self.unpack_uint64(message, pos)
-                    pos, ext = self.unpack_string(message, pos)
-                    pos, numattr = self.unpack_uint32(message, pos)
+                attrs = {}
 
-                    attrs = {}
+                for _ in range(numattr):
+                    pos, attrnum = self.unpack_uint32(message, pos)
+                    pos, attr = self.unpack_uint32(message, pos)
+                    attrs[str(attrnum)] = attr
 
-                    for _ in range(numattr):
-                        pos, attrnum = self.unpack_uint32(message, pos)
-                        pos, attr = self.unpack_uint32(message, pos)
-                        attrs[str(attrnum)] = attr
-
-                    shares[folder][directory].append((code, name, size, ext, attrs))
+                shares[folder][directory].append((code, name, size, ext, attrs))
 
         self.list = shares
 
     def make_network_message(self):
         msg = bytearray()
-        msg.extend(self.pack_uint32(1))
+        msg.extend(self.pack_uint32(self.token))
         msg.extend(self.pack_string(self.dir))
         msg.extend(self.pack_uint32(1))
         msg.extend(self.pack_string(self.dir))

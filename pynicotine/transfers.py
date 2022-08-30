@@ -1558,7 +1558,7 @@ class Transfers:
     """ Transfer Actions """
 
     def get_folder(self, user, folder):
-        self.core.send_message_to_peer(user, slskmessages.FolderContentsRequest(directory=folder))
+        self.core.send_message_to_peer(user, slskmessages.FolderContentsRequest(directory=folder, token=1))
 
     def get_file(self, user, filename, path="", transfer=None, size=0, bitrate=None, length=None, ui_callback=True):
 
