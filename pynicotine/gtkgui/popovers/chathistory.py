@@ -24,6 +24,7 @@ from collections import deque
 
 from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import TreeView
@@ -36,7 +37,7 @@ class ChatHistory(UserInterface):
     def __init__(self, frame, core):
 
         super().__init__("ui/popovers/chathistory.ui")
-        self.list_container, self.popover = self.widgets
+        self.list_container, self.popover, self.search_entry = self.widgets
 
         self.frame = frame
         self.core = core
@@ -49,7 +50,9 @@ class ChatHistory(UserInterface):
                 {"column_id": "latest_message", "column_type": "text", "title": _("Latest Message"), "sort_column": 1}
             ]
         )
+        self.list_view.set_search_entry(self.search_entry)
 
+        Accelerator("<Primary>f", self.popover, self.on_search_accelerator)
         CompletionEntry(frame.private_entry, self.list_view.model, column=0)
 
         if GTK_API_VERSION >= 4:
@@ -110,3 +113,9 @@ class ChatHistory(UserInterface):
 
         self.core.privatechats.show_user(username)
         self.popover.hide()
+
+    def on_search_accelerator(self, *_args):
+        """ Ctrl+F: Search users """
+
+        self.search_entry.grab_focus()
+        return True

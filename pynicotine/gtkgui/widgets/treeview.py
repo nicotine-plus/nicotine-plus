@@ -376,6 +376,9 @@ class TreeView:
 
         self.widget.set_model(self.model)
 
+    def set_search_entry(self, entry):
+        self.widget.set_search_entry(entry)
+
     def show_tooltip(self, pos_x, pos_y, tooltip, sourcecolumn, column_titles, text_function, strip_prefix=""):
 
         try:
