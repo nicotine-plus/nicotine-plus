@@ -850,19 +850,19 @@ class Transfers:
                 path = os.path.join(self.config.sections["transfers"]["uploaddir"], user, parentdir)
 
             transfer = Transfer(user=user, filename=filename, path=path, status="Queued",
-                                size=size, token=msg.token)
+                                size=size, token=token)
             self.downloads.appendleft(transfer)
             self.update_download(transfer)
             self.core.watch_user(user)
 
-            return slskmessages.TransferResponse(allowed=False, reason="Queued", token=transfer.token)
+            return slskmessages.TransferResponse(allowed=False, reason="Queued", token=token)
 
         log.add_transfer("Denied file request: User %(user)s, %(msg)s", {
             'user': user,
             'msg': str(vars(msg))
         })
 
-        return slskmessages.TransferResponse(allowed=False, reason=cancel_reason, token=msg.token)
+        return slskmessages.TransferResponse(allowed=False, reason=cancel_reason, token=token)
 
     def transfer_request_uploads(self, msg):
         """ Remote peer is requesting to download a file through your upload queue.
@@ -871,9 +871,10 @@ class Transfers:
 
         user = msg.init.target_user
         filename = msg.file
+        token = msg.token
 
         log.add_transfer("Received legacy upload request %(token)s for file %(filename)s from user %(user)s", {
-            "token": msg.token,
+            "token": token,
             "filename": filename,
             "user": user
         })
@@ -884,7 +885,7 @@ class Transfers:
 
         if not allowed:
             if reason:
-                return slskmessages.TransferResponse(allowed=False, reason=reason, token=msg.token)
+                return slskmessages.TransferResponse(allowed=False, reason=reason, token=token)
 
             return None
 
@@ -908,18 +909,18 @@ class Transfers:
             self.append_upload(user, filename, transfer)
             self.update_upload(transfer)
 
-            return slskmessages.TransferResponse(allowed=False, reason="Queued", token=msg.token)
+            return slskmessages.TransferResponse(allowed=False, reason="Queued", token=token)
 
         # All checks passed, starting a new upload.
         size = self.get_file_size(real_path)
         transfer = Transfer(user=user, filename=filename, path=os.path.dirname(real_path),
-                            status="Getting status", token=msg.token, size=size)
+                            status="Getting status", token=token, size=size)
 
         self.transfer_request_times[transfer] = time.time()
         self.append_upload(user, filename, transfer)
         self.update_upload(transfer)
 
-        return slskmessages.TransferResponse(allowed=True, token=msg.token, filesize=size)
+        return slskmessages.TransferResponse(allowed=True, token=token, filesize=size)
 
     def transfer_response(self, msg):
         """ Peer code: 41 """
@@ -1152,8 +1153,7 @@ class Transfers:
                     if download.size > offset:
                         download.status = "Transferring"
                         self.queue.append(slskmessages.DownloadFile(
-                            init=msg.init, token=download.token, file=file_handle,
-                            leftbytes=(download.size - offset)
+                            init=msg.init, token=token, file=file_handle, leftbytes=(download.size - offset)
                         ))
                         self.queue.append(slskmessages.FileOffset(init=msg.init, offset=offset))
 
