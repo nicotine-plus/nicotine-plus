@@ -937,7 +937,9 @@ class SlskProtoThread(threading.Thread):
                 self.total_download_bandwidth = 0
 
             if callback:
-                self._callback_msgs.append(DownloadConnClose(conn_obj.fileinit.token))
+                self._callback_msgs.append(DownloadConnClose(
+                    user=conn_obj.init.target_user, token=conn_obj.fileinit.token
+                ))
 
             self._calc_download_limit()
 
@@ -949,7 +951,9 @@ class SlskProtoThread(threading.Thread):
 
             if callback:
                 timed_out = (time.time() - conn_obj.lastactive) > self.CONNECTION_MAX_IDLE
-                self._callback_msgs.append(UploadConnClose(conn_obj.fileinit.token, timed_out))
+                self._callback_msgs.append(UploadConnClose(
+                    user=conn_obj.init.target_user, token=conn_obj.fileinit.token, timed_out=timed_out
+                ))
 
             self._calc_upload_limit_function()
 
@@ -1597,7 +1601,7 @@ class SlskProtoThread(threading.Thread):
                     self.modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
 
                 except (OSError, ValueError) as error:
-                    self._callback_msgs.append(UploadFileError(conn_obj.sock, conn_obj.fileupl.file, error))
+                    self._callback_msgs.append(UploadFileError(conn_obj.fileupl.token, conn_obj.fileupl.file, error))
                     self.close_connection(self._conns, conn_obj.sock)
 
                 conn_obj.fileupl.offset = msg.offset
@@ -1817,11 +1821,11 @@ class SlskProtoThread(threading.Thread):
             self.manual_server_disconnect = True
             self.server_disconnect()
 
-        elif msg_class is DownloadFile and msg_obj.sock in self._conns:
-            self._conns[msg_obj.sock].filedown = msg_obj
+        elif msg_class is DownloadFile and msg_obj.init.sock in self._conns:
+            self._conns[msg_obj.init.sock].filedown = msg_obj
 
-        elif msg_class is UploadFile and msg_obj.sock in self._conns:
-            self._conns[msg_obj.sock].fileupl = msg_obj
+        elif msg_class is UploadFile and msg_obj.init.sock in self._conns:
+            self._conns[msg_obj.init.sock].fileupl = msg_obj
 
         elif msg_class is SetDownloadLimit:
             self._download_limit = msg_obj.limit * 1024

@@ -637,17 +637,17 @@ class Transfers:
             self.core.watch_user(username)
             break
 
-    def get_cant_connect_upload(self, token):
+    def get_cant_connect_upload(self, username, token):
         """ We can't connect to the user, either way (TransferRequest, FileUploadInit). """
 
         for upload in self.uploads:
-            if upload.token != token:
+            if upload.token != token or upload.user != username:
                 continue
 
             log.add_transfer("Upload attempt for file %(filename)s with token %(token)s to user %(user)s timed out", {
                 "filename": upload.filename,
                 "token": token,
-                "user": upload.user
+                "user": username
             })
 
             if upload.sock is not None:
@@ -663,7 +663,7 @@ class Transfers:
 
             self.update_upload(upload)
 
-            self.core.watch_user(upload.user)
+            self.core.watch_user(username)
             self.check_upload_queue()
             return
 
@@ -925,6 +925,7 @@ class Transfers:
         """ Peer code: 41 """
         """ Received a response to the file request from the peer """
 
+        username = msg.init.target_user
         token = msg.token
         reason = msg.reason
 
@@ -942,7 +943,7 @@ class Transfers:
                 reason = "Cancelled"
 
             for upload in self.uploads:
-                if upload.token != token:
+                if upload.token != token or upload.user != username:
                     continue
 
                 if upload.sock is not None:
@@ -971,7 +972,7 @@ class Transfers:
             return
 
         for upload in self.uploads:
-            if upload.token != token:
+            if upload.token != token or upload.user != username:
                 continue
 
             if upload.sock is not None:
@@ -1018,10 +1019,11 @@ class Transfers:
     def download_file_error(self, msg):
         """ Networking thread encountered a local file error for download """
 
+        username = msg.user
         token = msg.token
 
         for download in self.downloads:
-            if download.token != token:
+            if download.token != token or download.user != username:
                 continue
 
             self.abort_transfer(download)
@@ -1034,10 +1036,11 @@ class Transfers:
     def upload_file_error(self, msg):
         """ Networking thread encountered a local file error for upload """
 
+        username = msg.user
         token = msg.token
 
         for upload in self.uploads:
-            if upload.token != token:
+            if upload.token != token or upload.user != username:
                 continue
 
             self.abort_transfer(upload)
@@ -1051,13 +1054,13 @@ class Transfers:
     def file_download_init(self, msg):
         """ A peer is requesting to start uploading a file to us """
 
+        username = msg.init.target_user
         token = msg.token
 
         for download in self.downloads:
-            if download.token != token:
+            if download.token != token or download.user != username:
                 continue
 
-            username = download.user
             filename = download.filename
 
             log.add_transfer(("Received file download init with token %(token)s for file %(filename)s "
@@ -1148,7 +1151,7 @@ class Transfers:
                     if download.size > offset:
                         download.status = "Transferring"
                         self.queue.append(slskmessages.DownloadFile(
-                            sock=download.sock, token=download.token, file=file_handle,
+                            init=msg.init, token=download.token, file=file_handle,
                             leftbytes=(download.size - offset)
                         ))
                         self.queue.append(slskmessages.FileOffset(init=msg.init, offset=offset))
@@ -1173,13 +1176,13 @@ class Transfers:
     def file_upload_init(self, msg):
         """ We are requesting to start uploading a file to a peer """
 
+        username = msg.init.target_user
         token = msg.token
 
         for upload in self.uploads:
-            if upload.token != token:
+            if upload.token != token or upload.user != username:
                 continue
 
-            username = upload.user
             filename = upload.filename
 
             log.add_transfer("Initializing upload with token %(token)s for file %(filename)s to user %(user)s", {
@@ -1241,7 +1244,7 @@ class Transfers:
                 if upload.size > 0:
                     upload.status = "Transferring"
                     self.queue.append(slskmessages.UploadFile(
-                        sock=upload.sock, token=upload.token, file=file_handle, size=upload.size
+                        init=msg.init, token=token, file=file_handle, size=upload.size
                     ))
 
                 else:
@@ -1346,10 +1349,11 @@ class Transfers:
     def file_download(self, msg):
         """ A file download is in progress """
 
+        username = msg.init.target_user
         token = msg.token
 
         for download in self.downloads:
-            if download.token != token:
+            if download.token != token or download.user != username:
                 continue
 
             if download in self.transfer_request_times:
@@ -1381,10 +1385,11 @@ class Transfers:
     def file_upload(self, msg):
         """ A file upload is in progress """
 
+        username = msg.init.target_user
         token = msg.token
 
         for upload in self.uploads:
-            if upload.token != token:
+            if upload.token != token or upload.user != username:
                 continue
 
             if upload in self.transfer_request_times:
@@ -1419,10 +1424,11 @@ class Transfers:
     def download_conn_close(self, msg):
         """ The remote peer has closed a file transfer connection """
 
+        username = msg.user
         token = msg.token
 
         for download in self.downloads:
-            if download.token != token:
+            if download.token != token or download.user != username:
                 continue
 
             if download.current_byte_offset is not None and download.current_byte_offset >= download.size:
@@ -1443,12 +1449,13 @@ class Transfers:
     def upload_conn_close(self, msg):
         """ The remote peer has closed a file transfer connection """
 
+        username = msg.user
         token = msg.token
         timed_out = msg.timed_out
 
         # We need a copy due to upload auto-clearing modifying the deque during iteration
         for upload in self.uploads.copy():
-            if upload.token != token:
+            if upload.token != token or upload.user != username:
                 continue
 
             if not timed_out and upload.current_byte_offset is not None and upload.current_byte_offset >= upload.size:

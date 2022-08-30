@@ -199,10 +199,10 @@ class DownloadFile(InternalMessage):
     """ Sent by networking thread to indicate file transfer progress.
     Sent by UI to pass the file object to write. """
 
-    __slots__ = ("sock", "token", "file", "leftbytes")
+    __slots__ = ("init", "token", "file", "leftbytes")
 
-    def __init__(self, sock=None, token=None, file=None, leftbytes=None):
-        self.sock = sock
+    def __init__(self, init=None, token=None, file=None, leftbytes=None):
+        self.init = init
         self.token = token
         self.file = file
         self.leftbytes = leftbytes
@@ -210,10 +210,10 @@ class DownloadFile(InternalMessage):
 
 class UploadFile(InternalMessage):
 
-    __slots__ = ("sock", "token", "file", "size", "sentbytes", "offset")
+    __slots__ = ("init", "token", "file", "size", "sentbytes", "offset")
 
-    def __init__(self, sock=None, token=None, file=None, size=None, sentbytes=0, offset=None):
-        self.sock = sock
+    def __init__(self, init=None, token=None, file=None, size=None, sentbytes=0, offset=None):
+        self.init = init
         self.token = token
         self.file = file
         self.size = size
@@ -225,9 +225,10 @@ class DownloadFileError(InternalMessage):
     """ Sent by networking thread to indicate that a file error occurred during
     filetransfer. """
 
-    __slots__ = ("token", "file", "error")
+    __slots__ = ("user", "token", "file", "error")
 
-    def __init__(self, token=None, file=None, error=None):
+    def __init__(self, user=None, token=None, file=None, error=None):
+        self.user = user
         self.token = token
         self.file = file
         self.error = error
@@ -240,17 +241,19 @@ class UploadFileError(DownloadFileError):
 class DownloadConnClose(InternalMessage):
     """ Sent by networking thread to indicate a file transfer connection has been closed """
 
-    __slots__ = ("token",)
+    __slots__ = ("user", "token")
 
-    def __init__(self, token=None):
+    def __init__(self, user=None, token=None):
+        self.user = user
         self.token = token
 
 
 class UploadConnClose(InternalMessage):
 
-    __slots__ = ("token", "timed_out")
+    __slots__ = ("user", "token", "timed_out")
 
-    def __init__(self, token=None, timed_out=None):
+    def __init__(self, user=None, token=None, timed_out=None):
+        self.user = user
         self.token = token
         self.timed_out = timed_out
 
