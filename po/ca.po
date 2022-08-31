@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-08-31 18:51+0300\n"
-"PO-Revision-Date: 2022-08-31 16:38+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2022-08-31 18:23+0000\n"
+"Last-Translator: Maite Guix <maite.guix@gmail.com>\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ca/>\n"
 "Language: ca\n"
@@ -58,9 +58,9 @@ msgid "Soulseek;Nicotine;sharing;music;P2P;peer-to-peer;GTK;"
 msgstr "Soulseek; Nicotine;compartir;música; P2P;d'igual a igual; GTK;"
 
 #: pynicotine/__init__.py:29
-#, fuzzy, python-format
+#, python-format
 msgid "Website: %s"
-msgstr "Executat: %s"
+msgstr "Lloc web: %s"
 
 #: pynicotine/__init__.py:35
 msgid "show this help message and exit"
@@ -1445,7 +1445,7 @@ msgid "File Properties (%(num)i of %(total)i  /  %(size)s)"
 msgstr "Propietats del fitxer (%(num)i de %(total)i / %(size)s)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:98
-#, fuzzy, python-format
+#, python-format
 msgid "<b>%(ip)s</b>, port %(port)s"
 msgstr "<b>%(ip)s</b>, port %(port)s"
 
@@ -1608,9 +1608,8 @@ msgstr ""
 "principi i al final de les línies)."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1200
-#, fuzzy
 msgid "Edit Censored Pattern"
-msgstr "Patrons censurats"
+msgstr "Editar el patró censurat"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1232
 #, fuzzy
