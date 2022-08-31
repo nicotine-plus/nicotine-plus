@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-08-31 21:23+0300\n"
-"PO-Revision-Date: 2022-08-31 18:23+0000\n"
+"PO-Revision-Date: 2022-08-31 20:33+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -4948,7 +4948,6 @@ msgstr ""
 "altijd Kb/s (Kilobits per seconde)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:325
-#, fuzzy
 msgid ""
 "Like File Size (above), operators =, !, <, and > can be used, and multiple "
 "conditions can be specified with | pipes:\n"
@@ -4956,24 +4955,23 @@ msgid ""
 "    with a maximum bitrate of 1411 Kb/s."
 msgstr ""
 "Net als bij Bestandsgrootte (hierboven), kunnen operators =, !, < en > "
-"worden gebruikt en kunnen meerdere voorwaarden worden opgegeven met | "
-"pijpen:\n"
+"worden gebruikt en kunnen meerdere voorwaarden worden opgegeven met | pijpen:"
+"\n"
 "    >256|<1411 om bestanden te tonen met een bitrate van minimaal 256 Kb/s\n"
-"    met een maximale bitrate van 1411 Kb/s."
+"    en een maximale bitrate van 1411 Kb/s."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:356
-#, fuzzy
 msgid "Filters files based upon their duration."
-msgstr "Filtert bestanden op bitrate."
+msgstr "Filtert bestanden op basis van hun duur."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:366
-#, fuzzy
 msgid ""
 "By default, files longer than or equal to the entered duration will be "
 "matched, unless an operator (=, !, <, or >) is used."
 msgstr ""
 "Standaard worden bestanden die langer zijn dan of gelijk zijn aan de "
-"ingevoerde duur gematcht, tenzij een operator (=, !, <, of >) wordt gebruikt."
+"ingevoerde duur vergeleken, tenzij een operator (=, !, < of >) wordt "
+"gebruikt."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:376
 #, fuzzy
