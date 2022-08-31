@@ -122,13 +122,14 @@ jobs:
 
       - name: Install dependencies
         run: |
+          brew install python
           python3 packaging/macos/dependencies_core.py
 
       - name: Flake8 linter
-        run: python3 -m flake8
+        run: flake8
 
       - name: Pylint linter
-        run: python3 -m pylint pynicotine test
+        run: pylint pynicotine test
 
       - name: Integration and unit tests
         run: python3 -m unittest
