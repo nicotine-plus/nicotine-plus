@@ -2028,7 +2028,7 @@ class NowPlayingFrame(UserInterface):
 
         elif self.NP_mpris.get_active():
             self.player_replacers = ["$n", "$p", "$a", "$b", "$t", "$y", "$c", "$r", "$k", "$l", "$f"]
-            self.player_input.set_text(_("Client name (e.g. amarok, audacious, exaile) or empty for auto:"))
+            self.player_input.set_text(_("Music player (e.g. amarok, audacious, exaile); leave empty to autodetect:"))
 
         elif self.NP_listenbrainz.get_active():
             self.player_replacers = ["$n", "$t", "$a", "$b"]
