@@ -3,13 +3,13 @@
   <requires lib="gtk+" version="3.0"/>
   <object class="GtkAdjustment" id="adjustment_DownloadSpeed">
     <property name="upper">1000000</property>
-    <property name="step-increment">1</property>
-    <property name="page-increment">10</property>
+    <property name="step-increment">10</property>
+    <property name="page-increment">50</property>
   </object>
   <object class="GtkAdjustment" id="adjustment_DownloadSpeedAlternative">
     <property name="upper">1000000</property>
-    <property name="step-increment">1</property>
-    <property name="page-increment">10</property>
+    <property name="step-increment">10</property>
+    <property name="page-increment">50</property>
   </object>
   <object class="GtkBox" id="Main">
     <property name="visible">True</property>
@@ -24,6 +24,8 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="label" translatable="yes">Downloads</property>
+            <property name="halign">start</property>
+            <property name="selectable">True</property>
             <property name="xalign">0</property>
             <property name="wrap">True</property>
             <attributes>
@@ -89,7 +91,8 @@
                 <property name="label" translatable="yes">Double-click action for downloads:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic_widget">DownloadDoubleClick</property>
+                <property name="wrap-mode">word-char</property>
+                <property name="mnemonic-widget">DownloadDoubleClick</property>
               </object>
             </child>
             <child>
@@ -121,6 +124,8 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="label" translatable="yes">Download Speed Limits</property>
+            <property name="halign">start</property>
+            <property name="selectable">True</property>
             <property name="xalign">0</property>
             <property name="wrap">True</property>
             <attributes>
@@ -139,17 +144,18 @@
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic_widget">DownloadSpeed</property>
+                <property name="wrap-mode">word-char</property>
+                <property name="mnemonic-widget">DownloadSpeed</property>
               </object>
             </child>
             <child>
               <object class="GtkSpinButton" id="DownloadSpeed">
                 <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">Kibibytes (2^10 bytes) per second.</property>
+                <property name="tooltip-text" translatable="yes">Kibibytes (2^10 bytes) per second.</property>
                 <property name="adjustment">adjustment_DownloadSpeed</property>
                 <property name="numeric">True</property>
                 <property name="valign">center</property>
-                <property name="width-chars">8</property>
+                <property name="max-width-chars">8</property>
               </object>
             </child>
           </object>
@@ -165,17 +171,18 @@
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic_widget">DownloadSpeedAlternative</property>
+                <property name="wrap-mode">word-char</property>
+                <property name="mnemonic-widget">DownloadSpeedAlternative</property>
               </object>
             </child>
             <child>
               <object class="GtkSpinButton" id="DownloadSpeedAlternative">
                 <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">Kibibytes (2^10 bytes) per second.</property>
+                <property name="tooltip-text" translatable="yes">Kibibytes (2^10 bytes) per second.</property>
                 <property name="adjustment">adjustment_DownloadSpeedAlternative</property>
                 <property name="numeric">True</property>
                 <property name="valign">center</property>
-                <property name="width-chars">8</property>
+                <property name="max-width-chars">8</property>
               </object>
             </child>
           </object>
@@ -191,6 +198,8 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="label" translatable="yes">Folders</property>
+            <property name="halign">start</property>
+            <property name="selectable">True</property>
             <property name="xalign">0</property>
             <property name="wrap">True</property>
             <attributes>
@@ -209,13 +218,13 @@
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic_widget">IncompleteDir</property>
+                <property name="wrap-mode">word-char</property>
+                <property name="mnemonic-widget">IncompleteDir</property>
               </object>
             </child>
             <child>
               <object class="GtkButton" id="IncompleteDir">
                 <property name="visible">True</property>
-                <property name="tooltip-text" translatable="yes">Where incomplete downloads are temporarily stored.</property>
                 <property name="valign">center</property>
               </object>
             </child>
@@ -232,7 +241,8 @@
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic_widget">DownloadDir</property>
+                <property name="wrap-mode">word-char</property>
+                <property name="mnemonic-widget">DownloadDir</property>
               </object>
             </child>
             <child>
@@ -250,17 +260,17 @@
             <property name="spacing">12</property>
             <child>
               <object class="GtkLabel">
-                <property name="label" translatable="yes">Save buddies&apos; uploads to:</property>
+                <property name="label" translatable="yes">Save buddies' uploads to:</property>
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic_widget">UploadDir</property>
+                <property name="wrap-mode">word-char</property>
+                <property name="mnemonic-widget">UploadDir</property>
               </object>
             </child>
             <child>
               <object class="GtkButton" id="UploadDir">
                 <property name="visible">True</property>
-                <property name="tooltip-text" translatable="yes">Where buddies&apos; uploads will be stored (with a subfolder created for each buddy).</property>
                 <property name="valign">center</property>
               </object>
             </child>
@@ -277,6 +287,8 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="label" translatable="yes">Events</property>
+            <property name="halign">start</property>
+            <property name="selectable">True</property>
             <property name="xalign">0</property>
             <property name="wrap">True</property>
             <attributes>
@@ -300,12 +312,14 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Run command after file download finishes ($ for file path):</property>
                     <property name="wrap">True</property>
-                    <property name="mnemonic_widget">AfterDownload</property>
+                    <property name="wrap-mode">word-char</property>
+                    <property name="mnemonic-widget">AfterDownload</property>
                   </object>
                 </child>
                 <child>
                   <object class="GtkEntry" id="AfterDownload">
                     <property name="visible">True</property>
+                    <property name="width-chars">16</property>
                   </object>
                 </child>
               </object>
@@ -321,12 +335,14 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Run command after folder download finishes ($ for folder path):</property>
                     <property name="wrap">True</property>
-                    <property name="mnemonic_widget">AfterFolder</property>
+                    <property name="wrap-mode">word-char</property>
+                    <property name="mnemonic-widget">AfterFolder</property>
                   </object>
                 </child>
                 <child>
                   <object class="GtkEntry" id="AfterFolder">
                     <property name="visible">True</property>
+                    <property name="width-chars">16</property>
                   </object>
                 </child>
               </object>
@@ -345,9 +361,10 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="label" translatable="yes">Download Filters</property>
+            <property name="halign">start</property>
+            <property name="selectable">True</property>
             <property name="xalign">0</property>
             <property name="wrap">True</property>
-            <property name="mnemonic_widget">FilterView</property>
             <attributes>
               <attribute name="weight" value="bold"/>
             </attributes>
@@ -398,7 +415,7 @@
                     <property name="margin-bottom">6</property>
                     <property name="spacing">6</property>
                     <child>
-                      <object class="GtkButton">
+                      <object class="GtkButton" id="_add_filter_button">
                         <property name="visible">True</property>
                         <property name="tooltip-text" translatable="yes">Add</property>
                         <signal name="clicked" handler="on_add_filter"/>
@@ -418,6 +435,7 @@
                                 <property name="ellipsize">end</property>
                                 <property name="label" translatable="yes">Add…</property>
                                 <property name="use-underline">True</property>
+                                <property name="mnemonic-widget">_add_filter_button</property>
                               </object>
                             </child>
                           </object>
@@ -428,7 +446,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkButton">
+                      <object class="GtkButton" id="_edit_filter_button">
                         <property name="visible">True</property>
                         <property name="tooltip-text" translatable="yes">Edit…</property>
                         <signal name="clicked" handler="on_edit_filter"/>
@@ -448,6 +466,7 @@
                                 <property name="ellipsize">end</property>
                                 <property name="label" translatable="yes">Edit…</property>
                                 <property name="use-underline">True</property>
+                                <property name="mnemonic-widget">_edit_filter_button</property>
                               </object>
                             </child>
                           </object>
@@ -458,7 +477,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkButton">
+                      <object class="GtkButton" id="_remove_filter_button">
                         <property name="visible">True</property>
                         <property name="tooltip-text" translatable="yes">Remove</property>
                         <signal name="clicked" handler="on_remove_filter"/>
@@ -478,6 +497,7 @@
                                 <property name="ellipsize">end</property>
                                 <property name="label" translatable="yes">Remove</property>
                                 <property name="use-underline">True</property>
+                                <property name="mnemonic-widget">_remove_filter_button</property>
                               </object>
                             </child>
                           </object>
@@ -493,7 +513,7 @@
                         <property name="halign">end</property>
                         <property name="hexpand">True</property>
                         <child>
-                          <object class="GtkButton">
+                          <object class="GtkButton" id="_default_filters_button">
                             <property name="visible">True</property>
                             <property name="tooltip-text" translatable="yes">Load Defaults</property>
                             <signal name="clicked" handler="on_default_filters"/>
@@ -504,7 +524,7 @@
                                 <child>
                                   <object class="GtkImage">
                                     <property name="visible">True</property>
-                                    <property name="icon-name">view-refresh-symbolic</property>
+                                    <property name="icon-name">edit-undo-symbolic</property>
                                   </object>
                                 </child>
                                 <child>
@@ -513,6 +533,7 @@
                                     <property name="ellipsize">end</property>
                                     <property name="label" translatable="yes">Load Defaults</property>
                                     <property name="use-underline">True</property>
+                                    <property name="mnemonic-widget">_default_filters_button</property>
                                   </object>
                                 </child>
                               </object>
@@ -535,7 +556,7 @@
             <property name="visible">True</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkButton" id="VerifyFilters">
+              <object class="GtkButton" id="_VerifyFilters">
                 <property name="visible">True</property>
                 <signal name="clicked" handler="on_verify_filter"/>
                 <child>
@@ -553,6 +574,7 @@
                         <property name="visible">True</property>
                         <property name="label" translatable="yes">Verify Filters</property>
                         <property name="use-underline">True</property>
+                        <property name="mnemonic-widget">_VerifyFilters</property>
                       </object>
                     </child>
                   </object>
@@ -563,9 +585,9 @@
               <object class="GtkLabel" id="VerifiedLabel">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Unverified</property>
+                <property name="selectable">True</property>
                 <property name="wrap">True</property>
                 <property name="xalign">0</property>
-                <property name="mnemonic_widget">VerifyFilters</property>
                 <attributes>
                   <attribute name="weight" value="bold"/>
                 </attributes>

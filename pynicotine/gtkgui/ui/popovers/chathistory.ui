@@ -12,6 +12,13 @@
         <property name="margin-bottom">12</property>
         <property name="spacing">12</property>
         <child>
+          <object class="GtkSearchEntry" id="search_entry">
+            <property name="visible">True</property>
+            <property name="hexpand">True</property>
+            <property name="width-chars">15</property>
+          </object>
+        </child>
+        <child>
           <object class="GtkFrame">
             <property name="visible">True</property>
             <property name="vexpand">True</property>

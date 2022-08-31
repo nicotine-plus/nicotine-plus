@@ -20,6 +20,7 @@ import time
 
 from pynicotine import slskmessages
 from pynicotine.logfacility import log
+from pynicotine.utils import encode_path
 from pynicotine.utils import unescape
 
 
@@ -70,7 +71,7 @@ class UserInfo:
             return
 
         # Request user description, picture and queue information
-        self.core.send_message_to_peer(user, slskmessages.UserInfoRequest(None))
+        self.core.send_message_to_peer(user, slskmessages.UserInfoRequest())
 
         # Request user status, speed and number of shared files
         self.core.watch_user(user, force_update=True)
@@ -84,6 +85,21 @@ class UserInfo:
     def show_connection_error(self, username):
         if self.ui_callback:
             self.ui_callback.show_connection_error(username)
+
+    @staticmethod
+    def save_user_picture(file_path, picture_bytes):
+
+        try:
+            with open(encode_path(file_path), "wb") as file_handle:
+                file_handle.write(picture_bytes)
+
+            log.add(_("Picture saved to %s"), file_path)
+
+        except Exception as error:
+            log.add(_("Cannot save picture to %(filename)s: %(error)s"), {
+                "filename": file_path,
+                "error": error
+            })
 
     def message_progress(self, msg):
         if self.ui_callback:
@@ -107,8 +123,6 @@ class UserInfo:
 
     def user_info_request(self, msg):
         """ Peer code: 15 """
-
-        log.add_msg_contents(msg)
 
         user = msg.init.target_user
         ip_address, _port = msg.init.addr
@@ -136,7 +150,7 @@ class UserInfo:
             try:
                 userpic = self.config.sections["userinfo"]["pic"]
 
-                with open(userpic, 'rb') as file_handle:
+                with open(encode_path(userpic), 'rb') as file_handle:
                     pic = file_handle.read()
 
             except Exception:
@@ -159,16 +173,12 @@ class UserInfo:
     def user_info_reply(self, msg):
         """ Peer code: 16 """
 
-        log.add_msg_contents(msg)
-
         if self.ui_callback:
             user = msg.init.target_user
             self.ui_callback.user_info_reply(user, msg)
 
     def user_interests(self, msg):
         """ Server code: 57 """
-
-        log.add_msg_contents(msg)
 
         if self.ui_callback:
             self.ui_callback.user_interests(msg)

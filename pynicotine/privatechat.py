@@ -78,7 +78,6 @@ class PrivateChats:
         if user in self.users:
             return
 
-        self.core.watch_user(user)
         self.users.add(user)
 
         if user not in self.config.sections["privatechat"]["users"]:
@@ -100,6 +99,8 @@ class PrivateChats:
 
         if self.ui_callback:
             self.ui_callback.show_user(user, switch_page)
+
+        self.core.watch_user(user)
 
     def load_users(self):
 
@@ -190,7 +191,6 @@ class PrivateChats:
         user = msg.user
 
         if should_log:
-            log.add_msg_contents(msg)
             log.add_chat(_("Private message from user '%(user)s': %(message)s"), {
                 "user": user,
                 "message": msg.msg
@@ -210,7 +210,7 @@ class PrivateChats:
                 if self.core.network_filter.is_ip_ignored(ip_address):
                     return
 
-            elif msg.newmessage:
+            else:
                 self.queue.append(slskmessages.GetPeerAddress(user))
                 self.private_message_queue_add(msg)
                 return
@@ -237,6 +237,10 @@ class PrivateChats:
 
         if ctcpversion and not self.config.sections["server"]["ctcpmsgs"]:
             self.send_message(user, "%s %s" % (self.config.application_name, self.config.version))
+
+        if not msg.newmessage:
+            # Message was sent while offline, don't auto-reply
+            return
 
         autoreply = self.config.sections["server"]["autoreply"]
 

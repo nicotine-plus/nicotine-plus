@@ -14,6 +14,8 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="label" translatable="yes">Now Playing</property>
+            <property name="halign">start</property>
+            <property name="selectable">True</property>
             <property name="xalign">0</property>
             <property name="wrap">True</property>
             <attributes>
@@ -78,13 +80,15 @@
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic_widget">NPCommand</property>
+                <property name="wrap-mode">word-char</property>
+                <property name="mnemonic-widget">NPCommand</property>
               </object>
             </child>
             <child>
               <object class="GtkEntry" id="NPCommand">
                 <property name="visible">True</property>
                 <property name="valign">center</property>
+                <property name="width-chars">16</property>
               </object>
             </child>
           </object>
@@ -100,9 +104,10 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="label" translatable="yes">Now Playing Format</property>
+            <property name="halign">start</property>
+            <property name="selectable">True</property>
             <property name="xalign">0</property>
             <property name="wrap">True</property>
-            <property name="mnemonic_widget">Legend</property>
             <attributes>
               <attribute name="weight" value="bold"/>
             </attributes>
@@ -127,7 +132,8 @@
                 <property name="label" translatable="yes">Now Playing message format:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic_widget">NPFormat</property>
+                <property name="wrap-mode">word-char</property>
+                <property name="mnemonic-widget">NPFormat</property>
               </object>
             </child>
             <child>
@@ -167,6 +173,7 @@
                       <object class="GtkLabel">
                         <property name="visible">True</property>
                         <property name="label" translatable="yes">Test Configuration</property>
+                        <property name="mnemonic-widget">test_now_playing</property>
                       </object>
                     </child>
                   </object>
@@ -180,7 +187,6 @@
                 <property name="selectable">True</property>
                 <property name="xalign">1</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic_widget">test_now_playing</property>
               </object>
             </child>
           </object>

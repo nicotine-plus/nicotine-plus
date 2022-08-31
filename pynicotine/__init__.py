@@ -91,18 +91,15 @@ def check_arguments():
 
 def check_core_dependencies():
 
-    # Require Python >= 3.5
-    import sys
-    try:
-        assert sys.version_info[:2] >= (3, 5), '.'.join(
-            map(str, sys.version_info[:3])
-        )
+    # Require minimum Python version
+    python_version = (3, 6)
 
-    except AssertionError as error:
+    import sys
+    if sys.version_info < python_version:
         return _("""You are using an unsupported version of Python (%(old_version)s).
 You should install Python %(min_version)s or newer.""") % {
-            "old_version": error,
-            "min_version": "3.5"
+            "old_version": '.'.join(map(str, sys.version_info[:3])),
+            "min_version": '.'.join(map(str, python_version))
         }
 
     # Require gdbm or semidbm, for faster loading of shelves
@@ -154,11 +151,7 @@ def run():
 
         # Set up paths for frozen binaries (Windows and macOS)
         executable_folder = os.path.dirname(sys.executable)
-        os.environ["XDG_DATA_DIRS"] = os.path.join(executable_folder, "share")
-        os.environ["GDK_PIXBUF_MODULE_FILE"] = os.path.join(executable_folder,
-                                                            "lib/gdk-pixbuf-2.0/2.10.0/loaders.cache")
-        os.environ["GI_TYPELIB_PATH"] = os.path.join(executable_folder, "lib/girepository-1.0")
-        os.environ["SSL_CERT_FILE"] = os.path.join(executable_folder, "share/ssl/cert.pem")
+        os.environ["SSL_CERT_FILE"] = os.path.join(executable_folder, "lib/cert.pem")
 
         # Support file scanning process in frozen binaries
         multiprocessing.freeze_support()

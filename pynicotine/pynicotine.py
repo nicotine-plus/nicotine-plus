@@ -49,9 +49,10 @@ from pynicotine.pluginsystem import PluginHandler
 from pynicotine.privatechat import PrivateChats
 from pynicotine.search import Search
 from pynicotine.shares import Shares
+from pynicotine.slskmessages import LoginFailure
+from pynicotine.slskmessages import UserStatus
 from pynicotine.transfers import Statistics
 from pynicotine.transfers import Transfers
-from pynicotine.upnp import UPnP
 from pynicotine.userbrowse import UserBrowse
 from pynicotine.userinfo import UserInfo
 from pynicotine.userlist import UserList
@@ -79,7 +80,6 @@ class NicotineCore:
         self.pluginhandler = None
         self.now_playing = None
         self.protothread = None
-        self.upnp = None
         self.geoip = None
         self.notifications = None
 
@@ -117,6 +117,13 @@ class NicotineCore:
         log.add_debug("Using %(program)s executable: %(exe)s", {"program": config.application_name, "exe": script_dir})
         log.add(_("Loading %(program)s %(version)s"), {"program": config.application_name, "version": config.version})
 
+        self.protothread = slskproto.SlskProtoThread(
+            core_callback=self.network_callback, queue=self.queue, bindip=self.bindip, port=self.port,
+            interface=config.sections["server"]["interface"],
+            port_range=config.sections["server"]["portrange"]
+        )
+        self.protothread.start()
+
         self.geoip = GeoIP(os.path.join(script_dir, "geoip/ipcountrydb.bin"))
         self.notifications = Notifications(config, ui_callback)
         self.network_filter = NetworkFilter(self, config, self.queue, self.geoip)
@@ -136,11 +143,6 @@ class NicotineCore:
         self.transfers.init_transfers()
         self.privatechats.load_users()
 
-        port_range = config.sections["server"]["portrange"]
-        interface = config.sections["server"]["interface"]
-        self.protothread = slskproto.SlskProtoThread(
-            self.network_callback, self.queue, self.bindip, interface, self.port, port_range, self)
-        self.upnp = UPnP(self, config)
         self.pluginhandler = PluginHandler(self, config)
 
         # Callback handlers for messages
@@ -253,7 +255,7 @@ class NicotineCore:
             slskmessages.PrivateRoomRemoveOperator: self.chatrooms.private_room_remove_operator,
             slskmessages.PublicRoomMessage: self.chatrooms.public_room_message,
             slskmessages.ShowConnectionErrorMessage: self.show_connection_error_message,
-            slskmessages.UnknownPeerMessage: self.ignore
+            slskmessages.UnknownPeerMessage: self.dummy_message
         }
 
     def quit(self, signal_type=None, _frame=None):
@@ -272,10 +274,6 @@ class NicotineCore:
 
         # Shut down networking thread
         if self.protothread:
-            if not self.protothread.server_disconnected:
-                self.protothread.manual_server_disconnect = True
-                self.server_disconnect()
-
             self.protothread.abort()
 
         # Save download/upload list to file
@@ -294,6 +292,7 @@ class NicotineCore:
             "version": config.version,
             "status": _("terminated") if signal_type == signal.SIGTERM else _("done")
         })
+        log.close_log_files()
 
     def connect(self):
 
@@ -384,6 +383,9 @@ class NicotineCore:
         """ Retrieve a user's country code if previously cached, otherwise request
         user's IP address to determine country """
 
+        if not self.logged_in:
+            return None
+
         user_address = self.protothread.user_addresses.get(user)
 
         if user_address and user != self.protothread.server_username:
@@ -400,7 +402,7 @@ class NicotineCore:
         """ Tell the server we want to be notified of status/stat updates
         for a user """
 
-        if not isinstance(user, str):
+        if not self.logged_in:
             return
 
         if not force_update and user in self.watched_users:
@@ -412,37 +414,35 @@ class NicotineCore:
         # Get privilege status
         self.queue.append(slskmessages.GetUserStatus(user))
 
+        self.watched_users.add(user)
+
     """ Network Events """
 
     def network_event(self, msgs):
 
-        for i in msgs:
+        for msg in msgs:
             if self.shutdown:
                 return
 
-            if i.__class__ in self.events:
-                self.events[i.__class__](i)
+            try:
+                self.events[msg.__class__](msg)
 
-            else:
-                log.add("No handler for class %s %s", (i.__class__, dir(i)))
+            except KeyError:
+                log.add("No handler for class %s %s", (msg.__class__, dir(msg)))
 
         msgs.clear()
 
     @staticmethod
-    def ignore(msg):
+    def dummy_message(msg):
         # Ignore received message
         pass
-
-    @staticmethod
-    def dummy_message(msg):
-        log.add_msg_contents(msg)
 
     def show_connection_error_message(self, msg):
         """ Request UI to show error messages related to connectivity """
 
         for i in msg.msgs:
             if i.__class__ in (slskmessages.TransferRequest, slskmessages.FileUploadInit):
-                self.transfers.get_cant_connect_upload(i.token)
+                self.transfers.get_cant_connect_upload(msg.user, i.token)
 
             elif i.__class__ is slskmessages.QueueUpload:
                 self.transfers.get_cant_connect_queue_file(msg.user, i.file)
@@ -493,8 +493,6 @@ class NicotineCore:
     def login(self, msg):
         """ Server code: 1 """
 
-        log.add_msg_contents(msg)
-
         if msg.success:
             self.logged_in = True
             self.login_username = msg.username
@@ -524,7 +522,7 @@ class NicotineCore:
             self.pluginhandler.server_connect_notification()
 
         else:
-            if msg.reason == "INVALIDPASS":
+            if msg.reason == LoginFailure.PASSWORD:
                 self.ui_callback.invalid_password()
                 return
 
@@ -532,8 +530,6 @@ class NicotineCore:
 
     def get_peer_address(self, msg):
         """ Server code: 3 """
-
-        log.add_msg_contents(msg)
 
         user = msg.user
 
@@ -586,65 +582,74 @@ class NicotineCore:
     def add_user(self, msg):
         """ Server code: 5 """
 
-        log.add_msg_contents(msg)
+        if msg.userexists:
+            self.get_user_stats(msg)
+            return
 
-        self.watched_users.add(msg.user)
+        # User does not exist, server will not keep us informed if the user is created later
+        self.watched_users.discard(msg.user)
 
-        if msg.userexists and msg.status is None:
-            # Legacy support (Soulfind server)
-            self.queue.append(slskmessages.GetUserStatus(msg.user))
-
-        if msg.files is not None:
-            self.get_user_stats(msg, log_contents=False)
-
-    def get_user_status(self, msg, log_contents=True):
+    def get_user_status(self, msg):
         """ Server code: 7 """
 
-        if log_contents:
-            log.add_msg_contents(msg)
+        user = msg.user
+        status = msg.status
+        privileged = msg.privileged
 
-        self.user_statuses[msg.user] = msg.status
+        if privileged is not None:
+            if privileged:
+                self.transfers.add_to_privileged(user)
+            else:
+                self.transfers.remove_from_privileged(user)
 
-        if msg.privileged == 1:
-            self.transfers.add_to_privileged(msg.user)
+        if status not in (UserStatus.OFFLINE, UserStatus.ONLINE, UserStatus.AWAY):
+            log.add_debug("Received an unknown status %(status)s for user %(user)s from the server", {
+                "status": status,
+                "user": user
+            })
+            return
 
-        elif msg.privileged == 0:
-            self.transfers.remove_from_privileged(msg.user)
-
-        self.interests.get_user_status(msg)
-        self.transfers.get_user_status(msg)
-        self.userbrowse.get_user_status(msg)
-        self.userinfo.get_user_status(msg)
-        self.userlist.get_user_status(msg)
-        self.privatechats.get_user_status(msg)
+        # We get status updates for room users even if we don't watch them
         self.chatrooms.get_user_status(msg)
 
-        self.pluginhandler.user_status_notification(msg.user, msg.status, bool(msg.privileged))
+        if user in self.watched_users:
+            self.user_statuses[user] = status
+
+            self.transfers.get_user_status(msg)
+            self.interests.get_user_status(msg)
+            self.userbrowse.get_user_status(msg)
+            self.userinfo.get_user_status(msg)
+            self.userlist.get_user_status(msg)
+            self.privatechats.get_user_status(msg)
+
+        self.pluginhandler.user_status_notification(user, status, privileged)
 
     def connect_to_peer(self, msg):
         """ Server code: 18 """
 
-        log.add_msg_contents(msg)
+        if msg.privileged is None:
+            return
 
-        if msg.privileged == 1:
+        if msg.privileged:
             self.transfers.add_to_privileged(msg.user)
-
-        elif msg.privileged == 0:
+        else:
             self.transfers.remove_from_privileged(msg.user)
 
-    def get_user_stats(self, msg, log_contents=True):
+    def get_user_stats(self, msg):
         """ Server code: 36 """
 
-        if log_contents:
-            log.add_msg_contents(msg)
+        user = msg.user
 
-        if msg.user == self.login_username:
+        if user == self.login_username:
             self.transfers.upload_speed = msg.avgspeed
 
-        self.interests.get_user_stats(msg)
-        self.userinfo.get_user_stats(msg)
-        self.userlist.get_user_stats(msg)
+        # We get stat updates for room users even if we don't watch them
         self.chatrooms.get_user_stats(msg)
+
+        if user in self.watched_users:
+            self.interests.get_user_stats(msg)
+            self.userinfo.get_user_stats(msg)
+            self.userlist.get_user_stats(msg)
 
         stats = {
             'avgspeed': msg.avgspeed,
@@ -653,7 +658,7 @@ class NicotineCore:
             'dirs': msg.dirs,
         }
 
-        self.pluginhandler.user_stats_notification(msg.user, stats)
+        self.pluginhandler.user_stats_notification(user, stats)
 
     @staticmethod
     def admin_message(msg):
@@ -664,7 +669,6 @@ class NicotineCore:
     def privileged_users(self, msg):
         """ Server code: 69 """
 
-        log.add_msg_contents(msg)
         self.transfers.set_privileged_users(msg.users)
         log.add(_("%i privileged users"), (len(msg.users)))
 
@@ -672,13 +676,10 @@ class NicotineCore:
         """ Server code: 91 """
         """ DEPRECATED """
 
-        log.add_msg_contents(msg)
         self.transfers.add_to_privileged(msg.user)
 
     def check_privileges(self, msg):
         """ Server code: 92 """
-
-        log.add_msg_contents(msg)
 
         mins = msg.seconds // 60
         hours = mins // 60
@@ -701,8 +702,6 @@ class NicotineCore:
     @staticmethod
     def change_password(msg):
         """ Server code: 142 """
-
-        log.add_msg_contents(msg)
 
         password = msg.password
         config.sections["server"]["passw"] = password

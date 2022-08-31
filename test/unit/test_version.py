@@ -27,25 +27,23 @@ from pynicotine.utils import make_version
 
 class VersionTest(unittest.TestCase):
 
-    @staticmethod
-    def test_dev_version():
+    def test_dev_version(self):
 
         # Test a sample dev version to ensure it's older than the stable counterpart
         sample_stable_version = make_version("2.1.0")
         sample_dev_version = make_version("2.1.0.dev1")
-        assert sample_stable_version > sample_dev_version
+        self.assertGreater(sample_stable_version, sample_dev_version)
 
-    @staticmethod
-    def test_update_check():
+    def test_update_check(self):
 
         # Validate local version
         local_version = make_version(config.version)
-        assert isinstance(local_version, int)
+        self.assertIsInstance(local_version, int)
 
         # Validate version of latest release
         try:
             _hlatest_version, latest_version, date = get_latest_version()
-            assert isinstance(latest_version, int)
+            self.assertIsInstance(latest_version, int)
 
         except socket.gaierror:
             print("No internet access, skipping update check test!")

@@ -29,6 +29,7 @@ from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.theme import get_status_icon_name
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.ui import UserInterface
+from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
 
@@ -39,6 +40,8 @@ class Interests(UserInterface):
 
         super().__init__("ui/interests.ui")
         (
+            self.add_dislike_entry,
+            self.add_like_entry,
             self.container,
             self.dislikes_list_container,
             self.likes_list_container,
@@ -112,16 +115,16 @@ class Interests(UserInterface):
             ]
         )
 
-        for thing in config.sections["interests"]["likes"]:
-            if thing and isinstance(thing, str):
-                self.likes_list_view.add_row([thing], select_row=False)
+        for item in config.sections["interests"]["likes"]:
+            if isinstance(item, str):
+                self.add_thing_i_like(item)
 
-        for thing in config.sections["interests"]["dislikes"]:
-            if thing and isinstance(thing, str):
-                self.dislikes_list_view.add_row([thing], select_row=False)
+        for item in config.sections["interests"]["dislikes"]:
+            if isinstance(item, str):
+                self.add_thing_i_hate(item)
 
         # Popup menus
-        self.til_popup_menu = popup = PopupMenu(self.frame, self.likes_list_view.widget)
+        popup = PopupMenu(self.frame, self.likes_list_view.widget)
         popup.add_items(
             ("#" + _("Re_commendations for Item"), self.on_recommend_item, self.likes_list_view),
             ("#" + _("_Search for Item"), self.on_recommend_search, self.likes_list_view),
@@ -129,7 +132,7 @@ class Interests(UserInterface):
             ("#" + _("_Remove Item"), self.on_remove_thing_i_like)
         )
 
-        self.tidl_popup_menu = popup = PopupMenu(self.frame, self.dislikes_list_view.widget)
+        popup = PopupMenu(self.frame, self.dislikes_list_view.widget)
         popup.add_items(
             ("#" + _("Re_commendations for Item"), self.on_recommend_item, self.dislikes_list_view),
             ("#" + _("_Search for Item"), self.on_recommend_search, self.dislikes_list_view),
@@ -137,7 +140,7 @@ class Interests(UserInterface):
             ("#" + _("_Remove Item"), self.on_remove_thing_i_dislike)
         )
 
-        self.r_popup_menu = popup = PopupMenu(self.frame, self.recommendations_list_view.widget, self.on_popup_r_menu)
+        popup = PopupMenu(self.frame, self.recommendations_list_view.widget, self.on_popup_r_menu)
         popup.add_items(
             ("$" + _("I _Like This"), self.on_like_recommendation, self.recommendations_list_view),
             ("$" + _("I _Dislike This"), self.on_dislike_recommendation, self.recommendations_list_view),
@@ -179,17 +182,27 @@ class Interests(UserInterface):
 
     def add_thing_i_like(self, item):
 
+        item = item.strip().lower()
+
+        if not item:
+            return
+
         iterator = self.likes_list_view.iterators.get(item)
 
         if iterator is None:
-            self.likes_list_view.add_row([item])
+            self.likes_list_view.add_row([item], select_row=False)
 
     def add_thing_i_hate(self, item):
+
+        item = item.strip().lower()
+
+        if not item:
+            return
 
         iterator = self.dislikes_list_view.iterators.get(item)
 
         if iterator is None:
-            self.dislikes_list_view.add_row([item])
+            self.dislikes_list_view.add_row([item], select_row=False)
 
     def remove_thing_i_like(self, item):
 
@@ -209,18 +222,24 @@ class Interests(UserInterface):
         self.frame.search_entry.set_text(item)
         self.frame.change_main_page(self.frame.search_page)
 
-    def on_add_thing_i_like(self, widget, *_args):
+    def on_add_thing_i_like(self, *_args):
 
-        item = widget.get_text().lower()
-        widget.set_text("")
+        item = self.add_like_entry.get_text().strip()
 
+        if not item:
+            return
+
+        self.add_like_entry.set_text("")
         self.core.interests.add_thing_i_like(item)
 
-    def on_add_thing_i_dislike(self, widget, *_args):
+    def on_add_thing_i_dislike(self, *_args):
 
-        item = widget.get_text().lower()
-        widget.set_text("")
+        item = self.add_dislike_entry.get_text().strip()
 
+        if not item:
+            return
+
+        self.add_dislike_entry.set_text("")
         self.core.interests.add_thing_i_hate(item)
 
     def on_remove_thing_i_like(self, *_args):
@@ -332,13 +351,12 @@ class Interests(UserInterface):
         self.similar_users_list_view.clear()
 
         for user in users:
-            self.similar_users_list_view.add_row([get_status_icon_name(0), user, "", "0", 0, 0, 0], select_row=False)
-
-            # Request user status, speed and number of shared files
-            self.core.watch_user(user, force_update=True)
+            self.similar_users_list_view.add_row(
+                [get_status_icon_name(UserStatus.OFFLINE), user, "", "0", 0, 0, 0], select_row=False)
 
     def similar_users(self, msg):
-        self.set_similar_users(msg.users)
+        # Sort users by rating (largest number of identical likes)
+        self.set_similar_users(sorted(msg.users, key=msg.users.get, reverse=True))
 
     def item_similar_users(self, msg):
         self.set_similar_users(msg.users, msg.thing)
@@ -351,11 +369,6 @@ class Interests(UserInterface):
             return
 
         status = msg.status
-
-        if status < 0 or status > 2:
-            # Unknown status
-            return
-
         status_icon = get_status_icon_name(status)
 
         self.similar_users_list_view.set_row_value(iterator, 0, status_icon)
@@ -431,6 +444,5 @@ class Interests(UserInterface):
         return list_view.show_user_status_tooltip(pos_x, pos_y, tooltip, column=4)
 
     def update_visuals(self):
-
-        for widget in list(self.__dict__.values()):
+        for widget in self.__dict__.values():
             update_widget_visuals(widget)

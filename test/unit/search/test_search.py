@@ -48,22 +48,23 @@ class SearchTest(unittest.TestCase):
         # Try a search with special characters removed
 
         config.sections["searches"]["remove_special_chars"] = True
-        token, searchterm, searchterm_without_special = self.search.do_search(SEARCH_TEXT, SEARCH_MODE)
+        search_term, search_term_without_special, *_unused = self.search.process_search_term(SEARCH_TEXT, SEARCH_MODE)
+        self.search.do_search(SEARCH_TEXT, SEARCH_MODE)
 
-        self.assertEqual(token, self.search.token)
-        self.assertEqual(token, old_token + 1)
-        self.assertEqual(searchterm, "70 gwen test a b c d auto yes -mp3 -nothanks *ello -no")
-        self.assertEqual(searchterm_without_special, "70 gwen test a b c d auto yes")
-        self.assertEqual(config.sections["searches"]["history"][0], searchterm)
+        self.assertEqual(self.search.token, old_token + 1)
+        self.assertEqual(search_term, "70 gwen test a b c d auto yes -mp3 -nothanks *ello -no")
+        self.assertEqual(search_term_without_special, "70 gwen test a b c d auto yes")
+        self.assertEqual(config.sections["searches"]["history"][0], search_term)
 
         # Try a search without special characters removed
 
         config.sections["searches"]["remove_special_chars"] = False
-        token, searchterm, searchterm_without_special = self.search.do_search(SEARCH_TEXT, SEARCH_MODE)
+        search_term, search_term_without_special, *_unused = self.search.process_search_term(SEARCH_TEXT, SEARCH_MODE)
+        self.search.do_search(SEARCH_TEXT, SEARCH_MODE)
 
-        self.assertEqual(searchterm, '70 gwen "test" a:b;c+d +++---}[ [[ @@ auto yes -mp3 -nothanks *ello -no')
-        self.assertEqual(searchterm_without_special, '70 gwen "test" a:b;c+d +++---}[ [[ @@ auto yes')
-        self.assertEqual(config.sections["searches"]["history"][0], searchterm)
+        self.assertEqual(search_term, '70 gwen "test" a:b;c+d +++---}[ [[ @@ auto yes -mp3 -nothanks *ello -no')
+        self.assertEqual(search_term_without_special, '70 gwen "test" a:b;c+d +++---}[ [[ @@ auto yes')
+        self.assertEqual(config.sections["searches"]["history"][0], search_term)
         self.assertEqual(config.sections["searches"]["history"][1],
                          "70 gwen test a b c d auto yes -mp3 -nothanks *ello -no")
 
@@ -93,3 +94,27 @@ class SearchTest(unittest.TestCase):
         self.search.add_wish(new_item)
         self.assertEqual(config.sections["server"]["autosearch"][0], SEARCH_TEXT)
         self.assertEqual(config.sections["server"]["autosearch"][1], new_item)
+
+    def test_create_search_result_list(self):
+        """ Test creating search result lists from the word index """
+
+        word_index = {
+            "iso": [34, 35, 36, 37, 38],
+            "lts": [63, 68, 73],
+            "system": [37, 38],
+            "linux": [35, 36]
+        }
+
+        search_term = "linux game iso stem"
+        excluded_words = ["linux", "game"]
+        partial_words = ["stem"]
+
+        results = self.search.create_search_result_list(search_term, word_index, excluded_words, partial_words)
+        self.assertEqual(results, {37, 38})
+
+        search_term = "linux game lts music iso cd"
+        excluded_words = ["linux", "game", "music", "cd"]
+        partial_words = []
+
+        results = self.search.create_search_result_list(search_term, word_index, excluded_words, partial_words)
+        self.assertEqual(results, set())

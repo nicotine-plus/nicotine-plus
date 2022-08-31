@@ -14,6 +14,8 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="label" translatable="yes">Logging</property>
+            <property name="halign">start</property>
+            <property name="selectable">True</property>
             <property name="xalign">0</property>
             <property name="wrap">True</property>
             <attributes>
@@ -53,56 +55,26 @@
           <object class="GtkBox">
             <property name="visible">True</property>
             <property name="spacing">12</property>
+            <property name="homogeneous">True</property>
             <child>
               <object class="GtkLabel">
                 <property name="visible">True</property>
-                <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Log timestamp format:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic_widget">LogFileFormat</property>
+                <property name="wrap-mode">word-char</property>
+                <property name="mnemonic-widget">LogFileFormat</property>
               </object>
             </child>
             <child>
-              <object class="GtkBox">
+              <object class="GtkEntry" id="LogFileFormat">
                 <property name="visible">True</property>
-                <property name="hexpand">True</property>
-                <property name="spacing">12</property>
                 <property name="valign">center</property>
-                <child>
-                  <object class="GtkEntry" id="LogFileFormat">
-                    <property name="visible">True</property>
-                    <property name="hexpand">True</property>
-                    <property name="tooltip-text">https://docs.python.org/3/library/time.html</property>
-                    <property name="width-chars">16</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkButton" id="DefaultTimestamp">
-                    <property name="visible">True</property>
-                    <property name="tooltip-text" translatable="yes">Default</property>
-                    <signal name="clicked" handler="on_default_timestamp"/>
-                    <child>
-                      <object class="GtkBox">
-                        <property name="visible">True</property>
-                        <property name="spacing">6</property>
-                        <child>
-                          <object class="GtkImage">
-                            <property name="visible">True</property>
-                            <property name="icon-name">edit-clear-symbolic</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkLabel">
-                            <property name="visible">True</property>
-                            <property name="ellipsize">end</property>
-                            <property name="label" translatable="yes">Default</property>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                  </object>
-                </child>
+                <property name="tooltip-text">https://docs.python.org/3/library/time.html</property>
+                <property name="width-chars">14</property>
+                <property name="secondary-icon-name">edit-undo-symbolic</property>
+                <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
+                <signal name="icon-press" handler="on_default_timestamp"/>
               </object>
             </child>
           </object>
@@ -118,6 +90,8 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="label" translatable="yes">Folder Locations</property>
+            <property name="halign">start</property>
+            <property name="selectable">True</property>
             <property name="xalign">0</property>
             <property name="wrap">True</property>
             <attributes>
@@ -136,7 +110,8 @@
                 <property name="label" translatable="yes">Chatroom logs folder:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic_widget">RoomLogDir</property>
+                <property name="wrap-mode">word-char</property>
+                <property name="mnemonic-widget">RoomLogDir</property>
               </object>
             </child>
             <child>
@@ -158,7 +133,8 @@
                 <property name="label" translatable="yes">Private chat logs folder:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic_widget">PrivateLogDir</property>
+                <property name="wrap-mode">word-char</property>
+                <property name="mnemonic-widget">PrivateLogDir</property>
               </object>
             </child>
             <child>
@@ -180,7 +156,8 @@
                 <property name="label" translatable="yes">Transfer logs folder:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic_widget">TransfersLogDir</property>
+                <property name="wrap-mode">word-char</property>
+                <property name="mnemonic-widget">TransfersLogDir</property>
               </object>
             </child>
             <child>
@@ -202,7 +179,8 @@
                 <property name="label" translatable="yes">Debug logs folder:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
-                <property name="mnemonic_widget">DebugLogDir</property>
+                <property name="wrap-mode">word-char</property>
+                <property name="mnemonic-widget">DebugLogDir</property>
               </object>
             </child>
             <child>

@@ -245,7 +245,7 @@ class ResponseThrottle:
     """
     ResponseThrottle - Mutnick 2016
 
-    See 'reddit' and my other plugins for example use
+    See 'testreplier' plugin for example use
 
     Purpose: Avoid flooding chat room with plugin responses
         Some plugins respond based on user requests and we do not want
@@ -486,7 +486,7 @@ class PluginHandler:
         for folder_path in self.plugindirs:
             try:
                 for entry in os.scandir(encode_path(folder_path)):
-                    file_path = entry.name.decode("utf-8")
+                    file_path = entry.name.decode("utf-8", "replace")
 
                     if entry.is_dir() and file_path not in plugin_list:
                         plugin_list.append(file_path)
@@ -529,7 +529,7 @@ class PluginHandler:
             if path in sys.path:
                 sys.path.remove(path)
 
-            for name, module in list(sys.modules.items()):
+            for name, module in sys.modules.copy().items():
                 try:
                     if module.__file__.startswith(path):
                         sys.modules.pop(name, None)
@@ -597,7 +597,7 @@ class PluginHandler:
         })
 
     def save_enabled(self):
-        self.config.sections["plugins"]["enabled"] = list(self.enabled_plugins.keys())
+        self.config.sections["plugins"]["enabled"] = list(self.enabled_plugins)
 
     def load_enabled(self):
         enable = self.config.sections["plugins"]["enable"]

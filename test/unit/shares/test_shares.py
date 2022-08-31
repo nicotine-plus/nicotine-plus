@@ -51,7 +51,7 @@ class SharesTest(unittest.TestCase):
         # Verify that shared files were added
         self.assertIn(['dummy_file', 0, None, None], shares.share_dbs["files"]["Shares"])
         self.assertIn(['nicotinetestdata.mp3', 80919, (128, 0), 5], shares.share_dbs["files"]["Shares"])
-        self.assertIn(['vbr44.mp3', 36609, (32, 1), 9], shares.share_dbs["files"]["Shares"])  # 1 = VBR
+        self.assertIn(['nicotinevbr.mp3', 36609, (32, 1), 9], shares.share_dbs["files"]["Shares"])  # 1: VBR
 
         # Verify that expected folder is empty
         self.assertEqual(len(shares.share_dbs["files"]["Shares\\folder2"]), 0)
@@ -63,7 +63,7 @@ class SharesTest(unittest.TestCase):
 
         self.assertEqual(set(word_index), set(
             ['nicotinetestdata', 'ogg', 'mp3', 'shares', 'file', 'dummy', 'folder1',
-             'folder2', 'nothing', 'something', 'test', 'vbr44']
+             'folder2', 'nothing', 'something', 'test', 'nicotinevbr']
         ))
         self.assertEqual(len(nicotinetestdata_indexes), 2)
         self.assertEqual(len(ogg_indexes), 1)

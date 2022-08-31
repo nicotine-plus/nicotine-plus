@@ -20,12 +20,11 @@ from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
-from pynicotine.gtkgui.widgets.dialogs import dialog_show
-from pynicotine.gtkgui.widgets.dialogs import set_dialog_properties
+from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.utils import open_uri
 
 
-class About:
+class About(Dialog):
 
     AUTHORS = """Nicotine+ Team
 –––––––––––––––––––––––––––––––––––––––>
@@ -74,7 +73,7 @@ Inactive
    - Developer
    - Debianization
 
-> gallows (aka &apos;burp O&apos;)
+> gallows (aka 'burp O')
    - Developer
    - Packager
    - Submitted Slack.Build file
@@ -92,7 +91,7 @@ Inactive
 
 > suser-guru
    - Suse Linux packager
-   - Nicotine+ RPM&apos;s for Suse 9.1, 9.2, 9.3, 10.0, 10.1
+   - Nicotine+ RPM's for Suse 9.1, 9.2, 9.3, 10.0, 10.1
 
 > osiris
    - Handy-man
@@ -277,6 +276,9 @@ Italian
  - nicola (2007)
  - dbazza (2003–2004)
 
+Latvian
+ - Pagal3 (2022)
+
 Lithuanian
  - mantas (2020)
  - Žygimantas Beručka (2006–2009)
@@ -332,8 +334,8 @@ Ukrainian
 
     def __init__(self, frame):
 
-        self.frame = frame
-        self.dialog = Gtk.AboutDialog(
+        dialog = Gtk.AboutDialog(
+            logo_icon_name=config.application_id,
             comments=config.summary,
             copyright=config.copyright,
             license_type=Gtk.License.GPL_3_0,
@@ -342,16 +344,13 @@ Ukrainian
             authors=self.AUTHORS.splitlines(),
             translator_credits=self.TRANSLATORS + config.translations_url
         )
-        set_dialog_properties(self.dialog, frame.window)
-        self.dialog.set_logo_icon_name(config.application_id)
-
-        if GTK_API_VERSION >= 4:
-            self.dialog.connect("close-request", lambda x: x.destroy())
-        else:
-            self.dialog.connect("response", lambda x, _y: x.destroy())
+        super().__init__(dialog=dialog, parent=frame.window)
 
         # Override link handler with our own
-        self.dialog.connect("activate-link", lambda x, url: open_uri(url))
+        dialog.connect("activate-link", lambda x, url: open_uri(url))
 
-    def show(self):
-        dialog_show(self.dialog)
+        if GTK_API_VERSION == 3:
+            dialog.connect("response", self.on_close)
+
+    def on_close(self, *_args):
+        self.close()

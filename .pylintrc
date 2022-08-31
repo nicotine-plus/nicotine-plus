@@ -52,7 +52,7 @@ persistent=yes
 
 # Minimum Python version to use for version dependent checks. Will default to
 # the version used to run pylint.
-py-version=3.5
+py-version=3.6
 
 # When enabled, pylint would attempt to guess common misconfiguration and emit
 # user-friendly hints instead of false-positive error messages.
@@ -87,7 +87,8 @@ disable=missing-class-docstring,
         import-outside-toplevel,
         pointless-string-statement,
         duplicate-code,
-        no-value-for-parameter
+        no-value-for-parameter,
+        consider-using-f-string
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option
@@ -276,7 +277,7 @@ indent-string='    '
 max-line-length=120
 
 # Maximum number of lines in a module.
-max-module-lines=3400
+max-module-lines=3300
 
 # Allow the body of a class to be on the same line as the declaration if body
 # contains single statement.

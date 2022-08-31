@@ -41,8 +41,12 @@ class UserList:
             self.ui_callback.server_disconnect()
 
     def add_user(self, user):
+
         if self.ui_callback:
             self.ui_callback.add_user(user)
+
+        if not self.core.logged_in:
+            return
 
         # Request user status, speed and number of shared files
         self.core.watch_user(user, force_update=True)

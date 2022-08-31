@@ -33,6 +33,7 @@ import webbrowser
 
 from pynicotine.config import config
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import FileAttribute
 from pynicotine.slskmessages import UINT_LIMIT
 
 FILE_SIZE_SUFFIXES = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
@@ -42,6 +43,7 @@ ILLEGALPATHCHARS = ['?', ':', '>', '<', '|', '*', '"']
 ILLEGALFILECHARS = ILLEGALPATHCHARS + ['\\', '/']
 LONG_PATH_PREFIX = "\\\\?\\"
 REPLACEMENTCHAR = '_'
+TRANSLATE_PUNCTUATION = str.maketrans(dict.fromkeys(PUNCTUATION, ' '))
 OPEN_SOULSEEK_URL = None
 
 
@@ -286,15 +288,55 @@ def human_length(seconds):
     return ret
 
 
+def get_file_attributes(attributes):
+
+    try:
+        bitrate = attributes.get(str(FileAttribute.BITRATE))
+        length = attributes.get(str(FileAttribute.DURATION))
+        vbr = attributes.get(str(FileAttribute.VBR))
+        sample_rate = attributes.get(str(FileAttribute.SAMPLE_RATE))
+        bit_depth = attributes.get(str(FileAttribute.BIT_DEPTH))
+
+    except AttributeError:
+        # Legacy attribute list format used for shares lists saved in Nicotine+ 3.2.2 and earlier
+        bitrate = length = vbr = sample_rate = bit_depth = None
+
+        if len(attributes) == 3:
+            attribute1, attribute2, attribute3 = attributes
+
+            if attribute3 in (0, 1):
+                bitrate = attribute1
+                length = attribute2
+                vbr = attribute3
+
+            elif attribute3 > 1:
+                length = attribute1
+                sample_rate = attribute2
+                bit_depth = attribute3
+
+        elif len(attributes) == 2:
+            attribute1, attribute2 = attributes
+
+            if attribute2 in (0, 1):
+                bitrate = attribute1
+                vbr = attribute2
+
+            elif attribute1 >= 8000 and attribute2 <= 64:
+                sample_rate = attribute1
+                bit_depth = attribute2
+
+            else:
+                bitrate = attribute1
+                length = attribute2
+
+    return bitrate, length, vbr, sample_rate, bit_depth
+
+
 def get_result_bitrate_length(filesize, attributes):
     """ Used to get the audio bitrate and length of search results and
     user browse files """
 
-    bitrate = attributes.get(0)
-    length = attributes.get(1)
-    vbr = attributes.get(2)
-    sample_rate = attributes.get(4)
-    bit_depth = attributes.get(5)
+    bitrate, length, vbr, sample_rate, bit_depth = get_file_attributes(attributes)
 
     if bitrate is None:
         if sample_rate and bit_depth:
@@ -350,7 +392,7 @@ def _human_speed_or_size(unit):
     except TypeError:
         pass
 
-    return unit
+    return str(unit)
 
 
 def human_speed(speed):
@@ -566,9 +608,8 @@ def write_file_and_backup(path, callback, protect=False):
 
     # Back up old file to path.old
     try:
-        if os.path.exists(path_encoded):
-            from shutil import copy2
-            copy2(path, path_old_encoded)
+        if os.path.exists(path_encoded) and os.stat(path_encoded).st_size > 0:
+            os.replace(path_encoded, path_old_encoded)
 
             if protect:
                 os.chmod(path_old_encoded, 0o600)
@@ -588,6 +629,10 @@ def write_file_and_backup(path, callback, protect=False):
         with open(path_encoded, "w", encoding="utf-8") as file_handle:
             callback(file_handle)
 
+            # Force write to file immediately in case of hard shutdown
+            file_handle.flush()
+            os.fsync(file_handle.fileno())
+
     except Exception as error:
         log.add(_("Unable to save file %(path)s: %(error)s"), {
             "path": path,
@@ -597,7 +642,7 @@ def write_file_and_backup(path, callback, protect=False):
         # Attempt to restore file
         try:
             if os.path.exists(path_old_encoded):
-                os.replace(path_old_encoded, path)
+                os.replace(path_old_encoded, path_encoded)
 
         except Exception as second_error:
             log.add(_("Unable to restore previous file %(path)s: %(error)s"), {
@@ -828,7 +873,7 @@ def get_completion_list(commands, rooms):
                 completion_list.append(user)
 
     if config_words["aliases"]:
-        for k in config.sections["server"]["command_aliases"].keys():
+        for k in config.sections["server"]["command_aliases"]:
             completion_list.append("/" + str(k))
 
     if config_words["commands"]:

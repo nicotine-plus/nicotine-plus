@@ -1,6 +1,6 @@
 # Downloads
 
-Download the current stable version of Nicotine+ for your operating system. For the release notes, see [NEWS.md](/NEWS.md).
+Download the current stable version of Nicotine+ for your operating system. For the release notes, see [NEWS.md](../NEWS.md).
 
 If you want to download the latest unstable build and help test Nicotine+, see [TESTING.md](TESTING.md).
 
@@ -18,7 +18,7 @@ sudo apt update
 sudo apt install nicotine
 ```
 
-If you prefer to install a .deb package directly, you can [download one here](http://ppa.launchpad.net/nicotine-team/stable/ubuntu/pool/main/n/nicotine/).
+If you prefer to install a .deb package directly, you can [download one here](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/debian-package.zip).
 
 Unlike the repository installation method, you need to download and install Nicotine+ from the link above every time you want to update to the latest version.
 

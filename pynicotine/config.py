@@ -55,7 +55,7 @@ class Config:
         config_dir, self.data_dir = self.get_user_directories()
         self.filename = os.path.join(config_dir, "config")
         self.plugin_dir = os.path.join(self.data_dir, "plugins")
-        self.version = "3.3.0.dev1"
+        self.version = "3.3.0.dev3"
         self.python_version = sys.version
         self.gtk_version = ""
 
@@ -192,7 +192,7 @@ class Config:
                 "usernamesubfolders": False,
                 "shared": [],
                 "buddyshared": [],
-                "uploadbandwidth": 10,
+                "uploadbandwidth": 50,
                 "uselimit": False,
                 "usealtlimits": False,
                 "uploadlimit": 1000,
@@ -235,10 +235,13 @@ class Config:
                     ["thumbs.db", 1],
                     ["albumart(_{........-....-....-....-............}_)?(_?(large|small))?\\.jpg", 0]
                 ],
-                "download_doubleclick": 1,
-                "upload_doubleclick": 1,
+                "download_doubleclick": 2,
+                "upload_doubleclick": 2,
                 "downloadsexpanded": True,
                 "uploadsexpanded": True
+            },
+            "userbrowse": {
+                "expand_folders": True
             },
             "userinfo": {
                 "descr": "''",
@@ -262,7 +265,7 @@ class Config:
                 "cycle": False,
                 "dropdown": False,
                 "characters": 3,
-                "roomnames": True,
+                "roomnames": False,
                 "buddies": True,
                 "roomusers": True,
                 "commands": True,
@@ -304,7 +307,7 @@ class Config:
             "searches": {
                 "expand_searches": True,
                 "group_searches": "folder_grouping",
-                "maxresults": 50,
+                "maxresults": 150,
                 "enable_history": True,
                 "history": [],
                 "enablefilters": False,
@@ -391,7 +394,7 @@ class Config:
                 "speechprivate": "User %(user)s told you: %(message)s",
                 "speechrooms": "In room %(room)s, user %(user)s said: %(message)s",
                 "speechcommand": "flite -t $",
-                "width": 1000,
+                "width": 800,
                 "height": 600,
                 "xposition": -1,
                 "yposition": -1,
@@ -660,7 +663,7 @@ class Config:
                     log.add(_("Unknown config section '%s'"), i)
 
                 # Check if config option exists in defaults
-                elif (j not in self.defaults.get(i, "") and j not in self.removed_options.get(i, "")
+                elif (j not in self.defaults.get(i, {}) and j not in self.removed_options.get(i, {})
                         and i != "plugins" and j != "filter"):
                     log.add(_("Unknown config option '%(option)s' in section '%(section)s'"),
                             {'option': j, 'section': i})

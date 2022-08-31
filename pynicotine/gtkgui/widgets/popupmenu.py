@@ -211,8 +211,8 @@ class PopupMenu:
         self.submenus.clear()
         self.model.remove_all()
 
-        for action in self.actions:
-            self.frame.window.remove_action(action)
+        for action in self.actions.values():
+            self.frame.window.remove_action(action.get_name())
 
         self.actions.clear()
         self.items.clear()
@@ -229,8 +229,12 @@ class PopupMenu:
             if not pos_x and not pos_y:
                 pos_x = pos_y = 0
 
-            menu.set_offset(pos_x, pos_y)
-            menu.set_pointing_to(Gdk.Rectangle(pos_x, pos_y, 1, 1))
+            rectangle = Gdk.Rectangle()
+            rectangle.x = pos_x
+            rectangle.y = pos_y
+            rectangle.width = rectangle.height = 1
+
+            menu.set_pointing_to(rectangle)
             menu.popup()
             return
 
@@ -272,20 +276,16 @@ class PopupMenu:
                 return False
 
         if callback:
-            cancel = callback(menu_model, self.parent)
-
-            if cancel:
-                return False
+            callback(menu_model, self.parent)
 
         self.popup(pos_x, pos_y, controller, menu=menu)
-        return False
+        return True
 
     def _callback_click(self, controller, _num_p, pos_x, pos_y):
         return self._callback(controller, pos_x, pos_y)
 
     def _callback_menu(self, *_args):
-        self._callback()
-        return True
+        return self._callback()
 
     def connect_events(self, parent):
 
@@ -372,12 +372,9 @@ class UserPopupMenu(PopupMenu):
         if not self.useritem:
             return
 
-        self.useritem.set_label(user)
+        self.useritem.set_label(user.replace('_', '__'))  # Escape underscores to disable mnemonics
         self.model.remove(0)
         self.model.prepend_item(self.useritem)
-
-    def get_user(self):
-        return self.user
 
     def toggle_user_items(self):
 

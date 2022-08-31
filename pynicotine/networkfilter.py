@@ -225,7 +225,7 @@ class NetworkFilter:
         self.config.sections["server"]["banlist"].append(user)
         self.config.write_configuration()
 
-        self.core.transfers.ban_user(user)
+        self.core.transfers.ban_users({user})
 
     def unban_user(self, user):
 

@@ -20,6 +20,8 @@ import json
 import os
 import threading
 
+from operator import itemgetter
+
 from pynicotine import slskmessages
 from pynicotine import utils
 from pynicotine.logfacility import log
@@ -53,12 +55,10 @@ class UserBrowse:
     def send_upload_attempt_notification(self, username):
         """ Send notification to user when attempting to initiate upload from our end """
 
-        self.core.send_message_to_peer(username, slskmessages.UploadQueueNotification(None))
+        self.core.send_message_to_peer(username, slskmessages.UploadQueueNotification())
 
     def add_user(self, user):
-
         if user not in self.users:
-            self.core.watch_user(user, force_update=True)
             self.users.add(user)
 
     def remove_user(self, user):
@@ -68,12 +68,12 @@ class UserBrowse:
         if self.ui_callback:
             self.ui_callback.remove_user(user)
 
-    def show_user(self, user, path=None, local_shares_type=None, indeterminate_progress=False, switch_page=True):
+    def show_user(self, user, path=None, local_shares_type=None, switch_page=True):
 
         self.add_user(user)
 
         if self.ui_callback:
-            self.ui_callback.show_user(user, path, local_shares_type, indeterminate_progress, switch_page)
+            self.ui_callback.show_user(user, path, local_shares_type, switch_page)
 
     def parse_local_shares(self, username, msg):
         """ Parse a local shares list and show it in the UI """
@@ -95,7 +95,7 @@ class UserBrowse:
             thread.daemon = True
             thread.start()
 
-        self.show_user(username, path=path, local_shares_type="normal", indeterminate_progress=True)
+        self.show_user(username, path=path, local_shares_type="normal")
 
     def browse_local_buddy_shares(self, path=None, new_request=False):
         """ Browse your own buddy shares """
@@ -109,7 +109,7 @@ class UserBrowse:
             thread.daemon = True
             thread.start()
 
-        self.show_user(username, path=path, local_shares_type="buddy", indeterminate_progress=True)
+        self.show_user(username, path=path, local_shares_type="buddy")
 
     def browse_user(self, username, path=None, local_shares_type=None, new_request=False, switch_page=True):
         """ Browse a user's shares """
@@ -132,8 +132,10 @@ class UserBrowse:
             self.show_connection_error(username)
             return
 
+        self.core.watch_user(username, force_update=True)
+
         if not user_exists or new_request:
-            self.core.send_message_to_peer(username, slskmessages.GetSharedFileList(None))
+            self.core.send_message_to_peer(username, slskmessages.GetSharedFileList())
 
     def create_user_shares_folder(self):
 
@@ -171,8 +173,8 @@ class UserBrowse:
 
             # Basic sanity check
             for _folder, files in shares_list:
-                for _file_data in files:
-                    pass
+                for _code, _filename, _size, _ext, _attrs, *_unused in files:
+                    break
 
         except Exception as msg:
             log.add(_("Loading Shares from disk failed: %(error)s"), {'error': msg})
@@ -181,7 +183,7 @@ class UserBrowse:
         username = filename.replace('\\', os.sep).split(os.sep)[-1]
         self.show_user(username)
 
-        msg = slskmessages.SharedFileList(None)
+        msg = slskmessages.SharedFileList()
         msg.list = shares_list
 
         self.shared_file_list(msg, username)
@@ -197,7 +199,8 @@ class UserBrowse:
             path = os.path.join(shares_folder, clean_file(user))
 
             with open(encode_path(path), "w", encoding="utf-8") as file_handle:
-                json.dump(shares_list, file_handle, ensure_ascii=False)
+                # Add line breaks for readability, but avoid indentation to decrease file size
+                json.dump(shares_list, file_handle, ensure_ascii=False, indent=0)
 
             log.add(_("Saved list of shared files for user '%(user)s' to %(dir)s"),
                     {'user': user, 'dir': shares_folder})
@@ -238,7 +241,7 @@ class UserBrowse:
 
             if files:
                 if self.config.sections["transfers"]["reverseorder"]:
-                    files.sort(key=lambda x: x[1], reverse=True)
+                    files.sort(key=itemgetter(1), reverse=True)
 
                 for file_data in files:
                     virtualpath = "\\".join([folder, file_data[1]])

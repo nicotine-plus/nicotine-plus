@@ -29,23 +29,28 @@ from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.application import GTK_GUI_DIR
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import encode_path
 
 
 """ Global Style """
 
 
-SETTINGS_PORTAL = None
+GTK_SETTINGS = Gtk.Settings.get_default()
+USE_LIBADWAITA = ("gi.repository.Adw" in sys.modules)
+USE_COLOR_SCHEME_PORTAL = (sys.platform not in ("win32", "darwin") and not USE_LIBADWAITA)
 
-if "gi.repository.Adw" not in sys.modules:
-    # GNOME 42+ system-wide dark mode for vanilla GTK (no libadwaita)
+
+if USE_COLOR_SCHEME_PORTAL:
+    # GNOME 42+ system-wide dark mode for GTK without libadwaita
+    SETTINGS_PORTAL = None
+
+    class ColorScheme:
+        NO_PREFERENCE = 0
+        PREFER_DARK = 1
+        PREFER_LIGHT = 2
 
     def read_color_scheme():
-        """ Available color schemes:
-        - 0: No preference
-        - 1: Prefer dark appearance
-        - 2: Prefer light appearance
-        """
 
         try:
             result = SETTINGS_PORTAL.call_sync(
@@ -55,7 +60,8 @@ if "gi.repository.Adw" not in sys.modules:
 
             return result.unpack()[0]
 
-        except Exception:
+        except Exception as error:
+            log.add_debug("Cannot read color scheme, falling back to GTK theme preference: %s", error)
             return None
 
     def on_color_scheme_changed(_proxy, _sender_name, signal_name, parameters):
@@ -69,7 +75,7 @@ if "gi.repository.Adw" not in sys.modules:
                 or namespace != "org.freedesktop.appearance" or name != "color-scheme"):
             return
 
-        set_dark_mode(color_scheme == 1)
+        set_dark_mode(color_scheme == ColorScheme.PREFER_DARK)
 
     try:
         SETTINGS_PORTAL = Gio.DBusProxy.new_for_bus_sync(
@@ -79,30 +85,26 @@ if "gi.repository.Adw" not in sys.modules:
         )
         SETTINGS_PORTAL.connect("g-signal", on_color_scheme_changed)
 
-    except Exception:
-        pass
-
-GTK_SETTINGS = Gtk.Settings.get_default()
-
-if not hasattr(GTK_SETTINGS, "reset_property"):
-    SYSTEM_FONT = GTK_SETTINGS.get_property("gtk-font-name")
-    SYSTEM_ICON_THEME = GTK_SETTINGS.get_property("gtk-icon-theme-name")
+    except Exception as portal_error:
+        log.add_debug("Cannot start color scheme settings portal, falling back to GTK theme preference: %s",
+                      portal_error)
+        USE_COLOR_SCHEME_PORTAL = None
 
 
 def set_dark_mode(enabled):
 
-    if "gi.repository.Adw" in sys.modules:
+    if USE_LIBADWAITA:
         from gi.repository import Adw  # pylint:disable=no-name-in-module
 
         color_scheme = Adw.ColorScheme.FORCE_DARK if enabled else Adw.ColorScheme.DEFAULT
         Adw.StyleManager.get_default().set_color_scheme(color_scheme)
         return
 
-    if not enabled:
+    if USE_COLOR_SCHEME_PORTAL and not enabled:
         color_scheme = read_color_scheme()
 
         if color_scheme is not None:
-            enabled = (color_scheme == 1)
+            enabled = (color_scheme == ColorScheme.PREFER_DARK)
 
     GTK_SETTINGS.set_property("gtk-application-prefer-dark-theme", enabled)
 
@@ -110,11 +112,8 @@ def set_dark_mode(enabled):
 def set_global_font(font_name):
 
     if font_name == "Normal":
-        if hasattr(GTK_SETTINGS, "reset_property"):
-            GTK_SETTINGS.reset_property("gtk-font-name")
-            return
-
-        font_name = SYSTEM_FONT
+        GTK_SETTINGS.reset_property("gtk-font-name")
+        return
 
     GTK_SETTINGS.set_property("gtk-font-name", font_name)
 
@@ -155,9 +154,15 @@ def set_global_css():
         margin: 0;
     }
 
-    .generic-dialog .dialog-action-box {
+    .generic-dialog .dialog-action-area {
         /* Add missing spacing to dialog action buttons */
-        padding: 6px;
+        padding: 0;
+        margin: 0 6px;
+    }
+
+    .generic-dialog .dialog-action-area button {
+        /* Add missing spacing to dialog action buttons */
+        margin: 6px 0;
     }
 
     /* Borders */
@@ -203,6 +208,34 @@ def set_global_css():
     }
     """
 
+    css_gtk3 = b"""
+    /* Tweaks (GTK 3) */
+
+    treeview {
+        /* Set spacing for dropdown menu/entry completion items */
+        -GtkTreeView-horizontal-separator: 12;
+        -GtkTreeView-vertical-separator: 5;
+    }
+
+    filechooser treeview,
+    fontchooser treeview {
+        /* Restore default item spacing in GTK choosers */
+        -GtkTreeView-horizontal-separator: 2;
+        -GtkTreeView-vertical-separator: 2;
+    }
+
+    .treeview-spacing {
+        /* Disable GTK's built-in item spacing in custom treeviews */
+        -GtkTreeView-horizontal-separator: 0;
+        -GtkTreeView-vertical-separator: 0;
+    }
+
+    .dropdown-scrollbar {
+        /* Enable dropdown list with a scrollbar */
+        -GtkComboBox-appears-as-list: 1;
+    }
+    """
+
     css_gtk4 = b"""
     /* Tweaks (GTK 4+) */
 
@@ -211,14 +244,9 @@ def set_global_css():
         -gtk-icon-size: 21px;
     }
 
-    .dialog-action-area {
+    window.dialog:not(.message) .dialog-action-area {
         /* Add missing spacing to dialog action buttons */
         border-spacing: 6px;
-    }
-
-    window.dialog.message .dialog-action-area {
-        /* Undo spacing change for message dialogs */
-        border-spacing: unset;
     }
 
     .image-text-button box {
@@ -231,7 +259,6 @@ def set_global_css():
 
     if GTK_API_VERSION >= 4:
         css = css + css_gtk4
-
         global_css_provider.load_from_data(css)
 
         Gtk.StyleContext.add_provider_for_display(  # pylint: disable=no-member
@@ -239,6 +266,7 @@ def set_global_css():
         )
 
     else:
+        css = css + css_gtk3
         global_css_provider.load_from_data(css)
 
         Gtk.StyleContext.add_provider_for_screen(  # pylint: disable=no-member
@@ -264,10 +292,7 @@ def load_custom_icons(update=False):
     """ Load custom icon theme if one is selected """
 
     if update:
-        if hasattr(GTK_SETTINGS, "reset_property"):
-            GTK_SETTINGS.reset_property("gtk-icon-theme-name")
-        else:
-            GTK_SETTINGS.set_property("gtk-icon-theme-name", SYSTEM_ICON_THEME)
+        GTK_SETTINGS.reset_property("gtk-icon-theme-name")
 
     icon_theme_name = ".nicotine-icon-theme"
     icon_theme_path = os.path.join(config.data_dir, icon_theme_name)
@@ -402,10 +427,10 @@ def get_flag_icon_name(country):
 
 def get_status_icon_name(status):
 
-    if status == 1:
+    if status == UserStatus.AWAY:
         return "nplus-status-away"
 
-    if status == 2:
+    if status == UserStatus.ONLINE:
         return "nplus-status-online"
 
     return "nplus-status-offline"
@@ -426,24 +451,22 @@ COLOR_RGBA = Gdk.RGBA()
 
 def get_user_status_color(status):
 
-    if status == 1:
-        color = "useraway"
-    elif status == 2:
-        color = "useronline"
-    else:
-        color = "useroffline"
+    if status == UserStatus.AWAY:
+        return "useraway"
 
-    return color
+    if status == UserStatus.ONLINE:
+        return "useronline"
+
+    return "useroffline"
 
 
 def parse_color_string(color_string):
     """ Take a color string, e.g. BLUE, and return a HEX color code """
 
-    if color_string:
-        if COLOR_RGBA.parse(color_string):
-            color_hex = "#%02X%02X%02X" % (
-                round(COLOR_RGBA.red * 255), round(COLOR_RGBA.green * 255), round(COLOR_RGBA.blue * 255))
-            return color_hex
+    if color_string and COLOR_RGBA.parse(color_string):
+        color_hex = "#%02X%02X%02X" % (
+            round(COLOR_RGBA.red * 255), round(COLOR_RGBA.green * 255), round(COLOR_RGBA.blue * 255))
+        return color_hex
 
     return None
 

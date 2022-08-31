@@ -125,14 +125,12 @@ class Downloads(TransferList):
     def on_open_file_manager(self, *_args):
 
         download_folder = config.sections["transfers"]["downloaddir"]
-        incomplete_folder = config.sections["transfers"]["incompletedir"] or download_folder
+        folder_path = config.sections["transfers"]["incompletedir"] or download_folder
 
         for transfer in self.selected_transfers:
             if transfer.status == "Finished":
                 folder_path = transfer.path or download_folder
                 break
-        else:
-            folder_path = incomplete_folder
 
         open_file_path(folder_path, command=config.sections["ui"]["filemanager"])
 
@@ -142,14 +140,14 @@ class Downloads(TransferList):
             file_path = None
 
             if transfer.file is not None:
-                file_path = transfer.file.name
+                file_path = transfer.file.name.decode("utf-8", "replace")
 
             else:
                 # If this file doesn't exist anymore, it may have finished downloading and have been renamed.
                 # Try looking in the download directory and match the original filename and size.
 
                 file_path = self.core.transfers.get_existing_download_path(
-                    transfer.user, transfer.filename, transfer.path, transfer.size)
+                    transfer.user, transfer.filename, transfer.path, transfer.size, always_return=True)
 
             open_file_path(file_path, command=config.sections["players"]["default"])
 

@@ -39,15 +39,19 @@ import time
 from collections import defaultdict
 from collections import deque
 from collections import OrderedDict
+from operator import itemgetter
 
 from pynicotine import slskmessages
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import increment_token
+from pynicotine.slskmessages import TransferDirection
+from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import execute_command
 from pynicotine.utils import clean_file
 from pynicotine.utils import clean_path
 from pynicotine.utils import encode_path
 from pynicotine.utils import get_result_bitrate_length
+from pynicotine.utils import human_speed
 from pynicotine.utils import load_file
 from pynicotine.utils import truncate_string_byte
 from pynicotine.utils import write_file_and_backup
@@ -82,7 +86,7 @@ class Transfer:
         self.last_update = None
         self.last_byte_offset = None
         self.speed = None
-        self.time_elapsed = None
+        self.time_elapsed = 0
         self.time_left = None
         self.iterator = None
         self.legacy_attempt = False
@@ -251,33 +255,33 @@ class Transfers:
         else:
             transfer_list = self.downloads
 
-        for i in transfers:
-            # User / filename / path
+        for transfer_row in transfers:
+            num_attributes = len(transfer_row)
 
-            if len(i) < 3:
+            if num_attributes < 3:
                 continue
 
-            user = i[0]
+            # User / filename / path
+            user = transfer_row[0]
 
             if not isinstance(user, str):
                 continue
 
-            filename = i[1]
+            filename = transfer_row[1]
 
             if not isinstance(filename, str):
                 continue
 
-            path = i[2]
+            path = transfer_row[2]
 
             if not isinstance(path, str):
                 continue
 
             # Status
+            loaded_status = None
 
-            try:
-                loaded_status = str(i[3])
-            except IndexError:
-                loaded_status = None
+            if num_attributes >= 4:
+                loaded_status = str(transfer_row[3])
 
             if transfer_type == "uploads" and loaded_status != "Finished":
                 # Only finished uploads are supposed to be restored
@@ -293,36 +297,35 @@ class Transfers:
                 status = "User logged off"
 
             # Size / offset
+            size = 0
+            current_byte_offset = None
 
-            try:
-                size = int(i[4])
-            except Exception:
-                size = 0
+            if num_attributes >= 5:
+                loaded_size = transfer_row[4]
 
-            try:
-                current_byte_offset = int(i[5])
-            except Exception:
-                current_byte_offset = None
+                if loaded_size and isinstance(loaded_size, (int, float)):
+                    size = int(loaded_size)
+
+            if num_attributes >= 6:
+                loaded_byte_offset = transfer_row[5]
+
+                if loaded_byte_offset and isinstance(loaded_byte_offset, (int, float)):
+                    current_byte_offset = int(loaded_byte_offset)
 
             # Bitrate / length
-
             bitrate = length = None
 
-            try:
-                loaded_bitrate = i[6]
+            if num_attributes >= 7:
+                loaded_bitrate = transfer_row[6]
 
                 if loaded_bitrate is not None:
                     bitrate = str(loaded_bitrate)
-            except IndexError:
-                pass
 
-            try:
-                loaded_length = i[7]
+            if num_attributes >= 8:
+                loaded_length = transfer_row[7]
 
                 if loaded_length is not None:
                     length = str(loaded_length)
-            except IndexError:
-                pass
 
             transfer_list.appendleft(
                 Transfer(
@@ -336,11 +339,11 @@ class Transfers:
 
         users = set()
 
-        for i in self.downloads:
-            if i.status in ("Filtered", "Finished"):
+        for download in self.downloads:
+            if download.status in ("Filtered", "Finished"):
                 continue
 
-            users.add(i.user)
+            users.add(download.user)
 
         for user in users:
             self.core.watch_user(user)
@@ -416,7 +419,7 @@ class Transfers:
 
         except Exception as error:
             log.add_transfer("Failed to close file %(filename)s: %(error)s", {
-                "filename": file_handle.name,
+                "filename": file_handle.name.decode("utf-8", "replace"),
                 "error": error
             })
 
@@ -452,39 +455,32 @@ class Transfers:
 
     def queue_limit_reached(self, user):
 
+        file_limit = self.config.sections["transfers"]["filelimit"]
         queue_size_limit = self.config.sections["transfers"]["queuelimit"] * 1024 * 1024
 
-        if not queue_size_limit:
-            return False
-
-        queue_size = 0
-
-        for i in self.uploads:
-            if i.user == user and i.status == "Queued":
-                queue_size += i.size
-
-                if queue_size >= queue_size_limit:
-                    return True
-
-        return False
-
-    def file_limit_reached(self, user):
-
-        file_limit = self.config.sections["transfers"]["filelimit"]
-
-        if not file_limit:
-            return False
+        if not file_limit and not queue_size_limit:
+            return False, None
 
         num_files = 0
+        queue_size = 0
 
-        for i in self.uploads:
-            if i.user == user and i.status == "Queued":
+        for upload in self.uploads:
+            if upload.user != user or upload.status != "Queued":
+                continue
+
+            if file_limit:
                 num_files += 1
 
                 if num_files >= file_limit:
-                    return True
+                    return True, "Too many files"
 
-        return False
+            if queue_size_limit:
+                queue_size += upload.size
+
+                if queue_size >= queue_size_limit:
+                    return True, "Too many megabytes"
+
+        return False, None
 
     def slot_limit_reached(self):
 
@@ -496,8 +492,8 @@ class Transfers:
         num_in_progress = 0
         active_statuses = ("Getting status", "Transferring")
 
-        for i in self.uploads:
-            if i.status in active_statuses:
+        for upload in self.uploads:
+            if upload.status in active_statuses:
                 num_in_progress += 1
 
                 if num_in_progress >= upload_slot_limit:
@@ -514,9 +510,9 @@ class Transfers:
 
         bandwidth_sum = 0
 
-        for i in self.uploads:
-            if i.speed is not None and i.sock is not None:
-                bandwidth_sum += i.speed
+        for upload in self.uploads:
+            if upload.sock is not None and upload.speed is not None:
+                bandwidth_sum += upload.speed
 
                 if bandwidth_sum >= bandwidth_limit:
                     return True
@@ -524,6 +520,9 @@ class Transfers:
         return False
 
     def allow_new_uploads(self):
+
+        if self.core.shares.rescanning:
+            return False
 
         if self.config.sections["transfers"]["useupslots"]:
             # Limit by upload slots
@@ -542,9 +541,29 @@ class Transfers:
 
         statuses = ("Queued", "Getting status", "Transferring")
 
-        for i in self.uploads:
-            if i.user == user and i.filename == filename and i.status in statuses:
+        return next(
+            (upload.filename == filename and upload.status in statuses and upload.user == user
+             for upload in self.uploads), False
+        )
+
+    @staticmethod
+    def file_is_readable(filename, real_path):
+
+        try:
+            if os.access(encode_path(real_path), os.R_OK):
                 return True
+
+            log.add_transfer("Cannot access file, not sharing: %(virtual_name)s with real path %(path)s", {
+                "virtual_name": filename,
+                "path": real_path
+            })
+
+        except Exception:
+            log.add_transfer(("Requested file path contains invalid characters or other errors, not sharing: "
+                              "%(virtual_name)s with real path %(path)s"), {
+                "virtual_name": filename,
+                "path": real_path
+            })
 
         return False
 
@@ -556,21 +575,22 @@ class Transfers:
 
         update = False
         username = msg.user
-        user_offline = (msg.status <= 0)
+        user_offline = (msg.status == UserStatus.OFFLINE)
         download_statuses = ("Queued", "Getting status", "Too many files", "Too many megabytes", "Pending shutdown.",
                              "User logged off", "Connection timeout", "Remote file error", "Cancelled")
         upload_statuses = ("Getting status", "Disallowed extension", "User logged off", "Connection timeout",
                            "Cancelled")
 
-        for i in reversed(self.downloads.copy()):
-            if username == i.user and (i.status in download_statuses or i.status.startswith("User limit of")):
+        for download in reversed(self.downloads.copy()):
+            if (download.user == username
+                    and (download.status in download_statuses or download.status.startswith("User limit of"))):
                 if user_offline:
-                    i.status = "User logged off"
-                    self.abort_transfer(i)
+                    download.status = "User logged off"
+                    self.abort_transfer(download)
                     update = True
 
-                elif i.status == "User logged off":
-                    self.get_file(username, i.filename, i.path, i, ui_callback=False)
+                elif download.status == "User logged off":
+                    self.get_file(username, download.filename, path=download.path, transfer=download, ui_callback=False)
                     update = True
 
         if self.downloadsview and update:
@@ -579,17 +599,17 @@ class Transfers:
         update = False
 
         # We need a copy due to upload auto-clearing modifying the deque during iteration
-        for i in reversed(self.uploads.copy()):
-            if username == i.user and i.status in upload_statuses:
+        for upload in reversed(self.uploads.copy()):
+            if upload.user == username and upload.status in upload_statuses:
                 if user_offline:
-                    i.status = "User logged off"
-                    self.abort_transfer(i)
-                    self.auto_clear_upload(i)
+                    upload.status = "User logged off"
+                    self.abort_transfer(upload)
+                    self.auto_clear_upload(upload)
                     update = True
 
-                elif i.status == "User logged off":
-                    i.status = "Cancelled"
-                    self.auto_clear_upload(i)
+                elif upload.status == "User logged off":
+                    upload.status = "Cancelled"
+                    self.auto_clear_upload(upload)
                     update = True
 
         if self.uploadsview and update:
@@ -598,32 +618,52 @@ class Transfers:
     def get_cant_connect_queue_file(self, username, filename):
         """ We can't connect to the user, either way (QueueUpload). """
 
-        for i in self.downloads:
-            if i.user != username or i.filename != filename:
+        for download in self.downloads:
+            if download.filename != filename or download.user != username:
                 continue
 
-            i.status = "Connection timeout"
-            i.token = None
+            log.add_transfer("Download attempt for file %(filename)s from user %(user)s timed out", {
+                "filename": filename,
+                "user": username
+            })
 
-            self.update_download(i)
-            self.core.watch_user(i.user)
+            download.status = "Connection timeout"
+            download.token = None
+
+            if download in self.transfer_request_times:
+                del self.transfer_request_times[download]
+
+            self.update_download(download)
+            self.core.watch_user(username)
             break
 
-    def get_cant_connect_upload(self, token):
+    def get_cant_connect_upload(self, username, token):
         """ We can't connect to the user, either way (TransferRequest, FileUploadInit). """
 
-        for i in self.uploads:
-            if i.token != token:
+        for upload in self.uploads:
+            if upload.token != token or upload.user != username:
                 continue
 
-            i.status = "Connection timeout"
-            i.token = None
-            i.queue_position = 0
+            log.add_transfer("Upload attempt for file %(filename)s with token %(token)s to user %(user)s timed out", {
+                "filename": upload.filename,
+                "token": token,
+                "user": username
+            })
 
-            self.update_user_counter(i.user)
-            self.update_upload(i)
+            if upload.sock is not None:
+                log.add_transfer("Existing file connection for upload with token %s already exists?", token)
+                return
 
-            self.core.watch_user(i.user)
+            upload.status = "Connection timeout"
+            upload.token = None
+            upload.queue_position = 0
+
+            if upload in self.transfer_request_times:
+                del self.transfer_request_times[upload]
+
+            self.update_upload(upload)
+
+            self.core.watch_user(username)
             self.check_upload_queue()
             return
 
@@ -650,9 +690,7 @@ class Transfers:
                     return
 
                 destination = self.get_folder_destination(username, directory)
-
-                if self.config.sections["transfers"]["reverseorder"]:
-                    files.sort(key=lambda x: x[1], reverse=True)
+                files.sort(key=itemgetter(1), reverse=self.config.sections["transfers"]["reverseorder"])
 
                 log.add_transfer(("Attempting to download files in folder %(folder)s for user %(user)s. "
                                   "Destination path: %(destination)s"), {
@@ -667,19 +705,14 @@ class Transfers:
                     h_bitrate, _bitrate, h_length, _length = get_result_bitrate_length(size, file[4])
 
                     self.get_file(
-                        username, virtualpath, destination,
+                        username, virtualpath, path=destination,
                         size=size, bitrate=h_bitrate, length=h_length)
-
-                if directory in self.requested_folders.get(username, []):
-                    del self.requested_folders[username][directory]
 
     def queue_upload(self, msg):
         """ Peer code: 43 """
         """ Peer remotely queued a download (upload here). This is the modern replacement to
         a TransferRequest with direction 0 (download request). We will initiate the upload of
         the queued file later. """
-
-        log.add_msg_contents(msg)
 
         user = msg.init.target_user
         filename = msg.file
@@ -688,9 +721,6 @@ class Transfers:
             "user": user,
             "filename": filename,
         })
-
-        if self.file_is_upload_queued(user, filename):
-            return
 
         real_path = self.core.shares.virtual2real(filename)
         allowed, reason = self.check_queue_upload_allowed(user, msg.init.addr, filename, real_path, msg)
@@ -704,8 +734,8 @@ class Transfers:
         })
 
         if not allowed:
-            if reason:
-                self.core.send_message_to_peer(user, slskmessages.UploadDenied(None, filename, reason))
+            if reason and reason != "Queued":
+                self.core.send_message_to_peer(user, slskmessages.UploadDenied(file=filename, reason=reason))
 
             return
 
@@ -720,21 +750,19 @@ class Transfers:
     def transfer_request(self, msg):
         """ Peer code: 40 """
 
-        log.add_msg_contents(msg)
-
         user = msg.init.target_user
         response = None
 
-        if msg.direction == 1:
+        if msg.direction == TransferDirection.UPLOAD:
             response = self.transfer_request_downloads(msg)
 
             log.add_transfer(("Responding to download request %(token)s for file %(filename)s "
                               "from user %(user)s: allowed: %(allowed)s, reason: %(reason)s"), {
                 "token": response.token, "filename": msg.file, "user": user,
-                "allowed": bool(response.allowed), "reason": response.reason
+                "allowed": response.allowed, "reason": response.reason
             })
 
-        else:
+        elif msg.direction == TransferDirection.DOWNLOAD:
             response = self.transfer_request_uploads(msg)
 
             if response is None:
@@ -743,8 +771,15 @@ class Transfers:
             log.add_transfer(("Responding to legacy upload request %(token)s for file %(filename)s "
                               "from user %(user)s: allowed: %(allowed)s, reason: %(reason)s"), {
                 "token": response.token, "filename": msg.file, "user": user,
-                "allowed": bool(response.allowed), "reason": response.reason
+                "allowed": response.allowed, "reason": response.reason
             })
+
+        else:
+            log.add_transfer(("Received unknown transfer direction %(direction)s for file %(filename)s "
+                              "from user %(user)s"), {
+                "direction": msg.direction, "filename": msg.file, "user": user
+            })
+            return
 
         self.core.send_message_to_peer(user, response)
 
@@ -753,9 +788,10 @@ class Transfers:
         user = msg.init.target_user
         filename = msg.file
         size = msg.filesize
+        token = msg.token
 
         log.add_transfer("Received download request %(token)s for file %(filename)s from user %(user)s", {
-            "token": msg.token,
+            "token": token,
             "filename": filename,
             "user": user
         })
@@ -763,11 +799,11 @@ class Transfers:
         cancel_reason = "Cancelled"
         accepted = True
 
-        for i in self.downloads:
-            if i.filename != filename or user != i.user:
+        for download in self.downloads:
+            if download.filename != filename or download.user != user:
                 continue
 
-            status = i.status
+            status = download.status
 
             if status == "Finished":
                 # SoulseekQt sends "Complete" as the reason for rejecting the download if it exists
@@ -787,18 +823,18 @@ class Transfers:
             # we initially added the download.
 
             if size > 0:
-                if i.size != size:
+                if download.size != size:
                     # The remote user's file contents have changed since we queued the download
-                    i.size_changed = True
+                    download.size_changed = True
 
-                i.size = size
+                download.size = size
 
-            i.token = msg.token
-            i.status = "Getting status"
-            self.transfer_request_times[i] = time.time()
+            download.token = token
+            download.status = "Getting status"
+            self.transfer_request_times[download] = time.time()
 
-            self.update_download(i)
-            return slskmessages.TransferResponse(None, 1, token=i.token)
+            self.update_download(download)
+            return slskmessages.TransferResponse(allowed=True, token=token)
 
         # Check if download exists in our default download folder
         if self.get_existing_download_path(user, filename, "", size):
@@ -814,19 +850,19 @@ class Transfers:
                 path = os.path.join(self.config.sections["transfers"]["uploaddir"], user, parentdir)
 
             transfer = Transfer(user=user, filename=filename, path=path, status="Queued",
-                                size=size, token=msg.token)
+                                size=size, token=token)
             self.downloads.appendleft(transfer)
             self.update_download(transfer)
             self.core.watch_user(user)
 
-            return slskmessages.TransferResponse(None, 0, reason="Queued", token=transfer.token)
+            return slskmessages.TransferResponse(allowed=False, reason="Queued", token=token)
 
         log.add_transfer("Denied file request: User %(user)s, %(msg)s", {
             'user': user,
             'msg': str(vars(msg))
         })
 
-        return slskmessages.TransferResponse(None, 0, reason=cancel_reason, token=msg.token)
+        return slskmessages.TransferResponse(allowed=False, reason=cancel_reason, token=token)
 
     def transfer_request_uploads(self, msg):
         """ Remote peer is requesting to download a file through your upload queue.
@@ -835,9 +871,10 @@ class Transfers:
 
         user = msg.init.target_user
         filename = msg.file
+        token = msg.token
 
         log.add_transfer("Received legacy upload request %(token)s for file %(filename)s from user %(user)s", {
-            "token": msg.token,
+            "token": token,
             "filename": filename,
             "user": user
         })
@@ -848,7 +885,7 @@ class Transfers:
 
         if not allowed:
             if reason:
-                return slskmessages.TransferResponse(None, 0, reason=reason, token=msg.token)
+                return slskmessages.TransferResponse(allowed=False, reason=reason, token=token)
 
             return None
 
@@ -859,13 +896,12 @@ class Transfers:
         already_downloading = False
         active_statuses = ("Getting status", "Transferring")
 
-        for i in self.uploads:
-            if i.user != user:
+        for upload in self.uploads:
+            if upload.status not in active_statuses or upload.user != user:
                 continue
 
-            if i.status in active_statuses:
-                already_downloading = True
-                break
+            already_downloading = True
+            break
 
         if not self.allow_new_uploads() or already_downloading:
             transfer = Transfer(user=user, filename=filename, path=os.path.dirname(real_path),
@@ -873,66 +909,78 @@ class Transfers:
             self.append_upload(user, filename, transfer)
             self.update_upload(transfer)
 
-            return slskmessages.TransferResponse(None, 0, reason="Queued", token=msg.token)
+            return slskmessages.TransferResponse(allowed=False, reason="Queued", token=token)
 
         # All checks passed, starting a new upload.
         size = self.get_file_size(real_path)
         transfer = Transfer(user=user, filename=filename, path=os.path.dirname(real_path),
-                            status="Getting status", token=msg.token, size=size)
+                            status="Getting status", token=token, size=size)
 
         self.transfer_request_times[transfer] = time.time()
         self.append_upload(user, filename, transfer)
         self.update_upload(transfer)
 
-        return slskmessages.TransferResponse(None, 1, token=msg.token, filesize=size)
+        return slskmessages.TransferResponse(allowed=True, token=token, filesize=size)
 
     def transfer_response(self, msg):
         """ Peer code: 41 """
         """ Received a response to the file request from the peer """
 
-        log.add_msg_contents(msg)
+        username = msg.init.target_user
+        token = msg.token
+        reason = msg.reason
 
         log.add_transfer(("Received response for upload request %(token)s: allowed: %(allowed)s, "
                           "reason: %(reason)s, file size: %(size)s"), {
-            "token": msg.token,
-            "allowed": bool(msg.allowed),
-            "reason": msg.reason,
+            "token": token,
+            "allowed": msg.allowed,
+            "reason": reason,
             "size": msg.filesize
         })
 
-        if msg.reason is not None:
-            for i in self.uploads:
-                if i.token != msg.token:
+        if reason is not None:
+            if reason in ("Getting status", "Transferring", "Paused", "Filtered", "User logged off"):
+                # Don't allow internal statuses as reason
+                reason = "Cancelled"
+
+            for upload in self.uploads:
+                if upload.token != token or upload.user != username:
                     continue
 
-                i.status = msg.reason
-                i.token = None
-                i.queue_position = 0
+                if upload.sock is not None:
+                    log.add_transfer("Upload with token %s already has an existing file connection", token)
+                    return
 
-                self.update_upload(i)
+                upload.status = reason
+                upload.token = None
+                upload.queue_position = 0
 
-                if i in self.transfer_request_times:
-                    del self.transfer_request_times[i]
+                self.update_upload(upload)
 
-                self.update_user_counter(i.user)
+                if upload in self.transfer_request_times:
+                    del self.transfer_request_times[upload]
 
-                if msg.reason == "Complete":
+                if reason in ("Complete", "Finished"):
                     # A complete download of this file already exists on the user's end
-                    self.upload_finished(i)
+                    self.upload_finished(upload)
 
-                elif msg.reason in ("Cancelled", "Disallowed extension"):
-                    self.auto_clear_upload(i)
+                elif reason in ("Cancelled", "Disallowed extension"):
+                    self.auto_clear_upload(upload)
 
                 self.check_upload_queue()
                 return
 
             return
 
-        for i in self.uploads:
-            if i.token != msg.token:
+        for upload in self.uploads:
+            if upload.token != token or upload.user != username:
                 continue
 
-            self.core.send_message_to_peer(i.user, slskmessages.FileUploadInit(None, msg.token))
+            if upload.sock is not None:
+                log.add_transfer("Upload with token %s already has an existing file connection", token)
+                return
+
+            self.core.send_message_to_peer(upload.user, slskmessages.FileUploadInit(None, token=token))
             self.check_upload_queue()
             return
 
@@ -962,7 +1010,6 @@ class Transfers:
 
         elif transfer in self.uploads:
             transfer.queue_position = 0
-            self.update_user_counter(transfer.user)
             self.update_upload(transfer)
 
         if transfer in self.transfer_request_times:
@@ -973,72 +1020,74 @@ class Transfers:
     def download_file_error(self, msg):
         """ Networking thread encountered a local file error for download """
 
-        log.add_msg_contents(msg)
+        username = msg.user
+        token = msg.token
 
-        for i in self.downloads:
-            if i.sock != msg.sock:
+        for download in self.downloads:
+            if download.token != token or download.user != username:
                 continue
 
-            self.abort_transfer(i)
-            i.status = "Local file error"
+            self.abort_transfer(download)
+            download.status = "Local file error"
 
-            log.add(_("I/O error: %s"), msg.error)
-            self.update_download(i)
+            log.add(_("Download I/O error: %s"), msg.error)
+            self.update_download(download)
             return
 
     def upload_file_error(self, msg):
         """ Networking thread encountered a local file error for upload """
 
-        log.add_msg_contents(msg)
+        username = msg.user
+        token = msg.token
 
-        for i in self.uploads:
-            if i.sock != msg.sock:
+        for upload in self.uploads:
+            if upload.token != token or upload.user != username:
                 continue
 
-            self.abort_transfer(i)
-            i.status = "Local file error"
+            self.abort_transfer(upload)
+            upload.status = "Local file error"
 
-            log.add(_("I/O error: %s"), msg.error)
-            self.update_upload(i)
+            log.add(_("Upload I/O error: %s"), msg.error)
+            self.update_upload(upload)
             self.check_upload_queue()
             return
 
     def file_download_init(self, msg):
         """ A peer is requesting to start uploading a file to us """
 
-        log.add_msg_contents(msg)
-
+        username = msg.init.target_user
         token = msg.token
 
-        for i in self.downloads:
-            if token != i.token:
+        for download in self.downloads:
+            if download.token != token or download.user != username:
                 continue
+
+            filename = download.filename
 
             log.add_transfer(("Received file download init with token %(token)s for file %(filename)s "
                               "from user %(user)s"), {
                 "token": token,
-                "filename": i.filename,
-                "user": i.user
+                "filename": filename,
+                "user": username
             })
 
-            if i.sock is not None:
+            if download.sock is not None:
                 log.add_transfer("Download already has an existing file connection, ignoring init message")
                 self.queue.append(slskmessages.ConnClose(msg.init.sock))
-                continue
+                return
 
             incomplete_folder = self.config.sections["transfers"]["incompletedir"]
-            needupdate = True
-            i.sock = msg.init.sock
-            i.token = None
+            need_update = True
+            download.sock = msg.init.sock
 
-            if i in self.transfer_request_times:
-                del self.transfer_request_times[i]
+            if download in self.transfer_request_times:
+                del self.transfer_request_times[download]
 
             if not incomplete_folder:
-                if i.path:
-                    incomplete_folder = i.path
+                if download.path:
+                    incomplete_folder = download.path
                 else:
-                    incomplete_folder = self.get_default_download_folder(i.user)
+                    incomplete_folder = self.get_default_download_folder(username)
 
             try:
                 incomplete_folder_encoded = encode_path(incomplete_folder)
@@ -1052,12 +1101,12 @@ class Transfers:
 
             except OSError as error:
                 log.add(_("OS error: %s"), error)
-                self.download_folder_error(i, error)
+                self.download_folder_error(download, error)
 
             else:
                 file_handle = None
                 try:
-                    incomplete_path = self.get_incomplete_file_path(incomplete_folder, i.user, i.filename)
+                    incomplete_path = self.get_incomplete_file_path(incomplete_folder, username, filename)
                     file_handle = open(encode_path(incomplete_path), 'ab+')  # pylint: disable=consider-using-with
 
                     try:
@@ -1069,48 +1118,53 @@ class Transfers:
                     except ImportError:
                         pass
 
-                    if i.size_changed:
+                    if download.size_changed:
                         # Remote user sent a different file size than we originally requested,
                         # wipe any existing data in the incomplete file to avoid corruption
                         file_handle.truncate(0)
 
-                    file_handle.seek(0, 2)
-                    offset = file_handle.tell()
+                    # Seek to the end of the file for resuming the download
+                    offset = file_handle.seek(0, os.SEEK_END)
 
                 except OSError as error:
                     log.add(_("Download I/O error: %s"), error)
 
-                    self.abort_transfer(i)
-                    i.status = "Local file error"
+                    self.abort_transfer(download)
+                    download.status = "Local file error"
 
                 else:
-                    i.file = file_handle
-                    i.last_byte_offset = offset
-                    i.queue_position = 0
+                    download.file = file_handle
+                    download.last_byte_offset = offset
+                    download.queue_position = 0
+                    download.last_update = time.time()
+                    download.start_time = download.last_update - download.time_elapsed
 
                     self.core.statistics.append_stat_value("started_downloads", 1)
-                    self.core.pluginhandler.download_started_notification(i.user, i.filename, incomplete_path)
+                    self.core.pluginhandler.download_started_notification(username, filename, incomplete_path)
 
-                    if i.size > offset:
-                        i.status = "Transferring"
-                        self.queue.append(slskmessages.DownloadFile(i.sock, file_handle))
-                        self.queue.append(slskmessages.FileOffset(msg.init, i.size, offset))
+                    log.add_download(
+                        _("Download started: user %(user)s, file %(file)s"), {
+                            "user": username,
+                            "file": file_handle.name.decode("utf-8", "replace")
+                        }
+                    )
 
-                        log.add_download(
-                            _("Download started: user %(user)s, file %(file)s"), {
-                                "user": i.user,
-                                "file": "%s" % file_handle.name
-                            }
-                        )
+                    if download.size > offset:
+                        download.status = "Transferring"
+                        self.queue.append(slskmessages.DownloadFile(
+                            init=msg.init, token=token, file=file_handle, leftbytes=(download.size - offset)
+                        ))
+                        self.queue.append(slskmessages.FileOffset(init=msg.init, offset=offset))
+
                     else:
-                        self.download_finished(file_handle, i)
-                        needupdate = False
+                        self.download_finished(download, file_handle=file_handle)
+                        need_update = False
 
             if self.downloadsview:
                 self.downloadsview.new_transfer_notification()
 
-            if needupdate:
-                self.update_download(i)
+            if need_update:
+                self.update_download(download)
 
             return
 
@@ -1122,74 +1176,86 @@ class Transfers:
     def file_upload_init(self, msg):
         """ We are requesting to start uploading a file to a peer """
 
-        log.add_msg_contents(msg)
-
+        username = msg.init.target_user
         token = msg.token
 
-        for i in self.uploads:
-            if token != i.token:
+        for upload in self.uploads:
+            if upload.token != token or upload.user != username:
                 continue
+
+            filename = upload.filename
 
             log.add_transfer("Initializing upload with token %(token)s for file %(filename)s to user %(user)s", {
                 "token": token,
-                "filename": i.filename,
-                "user": i.user
+                "filename": filename,
+                "user": username
             })
 
-            if i.sock is not None:
+            if upload.sock is not None:
                 log.add_transfer("Upload already has an existing file connection, ignoring init message")
                 self.queue.append(slskmessages.ConnClose(msg.init.sock))
-                continue
+                return
 
-            needupdate = True
-            i.sock = msg.init.sock
-            i.token = None
+            need_update = True
+            upload.sock = msg.init.sock
             file_handle = None
 
-            if i in self.transfer_request_times:
-                del self.transfer_request_times[i]
+            if upload in self.transfer_request_times:
+                del self.transfer_request_times[upload]
+
+            real_path = self.core.shares.virtual2real(filename)
+
+            if not self.core.shares.file_is_shared(username, filename, real_path):
+                upload.status = "File not shared."
+
+                self.abort_transfer(upload)
+                self.update_upload(upload)
+                self.check_upload_queue()
+                return
 
             try:
                 # Open File
-                real_path = self.core.shares.virtual2real(i.filename)
                 file_handle = open(encode_path(real_path), "rb")  # pylint: disable=consider-using-with
-                offset = file_handle.tell()
 
             except OSError as error:
                 log.add(_("Upload I/O error: %s"), error)
+                upload.status = "Local file error"
 
-                self.abort_transfer(i)
-                i.status = "Local file error"
+                self.abort_transfer(upload)
                 self.check_upload_queue()
 
             else:
-                i.file = file_handle
-                i.last_byte_offset = offset
-                i.queue_position = 0
+                upload.file = file_handle
+                upload.queue_position = 0
+                upload.last_update = time.time()
+                upload.start_time = upload.last_update - upload.time_elapsed
 
                 self.core.statistics.append_stat_value("started_uploads", 1)
-                self.core.pluginhandler.upload_started_notification(i.user, i.filename, real_path)
+                self.core.pluginhandler.upload_started_notification(username, filename, real_path)
 
-                if i.size > offset:
-                    i.status = "Transferring"
-                    self.queue.append(slskmessages.UploadFile(i.sock, file=file_handle, size=i.size))
+                log.add_upload(
+                    _("Upload started: user %(user)s, IP address %(ip)s, file %(file)s"), {
+                        "user": username,
+                        "ip": self.core.protothread.user_addresses.get(username),
+                        "file": filename
+                    }
+                )
 
-                    log.add_upload(
-                        _("Upload started: user %(user)s, IP address %(ip)s, file %(file)s"), {
-                            "user": i.user,
-                            "ip": self.core.protothread.user_addresses.get(i.user),
-                            "file": i.filename
-                        }
-                    )
+                if upload.size > 0:
+                    upload.status = "Transferring"
+                    self.queue.append(slskmessages.UploadFile(
+                        init=msg.init, token=token, file=file_handle, size=upload.size
+                    ))
+
                 else:
-                    self.upload_finished(i, file_handle=file_handle)
-                    needupdate = False
+                    self.upload_finished(upload, file_handle=file_handle)
+                    need_update = False
 
             if self.uploadsview:
                 self.uploadsview.new_transfer_notification()
 
-            if needupdate:
-                self.update_upload(i)
+            if need_update:
+                self.update_upload(upload)
 
             return
 
@@ -1199,40 +1265,43 @@ class Transfers:
     def upload_denied(self, msg):
         """ Peer code: 50 """
 
-        log.add_msg_contents(msg)
-
         user = msg.init.target_user
         filename = msg.file
+        reason = msg.reason
 
-        for i in self.downloads:
-            if i.user != user or i.filename != filename:
+        if reason in ("Getting status", "Transferring", "Paused", "Filtered", "User logged off", "Finished"):
+            # Don't allow internal statuses as reason
+            reason = "Cancelled"
+
+        for download in self.downloads:
+            if download.filename != filename or download.user != user:
                 continue
 
-            if i.status in ("Finished", "Paused"):
+            if download.status in ("Finished", "Paused"):
                 # SoulseekQt also sends this message for finished downloads when unsharing files, ignore
                 continue
 
-            if msg.reason in ("File not shared.", "File not shared", "Remote file error") and not i.legacy_attempt:
+            if reason in ("File not shared.", "File not shared", "Remote file error") and not download.legacy_attempt:
                 # The peer is possibly using an old client that doesn't support Unicode
                 # (Soulseek NS). Attempt to request file name encoded as latin-1 once.
 
                 log.add_transfer("User %(user)s responded with reason '%(reason)s' for download request %(filename)s. "
                                  "Attempting to request file as latin-1.", {
                                      "user": user,
-                                     "reason": msg.reason,
+                                     "reason": reason,
                                      "filename": filename
                                  })
 
-                self.abort_transfer(i)
-                i.legacy_attempt = True
-                self.get_file(i.user, filename, i.path, i)
+                self.abort_transfer(download)
+                download.legacy_attempt = True
+                self.get_file(user, filename, path=download.path, transfer=download)
                 break
 
-            if i.status == "Transferring":
-                self.abort_transfer(i, reason=msg.reason)
+            if download.status == "Transferring":
+                self.abort_transfer(download, reason=reason)
 
-            i.status = msg.reason
-            self.update_download(i)
+            download.status = reason
+            self.update_download(download)
 
             log.add_transfer("Download request denied by user %(user)s for file %(filename)s. Reason: %(reason)s", {
                 "user": user,
@@ -1244,217 +1313,185 @@ class Transfers:
     def upload_failed(self, msg):
         """ Peer code: 46 """
 
-        log.add_msg_contents(msg)
-
         user = msg.init.target_user
         filename = msg.file
 
-        for i in self.downloads:
-            if i.user != user or i.filename != filename:
+        for download in self.downloads:
+            if download.filename != filename or download.user != user:
                 continue
 
-            if i.status in ("Finished", "Paused", "Download folder error", "Local file error", "User logged off"):
+            if download.status in ("Finished", "Paused", "Download folder error", "Local file error",
+                                   "User logged off"):
                 # Check if there are more transfers with the same virtual path
                 continue
 
-            should_retry = not i.legacy_attempt
-            self.abort_transfer(i)
+            should_retry = not download.legacy_attempt
+            self.abort_transfer(download)
 
             if should_retry:
                 # Attempt to request file name encoded as latin-1 once
 
-                i.legacy_attempt = True
-                self.get_file(i.user, filename, i.path, i)
+                download.legacy_attempt = True
+                self.get_file(user, filename, path=download.path, transfer=download)
                 break
 
             # Already failed once previously, give up
-            i.status = "Remote file error"
-            self.update_download(i)
+            download.status = "Remote file error"
+            self.update_download(download)
 
             log.add_transfer("Upload attempt by user %(user)s for file %(filename)s failed. Reason: %(reason)s", {
                 "filename": filename,
                 "user": user,
-                "reason": i.status
+                "reason": download.status
             })
             return
 
     def file_download(self, msg):
         """ A file download is in progress """
 
-        log.add_msg_contents(msg)
+        username = msg.init.target_user
+        token = msg.token
 
-        needupdate = True
-
-        for i in self.downloads:
-            if i.sock != msg.sock:
+        for download in self.downloads:
+            if download.token != token or download.user != username:
                 continue
 
-            try:
-                if i in self.transfer_request_times:
-                    del self.transfer_request_times[i]
+            if download in self.transfer_request_times:
+                del self.transfer_request_times[download]
 
-                current_time = time.time()
-                i.current_byte_offset = msg.file.tell()
+            current_time = time.time()
+            size = download.size
 
-                if i.start_time is None:
-                    i.start_time = current_time
+            download.status = "Transferring"
+            download.time_elapsed = current_time - download.start_time
+            download.current_byte_offset = current_byte_offset = (size - msg.leftbytes)
+            byte_difference = current_byte_offset - download.last_byte_offset
 
-                i.status = "Transferring"
-                oldelapsed = i.time_elapsed
-                i.time_elapsed = current_time - i.start_time
-                byte_difference = i.current_byte_offset - i.last_byte_offset
+            if byte_difference:
+                self.core.statistics.append_stat_value("downloaded_size", byte_difference)
 
-                if byte_difference:
-                    self.core.statistics.append_stat_value("downloaded_size", byte_difference)
-
-                if i.size > i.current_byte_offset:
-                    if current_time > i.start_time and i.current_byte_offset > i.last_byte_offset:
-                        i.speed = int(max(0, byte_difference // max(1, current_time - i.last_update)))
-
-                        if i.speed <= 0:
-                            i.time_left = 0
-                        else:
-                            i.time_left = (i.size - i.current_byte_offset) / i.speed
-
-                    if oldelapsed == i.time_elapsed:
-                        needupdate = False
+                if size > current_byte_offset or download.speed is None:
+                    download.speed = int(max(0, byte_difference // max(1, current_time - download.last_update)))
+                    download.time_left = (size - current_byte_offset) // download.speed if download.speed else 0
                 else:
-                    self.download_finished(msg.file, i)
-                    needupdate = False
+                    download.time_left = 0
 
-                i.last_byte_offset = i.current_byte_offset
-                i.last_update = current_time
+            download.last_byte_offset = current_byte_offset
+            download.last_update = current_time
 
-            except OSError as error:
-                log.add(_("Download I/O error: %s"), error)
-
-                self.abort_transfer(i)
-                i.status = "Local file error"
-
-            if needupdate:
-                self.update_download(i)
-
+            self.update_download(download)
             return
 
     def file_upload(self, msg):
         """ A file upload is in progress """
 
-        log.add_msg_contents(msg)
+        username = msg.init.target_user
+        token = msg.token
 
-        needupdate = True
-
-        for i in self.uploads:
-            if i.sock != msg.sock:
+        for upload in self.uploads:
+            if upload.token != token or upload.user != username:
                 continue
 
-            if i in self.transfer_request_times:
-                del self.transfer_request_times[i]
+            if upload in self.transfer_request_times:
+                del self.transfer_request_times[upload]
 
             current_time = time.time()
-            i.current_byte_offset = msg.offset + msg.sentbytes
+            size = upload.size
 
-            if i.start_time is None:
-                i.start_time = current_time
+            if not upload.last_byte_offset:
+                upload.last_byte_offset = msg.offset
 
-            i.status = "Transferring"
-            oldelapsed = i.time_elapsed
-            i.time_elapsed = current_time - i.start_time
-            byte_difference = i.current_byte_offset - i.last_byte_offset
+            upload.status = "Transferring"
+            upload.time_elapsed = current_time - upload.start_time
+            upload.current_byte_offset = current_byte_offset = (msg.offset + msg.sentbytes)
+            byte_difference = current_byte_offset - upload.last_byte_offset
 
             if byte_difference:
                 self.core.statistics.append_stat_value("uploaded_size", byte_difference)
 
-            if i.size > i.current_byte_offset:
-                if current_time > i.start_time and i.current_byte_offset > i.last_byte_offset:
-                    i.speed = int(max(0, byte_difference // max(1, current_time - i.last_update)))
+                if size > current_byte_offset or upload.speed is None:
+                    upload.speed = int(max(0, byte_difference // max(1, current_time - upload.last_update)))
+                    upload.time_left = (size - current_byte_offset) // upload.speed if upload.speed else 0
+                else:
+                    upload.time_left = 0
 
-                    if i.speed <= 0:
-                        i.time_left = 0
-                    else:
-                        i.time_left = (i.size - i.current_byte_offset) / i.speed
+            upload.last_byte_offset = current_byte_offset
+            upload.last_update = current_time
 
-                if oldelapsed == i.time_elapsed:
-                    needupdate = False
-
-            elif i.speed is not None:
-                # Inform the server about the last upload speed for this transfer
-                self.queue.append(slskmessages.SendUploadSpeed(i.speed))
-
-                i.speed = None
-                i.time_left = 0
-
-            i.last_byte_offset = i.current_byte_offset
-            i.last_update = current_time
-
-            if needupdate:
-                self.update_upload(i)
-
+            self.update_upload(upload)
             return
 
     def download_conn_close(self, msg):
         """ The remote peer has closed a file transfer connection """
 
-        log.add_msg_contents(msg)
+        username = msg.user
+        token = msg.token
 
-        sock = msg.sock
-
-        for i in self.downloads:
-            if i.sock != sock:
+        for download in self.downloads:
+            if download.token != token or download.user != username:
                 continue
 
-            self.abort_transfer(i)
+            if download.current_byte_offset is not None and download.current_byte_offset >= download.size:
+                self.download_finished(download, file_handle=download.file)
+                return
 
-            if i.status != "Finished":
-                if self.user_logged_out(i.user):
-                    i.status = "User logged off"
+            self.abort_transfer(download)
+
+            if download.status != "Finished":
+                if self.user_logged_out(download.user):
+                    download.status = "User logged off"
                 else:
-                    i.status = "Cancelled"
+                    download.status = "Cancelled"
 
-            self.update_download(i)
+            self.update_download(download)
             return
 
     def upload_conn_close(self, msg):
         """ The remote peer has closed a file transfer connection """
 
-        log.add_msg_contents(msg)
-
-        sock = msg.sock
+        username = msg.user
+        token = msg.token
+        timed_out = msg.timed_out
 
         # We need a copy due to upload auto-clearing modifying the deque during iteration
-        for i in self.uploads.copy():
-            if i.sock != sock:
+        for upload in self.uploads.copy():
+            if upload.token != token or upload.user != username:
                 continue
 
-            if i.current_byte_offset is not None and i.current_byte_offset >= i.size:
+            if not timed_out and upload.current_byte_offset is not None and upload.current_byte_offset >= upload.size:
                 # We finish the upload here in case the downloading peer has a slow/limited download
                 # speed and finishes later than us
-                self.upload_finished(i, file_handle=i.file)
+
+                if upload.speed is not None:
+                    # Inform the server about the last upload speed for this transfer
+                    log.add_transfer("Sending upload speed %s to the server", human_speed(upload.speed))
+                    self.queue.append(slskmessages.SendUploadSpeed(upload.speed))
+
+                self.upload_finished(upload, file_handle=upload.file)
                 return
 
-            if i.status == "Finished":
+            if upload.status == "Finished":
                 return
 
-            self.abort_transfer(i)
+            self.abort_transfer(upload)
 
-            if self.user_logged_out(i.user):
-                i.status = "User logged off"
+            if self.user_logged_out(upload.user):
+                upload.status = "User logged off"
             else:
-                i.status = "Cancelled"
+                upload.status = "Cancelled"
 
                 # Transfer ended abruptly. Tell the peer to re-queue the file. If the transfer was
                 # intentionally cancelled, the peer should ignore this message.
-                self.core.send_message_to_peer(i.user, slskmessages.UploadFailed(None, i.filename))
+                self.core.send_message_to_peer(upload.user, slskmessages.UploadFailed(file=upload.filename))
 
-            if not self.auto_clear_upload(i):
-                self.update_upload(i)
+            if not self.auto_clear_upload(upload):
+                self.update_upload(upload)
 
             self.check_upload_queue()
             return
 
     def place_in_queue_request(self, msg):
         """ Peer code: 51 """
-
-        log.add_msg_contents(msg)
 
         user = msg.init.target_user
         filename = msg.file
@@ -1463,39 +1500,39 @@ class Transfers:
         transfer = None
 
         if self.config.sections["transfers"]["fifoqueue"]:
-            for i in reversed(self.uploads):
+            for upload in reversed(self.uploads):
                 # Ignore non-queued files
-                if i.status != "Queued":
+                if upload.status != "Queued":
                     continue
 
-                if not privileged_user or self.is_privileged(i.user):
+                if not privileged_user or self.is_privileged(upload.user):
                     queue_position += 1
 
                 # Stop counting on the matching file
-                if i.user == user and i.filename == filename:
-                    transfer = i
+                if upload.filename == filename and upload.user == user:
+                    transfer = upload
                     break
 
         else:
             num_queued_users = len(self.user_update_counters)
 
-            for i in reversed(self.uploads):
-                if i.user != user:
+            for upload in reversed(self.uploads):
+                if upload.user != user:
                     continue
 
                 # Ignore non-queued files
-                if i.status != "Queued":
+                if upload.status != "Queued":
                     continue
 
                 queue_position += num_queued_users
 
                 # Stop counting on the matching file
-                if i.filename == filename:
-                    transfer = i
+                if upload.filename == filename:
+                    transfer = upload
                     break
 
         if queue_position > 0:
-            self.queue.append(slskmessages.PlaceInQueue(msg.init, filename, queue_position))
+            self.queue.append(slskmessages.PlaceInQueue(init=msg.init, filename=filename, place=queue_position))
 
         if transfer is None:
             return
@@ -1508,32 +1545,30 @@ class Transfers:
         """ Peer code: 44 """
         """ The peer tells us our place in queue for a particular transfer """
 
-        log.add_msg_contents(msg)
-
         username = msg.init.target_user
         filename = msg.filename
 
-        for i in self.downloads:
-            if i.user == username and i.filename == filename and i.status == "Queued":
-                i.queue_position = msg.place
-                self.update_download(i, update_parent=False)
+        for download in self.downloads:
+            if download.filename == filename and download.status == "Queued" and download.user == username:
+                download.queue_position = msg.place
+                self.update_download(download, update_parent=False)
                 return
 
     """ Transfer Actions """
 
     def get_folder(self, user, folder):
-        self.core.send_message_to_peer(user, slskmessages.FolderContentsRequest(None, folder))
+        self.core.send_message_to_peer(user, slskmessages.FolderContentsRequest(directory=folder, token=1))
 
     def get_file(self, user, filename, path="", transfer=None, size=0, bitrate=None, length=None, ui_callback=True):
 
         path = clean_path(path, absolute=True)
 
         if transfer is None:
-            for i in self.downloads:
-                if i.user == user and i.filename == filename and i.path == path:
-                    if i.status == "Finished":
+            for download in self.downloads:
+                if download.filename == filename and download.path == path and download.user == user:
+                    if download.status == "Finished":
                         # Duplicate finished download found, verify that it's still present on disk later
-                        transfer = i
+                        transfer = download
                         break
 
                     # Duplicate active/cancelled download found, stop here
@@ -1549,12 +1584,13 @@ class Transfers:
         else:
             transfer.filename = filename
             transfer.status = "Queued"
+            transfer.token = None
 
         self.core.watch_user(user)
 
         if self.config.sections["transfers"]["enablefilters"]:
             try:
-                downloadregexp = re.compile(self.config.sections["transfers"]["downloadregexp"], re.I)
+                downloadregexp = re.compile(self.config.sections["transfers"]["downloadregexp"], flags=re.IGNORECASE)
 
                 if downloadregexp.search(filename) is not None:
                     log.add_transfer("Filtering: %s", filename)
@@ -1565,7 +1601,7 @@ class Transfers:
                     if self.auto_clear_download(transfer):
                         return
 
-            except Exception:
+            except re.error:
                 pass
 
         if self.user_logged_out(user):
@@ -1586,7 +1622,7 @@ class Transfers:
                     "user": user
                 })
                 self.core.send_message_to_peer(
-                    user, slskmessages.QueueUpload(None, filename, transfer.legacy_attempt))
+                    user, slskmessages.QueueUpload(file=filename, legacy_client=transfer.legacy_attempt))
 
         if ui_callback:
             self.update_download(transfer)
@@ -1616,6 +1652,7 @@ class Transfers:
             transfer.filename = filename
             transfer.size = size
             transfer.status = "Queued"
+            transfer.token = None
 
         log.add_transfer("Initializing upload request for file %(file)s to user %(user)s", {
             'file': filename,
@@ -1644,7 +1681,9 @@ class Transfers:
             })
 
             self.core.send_message_to_peer(
-                user, slskmessages.TransferRequest(None, 1, transfer.token, filename, size, real_path))
+                user, slskmessages.TransferRequest(
+                    direction=TransferDirection.UPLOAD, token=transfer.token, file=filename, filesize=size,
+                    realfile=real_path))
 
         self.update_upload(transfer)
 
@@ -1656,24 +1695,27 @@ class Transfers:
         if self.is_privileged(user):
             transferobj.modifier = "privileged" if user in self.privileged_users else "prioritized"
 
-        for i in self.uploads:
-            if i.user == user and i.filename == filename:
-                if i.status == "Queued":
+        for upload in self.uploads:
+            if upload.filename == filename and upload.user == user:
+                if upload.status == "Queued":
                     # This upload was queued previously
                     # Use the previous queue position
-                    transferobj.queue_position = i.queue_position
+                    transferobj.queue_position = upload.queue_position
                     previously_queued = True
 
-                if i.status != "Finished":
-                    transferobj.current_byte_offset = i.current_byte_offset
+                if upload.status != "Finished":
+                    transferobj.current_byte_offset = upload.current_byte_offset
+                    transferobj.time_elapsed = upload.time_elapsed
+                    transferobj.time_left = upload.time_left
+                    transferobj.speed = upload.speed
 
-                if i in self.transfer_request_times:
-                    del self.transfer_request_times[i]
+                if upload in self.transfer_request_times:
+                    del self.transfer_request_times[upload]
 
-                self.uploads.remove(i)
+                self.uploads.remove(upload)
 
                 if self.uploadsview:
-                    self.uploadsview.remove_specific(i, True)
+                    self.uploadsview.remove_specific(upload, True)
 
                 break
 
@@ -1682,9 +1724,6 @@ class Transfers:
         if previously_queued:
             self.uploads.insert(old_index, transferobj)
             return
-
-        if user not in self.user_update_counters:
-            self.update_user_counter(user)
 
         self.uploads.appendleft(transferobj)
 
@@ -1703,7 +1742,7 @@ class Transfers:
                 return True
 
             if (transfers["uploadallowed"] == 2
-                    and user in (i[0] for i in self.config.sections["server"]["userlist"])):
+                    and user in (x[0] for x in self.config.sections["server"]["userlist"])):
                 # Users in userlist
                 return True
 
@@ -1721,24 +1760,26 @@ class Transfers:
         if not self.core.logged_in:
             return True
 
-        try:
-            return self.core.user_statuses[user] <= 0
+        if user not in self.core.user_statuses:
+            return True
 
-        except (KeyError, TypeError):
-            return False
+        return self.core.user_statuses[user] == UserStatus.OFFLINE
 
-    def get_folder_destination(self, user, directory, remove_prefix=""):
+    def get_folder_destination(self, user, folder, remove_prefix="", remove_destination=True):
 
-        if not remove_prefix:
-            remove_prefix = directory.rsplit('\\', 1)[0]
+        if not remove_prefix and '\\' in folder:
+            remove_prefix = folder.rsplit('\\', 1)[0]
 
-        # Get the last folders in directory path, excluding remove_prefix
-        target_folders = directory.replace(remove_prefix, "").lstrip('\\').replace('\\', os.sep)
+        # Get the last folders in folder path, excluding remove_prefix
+        target_folders = folder.replace(remove_prefix, "").lstrip('\\').replace('\\', os.sep)
 
         # Check if a custom download location was specified
-        if (user in self.requested_folders and directory in self.requested_folders[user]
-                and self.requested_folders[user][directory]):
-            download_location = self.requested_folders[user].pop(directory)
+        if (user in self.requested_folders and folder in self.requested_folders[user]
+                and self.requested_folders[user][folder]):
+            download_location = self.requested_folders[user][folder]
+
+            if remove_destination:
+                del self.requested_folders[user][folder]
         else:
             download_location = self.get_default_download_folder(user)
 
@@ -1755,25 +1796,25 @@ class Transfers:
 
             return maxupslots
 
-        lstlen = sum(1 for i in self.uploads if i.sock is not None)
+        lstlen = sum(1 for upload in self.uploads if upload.sock is not None)
 
         if self.allow_new_uploads():
             return lstlen + 1
 
-        return lstlen
+        return lstlen or 1
 
     def get_upload_queue_size(self, username=None):
 
         if self.is_privileged(username):
             queue_size = 0
 
-            for i in self.uploads:
-                if i.status == "Queued" and self.is_privileged(i.user):
+            for upload in self.uploads:
+                if upload.status == "Queued" and self.is_privileged(upload.user):
                     queue_size += 1
 
             return queue_size
 
-        return sum(1 for i in self.uploads if i.status == "Queued")
+        return sum(1 for upload in self.uploads if upload.status == "Queued")
 
     def get_default_download_folder(self, user):
 
@@ -1802,23 +1843,26 @@ class Transfers:
 
         return folder_path, basename
 
-    def get_existing_download_path(self, user, virtual_path, target_path, size):
+    def get_existing_download_path(self, user, virtual_path, target_path, size, always_return=False):
         """ Returns the download path of a previous download, if available """
 
         folder, basename = self.get_download_destination(user, virtual_path, target_path)
         basename_root, extension = os.path.splitext(basename)
         download_path = os.path.join(folder, basename)
-        download_path_encoded = encode_path(download_path)
         counter = 1
 
-        while os.path.isfile(download_path_encoded):
-            if os.stat(download_path_encoded).st_size == size:
+        while os.path.isfile(encode_path(download_path)):
+            if os.stat(encode_path(download_path)).st_size == size:
                 # Found a previous download with a matching file size
                 return download_path
 
             basename = basename_root + " (" + str(counter) + ")" + extension
             download_path = os.path.join(folder, basename)
             counter += 1
+
+        if always_return:
+            # Get a download path even if it doesn't exist anymore
+            return download_path
 
         return None
 
@@ -1882,8 +1926,10 @@ class Transfers:
     def folder_downloaded_actions(self, user, folderpath):
 
         # walk through downloads and break if any file in the same folder exists, else execute
-        for i in self.downloads:
-            if i.status not in ("Finished", "Paused", "Filtered") and i.path == folderpath:
+        statuses = ("Finished", "Paused", "Filtered")
+
+        for download in self.downloads:
+            if download.path == folderpath and download.status not in statuses:
                 return
 
         config = self.config.sections
@@ -1916,11 +1962,11 @@ class Transfers:
         self.core.notifications.new_text_notification(
             _("OS error: %s") % error, title=_("Download folder error"))
 
-    def download_finished(self, file, i):
+    def download_finished(self, transfer, file_handle=None):
 
-        self.close_file(file, i)
+        self.close_file(file_handle, transfer)
 
-        folder, basename = self.get_download_destination(i.user, i.filename, i.path)
+        folder, basename = self.get_download_destination(transfer.user, transfer.filename, transfer.path)
         folder_encoded = encode_path(folder)
         newname = self.get_renamed(os.path.join(folder, basename))
 
@@ -1929,77 +1975,73 @@ class Transfers:
                 os.makedirs(folder_encoded)
 
             import shutil
-            shutil.move(file.name, encode_path(newname))
+            shutil.move(file_handle.name, encode_path(newname))
 
-        except OSError as inst:
+        except OSError as error:
             log.add(
                 _("Couldn't move '%(tempfile)s' to '%(file)s': %(error)s"), {
-                    'tempfile': "%s" % file.name,
+                    'tempfile': file_handle.name.decode("utf-8", "replace"),
                     'file': newname,
-                    'error': inst
+                    'error': error
                 }
             )
-            self.download_folder_error(i, inst)
-            self.update_download(i)
+            self.download_folder_error(transfer, error)
+            self.update_download(transfer)
             return
 
-        i.status = "Finished"
-        i.current_byte_offset = i.size
-        i.speed = None
-        i.time_left = 0
-        i.sock = None
+        transfer.status = "Finished"
+        transfer.current_byte_offset = transfer.size
+        transfer.sock = None
+        transfer.token = None
 
         self.core.statistics.append_stat_value("completed_downloads", 1)
 
         # Attempt to show notification and execute commands
-        self.file_downloaded_actions(i.user, newname)
-        self.folder_downloaded_actions(i.user, i.path)
+        self.file_downloaded_actions(transfer.user, newname)
+        self.folder_downloaded_actions(transfer.user, transfer.path)
 
         if self.downloadsview:
             # Main tab highlight (bright)
             self.downloadsview.new_transfer_notification(finished=True)
 
         # Attempt to autoclear this download, if configured
-        if not self.auto_clear_download(i):
-            self.update_download(i)
+        if not self.auto_clear_download(transfer):
+            self.update_download(transfer)
 
-        self.core.pluginhandler.download_finished_notification(i.user, i.filename, newname)
+        self.core.pluginhandler.download_finished_notification(transfer.user, transfer.filename, newname)
 
         log.add_download(
             _("Download finished: user %(user)s, file %(file)s"), {
-                'user': i.user,
-                'file': i.filename
+                'user': transfer.user,
+                'file': transfer.filename
             }
         )
 
-    def upload_finished(self, i, file_handle=None):
+    def upload_finished(self, transfer, file_handle=None):
 
-        self.close_file(file_handle, i)
+        self.close_file(file_handle, transfer)
 
-        i.status = "Finished"
-        i.current_byte_offset = i.size
-        i.speed = None
-        i.time_left = 0
-        i.sock = None
-
-        self.update_user_counter(i.user)
+        transfer.status = "Finished"
+        transfer.current_byte_offset = transfer.size
+        transfer.sock = None
+        transfer.token = None
 
         log.add_upload(
             _("Upload finished: user %(user)s, IP address %(ip)s, file %(file)s"), {
-                'user': i.user,
-                'ip': self.core.protothread.user_addresses.get(i.user),
-                'file': i.filename
+                'user': transfer.user,
+                'ip': self.core.protothread.user_addresses.get(transfer.user),
+                'file': transfer.filename
             }
         )
 
         self.core.statistics.append_stat_value("completed_uploads", 1)
 
         # Autoclear this upload
-        if not self.auto_clear_upload(i):
-            self.update_upload(i)
+        if not self.auto_clear_upload(transfer):
+            self.update_upload(transfer)
 
-        real_path = self.core.shares.virtual2real(i.filename)
-        self.core.pluginhandler.upload_finished_notification(i.user, i.filename, real_path)
+        real_path = self.core.shares.virtual2real(transfer.filename)
+        self.core.pluginhandler.upload_finished_notification(transfer.user, transfer.filename, real_path)
 
         self.check_upload_queue()
 
@@ -2018,6 +2060,7 @@ class Transfers:
     def auto_clear_upload(self, transfer):
 
         if self.config.sections["transfers"]["autoclear_uploads"]:
+            self.update_user_counter(transfer.user)
             self.uploads.remove(transfer)
 
             if self.uploadsview:
@@ -2034,8 +2077,22 @@ class Transfers:
 
     def update_upload(self, transfer, update_parent=True):
 
+        user = transfer.user
+        status = transfer.status
+
         if self.uploadsview:
             self.uploadsview.update_model(transfer, update_parent=update_parent)
+
+        if status == "Queued" and user in self.user_update_counters:
+            # Don't update existing user counter for queued uploads
+            # We don't want to push the user back in the queue if they enqueued new files
+            return
+
+        if status == "Transferring":
+            # Avoid unnecessary updates while transferring
+            return
+
+        self.update_user_counter(user)
 
     def _check_transfer_timeouts(self):
 
@@ -2095,28 +2152,29 @@ class Transfers:
             self.core.shares.pending_network_msgs.append(msg)
             return False, None
 
-        # Do we actually share that file with the world?
-        if not self.core.shares.file_is_shared(user, filename, real_path):
-            return False, "File not shared."
-
         # Is that file already in the queue?
         if self.file_is_upload_queued(user, filename):
             return False, "Queued"
 
         # Has user hit queue limit?
-        limits = True
+        enable_limits = True
 
         if self.config.sections["transfers"]["friendsnolimits"]:
-            friend = user in (i[0] for i in self.config.sections["server"]["userlist"])
+            friend = user in (x[0] for x in self.config.sections["server"]["userlist"])
 
             if friend:
-                limits = False
+                enable_limits = False
 
-        if limits and self.queue_limit_reached(user):
-            return False, "Too many megabytes"
+        if enable_limits:
+            limit_reached, reason = self.queue_limit_reached(user)
 
-        if limits and self.file_limit_reached(user):
-            return False, "Too many files"
+            if limit_reached:
+                return False, reason
+
+        # Do we actually share that file with the world?
+        if (not self.core.shares.file_is_shared(user, filename, real_path)
+                or not self.file_is_readable(filename, real_path)):
+            return False, "File not shared."
 
         return True, None
 
@@ -2128,35 +2186,35 @@ class Transfers:
         statuslist_limited = ("Too many files", "Too many megabytes")
         reset_count = False
 
-        for transfer in reversed(self.downloads):
-            status = transfer.status
+        for download in reversed(self.downloads):
+            status = download.status
 
             if (self.download_queue_timer_count >= 12
                     and (status in statuslist_limited or status.startswith("User limit of"))):
                 # Re-queue limited downloads every 12 minutes
 
                 log.add_transfer("Re-queuing file %(filename)s from user %(user)s in download queue", {
-                    "filename": transfer.filename,
-                    "user": transfer.user
+                    "filename": download.filename,
+                    "user": download.user
                 })
                 reset_count = True
 
-                self.abort_transfer(transfer)
-                self.get_file(transfer.user, transfer.filename, transfer.path, transfer)
+                self.abort_transfer(download)
+                self.get_file(download.user, download.filename, path=download.path, transfer=download)
 
             if self.download_queue_timer_count % 3 == 0:
                 if status in statuslist_failed:
                     # Retry failed downloads every 3 minutes
 
-                    self.abort_transfer(transfer)
-                    self.get_file(transfer.user, transfer.filename, transfer.path, transfer)
+                    self.abort_transfer(download)
+                    self.get_file(download.user, download.filename, path=download.path, transfer=download)
 
                 if status == "Queued":
                     # Request queue position every 3 minutes
 
                     self.core.send_message_to_peer(
-                        transfer.user,
-                        slskmessages.PlaceInQueueRequest(None, transfer.filename, transfer.legacy_attempt)
+                        download.user,
+                        slskmessages.PlaceInQueueRequest(file=download.filename, legacy_client=download.legacy_attempt)
                     )
 
         # Save list of downloads to file every one minute
@@ -2178,12 +2236,12 @@ class Transfers:
         queued_users = {}
         uploading_users = set()
 
-        for i in reversed(self.uploads):
-            if i.status == "Queued":
-                user = i.user
+        for upload in reversed(self.uploads):
+            if upload.status == "Queued":
+                user = upload.user
 
                 if user not in first_queued_transfers and user not in uploading_users:
-                    first_queued_transfers[user] = i
+                    first_queued_transfers[user] = upload
 
                 if user in queued_users:
                     continue
@@ -2191,9 +2249,9 @@ class Transfers:
                 privileged = self.is_privileged(user)
                 queued_users[user] = privileged
 
-            elif i.status in active_statuses:
+            elif upload.status in active_statuses:
                 # We're currently uploading a file to the user
-                user = i.user
+                user = upload.user
 
                 if user in uploading_users:
                     continue
@@ -2221,7 +2279,7 @@ class Transfers:
                 target_user = user
                 break
 
-        for user, update_time in list(self.user_update_counters.items()):
+        for user, update_time in self.user_update_counters.copy().items():
             if user not in queued_users:
                 del self.user_update_counters[user]
                 continue
@@ -2280,10 +2338,10 @@ class Transfers:
 
         if self.upload_queue_timer_count >= 18:
             # Re-queue timed out uploads every 3 minutes
-            for transfer in reversed(self.uploads):
-                if transfer.status == "Connection timeout":
-                    transfer.status = "Queued"
-                    self.update_upload(transfer)
+            for upload in reversed(self.uploads):
+                if upload.status == "Connection timeout":
+                    upload.status = "Queued"
+                    self.update_upload(upload)
 
             self.upload_queue_timer_count = 0
 
@@ -2297,7 +2355,7 @@ class Transfers:
         self.user_update_counter += 1
         self.user_update_counters[user] = self.user_update_counter
 
-    def ban_user(self, user, ban_message=None):
+    def ban_users(self, users, ban_message=None):
         """ Ban a user, cancel all the user's uploads, send a 'Banned'
         message via the transfers, and clear the transfers from the
         uploads list. """
@@ -2310,7 +2368,7 @@ class Transfers:
             banmsg = "Banned"
 
         for upload in self.uploads.copy():
-            if upload.user != user:
+            if upload.user not in users:
                 continue
 
             self.abort_transfer(upload, reason=banmsg, send_fail_message=True)
@@ -2318,7 +2376,10 @@ class Transfers:
             if self.uploadsview:
                 self.uploadsview.remove_specific(upload)
 
-        self.core.network_filter.ban_user(user)
+        for user in users:
+            self.core.network_filter.ban_user(user)
+
+        self.check_upload_queue()
 
     def retry_download(self, transfer):
 
@@ -2328,7 +2389,7 @@ class Transfers:
         user = transfer.user
 
         self.abort_transfer(transfer)
-        self.get_file(user, transfer.filename, transfer.path, transfer)
+        self.get_file(user, transfer.filename, path=transfer.path, transfer=transfer)
 
     def retry_upload(self, transfer):
 
@@ -2340,11 +2401,11 @@ class Transfers:
 
         user = transfer.user
 
-        for i in self.uploads:
-            if i.user != user:
+        for upload in self.uploads:
+            if upload.user != user:
                 continue
 
-            if i.status in active_statuses:
+            if upload.status in active_statuses:
                 # User already has an active upload, queue the retry attempt
                 if transfer.status != "Queued":
                     transfer.status = "Queued"
@@ -2358,9 +2419,7 @@ class Transfers:
         transfer.legacy_attempt = False
         transfer.size_changed = False
         transfer.token = None
-        transfer.speed = None
         transfer.queue_position = 0
-        transfer.time_left = 0
 
         if transfer.sock is not None:
             self.queue.append(slskmessages.ConnClose(transfer.sock))
@@ -2373,8 +2432,6 @@ class Transfers:
             self.close_file(transfer.file, transfer)
 
             if transfer in self.uploads:
-                self.update_user_counter(transfer.user)
-                self.check_upload_queue()
                 log.add_upload(
                     _("Upload aborted, user %(user)s file %(file)s"), {
                         "user": transfer.user,
@@ -2391,15 +2448,14 @@ class Transfers:
 
         elif send_fail_message and transfer in self.uploads and transfer.status == "Queued":
             self.core.send_message_to_peer(
-                transfer.user, slskmessages.UploadDenied(None, file=transfer.filename, reason=reason))
+                transfer.user, slskmessages.UploadDenied(file=transfer.filename, reason=reason))
 
     """ Filters """
 
     def update_download_filters(self):
 
-        proccessedfilters = []
-        outfilter = "(\\\\("
         failed = {}
+        outfilter = "(\\\\("
         download_filters = sorted(self.config.sections["transfers"]["downloadfilters"])
         # Get Filters from config file and check their escaped status
         # Test if they are valid regular expressions and save error messages
@@ -2409,72 +2465,68 @@ class Transfers:
             if escaped:
                 dfilter = re.escape(dfilter)
                 dfilter = dfilter.replace("\\*", ".*")
-            else:
-                # Avoid "Nothing to repeat" error
-                dfilter = dfilter.replace("*", "\\*").replace("+", "\\+")
 
             try:
                 re.compile("(" + dfilter + ")")
                 outfilter += dfilter
-                proccessedfilters.append(dfilter)
 
-            except Exception as error:
+                if item is not download_filters[-1]:
+                    outfilter += "|"
+
+            except re.error as error:
                 failed[dfilter] = error
 
-            proccessedfilters.append(dfilter)
-
-            if item is not download_filters[-1]:
-                outfilter += "|"
-
-        # Crop trailing pipes
-        while outfilter[-1] == "|":
-            outfilter = outfilter[:-1]
-
         outfilter += ")$)"
+
         try:
             re.compile(outfilter)
-            self.config.sections["transfers"]["downloadregexp"] = outfilter
-            # Send error messages for each failed filter to log window
-            if failed:
-                errors = ""
 
-                for dfilter, error in failed.items():
-                    errors += "Filter: %s Error: %s " % (dfilter, error)
-
-                log.add(_("Error: %(num)d Download filters failed! %(error)s "), {'num': len(failed), 'error': errors})
-
-        except Exception as error:
+        except re.error as error:
             # Strange that individual filters _and_ the composite filter both fail
             log.add(_("Error: Download Filter failed! Verify your filters. Reason: %s"), error)
             self.config.sections["transfers"]["downloadregexp"] = ""
+            return
+
+        self.config.sections["transfers"]["downloadregexp"] = outfilter
+
+        # Send error messages for each failed filter to log window
+        if not failed:
+            return
+
+        errors = ""
+
+        for dfilter, error in failed.items():
+            errors += "Filter: %s Error: %s " % (dfilter, error)
+
+        log.add(_("Error: %(num)d Download filters failed! %(error)s "), {'num': len(failed), 'error': errors})
 
     """ Exit """
 
     def abort_transfers(self):
         """ Stop all transfers on disconnect/shutdown """
 
-        update = False
+        need_update = False
 
-        for i in self.downloads:
-            if i.status not in ("Finished", "Filtered", "Paused"):
-                self.abort_transfer(i)
-                i.status = "User logged off"
-                update = True
+        for download in self.downloads:
+            if download.status not in ("Finished", "Filtered", "Paused"):
+                self.abort_transfer(download)
+                download.status = "User logged off"
+                need_update = True
 
-        if self.downloadsview and update:
+        if self.downloadsview and need_update:
             self.downloadsview.update_model()
 
-        update = False
+        need_update = False
 
-        for i in self.uploads.copy():
-            if i.status != "Finished":
-                self.uploads.remove(i)
-                update = True
+        for upload in self.uploads.copy():
+            if upload.status != "Finished":
+                self.uploads.remove(upload)
+                need_update = True
 
                 if self.uploadsview:
-                    self.uploadsview.remove_specific(i, True, update_parent=False)
+                    self.uploadsview.remove_specific(upload, True, update_parent=False)
 
-        if self.uploadsview and update:
+        if self.uploadsview and need_update:
             self.uploadsview.update_model()
 
         self.privileged_users.clear()
@@ -2484,13 +2536,19 @@ class Transfers:
 
     def get_downloads(self):
         """ Get a list of downloads """
-        return [[i.user, i.filename, i.path, i.status, i.size, i.current_byte_offset, i.bitrate, i.length]
-                for i in reversed(self.downloads)]
+        return [
+            [download.user, download.filename, download.path, download.status, download.size,
+             download.current_byte_offset, download.bitrate, download.length]
+            for download in reversed(self.downloads)
+        ]
 
     def get_uploads(self):
         """ Get a list of finished uploads """
-        return [[i.user, i.filename, i.path, i.status, i.size, i.current_byte_offset, i.bitrate, i.length]
-                for i in reversed(self.uploads) if i.status == "Finished"]
+        return [
+            [upload.user, upload.filename, upload.path, upload.status, upload.size, upload.current_byte_offset,
+             upload.bitrate, upload.length]
+            for upload in reversed(self.uploads) if upload.status == "Finished"
+        ]
 
     def save_downloads_callback(self, filename):
         json.dump(self.get_downloads(), filename, ensure_ascii=False)

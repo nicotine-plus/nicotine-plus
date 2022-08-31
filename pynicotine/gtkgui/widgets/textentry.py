@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import sys
+
 from os.path import commonprefix
 
 from gi.repository import Gtk
@@ -52,13 +54,9 @@ class ChatEntry:
         Accelerator("<Shift>Tab", entry, self.on_tab_complete_accelerator, True)
         Accelerator("Tab", entry, self.on_tab_complete_accelerator)
 
-        # Emoji Picker
-        try:
+        # Emoji Picker (disable on Windows and macOS for now until we render emoji properly there)
+        if sys.platform not in ("win32", "darwin"):
             self.entry.set_property("show-emoji-icon", True)
-
-        except TypeError:
-            # GTK version not supported
-            pass
 
         # Spell Check
         if config.sections["ui"]["spellcheck"]:
@@ -564,6 +562,9 @@ class TextSearchBar:
             Accelerator("Escape", widget, self.on_hide_search_accelerator)
 
     def on_search_match(self, search_type, restarted=False):
+
+        if not self.search_bar.get_search_mode():
+            return
 
         buffer = self.textview.get_buffer()
         query = self.entry.get_text()
