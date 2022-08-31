@@ -26,7 +26,7 @@ def check_arguments():
     from pynicotine.config import config
 
     parser = argparse.ArgumentParser(
-        description=config.summary, epilog="%s <%s>" % (config.author, config.website_url), add_help=False
+        description=config.summary, epilog=_("Website: %s") % config.website_url, add_help=False
     )
 
     # Visible arguments
