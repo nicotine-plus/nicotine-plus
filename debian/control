@@ -16,7 +16,7 @@ Build-Depends: debhelper-compat (= 10),
                python3-setuptools
 Vcs-Git: https://github.com/nicotine-plus/nicotine-plus.git
 Vcs-Browser: https://github.com/nicotine-plus/nicotine-plus
-X-Python3-Version: >= 3.5
+X-Python3-Version: >= 3.6
 Homepage: https://nicotine-plus.org
 Rules-Requires-Root: no
 

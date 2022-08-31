@@ -102,7 +102,7 @@ functionality while keeping current with the Soulseek protocol.""",
             ("share/icons/hicolor/scalable/intl", glob.glob("pynicotine/gtkgui/icons/hicolor/scalable/intl/*.svg")),
             ("share/icons/hicolor/scalable/status", glob.glob("pynicotine/gtkgui/icons/hicolor/scalable/status/*.svg"))
         ] + get_translation_paths(),
-        python_requires=">=3.5",
+        python_requires=">=3.6",
         install_requires=["PyGObject>=3.22"],
         cmdclass={"build_py": BuildPyCommand}
     )

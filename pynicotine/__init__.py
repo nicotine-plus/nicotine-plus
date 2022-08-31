@@ -92,7 +92,7 @@ def check_arguments():
 def check_core_dependencies():
 
     # Require minimum Python version
-    python_version = (3, 5)
+    python_version = (3, 6)
 
     import sys
     if sys.version_info < python_version:

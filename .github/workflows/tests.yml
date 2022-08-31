@@ -8,15 +8,13 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-20.04, ubuntu-22.04]
-        python: ['3.5', '3.6', '3.7', '3.8', '3.9', '3.10', 'pypy-3.6', 'pypy-3.7', 'pypy-3.8', 'pypy-3.9']
+        python: ['3.6', '3.7', '3.8', '3.9', '3.10', 'pypy-3.6', 'pypy-3.7', 'pypy-3.8', 'pypy-3.9']
         gtk: [3, 4]
         exclude:
           - os: ubuntu-20.04
             gtk: 4
           - os: ubuntu-22.04
             gtk: 3
-          - os: ubuntu-22.04
-            python: '3.5'
           - os: ubuntu-22.04
             python: '3.6'
     runs-on: ${{ matrix.os }}

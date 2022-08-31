@@ -22,7 +22,6 @@
 
 import random
 import string
-import sys
 
 from collections import OrderedDict
 
@@ -86,8 +85,7 @@ class TreeView:
 
     def _append_columns(self, cols, column_config):
 
-        # Column order not supported in Python 3.5
-        if not column_config or sys.version_info[:2] <= (3, 5):
+        if not column_config:
             for column in cols.values():
                 self.widget.append_column(column)
             return
@@ -683,8 +681,7 @@ def on_copy_cell_data_accelerator(treeview, *_args):
 
 def append_columns(treeview, cols, column_config):
 
-    # Column order not supported in Python 3.5
-    if not column_config or sys.version_info[:2] <= (3, 5):
+    if not column_config:
         for column in cols.values():
             treeview.append_column(column)
         return
