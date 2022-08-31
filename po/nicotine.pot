@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-31 18:51+0300\n"
+"POT-Creation-Date: 2022-08-31 21:23+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1590,12 +1590,15 @@ msgid "Add Replacement"
 msgstr ""
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1233
-#: pynicotine/gtkgui/dialogs/preferences.py:1262
-msgid "Enter the text pattern and replacement, respectively:"
+msgid "Enter a text pattern and what to replace it with"
 msgstr ""
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1261
 msgid "Edit Replacement"
+msgstr ""
+
+#: pynicotine/gtkgui/dialogs/preferences.py:1262
+msgid "Enter a text pattern and what to replace it with:"
 msgstr ""
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1329
@@ -1670,7 +1673,7 @@ msgid "Add URL Handler"
 msgstr ""
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1875
-msgid "Enter the protocol and command for the URL hander, respectively:"
+msgid "Enter the protocol and the command for the URL hander:"
 msgstr ""
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1902
