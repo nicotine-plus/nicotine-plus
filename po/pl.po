@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-31 18:51+0300\n"
+"POT-Creation-Date: 2022-08-31 21:23+0300\n"
 "PO-Revision-Date: 2022-08-31 18:23+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -1207,8 +1207,8 @@ msgstr ""
 #, fuzzy
 msgid "No graphical environment available, using headless (no GUI) mode"
 msgstr ""
-"Brak dostępnego środowiska graficznego, korzystającego z trybu bezgłowego ("
-"bez GUI)"
+"Brak dostępnego środowiska graficznego, korzystającego z trybu bezgłowego "
+"(bez GUI)"
 
 #: pynicotine/gtkgui/application.py:167
 msgid "Critical Error"
@@ -1620,15 +1620,19 @@ msgid "Add Replacement"
 msgstr "Zamiennik"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1233
-#: pynicotine/gtkgui/dialogs/preferences.py:1262
 #, fuzzy
-msgid "Enter the text pattern and replacement, respectively:"
+msgid "Enter a text pattern and what to replace it with"
 msgstr "Wprowadź odpowiednio wzór tekstu i zamianę:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1261
 #, fuzzy
 msgid "Edit Replacement"
 msgstr "Zamiennik"
+
+#: pynicotine/gtkgui/dialogs/preferences.py:1262
+#, fuzzy
+msgid "Enter a text pattern and what to replace it with:"
+msgstr "Wprowadź odpowiednio wzór tekstu i zamianę:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1329
 msgid "Top"
@@ -1704,7 +1708,7 @@ msgstr "Obsługa URL"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1875
 #, fuzzy
-msgid "Enter the protocol and command for the URL hander, respectively:"
+msgid "Enter the protocol and the command for the URL hander:"
 msgstr ""
 "Wprowadź odpowiednio protokół i polecenie dla programu obsługującego adres "
 "URL:"
@@ -4962,8 +4966,8 @@ msgid ""
 "Values must be entered as numeric digits only. The unit is always Kb/s "
 "(Kilobits per second)."
 msgstr ""
-"Wartości należy wprowadzać wyłącznie jako cyfry. Jednostką jest zawsze Kb/s ("
-"kilobity na sekundę)."
+"Wartości należy wprowadzać wyłącznie jako cyfry. Jednostką jest zawsze Kb/s "
+"(kilobity na sekundę)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:325
 #, fuzzy

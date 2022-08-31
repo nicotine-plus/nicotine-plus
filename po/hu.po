@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-31 18:51+0300\n"
+"POT-Creation-Date: 2022-08-31 21:23+0300\n"
 "PO-Revision-Date: 2022-08-31 18:23+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -1714,15 +1714,19 @@ msgid "Add Replacement"
 msgstr "Csere"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1233
-#: pynicotine/gtkgui/dialogs/preferences.py:1262
 #, fuzzy
-msgid "Enter the text pattern and replacement, respectively:"
+msgid "Enter a text pattern and what to replace it with"
 msgstr "Adja meg a szövegmintát és a cserét:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1261
 #, fuzzy
 msgid "Edit Replacement"
 msgstr "Csere"
+
+#: pynicotine/gtkgui/dialogs/preferences.py:1262
+#, fuzzy
+msgid "Enter a text pattern and what to replace it with:"
+msgstr "Adja meg a szövegmintát és a cserét:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1329
 msgid "Top"
@@ -1798,7 +1802,7 @@ msgstr "URL-kezelők"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1875
 #, fuzzy
-msgid "Enter the protocol and command for the URL hander, respectively:"
+msgid "Enter the protocol and the command for the URL hander:"
 msgstr "Adja meg az URL-osztó protokollját és parancsát:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1902
@@ -5128,8 +5132,8 @@ msgid ""
 "Values must be entered as numeric digits only. The unit is always Kb/s "
 "(Kilobits per second)."
 msgstr ""
-"Az értékeket csak számjegyekként kell megadni. A mértékegység mindig Kb/s ("
-"kilobit/s)."
+"Az értékeket csak számjegyekként kell megadni. A mértékegység mindig Kb/s "
+"(kilobit/s)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:325
 #, fuzzy

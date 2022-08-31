@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-31 18:51+0300\n"
+"POT-Creation-Date: 2022-08-31 21:23+0300\n"
 "PO-Revision-Date: 2022-08-31 18:23+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -1627,15 +1627,19 @@ msgid "Add Replacement"
 msgstr "Remplacement"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1233
-#: pynicotine/gtkgui/dialogs/preferences.py:1262
 #, fuzzy
-msgid "Enter the text pattern and replacement, respectively:"
+msgid "Enter a text pattern and what to replace it with"
 msgstr "Entrez le modèle de texte et le remplacement, respectivement :"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1261
 #, fuzzy
 msgid "Edit Replacement"
 msgstr "Remplacement"
+
+#: pynicotine/gtkgui/dialogs/preferences.py:1262
+#, fuzzy
+msgid "Enter a text pattern and what to replace it with:"
+msgstr "Entrez le modèle de texte et le remplacement, respectivement :"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1329
 msgid "Top"
@@ -1711,7 +1715,7 @@ msgstr "Gestionnaires d'URL"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1875
 #, fuzzy
-msgid "Enter the protocol and command for the URL hander, respectively:"
+msgid "Enter the protocol and the command for the URL hander:"
 msgstr ""
 "Entrez le protocole et la commande pour le gestionnaire d'URL, "
 "respectivement :"
@@ -5001,8 +5005,8 @@ msgid ""
 msgstr ""
 "Ajoutez < ou > pour rechercher des fichiers plus petits/plus grands que la "
 "valeur donnée :\n"
-"    >10,5 m|<1 g pour afficher les fichiers de plus de 10,5 Mio (mébioctets),"
-"\n"
+"    >10,5 m|<1 g pour afficher les fichiers de plus de 10,5 Mio "
+"(mébioctets),\n"
 "    mais inférieur à 1 Gio (gibioctets), utilisez un | entre conditions."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:277
@@ -5036,8 +5040,8 @@ msgid ""
 "    with a maximum bitrate of 1411 Kb/s."
 msgstr ""
 "Comme la taille du fichier (ci-dessus), les opérateurs =, !, < et > peuvent "
-"être utilisés, et plusieurs conditions peuvent être spécifiées avec | tuyaux "
-":\n"
+"être utilisés, et plusieurs conditions peuvent être spécifiées avec | "
+"tuyaux :\n"
 "    >256|<1411 pour afficher les fichiers avec un débit d'au moins 256 Kb/s\n"
 "    avec un débit maximum de 1411 Kb/s."
 

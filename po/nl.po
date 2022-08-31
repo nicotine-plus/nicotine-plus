@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-31 18:51+0300\n"
+"POT-Creation-Date: 2022-08-31 21:23+0300\n"
 "PO-Revision-Date: 2022-08-31 18:23+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -1612,13 +1612,18 @@ msgid "Add Replacement"
 msgstr "Vervanging toevoegen"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1233
-#: pynicotine/gtkgui/dialogs/preferences.py:1262
-msgid "Enter the text pattern and replacement, respectively:"
+#, fuzzy
+msgid "Enter a text pattern and what to replace it with"
 msgstr "Voer respectievelijk het tekstpatroon en de vervanging in:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1261
 msgid "Edit Replacement"
 msgstr "Bewerking Vervanging"
+
+#: pynicotine/gtkgui/dialogs/preferences.py:1262
+#, fuzzy
+msgid "Enter a text pattern and what to replace it with:"
+msgstr "Voer respectievelijk het tekstpatroon en de vervanging in:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1329
 msgid "Top"
@@ -1692,7 +1697,8 @@ msgid "Add URL Handler"
 msgstr "URL-programma opgeven"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1875
-msgid "Enter the protocol and command for the URL hander, respectively:"
+#, fuzzy
+msgid "Enter the protocol and the command for the URL hander:"
 msgstr ""
 "Voer respectievelijk het protocol en het commando voor de URL-hander in:"
 
@@ -4926,8 +4932,8 @@ msgid ""
 "The better-known variants kb, mb, and gb can also be used for kilobyte, "
 "megabyte, and gigabyte units."
 msgstr ""
-"De bekendere varianten kb, mb en gb kunnen ook worden gebruikt voor kilobyte-"
-", megabyte- en gigabyte-eenheden."
+"De bekendere varianten kb, mb en gb kunnen ook worden gebruikt voor "
+"kilobyte-, megabyte- en gigabyte-eenheden."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:305
 msgid "Filters files based upon their bitrate."
@@ -4950,8 +4956,8 @@ msgid ""
 "    with a maximum bitrate of 1411 Kb/s."
 msgstr ""
 "Net als bij Bestandsgrootte (hierboven), kunnen operators =, !, < en > "
-"worden gebruikt en kunnen meerdere voorwaarden worden opgegeven met | pijpen:"
-"\n"
+"worden gebruikt en kunnen meerdere voorwaarden worden opgegeven met | "
+"pijpen:\n"
 "    >256|<1411 om bestanden te tonen met een bitrate van minimaal 256 Kb/s\n"
 "    met een maximale bitrate van 1411 Kb/s."
 
@@ -4991,14 +4997,15 @@ msgid ""
 msgstr ""
 "Met | . kunnen meerdere voorwaarden worden opgegeven pijp scheiders:\n"
 "    >6:00|<12:00 om bestanden tussen 6 en 12 minuten te tonen.\n"
-"    !9:54|!8:43|!7:32 om bepaalde bestanden voor de resultaten te verbergen."
-"\n"
+"    !9:54|!8:43|!7:32 om bepaalde bestanden voor de resultaten te "
+"verbergen.\n"
 "    =5:34|=4:23|=3:05 om bestanden met een specifieke duur op te nemen."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:401
 #, fuzzy
 msgid "To exclude non-audio files use !0 in the duration filter."
-msgstr "Om niet-audiobestanden uit te sluiten, gebruikt u !0 in het duurfilter."
+msgstr ""
+"Om niet-audiobestanden uit te sluiten, gebruikt u !0 in het duurfilter."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:424
 #, fuzzy

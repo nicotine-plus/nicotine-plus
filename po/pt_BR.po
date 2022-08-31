@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-31 18:51+0300\n"
+"POT-Creation-Date: 2022-08-31 21:23+0300\n"
 "PO-Revision-Date: 2022-08-31 18:23+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
@@ -1903,15 +1903,19 @@ msgid "Add Replacement"
 msgstr "Substituição"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1233
-#: pynicotine/gtkgui/dialogs/preferences.py:1262
 #, fuzzy
-msgid "Enter the text pattern and replacement, respectively:"
+msgid "Enter a text pattern and what to replace it with"
 msgstr "Insira o padrão de texto e a substituição, respectivamente:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1261
 #, fuzzy
 msgid "Edit Replacement"
 msgstr "Substituição"
+
+#: pynicotine/gtkgui/dialogs/preferences.py:1262
+#, fuzzy
+msgid "Enter a text pattern and what to replace it with:"
+msgstr "Insira o padrão de texto e a substituição, respectivamente:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1329
 #, fuzzy
@@ -2000,7 +2004,7 @@ msgstr "Associador"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1875
 #, fuzzy
-msgid "Enter the protocol and command for the URL hander, respectively:"
+msgid "Enter the protocol and the command for the URL hander:"
 msgstr ""
 "Insira o protocolo e o comando para o manipulador de URL, respectivamente:"
 
@@ -5695,8 +5699,8 @@ msgid ""
 "    >10.5m|<1g to show files larger than 10.5 MiB (mebibytes),\n"
 "    but smaller than 1 GiB (gibibytes), use a | between conditions."
 msgstr ""
-"Anexar < ou > para localizar arquivos menores/maiores que o valor fornecido:"
-"\n"
+"Anexar < ou > para localizar arquivos menores/maiores que o valor "
+"fornecido:\n"
 "    >10,5m|<1g para mostrar arquivos maiores que 10,5 MiB (mebibytes),\n"
 "    mas menor que 1 GiB (gibibytes), use um | entre as condições."
 
@@ -5758,8 +5762,8 @@ msgid ""
 "    >5:30 to show files at least 5 and a half minutes long.\n"
 "    <5:30:00 shows files less than 5 and a half hours long."
 msgstr ""
-"Insira um valor bruto em segundos ou use os formatos de hora MM:SS e "
-"HH:MM:SS:\n"
+"Insira um valor bruto em segundos ou use os formatos de hora MM:SS e HH:MM:"
+"SS:\n"
 "    >5:30 para mostrar arquivos com pelo menos 5 minutos e meio de duração.\n"
 "    <5:30:00 mostra arquivos com menos de 5 horas e meia de duração."
 

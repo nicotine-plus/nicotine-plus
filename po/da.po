@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-31 18:51+0300\n"
+"POT-Creation-Date: 2022-08-31 21:23+0300\n"
 "PO-Revision-Date: 2022-08-31 18:23+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Danish <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -1942,15 +1942,19 @@ msgid "Add Replacement"
 msgstr "Ombytning"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1233
-#: pynicotine/gtkgui/dialogs/preferences.py:1262
 #, fuzzy
-msgid "Enter the text pattern and replacement, respectively:"
+msgid "Enter a text pattern and what to replace it with"
 msgstr "Indtast henholdsvis tekstmønster og erstatning:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1261
 #, fuzzy
 msgid "Edit Replacement"
 msgstr "Ombytning"
+
+#: pynicotine/gtkgui/dialogs/preferences.py:1262
+#, fuzzy
+msgid "Enter a text pattern and what to replace it with:"
+msgstr "Indtast henholdsvis tekstmønster og erstatning:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1329
 #, fuzzy
@@ -2039,7 +2043,7 @@ msgstr "Håndterere"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1875
 #, fuzzy
-msgid "Enter the protocol and command for the URL hander, respectively:"
+msgid "Enter the protocol and the command for the URL hander:"
 msgstr "Indtast henholdsvis protokollen og kommandoen for URL-handleren:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1902
@@ -5746,8 +5750,8 @@ msgid ""
 "Values must be entered as numeric digits only. The unit is always Kb/s "
 "(Kilobits per second)."
 msgstr ""
-"Værdier skal kun indtastes som numeriske cifre. Enheden er altid Kb/s ("
-"kilobit pr. sekund)."
+"Værdier skal kun indtastes som numeriske cifre. Enheden er altid Kb/s "
+"(kilobit pr. sekund)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:325
 #, fuzzy
@@ -5783,8 +5787,8 @@ msgid ""
 "    >5:30 to show files at least 5 and a half minutes long.\n"
 "    <5:30:00 shows files less than 5 and a half hours long."
 msgstr ""
-"Indtast en rå værdi i sekunder, eller brug tidsformaterne MM:SS og TT:MM:SS:"
-"\n"
+"Indtast en rå værdi i sekunder, eller brug tidsformaterne MM:SS og TT:MM:"
+"SS:\n"
 "    >5:30 for at vise filer på mindst 5 et halvt minut lange.\n"
 "    <5:30:00 viser filer, der er mindre end 5 og en halv time lange."
 
@@ -5798,8 +5802,8 @@ msgid ""
 msgstr ""
 "Flere betingelser kan angives med | rørskillere:\n"
 "    >6:00|<12:00 for at vise filer på mellem 6 og 12 minutter.\n"
-"    !9:54|!8:43|!7:32 for at skjule nogle specifikke filer fra resultaterne."
-"\n"
+"    !9:54|!8:43|!7:32 for at skjule nogle specifikke filer fra "
+"resultaterne.\n"
 "    =5:34|=4:23|=3:05 for at inkludere filer med specifik varighed."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:401

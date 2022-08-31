@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-31 18:51+0300\n"
+"POT-Creation-Date: 2022-08-31 21:23+0300\n"
 "PO-Revision-Date: 2022-08-31 18:23+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Latvian <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -1614,15 +1614,19 @@ msgid "Add Replacement"
 msgstr "Aizstāšana"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1233
-#: pynicotine/gtkgui/dialogs/preferences.py:1262
 #, fuzzy
-msgid "Enter the text pattern and replacement, respectively:"
+msgid "Enter a text pattern and what to replace it with"
 msgstr "Ievadiet attiecīgi teksta modeli un nomaiņu:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1261
 #, fuzzy
 msgid "Edit Replacement"
 msgstr "Aizstāšana"
+
+#: pynicotine/gtkgui/dialogs/preferences.py:1262
+#, fuzzy
+msgid "Enter a text pattern and what to replace it with:"
+msgstr "Ievadiet attiecīgi teksta modeli un nomaiņu:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1329
 msgid "Top"
@@ -1698,7 +1702,7 @@ msgstr "URL apstrādātāji"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1875
 #, fuzzy
-msgid "Enter the protocol and command for the URL hander, respectively:"
+msgid "Enter the protocol and the command for the URL hander:"
 msgstr "Ievadiet attiecīgi protokolu un komandu URL izplatītājam:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1902
@@ -4950,8 +4954,8 @@ msgid ""
 "Values must be entered as numeric digits only. The unit is always Kb/s "
 "(Kilobits per second)."
 msgstr ""
-"Vērtības jāievada tikai kā ciparu cipari. Mērvienība vienmēr ir Kb/s ("
-"kilobiti sekundē)."
+"Vērtības jāievada tikai kā ciparu cipari. Mērvienība vienmēr ir Kb/s "
+"(kilobiti sekundē)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:325
 #, fuzzy
@@ -5008,7 +5012,8 @@ msgstr ""
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:401
 #, fuzzy
 msgid "To exclude non-audio files use !0 in the duration filter."
-msgstr "Lai izslēgtu failus, kas nav audio faili, ilguma filtrā izmantojiet !0."
+msgstr ""
+"Lai izslēgtu failus, kas nav audio faili, ilguma filtrā izmantojiet !0."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:424
 #, fuzzy

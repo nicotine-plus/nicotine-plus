@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-31 18:51+0300\n"
+"POT-Creation-Date: 2022-08-31 21:23+0300\n"
 "PO-Revision-Date: 2022-08-31 18:23+0000\n"
 "Last-Translator: Maite Guix <maite.guix@gmail.com>\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -1617,15 +1617,19 @@ msgid "Add Replacement"
 msgstr "Substitució"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1233
-#: pynicotine/gtkgui/dialogs/preferences.py:1262
 #, fuzzy
-msgid "Enter the text pattern and replacement, respectively:"
+msgid "Enter a text pattern and what to replace it with"
 msgstr "Introduïu el patró de text i la substitució, respectivament:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1261
 #, fuzzy
 msgid "Edit Replacement"
 msgstr "Substitució"
+
+#: pynicotine/gtkgui/dialogs/preferences.py:1262
+#, fuzzy
+msgid "Enter a text pattern and what to replace it with:"
+msgstr "Introduïu el patró de text i la substitució, respectivament:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1329
 msgid "Top"
@@ -1701,7 +1705,7 @@ msgstr "Gestors d'URL"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1875
 #, fuzzy
-msgid "Enter the protocol and command for the URL hander, respectively:"
+msgid "Enter the protocol and the command for the URL hander:"
 msgstr "Introduïu el protocol i l'ordre per al gestor d'URL, respectivament:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1902
@@ -5018,8 +5022,8 @@ msgid ""
 "    >5:30 to show files at least 5 and a half minutes long.\n"
 "    <5:30:00 shows files less than 5 and a half hours long."
 msgstr ""
-"Introduïu un valor brut en segons o utilitzeu els formats d'hora MM:SS i "
-"HH:MM:SS:\n"
+"Introduïu un valor brut en segons o utilitzeu els formats d'hora MM:SS i HH:"
+"MM:SS:\n"
 "    > 5:30 per mostrar fitxers d'almenys 5 minuts i mig de durada.\n"
 "    <5:30:00 mostra fitxers de menys de 5 hores i mitja de durada."
 
