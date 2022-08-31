@@ -1872,7 +1872,7 @@ class UrlHandlersFrame(UserInterface):
         EntryDialog(
             parent=self.preferences.dialog,
             title=_("Add URL Handler"),
-            message=_("Enter the protocol and the command for the URL hander:"),
+            message=_("Enter the protocol and the command for the URL handler:"),
             callback=self.on_add_handler_response,
             use_second_entry=True,
             droplist=self.default_protocols,
