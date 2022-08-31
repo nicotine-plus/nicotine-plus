@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-08-31 18:51+0300\n"
-"PO-Revision-Date: 2022-04-21 23:51+0000\n"
+"PO-Revision-Date: 2022-08-31 18:23+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/fi/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.12-dev\n"
+"X-Generator: Weblate 4.14.1-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -1473,8 +1473,10 @@ msgstr ""
 "%(complete_version)s tai uusi."
 
 #: pynicotine/gtkgui/__init__.py:116
+#, fuzzy
 msgid "No graphical environment available, using headless (no GUI) mode"
 msgstr ""
+"Graafista ympäristöä ei ole saatavilla, käytetään headless (ei GUI) -tilaa"
 
 #: pynicotine/gtkgui/application.py:167
 #, fuzzy
@@ -1741,9 +1743,9 @@ msgid "File Properties (%(num)i of %(total)i  /  %(size)s)"
 msgstr "Tiedoston ominaisuudet (%(num)i tai %(total)i)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:98
-#, python-format
+#, fuzzy, python-format
 msgid "<b>%(ip)s</b>, port %(port)s"
-msgstr ""
+msgstr "<b>%(ip)s</b>, portti %(port)s"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:99
 #: pynicotine/gtkgui/dialogs/preferences.py:100
@@ -1941,8 +1943,9 @@ msgstr "Korvaaminen"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1233
 #: pynicotine/gtkgui/dialogs/preferences.py:1262
+#, fuzzy
 msgid "Enter the text pattern and replacement, respectively:"
-msgstr ""
+msgstr "Kirjoita tekstimalli ja korvaa vastaavasti:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1261
 #, fuzzy
@@ -2035,8 +2038,9 @@ msgid "Add URL Handler"
 msgstr "Ajuri"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1875
+#, fuzzy
 msgid "Enter the protocol and command for the URL hander, respectively:"
-msgstr ""
+msgstr "Anna URL-käsittelijän protokolla ja komento:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1902
 #, fuzzy
@@ -2091,8 +2095,9 @@ msgstr "Taiteilija"
 #: pynicotine/gtkgui/search.py:376 pynicotine/gtkgui/userbrowse.py:286
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:182
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:339
+#, fuzzy
 msgid "Duration"
-msgstr ""
+msgstr "Kesto"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2054
 #: pynicotine/gtkgui/search.py:375 pynicotine/gtkgui/userbrowse.py:285
@@ -3551,8 +3556,9 @@ msgid "Select an Image"
 msgstr "Valitse kuva"
 
 #: pynicotine/gtkgui/widgets/filechooser.py:106
+#, fuzzy
 msgid "All images"
-msgstr ""
+msgstr "Kaikki kuvat"
 
 #: pynicotine/gtkgui/widgets/filechooser.py:132
 #, fuzzy
@@ -4067,9 +4073,9 @@ msgid "Joined Rooms "
 msgstr "Yhdistetyt huoneet "
 
 #: pynicotine/search.py:259
-#, python-format
+#, fuzzy, python-format
 msgid "Searching for wishlist item \"%s\""
-msgstr ""
+msgstr "Haetaan toivelistakohdetta \"%s\""
 
 #: pynicotine/search.py:267
 #, fuzzy
@@ -5548,11 +5554,15 @@ msgstr ""
 "muuttaa hakuehtoja, suorita uusi haku."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:61
+#, fuzzy
 msgid ""
 "As the name suggests, a search result filter cannot expand your original "
 "search, it can only narrow it down. To broaden or change your search terms, "
 "perform a new search."
 msgstr ""
+"Kuten nimestä voi päätellä, hakutulossuodatin ei voi laajentaa alkuperäistä "
+"hakuasi, se voi vain kaventaa sitä. Jos haluat laajentaa tai muuttaa "
+"hakutermejäsi, suorita uusi haku."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:70
 #, fuzzy
@@ -5683,11 +5693,17 @@ msgstr ""
 "    =1024 vastaa vain tiedostoja, joiden koko on 1024 tavua (eli 1 kibitavu)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:265
+#, fuzzy
 msgid ""
 "Prepend < or > to find files smaller/larger than the given value:\n"
 "    >10.5m|<1g to show files larger than 10.5 MiB (mebibytes),\n"
 "    but smaller than 1 GiB (gibibytes), use a | between conditions."
 msgstr ""
+"Lisää < tai > eteen, jos haluat etsiä annettua arvoa pienempiä/suurempia "
+"tiedostoja:\n"
+"    >10,5 m|<1 g näyttääksesi tiedostot, jotka ovat suurempia kuin 10,5 MiB "
+"(mebitavua),\n"
+"    mutta pienempi kuin 1 GiB (gibitavua), käytä | ehtojen välillä."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:277
 #, fuzzy
@@ -5704,18 +5720,26 @@ msgid "Filters files based upon their bitrate."
 msgstr "Suodattaa tiedostot niiden bittinopeuden mukaan."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:315
+#, fuzzy
 msgid ""
 "Values must be entered as numeric digits only. The unit is always Kb/s "
 "(Kilobits per second)."
 msgstr ""
+"Arvot tulee syöttää vain numeerisina numeroina. Yksikkö on aina Kb/s ("
+"kilobittia sekunnissa)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:325
+#, fuzzy
 msgid ""
 "Like File Size (above), operators =, !, <, and > can be used, and multiple "
 "conditions can be specified with | pipes:\n"
 "    >256|<1411 to show files with a bitrate of at least 256 Kb/s\n"
 "    with a maximum bitrate of 1411 Kb/s."
 msgstr ""
+"Kuten Tiedoston koko (yllä), operaattoreita =, !, < ja > voidaan käyttää, ja "
+"useita ehtoja voidaan määrittää | putket:\n"
+"    >256|<1411 näyttää tiedostot, joiden bittinopeus on vähintään 256 Kb/s\n"
+"    maksimibittinopeudella 1411 Kb/s."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:356
 #, fuzzy
@@ -5723,29 +5747,43 @@ msgid "Filters files based upon their duration."
 msgstr "Suodattaa tiedostot niiden bittinopeuden mukaan."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:366
+#, fuzzy
 msgid ""
 "By default, files longer than or equal to the entered duration will be "
 "matched, unless an operator (=, !, <, or >) is used."
 msgstr ""
+"Oletusarvoisesti tiedostot, jotka ovat pitkiä tai yhtä suuria kuin syötetty "
+"kesto, täsmäytetään, ellei operaattoria (=, !, < tai >) käytetä."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:376
+#, fuzzy
 msgid ""
 "Enter a raw value in seconds or use the MM:SS and HH:MM:SS time formats:\n"
 "    >5:30 to show files at least 5 and a half minutes long.\n"
 "    <5:30:00 shows files less than 5 and a half hours long."
 msgstr ""
+"Syötä raaka-arvo sekunneissa tai käytä aikamuotoja MM:SS ja HH:MM:SS:\n"
+"    >5:30 näyttääksesi vähintään 5 ja puolen minuutin pituiset tiedostot.\n"
+"    <5:30:00 näyttää tiedostot, joiden pituus on alle 5 ja puoli tuntia."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:388
+#, fuzzy
 msgid ""
 "Multiple conditions can be specified with | pipe seperators:\n"
 "    >6:00|<12:00 to show files between 6 and 12 minutes long.\n"
 "    !9:54|!8:43|!7:32 to hide some specific files from the results.\n"
 "    =5:34|=4:23|=3:05 to include files with specific durations."
 msgstr ""
+"Useita ehtoja voidaan määrittää | putkien erottimet:\n"
+"    >6:00|<12:00 näyttääksesi tiedostot, joiden pituus on 6–12 minuuttia.\n"
+"    !9:54|!8:43|!7:32 piilottaaksesi tietyt tiedostot tuloksista.\n"
+"    =5:34|=4:23|=3:05 sisällyttääksesi tiedostot, joilla on tietty kesto."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:401
+#, fuzzy
 msgid "To exclude non-audio files use !0 in the duration filter."
 msgstr ""
+"Jos haluat sulkea pois muut kuin äänitiedostot, käytä kestosuodattimessa !0."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:424
 #, fuzzy
@@ -5781,8 +5819,11 @@ msgstr ""
 "ilmaiseksi. Tämä suodatin käytetään välittömästi."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:477
+#, fuzzy
 msgid "To view the full results again, simply clear all active filters."
 msgstr ""
+"Voit tarkastella kaikkia tuloksia uudelleen tyhjentämällä kaikki aktiiviset "
+"suodattimet."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:486
 #, fuzzy
@@ -5865,12 +5906,14 @@ msgid "Bitrate…"
 msgstr "Bittinopeus"
 
 #: pynicotine/gtkgui/ui/search.ui:327
+#, fuzzy
 msgid "Duration…"
-msgstr ""
+msgstr "Kesto…"
 
 #: pynicotine/gtkgui/ui/search.ui:328
+#, fuzzy
 msgid "Duration, e.g. 2:20|!3:30|=4:40"
-msgstr ""
+msgstr "Kesto, esim. 2:20|!3:30|=4:40"
 
 #: pynicotine/gtkgui/ui/search.ui:359
 #, fuzzy
@@ -6376,14 +6419,18 @@ msgid "Away Status"
 msgstr "Tila"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:281
+#, fuzzy
 msgid "Minutes of inactivity before going away (0 to disable):"
-msgstr ""
+msgstr "Minuutit toimettomuutta ennen poistumista (0 poistaa käytöstä):"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:282
+#, fuzzy
 msgid ""
 "Once you interact with the application being away, status will be set to "
 "online."
 msgstr ""
+"Kun olet vuorovaikutuksessa sovelluksen ollessa poissa, tilaksi asetetaan "
+"online."
 
 #: pynicotine/gtkgui/ui/settings/network.ui:308
 #, fuzzy
@@ -6565,8 +6612,9 @@ msgid "Bitrate:"
 msgstr "Bittinopeus:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:306
+#, fuzzy
 msgid "Duration:"
-msgstr ""
+msgstr "Kesto:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:336
 #, fuzzy

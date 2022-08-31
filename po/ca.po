@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-08-31 18:51+0300\n"
-"PO-Revision-Date: 2022-05-30 19:19+0000\n"
-"Last-Translator: Maite Guix <maite.guix@gmail.com>\n"
+"PO-Revision-Date: 2022-08-31 16:38+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ca/>\n"
 "Language: ca\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.13-dev\n"
+"X-Generator: Weblate 4.14.1-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -1203,8 +1203,10 @@ msgstr ""
 "d'instal·lar GTK %(complete_version)s o més recent."
 
 #: pynicotine/gtkgui/__init__.py:116
+#, fuzzy
 msgid "No graphical environment available, using headless (no GUI) mode"
 msgstr ""
+"No hi ha entorn gràfic disponible, utilitzant el mode sense cap (sense GUI)."
 
 #: pynicotine/gtkgui/application.py:167
 msgid "Critical Error"
@@ -1443,9 +1445,9 @@ msgid "File Properties (%(num)i of %(total)i  /  %(size)s)"
 msgstr "Propietats del fitxer (%(num)i de %(total)i / %(size)s)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:98
-#, python-format
+#, fuzzy, python-format
 msgid "<b>%(ip)s</b>, port %(port)s"
-msgstr ""
+msgstr "<b>%(ip)s</b>, port %(port)s"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:99
 #: pynicotine/gtkgui/dialogs/preferences.py:100
@@ -1617,8 +1619,9 @@ msgstr "Substitució"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1233
 #: pynicotine/gtkgui/dialogs/preferences.py:1262
+#, fuzzy
 msgid "Enter the text pattern and replacement, respectively:"
-msgstr ""
+msgstr "Introduïu el patró de text i la substitució, respectivament:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1261
 #, fuzzy
@@ -1698,8 +1701,9 @@ msgid "Add URL Handler"
 msgstr "Gestors d'URL"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1875
+#, fuzzy
 msgid "Enter the protocol and command for the URL hander, respectively:"
-msgstr ""
+msgstr "Introduïu el protocol i l'ordre per al gestor d'URL, respectivament:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1902
 #, fuzzy
@@ -1750,8 +1754,9 @@ msgstr "Artista"
 #: pynicotine/gtkgui/search.py:376 pynicotine/gtkgui/userbrowse.py:286
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:182
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:339
+#, fuzzy
 msgid "Duration"
-msgstr ""
+msgstr "Durada"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2054
 #: pynicotine/gtkgui/search.py:375 pynicotine/gtkgui/userbrowse.py:285
@@ -3008,8 +3013,9 @@ msgid "Select an Image"
 msgstr "Seleccionar una imatge"
 
 #: pynicotine/gtkgui/widgets/filechooser.py:106
+#, fuzzy
 msgid "All images"
-msgstr ""
+msgstr "Totes les imatges"
 
 #: pynicotine/gtkgui/widgets/filechooser.py:132
 msgid "Save as…"
@@ -3483,9 +3489,9 @@ msgid "Joined Rooms "
 msgstr "Sales Unides "
 
 #: pynicotine/search.py:259
-#, python-format
+#, fuzzy, python-format
 msgid "Searching for wishlist item \"%s\""
-msgstr ""
+msgstr "S'està cercant l'element de la llista de desitjos \"%s\""
 
 #: pynicotine/search.py:267
 msgid "Server does not permit performing wishlist searches at this time"
@@ -4816,11 +4822,15 @@ msgstr ""
 "fes una cerca nova."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:61
+#, fuzzy
 msgid ""
 "As the name suggests, a search result filter cannot expand your original "
 "search, it can only narrow it down. To broaden or change your search terms, "
 "perform a new search."
 msgstr ""
+"Com el seu nom indica, un filtre de resultats de cerca no pot ampliar la "
+"cerca original, només pot reduir-la. Per ampliar o canviar els termes de "
+"cerca, feu una cerca nova."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:70
 #, fuzzy
@@ -4943,11 +4953,15 @@ msgstr ""
 "a dir, 1 kibibyte)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:265
+#, fuzzy
 msgid ""
 "Prepend < or > to find files smaller/larger than the given value:\n"
 "    >10.5m|<1g to show files larger than 10.5 MiB (mebibytes),\n"
 "    but smaller than 1 GiB (gibibytes), use a | between conditions."
 msgstr ""
+"Afegiu < o > per trobar fitxers més petits/més grans que el valor donat:\n"
+"    >10,5 m|<1 g per mostrar fitxers de més de 10,5 MiB (mebibytes),\n"
+"    però inferior a 1 GiB (gibibytes), utilitzeu un | entre condicions."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:277
 #, fuzzy
@@ -4963,18 +4977,26 @@ msgid "Filters files based upon their bitrate."
 msgstr "Filtra els fitxers en funció de la seva taxa de bits."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:315
+#, fuzzy
 msgid ""
 "Values must be entered as numeric digits only. The unit is always Kb/s "
 "(Kilobits per second)."
 msgstr ""
+"Els valors només s'han d'introduir com a dígits numèrics. La unitat és "
+"sempre Kb/s (kilobits per segon)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:325
+#, fuzzy
 msgid ""
 "Like File Size (above), operators =, !, <, and > can be used, and multiple "
 "conditions can be specified with | pipes:\n"
 "    >256|<1411 to show files with a bitrate of at least 256 Kb/s\n"
 "    with a maximum bitrate of 1411 Kb/s."
 msgstr ""
+"Com la mida del fitxer (a dalt), es poden utilitzar els operadors =, !, < i "
+"> i es poden especificar diverses condicions amb | canonades:\n"
+"    >256|<1411 per mostrar fitxers amb una taxa de bits d'almenys 256 Kb/s\n"
+"    amb una taxa de bits màxima de 1411 Kb/s."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:356
 #, fuzzy
@@ -4982,29 +5004,44 @@ msgid "Filters files based upon their duration."
 msgstr "Filtra els fitxers en funció de la seva taxa de bits."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:366
+#, fuzzy
 msgid ""
 "By default, files longer than or equal to the entered duration will be "
 "matched, unless an operator (=, !, <, or >) is used."
 msgstr ""
+"Per defecte, els fitxers més llargs o iguals a la durada introduïda es faran "
+"coincidir, tret que s'utilitzi un operador (=, !, < o >)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:376
+#, fuzzy
 msgid ""
 "Enter a raw value in seconds or use the MM:SS and HH:MM:SS time formats:\n"
 "    >5:30 to show files at least 5 and a half minutes long.\n"
 "    <5:30:00 shows files less than 5 and a half hours long."
 msgstr ""
+"Introduïu un valor brut en segons o utilitzeu els formats d'hora MM:SS i "
+"HH:MM:SS:\n"
+"    > 5:30 per mostrar fitxers d'almenys 5 minuts i mig de durada.\n"
+"    <5:30:00 mostra fitxers de menys de 5 hores i mitja de durada."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:388
+#, fuzzy
 msgid ""
 "Multiple conditions can be specified with | pipe seperators:\n"
 "    >6:00|<12:00 to show files between 6 and 12 minutes long.\n"
 "    !9:54|!8:43|!7:32 to hide some specific files from the results.\n"
 "    =5:34|=4:23|=3:05 to include files with specific durations."
 msgstr ""
+"Es poden especificar diverses condicions amb | separadors de canonades:\n"
+"    >6:00|<12:00 per mostrar fitxers d'entre 6 i 12 minuts de durada.\n"
+"    !9:54|!8:43|!7:32 per amagar alguns fitxers específics dels resultats.\n"
+"    =5:34|=4:23|=3:05 per incloure fitxers amb durades específiques."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:401
+#, fuzzy
 msgid "To exclude non-audio files use !0 in the duration filter."
 msgstr ""
+"Per excloure fitxers que no siguin d'àudio, utilitzeu !0 al filtre de durada."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:424
 #, fuzzy
@@ -5039,8 +5076,11 @@ msgstr ""
 "pujada lliure. Aquest filtre s'aplica immediatament."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:477
+#, fuzzy
 msgid "To view the full results again, simply clear all active filters."
 msgstr ""
+"Per tornar a veure els resultats complets, simplement esborreu tots els "
+"filtres actius."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:486
 #, fuzzy
@@ -5111,12 +5151,14 @@ msgid "Bitrate…"
 msgstr "Taxa de bits…"
 
 #: pynicotine/gtkgui/ui/search.ui:327
+#, fuzzy
 msgid "Duration…"
-msgstr ""
+msgstr "Durada…"
 
 #: pynicotine/gtkgui/ui/search.ui:328
+#, fuzzy
 msgid "Duration, e.g. 2:20|!3:30|=4:40"
-msgstr ""
+msgstr "Durada, p. 2:20|!3:30|=4:40"
 
 #: pynicotine/gtkgui/ui/search.ui:359
 msgid "Country code…"
@@ -5551,14 +5593,16 @@ msgid "Away Status"
 msgstr "Estat Absent"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:281
+#, fuzzy
 msgid "Minutes of inactivity before going away (0 to disable):"
-msgstr ""
+msgstr "Minuts d'inactivitat abans de marxar (0 per desactivar):"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:282
+#, fuzzy
 msgid ""
 "Once you interact with the application being away, status will be set to "
 "online."
-msgstr ""
+msgstr "Un cop interactueu amb l'aplicació, l'estat es definirà en línia."
 
 #: pynicotine/gtkgui/ui/settings/network.ui:308
 msgid "Auto-reply message when away:"
@@ -5716,8 +5760,9 @@ msgid "Bitrate:"
 msgstr "Taxa de bits:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:306
+#, fuzzy
 msgid "Duration:"
-msgstr ""
+msgstr "Durada:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:336
 msgid "Country Code:"

@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-08-31 18:51+0300\n"
-"PO-Revision-Date: 2022-04-21 23:51+0000\n"
+"PO-Revision-Date: 2022-08-31 18:23+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/zh_Hans/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.12-dev\n"
+"X-Generator: Weblate 4.14.1-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -1444,8 +1444,9 @@ msgstr ""
 "%(complete_version)s 或更新版本。"
 
 #: pynicotine/gtkgui/__init__.py:116
+#, fuzzy
 msgid "No graphical environment available, using headless (no GUI) mode"
-msgstr ""
+msgstr "没有可用的图形环境，使用无头（无 GUI）模式"
 
 #: pynicotine/gtkgui/application.py:167
 msgid "Critical Error"
@@ -1684,9 +1685,9 @@ msgid "File Properties (%(num)i of %(total)i  /  %(size)s)"
 msgstr "文件属性（%(total)i / %(size)s 的 %(num)i）"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:98
-#, python-format
+#, fuzzy, python-format
 msgid "<b>%(ip)s</b>, port %(port)s"
-msgstr ""
+msgstr "<b>%(ip)s</b>，端口 %(port)s"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:99
 #: pynicotine/gtkgui/dialogs/preferences.py:100
@@ -1856,8 +1857,9 @@ msgstr "替换"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1233
 #: pynicotine/gtkgui/dialogs/preferences.py:1262
+#, fuzzy
 msgid "Enter the text pattern and replacement, respectively:"
-msgstr ""
+msgstr "分别输入文本模式和替换："
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1261
 #, fuzzy
@@ -1938,8 +1940,9 @@ msgid "Add URL Handler"
 msgstr "URL 处理程序"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1875
+#, fuzzy
 msgid "Enter the protocol and command for the URL hander, respectively:"
-msgstr ""
+msgstr "分别输入 URL 处理程序的协议和命令："
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1902
 #, fuzzy
@@ -1989,8 +1992,9 @@ msgstr "艺术家"
 #: pynicotine/gtkgui/search.py:376 pynicotine/gtkgui/userbrowse.py:286
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:182
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:339
+#, fuzzy
 msgid "Duration"
-msgstr ""
+msgstr "期间"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2054
 #: pynicotine/gtkgui/search.py:375 pynicotine/gtkgui/userbrowse.py:285
@@ -3266,8 +3270,9 @@ msgid "Select an Image"
 msgstr "选择图像"
 
 #: pynicotine/gtkgui/widgets/filechooser.py:106
+#, fuzzy
 msgid "All images"
-msgstr ""
+msgstr "所有图片"
 
 #: pynicotine/gtkgui/widgets/filechooser.py:132
 msgid "Save as…"
@@ -3771,9 +3776,9 @@ msgid "Joined Rooms "
 msgstr "连接的房间 "
 
 #: pynicotine/search.py:259
-#, python-format
+#, fuzzy, python-format
 msgid "Searching for wishlist item \"%s\""
-msgstr ""
+msgstr "正在搜索愿望清单项目“%s”"
 
 #: pynicotine/search.py:267
 #, fuzzy
@@ -5231,11 +5236,13 @@ msgstr ""
 "围，它只能缩小范围。要扩大或更改您的搜索词，请执行新的搜索。"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:61
+#, fuzzy
 msgid ""
 "As the name suggests, a search result filter cannot expand your original "
 "search, it can only narrow it down. To broaden or change your search terms, "
 "perform a new search."
-msgstr ""
+msgstr "顾名思义，搜索结果过滤器不能扩大您原来的搜索范围，它只能缩小范围。要扩大或更"
+"改您的搜索词，请执行新的搜索。"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:70
 #, fuzzy
@@ -5358,11 +5365,15 @@ msgstr ""
 "    =1024 仅匹配大小为 1024 字节（即 1 kibibyte）的文件。"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:265
+#, fuzzy
 msgid ""
 "Prepend < or > to find files smaller/larger than the given value:\n"
 "    >10.5m|<1g to show files larger than 10.5 MiB (mebibytes),\n"
 "    but smaller than 1 GiB (gibibytes), use a | between conditions."
 msgstr ""
+"添加 < 或 > 以查找小于/大于给定值的文件：\n"
+"    >10.5m|<1g 显示大于 10.5 MiB（兆字节）的文件，\n"
+"    但小于 1 GiB（千兆字节），请使用 |条件之间。"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:277
 #, fuzzy
@@ -5379,18 +5390,24 @@ msgid "Filters files based upon their bitrate."
 msgstr "根据比特率过滤文件。"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:315
+#, fuzzy
 msgid ""
 "Values must be entered as numeric digits only. The unit is always Kb/s "
 "(Kilobits per second)."
-msgstr ""
+msgstr "值只能以数字形式输入。单位始终为 Kb/s（千比特每秒）。"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:325
+#, fuzzy
 msgid ""
 "Like File Size (above), operators =, !, <, and > can be used, and multiple "
 "conditions can be specified with | pipes:\n"
 "    >256|<1411 to show files with a bitrate of at least 256 Kb/s\n"
 "    with a maximum bitrate of 1411 Kb/s."
 msgstr ""
+"与文件大小（上）一样，可以使用运算符 =、!、< 和 >，并且可以使用 | "
+"指定多个条件管道：\n"
+"    >256|<1411 显示比特率至少为 256 Kb/s 的文件\n"
+"    最大比特率为 1411 Kb/s。"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:356
 #, fuzzy
@@ -5398,29 +5415,41 @@ msgid "Filters files based upon their duration."
 msgstr "根据比特率过滤文件。"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:366
+#, fuzzy
 msgid ""
 "By default, files longer than or equal to the entered duration will be "
 "matched, unless an operator (=, !, <, or >) is used."
-msgstr ""
+msgstr "默认情况下，将匹配大于或等于输入持续时间的文件，除非使用运算符（=、!、< 或 "
+">）。"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:376
+#, fuzzy
 msgid ""
 "Enter a raw value in seconds or use the MM:SS and HH:MM:SS time formats:\n"
 "    >5:30 to show files at least 5 and a half minutes long.\n"
 "    <5:30:00 shows files less than 5 and a half hours long."
 msgstr ""
+"输入以秒为单位的原始值或使用 MM:SS 和 HH:MM:SS 时间格式：\n"
+"    >5:30 以显示至少 5 分半钟长的文件。\n"
+"    <5:30:00 显示时长少于 5 个半小时的文件。"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:388
+#, fuzzy
 msgid ""
 "Multiple conditions can be specified with | pipe seperators:\n"
 "    >6:00|<12:00 to show files between 6 and 12 minutes long.\n"
 "    !9:54|!8:43|!7:32 to hide some specific files from the results.\n"
 "    =5:34|=4:23|=3:05 to include files with specific durations."
 msgstr ""
+"可以使用 | 指定多个条件管道分离器：\n"
+"    >6:00|<12:00 显示 6 到 12 分钟之间的文件。\n"
+"    !9:54|!8:43|!7:32 从结果中隐藏一些特定文件。\n"
+"    =5:34|=4:23|=3:05 包含具有特定持续时间的文件。"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:401
+#, fuzzy
 msgid "To exclude non-audio files use !0 in the duration filter."
-msgstr ""
+msgstr "要排除非音频文件，请在持续时间过滤器中使用 !0。"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:424
 #, fuzzy
@@ -5453,8 +5482,9 @@ msgid ""
 msgstr "仅显示至少有一个免费上传插槽的用户的结果。立即应用此过滤器。"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:477
+#, fuzzy
 msgid "To view the full results again, simply clear all active filters."
-msgstr ""
+msgstr "要再次查看完整结果，只需清除所有活动过滤器。"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:486
 #, fuzzy
@@ -5535,12 +5565,14 @@ msgid "Bitrate…"
 msgstr "比特率…"
 
 #: pynicotine/gtkgui/ui/search.ui:327
+#, fuzzy
 msgid "Duration…"
-msgstr ""
+msgstr "期间…"
 
 #: pynicotine/gtkgui/ui/search.ui:328
+#, fuzzy
 msgid "Duration, e.g. 2:20|!3:30|=4:40"
-msgstr ""
+msgstr "持续时间，例如2:20|!3:30|=4:40"
 
 #: pynicotine/gtkgui/ui/search.ui:359
 #, fuzzy
@@ -6029,14 +6061,16 @@ msgid "Away Status"
 msgstr "离开状态"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:281
+#, fuzzy
 msgid "Minutes of inactivity before going away (0 to disable):"
-msgstr ""
+msgstr "离开前的不活动分钟数（0 表示禁用）："
 
 #: pynicotine/gtkgui/ui/settings/network.ui:282
+#, fuzzy
 msgid ""
 "Once you interact with the application being away, status will be set to "
 "online."
-msgstr ""
+msgstr "一旦您与离开的应用程序进行交互，状态将设置为在线。"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:308
 #, fuzzy
@@ -6217,8 +6251,9 @@ msgid "Bitrate:"
 msgstr "比特率："
 
 #: pynicotine/gtkgui/ui/settings/search.ui:306
+#, fuzzy
 msgid "Duration:"
-msgstr ""
+msgstr "期间："
 
 #: pynicotine/gtkgui/ui/settings/search.ui:336
 #, fuzzy

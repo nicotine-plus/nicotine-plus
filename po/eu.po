@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-08-31 18:51+0300\n"
-"PO-Revision-Date: 2022-04-21 23:51+0000\n"
+"PO-Revision-Date: 2022-08-31 18:23+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Basque <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/eu/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.12-dev\n"
+"X-Generator: Weblate 4.14.1-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -1476,8 +1476,11 @@ msgstr ""
 "%(complete_version)s edo berriagoa instalatu beharko zenuke."
 
 #: pynicotine/gtkgui/__init__.py:116
+#, fuzzy
 msgid "No graphical environment available, using headless (no GUI) mode"
 msgstr ""
+"Ez dago ingurune grafikorik erabilgarri, bururik gabeko modua erabiliz (ez "
+"GUI)."
 
 #: pynicotine/gtkgui/application.py:167
 #, fuzzy
@@ -1744,9 +1747,9 @@ msgid "File Properties (%(num)i of %(total)i  /  %(size)s)"
 msgstr "Fitxategiaren propietateak (%(total)i -ren %(num)i)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:98
-#, python-format
+#, fuzzy, python-format
 msgid "<b>%(ip)s</b>, port %(port)s"
-msgstr ""
+msgstr "<b>%(ip)s</b>, ataka %(port)s"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:99
 #: pynicotine/gtkgui/dialogs/preferences.py:100
@@ -1943,8 +1946,9 @@ msgstr "Ordezkapena"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1233
 #: pynicotine/gtkgui/dialogs/preferences.py:1262
+#, fuzzy
 msgid "Enter the text pattern and replacement, respectively:"
-msgstr ""
+msgstr "Sartu testu-eredua eta ordezkoa, hurrenez hurren:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1261
 #, fuzzy
@@ -2037,8 +2041,9 @@ msgid "Add URL Handler"
 msgstr "URL kudeatzaileak"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1875
+#, fuzzy
 msgid "Enter the protocol and command for the URL hander, respectively:"
-msgstr ""
+msgstr "Sartu URL eskudatzailearen protokoloa eta komandoa, hurrenez hurren:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1902
 #, fuzzy
@@ -2095,8 +2100,9 @@ msgstr "Artista"
 #: pynicotine/gtkgui/search.py:376 pynicotine/gtkgui/userbrowse.py:286
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:182
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:339
+#, fuzzy
 msgid "Duration"
-msgstr ""
+msgstr "Iraupena"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2054
 #: pynicotine/gtkgui/search.py:375 pynicotine/gtkgui/userbrowse.py:285
@@ -3555,8 +3561,9 @@ msgid "Select an Image"
 msgstr "Aukeratu irudi bat"
 
 #: pynicotine/gtkgui/widgets/filechooser.py:106
+#, fuzzy
 msgid "All images"
-msgstr ""
+msgstr "Irudi guztiak"
 
 #: pynicotine/gtkgui/widgets/filechooser.py:132
 #, fuzzy
@@ -4072,9 +4079,9 @@ msgid "Joined Rooms "
 msgstr "Sartutako Gelak "
 
 #: pynicotine/search.py:259
-#, python-format
+#, fuzzy, python-format
 msgid "Searching for wishlist item \"%s\""
-msgstr ""
+msgstr "\"%s\" nahien zerrendako elementua bilatzen"
 
 #: pynicotine/search.py:267
 #, fuzzy
@@ -5575,11 +5582,15 @@ msgstr ""
 "dezake. Bilaketa-terminoak zabaltzeko edo aldatzeko, egin bilaketa berria."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:61
+#, fuzzy
 msgid ""
 "As the name suggests, a search result filter cannot expand your original "
 "search, it can only narrow it down. To broaden or change your search terms, "
 "perform a new search."
 msgstr ""
+"Izenak dioen bezala, bilaketa-emaitzen iragazkiak ezin du zure jatorrizko "
+"bilaketa zabaldu, murriztu baino ezin du egin. Bilaketa-terminoak zabaltzeko "
+"edo aldatzeko, egin bilaketa berri bat."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:70
 #, fuzzy
@@ -5712,11 +5723,17 @@ msgstr ""
 "bakarrik dator."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:265
+#, fuzzy
 msgid ""
 "Prepend < or > to find files smaller/larger than the given value:\n"
 "    >10.5m|<1g to show files larger than 10.5 MiB (mebibytes),\n"
 "    but smaller than 1 GiB (gibibytes), use a | between conditions."
 msgstr ""
+"Aurreratu < edo > emandako balioa baino txikiagoak/handiagoak diren "
+"fitxategiak aurkitzeko:\n"
+"    >10,5 m|<1 g 10,5 MiB (mebibyte) baino handiagoak diren fitxategiak "
+"erakusteko\n"
+"    baina 1 GiB (gibibyte) baino txikiagoa, erabili | baldintzen artean."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:277
 #, fuzzy
@@ -5733,18 +5750,27 @@ msgid "Filters files based upon their bitrate."
 msgstr "Fitxategiak iragazten ditu bit-tasaren arabera."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:315
+#, fuzzy
 msgid ""
 "Values must be entered as numeric digits only. The unit is always Kb/s "
 "(Kilobits per second)."
 msgstr ""
+"Balioak zenbakizko zifra gisa soilik sartu behar dira. Unitatea beti da Kb/s "
+"(Kilobit segundoko)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:325
+#, fuzzy
 msgid ""
 "Like File Size (above), operators =, !, <, and > can be used, and multiple "
 "conditions can be specified with | pipes:\n"
 "    >256|<1411 to show files with a bitrate of at least 256 Kb/s\n"
 "    with a maximum bitrate of 1411 Kb/s."
 msgstr ""
+"Fitxategiaren Tamaina (goian) bezala, =, !, <, eta > eragileak erabil "
+"daitezke, eta hainbat baldintza zehaztu daitezke | hodiak:\n"
+"    >256|<1411 gutxienez 256 Kb/s-ko bit-abiadura duten fitxategiak "
+"erakusteko\n"
+"    1411 Kb/s-ko gehienezko bit-abiadurarekin."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:356
 #, fuzzy
@@ -5752,29 +5778,45 @@ msgid "Filters files based upon their duration."
 msgstr "Fitxategiak iragazten ditu bit-tasaren arabera."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:366
+#, fuzzy
 msgid ""
 "By default, files longer than or equal to the entered duration will be "
 "matched, unless an operator (=, !, <, or >) is used."
 msgstr ""
+"Lehenespenez, sartutako iraupena baino luzeagoak edo berdinak diren "
+"fitxategiak bat etorriko dira, operadore bat (=, !, <, edo >) erabiltzen ez "
+"bada behintzat."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:376
+#, fuzzy
 msgid ""
 "Enter a raw value in seconds or use the MM:SS and HH:MM:SS time formats:\n"
 "    >5:30 to show files at least 5 and a half minutes long.\n"
 "    <5:30:00 shows files less than 5 and a half hours long."
 msgstr ""
+"Idatzi balio gordina segundotan edo erabili MM:SS eta HH:MM:SS ordu "
+"formatuak:\n"
+"    > 5:30ean gutxienez 5 minutu eta erdiko fitxategiak erakusteko.\n"
+"    <5:30:00 5 ordu eta erdi baino gutxiagoko fitxategiak erakusten ditu."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:388
+#, fuzzy
 msgid ""
 "Multiple conditions can be specified with | pipe seperators:\n"
 "    >6:00|<12:00 to show files between 6 and 12 minutes long.\n"
 "    !9:54|!8:43|!7:32 to hide some specific files from the results.\n"
 "    =5:34|=4:23|=3:05 to include files with specific durations."
 msgstr ""
+"Baldintza anitz zehaztu daitezke | hodi bereizleak:\n"
+"    >6:00|<12:00 6 eta 12 minutu arteko fitxategiak erakusteko.\n"
+"    !9:54|!8:43|!7:32 fitxategi zehatz batzuk emaitzetatik ezkutatzeko.\n"
+"    =5:34|=4:23|=3:05 iraupen zehatza duten fitxategiak sartzeko."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:401
+#, fuzzy
 msgid "To exclude non-audio files use !0 in the duration filter."
 msgstr ""
+"Audiokoak ez diren fitxategiak baztertzeko, erabili !0 iraupen-iragazkian."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:424
 #, fuzzy
@@ -5811,8 +5853,9 @@ msgstr ""
 "emaitzak. Iragazki hau berehala aplikatzen da."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:477
+#, fuzzy
 msgid "To view the full results again, simply clear all active filters."
-msgstr ""
+msgstr "Emaitza osoa berriro ikusteko, garbitu iragazki aktibo guztiak."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:486
 #, fuzzy
@@ -5895,12 +5938,14 @@ msgid "Bitrate…"
 msgstr "Bit-tasa…"
 
 #: pynicotine/gtkgui/ui/search.ui:327
+#, fuzzy
 msgid "Duration…"
-msgstr ""
+msgstr "Iraupena…"
 
 #: pynicotine/gtkgui/ui/search.ui:328
+#, fuzzy
 msgid "Duration, e.g. 2:20|!3:30|=4:40"
-msgstr ""
+msgstr "Iraupena, adibidez. 2:20|!3:30|=4:40"
 
 #: pynicotine/gtkgui/ui/search.ui:359
 #, fuzzy
@@ -6406,14 +6451,18 @@ msgid "Away Status"
 msgstr "Kanpoko egoera"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:281
+#, fuzzy
 msgid "Minutes of inactivity before going away (0 to disable):"
-msgstr ""
+msgstr "Aktibitaterik gabeko minutuak joan aurretik (0 desgaitzeko):"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:282
+#, fuzzy
 msgid ""
 "Once you interact with the application being away, status will be set to "
 "online."
 msgstr ""
+"Aplikazioa kanpoan egotearekin elkarreragin duzunean, egoera linean ezarriko "
+"da."
 
 #: pynicotine/gtkgui/ui/settings/network.ui:308
 #, fuzzy
@@ -6599,8 +6648,9 @@ msgid "Bitrate:"
 msgstr "Bitrate-a:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:306
+#, fuzzy
 msgid "Duration:"
-msgstr ""
+msgstr "Iraupena:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:336
 #, fuzzy
