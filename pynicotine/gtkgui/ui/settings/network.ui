@@ -278,7 +278,8 @@
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Toggle away status after minutes of inactivity:</property>
+                <property name="label" translatable="yes">Minutes of inactivity before going away (0 to disable):</property>
+                <property name="tooltip-text" translatable="yes">Once you interact with the application being away, status will be set to online.</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
                 <property name="xalign">0</property>
