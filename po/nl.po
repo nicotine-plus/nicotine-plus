@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-08-31 21:23+0300\n"
-"PO-Revision-Date: 2022-08-31 20:33+0000\n"
+"PO-Revision-Date: 2022-08-31 21:27+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -1612,18 +1612,16 @@ msgid "Add Replacement"
 msgstr "Vervanging toevoegen"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1233
-#, fuzzy
 msgid "Enter a text pattern and what to replace it with"
-msgstr "Voer respectievelijk het tekstpatroon en de vervanging in:"
+msgstr "Voer een tekstpatroon in en waar het door vervangen moet worden"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1261
 msgid "Edit Replacement"
 msgstr "Bewerking Vervanging"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1262
-#, fuzzy
 msgid "Enter a text pattern and what to replace it with:"
-msgstr "Voer respectievelijk het tekstpatroon en de vervanging in:"
+msgstr "Voer een tekstpatroon in en waar het door vervangen moet worden:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1329
 msgid "Top"
@@ -1697,10 +1695,8 @@ msgid "Add URL Handler"
 msgstr "URL-programma opgeven"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1875
-#, fuzzy
 msgid "Enter the protocol and the command for the URL hander:"
-msgstr ""
-"Voer respectievelijk het protocol en het commando voor de URL-hander in:"
+msgstr "Voer het protocol en het commando voor de URL-handler in:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1902
 msgid "Edit Command"
@@ -4974,54 +4970,49 @@ msgstr ""
 "gebruikt."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:376
-#, fuzzy
 msgid ""
 "Enter a raw value in seconds or use the MM:SS and HH:MM:SS time formats:\n"
 "    >5:30 to show files at least 5 and a half minutes long.\n"
 "    <5:30:00 shows files less than 5 and a half hours long."
 msgstr ""
-"Voer een onbewerkte waarde in seconden in of gebruik de tijdnotaties MM:SS "
-"en UU:MM:SS:\n"
-"    >5:30 om bestanden van minimaal 5 en een halve minuut te tonen.\n"
-"    <5:30:00 toont bestanden van minder dan 5 en een half uur lang."
+"Voer een ruwe waarde in seconden in of gebruik de MM:SS en HH:MM:SS "
+"tijdnotaties:\n"
+"    >5:30 om bestanden te tonen die minstens 5 en een halve minuut lang zijn."
+"\n"
+"    <5:30:00 toont bestanden die minder dan 5 en een half uur lang zijn."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:388
-#, fuzzy
 msgid ""
 "Multiple conditions can be specified with | pipe seperators:\n"
 "    >6:00|<12:00 to show files between 6 and 12 minutes long.\n"
 "    !9:54|!8:43|!7:32 to hide some specific files from the results.\n"
 "    =5:34|=4:23|=3:05 to include files with specific durations."
 msgstr ""
-"Met | . kunnen meerdere voorwaarden worden opgegeven pijp scheiders:\n"
-"    >6:00|<12:00 om bestanden tussen 6 en 12 minuten te tonen.\n"
-"    !9:54|!8:43|!7:32 om bepaalde bestanden voor de resultaten te "
+"Meerdere condities kunnen gespecificeerd worden met | pijpscheidingstekens:\n"
+"    >6:00|<12:00 om bestanden te tonen tussen 6 en 12 minuten lang.\n"
+"    !9:54|!8:43|!7:32 om sommige specifieke bestanden uit de resultaten te "
 "verbergen.\n"
-"    =5:34|=4:23|=3:05 om bestanden met een specifieke duur op te nemen."
+"    =5:34|=4:23|=3:05 om bestanden met een specifieke tijdsduur op te nemen."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:401
-#, fuzzy
 msgid "To exclude non-audio files use !0 in the duration filter."
-msgstr ""
-"Om niet-audiobestanden uit te sluiten, gebruikt u !0 in het duurfilter."
+msgstr "Om niet-audiobestanden uit te sluiten, gebruik !0 in het duurfilter."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:424
-#, fuzzy
 msgid "Filters files based upon users' geographical location."
-msgstr "Filtert bestanden op basis van het land van de gebruiker."
+msgstr "Filtert bestanden op basis van de geografische locatie van gebruikers."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:434
-#, fuzzy
 msgid ""
 "Uses country codes defined by ISO 3166-2:\n"
 "    US will only show results from users with IP addresses in the United "
 "States. !GB will hide results that come from users in the United Kingdom "
 "(Great Britain)."
 msgstr ""
-"Gebruikt landcodes gedefinieerd door ISO 3166-2 (zie Wikipedia):\n"
-"    'US' retourneert alleen bestanden van gebruikers die zijn verbonden via "
-"de Verenigde Staten. Evenzo geeft \"GB\" bestanden weer van gebruikers met "
-"IP's in het Verenigd Koninkrijk."
+"Gebruikt landcodes gedefinieerd door ISO 3166-2:\n"
+"    US zal alleen resultaten tonen van gebruikers met IP-adressen in de "
+"Verenigde Staten. !GB zal resultaten verbergen van gebruikers in het "
+"Verenigd Koninkrijk (Groot-Brittannië)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:444
 #: pynicotine/gtkgui/ui/settings/search.ui:371
@@ -5029,25 +5020,23 @@ msgid "Free Slot"
 msgstr "Vrije plaats"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:456
-#, fuzzy
 msgid ""
 "Show only those results from users which have at least one upload slot free, "
 "i.e. files that are availiable immediately."
 msgstr ""
 "Toon alleen de resultaten van gebruikers die minstens één upload slot vrij "
-"hebben. Dit filter wordt onmiddellijk toegepast."
+"hebben, d.w.z. bestanden die onmiddellijk beschikbaar zijn."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:477
-#, fuzzy
 msgid "To view the full results again, simply clear all active filters."
 msgstr ""
-"Om de volledige resultaten opnieuw te bekijken, verwijdert u eenvoudig alle "
+"Om de volledige resultaten opnieuw te bekijken, verwijder eenvoudig alle "
 "actieve filters."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:486
-#, fuzzy
 msgid "See the preferences to set default search result filter options."
-msgstr "Zie de voorkeuren voor meer filteropties."
+msgstr ""
+"Zie de voorkeuren om standaard zoekresultaten filteropties in te stellen."
 
 #: pynicotine/gtkgui/ui/privatechat.ui:84
 msgid "Private chat command help"
@@ -5113,12 +5102,10 @@ msgid "Bitrate…"
 msgstr "Bitrate…"
 
 #: pynicotine/gtkgui/ui/search.ui:327
-#, fuzzy
 msgid "Duration…"
 msgstr "Looptijd…"
 
 #: pynicotine/gtkgui/ui/search.ui:328
-#, fuzzy
 msgid "Duration, e.g. 2:20|!3:30|=4:40"
 msgstr "Duur, bijv. 2:20|!3:30|=4:40"
 
@@ -5493,9 +5480,8 @@ msgid "Log debug messages to file"
 msgstr "Log debug-berichten in een bestand"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:62
-#, fuzzy
 msgid "Log timestamp format:"
-msgstr "Tijdstempel formaat logbestand:"
+msgstr "Log tijdstempel formaat:"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:92
 msgid "Folder Locations"
@@ -5542,27 +5528,24 @@ msgid "Last port"
 msgstr "Laatste poort"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:214
-#, fuzzy
 msgid "Public IP address:"
-msgstr "Blokkeer IP adres"
+msgstr "Publiek IP-adres:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:263
 msgid "Away Status"
 msgstr "Afwezigheidsstatus"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:281
-#, fuzzy
 msgid "Minutes of inactivity before going away (0 to disable):"
-msgstr "Minuten van inactiviteit voordat we weggaan (0 om uit te schakelen):"
+msgstr "Minuten van inactiviteit voor weg te gaan (0 tot uitschakelen):"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:282
-#, fuzzy
 msgid ""
 "Once you interact with the application being away, status will be set to "
 "online."
 msgstr ""
-"Zodra je interactie hebt met de applicatie die weg is, wordt de status "
-"ingesteld op online."
+"Zodra u in interactie bent met de applicatie die weg is, zal de status op "
+"online worden gezet."
 
 #: pynicotine/gtkgui/ui/settings/network.ui:308
 msgid "Auto-reply message when away:"
@@ -5718,9 +5701,8 @@ msgid "Bitrate:"
 msgstr "Bitrate:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:306
-#, fuzzy
 msgid "Duration:"
-msgstr "Looptijd:"
+msgstr "Duur:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:336
 msgid "Country Code:"
@@ -6189,9 +6171,8 @@ msgid "Icons"
 msgstr "Iconen"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1739
-#, fuzzy
 msgid "Icon theme folder:"
-msgstr "Onvolledige bestandsmap:"
+msgstr "Iconen thema map:"
 
 #: pynicotine/gtkgui/ui/uploads.ui:100
 msgid "Abort User(s)"
