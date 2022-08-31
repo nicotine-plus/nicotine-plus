@@ -109,8 +109,9 @@ Install dependencies:
 
 ```sh
 export NICOTINE_GTK_VERSION=3
-/usr/local/bin/python3 packaging/macos/dependencies_core.py
-/usr/local/bin/python3 packaging/macos/dependencies_packaging.py
+brew install python
+python3 packaging/macos/dependencies_core.py
+python3 packaging/macos/dependencies_packaging.py
 ```
 
 Build the application:
