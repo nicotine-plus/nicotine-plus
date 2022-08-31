@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-31 21:23+0300\n"
+"POT-Creation-Date: 2022-09-01 02:07+0300\n"
 "PO-Revision-Date: 2022-08-31 18:23+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
@@ -2004,7 +2004,7 @@ msgstr "Associador"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1875
 #, fuzzy
-msgid "Enter the protocol and the command for the URL hander:"
+msgid "Enter the protocol and the command for the URL handler:"
 msgstr ""
 "Insira o protocolo e o comando para o manipulador de URL, respectivamente:"
 

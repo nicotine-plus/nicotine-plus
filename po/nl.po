@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-31 21:23+0300\n"
+"POT-Creation-Date: 2022-09-01 02:07+0300\n"
 "PO-Revision-Date: 2022-08-31 21:27+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -1695,7 +1695,8 @@ msgid "Add URL Handler"
 msgstr "URL-programma opgeven"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1875
-msgid "Enter the protocol and the command for the URL hander:"
+#, fuzzy
+msgid "Enter the protocol and the command for the URL handler:"
 msgstr "Voer het protocol en het commando voor de URL-handler in:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1902
@@ -4951,8 +4952,8 @@ msgid ""
 "    with a maximum bitrate of 1411 Kb/s."
 msgstr ""
 "Net als bij Bestandsgrootte (hierboven), kunnen operators =, !, < en > "
-"worden gebruikt en kunnen meerdere voorwaarden worden opgegeven met | pijpen:"
-"\n"
+"worden gebruikt en kunnen meerdere voorwaarden worden opgegeven met | "
+"pijpen:\n"
 "    >256|<1411 om bestanden te tonen met een bitrate van minimaal 256 Kb/s\n"
 "    en een maximale bitrate van 1411 Kb/s."
 
@@ -4977,8 +4978,8 @@ msgid ""
 msgstr ""
 "Voer een ruwe waarde in seconden in of gebruik de MM:SS en HH:MM:SS "
 "tijdnotaties:\n"
-"    >5:30 om bestanden te tonen die minstens 5 en een halve minuut lang zijn."
-"\n"
+"    >5:30 om bestanden te tonen die minstens 5 en een halve minuut lang "
+"zijn.\n"
 "    <5:30:00 toont bestanden die minder dan 5 en een half uur lang zijn."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:388

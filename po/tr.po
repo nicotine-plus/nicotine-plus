@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-31 21:23+0300\n"
+"POT-Creation-Date: 2022-09-01 02:07+0300\n"
 "PO-Revision-Date: 2022-08-31 20:33+0000\n"
 "Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -1698,7 +1698,8 @@ msgid "Add URL Handler"
 msgstr "URL İşleyicisi Ekle"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1875
-msgid "Enter the protocol and the command for the URL hander:"
+#, fuzzy
+msgid "Enter the protocol and the command for the URL handler:"
 msgstr "URL işleyicisi için protokolü ve komutu girin:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1902
@@ -4982,8 +4983,8 @@ msgid ""
 msgstr ""
 "| ile birden çok koşul belirtilebilir: \n"
 "    >6:00|<12:00, 6 ila 12 dakika uzunluğundaki dosyaları gösterir. \n"
-"    !9:54|!8:43|!7:32, sonuçlardan belirtilen uzunluktaki dosyaları gizler. "
-"\n"
+"    !9:54|!8:43|!7:32, sonuçlardan belirtilen uzunluktaki dosyaları "
+"gizler. \n"
 "    =5:34|=4:23|=3:05, belirli sürelerdeki dosyaları dahil eder."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:401
@@ -5004,8 +5005,8 @@ msgid ""
 msgstr ""
 "ISO 3166-2 tarafından tanımlanan ülke kodlarını kullanır:\n"
 "    US, yalnızca Amerika Birleşik Devletleri'ndeki IP adreslerine sahip "
-"kullanıcılardan gelen sonuçları gösterecektir. !GB, Birleşik Krallık'taki ("
-"Büyük Britanya) kullanıcılardan gelen sonuçları gizleyecektir."
+"kullanıcılardan gelen sonuçları gösterecektir. !GB, Birleşik Krallık'taki "
+"(Büyük Britanya) kullanıcılardan gelen sonuçları gizleyecektir."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:444
 #: pynicotine/gtkgui/ui/settings/search.ui:371
