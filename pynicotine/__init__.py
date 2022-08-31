@@ -24,7 +24,10 @@ def check_arguments():
 
     import argparse
     from pynicotine.config import config
-    parser = argparse.ArgumentParser(description=_("Nicotine+ is a Soulseek client"), add_help=False)
+
+    parser = argparse.ArgumentParser(
+        description=config.summary, epilog=_("Website: %s") % config.website_url, add_help=False
+    )
 
     # Visible arguments
     parser.add_argument(
