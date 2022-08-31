@@ -1230,7 +1230,7 @@ class ChatsFrame(UserInterface):
         EntryDialog(
             parent=self.preferences.dialog,
             title=_("Add Replacement"),
-            message=_("Enter the text pattern and replacement, respectively:"),
+            message=_("Enter a text pattern and what to replace it with"),
             callback=self.on_add_replacement_response,
             use_second_entry=True
         ).show()
@@ -1259,7 +1259,7 @@ class ChatsFrame(UserInterface):
             EntryDialog(
                 parent=self.preferences.dialog,
                 title=_("Edit Replacement"),
-                message=_("Enter the text pattern and replacement, respectively:"),
+                message=_("Enter a text pattern and what to replace it with:"),
                 callback=self.on_edit_replacement_response,
                 callback_data=iterator,
                 use_second_entry=True,
@@ -1872,7 +1872,7 @@ class UrlHandlersFrame(UserInterface):
         EntryDialog(
             parent=self.preferences.dialog,
             title=_("Add URL Handler"),
-            message=_("Enter the protocol and command for the URL hander, respectively:"),
+            message=_("Enter the protocol and the command for the URL hander:"),
             callback=self.on_add_handler_response,
             use_second_entry=True,
             droplist=self.default_protocols,
