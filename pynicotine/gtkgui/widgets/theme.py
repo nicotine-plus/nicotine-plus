@@ -37,11 +37,6 @@ from pynicotine.utils import encode_path
 
 
 GTK_SETTINGS = Gtk.Settings.get_default()
-
-if not hasattr(GTK_SETTINGS, "reset_property"):
-    SYSTEM_FONT = GTK_SETTINGS.get_property("gtk-font-name")
-    SYSTEM_ICON_THEME = GTK_SETTINGS.get_property("gtk-icon-theme-name")
-
 USE_LIBADWAITA = ("gi.repository.Adw" in sys.modules)
 USE_COLOR_SCHEME_PORTAL = (sys.platform not in ("win32", "darwin") and not USE_LIBADWAITA)
 
@@ -117,11 +112,8 @@ def set_dark_mode(enabled):
 def set_global_font(font_name):
 
     if font_name == "Normal":
-        if hasattr(GTK_SETTINGS, "reset_property"):
-            GTK_SETTINGS.reset_property("gtk-font-name")
-            return
-
-        font_name = SYSTEM_FONT
+        GTK_SETTINGS.reset_property("gtk-font-name")
+        return
 
     GTK_SETTINGS.set_property("gtk-font-name", font_name)
 
@@ -237,10 +229,6 @@ def set_global_css():
         -GtkTreeView-horizontal-separator: 0;
         -GtkTreeView-vertical-separator: 0;
     }
-    """
-
-    css_gtk3_22_28 = b"""
-    /* Tweaks (GTK 3.22.28+) */
 
     .dropdown-scrollbar {
         /* Enable dropdown list with a scrollbar */
@@ -279,10 +267,6 @@ def set_global_css():
 
     else:
         css = css + css_gtk3
-
-        if not Gtk.check_version(3, 22, 28):
-            css = css + css_gtk3_22_28
-
         global_css_provider.load_from_data(css)
 
         Gtk.StyleContext.add_provider_for_screen(  # pylint: disable=no-member
@@ -308,10 +292,7 @@ def load_custom_icons(update=False):
     """ Load custom icon theme if one is selected """
 
     if update:
-        if hasattr(GTK_SETTINGS, "reset_property"):
-            GTK_SETTINGS.reset_property("gtk-icon-theme-name")
-        else:
-            GTK_SETTINGS.set_property("gtk-icon-theme-name", SYSTEM_ICON_THEME)
+        GTK_SETTINGS.reset_property("gtk-icon-theme-name")
 
     icon_theme_name = ".nicotine-icon-theme"
     icon_theme_path = os.path.join(config.data_dir, icon_theme_name)

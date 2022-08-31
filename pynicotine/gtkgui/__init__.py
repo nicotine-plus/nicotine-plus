@@ -39,7 +39,7 @@ def check_gui_dependencies():
         gtk_version = (4, 6, 5)
         pygobject_version = (3, 42, 0)
     else:
-        gtk_version = (3, 22, 11)
+        gtk_version = (3, 22, 30)
         pygobject_version = (3, 22, 0)
 
     try:

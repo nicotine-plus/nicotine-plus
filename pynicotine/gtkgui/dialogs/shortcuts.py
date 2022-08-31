@@ -16,8 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk
-
 from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.gtkgui.widgets.ui import UserInterface
 
@@ -36,10 +34,6 @@ class Shortcuts(UserInterface, Dialog):
             close_destroy=False
         )
         frame.window.set_help_overlay(self.dialog)
-
-        if hasattr(Gtk.Entry.props, "show-emoji-icon"):
-            # Emoji picker only available in GTK 3.24+
-            self.emoji_shortcut.show()
 
         # Workaround for off-centered dialog on first run
         self.dialog.show()

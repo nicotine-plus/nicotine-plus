@@ -56,12 +56,7 @@ class ChatEntry:
 
         # Emoji Picker (disable on Windows and macOS for now until we render emoji properly there)
         if sys.platform not in ("win32", "darwin"):
-            try:
-                self.entry.set_property("show-emoji-icon", True)
-
-            except TypeError:
-                # GTK version not supported
-                pass
+            self.entry.set_property("show-emoji-icon", True)
 
         # Spell Check
         if config.sections["ui"]["spellcheck"]:
