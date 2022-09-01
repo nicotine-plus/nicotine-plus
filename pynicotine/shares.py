@@ -400,7 +400,7 @@ class Scanner:
                 if not UINT_LIMIT > bitdepth >= 0:
                     bitdepth = None
 
-            audio_info = (bitrate, int(audio.is_vbr), int(audio.is_lossless), samplerate, bitdepth)
+            audio_info = (bitrate, int(audio.is_vbr), samplerate, bitdepth)
 
         return [name, size, audio_info, duration]
 

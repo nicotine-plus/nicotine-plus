@@ -102,7 +102,6 @@ class TinyTag(object):
         self.genre = None
         self.samplerate = None
         self.bitdepth = None
-        self.is_lossless = False
         self.title = None
         self.track = None
         self.track_total = None
@@ -296,7 +295,7 @@ class MP4(TinyTag):
             datafh = BytesIO(data)
             datafh.seek(16, os.SEEK_CUR)  # jump over version and flags
             channels = struct.unpack('>H', datafh.read(2))[0]
-            bitdepth = struct.unpack('>H', datafh.read(2))[0]
+            datafh.seek(2, os.SEEK_CUR)   # jump over bit_depth
             datafh.seek(2, os.SEEK_CUR)   # jump over QT compr id & pkt size
             sr = struct.unpack('>I', datafh.read(4))[0]
 
@@ -313,7 +312,7 @@ class MP4(TinyTag):
             cls.read_extended_descriptor(esds_atom)
             esds_atom.seek(9, os.SEEK_CUR)
             avg_br = struct.unpack('>I', esds_atom.read(4))[0] / 1000  # kbit/s
-            return {'channels': channels, 'samplerate': sr, 'bitrate': avg_br, 'bitdepth': bitdepth}
+            return {'channels': channels, 'samplerate': sr, 'bitrate': avg_br}
 
         @classmethod
         def parse_audio_sample_entry_alac(cls, data):
@@ -327,8 +326,7 @@ class MP4(TinyTag):
             alac_atom.seek(6, os.SEEK_CUR)
             avg_br = struct.unpack('>I', alac_atom.read(4))[0] / 1000  # kbit/s
             sr = struct.unpack('>I', alac_atom.read(4))[0]
-            return {'channels': channels, 'samplerate': sr, 'bitrate': avg_br, 'bitdepth': bitdepth,
-                    'is_lossless': True}
+            return {'channels': channels, 'samplerate': sr, 'bitrate': avg_br, 'bitdepth': bitdepth}
 
         @classmethod
         def parse_mvhd(cls, data):
@@ -940,7 +938,6 @@ class Wave(TinyTag):
     def __init__(self, filehandler, filesize, *args, **kwargs):
         TinyTag.__init__(self, filehandler, filesize, *args, **kwargs)
         self._duration_parsed = False
-        self.is_lossless = True
 
     def _determine_duration(self, fh):
         # see: http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/WAVE.html
@@ -1006,7 +1003,6 @@ class Flac(TinyTag):
     METADATA_PICTURE = 6
 
     def load(self, tags, duration, image=False):
-        self.is_lossless = True
         self._parse_tags = tags
         self._load_image = image
         header = self._filehandler.peek(4)
@@ -1278,7 +1274,6 @@ class Aiff(ID3):
     def __init__(self, filehandler, filesize, *args, **kwargs):
         super(Aiff, self).__init__(filehandler, filesize, *args, **kwargs)
         self.__tag_parsed = False
-        self.is_lossless = True
 
     def _determine_duration(self, fh):
         fh.seek(0, 0)
