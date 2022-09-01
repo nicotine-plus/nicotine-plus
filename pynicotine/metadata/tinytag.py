@@ -1229,6 +1229,8 @@ class Wma(TinyTag):
                     ])
                     self.samplerate = stream_info['samples_per_second']
                     self.bitrate = stream_info['avg_bytes_per_second'] * 8 / 1000
+                    if stream_info['codec_id_format_tag'] == 355:  # lossless
+                        self.bitdepth = stream_info['bits_per_sample']
                     already_read = 16
                 fh.seek(blocks['type_specific_data_length'] - already_read, os.SEEK_CUR)
                 fh.seek(blocks['error_correction_data_length'], os.SEEK_CUR)
