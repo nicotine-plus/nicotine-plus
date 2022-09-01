@@ -247,7 +247,8 @@ class RoomList(UserInterface):
         self.room_model.clear()
         self.room_iters.clear()
 
-    def on_show(self, popover, param):
+    @staticmethod
+    def on_show(popover, param):
 
         if not popover.get_property(param.name):
             return

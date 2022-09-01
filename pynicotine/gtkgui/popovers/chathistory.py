@@ -125,7 +125,8 @@ class ChatHistory(UserInterface):
         self.search_entry.grab_focus()
         return True
 
-    def on_show(self, popover, param):
+    @staticmethod
+    def on_show(popover, param):
 
         if not popover.get_property(param.name):
             return
