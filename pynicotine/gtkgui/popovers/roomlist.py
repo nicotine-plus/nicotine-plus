@@ -89,6 +89,9 @@ class RoomList(UserInterface):
         if GTK_API_VERSION >= 4:
             frame.room_list_button.get_first_child().add_css_class("arrow-button")
 
+            # Workaround for https://gitlab.gnome.org/GNOME/gtk/-/issues/4529
+            self.popover.set_autohide(False)
+
         frame.room_list_button.set_popover(self.popover)
 
     @staticmethod
@@ -243,3 +246,12 @@ class RoomList(UserInterface):
     def clear(self):
         self.room_model.clear()
         self.room_iters.clear()
+
+    def on_show(self, popover, param):
+
+        if not popover.get_property(param.name):
+            return
+
+        if GTK_API_VERSION >= 4:
+            # Workaround for https://gitlab.gnome.org/GNOME/gtk/-/issues/4529
+            popover.child_focus(Gtk.DirectionType.TAB_FORWARD)

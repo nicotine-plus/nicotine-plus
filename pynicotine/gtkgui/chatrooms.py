@@ -141,6 +141,10 @@ class ChatRooms(IconNotebook):
                     # Scroll to the focused widget
                     self.command_help.container.get_child().set_scroll_to_focus(True)
 
+                if GTK_API_VERSION >= 4:
+                    # Workaround for https://gitlab.gnome.org/GNOME/gtk/-/issues/4529
+                    self.command_help.popover.set_autohide(False)
+
             self.command_help.popover.unparent()
             tab.help_button.set_popover(self.command_help.popover)
 
