@@ -22,6 +22,8 @@ import time
 
 from collections import deque
 
+from gi.repository import Gtk
+
 from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
@@ -57,6 +59,9 @@ class ChatHistory(UserInterface):
 
         if GTK_API_VERSION >= 4:
             frame.private_history_button.get_first_child().add_css_class("arrow-button")
+
+            # Workaround for https://gitlab.gnome.org/GNOME/gtk/-/issues/4529
+            self.popover.set_autohide(False)
 
         frame.private_history_button.set_popover(self.popover)
         self.load_users()
@@ -119,3 +124,12 @@ class ChatHistory(UserInterface):
 
         self.search_entry.grab_focus()
         return True
+
+    def on_show(self, popover, param):
+
+        if not popover.get_property(param.name):
+            return
+
+        if GTK_API_VERSION >= 4:
+            # Workaround for https://gitlab.gnome.org/GNOME/gtk/-/issues/4529
+            popover.child_focus(Gtk.DirectionType.TAB_FORWARD)
