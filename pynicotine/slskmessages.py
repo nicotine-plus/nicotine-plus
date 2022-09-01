@@ -2446,17 +2446,36 @@ class FileSearchResult(PeerMessage):
             msg.extend(self.pack_string("mp3"))
             msg.extend(self.pack_uint32(3))
 
-            # Bitrate
-            msg.extend(self.pack_uint32(0))
-            msg.extend(self.pack_uint32(fileinfo[2][0] or 0))
+            audio_info = fileinfo[2]
+            is_lossless = len(audio_info) > 2 and audio_info[2]
 
-            # Duration
-            msg.extend(self.pack_uint32(1))
-            msg.extend(self.pack_uint32(fileinfo[3] or 0))
+            # Lossless audio file
+            if is_lossless:
+                # Duration
+                msg.extend(self.pack_uint32(1))
+                msg.extend(self.pack_uint32(fileinfo[3] or 0))
 
-            # VBR
-            msg.extend(self.pack_uint32(2))
-            msg.extend(self.pack_uint32(fileinfo[2][1] or 0))
+                # Sample rate
+                msg.extend(self.pack_uint32(4))
+                msg.extend(self.pack_uint32(audio_info[3] or 0))
+
+                # Bit depth
+                msg.extend(self.pack_uint32(5))
+                msg.extend(self.pack_uint32(audio_info[4] or 0))
+
+            # Lossy audio file
+            else:
+                # Bitrate
+                msg.extend(self.pack_uint32(0))
+                msg.extend(self.pack_uint32(audio_info[0] or 0))
+
+                # Duration
+                msg.extend(self.pack_uint32(1))
+                msg.extend(self.pack_uint32(fileinfo[3] or 0))
+
+                # VBR
+                msg.extend(self.pack_uint32(2))
+                msg.extend(self.pack_uint32(audio_info[1] or 0))
 
         return msg
 

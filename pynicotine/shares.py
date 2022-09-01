@@ -353,15 +353,15 @@ class Scanner:
 
         size = 0
         audio = None
-        bitrate_info = None
-        duration_info = None
+        audio_info = None
+        duration = None
 
         if file_stat is None:
             file_stat = os.stat(encode_path(pathname))
 
         size = file_stat.st_size
 
-        """ We skip metadata scanning of files without meaningful content """
+        # We skip metadata scanning of files without meaningful content
         if size > 128:
             try:
                 audio = tinytag.get(encode_path(pathname), size, tags=False)
@@ -370,22 +370,39 @@ class Scanner:
                 self.queue.put((_("Error while scanning metadata for file %(path)s: %(error)s"),
                                {'path': pathname, 'error': error}, None))
 
-        if audio is not None and audio.bitrate is not None and audio.duration is not None:
-            bitrate = int(audio.bitrate + 0.5)  # Round the value with minimal performance loss
-            duration = int(audio.duration)
+        if audio is not None:
+            bitrate = audio.bitrate
+            samplerate = audio.samplerate
+            bitdepth = audio.bitdepth
+            duration = audio.duration
 
-            if UINT_LIMIT > bitrate >= 0:
-                bitrate_info = (bitrate, int(audio.is_vbr))
+            if bitrate is not None:
+                bitrate = int(bitrate + 0.5)  # Round the value with minimal performance loss
 
-            if UINT_LIMIT > duration >= 0:
-                duration_info = duration
+                if not UINT_LIMIT > bitrate >= 0:
+                    bitrate = None
 
-            if bitrate_info is None or duration_info is None:
-                self.queue.put(("Ignoring invalid metadata for file %(path)s: %(metadata)s",
-                               {'path': pathname, 'metadata': "bitrate: %s, duration: %s s" % (bitrate, duration)},
-                               "miscellaneous"))
+            if duration is not None:
+                duration = int(duration)
 
-        return [name, size, bitrate_info, duration_info]
+                if not UINT_LIMIT > duration >= 0:
+                    duration = None
+
+            if samplerate is not None:
+                samplerate = int(samplerate)
+
+                if not UINT_LIMIT > samplerate >= 0:
+                    samplerate = None
+
+            if bitdepth is not None:
+                bitdepth = int(bitdepth)
+
+                if not UINT_LIMIT > bitdepth >= 0:
+                    bitdepth = None
+
+            audio_info = (bitrate, int(audio.is_vbr), int(audio.is_lossless), samplerate, bitdepth)
+
+        return [name, size, audio_info, duration]
 
     @staticmethod
     def get_dir_stream(folder):
