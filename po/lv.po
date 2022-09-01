@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-01 02:07+0300\n"
-"PO-Revision-Date: 2022-08-31 18:23+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2022-09-01 18:08+0000\n"
+"Last-Translator: Pagal3 <p4gal3@protonmail.com>\n"
 "Language-Team: Latvian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/lv/>\n"
 "Language: lv\n"
@@ -59,9 +59,9 @@ msgid "Soulseek;Nicotine;sharing;music;P2P;peer-to-peer;GTK;"
 msgstr "Soulseek;Nicotine;kopīgošana;mūzika;P2P;peer-to-peer;GTK;"
 
 #: pynicotine/__init__.py:29
-#, fuzzy, python-format
+#, python-format
 msgid "Website: %s"
-msgstr "Izpildīts: %s"
+msgstr "Vietne: %s"
 
 #: pynicotine/__init__.py:35
 msgid "show this help message and exit"
@@ -1201,9 +1201,8 @@ msgstr ""
 "instalēt GTK %(complete_version)s vai jaunāku versiju."
 
 #: pynicotine/gtkgui/__init__.py:116
-#, fuzzy
 msgid "No graphical environment available, using headless (no GUI) mode"
-msgstr "Nav pieejama grafiskā vide, izmantojot bezgalvu (bez GUI) režīmu"
+msgstr "Nav pieejama grafiskā vide, tiek izmantots bezgalvas (bez GUI) režīms"
 
 #: pynicotine/gtkgui/application.py:167
 msgid "Critical Error"
@@ -1443,7 +1442,7 @@ msgid "File Properties (%(num)i of %(total)i  /  %(size)s)"
 msgstr "Faila rekvizīti (%(num)i no %(total)i / %(size)s)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:98
-#, fuzzy, python-format
+#, python-format
 msgid "<b>%(ip)s</b>, port %(port)s"
 msgstr "<b>%(ip)s</b>, ports %(port)s"
 
@@ -1587,7 +1586,7 @@ msgstr "Modelis"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1045
 msgid "Replacement"
-msgstr "Aizstāšana"
+msgstr "Aizvietotājs"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1174
 msgid "Censor Pattern"
@@ -1604,29 +1603,24 @@ msgstr ""
 "nevēlaties saskaņot virknes vārdos (var neizdoties rindu sākumā un beigās)."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1200
-#, fuzzy
 msgid "Edit Censored Pattern"
-msgstr "Cenzētie modeļi"
+msgstr "Rediģēt cenzēto modeli"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1232
-#, fuzzy
 msgid "Add Replacement"
-msgstr "Aizstāšana"
+msgstr "Pievienot aizvietotāju"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1233
-#, fuzzy
 msgid "Enter a text pattern and what to replace it with"
-msgstr "Ievadiet attiecīgi teksta modeli un nomaiņu:"
+msgstr "Ievadiet teksta modeli un to, ar ko to aizstāt"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1261
-#, fuzzy
 msgid "Edit Replacement"
-msgstr "Aizstāšana"
+msgstr "Rediģēt aizvietotāju"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1262
-#, fuzzy
 msgid "Enter a text pattern and what to replace it with:"
-msgstr "Ievadiet attiecīgi teksta modeli un nomaiņu:"
+msgstr "Ievadiet teksta modeli un to, ar ko to aizstāt:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1329
 msgid "Top"
@@ -1696,35 +1690,32 @@ msgid "Command"
 msgstr "Komanda"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1874
-#, fuzzy
 msgid "Add URL Handler"
-msgstr "URL apstrādātāji"
+msgstr "Pievienot URL apstrādātāju"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1875
-#, fuzzy
 msgid "Enter the protocol and the command for the URL handler:"
-msgstr "Ievadiet attiecīgi protokolu un komandu URL izplatītājam:"
+msgstr "Ievadiet protokolu un komandu URL apstrādātājam:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1902
-#, fuzzy
 msgid "Edit Command"
-msgstr "Komanda"
+msgstr "Rediģēt komandu"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1903
-#, fuzzy, python-format
+#, python-format
 msgid "Enter a new command for protocol %s:"
-msgstr "Ievadiet jaunu vērtību vēlmei '%s':"
+msgstr "Ievadiet jaunu komandu protokolam %s:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2027
 msgid "Username;APIKEY:"
 msgstr "Lietotājvārds;APIKEY:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2031
-#, fuzzy
 msgid ""
 "Music player (e.g. amarok, audacious, exaile); leave empty to autodetect:"
 msgstr ""
-"Klienta vārds (piem., amarok, audacious, exaile) vai tukšs automātiskai:"
+"Mūzikas atskaņotājs (piem., amarok, audacious, exaile); atstāt tukšu, lai "
+"automātiski noteiktu:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2035
 #: pynicotine/gtkgui/ui/settings/network.ui:80
@@ -1754,7 +1745,6 @@ msgstr "Mākslinieks"
 #: pynicotine/gtkgui/search.py:376 pynicotine/gtkgui/userbrowse.py:286
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:182
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:339
-#, fuzzy
 msgid "Duration"
 msgstr "Ilgums"
 
@@ -3013,7 +3003,6 @@ msgid "Select an Image"
 msgstr "Atlasiet attēlu"
 
 #: pynicotine/gtkgui/widgets/filechooser.py:106
-#, fuzzy
 msgid "All images"
 msgstr "Visi attēli"
 
@@ -3471,9 +3460,8 @@ msgstr ""
 "%(seconds)i sekundes lejupielādes privilēģiju."
 
 #: pynicotine/pynicotine.py:710
-#, fuzzy
 msgid "Your password has been changed"
-msgstr "Jūsu parole ir nomainīta. Parole ir %s"
+msgstr "Jūsu parole ir nomainīta"
 
 #: pynicotine/search.py:129 pynicotine/search.py:234
 #: pynicotine/gtkgui/ui/mainwindow.ui:117
@@ -3481,9 +3469,9 @@ msgid "Joined Rooms "
 msgstr "Pievienotās istabas "
 
 #: pynicotine/search.py:259
-#, fuzzy, python-format
+#, python-format
 msgid "Searching for wishlist item \"%s\""
-msgstr "Tiek meklēts vēlmju saraksta vienums \"%s\""
+msgstr "Meklē vēlmju saraksta vienumu \"%s\""
 
 #: pynicotine/search.py:267
 msgid "Server does not permit performing wishlist searches at this time"
@@ -3809,9 +3797,9 @@ msgid "Picture saved to %s"
 msgstr "Attēls saglabāts uz %s"
 
 #: pynicotine/userinfo.py:99
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot save picture to %(filename)s: %(error)s"
-msgstr "Nevar saglabāt %(filename)s: %(error)s"
+msgstr "Nevar saglabāt attēlu uz %(filename)s: %(error)s"
 
 #: pynicotine/userinfo.py:139
 #, python-format
@@ -3819,19 +3807,19 @@ msgid "User %(user)s is reading your user info"
 msgstr "Lietotājs %(user)s lasa Jūsu lietotāja informāciju"
 
 #: pynicotine/utils.py:178
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot open file path %(path)s: %(error)s"
-msgstr "Nevar saglabāt failu %(path)s: %(error)s"
+msgstr "Nevar atvērt faila ceļu %(path)s: %(error)s"
 
 #: pynicotine/utils.py:207
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot open URL %(url)s: %(error)s"
-msgstr "Nevar saglabāt %(filename)s: %(error)s"
+msgstr "Nevar atvērt URL %(url)s: %(error)s"
 
 #: pynicotine/utils.py:232
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot access log file %(path)s: %(error)s"
-msgstr "Nevar saglabāt failu %(path)s: %(error)s"
+msgstr "Nevar piekļūt žurnāla failam %(path)s: %(error)s"
 
 #: pynicotine/utils.py:593
 #, python-format
@@ -3908,9 +3896,8 @@ msgid "Room wall"
 msgstr "Istabas siena"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:269
-#, fuzzy
 msgid "R_oom Wall"
-msgstr "Istabas siena"
+msgstr "_Istabas siena"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:6
 msgid "_Previous"
@@ -4775,7 +4762,6 @@ msgstr ""
 "rezultāti tiek rādīti."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:52
-#, fuzzy
 msgid ""
 "Each list of search results has its own filter which can be revealed by "
 "toggling the Result Filters button. A filter is made up of multiple fields, "
@@ -4784,30 +4770,24 @@ msgid ""
 "those yet to arrive."
 msgstr ""
 "Katram meklēšanas rezultātu sarakstam ir savs filtrs, ko var atklāt, "
-"pārslēdzot pogu Rezultātu filtri. Filtru veido vairāki lauki, kuri visi tiek "
-"lietoti, nospiežot taustiņu Enter kādā no laukiem. Filtrēšana tiek "
-"nekavējoties piemērota jau saņemtajiem rezultātiem, kā arī tiem, kas vēl "
-"tiks saņemti. Lai vēlreiz skatītu visus rezultātus, notīriet filtru no "
-"visiem terminiem un atkārtoti apstipriniet to. Kā norāda nosaukums, "
-"meklēšanas rezultātu filtrs nevar paplašināt sākotnējo meklēšanu, tas var "
-"tikai sašaurināt to. Lai paplašinātu vai mainītu meklēšanas vienumus, "
-"veiciet jaunu meklēšanu."
+"pārslēdzot pogu Rezultātu filtri. Filtrs sastāv no vairākiem laukiem, kas "
+"visi tiek pielietoti, nospiežot Enter jebkurā no laukiem. Filtrēšana tiek "
+"nekavējoties pielietota jau saņemtajiem rezultātiem, kā arī tiem, kas vēl "
+"nav saņemti."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:61
-#, fuzzy
 msgid ""
 "As the name suggests, a search result filter cannot expand your original "
 "search, it can only narrow it down. To broaden or change your search terms, "
 "perform a new search."
 msgstr ""
-"Kā norāda nosaukums, meklēšanas rezultātu filtrs nevar paplašināt sākotnējo "
-"meklēšanu, tas var tikai sašaurināt to. Lai paplašinātu vai mainītu "
-"meklēšanas vienumus, veiciet jaunu meklēšanu."
+"Kā norāda nosaukums, meklēšanas rezultātu filtrs nevar paplašināt jūsu "
+"sākotnējo meklēšanu, tas var tikai to sašaurināt. Lai paplašinātu vai "
+"mainītu meklēšanas nosacījumus, veiciet jaunu meklēšanu."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:70
-#, fuzzy
 msgid "Result Filter Usage"
-msgstr "Rezultātu filtri"
+msgstr "Rezultātu filtra lietojums"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:82
 msgid "Include Text"
@@ -4818,16 +4798,14 @@ msgid "Files and folders containing this text will be shown."
 msgstr "Tiks parādīti faili un mapes, kas satur šo tekstu."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:109
-#, fuzzy
 msgid ""
 "Case is insensitive, but word order is important: 'Instrumental Remix' will "
 "not show any 'Remix Instrumental'"
 msgstr ""
 "Lielo/mazo burtu lietojums ir nebūtisks, taču vārdu secība ir svarīga: "
-"“Spears Brittany” nerādīs nevienu “Brittany Spears”"
+"'Instrumental Remix” nerādīs nevienu 'Remix Instrumental'"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:119
-#, fuzzy
 msgid ""
 "For order-insensitive filtering, as well as filtering several exact phrases, "
 "vertical bars can be used to separate phrases and words.\n"
@@ -4835,7 +4813,7 @@ msgid ""
 msgstr ""
 "Lai filtrētu lielo/mazo burtu lietojumu, kā arī vairākas precīzas frāzes, "
 "var izmantot vertikālas joslas frāžu un vārdu atdalīšanai.\n"
-"    Piemērs: Spears|Brittany|My beautiful album|hello"
+"    Piemērs: Remix|Instrumental|Dub Mix"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:131
 msgid "Exclude Text"
@@ -4891,39 +4869,32 @@ msgstr ""
 "vienādi ar vērtību, tiks saskaņoti."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:232
-#, fuzzy
 msgid ""
 "Append b, k, m, or g (alternatively kib, mib, or gib) to specify byte, "
 "kibibyte, mebibyte, or gibibyte units:\n"
 "    20m to show files larger than 20 MiB (mebibytes)."
 msgstr ""
-"Pievienojiet beigās b, k, m vai g (alternatīvi kib, mib vai gib), lai "
-"norādītu baitu, kibibaitu, mebibaitu vai gibibaitu vienības:\n"
-"    <1024k tiks atrasti faili, kuru izmērs ir 1024 kibibaiti (t.i., "
-"1 mebibaits) vai mazāki."
+"Pievienojiet b, k, m vai g (alternatīvi kib, mib vai gib), lai norādītu "
+"baita, kibibita, mebibaita vai gibibita vienības:\n"
+"    20m, lai parādītu failus, kas lielāki par 20 MiB (mebibibitiem)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:243
-#, fuzzy
 msgid ""
 "Prepend = to a value to specify an exact match:\n"
 "    =1024 only matches files that are 1 KiB (kibibyte)."
 msgstr ""
 "Pievienojiet sākumā = vērtībai, lai norādītu precīzu atbilstību:\n"
-"    =1024 atbilst tikai failiem, kuru lielums ir 1024 baiti (t.i., 1 "
-"kibibaits)."
+"    =1024 atbilst tikai failiem, kuru izmērs ir 1 KiB (kibibits)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:254
-#, fuzzy
 msgid ""
 "Prepend ! to a value to exclude files of a specific size:\n"
 "    !30.5m to hide files that are 30.5 MiB (mebibytes)."
 msgstr ""
-"Pievienojiet sākumā = vērtībai, lai norādītu precīzu atbilstību:\n"
-"    =1024 atbilst tikai failiem, kuru lielums ir 1024 baiti (t.i., 1 "
-"kibibaits)."
+"Pievienojiet sākumā ! vērtībai, lai neiekļautu konkrēta izmēra failus:\n"
+"    !30.5m, lai paslēptu failus, kuru izmērs ir 30.5 MiB (megabaiti)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:265
-#, fuzzy
 msgid ""
 "Prepend < or > to find files smaller/larger than the given value:\n"
 "    >10.5m|<1g to show files larger than 10.5 MiB (mebibytes),\n"
@@ -4931,107 +4902,98 @@ msgid ""
 msgstr ""
 "Pievienojiet pirms < vai >, lai atrastu failus, kas ir mazāki/lielāki par "
 "norādīto vērtību:\n"
-"    >10,5 m|<1 g, lai parādītu failus, kas lielāki par 10,5 MiB "
+"    >10.5 m|<1 g, lai parādītu failus, kas lielāki par 10.5 MiB "
 "(mebibaitiem),\n"
-"    bet mazāks par 1 GiB (gibibaiti), izmantojiet a | starp nosacījumiem."
+"    bet mazāki par 1 GiB (gibibaitiem), izmantojiet | starp nosacījumiem."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:277
-#, fuzzy
 msgid ""
 "The better-known variants kb, mb, and gb can also be used for kilobyte, "
 "megabyte, and gigabyte units."
 msgstr ""
-"Ērtības labad var izmantot arī variantus kb, mb un gb labāk zināmajām kilo-, "
-"mega- un gigabaitu vienībām."
+"Labāk zināmos variantus kb, mb un gb var izmantot arī kilobaita, megabaita "
+"un gigabaita vienībām."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:305
 msgid "Filters files based upon their bitrate."
 msgstr "Filtrē failus, pamatojoties uz to bitu pārraides ātrumu."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:315
-#, fuzzy
 msgid ""
 "Values must be entered as numeric digits only. The unit is always Kb/s "
 "(Kilobits per second)."
 msgstr ""
-"Vērtības jāievada tikai kā ciparu cipari. Mērvienība vienmēr ir Kb/s "
-"(kilobiti sekundē)."
+"Vērtības jāievada tikai kā ciparu zīmes. Vienība vienmēr ir Kb/s (kilobiti "
+"sekundē)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:325
-#, fuzzy
 msgid ""
 "Like File Size (above), operators =, !, <, and > can be used, and multiple "
 "conditions can be specified with | pipes:\n"
 "    >256|<1411 to show files with a bitrate of at least 256 Kb/s\n"
 "    with a maximum bitrate of 1411 Kb/s."
 msgstr ""
-"Tāpat kā faila lielums (iepriekš), var izmantot operatorus =, !, < un >, un "
-"vairākus nosacījumus var norādīt ar | caurules:\n"
-"    >256|<1411, lai rādītu failus ar bitu pārraides ātrumu vismaz 256 Kb/s\n"
+"Līdzīgi kā iepriekš minētajā sadaļā Faila lielums var izmantot operatorus =, "
+"!, < un >, kā arī var norādīt vairākus nosacījumus, izmantojot | vertikālas "
+"svītras:\n"
+"    >256|<1411, lai parādītu failus ar vismaz 256 Kb/s bitu pārraides ātrumu."
+"\n"
 "    ar maksimālo bitu pārraides ātrumu 1411 Kb/s."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:356
-#, fuzzy
 msgid "Filters files based upon their duration."
-msgstr "Filtrē failus, pamatojoties uz to bitu pārraides ātrumu."
+msgstr "Filtrē failus, pamatojoties uz to ilgumu."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:366
-#, fuzzy
 msgid ""
 "By default, files longer than or equal to the entered duration will be "
 "matched, unless an operator (=, !, <, or >) is used."
 msgstr ""
-"Pēc noklusējuma tiks saskaņoti faili, kas ir garāki vai vienādi ar ievadīto "
-"ilgumu, ja vien netiek izmantots operators (=, !, < vai >)."
+"Pēc noklusējuma tiks atlasīti faili, kas ir garāki vai vienādi ar ievadīto "
+"ilgumu, ja vien nav izmantots kāds operators (=, !, < vai >)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:376
-#, fuzzy
 msgid ""
 "Enter a raw value in seconds or use the MM:SS and HH:MM:SS time formats:\n"
 "    >5:30 to show files at least 5 and a half minutes long.\n"
 "    <5:30:00 shows files less than 5 and a half hours long."
 msgstr ""
-"Ievadiet neapstrādātu vērtību sekundēs vai izmantojiet laika formātus MM:SS "
-"un HH:MM:SS:\n"
+"Ievadiet vērtību sekundēs vai izmantojiet laika formātus MM:SS un HH:MM:SS:\n"
 "    >5:30, lai rādītu vismaz 5 ar pusi minūtes garus failus.\n"
 "    <5:30:00 parāda failus, kuru garums nepārsniedz 5 ar pusi stundas."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:388
-#, fuzzy
 msgid ""
 "Multiple conditions can be specified with | pipe seperators:\n"
 "    >6:00|<12:00 to show files between 6 and 12 minutes long.\n"
 "    !9:54|!8:43|!7:32 to hide some specific files from the results.\n"
 "    =5:34|=4:23|=3:05 to include files with specific durations."
 msgstr ""
-"Ar | var norādīt vairākus nosacījumus cauruļu atdalītāji:\n"
+"Ar | var norādīt vairākus nosacījumus:\n"
 "    >6:00|<12:00, lai rādītu failus, kuru garums ir no 6 līdz 12 minūtēm.\n"
 "    !9:54|!8:43|!7:32, lai paslēptu dažus konkrētus failus no rezultātiem.\n"
-"    =5:34|=4:23|=3:05, lai iekļautu failus ar noteiktu ilgumu."
+"    =5:34|=4:23|=3:05, lai iekļautu failus ar noteiktiem ilgumiem."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:401
-#, fuzzy
 msgid "To exclude non-audio files use !0 in the duration filter."
 msgstr ""
-"Lai izslēgtu failus, kas nav audio faili, ilguma filtrā izmantojiet !0."
+"Lai neiekļautu failus, kas nav audio faili, ilguma filtrā izmantojiet !0."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:424
-#, fuzzy
 msgid "Filters files based upon users' geographical location."
-msgstr "Filtrē failus, pamatojoties uz lietotāju valstīm."
+msgstr "Filtrē failus, pamatojoties uz lietotāju ģeogrāfisko atrašanās vietu."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:434
-#, fuzzy
 msgid ""
 "Uses country codes defined by ISO 3166-2:\n"
 "    US will only show results from users with IP addresses in the United "
 "States. !GB will hide results that come from users in the United Kingdom "
 "(Great Britain)."
 msgstr ""
-"Izmanto valstu kodus, kurus nosaka ISO 3166-2 (skatiet Wikipedia):\n"
-"    “US” atgriezīs failus tikai no lietotājiem, kuriem ir savienojums ar "
-"ASV. Tāpat “GB” atgriež failus no lietotājiem ar IP adresēm Apvienotajā "
-"Karalistē."
+"Izmanto ISO 3166-2 definētos valstu kodus:\n"
+"    US tiks rādīti rezultāti tikai no lietotājiem, kuru IP adreses ir "
+"Amerikas Savienotajās Valstīs. !GB slēps rezultātus, kas nāk no lietotājiem "
+"Apvienotajā Karalistē (Lielbritānijā)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:444
 #: pynicotine/gtkgui/ui/settings/search.ui:371
@@ -5039,25 +5001,22 @@ msgid "Free Slot"
 msgstr "Brīvs slots"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:456
-#, fuzzy
 msgid ""
 "Show only those results from users which have at least one upload slot free, "
 "i.e. files that are availiable immediately."
 msgstr ""
-"Rādīt tikai tos rezultātus no lietotājiem, kuriem ir brīvs vismaz viens "
-"augšupielādes slots. Šis filtrs tiek lietots nekavējoties."
+"Rādīt tikai to lietotāju rezultātus, kuriem ir vismaz viens brīvs "
+"augšupielādes slots, t. i., failus, kas ir pieejami uzreiz."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:477
-#, fuzzy
 msgid "To view the full results again, simply clear all active filters."
-msgstr ""
-"Lai vēlreiz skatītu visus rezultātus, vienkārši notīriet visus aktīvos "
-"filtrus."
+msgstr "Lai vēlreiz skatītu visus rezultātus, notīriet visus aktīvos filtrus."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:486
-#, fuzzy
 msgid "See the preferences to set default search result filter options."
-msgstr "Vairāk filtru opciju skatiet preferencēs."
+msgstr ""
+"Skatiet preferences, lai iestatītu noklusējuma meklēšanas rezultātu filtra "
+"opcijas."
 
 #: pynicotine/gtkgui/ui/privatechat.ui:84
 msgid "Private chat command help"
@@ -5123,14 +5082,12 @@ msgid "Bitrate…"
 msgstr "Bitu pārraides ātrums…"
 
 #: pynicotine/gtkgui/ui/search.ui:327
-#, fuzzy
 msgid "Duration…"
 msgstr "Ilgums…"
 
 #: pynicotine/gtkgui/ui/search.ui:328
-#, fuzzy
 msgid "Duration, e.g. 2:20|!3:30|=4:40"
-msgstr "Ilgums, piem. 2:20|!3:30|=4:40"
+msgstr "Ilgums, piem., 2:20|!3:30|=4:40"
 
 #: pynicotine/gtkgui/ui/search.ui:359
 msgid "Country code…"
@@ -5503,9 +5460,8 @@ msgid "Log debug messages to file"
 msgstr "Reģistrēt žurnālā atkļūdošanas ziņojumus uz failu"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:62
-#, fuzzy
 msgid "Log timestamp format:"
-msgstr "Žurnāla faila laika zīmoga formāts:"
+msgstr "Žurnāla laika zīmoga formāts:"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:92
 msgid "Folder Locations"
@@ -5552,9 +5508,8 @@ msgid "Last port"
 msgstr "Pēdējais ports"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:214
-#, fuzzy
 msgid "Public IP address:"
-msgstr "Bloķēt IP adresi"
+msgstr "Publiskā IP adrese:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:263
 msgid "Away Status"
