@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-01 02:07+0300\n"
-"PO-Revision-Date: 2022-08-31 18:23+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2022-09-02 22:21+0000\n"
+"Last-Translator: Maxime Leroy <lisacintosh@gmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/fr/>\n"
 "Language: fr\n"
@@ -58,9 +58,9 @@ msgid "Soulseek;Nicotine;sharing;music;P2P;peer-to-peer;GTK;"
 msgstr "Soulseek ;Nicotine ;partage ;musique ;P2P ; pair-à-pair ;GTK ;"
 
 #: pynicotine/__init__.py:29
-#, fuzzy, python-format
+#, python-format
 msgid "Website: %s"
-msgstr "Exécuté  : %s"
+msgstr "Site internet : %s"
 
 #: pynicotine/__init__.py:35
 msgid "show this help message and exit"
@@ -1208,11 +1208,10 @@ msgstr ""
 "devriez installer GTK %(complete_version)s ou plus récent."
 
 #: pynicotine/gtkgui/__init__.py:116
-#, fuzzy
 msgid "No graphical environment available, using headless (no GUI) mode"
 msgstr ""
-"Aucun environnement graphique disponible, utilisant le mode sans tête (pas "
-"d'interface graphique)"
+"Aucun environnement graphique disponible, utilise le mode sans interface "
+"graphique"
 
 #: pynicotine/gtkgui/application.py:167
 msgid "Critical Error"
@@ -1453,7 +1452,7 @@ msgid "File Properties (%(num)i of %(total)i  /  %(size)s)"
 msgstr "Propriété du fichier (%(num)i sur %(total)i  /  %(size)s)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:98
-#, fuzzy, python-format
+#, python-format
 msgid "<b>%(ip)s</b>, port %(port)s"
 msgstr "<b>%(ip)s</b>, port %(port)s"
 
@@ -1617,29 +1616,24 @@ msgstr ""
 "des lignes)."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1200
-#, fuzzy
 msgid "Edit Censored Pattern"
-msgstr "Motifs censurés"
+msgstr "Modifier le motif de censure"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1232
-#, fuzzy
 msgid "Add Replacement"
-msgstr "Remplacement"
+msgstr "Ajouter un remplacement"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1233
-#, fuzzy
 msgid "Enter a text pattern and what to replace it with"
-msgstr "Entrez le modèle de texte et le remplacement, respectivement :"
+msgstr "Entrez le modèle du texte et son remplacement"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1261
-#, fuzzy
 msgid "Edit Replacement"
-msgstr "Remplacement"
+msgstr "Modifier le remplacement"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1262
-#, fuzzy
 msgid "Enter a text pattern and what to replace it with:"
-msgstr "Entrez le modèle de texte et le remplacement, respectivement :"
+msgstr "Entrez le modèle de texte et son remplacement :"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1329
 msgid "Top"
@@ -1709,9 +1703,8 @@ msgid "Command"
 msgstr "Commande"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1874
-#, fuzzy
 msgid "Add URL Handler"
-msgstr "Gestionnaires d'URL"
+msgstr "Ajouter un gestionnaire d'URL"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1875
 #, fuzzy
@@ -1726,21 +1719,20 @@ msgid "Edit Command"
 msgstr "Éditer les commentaires"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1903
-#, fuzzy, python-format
+#, python-format
 msgid "Enter a new command for protocol %s:"
-msgstr "Choisissez une nouvelle valeur pour le souhait '%s'  :"
+msgstr "Choisissez une nouvelle commande pour le protocole %s  :"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2027
 msgid "Username;APIKEY:"
 msgstr "Nom d'utilisateur ;APIKEY  :"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2031
-#, fuzzy
 msgid ""
 "Music player (e.g. amarok, audacious, exaile); leave empty to autodetect:"
 msgstr ""
-"Nom du client (par exemple amarok, audacious, exaile) ou laisser à vide pour "
-"une sélection automatique  :"
+"Lecteur de musique (par exemple amarok, audacious, exaile) ou laisser-le "
+"vide pour une sélection automatique  :"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2035
 #: pynicotine/gtkgui/ui/settings/network.ui:80
@@ -3033,9 +3025,8 @@ msgid "Select an Image"
 msgstr "Sélectionnez une image"
 
 #: pynicotine/gtkgui/widgets/filechooser.py:106
-#, fuzzy
 msgid "All images"
-msgstr "Toutes les photos"
+msgstr "Toutes les images"
 
 #: pynicotine/gtkgui/widgets/filechooser.py:132
 msgid "Save as…"
@@ -3512,9 +3503,8 @@ msgstr ""
 "restantes de privilèges de téléchargement."
 
 #: pynicotine/pynicotine.py:710
-#, fuzzy
 msgid "Your password has been changed"
-msgstr "Votre mot de passe a été modifié. Le mot de passe est %s"
+msgstr "Votre mot de passe a été modifié"
 
 #: pynicotine/search.py:129 pynicotine/search.py:234
 #: pynicotine/gtkgui/ui/mainwindow.ui:117
@@ -3862,9 +3852,9 @@ msgid "Picture saved to %s"
 msgstr "Image sauvegardée dans %s"
 
 #: pynicotine/userinfo.py:99
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot save picture to %(filename)s: %(error)s"
-msgstr "Impossible de sauvegarder %(filename)s : %(error)s"
+msgstr "Impossible de sauvegarder l'image %(filename)s : %(error)s"
 
 #: pynicotine/userinfo.py:139
 #, python-format
