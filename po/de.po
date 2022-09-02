@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-01 02:07+0300\n"
-"PO-Revision-Date: 2022-09-01 21:49+0000\n"
+"PO-Revision-Date: 2022-09-02 09:59+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
@@ -1629,7 +1629,6 @@ msgid "Edit Replacement"
 msgstr "Ersatz bearbeiten"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1262
-#, fuzzy
 msgid "Enter a text pattern and what to replace it with:"
 msgstr "Geben Sie ein Textmuster ein und womit es ersetzt werden soll"
 
@@ -4870,16 +4869,15 @@ msgstr ""
 "wichtig: 'Instrumental Remix' zeigt kein 'Remix Instrumental'"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:119
-#, fuzzy
 msgid ""
 "For order-insensitive filtering, as well as filtering several exact phrases, "
 "vertical bars can be used to separate phrases and words.\n"
 "    Example: Remix|Instrumental|Dub Mix"
 msgstr ""
-"Für die auftragsunabhängige Filterung sowie die Filterung mehrerer exakter "
+"Für eine ordnungsunempfindliche Filterung sowie zum Filtern mehrerer exakter "
 "Phrasen können vertikale Balken verwendet werden, um Phrasen und Wörter zu "
 "trennen.\n"
-"    Beispiel: Spears|Brittany|Mein schönes Album|Hallo"
+"    Beispiel: Remix| Instrumental| Dub-Mix"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:131
 msgid "Exclude Text"
@@ -4948,31 +4946,30 @@ msgstr ""
 "sind."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:243
-#, fuzzy
 msgid ""
 "Prepend = to a value to specify an exact match:\n"
 "    =1024 only matches files that are 1 KiB (kibibyte)."
 msgstr ""
-"Setzen Sie = vor einen Wert, um eine genaue Übereinstimmung anzugeben:\n"
-"    =1024 passt nur auf Dateien, die 1024 Bytes groß sind (d.h. 1 Kibyte)."
+"Stellen Sie = einem Wert voran, um eine genaue Übereinstimmung anzugeben:\n"
+"    =1024 entspricht nur Dateien, die 1 KiB (kibibyte) sind."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:254
-#, fuzzy
 msgid ""
 "Prepend ! to a value to exclude files of a specific size:\n"
 "    !30.5m to hide files that are 30.5 MiB (mebibytes)."
 msgstr ""
-"Setzen Sie = vor einen Wert, um eine genaue Übereinstimmung anzugeben:\n"
-"    =1024 passt nur auf Dateien, die 1024 Bytes groß sind (d.h. 1 Kibyte)."
+"Setzen Sie ! vor einen Wert, um Dateien einer bestimmten Größe "
+"auszuschließen:\n"
+"    !30.5m, um Dateien mit einer Größe von 30,5 MiB (Megabytes) "
+"auszuschließen."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:265
-#, fuzzy
 msgid ""
 "Prepend < or > to find files smaller/larger than the given value:\n"
 "    >10.5m|<1g to show files larger than 10.5 MiB (mebibytes),\n"
 "    but smaller than 1 GiB (gibibytes), use a | between conditions."
 msgstr ""
-"Stellen Sie < oder > voran, um Dateien zu finden, die kleiner/größer als der "
+"Setzen Sie < oder > voran, um Dateien zu finden, die kleiner/größer als der "
 "angegebene Wert sind:\n"
 "    >10,5 m|<1 g, um Dateien anzuzeigen, die größer als 10,5 MiB (Mebibyte) "
 "sind,\n"
@@ -4980,58 +4977,52 @@ msgstr ""
 "Bedingungen."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:277
-#, fuzzy
 msgid ""
 "The better-known variants kb, mb, and gb can also be used for kilobyte, "
 "megabyte, and gigabyte units."
 msgstr ""
-"Der Einfachheit halber können auch die Varianten kb, mb und gb für die "
-"bekannteren Einheiten Kilo-, Mega- und Gigabyte verwendet werden."
+"Die bekannteren Varianten kb, mb und gb können auch für Kilobyte-, Megabyte- "
+"und Gigabyte-Einheiten verwendet werden."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:305
 msgid "Filters files based upon their bitrate."
 msgstr "Filtert Dateien auf der Grundlage ihrer Bitrate."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:315
-#, fuzzy
 msgid ""
 "Values must be entered as numeric digits only. The unit is always Kb/s "
 "(Kilobits per second)."
 msgstr ""
-"Werte dürfen nur als Ziffern eingegeben werden. Die Einheit ist immer Kb/s "
-"(Kilobit pro Sekunde)."
+"Werte dürfen nur als Ziffern eingegeben werden. Die Einheit ist immer Kb/s ("
+"Kilobit pro Sekunde)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:325
-#, fuzzy
 msgid ""
 "Like File Size (above), operators =, !, <, and > can be used, and multiple "
 "conditions can be specified with | pipes:\n"
 "    >256|<1411 to show files with a bitrate of at least 256 Kb/s\n"
 "    with a maximum bitrate of 1411 Kb/s."
 msgstr ""
-"Wie Dateigröße (oben) können die Operatoren =, !, < und > verwendet werden, "
-"und mehrere Bedingungen können mit | angegeben werden Rohre:\n"
-"    >256|<1411, um Dateien mit einer Bitrate von mindestens 256 Kb/s "
-"anzuzeigen\n"
-"    mit einer maximalen Bitrate von 1411 Kb/s."
+"Wie bei der Dateigröße (siehe oben) können die Operatoren =, !, < und > "
+"verwendet werden, und es können mehrere Bedingungen mit | angegeben werden:\n"
+"    >256|<1411 zur Anzeige von Dateien mit einer Bitrate von mindestens 256 "
+"Kb/s\n"
+"    und einer maximalen Bitrate von 1411 Kb/s."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:356
-#, fuzzy
 msgid "Filters files based upon their duration."
-msgstr "Filtert Dateien auf der Grundlage ihrer Bitrate."
+msgstr "Filtert Dateien basierend auf ihrer Dauer."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:366
-#, fuzzy
 msgid ""
 "By default, files longer than or equal to the entered duration will be "
 "matched, unless an operator (=, !, <, or >) is used."
 msgstr ""
-"Standardmäßig werden Dateien abgeglichen, die länger oder gleich der "
-"eingegebenen Dauer sind, es sei denn, es wird ein Operator (=, !, < oder >) "
+"Standardmäßig werden Dateien, die länger als oder gleich der eingegebenen "
+"Dauer sind, abgeglichen, es sei denn, es wird ein Operator (=, !, < oder >) "
 "verwendet."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:376
-#, fuzzy
 msgid ""
 "Enter a raw value in seconds or use the MM:SS and HH:MM:SS time formats:\n"
 "    >5:30 to show files at least 5 and a half minutes long.\n"
