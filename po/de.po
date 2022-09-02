@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-01 02:07+0300\n"
-"PO-Revision-Date: 2022-09-02 09:59+0000\n"
+"PO-Revision-Date: 2022-09-02 17:59+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
@@ -1630,7 +1630,7 @@ msgstr "Ersatz bearbeiten"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1262
 msgid "Enter a text pattern and what to replace it with:"
-msgstr "Geben Sie ein Textmuster ein und womit es ersetzt werden soll"
+msgstr "Geben Sie ein Textmuster ein und womit es ersetzt werden soll:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1329
 msgid "Top"
@@ -4934,16 +4934,14 @@ msgstr ""
 "gleich dem Wert sind, werden abgeglichen."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:232
-#, fuzzy
 msgid ""
 "Append b, k, m, or g (alternatively kib, mib, or gib) to specify byte, "
 "kibibyte, mebibyte, or gibibyte units:\n"
 "    20m to show files larger than 20 MiB (mebibytes)."
 msgstr ""
-"Fügen Sie b, k, m oder g (alternativ kib, mib oder gib) hinzu, um die "
-"Einheiten Byte, Kibibyte, Mebibyte oder Gibibyte anzugeben:\n"
-"    <1024k findet Dateien, die 1024 Kibibyte (d.h. 1 Mebibyte) oder kleiner "
-"sind."
+"Fügen Sie b, k, m oder g (alternativ kib, mib oder gib) an, um die Einheiten "
+"Byte, Kibibyte, Mebibyte oder Gibibyte anzugeben:\n"
+"    20m, um Dateien anzuzeigen, die größer als 20 MiB (Mebibytes) sind."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:243
 msgid ""
@@ -5034,42 +5032,38 @@ msgstr ""
 "    <5:30:00 zeigt Dateien, die weniger als 5,5 Stunden lang sind."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:388
-#, fuzzy
 msgid ""
 "Multiple conditions can be specified with | pipe seperators:\n"
 "    >6:00|<12:00 to show files between 6 and 12 minutes long.\n"
 "    !9:54|!8:43|!7:32 to hide some specific files from the results.\n"
 "    =5:34|=4:23|=3:05 to include files with specific durations."
 msgstr ""
-"Mit | können mehrere Bedingungen angegeben werden Rohrtrenner:\n"
-"    >6:00|<12:00, um Dateien mit einer Länge zwischen 6 und 12 Minuten "
-"anzuzeigen.\n"
-"    !9:54|!8:43|!7:32 um bestimmte Dateien aus den Ergebnissen "
+"Mehrere Bedingungen können mit | angegeben werden:\n"
+"    >6:00|<12:00 Uhr, um Dateien zwischen 6 und 12 Minuten Länge anzuzeigen."
+"\n"
+"    !9:54|! 8:43|! 7:32, um einige bestimmte Dateien aus den Ergebnissen "
 "auszublenden.\n"
 "    =5:34|=4:23|=3:05, um Dateien mit bestimmter Dauer einzuschließen."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:401
-#, fuzzy
 msgid "To exclude non-audio files use !0 in the duration filter."
-msgstr "Um Nicht-Audiodateien auszuschließen, verwenden Sie !0 im Dauerfilter."
+msgstr "Verwende !0 im Dauerfilter, um Nicht-Audiodateien auszuschließen."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:424
-#, fuzzy
 msgid "Filters files based upon users' geographical location."
-msgstr "Filtert Dateien auf der Grundlage der Länder der Benutzer."
+msgstr "Filtert Dateien basierend auf dem geografischen Standort der Benutzer."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:434
-#, fuzzy
 msgid ""
 "Uses country codes defined by ISO 3166-2:\n"
 "    US will only show results from users with IP addresses in the United "
 "States. !GB will hide results that come from users in the United Kingdom "
 "(Great Britain)."
 msgstr ""
-"Verwendet die in ISO 3166-2 definierten Ländercodes (siehe Wikipedia):\n"
-"    'US' liefert nur Dateien von Benutzern, die über die Vereinigten Staaten "
-"verbunden sind. 'GB' gibt Dateien von Nutzern mit IPs im Vereinigten "
-"Königreich zurück."
+"Verwendet Ländercodes gemäß ISO 3166-2:\n"
+"    US zeigt nur Ergebnisse von Benutzern mit IP-Adressen in den Vereinigten "
+"Staaten an. !GB blendet Ergebnisse aus, die von Benutzern im Vereinigten "
+"Königreich (Großbritannien) stammen."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:444
 #: pynicotine/gtkgui/ui/settings/search.ui:371
@@ -5077,25 +5071,24 @@ msgid "Free Slot"
 msgstr "Freier Slot"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:456
-#, fuzzy
 msgid ""
 "Show only those results from users which have at least one upload slot free, "
 "i.e. files that are availiable immediately."
 msgstr ""
-"Zeigt nur die Ergebnisse von Nutzern an, die mindestens einen freien Upload-"
-"Slot haben. Dieser Filter wird sofort angewendet."
+"Zeigen Sie nur die Ergebnisse von Benutzern an, die mindestens einen Upload-"
+"Slot freihaben, d.h. Dateien, die sofort verfügbar sind."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:477
-#, fuzzy
 msgid "To view the full results again, simply clear all active filters."
 msgstr ""
-"Um die vollständigen Ergebnisse erneut anzuzeigen, löschen Sie einfach alle "
-"aktiven Filter."
+"Lösche einfach alle aktiven Filter, um die vollständigen Ergebnisse "
+"anzuzeigen."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:486
-#, fuzzy
 msgid "See the preferences to set default search result filter options."
-msgstr "In den Einstellungen finden Sie weitere Filteroptionen."
+msgstr ""
+"In den Einstellungen finden Sie Informationen zum Festlegen der "
+"Standardfilteroptionen für Suchergebnisse."
 
 #: pynicotine/gtkgui/ui/privatechat.ui:84
 msgid "Private chat command help"
@@ -5161,12 +5154,10 @@ msgid "Bitrate…"
 msgstr "Bitrate…"
 
 #: pynicotine/gtkgui/ui/search.ui:327
-#, fuzzy
 msgid "Duration…"
-msgstr "Dauer…"
+msgstr "Dauer …"
 
 #: pynicotine/gtkgui/ui/search.ui:328
-#, fuzzy
 msgid "Duration, e.g. 2:20|!3:30|=4:40"
 msgstr "Dauer, z.B. 2:20|!3:30|=4:40"
 
@@ -5543,9 +5534,8 @@ msgid "Log debug messages to file"
 msgstr "Debug-Meldungen in Datei protokollieren"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:62
-#, fuzzy
 msgid "Log timestamp format:"
-msgstr "Zeitstempelformat der Protokolldatei:"
+msgstr "Protokollzeitstempelformat:"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:92
 msgid "Folder Locations"
@@ -5593,27 +5583,24 @@ msgid "Last port"
 msgstr "Letzter Port"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:214
-#, fuzzy
 msgid "Public IP address:"
-msgstr "IP-Adresse blockieren"
+msgstr "Öffentliche IP-Adresse:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:263
 msgid "Away Status"
 msgstr "Abwesend-Status"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:281
-#, fuzzy
 msgid "Minutes of inactivity before going away (0 to disable):"
-msgstr "Minuten der Inaktivität vor dem Verlassen (0 zum Deaktivieren):"
+msgstr "Minuten Inaktivität vor dem Weggehen (0 zum Deaktivieren):"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:282
-#, fuzzy
 msgid ""
 "Once you interact with the application being away, status will be set to "
 "online."
 msgstr ""
-"Sobald Sie mit der abwesenden Anwendung interagieren, wird der Status auf "
-"online gesetzt."
+"Sobald Sie mit der Anwendung interagieren, wird der Status auf online "
+"gesetzt."
 
 #: pynicotine/gtkgui/ui/settings/network.ui:308
 msgid "Auto-reply message when away:"
@@ -5770,7 +5757,6 @@ msgid "Bitrate:"
 msgstr "Bitrate:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:306
-#, fuzzy
 msgid "Duration:"
 msgstr "Dauer:"
 
@@ -6246,9 +6232,8 @@ msgid "Icons"
 msgstr "Symbole"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1739
-#, fuzzy
 msgid "Icon theme folder:"
-msgstr "Unvollständiger Dateiordner:"
+msgstr "Icon-Themenordner:"
 
 #: pynicotine/gtkgui/ui/uploads.ui:100
 msgid "Abort User(s)"
