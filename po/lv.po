@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-01 02:07+0300\n"
-"PO-Revision-Date: 2022-09-01 18:08+0000\n"
+"PO-Revision-Date: 2022-09-02 09:59+0000\n"
 "Last-Translator: Pagal3 <p4gal3@protonmail.com>\n"
 "Language-Team: Latvian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/lv/>\n"
@@ -5516,18 +5516,16 @@ msgid "Away Status"
 msgstr "Prombūtnes statuss"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:281
-#, fuzzy
 msgid "Minutes of inactivity before going away (0 to disable):"
-msgstr "Neaktivitātes minūtes pirms došanās prom (0, lai atspējotu):"
+msgstr "Neaktivitātes minūtes pirms aiziešanas (0, lai atspējotu):"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:282
-#, fuzzy
 msgid ""
 "Once you interact with the application being away, status will be set to "
 "online."
 msgstr ""
-"Kad mijiedarbojaties ar lietojumprogrammu, kas atrodas prombūtnē, statuss "
-"tiks iestatīts uz tiešsaistē."
+"Kad mijiedarbojaties ar lietojumprogrammu, kamēr esat aizgājis, statuss tiks "
+"iestatīts uz tiešsaistē."
 
 #: pynicotine/gtkgui/ui/settings/network.ui:308
 msgid "Auto-reply message when away:"
@@ -5683,7 +5681,6 @@ msgid "Bitrate:"
 msgstr "Bitu pārraides ātrums:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:306
-#, fuzzy
 msgid "Duration:"
 msgstr "Ilgums:"
 
@@ -5906,7 +5903,7 @@ msgstr "Priekšroka tumšajam režīmam"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:40
 msgid "Note that the operating system's theme may take precedence."
-msgstr "Jāņem vērā, ka operētājsistēmas tēma var būt prioritāra."
+msgstr "Jāņem vērā, ka operētājsistēmas motīvs var būt prioritārs."
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:50
 msgid "Display tray icon"
@@ -6156,9 +6153,8 @@ msgid "Icons"
 msgstr "Ikonas"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1739
-#, fuzzy
 msgid "Icon theme folder:"
-msgstr "Nepabeigtu failu mape:"
+msgstr "Ikonu motīvu mape:"
 
 #: pynicotine/gtkgui/ui/uploads.ui:100
 msgid "Abort User(s)"
