@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-01 02:07+0300\n"
-"PO-Revision-Date: 2022-08-31 18:23+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2022-09-05 11:13+0000\n"
+"Last-Translator: Tagomago <tagomago@disroot.org>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/es/>\n"
 "Language: es_ES\n"
@@ -59,9 +59,9 @@ msgid "Soulseek;Nicotine;sharing;music;P2P;peer-to-peer;GTK;"
 msgstr "Soulseek;Nicotine;compartir;música;P2P;peer-to-peer;GTK;"
 
 #: pynicotine/__init__.py:29
-#, fuzzy, python-format
+#, python-format
 msgid "Website: %s"
-msgstr "Ejecutado: %s"
+msgstr "Sitio web: %s"
 
 #: pynicotine/__init__.py:35
 msgid "show this help message and exit"
@@ -1206,11 +1206,10 @@ msgstr ""
 "instalar GTK %(complete_version)s o superior."
 
 #: pynicotine/gtkgui/__init__.py:116
-#, fuzzy
 msgid "No graphical environment available, using headless (no GUI) mode"
 msgstr ""
 "No hay entorno gráfico disponible, utilizando el modo sin interfaz gráfica "
-"de usuario (sin GUI)"
+"de usuario"
 
 #: pynicotine/gtkgui/application.py:167
 msgid "Critical Error"
@@ -1451,7 +1450,7 @@ msgid "File Properties (%(num)i of %(total)i  /  %(size)s)"
 msgstr "Propiedades del archivo (%(num)i de %(total)i  /  %(size)s)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:98
-#, fuzzy, python-format
+#, python-format
 msgid "<b>%(ip)s</b>, port %(port)s"
 msgstr "<b>%(ip)s</b>, puerto %(port)s"
 
@@ -1614,14 +1613,12 @@ msgstr ""
 "fallar al principio y al final de las líneas)."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1200
-#, fuzzy
 msgid "Edit Censored Pattern"
-msgstr "Patrones censurados"
+msgstr "Modificar el patrón censurado"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1232
-#, fuzzy
 msgid "Add Replacement"
-msgstr "Sustitución"
+msgstr "Añadir sustitución"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1233
 #, fuzzy
