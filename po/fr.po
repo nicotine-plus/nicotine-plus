@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-01 02:07+0300\n"
-"PO-Revision-Date: 2022-09-02 22:21+0000\n"
+"PO-Revision-Date: 2022-09-05 11:13+0000\n"
 "Last-Translator: Maxime Leroy <lisacintosh@gmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/fr/>\n"
@@ -1707,16 +1707,14 @@ msgid "Add URL Handler"
 msgstr "Ajouter un gestionnaire d'URL"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1875
-#, fuzzy
 msgid "Enter the protocol and the command for the URL handler:"
 msgstr ""
 "Entrez le protocole et la commande pour le gestionnaire d'URL, "
 "respectivement :"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1902
-#, fuzzy
 msgid "Edit Command"
-msgstr "Éditer les commentaires"
+msgstr "Éditer les commandes"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1903
 #, python-format
@@ -1762,7 +1760,6 @@ msgstr "Artiste"
 #: pynicotine/gtkgui/search.py:376 pynicotine/gtkgui/userbrowse.py:286
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:182
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:339
-#, fuzzy
 msgid "Duration"
 msgstr "Durée"
 
@@ -3512,9 +3509,9 @@ msgid "Joined Rooms "
 msgstr "Salons joints "
 
 #: pynicotine/search.py:259
-#, fuzzy, python-format
+#, python-format
 msgid "Searching for wishlist item \"%s\""
-msgstr "Recherche de l'élément de liste de souhaits \"%s\""
+msgstr "Recherche de l'élément \"%s\" dans les listes de souhaits"
 
 #: pynicotine/search.py:267
 msgid "Server does not permit performing wishlist searches at this time"
@@ -3862,19 +3859,19 @@ msgid "User %(user)s is reading your user info"
 msgstr "L'utilisateur %(user)s lit vos informations d'utilisateur"
 
 #: pynicotine/utils.py:178
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot open file path %(path)s: %(error)s"
-msgstr "Impossible d'enregistrer le fichier %(path)s : %(error)s"
+msgstr "Impossible d'ouvrir le chemin du fichier %(path)s : %(error)s"
 
 #: pynicotine/utils.py:207
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot open URL %(url)s: %(error)s"
-msgstr "Impossible de sauvegarder %(filename)s : %(error)s"
+msgstr "Impossible d'ouvrir l'URL %(url)s : %(error)s"
 
 #: pynicotine/utils.py:232
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot access log file %(path)s: %(error)s"
-msgstr "Impossible d'enregistrer le fichier %(path)s : %(error)s"
+msgstr "Impossible d'accéder au fichier de journal %(path)s : %(error)s"
 
 #: pynicotine/utils.py:593
 #, python-format
@@ -3952,9 +3949,8 @@ msgid "Room wall"
 msgstr "Mur du salon"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:269
-#, fuzzy
 msgid "R_oom Wall"
-msgstr "Mur du salon"
+msgstr "Mur du sal_on"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:6
 msgid "_Previous"
@@ -4835,7 +4831,6 @@ msgstr ""
 "résultats de recherche affichés."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:52
-#, fuzzy
 msgid ""
 "Each list of search results has its own filter which can be revealed by "
 "toggling the Result Filters button. A filter is made up of multiple fields, "
@@ -4847,15 +4842,9 @@ msgstr ""
 "être affiché en cliquant sur le bouton « Filtres de résultats ». Un filtre "
 "est composé de plusieurs champs, chacun s'appliquant lorsque la touche « "
 "Entrée » est pressée dedans. Le filtrage s'applique alors aussitôt aux "
-"résultats déjà reçus ainsi qu'à ceux à venir. Pour afficher à nouveau les "
-"résultats complets, il suffit d'effacer le filtre sur tous les termes et de "
-"le réappliquer. Comme son nom l'indique, un filtre de résultats de recherche "
-"ne peut pas étendre la recherche initiale, uniquement l'affiner. Pour "
-"étendre ou modifier vos termes de recherche, vous devez lancer une nouvelle "
-"recherche."
+"résultats déjà reçus ainsi qu'à ceux à venir."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:61
-#, fuzzy
 msgid ""
 "As the name suggests, a search result filter cannot expand your original "
 "search, it can only narrow it down. To broaden or change your search terms, "
@@ -4866,9 +4855,8 @@ msgstr ""
 "ou modifier vos termes de recherche, effectuez une nouvelle recherche."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:70
-#, fuzzy
 msgid "Result Filter Usage"
-msgstr "Filtres de Résultat"
+msgstr "Utilisation des filtres de résultat"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:82
 msgid "Include Text"
@@ -4879,17 +4867,15 @@ msgid "Files and folders containing this text will be shown."
 msgstr "Les fichiers et répertoires contenant ce texte seront affichés."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:109
-#, fuzzy
 msgid ""
 "Case is insensitive, but word order is important: 'Instrumental Remix' will "
 "not show any 'Remix Instrumental'"
 msgstr ""
 "La recherche n'est pas sensible à la casse mais l'ordre des mots est "
-"important : « Spears Brittany » n'affichera aucun résultat « Brittany Spears "
-"»"
+"important : « Instrumental Remix » n'affichera pas les résultats avec « "
+"Remix Instrumental »"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:119
-#, fuzzy
 msgid ""
 "For order-insensitive filtering, as well as filtering several exact phrases, "
 "vertical bars can be used to separate phrases and words.\n"
@@ -4898,7 +4884,7 @@ msgstr ""
 "Pour le filtrage insensible à l'ordre, ainsi que pour le filtrage de "
 "plusieurs phrases exactes, des barres verticales peuvent être utilisées pour "
 "séparer les phrases et les mots.\n"
-"  Exemple : Spears|Brittany|My beautifull album|hello"
+"  Exemple : Remix|Instrumental|Dub Mix"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:131
 msgid "Exclude Text"
@@ -4955,7 +4941,6 @@ msgstr ""
 "supérieure ou égale à cette valeur seront mis en correspondance."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:232
-#, fuzzy
 msgid ""
 "Append b, k, m, or g (alternatively kib, mib, or gib) to specify byte, "
 "kibibyte, mebibyte, or gibibyte units:\n"
@@ -4963,31 +4948,26 @@ msgid ""
 msgstr ""
 "Ajoutez b, k, m ou g (alternativement kib, mib ou gib) pour spécifier les "
 "unités d'octet, de kibibyte, de mebibyte ou de gibibyte :\n"
-"  <1024k trouvera les fichiers de 1024 kibytes (c'est-à-dire 1 mebibyte) ou "
-"moins."
+"  20m trouvera les fichiers supérieurs à 20Mio (20 mebi-octets)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:243
-#, fuzzy
 msgid ""
 "Prepend = to a value to specify an exact match:\n"
 "    =1024 only matches files that are 1 KiB (kibibyte)."
 msgstr ""
 "Ajoutez = à une valeur pour spécifier une correspondance exacte :\n"
-"  =1024 ne correspond qu'aux fichiers d'une taille de 1024 octets (c'est-à-"
-"dire 1 kibibyte)."
+"  =1024 ne correspond qu'aux fichiers d'une taille de 1 KiB (1 kibi-octet) "
+"soit 1024 octets."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:254
-#, fuzzy
 msgid ""
 "Prepend ! to a value to exclude files of a specific size:\n"
 "    !30.5m to hide files that are 30.5 MiB (mebibytes)."
 msgstr ""
-"Ajoutez = à une valeur pour spécifier une correspondance exacte :\n"
-"  =1024 ne correspond qu'aux fichiers d'une taille de 1024 octets (c'est-à-"
-"dire 1 kibibyte)."
+"Ajoutez ! à une valeur pour spécifier une correspondance exacte :\n"
+"  !30.5m ne correspond qu'aux fichiers d'une taille de 30.5 Mio (mébi-octet)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:265
-#, fuzzy
 msgid ""
 "Prepend < or > to find files smaller/larger than the given value:\n"
 "    >10.5m|<1g to show files larger than 10.5 MiB (mebibytes),\n"
@@ -4995,34 +4975,31 @@ msgid ""
 msgstr ""
 "Ajoutez < ou > pour rechercher des fichiers plus petits/plus grands que la "
 "valeur donnée :\n"
-"    >10,5 m|<1 g pour afficher les fichiers de plus de 10,5 Mio "
-"(mébioctets),\n"
-"    mais inférieur à 1 Gio (gibioctets), utilisez un | entre conditions."
+"    >10,5 m|<1 g pour afficher les fichiers de plus de 10,5 Mio (mébi-"
+"octets),\n"
+"    mais inférieur à 1 Gio (gibi-octets), utilisez un | entre les conditions."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:277
-#, fuzzy
 msgid ""
 "The better-known variants kb, mb, and gb can also be used for kilobyte, "
 "megabyte, and gigabyte units."
 msgstr ""
-"Par commodité, les variantes kb, mb et gb pour les unités plus connues de "
-"kilo, méga et gigaoctet peuvent également être utilisées."
+"Par commodité, les populaires variantes kb, mb et gb respectivement pour "
+"kilo-octet, méga-octet et giga-octet peuvent également être utilisées."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:305
 msgid "Filters files based upon their bitrate."
 msgstr "Filtre les fichiers en fonction de leur taux d'encodage."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:315
-#, fuzzy
 msgid ""
 "Values must be entered as numeric digits only. The unit is always Kb/s "
 "(Kilobits per second)."
 msgstr ""
-"Les valeurs doivent être saisies sous forme de chiffres uniquement. L'unité "
-"est toujours Kb/s (Kilobits par seconde)."
+"Les valeurs ne doivent contenir que des chiffres. L'unité est toujours Kb/s ("
+"Kilobits par seconde)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:325
-#, fuzzy
 msgid ""
 "Like File Size (above), operators =, !, <, and > can be used, and multiple "
 "conditions can be specified with | pipes:\n"
@@ -5030,18 +5007,16 @@ msgid ""
 "    with a maximum bitrate of 1411 Kb/s."
 msgstr ""
 "Comme la taille du fichier (ci-dessus), les opérateurs =, !, < et > peuvent "
-"être utilisés, et plusieurs conditions peuvent être spécifiées avec | "
-"tuyaux :\n"
+"être utilisés, et plusieurs conditions peuvent être spécifiées avec le "
+"séparateur | :\n"
 "    >256|<1411 pour afficher les fichiers avec un débit d'au moins 256 Kb/s\n"
-"    avec un débit maximum de 1411 Kb/s."
+"    et avec un débit maximum de 1411 Kb/s."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:356
-#, fuzzy
 msgid "Filters files based upon their duration."
-msgstr "Filtre les fichiers en fonction de leur taux d'encodage."
+msgstr "Filtre les fichiers suivant leur durée."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:366
-#, fuzzy
 msgid ""
 "By default, files longer than or equal to the entered duration will be "
 "matched, unless an operator (=, !, <, or >) is used."
@@ -5050,7 +5025,6 @@ msgstr ""
 "correspondance, sauf si un opérateur (=, !, < ou >) est utilisé."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:376
-#, fuzzy
 msgid ""
 "Enter a raw value in seconds or use the MM:SS and HH:MM:SS time formats:\n"
 "    >5:30 to show files at least 5 and a half minutes long.\n"
@@ -5058,47 +5032,43 @@ msgid ""
 msgstr ""
 "Saisissez une valeur brute en secondes ou utilisez les formats d'heure MM:SS "
 "et HH:MM:SS :\n"
-"    >5:30 pour afficher des fichiers d'au moins 5 minutes et demie.\n"
+"    >5:30 pour afficher des fichiers de plus de 5 minutes et demie.\n"
 "    <5:30:00 affiche les fichiers de moins de 5 heures et demie."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:388
-#, fuzzy
 msgid ""
 "Multiple conditions can be specified with | pipe seperators:\n"
 "    >6:00|<12:00 to show files between 6 and 12 minutes long.\n"
 "    !9:54|!8:43|!7:32 to hide some specific files from the results.\n"
 "    =5:34|=4:23|=3:05 to include files with specific durations."
 msgstr ""
-"Plusieurs conditions peuvent être spécifiées avec | séparateurs de tuyaux :\n"
+"Plusieurs conditions peuvent être spécifiées avec le séparateur | :\n"
 "    >6:00|<12:00 pour afficher les fichiers d'une durée comprise entre 6 et "
 "12 minutes.\n"
-"    !9:54|!8:43|!7:32 pour masquer certains fichiers spécifiques des "
+"    !9:54|!8:43|!7:32 pour masquer certains fichiers spécifiques dans les "
 "résultats.\n"
 "    =5:34|=4:23|=3:05 pour inclure des fichiers avec des durées spécifiques."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:401
-#, fuzzy
 msgid "To exclude non-audio files use !0 in the duration filter."
 msgstr ""
 "Pour exclure les fichiers non audio, utilisez !0 dans le filtre de durée."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:424
-#, fuzzy
 msgid "Filters files based upon users' geographical location."
-msgstr "Filtre les fichiers en fonction des pays des utilisateurs."
+msgstr "Filtre les fichiers suivant la position géographique des utilisateurs."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:434
-#, fuzzy
 msgid ""
 "Uses country codes defined by ISO 3166-2:\n"
 "    US will only show results from users with IP addresses in the United "
 "States. !GB will hide results that come from users in the United Kingdom "
 "(Great Britain)."
 msgstr ""
-"Utilise les codes pays définis par la norme ISO 3166-2 (voir Wikipedia) :\n"
-"  'US' renvoie uniquement les fichiers des utilisateurs connectés via les "
-"États-Unis. De même, 'GB' renvoie les fichiers des utilisateurs dont "
-"l'adresse IP est située au Royaume-Uni."
+"Utilise les codes pays définis par la norme ISO 3166-2 :\n"
+"  'US' renvoie uniquement les fichiers des utilisateurs connectés aux États-"
+"Unis. De même, '!GB' masque les fichiers des utilisateurs situés au Royaume-"
+"Uni."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:444
 #: pynicotine/gtkgui/ui/settings/search.ui:371
@@ -5106,25 +5076,24 @@ msgid "Free Slot"
 msgstr "Place disponible"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:456
-#, fuzzy
 msgid ""
 "Show only those results from users which have at least one upload slot free, "
 "i.e. files that are availiable immediately."
 msgstr ""
-"Afficher uniquement les résultats des utilisateurs qui ont au moins un "
-"créneau de téléchargement libre. Ce filtre est appliqué immédiatement."
+"N'afficher que les résultats des utilisateurs qui ont au moins un créneau de "
+"téléchargement libre, c'est-à-dire les fichiers disponibles immédiatement."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:477
-#, fuzzy
 msgid "To view the full results again, simply clear all active filters."
 msgstr ""
 "Pour afficher à nouveau les résultats complets, effacez simplement tous les "
 "filtres actifs."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:486
-#, fuzzy
 msgid "See the preferences to set default search result filter options."
-msgstr "Consultez les préférences pour plus d'options de filtrage."
+msgstr ""
+"Consultez les préférences pour définir les options de filtrage des résultats "
+"de recherche."
 
 #: pynicotine/gtkgui/ui/privatechat.ui:84
 msgid "Private chat command help"
@@ -5190,12 +5159,10 @@ msgid "Bitrate…"
 msgstr "Taux d'encodage…"
 
 #: pynicotine/gtkgui/ui/search.ui:327
-#, fuzzy
 msgid "Duration…"
 msgstr "Durée…"
 
 #: pynicotine/gtkgui/ui/search.ui:328
-#, fuzzy
 msgid "Duration, e.g. 2:20|!3:30|=4:40"
 msgstr "Durée, par ex. 2:20|!3:30|=4:40"
 
@@ -5576,9 +5543,8 @@ msgid "Log debug messages to file"
 msgstr "Enregistrer les messages de débogage dans un fichier"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:62
-#, fuzzy
 msgid "Log timestamp format:"
-msgstr "Format de l'horodatage du fichier journal :"
+msgstr "Format de l'horodatage du journal :"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:92
 msgid "Folder Locations"
@@ -5625,27 +5591,24 @@ msgid "Last port"
 msgstr "Dernier port"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:214
-#, fuzzy
 msgid "Public IP address:"
-msgstr "Bloquer l'adresse IP"
+msgstr "Adresse IP publique :"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:263
 msgid "Away Status"
 msgstr "Statut d'absent"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:281
-#, fuzzy
 msgid "Minutes of inactivity before going away (0 to disable):"
-msgstr "Minutes d'inactivité avant de partir (0 pour désactiver) :"
+msgstr "Minutes d'inactivité avant d'être absent (0 pour désactiver) :"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:282
-#, fuzzy
 msgid ""
 "Once you interact with the application being away, status will be set to "
 "online."
 msgstr ""
-"Une fois que vous interagissez avec l'application en étant absent, le statut "
-"sera défini sur en ligne."
+"Dès que vous interagissez avec l'application en étant absent, votre statut "
+"sera à \"en ligne\"."
 
 #: pynicotine/gtkgui/ui/settings/network.ui:308
 msgid "Auto-reply message when away:"
@@ -5803,9 +5766,8 @@ msgid "Bitrate:"
 msgstr "Taux d'encodage  :"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:306
-#, fuzzy
 msgid "Duration:"
-msgstr "Durée:"
+msgstr "Durée :"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:336
 msgid "Country Code:"
@@ -6283,9 +6245,8 @@ msgid "Icons"
 msgstr "Icônes"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1739
-#, fuzzy
 msgid "Icon theme folder:"
-msgstr "Dossier incomplet :"
+msgstr "Dossier des icônes du thème :"
 
 #: pynicotine/gtkgui/ui/uploads.ui:100
 msgid "Abort User(s)"
