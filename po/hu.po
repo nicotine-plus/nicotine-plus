@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-01 02:07+0300\n"
-"PO-Revision-Date: 2022-08-31 18:23+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2022-09-04 02:14+0000\n"
+"Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
 "Language: hu\n"
@@ -1301,9 +1301,8 @@ msgstr ""
 "GTK %(complete_version)s vagy újabb verzióját."
 
 #: pynicotine/gtkgui/__init__.py:116
-#, fuzzy
 msgid "No graphical environment available, using headless (no GUI) mode"
-msgstr "Nem áll rendelkezésre grafikus környezet, fej nélküli (nincs GUI) mód"
+msgstr "Nem áll rendelkezésre grafikus környezet, fej nélküli mód (nincs GUI)"
 
 #: pynicotine/gtkgui/application.py:167
 msgid "Critical Error"
@@ -1541,7 +1540,7 @@ msgid "File Properties (%(num)i of %(total)i  /  %(size)s)"
 msgstr "Fájl tulajdonságai (%(num)i - %(total)i  /  %(size)s)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:98
-#, fuzzy, python-format
+#, python-format
 msgid "<b>%(ip)s</b>, port %(port)s"
 msgstr "<b>%(ip)s</b>, port %(port)s"
 
@@ -1855,7 +1854,6 @@ msgstr "Előadó"
 #: pynicotine/gtkgui/search.py:376 pynicotine/gtkgui/userbrowse.py:286
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:182
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:339
-#, fuzzy
 msgid "Duration"
 msgstr "Időtartam"
 
@@ -3115,7 +3113,6 @@ msgid "Select an Image"
 msgstr "Válasszon egy képet"
 
 #: pynicotine/gtkgui/widgets/filechooser.py:106
-#, fuzzy
 msgid "All images"
 msgstr "Minden kép"
 
@@ -3594,7 +3591,7 @@ msgid "Joined Rooms "
 msgstr "Belépett szobák "
 
 #: pynicotine/search.py:259
-#, fuzzy, python-format
+#, python-format
 msgid "Searching for wishlist item \"%s\""
 msgstr "„%s” kívánságlista-elem keresése"
 
@@ -4965,13 +4962,12 @@ msgstr ""
 "feltételek kiszélesítéséhez vagy módosításához végezzen új keresést."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:61
-#, fuzzy
 msgid ""
 "As the name suggests, a search result filter cannot expand your original "
 "search, it can only narrow it down. To broaden or change your search terms, "
 "perform a new search."
 msgstr ""
-"Ahogy a neve is sugallja, a keresési eredményszűrő nem tudja kiterjeszteni "
+"Ahogy a neve is sugallja, a keresésieredmény-szűrő nem tudja kiterjeszteni "
 "az eredeti keresést, csak szűkíteni tudja azt. A keresési kifejezések "
 "bővítéséhez vagy módosításához hajtson végre új keresést."
 
@@ -5102,15 +5098,15 @@ msgstr ""
 "    =1024 csak az 1024 bájt méretű (azaz 1 kibibájt) fájlokra illik."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:265
-#, fuzzy
 msgid ""
 "Prepend < or > to find files smaller/larger than the given value:\n"
 "    >10.5m|<1g to show files larger than 10.5 MiB (mebibytes),\n"
 "    but smaller than 1 GiB (gibibytes), use a | between conditions."
 msgstr ""
-"A megadott értéknél kisebb/nagyobb fájlok kereséséhez fűzze a < vagy > elé:\n"
-"    >10,5 m|<1g a 10,5 MiB-nál (mebibyte) nagyobb fájlok megjelenítéséhez,\n"
-"    de kisebb, mint 1 GiB (gibibyte), használjon a | feltételek között."
+"A megadott értéknél kisebb/nagyobb fájlok kereséséhez fűzze a „|” jelet a „<”"
+", vagy „>”elé:\n"
+"    >10,5 m|<1g, a 10,5 MiB (megabájtnál) nagyobb,\n"
+"    de kisebb mint 1 GiB (gigabájt) fájlok megjelenítése."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:277
 #, fuzzy
@@ -5127,26 +5123,24 @@ msgid "Filters files based upon their bitrate."
 msgstr "A fájlok szűrése a bitráta alapján."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:315
-#, fuzzy
 msgid ""
 "Values must be entered as numeric digits only. The unit is always Kb/s "
 "(Kilobits per second)."
 msgstr ""
-"Az értékeket csak számjegyekként kell megadni. A mértékegység mindig Kb/s "
-"(kilobit/s)."
+"Az értékeket számjegykkel kell megadni. A mértékegység mindig Kb/s (Kilobit/"
+"s)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:325
-#, fuzzy
 msgid ""
 "Like File Size (above), operators =, !, <, and > can be used, and multiple "
 "conditions can be specified with | pipes:\n"
 "    >256|<1411 to show files with a bitrate of at least 256 Kb/s\n"
 "    with a maximum bitrate of 1411 Kb/s."
 msgstr ""
-"A Fájlmérethez (fent) hasonlóan az =, !, < és > operátorok használhatók, és "
-"több feltétel is megadható a | csövek:\n"
-"    >256|<1411 legalább 256 Kb/s bitsebességű fájlok megjelenítéséhez\n"
-"    1411 Kb/s maximális bitsebességgel."
+"A fájlmérethez (fent) hasonlóan az =, !, < és > operátorok használhatók, és "
+"több feltétel is megadható a „|” csővel:\n"
+"    >256|<1411 , a legalább 256 Kb/s bitsebességű\n"
+"    és 1411 Kb/s maximális bitsebességű fájlok megjelenítése."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:356
 #, fuzzy
@@ -5154,41 +5148,38 @@ msgid "Filters files based upon their duration."
 msgstr "A fájlok szűrése a bitráta alapján."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:366
-#, fuzzy
 msgid ""
 "By default, files longer than or equal to the entered duration will be "
 "matched, unless an operator (=, !, <, or >) is used."
 msgstr ""
 "Alapértelmezés szerint a megadott időtartamnál hosszabb vagy azzal megegyező "
-"fájlok illeszkednek, kivéve, ha operátort (=, !, < vagy >) használnak."
+"fájlok illeszkednek, kivéve, ha (=, !, < vagy > operátort használ."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:376
-#, fuzzy
 msgid ""
 "Enter a raw value in seconds or use the MM:SS and HH:MM:SS time formats:\n"
 "    >5:30 to show files at least 5 and a half minutes long.\n"
 "    <5:30:00 shows files less than 5 and a half hours long."
 msgstr ""
-"Adjon meg egy nyers értéket másodpercben, vagy használja a MM:SS és ÓÓ:PP:SS "
+"Adjon meg egy nyers értéket másodpercben, vagy használja a PP:SS és ÓÓ:PP:SS "
 "időformátumokat:\n"
 "    >5:30 legalább 5 és fél perces fájlok megjelenítéséhez.\n"
 "    <5:30:00 5 és fél óránál rövidebb fájlokat jelenít meg."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:388
-#, fuzzy
 msgid ""
 "Multiple conditions can be specified with | pipe seperators:\n"
 "    >6:00|<12:00 to show files between 6 and 12 minutes long.\n"
 "    !9:54|!8:43|!7:32 to hide some specific files from the results.\n"
 "    =5:34|=4:23|=3:05 to include files with specific durations."
 msgstr ""
-"A |-vel több feltétel is megadható csőleválasztók:\n"
-"    >6:00|<12:00 6 és 12 perc közötti fájlok megjelenítéséhez.\n"
-"    !9:54|!8:43|!7:32 bizonyos fájlok elrejtéséhez a találatok közül.\n"
-"    =5:34|=4:23|=3:05 meghatározott időtartamú fájlok felvételéhez."
+"A „|” csővel több feltétel is megadható:\n"
+"    >6:00|<12:00, a 6 és 12 perc közötti fájlok megjelenítéséhez.\n"
+"    !9:54|!8:43|!7:32, megadott értékű fájlok elrejtéséhez a találatok közül."
+"\n"
+"    =5:34|=4:23|=3:05, megadott időtartamú fájlok megjelenítéséhez."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:401
-#, fuzzy
 msgid "To exclude non-audio files use !0 in the duration filter."
 msgstr ""
 "A nem hangfájlok kizárásához használja a !0 értéket az időtartamszűrőben."
@@ -5227,7 +5218,6 @@ msgstr ""
 "feltöltési helyük van. Ez a szűrő azonnal alkalmazásra kerül."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:477
-#, fuzzy
 msgid "To view the full results again, simply clear all active filters."
 msgstr ""
 "A teljes eredmények ismételt megtekintéséhez egyszerűen törölje az összes "
@@ -5311,12 +5301,10 @@ msgid "Bitrate…"
 msgstr "Bitráta…"
 
 #: pynicotine/gtkgui/ui/search.ui:327
-#, fuzzy
 msgid "Duration…"
 msgstr "Időtartam…"
 
 #: pynicotine/gtkgui/ui/search.ui:328
-#, fuzzy
 msgid "Duration, e.g. 2:20|!3:30|=4:40"
 msgstr "Időtartam, pl. 2:20|!3:30|=4:40"
 
@@ -5597,21 +5585,18 @@ msgstr "Semmi"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:104
 #: pynicotine/gtkgui/ui/settings/uploads.ui:84
-#, fuzzy
 msgid "Send to Player"
-msgstr "Küldés a _lejátszóba"
+msgstr "Küldés a lejátszónak"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:105
 #: pynicotine/gtkgui/ui/settings/uploads.ui:85
-#, fuzzy
 msgid "Open in File Manager"
-msgstr "Megnyitás fájlkezelőben"
+msgstr "Megnyitás a fájlkezelőben"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:110
 #: pynicotine/gtkgui/ui/settings/uploads.ui:90
-#, fuzzy
 msgid "Browse Folder"
-msgstr "Fájlok _tallózása"
+msgstr "Fájlok tallózása"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:126
 #, fuzzy
@@ -5802,18 +5787,14 @@ msgid "Away Status"
 msgstr "Állapot"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:281
-#, fuzzy
 msgid "Minutes of inactivity before going away (0 to disable):"
-msgstr "Inaktivitási percek az indulás előtt (0 a letiltáshoz):"
+msgstr "Tétlenség percekben az indulás előtt (0 a letiltáshoz):"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:282
-#, fuzzy
 msgid ""
 "Once you interact with the application being away, status will be set to "
 "online."
-msgstr ""
-"Miután kapcsolatba lép azzal, hogy az alkalmazás távol van, az állapot "
-"online lesz."
+msgstr "Miután kapcsolódik az alkalmazással, az állapot az internetre kerül."
 
 #: pynicotine/gtkgui/ui/settings/network.ui:308
 msgid "Auto-reply message when away:"
@@ -5992,7 +5973,6 @@ msgid "Bitrate:"
 msgstr "Bitráta:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:306
-#, fuzzy
 msgid "Duration:"
 msgstr "Időtartam:"
 
