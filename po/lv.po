@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-01 02:07+0300\n"
-"PO-Revision-Date: 2022-09-02 09:59+0000\n"
+"PO-Revision-Date: 2022-09-06 19:49+0000\n"
 "Last-Translator: Pagal3 <p4gal3@protonmail.com>\n"
 "Language-Team: Latvian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/lv/>\n"
@@ -5903,7 +5903,7 @@ msgstr "Priekšroka tumšajam režīmam"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:40
 msgid "Note that the operating system's theme may take precedence."
-msgstr "Jāņem vērā, ka operētājsistēmas motīvs var būt prioritārs."
+msgstr "Jāņem vērā, ka operētājsistēmas motīvam var būt prioritāte."
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:50
 msgid "Display tray icon"
