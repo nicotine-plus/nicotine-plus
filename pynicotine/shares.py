@@ -94,7 +94,7 @@ class Scanner:
                 self.create_compressed_shares()
 
             if self.rescan:
-                start_num_folders = len(list(self.share_dbs["buddyfiles"]))
+                start_num_folders = len(list(self.share_dbs.get("buddyfiles") or []))
 
                 self.queue.put((_("Rescanning shares…"), None, None))
                 self.queue.put((_("%(num)s folders found before rescan, rebuilding…"),
@@ -163,11 +163,18 @@ class Scanner:
                     destination = "buddy" + destination
 
                 # Close old db
-                self.share_dbs[destination].close()
+                share_db = self.share_dbs.get(destination)
 
-                self.share_dbs[destination] = shelve.open(os.path.join(self.config.data_dir, destination + ".db"),
-                                                          flag='n', protocol=pickle.HIGHEST_PROTOCOL)
-                self.share_dbs[destination].update(source)
+                if share_db is not None:
+                    share_db.close()
+
+                # Open db as read-only ("r"-flag) if possible
+                flag = 'n' if self.rescan else 'r'
+                self.share_dbs[destination] = share_db = shelve.open(
+                    encode_path(os.path.join(self.config.data_dir, destination + ".db")),
+                    flag=flag, protocol=pickle.HIGHEST_PROTOCOL
+                )
+                share_db.update(source)
 
             except Exception as error:
                 self.queue.put((_("Can't save %(filename)s: %(error)s"),
@@ -203,8 +210,11 @@ class Scanner:
         if mtimes is not None:
             new_mtimes = {**mtimes, **new_mtimes}
 
-        old_mtimes = self.share_dbs[prefix + "mtimes"]
-        share_version = old_mtimes.get("__NICOTINE_SHARE_VERSION__")
+        old_mtimes = self.share_dbs.get(prefix + "mtimes")
+        share_version = None
+
+        if old_mtimes is not None:
+            share_version = old_mtimes.get("__NICOTINE_SHARE_VERSION__")
 
         # Rebuild shares if share version is outdated
         if share_version is None or share_version < self.version:
@@ -214,8 +224,8 @@ class Scanner:
             # Get mtimes for top-level shared folders, then every subfolder
             try:
                 files, streams, mtimes = self.get_files_list(
-                    folder, old_mtimes, self.share_dbs[prefix + "files"],
-                    self.share_dbs[prefix + "streams"], rebuild
+                    folder, old_mtimes, self.share_dbs.get(prefix + "files"),
+                    self.share_dbs.get(prefix + "streams"), rebuild
                 )
                 new_files = {**new_files, **files}
                 new_streams = {**new_streams, **streams}
@@ -407,9 +417,16 @@ class Scanner:
         For the word index db, we can't use the same approach, as we need to access
         dict elements frequently. This would take too long to access from disk. """
 
-        self.share_dbs[fileindex_dest].close()
-        self.share_dbs[fileindex_dest] = shelve.open(os.path.join(self.config.data_dir, fileindex_dest + ".db"),
-                                                     flag='n', protocol=pickle.HIGHEST_PROTOCOL)
+        fileindex_db = self.share_dbs.get(fileindex_dest)
+
+        if fileindex_db is not None:
+            fileindex_db.close()
+
+        self.share_dbs[fileindex_dest] = fileindex_db = shelve.open(
+            encode_path(os.path.join(self.config.data_dir, fileindex_dest + ".db")),
+            flag='n', protocol=pickle.HIGHEST_PROTOCOL
+        )
+
         wordindex = {}
         file_index = -1
         num_shared_files = len(shared_files)
@@ -429,7 +446,7 @@ class Scanner:
 
                 # Add to file index
                 fileinfo[0] = folder + '\\' + filename
-                self.share_dbs[fileindex_dest][repr(file_index)] = fileinfo
+                fileindex_db[repr(file_index)] = fileinfo
 
                 # Collect words from filenames for Search index
                 # Use set to prevent duplicates
@@ -577,11 +594,10 @@ class Shares:
 
         for destination, shelvefile in dbs:
             shelvefile_encoded = encode_path(shelvefile)
+            shares[destination] = None
 
             try:
-                if not reset_shares:
-                    shares[destination] = shelve.open(shelvefile, protocol=pickle.HIGHEST_PROTOCOL)
-                else:
+                if reset_shares:
                     try:
                         os.remove(shelvefile_encoded)
 
@@ -589,12 +605,12 @@ class Shares:
                         # Potentially trying to use gdbm with a semidbm database
                         os.rmdir(shelvefile_encoded)
 
-                    shares[destination] = shelve.open(shelvefile, flag='n', protocol=pickle.HIGHEST_PROTOCOL)
+                elif os.path.exists(shelvefile_encoded):
+                    shares[destination] = shelve.open(shelvefile_encoded, flag='r', protocol=pickle.HIGHEST_PROTOCOL)
 
             except Exception:
                 from traceback import format_exc
 
-                shares[destination] = None
                 errors.append(shelvefile)
                 exception = format_exc()
 
@@ -695,12 +711,16 @@ class Shares:
         if not (self.core and self.core.logged_in):
             return
 
+        if self.rescanning:
+            return
+
         try:
             shared = self.share_dbs.get("files")
             index = self.share_dbs.get("fileindex")
 
             if shared is None or index is None:
-                return
+                shared = {}
+                index = []
 
             try:
                 sharedfolders = len(shared)
@@ -824,10 +844,10 @@ class Shares:
         # Scanning done, load shares in the main process again
         self.load_shares(self.share_dbs, self.share_db_paths)
 
+        self.rescanning = False
+
         if not error:
             self.send_num_shared_folders_files()
-
-        self.rescanning = False
 
         # Process any file transfer queue requests that arrived while scanning
         if self.network_callback:
