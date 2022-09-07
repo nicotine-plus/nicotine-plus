@@ -171,7 +171,7 @@ class Scanner:
                 # Open db as read-only ("r"-flag) if possible
                 flag = 'n' if self.rescan else 'r'
                 self.share_dbs[destination] = share_db = shelve.open(
-                    encode_path(os.path.join(self.config.data_dir, destination + ".db")),
+                    os.path.join(self.config.data_dir, destination + ".db"),
                     flag=flag, protocol=pickle.HIGHEST_PROTOCOL
                 )
                 share_db.update(source)
@@ -423,7 +423,7 @@ class Scanner:
             fileindex_db.close()
 
         self.share_dbs[fileindex_dest] = fileindex_db = shelve.open(
-            encode_path(os.path.join(self.config.data_dir, fileindex_dest + ".db")),
+            os.path.join(self.config.data_dir, fileindex_dest + ".db"),
             flag='n', protocol=pickle.HIGHEST_PROTOCOL
         )
 
@@ -606,7 +606,7 @@ class Shares:
                         os.rmdir(shelvefile_encoded)
 
                 elif os.path.exists(shelvefile_encoded):
-                    shares[destination] = shelve.open(shelvefile_encoded, flag='r', protocol=pickle.HIGHEST_PROTOCOL)
+                    shares[destination] = shelve.open(shelvefile, flag='r', protocol=pickle.HIGHEST_PROTOCOL)
 
             except Exception:
                 from traceback import format_exc
