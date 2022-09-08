@@ -600,10 +600,9 @@ class Shares:
         exception = None
 
         for destination, shelvefile in dbs:
-            shelvefile_encoded = encode_path(shelvefile)
-            shares[destination] = None
-
             try:
+                shelvefile_encoded = encode_path(shelvefile)
+
                 if reset_shares:
                     try:
                         os.remove(shelvefile_encoded)
