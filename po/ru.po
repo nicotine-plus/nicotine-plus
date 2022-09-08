@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-01 02:07+0300\n"
-"PO-Revision-Date: 2022-09-01 14:15+0000\n"
+"PO-Revision-Date: 2022-09-08 15:34+0000\n"
 "Last-Translator: Mehavoid <tontole@riseup.net>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ru/>\n"
@@ -5783,7 +5783,7 @@ msgstr "Прервать"
 #: pynicotine/gtkgui/ui/settings/uploads.ui:89
 #: pynicotine/gtkgui/ui/userinfo.ui:6
 msgid "Retry"
-msgstr "Повторить раздачу"
+msgstr "Повторить"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:106
 msgid "Upload Speed Limits"
