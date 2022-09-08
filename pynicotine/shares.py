@@ -95,7 +95,9 @@ class Scanner:
             from pynicotine.metadata.tinytag import TinyTag
             self.tinytag = TinyTag()
 
-            Shares.load_shares(self.share_dbs, self.share_db_paths)
+            if not Shares.load_shares(self.share_dbs, self.share_db_paths, remove_failed=True):
+                # Failed to load shares, rebuild
+                self.rescan = self.rebuild = True
 
             if self.init:
                 self.create_compressed_shares()
@@ -619,25 +621,17 @@ class Shares:
                                                             for x in self.config.sections["transfers"]["buddyshared"]]
 
     @classmethod
-    def load_shares(cls, shares, dbs, reset_shares=False):
+    def load_shares(cls, shares, dbs, remove_failed=False):
 
         errors = []
         exception = None
 
         for destination, db_path in dbs:
+            db_path_encoded = encode_path(db_path)
+
             try:
-                db_path_encoded = encode_path(db_path)
-
                 if os.path.exists(db_path_encoded):
-                    if reset_shares:
-                        try:
-                            os.remove(db_path_encoded)
-
-                        except IsADirectoryError:
-                            import shutil
-                            shutil.rmtree(db_path_encoded)
-                    else:
-                        shares[destination] = shelve.open(db_path, flag='r', protocol=pickle.HIGHEST_PROTOCOL)
+                    shares[destination] = shelve.open(db_path, flag='r', protocol=pickle.HIGHEST_PROTOCOL)
 
             except Exception:
                 from traceback import format_exc
@@ -645,21 +639,22 @@ class Shares:
                 errors.append(db_path)
                 exception = format_exc()
 
+                if remove_failed and os.path.exists(db_path_encoded):
+                    try:
+                        os.remove(db_path_encoded)
+
+                    except IsADirectoryError:
+                        import shutil
+                        shutil.rmtree(db_path_encoded)
+
         if not errors:
-            return
+            return True
 
         log.add(_("Failed to process the following databases: %(names)s"), {
             'names': '\n'.join(errors)
         })
         log.add(exception)
-
-        if not reset_shares:
-            log.add(_("Attempting to reset index of shared files due to an error. Please rescan your shares."))
-            cls.load_shares(shares, dbs, reset_shares=True)
-            return
-
-        log.add(_("File index of shared files could not be accessed. This could occur due to several instances of "
-                  "Nicotine+ being active simultaneously, file permission issues, or another issue in Nicotine+."))
+        return False
 
     def file_is_shared(self, user, virtualfilename, realfilename):
 
@@ -874,7 +869,6 @@ class Shares:
 
         # Scanning done, load shares in the main process again
         self.load_shares(self.share_dbs, self.share_db_paths)
-
         self.rescanning = False
 
         if not error:
