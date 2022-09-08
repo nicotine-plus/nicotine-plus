@@ -49,8 +49,15 @@ if importlib.util.find_spec("_gdbm"):
 
 elif importlib.util.find_spec("semidbm"):
 
+    import semidbm  # pylint: disable=import-error
+    try:
+        # semidbm throws an exception when calling sync on a read-only dict, avoid this
+        del semidbm.db._SemiDBMReadOnly.sync
+
+    except AttributeError:
+        pass
+
     def shelve_open_semidbm(filename, flag='c', protocol=None, writeback=False):
-        import semidbm  # pylint: disable=import-error
         return shelve.Shelf(semidbm.open(filename, flag), protocol, writeback)
 
     shelve.open = shelve_open_semidbm
@@ -94,7 +101,7 @@ class Scanner:
                 self.create_compressed_shares()
 
             if self.rescan:
-                start_num_folders = len(list(self.share_dbs.get("buddyfiles") or []))
+                start_num_folders = len(list(self.share_dbs.get("buddyfiles", {})))
 
                 self.queue.put((_("Rescanning shares…"), None, None))
                 self.queue.put((_("%(num)s folders found before rescan, rebuilding…"),
