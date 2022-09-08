@@ -28,9 +28,11 @@
 
 import mmap
 import os
-import shelve
+import pickle
 import struct
 import sys
+
+from io import BytesIO
 
 
 FILE_FORMAT_VERSION = (10, 0)
@@ -45,6 +47,14 @@ class DBMError(Exception):
 
 class DBMLoadError(DBMError):
     pass
+
+
+class RestrictedUnpickler(pickle.Unpickler):
+    """ Don't allow code execution from pickles """
+
+    def find_class(self, module, name):
+        # Forbid all globals
+        raise pickle.UnpicklingError("global '%s.%s' is forbidden" % (module, name))
 
 
 class DBMLoader:
@@ -183,10 +193,7 @@ class DBM:
                 # if the key already exists in the db.
                 del index[key_name]
             else:
-                if key_name in index:
-                    index[key_name] = (offset, size)
-                else:
-                    index[key_name] = (offset, size)
+                index[key_name] = (offset, size)
 
         return index
 
@@ -198,15 +205,17 @@ class DBM:
         offset, size = self._index[key]
         os.lseek(self._data_fd, offset, os.SEEK_SET)
 
-        return os.read(self._data_fd, size)
+        data = os.read(self._data_fd, size)
+        return RestrictedUnpickler(BytesIO(data)).load()
 
     def __setitem__(self, key, value):
 
         if isinstance(key, str):
             key = key.encode('utf-8')
 
-        if isinstance(value, str):
-            value = value.encode('utf-8')
+        bytes_file = BytesIO()
+        pickle.Pickler(bytes_file, pickle.HIGHEST_PROTOCOL).dump(value)
+        value = bytes_file.getvalue()
 
         key_size = len(key)
         val_size = len(value)
@@ -239,16 +248,30 @@ class DBM:
 
     def __iter__(self):
         for key in self._index:
-            yield key
+            yield key.decode('utf-8')
 
     def __len__(self):
         return len(self._index)
 
-    def keys(self):
-        return self._index.keys()
+    def get(self, key, default=None):
 
-    def values(self):
-        return [self[key] for key in self._index]
+        if isinstance(key, str):
+            key = key.encode('utf-8')
+
+        if key in self._index:
+            return self[key]
+
+        return default
+
+    def update(self, obj):
+
+        if hasattr(obj, 'keys'):
+            for key in obj.keys():
+                self[key] = obj[key]
+            return
+
+        for key, value in obj:
+            self[key] = value
 
     def sync(self):
         os.fsync(self._data_fd)
@@ -268,12 +291,12 @@ class DBMReadOnly(DBM):
     def __setitem__(self, key, value):
         self._method_not_allowed('setitem')
 
+    def sync(self):
+        self._method_not_allowed('sync')
+
     @staticmethod
     def _method_not_allowed(method_name):
         raise DBMError("Can't %s: db opened in read only mode." % method_name)
-
-    def sync(self):
-        pass
 
     def close(self):
         os.close(self._data_fd)
@@ -301,7 +324,7 @@ class DBMNew(DBM):
         super()._load_db()
 
 
-def _open(filename, flag='r', _mode=0o666):
+def open_db(filename, flag='r', _mode=0o666):
 
     if flag == 'r':
         return DBMReadOnly(filename)
@@ -316,7 +339,3 @@ def _open(filename, flag='r', _mode=0o666):
         return DBMNew(filename)
 
     raise ValueError("flag argument must be 'r', 'c', 'w', or 'n'")
-
-
-def open_shelve(filename, flag='c', protocol=None, writeback=False):
-    return shelve.Shelf(_open(filename, flag), protocol, writeback)

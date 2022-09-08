@@ -28,7 +28,6 @@ from pynicotine.logfacility import log
 from pynicotine.utils import clean_file
 from pynicotine.utils import encode_path
 from pynicotine.utils import get_result_bitrate_length
-from pynicotine.utils import RestrictedUnpickler
 
 
 class UserBrowse:
@@ -161,6 +160,7 @@ class UserBrowse:
             try:
                 # Try legacy format first
                 import bz2
+                from pynicotine.libs.dbm import RestrictedUnpickler
 
                 with bz2.BZ2File(filename_encoded) as file_handle:
                     shares_list = RestrictedUnpickler(file_handle, encoding='utf-8').load()

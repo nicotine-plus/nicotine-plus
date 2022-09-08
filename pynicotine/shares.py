@@ -22,14 +22,13 @@
 
 import gc
 import os
-import pickle
 import stat
 import sys
 import threading
 import time
 
 from pynicotine import slskmessages
-from pynicotine.libs.dbm import open_shelve
+from pynicotine.libs.dbm import open_db
 from pynicotine.libs.tinytag import TinyTag
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import UINT_LIMIT
@@ -147,9 +146,7 @@ class Scanner:
                 db_path_encoded = encode_path(db_path)
                 Shares.remove_db_file(db_path)
 
-                self.share_dbs[destination] = share_db = open_shelve(
-                    db_path_encoded, flag='n', protocol=pickle.HIGHEST_PROTOCOL
-                )
+                self.share_dbs[destination] = share_db = open_db(db_path_encoded, flag='n')
                 share_db.update(source)
 
             except Exception as error:
@@ -415,9 +412,9 @@ class Scanner:
         if fileindex_db is not None:
             fileindex_db.close()
 
-        self.share_dbs[fileindex_dest] = fileindex_db = open_shelve(
+        self.share_dbs[fileindex_dest] = fileindex_db = open_db(
             encode_path(os.path.join(self.config.data_dir, fileindex_dest + ".db")),
-            flag='n', protocol=pickle.HIGHEST_PROTOCOL
+            flag='n'
         )
 
         wordindex = {}
@@ -602,9 +599,7 @@ class Shares:
 
             try:
                 if os.path.exists(db_path_encoded):
-                    shares[destination] = open_shelve(
-                        db_path_encoded, flag='r', protocol=pickle.HIGHEST_PROTOCOL
-                    )
+                    shares[destination] = open_db(db_path_encoded, flag='r')
 
             except Exception:
                 from traceback import format_exc

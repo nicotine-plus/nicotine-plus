@@ -585,7 +585,7 @@ class Config:
 
             if (not self.sections["server"]["command_aliases"] and os.path.exists(encoded_alias_path)):
                 with open(encoded_alias_path, 'rb') as file_handle:
-                    from pynicotine.utils import RestrictedUnpickler
+                    from pynicotine.libs.dbm import RestrictedUnpickler
 
                     self.sections["server"]["command_aliases"] = RestrictedUnpickler(
                         file_handle, encoding='utf-8').load()

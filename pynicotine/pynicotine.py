@@ -280,7 +280,7 @@ class NicotineCore:
         if self.transfers:
             self.transfers.quit()
 
-        # Closing up all shelves db
+        # Closing up all databases
         if self.shares:
             self.shares.quit()
 

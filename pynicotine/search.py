@@ -424,8 +424,9 @@ class Search:
 
                     partial_results = set()
 
-                    for complete_word, indices in wordindex.items():
+                    for complete_word in wordindex:
                         if complete_word.endswith(word):
+                            indices = wordindex[complete_word]
                             partial_results.update(indices)
 
                     if partial_results:

@@ -27,7 +27,6 @@ This module contains utility functions.
 
 import json
 import os
-import pickle
 import sys
 import webbrowser
 
@@ -691,17 +690,6 @@ def http_request(url_scheme, base_url, path, request_type="GET", body="", header
         conn.close()
 
     return contents
-
-
-class RestrictedUnpickler(pickle.Unpickler):
-    """
-    Don't allow code execution from pickles
-    """
-
-    def find_class(self, module, name):
-        # Forbid all globals
-        raise pickle.UnpicklingError("global '%s.%s' is forbidden" %
-                                     (module, name))
 
 
 """ Command Aliases """
