@@ -178,18 +178,10 @@ class Scanner:
                     share_db.close()
 
                 db_path = os.path.join(self.config.data_dir, destination + ".db")
-                db_path_encoded = encode_path(db_path)
-
-                if os.path.exists(db_path_encoded):
-                    try:
-                        os.remove(db_path_encoded)
-
-                    except IsADirectoryError:
-                        import shutil
-                        shutil.rmtree(db_path_encoded)
+                Shares.remove_db_file(db_path)
 
                 self.share_dbs[destination] = share_db = shelve.open(
-                    db_path, flag='c', protocol=pickle.HIGHEST_PROTOCOL
+                    db_path, flag='n', protocol=pickle.HIGHEST_PROTOCOL
                 )
                 share_db.update(source)
 
@@ -603,6 +595,18 @@ class Shares:
         self.config.sections["transfers"]["buddyshared"] = [_convert_to_virtual(x)
                                                             for x in self.config.sections["transfers"]["buddyshared"]]
 
+    @staticmethod
+    def remove_db_file(db_path):
+
+        db_path_encoded = encode_path(db_path)
+
+        if os.path.isfile(db_path_encoded):
+            os.remove(db_path_encoded)
+
+        elif os.path.isdir(db_path_encoded):
+            import shutil
+            shutil.rmtree(db_path_encoded)
+
     @classmethod
     def load_shares(cls, shares, dbs, remove_failed=False):
 
@@ -622,13 +626,8 @@ class Shares:
                 errors.append(db_path)
                 exception = format_exc()
 
-                if remove_failed and os.path.exists(db_path_encoded):
-                    try:
-                        os.remove(db_path_encoded)
-
-                    except IsADirectoryError:
-                        import shutil
-                        shutil.rmtree(db_path_encoded)
+                if remove_failed:
+                    cls.remove_db_file(db_path)
 
         if not errors:
             return True
