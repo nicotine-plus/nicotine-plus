@@ -105,21 +105,26 @@ Copyright: 2003-2004 Ingmar K. Steen (Hyriand)
                 Pagal3
 License: GPL-3+
 
-Files: pynicotine/geoip/ip2location.py
-Copyright: 2017 IP2Location.com
-           2021-2022 Mat (mathiascode)
-License: MIT
-
-Files: pynicotine/geoip/ipcountrydb.bin
-Copyright: 2001-2022 Hexasoft Development Sdn. Bhd.
-License: CC-BY-SA-4.0
-
 Files: pynicotine/gtkgui/icons/hicolor/scalable/intl/nplus-flag-*.svg
 Copyright: 2016-2017 Bowtie AB
            2018-2020 Jack Marsh
 License: MIT
 
-Files: pynicotine/metadata/tinytag.py
+Files: pynicotine/libs/ip2location.py
+Copyright: 2017 IP2Location.com
+           2021-2022 Mat (mathiascode)
+License: MIT
+
+Files: pynicotine/libs/ipcountrydb.bin
+Copyright: 2001-2022 Hexasoft Development Sdn. Bhd.
+License: CC-BY-SA-4.0
+
+Files: pynicotine/libs/semidbm.py
+Copyright: 2011-2018 James Saryerwinnie
+           2022 Mat (mathiascode)
+License: BSD-3-clause
+
+Files: pynicotine/libs/tinytag.py
 Copyright: 2014-2022 Tom Wallroth
            2020-2022 Mat (mathiascode)
 License: MIT
@@ -172,6 +177,29 @@ License: MIT
  ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  SOFTWARE.
+
+License: BSD-3-clause
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met:
+ 1. Redistributions of source code must retain the above copyright notice,
+    this list of conditions and the following disclaimer.
+ 2. Redistributions in binary form must reproduce the above copyright notice,
+    this list of conditions and the following disclaimer in the documentation
+    and/or other materials provided with the distribution.
+ 3. The name of the author may not be used to endorse or promote products
+    derived from this software without specific prior written permission.
+ .
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ POSSIBILITY OF SUCH DAMAGE.
 
 License: CC-BY-SA-4.0
  Creative Commons Attribution-ShareAlike 4.0 International Public License

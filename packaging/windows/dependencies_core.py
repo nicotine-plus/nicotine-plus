@@ -19,7 +19,6 @@
 
 import os
 import subprocess
-import sys
 
 """ Script used to install core dependencies in MinGW """
 
@@ -55,13 +54,5 @@ def install_pacman():
     subprocess.check_call(["pacman", "--noconfirm", "-U"] + downgrade_packages)
 
 
-def install_pypi():
-    """ Install dependencies from PyPi """
-
-    packages = ["semidbm"]
-    subprocess.check_call([sys.executable, "-m", "pip", "install"] + packages)
-
-
 if __name__ == '__main__':
     install_pacman()
-    install_pypi()

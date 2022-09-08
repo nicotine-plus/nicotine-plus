@@ -105,15 +105,6 @@ You should install Python %(min_version)s or newer.""") % {
             "min_version": '.'.join(map(str, python_version))
         }
 
-    # Require gdbm or semidbm, for faster loading of shelves
-    import importlib.util
-    if not importlib.util.find_spec("_gdbm") and \
-            not importlib.util.find_spec("semidbm"):
-        return _("Cannot find %(option1)s or %(option2)s, please install either one.") % {
-            "option1": "gdbm",
-            "option2": "semidbm"
-        }
-
     return None
 
 

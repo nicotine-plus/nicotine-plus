@@ -205,9 +205,15 @@ Third-Party Attributions
   Copyright (c) 2018–2020 Jack Marsh
   https://github.com/jackiboy/flagpack
 
-- tinytag licensed under the MIT License.
+- Database format based on "Semidbm", licensed
+  under the 3-Clause BSD License.
+  Copyright (c) 2011–2018 James Saryerwinnie
+  https://github.com/jamesls/semidbm
+
+- Audio metadata parser "tinytag" licensed under
+  the MIT License.
   Copyright (c) 2014–2022 Tom Wallroth
-  https://github.com/devsnd/tinytag/
+  https://github.com/devsnd/tinytag
 
 
 """

@@ -39,7 +39,7 @@ from pynicotine import slskmessages
 from pynicotine import slskproto
 from pynicotine.chatrooms import ChatRooms
 from pynicotine.config import config
-from pynicotine.geoip.geoip import GeoIP
+from pynicotine.geoip import GeoIP
 from pynicotine.interests import Interests
 from pynicotine.logfacility import log
 from pynicotine.networkfilter import NetworkFilter
@@ -124,7 +124,7 @@ class NicotineCore:
         )
         self.protothread.start()
 
-        self.geoip = GeoIP(os.path.join(script_dir, "geoip/ipcountrydb.bin"))
+        self.geoip = GeoIP(os.path.join(script_dir, "libs/ipcountrydb.bin"))
         self.notifications = Notifications(config, ui_callback)
         self.network_filter = NetworkFilter(self, config, self.queue, self.geoip)
         self.now_playing = NowPlaying(config)

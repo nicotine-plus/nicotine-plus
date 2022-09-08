@@ -9,7 +9,6 @@ Build-Depends: debhelper-compat (= 10),
                gettext,
                gir1.2-gtk-3.0,
                python3-all,
-               python3-gdbm,
                python3-gi,
                python3-pytest,
                python3-pytest-xvfb,
@@ -25,7 +24,6 @@ Architecture: all
 Depends: ${python3:Depends},
          ${misc:Depends},
          gir1.2-gtk-3.0 (>= 3.22.30),
-         python3-gdbm,
          python3-gi (>= 3.22)
 Recommends: gir1.2-ayatanaappindicator3-0.1 | gir1.2-appindicator3-0.1,
             gir1.2-gspell-1

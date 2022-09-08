@@ -21,53 +21,21 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import gc
-import importlib.util
 import os
 import pickle
-import shelve
 import stat
 import sys
 import threading
 import time
 
 from pynicotine import slskmessages
+from pynicotine.libs.dbm import open_shelve
+from pynicotine.libs.tinytag import TinyTag
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import UINT_LIMIT
 from pynicotine.utils import TRANSLATE_PUNCTUATION
 from pynicotine.utils import encode_path
 from pynicotine.utils import rename_process
-
-""" Check if there's an appropriate (performant) database type for shelves """
-
-if importlib.util.find_spec("_gdbm"):
-
-    def shelve_open_gdbm(filename, flag='c', protocol=None, writeback=False):
-        import _gdbm  # pylint: disable=import-error
-        return shelve.Shelf(_gdbm.open(filename, flag), protocol, writeback)
-
-    shelve.open = shelve_open_gdbm
-
-elif importlib.util.find_spec("semidbm"):
-
-    import semidbm  # pylint: disable=import-error
-    try:
-        # semidbm throws an exception when calling sync on a read-only dict, avoid this
-        del semidbm.db._SemiDBMReadOnly.sync  # pylint: disable=protected-access
-
-    except AttributeError:
-        pass
-
-    def shelve_open_semidbm(filename, flag='c', protocol=None, writeback=False):
-        return shelve.Shelf(semidbm.open(filename, flag), protocol, writeback)
-
-    shelve.open = shelve_open_semidbm
-
-else:
-    log.add(_("Cannot find %(option1)s or %(option2)s, please install either one.") % {
-        "option1": "gdbm",
-        "option2": "semidbm"
-    })
-    sys.exit()
 
 
 class Scanner:
@@ -85,14 +53,12 @@ class Scanner:
         self.rescan = rescan
         self.rebuild = rebuild
         self.tinytag = None
-        self.version = 2
+        self.version = 3
 
     def run(self):
 
         try:
             rename_process(b'nicotine-scan')
-
-            from pynicotine.metadata.tinytag import TinyTag
             self.tinytag = TinyTag()
 
             if not Shares.load_shares(self.share_dbs, self.share_db_paths, remove_failed=True):
@@ -103,7 +69,7 @@ class Scanner:
                 self.create_compressed_shares()
 
             if self.rescan:
-                start_num_folders = len(list(self.share_dbs.get("buddyfiles", {})))
+                start_num_folders = len(self.share_dbs.get("buddyfiles", {}))
 
                 self.queue.put((_("Rescanning shares…"), None, None))
                 self.queue.put((_("%(num)s folders found before rescan, rebuilding…"),
@@ -178,10 +144,11 @@ class Scanner:
                     share_db.close()
 
                 db_path = os.path.join(self.config.data_dir, destination + ".db")
+                db_path_encoded = encode_path(db_path)
                 Shares.remove_db_file(db_path)
 
-                self.share_dbs[destination] = share_db = shelve.open(
-                    db_path, flag='n', protocol=pickle.HIGHEST_PROTOCOL
+                self.share_dbs[destination] = share_db = open_shelve(
+                    db_path_encoded, flag='n', protocol=pickle.HIGHEST_PROTOCOL
                 )
                 share_db.update(source)
 
@@ -448,8 +415,8 @@ class Scanner:
         if fileindex_db is not None:
             fileindex_db.close()
 
-        self.share_dbs[fileindex_dest] = fileindex_db = shelve.open(
-            os.path.join(self.config.data_dir, fileindex_dest + ".db"),
+        self.share_dbs[fileindex_dest] = fileindex_db = open_shelve(
+            encode_path(os.path.join(self.config.data_dir, fileindex_dest + ".db")),
             flag='n', protocol=pickle.HIGHEST_PROTOCOL
         )
 
@@ -635,7 +602,9 @@ class Shares:
 
             try:
                 if os.path.exists(db_path_encoded):
-                    shares[destination] = shelve.open(db_path, flag='r', protocol=pickle.HIGHEST_PROTOCOL)
+                    shares[destination] = open_shelve(
+                        db_path_encoded, flag='r', protocol=pickle.HIGHEST_PROTOCOL
+                    )
 
             except Exception:
                 from traceback import format_exc
@@ -747,13 +716,8 @@ class Shares:
                 shared = {}
                 index = []
 
-            try:
-                sharedfolders = len(shared)
-                sharedfiles = len(index)
-
-            except TypeError:
-                sharedfolders = len(list(shared))
-                sharedfiles = len(list(index))
+            sharedfolders = len(shared)
+            sharedfiles = len(index)
 
             self.queue.append(slskmessages.SharedFoldersFiles(sharedfolders, sharedfiles))
 

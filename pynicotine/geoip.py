@@ -274,7 +274,7 @@ class GeoIP:
 
     def __init__(self, filename):
 
-        from pynicotine.geoip.ip2location import IP2Location
+        from pynicotine.libs.ip2location import IP2Location
         self.ip2location = IP2Location(filename)
 
     @classmethod

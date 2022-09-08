@@ -6,8 +6,7 @@
 
 - [python3](https://www.python.org/) >= 3.6;
 - [gtk3](https://gtk.org/) >= 3.22.30 for graphical interface;
-- [pygobject](https://pygobject.readthedocs.io/) >= 3.22 for Python bindings for GTK;
-- [gdbm](https://www.gnu.org/software/gdbm/) for scanning shared files.
+- [pygobject](https://pygobject.readthedocs.io/) >= 3.22 for Python bindings for GTK.
 
 ### Recommended
 
@@ -36,13 +35,13 @@
 - On Debian/Ubuntu based distributions:
 
 ```sh
-sudo apt install gir1.2-gtk-3.0 python3-gi python3-gdbm
+sudo apt install gir1.2-gtk-3.0 python3-gi
 ```
 
 - On Redhat/Fedora based distributions:
 
 ```sh
-sudo dnf install gtk3 python3-gobject gdbm
+sudo dnf install gtk3 python3-gobject
 ```
 
 #### Installing Recommended Runtime Dependencies
