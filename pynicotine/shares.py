@@ -52,7 +52,7 @@ elif importlib.util.find_spec("semidbm"):
     import semidbm  # pylint: disable=import-error
     try:
         # semidbm throws an exception when calling sync on a read-only dict, avoid this
-        del semidbm.db._SemiDBMReadOnly.sync
+        del semidbm.db._SemiDBMReadOnly.sync  # pylint: disable=protected-access
 
     except AttributeError:
         pass
