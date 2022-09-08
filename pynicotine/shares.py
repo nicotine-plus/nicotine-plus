@@ -175,11 +175,19 @@ class Scanner:
                 if share_db is not None:
                     share_db.close()
 
-                # Open db as read-only ("r"-flag) if possible
-                flag = 'n' if self.rescan else 'r'
+                db_path = os.path.join(self.config.data_dir, destination + ".db")
+                db_path_encoded = encode_path(db_path)
+
+                if os.path.exists(db_path_encoded):
+                    try:
+                        os.remove(db_path_encoded)
+
+                    except IsADirectoryError:
+                        import shutil
+                        shutil.rmtree(db_path_encoded)
+
                 self.share_dbs[destination] = share_db = shelve.open(
-                    os.path.join(self.config.data_dir, destination + ".db"),
-                    flag=flag, protocol=pickle.HIGHEST_PROTOCOL
+                    db_path, flag='c', protocol=pickle.HIGHEST_PROTOCOL
                 )
                 share_db.update(source)
 
@@ -616,25 +624,25 @@ class Shares:
         errors = []
         exception = None
 
-        for destination, shelvefile in dbs:
+        for destination, db_path in dbs:
             try:
-                shelvefile_encoded = encode_path(shelvefile)
+                db_path_encoded = encode_path(db_path)
 
-                if reset_shares:
-                    try:
-                        os.remove(shelvefile_encoded)
+                if os.path.exists(db_path_encoded):
+                    if reset_shares:
+                        try:
+                            os.remove(db_path_encoded)
 
-                    except IsADirectoryError:
-                        # Potentially trying to use gdbm with a semidbm database
-                        os.rmdir(shelvefile_encoded)
-
-                elif os.path.exists(shelvefile_encoded):
-                    shares[destination] = shelve.open(shelvefile, flag='r', protocol=pickle.HIGHEST_PROTOCOL)
+                        except IsADirectoryError:
+                            import shutil
+                            shutil.rmtree(db_path_encoded)
+                    else:
+                        shares[destination] = shelve.open(db_path, flag='r', protocol=pickle.HIGHEST_PROTOCOL)
 
             except Exception:
                 from traceback import format_exc
 
-                errors.append(shelvefile)
+                errors.append(db_path)
                 exception = format_exc()
 
         if not errors:
