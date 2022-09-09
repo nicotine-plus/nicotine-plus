@@ -28,7 +28,6 @@ from gi.repository import GObject
 from gi.repository import Gtk
 
 from pynicotine.config import config
-from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.dialogs.fileproperties import FileProperties
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
@@ -506,10 +505,6 @@ class UserBrowse(UserInterface):
 
         self.queued_path = None
 
-        if GTK_API_VERSION >= 4:
-            # Workaround: Disable scrolling animation, since it doesn't work in GTK 4
-            self.folder_tree_view.queue_allocate()
-
         # Scroll to the requested folder
         path = self.dir_store.get_path(iterator)
         self.folder_tree_view.expand_to_path(path)
@@ -679,10 +674,6 @@ class UserBrowse(UserInterface):
 
         directory = self.search_list[self.search_position]
         path = self.dir_store.get_path(self.dir_iters[directory])
-
-        if GTK_API_VERSION >= 4:
-            # Workaround: Disable scrolling animation, since it doesn't work in GTK 4
-            self.folder_tree_view.queue_allocate()
 
         self.folder_tree_view.expand_to_path(path)
         self.folder_tree_view.set_cursor(path)

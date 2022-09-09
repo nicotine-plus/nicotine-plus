@@ -36,7 +36,7 @@ def check_gui_dependencies():
 
     # Require minor version of GTK
     if os.getenv("NICOTINE_GTK_VERSION") == '4':
-        gtk_version = (4, 6, 0)
+        gtk_version = (4, 6, 6)
         pygobject_version = (3, 40, 0)
     else:
         gtk_version = pygobject_version = (3, 18, 0)

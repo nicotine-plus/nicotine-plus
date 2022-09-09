@@ -221,31 +221,22 @@ def initialise_columns(frame, treeview_name, treeview, *args):
     treeview.get_style_context().add_class("treeview-spacing")
     treeview.set_fixed_height_mode(True)
 
-    treeview.set_search_equal_func(on_search_match, treeview)
+    treeview.set_search_equal_func(on_search_match)
     treeview.connect("columns-changed", set_last_column_autosize)
     treeview.emit("columns-changed")
 
     Accelerator("<Primary>c", treeview, on_copy_cell_data_accelerator)
     treeview.column_menu = PopupMenu(frame, treeview, callback=press_header, connect_events=False)
 
-    if GTK_API_VERSION >= 4:
-        # Hotfix: disable rubber-band selection in GTK 4 to avoid crash bug
-        # when clicking column headers
-        treeview.set_rubber_banding(False)
-
     return cols
 
 
-def on_search_match(model, column, search_term, iterator, treeview):
+def on_search_match(model, column, search_term, iterator):
 
     if not search_term:
         return True
 
     if search_term.lower() in model.get_value(iterator, column).lower():
-        if GTK_API_VERSION >= 4:
-            # Workaround: Disable scrolling animation, since it doesn't work in GTK 4
-            treeview.queue_allocate()
-
         return False
 
     return True
