@@ -46,14 +46,6 @@ To install Nicotine+ on Void Linux, run the following:
 sudo xbps-install -S nicotine+
 ```
 
-### FreeBSD
-
-To install Nicotine+ on FreeBSD, run the following:
-
-```sh
-pkg install py-nicotine-plus
-```
-
 ### Other Distributions
 
 #### Flatpak
