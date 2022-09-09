@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
+
 
 class GeoIP:
     """ Country-related class """
@@ -272,10 +274,10 @@ class GeoIP:
         'zw': _('Zimbabwe')
     }
 
-    def __init__(self, filename):
+    def __init__(self):
 
         from pynicotine.geoip.ip2location import IP2Location
-        self.ip2location = IP2Location(filename)
+        self.ip2location = IP2Location(os.path.join(os.path.dirname(__file__), "ipcountrydb.bin"))
 
     @classmethod
     def country_code_to_name(cls, country_code):

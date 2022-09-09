@@ -124,7 +124,7 @@ class NicotineCore:
         )
         self.protothread.start()
 
-        self.geoip = GeoIP(os.path.join(script_dir, "geoip/ipcountrydb.bin"))
+        self.geoip = GeoIP()
         self.notifications = Notifications(config, ui_callback)
         self.network_filter = NetworkFilter(self, config, self.queue, self.geoip)
         self.now_playing = NowPlaying(config)
