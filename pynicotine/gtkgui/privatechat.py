@@ -30,6 +30,7 @@ from gi.repository import GLib
 
 from pynicotine import slskmessages
 from pynicotine.config import config
+from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.popovers.chathistory import ChatHistory
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
@@ -63,9 +64,7 @@ class PrivateChats(IconNotebook):
 
         self.completion = ChatCompletion()
         self.history = ChatHistory(frame, core)
-
-        self.command_help = UserInterface("ui/popovers/privatechatcommands.ui")
-        self.command_help.popover, = self.command_help.widgets
+        self.command_help = None
 
         self.update_visuals()
 
@@ -82,6 +81,14 @@ class PrivateChats(IconNotebook):
 
             self.completion.set_entry(tab.chat_entry)
             tab.set_completion_list(self.core.privatechats.completion_list[:])
+
+            if self.command_help is None:
+                self.command_help = UserInterface("ui/popovers/privatechatcommands.ui")
+                self.command_help.popover, = self.command_help.widgets
+
+                if GTK_API_VERSION >= 4:
+                    # Workaround for https://gitlab.gnome.org/GNOME/gtk/-/issues/4529
+                    self.command_help.popover.set_autohide(False)
 
             self.command_help.popover.unparent()
             tab.help_button.set_popover(self.command_help.popover)
@@ -249,8 +256,8 @@ class PrivateChat(UserInterface):
                 ("#" + _("_Close Tab"), self.on_close)
             )
 
-        popup = PopupMenu(self.frame, self.chat_view.textview, self.on_popup_menu_chat)
-        popup.add_items(
+        self.popup_menu = PopupMenu(self.frame, self.chat_view.textview, self.on_popup_menu_chat)
+        self.popup_menu.add_items(
             ("#" + _("Find…"), self.on_find_chat_log),
             ("", None),
             ("#" + _("Copy"), self.chat_view.on_copy_text),
@@ -320,8 +327,12 @@ class PrivateChat(UserInterface):
         self.update_local_username_tag(status=UserStatus.OFFLINE)
 
     def clear(self):
+
         self.chat_view.clear()
         self.frame.notifications.clear("private", self.user)
+
+        for menu in (self.popup_menu_user_chat, self.popup_menu_user_tab, self.popup_menu):
+            menu.clear()
 
     def set_label(self, label):
         self.popup_menu_user_tab.set_parent(label)

@@ -53,7 +53,6 @@ from pynicotine.slskmessages import LoginFailure
 from pynicotine.slskmessages import UserStatus
 from pynicotine.transfers import Statistics
 from pynicotine.transfers import Transfers
-from pynicotine.upnp import UPnP
 from pynicotine.userbrowse import UserBrowse
 from pynicotine.userinfo import UserInfo
 from pynicotine.userlist import UserList
@@ -81,7 +80,6 @@ class NicotineCore:
         self.pluginhandler = None
         self.now_playing = None
         self.protothread = None
-        self.upnp = None
         self.geoip = None
         self.notifications = None
 
@@ -119,6 +117,13 @@ class NicotineCore:
         log.add_debug("Using %(program)s executable: %(exe)s", {"program": config.application_name, "exe": script_dir})
         log.add(_("Loading %(program)s %(version)s"), {"program": config.application_name, "version": config.version})
 
+        self.protothread = slskproto.SlskProtoThread(
+            core_callback=self.network_callback, queue=self.queue, bindip=self.bindip, port=self.port,
+            interface=config.sections["server"]["interface"],
+            port_range=config.sections["server"]["portrange"]
+        )
+        self.protothread.start()
+
         self.geoip = GeoIP(os.path.join(script_dir, "geoip/ipcountrydb.bin"))
         self.notifications = Notifications(config, ui_callback)
         self.network_filter = NetworkFilter(self, config, self.queue, self.geoip)
@@ -138,11 +143,6 @@ class NicotineCore:
         self.transfers.init_transfers()
         self.privatechats.load_users()
 
-        port_range = config.sections["server"]["portrange"]
-        interface = config.sections["server"]["interface"]
-        self.protothread = slskproto.SlskProtoThread(
-            self.network_callback, self.queue, self.bindip, interface, self.port, port_range)
-        self.upnp = UPnP(self, config)
         self.pluginhandler = PluginHandler(self, config)
 
         # Callback handlers for messages
@@ -274,10 +274,6 @@ class NicotineCore:
 
         # Shut down networking thread
         if self.protothread:
-            if not self.protothread.server_disconnected:
-                self.protothread.manual_server_disconnect = True
-                self.server_disconnect()
-
             self.protothread.abort()
 
         # Save download/upload list to file
@@ -446,7 +442,7 @@ class NicotineCore:
 
         for i in msg.msgs:
             if i.__class__ in (slskmessages.TransferRequest, slskmessages.FileUploadInit):
-                self.transfers.get_cant_connect_upload(i.token)
+                self.transfers.get_cant_connect_upload(msg.user, i.token)
 
             elif i.__class__ is slskmessages.QueueUpload:
                 self.transfers.get_cant_connect_queue_file(msg.user, i.file)

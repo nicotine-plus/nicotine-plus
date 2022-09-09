@@ -22,7 +22,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
 import threading
 import time
 
@@ -48,7 +47,6 @@ from pynicotine.gtkgui.uploads import Uploads
 from pynicotine.gtkgui.userbrowse import UserBrowses
 from pynicotine.gtkgui.userinfo import UserInfos
 from pynicotine.gtkgui.userlist import UserList
-from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.widgets.iconnotebook import TabLabel
 from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.gtkgui.widgets.dialogs import MessageDialog
@@ -77,10 +75,6 @@ from pynicotine.utils import open_uri
 class NicotineFrame(UserInterface):
 
     def __init__(self, application, core, start_hidden, ci_mode):
-
-        if not ci_mode:
-            # Show errors in the GUI from here on
-            self.init_exception_handler()
 
         self.application = application
         self.core = self.np = core  # pylint:disable=invalid-name
@@ -375,32 +369,6 @@ class NicotineFrame(UserInterface):
         # Check command line option and config option
         if not self.start_hidden and not config.sections["ui"]["startup_hidden"]:
             self.show()
-
-    def init_exception_handler(self):
-
-        sys.excepthook = self.on_critical_error
-
-        if hasattr(threading, "excepthook"):
-            threading.excepthook = self.on_critical_error_threading
-            return
-
-        # Workaround for Python <= 3.7
-        init_thread = threading.Thread.__init__
-
-        def init_thread_excepthook(self, *args, **kwargs):
-
-            init_thread(self, *args, **kwargs)
-            run_thread = self.run
-
-            def run_with_excepthook(*args2, **kwargs2):
-                try:
-                    run_thread(*args2, **kwargs2)
-                except Exception:
-                    GLib.idle_add(sys.excepthook, *sys.exc_info())
-
-            self.run = run_with_excepthook
-
-        threading.Thread.__init__ = init_thread_excepthook
 
     def init_spell_checker(self):
 
@@ -789,10 +757,10 @@ class NicotineFrame(UserInterface):
         action.connect("activate", self.on_fast_configure)
         self.application.add_action(action)
 
-        action = Gio.SimpleAction(name="settings")
+        action = Gio.SimpleAction(name="preferences")
         action.connect("activate", self.on_settings)
         self.application.add_action(action)
-        self.application.set_accels_for_action("app.settings", ["<Primary>comma", "<Primary>p"])
+        self.application.set_accels_for_action("app.preferences", ["<Primary>comma", "<Primary>p"])
 
         action = Gio.SimpleAction(name="quit")  # Menu 'Quit' always Quits
         action.connect("activate", self.on_quit)
@@ -987,7 +955,7 @@ class NicotineFrame(UserInterface):
 
     @staticmethod
     def add_preferences_item(menu):
-        menu.add_items(("#" + _("_Preferences"), "app.settings"))
+        menu.add_items(("#" + _("_Preferences"), "app.preferences"))
 
     @staticmethod
     def add_quit_item(menu):
@@ -1718,7 +1686,6 @@ class NicotineFrame(UserInterface):
             self.tray_icon.set_upload_status(_("Uploads: %(speed)s") % {'speed': upload_bandwidth})
 
     def show_scan_progress(self):
-        self.scan_progress_indeterminate = True
         GLib.idle_add(self.scan_progress_bar.show)
 
     def set_scan_progress(self, value):
@@ -1726,12 +1693,19 @@ class NicotineFrame(UserInterface):
         GLib.idle_add(self.scan_progress_bar.set_fraction, value)
 
     def set_scan_indeterminate(self):
+
+        self.scan_progress_indeterminate = True
+
         self.scan_progress_bar.pulse()
         GLib.timeout_add(500, self.pulse_scan_progress)
 
     def pulse_scan_progress(self):
-        if self.scan_progress_indeterminate:
-            self.set_scan_indeterminate()
+
+        if not self.scan_progress_indeterminate:
+            return False
+
+        self.scan_progress_bar.pulse()
+        return True
 
     def hide_scan_progress(self):
         self.scan_progress_indeterminate = False
@@ -1756,77 +1730,6 @@ class NicotineFrame(UserInterface):
         self.update_alternative_speed_icon(not state)
         self.core.transfers.update_limits()
         self.tray_icon.set_alternative_speed_limit(not state)
-
-    """ Termination """
-
-    def on_critical_error_response(self, _dialog, response_id, data):
-
-        loop, error = data
-
-        if response_id == 2:
-            copy_text(error)
-            self.on_report_bug()
-            return
-
-        loop.quit()
-        self.core.quit()
-
-    def on_critical_error(self, exc_type, exc_value, exc_traceback):
-
-        from traceback import format_tb
-
-        # Check if exception occurred in a plugin
-        if self.core.pluginhandler is not None:
-            traceback = exc_traceback
-
-            while True:
-                if not traceback.tb_next:
-                    break
-
-                filename = traceback.tb_frame.f_code.co_filename
-
-                for plugin_name in self.core.pluginhandler.enabled_plugins:
-                    path = self.core.pluginhandler.get_plugin_path(plugin_name)
-
-                    if filename.startswith(path):
-                        self.core.pluginhandler.show_plugin_error(
-                            plugin_name, exc_type, exc_value, exc_traceback)
-                        return
-
-                traceback = traceback.tb_next
-
-        # Show critical error dialog
-        loop = GLib.MainLoop()
-        error = ("\n\nNicotine+ Version: %s\nGTK Version: %s\nPython Version: %s\n\n"
-                 "Type: %s\nValue: %s\nTraceback: %s" %
-                 (config.version, config.gtk_version, config.python_version, exc_type,
-                  exc_value, ''.join(format_tb(exc_traceback))))
-
-        OptionDialog(
-            parent=self.window,
-            title=_("Critical Error"),
-            message=_("Nicotine+ has encountered a critical error and needs to exit. "
-                      "Please copy the following message and include it in a bug report:") + error,
-            first_button=_("_Quit Nicotine+"),
-            second_button=_("_Copy & Report Bug"),
-            callback=self.on_critical_error_response,
-            callback_data=(loop, error)
-        ).show()
-
-        # Keep dialog open if error occurs on startup
-        loop.run()
-
-        raise exc_value
-
-    @staticmethod
-    def _on_critical_error_threading(args):
-        raise args.exc_value
-
-    def on_critical_error_threading(self, args):
-        """ Exception that originated in a thread.
-        Raising an exception here calls sys.excepthook(), which in turn shows an error dialog. """
-
-        GLib.idle_add(self._on_critical_error_threading, args)
 
     """ Exit """
 

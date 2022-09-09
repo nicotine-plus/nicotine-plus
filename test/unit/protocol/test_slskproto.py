@@ -19,6 +19,7 @@
 
 import os
 import pickle
+import selectors
 import socket
 import unittest
 
@@ -26,15 +27,14 @@ from collections import deque
 from time import sleep
 from unittest.mock import MagicMock
 from unittest.mock import Mock
-from unittest.mock import patch
 
+from pynicotine.config import config
 from pynicotine.slskproto import SlskProtoThread
 from pynicotine.slskmessages import ServerConnect, Login, SetWaitPort
 from pynicotine.utils import encode_path
 
 # Time (in s) needed for SlskProtoThread main loop to run at least once
 SLSKPROTO_RUN_TIME = 1.5
-LOGIN_DATAFILE = 'socket_localhost_22420.log'
 
 
 class MockSocket(Mock):
@@ -73,56 +73,55 @@ class MockSocket(Mock):
 
 class SlskProtoTest(unittest.TestCase):
 
-    def test_server_conn(self):
-
-        queue = deque()
-        proto = SlskProtoThread(
-            core_callback=Mock(), queue=queue, interface='', bindip='',
-            port=None, port_range=(1024, 65535)
-        )
+    def setUp(self):
 
         # Windows doesn't accept mock_socket in select() calls
-        proto.selector = MagicMock()
+        selectors.DefaultSelector = MagicMock()
 
-        with patch('socket.socket') as mock_socket:
-            mock_socket.set_data(LOGIN_DATAFILE)
-            proto.server_disconnected = False
-
-            queue.append(ServerConnect(addr=('0.0.0.0', 0), login=('dummy', 'dummy')))
-            sleep(SLSKPROTO_RUN_TIME)
-
-            if hasattr(socket, 'TCP_KEEPIDLE'):
-                self.assertEqual(proto.server_socket.setsockopt.call_count, 4)  # pylint: disable=no-member
-
-            elif hasattr(socket, 'TCP_KEEPALIVE'):
-                self.assertEqual(proto.server_socket.setsockopt.call_count, 3)  # pylint: disable=no-member
-
-            elif hasattr(socket, 'SIO_KEEPALIVE_VALS'):
-                self.assertEqual(proto.server_socket.ioctl.call_count, 1)       # pylint: disable=no-member
-                self.assertEqual(proto.server_socket.setsockopt.call_count, 1)  # pylint: disable=no-member
-
-            self.assertEqual(proto.server_socket.setblocking.call_count, 1)     # pylint: disable=no-member
-            self.assertEqual(proto.server_socket.connect_ex.call_count, 1)      # pylint: disable=no-member
-
-            proto.abort()
-            self.assertIsNone(proto.server_socket)
-
-    @staticmethod
-    def test_login():
-
-        queue = deque()
-        proto = SlskProtoThread(
-            core_callback=Mock(), queue=queue, interface='', bindip='',
+        self.queue = deque()
+        config.sections["server"]["upnp"] = False
+        self.protothread = SlskProtoThread(
+            core_callback=Mock(), queue=self.queue, interface='', bindip='',
             port=None, port_range=(1024, 65535)
         )
-        proto.server_disconnected = False
-        queue.append(ServerConnect(addr=('0.0.0.0', 0), login=('username', 'password')))
+        self.protothread.start()
+
+        # Slight delay to allow the network thread to fully start
+        sleep(SLSKPROTO_RUN_TIME / 2)
+
+    def tearDown(self):
+
+        self.protothread.abort()
+
+        sleep(SLSKPROTO_RUN_TIME / 2)
+        self.assertIsNone(self.protothread.server_socket)
+
+    @unittest.mock.patch('socket.socket')
+    def test_server_conn(self, _mock_socket):
+
+        self.protothread.server_disconnected = False
+
+        self.queue.append(ServerConnect(addr=('0.0.0.0', 0), login=('dummy', 'dummy')))
+        sleep(SLSKPROTO_RUN_TIME)
+
+        if hasattr(socket, 'TCP_KEEPIDLE') or hasattr(socket, 'TCP_KEEPALIVE'):
+            self.assertEqual(self.protothread.server_socket.setsockopt.call_count, 4)  # pylint: disable=no-member
+
+        elif hasattr(socket, 'SIO_KEEPALIVE_VALS'):
+            self.assertEqual(self.protothread.server_socket.ioctl.call_count, 1)       # pylint: disable=no-member
+            self.assertEqual(self.protothread.server_socket.setsockopt.call_count, 1)  # pylint: disable=no-member
+
+        self.assertEqual(self.protothread.server_socket.setblocking.call_count, 1)     # pylint: disable=no-member
+        self.assertEqual(self.protothread.server_socket.connect_ex.call_count, 1)      # pylint: disable=no-member
+
+    def test_login(self):
+
+        self.protothread.server_disconnected = False
+        self.queue.append(ServerConnect(addr=('0.0.0.0', 0), login=('username', 'password')))
 
         sleep(SLSKPROTO_RUN_TIME / 2)
 
-        queue.append(Login('username', 'password', 160, 1))
-        queue.append(SetWaitPort(1))
+        self.queue.append(Login('username', 'password', 160, 1))
+        self.queue.append(SetWaitPort(1))
 
         sleep(SLSKPROTO_RUN_TIME)
-
-        proto.abort()

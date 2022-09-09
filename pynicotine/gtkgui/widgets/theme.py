@@ -36,10 +36,14 @@ from pynicotine.utils import encode_path
 """ Global Style """
 
 
-SETTINGS_PORTAL = None
+GTK_SETTINGS = Gtk.Settings.get_default()
+USE_LIBADWAITA = ("gi.repository.Adw" in sys.modules)
+USE_COLOR_SCHEME_PORTAL = (sys.platform not in ("win32", "darwin") and not USE_LIBADWAITA)
 
-if "gi.repository.Adw" not in sys.modules:
+
+if USE_COLOR_SCHEME_PORTAL:
     # GNOME 42+ system-wide dark mode for GTK without libadwaita
+    SETTINGS_PORTAL = None
 
     class ColorScheme:
         NO_PREFERENCE = 0
@@ -47,9 +51,6 @@ if "gi.repository.Adw" not in sys.modules:
         PREFER_LIGHT = 2
 
     def read_color_scheme():
-
-        if SETTINGS_PORTAL is None:
-            return None
 
         try:
             result = SETTINGS_PORTAL.call_sync(
@@ -87,24 +88,19 @@ if "gi.repository.Adw" not in sys.modules:
     except Exception as portal_error:
         log.add_debug("Cannot start color scheme settings portal, falling back to GTK theme preference: %s",
                       portal_error)
-
-GTK_SETTINGS = Gtk.Settings.get_default()
-
-if not hasattr(GTK_SETTINGS, "reset_property"):
-    SYSTEM_FONT = GTK_SETTINGS.get_property("gtk-font-name")
-    SYSTEM_ICON_THEME = GTK_SETTINGS.get_property("gtk-icon-theme-name")
+        USE_COLOR_SCHEME_PORTAL = None
 
 
 def set_dark_mode(enabled):
 
-    if "gi.repository.Adw" in sys.modules:
+    if USE_LIBADWAITA:
         from gi.repository import Adw  # pylint:disable=no-name-in-module
 
         color_scheme = Adw.ColorScheme.FORCE_DARK if enabled else Adw.ColorScheme.DEFAULT
         Adw.StyleManager.get_default().set_color_scheme(color_scheme)
         return
 
-    if not enabled:
+    if USE_COLOR_SCHEME_PORTAL and not enabled:
         color_scheme = read_color_scheme()
 
         if color_scheme is not None:
@@ -116,11 +112,8 @@ def set_dark_mode(enabled):
 def set_global_font(font_name):
 
     if font_name == "Normal":
-        if hasattr(GTK_SETTINGS, "reset_property"):
-            GTK_SETTINGS.reset_property("gtk-font-name")
-            return
-
-        font_name = SYSTEM_FONT
+        GTK_SETTINGS.reset_property("gtk-font-name")
+        return
 
     GTK_SETTINGS.set_property("gtk-font-name", font_name)
 
@@ -236,10 +229,6 @@ def set_global_css():
         -GtkTreeView-horizontal-separator: 0;
         -GtkTreeView-vertical-separator: 0;
     }
-    """
-
-    css_gtk3_22_28 = b"""
-    /* Tweaks (GTK 3.22.28+) */
 
     .dropdown-scrollbar {
         /* Enable dropdown list with a scrollbar */
@@ -278,10 +267,6 @@ def set_global_css():
 
     else:
         css = css + css_gtk3
-
-        if not Gtk.check_version(3, 22, 28):
-            css = css + css_gtk3_22_28
-
         global_css_provider.load_from_data(css)
 
         Gtk.StyleContext.add_provider_for_screen(  # pylint: disable=no-member
@@ -307,10 +292,7 @@ def load_custom_icons(update=False):
     """ Load custom icon theme if one is selected """
 
     if update:
-        if hasattr(GTK_SETTINGS, "reset_property"):
-            GTK_SETTINGS.reset_property("gtk-icon-theme-name")
-        else:
-            GTK_SETTINGS.set_property("gtk-icon-theme-name", SYSTEM_ICON_THEME)
+        GTK_SETTINGS.reset_property("gtk-icon-theme-name")
 
     icon_theme_name = ".nicotine-icon-theme"
     icon_theme_path = os.path.join(config.data_dir, icon_theme_name)

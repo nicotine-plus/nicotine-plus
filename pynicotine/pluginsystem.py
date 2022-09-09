@@ -245,7 +245,7 @@ class ResponseThrottle:
     """
     ResponseThrottle - Mutnick 2016
 
-    See 'reddit' and my other plugins for example use
+    See 'testreplier' plugin for example use
 
     Purpose: Avoid flooding chat room with plugin responses
         Some plugins respond based on user requests and we do not want

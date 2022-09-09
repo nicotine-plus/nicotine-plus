@@ -48,13 +48,14 @@ class GetUploadCandidateTest(unittest.TestCase):
 
             transfer_list.append(transfer)
             self.transfers.append_upload(user, filename, transfer)
+            self.transfers.update_upload(transfer)
 
         return transfer_list
 
     def set_finished(self, transfer):
 
         transfer.status = "Finished"
-        self.transfers.update_user_counter(transfer.user)
+        self.transfers.update_upload(transfer)
         self.transfers.uploads.remove(transfer)
 
     def consume_transfers(self, queued, in_progress, clear_first=False):

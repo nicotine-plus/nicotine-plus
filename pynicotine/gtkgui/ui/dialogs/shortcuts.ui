@@ -58,7 +58,7 @@
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">True</property>
-                <property name="action-name">app.settings</property>
+                <property name="action-name">app.preferences</property>
                 <property name="title" translatable="yes">Preferences</property>
               </object>
             </child>
@@ -179,7 +179,7 @@
             </child>
             <child>
               <object class="GtkShortcutsShortcut" id="emoji_shortcut">
-                <property name="visible">False</property>
+                <property name="visible">True</property>
                 <property name="accelerator">&lt;Primary&gt;period</property>
                 <property name="title" translatable="yes">Insert Emoji</property>
               </object>

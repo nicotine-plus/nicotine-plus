@@ -237,7 +237,7 @@ class DownloadsFrame(UserInterface):
             self.frame, parent=self.FilterView, multi_select=True, activate_row_callback=self.on_edit_filter,
             columns=[
                 {"column_id": "filter", "column_type": "text", "title": _("Filter"), "sort_column": 0,
-                 "width": 1, "expand_column": True},
+                 "width": 150, "expand_column": True},
                 {"column_id": "escaped", "column_type": "toggle", "title": _("Escaped"), "width": 0,
                  "sort_column": 1, "toggle_callback": self.on_toggle_escaped}
             ]
@@ -459,7 +459,7 @@ class SharesFrame(UserInterface):
         self.shares_list_view = TreeView(
             self.frame, parent=self.Shares, multi_select=True, activate_row_callback=self.on_edit_shared_dir,
             columns=[
-                {"column_id": "virtual_folder", "column_type": "text", "title": _("Virtual Folder"), "width": 1,
+                {"column_id": "virtual_folder", "column_type": "text", "title": _("Virtual Folder"), "width": 65,
                  "sort_column": 0, "expand_column": True},
                 {"column_id": "folder", "column_type": "text", "title": _("Folder"), "width": 150,
                  "sort_column": 1, "expand_column": True},
@@ -1230,7 +1230,7 @@ class ChatsFrame(UserInterface):
         EntryDialog(
             parent=self.preferences.dialog,
             title=_("Add Replacement"),
-            message=_("Enter the text pattern and replacement, respectively:"),
+            message=_("Enter a text pattern and what to replace it with"),
             callback=self.on_add_replacement_response,
             use_second_entry=True
         ).show()
@@ -1259,7 +1259,7 @@ class ChatsFrame(UserInterface):
             EntryDialog(
                 parent=self.preferences.dialog,
                 title=_("Edit Replacement"),
-                message=_("Enter the text pattern and replacement, respectively:"),
+                message=_("Enter a text pattern and what to replace it with:"),
                 callback=self.on_edit_replacement_response,
                 callback_data=iterator,
                 use_second_entry=True,
@@ -1815,7 +1815,7 @@ class UrlHandlersFrame(UserInterface):
             self.frame, parent=self.ProtocolHandlers, multi_select=True, activate_row_callback=self.on_edit_handler,
             columns=[
                 {"column_id": "protocol", "column_type": "text", "title": _("Protocol"), "sort_column": 0,
-                 "width": 1, "expand_column": True, "iterator_key": True},
+                 "width": 120, "expand_column": True, "iterator_key": True},
                 {"column_id": "command", "column_type": "text", "title": _("Command"), "sort_column": 1,
                  "expand_column": True}
             ]
@@ -1872,7 +1872,7 @@ class UrlHandlersFrame(UserInterface):
         EntryDialog(
             parent=self.preferences.dialog,
             title=_("Add URL Handler"),
-            message=_("Enter the protocol and command for the URL hander, respectively:"),
+            message=_("Enter the protocol and the command for the URL handler:"),
             callback=self.on_add_handler_response,
             use_second_entry=True,
             droplist=self.default_protocols,
@@ -2028,7 +2028,7 @@ class NowPlayingFrame(UserInterface):
 
         elif self.NP_mpris.get_active():
             self.player_replacers = ["$n", "$p", "$a", "$b", "$t", "$y", "$c", "$r", "$k", "$l", "$f"]
-            self.player_input.set_text(_("Client name (e.g. amarok, audacious, exaile) or empty for auto:"))
+            self.player_input.set_text(_("Music player (e.g. amarok, audacious, exaile); leave empty to autodetect:"))
 
         elif self.NP_listenbrainz.get_active():
             self.player_replacers = ["$n", "$t", "$a", "$b"]
@@ -2132,6 +2132,7 @@ class PluginsFrame(UserInterface):
 
     def set_settings(self):
 
+        self.enabled_plugins.clear()
         self.plugin_list_view.clear()
 
         self.preferences.set_widgets_data(self.options)
@@ -2287,7 +2288,7 @@ class Preferences(UserInterface, Dialog):
             ("UrlHandlers", _("URL Handlers"), "insert-link-symbolic")]
 
         for _page_id, label, icon_name in self.page_ids:
-            box = Gtk.Box(margin_top=8, margin_bottom=8, margin_start=12, margin_end=42, spacing=12, visible=True)
+            box = Gtk.Box(margin_top=8, margin_bottom=8, margin_start=12, margin_end=12, spacing=12, visible=True)
             icon = Gtk.Image(icon_name=icon_name, visible=True)
             label = Gtk.Label(label=label, xalign=0, visible=True)
 
@@ -2547,7 +2548,9 @@ class Preferences(UserInterface, Dialog):
             config.sections[key].update(data)
 
         if portmap_required:
-            self.core.upnp.add_port_mapping()
+            self.core.protothread.upnp.add_port_mapping()
+        else:
+            self.core.protothread.upnp.cancel_timer()
 
         if theme_required:
             # Dark mode
@@ -2582,10 +2585,6 @@ class Preferences(UserInterface, Dialog):
 
         if search_required:
             self.frame.search.populate_search_history()
-
-        # UPnP
-        if not config.sections["server"]["upnp"]:
-            self.core.upnp.cancel_timer()
 
         # Chatrooms
         self.frame.chatrooms.toggle_chat_buttons()

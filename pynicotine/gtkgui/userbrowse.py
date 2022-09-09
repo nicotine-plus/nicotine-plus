@@ -64,7 +64,7 @@ class UserBrowses(IconNotebook):
             switch_page_callback=self.on_switch_browse_page
         )
 
-        self.file_properties = FileProperties(frame, core)
+        self.file_properties = None
 
     def on_switch_browse_page(self, _notebook, page, _page_num):
 
@@ -106,17 +106,15 @@ class UserBrowses(IconNotebook):
             multiple=True
         ).show()
 
-    def show_user(self, user, path=None, local_shares_type=None, indeterminate_progress=False, switch_page=True):
+    def show_user(self, user, path=None, local_shares_type=None, switch_page=True):
 
         if user not in self.pages:
             self.pages[user] = page = UserBrowse(self, user)
-            page.set_in_progress(indeterminate_progress)
 
             self.append_page(page.container, user, page.on_close, user=user)
             page.set_label(self.get_tab_label_inner(page.container))
 
         page = self.pages[user]
-        page.indeterminate_progress = indeterminate_progress
         page.local_shares_type = local_shares_type
         page.queued_path = path
 
@@ -134,7 +132,7 @@ class UserBrowses(IconNotebook):
         if page is None:
             return
 
-        page.clear_model()
+        page.clear()
         self.remove_page(page.container)
         del self.pages[user]
 
@@ -184,6 +182,7 @@ class UserBrowse(UserInterface):
             self.num_folders_label,
             self.progress_bar,
             self.refresh_button,
+            self.retry_button,
             self.search_entry,
             self.share_size_label
         ) = self.widgets
@@ -192,7 +191,7 @@ class UserBrowse(UserInterface):
         self.frame = userbrowses.frame
         self.core = userbrowses.core
         self.user = user
-        self.indeterminate_progress = False
+        self.indeterminate_progress = True
         self.local_shares_type = None
         self.queued_path = None
         self.num_folders = 0
@@ -211,7 +210,7 @@ class UserBrowse(UserInterface):
         self.query = None
         self.search_position = 0
 
-        self.info_bar = InfoBar(self.info_bar, Gtk.MessageType.INFO)
+        self.info_bar = InfoBar(self.info_bar, button=self.retry_button)
 
         # Setup folder_tree_view
         self.dir_store = Gtk.TreeStore(str)
@@ -226,9 +225,9 @@ class UserBrowse(UserInterface):
         self.folder_tree_view.set_model(self.dir_store)
 
         # Popup Menu (folder_tree_view)
-        self.user_popup = popup = UserPopupMenu(self.frame, None, self.on_tab_popup)
-        popup.setup_user_menu(user, page="userbrowse")
-        popup.add_items(
+        self.user_popup_menu = UserPopupMenu(self.frame, None, self.on_tab_popup)
+        self.user_popup_menu.setup_user_menu(user, page="userbrowse")
+        self.user_popup_menu.add_items(
             ("", None),
             ("#" + _("_Save Shares List to Disk"), self.on_save),
             ("#" + _("Close All Tabs…"), self.on_close_all_tabs),
@@ -248,7 +247,7 @@ class UserBrowse(UserInterface):
                 ("#" + _("Copy _Folder Path"), self.on_copy_folder_path),
                 ("#" + _("Copy _URL"), self.on_copy_dir_url),
                 ("", None),
-                (">" + _("User"), self.user_popup)
+                (">" + _("User"), self.user_popup_menu)
             )
         else:
             self.folder_popup_menu.add_items(
@@ -262,7 +261,7 @@ class UserBrowse(UserInterface):
                 ("#" + _("Copy _Folder Path"), self.on_copy_folder_path),
                 ("#" + _("Copy _URL"), self.on_copy_dir_url),
                 ("", None),
-                (">" + _("User"), self.user_popup)
+                (">" + _("User"), self.user_popup_menu)
             )
 
         # Setup file_list_view
@@ -314,7 +313,7 @@ class UserBrowse(UserInterface):
                 ("#" + _("Copy _File Path"), self.on_copy_file_path),
                 ("#" + _("Copy _URL"), self.on_copy_url),
                 ("", None),
-                (">" + _("User"), self.user_popup)
+                (">" + _("User"), self.user_popup_menu)
             )
         else:
             self.file_popup_menu.add_items(
@@ -331,7 +330,7 @@ class UserBrowse(UserInterface):
                 ("#" + _("Copy _File Path"), self.on_copy_file_path),
                 ("#" + _("Copy _URL"), self.on_copy_url),
                 ("", None),
-                (">" + _("User"), self.user_popup)
+                (">" + _("User"), self.user_popup_menu)
             )
 
         # Key Bindings (folder_tree_view)
@@ -378,9 +377,18 @@ class UserBrowse(UserInterface):
 
         self.expand_button.set_active(config.sections["userbrowse"]["expand_folders"])
         self.update_visuals()
+        self.set_in_progress()
+
+    def clear(self):
+
+        self.clear_model()
+
+        for menu in (self.user_popup_menu, self.folder_popup_menu, self.file_popup_menu,
+                     self.folder_tree_view.column_menu, self.file_list_view.column_menu):
+            menu.clear()
 
     def set_label(self, label):
-        self.user_popup.set_parent(label)
+        self.user_popup_menu.set_parent(label)
 
     def update_visuals(self):
         for widget in self.__dict__.values():
@@ -527,6 +535,7 @@ class UserBrowse(UserInterface):
             self.browse_queued_path()
 
         else:
+            self.retry_button.hide()
             self.info_bar.show_message(
                 _("User's list of shared files is empty. Either the user is not sharing anything, "
                   "or they are sharing files privately.")
@@ -536,23 +545,36 @@ class UserBrowse(UserInterface):
 
     def show_connection_error(self):
 
+        self.retry_button.show()
         self.info_bar.show_message(
             _("Unable to request shared files from user. Either the user is offline, you both have "
-              "a closed listening port, or there's a temporary connectivity issue.")
+              "a closed listening port, or there's a temporary connectivity issue."),
+            message_type=Gtk.MessageType.ERROR
         )
 
         self.set_finished()
 
-    def set_in_progress(self, indeterminate_progress):
+    def pulse_progress(self, repeat=True):
 
-        if not indeterminate_progress:
-            self.progress_bar.set_fraction(0.0)
-        else:
-            self.progress_bar.set_fraction(0.5)
+        if not self.indeterminate_progress:
+            return False
+
+        self.progress_bar.pulse()
+        return repeat
+
+    def set_in_progress(self):
+
+        self.indeterminate_progress = True
+
+        self.progress_bar.pulse()
+        GLib.timeout_add(320, self.pulse_progress, False)
+        GLib.timeout_add(1000, self.pulse_progress)
 
         self.refresh_button.set_sensitive(False)
 
     def message_progress(self, msg):
+
+        self.indeterminate_progress = False
 
         if msg.total == 0 or msg.position == 0:
             fraction = 0.0
@@ -564,6 +586,8 @@ class UserBrowse(UserInterface):
         self.progress_bar.set_fraction(fraction)
 
     def set_finished(self):
+
+        self.indeterminate_progress = False
 
         self.userbrowses.request_tab_hilite(self.container)
         self.progress_bar.set_fraction(1.0)
@@ -732,7 +756,7 @@ class UserBrowse(UserInterface):
         self.set_directory(iterator.user_data)
 
     def on_folder_popup_menu(self, menu, _treeview):
-        self.user_popup.toggle_user_items()
+        self.user_popup_menu.toggle_user_items()
         menu.actions[_("F_ile Properties")].set_enabled(bool(self.shares.get(self.selected_folder)))
 
     def on_download_directory(self, *_args):
@@ -969,7 +993,7 @@ class UserBrowse(UserInterface):
         self.select_files()
         menu.set_num_selected_files(len(self.selected_files))
 
-        self.user_popup.toggle_user_items()
+        self.user_popup_menu.toggle_user_items()
 
     def on_download_files(self, *_args, prefix=""):
 
@@ -1100,6 +1124,9 @@ class UserBrowse(UserInterface):
                              "length": model.get_value(iterator, 3)})
 
         if data:
+            if self.userbrowses.file_properties is None:
+                self.userbrowses.file_properties = FileProperties(self.frame, self.core)
+
             self.userbrowses.file_properties.update_properties(data, selected_size, selected_length)
             self.userbrowses.file_properties.show()
 
@@ -1257,7 +1284,7 @@ class UserBrowse(UserInterface):
         config.sections["userbrowse"]["expand_folders"] = active
 
     def on_tab_popup(self, *_args):
-        self.user_popup.toggle_user_items()
+        self.user_popup_menu.toggle_user_items()
 
     def on_search(self, *_args):
         self.find_search_matches()
@@ -1275,7 +1302,7 @@ class UserBrowse(UserInterface):
         self.folder_tree_view.grab_focus()
         self.info_bar.set_visible(False)
 
-        self.set_in_progress(self.indeterminate_progress)
+        self.set_in_progress()
         self.core.userbrowse.browse_user(self.user, local_shares_type=self.local_shares_type, new_request=True)
 
     def on_close(self, *_args):

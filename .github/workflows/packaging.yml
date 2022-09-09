@@ -1,11 +1,11 @@
-name: Packaging (Debian, Windows and macOS)
+name: Packaging
 
 on: [push, pull_request]
 
 jobs:
 
   debian:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -114,6 +114,7 @@ jobs:
 
       - name: Install build dependencies
         run: |
+          brew install python
           python3 packaging/macos/dependencies_core.py
           python3 packaging/macos/dependencies_packaging.py
 

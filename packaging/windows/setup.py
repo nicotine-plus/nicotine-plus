@@ -74,15 +74,15 @@ def add_file(file_path, output_path, resource=False):
     file_list.append((file_path, output_path))
 
 
-def process_files(folder_path, starts_with, ends_with, callback, callback_data=None, recursive=False):
+def process_files(folder_path, callback, callback_data=None, starts_with=None, ends_with=None, recursive=False):
 
     for full_path in glob.glob(os.path.join(folder_path, '**'), recursive=recursive):
         short_path = os.path.relpath(full_path, folder_path)
 
-        if not short_path.startswith(starts_with):
+        if starts_with and not short_path.startswith(starts_with):
             continue
 
-        if not short_path.endswith(ends_with):
+        if ends_with and not short_path.endswith(ends_with):
             continue
 
         callback(full_path, short_path, callback_data)
@@ -94,11 +94,11 @@ def _add_files_callback(full_path, short_path, callback_data):
     add_file(full_path, os.path.join(output_path, short_path), resource=resource)
 
 
-def add_files(folder_path, output_path, starts_with, ends_with, recursive=False, resource=False):
+def add_files(folder_path, output_path, starts_with=None, ends_with=None, recursive=False, resource=False):
 
     process_files(
-        folder_path, starts_with, ends_with,
-        _add_files_callback, callback_data=(output_path, resource), recursive=recursive
+        folder_path, _add_files_callback, callback_data=(output_path, resource),
+        starts_with=starts_with, ends_with=ends_with, recursive=recursive
     )
 
 
@@ -177,7 +177,7 @@ def add_typelibs():
         # Remove absolute paths added by Homebrew (macOS)
         process_files(
             folder_path=os.path.join(SYS_BASE, "share/gir-1.0"),
-            starts_with=required_typelibs, ends_with=".gir", callback=_add_typelibs_callback
+            callback=_add_typelibs_callback, starts_with=required_typelibs, ends_with=".gir"
         )
         folder_path = TEMP_PATH
 
@@ -210,9 +210,16 @@ def add_gtk():
             starts_with="libadwaita-", ends_with=LIB_EXTENSION
         )
 
+    # Schemas
     add_file(
         file_path=os.path.join(SYS_BASE, "share/glib-2.0/schemas/gschemas.compiled"),
         output_path="lib/schemas/gschemas.compiled"
+    )
+
+    # Fontconfig
+    add_files(
+        folder_path=os.path.join(SYS_BASE, "etc/fonts"), output_path="share/fonts",
+        ends_with=".conf", recursive=True, resource=True
     )
 
     # Pixbuf loaders

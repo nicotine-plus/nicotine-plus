@@ -97,7 +97,7 @@ class Searches(IconNotebook):
         CompletionEntry(frame.room_search_entry, frame.room_search_combobox.get_model())
         CompletionEntry(frame.search_entry, frame.search_combobox.get_model())
 
-        self.file_properties = FileProperties(frame, core)
+        self.file_properties = None
         self.wish_list = WishList(frame, core, self)
         self.populate_search_history()
         self.update_visuals()
@@ -181,7 +181,7 @@ class Searches(IconNotebook):
         if page is None:
             return
 
-        page.clear_model(stored_results=True)
+        page.clear()
         self.remove_page(page.container)
         del self.pages[token]
 
@@ -496,6 +496,14 @@ class Search(UserInterface):
 
         if self.grouping_mode is not None:
             self.tree_view.set_model(self.resultsmodel)
+
+    def clear(self):
+
+        self.clear_model(stored_results=True)
+
+        for menu in (self.popup_menu_users, self.popup_menu_copy, self.popup_menu, self.tab_menu,
+                     self.tree_view.column_menu):
+            menu.clear()
 
     def set_label(self, label):
         self.tab_menu.set_parent(label)
@@ -1243,6 +1251,9 @@ class Search(UserInterface):
             })
 
         if data:
+            if self.searches.file_properties is None:
+                self.searches.file_properties = FileProperties(self.frame, self.core)
+
             self.searches.file_properties.update_properties(data, selected_size, selected_length)
             self.searches.file_properties.show()
 
@@ -1298,7 +1309,10 @@ class Search(UserInterface):
                 if folder != row[11].rsplit('\\', 1)[0]:
                     continue
 
-                destination = self.core.transfers.get_folder_destination(user, folder)
+                # remove_destination is False because we need the destination for the full folder
+                # contents response later
+                destination = self.core.transfers.get_folder_destination(user, folder, remove_destination=False)
+
                 (_counter, user, _flag, _h_speed, _h_queue, _directory, _filename,
                     _h_size, h_bitrate, h_length, _bitrate, fullpath, _country, size, _speed,
                     _queue, _length, _color) = row

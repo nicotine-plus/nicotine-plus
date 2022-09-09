@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-22 02:04+0300\n"
-"PO-Revision-Date: 2022-04-22 04:11+0000\n"
+"PO-Revision-Date: 2022-08-26 22:55+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.12-dev\n"
+"X-Generator: Weblate 4.14-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:8
@@ -29,7 +29,7 @@ msgstr "Soulseek cliënt"
 #: data/org.nicotine_plus.Nicotine.desktop.in:7 pynicotine/config.py:64
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:55
 msgid "Graphical client for the Soulseek peer-to-peer network"
-msgstr "Grafische client voor het Soulseek peer-to-peer netwerk"
+msgstr "Grafische cliënt voor het Soulseek peer-to-peer netwerk"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:12
 msgid "Soulseek;Nicotine;sharing;music;P2P;peer-to-peer;GTK;"
@@ -37,12 +37,12 @@ msgstr "Soulseek;Nicotine;delen;muziek;P2P;peer-naar-peer;GTK;"
 
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:9
 msgid "Graphical client for the Soulseek network"
-msgstr "Grafische client voor het Soulseek netwerk"
+msgstr "Grafische cliënt voor het Soulseek netwerk"
 
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:11
 msgid "Nicotine+ is a graphical client for the Soulseek peer-to-peer network."
 msgstr ""
-"Nicotine+ is een grafische client voor het Soulseek peer-to-peer netwerk."
+"Nicotine+ is een grafische cliënt voor het Soulseek peer-to-peer netwerk."
 
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:15
 msgid ""
@@ -51,7 +51,7 @@ msgid ""
 "keeping current with the Soulseek protocol."
 msgstr ""
 "Nicotine + wil een aangenaam, gratis en open source (FOSS) alternatief zijn "
-"voor de officiële Soulseek-client, die extra functionaliteit biedt terwijl "
+"voor de officiële Soulseek-cliënt, die extra functionaliteit biedt terwijl "
 "het up-to-date blijft met het Soulseek-protocol."
 
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:54
@@ -1651,7 +1651,9 @@ msgstr "Gebruikersnaam;APIKEY:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2180
 msgid "Client name (e.g. amarok, audacious, exaile) or empty for auto:"
-msgstr "Klantnaam (bijv. amarok, gedurfd, exaile) of leeg voor auto:"
+msgstr ""
+"Naam van de cliënt (bijv. amarok, audacious, exaile) of leeg voor "
+"automatisch:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2184
 #: pynicotine/gtkgui/ui/settings/network.ui:81
@@ -3365,7 +3367,7 @@ msgid ""
 "The range you specified for client connection ports was {}-{}, but none of "
 "these were usable. Increase and/or "
 msgstr ""
-"Het bereik dat je heeft opgegeven voor clientverbindingspoorten was {}-{}, "
+"Het bereik dat je heeft opgegeven voor cliënt-verbindingspoorten was {}-{}, "
 "maar geen van deze was bruikbaar. Verhogen en/of "
 
 #: pynicotine/pynicotine.py:333
@@ -5560,7 +5562,7 @@ msgstr "Speciale tekens uit zoektermen verwijderen"
 msgid ""
 "Certain clients don't send search results if special characters are included."
 msgstr ""
-"Sommige clients sturen geen zoekresultaten als er speciale tekens in "
+"Sommige cliënten sturen geen zoekresultaten als er speciale tekens in "
 "voorkomen."
 
 #: pynicotine/gtkgui/ui/settings/search.ui:66

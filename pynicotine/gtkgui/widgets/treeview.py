@@ -22,7 +22,6 @@
 
 import random
 import string
-import sys
 
 from collections import OrderedDict
 
@@ -60,7 +59,8 @@ class TreeView:
         self.initialise_columns(columns)
 
         Accelerator("<Primary>c", self.widget, self.on_copy_cell_data_accelerator)
-        self.widget.column_menu = PopupMenu(self.frame, self.widget, callback=self._press_header, connect_events=False)
+        self.column_menu = self.widget.column_menu = PopupMenu(self.frame, self.widget, callback=self._press_header,
+                                                               connect_events=False)
 
         if multi_select:
             self.widget.set_rubber_banding(True)
@@ -85,8 +85,7 @@ class TreeView:
 
     def _append_columns(self, cols, column_config):
 
-        # Column order not supported in Python 3.5
-        if not column_config or sys.version_info[:2] <= (3, 5):
+        if not column_config:
             for column in cols.values():
                 self.widget.append_column(column)
             return
@@ -323,10 +322,12 @@ class TreeView:
 
         self.widget.set_model(self.model)
 
-    def add_row(self, values, select_row=True):
+    def add_row(self, values, select_row=True, prepend=False):
 
+        position = 0 if prepend else -1
         key = values[self.iterator_key_column]
-        self.iterators[key] = iterator = self.model.insert_with_valuesv(-1, self.column_numbers, values)
+
+        self.iterators[key] = iterator = self.model.insert_with_valuesv(position, self.column_numbers, values)
         self._iter_keys[iterator.user_data] = key
 
         if select_row:
@@ -372,6 +373,9 @@ class TreeView:
         self.iterators.clear()
 
         self.widget.set_model(self.model)
+
+    def set_search_entry(self, entry):
+        self.widget.set_search_entry(entry)
 
     def show_tooltip(self, pos_x, pos_y, tooltip, sourcecolumn, column_titles, text_function, strip_prefix=""):
 
@@ -677,8 +681,7 @@ def on_copy_cell_data_accelerator(treeview, *_args):
 
 def append_columns(treeview, cols, column_config):
 
-    # Column order not supported in Python 3.5
-    if not column_config or sys.version_info[:2] <= (3, 5):
+    if not column_config:
         for column in cols.values():
             treeview.append_column(column)
         return

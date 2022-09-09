@@ -41,6 +41,10 @@ Copyright: 2001-2003, 2009 Alexander Kanavin (alexbk/hedonist)
            2021-2022 slook
 License: GPL-3+
 
+Files: data/org.nicotine_plus.Nicotine.appdata.xml*
+Copyright: 2020-2022 Mat (mathiascode)
+License: CC0-1.0
+
 Files: po/*.po
 Copyright: 2003-2004 Ingmar K. Steen (Hyriand)
                      dbazza
@@ -98,6 +102,7 @@ Copyright: 2003-2004 Ingmar K. Steen (Hyriand)
                 Gabboxl
                 Szia Tomi
                 Maite Guix
+                Pagal3
 License: GPL-3+
 
 Files: pynicotine/geoip/ip2location.py
@@ -135,6 +140,17 @@ License: GPL-3+
  .
  On Debian systems, the complete text of the GNU General
  Public License version 3 can be found in `/usr/share/common-licenses/GPL-3'.
+
+License: CC0-1.0
+ To the extent possible under law, the author(s) have dedicated all copyright
+ and related and neighboring rights to this software to the public domain
+ worldwide. This software is distributed without any warranty.
+ .
+ You should have received a copy of the CC0 Public Domain Dedication along with
+ this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
+ .
+ On Debian systems, the complete text of the CC0 1.0 Universal license can be
+ found in `/usr/share/common-licenses/CC0-1.0`.
 
 License: MIT
  Permission is hereby granted, free of charge, to any person obtaining

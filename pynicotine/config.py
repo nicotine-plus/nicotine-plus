@@ -52,7 +52,7 @@ class Config:
 
     def __init__(self):
 
-        self.version = "3.3.0.dev2"
+        self.version = "3.3.0.dev3"
         self.python_version = sys.version
         self.gtk_version = ""
 

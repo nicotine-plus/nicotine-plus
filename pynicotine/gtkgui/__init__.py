@@ -39,7 +39,7 @@ def check_gui_dependencies():
         gtk_version = (4, 6, 5)
         pygobject_version = (3, 42, 0)
     else:
-        gtk_version = (3, 22, 11)
+        gtk_version = (3, 22, 30)
         pygobject_version = (3, 22, 0)
 
     try:
@@ -93,9 +93,15 @@ def run_gui(core, hidden, ci_mode, multi_instance):
             resources_folder = os.path.abspath(os.path.join(executable_folder, "..", "Resources"))
 
         os.environ["XDG_DATA_DIRS"] = os.path.join(resources_folder, "share")
+        os.environ["FONTCONFIG_FILE"] = os.path.join(resources_folder, "share/fonts/fonts.conf")
+        os.environ["FONTCONFIG_PATH"] = os.path.join(resources_folder, "share/fonts")
         os.environ["GDK_PIXBUF_MODULE_FILE"] = os.path.join(executable_folder, "lib/pixbuf-loaders.cache")
         os.environ["GI_TYPELIB_PATH"] = os.path.join(executable_folder, "lib/typelibs")
         os.environ["GSETTINGS_SCHEMA_DIR"] = os.path.join(executable_folder, "lib/schemas")
+
+    if sys.platform == "win32":
+        # 'win32' PangoCairo backend on Windows is too slow, use 'fontconfig' instead
+        os.environ["PANGOCAIRO_BACKEND"] = "fontconfig"
 
     from pynicotine.logfacility import log
     error = check_gui_dependencies()
@@ -106,7 +112,7 @@ def run_gui(core, hidden, ci_mode, multi_instance):
 
     from gi.repository import Gdk
 
-    if Gdk.Display.get_default() is None:
+    if not ci_mode and Gdk.Display.get_default() is None:
         log.add(_("No graphical environment available, using headless (no GUI) mode"))
         return None
 

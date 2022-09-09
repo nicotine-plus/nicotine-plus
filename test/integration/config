@@ -242,3 +242,6 @@ started_uploads = 0
 completed_uploads = 0
 uploaded_size = 0
 
+[userbrowse]
+expand_folders = True
+

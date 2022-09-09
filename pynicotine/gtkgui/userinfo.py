@@ -159,6 +159,8 @@ class UserInfo(UserInterface):
             self.placeholder_picture,
             self.progress_bar,
             self.queued_uploads_label,
+            self.refresh_button,
+            self.retry_button,
             self.shared_files_label,
             self.shared_folders_label,
             self.upload_slots_label,
@@ -170,7 +172,7 @@ class UserInfo(UserInterface):
         self.frame = userinfos.frame
         self.core = userinfos.core
 
-        self.info_bar = InfoBar(self.info_bar, Gtk.MessageType.INFO)
+        self.info_bar = InfoBar(self.info_bar, button=self.retry_button)
         self.description_view = TextView(self.description_view)
         self.user_label.set_text(user)
 
@@ -194,6 +196,7 @@ class UserInfo(UserInterface):
         self.picture_data_original = self.picture_data_scaled = None
         self.zoom_factor = 5
         self.actual_zoom = 0
+        self.indeterminate_progress = True
 
         # Set up likes list
         self.likes_list_view = TreeView(
@@ -214,9 +217,9 @@ class UserInfo(UserInterface):
         )
 
         # Popup menus
-        self.user_popup = popup = UserPopupMenu(self.frame, None, self.on_tab_popup)
-        popup.setup_user_menu(user, page="userinfo")
-        popup.add_items(
+        self.user_popup_menu = UserPopupMenu(self.frame, None, self.on_tab_popup)
+        self.user_popup_menu.setup_user_menu(user, page="userinfo")
+        self.user_popup_menu.add_items(
             ("", None),
             ("#" + _("Close All Tabs…"), self.on_close_all_tabs),
             ("#" + _("_Close Tab"), self.on_close)
@@ -228,14 +231,14 @@ class UserInfo(UserInterface):
                     ("", None),
                     ("#" + _("_Search for Item"), self.frame.interests.on_recommend_search, list_view))
 
-        popup = PopupMenu(self.frame, self.likes_list_view.widget, self.on_popup_likes_menu)
-        popup.add_items(*get_interest_items(self.likes_list_view))
+        self.likes_popup_menu = PopupMenu(self.frame, self.likes_list_view.widget, self.on_popup_likes_menu)
+        self.likes_popup_menu.add_items(*get_interest_items(self.likes_list_view))
 
-        popup = PopupMenu(self.frame, self.dislikes_list_view.widget, self.on_popup_dislikes_menu)
-        popup.add_items(*get_interest_items(self.dislikes_list_view))
+        self.dislikes_popup_menu = PopupMenu(self.frame, self.dislikes_list_view.widget, self.on_popup_dislikes_menu)
+        self.dislikes_popup_menu.add_items(*get_interest_items(self.dislikes_list_view))
 
-        popup = PopupMenu(self.frame, self.picture_view)
-        popup.add_items(
+        self.picture_popup_menu = PopupMenu(self.frame, self.picture_view)
+        self.picture_popup_menu.add_items(
             ("#" + _("Zoom 1:1"), self.make_zoom_normal),
             ("#" + _("Zoom In"), self.make_zoom_in),
             ("#" + _("Zoom Out"), self.make_zoom_out),
@@ -244,6 +247,7 @@ class UserInfo(UserInterface):
         )
 
         self.update_visuals()
+        self.set_in_progress()
 
     def clear(self):
 
@@ -252,8 +256,12 @@ class UserInfo(UserInterface):
         self.dislikes_list_view.clear()
         self.load_picture(None)
 
+        for menu in (self.user_popup_menu, self.likes_popup_menu, self.dislikes_popup_menu,
+                     self.likes_list_view.column_menu, self.dislikes_list_view.column_menu, self.picture_popup_menu):
+            menu.clear()
+
     def set_label(self, label):
-        self.user_popup.set_parent(label)
+        self.user_popup_menu.set_parent(label)
 
     def save_columns(self):
         # Unused
@@ -354,16 +362,43 @@ class UserInfo(UserInterface):
 
         self.info_bar.show_message(
             _("Unable to request information from user. Either you both have a closed listening "
-              "port, the user is offline, or there's a temporary connectivity issue.")
+              "port, the user is offline, or there's a temporary connectivity issue."),
+            message_type=Gtk.MessageType.ERROR
         )
 
         self.set_finished()
 
     def set_finished(self):
+
+        self.indeterminate_progress = False
+
         self.userinfos.request_tab_hilite(self.container)
         self.progress_bar.set_fraction(1.0)
 
+        self.refresh_button.set_sensitive(True)
+
+    def pulse_progress(self, repeat=True):
+
+        if not self.indeterminate_progress:
+            return False
+
+        self.progress_bar.pulse()
+        return repeat
+
+    def set_in_progress(self):
+
+        self.indeterminate_progress = True
+
+        self.progress_bar.pulse()
+        GLib.timeout_add(320, self.pulse_progress, False)
+        GLib.timeout_add(1000, self.pulse_progress)
+
+        self.info_bar.set_visible(False)
+        self.refresh_button.set_sensitive(False)
+
     def message_progress(self, msg):
+
+        self.indeterminate_progress = False
 
         if msg.total == 0 or msg.position == 0:
             fraction = 0.0
@@ -405,11 +440,11 @@ class UserInfo(UserInterface):
 
     def set_user_country(self, country_code):
 
-        if country_code:
-            country = GeoIP.country_code_to_name(country_code)
-            country_text = "%s (%s)" % (country, country_code)
-        else:
-            country_text = _("Unknown")
+        if not country_code:
+            return
+
+        country = GeoIP.country_code_to_name(country_code)
+        country_text = "%s (%s)" % (country, country_code)
 
         self.country_label.set_text(country_text)
 
@@ -432,7 +467,7 @@ class UserInfo(UserInterface):
     """ Callbacks """
 
     def on_tab_popup(self, *_args):
-        self.user_popup.toggle_user_items()
+        self.user_popup_menu.toggle_user_items()
 
     def on_popup_likes_menu(self, menu, *_args):
         self.frame.interests.toggle_menu_items(menu, self.likes_list_view, column=0)
@@ -499,10 +534,7 @@ class UserInfo(UserInterface):
         return True
 
     def on_refresh(self, *_args):
-
-        self.info_bar.set_visible(False)
-        self.progress_bar.set_fraction(0.0)
-
+        self.set_in_progress()
         self.core.userinfo.request_user_info(self.user)
 
     def on_close(self, *_args):

@@ -211,8 +211,8 @@ class PopupMenu:
         self.submenus.clear()
         self.model.remove_all()
 
-        for action in self.actions:
-            self.frame.window.remove_action(action)
+        for action in self.actions.values():
+            self.frame.window.remove_action(action.get_name())
 
         self.actions.clear()
         self.items.clear()
@@ -229,8 +229,12 @@ class PopupMenu:
             if not pos_x and not pos_y:
                 pos_x = pos_y = 0
 
-            menu.set_offset(pos_x, pos_y)
-            menu.set_pointing_to(Gdk.Rectangle(pos_x, pos_y, 1, 1))
+            rectangle = Gdk.Rectangle()
+            rectangle.x = pos_x
+            rectangle.y = pos_y
+            rectangle.width = rectangle.height = 1
+
+            menu.set_pointing_to(rectangle)
             menu.popup()
             return
 

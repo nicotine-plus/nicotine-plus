@@ -101,6 +101,7 @@ class TinyTag(object):
         self.extra = defaultdict(lambda: None)
         self.genre = None
         self.samplerate = None
+        self.bitdepth = None
         self.title = None
         self.track = None
         self.track_total = None
@@ -318,12 +319,14 @@ class MP4(TinyTag):
             # https://github.com/macosforge/alac/blob/master/ALACMagicCookieDescription.txt
             alac_atom_size = struct.unpack('>I', data[28:32])[0]
             alac_atom = BytesIO(data[36:36 + alac_atom_size])
-            alac_atom.seek(13, os.SEEK_CUR)
+            alac_atom.seek(9, os.SEEK_CUR)
+            bitdepth = struct.unpack('b', alac_atom.read(1))[0]
+            alac_atom.seek(3, os.SEEK_CUR)
             channels = struct.unpack('b', alac_atom.read(1))[0]
             alac_atom.seek(6, os.SEEK_CUR)
             avg_br = struct.unpack('>I', alac_atom.read(4))[0] / 1000  # kbit/s
             sr = struct.unpack('>I', alac_atom.read(4))[0]
-            return {'channels': channels, 'samplerate': sr, 'bitrate': avg_br}
+            return {'channels': channels, 'samplerate': sr, 'bitrate': avg_br, 'bitdepth': bitdepth}
 
         @classmethod
         def parse_mvhd(cls, data):
@@ -942,23 +945,23 @@ class Wave(TinyTag):
         riff, size, fformat = struct.unpack('4sI4s', fh.read(12))
         if riff != b'RIFF' or fformat != b'WAVE':
             raise TinyTagException('not a wave file!')
-        bitdepth = 16  # assume 16bit depth (CD quality)
+        self.bitdepth = 16  # assume 16bit depth (CD quality)
         chunk_header = fh.read(8)
         while len(chunk_header) == 8:
             subchunkid, subchunksize = struct.unpack('4sI', chunk_header)
             if subchunkid == b'fmt ':
                 _, self.channels, self.samplerate = struct.unpack('HHI', fh.read(8))
-                _, _, bitdepth = struct.unpack('<IHH', fh.read(8))
-                if bitdepth == 0:
+                _, _, self.bitdepth = struct.unpack('<IHH', fh.read(8))
+                if self.bitdepth == 0:
                     # Certain codecs (e.g. GSM 6.10) give us a bit depth of zero.
                     # Avoid division by zero when calculating duration.
-                    bitdepth = 1
-                self.bitrate = self.samplerate * self.channels * bitdepth / 1000
+                    self.bitdepth = 1
+                self.bitrate = self.samplerate * self.channels * self.bitdepth / 1000
                 remaining_size = subchunksize - 16
                 if remaining_size > 0:
                     fh.seek(remaining_size, 1)  # skip remaining data in chunk
             elif subchunkid == b'data':
-                self.duration = subchunksize / self.channels / self.samplerate / (bitdepth / 8)
+                self.duration = subchunksize / self.channels / self.samplerate / (self.bitdepth / 8)
                 self.audio_offset = fh.tell() - 8  # rewind to data header
                 fh.seek(subchunksize, 1)
             elif subchunkid == b'LIST' and self._parse_tags:
@@ -1048,8 +1051,7 @@ class Flac(TinyTag):
                 # #---4---# #---5---# #---6---# #---7---# #--8-~   ~-12-#
                 self.samplerate = _bytes_to_int(header[4:7]) >> 4
                 self.channels = ((header[6] >> 1) & 0x07) + 1
-                # bit_depth = ((header[6] & 1) << 4) + ((header[7] & 0xF0) >> 4)
-                # bit_depth = (bit_depth + 1)
+                self.bitdepth = (((header[6] & 1) << 4) + ((header[7] & 0xF0) >> 4)) + 1
                 total_sample_bytes = [(header[7] & 0x0F)] + list(header[8:12])
                 total_samples = _bytes_to_int(total_sample_bytes)
                 self.duration = total_samples / self.samplerate
@@ -1227,6 +1229,8 @@ class Wma(TinyTag):
                     ])
                     self.samplerate = stream_info['samples_per_second']
                     self.bitrate = stream_info['avg_bytes_per_second'] * 8 / 1000
+                    if stream_info['codec_id_format_tag'] == 355:  # lossless
+                        self.bitdepth = stream_info['bits_per_sample']
                     already_read = 16
                 fh.seek(blocks['type_specific_data_length'] - already_read, os.SEEK_CUR)
                 fh.seek(blocks['error_correction_data_length'], os.SEEK_CUR)
@@ -1279,8 +1283,9 @@ class Aiff(ID3):
         aiffobj = aifc.open(fh, 'rb')
         self.channels = aiffobj.getnchannels()
         self.samplerate = aiffobj.getframerate()
+        self.bitdepth = aiffobj.getsampwidth() * 8
         self.duration = aiffobj.getnframes() / self.samplerate
-        self.bitrate = self.samplerate * self.channels * aiffobj.getsampwidth() * 8 / 1000
+        self.bitrate = self.samplerate * self.channels * self.bitdepth / 1000
 
     def _parse_tag(self, fh):
         fh.seek(0, 0)

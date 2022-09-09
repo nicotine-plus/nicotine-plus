@@ -199,20 +199,22 @@ class DownloadFile(InternalMessage):
     """ Sent by networking thread to indicate file transfer progress.
     Sent by UI to pass the file object to write. """
 
-    __slots__ = ("sock", "file", "leftbytes")
+    __slots__ = ("init", "token", "file", "leftbytes")
 
-    def __init__(self, sock=None, file=None, leftbytes=None):
-        self.sock = sock
+    def __init__(self, init=None, token=None, file=None, leftbytes=None):
+        self.init = init
+        self.token = token
         self.file = file
         self.leftbytes = leftbytes
 
 
 class UploadFile(InternalMessage):
 
-    __slots__ = ("sock", "file", "size", "sentbytes", "offset")
+    __slots__ = ("init", "token", "file", "size", "sentbytes", "offset")
 
-    def __init__(self, sock=None, file=None, size=None, sentbytes=0, offset=None):
-        self.sock = sock
+    def __init__(self, init=None, token=None, file=None, size=None, sentbytes=0, offset=None):
+        self.init = init
+        self.token = token
         self.file = file
         self.size = size
         self.sentbytes = sentbytes
@@ -223,10 +225,11 @@ class DownloadFileError(InternalMessage):
     """ Sent by networking thread to indicate that a file error occurred during
     filetransfer. """
 
-    __slots__ = ("sock", "file", "error")
+    __slots__ = ("user", "token", "file", "error")
 
-    def __init__(self, sock=None, file=None, error=None):
-        self.sock = sock
+    def __init__(self, user=None, token=None, file=None, error=None):
+        self.user = user
+        self.token = token
         self.file = file
         self.error = error
 
@@ -238,18 +241,20 @@ class UploadFileError(DownloadFileError):
 class DownloadConnClose(InternalMessage):
     """ Sent by networking thread to indicate a file transfer connection has been closed """
 
-    __slots__ = ("sock",)
+    __slots__ = ("user", "token")
 
-    def __init__(self, sock=None):
-        self.sock = sock
+    def __init__(self, user=None, token=None):
+        self.user = user
+        self.token = token
 
 
 class UploadConnClose(InternalMessage):
 
-    __slots__ = ("sock", "timed_out")
+    __slots__ = ("user", "token", "timed_out")
 
-    def __init__(self, sock=None, timed_out=None):
-        self.sock = sock
+    def __init__(self, user=None, token=None, timed_out=None):
+        self.user = user
+        self.token = token
         self.timed_out = timed_out
 
 
@@ -2441,17 +2446,36 @@ class FileSearchResult(PeerMessage):
             msg.extend(self.pack_string("mp3"))
             msg.extend(self.pack_uint32(3))
 
-            # Bitrate
-            msg.extend(self.pack_uint32(0))
-            msg.extend(self.pack_uint32(fileinfo[2][0] or 0))
+            audio_info = fileinfo[2]
+            bitdepth = len(audio_info) > 3 and audio_info[3]
 
-            # Duration
-            msg.extend(self.pack_uint32(1))
-            msg.extend(self.pack_uint32(fileinfo[3] or 0))
+            # Lossless audio file
+            if bitdepth:
+                # Duration
+                msg.extend(self.pack_uint32(1))
+                msg.extend(self.pack_uint32(fileinfo[3] or 0))
 
-            # VBR
-            msg.extend(self.pack_uint32(2))
-            msg.extend(self.pack_uint32(fileinfo[2][1] or 0))
+                # Sample rate
+                msg.extend(self.pack_uint32(4))
+                msg.extend(self.pack_uint32(audio_info[2] or 0))
+
+                # Bit depth
+                msg.extend(self.pack_uint32(5))
+                msg.extend(self.pack_uint32(bitdepth or 0))
+
+            # Lossy audio file
+            else:
+                # Bitrate
+                msg.extend(self.pack_uint32(0))
+                msg.extend(self.pack_uint32(audio_info[0] or 0))
+
+                # Duration
+                msg.extend(self.pack_uint32(1))
+                msg.extend(self.pack_uint32(fileinfo[3] or 0))
+
+                # VBR
+                msg.extend(self.pack_uint32(2))
+                msg.extend(self.pack_uint32(audio_info[1] or 0))
 
         return msg
 
@@ -2618,20 +2642,20 @@ class FolderContentsRequest(PeerMessage):
     """ Peer code: 36 """
     """ We ask the peer to send us the contents of a single folder. """
 
-    def __init__(self, init=None, directory=None):
+    def __init__(self, init=None, directory=None, token=None):
         self.init = init
         self.dir = directory
-        self.something = None
+        self.token = token
 
     def make_network_message(self):
         msg = bytearray()
-        msg.extend(self.pack_uint32(1))
+        msg.extend(self.pack_uint32(self.token))
         msg.extend(self.pack_string(self.dir, latin1=True))
 
         return msg
 
     def parse_network_message(self, message):
-        pos, self.something = self.unpack_uint32(message)
+        pos, self.token = self.unpack_uint32(message)
         pos, self.dir = self.unpack_string(message, pos)
 
 
@@ -2640,9 +2664,10 @@ class FolderContentsResponse(PeerMessage):
     """ A peer responds with the contents of a particular folder
     (with all subfolders) after we've sent a FolderContentsRequest. """
 
-    def __init__(self, init=None, directory=None, shares=None):
+    def __init__(self, init=None, directory=None, token=None, shares=None):
         self.init = init
         self.dir = directory
+        self.token = token
         self.list = shares
 
     def parse_network_message(self, message):
@@ -2651,43 +2676,41 @@ class FolderContentsResponse(PeerMessage):
 
     def _parse_network_message(self, message):
         shares = {}
-        pos, nfolders = self.unpack_uint32(message)
+        pos, self.token = self.unpack_uint32(message)
+        pos, folder = self.unpack_string(message, pos)
 
-        for _ in range(nfolders):
-            pos, folder = self.unpack_string(message, pos)
+        shares[folder] = {}
 
-            shares[folder] = {}
+        pos, ndir = self.unpack_uint32(message, pos)
 
-            pos, ndir = self.unpack_uint32(message, pos)
+        for _ in range(ndir):
+            pos, directory = self.unpack_string(message, pos)
+            directory = directory.replace('/', '\\')
+            pos, nfiles = self.unpack_uint32(message, pos)
 
-            for _ in range(ndir):
-                pos, directory = self.unpack_string(message, pos)
-                directory = directory.replace('/', '\\')
-                pos, nfiles = self.unpack_uint32(message, pos)
+            shares[folder][directory] = []
 
-                shares[folder][directory] = []
+            for _ in range(nfiles):
+                pos, code = self.unpack_uint8(message, pos)
+                pos, name = self.unpack_string(message, pos)
+                pos, size = self.unpack_uint64(message, pos)
+                pos, ext = self.unpack_string(message, pos)
+                pos, numattr = self.unpack_uint32(message, pos)
 
-                for _ in range(nfiles):
-                    pos, code = self.unpack_uint8(message, pos)
-                    pos, name = self.unpack_string(message, pos)
-                    pos, size = self.unpack_uint64(message, pos)
-                    pos, ext = self.unpack_string(message, pos)
-                    pos, numattr = self.unpack_uint32(message, pos)
+                attrs = {}
 
-                    attrs = {}
+                for _ in range(numattr):
+                    pos, attrnum = self.unpack_uint32(message, pos)
+                    pos, attr = self.unpack_uint32(message, pos)
+                    attrs[str(attrnum)] = attr
 
-                    for _ in range(numattr):
-                        pos, attrnum = self.unpack_uint32(message, pos)
-                        pos, attr = self.unpack_uint32(message, pos)
-                        attrs[str(attrnum)] = attr
-
-                    shares[folder][directory].append((code, name, size, ext, attrs))
+                shares[folder][directory].append((code, name, size, ext, attrs))
 
         self.list = shares
 
     def make_network_message(self):
         msg = bytearray()
-        msg.extend(self.pack_uint32(1))
+        msg.extend(self.pack_uint32(self.token))
         msg.extend(self.pack_string(self.dir))
         msg.extend(self.pack_uint32(1))
         msg.extend(self.pack_string(self.dir))

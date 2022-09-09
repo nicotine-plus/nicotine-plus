@@ -22,8 +22,11 @@ import time
 
 from collections import deque
 
+from gi.repository import Gtk
+
 from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import TreeView
@@ -36,7 +39,7 @@ class ChatHistory(UserInterface):
     def __init__(self, frame, core):
 
         super().__init__("ui/popovers/chathistory.ui")
-        self.list_container, self.popover = self.widgets
+        self.list_container, self.popover, self.search_entry = self.widgets
 
         self.frame = frame
         self.core = core
@@ -49,11 +52,16 @@ class ChatHistory(UserInterface):
                 {"column_id": "latest_message", "column_type": "text", "title": _("Latest Message"), "sort_column": 1}
             ]
         )
+        self.list_view.set_search_entry(self.search_entry)
 
+        Accelerator("<Primary>f", self.popover, self.on_search_accelerator)
         CompletionEntry(frame.private_entry, self.list_view.model, column=0)
 
         if GTK_API_VERSION >= 4:
             frame.private_history_button.get_first_child().add_css_class("arrow-button")
+
+            # Workaround for https://gitlab.gnome.org/GNOME/gtk/-/issues/4529
+            self.popover.set_autohide(False)
 
         frame.private_history_button.set_popover(self.popover)
         self.load_users()
@@ -61,7 +69,7 @@ class ChatHistory(UserInterface):
     def load_users(self):
 
         log_path = os.path.join(config.sections["logging"]["privatelogsdir"], "*.log")
-        user_logs = sorted(glob.glob(encode_path(log_path)), key=os.path.getmtime, reverse=True)
+        user_logs = sorted(glob.glob(encode_path(log_path)), key=os.path.getmtime)
 
         for file_path in user_logs:
             username = os.path.basename(file_path[:-4]).decode("utf-8", "replace")
@@ -99,7 +107,7 @@ class ChatHistory(UserInterface):
             timestamp_format = config.sections["logging"]["log_timestamp"]
             message = "%s %s" % (time.strftime(timestamp_format), message)
 
-        self.list_view.add_row([username, message], select_row=False)
+        self.list_view.add_row([username, message], select_row=False, prepend=True)
 
     def update_visuals(self):
         for widget in self.__dict__.values():
@@ -110,3 +118,19 @@ class ChatHistory(UserInterface):
 
         self.core.privatechats.show_user(username)
         self.popover.hide()
+
+    def on_search_accelerator(self, *_args):
+        """ Ctrl+F: Search users """
+
+        self.search_entry.grab_focus()
+        return True
+
+    @staticmethod
+    def on_show(popover, param):
+
+        if not popover.get_property(param.name):
+            return
+
+        if GTK_API_VERSION >= 4:
+            # Workaround for https://gitlab.gnome.org/GNOME/gtk/-/issues/4529
+            popover.child_focus(Gtk.DirectionType.TAB_FORWARD)

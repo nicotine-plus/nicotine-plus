@@ -84,6 +84,7 @@ class TransferList(UserInterface):
         self.paths = {}
         self.tree_users = None
         self.last_redraw_time = 0
+        self.file_properties = None
 
         # Use dict instead of list for faster membership checks
         self.selected_users = OrderedDict()
@@ -187,7 +188,6 @@ class TransferList(UserInterface):
             (">" + _("User(s)"), self.popup_menu_users)
         )
 
-        self.file_properties = FileProperties(self.frame, self.core, download_button=False)
         self.update_visuals()
 
     def create_model(self):
@@ -221,7 +221,7 @@ class TransferList(UserInterface):
 
     def init_transfers(self, transfer_list):
         self.transfer_list = transfer_list
-        self.update_model(forceupdate=True)
+        self.update_model()
 
     def server_login(self):
         # Not needed
@@ -318,15 +318,23 @@ class TransferList(UserInterface):
             # No need to do unnecessary work if transfers are not visible
             return
 
+        update_counters = False
+
         if transfer is not None:
-            self.update_specific(transfer)
+            update_counters = self.update_specific(transfer)
 
         elif self.transfer_list:
             for transfer_i in reversed(self.transfer_list):
-                self.update_specific(transfer_i)
+                row_added = self.update_specific(transfer_i)
+
+                if row_added and not update_counters:
+                    update_counters = True
 
         if update_parent:
             self.update_parent_rows(transfer)
+
+        if update_counters:
+            self.update_num_users_files()
 
         self.redraw_treeview()
 
@@ -514,7 +522,7 @@ class TransferList(UserInterface):
                 self.transfersmodel.set_value(initer, 4, self.get_hqueue_position(queue_position))
                 self.transfersmodel.set_value(initer, 13, GObject.Value(GObject.TYPE_UINT, queue_position))
 
-            return
+            return False
 
         expand_user = False
         expand_folder = False
@@ -640,13 +648,13 @@ class TransferList(UserInterface):
         else:
             transfer.iterator = self.transfersmodel.insert_with_values(parent, -1, self.column_numbers, row)
 
-        self.update_num_users_files()
-
         if expand_user:
             self.tree_view.expand_row(self.transfersmodel.get_path(self.users[user]), False)
 
         if expand_folder:
             self.tree_view.expand_row(self.transfersmodel.get_path(self.paths[user_path]), False)
+
+        return True
 
     def clear_model(self):
 
@@ -905,6 +913,9 @@ class TransferList(UserInterface):
             })
 
         if data:
+            if self.file_properties is None:
+                self.file_properties = FileProperties(self.frame, self.core, download_button=False)
+
             self.file_properties.update_properties(data, total_size=selected_size)
             self.file_properties.show()
 

@@ -49,8 +49,15 @@ if importlib.util.find_spec("_gdbm"):
 
 elif importlib.util.find_spec("semidbm"):
 
+    import semidbm  # pylint: disable=import-error
+    try:
+        # semidbm throws an exception when calling sync on a read-only dict, avoid this
+        del semidbm.db._SemiDBMReadOnly.sync  # pylint: disable=protected-access
+
+    except AttributeError:
+        pass
+
     def shelve_open_semidbm(filename, flag='c', protocol=None, writeback=False):
-        import semidbm  # pylint: disable=import-error
         return shelve.Shelf(semidbm.open(filename, flag), protocol, writeback)
 
     shelve.open = shelve_open_semidbm
@@ -88,13 +95,15 @@ class Scanner:
             from pynicotine.metadata.tinytag import TinyTag
             self.tinytag = TinyTag()
 
-            Shares.load_shares(self.share_dbs, self.share_db_paths)
+            if not Shares.load_shares(self.share_dbs, self.share_db_paths, remove_failed=True):
+                # Failed to load shares, rebuild
+                self.rescan = self.rebuild = True
 
             if self.init:
                 self.create_compressed_shares()
 
             if self.rescan:
-                start_num_folders = len(list(self.share_dbs["buddyfiles"]))
+                start_num_folders = len(list(self.share_dbs.get("buddyfiles", {})))
 
                 self.queue.put((_("Rescanning shares…"), None, None))
                 self.queue.put((_("%(num)s folders found before rescan, rebuilding…"),
@@ -163,11 +172,18 @@ class Scanner:
                     destination = "buddy" + destination
 
                 # Close old db
-                self.share_dbs[destination].close()
+                share_db = self.share_dbs.get(destination)
 
-                self.share_dbs[destination] = shelve.open(os.path.join(self.config.data_dir, destination + ".db"),
-                                                          flag='n', protocol=pickle.HIGHEST_PROTOCOL)
-                self.share_dbs[destination].update(source)
+                if share_db is not None:
+                    share_db.close()
+
+                db_path = os.path.join(self.config.data_dir, destination + ".db")
+                Shares.remove_db_file(db_path)
+
+                self.share_dbs[destination] = share_db = shelve.open(
+                    db_path, flag='n', protocol=pickle.HIGHEST_PROTOCOL
+                )
+                share_db.update(source)
 
             except Exception as error:
                 self.queue.put((_("Can't save %(filename)s: %(error)s"),
@@ -203,8 +219,11 @@ class Scanner:
         if mtimes is not None:
             new_mtimes = {**mtimes, **new_mtimes}
 
-        old_mtimes = self.share_dbs[prefix + "mtimes"]
-        share_version = old_mtimes.get("__NICOTINE_SHARE_VERSION__")
+        old_mtimes = self.share_dbs.get(prefix + "mtimes")
+        share_version = None
+
+        if old_mtimes is not None:
+            share_version = old_mtimes.get("__NICOTINE_SHARE_VERSION__")
 
         # Rebuild shares if share version is outdated
         if share_version is None or share_version < self.version:
@@ -214,8 +233,8 @@ class Scanner:
             # Get mtimes for top-level shared folders, then every subfolder
             try:
                 files, streams, mtimes = self.get_files_list(
-                    folder, old_mtimes, self.share_dbs[prefix + "files"],
-                    self.share_dbs[prefix + "streams"], rebuild
+                    folder, old_mtimes, self.share_dbs.get(prefix + "files"),
+                    self.share_dbs.get(prefix + "streams"), rebuild
                 )
                 new_files = {**new_files, **files}
                 new_streams = {**new_streams, **streams}
@@ -353,15 +372,15 @@ class Scanner:
 
         size = 0
         audio = None
-        bitrate_info = None
-        duration_info = None
+        audio_info = None
+        duration = None
 
         if file_stat is None:
             file_stat = os.stat(encode_path(pathname))
 
         size = file_stat.st_size
 
-        """ We skip metadata scanning of files without meaningful content """
+        # We skip metadata scanning of files without meaningful content
         if size > 128:
             try:
                 audio = tinytag.get(encode_path(pathname), size, tags=False)
@@ -370,22 +389,39 @@ class Scanner:
                 self.queue.put((_("Error while scanning metadata for file %(path)s: %(error)s"),
                                {'path': pathname, 'error': error}, None))
 
-        if audio is not None and audio.bitrate is not None and audio.duration is not None:
-            bitrate = int(audio.bitrate + 0.5)  # Round the value with minimal performance loss
-            duration = int(audio.duration)
+        if audio is not None:
+            bitrate = audio.bitrate
+            samplerate = audio.samplerate
+            bitdepth = audio.bitdepth
+            duration = audio.duration
 
-            if UINT_LIMIT > bitrate >= 0:
-                bitrate_info = (bitrate, int(audio.is_vbr))
+            if bitrate is not None:
+                bitrate = int(bitrate + 0.5)  # Round the value with minimal performance loss
 
-            if UINT_LIMIT > duration >= 0:
-                duration_info = duration
+                if not UINT_LIMIT > bitrate >= 0:
+                    bitrate = None
 
-            if bitrate_info is None or duration_info is None:
-                self.queue.put(("Ignoring invalid metadata for file %(path)s: %(metadata)s",
-                               {'path': pathname, 'metadata': "bitrate: %s, duration: %s s" % (bitrate, duration)},
-                               "miscellaneous"))
+            if duration is not None:
+                duration = int(duration)
 
-        return [name, size, bitrate_info, duration_info]
+                if not UINT_LIMIT > duration >= 0:
+                    duration = None
+
+            if samplerate is not None:
+                samplerate = int(samplerate)
+
+                if not UINT_LIMIT > samplerate >= 0:
+                    samplerate = None
+
+            if bitdepth is not None:
+                bitdepth = int(bitdepth)
+
+                if not UINT_LIMIT > bitdepth >= 0:
+                    bitdepth = None
+
+            audio_info = (bitrate, int(audio.is_vbr), samplerate, bitdepth)
+
+        return [name, size, audio_info, duration]
 
     @staticmethod
     def get_dir_stream(folder):
@@ -407,9 +443,16 @@ class Scanner:
         For the word index db, we can't use the same approach, as we need to access
         dict elements frequently. This would take too long to access from disk. """
 
-        self.share_dbs[fileindex_dest].close()
-        self.share_dbs[fileindex_dest] = shelve.open(os.path.join(self.config.data_dir, fileindex_dest + ".db"),
-                                                     flag='n', protocol=pickle.HIGHEST_PROTOCOL)
+        fileindex_db = self.share_dbs.get(fileindex_dest)
+
+        if fileindex_db is not None:
+            fileindex_db.close()
+
+        self.share_dbs[fileindex_dest] = fileindex_db = shelve.open(
+            os.path.join(self.config.data_dir, fileindex_dest + ".db"),
+            flag='n', protocol=pickle.HIGHEST_PROTOCOL
+        )
+
         wordindex = {}
         file_index = -1
         num_shared_files = len(shared_files)
@@ -429,7 +472,7 @@ class Scanner:
 
                 # Add to file index
                 fileinfo[0] = folder + '\\' + filename
-                self.share_dbs[fileindex_dest][repr(file_index)] = fileinfo
+                fileindex_db[repr(file_index)] = fileinfo
 
                 # Collect words from filenames for Search index
                 # Use set to prevent duplicates
@@ -569,50 +612,48 @@ class Shares:
         self.config.sections["transfers"]["buddyshared"] = [_convert_to_virtual(x)
                                                             for x in self.config.sections["transfers"]["buddyshared"]]
 
+    @staticmethod
+    def remove_db_file(db_path):
+
+        db_path_encoded = encode_path(db_path)
+
+        if os.path.isfile(db_path_encoded):
+            os.remove(db_path_encoded)
+
+        elif os.path.isdir(db_path_encoded):
+            import shutil
+            shutil.rmtree(db_path_encoded)
+
     @classmethod
-    def load_shares(cls, shares, dbs, reset_shares=False):
+    def load_shares(cls, shares, dbs, remove_failed=False):
 
         errors = []
         exception = None
 
-        for destination, shelvefile in dbs:
-            shelvefile_encoded = encode_path(shelvefile)
+        for destination, db_path in dbs:
+            db_path_encoded = encode_path(db_path)
 
             try:
-                if not reset_shares:
-                    shares[destination] = shelve.open(shelvefile, protocol=pickle.HIGHEST_PROTOCOL)
-                else:
-                    try:
-                        os.remove(shelvefile_encoded)
-
-                    except IsADirectoryError:
-                        # Potentially trying to use gdbm with a semidbm database
-                        os.rmdir(shelvefile_encoded)
-
-                    shares[destination] = shelve.open(shelvefile, flag='n', protocol=pickle.HIGHEST_PROTOCOL)
+                if os.path.exists(db_path_encoded):
+                    shares[destination] = shelve.open(db_path, flag='r', protocol=pickle.HIGHEST_PROTOCOL)
 
             except Exception:
                 from traceback import format_exc
 
-                shares[destination] = None
-                errors.append(shelvefile)
+                errors.append(db_path)
                 exception = format_exc()
 
+                if remove_failed:
+                    cls.remove_db_file(db_path)
+
         if not errors:
-            return
+            return True
 
         log.add(_("Failed to process the following databases: %(names)s"), {
             'names': '\n'.join(errors)
         })
         log.add(exception)
-
-        if not reset_shares:
-            log.add(_("Attempting to reset index of shared files due to an error. Please rescan your shares."))
-            cls.load_shares(shares, dbs, reset_shares=True)
-            return
-
-        log.add(_("File index of shared files could not be accessed. This could occur due to several instances of "
-                  "Nicotine+ being active simultaneously, file permission issues, or another issue in Nicotine+."))
+        return False
 
     def file_is_shared(self, user, virtualfilename, realfilename):
 
@@ -695,12 +736,16 @@ class Shares:
         if not (self.core and self.core.logged_in):
             return
 
+        if self.rescanning:
+            return
+
         try:
             shared = self.share_dbs.get("files")
             index = self.share_dbs.get("fileindex")
 
             if shared is None or index is None:
-                return
+                shared = {}
+                index = []
 
             try:
                 sharedfolders = len(shared)
@@ -823,11 +868,10 @@ class Shares:
 
         # Scanning done, load shares in the main process again
         self.load_shares(self.share_dbs, self.share_db_paths)
+        self.rescanning = False
 
         if not error:
             self.send_num_shared_folders_files()
-
-        self.rescanning = False
 
         # Process any file transfer queue requests that arrived while scanning
         if self.network_callback:
@@ -904,19 +948,19 @@ class Shares:
             try:
                 if msg.dir in shares:
                     self.queue.append(slskmessages.FolderContentsResponse(
-                        init=init, directory=msg.dir, shares=shares[msg.dir]))
+                        init=init, directory=msg.dir, token=msg.token, shares=shares[msg.dir]))
                     return
 
                 if msg.dir.rstrip('\\') in shares:
                     self.queue.append(slskmessages.FolderContentsResponse(
-                        init=init, directory=msg.dir, shares=shares[msg.dir.rstrip('\\')]))
+                        init=init, directory=msg.dir, token=msg.token, shares=shares[msg.dir.rstrip('\\')]))
                     return
 
             except Exception as error:
                 log.add(_("Failed to fetch the shared folder %(folder)s: %(error)s"),
                         {"folder": msg.dir, "error": error})
 
-            self.queue.append(slskmessages.FolderContentsResponse(init=init, directory=msg.dir))
+            self.queue.append(slskmessages.FolderContentsResponse(init=init, directory=msg.dir, token=msg.token))
 
     """ Quit """
 

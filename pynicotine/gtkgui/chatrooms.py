@@ -81,9 +81,7 @@ class ChatRooms(IconNotebook):
         self.autojoin_rooms = set()
         self.completion = ChatCompletion()
         self.roomlist = RoomList(frame, core)
-
-        self.command_help = UserInterface("ui/popovers/chatroomcommands.ui")
-        self.command_help.popover, = self.command_help.widgets
+        self.command_help = None
 
         if GTK_API_VERSION >= 4:
             self.frame.chatrooms_paned.set_resize_start_child(True)
@@ -134,6 +132,14 @@ class ChatRooms(IconNotebook):
 
             self.completion.set_entry(tab.chat_entry)
             tab.set_completion_list(self.core.chatrooms.completion_list[:])
+
+            if self.command_help is None:
+                self.command_help = UserInterface("ui/popovers/chatroomcommands.ui")
+                self.command_help.popover, = self.command_help.widgets
+
+                if GTK_API_VERSION >= 4:
+                    # Workaround for https://gitlab.gnome.org/GNOME/gtk/-/issues/4529
+                    self.command_help.popover.set_autohide(False)
 
             self.command_help.popover.unparent()
             tab.help_button.set_popover(self.command_help.popover)
@@ -527,7 +533,8 @@ class ChatRoom(UserInterface):
                 (">" + _("Private Rooms"), menu_private_rooms)
             )
 
-        PopupMenu(self.frame, self.activity_view.textview, self.on_popup_menu_log).add_items(
+        self.popup_menu_activity_view = PopupMenu(self.frame, self.activity_view.textview, self.on_popup_menu_log)
+        self.popup_menu_activity_view.add_items(
             ("#" + _("Find…"), self.on_find_activity_log),
             ("", None),
             ("#" + _("Copy"), self.activity_view.on_copy_text),
@@ -538,7 +545,8 @@ class ChatRoom(UserInterface):
             ("#" + _("_Leave Room"), self.on_leave_room)
         )
 
-        PopupMenu(self.frame, self.chat_view.textview, self.on_popup_menu_chat).add_items(
+        self.popup_menu_chat_view = PopupMenu(self.frame, self.chat_view.textview, self.on_popup_menu_chat)
+        self.popup_menu_chat_view.add_items(
             ("#" + _("Find…"), self.on_find_room_log),
             ("", None),
             ("#" + _("Copy"), self.chat_view.on_copy_text),
@@ -583,8 +591,14 @@ class ChatRoom(UserInterface):
         self.loaded = self.activity_view.auto_scroll = self.chat_view.auto_scroll = True
 
     def clear(self):
+
         self.activity_view.clear()
         self.chat_view.clear()
+
+        for menu in (self.popup_menu_private_rooms_chat, self.popup_menu_private_rooms_list,
+                     self.popup_menu_user_chat, self.popup_menu_user_list, self.users_list_view.column_menu,
+                     self.popup_menu_activity_view, self.popup_menu_chat_view, self.tab_menu):
+            menu.clear()
 
     def set_label(self, label):
         self.tab_menu.set_parent(label)
@@ -794,21 +808,25 @@ class ChatRoom(UserInterface):
     def ticker_remove(self, msg):
         self.tickers.remove_ticker(msg.user)
 
-    def show_notification(self, login, user, text, tag, public=False):
+    def show_notification(self, login, room, user, text, tag, public=False):
 
         if user == login:
             return
 
         mentioned = (tag == self.tag_hilite)
 
+        self.chatrooms.request_tab_hilite(self.container, mentioned)
+
+        if public and room in self.core.chatrooms.joined_rooms:
+            # Don't show notifications about the Public feed that's duplicated in an open tab
+            return
+
         if mentioned and config.sections["notifications"]["notification_popup_chatroom_mention"]:
             self.frame.notifications.new_text_notification(
                 text,
-                title=_("%(user)s mentioned you in the %(room)s room") % {"user": user, "room": self.room},
+                title=_("%(user)s mentioned you in the %(room)s room") % {"user": user, "room": room},
                 priority=Gio.NotificationPriority.HIGH
             )
-
-        self.chatrooms.request_tab_hilite(self.container, mentioned)
 
         if (self.chatrooms.get_current_page() == self.container
                 and self.frame.current_page_id == self.frame.chatrooms_page.id and self.frame.window.is_active()):
@@ -817,14 +835,14 @@ class ChatRoom(UserInterface):
 
         if mentioned:
             # We were mentioned, update tray icon and show urgency hint
-            self.frame.notifications.add("rooms", user, self.room)
+            self.frame.notifications.add("rooms", user, room)
             return
 
         if not public and config.sections["notifications"]["notification_popup_chatroom"]:
             # Don't show notifications for "Public " room, they're too noisy
             self.frame.notifications.new_text_notification(
                 text,
-                title=_("Message by %(user)s in the %(room)s room") % {"user": user, "room": self.room},
+                title=_("Message by %(user)s in the %(room)s room") % {"user": user, "room": room},
                 priority=Gio.NotificationPriority.HIGH
             )
 
@@ -860,6 +878,7 @@ class ChatRoom(UserInterface):
 
         login_username = self.core.login_username
         text = msg.msg
+        room = msg.room
 
         if user == login_username:
             tag = self.tag_local
@@ -877,7 +896,7 @@ class ChatRoom(UserInterface):
             speech = text
 
         if public:
-            line = "%s | %s" % (msg.room, line)
+            line = "%s | %s" % (room, line)
 
         line = "\n-- ".join(line.split("\n"))
         usertag = self.get_user_tag(user)
@@ -891,7 +910,7 @@ class ChatRoom(UserInterface):
 
             if self.speech_toggle.get_active():
                 self.core.notifications.new_tts(
-                    config.sections["ui"]["speechrooms"], {"room": msg.room, "user": user, "message": speech}
+                    config.sections["ui"]["speechrooms"], {"room": room, "user": user, "message": speech}
                 )
 
         else:
@@ -900,7 +919,7 @@ class ChatRoom(UserInterface):
                 username=user, usertag=usertag, timestamp_format=timestamp_format
             )
 
-        self.show_notification(login_username, user, speech, tag, public)
+        self.show_notification(login_username, room, user, speech, tag, public)
 
         if self.log_toggle.get_active():
             log.write_log_file(

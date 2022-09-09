@@ -19,13 +19,14 @@
 import threading
 import socket
 
+from pynicotine.config import config
 from pynicotine.logfacility import log
 from pynicotine.utils import http_request
 
 
 MULTICAST_HOST = "239.255.255.250"
 MULTICAST_PORT = 1900
-RESPONSE_TIME_SECONDS = 2
+RESPONSE_TIME_SECONDS = 1  # At least 1 second is sufficient according to UPnP specification
 
 
 class Router:
@@ -200,13 +201,9 @@ class SSDP:
 class UPnP:
     """ Class that handles UPnP Port Mapping """
 
-    def __init__(self, core, config):
-
-        self.core = core
-        self.config = config
+    def __init__(self, port):
+        self.port = port
         self.timer = None
-
-        self.add_port_mapping()
 
     @staticmethod
     def _request_port_mapping(router, protocol, public_port, private_ip, private_port,
@@ -312,7 +309,7 @@ class UPnP:
 
         return router
 
-    def _update_port_mapping(self, listening_port):
+    def _update_port_mapping(self):
         """
         This function supports creating a Port Mapping via the UPnP
         IGDv1 and IGDv2 protocol.
@@ -337,18 +334,18 @@ class UPnP:
 
             # Perform the port mapping
             log.add_debug("UPnP: Trying to redirect external WAN port %s TCP => %s port %s TCP", (
-                listening_port,
+                self.port,
                 local_ip_address,
-                listening_port
+                self.port
             ))
 
             try:
                 self._request_port_mapping(
                     router=router,
                     protocol="TCP",
-                    public_port=listening_port,
+                    public_port=self.port,
                     private_ip=local_ip_address,
-                    private_port=listening_port,
+                    private_port=self.port,
                     mapping_description="NicotinePlus",
                     lease_duration=86400  # Expires in 24 hours
                 )
@@ -360,7 +357,7 @@ class UPnP:
         except Exception as error:
             from traceback import format_exc
             log.add(_("UPnP: Failed to forward external port %(external_port)s: %(error)s"), {
-                "external_port": listening_port,
+                "external_port": self.port,
                 "error": error
             })
             log.add_debug(format_exc())
@@ -368,35 +365,35 @@ class UPnP:
 
         log.add(_("UPnP: External port %(external_port)s successfully forwarded to local "
                   "IP address %(ip_address)s port %(local_port)s"), {
-            "external_port": listening_port,
+            "external_port": self.port,
             "ip_address": local_ip_address,
-            "local_port": listening_port
+            "local_port": self.port
         })
 
-    def add_port_mapping(self):
+    def add_port_mapping(self, blocking=False):
 
         # Test if we want to do a port mapping
-        if not self.config.sections["server"]["upnp"]:
+        if not config.sections["server"]["upnp"]:
             return
 
         # Do the port mapping
-        thread = threading.Thread(target=self._add_port_mapping)
-        thread.name = "UPnPAddPortmapping"
-        thread.daemon = True
-        thread.start()
+        if blocking:
+            self._update_port_mapping()
+        else:
+            thread = threading.Thread(target=self._update_port_mapping)
+            thread.name = "UPnPAddPortmapping"
+            thread.daemon = True
+            thread.start()
 
         # Repeat
         self._start_timer()
-
-    def _add_port_mapping(self):
-        self._update_port_mapping(self.core.protothread.listenport)
 
     def _start_timer(self):
         """ Port mapping entries last 24 hours, we need to regularly renew them.
         The default interval is 4 hours. """
 
         self.cancel_timer()
-        upnp_interval = self.config.sections["server"]["upnp_interval"]
+        upnp_interval = config.sections["server"]["upnp_interval"]
 
         if upnp_interval < 1:
             return

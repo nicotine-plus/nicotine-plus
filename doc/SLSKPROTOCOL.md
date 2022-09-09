@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on July 29, 2022
+Last updated on September 1, 2022
 
 Since the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify or extend the protocol in ways that negatively impact the network.
 
@@ -95,7 +95,7 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
 
 These combinations are actively used by clients. Other combinations are discouraged, unless the official client makes changes.
 
-  - Soulseek NS, SoulseekQt (2015-2-21 and earlier), Nicotine+, Museek+, SoulSeeX, slskd (lossy formats):
+  - Soulseek NS, SoulseekQt (2015-2-21 and earlier), Nicotine+ (lossy formats), Museek+, SoulSeeX, slskd (lossy formats):
       - {0: *bitrate*, 1: *duration*, 2: *VBR*}
 
   - SoulseekQt (2015-2-21 and earlier):
@@ -109,7 +109,7 @@ These combinations are actively used by clients. Other combinations are discoura
       - {1: *duration*, 4: *sample rate*, 5: *bit depth*} (FLAC, WAV, APE)
       - {0: *bitrate*, 1: *duration*, 4: *sample rate*, 5: *bit depth*} (WV)
 
-  - slskd (lossless formats):
+  - Nicotine+ (lossless formats), slskd (lossless formats):
       - {1: *duration*, 4: *sample rate*, 5: *bit depth*}
 
 # Server Messages
@@ -2148,13 +2148,11 @@ We ask the peer to send us the contents of a single folder.
 ### Data Order
 
   - Send
-    1.  **uint32** <ins>number of files in directory</ins>
-    2.  Iterate <ins>number of files in directory</ins>
-        1.  **string** <ins>file</ins>
+    1.  **uint32** <ins>token</ins>
+    2.  **string** <ins>folder</ins>
   - Receive
-    1.  **uint32** <ins>number of files in directory</ins>
-    2.  Iterate <ins>number of files in directory</ins>
-        1.  **string** <ins>file</ins>
+    1.  **uint32** <ins>token</ins>
+    2.  **string** <ins>folder</ins>
 
 ## Peer Code 37
 
@@ -2165,8 +2163,10 @@ A peer responds with the contents of a particular folder (with all subfolders) a
 ### Data Order
 
   - Send
-    1.  **uint32** <ins>number of folders</ins>
-    2.  Iterate for <ins>number of folders</ins>
+    1.  **uint32** <ins>token</ins>
+    2.  **string** <ins>folder</ins>
+    3.  **uint32** <ins>number of folders</ins>
+    4.  Iterate for <ins>number of folders</ins>
         1.  **string** <ins>dir</ins>
         2.  **uint32** <ins>number of files</ins>
         3.  Iterate <ins>number of files</ins>
@@ -2180,8 +2180,10 @@ A peer responds with the contents of a particular folder (with all subfolders) a
                 2.  **uint32** <ins>attribute value</ins>
   - Receive
     1.  decompress
-    2.  **uint32** <ins>number of folders</ins>
-    3.  Iterate for <ins>number of folders</ins>
+    2.  **uint32** <ins>token</ins>
+    3.  **string** <ins>folder</ins>
+    4.  **uint32** <ins>number of folders</ins>
+    5.  Iterate for <ins>number of folders</ins>
         1.  **string** <ins>dir</ins>
         2.  **uint32** <ins>number of files</ins>
         3.  Iterate <ins>number of files</ins>

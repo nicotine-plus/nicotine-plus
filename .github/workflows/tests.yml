@@ -1,14 +1,25 @@
-name: In-Tree Unit Tests
+name: Tests
 
 on: [push, pull_request]
 
 jobs:
 
   ubuntu:
-    runs-on: ubuntu-latest
     strategy:
       matrix:
-        python: ['3.5', '3.6', '3.7', '3.8', '3.9', '3.10', 'pypy-3.6', 'pypy-3.7', 'pypy-3.8', 'pypy-3.9']
+        os: [ubuntu-20.04, ubuntu-22.04]
+        python: ['3.6', '3.7', '3.8', '3.9', '3.10', 'pypy-3.6', 'pypy-3.7', 'pypy-3.8', 'pypy-3.9']
+        gtk: [3, 4]
+        exclude:
+          - os: ubuntu-20.04
+            gtk: 4
+          - os: ubuntu-22.04
+            gtk: 3
+          - os: ubuntu-22.04
+            python: '3.6'
+    runs-on: ${{ matrix.os }}
+    env:
+      NICOTINE_GTK_VERSION: ${{ matrix.gtk }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -23,7 +34,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install gettext gir1.2-gtk-3.0 libgirepository1.0-dev
+          sudo apt install gettext gir1.2-gtk-${{ matrix.gtk }}.0 libgirepository1.0-dev
           python -m pip install flake8 pygobject pylint
 
       - name: Flake8 linter
@@ -34,6 +45,25 @@ jobs:
 
       - name: Integration and unit tests
         run: xvfb-run python -m unittest
+
+  ubuntu-dep8:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-18.04, ubuntu-20.04, ubuntu-22.04]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Install autopkgtest dependencies
+        run: |
+          sudo apt update
+          sudo apt -y install autopkgtest
+
+      - name: Run autopkgtest
+        run: sudo autopkgtest . -- null
 
   windows:
     runs-on: windows-latest
@@ -73,7 +103,7 @@ jobs:
         run: python3 -m unittest
 
   macos:
-    runs-on: macos-latest
+    runs-on: macos-10.15
     strategy:
       matrix:
         gtk: [3, 4]
@@ -90,13 +120,14 @@ jobs:
 
       - name: Install dependencies
         run: |
+          brew install python
           python3 packaging/macos/dependencies_core.py
 
       - name: Flake8 linter
-        run: python3 -m flake8
+        run: flake8
 
       - name: Pylint linter
-        run: python3 -m pylint pynicotine test
+        run: pylint pynicotine test
 
       - name: Integration and unit tests
         run: python3 -m unittest
