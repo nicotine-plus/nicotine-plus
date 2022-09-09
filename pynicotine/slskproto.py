@@ -1993,16 +1993,18 @@ class SlskProtoThread(threading.Thread):
 
     def run(self):
 
-        # Select Networking Input and Output sockets
+        self._core_callback([SetConnectionStats()])
+
+        # Watch sockets for I/0 readiness with the selectors module. Only call register() after a socket
+        # is bound, otherwise watching the socket not guaranteed to work (breaks on OpenBSD at least)
         self.selector = selectors.DefaultSelector()
 
         self.listen_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.listen_socket.setblocking(False)
-        self.selector.register(self.listen_socket, selectors.EVENT_READ)
-
-        self._core_callback([SetConnectionStats()])
         self.bind_listen_port()
+
+        self.selector.register(self.listen_socket, selectors.EVENT_READ)
 
         self.upnp = UPnP(self.listenport)
         self.upnp.add_port_mapping(blocking=True)
