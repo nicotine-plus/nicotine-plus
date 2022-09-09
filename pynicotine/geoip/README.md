@@ -1,6 +1,6 @@
 # IP2Location Country Database
 
-- Last updated on July 31, 2022
+- Last updated on September 9, 2022
 - Original file name "IP2LOCATION-LITE-DB1.BIN" renamed to "ipcountrydb.bin"
 - Fetched from https://lite.ip2location.com/database/ip-country
 
