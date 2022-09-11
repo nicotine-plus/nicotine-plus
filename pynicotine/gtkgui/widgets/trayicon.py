@@ -686,18 +686,18 @@ class StatusIconImplementation(BaseImplementation):
 
     @staticmethod
     def set_item_text(item, text):
-        super().set_item_text(item, text)
+        BaseImplementation.set_item_text(item, text)
         item["gtk_menu_item"].set_label(text)
 
     @staticmethod
     def set_item_sensitive(item, sensitive):
-        super().set_item_sensitive(item, sensitive)
+        BaseImplementation.set_item_sensitive(item, sensitive)
         item["gtk_menu_item"].set_sensitive(sensitive)
 
     @staticmethod
     def set_item_toggled(item, toggled):
 
-        super().set_item_toggled(item, toggled)
+        BaseImplementation.set_item_toggled(item, toggled)
         gtk_menu_item = item["gtk_menu_item"]
 
         with gtk_menu_item.handler_block(item["gtk_handler"]):
