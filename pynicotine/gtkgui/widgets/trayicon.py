@@ -508,7 +508,7 @@ class StatusNotifierImplementation(BaseImplementation):
                 ("Category", "Communications"),
                 ("Id", config.application_id),
                 ("Title", config.application_name),
-                ("ToolTip", ("", [], config.application_name, config.summary)),
+                ("ToolTip", ("", [], config.application_name, "")),
                 ("Menu", "/org/ayatana/NotificationItem/Nicotine/Menu"),
                 ("ItemIsMenu", False),
                 ("IconName", ""),
