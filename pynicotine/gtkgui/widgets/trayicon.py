@@ -69,13 +69,16 @@ class BaseImplementation:
 
         return item
 
-    def set_item_text(self, item, text):
+    @staticmethod
+    def set_item_text(item, text):
         item["text"] = text
 
-    def set_item_sensitive(self, item, sensitive):
+    @staticmethod
+    def set_item_sensitive(item, sensitive):
         item["sensitive"] = sensitive
 
-    def set_item_toggled(self, item, toggled):
+    @staticmethod
+    def set_item_toggled(item, toggled):
         item["toggled"] = toggled
 
     def create_menu(self):
@@ -432,7 +435,8 @@ class StatusNotifierImplementation(BaseImplementation):
             self._revision += 1
             self.emit_signal("LayoutUpdated", self._revision, 0)
 
-        def _render_item(self, item):
+        @staticmethod
+        def _serialize_item(item):
 
             if "text" in item:
                 props = {
@@ -454,19 +458,19 @@ class StatusNotifierImplementation(BaseImplementation):
 
             for idx, item in self._items.items():
                 if idx in ids:
-                    item_properties.append((idx, self._render_item(item)))
+                    item_properties.append((idx, self._serialize_item(item)))
 
             return (item_properties,)
 
         def on_get_layout(self, _parent_id, _recursion_depth, _property_names):
 
-            rendered_items = []
+            serialized_items = []
 
             for idx, item in self._items.items():
-                rendered_item = GLib.Variant("(ia{sv}av)", (idx, self._render_item(item), []))
-                rendered_items.append(rendered_item)
+                serialized_item = GLib.Variant("(ia{sv}av)", (idx, self._serialize_item(item), []))
+                serialized_items.append(serialized_item)
 
-            return (self._revision, (0, {}, rendered_items))
+            return (self._revision, (0, {}, serialized_items))
 
         def on_event(self, idx, event_id, _data, _timestamp):
 
@@ -680,15 +684,18 @@ class StatusIconImplementation(BaseImplementation):
             time = Gtk.get_current_event_time()
             self.gtk_menu.popup(None, None, None, None, button, time)
 
-    def set_item_text(self, item, text):
+    @staticmethod
+    def set_item_text(item, text):
         super().set_item_text(item, text)
         item["gtk_menu_item"].set_label(text)
 
-    def set_item_sensitive(self, item, sensitive):
+    @staticmethod
+    def set_item_sensitive(item, sensitive):
         super().set_item_sensitive(item, sensitive)
         item["gtk_menu_item"].set_sensitive(sensitive)
 
-    def set_item_toggled(self, item, toggled):
+    @staticmethod
+    def set_item_toggled(item, toggled):
 
         super().set_item_toggled(item, toggled)
         gtk_menu_item = item["gtk_menu_item"]
