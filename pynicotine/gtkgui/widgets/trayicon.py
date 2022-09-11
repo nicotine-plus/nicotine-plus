@@ -547,33 +547,22 @@ class StatusNotifierImplementation(BaseImplementation):
             self.tray_icon = self.StatusNotifierItemService(activate_callback=frame.on_window_hide_unhide)
             self.tray_icon.register()
 
-            self._register_status_notifier()
-
-            Gio.bus_watch_name(
-                Gio.BusType.SESSION,
+            self.bus.call_sync(
                 "org.kde.StatusNotifierWatcher",
-                Gio.BusNameWatcherFlags.NONE,
-                self._register_status_notifier,
-                None
+                "/StatusNotifierWatcher",
+                "org.kde.StatusNotifierWatcher",
+                "RegisterStatusNotifierItem",
+                GLib.Variant("(s)", ("/org/ayatana/NotificationItem/Nicotine",)),
+                None,
+                Gio.DBusCallFlags.NONE, -1
             )
 
         except GLib.Error as error:
+            self.tray_icon.unregister()
             raise ImplementationUnavailable("StatusNotifier implementation not available: %s" % error) from error
 
         self.update_menu()
         self.update_icon_theme()
-
-    def _register_status_notifier(self, *_args):
-
-        self.bus.call_sync(
-            "org.kde.StatusNotifierWatcher",
-            "/StatusNotifierWatcher",
-            "org.kde.StatusNotifierWatcher",
-            "RegisterStatusNotifierItem",
-            GLib.Variant("(s)", ("/org/ayatana/NotificationItem/Nicotine",)),
-            None,
-            Gio.DBusCallFlags.NONE, -1
-        )
 
     @staticmethod
     def check_icon_path(icon_name, icon_path):
@@ -758,9 +747,22 @@ class TrayIcon:
         self.available = True
         self.implementation = None
 
+        self.watch_availability()
         self.load()
 
-    def load(self):
+    def watch_availability(self):
+
+        Gio.bus_watch_name(
+            Gio.BusType.SESSION,
+            "org.kde.StatusNotifierWatcher",
+            Gio.BusNameWatcherFlags.NONE,
+            self.load,
+            None
+        )
+
+    def load(self, *_args):
+
+        self.available = True
 
         if sys.platform == "win32":
             # Always keep tray icon loaded for Windows notification support
