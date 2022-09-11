@@ -333,17 +333,13 @@ class StatusNotifierImplementation(BaseImplementation):
             self._bus.unregister_object(self._registration_id)
             self._registration_id = None
 
-        def reregister(self):
-
-            if self._registration_id is None:
-                return
-
-            self.unregister()
-            self.register()
-
-        def add_property(self, name, signature):
+        def _add_property(self, name, signature):
             self._property_signatures[name] = signature
             self._property_values[name] = None
+
+        def _remove_property(self, name):
+            del self._property_signatures[name]
+            del self._property_values[name]
 
         def set_property_value(self, name, value):
             self._property_values[name] = value
@@ -351,17 +347,11 @@ class StatusNotifierImplementation(BaseImplementation):
         def get_property_value(self, name):
             return self._property_values[name]
 
-        def remove_property(self, name):
-            del self._property_signatures[name]
-            del self._property_values[name]
-
-        def add_signal(self, name, signature):
+        def _add_signal(self, name, signature):
             self._signal_signatures[name] = signature
-            self.reregister()
 
-        def remove_signal(self, name):
+        def _remove_signal(self, name):
             del self._signal_signatures[name]
-            self.reregister()
 
         def emit_signal(self, name, *args):
 
@@ -373,19 +363,13 @@ class StatusNotifierImplementation(BaseImplementation):
                 GLib.Variant("(%s)" % "".join(self._signal_signatures[name]), args)
             )
 
-        def add_method(self, name, in_args, out_args, callback):
-
+        def _add_method(self, name, in_args, out_args, callback):
             self._method_signatures[name] = (in_args, out_args)
             self._method_callbacks[name] = callback
 
-            self.reregister()
-
-        def remove_method(self, name):
-
+        def _remove_method(self, name):
             del self._method_signatures[name]
             del self._method_callbacks[name]
-
-            self.reregister()
 
         def on_method_call(self, _connection, _sender, _path, _interface_name, method_name, parameters, invocation):
 
@@ -424,9 +408,9 @@ class StatusNotifierImplementation(BaseImplementation):
                 ("GetLayout", ("i", "i", "as"), ("u", "(ia{sv}av)"), self.on_get_layout),
                 ("Event", ("i", "s", "v", "u"), (), self.on_event),
             ):
-                self.add_method(method_name, in_args, out_args, callback)
+                self._add_method(method_name, in_args, out_args, callback)
 
-            self.add_signal("LayoutUpdated", ("u", "i"))
+            self._add_signal("LayoutUpdated", ("u", "i"))
 
         def set_items(self, items):
 
@@ -502,7 +486,7 @@ class StatusNotifierImplementation(BaseImplementation):
                 ("IconThemePath", "s"),
                 ("Status", "s")
             ):
-                self.add_property(property_name, signature)
+                self._add_property(property_name, signature)
 
             for property_name, value in (
                 ("Category", "Communications"),
@@ -521,14 +505,14 @@ class StatusNotifierImplementation(BaseImplementation):
                 ("Activate", ("i", "i"), (), activate_callback),
                 ("SecondaryActivate", ("i", "i"), (), activate_callback),
             ):
-                self.add_method(method_name, in_args, out_args, callback)
+                self._add_method(method_name, in_args, out_args, callback)
 
             for signal_name, value in (
                 ("NewIcon", ()),
                 ("NewIconThemePath", ("s",)),
                 ("NewStatus", ("s",))
             ):
-                self.add_signal(signal_name, value)
+                self._add_signal(signal_name, value)
 
         def register(self):
             self.menu.register()
