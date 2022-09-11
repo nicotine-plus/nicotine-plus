@@ -540,6 +540,7 @@ class StatusNotifierImplementation(BaseImplementation):
 
         super().__init__(frame, core)
 
+        self.tray_icon = None
         self.custom_icons = False
 
         try:
@@ -558,7 +559,9 @@ class StatusNotifierImplementation(BaseImplementation):
             )
 
         except GLib.Error as error:
-            self.tray_icon.unregister()
+            if self.tray_icon is not None:
+                self.tray_icon.unregister()
+
             raise ImplementationUnavailable("StatusNotifier implementation not available: %s" % error) from error
 
         self.update_menu()
