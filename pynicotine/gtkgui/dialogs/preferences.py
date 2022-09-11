@@ -2620,9 +2620,6 @@ class Preferences(UserInterface, Dialog):
         # Update configuration
         config.write_configuration()
 
-        if config.need_config():
-            self.frame.setup()
-
         if not settings_closed:
             return
 
@@ -2633,6 +2630,9 @@ class Preferences(UserInterface, Dialog):
 
         if not config.sections["ui"]["trayicon"]:
             self.frame.show()
+
+        if config.need_config():
+            GLib.idle_add(self.frame.setup)
 
     @staticmethod
     def on_back_up_config_response(selected, _data):
