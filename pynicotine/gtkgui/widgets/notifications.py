@@ -48,8 +48,7 @@ class Notifications:
         if self.core.notifications.add_hilite_item(location, item):
             self.frame.tray_icon.set_icon()
 
-        if (GTK_API_VERSION == 3 and config.sections["ui"]["urgencyhint"]
-                and not self.frame.window.is_active()):
+        if config.sections["ui"]["urgencyhint"] and not self.frame.window.is_active():
             self.set_urgency_hint(True)
 
         self.set_title(user)
