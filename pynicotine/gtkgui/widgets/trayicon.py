@@ -755,6 +755,9 @@ class TrayIcon:
 
     def watch_availability(self):
 
+        if sys.platform in ("win32", "darwin"):
+            return
+
         Gio.bus_watch_name(
             Gio.BusType.SESSION,
             "org.kde.StatusNotifierWatcher",
