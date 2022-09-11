@@ -27,8 +27,7 @@ Depends: ${python3:Depends},
          gir1.2-gtk-3.0 (>= 3.22.30),
          python3-gdbm,
          python3-gi (>= 3.22)
-Recommends: gir1.2-ayatanaappindicator3-0.1 | gir1.2-appindicator3-0.1,
-            gir1.2-gspell-1
+Recommends: gir1.2-gspell-1
 Description: graphical client for Soulseek peer-to-peer network
  Nicotine+ is a graphical client for the Soulseek peer-to-peer
  network.

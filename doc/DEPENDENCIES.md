@@ -11,7 +11,6 @@
 
 ### Recommended
 
-- [ayatanaappindicator / appindicator](https://ayatanaindicators.github.io/) for tray icon;
 - [gspell](https://gitlab.gnome.org/GNOME/gspell) for spell checking in chat.
 
 ## Building
@@ -50,13 +49,13 @@ sudo dnf install gtk3 python3-gobject gdbm
 - On Debian/Ubuntu based distributions:
 
 ```sh
-sudo apt install gir1.2-ayatanaappindicator3-0.1 gir1.2-gspell-1
+sudo apt install gir1.2-gspell-1
 ```
 
 - On Redhat/Fedora based distributions:
 
 ```sh
-sudo dnf install gspell libappindicator-gtk3
+sudo dnf install gspell
 ```
 
 #### Installing Build Dependencies

@@ -18,12 +18,14 @@
 
 import os
 import sys
-import gi
 
+from collections import OrderedDict
+
+from gi.repository import Gio
+from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine.config import config
-from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.application import GTK_GUI_DIR
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.logfacility import log
@@ -33,86 +35,97 @@ from pynicotine.utils import encode_path
 """ Tray Icon """
 
 
+class ImplementationUnavailable(Exception):
+    pass
+
+
 class BaseImplementation:
 
     def __init__(self, frame, core):
 
         self.frame = frame
         self.core = core
-        self.menu = None
+        self.menu_items = OrderedDict()
+        self.menu_item_id = 1
         self.status = "disconnect"
 
         self.create_menu()
 
-    def create_item(self, text, callback, check=False):
+    def create_item(self, text=None, callback=None, check=False):
+
+        item = {"id": self.menu_item_id, "sensitive": True}
+
+        if text is not None:
+            item["text"] = text
+
+        if callback is not None:
+            item["callback"] = callback
 
         if check:
-            item = Gtk.CheckMenuItem.new_with_label(text)
-        else:
-            item = Gtk.MenuItem.new_with_label(text)
+            item["toggled"] = False
 
-        handler = item.connect("activate", callback)
-        self.menu.append(item)
-        item.show()
+        self.menu_items[self.menu_item_id] = item
+        self.menu_item_id += 1
 
-        return item, handler
+        return item
+
+    def set_item_text(self, item, text):
+        item["text"] = text
+
+    def set_item_sensitive(self, item, sensitive):
+        item["sensitive"] = sensitive
+
+    def set_item_toggled(self, item, toggled):
+        item["toggled"] = toggled
 
     def create_menu(self):
 
-        if GTK_API_VERSION >= 4:
-            return
-
-        self.menu = Gtk.Menu()
-        self.hide_show_item, _handler = self.create_item(_("Show Nicotine+"), self.frame.on_window_hide_unhide)
-        self.alt_speed_item, self.alt_speed_handler = self.create_item(
+        self.hide_show_item = self.create_item(_("Show Nicotine+"), self.frame.on_window_hide_unhide)
+        self.alt_speed_item = self.create_item(
             _("Alternative Speed Limits"), self.frame.on_alternative_speed_limit, check=True)
 
-        self.menu.append(Gtk.SeparatorMenuItem())
+        self.create_item()
 
-        self.downloads_item, _handler = self.create_item(_("Downloads"), self.on_downloads)
-        self.uploads_item, _handler = self.create_item(_("Uploads"), self.on_uploads)
+        self.downloads_item = self.create_item(_("Downloads"), self.on_downloads)
+        self.uploads_item = self.create_item(_("Uploads"), self.on_uploads)
 
-        self.menu.append(Gtk.SeparatorMenuItem())
+        self.create_item()
 
-        self.connect_item, _handler = self.create_item(_("Connect"), self.frame.on_connect)
-        self.disconnect_item, _handler = self.create_item(_("Disconnect"), self.frame.on_disconnect)
-        self.away_item, self.away_handler = self.create_item(_("Away"), self.frame.on_away, check=True)
+        self.connect_item = self.create_item(_("Connect"), self.frame.on_connect)
+        self.disconnect_item = self.create_item(_("Disconnect"), self.frame.on_disconnect)
+        self.away_item = self.create_item(_("Away"), self.frame.on_away, check=True)
 
-        self.menu.append(Gtk.SeparatorMenuItem())
+        self.create_item()
 
-        self.send_message_item, _handler = self.create_item(_("Send Message"), self.on_open_private_chat)
-        self.lookup_info_item, _handler = self.create_item(_("Request User's Info"), self.on_get_a_users_info)
-        self.lookup_shares_item, _handler = self.create_item(_("Request User's Shares"), self.on_get_a_users_shares)
+        self.send_message_item = self.create_item(_("Send Message"), self.on_open_private_chat)
+        self.lookup_info_item = self.create_item(_("Request User's Info"), self.on_get_a_users_info)
+        self.lookup_shares_item = self.create_item(_("Request User's Shares"), self.on_get_a_users_shares)
 
-        self.menu.append(Gtk.SeparatorMenuItem())
+        self.create_item()
 
         self.create_item(_("Preferences"), self.frame.on_settings)
         self.create_item(_("Quit"), self.core.quit)
 
     def update_show_hide_label(self):
 
-        if self.menu is None:
-            return
-
         if self.frame.window.get_property("visible"):
             text = _("Hide Nicotine+")
         else:
             text = _("Show Nicotine+")
 
-        self.hide_show_item.set_label(text)
+        self.set_item_text(self.hide_show_item, text)
+        self.update_menu()
 
     def set_server_actions_sensitive(self, status):
-
-        if self.menu is None:
-            return
 
         for item in (self.disconnect_item, self.away_item, self.send_message_item,
                      self.lookup_info_item, self.lookup_shares_item):
 
             # Disable menu items when disconnected from server
-            item.set_sensitive(status)
+            self.set_item_sensitive(item, status)
 
-        self.connect_item.set_sensitive(not status)
+        self.set_item_sensitive(self.connect_item, not status)
+        self.update_menu()
 
     def set_connected(self, enable):
         self.set_icon("connect" if enable else "disconnect")
@@ -120,36 +133,20 @@ class BaseImplementation:
     def set_away(self, enable):
 
         self.set_icon("away" if enable else "connect")
-
-        if self.menu is None:
-            return
-
-        with self.away_item.handler_block(self.away_handler):
-            # Temporarily disable handler, we only want to change the visual checkbox appearance
-            self.away_item.set_active(enable)
+        self.set_item_toggled(self.away_item, enable)
+        self.update_menu()
 
     def set_download_status(self, status):
-
-        if self.menu is None:
-            return
-
-        self.downloads_item.set_label(status)
+        self.set_item_text(self.downloads_item, status)
+        self.update_menu()
 
     def set_upload_status(self, status):
-
-        if self.menu is None:
-            return
-
-        self.uploads_item.set_label(status)
+        self.set_item_text(self.uploads_item, status)
+        self.update_menu()
 
     def set_alternative_speed_limit(self, enable):
-
-        if self.menu is None:
-            return
-
-        with self.alt_speed_item.handler_block(self.alt_speed_handler):
-            # Temporarily disable handler, we only want to change the visual checkbox appearance
-            self.alt_speed_item.set_active(enable)
+        self.set_item_toggled(self.alt_speed_item, enable)
+        self.update_menu()
 
     def on_downloads(self, *_args):
         self.frame.change_main_page(self.frame.downloads_page)
@@ -251,6 +248,10 @@ class BaseImplementation:
         # Implemented in subclasses
         pass
 
+    def update_menu(self):
+        # Implemented in subclasses
+        pass
+
     def is_visible(self):  # pylint:disable=no-self-use
         # Implemented in subclasses
         return False
@@ -264,40 +265,311 @@ class BaseImplementation:
         pass
 
 
-class AppIndicatorImplementation(BaseImplementation):
+class StatusNotifierImplementation(BaseImplementation):
+
+    class DBusService:
+
+        def __init__(self, interface_name, object_path, bus_type):
+
+            self._interface_name = interface_name
+            self._object_path = object_path
+
+            self._bus = Gio.bus_get_sync(bus_type)
+            self._property_signatures = {}
+            self._property_values = {}
+            self._signal_signatures = {}
+            self._method_signatures = {}
+            self._method_callbacks = {}
+            self._registration_id = None
+
+        def register(self):
+
+            xml_output = "<node name='/'><interface name='%s'>" % self._interface_name
+
+            for property_name, signature in self._property_signatures.items():
+                xml_output += "<property name='%s' type='%s' access='read'/>" % (property_name, signature)
+
+            for method_name, (in_args, out_args) in self._method_signatures.items():
+                xml_output += "<method name='%s'>" % method_name
+
+                for in_signature in in_args:
+                    xml_output += "<arg type='%s' direction='in'/>" % in_signature
+                for out_signature in out_args:
+                    xml_output += "<arg type='%s' direction='out'/>" % out_signature
+
+                xml_output += "</method>"
+
+            for signal_name, args in self._signal_signatures.items():
+                xml_output += "<signal name='%s'>" % signal_name
+
+                for signature in args:
+                    xml_output += "<arg type='%s'/>" % signature
+
+                xml_output += "</signal>"
+
+            xml_output += "</interface></node>"
+
+            registration_id = self._bus.register_object(
+                self._object_path,
+                Gio.DBusNodeInfo.new_for_xml(xml_output).interfaces[0],
+                self.on_method_call,
+                self.on_get_property,
+                None
+            )
+
+            if not registration_id:
+                raise GLib.Error("Failed to register object with path %s" % self._object_path)
+
+            self._registration_id = registration_id
+
+        def unregister(self):
+
+            if self._registration_id is None:
+                return
+
+            self._bus.unregister_object(self._registration_id)
+            self._registration_id = None
+
+        def reregister(self):
+
+            if self._registration_id is None:
+                return
+
+            self.unregister()
+            self.register()
+
+        def add_property(self, name, signature):
+            self._property_signatures[name] = signature
+            self._property_values[name] = None
+
+        def set_property_value(self, name, value):
+            self._property_values[name] = value
+
+        def get_property_value(self, name):
+            return self._property_values[name]
+
+        def remove_property(self, name):
+            del self._property_signatures[name]
+            del self._property_values[name]
+
+        def add_signal(self, name, signature):
+            self._signal_signatures[name] = signature
+            self.reregister()
+
+        def remove_signal(self, name):
+            del self._signal_signatures[name]
+            self.reregister()
+
+        def emit_signal(self, name, *args):
+
+            self._bus.emit_signal(
+                None,
+                self._object_path,
+                self._interface_name,
+                name,
+                GLib.Variant("(%s)" % "".join(self._signal_signatures[name]), args)
+            )
+
+        def add_method(self, name, in_args, out_args, callback):
+
+            self._method_signatures[name] = (in_args, out_args)
+            self._method_callbacks[name] = callback
+
+            self.reregister()
+
+        def remove_method(self, name):
+
+            del self._method_signatures[name]
+            del self._method_callbacks[name]
+
+            self.reregister()
+
+        def on_method_call(self, _connection, _sender, _path, _interface_name, method_name, parameters, invocation):
+
+            _in_args, out_args = self._method_signatures[method_name]
+            callback = self._method_callbacks[method_name]
+            result = callback(*parameters.unpack())
+            return_value = None
+
+            if out_args:
+                return_value = GLib.Variant("(%s)" % "".join(out_args), result)
+
+            invocation.return_value(return_value)
+
+        def on_get_property(self, _connection, _sender, _path, _interface_name, property_name):
+
+            return GLib.Variant(
+                self._property_signatures[property_name],
+                self._property_values[property_name]
+            )
+
+    class DBusMenuService(DBusService):
+
+        def __init__(self):
+
+            super().__init__(
+                interface_name="com.canonical.dbusmenu",
+                object_path="/org/ayatana/NotificationItem/Nicotine/Menu",
+                bus_type=Gio.BusType.SESSION
+            )
+
+            self._items = OrderedDict()
+            self._revision = 0
+
+            for method_name, in_args, out_args, callback in (
+                ("GetGroupProperties", ("ai", "as"), ("a(ia{sv})",), self.on_get_group_properties),
+                ("GetLayout", ("i", "i", "as"), ("u", "(ia{sv}av)"), self.on_get_layout),
+                ("Event", ("i", "s", "v", "u"), (), self.on_event),
+            ):
+                self.add_method(method_name, in_args, out_args, callback)
+
+            self.add_signal("LayoutUpdated", ("u", "i"))
+
+        def set_items(self, items):
+
+            self._items = items
+
+            self._revision += 1
+            self.emit_signal("LayoutUpdated", self._revision, 0)
+
+        def _render_item(self, item):
+
+            if "text" in item:
+                props = {
+                    "label": GLib.Variant("s", item["text"]),
+                    "enabled": GLib.Variant("b", item["sensitive"]),
+                }
+
+                if item.get("toggled") is not None:
+                    props["toggle-type"] = GLib.Variant("s", "checkmark")
+                    props["toggle-state"] = GLib.Variant("i", int(item["toggled"]))
+
+                return props
+
+            return {"type": GLib.Variant("s", "separator")}
+
+        def on_get_group_properties(self, ids, _properties):
+
+            item_properties = []
+
+            for idx, item in self._items.items():
+                if idx in ids:
+                    item_properties.append((idx, self._render_item(item)))
+
+            return (item_properties,)
+
+        def on_get_layout(self, _parent_id, _recursion_depth, _property_names):
+
+            rendered_items = []
+
+            for idx, item in self._items.items():
+                rendered_item = GLib.Variant("(ia{sv}av)", (idx, self._render_item(item), []))
+                rendered_items.append(rendered_item)
+
+            return (self._revision, (0, {}, rendered_items))
+
+        def on_event(self, idx, event_id, _data, _timestamp):
+
+            if event_id != "clicked":
+                return
+
+            self._items[idx]["callback"]()
+
+    class StatusNotifierItemService(DBusService):
+
+        def __init__(self, activate_callback):
+
+            super().__init__(
+                interface_name="org.kde.StatusNotifierItem",
+                object_path="/org/ayatana/NotificationItem/Nicotine",
+                bus_type=Gio.BusType.SESSION
+            )
+
+            self.menu = StatusNotifierImplementation.DBusMenuService()
+
+            for property_name, signature in (
+                ("Category", "s"),
+                ("Id", "s"),
+                ("Title", "s"),
+                ("Menu", "o"),
+                ("ItemIsMenu", "b"),
+                ("IconName", "s"),
+                ("IconThemePath", "s"),
+                ("Status", "s")
+            ):
+                self.add_property(property_name, signature)
+
+            for property_name, value in (
+                ("Category", "Communications"),
+                ("Id", config.application_id),
+                ("Title", config.application_name),
+                ("Menu", "/org/ayatana/NotificationItem/Nicotine/Menu"),
+                ("ItemIsMenu", False),
+                ("IconName", ""),
+                ("IconThemePath", ""),
+                ("Status", "Active")
+            ):
+                self.set_property_value(property_name, value)
+
+            for method_name, in_args, out_args, callback in (
+                ("Activate", ("i", "i"), (), activate_callback),
+                ("SecondaryActivate", ("i", "i"), (), activate_callback),
+            ):
+                self.add_method(method_name, in_args, out_args, callback)
+
+            for signal_name, value in (
+                ("NewIcon", ()),
+                ("NewIconThemePath", ("s",)),
+                ("NewStatus", ("s",))
+            ):
+                self.add_signal(signal_name, value)
+
+        def register(self):
+            self.menu.register()
+            super().register()
+
+        def unregister(self):
+            super().unregister()
+            self.menu.unregister()
 
     def __init__(self, frame, core):
 
         super().__init__(frame, core)
 
-        try:
-            # Check if AyatanaAppIndicator3 is available
-            gi.require_version('AyatanaAppIndicator3', '0.1')
-            from gi.repository import AyatanaAppIndicator3
-            self.implementation_class = AyatanaAppIndicator3
-
-        except (ImportError, ValueError):
-            try:
-                # Check if AppIndicator3 is available
-                gi.require_version('AppIndicator3', '0.1')
-                from gi.repository import AppIndicator3
-                self.implementation_class = AppIndicator3
-
-            except (ImportError, ValueError) as error:
-                raise AttributeError("AppIndicator implementation not available") from error
-
         self.custom_icons = False
-        self.tray_icon = self.implementation_class.Indicator.new(
-            id=config.application_name,
-            icon_name="",
-            category=self.implementation_class.IndicatorCategory.APPLICATION_STATUS)
 
-        self.tray_icon.set_menu(self.menu)
+        try:
+            self.bus = Gio.bus_get_sync(Gio.BusType.SESSION)
+            self.tray_icon = self.StatusNotifierItemService(activate_callback=frame.on_window_hide_unhide)
+            self.tray_icon.register()
 
-        # Action to hide/unhide main window when middle clicking the tray icon
-        self.tray_icon.set_secondary_activate_target(self.menu.get_children()[0])
+            self._register_status_notifier()
 
+            Gio.bus_watch_name(
+                Gio.BusType.SESSION,
+                "org.kde.StatusNotifierWatcher",
+                Gio.BusNameWatcherFlags.NONE,
+                self._register_status_notifier,
+                None
+            )
+
+        except GLib.Error as error:
+            raise ImplementationUnavailable("StatusNotifier implementation not available: %s" % error) from error
+
+        self.update_menu()
         self.update_icon_theme()
+
+    def _register_status_notifier(self, *_args):
+
+        self.bus.call_sync(
+            "org.kde.StatusNotifierWatcher",
+            "/StatusNotifierWatcher",
+            "org.kde.StatusNotifierWatcher",
+            "RegisterStatusNotifierItem",
+            GLib.Variant("(s)", ("/org/ayatana/NotificationItem/Nicotine",)),
+            None,
+            Gio.DBusCallFlags.NONE, -1
+        )
 
     @staticmethod
     def check_icon_path(icon_name, icon_path):
@@ -345,7 +617,7 @@ class AppIndicatorImplementation(BaseImplementation):
             if self.check_icon_path(icon_name, local_icon_path):
                 return local_icon_path
 
-        return None
+        return ""
 
     def set_icon_name(self, icon_name):
 
@@ -353,34 +625,38 @@ class AppIndicatorImplementation(BaseImplementation):
             # Use alternative icon names to enforce custom icons, since system-wide icons take precedence
             icon_name = icon_name.replace(config.application_id, "nplus-tray")
 
-        self.tray_icon.set_icon_full(icon_name, config.application_name)
+        self.tray_icon.set_property_value("IconName", icon_name)
+        self.tray_icon.emit_signal("NewIcon")
 
     def update_icon_theme(self):
 
         # If custom icon path was found, use it, otherwise we fall back to system icons
         icon_path = self.get_icon_path()
-        self.tray_icon.set_property("icon-theme-path", icon_path)
+        self.tray_icon.set_property_value("IconThemePath", icon_path)
+        self.tray_icon.emit_signal("NewIconThemePath", icon_path)
+
         self.set_icon()
 
         if icon_path:
             log.add_debug("Using tray icon path %s", icon_path)
 
+    def update_menu(self):
+        self.tray_icon.menu.set_items(self.menu_items)
+
     def is_visible(self):
-        return self.tray_icon.get_status() == self.implementation_class.IndicatorStatus.ACTIVE
+        return self.tray_icon.get_property_value("Status") == "Active"
 
     def show(self):
 
-        if self.is_visible():
-            return
-
-        self.tray_icon.set_status(self.implementation_class.IndicatorStatus.ACTIVE)
+        status = "Active"
+        self.tray_icon.set_property_value("Status", status)
+        self.tray_icon.emit_signal("NewStatus", status)
 
     def hide(self):
 
-        if not self.is_visible():
-            return
-
-        self.tray_icon.set_status(self.implementation_class.IndicatorStatus.PASSIVE)
+        status = "Passive"
+        self.tray_icon.set_property_value("Status", status)
+        self.tray_icon.emit_signal("NewStatus", status)
 
 
 class StatusIconImplementation(BaseImplementation):
@@ -391,17 +667,59 @@ class StatusIconImplementation(BaseImplementation):
 
         if not hasattr(Gtk, "StatusIcon") or sys.platform == "darwin":
             # Tray icons don't work as expected on macOS
-            raise AttributeError("StatusIcon implementation not available")
+            raise ImplementationUnavailable("StatusIcon implementation not available")
 
         self.tray_icon = Gtk.StatusIcon(tooltip_text=config.application_name)
         self.tray_icon.connect("activate", self.frame.on_window_hide_unhide)
         self.tray_icon.connect("popup-menu", self.on_status_icon_popup)
 
+        self.gtk_menu = self.build_gtk_menu()
+
     def on_status_icon_popup(self, _status_icon, button, _activate_time):
 
         if button == 3:
             time = Gtk.get_current_event_time()
-            self.menu.popup(None, None, None, None, button, time)
+            self.gtk_menu.popup(None, None, None, None, button, time)
+
+    def set_item_text(self, item, text):
+        super().set_item_text(item, text)
+        item["gtk_menu_item"].set_label(text)
+
+    def set_item_sensitive(self, item, sensitive):
+        super().set_item_sensitive(item, sensitive)
+        item["gtk_menu_item"].set_sensitive(sensitive)
+
+    def set_item_toggled(self, item, toggled):
+
+        super().set_item_toggled(item, toggled)
+        gtk_menu_item = item["gtk_menu_item"]
+
+        with gtk_menu_item.handler_block(item["gtk_handler"]):
+            gtk_menu_item.set_active(toggled)
+
+    def build_gtk_menu(self):
+
+        gtk_menu = Gtk.Menu()
+
+        for item in self.menu_items.values():
+            text = item.get("text")
+
+            if text is None:
+                gtk_menu_item = Gtk.SeparatorMenuItem()
+            else:
+                if "toggled" in item:
+                    gtk_menu_item = Gtk.CheckMenuItem.new_with_label(text)
+                else:
+                    gtk_menu_item = Gtk.MenuItem.new_with_label(text)
+
+                item["gtk_handler"] = gtk_menu_item.connect("activate", item["callback"])
+
+            item["gtk_menu_item"] = gtk_menu_item
+
+            gtk_menu_item.show()
+            gtk_menu.append(gtk_menu_item)
+
+        return gtk_menu
 
     def set_icon_name(self, icon_name):
         self.tray_icon.set_from_icon_name(icon_name)
@@ -447,13 +765,13 @@ class TrayIcon:
 
         if self.implementation is None:
             try:
-                self.implementation = AppIndicatorImplementation(self.frame, self.core)
+                self.implementation = StatusNotifierImplementation(self.frame, self.core)
 
-            except AttributeError:
+            except ImplementationUnavailable:
                 try:
                     self.implementation = StatusIconImplementation(self.frame, self.core)
 
-                except AttributeError:
+                except ImplementationUnavailable:
                     self.available = False
                     return
 
