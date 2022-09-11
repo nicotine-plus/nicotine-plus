@@ -91,6 +91,9 @@ class PopupMenu:
             self.popup_menu.set_parent(parent)
             self.popup_menu.set_halign(Gtk.Align.START)
             self.popup_menu.set_has_arrow(False)
+
+            # Workaround for wrong widget receiving focus after closing menu in GTK 4
+            self.popup_menu.connect("closed", lambda *_args: self.parent.child_focus(Gtk.DirectionType.TAB_FORWARD))
         else:
             self.popup_menu = Gtk.Menu.new_from_model(self.model)
             self.popup_menu.attach_to_widget(parent, None)
