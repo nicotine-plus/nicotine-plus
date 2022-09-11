@@ -1525,6 +1525,11 @@ class Search(UserInterface):
         self.update_model()
 
     def on_filter_entry_changed(self, widget):
+
+        # Workaround for wrong widget focus when closing context menu in GTK 4
+        if GTK_API_VERSION >= 4 and not widget.has_focus():
+            widget.grab_focus_without_selecting()
+
         if not widget.get_text():
             self.on_refilter()
 

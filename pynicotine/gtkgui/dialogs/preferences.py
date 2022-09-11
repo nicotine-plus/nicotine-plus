@@ -695,6 +695,9 @@ class UserInfoFrame(UserInterface):
         self.preferences = preferences
         self.frame = preferences.frame
 
+        if GTK_API_VERSION >= 4:
+            self.Description.get_buffer().connect("changed", self.on_textview_changed)
+
         self.image_chooser = FileChooserButton(self.ImageChooser, preferences.dialog, "image")
 
         self.options = {
@@ -727,6 +730,12 @@ class UserInfoFrame(UserInterface):
                 "pic": self.image_chooser.get_path()
             }
         }
+
+    def on_textview_changed(self, *_args):
+
+        # Workaround for wrong widget focus when closing context menu in GTK 4
+        if not self.Description.has_focus():
+            self.Description.grab_focus()
 
     def on_default_image(self, *_args):
         self.image_chooser.clear()

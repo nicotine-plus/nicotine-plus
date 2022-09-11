@@ -24,6 +24,7 @@ from gi.repository import Gtk
 
 from pynicotine import slskmessages
 from pynicotine.config import config
+from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.logfacility import log
 from pynicotine.utils import add_alias
@@ -69,6 +70,9 @@ class ChatEntry:
                 spell_buffer.set_spell_checker(self.frame.spell_checker)
                 spell_view = Gspell.Entry.get_from_gtk_entry(entry)
                 spell_view.set_inline_spell_checking(True)
+
+        if GTK_API_VERSION >= 4:
+            entry.connect("changed", self.on_entry_changed)
 
     def on_enter(self, *_args):
 
@@ -269,6 +273,12 @@ class ChatEntry:
     def on_tab_complete_accelerator(self, widget, state, backwards=False):
         """ Tab and Shift+Tab: tab complete chat """
         return self.completion.on_tab_complete_accelerator(widget, state, backwards)
+
+    def on_entry_changed(self, *_args):
+
+        # Workaround for wrong widget focus when closing context menu in GTK 4
+        if not self.entry.has_focus():
+            self.entry.grab_focus_without_selecting()
 
 
 class ChatCompletion:
@@ -520,6 +530,9 @@ class CompletionEntry:
         completion.set_match_func(self.entry_completion_find_match)
         entry.set_completion(completion)
 
+        if GTK_API_VERSION >= 4:
+            entry.connect("changed", self.on_entry_changed)
+
     def entry_completion_find_match(self, _completion, entry_text, iterator):
 
         if not entry_text:
@@ -534,6 +547,12 @@ class CompletionEntry:
             return True
 
         return False
+
+    def on_entry_changed(self, *_args):
+
+        # Workaround for wrong widget focus when closing context menu in GTK 4
+        if not self.entry.has_focus():
+            self.entry.grab_focus_without_selecting()
 
 
 class TextSearchBar:
@@ -552,6 +571,9 @@ class TextSearchBar:
 
         self.entry.connect("previous-match", self.on_search_previous_match)
         self.entry.connect("next-match", self.on_search_next_match)
+
+        if GTK_API_VERSION >= 4:
+            entry.connect("changed", self.on_entry_changed)
 
         if not controller_widget:
             controller_widget = textview
@@ -615,6 +637,12 @@ class TextSearchBar:
 
     def on_search_next_match(self, *_args):
         self.on_search_match(search_type="next")
+
+    def on_entry_changed(self, *_args):
+
+        # Workaround for wrong widget focus when closing context menu in GTK 4
+        if not self.entry.has_focus():
+            self.entry.grab_focus()
 
     def on_hide_search_accelerator(self, *_args):
         """ Escape: hide search bar """
