@@ -395,8 +395,7 @@ class NicotineFrame(UserInterface):
         self.privatechat.clear_notifications()
         self.on_cancel_auto_away()
 
-        if GTK_API_VERSION == 3 and window.get_urgency_hint():
-            window.set_urgency_hint(False)
+        self.notifications.set_urgency_hint(False)
 
     @staticmethod
     def on_window_property_changed(window, param, config_property):

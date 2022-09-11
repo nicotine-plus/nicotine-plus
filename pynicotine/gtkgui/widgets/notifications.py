@@ -50,7 +50,7 @@ class Notifications:
 
         if (GTK_API_VERSION == 3 and config.sections["ui"]["urgencyhint"]
                 and not self.frame.window.is_active()):
-            self.frame.window.set_urgency_hint(True)
+            self.set_urgency_hint(True)
 
         self.set_title(user)
 
@@ -95,6 +95,20 @@ class Notifications:
                 self.frame.window.set_title(
                     app_name + " - " + _("%(user)s mentioned you in the %(room)s room") % {'user': user, 'room': room}
                 )
+
+    def set_urgency_hint(self, enabled):
+
+        if GTK_API_VERSION >= 4:
+            surface = self.frame.window.get_surface()
+        else:
+            surface = self.frame.window.get_window()
+
+        try:
+            surface.set_urgency_hint(enabled)
+
+        except AttributeError:
+            # No support for urgency hints
+            pass
 
     def new_text_notification(self, message, title=None, priority=Gio.NotificationPriority.NORMAL):
 
