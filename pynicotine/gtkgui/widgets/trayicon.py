@@ -798,7 +798,7 @@ class TrayIcon:
             self.set_server_actions_sensitive(False)
             self.set_alternative_speed_limit(config.sections["transfers"]["usealtlimits"])
 
-        if config.sections["ui"]["trayicon"]:
+        if self.use_trayicon or config.sections["ui"]["trayicon"]:
             self.show()
 
             # Gtk.StatusIcon.is_embedded() may not be true yet (observed in LXDE), force an icon update
