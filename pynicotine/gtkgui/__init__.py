@@ -20,41 +20,38 @@ import os
 import sys
 
 
-def check_gui_dependencies():
-
-    # Defaults for different operating systems
-    components = {
-        "gtk": {"win32": '3', "darwin": '4'},
-        "libadwaita": {"win32": '0', "darwin": '1'}
-    }
-
-    if os.getenv("NICOTINE_GTK_VERSION") is None:
-        os.environ["NICOTINE_GTK_VERSION"] = components.get("gtk").get(sys.platform, '3')
-
-    if os.getenv("NICOTINE_LIBADWAITA") is None:
-        os.environ["NICOTINE_LIBADWAITA"] = components.get("libadwaita").get(sys.platform, '0')
+def check_gtk_version():
 
     # Require minor version of GTK
-    if os.getenv("NICOTINE_GTK_VERSION") == '4':
+    if os.getenv("NICOTINE_GTK_VERSION", '4') == '4':
         gtk_version = (4, 6, 6)
-        pygobject_version = (3, 42, 0)
     else:
+        os.environ["NICOTINE_LIBADWAITA"] = '0'
         gtk_version = (3, 22, 30)
-        pygobject_version = (3, 22, 0)
+
+    if os.getenv("NICOTINE_LIBADWAITA") is None:
+        os.environ["NICOTINE_LIBADWAITA"] = str(int(
+            sys.platform in ("win32", "darwin") or os.environ.get("DESKTOP_SESSION") == "gnome"
+        ))
+
+    gtk_major_version, *_unused = gtk_version
 
     try:
         import gi
-        gi.check_version(pygobject_version)
 
-    except (ImportError, ValueError):
-        return _("Cannot find %s, please install it.") % ("pygobject >= " + '.'.join(map(str, pygobject_version)))
+    except ImportError:
+        return _("Cannot find %s, please install it.") % "pygobject"
 
     try:
-        api_version = (gtk_version[0], 0)
+        api_version = (gtk_major_version, 0)
         gi.require_version('Gtk', '.'.join(map(str, api_version)))
 
     except ValueError:
-        return _("Cannot find %s, please install it.") % ("GTK " + str(gtk_version[0]))
+        if gtk_major_version == 4:
+            os.environ["NICOTINE_GTK_VERSION"] = '3'
+            return check_gtk_version()
+
+        return _("Cannot find %s or newer, please install it.") % ("GTK " + '.'.join(map(str, gtk_version)))
 
     try:
         from gi.repository import Gtk
@@ -65,11 +62,11 @@ def check_gui_dependencies():
     if Gtk.check_version(*gtk_version):
         return _("You are using an unsupported version of GTK %(major_version)s. You should install "
                  "GTK %(complete_version)s or newer.") % {
-            "major_version": gtk_version[0],
+            "major_version": gtk_major_version,
             "complete_version": '.'.join(map(str, gtk_version))}
 
     try:
-        if gtk_version[0] == 4 and os.getenv("NICOTINE_LIBADWAITA") == '1':
+        if os.getenv("NICOTINE_LIBADWAITA") == '1':
             gi.require_version('Adw', '1')
 
             from gi.repository import Adw
@@ -104,7 +101,7 @@ def run_gui(core, hidden, ci_mode, multi_instance):
         os.environ["PANGOCAIRO_BACKEND"] = "fontconfig"
 
     from pynicotine.logfacility import log
-    error = check_gui_dependencies()
+    error = check_gtk_version()
 
     if error:
         log.add(error)
