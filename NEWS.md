@@ -1,5 +1,20 @@
 # Release Notes
 
+## Version 3.2.6 (Unreleased)
+
+### Changes
+
+ * Removed AppIndicator dependency in favor of custom tray icon implementation
+
+### Corrections
+
+ * OpenBSD: Fixed a regression where incoming peer connections did not work
+
+### Issues closed on GitHub
+
+ * Users can't connect to me after upgrade to 3.2.5 (transfers don't work) on OpenBSD ([#2175](https://github.com/nicotine-plus/nicotine-plus/issues/2175))
+
+
 ## Version 3.2.5 (August 31, 2022)
 
 ### Corrections
