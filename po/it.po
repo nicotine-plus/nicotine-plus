@@ -7,7 +7,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
 "PO-Revision-Date: 2023-05-17 14:53+0000\n"
-"Last-Translator: ms-afk <scagnolmarco@gmail.com>\n"
+"Last-Translator: Gabriele <gabboxl0@gmail.com>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/it/>\n"
 "Language: it\n"
@@ -305,8 +305,8 @@ msgstr "Impossibile trovare %s, installalo."
 #: pynicotine/gtkgui/__init__.py:95
 msgid "No graphical environment available, using headless (no GUI) mode"
 msgstr ""
-"Nessun ambiente grafico disponibile, verrà utilizzata la modalità headless "
-"(senza GUI)"
+"Nessun ambiente grafico disponibile, verrà utilizzata la modalità headless ("
+"senza GUI)"
 
 #: pynicotine/gtkgui/application.py:287
 #: pynicotine/plugins/core_commands/__init__.py:68
