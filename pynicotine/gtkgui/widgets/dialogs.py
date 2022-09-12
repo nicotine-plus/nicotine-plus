@@ -134,10 +134,10 @@ class Dialog:
         else:
             main_window_width, main_window_height = parent.get_size()
 
-        if dialog_width > main_window_width:
+        if main_window_width and dialog_width > main_window_width:
             dialog_width = main_window_width - 30
 
-        if dialog_height > main_window_height:
+        if main_window_height and dialog_height > main_window_height:
             dialog_height = main_window_height - 30
 
         self.dialog.set_default_size(dialog_width, dialog_height)
