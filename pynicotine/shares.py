@@ -152,6 +152,30 @@ class Scanner:
         self.create_compressed_shares_message("normal")
         self.create_compressed_shares_message("buddy")
 
+    def create_db_file(self, destination):
+
+        share_db = self.share_dbs.get(destination)
+
+        if share_db is not None:
+            share_db.close()
+
+        db_path = os.path.join(self.config.data_dir, destination + ".db")
+        self.remove_db_file(db_path)
+
+        return shelve.open(db_path, flag='n', protocol=pickle.HIGHEST_PROTOCOL)
+
+    @staticmethod
+    def remove_db_file(db_path):
+
+        db_path_encoded = encode_path(db_path)
+
+        if os.path.isfile(db_path_encoded):
+            os.remove(db_path_encoded)
+
+        elif os.path.isdir(db_path_encoded):
+            import shutil
+            shutil.rmtree(db_path_encoded)
+
     def set_shares(self, share_type, files=None, streams=None, mtimes=None, wordindex=None):
 
         self.config.create_data_folder()
@@ -171,18 +195,7 @@ class Scanner:
                 if share_type == "buddy":
                     destination = "buddy" + destination
 
-                # Close old db
-                share_db = self.share_dbs.get(destination)
-
-                if share_db is not None:
-                    share_db.close()
-
-                db_path = os.path.join(self.config.data_dir, destination + ".db")
-                Shares.remove_db_file(db_path)
-
-                self.share_dbs[destination] = share_db = shelve.open(
-                    db_path, flag='n', protocol=pickle.HIGHEST_PROTOCOL
-                )
+                self.share_dbs[destination] = share_db = self.create_db_file(destination)
                 share_db.update(source)
 
             except Exception as error:
@@ -443,15 +456,7 @@ class Scanner:
         For the word index db, we can't use the same approach, as we need to access
         dict elements frequently. This would take too long to access from disk. """
 
-        fileindex_db = self.share_dbs.get(fileindex_dest)
-
-        if fileindex_db is not None:
-            fileindex_db.close()
-
-        self.share_dbs[fileindex_dest] = fileindex_db = shelve.open(
-            os.path.join(self.config.data_dir, fileindex_dest + ".db"),
-            flag='n', protocol=pickle.HIGHEST_PROTOCOL
-        )
+        self.share_dbs[fileindex_dest] = fileindex_db = self.create_db_file(fileindex_dest)
 
         wordindex = {}
         file_index = -1
@@ -612,18 +617,6 @@ class Shares:
         self.config.sections["transfers"]["buddyshared"] = [_convert_to_virtual(x)
                                                             for x in self.config.sections["transfers"]["buddyshared"]]
 
-    @staticmethod
-    def remove_db_file(db_path):
-
-        db_path_encoded = encode_path(db_path)
-
-        if os.path.isfile(db_path_encoded):
-            os.remove(db_path_encoded)
-
-        elif os.path.isdir(db_path_encoded):
-            import shutil
-            shutil.rmtree(db_path_encoded)
-
     @classmethod
     def load_shares(cls, shares, dbs, remove_failed=False):
 
@@ -644,7 +637,7 @@ class Shares:
                 exception = format_exc()
 
                 if remove_failed:
-                    cls.remove_db_file(db_path)
+                    Scanner.remove_db_file(db_path)
 
         if not errors:
             return True
