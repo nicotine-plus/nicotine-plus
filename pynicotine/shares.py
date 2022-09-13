@@ -335,40 +335,41 @@ class Scanner:
                 }, "miscellaneous"))
 
         try:
-            for entry in os.scandir(encode_path(folder, prefix=False)):
-                entry_stat = entry.stat()
+            with os.scandir(encode_path(folder, prefix=False)) as entries:
+                for entry in entries:
+                    entry_stat = entry.stat()
 
-                if entry.is_file():
-                    try:
-                        if not folder_unchanged:
-                            filename = entry.name.decode("utf-8", "replace")
+                    if entry.is_file():
+                        try:
+                            if not folder_unchanged:
+                                filename = entry.name.decode("utf-8", "replace")
 
-                            if self.is_hidden(folder, filename, entry_stat):
-                                continue
+                                if self.is_hidden(folder, filename, entry_stat):
+                                    continue
 
-                            # Get the metadata of the file
-                            path = entry.path.decode("utf-8", "replace")
-                            data = self.get_file_info(filename, path, self.tinytag, entry_stat)
-                            file_list.append(data)
+                                # Get the metadata of the file
+                                path = entry.path.decode("utf-8", "replace")
+                                data = self.get_file_info(filename, path, self.tinytag, entry_stat)
+                                file_list.append(data)
 
-                    except Exception as error:
-                        self.queue.put((_("Error while scanning file %(path)s: %(error)s"),
-                                       {'path': entry.path, 'error': error}, None))
+                        except Exception as error:
+                            self.queue.put((_("Error while scanning file %(path)s: %(error)s"),
+                                           {'path': entry.path, 'error': error}, None))
 
-                    continue
+                        continue
 
-                path = entry.path.decode("utf-8", "replace").replace('\\', os.sep)
+                    path = entry.path.decode("utf-8", "replace").replace('\\', os.sep)
 
-                if self.is_hidden(path, entry_stat=entry_stat):
-                    continue
+                    if self.is_hidden(path, entry_stat=entry_stat):
+                        continue
 
-                dir_files, dir_streams, dir_mtimes = self.get_files_list(
-                    path, oldmtimes, oldfiles, oldstreams, rebuild, entry_stat
-                )
+                    dir_files, dir_streams, dir_mtimes = self.get_files_list(
+                        path, oldmtimes, oldfiles, oldstreams, rebuild, entry_stat
+                    )
 
-                files = {**files, **dir_files}
-                streams = {**streams, **dir_streams}
-                mtimes = {**mtimes, **dir_mtimes}
+                    files = {**files, **dir_files}
+                    streams = {**streams, **dir_streams}
+                    mtimes = {**mtimes, **dir_mtimes}
 
         except OSError as error:
             self.queue.put((_("Error while scanning folder %(path)s: %(error)s"),
