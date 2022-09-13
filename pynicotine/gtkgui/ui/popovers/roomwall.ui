@@ -1,74 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.0"/>
-  <object class="GtkPopover" id="popover">
-    <signal name="notify::visible" handler="on_show"/>
+  <object class="GtkBox" id="container">
+    <property name="visible">True</property>
+    <property name="orientation">vertical</property>
+    <property name="margin-start">18</property>
+    <property name="margin-end">18</property>
+    <property name="margin-top">18</property>
+    <property name="margin-bottom">18</property>
+    <property name="spacing">12</property>
     <child>
-      <object class="GtkBox" id="Main">
+      <object class="GtkLabel">
         <property name="visible">True</property>
-        <property name="orientation">vertical</property>
-        <property name="margin-start">12</property>
-        <property name="margin-end">12</property>
-        <property name="margin-top">12</property>
-        <property name="margin-bottom">12</property>
-        <property name="spacing">12</property>
+        <property name="xalign">0</property>
+        <property name="label" translatable="yes">The room wall feature allows users in a room to specify a unique message to display to others. Recent messages are shown at the top.</property>
+        <property name="max-width-chars">55</property>
+        <property name="wrap">True</property>
+        <property name="mnemonic-widget">message_view</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkFrame">
+        <property name="visible">True</property>
+        <property name="vexpand">True</property>
         <child>
-          <object class="GtkLabel">
+          <object class="GtkBox">
             <property name="visible">True</property>
-            <property name="xalign">0</property>
-            <property name="label" translatable="yes">The room wall feature allows users in a room to specify a unique message to display to others. Recent messages are shown at the top.</property>
-            <property name="max-width-chars">55</property>
-            <property name="wrap">True</property>
-            <property name="mnemonic-widget">message_view</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkFrame">
-            <property name="visible">True</property>
-            <property name="vexpand">True</property>
             <child>
-              <object class="GtkBox">
+              <object class="GtkScrolledWindow">
                 <property name="visible">True</property>
+                <property name="hexpand">True</property>
                 <child>
-                  <object class="GtkScrolledWindow">
+                  <object class="GtkTextView" id="message_view">
                     <property name="visible">True</property>
-                    <property name="hexpand">True</property>
-                    <property name="height-request">380</property>
-                    <property name="width-request">500</property>
-                    <child>
-                      <object class="GtkTextView" id="message_view">
-                        <property name="visible">True</property>
-                        <property name="editable">False</property>
-                        <property name="wrap-mode">word-char</property>
-                        <property name="cursor-visible">False</property>
-                        <property name="pixels-above-lines">3</property>
-                        <property name="pixels-below-lines">3</property>
-                        <property name="left-margin">10</property>
-                        <property name="right-margin">10</property>
-                        <property name="top-margin">4</property>
-                        <property name="bottom-margin">4</property>
-                      </object>
-                    </child>
+                    <property name="editable">False</property>
+                    <property name="wrap-mode">word-char</property>
+                    <property name="cursor-visible">False</property>
+                    <property name="pixels-above-lines">3</property>
+                    <property name="pixels-below-lines">3</property>
+                    <property name="left-margin">10</property>
+                    <property name="right-margin">10</property>
+                    <property name="top-margin">4</property>
+                    <property name="bottom-margin">4</property>
                   </object>
                 </child>
               </object>
             </child>
           </object>
         </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">True</property>
         <child>
-          <object class="GtkBox">
+          <object class="GtkEntry" id="message_entry">
             <property name="visible">True</property>
-            <child>
-              <object class="GtkEntry" id="message_entry">
-                <property name="visible">True</property>
-                <property name="hexpand">True</property>
-                <property name="placeholder-text" translatable="yes">Set wall message…</property>
-                <property name="primary-icon-name">user-available-symbolic</property>
-                <property name="secondary-icon-name">edit-clear-symbolic</property>
-                <signal name="activate" handler="on_set_room_wall_message"/>
-                <signal name="icon-press" handler="on_icon_pressed"/>
-              </object>
-            </child>
+            <property name="hexpand">True</property>
+            <property name="placeholder-text" translatable="yes">Set wall message…</property>
+            <property name="primary-icon-name">user-available-symbolic</property>
+            <property name="secondary-icon-name">edit-clear-symbolic</property>
+            <signal name="activate" handler="on_set_room_wall_message"/>
+            <signal name="icon-press" handler="on_icon_pressed"/>
           </object>
         </child>
       </object>

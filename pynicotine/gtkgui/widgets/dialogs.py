@@ -77,11 +77,11 @@ class Dialog:
 
         self._set_dialog_properties(parent, modal)
 
-    def on_show(self, *_args):
+    def _on_show(self, *_args):
         if self.show_callback is not None:
             self.show_callback(self)
 
-    def on_close_request(self, *_args):
+    def _on_close_request(self, *_args):
 
         Dialog.active_dialog = None
 
@@ -103,14 +103,14 @@ class Dialog:
     def _set_dialog_properties(self, parent, modal=True):
 
         if GTK_API_VERSION >= 4:
-            self.dialog.connect("close-request", self.on_close_request)
+            self.dialog.connect("close-request", self._on_close_request)
         else:
-            self.dialog.connect("delete-event", self.on_close_request)
+            self.dialog.connect("delete-event", self._on_close_request)
 
             self.dialog.set_property("window-position", Gtk.WindowPosition.CENTER_ON_PARENT)
             self.dialog.set_type_hint(Gdk.WindowTypeHint.DIALOG)
 
-        self.dialog.connect("show", self.on_show)
+        self.dialog.connect("show", self._on_show)
 
         self.dialog.set_modal(modal)
         self.dialog.set_transient_for(parent)

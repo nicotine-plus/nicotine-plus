@@ -36,6 +36,7 @@ from gi.repository import Pango
 
 from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.popovers.searchfilterhelp import SearchFilterHelp
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
 from pynicotine.gtkgui.widgets.filechooser import FileChooserSave
 from pynicotine.gtkgui.widgets.filechooser import FolderChooser
@@ -1680,8 +1681,7 @@ class SearchesFrame(UserInterface):
         self.frame = preferences.frame
         self.search_required = False
 
-        self.filter_help = UserInterface("ui/popovers/searchfilters.ui")
-        self.filter_help.popover, = self.filter_help.widgets
+        self.filter_help = SearchFilterHelp(self.preferences.dialog)
         self.ShowSearchHelp.set_popover(self.filter_help.popover)
 
         self.options = {

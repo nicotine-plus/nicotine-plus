@@ -22,6 +22,7 @@ from gi.repository import Pango
 from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
+from pynicotine.gtkgui.widgets.popover import Popover
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
@@ -29,19 +30,27 @@ from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.ui import UserInterface
 
 
-class RoomList(UserInterface):
+class RoomList(UserInterface, Popover):
 
     def __init__(self, frame, core):
 
-        super().__init__("ui/popovers/roomlist.ui")
+        UserInterface.__init__(self, "ui/popovers/roomlist.ui")
         (
+            self.container,
             self.list_view,
-            self.popover,
             self.private_room_toggle,
             self.public_feed_toggle,
             self.refresh_button,
             self.search_entry
         ) = self.widgets
+
+        Popover.__init__(
+            self,
+            window=frame.window,
+            content_box=self.container,
+            width=350,
+            height=500
+        )
 
         self.frame = frame
         self.core = core
@@ -88,9 +97,6 @@ class RoomList(UserInterface):
 
         if GTK_API_VERSION >= 4:
             frame.room_list_button.get_first_child().add_css_class("arrow-button")
-
-            # Workaround for https://gitlab.gnome.org/GNOME/gtk/-/issues/4529
-            self.popover.set_autohide(False)
 
         frame.room_list_button.set_popover(self.popover)
 
@@ -246,13 +252,3 @@ class RoomList(UserInterface):
     def clear(self):
         self.room_model.clear()
         self.room_iters.clear()
-
-    @staticmethod
-    def on_show(popover, param):
-
-        if not popover.get_property(param.name):
-            return
-
-        if GTK_API_VERSION >= 4:
-            # Workaround for https://gitlab.gnome.org/GNOME/gtk/-/issues/4529
-            popover.child_focus(Gtk.DirectionType.TAB_FORWARD)

@@ -22,11 +22,10 @@ import time
 
 from collections import deque
 
-from gi.repository import Gtk
-
 from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
+from pynicotine.gtkgui.widgets.popover import Popover
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import TreeView
@@ -34,12 +33,20 @@ from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.utils import encode_path
 
 
-class ChatHistory(UserInterface):
+class ChatHistory(UserInterface, Popover):
 
     def __init__(self, frame, core):
 
-        super().__init__("ui/popovers/chathistory.ui")
-        self.list_container, self.popover, self.search_entry = self.widgets
+        UserInterface.__init__(self, "ui/popovers/chathistory.ui")
+        self.container, self.list_container, self.search_entry = self.widgets
+
+        Popover.__init__(
+            self,
+            window=frame.window,
+            content_box=self.container,
+            width=1000,
+            height=700
+        )
 
         self.frame = frame
         self.core = core
@@ -59,9 +66,6 @@ class ChatHistory(UserInterface):
 
         if GTK_API_VERSION >= 4:
             frame.private_history_button.get_first_child().add_css_class("arrow-button")
-
-            # Workaround for https://gitlab.gnome.org/GNOME/gtk/-/issues/4529
-            self.popover.set_autohide(False)
 
         frame.private_history_button.set_popover(self.popover)
         self.load_users()
@@ -124,13 +128,3 @@ class ChatHistory(UserInterface):
 
         self.search_entry.grab_focus()
         return True
-
-    @staticmethod
-    def on_show(popover, param):
-
-        if not popover.get_property(param.name):
-            return
-
-        if GTK_API_VERSION >= 4:
-            # Workaround for https://gitlab.gnome.org/GNOME/gtk/-/issues/4529
-            popover.child_focus(Gtk.DirectionType.TAB_FORWARD)

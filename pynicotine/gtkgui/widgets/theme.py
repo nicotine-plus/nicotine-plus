@@ -253,6 +253,11 @@ def set_global_css():
         /* Remove unwanted spacing from buttons */
         border-spacing: 0;
     }
+
+    .generic-popover contents {
+        /* Remove unwanted spacing from popovers */
+        padding: 0;
+    }
     """
 
     global_css_provider = Gtk.CssProvider()
