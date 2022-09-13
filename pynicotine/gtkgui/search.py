@@ -304,7 +304,6 @@ class Search(UserInterface):
         self.searches = searches
         self.frame = searches.frame
         self.core = searches.core
-        self.filter_help = UserInterface("ui/popovers/searchfilters.ui")
 
         self.text = text
         self.searchterm_words_include = []
