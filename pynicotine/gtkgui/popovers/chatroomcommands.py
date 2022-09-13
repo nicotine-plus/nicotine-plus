@@ -32,5 +32,5 @@ class ChatRoomCommands(UserInterface, Popover):
             window=window,
             content_box=self.container,
             width=600,
-            height=400
+            height=450
         )

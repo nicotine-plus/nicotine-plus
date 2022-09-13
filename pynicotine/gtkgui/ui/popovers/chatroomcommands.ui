@@ -28,6 +28,7 @@
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">Chat Room Commands</property>
                 <property name="selectable">True</property>
+                <property name="wrap">True</property>
                 <attributes>
                   <attribute name="weight" value="bold"/>
                 </attributes>
@@ -44,6 +45,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">/join /j 'room'</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
@@ -55,6 +57,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Join room 'room'</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                   </object>
                 </child>
               </object>
@@ -70,6 +73,7 @@
                     <property name="xalign">0</property>
                     <property name="label">/leave /l /part /p</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
@@ -81,6 +85,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Leave current room</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                   </object>
                 </child>
               </object>
@@ -96,6 +101,7 @@
                     <property name="xalign">0</property>
                     <property name="label">/clear /cl</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
@@ -107,6 +113,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Clear the chat window</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                   </object>
                 </child>
               </object>
@@ -122,6 +129,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">/me 'message'</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
@@ -133,6 +141,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Say something in the third-person</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                   </object>
                 </child>
               </object>
@@ -153,6 +162,7 @@
                     <property name="xalign">0</property>
                     <property name="label">/now</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
@@ -164,6 +174,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Display the Now Playing script's output</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                   </object>
                 </child>
               </object>
@@ -179,6 +190,7 @@
                     <property name="xalign">0</property>
                     <property name="label">/away /a</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
@@ -190,6 +202,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Toggles your away status</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                   </object>
                 </child>
               </object>
@@ -205,6 +218,7 @@
                     <property name="xalign">0</property>
                     <property name="label">/rescan</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
@@ -216,6 +230,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Rescan shares</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                   </object>
                 </child>
               </object>
@@ -231,6 +246,7 @@
                     <property name="xalign">0</property>
                     <property name="label">/quit /q /exit</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
@@ -242,6 +258,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Quit Nicotine+</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                   </object>
                 </child>
               </object>
@@ -257,6 +274,7 @@
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">Users</property>
                 <property name="selectable">True</property>
+                <property name="wrap">True</property>
                 <attributes>
                   <attribute name="weight" value="bold"/>
                 </attributes>
@@ -273,6 +291,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">/add /ad 'user'</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
@@ -284,6 +303,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Add user 'user' to your buddy list</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                   </object>
                 </child>
               </object>
@@ -299,6 +319,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">/rem /unbuddy 'user'</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
@@ -310,6 +331,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Remove user 'user' from your buddy list</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                   </object>
                 </child>
               </object>
@@ -325,6 +347,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">/ban 'user'</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
@@ -336,6 +359,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Add user 'user' to your ban list</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                   </object>
                 </child>
               </object>
@@ -351,6 +375,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">/unban 'user'</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
@@ -362,6 +387,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Remove user 'user' from your ban list</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                   </object>
                 </child>
               </object>
@@ -377,6 +403,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">/ignore 'user'</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
@@ -388,6 +415,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Add user 'user' to your ignore list</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                   </object>
                 </child>
               </object>
@@ -403,6 +431,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">/unignore 'user'</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
@@ -414,6 +443,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Remove user 'user' from your ignore list</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                   </object>
                 </child>
               </object>
@@ -429,6 +459,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">/browse /b 'user'</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
@@ -440,6 +471,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Browse files of user 'user'</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                   </object>
                 </child>
               </object>
@@ -455,6 +487,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">/whois /w 'user'</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
@@ -466,6 +499,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Request info for 'user'</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                   </object>
                 </child>
               </object>
@@ -481,6 +515,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">/ip 'user'</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
@@ -492,6 +527,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Show IP for user 'user'</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                   </object>
                 </child>
               </object>
@@ -507,6 +543,7 @@
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">Aliases</property>
                 <property name="selectable">True</property>
+                <property name="wrap">True</property>
                 <attributes>
                   <attribute name="weight" value="bold"/>
                 </attributes>
@@ -523,6 +560,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">/alias /al 'command' 'definition'</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
@@ -534,6 +572,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Add a new alias</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                   </object>
                 </child>
               </object>
@@ -549,6 +588,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">/unalias /un 'command'</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
@@ -560,6 +600,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Remove an alias</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                   </object>
                 </child>
               </object>
@@ -575,6 +616,7 @@
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">Search</property>
                 <property name="selectable">True</property>
+                <property name="wrap">True</property>
                 <attributes>
                   <attribute name="weight" value="bold"/>
                 </attributes>
@@ -591,6 +633,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">/search /s 'query'</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
@@ -602,6 +645,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Start a new search for 'query'</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                   </object>
                 </child>
               </object>
@@ -617,6 +661,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">/rsearch /rs 'query'</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
@@ -628,6 +673,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Search the joined rooms for 'query'</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                   </object>
                 </child>
               </object>
@@ -643,6 +689,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">/bsearch /bs 'query'</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
@@ -654,6 +701,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Search the buddy list for 'query'</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                   </object>
                 </child>
               </object>
@@ -669,6 +717,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">/usearch /us 'user' 'query'</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
@@ -680,6 +729,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Search a user's shares for 'query'</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                   </object>
                 </child>
               </object>
@@ -695,6 +745,7 @@
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">Private Chat</property>
                 <property name="selectable">True</property>
+                <property name="wrap">True</property>
                 <attributes>
                   <attribute name="weight" value="bold"/>
                 </attributes>
@@ -711,6 +762,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">/msg 'user' 'message'</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
@@ -722,6 +774,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Send message 'message' to user 'user'</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                   </object>
                 </child>
               </object>
@@ -737,6 +790,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">/pm 'user'</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
@@ -748,6 +802,7 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Open private chat window for user 'user'</property>
                     <property name="selectable">True</property>
+                    <property name="wrap">True</property>
                   </object>
                 </child>
               </object>
