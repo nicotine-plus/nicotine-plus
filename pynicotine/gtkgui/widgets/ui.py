@@ -37,43 +37,35 @@ class UserInterface:
 
     def __init__(self, filename):
 
-        try:
-            if filename not in self.ui_data:
-                with open(encode_path(os.path.join(GTK_GUI_DIR, filename)), encoding="utf-8") as file_handle:
-                    if GTK_API_VERSION >= 4:
-                        self.ui_data[filename] = file_handle.read().replace(
-                            "GtkRadioButton", "GtkCheckButton").replace("\"can-focus\"", "\"focusable\"")
-                    else:
-                        self.ui_data[filename] = file_handle.read()
+        if filename not in self.ui_data:
+            with open(encode_path(os.path.join(GTK_GUI_DIR, filename)), encoding="utf-8") as file_handle:
+                if GTK_API_VERSION >= 4:
+                    self.ui_data[filename] = file_handle.read().replace(
+                        "GtkRadioButton", "GtkCheckButton").replace("\"can-focus\"", "\"focusable\"")
+                else:
+                    self.ui_data[filename] = file_handle.read()
 
-            if GTK_API_VERSION >= 4:
-                self.builder = Gtk.Builder(self)
-                self.builder.set_translation_domain(TRANSLATION_DOMAIN)
-                self.builder.add_from_string(self.ui_data[filename])
-                Gtk.Buildable.get_name = Gtk.Buildable.get_buildable_id  # pylint: disable=no-member
-            else:
-                self.builder = Gtk.Builder(translation_domain=TRANSLATION_DOMAIN)
-                self.builder.add_from_string(self.ui_data[filename])
-                self.builder.connect_signals(self)                       # pylint: disable=no-member
+        if GTK_API_VERSION >= 4:
+            self.builder = Gtk.Builder(self)
+            self.builder.set_translation_domain(TRANSLATION_DOMAIN)
+            self.builder.add_from_string(self.ui_data[filename])
+            Gtk.Buildable.get_name = Gtk.Buildable.get_buildable_id  # pylint: disable=no-member
+        else:
+            self.builder = Gtk.Builder(translation_domain=TRANSLATION_DOMAIN)
+            self.builder.add_from_string(self.ui_data[filename])
+            self.builder.connect_signals(self)                       # pylint: disable=no-member
 
-            self.widgets = self.builder.get_objects()
+        self.widgets = self.builder.get_objects()
 
-            for obj in list(self.widgets):
-                try:
-                    obj_name = Gtk.Buildable.get_name(obj)
-                    if not obj_name.startswith("_"):
-                        continue
+        for obj in list(self.widgets):
+            try:
+                obj_name = Gtk.Buildable.get_name(obj)
+                if not obj_name.startswith("_"):
+                    continue
 
-                except TypeError:
-                    pass
+            except TypeError:
+                pass
 
-                self.widgets.remove(obj)
+            self.widgets.remove(obj)
 
-            self.widgets.sort(key=Gtk.Buildable.get_name)
-
-        except Exception as error:
-            log.add(_("Failed to load ui file %(file)s: %(error)s"), {
-                "file": filename,
-                "error": error
-            })
-            sys.exit()
+        self.widgets.sort(key=Gtk.Buildable.get_name)
