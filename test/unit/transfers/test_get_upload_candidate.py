@@ -25,6 +25,8 @@ from unittest.mock import Mock
 from pynicotine.config import config
 from pynicotine.transfers import Transfers, Transfer
 
+NUM_ALLOWED_NONE = 2
+
 
 class GetUploadCandidateTest(unittest.TestCase):
 
@@ -77,9 +79,8 @@ class GetUploadCandidateTest(unittest.TestCase):
 
         candidates = []
         none_count = 0  # prevent infinite loop in case of bug or bad test setup
-        num_allowed_nones = 2
 
-        while len(self.transfers.uploads) > 0 and none_count < num_allowed_nones:
+        while len(self.transfers.uploads) > 0 and none_count < NUM_ALLOWED_NONE:
 
             # "finish" one in progress transfer, if any
             if clear_first and in_progress:
@@ -92,16 +93,10 @@ class GetUploadCandidateTest(unittest.TestCase):
 
             if not candidate:
                 none_count += 1
-                print("none_count: %i" % none_count)
-
-                if queued:
-                    print("Found no transfer candidates out of %i queued uploads" % len(queued))
-
                 candidates.append(None)
                 continue
 
             none_count = 0
-            print("Transfer candidate: %s" % candidate.user)
 
             candidates.append(candidate)
             queued.remove(candidate)
