@@ -43,7 +43,6 @@ import operator
 import os
 import struct
 import sys
-
 try:
     from chunk import Chunk
     import aifc
@@ -135,9 +134,10 @@ class TinyTag(object):
                 (b'.wav',): Wave,
                 (b'.flac',): Flac,
                 (b'.wma',): Wma,
-                (b'.m4b', b'.m4a', b'.m4r', b'.m4v', b'.mp4'): MP4,
-                (b'.aiff', b'.aifc', b'.aif', b'.afc'): Aiff,
+                (b'.m4b', b'.m4a', b'.m4r', b'.m4v', b'.mp4'): MP4
             }
+            if 'aifc' in sys.modules:
+                self._mapping[(b'.aiff', b'.aifc', b'.aif', b'.afc')] = Aiff
         for ext, tagclass in self._mapping.items():
             if filename.lower().endswith(ext):
                 parser_class = tagclass
