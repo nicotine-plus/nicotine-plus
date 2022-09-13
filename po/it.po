@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-01 02:07+0300\n"
-"PO-Revision-Date: 2022-08-31 18:23+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2022-09-13 19:21+0000\n"
+"Last-Translator: Gabriele <gabboxl0@gmail.com>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/it/>\n"
 "Language: it\n"
@@ -58,9 +58,9 @@ msgid "Soulseek;Nicotine;sharing;music;P2P;peer-to-peer;GTK;"
 msgstr "Soulseek,Nicotine,condivisione;musica;P2P;peer-to-peer;GTK;"
 
 #: pynicotine/__init__.py:29
-#, fuzzy, python-format
+#, python-format
 msgid "Website: %s"
-msgstr "Eseguito: %s"
+msgstr "Sito web: %s"
 
 #: pynicotine/__init__.py:35
 msgid "show this help message and exit"
@@ -1203,11 +1203,10 @@ msgstr ""
 "installare GTK %(complete_version)s o più recente."
 
 #: pynicotine/gtkgui/__init__.py:116
-#, fuzzy
 msgid "No graphical environment available, using headless (no GUI) mode"
 msgstr ""
-"Nessun ambiente grafico disponibile, utilizzando la modalità headless (senza "
-"GUI)."
+"Nessun ambiente grafico disponibile, verrà utilizzata la modalità headless ("
+"senza GUI)"
 
 #: pynicotine/gtkgui/application.py:167
 msgid "Critical Error"
@@ -1447,7 +1446,7 @@ msgid "File Properties (%(num)i of %(total)i  /  %(size)s)"
 msgstr "Proprietà File (%(num)i di %(total)i  /  %(size)s)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:98
-#, fuzzy, python-format
+#, python-format
 msgid "<b>%(ip)s</b>, port %(port)s"
 msgstr "<b>%(ip)s</b>, porta %(port)s"
 
@@ -1610,24 +1609,20 @@ msgstr ""
 "(potrebbe fallire all'inizio e alla fine delle linee)."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1200
-#, fuzzy
 msgid "Edit Censored Pattern"
-msgstr "Corrispondenze Censurate"
+msgstr "Modifica corrispondenze censurate"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1232
-#, fuzzy
 msgid "Add Replacement"
-msgstr "Sostituzione"
+msgstr "Aggiungi sostituzione"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1233
-#, fuzzy
 msgid "Enter a text pattern and what to replace it with"
-msgstr "Immettere il modello di testo e la sostituzione, rispettivamente:"
+msgstr "Inserire il pattern di testo e con quale testo sostituirlo"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1261
-#, fuzzy
 msgid "Edit Replacement"
-msgstr "Sostituzione"
+msgstr "Modifica sostituzione"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1262
 #, fuzzy
@@ -1713,24 +1708,24 @@ msgstr ""
 "Immettere rispettivamente il protocollo e il comando per il gestore URL:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1902
-#, fuzzy
 msgid "Edit Command"
-msgstr "Modifica Commenti"
+msgstr "Modifica comando"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1903
-#, fuzzy, python-format
+#, python-format
 msgid "Enter a new command for protocol %s:"
-msgstr "Inserisci nuovo valore per desiderio'%s':"
+msgstr "Inserisci un nuovo comando per il protocollo '%s':"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2027
 msgid "Username;APIKEY:"
 msgstr "Nome Utente;APIKEY:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2031
-#, fuzzy
 msgid ""
 "Music player (e.g. amarok, audacious, exaile); leave empty to autodetect:"
-msgstr "Nome client (e. amarok, audacious, exaile) o vuoto per auto:"
+msgstr ""
+"Player musicale (ad es. Amarok, Audacious, Exaile); lascia vuoto per "
+"rilevarlo automaticamente:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2035
 #: pynicotine/gtkgui/ui/settings/network.ui:80
@@ -1760,7 +1755,6 @@ msgstr "Artista"
 #: pynicotine/gtkgui/search.py:376 pynicotine/gtkgui/userbrowse.py:286
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:182
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:339
-#, fuzzy
 msgid "Duration"
 msgstr "Durata"
 
@@ -3020,7 +3014,6 @@ msgid "Select an Image"
 msgstr "Seleziona un'Immagine"
 
 #: pynicotine/gtkgui/widgets/filechooser.py:106
-#, fuzzy
 msgid "All images"
 msgstr "Tutte le immagini"
 
@@ -3487,9 +3480,8 @@ msgstr ""
 "privilegi di download rimanenti."
 
 #: pynicotine/pynicotine.py:710
-#, fuzzy
 msgid "Your password has been changed"
-msgstr "La tua password è stata cambiata. La password è %s"
+msgstr "La tua password è stata cambiata"
 
 #: pynicotine/search.py:129 pynicotine/search.py:234
 #: pynicotine/gtkgui/ui/mainwindow.ui:117
@@ -3497,9 +3489,9 @@ msgid "Joined Rooms "
 msgstr "Canali Acceduti "
 
 #: pynicotine/search.py:259
-#, fuzzy, python-format
+#, python-format
 msgid "Searching for wishlist item \"%s\""
-msgstr "Ricerca dell'elemento della lista dei desideri \"%s\""
+msgstr "Ricerca elemento della lista dei desideri \"%s\""
 
 #: pynicotine/search.py:267
 msgid "Server does not permit performing wishlist searches at this time"
@@ -3825,9 +3817,9 @@ msgid "Picture saved to %s"
 msgstr "Immagine salvata in %s"
 
 #: pynicotine/userinfo.py:99
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot save picture to %(filename)s: %(error)s"
-msgstr "Impossibile salvare %(filename)s: %(error)s"
+msgstr "Impossibile salvare immagine in %(filename)s: %(error)s"
 
 #: pynicotine/userinfo.py:139
 #, python-format
@@ -3835,19 +3827,19 @@ msgid "User %(user)s is reading your user info"
 msgstr "L'utente %(user)s sta leggendo i tuoi dettagli utente"
 
 #: pynicotine/utils.py:178
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot open file path %(path)s: %(error)s"
-msgstr "Impossibile salvare il file %(path)s: %(error)s"
+msgstr "Impossibile aprire il percorso file %(path)s: %(error)s"
 
 #: pynicotine/utils.py:207
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot open URL %(url)s: %(error)s"
-msgstr "Impossibile salvare %(filename)s: %(error)s"
+msgstr "Impossibile aprire l'URL %(url)s: %(error)s"
 
 #: pynicotine/utils.py:232
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot access log file %(path)s: %(error)s"
-msgstr "Impossibile salvare il file %(path)s: %(error)s"
+msgstr "Impossibile accedere al file log %(path)s: %(error)s"
 
 #: pynicotine/utils.py:593
 #, python-format
@@ -4797,7 +4789,6 @@ msgstr ""
 "risultati di ricerca visualizzati."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:52
-#, fuzzy
 msgid ""
 "Each list of search results has its own filter which can be revealed by "
 "toggling the Result Filters button. A filter is made up of multiple fields, "
@@ -4809,14 +4800,9 @@ msgstr ""
 "rivelato attivando il pulsante Filtra risultati. Un filtro è composto da più "
 "campi, che vengono tutti applicati quando si preme Invio in uno dei suoi "
 "campi. Il filtraggio viene applicato immediatamente ai risultati già "
-"ricevuti e a quelli che appariranno. Per visualizzare nuovamente i risultati "
-"completi, è sufficiente cancellare il filtro e riapplicarlo. Come suggerisce "
-"il nome, un filtro dei risultati di ricerca non può espandere la ricerca "
-"originale, può solo restringerla. Per ampliare o modificare i termini di "
-"ricerca, eseguire una nuova ricerca."
+"ricevuti e a quelli che appariranno."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:61
-#, fuzzy
 msgid ""
 "As the name suggests, a search result filter cannot expand your original "
 "search, it can only narrow it down. To broaden or change your search terms, "
@@ -4840,13 +4826,12 @@ msgid "Files and folders containing this text will be shown."
 msgstr "Verranno visualizzati i file e le cartelle contenenti questo testo."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:109
-#, fuzzy
 msgid ""
 "Case is insensitive, but word order is important: 'Instrumental Remix' will "
 "not show any 'Remix Instrumental'"
 msgstr ""
-"Ignora Maiuscole/minuscole, non l'ordine delle parole: \"Spears Britney\" "
-"non mostrerà alcuna \"Britney Spears\""
+"Le Maiuscole/minuscole sono ignorate, ma l'ordine delle parole rimane "
+"importante: \"Spears Britney\" non mostrerà alcuna \"Britney Spears\""
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:119
 #, fuzzy
@@ -4914,15 +4899,14 @@ msgstr ""
 "dimensione uguale o maggiore."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:232
-#, fuzzy
 msgid ""
 "Append b, k, m, or g (alternatively kib, mib, or gib) to specify byte, "
 "kibibyte, mebibyte, or gibibyte units:\n"
 "    20m to show files larger than 20 MiB (mebibytes)."
 msgstr ""
-"Usa b, k, m, o g (oppure kib, mib, o gib) per specificare unità di byte, "
-"kibibyte, mebibyte, o gibibyte:\n"
-"   <128k troverà file da 128 kibibyte (cioè 1 mebibyte) o inferiori."
+"Aggiungi b, k, m, o g (oppure kib, mib, o gib) per specificare unità di "
+"byte, kibibyte, mebibyte, o gibibyte: \n"
+"    20m per mostrare file con dimensioni più grandi di 20 MiB (mebibytes)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:243
 #, fuzzy
@@ -4990,9 +4974,8 @@ msgstr ""
 "    con un bitrate massimo di 1411 Kb/s."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:356
-#, fuzzy
 msgid "Filters files based upon their duration."
-msgstr "Filtra i file in base al bitrate."
+msgstr "Filtra i file in base alla durata."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:366
 #, fuzzy
@@ -5030,14 +5013,12 @@ msgstr ""
 "    =5:34|=4:23|=3:05 per includere file con durate specifiche."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:401
-#, fuzzy
 msgid "To exclude non-audio files use !0 in the duration filter."
-msgstr "Per escludere i file non audio, utilizzare !0 nel filtro della durata."
+msgstr "Per escludere i file non audio, usa !0 nel filtro della durata."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:424
-#, fuzzy
 msgid "Filters files based upon users' geographical location."
-msgstr "Filtra i file in base al paese degli utenti."
+msgstr "Filtra i file in base alla posizione geografica degli utenti."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:434
 #, fuzzy
@@ -5146,7 +5127,6 @@ msgid "Duration…"
 msgstr "Durata…"
 
 #: pynicotine/gtkgui/ui/search.ui:328
-#, fuzzy
 msgid "Duration, e.g. 2:20|!3:30|=4:40"
 msgstr "Durata, ad es. 2:20|!3:30|=4:40"
 
@@ -5518,9 +5498,8 @@ msgid "Log debug messages to file"
 msgstr "Registra messaggi di debug su file"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:62
-#, fuzzy
 msgid "Log timestamp format:"
-msgstr "Formato datazione file di registro:"
+msgstr "Formato data file di log:"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:92
 msgid "Folder Locations"
@@ -5567,16 +5546,14 @@ msgid "Last port"
 msgstr "Ultima porta"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:214
-#, fuzzy
 msgid "Public IP address:"
-msgstr "Blocca Indirizzo IP"
+msgstr "Indirizzo IP pubblico:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:263
 msgid "Away Status"
 msgstr "Stato Assente"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:281
-#, fuzzy
 msgid "Minutes of inactivity before going away (0 to disable):"
 msgstr "Minuti di inattività prima di andare via (0 per disabilitare):"
 
@@ -6215,9 +6192,8 @@ msgid "Icons"
 msgstr "Icone"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1739
-#, fuzzy
 msgid "Icon theme folder:"
-msgstr "Cartella dei file incompleti:"
+msgstr "Tema icona cartella:"
 
 #: pynicotine/gtkgui/ui/uploads.ui:100
 msgid "Abort User(s)"
