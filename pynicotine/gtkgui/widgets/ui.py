@@ -17,14 +17,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import sys
 
 from gi.repository import Gtk
 
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.application import GTK_GUI_DIR
 from pynicotine.i18n import TRANSLATION_DOMAIN
-from pynicotine.logfacility import log
 from pynicotine.utils import encode_path
 
 
