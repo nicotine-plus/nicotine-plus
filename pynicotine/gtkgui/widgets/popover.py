@@ -41,7 +41,7 @@ class Popover:
 
         if GTK_API_VERSION >= 4:
             # Workaround for https://gitlab.gnome.org/GNOME/gtk/-/issues/4529
-            self.popover.set_autohide(False)
+            self.popover.set_autohide(False)  # pylint: disable=no-member
 
     def _on_show(self, _popover, param):
 
