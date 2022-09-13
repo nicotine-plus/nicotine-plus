@@ -351,8 +351,12 @@ class IconNotebook:
         if GTK_API_VERSION >= 4:
             label_tab.gesture_click = Gtk.GestureClick()
             label_tab.add_controller(label_tab.gesture_click)  # pylint: disable=no-member
+
+            page.get_first_child().hide()
         else:
             label_tab.gesture_click = Gtk.GestureMultiPress(widget=label_tab)
+
+            page.get_children()[0].hide()
 
         label_tab.gesture_click.set_button(Gdk.BUTTON_MIDDLE)
         label_tab.gesture_click.connect("pressed", label_tab.close_callback, page)
