@@ -19,32 +19,36 @@
 from gi.repository import Gtk
 
 from pynicotine import slskmessages
-from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.widgets.popover import Popover
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.ui import UserInterface
 
 
-class RoomWall(UserInterface):
+class RoomWall(UserInterface, Popover):
 
     def __init__(self, frame, core, room):
 
-        super().__init__("ui/popovers/roomwall.ui")
+        UserInterface.__init__(self, "ui/popovers/roomwall.ui")
         (
-            self.list_view,
+            self.container,
             self.message_entry,
             self.message_view,
-            self.popover
         ) = self.widgets
+
+        Popover.__init__(
+            self,
+            window=frame.window,
+            content_box=self.container,
+            show_callback=self.on_show,
+            width=600,
+            height=500
+        )
 
         self.frame = frame
         self.core = core
         self.room = room
         self.room_wall_textview = TextView(self.message_view)
-
-        if GTK_API_VERSION >= 4:
-            # Workaround for https://gitlab.gnome.org/GNOME/gtk/-/issues/4529
-            self.popover.set_autohide(False)
 
         room.room_wall_button.set_popover(self.popover)
 
@@ -91,10 +95,7 @@ class RoomWall(UserInterface):
         for widget in self.__dict__.values():
             update_widget_visuals(widget)
 
-    def on_show(self, popover, param):
-
-        if not popover.get_property(param.name):
-            return
+    def on_show(self, *_args):
 
         self.room_wall_textview.clear()
         self.update_message_list()
@@ -105,7 +106,3 @@ class RoomWall(UserInterface):
             if user == login_username:
                 self.message_entry.set_text(msg)
                 self.message_entry.select_region(0, -1)
-
-        if GTK_API_VERSION >= 4:
-            # Workaround for https://gitlab.gnome.org/GNOME/gtk/-/issues/4529
-            popover.child_focus(Gtk.DirectionType.TAB_FORWARD)

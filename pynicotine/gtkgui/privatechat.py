@@ -30,7 +30,7 @@ from gi.repository import GLib
 
 from pynicotine import slskmessages
 from pynicotine.config import config
-from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.popovers.privatechatcommands import PrivateChatCommands
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
@@ -79,16 +79,7 @@ class PrivateChats(IconNotebook):
             tab.set_completion_list(self.core.privatechats.completion_list[:])
 
             if self.command_help is None:
-                self.command_help = UserInterface("ui/popovers/privatechatcommands.ui")
-                (self.command_help.popover,) = self.command_help.widgets
-
-                if GTK_API_VERSION >= 4:
-                    # Scroll to the focused widget
-                    self.command_help.container.get_child().set_scroll_to_focus(True)
-
-                if GTK_API_VERSION >= 4:
-                    # Workaround for https://gitlab.gnome.org/GNOME/gtk/-/issues/4529
-                    self.command_help.popover.set_autohide(False)
+                self.command_help = PrivateChatCommands(self.frame.window)
 
             self.command_help.popover.unparent()
             tab.help_button.set_popover(self.command_help.popover)

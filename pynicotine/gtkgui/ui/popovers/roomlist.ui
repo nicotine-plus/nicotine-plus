@@ -1,68 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.0"/>
-  <object class="GtkPopover" id="popover">
-    <signal name="notify::visible" handler="on_show"/>
+  <object class="GtkBox" id="container">
+    <property name="visible">True</property>
+    <property name="orientation">vertical</property>
+    <property name="margin-start">18</property>
+    <property name="margin-end">18</property>
+    <property name="margin-top">18</property>
+    <property name="margin-bottom">18</property>
+    <property name="spacing">12</property>
     <child>
       <object class="GtkBox">
         <property name="visible">True</property>
-        <property name="orientation">vertical</property>
-        <property name="margin-start">12</property>
-        <property name="margin-end">12</property>
-        <property name="margin-top">12</property>
-        <property name="margin-bottom">12</property>
         <property name="spacing">12</property>
+        <child>
+          <object class="GtkSearchEntry" id="search_entry">
+            <property name="visible">True</property>
+            <property name="hexpand">True</property>
+            <property name="width-chars">15</property>
+            <signal name="changed" handler="on_search_room"/>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton" id="refresh_button">
+            <property name="visible">True</property>
+            <property name="tooltip-text" translatable="yes">Refresh room list</property>
+            <signal name="clicked" handler="on_refresh"/>
+            <child>
+              <object class="GtkImage">
+                <property name="visible">True</property>
+                <property name="icon-name">view-refresh-symbolic</property>
+              </object>
+            </child>
+            <style>
+              <class name="circular"/>
+              <class name="image-button"/>
+            </style>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkFrame">
+        <property name="visible">True</property>
+        <property name="vexpand">True</property>
         <child>
           <object class="GtkBox">
             <property name="visible">True</property>
-            <property name="spacing">12</property>
             <child>
-              <object class="GtkSearchEntry" id="search_entry">
+              <object class="GtkScrolledWindow">
                 <property name="visible">True</property>
                 <property name="hexpand">True</property>
-                <property name="width-chars">15</property>
-                <signal name="changed" handler="on_search_room"/>
-              </object>
-            </child>
-            <child>
-              <object class="GtkButton" id="refresh_button">
-                <property name="visible">True</property>
-                <property name="tooltip-text" translatable="yes">Refresh room list</property>
-                <signal name="clicked" handler="on_refresh"/>
                 <child>
-                  <object class="GtkImage">
+                  <object class="GtkTreeView" id="list_view">
                     <property name="visible">True</property>
-                    <property name="icon-name">view-refresh-symbolic</property>
+                    <signal name="row-activated" handler="on_row_activated"/>
                   </object>
                 </child>
-                <style>
-                  <class name="circular"/>
-                  <class name="image-button"/>
-                </style>
               </object>
             </child>
           </object>
         </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">True</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">6</property>
         <child>
-          <object class="GtkFrame">
+          <object class="GtkBox">
             <property name="visible">True</property>
+            <property name="orientation">vertical</property>
             <child>
-              <object class="GtkBox">
+              <object class="GtkCheckButton" id="public_feed_toggle">
+                <property name="label" translatable="yes">_Show feed of public chat room messages</property>
                 <property name="visible">True</property>
-                <child>
-                  <object class="GtkScrolledWindow">
-                    <property name="visible">True</property>
-                    <property name="height-request">400</property>
-                    <property name="width-request">350</property>
-                    <child>
-                      <object class="GtkTreeView" id="list_view">
-                        <property name="visible">True</property>
-                        <property name="hexpand">True</property>
-                        <signal name="row-activated" handler="on_row_activated"/>
-                      </object>
-                    </child>
-                  </object>
-                </child>
+                <property name="use-underline">True</property>
+                <signal name="toggled" handler="on_toggle_public_feed"/>
               </object>
             </child>
           </object>
@@ -71,32 +86,11 @@
           <object class="GtkBox">
             <property name="visible">True</property>
             <property name="orientation">vertical</property>
-            <property name="spacing">6</property>
             <child>
-              <object class="GtkBox">
+              <object class="GtkCheckButton" id="private_room_toggle">
+                <property name="label" translatable="yes">_Accept private room invitations</property>
                 <property name="visible">True</property>
-                <property name="orientation">vertical</property>
-                <child>
-                  <object class="GtkCheckButton" id="public_feed_toggle">
-                    <property name="label" translatable="yes">_Show feed of public chat room messages</property>
-                    <property name="visible">True</property>
-                    <property name="use-underline">True</property>
-                    <signal name="toggled" handler="on_toggle_public_feed"/>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="orientation">vertical</property>
-                <child>
-                  <object class="GtkCheckButton" id="private_room_toggle">
-                    <property name="label" translatable="yes">_Accept private room invitations</property>
-                    <property name="visible">True</property>
-                    <property name="use-underline">True</property>
-                  </object>
-                </child>
+                <property name="use-underline">True</property>
               </object>
             </child>
           </object>

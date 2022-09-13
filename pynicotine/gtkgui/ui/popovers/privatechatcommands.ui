@@ -1,701 +1,696 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.0"/>
-  <object class="GtkPopover" id="popover">
+  <object class="GtkScrolledWindow" id="container">
+    <property name="visible">True</property>
+    <property name="hscrollbar-policy">never</property>
     <child>
-      <object class="GtkScrolledWindow">
+      <object class="GtkBox">
         <property name="visible">True</property>
-        <property name="hscrollbar-policy">never</property>
-        <property name="height-request">400</property>
         <child>
           <object class="GtkBox">
             <property name="visible">True</property>
+            <property name="can-focus">True</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">True</property>
+            <property name="margin-start">18</property>
+            <property name="margin-end">18</property>
+            <property name="margin-top">18</property>
+            <property name="margin-bottom">18</property>
+            <property name="spacing">12</property>
+            <property name="orientation">vertical</property>
             <child>
-              <object class="GtkBox">
+              <object class="GtkLabel">
                 <property name="visible">True</property>
-                <property name="can-focus">True</property>
+                <property name="xalign">0</property>
+                <property name="label" translatable="yes">Private Chat Commands</property>
+                <property name="selectable">True</property>
+                <attributes>
+                  <attribute name="weight" value="bold"/>
+                </attributes>
               </object>
             </child>
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
-                <property name="margin-start">12</property>
-                <property name="margin-end">12</property>
-                <property name="margin-top">12</property>
-                <property name="margin-bottom">12</property>
                 <property name="spacing">12</property>
-                <property name="orientation">vertical</property>
+                <property name="homogeneous">True</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">True</property>
-                    <property name="xalign">0</property>
-                    <property name="label" translatable="yes">Private Chat Commands</property>
+                    <property name="label">/close /c</property>
                     <property name="selectable">True</property>
+                    <property name="xalign">0</property>
                     <attributes>
-                      <attribute name="weight" value="bold"/>
+                      <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkLabel">
                     <property name="visible">True</property>
-                    <property name="spacing">12</property>
-                    <property name="homogeneous">True</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label">/close /c</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                        <attributes>
-                          <attribute name="style" value="italic"/>
-                        </attributes>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Close the current private chat</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                      </object>
-                    </child>
+                    <property name="label" translatable="yes">Close the current private chat</property>
+                    <property name="selectable">True</property>
+                    <property name="xalign">0</property>
                   </object>
                 </child>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <property name="spacing">12</property>
-                    <property name="homogeneous">True</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label">/clear /cl</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                        <attributes>
-                          <attribute name="style" value="italic"/>
-                        </attributes>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Clear the chat window</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <property name="spacing">12</property>
-                    <property name="homogeneous">True</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">/me 'message'</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                        <attributes>
-                          <attribute name="style" value="italic"/>
-                        </attributes>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Say something in the third-person</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <property name="spacing">12</property>
-                    <property name="homogeneous">True</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label">/now</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                        <attributes>
-                          <attribute name="style" value="italic"/>
-                        </attributes>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Display the Now Playing script's output</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <property name="spacing">12</property>
-                    <property name="homogeneous">True</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label">/away /a</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                        <attributes>
-                          <attribute name="style" value="italic"/>
-                        </attributes>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Toggles your away status</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <property name="spacing">12</property>
-                    <property name="homogeneous">True</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label">/rescan</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                        <attributes>
-                          <attribute name="style" value="italic"/>
-                        </attributes>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Rescan shares</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <property name="spacing">12</property>
-                    <property name="homogeneous">True</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label">/quit /q /exit</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                        <attributes>
-                          <attribute name="style" value="italic"/>
-                        </attributes>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Quit Nicotine+</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="spacing">12</property>
+                <property name="homogeneous">True</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">True</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">User</property>
+                    <property name="label">/clear /cl</property>
                     <property name="selectable">True</property>
                     <property name="xalign">0</property>
                     <attributes>
-                      <attribute name="weight" value="bold"/>
+                      <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkLabel">
                     <property name="visible">True</property>
-                    <property name="spacing">12</property>
-                    <property name="homogeneous">True</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label">/add /ad</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                        <attributes>
-                          <attribute name="style" value="italic"/>
-                        </attributes>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Add user to your buddy-list</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                      </object>
-                    </child>
+                    <property name="label" translatable="yes">Clear the chat window</property>
+                    <property name="selectable">True</property>
+                    <property name="xalign">0</property>
                   </object>
                 </child>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <property name="spacing">12</property>
-                    <property name="homogeneous">True</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label">/rem /unbuddy</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                        <attributes>
-                          <attribute name="style" value="italic"/>
-                        </attributes>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Remove user from your buddy-list</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <property name="spacing">12</property>
-                    <property name="homogeneous">True</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label">/ban</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                        <attributes>
-                          <attribute name="style" value="italic"/>
-                        </attributes>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Add user to your ban list</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <property name="spacing">12</property>
-                    <property name="homogeneous">True</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label">/unban</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                        <attributes>
-                          <attribute name="style" value="italic"/>
-                        </attributes>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Remove user from your ban list</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <property name="spacing">12</property>
-                    <property name="homogeneous">True</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label">/ignore</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                        <attributes>
-                          <attribute name="style" value="italic"/>
-                        </attributes>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Add user to your ignore list</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <property name="spacing">12</property>
-                    <property name="homogeneous">True</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label">/unignore</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                        <attributes>
-                          <attribute name="style" value="italic"/>
-                        </attributes>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Remove user from your ignore list</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <property name="spacing">12</property>
-                    <property name="homogeneous">True</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label">/browse /b</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                        <attributes>
-                          <attribute name="style" value="italic"/>
-                        </attributes>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Browse shares of user</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <property name="spacing">12</property>
-                    <property name="homogeneous">True</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label">/whois /w</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                        <attributes>
-                          <attribute name="style" value="italic"/>
-                        </attributes>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Request user's info</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <property name="spacing">12</property>
-                    <property name="homogeneous">True</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label">/ip</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                        <attributes>
-                          <attribute name="style" value="italic"/>
-                        </attributes>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Show IP for user</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="spacing">12</property>
+                <property name="homogeneous">True</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">True</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">Aliases</property>
+                    <property name="label" translatable="yes">/me 'message'</property>
                     <property name="selectable">True</property>
                     <property name="xalign">0</property>
                     <attributes>
-                      <attribute name="weight" value="bold"/>
+                      <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkLabel">
                     <property name="visible">True</property>
-                    <property name="spacing">12</property>
-                    <property name="homogeneous">True</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">/alias /al 'command' 'definition'</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                        <attributes>
-                          <attribute name="style" value="italic"/>
-                        </attributes>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Add a new alias</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                      </object>
-                    </child>
+                    <property name="label" translatable="yes">Say something in the third-person</property>
+                    <property name="selectable">True</property>
+                    <property name="xalign">0</property>
                   </object>
                 </child>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <property name="spacing">12</property>
-                    <property name="homogeneous">True</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">/unalias /un 'command'</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                        <attributes>
-                          <attribute name="style" value="italic"/>
-                        </attributes>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Remove an alias</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="spacing">12</property>
+                <property name="homogeneous">True</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">True</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">Search</property>
+                    <property name="label">/now</property>
                     <property name="selectable">True</property>
                     <property name="xalign">0</property>
                     <attributes>
-                      <attribute name="weight" value="bold"/>
+                      <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkLabel">
                     <property name="visible">True</property>
-                    <property name="spacing">12</property>
-                    <property name="homogeneous">True</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">/search /s 'query'</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                        <attributes>
-                          <attribute name="style" value="italic"/>
-                        </attributes>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Start a new search for 'query'</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                      </object>
-                    </child>
+                    <property name="label" translatable="yes">Display the Now Playing script's output</property>
+                    <property name="selectable">True</property>
+                    <property name="xalign">0</property>
                   </object>
                 </child>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <property name="spacing">12</property>
-                    <property name="homogeneous">True</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">/rsearch /rs 'query'</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                        <attributes>
-                          <attribute name="style" value="italic"/>
-                        </attributes>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Search the joined rooms for 'query'</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <property name="spacing">12</property>
-                    <property name="homogeneous">True</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">/bsearch /bs 'query'</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                        <attributes>
-                          <attribute name="style" value="italic"/>
-                        </attributes>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Search the buddy list for 'query'</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <property name="spacing">12</property>
-                    <property name="homogeneous">True</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">/usearch /us 'user' 'query'</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                        <attributes>
-                          <attribute name="style" value="italic"/>
-                        </attributes>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Search a user's shares for 'query'</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="spacing">12</property>
+                <property name="homogeneous">True</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">True</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">Chat Rooms</property>
+                    <property name="label">/away /a</property>
                     <property name="selectable">True</property>
                     <property name="xalign">0</property>
                     <attributes>
-                      <attribute name="weight" value="bold"/>
+                      <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkLabel">
                     <property name="visible">True</property>
-                    <property name="spacing">12</property>
-                    <property name="homogeneous">True</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">/join /j 'room'</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                        <attributes>
-                          <attribute name="style" value="italic"/>
-                        </attributes>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Join room 'room'</property>
-                        <property name="selectable">True</property>
-                        <property name="xalign">0</property>
-                      </object>
-                    </child>
+                    <property name="label" translatable="yes">Toggles your away status</property>
+                    <property name="selectable">True</property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="spacing">12</property>
+                <property name="homogeneous">True</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="label">/rescan</property>
+                    <property name="selectable">True</property>
+                    <property name="xalign">0</property>
+                    <attributes>
+                      <attribute name="style" value="italic"/>
+                    </attributes>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Rescan shares</property>
+                    <property name="selectable">True</property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="spacing">12</property>
+                <property name="homogeneous">True</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="label">/quit /q /exit</property>
+                    <property name="selectable">True</property>
+                    <property name="xalign">0</property>
+                    <attributes>
+                      <attribute name="style" value="italic"/>
+                    </attributes>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Quit Nicotine+</property>
+                    <property name="selectable">True</property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">User</property>
+                <property name="selectable">True</property>
+                <property name="xalign">0</property>
+                <attributes>
+                  <attribute name="weight" value="bold"/>
+                </attributes>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="spacing">12</property>
+                <property name="homogeneous">True</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="label">/add /ad</property>
+                    <property name="selectable">True</property>
+                    <property name="xalign">0</property>
+                    <attributes>
+                      <attribute name="style" value="italic"/>
+                    </attributes>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Add user to your buddy-list</property>
+                    <property name="selectable">True</property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="spacing">12</property>
+                <property name="homogeneous">True</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="label">/rem /unbuddy</property>
+                    <property name="selectable">True</property>
+                    <property name="xalign">0</property>
+                    <attributes>
+                      <attribute name="style" value="italic"/>
+                    </attributes>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Remove user from your buddy-list</property>
+                    <property name="selectable">True</property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="spacing">12</property>
+                <property name="homogeneous">True</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="label">/ban</property>
+                    <property name="selectable">True</property>
+                    <property name="xalign">0</property>
+                    <attributes>
+                      <attribute name="style" value="italic"/>
+                    </attributes>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Add user to your ban list</property>
+                    <property name="selectable">True</property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="spacing">12</property>
+                <property name="homogeneous">True</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="label">/unban</property>
+                    <property name="selectable">True</property>
+                    <property name="xalign">0</property>
+                    <attributes>
+                      <attribute name="style" value="italic"/>
+                    </attributes>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Remove user from your ban list</property>
+                    <property name="selectable">True</property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="spacing">12</property>
+                <property name="homogeneous">True</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="label">/ignore</property>
+                    <property name="selectable">True</property>
+                    <property name="xalign">0</property>
+                    <attributes>
+                      <attribute name="style" value="italic"/>
+                    </attributes>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Add user to your ignore list</property>
+                    <property name="selectable">True</property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="spacing">12</property>
+                <property name="homogeneous">True</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="label">/unignore</property>
+                    <property name="selectable">True</property>
+                    <property name="xalign">0</property>
+                    <attributes>
+                      <attribute name="style" value="italic"/>
+                    </attributes>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Remove user from your ignore list</property>
+                    <property name="selectable">True</property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="spacing">12</property>
+                <property name="homogeneous">True</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="label">/browse /b</property>
+                    <property name="selectable">True</property>
+                    <property name="xalign">0</property>
+                    <attributes>
+                      <attribute name="style" value="italic"/>
+                    </attributes>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Browse shares of user</property>
+                    <property name="selectable">True</property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="spacing">12</property>
+                <property name="homogeneous">True</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="label">/whois /w</property>
+                    <property name="selectable">True</property>
+                    <property name="xalign">0</property>
+                    <attributes>
+                      <attribute name="style" value="italic"/>
+                    </attributes>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Request user's info</property>
+                    <property name="selectable">True</property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="spacing">12</property>
+                <property name="homogeneous">True</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="label">/ip</property>
+                    <property name="selectable">True</property>
+                    <property name="xalign">0</property>
+                    <attributes>
+                      <attribute name="style" value="italic"/>
+                    </attributes>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Show IP for user</property>
+                    <property name="selectable">True</property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Aliases</property>
+                <property name="selectable">True</property>
+                <property name="xalign">0</property>
+                <attributes>
+                  <attribute name="weight" value="bold"/>
+                </attributes>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="spacing">12</property>
+                <property name="homogeneous">True</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">/alias /al 'command' 'definition'</property>
+                    <property name="selectable">True</property>
+                    <property name="xalign">0</property>
+                    <attributes>
+                      <attribute name="style" value="italic"/>
+                    </attributes>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Add a new alias</property>
+                    <property name="selectable">True</property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="spacing">12</property>
+                <property name="homogeneous">True</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">/unalias /un 'command'</property>
+                    <property name="selectable">True</property>
+                    <property name="xalign">0</property>
+                    <attributes>
+                      <attribute name="style" value="italic"/>
+                    </attributes>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Remove an alias</property>
+                    <property name="selectable">True</property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Search</property>
+                <property name="selectable">True</property>
+                <property name="xalign">0</property>
+                <attributes>
+                  <attribute name="weight" value="bold"/>
+                </attributes>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="spacing">12</property>
+                <property name="homogeneous">True</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">/search /s 'query'</property>
+                    <property name="selectable">True</property>
+                    <property name="xalign">0</property>
+                    <attributes>
+                      <attribute name="style" value="italic"/>
+                    </attributes>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Start a new search for 'query'</property>
+                    <property name="selectable">True</property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="spacing">12</property>
+                <property name="homogeneous">True</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">/rsearch /rs 'query'</property>
+                    <property name="selectable">True</property>
+                    <property name="xalign">0</property>
+                    <attributes>
+                      <attribute name="style" value="italic"/>
+                    </attributes>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Search the joined rooms for 'query'</property>
+                    <property name="selectable">True</property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="spacing">12</property>
+                <property name="homogeneous">True</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">/bsearch /bs 'query'</property>
+                    <property name="selectable">True</property>
+                    <property name="xalign">0</property>
+                    <attributes>
+                      <attribute name="style" value="italic"/>
+                    </attributes>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Search the buddy list for 'query'</property>
+                    <property name="selectable">True</property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="spacing">12</property>
+                <property name="homogeneous">True</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">/usearch /us 'user' 'query'</property>
+                    <property name="selectable">True</property>
+                    <property name="xalign">0</property>
+                    <attributes>
+                      <attribute name="style" value="italic"/>
+                    </attributes>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Search a user's shares for 'query'</property>
+                    <property name="selectable">True</property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Chat Rooms</property>
+                <property name="selectable">True</property>
+                <property name="xalign">0</property>
+                <attributes>
+                  <attribute name="weight" value="bold"/>
+                </attributes>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="spacing">12</property>
+                <property name="homogeneous">True</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">/join /j 'room'</property>
+                    <property name="selectable">True</property>
+                    <property name="xalign">0</property>
+                    <attributes>
+                      <attribute name="style" value="italic"/>
+                    </attributes>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Join room 'room'</property>
+                    <property name="selectable">True</property>
+                    <property name="xalign">0</property>
                   </object>
                 </child>
               </object>
