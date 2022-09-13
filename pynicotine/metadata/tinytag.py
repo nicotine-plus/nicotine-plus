@@ -29,7 +29,6 @@
 
 
 from __future__ import division, print_function
-from chunk import Chunk
 from collections import OrderedDict, defaultdict
 try:
     from collections.abc import MutableMapping
@@ -37,7 +36,6 @@ except ImportError:
     from collections import MutableMapping
 from functools import reduce
 from io import BytesIO
-import aifc
 import codecs
 import io
 import json
@@ -45,6 +43,12 @@ import operator
 import os
 import struct
 import sys
+
+try:
+    from chunk import Chunk
+    import aifc
+except ImportError:
+    pass
 
 DEBUG = os.environ.get('DEBUG', False)  # some of the parsers can print debug info
 
