@@ -1612,8 +1612,8 @@ class Transfers:
             except re.error:
                 pass
 
-        if self.core.user_status == UserStatus.OFFLINE:
-            # We are logged out, don't attempt to start a download
+        if UserStatus.OFFLINE in (self.core.user_status, self.core.user_statuses.get(user)):
+            # Either we are offline or the user we want to download from is
             transfer.status = "User logged off"
 
         elif transfer.status != "Filtered":
@@ -1667,8 +1667,8 @@ class Transfers:
 
         self.core.watch_user(user)
 
-        if self.core.user_status == UserStatus.OFFLINE:
-            # We are logged out, don't attempt to start an upload
+        if UserStatus.OFFLINE in (self.core.user_status, self.core.user_statuses.get(user)):
+            # Either we are offline or the user we want to upload to is
             transfer.status = "User logged off"
 
             if not self.auto_clear_upload(transfer):
