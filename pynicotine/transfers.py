@@ -615,7 +615,7 @@ class Transfers:
         if self.uploadsview and update:
             self.uploadsview.update_model()
 
-    def get_cant_connect_queue_file(self, username, filename):
+    def get_cant_connect_queue_file(self, username, filename, offline):
         """ We can't connect to the user, either way (QueueUpload). """
 
         for download in self.downloads:
@@ -627,7 +627,7 @@ class Transfers:
                 "user": username
             })
 
-            download.status = "Connection timeout"
+            download.status = "User logged off" if offline else "Connection timeout"
             download.token = None
 
             if download in self.transfer_request_times:
@@ -637,7 +637,7 @@ class Transfers:
             self.core.watch_user(username)
             break
 
-    def get_cant_connect_upload(self, username, token):
+    def get_cant_connect_upload(self, username, token, offline):
         """ We can't connect to the user, either way (TransferRequest, FileUploadInit). """
 
         for upload in self.uploads:
@@ -654,14 +654,21 @@ class Transfers:
                 log.add_transfer("Existing file connection for upload with token %s already exists?", token)
                 return
 
-            upload.status = "Connection timeout"
+            if offline:
+                upload.status = "User logged off"
+                upload_cleared = self.auto_clear_upload(upload)
+            else:
+                upload.status = "Connection timeout"
+                upload_cleared = False
+
             upload.token = None
             upload.queue_position = 0
 
             if upload in self.transfer_request_times:
                 del self.transfer_request_times[upload]
 
-            self.update_upload(upload)
+            if not upload_cleared:
+                self.update_upload(upload)
 
             self.core.watch_user(username)
             self.check_upload_queue()
@@ -1438,7 +1445,7 @@ class Transfers:
             self.abort_transfer(download)
 
             if download.status != "Finished":
-                if self.user_logged_out(download.user):
+                if self.core.user_statuses.get(download.user) == UserStatus.OFFLINE:
                     download.status = "User logged off"
                 else:
                     download.status = "Cancelled"
@@ -1475,7 +1482,7 @@ class Transfers:
 
             self.abort_transfer(upload)
 
-            if self.user_logged_out(upload.user):
+            if self.core.user_statuses.get(upload.user) == UserStatus.OFFLINE:
                 upload.status = "User logged off"
             else:
                 upload.status = "Cancelled"
@@ -1604,7 +1611,8 @@ class Transfers:
             except re.error:
                 pass
 
-        if self.user_logged_out(user):
+        if self.core.user_status == UserStatus.OFFLINE:
+            # We are logged out, don't attempt to start a download
             transfer.status = "User logged off"
 
         elif transfer.status != "Filtered":
@@ -1628,9 +1636,6 @@ class Transfers:
             self.update_download(transfer)
 
     def push_file(self, user, filename, size, path="", transfer=None, bitrate=None, length=None, locally_queued=False):
-
-        if self.core.user_status == UserStatus.OFFLINE:
-            return
 
         real_path = self.core.shares.virtual2real(filename)
         size_attempt = self.get_file_size(real_path)
@@ -1661,7 +1666,8 @@ class Transfers:
 
         self.core.watch_user(user)
 
-        if self.user_logged_out(user):
+        if self.core.user_status == UserStatus.OFFLINE:
+            # We are logged out, don't attempt to start an upload
             transfer.status = "User logged off"
 
             if not self.auto_clear_upload(transfer):
@@ -1753,17 +1759,6 @@ class Transfers:
                         return True
 
         return False
-
-    def user_logged_out(self, user):
-        """ Check if a user who previously queued a file has logged out since """
-
-        if self.core.user_status == UserStatus.OFFLINE:
-            return True
-
-        if user not in self.core.user_statuses:
-            return True
-
-        return self.core.user_statuses[user] == UserStatus.OFFLINE
 
     def get_folder_destination(self, user, folder, remove_prefix="", remove_destination=True):
 

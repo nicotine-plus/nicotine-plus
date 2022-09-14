@@ -160,9 +160,10 @@ class SendNetworkMessage(InternalMessage):
 
 class ShowConnectionErrorMessage(InternalMessage):
 
-    def __init__(self, user=None, msgs=None):
+    def __init__(self, user=None, msgs=None, offline=False):
         self.user = user
         self.msgs = msgs
+        self.offline = offline
 
 
 class MessageProgress(InternalMessage):
