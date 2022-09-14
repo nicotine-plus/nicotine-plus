@@ -115,21 +115,23 @@ class PopupMenu:
             $ - boolean
             O - choice
             # - regular
+            = - hidden when disabled
             U - user
         """
 
         submenu = False
         boolean = False
         choice = False
+        item_type = item[0][0]
         label = item[0][1:]
 
-        if item[0][0] == ">":
+        if item_type == ">":
             submenu = True
 
-        elif item[0][0] == "$":
+        elif item_type == "$":
             boolean = True
 
-        elif item[0][0] == "O":
+        elif item_type == "O":
             choice = True
 
         if isinstance(item[1], str):
@@ -149,8 +151,11 @@ class PopupMenu:
 
         menuitem = Gio.MenuItem.new(label, action_id)
 
-        if item[0][0] == "U":
+        if item_type == "U":
             self.useritem = menuitem
+
+        elif item_type == "=":
+            menuitem.set_attribute_value("hidden-when", GLib.Variant("s", "action-disabled"))
 
         if submenu:
             menuitem.set_submenu(item[1].model)
