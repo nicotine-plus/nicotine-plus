@@ -414,7 +414,10 @@ class StatusNotifierImplementation(BaseImplementation):
             ):
                 self._add_method(method_name, in_args, out_args, callback)
 
-            self._add_signal("LayoutUpdated", ("u", "i"))
+            for signal_name, value in (
+                ("LayoutUpdated", ("u", "i")),
+            ):
+                self._add_signal(signal_name, value)
 
         def set_items(self, items):
 
@@ -508,7 +511,6 @@ class StatusNotifierImplementation(BaseImplementation):
 
             for method_name, in_args, out_args, callback in (
                 ("Activate", ("i", "i"), (), activate_callback),
-                ("SecondaryActivate", ("i", "i"), (), activate_callback),
             ):
                 self._add_method(method_name, in_args, out_args, callback)
 
