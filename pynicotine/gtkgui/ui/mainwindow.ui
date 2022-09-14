@@ -153,7 +153,7 @@
                                         <child>
                                           <object class="GtkComboBoxText" id="search_combobox">
                                             <property name="visible">True</property>
-                                            <property name="sensitive" bind-source="_user_status_button" bind-property="sensitive" bind-flags="sync-create"/>
+                                            <property name="sensitive" bind-source="user_status_button" bind-property="sensitive" bind-flags="sync-create"/>
                                             <property name="hexpand">True</property>
                                             <property name="has-entry">True</property>
                                             <signal name="notify::popup-shown" handler="on_combobox_popup_shown"/>
@@ -815,7 +815,7 @@
                                     <child>
                                       <object class="GtkBox" id="userbrowse_title">
                                         <property name="visible">True</property>
-                                        <property name="sensitive" bind-source="_user_status_button" bind-property="sensitive" bind-flags="sync-create"/>
+                                        <property name="sensitive" bind-source="user_status_button" bind-property="sensitive" bind-flags="sync-create"/>
                                         <property name="hexpand">True</property>
                                         <property name="halign">start</property>
                                         <property name="valign">center</property>
@@ -994,7 +994,7 @@
                                     <child>
                                       <object class="GtkBox" id="userinfo_title">
                                         <property name="visible">True</property>
-                                        <property name="sensitive" bind-source="_user_status_button" bind-property="sensitive" bind-flags="sync-create"/>
+                                        <property name="sensitive" bind-source="user_status_button" bind-property="sensitive" bind-flags="sync-create"/>
                                         <property name="hexpand">True</property>
                                         <property name="halign">start</property>
                                         <property name="valign">center</property>
@@ -1444,7 +1444,7 @@
                                         <child>
                                           <object class="GtkBox" id="chatrooms_title">
                                             <property name="visible">True</property>
-                                            <property name="sensitive" bind-source="_user_status_button" bind-property="sensitive" bind-flags="sync-create"/>
+                                            <property name="sensitive" bind-source="user_status_button" bind-property="sensitive" bind-flags="sync-create"/>
                                             <property name="hexpand">True</property>
                                             <property name="halign">start</property>
                                             <property name="spacing">4</property>
@@ -1822,7 +1822,7 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton" id="_user_status_button">
+                  <object class="GtkButton" id="user_status_button">
                     <property name="visible">True</property>
                     <property name="action-name">win.away</property>
                     <child>
@@ -1839,7 +1839,7 @@
 	                  <object class="GtkLabel" id="user_status_label">
 	                    <property name="visible">True</property>
 	                    <property name="label" translatable="yes">Offline</property>
-	                    <property name="mnemonic-widget">_user_status_button</property>
+	                    <property name="mnemonic-widget">user_status_button</property>
                             <attributes>
                               <attribute name="weight" value="bold"/>
                             </attributes>
