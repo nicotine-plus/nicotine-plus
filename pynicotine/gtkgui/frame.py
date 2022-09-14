@@ -57,6 +57,7 @@ from pynicotine.gtkgui.widgets.notifications import Notifications
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
 from pynicotine.gtkgui.widgets.textview import TextView
+from pynicotine.gtkgui.widgets.theme import get_status_icon_name
 from pynicotine.gtkgui.widgets.theme import load_icons
 from pynicotine.gtkgui.widgets.theme import set_dark_mode
 from pynicotine.gtkgui.widgets.theme import set_global_style
@@ -65,6 +66,7 @@ from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.trayicon import TrayIcon
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import get_latest_version
 from pynicotine.utils import human_speed
 from pynicotine.utils import make_version
@@ -180,6 +182,7 @@ class NicotineFrame(UserInterface):
             self.uploads_toolbar_contents,
             self.user_search_combobox,
             self.user_search_entry,
+            self.user_status_icon,
             self.user_status_label,
             self.userbrowse_combobox,
             self.userbrowse_end,
@@ -449,7 +452,7 @@ class NicotineFrame(UserInterface):
     def server_disconnect(self):
 
         self.remove_away_timer()
-        self.set_user_status(_("Offline"))
+        self.set_user_status(UserStatus.OFFLINE)
 
         self.set_widget_online_status(False)
         self.tray_icon.set_connected(False)
@@ -1468,10 +1471,10 @@ class NicotineFrame(UserInterface):
     def set_away_mode(self, is_away):
 
         if not is_away:
-            self.set_user_status(_("Online"))
+            self.set_user_status(UserStatus.ONLINE)
             self.set_auto_away(False)
         else:
-            self.set_user_status(_("Away"))
+            self.set_user_status(UserStatus.AWAY)
             self.remove_away_timer()
 
         self.tray_icon.set_away(is_away)
@@ -1666,7 +1669,20 @@ class NicotineFrame(UserInterface):
         self.status_label.set_tooltip_text(msg)
 
     def set_user_status(self, status):
-        self.user_status_label.set_text(status)
+
+        icon_name = get_status_icon_name(status)
+
+        if status == UserStatus.AWAY:
+            status_text = _("Away")
+
+        elif status == UserStatus.ONLINE:
+            status_text = _("Online")
+
+        else:
+            status_text = _("Offline")
+
+        self.user_status_icon.set_property("icon-name", icon_name)
+        self.user_status_label.set_text(status_text)
 
     def set_connection_stats(self, msg):
 
