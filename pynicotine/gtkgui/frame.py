@@ -954,7 +954,6 @@ class NicotineFrame(UserInterface):
         menu.add_items(
             ("#" + _("_Connect"), "app.connect"),
             ("#" + _("_Disconnect"), "app.disconnect"),
-            ("#" + _("_Away"), "win.away"),
             ("#" + _("Soulseek _Privileges"), "app.getprivileges"),
             ("", None)
         )
