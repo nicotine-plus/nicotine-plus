@@ -87,8 +87,8 @@ class BaseImplementation:
 
     def create_menu(self):
 
-        self.show_item = self.create_item(_("Show Nicotine+"), self.frame.show)
-        self.hide_item = self.create_item(_("Hide Nicotine+"), self.frame.hide)
+        self.show_item = self.create_item(_("Show Nicotine+"), self.frame.on_window_hide_unhide)
+        self.hide_item = self.create_item(_("Hide Nicotine+"), self.frame.on_window_hide_unhide)
         self.alt_speed_item = self.create_item(
             _("Alternative Speed Limits"), self.frame.on_alternative_speed_limit, check=True)
 
