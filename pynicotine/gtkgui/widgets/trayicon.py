@@ -793,12 +793,8 @@ class TrayIcon:
 
         if self.use_trayicon or config.sections["ui"]["trayicon"]:
             self.show()
-
-            # Gtk.StatusIcon.is_embedded() may not be true yet (observed in LXDE), force an icon update
-            self.update_icon(force_update=True)
             return
 
-        self.update_icon(force_update=True)
         self.hide()
 
     def update_window_visibility(self):
@@ -831,7 +827,7 @@ class TrayIcon:
 
     def refresh_state(self):
 
-        self.update_icon()
+        self.update_icon(force_update=True)
         self.update_window_visibility()
         self.update_user_status()
         self.update_alternative_speed_limit_status()
