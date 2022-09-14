@@ -1826,15 +1826,27 @@
                     <property name="visible">True</property>
                     <property name="action-name">win.away</property>
                     <child>
-                      <object class="GtkLabel" id="user_status_label">
+                      <object class="GtkBox">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">Offline</property>
-                        <property name="mnemonic-widget">_user_status_button</property>
-                        <attributes>
-                          <attribute name="weight" value="bold"/>
-                        </attributes>
-                      </object>
-                    </child>
+                        <property name="spacing">6</property>
+                        <child>
+                          <object class="GtkImage" id="user_status_icon">
+                            <property name="visible">True</property>
+			    <property name="icon-name">nplus-status-offline</property>
+                          </object>
+                        </child>
+	                <child>
+	                  <object class="GtkLabel" id="user_status_label">
+	                    <property name="visible">True</property>
+	                    <property name="label" translatable="yes">Offline</property>
+	                    <property name="mnemonic-widget">_user_status_button</property>
+                            <attributes>
+                              <attribute name="weight" value="bold"/>
+                            </attributes>
+	                  </object>
+	                </child>
+	              </object>
+	            </child>
                     <style>
                       <class name="flat"/>
                     </style>
