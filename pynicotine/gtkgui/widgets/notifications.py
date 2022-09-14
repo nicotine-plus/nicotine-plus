@@ -46,7 +46,7 @@ class Notifications:
         item = room if location == "rooms" else user
 
         if self.core.notifications.add_hilite_item(location, item):
-            self.frame.tray_icon.set_icon()
+            self.frame.tray_icon.update_icon()
 
         if config.sections["ui"]["urgencyhint"] and not self.frame.window.is_active():
             self.set_urgency_hint(True)
@@ -59,7 +59,7 @@ class Notifications:
 
         if self.core.notifications.remove_hilite_item(location, item):
             self.set_title(item)
-            self.frame.tray_icon.set_icon()
+            self.frame.tray_icon.update_icon()
 
     def set_title(self, user=None):
 
