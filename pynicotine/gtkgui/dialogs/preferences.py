@@ -51,6 +51,7 @@ from pynicotine.gtkgui.widgets.theme import set_global_font
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.ui import UserInterface
+from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import open_file_path
 from pynicotine.utils import open_uri
 from pynicotine.utils import unescape
@@ -168,11 +169,11 @@ class NetworkFrame(UserInterface):
             }
         }
 
-    def on_change_password_response(self, dialog, _response_id, logged_in):
+    def on_change_password_response(self, dialog, _response_id, user_status):
 
         password = dialog.get_entry_value()
 
-        if logged_in != self.core.logged_in:
+        if user_status != self.core.user_status:
             MessageDialog(
                 parent=self.preferences.dialog,
                 title=_("Password Change Rejected"),
@@ -184,7 +185,7 @@ class NetworkFrame(UserInterface):
             self.on_change_password()
             return
 
-        if not self.core.logged_in:
+        if self.core.user_status == UserStatus.OFFLINE:
             config.sections["server"]["passw"] = password
             config.write_configuration()
             return
@@ -193,7 +194,7 @@ class NetworkFrame(UserInterface):
 
     def on_change_password(self, *_args):
 
-        if self.core.logged_in:
+        if self.core.user_status != UserStatus.OFFLINE:
             message = _("Enter a new password for your Soulseek account:")
         else:
             message = (_("You are currently logged out of the Soulseek network. If you want to change "
@@ -207,7 +208,7 @@ class NetworkFrame(UserInterface):
             message=message,
             visibility=False,
             callback=self.on_change_password_response,
-            callback_data=self.core.logged_in
+            callback_data=self.core.user_status
         ).show()
 
     def on_toggle_upnp(self, widget, *_args):

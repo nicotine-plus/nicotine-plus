@@ -27,6 +27,7 @@ from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import add_alias
 from pynicotine.utils import get_alias
 from pynicotine.utils import is_alias
@@ -81,7 +82,7 @@ class ChatEntry:
 
     def on_enter(self, *_args):
 
-        if not self.core.logged_in:
+        if self.core.user_status == UserStatus.OFFLINE:
             return
 
         text = self.entry.get_text()

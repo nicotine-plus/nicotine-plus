@@ -91,8 +91,7 @@ class NicotineCore:
         self.port = port
 
         self.shutdown = False
-        self.away = False
-        self.logged_in = False
+        self.user_status = UserStatus.OFFLINE
         self.login_username = None  # Only present while logged in
         self.user_ip_address = None
         self.privileges_left = None
@@ -356,7 +355,7 @@ class NicotineCore:
         if save_state:
             config.sections["server"]["away"] = is_away
 
-        self.away = is_away
+        self.user_status = UserStatus.AWAY if is_away else UserStatus.ONLINE
         self.request_set_status(is_away and 1 or 2)
 
         # Reset away message users
@@ -383,7 +382,7 @@ class NicotineCore:
         """ Retrieve a user's country code if previously cached, otherwise request
         user's IP address to determine country """
 
-        if not self.logged_in:
+        if self.user_status == UserStatus.OFFLINE:
             return None
 
         user_address = self.protothread.user_addresses.get(user)
@@ -402,7 +401,7 @@ class NicotineCore:
         """ Tell the server we want to be notified of status/stat updates
         for a user """
 
-        if not self.logged_in:
+        if self.user_status == UserStatus.OFFLINE:
             return
 
         if not force_update and user in self.watched_users:
@@ -467,7 +466,7 @@ class NicotineCore:
 
     def server_disconnect(self, msg=None):
 
-        self.logged_in = False
+        self.user_status = UserStatus.OFFLINE
 
         # Clean up connections
         self.user_statuses.clear()
@@ -494,7 +493,7 @@ class NicotineCore:
         """ Server code: 1 """
 
         if msg.success:
-            self.logged_in = True
+            self.user_status = UserStatus.ONLINE
             self.login_username = msg.username
 
             self.set_away_mode(config.sections["server"]["away"])

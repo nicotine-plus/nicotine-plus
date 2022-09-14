@@ -33,6 +33,7 @@ import time
 from pynicotine import slskmessages
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import UINT_LIMIT
+from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import TRANSLATE_PUNCTUATION
 from pynicotine.utils import encode_path
 from pynicotine.utils import rename_process
@@ -709,7 +710,7 @@ class Shares:
     def send_num_shared_folders_files(self):
         """ Send number publicly shared files to the server. """
 
-        if not (self.core and self.core.logged_in):
+        if not (self.core and self.core.user_status != UserStatus.OFFLINE):
             return
 
         if self.rescanning:

@@ -20,6 +20,7 @@ import time
 
 from pynicotine import slskmessages
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import encode_path
 from pynicotine.utils import unescape
 
@@ -66,7 +67,7 @@ class UserInfo:
         self.add_user(user)
         self.show_user(user, switch_page)
 
-        if not self.core.logged_in:
+        if self.core.user_status == UserStatus.OFFLINE:
             self.show_connection_error(user)
             return
 

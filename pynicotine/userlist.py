@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from pynicotine.slskmessages import UserStatus
+
 
 class UserList:
 
@@ -45,7 +47,7 @@ class UserList:
         if self.ui_callback:
             self.ui_callback.add_user(user)
 
-        if not self.core.logged_in:
+        if self.core.user_status == UserStatus.OFFLINE:
             return
 
         # Request user status, speed and number of shared files
