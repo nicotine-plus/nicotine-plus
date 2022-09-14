@@ -182,6 +182,7 @@ class NicotineFrame(UserInterface):
             self.uploads_toolbar_contents,
             self.user_search_combobox,
             self.user_search_entry,
+            self.user_status_button,
             self.user_status_icon,
             self.user_status_label,
             self.userbrowse_combobox,
@@ -1670,6 +1671,7 @@ class NicotineFrame(UserInterface):
 
     def set_user_status(self, status):
 
+        username = self.core.login_username
         icon_name = get_status_icon_name(status)
 
         if status == UserStatus.AWAY:
@@ -1679,7 +1681,11 @@ class NicotineFrame(UserInterface):
             status_text = _("Online")
 
         else:
+            username = None
             status_text = _("Offline")
+
+        if self.user_status_button.get_tooltip_text() != username:
+            self.user_status_button.set_tooltip_text(username)
 
         self.user_status_icon.set_property("icon-name", icon_name)
         self.user_status_label.set_text(status_text)
