@@ -423,12 +423,12 @@ class NicotineFrame(UserInterface):
         config.sections["ui"]["yposition"] = y_pos
 
     def on_window_visible_changed(self, *_args):
-        self.tray_icon.update_show_hide_label()
+        self.tray_icon.update_window_visibility()
 
     def on_window_hide_unhide(self, *_args):
 
         if self.window.get_property("visible"):
-            self.window.hide()
+            self.hide()
             return
 
         self.show()
