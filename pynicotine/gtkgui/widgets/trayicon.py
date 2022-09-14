@@ -53,7 +53,7 @@ class BaseImplementation:
 
     def create_item(self, text=None, callback=None, check=False):
 
-        item = {"id": self.menu_item_id, "sensitive": True}
+        item = {"id": self.menu_item_id, "sensitive": True, "visible": True}
 
         if text is not None:
             item["text"] = text
@@ -78,12 +78,17 @@ class BaseImplementation:
         item["sensitive"] = sensitive
 
     @staticmethod
+    def set_item_visible(item, visible):
+        item["visible"] = visible
+
+    @staticmethod
     def set_item_toggled(item, toggled):
         item["toggled"] = toggled
 
     def create_menu(self):
 
-        self.hide_show_item = self.create_item(_("Show Nicotine+"), self.frame.on_window_hide_unhide)
+        self.show_item = self.create_item(_("Show Nicotine+"), self.frame.show)
+        self.hide_item = self.create_item(_("Hide Nicotine+"), self.frame.hide)
         self.alt_speed_item = self.create_item(
             _("Alternative Speed Limits"), self.frame.on_alternative_speed_limit, check=True)
 
@@ -109,27 +114,27 @@ class BaseImplementation:
         self.create_item(_("Preferences"), self.frame.on_settings)
         self.create_item(_("Quit"), self.core.quit)
 
-    def update_show_hide_label(self):
+    def update_window_visibility(self):
 
-        if self.frame.window.get_property("visible"):
-            text = _("Hide Nicotine+")
-        else:
-            text = _("Show Nicotine+")
+        visible = self.frame.window.get_property("visible")
 
-        self.set_item_text(self.hide_show_item, text)
+        self.set_item_visible(self.show_item, not visible)
+        self.set_item_visible(self.hide_item, visible)
+
         self.update_menu()
 
     def update_user_status(self):
 
         sensitive = self.core.user_status != UserStatus.OFFLINE
 
-        for item in (self.disconnect_item, self.away_item, self.send_message_item,
+        for item in (self.away_item, self.send_message_item,
                      self.lookup_info_item, self.lookup_shares_item):
 
             # Disable menu items when disconnected from server
             self.set_item_sensitive(item, sensitive)
 
-        self.set_item_sensitive(self.connect_item, not sensitive)
+        self.set_item_visible(self.connect_item, not sensitive)
+        self.set_item_visible(self.disconnect_item, sensitive)
         self.set_item_toggled(self.away_item, self.core.user_status == UserStatus.AWAY)
 
         self.update_icon()
@@ -425,6 +430,7 @@ class StatusNotifierImplementation(BaseImplementation):
                 props = {
                     "label": GLib.Variant("s", item["text"]),
                     "enabled": GLib.Variant("b", item["sensitive"]),
+                    "visible": GLib.Variant("b", item["visible"])
                 }
 
                 if item.get("toggled") is not None:
@@ -673,6 +679,11 @@ class StatusIconImplementation(BaseImplementation):
         item["gtk_menu_item"].set_sensitive(sensitive)
 
     @staticmethod
+    def set_item_visible(item, visible):
+        BaseImplementation.set_item_visible(item, visible)
+        item["gtk_menu_item"].set_visible(visible)
+
+    @staticmethod
     def set_item_toggled(item, toggled):
 
         BaseImplementation.set_item_toggled(item, toggled)
@@ -787,9 +798,9 @@ class TrayIcon:
         self.update_icon(force_update=True)
         self.hide()
 
-    def update_show_hide_label(self):
+    def update_window_visibility(self):
         if self.implementation:
-            self.implementation.update_show_hide_label()
+            self.implementation.update_window_visibility()
 
     def update_user_status(self):
         if self.implementation:
@@ -818,7 +829,7 @@ class TrayIcon:
     def refresh_state(self):
 
         self.update_icon()
-        self.update_show_hide_label()
+        self.update_window_visibility()
         self.update_user_status()
         self.update_alternative_speed_limit_status()
 
