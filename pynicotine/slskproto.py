@@ -1199,7 +1199,8 @@ class SlskProtoThread(threading.Thread):
                             # We now have the IP address for a user we previously didn't know,
                             # attempt a direct connection to the peer/user
                             if user_offline:
-                                self._callback_msgs.append(ShowConnectionErrorMessage(user, init.outgoing_msgs[:]))
+                                self._callback_msgs.append(
+                                    ShowConnectionErrorMessage(user, init.outgoing_msgs[:], offline=True))
                             else:
                                 init.addr = addr
                                 self.connect_to_peer(user, addr, init)
