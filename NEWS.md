@@ -8,6 +8,7 @@
 
 ### Corrections
 
+ * Fixed an issue where certain uploads were incorrectly marked as "Cancelled"
  * OpenBSD: Fixed a regression where incoming peer connections did not work
 
 ### Issues closed on GitHub
