@@ -652,8 +652,8 @@ class StatusIconImplementation(BaseImplementation):
 
         super().__init__(frame, core)
 
-        if not hasattr(Gtk, "StatusIcon") or sys.platform == "darwin":
-            # Tray icons don't work as expected on macOS
+        if not hasattr(Gtk, "StatusIcon") or sys.platform == "darwin" or os.getenv("WAYLAND_DISPLAY"):
+            # GtkStatusIcon does not work on macOS and Wayland
             raise ImplementationUnavailable("StatusIcon implementation not available")
 
         self.tray_icon = Gtk.StatusIcon(tooltip_text=config.application_name)
