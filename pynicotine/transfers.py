@@ -1629,7 +1629,7 @@ class Transfers:
 
     def push_file(self, user, filename, size, path="", transfer=None, bitrate=None, length=None, locally_queued=False):
 
-        if not self.core.logged_in:
+        if self.core.user_status == UserStatus.OFFLINE:
             return
 
         real_path = self.core.shares.virtual2real(filename)
@@ -1757,7 +1757,7 @@ class Transfers:
     def user_logged_out(self, user):
         """ Check if a user who previously queued a file has logged out since """
 
-        if not self.core.logged_in:
+        if self.core.user_status == UserStatus.OFFLINE:
             return True
 
         if user not in self.core.user_statuses:

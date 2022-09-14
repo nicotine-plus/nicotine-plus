@@ -172,7 +172,7 @@ class Interests(UserInterface):
     def populate_recommendations(self):
         """ Populates the lists of recommendations and similar users if empty """
 
-        if self.populated_recommends or not self.core.logged_in:
+        if self.populated_recommends or self.core.user_status == UserStatus.OFFLINE:
             return
 
         self.on_recommendations_clicked()

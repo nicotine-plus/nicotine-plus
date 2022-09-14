@@ -18,6 +18,7 @@
 
 from pynicotine import slskmessages
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import get_completion_list
 
 
@@ -244,7 +245,7 @@ class PrivateChats:
 
         autoreply = self.config.sections["server"]["autoreply"]
 
-        if autoreply and self.core.away and user not in self.away_message_users:
+        if autoreply and self.core.user_status == UserStatus.AWAY and user not in self.away_message_users:
             self.send_automatic_message(user, autoreply)
             self.away_message_users.add(user)
 

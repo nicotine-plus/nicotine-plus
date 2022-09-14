@@ -29,6 +29,7 @@ from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_GUI_DIR
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import encode_path
 
 
@@ -47,7 +48,6 @@ class BaseImplementation:
         self.core = core
         self.menu_items = OrderedDict()
         self.menu_item_id = 1
-        self.status = "disconnect"
 
         self.create_menu()
 
@@ -119,25 +119,60 @@ class BaseImplementation:
         self.set_item_text(self.hide_show_item, text)
         self.update_menu()
 
-    def set_server_actions_sensitive(self, status):
+    def update_user_status(self):
+
+        sensitive = self.core.user_status != UserStatus.OFFLINE
 
         for item in (self.disconnect_item, self.away_item, self.send_message_item,
                      self.lookup_info_item, self.lookup_shares_item):
 
             # Disable menu items when disconnected from server
-            self.set_item_sensitive(item, status)
+            self.set_item_sensitive(item, sensitive)
 
-        self.set_item_sensitive(self.connect_item, not status)
+        self.set_item_sensitive(self.connect_item, not sensitive)
+        self.set_item_toggled(self.away_item, self.core.user_status == UserStatus.AWAY)
+
+        self.update_icon()
         self.update_menu()
 
-    def set_connected(self, enable):
-        self.set_icon("connect" if enable else "disconnect")
-
-    def set_away(self, enable):
-
-        self.set_icon("away" if enable else "connect")
-        self.set_item_toggled(self.away_item, enable)
+    def update_alternative_speed_limit_status(self):
+        self.set_item_toggled(self.alt_speed_item, config.sections["transfers"]["usealtlimits"])
         self.update_menu()
+
+    def update_icon(self, force_update=False):
+
+        if not force_update and not self.is_visible():
+            return
+
+        # Check for hilites, and display hilite icon if there is a room or private hilite
+        if (self.core.notifications
+                and (self.core.notifications.chat_hilites["rooms"]
+                     or self.core.notifications.chat_hilites["private"])):
+            icon_name = "msg"
+
+        elif self.core.user_status == UserStatus.ONLINE:
+            icon_name = "connect"
+
+        elif self.core.user_status == UserStatus.AWAY:
+            icon_name = "away"
+
+        else:
+            icon_name = "disconnect"
+
+        icon_name = config.application_id + "-" + icon_name
+        self.set_icon_name(icon_name)
+
+    def set_icon_name(self, icon_name):
+        # Implemented in subclasses
+        pass
+
+    def update_icon_theme(self):
+        # Implemented in subclasses
+        pass
+
+    def update_menu(self):
+        # Implemented in subclasses
+        pass
 
     def set_download_status(self, status):
         self.set_item_text(self.downloads_item, status)
@@ -145,10 +180,6 @@ class BaseImplementation:
 
     def set_upload_status(self, status):
         self.set_item_text(self.uploads_item, status)
-        self.update_menu()
-
-    def set_alternative_speed_limit(self, enable):
-        self.set_item_toggled(self.alt_speed_item, enable)
         self.update_menu()
 
     def on_downloads(self, *_args):
@@ -222,38 +253,6 @@ class BaseImplementation:
             callback=self.on_get_a_users_shares_response,
             droplist=users
         ).show()
-
-    def set_icon(self, status=None, force_update=False):
-
-        if not force_update and not self.is_visible():
-            return
-
-        if status is not None:
-            self.status = status
-
-        # Check for hilites, and display hilite icon if there is a room or private hilite
-        if (self.core.notifications
-                and (self.core.notifications.chat_hilites["rooms"]
-                     or self.core.notifications.chat_hilites["private"])):
-            icon_name = "msg"
-        else:
-            # If there is no hilite, display the status
-            icon_name = self.status
-
-        icon_name = config.application_id + "-" + icon_name
-        self.set_icon_name(icon_name)
-
-    def set_icon_name(self, icon_name):
-        # Implemented in subclasses
-        pass
-
-    def update_icon_theme(self):
-        # Implemented in subclasses
-        pass
-
-    def update_menu(self):
-        # Implemented in subclasses
-        pass
 
     def is_visible(self):  # pylint:disable=no-self-use
         # Implemented in subclasses
@@ -617,7 +616,7 @@ class StatusNotifierImplementation(BaseImplementation):
         self.tray_icon.set_property_value("IconThemePath", icon_path)
         self.tray_icon.emit_signal("NewIconThemePath", icon_path)
 
-        self.set_icon()
+        self.update_icon()
 
         if icon_path:
             log.add_debug("Using tray icon path %s", icon_path)
@@ -776,34 +775,37 @@ class TrayIcon:
                     self.available = False
                     return
 
-            self.set_server_actions_sensitive(False)
-            self.set_alternative_speed_limit(config.sections["transfers"]["usealtlimits"])
+            self.refresh_state()
 
         if config.sections["ui"]["trayicon"]:
             self.show()
 
             # Gtk.StatusIcon.is_embedded() may not be true yet (observed in LXDE), force an icon update
-            self.set_icon(force_update=True)
+            self.update_icon(force_update=True)
             return
 
-        self.set_icon("msg", force_update=True)
+        self.update_icon(force_update=True)
         self.hide()
 
     def update_show_hide_label(self):
         if self.implementation:
             self.implementation.update_show_hide_label()
 
-    def set_away(self, enable):
+    def update_user_status(self):
         if self.implementation:
-            self.implementation.set_away(enable)
+            self.implementation.update_user_status()
 
-    def set_connected(self, enable):
+    def update_alternative_speed_limit_status(self):
         if self.implementation:
-            self.implementation.set_connected(enable)
+            self.implementation.update_alternative_speed_limit_status()
 
-    def set_server_actions_sensitive(self, status):
+    def update_icon(self, force_update=False):
         if self.implementation:
-            self.implementation.set_server_actions_sensitive(status)
+            self.implementation.update_icon(force_update)
+
+    def update_icon_theme(self):
+        if self.implementation:
+            self.implementation.update_icon_theme()
 
     def set_download_status(self, status):
         if self.implementation:
@@ -813,17 +815,12 @@ class TrayIcon:
         if self.implementation:
             self.implementation.set_upload_status(status)
 
-    def set_alternative_speed_limit(self, enable):
-        if self.implementation:
-            self.implementation.set_alternative_speed_limit(enable)
+    def refresh_state(self):
 
-    def set_icon(self, status=None, force_update=False):
-        if self.implementation:
-            self.implementation.set_icon(status, force_update)
-
-    def update_icon_theme(self):
-        if self.implementation:
-            self.implementation.update_icon_theme()
+        self.update_icon()
+        self.update_show_hide_label()
+        self.update_user_status()
+        self.update_alternative_speed_limit_status()
 
     def is_visible(self):
 

@@ -447,15 +447,20 @@ class NicotineFrame(UserInterface):
     """ Connection """
 
     def server_login(self):
-        self.set_widget_online_status(True)
+
+        self.update_user_status()
+
+        if self.current_page_id == self.userbrowse_page.id:
+            GLib.idle_add(lambda: self.userbrowse_entry.grab_focus() == -1)
+
+        if self.current_page_id == self.userinfo_page.id:
+            GLib.idle_add(lambda: self.userinfo_entry.grab_focus() == -1)
+
+        if self.current_page_id == self.search_page.id:
+            GLib.idle_add(lambda: self.search_entry.grab_focus() == -1)
 
     def server_disconnect(self):
-
-        self.remove_away_timer()
-        self.set_user_status(UserStatus.OFFLINE)
-
-        self.set_widget_online_status(False)
-        self.tray_icon.set_connected(False)
+        self.update_user_status()
 
     def invalid_password_response(self, _dialog, response_id, _data):
         if response_id == 2:
@@ -476,25 +481,46 @@ class NicotineFrame(UserInterface):
             callback=self.invalid_password_response
         ).show()
 
-    def set_widget_online_status(self, status):
+    def update_user_status(self):
 
-        self.connect_action.set_enabled(not status)
-        self.disconnect_action.set_enabled(status)
-        self.away_action.set_enabled(status)
-        self.get_privileges_action.set_enabled(status)
-        self.tray_icon.set_server_actions_sensitive(status)
+        status = self.core.user_status
+        is_online = (status != UserStatus.OFFLINE)
+        is_away = (status == UserStatus.AWAY)
 
-        if not status:
-            return
+        # Action status
+        self.connect_action.set_enabled(not is_online)
+        self.disconnect_action.set_enabled(is_online)
+        self.away_action.set_enabled(is_online)
+        self.away_action.set_state(GLib.Variant("b", is_away))
+        self.get_privileges_action.set_enabled(is_online)
 
-        if self.current_page_id == self.userbrowse_page.id:
-            GLib.idle_add(lambda: self.userbrowse_entry.grab_focus() == -1)
+        self.tray_icon.update_user_status()
 
-        if self.current_page_id == self.userinfo_page.id:
-            GLib.idle_add(lambda: self.userinfo_entry.grab_focus() == -1)
+        # Away mode
+        if not is_away:
+            self.set_auto_away(False)
+        else:
+            self.remove_away_timer()
 
-        if self.current_page_id == self.search_page.id:
-            GLib.idle_add(lambda: self.search_entry.grab_focus() == -1)
+        # Status bar
+        username = self.core.login_username
+        icon_name = get_status_icon_name(status)
+
+        if status == UserStatus.AWAY:
+            status_text = _("Away")
+
+        elif status == UserStatus.ONLINE:
+            status_text = _("Online")
+
+        else:
+            username = None
+            status_text = _("Offline")
+
+        if self.user_status_button.get_tooltip_text() != username:
+            self.user_status_button.set_tooltip_text(username)
+
+        self.user_status_icon.set_property("icon-name", icon_name)
+        self.user_status_label.set_text(status_text)
 
     """ Action Callbacks """
 
@@ -507,7 +533,7 @@ class NicotineFrame(UserInterface):
         self.core.disconnect()
 
     def on_away(self, *_args):
-        self.core.set_away_mode(not self.core.away, save_state=True)
+        self.core.set_away_mode(self.core.user_status != UserStatus.AWAY, save_state=True)
 
     def on_get_privileges(self, *_args):
 
@@ -1465,17 +1491,8 @@ class NicotineFrame(UserInterface):
 
     """ Away Mode """
 
-    def set_away_mode(self, is_away):
-
-        if not is_away:
-            self.set_user_status(UserStatus.ONLINE)
-            self.set_auto_away(False)
-        else:
-            self.set_user_status(UserStatus.AWAY)
-            self.remove_away_timer()
-
-        self.tray_icon.set_away(is_away)
-        self.away_action.set_state(GLib.Variant("b", is_away))
+    def set_away_mode(self, _is_away):
+        self.update_user_status()
 
     def set_auto_away(self, active):
 
@@ -1483,7 +1500,7 @@ class NicotineFrame(UserInterface):
             self.auto_away = True
             self.away_timer = None
 
-            if not self.core.away:
+            if self.core.user_status != UserStatus.AWAY:
                 self.core.set_away_mode(True)
 
             return
@@ -1491,7 +1508,7 @@ class NicotineFrame(UserInterface):
         if self.auto_away:
             self.auto_away = False
 
-            if self.core.away:
+            if self.core.user_status == UserStatus.AWAY:
                 self.core.set_away_mode(False)
 
         # Reset away timer
@@ -1500,7 +1517,7 @@ class NicotineFrame(UserInterface):
 
     def create_away_timer(self):
 
-        if self.core.away or not self.core.logged_in:
+        if self.core.user_status != UserStatus.ONLINE:
             return
 
         away_interval = config.sections["server"]["autoaway"]
@@ -1665,27 +1682,6 @@ class NicotineFrame(UserInterface):
         self.status_label.set_text(msg)
         self.status_label.set_tooltip_text(msg)
 
-    def set_user_status(self, status):
-
-        username = self.core.login_username
-        icon_name = get_status_icon_name(status)
-
-        if status == UserStatus.AWAY:
-            status_text = _("Away")
-
-        elif status == UserStatus.ONLINE:
-            status_text = _("Online")
-
-        else:
-            username = None
-            status_text = _("Offline")
-
-        if self.user_status_button.get_tooltip_text() != username:
-            self.user_status_button.set_tooltip_text(username)
-
-        self.user_status_icon.set_property("icon-name", icon_name)
-        self.user_status_label.set_text(status_text)
-
     def set_connection_stats(self, msg):
 
         total_conns_text = repr(msg.total_conns)
@@ -1749,7 +1745,7 @@ class NicotineFrame(UserInterface):
 
         self.update_alternative_speed_icon(not state)
         self.core.transfers.update_limits()
-        self.tray_icon.set_alternative_speed_limit(not state)
+        self.tray_icon.update_alternative_speed_limit_status()
 
     """ Exit """
 

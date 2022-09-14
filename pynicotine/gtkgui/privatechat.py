@@ -484,10 +484,14 @@ class PrivateChat(UserInterface):
         color = get_user_status_color(self.status)
         self.tag_username = self.chat_view.create_tag(color, callback=self.user_name_event, username=self.user)
 
-        if not self.core.logged_in:
-            color = "useroffline"
+        if self.core.user_status == UserStatus.AWAY:
+            color = "useraway"
+
+        elif self.core.user_status == UserStatus.ONLINE:
+            color = "useronline"
+
         else:
-            color = "useraway" if self.core.away else "useronline"
+            color = "useroffline"
 
         my_username = config.sections["server"]["login"]
         self.tag_my_username = self.chat_view.create_tag(color, callback=self.user_name_event, username=my_username)
