@@ -1822,6 +1822,24 @@
                   </object>
                 </child>
                 <child>
+                  <object class="GtkToggleButton">
+                    <property name="visible">True</property>
+                    <property name="tooltip-text" translatable="yes">Enable alternative download and upload speed limits</property>
+                    <property name="action-name">app.altspeedlimit</property>
+                    <child>
+                      <object class="GtkImage" id="alt_speed_icon">
+                        <property name="visible">True</property>
+                        <property name="icon-name">media-seek-backward-symbolic</property>
+                      </object>
+                    </child>
+                    <style>
+                      <class name="circular"/>
+                      <class name="flat"/>
+                      <class name="image-button"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
                   <object class="GtkButton" id="user_status_button">
                     <property name="visible">True</property>
                     <property name="action-name">win.away</property>
@@ -1841,7 +1859,7 @@
 	                    <property name="label" translatable="yes">Offline</property>
 	                    <property name="mnemonic-widget">user_status_button</property>
                             <attributes>
-                              <attribute name="weight" value="bold"/>
+                              <attribute name="weight" value="normal"/>
                             </attributes>
 	                  </object>
 	                </child>
@@ -1849,24 +1867,6 @@
 	            </child>
                     <style>
                       <class name="flat"/>
-                    </style>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkToggleButton">
-                    <property name="visible">True</property>
-                    <property name="tooltip-text" translatable="yes">Enable alternative download and upload speed limits</property>
-                    <property name="action-name">app.altspeedlimit</property>
-                    <child>
-                      <object class="GtkImage" id="alt_speed_icon">
-                        <property name="visible">True</property>
-                        <property name="icon-name">media-seek-backward-symbolic</property>
-                      </object>
-                    </child>
-                    <style>
-                      <class name="circular"/>
-                      <class name="flat"/>
-                      <class name="image-button"/>
                     </style>
                   </object>
                 </child>
