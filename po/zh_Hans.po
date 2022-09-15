@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-15 19:40+0300\n"
-"PO-Revision-Date: 2022-08-31 18:23+0000\n"
+"PO-Revision-Date: 2022-09-15 18:10+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/zh_Hans/>\n"
@@ -1771,8 +1771,9 @@ msgid "Buddy-only"
 msgstr "仅限好友"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:603
+#, fuzzy
 msgid "Share with buddies only?"
-msgstr ""
+msgstr "只分享给好友？"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:762
 #: pynicotine/gtkgui/dialogs/preferences.py:889
