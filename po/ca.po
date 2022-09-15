@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-15 21:58+0300\n"
-"PO-Revision-Date: 2022-09-15 18:10+0000\n"
+"PO-Revision-Date: 2022-09-15 20:29+0000\n"
 "Last-Translator: Maite Guix <maite.guix@gmail.com>\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ca/>\n"
@@ -1512,9 +1512,8 @@ msgstr "Introduir un filtre de descàrrega nou:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:341
 #: pynicotine/gtkgui/dialogs/preferences.py:373
-#, fuzzy
 msgid "Escape filter"
-msgstr "Escapada"
+msgstr "Filtre d'escapament"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:367
 msgid "Edit Download Filter"
@@ -1538,9 +1537,8 @@ msgid "Buddy-only"
 msgstr "Només per a amics"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:603
-#, fuzzy
 msgid "Share with buddies only"
-msgstr "Compartir només amb companys?"
+msgstr "Compartir només amb companys"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:762
 #: pynicotine/gtkgui/dialogs/preferences.py:889
