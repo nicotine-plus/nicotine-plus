@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-15 19:40+0300\n"
+"POT-Creation-Date: 2022-09-15 21:58+0300\n"
 "PO-Revision-Date: 2022-09-15 18:10+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -1514,6 +1514,12 @@ msgstr "Додати фільтр завантаження"
 msgid "Enter a new download filter:"
 msgstr "Введіть новий фільтр завантаження:"
 
+#: pynicotine/gtkgui/dialogs/preferences.py:341
+#: pynicotine/gtkgui/dialogs/preferences.py:373
+#, fuzzy
+msgid "Escape filter"
+msgstr "Такий, що втік"
+
 #: pynicotine/gtkgui/dialogs/preferences.py:367
 msgid "Edit Download Filter"
 msgstr "Редагувати фільтр завантаження"
@@ -1537,7 +1543,7 @@ msgstr "Лише для друзів"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:603
 #, fuzzy
-msgid "Share with buddies only?"
+msgid "Share with buddies only"
 msgstr "Поділитися лише з друзями?"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:762
@@ -1842,7 +1848,7 @@ msgid "Shares"
 msgstr "Спільні файли"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2288
-#: pynicotine/gtkgui/frame.py:1213 pynicotine/gtkgui/frame.py:1576
+#: pynicotine/gtkgui/frame.py:1215 pynicotine/gtkgui/frame.py:1578
 #: pynicotine/gtkgui/widgets/trayicon.py:97
 #: pynicotine/gtkgui/ui/mainwindow.ui:519
 #: pynicotine/gtkgui/ui/settings/downloads.ui:26
@@ -1851,7 +1857,7 @@ msgid "Downloads"
 msgstr "Завантаження"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2289
-#: pynicotine/gtkgui/frame.py:1214 pynicotine/gtkgui/frame.py:1577
+#: pynicotine/gtkgui/frame.py:1216 pynicotine/gtkgui/frame.py:1579
 #: pynicotine/gtkgui/widgets/trayicon.py:98
 #: pynicotine/gtkgui/ui/mainwindow.ui:762
 #: pynicotine/gtkgui/ui/settings/uploads.ui:47
@@ -1865,7 +1871,7 @@ msgid "Searches"
 msgstr "Пошуки"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2291
-#: pynicotine/gtkgui/frame.py:1216 pynicotine/gtkgui/ui/mainwindow.ui:1101
+#: pynicotine/gtkgui/frame.py:1218 pynicotine/gtkgui/ui/mainwindow.ui:1101
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:216
 msgid "User Info"
 msgstr "Інформація про користувача"
@@ -2089,152 +2095,152 @@ msgstr "Схоже, ви використовуєте версію Nicotine+ д�
 msgid "You are using the latest version of Nicotine+."
 msgstr "Ви використовуєте останню версію Nicotine+."
 
-#: pynicotine/gtkgui/frame.py:978
+#: pynicotine/gtkgui/frame.py:979
 msgid "_Connect"
 msgstr "_Підключитися"
 
-#: pynicotine/gtkgui/frame.py:979
+#: pynicotine/gtkgui/frame.py:980
 msgid "_Disconnect"
 msgstr "_Відключити"
 
-#: pynicotine/gtkgui/frame.py:980
+#: pynicotine/gtkgui/frame.py:981
 msgid "Soulseek _Privileges"
 msgstr "_Привілеї Soulseek"
 
-#: pynicotine/gtkgui/frame.py:986
+#: pynicotine/gtkgui/frame.py:987
 msgid "_Preferences"
 msgstr "_Налаштування"
 
-#: pynicotine/gtkgui/frame.py:991
+#: pynicotine/gtkgui/frame.py:992
 msgid "_Quit…"
 msgstr "_Вийти…"
 
-#: pynicotine/gtkgui/frame.py:991 pynicotine/gtkgui/frame.py:1775
+#: pynicotine/gtkgui/frame.py:992 pynicotine/gtkgui/frame.py:1777
 msgid "_Quit"
 msgstr "_Вихід"
 
-#: pynicotine/gtkgui/frame.py:1011
+#: pynicotine/gtkgui/frame.py:1012
 msgid "Prefer Dark _Mode"
 msgstr "Віддавати перевагу _темному режиму"
 
-#: pynicotine/gtkgui/frame.py:1012
+#: pynicotine/gtkgui/frame.py:1013
 msgid "Use _Header Bar"
 msgstr "Використовувати панель заголовків"
 
-#: pynicotine/gtkgui/frame.py:1013
+#: pynicotine/gtkgui/frame.py:1014
 msgid "Show _Log History Pane"
 msgstr "Показувати панель журналу історії"
 
-#: pynicotine/gtkgui/frame.py:1015
+#: pynicotine/gtkgui/frame.py:1016
 msgid "Buddy List in Separate Tab"
 msgstr "Список друзів на окремій вкладці"
 
-#: pynicotine/gtkgui/frame.py:1016
+#: pynicotine/gtkgui/frame.py:1017
 msgid "Buddy List in Chat Rooms"
 msgstr "Список друзів у чатах"
 
-#: pynicotine/gtkgui/frame.py:1017
+#: pynicotine/gtkgui/frame.py:1018
 msgid "Buddy List Always Visible"
 msgstr "Список друзів завжди видимий"
 
-#: pynicotine/gtkgui/frame.py:1026
+#: pynicotine/gtkgui/frame.py:1027
 msgid "_Rescan Shares"
 msgstr "_Пересканувати спільні каталоги"
 
-#: pynicotine/gtkgui/frame.py:1027
+#: pynicotine/gtkgui/frame.py:1028
 msgid "_Configure Shares"
 msgstr "_Налаштувати спільні каталоги"
 
-#: pynicotine/gtkgui/frame.py:1035
+#: pynicotine/gtkgui/frame.py:1036
 msgid "_Browse Public Shares"
 msgstr "_Перегляд спільних каталогів"
 
-#: pynicotine/gtkgui/frame.py:1036
+#: pynicotine/gtkgui/frame.py:1037
 msgid "Bro_wse Buddy Shares"
 msgstr "_Перегляд спільних каталогів друзів"
 
-#: pynicotine/gtkgui/frame.py:1052
+#: pynicotine/gtkgui/frame.py:1053
 msgid "_Keyboard Shortcuts"
 msgstr "_Гарячі клавіши"
 
-#: pynicotine/gtkgui/frame.py:1053
+#: pynicotine/gtkgui/frame.py:1054
 msgid "_Setup Assistant"
 msgstr "_Помічник з налаштування"
 
-#: pynicotine/gtkgui/frame.py:1054
+#: pynicotine/gtkgui/frame.py:1055
 msgid "_Transfer Statistics"
 msgstr "_Статистика передач"
 
-#: pynicotine/gtkgui/frame.py:1056
+#: pynicotine/gtkgui/frame.py:1057
 msgid "Report a _Bug"
 msgstr "Повідомити про помилку"
 
-#: pynicotine/gtkgui/frame.py:1057
+#: pynicotine/gtkgui/frame.py:1058
 msgid "Improve T_ranslations"
 msgstr "Покращити Пе_реклад"
 
-#: pynicotine/gtkgui/frame.py:1058
+#: pynicotine/gtkgui/frame.py:1059
 msgid "Check _Latest Version"
 msgstr "Перевірити _останню версію"
 
-#: pynicotine/gtkgui/frame.py:1060
+#: pynicotine/gtkgui/frame.py:1061
 msgid "_About Nicotine+"
 msgstr "_Про Nicotine+"
 
-#: pynicotine/gtkgui/frame.py:1072 pynicotine/gtkgui/frame.py:1092
+#: pynicotine/gtkgui/frame.py:1073 pynicotine/gtkgui/frame.py:1093
 msgid "_View"
 msgstr "_Вигляд"
 
-#: pynicotine/gtkgui/frame.py:1079 pynicotine/gtkgui/frame.py:1094
+#: pynicotine/gtkgui/frame.py:1080 pynicotine/gtkgui/frame.py:1095
 msgid "_Help"
 msgstr "_Допомога"
 
-#: pynicotine/gtkgui/frame.py:1091
+#: pynicotine/gtkgui/frame.py:1092
 msgid "_File"
 msgstr "_Файл"
 
-#: pynicotine/gtkgui/frame.py:1093
+#: pynicotine/gtkgui/frame.py:1094
 msgid "_Shares"
 msgstr "_Спільні каталоги"
 
-#: pynicotine/gtkgui/frame.py:1212 pynicotine/gtkgui/ui/mainwindow.ui:274
+#: pynicotine/gtkgui/frame.py:1214 pynicotine/gtkgui/ui/mainwindow.ui:274
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:168
 msgid "Search Files"
 msgstr "Пошук файлів"
 
-#: pynicotine/gtkgui/frame.py:1215
+#: pynicotine/gtkgui/frame.py:1217
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:240
 #: pynicotine/gtkgui/ui/mainwindow.ui:939
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:204
 msgid "Browse Shares"
 msgstr "Переглянути спільні каталоги"
 
-#: pynicotine/gtkgui/frame.py:1217 pynicotine/gtkgui/ui/mainwindow.ui:1266
+#: pynicotine/gtkgui/frame.py:1219 pynicotine/gtkgui/ui/mainwindow.ui:1266
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:746
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:228
 msgid "Private Chat"
 msgstr "Приватний чат"
 
-#: pynicotine/gtkgui/frame.py:1218 pynicotine/gtkgui/search.py:169
+#: pynicotine/gtkgui/frame.py:1220 pynicotine/gtkgui/search.py:169
 #: pynicotine/gtkgui/ui/buddylist.ui:19 pynicotine/gtkgui/ui/mainwindow.ui:1388
 #: pynicotine/gtkgui/ui/settings/downloads.ui:76
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:240
 msgid "Buddies"
 msgstr "Друзі"
 
-#: pynicotine/gtkgui/frame.py:1219 pynicotine/gtkgui/ui/mainwindow.ui:1555
+#: pynicotine/gtkgui/frame.py:1221 pynicotine/gtkgui/ui/mainwindow.ui:1555
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:712
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:252
 msgid "Chat Rooms"
 msgstr "Чати"
 
-#: pynicotine/gtkgui/frame.py:1220 pynicotine/gtkgui/ui/mainwindow.ui:1613
+#: pynicotine/gtkgui/frame.py:1222 pynicotine/gtkgui/ui/mainwindow.ui:1613
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:264
 #: pynicotine/gtkgui/ui/userinfo.ui:333
 msgid "Interests"
 msgstr "Інтереси"
 
-#: pynicotine/gtkgui/frame.py:1578
+#: pynicotine/gtkgui/frame.py:1580
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:617
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:583
 #: pynicotine/gtkgui/ui/settings/downloads.ui:106
@@ -2242,83 +2248,83 @@ msgstr "Інтереси"
 msgid "Search"
 msgstr "Пошук"
 
-#: pynicotine/gtkgui/frame.py:1579
+#: pynicotine/gtkgui/frame.py:1581
 msgid "Chat"
 msgstr "Чат"
 
-#: pynicotine/gtkgui/frame.py:1581
+#: pynicotine/gtkgui/frame.py:1583
 msgid "[Debug] Connections"
 msgstr "[Відлагодження] Підключення"
 
-#: pynicotine/gtkgui/frame.py:1582
+#: pynicotine/gtkgui/frame.py:1584
 msgid "[Debug] Messages"
 msgstr "[Відлагодження] Повідомлення"
 
-#: pynicotine/gtkgui/frame.py:1583
+#: pynicotine/gtkgui/frame.py:1585
 msgid "[Debug] Transfers"
 msgstr "[Відлагодження] Передачі"
 
-#: pynicotine/gtkgui/frame.py:1584
+#: pynicotine/gtkgui/frame.py:1586
 msgid "[Debug] Miscellaneous"
 msgstr "[Відлагодження] Різне"
 
-#: pynicotine/gtkgui/frame.py:1588
+#: pynicotine/gtkgui/frame.py:1590
 msgid "_Find…"
 msgstr "_Знайти…"
 
-#: pynicotine/gtkgui/frame.py:1590 pynicotine/gtkgui/frame.py:1623
+#: pynicotine/gtkgui/frame.py:1592 pynicotine/gtkgui/frame.py:1625
 msgid "_Copy"
 msgstr "_Копіювати"
 
-#: pynicotine/gtkgui/frame.py:1591
+#: pynicotine/gtkgui/frame.py:1593
 msgid "Copy _All"
 msgstr "Копіювати _Все"
 
-#: pynicotine/gtkgui/frame.py:1593
+#: pynicotine/gtkgui/frame.py:1595
 msgid "_Open Log Folder"
 msgstr "_Відкрити каталог журналу"
 
-#: pynicotine/gtkgui/frame.py:1594
+#: pynicotine/gtkgui/frame.py:1596
 msgid "Open _Transfer Log"
 msgstr "Відкрити журнал _передач"
 
-#: pynicotine/gtkgui/frame.py:1596
+#: pynicotine/gtkgui/frame.py:1598
 msgid "_Log Categories"
 msgstr "_Категорії журналу"
 
-#: pynicotine/gtkgui/frame.py:1598
+#: pynicotine/gtkgui/frame.py:1600
 msgid "Clear Log View"
 msgstr "Очистити вигляд журналу"
 
-#: pynicotine/gtkgui/frame.py:1698
+#: pynicotine/gtkgui/frame.py:1700
 #, python-format
 msgid "Downloads: %(speed)s"
 msgstr "Завантаження: %(speed)s"
 
-#: pynicotine/gtkgui/frame.py:1702
+#: pynicotine/gtkgui/frame.py:1704
 #, python-format
 msgid "Uploads: %(speed)s"
 msgstr "Вивантаження: %(speed)s"
 
-#: pynicotine/gtkgui/frame.py:1773
+#: pynicotine/gtkgui/frame.py:1775
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:259
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:225
 msgid "Quit Nicotine+"
 msgstr "Вийти з Nicotine+"
 
-#: pynicotine/gtkgui/frame.py:1774
+#: pynicotine/gtkgui/frame.py:1776
 msgid "Do you really want to exit?"
 msgstr "Ви дійсно хочете вийти?"
 
-#: pynicotine/gtkgui/frame.py:1776
+#: pynicotine/gtkgui/frame.py:1778
 msgid "_Run in Background"
 msgstr "_Запуск у фоновому режимі"
 
-#: pynicotine/gtkgui/frame.py:1777
+#: pynicotine/gtkgui/frame.py:1779
 msgid "Remember choice"
 msgstr "Запам'ятати вибір"
 
-#: pynicotine/gtkgui/frame.py:1818
+#: pynicotine/gtkgui/frame.py:1820
 msgid "Nicotine+ is running in the background"
 msgstr "Nicotine+ працює у фоновому режимі"
 
