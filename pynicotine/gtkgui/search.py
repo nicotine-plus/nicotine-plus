@@ -1362,7 +1362,7 @@ class Search(UserInterface):
         if self.num_results_found > self.num_results_visible:
             self.on_clear_filters()
         else:
-            self.frame.on_preferences(page='Searches')
+            self.frame.on_preferences(page_id="searches")
 
     def on_group(self, action, state):
 

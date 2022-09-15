@@ -2281,20 +2281,20 @@ class Preferences(UserInterface, Dialog):
 
         self.pages = {}
         self.page_ids = [
-            ("Network", _("Network"), "network-wireless-symbolic"),
-            ("UserInterface", _("User Interface"), "view-grid-symbolic"),
-            ("Shares", _("Shares"), "folder-symbolic"),
-            ("Downloads", _("Downloads"), "document-save-symbolic"),
-            ("Uploads", _("Uploads"), "emblem-shared-symbolic"),
-            ("Searches", _("Searches"), "system-search-symbolic"),
-            ("UserInfo", _("User Info"), "avatar-default-symbolic"),
-            ("Chats", _("Chats"), "insert-text-symbolic"),
-            ("NowPlaying", _("Now Playing"), "folder-music-symbolic"),
-            ("Logging", _("Logging"), "folder-documents-symbolic"),
-            ("BannedUsers", _("Banned Users"), "action-unavailable-symbolic"),
-            ("IgnoredUsers", _("Ignored Users"), "microphone-sensitivity-muted-symbolic"),
-            ("Plugins", _("Plugins"), "list-add-symbolic"),
-            ("UrlHandlers", _("URL Handlers"), "insert-link-symbolic")]
+            ("network", _("Network"), "network-wireless-symbolic"),
+            ("user-interface", _("User Interface"), "view-grid-symbolic"),
+            ("shares", _("Shares"), "folder-symbolic"),
+            ("downloads", _("Downloads"), "document-save-symbolic"),
+            ("uploads", _("Uploads"), "emblem-shared-symbolic"),
+            ("searches", _("Searches"), "system-search-symbolic"),
+            ("user-info", _("User Info"), "avatar-default-symbolic"),
+            ("chats", _("Chats"), "insert-text-symbolic"),
+            ("now-playing", _("Now Playing"), "folder-music-symbolic"),
+            ("logging", _("Logging"), "folder-documents-symbolic"),
+            ("banned-users", _("Banned Users"), "action-unavailable-symbolic"),
+            ("ignored-users", _("Ignored Users"), "microphone-sensitivity-muted-symbolic"),
+            ("plugins", _("Plugins"), "list-add-symbolic"),
+            ("url-handlers", _("URL Handlers"), "insert-link-symbolic")]
 
         for _page_id, label, icon_name in self.page_ids:
             box = Gtk.Box(margin_top=8, margin_bottom=8, margin_start=12, margin_end=12, spacing=12, visible=True)
@@ -2310,7 +2310,7 @@ class Preferences(UserInterface, Dialog):
 
             self.preferences_list.insert(box, -1)
 
-        self.set_active_page("Network")
+        self.set_active_page("network")
         self.update_visuals()
 
     def update_visuals(self, scope=None):
@@ -2691,7 +2691,8 @@ class Preferences(UserInterface, Dialog):
                 self.viewport.remove(old_page)
 
         if page_id not in self.pages:
-            self.pages[page_id] = page = getattr(sys.modules[__name__], page_id + "Frame")(self)
+            class_name = page_id.title().replace("-", "") + "Frame"
+            self.pages[page_id] = page = getattr(sys.modules[__name__], class_name)(self)
             page.set_settings()
 
             for obj in page.widgets:
