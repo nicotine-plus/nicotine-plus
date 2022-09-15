@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-15 19:40+0300\n"
-"PO-Revision-Date: 2022-09-01 14:15+0000\n"
+"PO-Revision-Date: 2022-09-15 18:58+0000\n"
 "Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/tr/>\n"
@@ -1189,9 +1189,9 @@ msgid "Cannot find %s, please install it."
 msgstr "%s bulunamıyor, lütfen kurun."
 
 #: pynicotine/gtkgui/__init__.py:54
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot find %s or newer, please install it."
-msgstr "%s bulunamıyor, lütfen kurun."
+msgstr "%s veya daha yenisi bulunamıyor, lütfen kurun."
 
 #: pynicotine/gtkgui/__init__.py:60
 msgid "Cannot import the Gtk module. Bad install of the python-gobject module?"
@@ -1531,9 +1531,8 @@ msgid "Buddy-only"
 msgstr "Yalnızca arkadaş"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:603
-#, fuzzy
 msgid "Share with buddies only?"
-msgstr "Yalnızca arkadaşlarla paylaş"
+msgstr "Yalnızca arkadaşlarla mı paylaşılsın?"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:762
 #: pynicotine/gtkgui/dialogs/preferences.py:889
