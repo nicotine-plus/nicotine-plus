@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-15 21:58+0300\n"
-"PO-Revision-Date: 2022-09-01 21:49+0000\n"
+"PO-Revision-Date: 2022-09-15 21:24+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -1186,9 +1186,9 @@ msgid "Cannot find %s, please install it."
 msgstr "Kan %s niet vinden, installeer het aub."
 
 #: pynicotine/gtkgui/__init__.py:54
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot find %s or newer, please install it."
-msgstr "Kan %s niet vinden, installeer het aub."
+msgstr "Kan %s of nieuwer niet vinden, installeer het alstublieft."
 
 #: pynicotine/gtkgui/__init__.py:60
 msgid "Cannot import the Gtk module. Bad install of the python-gobject module?"
@@ -1508,9 +1508,8 @@ msgstr "Geef een nieuwe download-filter op:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:341
 #: pynicotine/gtkgui/dialogs/preferences.py:373
-#, fuzzy
 msgid "Escape filter"
-msgstr "Filters inschakelen"
+msgstr "Escape-filter"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:367
 msgid "Edit Download Filter"
@@ -1534,7 +1533,6 @@ msgid "Buddy-only"
 msgstr "Alleen voor vrienden"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:603
-#, fuzzy
 msgid "Share with buddies only"
 msgstr "Alleen met vrienden delen"
 
