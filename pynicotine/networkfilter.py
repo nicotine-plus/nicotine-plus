@@ -191,7 +191,7 @@ class NetworkFilter:
         """ Close all connections whose IP address exists in the block list """
 
         for ip_address in self.config.sections["server"]["ipblocklist"]:
-            self.queue.append(slskmessages.ConnCloseIP(ip_address))
+            self.queue.append(slskmessages.CloseConnectionIP(ip_address))
 
     def update_saved_user_ip_filters(self, user):
         """ When we know a user's IP address has changed, we call this function to
@@ -237,7 +237,7 @@ class NetworkFilter:
         ip_address = self._add_user_ip_to_list(user, "block")
 
         if ip_address:
-            self.queue.append(slskmessages.ConnCloseIP(ip_address))
+            self.queue.append(slskmessages.CloseConnectionIP(ip_address))
 
     def unblock_user_ip(self, user):
         self._remove_user_ip_from_list(user, "block")

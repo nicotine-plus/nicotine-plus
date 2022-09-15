@@ -109,6 +109,20 @@ class InternalMessage:
     msgtype = MessageType.INTERNAL
 
 
+class CloseConnection(InternalMessage):
+
+    def __init__(self, sock=None):
+        self.sock = sock
+
+
+class CloseConnectionIP(InternalMessage):
+    """ Sent by the main thread to the networking thread in order to close any connections
+    using a certain IP address. """
+
+    def __init__(self, addr=None):
+        self.addr = addr
+
+
 class ServerConnect(InternalMessage):
     """ NicotineCore sends this to make networking thread establish a server connection. """
 
@@ -127,27 +141,13 @@ class ServerTimeout(InternalMessage):
     pass
 
 
-class InitPeerConn(InternalMessage):
+class InitPeerConnection(InternalMessage):
 
     __slots__ = ("addr", "init")
 
     def __init__(self, addr=None, init=None):
         self.addr = addr
         self.init = init
-
-
-class ConnClose(InternalMessage):
-
-    def __init__(self, sock=None):
-        self.sock = sock
-
-
-class ConnCloseIP(InternalMessage):
-    """ Sent by the main thread to the networking thread in order to close any connections
-    using a certain IP address. """
-
-    def __init__(self, addr=None):
-        self.addr = addr
 
 
 class SendNetworkMessage(InternalMessage):
@@ -166,7 +166,7 @@ class ShowConnectionErrorMessage(InternalMessage):
         self.offline = offline
 
 
-class MessageProgress(InternalMessage):
+class PeerMessageProgress(InternalMessage):
     """ Used to indicate progress of long transfers. """
 
     __slots__ = ("user", "msg_type", "position", "total")
@@ -176,6 +176,14 @@ class MessageProgress(InternalMessage):
         self.msg_type = msg_type
         self.position = position
         self.total = total
+
+
+class PeerConnectionClosed(InternalMessage):
+
+    __slots__ = ("user",)
+
+    def __init__(self, user=None):
+        self.user = user
 
 
 class TransferTimeout(InternalMessage):
@@ -239,7 +247,7 @@ class UploadFileError(DownloadFileError):
     pass
 
 
-class DownloadConnClose(InternalMessage):
+class DownloadConnectionClosed(InternalMessage):
     """ Sent by networking thread to indicate a file transfer connection has been closed """
 
     __slots__ = ("user", "token")
@@ -249,7 +257,7 @@ class DownloadConnClose(InternalMessage):
         self.token = token
 
 
-class UploadConnClose(InternalMessage):
+class UploadConnectionClosed(InternalMessage):
 
     __slots__ = ("user", "token", "timed_out")
 
