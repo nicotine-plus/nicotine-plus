@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-15 21:58+0300\n"
-"PO-Revision-Date: 2022-09-15 16:43+0000\n"
+"PO-Revision-Date: 2022-09-15 20:29+0000\n"
 "Last-Translator: Kirill Feoktistov <feoktistovk@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ru/>\n"
@@ -1511,9 +1511,8 @@ msgstr "Введите новый фильтр загрузки:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:341
 #: pynicotine/gtkgui/dialogs/preferences.py:373
-#, fuzzy
 msgid "Escape filter"
-msgstr "Сбежавший"
+msgstr "Отключить"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:367
 msgid "Edit Download Filter"
@@ -1537,9 +1536,8 @@ msgid "Buddy-only"
 msgstr "Только для друзей"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:603
-#, fuzzy
 msgid "Share with buddies only"
-msgstr "Только для приятелей"
+msgstr "Только для друзей"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:762
 #: pynicotine/gtkgui/dialogs/preferences.py:889
@@ -4428,7 +4426,7 @@ msgid ""
 "notifications when they are online"
 msgstr ""
 "Добавляйте пользователей в список друзей, чтобы делиться с ними конкретными "
-"каталогами; получать уведомления, когда они в сети"
+"каталогами и получать уведомления, когда они в сети"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1457
 msgid "Create or join room…"
@@ -4755,9 +4753,7 @@ msgstr "Фильтры результата поиска"
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:39
 msgid ""
 "Search result filters are used to refine which search results are displayed."
-msgstr ""
-"Фильтры результата поиска используются для уточнения отображаемых "
-"результатов."
+msgstr "Используются для уточнения отображаемых результатов."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:48
 msgid ""
@@ -5728,7 +5724,7 @@ msgid ""
 "Share folders with every Soulseek user or buddies, allowing contents to be "
 "downloaded directly from your device. Hidden files are never shared."
 msgstr ""
-"Делитесь общими каталогами с пользователями или друзьями сети Soulseek, "
+"Делитесь общими каталогами с пользователями или друзьями в сети Soulseek, "
 "позволяя загружать содержимое непосредственно с вашего устройства. Скрытые "
 "файлы не будут доступны для загрузки."
 
