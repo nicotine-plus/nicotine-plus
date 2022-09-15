@@ -1227,8 +1227,8 @@ class ChatRoom(UserInterface):
             callback=self.on_delete_room_log_response
         ).show()
 
-    def on_ignore_users_settings(self, *_args):
-        self.frame.on_settings(page='IgnoredUsers')
+    def on_configure_ignored_users(self, *_args):
+        self.frame.on_preferences(page='IgnoredUsers')
 
     def set_completion_list(self, completion_list):
 

@@ -81,10 +81,10 @@ class Searches(IconNotebook):
 
         mode_menu = PopupMenu(frame)
         mode_menu.add_items(
-            ("O" + self.modes["global"], "win.searchmode", "global"),
-            ("O" + self.modes["buddies"], "win.searchmode", "buddies"),
-            ("O" + self.modes["rooms"], "win.searchmode", "rooms"),
-            ("O" + self.modes["user"], "win.searchmode", "user")
+            ("O" + self.modes["global"], "win.search-mode", "global"),
+            ("O" + self.modes["buddies"], "win.search-mode", "buddies"),
+            ("O" + self.modes["rooms"], "win.search-mode", "rooms"),
+            ("O" + self.modes["user"], "win.search-mode", "user")
         )
         mode_menu.update_model()
         frame.search_mode_button.set_menu_model(mode_menu.model)
@@ -1341,7 +1341,7 @@ class Search(UserInterface):
         if self.num_results_found > self.num_results_visible:
             self.on_clear_filters()
         else:
-            self.frame.on_settings(page='Searches')
+            self.frame.on_preferences(page='Searches')
 
     def on_group(self, action, state):
 

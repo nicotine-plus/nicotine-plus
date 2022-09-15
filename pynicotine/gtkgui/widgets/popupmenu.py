@@ -140,7 +140,7 @@ class PopupMenu:
             action = None
 
         else:
-            action_id = "win." + (label + self.popup_id).replace(" ", "").lower().translate(
+            action_id = "win." + (label + "-" + self.popup_id).replace(" ", "-").lower().translate(
                 str.maketrans(dict.fromkeys(string.punctuation)))
 
             action = self._create_action(action_id[4:], (boolean or choice))

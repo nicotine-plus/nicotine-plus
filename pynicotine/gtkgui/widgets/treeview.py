@@ -62,7 +62,7 @@ def verify_grouping_mode(mode):
 
 def create_grouping_menu(window, active_mode, callback):
 
-    action_id = "grouping" + ''.join(random.choice(string.digits) for _ in range(8))
+    action_id = "grouping-" + ''.join(random.choice(string.digits) for _ in range(8))
     menu = Gio.Menu()
 
     menuitem = Gio.MenuItem.new(_("Ungrouped"), "win." + action_id + "::ungrouped")
