@@ -411,8 +411,7 @@ class DownloadsFrame(UserInterface):
             callback=self.on_edit_filter_response,
             default=dfilter,
             option_value=escapedvalue,
-            option_label=_("Escape filter"),
-            droplist=list(self.filtersiters.keys())
+            option_label=_("Escape filter")
         ).show()
 
     def get_selected_filter(self):
