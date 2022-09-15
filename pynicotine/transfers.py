@@ -1080,7 +1080,7 @@ class Transfers:
 
             if download.sock is not None:
                 log.add_transfer("Download already has an existing file connection, ignoring init message")
-                self.queue.append(slskmessages.ConnClose(msg.init.sock))
+                self.queue.append(slskmessages.CloseConnection(msg.init.sock))
                 return
 
             incomplete_folder = self.config.sections["transfers"]["incompletedir"]
@@ -1201,7 +1201,7 @@ class Transfers:
 
             if upload.sock is not None:
                 log.add_transfer("Upload already has an existing file connection, ignoring init message")
-                self.queue.append(slskmessages.ConnClose(msg.init.sock))
+                self.queue.append(slskmessages.CloseConnection(msg.init.sock))
                 return
 
             need_update = True
@@ -1268,7 +1268,7 @@ class Transfers:
             return
 
         log.add_transfer("Unknown file upload init message with token %s", token)
-        self.queue.append(slskmessages.ConnClose(msg.init.sock))
+        self.queue.append(slskmessages.CloseConnection(msg.init.sock))
 
     def upload_denied(self, msg):
         """ Peer code: 50 """
@@ -1429,8 +1429,8 @@ class Transfers:
             self.update_upload(upload)
             return
 
-    def download_conn_close(self, msg):
-        """ The remote peer has closed a file transfer connection """
+    def download_connection_closed(self, msg):
+        """ A file download connection has closed for any reason """
 
         username = msg.user
         token = msg.token
@@ -1454,8 +1454,8 @@ class Transfers:
             self.update_download(download)
             return
 
-    def upload_conn_close(self, msg):
-        """ The remote peer has closed a file transfer connection """
+    def upload_connection_closed(self, msg):
+        """ A file upload connection has closed for any reason """
 
         username = msg.user
         token = msg.token
@@ -2418,7 +2418,7 @@ class Transfers:
         transfer.queue_position = 0
 
         if transfer.sock is not None:
-            self.queue.append(slskmessages.ConnClose(transfer.sock))
+            self.queue.append(slskmessages.CloseConnection(transfer.sock))
             transfer.sock = None
 
         if transfer in self.transfer_request_times:

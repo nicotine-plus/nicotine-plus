@@ -42,15 +42,15 @@ from pynicotine.slskmessages import AcceptChildren
 from pynicotine.slskmessages import BranchLevel
 from pynicotine.slskmessages import BranchRoot
 from pynicotine.slskmessages import CheckPrivileges
-from pynicotine.slskmessages import ConnClose
-from pynicotine.slskmessages import ConnCloseIP
+from pynicotine.slskmessages import CloseConnection
+from pynicotine.slskmessages import CloseConnectionIP
 from pynicotine.slskmessages import ConnectionType
 from pynicotine.slskmessages import ConnectToPeer
 from pynicotine.slskmessages import DistribBranchLevel
 from pynicotine.slskmessages import DistribBranchRoot
 from pynicotine.slskmessages import DistribEmbeddedMessage
 from pynicotine.slskmessages import DistribSearch
-from pynicotine.slskmessages import DownloadConnClose
+from pynicotine.slskmessages import DownloadConnectionClosed
 from pynicotine.slskmessages import DownloadFile
 from pynicotine.slskmessages import DownloadFileError
 from pynicotine.slskmessages import EmbeddedMessage
@@ -62,14 +62,15 @@ from pynicotine.slskmessages import GetPeerAddress
 from pynicotine.slskmessages import GetUserStats
 from pynicotine.slskmessages import GetUserStatus
 from pynicotine.slskmessages import HaveNoParent
-from pynicotine.slskmessages import InitPeerConn
+from pynicotine.slskmessages import InitPeerConnection
 from pynicotine.slskmessages import Login
-from pynicotine.slskmessages import MessageProgress
 from pynicotine.slskmessages import MessageType
 from pynicotine.slskmessages import PossibleParents
 from pynicotine.slskmessages import ParentMinSpeed
 from pynicotine.slskmessages import ParentSpeedRatio
+from pynicotine.slskmessages import PeerConnectionClosed
 from pynicotine.slskmessages import PeerInit
+from pynicotine.slskmessages import PeerMessageProgress
 from pynicotine.slskmessages import PierceFireWall
 from pynicotine.slskmessages import Relogged
 from pynicotine.slskmessages import ResetDistributed
@@ -84,7 +85,7 @@ from pynicotine.slskmessages import SetUploadLimit
 from pynicotine.slskmessages import SetWaitPort
 from pynicotine.slskmessages import SharedFileList
 from pynicotine.slskmessages import ShowConnectionErrorMessage
-from pynicotine.slskmessages import UploadConnClose
+from pynicotine.slskmessages import UploadConnectionClosed
 from pynicotine.slskmessages import UploadFile
 from pynicotine.slskmessages import UploadFileError
 from pynicotine.slskmessages import UserInfoReply
@@ -723,7 +724,7 @@ class SlskProtoThread(threading.Thread):
             self.connect_to_peer_indirect(init)
 
         self.add_init_message(init)
-        self._queue.append(InitPeerConn(addr, init))
+        self._queue.append(InitPeerConnection(addr, init))
 
         log.add_conn("Attempting direct connection of type %(type)s to user %(user)s %(addr)s", {
             'type': conn_type,
@@ -923,11 +924,12 @@ class SlskProtoThread(threading.Thread):
         self.close_socket(sock, shutdown=(connection_list != self._connsinprogress))
         self._numsockets -= 1
 
-        if sock is self.server_socket:
+        if conn_obj.__class__ is ServerConnection:
             # Disconnected from server, clean up connections and queue
             self.server_disconnect()
+            return
 
-        elif sock is self.parent_socket and not self.server_disconnected:
+        if sock is self.parent_socket and not self.server_disconnected:
             self.send_have_no_parent()
 
         elif self._is_download(conn_obj):
@@ -937,7 +939,7 @@ class SlskProtoThread(threading.Thread):
                 self.total_download_bandwidth = 0
 
             if callback:
-                self._callback_msgs.append(DownloadConnClose(
+                self._callback_msgs.append(DownloadConnectionClosed(
                     user=conn_obj.init.target_user, token=conn_obj.fileinit.token
                 ))
 
@@ -951,13 +953,17 @@ class SlskProtoThread(threading.Thread):
 
             if callback:
                 timed_out = (time.time() - conn_obj.lastactive) > self.CONNECTION_MAX_IDLE
-                self._callback_msgs.append(UploadConnClose(
+                self._callback_msgs.append(UploadConnectionClosed(
                     user=conn_obj.init.target_user, token=conn_obj.fileinit.token, timed_out=timed_out
                 ))
 
             self._calc_upload_limit_function()
 
-        if conn_obj.__class__ is ServerConnection or conn_obj.init is None:
+        elif conn_obj.init is not None:
+            self._callback_msgs.append(PeerConnectionClosed(user=conn_obj.init.target_user))
+
+        else:
+            # No peer init message present, nothing to do
             return
 
         conn_type = conn_obj.init.conn_type
@@ -1420,7 +1426,7 @@ class SlskProtoThread(threading.Thread):
 
     """ Peer Connection """
 
-    def init_peer_conn(self, msg_obj):
+    def init_peer_connection(self, msg_obj):
 
         conn_obj = None
 
@@ -1469,7 +1475,7 @@ class SlskProtoThread(threading.Thread):
                 if peer_class in (SharedFileList, UserInfoReply):
                     # Send progress to the main thread
                     self._callback_msgs.append(
-                        MessageProgress(conn_obj.init.target_user, peer_class, buffer_len, msgsize_total))
+                        PeerMessageProgress(conn_obj.init.target_user, peer_class, buffer_len, msgsize_total))
 
             except KeyError:
                 pass
@@ -1801,18 +1807,18 @@ class SlskProtoThread(threading.Thread):
 
         msg_class = msg_obj.__class__
 
-        if msg_class is InitPeerConn:
+        if msg_class is InitPeerConnection:
             if self._numsockets < MAXSOCKETS:
-                self.init_peer_conn(msg_obj)
+                self.init_peer_connection(msg_obj)
             else:
                 # Connection limit reached, re-queue
                 self._queue.append(msg_obj)
 
-        elif msg_class is ConnClose and msg_obj.sock in self._conns:
+        elif msg_class is CloseConnection and msg_obj.sock in self._conns:
             sock = msg_obj.sock
             self.close_connection(self._conns, sock)
 
-        elif msg_class is ConnCloseIP:
+        elif msg_class is CloseConnectionIP:
             self.close_connection_by_ip(msg_obj.addr)
 
         elif msg_class is ServerConnect:

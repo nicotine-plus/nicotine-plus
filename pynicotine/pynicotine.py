@@ -166,7 +166,7 @@ class NicotineCore:
             slskmessages.PierceFireWall: self.dummy_message,
             slskmessages.ConnectToPeer: self.connect_to_peer,
             slskmessages.CantConnectToPeer: self.dummy_message,
-            slskmessages.MessageProgress: self.message_progress,
+            slskmessages.PeerMessageProgress: self.peer_message_progress,
             slskmessages.SharedFileList: self.userbrowse.shared_file_list,
             slskmessages.GetSharedFileList: self.shares.get_shared_file_list,
             slskmessages.FileSearchRequest: self.dummy_message,
@@ -189,8 +189,9 @@ class NicotineCore:
             slskmessages.PlaceInQueue: self.transfers.place_in_queue,
             slskmessages.DownloadFileError: self.transfers.download_file_error,
             slskmessages.UploadFileError: self.transfers.upload_file_error,
-            slskmessages.DownloadConnClose: self.transfers.download_conn_close,
-            slskmessages.UploadConnClose: self.transfers.upload_conn_close,
+            slskmessages.DownloadConnectionClosed: self.transfers.download_connection_closed,
+            slskmessages.UploadConnectionClosed: self.transfers.upload_connection_closed,
+            slskmessages.PeerConnectionClosed: self.peer_connection_closed,
             slskmessages.FolderContentsResponse: self.transfers.folder_contents_response,
             slskmessages.FolderContentsRequest: self.shares.folder_contents_request,
             slskmessages.RoomList: self.chatrooms.room_list,
@@ -453,13 +454,17 @@ class NicotineCore:
             elif i.__class__ is slskmessages.UserInfoRequest:
                 self.userinfo.show_connection_error(msg.user)
 
-    def message_progress(self, msg):
+    def peer_message_progress(self, msg):
 
         if msg.msg_type is slskmessages.SharedFileList:
-            self.userbrowse.message_progress(msg)
+            self.userbrowse.peer_message_progress(msg)
 
         elif msg.msg_type is slskmessages.UserInfoReply:
-            self.userinfo.message_progress(msg)
+            self.userinfo.peer_message_progress(msg)
+
+    def peer_connection_closed(self, msg):
+        self.userbrowse.peer_connection_closed(msg)
+        self.userinfo.peer_connection_closed(msg)
 
     def server_timeout(self, _msg):
         if not config.need_config():

@@ -310,9 +310,13 @@ class UserBrowse:
         if self.ui_callback:
             self.ui_callback.show_connection_error(username)
 
-    def message_progress(self, msg):
+    def peer_message_progress(self, msg):
         if self.ui_callback:
-            self.ui_callback.message_progress(msg)
+            self.ui_callback.peer_message_progress(msg)
+
+    def peer_connection_closed(self, msg):
+        if self.ui_callback:
+            self.ui_callback.peer_connection_closed(msg)
 
     def get_user_status(self, msg):
         """ Server code: 7 """

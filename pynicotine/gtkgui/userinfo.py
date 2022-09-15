@@ -104,9 +104,13 @@ class UserInfos(IconNotebook):
         if user in self.pages:
             self.pages[user].show_connection_error()
 
-    def message_progress(self, msg):
+    def peer_message_progress(self, msg):
         if msg.user in self.pages:
-            self.pages[msg.user].message_progress(msg)
+            self.pages[msg.user].peer_message_progress(msg)
+
+    def peer_connection_closed(self, msg):
+        if msg.user in self.pages:
+            self.pages[msg.user].peer_connection_closed()
 
     def get_user_stats(self, msg):
         if msg.user in self.pages:
@@ -404,7 +408,7 @@ class UserInfo(UserInterface):
         self.info_bar.set_visible(False)
         self.refresh_button.set_sensitive(False)
 
-    def message_progress(self, msg):
+    def peer_message_progress(self, msg):
 
         self.indeterminate_progress = False
 
@@ -416,6 +420,10 @@ class UserInfo(UserInterface):
             fraction = float(msg.position) / msg.total
 
         self.progress_bar.set_fraction(fraction)
+
+    def peer_connection_closed(self):
+        if not self.refresh_button.get_sensitive():
+            self.show_connection_error()
 
     """ Network Messages """
 
