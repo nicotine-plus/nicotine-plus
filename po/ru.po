@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-15 21:58+0300\n"
-"PO-Revision-Date: 2022-09-15 20:29+0000\n"
-"Last-Translator: Kirill Feoktistov <feoktistovk@gmail.com>\n"
+"PO-Revision-Date: 2022-09-15 21:24+0000\n"
+"Last-Translator: Mehavoid <tontole@riseup.net>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ru/>\n"
 "Language: ru\n"
@@ -1188,9 +1188,9 @@ msgid "Cannot find %s, please install it."
 msgstr "Не удаётся найти %s, установите его."
 
 #: pynicotine/gtkgui/__init__.py:54
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot find %s or newer, please install it."
-msgstr "Не удаётся найти %s, установите его."
+msgstr "Не удается найти %s или новее, установите его."
 
 #: pynicotine/gtkgui/__init__.py:60
 msgid "Cannot import the Gtk module. Bad install of the python-gobject module?"
