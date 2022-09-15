@@ -756,9 +756,10 @@ class NicotineFrame(UserInterface):
 
         # Menu Button
 
-        action = Gio.SimpleAction(name="menu")
-        action.connect("activate", self.on_menu)
-        self.application.add_action(action)
+        if GTK_API_VERSION == 3:
+            action = Gio.SimpleAction(name="menu")
+            action.connect("activate", self.on_menu)
+            self.application.add_action(action)
 
         # File
 
@@ -1105,12 +1106,12 @@ class NicotineFrame(UserInterface):
         hamburger_menu = self.create_hamburger_menu()
         self.header_menu.set_menu_model(hamburger_menu.model)
 
-    def on_menu(self, *_args):
-
         if GTK_API_VERSION >= 4:
-            self.header_menu.popup()
-        else:
-            self.header_menu.set_active(not self.header_menu.get_active())
+            # F10 shortcut to open menu
+            self.header_menu.set_primary(True)
+
+    def on_menu(self, *_args):
+        self.header_menu.set_active(not self.header_menu.get_active())
 
     """ Headerbar/toolbar """
 
@@ -1119,11 +1120,11 @@ class NicotineFrame(UserInterface):
 
         if self.window.get_titlebar() != self.header_bar:
             self.window.set_titlebar(self.header_bar)
-
-            self.application.set_accels_for_action("app.menu", ["F10"])
             self.window.set_show_menubar(False)
 
             if GTK_API_VERSION == 3:
+                self.application.set_accels_for_action("app.menu", ["F10"])
+
                 # Avoid "Untitled window" in certain desktop environments
                 self.header_bar.set_title(self.window.get_title())
 
@@ -1165,10 +1166,11 @@ class NicotineFrame(UserInterface):
 
         if not self.window.get_show_menubar():
             self.window.set_show_menubar(True)
-
-            # Don't override builtin accelerator for menu bar
-            self.application.set_accels_for_action("app.menu", [])
             self.header_menu.get_popover().hide()
+
+            if GTK_API_VERSION == 3:
+                # Don't override builtin accelerator for menu bar
+                self.application.set_accels_for_action("app.menu", [])
 
             if self.window.get_titlebar():
                 self.window.unrealize()
