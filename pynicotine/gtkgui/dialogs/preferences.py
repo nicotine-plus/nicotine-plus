@@ -370,8 +370,7 @@ class DownloadsFrame(UserInterface):
                 callback_data=iterator,
                 default=dfilter,
                 option_value=escaped,
-                option_label=_("Escape filter"),
-                droplist=self.filter_list_view.iterators
+                option_label=_("Escape filter")
             ).show()
             return
 
