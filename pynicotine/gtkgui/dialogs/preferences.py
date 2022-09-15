@@ -600,7 +600,7 @@ class SharesFrame(UserInterface):
                 message=_("Enter new virtual name for '%(dir)s':") % {'dir': folder},
                 default=virtual_name,
                 option_value=buddy_only,
-                option_label="Share with buddies only?",
+                option_label=_("Share with buddies only?"),
                 callback=self.on_edit_shared_dir_response,
                 callback_data=iterator
             ).show()
