@@ -23,6 +23,7 @@
 import sys
 
 from gi.repository import Gdk
+from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine.config import config
@@ -340,7 +341,7 @@ class IconNotebook:
         self.set_tab_reorderable(page, True)
         self.set_show_tabs(True)
 
-    def append_page(self, page, text, close_callback=None, full_text=None, user=None):
+    def append_page(self, page, text, focus_callback=None, close_callback=None, full_text=None, user=None):
 
         if full_text is None:
             full_text = text
@@ -364,6 +365,7 @@ class IconNotebook:
         # menu for all tabs
         label_tab_menu = TabLabel(text)
 
+        page.focus_callback = focus_callback
         self.append_page_label(page, label_tab, label_tab_menu)
 
         if user is not None:
@@ -561,6 +563,9 @@ class IconNotebook:
         else:
             current_page.get_children()[0].hide()
             new_page.get_children()[0].show()
+
+        if hasattr(new_page, "focus_callback"):
+            GLib.idle_add(new_page.focus_callback)
 
         # Dismiss tab highlight
         if self.parent_page is not None:

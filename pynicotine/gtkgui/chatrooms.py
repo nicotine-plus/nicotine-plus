@@ -129,8 +129,6 @@ class ChatRooms(IconNotebook):
             if tab.container != page:
                 continue
 
-            GLib.idle_add(lambda tab: tab.chat_entry.grab_focus() == -1, tab)
-
             self.completion.set_entry(tab.chat_entry)
             tab.set_completion_list(self.core.chatrooms.completion_list[:])
 
@@ -207,7 +205,7 @@ class ChatRooms(IconNotebook):
 
         self.pages[msg.room] = tab = ChatRoom(self, msg.room, msg.users)
 
-        self.append_page(tab.container, msg.room, tab.on_leave_room)
+        self.append_page(tab.container, msg.room, focus_callback=tab.on_focus, close_callback=tab.on_leave_room)
         tab.set_label(self.get_tab_label_inner(tab.container))
 
         if msg.room in self.autojoin_rooms:
@@ -1167,6 +1165,9 @@ class ChatRoom(UserInterface):
             autojoin.append(self.room)
 
         config.write_configuration()
+
+    def on_focus(self, *_args):
+        self.chat_entry.grab_focus()
 
     def on_leave_room(self, *_args):
 

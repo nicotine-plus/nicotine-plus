@@ -59,21 +59,10 @@ class UserBrowses(IconNotebook):
         super().__init__(
             frame, core,
             widget=frame.userbrowse_notebook,
-            parent_page=frame.userbrowse_page,
-            switch_page_callback=self.on_switch_browse_page
+            parent_page=frame.userbrowse_page
         )
 
         self.file_properties = None
-
-    def on_switch_browse_page(self, _notebook, page, _page_num):
-
-        if self.frame.current_page_id != self.frame.userbrowse_page.id:
-            return
-
-        for tab in self.pages.values():
-            if tab.container == page:
-                GLib.idle_add(tab.grab_view_focus)
-                break
 
     def on_get_shares(self, *_args):
 
@@ -110,7 +99,8 @@ class UserBrowses(IconNotebook):
         if user not in self.pages:
             self.pages[user] = page = UserBrowse(self, user)
 
-            self.append_page(page.container, user, page.on_close, user=user)
+            self.append_page(page.container, user, focus_callback=page.on_focus,
+                             close_callback=page.on_close, user=user)
             page.set_label(self.get_tab_label_inner(page.container))
 
         page = self.pages[user]
@@ -118,7 +108,6 @@ class UserBrowses(IconNotebook):
         page.queued_path = path
 
         page.browse_queued_path()
-        page.grab_view_focus()
 
         if switch_page:
             self.set_current_page(page.container)
@@ -650,14 +639,6 @@ class UserBrowse(UserInterface):
             filesize = model.get_value(iterator, 4)
 
             self.selected_files[rawfilename] = filesize
-
-    def grab_view_focus(self):
-
-        if self.file_list_view.get_selection().count_selected_rows() >= 1:
-            self.file_list_view.grab_focus()
-            return
-
-        self.folder_tree_view.grab_focus()
 
     """ Search """
 
@@ -1299,6 +1280,14 @@ class UserBrowse(UserInterface):
 
         self.set_in_progress()
         self.core.userbrowse.browse_user(self.user, local_shares_type=self.local_shares_type, new_request=True)
+
+    def on_focus(self):
+
+        if self.file_list_view.get_selection().count_selected_rows() >= 1:
+            self.file_list_view.grab_focus()
+            return
+
+        self.folder_tree_view.grab_focus()
 
     def on_close(self, *_args):
         self.core.userbrowse.remove_user(self.user)

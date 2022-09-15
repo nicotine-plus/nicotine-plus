@@ -755,12 +755,17 @@ class NicotineFrame(UserInterface):
 
     def set_up_actions(self):
 
-        # Menu Button
+        # Main
 
         if GTK_API_VERSION == 3:
             action = Gio.SimpleAction(name="menu")
             action.connect("activate", self.on_menu)
             self.application.add_action(action)
+
+        action = Gio.SimpleAction(name="change-focus-view")
+        action.connect("activate", self.on_change_focus_view)
+        self.window.add_action(action)
+        self.application.set_accels_for_action("win.change-focus-view", ["F6"])
 
         # File
 
@@ -1207,6 +1212,39 @@ class NicotineFrame(UserInterface):
 
         if self.application.get_active_window():
             config.sections["ui"]["last_tab_id"] = page_id
+
+    def on_change_focus_view(self, *_args):
+        """ F6: move focus between header bar/toolbar and main content """
+
+        title_widget = getattr(self, self.current_page_id + "_title")
+
+        # Find the correct widget to focus in the main view
+        if title_widget.get_focus_child():
+            try:
+                # Attempt to focus a widget in a secondary notebook
+                notebook = getattr(self, self.current_page_id)
+                page = notebook.get_current_page()
+
+                if page is not None:
+                    # Found a focusable widget
+                    page.focus_callback()
+                    return
+
+            except AttributeError:
+                # No notebook present, attempt to focus the main content widget
+                content_widget = getattr(self, self.current_page_id + "_content")
+
+                if content_widget.child_focus(Gtk.DirectionType.TAB_FORWARD):
+                    # Found a focusable widget
+                    return
+
+        # Find the correct widget to focus in the header bar/toolbar
+        try:
+            entry_widget = getattr(self, self.current_page_id + "_entry")
+            entry_widget.grab_focus()
+
+        except AttributeError:
+            title_widget.child_focus(Gtk.DirectionType.TAB_FORWARD)
 
     """ Main Notebook """
 
