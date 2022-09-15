@@ -1228,7 +1228,7 @@ class ChatRoom(UserInterface):
         ).show()
 
     def on_configure_ignored_users(self, *_args):
-        self.frame.on_preferences(page='IgnoredUsers')
+        self.frame.on_preferences(page_id="ignored-users")
 
     def set_completion_list(self, completion_list):
 

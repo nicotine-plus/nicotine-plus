@@ -465,7 +465,7 @@ class NicotineFrame(UserInterface):
 
     def invalid_password_response(self, _dialog, response_id, _data):
         if response_id == 2:
-            self.on_preferences(page='Network')
+            self.on_preferences(page_id="network")
 
     def invalid_password(self):
 
@@ -550,13 +550,13 @@ class NicotineFrame(UserInterface):
     def on_fast_configure(self, *_args):
         self.setup()
 
-    def on_preferences(self, *_args, page=None):
+    def on_preferences(self, *_args, page_id=None):
 
         if self.preferences is None:
             self.preferences = Preferences(self, self.core)
 
         self.preferences.set_settings()
-        self.preferences.set_active_page(page)
+        self.preferences.set_active_page(page_id)
         self.preferences.show()
 
     # View
@@ -676,7 +676,7 @@ class NicotineFrame(UserInterface):
     # Shares
 
     def on_configure_shares(self, *_args):
-        self.on_preferences(page='Shares')
+        self.on_preferences(page_id="shares")
 
     def on_rescan_shares(self, *_args):
         self.core.shares.rescan_shares()
@@ -1458,7 +1458,7 @@ class NicotineFrame(UserInterface):
     """ Search """
 
     def on_configure_searches(self, *_args):
-        self.on_preferences(page='Searches')
+        self.on_preferences(page_id="searches")
 
     def on_search(self, *_args):
         self.search.on_search()
@@ -1466,7 +1466,7 @@ class NicotineFrame(UserInterface):
     """ User Info """
 
     def on_update_user_info(self, *_args):
-        self.on_preferences(page='UserInfo')
+        self.on_preferences(page_id="user-info")
 
     def on_get_user_info(self, *_args):
         self.userinfo.on_get_user_info()
@@ -1482,7 +1482,7 @@ class NicotineFrame(UserInterface):
     """ Chat """
 
     def on_configure_chats(self, *_args):
-        self.on_preferences(page="Chats")
+        self.on_preferences(page_id="chats")
 
     def on_get_private_chat(self, *_args):
         self.privatechat.on_get_private_chat()
@@ -1567,10 +1567,10 @@ class NicotineFrame(UserInterface):
         entry.set_position(-1)
 
     def on_configure_downloads(self, *_args):
-        self.on_preferences(page='Downloads')
+        self.on_preferences(page_id="downloads")
 
     def on_configure_uploads(self, *_args):
-        self.on_preferences(page='Uploads')
+        self.on_preferences(page_id="uploads")
 
     """ Log Pane """
 
