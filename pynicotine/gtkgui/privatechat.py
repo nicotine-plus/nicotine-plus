@@ -77,8 +77,6 @@ class PrivateChats(IconNotebook):
             if tab.container != page:
                 continue
 
-            GLib.idle_add(lambda tab: tab.chat_entry.grab_focus() == -1, tab)
-
             self.completion.set_entry(tab.chat_entry)
             tab.set_completion_list(self.core.privatechats.completion_list[:])
 
@@ -134,7 +132,8 @@ class PrivateChats(IconNotebook):
 
         if user not in self.pages:
             self.pages[user] = page = PrivateChat(self, user)
-            self.append_page(page.container, user, page.on_close, user=user)
+            self.append_page(page.container, user, focus_callback=page.on_focus,
+                             close_callback=page.on_close, user=user)
             page.set_label(self.get_tab_label_inner(page.container))
 
         if switch_page and self.get_current_page() != self.pages[user].container:
@@ -515,6 +514,9 @@ class PrivateChat(UserInterface):
         for tag in (self.tag_remote, self.tag_local, self.tag_action, self.tag_hilite,
                     self.tag_username, self.tag_my_username):
             self.chat_view.update_tag(tag)
+
+    def on_focus(self, *_args):
+        self.chat_entry.grab_focus()
 
     def on_close(self, *_args):
         self.core.privatechats.remove_user(self.user)

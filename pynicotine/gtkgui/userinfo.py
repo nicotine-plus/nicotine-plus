@@ -54,19 +54,8 @@ class UserInfos(IconNotebook):
         super().__init__(
             frame, core,
             widget=frame.userinfo_notebook,
-            parent_page=frame.userinfo_page,
-            switch_page_callback=self.on_switch_info_page
+            parent_page=frame.userinfo_page
         )
-
-    def on_switch_info_page(self, _notebook, page, _page_num):
-
-        if self.frame.current_page_id != self.frame.userinfo_page.id:
-            return
-
-        for tab in self.pages.values():
-            if tab.container == page:
-                GLib.idle_add(lambda tab: tab.description_view.textview.grab_focus() == -1, tab)
-                break
 
     def on_get_user_info(self, *_args):
 
@@ -82,7 +71,8 @@ class UserInfos(IconNotebook):
 
         if user not in self.pages:
             self.pages[user] = page = UserInfo(self, user)
-            self.append_page(page.container, user, page.on_close, user=user)
+            self.append_page(page.container, user, focus_callback=page.on_focus,
+                             close_callback=page.on_close, user=user)
             page.set_label(self.get_tab_label_inner(page.container))
 
         if switch_page:
@@ -544,6 +534,9 @@ class UserInfo(UserInterface):
     def on_refresh(self, *_args):
         self.set_in_progress()
         self.core.userinfo.request_user_info(self.user)
+
+    def on_focus(self, *_args):
+        self.description_view.textview.grab_focus()
 
     def on_close(self, *_args):
         self.core.userinfo.remove_user(self.user)

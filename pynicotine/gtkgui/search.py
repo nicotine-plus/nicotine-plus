@@ -27,7 +27,6 @@ import re
 from collections import defaultdict
 from collections import OrderedDict
 
-from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
 
@@ -112,7 +111,6 @@ class Searches(IconNotebook):
                 continue
 
             tab.update_filter_comboboxes()
-            GLib.idle_add(lambda tab: tab.tree_view.grab_focus() == -1, tab)
             break
 
     def on_search_mode(self, action, state):
@@ -229,7 +227,8 @@ class Searches(IconNotebook):
             length = 20
 
         label = full_text[:length]
-        self.append_page(tab.container, label, tab.on_close, full_text=full_text)
+        self.append_page(tab.container, label, focus_callback=tab.on_focus,
+                         close_callback=tab.on_close, full_text=full_text)
         tab.set_label(self.get_tab_label_inner(tab.container))
 
     def show_search_result(self, msg, username, country):
@@ -1558,6 +1557,9 @@ class Search(UserInterface):
 
         # Update number of results widget
         self.update_result_counter()
+
+    def on_focus(self, *_args):
+        self.tree_view.grab_focus()
 
     def on_close(self, *_args):
         self.core.search.remove_search(self.token)
