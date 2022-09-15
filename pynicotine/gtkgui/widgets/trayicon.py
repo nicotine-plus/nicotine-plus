@@ -111,7 +111,7 @@ class BaseImplementation:
 
         self.create_item()
 
-        self.create_item(_("Preferences"), self.frame.on_settings)
+        self.create_item(_("Preferences"), self.frame.on_preferences)
         self.create_item(_("Quit"), self.core.quit)
 
     def update_window_visibility(self):

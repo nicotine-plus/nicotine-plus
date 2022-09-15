@@ -189,7 +189,7 @@
                       <object class="GtkButton" id="_users_button">
                         <property name="visible">True</property>
                         <property name="tooltip-text" translatable="yes">Users</property>
-                        <signal name="clicked" handler="on_ignore_users_settings"/>
+                        <signal name="clicked" handler="on_configure_ignored_users"/>
                         <child>
                           <object class="GtkLabel" id="users_label">
                             <property name="visible">True</property>

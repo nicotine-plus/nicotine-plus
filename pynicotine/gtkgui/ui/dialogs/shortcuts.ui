@@ -30,28 +30,28 @@
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">True</property>
-                <property name="action-name">win.away</property>
+                <property name="action-name">app.away</property>
                 <property name="title" translatable="yes">Away</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">True</property>
-                <property name="action-name">app.rescanshares</property>
+                <property name="action-name">app.rescan-shares</property>
                 <property name="title" translatable="yes">Rescan Shares</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">True</property>
-                <property name="action-name">win.showlog</property>
+                <property name="action-name">win.show-log-history</property>
                 <property name="title" translatable="yes">Show Log Pane</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">True</property>
-                <property name="action-name">app.keyboardshortcuts</property>
+                <property name="action-name">app.keyboard-shortcuts</property>
                 <property name="title" translatable="yes">Keyboard Shortcuts</property>
               </object>
             </child>
@@ -72,7 +72,7 @@
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">True</property>
-                <property name="action-name">app.force_quit</property>
+                <property name="action-name">app.force-quit</property>
                 <property name="title" translatable="yes">Quit</property>
               </object>
             </child>
@@ -112,21 +112,21 @@
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">True</property>
-                <property name="action-name">win.reversetabcycle</property>
+                <property name="action-name">win.cycle-tabs-reverse</property>
                 <property name="title" translatable="yes">Go to Previous Secondary Tab</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">True</property>
-                <property name="action-name">win.tabcycle</property>
+                <property name="action-name">win.cycle-tabs</property>
                 <property name="title" translatable="yes">Go to Next Secondary Tab</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">True</property>
-                <property name="action-name">win.tabclose</property>
+                <property name="action-name">win.close-tab</property>
                 <property name="title" translatable="yes">Close Secondary Tab</property>
               </object>
             </child>
