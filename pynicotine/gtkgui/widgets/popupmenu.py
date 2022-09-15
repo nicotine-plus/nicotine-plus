@@ -34,6 +34,7 @@ from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
+from pynicotine.utils import TRANSLATE_PUNCTUATION
 
 
 """ Popup/Context Menu """
@@ -140,9 +141,8 @@ class PopupMenu:
             action = None
 
         else:
-            action_id = "win." + (label + "-" + self.popup_id).replace(" ", "-").lower().translate(
-                str.maketrans(dict.fromkeys(string.punctuation)))
-
+            normalized_label = "-".join(label.translate(TRANSLATE_PUNCTUATION).lower().split())
+            action_id = "win." + (normalized_label + "-" + self.popup_id)
             action = self._create_action(action_id[4:], (boolean or choice))
 
         if choice and len(item) > 2 and isinstance(item[2], str):
