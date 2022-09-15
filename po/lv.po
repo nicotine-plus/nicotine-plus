@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-15 19:40+0300\n"
-"PO-Revision-Date: 2022-09-06 19:49+0000\n"
-"Last-Translator: Pagal3 <p4gal3@protonmail.com>\n"
+"PO-Revision-Date: 2022-09-15 18:10+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Latvian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/lv/>\n"
 "Language: lv\n"
@@ -1528,8 +1528,9 @@ msgid "Buddy-only"
 msgstr "Tikai draugiem"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:603
+#, fuzzy
 msgid "Share with buddies only?"
-msgstr ""
+msgstr "Vai kopīgot tikai ar draugiem?"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:762
 #: pynicotine/gtkgui/dialogs/preferences.py:889
