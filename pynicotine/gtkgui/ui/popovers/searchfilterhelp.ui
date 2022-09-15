@@ -113,7 +113,7 @@
                     <property name="xalign">0</property>
                     <property name="margin-start">12</property>
                     <property name="label" translatable="yes">For order-insensitive filtering, as well as filtering several exact phrases, vertical bars can be used to separate phrases and words.
-Example: Remix|Instrumental|Dub Mix</property>
+    Example: Remix|Instrumental|Dub Mix</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
                   </object>
@@ -168,7 +168,7 @@ Example: Remix|Instrumental|Dub Mix</property>
                 <property name="xalign">0</property>
                 <property name="margin-start">12</property>
                 <property name="label" translatable="yes">Multiple file extensions can be specified, which in turn will broaden the list of results.
-Example: flac|wav|ape</property>
+    Example: flac|wav|ape</property>
                 <property name="selectable">True</property>
                 <property name="wrap">True</property>
               </object>
@@ -179,7 +179,7 @@ Example: flac|wav|ape</property>
                 <property name="xalign">0</property>
                 <property name="margin-start">12</property>
                 <property name="label" translatable="yes">It is also possible to invert the filter, specifying file extensions you don't want in your results.
-Example: !mp3|!jpg</property>
+    Example: !mp3|!jpg</property>
                 <property name="selectable">True</property>
                 <property name="wrap">True</property>
               </object>
@@ -226,7 +226,7 @@ Example: !mp3|!jpg</property>
                     <property name="xalign">0</property>
                     <property name="margin-start">12</property>
                     <property name="label" translatable="yes">Append b, k, m, or g (alternatively kib, mib, or gib) to specify byte, kibibyte, mebibyte, or gibibyte units:
-20m to show files larger than 20 MiB (mebibytes).</property>
+    20m to show files larger than 20 MiB (mebibytes).</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
                   </object>
@@ -237,7 +237,7 @@ Example: !mp3|!jpg</property>
                     <property name="xalign">0</property>
                     <property name="margin-start">12</property>
                     <property name="label" translatable="yes">Prepend = to a value to specify an exact match:
-=1024 only matches files that are 1 KiB (kibibyte).</property>
+    =1024 only matches files that are 1 KiB (kibibyte).</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
                   </object>
@@ -248,7 +248,7 @@ Example: !mp3|!jpg</property>
                     <property name="xalign">0</property>
                     <property name="margin-start">12</property>
                     <property name="label" translatable="yes">Prepend ! to a value to exclude files of a specific size:
-!30.5m to hide files that are 30.5 MiB (mebibytes).</property>
+    !30.5m to hide files that are 30.5 MiB (mebibytes).</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
                   </object>
@@ -259,8 +259,8 @@ Example: !mp3|!jpg</property>
                     <property name="xalign">0</property>
                     <property name="margin-start">12</property>
                     <property name="label" translatable="yes">Prepend &lt; or &gt; to find files smaller/larger than the given value:
-&gt;10.5m|&lt;1g to show files larger than 10.5 MiB (mebibytes),
-but smaller than 1 GiB (gibibytes), use a | between conditions.</property>
+    &gt;10.5m|&lt;1g to show files larger than 10.5 MiB (mebibytes),
+    but smaller than 1 GiB (gibibytes), use a | between conditions.</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
                   </object>
@@ -319,8 +319,8 @@ but smaller than 1 GiB (gibibytes), use a | between conditions.</property>
                     <property name="xalign">0</property>
                     <property name="margin-start">12</property>
                     <property name="label" translatable="yes">Like File Size (above), operators =, !, &lt;, and &gt; can be used, and multiple conditions can be specified with | pipes:
-&gt;256|&lt;1411 to show files with a bitrate of at least 256 Kb/s
-with a maximum bitrate of 1411 Kb/s.</property>
+    &gt;256|&lt;1411 to show files with a bitrate of at least 256 Kb/s
+    with a maximum bitrate of 1411 Kb/s.</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
                   </object>
@@ -370,8 +370,8 @@ with a maximum bitrate of 1411 Kb/s.</property>
                     <property name="xalign">0</property>
                     <property name="margin-start">12</property>
                     <property name="label" translatable="yes">Enter a raw value in seconds or use the MM:SS and HH:MM:SS time formats:
-&gt;5:30 to show files at least 5 and a half minutes long.
-&lt;5:30:00 shows files less than 5 and a half hours long.</property>
+    &gt;5:30 to show files at least 5 and a half minutes long.
+    &lt;5:30:00 shows files less than 5 and a half hours long.</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
                   </object>
@@ -382,9 +382,9 @@ with a maximum bitrate of 1411 Kb/s.</property>
                     <property name="xalign">0</property>
                     <property name="margin-start">12</property>
                     <property name="label" translatable="yes">Multiple conditions can be specified with | pipe seperators:
-&gt;6:00|&lt;12:00 to show files between 6 and 12 minutes long.
-!9:54|!8:43|!7:32 to hide some specific files from the results.
-=5:34|=4:23|=3:05 to include files with specific durations.</property>
+    &gt;6:00|&lt;12:00 to show files between 6 and 12 minutes long.
+    !9:54|!8:43|!7:32 to hide some specific files from the results.
+    =5:34|=4:23|=3:05 to include files with specific durations.</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
                   </object>
@@ -428,7 +428,7 @@ with a maximum bitrate of 1411 Kb/s.</property>
                 <property name="xalign">0</property>
                 <property name="margin-start">12</property>
                 <property name="label" translatable="yes">Uses country codes defined by ISO 3166-2:
-US will only show results from users with IP addresses in the United States. !GB will hide results that come from users in the United Kingdom (Great Britain).</property>
+    US will only show results from users with IP addresses in the United States. !GB will hide results that come from users in the United Kingdom (Great Britain).</property>
                 <property name="selectable">True</property>
                 <property name="wrap">True</property>
               </object>
