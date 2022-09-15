@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-01 02:07+0300\n"
-"PO-Revision-Date: 2022-09-08 15:34+0000\n"
-"Last-Translator: Mehavoid <tontole@riseup.net>\n"
+"PO-Revision-Date: 2022-09-15 16:43+0000\n"
+"Last-Translator: Kirill Feoktistov <feoktistovk@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ru/>\n"
 "Language: ru\n"
@@ -1205,8 +1205,7 @@ msgstr ""
 #: pynicotine/gtkgui/__init__.py:116
 msgid "No graphical environment available, using headless (no GUI) mode"
 msgstr ""
-"Графическая среда отсутствует, используется безголовый режим (без "
-"графического интерфейса)"
+"Графическая среда отсутствует, используется режим без графического интерфейса"
 
 #: pynicotine/gtkgui/application.py:167
 msgid "Critical Error"
@@ -3463,7 +3462,7 @@ msgid ""
 "downloads to be queued ahead of non-privileged users."
 msgstr ""
 "У вас нет привилегий. Привилегии не обязательны, но позволяют помещать ваши "
-"загрузки в очередь раньше перед непривилегированными пользователями."
+"загрузки в очереди перед непривилегированными пользователями."
 
 #: pynicotine/pynicotine.py:692
 #, python-format
@@ -4048,7 +4047,7 @@ msgstr "Общий"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:41
 msgid "Rescan Shares"
-msgstr "Пересканировать раздачи"
+msgstr "Пересканировать общие каталоги"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:48
 msgid "Show Log Pane"
@@ -4166,7 +4165,7 @@ msgstr "Развернуть / Свернуть всё"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:287
 msgid "Back to Parent Folder"
-msgstr "Вернуться в родительский каталог"
+msgstr "Вернуться в корневой каталог"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:295
 msgid "File Search"
@@ -4178,7 +4177,7 @@ msgstr "Фильтры результата"
 
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:6
 msgid "_Reset…"
-msgstr "Возобновить…"
+msgstr "Сброс…"
 
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:29
 msgid "Current Session"
@@ -4961,7 +4960,7 @@ msgid ""
 "matched, unless an operator (=, !, <, or >) is used."
 msgstr ""
 "По умолчанию, если не используется оператор (=, !, < или >), будут найдены "
-"файлы, длина которых больше или равна введенной продолжительности."
+"файлы, длина которых больше или равна введённой продолжительности."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:376
 msgid ""
@@ -5733,13 +5732,11 @@ msgstr ""
 #: pynicotine/gtkgui/ui/settings/search.ui:484
 msgid "Searches shorter than this number of characters will be ignored:"
 msgstr ""
-"Поисковые запросы короче этого количества символов будут игнорироваться:"
+"Поисковые запросы короче указанного количества символов будут игнорироваться:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:510
 msgid "Maximum search results to send per search request:"
-msgstr ""
-"Максимальное количество результатов поиска для отправки за один поисковый "
-"запрос:"
+msgstr "Максимальное количество результатов на странице поиска:"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:25
 msgid ""
@@ -5898,7 +5895,7 @@ msgstr "Команда файлового менеджера:"
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:11
 msgid "Self Description"
-msgstr "Самоописание"
+msgstr "Информация отображаемая всем пользователям, зашедшим в ваш профиль"
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:65
 msgid "Picture:"
