@@ -63,6 +63,7 @@ class Uploads(TransferList):
             ("#" + _("Finished"), self.on_clear_finished),
             ("#" + _("Aborted"), self.on_clear_aborted),
             ("#" + _("Failed"), self.on_clear_failed),
+            ("#" + _("User logged off"), self.on_clear_logged_out),
             ("#" + _("Queued…"), self.on_try_clear_queued),
             ("", None),
             ("#" + _("Everything…"), self.on_try_clear_all),
@@ -151,14 +152,17 @@ class Uploads(TransferList):
         self.core.transfers.ban_users(self.selected_users)
 
     def on_clear_aborted(self, *_args):
-        self.clear_transfers(["Aborted", "Cancelled", "Disallowed extension", "User logged off"])
+        self.clear_transfers(["Aborted", "Cancelled", "Disallowed extension"])
 
     def on_clear_failed(self, *_args):
         self.clear_transfers(["Connection timeout", "Local file error", "Remote file error"])
 
+    def on_clear_logged_out(self, *_args):
+        self.clear_transfers(["User logged off"])
+
     def on_clear_finished_aborted(self, *_args):
-        self.clear_transfers(["Aborted", "Cancelled", "Disallowed extension", "User logged off", "Finished"])
+        self.clear_transfers(["Aborted", "Cancelled", "Disallowed extension", "Finished"])
 
     def on_clear_finished_failed(self, *_args):
-        self.clear_transfers(["Aborted", "Cancelled", "Disallowed extension", "User logged off", "Finished",
+        self.clear_transfers(["Aborted", "Cancelled", "Disallowed extension", "Finished",
                               "Connection timeout", "Local file error", "Remote file error"])
