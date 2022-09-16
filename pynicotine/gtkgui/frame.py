@@ -449,16 +449,20 @@ class NicotineFrame(UserInterface):
 
     def server_login(self):
 
+        focus_widget = None
         self.update_user_status()
 
         if self.current_page_id == self.userbrowse_page.id:
-            GLib.idle_add(lambda: self.userbrowse_entry.grab_focus() == -1)
+            focus_widget = self.userbrowse_entry
 
         if self.current_page_id == self.userinfo_page.id:
-            GLib.idle_add(lambda: self.userinfo_entry.grab_focus() == -1)
+            focus_widget = self.userinfo_entry
 
         if self.current_page_id == self.search_page.id:
-            GLib.idle_add(lambda: self.search_entry.grab_focus() == -1)
+            focus_widget = self.search_entry
+
+        if focus_widget is not None:
+            GLib.idle_add(lambda: focus_widget.grab_focus() == -1, priority=GLib.PRIORITY_HIGH_IDLE)
 
     def server_disconnect(self):
         self.update_user_status()
@@ -1291,50 +1295,54 @@ class NicotineFrame(UserInterface):
 
     def on_switch_page(self, _notebook, page, _page_num):
 
+        focus_widget = None
         self.set_active_header_bar(page.id)
 
         if page == self.chatrooms_page:
             if not self.chatrooms.get_n_pages():
-                GLib.idle_add(lambda: self.chatrooms_entry.grab_focus() == -1)
+                focus_widget = self.chatrooms_entry
 
         elif page == self.private_page:
             if not self.privatechat.get_n_pages():
-                GLib.idle_add(lambda: self.private_entry.grab_focus() == -1)
+                focus_widget = self.private_entry
 
         elif page == self.uploads_page:
             self.uploads.update_model(forceupdate=True)
             self.notebook.remove_tab_hilite(self.uploads_page)
 
             if self.uploads.container.get_visible():
-                GLib.idle_add(lambda: self.uploads.tree_view.grab_focus() == -1)
+                focus_widget = self.uploads.tree_view
 
         elif page == self.downloads_page:
             self.downloads.update_model(forceupdate=True)
             self.notebook.remove_tab_hilite(self.downloads_page)
 
             if self.downloads.container.get_visible():
-                GLib.idle_add(lambda: self.downloads.tree_view.grab_focus() == -1)
+                focus_widget = self.downloads.tree_view
 
         elif page == self.search_page:
-            GLib.idle_add(lambda: self.search_entry.grab_focus() == -1)
+            focus_widget = self.search_entry
 
         elif page == self.userinfo_page:
             if not self.userinfo.get_n_pages():
-                GLib.idle_add(lambda: self.userinfo_entry.grab_focus() == -1)
+                focus_widget = self.userinfo_entry
 
         elif page == self.userbrowse_page:
             if not self.userbrowse.get_n_pages():
-                GLib.idle_add(lambda: self.userbrowse_entry.grab_focus() == -1)
+                focus_widget = self.userbrowse_entry
 
         elif page == self.userlist_page:
             self.userlist.update()
 
             if self.userlist.container.get_visible():
-                GLib.idle_add(lambda: self.userlist.list_view.grab_focus() == -1)
+                focus_widget = self.userlist.list_view
 
         elif page == self.interests_page:
             self.interests.populate_recommendations()
-            GLib.idle_add(lambda: self.interests.recommendations_list_view.grab_focus() == -1)
+            focus_widget = self.interests.recommendations_list_view
+
+        if focus_widget is not None:
+            GLib.idle_add(lambda: focus_widget.grab_focus() == -1, priority=GLib.PRIORITY_HIGH_IDLE)
 
     def on_page_reordered(self, *_args):
 

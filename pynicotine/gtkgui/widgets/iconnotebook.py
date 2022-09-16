@@ -569,7 +569,7 @@ class IconNotebook:
 
         # Focus the default widget on the page
         if self.frame.current_page_id == self.parent_page.id:
-            GLib.idle_add(new_page.focus_callback)
+            GLib.idle_add(new_page.focus_callback, priority=GLib.PRIORITY_HIGH_IDLE)
 
         # Dismiss tab highlight
         self.remove_tab_hilite(new_page)
