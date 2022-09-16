@@ -1608,12 +1608,17 @@
                                   <object class="GtkBox" id="interests_toolbar_contents">
                                     <property name="visible">False</property>
                                     <child>
-                                      <object class="GtkLabel" id="interests_title">
+                                      <object class="GtkBox" id="interests_title">
                                         <property name="visible">True</property>
-                                        <property name="label" translatable="yes">Interests</property>
-                                        <style>
-                                          <class name="title"/>
-                                        </style>
+                                        <child>
+                                          <object class="GtkLabel">
+                                            <property name="visible">True</property>
+                                            <property name="label" translatable="yes">Interests</property>
+                                            <style>
+                                              <class name="title"/>
+                                            </style>
+                                          </object>
+                                        </child>
                                       </object>
                                     </child>
                                     <child>
@@ -1850,21 +1855,21 @@
                         <child>
                           <object class="GtkImage" id="user_status_icon">
                             <property name="visible">True</property>
-			    <property name="icon-name">nplus-status-offline</property>
+                            <property name="icon-name">nplus-status-offline</property>
                           </object>
                         </child>
-	                <child>
-	                  <object class="GtkLabel" id="user_status_label">
-	                    <property name="visible">True</property>
-	                    <property name="label" translatable="yes">Offline</property>
-	                    <property name="mnemonic-widget">user_status_button</property>
+                        <child>
+                          <object class="GtkLabel" id="user_status_label">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">Offline</property>
+                            <property name="mnemonic-widget">user_status_button</property>
                             <attributes>
                               <attribute name="weight" value="normal"/>
                             </attributes>
-	                  </object>
-	                </child>
-	              </object>
-	            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
                     <style>
                       <class name="flat"/>
                     </style>
