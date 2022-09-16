@@ -564,12 +564,15 @@ class IconNotebook:
             current_page.get_children()[0].hide()
             new_page.get_children()[0].show()
 
-        if hasattr(new_page, "focus_callback"):
+        if self.parent_page is None:
+            return
+
+        # Focus the default widget on the page
+        if self.frame.current_page_id == self.parent_page.id:
             GLib.idle_add(new_page.focus_callback)
 
         # Dismiss tab highlight
-        if self.parent_page is not None:
-            self.remove_tab_hilite(new_page)
+        self.remove_tab_hilite(new_page)
 
     def on_reorder_page(self, _notebook, page, page_num):
         if self.reorder_page_callback is not None:
