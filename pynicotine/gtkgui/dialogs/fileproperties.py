@@ -71,33 +71,11 @@ class FileProperties(UserInterface, Dialog):
             parent=frame.window,
             content_box=self.container,
             buttons=buttons,
+            show_callback=self.on_show,
             title=_("File Properties"),
             width=600,
             close_destroy=False
         )
-
-    def on_previous(self, *_args):
-
-        self.current_index -= 1
-
-        if self.current_index < 0:
-            self.current_index = len(self.properties) - 1
-
-        self.update_current_file()
-
-    def on_next(self, *_args):
-
-        self.current_index += 1
-
-        if self.current_index >= len(self.properties):
-            self.current_index = 0
-
-        self.update_current_file()
-
-    def on_download_item(self, *_args):
-        properties = self.properties[self.current_index]
-        self.core.transfers.get_file(properties["user"], properties["fn"], size=properties["size"],
-                                     bitrate=properties.get("bitrate"), length=properties.get("length"))
 
     def update_title(self):
 
@@ -163,3 +141,33 @@ class FileProperties(UserInterface, Dialog):
         self.current_index = 0
 
         self.update_current_file()
+
+    def on_previous(self, *_args):
+
+        self.current_index -= 1
+
+        if self.current_index < 0:
+            self.current_index = len(self.properties) - 1
+
+        self.update_current_file()
+
+    def on_next(self, *_args):
+
+        self.current_index += 1
+
+        if self.current_index >= len(self.properties):
+            self.current_index = 0
+
+        self.update_current_file()
+
+    def on_download_item(self, *_args):
+
+        properties = self.properties[self.current_index]
+
+        self.core.transfers.get_file(
+            properties["user"], properties["fn"], size=properties["size"],
+            bitrate=properties.get("bitrate"), length=properties.get("length")
+        )
+
+    def on_show(self, *_args):
+        self.next_button.grab_focus()
