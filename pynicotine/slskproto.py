@@ -929,6 +929,8 @@ class SlskProtoThread(threading.Thread):
             self.server_disconnect()
             return
 
+        init = conn_obj.init
+
         if sock is self.parent_socket and not self.server_disconnected:
             self.send_have_no_parent()
 
@@ -940,7 +942,7 @@ class SlskProtoThread(threading.Thread):
 
             if callback:
                 self._callback_msgs.append(DownloadConnectionClosed(
-                    user=conn_obj.init.target_user, token=conn_obj.fileinit.token
+                    user=init.target_user, token=conn_obj.fileinit.token
                 ))
 
             self._calc_download_limit()
@@ -954,20 +956,22 @@ class SlskProtoThread(threading.Thread):
             if callback:
                 timed_out = (time.time() - conn_obj.lastactive) > self.CONNECTION_MAX_IDLE
                 self._callback_msgs.append(UploadConnectionClosed(
-                    user=conn_obj.init.target_user, token=conn_obj.fileinit.token, timed_out=timed_out
+                    user=init.target_user, token=conn_obj.fileinit.token, timed_out=timed_out
                 ))
 
             self._calc_upload_limit_function()
 
-        elif conn_obj.init is not None:
-            self._callback_msgs.append(PeerConnectionClosed(user=conn_obj.init.target_user))
+        elif init is not None:
+            # Only send callback message if there's no indirect connection attempt in progress
+            if init not in self._out_indirect_conn_request_times:
+                self._callback_msgs.append(PeerConnectionClosed(user=init.target_user))
 
         else:
             # No peer init message present, nothing to do
             return
 
-        conn_type = conn_obj.init.conn_type
-        user = conn_obj.init.target_user
+        conn_type = init.conn_type
+        user = init.target_user
 
         log.add_conn("Removed connection of type %(type)s to user %(user)s %(addr)s", {
             'type': conn_type,
@@ -976,9 +980,9 @@ class SlskProtoThread(threading.Thread):
         })
 
         init_key = user + conn_type
-        init = self._username_init_msgs.get(init_key)
+        user_init = self._username_init_msgs.get(init_key)
 
-        if init is None:
+        if user_init is None:
             return
 
         log.add_conn("Removing PeerInit message of type %(type)s for user %(user)s %(addr)s", {
@@ -987,12 +991,12 @@ class SlskProtoThread(threading.Thread):
             'addr': conn_obj.addr
         })
 
-        if conn_obj.init is not init:
+        if init is not user_init:
             # Don't remove init message if connection has been superseded
             log.add_conn("Cannot remove PeerInit message, since the connection has been superseded")
             return
 
-        if connection_list is self._connsinprogress and init.sock is not None:
+        if connection_list is self._connsinprogress and user_init.sock is not None:
             # Outgoing connection failed, but an indirect connection was already established
             log.add_conn("Cannot remove PeerInit message, an indirect connection was already established previously")
             return
