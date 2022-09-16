@@ -34,6 +34,7 @@ class Statistics(UserInterface, Dialog):
 
         UserInterface.__init__(self, "ui/dialogs/statistics.ui")
         (
+            self.close_button,
             self.completed_downloads_session_label,
             self.completed_downloads_total_label,
             self.completed_uploads_session_label,
@@ -55,8 +56,8 @@ class Statistics(UserInterface, Dialog):
             self,
             parent=frame.window,
             content_box=self.container,
-            buttons=[(self.reset_button, Gtk.ResponseType.HELP)],
-            show_callback=self.on_show,
+            buttons=[(self.close_button, Gtk.ResponseType.CANCEL),
+                     (self.reset_button, Gtk.ResponseType.NONE)],
             title=_("Transfer Statistics"),
             width=450,
             resizable=False,
@@ -94,5 +95,5 @@ class Statistics(UserInterface, Dialog):
             callback=self.on_reset_statistics_response
         ).show()
 
-    def on_show(self, *_args):
-        self.current_session_label.grab_focus()
+    def on_close(self, *_args):
+        self.close()
