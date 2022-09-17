@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-15 21:58+0300\n"
-"PO-Revision-Date: 2022-09-16 00:08+0000\n"
-"Last-Translator: Mehavoid <tontole@riseup.net>\n"
+"PO-Revision-Date: 2022-09-18 10:34+0000\n"
+"Last-Translator: Kirill Feoktistov <feoktistovk@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ru/>\n"
 "Language: ru\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.14.1-dev\n"
+"X-Generator: Weblate 4.14.1\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -4766,7 +4766,7 @@ msgstr ""
 "Каждый список результатов поиска имеет свой собственный фильтр, который "
 "можно открыть, нажав кнопку «Фильтры результата». Фильтр состоит из "
 "нескольких полей, каждое из которых применяется при нажатии клавиши «Enter». "
-"Фильтрация применяется к полученным и не получненным результатам."
+"Фильтрация применяется к полученным и не полученным результатам."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:57
 msgid ""
