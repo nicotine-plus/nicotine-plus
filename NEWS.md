@@ -4,16 +4,23 @@
 
 ### Changes
 
+ * Added Alt+D and F6 shortcuts to move keyboard focus to the headerbar/toolbar
+ * Added an option to clear all uploads with a "User logged off" status
  * Removed AppIndicator dependency in favor of custom tray icon implementation
 
 ### Corrections
 
  * Fixed an issue where certain uploads were incorrectly marked as "Cancelled"
+ * Fixed an issue where the progress bar would get stuck if a share browse request ended abruptly
  * OpenBSD: Fixed a regression where incoming peer connections did not work
 
 ### Issues closed on GitHub
 
+ * Clear Finished also clears uploads/downloads with "User logged off" status ([#2081](https://github.com/nicotine-plus/nicotine-plus/issues/2081))
+ * Scanning taking many hours ([#2173](https://github.com/nicotine-plus/nicotine-plus/issues/2173))
  * Users can't connect to me after upgrade to 3.2.5 (transfers don't work) on OpenBSD ([#2175](https://github.com/nicotine-plus/nicotine-plus/issues/2175))
+ * Some bugs in Nicotine+ v. 3.2.5 ([#2184](https://github.com/nicotine-plus/nicotine-plus/issues/2184))
+ * Search Files: Keyboard shortcut to focus search bar ([#2186](https://github.com/nicotine-plus/nicotine-plus/issues/2186))
 
 
 ## Version 3.2.5 (August 31, 2022)
