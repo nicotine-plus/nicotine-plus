@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-15 21:58+0300\n"
-"PO-Revision-Date: 2022-09-15 18:10+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2022-09-19 16:16+0000\n"
+"Last-Translator: Pagal3 <p4gal3@protonmail.com>\n"
 "Language-Team: Latvian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/lv/>\n"
 "Language: lv\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n % 10 == 0 || n % 100 >= 11 && n % 100 <= "
 "19) ? 0 : ((n % 10 == 1 && n % 100 != 11) ? 1 : 2);\n"
-"X-Generator: Weblate 4.14.1-dev\n"
+"X-Generator: Weblate 4.14.1\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -1188,9 +1188,9 @@ msgid "Cannot find %s, please install it."
 msgstr "Nevar atrast %s, lūdzu, instalējiet to."
 
 #: pynicotine/gtkgui/__init__.py:54
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot find %s or newer, please install it."
-msgstr "Nevar atrast %s, lūdzu, instalējiet to."
+msgstr "Nevar atrast %s vai jaunāku, lūdzu, instalējiet to."
 
 #: pynicotine/gtkgui/__init__.py:60
 msgid "Cannot import the Gtk module. Bad install of the python-gobject module?"
@@ -1508,9 +1508,8 @@ msgstr "Ievadiet jaunu lejupielādes filtru:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:341
 #: pynicotine/gtkgui/dialogs/preferences.py:373
-#, fuzzy
 msgid "Escape filter"
-msgstr "Izbēdzis"
+msgstr "Iziet no filtra"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:367
 msgid "Edit Download Filter"
@@ -1534,9 +1533,8 @@ msgid "Buddy-only"
 msgstr "Tikai draugiem"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:603
-#, fuzzy
 msgid "Share with buddies only"
-msgstr "Vai kopīgot tikai ar draugiem?"
+msgstr "Kopīgot tikai ar draugiem"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:762
 #: pynicotine/gtkgui/dialogs/preferences.py:889
