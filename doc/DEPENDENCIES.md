@@ -21,9 +21,7 @@
 ## Testing
 
 - [flake8](https://flake8.pycqa.org/) for lint checks;
-- [pylint](https://pylint.pycqa.org/) for lint checks;
-- [pygobject](https://pygobject.readthedocs.io/) for integration tests;
-- [gtk3](https://gtk.org/) for integration tests.
+- [pylint](https://pylint.pycqa.org/) for lint checks.
 
 
 ## Installing Dependencies
