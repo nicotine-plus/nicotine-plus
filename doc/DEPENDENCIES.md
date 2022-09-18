@@ -5,9 +5,9 @@
 ### Required
 
 - [python3](https://www.python.org/) >= 3.6;
+- [python3-gdbm](https://docs.python.org/3/library/dbm.html#module-dbm.gnu) for scanning shared files.
 - [gtk3](https://gtk.org/) >= 3.22.30 or [gtk4](https://gtk.org/) >= 4.6.6 for graphical interface;
 - [pygobject](https://pygobject.readthedocs.io/) for Python bindings for GTK;
-- [gdbm](https://www.gnu.org/software/gdbm/) for scanning shared files.
 
 ### Recommended
 
@@ -39,7 +39,7 @@ sudo apt install gir1.2-gtk-3.0 python3-gi python3-gdbm
 - On Redhat/Fedora based distributions:
 
 ```sh
-sudo dnf install gtk3 python3-gobject gdbm
+sudo dnf install gtk3 python3-gobject
 ```
 
 #### Installing Recommended Runtime Dependencies
