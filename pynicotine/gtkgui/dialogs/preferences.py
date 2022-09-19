@@ -2506,37 +2506,37 @@ class Preferences(UserInterface, Dialog):
         }
 
         try:
-            portmap_required = self.pages["Network"].portmap_required
+            portmap_required = self.pages["network"].portmap_required
 
         except KeyError:
             portmap_required = False
 
         try:
-            rescan_required = self.pages["Shares"].rescan_required
+            rescan_required = self.pages["shares"].rescan_required
 
         except KeyError:
             rescan_required = False
 
         try:
-            theme_required = self.pages["UserInterface"].theme_required
+            theme_required = self.pages["user-interface"].theme_required
 
         except KeyError:
             theme_required = False
 
         try:
-            completion_required = self.pages["Chats"].completion_required
+            completion_required = self.pages["chats"].completion_required
 
         except KeyError:
             completion_required = False
 
         try:
-            ip_block_required = self.pages["BannedUsers"].ip_block_required
+            ip_block_required = self.pages["banned-users"].ip_block_required
 
         except KeyError:
             ip_block_required = False
 
         try:
-            search_required = self.pages["Searches"].search_required
+            search_required = self.pages["searches"].search_required
 
         except KeyError:
             search_required = False
