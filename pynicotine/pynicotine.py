@@ -346,11 +346,11 @@ class NicotineCore:
     def disconnect(self):
         self.queue.append(slskmessages.ServerDisconnect())
 
-    def send_message_to_peer(self, user, message, address=None):
+    def send_message_to_peer(self, user, message):
         """ Sends message to a peer. Used when we know the username of a peer,
         but don't have/know an active connection. """
 
-        self.queue.append(slskmessages.SendNetworkMessage(user, message, address))
+        self.queue.append(slskmessages.SendNetworkMessage(user, message))
 
     def set_away_mode(self, is_away, save_state=False):
 
