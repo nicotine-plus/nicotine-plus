@@ -631,7 +631,7 @@ class SlskProtoThread(threading.Thread):
 
         return True
 
-    def send_message_to_peer(self, user, message, address=None):
+    def send_message_to_peer(self, user, message, in_address=None):
 
         init = None
         conn_type = message.msgtype
@@ -670,24 +670,28 @@ class SlskProtoThread(threading.Thread):
 
         else:
             # This is a new peer, initiate a connection
-            self.initiate_connection_to_peer(user, conn_type, message, address)
+            self.initiate_connection_to_peer(user, conn_type, message, in_address)
 
-    def initiate_connection_to_peer(self, user, conn_type, message=None, address=None):
+    def initiate_connection_to_peer(self, user, conn_type, message=None, in_address=None):
         """ Prepare to initiate a connection with a peer """
 
         init = PeerInit(init_user=self.server_username, target_user=user, conn_type=conn_type)
-        addr = None
+        user_address = self.user_addresses.get(user)
+
+        if user_address is not None:
+            _ip_address, port = user_address
+
+            if port == 0:
+                # Port 0 means the user is likely bugged, ask the server for a new address
+                user_address = None
+
+        elif in_address is not None:
+            self.user_addresses[user] = user_address = in_address
 
         if message is not None:
             init.outgoing_msgs.append(message)
 
-        if user in self.user_addresses:
-            addr = self.user_addresses[user]
-
-        elif address is not None:
-            self.user_addresses[user] = addr = address
-
-        if addr is None:
+        if user_address is None:
             if user not in self._pending_init_msgs:
                 self._pending_init_msgs[user] = []
 
@@ -699,8 +703,8 @@ class SlskProtoThread(threading.Thread):
             })
 
         else:
-            init.addr = addr
-            self.connect_to_peer(user, addr, init)
+            init.addr = user_address
+            self.connect_to_peer(user, user_address, init)
 
     def connect_to_peer(self, user, addr, init):
         """ Initiate a connection with a peer """
@@ -1216,8 +1220,7 @@ class SlskProtoThread(threading.Thread):
                                 self.connect_to_peer(user, addr, init)
 
                         # We already store a local IP address for our username
-                        # Port 0 means the user is offline or bugged, don't store address
-                        if user != self.server_username and msg.port != 0:
+                        if user != self.server_username and not user_offline:
                             self.user_addresses[msg.user] = addr
 
                     elif msg_class is Relogged:
@@ -1236,7 +1239,7 @@ class SlskProtoThread(threading.Thread):
                                 addr = self.potential_parents[user]
 
                                 log.add_conn("Attempting parent connection to user %s", user)
-                                self.initiate_connection_to_peer(user, ConnectionType.DISTRIBUTED, address=addr)
+                                self.initiate_connection_to_peer(user, ConnectionType.DISTRIBUTED, in_address=addr)
 
                     elif msg_class is ParentMinSpeed:
                         self.distrib_parent_min_speed = msg.speed

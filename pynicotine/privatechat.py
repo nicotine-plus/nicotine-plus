@@ -152,7 +152,7 @@ class PrivateChats:
 
         for msg in self.private_message_queue[user][:]:
             self.private_message_queue[user].remove(msg)
-            self.message_user(msg, should_log=False)
+            self.message_user(msg, queue_processed=True)
 
     def send_automatic_message(self, user, message):
         self.send_message(user, "[Automatic Message] " + message)
@@ -186,12 +186,12 @@ class PrivateChats:
         if self.ui_callback:
             self.ui_callback.get_user_status(msg)
 
-    def message_user(self, msg, should_log=True):
+    def message_user(self, msg, queue_processed=False):
         """ Server code: 22 """
 
         user = msg.user
 
-        if should_log:
+        if not queue_processed:
             log.add_chat(_("Private message from user '%(user)s': %(message)s"), {
                 "user": user,
                 "message": msg.msg
@@ -211,8 +211,10 @@ class PrivateChats:
                 if self.core.network_filter.is_ip_ignored(ip_address):
                     return
 
-            else:
-                self.queue.append(slskmessages.GetPeerAddress(user))
+            elif not queue_processed:
+                if user not in self.private_message_queue:
+                    self.queue.append(slskmessages.GetPeerAddress(user))
+
                 self.private_message_queue_add(msg)
                 return
 
