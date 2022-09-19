@@ -538,17 +538,14 @@ class NicotineCore:
 
         user = msg.user
 
-        # User seems to be offline, don't update IP
-        if msg.ip_address != "0.0.0.0":
+        # If the IP address changed, make sure our IP block/ignore list reflects this
+        self.network_filter.update_saved_user_ip_filters(user)
 
-            # If the IP address changed, make sure our IP block/ignore list reflects this
-            self.network_filter.update_saved_user_ip_filters(user)
+        if self.network_filter.block_unblock_user_ip_callback(user):
+            return
 
-            if self.network_filter.block_unblock_user_ip_callback(user):
-                return
-
-            if self.network_filter.ignore_unignore_user_ip_callback(user):
-                return
+        if self.network_filter.ignore_unignore_user_ip_callback(user):
+            return
 
         country_code = self.geoip.get_country_code(msg.ip_address)
 
