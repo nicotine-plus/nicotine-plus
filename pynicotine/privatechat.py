@@ -155,7 +155,7 @@ class PrivateChats:
 
         for msg in self.private_message_queue[user][:]:
             self.private_message_queue[user].remove(msg)
-            self.message_user(msg, queue_processed=True)
+            self.message_user(msg, queued_message=True)
 
     def send_automatic_message(self, user, message):
         self.send_message(user, "[Automatic Message] " + message)
