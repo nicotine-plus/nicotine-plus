@@ -38,19 +38,19 @@ class NetworkFilter:
         either block_unblock_user_ip_callback or ignore_unignore_user_ip_callback
         is called. """
 
+        if user in self.core.protothread.user_addresses:
+            return False
+
         if list_type == "block":
             request_list = self.ipblock_requested
         else:
             request_list = self.ipignore_requested
 
-        if user not in self.core.protothread.user_addresses:
-            if user not in request_list:
-                request_list[user] = action
+        if user not in request_list:
+            request_list[user] = action
 
-            self.queue.append(slskmessages.GetPeerAddress(user))
-            return True
-
-        return False
+        self.queue.append(slskmessages.GetPeerAddress(user))
+        return True
 
     def _add_user_ip_to_list(self, user, list_type):
         """ Add the current IP of a user to a list. """
@@ -200,6 +200,7 @@ class NetworkFilter:
         user_address = self.core.protothread.user_addresses.get(user)
 
         if not user_address:
+            # User is offline
             return
 
         new_ip, _new_port = user_address
@@ -244,15 +245,20 @@ class NetworkFilter:
 
     def block_unblock_user_ip_callback(self, user):
 
-        if user not in self.ipblock_requested:
+        request = self.ipblock_requested.pop(user, None)
+
+        if request is None:
             return False
 
-        if self.ipblock_requested[user] == "remove":
+        if user not in self.core.protothread.user_addresses:
+            # User is offline
+            return False
+
+        if request == "remove":
             self.unblock_user_ip(user)
         else:
             self.block_user_ip(user)
 
-        del self.ipblock_requested[user]
         return True
 
     def get_cached_blocked_user_ip(self, user):
@@ -295,15 +301,20 @@ class NetworkFilter:
 
     def ignore_unignore_user_ip_callback(self, user):
 
-        if user not in self.ipignore_requested:
+        request = self.ipignore_requested.pop(user, None)
+
+        if request is None:
             return False
 
-        if self.ipignore_requested[user] == "remove":
+        if user not in self.core.protothread.user_addresses:
+            # User is offline
+            return False
+
+        if request == "remove":
             self.unignore_user_ip(user)
         else:
             self.ignore_user_ip(user)
 
-        del self.ipignore_requested[user]
         return True
 
     def get_cached_ignored_user_ip(self, user):
