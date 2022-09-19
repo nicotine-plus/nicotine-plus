@@ -572,6 +572,10 @@ class Shares:
     @staticmethod
     def get_normalized_virtual_name(virtual_name, shared_folders):
 
+        # Provide a default name for root folders
+        if not virtual_name:
+            virtual_name = "Shared"
+
         # Remove slashes from share name to avoid path conflicts
         virtual_name = virtual_name.replace('/', '_').replace('\\', '_')
         new_virtual_name = str(virtual_name)
