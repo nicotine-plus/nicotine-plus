@@ -137,6 +137,7 @@ class PrivateChats:
         return message
 
     def private_message_queue_add(self, msg):
+        """ Queue a private message until we've received a user's IP address """
 
         user = msg.user
 
@@ -146,6 +147,8 @@ class PrivateChats:
             self.private_message_queue[user].append(msg)
 
     def private_message_queue_process(self, user):
+        """ Received a user's IP address, process any queued private messages and check
+        if the IP is ignored """
 
         if user not in self.private_message_queue:
             return
@@ -186,12 +189,12 @@ class PrivateChats:
         if self.ui_callback:
             self.ui_callback.get_user_status(msg)
 
-    def message_user(self, msg, queue_processed=False):
+    def message_user(self, msg, queued_message=False):
         """ Server code: 22 """
 
         user = msg.user
 
-        if not queue_processed:
+        if not queued_message:
             log.add_chat(_("Private message from user '%(user)s': %(message)s"), {
                 "user": user,
                 "message": msg.msg
@@ -211,7 +214,8 @@ class PrivateChats:
                 if self.core.network_filter.is_ip_ignored(ip_address):
                     return
 
-            elif not queue_processed:
+            elif not queued_message:
+                # Ask for user's IP address and queue the private message until we receive the address
                 if user not in self.private_message_queue:
                     self.queue.append(slskmessages.GetPeerAddress(user))
 
