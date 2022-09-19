@@ -197,7 +197,7 @@ class PrivateChats:
                 "message": msg.msg
             })
 
-        self.queue.append(slskmessages.MessageAcked(msg.msgid))
+            self.queue.append(slskmessages.MessageAcked(msg.msgid))
 
         if user != "server":
             # Check ignore status for all other users except "server"
