@@ -631,7 +631,7 @@ class SlskProtoThread(threading.Thread):
 
         return True
 
-    def send_message_to_peer(self, user, message, in_address=None):
+    def send_message_to_peer(self, user, message):
 
         init = None
         conn_type = message.msgtype
@@ -670,7 +670,7 @@ class SlskProtoThread(threading.Thread):
 
         else:
             # This is a new peer, initiate a connection
-            self.initiate_connection_to_peer(user, conn_type, message, in_address)
+            self.initiate_connection_to_peer(user, conn_type, message)
 
     def initiate_connection_to_peer(self, user, conn_type, message=None, in_address=None):
         """ Prepare to initiate a connection with a peer """
@@ -678,15 +678,15 @@ class SlskProtoThread(threading.Thread):
         init = PeerInit(init_user=self.server_username, target_user=user, conn_type=conn_type)
         user_address = self.user_addresses.get(user)
 
-        if user_address is not None:
+        if in_address is not None:
+            user_address = in_address
+
+        elif user_address is not None:
             _ip_address, port = user_address
 
             if port == 0:
                 # Port 0 means the user is likely bugged, ask the server for a new address
                 user_address = None
-
-        elif in_address is not None:
-            self.user_addresses[user] = user_address = in_address
 
         if message is not None:
             init.outgoing_msgs.append(message)
@@ -1859,7 +1859,7 @@ class SlskProtoThread(threading.Thread):
             self._calc_upload_limit_function()
 
         elif msg_class is SendNetworkMessage:
-            self.send_message_to_peer(msg_obj.user, msg_obj.message, msg_obj.addr)
+            self.send_message_to_peer(msg_obj.user, msg_obj.message)
 
     """ Input/Output """
 

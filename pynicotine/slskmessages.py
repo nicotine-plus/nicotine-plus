@@ -152,10 +152,9 @@ class InitPeerConnection(InternalMessage):
 
 class SendNetworkMessage(InternalMessage):
 
-    def __init__(self, user=None, message=None, addr=None):
+    def __init__(self, user=None, message=None):
         self.user = user
         self.message = message
-        self.addr = addr
 
 
 class ShowConnectionErrorMessage(InternalMessage):
