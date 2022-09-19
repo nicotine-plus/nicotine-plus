@@ -574,7 +574,7 @@ class Shares:
                 return real
 
             if path.startswith(virtual + os.sep):
-                realpath = real + path[len(virtual):]
+                realpath = real.rstrip('/\\') + path[len(virtual):]
                 return realpath
 
         return "__INTERNAL_ERROR__" + path
