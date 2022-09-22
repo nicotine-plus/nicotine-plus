@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-01 02:07+0300\n"
-"PO-Revision-Date: 2022-09-01 21:49+0000\n"
+"POT-Creation-Date: 2022-09-15 21:58+0300\n"
+"PO-Revision-Date: 2022-09-15 21:24+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -129,7 +129,7 @@ msgstr ""
 "Je gebruikt een niet-ondersteunde versie van Python (%(old_version)s).\n"
 "Installeer Python %(min_version)s of nieuwer."
 
-#: pynicotine/__init__.py:112 pynicotine/shares.py:59
+#: pynicotine/__init__.py:112 pynicotine/shares.py:67
 #, python-format
 msgid "Cannot find %(option1)s or %(option2)s, please install either one."
 msgstr "Kan %(option1)s of %(option2)s niet vinden, installeer een van beide."
@@ -176,1022 +176,1027 @@ msgstr "Fout bij het maken van een back-up van de configuratie: %s"
 msgid "Config backed up to: %s"
 msgstr "Configuratie geback-upt naar: %s"
 
-#: pynicotine/geoip/geoip.py:22
+#: pynicotine/geoip/geoip.py:24
 msgid "Andorra"
 msgstr "Andorra"
 
-#: pynicotine/geoip/geoip.py:23
+#: pynicotine/geoip/geoip.py:25
 msgid "United Arab Emirates"
 msgstr "Verenigde Arabische Emiraten"
 
-#: pynicotine/geoip/geoip.py:24
+#: pynicotine/geoip/geoip.py:26
 msgid "Afghanistan"
 msgstr "Afghanistan"
 
-#: pynicotine/geoip/geoip.py:25
+#: pynicotine/geoip/geoip.py:27
 msgid "Antigua & Barbuda"
 msgstr "Antigua en Barbuda"
 
-#: pynicotine/geoip/geoip.py:26
+#: pynicotine/geoip/geoip.py:28
 msgid "Anguilla"
 msgstr "Anguilla"
 
-#: pynicotine/geoip/geoip.py:27
+#: pynicotine/geoip/geoip.py:29
 msgid "Albania"
 msgstr "Albanië"
 
-#: pynicotine/geoip/geoip.py:28
+#: pynicotine/geoip/geoip.py:30
 msgid "Armenia"
 msgstr "Armenië"
 
-#: pynicotine/geoip/geoip.py:29
+#: pynicotine/geoip/geoip.py:31
 msgid "Angola"
 msgstr "Angola"
 
-#: pynicotine/geoip/geoip.py:30
+#: pynicotine/geoip/geoip.py:32
 msgid "Antarctica"
 msgstr "Antarctica"
 
-#: pynicotine/geoip/geoip.py:31
+#: pynicotine/geoip/geoip.py:33
 msgid "Argentina"
 msgstr "Argentinië"
 
-#: pynicotine/geoip/geoip.py:32
+#: pynicotine/geoip/geoip.py:34
 msgid "American Samoa"
 msgstr "Amerikaans Samoa"
 
-#: pynicotine/geoip/geoip.py:33
+#: pynicotine/geoip/geoip.py:35
 msgid "Austria"
 msgstr "Oostenrijk"
 
-#: pynicotine/geoip/geoip.py:34
+#: pynicotine/geoip/geoip.py:36
 msgid "Australia"
 msgstr "Australië"
 
-#: pynicotine/geoip/geoip.py:35
+#: pynicotine/geoip/geoip.py:37
 msgid "Aruba"
 msgstr "Aruba"
 
-#: pynicotine/geoip/geoip.py:36
+#: pynicotine/geoip/geoip.py:38
 msgid "Åland Islands"
 msgstr "Åland eilanden"
 
-#: pynicotine/geoip/geoip.py:37
+#: pynicotine/geoip/geoip.py:39
 msgid "Azerbaijan"
 msgstr "Azerbeidzjan"
 
-#: pynicotine/geoip/geoip.py:38
+#: pynicotine/geoip/geoip.py:40
 msgid "Bosnia & Herzegovina"
 msgstr "Bosnië en Herzegovina"
 
-#: pynicotine/geoip/geoip.py:39
+#: pynicotine/geoip/geoip.py:41
 msgid "Barbados"
 msgstr "Barbados"
 
-#: pynicotine/geoip/geoip.py:40
+#: pynicotine/geoip/geoip.py:42
 msgid "Bangladesh"
 msgstr "Bangladesh"
 
-#: pynicotine/geoip/geoip.py:41
+#: pynicotine/geoip/geoip.py:43
 msgid "Belgium"
 msgstr "België"
 
-#: pynicotine/geoip/geoip.py:42
+#: pynicotine/geoip/geoip.py:44
 msgid "Burkina Faso"
 msgstr "Burkina Faso"
 
-#: pynicotine/geoip/geoip.py:43
+#: pynicotine/geoip/geoip.py:45
 msgid "Bulgaria"
 msgstr "Bulgarije"
 
-#: pynicotine/geoip/geoip.py:44
+#: pynicotine/geoip/geoip.py:46
 msgid "Bahrain"
 msgstr "Bahrein"
 
-#: pynicotine/geoip/geoip.py:45
+#: pynicotine/geoip/geoip.py:47
 msgid "Burundi"
 msgstr "Burundi"
 
-#: pynicotine/geoip/geoip.py:46
+#: pynicotine/geoip/geoip.py:48
 msgid "Benin"
 msgstr "Benin"
 
-#: pynicotine/geoip/geoip.py:47
+#: pynicotine/geoip/geoip.py:49
 msgid "Saint Barthelemy"
 msgstr "Sint-Bartholomeus"
 
-#: pynicotine/geoip/geoip.py:48
+#: pynicotine/geoip/geoip.py:50
 msgid "Bermuda"
 msgstr "Bermuda"
 
-#: pynicotine/geoip/geoip.py:49
+#: pynicotine/geoip/geoip.py:51
 msgid "Brunei Darussalam"
 msgstr "Brunei Darussalam"
 
-#: pynicotine/geoip/geoip.py:50
+#: pynicotine/geoip/geoip.py:52
 msgid "Bolivia"
 msgstr "Bolivia"
 
-#: pynicotine/geoip/geoip.py:51
+#: pynicotine/geoip/geoip.py:53
 msgid "Bonaire, Sint Eustatius and Saba"
 msgstr "Bonaire, Sint-Eustatius en Saba"
 
-#: pynicotine/geoip/geoip.py:52
+#: pynicotine/geoip/geoip.py:54
 msgid "Brazil"
 msgstr "Brazilië"
 
-#: pynicotine/geoip/geoip.py:53
+#: pynicotine/geoip/geoip.py:55
 msgid "Bahamas"
 msgstr "Bahamas"
 
-#: pynicotine/geoip/geoip.py:54
+#: pynicotine/geoip/geoip.py:56
 msgid "Bhutan"
 msgstr "Bhutan"
 
-#: pynicotine/geoip/geoip.py:55
+#: pynicotine/geoip/geoip.py:57
 msgid "Bouvet Island"
 msgstr "Bouvet Eiland"
 
-#: pynicotine/geoip/geoip.py:56
+#: pynicotine/geoip/geoip.py:58
 msgid "Botswana"
 msgstr "Botswana"
 
-#: pynicotine/geoip/geoip.py:57
+#: pynicotine/geoip/geoip.py:59
 msgid "Belarus"
 msgstr "Wit-Rusland"
 
-#: pynicotine/geoip/geoip.py:58
+#: pynicotine/geoip/geoip.py:60
 msgid "Belize"
 msgstr "Belize"
 
-#: pynicotine/geoip/geoip.py:59
+#: pynicotine/geoip/geoip.py:61
 msgid "Canada"
 msgstr "Canada"
 
-#: pynicotine/geoip/geoip.py:60
+#: pynicotine/geoip/geoip.py:62
 msgid "Cocos (Keeling) Islands"
 msgstr "Cocoseilanden"
 
-#: pynicotine/geoip/geoip.py:61
+#: pynicotine/geoip/geoip.py:63
 msgid "Democratic Republic of Congo"
 msgstr "Democratische Republiek van Congo"
 
-#: pynicotine/geoip/geoip.py:62
+#: pynicotine/geoip/geoip.py:64
 msgid "Central African Republic"
 msgstr "Centraal-Afrikaanse Republiek"
 
-#: pynicotine/geoip/geoip.py:63
+#: pynicotine/geoip/geoip.py:65
 msgid "Congo"
 msgstr "Congo"
 
-#: pynicotine/geoip/geoip.py:64
+#: pynicotine/geoip/geoip.py:66
 msgid "Switzerland"
 msgstr "Zwitserland"
 
-#: pynicotine/geoip/geoip.py:65
+#: pynicotine/geoip/geoip.py:67
 msgid "Ivory Coast"
 msgstr "Ivoorkust"
 
-#: pynicotine/geoip/geoip.py:66
+#: pynicotine/geoip/geoip.py:68
 msgid "Cook Islands"
 msgstr "Cookeilanden"
 
-#: pynicotine/geoip/geoip.py:67
+#: pynicotine/geoip/geoip.py:69
 msgid "Chile"
 msgstr "Chili"
 
-#: pynicotine/geoip/geoip.py:68
+#: pynicotine/geoip/geoip.py:70
 msgid "Cameroon"
 msgstr "Kameroen"
 
-#: pynicotine/geoip/geoip.py:69
+#: pynicotine/geoip/geoip.py:71
 msgid "China"
 msgstr "China"
 
-#: pynicotine/geoip/geoip.py:70
+#: pynicotine/geoip/geoip.py:72
 msgid "Colombia"
 msgstr "Colombia"
 
-#: pynicotine/geoip/geoip.py:71
+#: pynicotine/geoip/geoip.py:73
 msgid "Costa Rica"
 msgstr "Costa Rica"
 
-#: pynicotine/geoip/geoip.py:72
+#: pynicotine/geoip/geoip.py:74
 msgid "Cuba"
 msgstr "Cuba"
 
-#: pynicotine/geoip/geoip.py:73
+#: pynicotine/geoip/geoip.py:75
 msgid "Cabo Verde"
 msgstr "Kaapverdië"
 
-#: pynicotine/geoip/geoip.py:74
+#: pynicotine/geoip/geoip.py:76
 msgid "Curaçao"
 msgstr "Curaçao"
 
-#: pynicotine/geoip/geoip.py:75
+#: pynicotine/geoip/geoip.py:77
 msgid "Christmas Island"
 msgstr "Kersteiland"
 
-#: pynicotine/geoip/geoip.py:76
+#: pynicotine/geoip/geoip.py:78
 msgid "Cyprus"
 msgstr "Cyprus"
 
-#: pynicotine/geoip/geoip.py:77
+#: pynicotine/geoip/geoip.py:79
 msgid "Czech Republic"
 msgstr "Tsjechië"
 
-#: pynicotine/geoip/geoip.py:78
+#: pynicotine/geoip/geoip.py:80
 msgid "Germany"
 msgstr "Duitsland"
 
-#: pynicotine/geoip/geoip.py:79
+#: pynicotine/geoip/geoip.py:81
 msgid "Djibouti"
 msgstr "Djibouti"
 
-#: pynicotine/geoip/geoip.py:80
+#: pynicotine/geoip/geoip.py:82
 msgid "Denmark"
 msgstr "Denemarken"
 
-#: pynicotine/geoip/geoip.py:81
+#: pynicotine/geoip/geoip.py:83
 msgid "Dominica"
 msgstr "Dominica"
 
-#: pynicotine/geoip/geoip.py:82
+#: pynicotine/geoip/geoip.py:84
 msgid "Dominican Republic"
 msgstr "Dominicaanse Republiek"
 
-#: pynicotine/geoip/geoip.py:83
+#: pynicotine/geoip/geoip.py:85
 msgid "Algeria"
 msgstr "Algerije"
 
-#: pynicotine/geoip/geoip.py:84
+#: pynicotine/geoip/geoip.py:86
 msgid "Ecuador"
 msgstr "Ecuador"
 
-#: pynicotine/geoip/geoip.py:85
+#: pynicotine/geoip/geoip.py:87
 msgid "Estonia"
 msgstr "Estland"
 
-#: pynicotine/geoip/geoip.py:86
+#: pynicotine/geoip/geoip.py:88
 msgid "Egypt"
 msgstr "Egypte"
 
-#: pynicotine/geoip/geoip.py:87
+#: pynicotine/geoip/geoip.py:89
 msgid "Western Sahara"
 msgstr "Westelijke Sahara"
 
-#: pynicotine/geoip/geoip.py:88
+#: pynicotine/geoip/geoip.py:90
 msgid "Eritrea"
 msgstr "Eritrea"
 
-#: pynicotine/geoip/geoip.py:89
+#: pynicotine/geoip/geoip.py:91
 msgid "Spain"
 msgstr "Spanje"
 
-#: pynicotine/geoip/geoip.py:90
+#: pynicotine/geoip/geoip.py:92
 msgid "Ethiopia"
 msgstr "Ethiopië"
 
-#: pynicotine/geoip/geoip.py:91
+#: pynicotine/geoip/geoip.py:93
 msgid "Europe"
 msgstr "Europa"
 
-#: pynicotine/geoip/geoip.py:92
+#: pynicotine/geoip/geoip.py:94
 msgid "Finland"
 msgstr "Finland"
 
-#: pynicotine/geoip/geoip.py:93
+#: pynicotine/geoip/geoip.py:95
 msgid "Fiji"
 msgstr "Fiji"
 
-#: pynicotine/geoip/geoip.py:94
+#: pynicotine/geoip/geoip.py:96
 msgid "Falkland Islands (Malvinas)"
 msgstr "Falklandeilanden (Malvinas)"
 
-#: pynicotine/geoip/geoip.py:95
+#: pynicotine/geoip/geoip.py:97
 msgid "Micronesia"
 msgstr "Micronesië"
 
-#: pynicotine/geoip/geoip.py:96
+#: pynicotine/geoip/geoip.py:98
 msgid "Faroe Islands"
 msgstr "Faeröer Eilanden"
 
-#: pynicotine/geoip/geoip.py:97
+#: pynicotine/geoip/geoip.py:99
 msgid "France"
 msgstr "Frankrijk"
 
-#: pynicotine/geoip/geoip.py:98
+#: pynicotine/geoip/geoip.py:100
 msgid "Gabon"
 msgstr "Gabon"
 
-#: pynicotine/geoip/geoip.py:99
+#: pynicotine/geoip/geoip.py:101
 msgid "Great Britain"
 msgstr "Groot-Brittannië"
 
-#: pynicotine/geoip/geoip.py:100
+#: pynicotine/geoip/geoip.py:102
 msgid "Grenada"
 msgstr "Grenada"
 
-#: pynicotine/geoip/geoip.py:101
+#: pynicotine/geoip/geoip.py:103
 msgid "Georgia"
 msgstr "Georgië"
 
-#: pynicotine/geoip/geoip.py:102
+#: pynicotine/geoip/geoip.py:104
 msgid "French Guiana"
 msgstr "Frans-Guyana"
 
-#: pynicotine/geoip/geoip.py:103
+#: pynicotine/geoip/geoip.py:105
 msgid "Guernsey"
 msgstr "Guernsey"
 
-#: pynicotine/geoip/geoip.py:104
+#: pynicotine/geoip/geoip.py:106
 msgid "Ghana"
 msgstr "Ghana"
 
-#: pynicotine/geoip/geoip.py:105
+#: pynicotine/geoip/geoip.py:107
 msgid "Gibraltar"
 msgstr "Gibraltar"
 
-#: pynicotine/geoip/geoip.py:106
+#: pynicotine/geoip/geoip.py:108
 msgid "Greenland"
 msgstr "Groenland"
 
-#: pynicotine/geoip/geoip.py:107
+#: pynicotine/geoip/geoip.py:109
 msgid "Gambia"
 msgstr "Gambia"
 
-#: pynicotine/geoip/geoip.py:108
+#: pynicotine/geoip/geoip.py:110
 msgid "Guinea"
 msgstr "Guinee"
 
-#: pynicotine/geoip/geoip.py:109
+#: pynicotine/geoip/geoip.py:111
 msgid "Guadeloupe"
 msgstr "Guadeloupe"
 
-#: pynicotine/geoip/geoip.py:110
+#: pynicotine/geoip/geoip.py:112
 msgid "Equatorial Guinea"
 msgstr "Equatoriaal-Guinea"
 
-#: pynicotine/geoip/geoip.py:111
+#: pynicotine/geoip/geoip.py:113
 msgid "Greece"
 msgstr "Griekenland"
 
-#: pynicotine/geoip/geoip.py:112
+#: pynicotine/geoip/geoip.py:114
 msgid "South Georgia & South Sandwich Islands"
 msgstr "Zuid-Georgië en Zuidelijke Sandwicheilanden"
 
-#: pynicotine/geoip/geoip.py:113
+#: pynicotine/geoip/geoip.py:115
 msgid "Guatemala"
 msgstr "Guatemala"
 
-#: pynicotine/geoip/geoip.py:114
+#: pynicotine/geoip/geoip.py:116
 msgid "Guam"
 msgstr "Guam"
 
-#: pynicotine/geoip/geoip.py:115
+#: pynicotine/geoip/geoip.py:117
 msgid "Guinea-Bissau"
 msgstr "Guinee-Bissau"
 
-#: pynicotine/geoip/geoip.py:116
+#: pynicotine/geoip/geoip.py:118
 msgid "Guyana"
 msgstr "Guyana"
 
-#: pynicotine/geoip/geoip.py:117
+#: pynicotine/geoip/geoip.py:119
 msgid "Hong Kong"
 msgstr "Hong Kong"
 
-#: pynicotine/geoip/geoip.py:118
+#: pynicotine/geoip/geoip.py:120
 msgid "Heard & McDonald Islands"
 msgstr "Heard- en McDonaldeilanden"
 
-#: pynicotine/geoip/geoip.py:119
+#: pynicotine/geoip/geoip.py:121
 msgid "Honduras"
 msgstr "Honduras"
 
-#: pynicotine/geoip/geoip.py:120
+#: pynicotine/geoip/geoip.py:122
 msgid "Croatia"
 msgstr "Kroatië"
 
-#: pynicotine/geoip/geoip.py:121
+#: pynicotine/geoip/geoip.py:123
 msgid "Haiti"
 msgstr "Haïti"
 
-#: pynicotine/geoip/geoip.py:122
+#: pynicotine/geoip/geoip.py:124
 msgid "Hungary"
 msgstr "Hongarije"
 
-#: pynicotine/geoip/geoip.py:123
+#: pynicotine/geoip/geoip.py:125
 msgid "Indonesia"
 msgstr "Indonesië"
 
-#: pynicotine/geoip/geoip.py:124
+#: pynicotine/geoip/geoip.py:126
 msgid "Ireland"
 msgstr "Ierland"
 
-#: pynicotine/geoip/geoip.py:125
+#: pynicotine/geoip/geoip.py:127
 msgid "Israel"
 msgstr "Israël"
 
-#: pynicotine/geoip/geoip.py:126
+#: pynicotine/geoip/geoip.py:128
 msgid "Isle of Man"
 msgstr "Isle of Man"
 
-#: pynicotine/geoip/geoip.py:127
+#: pynicotine/geoip/geoip.py:129
 msgid "India"
 msgstr "India"
 
-#: pynicotine/geoip/geoip.py:128
+#: pynicotine/geoip/geoip.py:130
 msgid "British Indian Ocean Territory"
 msgstr "Brits Indische Oceaanterritorium"
 
-#: pynicotine/geoip/geoip.py:129
+#: pynicotine/geoip/geoip.py:131
 msgid "Iraq"
 msgstr "Irak"
 
-#: pynicotine/geoip/geoip.py:130
+#: pynicotine/geoip/geoip.py:132
 msgid "Iran"
 msgstr "Iran"
 
-#: pynicotine/geoip/geoip.py:131
+#: pynicotine/geoip/geoip.py:133
 msgid "Iceland"
 msgstr "IJsland"
 
-#: pynicotine/geoip/geoip.py:132
+#: pynicotine/geoip/geoip.py:134
 msgid "Italy"
 msgstr "Italië"
 
-#: pynicotine/geoip/geoip.py:133
+#: pynicotine/geoip/geoip.py:135
 msgid "Jersey"
 msgstr "Jersey"
 
-#: pynicotine/geoip/geoip.py:134
+#: pynicotine/geoip/geoip.py:136
 msgid "Jamaica"
 msgstr "Jamaica"
 
-#: pynicotine/geoip/geoip.py:135
+#: pynicotine/geoip/geoip.py:137
 msgid "Jordan"
 msgstr "Jordanië"
 
-#: pynicotine/geoip/geoip.py:136
+#: pynicotine/geoip/geoip.py:138
 msgid "Japan"
 msgstr "Japan"
 
-#: pynicotine/geoip/geoip.py:137
+#: pynicotine/geoip/geoip.py:139
 msgid "Kenya"
 msgstr "Kenia"
 
-#: pynicotine/geoip/geoip.py:138
+#: pynicotine/geoip/geoip.py:140
 msgid "Kyrgyzstan"
 msgstr "Kirgizië"
 
-#: pynicotine/geoip/geoip.py:139
+#: pynicotine/geoip/geoip.py:141
 msgid "Cambodia"
 msgstr "Cambodja"
 
-#: pynicotine/geoip/geoip.py:140
+#: pynicotine/geoip/geoip.py:142
 msgid "Kiribati"
 msgstr "Kiribati"
 
-#: pynicotine/geoip/geoip.py:141
+#: pynicotine/geoip/geoip.py:143
 msgid "Comoros"
 msgstr "Comoren"
 
-#: pynicotine/geoip/geoip.py:142
+#: pynicotine/geoip/geoip.py:144
 msgid "Saint Kitts & Nevis"
 msgstr "Saint Kitts en Nevis"
 
-#: pynicotine/geoip/geoip.py:143
+#: pynicotine/geoip/geoip.py:145
 msgid "North Korea"
 msgstr "Noord-Korea"
 
-#: pynicotine/geoip/geoip.py:144
+#: pynicotine/geoip/geoip.py:146
 msgid "South Korea"
 msgstr "Zuid-Korea"
 
-#: pynicotine/geoip/geoip.py:145
+#: pynicotine/geoip/geoip.py:147
 msgid "Kuwait"
 msgstr "Koeweit"
 
-#: pynicotine/geoip/geoip.py:146
+#: pynicotine/geoip/geoip.py:148
 msgid "Cayman Islands"
 msgstr "Kaaimaneilanden"
 
-#: pynicotine/geoip/geoip.py:147
+#: pynicotine/geoip/geoip.py:149
 msgid "Kazakhstan"
 msgstr "Kazachstan"
 
-#: pynicotine/geoip/geoip.py:148
+#: pynicotine/geoip/geoip.py:150
 msgid "Laos"
 msgstr "Laos"
 
-#: pynicotine/geoip/geoip.py:149
+#: pynicotine/geoip/geoip.py:151
 msgid "Lebanon"
 msgstr "Libanon"
 
-#: pynicotine/geoip/geoip.py:150
+#: pynicotine/geoip/geoip.py:152
 msgid "Saint Lucia"
 msgstr "Sint Lucia"
 
-#: pynicotine/geoip/geoip.py:151
+#: pynicotine/geoip/geoip.py:153
 msgid "Liechtenstein"
 msgstr "Liechtenstein"
 
-#: pynicotine/geoip/geoip.py:152
+#: pynicotine/geoip/geoip.py:154
 msgid "Sri Lanka"
 msgstr "Sri Lanka"
 
-#: pynicotine/geoip/geoip.py:153
+#: pynicotine/geoip/geoip.py:155
 msgid "Liberia"
 msgstr "Liberia"
 
-#: pynicotine/geoip/geoip.py:154
+#: pynicotine/geoip/geoip.py:156
 msgid "Lesotho"
 msgstr "Lesotho"
 
-#: pynicotine/geoip/geoip.py:155
+#: pynicotine/geoip/geoip.py:157
 msgid "Lithuania"
 msgstr "Litouwen"
 
-#: pynicotine/geoip/geoip.py:156
+#: pynicotine/geoip/geoip.py:158
 msgid "Luxembourg"
 msgstr "Luxemburg"
 
-#: pynicotine/geoip/geoip.py:157
+#: pynicotine/geoip/geoip.py:159
 msgid "Latvia"
 msgstr "Letland"
 
-#: pynicotine/geoip/geoip.py:158
+#: pynicotine/geoip/geoip.py:160
 msgid "Libya"
 msgstr "Libië"
 
-#: pynicotine/geoip/geoip.py:159
+#: pynicotine/geoip/geoip.py:161
 msgid "Morocco"
 msgstr "Marokko"
 
-#: pynicotine/geoip/geoip.py:160
+#: pynicotine/geoip/geoip.py:162
 msgid "Monaco"
 msgstr "Monaco"
 
-#: pynicotine/geoip/geoip.py:161
+#: pynicotine/geoip/geoip.py:163
 msgid "Moldova"
 msgstr "Moldavië"
 
-#: pynicotine/geoip/geoip.py:162
+#: pynicotine/geoip/geoip.py:164
 msgid "Montenegro"
 msgstr "Montenegro"
 
-#: pynicotine/geoip/geoip.py:163
+#: pynicotine/geoip/geoip.py:165
 msgid "Saint Martin"
 msgstr "Sint-Maarten"
 
-#: pynicotine/geoip/geoip.py:164
+#: pynicotine/geoip/geoip.py:166
 msgid "Madagascar"
 msgstr "Madagaskar"
 
-#: pynicotine/geoip/geoip.py:165
+#: pynicotine/geoip/geoip.py:167
 msgid "Marshall Islands"
 msgstr "Marshall eilanden"
 
-#: pynicotine/geoip/geoip.py:166
+#: pynicotine/geoip/geoip.py:168
 msgid "North Macedonia"
 msgstr "Noord-Macedonië"
 
-#: pynicotine/geoip/geoip.py:167
+#: pynicotine/geoip/geoip.py:169
 msgid "Mali"
 msgstr "Mali"
 
-#: pynicotine/geoip/geoip.py:168
+#: pynicotine/geoip/geoip.py:170
 msgid "Myanmar"
 msgstr "Myanmar"
 
-#: pynicotine/geoip/geoip.py:169
+#: pynicotine/geoip/geoip.py:171
 msgid "Mongolia"
 msgstr "Mongolië"
 
-#: pynicotine/geoip/geoip.py:170
+#: pynicotine/geoip/geoip.py:172
 msgid "Macau"
 msgstr "Macau"
 
-#: pynicotine/geoip/geoip.py:171
+#: pynicotine/geoip/geoip.py:173
 msgid "Northern Mariana Islands"
 msgstr "Noordelijke Marianen"
 
-#: pynicotine/geoip/geoip.py:172
+#: pynicotine/geoip/geoip.py:174
 msgid "Martinique"
 msgstr "Martinique"
 
-#: pynicotine/geoip/geoip.py:173
+#: pynicotine/geoip/geoip.py:175
 msgid "Mauritania"
 msgstr "Mauritanië"
 
-#: pynicotine/geoip/geoip.py:174
+#: pynicotine/geoip/geoip.py:176
 msgid "Montserrat"
 msgstr "Montserrat"
 
-#: pynicotine/geoip/geoip.py:175
+#: pynicotine/geoip/geoip.py:177
 msgid "Malta"
 msgstr "Malta"
 
-#: pynicotine/geoip/geoip.py:176
+#: pynicotine/geoip/geoip.py:178
 msgid "Mauritius"
 msgstr "Mauritius"
 
-#: pynicotine/geoip/geoip.py:177
+#: pynicotine/geoip/geoip.py:179
 msgid "Maldives"
 msgstr "Maldiven"
 
-#: pynicotine/geoip/geoip.py:178
+#: pynicotine/geoip/geoip.py:180
 msgid "Malawi"
 msgstr "Malawi"
 
-#: pynicotine/geoip/geoip.py:179
+#: pynicotine/geoip/geoip.py:181
 msgid "Mexico"
 msgstr "Mexico"
 
-#: pynicotine/geoip/geoip.py:180
+#: pynicotine/geoip/geoip.py:182
 msgid "Malaysia"
 msgstr "Maleisië"
 
-#: pynicotine/geoip/geoip.py:181
+#: pynicotine/geoip/geoip.py:183
 msgid "Mozambique"
 msgstr "Mozambique"
 
-#: pynicotine/geoip/geoip.py:182
+#: pynicotine/geoip/geoip.py:184
 msgid "Namibia"
 msgstr "Namibië"
 
-#: pynicotine/geoip/geoip.py:183
+#: pynicotine/geoip/geoip.py:185
 msgid "New Caledonia"
 msgstr "Nieuw Caledonië"
 
-#: pynicotine/geoip/geoip.py:184
+#: pynicotine/geoip/geoip.py:186
 msgid "Niger"
 msgstr "Niger"
 
-#: pynicotine/geoip/geoip.py:185
+#: pynicotine/geoip/geoip.py:187
 msgid "Norfolk Island"
 msgstr "Norfolk Eiland"
 
-#: pynicotine/geoip/geoip.py:186
+#: pynicotine/geoip/geoip.py:188
 msgid "Nigeria"
 msgstr "Nigeria"
 
-#: pynicotine/geoip/geoip.py:187
+#: pynicotine/geoip/geoip.py:189
 msgid "Nicaragua"
 msgstr "Nicaragua"
 
-#: pynicotine/geoip/geoip.py:188
+#: pynicotine/geoip/geoip.py:190
 msgid "Netherlands"
 msgstr "Nederland"
 
-#: pynicotine/geoip/geoip.py:189
+#: pynicotine/geoip/geoip.py:191
 msgid "Norway"
 msgstr "Noorwegen"
 
-#: pynicotine/geoip/geoip.py:190
+#: pynicotine/geoip/geoip.py:192
 msgid "Nepal"
 msgstr "Nepal"
 
-#: pynicotine/geoip/geoip.py:191
+#: pynicotine/geoip/geoip.py:193
 msgid "Nauru"
 msgstr "Nauru"
 
-#: pynicotine/geoip/geoip.py:192
+#: pynicotine/geoip/geoip.py:194
 msgid "Niue"
 msgstr "Niue"
 
-#: pynicotine/geoip/geoip.py:193
+#: pynicotine/geoip/geoip.py:195
 msgid "New Zealand"
 msgstr "Nieuw Zeeland"
 
-#: pynicotine/geoip/geoip.py:194
+#: pynicotine/geoip/geoip.py:196
 msgid "Oman"
 msgstr "Oman"
 
-#: pynicotine/geoip/geoip.py:195
+#: pynicotine/geoip/geoip.py:197
 msgid "Panama"
 msgstr "Pamama"
 
-#: pynicotine/geoip/geoip.py:196
+#: pynicotine/geoip/geoip.py:198
 msgid "Peru"
 msgstr "Peru"
 
-#: pynicotine/geoip/geoip.py:197
+#: pynicotine/geoip/geoip.py:199
 msgid "French Polynesia"
 msgstr "Frans Polynesië"
 
-#: pynicotine/geoip/geoip.py:198
+#: pynicotine/geoip/geoip.py:200
 msgid "Papua New Guinea"
 msgstr "Papoea Nieuw Guinea"
 
-#: pynicotine/geoip/geoip.py:199
+#: pynicotine/geoip/geoip.py:201
 msgid "Philippines"
 msgstr "Filippijnen"
 
-#: pynicotine/geoip/geoip.py:200
+#: pynicotine/geoip/geoip.py:202
 msgid "Pakistan"
 msgstr "Pakistan"
 
-#: pynicotine/geoip/geoip.py:201
+#: pynicotine/geoip/geoip.py:203
 msgid "Poland"
 msgstr "Polen"
 
-#: pynicotine/geoip/geoip.py:202
+#: pynicotine/geoip/geoip.py:204
 msgid "Saint Pierre & Miquelon"
 msgstr "Saint Pierre en Miquelon"
 
-#: pynicotine/geoip/geoip.py:203
+#: pynicotine/geoip/geoip.py:205
 msgid "Pitcairn"
 msgstr "Pitcairn"
 
-#: pynicotine/geoip/geoip.py:204
+#: pynicotine/geoip/geoip.py:206
 msgid "Puerto Rico"
 msgstr "Puerto Rico"
 
-#: pynicotine/geoip/geoip.py:205
+#: pynicotine/geoip/geoip.py:207
 msgid "State of Palestine"
 msgstr "Palestina"
 
-#: pynicotine/geoip/geoip.py:206
+#: pynicotine/geoip/geoip.py:208
 msgid "Portugal"
 msgstr "Portugal"
 
-#: pynicotine/geoip/geoip.py:207
+#: pynicotine/geoip/geoip.py:209
 msgid "Palau"
 msgstr "Palau"
 
-#: pynicotine/geoip/geoip.py:208
+#: pynicotine/geoip/geoip.py:210
 msgid "Paraguay"
 msgstr "Paraguay"
 
-#: pynicotine/geoip/geoip.py:209
+#: pynicotine/geoip/geoip.py:211
 msgid "Qatar"
 msgstr "Qatar"
 
-#: pynicotine/geoip/geoip.py:210
+#: pynicotine/geoip/geoip.py:212
 msgid "Réunion"
 msgstr "Réunion"
 
-#: pynicotine/geoip/geoip.py:211
+#: pynicotine/geoip/geoip.py:213
 msgid "Romania"
 msgstr "Roemenië"
 
-#: pynicotine/geoip/geoip.py:212
+#: pynicotine/geoip/geoip.py:214
 msgid "Serbia"
 msgstr "Servië"
 
-#: pynicotine/geoip/geoip.py:213
+#: pynicotine/geoip/geoip.py:215
 msgid "Russia"
 msgstr "Rusland"
 
-#: pynicotine/geoip/geoip.py:214
+#: pynicotine/geoip/geoip.py:216
 msgid "Rwanda"
 msgstr "Rwanda"
 
-#: pynicotine/geoip/geoip.py:215
+#: pynicotine/geoip/geoip.py:217
 msgid "Saudi Arabia"
 msgstr "Saoedi-Arabië"
 
-#: pynicotine/geoip/geoip.py:216
+#: pynicotine/geoip/geoip.py:218
 msgid "Solomon Islands"
 msgstr "Solomon eilanden"
 
-#: pynicotine/geoip/geoip.py:217
+#: pynicotine/geoip/geoip.py:219
 msgid "Seychelles"
 msgstr "Seychellen"
 
-#: pynicotine/geoip/geoip.py:218
+#: pynicotine/geoip/geoip.py:220
 msgid "Sudan"
 msgstr "Soedan"
 
-#: pynicotine/geoip/geoip.py:219
+#: pynicotine/geoip/geoip.py:221
 msgid "Sweden"
 msgstr "Zweden"
 
-#: pynicotine/geoip/geoip.py:220
+#: pynicotine/geoip/geoip.py:222
 msgid "Singapore"
 msgstr "Singapore"
 
-#: pynicotine/geoip/geoip.py:221
+#: pynicotine/geoip/geoip.py:223
 msgid "Saint Helena"
 msgstr "Sint Helena"
 
-#: pynicotine/geoip/geoip.py:222
+#: pynicotine/geoip/geoip.py:224
 msgid "Slovenia"
 msgstr "Slovenië"
 
-#: pynicotine/geoip/geoip.py:223
+#: pynicotine/geoip/geoip.py:225
 msgid "Svalbard & Jan Mayen Islands"
 msgstr "Spitsbergen en Jan Mayen-eilanden"
 
-#: pynicotine/geoip/geoip.py:224
+#: pynicotine/geoip/geoip.py:226
 msgid "Slovak Republic"
 msgstr "Slowakije"
 
-#: pynicotine/geoip/geoip.py:225
+#: pynicotine/geoip/geoip.py:227
 msgid "Sierra Leone"
 msgstr "Sierra Leone"
 
-#: pynicotine/geoip/geoip.py:226
+#: pynicotine/geoip/geoip.py:228
 msgid "San Marino"
 msgstr "San Marino"
 
-#: pynicotine/geoip/geoip.py:227
+#: pynicotine/geoip/geoip.py:229
 msgid "Senegal"
 msgstr "Senegal"
 
-#: pynicotine/geoip/geoip.py:228
+#: pynicotine/geoip/geoip.py:230
 msgid "Somalia"
 msgstr "Somalië"
 
-#: pynicotine/geoip/geoip.py:229
+#: pynicotine/geoip/geoip.py:231
 msgid "Suriname"
 msgstr "Suriname"
 
-#: pynicotine/geoip/geoip.py:230
+#: pynicotine/geoip/geoip.py:232
 msgid "South Sudan"
 msgstr "Zuid Soedan"
 
-#: pynicotine/geoip/geoip.py:231
+#: pynicotine/geoip/geoip.py:233
 msgid "Sao Tome & Principe"
 msgstr "Sao Tomé en Principe"
 
-#: pynicotine/geoip/geoip.py:232
+#: pynicotine/geoip/geoip.py:234
 msgid "El Salvador"
 msgstr "El Salvador"
 
-#: pynicotine/geoip/geoip.py:233
+#: pynicotine/geoip/geoip.py:235
 msgid "Sint Maarten"
 msgstr "Sint Maarten"
 
-#: pynicotine/geoip/geoip.py:234
+#: pynicotine/geoip/geoip.py:236
 msgid "Syria"
 msgstr "Syrië"
 
-#: pynicotine/geoip/geoip.py:235
+#: pynicotine/geoip/geoip.py:237
 msgid "Eswatini"
 msgstr "Eswatini"
 
-#: pynicotine/geoip/geoip.py:236
+#: pynicotine/geoip/geoip.py:238
 msgid "Turks & Caicos Islands"
 msgstr "Turks- en Caicoseilanden"
 
-#: pynicotine/geoip/geoip.py:237
+#: pynicotine/geoip/geoip.py:239
 msgid "Chad"
 msgstr "Tsjaad"
 
-#: pynicotine/geoip/geoip.py:238
+#: pynicotine/geoip/geoip.py:240
 msgid "French Southern Territories"
 msgstr "Franse zuidelijke gebieden"
 
-#: pynicotine/geoip/geoip.py:239
+#: pynicotine/geoip/geoip.py:241
 msgid "Togo"
 msgstr "Togo"
 
-#: pynicotine/geoip/geoip.py:240
+#: pynicotine/geoip/geoip.py:242
 msgid "Thailand"
 msgstr "Thailand"
 
-#: pynicotine/geoip/geoip.py:241
+#: pynicotine/geoip/geoip.py:243
 msgid "Tajikistan"
 msgstr "Tadzjikistan"
 
-#: pynicotine/geoip/geoip.py:242
+#: pynicotine/geoip/geoip.py:244
 msgid "Tokelau"
 msgstr "Tokelau"
 
-#: pynicotine/geoip/geoip.py:243
+#: pynicotine/geoip/geoip.py:245
 msgid "Timor-Leste"
 msgstr "Oost-Timor"
 
-#: pynicotine/geoip/geoip.py:244
+#: pynicotine/geoip/geoip.py:246
 msgid "Turkmenistan"
 msgstr "Turkmenistan"
 
-#: pynicotine/geoip/geoip.py:245
+#: pynicotine/geoip/geoip.py:247
 msgid "Tunisia"
 msgstr "Tunesië"
 
-#: pynicotine/geoip/geoip.py:246
+#: pynicotine/geoip/geoip.py:248
 msgid "Tonga"
 msgstr "Tonga"
 
-#: pynicotine/geoip/geoip.py:247
+#: pynicotine/geoip/geoip.py:249
 msgid "Turkey"
 msgstr "Turkije"
 
-#: pynicotine/geoip/geoip.py:248
+#: pynicotine/geoip/geoip.py:250
 msgid "Trinidad & Tobago"
 msgstr "Trinidad en Tobago"
 
-#: pynicotine/geoip/geoip.py:249
+#: pynicotine/geoip/geoip.py:251
 msgid "Tuvalu"
 msgstr "Tuvalu"
 
-#: pynicotine/geoip/geoip.py:250
+#: pynicotine/geoip/geoip.py:252
 msgid "Taiwan"
 msgstr "Taiwan"
 
-#: pynicotine/geoip/geoip.py:251
+#: pynicotine/geoip/geoip.py:253
 msgid "Tanzania"
 msgstr "Tanzania"
 
-#: pynicotine/geoip/geoip.py:252
+#: pynicotine/geoip/geoip.py:254
 msgid "Ukraine"
 msgstr "Oekraïne"
 
-#: pynicotine/geoip/geoip.py:253
+#: pynicotine/geoip/geoip.py:255
 msgid "Uganda"
 msgstr "Oeganda"
 
-#: pynicotine/geoip/geoip.py:254
+#: pynicotine/geoip/geoip.py:256
 msgid "U.S. Minor Outlying Islands"
 msgstr "Amerikaanse kleine afgelegen eilanden"
 
-#: pynicotine/geoip/geoip.py:255
+#: pynicotine/geoip/geoip.py:257
 msgid "United States"
 msgstr "Verenigde Staten"
 
-#: pynicotine/geoip/geoip.py:256
+#: pynicotine/geoip/geoip.py:258
 msgid "Uruguay"
 msgstr "Uruguay"
 
-#: pynicotine/geoip/geoip.py:257
+#: pynicotine/geoip/geoip.py:259
 msgid "Uzbekistan"
 msgstr "Oezbekistan"
 
-#: pynicotine/geoip/geoip.py:258
+#: pynicotine/geoip/geoip.py:260
 msgid "Holy See (Vatican City State)"
 msgstr "Heilige Stoel (Vaticaanstad)"
 
-#: pynicotine/geoip/geoip.py:259
+#: pynicotine/geoip/geoip.py:261
 msgid "Saint Vincent & The Grenadines"
 msgstr "Saint Vincent en de Grenadines"
 
-#: pynicotine/geoip/geoip.py:260
+#: pynicotine/geoip/geoip.py:262
 msgid "Venezuela"
 msgstr "Venezuela"
 
-#: pynicotine/geoip/geoip.py:261
+#: pynicotine/geoip/geoip.py:263
 msgid "British Virgin Islands"
 msgstr "Britse Maagdeneilanden"
 
-#: pynicotine/geoip/geoip.py:262
+#: pynicotine/geoip/geoip.py:264
 msgid "U.S. Virgin Islands"
 msgstr "V.S. Maagdeneilanden"
 
-#: pynicotine/geoip/geoip.py:263
+#: pynicotine/geoip/geoip.py:265
 msgid "Viet Nam"
 msgstr "Vietnam"
 
-#: pynicotine/geoip/geoip.py:264
+#: pynicotine/geoip/geoip.py:266
 msgid "Vanuatu"
 msgstr "Vanuatu"
 
-#: pynicotine/geoip/geoip.py:265
+#: pynicotine/geoip/geoip.py:267
 msgid "Wallis & Futuna"
 msgstr "Wallis en Futuna"
 
-#: pynicotine/geoip/geoip.py:266
+#: pynicotine/geoip/geoip.py:268
 msgid "Samoa"
 msgstr "Samoa"
 
-#: pynicotine/geoip/geoip.py:267
+#: pynicotine/geoip/geoip.py:269
 msgid "Kosovo"
 msgstr "Kosovo"
 
-#: pynicotine/geoip/geoip.py:268
+#: pynicotine/geoip/geoip.py:270
 msgid "Yemen"
 msgstr "Jemen"
 
-#: pynicotine/geoip/geoip.py:269
+#: pynicotine/geoip/geoip.py:271
 msgid "Mayotte"
 msgstr "Mayotte"
 
-#: pynicotine/geoip/geoip.py:270
+#: pynicotine/geoip/geoip.py:272
 msgid "South Africa"
 msgstr "Zuid-Afrika"
 
-#: pynicotine/geoip/geoip.py:271
+#: pynicotine/geoip/geoip.py:273
 msgid "Zambia"
 msgstr "Zambia"
 
-#: pynicotine/geoip/geoip.py:272
+#: pynicotine/geoip/geoip.py:274
 msgid "Zimbabwe"
 msgstr "Zimbabwe"
 
-#: pynicotine/gtkgui/__init__.py:50 pynicotine/gtkgui/__init__.py:57
+#: pynicotine/gtkgui/__init__.py:43
 #, python-format
 msgid "Cannot find %s, please install it."
 msgstr "Kan %s niet vinden, installeer het aub."
 
-#: pynicotine/gtkgui/__init__.py:63
+#: pynicotine/gtkgui/__init__.py:54
+#, python-format
+msgid "Cannot find %s or newer, please install it."
+msgstr "Kan %s of nieuwer niet vinden, installeer het alstublieft."
+
+#: pynicotine/gtkgui/__init__.py:60
 msgid "Cannot import the Gtk module. Bad install of the python-gobject module?"
 msgstr ""
 "Kan de Gtk-module niet importeren. Slechte installatie van de python-gobject-"
 "module?"
 
-#: pynicotine/gtkgui/__init__.py:66
+#: pynicotine/gtkgui/__init__.py:63
 #, python-format
 msgid ""
 "You are using an unsupported version of GTK %(major_version)s. You should "
@@ -1200,7 +1205,7 @@ msgstr ""
 "Je gebruikt een niet-ondersteunde versie van GTK %(major_version)s. GTK "
 "%(complete_version)s of nieuwer is vereist."
 
-#: pynicotine/gtkgui/__init__.py:116
+#: pynicotine/gtkgui/__init__.py:113
 msgid "No graphical environment available, using headless (no GUI) mode"
 msgstr "Geen grafische omgeving beschikbaar, gebruik headless (geen GUI) modus"
 
@@ -1242,29 +1247,29 @@ msgstr "Maak kamer privé"
 msgid "Status"
 msgstr "Status"
 
-#: pynicotine/gtkgui/chatrooms.py:495 pynicotine/gtkgui/search.py:369
+#: pynicotine/gtkgui/chatrooms.py:495 pynicotine/gtkgui/search.py:368
 #: pynicotine/gtkgui/userlist.py:85
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:311
-#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:412
+#: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:408
 #: pynicotine/gtkgui/ui/userinfo.ui:285
 msgid "Country"
 msgstr "Land"
 
 #: pynicotine/gtkgui/chatrooms.py:496
-#: pynicotine/gtkgui/dialogs/preferences.py:761
-#: pynicotine/gtkgui/dialogs/preferences.py:888
+#: pynicotine/gtkgui/dialogs/preferences.py:772
+#: pynicotine/gtkgui/dialogs/preferences.py:899
 #: pynicotine/gtkgui/interests.py:104
-#: pynicotine/gtkgui/popovers/chathistory.py:48
-#: pynicotine/gtkgui/privatechat.py:267 pynicotine/gtkgui/search.py:368
-#: pynicotine/gtkgui/transferlist.py:127 pynicotine/gtkgui/userbrowse.py:250
-#: pynicotine/gtkgui/userbrowse.py:264 pynicotine/gtkgui/userbrowse.py:316
-#: pynicotine/gtkgui/userbrowse.py:333 pynicotine/gtkgui/userlist.py:86
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:229
+#: pynicotine/gtkgui/popovers/chathistory.py:57
+#: pynicotine/gtkgui/privatechat.py:267 pynicotine/gtkgui/search.py:367
+#: pynicotine/gtkgui/transferlist.py:127 pynicotine/gtkgui/userbrowse.py:254
+#: pynicotine/gtkgui/userbrowse.py:268 pynicotine/gtkgui/userbrowse.py:320
+#: pynicotine/gtkgui/userbrowse.py:337 pynicotine/gtkgui/userlist.py:86
+#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:241
 msgid "User"
 msgstr "Gebruiker"
 
 #: pynicotine/gtkgui/chatrooms.py:497 pynicotine/gtkgui/interests.py:106
-#: pynicotine/gtkgui/search.py:370 pynicotine/gtkgui/transferlist.py:134
+#: pynicotine/gtkgui/search.py:369 pynicotine/gtkgui/transferlist.py:134
 #: pynicotine/gtkgui/userlist.py:87
 msgid "Speed"
 msgstr "Snelheid"
@@ -1292,7 +1297,7 @@ msgstr "Vinden…"
 #: pynicotine/gtkgui/chatrooms.py:536 pynicotine/gtkgui/chatrooms.py:548
 #: pynicotine/gtkgui/chatrooms.py:773 pynicotine/gtkgui/chatrooms.py:776
 #: pynicotine/gtkgui/privatechat.py:258 pynicotine/gtkgui/privatechat.py:339
-#: pynicotine/gtkgui/search.py:427 pynicotine/gtkgui/transferlist.py:186
+#: pynicotine/gtkgui/search.py:426 pynicotine/gtkgui/transferlist.py:186
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:170
 msgid "Copy"
 msgstr "Kopiëren"
@@ -1333,7 +1338,7 @@ msgid "--- old messages above ---"
 msgstr "--- oude berichten hierboven ---"
 
 #: pynicotine/gtkgui/chatrooms.py:823
-#: pynicotine/gtkgui/widgets/notifications.py:96
+#: pynicotine/gtkgui/widgets/notifications.py:95
 #, python-format
 msgid "%(user)s mentioned you in the %(room)s room"
 msgstr "%(user)s noemde jou in de kamer %(room)s"
@@ -1382,13 +1387,13 @@ msgstr ""
 "Wil je echt alle gelogde berichten voor deze kamer definitief verwijderen?"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:87
-#: pynicotine/gtkgui/dialogs/preferences.py:462
+#: pynicotine/gtkgui/dialogs/preferences.py:464
 msgid "Virtual Folder"
 msgstr "Virtuele map"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:89
-#: pynicotine/gtkgui/dialogs/preferences.py:464 pynicotine/gtkgui/search.py:372
-#: pynicotine/gtkgui/uploads.py:40 pynicotine/gtkgui/userbrowse.py:220
+#: pynicotine/gtkgui/dialogs/preferences.py:466 pynicotine/gtkgui/search.py:371
+#: pynicotine/gtkgui/uploads.py:40 pynicotine/gtkgui/userbrowse.py:224
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:132
 msgid "Folder"
 msgstr "Map"
@@ -1402,23 +1407,23 @@ msgid "_Next"
 msgstr "_Volgende"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:154
-#: pynicotine/gtkgui/dialogs/preferences.py:556
+#: pynicotine/gtkgui/dialogs/preferences.py:558
 msgid "Add a Shared Folder"
 msgstr "Een share toevoegen"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:189
-#: pynicotine/gtkgui/dialogs/preferences.py:597
+#: pynicotine/gtkgui/dialogs/preferences.py:599
 msgid "Edit Shared Folder"
 msgstr "Shares bewerken"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:190
-#: pynicotine/gtkgui/dialogs/preferences.py:598
+#: pynicotine/gtkgui/dialogs/preferences.py:600
 #, python-format
 msgid "Enter new virtual name for '%(dir)s':"
 msgstr "Voer een nieuwe virtuele naam in voor '%(dir)s':"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:269
-#: pynicotine/gtkgui/dialogs/preferences.py:105
+#: pynicotine/gtkgui/dialogs/preferences.py:107
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:275
 #: pynicotine/gtkgui/ui/settings/network.ui:237
 msgid "Check Port Status"
@@ -1440,14 +1445,14 @@ msgstr "Bestandseigenschappen (%(num)i van %(total)i / %(size)s / %(length)s)"
 msgid "File Properties (%(num)i of %(total)i  /  %(size)s)"
 msgstr "Bestandseigenschappen (%(num)i van %(total)i / %(size)s)"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:98
+#: pynicotine/gtkgui/dialogs/preferences.py:100
 #, python-format
 msgid "<b>%(ip)s</b>, port %(port)s"
 msgstr "<b>%(ip)s</b>, poort %(port)s"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:99
-#: pynicotine/gtkgui/dialogs/preferences.py:100
-#: pynicotine/gtkgui/widgets/popupmenu.py:555
+#: pynicotine/gtkgui/dialogs/preferences.py:101
+#: pynicotine/gtkgui/dialogs/preferences.py:102
+#: pynicotine/gtkgui/widgets/popupmenu.py:563
 #: pynicotine/gtkgui/widgets/treeview.py:863
 #: pynicotine/gtkgui/ui/settings/network.ui:228
 #: pynicotine/gtkgui/ui/userinfo.ui:134 pynicotine/gtkgui/ui/userinfo.ui:161
@@ -1457,15 +1462,15 @@ msgstr "<b>%(ip)s</b>, poort %(port)s"
 msgid "Unknown"
 msgstr "Onbekend"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:174
+#: pynicotine/gtkgui/dialogs/preferences.py:176
 msgid "Password Change Rejected"
 msgstr "Wachtwoordwijziging afgewezen"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:193
+#: pynicotine/gtkgui/dialogs/preferences.py:195
 msgid "Enter a new password for your Soulseek account:"
 msgstr "Voer een nieuw wachtwoord in voor jouw Soulseek-account:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:195
+#: pynicotine/gtkgui/dialogs/preferences.py:197
 msgid ""
 "You are currently logged out of the Soulseek network. If you want to change "
 "the password of an existing Soulseek account, you need to be logged into "
@@ -1475,125 +1480,134 @@ msgstr ""
 "van een bestaand Soulseek-account wilt wijzigen, moet u op dat account zijn "
 "ingelogd."
 
-#: pynicotine/gtkgui/dialogs/preferences.py:198
+#: pynicotine/gtkgui/dialogs/preferences.py:200
 msgid "Enter password to use when logging in:"
 msgstr "Voer het wachtwoord in om te gebruiken bij het inloggen:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:202
+#: pynicotine/gtkgui/dialogs/preferences.py:204
 #: pynicotine/gtkgui/ui/settings/network.ui:103
 #: pynicotine/gtkgui/ui/settings/network.ui:118
 msgid "Change Password"
 msgstr "Verander wachtwoord"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:239
+#: pynicotine/gtkgui/dialogs/preferences.py:241
 msgid "Filter"
 msgstr "Filter"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:241
+#: pynicotine/gtkgui/dialogs/preferences.py:243
 msgid "Escaped"
 msgstr "Ontsnapt"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:335
+#: pynicotine/gtkgui/dialogs/preferences.py:337
 msgid "Add Download Filter"
 msgstr "Voeg een downloadfilter toe"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:336
+#: pynicotine/gtkgui/dialogs/preferences.py:338
 msgid "Enter a new download filter:"
 msgstr "Geef een nieuwe download-filter op:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:365
+#: pynicotine/gtkgui/dialogs/preferences.py:341
+#: pynicotine/gtkgui/dialogs/preferences.py:373
+msgid "Escape filter"
+msgstr "Escape-filter"
+
+#: pynicotine/gtkgui/dialogs/preferences.py:367
 msgid "Edit Download Filter"
 msgstr "Bewerk Downloadfilter"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:366
+#: pynicotine/gtkgui/dialogs/preferences.py:368
 msgid "Modify the following download filter:"
 msgstr "Wijzig het volgende downloadfilter:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:432
+#: pynicotine/gtkgui/dialogs/preferences.py:434
 #, python-format
 msgid "%(num)d Failed! %(error)s "
 msgstr "%(num)d mislukt! %(error)s "
 
-#: pynicotine/gtkgui/dialogs/preferences.py:439
+#: pynicotine/gtkgui/dialogs/preferences.py:441
 msgid "Filters Successful"
 msgstr "Filters gelukt"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:466
+#: pynicotine/gtkgui/dialogs/preferences.py:468
 msgid "Buddy-only"
 msgstr "Alleen voor vrienden"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:751
-#: pynicotine/gtkgui/dialogs/preferences.py:878
+#: pynicotine/gtkgui/dialogs/preferences.py:603
+msgid "Share with buddies only"
+msgstr "Alleen met vrienden delen"
+
+#: pynicotine/gtkgui/dialogs/preferences.py:762
+#: pynicotine/gtkgui/dialogs/preferences.py:889
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:160
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:234
 msgid "Username"
 msgstr "Gebruikersnaam"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:759
-#: pynicotine/gtkgui/dialogs/preferences.py:886
+#: pynicotine/gtkgui/dialogs/preferences.py:770
+#: pynicotine/gtkgui/dialogs/preferences.py:897
 msgid "IP Address"
 msgstr "IP-adres"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:805
-#: pynicotine/gtkgui/widgets/popupmenu.py:358
-#: pynicotine/gtkgui/widgets/popupmenu.py:392
+#: pynicotine/gtkgui/dialogs/preferences.py:816
+#: pynicotine/gtkgui/widgets/popupmenu.py:366
+#: pynicotine/gtkgui/widgets/popupmenu.py:400
 #: pynicotine/gtkgui/ui/userinfo.ui:546
 msgid "Ignore User"
 msgstr "Negeer gebruiker"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:806
+#: pynicotine/gtkgui/dialogs/preferences.py:817
 msgid "Enter the name of the user you want to ignore:"
 msgstr "Voer de naam in van de gebruiker die je wilt negeren:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:846
-#: pynicotine/gtkgui/widgets/popupmenu.py:361
-#: pynicotine/gtkgui/widgets/popupmenu.py:396
+#: pynicotine/gtkgui/dialogs/preferences.py:857
+#: pynicotine/gtkgui/widgets/popupmenu.py:369
+#: pynicotine/gtkgui/widgets/popupmenu.py:404
 msgid "Ignore IP Address"
 msgstr "Negeer IP adres"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:847
+#: pynicotine/gtkgui/dialogs/preferences.py:858
 msgid "Enter an IP address you want to ignore:"
 msgstr "Voer het IP-adres in dat je wilt negeren:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:847
-#: pynicotine/gtkgui/dialogs/preferences.py:997
+#: pynicotine/gtkgui/dialogs/preferences.py:858
+#: pynicotine/gtkgui/dialogs/preferences.py:1008
 msgid "* is a wildcard"
 msgstr "* is een jokerteken"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:954
-#: pynicotine/gtkgui/widgets/popupmenu.py:357
-#: pynicotine/gtkgui/widgets/popupmenu.py:391
+#: pynicotine/gtkgui/dialogs/preferences.py:965
+#: pynicotine/gtkgui/widgets/popupmenu.py:365
+#: pynicotine/gtkgui/widgets/popupmenu.py:399
 #: pynicotine/gtkgui/ui/userinfo.ui:515
 msgid "Ban User"
 msgstr "Verban gebruiker"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:955
+#: pynicotine/gtkgui/dialogs/preferences.py:966
 msgid "Enter the name of the user you want to ban:"
 msgstr "Voer de naam in van de gebruiker die je wilt verbannen:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:996
+#: pynicotine/gtkgui/dialogs/preferences.py:1007
 msgid "Block IP Address"
 msgstr "Blokkeer IP adres"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:997
+#: pynicotine/gtkgui/dialogs/preferences.py:1008
 msgid "Enter an IP address you want to block:"
 msgstr "Voer een IP-adres in dat je wilt blokkeren:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1035
-#: pynicotine/gtkgui/dialogs/preferences.py:1043
+#: pynicotine/gtkgui/dialogs/preferences.py:1046
+#: pynicotine/gtkgui/dialogs/preferences.py:1054
 msgid "Pattern"
 msgstr "Patroon"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1045
+#: pynicotine/gtkgui/dialogs/preferences.py:1056
 msgid "Replacement"
 msgstr "Vervanging"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1174
+#: pynicotine/gtkgui/dialogs/preferences.py:1185
 msgid "Censor Pattern"
 msgstr "Censuur Patroon"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1175
-#: pynicotine/gtkgui/dialogs/preferences.py:1201
+#: pynicotine/gtkgui/dialogs/preferences.py:1186
+#: pynicotine/gtkgui/dialogs/preferences.py:1212
 msgid ""
 "Enter a pattern you want to censor. Add spaces around the pattern if you "
 "don't want to match strings inside words (may fail at the beginning and end "
@@ -1603,282 +1617,281 @@ msgstr ""
 "patroon als je niet wilt dat strings binnen woorden overeenkomen (kan "
 "mislukken aan het begin en einde van regels)."
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1200
+#: pynicotine/gtkgui/dialogs/preferences.py:1211
 msgid "Edit Censored Pattern"
 msgstr "Gecensureerd patroon bewerken"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1232
+#: pynicotine/gtkgui/dialogs/preferences.py:1243
 msgid "Add Replacement"
 msgstr "Vervanging toevoegen"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1233
+#: pynicotine/gtkgui/dialogs/preferences.py:1244
 msgid "Enter a text pattern and what to replace it with"
 msgstr "Voer een tekstpatroon in en waar het door vervangen moet worden"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1261
+#: pynicotine/gtkgui/dialogs/preferences.py:1272
 msgid "Edit Replacement"
 msgstr "Bewerking Vervanging"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1262
+#: pynicotine/gtkgui/dialogs/preferences.py:1273
 msgid "Enter a text pattern and what to replace it with:"
 msgstr "Voer een tekstpatroon in en waar het door vervangen moet worden:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1329
+#: pynicotine/gtkgui/dialogs/preferences.py:1340
 msgid "Top"
 msgstr "Boven"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1330
+#: pynicotine/gtkgui/dialogs/preferences.py:1341
 msgid "Bottom"
 msgstr "Onder"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1331
+#: pynicotine/gtkgui/dialogs/preferences.py:1342
 msgid "Left"
 msgstr "Links"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1332
+#: pynicotine/gtkgui/dialogs/preferences.py:1343
 msgid "Right"
 msgstr "Rechts"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1336
+#: pynicotine/gtkgui/dialogs/preferences.py:1347
 msgid "Connected"
 msgstr "Verbonden"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1337
+#: pynicotine/gtkgui/dialogs/preferences.py:1348
 msgid "Disconnected"
 msgstr "Verbinding verbroken"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1338
-#: pynicotine/gtkgui/frame.py:1472
+#: pynicotine/gtkgui/dialogs/preferences.py:1349 pynicotine/gtkgui/frame.py:510
 #: pynicotine/gtkgui/widgets/iconnotebook.py:522
-#: pynicotine/gtkgui/widgets/trayicon.py:79
+#: pynicotine/gtkgui/widgets/trayicon.py:104
 #: pynicotine/gtkgui/widgets/treeview.py:409
 #: pynicotine/gtkgui/widgets/treeview.py:885
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:34
 msgid "Away"
 msgstr "Afwezig"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1339
-#: pynicotine/gtkgui/dialogs/preferences.py:1340
+#: pynicotine/gtkgui/dialogs/preferences.py:1350
+#: pynicotine/gtkgui/dialogs/preferences.py:1351
 msgid "Highlight"
 msgstr "Markeren"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1341
+#: pynicotine/gtkgui/dialogs/preferences.py:1352
 msgid "Window"
 msgstr "Venster"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1345
+#: pynicotine/gtkgui/dialogs/preferences.py:1356
 msgid "Connected (Tray)"
 msgstr "Verbonden (lade)"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1346
+#: pynicotine/gtkgui/dialogs/preferences.py:1357
 msgid "Disconnected (Tray)"
 msgstr "Verbinding verbroken (lade)"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1347
+#: pynicotine/gtkgui/dialogs/preferences.py:1358
 msgid "Away (Tray)"
 msgstr "Afwezig (lade)"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1348
+#: pynicotine/gtkgui/dialogs/preferences.py:1359
 msgid "Message (Tray)"
 msgstr "Bericht (lade)"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1817
+#: pynicotine/gtkgui/dialogs/preferences.py:1827
 msgid "Protocol"
 msgstr "Protocol"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1819
+#: pynicotine/gtkgui/dialogs/preferences.py:1829
 msgid "Command"
 msgstr "Opdracht"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1874
+#: pynicotine/gtkgui/dialogs/preferences.py:1884
 msgid "Add URL Handler"
 msgstr "URL-programma opgeven"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1875
+#: pynicotine/gtkgui/dialogs/preferences.py:1885
 msgid "Enter the protocol and the command for the URL handler:"
 msgstr "Voer het protocol en het commando voor de URL-handler in:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1902
+#: pynicotine/gtkgui/dialogs/preferences.py:1912
 msgid "Edit Command"
 msgstr "Commentaar bewerken"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1903
+#: pynicotine/gtkgui/dialogs/preferences.py:1913
 #, python-format
 msgid "Enter a new command for protocol %s:"
 msgstr "Voer een nieuw commando in voor protocol %s:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2027
+#: pynicotine/gtkgui/dialogs/preferences.py:2037
 msgid "Username;APIKEY:"
 msgstr "Gebruikersnaam;APIKEY:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2031
+#: pynicotine/gtkgui/dialogs/preferences.py:2041
 msgid ""
 "Music player (e.g. amarok, audacious, exaile); leave empty to autodetect:"
 msgstr ""
 "Muziekspeler (b.v. amarok, audacious, exaile); leeg laten om automatisch te "
 "detecteren:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2035
+#: pynicotine/gtkgui/dialogs/preferences.py:2045
 #: pynicotine/gtkgui/ui/settings/network.ui:80
 msgid "Username:"
 msgstr "Gebruikersnaam:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2039
+#: pynicotine/gtkgui/dialogs/preferences.py:2049
 msgid "Command:"
 msgstr "Bevel:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2047
-#: pynicotine/gtkgui/dialogs/preferences.py:2050
+#: pynicotine/gtkgui/dialogs/preferences.py:2057
+#: pynicotine/gtkgui/dialogs/preferences.py:2060
 msgid "Title"
 msgstr "Titel"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2049
+#: pynicotine/gtkgui/dialogs/preferences.py:2059
 #, python-format
 msgid "Now Playing (typically \"%(artist)s - %(title)s\")"
 msgstr "Nu aan het afspelen (typically \"%(artist)s - %(title)s\")"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2050
-#: pynicotine/gtkgui/dialogs/preferences.py:2058
+#: pynicotine/gtkgui/dialogs/preferences.py:2060
+#: pynicotine/gtkgui/dialogs/preferences.py:2068
 msgid "Artist"
 msgstr "Artiest"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2052
-#: pynicotine/gtkgui/search.py:376 pynicotine/gtkgui/userbrowse.py:286
+#: pynicotine/gtkgui/dialogs/preferences.py:2062
+#: pynicotine/gtkgui/search.py:375 pynicotine/gtkgui/userbrowse.py:290
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:182
-#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:339
+#: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:335
 msgid "Duration"
 msgstr "Looptijd"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2054
-#: pynicotine/gtkgui/search.py:375 pynicotine/gtkgui/userbrowse.py:285
+#: pynicotine/gtkgui/dialogs/preferences.py:2064
+#: pynicotine/gtkgui/search.py:374 pynicotine/gtkgui/userbrowse.py:289
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:209
-#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:288
+#: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:284
 #: pynicotine/gtkgui/ui/search.ui:300
 msgid "Bitrate"
 msgstr "Bitrate"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2056
+#: pynicotine/gtkgui/dialogs/preferences.py:2066
 msgid "Comment"
 msgstr "Commentaar"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2060
+#: pynicotine/gtkgui/dialogs/preferences.py:2070
 msgid "Album"
 msgstr "Album"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2062
+#: pynicotine/gtkgui/dialogs/preferences.py:2072
 msgid "Track Number"
 msgstr "Track Nummer"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2064
+#: pynicotine/gtkgui/dialogs/preferences.py:2074
 msgid "Year"
 msgstr "Jaar"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2066
+#: pynicotine/gtkgui/dialogs/preferences.py:2076
 msgid "Filename (URI)"
 msgstr "Bestandsnaam (URI)"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2068
+#: pynicotine/gtkgui/dialogs/preferences.py:2078
 msgid "Program"
 msgstr "Programma"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2124
+#: pynicotine/gtkgui/dialogs/preferences.py:2134
 msgid "Enabled"
 msgstr "Ingeschakeld"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2126
+#: pynicotine/gtkgui/dialogs/preferences.py:2136
 msgid "Plugin"
 msgstr "Plug-in"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2168
+#: pynicotine/gtkgui/dialogs/preferences.py:2178
 msgid "No Plugin Selected"
 msgstr "Geen plug-in geselecteerd"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2261
-#: pynicotine/gtkgui/widgets/trayicon.py:89
+#: pynicotine/gtkgui/dialogs/preferences.py:2271
+#: pynicotine/gtkgui/widgets/trayicon.py:114
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:62
 msgid "Preferences"
 msgstr "Voorkeuren"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2275
+#: pynicotine/gtkgui/dialogs/preferences.py:2285
 #: pynicotine/gtkgui/ui/settings/network.ui:38
 msgid "Network"
 msgstr "Netwerk"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2276
+#: pynicotine/gtkgui/dialogs/preferences.py:2286
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:16
 msgid "User Interface"
 msgstr "Uiterlijk"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2277
+#: pynicotine/gtkgui/dialogs/preferences.py:2287
 #: pynicotine/gtkgui/ui/settings/shares.ui:11
 msgid "Shares"
 msgstr "Shares"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2278
-#: pynicotine/gtkgui/frame.py:1185 pynicotine/gtkgui/frame.py:1557
-#: pynicotine/gtkgui/widgets/trayicon.py:72
+#: pynicotine/gtkgui/dialogs/preferences.py:2288
+#: pynicotine/gtkgui/frame.py:1215 pynicotine/gtkgui/frame.py:1578
+#: pynicotine/gtkgui/widgets/trayicon.py:97
 #: pynicotine/gtkgui/ui/mainwindow.ui:519
 #: pynicotine/gtkgui/ui/settings/downloads.ui:26
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:180
 msgid "Downloads"
 msgstr "Downloads"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2279
-#: pynicotine/gtkgui/frame.py:1186 pynicotine/gtkgui/frame.py:1558
-#: pynicotine/gtkgui/widgets/trayicon.py:73
+#: pynicotine/gtkgui/dialogs/preferences.py:2289
+#: pynicotine/gtkgui/frame.py:1216 pynicotine/gtkgui/frame.py:1579
+#: pynicotine/gtkgui/widgets/trayicon.py:98
 #: pynicotine/gtkgui/ui/mainwindow.ui:762
 #: pynicotine/gtkgui/ui/settings/uploads.ui:47
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:192
 msgid "Uploads"
 msgstr "Uploads"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2280
+#: pynicotine/gtkgui/dialogs/preferences.py:2290
 #: pynicotine/gtkgui/ui/settings/search.ui:33
 msgid "Searches"
 msgstr "Zoekopdrachten"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2281
-#: pynicotine/gtkgui/frame.py:1188 pynicotine/gtkgui/ui/mainwindow.ui:1101
+#: pynicotine/gtkgui/dialogs/preferences.py:2291
+#: pynicotine/gtkgui/frame.py:1218 pynicotine/gtkgui/ui/mainwindow.ui:1101
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:216
 msgid "User Info"
 msgstr "Gebruikersinfo"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2282
+#: pynicotine/gtkgui/dialogs/preferences.py:2292
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:736
 msgid "Chats"
 msgstr "Chats"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2283
+#: pynicotine/gtkgui/dialogs/preferences.py:2293
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:16
 msgid "Now Playing"
 msgstr "Nu aan het spelen"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2284
+#: pynicotine/gtkgui/dialogs/preferences.py:2294
 #: pynicotine/gtkgui/ui/settings/log.ui:16
 msgid "Logging"
 msgstr "Loggen"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2285
+#: pynicotine/gtkgui/dialogs/preferences.py:2295
 #: pynicotine/gtkgui/ui/settings/ban.ui:16
 msgid "Banned Users"
 msgstr "Verbannen gebruikers"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2286
+#: pynicotine/gtkgui/dialogs/preferences.py:2296
 #: pynicotine/gtkgui/ui/settings/ignore.ui:16
 msgid "Ignored Users"
 msgstr "Genegeerde gebruikers"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2287
+#: pynicotine/gtkgui/dialogs/preferences.py:2297
 #: pynicotine/gtkgui/ui/settings/plugin.ui:29
 msgid "Plugins"
 msgstr "Plug-ins"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2288
+#: pynicotine/gtkgui/dialogs/preferences.py:2298
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:16
 msgid "URL Handlers"
 msgstr "URL programma"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2648
+#: pynicotine/gtkgui/dialogs/preferences.py:2658
 msgid "Pick a File Name for Config Backup"
 msgstr "Kies een bestandsnaam voor Config Backup"
 
@@ -1991,24 +2004,17 @@ msgid ""
 msgstr ""
 "Wil je echt %(num)i bestanden downloaden uit de map %(folder)s van %(user)s?"
 
-#: pynicotine/gtkgui/frame.py:247 pynicotine/pynicotine.py:115
-#: pynicotine/pynicotine.py:118
+#: pynicotine/gtkgui/frame.py:251 pynicotine/pynicotine.py:114
+#: pynicotine/pynicotine.py:117
 #, python-format
 msgid "Loading %(program)s %(version)s"
 msgstr "Bezig met laden %(program)s %(version)s"
 
-#: pynicotine/gtkgui/frame.py:452 pynicotine/gtkgui/widgets/iconnotebook.py:528
-#: pynicotine/gtkgui/widgets/treeview.py:414
-#: pynicotine/gtkgui/widgets/treeview.py:890
-#: pynicotine/gtkgui/ui/mainwindow.ui:1831
-msgid "Offline"
-msgstr "Afgemeld"
-
-#: pynicotine/gtkgui/frame.py:463
+#: pynicotine/gtkgui/frame.py:471
 msgid "Invalid Password"
 msgstr "Ongeldig wachtwoord"
 
-#: pynicotine/gtkgui/frame.py:464
+#: pynicotine/gtkgui/frame.py:472
 #, python-format
 msgid ""
 "User %s already exists, and the password you entered is invalid. Please "
@@ -2018,294 +2024,296 @@ msgstr ""
 "ongeldig. Kies een andere gebruikersnaam als dit de eerste keer is dat je "
 "inlogt."
 
-#: pynicotine/gtkgui/frame.py:471 pynicotine/gtkgui/widgets/dialogs.py:334
+#: pynicotine/gtkgui/frame.py:479 pynicotine/gtkgui/widgets/dialogs.py:334
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:6
 msgid "_Cancel"
 msgstr "_Annuleren"
 
-#: pynicotine/gtkgui/frame.py:472
+#: pynicotine/gtkgui/frame.py:480
 msgid "Change _Login Details"
 msgstr "Wijzig _Inloggegevens"
 
-#: pynicotine/gtkgui/frame.py:690
+#: pynicotine/gtkgui/frame.py:513 pynicotine/gtkgui/widgets/iconnotebook.py:525
+#: pynicotine/gtkgui/widgets/treeview.py:412
+#: pynicotine/gtkgui/widgets/treeview.py:888
+msgid "Online"
+msgstr "Online"
+
+#: pynicotine/gtkgui/frame.py:517 pynicotine/gtkgui/widgets/iconnotebook.py:528
+#: pynicotine/gtkgui/widgets/treeview.py:414
+#: pynicotine/gtkgui/widgets/treeview.py:890
+#: pynicotine/gtkgui/ui/mainwindow.ui:1859
+msgid "Offline"
+msgstr "Afgemeld"
+
+#: pynicotine/gtkgui/frame.py:719
 msgid "Error retrieving latest version"
 msgstr "Fout bij het ophalen van de nieuwste versie"
 
-#: pynicotine/gtkgui/frame.py:695
+#: pynicotine/gtkgui/frame.py:724
 #, python-format
 msgid "Version %s is available"
 msgstr "Versie %s is beschikbaar"
 
-#: pynicotine/gtkgui/frame.py:698
+#: pynicotine/gtkgui/frame.py:727
 #, python-format
 msgid "released on %s"
 msgstr "uitgebracht op %s"
 
-#: pynicotine/gtkgui/frame.py:700
+#: pynicotine/gtkgui/frame.py:729
 msgid "Out of date"
 msgstr "Verouderd"
 
-#: pynicotine/gtkgui/frame.py:703 pynicotine/gtkgui/frame.py:707
+#: pynicotine/gtkgui/frame.py:732 pynicotine/gtkgui/frame.py:736
 msgid "Up to date"
 msgstr "Actueel"
 
-#: pynicotine/gtkgui/frame.py:704
+#: pynicotine/gtkgui/frame.py:733
 msgid "You appear to be using a development version of Nicotine+."
 msgstr "Het lijkt erop dat je een ontwikkelingsversie van Nicotine+ gebruikt."
 
-#: pynicotine/gtkgui/frame.py:707
+#: pynicotine/gtkgui/frame.py:736
 msgid "You are using the latest version of Nicotine+."
 msgstr "Je gebruikt de laatste versie van Nicotine+."
 
-#: pynicotine/gtkgui/frame.py:949
+#: pynicotine/gtkgui/frame.py:979
 msgid "_Connect"
 msgstr "_Verbinden"
 
-#: pynicotine/gtkgui/frame.py:950
+#: pynicotine/gtkgui/frame.py:980
 msgid "_Disconnect"
 msgstr "Verbinding verbre_ken"
 
-#: pynicotine/gtkgui/frame.py:951
-msgid "_Away"
-msgstr "_Weg"
-
-#: pynicotine/gtkgui/frame.py:952
+#: pynicotine/gtkgui/frame.py:981
 msgid "Soulseek _Privileges"
 msgstr "Soulseek _Privileges"
 
-#: pynicotine/gtkgui/frame.py:958
+#: pynicotine/gtkgui/frame.py:987
 msgid "_Preferences"
 msgstr "_Voorkeuren"
 
-#: pynicotine/gtkgui/frame.py:963
+#: pynicotine/gtkgui/frame.py:992
 msgid "_Quit…"
 msgstr "_Afsluiten…"
 
-#: pynicotine/gtkgui/frame.py:963 pynicotine/gtkgui/frame.py:1759
+#: pynicotine/gtkgui/frame.py:992 pynicotine/gtkgui/frame.py:1777
 msgid "_Quit"
 msgstr "_Ontslag nemen"
 
-#: pynicotine/gtkgui/frame.py:983
+#: pynicotine/gtkgui/frame.py:1012
 msgid "Prefer Dark _Mode"
 msgstr "Liever donkere _Modus"
 
-#: pynicotine/gtkgui/frame.py:984
+#: pynicotine/gtkgui/frame.py:1013
 msgid "Use _Header Bar"
 msgstr "Gebruik _Kopbalk"
 
-#: pynicotine/gtkgui/frame.py:985
+#: pynicotine/gtkgui/frame.py:1014
 msgid "Show _Log History Pane"
 msgstr "Toon _Log Geschiedenis Paneel"
 
-#: pynicotine/gtkgui/frame.py:987
+#: pynicotine/gtkgui/frame.py:1016
 msgid "Buddy List in Separate Tab"
 msgstr "Vriendenlijst in afzonderlijke tab"
 
-#: pynicotine/gtkgui/frame.py:988
+#: pynicotine/gtkgui/frame.py:1017
 msgid "Buddy List in Chat Rooms"
 msgstr "Vriendenlijst in kamers"
 
-#: pynicotine/gtkgui/frame.py:989
+#: pynicotine/gtkgui/frame.py:1018
 msgid "Buddy List Always Visible"
 msgstr "Vriendenlijst altijd zichtbaar"
 
-#: pynicotine/gtkgui/frame.py:998
+#: pynicotine/gtkgui/frame.py:1027
 msgid "_Rescan Shares"
 msgstr "Shares opnieuw scannen"
 
-#: pynicotine/gtkgui/frame.py:999
+#: pynicotine/gtkgui/frame.py:1028
 msgid "_Configure Shares"
 msgstr "_Configureer shares"
 
-#: pynicotine/gtkgui/frame.py:1007
+#: pynicotine/gtkgui/frame.py:1036
 msgid "_Browse Public Shares"
 msgstr "_Bekijk publieke shares"
 
-#: pynicotine/gtkgui/frame.py:1008
+#: pynicotine/gtkgui/frame.py:1037
 msgid "Bro_wse Buddy Shares"
 msgstr "Bekijk vrienden-shares"
 
-#: pynicotine/gtkgui/frame.py:1024
+#: pynicotine/gtkgui/frame.py:1053
 msgid "_Keyboard Shortcuts"
 msgstr "_Sneltoetsen"
 
-#: pynicotine/gtkgui/frame.py:1025
+#: pynicotine/gtkgui/frame.py:1054
 msgid "_Setup Assistant"
 msgstr "_Configuratie Assistent"
 
-#: pynicotine/gtkgui/frame.py:1026
+#: pynicotine/gtkgui/frame.py:1055
 msgid "_Transfer Statistics"
 msgstr "_Overdrachtsstatistiek"
 
-#: pynicotine/gtkgui/frame.py:1028
+#: pynicotine/gtkgui/frame.py:1057
 msgid "Report a _Bug"
 msgstr "_Bug melden"
 
-#: pynicotine/gtkgui/frame.py:1029
+#: pynicotine/gtkgui/frame.py:1058
 msgid "Improve T_ranslations"
 msgstr "Verbeter _Vertaling"
 
-#: pynicotine/gtkgui/frame.py:1030
+#: pynicotine/gtkgui/frame.py:1059
 msgid "Check _Latest Version"
 msgstr "Controleer _laatste versie"
 
-#: pynicotine/gtkgui/frame.py:1032
+#: pynicotine/gtkgui/frame.py:1061
 msgid "_About Nicotine+"
 msgstr "_Over Nicotine+"
 
-#: pynicotine/gtkgui/frame.py:1044 pynicotine/gtkgui/frame.py:1064
+#: pynicotine/gtkgui/frame.py:1073 pynicotine/gtkgui/frame.py:1093
 msgid "_View"
 msgstr "_Weergave"
 
-#: pynicotine/gtkgui/frame.py:1051 pynicotine/gtkgui/frame.py:1066
+#: pynicotine/gtkgui/frame.py:1080 pynicotine/gtkgui/frame.py:1095
 msgid "_Help"
 msgstr "_Help"
 
-#: pynicotine/gtkgui/frame.py:1063
+#: pynicotine/gtkgui/frame.py:1092
 msgid "_File"
 msgstr "_Bestand"
 
-#: pynicotine/gtkgui/frame.py:1065
+#: pynicotine/gtkgui/frame.py:1094
 msgid "_Shares"
 msgstr "_Shares"
 
-#: pynicotine/gtkgui/frame.py:1184 pynicotine/gtkgui/ui/mainwindow.ui:274
+#: pynicotine/gtkgui/frame.py:1214 pynicotine/gtkgui/ui/mainwindow.ui:274
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:168
 msgid "Search Files"
 msgstr "Zoek bestanden"
 
-#: pynicotine/gtkgui/frame.py:1187
+#: pynicotine/gtkgui/frame.py:1217
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:240
 #: pynicotine/gtkgui/ui/mainwindow.ui:939
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:204
 msgid "Browse Shares"
 msgstr "Verken gedeelde bestanden"
 
-#: pynicotine/gtkgui/frame.py:1189 pynicotine/gtkgui/ui/mainwindow.ui:1266
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:699
+#: pynicotine/gtkgui/frame.py:1219 pynicotine/gtkgui/ui/mainwindow.ui:1266
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:746
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:228
 msgid "Private Chat"
 msgstr "Privégesprek"
 
-#: pynicotine/gtkgui/frame.py:1190 pynicotine/gtkgui/search.py:169
+#: pynicotine/gtkgui/frame.py:1220 pynicotine/gtkgui/search.py:169
 #: pynicotine/gtkgui/ui/buddylist.ui:19 pynicotine/gtkgui/ui/mainwindow.ui:1388
 #: pynicotine/gtkgui/ui/settings/downloads.ui:76
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:240
 msgid "Buddies"
 msgstr "Vrienden"
 
-#: pynicotine/gtkgui/frame.py:1191 pynicotine/gtkgui/ui/mainwindow.ui:1555
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:667
+#: pynicotine/gtkgui/frame.py:1221 pynicotine/gtkgui/ui/mainwindow.ui:1555
+#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:712
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:252
 msgid "Chat Rooms"
 msgstr "Chatkamers"
 
-#: pynicotine/gtkgui/frame.py:1192 pynicotine/gtkgui/ui/mainwindow.ui:1613
+#: pynicotine/gtkgui/frame.py:1222 pynicotine/gtkgui/ui/mainwindow.ui:1613
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:264
 #: pynicotine/gtkgui/ui/userinfo.ui:333
 msgid "Interests"
 msgstr "Interesses"
 
-#: pynicotine/gtkgui/frame.py:1469
-#: pynicotine/gtkgui/widgets/iconnotebook.py:525
-#: pynicotine/gtkgui/widgets/treeview.py:412
-#: pynicotine/gtkgui/widgets/treeview.py:888
-msgid "Online"
-msgstr "Online"
-
-#: pynicotine/gtkgui/frame.py:1559
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:579
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:547
+#: pynicotine/gtkgui/frame.py:1580
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:617
+#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:583
 #: pynicotine/gtkgui/ui/settings/downloads.ui:106
 #: pynicotine/gtkgui/ui/settings/uploads.ui:86
 msgid "Search"
 msgstr "Zoeken"
 
-#: pynicotine/gtkgui/frame.py:1560
+#: pynicotine/gtkgui/frame.py:1581
 msgid "Chat"
 msgstr "Chat"
 
-#: pynicotine/gtkgui/frame.py:1562
+#: pynicotine/gtkgui/frame.py:1583
 msgid "[Debug] Connections"
 msgstr "[Debug] Verbindingen"
 
-#: pynicotine/gtkgui/frame.py:1563
+#: pynicotine/gtkgui/frame.py:1584
 msgid "[Debug] Messages"
 msgstr "[Debug] Berichten"
 
-#: pynicotine/gtkgui/frame.py:1564
+#: pynicotine/gtkgui/frame.py:1585
 msgid "[Debug] Transfers"
 msgstr "[Debug] Bestandsoverdracht"
 
-#: pynicotine/gtkgui/frame.py:1565
+#: pynicotine/gtkgui/frame.py:1586
 msgid "[Debug] Miscellaneous"
 msgstr "[Debug] Diversen"
 
-#: pynicotine/gtkgui/frame.py:1569
+#: pynicotine/gtkgui/frame.py:1590
 msgid "_Find…"
 msgstr "_Vind…"
 
-#: pynicotine/gtkgui/frame.py:1571 pynicotine/gtkgui/frame.py:1604
+#: pynicotine/gtkgui/frame.py:1592 pynicotine/gtkgui/frame.py:1625
 msgid "_Copy"
 msgstr "_Kopiëren"
 
-#: pynicotine/gtkgui/frame.py:1572
+#: pynicotine/gtkgui/frame.py:1593
 msgid "Copy _All"
 msgstr "Kopieer _Alles"
 
-#: pynicotine/gtkgui/frame.py:1574
+#: pynicotine/gtkgui/frame.py:1595
 msgid "_Open Log Folder"
 msgstr "_Open Log Map"
 
-#: pynicotine/gtkgui/frame.py:1575
+#: pynicotine/gtkgui/frame.py:1596
 msgid "Open _Transfer Log"
 msgstr "Open _Bestandsoverdracht Log"
 
-#: pynicotine/gtkgui/frame.py:1577
+#: pynicotine/gtkgui/frame.py:1598
 msgid "_Log Categories"
 msgstr "_Log categorieën"
 
-#: pynicotine/gtkgui/frame.py:1579
+#: pynicotine/gtkgui/frame.py:1600
 msgid "Clear Log View"
 msgstr "Logboekweergave wissen"
 
-#: pynicotine/gtkgui/frame.py:1682
+#: pynicotine/gtkgui/frame.py:1700
 #, python-format
 msgid "Downloads: %(speed)s"
 msgstr "Downloads: %(speed)s"
 
-#: pynicotine/gtkgui/frame.py:1686
+#: pynicotine/gtkgui/frame.py:1704
 #, python-format
 msgid "Uploads: %(speed)s"
 msgstr "Uploads: %(speed)s"
 
-#: pynicotine/gtkgui/frame.py:1757
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:246
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:214
+#: pynicotine/gtkgui/frame.py:1775
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:259
+#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:225
 msgid "Quit Nicotine+"
 msgstr "Nicotine+ afsluiten"
 
-#: pynicotine/gtkgui/frame.py:1758
+#: pynicotine/gtkgui/frame.py:1776
 msgid "Do you really want to exit?"
 msgstr "Wil je echt afsluiten?"
 
-#: pynicotine/gtkgui/frame.py:1760
+#: pynicotine/gtkgui/frame.py:1778
 msgid "_Run in Background"
 msgstr "_In de achtergrond uitvoeren"
 
-#: pynicotine/gtkgui/frame.py:1761
+#: pynicotine/gtkgui/frame.py:1779
 msgid "Remember choice"
 msgstr "Onthoud keuze"
 
-#: pynicotine/gtkgui/frame.py:1802
+#: pynicotine/gtkgui/frame.py:1820
 msgid "Nicotine+ is running in the background"
 msgstr "Nicotine+ wordt in de achtergrond uitgevoerd"
 
-#: pynicotine/gtkgui/interests.py:70 pynicotine/gtkgui/userinfo.py:205
+#: pynicotine/gtkgui/interests.py:70 pynicotine/gtkgui/userinfo.py:209
 msgid "Likes"
 msgstr "Houdt van"
 
-#: pynicotine/gtkgui/interests.py:78 pynicotine/gtkgui/userinfo.py:214
+#: pynicotine/gtkgui/interests.py:78 pynicotine/gtkgui/userinfo.py:218
 msgid "Dislikes"
 msgstr "Houdt niet van"
 
@@ -2322,7 +2330,7 @@ msgid "Re_commendations for Item"
 msgstr "_Aanbevelingen voor voorwerp"
 
 #: pynicotine/gtkgui/interests.py:130 pynicotine/gtkgui/interests.py:138
-#: pynicotine/gtkgui/interests.py:149 pynicotine/gtkgui/userinfo.py:232
+#: pynicotine/gtkgui/interests.py:149 pynicotine/gtkgui/userinfo.py:236
 msgid "_Search for Item"
 msgstr "Hiernaar zoeken"
 
@@ -2331,12 +2339,12 @@ msgid "_Remove Item"
 msgstr "_Verwijder voorwerp"
 
 #: pynicotine/gtkgui/interests.py:145 pynicotine/gtkgui/interests.py:404
-#: pynicotine/gtkgui/userinfo.py:229
+#: pynicotine/gtkgui/userinfo.py:233
 msgid "I _Like This"
 msgstr "Vind ik leuk"
 
 #: pynicotine/gtkgui/interests.py:146 pynicotine/gtkgui/interests.py:407
-#: pynicotine/gtkgui/userinfo.py:230
+#: pynicotine/gtkgui/userinfo.py:234
 msgid "I _Dislike This"
 msgstr "Vind ik niet leuk"
 
@@ -2362,50 +2370,50 @@ msgstr "Vergelijkbare gebruikers (%s)"
 msgid "Similar Users"
 msgstr "Vergelijkbare gebruikers"
 
-#: pynicotine/gtkgui/popovers/chathistory.py:50
+#: pynicotine/gtkgui/popovers/chathistory.py:59
 msgid "Latest Message"
 msgstr "Laatste bericht"
 
-#: pynicotine/gtkgui/popovers/roomlist.py:67
+#: pynicotine/gtkgui/popovers/roomlist.py:76
 msgid "Room"
 msgstr "Kamer"
 
-#: pynicotine/gtkgui/popovers/roomlist.py:68
+#: pynicotine/gtkgui/popovers/roomlist.py:77
 #: pynicotine/gtkgui/ui/chatrooms.ui:191 pynicotine/gtkgui/ui/mainwindow.ui:355
 #: pynicotine/gtkgui/ui/mainwindow.ui:598
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:261
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:275
 #: pynicotine/gtkgui/ui/settings/ban.ui:133
 #: pynicotine/gtkgui/ui/settings/ignore.ui:66
 msgid "Users"
 msgstr "Gebruikers"
 
-#: pynicotine/gtkgui/popovers/roomlist.py:76
-#: pynicotine/gtkgui/popovers/roomlist.py:193
+#: pynicotine/gtkgui/popovers/roomlist.py:85
+#: pynicotine/gtkgui/popovers/roomlist.py:202
 msgid "Join Room"
 msgstr "Deelnemen aan kamer"
 
-#: pynicotine/gtkgui/popovers/roomlist.py:77
-#: pynicotine/gtkgui/popovers/roomlist.py:194
+#: pynicotine/gtkgui/popovers/roomlist.py:86
+#: pynicotine/gtkgui/popovers/roomlist.py:203
 msgid "Leave Room"
 msgstr "Verlaat Kamer"
 
-#: pynicotine/gtkgui/popovers/roomlist.py:79
-#: pynicotine/gtkgui/popovers/roomlist.py:196
+#: pynicotine/gtkgui/popovers/roomlist.py:88
+#: pynicotine/gtkgui/popovers/roomlist.py:205
 msgid "Disown Private Room"
 msgstr "Geef beheer van de privékamer op"
 
-#: pynicotine/gtkgui/popovers/roomlist.py:80
-#: pynicotine/gtkgui/popovers/roomlist.py:197
+#: pynicotine/gtkgui/popovers/roomlist.py:89
+#: pynicotine/gtkgui/popovers/roomlist.py:206
 msgid "Cancel Room Membership"
 msgstr "Kamerlidmaatschap annuleren"
 
-#: pynicotine/gtkgui/privatechat.py:250 pynicotine/gtkgui/search.py:436
-#: pynicotine/gtkgui/userbrowse.py:233 pynicotine/gtkgui/userinfo.py:224
+#: pynicotine/gtkgui/privatechat.py:250 pynicotine/gtkgui/search.py:435
+#: pynicotine/gtkgui/userbrowse.py:237 pynicotine/gtkgui/userinfo.py:228
 msgid "Close All Tabs…"
 msgstr "Alle tabbladen sluiten…"
 
-#: pynicotine/gtkgui/privatechat.py:251 pynicotine/gtkgui/search.py:437
-#: pynicotine/gtkgui/userbrowse.py:234 pynicotine/gtkgui/userinfo.py:225
+#: pynicotine/gtkgui/privatechat.py:251 pynicotine/gtkgui/search.py:436
+#: pynicotine/gtkgui/userbrowse.py:238 pynicotine/gtkgui/userinfo.py:229
 msgid "_Close Tab"
 msgstr "Sluit Tab"
 
@@ -2448,81 +2456,81 @@ msgstr "_Kamers"
 msgid "_User"
 msgstr "_Gebruiker"
 
-#: pynicotine/gtkgui/search.py:367
+#: pynicotine/gtkgui/search.py:366
 msgid "ID"
 msgstr "ID kaart"
 
-#: pynicotine/gtkgui/search.py:371
+#: pynicotine/gtkgui/search.py:370
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:261
 msgid "In Queue"
 msgstr "In de wachtrij"
 
-#: pynicotine/gtkgui/search.py:373 pynicotine/gtkgui/transferlist.py:129
-#: pynicotine/gtkgui/userbrowse.py:283
+#: pynicotine/gtkgui/search.py:372 pynicotine/gtkgui/transferlist.py:129
+#: pynicotine/gtkgui/userbrowse.py:287
 msgid "Filename"
 msgstr "Bestandsnaam"
 
-#: pynicotine/gtkgui/search.py:374 pynicotine/gtkgui/transferlist.py:133
-#: pynicotine/gtkgui/userbrowse.py:284
+#: pynicotine/gtkgui/search.py:373 pynicotine/gtkgui/transferlist.py:133
+#: pynicotine/gtkgui/userbrowse.py:288
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:107
 msgid "Size"
 msgstr "Grootte"
 
-#: pynicotine/gtkgui/search.py:410 pynicotine/gtkgui/transferlist.py:166
-#: pynicotine/gtkgui/userbrowse.py:313 pynicotine/gtkgui/userbrowse.py:330
+#: pynicotine/gtkgui/search.py:409 pynicotine/gtkgui/transferlist.py:166
+#: pynicotine/gtkgui/userbrowse.py:317 pynicotine/gtkgui/userbrowse.py:334
 msgid "Copy _File Path"
 msgstr "Kopieer _Bestandspad"
 
-#: pynicotine/gtkgui/search.py:411 pynicotine/gtkgui/transferlist.py:167
-#: pynicotine/gtkgui/userbrowse.py:248 pynicotine/gtkgui/userbrowse.py:262
-#: pynicotine/gtkgui/userbrowse.py:314 pynicotine/gtkgui/userbrowse.py:331
+#: pynicotine/gtkgui/search.py:410 pynicotine/gtkgui/transferlist.py:167
+#: pynicotine/gtkgui/userbrowse.py:252 pynicotine/gtkgui/userbrowse.py:266
+#: pynicotine/gtkgui/userbrowse.py:318 pynicotine/gtkgui/userbrowse.py:335
 msgid "Copy _URL"
 msgstr "Kopieer _URL"
 
-#: pynicotine/gtkgui/search.py:412 pynicotine/gtkgui/transferlist.py:168
+#: pynicotine/gtkgui/search.py:411 pynicotine/gtkgui/transferlist.py:168
 msgid "Copy Folder U_RL"
 msgstr "Kopieer map U_RL"
 
-#: pynicotine/gtkgui/search.py:419 pynicotine/gtkgui/userbrowse.py:322
+#: pynicotine/gtkgui/search.py:418 pynicotine/gtkgui/userbrowse.py:326
 msgid "_Download File(s)"
 msgstr "_Download bestand(en)"
 
-#: pynicotine/gtkgui/search.py:420 pynicotine/gtkgui/userbrowse.py:323
+#: pynicotine/gtkgui/search.py:419 pynicotine/gtkgui/userbrowse.py:327
 msgid "Download File(s) _To…"
 msgstr "Download bestanden _naar…"
 
-#: pynicotine/gtkgui/search.py:421
+#: pynicotine/gtkgui/search.py:420
 msgid "Download _Folder(s)"
 msgstr "_Map(pen) downloaden"
 
-#: pynicotine/gtkgui/search.py:422
+#: pynicotine/gtkgui/search.py:421
 msgid "Download F_older(s) To…"
 msgstr "Download M_ap(pen) naar…"
 
-#: pynicotine/gtkgui/search.py:424 pynicotine/gtkgui/transferlist.py:183
+#: pynicotine/gtkgui/search.py:423 pynicotine/gtkgui/transferlist.py:183
 msgid "_Browse Folder(s)"
 msgstr "_Blader door map(pen)"
 
-#: pynicotine/gtkgui/search.py:425 pynicotine/gtkgui/transferlist.py:177
-#: pynicotine/gtkgui/userbrowse.py:245 pynicotine/gtkgui/userbrowse.py:259
-#: pynicotine/gtkgui/userbrowse.py:311 pynicotine/gtkgui/userbrowse.py:328
-#: pynicotine/gtkgui/userbrowse.py:760
+#: pynicotine/gtkgui/search.py:424 pynicotine/gtkgui/transferlist.py:177
+#: pynicotine/gtkgui/userbrowse.py:249 pynicotine/gtkgui/userbrowse.py:263
+#: pynicotine/gtkgui/userbrowse.py:315 pynicotine/gtkgui/userbrowse.py:332
+#: pynicotine/gtkgui/userbrowse.py:768
 msgid "F_ile Properties"
 msgstr "_Bestandseigenschappen"
 
-#: pynicotine/gtkgui/search.py:428 pynicotine/gtkgui/transferlist.py:188
+#: pynicotine/gtkgui/search.py:427 pynicotine/gtkgui/transferlist.py:188
 msgid "User(s)"
 msgstr "Gebruiker(s)"
 
-#: pynicotine/gtkgui/search.py:433
+#: pynicotine/gtkgui/search.py:432
 msgid "Copy Search Term"
 msgstr "Zoekterm kopiëren"
 
-#: pynicotine/gtkgui/search.py:435
+#: pynicotine/gtkgui/search.py:434
 msgid "Clear All Results"
 msgstr "Wis alle resultaten"
 
-#: pynicotine/gtkgui/search.py:615
+#: pynicotine/gtkgui/search.py:614
 #, python-format
 msgid ""
 "Filtered out incorrect search result %(filepath)s from user %(user)s for "
@@ -2531,42 +2539,42 @@ msgstr ""
 "Onjuist zoekresultaat %(filepath)s van gebruiker %(user)s voor zoekopdracht "
 "\"%(query)s\" uitgefilterd"
 
-#: pynicotine/gtkgui/search.py:644 pynicotine/gtkgui/userbrowse.py:484
+#: pynicotine/gtkgui/search.py:643 pynicotine/gtkgui/userbrowse.py:488
 #, python-format
 msgid "[PRIVATE]  %s"
 msgstr "[PRIVÉ] %s"
 
-#: pynicotine/gtkgui/search.py:976
+#: pynicotine/gtkgui/search.py:975
 #, python-format
 msgid "_Result Filters [%d]"
 msgstr "_Resultaatfilters [%d]"
 
-#: pynicotine/gtkgui/search.py:978 pynicotine/gtkgui/ui/search.ui:106
+#: pynicotine/gtkgui/search.py:977 pynicotine/gtkgui/ui/search.ui:106
 msgid "_Result Filters"
 msgstr "_Resultaatfilters"
 
-#: pynicotine/gtkgui/search.py:1033
+#: pynicotine/gtkgui/search.py:1032
 msgid "Add Wi_sh"
 msgstr "Wens toevoegen"
 
-#: pynicotine/gtkgui/search.py:1037
+#: pynicotine/gtkgui/search.py:1036
 msgid "Remove Wi_sh"
 msgstr "Verwijder wen_s"
 
-#: pynicotine/gtkgui/search.py:1051
+#: pynicotine/gtkgui/search.py:1050
 msgid "Select User's Results"
 msgstr "Selecteer resultaten van deze gebruiker"
 
-#: pynicotine/gtkgui/search.py:1161
+#: pynicotine/gtkgui/search.py:1160
 #, python-format
 msgid "Total: %s"
 msgstr "Totaal: %s"
 
-#: pynicotine/gtkgui/search.py:1279 pynicotine/gtkgui/userbrowse.py:1035
+#: pynicotine/gtkgui/search.py:1278 pynicotine/gtkgui/userbrowse.py:1043
 msgid "Select Destination Folder for File(s)"
 msgstr "Selecteer Doelmap voor Bestand(en)"
 
-#: pynicotine/gtkgui/search.py:1331 pynicotine/gtkgui/userbrowse.py:783
+#: pynicotine/gtkgui/search.py:1330 pynicotine/gtkgui/userbrowse.py:791
 msgid "Select Destination Folder"
 msgstr "Selecteer Doelmap"
 
@@ -2634,7 +2642,7 @@ msgstr "Te veel megabytes"
 msgid "File not shared"
 msgstr "Bestand niet gedeeld"
 
-#: pynicotine/gtkgui/transferlist.py:115 pynicotine/transfers.py:1963
+#: pynicotine/gtkgui/transferlist.py:115 pynicotine/transfers.py:1958
 msgid "Download folder error"
 msgstr "Download map fout"
 
@@ -2662,7 +2670,7 @@ msgstr "Verstreken tijd"
 msgid "Time Left"
 msgstr "Resterende tijd"
 
-#: pynicotine/gtkgui/transferlist.py:175 pynicotine/gtkgui/userbrowse.py:309
+#: pynicotine/gtkgui/transferlist.py:175 pynicotine/gtkgui/userbrowse.py:313
 msgid "Send to _Player"
 msgstr "Verstuur naar s_peler"
 
@@ -2722,47 +2730,47 @@ msgstr "Wil je echt alle uploads wissen?"
 msgid "Select a Saved Shares List File"
 msgstr "Selecteer een opgeslagen shares bestand"
 
-#: pynicotine/gtkgui/userbrowse.py:232
+#: pynicotine/gtkgui/userbrowse.py:236
 msgid "_Save Shares List to Disk"
 msgstr "Lijst met Shares op_slaan"
 
-#: pynicotine/gtkgui/userbrowse.py:241 pynicotine/gtkgui/userbrowse.py:307
+#: pynicotine/gtkgui/userbrowse.py:245 pynicotine/gtkgui/userbrowse.py:311
 msgid "Upload Folder…"
 msgstr "Upload map…"
 
-#: pynicotine/gtkgui/userbrowse.py:242
+#: pynicotine/gtkgui/userbrowse.py:246
 msgid "Upload Folder & Subfolder(s)…"
 msgstr "Upload map en submap(pen)…"
 
-#: pynicotine/gtkgui/userbrowse.py:244 pynicotine/gtkgui/userbrowse.py:310
+#: pynicotine/gtkgui/userbrowse.py:248 pynicotine/gtkgui/userbrowse.py:314
 msgid "Open in File _Manager"
 msgstr "Open in Bestands_Manager"
 
-#: pynicotine/gtkgui/userbrowse.py:247 pynicotine/gtkgui/userbrowse.py:261
+#: pynicotine/gtkgui/userbrowse.py:251 pynicotine/gtkgui/userbrowse.py:265
 msgid "Copy _Folder Path"
 msgstr "Kopieer _Map Pad"
 
-#: pynicotine/gtkgui/userbrowse.py:254 pynicotine/gtkgui/userbrowse.py:325
+#: pynicotine/gtkgui/userbrowse.py:258 pynicotine/gtkgui/userbrowse.py:329
 msgid "_Download Folder"
 msgstr "_Download Map"
 
-#: pynicotine/gtkgui/userbrowse.py:255 pynicotine/gtkgui/userbrowse.py:326
+#: pynicotine/gtkgui/userbrowse.py:259 pynicotine/gtkgui/userbrowse.py:330
 msgid "Download Folder _To…"
 msgstr "Download Map naar…"
 
-#: pynicotine/gtkgui/userbrowse.py:256
+#: pynicotine/gtkgui/userbrowse.py:260
 msgid "Download Folder & Subfolder(s)"
 msgstr "Download Map & Submap(pen)"
 
-#: pynicotine/gtkgui/userbrowse.py:257
+#: pynicotine/gtkgui/userbrowse.py:261
 msgid "Download Folder & Subfolder(s) To…"
 msgstr "Download Map & Submap(pen) Naar…"
 
-#: pynicotine/gtkgui/userbrowse.py:306
+#: pynicotine/gtkgui/userbrowse.py:310
 msgid "Up_load File(s)…"
 msgstr "Up_load bestand(en)…"
 
-#: pynicotine/gtkgui/userbrowse.py:540
+#: pynicotine/gtkgui/userbrowse.py:544
 msgid ""
 "User's list of shared files is empty. Either the user is not sharing "
 "anything, or they are sharing files privately."
@@ -2770,7 +2778,7 @@ msgstr ""
 "De lijst met gedeelde bestanden van de gebruiker is leeg. Ofwel deelt de "
 "gebruiker niets, ofwel hij deelt de bestanden alleen privé."
 
-#: pynicotine/gtkgui/userbrowse.py:550
+#: pynicotine/gtkgui/userbrowse.py:554
 msgid ""
 "Unable to request shared files from user. Either the user is offline, you "
 "both have a closed listening port, or there's a temporary connectivity issue."
@@ -2779,48 +2787,48 @@ msgstr ""
 "hebben jullie allebei een gesloten luisterpoort of is er een tijdelijk "
 "verbindingsprobleem."
 
-#: pynicotine/gtkgui/userbrowse.py:781
+#: pynicotine/gtkgui/userbrowse.py:789
 msgid "Select Destination for Downloading Multiple Folders"
 msgstr "Selecteer bestemming voor het downloaden van meerdere mappen"
 
-#: pynicotine/gtkgui/userbrowse.py:823
+#: pynicotine/gtkgui/userbrowse.py:831
 msgid "Upload Folder (with Subfolders) To User"
 msgstr "Map uploaden (met submappen) naar gebruiker"
 
-#: pynicotine/gtkgui/userbrowse.py:825
+#: pynicotine/gtkgui/userbrowse.py:833
 msgid "Upload Folder To User"
 msgstr "Map uploaden naar gebruiker"
 
-#: pynicotine/gtkgui/userbrowse.py:830 pynicotine/gtkgui/userbrowse.py:1066
+#: pynicotine/gtkgui/userbrowse.py:838 pynicotine/gtkgui/userbrowse.py:1074
 msgid "Enter the name of the user you want to upload to:"
 msgstr "Voer de naam in van de gebruiker waarnaar je wilt uploaden:"
 
-#: pynicotine/gtkgui/userbrowse.py:1065
+#: pynicotine/gtkgui/userbrowse.py:1073
 msgid "Upload File(s) To User"
 msgstr "Upload bestand(en) naar gebruiker"
 
-#: pynicotine/gtkgui/userinfo.py:242
+#: pynicotine/gtkgui/userinfo.py:246
 msgid "Zoom 1:1"
 msgstr "Zoom 1:1"
 
-#: pynicotine/gtkgui/userinfo.py:243
+#: pynicotine/gtkgui/userinfo.py:247
 msgid "Zoom In"
 msgstr "Zoom In"
 
-#: pynicotine/gtkgui/userinfo.py:244
+#: pynicotine/gtkgui/userinfo.py:248
 msgid "Zoom Out"
 msgstr "Zoom Uit"
 
-#: pynicotine/gtkgui/userinfo.py:246
+#: pynicotine/gtkgui/userinfo.py:250
 msgid "Save Picture"
 msgstr "Sla de afbeelding op"
 
-#: pynicotine/gtkgui/userinfo.py:318
+#: pynicotine/gtkgui/userinfo.py:322
 #, python-format
 msgid "Failed to load picture for user %(user)s: %(error)s"
 msgstr "Kan gebruikers afbeelding niet laden %(user)s: %(error)s"
 
-#: pynicotine/gtkgui/userinfo.py:364
+#: pynicotine/gtkgui/userinfo.py:368
 msgid ""
 "Unable to request information from user. Either you both have a closed "
 "listening port, the user is offline, or there's a temporary connectivity "
@@ -2830,11 +2838,11 @@ msgstr ""
 "gesloten luisterpoort, is de gebruiker offline of is er een tijdelijk "
 "verbindingsprobleem."
 
-#: pynicotine/gtkgui/userinfo.py:425
+#: pynicotine/gtkgui/userinfo.py:433
 msgid "Yes"
 msgstr "Ja"
 
-#: pynicotine/gtkgui/userinfo.py:425
+#: pynicotine/gtkgui/userinfo.py:433
 msgid "No"
 msgstr "Nee"
 
@@ -2995,24 +3003,24 @@ msgstr "Verwijderen"
 msgid "Select a File"
 msgstr "Selecteer een bestand"
 
-#: pynicotine/gtkgui/widgets/filechooser.py:90
+#: pynicotine/gtkgui/widgets/filechooser.py:87
 msgid "Select a Folder"
 msgstr "Selecteer een map"
 
-#: pynicotine/gtkgui/widgets/filechooser.py:99
+#: pynicotine/gtkgui/widgets/filechooser.py:96
 msgid "Select an Image"
 msgstr "Selecteer een afbeelding"
 
-#: pynicotine/gtkgui/widgets/filechooser.py:106
+#: pynicotine/gtkgui/widgets/filechooser.py:103
 msgid "All images"
 msgstr "Alle afbeeldingen"
 
-#: pynicotine/gtkgui/widgets/filechooser.py:132
+#: pynicotine/gtkgui/widgets/filechooser.py:129
 msgid "Save as…"
 msgstr "Opslaan als…"
 
-#: pynicotine/gtkgui/widgets/filechooser.py:168
-#: pynicotine/gtkgui/widgets/filechooser.py:239
+#: pynicotine/gtkgui/widgets/filechooser.py:165
+#: pynicotine/gtkgui/widgets/filechooser.py:236
 msgid "(None)"
 msgstr "(Geen)"
 
@@ -3032,176 +3040,175 @@ msgstr "Alle tabbladen sluiten?"
 msgid "Do you really want to close all tabs?"
 msgstr "Wil je echt alle tabbladen sluiten?"
 
-#: pynicotine/gtkgui/widgets/notifications.py:83
+#: pynicotine/gtkgui/widgets/notifications.py:82
 #, python-format
 msgid "Private Message from %(user)s"
 msgstr "Privébericht van %(user)s"
 
-#: pynicotine/gtkgui/widgets/notifications.py:92
+#: pynicotine/gtkgui/widgets/notifications.py:91
 #, python-format
 msgid "You've been mentioned in the %(room)s room"
 msgstr "Je bent genoemd in de kamer %(room)s"
 
-#: pynicotine/gtkgui/widgets/notifications.py:130
+#: pynicotine/gtkgui/widgets/notifications.py:143
 #, python-format
 msgid "Unable to show notification: %s"
 msgstr "Kan melding niet weergeven: %s"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:322
+#: pynicotine/gtkgui/widgets/popupmenu.py:330
 #, python-format
 msgid "%s File(s) Selected"
 msgstr "%s Geselecteerde bestand(en)"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:343
+#: pynicotine/gtkgui/widgets/popupmenu.py:351
 #: pynicotine/gtkgui/ui/userinfo.ui:419
 msgid "Send M_essage"
 msgstr "Verstuur _bericht"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:346
+#: pynicotine/gtkgui/widgets/popupmenu.py:354
 msgid "Show User I_nfo"
 msgstr "Toon gebruiker I_nfo"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:349
+#: pynicotine/gtkgui/widgets/popupmenu.py:357
 #: pynicotine/gtkgui/ui/userinfo.ui:451
 msgid "_Browse Files"
 msgstr "_Bekijk Bestanden"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:352
-#: pynicotine/gtkgui/widgets/popupmenu.py:384
+#: pynicotine/gtkgui/widgets/popupmenu.py:360
+#: pynicotine/gtkgui/widgets/popupmenu.py:392
 #: pynicotine/gtkgui/ui/userinfo.ui:483
 msgid "_Add to Buddy List"
 msgstr "_Toevoegen aan Vriendenlijst"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:355
-#: pynicotine/gtkgui/widgets/popupmenu.py:382
+#: pynicotine/gtkgui/widgets/popupmenu.py:363
+#: pynicotine/gtkgui/widgets/popupmenu.py:390
 msgid "_Gift Privileges…"
 msgstr "_Geef privileges…"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:360
-#: pynicotine/gtkgui/widgets/popupmenu.py:394
+#: pynicotine/gtkgui/widgets/popupmenu.py:368
+#: pynicotine/gtkgui/widgets/popupmenu.py:402
 msgid "Ban IP Address"
 msgstr "Verban IP-adres"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:362
+#: pynicotine/gtkgui/widgets/popupmenu.py:370
 #: pynicotine/gtkgui/ui/userinfo.ui:577
 msgid "Show IP A_ddress"
 msgstr "Toon IP-a_dres"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:419
+#: pynicotine/gtkgui/widgets/popupmenu.py:427
 #, python-format
 msgid "Remove from Private Room %s"
 msgstr "Verwijder uit privékamer %s"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:421
+#: pynicotine/gtkgui/widgets/popupmenu.py:429
 #, python-format
 msgid "Add to Private Room %s"
 msgstr "Toevoegen aan privékamer %s"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:428
+#: pynicotine/gtkgui/widgets/popupmenu.py:436
 #, python-format
 msgid "Remove as Operator of %s"
 msgstr "Verwijderen als operator van %s"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:430
+#: pynicotine/gtkgui/widgets/popupmenu.py:438
 #, python-format
 msgid "Add as Operator of %s"
 msgstr "Toevoegen als operator van %s"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:548
+#: pynicotine/gtkgui/widgets/popupmenu.py:556
 msgid "Please enter number of days!"
 msgstr "Vul het aantal dagen in!"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:559
+#: pynicotine/gtkgui/widgets/popupmenu.py:567
 #, python-format
 msgid "Gift days of your Soulseek privileges to user %(user)s (%(days_left)s):"
 msgstr ""
 "Geef dagen van uw Soulseek-privileges aan gebruiker %(user)s (%(days_left)s):"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:560
+#: pynicotine/gtkgui/widgets/popupmenu.py:568
 #, python-format
 msgid "%(days)s days left"
 msgstr "%(days)s dagen over"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:567
+#: pynicotine/gtkgui/widgets/popupmenu.py:575
 msgid "Gift Privileges"
 msgstr "Geef privileges"
 
-#: pynicotine/gtkgui/widgets/textentry.py:87
+#: pynicotine/gtkgui/widgets/textentry.py:92
 #, python-format
 msgid "Alias \"%s\" returned nothing"
 msgstr "Alias \"%s\" leverde niets op"
 
-#: pynicotine/gtkgui/widgets/textentry.py:111
+#: pynicotine/gtkgui/widgets/textentry.py:116
 #, python-format
 msgid "Command %s is not recognized"
 msgstr "Commando %s is niet herkend"
 
-#: pynicotine/gtkgui/widgets/theme.py:391
+#: pynicotine/gtkgui/widgets/theme.py:396
 #, python-format
 msgid "Error loading custom icon %(path)s: %(error)s"
 msgstr "Fout bij laden van aangepast pictogram %(path)s: %(error)s"
 
-#: pynicotine/gtkgui/widgets/trayicon.py:66
-#: pynicotine/gtkgui/widgets/trayicon.py:100
+#: pynicotine/gtkgui/widgets/trayicon.py:90
 msgid "Show Nicotine+"
 msgstr "Toon Nicotine+"
 
-#: pynicotine/gtkgui/widgets/trayicon.py:68
+#: pynicotine/gtkgui/widgets/trayicon.py:91
+msgid "Hide Nicotine+"
+msgstr "Verberg Nicotine+"
+
+#: pynicotine/gtkgui/widgets/trayicon.py:93
 msgid "Alternative Speed Limits"
 msgstr "Alternatieve snelheidslimieten"
 
-#: pynicotine/gtkgui/widgets/trayicon.py:77
+#: pynicotine/gtkgui/widgets/trayicon.py:102
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:20
 msgid "Connect"
 msgstr "Verbinden"
 
-#: pynicotine/gtkgui/widgets/trayicon.py:78
+#: pynicotine/gtkgui/widgets/trayicon.py:103
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:27
 msgid "Disconnect"
 msgstr "Verbinding verbreken"
 
-#: pynicotine/gtkgui/widgets/trayicon.py:83
+#: pynicotine/gtkgui/widgets/trayicon.py:108
 msgid "Send Message"
 msgstr "Verstuur bericht"
 
-#: pynicotine/gtkgui/widgets/trayicon.py:84
+#: pynicotine/gtkgui/widgets/trayicon.py:109
 msgid "Request User's Info"
 msgstr "Gebruikersinformatie opvragen"
 
-#: pynicotine/gtkgui/widgets/trayicon.py:85
+#: pynicotine/gtkgui/widgets/trayicon.py:110
 msgid "Request User's Shares"
 msgstr "Shares van gebruiker opvragen"
 
-#: pynicotine/gtkgui/widgets/trayicon.py:90
+#: pynicotine/gtkgui/widgets/trayicon.py:115
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:76
 msgid "Quit"
 msgstr "Afsluiten"
 
-#: pynicotine/gtkgui/widgets/trayicon.py:98
-msgid "Hide Nicotine+"
-msgstr "Verberg Nicotine+"
-
-#: pynicotine/gtkgui/widgets/trayicon.py:178
+#: pynicotine/gtkgui/widgets/trayicon.py:214
 msgid "Start Messaging"
 msgstr "Berichten starten"
 
-#: pynicotine/gtkgui/widgets/trayicon.py:179
+#: pynicotine/gtkgui/widgets/trayicon.py:215
 msgid "Enter the name of the user whom you want to send a message:"
 msgstr "Voer de naam in van een gebruiker die je een bericht wilt sturen:"
 
-#: pynicotine/gtkgui/widgets/trayicon.py:199
+#: pynicotine/gtkgui/widgets/trayicon.py:235
 msgid "Request User Info"
 msgstr "Gebruikersinformatie opvragen"
 
-#: pynicotine/gtkgui/widgets/trayicon.py:200
+#: pynicotine/gtkgui/widgets/trayicon.py:236
 msgid "Enter the name of the user whose info you want to see:"
 msgstr "Voer de naam in van de gebruiker wiens gegevens je wilt zien:"
 
-#: pynicotine/gtkgui/widgets/trayicon.py:220
+#: pynicotine/gtkgui/widgets/trayicon.py:256
 msgid "Request Shares List"
 msgstr "Shares opvragen"
 
-#: pynicotine/gtkgui/widgets/trayicon.py:221
+#: pynicotine/gtkgui/widgets/trayicon.py:257
 msgid "Enter the name of the user whose shares you want to see:"
 msgstr "Voer de naam in van de gebruiker wiens shares je wilt zien:"
 
@@ -3226,11 +3233,6 @@ msgstr "Groeperen per gebruiker"
 #: pynicotine/gtkgui/widgets/treeview.py:871
 msgid "Earth"
 msgstr "Aarde"
-
-#: pynicotine/gtkgui/widgets/ui.py:75
-#, python-format
-msgid "Failed to load ui file %(file)s: %(error)s"
-msgstr "Kan ui-bestand %(file)s niet laden: %(error)s"
 
 #: pynicotine/logfacility.py:106
 #, python-format
@@ -3360,12 +3362,12 @@ msgstr ""
 msgid "Loading plugin system"
 msgstr "Plug-in systeem laden"
 
-#: pynicotine/privatechat.py:194
+#: pynicotine/privatechat.py:195
 #, python-format
 msgid "Private message from user '%(user)s': %(message)s"
 msgstr "Privébericht van gebruiker '%(user)s': %(message)s"
 
-#: pynicotine/privatechat.py:257
+#: pynicotine/privatechat.py:258
 #, python-format
 msgid "(Warning: %(realuser)s is attempting to spoof %(fakeuser)s) "
 msgstr "(Waarschuwing: %(realuser)s probeert %(fakeuser)s te spoofen) "
@@ -3383,25 +3385,25 @@ msgstr "afsluiten"
 msgid "application closing"
 msgstr "toepassing sluit"
 
-#: pynicotine/pynicotine.py:290
+#: pynicotine/pynicotine.py:291
 #, python-format
 msgid "Quit %(program)s %(version)s, %(status)s!"
 msgstr "%(program)s afsluiten, %(version)s, %(status)s!"
 
-#: pynicotine/pynicotine.py:293
+#: pynicotine/pynicotine.py:294
 msgid "terminated"
 msgstr "beëindigd"
 
-#: pynicotine/pynicotine.py:293
+#: pynicotine/pynicotine.py:294
 msgid "done"
 msgstr "klaar"
 
-#: pynicotine/pynicotine.py:303
+#: pynicotine/pynicotine.py:304
 msgid "You need to specify a username and password before connecting…"
 msgstr ""
 "Je moet een gebruikersnaam en wachtwoord opgeven voordat je verbinding maakt…"
 
-#: pynicotine/pynicotine.py:311
+#: pynicotine/pynicotine.py:312
 #, python-format
 msgid ""
 "The network interface you specified, '%s', does not exist. Change or remove "
@@ -3410,7 +3412,7 @@ msgstr ""
 "De netwerkinterface die je hebt opgegeven, '%s', bestaat niet. Wijzig of "
 "verwijder de opgegeven netwerkinterface en start Nicotine+ opnieuw."
 
-#: pynicotine/pynicotine.py:321
+#: pynicotine/pynicotine.py:322
 msgid ""
 "The range you specified for client connection ports was {}-{}, but none of "
 "these were usable. Increase and/or "
@@ -3418,7 +3420,7 @@ msgstr ""
 "Het bereik dat je heeft opgegeven voor cliënt-verbindingspoorten was {}-{}, "
 "maar geen van deze was bruikbaar. Verhogen en/of "
 
-#: pynicotine/pynicotine.py:328
+#: pynicotine/pynicotine.py:329
 msgid ""
 "Note that part of your range lies below 1024, this is usually not allowed on "
 "most operating systems with the exception of Windows."
@@ -3427,29 +3429,29 @@ msgstr ""
 "niet toegestaan op de meeste besturingssystemen met de uitzondering van "
 "Windows."
 
-#: pynicotine/pynicotine.py:529
+#: pynicotine/pynicotine.py:534
 #, python-format
 msgid "Unable to connect to the server. Reason: %s"
 msgstr "Kan niet verbinden met de server. Reden: %s"
 
-#: pynicotine/pynicotine.py:572
+#: pynicotine/pynicotine.py:577
 #, python-format
 msgid "Cannot retrieve the IP of user %s, since this user is offline"
 msgstr ""
 "Kan het IP-adres van gebruiker %s niet ophalen, omdat deze gebruiker offline "
 "is"
 
-#: pynicotine/pynicotine.py:575
+#: pynicotine/pynicotine.py:580
 #, python-format
 msgid "IP address of user %(user)s is %(ip)s, port %(port)i%(country)s"
 msgstr "IP adres van %(user)s is %(ip)s, poort %(port)i%(country)s"
 
-#: pynicotine/pynicotine.py:673
+#: pynicotine/pynicotine.py:678
 #, python-format
 msgid "%i privileged users"
 msgstr "%i gebruikers met privileges"
 
-#: pynicotine/pynicotine.py:689
+#: pynicotine/pynicotine.py:694
 msgid ""
 "You have no privileges. Privileges are not required, but allow your "
 "downloads to be queued ahead of non-privileged users."
@@ -3457,7 +3459,7 @@ msgstr ""
 "Je hebt geen privileges. Ze zijn niet nodig, maar geven je voorrang in de "
 "download wachtrij."
 
-#: pynicotine/pynicotine.py:692
+#: pynicotine/pynicotine.py:697
 #, python-format
 msgid ""
 "%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of "
@@ -3466,7 +3468,7 @@ msgstr ""
 "%(days)i dagen, %(hours)i uren, %(minutes)i minuten, %(seconds)i seconden "
 "download privileges over."
 
-#: pynicotine/pynicotine.py:710
+#: pynicotine/pynicotine.py:715
 msgid "Your password has been changed"
 msgstr "Uw wachtwoord is gewijzigd"
 
@@ -3496,21 +3498,21 @@ msgstr "Verlanglijstje wachttijd ingesteld op %s seconden"
 msgid "User %(user)s is searching for \"%(query)s\", found %(num)i results"
 msgstr "Gebruiker %(user)s zoekt naar \"%(query)s\", vond %(num)i resultaten"
 
-#: pynicotine/shares.py:99
+#: pynicotine/shares.py:109
 msgid "Rescanning shares…"
 msgstr "Shares worden opnieuw gescand…"
 
-#: pynicotine/shares.py:100
+#: pynicotine/shares.py:110
 #, python-format
 msgid "%(num)s folders found before rescan, rebuilding…"
 msgstr "%(num)s mappen gevonden vóór opnieuw scannen, opnieuw doorzoeken…"
 
-#: pynicotine/shares.py:107
+#: pynicotine/shares.py:117
 #, python-format
 msgid "Rescan complete: %(num)s folders found"
 msgstr "Herscannen voltooid: %(num)s mappen gevonden"
 
-#: pynicotine/shares.py:115
+#: pynicotine/shares.py:125
 #, python-format
 msgid ""
 "Serious error occurred while rescanning shares. If this problem persists, "
@@ -3522,145 +3524,127 @@ msgstr ""
 "het opnieuw. Als dat niet helpt, dien dan een bugrapport in met deze "
 "stacktracering: %(trace)s"
 
-#: pynicotine/shares.py:173
+#: pynicotine/shares.py:203
 #, python-format
 msgid "Can't save %(filename)s: %(error)s"
 msgstr "Kan %(filename)s: %(error)s niet opslaan"
 
-#: pynicotine/shares.py:225 pynicotine/shares.py:342
+#: pynicotine/shares.py:258 pynicotine/shares.py:376
 #, python-format
 msgid "Error while scanning folder %(path)s: %(error)s"
 msgstr "Fout tijdens het scannen van map %(path)s: %(error)s"
 
-#: pynicotine/shares.py:323
+#: pynicotine/shares.py:357
 #, python-format
 msgid "Error while scanning file %(path)s: %(error)s"
 msgstr "Fout tijdens het scannen van bestand %(path)s: %(error)s"
 
-#: pynicotine/shares.py:370
+#: pynicotine/shares.py:404
 #, python-format
 msgid "Error while scanning metadata for file %(path)s: %(error)s"
 msgstr "Fout bij het scannen van metadata voor bestand %(path)s: %(error)s"
 
-#: pynicotine/shares.py:604
+#: pynicotine/shares.py:647
 #, python-format
 msgid "Failed to process the following databases: %(names)s"
 msgstr "Kan de volgende databases niet verwerken: %(names)s"
 
-#: pynicotine/shares.py:610
-msgid ""
-"Attempting to reset index of shared files due to an error. Please rescan "
-"your shares."
-msgstr ""
-"Poging om index van gedeelde bestanden te resetten vanwege een fout. "
-"Herindexeer je gedeelde bestanden."
-
-#: pynicotine/shares.py:614
-msgid ""
-"File index of shared files could not be accessed. This could occur due to "
-"several instances of Nicotine+ being active simultaneously, file permission "
-"issues, or another issue in Nicotine+."
-msgstr ""
-"De bestandsindex van gedeelde bestanden kan niet worden geopend. Dit kan "
-"gebeuren als meerder instanties van Nicotine+ tegelijkertijd actief zijn, "
-"problemen met bestandsrechten of een ander probleem in Nicotine+."
-
-#: pynicotine/shares.py:716
+#: pynicotine/shares.py:756
 #, python-format
 msgid "Failed to send number of shared files to the server: %s"
 msgstr ""
 "Het is niet gelukt om het aantal gedeelde bestanden naar de server te "
 "sturen: %s"
 
-#: pynicotine/shares.py:776
+#: pynicotine/shares.py:816
 #, python-format
 msgid "Rescan progress: %s"
 msgstr "Voortgang herscannen: %s"
 
-#: pynicotine/shares.py:853
+#: pynicotine/shares.py:892
 #, python-format
 msgid "User %(user)s is browsing your list of shared files"
 msgstr "Gebruiker %(user)s doorzoekt je lijst met gedeelde bestanden"
 
-#: pynicotine/shares.py:916
+#: pynicotine/shares.py:955
 #, python-format
 msgid "Failed to fetch the shared folder %(folder)s: %(error)s"
 msgstr "Kan mapinhoud van gedeelde map %(folder)s niet ophalen: %(error)s"
 
-#: pynicotine/slskmessages.py:2330
+#: pynicotine/slskmessages.py:2339
 #, python-format
 msgid "Unable to read shares database. Please rescan your shares. Error: %s"
 msgstr ""
 "Kan de share-database niet lezen. Gelieve uw shares opnieuw te scannen. "
 "Fout: %s"
 
-#: pynicotine/slskproto.py:331
+#: pynicotine/slskproto.py:332
 #, python-format
 msgid "Listening on port: %i"
 msgstr "Luistert op poort %i"
 
-#: pynicotine/slskproto.py:353
+#: pynicotine/slskproto.py:354
 #, python-format
 msgid "Connecting to %(host)s:%(port)s"
 msgstr "Bezig met verbinden met: %(host)s:%(port)s"
 
-#: pynicotine/slskproto.py:391
+#: pynicotine/slskproto.py:392
 #, python-format
 msgid "Disconnected from server %(host)s:%(port)s"
 msgstr "Verbinding met server %(host)s:%(port)s verbroken"
 
-#: pynicotine/slskproto.py:397
+#: pynicotine/slskproto.py:398
 msgid "Someone logged in to your Soulseek account elsewhere"
 msgstr "Iemand heeft ergens anders ingelogd op je Soulseek-account"
 
-#: pynicotine/slskproto.py:423
+#: pynicotine/slskproto.py:424
 #, python-format
 msgid "The server seems to be down or not responding, retrying in %i seconds"
 msgstr ""
 "De server lijkt uitgevallen of antwoordt niet, over %i seconden wordt een "
 "nieuwe poging gedaan"
 
-#: pynicotine/slskproto.py:740
+#: pynicotine/slskproto.py:741
 #, python-format
 msgid "Cannot connect to server %(host)s:%(port)s: %(error)s"
 msgstr "Kan niet met server %(host)s:%(port)s verbinden: %(error)s"
 
-#: pynicotine/slskproto.py:837
+#: pynicotine/slskproto.py:838
 #, python-format
 msgid "Connected to server %(host)s:%(port)s, logging in…"
 msgstr "Verbonden met server %(host)s:%(port)s, bezig met inloggen…"
 
-#: pynicotine/transfers.py:1033 pynicotine/transfers.py:1130
+#: pynicotine/transfers.py:1040 pynicotine/transfers.py:1137
 #, python-format
 msgid "Download I/O error: %s"
 msgstr "Download I/O fout: %s"
 
-#: pynicotine/transfers.py:1050 pynicotine/transfers.py:1221
+#: pynicotine/transfers.py:1057 pynicotine/transfers.py:1228
 #, python-format
 msgid "Upload I/O error: %s"
 msgstr "Upload I/O fout: %s"
 
-#: pynicotine/transfers.py:1103 pynicotine/transfers.py:1963
+#: pynicotine/transfers.py:1110 pynicotine/transfers.py:1958
 #, python-format
 msgid "OS error: %s"
 msgstr "OS fout: %s"
 
-#: pynicotine/transfers.py:1117
+#: pynicotine/transfers.py:1124
 #, python-format
 msgid "Can't get an exclusive lock on file - I/O error: %s"
 msgstr "Kan geen exclusieve vergrendeling op bestand verkrijgen - I/O fout: %s"
 
-#: pynicotine/transfers.py:1146
+#: pynicotine/transfers.py:1153
 #, python-format
 msgid "Download started: user %(user)s, file %(file)s"
 msgstr "Download gestart: gebruiker %(user)s, bestand %(file)s"
 
-#: pynicotine/transfers.py:1237
+#: pynicotine/transfers.py:1244
 #, python-format
 msgid "Upload started: user %(user)s, IP address %(ip)s, file %(file)s"
 msgstr "Upload gestart: gebruiker %(user)s, IP-adres %(ip)s, bestand %(file)s"
 
-#: pynicotine/transfers.py:1833
+#: pynicotine/transfers.py:1828
 #, python-format
 msgid ""
 "Unable to save download to username subfolder, falling back to default "
@@ -3669,75 +3653,75 @@ msgstr ""
 "Kan download niet opslaan in gebruikersnaam submap, valt terug op standaard "
 "download map. Fout: %s"
 
-#: pynicotine/transfers.py:1911
+#: pynicotine/transfers.py:1906
 #, python-format
 msgid "%(file)s downloaded from %(user)s"
 msgstr "%(file)s gedownload van %(user)s"
 
-#: pynicotine/transfers.py:1915
+#: pynicotine/transfers.py:1910
 msgid "File downloaded"
 msgstr "Bestand gedownload"
 
-#: pynicotine/transfers.py:1921
+#: pynicotine/transfers.py:1916
 #, python-format
 msgid "Executed: %s"
 msgstr "Uitgevoerd: %s"
 
-#: pynicotine/transfers.py:1924
+#: pynicotine/transfers.py:1919
 #, python-format
 msgid "Trouble executing '%s'"
 msgstr "Problemen bij het uitvoeren van '%s'"
 
-#: pynicotine/transfers.py:1942
+#: pynicotine/transfers.py:1937
 #, python-format
 msgid "%(folder)s downloaded from %(user)s"
 msgstr "%(folder)s gedownload van %(user)s"
 
-#: pynicotine/transfers.py:1946
+#: pynicotine/transfers.py:1941
 msgid "Folder downloaded"
 msgstr "Map gedownload"
 
-#: pynicotine/transfers.py:1952
+#: pynicotine/transfers.py:1947
 #, python-format
 msgid "Executed on folder: %s"
 msgstr "Uitgevoerd op map: %s"
 
-#: pynicotine/transfers.py:1955
+#: pynicotine/transfers.py:1950
 #, python-format
 msgid "Trouble executing on folder: %s"
 msgstr "Problemen bij het uitvoeren op map: %s"
 
-#: pynicotine/transfers.py:1982
+#: pynicotine/transfers.py:1977
 #, python-format
 msgid "Couldn't move '%(tempfile)s' to '%(file)s': %(error)s"
 msgstr "Kon '%(tempfile)s' niet naar '%(file)s' verplaatsen: %(error)s"
 
-#: pynicotine/transfers.py:2014
+#: pynicotine/transfers.py:2009
 #, python-format
 msgid "Download finished: user %(user)s, file %(file)s"
 msgstr "Download voltooid: gebruiker %(user)s, bestand %(file)s"
 
-#: pynicotine/transfers.py:2030
+#: pynicotine/transfers.py:2025
 #, python-format
 msgid "Upload finished: user %(user)s, IP address %(ip)s, file %(file)s"
 msgstr "Upload voltooid: gebruiker %(user)s, IP-adres %(ip)s, bestand %(file)s"
 
-#: pynicotine/transfers.py:2436
+#: pynicotine/transfers.py:2431
 #, python-format
 msgid "Upload aborted, user %(user)s file %(file)s"
 msgstr "Upload afgebroken: gebruiker %(user)s, bestand %(file)s"
 
-#: pynicotine/transfers.py:2443
+#: pynicotine/transfers.py:2438
 #, python-format
 msgid "Download aborted, user %(user)s file %(file)s"
 msgstr "Download afgebroken: gebruiker %(user)s, bestand %(file)s"
 
-#: pynicotine/transfers.py:2486
+#: pynicotine/transfers.py:2481
 #, python-format
 msgid "Error: Download Filter failed! Verify your filters. Reason: %s"
 msgstr "Fout: downloadfilter faalde! Kijk de filters na. Oorzaak: %s"
 
-#: pynicotine/transfers.py:2501
+#: pynicotine/transfers.py:2496
 #, python-format
 msgid "Error: %(num)d Download filters failed! %(error)s "
 msgstr "Fout: %(num)d Downloadfilters gefaald! %(error)s "
@@ -3775,42 +3759,42 @@ msgstr ""
 "UPnP: Externe poort %(external_port)s succesvol doorgestuurd naar lokaal IP-"
 "adres %(ip_address)s poort %(local_port)s"
 
-#: pynicotine/userbrowse.py:150
+#: pynicotine/userbrowse.py:151
 #, python-format
 msgid "Can't create directory '%(folder)s', reported error: %(error)s"
 msgstr "Kan map '%(folder)s' niet aanmaken, fout: %(error)s"
 
-#: pynicotine/userbrowse.py:180
+#: pynicotine/userbrowse.py:181
 #, python-format
 msgid "Loading Shares from disk failed: %(error)s"
 msgstr "Lezen gedeelde mappen van schijf mislukt: %(error)s"
 
-#: pynicotine/userbrowse.py:205
+#: pynicotine/userbrowse.py:206
 #, python-format
 msgid "Saved list of shared files for user '%(user)s' to %(dir)s"
 msgstr "Shares lijst voor gebruiker '%(user)s' opgeslagen naar %(dir)s"
 
-#: pynicotine/userbrowse.py:209
+#: pynicotine/userbrowse.py:210
 #, python-format
 msgid "Can't save shares, '%(user)s', reported error: %(error)s"
 msgstr "Kan shares niet opslaan, '%(user)s', fout: %(error)s"
 
-#: pynicotine/userbrowse.py:306
+#: pynicotine/userbrowse.py:307
 #, python-format
 msgid "Invalid Soulseek URL: %s"
 msgstr "Ongeldige Soulseek URL: %s"
 
-#: pynicotine/userinfo.py:96
+#: pynicotine/userinfo.py:97
 #, python-format
 msgid "Picture saved to %s"
 msgstr "Foto opgeslagen in %s"
 
-#: pynicotine/userinfo.py:99
+#: pynicotine/userinfo.py:100
 #, python-format
 msgid "Cannot save picture to %(filename)s: %(error)s"
 msgstr "Kan de afbeelding niet opslaan naar %(filename)s: %(error)s"
 
-#: pynicotine/userinfo.py:139
+#: pynicotine/userinfo.py:144
 #, python-format
 msgid "User %(user)s is reading your user info"
 msgstr "Gebruiker %(user)s leest je gebruikersinfo"
@@ -4245,7 +4229,7 @@ msgid "Pause"
 msgstr "Pauzeer"
 
 #: pynicotine/gtkgui/ui/downloads.ui:130
-#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:465
+#: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:461
 #: pynicotine/gtkgui/ui/settings/downloads.ui:108
 #: pynicotine/gtkgui/ui/settings/uploads.ui:88
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1452
@@ -4486,272 +4470,272 @@ msgstr "Downloaden (snelheid / actieve gebruikers)"
 msgid "Uploading (speed / active users)"
 msgstr "Uploaden (snelheid / actieve gebruikers)"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1846
+#: pynicotine/gtkgui/ui/mainwindow.ui:1827
 msgid "Enable alternative download and upload speed limits"
 msgstr "Alternatieve download- en uploadsnelheidslimieten inschakelen"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1864
+#: pynicotine/gtkgui/ui/mainwindow.ui:1876
 msgid "Show log history"
 msgstr "Toon log geschiedenis"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:32
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:29
 msgid "Chat Room Commands"
 msgstr "Chatkamer commando's"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:48
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:683
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:46
+#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:729
 msgid "/join /j 'room'"
 msgstr "/join /j 'kamer'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:59
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:694
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:58
+#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:741
 msgid "Join room 'room'"
 msgstr "Kamer 'room' betreden"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:85
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:86
 msgid "Leave current room"
 msgstr "Verlaat deze kamer"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:111
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:84
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:114
+#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:85
 msgid "Clear the chat window"
 msgstr "Wis het chatvenster"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:126
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:99
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:130
+#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:101
 msgid "/me 'message'"
 msgstr "/me 'bericht'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:137
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:110
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:142
+#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:113
 msgid "Say something in the third-person"
 msgstr "Zeg iets in de derde-persoon"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:168
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:136
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:175
+#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:141
 msgid "Display the Now Playing script's output"
 msgstr "Toon wat je mediaspeler nu afspeelt"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:194
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:162
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:203
+#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:169
 msgid "Toggles your away status"
 msgstr "Schakelt de status aanwezig / afwezig om"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:220
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:188
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:231
+#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:197
 msgid "Rescan shares"
 msgstr "Herlees gedeelde bestanden"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:277
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:292
 msgid "/add /ad 'user'"
 msgstr "/add /ad 'gebruiker'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:288
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:304
 msgid "Add user 'user' to your buddy list"
 msgstr "Voeg gebruiker 'gebruiker' toe aan je vriendenlijst"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:303
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:320
 msgid "/rem /unbuddy 'user'"
 msgstr "/rem /unbuddy 'gebruiker'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:314
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:332
 msgid "Remove user 'user' from your buddy list"
 msgstr "Verwijder gebruiker 'gebruiker' uit je vriendenlijst"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:329
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:348
 msgid "/ban 'user'"
 msgstr "/ban 'user'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:340
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:360
 msgid "Add user 'user' to your ban list"
 msgstr "Verban gebruiker 'user'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:355
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:376
 msgid "/unban 'user'"
 msgstr "/unban 'gebruiker'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:366
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:388
 msgid "Remove user 'user' from your ban list"
 msgstr "Hef de verbanning van gebruiker 'user' op"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:381
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:404
 msgid "/ignore 'user'"
 msgstr "/ignore 'user'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:392
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:416
 msgid "Add user 'user' to your ignore list"
 msgstr "Negeer gebruiker 'user'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:407
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:432
 msgid "/unignore 'user'"
 msgstr "/unignore 'user'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:418
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:444
 msgid "Remove user 'user' from your ignore list"
 msgstr "Gebruiker 'user' niet meer negeren"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:433
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:460
 msgid "/browse /b 'user'"
 msgstr "/browse /b 'user'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:444
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:472
 msgid "Browse files of user 'user'"
 msgstr "Blader door de bestanden van gebruiker 'user'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:459
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:488
 msgid "/whois /w 'user'"
 msgstr "/whois /w 'gebruiker'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:470
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:500
 msgid "Request info for 'user'"
 msgstr "Vraag informatie aan voor 'gebruiker'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:485
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:516
 msgid "/ip 'user'"
 msgstr "/ip 'gebruiker'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:496
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:528
 msgid "Show IP for user 'user'"
 msgstr "Toon IP van gebruiker 'user'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:511
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:479
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:544
+#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:510
 msgid "Aliases"
 msgstr "Aliassen"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:527
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:495
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:561
+#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:527
 msgid "/alias /al 'command' 'definition'"
 msgstr "/alias /al 'opdracht' 'definitie'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:538
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:506
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:573
+#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:539
 msgid "Add a new alias"
 msgstr "Een nieuwe alias toevoegen"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:553
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:521
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:589
+#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:555
 msgid "/unalias /un 'command'"
 msgstr "/unalias /un 'opdracht'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:564
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:532
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:601
+#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:567
 msgid "Remove an alias"
 msgstr "Verwijder een alias"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:595
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:563
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:634
+#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:600
 msgid "/search /s 'query'"
 msgstr "/search /s 'zoekopdracht'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:606
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:574
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:646
+#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:612
 msgid "Start a new search for 'query'"
 msgstr "Start nieuwe zoekopdracht naar '…'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:621
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:589
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:662
+#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:628
 msgid "/rsearch /rs 'query'"
 msgstr "/rsearch /rs 'query'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:632
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:600
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:674
+#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:640
 msgid "Search the joined rooms for 'query'"
 msgstr "Doorzoek de betreden kamers naar '…'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:647
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:615
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:690
+#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:656
 msgid "/bsearch /bs 'query'"
 msgstr "/bsearch /bs 'zoekterm'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:658
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:626
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:702
+#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:668
 msgid "Search the buddy list for 'query'"
 msgstr "Doorzoek de vriendenlijst naar '…'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:673
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:641
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:718
+#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:684
 msgid "/usearch /us 'user' 'query'"
 msgstr "/usearch /us 'gebruiker' 'zoekopdracht'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:684
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:652
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:730
+#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:696
 msgid "Search a user's shares for 'query'"
 msgstr "Doorzoek de bestanden van een gebruiker naar '…'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:715
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:763
 msgid "/msg 'user' 'message'"
 msgstr "/msg 'gebruiker' 'bericht'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:726
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:775
 msgid "Send message 'message' to user 'user'"
 msgstr "Verstuur bericht 'message' naar gebruiker 'user'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:741
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:791
 msgid "/pm 'user'"
 msgstr "/pm 'gebruiker'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:752
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:803
 msgid "Open private chat window for user 'user'"
 msgstr "Start privégesprek met gebruiker 'user'"
 
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:32
+#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:29
 msgid "Private Chat Commands"
 msgstr "Privé Chat Commando's"
 
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:58
+#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:57
 msgid "Close the current private chat"
 msgstr "Sluit het huidige privégesprek"
 
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:256
+#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:270
 msgid "Add user to your buddy-list"
 msgstr "Gebruiker toevoegen aan je vriendenlijst"
 
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:282
+#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:298
 msgid "Remove user from your buddy-list"
 msgstr "Gebruiker uit je vriendenlijst verwijderen"
 
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:308
+#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:326
 msgid "Add user to your ban list"
 msgstr "Verban gebruiker"
 
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:334
+#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:354
 msgid "Remove user from your ban list"
 msgstr "Ontban gebruiker"
 
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:360
+#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:382
 msgid "Add user to your ignore list"
 msgstr "Negeer gebruiker"
 
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:386
+#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:410
 msgid "Remove user from your ignore list"
 msgstr "Gebruiker niet meer negeren"
 
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:412
+#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:438
 msgid "Browse shares of user"
 msgstr "Bestanden van gebruiker bekijken"
 
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:438
+#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:466
 msgid "Request user's info"
 msgstr "Gebruikersinformatie opvragen"
 
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:464
+#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:494
 msgid "Show IP for user"
 msgstr "Toon IP van gebruiker"
 
-#: pynicotine/gtkgui/ui/popovers/roomlist.ui:29
+#: pynicotine/gtkgui/ui/popovers/roomlist.ui:27
 msgid "Refresh room list"
 msgstr "Lijst met kamers vernieuwen"
 
-#: pynicotine/gtkgui/ui/popovers/roomlist.ui:81
+#: pynicotine/gtkgui/ui/popovers/roomlist.ui:77
 msgid "_Show feed of public chat room messages"
 msgstr "Toon feed van publieke chatroom berichten"
 
-#: pynicotine/gtkgui/ui/popovers/roomlist.ui:95
+#: pynicotine/gtkgui/ui/popovers/roomlist.ui:91
 msgid "_Accept private room invitations"
 msgstr "_Uitnodigingen voor privékamers accepteren"
 
-#: pynicotine/gtkgui/ui/popovers/roomwall.ui:19
+#: pynicotine/gtkgui/ui/popovers/roomwall.ui:16
 msgid ""
 "The room wall feature allows users in a room to specify a unique message to "
 "display to others. Recent messages are shown at the top."
@@ -4760,23 +4744,23 @@ msgstr ""
 "opgeven dat aan anderen wordt getoond. Recente berichten worden bovenaan "
 "getoond."
 
-#: pynicotine/gtkgui/ui/popovers/roomwall.ui:65
+#: pynicotine/gtkgui/ui/popovers/roomwall.ui:60
 msgid "Set wall message…"
 msgstr "Prikbordbericht instellen…"
 
-#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:32
+#: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:28
 #: pynicotine/gtkgui/ui/settings/search.ui:140
 msgid "Search Result Filters"
 msgstr "Zoekresultaat filters"
 
-#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:43
+#: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:39
 msgid ""
 "Search result filters are used to refine which search results are displayed."
 msgstr ""
 "Zoekresultaatfilters worden gebruikt om te verfijnen welke zoekresultaten "
 "worden weergegeven."
 
-#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:52
+#: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:48
 msgid ""
 "Each list of search results has its own filter which can be revealed by "
 "toggling the Result Filters button. A filter is made up of multiple fields, "
@@ -4790,7 +4774,7 @@ msgstr ""
 "van de velden op Enter drukt. Er wordt onmiddellijk gefilterd op al "
 "ontvangen resultaten, maar ook op resultaten die nog moeten komen."
 
-#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:61
+#: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:57
 msgid ""
 "As the name suggests, a search result filter cannot expand your original "
 "search, it can only narrow it down. To broaden or change your search terms, "
@@ -4800,19 +4784,19 @@ msgstr ""
 "zoekopdracht niet uitbreiden, maar alleen beperken. Om uw zoektermen uit te "
 "breiden of te wijzigen, voert u een nieuwe zoekopdracht uit."
 
-#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:70
+#: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:66
 msgid "Result Filter Usage"
 msgstr "Resultaat filtergebruik"
 
-#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:82
+#: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:78
 msgid "Include Text"
 msgstr "Tekst opnemen"
 
-#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:99
+#: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:95
 msgid "Files and folders containing this text will be shown."
 msgstr "Bestanden en mappen met deze tekst worden weergegeven."
 
-#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:109
+#: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:105
 msgid ""
 "Case is insensitive, but word order is important: 'Instrumental Remix' will "
 "not show any 'Remix Instrumental'"
@@ -4820,7 +4804,7 @@ msgstr ""
 "Hoofdlettergevoeligheid is ongevoelig, maar de woordvolgorde is belangrijk: "
 "'Instrumental Remix' zal geen 'Remix Instrumental' laten zien"
 
-#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:119
+#: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:115
 msgid ""
 "For order-insensitive filtering, as well as filtering several exact phrases, "
 "vertical bars can be used to separate phrases and words.\n"
@@ -4831,25 +4815,25 @@ msgstr ""
 "zinnen en woorden te scheiden.\n"
 "    Voorbeeld: Remix|Instrumental|Dub Mix"
 
-#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:131
+#: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:127
 msgid "Exclude Text"
 msgstr "Tekst uitsluiten"
 
-#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:143
+#: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:139
 msgid "As above, but files and folders are filtered out if the text matches."
 msgstr ""
 "Zoals hierboven, maar bestanden en mappen worden uitgefilterd als de tekst "
 "overeenkomt."
 
-#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:152
+#: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:148
 msgid "File Type"
 msgstr "Bestandstype"
 
-#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:164
+#: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:160
 msgid "Filters files based upon their file extension."
 msgstr "Filtert bestanden op basis van hun bestandsextensie."
 
-#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:174
+#: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:170
 msgid ""
 "Multiple file extensions can be specified, which in turn will broaden the "
 "list of results.\n"
@@ -4859,7 +4843,7 @@ msgstr ""
 "resultaten wordt uitgebreid.\n"
 "    Voorbeeld: flac|wav|ape"
 
-#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:185
+#: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:181
 msgid ""
 "It is also possible to invert the filter, specifying file extensions you "
 "don't want in your results.\n"
@@ -4869,15 +4853,15 @@ msgstr ""
 "geven die je niet in jouw resultaten wilt hebben.\n"
 "    Voorbeeld: !mp3|!jpg"
 
-#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:195
+#: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:191
 msgid "File Size"
 msgstr "Bestandsgrootte"
 
-#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:212
+#: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:208
 msgid "Filters files based upon their file size."
 msgstr "Filtert bestanden op basis van hun bestandsgrootte."
 
-#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:222
+#: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:218
 msgid ""
 "By default, the unit used is bytes and files greater than or equal to the "
 "value will be matched."
@@ -4885,7 +4869,7 @@ msgstr ""
 "De standaard gebruikte eenheid is bytes en bestanden groter dan of gelijk "
 "aan de waarde zullen worden gematcht."
 
-#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:232
+#: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:228
 msgid ""
 "Append b, k, m, or g (alternatively kib, mib, or gib) to specify byte, "
 "kibibyte, mebibyte, or gibibyte units:\n"
@@ -4895,7 +4879,7 @@ msgstr ""
 "mebibyte, of gibyte eenheden aan te geven:\n"
 "    20m om bestanden groter dan 20 MiB (mebibytes) weer te geven."
 
-#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:243
+#: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:239
 msgid ""
 "Prepend = to a value to specify an exact match:\n"
 "    =1024 only matches files that are 1 KiB (kibibyte)."
@@ -4903,7 +4887,7 @@ msgstr ""
 "Voeg = toe voor een waarde om een exacte overeenkomst te specificeren:\n"
 "    =1024 komt alleen overeen met bestanden van 1 KiB (kibibyte)."
 
-#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:254
+#: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:250
 msgid ""
 "Prepend ! to a value to exclude files of a specific size:\n"
 "    !30.5m to hide files that are 30.5 MiB (mebibytes)."
@@ -4912,7 +4896,7 @@ msgstr ""
 "sluiten:\n"
 "    !30.5m om bestanden te verbergen die 30.5 MiB (mebibytes) groot zijn."
 
-#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:265
+#: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:261
 msgid ""
 "Prepend < or > to find files smaller/larger than the given value:\n"
 "    >10.5m|<1g to show files larger than 10.5 MiB (mebibytes),\n"
@@ -4923,7 +4907,7 @@ msgstr ""
 "    >10,5m|<1g om bestanden groter dan 10,5 MiB (mebibytes) weer te geven,\n"
 "    maar kleiner dan 1 GiB (gibibytes), gebruik een | tussen voorwaarden."
 
-#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:277
+#: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:273
 msgid ""
 "The better-known variants kb, mb, and gb can also be used for kilobyte, "
 "megabyte, and gigabyte units."
@@ -4931,11 +4915,11 @@ msgstr ""
 "De bekendere varianten kb, mb en gb kunnen ook worden gebruikt voor "
 "kilobyte-, megabyte- en gigabyte-eenheden."
 
-#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:305
+#: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:301
 msgid "Filters files based upon their bitrate."
 msgstr "Filtert bestanden op bitrate."
 
-#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:315
+#: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:311
 msgid ""
 "Values must be entered as numeric digits only. The unit is always Kb/s "
 "(Kilobits per second)."
@@ -4943,7 +4927,7 @@ msgstr ""
 "Waarden mogen alleen als numerieke cijfers worden ingevoerd. De eenheid is "
 "altijd Kb/s (Kilobits per seconde)."
 
-#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:325
+#: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:321
 msgid ""
 "Like File Size (above), operators =, !, <, and > can be used, and multiple "
 "conditions can be specified with | pipes:\n"
@@ -4956,11 +4940,11 @@ msgstr ""
 "    >256|<1411 om bestanden te tonen met een bitrate van minimaal 256 Kb/s\n"
 "    en een maximale bitrate van 1411 Kb/s."
 
-#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:356
+#: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:352
 msgid "Filters files based upon their duration."
 msgstr "Filtert bestanden op basis van hun duur."
 
-#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:366
+#: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:362
 msgid ""
 "By default, files longer than or equal to the entered duration will be "
 "matched, unless an operator (=, !, <, or >) is used."
@@ -4969,7 +4953,7 @@ msgstr ""
 "ingevoerde duur vergeleken, tenzij een operator (=, !, < of >) wordt "
 "gebruikt."
 
-#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:376
+#: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:372
 msgid ""
 "Enter a raw value in seconds or use the MM:SS and HH:MM:SS time formats:\n"
 "    >5:30 to show files at least 5 and a half minutes long.\n"
@@ -4981,7 +4965,7 @@ msgstr ""
 "zijn.\n"
 "    <5:30:00 toont bestanden die minder dan 5 en een half uur lang zijn."
 
-#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:388
+#: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:384
 msgid ""
 "Multiple conditions can be specified with | pipe seperators:\n"
 "    >6:00|<12:00 to show files between 6 and 12 minutes long.\n"
@@ -4994,15 +4978,15 @@ msgstr ""
 "verbergen.\n"
 "    =5:34|=4:23|=3:05 om bestanden met een specifieke tijdsduur op te nemen."
 
-#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:401
+#: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:397
 msgid "To exclude non-audio files use !0 in the duration filter."
 msgstr "Om niet-audiobestanden uit te sluiten, gebruik !0 in het duurfilter."
 
-#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:424
+#: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:420
 msgid "Filters files based upon users' geographical location."
 msgstr "Filtert bestanden op basis van de geografische locatie van gebruikers."
 
-#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:434
+#: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:430
 msgid ""
 "Uses country codes defined by ISO 3166-2:\n"
 "    US will only show results from users with IP addresses in the United "
@@ -5014,12 +4998,12 @@ msgstr ""
 "Verenigde Staten. !GB zal resultaten verbergen van gebruikers in het "
 "Verenigd Koninkrijk (Groot-Brittannië)."
 
-#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:444
+#: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:440
 #: pynicotine/gtkgui/ui/settings/search.ui:371
 msgid "Free Slot"
 msgstr "Vrije plaats"
 
-#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:456
+#: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:452
 msgid ""
 "Show only those results from users which have at least one upload slot free, "
 "i.e. files that are availiable immediately."
@@ -5027,13 +5011,13 @@ msgstr ""
 "Toon alleen de resultaten van gebruikers die minstens één upload slot vrij "
 "hebben, d.w.z. bestanden die onmiddellijk beschikbaar zijn."
 
-#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:477
+#: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:473
 msgid "To view the full results again, simply clear all active filters."
 msgstr ""
 "Om de volledige resultaten opnieuw te bekijken, verwijder eenvoudig alle "
 "actieve filters."
 
-#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:486
+#: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:482
 msgid "See the preferences to set default search result filter options."
 msgstr ""
 "Zie de voorkeuren om standaard zoekresultaten filteropties in te stellen."
@@ -6238,6 +6222,29 @@ msgstr "Bewaar _Beeld"
 msgid "_Refresh Info"
 msgstr "Info _vernieuwen"
 
+#~ msgid "_Away"
+#~ msgstr "_Weg"
+
+#, python-format
+#~ msgid "Failed to load ui file %(file)s: %(error)s"
+#~ msgstr "Kan ui-bestand %(file)s niet laden: %(error)s"
+
+#~ msgid ""
+#~ "Attempting to reset index of shared files due to an error. Please rescan "
+#~ "your shares."
+#~ msgstr ""
+#~ "Poging om index van gedeelde bestanden te resetten vanwege een fout. "
+#~ "Herindexeer je gedeelde bestanden."
+
+#~ msgid ""
+#~ "File index of shared files could not be accessed. This could occur due to "
+#~ "several instances of Nicotine+ being active simultaneously, file "
+#~ "permission issues, or another issue in Nicotine+."
+#~ msgstr ""
+#~ "De bestandsindex van gedeelde bestanden kan niet worden geopend. Dit kan "
+#~ "gebeuren als meerder instanties van Nicotine+ tegelijkertijd actief zijn, "
+#~ "problemen met bestandsrechten of een ander probleem in Nicotine+."
+
 #~ msgid "Nicotine+ is a Soulseek client"
 #~ msgstr "Nicotine+ is een Soulseek cliënt"
 
@@ -6568,9 +6575,6 @@ msgstr "Info _vernieuwen"
 
 #~ msgid "The chosen folder is already shared."
 #~ msgstr "De gekozen map is al gedeeld."
-
-#~ msgid "Share with buddies only"
-#~ msgstr "Alleen met vrienden delen"
 
 #, python-format
 #~ msgid "%s Properties"
@@ -8200,9 +8204,6 @@ msgstr "Info _vernieuwen"
 
 #~ msgid "<b>Download Filters</b>"
 #~ msgstr "<b>Filters downloaden</b>"
-
-#~ msgid "Enable Filters"
-#~ msgstr "Filters inschakelen"
 
 #~ msgid "Edit Filter"
 #~ msgstr "Filter bewerken"
