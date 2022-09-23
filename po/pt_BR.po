@@ -7,7 +7,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
 "PO-Revision-Date: 2023-05-17 14:53+0000\n"
-"Last-Translator: Han <hboetes@gmail.com>\n"
+"Last-Translator: Havokdan <havokdan@yahoo.com.br>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -3626,8 +3626,7 @@ msgstr "MPRIS: Não foi possível encontrar um MPRIS player adequado"
 #: pynicotine/nowplaying.py:196
 #, python-format
 msgid "Found multiple MPRIS players: %(players)s. Using: %(player)s"
-msgstr ""
-"Foram encontrados vários players MPRIS: %(players)s. Usando: %(player)s"
+msgstr "Foram encontrados vários players MPRIS: %(players)s. Usando: %(player)s"
 
 #: pynicotine/nowplaying.py:199
 #, python-format
@@ -4013,8 +4012,7 @@ msgstr "Falha ao processar os seguintes bancos de dados: %(names)s"
 #: pynicotine/shares.py:798
 #, python-format
 msgid "Failed to send number of shared files to the server: %s"
-msgstr ""
-"Falha ao enviar o número de arquivos compartilhados para o servidor: %s"
+msgstr "Falha ao enviar o número de arquivos compartilhados para o servidor: %s"
 
 #: pynicotine/shares.py:882
 #, python-format
@@ -4127,8 +4125,7 @@ msgstr "Download inicializado: usuário %(user)s, arquivo %(file)s"
 #: pynicotine/transfers.py:1278
 #, python-format
 msgid "Upload started: user %(user)s, IP address %(ip)s, file %(file)s"
-msgstr ""
-"Upload iniciado: usuário %(user)s, endereço IP %(ip)s, arquivo %(file)s"
+msgstr "Upload iniciado: usuário %(user)s, endereço IP %(ip)s, arquivo %(file)s"
 
 #: pynicotine/transfers.py:1857
 #, python-format
@@ -5308,8 +5305,8 @@ msgid ""
 "phrase two"
 msgstr ""
 "Filtre os resultados cujos caminhos de arquivo contêm o texto especificado. "
-"Várias frases e palavras podem ser especificadas, por exemplo: frase exata|"
-"música|termo|frase exata dois"
+"Várias frases e palavras podem ser especificadas, por exemplo: frase "
+"exata|música|termo|frase exata dois"
 
 #: pynicotine/gtkgui/ui/search.ui:215
 msgid "Exclude text…"
@@ -5323,8 +5320,8 @@ msgid ""
 "phrase two"
 msgstr ""
 "Filtre os resultados cujos caminhos de arquivo contêm o texto especificado. "
-"Várias frases e palavras podem ser especificadas, por exemplo: frase exata|"
-"música|termo|frase exata dois"
+"Várias frases e palavras podem ser especificadas, por exemplo: frase "
+"exata|música|termo|frase exata dois"
 
 #: pynicotine/gtkgui/ui/search.ui:244
 msgid "File type…"
@@ -5905,8 +5902,7 @@ msgstr "Código do país:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:376
 msgid "Only show results from users with an available upload slot."
-msgstr ""
-"Mostrar apenas resultados de usuários com um slot de upload disponível."
+msgstr "Mostrar apenas resultados de usuários com um slot de upload disponível."
 
 #: pynicotine/gtkgui/ui/settings/search.ui:403
 msgid "Result Filter Help"
@@ -6048,8 +6044,7 @@ msgstr "Primeiro que entrar, primeiro a sair"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:362
 msgid "Queue uploads if total transfer speed reaches (KiB/s):"
-msgstr ""
-"Uploads de fila se a velocidade total de transferência atingir (KiB/s):"
+msgstr "Uploads de fila se a velocidade total de transferência atingir (KiB/s):"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:387
 msgid "Limit number of upload slots to:"
