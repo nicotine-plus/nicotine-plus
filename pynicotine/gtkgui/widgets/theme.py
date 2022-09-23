@@ -579,24 +579,25 @@ def update_tag_visuals(tag, color=None, font=None):
         tag.set_property("underline", Pango.Underline.SINGLE)
 
     # Hotspots
-    if color in ("useraway", "useronline", "useroffline"):
+    if color not in ("useraway", "useronline", "useroffline"):
+        return
 
-        usernamestyle = config_ui["usernamestyle"]
+    usernamestyle = config_ui["usernamestyle"]
 
-        if usernamestyle == "bold":
-            tag.set_property("weight", Pango.Weight.BOLD)
-        else:
-            tag.set_property("weight", Pango.Weight.NORMAL)
+    if usernamestyle == "bold":
+        tag.set_property("weight", Pango.Weight.BOLD)
+    else:
+        tag.set_property("weight", Pango.Weight.NORMAL)
 
-        if usernamestyle == "italic":
-            tag.set_property("style", Pango.Style.ITALIC)
-        else:
-            tag.set_property("style", Pango.Style.NORMAL)
+    if usernamestyle == "italic":
+        tag.set_property("style", Pango.Style.ITALIC)
+    else:
+        tag.set_property("style", Pango.Style.NORMAL)
 
-        if usernamestyle == "underline":
-            tag.set_property("underline", Pango.Underline.SINGLE)
-        else:
-            tag.set_property("underline", Pango.Underline.NONE)
+    if usernamestyle == "underline":
+        tag.set_property("underline", Pango.Underline.SINGLE)
+    else:
+        tag.set_property("underline", Pango.Underline.NONE)
 
 
 def update_widget_visuals(widget, list_font_target="listfont"):
