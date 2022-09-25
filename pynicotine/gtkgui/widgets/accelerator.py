@@ -52,7 +52,7 @@ class Accelerator:
     @staticmethod
     def parse_accelerator(accelerator):
 
-        keys = keycodes = []
+        keycodes = []
         *_args, key, mods = Gtk.accelerator_parse(accelerator)
 
         if not key:

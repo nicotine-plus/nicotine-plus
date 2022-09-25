@@ -137,8 +137,6 @@ class Downloads(TransferList):
     def on_play_files(self, *_args):
 
         for transfer in self.selected_transfers:
-            file_path = None
-
             if transfer.file is not None:
                 file_path = transfer.file.name.decode("utf-8", "replace")
 

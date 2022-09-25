@@ -385,7 +385,6 @@ class Scanner:
     def get_file_info(self, name, pathname, tinytag, file_stat=None):
         """ Get file metadata """
 
-        size = 0
         audio = None
         audio_info = None
         duration = None

@@ -633,7 +633,6 @@ class SlskProtoThread(threading.Thread):
 
     def send_message_to_peer(self, user, message):
 
-        init = None
         conn_type = message.msgtype
 
         if not self.verify_peer_connection_type(conn_type):
