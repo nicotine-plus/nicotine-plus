@@ -20,40 +20,40 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
 
 ### 8-bit Integer
 
-| Number                  |
-| ----------------------- |
-| 1 Byte                  |
+| Number |
+|--------|
+| 1 Byte |
 
 ### 32-bit Integer
 
 | Number                  |
-| ----------------------- |
+|-------------------------|
 | 4 Bytes (little-endian) |
 
 ### 64-bit Integer
 
 | Number                  |
-| ----------------------- |
+|-------------------------|
 | 8 Bytes (little-endian) |
 
 ### Bool
 
 | Number          |
-| --------------- |
+|-----------------|
 | 1 Byte (0 or 1) |
 
 ### String
 
-| Length of String        | String |
-| ----------------------- | ------ |
-| uint32                  | bytes  |
+| Length of String | String |
+|------------------|--------|
+| uint32           | bytes  |
 
 # Constants
 
 ### Connection Types
 
 | Type | Connection          |
-| ---- | ------------------- |
+|------|---------------------|
 | P    | Peer To Peer        |
 | F    | File Transfer       |
 | D    | Distributed Network |
@@ -61,14 +61,14 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
 ### Login Failure Reasons
 
 | Reason          | Description                                                                      |
-| --------------- | -------------------------------------------------------------------------------- |
+|-----------------|----------------------------------------------------------------------------------|
 | INVALIDUSERNAME | Username is longer than 30 characters or contains invalid characters (non-ASCII) |
 | INVALIDPASS     | Password for existing user is incorrect                                          |
 
 ### User Status Codes
 
 | Code | Status  |
-| ---- | ------- |
+|------|---------|
 | 0    | Offline |
 | 1    | Away    |
 | 2    | Online  |
@@ -76,14 +76,14 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
 ### Transfer Directions
 
 | Code | Direction          |
-| ---- | ------------------ |
+|------|--------------------|
 | 0    | Download from Peer |
 | 1    | Upload to Peer     |
 
 ### File Attribute Types
 
 | Code | Attribute (unit)   |
-| ---- | ------------------ |
+|------|--------------------|
 | 0    | Bitrate (kbps)     |
 | 1    | Duration (seconds) |
 | 2    | VBR (0 or 1)       |
@@ -115,7 +115,7 @@ These combinations are actively used by clients. Other combinations are discoura
 # Server Messages
 
 | Send           | Receive             |
-| -------------- | ------------------- |
+|----------------|---------------------|
 | Send to Server | Receive from Server |
 
 Server messages are used by clients to interface with the server. In Nicotine+, these messages are defined in slskmessages.py.
@@ -126,14 +126,14 @@ but it handles the protocol well enough (and can be modified).
 
 ### Server Message Format
 
-| Message Length | Code    | Message Contents |
-| -------------- | ------- | ---------------- |
-| uint32         | uint32  | ...              |
+| Message Length | Code   | Message Contents |
+|----------------|--------|------------------|
+| uint32         | uint32 | ...              |
 
 ### Server Message Codes
 
 | Code | Message                                           | Status     |
-| ---- | ------------------------------------------------- | ---------- |
+|------|---------------------------------------------------|------------|
 | 1    | [Login](#server-code-1)                           |            |
 | 2    | [Set Listen Port](#server-code-2)                 |            |
 | 3    | [Get Peer Address](#server-code-3)                |            |
@@ -242,14 +242,14 @@ We send this to the server right after the connection has been established. Serv
 *Message:*
 
 | Data      | Message Length | Message Code | Username Length | Username                | Password Length | Password                |
-| --------- | -------------- | ------------ | --------------- | ----------------------- | --------------- | ----------------------- |
+|-----------|----------------|--------------|-----------------|-------------------------|-----------------|-------------------------|
 | **Human** | 72             | 1            | 8               | username                | 8               | password                |
 | **Hex**   | 48 00 00 00    | 01 00 00 00  | 08 00 00 00     | 75 73 65 72 6e 61 6d 65 | 08 00 00 00     | 70 61 73 73 77 6f 72 64 |
 
 *... continued:*
 
 | Data      | Version     | Hash Length | Hash                                                                                            | Minor Version |
-| --------- | ----------- | ----------- | ----------------------------------------------------------------------------------------------- | ------------- |
+|-----------|-------------|-------------|-------------------------------------------------------------------------------------------------|---------------|
 | **Human** | 160         | 32          | d51c9a7e9353746a6020f9602d452929                                                                | 1             |
 | **Hex**   | a0 00 00 00 | 20 00 00 00 | 64 35 31 63 39 61 37 65 39 33 35 33 37 34 36 61 36 30 32 30 66 39 36 30 32 64 34 35 32 39 32 39 | 01 00 00 00   |
 
@@ -321,7 +321,7 @@ Used to be kept updated about a user's stats. When a user's stats have changed, 
     1.  **string** <ins>username</ins>
     2.  **bool** <ins>exists</ins>
     - If <ins>exists</ins> is true
-        1.  **uint32** <ins>status</ins> *see [Status Codes](#status-codes)*
+        1.  **uint32** <ins>status</ins> *see [User Status Codes](#user-status-codes)*
         2.  **uint32** <ins>avgspeed</ins>
         3.  **uint64** <ins>uploadnum</ins> *Number of uploaded files. The value changes when sending a [SendUploadSpeed](#server-code-121) server message, and is likely used by the server to calculate the average speed.*
         4.  **uint32** <ins>files</ins>
@@ -354,7 +354,7 @@ The server tells us if a user has gone away or has returned.
     1.  **string** <ins>username</ins>
   - Receive
     1.  **string** <ins>username</ins>
-    2.  **uint32** <ins>status</ins> *see [Status Codes](#status-codes)*
+    2.  **uint32** <ins>status</ins> *see [User Status Codes](#user-status-codes)*
     3.  **bool** <ins>privileged</ins>
 
 ## Server Code 13
@@ -525,9 +525,9 @@ We send this to the server when we search for something in a room.
 ### Data Order
 
   - Send
-    1.  **uint32** <ins>token</ins>
-    1.  **uint32** <ins>room id</ins>
-    2.  **string** <ins>search query</ins>
+    1. **uint32** <ins>token</ins>
+    2. **uint32** <ins>room id</ins>
+    3. **string** <ins>search query</ins>
   - Receive
       - *No Message*
 
@@ -561,7 +561,7 @@ We send our new status to the server. Status is a way to define whether we're av
 ### Data Order
 
   - Send
-    1.  **int32** <ins>status</ins> *see [Status Codes](#status-codes)*
+    1.  **int32** <ins>status</ins> *see [User Status Codes](#user-status-codes)*
   - Receive
       - *No Message*
 
@@ -953,10 +953,10 @@ We send this to get a global list of all users online.
         3.  **uint32** <ins>files</ins>
         4.  **uint32** <ins>dirs</ins>
     7.  **uint32** <ins>number of slotsfree</ins>
-    8.  Iterate thru number of slotsfree
+    8.  Iterate through number of slotsfree
         1.  **uint32** <ins>slotsfree</ins>
     9. **uint32** <ins>number of usercountries</ins>
-    10. Iterate thru number of usercountries
+    10. Iterate through number of usercountries
         1.  **string** <ins>countrycode</ins> *Uppercase country code*
 
 ## Server Code 68
@@ -1579,7 +1579,7 @@ We send this to the server to stop owning a private room.
 
 **OBSOLETE, no longer used**
 
-Unknown purporse
+Unknown purpose
 
 ### Data Order
 
@@ -1829,21 +1829,21 @@ This message only seems to be sent if you try to create a room with the same nam
 # Peer Init Messages
 
 | Send         | Receive           |
-| ------------ | ----------------- |
+|--------------|-------------------|
 | Send to Peer | Receive from Peer |
 
 Peer init messages are used to initiate a 'P', 'F' or 'D' connection to a peer. In Nicotine+, these messages are defined in slskmessages.py.
 
 ### Peer Init Message Format
 
-| Message Length | Code   | Message Contents |
-| -------------- | ------ | ---------------- |
-| uint32         | uint8  | ...              |
+| Message Length | Code  | Message Contents |
+|----------------|-------|------------------|
+| uint32         | uint8 | ...              |
 
 ### Peer Init Message Codes
 
 | Code | Message                              |
-| ---- | ------------------------------------ |
+|------|--------------------------------------|
 | 0    | [Pierce Firewall](#peer-init-code-0) |
 | 1    | [Peer Init](#peer-init-code-1)       |
 
@@ -1916,21 +1916,21 @@ See also: [Peer Connection Message Order](#modern-peer-connection-message-order)
 # Peer Messages
 
 | Send         | Receive           |
-| ------------ | ----------------- |
+|--------------|-------------------|
 | Send to Peer | Receive from Peer |
 
 Peer messages are sent to peers over a 'P' connection. Only a single active connection to a peer is allowed. In Nicotine+, these messages are defined in slskmessages.py.
 
 ### Peer Message Format
 
-| Message Length | Code    | Message Contents |
-| -------------- | ------- | ---------------- |
-| uint32         | uint32  | ...              |
+| Message Length | Code   | Message Contents |
+|----------------|--------|------------------|
+| uint32         | uint32 | ...              |
 
 ### Peer Message Codes
 
 | Code | Message                                    | Status                     |
-| ---- | ------------------------------------------ | -------------------------- |
+|------|--------------------------------------------|----------------------------|
 | 1    | Private Message                            | Obsolete, contents unknown |
 | 4    | [Shares Request](#peer-code-4)             |                            |
 | 5    | [Shares Reply](#peer-code-5)               |                            |
@@ -1980,7 +1980,7 @@ A peer responds with a list of shared files after we've sent a [GetSharedFileLis
 ### Data Order
 
   - Send
-    1.  Iterate thru shares database
+    1.  Iterate through shares database
         1.  **data**
   - Receive
     1.  decompress
@@ -2202,7 +2202,7 @@ A peer responds with the contents of a particular folder (with all subfolders) a
 
 This message is sent by a peer once they are ready to start uploading a file to us. A [TransferResponse](#peer-code-41-a) message is expected from the recipient, either allowing or rejecting the upload attempt.
 
-This message was formely used to send a download request (direction 0) as well, but Nicotine+, Museek+ and the official clients use the [QueueUpload](#peer-code-43) peer message for this purpose today.
+This message was formerly used to send a download request (direction 0) as well, but Nicotine+, Museek+ and the official clients use the [QueueUpload](#peer-code-43) peer message for this purpose today.
 
 ### Data Order
 
@@ -2365,7 +2365,7 @@ This message is sent to inform a peer about an upload attempt initiated by us.
 # File Messages
 
 | Send         | Receive           |
-| ------------ | ----------------- |
+|--------------|-------------------|
 | Send to Peer | Receive from Peer |
 
 File messages are sent to peers over a 'F' connection, and do not have messages codes associated with them.
@@ -2373,13 +2373,13 @@ File messages are sent to peers over a 'F' connection, and do not have messages 
 ### File Connection Message Format
 
 | Message Contents |
-| ---------------- |
+|------------------|
 | ...              |
 
 ### File Connection Messages
 
 | Message                                   |
-| ----------------------------------------- |
+|-------------------------------------------|
 | [File Download Init](#file-download-init) |
 | [File Upload Init](#file-upload-init)     |
 | [File Offset](#file-offset)               |
@@ -2426,21 +2426,21 @@ We send this to the uploading peer at the beginning of a 'F' connection, to tell
 # Distributed Messages
 
 | Send         | Receive           |
-| ------------ | ----------------- |
+|--------------|-------------------|
 | Send to Node | Receive from Node |
 
 Distributed messages are sent to peers over a 'D' connection, and are used for the distributed search network. Only a single active connection to a peer is allowed. In Nicotine+, these messages are defined in slskmessages.py.
 
 ### Distributed Message Format
 
-| Message Length | Code   | Message Contents |
-| -------------- | ------ | ---------------- |
-| uint32         | uint8  | ...              |
+| Message Length | Code  | Message Contents |
+|----------------|-------|------------------|
+| uint32         | uint8 | ...              |
 
 ### Distributed Message Codes
 
 | Code | Message                                  | Status     |
-| ---- | ---------------------------------------- | ---------- |
+|------|------------------------------------------|------------|
 | 0    | [Ping](#distributed-code-0)              |            |
 | 3    | [Search Request](#distributed-code-3)    |            |
 | 4    | [Branch Level](#distributed-code-4)      |            |
