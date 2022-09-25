@@ -462,7 +462,7 @@ class StatusNotifierImplementation(BaseImplementation):
                 serialized_item = GLib.Variant("(ia{sv}av)", (idx, self._serialize_item(item), []))
                 serialized_items.append(serialized_item)
 
-            return (self._revision, (0, {}, serialized_items))
+            return self._revision, (0, {}, serialized_items)
 
         def on_event(self, idx, event_id, _data, _timestamp):
 

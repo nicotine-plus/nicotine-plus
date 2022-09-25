@@ -91,7 +91,7 @@ class IP2Location:
 
         while low <= high:
             mid = int((low + high) / 2)
-            ipfrom = self._readi(baseaddr + (mid) * (self._dbcolumn * 4 + off))
+            ipfrom = self._readi(baseaddr + mid * (self._dbcolumn * 4 + off))
             ipto = self._readi(baseaddr + (mid + 1) * (self._dbcolumn * 4 + off))
 
             if ipfrom <= ipno < ipto:

@@ -1680,7 +1680,7 @@ class Transfers:
             transfer.status = "Getting status"
             self.transfer_request_times[transfer] = time.time()
 
-            log.add_transfer(("Requesting to upload file %(filename)s with token %(token)s to user %(user)s"), {
+            log.add_transfer("Requesting to upload file %(filename)s with token %(token)s to user %(user)s", {
                 "filename": filename,
                 "token": transfer.token,
                 "user": user
