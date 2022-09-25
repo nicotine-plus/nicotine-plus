@@ -745,7 +745,7 @@ class PluginHandler:
             # dont trigger the scripts on our own talking - we've got "Outgoing" for that
             return self.trigger_event("incoming_private_chat_event", (user, line))
 
-        return (user, line)
+        return user, line
 
     def incoming_private_chat_notification(self, user, line):
         self.trigger_event("incoming_private_chat_notification", (user, line))
@@ -761,7 +761,7 @@ class PluginHandler:
             # if line is None nobody actually said anything
             return self.trigger_event("outgoing_private_chat_event", (user, line))
 
-        return (user, line)
+        return user, line
 
     def outgoing_private_chat_notification(self, user, line):
         self.trigger_event("outgoing_private_chat_notification", (user, line))

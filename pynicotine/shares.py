@@ -598,7 +598,7 @@ class Shares:
             virtual = shared_folder.replace('/', '_').replace('\\', '_').strip('_')
             log.add("Renaming shared folder '%s' to '%s'. A rescan of your share is required.",
                     (shared_folder, virtual))
-            return (virtual, shared_folder)
+            return virtual, shared_folder
 
         self.config.sections["transfers"]["shared"] = [_convert_to_virtual(x)
                                                        for x in self.config.sections["transfers"]["shared"]]
@@ -777,7 +777,7 @@ class Shares:
         shared_folders = self.config.sections["transfers"]["shared"][:]
         shared_folders_buddy = self.config.sections["transfers"]["buddyshared"][:]
 
-        return (shared_folders, shared_folders_buddy)
+        return shared_folders, shared_folders_buddy
 
     def process_scanner_messages(self, scanner, scanner_queue):
 

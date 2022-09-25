@@ -586,7 +586,7 @@ class Config:
             from pynicotine.utils import encode_path
             encoded_alias_path = encode_path(self.filename + ".alias")
 
-            if (not self.sections["server"]["command_aliases"] and os.path.exists(encoded_alias_path)):
+            if not self.sections["server"]["command_aliases"] and os.path.exists(encoded_alias_path):
                 with open(encoded_alias_path, 'rb') as file_handle:
                     from pynicotine.utils import RestrictedUnpickler
 

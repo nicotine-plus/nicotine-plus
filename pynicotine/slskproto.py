@@ -562,7 +562,7 @@ class SlskProtoThread(threading.Thread):
 
         except Exception:
             from traceback import format_exc
-            log.add(("Unable to pack message type %(msg_type)s. %(error)s"),
+            log.add("Unable to pack message type %(msg_type)s. %(error)s",
                     {'msg_type': msg_obj.__class__, 'error': format_exc()})
 
         return None
@@ -752,7 +752,7 @@ class SlskProtoThread(threading.Thread):
             return
 
         if not conn_obj.init.indirect:
-            log.add_conn(("Direct connection of type %(type)s to user %(user)s failed. Error: %(error)s"), {
+            log.add_conn("Direct connection of type %(type)s to user %(user)s failed. Error: %(error)s", {
                 "type": conn_obj.init.conn_type,
                 "user": conn_obj.init.target_user,
                 "error": error
@@ -781,7 +781,7 @@ class SlskProtoThread(threading.Thread):
         self._out_indirect_conn_request_times[init] = time.time()
         self._queue.append(ConnectToPeer(self._token, username, conn_type))
 
-        log.add_conn(("Attempting indirect connection to user %(user)s with token %(token)s"), {
+        log.add_conn("Attempting indirect connection to user %(user)s with token %(token)s", {
             "user": username,
             "token": self._token
         })
