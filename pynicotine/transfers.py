@@ -758,7 +758,6 @@ class Transfers:
         """ Peer code: 40 """
 
         user = msg.init.target_user
-        response = None
 
         if msg.direction == TransferDirection.UPLOAD:
             response = self.transfer_request_downloads(msg)
@@ -1111,7 +1110,6 @@ class Transfers:
                 self.download_folder_error(download, error)
 
             else:
-                file_handle = None
                 try:
                     incomplete_path = self.get_incomplete_file_path(incomplete_folder, username, filename)
                     file_handle = open(encode_path(incomplete_path), 'ab+')  # pylint: disable=consider-using-with
@@ -1206,7 +1204,6 @@ class Transfers:
 
             need_update = True
             upload.sock = msg.init.sock
-            file_handle = None
 
             if upload in self.transfer_request_times:
                 del self.transfer_request_times[upload]

@@ -115,7 +115,6 @@ class Search:
     def process_search_term(self, search_term, mode, room=None, user=None):
 
         users = []
-        feedback = None
 
         if mode == "global":
             if self.core:

@@ -110,7 +110,8 @@ class ImageChooser(FileChooser):
     def __init__(self, parent, callback, callback_data=None, title=_("Select an Image"),
                  initial_folder='~', multiple=False):
 
-        super().__init__(parent, callback, callback_data, title, initial_folder)
+        super().__init__(parent, callback, callback_data, title, initial_folder,
+                         multiple=multiple)
 
         # Only show image files
         file_filter = Gtk.FileFilter()
