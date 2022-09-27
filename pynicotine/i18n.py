@@ -94,14 +94,20 @@ def apply_translations():
     local_mo_path = os.path.join(BASE_FOLDER, "mo")
     use_local_path = gettext.find(TRANSLATION_DOMAIN, localedir=local_mo_path)
 
-    if use_local_path:
-        mo_path = local_mo_path
+    if not use_local_path:
+        if getattr(sys, 'frozen', False):
+            prefix = resources_folder
 
-    elif getattr(sys, 'frozen', False):
-        mo_path = os.path.join(resources_folder, "share", "locale")
+        elif os.path.exists("/.flatpak-info"):
+            prefix = "/app"
+
+        else:
+            prefix = sys.prefix
+
+        mo_path = os.path.join(prefix, "share", "locale")
 
     else:
-        mo_path = os.path.join(sys.prefix, "share", "locale")
+        mo_path = local_mo_path
 
     if libintl_path is not None:
         import ctypes
