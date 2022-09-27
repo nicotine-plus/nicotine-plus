@@ -4,6 +4,7 @@
     "runtime-version": "43",
     "sdk": "org.gnome.Sdk",
     "command": "nicotine",
+    "separate-locales": false,
     "finish-args": [
         "--socket=wayland",
         "--socket=fallback-x11",
