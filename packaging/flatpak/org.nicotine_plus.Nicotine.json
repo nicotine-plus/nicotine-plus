@@ -1,7 +1,7 @@
 {
     "app-id": "org.nicotine_plus.Nicotine",
     "runtime": "org.gnome.Platform",
-    "runtime-version": "42",
+    "runtime-version": "43",
     "sdk": "org.gnome.Sdk",
     "command": "nicotine",
     "finish-args": [
