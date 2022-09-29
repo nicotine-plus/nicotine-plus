@@ -31,7 +31,8 @@ class Window:
         if GTK_API_VERSION >= 4:
             window.connect("notify::focus-widget", self.on_focus_widget_changed)
 
-    def on_popover_closed(self, popover):
+    @staticmethod
+    def on_popover_closed(popover):
 
         focus_widget = popover.get_parent()
 
