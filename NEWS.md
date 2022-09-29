@@ -13,7 +13,9 @@
  * Fixed an issue where private messages from offline users were ignored
  * Fixed an issue where certain uploads were incorrectly marked as "Cancelled"
  * Fixed an issue where the progress bar would get stuck if a share browse request ended abruptly
+ * Windows: Fixed an issue where network drives could not be shared
  * OpenBSD: Fixed a regression where incoming peer connections did not work
+ * Flatpak: Fixed an issue where the GUI was not translated to the system language
 
 ### Issues closed on GitHub
 
@@ -23,6 +25,8 @@
  * Some bugs in Nicotine+ v. 3.2.5 ([#2184](https://github.com/nicotine-plus/nicotine-plus/issues/2184))
  * Search Files: Keyboard shortcut to focus search bar ([#2186](https://github.com/nicotine-plus/nicotine-plus/issues/2186))
  * Offline messages not popping up in tabs ([#2189](https://github.com/nicotine-plus/nicotine-plus/issues/2189))
+ * Samba Share hosted by Linux, mounted on Windows Failing ([#2190](https://github.com/nicotine-plus/nicotine-plus/issues/2190))
+ * The flatpak version of Nicotine+ is using the wrong language ([#2194](https://github.com/nicotine-plus/nicotine-plus/issues/2194))
 
 
 ## Version 3.2.5 (August 31, 2022)
