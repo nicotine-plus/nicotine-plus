@@ -22,11 +22,12 @@ from gi.repository import Gtk
 from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
+from pynicotine.gtkgui.widgets.window import Window
 
 """ Dialogs """
 
 
-class Dialog:
+class Dialog(Window):
 
     active_dialog = None  # Class variable keeping the dialog object alive
 
@@ -53,6 +54,7 @@ class Dialog:
             default_height=height,
             resizable=resizable
         )
+        Window.__init__(self, self.dialog)
         self.dialog.get_style_context().add_class("generic-dialog")
         dialog_content_area = self.dialog.get_content_area()
 
@@ -166,7 +168,7 @@ class Dialog:
 """ Message Dialogs """
 
 
-class MessageDialog:
+class MessageDialog(Window):
 
     active_dialog = None  # Class variable keeping the dialog object alive
 
@@ -178,6 +180,7 @@ class MessageDialog:
             message_type=message_type, default_width=width,
             text=title, secondary_text=message
         )
+        Window.__init__(self, self.dialog)
         self.container = self.dialog.get_message_area()
         self.dialog.connect("response", self.on_response, callback, callback_data)
 

@@ -64,6 +64,7 @@ from pynicotine.gtkgui.widgets.theme import set_use_header_bar
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.trayicon import TrayIcon
 from pynicotine.gtkgui.widgets.ui import UserInterface
+from pynicotine.gtkgui.widgets.window import Window
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import get_latest_version
@@ -74,7 +75,7 @@ from pynicotine.utils import open_log
 from pynicotine.utils import open_uri
 
 
-class NicotineFrame(UserInterface):
+class NicotineFrame(UserInterface, Window):
 
     def __init__(self, application, core, start_hidden, ci_mode):
 
@@ -98,7 +99,7 @@ class NicotineFrame(UserInterface):
 
         """ Load UI """
 
-        super().__init__("ui/mainwindow.ui")
+        UserInterface.__init__(self, "ui/mainwindow.ui")
         (
             self.add_buddy_entry,
             self.alt_speed_icon,
@@ -209,6 +210,7 @@ class NicotineFrame(UserInterface):
             self.vertical_paned,
             self.window
         ) = self.widgets
+        Window.__init__(self, self.window)
 
         self.header_bar.pack_end(self.header_end)
 
