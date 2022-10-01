@@ -1613,9 +1613,6 @@ class NicotineFrame(UserInterface, Window):
         visible = combobox.get_property(param.name)
 
         if visible:
-            for cell in combobox.get_cells():
-                if not cell.get_property("ellipsize") == Pango.EllipsizeMode.END:
-                    cell.set_property("ellipsize", Pango.EllipsizeMode.END)
             return
 
         entry = combobox.get_child()
