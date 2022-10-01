@@ -85,6 +85,7 @@
  - Felipe Nogaroto Gonzalez (Suicide|Solution) (2006)
 
 ## Russian
+ - AHOHNMYC (2022)
  - SnIPeRSnIPeR (2022)
  - Mehavoid (2021–2022)
 
