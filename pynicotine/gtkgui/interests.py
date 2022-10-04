@@ -34,11 +34,11 @@ from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
 
 
-class Interests(UserInterface):
+class Interests:
 
     def __init__(self, frame, core):
 
-        super().__init__("ui/interests.ui")
+        ui_template = UserInterface(scope=self, path="interests.ui")
         (
             self.add_dislike_entry,
             self.add_like_entry,
@@ -51,7 +51,7 @@ class Interests(UserInterface):
             self.similar_users_button,
             self.similar_users_label,
             self.similar_users_list_container
-        ) = self.widgets
+        ) = ui_template.widgets
 
         if GTK_API_VERSION >= 4:
             frame.interests_container.append(self.container)

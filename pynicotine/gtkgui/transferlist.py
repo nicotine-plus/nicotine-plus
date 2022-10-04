@@ -53,19 +53,19 @@ from pynicotine.utils import human_speed
 from pynicotine.utils import humanize
 
 
-class TransferList(UserInterface):
+class TransferList:
 
     path_separator = path_label = retry_label = abort_label = aborted_status = None
     transfer_page = user_counter = file_counter = expand_button = expand_icon = grouping_button = None
 
     def __init__(self, frame, core, transfer_type):
 
-        super().__init__("ui/" + transfer_type + "s.ui")
+        ui_template = UserInterface(scope=self, path=transfer_type + "s.ui")
         (
             self.clear_all_button,
             self.container,
             self.tree_view
-        ) = self.widgets
+        ) = ui_template.widgets
 
         self.frame = frame
         self.core = core

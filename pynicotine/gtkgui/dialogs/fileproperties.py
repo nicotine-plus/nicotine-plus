@@ -26,7 +26,7 @@ from pynicotine.utils import human_speed
 from pynicotine.utils import humanize
 
 
-class FileProperties(UserInterface, Dialog):
+class FileProperties(Dialog):
 
     def __init__(self, frame, core, download_button=True):
 
@@ -36,7 +36,7 @@ class FileProperties(UserInterface, Dialog):
         self.total_length = 0
         self.current_index = 0
 
-        UserInterface.__init__(self, "ui/dialogs/fileproperties.ui")
+        ui_template = UserInterface(scope=self, path="dialogs/fileproperties.ui")
         (
             self.bitrate_row,
             self.bitrate_value_label,
@@ -58,7 +58,7 @@ class FileProperties(UserInterface, Dialog):
             self.speed_row,
             self.speed_value_label,
             self.username_value_label
-        ) = self.widgets
+        ) = ui_template.widgets
 
         buttons = [(self.previous_button, Gtk.ResponseType.HELP),
                    (self.next_button, Gtk.ResponseType.HELP)]

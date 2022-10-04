@@ -33,15 +33,18 @@ from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.utils import encode_path
 
 
-class ChatHistory(UserInterface, Popover):
+class ChatHistory(Popover):
 
     def __init__(self, frame, core):
 
-        UserInterface.__init__(self, "ui/popovers/chathistory.ui")
-        self.container, self.list_container, self.search_entry = self.widgets
+        ui_template = UserInterface(scope=self, path="popovers/chathistory.ui")
+        (
+            self.container,
+            self.list_container,
+            self.search_entry
+        ) = ui_template.widgets
 
-        Popover.__init__(
-            self,
+        super().__init__(
             window=frame.window,
             content_box=self.container,
             width=1000,

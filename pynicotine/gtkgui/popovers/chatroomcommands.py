@@ -20,15 +20,14 @@ from pynicotine.gtkgui.widgets.popover import Popover
 from pynicotine.gtkgui.widgets.ui import UserInterface
 
 
-class ChatRoomCommands(UserInterface, Popover):
+class ChatRoomCommands(Popover):
 
     def __init__(self, window):
 
-        UserInterface.__init__(self, "ui/popovers/chatroomcommands.ui")
-        (self.container,) = self.widgets
+        ui_template = UserInterface(scope=self, path="popovers/chatroomcommands.ui")
+        (self.container,) = ui_template.widgets
 
-        Popover.__init__(
-            self,
+        super().__init__(
             window=window,
             content_box=self.container,
             width=600,

@@ -74,7 +74,7 @@ from pynicotine.utils import open_log
 from pynicotine.utils import open_uri
 
 
-class NicotineFrame(UserInterface, Window):
+class NicotineFrame(Window):
 
     def __init__(self, application, core, start_hidden, ci_mode):
 
@@ -98,7 +98,7 @@ class NicotineFrame(UserInterface, Window):
 
         """ Load UI """
 
-        UserInterface.__init__(self, "ui/mainwindow.ui")
+        ui_template = UserInterface(scope=self, path="mainwindow.ui")
         (
             self.add_buddy_entry,
             self.alt_speed_icon,
@@ -208,8 +208,8 @@ class NicotineFrame(UserInterface, Window):
             self.userlist_toolbar_contents,
             self.vertical_paned,
             self.window
-        ) = self.widgets
-        Window.__init__(self, self.window)
+        ) = ui_template.widgets
+        super().__init__(self.window)
 
         self.header_bar.pack_end(self.header_end)
 

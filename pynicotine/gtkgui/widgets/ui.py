@@ -33,25 +33,25 @@ class UserInterface:
 
     ui_data = {}
 
-    def __init__(self, filename):
+    def __init__(self, scope, path):
 
-        if filename not in self.ui_data:
-            with open(encode_path(os.path.join(GTK_GUI_DIR, filename)), encoding="utf-8") as file_handle:
+        if path not in self.ui_data:
+            with open(encode_path(os.path.join(GTK_GUI_DIR, "ui", path)), encoding="utf-8") as file_handle:
                 if GTK_API_VERSION >= 4:
-                    self.ui_data[filename] = file_handle.read().replace(
+                    self.ui_data[path] = file_handle.read().replace(
                         "GtkRadioButton", "GtkCheckButton").replace("\"can-focus\"", "\"focusable\"")
                 else:
-                    self.ui_data[filename] = file_handle.read()
+                    self.ui_data[path] = file_handle.read()
 
         if GTK_API_VERSION >= 4:
-            self.builder = Gtk.Builder(self)
+            self.builder = Gtk.Builder(scope)
             self.builder.set_translation_domain(TRANSLATION_DOMAIN)
-            self.builder.add_from_string(self.ui_data[filename])
+            self.builder.add_from_string(self.ui_data[path])
             Gtk.Buildable.get_name = Gtk.Buildable.get_buildable_id  # pylint: disable=no-member
         else:
             self.builder = Gtk.Builder(translation_domain=TRANSLATION_DOMAIN)
-            self.builder.add_from_string(self.ui_data[filename])
-            self.builder.connect_signals(self)                       # pylint: disable=no-member
+            self.builder.add_from_string(self.ui_data[path])
+            self.builder.connect_signals(scope)                      # pylint: disable=no-member
 
         self.widgets = self.builder.get_objects()
 

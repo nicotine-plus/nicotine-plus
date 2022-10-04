@@ -26,13 +26,13 @@ from pynicotine.utils import human_size
 from pynicotine.utils import humanize
 
 
-class Statistics(UserInterface, Dialog):
+class Statistics(Dialog):
 
     def __init__(self, frame, core):
 
         self.core = core
 
-        UserInterface.__init__(self, "ui/dialogs/statistics.ui")
+        ui_template = UserInterface(scope=self, path="dialogs/statistics.ui")
         (
             self.close_button,
             self.completed_downloads_session_label,
@@ -50,10 +50,9 @@ class Statistics(UserInterface, Dialog):
             self.started_uploads_total_label,
             self.uploaded_size_session_label,
             self.uploaded_size_total_label
-        ) = self.widgets
+        ) = ui_template.widgets
 
-        Dialog.__init__(
-            self,
+        super().__init__(
             parent=frame.window,
             content_box=self.container,
             buttons=[(self.close_button, Gtk.ResponseType.CANCEL),

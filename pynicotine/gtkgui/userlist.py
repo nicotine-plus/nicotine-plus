@@ -44,16 +44,16 @@ from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
 
 
-class UserList(UserInterface):
+class UserList:
 
     def __init__(self, frame, core):
 
-        super().__init__("ui/buddylist.ui")
+        ui_template = UserInterface(scope=self, path="buddylist.ui")
         (
             self.container,
             self.list_view,
             self.toolbar
-        ) = self.widgets
+        ) = ui_template.widgets
 
         self.frame = frame
         self.core = core

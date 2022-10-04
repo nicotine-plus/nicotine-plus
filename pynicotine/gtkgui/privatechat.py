@@ -200,11 +200,11 @@ class PrivateChats(IconNotebook):
             self.set_user_status(page.container, user, UserStatus.OFFLINE)
 
 
-class PrivateChat(UserInterface):
+class PrivateChat:
 
     def __init__(self, chats, user):
 
-        super().__init__("ui/privatechat.ui")
+        ui_template = UserInterface(scope=self, path="privatechat.ui")
         (
             self.chat_entry,
             self.chat_view,
@@ -214,7 +214,7 @@ class PrivateChat(UserInterface):
             self.search_bar,
             self.search_entry,
             self.speech_toggle
-        ) = self.widgets
+        ) = ui_template.widgets
 
         self.user = user
         self.chats = chats

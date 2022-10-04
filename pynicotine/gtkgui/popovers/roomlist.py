@@ -30,11 +30,11 @@ from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.ui import UserInterface
 
 
-class RoomList(UserInterface, Popover):
+class RoomList(Popover):
 
     def __init__(self, frame, core):
 
-        UserInterface.__init__(self, "ui/popovers/roomlist.ui")
+        ui_template = UserInterface(scope=self, path="popovers/roomlist.ui")
         (
             self.container,
             self.list_view,
@@ -42,10 +42,9 @@ class RoomList(UserInterface, Popover):
             self.public_feed_toggle,
             self.refresh_button,
             self.search_entry
-        ) = self.widgets
+        ) = ui_template.widgets
 
-        Popover.__init__(
-            self,
+        super().__init__(
             window=frame.window,
             content_box=self.container,
             width=350,

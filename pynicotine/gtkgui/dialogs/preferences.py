@@ -57,16 +57,16 @@ from pynicotine.utils import open_uri
 from pynicotine.utils import unescape
 
 
-class NetworkFrame(UserInterface):
+class NetworkFrame:
 
     def __init__(self, preferences):
 
-        super().__init__("ui/settings/network.ui")
+        ui_template = UserInterface(scope=self, path="settings/network.ui")
 
         # pylint: disable=invalid-name
         (self.AutoAway, self.AutoConnectStartup, self.AutoReply, self.CheckPortLabel,
          self.CurrentPort, self.FirstPort, self.Interface, self.InterfaceLabel, self.LastPort, self.Login, self.Main,
-         self.Server, self.UPnPInterval, self.UseUPnP, self.ctcptogglebutton) = self.widgets
+         self.Server, self.UPnPInterval, self.UseUPnP, self.ctcptogglebutton) = ui_template.widgets
 
         self.preferences = preferences
         self.frame = preferences.frame
@@ -215,18 +215,18 @@ class NetworkFrame(UserInterface):
         self.portmap_required = True
 
 
-class DownloadsFrame(UserInterface):
+class DownloadsFrame:
 
     def __init__(self, preferences):
 
-        super().__init__("ui/settings/downloads.ui")
+        ui_template = UserInterface(scope=self, path="settings/downloads.ui")
 
         # pylint: disable=invalid-name
         (self.AfterDownload, self.AfterFolder, self.AutoclearFinished,
          self.DownloadDir, self.DownloadDoubleClick, self.DownloadFilter, self.DownloadReverseOrder,
          self.DownloadSpeed, self.DownloadSpeedAlternative, self.FilterView, self.IncompleteDir,
          self.Main, self.RemoteDownloads, self.UploadDir, self.UploadsAllowed,
-         self.UsernameSubfolders, self.VerifiedLabel) = self.widgets
+         self.UsernameSubfolders, self.VerifiedLabel) = ui_template.widgets
 
         self.preferences = preferences
         self.frame = preferences.frame
@@ -440,14 +440,14 @@ class DownloadsFrame(UserInterface):
             self.VerifiedLabel.set_text(_("Filters Successful"))
 
 
-class SharesFrame(UserInterface):
+class SharesFrame:
 
     def __init__(self, preferences):
 
-        super().__init__("ui/settings/shares.ui")
+        ui_template = UserInterface(scope=self, path="settings/shares.ui")
 
         # pylint: disable=invalid-name
-        (self.BuddySharesTrustedOnly, self.Main, self.RescanOnStartup, self.Shares) = self.widgets
+        (self.BuddySharesTrustedOnly, self.Main, self.RescanOnStartup, self.Shares) = ui_template.widgets
 
         self.preferences = preferences
         self.frame = preferences.frame
@@ -625,17 +625,17 @@ class SharesFrame(UserInterface):
             self.rescan_required = True
 
 
-class UploadsFrame(UserInterface):
+class UploadsFrame:
 
     def __init__(self, preferences):
 
-        super().__init__("ui/settings/uploads.ui")
+        ui_template = UserInterface(scope=self, path="settings/uploads.ui")
 
         # pylint: disable=invalid-name
         (self.AutoclearFinished, self.FirstInFirstOut, self.FriendsNoLimits, self.Limit,
          self.LimitSpeed, self.LimitSpeedAlternative, self.LimitTotalTransfers, self.Main, self.MaxUserFiles,
          self.MaxUserQueue, self.PreferFriends, self.QueueBandwidth, self.QueueSlots, self.QueueUseBandwidth,
-         self.QueueUseSlots, self.UploadDoubleClick) = self.widgets
+         self.QueueUseSlots, self.UploadDoubleClick) = ui_template.widgets
 
         self.preferences = preferences
         self.frame = preferences.frame
@@ -684,14 +684,14 @@ class UploadsFrame(UserInterface):
         }
 
 
-class UserInfoFrame(UserInterface):
+class UserInfoFrame:
 
     def __init__(self, preferences):
 
-        super().__init__("ui/settings/userinfo.ui")
+        ui_template = UserInterface(scope=self, path="settings/userinfo.ui")
 
         # pylint: disable=invalid-name
-        self.Description, self.ImageChooser, self.Main = self.widgets
+        self.Description, self.ImageChooser, self.Main = ui_template.widgets
 
         self.preferences = preferences
         self.frame = preferences.frame
@@ -733,14 +733,14 @@ class UserInfoFrame(UserInterface):
         self.image_chooser.clear()
 
 
-class IgnoredUsersFrame(UserInterface):
+class IgnoredUsersFrame:
 
     def __init__(self, preferences):
 
-        super().__init__("ui/settings/ignore.ui")
+        ui_template = UserInterface(scope=self, path="settings/ignore.ui")
 
         # pylint: disable=invalid-name
-        self.IgnoredIPs, self.IgnoredUsers, self.Main = self.widgets
+        self.IgnoredIPs, self.IgnoredUsers, self.Main = ui_template.widgets
 
         self.preferences = preferences
         self.frame = self.preferences.frame
@@ -858,15 +858,15 @@ class IgnoredUsersFrame(UserInterface):
             del self.ignored_ips[ip_address]
 
 
-class BannedUsersFrame(UserInterface):
+class BannedUsersFrame:
 
     def __init__(self, preferences):
 
-        super().__init__("ui/settings/ban.ui")
+        ui_template = UserInterface(scope=self, path="settings/ban.ui")
 
         # pylint: disable=invalid-name
         (self.BannedList, self.BlockedList, self.CustomBan, self.CustomGeoBlock, self.GeoBlock, self.GeoBlockCC,
-         self.Main, self.UseCustomBan, self.UseCustomGeoBlock) = self.widgets
+         self.Main, self.UseCustomBan, self.UseCustomGeoBlock) = ui_template.widgets
 
         self.preferences = preferences
         self.frame = preferences.frame
@@ -1008,11 +1008,11 @@ class BannedUsersFrame(UserInterface):
             del self.banned_ips[ip_address]
 
 
-class ChatsFrame(UserInterface):
+class ChatsFrame:
 
     def __init__(self, preferences):
 
-        super().__init__("ui/settings/chats.ui")
+        ui_template = UserInterface(scope=self, path="settings/chats.ui")
 
         # pylint: disable=invalid-name
         (self.CensorCheck, self.CensorList,
@@ -1023,7 +1023,7 @@ class ChatsFrame(UserInterface):
          self.PrivateLogLines, self.PrivateMessage,
          self.ReopenPrivateChats, self.ReplaceCheck, self.ReplacementList,
          self.RoomLogLines, self.RoomMessage, self.SpellCheck,
-         self.TTSCommand, self.TextToSpeech) = self.widgets
+         self.TTSCommand, self.TextToSpeech) = ui_template.widgets
 
         self.preferences = preferences
         self.frame = preferences.frame
@@ -1278,11 +1278,11 @@ class ChatsFrame(UserInterface):
             del self.replacements[replacement]
 
 
-class UserInterfaceFrame(UserInterface):
+class UserInterfaceFrame:
 
     def __init__(self, preferences):
 
-        super().__init__("ui/settings/userinterface.ui")
+        ui_template = UserInterface(scope=self, path="settings/userinterface.ui")
 
         # pylint: disable=invalid-name
         (self.ChatRoomsPosition, self.CloseAction, self.DarkMode,
@@ -1304,7 +1304,7 @@ class UserInterfaceFrame(UserInterface):
          self.SelectSearchFont, self.SelectTransfersFont, self.StartupHidden, self.TabClosers, self.TabSelectPrevious,
          self.TabStatusIcons, self.ThemeDir, self.TraySettings, self.TrayiconCheck,
          self.UserBrowsePosition, self.UserInfoPosition, self.UsernameHotspots,
-         self.UsernameStyle) = self.widgets
+         self.UsernameStyle) = ui_template.widgets
 
         self.preferences = preferences
         self.frame = preferences.frame
@@ -1600,16 +1600,16 @@ class UserInterfaceFrame(UserInterface):
         self.theme_required = True
 
 
-class LoggingFrame(UserInterface):
+class LoggingFrame:
 
     def __init__(self, preferences):
 
-        super().__init__("ui/settings/log.ui")
+        ui_template = UserInterface(scope=self, path="settings/log.ui")
 
         # pylint: disable=invalid-name
         (self.DebugLogDir, self.LogDebug, self.LogFileFormat,
          self.LogPrivate, self.LogRooms, self.LogTransfers, self.Main, self.PrivateLogDir,
-         self.RoomLogDir, self.TransfersLogDir) = self.widgets
+         self.RoomLogDir, self.TransfersLogDir) = ui_template.widgets
 
         self.preferences = preferences
         self.frame = preferences.frame
@@ -1656,17 +1656,18 @@ class LoggingFrame(UserInterface):
         self.LogFileFormat.set_text(config.defaults["logging"]["log_timestamp"])
 
 
-class SearchesFrame(UserInterface):
+class SearchesFrame:
 
     def __init__(self, preferences):
 
-        super().__init__("ui/settings/search.ui")
+        ui_template = UserInterface(scope=self, path="settings/search.ui")
 
         # pylint: disable=invalid-name
         (self.ClearFilterHistorySuccess, self.ClearSearchHistorySuccess, self.EnableFilters, self.EnableSearchHistory,
          self.FilterBR, self.FilterCC, self.FilterFree, self.FilterIn, self.FilterLength, self.FilterOut,
          self.FilterSize, self.FilterType, self.Main, self.MaxDisplayedResults, self.MaxResults, self.MinSearchChars,
-         self.RemoveSpecialChars, self.ShowPrivateSearchResults, self.ShowSearchHelp, self.ToggleResults) = self.widgets
+         self.RemoveSpecialChars, self.ShowPrivateSearchResults, self.ShowSearchHelp,
+         self.ToggleResults) = ui_template.widgets
 
         self.preferences = preferences
         self.frame = preferences.frame
@@ -1764,14 +1765,14 @@ class SearchesFrame(UserInterface):
         self.ClearFilterHistorySuccess.show()
 
 
-class UrlHandlersFrame(UserInterface):
+class UrlHandlersFrame:
 
     def __init__(self, preferences):
 
-        super().__init__("ui/settings/urlhandlers.ui")
+        ui_template = UserInterface(scope=self, path="settings/urlhandlers.ui")
 
         # pylint: disable=invalid-name
-        (self.FileManagerCombo, self.Main, self.ProtocolHandlers, self.audioPlayerCombo) = self.widgets
+        (self.FileManagerCombo, self.Main, self.ProtocolHandlers, self.audioPlayerCombo) = ui_template.widgets
 
         self.preferences = preferences
         self.frame = preferences.frame
@@ -1917,15 +1918,15 @@ class UrlHandlersFrame(UserInterface):
             del self.protocols[protocol]
 
 
-class NowPlayingFrame(UserInterface):
+class NowPlayingFrame:
 
     def __init__(self, preferences):
 
-        super().__init__("ui/settings/nowplaying.ui")
+        ui_template = UserInterface(scope=self, path="settings/nowplaying.ui")
 
         # pylint: disable=invalid-name
         (self.Example, self.Legend, self.Main, self.NPCommand, self.NPFormat, self.NP_lastfm, self.NP_listenbrainz,
-         self.NP_mpris, self.NP_other, self.player_input, self.test_now_playing) = self.widgets
+         self.NP_mpris, self.NP_other, self.player_input, self.test_now_playing) = ui_template.widgets
 
         self.preferences = preferences
         self.frame = preferences.frame
@@ -2093,15 +2094,15 @@ class NowPlayingFrame(UserInterface):
         }
 
 
-class PluginsFrame(UserInterface):
+class PluginsFrame:
 
     def __init__(self, preferences):
 
-        super().__init__("ui/settings/plugin.ui")
+        ui_template = UserInterface(scope=self, path="settings/plugin.ui")
 
         # pylint: disable=invalid-name
         (self.Main, self.PluginAuthor, self.PluginDescription, self.PluginName,
-         self.PluginProperties, self.PluginTreeView, self.PluginVersion, self.PluginsEnable) = self.widgets
+         self.PluginProperties, self.PluginTreeView, self.PluginVersion, self.PluginsEnable) = ui_template.widgets
 
         self.preferences = preferences
         self.frame = preferences.frame
@@ -2229,14 +2230,14 @@ class PluginsFrame(UserInterface):
         ).show()
 
 
-class Preferences(UserInterface, Dialog):
+class Preferences(Dialog):
 
     def __init__(self, frame, core):
 
         self.frame = frame
         self.core = core
 
-        UserInterface.__init__(self, "ui/dialogs/preferences.ui")
+        ui_template = UserInterface(scope=self, path="dialogs/preferences.ui")
         (
             self.apply_button,
             self.cancel_button,
@@ -2246,10 +2247,9 @@ class Preferences(UserInterface, Dialog):
             self.ok_button,
             self.preferences_list,
             self.viewport
-        ) = self.widgets
+        ) = ui_template.widgets
 
-        Dialog.__init__(
-            self,
+        super().__init__(
             parent=frame.window,
             content_box=self.container,
             buttons=[(self.cancel_button, Gtk.ResponseType.CANCEL),
@@ -2686,7 +2686,7 @@ class Preferences(UserInterface, Dialog):
             self.pages[page_id] = page = getattr(sys.modules[__name__], class_name)(self)
             page.set_settings()
 
-            for obj in page.widgets:
+            for obj in page.__dict__.values():
                 if isinstance(obj, Gtk.CheckButton):
                     if GTK_API_VERSION >= 4:
                         check_button_label = obj.get_last_child()

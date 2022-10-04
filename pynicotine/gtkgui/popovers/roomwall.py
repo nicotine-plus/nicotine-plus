@@ -25,19 +25,18 @@ from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.ui import UserInterface
 
 
-class RoomWall(UserInterface, Popover):
+class RoomWall(Popover):
 
     def __init__(self, frame, core, room):
 
-        UserInterface.__init__(self, "ui/popovers/roomwall.ui")
+        ui_template = UserInterface(scope=self, path="popovers/roomwall.ui")
         (
             self.container,
             self.message_entry,
             self.message_view,
-        ) = self.widgets
+        ) = ui_template.widgets
 
-        Popover.__init__(
-            self,
+        super().__init__(
             window=frame.window,
             content_box=self.container,
             show_callback=self.on_show,

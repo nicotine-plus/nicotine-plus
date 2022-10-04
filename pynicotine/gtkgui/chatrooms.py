@@ -388,11 +388,11 @@ class ChatRooms(IconNotebook):
             page.server_disconnect()
 
 
-class ChatRoom(UserInterface):
+class ChatRoom:
 
     def __init__(self, chatrooms, room, users):
 
-        super().__init__("ui/chatrooms.ui")
+        ui_template = UserInterface(scope=self, path="chatrooms.ui")
         (
             self.activity_container,
             self.activity_search_bar,
@@ -416,7 +416,7 @@ class ChatRoom(UserInterface):
             self.users_label,
             self.users_list_view,
             self.users_paned
-        ) = self.widgets
+        ) = ui_template.widgets
 
         self.chatrooms = chatrooms
         self.frame = chatrooms.frame

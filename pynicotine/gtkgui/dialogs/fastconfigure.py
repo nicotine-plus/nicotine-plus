@@ -32,7 +32,7 @@ from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.utils import open_uri
 
 
-class FastConfigure(UserInterface, Dialog):
+class FastConfigure(Dialog):
 
     def __init__(self, frame, core):
 
@@ -40,7 +40,7 @@ class FastConfigure(UserInterface, Dialog):
         self.rescan_required = False
         self.finished = False
 
-        UserInterface.__init__(self, "ui/dialogs/fastconfigure.ui")
+        ui_template = UserInterface(scope=self, path="dialogs/fastconfigure.ui")
         (
             self.account_page,
             self.check_port_label,
@@ -56,12 +56,11 @@ class FastConfigure(UserInterface, Dialog):
             self.summary_page,
             self.username_entry,
             self.welcome_page
-        ) = self.widgets
+        ) = ui_template.widgets
 
         self.pages = [self.welcome_page, self.account_page, self.port_page, self.share_page, self.summary_page]
 
-        Dialog.__init__(
-            self,
+        super().__init__(
             parent=frame.window,
             content_box=self.stack,
             buttons=[(self.previous_button, Gtk.ResponseType.HELP),

@@ -20,15 +20,14 @@ from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.gtkgui.widgets.ui import UserInterface
 
 
-class Shortcuts(UserInterface, Dialog):
+class Shortcuts(Dialog):
 
     def __init__(self, frame):
 
-        UserInterface.__init__(self, "ui/dialogs/shortcuts.ui")
-        self.dialog, self.emoji_shortcut = self.widgets
+        ui_template = UserInterface(scope=self, path="dialogs/shortcuts.ui")
+        self.dialog, self.emoji_shortcut = ui_template.widgets
 
-        Dialog.__init__(
-            self,
+        super().__init__(
             dialog=self.dialog,
             parent=frame.window,
             close_destroy=False

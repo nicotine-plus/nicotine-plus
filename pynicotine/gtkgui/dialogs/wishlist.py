@@ -29,7 +29,7 @@ from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.ui import UserInterface
 
 
-class WishList(UserInterface, Dialog):
+class WishList(Dialog):
 
     def __init__(self, frame, core, searches):
 
@@ -37,15 +37,14 @@ class WishList(UserInterface, Dialog):
         self.searches = searches
         self.timer = None
 
-        UserInterface.__init__(self, "ui/dialogs/wishlist.ui")
+        ui_template = UserInterface(scope=self, path="dialogs/wishlist.ui")
         (
             self.container,
             self.list_container,
             self.wish_entry
-        ) = self.widgets
+        ) = ui_template.widgets
 
-        Dialog.__init__(
-            self,
+        super().__init__(
             parent=frame.window,
             modal=False,
             content_box=self.container,

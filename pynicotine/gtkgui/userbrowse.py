@@ -160,11 +160,11 @@ class UserBrowses(IconNotebook):
             self.set_user_status(page.container, user, UserStatus.OFFLINE)
 
 
-class UserBrowse(UserInterface):
+class UserBrowse:
 
     def __init__(self, userbrowses, user):
 
-        super().__init__("ui/userbrowse.ui")
+        ui_template = UserInterface(scope=self, path="userbrowse.ui")
         (
             self.container,
             self.expand_button,
@@ -178,7 +178,7 @@ class UserBrowse(UserInterface):
             self.retry_button,
             self.search_entry,
             self.share_size_label
-        ) = self.widgets
+        ) = ui_template.widgets
 
         self.userbrowses = userbrowses
         self.frame = userbrowses.frame

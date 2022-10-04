@@ -274,11 +274,11 @@ class Searches(IconNotebook):
         self.wish_list.server_disconnect()
 
 
-class Search(UserInterface):
+class Search:
 
     def __init__(self, searches, text, token, mode, mode_label, showtab):
 
-        super().__init__("ui/search.ui")
+        ui_template = UserInterface(scope=self, path="search.ui")
         (
             self.add_wish_button,
             self.add_wish_icon,
@@ -301,7 +301,7 @@ class Search(UserInterface):
             self.results_button,
             self.results_label,
             self.tree_view
-        ) = self.widgets
+        ) = ui_template.widgets
 
         self.searches = searches
         self.frame = searches.frame

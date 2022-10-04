@@ -133,11 +133,11 @@ class UserInfos(IconNotebook):
             self.set_user_status(page.container, user, UserStatus.OFFLINE)
 
 
-class UserInfo(UserInterface):
+class UserInfo:
 
     def __init__(self, userinfos, user):
 
-        super().__init__("ui/userinfo.ui")
+        ui_template = UserInterface(scope=self, path="userinfo.ui")
         (
             self.container,
             self.country_icon,
@@ -160,7 +160,7 @@ class UserInfo(UserInterface):
             self.upload_slots_label,
             self.upload_speed_label,
             self.user_label
-        ) = self.widgets
+        ) = ui_template.widgets
 
         self.userinfos = userinfos
         self.frame = userinfos.frame
