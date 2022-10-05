@@ -32,7 +32,7 @@
  - Maintainer (2004–2009)
  - Developer
 
-### QuinoX
+### quinox
  - Maintainer (2009–2012)
  - Developer
 

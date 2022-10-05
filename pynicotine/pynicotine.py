@@ -2,10 +2,10 @@
 # COPYRIGHT (C) 2020-2022 Mathias <mail@mathias.is>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
-# COPYRIGHT (C) 2013 eL_vErDe <gandalf@le-vert.net>
-# COPYRIGHT (C) 2008-2012 Quinox <quinox@users.sf.net>
-# COPYRIGHT (C) 2009 Hedonist <ak@sensi.org>
-# COPYRIGHT (C) 2006-2009 Daelstorm <daelstorm@gmail.com>
+# COPYRIGHT (C) 2013 eLvErDe <gandalf@le-vert.net>
+# COPYRIGHT (C) 2008-2012 quinox <quinox@users.sf.net>
+# COPYRIGHT (C) 2009 hedonist <ak@sensi.org>
+# COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
 # COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
 # COPYRIGHT (C) 2001-2003 Alexander Kanavin
 #

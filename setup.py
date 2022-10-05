@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
-# COPYRIGHT (C) 2009-2010 Quinox <quinox@users.sf.net>
-# COPYRIGHT (C) 2009 Hedonist <ak@sensi.org>
-# COPYRIGHT (C) 2006-2009 Daelstorm <daelstorm@gmail.com>
-# COPYRIGHT (C) 2008-2009 eL_vErDe <gandalf@le-vert.net>
+# COPYRIGHT (C) 2009-2010 quinox <quinox@users.sf.net>
+# COPYRIGHT (C) 2009 hedonist <ak@sensi.org>
+# COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
+# COPYRIGHT (C) 2008-2009 eLvErDe <gandalf@le-vert.net>
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007

@@ -1,8 +1,8 @@
 # COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
-# COPYRIGHT (C) 2008-2011 Quinox <quinox@users.sf.net>
-# COPYRIGHT (C) 2007 Gallows <g4ll0ws@gmail.com>
-# COPYRIGHT (C) 2006-2009 Daelstorm <daelstorm@gmail.com>
+# COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
+# COPYRIGHT (C) 2007 gallows <g4ll0ws@gmail.com>
+# COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
 # COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
 #
 # GNU GENERAL PUBLIC LICENSE

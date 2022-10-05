@@ -1,6 +1,6 @@
 # COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
-# COPYRIGHT (C) 2009-2011 Quinox <quinox@users.sf.net>
-# COPYRIGHT (C) 2007-2009 Daelstorm <daelstorm@gmail.com>
+# COPYRIGHT (C) 2009-2011 quinox <quinox@users.sf.net>
+# COPYRIGHT (C) 2007-2009 daelstorm <daelstorm@gmail.com>
 # COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
 # COPYRIGHT (C) 2001-2003 Alexander Kanavin
 #

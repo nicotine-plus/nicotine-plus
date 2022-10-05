@@ -1,5 +1,5 @@
 # COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
-# COPYRIGHT (C) 2009 Quinox <quinox@users.sf.net>
+# COPYRIGHT (C) 2009 quinox <quinox@users.sf.net>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
