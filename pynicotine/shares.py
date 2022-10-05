@@ -65,7 +65,7 @@ elif importlib.util.find_spec("semidbm"):
 
 else:
     log.add(_("Cannot find %(option1)s or %(option2)s, please install either one.") % {
-        "option1": "gdbm",
+        "option1": "python3-gdbm",
         "option2": "semidbm"
     })
     sys.exit()
