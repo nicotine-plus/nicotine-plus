@@ -4,7 +4,8 @@ Upstream-Contact: Nicotine+ Team <nicotine-team@lists.launchpad.net>
 Source: https://github.com/nicotine-plus/nicotine-plus/
 
 Files: *
-Copyright: 2001-2003, 2009 Alexander Kanavin (alexbk/hedonist)
+Copyright: 2001-2022 Nicotine+ Contributors
+           2001-2003, 2009 Alexander Kanavin (alexbk/hedonist)
            2002 Joe Halliwell
            2003 Brett W. Thompson (Zip)
                 Geert Kloosterman (geertk)
@@ -109,7 +110,7 @@ License: GPL-3+
 Files: pynicotine/geoip/ip2location.py
 Copyright: 2017 IP2Location.com
            2021-2022 Mat (mathiascode)
-License: MIT
+License: Expat
 
 Files: pynicotine/geoip/ipcountrydb.bin
 Copyright: 2001-2022 Hexasoft Development Sdn. Bhd.
@@ -118,12 +119,12 @@ License: CC-BY-SA-4.0
 Files: pynicotine/gtkgui/icons/hicolor/scalable/intl/nplus-flag-*.svg
 Copyright: 2016-2017 Bowtie AB
            2018-2020 Jack Marsh
-License: MIT
+License: Expat
 
 Files: pynicotine/metadata/tinytag.py
 Copyright: 2014-2022 Tom Wallroth
            2020-2022 Mat (mathiascode)
-License: MIT
+License: Expat
 
 License: GPL-3+
  This program is free software: you can redistribute it and/or modify
@@ -153,7 +154,7 @@ License: CC0-1.0
  On Debian systems, the complete text of the CC0 1.0 Universal license can be
  found in `/usr/share/common-licenses/CC0-1.0`.
 
-License: MIT
+License: Expat
  Permission is hereby granted, free of charge, to any person obtaining
  a copy of this software and associated documentation files (the
  "Software"), to deal in the Software without restriction, including
@@ -186,7 +187,7 @@ License: CC-BY-SA-4.0
  such rights in consideration of benefits the Licensor receives from
  making the Licensed Material available under these terms and conditions.
  .
- Section 1 – Definitions.
+ Section 1 - Definitions.
  .
  Adapted Material means material subject to Copyright and Similar Rights
  that is derived from or based upon the Licensed Material and in which
@@ -240,7 +241,7 @@ License: CC-BY-SA-4.0
  You means the individual or entity exercising the Licensed Rights under
  this Public License. Your has a corresponding meaning.
  .
- Section 2 – Scope.
+ Section 2 - Scope.
  .
  License grant.
  Subject to the terms and conditions of this Public License, the
@@ -294,7 +295,7 @@ License: CC-BY-SA-4.0
  statutory or compulsory licensing scheme. In all other cases the
  Licensor expressly reserves any right to collect such royalties.
  .
- Section 3 – License Conditions.
+ Section 3 - License Conditions.
  .
  Your exercise of the Licensed Rights is expressly made subject to the
  following conditions.
@@ -338,7 +339,7 @@ License: CC-BY-SA-4.0
  Material that restrict exercise of the rights granted under the
  Adapter's License You apply.
  .
- Section 4 – Sui Generis Database Rights.
+ Section 4 - Sui Generis Database Rights.
  .
  Where the Licensed Rights include Sui Generis Database Rights that
  apply to Your use of the Licensed Material:
@@ -356,7 +357,7 @@ License: CC-BY-SA-4.0
  obligations under this Public License where the Licensed Rights include
  other Copyright and Similar Rights.
  .
- Section 5 – Disclaimer of Warranties and Limitation of Liability.
+ Section 5 - Disclaimer of Warranties and Limitation of Liability.
  .
  Unless otherwise separately undertaken by the Licensor, to the extent
  possible, the Licensor offers the Licensed Material as-is and
@@ -380,7 +381,7 @@ License: CC-BY-SA-4.0
  shall be interpreted in a manner that, to the extent possible, most
  closely approximates an absolute disclaimer and waiver of all liability.
  .
- Section 6 – Term and Termination.
+ Section 6 - Term and Termination.
  .
  This Public License applies for the term of the Copyright and Similar
  Rights licensed here. However, if You fail to comply with this Public
@@ -399,7 +400,7 @@ License: CC-BY-SA-4.0
  not terminate this Public License.
  Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
  .
- Section 7 – Other Terms and Conditions.
+ Section 7 - Other Terms and Conditions.
  .
  The Licensor shall not be bound by any additional or different terms or
  conditions communicated by You unless expressly agreed.  Any
@@ -407,7 +408,7 @@ License: CC-BY-SA-4.0
  Material not stated herein are separate from and independent of the
  terms and conditions of this Public License.
  .
- Section 8 – Interpretation.
+ Section 8 - Interpretation.
  .
  For the avoidance of doubt, this Public License does not, and shall not
  be interpreted to, reduce, limit, restrict, or impose conditions on any
