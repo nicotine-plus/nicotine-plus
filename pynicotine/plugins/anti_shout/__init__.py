@@ -1,5 +1,5 @@
 # COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
-# COPYRIGHT (C) 2009 Quinox <quinox@users.sf.net>
+# COPYRIGHT (C) 2009 quinox <quinox@users.sf.net>
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
