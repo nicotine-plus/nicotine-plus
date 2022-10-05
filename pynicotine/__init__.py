@@ -92,7 +92,7 @@ def check_arguments():
     return args.headless, args.hidden, args.bindip, args.port, args.ci_mode, args.rescan, multi_instance
 
 
-def check_core_dependencies():
+def check_python_version():
 
     # Require minimum Python version
     python_version = (3, 6)
@@ -103,15 +103,6 @@ def check_core_dependencies():
 You should install Python %(min_version)s or newer.""") % {
             "old_version": '.'.join(map(str, sys.version_info[:3])),
             "min_version": '.'.join(map(str, python_version))
-        }
-
-    # Require gdbm or semidbm, for faster loading of shelves
-    import importlib.util
-    if not importlib.util.find_spec("_gdbm") and \
-            not importlib.util.find_spec("semidbm"):
-        return _("Cannot find %(option1)s or %(option2)s, please install either one.") % {
-            "option1": "gdbm",
-            "option2": "semidbm"
         }
 
     return None
@@ -164,7 +155,7 @@ def run():
     rename_process(b"nicotine")
 
     headless, hidden, bindip, port, ci_mode, rescan, multi_instance = check_arguments()
-    error = check_core_dependencies()
+    error = check_python_version()
 
     if error:
         log.add(error)
