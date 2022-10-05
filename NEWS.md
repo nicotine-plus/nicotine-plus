@@ -10,11 +10,12 @@
 
 ### Corrections
 
- * Fixed an issue where private messages from offline users were ignored
- * Fixed an issue where certain uploads were incorrectly marked as "Cancelled"
+ * IMPORTANT: Fixed an issue where private messages from offline users were ignored
+ * IMPORTANT: Fixed an issue where certain uploads were incorrectly marked as "Cancelled"
+ * IMPORTANT: Fixed an issue where redundant protocol messages could be sent to the server indefinitely
+ * IMPORTANT - OpenBSD: Fixed a regression where incoming peer connections did not work
  * Fixed an issue where the progress bar would get stuck if a share browse request ended abruptly
  * Windows: Fixed an issue where network drives could not be shared
- * OpenBSD: Fixed a regression where incoming peer connections did not work
  * Flatpak: Fixed an issue where the GUI was not translated to the system language
 
 ### Issues closed on GitHub
