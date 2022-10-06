@@ -107,7 +107,11 @@ class NicotineCore:
     def process_input(self):
 
         while not self.shutdown:
-            user_input = input()
+            try:
+                user_input = input()
+
+            except EOFError:
+                return
 
             if not user_input:
                 continue
