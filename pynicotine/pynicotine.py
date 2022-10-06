@@ -32,6 +32,7 @@ This is the actual client code. Actual GUI classes are in the separate modules
 import os
 import signal
 import sys
+import threading
 
 from collections import deque
 
@@ -103,6 +104,24 @@ class NicotineCore:
         self.watched_users = set()
         self.ip_requested = set()
 
+    def process_input(self):
+
+        while not self.shutdown:
+            user_input = input()
+
+            if not user_input:
+                continue
+
+            command, *args = user_input.split(maxsplit=1)
+
+            if command.startswith("/"):
+                command = command[1:]
+
+            if args:
+                (args,) = args
+
+            self.pluginhandler.trigger_cli_command_event(command, args or "")
+
     """ Actions """
 
     def start(self, ui_callback, network_callback):
@@ -144,6 +163,11 @@ class NicotineCore:
 
         self.pluginhandler = PluginHandler(self, config)
         self.pluginhandler.load_enabled()
+
+        thread = threading.Thread(target=self.process_input)
+        thread.name = "InputProcessor"
+        thread.daemon = True
+        thread.start()
 
         # Callback handlers for messages
         self.events = {

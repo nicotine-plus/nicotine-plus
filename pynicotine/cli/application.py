@@ -48,11 +48,6 @@ class Application:
             # Network error, exit code 1
             return 1
 
-        thread = threading.Thread(target=self.process_input)
-        thread.name = "InputProcessor"
-        thread.daemon = True
-        thread.start()
-
         # Main loop, process messages from networking thread
         while not self.core.shutdown:
             if self.network_msgs:
@@ -68,24 +63,6 @@ class Application:
         # Shut down with exit code 0 (success)
         config.write_configuration()
         return 0
-
-    def process_input(self):
-
-        while not self.core.shutdown:
-            user_input = input()
-
-            if not user_input:
-                continue
-
-            command, *args = user_input.split(maxsplit=1)
-
-            if command.startswith("/"):
-                command = command[1:]
-
-            if args:
-                (args,) = args
-
-            self.core.pluginhandler.trigger_cli_command_event(command, args or "")
 
     def network_callback(self, msgs):
         self.network_msgs.extend(msgs)
