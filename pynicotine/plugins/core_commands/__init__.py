@@ -129,15 +129,15 @@ class Plugin(BasePlugin):
     def hello_command(self, args, _command_type, _source):
         self.echo_message("Hello there, %s" % args)
 
-    def add_share_command(self, args, _command_type, _source):
+    def add_share_command(self, _args, _command_type, _source):
 
-        share_type, virtual_name, path = args.split(maxsplit=3)
+        # share_type, virtual_name, path = args.split(maxsplit=3)
 
         self.core.shares.rescan_shares()
 
-    def remove_share_command(self, args, _command_type, _source):
+    def remove_share_command(self, _args, _command_type, _source):
 
-        share_type, virtual_name, *_unused = args.split(maxsplit=2)
+        # share_type, virtual_name, *_unused = args.split(maxsplit=2)
 
         self.core.shares.rescan_shares()
 
