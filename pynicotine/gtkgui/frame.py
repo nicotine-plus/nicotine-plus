@@ -766,11 +766,6 @@ class NicotineFrame(Window):
             action.connect("activate", self.on_menu)
             self.application.add_action(action)
 
-        action = Gio.SimpleAction(name="focus-header-bar")
-        action.connect("activate", self.on_focus_header_bar)
-        self.window.add_action(action)
-        self.application.set_accels_for_action("win.focus-header-bar", ["<Alt>d"])
-
         action = Gio.SimpleAction(name="change-focus-view")
         action.connect("activate", self.on_change_focus_view)
         self.window.add_action(action)
@@ -1220,18 +1215,6 @@ class NicotineFrame(Window):
         if self.application.get_active_window():
             config.sections["ui"]["last_tab_id"] = page_id
 
-    def on_focus_header_bar(self, *_args):
-        """ Alt+D: focus header bar/toolbar """
-
-        # Find the correct widget to focus in the header bar/toolbar
-        try:
-            entry_widget = getattr(self, self.current_page_id + "_entry")
-            entry_widget.grab_focus()
-
-        except AttributeError:
-            title_widget = getattr(self, self.current_page_id + "_title")
-            title_widget.child_focus(Gtk.DirectionType.TAB_FORWARD)
-
     def on_change_focus_view(self, *_args):
         """ F6: move focus between header bar/toolbar and main content """
 
@@ -1257,7 +1240,14 @@ class NicotineFrame(Window):
                     # Found a focusable widget
                     return
 
-        self.on_focus_header_bar()
+        # Find the correct widget to focus in the header bar/toolbar
+        try:
+            entry_widget = getattr(self, self.current_page_id + "_entry")
+            entry_widget.grab_focus()
+
+        except AttributeError:
+            title_widget = getattr(self, self.current_page_id + "_title")
+            title_widget.child_focus(Gtk.DirectionType.TAB_FORWARD)
 
     """ Main Notebook """
 
