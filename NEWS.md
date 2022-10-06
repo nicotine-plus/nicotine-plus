@@ -4,7 +4,7 @@
 
 ### Changes
 
- * Added Alt+D and F6 shortcuts to move keyboard focus to the headerbar/toolbar
+ * Added F6 shortcut to move keyboard focus to the headerbar/toolbar
  * Added an option to clear all uploads with a "User logged off" status
  * Removed AppIndicator dependency in favor of custom tray icon implementation
 
