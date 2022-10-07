@@ -1596,18 +1596,6 @@ class NicotineFrame(Window):
 
     """ Various """
 
-    @staticmethod
-    def on_combobox_popup_shown(combobox, param):
-
-        visible = combobox.get_property(param.name)
-
-        if visible:
-            return
-
-        entry = combobox.get_child()
-        entry.grab_focus()
-        entry.set_position(-1)
-
     def on_configure_downloads(self, *_args):
         self.on_preferences(page_id="downloads")
 

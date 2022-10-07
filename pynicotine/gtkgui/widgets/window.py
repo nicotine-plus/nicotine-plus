@@ -20,6 +20,7 @@ from gi.repository import Gtk
 
 from pynicotine.gtkgui.application import GTK_API_VERSION
 
+
 """ Window """
 
 
@@ -27,14 +28,24 @@ class Window:
 
     def __init__(self, window):
 
-        # Workaround for GTK 4 issue where wrong widget receives focus after closing popover
-        if GTK_API_VERSION >= 4:
-            window.connect("notify::focus-widget", self.on_focus_widget_changed)
+        signal_name = "notify::focus-widget" if GTK_API_VERSION >= 4 else "set-focus"
+        window.connect(signal_name, self.on_focus_widget_changed)
+
+    def connect_signal(self, widget, signal, callback):
+
+        try:
+            widget.handler_block_by_func(callback)
+
+        except TypeError:
+            widget.connect(signal, callback)
+            return
+
+        widget.handler_unblock_by_func(callback)
 
     @staticmethod
     def on_popover_closed(popover):
 
-        focus_widget = popover.get_parent()
+        focus_widget = popover.get_parent() if GTK_API_VERSION >= 4 else popover.get_relative_to()
 
         if focus_widget.get_focusable():
             focus_widget.grab_focus()
@@ -42,23 +53,41 @@ class Window:
 
         focus_widget.child_focus(Gtk.DirectionType.TAB_FORWARD)
 
-    def on_focus_widget_changed(self, window, param):
+    @staticmethod
+    def on_combobox_popup_shown(combobox, param):
 
-        widget = window.get_property(param.name)
+        visible = combobox.get_property(param.name)
+
+        if visible:
+            return
+
+        # Always focus the text entry after the popup is closed
+        if combobox.get_has_entry():
+            entry = combobox.get_child()
+            entry.grab_focus_without_selecting()
+            entry.set_position(-1)
+            return
+
+        # Workaround for GTK 4 issue where wrong widget receives focus after closing popup
+        if GTK_API_VERSION >= 4:
+            combobox.grab_focus()
+
+    def on_focus_widget_changed(self, window, arg):
+
+        widget = window.get_property(arg.name) if GTK_API_VERSION >= 4 else arg
 
         if widget is None:
             return
 
-        popover = widget.get_ancestor(Gtk.Popover)
+        # Workaround for GTK 4 issue where wrong widget receives focus after closing popover
+        if GTK_API_VERSION >= 4:
+            popover = widget.get_ancestor(Gtk.Popover)
 
-        if popover is None:
-            return
+            if popover is not None:
+                self.connect_signal(popover, "closed", self.on_popover_closed)
+                return
 
-        try:
-            popover.handler_block_by_func(self.on_popover_closed)
+        combobox = widget.get_ancestor(Gtk.ComboBoxText)
 
-        except TypeError:
-            popover.connect("closed", self.on_popover_closed)
-            return
-
-        popover.handler_unblock_by_func(self.on_popover_closed)
+        if combobox is not None:
+            self.connect_signal(combobox, "notify::popup-shown", self.on_combobox_popup_shown)

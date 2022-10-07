@@ -520,10 +520,7 @@ class Search:
 
         return False
 
-    def on_combobox_popup_shown(self, combobox, param):
-
-        self.frame.on_combobox_popup_shown(combobox, param)
-
+    def on_combobox_popup_shown(self, combobox, _param):
         entry = combobox.get_child()
         entry.emit("activate")
 
