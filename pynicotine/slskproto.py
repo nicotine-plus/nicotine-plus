@@ -607,6 +607,10 @@ class SlskProtoThread(threading.Thread):
     def modify_connection_events(self, conn_obj, events):
 
         if conn_obj.events != events:
+            log.add_conn("Modifying selector events for connection to %(addr)s: %(events)s", {
+                "addr": conn_obj.addr,
+                "events": events
+            })
             self.selector.modify(conn_obj.sock, events)
             conn_obj.events = events
 
@@ -1896,6 +1900,7 @@ class SlskProtoThread(threading.Thread):
                 return
 
             msg_type = msg_obj.msgtype
+            log.add_msg_contents(msg_obj, is_outgoing=True)
 
             if msg_type == MessageType.INIT:
                 self.process_peer_init_output(msg_obj)

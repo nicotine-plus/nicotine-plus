@@ -173,7 +173,9 @@ class Logger:
             if msg_class in self.EXCLUDED_MSGS:
                 return
 
-            msg = "%s %s" % (msg_class, self.contents(msg))
+            msg_direction = "SENT" if msg_args else "RECEIVED"
+            msg = "%s: %s %s" % (msg_direction, msg_class, self.contents(msg))
+            msg_args = None
 
         msg = self.set_msg_prefix(level, msg)
 
@@ -212,8 +214,8 @@ class Logger:
     def add_conn(self, msg, msg_args=None):
         self.add(msg, msg_args=msg_args, level="connection")
 
-    def add_msg_contents(self, msg):
-        self.add(msg, msg_args=None, level="message")
+    def add_msg_contents(self, msg, is_outgoing=False):
+        self.add(msg, msg_args=is_outgoing, level="message")
 
     def add_transfer(self, msg, msg_args=None):
         self.add(msg, msg_args=msg_args, level="transfer")
