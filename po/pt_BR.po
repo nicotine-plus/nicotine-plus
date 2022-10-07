@@ -1746,7 +1746,7 @@ msgstr "Modifique o seguinte filtro de download:"
 #: pynicotine/gtkgui/dialogs/preferences.py:434
 #, python-format
 msgid "%(num)d Failed! %(error)s "
-msgstr "%(num)d falhou! %(erro)s "
+msgstr "%(num)d falhou! %(error)s "
 
 #: pynicotine/gtkgui/dialogs/preferences.py:441
 msgid "Filters Successful"
