@@ -87,8 +87,9 @@ disable=missing-class-docstring,
         import-outside-toplevel,
         pointless-string-statement,
         duplicate-code,
+        no-value-for-parameter,
         consider-using-f-string,
-        no-value-for-parameter
+        no-self-use
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option
