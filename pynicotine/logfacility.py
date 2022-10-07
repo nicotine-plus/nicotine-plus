@@ -173,7 +173,7 @@ class Logger:
             if msg_class in self.EXCLUDED_MSGS:
                 return
 
-            msg_direction = "SENT" if msg_args else "RECEIVED"
+            msg_direction = "OUT" if msg_args else "IN"
             msg = "%s: %s %s" % (msg_direction, msg_class, self.contents(msg))
             msg_args = None
 
