@@ -1613,6 +1613,9 @@ class SlskProtoThread(threading.Thread):
             msg = self.unpack_network_message(FileOffset, msg_buffer_mem[:msgsize], msgsize, "file", conn_obj.init)
 
             if msg is not None and msg.offset is not None:
+                self._callback_msgs.append(msg)
+                conn_obj.fileupl.offset = msg.offset
+
                 try:
                     conn_obj.fileupl.file.seek(msg.offset)
                     self.modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
@@ -1620,8 +1623,6 @@ class SlskProtoThread(threading.Thread):
                 except (OSError, ValueError) as error:
                     self._callback_msgs.append(UploadFileError(conn_obj.fileupl.token, conn_obj.fileupl.file, error))
                     self.close_connection(self._conns, conn_obj.sock)
-
-                conn_obj.fileupl.offset = msg.offset
 
         if idx:
             conn_obj.ibuf = msg_buffer[idx:]

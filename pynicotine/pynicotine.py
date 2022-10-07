@@ -181,6 +181,7 @@ class NicotineCore:
             slskmessages.UploadFile: self.transfers.file_upload,
             slskmessages.FileDownloadInit: self.transfers.file_download_init,
             slskmessages.FileUploadInit: self.transfers.file_upload_init,
+            slskmessages.FileOffset: self.dummy_message,
             slskmessages.TransferRequest: self.transfers.transfer_request,
             slskmessages.TransferResponse: self.transfers.transfer_response,
             slskmessages.QueueUpload: self.transfers.queue_upload,
