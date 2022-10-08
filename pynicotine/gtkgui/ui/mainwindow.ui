@@ -1873,7 +1873,7 @@
                 <child>
                   <object class="GtkToggleButton" id="_log_history_button">
                     <property name="visible">True</property>
-                    <property name="tooltip-text" translatable="yes">Show log history</property>
+                    <property name="tooltip-text" translatable="yes">Show Log History Pane</property>
                     <property name="action-name">win.show-log-history</property>
                     <child>
                       <object class="GtkImage">
