@@ -1,8 +1,8 @@
-nicotine (3.2.6-rc2) jammy; urgency=medium
+nicotine (3.2.6-rc3) jammy; urgency=medium
 
-  * Release candidate 2.
+  * Release candidate 3.
 
- -- Mat <mail@mathias.is>  Wed, 05 Oct 2022 17:16:31 +0300
+ -- Mat <mail@mathias.is>  Sat, 08 Oct 2022 21:15:38 +0300
 
 nicotine (3.2.5-1) jammy; urgency=medium
 

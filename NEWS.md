@@ -1,6 +1,6 @@
 # Release Notes
 
-## Version 3.2.6 (Release Candidate 1)
+## Version 3.2.6 (Release Candidate 3)
 
 ### Changes
 
@@ -14,6 +14,7 @@
  * IMPORTANT: Fixed an issue where certain uploads were incorrectly marked as "Cancelled"
  * IMPORTANT: Fixed an issue where redundant protocol messages could be sent to the server indefinitely
  * IMPORTANT - OpenBSD: Fixed a regression where incoming peer connections did not work
+ * Fixed an issue where UPnP did not work on MikroTik routers
  * Fixed an issue where the progress bar would get stuck if a share browse request ended abruptly
  * Windows: Fixed an issue where network drives could not be shared
  * Flatpak: Fixed an issue where the GUI was not translated to the system language
@@ -28,6 +29,8 @@
  * Offline messages not popping up in tabs ([#2189](https://github.com/nicotine-plus/nicotine-plus/issues/2189))
  * Samba Share hosted by Linux, mounted on Windows Failing ([#2190](https://github.com/nicotine-plus/nicotine-plus/issues/2190))
  * The flatpak version of Nicotine+ is using the wrong language ([#2194](https://github.com/nicotine-plus/nicotine-plus/issues/2194))
+ * Uploads partly broken ([#2197](https://github.com/nicotine-plus/nicotine-plus/issues/2197))
+ * Error code 725: OnlyPermanentLeasesSupported ([#2200](https://github.com/nicotine-plus/nicotine-plus/issues/2200))
 
 
 ## Version 3.2.5 (August 31, 2022)
