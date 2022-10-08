@@ -1466,7 +1466,7 @@
                                                     <child>
                                                       <object class="GtkLabel">
                                                         <property name="visible">True</property>
-                                                        <property name="label" translatable="yes">_Room List</property>
+                                                        <property name="label" translatable="yes">_Rooms</property>
                                                         <property name="use-underline">True</property>
                                                         <property name="mnemonic-widget">room_list_button</property>
                                                       </object>
