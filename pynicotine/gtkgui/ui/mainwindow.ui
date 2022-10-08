@@ -440,7 +440,7 @@
                                             <child>
                                               <object class="GtkMenuButton" id="downloads_grouping_button">
                                                 <property name="visible">True</property>
-                                                <property name="tooltip-text" translatable="yes">File grouping mode</property>
+                                                <property name="tooltip-text" translatable="yes">File Grouping Mode</property>
                                                 <child>
                                                   <object class="GtkImage">
                                                     <property name="visible">True</property>
@@ -683,7 +683,7 @@
                                             <child>
                                               <object class="GtkMenuButton" id="uploads_grouping_button">
                                                 <property name="visible">True</property>
-                                                <property name="tooltip-text" translatable="yes">File grouping mode</property>
+                                                <property name="tooltip-text" translatable="yes">File Grouping Mode</property>
                                                 <child>
                                                   <object class="GtkImage">
                                                     <property name="visible">True</property>
