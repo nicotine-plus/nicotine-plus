@@ -137,7 +137,7 @@
                 <child>
                   <object class="GtkMenuButton" id="grouping_button">
                     <property name="visible">True</property>
-                    <property name="tooltip-text" translatable="yes">Result grouping mode</property>
+                    <property name="tooltip-text" translatable="yes">File Grouping Mode</property>
                     <child>
                       <object class="GtkImage">
                         <property name="visible">True</property>
