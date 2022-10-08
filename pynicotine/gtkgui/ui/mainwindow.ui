@@ -1449,7 +1449,7 @@
                                                 <property name="visible">True</property>
                                                 <property name="max-width-chars">40</property>
                                                 <property name="width-chars">5</property>
-                                                <property name="placeholder-text" translatable="yes">Create or join room…</property>
+                                                <property name="placeholder-text" translatable="yes">Join or create room…</property>
                                                 <property name="tooltip-text" translatable="yes">Enter the name of a room you want to join. If the room doesn't exist, it will be created.</property>
                                                 <property name="primary-icon-name">user-available-symbolic</property>
                                                 <signal name="activate" handler="on_create_room"/>
