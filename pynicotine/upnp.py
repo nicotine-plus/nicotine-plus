@@ -347,7 +347,7 @@ class UPnP:
                 lease_duration=lease_duration
             )
 
-            if error_code == 725 and lease_duration > 0:
+            if error_code == "725" and lease_duration > 0:
                 log.add_debug("UPnP: Router requested permanent lease duration")
                 self._update_port_mapping(lease_duration=0)
                 return
