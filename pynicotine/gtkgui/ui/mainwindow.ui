@@ -212,7 +212,7 @@
                                         <child>
                                           <object class="GtkButton">
                                             <property name="visible">True</property>
-                                            <property name="tooltip-text" translatable="yes">Configure searches</property>
+                                            <property name="tooltip-text" translatable="yes">Configure Searches</property>
                                             <signal name="clicked" handler="on_configure_searches"/>
                                             <child>
                                               <object class="GtkImage">
@@ -457,7 +457,7 @@
                                         <child>
                                           <object class="GtkButton">
                                             <property name="visible">True</property>
-                                            <property name="tooltip-text" translatable="yes">Configure downloads</property>
+                                            <property name="tooltip-text" translatable="yes">Configure Downloads</property>
                                             <signal name="clicked" handler="on_configure_downloads"/>
                                             <child>
                                               <object class="GtkImage">
@@ -700,7 +700,7 @@
                                         <child>
                                           <object class="GtkButton">
                                             <property name="visible">True</property>
-                                            <property name="tooltip-text" translatable="yes">Configure uploads</property>
+                                            <property name="tooltip-text" translatable="yes">Configure Uploads</property>
                                             <signal name="clicked" handler="on_configure_uploads"/>
                                             <child>
                                               <object class="GtkImage">
@@ -876,7 +876,7 @@
                                         <child>
                                           <object class="GtkButton">
                                             <property name="visible">True</property>
-                                            <property name="tooltip-text" translatable="yes">Configure shares</property>
+                                            <property name="tooltip-text" translatable="yes">Configure Shares</property>
                                             <signal name="clicked" handler="on_configure_shares"/>
                                             <child>
                                               <object class="GtkImage">
@@ -1202,7 +1202,7 @@
                                         <child>
                                           <object class="GtkButton">
                                             <property name="visible">True</property>
-                                            <property name="tooltip-text" translatable="yes">Configure chats</property>
+                                            <property name="tooltip-text" translatable="yes">Configure Chats</property>
                                             <signal name="clicked" handler="on_configure_chats"/>
                                             <child>
                                               <object class="GtkImage">
@@ -1491,7 +1491,7 @@
                                             <child>
                                               <object class="GtkButton">
                                                 <property name="visible">True</property>
-                                                <property name="tooltip-text" translatable="yes">Configure chats</property>
+                                                <property name="tooltip-text" translatable="yes">Configure Chats</property>
                                                 <signal name="clicked" handler="on_configure_chats"/>
                                                 <child>
                                                   <object class="GtkImage">
