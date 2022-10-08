@@ -202,7 +202,9 @@ class UPnP:
     """ Class that handles UPnP Port Mapping """
 
     def __init__(self, port):
+
         self.port = port
+        self.lease_duration = 86400  # Mapping expires in 24 hours
         self.timer = None
 
     @staticmethod
@@ -263,9 +265,7 @@ class UPnP:
         error_code = xml.findtext(".//{urn:schemas-upnp-org:control-1-0}errorCode")
         error_description = xml.findtext(".//{urn:schemas-upnp-org:control-1-0}errorDescription")
 
-        if error_code or error_description:
-            raise Exception(_("Error code %(code)s: %(description)s") %
-                            {"code": error_code, "description": error_description})
+        return error_code, error_description
 
     @staticmethod
     def find_local_ip_address():
@@ -339,20 +339,28 @@ class UPnP:
                 self.port
             ))
 
-            try:
-                self._request_port_mapping(
-                    router=router,
-                    protocol="TCP",
-                    public_port=self.port,
-                    private_ip=local_ip_address,
-                    private_port=self.port,
-                    mapping_description="NicotinePlus",
-                    lease_duration=86400  # Expires in 24 hours
-                )
+            error_code, error_description = self._request_port_mapping(
+                router=router,
+                protocol="TCP",
+                public_port=self.port,
+                private_ip=local_ip_address,
+                private_port=self.port,
+                mapping_description="NicotinePlus",
+                lease_duration=self.lease_duration
+            )
 
-            except Exception as error:
-                raise RuntimeError(
-                    _("Failed to map the external WAN port: %(error)s") % {"error": error}) from error
+            if error_code == 725 and self.lease_duration > 0:
+                log.add_debug("UPnP: Router only supports permanent leases, setting lease duration to 0")
+                old_lease_duration = self.lease_duration
+                self.lease_duration = 0
+
+                self._update_port_mapping()
+                self.lease_duration = old_lease_duration
+                return
+
+            if error_code or error_description:
+                raise Exception(_("Error code %(code)s: %(description)s") %
+                                {"code": error_code, "description": error_description})
 
         except Exception as error:
             from traceback import format_exc
