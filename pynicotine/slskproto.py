@@ -1992,10 +1992,12 @@ class SlskProtoThread(threading.Thread):
                 self._callback_msgs.append(UploadFileError(conn_obj.fileupl.token, conn_obj.fileupl.file, error))
                 self.close_connection(self._conns, sock)
 
-            if bytes_send > 0:
+            # bytes_send can be zero if the offset equals the file size, check finished status here
+            finished = (conn_obj.fileupl.offset + conn_obj.fileupl.sentbytes == size)
+
+            if finished or bytes_send > 0:
                 self.total_upload_bandwidth += bytes_send
                 current_time = time.time()
-                finished = (conn_obj.fileupl.offset + conn_obj.fileupl.sentbytes == size)
 
                 if finished or (current_time - conn_obj.lastcallback) > 1:
                     # We save resources by not sending data back to the NicotineCore
