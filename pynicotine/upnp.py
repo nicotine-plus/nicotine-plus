@@ -202,9 +202,7 @@ class UPnP:
     """ Class that handles UPnP Port Mapping """
 
     def __init__(self, port):
-
         self.port = port
-        self.lease_duration = 86400  # Mapping expires in 24 hours
         self.timer = None
 
     @staticmethod
@@ -309,7 +307,7 @@ class UPnP:
 
         return router
 
-    def _update_port_mapping(self):
+    def _update_port_mapping(self, lease_duration=86400):
         """
         This function supports creating a Port Mapping via the UPnP
         IGDv1 and IGDv2 protocol.
@@ -346,16 +344,12 @@ class UPnP:
                 private_ip=local_ip_address,
                 private_port=self.port,
                 mapping_description="NicotinePlus",
-                lease_duration=self.lease_duration
+                lease_duration=lease_duration
             )
 
-            if error_code == 725 and self.lease_duration > 0:
-                log.add_debug("UPnP: Router only supports permanent leases, setting lease duration to 0")
-                old_lease_duration = self.lease_duration
-                self.lease_duration = 0
-
-                self._update_port_mapping()
-                self.lease_duration = old_lease_duration
+            if error_code == 725 and lease_duration > 0:
+                log.add_debug("UPnP: Router requested permanent lease duration")
+                self._update_port_mapping(lease_duration=0)
                 return
 
             if error_code or error_description:
