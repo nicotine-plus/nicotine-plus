@@ -50,6 +50,7 @@ class Logger:
         slskmessages.DistribEmbeddedMessage,
         slskmessages.DistribSearch,
         slskmessages.EmbeddedMessage,
+        slskmessages.PeerMessageProgress,
         slskmessages.SetConnectionStats,
         slskmessages.SharedFileList,
         slskmessages.UnknownPeerMessage
