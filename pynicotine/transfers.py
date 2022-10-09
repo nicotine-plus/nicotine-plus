@@ -775,7 +775,7 @@ class Transfers:
                 return
 
             log.add_transfer(("Responding to legacy upload request %(token)s for file %(filename)s "
-                              "from user %(user)s: allowed: %(allowed)s, reason: %(reason)s"), {
+                              "from user %(user)s, allowed: %(allowed)s, reason: %(reason)s"), {
                 "token": response.token, "filename": msg.file, "user": user,
                 "allowed": response.allowed, "reason": response.reason
             })
