@@ -537,9 +537,6 @@ class NicotineFrame(Window):
     def on_disconnect(self, *_args):
         self.core.disconnect()
 
-    def on_away(self, *_args):
-        self.core.set_away_mode(self.core.user_status != UserStatus.AWAY, save_state=True)
-
     def on_soulseek_privileges(self, *_args):
 
         import urllib.parse
@@ -783,12 +780,6 @@ class NicotineFrame(Window):
         self.application.add_action(self.disconnect_action)
         self.application.set_accels_for_action("app.disconnect", ["<Shift><Primary>d"])
 
-        state = config.sections["server"]["away"]
-        self.away_action = Gio.SimpleAction(name="away", state=GLib.Variant("b", state), enabled=False)
-        self.away_action.connect("change-state", self.on_away)
-        self.application.add_action(self.away_action)
-        self.application.set_accels_for_action("app.away", ["<Primary>h"])
-
         self.soulseek_privileges_action = Gio.SimpleAction(name="soulseek-privileges", enabled=False)
         self.soulseek_privileges_action.connect("activate", self.on_soulseek_privileges)
         self.application.add_action(self.soulseek_privileges_action)
@@ -960,13 +951,19 @@ class NicotineFrame(Window):
         action.connect("change-state", self.on_debug_miscellaneous)
         self.window.add_action(action)
 
-        # Status Bar
+        # Status Bar Buttons
 
         state = config.sections["transfers"]["usealtlimits"]
         self.alt_speed_action = Gio.SimpleAction(name="alternative-speed-limit", state=GLib.Variant("b", state))
         self.alt_speed_action.connect("change-state", self.on_alternative_speed_limit)
         self.application.add_action(self.alt_speed_action)
         self.update_alternative_speed_icon(state)
+
+        state = config.sections["server"]["away"]
+        self.away_action = Gio.SimpleAction(name="away", state=GLib.Variant("b", state), enabled=False)
+        self.away_action.connect("change-state", self.on_away)
+        self.application.add_action(self.away_action)
+        self.application.set_accels_for_action("app.away", ["<Primary>h"])
 
         # Window (system menu and events)
 
@@ -1540,6 +1537,9 @@ class NicotineFrame(Window):
         self.core.privatechats.update_completions()
 
     """ Away Mode """
+
+    def on_away(self, *_args):
+        self.core.set_away_mode(self.core.user_status != UserStatus.AWAY, save_state=True)
 
     def set_away_mode(self, _is_away):
         self.update_user_status()
