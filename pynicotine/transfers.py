@@ -2408,6 +2408,14 @@ class Transfers:
 
     def abort_transfer(self, transfer, reason="Cancelled", send_fail_message=False):
 
+        log.add_transfer(("Aborting transfer, user \"%(user)s\", filename \"%(filename)s\", token \"%(token)s\", "
+                          "status \"%(status)s\""), {
+            "user": transfer.user,
+            "filename": transfer.filename,
+            "token": transfer.token,
+            "status": transfer.status
+        })
+
         transfer.legacy_attempt = False
         transfer.size_changed = False
         transfer.token = None
