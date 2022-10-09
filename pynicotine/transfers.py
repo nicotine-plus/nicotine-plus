@@ -1033,8 +1033,8 @@ class Transfers:
             if download.token != token or download.user != username:
                 continue
 
-            self.abort_transfer(download)
             download.status = "Local file error"
+            self.abort_transfer(download)
 
             log.add(_("Download I/O error: %s"), msg.error)
             self.update_download(download)
@@ -1050,8 +1050,8 @@ class Transfers:
             if upload.token != token or upload.user != username:
                 continue
 
-            self.abort_transfer(upload)
             upload.status = "Local file error"
+            self.abort_transfer(upload)
 
             log.add(_("Upload I/O error: %s"), msg.error)
             self.update_upload(upload)
@@ -1134,8 +1134,8 @@ class Transfers:
                 except OSError as error:
                     log.add(_("Download I/O error: %s"), error)
 
-                    self.abort_transfer(download)
                     download.status = "Local file error"
+                    self.abort_transfer(download)
 
                 else:
                     download.file = file_handle
@@ -1439,14 +1439,13 @@ class Transfers:
                 self.download_finished(download, file_handle=download.file)
                 return
 
-            self.abort_transfer(download)
-
             if download.status != "Finished":
                 if self.core.user_statuses.get(download.user) == UserStatus.OFFLINE:
                     download.status = "User logged off"
                 else:
                     download.status = "Cancelled"
 
+            self.abort_transfer(download)
             self.update_download(download)
             return
 
@@ -1477,8 +1476,6 @@ class Transfers:
             if upload.status == "Finished":
                 return
 
-            self.abort_transfer(upload)
-
             if self.core.user_statuses.get(upload.user) == UserStatus.OFFLINE:
                 upload.status = "User logged off"
             else:
@@ -1487,6 +1484,8 @@ class Transfers:
                 # Transfer ended abruptly. Tell the peer to re-queue the file. If the transfer was
                 # intentionally cancelled, the peer should ignore this message.
                 self.core.send_message_to_peer(upload.user, slskmessages.UploadFailed(file=upload.filename))
+
+            self.abort_transfer(upload)
 
             if not self.auto_clear_upload(upload):
                 self.update_upload(upload)
@@ -1598,9 +1597,9 @@ class Transfers:
 
                 if downloadregexp.search(filename) is not None:
                     log.add_transfer("Filtering: %s", filename)
-                    self.abort_transfer(transfer)
-                    # The string to be displayed on the GUI
+
                     transfer.status = "Filtered"
+                    self.abort_transfer(transfer)
 
                     if self.auto_clear_download(transfer):
                         return
@@ -1948,8 +1947,8 @@ class Transfers:
 
     def download_folder_error(self, transfer, error):
 
-        self.abort_transfer(transfer)
         transfer.status = "Download folder error"
+        self.abort_transfer(transfer)
 
         self.core.notifications.new_text_notification(
             _("OS error: %s") % error, title=_("Download folder error"))
@@ -2509,8 +2508,8 @@ class Transfers:
 
         for download in self.downloads:
             if download.status not in ("Finished", "Filtered", "Paused"):
-                self.abort_transfer(download)
                 download.status = "User logged off"
+                self.abort_transfer(download)
                 need_update = True
 
         if self.downloadsview and need_update:
