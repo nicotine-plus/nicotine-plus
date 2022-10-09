@@ -732,7 +732,7 @@ class Transfers:
         real_path = self.core.shares.virtual2real(filename)
         allowed, reason = self.check_queue_upload_allowed(user, msg.init.addr, filename, real_path, msg)
 
-        log.add_transfer(("Upload request for file %(filename)s from user %(user)s: "
+        log.add_transfer(("Upload request for file %(filename)s from user: %(user)s, "
                           "allowed: %(allowed)s, reason: %(reason)s"), {
             "filename": filename,
             "user": user,
@@ -762,8 +762,8 @@ class Transfers:
         if msg.direction == TransferDirection.UPLOAD:
             response = self.transfer_request_downloads(msg)
 
-            log.add_transfer(("Responding to download request %(token)s for file %(filename)s "
-                              "from user %(user)s: allowed: %(allowed)s, reason: %(reason)s"), {
+            log.add_transfer(("Responding to download request with token %(token)s for file %(filename)s "
+                              "from user: %(user)s, allowed: %(allowed)s, reason: %(reason)s"), {
                 "token": response.token, "filename": msg.file, "user": user,
                 "allowed": response.allowed, "reason": response.reason
             })
@@ -796,7 +796,7 @@ class Transfers:
         size = msg.filesize
         token = msg.token
 
-        log.add_transfer("Received download request %(token)s for file %(filename)s from user %(user)s", {
+        log.add_transfer("Received download request with token %(token)s for file %(filename)s from user %(user)s", {
             "token": token,
             "filename": filename,
             "user": user
@@ -936,7 +936,7 @@ class Transfers:
         token = msg.token
         reason = msg.reason
 
-        log.add_transfer(("Received response for upload request %(token)s: allowed: %(allowed)s, "
+        log.add_transfer(("Received response for upload with token: %(token)s, allowed: %(allowed)s, "
                           "reason: %(reason)s, file size: %(size)s"), {
             "token": token,
             "allowed": msg.allowed,
