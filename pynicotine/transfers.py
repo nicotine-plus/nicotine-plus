@@ -578,8 +578,7 @@ class Transfers:
         user_offline = (msg.status == UserStatus.OFFLINE)
         download_statuses = ("Queued", "Getting status", "Too many files", "Too many megabytes", "Pending shutdown.",
                              "User logged off", "Connection timeout", "Remote file error", "Cancelled")
-        upload_statuses = ("Getting status", "Disallowed extension", "User logged off", "Connection timeout",
-                           "Cancelled")
+        upload_statuses = ("Getting status", "User logged off", "Connection timeout")
 
         for download in reversed(self.downloads.copy()):
             if (download.user == username
