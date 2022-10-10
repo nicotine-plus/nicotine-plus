@@ -495,6 +495,8 @@ class NicotineFrame(Window):
         # Action status
         self.connect_action.set_enabled(not is_online)
         self.disconnect_action.set_enabled(is_online)
+        self.away_set_action.set_enabled(is_online)
+        self.away_unset_action.set_enabled(is_online)
         self.away_action.set_enabled(is_online)
         self.away_action.set_state(GLib.Variant("b", is_away))
         self.soulseek_privileges_action.set_enabled(is_online)
@@ -963,9 +965,18 @@ class NicotineFrame(Window):
         self.away_action = Gio.SimpleAction(name="away", state=GLib.Variant("b", state), enabled=False)
         self.away_action.connect("change-state", self.on_away)
         self.application.add_action(self.away_action)
-        self.application.set_accels_for_action("app.away", ["<Primary>h"])
 
-        # Window (system menu and events)
+        # Action Shortcuts
+
+        self.away_set_action = Gio.SimpleAction(name="away-set", enabled=False)
+        self.away_set_action.connect("activate", self.on_away_set_accelerator)
+        self.application.add_action(self.away_set_action)
+        self.application.set_accels_for_action("app.away-set", ["<Shift><Primary>h"])
+
+        self.away_unset_action = Gio.SimpleAction(name="away-unset", enabled=False)
+        self.away_unset_action.connect("activate", self.on_away_unset_accelerator)
+        self.application.add_action(self.away_unset_action)
+        self.application.set_accels_for_action("app.away-unset", ["<Primary>h"])
 
         action = Gio.SimpleAction(name="close")  # 'When closing Nicotine+'
         action.connect("activate", self.on_close_request)
@@ -1540,6 +1551,16 @@ class NicotineFrame(Window):
 
     def on_away(self, *_args):
         self.core.set_away_mode(self.core.user_status != UserStatus.AWAY, save_state=True)
+
+    def on_away_set_accelerator(self, *_args):
+        """ Shift+Ctrl+H: Set Away """
+
+        self.core.set_away_mode(True, save_state=True)
+
+    def on_away_unset_accelerator(self, *_args):
+        """ Ctrl+H: Unset Away (Return Home) """
+
+        self.core.set_away_mode(False, save_state=True)
 
     def set_away_mode(self, _is_away):
         self.update_user_status()
