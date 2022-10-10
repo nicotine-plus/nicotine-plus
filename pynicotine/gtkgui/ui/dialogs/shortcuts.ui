@@ -30,8 +30,15 @@
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">True</property>
-                <property name="action-name">app.away</property>
-                <property name="title" translatable="yes">Away</property>
+                <property name="action-name">app.away-set</property>
+                <property name="title" translatable="yes">Set Away Status</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">True</property>
+                <property name="action-name">app.away-unset</property>
+                <property name="title" translatable="yes">Set Online Status</property>
               </object>
             </child>
             <child>
