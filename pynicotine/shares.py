@@ -835,19 +835,15 @@ class Shares:
 
     @staticmethod
     def check_shares(shared_folders):
-        """ Return number of configured shared folders, list any that are unreadable """
+        """ Return shared folder paths that are inaccessible """
 
-        num_ok = 0
         errors = []
 
-        for shares in shared_folders:
-            for virtual, folder, *_unused in shares:
-                if os.access(folder, os.R_OK):
-                    num_ok += 1
-                else:
-                    errors.append(f"Cannot access share {virtual} with real path {folder}")
+        for virtual, folder, *_unused in shared_folders[1]:
+            if not os.access(str(folder), os.R_OK):
+                errors.append(f"Cannot access share {virtual} with real path {folder}")
 
-        return num_ok, errors
+        return errors
 
     def rescan_shares(self, init=False, rescan=True, rebuild=False, use_thread=True, force=False):
 
@@ -856,14 +852,18 @@ class Shares:
 
         self.rescanning = True
         shared_folders = self.get_shared_folders()
-        num_ok, errors = self.check_shares(shared_folders)
+        errors = self.check_shares(shared_folders)
 
         if errors:
             log.add('\n'.join(errors))
-            log.add(f"{len(errors)} shares cannot be scanned")
+
+            if len(errors) >= 2:
+                log.add(f"Failed to access {len(errors)} shares")
+
+            if not force and rescan and self.ui_callback:
+                pass  # TODO: Confirm abort/retry/continue (force rescan)
+
             rescan = (force and rescan)
-        else:
-            log.add(f"{num_ok} shares configured")
             
         # Hand over database control to the scanner process
         self.close_shares(self.share_dbs)
