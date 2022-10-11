@@ -104,18 +104,18 @@ class Scanner:
                 self.create_compressed_shares()
 
             if self.rescan:
-                start_num_folders = len(list(self.share_dbs.get("buddyfiles", {})))
+                num_folders = len(list(self.share_dbs.get("buddyfiles", {})))
+                str_processing = _("rebuilding") if self.rebuild else _("rescanning")
 
-                self.queue.put((_("Rescanning shares…"), None, None))
-                self.queue.put((_("%(num)s folders found before rescan, rebuilding…"),
-                               {"num": start_num_folders}, None))
+                self.queue.put((_(f"{num_folders} folders found before {str_processing} shares…"), None , None))
 
                 new_mtimes, new_files, new_streams = self.rescan_dirs("normal", rebuild=self.rebuild)
                 _new_mtimes, new_files, _new_streams = self.rescan_dirs("buddy", new_mtimes, new_files,
                                                                         new_streams, self.rebuild)
+                num_folders = len(new_files)
+                str_process = _("Rebuild") if self.rebuild else _("Rescan")
 
-                self.queue.put((_("Rescan complete: %(num)s folders found"), {"num": len(new_files)}, None))
-
+                self.queue.put((_(f"{str_process} complete: {num_folders} folders found"), None, None))
                 self.create_compressed_shares()
 
         except Exception:
@@ -242,6 +242,8 @@ class Scanner:
         # Rebuild shares if share version is outdated
         if share_version is None or share_version < self.version:
             rebuild = True
+
+        self.rebuild = rebuild
 
         for folder in shared_folders:
             # Get mtimes for top-level shared folders, then every subfolder
