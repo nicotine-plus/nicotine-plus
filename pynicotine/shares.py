@@ -833,14 +833,38 @@ class Shares:
 
         return False
 
-    def rescan_shares(self, init=False, rescan=True, rebuild=False, use_thread=True):
+    @staticmethod
+    def check_shares(shared_folders):
+        """ Return number of configured shared folders, list any that are unreadable """
+
+        num_ok = 0
+        errors = []
+
+        for shares in shared_folders:
+            for virtual, folder, *_unused in shares:
+                if os.access(folder, os.R_OK):
+                    num_ok += 1
+                else:
+                    errors.append(f"Cannot access share {virtual} with real path {folder}")
+
+        return num_ok, errors
+
+    def rescan_shares(self, init=False, rescan=True, rebuild=False, use_thread=True, force=False):
 
         if self.rescanning:
             return None
 
         self.rescanning = True
         shared_folders = self.get_shared_folders()
+        num_ok, errors = self.check_shares(shared_folders)
 
+        if errors:
+            log.add('\n'.join(errors))
+            log.add(f"{len(errors)} shares cannot be scanned")
+            rescan = (force and rescan)
+        else:
+            log.add(f"{num_ok} shares configured")
+            
         # Hand over database control to the scanner process
         self.close_shares(self.share_dbs)
 
