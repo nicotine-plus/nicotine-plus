@@ -107,7 +107,7 @@ class Scanner:
                 num_folders = len(list(self.share_dbs.get("buddyfiles", {})))
                 str_processing = _("rebuilding") if self.rebuild else _("rescanning")
 
-                self.queue.put((_(f"{num_folders} folders found before {str_processing} shares…"), None , None))
+                self.queue.put((_(f"{num_folders} folders found before {str_processing} shares…"), None, None))
 
                 new_mtimes, new_files, new_streams = self.rescan_dirs("normal", rebuild=self.rebuild)
                 _new_mtimes, new_files, _new_streams = self.rescan_dirs("buddy", new_mtimes, new_files,
