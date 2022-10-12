@@ -535,20 +535,20 @@ class NicotineFrame(Window):
         elif response_id == 2:  # 'Force Rescan'
             self.core.shares.rescan_shares(force=True)
 
-        elif response_id == 3:  # 'Configure Shares'
-            self.on_configure_shares()
+        elif response_id == 3:  # 'Configure Shares' or 'Setup Assistant'
+            self.on_configure_shares() if not config.need_config() else self.on_fast_configure()
 
         return False
 
-    def confirm_rescan_dialog(self, message):
+    def confirm_rescan_dialog(self, message, show_force):
 
         OptionDialog(
             parent=self.window,
             title=_("Failed to access shares"),
             message=message,
             first_button=_("_Retry"),
-            second_button=_("_Force Rescan"),
-            third_button=_("_Configure Shares"),
+            second_button=_("_Force Rescan") if show_force else None,
+            third_button=_("_Configure Shares") if not config.need_config() else _("_Setup Assistant"),
             callback=self.confirm_rescan_dialog_response
         ).show()
 

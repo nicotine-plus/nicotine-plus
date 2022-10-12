@@ -856,10 +856,10 @@ class Shares:
         num_ok, num_shares, errors = self.check_shares(shared_folders)
         num_errors = len(errors)
 
-        if num_shares:
-            log.add(f"Located {num_ok} of {num_shares} configured shares")
-        elif not num_ok:
-            errors.append("No configured shares")
+        log.add(f"Located {num_ok} of {num_shares} configured shares")
+
+        if not num_ok:
+            errors.insert(0, "No shares available" if num_shares else "No shares configured")
 
         if not errors:
             return True
@@ -875,7 +875,7 @@ class Shares:
             message = summary + ":\n\n" + ('\n\n'.join(errors) if num_errors <= 5
                                            else '\n\n'.join(errors[:5]) + "\n\n…")
             # Prompt retry/force rescan
-            return self.ui_callback.confirm_rescan_dialog(message)
+            return self.ui_callback.confirm_rescan_dialog(message, num_ok)
 
         return False
 
