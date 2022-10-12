@@ -840,7 +840,7 @@ class Shares:
         num_shares = 0
 
         for shares in shared_folders:
-            for virtual, folder, *_unused in shares:
+            for _virtual, _folder, *_unused in shares:
                 num_shares += 1
 
         return num_shares
