@@ -536,7 +536,10 @@ class NicotineFrame(Window):
             self.core.shares.rescan_shares(force=True)
 
         elif response_id == 3:  # 'Configure Shares' or 'Setup Assistant'
-            self.on_configure_shares() if not config.need_config() else self.on_fast_configure()
+            if config.need_config():
+                self.on_fast_configure()
+            else:
+                self.on_configure_shares()
 
         return False
 
