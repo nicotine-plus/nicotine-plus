@@ -54,13 +54,13 @@ class StartupTest(unittest.TestCase):
         output = subprocess.check_output(["python3", "-m", "pynicotine", "--help"], timeout=3)
         self.assertTrue(str(output).find("--help") > -1)
 
-        # Check for " 0 folders found after rescan" in output. Text strings are translatable,
-        # so we can't match them directly.
+        # Look for ' 1 of 1 configured shares' in output. Text strings are translatable,
+        # so we can't match an entire line directly.
         output = subprocess.check_output(
             ["python3", "-m", "pynicotine", "--config=" + CONFIG_FILE, "--user-data=" + USER_DATA, "--rescan"],
             timeout=10
         )
-        self.assertTrue(str(output).find(" 0 ") > -1)
+        self.assertTrue(str(output).find(" 1 ") > -1)
 
         output = subprocess.check_output(["python3", "-m", "pynicotine", "--version"], timeout=3)
         self.assertTrue(str(output).find("Nicotine+") > -1)
