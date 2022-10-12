@@ -856,10 +856,10 @@ class Shares:
         num_ok, num_shares, errors = self.check_shares(shared_folders)
         num_errors = len(errors)
 
-        log.add(f"Located {num_ok} of {num_shares} configured shares")
+        log.add(f"{num_ok} shares available" + " / " + f"{num_shares} shares configured")
 
-        if not num_ok:
-            errors.insert(0, "No shares available" if num_shares else "No shares configured")
+        if not num_ok or not num_shares:
+            errors.insert(0, f"{num_ok} shares available" if num_shares else f"{num_shares} shares configured")
 
         if not errors:
             return True
