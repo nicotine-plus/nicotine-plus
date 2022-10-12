@@ -854,7 +854,7 @@ class Shares:
         for shares in shared_folders:
             for virtual, folder, *_unused in shares:
                 if not os.access(str(folder), os.R_OK):
-                    errors.append(f"Cannot access share {virtual} with real path {folder}")
+                    errors.append(f"Cannot access share {virtual} at {folder}")
 
         return errors
 
