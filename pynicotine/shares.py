@@ -834,50 +834,48 @@ class Shares:
         return False
 
     @staticmethod
-    def count_shares(shared_folders):
-        """ Return the total number of configured shared folders """
-
-        num_shares = 0
-
-        for shares in shared_folders:
-            for _virtual, _folder, *_unused in shares:
-                num_shares += 1
-
-        return num_shares
-
-    @staticmethod
     def check_shares(shared_folders):
-        """ Return shared folder paths that are inaccessible """
+        """ Return number of readable shares, total shares, list
+        any shared folders with paths that are inaccessible """
 
-        errors = []
+        num_ok, num_shares, errors = 0, 0, []
 
         for shares in shared_folders:
             for virtual, folder, *_unused in shares:
-                if not os.access(str(folder), os.R_OK):
+                num_shares += 1
+
+                if os.access(folder, os.R_OK):
+                    num_ok += 1
+                else:
                     errors.append(f"Cannot access share {virtual} at {folder}")
 
-        return errors
+        return num_ok, num_shares, errors
 
     def confirm_rescan(self, shared_folders):
-        """ Verify if all shares are mounted before continuing to rescan """
 
-        errors = self.check_shares(shared_folders)
+        num_ok, num_shares, errors = self.check_shares(shared_folders)
+        num_errors = len(errors)
+
+        if num_shares:
+            log.add(f"Located {num_ok} of {num_shares} configured shares")
+        elif not num_ok:
+            errors.append("No configured shares")
 
         if not errors:
             return True
 
-        num_errors, num_shares = len(errors), self.count_shares(shared_folders)
-        title = f"Failed to access {num_errors} of {num_shares} configured shares"
+        summary = f"Failed to access {num_errors} of {num_shares} configured shares"
         message = '\n'.join(errors)
 
-        log.add(message)
-
-        if num_errors >= 2:
-            log.add(title)
+        log.add_transfer(f"{summary}:\n{message}")
+        log.add(message if num_errors < 2 else summary)
 
         if self.ui_callback:
-            # Prompt to retry or force rescan
-            return self.ui_callback.confirm_rescan_dialog(title, message)
+            # Abbreviate message if needed as dialog box may get too tall
+            message = summary + ":\n\n" + ('\n\n'.join(errors) if num_errors <= 5
+                                           else '\n\n'.join(errors[:5]) + "\n\n…")
+            # Prompt retry/force rescan
+            return self.ui_callback.confirm_rescan_dialog(message)
 
         return False
 
@@ -889,6 +887,7 @@ class Shares:
         shared_folders = self.get_shared_folders()
 
         if not force:
+            # Verify that all shares are mounted before doing rescan
             rescan = (rescan and self.confirm_rescan(shared_folders))
 
         # Hand over database control to the scanner process

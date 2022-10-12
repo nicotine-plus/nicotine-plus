@@ -540,11 +540,11 @@ class NicotineFrame(Window):
 
         return False
 
-    def confirm_rescan_dialog(self, title, message):
+    def confirm_rescan_dialog(self, message):
 
         OptionDialog(
             parent=self.window,
-            title=title,
+            title=_("Failed to access shares"),
             message=message,
             first_button=_("_Retry"),
             second_button=_("_Force Rescan"),
