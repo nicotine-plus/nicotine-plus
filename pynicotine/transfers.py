@@ -995,10 +995,6 @@ class Transfers:
 
         transfer = msg.transfer
 
-        if transfer.status == "Transferring":
-            # Check if the transfer has started since the timeout callback was initiated
-            return
-
         log.add_transfer("Transfer %(filename)s with token %(token)s for user %(user)s timed out", {
             "filename": transfer.filename,
             "token": transfer.token,
@@ -1006,7 +1002,7 @@ class Transfers:
         })
 
         transfer.status = "Connection timeout"
-        transfer.token = None
+        self.abort_transfer(transfer)
 
         self.core.watch_user(transfer.user)
 
@@ -1084,9 +1080,6 @@ class Transfers:
             incomplete_folder = self.config.sections["transfers"]["incompletedir"]
             need_update = True
             download.sock = msg.init.sock
-
-            if download in self.transfer_request_times:
-                del self.transfer_request_times[download]
 
             if not incomplete_folder:
                 if download.path:
@@ -1174,6 +1167,10 @@ class Transfers:
             return
 
         # Support legacy transfer system (clients: old Nicotine+ versions, slskd)
+        # The user who requested the download initiates the file upload connection
+        # in this case, but we always assume an incoming file init message is
+        # FileDownloadInit
+
         log.add_transfer(("Received unknown file download init message with token %s, checking if peer "
                           "requested us to upload a file instead"), token)
         self.file_upload_init(msg)
@@ -1203,9 +1200,6 @@ class Transfers:
 
             need_update = True
             upload.sock = msg.init.sock
-
-            if upload in self.transfer_request_times:
-                del self.transfer_request_times[upload]
 
             real_path = self.core.shares.virtual2real(filename)
 
