@@ -689,11 +689,11 @@ class NicotineCore:
         days = hours // 24
 
         if msg.seconds == 0:
-            log.add(_("You have no privileges. Privileges are not required, but allow your downloads "
+            log.add(_("You have no Soulseek privileges. Privileges are not required, but allow your downloads "
                       "to be queued ahead of non-privileged users."))
         else:
             log.add(_("%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of "
-                      "download privileges left."), {
+                      "Soulseek privileges left"), {
                 'days': days,
                 'hours': hours % 24,
                 'minutes': mins % 60,
