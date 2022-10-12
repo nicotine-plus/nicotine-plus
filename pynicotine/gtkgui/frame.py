@@ -527,6 +527,31 @@ class NicotineFrame(Window):
         self.user_status_icon.set_property("icon-name", icon_name)
         self.user_status_label.set_text(status_text)
 
+    def confirm_rescan_dialog_response(self, _dialog, response_id, _data):
+
+        if response_id == 1:  # 'Retry'
+            self.core.shares.rescan_shares()
+
+        elif response_id == 2:  # 'Force Rescan'
+            self.core.shares.rescan_shares(force=True)
+
+        elif response_id == 3:  # 'Configure Shares'
+            self.on_configure_shares()
+
+        return False
+
+    def confirm_rescan_dialog(self, title, message):
+
+        OptionDialog(
+            parent=self.window,
+            title=title,
+            message=message,
+            first_button=_("_Retry"),
+            second_button=_("_Force Rescan"),
+            third_button=_("_Configure Shares"),
+            callback=self.confirm_rescan_dialog_response
+        ).show()
+
     """ Action Callbacks """
 
     # File
