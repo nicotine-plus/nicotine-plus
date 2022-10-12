@@ -432,11 +432,11 @@ class SlskProtoThread(threading.Thread):
 
     @staticmethod
     def _is_upload(conn_obj):
-        return conn_obj.__class__ is PeerConnection and conn_obj.fileinit.__class__ is FileUploadInit
+        return conn_obj.__class__ is PeerConnection and conn_obj.fileupl is not None
 
     @staticmethod
     def _is_download(conn_obj):
-        return conn_obj.__class__ is PeerConnection and conn_obj.fileinit.__class__ is FileDownloadInit
+        return conn_obj.__class__ is PeerConnection and conn_obj.filedown is not None
 
     def _calc_upload_limit(self, limit_disabled=False, limit_per_transfer=False):
 
@@ -1566,6 +1566,13 @@ class SlskProtoThread(threading.Thread):
         idx = 0
 
         if conn_obj.fileinit is None:
+            # Note that this would technically be a FileUploadInit message if the remote user
+            # uses the legacy file transfer system, where file upload connections are initiated
+            # by the user that requested a download. We have no easy way of determining this.
+            # Hence, we always assume that any incoming file init message is a
+            # FileDownloadInit message. Do NOT use these messages to determine if the
+            # transfer is a download or upload!
+
             msgsize = idx = 4
             msg = self.unpack_network_message(
                 FileDownloadInit, msg_buffer_mem[:msgsize], msgsize, "file", conn_obj.init)
@@ -1573,9 +1580,6 @@ class SlskProtoThread(threading.Thread):
             if msg is not None and msg.token is not None:
                 self._callback_msgs.append(msg)
                 conn_obj.fileinit = msg
-
-                self.total_downloads += 1
-                self._calc_download_limit()
 
         elif conn_obj.filedown is not None:
             idx = conn_obj.filedown.leftbytes
@@ -1648,9 +1652,6 @@ class SlskProtoThread(threading.Thread):
             conn_obj = self._conns[msg_obj.init.sock]
             conn_obj.fileinit = msg_obj
             conn_obj.obuf.extend(msg)
-
-            self.total_uploads += 1
-            self._calc_upload_limit_function()
 
             self._callback_msgs.append(msg_obj)
 
@@ -1842,8 +1843,14 @@ class SlskProtoThread(threading.Thread):
         elif msg_class is DownloadFile and msg_obj.init.sock in self._conns:
             self._conns[msg_obj.init.sock].filedown = msg_obj
 
+            self.total_downloads += 1
+            self._calc_download_limit()
+
         elif msg_class is UploadFile and msg_obj.init.sock in self._conns:
             self._conns[msg_obj.init.sock].fileupl = msg_obj
+
+            self.total_uploads += 1
+            self._calc_upload_limit_function()
 
         elif msg_class is SetDownloadLimit:
             self._download_limit = msg_obj.limit * 1024
@@ -1971,7 +1978,7 @@ class SlskProtoThread(threading.Thread):
         else:
             bytes_send = 0
 
-        if self._is_upload(conn_obj) and conn_obj.fileupl is not None and conn_obj.fileupl.offset is not None:
+        if self._is_upload(conn_obj) and conn_obj.fileupl.offset is not None:
             conn_obj.fileupl.sentbytes += bytes_send
             totalsentbytes = conn_obj.fileupl.offset + conn_obj.fileupl.sentbytes + len(conn_obj.obuf)
 
