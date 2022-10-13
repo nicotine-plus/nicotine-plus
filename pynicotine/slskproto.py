@@ -969,8 +969,7 @@ class SlskProtoThread(threading.Thread):
             self._calc_upload_limit_function()
 
         elif init is not None:
-            # Only send callback message if there's no indirect connection attempt in progress
-            if init not in self._out_indirect_conn_request_times:
+            if callback:
                 self._callback_msgs.append(PeerConnectionClosed(user=init.target_user))
 
         else:
