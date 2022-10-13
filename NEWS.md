@@ -1,6 +1,6 @@
 # Release Notes
 
-## Version 3.2.6 (Release Candidate 3)
+## Version 3.2.6 (Release Candidate 4)
 
 ### Changes
 
