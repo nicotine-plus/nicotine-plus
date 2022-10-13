@@ -892,7 +892,7 @@ class SlskProtoThread(threading.Thread):
         init.outgoing_msgs = prev_init.outgoing_msgs
         prev_init.outgoing_msgs = []
 
-        self.close_connection(self._conns, prev_init.sock)
+        self.close_connection(self._conns, prev_init.sock, callback=False)
 
     @staticmethod
     def close_socket(sock, shutdown=True):
