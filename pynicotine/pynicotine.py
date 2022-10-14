@@ -259,6 +259,14 @@ class NicotineCore:
             slskmessages.UnknownPeerMessage: self.dummy_message
         }
 
+    def confirm_quit(self, remember=False):
+
+        if self.ui_callback and config.sections["ui"]["exitdialog"] != 0:  # 0: 'Quit program'
+            self.ui_callback.confirm_quit(remember)
+            return
+
+        self.quit()
+
     def quit(self, signal_type=None, _frame=None):
 
         log.add(_("Quitting %(program)s %(version)s, %(status)s…"), {
@@ -689,11 +697,11 @@ class NicotineCore:
         days = hours // 24
 
         if msg.seconds == 0:
-            log.add(_("You have no privileges. Privileges are not required, but allow your downloads "
+            log.add(_("You have no Soulseek privileges. Privileges are not required, but allow your downloads "
                       "to be queued ahead of non-privileged users."))
         else:
             log.add(_("%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of "
-                      "download privileges left."), {
+                      "Soulseek privileges left"), {
                 'days': days,
                 'hours': hours % 24,
                 'minutes': mins % 60,

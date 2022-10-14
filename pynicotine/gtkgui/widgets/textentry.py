@@ -126,24 +126,24 @@ class ChatEntry:
             parent.echo_message(self.entity, add_alias(args))
 
             if config.sections["words"]["aliases"]:
-                self.frame.update_completions()
+                self.core.chatrooms.update_completions()
+                self.core.privatechats.update_completions()
 
         elif cmd in ("/unalias", "/un"):
             parent = self.core.chatrooms if self.is_chatroom else self.core.privatechats
             parent.echo_message(self.entity, unalias(args))
 
             if config.sections["words"]["aliases"]:
-                self.frame.update_completions()
+                self.core.chatrooms.update_completions()
+                self.core.privatechats.update_completions()
 
         elif cmd in ("/w", "/whois", "/info"):
             if arg_self:
                 self.core.userinfo.request_user_info(arg_self)
-                self.frame.change_main_page(self.frame.userinfo_page)
 
         elif cmd in ("/b", "/browse"):
             if arg_self:
                 self.core.userbrowse.browse_user(arg_self)
-                self.frame.change_main_page(self.frame.userbrowse_page)
 
         elif cmd == "/ip":
             if arg_self:
@@ -152,7 +152,6 @@ class ChatEntry:
         elif cmd == "/pm":
             if args:
                 self.core.privatechats.show_user(args)
-                self.frame.change_main_page(self.frame.private_page)
 
         elif cmd in ("/m", "/msg"):
             if args:
@@ -166,29 +165,24 @@ class ChatEntry:
                 if msg:
                     self.core.privatechats.show_user(user)
                     self.core.privatechats.send_message(user, msg)
-                    self.frame.change_main_page(self.frame.private_page)
 
         elif cmd in ("/s", "/search"):
             if args:
                 self.core.search.do_search(args, "global")
-                self.frame.change_main_page(self.frame.search_page)
 
         elif cmd in ("/us", "/usearch"):
             args_split = args.split(" ", maxsplit=1)
 
             if len(args_split) == 2:
                 self.core.search.do_search(args_split[1], "user", user=args_split[0])
-                self.frame.change_main_page(self.frame.search_page)
 
         elif cmd in ("/rs", "/rsearch"):
             if args:
                 self.core.search.do_search(args, "rooms")
-                self.frame.change_main_page(self.frame.search_page)
 
         elif cmd in ("/bs", "/bsearch"):
             if args:
                 self.core.search.do_search(args, "buddies")
-                self.frame.change_main_page(self.frame.search_page)
 
         elif cmd in ("/j", "/join"):
             if args:
@@ -235,20 +229,18 @@ class ChatEntry:
 
         elif cmd in ("/clear", "/cl"):
             if self.is_chatroom:
-                parent = self.frame.chatrooms.pages[self.entity]
+                self.core.chatrooms.clear_messages(self.entity)
             else:
-                parent = self.frame.privatechat.pages[self.entity]
-
-            parent.chat_view.clear()
+                self.core.privatechats.clear_messages(self.entity)
 
         elif cmd in ("/a", "/away"):
-            self.frame.on_away()
+            self.core.set_away_mode(self.core.user_status != UserStatus.AWAY, save_state=True)
 
         elif cmd in ("/q", "/quit", "/exit"):
-            self.frame.on_quit()
+            self.core.confirm_quit()
 
         elif cmd in ("/c", "/close"):
-            self.frame.privatechat.pages[self.entity].on_close()
+            self.core.privatechats.remove_user(self.entity)
 
         elif cmd == "/now":
             self.core.now_playing.display_now_playing(

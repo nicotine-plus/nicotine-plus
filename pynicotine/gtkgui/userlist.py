@@ -313,7 +313,6 @@ class UserList:
             return
 
         self.core.privatechats.show_user(user)
-        self.frame.change_main_page(self.frame.private_page)
 
     def on_popup_menu(self, menu, _widget):
 

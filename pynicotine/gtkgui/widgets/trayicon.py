@@ -203,7 +203,6 @@ class BaseImplementation:
             return
 
         self.core.privatechats.show_user(user)
-        self.frame.change_main_page(self.frame.private_page)
         self.frame.show()
 
     def on_open_private_chat(self, *_args):

@@ -495,9 +495,10 @@ class NicotineFrame(Window):
         # Action status
         self.connect_action.set_enabled(not is_online)
         self.disconnect_action.set_enabled(is_online)
+        self.soulseek_privileges_action.set_enabled(is_online)
+        self.away_accelerator_action.set_enabled(is_online)
         self.away_action.set_enabled(is_online)
         self.away_action.set_state(GLib.Variant("b", is_away))
-        self.soulseek_privileges_action.set_enabled(is_online)
 
         self.tray_icon.update_user_status()
 
@@ -564,9 +565,6 @@ class NicotineFrame(Window):
 
     def on_disconnect(self, *_args):
         self.core.disconnect()
-
-    def on_away(self, *_args):
-        self.core.set_away_mode(self.core.user_status != UserStatus.AWAY, save_state=True)
 
     def on_soulseek_privileges(self, *_args):
 
@@ -811,12 +809,6 @@ class NicotineFrame(Window):
         self.application.add_action(self.disconnect_action)
         self.application.set_accels_for_action("app.disconnect", ["<Shift><Primary>d"])
 
-        state = config.sections["server"]["away"]
-        self.away_action = Gio.SimpleAction(name="away", state=GLib.Variant("b", state), enabled=False)
-        self.away_action.connect("change-state", self.on_away)
-        self.application.add_action(self.away_action)
-        self.application.set_accels_for_action("app.away", ["<Primary>h"])
-
         self.soulseek_privileges_action = Gio.SimpleAction(name="soulseek-privileges", enabled=False)
         self.soulseek_privileges_action.connect("activate", self.on_soulseek_privileges)
         self.application.add_action(self.soulseek_privileges_action)
@@ -988,7 +980,7 @@ class NicotineFrame(Window):
         action.connect("change-state", self.on_debug_miscellaneous)
         self.window.add_action(action)
 
-        # Status Bar
+        # Status Bar Buttons
 
         state = config.sections["transfers"]["usealtlimits"]
         self.alt_speed_action = Gio.SimpleAction(name="alternative-speed-limit", state=GLib.Variant("b", state))
@@ -996,7 +988,18 @@ class NicotineFrame(Window):
         self.application.add_action(self.alt_speed_action)
         self.update_alternative_speed_icon(state)
 
-        # Window (system menu and events)
+        state = config.sections["server"]["away"]
+        self.away_action = Gio.SimpleAction(name="away", state=GLib.Variant("b", state), enabled=False)
+        self.away_action.connect("change-state", self.on_away)
+        self.application.add_action(self.away_action)
+
+        # Shortcut Key Actions
+
+        self.away_accelerator_action = Gio.SimpleAction(name="away-accelerator", enabled=False)
+        self.away_accelerator_action.cooldown_time = 0  # needed to prevent server ban
+        self.away_accelerator_action.connect("activate", self.on_away_accelerator)
+        self.application.add_action(self.away_accelerator_action)
+        self.application.set_accels_for_action("app.away-accelerator", ["<Primary>h"])
 
         action = Gio.SimpleAction(name="close")  # 'When closing Nicotine+'
         action.connect("activate", self.on_close_request)
@@ -1617,6 +1620,21 @@ class NicotineFrame(Window):
             self.set_auto_away(False)
             self.away_cooldown_time = current_time
 
+    def on_away_accelerator(self, *_args):
+        """ Ctrl+H: Away/Online toggle """
+
+        current_time = time.time()
+
+        if (current_time - self.away_accelerator_action.cooldown_time) >= 1:
+            # Prevent rapid key-repeat toggling to avoid server ban
+            self.on_away()
+            self.away_accelerator_action.cooldown_time = current_time
+
+    def on_away(self, *_args):
+        """ Away/Online status button """
+
+        self.core.set_away_mode(self.core.user_status != UserStatus.AWAY, save_state=True)
+
     """ User Actions """
 
     def on_add_user(self, *_args):
@@ -1812,50 +1830,17 @@ class NicotineFrame(Window):
 
     """ Exit """
 
-    def show_exit_dialog_response(self, dialog, response_id, _data):
-
-        remember = dialog.option.get_active()
-
-        if response_id == 2:  # 'Quit'
-            if remember:
-                config.sections["ui"]["exitdialog"] = 0
-
-            self.core.quit()
-
-        elif response_id == 3:  # 'Run in Background'
-            if remember:
-                config.sections["ui"]["exitdialog"] = 2
-
-            if self.window.get_property("visible"):
-                self.hide()
-
-    def show_exit_dialog(self, remember=True):
-
-        OptionDialog(
-            parent=self.window,
-            title=_('Quit Nicotine+'),
-            message=_('Do you really want to exit?'),
-            second_button=_("_Quit"),
-            third_button=_("_Run in Background") if self.window.get_property("visible") else None,
-            option_label=_("Remember choice") if remember else None,
-            callback=self.show_exit_dialog_response
-        ).show()
-
     def on_close_request(self, *_args):
 
         if config.sections["ui"]["exitdialog"] >= 2:  # 2: 'Run in Background'
             self.hide()
             return True
 
-        return self.on_quit(remember=True)
+        self.core.confirm_quit(remember=True)
+        return True
 
-    def on_quit(self, *_args, remember=False):
-
-        if config.sections["ui"]["exitdialog"] == 0:  # 0: 'Quit program'
-            self.core.quit()
-            return True
-
-        self.show_exit_dialog(remember)
+    def on_quit(self, *_args):
+        self.core.confirm_quit()
         return True
 
     def on_shutdown(self):
@@ -1885,6 +1870,35 @@ class NicotineFrame(Window):
 
         # Save config, incase application is killed later
         config.write_configuration()
+
+    def confirm_quit_response(self, dialog, response_id, _data):
+
+        remember = dialog.option.get_active()
+
+        if response_id == 2:  # 'Quit'
+            if remember:
+                config.sections["ui"]["exitdialog"] = 0
+
+            self.core.quit()
+
+        elif response_id == 3:  # 'Run in Background'
+            if remember:
+                config.sections["ui"]["exitdialog"] = 2
+
+            if self.window.get_property("visible"):
+                self.hide()
+
+    def confirm_quit(self, remember=True):
+
+        OptionDialog(
+            parent=self.window,
+            title=_('Quit Nicotine+'),
+            message=_('Do you really want to exit?'),
+            second_button=_("_Quit"),
+            third_button=_("_Run in Background") if self.window.get_property("visible") else None,
+            option_label=_("Remember choice") if remember else None,
+            callback=self.confirm_quit_response
+        ).show()
 
     def quit(self):
         self.application.quit()

@@ -436,7 +436,6 @@ class Interests:
             user = self.similar_users_list_view.get_row_value(iterator, 1)
 
             self.core.privatechats.show_user(user)
-            self.frame.change_main_page(self.frame.private_page)
             return
 
     @staticmethod

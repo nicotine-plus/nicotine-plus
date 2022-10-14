@@ -114,6 +114,10 @@ class PrivateChats:
 
         self.update_completions()
 
+    def clear_messages(self, user):
+        if self.ui_callback:
+            self.ui_callback.clear_messages(user)
+
     def auto_replace(self, message):
 
         if self.config.sections["words"]["replacewords"]:
