@@ -151,7 +151,7 @@ class ChatRooms(IconNotebook):
 
         if response_id == 2:
             # Create a new room
-            self.core.chatrooms.request_join_room(room, private)
+            self.core.chatrooms.show_room(room, private)
 
     def on_create_room(self, *_args):
 
@@ -203,6 +203,26 @@ class ChatRooms(IconNotebook):
             self.set_current_page(page.container)
             self.frame.change_main_page(self.frame.chatrooms_page)
 
+    def remove_room(self, room):
+
+        page = self.pages.get(room)
+
+        if page is None:
+            return
+
+        page.clear()
+        self.remove_page(page.container)
+        del self.pages[room]
+
+        if room == "Public ":
+            self.roomlist.toggle_public_feed(False)
+        else:
+            self.frame.room_search_combobox.remove_all()
+            self.frame.room_search_combobox.append_text("Joined Rooms ")
+
+            for joined_room in self.pages:
+                self.frame.room_search_combobox.append_text(joined_room)
+
     def join_room(self, msg):
 
         page = self.pages.get(msg.room)
@@ -228,24 +248,8 @@ class ChatRooms(IconNotebook):
             self.frame.room_search_combobox.append_text(msg.room)
 
     def leave_room(self, msg):
-
-        page = self.pages.get(msg.room)
-
-        if page is None:
-            return
-
-        page.clear()
-        self.remove_page(page.container)
-        del self.pages[msg.room]
-
-        if msg.room == "Public ":
-            self.roomlist.toggle_public_feed(False)
-        else:
-            self.frame.room_search_combobox.remove_all()
-            self.frame.room_search_combobox.append_text("Joined Rooms ")
-
-            for room in self.pages:
-                self.frame.room_search_combobox.append_text(room)
+        # Not needed
+        pass
 
     def private_room_users(self, msg):
         # Not needed
@@ -446,7 +450,6 @@ class ChatRoom(UserInterface):
 
         self.tickers = Tickers()
         self.room_wall = RoomWall(self.frame, self.core, self)
-        self.leaving = False
         self.loaded = False
 
         self.users = {}
@@ -1179,19 +1182,11 @@ class ChatRoom(UserInterface):
 
     def on_leave_room(self, *_args):
 
-        if self.leaving:
-            return
-
-        self.leaving = True
-
-        if self.room in config.sections["columns"]["chat_room"]:
-            del config.sections["columns"]["chat_room"][self.room]
-
         if self.room == "Public ":
             self.chatrooms.roomlist.public_feed_toggle.set_active(False)
             return
 
-        self.core.chatrooms.request_leave_room(self.room)
+        self.core.chatrooms.remove_room(self.room)
 
     @staticmethod
     def on_tooltip(widget, pos_x, pos_y, _keyboard_mode, tooltip):

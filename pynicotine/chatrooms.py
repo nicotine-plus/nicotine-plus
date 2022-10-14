@@ -55,10 +55,10 @@ class ChatRooms:
 
         for room in join_list:
             if room == "Public ":
-                self.request_join_public_room()
+                self.queue.append(slskmessages.JoinPublicRoom())
 
             elif isinstance(room, str):
-                self.request_join_room(room)
+                self.queue.append(slskmessages.JoinRoom(room))
 
         if self.ui_callback:
             self.ui_callback.server_login()
@@ -70,14 +70,36 @@ class ChatRooms:
         if self.ui_callback:
             self.ui_callback.server_disconnect()
 
-    def show_room(self, room):
+    def show_room(self, room, private=False):
 
-        if room not in self.joined_rooms:
-            self.request_join_room(room)
+        if room == "Public ":
+            # Fake a JoinRoom protocol message
+            self.join_room(slskmessages.JoinRoom(room))
+            self.queue.append(slskmessages.JoinPublicRoom())
+
+        elif room not in self.joined_rooms:
+            self.queue.append(slskmessages.JoinRoom(room, private))
             return
 
         if self.ui_callback:
             self.ui_callback.show_room(room)
+
+    def remove_room(self, room):
+
+        if room == "Public ":
+            self.queue.append(slskmessages.LeavePublicRoom())
+        else:
+            self.queue.append(slskmessages.LeaveRoom(room))
+
+        self.joined_rooms.discard(room)
+
+        if room in self.config.sections["columns"]["chat_room"]:
+            del self.config.sections["columns"]["chat_room"][room]
+
+        if self.ui_callback:
+            self.ui_callback.remove_room(room)
+
+        self.core.pluginhandler.leave_chatroom_notification(room)
 
     def echo_message(self, room, message, message_type="local"):
         if self.ui_callback:
@@ -134,20 +156,6 @@ class ChatRooms:
     def request_room_list(self):
         self.queue.append(slskmessages.RoomList())
 
-    def request_join_room(self, room, private=False):
-        self.queue.append(slskmessages.JoinRoom(room, private))
-
-    def request_leave_room(self, room):
-        self.queue.append(slskmessages.LeaveRoom(room))
-
-    def request_join_public_room(self):
-        self.join_room(slskmessages.JoinRoom("Public "))
-        self.queue.append(slskmessages.JoinPublicRoom())
-
-    def request_leave_public_room(self):
-        self.queue.append(slskmessages.LeavePublicRoom())
-        self.leave_room(slskmessages.LeaveRoom("Public "))
-
     def request_private_room_disown(self, room):
 
         if not self.is_private_room_owned(room):
@@ -189,12 +197,8 @@ class ChatRooms:
     def leave_room(self, msg):
         """ Server code: 15 """
 
-        self.joined_rooms.discard(msg.room)
-
         if self.ui_callback:
             self.ui_callback.leave_room(msg)
-
-        self.core.pluginhandler.leave_chatroom_notification(msg.room)
 
     def get_user_status(self, msg):
         """ Server code: 7 """
