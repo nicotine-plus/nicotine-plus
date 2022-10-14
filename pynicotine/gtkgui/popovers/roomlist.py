@@ -190,7 +190,7 @@ class RoomList(UserInterface, Popover):
 
         room = self.get_selected_room(treeview)
 
-        if room is not None and room not in self.core.chatrooms.joined_rooms:
+        if room is not None:
             self.popup_room = room
             self.on_popup_join()
 
@@ -206,7 +206,7 @@ class RoomList(UserInterface, Popover):
         menu.actions[_("Cancel Room Membership")].set_enabled(self.core.chatrooms.is_private_room_member(room))
 
     def on_popup_join(self, *_args):
-        self.core.chatrooms.request_join_room(self.popup_room)
+        self.core.chatrooms.show_room(self.popup_room)
         self.popover.hide()
 
     def on_toggle_public_feed(self, *_args):

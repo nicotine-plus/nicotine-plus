@@ -22,7 +22,6 @@ from os.path import commonprefix
 
 from gi.repository import Gtk
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.logfacility import log
@@ -197,13 +196,13 @@ class ChatEntry:
 
         elif cmd in ("/j", "/join"):
             if args:
-                self.core.queue.append(slskmessages.JoinRoom(args))
+                self.core.chatrooms.show_room(args)
 
         elif cmd in ("/l", "/leave", "/p", "/part"):
             if args:
-                self.core.queue.append(slskmessages.LeaveRoom(args))
+                self.core.chatrooms.request_leave_room(args)
             else:
-                self.core.queue.append(slskmessages.LeaveRoom(self.entity))
+                self.core.chatrooms.request_leave_room(self.entity)
 
         elif cmd in ("/ad", "/add", "/buddy"):
             if args:
