@@ -196,10 +196,10 @@ class Plugin(BasePlugin):
             return
 
         if command_type == "chatroom":
-            self.core.chatrooms.clear_view(source)
+            self.core.chatrooms.clear_messages(source)
 
         elif command_type == "private_chat":
-            self.core.privatechats.clear_view(source)
+            self.core.privatechats.clear_messages(source)
 
     def join_command(self, args, _command_type, _source):
 

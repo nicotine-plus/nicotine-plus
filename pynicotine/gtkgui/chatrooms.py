@@ -344,13 +344,6 @@ class ChatRooms(IconNotebook):
         if page is not None:
             page.ticker_remove(msg)
 
-    def clear_view(self, room):
-
-        page = self.pages.get(room)
-        if page is not None:
-            page.chat_view.on_clear_all_text()
-            page.activity_view.on_clear_all_text()
-
     def echo_message(self, room, text, message_type):
 
         page = self.pages.get(room)
