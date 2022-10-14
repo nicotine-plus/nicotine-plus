@@ -189,9 +189,9 @@ class ChatEntry:
 
         elif cmd in ("/l", "/leave", "/p", "/part"):
             if args:
-                self.core.chatrooms.request_leave_room(args)
+                self.core.chatrooms.remove_room(args)
             else:
-                self.core.chatrooms.request_leave_room(self.entity)
+                self.core.chatrooms.remove_room(self.entity)
 
         elif cmd in ("/ad", "/add", "/buddy"):
             if args:
