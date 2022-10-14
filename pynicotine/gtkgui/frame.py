@@ -1784,50 +1784,17 @@ class NicotineFrame(Window):
 
     """ Exit """
 
-    def show_exit_dialog_response(self, dialog, response_id, _data):
-
-        remember = dialog.option.get_active()
-
-        if response_id == 2:  # 'Quit'
-            if remember:
-                config.sections["ui"]["exitdialog"] = 0
-
-            self.core.quit()
-
-        elif response_id == 3:  # 'Run in Background'
-            if remember:
-                config.sections["ui"]["exitdialog"] = 2
-
-            if self.window.get_property("visible"):
-                self.hide()
-
-    def show_exit_dialog(self, remember=True):
-
-        OptionDialog(
-            parent=self.window,
-            title=_('Quit Nicotine+'),
-            message=_('Do you really want to exit?'),
-            second_button=_("_Quit"),
-            third_button=_("_Run in Background") if self.window.get_property("visible") else None,
-            option_label=_("Remember choice") if remember else None,
-            callback=self.show_exit_dialog_response
-        ).show()
-
     def on_close_request(self, *_args):
 
         if config.sections["ui"]["exitdialog"] >= 2:  # 2: 'Run in Background'
             self.hide()
             return True
 
-        return self.on_quit(remember=True)
+        self.core.confirm_quit(remember=True)
+        return True
 
-    def on_quit(self, *_args, remember=False):
-
-        if config.sections["ui"]["exitdialog"] == 0:  # 0: 'Quit program'
-            self.core.quit()
-            return True
-
-        self.show_exit_dialog(remember)
+    def on_quit(self, *_args):
+        self.core.confirm_quit()
         return True
 
     def on_shutdown(self):
@@ -1857,6 +1824,35 @@ class NicotineFrame(Window):
 
         # Save config, incase application is killed later
         config.write_configuration()
+
+    def confirm_quit_response(self, dialog, response_id, _data):
+
+        remember = dialog.option.get_active()
+
+        if response_id == 2:  # 'Quit'
+            if remember:
+                config.sections["ui"]["exitdialog"] = 0
+
+            self.core.quit()
+
+        elif response_id == 3:  # 'Run in Background'
+            if remember:
+                config.sections["ui"]["exitdialog"] = 2
+
+            if self.window.get_property("visible"):
+                self.hide()
+
+    def confirm_quit(self, remember=True):
+
+        OptionDialog(
+            parent=self.window,
+            title=_('Quit Nicotine+'),
+            message=_('Do you really want to exit?'),
+            second_button=_("_Quit"),
+            third_button=_("_Run in Background") if self.window.get_property("visible") else None,
+            option_label=_("Remember choice") if remember else None,
+            callback=self.confirm_quit_response
+        ).show()
 
     def quit(self):
         self.application.quit()

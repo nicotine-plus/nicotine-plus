@@ -183,7 +183,7 @@ class Search:
 
         return search_term, search_term_without_special, room, users
 
-    def do_search(self, search_term, mode, room=None, user=None):
+    def do_search(self, search_term, mode, room=None, user=None, switch_page=True):
 
         # Validate search term and run it through plugins
         search_term, _search_term_without_special, room, users = self.process_search_term(search_term, mode, room, user)
@@ -218,7 +218,7 @@ class Search:
         self.add_search(search_term, mode, ignore=False)
 
         if self.ui_callback:
-            self.ui_callback.do_search(self.token, search_term, mode, room, users)
+            self.ui_callback.do_search(self.token, search_term, mode, room, users, switch_page)
 
     def do_global_search(self, text):
         self.queue.append(slskmessages.FileSearch(self.token, text))

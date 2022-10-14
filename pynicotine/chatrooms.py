@@ -70,6 +70,10 @@ class ChatRooms:
         if self.ui_callback:
             self.ui_callback.server_disconnect()
 
+    def clear_messages(self, room):
+        if self.ui_callback:
+            self.ui_callback.clear_messages(room)
+
     def echo_message(self, room, message, message_type="local"):
         if self.ui_callback:
             self.ui_callback.echo_message(room, message, message_type)

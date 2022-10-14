@@ -153,7 +153,7 @@ class Searches(IconNotebook):
         for term in config.sections["searches"]["history"]:
             self.frame.search_combobox.append_text(str(term))
 
-    def do_search(self, token, search_term, mode, room=None, users=None):
+    def do_search(self, token, search_term, mode, room=None, users=None, switch_page=True):
 
         mode_label = None
 
@@ -167,7 +167,10 @@ class Searches(IconNotebook):
             mode_label = _("Buddies")
 
         tab = self.create_tab(token, search_term, mode, mode_label)
-        self.set_current_page(tab.container)
+
+        if switch_page:
+            self.set_current_page(tab.container)
+            self.frame.change_main_page(self.frame.search_page)
 
         # Repopulate the combo list
         self.populate_search_history()

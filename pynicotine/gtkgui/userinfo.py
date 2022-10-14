@@ -475,7 +475,6 @@ class UserInfo:
 
     def on_send_message(self, *_args):
         self.core.privatechats.show_user(self.user)
-        self.frame.change_main_page(self.frame.private_page)
 
     def on_show_ip_address(self, *_args):
         self.core.request_ip_address(self.user)

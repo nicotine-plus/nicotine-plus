@@ -175,6 +175,13 @@ class ChatRooms(IconNotebook):
 
         self.frame.chatrooms_entry.set_text("")
 
+    def clear_messages(self, room):
+
+        page = self.pages.get(room)
+        if page is not None:
+            page.chat_view.clear()
+            page.activity_view.clear()
+
     def clear_notifications(self):
 
         if self.frame.current_page_id != self.frame.chatrooms_page.id:
@@ -761,7 +768,6 @@ class ChatRoom:
 
         if user is not None:
             self.core.privatechats.show_user(user)
-            self.frame.change_main_page(self.frame.private_page)
 
     def on_popup_menu_user(self, menu, treeview):
         user = self.get_selected_username(treeview)

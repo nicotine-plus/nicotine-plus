@@ -259,6 +259,14 @@ class NicotineCore:
             slskmessages.UnknownPeerMessage: self.dummy_message
         }
 
+    def confirm_quit(self, remember=False):
+
+        if self.ui_callback and config.sections["ui"]["exitdialog"] != 0:  # 0: 'Quit program'
+            self.ui_callback.confirm_quit(remember)
+            return
+
+        self.quit()
+
     def quit(self, signal_type=None, _frame=None):
 
         log.add(_("Quitting %(program)s %(version)s, %(status)s…"), {
