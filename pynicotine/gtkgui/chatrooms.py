@@ -171,7 +171,7 @@ class ChatRooms(IconNotebook):
             ).show()
 
         else:
-            self.core.chatrooms.request_join_room(room)
+            self.core.chatrooms.show_room(room)
 
         self.frame.chatrooms_entry.set_text("")
 
@@ -202,6 +202,14 @@ class ChatRooms(IconNotebook):
         if config.sections["words"]["roomnames"]:
             self.frame.update_completions()
 
+    def show_room(self, room):
+
+        page = self.pages.get(room)
+
+        if page is not None:
+            self.set_current_page(page.container)
+            self.frame.change_main_page(self.frame.chatrooms_page)
+
     def join_room(self, msg):
 
         page = self.pages.get(msg.room)
@@ -219,7 +227,7 @@ class ChatRooms(IconNotebook):
             self.autojoin_rooms.remove(msg.room)
         else:
             # Did not auto-join room, switch to tab
-            self.set_current_page(tab.container)
+            self.core.chatrooms.show_room(msg.room)
 
         if msg.room == "Public ":
             self.roomlist.toggle_public_feed(True)

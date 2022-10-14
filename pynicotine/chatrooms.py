@@ -58,7 +58,7 @@ class ChatRooms:
                 self.request_join_public_room()
 
             elif isinstance(room, str):
-                self.queue.append(slskmessages.JoinRoom(room))
+                self.request_join_room(room)
 
         if self.ui_callback:
             self.ui_callback.server_login()
@@ -69,6 +69,15 @@ class ChatRooms:
 
         if self.ui_callback:
             self.ui_callback.server_disconnect()
+
+    def show_room(self, room):
+
+        if room not in self.joined_rooms:
+            self.request_join_room(room)
+            return
+
+        if self.ui_callback:
+            self.ui_callback.show_room(room)
 
     def clear_messages(self, room):
         if self.ui_callback:
