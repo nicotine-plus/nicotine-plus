@@ -228,7 +228,7 @@ class Plugin(BasePlugin):
         if room in self.core.chatrooms.joined_rooms:
             self.echo_message("Leaving room %s" % room)
         else:
-            self.echo_message("Not in room %s" % room)
+            self.echo_message("Not joined in room %s" % room)
 
         self.core.chatrooms.remove_room(room)
 
@@ -276,12 +276,8 @@ class Plugin(BasePlugin):
         args_split = args.split(" ", maxsplit=1)
         room, text = args_split[0], args_split[1]
 
-        if not room in self.core.chatrooms.joined_rooms:
-            self.echo_message("Not joined in room %s" % room)
-            return
-
-        self.send_public(room, text)
-        self.echo_message("Chat message sent to room %s" % room)
+        if self.send_public(room, text):
+            self.echo_message("Chat message sent to room %s" % room)
 
     def hello_command(self, args, _command_type, _source):
         self.echo_message("Hello there! %s" % args)
@@ -310,7 +306,7 @@ class Plugin(BasePlugin):
 
     def quit_command(self, args, command_type, _source):
 
-        if self.core.ui_callback and not "force" in args:  # and not command_type == "cli":
+        if self.core.ui_callback and "force" not in args:  # and not command_type == "cli":
             self.log("Exiting application on %s command %s" % (command_type, args))
             # TODO: X Window System error 'BadImplementation (server does not implement operation)'
             # '     Details: serial 28078 error_code 17 request_code 20 (core protocol) minor_code 0

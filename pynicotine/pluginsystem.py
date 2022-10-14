@@ -173,7 +173,16 @@ class BasePlugin:
         log.add(self.human_name + ": " + msg, msg_args)
 
     def send_public(self, room, text):
-        self.core.queue.append(slskmessages.SayChatroom(room, text))
+        """ Send a public message to the specified chat room """
+
+        if room not in self.core.chatrooms.joined_rooms:
+            self.echo_message("Not joined in room %s" % room)
+
+        elif text:
+            self.core.queue.append(slskmessages.SayChatroom(room, text))
+            return True
+
+        return False
 
     def send_private(self, user, text, show_ui=True, switch_page=True):
         """ Send user message in private.
