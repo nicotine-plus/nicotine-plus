@@ -495,9 +495,10 @@ class NicotineFrame(Window):
         # Action status
         self.connect_action.set_enabled(not is_online)
         self.disconnect_action.set_enabled(is_online)
+        self.soulseek_privileges_action.set_enabled(is_online)
+        self.away_accelerator_action.set_enabled(is_online)
         self.away_action.set_enabled(is_online)
         self.away_action.set_state(GLib.Variant("b", is_away))
-        self.soulseek_privileges_action.set_enabled(is_online)
 
         self.tray_icon.update_user_status()
 
@@ -536,9 +537,6 @@ class NicotineFrame(Window):
 
     def on_disconnect(self, *_args):
         self.core.disconnect()
-
-    def on_away(self, *_args):
-        self.core.set_away_mode(self.core.user_status != UserStatus.AWAY, save_state=True)
 
     def on_soulseek_privileges(self, *_args):
 
@@ -783,12 +781,6 @@ class NicotineFrame(Window):
         self.application.add_action(self.disconnect_action)
         self.application.set_accels_for_action("app.disconnect", ["<Shift><Primary>d"])
 
-        state = config.sections["server"]["away"]
-        self.away_action = Gio.SimpleAction(name="away", state=GLib.Variant("b", state), enabled=False)
-        self.away_action.connect("change-state", self.on_away)
-        self.application.add_action(self.away_action)
-        self.application.set_accels_for_action("app.away", ["<Primary>h"])
-
         self.soulseek_privileges_action = Gio.SimpleAction(name="soulseek-privileges", enabled=False)
         self.soulseek_privileges_action.connect("activate", self.on_soulseek_privileges)
         self.application.add_action(self.soulseek_privileges_action)
@@ -960,7 +952,7 @@ class NicotineFrame(Window):
         action.connect("change-state", self.on_debug_miscellaneous)
         self.window.add_action(action)
 
-        # Status Bar
+        # Status Bar Buttons
 
         state = config.sections["transfers"]["usealtlimits"]
         self.alt_speed_action = Gio.SimpleAction(name="alternative-speed-limit", state=GLib.Variant("b", state))
@@ -968,7 +960,18 @@ class NicotineFrame(Window):
         self.application.add_action(self.alt_speed_action)
         self.update_alternative_speed_icon(state)
 
-        # Window (system menu and events)
+        state = config.sections["server"]["away"]
+        self.away_action = Gio.SimpleAction(name="away", state=GLib.Variant("b", state), enabled=False)
+        self.away_action.connect("change-state", self.on_away)
+        self.application.add_action(self.away_action)
+
+        # Shortcut Key Actions
+
+        self.away_accelerator_action = Gio.SimpleAction(name="away-accelerator", enabled=False)
+        self.away_accelerator_action.cooldown_time = 0  # needed to prevent server ban
+        self.away_accelerator_action.connect("activate", self.on_away_accelerator)
+        self.application.add_action(self.away_accelerator_action)
+        self.application.set_accels_for_action("app.away-accelerator", ["<Primary>h"])
 
         action = Gio.SimpleAction(name="close")  # 'When closing Nicotine+'
         action.connect("activate", self.on_close_request)
@@ -1588,6 +1591,21 @@ class NicotineFrame(Window):
         if (current_time - self.away_cooldown_time) >= 5:
             self.set_auto_away(False)
             self.away_cooldown_time = current_time
+
+    def on_away_accelerator(self, *_args):
+        """ Ctrl+H: Away/Online toggle """
+
+        current_time = time.time()
+
+        if (current_time - self.away_accelerator_action.cooldown_time) >= 1:
+            # Prevent rapid key-repeat toggling to avoid server ban
+            self.on_away()
+            self.away_accelerator_action.cooldown_time = current_time
+
+    def on_away(self, *_args):
+        """ Away/Online status button """
+
+        self.core.set_away_mode(self.core.user_status != UserStatus.AWAY, save_state=True)
 
     """ User Actions """
 
