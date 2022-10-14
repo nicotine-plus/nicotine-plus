@@ -205,16 +205,14 @@ class Plugin(BasePlugin):
 
         room = args
 
-        if room in self.core.chatrooms.joined_rooms:
-            # TODO: core needs show_room() tab switch ui_callback
-            self.echo_message("Already joined in room %s" % room)
-            return
-
         if room not in self.core.chatrooms.server_rooms and room not in self.core.chatrooms.private_rooms:
             self.echo_message("Creating new room %s" % room)
+        elif room in self.core.chatrooms.joined_rooms:
+            self.echo_message("Chatting in room %s" % room)
+        else:
+            self.echo_message("Joining room %s" % room)
 
-        self.echo_message("Joining room %s" % room)
-        self.core.chatrooms.request_join_room(room)
+        self.core.chatrooms.show_room(room)
 
     def leave_command(self, args, command_type, source):
 
@@ -227,12 +225,12 @@ class Plugin(BasePlugin):
             self.echo_message("Missing argument: %s" % ('[room]'))
             return
 
-        if not room in self.core.chatrooms.joined_rooms:
-            self.echo_message("Not joined in room %s" % room)
-            return
+        if room in self.core.chatrooms.joined_rooms:
+            self.echo_message("Leaving room %s" % room)
+        else:
+            self.echo_message("Not in room %s" % room)
 
-        self.echo_message("Leaving room %s" % room)
-        self.core.chatrooms.request_leave_room(room)
+        self.core.chatrooms.remove_room(room)
 
     def me_command(self, args, _command_type, _source):
         self.send_message("/me " + args)
