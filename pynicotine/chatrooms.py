@@ -79,10 +79,13 @@ class ChatRooms:
 
         if room == "Public ":
             self.queue.append(slskmessages.LeavePublicRoom())
-        else:
+        elif room in self.joined_rooms:
+            log.add_chat(_(f"Leaving room {room}"))
             self.queue.append(slskmessages.LeaveRoom(room))
-
-        self.joined_rooms.discard(room)
+            self.joined_rooms.discard(room)
+            was_joined = True
+        else:
+            was_joined = False
 
         if room in self.config.sections["columns"]["chat_room"]:
             del self.config.sections["columns"]["chat_room"][room]
@@ -90,7 +93,7 @@ class ChatRooms:
         if self.ui_callback:
             self.ui_callback.remove_room(room)
 
-        self.core.pluginhandler.leave_chatroom_notification(room)
+        return was_joined
 
     def clear_messages(self, room):
         if self.ui_callback:
@@ -199,6 +202,8 @@ class ChatRooms:
 
         if self.ui_callback:
             self.ui_callback.leave_room(msg)
+
+        self.core.pluginhandler.leave_chatroom_notification(msg.room)
 
     def get_user_status(self, msg):
         """ Server code: 7 """

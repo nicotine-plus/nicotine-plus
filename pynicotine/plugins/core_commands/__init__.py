@@ -228,14 +228,11 @@ class Plugin(BasePlugin):
 
         room = args if args else (source if command_type == "chatroom" else None)
 
-        if room in self.core.chatrooms.joined_rooms:
-            self.echo_message("Leaving room %s" % room)
-        elif room:
-            self.echo_message("Not joined in room %s" % room)
-        else:
+        if not room:
             return self._echo_missing_arg('[room]')
 
-        self.core.chatrooms.remove_room(room)
+        if not self.core.chatrooms.remove_room(room):
+            self.echo_message("Not joined in room %s" % room)
 
     def me_command(self, args, _command_type, _source):
         self.send_message("/me " + args)
