@@ -180,26 +180,30 @@ class Plugin(BasePlugin):
             for command in commands:
                 self.echo_message(command)
 
+    def _echo_missing_arg(self, arg):
+        self.echo_message("Missing argument: %s" % arg)
+        return arg
+
+    def _echo_unexpect_arg(self, arg):
+        self.echo_message("Unexpected argument: %s" % arg)
+        return False
+
     def close_command(self, args, command_type, source):
 
-        if not args and command_type == "private_chat":
-            self.core.privatechats.remove_user(source)
+        user = args if args else (source if command_type == "private_chat" else None)
 
-        elif args in self.core.privatechats.users:
-            self.core.privatechats.remove_user(args)
-            self.echo_message("Closed private chat of user %s" % args)
-
-        elif args:
-            self.echo_message("Not chatting with user %s" % args)
-
-        elif command_type != "private_chat":
-            self.echo_message("Missing argument: %s" % ('[user]'))
+        if user in self.core.privatechats.users:
+            self.echo_message("Closing private chat of user %s" % user)
+            self.core.privatechats.remove_user(user)
+        elif user:
+            self.echo_message("Not messaging with user %s" % user)
+        else:
+            return self._echo_missing_arg('[user]')
 
     def clear_command(self, args, command_type, source):
 
         if args:
-            self.echo_message("Unexpected argument: %s" % (args))
-            return
+            return self._echo_unexpect_arg(args.split(" ", maxsplit=1)[0])
 
         if command_type == "chatroom":
             self.core.chatrooms.clear_messages(source)
@@ -222,19 +226,14 @@ class Plugin(BasePlugin):
 
     def leave_command(self, args, command_type, source):
 
-        if args:
-            room = args  # optional argument for leaving any room
-        else:
-            room = source if command_type == "chatroom" else None
-
-        if room is None:
-            self.echo_message("Missing argument: %s" % ('[room]'))
-            return
+        room = args if args else (source if command_type == "chatroom" else None)
 
         if room in self.core.chatrooms.joined_rooms:
             self.echo_message("Leaving room %s" % room)
-        else:
+        elif room:
             self.echo_message("Not joined in room %s" % room)
+        else:
+            return self._echo_missing_arg('[room]')
 
         self.core.chatrooms.remove_room(room)
 
