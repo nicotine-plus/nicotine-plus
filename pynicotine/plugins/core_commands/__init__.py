@@ -45,7 +45,8 @@ class Plugin(BasePlugin):
             },
             "away": {
                 "callback": self.away_command,
-                "description": "Toggle away status"
+                "description": _("Toggle away status"),
+                "aliases": ["a"]
             },
             "quit": {
                 "callback": self.quit_command,
@@ -299,7 +300,7 @@ class Plugin(BasePlugin):
 
     def away_command(self, _args, _command_type, _source):
         self.core.set_away_mode(self.core.user_status != 1, save_state=True)  # 1 = UserStatus.AWAY
-        self.echo_message("Status is now %s" % ("Online" if self.core.user_status == 2 else "Away"))
+        self.echo_message("Status is now %s" % (_("Online") if self.core.user_status == 2 else _("Away")))
 
     def shutdown_notification(self):
         self.log("Shutdown!")
