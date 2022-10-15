@@ -109,6 +109,13 @@ class InternalMessage:
     msgtype = MessageType.INTERNAL
 
 
+class CLICommand(InternalMessage):
+
+    def __init__(self, command=None, args=None):
+        self.command = command
+        self.args = args
+
+
 class CloseConnection(InternalMessage):
 
     def __init__(self, sock=None):
