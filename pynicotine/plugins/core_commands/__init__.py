@@ -98,7 +98,7 @@ class Plugin(BasePlugin):
                 "group": _("Private Chat")
             },
             "pm": {
-                "callback": self.pm_command,
+                "callback": self.private_message_command,
                 "description": _("Open private chat window for user"),
                 "usage": ["<user>", "[message..]"],
                 "group": _("Private Chat")
@@ -187,7 +187,6 @@ class Plugin(BasePlugin):
             self.echo_message("Not chatting with user %s" % args)
 
         elif command_type != "private_chat":
-            # TODO: maybe consider diverting to leave_command(room)
             self.echo_message("Missing argument: %s" % ('[user]'))
 
     def clear_command(self, args, command_type, source):
@@ -237,37 +236,15 @@ class Plugin(BasePlugin):
         self.send_message("/me " + args)
 
     def msg_command(self, args, _command_type, _source):
-        # Send private chat [message] to <user> or open chat window if no [message]
+        self.private_message_command(args, _command_type, _source, switch_page=False)
+
+    def private_message_command(self, args, _command_type, _source, switch_page=True):
 
         args_split = args.split(" ", maxsplit=1)
         user, text = args_split[0], args_split[1] if len(args_split) == 2 else None
 
-        if text:
-            self.send_private(user, text, switch_page=False)
+        if self.send_private(user, text, show_ui=True, switch_page=switch_page):
             self.echo_message("Private message sent to user %s" % user)
-        else:
-            self.core.privatechats.show_user(user)
-            self.echo_message("Private chat opened with user %s" % user)
-
-    def pm_command(self, args, _command_type, _source):
-        # Open private chat window for <user> and optionally send [message]
-
-        args_split = args.split(" ", maxsplit=1)
-        user, text = args_split[0], args_split[1] if len(args_split) == 2 else None
-
-        if text:
-            self.send_private(user, text, switch_page=True)
-            self.echo_message("Private message sent to user %s" % user)
-        else:
-            self.core.privatechats.show_user(user)
-            self.echo_message("Private chat opened with user %s" % user)
-
-    def private_message_command(self, _args, _command_type, _source):  # , switch_page=True):
-        # TODO: combine pm_command(switch_page=True) with msg_command(switch_page=False)
-        #
-        # "Plugin core_commands failed with error <class 'TypeError'>:
-        # private_message_command() got multiple values for argument 'switch_page'.
-        pass
 
     def rescan_command(self, _args, _command_type, _source):
         self.core.shares.rescan_shares()

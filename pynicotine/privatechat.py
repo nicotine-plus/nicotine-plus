@@ -159,22 +159,26 @@ class PrivateChats:
 
     def send_message(self, user, message):
 
-        user_text = self.core.pluginhandler.outgoing_private_chat_event(user, message)
-        if user_text is None:
-            return
+        user, message = self.core.pluginhandler.outgoing_private_chat_event(user, message)
 
-        user, message = user_text
+        if user is None or message is None:
+            return False
 
         if message == self.CTCP_VERSION:
             ui_message = "CTCP VERSION"
         else:
             message = ui_message = self.auto_replace(message)
 
+        if message == "":
+            return False
+
         self.queue.append(slskmessages.MessageUser(user, message))
         self.core.pluginhandler.outgoing_private_chat_notification(user, message)
 
         if self.ui_callback:
             self.ui_callback.send_message(user, ui_message)
+
+        return True
 
     def get_user_status(self, msg):
         """ Server code: 7 """

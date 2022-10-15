@@ -190,9 +190,9 @@ class BasePlugin:
         switch_page controls whether the user's private chat view should be opened. """
 
         if show_ui:
-            self.core.privatechats.show_user(user, switch_page)
+            self.core.privatechats.show_user(user, switch_page=switch_page)
 
-        self.core.privatechats.send_message(user, text)
+        return self.core.privatechats.send_message(user, text)
 
     def echo_public(self, room, text, message_type="local"):
         """ Display a raw message in chat rooms (not sent to others).
