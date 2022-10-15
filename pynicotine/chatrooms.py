@@ -102,15 +102,20 @@ class ChatRooms:
 
     def send_message(self, room, message):
 
-        event = self.core.pluginhandler.outgoing_public_chat_event(room, message)
-        if event is None:
-            return
+        room, message = self.core.pluginhandler.outgoing_public_chat_event(room, message)
 
-        room, message = event
+        if room is None or message is None:
+            return False
+
         message = self.core.privatechats.auto_replace(message)
+
+        if message == "":
+            return False
 
         self.queue.append(slskmessages.SayChatroom(room, message))
         self.core.pluginhandler.outgoing_public_chat_notification(room, message)
+
+        return True
 
     def create_private_room(self, room, owner=None, operators=None):
 

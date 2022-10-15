@@ -109,6 +109,12 @@ class Plugin(BasePlugin):
                 "usage": ["<room>", "<message..>"],
                 "group": _("Chat Rooms")
             },
+            "ctcpversion": {
+                "callback": self.ctcpversion_command,
+                "description": _("Ask for a user's client version"),
+                "usage": ["[user]"],
+                "group": _("Client-To-Client Protocol")
+            }
         }
 
         cli_commands = {
@@ -279,8 +285,12 @@ class Plugin(BasePlugin):
         self.core.set_away_mode(self.core.user_status != 1, save_state=True)  # 1 = UserStatus.AWAY
         self.echo_message("Status is now %s" % (_("Online") if self.core.user_status == 2 else _("Away")))
 
-    def shutdown_notification(self):
-        self.log("Shutdown!")
+    def ctcpversion_command(self, args, command_type, source):
+
+        user = args if args else (source if command_type == "private_chat" else self.core.login_username)
+
+        if self.send_private(user, self.core.privatechats.CTCP_VERSION, show_ui=False):
+            self.echo_message("Asked %s for client version" % user)
 
     def quit_command(self, args, command_type, _source):
 
@@ -291,3 +301,6 @@ class Plugin(BasePlugin):
 
         self.log("Quitting on %s command %s" % (command_type, args))
         self.core.quit()
+
+    def shutdown_notification(self):
+        self.log("Shutdown!")
