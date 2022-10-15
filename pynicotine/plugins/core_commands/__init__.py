@@ -93,7 +93,7 @@ class Plugin(BasePlugin):
             "msg": {
                 "callback": self.msg_command,
                 "description": _("Send private message to user"),
-                "usage": ["<user>", "[message..]"],
+                "usage": ["<user>", "<message..>"],
                 "aliases": ["m"],
                 "group": _("Private Chat")
             },
