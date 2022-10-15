@@ -80,7 +80,7 @@ class PrivateChats:
         if user in self.config.sections["privatechat"]["users"]:
             self.config.sections["privatechat"]["users"].remove(user)
 
-        self.users.remove(user)
+        self.users.discard(user)
 
         if self.ui_callback:
             self.ui_callback.remove_user(user)

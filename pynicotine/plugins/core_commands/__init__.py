@@ -192,11 +192,12 @@ class Plugin(BasePlugin):
 
         if user in self.core.privatechats.users:
             self.echo_message("Closing private chat of user %s" % user)
-            self.core.privatechats.remove_user(user)
         elif user:
             self.echo_message("Not messaging with user %s" % user)
         else:
             self._echo_missing_arg('[user]')
+
+        self.core.privatechats.remove_user(user)
 
     def clear_command(self, args, command_type, source):
 
