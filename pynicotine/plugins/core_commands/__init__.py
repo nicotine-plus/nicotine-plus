@@ -306,13 +306,10 @@ class Plugin(BasePlugin):
 
     def quit_command(self, args, command_type, _source):
 
-        if self.core.ui_callback and "force" not in args:  # and not command_type == "cli":
+        if "force" not in args:
             self.log("Exiting application on %s command %s" % (command_type, args))
-            # TODO: X Window System error 'BadImplementation (server does not implement operation)'
-            # '     Details: serial 28078 error_code 17 request_code 20 (core protocol) minor_code 0
-            self.core.ui_callback.on_quit()
+            self.core.confirm_quit()
             return
 
         self.log("Quitting on %s command %s" % (command_type, args))
-        # TODO: Gtk-ERROR **: 12:13:37.433: Unknown segment type: \x80\x9d\x9b\u0003
-        self.core.quit()  # Fatal Python error: Segmentation fault
+        self.core.quit()
