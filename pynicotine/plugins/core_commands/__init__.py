@@ -182,11 +182,9 @@ class Plugin(BasePlugin):
 
     def _echo_missing_arg(self, arg):
         self.echo_message("Missing argument: %s" % arg)
-        return arg
 
     def _echo_unexpect_arg(self, arg):
         self.echo_message("Unexpected argument: %s" % arg)
-        return False
 
     def close_command(self, args, command_type, source):
 
@@ -198,14 +196,14 @@ class Plugin(BasePlugin):
         elif user:
             self.echo_message("Not messaging with user %s" % user)
         else:
-            return self._echo_missing_arg('[user]')
+            self._echo_missing_arg('[user]')
 
     def clear_command(self, args, command_type, source):
 
         if args:
-            return self._echo_unexpect_arg(args.split(" ", maxsplit=1)[0])
+            self._echo_unexpect_arg(args.split(" ", maxsplit=1)[0])
 
-        if command_type == "chatroom":
+        elif command_type == "chatroom":
             self.core.chatrooms.clear_messages(source)
 
         elif command_type == "private_chat":
@@ -229,10 +227,13 @@ class Plugin(BasePlugin):
         room = args if args else (source if command_type == "chatroom" else None)
 
         if not room:
-            return self._echo_missing_arg('[room]')
-
-        if not self.core.chatrooms.remove_room(room):
+            self._echo_missing_arg('[room]')
+        elif room not in self.core.chatrooms.joined_rooms:
             self.echo_message("Not joined in room %s" % room)
+        elif command_type != "chatroom" or room != source:
+            self.echo_message(_(f"Leaving room {room}"))
+
+        self.core.chatrooms.remove_room(room)
 
     def me_command(self, args, _command_type, _source):
         self.send_message("/me " + args)

@@ -79,21 +79,17 @@ class ChatRooms:
 
         if room == "Public ":
             self.queue.append(slskmessages.LeavePublicRoom())
+
         elif room in self.joined_rooms:
             log.add_chat(_(f"Leaving room {room}"))
             self.queue.append(slskmessages.LeaveRoom(room))
             self.joined_rooms.discard(room)
-            was_joined = True
-        else:
-            was_joined = False
 
         if room in self.config.sections["columns"]["chat_room"]:
             del self.config.sections["columns"]["chat_room"][room]
 
         if self.ui_callback:
             self.ui_callback.remove_room(room)
-
-        return was_joined
 
     def clear_messages(self, room):
         if self.ui_callback:
