@@ -85,6 +85,15 @@ class Plugin(BasePlugin):
                 "aliases": ["c"],
                 "group": _("Private Chat")
             },
+            "ctcpversion": {
+                "callbacks": {
+                    "chatroom": self.ctcpversion_other_chat_command,
+                    "private_chat": self.ctcpversion_private_chat_command,
+                },
+                "description": _("Ask for a user's client version"),
+                "usage": ["[user]"],
+                "group": _("Client-To-Client Protocol")
+            },
             "join": {
                 "callback": self.join_chat_command,
                 "description": _("Join chat room"),
@@ -126,16 +135,6 @@ class Plugin(BasePlugin):
                 "description": _("Say message in specified chat room"),
                 "usage": ["<room>", "<message..>"],
                 "group": _("Chat Rooms")
-            },
-            "ctcpversion": {
-                "callbacks": {
-                    "chatroom": self.ctcpversion_other_chat_command,
-                    "private_chat": self.ctcpversion_private_chat_command,
-                    "cli": self.ctcpversion_cli_command
-                },
-                "description": _("Ask for a user's client version"),
-                "usage": ["[user]"],
-                "group": _("Client-To-Client Protocol")
             }
         }
 
@@ -220,6 +219,22 @@ class Plugin(BasePlugin):
     def _echo_unexpect_arg(self, arg):
         self.echo_message("Unexpected argument: %s" % arg.split(" ", maxsplit=1)[0])
 
+    def clear_chatroom_command(self, args, room):
+
+        if args:
+            self._echo_unexpect_arg(args)
+            return
+
+        self.core.chatrooms.clear_messages(room)
+
+    def clear_private_chat_command(self, args, user):
+
+        if args:
+            self._echo_unexpect_arg(args)
+            return
+
+        self.core.privatechats.clear_messages(user)
+
     def close_other_chat_command(self, args, _room):
         self.close_private_chat_command(None, user=args)
 
@@ -237,21 +252,22 @@ class Plugin(BasePlugin):
 
         self.core.privatechats.remove_user(user)
 
-    def clear_chatroom_command(self, args, room):
+    def ctcpversion_other_chat_command(self, args, _room):
+
+        user = args if args else self.core.login_username
+
+        self.ctcpversion_private_chat_command(None, user)
+
+    def ctcpversion_private_chat_command(self, args, user=None):
 
         if args:
-            self._echo_unexpect_arg(args)
-            return
+            user = args
 
-        self.core.chatrooms.clear_messages(room)
+        if self.send_private(user, self.core.privatechats.CTCP_VERSION, show_ui=False):
+            self.echo_message("Asked %s for client version" % user)
 
-    def clear_private_chat_command(self, args, user):
-
-        if args:
-            self._echo_unexpect_arg(args)
-            return
-
-        self.core.privatechats.clear_messages(user)
+    def hello_command(self, args):
+        self.echo_message("Hello there! %s" % args)
 
     def join_chat_command(self, args):
         self.core.chatrooms.show_room(args)
@@ -291,9 +307,6 @@ class Plugin(BasePlugin):
         if switch_page:
             self.log("Private chat with user %s" % user)
 
-    def rescan_command(self, _args):
-        self.core.shares.rescan_shares()
-
     def say_chat_command(self, args):
 
         args_split = args.split(" ", maxsplit=1)
@@ -301,9 +314,6 @@ class Plugin(BasePlugin):
 
         if self.send_public(room, text):
             self.log("Chat message sent to room %s" % room)
-
-    def hello_command(self, args):
-        self.echo_message("Hello there! %s" % args)
 
     def add_share_command(self, _args):
 
@@ -320,26 +330,12 @@ class Plugin(BasePlugin):
     def list_shares_command(self, _args):
         self.echo_message("nothing here yet")
 
+    def rescan_command(self, _args):
+        self.core.shares.rescan_shares()
+
     def away_command(self, _args):
         self.core.set_away_mode(self.core.user_status != 1, save_state=True)  # 1 = UserStatus.AWAY
         self.echo_message("Status is now %s" % (_("Online") if self.core.user_status == 2 else _("Away")))
-
-    def ctcpversion_other_chat_command(self, args, _room):
-
-        user = args if args else self.core.login_username
-
-        self.ctcpversion_private_chat_command(None, user)
-
-    def ctcpversion_private_chat_command(self, args, user=None):
-
-        if args:
-            user = args
-
-        if self.send_private(user, self.core.privatechats.CTCP_VERSION, show_ui=False):
-            self.echo_message("Asked %s for client version" % user)
-
-    def ctcpversion_cli_command(self, args):
-        self.ctcpversion_private_chat_command(None, user=args)
 
     def quit_program_chatroom_command(self, args, _room):
         self.quit_command(args, interface="chatroom")
