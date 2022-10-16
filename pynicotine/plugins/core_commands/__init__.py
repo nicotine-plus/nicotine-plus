@@ -142,17 +142,17 @@ class Plugin(BasePlugin):
         self.private_chat_commands = {**commands, **chat_commands}
         self.cli_commands = {**commands, **cli_commands}
 
-    def help_command(self, args, command_type, _source):
+    def help_command(self, args, user=None, room=None):
 
         query = args.split(" ", maxsplit=1)[0].lower().lstrip("/")
 
-        if command_type == "chatroom":
+        if room is not None:
             command_list = self.parent.chatroom_commands
 
-        elif command_type == "private_chat":
+        elif user is not None:
             command_list = self.parent.private_chat_commands
 
-        elif command_type == "cli":
+        else:
             command_list = self.parent.cli_commands
 
         command_groups = {}
@@ -199,66 +199,75 @@ class Plugin(BasePlugin):
     def _echo_unexpect_arg(self, arg):
         self.echo_message("Unexpected argument: %s" % arg.split(" ", maxsplit=1)[0])
 
-    def close_command(self, args, command_type, source):
+    def close_command(self, args, user=None, _room=None):
 
-        user = args if args else (source if command_type == "private_chat" else None)
-        echo = self.echo_message if user != source else self.log
+        if args:
+            user = args
 
         if user in self.core.privatechats.users:
-            echo("Closing private chat of user %s" % user)
+            self.echo_message("Closing private chat of user %s" % user)
         elif user:
-            echo("Not messaging with user %s" % user)
+            self.echo_message("Not messaging with user %s" % user)
         else:
             self._echo_missing_arg('[user]')
 
         self.core.privatechats.remove_user(user)
 
-    def clear_command(self, args, command_type, source):
+    def clear_command(self, args, user=None, room=None):
 
         if args:
             self._echo_unexpect_arg(args)
+            return
 
-        elif command_type == "chatroom":
-            self.core.chatrooms.clear_messages(source)
+        if room is not None:
+            self.core.chatrooms.clear_messages(room)
+            return
 
-        elif command_type == "private_chat":
-            self.core.privatechats.clear_messages(source)
+        if user is not None:
+            self.core.privatechats.clear_messages(user)
 
-    def join_command(self, args, _command_type, _source):
+    def join_command(self, args, _user=None, _room=None):
         self.core.chatrooms.show_room(args)
 
-    def leave_command(self, args, command_type, source):
+    def leave_command(self, args, _user=None, room=None):
 
-        room = args if args else (source if command_type == "chatroom" else None)
+        if args:
+            room = args
 
         if not room:
             self._echo_missing_arg('[room]')
-        elif room not in self.core.chatrooms.joined_rooms:
+            return
+
+        if room not in self.core.chatrooms.joined_rooms:
             self.echo_message("Not joined in room %s" % room)
+            return
 
         self.core.chatrooms.remove_room(room)
 
-    def me_command(self, args, _command_type, _source):
+    def me_command(self, args, _user=None, _room=None):
         self.send_message("/me " + args)
 
-    def msg_command(self, args, _command_type, _source):
-        self.private_message_command(args, _command_type, _source, switch_page=False)
+    def msg_command(self, args, user=None, room=None):
+        self.private_message_command(args, user=user, room=room, switch_page=False)
 
-    def private_message_command(self, args, _command_type, _source, switch_page=True):
+    def private_message_command(self, args, user=None, _room=None, switch_page=True):
 
         args_split = args.split(" ", maxsplit=1)
         user, text = args_split[0], args_split[1] if len(args_split) == 2 else None
 
-        if self.send_private(user, text, show_ui=True, switch_page=switch_page):
-            if switch_page:
-                self.log("Private chat with user %s" % user)
-            else:
-                self.log("Private message sent to user %s" % user)
+        if not self.send_private(user, text, show_ui=True, switch_page=switch_page):
+            return
 
-    def rescan_command(self, _args, _command_type, _source):
+        if switch_page:
+            self.log("Private chat with user %s" % user)
+            return
+
+        self.log("Private message sent to user %s" % user)
+
+    def rescan_command(self, _args, _user=None, _room=None):
         self.core.shares.rescan_shares()
 
-    def say_command(self, args, _command_type, _source):
+    def say_command(self, args, _user=None, room=None):
 
         args_split = args.split(" ", maxsplit=1)
         room, text = args_split[0], args_split[1]
@@ -266,43 +275,44 @@ class Plugin(BasePlugin):
         if self.send_public(room, text):
             self.log("Chat message sent to room %s" % room)
 
-    def hello_command(self, args, _command_type, _source):
+    def hello_command(self, args, _user=None, _room=None):
         self.echo_message("Hello there! %s" % args)
 
-    def add_share_command(self, _args, _command_type, _source):
+    def add_share_command(self, _args, _user=None, _room=None):
 
         # share_type, virtual_name, path = args.split(maxsplit=3)
 
         self.core.shares.rescan_shares()
 
-    def remove_share_command(self, _args, _command_type, _source):
+    def remove_share_command(self, _args, _user=None, _room=None):
 
         # share_type, virtual_name, *_unused = args.split(maxsplit=2)
 
         self.core.shares.rescan_shares()
 
-    def list_shares_command(self, _args, _command_type, _source):
+    def list_shares_command(self, _args, _user=None, _room=None):
         self.echo_message("nothing here yet")
 
-    def away_command(self, _args, _command_type, _source):
+    def away_command(self, _args, _user=None, _room=None):
         self.core.set_away_mode(self.core.user_status != 1, save_state=True)  # 1 = UserStatus.AWAY
         self.echo_message("Status is now %s" % (_("Online") if self.core.user_status == 2 else _("Away")))
 
-    def ctcpversion_command(self, args, command_type, source):
+    def ctcpversion_command(self, args, user=None, _room=None):
 
-        user = args if args else (source if command_type == "private_chat" else self.core.login_username)
+        if args:
+            user = args
 
         if self.send_private(user, self.core.privatechats.CTCP_VERSION, show_ui=False):
             self.echo_message("Asked %s for client version" % user)
 
-    def quit_command(self, args, command_type, _source):
+    def quit_command(self, args, _user=None, _room=None):
 
         if "force" not in args:
-            self.log("Exiting application on %s command %s" % (command_type, args))
+            self.log("Exiting application on %s command %s" % ("temp", args))
             self.core.confirm_quit()
             return
 
-        self.log("Quitting on %s command %s" % (command_type, args))
+        self.log("Quitting on %s command %s" % ("temp", args))
         self.core.quit()
 
     def shutdown_notification(self):
