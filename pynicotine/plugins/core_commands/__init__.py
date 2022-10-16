@@ -28,9 +28,9 @@ class Plugin(BasePlugin):
         commands = {
             "help": {
                 "callbacks": {
-                    "chatroom": self.chatroom_help_command,
-                    "private_chat": self.private_chat_help_command,
-                    "cli": self.cli_help_command
+                    "chatroom": self.help_chatroom_command,
+                    "private_chat": self.help_private_chat_command,
+                    "cli": self.help_cli_command
                 },
                 "description": "Show commands",
                 "usage": ["[query]"],
@@ -55,9 +55,9 @@ class Plugin(BasePlugin):
             },
             "quit": {
                 "callbacks": {
-                    "chatroom": self.chatroom_quit_command,
-                    "private_chat": self.private_chat_quit_command,
-                    "cli": self.quit_command
+                    "chatroom": self.quit_program_chatroom_command,
+                    "private_chat": self.quit_program_private_chat_command,
+                    "cli": self.quit_program_command
                 },
                 "description": _("Quit Nicotine+"),
                 "usage": ["[force]"],
@@ -68,9 +68,8 @@ class Plugin(BasePlugin):
         chat_commands = {
             "clear": {
                 "callbacks": {
-                    "chatroom": self.chatroom_clear_command,
-                    "private_chat": self.private_chat_clear_command,
-                    "cli": self.cli_clear_command
+                    "chatroom": self.clear_chatroom_command,
+                    "private_chat": self.clear_private_chat_command,
                 },
                 "description": _("Clear chat window"),
                 "aliases": ["cl"],
@@ -78,8 +77,8 @@ class Plugin(BasePlugin):
             },
             "close": {
                 "callbacks": {
-                    "chatroom": self.chatroom_close_command,
-                    "private_chat": self.private_chat_close_command,
+                    "chatroom": self.close_other_chat_command,
+                    "private_chat": self.close_private_chat_command,
                 },
                 "description": _("Close private chat"),
                 "usage": ["[user]"],
@@ -87,7 +86,7 @@ class Plugin(BasePlugin):
                 "group": _("Private Chat")
             },
             "join": {
-                "callback": self.join_command,
+                "callback": self.join_chat_command,
                 "description": _("Join chat room"),
                 "usage": ["<room>"],
                 "aliases": ["j"],
@@ -95,8 +94,8 @@ class Plugin(BasePlugin):
             },
             "leave": {
                 "callbacks": {
-                    "chatroom": self.chatroom_leave_command,
-                    "private_chat": self.private_chat_leave_command,
+                    "chatroom": self.leave_chatroom_command,
+                    "private_chat": self.leave_other_chat_command,
                 },
                 "description": _("Leave chat room"),
                 "usage": ["[room]"],
@@ -104,35 +103,35 @@ class Plugin(BasePlugin):
                 "group": _("Chat Rooms")
             },
             "me": {
-                "callback": self.me_command,
+                "callback": self.me_chat_command,
                 "description": _("Say something in the third-person"),
                 "usage": ["<something..>"],
                 "group": _("Chat")
             },
             "msg": {
-                "callback": self.msg_command,
+                "callback": self.msg_chat_command,
                 "description": _("Send private message to user"),
                 "usage": ["<user>", "<message..>"],
                 "aliases": ["m"],
                 "group": _("Private Chat")
             },
             "pm": {
-                "callback": self.private_message_command,
+                "callback": self.pm_chat_command,
                 "description": _("Open private chat window for user"),
                 "usage": ["<user>", "[message..]"],
                 "group": _("Private Chat")
             },
             "say": {
-                "callback": self.say_command,
+                "callback": self.say_chat_command,
                 "description": _("Say message in specified chat room"),
                 "usage": ["<room>", "<message..>"],
                 "group": _("Chat Rooms")
             },
             "ctcpversion": {
                 "callbacks": {
-                    "chatroom": self.chatroom_ctcpversion_command,
-                    "private_chat": self.private_chat_ctcpversion_command,
-                    "cli": self.cli_ctcpversion_command
+                    "chatroom": self.ctcpversion_other_chat_command,
+                    "private_chat": self.ctcpversion_private_chat_command,
+                    "cli": self.ctcpversion_cli_command
                 },
                 "description": _("Ask for a user's client version"),
                 "usage": ["[user]"],
@@ -164,16 +163,16 @@ class Plugin(BasePlugin):
         self.private_chat_commands = {**commands, **chat_commands}
         self.cli_commands = {**commands, **cli_commands}
 
-    def chatroom_help_command(self, args, _room):
-        self._help_command(args, self.parent.chatroom_commands)
+    def help_chatroom_command(self, args, _room):
+        self._list_commands(args, self.parent.chatroom_commands)
 
-    def private_chat_help_command(self, args, _user):
-        self._help_command(args, self.parent.private_chat_commands)
+    def help_private_chat_command(self, args, _user):
+        self._list_commands(args, self.parent.private_chat_commands)
 
-    def cli_help_command(self, args):
-        self._help_command(args, self.parent.cli_commands)
+    def help_cli_command(self, args):
+        self._list_commands(args, self.parent.cli_commands)
 
-    def _help_command(self, args, command_list):
+    def _list_commands(self, args, command_list):
 
         query = args.split(" ", maxsplit=1)[0].lower().lstrip("/")
 
@@ -221,10 +220,10 @@ class Plugin(BasePlugin):
     def _echo_unexpect_arg(self, arg):
         self.echo_message("Unexpected argument: %s" % arg.split(" ", maxsplit=1)[0])
 
-    def chatroom_close_command(self, args, _room):
-        self.private_chat_close_command(args)
+    def close_other_chat_command(self, args, _room):
+        self.close_private_chat_command(None, user=args)
 
-    def private_chat_close_command(self, args, user=None):
+    def close_private_chat_command(self, args, user=None):
 
         if args:
             user = args
@@ -238,7 +237,7 @@ class Plugin(BasePlugin):
 
         self.core.privatechats.remove_user(user)
 
-    def chatroom_clear_command(self, args, room):
+    def clear_chatroom_command(self, args, room):
 
         if args:
             self._echo_unexpect_arg(args)
@@ -246,7 +245,7 @@ class Plugin(BasePlugin):
 
         self.core.chatrooms.clear_messages(room)
 
-    def private_chat_clear_command(self, args, user):
+    def clear_private_chat_command(self, args, user):
 
         if args:
             self._echo_unexpect_arg(args)
@@ -254,13 +253,10 @@ class Plugin(BasePlugin):
 
         self.core.privatechats.clear_messages(user)
 
-    def cli_clear_command(self, args):
-        self.echo_message("you really shouldn't see this")
-
-    def join_command(self, args):
+    def join_chat_command(self, args):
         self.core.chatrooms.show_room(args)
 
-    def chatroom_leave_command(self, args, room=None):
+    def leave_chatroom_command(self, args, room=None):
 
         if args:
             room = args
@@ -275,16 +271,16 @@ class Plugin(BasePlugin):
 
         self.core.chatrooms.remove_room(room)
 
-    def private_chat_leave_command(self, args, _user):
-        self.chatroom_leave_command(args)
+    def leave_other_chat_command(self, args, _user=None):
+        self.leave_chatroom_command(None, room=args)
 
-    def me_command(self, args):
+    def me_chat_command(self, args):
         self.send_message("/me " + args)
 
-    def msg_command(self, args):
-        self.private_message_command(args, switch_page=False)
+    def msg_chat_command(self, args):
+        self.pm_chat_command(args, switch_page=False)
 
-    def private_message_command(self, args, switch_page=True):
+    def pm_chat_command(self, args, switch_page=True):
 
         args_split = args.split(" ", maxsplit=1)
         user, text = args_split[0], args_split[1] if len(args_split) == 2 else None
@@ -298,7 +294,7 @@ class Plugin(BasePlugin):
     def rescan_command(self, _args):
         self.core.shares.rescan_shares()
 
-    def say_command(self, args):
+    def say_chat_command(self, args):
 
         args_split = args.split(" ", maxsplit=1)
         room, text = args_split[0], args_split[1]
@@ -328,13 +324,13 @@ class Plugin(BasePlugin):
         self.core.set_away_mode(self.core.user_status != 1, save_state=True)  # 1 = UserStatus.AWAY
         self.echo_message("Status is now %s" % (_("Online") if self.core.user_status == 2 else _("Away")))
 
-    def chatroom_ctcpversion_command(self, args, _room):
+    def ctcpversion_other_chat_command(self, args, _room):
 
         user = args if args else self.core.login_username
 
-        self.private_chat_ctcpversion_command(user)
+        self.ctcpversion_private_chat_command(None, user)
 
-    def private_chat_ctcpversion_command(self, args, user=None):
+    def ctcpversion_private_chat_command(self, args, user=None):
 
         if args:
             user = args
@@ -342,18 +338,16 @@ class Plugin(BasePlugin):
         if self.send_private(user, self.core.privatechats.CTCP_VERSION, show_ui=False):
             self.echo_message("Asked %s for client version" % user)
 
-    def cli_ctcpversion_command(self, args):
-        self.private_chat_ctcpversion_command(args)
-        self.echo_message("... but you won't see that answer here, so here you go:")
-        self.echo_message("%s %s" % (self.config.application_name, self.config.version))
+    def ctcpversion_cli_command(self, args):
+        self.ctcpversion_private_chat_command(None, user=args)
 
-    def chatroom_quit_command(self, args, _room):
+    def quit_program_chatroom_command(self, args, _room):
         self.quit_command(args, interface="chatroom")
 
-    def private_chat_quit_command(self, args, _user):
+    def quit_program_private_chat_command(self, args, _user):
         self.quit_command(args, interface="private_chat")
 
-    def quit_command(self, args, interface="cli"):
+    def quit_program_command(self, args, interface="cli"):
 
         if args and args != "force":
             self._echo_unexpect_arg(args)
