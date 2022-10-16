@@ -743,7 +743,7 @@ class PluginHandler:
                 return
 
         if plugin is not None:
-            self.echo_unknown_command(command)
+            plugin.echo_unknown_command(command)
 
         self.command_source = None
         return

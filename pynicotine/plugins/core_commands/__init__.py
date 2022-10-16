@@ -171,8 +171,9 @@ class Plugin(BasePlugin):
 
             description = data.get("description", "No description")
             group = data.get("group", _("Commands"))
+            group_words = group.lower().split(" ")
 
-            if not args or query in command or query in (a for a in aliases) or query.find(group.lower()) > -1:
+            if not args or query in command or query in (a for a in aliases) or query in group_words:
                 if group not in command_groups:
                     command_groups[group] = []
 
