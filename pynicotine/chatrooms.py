@@ -69,6 +69,11 @@ class ChatRooms:
             self.queue.append(slskmessages.JoinPublicRoom())
 
         elif room not in self.joined_rooms:
+            if room not in self.server_rooms and room not in self.private_rooms:
+                log.add_chat(_(f"Creating new room {room}"))
+            else:
+                log.add_chat(_(f"Joining room {room}"))
+
             self.queue.append(slskmessages.JoinRoom(room, private))
             return
 
@@ -190,6 +195,8 @@ class ChatRooms:
 
         if self.ui_callback:
             self.ui_callback.join_room(msg)
+
+        self.echo_message(msg.room, "Joined room %(room)s" % {"room": msg.room})
 
         self.core.pluginhandler.join_chatroom_notification(msg.room)
 

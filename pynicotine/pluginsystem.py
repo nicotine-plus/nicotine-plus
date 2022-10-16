@@ -180,9 +180,6 @@ class BasePlugin:
 
         elif text:
             self.core.queue.append(slskmessages.SayChatroom(room, text))
-            return True
-
-        return False
 
     def send_private(self, user, text, show_ui=True, switch_page=True):
         """ Send user message in private.

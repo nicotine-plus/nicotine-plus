@@ -184,16 +184,17 @@ class Plugin(BasePlugin):
         self.echo_message("Missing argument: %s" % arg)
 
     def _echo_unexpect_arg(self, arg):
-        self.echo_message("Unexpected argument: %s" % arg)
+        self.echo_message("Unexpected argument: %s" % arg.split(" ", maxsplit=1)[0])
 
     def close_command(self, args, command_type, source):
 
         user = args if args else (source if command_type == "private_chat" else None)
+        echo = self.echo_message if user != source else self.log
 
         if user in self.core.privatechats.users:
-            self.echo_message("Closing private chat of user %s" % user)
+            echo("Closing private chat of user %s" % user)
         elif user:
-            self.echo_message("Not messaging with user %s" % user)
+            echo("Not messaging with user %s" % user)
         else:
             self._echo_missing_arg('[user]')
 
@@ -202,7 +203,7 @@ class Plugin(BasePlugin):
     def clear_command(self, args, command_type, source):
 
         if args:
-            self._echo_unexpect_arg(args.split(" ", maxsplit=1)[0])
+            self._echo_unexpect_arg(args)
 
         elif command_type == "chatroom":
             self.core.chatrooms.clear_messages(source)
@@ -211,17 +212,7 @@ class Plugin(BasePlugin):
             self.core.privatechats.clear_messages(source)
 
     def join_command(self, args, _command_type, _source):
-
-        room = args
-
-        if room not in self.core.chatrooms.server_rooms and room not in self.core.chatrooms.private_rooms:
-            self.echo_message("Creating new room %s" % room)
-        elif room in self.core.chatrooms.joined_rooms:
-            self.echo_message("Chatting in room %s" % room)
-        else:
-            self.echo_message("Joining room %s" % room)
-
-        self.core.chatrooms.show_room(room)
+        self.core.chatrooms.show_room(args)
 
     def leave_command(self, args, command_type, source):
 
@@ -231,8 +222,6 @@ class Plugin(BasePlugin):
             self._echo_missing_arg('[room]')
         elif room not in self.core.chatrooms.joined_rooms:
             self.echo_message("Not joined in room %s" % room)
-        elif command_type != "chatroom" or room != source:
-            self.echo_message(_(f"Leaving room {room}"))
 
         self.core.chatrooms.remove_room(room)
 
@@ -242,24 +231,27 @@ class Plugin(BasePlugin):
     def msg_command(self, args, _command_type, _source):
         self.private_message_command(args, _command_type, _source, switch_page=False)
 
-    def private_message_command(self, args, _command_type, _source, switch_page=True):
+    def private_message_command(self, args, _command_type, source, switch_page=True):
 
         args_split = args.split(" ", maxsplit=1)
         user, text = args_split[0], args_split[1] if len(args_split) == 2 else None
 
         if self.send_private(user, text, show_ui=True, switch_page=switch_page):
-            self.echo_message("Private message sent to user %s" % user)
+            if switch_page:
+                self.log("Private chat with user %s" % user)
+            else:
+                self.log("Private message sent to user %s" % user)
 
     def rescan_command(self, _args, _command_type, _source):
         self.core.shares.rescan_shares()
 
-    def say_command(self, args, _command_type, _source):
+    def say_command(self, args, _command_type, source):
 
         args_split = args.split(" ", maxsplit=1)
         room, text = args_split[0], args_split[1]
 
         if self.send_public(room, text):
-            self.echo_message("Chat message sent to room %s" % room)
+            self.log("Chat message sent to room %s" % room)
 
     def hello_command(self, args, _command_type, _source):
         self.echo_message("Hello there! %s" % args)
