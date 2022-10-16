@@ -69,11 +69,6 @@ class ChatRooms:
             self.queue.append(slskmessages.JoinPublicRoom())
 
         elif room not in self.joined_rooms:
-            if room not in self.server_rooms and room not in self.private_rooms:
-                log.add_chat(_(f"Creating new room {room}"))
-            else:
-                log.add_chat(_(f"Joining room {room}"))
-
             self.queue.append(slskmessages.JoinRoom(room, private))
             return
 
