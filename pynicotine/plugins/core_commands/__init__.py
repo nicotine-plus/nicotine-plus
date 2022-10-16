@@ -29,6 +29,7 @@ class Plugin(BasePlugin):
             "help": {
                 "callback": self.help_command,
                 "description": "Show commands",
+                "usage": ["[query]"],
                 "aliases": ["?"]
             },
             "rescan": {
@@ -141,7 +142,9 @@ class Plugin(BasePlugin):
         self.private_chat_commands = {**commands, **chat_commands}
         self.cli_commands = {**commands, **cli_commands}
 
-    def help_command(self, _args, command_type, _source):
+    def help_command(self, args, command_type, _source):
+
+        query = args.split(" ", maxsplit=1)[0].lower().lstrip("/")
 
         if command_type == "chatroom":
             command_list = self.parent.chatroom_commands
@@ -153,6 +156,7 @@ class Plugin(BasePlugin):
             command_list = self.parent.cli_commands
 
         command_groups = {}
+        num_commands = 0
 
         for command, data in command_list.items():
             command_message = command
@@ -168,10 +172,18 @@ class Plugin(BasePlugin):
             description = data.get("description", "No description")
             group = data.get("group", _("Commands"))
 
-            if group not in command_groups:
-                command_groups[group] = []
+            if not args or query in command or query in (a for a in aliases) or query.find(group.lower()) > -1:
+                if group not in command_groups:
+                    command_groups[group] = []
 
-            command_groups[group].append("    %s  -  %s" % (command_message, description))
+                command_groups[group].append("    %s  -  %s" % (command_message, description))
+                num_commands += 1
+
+        if not num_commands:
+            self.echo_unknown_command(query)
+
+        elif num_commands >= 2 and query:
+            self.echo_message("List of %i commands matching \"%s\":" % (num_commands, query))
 
         for group, commands in command_groups.items():
             self.echo_message("")
@@ -231,7 +243,7 @@ class Plugin(BasePlugin):
     def msg_command(self, args, _command_type, _source):
         self.private_message_command(args, _command_type, _source, switch_page=False)
 
-    def private_message_command(self, args, _command_type, source, switch_page=True):
+    def private_message_command(self, args, _command_type, _source, switch_page=True):
 
         args_split = args.split(" ", maxsplit=1)
         user, text = args_split[0], args_split[1] if len(args_split) == 2 else None
@@ -245,7 +257,7 @@ class Plugin(BasePlugin):
     def rescan_command(self, _args, _command_type, _source):
         self.core.shares.rescan_shares()
 
-    def say_command(self, args, _command_type, source):
+    def say_command(self, args, _command_type, _source):
 
         args_split = args.split(" ", maxsplit=1)
         room, text = args_split[0], args_split[1]

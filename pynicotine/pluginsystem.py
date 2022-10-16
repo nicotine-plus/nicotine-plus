@@ -244,6 +244,9 @@ class BasePlugin:
 
         function(source, text, message_type)
 
+    def echo_unknown_command(self, command):
+        self.echo_message(_("Unknown command: %s. Type /help for a list of commands.") % ("/" + command))
+
     # Obsolete functions
 
     def saypublic(self, _room, _text):
@@ -740,7 +743,7 @@ class PluginHandler:
                 return
 
         if plugin is not None:
-            plugin.echo_message(_("Unknown command %s. Type /help for a list of commands.") % ("/" + command))
+            self.echo_unknown_command(command)
 
         self.command_source = None
         return
