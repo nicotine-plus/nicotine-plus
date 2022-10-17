@@ -145,12 +145,14 @@ class Plugin(BasePlugin):
                 "callback": self.add_share_command,
                 "description": _("Add share"),
                 "usage": ["<public|private>", "<virtual_name>", "<path>"],
+                "choices": ["public", "private"],
                 "group": _("Shares")
             },
             "removeshare": {
                 "callback": self.remove_share_command,
                 "description": _("Remove share"),
                 "usage": ["<public|private>", "<virtual_name>"],
+                "choices": ["public", "private"],
                 "group": _("Shares")
             },
             "listshares": {
@@ -214,7 +216,7 @@ class Plugin(BasePlugin):
             for command in commands:
                 self.echo_message(command)
 
-    def clear_command(self, args, user=None, room=None):
+    def clear_command(self, _args, user=None, room=None):
 
         if room is not None:
             self.core.chatrooms.clear_messages(room)
@@ -287,20 +289,22 @@ class Plugin(BasePlugin):
 
     def add_share_command(self, args):
 
-        # share_type, virtual_name, path = args.split(maxsplit=3)
+        args_split = args.split(" ", maxsplit=3)  # "\""
+        type, name, path = args_split[0], args_split[1], args_split[2]
 
-        self.core.shares.rescan_shares()
+        self.echo_message(f"nothing here yet, you entered: type='{type}' name='{name}' path='{path}'")
 
     def remove_share_command(self, args):
 
-        # share_type, virtual_name, *_unused = args.split(maxsplit=2)
+        args_split = args.split(" ", maxsplit=2)
+        type, name = args_split[0], args_split[1]
 
-        self.core.shares.rescan_shares()
+        self.echo_message(f"nothing here yet, you entered: type='{type}' name='{name}'")
 
     def list_shares_command(self, args):
-        self.echo_message("nothing here yet")
+        self.echo_message(f"nothing here yet, you entered: {args}")
 
-    def rescan_command(self, args, **_unused):
+    def rescan_command(self, _args, **_unused):
         self.core.shares.rescan_shares()
 
     def away_command(self, args, **_unused):

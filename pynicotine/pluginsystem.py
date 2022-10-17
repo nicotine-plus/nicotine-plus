@@ -729,25 +729,26 @@ class PluginHandler:
                         continue
 
                     usage = data.get("usage")
-                    choices = data.get("choices")
-                    num_args = len(args.split())
-                    failure = None
+                    choices = data.get("choices", [])
+                    args_split = args.split(maxsplit=3)
+                    num_args = len(args_split)
+                    reject = None
 
-                    if choices and args and -1 in choices:  # or len(list(x for x in choices)) < num_args:
-                        failure = f"Unexpected argument [{args}]"
+                    if args and -1 in choices:
+                        reject = f"Unexpected argument >{args_split[0]}<"
 
-                    elif choices and args and " ".join(choices) not in args:
-                        failure = "Incorrect argument (possible choices: %s)" % " | ".join(choices)
+                    elif args and choices and args_split[0] not in choices:
+                        reject = "Invalid argument, possible choices: %s" % " | ".join(choices)
 
                     elif usage:
                         num_usage = len(list(x for x in usage if x.startswith("<")))
 
                         if num_args < num_usage:
-                            failure = "Missing argument"
+                            reject = "Missing argument"
 
-                    if failure:
-                        description = (data.get("description") or "execute command").lower()
-                        plugin.echo_message(f"Cannot {description}: {failure}")
+                    if reject:
+                        description = data.get("description", "execute command").lower()
+                        plugin.echo_message(f"Cannot {description}: {reject}")
                         plugin.echo_message("Usage: %s %s" % ('/' + command, " ".join(usage) if usage else ""))
                         return
 
