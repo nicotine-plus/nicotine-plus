@@ -24,12 +24,12 @@ jobs:
       NICOTINE_GTK_VERSION: ${{ matrix.gtk }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
       - name: Set up Python ${{ matrix.python }}
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python }}
 
@@ -55,7 +55,7 @@ jobs:
         os: [ubuntu-18.04, ubuntu-20.04, ubuntu-22.04]
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
@@ -80,7 +80,7 @@ jobs:
       GSK_RENDERER: cairo
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
@@ -113,7 +113,7 @@ jobs:
       NICOTINE_GTK_VERSION: ${{ matrix.gtk }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
