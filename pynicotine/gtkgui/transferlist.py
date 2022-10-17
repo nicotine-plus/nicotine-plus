@@ -45,6 +45,7 @@ from pynicotine.gtkgui.widgets.treeview import save_columns
 from pynicotine.gtkgui.widgets.treeview import select_user_row_iter
 from pynicotine.gtkgui.widgets.treeview import show_file_path_tooltip
 from pynicotine.gtkgui.widgets.ui import UserInterface
+from pynicotine.slskmessages import UINT64_LIMIT
 from pynicotine.transfers import Transfer
 from pynicotine.utils import human_length
 from pynicotine.utils import human_size
@@ -427,6 +428,8 @@ class TransferList:
             iterator = self.transfersmodel.iter_next(iterator)
 
         transfer = self.transfersmodel.get_value(initer, 16)
+        total_size = min(total_size, UINT64_LIMIT)
+        current_bytes = min(current_bytes, UINT64_LIMIT)
 
         if transfer.status != salient_status:
             self.transfersmodel.set_value(initer, 3, self.translate_status(salient_status))
