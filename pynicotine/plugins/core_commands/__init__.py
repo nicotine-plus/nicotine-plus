@@ -129,7 +129,7 @@ class Plugin(BasePlugin):
                 "aliases": ["?"]
             },
             "clear": {
-                "callback": self.help_private_chat_command,
+                "callback": self.clear_private_chat_command,
                 "description": _("Clear chat window"),
                 "aliases": ["cl"],
                 "group": _("Chat")
@@ -249,7 +249,7 @@ class Plugin(BasePlugin):
     def _echo_unexpect_arg(self, arg):
         self.echo_message("Unexpected argument: %s" % arg.split(" ", maxsplit=1)[0])
 
-    def clear_chatroom_command(self, args=None, _user=None, _room=None):
+    def clear_chatroom_command(self, args=None, _user=None, room=None):
 
         if args:
             self._echo_unexpect_arg(args)
@@ -297,7 +297,7 @@ class Plugin(BasePlugin):
     def hello_command(self, args=None, _user=None, _room=None):
         self.echo_message("Hello there! %s" % args)
 
-    def join_chat_command(self, args, _user, _room):
+    def join_chat_command(self, args=None, _user=None, _room=None):
         self.core.chatrooms.show_room(args)
 
     def leave_chatroom_command(self, args=None, _user=None, room=None):
