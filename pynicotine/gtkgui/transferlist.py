@@ -25,7 +25,6 @@
 import time
 
 from collections import OrderedDict
-from sys import maxsize
 
 from gi.repository import GObject
 from gi.repository import Gtk
@@ -389,20 +388,6 @@ class TransferList(UserInterface):
     def get_percent(current_byte_offset, size):
         return min(((100 * int(current_byte_offset)) / int(size)), 100) if size > 0 else 100
 
-    @staticmethod
-    def get_size(size):
-
-        try:
-            size = int(size)
-
-            if size < 0 or size > maxsize:
-                size = 0
-
-        except TypeError:
-            size = 0
-
-        return size
-
     def update_parent_row(self, initer, key, folder=False):
 
         speed = 0.0
@@ -436,7 +421,7 @@ class TransferList(UserInterface):
                 continue
 
             elapsed += transfer.time_elapsed or 0
-            total_size += self.get_size(transfer.size)
+            total_size += transfer.size or 0
             current_bytes += transfer.current_byte_offset or 0
 
             iterator = self.transfersmodel.iter_next(iterator)
@@ -453,7 +438,7 @@ class TransferList(UserInterface):
             transfer.speed = speed
 
         if transfer.time_elapsed != elapsed:
-            left = (total_size - current_bytes) / speed if speed > 0 else 0
+            left = (total_size - current_bytes) / speed if speed and total_size > current_bytes else 0
             self.transfersmodel.set_value(initer, 8, self.get_helapsed(elapsed))
             self.transfersmodel.set_value(initer, 9, self.get_hleft(left))
             self.transfersmodel.set_value(initer, 14, elapsed)
@@ -482,7 +467,7 @@ class TransferList(UserInterface):
             # Priority status
             status = status + " (%s)" % modifier
 
-        size = self.get_size(transfer.size)
+        size = transfer.size or 0
         speed = transfer.speed or 0
         hspeed = self.get_hspeed(speed)
         elapsed = transfer.time_elapsed or 0
