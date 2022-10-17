@@ -82,6 +82,7 @@ class Plugin(BasePlugin):
                 "callback": self.quit_program_chat_command,
                 "description": _("Quit Nicotine+"),
                 "usage": ["[force]"],
+                "choices": ["force"],
                 "aliases": ["q", "exit"]
             }
         }
@@ -97,6 +98,7 @@ class Plugin(BasePlugin):
                 "callback": self.clear_chatroom_command,
                 "description": _("Clear chat window"),
                 "aliases": ["cl"],
+                "choices": [-1],
                 "group": _("Chat")
             },
             "close": {
@@ -132,6 +134,7 @@ class Plugin(BasePlugin):
                 "callback": self.clear_private_chat_command,
                 "description": _("Clear chat window"),
                 "aliases": ["cl"],
+                "choices": [-1],
                 "group": _("Chat")
             },
             "close": {
@@ -184,6 +187,7 @@ class Plugin(BasePlugin):
                 "callback": self.quit_command,
                 "description": _("Quit Nicotine+"),
                 "usage": ["[force]"],
+                "choices": ["force"],
                 "aliases": ["q", "exit"]
             }
         }
@@ -192,13 +196,13 @@ class Plugin(BasePlugin):
         self.private_chat_commands = {**commands, **chat_commands, **private_chat_commands}
         self.cli_commands = {**commands, **cli_commands}
 
-    def help_chatroom_command(self, args=None, _user=None, _room=None):
+    def help_chatroom_command(self, args=None, user=None, room=None):  # pylint: disable=unused-argument
         self._list_commands(args, self.parent.chatroom_commands)
 
-    def help_private_chat_command(self, args=None, _user=None, _room=None):
+    def help_private_chat_command(self, args=None, user=None, room=None):  # pylint: disable=unused-argument
         self._list_commands(args, self.parent.private_chat_commands)
 
-    def help_cli_command(self, args):
+    def help_cli_command(self, args=None):  # pylint: disable=unused-argument
         self._list_commands(args, self.parent.cli_commands)
 
     def _list_commands(self, args, command_list):
@@ -243,32 +247,16 @@ class Plugin(BasePlugin):
             for command in commands:
                 self.echo_message(command)
 
-    def _echo_missing_arg(self, arg):
-        self.echo_message("Missing argument: %s" % arg)
-
-    def _echo_unexpect_arg(self, arg):
-        self.echo_message("Unexpected argument: %s" % arg.split(" ", maxsplit=1)[0])
-
-    def clear_chatroom_command(self, args=None, _user=None, room=None):
-
-        if args:
-            self._echo_unexpect_arg(args)
-            return
-
+    def clear_chatroom_command(self, args=None, user=None, room=None):  # pylint: disable=unused-argument
         self.core.chatrooms.clear_messages(room)
 
-    def clear_private_chat_command(self, args=None, user=None, _room=None):
-
-        if args:
-            self._echo_unexpect_arg(args)
-            return
-
+    def clear_private_chat_command(self, args=None, user=None, room=None):  # pylint: disable=unused-argument
         self.core.privatechats.clear_messages(user)
 
-    def close_other_chat_command(self, args=None, _user=None, _room=None):
+    def close_other_chat_command(self, args=None, user=None, room=None):  # pylint: disable=unused-argument
         self.close_private_chat_command(args=args)
 
-    def close_private_chat_command(self, args=None, user=None, _room=None):
+    def close_private_chat_command(self, args=None, user=None, room=None):  # pylint: disable=unused-argument
 
         if args:
             user = args
@@ -280,13 +268,13 @@ class Plugin(BasePlugin):
 
         self.core.privatechats.remove_user(user)
 
-    def ctcpversion_other_chat_command(self, args=None, _user=None, _room=None):
+    def ctcpversion_other_chat_command(self, args=None, user=None, room=None):  # pylint: disable=unused-argument
 
         user = args if args else self.core.login_username
 
         self.ctcpversion_private_chat_command(args=user)
 
-    def ctcpversion_private_chat_command(self, args=None, user=None, _room=None):
+    def ctcpversion_private_chat_command(self, args=None, user=None, room=None):  # pylint: disable=unused-argument
 
         if args:
             user = args
@@ -294,13 +282,13 @@ class Plugin(BasePlugin):
         if self.send_private(user, self.core.privatechats.CTCP_VERSION, show_ui=False):
             self.echo_message("Asked %s for client version" % user)
 
-    def hello_command(self, args=None, _user=None, _room=None):
+    def hello_command(self, args=None, user=None, room=None):  # pylint: disable=unused-argument
         self.echo_message("Hello there! %s" % args)
 
-    def join_chat_command(self, args=None, _user=None, _room=None):
+    def join_chat_command(self, args=None, user=None, room=None):  # pylint: disable=unused-argument
         self.core.chatrooms.show_room(args)
 
-    def leave_chatroom_command(self, args=None, _user=None, room=None):
+    def leave_chatroom_command(self, args=None, user=None, room=None):  # pylint: disable=unused-argument
 
         if args:
             room = args
@@ -311,13 +299,13 @@ class Plugin(BasePlugin):
 
         self.core.chatrooms.remove_room(room)
 
-    def leave_other_chat_command(self, args=None, _user=None, _room=None):
+    def leave_other_chat_command(self, args=None, user=None, room=None):  # pylint: disable=unused-argument
         self.leave_chatroom_command(args=args)
 
-    def me_chat_command(self, args=None, _user=None, _room=None):
+    def me_chat_command(self, args=None, user=None, room=None):  # pylint: disable=unused-argument
         self.send_message("/me " + args)
 
-    def msg_chat_command(self, args=None, _user=None, _room=None):
+    def msg_chat_command(self, args=None, user=None, room=None):  # pylint: disable=unused-argument
 
         args_split = args.split(" ", maxsplit=1)
         user, text = args_split[0], args_split[1]
@@ -325,11 +313,11 @@ class Plugin(BasePlugin):
         if self.send_private(user, text, show_ui=True, switch_page=False):
             self.echo_message("Private message sent to user %s" % user)
 
-    def pm_chat_command(self, args=None, _user=None, _room=None):
+    def pm_chat_command(self, args=None, user=None, room=None):  # pylint: disable=unused-argument
         self.core.privatechats.show_user(args)
-        self.log("Private chat with user %s" % user)
+        self.log("Private chat with user %s" % args)
 
-    def say_chat_command(self, args=None, _user=None, _room=None):
+    def say_chat_command(self, args=None, user=None, room=None):  # pylint: disable=unused-argument
 
         args_split = args.split(" ", maxsplit=1)
         room, text = args_split[0], args_split[1]
@@ -337,36 +325,32 @@ class Plugin(BasePlugin):
         if self.send_public(room, text):
             self.log("Chat message sent to room %s" % room)
 
-    def add_share_command(self, _args=None, _user=None, _room=None):
+    def add_share_command(self, args=None, user=None, room=None):  # pylint: disable=unused-argument
 
         # share_type, virtual_name, path = args.split(maxsplit=3)
 
         self.core.shares.rescan_shares()
 
-    def remove_share_command(self, _args=None, _user=None, _room=None):
+    def remove_share_command(self, args=None, user=None, room=None):  # pylint: disable=unused-argument
 
         # share_type, virtual_name, *_unused = args.split(maxsplit=2)
 
         self.core.shares.rescan_shares()
 
-    def list_shares_command(self, _args=None, _user=None, _room=None):
+    def list_shares_command(self, args=None, user=None, room=None):  # pylint: disable=unused-argument
         self.echo_message("nothing here yet")
 
-    def rescan_command(self, _args=None, _user=None, _room=None):
+    def rescan_command(self, args=None, user=None, room=None):  # pylint: disable=unused-argument
         self.core.shares.rescan_shares()
 
-    def away_command(self, _args=None, _user=None, _room=None):
+    def away_command(self, args=None, user=None, room=None):  # pylint: disable=unused-argument
         self.core.set_away_mode(self.core.user_status != 1, save_state=True)  # 1 = UserStatus.AWAY
         self.echo_message("Status is now %s" % (_("Online") if self.core.user_status == 2 else _("Away")))
 
-    def quit_program_chat_command(self, args=None, _user=None, room=None):
+    def quit_program_chat_command(self, args=None, user=None, room=None):
         self.quit_command(args=args, interface="chatroom" if room else "private_chat")
 
     def quit_command(self, args=None, interface="cli"):
-
-        if args and args != "force":
-            self._echo_unexpect_arg(args)
-            return
 
         if "force" not in args:
             self.log("Exiting application on %s command %s" % (interface, args))

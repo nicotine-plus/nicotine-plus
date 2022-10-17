@@ -729,25 +729,33 @@ class PluginHandler:
                         continue
 
                     usage = data.get("usage")
+                    choices = data.get("choices")
+                    num_args = len(args.split())
+                    failure = None
 
-                    if usage:
+                    if choices and args and -1 in choices:  # or len(list(x for x in choices)) < num_args:
+                        failure = f"Unexpected argument [{args}]"
+
+                    elif choices and args and " ".join(choices) not in args:
+                        failure = "Incorrect argument (possible choices: %s)" % " | ".join(choices)
+
+                    elif usage:
                         num_usage = len(list(x for x in usage if x.startswith("<")))
-                        num_args = len(args.split())
 
                         if num_args < num_usage:
-                            description = data.get("description")
+                            failure = "Missing argument"
 
-                            if description:
-                                plugin.echo_message(description)
-
-                            plugin.echo_message("Usage: %s %s" % ('/' + command, " ".join(usage)))
-                            return
+                    if failure:
+                        description = (data.get("description") or "execute command").lower()
+                        plugin.echo_message(f"Cannot {description}: {failure}")
+                        plugin.echo_message("Usage: %s %s" % ('/' + command, " ".join(usage) if usage else ""))
+                        return
 
                     if room is not None:
-                        getattr(plugin, data.get("callback").__name__)(args, None, room)
+                        getattr(plugin, data.get("callback").__name__)(args, room=room)
 
                     elif user is not None:
-                        getattr(plugin, data.get("callback").__name__)(args, user, None)
+                        getattr(plugin, data.get("callback").__name__)(args, user=user)
 
                     else:
                         getattr(plugin, data.get("callback").__name__)(args)
