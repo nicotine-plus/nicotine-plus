@@ -949,7 +949,7 @@ class SlskProtoThread(threading.Thread):
 
             if callback:
                 self._callback_msgs.append(DownloadConnectionClosed(
-                    user=init.target_user, token=conn_obj.fileinit.token
+                    user=init.target_user, token=conn_obj.filedown.token
                 ))
 
             self._calc_download_limit()
@@ -963,7 +963,7 @@ class SlskProtoThread(threading.Thread):
             if callback:
                 timed_out = (time.time() - conn_obj.lastactive) > self.CONNECTION_MAX_IDLE
                 self._callback_msgs.append(UploadConnectionClosed(
-                    user=init.target_user, token=conn_obj.fileinit.token, timed_out=timed_out
+                    user=init.target_user, token=conn_obj.fileupl.token, timed_out=timed_out
                 ))
 
             self._calc_upload_limit_function()
