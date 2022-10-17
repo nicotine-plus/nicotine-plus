@@ -290,16 +290,16 @@ class Plugin(BasePlugin):
     def add_share_command(self, args):
 
         args_split = args.split(" ", maxsplit=3)  # "\""
-        type, name, path = args_split[0], args_split[1], args_split[2]
+        access, name, path = args_split[0], args_split[1], args_split[2]
 
-        self.echo_message(f"nothing here yet, you entered: type='{type}' name='{name}' path='{path}'")
+        self.echo_message(f"nothing here yet, you entered: access='{access}' name='{name}' path='{path}'")
 
     def remove_share_command(self, args):
 
         args_split = args.split(" ", maxsplit=2)
-        type, name = args_split[0], args_split[1]
+        access, name = args_split[0], args_split[1]
 
-        self.echo_message(f"nothing here yet, you entered: type='{type}' name='{name}'")
+        self.echo_message(f"nothing here yet, you entered: access='{access}' name='{name}'")
 
     def list_shares_command(self, args):
         self.echo_message(f"nothing here yet, you entered: {args}")
@@ -307,7 +307,7 @@ class Plugin(BasePlugin):
     def rescan_command(self, _args, **_unused):
         self.core.shares.rescan_shares()
 
-    def away_command(self, args, **_unused):
+    def away_command(self, _args, **_unused):
         self.core.set_away_mode(self.core.user_status != 1, save_state=True)  # 1 = UserStatus.AWAY
         self.echo_message("Status is now %s" % (_("Online") if self.core.user_status == 2 else _("Away")))
 
