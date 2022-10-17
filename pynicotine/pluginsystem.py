@@ -743,27 +743,16 @@ class PluginHandler:
                             plugin.echo_message("Usage: %s %s" % ('/' + command, " ".join(usage)))
                             return
 
-                    callback = data.get("callback")
-                    callbacks = data.get("callbacks")
+                    if room is not None:
+                        getattr(plugin, data.get("callback").__name__)(args, None, room)
 
-                    if callbacks:
-                        if room is not None:
-                            callback = callbacks.get("chatroom")
+                    elif user is not None:
+                        getattr(plugin, data.get("callback").__name__)(args, user, None)
 
-                            return getattr(plugin, callback.__name__)(args, room)
+                    else:
+                        getattr(plugin, data.get("callback").__name__)(args)
 
-                        elif user is not None:
-                            callback = callbacks.get("private_chat")
-
-                            return getattr(plugin, callback.__name__)(args, user)
-
-                        elif callbacks.get("cli"):
-                            callback = callbacks.get("cli")
-
-                    if not callback:
-                        return
-
-                    return getattr(plugin, callback.__name__)(args)
+                    return
 
             except Exception:
                 self.show_plugin_error(module, sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
