@@ -69,7 +69,7 @@ class Plugin(BasePlugin):
             "pm": {
                 "callback": self.pm_chat_command,
                 "description": _("Open private chat window for user"),
-                "usage": ["<user>", "[message..]"],
+                "usage": ["<user>"],
                 "group": _("Private Chat")
             },
             "say": {
@@ -318,18 +318,16 @@ class Plugin(BasePlugin):
         self.send_message("/me " + args)
 
     def msg_chat_command(self, args=None, _user=None, _room=None):
-        self.pm_chat_command(args=args, switch_page=False)
-
-    def pm_chat_command(self, args=None, _user=None, _room=None, switch_page=True):
 
         args_split = args.split(" ", maxsplit=1)
-        user, text = args_split[0], args_split[1] if len(args_split) == 2 else None
+        user, text = args_split[0], args_split[1]
 
-        if self.send_private(user, text, show_ui=True, switch_page=switch_page):
+        if self.send_private(user, text, show_ui=True, switch_page=False):
             self.echo_message("Private message sent to user %s" % user)
 
-        if switch_page:
-            self.log("Private chat with user %s" % user)
+    def pm_chat_command(self, args=None, _user=None, _room=None):
+        self.core.privatechats.show_user(args)
+        self.log("Private chat with user %s" % user)
 
     def say_chat_command(self, args=None, _user=None, _room=None):
 
