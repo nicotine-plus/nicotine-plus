@@ -933,7 +933,8 @@ class Shares:
 
         if self.ui_callback:
             if num_reads:
-                bottom_line = f"Retry to check again, or use force to exclude {num_fails} shares."
+                shares_word = "shares" if num_fails > 1 else "share"
+                bottom_line = f"Retry to check again, or use force to exclude {num_fails} {shares_word}."
             else:
                 bottom_line = "No accessible shares" if num_total else ""  # "No configured shares"
 
@@ -957,7 +958,7 @@ class Shares:
             # Verify all shares are mounted before allowing destructive rescan
             rescan = (rescan and self.confirm_force_rescan(shared_folders))
         else:
-            log.add("Shares check skipped (force rescan)")
+            log.add("Shared folder checks skipped using force rescan")
 
         # Hand over database control to the scanner process (it needs to initialize in any case)
         self.rescanning = True
