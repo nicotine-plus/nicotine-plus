@@ -528,12 +528,12 @@ class NicotineFrame(Window):
         self.user_status_icon.set_property("icon-name", icon_name)
         self.user_status_label.set_text(status_text)
 
-    def confirm_rescan_dialog_response(self, _dialog, response_id, _data):
+    def confirm_force_rescan_response(self, _dialog, response_id, _data):
 
         if response_id == 1:  # 'Retry'
             self.core.shares.rescan_shares()
 
-        elif response_id == 2:  # 'Force Rescan'
+        elif response_id == 2:  # 'Force Rescan'  # TODO: or 'Ignore'
             self.core.shares.rescan_shares(force=True)
 
         elif response_id == 3:  # 'Configure Shares' or 'Setup Assistant'
@@ -544,16 +544,16 @@ class NicotineFrame(Window):
 
         return False
 
-    def confirm_rescan_dialog(self, message, show_force):
+    def confirm_force_rescan(self, message, show_force):
 
         OptionDialog(
             parent=self.window,
             title=_("Failed to access shares"),
             message=message,
             first_button=_("_Retry"),
-            second_button=_("_Force Rescan") if show_force else None,
+            second_button=_("_Force Rescan") if show_force else None,  # _("_Ignore"),
             third_button=_("_Configure Shares") if not config.need_config() else _("_Setup Assistant"),
-            callback=self.confirm_rescan_dialog_response
+            callback=self.confirm_force_rescan_response
         ).show()
 
     """ Action Callbacks """
