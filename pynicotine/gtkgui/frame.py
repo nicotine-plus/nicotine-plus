@@ -727,13 +727,13 @@ class NicotineFrame(Window):
             else:
                 self.on_configure_shares()
 
-    def confirm_force_rescan(self, message_text, show_force):
+    def confirm_force_rescan(self, title, message, show_force):
 
-        def create_dialog(message_text, show_force):
+        def create_dialog(title, message_text, show_force):
             OptionDialog(
                 parent=self.window,
-                title=_("Failed to access shares"),
-                message=message_text,
+                title=title,
+                message=message,
                 first_button=_("_Retry"),
                 second_button=_("_Force Rescan") if show_force else None,
                 third_button=_("_Ignore") if not show_force else None,
@@ -742,7 +742,7 @@ class NicotineFrame(Window):
             ).show()
 
         # Avoid dialog appearing deactive if invoked during rescan on startup
-        GLib.idle_add(create_dialog, message_text, show_force)
+        GLib.idle_add(create_dialog, title, message, show_force)
 
         # Continue initializing shares, but without doing the rescan for now
         return False

@@ -908,19 +908,36 @@ class Shares:
         """ Check if any shares are missing, if so then show a prompt """
 
         reads, fails = self.check_shares(shares)
+
         num_reads = len(reads)
         num_fails = len(fails)
         num_total = num_reads + num_fails
 
-        if not num_total:
-            head_line = "No configured shares"
-            fails.insert(0, head_line)
-        elif num_reads < num_total:
-            head_line = f"Cannot access {num_fails} of {num_total} configured shares"
-        else:
-            head_line = f"Able to scan {num_reads} of {num_total} configured shares"
+        reads_shares_word = "share" if num_reads == 1 else "shares"
+        fails_shares_word = "share" if num_fails == 1 else "shares"
+        total_shares_word = "share" if num_total == 1 else "shares"
 
-        log.add(head_line)
+        total_shares_line = f"{num_total} {total_shares_word} configured"
+        reads_shares_line = f"{num_reads} {reads_shares_word} ready to scan"
+        fails_shares_line = f"{num_fails} {fails_shares_word} cannot be found"
+
+        reads_text = '\n\n'.join(reads) + "\n"
+
+        log.add_transfer(f"{reads_shares_line}:\n\n{reads_text}\n")
+        log.add(total_shares_line)
+
+        if num_total:
+            log.add(reads_shares_line)
+            if num_fails:
+                log.add(fails_shares_line)
+        else:
+            head_line = total_shares_line
+            fails.insert(0, total_shares_line)
+
+        if num_reads < num_total:
+            head_line = fails_shares_line
+        else:
+            head_line = reads_shares_line
 
         if reads and not fails:
             # Continue initializing shares, and do the rescan now
@@ -928,21 +945,26 @@ class Shares:
 
         fails_text = '\n\n'.join(fails) + "\n"
 
-        log.add_transfer(f"{head_line}:\n\n{fails_text}\n")
-        log.add(fails_text if num_fails < 2 else head_line)
+        log.add_transfer(f"{fails_shares_line}:\n\n{fails_text}\n")
+
+        if num_fails < 2:
+            log.add(fails_text)
 
         if self.ui_callback:
             if num_reads:
-                shares_word = "shares" if num_fails > 1 else "share"
-                bottom_line = f"Retry to check again, or use force to exclude {num_fails} {shares_word}."
+                bottom_line = f"Retry to check again, or use force to exclude {num_fails} {fails_shares_word}."
             else:
-                bottom_line = "No accessible shares" if num_total else ""  # "No configured shares"
+                bottom_line = reads_shares_line if num_total and num_reads else "Rescan aborted"
 
-            # Abbreviate message_text if needed, as dialog may get too tall if there's many failed items!
-            message_text = head_line + ":\n\n" + (f"{fails_text}\n{bottom_line}" if num_fails <= 5 else
-                                                  '\n\n'.join(fails[:5]) + f"\n\n…\n\n{bottom_line}")
+            if num_fails > 5:
+                # Abbreviate message_text, as dialog may get too tall if there's many fails!
+                message_text = ('\n\n'.join(fails[:5]) + f"\n\n…\n\n{reads_shares_line} (out of {total_shares_line})"
+                                f"\n\n{bottom_line}")
+            else:
+                message_text = f"{fails_text}\n{reads_shares_line} (out of {total_shares_line})\n\n{bottom_line}"
+
             # Prompt retry/force rescan
-            return self.ui_callback.confirm_force_rescan(message_text, num_reads)  # always False
+            return self.ui_callback.confirm_force_rescan(fails_shares_line, message_text, num_reads)
 
         # Continue initializing shares, but without doing the rescan for now
         return False
