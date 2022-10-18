@@ -52,7 +52,7 @@ class StartupTest(unittest.TestCase):
         """ Verify that CLI-exclusive functionality works """
 
         output = subprocess.check_output(["python3", "-m", "pynicotine", "--help"], timeout=3)
-        self.assertTrue(str(output).find("--help") > -1)
+        self.assertIn("--help", str(output))
 
         # Check for " 0 folders found after rescan" in output. Text strings are translatable,
         # so we can't match them directly.
@@ -60,7 +60,7 @@ class StartupTest(unittest.TestCase):
             ["python3", "-m", "pynicotine", "--config=" + CONFIG_FILE, "--user-data=" + USER_DATA, "--rescan"],
             timeout=10
         )
-        self.assertTrue(str(output).find(" 0 ") > -1)
+        self.assertIn(" 0 ", str(output))
 
         output = subprocess.check_output(["python3", "-m", "pynicotine", "--version"], timeout=3)
-        self.assertTrue(str(output).find("Nicotine+") > -1)
+        self.assertIn("Nicotine+", str(output))
