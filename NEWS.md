@@ -14,6 +14,7 @@
  * IMPORTANT: Fixed an issue where private messages from offline users were ignored
  * IMPORTANT: Fixed an issue where certain uploads were incorrectly marked as "Cancelled"
  * IMPORTANT - OpenBSD: Fixed a regression where incoming peer connections did not work
+ * Fixed a crash when uploading large files on a 32-bit system
  * Fixed an issue where redundant protocol messages could be sent to the server indefinitely
  * Fixed an issue where UPnP did not work on MikroTik routers
  * Fixed an issue where the progress bar would get stuck if a share browse request ended abruptly
