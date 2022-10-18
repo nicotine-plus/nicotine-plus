@@ -34,6 +34,8 @@
  * The flatpak version of Nicotine+ is using the wrong language ([#2194](https://github.com/nicotine-plus/nicotine-plus/issues/2194))
  * Uploads partly broken ([#2197](https://github.com/nicotine-plus/nicotine-plus/issues/2197))
  * Error code 725: OnlyPermanentLeasesSupported ([#2200](https://github.com/nicotine-plus/nicotine-plus/issues/2200))
+ * Critical error ([#2215](https://github.com/nicotine-plus/nicotine-plus/issues/2215))
+ * OverflowError ([#2216](https://github.com/nicotine-plus/nicotine-plus/issues/2216))
 
 
 ## Version 3.2.5 (August 31, 2022)
