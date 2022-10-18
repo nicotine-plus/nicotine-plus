@@ -18,6 +18,7 @@
 
 import os
 import subprocess
+import sys
 import unittest
 
 USER_DATA = os.path.dirname(os.path.realpath(__file__))
@@ -48,6 +49,7 @@ class StartupTest(unittest.TestCase):
 
             self.assertTrue(is_success)
 
+    @unittest.skipIf((sys.platform == "win32"), "CLI tests are currently flaky in Windows CI")
     def test_cli(self):
         """ Verify that CLI-exclusive functionality works """
 
