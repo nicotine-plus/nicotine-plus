@@ -294,7 +294,7 @@ class EntryDialog(MessageDialog):
 class OptionDialog(MessageDialog):
 
     def __init__(self, parent, title, message, callback, callback_data=None, option_label="", option_value=False,
-                 first_button=_("_No"), second_button=_("_Yes"), third_button=""):
+                 first_button=_("_No"), second_button=_("_Yes"), third_button="", fourth_button=""):
 
         buttons = []
 
@@ -306,6 +306,9 @@ class OptionDialog(MessageDialog):
 
         if third_button:
             buttons.append((third_button, 3))
+
+        if fourth_button:
+            buttons.append((fourth_button, 4))
 
         super().__init__(parent=parent, title=title, message=message, message_type=Gtk.MessageType.OTHER,
                          callback=callback, callback_data=callback_data, buttons=buttons)

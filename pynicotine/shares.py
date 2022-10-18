@@ -835,7 +835,7 @@ class Shares:
 
     @staticmethod
     def _get_group_index(group="normal"):
-        """ Convienience function to address a specific shares database index by "name" or alias """
+        """ Address the index of a shares table by "name" or alias """
 
         if group in (0, "normal", "public", "everyone"):
             return 0
@@ -847,10 +847,10 @@ class Shares:
 
     @staticmethod
     def _get_group_name(group=0):
-        """ Convienience function to identify a specific shares database by [index] or alias """
+        """ Identify the name of a specific shares table by [index] """
 
         if group in (0, "normal", "public", "everyone"):
-            return "public"
+            return "public"  # "normal" is not UI friendly
 
         if group in (1, "buddy", "private", "trusted"):
             return "buddy"
@@ -862,17 +862,17 @@ class Shares:
         group specifies which shares to check: "normal", "buddy", etc """
         # TODO: Unused, need new command in core_commands to run this
 
-        ok, no = self.check_shares(shares=None, group=group)
-        num_ok = len(ok)
-        num_no = len(no)
-        num_total = num_ok + num_no
+        reads, fails = self.check_shares(shares=None, group=group)
+        num_reads = len(reads)
+        num_fails = len(fails)
+        num_total = num_reads + num_fails
 
         if not num_total:
-            summary = "No configured shares"
-            no.insert(0, summary)
+            head_line = "No configured shares"
+            fails.insert(0, head_line)
 
         # Coalesce all "Ready " and "Missing " items toegether
-        all_shares = '\n\n'.join(ok) + "\n" + '\n\n'.join(no)
+        all_shares = '\n\n'.join(reads) + "\n" + '\n\n'.join(fails)
 
         return all_shares
 
@@ -885,67 +885,62 @@ class Shares:
             shares = self.get_shared_folders()
 
         group_index = self._get_group_index(group) if group is not None else 0
-        ok, no = [], []
+        reads, fails = [], []
 
         for table in shares:
             group_name = self._get_group_name(group_index)
 
             for virtual, folder, *_unused in table:
                 if os.access(folder, os.R_OK):
-                    ok.append(f"Ready {group_name} share \"{virtual}\" at:\n{folder}")
+                    reads.append(f"Ready {group_name} share \"{virtual}\" at:\n{folder}")
                 else:
-                    no.append(f"Missing {group_name} share \"{virtual}\" at:\n{folder}")
+                    fails.append(f"Missing {group_name} share \"{virtual}\" at:\n{folder}")
 
             if group is not None:
-                # Only check a specific group (ie "normal" or "buddy", etc)
+                # Only check a specific group (ie just "normal" or "buddy" shares, etc)
                 break
 
             group_index += 1
 
-        return ok, no  # ["Ready "...], ["Missing "...]
+        return reads, fails
 
     def confirm_force_rescan(self, shares):
 
-        ok, no = self.check_shares(shares)
-        num_ok = len(ok)
-        num_no = len(no)
-        num_total = num_ok + num_no
+        reads, fails = self.check_shares(shares)
+        num_reads = len(reads)
+        num_fails = len(fails)
+        num_total = num_reads + num_fails
 
         if not num_total:
-            summary = "No configured shares"
-            no.insert(0, summary)
-        elif num_ok < num_total:
-            summary = f"Cannot access {num_no} of {num_total} configured shares"
+            head_line = "No configured shares"
+            fails.insert(0, head_line)
+        elif num_reads < num_total:
+            head_line = f"Cannot access {num_fails} of {num_total} configured shares"
         else:
-            summary = f"Able to scan {num_ok} of {num_total} configured shares"
+            head_line = f"Able to scan {num_reads} of {num_total} configured shares"
 
-        log.add(summary)
+        log.add(head_line)
 
-        if ok and not no:
+        if reads and not fails:
             return True
 
-        fails = '\n\n'.join(no)
+        reads_text = '\n\n'.join(reads) + "\n"
+        fails_text = '\n\n'.join(fails) + "\n"
 
-        if num_ok:
-            epilog = f"Retry to check again, or use force to unindex {num_no} shares" + "."
-        elif num_total:
-            epilog = "No accessible shares"
-        else:
-            epilog = ""
-
-        if not self.ui_callback:
-            okay = '\n\n'.join(ok)
-            log.add(f"{okay}\n\n{summary}:\n\n{fails}\n")
-
-        log.add_transfer(f"{summary}:\n\n{fails}\n")
-        log.add(fails if num_no < 2 else summary)
+        log.add_transfer(f"{head_line}:\n\n{fails_text}\n")
+        log.add(fails_text if num_fails < 2 else head_line)
 
         if self.ui_callback:
-            # Abbreviate message if needed as dialog box may get too tall if many items
-            message = summary + ":\n\n" + (f"{fails}\n\n{epilog}" if num_no <= 5 else
-                                           '\n\n'.join(no[:5]) + f"\n\n…\n\n{epilog}")
+            if num_reads:
+                bottom_line = f"Retry to check again, or use force to exclude {num_fails} shares."
+            else:
+                bottom_line = "No accessible shares" if num_total else "" # "No configured shares"
+
+            # Abbreviate message_text if needed, as dialog may get too tall if there's many failed items!
+            message_text = head_line + ":\n\n" + (f"{fails_text}\n{bottom_line}" if num_fails <= 5 else
+                                                  '\n\n'.join(fails[:5]) + f"\n\n…\n\n{bottom_line}")
             # Prompt retry/force rescan
-            return self.ui_callback.confirm_force_rescan(message, num_ok)
+            return self.ui_callback.confirm_force_rescan(message_text, num_reads)  # always False
 
         return False
 
@@ -957,10 +952,10 @@ class Shares:
         shared_folders = self.get_shared_folders()
 
         if not force:
-            # Verify that all shares are mounted before doing rescan
+            # Verify all shares are mounted before allowing destructive rescan
             rescan = (rescan and self.confirm_force_rescan(shared_folders))
 
-        # Hand over database control to the scanner process
+        # Hand over database control to the scanner process (it needs to initialize in any case)
         self.rescanning = True
         self.close_shares(self.share_dbs)
 

@@ -117,8 +117,8 @@ class Application:
         # Not implemented
         pass
 
-    def confirm_force_rescan(self, message, _unused):
-        log.add(f"Rescan aborted: {message}")
+    def confirm_force_rescan(self, message_text, _unused):
+        log.add(f"Rescan aborted: {message_text}")
         return False
 
     def invalid_password(self):
