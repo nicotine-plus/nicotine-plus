@@ -921,9 +921,6 @@ class Shares:
         reads_shares_line = f"{num_reads} {reads_shares_word} ready to scan"
         fails_shares_line = f"{num_fails} {fails_shares_word} cannot be found"
 
-        reads_text = '\n\n'.join(reads) + "\n"
-
-        log.add_transfer(f"{reads_shares_line}:\n\n{reads_text}\n")
         log.add(total_shares_line)
 
         if num_total:
@@ -938,6 +935,10 @@ class Shares:
             head_line = fails_shares_line
         else:
             head_line = reads_shares_line
+
+        reads_text = '\n\n'.join(reads) + "\n"
+
+        log.add_transfer(f"{reads_shares_line}:\n\n{reads_text}\n")
 
         if reads and not fails:
             # Continue initializing shares, and do the rescan now
@@ -954,7 +955,7 @@ class Shares:
             if num_reads:
                 bottom_line = f"Retry to check again, or use force to exclude {num_fails} {fails_shares_word}."
             else:
-                bottom_line = reads_shares_line if num_total and num_reads else "Rescan aborted"
+                bottom_line = reads_shares_line if num_total and num_reads else "Nothing to scan" + "."
 
             if num_fails > 5:
                 # Abbreviate message_text, as dialog may get too tall if there's many fails!
