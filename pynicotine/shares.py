@@ -605,6 +605,30 @@ class Shares:
 
         return new_virtual_name
 
+    @staticmethod
+    def get_group_index(group="normal"):
+        """ Address the index of a shares table by "name" or alias """
+
+        if group in (0, "normal", "public", "everyone"):
+            return 0
+
+        if group in (1, "buddy", "private", "trusted"):
+            return 1
+
+        return -1
+
+    @staticmethod
+    def get_group_name(group=0):
+        """ Identify the name of a specific shares table by [index] """
+
+        if group in (0, "normal", "public", "everyone"):
+            return "public"  # "normal" is not UI friendly
+
+        if group in (1, "buddy", "private", "trusted"):
+            return "buddy"
+
+        return "__INTERNAL_ERROR__"
+
     def convert_shares(self):
         """ Convert fs-based shared to virtual shared (pre 1.4.0) """
 
@@ -833,30 +857,6 @@ class Shares:
 
         return False
 
-    @staticmethod
-    def _get_group_index(group="normal"):
-        """ Address the index of a shares table by "name" or alias """
-
-        if group in (0, "normal", "public", "everyone"):
-            return 0
-
-        if group in (1, "buddy", "private", "trusted"):
-            return 1
-
-        return -1
-
-    @staticmethod
-    def _get_group_name(group=0):
-        """ Identify the name of a specific shares table by [index] """
-
-        if group in (0, "normal", "public", "everyone"):
-            return "public"  # "normal" is not UI friendly
-
-        if group in (1, "buddy", "private", "trusted"):
-            return "buddy"
-
-        return "__INTERNAL_ERROR__"
-
     def list_shares(self, group=None):
         """ Returns ONE list with all readable shares and missing shares.
         group specifies which shares to check: "normal", "buddy", etc """
@@ -884,11 +884,11 @@ class Shares:
             # Triggered by list shares command
             shares = self.get_shared_folders()
 
-        group_index = self._get_group_index(group) if group is not None else 0
+        group_index = self.get_group_index(group) if group is not None else 0
         reads, fails = [], []
 
         for table in shares:
-            group_name = self._get_group_name(group_index)
+            group_name = self.get_group_name(group_index)
 
             for virtual, folder, *_unused in table:
                 if os.access(folder, os.R_OK):
@@ -905,6 +905,7 @@ class Shares:
         return reads, fails
 
     def confirm_force_rescan(self, shares):
+        """ Check if any shares are missing, if so then show a prompt """
 
         reads, fails = self.check_shares(shares)
         num_reads = len(reads)
@@ -922,9 +923,9 @@ class Shares:
         log.add(head_line)
 
         if reads and not fails:
+            # Continue initializing shares, and do the rescan now
             return True
 
-        reads_text = '\n\n'.join(reads) + "\n"
         fails_text = '\n\n'.join(fails) + "\n"
 
         log.add_transfer(f"{head_line}:\n\n{fails_text}\n")
@@ -934,7 +935,7 @@ class Shares:
             if num_reads:
                 bottom_line = f"Retry to check again, or use force to exclude {num_fails} shares."
             else:
-                bottom_line = "No accessible shares" if num_total else "" # "No configured shares"
+                bottom_line = "No accessible shares" if num_total else ""  # "No configured shares"
 
             # Abbreviate message_text if needed, as dialog may get too tall if there's many failed items!
             message_text = head_line + ":\n\n" + (f"{fails_text}\n{bottom_line}" if num_fails <= 5 else
@@ -942,6 +943,7 @@ class Shares:
             # Prompt retry/force rescan
             return self.ui_callback.confirm_force_rescan(message_text, num_reads)  # always False
 
+        # Continue initializing shares, but without doing the rescan for now
         return False
 
     def rescan_shares(self, init=False, rescan=True, rebuild=False, use_thread=True, force=False):
@@ -954,6 +956,8 @@ class Shares:
         if not force:
             # Verify all shares are mounted before allowing destructive rescan
             rescan = (rescan and self.confirm_force_rescan(shared_folders))
+        else:
+            log.add("Shares check skipped (force rescan)")
 
         # Hand over database control to the scanner process (it needs to initialize in any case)
         self.rescanning = True
