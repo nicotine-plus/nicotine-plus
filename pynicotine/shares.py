@@ -935,7 +935,7 @@ class Shares:
             fails.insert(0, total_shares_line)
 
         if reads:
-            reads_text = '\n\n'.join(reads) + "\n"
+            reads_text = '\n\n'.join(reads)
             log.add_transfer(f"{reads_shares_line}:\n\n{reads_text}\n")
 
         if reads and not fails:
@@ -943,8 +943,9 @@ class Shares:
             return True
 
         fails_text = '\n\n'.join(fails)
+        summary_line = _(f"{reads_shares_line} (out of {total_shares_line})")
 
-        log.add_transfer(f"{fails_shares_line}:\n\n{fails_text}\n\n")
+        log.add_transfer(f"{fails_shares_line}:\n\n{fails_text}\n\n{summary_line}")
         log.add(_("Rescan aborted") + ": " + (fails_text.replace(":\n", " ") if num_fails == 1 else fails_shares_line))
 
         if self.ui_callback:
@@ -961,7 +962,6 @@ class Shares:
                 bottom_line = _("Nothing to scan") + ". " + (bottom_line if num_total else "")
 
             title_text = _("Rescan aborted") + ": " + (fails_shares_line if num_total else total_shares_line)
-            summary_line = f"{reads_shares_line}" + " " + f"(out of {total_shares_line})"
             message_text = f"{fails_text}\n\n{summary_line}\n\n{bottom_line}"
 
             # Prompt with retry/force rescan options only offered if relevant and appropriate
