@@ -938,30 +938,31 @@ class Shares:
             # Continue initializing shares, and do the rescan now
             return True
 
-        fails_text = '\n\n'.join(fails) + "\n"
+        fails_text = '\n\n'.join(fails)
 
-        log.add_transfer(f"{fails_shares_line}:\n\n{fails_text}\n")
-
-        if num_fails < 2:
-            log.add(fails_text)
+        log.add_transfer(f"{fails_shares_line}:\n\n{fails_text}\n\n")
+        log.add("Rescan aborted" + ": " + (fails_text.replace(":\n", " ") if num_fails == 1 else fails_shares_line))
 
         if self.ui_callback:
+            if num_fails > 5:
+                # Abbreviate message_text, the dialog may get too tall if there's many fails!
+                fails_text = '\n\n'.join(fails[:5]) + "\n\n…\n"
+
             if num_reads:
                 bottom_line = f"Retry to check again, or use force to exclude {num_fails} {fails_shares_word}."
+                show_force = True
             else:
-                bottom_line = reads_shares_line if num_total and num_reads else "Nothing to scan" + "."
+                bottom_line = "Nothing to scan" + "."
+                show_force = False  # don't offer to totally wipe out all share indexes
 
-            if num_fails > 5:
-                # Abbreviate message_text, as dialog may get too tall if there's many fails!
-                message_text = ('\n\n'.join(fails[:5]) + f"\n\n…\n\n{reads_shares_line} (out of {total_shares_line})"
-                                f"\n\n{bottom_line}")
-            else:
-                message_text = f"{fails_text}\n{reads_shares_line} (out of {total_shares_line})\n\n{bottom_line}"
+            title_text = "Rescan aborted" + ": " + (fails_shares_line if num_total else total_shares_line)
+            summary_line = f"{reads_shares_line}" + " " + f"(out of {total_shares_line})"
+            message_text = f"{fails_text}\n\n{summary_line}\n\n{bottom_line}"
 
-            # Prompt retry/force rescan
-            return self.ui_callback.confirm_force_rescan(fails_shares_line, message_text, num_reads)
+            # Prompt retry/force rescan (in any case we will need to scan again from scratch)
+            self.ui_callback.confirm_force_rescan(title_text, message_text, show_force)
 
-        # Continue initializing shares, but without doing the rescan for now
+        # Always continue to initialize shares in background by setting rescan to False
         return False
 
     def rescan_shares(self, init=False, rescan=True, rebuild=False, use_thread=True, force=False):

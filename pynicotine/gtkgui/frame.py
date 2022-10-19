@@ -714,11 +714,9 @@ class NicotineFrame(Window):
     def confirm_force_rescan_response(self, _dialog, response_id, _data):
 
         if response_id == 1:  # 'Retry'
-            # Start the scan again from scratch
             self.core.shares.rescan_shares()
 
         elif response_id == 2:  # 'Force Rescan'
-            # Start the scan again and skip the check
             self.core.shares.rescan_shares(force=True)
 
         elif response_id == 4:  # 'Configure Shares' or 'Setup Assistant'
@@ -743,9 +741,6 @@ class NicotineFrame(Window):
 
         # Avoid dialog appearing deactive if invoked during rescan on startup
         GLib.idle_add(create_dialog, title, message, show_force)
-
-        # Continue initializing shares, but without doing the rescan for now
-        return False
 
     def _on_check_latest_version(self):
 
