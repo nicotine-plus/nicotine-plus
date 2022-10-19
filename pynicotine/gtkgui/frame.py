@@ -729,7 +729,7 @@ class NicotineFrame(Window):
 
     def confirm_force_rescan(self, title, message, show_force):
 
-        def create_dialog(title, message_text, show_force):
+        def create_dialog(title, message, show_force):
             OptionDialog(
                 parent=self.window,
                 title=title,
