@@ -858,26 +858,26 @@ class Shares:
         return False
 
     def list_shares(self, group=None):
-        """ Returns ONE list with all readable shares and missing shares.
-        group specifies which shares to check: "normal", "buddy", etc """
+        """ Returns ONE string with all readable shares and missing shares.
+        group specifies which shares to list: "normal", "buddy", etc. """
         # TODO: Unused, need new command in core_commands to run this
 
         reads, fails = self.check_shares(shares=None, group=group)
         num_reads = len(reads)
         num_fails = len(fails)
         num_total = num_reads + num_fails
+        total_shares_line = "0 " + _("shares") + " " + _("configured")
 
         if not num_total:
-            head_line = "No configured shares"
-            fails.insert(0, head_line)
+            fails.insert(0, total_shares_line)
 
-        # Coalesce all "Ready " and "Missing " items toegether
-        all_shares = '\n\n'.join(reads) + "\n" + '\n\n'.join(fails)
+        # Coalesce the summary line toegether with all "Ready " and "Missing " items
+        all_shares = total_shares_line + ":\n\n" + '\n\n'.join(reads) + "\n" + '\n\n'.join(fails)
 
         return all_shares
 
     def check_shares(self, shares=None, group=None):
-        """ Returns TWO lists of: readable shares, and missing shares.
+        """ Returns TWO lists of strings: readable shares, and missing shares.
         group specifies which shares to check: "normal", "buddy", etc. """
 
         if shares is None:
@@ -892,9 +892,9 @@ class Shares:
 
             for virtual, folder, *_unused in table:
                 if os.access(folder, os.R_OK):
-                    reads.append(f"Ready {group_name} share \"{virtual}\" at:\n{folder}")
+                    reads.append(_(f"Ready {group_name} share \"{virtual}\" at:\n{folder}"))
                 else:
-                    fails.append(f"Missing {group_name} share \"{virtual}\" at:\n{folder}")
+                    fails.append(_(f"Missing {group_name} share \"{virtual}\" at:\n{folder}"))
 
             if group is not None:
                 # Only check a specific group (ie just "normal" or "buddy" shares, etc)
@@ -913,13 +913,13 @@ class Shares:
         num_fails = len(fails)
         num_total = num_reads + num_fails
 
-        reads_shares_word = "share" if num_reads == 1 else "shares"
-        fails_shares_word = "share" if num_fails == 1 else "shares"
-        total_shares_word = "share" if num_total == 1 else "shares"
+        reads_shares_word = _("share") if num_reads == 1 else _("shares")
+        fails_shares_word = _("share") if num_fails == 1 else _("shares")
+        total_shares_word = _("share") if num_total == 1 else _("shares")
 
-        total_shares_line = f"{num_total} {total_shares_word} configured"
-        reads_shares_line = f"{num_reads} {reads_shares_word} ready to scan"
-        fails_shares_line = f"{num_fails} {fails_shares_word} cannot be found"
+        total_shares_line = f"{num_total} {total_shares_word} " + _("configured")
+        reads_shares_line = f"{num_reads} {reads_shares_word} " + _("ready to scan")
+        fails_shares_line = f"{num_fails} {fails_shares_word} " + _("cannot be found")
 
         log.add(total_shares_line)
 
@@ -941,7 +941,7 @@ class Shares:
         fails_text = '\n\n'.join(fails)
 
         log.add_transfer(f"{fails_shares_line}:\n\n{fails_text}\n\n")
-        log.add("Rescan aborted" + ": " + (fails_text.replace(":\n", " ") if num_fails == 1 else fails_shares_line))
+        log.add(_("Rescan aborted") + ": " + (fails_text.replace(":\n", " ") if num_fails == 1 else fails_shares_line))
 
         if self.ui_callback:
             if num_fails > 5:
@@ -949,13 +949,13 @@ class Shares:
                 fails_text = '\n\n'.join(fails[:5]) + "\n\n…\n"
 
             if num_reads:
-                bottom_line = f"Retry to check again, or use force to exclude {num_fails} {fails_shares_word}."
+                bottom_line = _(f"Retry to check again, or use force to exclude {num_fails} {fails_shares_word}.")
                 show_force = True
             else:
-                bottom_line = "Nothing to scan" + "."
+                bottom_line = _("Nothing to scan") + "."
                 show_force = False  # don't offer to totally wipe out all share indexes
 
-            title_text = "Rescan aborted" + ": " + (fails_shares_line if num_total else total_shares_line)
+            title_text = _("Rescan aborted") + ": " + (fails_shares_line if num_total else total_shares_line)
             summary_line = f"{reads_shares_line}" + " " + f"(out of {total_shares_line})"
             message_text = f"{fails_text}\n\n{summary_line}\n\n{bottom_line}"
 
@@ -976,7 +976,7 @@ class Shares:
             # Verify all shares are mounted before allowing destructive rescan
             rescan = (rescan and self.confirm_force_rescan(shared_folders))
         else:
-            log.add("Shared folder checks skipped using force rescan")
+            log.add(_("Shared folder checks skipped, using force rescan"))
 
         # Hand over database control to the scanner process (it needs to initialize in any case)
         self.rescanning = True
