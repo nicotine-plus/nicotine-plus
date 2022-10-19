@@ -891,13 +891,13 @@ class Shares:
         reads, fails = [], []
 
         for table in shares:
-            group_name = self.get_group_name(group_index)
+            group_name = self.get_group_name(group_index).title()
 
             for virtual, folder, *_unused in table:
                 if os.access(folder, os.R_OK):
-                    reads.append(_(f"Ready {group_name} share \"{virtual}\" at:\n{folder}"))
+                    reads.append(_(f"{group_name} share \"{virtual}\" ready at:\n{folder}"))
                 else:
-                    fails.append(_(f"Missing {group_name} share \"{virtual}\" at:\n{folder}"))
+                    fails.append(_(f"{group_name} share \"{virtual}\" not found at:\n{folder}"))
 
             if group is not None:
                 # Only check a specific group (ie just "normal" or "buddy" shares, etc)
@@ -916,53 +916,54 @@ class Shares:
         num_fails = len(fails)
         num_total = num_reads + num_fails
 
-        total_shares_line = (_(f"{num_total} share configured") if num_total == 1 else
-                             _(f"{num_total} shares configured"))
+        total_shares = (_(f"{num_total} share configured") if num_total == 1 else
+                        _(f"{num_total} shares configured"))
 
-        reads_shares_line = (_(f"{num_reads} share ready") if num_reads == 1 else
-                             _(f"{num_reads} shares ready"))
+        reads_shares = (_(f"{num_reads} share ready") if num_reads == 1 else
+                        _(f"{num_reads} shares ready"))
 
-        fails_shares_line = (_(f"{num_fails} share not found") if num_fails == 1 else
-                             _(f"{num_fails} shares not found"))
+        fails_shares = (_(f"{num_fails} share not found") if num_fails == 1 else
+                        _(f"{num_fails} shares not found"))
 
-        log.add(total_shares_line)
+        log.add(total_shares)
 
         if num_total:
-            log.add(reads_shares_line)
+            log.add(reads_shares)
             if num_fails:
-                log.add(fails_shares_line)
+                log.add(fails_shares)
         else:
-            fails.insert(0, total_shares_line)
+            fails.insert(0, total_shares)
 
         if reads:
             reads_text = '\n\n'.join(reads)
-            log.add_transfer(f"{reads_shares_line}:\n\n{reads_text}\n")
+            log.add_transfer(f"{reads_shares}:\n\n{reads_text}\n")
 
         if reads and not fails:
             # Continue initializing shares, and do the rescan now
             return True
 
         fails_text = '\n\n'.join(fails)
-        summary_line = _(f"{reads_shares_line} (out of {total_shares_line})")
+        summary = _(f"{reads_shares} out of {total_shares}")
 
-        log.add_transfer(f"{fails_shares_line}:\n\n{fails_text}\n\n{summary_line}")
-        log.add(_("Rescan aborted") + ": " + (fails_text.replace(":\n", " ") if num_fails == 1 else fails_shares_line))
+        log.add_transfer(f"{fails_shares}:\n\n{fails_text}\n\n{summary}")
+        log.add(_("Rescan aborted") + ": " + (fails_text.replace(":\n", " ") if num_fails == 1 else fails_shares))
 
         if self.ui_callback:
             if num_fails > 5:
                 # Abbreviate message_text, the dialog may get too tall if there's many fails!
                 fails_text = '\n\n'.join(fails[:5]) + "\n\n…\n"
 
-            bottom_line = _("Retry to check again") + ". "
+            epilog = _("Verify disk(s) are accessible then retry to check again")
 
             if num_reads:
-                bottom_line += (_(f"Use force to exclude {num_fails} share") + "." if num_fails == 1 else
-                                _(f"Use force to exclude {num_fails} shares") + ".")
+                # TODO: This string doesn't currently make sense in the CLI until '/rescan force' is implemented
+                summary += ",\n" + (_(f"using force will exclude {num_fails} share") + "." if num_fails == 1 else
+                                    _(f"using force will exclude {num_fails} shares") + ".")
             else:
-                bottom_line = _("Nothing to scan") + ". " + (bottom_line if num_total else "")
+                epilog = _("Nothing to scan") + ". " + (epilog if num_total else "")
 
-            title_text = _("Rescan aborted") + ": " + (fails_shares_line if num_total else total_shares_line)
-            message_text = f"{fails_text}\n\n{summary_line}\n\n{bottom_line}"
+            title_text = _("Rescan aborted") + ": " + (fails_shares if num_total else total_shares)
+            message_text = f"{fails_text}\n\n{summary}\n\n{epilog}"
 
             # Prompt with retry/force rescan options only offered if relevant and appropriate
             self.ui_callback.confirm_force_rescan(title_text, message_text, num_total, num_reads)
