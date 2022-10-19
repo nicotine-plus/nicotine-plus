@@ -35,8 +35,7 @@ class Plugin(BasePlugin):
             "rescan": {
                 "callback": self.rescan_command,
                 "description": _("Rescan shares"),
-                "usage": ["[force]"],
-                "choices": ["force"],
+                "usage": ["[-force]"],
                 "group": _("Shares")
             },
             "hello": {
