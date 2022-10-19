@@ -863,10 +863,13 @@ class Shares:
         # TODO: Unused, need new command in core_commands to run this
 
         reads, fails = self.check_shares(shares=None, group=group)
+
         num_reads = len(reads)
         num_fails = len(fails)
         num_total = num_reads + num_fails
-        total_shares_line = "0 " + _("shares") + " " + _("configured")
+
+        total_shares_line = (_(f"{num_total} share configured") if num_total == 1 else
+                             _(f"{num_total} shares configured"))
 
         if not num_total:
             fails.insert(0, total_shares_line)
@@ -913,13 +916,14 @@ class Shares:
         num_fails = len(fails)
         num_total = num_reads + num_fails
 
-        reads_shares_word = _("share") if num_reads == 1 else _("shares")
-        fails_shares_word = _("share") if num_fails == 1 else _("shares")
-        total_shares_word = _("share") if num_total == 1 else _("shares")
+        total_shares_line = (_(f"{num_total} share configured") if num_total == 1 else
+                             _(f"{num_total} shares configured"))
 
-        total_shares_line = f"{num_total} {total_shares_word} " + _("configured")
-        reads_shares_line = f"{num_reads} {reads_shares_word} " + _("ready to scan")
-        fails_shares_line = f"{num_fails} {fails_shares_word} " + _("cannot be found")
+        reads_shares_line = (_(f"{num_reads} share ready") if num_reads == 1 else
+                             _(f"{num_reads} shares ready"))
+
+        fails_shares_line = (_(f"{num_fails} share not found") if num_fails == 1 else
+                             _(f"{num_fails} shares not found"))
 
         log.add(total_shares_line)
 
@@ -948,21 +952,23 @@ class Shares:
                 # Abbreviate message_text, the dialog may get too tall if there's many fails!
                 fails_text = '\n\n'.join(fails[:5]) + "\n\n…\n"
 
+            bottom_line = _("Retry to check again") + ". "
+
             if num_reads:
-                bottom_line = _(f"Retry to check again, or use force to exclude {num_fails} {fails_shares_word}.")
-                show_force = True
+                bottom_line += (_(f"Use force to exclude {num_fails} share") + "." if num_fails == 1 else
+                                _(f"Use force to exclude {num_fails} shares") + ".")
             else:
-                bottom_line = _("Nothing to scan") + "."
-                show_force = False  # don't offer to totally wipe out all share indexes
+                bottom_line = _("Nothing to scan") + ". " + (bottom_line if num_total else "")
 
             title_text = _("Rescan aborted") + ": " + (fails_shares_line if num_total else total_shares_line)
             summary_line = f"{reads_shares_line}" + " " + f"(out of {total_shares_line})"
             message_text = f"{fails_text}\n\n{summary_line}\n\n{bottom_line}"
 
-            # Prompt retry/force rescan (in any case we will need to scan again from scratch)
-            self.ui_callback.confirm_force_rescan(title_text, message_text, show_force)
+            # Prompt with retry/force rescan options only offered if relevant and appropriate
+            self.ui_callback.confirm_force_rescan(title_text, message_text, num_total, num_reads)
 
-        # Always continue to initialize shares in background by setting rescan to False
+        # We don't wait for the response (and we need to scan again from scratch in any case),
+        # so always continue initializing share(s) in the background by setting rescan to False
         return False
 
     def rescan_shares(self, init=False, rescan=True, rebuild=False, use_thread=True, force=False):

@@ -725,22 +725,22 @@ class NicotineFrame(Window):
             else:
                 self.on_configure_shares()
 
-    def confirm_force_rescan(self, title, message, show_force):
+    def confirm_force_rescan(self, title, message, show_retry, show_force):
 
-        def create_dialog(title, message, show_force):
+        def create_dialog():
             OptionDialog(
                 parent=self.window,
                 title=title,
                 message=message,
-                first_button=_("_Retry"),
-                second_button=_("_Force Rescan") if show_force else None,
-                third_button=_("_Ignore") if not show_force else None,
+                first_button=_("_Retry") if show_retry else None,  # hide if 0 shares configured
+                second_button=_("_Force Rescan") if show_force else None,  # hide if 0 shares ready
+                third_button=_("_Ignore") if not show_force else None,  # don't offer to completely wipe out the index
                 fourth_button=_("_Configure Shares") if not config.need_config() else _("_Setup Assistant"),
                 callback=self.confirm_force_rescan_response
             ).show()
 
         # Avoid dialog appearing deactive if invoked during rescan on startup
-        GLib.idle_add(create_dialog, title, message, show_force)
+        GLib.idle_add(create_dialog)
 
     def _on_check_latest_version(self):
 
