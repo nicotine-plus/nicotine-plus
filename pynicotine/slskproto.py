@@ -185,6 +185,8 @@ class SlskProtoThread(threading.Thread):
 
     IN_PROGRESS_STALE_AFTER = 2
     CONNECTION_MAX_IDLE = 60
+    READ_BUFFER_SIZE = 1048576
+    WRITE_BUFFER_SIZE = 1048576
 
     def __init__(self, core_callback, queue, bindip, interface, port, port_range):
         """ core_callback is a NicotineCore callback function to be called with messages
@@ -1091,6 +1093,8 @@ class SlskProtoThread(threading.Thread):
             conn_obj = ServerConnection(sock=server_socket, addr=msg_obj.addr, events=events, login=msg_obj.login)
 
             server_socket.setblocking(False)
+            server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.READ_BUFFER_SIZE)
+            server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, self.WRITE_BUFFER_SIZE)
 
             # Detect if our connection to the server is still alive
             self.set_server_socket_keepalive(server_socket)
@@ -1445,6 +1449,8 @@ class SlskProtoThread(threading.Thread):
             conn_obj = PeerConnection(sock=sock, addr=msg_obj.addr, events=events, init=msg_obj.init)
 
             sock.setblocking(False)
+            sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.READ_BUFFER_SIZE)
+            sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, self.WRITE_BUFFER_SIZE)
 
             if self.bindip:
                 sock.bind((self.bindip, 0))
@@ -2028,6 +2034,8 @@ class SlskProtoThread(threading.Thread):
 
         self.listen_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.READ_BUFFER_SIZE)
+        self.listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, self.WRITE_BUFFER_SIZE)
         self.listen_socket.setblocking(False)
         self.bind_listen_port()
 
