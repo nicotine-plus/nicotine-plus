@@ -446,6 +446,8 @@ class Plugin(BasePlugin):
             for command in commands:
                 self.echo_message(command)
 
+        return ("To search for a command, type /help [command]")
+
     """ "Chats" """
 
     def clear_command(self, _args, user=None, room=None):
@@ -455,6 +457,8 @@ class Plugin(BasePlugin):
 
         elif user is not None:
             self.core.privatechats.clear_messages(user)
+
+        return 0
 
     def close_command(self, args, user=None, **_unused):
 
@@ -468,6 +472,8 @@ class Plugin(BasePlugin):
 
         self.core.privatechats.remove_user(user)
 
+        return 0
+
     def ctcpversion_command(self, args, user=None, **_unused):
 
         if args:
@@ -480,10 +486,12 @@ class Plugin(BasePlugin):
             self.echo_message("Asked %s for client version" % user)
 
     def hello_command(self, args, **_unused):
-        self.echo_message("Hello there! %s" % args)
+        return ("Hello there! %s" % args)
 
     def join_chat_command(self, args, **_unused):
         self.core.chatrooms.show_room(args)
+
+        return 0  # don't let a None echo steal the tab back again
 
     def leave_command(self, args, room=None, **_unused):
 
@@ -499,17 +507,21 @@ class Plugin(BasePlugin):
     def me_chat_command(self, args, **_unused):
         self.send_message("/me " + args)
 
+        return 0  # don't need any echo if we're chatting
+
     def msg_chat_command(self, args, **_unused):
 
         args_split = args.split(" ", maxsplit=1)
         user, text = args_split[0], args_split[1]
 
         if self.send_private(user, text, show_ui=True, switch_page=False):
-            self.echo_message("Private message sent to user %s" % user)
+            return ("Private message sent to user %s" % user)
 
     def pm_chat_command(self, args, **_unused):
         self.core.privatechats.show_user(args)
         self.log("Private chat with user %s" % args)
+
+        return 0  # don't let a None echo steal the tab back again (hence the use of log above instead of echo_message)
 
     def say_chat_command(self, args, **_unused):
 
@@ -517,7 +529,7 @@ class Plugin(BasePlugin):
         room, text = args_split[0], args_split[1]
 
         if self.send_public(room, text):
-            self.log("Chat message sent to room %s" % room)
+            return ("Chat message sent to room %s" % room)
 
     """ "Shares" """
 
@@ -548,6 +560,7 @@ class Plugin(BasePlugin):
         if args:
             user = args
 
+        # TODO: None of the user commands return anything
         return self.core.userlist.add_user(user)
 
     def remove_buddy_command(self, args, user=None, **_unused):
@@ -632,21 +645,28 @@ class Plugin(BasePlugin):
         if args:
             user = args
 
+        # Echoing the IP will be difficult because it waits for a server response message
+        # could we use a user_resolve_notification() or similar?
         return self.core.request_ip_address(user)
+
+    def user_resolve_notification(self, _user, _ip_address, _port, _country):
+        pass  # TODO: this wont work, we need request_ip_address_response_notification()
 
     def whois_user_command(self, args, user=None, **_unused):
 
         if args:
             user = args
 
-        return self.core.userinfo.request_user_info(user)
+        self.core.userinfo.request_user_info(user)  # TODO: returns None which blocks the switch tab
+        return 0
 
     def browse_user_command(self, args, user=None, **_unused):
 
         if args:
             user = args
 
-        return self.core.userbrowse.browse_user(user)
+        self.core.userbrowse.browse_user(user)  # TODO: returns None which blocks the switch tab
+        return 0
 
     """ General purpose "Commands" """
 

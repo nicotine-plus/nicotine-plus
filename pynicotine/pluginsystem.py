@@ -180,6 +180,9 @@ class BasePlugin:
 
         elif text:
             self.core.queue.append(slskmessages.SayChatroom(room, text))
+            return True
+
+        return False
 
     def send_private(self, user, text, show_ui=True, switch_page=True):
         """ Send user message in private.
@@ -687,13 +690,13 @@ class PluginHandler:
             log.add_debug("No stored settings found for %s", plugin.human_name)
 
     def trigger_chatroom_command_event(self, room, command, args):
-        return self._trigger_command(command, args, room=room)
+        return self._trigger_command(command, args, room=room)  # TODO: return not used here, the return chain is lost
 
     def trigger_private_chat_command_event(self, user, command, args):
-        return self._trigger_command(command, args, user=user)
+        return self._trigger_command(command, args, user=user)  # TODO: return not used here, the return chain is lost
 
     def trigger_cli_command_event(self, command, args):
-        return self._trigger_command(command, args)
+        return self._trigger_command(command, args)  # TODO: return not used here, the return chain is lost anyway
 
     def _trigger_command(self, command, args, user=None, room=None):
 
@@ -753,25 +756,47 @@ class PluginHandler:
                         return
 
                     if room is not None:
-                        getattr(plugin, data.get("callback").__name__)(args, room=room)
+                        output = getattr(plugin, data.get("callback").__name__)(args, room=room)
 
                     elif user is not None:
-                        getattr(plugin, data.get("callback").__name__)(args, user=user)
+                        output = getattr(plugin, data.get("callback").__name__)(args, user=user)
 
                     else:
-                        getattr(plugin, data.get("callback").__name__)(args)
+                        output = getattr(plugin, data.get("callback").__name__)(args)
 
-                    return
+                    # For debug purposes, TODO: Consider if this would be a good way for functions to echo their output
+                    if output is 0:
+                        # The command executed successfully and it wanted to consume the output entirely by itself,
+                        # such as if it needed to switch a tab and a further echo would have switched it back again,
+                        # or it is simply happy with no output or the output generated during its execution.
+                        pass
+
+                    elif output is False:
+                        plugin.echo_message("%s: %s  :/" % (command, " was called, the result was vaguely negative"))
+
+                    elif output is True:
+                        plugin.echo_message("%s: %s  :]" % (command, " was called, it seems to be vaguely affirmative"))
+
+                    elif output is None:
+                        # For debug purposes, steals tabs back so probably better to just do nothing if return is None
+                        plugin.echo_message("%s: %s  :(" % (command, (" was called, but nothing was echoed back here,"
+                                                                      " so nobody knows what just happened")))
+                    else:
+                        # The command got something useful it wants to echo back, but note that this is of no use
+                        # if we wanted to switch or close a tab then the following echo will steal it back again.
+                        plugin.echo_message("%s: %s  :)" % (command, output))
+
+                    return  # TODO: We could tell the calling entity of our success or failure
 
             except Exception:
                 self.show_plugin_error(module, sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
-                return
+                return  # TODO: the return chain is lost
 
         if plugin is not None:
             plugin.echo_unknown_command(command)
 
         self.command_source = None
-        return
+        return  # TODO: the return chain is lost
 
     def trigger_event(self, function_name, args):
         """ Triggers an event for the plugins. Since events and notifications
