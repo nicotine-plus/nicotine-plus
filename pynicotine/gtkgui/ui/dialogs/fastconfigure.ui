@@ -47,6 +47,7 @@
                 <property name="selectable">True</property>
                 <property name="halign">center</property>
                 <property name="justify">center</property>
+                <property name="max-width-chars">30</property>
                 <property name="wrap">True</property>
                 <style>
                   <class name="title-1"/>
@@ -303,6 +304,9 @@
                 <property name="label" translatable="yes">Download Files to Folder</property>
                 <property name="halign">center</property>
                 <property name="selectable">True</property>
+                <property name="justify">center</property>
+                <property name="max-width-chars">60</property>
+                <property name="wrap">True</property>
                 <attributes>
                   <attribute name="weight" value="bold"/>
                 </attributes>
@@ -327,6 +331,9 @@
                 <property name="label" translatable="yes">Share Folders</property>
                 <property name="halign">center</property>
                 <property name="selectable">True</property>
+                <property name="justify">center</property>
+                <property name="max-width-chars">60</property>
+                <property name="wrap">True</property>
                 <attributes>
                   <attribute name="weight" value="bold"/>
                 </attributes>
@@ -502,6 +509,7 @@
                 <property name="selectable">True</property>
                 <property name="halign">center</property>
                 <property name="justify">center</property>
+                <property name="max-width-chars">30</property>
                 <property name="wrap">True</property>
                 <style>
                   <class name="title-1"/>
