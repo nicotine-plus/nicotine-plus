@@ -765,7 +765,7 @@ class PluginHandler:
                         output = getattr(plugin, data.get("callback").__name__)(args)
 
                     # For debug purposes, TODO: Consider if this would be a good way for functions to echo their output
-                    if output is 0:
+                    if output == 0:
                         # The command executed successfully and it wanted to consume the output entirely by itself,
                         # such as if it needed to switch a tab and a further echo would have switched it back again,
                         # or it is simply happy with no output or the output generated during its execution.
