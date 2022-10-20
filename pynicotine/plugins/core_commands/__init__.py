@@ -28,7 +28,7 @@ class Plugin(BasePlugin):
         commands = {
             "help": {
                 "callback": self.help_command,
-                "description": "Show commands",
+                "description": "List commands",
                 "usage": ["[query]"],
                 "aliases": ["?"]
             },
@@ -62,60 +62,45 @@ class Plugin(BasePlugin):
                 "description": _("Add user to buddy list"),
                 "usage": ["<user>"],
                 "aliases": ["buddy"],
-                "group": _("User")
+                "group": _("Users")
             },
             "rem": {
                 "callback": self.remove_buddy_command,
                 "description": _("Remove user from buddy list"),
                 "usage": ["<buddy>"],
                 "aliases": ["unbuddy"],
-                "group": _("User")
+                "group": _("Users")
             },
             "ban": {
                 "callback": self.ban_user_command,
                 "description": _("Stop file transfers to user"),
                 "usage": ["<user>"],
-                "group": _("User")
+                "group": _("Users")
             },
             "unban": {
                 "callback": self.unban_user_command,
                 "description": _("Remove user from ban list"),
                 "usage": ["<user>"],
-                "group": _("User")
+                "group": _("Users")
             },
             "block": {  # new untested
                 "callback": self.block_user_ip_command,
                 "description": _("Stop all connections from same IP as user"),
                 "usage": ["<user>"],
-                "group": _("User")
+                "group": _("Users")
             },
             "unblock": {  # new untested
                 "callback": self.unblock_user_ip_command,
                 "description": _("Remove user's IP address from block list"),
                 "usage": ["<user>"],
-                "group": _("User")
+                "group": _("Users")
             },
 
             "ip": {
                 "callback": self.ip_user_command,
                 "description": _("Show IP address of user"),
                 "usage": ["<user>"],
-                "group": _("User")
-            },
-
-            "whois": {
-                "callback": self.whois_user_command,
-                "description": _("Show info about user"),
-                "usage": ["<user>"],
-                "aliases": ["info"],  # new
-                "group": _("User")
-            },
-            "browse": {
-                "callback": self.browse_user_command,
-                "description": _("Browse files of user"),
-                "usage": ["<user>"],
-                "aliases": ["b"],
-                "group": _("User")
+                "group": _("Network Filters")
             },
 
         }
@@ -164,45 +149,59 @@ class Plugin(BasePlugin):
                 "callback": self.ctcpversion_command,
                 "description": _("Ask for a user's client version"),
                 "usage": ["[user]"],
-                "group": _("Client-To-Client Protocol")
             },
 
             "ignore": {
                 "callback": self.ignore_user_command,
                 "description": _("Silence chat messages from user"),
                 "usage": ["<user>"],
-                "group": _("User")
+                "group": _("Users")
             },
             "unignore": {
                 "callback": self.unignore_user_command,
                 "description": _("Remove user from ignore list"),
                 "usage": ["<user>"],
-                "group": _("User")
+                "group": _("Users")
             },
             "ignoreip": {
                 "callback": self.ignore_user_ip_command,
                 "description": _("Silence chat messages from IP address of user"),
                 "usage": ["<user>"],
-                "group": _("User")
+                "group": _("Users")
             },
             "unignoreip": {  # new
                 "callback": self.unignore_user_ip_command,
                 "description": _("Remove user's IP address from chat ignore list"),
                 "usage": ["<user>"],
-                "group": _("User")
+                "group": _("Users")
             },
 
             "ipignore": {  # new untested
                 "callback": self.ignore_ip_command,
                 "description": _("Silence chat from anyone at IP address"),
                 "usage": ["<ip_address>"],
-                "group": _("User")
+                "group": _("Network Filters")
             },
             "ipunignore": {  # new untested
                 "callback": self.unignore_ip_command,
                 "description": _("Remove IP address from chat ignore list"),
                 "usage": ["<ip_address>"],
-                "group": _("User")
+                "group": _("Network Filters")
+            },
+
+            "whois": {
+                "callback": self.whois_user_command,
+                "description": _("Show info about user"),
+                "usage": ["<user>"],
+                "aliases": ["info"],  # new
+                "group": _("Users")
+            },
+            "browse": {
+                "callback": self.browse_user_command,
+                "description": _("Browse files of user"),
+                "usage": ["<user>"],
+                "aliases": ["b"],
+                "group": _("Users")
             },
 
         }
@@ -246,71 +245,71 @@ class Plugin(BasePlugin):
                 "description": _("Add user to buddy list"),
                 "usage": ["[user]"],
                 "aliases": ["buddy"],
-                "group": _("User")
+                "group": _("Users")
             },
             "rem": {
                 "callback": self.remove_buddy_command,
                 "description": _("Remove user from buddy list"),
                 "usage": ["[buddy]"],
                 "aliases": ["unbuddy"],
-                "group": _("User")
+                "group": _("Users")
             },
             "ban": {
                 "callback": self.ban_user_command,
                 "description": _("Stop file transfers to user"),
                 "usage": ["[user]"],
-                "group": _("User")
+                "group": _("Users")
             },
             "unban": {
                 "callback": self.unban_user_command,
                 "description": _("Remove user from ban list"),
                 "usage": ["[user]"],
-                "group": _("User")
+                "group": _("Users")
             },
             "block": {  # new
                 "callback": self.block_user_ip_command,
                 "description": _("Stop connections to IP of user"),
                 "usage": ["[user]"],
                 "aliases": ["banip"],  # new
-                "group": _("User")
+                "group": _("Users")
             },
             "unblock": {  # new
                 "callback": self.unblock_user_ip_command,
                 "description": _("Remove user from IP block list"),
                 "usage": ["[user]"],
                 "aliases": ["unbanip"],  # new
-                "group": _("User")
+                "group": _("Users")
             },
             "ignore": {
                 "callback": self.ignore_user_command,
                 "description": _("Silence chat messages from user"),
                 "usage": ["[user]"],
-                "group": _("User")
+                "group": _("Users")
             },
             "unignore": {
                 "callback": self.unignore_user_command,
                 "description": _("Remove user from ignore list"),
                 "usage": ["[user]"],
-                "group": _("User")
+                "group": _("Users")
             },
             "ignoreip": {
                 "callback": self.ignore_user_ip_command,
                 "description": _("Silence chat messages from IP address of user"),
                 "usage": ["[user]"],
-                "group": _("User")
+                "group": _("Users")
             },
             "unignoreip": {  # new
                 "callback": self.unignore_user_ip_command,
                 "description": _("Remove user's IP address from chat ignore list"),
                 "usage": ["[user]"],
-                "group": _("User")
+                "group": _("Users")
             },
 
             "ip": {
                 "callback": self.ip_user_command,
                 "description": _("Show IP address of user"),
                 "usage": ["[user]"],
-                "group": _("User")
+                "group": _("Network Filters")
             },
 
             "whois": {
@@ -318,14 +317,14 @@ class Plugin(BasePlugin):
                 "description": _("Show info about user"),
                 "usage": ["[user]"],
                 "aliases": ["info"],  # new
-                "group": _("User")
+                "group": _("Users")
             },
             "browse": {
                 "callback": self.browse_user_command,
                 "description": _("Browse files of user"),
                 "usage": ["[user]"],
                 "aliases": ["b"],
-                "group": _("User")
+                "group": _("Users")
             },
 
         }
@@ -361,33 +360,39 @@ class Plugin(BasePlugin):
 
         if user is not None:
             command_list = self.parent.private_chat_commands
+            interface = "private_chat"  # _("_")
+            prefix = "/"
 
         elif room is not None:
             command_list = self.parent.chatroom_commands
+            interface = "chatroom"
+            prefix = "/"
 
         else:
             command_list = self.parent.cli_commands
+            interface = "cli"
+            prefix = ""
 
         query = args.split(" ", maxsplit=1)[0].lower().lstrip("/")
         command_groups = {}
         num_commands = 0
 
         for command, data in command_list.items():
-            command_message = command
+            command_message = command if prefix else command.lstrip("/")
             usage = " ".join(data.get("usage", []))
             aliases = data.get("aliases", [])
 
             if aliases:
-                command_message = command_message + " /" + " /".join(aliases)
+                command_message = command_message + f", {prefix}" + f", {prefix}".join(aliases)
 
             if usage:
                 command_message += " " + usage
 
             description = data.get("description", "No description")
-            group = data.get("group", _("Commands"))
-            group_words = group.lower().split(" ")
+            group = data.get("group", f"{self.config.application_name} {_('Commands')}")
+            group_words = group.lower()
 
-            if not args or query in command or query in (a for a in aliases) or query in group_words:
+            if not args or query in command_message or query in group_words:
                 if group not in command_groups:
                     command_groups[group] = []
 
@@ -395,19 +400,22 @@ class Plugin(BasePlugin):
                 num_commands += 1
 
         if not num_commands:
-            self.echo_unknown_command(query)
+            self.echo_unknown_command(f"{prefix}{query}")
+            return None
 
-        elif num_commands >= 2 and query:
-            self.echo_message("List of %i commands matching \"%s\":" % (num_commands, query))
+        output = f"Listing {num_commands} {interface} commands with <required> and [optional] arguments"
+        output += " " + f"matching \"{query}\"" + ":" if query else ":"
 
         for group, commands in command_groups.items():
-            self.echo_message("")
-            self.echo_message("  " + group + ":")
+            output += "\n\n" + "  " + group + ":"
 
             for command in commands:
-                self.echo_message(command)
+                output += "\n" + command
 
-        return ("To search for a command, type /help [command]")
+        output += "\n\n" + "Use /help [query] (without brackets) to find similar commands or aliases"
+        output += "\n" + "Start a command using / (forward slash)" if prefix else ""
+
+        return output
 
     """ "Chats" """
 
@@ -418,8 +426,6 @@ class Plugin(BasePlugin):
 
         elif user is not None:
             self.core.privatechats.clear_messages(user)
-
-        return 0
 
     def close_command(self, args, user=None, **_unused):
 
@@ -433,8 +439,6 @@ class Plugin(BasePlugin):
 
         self.core.privatechats.remove_user(user)
 
-        return 0
-
     def ctcpversion_command(self, args, user=None, **_unused):
 
         if args:
@@ -444,15 +448,15 @@ class Plugin(BasePlugin):
             user = self.core.login_username
 
         if self.send_private(user, self.core.privatechats.CTCP_VERSION, show_ui=False):
-            self.echo_message("Asked %s for client version" % user)
+            return "Asked %s for client version" % user
+
+        return False
 
     def hello_command(self, args, **_unused):
-        return ("Hello there! %s" % args)
+        return "Hello there! %s" % args
 
     def join_chat_command(self, args, **_unused):
         self.core.chatrooms.show_room(args)
-
-        return 0  # don't let a None echo steal the tab back again
 
     def leave_command(self, args, room=None, **_unused):
 
@@ -468,21 +472,19 @@ class Plugin(BasePlugin):
     def me_chat_command(self, args, **_unused):
         self.send_message("/me " + args)
 
-        return 0  # don't need any echo if we're chatting
-
     def msg_chat_command(self, args, **_unused):
 
         args_split = args.split(" ", maxsplit=1)
         user, text = args_split[0], args_split[1]
 
         if self.send_private(user, text, show_ui=True, switch_page=False):
-            return ("Private message sent to user %s" % user)
+            return "Private message sent to user %s" % user
+
+        return False
 
     def pm_chat_command(self, args, **_unused):
         self.core.privatechats.show_user(args)
-        self.log("Private chat with user %s" % args)
-
-        return 0  # don't let a None echo steal the tab back again (hence the use of log above instead of echo_message)
+        self.log("Private chat with user %s" % args)  # don't echo after switch_tab
 
     def say_chat_command(self, args, **_unused):
 
@@ -490,7 +492,9 @@ class Plugin(BasePlugin):
         room, text = args_split[0], args_split[1]
 
         if self.send_public(room, text):
-            return ("Chat message sent to room %s" % room)
+            return "Chat message sent to room %s" % room
+
+        return False
 
     """ "Shares" """
 
@@ -608,16 +612,14 @@ class Plugin(BasePlugin):
         if args:
             user = args
 
-        self.core.userinfo.request_user_info(user)  # TODO: returns None which blocks the switch tab
-        return 0
+        return self.core.userinfo.request_user_info(user)
 
     def browse_user_command(self, args, user=None, **_unused):
 
         if args:
             user = args
 
-        self.core.userbrowse.browse_user(user)  # TODO: returns None which blocks the switch tab
-        return 0
+        return self.core.userbrowse.browse_user(user)
 
     """ General "Commands" """
 

@@ -225,7 +225,7 @@ class BasePlugin:
         function = self.send_public if command_type == "chatroom" else self.send_private
         function(source, text)
 
-    def echo_message(self, text, message_type="local"):
+    def echo_message(self, text, message_type="echo"):
         """ Convenience function to display a raw message the same window
         a plugin command runs from """
 
@@ -248,7 +248,7 @@ class BasePlugin:
         function(source, text, message_type)
 
     def echo_unknown_command(self, command):
-        self.echo_message(_("Unknown command: %s. Type /help for a list of commands.") % ("/" + command))
+        self.echo_message(_(f"Unknown command: {command} (type /help for a list of commands)"))
 
     # Obsolete functions
 
@@ -717,12 +717,15 @@ class PluginHandler:
 
             if room is not None:
                 commands = plugin.chatroom_commands
+                prefix = "/"  # echo input command line in the chat view
 
             elif user is not None:
                 commands = plugin.private_chat_commands
+                prefix = "/"  # echo input command line in the chat view
 
             else:
                 commands = plugin.cli_commands
+                prefix = ""  # input command line already echoed by shell in the cli
 
             try:
                 for trigger, data in commands.items():
@@ -730,6 +733,10 @@ class PluginHandler:
 
                     if command != trigger and command not in aliases:
                         continue
+
+                    if prefix:
+                        # Echo input command if needed in chat view
+                        plugin.echo_message(f"{prefix}{command} {args}")
 
                     usage = data.get("usage")
                     choices = data.get("choices", [])
@@ -747,12 +754,14 @@ class PluginHandler:
                         num_usage = len(list(x for x in usage if x.startswith("<")))
 
                         if num_args < num_usage:
-                            reject = "Missing argument"
+                            reject = "Required argument missing"
 
                     if reject:
                         description = data.get("description", "execute command").lower()
-                        plugin.echo_message(f"Cannot {description}: {reject}")
-                        plugin.echo_message("Usage: %s %s" % ('/' + command, " ".join(usage) if usage else ""))
+                        output = (f"Cannot {description}: {reject}\n"
+                                  "Usage: %s %s" % (prefix + command, " ".join(usage) if usage else ""))
+
+                        plugin.echo_message(output)
                         return
 
                     if room is not None:
@@ -764,27 +773,20 @@ class PluginHandler:
                     else:
                         output = getattr(plugin, data.get("callback").__name__)(args)
 
-                    # For debug purposes, TODO: Consider if this would be a good way for functions to echo their output
-                    if output == 0:
-                        # The command executed successfully and it wanted to consume the output entirely by itself,
-                        # such as if it needed to switch a tab and a further echo would have switched it back again,
-                        # or it is simply happy with no output or the output generated during its execution.
+                    if output in (None, 0):
                         pass
 
                     elif output is False:
-                        plugin.echo_message("%s: %s  :/" % (command, " was called, the result was vaguely negative"))
+                        # TODO: Not seriously considering keeping these debug strings in here
+                        plugin.log("%s %s" % (command, "has returned, the result is vaguely negative"))
 
                     elif output is True:
-                        plugin.echo_message("%s: %s  :]" % (command, " was called, it seems to be vaguely affirmative"))
+                        plugin.log("%s %s" % (command, "has returned, it seems to be vaguely affirmative"))
 
-                    elif output is None:
-                        # For debug purposes, steals tabs back so probably better to just do nothing if return is None
-                        plugin.echo_message("%s: %s  :(" % (command, (" was called, but nothing was echoed back here,"
-                                                                      " so nobody knows what just happened")))
                     else:
                         # The command got something useful it wants to echo back, but note that this is of no use
                         # if we wanted to switch or close a tab then the following echo will steal it back again.
-                        plugin.echo_message("%s: %s  :)" % (command, output))
+                        plugin.echo_message(output)
 
                     return  # TODO: We could tell the calling entity of our success or failure
 
@@ -793,7 +795,11 @@ class PluginHandler:
                 return  # TODO: the return chain is lost
 
         if plugin is not None:
-            plugin.echo_unknown_command(command)
+            if prefix:
+                # Echo input command if needed in chat view
+                plugin.echo_message(f"{prefix}{command} {args}")
+
+            plugin.echo_unknown_command(f"{prefix}{command}")
 
         self.command_source = None
         return  # TODO: the return chain is lost
