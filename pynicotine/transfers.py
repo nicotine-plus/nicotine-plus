@@ -39,10 +39,10 @@ from collections import defaultdict
 from collections import deque
 from collections import OrderedDict
 from operator import itemgetter
-from threading import Thread
 
 from pynicotine import slskmessages
 from pynicotine.logfacility import log
+from pynicotine.scheduler import scheduler
 from pynicotine.slskmessages import increment_token
 from pynicotine.slskmessages import TransferDirection
 from pynicotine.slskmessages import UserStatus
@@ -117,8 +117,6 @@ class Transfers:
         self.uploads_file_name = os.path.join(self.config.data_dir, 'uploads.json')
 
         self.network_callback = network_callback
-        self.download_queue_timer_count = -1
-        self.upload_queue_timer_count = -1
         self.downloadsview = None
         self.uploadsview = None
 
@@ -127,6 +125,15 @@ class Transfers:
 
         if hasattr(ui_callback, "uploads"):
             self.uploadsview = ui_callback.uploads
+
+        self.transfer_timeout_timer_id = None
+        self.download_queue_timer_id = None
+        self.upload_queue_timer_id = None
+        self.retry_download_limits_timer_id = None
+        self.retry_failed_uploads_timer_id = None
+
+        # Save list of transfers every minute
+        scheduler.add(delay=60, callback=lambda: self.network_callback([slskmessages.SaveTransfers()]), repeat=True)
 
         self.update_download_filters()
 
@@ -150,13 +157,27 @@ class Transfers:
         self.watch_stored_downloads()
 
         # Check for transfer timeouts
-        Thread(target=self._check_transfer_timeouts, name="TransferTimeoutTimer", daemon=True).start()
+        self.transfer_timeout_timer_id = scheduler.add(delay=1, callback=self._check_transfer_timeouts, repeat=True)
 
-        # Check for failed downloads (1 min delay)
-        Thread(target=self._check_download_queue_timer, name="DownloadQueueTimer", daemon=True).start()
+        # Request queue position of queued downloads and retry failed downloads every 3 minutes
+        self.download_queue_timer_id = scheduler.add(
+            delay=180, callback=lambda: self.network_callback([slskmessages.CheckDownloadQueue()]), repeat=True
+        )
 
-        # Check if queued uploads can be started
-        Thread(target=self._check_upload_queue_timer, name="UploadQueueTimer", daemon=True).start()
+        # Check if queued uploads can be started every 10 seconds
+        self.upload_queue_timer_id = scheduler.add(
+            delay=10, callback=lambda: self.network_callback([slskmessages.CheckUploadQueue()]), repeat=True
+        )
+
+        # Re-queue limited downloads every 12 minutes
+        self.retry_download_limits_timer_id = scheduler.add(
+            delay=720, callback=lambda: self.network_callback([slskmessages.RetryDownloadLimits()]), repeat=True
+        )
+
+        # Re-queue timed out uploads every 3 minutes
+        self.retry_failed_uploads_timer_id = scheduler.add(
+            delay=180, callback=lambda: self.network_callback([slskmessages.RetryFailedUploads()]), repeat=True
+        )
 
         if self.downloadsview:
             self.downloadsview.server_login()
@@ -2071,48 +2092,19 @@ class Transfers:
 
     def _check_transfer_timeouts(self):
 
-        while True:
-            current_time = time.time()
+        current_time = time.time()
 
-            if self.transfer_request_times:
-                for transfer, start_time in self.transfer_request_times.copy().items():
-                    # When our port is closed, certain clients can take up to ~30 seconds before they
-                    # initiate a 'F' connection, since they only send an indirect connection request after
-                    # attempting to connect to our port for a certain time period.
-                    # Known clients: Nicotine+ 2.2.0 - 3.2.0, 2 s; Soulseek NS, ~20 s; soulseeX, ~30 s.
-                    # To account for potential delays while initializing the connection, add 15 seconds
-                    # to the timeout value.
+        if self.transfer_request_times:
+            for transfer, start_time in self.transfer_request_times.copy().items():
+                # When our port is closed, certain clients can take up to ~30 seconds before they
+                # initiate a 'F' connection, since they only send an indirect connection request after
+                # attempting to connect to our port for a certain time period.
+                # Known clients: Nicotine+ 2.2.0 - 3.2.0, 2 s; Soulseek NS, ~20 s; soulseeX, ~30 s.
+                # To account for potential delays while initializing the connection, add 15 seconds
+                # to the timeout value.
 
-                    if (current_time - start_time) >= 45:
-                        self.network_callback([slskmessages.TransferTimeout(transfer)])
-
-            if self.core.protothread.exit.wait(1):
-                # Event set, we're exiting
-                return
-
-    def _check_upload_queue_timer(self):
-
-        self.upload_queue_timer_count = -1
-
-        while True:
-            self.upload_queue_timer_count += 1
-            self.network_callback([slskmessages.CheckUploadQueue()])
-
-            if self.core.protothread.exit.wait(10):
-                # Event set, we're exiting
-                return
-
-    def _check_download_queue_timer(self):
-
-        self.download_queue_timer_count = -1
-
-        while True:
-            self.download_queue_timer_count += 1
-            self.network_callback([slskmessages.CheckDownloadQueue()])
-
-            if self.core.protothread.exit.wait(60):
-                # Event set, we're exiting
-                return
+                if (current_time - start_time) >= 45:
+                    self.network_callback([slskmessages.TransferTimeout(transfer)])
 
     def check_queue_upload_allowed(self, user, addr, filename, real_path, msg):
 
@@ -2153,50 +2145,24 @@ class Transfers:
 
         return True, None
 
-    def check_download_queue_callback(self, _msg):
-        """ Find failed or stuck downloads and attempt to queue them. Also ask for the queue
-        position of downloads. """
+    def check_download_queue(self, *_args):
 
         statuslist_failed = ("Connection timeout", "Local file error", "Remote file error")
-        statuslist_limited = ("Too many files", "Too many megabytes")
-        reset_count = False
 
         for download in reversed(self.downloads):
-            status = download.status
-
-            if (self.download_queue_timer_count >= 12
-                    and (status in statuslist_limited or status.startswith("User limit of"))):
-                # Re-queue limited downloads every 12 minutes
-
-                log.add_transfer("Re-queuing file %(filename)s from user %(user)s in download queue", {
-                    "filename": download.filename,
-                    "user": download.user
-                })
-                reset_count = True
+            if download.status in statuslist_failed:
+                # Retry failed downloads every 3 minutes
 
                 self.abort_transfer(download)
                 self.get_file(download.user, download.filename, path=download.path, transfer=download)
 
-            if self.download_queue_timer_count % 3 == 0:
-                if status in statuslist_failed:
-                    # Retry failed downloads every 3 minutes
+            if download.status == "Queued":
+                # Request queue position every 3 minutes
 
-                    self.abort_transfer(download)
-                    self.get_file(download.user, download.filename, path=download.path, transfer=download)
-
-                if status == "Queued":
-                    # Request queue position every 3 minutes
-
-                    self.core.send_message_to_peer(
-                        download.user,
-                        slskmessages.PlaceInQueueRequest(file=download.filename, legacy_client=download.legacy_attempt)
-                    )
-
-        # Save list of downloads to file every one minute
-        self.save_transfers("downloads")
-
-        if reset_count:
-            self.download_queue_timer_count = 0
+                self.core.send_message_to_peer(
+                    download.user,
+                    slskmessages.PlaceInQueueRequest(file=download.filename, legacy_client=download.legacy_attempt)
+                )
 
     def get_upload_candidate(self):
         """ Retrieve a suitable queued transfer for uploading.
@@ -2277,7 +2243,7 @@ class Transfers:
 
         return first_queued_transfers[target_user]
 
-    def check_upload_queue(self):
+    def check_upload_queue(self, *_args):
         """ Find next file to upload """
 
         if not self.uploads:
@@ -2304,23 +2270,6 @@ class Transfers:
         self.push_file(
             user=user, filename=upload_candidate.filename, size=upload_candidate.size, transfer=upload_candidate
         )
-
-    def check_upload_queue_callback(self, _msg):
-
-        if self.upload_queue_timer_count % 6 == 0:
-            # Save list of uploads to file every one minute
-            self.save_transfers("uploads")
-
-        if self.upload_queue_timer_count >= 18:
-            # Re-queue timed out uploads every 3 minutes
-            for upload in reversed(self.uploads):
-                if upload.status == "Connection timeout":
-                    upload.status = "Queued"
-                    self.update_upload(upload)
-
-            self.upload_queue_timer_count = 0
-
-        self.check_upload_queue()
 
     def update_user_counter(self, user):
         """ Called when an upload associated with a user has changed. The user update counter
@@ -2366,6 +2315,22 @@ class Transfers:
         self.abort_transfer(transfer)
         self.get_file(user, transfer.filename, path=transfer.path, transfer=transfer)
 
+    def retry_download_limits(self, *_args):
+
+        statuslist_limited = ("Too many files", "Too many megabytes")
+
+        for download in reversed(self.downloads):
+            if download.status in statuslist_limited or download.status.startswith("User limit of"):
+                # Re-queue limited downloads every 12 minutes
+
+                log.add_transfer("Re-queuing file %(filename)s from user %(user)s in download queue", {
+                    "filename": download.filename,
+                    "user": download.user
+                })
+
+                self.abort_transfer(download)
+                self.get_file(download.user, download.filename, path=download.path, transfer=download)
+
     def retry_upload(self, transfer):
 
         active_statuses = ["Getting status", "Transferring"]
@@ -2388,6 +2353,13 @@ class Transfers:
                 return
 
         self.push_file(user, transfer.filename, transfer.size, transfer.path, transfer=transfer)
+
+    def retry_failed_uploads(self, *_args):
+
+        for upload in reversed(self.uploads):
+            if upload.status == "Connection timeout":
+                upload.status = "Queued"
+                self.update_upload(upload)
 
     def abort_transfer(self, transfer, reason="Cancelled", send_fail_message=False):
 
@@ -2539,24 +2511,26 @@ class Transfers:
     def save_uploads_callback(self, filename):
         json.dump(self.get_uploads(), filename, ensure_ascii=False)
 
-    def save_transfers(self, transfer_type):
+    def save_transfers(self, *_args):
         """ Save list of transfers """
 
         if not self.allow_saving_transfers:
             # Don't save if transfers didn't load properly!
             return
 
-        if transfer_type == "uploads":
-            transfers_file = self.uploads_file_name
-            callback = self.save_uploads_callback
-        else:
-            transfers_file = self.downloads_file_name
-            callback = self.save_downloads_callback
-
         self.config.create_data_folder()
-        write_file_and_backup(transfers_file, callback)
+
+        for transfers_file, callback in (
+            (self.downloads_file_name, self.save_downloads_callback),
+            (self.uploads_file_name, self.save_uploads_callback)
+        ):
+            write_file_and_backup(transfers_file, callback)
 
     def server_disconnect(self):
+
+        for timer_id in (self.transfer_timeout_timer_id, self.download_queue_timer_id, self.upload_queue_timer_id,
+                         self.retry_download_limits_timer_id, self.retry_failed_uploads_timer_id):
+            scheduler.cancel(timer_id)
 
         self.abort_transfers()
 
@@ -2567,9 +2541,7 @@ class Transfers:
             self.uploadsview.server_disconnect()
 
     def quit(self):
-
-        self.save_transfers("downloads")
-        self.save_transfers("uploads")
+        self.save_transfers()
 
 
 class Statistics:

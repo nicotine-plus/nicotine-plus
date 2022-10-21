@@ -17,11 +17,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import threading
 import time
 
 from pynicotine import slskmessages
 from pynicotine.config import config
+from pynicotine.scheduler import scheduler
 
 
 class LogFile:
@@ -64,7 +64,7 @@ class Logger:
         self.log_files = {}
 
         self.add_listener(self.log_console)
-        self.start_log_file_timer()
+        scheduler.add(delay=10, callback=self._close_inactive_log_files, repeat=True)
 
     def get_log_file(self, folder_path, base_name):
 
@@ -133,16 +133,6 @@ class Logger:
         for log_file in self.log_files.copy().values():
             if (current_time - log_file.last_active) >= 10:
                 self.close_log_file(log_file)
-
-        # Repeat timer
-        self.start_log_file_timer()
-
-    def start_log_file_timer(self):
-
-        thread = threading.Timer(interval=10, function=self._close_inactive_log_files)
-        thread.name = "LogFileTimer"
-        thread.daemon = True
-        thread.start()
 
     def add_listener(self, callback):
         self.listeners.add(callback)
