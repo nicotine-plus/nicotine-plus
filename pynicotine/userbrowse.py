@@ -18,9 +18,9 @@
 
 import json
 import os
-import threading
 
 from operator import itemgetter
+from threading import Thread
 
 from pynicotine import slskmessages
 from pynicotine import utils
@@ -91,10 +91,9 @@ class UserBrowse:
 
         if username not in self.users or new_request:
             msg = self.core.shares.get_compressed_shares_message("normal")
-            thread = threading.Thread(target=self.parse_local_shares, args=(username, msg))
-            thread.name = "LocalShareParser"
-            thread.daemon = True
-            thread.start()
+            Thread(
+                target=self.parse_local_shares, args=(username, msg), name="LocalShareParser", daemon=True
+            ).start()
 
         self.show_user(username, path=path, local_shares_type="normal")
 
@@ -105,10 +104,9 @@ class UserBrowse:
 
         if username not in self.users or new_request:
             msg = self.core.shares.get_compressed_shares_message("buddy")
-            thread = threading.Thread(target=self.parse_local_shares, args=(username, msg))
-            thread.name = "LocalBuddyShareParser"
-            thread.daemon = True
-            thread.start()
+            Thread(
+                target=self.parse_local_shares, args=(username, msg), name="LocalBuddyShareParser", daemon=True
+            ).start()
 
         self.show_user(username, path=path, local_shares_type="buddy")
 

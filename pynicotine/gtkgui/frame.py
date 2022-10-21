@@ -22,8 +22,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import threading
 import time
+
+from threading import Thread
 
 import gi
 from gi.repository import Gio
@@ -83,7 +84,7 @@ class NicotineFrame(Window):
         self.start_hidden = start_hidden
         self.ci_mode = ci_mode
         self.current_page_id = ""
-        self.checking_update = False
+        self.update_checker = None
         self.auto_away = False
         self.away_timer = None
         self.away_cooldown_time = 0
@@ -719,7 +720,6 @@ class NicotineFrame(Window):
 
         except Exception as error:
             GLib.idle_add(create_dialog, _("Error retrieving latest version"), str(error))
-            self.checking_update = False
             return
 
         if latest > myversion:
@@ -729,25 +729,22 @@ class NicotineFrame(Window):
                 version_label += ", " + _("released on %s") % date
 
             GLib.idle_add(create_dialog, _("Out of date"), version_label)
+            return
 
-        elif myversion > latest:
+        if myversion > latest:
             GLib.idle_add(create_dialog, _("Up to date"),
                           _("You appear to be using a development version of Nicotine+."))
+            return
 
-        else:
-            GLib.idle_add(create_dialog, _("Up to date"), _("You are using the latest version of Nicotine+."))
-
-        self.checking_update = False
+        GLib.idle_add(create_dialog, _("Up to date"), _("You are using the latest version of Nicotine+."))
 
     def on_check_latest_version(self, *_args):
 
-        if not self.checking_update:
-            thread = threading.Thread(target=self._on_check_latest_version)
-            thread.name = "UpdateChecker"
-            thread.daemon = True
-            thread.start()
+        if self.update_checker and self.update_checker.is_alive():
+            return
 
-            self.checking_update = True
+        self.update_checker = Thread(target=self._on_check_latest_version, name="UpdateChecker", daemon=True)
+        self.update_checker.start()
 
     def on_about(self, *_args):
         About(self).show()

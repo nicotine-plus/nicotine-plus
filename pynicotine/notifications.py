@@ -16,7 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import threading
+from collections import deque
+from threading import Thread
 
 from pynicotine.logfacility import log
 from pynicotine.utils import execute_command
@@ -34,8 +35,8 @@ class Notifications:
             "private": []
         }
 
-        self.tts = []
-        self.tts_playing = False
+        self.tts = deque()
+        self.tts_thread = None
         self.continue_playing = False
 
         if hasattr(ui_callback, "notifications"):
@@ -79,12 +80,10 @@ class Notifications:
         if not self.config.sections["ui"]["speechenabled"]:
             return
 
-        if message in self.tts:
-            return
-
         if args:
             for key, value in args.items():
-                args[key] = self.tts_clean_message(value)
+                args[key] = (value.replace("_", " ").replace("[", " ").replace("]", " ")
+                                  .replace("(", " ").replace(")", " "))
 
             try:
                 message = message % args
@@ -95,43 +94,18 @@ class Notifications:
 
         self.tts.append(message)
 
-        if self.tts_playing:
-            # Avoid spinning up useless threads
-            self.continue_playing = True
+        if self.tts_thread and self.tts_thread.is_alive():
             return
 
-        thread = threading.Thread(target=self.play_tts)
-        thread.name = "TTS"
-        thread.daemon = True
-        thread.start()
+        self.tts_thread = Thread(target=self.play_tts, name="TTS", daemon=True)
+        self.tts_thread.start()
 
     def play_tts(self):
 
-        for message in self.tts[:]:
-            self.tts_player(message)
+        while self.tts:
+            try:
+                message = self.tts.popleft()
+                execute_command(self.config.sections["ui"]["speechcommand"], message, background=False)
 
-            if message in self.tts:
-                self.tts.remove(message)
-
-        self.tts_playing = False
-        if self.continue_playing:
-            self.continue_playing = False
-            self.play_tts()
-
-    @staticmethod
-    def tts_clean_message(message):
-
-        for i in ["_", "[", "]", "(", ")"]:
-            message = message.replace(i, " ")
-
-        return message
-
-    def tts_player(self, message):
-
-        self.tts_playing = True
-
-        try:
-            execute_command(self.config.sections["ui"]["speechcommand"], message, background=False)
-
-        except Exception as error:
-            log.add(_("Text-to-speech for message failed: %s"), error)
+            except Exception as error:
+                log.add(_("Text-to-speech for message failed: %s"), error)

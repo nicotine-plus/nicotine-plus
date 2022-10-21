@@ -26,8 +26,11 @@ import selectors
 import socket
 import struct
 import sys
-import threading
 import time
+
+from threading import Event
+from threading import Thread
+from threading import Timer
 
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import DISTRIBUTED_MESSAGE_CLASSES
@@ -175,7 +178,7 @@ class PeerConnection(Connection):
         self.lastcallback = time.time()
 
 
-class SlskProtoThread(threading.Thread):
+class SlskProtoThread(Thread):
     """ This is a networking thread that actually does all the communication.
     It sends data to the NicotineCore via a callback function and receives
     data via a deque object. """
@@ -193,9 +196,7 @@ class SlskProtoThread(threading.Thread):
         list as a parameter. queue is deque object that holds network messages from
         NicotineCore. """
 
-        threading.Thread.__init__(self)
-
-        self.name = "NetworkThread"
+        super().__init__(name="NetworkThread")
 
         if sys.platform not in ("linux", "darwin"):
             # TODO: support custom network interface for other systems than Linux and macOS
@@ -239,7 +240,7 @@ class SlskProtoThread(threading.Thread):
         self._connsinprogress = {}
         self._out_indirect_conn_request_times = {}
         self._token = 0
-        self.exit = threading.Event()
+        self.exit = Event()
         self.user_addresses = {}
 
         self._calc_upload_limit_function = self._calc_upload_limit_none
@@ -418,7 +419,7 @@ class SlskProtoThread(threading.Thread):
         elif 0 < self.server_timeout_value < 600:
             self.server_timeout_value = self.server_timeout_value * 2
 
-        self.server_timer = threading.Timer(self.server_timeout_value, self.server_timeout)
+        self.server_timer = Timer(interval=self.server_timeout_value, function=self.server_timeout)
         self.server_timer.name = "ServerTimer"
         self.server_timer.daemon = True
         self.server_timer.start()
@@ -1149,10 +1150,10 @@ class SlskProtoThread(threading.Thread):
                             # Check for indirect connection timeouts
                             self.exit.clear()
 
-                            thread = threading.Thread(target=self._check_indirect_connection_timeouts)
-                            thread.name = "IndirectConnectionTimeoutTimer"
-                            thread.daemon = True
-                            thread.start()
+                            Thread(
+                                target=self._check_indirect_connection_timeouts,
+                                name="IndirectConnectionTimeoutTimer", daemon=True
+                            ).start()
 
                             msg.username = self.server_username
                             self._queue.append(CheckPrivileges())

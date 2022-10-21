@@ -27,8 +27,9 @@ import pickle
 import shelve
 import stat
 import sys
-import threading
 import time
+
+from threading import Thread
 
 from pynicotine import slskmessages
 from pynicotine.logfacility import log
@@ -848,10 +849,9 @@ class Shares:
         scanner.start()
 
         if use_thread:
-            thread = threading.Thread(target=self._process_scanner, args=(scanner, scanner_queue))
-            thread.name = "ProcessShareScanner"
-            thread.daemon = True
-            thread.start()
+            Thread(
+                target=self._process_scanner, args=(scanner, scanner_queue), name="ProcessShareScanner", daemon=True
+            ).start()
             return None
 
         return self._process_scanner(scanner, scanner_queue)
