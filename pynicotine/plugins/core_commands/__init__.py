@@ -302,8 +302,8 @@ class Plugin(BasePlugin):
 
         self.echo_message(f"nothing here yet, you entered: access='{access}' name='{name}'")
 
-    def list_shares_command(self, args):
-        self.echo_message(f"nothing here yet, you entered: {args}")
+    def list_shares_command(self, _args):
+        self.echo_message(self.core.shares.list_shares())
 
     def rescan_command(self, args, **_unused):
 
