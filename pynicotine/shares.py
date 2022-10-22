@@ -957,7 +957,6 @@ class Shares:
             epilog = _("Verify disk(s) are accessible then retry to check again")
 
             if num_reads:
-                # TODO: This string doesn't currently make sense in the CLI until '/rescan force' is implemented
                 summary += ",\n" + (_(f"using force will exclude {num_fails} share") + "." if num_fails == 1 else
                                     _(f"using force will exclude {num_fails} shares") + ".")
             else:

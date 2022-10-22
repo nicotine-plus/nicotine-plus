@@ -307,11 +307,9 @@ class Plugin(BasePlugin):
 
     def rescan_command(self, args, **_unused):
 
-        if args:
-            self.echo_message(f"Force rescan is not implemented here yet, you entered: {args}")
-            return
+        force = bool("force" in args)
 
-        self.core.shares.rescan_shares()  # TODO: force=args)  # see shares.py in verify-dirs branch
+        self.core.shares.rescan_shares(force=force)
 
     def away_command(self, _args, **_unused):
         self.core.set_away_mode(self.core.user_status != 1, save_state=True)  # 1 = UserStatus.AWAY
