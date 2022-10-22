@@ -348,8 +348,8 @@
                                             <child>
                                               <object class="GtkButton" id="_download_users_button">
                                                 <property name="visible">True</property>
-                                                <property name="action-name">app.transfer-statistics</property>
                                                 <property name="tooltip-text" translatable="yes">Users</property>
+                                                <signal name="clicked" handler="on_transfer_statistics"/>
                                                 <child>
                                                   <object class="GtkLabel" id="download_users_label">
                                                     <property name="visible">True</property>
@@ -389,8 +389,8 @@
                                             <child>
                                               <object class="GtkButton" id="_download_files_button">
                                                 <property name="visible">True</property>
-                                                <property name="action-name">app.transfer-statistics</property>
                                                 <property name="tooltip-text" translatable="yes">Files</property>
+                                                <signal name="clicked" handler="on_transfer_statistics"/>
                                                 <child>
                                                   <object class="GtkLabel" id="download_files_label">
                                                     <property name="visible">True</property>
@@ -591,8 +591,8 @@
                                             <child>
                                               <object class="GtkButton" id="_upload_users_button">
                                                 <property name="visible">True</property>
-                                                <property name="action-name">app.transfer-statistics</property>
                                                 <property name="tooltip-text" translatable="yes">Users</property>
+                                                <signal name="clicked" handler="on_transfer_statistics"/>
                                                 <child>
                                                   <object class="GtkLabel" id="upload_users_label">
                                                     <property name="visible">True</property>
@@ -632,8 +632,8 @@
                                             <child>
                                               <object class="GtkButton" id="_upload_files_button">
                                                 <property name="visible">True</property>
-                                                <property name="action-name">app.transfer-statistics</property>
                                                 <property name="tooltip-text" translatable="yes">Files</property>
+                                                <signal name="clicked" handler="on_transfer_statistics"/>
                                                 <child>
                                                   <object class="GtkLabel" id="upload_files_label">
                                                     <property name="visible">True</property>
@@ -1731,7 +1731,7 @@
                   <object class="GtkButton" id="_connections_button">
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Connections</property>
-                    <property name="action-name">app.transfer-statistics</property>
+                    <signal name="clicked" handler="on_transfer_statistics"/>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
@@ -1842,7 +1842,7 @@
                 <child>
                   <object class="GtkButton" id="user_status_button">
                     <property name="visible">True</property>
-                    <property name="action-name">app.away</property>
+                    <signal name="clicked" handler="on_away"/>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
