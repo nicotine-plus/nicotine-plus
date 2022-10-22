@@ -27,8 +27,9 @@ import pickle
 import shelve
 import stat
 import sys
-import threading
 import time
+
+from threading import Thread
 
 from pynicotine import slskmessages
 from pynicotine.logfacility import log
@@ -605,6 +606,30 @@ class Shares:
 
         return new_virtual_name
 
+    @staticmethod
+    def get_group_index(group="normal"):
+        """ Address the index of a shares table by "name" or alias """
+
+        if group in (0, "normal", "public", "everyone"):
+            return 0
+
+        if group in (1, "buddy", "private", "trusted"):
+            return 1
+
+        return -1
+
+    @staticmethod
+    def get_group_name(group=0):
+        """ Identify the name of a specific shares table by [index] """
+
+        if group in (0, "normal", "public", "everyone"):
+            return "public"  # "normal" is not UI friendly
+
+        if group in (1, "buddy", "private", "trusted"):
+            return "buddy"
+
+        return "__INTERNAL_ERROR__"
+
     def convert_shares(self):
         """ Convert fs-based shared to virtual shared (pre 1.4.0) """
 
@@ -833,25 +858,145 @@ class Shares:
 
         return False
 
-    def rescan_shares(self, init=False, rescan=True, rebuild=False, use_thread=True):
+    def list_shares(self, group=None):
+        """ Returns ONE string with all readable shares and missing shares.
+        group specifies which shares to list: "normal", "buddy", etc. """
+        # TODO: Unused, need new command in core_commands to run this
+
+        reads, fails = self.check_shares(shares=None, group=group)
+
+        num_reads = len(reads)
+        num_fails = len(fails)
+        num_total = num_reads + num_fails
+
+        total_shares_line = (_(f"{num_total} share configured") if num_total == 1 else
+                             _(f"{num_total} shares configured"))
+
+        if not num_total:
+            fails.insert(0, total_shares_line)
+
+        # Coalesce the summary line toegether with all "Ready " and "Missing " items
+        all_shares = total_shares_line + ":\n\n" + '\n\n'.join(reads) + "\n" + '\n\n'.join(fails)
+
+        return all_shares
+
+    def check_shares(self, shares=None, group=None):
+        """ Returns TWO lists of strings: readable shares, and missing shares.
+        group specifies which shares to check: "normal", "buddy", etc. """
+
+        if shares is None:
+            # Triggered by list shares command
+            shares = self.get_shared_folders()
+
+        group_index = self.get_group_index(group) if group is not None else 0
+        reads, fails = [], []
+
+        for table in shares:
+            group_name = self.get_group_name(group_index).title()
+
+            for virtual, folder, *_unused in table:
+                if os.access(folder, os.R_OK):
+                    reads.append(_(f"{group_name} share \"{virtual}\" ready at:\n{folder}"))
+                else:
+                    fails.append(_(f"{group_name} share \"{virtual}\" not found at:\n{folder}"))
+
+            if group is not None:
+                # Only check a specific group (ie just "normal" or "buddy" shares, etc)
+                break
+
+            group_index += 1
+
+        return reads, fails
+
+    def confirm_force_rescan(self, shares):
+        """ Check if any shares are missing, if so then show a prompt """
+
+        reads, fails = self.check_shares(shares)
+
+        num_reads = len(reads)
+        num_fails = len(fails)
+        num_total = num_reads + num_fails
+
+        total_shares = (_(f"{num_total} share configured") if num_total == 1 else
+                        _(f"{num_total} shares configured"))
+
+        reads_shares = (_(f"{num_reads} share ready") if num_reads == 1 else
+                        _(f"{num_reads} shares ready"))
+
+        fails_shares = (_(f"{num_fails} share not found") if num_fails == 1 else
+                        _(f"{num_fails} shares not found"))
+
+        log.add(total_shares)
+
+        if num_total:
+            log.add(reads_shares)
+            if num_fails:
+                log.add(fails_shares)
+        else:
+            fails.insert(0, total_shares)
+
+        if reads:
+            reads_text = '\n\n'.join(reads)
+            log.add_transfer(f"{reads_shares}:\n\n{reads_text}\n")
+
+        if reads and not fails:
+            # Continue initializing shares, and do the rescan now
+            return True
+
+        fails_text = '\n\n'.join(fails)
+        summary = _(f"{reads_shares} out of {total_shares}")
+
+        log.add_transfer(f"{fails_shares}:\n\n{fails_text}\n\n{summary}")
+        log.add(_("Rescan aborted") + ": " + (fails_text.replace(":\n", " ") if num_fails == 1 else fails_shares))
+
+        if self.ui_callback:
+            if num_fails > 5:
+                # Abbreviate message_text, the dialog may get too tall if there's many fails!
+                fails_text = '\n\n'.join(fails[:5]) + "\n\n…\n"
+
+            epilog = _("Verify disk(s) are accessible then retry to check again")
+
+            if num_reads:
+                # TODO: This string doesn't currently make sense in the CLI until '/rescan force' is implemented
+                summary += ",\n" + (_(f"using force will exclude {num_fails} share") + "." if num_fails == 1 else
+                                    _(f"using force will exclude {num_fails} shares") + ".")
+            else:
+                epilog = _("Nothing to scan") + ". " + (epilog if num_total else "")
+
+            title_text = _("Rescan aborted") + ": " + (fails_shares if num_total else total_shares)
+            message_text = f"{fails_text}\n\n{summary}\n\n{epilog}"
+
+            # Prompt with retry/force rescan options only offered if relevant and appropriate
+            self.ui_callback.confirm_force_rescan(title_text, message_text, num_total, num_reads)
+
+        # We don't wait for the response (and we need to scan again from scratch in any case),
+        # so always continue initializing share(s) in the background by setting rescan to False
+        return False
+
+    def rescan_shares(self, init=False, rescan=True, rebuild=False, use_thread=True, force=False):
 
         if self.rescanning:
             return None
 
-        self.rescanning = True
         shared_folders = self.get_shared_folders()
 
-        # Hand over database control to the scanner process
+        if not force:
+            # Verify all shares are mounted before allowing destructive rescan
+            rescan = (rescan and self.confirm_force_rescan(shared_folders))
+        else:
+            log.add(_("Shared folder checks skipped, using force rescan"))
+
+        # Hand over database control to the scanner process (it needs to initialize in any case)
+        self.rescanning = True
         self.close_shares(self.share_dbs)
 
         scanner, scanner_queue = self.build_scanner_process(shared_folders, init, rescan, rebuild)
         scanner.start()
 
         if use_thread:
-            thread = threading.Thread(target=self._process_scanner, args=(scanner, scanner_queue))
-            thread.name = "ProcessShareScanner"
-            thread.daemon = True
-            thread.start()
+            Thread(
+                target=self._process_scanner, args=(scanner, scanner_queue), name="ProcessShareScanner", daemon=True
+            ).start()
             return None
 
         return self._process_scanner(scanner, scanner_queue)
