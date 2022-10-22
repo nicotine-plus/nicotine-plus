@@ -44,7 +44,7 @@ jobs:
         run: python -m pylint pynicotine test
 
       - name: Integration and unit tests
-        run: xvfb-run python -m unittest
+        run: xvfb-run python -m unittest -v
 
   ubuntu-dep8:
     runs-on: ${{ matrix.os }}
@@ -100,7 +100,7 @@ jobs:
         run: python3 -m pylint pynicotine test
 
       - name: Integration and unit tests
-        run: python3 -m unittest
+        run: python3 -m unittest -v
 
   macos:
     runs-on: macos-10.15
@@ -130,4 +130,4 @@ jobs:
         run: pylint pynicotine test
 
       - name: Integration and unit tests
-        run: python3 -m unittest
+        run: python3 -m unittest -v

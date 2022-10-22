@@ -99,8 +99,6 @@ class ChatRooms:
         if self.ui_callback:
             self.ui_callback.remove_room(room)
 
-        self.core.pluginhandler.leave_chatroom_notification(room)
-
     def clear_messages(self, room):
         if self.ui_callback:
             self.ui_callback.clear_messages(room)
@@ -203,6 +201,8 @@ class ChatRooms:
 
         if self.ui_callback:
             self.ui_callback.leave_room(msg)
+
+        self.core.pluginhandler.leave_chatroom_notification(msg.room)
 
     def get_user_status(self, msg):
         """ Server code: 7 """

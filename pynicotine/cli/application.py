@@ -144,7 +144,7 @@ class Application:
         # Not implemented
         pass
 
-    def confirm_quit(self):
+    def confirm_quit(self, _remember):
         # Not implemented
         pass
 

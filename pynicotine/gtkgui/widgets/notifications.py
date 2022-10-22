@@ -17,10 +17,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys
-import threading
 import time
 
 from ctypes import Structure, byref, sizeof
+from threading import Thread
 
 from gi.repository import Gdk
 from gi.repository import Gio
@@ -190,9 +190,7 @@ class WinNotify:
         if self.worker and self.worker.is_alive():
             return
 
-        self.worker = threading.Thread(target=self.work)
-        self.worker.name = "WinNotify"
-        self.worker.daemon = True
+        self.worker = Thread(target=self.work, name="WinNotify", daemon=True)
         self.worker.start()
 
     def work(self):

@@ -16,8 +16,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import threading
 import socket
+
+from threading import Thread
+from threading import Timer
 
 from pynicotine.config import config
 from pynicotine.logfacility import log
@@ -382,10 +384,7 @@ class UPnP:
         if blocking:
             self._update_port_mapping()
         else:
-            thread = threading.Thread(target=self._update_port_mapping)
-            thread.name = "UPnPAddPortmapping"
-            thread.daemon = True
-            thread.start()
+            Thread(target=self._update_port_mapping, name="UPnPAddPortmapping", daemon=True).start()
 
         # Repeat
         self._start_timer()
@@ -402,7 +401,7 @@ class UPnP:
 
         upnp_interval_seconds = upnp_interval * 60 * 60
 
-        self.timer = threading.Timer(upnp_interval_seconds, self.add_port_mapping)
+        self.timer = Timer(interval=upnp_interval_seconds, function=self.add_port_mapping)
         self.timer.name = "UPnPTimer"
         self.timer.daemon = True
         self.timer.start()

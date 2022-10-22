@@ -1,5 +1,5 @@
 # This file is responsible for including all necessary files in the source distribution
-# https://docs.python.org/3/distutils/sourcedist.html
+# https://packaging.python.org/en/latest/guides/using-manifest-in/
 
 recursive-include data *.in
 recursive-include po *
