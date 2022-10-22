@@ -446,6 +446,7 @@ class PrivateChat:
             timestamp_format = config.sections["logging"]["private_timestamp"]
         else:
             timestamp_format = False
+            tag = self.tag_action
 
         if hasattr(self, "tag_" + str(message_type)):
             tag = getattr(self, "tag_" + str(message_type))

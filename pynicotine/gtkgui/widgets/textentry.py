@@ -104,19 +104,23 @@ class ChatEntry:
         cmd_split = text.split(maxsplit=1)
         cmd = cmd_split[0]
 
-        # Clear chat entry
-        self.entry.set_text("")
-
         if len(cmd_split) == 2:
             args = cmd_split[1]
         else:
             args = ""
 
+        # Allow the command line to be edited if parsing rejects the line or if the plugin returns False
         if self.is_chatroom:
-            self.core.pluginhandler.trigger_chatroom_command_event(self.entity, cmd[1:], args)
+            if not self.core.pluginhandler.trigger_chatroom_command_event(self.entity, cmd[1:], args):
+                self.entry.grab_focus()
+                return
+
+        elif not self.core.pluginhandler.trigger_private_chat_command_event(self.entity, cmd[1:], args):
+            self.entry.grab_focus()
             return
 
-        self.core.pluginhandler.trigger_private_chat_command_event(self.entity, cmd[1:], args)
+        # Clear chat entry
+        self.entry.set_text("")
 
     def on_tab_complete_accelerator(self, widget, state, backwards=False):
         """ Tab and Shift+Tab: tab complete chat """

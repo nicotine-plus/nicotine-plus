@@ -52,8 +52,7 @@ class Plugin(BasePlugin):
             "quit": {
                 "callback": self.quit_command,
                 "description": _("Quit Nicotine+"),
-                "usage": ["[force]"],
-                "choices": ["force"],
+                "usage": ["[-force]", ""],  # "" disallow extra args
                 "aliases": ["q", "exit"]
             },
 
@@ -73,7 +72,7 @@ class Plugin(BasePlugin):
             },
             "ban": {
                 "callback": self.ban_user_command,
-                "description": _("Stop file transfers to user"),
+                "description": _("Stop connections from user"),
                 "usage": ["<user>"],
                 "group": _("Users")
             },
@@ -109,8 +108,8 @@ class Plugin(BasePlugin):
             "clear": {
                 "callback": self.clear_command,
                 "description": _("Clear chat window"),
+                "usage": [""],  # "" disallow any args
                 "aliases": ["cl"],
-                "choices": [-1],
                 "group": _("Chat")
             },
             "join": {
@@ -256,7 +255,7 @@ class Plugin(BasePlugin):
             },
             "ban": {
                 "callback": self.ban_user_command,
-                "description": _("Stop file transfers to user"),
+                "description": _("Stop connections from user"),
                 "usage": ["[user]"],
                 "group": _("Users")
             },
@@ -333,15 +332,13 @@ class Plugin(BasePlugin):
             "addshare": {
                 "callback": self.add_share_command,
                 "description": _("Add share"),
-                "usage": ["<public|private>", "<virtual_name>", "<path>"],
-                "choices": ["public", "private"],
+                "usage": ["<public|private|buddy>", "<virtual_name>", "<path>"],
                 "group": _("Shares")
             },
             "removeshare": {
                 "callback": self.remove_share_command,
                 "description": _("Remove share"),
-                "usage": ["<public|private>", "<virtual_name>"],
-                "choices": ["public", "private"],
+                "usage": ["<public|private|buddy>", "<virtual_name>"],
                 "group": _("Shares")
             },
             "listshares": {
@@ -401,7 +398,7 @@ class Plugin(BasePlugin):
 
         if not num_commands:
             self.echo_unknown_command(f"{prefix}{query}")
-            return None
+            return False
 
         output = f"Listing {num_commands} {interface} commands with <required> and [optional] arguments"
         output += " " + f"matching \"{query}\"" + ":" if query else ":"
@@ -432,12 +429,13 @@ class Plugin(BasePlugin):
         if args:
             user = args
 
-        if user in self.core.privatechats.users:
-            self.echo_message("Closing private chat of user %s" % user)
-        elif user:
+        if user not in self.core.privatechats.users:
             self.echo_message("Not messaging with user %s" % user)
+            return False
 
+        self.echo_message("Closing private chat of user %s" % user)
         self.core.privatechats.remove_user(user)
+        return True
 
     def ctcpversion_command(self, args, user=None, **_unused):
 
@@ -465,12 +463,13 @@ class Plugin(BasePlugin):
 
         if room not in self.core.chatrooms.joined_rooms:
             self.echo_message("Not joined in room %s" % room)
-            # return  # in future the gui might need to close a tab even if we are not joined, such as while offline etc
+            return False
 
         self.core.chatrooms.remove_room(room)
+        return True
 
     def me_chat_command(self, args, **_unused):
-        self.send_message("/me " + args)
+        return self.send_message("/me " + args)
 
     def msg_chat_command(self, args, **_unused):
 
@@ -500,17 +499,17 @@ class Plugin(BasePlugin):
 
     def add_share_command(self, args):
 
-        args_split = args.split(" ", maxsplit=3)  # "\""
-        access, name, path = args_split[0], args_split[1], args_split[2]
+        args_split = args.split(maxsplit=2)  # "\""
+        group, name, path = args_split[0], args_split[1], args_split[2]
 
-        self.echo_message(f"nothing here yet, you entered: access='{access}' name='{name}' path='{path}'")
+        self.echo_message(f"nothing here yet, you entered: group='{group}' name='{name}' path='{path}'")
 
     def remove_share_command(self, args):
 
-        args_split = args.split(" ", maxsplit=2)
-        access, name = args_split[0], args_split[1]
+        args_split = args.split(maxsplit=1)
+        group, name = args_split[0], args_split[1]
 
-        self.echo_message(f"nothing here yet, you entered: access='{access}' name='{name}'")
+        self.echo_message(f"nothing here yet, you entered: group='{group}' name='{name}'")
 
     def list_shares_command(self, args):
         self.echo_message(f"nothing here yet, you entered: {args}")
