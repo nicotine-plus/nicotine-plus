@@ -35,6 +35,7 @@ class Plugin(BasePlugin):
             "rescan": {
                 "callback": self.rescan_command,
                 "description": _("Rescan shares"),
+                "usage": ["[-force]"],
                 "group": _("Shares")
             },
             "hello": {
@@ -514,8 +515,13 @@ class Plugin(BasePlugin):
     def list_shares_command(self, args):
         self.echo_message(f"nothing here yet, you entered: {args}")
 
-    def rescan_command(self, _args, **_unused):
-        self.core.shares.rescan_shares()
+    def rescan_command(self, args, **_unused):
+
+        if args:
+            self.echo_message(f"Force rescan is not implemented here yet, you entered: {args}")
+            return
+
+        self.core.shares.rescan_shares()  # TODO: force=args)  # see shares.py in verify-dirs branch
 
     """ "User" """
 
