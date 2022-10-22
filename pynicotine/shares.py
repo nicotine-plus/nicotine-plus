@@ -858,12 +858,10 @@ class Shares:
 
         return False
 
-    def list_shares(self, group=None):
-        """ Returns ONE string with all readable shares and missing shares.
-        group specifies which shares to list: "normal", "buddy", etc. """
-        # TODO: Unused, need new command in core_commands to run this
+    def list_shares(self):
+        """ Returns ONE string with all readable shares and missing shares """
 
-        reads, fails = self.check_shares(shares=None, group=group)
+        reads, fails = self.check_shares()
 
         num_reads = len(reads)
         num_fails = len(fails)
@@ -875,8 +873,10 @@ class Shares:
         if not num_total:
             fails.insert(0, total_shares_line)
 
-        # Coalesce the summary line toegether with all "Ready " and "Missing " items
-        all_shares = total_shares_line + ":\n\n" + '\n\n'.join(reads) + "\n" + '\n\n'.join(fails)
+        # Coalesce the summary line toegether with all "ready" and "not found" items
+        all_shares = total_shares_line
+        all_shares += "\n\n" + '\n\n'.join(reads) if reads else ""
+        all_shares += "\n\n" + '\n\n'.join(fails) if fails else ""
 
         return all_shares
 
