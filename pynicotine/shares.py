@@ -903,10 +903,10 @@ class Shares:
             else:
                 fails.insert(0, summary_total)
 
-            if reads:
+            if reads and num_total:
                 log.add_transfer(f"{summary_reads}:\n\n{reads_text}\n")
 
-            if fails:
+            if fails and num_total:
                 log.add_transfer(f"{summary_fails}:\n\n{fails_text}\n")
 
             log.add_transfer(_(f"{summary_reads} out of {summary_total}"))
@@ -952,23 +952,19 @@ class Shares:
             # Continue initializing shares, and do the rescan now
             return True
 
-        summary = _(f"{summary_reads} out of {summary_total}")
-
         log.add(_("Rescan aborted") + ": " + (fails_text.replace(":\n", " ") if num_fails == 1 else summary_fails))
 
         if self.ui_callback:
+            title_text = _("Rescan aborted") + ": " + (summary_fails if num_total else summary_total)
+            summary = _(f"{summary_reads} out of {summary_total}")
+            summary += ("\n" + _(f"Force rescan will exclude {num_fails} shares") if num_reads else
+                        "\n" + _("Nothing to scan"))
+
             if num_fails > 5:
                 # Abbreviate message_text, the dialog may get too tall if there's many fails!
                 fails_text = '\n\n'.join(fails[:5]) + "\n\n…\n"
 
-            epilog = _("Verify disk(s) are accessible then retry to check again")
-
-            if num_reads:
-                summary += ",\n" + _(f"using force will exclude {num_fails} shares") + "."
-            else:
-                epilog = _("Nothing to scan") + ". " + (epilog if num_total else "")
-
-            title_text = _("Rescan aborted") + ": " + (summary_fails if num_total else summary_total)
+            epilog = _("Verify disk(s) are accessible then retry to check again") if num_total else ""
             message_text = f"{fails_text}\n\n{summary}\n\n{epilog}"
 
             # Prompt with retry/force rescan options only offered if relevant and appropriate
