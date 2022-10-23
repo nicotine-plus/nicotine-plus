@@ -804,7 +804,7 @@ class PluginHandler:
                 num_args_optional += 1
 
                 # [-flag] options (the -hyphen doesn't have to be entered by the user)
-                if "[-" in def_arg and com_arg not in usage:
+                if "[-" in def_arg and com_arg not in def_arg:
                     reject = "Unknown option argument"
                     break
 
