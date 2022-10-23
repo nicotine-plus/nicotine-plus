@@ -946,7 +946,7 @@ class Shares:
 
         # Check if any shares are missing and log counts
         (num_reads, num_fails, num_total, summary_total,
-        summary_reads, summary_fails, reads_text, fails_text, fails) = self.count_shares(shares)
+         summary_reads, summary_fails, _reads_text, fails_text, fails) = self.count_shares(shares)
 
         if num_reads and not num_fails:
             # Continue initializing shares, and do the rescan now
