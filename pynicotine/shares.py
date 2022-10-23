@@ -858,27 +858,42 @@ class Shares:
 
         return False
 
-    def list_shares(self):
-        """ Returns ONE string with all readable shares and missing shares """
+    def count_shares(self, shares=None, group=None, logging=True):
+        """ Check if any shares are missing and log counts """
 
-        reads, fails = self.check_shares()
+        reads, fails = self.check_shares(shares=shares, group=group)
 
         num_reads = len(reads)
         num_fails = len(fails)
         num_total = num_reads + num_fails
 
-        total_shares_line = (_(f"{num_total} share configured") if num_total == 1 else
-                             _(f"{num_total} shares configured"))
+        summary_total = _(f"{num_total} shares configured")
+        summary_reads = _(f"{num_reads} shares ready")
+        summary_fails = _(f"{num_fails} shares not found")
 
-        if not num_total:
-            fails.insert(0, total_shares_line)
+        reads_text = '\n\n'.join(reads)
+        fails_text = '\n\n'.join(fails)
 
-        # Coalesce the summary line toegether with all "ready" and "not found" items
-        all_shares = total_shares_line
-        all_shares += "\n\n" + '\n\n'.join(reads) if reads else ""
-        all_shares += "\n\n" + '\n\n'.join(fails) if fails else ""
+        if logging:
+            log.add(summary_total)
 
-        return all_shares
+            if num_total:
+                log.add(summary_reads)
+                if num_fails:
+                    log.add(summary_fails)
+            else:
+                fails.insert(0, summary_total)
+
+            if reads:
+                log.add_transfer(f"{summary_reads}:\n\n{reads_text}\n")
+
+            if fails and num_total:
+                log.add_transfer(f"{summary_fails}:\n\n{fails_text}\n")
+
+            log.add_transfer(_(f"{summary_reads} out of {summary_total}"))
+
+        return (num_reads, num_fails, num_total, summary_total,
+                summary_reads, summary_fails, reads_text, fails_text, fails)
 
     def check_shares(self, shares=None, group=None):
         """ Returns TWO lists of strings: readable shares, and missing shares.
@@ -909,61 +924,30 @@ class Shares:
         return reads, fails
 
     def confirm_force_rescan(self, shares):
-        """ Check if any shares are missing, if so then show a prompt """
 
-        reads, fails = self.check_shares(shares)
+        # Check if any shares are missing and log counts
+        (num_reads, num_fails, num_total, summary_total,
+         summary_reads, summary_fails, _reads_text, fails_text, fails) = self.count_shares(shares)
 
-        num_reads = len(reads)
-        num_fails = len(fails)
-        num_total = num_reads + num_fails
-
-        total_shares = (_(f"{num_total} share configured") if num_total == 1 else
-                        _(f"{num_total} shares configured"))
-
-        reads_shares = (_(f"{num_reads} share ready") if num_reads == 1 else
-                        _(f"{num_reads} shares ready"))
-
-        fails_shares = (_(f"{num_fails} share not found") if num_fails == 1 else
-                        _(f"{num_fails} shares not found"))
-
-        log.add(total_shares)
-
-        if num_total:
-            log.add(reads_shares)
-            if num_fails:
-                log.add(fails_shares)
-        else:
-            fails.insert(0, total_shares)
-
-        if reads:
-            reads_text = '\n\n'.join(reads)
-            log.add_transfer(f"{reads_shares}:\n\n{reads_text}\n")
-
-        if reads and not fails:
+        if num_reads and not num_fails:
             # Continue initializing shares, and do the rescan now
             return True
 
-        fails_text = '\n\n'.join(fails)
-        summary = _(f"{reads_shares} out of {total_shares}")
-
-        log.add_transfer(f"{fails_shares}:\n\n{fails_text}\n\n{summary}")
-        log.add(_("Rescan aborted") + ": " + (fails_text.replace(":\n", " ") if num_fails == 1 else fails_shares))
+        log.add(_("Rescan aborted") + ": " + (fails_text.replace(":\n", " ") if num_fails == 1 else summary_fails))
 
         if self.ui_callback:
+            title_text = _("Rescan aborted") + ": " + (summary_fails if num_total else summary_total)
+            summary = _(f"{summary_reads} out of {summary_total}")
+
+            # TODO: This string doesn't currently make sense in the CLI until '/rescan force' is implemented
+            summary += ("\n" + _(f"Force rescan will exclude {num_fails} shares") if num_reads else
+                        "\n" + _("Nothing to scan"))
+
             if num_fails > 5:
                 # Abbreviate message_text, the dialog may get too tall if there's many fails!
                 fails_text = '\n\n'.join(fails[:5]) + "\n\n…\n"
 
-            epilog = _("Verify disk(s) are accessible then retry to check again")
-
-            if num_reads:
-                # TODO: This string doesn't currently make sense in the CLI until '/rescan force' is implemented
-                summary += ",\n" + (_(f"using force will exclude {num_fails} share") + "." if num_fails == 1 else
-                                    _(f"using force will exclude {num_fails} shares") + ".")
-            else:
-                epilog = _("Nothing to scan") + ". " + (epilog if num_total else "")
-
-            title_text = _("Rescan aborted") + ": " + (fails_shares if num_total else total_shares)
+            epilog = _("Verify disk(s) are accessible then retry to check again") if num_total else ""
             message_text = f"{fails_text}\n\n{summary}\n\n{epilog}"
 
             # Prompt with retry/force rescan options only offered if relevant and appropriate
