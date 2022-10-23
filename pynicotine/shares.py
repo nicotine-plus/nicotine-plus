@@ -919,7 +919,7 @@ class Shares:
         group specifies which shares to check: "normal", "buddy", etc. """
 
         if shares is None:
-            # Triggered by list shares or confirm rescan
+            # Triggered by list shares command
             shares = self.get_shared_folders()
 
         group_index = self.get_group_index(group) if group is not None else 0
