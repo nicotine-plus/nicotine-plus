@@ -118,6 +118,8 @@ def rescan_shares():
 
     config.load_config()
 
+    log.log_levels = set(["transfer"] + config.sections["logging"]["debugmodes"])
+
     shares = Shares(None, config, deque(), init_shares=False)
     error = shares.rescan_shares(use_thread=False)
 

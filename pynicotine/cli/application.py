@@ -117,6 +117,9 @@ class Application:
         # Not implemented
         pass
 
+    def confirm_force_rescan(self, title, message, _show_retry, _show_force):
+        log.add(f"{title}:\n\n{message}\n" + _("Rescan aborted") + "!")
+
     def invalid_password(self):
         # Not implemented
         pass
@@ -141,7 +144,7 @@ class Application:
         # Not implemented
         pass
 
-    def confirm_quit(self):
+    def confirm_quit(self, _remember):
         # Not implemented
         pass
 

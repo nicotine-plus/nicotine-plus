@@ -180,6 +180,9 @@ class BasePlugin:
 
         elif text:
             self.core.queue.append(slskmessages.SayChatroom(room, text))
+            return True
+
+        return False
 
     def send_private(self, user, text, show_ui=True, switch_page=True):
         """ Send user message in private.
@@ -212,17 +215,17 @@ class BasePlugin:
 
         if self.parent.command_source is None:  # pylint: disable=no-member
             # Function was not called from a command
-            return
+            return False
 
         command_type, source = self.parent.command_source  # pylint: disable=no-member
 
         if command_type == "cli":
-            return
+            return False
 
         function = self.send_public if command_type == "chatroom" else self.send_private
-        function(source, text)
+        return function(source, text)
 
-    def echo_message(self, text, message_type="local"):
+    def echo_message(self, text, message_type="echo"):
         """ Convenience function to display a raw message the same window
         a plugin command runs from """
 
@@ -245,7 +248,7 @@ class BasePlugin:
         function(source, text, message_type)
 
     def echo_unknown_command(self, command):
-        self.echo_message(_("Unknown command: %s. Type /help for a list of commands.") % ("/" + command))
+        self.echo_message(_(f"Unknown command: {command} (type /help for a list of commands)"))
 
     # Obsolete functions
 
@@ -629,8 +632,8 @@ class PluginHandler:
 
         from traceback import format_tb
 
-        log.add(_("Plugin %(module)s failed with error %(errortype)s: %(error)s.\n"
-                  "Trace: %(trace)s"), {
+        log.add_debug(_("Plugin %(module)s failed with error %(errortype)s: %(error)s.\n"
+                        "Trace: %(trace)s"), {
             'module': plugin_name,
             'errortype': exc_type,
             'error': exc_value,
@@ -697,29 +700,31 @@ class PluginHandler:
 
     def _trigger_command(self, command, args, user=None, room=None):
 
+        self.command_source = None
         plugin = None
-
-        if room is not None:
-            self.command_source = ("chatroom", room)
-
-        elif user is not None:
-            self.command_source = ("private_chat", user)
-
-        else:
-            self.command_source = ("cli", None)
 
         for module, plugin in self.enabled_plugins.items():
             if plugin is None:
                 continue
 
             if room is not None:
+                self.command_source = ("chatroom", room)
                 commands = plugin.chatroom_commands
+                prefix = "/"
 
             elif user is not None:
+                self.command_source = ("private_chat", user)
                 commands = plugin.private_chat_commands
+                prefix = "/"
 
             else:
+                self.command_source = ("cli", None)
                 commands = plugin.cli_commands
+                prefix = ""
+
+            if prefix:
+                # Input command line echo is needed in chat view
+                plugin.echo_message(f"{prefix}{command} {args}")
 
             try:
                 for trigger, data in commands.items():
@@ -728,50 +733,105 @@ class PluginHandler:
                     if command != trigger and command not in aliases:
                         continue
 
-                    usage = data.get("usage")
-                    choices = data.get("choices", [])
-                    args_split = args.split(maxsplit=3)
-                    num_args = len(args_split)
-                    reject = None
+                    if not self._parse_command_arguments(plugin, command, args, data):
+                        return False
 
-                    if args and -1 in choices:
-                        reject = f"Unexpected argument >{args_split[0]}<"
-
-                    elif args and choices and args_split[0] not in choices:
-                        reject = "Invalid argument, possible choices: %s" % " | ".join(choices)
-
-                    elif usage:
-                        num_usage = len(list(x for x in usage if x.startswith("<")))
-
-                        if num_args < num_usage:
-                            reject = "Missing argument"
-
-                    if reject:
-                        description = data.get("description", "execute command").lower()
-                        plugin.echo_message(f"Cannot {description}: {reject}")
-                        plugin.echo_message("Usage: %s %s" % ('/' + command, " ".join(usage) if usage else ""))
-                        return
+                    output = None
 
                     if room is not None:
-                        getattr(plugin, data.get("callback").__name__)(args, room=room)
+                        output = getattr(plugin, data.get("callback").__name__)(args, room=room)
 
                     elif user is not None:
-                        getattr(plugin, data.get("callback").__name__)(args, user=user)
+                        output = getattr(plugin, data.get("callback").__name__)(args, user=user)
 
                     else:
-                        getattr(plugin, data.get("callback").__name__)(args)
+                        output = getattr(plugin, data.get("callback").__name__)(args)
 
-                    return
+                    if output is True or output is False:
+                        # Tell the TextEntry if the command was consumed or not so it
+                        # can either clear itself or allow the user to edit and retry
+                        return output
+
+                    if output is None or output == 0:
+                        # Assume the command has been consumed and needs no echo
+                        return True
+
+                    # The command returned something useful to echo, but note this is
+                    # of no use if we wanted to switch or close a chat tab because
+                    # the following echo will steal focus back to the command source.
+                    plugin.echo_message(output)
+
+                    # Tell the calling entity of our success or failure
+                    return bool(output)
+
+                plugin.echo_unknown_command(f"{prefix}{command}")
 
             except Exception:
                 self.show_plugin_error(module, sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
-                return
+                log.add(f"{command} command encountered an error in the plugin {module}!")
+                return -1
 
-        if plugin is not None:
-            plugin.echo_unknown_command(command)
+        return None
 
-        self.command_source = None
-        return
+    def _parse_command_arguments(self, plugin, command, args, data):
+
+        usage = data.get("usage")
+
+        if not usage or len(usage) < 1:
+            # No usage criteria set, plugin has to deal with it
+            return True
+
+        # TODO: Support arguments "containing spaces in quotes"
+        args_split = args.split(maxsplit=(len(usage) - 1))
+        num_args = len(args_split)
+
+        reject = None
+        position = num_args_required = num_args_optional = 0
+
+        for def_arg in usage:
+            com_arg = args_split[position] if position < num_args else ""
+
+            # <required> argument
+            if def_arg.startswith("<"):
+                num_args_required += 1
+
+                if num_args < num_args_required:
+                    reject = f"Required {def_arg} argument missing"
+                    break
+
+            # [optional] argument
+            elif def_arg.startswith("["):
+                num_args_optional += 1
+
+                # [-flag] options (the -hyphen doesn't have to be entered by the user)
+                if "[-" in def_arg and com_arg not in usage:
+                    reject = "Unknown option argument"
+                    break
+
+            # choice|selection argument
+            if "|" in def_arg and com_arg not in def_arg:
+                reject = f"Invalid argument >{com_arg}<\nChoices: {def_arg}"
+                break
+
+            # usage: [""] empty string disallows any further arguments
+            if def_arg == "":
+                if num_args > num_args_optional + num_args_required:
+                    reject = "Excessive argument"
+                    break
+
+            position += 1
+
+        if reject:
+            # Parsed usage criteria not satisfied, provide helpful prompt for guidance
+            description = data.get("description", "execute command").lower()
+            output = (f"Cannot {description}: {reject}\n"
+                      "Usage: %s %s" % ("/" + command, " ".join(usage) if usage else ""))
+
+            plugin.echo_message(output)
+            return False
+
+        # Parsed usage criteria satified, continue to trigger command in the plugin
+        return True
 
     def trigger_event(self, function_name, args):
         """ Triggers an event for the plugins. Since events and notifications

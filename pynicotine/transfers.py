@@ -33,13 +33,13 @@ import os
 import os.path
 import re
 import stat
-import threading
 import time
 
 from collections import defaultdict
 from collections import deque
 from collections import OrderedDict
 from operator import itemgetter
+from threading import Thread
 
 from pynicotine import slskmessages
 from pynicotine.logfacility import log
@@ -150,22 +150,13 @@ class Transfers:
         self.watch_stored_downloads()
 
         # Check for transfer timeouts
-        thread = threading.Thread(target=self._check_transfer_timeouts)
-        thread.name = "TransferTimeoutTimer"
-        thread.daemon = True
-        thread.start()
+        Thread(target=self._check_transfer_timeouts, name="TransferTimeoutTimer", daemon=True).start()
 
         # Check for failed downloads (1 min delay)
-        thread = threading.Thread(target=self._check_download_queue_timer)
-        thread.name = "DownloadQueueTimer"
-        thread.daemon = True
-        thread.start()
+        Thread(target=self._check_download_queue_timer, name="DownloadQueueTimer", daemon=True).start()
 
         # Check if queued uploads can be started
-        thread = threading.Thread(target=self._check_upload_queue_timer)
-        thread.name = "UploadQueueTimer"
-        thread.daemon = True
-        thread.start()
+        Thread(target=self._check_upload_queue_timer, name="UploadQueueTimer", daemon=True).start()
 
         if self.downloadsview:
             self.downloadsview.server_login()

@@ -26,8 +26,11 @@ import selectors
 import socket
 import struct
 import sys
-import threading
 import time
+
+from threading import Event
+from threading import Thread
+from threading import Timer
 
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import DISTRIBUTED_MESSAGE_CLASSES
@@ -175,7 +178,7 @@ class PeerConnection(Connection):
         self.lastcallback = time.time()
 
 
-class SlskProtoThread(threading.Thread):
+class SlskProtoThread(Thread):
     """ This is a networking thread that actually does all the communication.
     It sends data to the NicotineCore via a callback function and receives
     data via a deque object. """
@@ -185,15 +188,15 @@ class SlskProtoThread(threading.Thread):
 
     IN_PROGRESS_STALE_AFTER = 2
     CONNECTION_MAX_IDLE = 60
+    SOCKET_READ_BUFFER_SIZE = 1048576
+    SOCKET_WRITE_BUFFER_SIZE = 1048576
 
     def __init__(self, core_callback, queue, bindip, interface, port, port_range):
         """ core_callback is a NicotineCore callback function to be called with messages
         list as a parameter. queue is deque object that holds network messages from
         NicotineCore. """
 
-        threading.Thread.__init__(self)
-
-        self.name = "NetworkThread"
+        super().__init__(name="NetworkThread")
 
         if sys.platform not in ("linux", "darwin"):
             # TODO: support custom network interface for other systems than Linux and macOS
@@ -237,7 +240,7 @@ class SlskProtoThread(threading.Thread):
         self._connsinprogress = {}
         self._out_indirect_conn_request_times = {}
         self._token = 0
-        self.exit = threading.Event()
+        self.exit = Event()
         self.user_addresses = {}
 
         self._calc_upload_limit_function = self._calc_upload_limit_none
@@ -416,7 +419,7 @@ class SlskProtoThread(threading.Thread):
         elif 0 < self.server_timeout_value < 600:
             self.server_timeout_value = self.server_timeout_value * 2
 
-        self.server_timer = threading.Timer(self.server_timeout_value, self.server_timeout)
+        self.server_timer = Timer(interval=self.server_timeout_value, function=self.server_timeout)
         self.server_timer.name = "ServerTimer"
         self.server_timer.daemon = True
         self.server_timer.start()
@@ -949,7 +952,7 @@ class SlskProtoThread(threading.Thread):
 
             if callback:
                 self._callback_msgs.append(DownloadConnectionClosed(
-                    user=init.target_user, token=conn_obj.fileinit.token
+                    user=init.target_user, token=conn_obj.filedown.token
                 ))
 
             self._calc_download_limit()
@@ -963,7 +966,7 @@ class SlskProtoThread(threading.Thread):
             if callback:
                 timed_out = (time.time() - conn_obj.lastactive) > self.CONNECTION_MAX_IDLE
                 self._callback_msgs.append(UploadConnectionClosed(
-                    user=init.target_user, token=conn_obj.fileinit.token, timed_out=timed_out
+                    user=init.target_user, token=conn_obj.fileupl.token, timed_out=timed_out
                 ))
 
             self._calc_upload_limit_function()
@@ -1091,6 +1094,8 @@ class SlskProtoThread(threading.Thread):
             conn_obj = ServerConnection(sock=server_socket, addr=msg_obj.addr, events=events, login=msg_obj.login)
 
             server_socket.setblocking(False)
+            server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.SOCKET_READ_BUFFER_SIZE)
+            server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, self.SOCKET_WRITE_BUFFER_SIZE)
 
             # Detect if our connection to the server is still alive
             self.set_server_socket_keepalive(server_socket)
@@ -1145,10 +1150,10 @@ class SlskProtoThread(threading.Thread):
                             # Check for indirect connection timeouts
                             self.exit.clear()
 
-                            thread = threading.Thread(target=self._check_indirect_connection_timeouts)
-                            thread.name = "IndirectConnectionTimeoutTimer"
-                            thread.daemon = True
-                            thread.start()
+                            Thread(
+                                target=self._check_indirect_connection_timeouts,
+                                name="IndirectConnectionTimeoutTimer", daemon=True
+                            ).start()
 
                             msg.username = self.server_username
                             self._queue.append(CheckPrivileges())
@@ -1445,6 +1450,8 @@ class SlskProtoThread(threading.Thread):
             conn_obj = PeerConnection(sock=sock, addr=msg_obj.addr, events=events, init=msg_obj.init)
 
             sock.setblocking(False)
+            sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.SOCKET_READ_BUFFER_SIZE)
+            sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, self.SOCKET_WRITE_BUFFER_SIZE)
 
             if self.bindip:
                 sock.bind((self.bindip, 0))
@@ -2028,6 +2035,8 @@ class SlskProtoThread(threading.Thread):
 
         self.listen_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.SOCKET_READ_BUFFER_SIZE)
+        self.listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, self.SOCKET_WRITE_BUFFER_SIZE)
         self.listen_socket.setblocking(False)
         self.bind_listen_port()
 

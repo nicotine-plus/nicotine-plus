@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
@@ -25,14 +25,14 @@ jobs:
 
       - name: Prepare artifacts
         run: |
-          mkdir ../build/
-          cp -Lr ../nicotine_* ../build/
+          mkdir build/package/
+          cp -Lr ../nicotine_* build/package/
 
       - name: Archive artifacts
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v3
         with:
           name: debian-package
-          path: ../build/
+          path: build/package/
 
   flatpak:
     runs-on: ubuntu-20.04
@@ -40,7 +40,7 @@ jobs:
       image: bilelmoussaoui/flatpak-github-actions:gnome-43
       options: --privileged
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - uses: bilelmoussaoui/flatpak-github-actions/flatpak-builder@v3
       with:
         bundle: flatpak-package.flatpak
@@ -65,7 +65,7 @@ jobs:
       NICOTINE_LIBADWAITA: 0
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
@@ -84,16 +84,21 @@ jobs:
 
       - name: Freeze application
         run: |
-          python3 packaging/windows/setup.py bdist_msi
+          python3 packaging/windows/setup.py build_exe
+
+          # Workaround for https://github.com/nicotine-plus/nicotine-plus/issues/2218
+          cp packaging/windows/build/package/Nicotine+/lib/libgcc*.dll packaging/windows/build/package/Nicotine+/
+          cp packaging/windows/build/package/Nicotine+/lib/libwinpthread*.dll packaging/windows/build/package/Nicotine+/
+          python3 packaging/windows/setup.py bdist_msi --skip-build
 
       - name: Archive installer artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: windows-${{ matrix.arch }}-installer
           path: packaging/windows/build/*.msi
 
       - name: Archive package artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: windows-${{ matrix.arch }}-package
           path: packaging/windows/build/package
@@ -105,7 +110,7 @@ jobs:
       NICOTINE_LIBADWAITA: 1
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
@@ -123,7 +128,7 @@ jobs:
           python3 packaging/macos/setup.py bdist_dmg
 
       - name: Archive installer artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: macos-installer
           path: packaging/macos/build/*.dmg

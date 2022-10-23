@@ -31,6 +31,7 @@ server messages and p2p messages (between clients). """
 
 
 UINT_LIMIT = 4294967295
+UINT64_LIMIT = 18446744073709551615
 
 INT_UNPACK = struct.Struct("<i").unpack
 UINT_UNPACK = struct.Struct("<I").unpack
