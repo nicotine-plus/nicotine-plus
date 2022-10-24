@@ -428,7 +428,8 @@ class Config:
                 "notification_popup_folder": True,
                 "notification_popup_private_message": True,
                 "notification_popup_chatroom": False,
-                "notification_popup_chatroom_mention": True
+                "notification_popup_chatroom_mention": True,
+                "notification_popup_wish": True
             },
             "plugins": {
                 "enable": True,

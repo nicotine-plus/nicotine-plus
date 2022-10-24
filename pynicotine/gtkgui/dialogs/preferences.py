@@ -1293,9 +1293,9 @@ class UserInterfaceFrame:
          self.EntryAway, self.EntryBackground, self.EntryChangedTab, self.EntryHighlight, self.EntryHighlightTab,
          self.EntryImmediate, self.EntryInput, self.EntryLocal, self.EntryMe, self.EntryOffline, self.EntryOnline,
          self.EntryQueue, self.EntryRegularTab, self.EntryRemote, self.EntryURL, self.FilePathTooltips,
-         self.IconView, self.Main, self.MainPosition,
-         self.NotificationPopupChatroom, self.NotificationPopupChatroomMention, self.NotificationPopupFile,
-         self.NotificationPopupFolder, self.NotificationPopupPrivateMessage, self.NotificationPopupSound,
+         self.IconView, self.Main, self.MainPosition, self.NotificationPopupChatroom,
+         self.NotificationPopupChatroomMention, self.NotificationPopupFile, self.NotificationPopupFolder,
+         self.NotificationPopupPrivateMessage, self.NotificationPopupSound, self.NotificationPopupWish,
          self.NotificationTabColors, self.NotificationWindowTitle, self.PickAway, self.PickBackground,
          self.PickChangedTab, self.PickHighlight, self.PickHighlightTab, self.PickImmediate, self.PickInput,
          self.PickLocal, self.PickMe, self.PickOffline, self.PickOnline, self.PickQueue, self.PickRegularTab,
@@ -1371,7 +1371,8 @@ class UserInterfaceFrame:
                 "notification_popup_folder": self.NotificationPopupFolder,
                 "notification_popup_private_message": self.NotificationPopupPrivateMessage,
                 "notification_popup_chatroom": self.NotificationPopupChatroom,
-                "notification_popup_chatroom_mention": self.NotificationPopupChatroomMention
+                "notification_popup_chatroom_mention": self.NotificationPopupChatroomMention,
+                "notification_popup_wish": self.NotificationPopupWish
             },
             "ui": {
                 "globalfont": self.SelectGlobalFont,
@@ -1472,7 +1473,8 @@ class UserInterfaceFrame:
                 "notification_popup_folder": self.NotificationPopupFolder.get_active(),
                 "notification_popup_private_message": self.NotificationPopupPrivateMessage.get_active(),
                 "notification_popup_chatroom": self.NotificationPopupChatroom.get_active(),
-                "notification_popup_chatroom_mention": self.NotificationPopupChatroomMention.get_active()
+                "notification_popup_chatroom_mention": self.NotificationPopupChatroomMention.get_active(),
+                "notification_popup_wish": self.NotificationPopupWish.get_active()
             },
             "ui": {
                 "globalfont": self.SelectGlobalFont.get_font(),
