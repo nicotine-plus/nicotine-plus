@@ -163,7 +163,7 @@
                                     <property name="adjustment">adjustment_FirstPort</property>
                                     <property name="numeric">True</property>
                                     <property name="max-width-chars">6</property>
-                                    <property name="tooltip-text" translatable="yes">First port</property>
+                                    <property name="tooltip-text" translatable="yes">First Port</property>
                                   </object>
                                 </child>
                               </object>
@@ -190,7 +190,7 @@
                                         <property name="adjustment">adjustment_LastPort</property>
                                         <property name="numeric">True</property>
                                         <property name="max-width-chars">6</property>
-                                        <property name="tooltip-text" translatable="yes">Last port</property>
+                                        <property name="tooltip-text" translatable="yes">Last Port</property>
                                       </object>
                                     </child>
                                   </object>
