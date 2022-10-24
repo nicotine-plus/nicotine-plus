@@ -425,7 +425,7 @@
                                             <child>
                                               <object class="GtkToggleButton" id="downloads_expand_button">
                                                 <property name="visible">True</property>
-                                                <property name="tooltip-text" translatable="yes">Expand / Collapse all</property>
+                                                <property name="tooltip-text" translatable="yes">Expand / Collapse All</property>
                                                 <child>
                                                   <object class="GtkImage" id="downloads_expand_icon">
                                                     <property name="visible">True</property>
@@ -668,7 +668,7 @@
                                             <child>
                                               <object class="GtkToggleButton" id="uploads_expand_button">
                                                 <property name="visible">True</property>
-                                                <property name="tooltip-text" translatable="yes">Expand / Collapse all</property>
+                                                <property name="tooltip-text" translatable="yes">Expand / Collapse All</property>
                                                 <child>
                                                   <object class="GtkImage" id="uploads_expand_icon">
                                                     <property name="visible">True</property>
