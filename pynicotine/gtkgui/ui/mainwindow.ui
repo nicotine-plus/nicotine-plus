@@ -86,7 +86,7 @@
                                         <child>
                                           <object class="GtkMenuButton" id="search_mode_button">
                                             <property name="visible">True</property>
-                                            <property name="tooltip-text" translatable="yes">Search scope</property>
+                                            <property name="tooltip-text" translatable="yes">Search Scope</property>
                                             <child>
                                               <object class="GtkBox">
                                                 <property name="visible">True</property>
