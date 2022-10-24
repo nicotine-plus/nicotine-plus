@@ -376,7 +376,7 @@
                                 <child>
                                   <object class="GtkToggleButton" id="filter_free_slot_button">
                                     <property name="visible">True</property>
-                                    <property name="tooltip-text" translatable="yes">Free slot</property>
+                                    <property name="tooltip-text" translatable="yes">Free Slot</property>
                                     <signal name="toggled" handler="on_refilter"/>
                                     <child>
                                       <object class="GtkImage">
