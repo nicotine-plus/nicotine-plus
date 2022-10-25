@@ -121,7 +121,7 @@
                 <property name="visible">True</property>
                 <child>
                   <object class="GtkToggleButton" id="expand_button">
-                    <property name="tooltip-text" translatable="yes">Expand / Collapse all</property>
+                    <property name="tooltip-text" translatable="yes">Expand / Collapse All</property>
                     <signal name="toggled" handler="on_toggle_expand_all"/>
                     <child>
                       <object class="GtkImage" id="expand_icon">
@@ -376,7 +376,7 @@
                                 <child>
                                   <object class="GtkToggleButton" id="filter_free_slot_button">
                                     <property name="visible">True</property>
-                                    <property name="tooltip-text" translatable="yes">Free slot</property>
+                                    <property name="tooltip-text" translatable="yes">Free Slot</property>
                                     <signal name="toggled" handler="on_refilter"/>
                                     <child>
                                       <object class="GtkImage">

@@ -179,7 +179,7 @@
                                 <child>
                                   <object class="GtkButton" id="refresh_button">
                                     <property name="visible">True</property>
-                                    <property name="tooltip-text" translatable="yes">Refresh files</property>
+                                    <property name="tooltip-text" translatable="yes">Refresh Files</property>
                                     <signal name="clicked" handler="on_refresh"/>
                                     <child>
                                       <object class="GtkImage">
@@ -195,7 +195,7 @@
                                 <child>
                                   <object class="GtkToggleButton" id="expand_button">
                                     <property name="visible">True</property>
-                                    <property name="tooltip-text" translatable="yes">Expand / Collapse all</property>
+                                    <property name="tooltip-text" translatable="yes">Expand / Collapse All</property>
                                     <signal name="toggled" handler="on_expand"/>
                                     <child>
                                       <object class="GtkImage" id="expand_icon">
