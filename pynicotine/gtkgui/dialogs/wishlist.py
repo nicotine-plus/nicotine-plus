@@ -16,8 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import GLib
-
 from pynicotine.config import config
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.dialogs import Dialog
@@ -35,7 +33,6 @@ class WishList(Dialog):
 
         self.core = core
         self.searches = searches
-        self.timer = None
 
         ui_template = UserInterface(scope=self, path="dialogs/wishlist.ui")
         (
@@ -169,14 +166,8 @@ class WishList(Dialog):
             self.list_view.select_row(iterator)
 
     def set_interval(self, msg):
-        self.core.search.do_wishlist_search_interval()
-        self.timer = GLib.timeout_add_seconds(msg.seconds, self.core.search.do_wishlist_search_interval)
-
-    def server_disconnect(self):
-
-        if self.timer is not None:
-            GLib.source_remove(self.timer)
-            self.timer = None
+        # Not used
+        pass
 
     def update_wish_button(self, wish):
 

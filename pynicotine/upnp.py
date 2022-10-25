@@ -19,10 +19,10 @@
 import socket
 
 from threading import Thread
-from threading import Timer
 
 from pynicotine.config import config
 from pynicotine.logfacility import log
+from pynicotine.scheduler import scheduler
 from pynicotine.utils import http_request
 
 
@@ -386,7 +386,6 @@ class UPnP:
         else:
             Thread(target=self._update_port_mapping, name="UPnPAddPortmapping", daemon=True).start()
 
-        # Repeat
         self._start_timer()
 
     def _start_timer(self):
@@ -400,12 +399,7 @@ class UPnP:
             return
 
         upnp_interval_seconds = upnp_interval * 60 * 60
-
-        self.timer = Timer(interval=upnp_interval_seconds, function=self.add_port_mapping)
-        self.timer.name = "UPnPTimer"
-        self.timer.daemon = True
-        self.timer.start()
+        self.timer = scheduler.add(delay=upnp_interval_seconds, callback=self.add_port_mapping)
 
     def cancel_timer(self):
-        if self.timer:
-            self.timer.cancel()
+        scheduler.cancel(self.timer)

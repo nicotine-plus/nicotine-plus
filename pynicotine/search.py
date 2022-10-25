@@ -28,6 +28,7 @@ from operator import itemgetter
 
 from pynicotine import slskmessages
 from pynicotine.logfacility import log
+from pynicotine.scheduler import scheduler
 from pynicotine.slskmessages import increment_token
 from pynicotine.utils import TRANSLATE_PUNCTUATION
 
@@ -43,6 +44,7 @@ class Search:
         self.searches = {}
         self.token = int(random.random() * (2 ** 31 - 1))
         self.wishlist_interval = 0
+        self.wishlist_timer_id = None
         self.share_dbs = share_dbs
         self.geoip = geoip
 
@@ -60,6 +62,7 @@ class Search:
 
     def server_disconnect(self):
 
+        scheduler.cancel(self.wishlist_timer_id)
         self.wishlist_interval = 0
 
         if self.ui_callback:
@@ -262,14 +265,10 @@ class Search:
 
     def do_wishlist_search_interval(self):
 
-        if self.wishlist_interval == 0:
-            log.add(_("Server does not permit performing wishlist searches at this time"))
-            return False
-
         searches = self.config.sections["server"]["autosearch"]
 
         if not searches:
-            return True
+            return
 
         # Search for a maximum of 1 item at each search interval
         term = searches.pop()
@@ -280,8 +279,6 @@ class Search:
                 search["ignore"] = False
                 self.do_wishlist_search(search["id"], term)
                 break
-
-        return True
 
     def add_wish(self, wish):
 
@@ -319,7 +316,15 @@ class Search:
         """ Server code: 104 """
 
         self.wishlist_interval = msg.seconds
-        log.add_search(_("Wishlist wait period set to %s seconds"), msg.seconds)
+
+        if self.wishlist_interval > 0:
+            log.add_search(_("Wishlist wait period set to %s seconds"), self.wishlist_interval)
+
+            scheduler.cancel(self.wishlist_timer_id)
+            self.wishlist_timer_id = scheduler.add(
+                delay=self.wishlist_interval, callback=self.do_wishlist_search_interval, repeat=True)
+        else:
+            log.add(_("Server does not permit performing wishlist searches at this time"))
 
         if self.ui_callback:
             self.ui_callback.set_wishlist_interval(msg)

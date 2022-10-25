@@ -204,6 +204,18 @@ class CheckUploadQueue(InternalMessage):
     should be checked. """
 
 
+class RetryDownloadLimits(InternalMessage):
+    pass
+
+
+class RetryFailedUploads(InternalMessage):
+    pass
+
+
+class SaveTransfers(InternalMessage):
+    pass
+
+
 class DownloadFile(InternalMessage):
     """ Sent by networking thread to indicate file transfer progress.
     Sent by UI to pass the file object to write. """

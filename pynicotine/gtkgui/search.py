@@ -277,7 +277,8 @@ class Searches(IconNotebook):
         pass
 
     def server_disconnect(self):
-        self.wish_list.server_disconnect()
+        # Not needed
+        pass
 
 
 class Search:

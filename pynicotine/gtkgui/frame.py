@@ -66,6 +66,7 @@ from pynicotine.gtkgui.widgets.trayicon import TrayIcon
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.gtkgui.widgets.window import Window
 from pynicotine.logfacility import log
+from pynicotine.scheduler import scheduler
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import get_latest_version
 from pynicotine.utils import human_speed
@@ -86,7 +87,7 @@ class NicotineFrame(Window):
         self.current_page_id = ""
         self.update_checker = None
         self.auto_away = False
-        self.away_timer = None
+        self.away_timer_id = None
         self.away_cooldown_time = 0
         self.gesture_click = None
         self.scan_progress_indeterminate = False
@@ -1495,11 +1496,11 @@ class NicotineFrame(Window):
     def set_away_mode(self, _is_away):
         self.update_user_status()
 
-    def set_auto_away(self, active):
+    def set_auto_away(self, active=True):
 
         if active:
             self.auto_away = True
-            self.away_timer = None
+            self.away_timer_id = None
 
             if self.core.user_status != UserStatus.AWAY:
                 self.core.set_away_mode(True)
@@ -1524,13 +1525,10 @@ class NicotineFrame(Window):
         away_interval = config.sections["server"]["autoaway"]
 
         if away_interval > 0:
-            self.away_timer = GLib.timeout_add_seconds(60 * away_interval, self.set_auto_away, True)
+            self.away_timer_id = scheduler.add(delay=(60 * away_interval), callback=self.set_auto_away)
 
     def remove_away_timer(self):
-
-        if self.away_timer is not None:
-            GLib.source_remove(self.away_timer)
-            self.away_timer = None
+        scheduler.cancel(self.away_timer_id)
 
     def on_cancel_auto_away(self, *_args):
 
