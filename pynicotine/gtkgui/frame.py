@@ -1596,7 +1596,7 @@ class NicotineFrame(Window):
             ("", None),
             (">" + _("_Log Categories"), popup_menu_log_categories),
             ("", None),
-            ("#" + _("Clear Log View"), self.log_view.on_clear_all_text)
+            ("#" + _("Clear Log View"), self.on_clear_log_view)
         )
 
     def log_callback(self, timestamp_format, msg, level):
@@ -1633,6 +1633,10 @@ class NicotineFrame(Window):
     @staticmethod
     def on_view_transfer_log(*_args):
         open_log(config.sections["logging"]["transferslogsdir"], "transfers")
+
+    def on_clear_log_view(self, *_args):
+        self.log_view.on_clear_all_text()
+        self.set_status_text("")
 
     @staticmethod
     def add_debug_level(debug_level):
