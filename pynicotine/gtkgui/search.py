@@ -244,6 +244,9 @@ class Searches(IconNotebook):
             mode_label = _("Wish")
             tab = self.create_tab(msg.token, search_term, mode, mode_label, showtab=False)
 
+            if config.sections["notifications"]["notification_popup_wish"]:
+                self.core.notifications.new_text_notification(search_term, title=_("Wishlist item found"))
+
         # No more things to add because we've reached the result limit
         if tab.num_results_found >= tab.max_limit:
             self.core.search.remove_allowed_token(msg.token)
