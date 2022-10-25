@@ -1842,6 +1842,7 @@
                 <child>
                   <object class="GtkButton" id="user_status_button">
                     <property name="visible">True</property>
+                    <property name="sensitive">False</property>
                     <signal name="clicked" handler="on_away"/>
                     <child>
                       <object class="GtkBox">
