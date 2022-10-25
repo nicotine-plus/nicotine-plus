@@ -805,32 +805,21 @@ class Search:
         else:
             parent = None
 
-        try:
-            """ Note that we use insert_with_values instead of append, as this reduces
-            overhead by bypassing useless row conversion to GObject.Value in PyGObject. """
+        # Note that we use insert_with_values instead of append, as this reduces
+        # overhead by bypassing useless row conversion to GObject.Value in PyGObject.
 
-            if parent is None:
-                iterator = self.resultsmodel.insert_with_valuesv(-1, self.column_numbers, row)
-            else:
-                iterator = self.resultsmodel.insert_with_values(parent, -1, self.column_numbers, row)
+        if parent is None:
+            iterator = self.resultsmodel.insert_with_valuesv(-1, self.column_numbers, row)
+        else:
+            iterator = self.resultsmodel.insert_with_values(parent, -1, self.column_numbers, row)
 
-            if expand_user:
-                self.tree_view.expand_row(self.resultsmodel.get_path(self.usersiters[user]), False)
+        if expand_user:
+            self.tree_view.expand_row(self.resultsmodel.get_path(self.usersiters[user]), False)
 
-            if expand_folder:
-                self.tree_view.expand_row(self.resultsmodel.get_path(self.directoryiters[user_directory]), False)
+        if expand_folder:
+            self.tree_view.expand_row(self.resultsmodel.get_path(self.directoryiters[user_directory]), False)
 
-            self.num_results_visible += 1
-
-        except Exception as error:
-            types = []
-
-            for i in row:
-                types.append(type(i))
-
-            log.add("Search row error: %(exception)s %(row)s", {'exception': error, 'row': row})
-            iterator = None
-
+        self.num_results_visible += 1
         return iterator
 
     """ Result Filters """

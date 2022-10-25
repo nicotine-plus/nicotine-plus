@@ -45,7 +45,6 @@ from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.treeview import save_columns
 from pynicotine.gtkgui.widgets.treeview import show_file_path_tooltip
 from pynicotine.gtkgui.widgets.ui import UserInterface
-from pynicotine.logfacility import log
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import get_result_bitrate_length
 from pynicotine.utils import human_size
