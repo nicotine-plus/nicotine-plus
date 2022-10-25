@@ -757,12 +757,8 @@ class UserBrowse:
         self.core.userbrowse.download_folder(self.user, self.selected_folder, self.shares, prefix="", recurse=True)
 
     def on_download_directory_to_selected(self, selected, recurse):
-
-        try:
-            self.core.userbrowse.download_folder(self.user, self.selected_folder, self.shares,
-                                                 prefix=os.path.join(selected, ""), recurse=recurse)
-        except OSError:  # failed to open
-            log.add('Failed to open %r for reading', selected)  # notify user
+        self.core.userbrowse.download_folder(self.user, self.selected_folder, self.shares,
+                                             prefix=os.path.join(selected, ""), recurse=recurse)
 
     def on_download_directory_to(self, *_args, recurse=False):
 
@@ -1000,11 +996,7 @@ class UserBrowse:
             self.core.userbrowse.download_file(self.user, folder, file_data, prefix=prefix)
 
     def on_download_files_to_selected(self, selected, _data):
-
-        try:
-            self.on_download_files(prefix=selected)
-        except OSError:  # failed to open
-            log.add('failed to open %r for reading', selected)  # notify user
+        self.on_download_files(prefix=selected)
 
     def on_download_files_to(self, *_args):
 
