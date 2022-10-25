@@ -31,6 +31,7 @@ class Scheduler(Thread):
 
         super().__init__(name="SchedulerThread", daemon=True)
         self._scheduler = sched.scheduler()
+        self._event_id = 0
         self._events = {}
 
         self.start()
@@ -49,16 +50,16 @@ class Scheduler(Thread):
 
     def add(self, delay, callback, repeat=False):
 
-        event_id = ''.join(random.choice(string.digits) for _ in range(8))
+        self._event_id += 1
 
         if repeat:
-            self._add_repeat(delay, callback, event_id)
+            self._add_repeat(delay, callback, self._event_id)
 
         else:
-            self._events[event_id] = self._scheduler.enter(
-                delay=delay, priority=1, action=self._callback_one_time, argument=(callback, event_id))
+            self._events[self._event_id] = self._scheduler.enter(
+                delay=delay, priority=1, action=self._callback_one_time, argument=(callback, self._event_id))
 
-        return event_id
+        return self._event_id
 
     def cancel(self, event_id):
 
