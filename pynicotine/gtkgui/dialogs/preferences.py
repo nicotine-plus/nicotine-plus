@@ -2215,9 +2215,8 @@ class PluginsFrame:
 
         self.PluginProperties.set_sensitive(False)
 
-    @staticmethod
-    def on_add_plugins(*_args):
-        open_file_path(config.plugin_dir, create_folder=True)
+    def on_add_plugins(self, *_args):
+        open_file_path(self.core.pluginhandler.user_plugin_folder, create_folder=True)
 
     def on_plugin_properties(self, *_args):
 
