@@ -80,6 +80,23 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
 | 0    | Download from Peer |
 | 1    | Upload to Peer     |
 
+### Transfer Status Strings
+
+| String                | Comments                                    |
+| --------------------- | ------------------------------------------- |
+| Banned                |                                             |
+| Blocked country       |                                             |
+| Cancelled             |                                             |
+| Complete              |                                             |
+| Disallowed extension  | Sent by Soulseek NS for filtered extensions |
+| File not shared       |                                             |
+| File not shared.      | Newer variant containing a dot              |
+| Pending shutdown.     |                                             |
+| Queued                |                                             |
+| Remote file error     |                                             |
+| Too many files        |                                             |
+| Too many megabytes    |                                             |
+
 ### File Attribute Types
 
 | Code | Attribute (unit)   |
@@ -2236,13 +2253,13 @@ We (or the other peer) either agrees, or tells the reason for rejecting the file
     2.  **bool** <ins>allowed</ins>
     3.  Check contents of <ins>allowed</ins>
           - **uint64** <ins>filesize</ins> *if allowed == 1*
-          - **string** <ins>reason</ins> *if allowed == 0*
+          - **string** <ins>reason</ins> *if allowed == 0* ; *see [Transfer Status Strings](#transfer-status-strings)*
   - Receive
     1.  **uint32** <ins>token</ins>
     2.  **bool** <ins>allowed</ins>
     3.  Check contents of <ins>allowed</ins>
           - **uint64** <ins>filesize</ins> *if allowed == 1*
-          - **string** <ins>reason</ins> *if allowed == 0*
+          - **string** <ins>reason</ins> *if allowed == 0* ; *see [Transfer Status Strings](#transfer-status-strings)*
 
 ## Peer Code 41 b
 
@@ -2258,12 +2275,12 @@ We (or the other peer) either agrees, or tells the reason for rejecting the file
     1.  **uint32** <ins>token</ins>
     2.  **bool** <ins>allowed</ins>
     3.  Check contents of <ins>allowed</ins>
-          - **string** <ins>reason</ins> *if allowed == 0*
+          - **string** <ins>reason</ins> *if allowed == 0* ; *see [Transfer Status Strings](#transfer-status-strings)*
   - Receive
     1.  **uint32** <ins>token</ins>
     2.  **bool** <ins>allowed</ins>
     3.  Check contents of <ins>allowed</ins>
-          - **string** <ins>reason</ins> *if allowed == 0*
+          - **string** <ins>reason</ins> *if allowed == 0* ; *see [Transfer Status Strings](#transfer-status-strings)*
 
 ## Peer Code 42
 
@@ -2329,10 +2346,10 @@ This message is sent to reject [QueueUpload](#peer-code-43) attempts and previou
 
   - Send
     1.  **string** <ins>filename</ins>
-    2.  **string** <ins>reason</ins>
+    2.  **string** <ins>reason</ins> *see [Transfer Status Strings](#transfer-status-strings)*
   - Receive
     1.  **string** <ins>filename</ins>
-    2.  **string** <ins>reason</ins>
+    2.  **string** <ins>reason</ins> *see [Transfer Status Strings](#transfer-status-strings)*
 
 ## Peer Code 51
 
@@ -2415,6 +2432,8 @@ We send this to a peer via a 'F' connection to tell them that we want to start u
 ### FileOffset
 
 We send this to the uploading peer at the beginning of a 'F' connection, to tell them how many bytes of the file we've previously downloaded. If none, the offset is 0.
+
+Soulseek NS fails to read the size of an incomplete file if more than 2 GB of the file has been downloaded by them, and their download pauses and later resumes. The legacy client then sends us an invalid file offset of -1.
 
 ### Data Order
 
