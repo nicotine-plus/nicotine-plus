@@ -336,16 +336,16 @@ class PluginHandler:
         self.core = core
         self.config = config
 
-        self.plugindirs = []
+        self.plugin_folders = []
         self.enabled_plugins = {}
         self.command_source = None
 
         # Load system-wide plugins
         prefix = os.path.dirname(os.path.realpath(__file__))
-        self.plugindirs.append(os.path.join(prefix, "plugins"))
+        self.plugin_folders.append(os.path.join(prefix, "plugins"))
 
         # Load home directory plugins
-        self.plugindirs.append(config.plugin_dir)
+        self.plugin_folders.append(os.path.join(config.data_dir, "plugins"))
 
         BasePlugin.parent = self
         BasePlugin.config = self.config
@@ -376,7 +376,7 @@ class PluginHandler:
 
     def get_plugin_path(self, plugin_name):
 
-        for folder_path in self.plugindirs:
+        for folder_path in self.plugin_folders:
             file_path = os.path.join(folder_path, plugin_name)
 
             if os.path.isdir(encode_path(file_path)):
@@ -482,7 +482,7 @@ class PluginHandler:
 
         plugin_list = []
 
-        for folder_path in self.plugindirs:
+        for folder_path in self.plugin_folders:
             try:
                 for entry in os.scandir(encode_path(folder_path)):
                     file_path = entry.name.decode("utf-8", "replace")

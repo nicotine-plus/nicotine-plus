@@ -40,11 +40,7 @@ def check_arguments():
     )
     parser.add_argument(
         "-u", "--user-data", metavar=_("dir"),
-        help=_("use non-default user data directory for e.g. list of downloads")
-    )
-    parser.add_argument(
-        "-p", "--plugins", metavar=_("dir"),
-        help=_("use non-default directory for plugins")
+        help=_("alternative directory for user data and plugins")
     )
     parser.add_argument(
         "-s", "--hidden", action="store_true",
@@ -85,9 +81,6 @@ def check_arguments():
 
     if args.user_data:
         config.data_dir = args.user_data
-
-    if args.plugins:
-        config.plugin_dir = args.plugins
 
     return args.headless, args.hidden, args.bindip, args.port, args.ci_mode, args.rescan, multi_instance
 
