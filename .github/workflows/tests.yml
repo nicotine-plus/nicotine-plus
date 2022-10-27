@@ -8,7 +8,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-20.04, ubuntu-22.04]
-        python: ['3.6', '3.7', '3.8', '3.9', '3.10', 'pypy-3.6', 'pypy-3.7', 'pypy-3.8', 'pypy-3.9']
+        python: ['3.6', '3.7', '3.8', '3.9', '3.10', '3.11', pypy-3.6', 'pypy-3.7', 'pypy-3.8', 'pypy-3.9']
         gtk: [3, 4]
         exclude:
           - os: ubuntu-20.04
