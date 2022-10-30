@@ -273,6 +273,29 @@ class BaseImplementation:
 
 class StatusNotifierImplementation(BaseImplementation):
 
+    class DBusProperty:
+
+        def __init__(self, name, signature, value):
+
+            self.name = name
+            self.signature = signature
+            self.value = value
+
+    class DBusSignal:
+
+        def __init__(self, name, args):
+            self.name = name
+            self.args = args
+
+    class DBusMethod:
+
+        def __init__(self, name, in_args, out_args, callback):
+
+            self.name = name
+            self.in_args = in_args
+            self.out_args = out_args
+            self.callback = callback
+
     class DBusService:
 
         def __init__(self, interface_name, object_path, bus_type):
@@ -281,34 +304,32 @@ class StatusNotifierImplementation(BaseImplementation):
             self._object_path = object_path
 
             self._bus = Gio.bus_get_sync(bus_type)
-            self._property_signatures = {}
-            self._property_values = {}
-            self._signal_signatures = {}
-            self._method_signatures = {}
-            self._method_callbacks = {}
             self._registration_id = None
+            self.properties = {}
+            self.signals = {}
+            self.methods = {}
 
         def register(self):
 
             xml_output = "<node name='/'><interface name='%s'>" % self._interface_name
 
-            for property_name, signature in self._property_signatures.items():
-                xml_output += "<property name='%s' type='%s' access='read'/>" % (property_name, signature)
+            for property_name, prop in self.properties.items():
+                xml_output += "<property name='%s' type='%s' access='read'/>" % (property_name, prop.signature)
 
-            for method_name, (in_args, out_args) in self._method_signatures.items():
+            for method_name, method in self.methods.items():
                 xml_output += "<method name='%s'>" % method_name
 
-                for in_signature in in_args:
+                for in_signature in method.in_args:
                     xml_output += "<arg type='%s' direction='in'/>" % in_signature
-                for out_signature in out_args:
+                for out_signature in method.out_args:
                     xml_output += "<arg type='%s' direction='out'/>" % out_signature
 
                 xml_output += "</method>"
 
-            for signal_name, args in self._signal_signatures.items():
+            for signal_name, signal in self.signals.items():
                 xml_output += "<signal name='%s'>" % signal_name
 
-                for signature in args:
+                for signature in signal.args:
                     xml_output += "<arg type='%s'/>" % signature
 
                 xml_output += "</signal>"
@@ -336,26 +357,6 @@ class StatusNotifierImplementation(BaseImplementation):
             self._bus.unregister_object(self._registration_id)
             self._registration_id = None
 
-        def _add_property(self, name, signature):
-            self._property_signatures[name] = signature
-            self._property_values[name] = None
-
-        def _remove_property(self, name):
-            del self._property_signatures[name]
-            del self._property_values[name]
-
-        def set_property_value(self, name, value):
-            self._property_values[name] = value
-
-        def get_property_value(self, name):
-            return self._property_values[name]
-
-        def _add_signal(self, name, signature):
-            self._signal_signatures[name] = signature
-
-        def _remove_signal(self, name):
-            del self._signal_signatures[name]
-
         def emit_signal(self, name, *args):
 
             self._bus.emit_signal(
@@ -363,35 +364,23 @@ class StatusNotifierImplementation(BaseImplementation):
                 self._object_path,
                 self._interface_name,
                 name,
-                GLib.Variant("(%s)" % "".join(self._signal_signatures[name]), args)
+                GLib.Variant("(%s)" % "".join(self.signals[name].args), args)
             )
-
-        def _add_method(self, name, in_args, out_args, callback):
-            self._method_signatures[name] = (in_args, out_args)
-            self._method_callbacks[name] = callback
-
-        def _remove_method(self, name):
-            del self._method_signatures[name]
-            del self._method_callbacks[name]
 
         def on_method_call(self, _connection, _sender, _path, _interface_name, method_name, parameters, invocation):
 
-            _in_args, out_args = self._method_signatures[method_name]
-            callback = self._method_callbacks[method_name]
-            result = callback(*parameters.unpack())
+            method = self.methods[method_name]
+            result = method.callback(*parameters.unpack())
             return_value = None
 
-            if out_args:
-                return_value = GLib.Variant("(%s)" % "".join(out_args), result)
+            if method.out_args:
+                return_value = GLib.Variant("(%s)" % "".join(method.out_args), result)
 
             invocation.return_value(return_value)
 
         def on_get_property(self, _connection, _sender, _path, _interface_name, property_name):
-
-            return GLib.Variant(
-                self._property_signatures[property_name],
-                self._property_values[property_name]
-            )
+            prop = self.properties[property_name]
+            return GLib.Variant(prop.signature, prop.value)
 
     class DBusMenuService(DBusService):
 
@@ -411,12 +400,13 @@ class StatusNotifierImplementation(BaseImplementation):
                 ("GetLayout", ("i", "i", "as"), ("u", "(ia{sv}av)"), self.on_get_layout),
                 ("Event", ("i", "s", "v", "u"), (), self.on_event),
             ):
-                self._add_method(method_name, in_args, out_args, callback)
+                self.methods[method_name] = StatusNotifierImplementation.DBusMethod(
+                    method_name, in_args, out_args, callback)
 
             for signal_name, value in (
                 ("LayoutUpdated", ("u", "i")),
             ):
-                self._add_signal(signal_name, value)
+                self.signals[signal_name] = StatusNotifierImplementation.DBusSignal(signal_name, value)
 
         def set_items(self, items):
 
@@ -482,43 +472,32 @@ class StatusNotifierImplementation(BaseImplementation):
 
             self.menu = StatusNotifierImplementation.DBusMenuService()
 
-            for property_name, signature in (
-                ("Category", "s"),
-                ("Id", "s"),
-                ("Title", "s"),
-                ("ToolTip", "(sa(iiay)ss)"),
-                ("Menu", "o"),
-                ("ItemIsMenu", "b"),
-                ("IconName", "s"),
-                ("IconThemePath", "s"),
-                ("Status", "s")
+            for property_name, signature, value in (
+                ("Category", "s", "Communications"),
+                ("Id", "s", config.application_id),
+                ("Title", "s", config.application_name),
+                ("ToolTip", "(sa(iiay)ss)", ("", [], config.application_name, "")),
+                ("Menu", "o", "/org/ayatana/NotificationItem/Nicotine/Menu"),
+                ("ItemIsMenu", "b", False),
+                ("IconName", "s", ""),
+                ("IconThemePath", "s", ""),
+                ("Status", "s", "Active")
             ):
-                self._add_property(property_name, signature)
-
-            for property_name, value in (
-                ("Category", "Communications"),
-                ("Id", config.application_id),
-                ("Title", config.application_name),
-                ("ToolTip", ("", [], config.application_name, "")),
-                ("Menu", "/org/ayatana/NotificationItem/Nicotine/Menu"),
-                ("ItemIsMenu", False),
-                ("IconName", ""),
-                ("IconThemePath", ""),
-                ("Status", "Active")
-            ):
-                self.set_property_value(property_name, value)
+                self.properties[property_name] = StatusNotifierImplementation.DBusProperty(
+                    property_name, signature, value)
 
             for method_name, in_args, out_args, callback in (
                 ("Activate", ("i", "i"), (), activate_callback),
             ):
-                self._add_method(method_name, in_args, out_args, callback)
+                self.methods[method_name] = StatusNotifierImplementation.DBusMethod(
+                    method_name, in_args, out_args, callback)
 
             for signal_name, value in (
                 ("NewIcon", ()),
                 ("NewIconThemePath", ("s",)),
                 ("NewStatus", ("s",))
             ):
-                self._add_signal(signal_name, value)
+                self.signals[signal_name] = StatusNotifierImplementation.DBusSignal(signal_name, value)
 
         def register(self):
             self.menu.register()
@@ -613,14 +592,14 @@ class StatusNotifierImplementation(BaseImplementation):
             # Use alternative icon names to enforce custom icons, since system-wide icons take precedence
             icon_name = icon_name.replace(config.application_id, "nplus-tray")
 
-        self.tray_icon.set_property_value("IconName", icon_name)
+        self.tray_icon.properties["IconName"].value = icon_name
         self.tray_icon.emit_signal("NewIcon")
 
     def update_icon_theme(self):
 
         # If custom icon path was found, use it, otherwise we fall back to system icons
         icon_path = self.get_icon_path()
-        self.tray_icon.set_property_value("IconThemePath", icon_path)
+        self.tray_icon.properties["IconThemePath"].value = icon_path
         self.tray_icon.emit_signal("NewIconThemePath", icon_path)
 
         self.update_icon()
@@ -632,18 +611,18 @@ class StatusNotifierImplementation(BaseImplementation):
         self.tray_icon.menu.set_items(self.menu_items)
 
     def is_visible(self):
-        return self.tray_icon.get_property_value("Status") == "Active"
+        return self.tray_icon.properties["Status"].value == "Active"
 
     def show(self):
 
         status = "Active"
-        self.tray_icon.set_property_value("Status", status)
+        self.tray_icon.properties["Status"].value = status
         self.tray_icon.emit_signal("NewStatus", status)
 
     def hide(self):
 
         status = "Passive"
-        self.tray_icon.set_property_value("Status", status)
+        self.tray_icon.properties["Status"].value = status
         self.tray_icon.emit_signal("NewStatus", status)
 
 
