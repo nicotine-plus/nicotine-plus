@@ -357,6 +357,15 @@ class StatusNotifierImplementation(BaseImplementation):
             self._bus.unregister_object(self._registration_id)
             self._registration_id = None
 
+        def add_property(self, name, signature, value):
+            self.properties[name] = StatusNotifierImplementation.DBusProperty(name, signature, value)
+
+        def add_signal(self, name, args):
+            self.signals[name] = StatusNotifierImplementation.DBusSignal(name, args)
+
+        def add_method(self, name, in_args, out_args, callback):
+            self.methods[name] = StatusNotifierImplementation.DBusMethod(name, in_args, out_args, callback)
+
         def emit_signal(self, name, *args):
 
             self._bus.emit_signal(
@@ -400,13 +409,12 @@ class StatusNotifierImplementation(BaseImplementation):
                 ("GetLayout", ("i", "i", "as"), ("u", "(ia{sv}av)"), self.on_get_layout),
                 ("Event", ("i", "s", "v", "u"), (), self.on_event),
             ):
-                self.methods[method_name] = StatusNotifierImplementation.DBusMethod(
-                    method_name, in_args, out_args, callback)
+                self.add_method(method_name, in_args, out_args, callback)
 
             for signal_name, value in (
                 ("LayoutUpdated", ("u", "i")),
             ):
-                self.signals[signal_name] = StatusNotifierImplementation.DBusSignal(signal_name, value)
+                self.add_signal(signal_name, value)
 
         def set_items(self, items):
 
@@ -483,21 +491,19 @@ class StatusNotifierImplementation(BaseImplementation):
                 ("IconThemePath", "s", ""),
                 ("Status", "s", "Active")
             ):
-                self.properties[property_name] = StatusNotifierImplementation.DBusProperty(
-                    property_name, signature, value)
+                self.add_property(property_name, signature, value)
 
             for method_name, in_args, out_args, callback in (
                 ("Activate", ("i", "i"), (), activate_callback),
             ):
-                self.methods[method_name] = StatusNotifierImplementation.DBusMethod(
-                    method_name, in_args, out_args, callback)
+                self.add_method(method_name, in_args, out_args, callback)
 
             for signal_name, value in (
                 ("NewIcon", ()),
                 ("NewIconThemePath", ("s",)),
                 ("NewStatus", ("s",))
             ):
-                self.signals[signal_name] = StatusNotifierImplementation.DBusSignal(signal_name, value)
+                self.add_signal(signal_name, value)
 
         def register(self):
             self.menu.register()
