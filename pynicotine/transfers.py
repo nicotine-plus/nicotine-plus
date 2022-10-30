@@ -2552,11 +2552,19 @@ class Statistics:
         self.ui_callback = None
         self.session_stats = {}
 
+        # Only populate total since date on first run
+        if (not self.config.sections["statistics"]["since_timestamp"]
+                and config.sections["statistics"] == config.defaults["statistics"]):
+            self.config.sections["statistics"]["since_timestamp"] = int(time.time())
+
+        for stat_id in self.config.defaults["statistics"]:
+            self.session_stats[stat_id] = 0 if stat_id != "since_timestamp" else int(time.time())
+
         if hasattr(ui_callback, "statistics"):
             self.ui_callback = ui_callback.statistics
 
-        for stat_id in self.config.defaults["statistics"]:
-            self.session_stats[stat_id] = 0
+            for stat_id in config.defaults["statistics"]:
+                self.update_ui(stat_id)
 
     def append_stat_value(self, stat_id, stat_value):
 
@@ -2567,13 +2575,14 @@ class Statistics:
     def update_ui(self, stat_id):
 
         if self.ui_callback:
-            stat_value = self.session_stats[stat_id]
-            self.ui_callback.update_stat_value(stat_id, stat_value)
+            session_stat_value = self.session_stats[stat_id]
+            total_stat_value = self.config.sections["statistics"][stat_id]
+            self.ui_callback.update_stat_value(stat_id, session_stat_value, total_stat_value)
 
     def reset_stats(self):
 
         for stat_id in self.config.defaults["statistics"]:
-            self.session_stats[stat_id] = 0
-            self.config.sections["statistics"][stat_id] = 0
+            stat_value = 0 if stat_id != "since_timestamp" else int(time.time())
+            self.session_stats[stat_id] = self.config.sections["statistics"][stat_id] = stat_value
 
             self.update_ui(stat_id)

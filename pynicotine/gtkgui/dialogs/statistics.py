@@ -16,9 +16,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import time
+
 from gi.repository import Gtk
 
-from pynicotine.config import config
 from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.ui import UserInterface
@@ -44,6 +45,7 @@ class Statistics(Dialog):
             self.downloaded_size_session_label,
             self.downloaded_size_total_label,
             self.reset_button,
+            self.since_timestamp_total_label,
             self.started_downloads_session_label,
             self.started_downloads_total_label,
             self.started_uploads_session_label,
@@ -63,23 +65,26 @@ class Statistics(Dialog):
             close_destroy=False
         )
 
-        # Initialize stats
-        for stat_id in config.defaults["statistics"]:
-            self.update_stat_value(stat_id, 0)
-
-    def update_stat_value(self, stat_id, session_value):
-
-        total_value = config.sections["statistics"][stat_id]
+    def update_stat_value(self, stat_id, session_value, total_value):
 
         if stat_id in ("downloaded_size", "uploaded_size"):
             session_value = human_size(session_value)
             total_value = human_size(total_value)
+
+        elif stat_id == "since_timestamp":
+            session_value = None
+            total_value = (_("Total Since %(date)s") % {
+                "date": time.strftime("%x", time.localtime(total_value))} if total_value > 0 else None)
+
         else:
             session_value = humanize(session_value)
             total_value = humanize(total_value)
 
-        getattr(self, stat_id + "_session_label").set_text(session_value)
-        getattr(self, stat_id + "_total_label").set_text(total_value)
+        if session_value is not None:
+            getattr(self, stat_id + "_session_label").set_text(session_value)
+
+        if total_value is not None:
+            getattr(self, stat_id + "_total_label").set_text(total_value)
 
     def on_reset_statistics_response(self, _dialog, response_id, _data):
         if response_id == 2:

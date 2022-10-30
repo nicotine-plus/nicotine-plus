@@ -435,6 +435,7 @@ class Config:
                 "enabled": []
             },
             "statistics": {
+                "since_timestamp": 0,
                 "started_downloads": 0,
                 "completed_downloads": 0,
                 "downloaded_size": 0,

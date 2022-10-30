@@ -206,7 +206,7 @@
           </object>
         </child>
         <child>
-          <object class="GtkLabel">
+          <object class="GtkLabel" id="since_timestamp_total_label">
             <property name="visible">True</property>
             <property name="label" translatable="yes">Total</property>
             <property name="selectable">True</property>
