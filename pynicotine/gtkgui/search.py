@@ -828,15 +828,28 @@ class Search:
 
     """ Result Filters """
 
+    @staticmethod
+    def split_condition(condition):
+        """ Split the operator apart from the digit """
+
+        if condition.startswith((">=", "<=", "==", "!=")):
+            return condition[:2], condition[2:]
+
+        elif condition.startswith((">", "<")):
+            return condition[:1], condition[1:]
+
+        elif condition.startswith(("=", "!")):
+            return condition[:1] + "=", condition[1:]
+
+        return ">=", condition
+
     def check_digit(self, result_filter, value, file_size=False):
+        """ Check if all conditions in result_filter match value """
 
         allowed = blocked = False
 
         for condition in result_filter:
-            if condition.startswith((">", "<", "=", "!")):
-                used_operator, digit = condition[:1] + "=", condition[1:]
-            else:
-                used_operator, digit = ">=", condition
+            operator, digit = self.split_condition(condition)
 
             if file_size:
                 digit, factor = factorize(digit)  # File Size
@@ -858,20 +871,20 @@ class Search:
             if digit is None:
                 continue
 
-            if factor > 1 and used_operator in ("==", "!="):
+            if factor > 1 and operator in ("==", "!="):
                 # Exact match is unlikely, so approximate within +/- 0.1 MiB or 1 MiB if over 100 MiB
                 adjust = factor / 8 if factor > 1024 and digit < 104857600 else factor  # TODO: GiB
 
                 if (digit - adjust) <= value <= (digit + adjust):
-                    if used_operator == "!=":
+                    if operator == "!=":
                         return False
 
                     return True
 
-                allowed = used_operator == "!="
+                allowed = operator == "!="
                 continue
 
-            operation = self.operators.get(used_operator)
+            operation = self.operators.get(operator)
 
             if operation(value, digit) and not blocked:
                 allowed = True
