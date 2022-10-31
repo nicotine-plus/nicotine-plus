@@ -77,9 +77,9 @@ class Scanner:
     """ Separate process responsible for building shares. It handles scanning of
     folders and files, as well as building databases and writing them to disk. """
 
-    def __init__(self, config, queue, shared_folders, share_db_paths, init=False, rescan=True, rebuild=False):
+    def __init__(self, config_obj, queue, shared_folders, share_db_paths, init=False, rescan=True, rebuild=False):
 
-        self.config = config
+        self.config = config_obj
         self.queue = queue
         self.shared_folders, self.shared_buddy_folders = shared_folders
         self.share_dbs = {}
