@@ -133,7 +133,7 @@ class NowPlaying:
             user, apikey = user.split(';')
 
         except ValueError:
-            log.add_important_error(_("Last.fm: Please provide both your Last.fm username and API key"))
+            log.add(_("Last.fm: Please provide both your Last.fm username and API key"), title=_("Now Playing Error"))
             return None
 
         try:
@@ -143,7 +143,8 @@ class NowPlaying:
                 headers={"User-Agent": self.config.application_name})
 
         except Exception as error:
-            log.add_important_error(_("Last.fm: Could not connect to Audioscrobbler: %(error)s"), {"error": error})
+            log.add(_("Last.fm: Could not connect to Audioscrobbler: %(error)s"), {"error": error},
+                    title=_("Now Playing Error"))
             return None
 
         try:
@@ -165,8 +166,8 @@ class NowPlaying:
                 _("Last played"), self.title["artist"], self.title["album"], self.title["title"])
 
         except Exception:
-            log.add_important_error(_("Last.fm: Could not get recent track from Audioscrobbler: %(error)s"),
-                                    {"error": response})
+            log.add(_("Last.fm: Could not get recent track from Audioscrobbler: %(error)s"),
+                    {"error": response}, title=_("Now Playing Error"))
             return None
 
         return True
@@ -198,7 +199,7 @@ class NowPlaying:
                     players.append(name[len(dbus_mpris_service):])
 
             if not players:
-                log.add_important_error(_("MPRIS: Could not find a suitable MPRIS player"))
+                log.add(_("MPRIS: Could not find a suitable MPRIS player"), title=_("Now Playing Error"))
                 return None
 
             player = players[0]
@@ -217,8 +218,8 @@ class NowPlaying:
             metadata = dbus_proxy.Get('(ss)', dbus_mpris_player_service, 'Metadata')
 
         except Exception as error:
-            log.add_important_error(_("MPRIS: Something went wrong while querying %(player)s: %(exception)s"),
-                                    {'player': player, 'exception': error})
+            log.add(_("MPRIS: Something went wrong while querying %(player)s: %(exception)s"),
+                    {'player': player, 'exception': error}, title=_("Now Playing Error"))
             return None
 
         self.title['program'] = player
@@ -264,7 +265,7 @@ class NowPlaying:
         """ Function to get the currently playing song via ListenBrainz API """
 
         if not username:
-            log.add_important_error(_("ListenBrainz: Please provide your ListenBrainz username"))
+            log.add(_("ListenBrainz: Please provide your ListenBrainz username"), title=_("Now Playing Error"))
             return None
 
         try:
@@ -273,14 +274,16 @@ class NowPlaying:
                                     headers={'User-Agent': self.config.application_name})
 
         except Exception as error:
-            log.add_important_error(_("ListenBrainz: Could not connect to ListenBrainz: %(error)s"), {'error': error})
+            log.add(_("ListenBrainz: Could not connect to ListenBrainz: %(error)s"), {'error': error},
+                    title=_("Now Playing Error"))
             return None
 
         try:
             json_api = json.loads(response)['payload']
 
             if not json_api['playing_now']:
-                log.add_important_error(_("ListenBrainz: You don\'t seem to be listening to anything right now"))
+                log.add(_("ListenBrainz: You don\'t seem to be listening to anything right now"),
+                        title=_("Now Playing Error"))
                 return None
 
             track = json_api['listens'][0]['track_metadata']
@@ -294,8 +297,8 @@ class NowPlaying:
             return True
 
         except Exception:
-            log.add_important_error(_("ListenBrainz: Could not get current track from ListenBrainz: %(error)s"),
-                                    {'error': str(response)})
+            log.add(_("ListenBrainz: Could not get current track from ListenBrainz: %(error)s"),
+                    {'error': str(response)}, title=_("Now Playing Error"))
         return None
 
     def other(self, command):
@@ -309,6 +312,6 @@ class NowPlaying:
             return True
 
         except Exception as error:
-            log.add_important_error(_("Executing '%(command)s' failed: %(error)s"),
-                                    {"command": command, "error": error})
+            log.add(_("Executing '%(command)s' failed: %(error)s"),
+                    {"command": command, "error": error}, title=_("Now Playing Error"))
             return None

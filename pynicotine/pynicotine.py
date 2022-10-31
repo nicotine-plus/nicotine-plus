@@ -53,6 +53,7 @@ from pynicotine.slskmessages import LoginFailure
 from pynicotine.slskmessages import UserStatus
 from pynicotine.transfers import Statistics
 from pynicotine.transfers import Transfers
+from pynicotine.updatechecker import UpdateChecker
 from pynicotine.userbrowse import UserBrowse
 from pynicotine.userinfo import UserInfo
 from pynicotine.userlist import UserList
@@ -82,6 +83,7 @@ class NicotineCore:
         self.protothread = None
         self.geoip = None
         self.notifications = None
+        self.update_checker = None
 
         # Handle Ctrl+C and "kill" exit gracefully
         for signal_type in (signal.SIGINT, signal.SIGTERM):
@@ -128,6 +130,7 @@ class NicotineCore:
         self.network_filter = NetworkFilter(self, config, self.queue, self.geoip)
         self.now_playing = NowPlaying(config)
         self.statistics = Statistics(config, ui_callback)
+        self.update_checker = UpdateChecker()
 
         self.shares = Shares(self, config, self.queue, self.network_callback, ui_callback)
         self.search = Search(self, config, self.queue, self.shares.share_dbs, self.geoip, ui_callback)
@@ -324,7 +327,7 @@ class NicotineCore:
                 "The network interface you specified, '%s', does not exist. Change or remove the specified "
                 "network interface and restart Nicotine+."
             )
-            log.add_important_error(message, self.protothread.interface)
+            log.add(message, self.protothread.interface, title=_("Unknown Network Interface"))
             return False
 
         valid_listen_port = self.protothread.validate_listen_port()
@@ -341,7 +344,7 @@ class NicotineCore:
                     "Note that part of your range lies below 1024, this is usually not allowed on"
                     " most operating systems with the exception of Windows."
                 )
-            log.add_important_error(message)
+            log.add(message, title=_("Port Unavailable"))
             return False
 
         # Clear any potential messages queued up while offline
@@ -543,7 +546,7 @@ class NicotineCore:
                 self.ui_callback.invalid_password()
                 return
 
-            log.add_important_error(_("Unable to connect to the server. Reason: %s"), msg.reason)
+            log.add(_("Unable to connect to the server. Reason: %s"), msg.reason, title=_("Cannot Connect"))
 
     def get_peer_address(self, msg):
         """ Server code: 3 """
@@ -586,12 +589,12 @@ class NicotineCore:
             log.add(_("Cannot retrieve the IP of user %s, since this user is offline"), user)
             return
 
-        log.add(_("IP address of user %(user)s is %(ip)s, port %(port)i%(country)s"), {
+        log.add(_("IP address of user %(user)s: %(ip)s, port %(port)i%(country)s"), {
             'user': user,
             'ip': msg.ip_address,
             'port': msg.port,
             'country': country
-        })
+        }, title=_("IP Address"))
 
     def add_user(self, msg):
         """ Server code: 5 """
@@ -678,7 +681,7 @@ class NicotineCore:
     def admin_message(msg):
         """ Server code: 66 """
 
-        log.add_important_info(msg.msg)
+        log.add(msg.msg, title=_("Soulseek Announcement"))
 
     def privileged_users(self, msg):
         """ Server code: 69 """
@@ -721,4 +724,4 @@ class NicotineCore:
         config.sections["server"]["passw"] = password
         config.write_configuration()
 
-        log.add_important_info(_("Your password has been changed"))
+        log.add(_("Your password has been changed"), title=_("Password Changed"))
