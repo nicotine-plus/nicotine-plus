@@ -828,20 +828,19 @@ class Search:
 
     """ Result Filters """
 
-    @staticmethod
-    def split_condition(condition):
+    def split_condition(self, condition):
         """ Split the operator apart from the digit """
 
         if condition.startswith((">=", "<=", "==", "!=")):
-            return condition[:2], condition[2:]
+            return self.operators.get(condition[:2]), condition[2:]
 
-        elif condition.startswith((">", "<")):
-            return condition[:1], condition[1:]
+        if condition.startswith((">", "<")):
+            return self.operators.get(condition[:1]), condition[1:]
 
-        elif condition.startswith(("=", "!")):
-            return condition[:1] + "=", condition[1:]
+        if condition.startswith(("=", "!")):
+            return self.operators.get(condition[:1] + "="), condition[1:]
 
-        return ">=", condition
+        return self.operators.get(">="), condition
 
     def check_digit(self, result_filter, value, file_size=False):
         """ Check if all conditions in result_filter match value """
@@ -849,7 +848,7 @@ class Search:
         allowed = blocked = False
 
         for condition in result_filter:
-            operator, digit = self.split_condition(condition)
+            operation, digit = self.split_condition(condition)
 
             if file_size:
                 digit, factor = factorize(digit)  # File Size
@@ -877,14 +876,12 @@ class Search:
             else:
                 adjust = 0
 
-            if operator in ("==", "!="):
+            if operation in (operator.eq, operator.ne):
                 if (digit - adjust) <= value <= (digit + adjust):
-                    return (operator == "==")
+                    return bool(operation is operator.eq)
 
-                allowed = (operator == "!=")
+                allowed = bool(operation is operator.ne)
                 continue
-
-            operation = self.operators.get(operator)
 
             if operation(value, digit) and not blocked:
                 allowed = True
