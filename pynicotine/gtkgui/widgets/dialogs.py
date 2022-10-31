@@ -391,9 +391,9 @@ class PluginSettingsDialog(Dialog):
     def _generate_label(text):
         return Gtk.Label(label=text, use_markup=True, hexpand=True, wrap=True, xalign=0, visible=bool(text))
 
-    def _generate_widget_container(self, description, child_widget, vertical=False):
+    def _generate_widget_container(self, description, child_widget, homogeneous=False, vertical=False):
 
-        container = Gtk.Box(spacing=12, visible=True)
+        container = Gtk.Box(spacing=12, homogeneous=homogeneous, visible=True)
 
         if vertical:
             container.set_orientation(Gtk.Orientation.VERTICAL)
@@ -479,7 +479,7 @@ class PluginSettingsDialog(Dialog):
 
         self.option_widgets[option_name] = entry = Gtk.Entry(hexpand=True, valign=Gtk.Align.CENTER,
                                                              visible=True)
-        label = self._generate_widget_container(description, entry)
+        label = self._generate_widget_container(description, entry, homogeneous=True)
         label.set_mnemonic_widget(entry)
 
         self.preferences.set_widget(entry, option_value)
@@ -555,7 +555,7 @@ class PluginSettingsDialog(Dialog):
     def _add_file_option(self, option_name, option_value, description, file_chooser_type):
 
         button_widget = Gtk.Button(hexpand=True, valign=Gtk.Align.CENTER, visible=True)
-        label = self._generate_widget_container(description, button_widget)
+        label = self._generate_widget_container(description, button_widget, homogeneous=True)
 
         self.option_widgets[option_name] = FileChooserButton(button_widget, self.dialog, file_chooser_type)
         label.set_mnemonic_widget(button_widget)

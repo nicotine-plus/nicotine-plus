@@ -29,11 +29,13 @@
 This is the actual client code. Actual GUI classes are in the separate modules
 """
 
+import json
 import os
 import signal
 import sys
 
 from collections import deque
+from threading import Thread
 
 from pynicotine import slskmessages
 from pynicotine import slskproto
@@ -44,7 +46,6 @@ from pynicotine.interests import Interests
 from pynicotine.logfacility import log
 from pynicotine.networkfilter import NetworkFilter
 from pynicotine.notifications import Notifications
-from pynicotine.nowplaying import NowPlaying
 from pynicotine.pluginsystem import PluginHandler
 from pynicotine.privatechat import PrivateChats
 from pynicotine.search import Search
@@ -56,6 +57,7 @@ from pynicotine.transfers import Transfers
 from pynicotine.userbrowse import UserBrowse
 from pynicotine.userinfo import UserInfo
 from pynicotine.userlist import UserList
+from pynicotine.utils import http_request
 
 
 class NicotineCore:
@@ -78,10 +80,10 @@ class NicotineCore:
         self.privatechats = None
         self.chatrooms = None
         self.pluginhandler = None
-        self.now_playing = None
         self.protothread = None
         self.geoip = None
         self.notifications = None
+        self.update_checker = None
 
         # Handle Ctrl+C and "kill" exit gracefully
         for signal_type in (signal.SIGINT, signal.SIGTERM):
@@ -126,7 +128,6 @@ class NicotineCore:
         self.geoip = GeoIP()
         self.notifications = Notifications(config, ui_callback)
         self.network_filter = NetworkFilter(self, config, self.queue, self.geoip)
-        self.now_playing = NowPlaying(config)
         self.statistics = Statistics(config, ui_callback)
 
         self.shares = Shares(self, config, self.queue, self.network_callback, ui_callback)
@@ -307,6 +308,72 @@ class NicotineCore:
         })
         log.close_log_files()
 
+    @staticmethod
+    def create_integer_version(version):
+
+        major, minor, patch = version.split(".")[:3]
+        stable = 1
+
+        if "dev" in version or "rc" in version:
+            # Example: 2.0.1.dev1
+            # A dev version will be one less than a stable version
+            stable = 0
+
+        return (int(major) << 24) + (int(minor) << 16) + (int(patch.split("rc", 1)[0]) << 8) + stable
+
+    @classmethod
+    def retrieve_latest_version(cls):
+
+        response = http_request(
+            "https", "pypi.org", "/pypi/nicotine-plus/json",
+            headers={"User-Agent": config.application_name}
+        )
+        data = json.loads(response)
+
+        h_latest_version = data['info']['version']
+        latest_version = cls.create_integer_version(h_latest_version)
+
+        try:
+            date = data['releases'][h_latest_version][0]['upload_time']
+        except Exception:
+            date = None
+
+        return h_latest_version, latest_version, date
+
+    def _check_latest_version(self):
+
+        try:
+            h_latest_version, latest_version, date = self.retrieve_latest_version()
+            version = self.create_integer_version(config.version)
+            title = _("Up to Date")
+
+            if latest_version > version:
+                title = _("Out of Date")
+                message = _("Version %(version)s is available, released on %(date)s") % {
+                    "version": h_latest_version,
+                    "date": date
+                }
+
+            elif version > latest_version:
+                message = _("You are using a development version of %s") % config.application_name
+
+            else:
+                message = _("You are using the latest version of %s") % config.application_name
+
+        except Exception as error:
+            title = ("Latest Version Unknown")
+            message = _("Cannot retrieve latest version: %s") % error
+
+        log.add_important(message, title=title)
+
+    def check_latest_version(self):
+
+        if self.update_checker and self.update_checker.is_alive():
+            return
+
+        self.update_checker = Thread(target=self._check_latest_version, name="UpdateChecker", daemon=True)
+        self.update_checker.start()
+
     def connect(self):
 
         if not self.protothread.server_disconnected:
@@ -324,7 +391,7 @@ class NicotineCore:
                 "The network interface you specified, '%s', does not exist. Change or remove the specified "
                 "network interface and restart Nicotine+."
             )
-            log.add_important_error(message, self.protothread.interface)
+            log.add_important(message, self.protothread.interface, title=_("Unknown Network Interface"))
             return False
 
         valid_listen_port = self.protothread.validate_listen_port()
@@ -341,7 +408,7 @@ class NicotineCore:
                     "Note that part of your range lies below 1024, this is usually not allowed on"
                     " most operating systems with the exception of Windows."
                 )
-            log.add_important_error(message)
+            log.add_important(message, title=_("Port Unavailable"))
             return False
 
         # Clear any potential messages queued up while offline
@@ -543,7 +610,7 @@ class NicotineCore:
                 self.ui_callback.invalid_password()
                 return
 
-            log.add_important_error(_("Unable to connect to the server. Reason: %s"), msg.reason)
+            log.add_important(_("Unable to connect to the server. Reason: %s"), msg.reason, title=_("Cannot Connect"))
 
     def get_peer_address(self, msg):
         """ Server code: 3 """
@@ -586,12 +653,12 @@ class NicotineCore:
             log.add(_("Cannot retrieve the IP of user %s, since this user is offline"), user)
             return
 
-        log.add(_("IP address of user %(user)s is %(ip)s, port %(port)i%(country)s"), {
+        log.add_important(_("IP address of user %(user)s: %(ip)s, port %(port)i%(country)s"), {
             'user': user,
             'ip': msg.ip_address,
             'port': msg.port,
             'country': country
-        })
+        }, title=_("IP Address"))
 
     def add_user(self, msg):
         """ Server code: 5 """
@@ -678,7 +745,7 @@ class NicotineCore:
     def admin_message(msg):
         """ Server code: 66 """
 
-        log.add_important_info(msg.msg)
+        log.add_important(msg.msg, title=_("Soulseek Announcement"))
 
     def privileged_users(self, msg):
         """ Server code: 69 """
@@ -721,4 +788,4 @@ class NicotineCore:
         config.sections["server"]["passw"] = password
         config.write_configuration()
 
-        log.add_important_info(_("Your password has been changed"))
+        log.add_important(_("Your password has been changed"), title=_("Password Changed"))
