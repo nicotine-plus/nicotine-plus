@@ -1468,13 +1468,43 @@ class NicotineFrame(Window):
     def on_get_user_info(self, *_args):
         self.userinfo.on_get_user_info()
 
-    """ Browse Shares """
+    """ Shares """
 
     def on_get_shares(self, *_args):
         self.userbrowse.on_get_shares()
 
     def on_load_from_disk(self, *_args):
         self.userbrowse.on_load_from_disk()
+
+    def shares_unavailable_response(self, _dialog, response_id, _data):
+
+        if response_id == 2:  # 'Retry'
+            self.core.shares.rescan_shares()
+
+        elif response_id == 3:  # 'Force Rescan'
+            self.core.shares.rescan_shares(force=True)
+
+    def shares_unavailable(self, shares):
+
+        shares_list_message = ""
+
+        for virtual_name, folder_path in shares:
+            shares_list_message += "• \"%s\" %s\n" % (virtual_name, folder_path)
+
+        def create_dialog():
+            OptionDialog(
+                parent=self.window,
+                title=_("Shares Not Available"),
+                message=_("Verify that external disks are mounted and folder permissions are correct."),
+                long_message=shares_list_message,
+                first_button=_("_Cancel"),
+                second_button=_("_Retry"),
+                third_button=_("_Force Rescan"),
+                callback=self.shares_unavailable_response
+            ).show()
+
+        # Avoid dialog appearing deactive if invoked during rescan on startup
+        GLib.idle_add(create_dialog)
 
     """ Chat """
 
