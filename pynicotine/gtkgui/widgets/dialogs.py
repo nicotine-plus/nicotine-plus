@@ -201,9 +201,11 @@ class MessageDialog(Window):
             return
 
         frame = Gtk.Frame(margin_top=6, visible=True)
-        scrolled_window = Gtk.ScrolledWindow(height_request=200, hexpand=True, vexpand=True, visible=True)
+        scrolled_window = Gtk.ScrolledWindow(min_content_height=75, max_content_height=200, hexpand=True,
+                                             vexpand=True, propagate_natural_height=True, visible=True)
         textview = Gtk.TextView(left_margin=8, right_margin=8, top_margin=5, bottom_margin=5, editable=False,
-                                cursor_visible=False, wrap_mode=Gtk.WrapMode.WORD_CHAR, visible=True)
+                                cursor_visible=False, pixels_above_lines=1, pixels_below_lines=1,
+                                wrap_mode=Gtk.WrapMode.WORD_CHAR, visible=True)
 
         buffer = textview.get_buffer()
         buffer.set_text(long_message)
