@@ -179,6 +179,27 @@ class Scanner:
             import shutil
             shutil.rmtree(db_path_encoded)
 
+    def real2virtual(self, path):
+
+        path = path.replace('/', '\\')
+
+        for virtual, real, *_unused in Shares.virtual_mapping(self.config):
+            # Remove slashes from share name to avoid path conflicts
+            virtual = virtual.replace('/', '_').replace('\\', '_')
+
+            real = real.replace('/', '\\')
+            if path == real:
+                return virtual
+
+            # Use rstrip to remove trailing separator from root directories
+            real = real.rstrip('\\') + '\\'
+
+            if path.startswith(real):
+                virtualpath = virtual + '\\' + path[len(real):]
+                return virtualpath
+
+        return "__INTERNAL_ERROR__" + path
+
     def set_shares(self, share_type, files=None, streams=None, mtimes=None, wordindex=None):
 
         self.config.create_data_folder()
@@ -317,7 +338,7 @@ class Scanner:
             folder_stat = os.stat(encode_path(folder))
 
         folder_unchanged = False
-        virtual_folder = Shares.real2virtual_cls(folder, self.config)
+        virtual_folder = self.real2virtual(folder)
         mtime = folder_stat.st_mtime
 
         file_list = []
@@ -537,36 +558,11 @@ class Shares:
 
         self.rescan_shares(init=True, rescan=rescan_startup)
 
-    def real2virtual(self, path):
-        return self.real2virtual_cls(path, config)
-
-    @classmethod
-    def real2virtual_cls(cls, path, config_obj):
-
-        path = path.replace('/', '\\')
-
-        for virtual, real, *_unused in cls._virtualmapping(config_obj):
-            # Remove slashes from share name to avoid path conflicts
-            virtual = virtual.replace('/', '_').replace('\\', '_')
-
-            real = real.replace('/', '\\')
-            if path == real:
-                return virtual
-
-            # Use rstrip to remove trailing separator from root directories
-            real = real.rstrip('\\') + '\\'
-
-            if path.startswith(real):
-                virtualpath = virtual + '\\' + path[len(real):]
-                return virtualpath
-
-        return "__INTERNAL_ERROR__" + path
-
     def virtual2real(self, path):
 
         path = path.replace('/', os.sep).replace('\\', os.sep)
 
-        for virtual, real, *_unused in self._virtualmapping(config):
+        for virtual, real, *_unused in self.virtual_mapping(config):
             # Remove slashes from share name to avoid path conflicts
             virtual = virtual.replace('/', '_').replace('\\', '_')
 
@@ -580,7 +576,7 @@ class Shares:
         return "__INTERNAL_ERROR__" + path
 
     @staticmethod
-    def _virtualmapping(config_obj):
+    def virtual_mapping(config_obj):
 
         mapping = config_obj.sections["transfers"]["shared"][:]
         mapping += config_obj.sections["transfers"]["buddyshared"]
