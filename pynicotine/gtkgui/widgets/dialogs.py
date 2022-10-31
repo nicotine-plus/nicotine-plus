@@ -172,7 +172,7 @@ class MessageDialog(Window):
 
     active_dialog = None  # Class variable keeping the dialog object alive
 
-    def __init__(self, parent, title, message, callback=None, callback_data=None,
+    def __init__(self, parent, title, message, callback=None, callback_data=None, long_message=None,
                  message_type=Gtk.MessageType.OTHER, buttons=None, width=-1):
 
         self.dialog = Gtk.MessageDialog(
@@ -196,6 +196,25 @@ class MessageDialog(Window):
             label = self.container.get_children()[-1]
 
         label.set_selectable(True)
+
+        if not long_message:
+            return
+
+        frame = Gtk.Frame(margin_top=6, visible=True)
+        scrolled_window = Gtk.ScrolledWindow(height_request=200, hexpand=True, vexpand=True, visible=True)
+        textview = Gtk.TextView(left_margin=8, right_margin=8, top_margin=5, bottom_margin=5, editable=False,
+                                cursor_visible=False, wrap_mode=Gtk.WrapMode.WORD_CHAR, visible=True)
+
+        buffer = textview.get_buffer()
+        buffer.set_text(long_message)
+
+        frame.set_property("child", scrolled_window)
+        scrolled_window.set_property("child", textview)
+
+        if GTK_API_VERSION >= 4:
+            self.container.append(frame)
+        else:
+            self.container.add(frame)
 
     def on_response(self, dialog, response_id, callback, callback_data):
 
@@ -293,8 +312,8 @@ class EntryDialog(MessageDialog):
 
 class OptionDialog(MessageDialog):
 
-    def __init__(self, parent, title, message, callback, callback_data=None, option_label="", option_value=False,
-                 first_button=_("_No"), second_button=_("_Yes"), third_button=""):
+    def __init__(self, parent, title, message, callback, callback_data=None, long_message=None, option_label="",
+                 option_value=False, first_button=_("_No"), second_button=_("_Yes"), third_button=""):
 
         buttons = []
 
@@ -307,8 +326,9 @@ class OptionDialog(MessageDialog):
         if third_button:
             buttons.append((third_button, 3))
 
-        super().__init__(parent=parent, title=title, message=message, message_type=Gtk.MessageType.OTHER,
-                         callback=callback, callback_data=callback_data, buttons=buttons)
+        super().__init__(parent=parent, title=title, message=message, long_message=long_message,
+                         message_type=Gtk.MessageType.OTHER, callback=callback, callback_data=callback_data,
+                         buttons=buttons)
 
         self.option = Gtk.CheckButton(label=option_label, active=option_value, visible=bool(option_label))
 

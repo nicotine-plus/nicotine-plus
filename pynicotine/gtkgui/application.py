@@ -157,7 +157,7 @@ class Application:
         from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 
         loop = GLib.MainLoop()
-        error = ("\n\nNicotine+ Version: %s\nGTK Version: %s\nPython Version: %s\n\n"
+        error = ("Nicotine+ Version: %s\nGTK Version: %s\nPython Version: %s\n\n"
                  "Type: %s\nValue: %s\nTraceback: %s" %
                  (config.version, config.gtk_version, config.python_version, exc_type,
                   exc_value, ''.join(format_tb(exc_traceback))))
@@ -166,7 +166,8 @@ class Application:
             parent=self.instance.get_active_window(),
             title=_("Critical Error"),
             message=_("Nicotine+ has encountered a critical error and needs to exit. "
-                      "Please copy the following message and include it in a bug report:") + error,
+                      "Please copy the following message and include it in a bug report:"),
+            long_message=error,
             first_button=_("_Quit Nicotine+"),
             second_button=_("_Copy & Report Bug"),
             callback=self.on_critical_error_response,
