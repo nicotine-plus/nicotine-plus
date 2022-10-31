@@ -1446,11 +1446,11 @@ class Search:
 
         filter_in = self.filter_include_combobox.get_active_text().strip()
         filter_out = self.filter_exclude_combobox.get_active_text().strip()
-        filter_size = self.filter_file_size_combobox.get_active_text().replace(" ", "")
-        filter_bitrate = self.filter_bitrate_combobox.get_active_text().replace(" ", "")
-        filter_country = self.filter_country_combobox.get_active_text().replace(" ", "")
-        filter_file_type = self.filter_file_type_combobox.get_active_text().replace(" ", "")
-        filter_length = self.filter_length_combobox.get_active_text().replace(" ", "")
+        filter_size = self.filter_file_size_combobox.get_active_text()
+        filter_bitrate = self.filter_bitrate_combobox.get_active_text()
+        filter_country = self.filter_country_combobox.get_active_text().replace("! ", "!")
+        filter_file_type = self.filter_file_type_combobox.get_active_text().replace("! ", "!")
+        filter_length = self.filter_length_combobox.get_active_text()
         filter_free_slot = self.filter_free_slot_button.get_active()
 
         if filter_in:
@@ -1465,20 +1465,21 @@ class Search:
             except re.error:
                 filter_out = None
 
+        # Allow the use of seperator pipes | OR spaces & ampersands
         if filter_size:
-            filter_size = filter_size.split("|")
+            filter_size = re.sub(r"[\s&]", '|', filter_size).split("|")
 
         if filter_bitrate:
-            filter_bitrate = filter_bitrate.split("|")
+            filter_bitrate = re.sub(r"[\s&]", '|', filter_bitrate).split("|")
 
         if filter_country:
-            filter_country = filter_country.upper().split("|")
+            filter_country = re.sub(r"[\s&,;]", '|', filter_country.upper()).split("|")
 
         if filter_file_type:
-            filter_file_type = filter_file_type.lower().split("|")
+            filter_file_type = re.sub(r"[\s&]", '|', filter_file_type.lower()).split("|")
 
         if filter_length:
-            filter_length = filter_length.split("|")
+            filter_length = re.sub(r"[\s&]", '|', filter_length).split("|")
 
         filters = {
             "filterin": filter_in,
