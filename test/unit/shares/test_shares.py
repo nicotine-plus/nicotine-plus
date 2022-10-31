@@ -42,7 +42,7 @@ class SharesTest(unittest.TestCase):
         config.sections["transfers"]["shared"] = [("Shares", SHARES_DIR)]
         config.sections["transfers"]["rescanonstartup"] = False
 
-        shares = Shares(None, config, deque(), init_shares=False)
+        shares = Shares(None, deque(), init_shares=False)
         shares.rescan_shares(use_thread=False)
 
         # Verify that modification time was saved for shares folder
@@ -80,7 +80,7 @@ class SharesTest(unittest.TestCase):
         config.sections["transfers"]["shared"] = [("Shares", SHARES_DIR)]
         config.sections["transfers"]["rescanonstartup"] = False
 
-        shares = Shares(None, config, deque(), init_shares=False)
+        shares = Shares(None, deque(), init_shares=False)
         shares.rescan_shares(use_thread=False)
 
         # Check folders

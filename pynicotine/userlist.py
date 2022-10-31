@@ -16,15 +16,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from pynicotine.config import config
 from pynicotine.slskmessages import UserStatus
 
 
 class UserList:
 
-    def __init__(self, core, config, queue, ui_callback):
+    def __init__(self, core, queue, ui_callback):
 
         self.core = core
-        self.config = config
         self.queue = queue
         self.ui_callback = None
 
@@ -33,7 +33,7 @@ class UserList:
 
     def server_login(self):
 
-        for row in self.config.sections["server"]["userlist"]:
+        for row in config.sections["server"]["userlist"]:
             if row and isinstance(row, list):
                 user = str(row[0])
                 self.core.watch_user(user)
@@ -61,8 +61,8 @@ class UserList:
             self.ui_callback.remove_user(user)
 
     def save_user_list(self, user_list):
-        self.config.sections["server"]["userlist"] = user_list
-        self.config.write_configuration()
+        config.sections["server"]["userlist"] = user_list
+        config.write_configuration()
 
     def get_user_status(self, msg):
         """ Server code: 7 """

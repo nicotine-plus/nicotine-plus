@@ -22,6 +22,7 @@
 
 import json
 
+from pynicotine.config import config
 from pynicotine.logfacility import log
 from pynicotine.utils import execute_command
 from pynicotine.utils import http_request
@@ -32,9 +33,8 @@ class NowPlaying:
     """ This class contains code for retrieving information about the song currently
     playing in a media player """
 
-    def __init__(self, config):
+    def __init__(self):
 
-        self.config = config
         self.bus = None
         self.title_clear()
 
@@ -61,12 +61,12 @@ class NowPlaying:
         self.title_clear()
 
         if get_player is None:
-            player = self.config.sections["players"]["npplayer"]
+            player = config.sections["players"]["npplayer"]
         else:
             player = get_player()
 
         if get_command is None:
-            command = self.config.sections["players"]["npothercommand"]
+            command = config.sections["players"]["npothercommand"]
         else:
             command = get_command()
 
@@ -98,7 +98,7 @@ class NowPlaying:
                 self.title[key] = value  # already unicode
 
         if get_format is None:
-            title = self.config.sections["players"]["npformat"]
+            title = config.sections["players"]["npformat"]
         else:
             title = get_format()
 
@@ -140,7 +140,7 @@ class NowPlaying:
             response = http_request(
                 "https", "ws.audioscrobbler.com",
                 "/2.0/?method=user.getrecenttracks&user=" + user + "&api_key=" + apikey + "&limit=1&format=json",
-                headers={"User-Agent": self.config.application_name})
+                headers={"User-Agent": config.application_name})
 
         except Exception as error:
             log.add(_("Last.fm: Could not connect to Audioscrobbler: %(error)s"), {"error": error},
@@ -271,7 +271,7 @@ class NowPlaying:
         try:
             response = http_request('https', 'api.listenbrainz.org',
                                     '/1/user/{}/playing-now'.format(username),
-                                    headers={'User-Agent': self.config.application_name})
+                                    headers={'User-Agent': config.application_name})
 
         except Exception as error:
             log.add(_("ListenBrainz: Could not connect to ListenBrainz: %(error)s"), {'error': error},

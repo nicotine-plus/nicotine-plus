@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from pynicotine import slskmessages
+from pynicotine.config import config
 from pynicotine.logfacility import log
 from pynicotine.utils import get_completion_list
 
@@ -32,14 +33,13 @@ class ChatRooms:
         "/rescan ", "/info ", "/toggle "
     }
 
-    def __init__(self, core, config, queue, ui_callback=None):
+    def __init__(self, core, queue, ui_callback=None):
 
         self.core = core
-        self.config = config
         self.queue = queue
         self.server_rooms = set()
         self.joined_rooms = set()
-        self.private_rooms = self.config.sections["private_rooms"]["rooms"]
+        self.private_rooms = config.sections["private_rooms"]["rooms"]
         self.completion_list = []
         self.ui_callback = None
 
@@ -51,7 +51,7 @@ class ChatRooms:
         join_list = self.joined_rooms
 
         if not join_list:
-            join_list = self.config.sections["server"]["autojoin"]
+            join_list = config.sections["server"]["autojoin"]
 
         for room in join_list:
             if room == "Public ":
@@ -93,8 +93,8 @@ class ChatRooms:
 
         self.joined_rooms.discard(room)
 
-        if room in self.config.sections["columns"]["chat_room"]:
-            del self.config.sections["columns"]["chat_room"][room]
+        if room in config.sections["columns"]["chat_room"]:
+            del config.sections["columns"]["chat_room"][room]
 
         if self.ui_callback:
             self.ui_callback.remove_room(room)
@@ -279,7 +279,7 @@ class ChatRooms:
     def private_room_toggle(self, msg):
         """ Server code: 141 """
 
-        self.config.sections["server"]["private_chatrooms"] = msg.enabled
+        config.sections["server"]["private_chatrooms"] = msg.enabled
 
     def private_room_add_operator(self, msg):
         """ Server code: 143 """

@@ -32,6 +32,7 @@ import time
 from threading import Thread
 
 from pynicotine import slskmessages
+from pynicotine.config import config
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import UINT_LIMIT
 from pynicotine.slskmessages import UserStatus
@@ -494,12 +495,11 @@ class Scanner:
 
 class Shares:
 
-    def __init__(self, core, config, queue, network_callback=None, ui_callback=None, init_shares=True):
+    def __init__(self, core, queue, network_callback=None, ui_callback=None, init_shares=True):
 
         self.core = core
         self.network_callback = network_callback
         self.ui_callback = ui_callback
-        self.config = config
         self.queue = queue
         self.share_dbs = {}
         self.requested_share_times = {}
@@ -511,16 +511,16 @@ class Shares:
 
         self.convert_shares()
         self.share_db_paths = [
-            ("files", os.path.join(self.config.data_dir, "files.db")),
-            ("streams", os.path.join(self.config.data_dir, "streams.db")),
-            ("wordindex", os.path.join(self.config.data_dir, "wordindex.db")),
-            ("fileindex", os.path.join(self.config.data_dir, "fileindex.db")),
-            ("mtimes", os.path.join(self.config.data_dir, "mtimes.db")),
-            ("buddyfiles", os.path.join(self.config.data_dir, "buddyfiles.db")),
-            ("buddystreams", os.path.join(self.config.data_dir, "buddystreams.db")),
-            ("buddywordindex", os.path.join(self.config.data_dir, "buddywordindex.db")),
-            ("buddyfileindex", os.path.join(self.config.data_dir, "buddyfileindex.db")),
-            ("buddymtimes", os.path.join(self.config.data_dir, "buddymtimes.db"))
+            ("files", os.path.join(config.data_dir, "files.db")),
+            ("streams", os.path.join(config.data_dir, "streams.db")),
+            ("wordindex", os.path.join(config.data_dir, "wordindex.db")),
+            ("fileindex", os.path.join(config.data_dir, "fileindex.db")),
+            ("mtimes", os.path.join(config.data_dir, "mtimes.db")),
+            ("buddyfiles", os.path.join(config.data_dir, "buddyfiles.db")),
+            ("buddystreams", os.path.join(config.data_dir, "buddystreams.db")),
+            ("buddywordindex", os.path.join(config.data_dir, "buddywordindex.db")),
+            ("buddyfileindex", os.path.join(config.data_dir, "buddyfileindex.db")),
+            ("buddymtimes", os.path.join(config.data_dir, "buddymtimes.db"))
         ]
 
         if not init_shares:
@@ -532,20 +532,20 @@ class Shares:
 
     def init_shares(self):
 
-        rescan_startup = (self.config.sections["transfers"]["rescanonstartup"]
-                          and not self.config.need_config())
+        rescan_startup = (config.sections["transfers"]["rescanonstartup"]
+                          and not config.need_config())
 
         self.rescan_shares(init=True, rescan=rescan_startup)
 
     def real2virtual(self, path):
-        return self.real2virtual_cls(path, self.config)
+        return self.real2virtual_cls(path, config)
 
     @classmethod
-    def real2virtual_cls(cls, path, config):
+    def real2virtual_cls(cls, path, config_obj):
 
         path = path.replace('/', '\\')
 
-        for virtual, real, *_unused in cls._virtualmapping(config):
+        for virtual, real, *_unused in cls._virtualmapping(config_obj):
             # Remove slashes from share name to avoid path conflicts
             virtual = virtual.replace('/', '_').replace('\\', '_')
 
@@ -566,7 +566,7 @@ class Shares:
 
         path = path.replace('/', os.sep).replace('\\', os.sep)
 
-        for virtual, real, *_unused in self._virtualmapping(self.config):
+        for virtual, real, *_unused in self._virtualmapping(config):
             # Remove slashes from share name to avoid path conflicts
             virtual = virtual.replace('/', '_').replace('\\', '_')
 
@@ -580,10 +580,10 @@ class Shares:
         return "__INTERNAL_ERROR__" + path
 
     @staticmethod
-    def _virtualmapping(config):
+    def _virtualmapping(config_obj):
 
-        mapping = config.sections["transfers"]["shared"][:]
-        mapping += config.sections["transfers"]["buddyshared"]
+        mapping = config_obj.sections["transfers"]["shared"][:]
+        mapping += config_obj.sections["transfers"]["buddyshared"]
 
         return mapping
 
@@ -618,10 +618,10 @@ class Shares:
                     (shared_folder, virtual))
             return virtual, shared_folder
 
-        self.config.sections["transfers"]["shared"] = [_convert_to_virtual(x)
-                                                       for x in self.config.sections["transfers"]["shared"]]
-        self.config.sections["transfers"]["buddyshared"] = [_convert_to_virtual(x)
-                                                            for x in self.config.sections["transfers"]["buddyshared"]]
+        config.sections["transfers"]["shared"] = [_convert_to_virtual(x)
+                                                  for x in config.sections["transfers"]["shared"]]
+        config.sections["transfers"]["buddyshared"] = [_convert_to_virtual(x)
+                                                       for x in config.sections["transfers"]["buddyshared"]]
 
     @classmethod
     def load_shares(cls, shares, dbs, remove_failed=False):
@@ -668,12 +668,12 @@ class Shares:
 
         if not realfilename.startswith("__INTERNAL_ERROR__"):
             if bshared_files is not None:
-                for row in self.config.sections["server"]["userlist"]:
+                for row in config.sections["server"]["userlist"]:
                     if row[0] != user:
                         continue
 
                     # Check if buddy is trusted
-                    if self.config.sections["transfers"]["buddysharestrustedonly"] and not row[4]:
+                    if config.sections["transfers"]["buddysharestrustedonly"] and not row[4]:
                         break
 
                     for fileinfo in bshared_files.get(str(folder), []):
@@ -775,7 +775,7 @@ class Shares:
 
         scanner_queue = multiprocessing.Queue()
         scanner = Scanner(
-            self.config,
+            config,
             scanner_queue,
             shared_folders,
             self.share_db_paths,
@@ -792,8 +792,8 @@ class Shares:
 
     def get_shared_folders(self):
 
-        shared_folders = self.config.sections["transfers"]["shared"][:]
-        shared_folders_buddy = self.config.sections["transfers"]["buddyshared"][:]
+        shared_folders = config.sections["transfers"]["shared"][:]
+        shared_folders_buddy = config.sections["transfers"]["buddyshared"][:]
 
         return shared_folders, shared_folders_buddy
 

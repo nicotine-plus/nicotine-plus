@@ -27,6 +27,7 @@ from ast import literal_eval
 from time import time
 
 from pynicotine import slskmessages
+from pynicotine.config import config
 from pynicotine.logfacility import log
 from pynicotine.utils import encode_path
 
@@ -331,11 +332,9 @@ class ResponseThrottle:
 
 class PluginHandler:
 
-    def __init__(self, core, config):
+    def __init__(self, core):
 
         self.core = core
-        self.config = config
-
         self.plugin_folders = []
         self.enabled_plugins = {}
         self.command_source = None
@@ -349,7 +348,7 @@ class PluginHandler:
         self.plugin_folders.append(self.user_plugin_folder)
 
         BasePlugin.parent = self
-        BasePlugin.config = self.config
+        BasePlugin.config = config
         BasePlugin.core = self.core
         BasePlugin.frame = self.core.ui_callback
 
@@ -366,7 +365,7 @@ class PluginHandler:
 
     def update_completions(self, plugin):
 
-        if not self.config.sections["words"]["commands"]:
+        if not config.sections["words"]["commands"]:
             return
 
         if plugin.__publiccommands__:
@@ -597,17 +596,17 @@ class PluginHandler:
         })
 
     def save_enabled(self):
-        self.config.sections["plugins"]["enabled"] = list(self.enabled_plugins)
+        config.sections["plugins"]["enabled"] = list(self.enabled_plugins)
 
     def load_enabled(self):
-        enable = self.config.sections["plugins"]["enable"]
+        enable = config.sections["plugins"]["enable"]
 
         if not enable:
             return
 
         log.add(_("Loading plugin system"))
 
-        to_enable = self.config.sections["plugins"]["enabled"]
+        to_enable = config.sections["plugins"]["enabled"]
         log.add_debug("Enabled plugin(s): %s" % ', '.join(to_enable))
 
         for plugin in to_enable:
@@ -621,14 +620,14 @@ class PluginHandler:
             if not plugin.settings:
                 return
 
-            if plugin_name not in self.config.sections["plugins"]:
-                self.config.sections["plugins"][plugin_name] = plugin.settings
+            if plugin_name not in config.sections["plugins"]:
+                config.sections["plugins"][plugin_name] = plugin.settings
 
             for i in plugin.settings:
-                if i not in self.config.sections["plugins"][plugin_name]:
-                    self.config.sections["plugins"][plugin_name][i] = plugin.settings[i]
+                if i not in config.sections["plugins"][plugin_name]:
+                    config.sections["plugins"][plugin_name][i] = plugin.settings[i]
 
-            customsettings = self.config.sections["plugins"][plugin_name]
+            customsettings = config.sections["plugins"][plugin_name]
 
             for key in customsettings:
                 if key in plugin.settings:

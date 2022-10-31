@@ -126,26 +126,26 @@ class NicotineCore:
         self.protothread.start()
 
         self.geoip = GeoIP()
-        self.notifications = Notifications(config, ui_callback)
-        self.network_filter = NetworkFilter(self, config, self.queue, self.geoip)
-        self.now_playing = NowPlaying(config)
-        self.statistics = Statistics(config, ui_callback)
+        self.notifications = Notifications(ui_callback)
+        self.network_filter = NetworkFilter(self, self.queue, self.geoip)
+        self.now_playing = NowPlaying()
+        self.statistics = Statistics(ui_callback)
         self.update_checker = UpdateChecker()
 
-        self.shares = Shares(self, config, self.queue, self.network_callback, ui_callback)
-        self.search = Search(self, config, self.queue, self.shares.share_dbs, self.geoip, ui_callback)
-        self.transfers = Transfers(self, config, self.queue, self.network_callback, ui_callback)
-        self.interests = Interests(self, config, self.queue, ui_callback)
-        self.userbrowse = UserBrowse(self, config, ui_callback)
-        self.userinfo = UserInfo(self, config, self.queue, ui_callback)
-        self.userlist = UserList(self, config, self.queue, ui_callback)
-        self.privatechats = PrivateChats(self, config, self.queue, ui_callback)
-        self.chatrooms = ChatRooms(self, config, self.queue, ui_callback)
+        self.shares = Shares(self, self.queue, self.network_callback, ui_callback)
+        self.search = Search(self, self.queue, self.shares.share_dbs, self.geoip, ui_callback)
+        self.transfers = Transfers(self, self.queue, self.network_callback, ui_callback)
+        self.interests = Interests(self, self.queue, ui_callback)
+        self.userbrowse = UserBrowse(self, ui_callback)
+        self.userinfo = UserInfo(self, self.queue, ui_callback)
+        self.userlist = UserList(self, self.queue, ui_callback)
+        self.privatechats = PrivateChats(self, self.queue, ui_callback)
+        self.chatrooms = ChatRooms(self, self.queue, ui_callback)
 
         self.transfers.init_transfers()
         self.privatechats.load_users()
 
-        self.pluginhandler = PluginHandler(self, config)
+        self.pluginhandler = PluginHandler(self)
 
         # Callback handlers for messages
         self.events = {

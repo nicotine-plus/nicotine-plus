@@ -24,6 +24,7 @@ from threading import Thread
 
 from pynicotine import slskmessages
 from pynicotine import utils
+from pynicotine.config import config
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import clean_file
@@ -34,10 +35,9 @@ from pynicotine.utils import RestrictedUnpickler
 
 class UserBrowse:
 
-    def __init__(self, core, config, ui_callback=None):
+    def __init__(self, core, ui_callback=None):
 
         self.core = core
-        self.config = config
         self.users = set()
         self.ui_callback = None
         utils.OPEN_SOULSEEK_URL = self.open_soulseek_url
@@ -87,7 +87,7 @@ class UserBrowse:
     def browse_local_public_shares(self, path=None, new_request=None):
         """ Browse your own public shares """
 
-        username = self.config.sections["server"]["login"] or "Default"
+        username = config.sections["server"]["login"] or "Default"
 
         if username not in self.users or new_request:
             msg = self.core.shares.get_compressed_shares_message("normal")
@@ -100,7 +100,7 @@ class UserBrowse:
     def browse_local_buddy_shares(self, path=None, new_request=False):
         """ Browse your own buddy shares """
 
-        username = self.config.sections["server"]["login"] or "Default"
+        username = config.sections["server"]["login"] or "Default"
 
         if username not in self.users or new_request:
             msg = self.core.shares.get_compressed_shares_message("buddy")
@@ -116,7 +116,7 @@ class UserBrowse:
         if not username:
             return
 
-        if username == (self.config.sections["server"]["login"] or "Default"):
+        if username == (config.sections["server"]["login"] or "Default"):
             if local_shares_type == "normal":
                 self.browse_local_public_shares(path, new_request)
                 return
@@ -138,7 +138,7 @@ class UserBrowse:
 
     def create_user_shares_folder(self):
 
-        shares_folder = os.path.join(self.config.data_dir, "usershares")
+        shares_folder = os.path.join(config.data_dir, "usershares")
         shares_folder_encoded = encode_path(shares_folder)
 
         try:
@@ -239,7 +239,7 @@ class UserBrowse:
             destination = self.core.transfers.get_folder_destination(user, folder, remove_prefix)
 
             if files:
-                if self.config.sections["transfers"]["reverseorder"]:
+                if config.sections["transfers"]["reverseorder"]:
                     files.sort(key=itemgetter(1), reverse=True)
 
                 for file_data in files:

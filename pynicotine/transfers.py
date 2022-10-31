@@ -41,6 +41,7 @@ from collections import OrderedDict
 from operator import itemgetter
 
 from pynicotine import slskmessages
+from pynicotine.config import config
 from pynicotine.logfacility import log
 from pynicotine.scheduler import scheduler
 from pynicotine.slskmessages import increment_token
@@ -96,10 +97,9 @@ class Transfer:
 class Transfers:
     """ This is the transfers manager """
 
-    def __init__(self, core, config, queue, network_callback, ui_callback=None):
+    def __init__(self, core, queue, network_callback, ui_callback=None):
 
         self.core = core
-        self.config = config
         self.queue = queue
         self.allow_saving_transfers = False
         self.downloads = deque()
@@ -113,8 +113,8 @@ class Transfers:
         self.user_update_counter = 0
         self.user_update_counters = {}
 
-        self.downloads_file_name = os.path.join(self.config.data_dir, 'downloads.json')
-        self.uploads_file_name = os.path.join(self.config.data_dir, 'uploads.json')
+        self.downloads_file_name = os.path.join(config.data_dir, 'downloads.json')
+        self.uploads_file_name = os.path.join(config.data_dir, 'uploads.json')
 
         self.network_callback = network_callback
         self.downloadsview = None
@@ -189,7 +189,7 @@ class Transfers:
 
     def get_download_queue_file_name(self):
 
-        data_dir = self.config.data_dir
+        data_dir = config.data_dir
         downloads_file_json = os.path.join(data_dir, 'downloads.json')
         downloads_file_1_4_2 = os.path.join(data_dir, 'config.transfers.pickle')
         downloads_file_1_4_1 = os.path.join(data_dir, 'transfers.pickle')
@@ -211,7 +211,7 @@ class Transfers:
 
     def get_upload_list_file_name(self):
 
-        data_dir = self.config.data_dir
+        data_dir = config.data_dir
         uploads_file_json = os.path.join(data_dir, 'uploads.json')
 
         return uploads_file_json
@@ -388,13 +388,13 @@ class Transfers:
         if not user:
             return False
 
-        for row in self.config.sections["server"]["userlist"]:
+        for row in config.sections["server"]["userlist"]:
             if not row or not isinstance(row, list):
                 continue
 
             if user == str(row[0]):
                 # All users
-                if self.config.sections["transfers"]["preferfriends"]:
+                if config.sections["transfers"]["preferfriends"]:
                     return True
 
                 # Only explicitly prioritized users
@@ -440,26 +440,26 @@ class Transfers:
     def _update_regular_limits(self):
         """ Sends the regular speed limits to the networking thread """
 
-        uselimit = self.config.sections["transfers"]["uselimit"]
-        uploadlimit = self.config.sections["transfers"]["uploadlimit"]
-        limitby = self.config.sections["transfers"]["limitby"]
+        uselimit = config.sections["transfers"]["uselimit"]
+        uploadlimit = config.sections["transfers"]["uploadlimit"]
+        limitby = config.sections["transfers"]["limitby"]
 
         self.queue.append(slskmessages.SetUploadLimit(uselimit, uploadlimit, limitby))
-        self.queue.append(slskmessages.SetDownloadLimit(self.config.sections["transfers"]["downloadlimit"]))
+        self.queue.append(slskmessages.SetDownloadLimit(config.sections["transfers"]["downloadlimit"]))
 
     def _update_alt_limits(self):
         """ Sends the alternative speed limits to the networking thread """
 
         uselimit = True
-        uploadlimit = self.config.sections["transfers"]["uploadlimitalt"]
-        limitby = self.config.sections["transfers"]["limitby"]
+        uploadlimit = config.sections["transfers"]["uploadlimitalt"]
+        limitby = config.sections["transfers"]["limitby"]
 
         self.queue.append(slskmessages.SetUploadLimit(uselimit, uploadlimit, limitby))
-        self.queue.append(slskmessages.SetDownloadLimit(self.config.sections["transfers"]["downloadlimitalt"]))
+        self.queue.append(slskmessages.SetDownloadLimit(config.sections["transfers"]["downloadlimitalt"]))
 
     def update_limits(self):
 
-        if self.config.sections["transfers"]["usealtlimits"]:
+        if config.sections["transfers"]["usealtlimits"]:
             self._update_alt_limits()
             return
 
@@ -467,8 +467,8 @@ class Transfers:
 
     def queue_limit_reached(self, user):
 
-        file_limit = self.config.sections["transfers"]["filelimit"]
-        queue_size_limit = self.config.sections["transfers"]["queuelimit"] * 1024 * 1024
+        file_limit = config.sections["transfers"]["filelimit"]
+        queue_size_limit = config.sections["transfers"]["queuelimit"] * 1024 * 1024
 
         if not file_limit and not queue_size_limit:
             return False, None
@@ -496,7 +496,7 @@ class Transfers:
 
     def slot_limit_reached(self):
 
-        upload_slot_limit = self.config.sections["transfers"]["uploadslots"]
+        upload_slot_limit = config.sections["transfers"]["uploadslots"]
 
         if upload_slot_limit <= 0:
             upload_slot_limit = 1
@@ -515,7 +515,7 @@ class Transfers:
 
     def bandwidth_limit_reached(self):
 
-        bandwidth_limit = self.config.sections["transfers"]["uploadbandwidth"] * 1024
+        bandwidth_limit = config.sections["transfers"]["uploadbandwidth"] * 1024
 
         if not bandwidth_limit:
             return False
@@ -536,7 +536,7 @@ class Transfers:
         if self.core.shares.rescanning:
             return False
 
-        if self.config.sections["transfers"]["useupslots"]:
+        if config.sections["transfers"]["useupslots"]:
             # Limit by upload slots
             if self.slot_limit_reached():
                 return False
@@ -708,7 +708,7 @@ class Transfers:
                     return
 
                 destination = self.get_folder_destination(username, directory)
-                files.sort(key=itemgetter(1), reverse=self.config.sections["transfers"]["reverseorder"])
+                files.sort(key=itemgetter(1), reverse=config.sections["transfers"]["reverseorder"])
 
                 log.add_transfer(("Attempting to download files in folder %(folder)s for user %(user)s. "
                                   "Destination path: %(destination)s"), {
@@ -862,9 +862,9 @@ class Transfers:
         # a remotely initiated download and someone is manually uploading to you
         if accepted and self.can_upload(user):
             path = ""
-            if self.config.sections["transfers"]["uploadsinsubdirs"]:
+            if config.sections["transfers"]["uploadsinsubdirs"]:
                 parentdir = filename.replace('/', '\\').split('\\')[-2]
-                path = os.path.join(self.config.sections["transfers"]["uploaddir"], user, parentdir)
+                path = os.path.join(config.sections["transfers"]["uploaddir"], user, parentdir)
 
             transfer = Transfer(user=user, filename=filename, path=path, status="Queued",
                                 size=size, token=token)
@@ -1089,7 +1089,7 @@ class Transfers:
                 self.queue.append(slskmessages.CloseConnection(msg.init.sock))
                 return
 
-            incomplete_folder = self.config.sections["transfers"]["incompletedir"]
+            incomplete_folder = config.sections["transfers"]["incompletedir"]
             need_update = True
             download.sock = msg.init.sock
 
@@ -1507,7 +1507,7 @@ class Transfers:
         queue_position = 0
         transfer = None
 
-        if self.config.sections["transfers"]["fifoqueue"]:
+        if config.sections["transfers"]["fifoqueue"]:
             for upload in reversed(self.uploads):
                 # Ignore non-queued files
                 if upload.status != "Queued":
@@ -1596,9 +1596,9 @@ class Transfers:
 
         self.core.watch_user(user)
 
-        if self.config.sections["transfers"]["enablefilters"]:
+        if config.sections["transfers"]["enablefilters"]:
             try:
-                downloadregexp = re.compile(self.config.sections["transfers"]["downloadregexp"], flags=re.IGNORECASE)
+                downloadregexp = re.compile(config.sections["transfers"]["downloadregexp"], flags=re.IGNORECASE)
 
                 if downloadregexp.search(filename) is not None:
                     log.add_transfer("Filtering: %s", filename)
@@ -1736,7 +1736,7 @@ class Transfers:
 
     def can_upload(self, user):
 
-        transfers = self.config.sections["transfers"]
+        transfers = config.sections["transfers"]
 
         if transfers["remotedownloads"]:
 
@@ -1749,13 +1749,13 @@ class Transfers:
                 return True
 
             if (transfers["uploadallowed"] == 2
-                    and user in (x[0] for x in self.config.sections["server"]["userlist"])):
+                    and user in (x[0] for x in config.sections["server"]["userlist"])):
                 # Users in userlist
                 return True
 
             if transfers["uploadallowed"] == 3:
                 # Trusted buddies
-                for row in self.config.sections["server"]["userlist"]:
+                for row in config.sections["server"]["userlist"]:
                     if row[0] == user and row[4]:
                         return True
 
@@ -1784,8 +1784,8 @@ class Transfers:
 
     def get_total_uploads_allowed(self):
 
-        if self.config.sections["transfers"]["useupslots"]:
-            maxupslots = self.config.sections["transfers"]["uploadslots"]
+        if config.sections["transfers"]["useupslots"]:
+            maxupslots = config.sections["transfers"]["uploadslots"]
 
             if maxupslots <= 0:
                 maxupslots = 1
@@ -1814,10 +1814,10 @@ class Transfers:
 
     def get_default_download_folder(self, user):
 
-        downloaddir = self.config.sections["transfers"]["downloaddir"]
+        downloaddir = config.sections["transfers"]["downloaddir"]
 
         # Check if username subfolders should be created for downloads
-        if self.config.sections["transfers"]["usernamesubfolders"]:
+        if config.sections["transfers"]["usernamesubfolders"]:
             try:
                 downloaddir = os.path.join(downloaddir, clean_file(user))
                 downloaddir_encoded = encode_path(downloaddir)
@@ -1900,9 +1900,7 @@ class Transfers:
 
     def file_downloaded_actions(self, user, filepath):
 
-        config = self.config.sections
-
-        if config["notifications"]["notification_popup_file"]:
+        if config.sections["notifications"]["notification_popup_file"]:
             self.core.notifications.new_text_notification(
                 _("%(file)s downloaded from %(user)s") % {
                     'user': user,
@@ -1911,13 +1909,13 @@ class Transfers:
                 title=_("File downloaded")
             )
 
-        if config["transfers"]["afterfinish"]:
+        if config.sections["transfers"]["afterfinish"]:
             try:
-                execute_command(config["transfers"]["afterfinish"], filepath)
-                log.add(_("Executed: %s"), config["transfers"]["afterfinish"])
+                execute_command(config.sections["transfers"]["afterfinish"], filepath)
+                log.add(_("Executed: %s"), config.sections["transfers"]["afterfinish"])
 
             except Exception:
-                log.add(_("Trouble executing '%s'"), config["transfers"]["afterfinish"])
+                log.add(_("Trouble executing '%s'"), config.sections["transfers"]["afterfinish"])
 
     def folder_downloaded_actions(self, user, folderpath):
 
@@ -1928,12 +1926,10 @@ class Transfers:
             if download.path == folderpath and download.status not in statuses:
                 return
 
-        config = self.config.sections
-
         if not folderpath:
             return
 
-        if config["notifications"]["notification_popup_folder"]:
+        if config.sections["notifications"]["notification_popup_folder"]:
             self.core.notifications.new_text_notification(
                 _("%(folder)s downloaded from %(user)s") % {
                     'user': user,
@@ -1942,13 +1938,13 @@ class Transfers:
                 title=_("Folder downloaded")
             )
 
-        if config["transfers"]["afterfolder"]:
+        if config.sections["transfers"]["afterfolder"]:
             try:
-                execute_command(config["transfers"]["afterfolder"], folderpath)
-                log.add(_("Executed on folder: %s"), config["transfers"]["afterfolder"])
+                execute_command(config.sections["transfers"]["afterfolder"], folderpath)
+                log.add(_("Executed on folder: %s"), config.sections["transfers"]["afterfolder"])
 
             except Exception:
-                log.add(_("Trouble executing on folder: %s"), config["transfers"]["afterfolder"])
+                log.add(_("Trouble executing on folder: %s"), config.sections["transfers"]["afterfolder"])
 
     def download_folder_error(self, transfer, error):
 
@@ -2043,7 +2039,7 @@ class Transfers:
 
     def auto_clear_download(self, transfer):
 
-        if self.config.sections["transfers"]["autoclear_downloads"]:
+        if config.sections["transfers"]["autoclear_downloads"]:
             self.downloads.remove(transfer)
 
             if self.downloadsview:
@@ -2055,7 +2051,7 @@ class Transfers:
 
     def auto_clear_upload(self, transfer):
 
-        if self.config.sections["transfers"]["autoclear_uploads"]:
+        if config.sections["transfers"]["autoclear_uploads"]:
             self.update_user_counter(transfer.user)
             self.uploads.remove(transfer)
 
@@ -2126,8 +2122,8 @@ class Transfers:
         # Has user hit queue limit?
         enable_limits = True
 
-        if self.config.sections["transfers"]["friendsnolimits"]:
-            friend = user in (x[0] for x in self.config.sections["server"]["userlist"])
+        if config.sections["transfers"]["friendsnolimits"]:
+            friend = user in (x[0] for x in config.sections["server"]["userlist"])
 
             if friend:
                 enable_limits = False
@@ -2169,7 +2165,7 @@ class Transfers:
         Round Robin: Get the first queued item from the oldest user
         FIFO: Get the first queued item in the list """
 
-        round_robin_queue = not self.config.sections["transfers"]["fifoqueue"]
+        round_robin_queue = not config.sections["transfers"]["fifoqueue"]
         active_statuses = ("Getting status", "Transferring")
         privileged_queue = False
 
@@ -2286,8 +2282,8 @@ class Transfers:
 
         if ban_message:
             banmsg = "Banned (%s)" % ban_message
-        elif self.config.sections["transfers"]["usecustomban"]:
-            banmsg = "Banned (%s)" % self.config.sections["transfers"]["customban"]
+        elif config.sections["transfers"]["usecustomban"]:
+            banmsg = "Banned (%s)" % config.sections["transfers"]["customban"]
         else:
             banmsg = "Banned"
 
@@ -2411,7 +2407,7 @@ class Transfers:
 
         failed = {}
         outfilter = "(\\\\("
-        download_filters = sorted(self.config.sections["transfers"]["downloadfilters"])
+        download_filters = sorted(config.sections["transfers"]["downloadfilters"])
         # Get Filters from config file and check their escaped status
         # Test if they are valid regular expressions and save error messages
 
@@ -2439,10 +2435,10 @@ class Transfers:
         except re.error as error:
             # Strange that individual filters _and_ the composite filter both fail
             log.add(_("Error: Download Filter failed! Verify your filters. Reason: %s"), error)
-            self.config.sections["transfers"]["downloadregexp"] = ""
+            config.sections["transfers"]["downloadregexp"] = ""
             return
 
-        self.config.sections["transfers"]["downloadregexp"] = outfilter
+        config.sections["transfers"]["downloadregexp"] = outfilter
 
         # Send error messages for each failed filter to log window
         if not failed:
@@ -2518,7 +2514,7 @@ class Transfers:
             # Don't save if transfers didn't load properly!
             return
 
-        self.config.create_data_folder()
+        config.create_data_folder()
 
         for transfers_file, callback in (
             (self.downloads_file_name, self.save_downloads_callback),
@@ -2546,18 +2542,17 @@ class Transfers:
 
 class Statistics:
 
-    def __init__(self, config, ui_callback=None):
+    def __init__(self, ui_callback=None):
 
-        self.config = config
         self.ui_callback = None
         self.session_stats = {}
 
         # Only populate total since date on first run
-        if (not self.config.sections["statistics"]["since_timestamp"]
+        if (not config.sections["statistics"]["since_timestamp"]
                 and config.sections["statistics"] == config.defaults["statistics"]):
-            self.config.sections["statistics"]["since_timestamp"] = int(time.time())
+            config.sections["statistics"]["since_timestamp"] = int(time.time())
 
-        for stat_id in self.config.defaults["statistics"]:
+        for stat_id in config.defaults["statistics"]:
             self.session_stats[stat_id] = 0 if stat_id != "since_timestamp" else int(time.time())
 
         if hasattr(ui_callback, "statistics"):
@@ -2569,20 +2564,20 @@ class Statistics:
     def append_stat_value(self, stat_id, stat_value):
 
         self.session_stats[stat_id] += stat_value
-        self.config.sections["statistics"][stat_id] += stat_value
+        config.sections["statistics"][stat_id] += stat_value
         self.update_ui(stat_id)
 
     def update_ui(self, stat_id):
 
         if self.ui_callback:
             session_stat_value = self.session_stats[stat_id]
-            total_stat_value = self.config.sections["statistics"][stat_id]
+            total_stat_value = config.sections["statistics"][stat_id]
             self.ui_callback.update_stat_value(stat_id, session_stat_value, total_stat_value)
 
     def reset_stats(self):
 
-        for stat_id in self.config.defaults["statistics"]:
+        for stat_id in config.defaults["statistics"]:
             stat_value = 0 if stat_id != "since_timestamp" else int(time.time())
-            self.session_stats[stat_id] = self.config.sections["statistics"][stat_id] = stat_value
+            self.session_stats[stat_id] = config.sections["statistics"][stat_id] = stat_value
 
             self.update_ui(stat_id)

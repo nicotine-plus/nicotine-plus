@@ -17,14 +17,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from pynicotine import slskmessages
+from pynicotine.config import config
 
 
 class Interests:
 
-    def __init__(self, core, config, queue, ui_callback=None):
+    def __init__(self, core, queue, ui_callback=None):
 
         self.core = core
-        self.config = config
         self.queue = queue
         self.ui_callback = None
 
@@ -33,7 +33,7 @@ class Interests:
 
     def server_login(self):
 
-        for item in self.config.sections["interests"]["likes"]:
+        for item in config.sections["interests"]["likes"]:
             if not isinstance(item, str):
                 continue
 
@@ -42,7 +42,7 @@ class Interests:
             if item:
                 self.queue.append(slskmessages.AddThingILike(item))
 
-        for item in self.config.sections["interests"]["dislikes"]:
+        for item in config.sections["interests"]["dislikes"]:
             if not isinstance(item, str):
                 continue
 
@@ -65,11 +65,11 @@ class Interests:
         if not item:
             return
 
-        if item in self.config.sections["interests"]["likes"]:
+        if item in config.sections["interests"]["likes"]:
             return
 
-        self.config.sections["interests"]["likes"].append(item)
-        self.config.write_configuration()
+        config.sections["interests"]["likes"].append(item)
+        config.write_configuration()
         self.queue.append(slskmessages.AddThingILike(item))
 
         if self.ui_callback:
@@ -82,11 +82,11 @@ class Interests:
         if not item:
             return
 
-        if item in self.config.sections["interests"]["dislikes"]:
+        if item in config.sections["interests"]["dislikes"]:
             return
 
-        self.config.sections["interests"]["dislikes"].append(item)
-        self.config.write_configuration()
+        config.sections["interests"]["dislikes"].append(item)
+        config.write_configuration()
         self.queue.append(slskmessages.AddThingIHate(item))
 
         if self.ui_callback:
@@ -97,11 +97,11 @@ class Interests:
         if not item and not isinstance(item, str):
             return
 
-        if item not in self.config.sections["interests"]["likes"]:
+        if item not in config.sections["interests"]["likes"]:
             return
 
-        self.config.sections["interests"]["likes"].remove(item)
-        self.config.write_configuration()
+        config.sections["interests"]["likes"].remove(item)
+        config.write_configuration()
         self.queue.append(slskmessages.RemoveThingILike(item))
 
         if self.ui_callback:
@@ -112,11 +112,11 @@ class Interests:
         if not item and not isinstance(item, str):
             return
 
-        if item not in self.config.sections["interests"]["dislikes"]:
+        if item not in config.sections["interests"]["dislikes"]:
             return
 
-        self.config.sections["interests"]["dislikes"].remove(item)
-        self.config.write_configuration()
+        config.sections["interests"]["dislikes"].remove(item)
+        config.write_configuration()
         self.queue.append(slskmessages.RemoveThingIHate(item))
 
         if self.ui_callback:

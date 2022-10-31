@@ -19,22 +19,20 @@
 from collections import deque
 from threading import Thread
 
+from pynicotine.config import config
 from pynicotine.logfacility import log
 from pynicotine.utils import execute_command
 
 
 class Notifications:
 
-    def __init__(self, config, ui_callback=None):
+    def __init__(self, ui_callback=None):
 
-        self.config = config
         self.ui_callback = None
-
         self.chat_hilites = {
             "rooms": [],
             "private": []
         }
-
         self.tts = deque()
         self.tts_thread = None
         self.continue_playing = False
@@ -77,7 +75,7 @@ class Notifications:
 
     def new_tts(self, message, args=None):
 
-        if not self.config.sections["ui"]["speechenabled"]:
+        if not config.sections["ui"]["speechenabled"]:
             return
 
         if args:
@@ -105,7 +103,7 @@ class Notifications:
         while self.tts:
             try:
                 message = self.tts.popleft()
-                execute_command(self.config.sections["ui"]["speechcommand"], message, background=False)
+                execute_command(config.sections["ui"]["speechcommand"], message, background=False)
 
             except Exception as error:
                 log.add(_("Text-to-speech for message failed: %s"), error)
