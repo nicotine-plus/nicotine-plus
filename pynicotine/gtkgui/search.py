@@ -871,17 +871,17 @@ class Search:
             if digit is None:
                 continue
 
-            if factor > 1 and operator in ("==", "!="):
+            if factor > 1:
                 # Exact match is unlikely, so approximate within +/- 0.1 MiB or 1 MiB if over 100 MiB
                 adjust = factor / 8 if factor > 1024 and digit < 104857600 else factor  # TODO: GiB
+            else:
+                adjust = 0
 
+            if operator in ("==", "!="):
                 if (digit - adjust) <= value <= (digit + adjust):
-                    if operator == "!=":
-                        return False
+                    return (operator == "==")
 
-                    return True
-
-                allowed = operator == "!="
+                allowed = (operator == "!=")
                 continue
 
             operation = self.operators.get(operator)
