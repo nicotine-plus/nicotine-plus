@@ -538,13 +538,16 @@ class Search:
             widget.remove_all()
 
             if filter_id == "filterbr":
-                presets = ("0", "128", "160", "192", "256", "320")
+                presets = ("!0", "128|<224", ">192|<=320", "=320|=1411", ">320")
 
             elif filter_id == "filtersize":
-                presets = (">10MiB", "<10MiB", "<5MiB", "<1MiB", ">0")
+                presets = (">50MiB", ">20MiB|<50MiB", ">10MiB|<20MiB", ">5MiB|<10MiB", "<=5MiB")
 
             elif filter_id == "filtertype":
-                presets = ("flac|wav|ape|aiff|wv|cue", "mp3|m4a|aac|ogg|opus|wma", "!mp3")
+                presets = ("flac|wav|aiff|cue|iso", "mp3|m4a|aac|ogg|opus", "mp4|mkv|m4v|mov|264", "!mp3|!wma|!rar")
+
+            elif filter_id == "filterlength":
+                presets = (">12:00", ">8:00|<12:00", ">5:00|<8:00", "<=5:00|!0", "=0")
 
             for value in presets:
                 widget.append_text(value)
