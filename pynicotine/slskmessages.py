@@ -2342,7 +2342,7 @@ class SharedFileList(PeerMessage):
                     msg_list.extend(self.pack_uint32(len(list(self.list))))
 
                 for key in self.list:
-                    msg_list.extend(self.pack_string(key.replace('/', '\\')))
+                    msg_list.extend(self.pack_string(key))
                     msg_list.extend(self.list[key])
 
             except Exception as error:
@@ -2455,7 +2455,7 @@ class FileSearchResult(PeerMessage):
     def pack_file_info(self, fileinfo):
         msg = bytearray()
         msg.extend(self.pack_uint8(1))
-        msg.extend(self.pack_string(fileinfo[0].replace('/', '\\')))
+        msg.extend(self.pack_string(fileinfo[0]))
         msg.extend(self.pack_uint64(fileinfo[1]))
 
         if fileinfo[2] is None or fileinfo[3] is None:
