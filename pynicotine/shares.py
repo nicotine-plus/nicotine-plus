@@ -95,7 +95,7 @@ class Scanner:
         try:
             rename_process(b'nicotine-scan')
 
-            from pynicotine.metadata.tinytag import TinyTag
+            from pynicotine.external.tinytag import TinyTag
             self.tinytag = TinyTag()
 
             if not Shares.load_shares(self.share_dbs, self.share_db_paths, remove_failed=True):

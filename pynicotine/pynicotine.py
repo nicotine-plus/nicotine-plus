@@ -39,7 +39,7 @@ from pynicotine import slskmessages
 from pynicotine import slskproto
 from pynicotine.chatrooms import ChatRooms
 from pynicotine.config import config
-from pynicotine.geoip.geoip import GeoIP
+from pynicotine.geoip import GeoIP
 from pynicotine.interests import Interests
 from pynicotine.logfacility import log
 from pynicotine.networkfilter import NetworkFilter
