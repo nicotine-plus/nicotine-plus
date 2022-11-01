@@ -28,6 +28,7 @@ from gi.repository import Gio
 from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.logfacility import log
+from pynicotine.utils import truncate_string_byte
 
 
 class Notifications:
@@ -209,8 +210,8 @@ class WinNotify:
             self.tray_icon.show()
 
         # Need to account for the null terminated character appended to the message length by Windows
-        self.nid.sz_info_title = (title[:62].strip() + "…") if len(title) > 63 else title
-        self.nid.sz_info = (message[:254].strip() + "…") if len(message) > 255 else message
+        self.nid.sz_info_title = truncate_string_byte(title, byte_limit=63, ellipsize=True)
+        self.nid.sz_info = truncate_string_byte(message, byte_limit=255, ellipsize=True)
 
         windll.shell32.Shell_NotifyIconW(self.NIM_MODIFY, byref(self.nid))
         time.sleep(timeout)
