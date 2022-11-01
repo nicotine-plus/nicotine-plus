@@ -23,7 +23,7 @@ from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import get_completion_list
 
 
-class PrivateChats:
+class PrivateChat:
 
     # List of allowed commands
     CMDS = {

@@ -312,7 +312,7 @@ class UserList:
             self.on_add_note()
             return
 
-        self.core.privatechats.show_user(user)
+        self.core.privatechat.show_user(user)
 
     def on_popup_menu(self, menu, _widget):
 

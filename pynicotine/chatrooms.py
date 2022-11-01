@@ -112,7 +112,7 @@ class ChatRooms:
             return
 
         room, message = event
-        message = self.core.privatechats.auto_replace(message)
+        message = self.core.privatechat.auto_replace(message)
 
         self.queue.append(slskmessages.SayChatroom(room, message))
         self.core.pluginhandler.outgoing_public_chat_notification(room, message)

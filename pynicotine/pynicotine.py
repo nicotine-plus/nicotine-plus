@@ -46,7 +46,7 @@ from pynicotine.networkfilter import NetworkFilter
 from pynicotine.notifications import Notifications
 from pynicotine.nowplaying import NowPlaying
 from pynicotine.pluginsystem import PluginHandler
-from pynicotine.privatechat import PrivateChats
+from pynicotine.privatechat import PrivateChat
 from pynicotine.search import Search
 from pynicotine.shares import Shares
 from pynicotine.slskmessages import LoginFailure
@@ -76,7 +76,7 @@ class NicotineCore:
         self.userbrowse = None
         self.userinfo = None
         self.userlist = None
-        self.privatechats = None
+        self.privatechat = None
         self.chatrooms = None
         self.pluginhandler = None
         self.now_playing = None
@@ -139,11 +139,11 @@ class NicotineCore:
         self.userbrowse = UserBrowse(self, ui_callback)
         self.userinfo = UserInfo(self, self.queue, ui_callback)
         self.userlist = UserList(self, self.queue, ui_callback)
-        self.privatechats = PrivateChats(self, self.queue, ui_callback)
+        self.privatechat = PrivateChat(self, self.queue, ui_callback)
         self.chatrooms = ChatRooms(self, self.queue, ui_callback)
 
         self.transfers.init_transfers()
-        self.privatechats.load_users()
+        self.privatechat.load_users()
 
         self.pluginhandler = PluginHandler(self)
 
@@ -152,8 +152,8 @@ class NicotineCore:
             slskmessages.ServerDisconnect: self.server_disconnect,
             slskmessages.Login: self.login,
             slskmessages.ChangePassword: self.change_password,
-            slskmessages.MessageUser: self.privatechats.message_user,
-            slskmessages.PMessageUser: self.privatechats.p_message_user,
+            slskmessages.MessageUser: self.privatechat.message_user,
+            slskmessages.PMessageUser: self.privatechat.p_message_user,
             slskmessages.ExactFileSearch: self.dummy_message,
             slskmessages.RoomAdded: self.dummy_message,
             slskmessages.RoomRemoved: self.dummy_message,
@@ -376,7 +376,7 @@ class NicotineCore:
         self.request_set_status(is_away and 1 or 2)
 
         # Reset away message users
-        self.privatechats.set_away_mode(is_away)
+        self.privatechat.set_away_mode(is_away)
         self.ui_callback.set_away_mode(is_away)
 
     def request_change_password(self, password):
@@ -499,7 +499,7 @@ class NicotineCore:
         self.search.server_disconnect()
         self.userlist.server_disconnect()
         self.chatrooms.server_disconnect()
-        self.privatechats.server_disconnect()
+        self.privatechat.server_disconnect()
         self.userinfo.server_disconnect()
         self.userbrowse.server_disconnect()
         self.interests.server_disconnect()
@@ -528,7 +528,7 @@ class NicotineCore:
             self.userbrowse.server_login()
             self.userinfo.server_login()
             self.userlist.server_login()
-            self.privatechats.server_login()
+            self.privatechat.server_login()
             self.chatrooms.server_login()
             self.ui_callback.server_login()
 
@@ -570,7 +570,7 @@ class NicotineCore:
 
         # From this point on all paths should call
         # self.pluginhandler.user_resolve_notification precisely once
-        self.privatechats.private_message_queue_process(user)
+        self.privatechat.private_message_queue_process(user)
 
         if user not in self.ip_requested:
             self.pluginhandler.user_resolve_notification(user, msg.ip_address, msg.port)
@@ -637,7 +637,7 @@ class NicotineCore:
             self.userbrowse.get_user_status(msg)
             self.userinfo.get_user_status(msg)
             self.userlist.get_user_status(msg)
-            self.privatechats.get_user_status(msg)
+            self.privatechat.get_user_status(msg)
 
         self.pluginhandler.user_status_notification(user, status, privileged)
 

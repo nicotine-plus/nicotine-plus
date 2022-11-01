@@ -435,7 +435,7 @@ class Interests:
         for iterator in self.similar_users_list_view.get_selected_rows():
             user = self.similar_users_list_view.get_row_value(iterator, 1)
 
-            self.core.privatechats.show_user(user)
+            self.core.privatechat.show_user(user)
             return
 
     @staticmethod

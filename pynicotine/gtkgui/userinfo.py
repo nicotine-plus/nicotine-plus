@@ -474,7 +474,7 @@ class UserInfo:
         self.frame.interests.toggle_menu_items(menu, self.dislikes_list_view, column=0)
 
     def on_send_message(self, *_args):
-        self.core.privatechats.show_user(self.user)
+        self.core.privatechat.show_user(self.user)
 
     def on_show_ip_address(self, *_args):
         self.core.request_ip_address(self.user)

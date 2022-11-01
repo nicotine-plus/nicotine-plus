@@ -121,20 +121,20 @@ class ChatEntry:
             arg_self = "" if self.is_chatroom else self.entity
 
         if cmd in ("/alias", "/al"):
-            parent = self.core.chatrooms if self.is_chatroom else self.core.privatechats
+            parent = self.core.chatrooms if self.is_chatroom else self.core.privatechat
             parent.echo_message(self.entity, add_alias(args))
 
             if config.sections["words"]["aliases"]:
                 self.core.chatrooms.update_completions()
-                self.core.privatechats.update_completions()
+                self.core.privatechat.update_completions()
 
         elif cmd in ("/unalias", "/un"):
-            parent = self.core.chatrooms if self.is_chatroom else self.core.privatechats
+            parent = self.core.chatrooms if self.is_chatroom else self.core.privatechat
             parent.echo_message(self.entity, unalias(args))
 
             if config.sections["words"]["aliases"]:
                 self.core.chatrooms.update_completions()
-                self.core.privatechats.update_completions()
+                self.core.privatechat.update_completions()
 
         elif cmd in ("/w", "/whois", "/info"):
             if arg_self:
@@ -150,7 +150,7 @@ class ChatEntry:
 
         elif cmd == "/pm":
             if args:
-                self.core.privatechats.show_user(args)
+                self.core.privatechat.show_user(args)
 
         elif cmd in ("/m", "/msg"):
             if args:
@@ -162,8 +162,8 @@ class ChatEntry:
                     msg = args_split[1]
 
                 if msg:
-                    self.core.privatechats.show_user(user)
-                    self.core.privatechats.send_message(user, msg)
+                    self.core.privatechat.show_user(user)
+                    self.core.privatechat.send_message(user, msg)
 
         elif cmd in ("/s", "/search"):
             if args:
@@ -223,14 +223,14 @@ class ChatEntry:
 
         elif cmd == "/ctcpversion":
             if arg_self:
-                self.core.privatechats.show_user(arg_self)
-                self.core.privatechats.send_message(arg_self, self.core.privatechats.CTCP_VERSION)
+                self.core.privatechat.show_user(arg_self)
+                self.core.privatechat.send_message(arg_self, self.core.privatechat.CTCP_VERSION)
 
         elif cmd in ("/clear", "/cl"):
             if self.is_chatroom:
                 self.core.chatrooms.clear_messages(self.entity)
             else:
-                self.core.privatechats.clear_messages(self.entity)
+                self.core.privatechat.clear_messages(self.entity)
 
         elif cmd in ("/a", "/away"):
             self.core.set_away_mode(self.core.user_status != UserStatus.AWAY, save_state=True)
@@ -239,7 +239,7 @@ class ChatEntry:
             self.core.confirm_quit()
 
         elif cmd in ("/c", "/close"):
-            self.core.privatechats.remove_user(self.entity)
+            self.core.privatechat.remove_user(self.entity)
 
         elif cmd == "/now":
             self.core.now_playing.display_now_playing(

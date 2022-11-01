@@ -1480,7 +1480,7 @@ class NicotineFrame(Window):
 
     def update_completions(self):
         self.core.chatrooms.update_completions()
-        self.core.privatechats.update_completions()
+        self.core.privatechat.update_completions()
 
     """ Away Mode """
 

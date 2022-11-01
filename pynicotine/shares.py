@@ -920,7 +920,7 @@ class Shares:
 
         if not checkuser:
             message = self.core.ban_message % reason
-            self.core.privatechats.send_automatic_message(user, message)
+            self.core.privatechat.send_automatic_message(user, message)
 
         shares_list = None
 
@@ -949,7 +949,7 @@ class Shares:
 
         if not checkuser:
             message = self.core.ban_message % reason
-            self.core.privatechats.send_automatic_message(username, message)
+            self.core.privatechat.send_automatic_message(username, message)
 
         normalshares = self.share_dbs.get("streams")
         buddyshares = self.share_dbs.get("buddystreams")

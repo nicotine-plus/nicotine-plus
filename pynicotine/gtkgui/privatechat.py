@@ -78,7 +78,7 @@ class PrivateChats(IconNotebook):
                 continue
 
             self.completion.set_entry(tab.chat_entry)
-            tab.set_completion_list(self.core.privatechats.completion_list[:])
+            tab.set_completion_list(self.core.privatechat.completion_list[:])
 
             if self.command_help is None:
                 self.command_help = PrivateChatCommands(self.frame.window)
@@ -101,7 +101,7 @@ class PrivateChats(IconNotebook):
             return
 
         self.frame.private_entry.set_text("")
-        self.core.privatechats.show_user(username)
+        self.core.privatechat.show_user(username)
 
     def clear_messages(self, user):
 
@@ -240,7 +240,7 @@ class PrivateChat:
 
         # Chat Entry
         ChatEntry(self.frame, self.chat_entry, chats.completion, user, slskmessages.MessageUser,
-                  self.core.privatechats.send_message, self.core.privatechats.CMDS)
+                  self.core.privatechat.send_message, self.core.privatechat.CMDS)
 
         self.log_toggle.set_active(config.sections["logging"]["privatechat"])
 
@@ -518,7 +518,7 @@ class PrivateChat:
         self.chat_entry.grab_focus()
 
     def on_close(self, *_args):
-        self.core.privatechats.remove_user(self.user)
+        self.core.privatechat.remove_user(self.user)
 
     def on_close_all_tabs(self, *_args):
         self.chats.remove_all_pages()
