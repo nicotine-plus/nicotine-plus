@@ -25,6 +25,8 @@ from pynicotine.gtkgui.application import GTK_API_VERSION
 
 class Window:
 
+    active_dialogs = []  # Class variable keeping dialog objects alive
+
     def __init__(self, window):
 
         # Workaround for GTK 4 issue where wrong widget receives focus after closing popover
