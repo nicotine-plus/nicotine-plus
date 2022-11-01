@@ -830,17 +830,42 @@ class Shares:
 
         return False
 
-    def rescan_shares(self, init=False, rescan=True, rebuild=False, use_thread=True):
+    def check_shares_available(self):
+
+        share_groups = self.get_shared_folders()
+        unavailable_shares = []
+
+        for share in share_groups:
+            for virtual_name, folder_path, *_unused in share:
+                if not os.access(encode_path(folder_path), os.R_OK):
+                    unavailable_shares.append((virtual_name, folder_path))
+
+        return unavailable_shares
+
+    def rescan_shares(self, init=False, rescan=True, rebuild=False, use_thread=True, force=False):
 
         if self.rescanning:
             return None
 
-        self.rescanning = True
-        shared_folders = self.get_shared_folders()
+        if rescan and not force:
+            # Verify all shares are mounted before allowing destructive rescan
+            unavailable_shares = self.check_shares_available()
+
+            if unavailable_shares:
+                log.add(_("Rescan aborted due to unavailable shares"))
+                rescan = False
+
+                if self.ui_callback:
+                    self.ui_callback.shares_unavailable(unavailable_shares)
+
+                if not init:
+                    return None
 
         # Hand over database control to the scanner process
+        self.rescanning = True
         self.close_shares(self.share_dbs)
 
+        shared_folders = self.get_shared_folders()
         scanner, scanner_queue = self.build_scanner_process(shared_folders, init, rescan, rebuild)
         scanner.start()
 
