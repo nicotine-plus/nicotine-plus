@@ -87,16 +87,6 @@ class NowPlaying:
         if not result:
             return None
 
-        # Since we need unicode instead of bytes we'll try to force such a
-        # conversion. Individual player commands should have done this already
-        # - this is a failsafe.
-
-        for key, value in self.title.items():
-            try:
-                self.title[key] = str(value, "utf-8", "replace")
-            except TypeError:
-                self.title[key] = value  # already unicode
-
         if get_format is None:
             title = config.sections["players"]["npformat"]
         else:
