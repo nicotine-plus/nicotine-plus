@@ -42,7 +42,6 @@ class ChatRooms:
         self.joined_rooms = set()
         self.private_rooms = config.sections["private_rooms"]["rooms"]
         self.completion_list = []
-        self.ui_callback = None
 
     def server_login(self):
 
