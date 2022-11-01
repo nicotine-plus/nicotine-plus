@@ -46,7 +46,6 @@ from pynicotine.gtkgui.userbrowse import UserBrowses
 from pynicotine.gtkgui.userinfo import UserInfos
 from pynicotine.gtkgui.userlist import UserList
 from pynicotine.gtkgui.widgets.iconnotebook import TabLabel
-from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.gtkgui.widgets.dialogs import MessageDialog
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
@@ -1594,13 +1593,7 @@ class NicotineFrame(Window):
     def update_log(self, timestamp_format, msg, title, level):
 
         if title:
-            parent = self.window
-            active_dialog = Dialog.active_dialog
-
-            if active_dialog is not None:
-                parent = active_dialog.dialog
-
-            MessageDialog(parent=parent, title=title, message=msg).show()
+            MessageDialog(parent=self.window, title=title, message=msg).show()
 
         # Keep verbose debug messages out of statusbar to make it more useful
         if level not in ("transfer", "connection", "message", "miscellaneous"):
@@ -1773,6 +1766,10 @@ class NicotineFrame(Window):
 
         # Save visible columns, incase application is killed later
         self.save_columns()
+
+        # Close any visible dialogs
+        for dialog in reversed(Window.active_dialogs):
+            dialog.close()
 
         if not self.tray_icon.is_visible():
             log.add(_("Nicotine+ is running in the background"))
