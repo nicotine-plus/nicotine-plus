@@ -51,7 +51,7 @@ from pynicotine.search import Search
 from pynicotine.shares import Shares
 from pynicotine.slskmessages import LoginFailure
 from pynicotine.slskmessages import UserStatus
-from pynicotine.transfers import Statistics
+from pynicotine.statistics import Statistics
 from pynicotine.transfers import Transfers
 from pynicotine.updatechecker import UpdateChecker
 from pynicotine.userbrowse import UserBrowse
