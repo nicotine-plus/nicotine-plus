@@ -40,7 +40,7 @@ class Search:
 
         self.core = core
         self.queue = queue
-        self.ui_callback = None
+        self.ui_callback = getattr(ui_callback, "search", None)
         self.searches = {}
         self.token = int(random.random() * (2 ** 31 - 1))
         self.wishlist_interval = 0
@@ -52,9 +52,6 @@ class Search:
         for term in config.sections["server"]["autosearch"]:
             self.token = increment_token(self.token)
             self.searches[self.token] = {"id": self.token, "term": term, "mode": "wishlist", "ignore": True}
-
-        if hasattr(ui_callback, "search"):
-            self.ui_callback = ui_callback.search
 
     def server_login(self):
         if self.ui_callback:

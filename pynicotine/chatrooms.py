@@ -37,14 +37,12 @@ class ChatRooms:
 
         self.core = core
         self.queue = queue
+        self.ui_callback = getattr(ui_callback, "chatrooms", None)
         self.server_rooms = set()
         self.joined_rooms = set()
         self.private_rooms = config.sections["private_rooms"]["rooms"]
         self.completion_list = []
         self.ui_callback = None
-
-        if hasattr(ui_callback, "chatrooms"):
-            self.ui_callback = ui_callback.chatrooms
 
     def server_login(self):
 

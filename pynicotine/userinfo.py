@@ -32,12 +32,9 @@ class UserInfo:
 
         self.core = core
         self.queue = queue
+        self.ui_callback = getattr(ui_callback, "userinfo", None)
         self.users = set()
         self.requested_info_times = {}
-        self.ui_callback = None
-
-        if hasattr(ui_callback, "userinfo"):
-            self.ui_callback = ui_callback.userinfo
 
     def server_login(self):
         for user in self.users:

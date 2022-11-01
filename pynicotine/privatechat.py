@@ -40,14 +40,11 @@ class PrivateChats:
 
         self.core = core
         self.queue = queue
+        self.ui_callback = getattr(ui_callback, "privatechat", None)
         self.completion_list = []
         self.private_message_queue = {}
         self.away_message_users = set()
         self.users = set()
-        self.ui_callback = None
-
-        if hasattr(ui_callback, "privatechat"):
-            self.ui_callback = ui_callback.privatechat
 
         # Clear list of previously open chats if we don't want to restore them
         if not config.sections["privatechat"]["store"]:

@@ -26,10 +26,7 @@ class Interests:
 
         self.core = core
         self.queue = queue
-        self.ui_callback = None
-
-        if hasattr(ui_callback, "interests"):
-            self.ui_callback = ui_callback.interests
+        self.ui_callback = getattr(ui_callback, "interests", None)
 
     def server_login(self):
 

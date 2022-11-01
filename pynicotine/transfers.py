@@ -117,14 +117,8 @@ class Transfers:
         self.uploads_file_name = os.path.join(config.data_dir, 'uploads.json')
 
         self.network_callback = network_callback
-        self.downloadsview = None
-        self.uploadsview = None
-
-        if hasattr(ui_callback, "downloads"):
-            self.downloadsview = ui_callback.downloads
-
-        if hasattr(ui_callback, "uploads"):
-            self.uploadsview = ui_callback.uploads
+        self.downloadsview = getattr(ui_callback, "downloads", None)
+        self.uploadsview = getattr(ui_callback, "uploads", None)
 
         self.transfer_timeout_timer_id = None
         self.download_queue_timer_id = None
@@ -2544,7 +2538,7 @@ class Statistics:
 
     def __init__(self, ui_callback=None):
 
-        self.ui_callback = None
+        self.ui_callback = getattr(ui_callback, "statistics", None)
         self.session_stats = {}
 
         # Only populate total since date on first run
@@ -2555,11 +2549,8 @@ class Statistics:
         for stat_id in config.defaults["statistics"]:
             self.session_stats[stat_id] = 0 if stat_id != "since_timestamp" else int(time.time())
 
-        if hasattr(ui_callback, "statistics"):
-            self.ui_callback = ui_callback.statistics
-
-            for stat_id in config.defaults["statistics"]:
-                self.update_ui(stat_id)
+        for stat_id in config.defaults["statistics"]:
+            self.update_ui(stat_id)
 
     def append_stat_value(self, stat_id, stat_value):
 

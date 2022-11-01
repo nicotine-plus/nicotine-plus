@@ -28,7 +28,7 @@ class Notifications:
 
     def __init__(self, ui_callback=None):
 
-        self.ui_callback = None
+        self.ui_callback = getattr(ui_callback, "notifications", None)
         self.chat_hilites = {
             "rooms": [],
             "private": []
@@ -36,9 +36,6 @@ class Notifications:
         self.tts = deque()
         self.tts_thread = None
         self.continue_playing = False
-
-        if hasattr(ui_callback, "notifications"):
-            self.ui_callback = ui_callback.notifications
 
     """ Chat Hilites """
 

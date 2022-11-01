@@ -22,14 +22,11 @@ from pynicotine.slskmessages import UserStatus
 
 class UserList:
 
-    def __init__(self, core, queue, ui_callback):
+    def __init__(self, core, queue, ui_callback=None):
 
         self.core = core
         self.queue = queue
-        self.ui_callback = None
-
-        if hasattr(ui_callback, "userlist"):
-            self.ui_callback = ui_callback.userlist
+        self.ui_callback = getattr(ui_callback, "userlist", None)
 
     def server_login(self):
 

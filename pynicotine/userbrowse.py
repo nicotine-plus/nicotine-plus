@@ -39,11 +39,8 @@ class UserBrowse:
 
         self.core = core
         self.users = set()
-        self.ui_callback = None
+        self.ui_callback = getattr(ui_callback, "userbrowse", None)
         utils.OPEN_SOULSEEK_URL = self.open_soulseek_url
-
-        if hasattr(ui_callback, "userbrowse"):
-            self.ui_callback = ui_callback.userbrowse
 
     def server_login(self):
         for user in self.users:
