@@ -325,7 +325,7 @@
                               <object class="GtkEntry">
                                 <property name="width-chars">10</property>
                                 <property name="placeholder-text" translatable="yes">Duration…</property>
-                                <property name="tooltip-text" translatable="yes">Duration, e.g. &gt;6:00 &lt;12:00 !9:54 =5:34</property>
+                                <property name="tooltip-text" translatable="yes">Duration, e.g. &gt;6:00 &lt;12:00 !6:54</property>
                                 <property name="primary-icon-name">media-playback-start-symbolic</property>
                                 <signal name="activate" handler="on_refilter"/>
                                 <signal name="changed" handler="on_filter_entry_changed"/>

@@ -318,7 +318,7 @@
                 <child>
                   <object class="GtkEntry" id="FilterLength">
                     <property name="visible">True</property>
-                    <property name="tooltip-text" translatable="yes">Duration, e.g. &gt;6:00 &lt;12:00 !9:54 =5:34</property>
+                    <property name="tooltip-text" translatable="yes">Duration, e.g. &gt;6:00 &lt;12:00 !6:54</property>
                     <property name="valign">center</property>
                     <property name="max-width-chars">26</property>
                     <property name="width-chars">16</property>
