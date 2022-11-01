@@ -407,10 +407,17 @@ def humanize(number):
     return "{:n}".format(number)
 
 
-def truncate_string_byte(string, byte_limit, encoding='utf-8'):
+def truncate_string_byte(string, byte_limit, encoding='utf-8', ellipsize=False):
     """ Truncates a string to fit inside a byte limit """
 
-    return string.encode(encoding)[:max(byte_limit, 0)].decode(encoding, 'ignore')
+    if ellipsize:
+        ellipsis = "…".encode(encoding)
+        byte_limit = byte_limit - len(ellipsis)
+    else:
+        ellipsis = b""
+
+    string_bytes = string.encode(encoding)[:max(byte_limit, 0)].rstrip() + ellipsis
+    return string_bytes.decode(encoding, 'ignore')
 
 
 def unescape(string):
