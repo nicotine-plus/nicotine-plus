@@ -446,13 +446,18 @@ def factorize(filesize, base=1024):
 def truncate_string_byte(string, byte_limit, encoding='utf-8', ellipsize=False):
     """ Truncates a string to fit inside a byte limit """
 
+    string_bytes = string.encode(encoding)
+
+    if len(string_bytes) <= byte_limit:
+        # Nothing to do, return original string
+        return string
+
     if ellipsize:
         ellipsis = "…".encode(encoding)
-        byte_limit = byte_limit - len(ellipsis)
+        string_bytes = string_bytes[:max(byte_limit - len(ellipsis), 0)].rstrip() + ellipsis
     else:
-        ellipsis = b""
+        string_bytes = string_bytes[:byte_limit]
 
-    string_bytes = string.encode(encoding)[:max(byte_limit, 0)].rstrip() + ellipsis
     return string_bytes.decode(encoding, 'ignore')
 
 
