@@ -177,8 +177,9 @@ class MessageDialog(Window):
     def __init__(self, parent, title, message, callback=None, callback_data=None, long_message=None,
                  message_type=Gtk.MessageType.OTHER, buttons=None, width=-1):
 
+        # Prioritize modal non-message dialogs as parent
         for active_dialog in reversed(Window.active_dialogs):
-            if active_dialog.modal:
+            if isinstance(active_dialog, Dialog) and active_dialog.modal:
                 parent = active_dialog.dialog
                 break
 
@@ -188,7 +189,6 @@ class MessageDialog(Window):
             text=title, secondary_text=message
         )
         Window.__init__(self, self.dialog)
-        self.modal = True
         self.container = self.dialog.get_message_area()
         self.dialog.connect("response", self.on_response, callback, callback_data)
 
