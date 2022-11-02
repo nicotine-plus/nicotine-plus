@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2021 Nicotine+ Team
+# COPYRIGHT (C) 2021-2022 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -20,6 +20,7 @@ import os
 import unittest
 
 from pynicotine.config import config
+from pynicotine.utils import encode_path
 
 
 class ConfigTest(unittest.TestCase):
@@ -48,11 +49,11 @@ class ConfigTest(unittest.TestCase):
         config.sections["server"]["login"] = "newname"
         config.write_configuration()
 
-        with open(config.filename, encoding="utf-8") as file_handle:
+        with open(encode_path(config.filename), encoding="utf-8") as file_handle:
             self.assertIn("newname", file_handle.read())
 
         # Verify that the backup is valid
-        old_config = config.filename + ".old"
+        old_config = encode_path(config.filename + ".old")
         self.assertTrue(os.path.exists(old_config))
 
         with open(old_config, encoding="utf-8") as file_handle:

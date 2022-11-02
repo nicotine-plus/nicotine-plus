@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -17,58 +17,53 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import sys
 
 from gi.repository import Gtk
 
+from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.application import GTK_GUI_DIR
 from pynicotine.i18n import TRANSLATION_DOMAIN
-from pynicotine.logfacility import log
+from pynicotine.utils import encode_path
 
 
 """ UI Builder """
 
 
-GUI_DIR = os.path.normpath(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
-UI_DATA = {}
-
-
 class UserInterface:
 
-    def __init__(self, filename):
+    ui_data = {}
 
-        try:
-            if filename not in UI_DATA:
-                with open(os.path.join(GUI_DIR, filename), encoding="utf-8") as file_handle:
-                    if Gtk.get_major_version() == 4:
-                        UI_DATA[filename] = file_handle.read().replace(
-                            "GtkRadioButton", "GtkCheckButton").replace("\"can-focus\"", "\"focusable\"")
-                    else:
-                        UI_DATA[filename] = file_handle.read()
+    def __init__(self, scope, path):
 
-            if Gtk.get_major_version() == 4:
-                builder = Gtk.Builder(self)
-                builder.set_translation_domain(TRANSLATION_DOMAIN)
-                builder.add_from_string(UI_DATA[filename])
-                Gtk.Buildable.get_name = Gtk.Buildable.get_buildable_id
-            else:
-                builder = Gtk.Builder()
-                builder.set_translation_domain(TRANSLATION_DOMAIN)
-                builder.add_from_string(UI_DATA[filename])
-                builder.connect_signals(self)
+        if path not in self.ui_data:
+            with open(encode_path(os.path.join(GTK_GUI_DIR, "ui", path)), encoding="utf-8") as file_handle:
+                if GTK_API_VERSION >= 4:
+                    self.ui_data[path] = file_handle.read().replace(
+                        "GtkRadioButton", "GtkCheckButton").replace("\"can-focus\"", "\"focusable\"")
+                else:
+                    self.ui_data[path] = file_handle.read()
 
-            for obj in builder.get_objects():
-                try:
-                    obj_name = Gtk.Buildable.get_name(obj)
+        if GTK_API_VERSION >= 4:
+            self.builder = Gtk.Builder(scope)
+            self.builder.set_translation_domain(TRANSLATION_DOMAIN)
+            self.builder.add_from_string(self.ui_data[path])
+            Gtk.Buildable.get_name = Gtk.Buildable.get_buildable_id  # pylint: disable=no-member
+        else:
+            self.builder = Gtk.Builder(translation_domain=TRANSLATION_DOMAIN)
+            self.builder.add_from_string(self.ui_data[path])
+            self.builder.connect_signals(scope)                      # pylint: disable=no-member
 
-                    if not obj_name.startswith("_"):
-                        setattr(self, obj_name, obj)
+        self.widgets = self.builder.get_objects()
 
-                except TypeError:
-                    pass
+        for obj in list(self.widgets):
+            try:
+                obj_name = Gtk.Buildable.get_name(obj)
+                if not obj_name.startswith("_"):
+                    continue
 
-        except Exception as error:
-            log.add(_("Failed to load ui file %(file)s: %(error)s"), {
-                "file": filename,
-                "error": error
-            })
-            sys.exit()
+            except TypeError:
+                pass
+
+            self.widgets.remove(obj)
+
+        self.widgets.sort(key=Gtk.Buildable.get_name)

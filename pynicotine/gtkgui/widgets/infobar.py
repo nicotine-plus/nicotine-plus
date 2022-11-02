@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -18,33 +18,34 @@
 
 from gi.repository import Gtk
 
+from pynicotine.gtkgui.application import GTK_API_VERSION
+
 
 class InfoBar:
-    """ Wrapper for setting up a GtkInfoBar """
 
-    def __init__(self, info_bar, message_type):
+    def __init__(self, info_bar, button=None):
 
         self.info_bar = info_bar
-        self.info_bar.set_message_type(message_type)
-        self.info_bar.set_show_close_button(True)
-        self.info_bar.connect("response", self._hide)
-
         self.revealer = self.info_bar.get_ancestor(Gtk.Revealer)
-        self.label = Gtk.Label(wrap=True, visible=True)
+        self.label = Gtk.Label(height_request=24, hexpand=True, margin_start=3, margin_end=3, wrap=True,
+                               visible=True, xalign=0)
 
-        if Gtk.get_major_version() == 4:
+        if button is not None:
+            self.info_bar.add_action_widget(button, Gtk.ResponseType.NONE)
+
+        if GTK_API_VERSION >= 4:
             self.info_bar.add_child(self.label)
         else:
             self.info_bar.get_content_area().add(self.label)
 
         self.set_visible(False)
 
-    def _hide(self, *_args):
-        self.set_visible(False)
-
     def set_visible(self, visible):
+        self.info_bar.set_visible(visible)
         self.revealer.set_reveal_child(visible)
 
-    def show_message(self, message):
+    def show_message(self, message, message_type=Gtk.MessageType.INFO):
+
         self.label.set_text(message)
+        self.info_bar.set_message_type(message_type)
         self.set_visible(True)

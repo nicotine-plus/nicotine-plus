@@ -8,6 +8,7 @@
     <child>
       <object class="GtkFlowBox">
         <property name="visible">True</property>
+        <property name="vexpand">True</property>
         <property name="homogeneous">True</property>
         <property name="column-spacing">18</property>
         <property name="row-spacing">24</property>
@@ -26,8 +27,11 @@
                   <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="label" translatable="yes">Plugins</property>
+                    <property name="halign">start</property>
+                    <property name="selectable">True</property>
                     <property name="xalign">0</property>
-                    <property name="mnemonic_widget">PluginTreeView</property>
+                    <property name="wrap">True</property>
+                    <property name="mnemonic-widget">PluginTreeView</property>
                     <attributes>
                       <attribute name="weight" value="bold"/>
                     </attributes>
@@ -44,28 +48,17 @@
                 <child>
                   <object class="GtkFrame">
                     <property name="visible">True</property>
+                    <property name="vexpand">True</property>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
                         <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkScrolledWindow">
+                          <object class="GtkScrolledWindow" id="PluginTreeView">
                             <property name="visible">True</property>
                             <property name="hexpand">True</property>
                             <property name="vexpand">True</property>
-                            <child>
-                              <object class="GtkTreeView" id="PluginTreeView">
-                                <property name="visible">True</property>
-                                <property name="search-column">1</property>
-                                <property name="sensitive" bind-source="PluginsEnable" bind-property="active" bind-flags="bidirectional|sync-create"/>
-                                <child internal-child="selection">
-                                  <object class="GtkTreeSelection">
-                                    <property name="mode">browse</property>
-                                    <signal name="changed" handler="on_select_plugin"/>
-                                  </object>
-                                </child>
-                              </object>
-                            </child>
+                            <property name="sensitive" bind-source="PluginsEnable" bind-property="active" bind-flags="bidirectional|sync-create"/>
                             <style>
                               <class name="border-bottom"/>
                             </style>
@@ -80,7 +73,7 @@
                             <property name="margin-bottom">6</property>
                             <property name="spacing">6</property>
                             <child>
-                              <object class="GtkButton" id="PluginFolder">
+                              <object class="GtkButton" id="_add_plugins_button">
                                 <property name="visible">True</property>
                                 <property name="tooltip-text" translatable="yes">Add Plugins</property>
                                 <signal name="clicked" handler="on_add_plugins"/>
@@ -100,6 +93,7 @@
                                         <property name="ellipsize">end</property>
                                         <property name="label" translatable="yes">_Add Plugins</property>
                                         <property name="use-underline">True</property>
+                                        <property name="mnemonic-widget">_add_plugins_button</property>
                                       </object>
                                     </child>
                                   </object>
@@ -136,6 +130,7 @@
                                             <property name="ellipsize">end</property>
                                             <property name="label" translatable="yes">_Settings</property>
                                             <property name="use-underline">True</property>
+                                            <property name="mnemonic-widget">PluginProperties</property>
                                           </object>
                                         </child>
                                       </object>
@@ -166,7 +161,7 @@
                 <property name="visible">True</property>
                 <property name="spacing">18</property>
                 <property name="orientation">vertical</property>
-                <property name="width-request">320</property>
+                <property name="width-request">260</property>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
@@ -184,7 +179,9 @@
                               <object class="GtkLabel" id="PluginName">
                                 <property name="visible">True</property>
                                 <property name="xalign">0</property>
-                                <property name="hexpand">True</property>
+                                <property name="wrap">True</property>
+                                <property name="halign">start</property>
+                                <property name="selectable">True</property>
                                 <attributes>
                                   <attribute name="weight" value="bold"/>
                                 </attributes>
@@ -205,7 +202,7 @@
                                     <property name="visible">True</property>
                                     <property name="xalign">0</property>
                                     <property name="label" translatable="yes">Version:</property>
-                                    <property name="mnemonic_widget">PluginVersion</property>
+                                    <property name="mnemonic-widget">PluginVersion</property>
                                     <property name="width-chars">15</property>
                                   </object>
                                 </child>
@@ -214,6 +211,7 @@
                                     <property name="visible">True</property>
                                     <property name="selectable">True</property>
                                     <property name="xalign">0</property>
+                                    <property name="wrap">True</property>
                                   </object>
                                 </child>
                               </object>
@@ -226,7 +224,7 @@
                                     <property name="visible">True</property>
                                     <property name="xalign">0</property>
                                     <property name="label" translatable="yes">Author(s):</property>
-                                    <property name="mnemonic_widget">PluginAuthor</property>
+                                    <property name="mnemonic-widget">PluginAuthor</property>
                                     <property name="width-chars">15</property>
                                   </object>
                                 </child>
@@ -235,6 +233,7 @@
                                     <property name="visible">True</property>
                                     <property name="selectable">True</property>
                                     <property name="xalign">0</property>
+                                    <property name="wrap">True</property>
                                   </object>
                                 </child>
                               </object>
@@ -248,17 +247,18 @@
                 <child>
                   <object class="GtkFrame">
                     <property name="visible">True</property>
+                    <property name="vexpand">True</property>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
                         <child>
                           <object class="GtkScrolledWindow">
                             <property name="visible">True</property>
+                            <property name="hexpand">True</property>
                             <property name="vexpand">True</property>
                             <child>
                               <object class="GtkTextView" id="PluginDescription">
                                 <property name="visible">True</property>
-                                <property name="hexpand">True</property>
                                 <property name="editable">False</property>
                                 <property name="cursor-visible">False</property>
                                 <property name="pixels-above-lines">1</property>

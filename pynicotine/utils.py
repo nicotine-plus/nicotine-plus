@@ -1,7 +1,7 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 # COPYRIGHT (C) 2020 Lene Preuss <lene.preuss@gmail.com>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
-# COPYRIGHT (C) 2007 Daelstorm <daelstorm@gmail.com>
+# COPYRIGHT (C) 2007 daelstorm <daelstorm@gmail.com>
 # COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
 # COPYRIGHT (C) 2001-2003 Alexander Kanavin
 #
@@ -33,13 +33,17 @@ import webbrowser
 
 from pynicotine.config import config
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import FileAttribute
+from pynicotine.slskmessages import UINT_LIMIT
 
 FILE_SIZE_SUFFIXES = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
 PUNCTUATION = ['!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>',
                '?', '@', '[', '\\', ']', '^', '_', '`', '{', '|', '}', '~', '–', '—', '‐', '’', '“', '”', '…']
 ILLEGALPATHCHARS = ['?', ':', '>', '<', '|', '*', '"']
 ILLEGALFILECHARS = ILLEGALPATHCHARS + ['\\', '/']
+LONG_PATH_PREFIX = "\\\\?\\"
 REPLACEMENTCHAR = '_'
+TRANSLATE_PUNCTUATION = str.maketrans(dict.fromkeys(PUNCTUATION, ' '))
 OPEN_SOULSEEK_URL = None
 
 
@@ -64,8 +68,8 @@ def rename_process(new_name, debug_info=False):
             libc = ctypes.CDLL(None)
             libc.setproctitle(new_name)
 
-        except Exception as error:
-            errors.append(error)
+        except Exception as second_error:
+            errors.append(second_error)
             errors.append("Failed BSD style")
 
     if debug_info and errors:
@@ -104,59 +108,103 @@ def clean_path(path, absolute=False):
     return path
 
 
-def open_file_path(file_path, command=None):
+def encode_path(path, prefix=True):
+    """ Converts a file path to bytes for processing by the system.
+    On Windows, also append prefix to enable extended-length path. """
+
+    if sys.platform == "win32" and prefix:
+        path = path.replace('/', '\\')
+
+        if path.startswith('\\\\'):
+            path = "UNC" + path[1:]
+
+        path = LONG_PATH_PREFIX + path
+
+    return path.encode("utf-8")
+
+
+def _try_open_uri(uri):
+
+    if sys.platform not in ("darwin", "win32"):
+        try:
+            from gi.repository import Gio  # pylint: disable=import-error
+            Gio.AppInfo.launch_default_for_uri(uri)
+            return
+
+        except Exception:
+            # Fall back to webbrowser module
+            pass
+
+    if not webbrowser.open(uri):
+        raise webbrowser.Error("No known URI provider available")
+
+
+def open_file_path(file_path, command=None, create_folder=False, create_file=False):
     """ Currently used to either open a folder or play an audio file
     Tries to run a user-specified command first, and falls back to
     the system default. """
 
+    if file_path is None:
+        return False
+
     try:
         file_path = os.path.normpath(file_path)
+        file_path_encoded = encode_path(file_path)
+
+        if not os.path.exists(file_path_encoded):
+            if create_folder:
+                os.makedirs(file_path_encoded)
+
+            elif create_file:
+                with open(file_path_encoded, "w", encoding="utf-8"):
+                    # Create empty file
+                    pass
+            else:
+                raise FileNotFoundError("File path does not exist")
 
         if command and "$" in command:
             execute_command(command, file_path)
 
         elif sys.platform == "win32":
-            os.startfile(file_path)
+            os.startfile(file_path_encoded)  # pylint: disable=no-member
 
         elif sys.platform == "darwin":
             execute_command("open $", file_path)
 
-        elif not webbrowser.open(file_path):
-            raise webbrowser.Error("no known URL provider available")
+        else:
+            _try_open_uri("file:///" + file_path)
 
     except Exception as error:
-        log.add(_("Failed to open file path: %s"), error)
+        log.add(_("Cannot open file path %(path)s: %(error)s"), {"path": file_path, "error": error})
+        return False
+
+    return True
 
 
 def open_uri(uri):
     """ Open a URI in an external (web) browser. The given argument has
     to be a properly formed URI including the scheme (fe. HTTP). """
 
-    # Situation 1, user defined a way of handling the protocol
-    protocol = uri[:uri.find(":")]
-    protocol_handlers = config.sections["urls"]["protocols"]
+    try:
+        # Situation 1, user defined a way of handling the protocol
+        protocol = uri[:uri.find(":")]
+        protocol_handlers = config.sections["urls"]["protocols"]
 
-    if protocol in protocol_handlers and protocol_handlers[protocol]:
-        try:
+        if protocol in protocol_handlers and protocol_handlers[protocol]:
             execute_command(protocol_handlers[protocol], uri)
             return True
 
-        except RuntimeError as error:
-            log.add(error)
+        if protocol == "slsk":
+            OPEN_SOULSEEK_URL(uri.strip())  # pylint:disable=not-callable
+            return True
 
-    if protocol == "slsk":
-        OPEN_SOULSEEK_URL(uri.strip())  # pylint:disable=not-callable
-        return True
-
-    # Situation 2, user did not define a way of handling the protocol
-    try:
-        if not webbrowser.open(uri):
-            raise webbrowser.Error("no known URL provider available")
+        # Situation 2, user did not define a way of handling the protocol
+        _try_open_uri(uri)
 
         return True
 
     except Exception as error:
-        log.add(_("Failed to open URL: %s"), error)
+        log.add(_("Cannot open URL %(url)s: %(error)s"), {"url": uri, "error": error})
 
     return False
 
@@ -171,35 +219,25 @@ def delete_log(folder, filename):
 
 def _handle_log(folder, filename, callback):
 
-    try:
-        if not os.path.isdir(folder):
-            os.makedirs(folder)
+    folder_encoded = encode_path(folder)
+    path = os.path.join(folder, clean_file(filename) + ".log")
 
-        filename = clean_file(filename) + ".log"
-        path = os.path.join(folder, filename)
+    try:
+        if not os.path.isdir(folder_encoded):
+            os.makedirs(folder_encoded)
+
         callback(path)
 
     except Exception as error:
-        log.add("Failed to process log file: %s", error)
+        log.add(_("Cannot access log file %(path)s: %(error)s"), {"path": path, "error": error})
 
 
 def open_log_callback(path):
-
-    if not os.path.exists(path):
-        with open(path, "w", encoding="utf-8"):
-            # No logs, create empty file
-            pass
-
-    open_file_path(path)
+    open_file_path(path, create_file=True)
 
 
 def delete_log_callback(path):
-
-    with open(path, "w", encoding="utf-8"):
-        # Check if path should contain special characters
-        pass
-
-    os.remove(path)
+    os.remove(encode_path(path))
 
 
 def get_latest_version():
@@ -223,7 +261,7 @@ def get_latest_version():
 
 def make_version(version):
 
-    major, minor, patch = (int(i) for i in version.split(".")[:3])
+    major, minor, patch = version.split(".")[:3]
     stable = 1
 
     if "dev" in version or "rc" in version:
@@ -231,7 +269,7 @@ def make_version(version):
         # A dev version will be one less than a stable version
         stable = 0
 
-    return (major << 24) + (minor << 16) + (patch << 8) + stable
+    return (int(major) << 24) + (int(minor) << 16) + (int(patch.split("rc", 1)[0]) << 8) + stable
 
 
 def human_length(seconds):
@@ -250,128 +288,90 @@ def human_length(seconds):
     return ret
 
 
+def get_file_attributes(attributes):
+
+    try:
+        bitrate = attributes.get(str(FileAttribute.BITRATE))
+        length = attributes.get(str(FileAttribute.DURATION))
+        vbr = attributes.get(str(FileAttribute.VBR))
+        sample_rate = attributes.get(str(FileAttribute.SAMPLE_RATE))
+        bit_depth = attributes.get(str(FileAttribute.BIT_DEPTH))
+
+    except AttributeError:
+        # Legacy attribute list format used for shares lists saved in Nicotine+ 3.2.2 and earlier
+        bitrate = length = vbr = sample_rate = bit_depth = None
+
+        if len(attributes) == 3:
+            attribute1, attribute2, attribute3 = attributes
+
+            if attribute3 in (0, 1):
+                bitrate = attribute1
+                length = attribute2
+                vbr = attribute3
+
+            elif attribute3 > 1:
+                length = attribute1
+                sample_rate = attribute2
+                bit_depth = attribute3
+
+        elif len(attributes) == 2:
+            attribute1, attribute2 = attributes
+
+            if attribute2 in (0, 1):
+                bitrate = attribute1
+                vbr = attribute2
+
+            elif attribute1 >= 8000 and attribute2 <= 64:
+                sample_rate = attribute1
+                bit_depth = attribute2
+
+            else:
+                bitrate = attribute1
+                length = attribute2
+
+    return bitrate, length, vbr, sample_rate, bit_depth
+
+
 def get_result_bitrate_length(filesize, attributes):
     """ Used to get the audio bitrate and length of search results and
     user browse files """
 
-    h_bitrate = ""
-    h_length = ""
+    bitrate, length, vbr, sample_rate, bit_depth = get_file_attributes(attributes)
 
-    bitrate = 0
-    length = 0
-
-    # If there are 3 entries in the attribute list
-    if len(attributes) == 3:
-
-        first = attributes[0]
-        second = attributes[1]
-        third = attributes[2]
-
-        # Sometimes the vbr indicator is in third position
-        # Known clients: Soulseek NS, Nicotine+, Museek+, SoulSeeX
-        if third in (0, 1):
-
-            if third == 1:
-                h_bitrate = " (vbr)"
-
-            bitrate = first
-            h_bitrate = str(bitrate) + h_bitrate
-
-            length = second
-            h_length = human_length(second)
-
-        # Sometimes the vbr indicator is in second position
-        # Known clients: unknown (does this actually exist?)
-        elif second in (0, 1):
-
-            if second == 1:
-                h_bitrate = " (vbr)"
-
-            bitrate = first
-            h_bitrate = str(bitrate) + h_bitrate
-
-            length = third
-            h_length = human_length(third)
-
-        # Lossless audio, length is in first position
-        # Known clients: SoulseekQt 2015-6-12 and later
-        elif third > 1:
-
-            length = first
-            h_length = human_length(first)
-
+    if bitrate is None:
+        if sample_rate and bit_depth:
             # Bitrate = sample rate (Hz) * word length (bits) * channel count
             # Bitrate = 44100 * 16 * 2
-            bitrate = (second * third * 2) // 1000
-            h_bitrate = str(bitrate)
+            bitrate = (sample_rate * bit_depth * 2) // 1000
 
         else:
+            bitrate = -1
 
-            bitrate = first
-            h_bitrate = str(bitrate) + h_bitrate
+    if length is None:
+        if bitrate > 0:
+            # Dividing the file size by the bitrate in Bytes should give us a good enough approximation
+            length = filesize / (bitrate * 125)
 
-    # If there are 2 entries in the attribute list
-    # Known clients: SoulseekQt
-    elif len(attributes) == 2:
-
-        first = attributes[0]
-        second = attributes[1]
-
-        # Sometimes the vbr indicator is in second position
-        # Known clients: SoulseekQt 2015-2-21 and earlier
-        if second in (0, 1):
-
-            # If it's a vbr file we can't deduce the length
-            if second == 1:
-
-                h_bitrate = " (vbr)"
-
-                bitrate = first
-                h_bitrate = str(bitrate) + h_bitrate
-
-            # If it's a constant bitrate we can deduce the length
-            else:
-
-                bitrate = first
-                h_bitrate = str(bitrate) + h_bitrate
-
-                if bitrate > 0:
-                    # Dividing the file size by the bitrate in Bytes should give us a good enough approximation
-                    length = filesize / (bitrate * 125)
-                    h_length = human_length(length)
-
-        # Lossless audio without length attribute
-        # Known clients: SoulseekQt 2015-6-12 and later
-        elif first >= 8000 and second <= 64:
-
-            # Bitrate = sample rate (Hz) * word length (bits) * channel count
-            # Bitrate = 44100 * 16 * 2
-            bitrate = (first * second * 2) // 1000
-            h_bitrate = str(bitrate)
-
-            if bitrate > 0:
-                # Dividing the file size by the bitrate in Bytes should give us a good enough approximation
-                length = filesize / (bitrate * 125)
-                h_length = human_length(length)
-
-        # Sometimes the bitrate is in first position and the length in second position
-        # Known clients: SoulseekQt 2015-6-12 and later
         else:
-
-            bitrate = first
-            h_bitrate = str(bitrate) + h_bitrate
-
-            length = second
-            h_length = human_length(second)
+            length = -1
 
     # Ignore invalid values
-    if bitrate <= 0:
-        h_bitrate = ""
+    if bitrate <= 0 or bitrate > UINT_LIMIT:
         bitrate = 0
+        h_bitrate = ""
 
-    if length < 0:
-        h_length = ""
+    else:
+        h_bitrate = str(bitrate)
+
+        if vbr == 1:
+            h_bitrate += " (vbr)"
+
+    if length < 0 or length > UINT_LIMIT:
         length = 0
+        h_length = ""
+
+    else:
+        h_length = human_length(length)
 
     return h_bitrate, bitrate, h_length, length
 
@@ -392,7 +392,7 @@ def _human_speed_or_size(unit):
     except TypeError:
         pass
 
-    return unit
+    return str(unit)
 
 
 def human_speed(speed):
@@ -405,6 +405,60 @@ def human_size(filesize):
 
 def humanize(number):
     return "{:n}".format(number)
+
+
+def factorize(filesize, base=1024):
+    """ Converts filesize string with a given unit into raw integer size,
+        defaults to binary for "k", "m", "g" suffixes (KiB, MiB, GiB) """
+
+    if not filesize:
+        return None, None
+
+    if filesize[-1:].lower() == 'b':
+        base = 1000  # Byte suffix detected, prepare to use decimal if necessary
+        filesize = filesize[:-1]
+
+    if filesize[-1:].lower() == 'i':
+        base = 1024  # Binary requested, stop using decimal
+        filesize = filesize[:-1]
+
+    if filesize.lower()[-1:] == "g":
+        factor = pow(base, 3)
+        filesize = filesize[:-1]
+
+    elif filesize.lower()[-1:] == "m":
+        factor = pow(base, 2)
+        filesize = filesize[:-1]
+
+    elif filesize.lower()[-1:] == "k":
+        factor = base
+        filesize = filesize[:-1]
+
+    else:
+        factor = 1
+
+    try:
+        return int(float(filesize) * factor), factor
+    except ValueError:
+        return None, factor
+
+
+def truncate_string_byte(string, byte_limit, encoding='utf-8', ellipsize=False):
+    """ Truncates a string to fit inside a byte limit """
+
+    string_bytes = string.encode(encoding)
+
+    if len(string_bytes) <= byte_limit:
+        # Nothing to do, return original string
+        return string
+
+    if ellipsize:
+        ellipsis = "…".encode(encoding)
+        string_bytes = string_bytes[:max(byte_limit - len(ellipsis), 0)].rstrip() + ellipsis
+    else:
+        string_bytes = string_bytes[:byte_limit]
+
+    return string_bytes.decode(encoding, 'ignore')
 
 
 def unescape(string):
@@ -505,14 +559,20 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
 
     try:
         if len(subcommands) == 1:  # no need to fool around with pipes
-            procs.append(Popen(subcommands[0], stdout=finalstdout))
+            procs.append(Popen(subcommands[0], stdout=finalstdout))      # pylint: disable=consider-using-with
         else:
-            procs.append(Popen(subcommands[0], stdout=PIPE))
+            procs.append(Popen(subcommands[0], stdout=PIPE))             # pylint: disable=consider-using-with
+
             for subcommand in subcommands[1:-1]:
-                procs.append(Popen(subcommand, stdin=procs[-1].stdout, stdout=PIPE))
-            procs.append(Popen(subcommands[-1], stdin=procs[-1].stdout, stdout=finalstdout))
+                procs.append(Popen(subcommand, stdin=procs[-1].stdout,   # pylint: disable=consider-using-with
+                                   stdout=PIPE))
+
+            procs.append(Popen(subcommands[-1], stdin=procs[-1].stdout,  # pylint: disable=consider-using-with
+                               stdout=finalstdout))
+
         if not background and not returnoutput:
             procs[-1].wait()
+
     except Exception as error:
         raise RuntimeError("Problem while executing command %s (%s of %s)" %
                            (subcommands[len(procs)], len(procs) + 1, len(subcommands))) from error
@@ -529,11 +589,13 @@ def load_file(path, load_func, use_old_file=False):
         if use_old_file:
             path = path + ".old"
 
-        elif os.path.isfile(path + ".old"):
-            if not os.path.isfile(path):
+        elif os.path.isfile(encode_path(path + ".old")):
+            path_encoded = encode_path(path)
+
+            if not os.path.isfile(path_encoded):
                 raise OSError("*.old file is present but main file is missing")
 
-            if os.path.getsize(path) == 0:
+            if os.path.getsize(path_encoded) == 0:
                 # Empty files should be considered broken/corrupted
                 raise OSError("*.old file is present but main file is empty")
 
@@ -553,28 +615,35 @@ def load_file(path, load_func, use_old_file=False):
 
 def write_file_and_backup(path, callback, protect=False):
 
+    path_encoded = encode_path(path)
+    path_old_encoded = encode_path(path + ".old")
+
     # Back up old file to path.old
     try:
-        if os.path.exists(path):
-            from shutil import copy2
-            copy2(path, path + ".old")
+        if os.path.exists(path_encoded) and os.stat(path_encoded).st_size > 0:
+            os.replace(path_encoded, path_old_encoded)
 
             if protect:
-                os.chmod(path + ".old", 0o600)
+                os.chmod(path_old_encoded, 0o600)
 
     except Exception as error:
         log.add(_("Unable to back up file %(path)s: %(error)s"), {
             "path": path,
             "error": error
         })
+        return
 
     # Save new file
     if protect:
         oldumask = os.umask(0o077)
 
     try:
-        with open(path, "w", encoding="utf-8") as file_handle:
+        with open(path_encoded, "w", encoding="utf-8") as file_handle:
             callback(file_handle)
+
+            # Force write to file immediately in case of hard shutdown
+            file_handle.flush()
+            os.fsync(file_handle.fileno())
 
     except Exception as error:
         log.add(_("Unable to save file %(path)s: %(error)s"), {
@@ -584,13 +653,13 @@ def write_file_and_backup(path, callback, protect=False):
 
         # Attempt to restore file
         try:
-            if os.path.exists(path + ".old"):
-                os.rename(path + ".old", path)
+            if os.path.exists(path_old_encoded):
+                os.replace(path_old_encoded, path_encoded)
 
-        except Exception as error:
+        except Exception as second_error:
             log.add(_("Unable to restore previous file %(path)s: %(error)s"), {
                 "path": path,
-                "error": error
+                "error": second_error
             })
 
     if protect:
@@ -816,7 +885,7 @@ def get_completion_list(commands, rooms):
                 completion_list.append(user)
 
     if config_words["aliases"]:
-        for k in config.sections["server"]["command_aliases"].keys():
+        for k in config.sections["server"]["command_aliases"]:
             completion_list.append("/" + str(k))
 
     if config_words["commands"]:

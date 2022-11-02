@@ -14,7 +14,10 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="label" translatable="yes">Ignored Users</property>
+            <property name="halign">start</property>
+            <property name="selectable">True</property>
             <property name="xalign">0</property>
+            <property name="wrap">True</property>
             <attributes>
               <attribute name="weight" value="bold"/>
             </attributes>
@@ -42,6 +45,7 @@
     <child>
       <object class="GtkFlowBox">
         <property name="visible">True</property>
+        <property name="vexpand">True</property>
         <property name="homogeneous">True</property>
         <property name="column-spacing">18</property>
         <property name="row-spacing">24</property>
@@ -59,9 +63,11 @@
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">True</property>
-                    <property name="xalign">0</property>
                     <property name="label" translatable="yes">Users</property>
-                    <property name="mnemonic_widget">IgnoredUsers</property>
+                    <property name="halign">start</property>
+                    <property name="selectable">True</property>
+                    <property name="xalign">0</property>
+                    <property name="wrap">True</property>
                     <attributes>
                       <attribute name="weight" value="bold"/>
                     </attributes>
@@ -70,26 +76,16 @@
                 <child>
                   <object class="GtkFrame">
                     <property name="visible">True</property>
+                    <property name="vexpand">True</property>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
                         <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkScrolledWindow">
+                          <object class="GtkScrolledWindow" id="IgnoredUsers">
                             <property name="visible">True</property>
                             <property name="hexpand">True</property>
                             <property name="vexpand">True</property>
-                            <child>
-                              <object class="GtkTreeView" id="IgnoredUsers">
-                                <property name="visible">True</property>
-                                <property name="rubber-banding">True</property>
-                                <child internal-child="selection">
-                                  <object class="GtkTreeSelection">
-                                    <property name="mode">multiple</property>
-                                  </object>
-                                </child>
-                              </object>
-                            </child>
                             <style>
                               <class name="border-bottom"/>
                             </style>
@@ -104,7 +100,7 @@
                             <property name="margin-bottom">6</property>
                             <property name="spacing">6</property>
                             <child>
-                              <object class="GtkButton">
+                              <object class="GtkButton" id="_add_user_button">
                                 <property name="visible">True</property>
                                 <property name="tooltip-text" translatable="yes">Add…</property>
                                 <signal name="clicked" handler="on_add_ignored"/>
@@ -124,6 +120,7 @@
                                         <property name="ellipsize">end</property>
                                         <property name="label" translatable="yes">Add…</property>
                                         <property name="use-underline">True</property>
+                                        <property name="mnemonic-widget">_add_user_button</property>
                                       </object>
                                     </child>
                                   </object>
@@ -134,7 +131,7 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkButton">
+                              <object class="GtkButton" id="_remove_user_button">
                                 <property name="visible">True</property>
                                 <property name="tooltip-text" translatable="yes">Remove</property>
                                 <signal name="clicked" handler="on_remove_ignored"/>
@@ -154,6 +151,7 @@
                                         <property name="ellipsize">end</property>
                                         <property name="label" translatable="yes">Remove</property>
                                         <property name="use-underline">True</property>
+                                        <property name="mnemonic-widget">_remove_user_button</property>
                                       </object>
                                     </child>
                                   </object>
@@ -185,9 +183,11 @@
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">True</property>
-                    <property name="xalign">0</property>
                     <property name="label" translatable="yes">IP Addresses</property>
-                    <property name="mnemonic_widget">IgnoredIPs</property>
+                    <property name="halign">start</property>
+                    <property name="selectable">True</property>
+                    <property name="xalign">0</property>
+                    <property name="wrap">True</property>
                     <attributes>
                       <attribute name="weight" value="bold"/>
                     </attributes>
@@ -196,26 +196,17 @@
                 <child>
                   <object class="GtkFrame">
                     <property name="visible">True</property>
+                    <property name="vexpand">True</property>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
                         <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkScrolledWindow">
+                          <object class="GtkScrolledWindow" id="IgnoredIPs">
                             <property name="visible">True</property>
+                            <property name="width-request">260</property>
                             <property name="hexpand">True</property>
                             <property name="vexpand">True</property>
-                            <child>
-                              <object class="GtkTreeView" id="IgnoredIPs">
-                                <property name="visible">True</property>
-                                <property name="rubber-banding">True</property>
-                                <child internal-child="selection">
-                                  <object class="GtkTreeSelection">
-                                    <property name="mode">multiple</property>
-                                  </object>
-                                </child>
-                              </object>
-                            </child>
                             <style>
                               <class name="border-bottom"/>
                             </style>
@@ -230,7 +221,7 @@
                             <property name="margin-bottom">6</property>
                             <property name="spacing">6</property>
                             <child>
-                              <object class="GtkButton">
+                              <object class="GtkButton" id="_add_ip_button">
                                 <property name="visible">True</property>
                                 <property name="tooltip-text" translatable="yes">Add…</property>
                                 <signal name="clicked" handler="on_add_ignored_ip"/>
@@ -250,6 +241,7 @@
                                         <property name="ellipsize">end</property>
                                         <property name="label" translatable="yes">Add…</property>
                                         <property name="use-underline">True</property>
+                                        <property name="mnemonic-widget">_add_ip_button</property>
                                       </object>
                                     </child>
                                   </object>
@@ -260,7 +252,7 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkButton">
+                              <object class="GtkButton" id="_remove_ip_button">
                                 <property name="visible">True</property>
                                 <property name="tooltip-text" translatable="yes">Remove</property>
                                 <signal name="clicked" handler="on_remove_ignored_ip"/>
@@ -280,6 +272,7 @@
                                         <property name="ellipsize">end</property>
                                         <property name="label" translatable="yes">Remove</property>
                                         <property name="use-underline">True</property>
+                                        <property name="mnemonic-widget">_remove_ip_button</property>
                                       </object>
                                     </child>
                                   </object>

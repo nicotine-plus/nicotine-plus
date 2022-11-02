@@ -1,6 +1,4 @@
-# pylint: disable=attribute-defined-outside-init
-
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -23,17 +21,23 @@ from pynicotine.pluginsystem import BasePlugin
 
 class Plugin(BasePlugin):
 
+    def __init__(self, *args, **kwargs):
+
+        super().__init__(*args, **kwargs)
+
+        self.np_format = None
+
     def outgoing_global_search_event(self, text):
         return (self.get_np(text),)
 
     def outgoing_room_search_event(self, rooms, text):
-        return (rooms, self.get_np(text))
+        return rooms, self.get_np(text)
 
     def outgoing_buddy_search_event(self, text):
         return (self.get_np(text),)
 
     def outgoing_user_search_event(self, users, text):
-        return (users, self.get_np(text))
+        return users, self.get_np(text)
 
     def get_np(self, text):
         self.np_format = text

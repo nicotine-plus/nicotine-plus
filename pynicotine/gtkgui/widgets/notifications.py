@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -17,25 +17,26 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys
-import threading
 import time
 
 from ctypes import Structure, byref, sizeof
+from threading import Thread
 
 from gi.repository import Gdk
 from gi.repository import Gio
-from gi.repository import Gtk
 
 from pynicotine.config import config
-from pynicotine.gtkgui.widgets.theme import get_icon
+from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.logfacility import log
+from pynicotine.utils import truncate_string_byte
 
 
 class Notifications:
 
-    def __init__(self, frame):
+    def __init__(self, frame, core):
 
         self.frame = frame
+        self.core = core
         self.application = Gio.Application.get_default()
 
         if sys.platform == "win32":
@@ -45,12 +46,11 @@ class Notifications:
 
         item = room if location == "rooms" else user
 
-        if self.frame.np.notifications.add_hilite_item(location, item):
-            self.frame.tray_icon.set_icon()
+        if self.core.notifications.add_hilite_item(location, item):
+            self.frame.tray_icon.update_icon()
 
-        if (Gtk.get_major_version() == 3 and config.sections["ui"]["urgencyhint"]
-                and not self.frame.MainWindow.is_active()):
-            self.frame.MainWindow.set_urgency_hint(True)
+        if config.sections["ui"]["urgencyhint"] and not self.frame.window.is_active():
+            self.set_urgency_hint(True)
 
         self.set_title(user)
 
@@ -58,43 +58,57 @@ class Notifications:
 
         item = room if location == "rooms" else user
 
-        if self.frame.np.notifications.remove_hilite_item(location, item):
+        if self.core.notifications.remove_hilite_item(location, item):
             self.set_title(item)
-            self.frame.tray_icon.set_icon()
+            self.frame.tray_icon.update_icon()
 
     def set_title(self, user=None):
 
         app_name = config.application_name
 
-        if (not self.frame.np.notifications.chat_hilites["rooms"]
-                and not self.frame.np.notifications.chat_hilites["private"]):
+        if (not self.core.notifications.chat_hilites["rooms"]
+                and not self.core.notifications.chat_hilites["private"]):
             # Reset Title
-            self.frame.MainWindow.set_title(app_name)
+            self.frame.window.set_title(app_name)
             return
 
         if not config.sections["notifications"]["notification_window_title"]:
             return
 
-        if self.frame.np.notifications.chat_hilites["private"]:
+        if self.core.notifications.chat_hilites["private"]:
             # Private Chats have a higher priority
-            user = self.frame.np.notifications.chat_hilites["private"][-1]
+            user = self.core.notifications.chat_hilites["private"][-1]
 
-            self.frame.MainWindow.set_title(
+            self.frame.window.set_title(
                 app_name + " - " + _("Private Message from %(user)s") % {'user': user}
             )
 
-        elif self.frame.np.notifications.chat_hilites["rooms"]:
+        elif self.core.notifications.chat_hilites["rooms"]:
             # Allow for the possibility the username is not available
-            room = self.frame.np.notifications.chat_hilites["rooms"][-1]
+            room = self.core.notifications.chat_hilites["rooms"][-1]
 
             if user is None:
-                self.frame.MainWindow.set_title(
+                self.frame.window.set_title(
                     app_name + " - " + _("You've been mentioned in the %(room)s room") % {'room': room}
                 )
             else:
-                self.frame.MainWindow.set_title(
+                self.frame.window.set_title(
                     app_name + " - " + _("%(user)s mentioned you in the %(room)s room") % {'user': user, 'room': room}
                 )
+
+    def set_urgency_hint(self, enabled):
+
+        if GTK_API_VERSION >= 4:
+            surface = self.frame.window.get_surface()
+        else:
+            surface = self.frame.window.get_window()
+
+        try:
+            surface.set_urgency_hint(enabled)
+
+        except AttributeError:
+            # No support for urgency hints
+            pass
 
     def new_text_notification(self, message, title=None, priority=Gio.NotificationPriority.NORMAL):
 
@@ -119,11 +133,6 @@ class Notifications:
 
             notification_popup = Gio.Notification.new(title)
             notification_popup.set_body(message)
-
-            icon = get_icon("notify")
-            if icon:
-                notification_popup.set_icon(icon)
-
             notification_popup.set_priority(priority)
 
             self.application.send_notification(None, notification_popup)
@@ -182,9 +191,7 @@ class WinNotify:
         if self.worker and self.worker.is_alive():
             return
 
-        self.worker = threading.Thread(target=self.work)
-        self.worker.name = "WinNotify"
-        self.worker.daemon = True
+        self.worker = Thread(target=self.work, name="WinNotify", daemon=True)
         self.worker.start()
 
     def work(self):
@@ -203,8 +210,8 @@ class WinNotify:
             self.tray_icon.show()
 
         # Need to account for the null terminated character appended to the message length by Windows
-        self.nid.sz_info_title = (title[:62].strip() + "…") if len(title) > 63 else title
-        self.nid.sz_info = (message[:254].strip() + "…") if len(message) > 255 else message
+        self.nid.sz_info_title = truncate_string_byte(title, byte_limit=63, ellipsize=True)
+        self.nid.sz_info = truncate_string_byte(message, byte_limit=255, ellipsize=True)
 
         windll.shell32.Shell_NotifyIconW(self.NIM_MODIFY, byref(self.nid))
         time.sleep(timeout)

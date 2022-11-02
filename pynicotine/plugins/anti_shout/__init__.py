@@ -1,5 +1,5 @@
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
-# COPYRIGHT (C) 2009 Quinox <quinox@users.sf.net>
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2009 quinox <quinox@users.sf.net>
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -51,10 +51,10 @@ class Plugin(BasePlugin):
         return text.capitalize()
 
     def incoming_private_chat_event(self, user, line):
-        return (user, self.antishout(line))
+        return user, self.antishout(line)
 
     def incoming_public_chat_event(self, room, user, line):
-        return (room, user, self.antishout(line))
+        return room, user, self.antishout(line)
 
     def antishout(self, line):
 

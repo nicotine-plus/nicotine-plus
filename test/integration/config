@@ -100,7 +100,6 @@ transferslogsdir =
 rooms_timestamp = %H:%M:%S
 private_timestamp = %Y-%m-%d %H:%M:%S
 log_timestamp = %Y-%m-%d %H:%M:%S
-timestamps = True
 privatechat = True
 chatrooms = True
 transfers = False
@@ -144,6 +143,7 @@ max_displayed_results = 1500
 min_search_chars = 3
 remove_special_chars = True
 private_search_results = True
+filterlength = []
 
 [ui]
 dark_mode = False
@@ -229,6 +229,7 @@ notification_popup_folder = True
 notification_popup_private_message = True
 notification_popup_chatroom = False
 notification_popup_chatroom_mention = True
+notification_popup_wish = True
 
 [plugins]
 enable = True
@@ -241,4 +242,8 @@ downloaded_size = 0
 started_uploads = 0
 completed_uploads = 0
 uploaded_size = 0
+since_timestamp = 0
+
+[userbrowse]
+expand_folders = True
 

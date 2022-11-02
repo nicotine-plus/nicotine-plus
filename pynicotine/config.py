@@ -1,10 +1,10 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016-2018 Mutnick <mutnick@techie.com>
-# COPYRIGHT (C) 2008-2011 Quinox <quinox@users.sf.net>
-# COPYRIGHT (C) 2009 Hedonist <ak@sensi.org>
-# COPYRIGHT (C) 2007 Gallows <g4ll0ws@gmail.com>
-# COPYRIGHT (C) 2006-2009 Daelstorm <daelstorm@gmail.com>
+# COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
+# COPYRIGHT (C) 2009 hedonist <ak@sensi.org>
+# COPYRIGHT (C) 2007 gallows <g4ll0ws@gmail.com>
+# COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
 # COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
 # COPYRIGHT (C) 2001-2003 Alexander Kanavin
 #
@@ -54,16 +54,16 @@ class Config:
 
         config_dir, self.data_dir = self.get_user_directories()
         self.filename = os.path.join(config_dir, "config")
-        self.plugin_dir = os.path.join(self.data_dir, "plugins")
-        self.version = "3.3.0.dev1"
+        self.version = "3.3.0.dev3"
         self.python_version = sys.version
         self.gtk_version = ""
 
         self.application_name = "Nicotine+"
         self.application_id = "org.nicotine_plus.Nicotine"
         self.summary = _("Graphical client for the Soulseek peer-to-peer network")
-        self.copyright = """© 2004–2022 Nicotine+ Team
-© 2003–2004 Nicotine Team
+        self.author = "Nicotine+ Team"
+        self.copyright = """© 2004–2022 Nicotine+ Contributors
+© 2003–2004 Nicotine Contributors
 © 2001–2003 PySoulSeek Contributors"""
 
         self.website_url = "https://nicotine-plus.org/"
@@ -97,7 +97,7 @@ class Config:
 
         legacy_dir = os.path.join(home, '.nicotine')
 
-        if os.path.isdir(legacy_dir):
+        if os.path.isdir(legacy_dir.encode("utf-8")):
             return legacy_dir, legacy_dir
 
         def xdg_path(xdg, default):
@@ -122,9 +122,12 @@ class Config:
             # Only file name specified, use current folder
             return True
 
+        from pynicotine.utils import encode_path
+        path_encoded = encode_path(path)
+
         try:
-            if not os.path.isdir(path):
-                os.makedirs(path)
+            if not os.path.isdir(path_encoded):
+                os.makedirs(path_encoded)
 
         except OSError as msg:
             from pynicotine.logfacility import log
@@ -139,9 +142,12 @@ class Config:
         """ Create the folder for storing data in (aliases, shared files etc.),
         if the folder doesn't exist """
 
+        from pynicotine.utils import encode_path
+        data_dir_encoded = encode_path(self.data_dir)
+
         try:
-            if not os.path.isdir(self.data_dir):
-                os.makedirs(self.data_dir)
+            if not os.path.isdir(data_dir_encoded):
+                os.makedirs(data_dir_encoded)
 
         except OSError as msg:
             from pynicotine.logfacility import log
@@ -185,7 +191,7 @@ class Config:
                 "usernamesubfolders": False,
                 "shared": [],
                 "buddyshared": [],
-                "uploadbandwidth": 10,
+                "uploadbandwidth": 50,
                 "uselimit": False,
                 "usealtlimits": False,
                 "uploadlimit": 1000,
@@ -228,10 +234,13 @@ class Config:
                     ["thumbs.db", 1],
                     ["albumart(_{........-....-....-....-............}_)?(_?(large|small))?\\.jpg", 0]
                 ],
-                "download_doubleclick": 1,
-                "upload_doubleclick": 1,
+                "download_doubleclick": 2,
+                "upload_doubleclick": 2,
                 "downloadsexpanded": True,
                 "uploadsexpanded": True
+            },
+            "userbrowse": {
+                "expand_folders": True
             },
             "userinfo": {
                 "descr": "''",
@@ -255,7 +264,7 @@ class Config:
                 "cycle": False,
                 "dropdown": False,
                 "characters": 3,
-                "roomnames": True,
+                "roomnames": False,
                 "buddies": True,
                 "roomusers": True,
                 "commands": True,
@@ -271,7 +280,6 @@ class Config:
                 "rooms_timestamp": "%H:%M:%S",
                 "private_timestamp": "%Y-%m-%d %H:%M:%S",
                 "log_timestamp": "%Y-%m-%d %H:%M:%S",
-                "timestamps": True,
                 "privatechat": True,
                 "chatrooms": True,
                 "transfers": False,
@@ -279,8 +287,8 @@ class Config:
                 "roomlogsdir": os.path.join(log_dir, "rooms"),
                 "privatelogsdir": os.path.join(log_dir, "private"),
                 "readroomlogs": True,
-                "readroomlines": 15,
-                "readprivatelines": 15,
+                "readroomlines": 200,
+                "readprivatelines": 200,
                 "rooms": []
             },
             "privatechat": {
@@ -298,18 +306,19 @@ class Config:
             "searches": {
                 "expand_searches": True,
                 "group_searches": "folder_grouping",
-                "maxresults": 50,
+                "maxresults": 150,
                 "enable_history": True,
                 "history": [],
                 "enablefilters": False,
                 "filters_visible": False,
-                "defilter": ["", "", "", "", 0, ""],
+                "defilter": ["", "", "", "", 0, "", ""],
                 "filtercc": [],
                 "filterin": [],
                 "filterout": [],
                 "filtersize": [],
                 "filterbr": [],
                 "filtertype": [],
+                "filterlength": [],
                 "search_results": True,
                 "max_displayed_results": 1500,
                 "min_search_chars": 3,
@@ -384,7 +393,7 @@ class Config:
                 "speechprivate": "User %(user)s told you: %(message)s",
                 "speechrooms": "In room %(room)s, user %(user)s said: %(message)s",
                 "speechcommand": "flite -t $",
-                "width": 1000,
+                "width": 800,
                 "height": 600,
                 "xposition": -1,
                 "yposition": -1,
@@ -418,13 +427,15 @@ class Config:
                 "notification_popup_folder": True,
                 "notification_popup_private_message": True,
                 "notification_popup_chatroom": False,
-                "notification_popup_chatroom_mention": True
+                "notification_popup_chatroom_mention": True,
+                "notification_popup_wish": True
             },
             "plugins": {
                 "enable": True,
                 "enabled": []
             },
             "statistics": {
+                "since_timestamp": 0,
                 "started_downloads": 0,
                 "completed_downloads": 0,
                 "downloaded_size": 0,
@@ -522,7 +533,8 @@ class Config:
                 "enabled"
             ),
             "logging": (
-                "logsdir"
+                "logsdir",
+                "timestamps"
             ),
             "ticker": (
                 "default",
@@ -558,10 +570,6 @@ class Config:
         # Update config values from file
         self.set_config()
 
-        if sys.platform == "darwin":
-            # Disable header bar in macOS for now due to GTK 3 performance issues
-            self.sections["ui"]["header_bar"] = False
-
         # Convert special download folder share to regular share
         if self.sections["transfers"].get("sharedownloaddir", False):
             shares = self.sections["transfers"]["shared"]
@@ -573,9 +581,13 @@ class Config:
 
         # Load command aliases from legacy file
         try:
-            if not self.sections["server"]["command_aliases"] and os.path.exists(self.filename + ".alias"):
-                with open(self.filename + ".alias", 'rb') as file_handle:
+            from pynicotine.utils import encode_path
+            encoded_alias_path = encode_path(self.filename + ".alias")
+
+            if not self.sections["server"]["command_aliases"] and os.path.exists(encoded_alias_path):
+                with open(encoded_alias_path, 'rb') as file_handle:
                     from pynicotine.utils import RestrictedUnpickler
+
                     self.sections["server"]["command_aliases"] = RestrictedUnpickler(
                         file_handle, encoding='utf-8').load()
 
@@ -590,8 +602,10 @@ class Config:
     def parse_config(self, filename):
         """ Parses the config file """
 
+        from pynicotine.utils import encode_path
+
         try:
-            with open(filename, 'a+', encoding="utf-8") as file_handle:
+            with open(encode_path(filename), 'a+', encoding="utf-8") as file_handle:
                 file_handle.seek(0)
                 self.parser.read_file(file_handle)
 
@@ -613,19 +627,21 @@ class Config:
                     "the application again.")
             sys.exit()
 
-        os.rename(self.filename, self.filename + ".conv")
+        from pynicotine.utils import encode_path
+        conv_filename = encode_path(self.filename + ".conv")
+        os.replace(self.filename, conv_filename)
 
-        with open(self.filename + ".conv", 'rb') as file_handle:
+        with open(conv_filename, 'rb') as file_handle:
             rawdata = file_handle.read()
 
         from_encoding = detect(rawdata)['encoding']
 
-        with open(self.filename + ".conv", encoding=from_encoding) as file_read:
-            with open(self.filename, 'w', encoding="utf-8") as file_write:
+        with open(conv_filename, encoding=from_encoding) as file_read:
+            with open(encode_path(self.filename), 'w', encoding="utf-8") as file_write:
                 for line in file_read:
                     file_write.write(line[:-1] + '\r\n')
 
-        os.remove(self.filename + ".conv")
+        os.remove(conv_filename)
 
     def need_config(self):
 
@@ -645,13 +661,13 @@ class Config:
 
                 # Check if config section exists in defaults
                 if i not in self.defaults and i not in self.removed_options:
-                    log.add(_("Unknown config section '%s'"), i)
+                    log.add_debug("Unknown config section '%s'", i)
 
                 # Check if config option exists in defaults
-                elif (j not in self.defaults.get(i, "") and j not in self.removed_options.get(i, "")
+                elif (j not in self.defaults.get(i, {}) and j not in self.removed_options.get(i, {})
                         and i != "plugins" and j != "filter"):
-                    log.add(_("Unknown config option '%(option)s' in section '%(section)s'"),
-                            {'option': j, 'section': i})
+                    log.add_debug("Unknown config option '%(option)s' in section '%(section)s'",
+                                  {'option': j, 'section': i})
 
                 else:
                     """ Attempt to get the default value for a config option. If there's no default
@@ -758,17 +774,20 @@ class Config:
     def write_config_backup(self, filename):
 
         from pynicotine.logfacility import log
+        from pynicotine.utils import encode_path
 
         if not filename.endswith(".tar.bz2"):
             filename += ".tar.bz2"
 
+        filename_encoded = encode_path(filename)
+
         try:
-            if os.path.exists(filename):
+            if os.path.exists(filename_encoded):
                 raise FileExistsError("File %s exists" % filename)
 
             import tarfile
-            with tarfile.open(filename, "w:bz2") as tar:
-                if not os.path.exists(self.filename):
+            with tarfile.open(filename_encoded, "w:bz2") as tar:
+                if not os.path.exists(filename_encoded):
                     raise FileNotFoundError("Config file missing")
 
                 tar.add(self.filename)

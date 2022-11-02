@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2021 Nicotine+ Team
+# COPYRIGHT (C) 2021-2022 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -17,29 +17,36 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from pynicotine import slskmessages
+from pynicotine.config import config
 
 
 class Interests:
 
-    def __init__(self, core, config, queue, ui_callback=None):
+    def __init__(self, core, queue, ui_callback=None):
 
         self.core = core
-        self.config = config
         self.queue = queue
-        self.ui_callback = None
-
-        if hasattr(ui_callback, "interests"):
-            self.ui_callback = ui_callback.interests
+        self.ui_callback = getattr(ui_callback, "interests", None)
 
     def server_login(self):
 
-        for thing in self.config.sections["interests"]["likes"]:
-            if thing and isinstance(thing, str):
-                self.queue.append(slskmessages.AddThingILike(thing))
+        for item in config.sections["interests"]["likes"]:
+            if not isinstance(item, str):
+                continue
 
-        for thing in self.config.sections["interests"]["dislikes"]:
-            if thing and isinstance(thing, str):
-                self.queue.append(slskmessages.AddThingIHate(thing))
+            item = item.strip().lower()
+
+            if item:
+                self.queue.append(slskmessages.AddThingILike(item))
+
+        for item in config.sections["interests"]["dislikes"]:
+            if not isinstance(item, str):
+                continue
+
+            item = item.strip().lower()
+
+            if item:
+                self.queue.append(slskmessages.AddThingIHate(item))
 
         if self.ui_callback:
             self.ui_callback.server_login()
@@ -50,57 +57,67 @@ class Interests:
 
     def add_thing_i_like(self, item):
 
-        if not item and not isinstance(item, str):
-            return False
+        item = item.strip().lower()
 
-        if item in self.config.sections["interests"]["likes"]:
-            return False
+        if not item:
+            return
 
-        self.config.sections["interests"]["likes"].append(item)
-        self.config.write_configuration()
+        if item in config.sections["interests"]["likes"]:
+            return
 
+        config.sections["interests"]["likes"].append(item)
+        config.write_configuration()
         self.queue.append(slskmessages.AddThingILike(item))
-        return True
+
+        if self.ui_callback:
+            self.ui_callback.add_thing_i_like(item)
 
     def add_thing_i_hate(self, item):
 
-        if not item and not isinstance(item, str):
-            return False
+        item = item.strip().lower()
 
-        if item in self.config.sections["interests"]["dislikes"]:
-            return False
+        if not item:
+            return
 
-        self.config.sections["interests"]["dislikes"].append(item)
-        self.config.write_configuration()
+        if item in config.sections["interests"]["dislikes"]:
+            return
 
+        config.sections["interests"]["dislikes"].append(item)
+        config.write_configuration()
         self.queue.append(slskmessages.AddThingIHate(item))
-        return True
+
+        if self.ui_callback:
+            self.ui_callback.add_thing_i_hate(item)
 
     def remove_thing_i_like(self, item):
 
         if not item and not isinstance(item, str):
-            return False
+            return
 
-        if item not in self.config.sections["interests"]["likes"]:
-            return False
+        if item not in config.sections["interests"]["likes"]:
+            return
 
-        self.config.sections["interests"]["likes"].remove(item)
-        self.config.write_configuration()
+        config.sections["interests"]["likes"].remove(item)
+        config.write_configuration()
         self.queue.append(slskmessages.RemoveThingILike(item))
-        return True
+
+        if self.ui_callback:
+            self.ui_callback.remove_thing_i_like(item)
 
     def remove_thing_i_hate(self, item):
 
         if not item and not isinstance(item, str):
-            return False
+            return
 
-        if item not in self.config.sections["interests"]["dislikes"]:
-            return False
+        if item not in config.sections["interests"]["dislikes"]:
+            return
 
-        self.config.sections["interests"]["dislikes"].remove(item)
-        self.config.write_configuration()
+        config.sections["interests"]["dislikes"].remove(item)
+        config.write_configuration()
         self.queue.append(slskmessages.RemoveThingIHate(item))
-        return True
+
+        if self.ui_callback:
+            self.ui_callback.remove_thing_i_hate(item)
 
     def request_global_recommendations(self):
         self.queue.append(slskmessages.GlobalRecommendations())
@@ -118,29 +135,51 @@ class Interests:
         self.queue.append(slskmessages.SimilarUsers())
 
     def global_recommendations(self, msg):
+        """ Server code: 56 """
+
         if self.ui_callback:
             self.ui_callback.global_recommendations(msg)
 
     def item_recommendations(self, msg):
+        """ Server code: 111 """
+
         if self.ui_callback:
             self.ui_callback.item_recommendations(msg)
 
     def recommendations(self, msg):
+        """ Server code: 54 """
+
         if self.ui_callback:
             self.ui_callback.recommendations(msg)
 
     def similar_users(self, msg):
+        """ Server code: 110 """
+
         if self.ui_callback:
             self.ui_callback.similar_users(msg)
 
+        for user in msg.users:
+            # Request user status, speed and number of shared files
+            self.core.watch_user(user, force_update=True)
+
     def item_similar_users(self, msg):
+        """ Server code: 112 """
+
         if self.ui_callback:
             self.ui_callback.item_similar_users(msg)
 
+        for user in msg.users:
+            # Request user status, speed and number of shared files
+            self.core.watch_user(user, force_update=True)
+
     def get_user_status(self, msg):
+        """ Server code: 7 """
+
         if self.ui_callback:
             self.ui_callback.get_user_status(msg)
 
     def get_user_stats(self, msg):
+        """ Server code: 36 """
+
         if self.ui_callback:
             self.ui_callback.get_user_stats(msg)
