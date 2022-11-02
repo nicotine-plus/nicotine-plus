@@ -201,6 +201,8 @@ class Config:
                 "preferfriends": False,
                 "useupslots": False,
                 "uploadslots": 2,
+                "use_download_slots": False,
+                "download_slots": 2,
                 "afterfinish": "",
                 "afterfolder": "",
                 "lock": True,
