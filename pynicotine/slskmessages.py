@@ -194,14 +194,12 @@ class TransferTimeout(InternalMessage):
         self.transfer = transfer
 
 
-class CheckDownloadQueue(InternalMessage):
-    """ Sent from a timer to the main thread to indicate that stuck downloads
-    should be checked. """
+class CheckDownloads(InternalMessage):
+    pass
 
 
 class CheckUploadQueue(InternalMessage):
-    """ Sent from a timer to the main thread to indicate that the upload queue
-    should be checked. """
+    pass
 
 
 class RetryDownloadLimits(InternalMessage):

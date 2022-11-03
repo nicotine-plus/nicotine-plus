@@ -198,6 +198,8 @@ class Config:
                 "uploadlimitalt": 100,
                 "downloadlimit": 0,
                 "downloadlimitalt": 100,
+                "use_download_slots": False,
+                "download_slots": 2,
                 "preferfriends": False,
                 "useupslots": False,
                 "uploadslots": 2,

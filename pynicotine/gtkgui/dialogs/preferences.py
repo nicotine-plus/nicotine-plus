@@ -224,8 +224,8 @@ class DownloadsFrame:
         # pylint: disable=invalid-name
         (self.AfterDownload, self.AfterFolder, self.AutoclearFinished,
          self.DownloadDir, self.DownloadDoubleClick, self.DownloadFilter, self.DownloadReverseOrder,
-         self.DownloadSpeed, self.DownloadSpeedAlternative, self.FilterView, self.IncompleteDir,
-         self.Main, self.RemoteDownloads, self.UploadDir, self.UploadsAllowed,
+         self.DownloadSlots, self.DownloadSpeed, self.DownloadSpeedAlternative, self.FilterView, self.IncompleteDir,
+         self.Main, self.RemoteDownloads, self.UploadDir, self.UploadsAllowed, self.UseDownloadSlots,
          self.UsernameSubfolders, self.VerifiedLabel) = ui_template.widgets
 
         self.preferences = preferences
@@ -258,6 +258,8 @@ class DownloadsFrame:
                 "enablefilters": self.DownloadFilter,
                 "downloadlimit": self.DownloadSpeed,
                 "downloadlimitalt": self.DownloadSpeedAlternative,
+                "use_download_slots": self.UseDownloadSlots,
+                "download_slots": self.DownloadSlots,
                 "usernamesubfolders": self.UsernameSubfolders,
                 "afterfinish": self.AfterDownload,
                 "afterfolder": self.AfterFolder,
@@ -301,6 +303,8 @@ class DownloadsFrame:
                 "enablefilters": self.DownloadFilter.get_active(),
                 "downloadlimit": self.DownloadSpeed.get_value_as_int(),
                 "downloadlimitalt": self.DownloadSpeedAlternative.get_value_as_int(),
+                "use_download_slots": self.UseDownloadSlots.get_active(),
+                "download_slots": self.DownloadSlots.get_value_as_int(),
                 "usernamesubfolders": self.UsernameSubfolders.get_active(),
                 "afterfinish": self.AfterDownload.get_text(),
                 "afterfolder": self.AfterFolder.get_text(),
@@ -2594,6 +2598,7 @@ class Preferences(Dialog):
         # Transfers
         self.core.transfers.update_limits()
         self.core.transfers.update_download_filters()
+        self.core.transfers.check_download_queue()
         self.core.transfers.check_upload_queue()
 
         # Tray icon

@@ -104,6 +104,8 @@ class Transfers:
         self.allow_saving_transfers = False
         self.downloads = deque()
         self.uploads = deque()
+        self.active_downloads = set()
+        self.active_uploads = set()
         self.privileged_users = set()
         self.requested_folders = defaultdict(dict)
         self.transfer_request_times = {}
@@ -121,7 +123,7 @@ class Transfers:
         self.uploadsview = getattr(ui_callback, "uploads", None)
 
         self.transfer_timeout_timer_id = None
-        self.download_queue_timer_id = None
+        self.downloads_timer_id = None
         self.upload_queue_timer_id = None
         self.retry_download_limits_timer_id = None
         self.retry_failed_uploads_timer_id = None
@@ -154,8 +156,8 @@ class Transfers:
         self.transfer_timeout_timer_id = scheduler.add(delay=1, callback=self._check_transfer_timeouts, repeat=True)
 
         # Request queue position of queued downloads and retry failed downloads every 3 minutes
-        self.download_queue_timer_id = scheduler.add(
-            delay=180, callback=lambda: self.network_callback([slskmessages.CheckDownloadQueue()]), repeat=True
+        self.downloads_timer_id = scheduler.add(
+            delay=180, callback=lambda: self.network_callback([slskmessages.CheckDownloads()]), repeat=True
         )
 
         # Check if queued uploads can be started every 10 seconds
@@ -459,6 +461,23 @@ class Transfers:
 
         self._update_regular_limits()
 
+    def allow_new_downloads(self, user=None):
+
+        if not config.sections["transfers"]["use_download_slots"]:
+            return True
+
+        download_slot_limit = config.sections["transfers"]["download_slots"]
+
+        if user:
+            for download in self.active_downloads:
+                if download.user == user:
+                    return True
+
+        if len(self.active_downloads) >= download_slot_limit:
+            return False
+
+        return True
+
     def queue_limit_reached(self, user):
 
         file_limit = config.sections["transfers"]["filelimit"]
@@ -495,15 +514,8 @@ class Transfers:
         if upload_slot_limit <= 0:
             upload_slot_limit = 1
 
-        num_in_progress = 0
-        active_statuses = ("Getting status", "Transferring")
-
-        for upload in self.uploads:
-            if upload.status in active_statuses:
-                num_in_progress += 1
-
-                if num_in_progress >= upload_slot_limit:
-                    return True
+        if len(self.active_uploads) >= upload_slot_limit:
+            return True
 
         return False
 
@@ -795,6 +807,10 @@ class Transfers:
         cancel_reason = "Cancelled"
         accepted = True
 
+        if not self.allow_new_downloads():
+            cancel_reason = "Queued"
+            accepted = False
+
         for download in self.downloads:
             if download.filename != filename or download.user != user:
                 continue
@@ -809,6 +825,11 @@ class Transfers:
 
             if status in ("Paused", "Filtered"):
                 accepted = False
+                break
+
+            if cancel_reason == "Queued":
+                download.status = "Locally Queued"
+                self.update_download(download)
                 break
 
             # Remote peer is signaling a transfer is ready, attempting to download it
@@ -828,6 +849,7 @@ class Transfers:
             download.token = token
             download.status = "Getting status"
             self.transfer_request_times[download] = time.time()
+            self.active_downloads.add(download)
 
             self.update_download(download)
             return slskmessages.TransferResponse(allowed=True, token=token)
@@ -890,14 +912,11 @@ class Transfers:
 
         # Is user already downloading/negotiating a download?
         already_downloading = False
-        active_statuses = ("Getting status", "Transferring")
 
-        for upload in self.uploads:
-            if upload.status not in active_statuses or upload.user != user:
-                continue
-
-            already_downloading = True
-            break
+        for upload in self.active_uploads:
+            if upload.user == user:
+                already_downloading = True
+                break
 
         if not self.allow_new_uploads() or already_downloading:
             transfer = Transfer(user=user, filename=filename, path=os.path.dirname(real_path),
@@ -914,6 +933,7 @@ class Transfers:
 
         self.transfer_request_times[transfer] = time.time()
         self.append_upload(user, filename, transfer)
+        self.active_uploads.add(transfer)
         self.update_upload(transfer)
 
         return slskmessages.TransferResponse(allowed=True, token=token, filesize=size)
@@ -1528,6 +1548,10 @@ class Transfers:
     def get_file(self, user, filename, path="", transfer=None, size=0, bitrate=None, length=None, ui_callback=True):
 
         path = clean_path(path, absolute=True)
+        status = "Queued"
+
+        if not self.allow_new_downloads(user):
+            status = "Locally Queued"
 
         if transfer is None:
             for download in self.downloads:
@@ -1543,13 +1567,13 @@ class Transfers:
             else:
                 transfer = Transfer(
                     user=user, filename=filename, path=path,
-                    status="Queued", size=size, bitrate=bitrate,
+                    status=status, size=size, bitrate=bitrate,
                     length=length
                 )
                 self.downloads.appendleft(transfer)
         else:
             transfer.filename = filename
-            transfer.status = "Queued"
+            transfer.status = status
             transfer.token = None
 
         self.core.watch_user(user)
@@ -1582,7 +1606,7 @@ class Transfers:
 
                 log.add_transfer("File %s is already downloaded", download_path)
 
-            else:
+            elif transfer.status != "Locally Queued":
                 log.add_transfer("Adding file %(filename)s from user %(user)s to download queue", {
                     "filename": filename,
                     "user": user
@@ -1637,6 +1661,7 @@ class Transfers:
             transfer.token = self.token
             transfer.status = "Getting status"
             self.transfer_request_times[transfer] = time.time()
+            self.active_uploads.add(transfer)
 
             log.add_transfer("Requesting to upload file %(filename)s with token %(token)s to user %(user)s", {
                 "filename": filename,
@@ -1908,6 +1933,8 @@ class Transfers:
     def download_finished(self, transfer, file_handle=None):
 
         self.close_file(file_handle, transfer)
+        self.active_downloads.discard(transfer)
+        self.check_download_queue()
 
         folder, basename = self.get_download_destination(transfer.user, transfer.filename, transfer.path)
         folder_encoded = encode_path(folder)
@@ -1962,6 +1989,7 @@ class Transfers:
     def upload_finished(self, transfer, file_handle=None):
 
         self.close_file(file_handle, transfer)
+        self.active_uploads.discard(transfer)
 
         transfer.status = "Finished"
         transfer.current_byte_offset = transfer.size
@@ -2084,6 +2112,28 @@ class Transfers:
         return True, None
 
     def check_download_queue(self, *_args):
+
+        if not config.sections["transfers"]["use_download_slots"]:
+            return
+
+        if not self.allow_new_downloads():
+            return
+
+        user = None
+
+        for download in reversed(self.downloads):
+            if download.status != "Locally Queued":
+                continue
+
+            if user is None:
+                user = download.user
+
+            elif user != download.user:
+                continue
+
+            self.get_file(user, download.filename, path=download.path, transfer=download)
+
+    def check_downloads(self, *_args):
 
         statuslist_failed = ("Connection timeout", "Local file error", "Remote file error")
 
@@ -2319,6 +2369,10 @@ class Transfers:
         download.token = None
         download.queue_position = 0
 
+        if download in self.active_downloads:
+            self.active_downloads.discard(download)
+            self.check_download_queue()
+
         if download in self.transfer_request_times:
             del self.transfer_request_times[download]
 
@@ -2363,6 +2417,10 @@ class Transfers:
 
         upload.token = None
         upload.queue_position = 0
+
+        if upload in self.active_uploads:
+            self.active_uploads.discard(upload)
+            self.check_upload_queue()
 
         if upload in self.transfer_request_times:
             del self.transfer_request_times[upload]
@@ -2538,7 +2596,7 @@ class Transfers:
 
     def server_disconnect(self):
 
-        for timer_id in (self.transfer_timeout_timer_id, self.download_queue_timer_id, self.upload_queue_timer_id,
+        for timer_id in (self.transfer_timeout_timer_id, self.downloads_timer_id, self.upload_queue_timer_id,
                          self.retry_download_limits_timer_id, self.retry_failed_uploads_timer_id):
             scheduler.cancel(timer_id)
 
