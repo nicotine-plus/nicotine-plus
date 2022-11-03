@@ -11,13 +11,13 @@
     <property name="step-increment">10</property>
     <property name="page-increment">50</property>
   </object>
-    <object class="GtkAdjustment" id="adjustment_QueueSlots">
+  <object class="GtkAdjustment" id="adjustment_QueueSlots">
     <property name="lower">1</property>
     <property name="upper">1000000</property>
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
-<object class="GtkBox" id="Main">
+  <object class="GtkBox" id="Main">
     <property name="visible">True</property>
     <property name="spacing">30</property>
     <property name="orientation">vertical</property>
@@ -201,8 +201,7 @@
               <object class="GtkCheckButton" id="UseDownloadSlots">
                 <property name="visible">True</property>
                 <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Fixed number of download slots:</property>
-                <property name="tooltip-text" translatable="yes">Causes downloads to be queued regardless of available bandwidth</property>
+                <property name="label" translatable="yes">Maximum number of active downloads:</property>
               </object>
             </child>
             <child>
