@@ -78,7 +78,7 @@ class TransfersTest(unittest.TestCase):
         is identical to the one we loaded. Ignore transfer 13, since its missing
         properties will be added at the end of the session. """
 
-        self.transfers.abort_transfers()
+        self.transfers.server_disconnect()
 
         old_transfers = self.transfers.load_transfers_file(self.transfers.downloads_file_name)[:12]
 
