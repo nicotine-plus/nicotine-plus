@@ -123,6 +123,7 @@ class Transfers:
 
         self.transfer_timeout_timer_id = None
         self.download_queue_timer_id = None
+        self.downloads_timer_id = None
         self.upload_queue_timer_id = None
         self.retry_download_limits_timer_id = None
         self.retry_failed_uploads_timer_id = None
@@ -154,9 +155,14 @@ class Transfers:
         # Check for transfer timeouts
         self.transfer_timeout_timer_id = scheduler.add(delay=1, callback=self._check_transfer_timeouts, repeat=True)
 
-        # Request queue position of queued downloads and retry failed downloads every 3 minutes
+        # Check if locally queued downloads can be started every 10 seconds
         self.download_queue_timer_id = scheduler.add(
-            delay=180, callback=lambda: self.network_callback([slskmessages.CheckDownloadQueue()]), repeat=True
+            delay=10, callback=lambda: self.network_callback([slskmessages.CheckDownloadQueue()]), repeat=True
+        )
+
+        # Request queue position of queued downloads and retry failed downloads every 3 minutes
+        self.downloads_timer_id = scheduler.add(
+            delay=180, callback=lambda: self.network_callback([slskmessages.CheckDownloads()]), repeat=True
         )
 
         # Check if queued uploads can be started every 10 seconds
@@ -1957,7 +1963,7 @@ class Transfers:
 
         self.close_file(file_handle, transfer)
         self.active_download_users.discard(transfer.user)
-        self.check_locally_queued_downloads()
+        self.check_download_queue()
 
         folder, basename = self.get_download_destination(transfer.user, transfer.filename, transfer.path)
         folder_encoded = encode_path(folder)
@@ -2134,7 +2140,7 @@ class Transfers:
 
         return True, None
 
-    def check_locally_queued_downloads(self):
+    def check_download_queue(self, *_args):
 
         if not self.allow_new_downloads():
             return
@@ -2153,7 +2159,7 @@ class Transfers:
 
             self.get_file(user, download.filename, path=download.path, transfer=download)
 
-    def check_download_queue(self, *_args):
+    def check_downloads(self, *_args):
 
         statuslist_failed = ("Connection timeout", "Local file error", "Remote file error")
 
@@ -2399,7 +2405,7 @@ class Transfers:
 
         if download.user in self.active_download_users:
             self.active_download_users.discard(download.user)
-            self.check_locally_queued_downloads()
+            self.check_download_queue()
 
         if download.file is not None:
             self.close_file(download.file, download)
@@ -2604,8 +2610,9 @@ class Transfers:
 
     def server_disconnect(self):
 
-        for timer_id in (self.transfer_timeout_timer_id, self.download_queue_timer_id, self.upload_queue_timer_id,
-                         self.retry_download_limits_timer_id, self.retry_failed_uploads_timer_id):
+        for timer_id in (self.transfer_timeout_timer_id, self.download_queue_timer_id, self.downloads_timer_id,
+                         self.upload_queue_timer_id, self.retry_download_limits_timer_id,
+                         self.retry_failed_uploads_timer_id):
             scheduler.cancel(timer_id)
 
         need_update = False
