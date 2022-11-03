@@ -528,15 +528,12 @@ class Transfers:
 
     def allow_new_downloads(self):
 
-        download_slot_limit = 1
+        if config.sections["transfers"]["use_download_slots"]:
+            download_slot_limit = config.sections["transfers"]["download_slots"]
 
-        if download_slot_limit <= 0:
-            download_slot_limit = 1
+            if len(self.active_download_users) >= download_slot_limit:
+                return False
 
-        if len(self.active_download_users) >= download_slot_limit:
-            return False
-
-        # No limits
         return True
 
     def allow_new_uploads(self):
