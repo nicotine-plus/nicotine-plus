@@ -92,7 +92,7 @@
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="margin-start">12</property>
-                    <property name="label" translatable="yes">Files and folders containing this text will be shown.</property>
+                    <property name="label" translatable="yes">Files, folders and usernames containing this text will be shown.</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
                   </object>
@@ -136,7 +136,7 @@
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="margin-start">12</property>
-                <property name="label" translatable="yes">As above, but files and folders are filtered out if the text matches.</property>
+                <property name="label" translatable="yes">As above, but files, folders and usernames are filtered out if the text matches.</property>
                 <property name="selectable">True</property>
                 <property name="wrap">True</property>
               </object>
