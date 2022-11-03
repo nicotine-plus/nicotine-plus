@@ -650,6 +650,7 @@ class Transfers:
                 del self.transfer_request_times[download]
 
             self.active_download_users.discard(user)
+            self.check_locally_queued_downloads()
             self.update_download(download)
             self.core.watch_user(username)
             break
@@ -843,7 +844,8 @@ class Transfers:
                 break
 
             if cancel_reason == "Queued":
-                download.status == "Locally Queued"
+                download.status = "Locally Queued"
+                self.update_download(download)
                 break
 
             # Remote peer is signaling a transfer is ready, attempting to download it
@@ -1036,6 +1038,7 @@ class Transfers:
         if transfer in self.downloads:
             self.update_download(transfer)
             self.active_download_users.discard(transfer.user)
+            self.check_locally_queued_downloads()
 
         elif transfer in self.uploads:
             transfer.queue_position = 0
@@ -1351,6 +1354,8 @@ class Transfers:
                 continue
 
             should_retry = not download.legacy_attempt
+            self.active_download_users.discard(user)
+            self.check_locally_queued_downloads()
             self.abort_transfer(download)
 
             if should_retry:
@@ -2172,14 +2177,16 @@ class Transfers:
         user = None
 
         for download in reversed(self.downloads):
-            if download.status == "Locally Queued":
-                if user is None:
-                    user = download.user
+            if download.status != "Locally Queued":
+                continue
 
-                elif user != download.user:
-                    continue
+            if user is None:
+                user = download.user
 
-                self.get_file(download.user, download.filename, path=download.path, transfer=download)
+            elif user != download.user:
+                continue
+
+            self.get_file(user, download.filename, path=download.path, transfer=download)
 
     def check_download_queue(self, *_args):
 
@@ -2406,7 +2413,6 @@ class Transfers:
             "token": transfer.token,
             "status": transfer.status
         })
-        print(self.active_download_users)
 
         transfer.legacy_attempt = False
         transfer.size_changed = False
@@ -2523,6 +2529,7 @@ class Transfers:
         if self.uploadsview and need_update:
             self.uploadsview.update_model()
 
+        self.active_download_users.clear()
         self.privileged_users.clear()
         self.requested_folders.clear()
         self.transfer_request_times.clear()

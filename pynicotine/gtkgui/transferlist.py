@@ -93,7 +93,7 @@ class TransferList:
         # Status list
         self.statuses = {
             "Queued": _("Queued"),
-            "Locally Queued": _("Queued"),
+            # "Locally Queued": _("Queued"),
             "Queued (prioritized)": _("Queued (prioritized)"),
             "Queued (privileged)": _("Queued (privileged)"),
             "Getting status": _("Getting status"),
