@@ -68,9 +68,26 @@ class Downloads(TransferList):
         )
         self.popup_menu_clear.update_model()
 
-    def retry_transfers(self):
+    def retry_selected_transfers(self):
+        self.core.transfers.retry_downloads(self.selected_transfers)
+
+    def abort_selected_transfers(self):
+
         for transfer in self.selected_transfers:
-            self.core.transfers.retry_download(transfer)
+            if transfer.status != "Finished":
+                transfer.status = "Paused"
+                self.update_model(transfer)
+
+        self.core.transfers.abort_downloads(self.selected_transfers)
+        self.update_parent_rows()
+
+    def clear_selected_transfers(self):
+        print("FU")
+        self.core.transfers.clear_downloads(downloads=self.selected_transfers)
+
+    def on_clear_queued_response(self, _dialog, response_id, _data):
+        if response_id == 2:
+            self.core.transfers.clear_downloads(statuses=["Queued"])
 
     def on_try_clear_queued(self, *_args):
 
@@ -80,6 +97,10 @@ class Downloads(TransferList):
             message=_('Do you really want to clear all queued downloads?'),
             callback=self.on_clear_queued_response
         ).show()
+
+    def on_clear_all_response(self, _dialog, response_id, _data):
+        if response_id == 2:
+            self.core.transfers.clear_downloads()
 
     def on_try_clear_all(self, *_args):
 
@@ -164,14 +185,21 @@ class Downloads(TransferList):
                 requested_users.add(user)
                 requested_folders.add(folder)
 
+    def on_clear_queued(self, *_args):
+        self.core.transfers.clear_downloads(statuses=["Queued"])
+
+    def on_clear_finished(self, *_args):
+        self.core.transfers.clear_downloads(statuses=["Finished"])
+
     def on_clear_paused(self, *_args):
-        self.clear_transfers(["Paused"])
+        self.core.transfers.clear_downloads(statuses=["Paused"])
 
     def on_clear_finished_filtered(self, *_args):
-        self.clear_transfers(["Finished", "Filtered"])
+        self.core.transfers.clear_downloads(statuses=["Finished", "Filtered"])
 
     def on_clear_failed(self, *_args):
-        self.clear_transfers(["Connection timeout", "Local file error", "Remote file error", "File not shared"])
+        self.core.transfers.clear_downloads(
+            ["Connection timeout", "Local file error", "Remote file error", "File not shared"])
 
     def on_clear_filtered(self, *_args):
-        self.clear_transfers(["Filtered"])
+        self.core.transfers.clear_downloads(statuses=["Filtered"])

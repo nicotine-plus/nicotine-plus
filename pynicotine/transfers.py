@@ -1722,11 +1722,7 @@ class Transfers:
                 if upload in self.transfer_request_times:
                     del self.transfer_request_times[upload]
 
-                self.uploads.remove(upload)
-
-                if self.uploadsview:
-                    self.uploadsview.remove_specific(upload, True)
-
+                self.clear_upload(upload)
                 break
 
             old_index += 1
@@ -2042,27 +2038,19 @@ class Transfers:
 
         self.check_upload_queue()
 
-    def auto_clear_download(self, transfer):
+    def auto_clear_download(self, download):
 
         if config.sections["transfers"]["autoclear_downloads"]:
-            self.downloads.remove(transfer)
-
-            if self.downloadsview:
-                self.downloadsview.remove_specific(transfer, True)
-
+            self.clear_download(download)
             return True
 
         return False
 
-    def auto_clear_upload(self, transfer):
+    def auto_clear_upload(self, upload):
 
         if config.sections["transfers"]["autoclear_uploads"]:
-            self.update_user_counter(transfer.user)
-            self.uploads.remove(transfer)
-
-            if self.uploadsview:
-                self.uploadsview.remove_specific(transfer, True)
-
+            self.update_user_counter(upload.user)
+            self.clear_upload(upload)
             return True
 
         return False
@@ -2315,14 +2303,8 @@ class Transfers:
             if upload.user not in users:
                 continue
 
-            if upload.status == "Queued":
-                self.core.send_message_to_peer(
-                    upload.user, slskmessages.UploadDenied(file=upload.filename, reason=banmsg))
-
-            self.abort_upload(upload)
-
-            if self.uploadsview:
-                self.uploadsview.remove_specific(upload)
+            self.abort_upload(upload, denied_message=banmsg)
+            self.clear_upload(upload)
 
         for user in users:
             self.core.network_filter.ban_user(user)
@@ -2338,6 +2320,10 @@ class Transfers:
 
         self.abort_download(transfer)
         self.get_file(user, transfer.filename, path=transfer.path, transfer=transfer)
+
+    def retry_downloads(self, downloads):
+        for download in downloads:
+            self.retry_download(download)
 
     def retry_download_limits(self, *_args):
 
@@ -2377,6 +2363,10 @@ class Transfers:
                 return
 
         self.push_file(user, transfer.filename, transfer.size, transfer.path, transfer=transfer)
+
+    def retry_uploads(self, uploads):
+        for upload in uploads:
+            self.retry_upload(upload)
 
     def retry_failed_uploads(self, *_args):
 
@@ -2421,7 +2411,15 @@ class Transfers:
                 }
             )
 
-    def abort_upload(self, upload):
+    def abort_downloads(self, downloads):
+
+        for download in downloads:
+            if download.status == "Finished":
+                continue
+
+            self.abort_download(download)
+
+    def abort_upload(self, upload, denied_message=None):
 
         log.add_transfer(("Aborting upload, user \"%(user)s\", filename \"%(filename)s\", token \"%(token)s\", "
                           "status \"%(status)s\""), {
@@ -2450,6 +2448,70 @@ class Transfers:
                     "file": upload.filename
                 }
             )
+
+        elif denied_message and upload.status == "Queued":
+            self.core.send_message_to_peer(
+                upload.user, slskmessages.UploadDenied(file=upload.filename, reason=denied_message))
+
+    def abort_uploads(self, uploads, denied_message=None):
+
+        for upload in uploads:
+            if upload.status == "Finished":
+                continue
+
+            self.abort_upload(upload, denied_message)
+
+    def clear_download(self, download):
+
+        self.abort_download(download)
+        self.downloads.remove(download)
+
+        if self.downloadsview:
+            self.downloadsview.clear_transfer(download)
+
+    def clear_downloads(self, downloads=None, statuses=None):
+
+        if downloads is None:
+            downloads = self.downloads
+
+        cleared_downloads = []
+
+        for download in downloads.copy():
+            if statuses is not None and download.status not in statuses:
+                continue
+
+            self.abort_download(download)
+            self.downloads.remove(download)
+            cleared_downloads.append(download)
+
+        if self.downloadsview:
+            self.downloadsview.clear_transfers(cleared_downloads)
+
+    def clear_upload(self, upload):
+
+        self.abort_upload(upload, denied_message="Cancelled")
+        self.uploads.remove(upload)
+
+        if self.uploadsview:
+            self.uploadsview.clear_transfer(upload)
+
+    def clear_uploads(self, uploads=None, statuses=None):
+
+        if uploads is None:
+            uploads = self.uploads
+
+        cleared_uploads = []
+
+        for upload in self.uploads.copy():
+            if statuses is not None and upload.status not in statuses:
+                continue
+
+            self.abort_upload(upload, denied_message="Cancelled")
+            self.uploads.remove(upload)
+            cleared_uploads.append(upload)
+
+        if self.uploadsview:
+            self.uploadsview.clear_transfers(cleared_uploads)
 
     """ Filters """
 
@@ -2503,39 +2565,6 @@ class Transfers:
 
     """ Exit """
 
-    def abort_transfers(self):
-        """ Stop all transfers on disconnect/shutdown """
-
-        need_update = False
-
-        for download in self.downloads:
-            if download.status not in ("Finished", "Filtered", "Paused"):
-                download.status = "User logged off"
-                self.abort_download(download)
-                need_update = True
-
-        if self.downloadsview and need_update:
-            self.downloadsview.update_model()
-
-        need_update = False
-
-        for upload in self.uploads.copy():
-            if upload.status != "Finished":
-                self.uploads.remove(upload)
-                need_update = True
-
-                if self.uploadsview:
-                    self.uploadsview.remove_specific(upload, True, update_parent=False)
-
-        if self.uploadsview and need_update:
-            self.uploadsview.update_model()
-
-        self.active_download_users.clear()
-        self.privileged_users.clear()
-        self.requested_folders.clear()
-        self.transfer_request_times.clear()
-        self.user_update_counters.clear()
-
     def get_downloads(self):
         """ Get a list of downloads """
         return [
@@ -2579,7 +2608,32 @@ class Transfers:
                          self.retry_download_limits_timer_id, self.retry_failed_uploads_timer_id):
             scheduler.cancel(timer_id)
 
-        self.abort_transfers()
+        need_update = False
+
+        for download in self.downloads:
+            if download.status not in ("Finished", "Filtered", "Paused"):
+                download.status = "User logged off"
+                self.abort_download(download)
+                need_update = True
+
+        if self.downloadsview and need_update:
+            self.downloadsview.update_model()
+
+        need_update = False
+
+        for upload in self.uploads.copy():
+            if upload.status != "Finished":
+                need_update = True
+                self.clear_upload(upload)
+
+        if self.uploadsview and need_update:
+            self.uploadsview.update_model()
+
+        self.active_download_users.clear()
+        self.privileged_users.clear()
+        self.requested_folders.clear()
+        self.transfer_request_times.clear()
+        self.user_update_counters.clear()
 
         if self.downloadsview:
             self.downloadsview.server_disconnect()
