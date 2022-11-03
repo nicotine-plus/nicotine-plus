@@ -656,7 +656,7 @@ class Transfers:
             if download in self.transfer_request_times:
                 del self.transfer_request_times[download]
 
-            self.active_download_users.discard(user)
+            self.active_download_users.discard(username)
             self.update_download(download)
             self.core.watch_user(username)
             break
@@ -850,7 +850,7 @@ class Transfers:
                 break
 
             if cancel_reason == "Queued":
-                download.status == "Locally Queued"
+                download.status = "Locally Queued"
                 break
 
             # Remote peer is signaling a transfer is ready, attempting to download it
