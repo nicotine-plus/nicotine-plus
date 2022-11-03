@@ -528,7 +528,11 @@ class Transfers:
 
     def allow_new_downloads(self):
 
-        download_slot_limit = 1
+        if not config.sections["transfers"]["use_download_slots"]:
+            # No limits
+            return True
+
+        download_slot_limit = config.sections["transfers"]["download_slots"]
 
         if download_slot_limit <= 0:
             download_slot_limit = 1
