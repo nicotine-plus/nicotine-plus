@@ -179,6 +179,7 @@ class NicotineCore:
             slskmessages.Relogged: self.dummy_message,
             slskmessages.PeerInit: self.dummy_message,
             slskmessages.CheckDownloadQueue: self.transfers.check_download_queue,
+            slskmessages.CheckDownloads: self.transfers.check_downloads,
             slskmessages.CheckUploadQueue: self.transfers.check_upload_queue,
             slskmessages.DownloadFile: self.transfers.file_download,
             slskmessages.UploadFile: self.transfers.file_upload,
