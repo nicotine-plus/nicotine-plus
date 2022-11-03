@@ -105,6 +105,7 @@ class Transfers:
         self.downloads = deque()
         self.uploads = deque()
         self.privileged_users = set()
+        self.active_download_users = set()
         self.requested_folders = defaultdict(dict)
         self.transfer_request_times = {}
         self.upload_speed = 0
@@ -525,6 +526,19 @@ class Transfers:
 
         return False
 
+    def allow_new_downloads(self):
+
+        download_slot_limit = 1
+
+        if download_slot_limit <= 0:
+            download_slot_limit = 1
+
+        if len(self.active_download_users) >= download_slot_limit:
+            return False
+
+        # No limits
+        return True
+
     def allow_new_uploads(self):
 
         if self.core.shares.rescanning:
@@ -638,6 +652,7 @@ class Transfers:
             if download in self.transfer_request_times:
                 del self.transfer_request_times[download]
 
+            self.active_download_users.discard(user)
             self.update_download(download)
             self.core.watch_user(username)
             break
@@ -822,8 +837,23 @@ class Transfers:
                 accepted = False
                 break
 
-            if status in ("Paused", "Filtered"):
+            if status in ("Paused", "Filtered", "Locally Queued"):
                 accepted = False
+                break
+
+            if not self.allow_new_downloads():
+                accepted = False
+
+                if user not in self.active_download_users:
+                    for download in self.downloads:
+                        if download.user != user:
+                            continue
+
+                        if download.status == "Queued":
+                            download.status == "Locally Queued"
+                else:
+                    cancel_reason = "Queued"
+
                 break
 
             # Remote peer is signaling a transfer is ready, attempting to download it
@@ -843,6 +873,7 @@ class Transfers:
             download.token = token
             download.status = "Getting status"
             self.transfer_request_times[download] = time.time()
+            self.active_download_users.add(user)
 
             self.update_download(download)
             return slskmessages.TransferResponse(allowed=True, token=token)
@@ -1014,6 +1045,7 @@ class Transfers:
 
         if transfer in self.downloads:
             self.update_download(transfer)
+            self.active_download_users.discard(transfer.user)
 
         elif transfer in self.uploads:
             transfer.queue_position = 0
@@ -1565,6 +1597,11 @@ class Transfers:
 
         path = clean_path(path, absolute=True)
 
+        if not self.allow_new_downloads() and user not in self.active_download_users:
+            status = "Locally Queued"
+        else:
+            status = "Queued"
+
         if transfer is None:
             for download in self.downloads:
                 if download.filename == filename and download.path == path and download.user == user:
@@ -1579,13 +1616,13 @@ class Transfers:
             else:
                 transfer = Transfer(
                     user=user, filename=filename, path=path,
-                    status="Queued", size=size, bitrate=bitrate,
+                    status=status, size=size, bitrate=bitrate,
                     length=length
                 )
                 self.downloads.appendleft(transfer)
         else:
             transfer.filename = filename
-            transfer.status = "Queued"
+            transfer.status = status
             transfer.token = None
 
         self.core.watch_user(user)
@@ -1619,7 +1656,7 @@ class Transfers:
 
                 log.add_transfer("File %s is already downloaded", download_path)
 
-            else:
+            elif transfer.status != "Locally Queued":
                 log.add_transfer("Adding file %(filename)s from user %(user)s to download queue", {
                     "filename": filename,
                     "user": user
@@ -1951,6 +1988,8 @@ class Transfers:
     def download_finished(self, transfer, file_handle=None):
 
         self.close_file(file_handle, transfer)
+        self.active_download_users.discard(transfer.user)
+        self.check_locally_queued_downloads()
 
         folder, basename = self.get_download_destination(transfer.user, transfer.filename, transfer.path)
         folder_encoded = encode_path(folder)
@@ -2134,6 +2173,23 @@ class Transfers:
             return False, "File not shared."
 
         return True, None
+
+    def check_locally_queued_downloads(self):
+
+        if not self.allow_new_downloads():
+            return
+
+        user = None
+
+        for download in reversed(self.downloads):
+            if download.status == "Locally Queued":
+                if user is None:
+                    user = download.user
+
+                elif user != download.user:
+                    continue
+
+                self.get_file(download.user, download.filename, path=download.path, transfer=download)
 
     def check_download_queue(self, *_args):
 
@@ -2360,6 +2416,7 @@ class Transfers:
             "token": transfer.token,
             "status": transfer.status
         })
+        print(self.active_download_users)
 
         transfer.legacy_attempt = False
         transfer.size_changed = False
@@ -2384,6 +2441,8 @@ class Transfers:
                     }
                 )
             else:
+                self.active_download_users.discard(transfer.user)
+                self.check_locally_queued_downloads()
                 log.add_download(
                     _("Download aborted, user %(user)s file %(file)s"), {
                         "user": transfer.user,
