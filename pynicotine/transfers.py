@@ -104,8 +104,9 @@ class Transfers:
         self.allow_saving_transfers = False
         self.downloads = deque()
         self.uploads = deque()
+        self.active_downloads = set()
+        self.active_uploads = set()
         self.privileged_users = set()
-        self.active_download_users = set()
         self.requested_folders = defaultdict(dict)
         self.transfer_request_times = {}
         self.upload_speed = 0
@@ -502,15 +503,8 @@ class Transfers:
         if upload_slot_limit <= 0:
             upload_slot_limit = 1
 
-        num_in_progress = 0
-        active_statuses = ("Getting status", "Transferring")
-
-        for upload in self.uploads:
-            if upload.status in active_statuses:
-                num_in_progress += 1
-
-                if num_in_progress >= upload_slot_limit:
-                    return True
+        if len(self.active_uploads) >= upload_slot_limit:
+            return True
 
         return False
 
@@ -532,13 +526,20 @@ class Transfers:
 
         return False
 
-    def allow_new_downloads(self):
+    def allow_new_downloads(self, user=None):
 
-        if config.sections["transfers"]["use_download_slots"]:
-            download_slot_limit = config.sections["transfers"]["download_slots"]
+        if not config.sections["transfers"]["use_download_slots"]:
+            return True
 
-            if len(self.active_download_users) >= download_slot_limit:
-                return False
+        download_slot_limit = config.sections["transfers"]["download_slots"]
+
+        if user:
+            for download in self.active_downloads:
+                if download.user == user:
+                    return True
+
+        if len(self.active_downloads) >= download_slot_limit:
+            return False
 
         return True
 
@@ -861,7 +862,7 @@ class Transfers:
             download.token = token
             download.status = "Getting status"
             self.transfer_request_times[download] = time.time()
-            self.active_download_users.add(user)
+            self.active_downloads.add(download)
 
             self.update_download(download)
             return slskmessages.TransferResponse(allowed=True, token=token)
@@ -924,10 +925,9 @@ class Transfers:
 
         # Is user already downloading/negotiating a download?
         already_downloading = False
-        active_statuses = ("Getting status", "Transferring")
 
-        for upload in self.uploads:
-            if upload.status not in active_statuses or upload.user != user:
+        for upload in self.active_uploads:
+            if upload.user != user:
                 continue
 
             already_downloading = True
@@ -948,6 +948,7 @@ class Transfers:
 
         self.transfer_request_times[transfer] = time.time()
         self.append_upload(user, filename, transfer)
+        self.active_uploads.add(transfer)
         self.update_upload(transfer)
 
         return slskmessages.TransferResponse(allowed=True, token=token, filesize=size)
@@ -1574,11 +1575,10 @@ class Transfers:
     def get_file(self, user, filename, path="", transfer=None, size=0, bitrate=None, length=None, ui_callback=True):
 
         path = clean_path(path, absolute=True)
+        status = "Queued"
 
-        if not self.allow_new_downloads() and user not in self.active_download_users:
+        if not self.allow_new_downloads(user):
             status = "Locally Queued"
-        else:
-            status = "Queued"
 
         if transfer is None:
             for download in self.downloads:
@@ -1689,6 +1689,7 @@ class Transfers:
             transfer.token = self.token
             transfer.status = "Getting status"
             self.transfer_request_times[transfer] = time.time()
+            self.active_uploads.add(transfer)
 
             log.add_transfer("Requesting to upload file %(filename)s with token %(token)s to user %(user)s", {
                 "filename": filename,
@@ -1962,7 +1963,7 @@ class Transfers:
     def download_finished(self, transfer, file_handle=None):
 
         self.close_file(file_handle, transfer)
-        self.active_download_users.discard(transfer.user)
+        self.active_downloads.discard(transfer)
         self.check_download_queue()
 
         folder, basename = self.get_download_destination(transfer.user, transfer.filename, transfer.path)
@@ -2019,6 +2020,7 @@ class Transfers:
     def upload_finished(self, transfer, file_handle=None):
 
         self.close_file(file_handle, transfer)
+        self.active_uploads.discard(transfer)
 
         transfer.status = "Finished"
         transfer.current_byte_offset = transfer.size
@@ -2141,6 +2143,9 @@ class Transfers:
         return True, None
 
     def check_download_queue(self, *_args):
+
+        if not config.sections["transfers"]["use_download_slots"]:
+            return
 
         if not self.allow_new_downloads():
             return
@@ -2403,11 +2408,8 @@ class Transfers:
             self.queue.append(slskmessages.CloseConnection(download.sock))
             download.sock = None
 
-        if download.user in self.active_download_users:
-            self.active_download_users.discard(download.user)
-            self.check_download_queue()
-
         if download.file is not None:
+            self.active_downloads.discard(download)
             self.close_file(download.file, download)
 
             log.add_download(
@@ -2446,6 +2448,7 @@ class Transfers:
             upload.sock = None
 
         if upload.file is not None:
+            self.active_uploads.discard(upload)
             self.close_file(upload.file, upload)
 
             log.add_upload(
@@ -2636,7 +2639,8 @@ class Transfers:
         if self.uploadsview and need_update:
             self.uploadsview.update_model()
 
-        self.active_download_users.clear()
+        self.active_downloads.clear()
+        self.active_uploads.clear()
         self.privileged_users.clear()
         self.requested_folders.clear()
         self.transfer_request_times.clear()
