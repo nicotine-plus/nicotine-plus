@@ -914,7 +914,7 @@ class Transfers:
             self.append_upload(user, filename, transfer)
             self.update_upload(transfer)
 
-            return slskmessages.TransferResponse(allowed=False, reason="Queued", token=token)
+            return slskmessages.TransferResponse(allowed=True, token=token)
 
         # All checks passed, starting a new upload.
         size = self.get_file_size(real_path)
@@ -944,7 +944,7 @@ class Transfers:
         })
 
         if reason is not None:
-            if reason in ("Getting status", "Transferring", "Paused", "Filtered", "User logged off"):
+            if reason in ("Queued", "Getting status", "Transferring", "Paused", "Filtered", "User logged off"):
                 # Don't allow internal statuses as reason
                 reason = "Cancelled"
 
