@@ -825,6 +825,10 @@ class Transfers:
         cancel_reason = "Cancelled"
         accepted = True
 
+        if not self.allow_new_downloads():
+            cancel_reason = "Queued"
+            accepted = False
+
         for download in self.downloads:
             if download.filename != filename or download.user != user:
                 continue
@@ -837,23 +841,12 @@ class Transfers:
                 accepted = False
                 break
 
-            if status in ("Paused", "Filtered", "Locally Queued"):
+            if status in ("Paused", "Filtered"):
                 accepted = False
                 break
 
-            if not self.allow_new_downloads():
-                accepted = False
-
-                if user not in self.active_download_users:
-                    for download in self.downloads:
-                        if download.user != user:
-                            continue
-
-                        if download.status == "Queued":
-                            download.status == "Locally Queued"
-                else:
-                    cancel_reason = "Queued"
-
+            if cancel_reason == "Queued":
+                download.status == "Locally Queued"
                 break
 
             # Remote peer is signaling a transfer is ready, attempting to download it
@@ -897,7 +890,7 @@ class Transfers:
             self.update_download(transfer)
             self.core.watch_user(user)
 
-            return slskmessages.TransferResponse(allowed=False, reason="Queued", token=token)
+            return slskmessages.TransferResponse(allowed=True, token=token)
 
         log.add_transfer("Denied file request: User %(user)s, %(msg)s", {
             'user': user,
@@ -981,7 +974,7 @@ class Transfers:
         })
 
         if reason is not None:
-            if reason in ("Getting status", "Transferring", "Paused", "Filtered", "User logged off"):
+            if reason in ("Queued", "Getting status", "Transferring", "Paused", "Filtered", "User logged off"):
                 # Don't allow internal statuses as reason
                 reason = "Cancelled"
 
