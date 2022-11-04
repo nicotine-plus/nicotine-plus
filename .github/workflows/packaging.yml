@@ -84,12 +84,7 @@ jobs:
 
       - name: Freeze application
         run: |
-          python3 packaging/windows/setup.py build_exe
-
-          # Workaround for https://github.com/nicotine-plus/nicotine-plus/issues/2218
-          cp packaging/windows/build/package/Nicotine+/lib/libgcc*.dll packaging/windows/build/package/Nicotine+/
-          cp packaging/windows/build/package/Nicotine+/lib/libwinpthread*.dll packaging/windows/build/package/Nicotine+/
-          python3 packaging/windows/setup.py bdist_msi --skip-build
+          python3 packaging/windows/setup.py bdist_msi
 
       - name: Archive installer artifacts
         uses: actions/upload-artifact@v3
