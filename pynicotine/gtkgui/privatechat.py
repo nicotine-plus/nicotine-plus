@@ -345,7 +345,6 @@ class PrivateChat(UserInterface):
 
         if response_id == 2:
             delete_log(config.sections["logging"]["privatelogsdir"], self.user)
-            self.chats.history.remove_user(self.user)
             self.chat_view.clear()
 
     def on_delete_chat_log(self, *_args):
