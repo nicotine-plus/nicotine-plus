@@ -27,6 +27,7 @@ from ast import literal_eval
 from time import time
 
 from pynicotine import slskmessages
+from pynicotine.config import config
 from pynicotine.logfacility import log
 from pynicotine.utils import encode_path
 
@@ -180,9 +181,9 @@ class BasePlugin:
         switch_page controls whether the user's private chat view should be opened. """
 
         if show_ui:
-            self.core.privatechats.show_user(user, switch_page)
+            self.core.privatechat.show_user(user, switch_page)
 
-        self.core.privatechats.send_message(user, text)
+        self.core.privatechat.send_message(user, text)
 
     def echo_public(self, room, text, message_type="local"):
         """ Display a raw message in chat rooms (not sent to others).
@@ -196,8 +197,8 @@ class BasePlugin:
         message_type changes the type (and color) of the message in the UI.
         available message_type values: action, remote, local, hilite """
 
-        self.core.privatechats.show_user(user)
-        self.core.privatechats.echo_message(user, text, message_type)
+        self.core.privatechat.show_user(user)
+        self.core.privatechat.echo_message(user, text, message_type)
 
     def send_message(self, text):
         """ Convenience function to send a message to the same user/room
@@ -331,11 +332,9 @@ class ResponseThrottle:
 
 class PluginHandler:
 
-    def __init__(self, core, config):
+    def __init__(self, core):
 
         self.core = core
-        self.config = config
-
         self.plugin_folders = []
         self.enabled_plugins = {}
         self.command_source = None
@@ -349,7 +348,7 @@ class PluginHandler:
         self.plugin_folders.append(self.user_plugin_folder)
 
         BasePlugin.parent = self
-        BasePlugin.config = self.config
+        BasePlugin.config = config
         BasePlugin.core = self.core
         BasePlugin.frame = self.core.ui_callback
 
@@ -366,14 +365,14 @@ class PluginHandler:
 
     def update_completions(self, plugin):
 
-        if not self.config.sections["words"]["commands"]:
+        if not config.sections["words"]["commands"]:
             return
 
         if plugin.__publiccommands__:
             self.core.chatrooms.update_completions()
 
         if plugin.__privatecommands__:
-            self.core.privatechats.update_completions()
+            self.core.privatechat.update_completions()
 
     def get_plugin_path(self, plugin_name):
 
@@ -463,7 +462,7 @@ class PluginHandler:
                 self.core.chatrooms.CMDS.add('/' + trigger + ' ')
 
             for trigger, _func in plugin.__privatecommands__:
-                self.core.privatechats.CMDS.add('/' + trigger + ' ')
+                self.core.privatechat.CMDS.add('/' + trigger + ' ')
 
             self.update_completions(plugin)
 
@@ -512,7 +511,7 @@ class PluginHandler:
                 self.core.chatrooms.CMDS.remove('/' + trigger + ' ')
 
             for trigger, _func in plugin.__privatecommands__:
-                self.core.privatechats.CMDS.remove('/' + trigger + ' ')
+                self.core.privatechat.CMDS.remove('/' + trigger + ' ')
 
             self.update_completions(plugin)
             plugin.unloaded_notification()
@@ -597,17 +596,17 @@ class PluginHandler:
         })
 
     def save_enabled(self):
-        self.config.sections["plugins"]["enabled"] = list(self.enabled_plugins)
+        config.sections["plugins"]["enabled"] = list(self.enabled_plugins)
 
     def load_enabled(self):
-        enable = self.config.sections["plugins"]["enable"]
+        enable = config.sections["plugins"]["enable"]
 
         if not enable:
             return
 
         log.add(_("Loading plugin system"))
 
-        to_enable = self.config.sections["plugins"]["enabled"]
+        to_enable = config.sections["plugins"]["enabled"]
         log.add_debug("Enabled plugin(s): %s" % ', '.join(to_enable))
 
         for plugin in to_enable:
@@ -621,14 +620,14 @@ class PluginHandler:
             if not plugin.settings:
                 return
 
-            if plugin_name not in self.config.sections["plugins"]:
-                self.config.sections["plugins"][plugin_name] = plugin.settings
+            if plugin_name not in config.sections["plugins"]:
+                config.sections["plugins"][plugin_name] = plugin.settings
 
             for i in plugin.settings:
-                if i not in self.config.sections["plugins"][plugin_name]:
-                    self.config.sections["plugins"][plugin_name][i] = plugin.settings[i]
+                if i not in config.sections["plugins"][plugin_name]:
+                    config.sections["plugins"][plugin_name][i] = plugin.settings[i]
 
-            customsettings = self.config.sections["plugins"][plugin_name]
+            customsettings = config.sections["plugins"][plugin_name]
 
             for key in customsettings:
                 if key in plugin.settings:

@@ -26,6 +26,8 @@ from pynicotine.gtkgui.application import GTK_API_VERSION
 
 class Window:
 
+    active_dialogs = []  # Class variable keeping dialog objects alive
+
     def __init__(self, window):
 
         signal_name = "notify::focus-widget" if GTK_API_VERSION >= 4 else "set-focus"

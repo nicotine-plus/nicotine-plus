@@ -123,7 +123,7 @@ class ChatHistory(Popover):
     def on_row_activated(self, list_view, iterator):
         username = list_view.get_row_value(iterator, 0)
 
-        self.core.privatechats.show_user(username)
+        self.core.privatechat.show_user(username)
         self.popover.hide()
 
     def on_search_accelerator(self, *_args):

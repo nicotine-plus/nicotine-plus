@@ -29,12 +29,12 @@ from pynicotine.gtkgui.widgets.window import Window
 
 class Dialog(Window):
 
-    active_dialog = None  # Class variable keeping the dialog object alive
-
     def __init__(self, dialog=None, parent=None, content_box=None, buttons=None, default_response=None,
                  show_callback=None, close_callback=None, title="", width=0, height=0,
                  modal=True, resizable=True, close_destroy=True):
 
+        self.parent = parent
+        self.modal = modal
         self.default_width = width
         self.default_height = height
         self.close_destroy = close_destroy
@@ -44,7 +44,7 @@ class Dialog(Window):
 
         if dialog:
             self.dialog = dialog
-            self._set_dialog_properties(parent, modal)
+            self._set_dialog_properties()
             return
 
         self.dialog = Gtk.Dialog(
@@ -77,7 +77,7 @@ class Dialog(Window):
         if default_response:
             self.dialog.set_default_response(default_response)
 
-        self._set_dialog_properties(parent, modal)
+        self._set_dialog_properties()
 
     def _on_show(self, *_args):
         if self.show_callback is not None:
@@ -85,7 +85,10 @@ class Dialog(Window):
 
     def _on_close_request(self, *_args):
 
-        Dialog.active_dialog = None
+        if self not in Window.active_dialogs:
+            return False
+
+        Window.active_dialogs.remove(self)
 
         if self.close_callback is not None:
             self.close_callback(self)
@@ -102,7 +105,7 @@ class Dialog(Window):
 
         return True
 
-    def _set_dialog_properties(self, parent, modal=True):
+    def _set_dialog_properties(self):
 
         if GTK_API_VERSION >= 4:
             self.dialog.connect("close-request", self._on_close_request)
@@ -113,9 +116,7 @@ class Dialog(Window):
             self.dialog.set_type_hint(Gdk.WindowTypeHint.DIALOG)
 
         self.dialog.connect("show", self._on_show)
-
-        self.dialog.set_modal(modal)
-        self.dialog.set_transient_for(parent)
+        self.dialog.set_transient_for(self.parent)
 
     def _resize_dialog(self):
 
@@ -128,13 +129,11 @@ class Dialog(Window):
         if not dialog_width and not dialog_height:
             return
 
-        parent = self.dialog.get_transient_for()
-
         if GTK_API_VERSION >= 4:
-            main_window_width = parent.get_width()
-            main_window_height = parent.get_height()
+            main_window_width = self.parent.get_width()
+            main_window_height = self.parent.get_height()
         else:
-            main_window_width, main_window_height = parent.get_size()
+            main_window_width, main_window_height = self.parent.get_size()
 
         if main_window_width and dialog_width > main_window_width:
             dialog_width = main_window_width - 30
@@ -149,11 +148,16 @@ class Dialog(Window):
 
     def show(self):
 
+        if self not in Window.active_dialogs:
+            Window.active_dialogs.append(self)
+
+        # Check if dialog should be modal
+        self.dialog.set_modal(self.modal and self.parent.get_visible())
+
         # Shrink the dialog if it's larger than the main window
         self._resize_dialog()
 
         # Show the dialog
-        Dialog.active_dialog = self
         self.dialog.present()
 
         if GTK_API_VERSION == 3:
@@ -170,13 +174,17 @@ class Dialog(Window):
 
 class MessageDialog(Window):
 
-    active_dialog = None  # Class variable keeping the dialog object alive
-
-    def __init__(self, parent, title, message, callback=None, callback_data=None,
+    def __init__(self, parent, title, message, callback=None, callback_data=None, long_message=None,
                  message_type=Gtk.MessageType.OTHER, buttons=None, width=-1):
 
+        # Prioritize modal non-message dialogs as parent
+        for active_dialog in reversed(Window.active_dialogs):
+            if isinstance(active_dialog, Dialog) and active_dialog.modal:
+                parent = active_dialog.dialog
+                break
+
         self.dialog = Gtk.MessageDialog(
-            transient_for=parent, destroy_with_parent=True, modal=True,
+            transient_for=parent, destroy_with_parent=True, modal=parent.get_visible(),
             message_type=message_type, default_width=width,
             text=title, secondary_text=message
         )
@@ -197,18 +205,48 @@ class MessageDialog(Window):
 
         label.set_selectable(True)
 
+        if not long_message:
+            return
+
+        frame = Gtk.Frame(margin_top=6, visible=True)
+        scrolled_window = Gtk.ScrolledWindow(min_content_height=75, max_content_height=200, hexpand=True,
+                                             vexpand=True, propagate_natural_height=True, visible=True)
+        textview = Gtk.TextView(left_margin=8, right_margin=8, top_margin=5, bottom_margin=5, editable=False,
+                                cursor_visible=False, pixels_above_lines=1, pixels_below_lines=1,
+                                wrap_mode=Gtk.WrapMode.WORD_CHAR, visible=True)
+
+        buffer = textview.get_buffer()
+        buffer.set_text(long_message)
+
+        frame.set_property("child", scrolled_window)
+        scrolled_window.set_property("child", textview)
+
+        if GTK_API_VERSION >= 4:
+            self.container.append(frame)
+        else:
+            self.container.add(frame)
+
     def on_response(self, dialog, response_id, callback, callback_data):
+
+        if self not in Window.active_dialogs:
+            return
 
         if callback and response_id not in (Gtk.ResponseType.CANCEL, Gtk.ResponseType.CLOSE,
                                             Gtk.ResponseType.DELETE_EVENT):
             callback(self, response_id, callback_data)
 
-        MessageDialog.active_dialog = None
-        dialog.destroy()
+        Window.active_dialogs.remove(self)
+        dialog.close()
 
     def show(self):
-        MessageDialog.active_dialog = self
+
+        if self not in Window.active_dialogs:
+            Window.active_dialogs.append(self)
+
         self.dialog.present()
+
+    def close(self):
+        self.dialog.close()
 
 
 class EntryDialog(MessageDialog):
@@ -293,8 +331,8 @@ class EntryDialog(MessageDialog):
 
 class OptionDialog(MessageDialog):
 
-    def __init__(self, parent, title, message, callback, callback_data=None, option_label="", option_value=False,
-                 first_button=_("_No"), second_button=_("_Yes"), third_button=""):
+    def __init__(self, parent, title, message, callback, callback_data=None, long_message=None, option_label="",
+                 option_value=False, first_button=_("_No"), second_button=_("_Yes"), third_button=""):
 
         buttons = []
 
@@ -307,8 +345,9 @@ class OptionDialog(MessageDialog):
         if third_button:
             buttons.append((third_button, 3))
 
-        super().__init__(parent=parent, title=title, message=message, message_type=Gtk.MessageType.OTHER,
-                         callback=callback, callback_data=callback_data, buttons=buttons)
+        super().__init__(parent=parent, title=title, message=message, long_message=long_message,
+                         message_type=Gtk.MessageType.OTHER, callback=callback, callback_data=callback_data,
+                         buttons=buttons)
 
         self.option = Gtk.CheckButton(label=option_label, active=option_value, visible=bool(option_label))
 

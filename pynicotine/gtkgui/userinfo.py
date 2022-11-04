@@ -29,7 +29,7 @@ from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine.config import config
-from pynicotine.geoip.geoip import GeoIP
+from pynicotine.geoip import GeoIP
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.filechooser import FileChooserSave
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
@@ -474,7 +474,7 @@ class UserInfo:
         self.frame.interests.toggle_menu_items(menu, self.dislikes_list_view, column=0)
 
     def on_send_message(self, *_args):
-        self.core.privatechats.show_user(self.user)
+        self.core.privatechat.show_user(self.user)
 
     def on_show_ip_address(self, *_args):
         self.core.request_ip_address(self.user)

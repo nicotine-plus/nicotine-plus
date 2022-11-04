@@ -51,12 +51,12 @@ Copyright: 2003-2022 Nicotine+ Translators
 License: GPL-3+
 Comment: see TRANSLATORS.md for more information.
 
-Files: pynicotine/geoip/ip2location.py
+Files: pynicotine/external/ip2location.py
 Copyright: 2017 IP2Location.com
            2021-2022 Mat (mathiascode)
 License: Expat
 
-Files: pynicotine/geoip/ipcountrydb.bin
+Files: pynicotine/external/ipcountrydb.bin
 Copyright: 2001-2022 Hexasoft Development Sdn. Bhd.
 License: CC-BY-SA-4.0
 
@@ -65,7 +65,7 @@ Copyright: 2016-2017 Bowtie AB
            2018-2020 Jack Marsh
 License: Expat
 
-Files: pynicotine/metadata/tinytag.py
+Files: pynicotine/external/tinytag.py
 Copyright: 2014-2022 Tom Wallroth
            2020-2022 Mat (mathiascode)
 License: Expat

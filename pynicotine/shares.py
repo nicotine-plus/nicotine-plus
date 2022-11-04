@@ -32,6 +32,7 @@ import time
 from threading import Thread
 
 from pynicotine import slskmessages
+from pynicotine.config import config
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import UINT_LIMIT
 from pynicotine.slskmessages import UserStatus
@@ -76,9 +77,9 @@ class Scanner:
     """ Separate process responsible for building shares. It handles scanning of
     folders and files, as well as building databases and writing them to disk. """
 
-    def __init__(self, config, queue, shared_folders, share_db_paths, init=False, rescan=True, rebuild=False):
+    def __init__(self, config_obj, queue, shared_folders, share_db_paths, init=False, rescan=True, rebuild=False):
 
-        self.config = config
+        self.config = config_obj
         self.queue = queue
         self.shared_folders, self.shared_buddy_folders = shared_folders
         self.share_dbs = {}
@@ -94,7 +95,7 @@ class Scanner:
         try:
             rename_process(b'nicotine-scan')
 
-            from pynicotine.metadata.tinytag import TinyTag
+            from pynicotine.external.tinytag import TinyTag
             self.tinytag = TinyTag()
 
             if not Shares.load_shares(self.share_dbs, self.share_db_paths, remove_failed=True):
@@ -177,6 +178,27 @@ class Scanner:
         elif os.path.isdir(db_path_encoded):
             import shutil
             shutil.rmtree(db_path_encoded)
+
+    def real2virtual(self, path):
+
+        path = path.replace('/', '\\')
+
+        for virtual, real, *_unused in Shares.virtual_mapping(self.config):
+            # Remove slashes from share name to avoid path conflicts
+            virtual = virtual.replace('/', '_').replace('\\', '_')
+
+            real = real.replace('/', '\\')
+            if path == real:
+                return virtual
+
+            # Use rstrip to remove trailing separator from root directories
+            real = real.rstrip('\\') + '\\'
+
+            if path.startswith(real):
+                virtualpath = virtual + '\\' + path[len(real):]
+                return virtualpath
+
+        return "__INTERNAL_ERROR__" + path
 
     def set_shares(self, share_type, files=None, streams=None, mtimes=None, wordindex=None):
 
@@ -316,7 +338,7 @@ class Scanner:
             folder_stat = os.stat(encode_path(folder))
 
         folder_unchanged = False
-        virtual_folder = Shares.real2virtual_cls(folder, self.config)
+        virtual_folder = self.real2virtual(folder)
         mtime = folder_stat.st_mtime
 
         file_list = []
@@ -494,12 +516,11 @@ class Scanner:
 
 class Shares:
 
-    def __init__(self, core, config, queue, network_callback=None, ui_callback=None, init_shares=True):
+    def __init__(self, core, queue, network_callback=None, ui_callback=None, init_shares=True):
 
         self.core = core
         self.network_callback = network_callback
         self.ui_callback = ui_callback
-        self.config = config
         self.queue = queue
         self.share_dbs = {}
         self.requested_share_times = {}
@@ -511,16 +532,16 @@ class Shares:
 
         self.convert_shares()
         self.share_db_paths = [
-            ("files", os.path.join(self.config.data_dir, "files.db")),
-            ("streams", os.path.join(self.config.data_dir, "streams.db")),
-            ("wordindex", os.path.join(self.config.data_dir, "wordindex.db")),
-            ("fileindex", os.path.join(self.config.data_dir, "fileindex.db")),
-            ("mtimes", os.path.join(self.config.data_dir, "mtimes.db")),
-            ("buddyfiles", os.path.join(self.config.data_dir, "buddyfiles.db")),
-            ("buddystreams", os.path.join(self.config.data_dir, "buddystreams.db")),
-            ("buddywordindex", os.path.join(self.config.data_dir, "buddywordindex.db")),
-            ("buddyfileindex", os.path.join(self.config.data_dir, "buddyfileindex.db")),
-            ("buddymtimes", os.path.join(self.config.data_dir, "buddymtimes.db"))
+            ("files", os.path.join(config.data_dir, "files.db")),
+            ("streams", os.path.join(config.data_dir, "streams.db")),
+            ("wordindex", os.path.join(config.data_dir, "wordindex.db")),
+            ("fileindex", os.path.join(config.data_dir, "fileindex.db")),
+            ("mtimes", os.path.join(config.data_dir, "mtimes.db")),
+            ("buddyfiles", os.path.join(config.data_dir, "buddyfiles.db")),
+            ("buddystreams", os.path.join(config.data_dir, "buddystreams.db")),
+            ("buddywordindex", os.path.join(config.data_dir, "buddywordindex.db")),
+            ("buddyfileindex", os.path.join(config.data_dir, "buddyfileindex.db")),
+            ("buddymtimes", os.path.join(config.data_dir, "buddymtimes.db"))
         ]
 
         if not init_shares:
@@ -532,41 +553,16 @@ class Shares:
 
     def init_shares(self):
 
-        rescan_startup = (self.config.sections["transfers"]["rescanonstartup"]
-                          and not self.config.need_config())
+        rescan_startup = (config.sections["transfers"]["rescanonstartup"]
+                          and not config.need_config())
 
         self.rescan_shares(init=True, rescan=rescan_startup)
-
-    def real2virtual(self, path):
-        return self.real2virtual_cls(path, self.config)
-
-    @classmethod
-    def real2virtual_cls(cls, path, config):
-
-        path = path.replace('/', '\\')
-
-        for virtual, real, *_unused in cls._virtualmapping(config):
-            # Remove slashes from share name to avoid path conflicts
-            virtual = virtual.replace('/', '_').replace('\\', '_')
-
-            real = real.replace('/', '\\')
-            if path == real:
-                return virtual
-
-            # Use rstrip to remove trailing separator from root directories
-            real = real.rstrip('\\') + '\\'
-
-            if path.startswith(real):
-                virtualpath = virtual + '\\' + path[len(real):]
-                return virtualpath
-
-        return "__INTERNAL_ERROR__" + path
 
     def virtual2real(self, path):
 
         path = path.replace('/', os.sep).replace('\\', os.sep)
 
-        for virtual, real, *_unused in self._virtualmapping(self.config):
+        for virtual, real, *_unused in self.virtual_mapping(config):
             # Remove slashes from share name to avoid path conflicts
             virtual = virtual.replace('/', '_').replace('\\', '_')
 
@@ -580,10 +576,10 @@ class Shares:
         return "__INTERNAL_ERROR__" + path
 
     @staticmethod
-    def _virtualmapping(config):
+    def virtual_mapping(config_obj):
 
-        mapping = config.sections["transfers"]["shared"][:]
-        mapping += config.sections["transfers"]["buddyshared"]
+        mapping = config_obj.sections["transfers"]["shared"][:]
+        mapping += config_obj.sections["transfers"]["buddyshared"]
 
         return mapping
 
@@ -618,10 +614,10 @@ class Shares:
                     (shared_folder, virtual))
             return virtual, shared_folder
 
-        self.config.sections["transfers"]["shared"] = [_convert_to_virtual(x)
-                                                       for x in self.config.sections["transfers"]["shared"]]
-        self.config.sections["transfers"]["buddyshared"] = [_convert_to_virtual(x)
-                                                            for x in self.config.sections["transfers"]["buddyshared"]]
+        config.sections["transfers"]["shared"] = [_convert_to_virtual(x)
+                                                  for x in config.sections["transfers"]["shared"]]
+        config.sections["transfers"]["buddyshared"] = [_convert_to_virtual(x)
+                                                       for x in config.sections["transfers"]["buddyshared"]]
 
     @classmethod
     def load_shares(cls, shares, dbs, remove_failed=False):
@@ -668,12 +664,12 @@ class Shares:
 
         if not realfilename.startswith("__INTERNAL_ERROR__"):
             if bshared_files is not None:
-                for row in self.config.sections["server"]["userlist"]:
+                for row in config.sections["server"]["userlist"]:
                     if row[0] != user:
                         continue
 
                     # Check if buddy is trusted
-                    if self.config.sections["transfers"]["buddysharestrustedonly"] and not row[4]:
+                    if config.sections["transfers"]["buddysharestrustedonly"] and not row[4]:
                         break
 
                     for fileinfo in bshared_files.get(str(folder), []):
@@ -775,7 +771,7 @@ class Shares:
 
         scanner_queue = multiprocessing.Queue()
         scanner = Scanner(
-            self.config,
+            config,
             scanner_queue,
             shared_folders,
             self.share_db_paths,
@@ -792,8 +788,8 @@ class Shares:
 
     def get_shared_folders(self):
 
-        shared_folders = self.config.sections["transfers"]["shared"][:]
-        shared_folders_buddy = self.config.sections["transfers"]["buddyshared"][:]
+        shared_folders = config.sections["transfers"]["shared"][:]
+        shared_folders_buddy = config.sections["transfers"]["buddyshared"][:]
 
         return shared_folders, shared_folders_buddy
 
@@ -834,17 +830,42 @@ class Shares:
 
         return False
 
-    def rescan_shares(self, init=False, rescan=True, rebuild=False, use_thread=True):
+    def check_shares_available(self):
+
+        share_groups = self.get_shared_folders()
+        unavailable_shares = []
+
+        for share in share_groups:
+            for virtual_name, folder_path, *_unused in share:
+                if not os.access(encode_path(folder_path), os.R_OK):
+                    unavailable_shares.append((virtual_name, folder_path))
+
+        return unavailable_shares
+
+    def rescan_shares(self, init=False, rescan=True, rebuild=False, use_thread=True, force=False):
 
         if self.rescanning:
             return None
 
-        self.rescanning = True
-        shared_folders = self.get_shared_folders()
+        if rescan and not force:
+            # Verify all shares are mounted before allowing destructive rescan
+            unavailable_shares = self.check_shares_available()
+
+            if unavailable_shares:
+                log.add(_("Rescan aborted due to unavailable shares"))
+                rescan = False
+
+                if self.ui_callback:
+                    self.ui_callback.shares_unavailable(unavailable_shares)
+
+                if not init:
+                    return None
 
         # Hand over database control to the scanner process
+        self.rescanning = True
         self.close_shares(self.share_dbs)
 
+        shared_folders = self.get_shared_folders()
         scanner, scanner_queue = self.build_scanner_process(shared_folders, init, rescan, rebuild)
         scanner.start()
 
@@ -899,7 +920,7 @@ class Shares:
 
         if not checkuser:
             message = self.core.ban_message % reason
-            self.core.privatechats.send_automatic_message(user, message)
+            self.core.privatechat.send_automatic_message(user, message)
 
         shares_list = None
 
@@ -928,7 +949,7 @@ class Shares:
 
         if not checkuser:
             message = self.core.ban_message % reason
-            self.core.privatechats.send_automatic_message(username, message)
+            self.core.privatechat.send_automatic_message(username, message)
 
         normalshares = self.share_dbs.get("streams")
         buddyshares = self.share_dbs.get("buddystreams")

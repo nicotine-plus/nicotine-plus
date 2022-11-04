@@ -443,10 +443,22 @@ def factorize(filesize, base=1024):
         return None, factor
 
 
-def truncate_string_byte(string, byte_limit, encoding='utf-8'):
+def truncate_string_byte(string, byte_limit, encoding='utf-8', ellipsize=False):
     """ Truncates a string to fit inside a byte limit """
 
-    return string.encode(encoding)[:max(byte_limit, 0)].decode(encoding, 'ignore')
+    string_bytes = string.encode(encoding)
+
+    if len(string_bytes) <= byte_limit:
+        # Nothing to do, return original string
+        return string
+
+    if ellipsize:
+        ellipsis = "…".encode(encoding)
+        string_bytes = string_bytes[:max(byte_limit - len(ellipsis), 0)].rstrip() + ellipsis
+    else:
+        string_bytes = string_bytes[:byte_limit]
+
+    return string_bytes.decode(encoding, 'ignore')
 
 
 def unescape(string):

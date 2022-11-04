@@ -39,12 +39,12 @@ class TransfersTest(unittest.TestCase):
         config.load_config()
         config.sections["transfers"]["downloaddir"] = config.data_dir
 
-        self.transfers = Transfers(MagicMock(), config, deque(), Mock())
+        self.transfers = Transfers(MagicMock(), deque(), Mock())
         self.transfers.init_transfers()
         self.transfers.server_login()
         self.transfers.allow_saving_transfers = False
 
-        self.userbrowse = UserBrowse(MagicMock(), config, Mock())
+        self.userbrowse = UserBrowse(MagicMock(), Mock())
         self.userbrowse.core.transfers = self.transfers
 
     def test_load_downloads(self):
@@ -78,7 +78,7 @@ class TransfersTest(unittest.TestCase):
         is identical to the one we loaded. Ignore transfer 13, since its missing
         properties will be added at the end of the session. """
 
-        self.transfers.abort_transfers()
+        self.transfers.server_disconnect()
 
         old_transfers = self.transfers.load_transfers_file(self.transfers.downloads_file_name)[:12]
 

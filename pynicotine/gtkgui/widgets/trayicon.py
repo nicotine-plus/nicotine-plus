@@ -202,7 +202,7 @@ class BaseImplementation:
         if not user:
             return
 
-        self.core.privatechats.show_user(user)
+        self.core.privatechat.show_user(user)
         self.frame.show()
 
     def on_open_private_chat(self, *_args):

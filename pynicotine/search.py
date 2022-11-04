@@ -27,6 +27,7 @@ from itertools import islice
 from operator import itemgetter
 
 from pynicotine import slskmessages
+from pynicotine.config import config
 from pynicotine.logfacility import log
 from pynicotine.scheduler import scheduler
 from pynicotine.slskmessages import increment_token
@@ -35,12 +36,11 @@ from pynicotine.utils import TRANSLATE_PUNCTUATION
 
 class Search:
 
-    def __init__(self, core, config, queue, share_dbs, geoip, ui_callback=None):
+    def __init__(self, core, queue, share_dbs, geoip, ui_callback=None):
 
         self.core = core
-        self.config = config
         self.queue = queue
-        self.ui_callback = None
+        self.ui_callback = getattr(ui_callback, "search", None)
         self.searches = {}
         self.token = int(random.random() * (2 ** 31 - 1))
         self.wishlist_interval = 0
@@ -52,9 +52,6 @@ class Search:
         for term in config.sections["server"]["autosearch"]:
             self.token = increment_token(self.token)
             self.searches[self.token] = {"id": self.token, "term": term, "mode": "wishlist", "ignore": True}
-
-        if hasattr(ui_callback, "search"):
-            self.ui_callback = ui_callback.search
 
     def server_login(self):
         if self.ui_callback:
@@ -71,7 +68,7 @@ class Search:
     def request_folder_download(self, user, folder, visible_files):
 
         # First queue the visible search results
-        visible_files.sort(key=itemgetter(1), reverse=self.config.sections["transfers"]["reverseorder"])
+        visible_files.sort(key=itemgetter(1), reverse=config.sections["transfers"]["reverseorder"])
 
         for file in visible_files:
             user, fullpath, destination, size, bitrate, length = file
@@ -107,7 +104,7 @@ class Search:
         if search is None:
             return
 
-        if search["term"] in self.config.sections["server"]["autosearch"]:
+        if search["term"] in config.sections["server"]["autosearch"]:
             search["ignore"] = True
         else:
             del self.searches[token]
@@ -166,7 +163,7 @@ class Search:
         # Remove words starting with "-", results containing these are excluded by us later
         search_term_without_special = ' '.join(p for p in search_term_words if p not in search_term_words_special)
 
-        if self.config.sections["searches"]["remove_special_chars"]:
+        if config.sections["searches"]["remove_special_chars"]:
             """
             Remove special characters from search term
             SoulseekQt doesn't seem to send search results if special characters are included (July 7, 2020)
@@ -194,8 +191,8 @@ class Search:
         # Get a new search token
         self.token = increment_token(self.token)
 
-        if self.config.sections["searches"]["enable_history"]:
-            items = self.config.sections["searches"]["history"]
+        if config.sections["searches"]["enable_history"]:
+            items = config.sections["searches"]["history"]
 
             if search_term in items:
                 items.remove(search_term)
@@ -204,7 +201,7 @@ class Search:
 
             # Clear old items
             del items[200:]
-            self.config.write_configuration()
+            config.write_configuration()
 
         if mode == "global":
             self.do_global_search(search_term)
@@ -242,7 +239,7 @@ class Search:
 
     def do_buddies_search(self, text):
 
-        for row in self.config.sections["server"]["userlist"]:
+        for row in config.sections["server"]["userlist"]:
             if row and isinstance(row, list):
                 user = str(row[0])
                 self.queue.append(slskmessages.UserSearch(user, self.token, text))
@@ -265,7 +262,7 @@ class Search:
 
     def do_wishlist_search_interval(self):
 
-        searches = self.config.sections["server"]["autosearch"]
+        searches = config.sections["server"]["autosearch"]
 
         if not searches:
             return
@@ -288,8 +285,8 @@ class Search:
         # Get a new search token
         self.token = increment_token(self.token)
 
-        if wish not in self.config.sections["server"]["autosearch"]:
-            self.config.sections["server"]["autosearch"].append(wish)
+        if wish not in config.sections["server"]["autosearch"]:
+            config.sections["server"]["autosearch"].append(wish)
 
         self.add_search(wish, "wishlist", ignore=True)
 
@@ -298,8 +295,8 @@ class Search:
 
     def remove_wish(self, wish):
 
-        if wish in self.config.sections["server"]["autosearch"]:
-            self.config.sections["server"]["autosearch"].remove(wish)
+        if wish in config.sections["server"]["autosearch"]:
+            config.sections["server"]["autosearch"].remove(wish)
 
             for search in self.searches.values():
                 if search["term"] == wish and search["mode"] == "wishlist":
@@ -310,7 +307,7 @@ class Search:
             self.ui_callback.remove_wish(wish)
 
     def is_wish(self, wish):
-        return wish in self.config.sections["server"]["autosearch"]
+        return wish in config.sections["server"]["autosearch"]
 
     def set_wishlist_interval(self, msg):
         """ Server code: 104 """
@@ -455,7 +452,7 @@ class Search:
         if not searchterm:
             return
 
-        if not self.config.sections["searches"]["search_results"]:
+        if not config.sections["searches"]["search_results"]:
             # Don't return _any_ results when this option is disabled
             return
 
@@ -464,7 +461,7 @@ class Search:
             # unless we're specifically searching our own username
             return
 
-        maxresults = self.config.sections["searches"]["maxresults"]
+        maxresults = config.sections["searches"]["maxresults"]
 
         if maxresults == 0:
             return
@@ -490,7 +487,7 @@ class Search:
         searchterm_old = searchterm
         searchterm = searchterm.lower().translate(TRANSLATE_PUNCTUATION).strip()
 
-        if len(searchterm) < self.config.sections["searches"]["min_search_chars"]:
+        if len(searchterm) < config.sections["searches"]["min_search_chars"]:
             # Don't send search response if search term contains too few characters
             return
 
@@ -547,7 +544,7 @@ class Search:
         uploadspeed = self.core.transfers.upload_speed
         queuesize = self.core.transfers.get_upload_queue_size()
         slotsavail = self.core.transfers.allow_new_uploads()
-        fifoqueue = self.config.sections["transfers"]["fifoqueue"]
+        fifoqueue = config.sections["transfers"]["fifoqueue"]
 
         message = slskmessages.FileSearchResult(
             None, self.core.login_username,

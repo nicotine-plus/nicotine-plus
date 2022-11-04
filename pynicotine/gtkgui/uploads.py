@@ -40,7 +40,6 @@ class Uploads(TransferList):
         self.path_label = _("Folder")
         self.retry_label = _("_Retry")
         self.abort_label = _("_Abort")
-        self.aborted_status = "Aborted"
 
         self.transfer_page = frame.uploads_page
         self.user_counter = frame.upload_users_label
@@ -70,9 +69,18 @@ class Uploads(TransferList):
         )
         self.popup_menu_clear.update_model()
 
-    def retry_transfers(self):
-        for transfer in self.selected_transfers:
-            self.core.transfers.retry_upload(transfer)
+    def retry_selected_transfers(self):
+        self.core.transfers.retry_uploads(self.selected_transfers)
+
+    def abort_selected_transfers(self):
+        self.core.transfers.abort_uploads(self.selected_transfers, denied_message="Cancelled")
+
+    def clear_selected_transfers(self):
+        self.core.transfers.clear_uploads(uploads=self.selected_transfers)
+
+    def on_clear_queued_response(self, _dialog, response_id, _data):
+        if response_id == 2:
+            self.core.transfers.clear_uploads(statuses=["Queued"])
 
     def on_try_clear_queued(self, *_args):
 
@@ -82,6 +90,10 @@ class Uploads(TransferList):
             message=_('Do you really want to clear all queued uploads?'),
             callback=self.on_clear_queued_response
         ).show()
+
+    def on_clear_all_response(self, _dialog, response_id, _data):
+        if response_id == 2:
+            self.core.transfers.clear_uploads()
 
     def on_try_clear_all(self, *_args):
 
@@ -145,24 +157,31 @@ class Uploads(TransferList):
             if transfer.user in self.selected_users and transfer not in self.selected_transfers:
                 self.selected_transfers[transfer] = None
 
-        self.abort_transfers()
+        self.abort_selected_transfers()
 
     def on_ban_users(self, *_args):
         self.select_transfers()
         self.core.transfers.ban_users(self.selected_users)
 
+    def on_clear_queued(self, *_args):
+        self.core.transfers.clear_uploads(statuses=["Queued"])
+
+    def on_clear_finished(self, *_args):
+        self.core.transfers.clear_uploads(statuses=["Finished"])
+
     def on_clear_aborted(self, *_args):
-        self.clear_transfers(["Aborted", "Cancelled", "Disallowed extension"])
+        self.core.transfers.clear_uploads(statuses=["Aborted", "Cancelled", "Disallowed extension"])
 
     def on_clear_failed(self, *_args):
-        self.clear_transfers(["Connection timeout", "Local file error", "Remote file error"])
+        self.core.transfers.clear_uploads(statuses=["Connection timeout", "Local file error", "Remote file error"])
 
     def on_clear_logged_out(self, *_args):
-        self.clear_transfers(["User logged off"])
+        self.core.transfers.clear_uploads(statuses=["User logged off"])
 
     def on_clear_finished_aborted(self, *_args):
-        self.clear_transfers(["Aborted", "Cancelled", "Disallowed extension", "Finished"])
+        self.core.transfers.clear_uploads(statuses=["Aborted", "Cancelled", "Disallowed extension", "Finished"])
 
     def on_clear_finished_failed(self, *_args):
-        self.clear_transfers(["Aborted", "Cancelled", "Disallowed extension", "Finished",
-                              "Connection timeout", "Local file error", "Remote file error"])
+        self.core.transfers.clear_uploads(
+            statuses=["Aborted", "Cancelled", "Disallowed extension", "Finished", "Connection timeout",
+                      "Local file error", "Remote file error"])

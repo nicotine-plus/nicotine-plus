@@ -178,8 +178,8 @@ def run():
             return exit_code
 
     # Run without a GUI
-    from pynicotine.cli import run_cli
-    return run_cli(core, ci_mode)
+    from pynicotine.headless import run_headless
+    return run_headless(core, ci_mode)
 
 
 apply_translations()

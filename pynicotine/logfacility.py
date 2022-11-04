@@ -149,12 +149,11 @@ class Logger:
 
         return msg
 
-    def add(self, msg, msg_args=None, level=None, should_log_file=True):
+    def add(self, msg, msg_args=None, title=None, level=None, should_log_file=True):
 
         levels = self.log_levels if self.log_levels else config.sections["logging"].get("debugmodes", [])
 
-        # Important messages are always visible
-        if level and level not in levels and not level.startswith("important"):
+        if level and level not in levels:
             return
 
         if level == "message":
@@ -180,7 +179,7 @@ class Logger:
         for callback in self.listeners:
             try:
                 timestamp_format = config.sections["logging"].get("log_timestamp", "%Y-%m-%d %H:%M:%S")
-                callback(timestamp_format, msg, level)
+                callback(timestamp_format, msg, title, level)
             except Exception as error:
                 try:
                     print("Callback on %s failed: %s %s\n%s" % (callback, level, msg, error))
@@ -214,12 +213,6 @@ class Logger:
     def add_debug(self, msg, msg_args=None):
         self.add(msg, msg_args=msg_args, level="miscellaneous")
 
-    def add_important_error(self, msg, msg_args=None):
-        self.add(msg, msg_args=msg_args, level="important_error")
-
-    def add_important_info(self, msg, msg_args=None):
-        self.add(msg, msg_args=msg_args, level="important_info")
-
     @staticmethod
     def contents(obj):
         """ Returns variables for object, for debug output """
@@ -229,7 +222,7 @@ class Logger:
             return vars(obj)
 
     @staticmethod
-    def log_console(timestamp_format, msg, _level):
+    def log_console(timestamp_format, msg, _title, _level):
         try:
             print("[" + time.strftime(timestamp_format) + "] " + msg)
         except OSError:

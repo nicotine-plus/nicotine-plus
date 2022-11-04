@@ -55,7 +55,7 @@ from pynicotine.utils import humanize
 
 class TransferList:
 
-    path_separator = path_label = retry_label = abort_label = aborted_status = None
+    path_separator = path_label = retry_label = abort_label = None
     transfer_page = user_counter = file_counter = expand_button = expand_icon = grouping_button = None
 
     def __init__(self, frame, core, transfer_type):
@@ -659,27 +659,26 @@ class TransferList:
         for transfer in self.transfer_list:
             transfer.iterator = None
 
-    def retry_transfers(self):
+    def retry_selected_transfers(self):
         # Implemented in subclasses
         pass
 
-    def abort_transfers(self, clear=False):
+    def abort_selected_transfers(self):
+        # Implemented in subclasses
+        pass
 
-        for transfer in self.selected_transfers:
-            if transfer.status != "Finished":
-                self.core.transfers.abort_transfer(transfer, send_fail_message=True)
+    def clear_selected_transfers(self):
+        # Implemented in subclasses
+        pass
 
-                if not clear:
-                    transfer.status = self.aborted_status
-                    self.update_model(transfer)
+    def abort_transfer(self, transfer, status_message=None, update_parent=True):
+        if status_message is not None:
+            self.update_model(transfer, update_parent=update_parent)
 
-            if clear:
-                self.remove_specific(transfer, update_parent=False)
-
+    def abort_transfers(self, _transfers, _status_message=None):
         self.update_parent_rows()
-        self.update_num_users_files()
 
-    def remove_specific(self, transfer, cleartreeviewonly=False, update_parent=True):
+    def clear_transfer(self, transfer, update_parent=True):
 
         user = transfer.user
 
@@ -690,12 +689,6 @@ class TransferList:
             if not self.users[user]:
                 del self.users[user]
 
-        if transfer in self.core.transfers.transfer_request_times:
-            del self.core.transfers.transfer_request_times[transfer]
-
-        if not cleartreeviewonly:
-            self.transfer_list.remove(transfer)
-
         if transfer.iterator is not None:
             self.transfersmodel.remove(transfer.iterator)
 
@@ -703,12 +696,9 @@ class TransferList:
             self.update_parent_rows(transfer)
             self.update_num_users_files()
 
-    def clear_transfers(self, statuses=None):
-
-        for transfer in self.transfer_list.copy():
-            if statuses is None or transfer.status in statuses:
-                self.core.transfers.abort_transfer(transfer, send_fail_message=True)
-                self.remove_specific(transfer)
+    def clear_transfers(self, _transfers, _statuses):
+        self.update_parent_rows()
+        self.update_num_users_files()
 
     def add_popup_menu_user(self, popup, user):
 
@@ -819,13 +809,13 @@ class TransferList:
             self.on_file_search()
 
         elif action == 4:  # Pause / Abort
-            self.abort_transfers()
+            self.abort_selected_transfers()
 
         elif action == 5:  # Clear
-            self.abort_transfers(clear=True)
+            self.clear_selected_transfers()
 
         elif action == 6:  # Resume / Retry
-            self.retry_transfers()
+            self.retry_selected_transfers()
 
         elif action == 7:  # Browse Folder
             self.on_browse_folder()
@@ -851,21 +841,21 @@ class TransferList:
         """ T: abort transfer """
 
         self.select_transfers()
-        self.abort_transfers()
+        self.abort_selected_transfers()
         return True
 
     def on_retry_transfers_accelerator(self, *_args):
         """ R: retry transfers """
 
         self.select_transfers()
-        self.retry_transfers()
+        self.retry_selected_transfers()
         return True
 
     def on_clear_transfers_accelerator(self, *_args):
         """ Delete: clear transfers """
 
         self.select_transfers()
-        self.abort_transfers(clear=True)
+        self.clear_selected_transfers()
         return True
 
     def on_file_properties_accelerator(self, *_args):
@@ -936,26 +926,12 @@ class TransferList:
 
     def on_retry_transfer(self, *_args):
         self.select_transfers()
-        self.retry_transfers()
+        self.retry_selected_transfers()
 
     def on_abort_transfer(self, *_args):
         self.select_transfers()
-        self.abort_transfers()
+        self.abort_selected_transfers()
 
     def on_clear_transfer(self, *_args):
         self.select_transfers()
-        self.abort_transfers(clear=True)
-
-    def on_clear_queued_response(self, _dialog, response_id, _data):
-        if response_id == 2:
-            self.clear_transfers(["Queued"])
-
-    def on_clear_all_response(self, _dialog, response_id, _data):
-        if response_id == 2:
-            self.clear_transfers()
-
-    def on_clear_queued(self, *_args):
-        self.clear_transfers(["Queued"])
-
-    def on_clear_finished(self, *_args):
-        self.clear_transfers(["Finished"])
+        self.clear_selected_transfers()

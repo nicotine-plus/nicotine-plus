@@ -17,15 +17,15 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from pynicotine import slskmessages
+from pynicotine.config import config
 
 
 class NetworkFilter:
     """ Functions related to banning, blocking and ignoring users """
 
-    def __init__(self, core, config, queue, geoip):
+    def __init__(self, core, queue, geoip):
 
         self.core = core
-        self.config = config
         self.queue = queue
         self.geoip = geoip
         self.ipblock_requested = {}
@@ -56,9 +56,9 @@ class NetworkFilter:
         """ Add the current IP of a user to a list. """
 
         if list_type == "block":
-            ip_list = self.config.sections["server"]["ipblocklist"]
+            ip_list = config.sections["server"]["ipblocklist"]
         else:
-            ip_list = self.config.sections["server"]["ipignorelist"]
+            ip_list = config.sections["server"]["ipignorelist"]
 
         if self._request_ip(user, "add", list_type):
             return None
@@ -67,7 +67,7 @@ class NetworkFilter:
 
         if ip_address not in ip_list or ip_list[ip_address] != user:
             ip_list[ip_address] = user
-            self.config.write_configuration()
+            config.write_configuration()
 
         return ip_address
 
@@ -76,14 +76,14 @@ class NetworkFilter:
 
         if list_type == "block":
             cached_ip = self.get_cached_blocked_user_ip(user)
-            ip_list = self.config.sections["server"]["ipblocklist"]
+            ip_list = config.sections["server"]["ipblocklist"]
         else:
             cached_ip = self.get_cached_ignored_user_ip(user)
-            ip_list = self.config.sections["server"]["ipignorelist"]
+            ip_list = config.sections["server"]["ipignorelist"]
 
         if cached_ip is not None:
             del ip_list[cached_ip]
-            self.config.write_configuration()
+            config.write_configuration()
             return
 
         if self._request_ip(user, "remove", list_type):
@@ -93,15 +93,15 @@ class NetworkFilter:
 
         if ip_address in ip_list:
             del ip_list[ip_address]
-            self.config.write_configuration()
+            config.write_configuration()
 
     def _get_cached_user_ip(self, user, list_type):
         """ Retrieve the IP address of a user previously saved in a list. """
 
         if list_type == "block":
-            ip_list = self.config.sections["server"]["ipblocklist"]
+            ip_list = config.sections["server"]["ipblocklist"]
         else:
-            ip_list = self.config.sections["server"]["ipignorelist"]
+            ip_list = config.sections["server"]["ipignorelist"]
 
         for ip_address, username in ip_list.items():
             if user == username:
@@ -117,9 +117,9 @@ class NetworkFilter:
             return True
 
         if list_type == "block":
-            ip_list = self.config.sections["server"]["ipblocklist"]
+            ip_list = config.sections["server"]["ipblocklist"]
         else:
-            ip_list = self.config.sections["server"]["ipignorelist"]
+            ip_list = config.sections["server"]["ipignorelist"]
 
         s_address = address.split(".")
 
@@ -155,23 +155,23 @@ class NetworkFilter:
         it is allowed to access based on transfer and shares settings. """
 
         if self.is_user_banned(user) or (ip_address is not None and self.is_ip_blocked(ip_address)):
-            if self.config.sections["transfers"]["usecustomban"]:
-                return 0, "Banned (%s)" % self.config.sections["transfers"]["customban"]
+            if config.sections["transfers"]["usecustomban"]:
+                return 0, "Banned (%s)" % config.sections["transfers"]["customban"]
 
             return 0, "Banned"
 
-        for row in self.config.sections["server"]["userlist"]:
+        for row in config.sections["server"]["userlist"]:
             if row[0] != user:
                 continue
 
-            if self.config.sections["transfers"]["buddysharestrustedonly"] and not row[4]:
+            if config.sections["transfers"]["buddysharestrustedonly"] and not row[4]:
                 # Only trusted buddies allowed, and user isn't trusted
                 return 1, ""
 
             # For sending buddy-only shares
             return 2, ""
 
-        if ip_address is None or not self.config.sections["transfers"]["geoblock"]:
+        if ip_address is None or not config.sections["transfers"]["geoblock"]:
             return 1, ""
 
         country_code = self.geoip.get_country_code(ip_address)
@@ -179,9 +179,9 @@ class NetworkFilter:
         # Please note that all country codes are stored in the same string at the first index
         # of an array, separated by commas (no idea why this decision was made...)
 
-        if country_code and self.config.sections["transfers"]["geoblockcc"][0].find(country_code) >= 0:
-            if self.config.sections["transfers"]["usecustomgeoblock"]:
-                return 0, "Banned (%s)" % self.config.sections["transfers"]["customgeoblock"]
+        if country_code and config.sections["transfers"]["geoblockcc"][0].find(country_code) >= 0:
+            if config.sections["transfers"]["usecustomgeoblock"]:
+                return 0, "Banned (%s)" % config.sections["transfers"]["customgeoblock"]
 
             return 0, "Banned"
 
@@ -190,7 +190,7 @@ class NetworkFilter:
     def close_blocked_ip_connections(self):
         """ Close all connections whose IP address exists in the block list """
 
-        for ip_address in self.config.sections["server"]["ipblocklist"]:
+        for ip_address in config.sections["server"]["ipblocklist"]:
             self.queue.append(slskmessages.CloseConnectionIP(ip_address))
 
     def update_saved_user_ip_filters(self, user):
@@ -223,16 +223,16 @@ class NetworkFilter:
         if self.is_user_banned(user):
             return
 
-        self.config.sections["server"]["banlist"].append(user)
-        self.config.write_configuration()
+        config.sections["server"]["banlist"].append(user)
+        config.write_configuration()
 
         self.core.transfers.ban_users({user})
 
     def unban_user(self, user):
 
         if self.is_user_banned(user):
-            self.config.sections["server"]["banlist"].remove(user)
-            self.config.write_configuration()
+            config.sections["server"]["banlist"].remove(user)
+            config.write_configuration()
 
     def block_user_ip(self, user):
         ip_address = self._add_user_ip_to_list(user, "block")
@@ -265,7 +265,7 @@ class NetworkFilter:
         return self._get_cached_user_ip(user, "block")
 
     def is_user_banned(self, user):
-        return user in self.config.sections["server"]["banlist"]
+        return user in config.sections["server"]["banlist"]
 
     def is_ip_blocked(self, address):
         return self._is_ip_in_list(address, "block")
@@ -274,24 +274,24 @@ class NetworkFilter:
 
     def ignore_user(self, user):
         if not self.is_user_ignored(user):
-            self.config.sections["server"]["ignorelist"].append(user)
-            self.config.write_configuration()
+            config.sections["server"]["ignorelist"].append(user)
+            config.write_configuration()
 
     def unignore_user(self, user):
         if self.is_user_ignored(user):
-            self.config.sections["server"]["ignorelist"].remove(user)
-            self.config.write_configuration()
+            config.sections["server"]["ignorelist"].remove(user)
+            config.write_configuration()
 
     def ignore_ip(self, ip_address):
 
         if not ip_address or ip_address.count(".") != 3:
             return
 
-        ipignorelist = self.config.sections["server"]["ipignorelist"]
+        ipignorelist = config.sections["server"]["ipignorelist"]
 
         if ip_address not in ipignorelist:
             ipignorelist[ip_address] = ""
-            self.config.write_configuration()
+            config.write_configuration()
 
     def ignore_user_ip(self, user):
         self._add_user_ip_to_list(user, "ignore")
@@ -321,7 +321,7 @@ class NetworkFilter:
         return self._get_cached_user_ip(user, "ignore")
 
     def is_user_ignored(self, user):
-        return user in self.config.sections["server"]["ignorelist"]
+        return user in config.sections["server"]["ignorelist"]
 
     def is_ip_ignored(self, address):
         return self._is_ip_in_list(address, "ignore")

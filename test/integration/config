@@ -229,6 +229,7 @@ notification_popup_folder = True
 notification_popup_private_message = True
 notification_popup_chatroom = False
 notification_popup_chatroom_mention = True
+notification_popup_wish = True
 
 [plugins]
 enable = True
@@ -241,6 +242,7 @@ downloaded_size = 0
 started_uploads = 0
 completed_uploads = 0
 uploaded_size = 0
+since_timestamp = 0
 
 [userbrowse]
 expand_folders = True

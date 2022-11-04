@@ -738,7 +738,7 @@ class ChatRoom:
                     tag = self.tag_action
 
                 if user != login:
-                    self.chat_view.append_line(self.core.privatechats.censor_chat(line), tag=tag, username=user,
+                    self.chat_view.append_line(self.core.privatechat.censor_chat(line), tag=tag, username=user,
                                                usertag=usertag)
                 else:
                     self.chat_view.append_line(line, tag=tag, username=user, usertag=usertag)
@@ -778,7 +778,7 @@ class ChatRoom:
         user = self.get_selected_username(treeview)
 
         if user is not None:
-            self.core.privatechats.show_user(user)
+            self.core.privatechat.show_user(user)
 
     def on_popup_menu_user(self, menu, treeview):
         user = self.get_selected_username(treeview)
@@ -915,7 +915,7 @@ class ChatRoom:
 
         if user != login_username:
             self.chat_view.append_line(
-                self.core.privatechats.censor_chat(line), tag=tag,
+                self.core.privatechat.censor_chat(line), tag=tag,
                 username=user, usertag=usertag, timestamp_format=timestamp_format
             )
 

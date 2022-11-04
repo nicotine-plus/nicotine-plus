@@ -21,8 +21,7 @@ import socket
 import unittest
 
 from pynicotine.config import config
-from pynicotine.utils import get_latest_version
-from pynicotine.utils import make_version
+from pynicotine.updatechecker import UpdateChecker
 
 
 class VersionTest(unittest.TestCase):
@@ -30,19 +29,19 @@ class VersionTest(unittest.TestCase):
     def test_dev_version(self):
 
         # Test a sample dev version to ensure it's older than the stable counterpart
-        sample_stable_version = make_version("2.1.0")
-        sample_dev_version = make_version("2.1.0.dev1")
+        sample_stable_version = UpdateChecker.create_integer_version("2.1.0")
+        sample_dev_version = UpdateChecker.create_integer_version("2.1.0.dev1")
         self.assertGreater(sample_stable_version, sample_dev_version)
 
     def test_update_check(self):
 
         # Validate local version
-        local_version = make_version(config.version)
+        local_version = UpdateChecker.create_integer_version(config.version)
         self.assertIsInstance(local_version, int)
 
         # Validate version of latest release
         try:
-            _hlatest_version, latest_version, date = get_latest_version()
+            _hlatest_version, latest_version, date = UpdateChecker.retrieve_latest_version()
             self.assertIsInstance(latest_version, int)
 
         except socket.gaierror:

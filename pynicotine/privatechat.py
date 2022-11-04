@@ -17,12 +17,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from pynicotine import slskmessages
+from pynicotine.config import config
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import get_completion_list
 
 
-class PrivateChats:
+class PrivateChat:
 
     # List of allowed commands
     CMDS = {
@@ -35,19 +36,15 @@ class PrivateChats:
 
     CTCP_VERSION = "\x01VERSION\x01"
 
-    def __init__(self, core, config, queue, ui_callback=None):
+    def __init__(self, core, queue, ui_callback=None):
 
         self.core = core
-        self.config = config
         self.queue = queue
+        self.ui_callback = getattr(ui_callback, "privatechat", None)
         self.completion_list = []
         self.private_message_queue = {}
         self.away_message_users = set()
         self.users = set()
-        self.ui_callback = None
-
-        if hasattr(ui_callback, "privatechat"):
-            self.ui_callback = ui_callback.privatechat
 
         # Clear list of previously open chats if we don't want to restore them
         if not config.sections["privatechat"]["store"]:
@@ -81,13 +78,13 @@ class PrivateChats:
 
         self.users.add(user)
 
-        if user not in self.config.sections["privatechat"]["users"]:
-            self.config.sections["privatechat"]["users"].append(user)
+        if user not in config.sections["privatechat"]["users"]:
+            config.sections["privatechat"]["users"].append(user)
 
     def remove_user(self, user):
 
-        if user in self.config.sections["privatechat"]["users"]:
-            self.config.sections["privatechat"]["users"].remove(user)
+        if user in config.sections["privatechat"]["users"]:
+            config.sections["privatechat"]["users"].remove(user)
 
         self.users.remove(user)
 
@@ -105,10 +102,10 @@ class PrivateChats:
 
     def load_users(self):
 
-        if not self.config.sections["privatechat"]["store"]:
+        if not config.sections["privatechat"]["store"]:
             return
 
-        for user in self.config.sections["privatechat"]["users"]:
+        for user in config.sections["privatechat"]["users"]:
             if isinstance(user, str) and user not in self.users:
                 self.show_user(user, switch_page=False)
 
@@ -120,8 +117,8 @@ class PrivateChats:
 
     def auto_replace(self, message):
 
-        if self.config.sections["words"]["replacewords"]:
-            autoreplaced = self.config.sections["words"]["autoreplaced"]
+        if config.sections["words"]["replacewords"]:
+            autoreplaced = config.sections["words"]["autoreplaced"]
 
             for word, replacement in autoreplaced.items():
                 message = message.replace(str(word), str(replacement))
@@ -130,9 +127,9 @@ class PrivateChats:
 
     def censor_chat(self, message):
 
-        if self.config.sections["words"]["censorwords"]:
-            filler = self.config.sections["words"]["censorfill"]
-            censored = self.config.sections["words"]["censored"]
+        if config.sections["words"]["censorwords"]:
+            filler = config.sections["words"]["censorfill"]
+            censored = config.sections["words"]["censored"]
 
             for word in censored:
                 word = str(word)
@@ -246,14 +243,14 @@ class PrivateChats:
 
         self.core.pluginhandler.incoming_private_chat_notification(user, msg.msg)
 
-        if ctcpversion and not self.config.sections["server"]["ctcpmsgs"]:
-            self.send_message(user, "%s %s" % (self.config.application_name, self.config.version))
+        if ctcpversion and not config.sections["server"]["ctcpmsgs"]:
+            self.send_message(user, "%s %s" % (config.application_name, config.version))
 
         if not msg.newmessage:
             # Message was sent while offline, don't auto-reply
             return
 
-        autoreply = self.config.sections["server"]["autoreply"]
+        autoreply = config.sections["server"]["autoreply"]
 
         if autoreply and self.core.user_status == UserStatus.AWAY and user not in self.away_message_users:
             self.send_automatic_message(user, autoreply)

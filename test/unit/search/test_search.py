@@ -38,7 +38,7 @@ class SearchTest(unittest.TestCase):
 
         config.load_config()
 
-        self.search = Search(None, config, deque(), None, None)
+        self.search = Search(None, deque(), None, None)
 
     def test_do_search(self):
         """ Test the do_search function, including the outgoing search term and search history """

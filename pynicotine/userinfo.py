@@ -19,6 +19,7 @@
 import time
 
 from pynicotine import slskmessages
+from pynicotine.config import config
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import encode_path
@@ -27,17 +28,13 @@ from pynicotine.utils import unescape
 
 class UserInfo:
 
-    def __init__(self, core, config, queue, ui_callback=None):
+    def __init__(self, core, queue, ui_callback=None):
 
         self.core = core
-        self.config = config
         self.queue = queue
+        self.ui_callback = getattr(ui_callback, "userinfo", None)
         self.users = set()
         self.requested_info_times = {}
-        self.ui_callback = None
-
-        if hasattr(ui_callback, "userinfo"):
-            self.ui_callback = ui_callback.userinfo
 
     def server_login(self):
         for user in self.users:
@@ -149,11 +146,11 @@ class UserInfo:
             pic = None
             descr = self.core.ban_message % reason
             descr += "\n\n----------------------------------------------\n\n"
-            descr += unescape(self.config.sections["userinfo"]["descr"])
+            descr += unescape(config.sections["userinfo"]["descr"])
 
         else:
             try:
-                userpic = self.config.sections["userinfo"]["pic"]
+                userpic = config.sections["userinfo"]["pic"]
 
                 with open(encode_path(userpic), 'rb') as file_handle:
                     pic = file_handle.read()
@@ -161,14 +158,14 @@ class UserInfo:
             except Exception:
                 pic = None
 
-            descr = unescape(self.config.sections["userinfo"]["descr"])
+            descr = unescape(config.sections["userinfo"]["descr"])
 
         totalupl = self.core.transfers.get_total_uploads_allowed()
         queuesize = self.core.transfers.get_upload_queue_size()
         slotsavail = self.core.transfers.allow_new_uploads()
 
-        if self.config.sections["transfers"]["remotedownloads"]:
-            uploadallowed = self.config.sections["transfers"]["uploadallowed"]
+        if config.sections["transfers"]["remotedownloads"]:
+            uploadallowed = config.sections["transfers"]["uploadallowed"]
         else:
             uploadallowed = 0
 
