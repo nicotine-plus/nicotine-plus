@@ -941,10 +941,10 @@ class Search:
             if filter_id == "filtercc" and not self.check_country(filter_value, row[12].upper()):
                 return False
 
-            if filter_id == "filterin" and not filter_value.search(row[11]):
+            if filter_id == "filterin" and not filter_value.search(row[11]) and not filter_value.fullmatch(row[1]):
                 return False
 
-            if filter_id == "filterout" and filter_value.search(row[11]):
+            if filter_id == "filterout" and (filter_value.search(row[11]) or filter_value.fullmatch(row[1])):
                 return False
 
             if filter_id == "filterslot" and row[15].get_value() > 0:
