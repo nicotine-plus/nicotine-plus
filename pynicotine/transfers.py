@@ -1934,7 +1934,7 @@ class Transfers:
 
         self.close_file(file_handle, transfer)
         self.active_downloads.discard(transfer)
-        self.check_download_queue()
+        self.check_download_queue(previous_user=transfer.user)
 
         folder, basename = self.get_download_destination(transfer.user, transfer.filename, transfer.path)
         folder_encoded = encode_path(folder)
@@ -2111,7 +2111,7 @@ class Transfers:
 
         return True, None
 
-    def check_download_queue(self, *_args):
+    def check_download_queue(self, previous_user=None):
 
         if not config.sections["transfers"]["use_download_slots"]:
             return
@@ -2119,10 +2119,16 @@ class Transfers:
         if not self.allow_new_downloads():
             return
 
-        user = None
+        statuses = ["Locally Queued"]
+
+        if previous_user:
+            statuses += ["Queued"]
+
+        user = previous_user
+        found_queued = False
 
         for download in reversed(self.downloads):
-            if download.status != "Locally Queued":
+            if download.status not in statuses:
                 continue
 
             if user is None:
@@ -2131,7 +2137,13 @@ class Transfers:
             elif user != download.user:
                 continue
 
-            self.get_file(user, download.filename, path=download.path, transfer=download)
+            found_queued = True
+
+            if download.status == "Locally Queued":
+                self.get_file(user, download.filename, path=download.path, transfer=download)
+
+        if previous_user and not found_queued:
+            self.check_download_queue()
 
     def check_downloads(self, *_args):
 
@@ -2369,10 +2381,6 @@ class Transfers:
         download.token = None
         download.queue_position = 0
 
-        if download in self.active_downloads:
-            self.active_downloads.discard(download)
-            self.check_download_queue()
-
         if download in self.transfer_request_times:
             del self.transfer_request_times[download]
 
@@ -2389,6 +2397,10 @@ class Transfers:
                     "file": download.filename
                 }
             )
+
+        if download in self.active_downloads:
+            self.active_downloads.discard(download)
+            self.check_download_queue(previous_user=download.user)
 
         if abort_reason:
             download.status = abort_reason
@@ -2418,10 +2430,6 @@ class Transfers:
         upload.token = None
         upload.queue_position = 0
 
-        if upload in self.active_uploads:
-            self.active_uploads.discard(upload)
-            self.check_upload_queue()
-
         if upload in self.transfer_request_times:
             del self.transfer_request_times[upload]
 
@@ -2442,6 +2450,10 @@ class Transfers:
         elif denied_message and upload.status == "Queued":
             self.core.send_message_to_peer(
                 upload.user, slskmessages.UploadDenied(file=upload.filename, reason=denied_message))
+
+        if upload in self.active_uploads:
+            self.active_uploads.discard(upload)
+            self.check_upload_queue()
 
         if abort_reason:
             upload.status = abort_reason
