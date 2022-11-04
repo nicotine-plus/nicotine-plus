@@ -380,8 +380,7 @@ First In, First Out: Files will be uploaded in the order they were queued.</prop
               <object class="GtkRadioButton" id="QueueUseSlots">
                 <property name="visible">True</property>
                 <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Fixed number of upload slots:</property>
-                <property name="tooltip-text" translatable="yes">Upload slots always allocated regardless of available bandwidth</property>
+                <property name="label" translatable="yes">Maximum number of active uploads:</property>
                 <property name="group">QueueUseBandwidth</property>
               </object>
             </child>
