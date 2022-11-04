@@ -1,3 +1,9 @@
+nicotine (3.2.7-dev1) kinetic; urgency=medium
+
+  * Development version 1.
+
+ -- Mat <mail@mathias.is>  Fri, 04 Nov 2022 23:18:24 +0300
+
 nicotine (3.2.6-1) jammy; urgency=medium
 
   * Latest upstream.
