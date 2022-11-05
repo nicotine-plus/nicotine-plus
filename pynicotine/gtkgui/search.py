@@ -244,9 +244,6 @@ class Searches(IconNotebook):
             mode_label = _("Wish")
             tab = self.create_tab(msg.token, search_term, mode, mode_label, showtab=False)
 
-            if config.sections["notifications"]["notification_popup_wish"]:
-                self.core.notifications.new_text_notification(search_term, title=_("Wishlist item found"))
-
         # No more things to add because we've reached the result limit
         if tab.num_results_found >= tab.max_limit:
             self.core.search.remove_allowed_token(msg.token)
@@ -697,6 +694,9 @@ class Search:
                 self.searches.show_tab(self, self.text)
                 self.showtab = True
 
+                if self.mode == "wishlist" and config.sections["notifications"]["notification_popup_wish"]:
+                    self.core.notifications.new_text_notification(self.text, title=_("Wishlist item found"))
+
             self.searches.request_tab_hilite(self.container)
 
         # Update number of results, even if they are all filtered
@@ -937,10 +937,10 @@ class Search:
             if filter_id == "filtercc" and not self.check_country(filter_value, row[12].upper()):
                 return False
 
-            if filter_id == "filterin" and not filter_value.search(row[11]):
+            if filter_id == "filterin" and not filter_value.search(row[11]) and not filter_value.fullmatch(row[1]):
                 return False
 
-            if filter_id == "filterout" and filter_value.search(row[11]):
+            if filter_id == "filterout" and (filter_value.search(row[11]) or filter_value.fullmatch(row[1])):
                 return False
 
             if filter_id == "filterslot" and row[15].get_value() > 0:
