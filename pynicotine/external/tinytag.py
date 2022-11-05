@@ -1327,7 +1327,6 @@ class Aiff(ID3):
                     self.duration = num_frames / self.samplerate
                     self.bitrate = self.samplerate * self.channels * self.bitdepth / 1000
                 except OverflowError:
-                    print("WTF")
                     self.samplerate = self.duration = self.bitrate = None  # invalid sample rate
                 fh.seek(sub_chunk_size - 18, 1)  # skip remaining data in chunk
             elif sub_chunk_id in (b'id3 ', b'ID3 ') and self._parse_tags:
