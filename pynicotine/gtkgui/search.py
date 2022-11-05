@@ -348,15 +348,6 @@ class Search:
         self.selected_users = OrderedDict()
         self.selected_results = OrderedDict()
 
-        self.operators = {
-            '<': operator.lt,
-            '<=': operator.le,
-            '==': operator.eq,
-            '!=': operator.ne,
-            '>=': operator.ge,
-            '>': operator.gt
-        }
-
         # Columns
         self.treeview_name = "file_search"
         self.create_model()
@@ -814,19 +805,29 @@ class Search:
 
     """ Result Filters """
 
-    def split_condition(self, condition):
-        """ Split the operator apart from the digit """
+    @staticmethod
+    def split_operator(condition):
+        """ Returns: specified or default operator, digit """
+
+        operators = {
+            '<': operator.lt,
+            '<=': operator.le,
+            '==': operator.eq,
+            '!=': operator.ne,
+            '>=': operator.ge,
+            '>': operator.gt
+        }
 
         if condition.startswith((">=", "<=", "==", "!=")):
-            return self.operators.get(condition[:2]), condition[2:]
+            return operators.get(condition[:2]), condition[2:]
 
         if condition.startswith((">", "<")):
-            return self.operators.get(condition[:1]), condition[1:]
+            return operators.get(condition[:1]), condition[1:]
 
         if condition.startswith(("=", "!")):
-            return self.operators.get(condition[:1] + "="), condition[1:]
+            return operators.get(condition[:1] + "="), condition[1:]
 
-        return self.operators.get(">="), condition
+        return operator.ge, condition
 
     def check_digit(self, result_filter, value, file_size=False):
         """ Check if all conditions in result_filter match value """
@@ -834,7 +835,7 @@ class Search:
         allowed = blocked = False
 
         for condition in result_filter:
-            operation, digit = self.split_condition(condition)
+            operation, digit = self.split_operator(condition)
 
             if file_size:
                 digit, factor = factorize(digit)  # File Size
