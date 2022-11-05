@@ -36,6 +36,7 @@ except ImportError:
     from collections import MutableMapping
 from functools import reduce
 from io import BytesIO
+import base64
 import codecs
 import io
 import json
@@ -167,9 +168,8 @@ class TinyTag(object):
                 self._filehandler.seek(0)
             self._determine_duration(self._filehandler)
 
-    def _set_field(self, fieldname, bytestring, transfunc=None, overwrite=True):
-        """convienience function to set fields of the tinytag by name.
-        the payload (bytestring) can be changed using the transfunc"""
+    def _set_field(self, fieldname, value, overwrite=True):
+        """convenience function to set fields of the tinytag by name"""
         write_dest = self  # write into the TinyTag by default
         get_func = getattr
         set_func = setattr
@@ -181,7 +181,6 @@ class TinyTag(object):
             set_func = operator.setitem
         if get_func(write_dest, fieldname):  # do not overwrite existing data
             return
-        value = bytestring if transfunc is None else transfunc(bytestring)
         if DEBUG:
             stderr('Setting field "%s" to "%s"' % (fieldname, value))
         if fieldname == 'genre':
@@ -358,18 +357,29 @@ class MP4(TinyTag):
     # callables return {fieldname: value} which is updates the TinyTag.
     META_DATA_TREE = {b'moov': {b'udta': {b'meta': {b'ilst': {
         # see: http://atomicparsley.sourceforge.net/mpeg-4files.html
-        b'\xa9alb': {b'data': Parser.make_data_atom_parser('album')},
+        # and: https://metacpan.org/dist/Image-ExifTool/source/lib/Image/ExifTool/QuickTime.pm#L3093
         b'\xa9ART': {b'data': Parser.make_data_atom_parser('artist')},
-        b'aART': {b'data': Parser.make_data_atom_parser('albumartist')},
-        # b'cpil':    {b'data': Parser.make_data_atom_parser('compilation')},
+        b'\xa9alb': {b'data': Parser.make_data_atom_parser('album')},
         b'\xa9cmt': {b'data': Parser.make_data_atom_parser('comment')},
-        b'disk': {b'data': Parser.make_number_parser('disc', 'disc_total')},
-        b'\xa9wrt': {b'data': Parser.make_data_atom_parser('composer')},
+        # need test-data for this
+        # b'cpil':   {b'data': Parser.make_data_atom_parser('extra.compilation')},
         b'\xa9day': {b'data': Parser.make_data_atom_parser('year')},
+        # need test-data for this
+        # b'\xa9des': {b'data': Parser.make_data_atom_parser('description')},
         b'\xa9gen': {b'data': Parser.make_data_atom_parser('genre')},
-        b'gnre': {b'data': Parser.parse_id3v1_genre},
+        b'\xa9lyr': {b'data': Parser.make_data_atom_parser('extra.lyrics')},
+        b'\xa9mvn': {b'data': Parser.make_data_atom_parser('movement')},
         b'\xa9nam': {b'data': Parser.make_data_atom_parser('title')},
+        b'\xa9wrt': {b'data': Parser.make_data_atom_parser('composer')},
+        b'aART': {b'data': Parser.make_data_atom_parser('albumartist')},
+        b'cprt': {b'data': Parser.make_data_atom_parser('extra.copyright')},
+        # need test-data for this
+        # b'desc': {b'data': Parser.make_data_atom_parser('extra.description')},
+        b'disk': {b'data': Parser.make_number_parser('disc', 'disc_total')},
+        b'gnre': {b'data': Parser.parse_id3v1_genre},
         b'trkn': {b'data': Parser.make_number_parser('track', 'track_total')},
+        # need test-data for this
+        # b'tmpo': {b'data': Parser.make_data_atom_parser('extra.bmp')},
     }}}}}
 
     # see: https://developer.apple.com/library/mac/documentation/QuickTime/QTFF/QTFFChap3/qtff3.html
@@ -444,7 +454,7 @@ class ID3(TinyTag):
     FRAME_ID_TO_FIELD = {  # Mapping from Frame ID to a field of the TinyTag
         'COMM': 'comment', 'COM': 'comment',
         'TRCK': 'track', 'TRK': 'track',
-        'TYER': 'year', 'TYE': 'year',
+        'TYER': 'year', 'TYE': 'year', 'TDRC': 'year',
         'TALB': 'album', 'TAL': 'album',
         'TPE1': 'artist', 'TP1': 'artist',
         'TIT2': 'title', 'TT2': 'title',
@@ -696,15 +706,15 @@ class ID3(TinyTag):
             def asciidecode(x):
                 return self._unpad(codecs.decode(x, self._default_encoding or 'latin1'))
             fields = fh.read(30 + 30 + 30 + 4 + 30 + 1)
-            self._set_field('title', fields[:30], transfunc=asciidecode, overwrite=False)
-            self._set_field('artist', fields[30:60], transfunc=asciidecode, overwrite=False)
-            self._set_field('album', fields[60:90], transfunc=asciidecode, overwrite=False)
-            self._set_field('year', fields[90:94], transfunc=asciidecode, overwrite=False)
+            self._set_field('title', asciidecode(fields[:30]), overwrite=False)
+            self._set_field('artist', asciidecode(fields[30:60]), overwrite=False)
+            self._set_field('album', asciidecode(fields[60:90]), overwrite=False)
+            self._set_field('year', asciidecode(fields[90:94]), overwrite=False)
             comment = fields[94:124]
             if b'\x00\x00' < comment[-2:] < b'\x01\x00':
                 self._set_field('track', str(ord(comment[-1:])), overwrite=False)
                 comment = comment[:-2]
-            self._set_field('comment', comment, transfunc=asciidecode, overwrite=False)
+            self._set_field('comment', asciidecode(comment), overwrite=False)
             genre_id = ord(fields[124:125])
             if genre_id < len(ID3.ID3V1_GENRES):
                 self._set_field('genre', ID3.ID3V1_GENRES[genre_id], overwrite=False)
@@ -739,7 +749,8 @@ class ID3(TinyTag):
             content = fh.read(frame_size)
             fieldname = ID3.FRAME_ID_TO_FIELD.get(frame_id)
             if fieldname:
-                self._set_field(fieldname, content, self._decode_string)
+                language = fieldname in ("comment", "extra.lyrics")
+                self._set_field(fieldname, self._decode_string(content, language))
             elif frame_id in self.IMAGE_FRAME_IDS and self._load_image:
                 # See section 4.14: http://id3.org/id3v2.4.0-frames
                 encoding = content[0:1]
@@ -755,7 +766,7 @@ class ID3(TinyTag):
             return frame_size
         return 0
 
-    def _decode_string(self, bytestr):
+    def _decode_string(self, bytestr, language=False):
         default_encoding = 'ISO-8859-1'
         if self._default_encoding:
             default_encoding = self._default_encoding
@@ -767,13 +778,14 @@ class ID3(TinyTag):
             elif first_byte == b'\x01':  # UTF-16 with BOM
                 bytestr = bytestr[1:]
                 # remove language (but leave BOM)
-                if bytestr[3:5] in (b'\xfe\xff', b'\xff\xfe'):
-                    bytestr = bytestr[3:]
-                if bytestr[:3].isalpha() and bytestr[3:4] == b'\x00':
-                    bytestr = bytestr[4:]  # remove language
-                if bytestr[:1] == b'\x00':
-                    bytestr = bytestr[1:]  # strip optional additional null byte
-                # read byte order mark to determine endianess
+                if language:
+                    if bytestr[3:5] in (b'\xfe\xff', b'\xff\xfe'):
+                        bytestr = bytestr[3:]
+                    if bytestr[:3].isalpha() and bytestr[3:4] == b'\x00':
+                        bytestr = bytestr[4:]  # remove language
+                    if bytestr[:1] == b'\x00':
+                        bytestr = bytestr[1:]  # strip optional additional null byte
+                # read byte order mark to determine endianness
                 encoding = 'UTF-16be' if bytestr[0:2] == b'\xfe\xff' else 'UTF-16le'
                 # strip the bom if it exists
                 if bytestr[:2] in (b'\xfe\xff', b'\xff\xfe'):
@@ -791,7 +803,7 @@ class ID3(TinyTag):
             else:
                 bytestr = bytestr
                 encoding = default_encoding  # wild guess
-            if bytestr[:3].isalpha() and bytestr[3:4] == b'\x00':
+            if language and bytestr[:3].isalpha() and bytestr[3:4] == b'\x00':
                 bytestr = bytestr[4:]  # remove language
             errors = 'ignore' if self._ignore_errors else 'strict'
             return self._unpad(codecs.decode(bytestr, encoding, errors))
@@ -830,7 +842,7 @@ class Ogg(TinyTag):
                 fh.seek(max(seekpos, 1), os.SEEK_CUR)
 
     def _parse_tag(self, fh):
-        page_start_pos = fh.tell()  # set audio_offest later if its audio data
+        page_start_pos = fh.tell()  # set audio_offset later if its audio data
         for packet in self._parse_pages(fh):
             walker = BytesIO(packet)
             if packet[0:7] == b"\x01vorbis":
@@ -888,11 +900,18 @@ class Ogg(TinyTag):
                 continue
             if '=' in keyvalpair:
                 key, value = keyvalpair.split('=', 1)
-                if DEBUG:
-                    stderr('Found Vorbis Comment', key, value[:64])
-                fieldname = comment_type_to_attr_mapping.get(key.lower())
-                if fieldname:
-                    self._set_field(fieldname, value)
+                key_lowercase = key.lower()
+
+                if key_lowercase == "metadata_block_picture" and self._load_image:
+                    if DEBUG:
+                        stderr('Found Vorbis Image', key, value[:64])
+                    self._image_data = Flac._parse_image(BytesIO(base64.b64decode(value)))
+                else:
+                    if DEBUG:
+                        stderr('Found Vorbis Comment', key, value[:64])
+                    fieldname = comment_type_to_attr_mapping.get(key_lowercase)
+                    if fieldname:
+                        self._set_field(fieldname, value)
 
     def _parse_pages(self, fh):
         # for the spec, see: https://wiki.xiph.org/Ogg
@@ -927,11 +946,13 @@ class Wave(TinyTag):
     riff_mapping = {
         b'INAM': 'title',
         b'TITL': 'title',
+        b'IPRD': 'album',
         b'IART': 'artist',
         b'ICMT': 'comment',
         b'ICRD': 'year',
         b'IGNR': 'genre',
         b'ISRC': 'extra.isrc',
+        b'ITRK': 'track',
         b'TRCK': 'track',
         b'PRT1': 'track',
         b'PRT2': 'track_number',
@@ -953,6 +974,7 @@ class Wave(TinyTag):
         chunk_header = fh.read(8)
         while len(chunk_header) == 8:
             subchunkid, subchunksize = struct.unpack('4sI', chunk_header)
+            subchunksize += subchunksize % 2  # IFF chunks are padded to an even number of bytes
             if subchunkid == b'fmt ':
                 _, self.channels, self.samplerate = struct.unpack('HHI', fh.read(8))
                 _, _, self.bitdepth = struct.unpack('<IHH', fh.read(8))
@@ -977,11 +999,11 @@ class Wave(TinyTag):
                     field = sub_fh.read(4)
                     while len(field) == 4:
                         data_length = struct.unpack('I', sub_fh.read(4))[0]
+                        data_length += data_length % 2  # IFF chunks are padded to an even size
                         data = sub_fh.read(data_length).split(b'\x00', 1)[0]  # strip zero-byte
-                        data = codecs.decode(data, 'utf-8')
                         fieldname = self.riff_mapping.get(field)
                         if fieldname:
-                            self._set_field(fieldname, data)
+                            self._set_field(fieldname, codecs.decode(data, 'utf-8'))
                         field = sub_fh.read(4)
             elif subchunkid in (b'id3 ', b'ID3 ') and self._parse_tags:
                 id3 = ID3(fh, 0)
@@ -1055,7 +1077,7 @@ class Flac(TinyTag):
                 # #---4---# #---5---# #---6---# #---7---# #--8-~   ~-12-#
                 self.samplerate = _bytes_to_int(header[4:7]) >> 4
                 self.channels = ((header[6] >> 1) & 0x07) + 1
-                self.bitdepth = (((header[6] & 1) << 4) + ((header[7] & 0xF0) >> 4)) + 1
+                self.bitdepth = (((header[6] & 1) << 4) + ((header[7] & 0xF0) >> 4) + 1)
                 total_sample_bytes = [(header[7] & 0x0F)] + list(header[8:12])
                 total_samples = _bytes_to_int(total_sample_bytes)
                 self.duration = total_samples / self.samplerate
@@ -1066,13 +1088,7 @@ class Flac(TinyTag):
                 oggtag._parse_vorbis_comment(fh)
                 self.update(oggtag)
             elif block_type == Flac.METADATA_PICTURE and self._load_image:
-                # https://xiph.org/flac/format.html#metadata_block_picture
-                pic_type, mime_len = struct.unpack('>2I', fh.read(8))
-                fh.read(mime_len)
-                description_len = struct.unpack('>I', fh.read(4))[0]
-                fh.read(description_len)
-                width, height, depth, colors, pic_len = struct.unpack('>5I', fh.read(20))
-                self._image_data = fh.read(pic_len)
+                self._image_data = self._parse_image(fh)
             elif block_type >= 127:
                 return  # invalid block type
             else:
@@ -1083,6 +1099,16 @@ class Flac(TinyTag):
             if is_last_block:
                 return
             header_data = fh.read(4)
+
+    @staticmethod
+    def _parse_image(fh):
+        # https://xiph.org/flac/format.html#metadata_block_picture
+        pic_type, mime_len = struct.unpack('>2I', fh.read(8))
+        fh.read(mime_len)
+        description_len = struct.unpack('>I', fh.read(4))[0]
+        fh.read(description_len)
+        width, height, depth, colors, pic_len = struct.unpack('>5I', fh.read(20))
+        return fh.read(pic_len)
 
 
 class Wma(TinyTag):
@@ -1170,7 +1196,7 @@ class Wma(TinyTag):
                 ])
                 for field_name, bytestring in data_blocks.items():
                     if field_name:
-                        self._set_field(field_name, bytestring, self.__decode_string)
+                        self._set_field(field_name, self.__decode_string(bytestring))
             elif object_id == Wma.ASF_EXTENDED_CONTENT_DESCRIPTION_OBJECT and self._parse_tags:
                 mapping = {
                     'WM/TrackNumber': 'track',
