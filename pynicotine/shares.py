@@ -549,6 +549,10 @@ class Shares:
 
         self.init_shares()
 
+    def server_disconnect(self):
+        self.requested_share_times.clear()
+        self.pending_network_msgs.clear()
+
     """ Shares-related actions """
 
     def init_shares(self):

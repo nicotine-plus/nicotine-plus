@@ -41,6 +41,9 @@ class UserInfo:
             self.core.watch_user(user)  # Get notified of user status
 
     def server_disconnect(self):
+
+        self.requested_info_times.clear()
+
         if self.ui_callback:
             self.ui_callback.server_disconnect()
 
