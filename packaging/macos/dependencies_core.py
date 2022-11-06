@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -19,7 +19,6 @@
 
 import os
 import subprocess
-import sys
 
 """ Script used to install core dependencies in Homebrew """
 
@@ -27,23 +26,22 @@ import sys
 def install_brew():
     """ Install dependencies from the main Homebrew repos """
 
-    gtk_version = os.environ.get("NICOTINE_GTK_VERSION") or 3
+    gtk_version = os.environ.get("NICOTINE_GTK_VERSION") or '3'
+    use_libadwaita = gtk_version == '4' and os.environ.get("NICOTINE_LIBADWAITA") == '1'
+
     packages = ["adwaita-icon-theme",
+                "flake8",
                 "gettext",
-                "gtk+" + str(gtk_version)]
+                "gobject-introspection",
+                "gtk+" + gtk_version,
+                "pygobject3",
+                "pylint"]
+
+    if use_libadwaita:
+        packages.append("libadwaita")
 
     subprocess.check_call(["brew", "install"] + packages)
 
 
-def install_pypi():
-    """ Install dependencies from PyPi """
-
-    packages = ["flake8",
-                "pygobject",
-                "pylint"]
-    subprocess.check_call([sys.executable, "-m", "pip", "install"] + packages)
-
-
 if __name__ == '__main__':
     install_brew()
-    install_pypi()

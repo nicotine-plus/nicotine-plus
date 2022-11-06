@@ -1,0 +1,95 @@
+# COPYRIGHT (C) 2022 Nicotine+ Contributors
+#
+# GNU GENERAL PUBLIC LICENSE
+#    Version 3, 29 June 2007
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+from gi.repository import Gtk
+
+from pynicotine.gtkgui.application import GTK_API_VERSION
+
+
+""" Window """
+
+
+class Window:
+
+    active_dialogs = []  # Class variable keeping dialog objects alive
+
+    def __init__(self, window):
+
+        signal_name = "notify::focus-widget" if GTK_API_VERSION >= 4 else "set-focus"
+        window.connect(signal_name, self.on_focus_widget_changed)
+
+    def connect_signal(self, widget, signal, callback):
+
+        try:
+            widget.handler_block_by_func(callback)
+
+        except TypeError:
+            widget.connect(signal, callback)
+            return
+
+        widget.handler_unblock_by_func(callback)
+
+    @staticmethod
+    def on_popover_closed(popover):
+
+        focus_widget = popover.get_parent() if GTK_API_VERSION >= 4 else popover.get_relative_to()
+
+        if focus_widget.get_focusable():
+            focus_widget.grab_focus()
+            return
+
+        focus_widget.child_focus(Gtk.DirectionType.TAB_FORWARD)
+
+    @staticmethod
+    def on_combobox_popup_shown(combobox, param):
+
+        visible = combobox.get_property(param.name)
+
+        if visible:
+            return
+
+        # Always focus the text entry after the popup is closed
+        if combobox.get_has_entry():
+            entry = combobox.get_child()
+            entry.grab_focus_without_selecting()
+            entry.set_position(-1)
+            return
+
+        # Workaround for GTK 4 issue where wrong widget receives focus after closing popup
+        if GTK_API_VERSION >= 4:
+            combobox.grab_focus()
+
+    def on_focus_widget_changed(self, window, arg):
+
+        widget = window.get_property(arg.name) if GTK_API_VERSION >= 4 else arg
+
+        if widget is None:
+            return
+
+        # Workaround for GTK 4 issue where wrong widget receives focus after closing popover
+        if GTK_API_VERSION >= 4:
+            popover = widget.get_ancestor(Gtk.Popover)
+
+            if popover is not None:
+                self.connect_signal(popover, "closed", self.on_popover_closed)
+                return
+
+        combobox = widget.get_ancestor(Gtk.ComboBoxText)
+
+        if combobox is not None:
+            self.connect_signal(combobox, "notify::popup-shown", self.on_combobox_popup_shown)

@@ -1,5 +1,5 @@
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
-# COPYRIGHT (C) 2011 Quinox <quinox@users.sf.net>
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2011 quinox <quinox@users.sf.net>
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -22,6 +22,11 @@ from pynicotine.pluginsystem import BasePlugin
 
 
 class Plugin(BasePlugin):
+
+    PLACEHOLDERS = {
+        "%files%": "num_files",
+        "%folders%": "num_folders"
+    }
 
     def __init__(self, *args, **kwargs):
 
@@ -139,6 +144,10 @@ class Plugin(BasePlugin):
             return
 
         for line in self.settings['message'].splitlines():
+            for placeholder, option_key in self.PLACEHOLDERS.items():
+                # Replace message placeholders with actual values specified in the plugin settings
+                line = line.replace(placeholder, str(self.settings[option_key]))
+
             self.send_private(user, line, show_ui=self.settings['open_private_chat'], switch_page=False)
 
         self.log("Leecher %s doesn't share enough files. Message sent.", user)

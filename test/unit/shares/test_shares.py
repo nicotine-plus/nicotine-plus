@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -42,7 +42,7 @@ class SharesTest(unittest.TestCase):
         config.sections["transfers"]["shared"] = [("Shares", SHARES_DIR)]
         config.sections["transfers"]["rescanonstartup"] = False
 
-        shares = Shares(None, config, deque(), init_shares=False)
+        shares = Shares(None, deque(), init_shares=False)
         shares.rescan_shares(use_thread=False)
 
         # Verify that modification time was saved for shares folder
@@ -50,8 +50,8 @@ class SharesTest(unittest.TestCase):
 
         # Verify that shared files were added
         self.assertIn(['dummy_file', 0, None, None], shares.share_dbs["files"]["Shares"])
-        self.assertIn(['nicotinetestdata.mp3', 80919, (128, 0), 5], shares.share_dbs["files"]["Shares"])
-        self.assertIn(['vbr44.mp3', 36609, (32, 1), 9], shares.share_dbs["files"]["Shares"])  # 1 = VBR
+        self.assertIn(['nicotinetestdata.mp3', 80919, (128, 0, 44100, None), 5], shares.share_dbs["files"]["Shares"])
+        self.assertIn(['nicotinevbr.mp3', 36609, (32, 1, 44100, None), 9], shares.share_dbs["files"]["Shares"])
 
         # Verify that expected folder is empty
         self.assertEqual(len(shares.share_dbs["files"]["Shares\\folder2"]), 0)
@@ -63,7 +63,7 @@ class SharesTest(unittest.TestCase):
 
         self.assertEqual(set(word_index), set(
             ['nicotinetestdata', 'ogg', 'mp3', 'shares', 'file', 'dummy', 'folder1',
-             'folder2', 'nothing', 'something', 'test', 'vbr44']
+             'folder2', 'nothing', 'something', 'test', 'nicotinevbr']
         ))
         self.assertEqual(len(nicotinetestdata_indexes), 2)
         self.assertEqual(len(ogg_indexes), 1)
@@ -80,7 +80,7 @@ class SharesTest(unittest.TestCase):
         config.sections["transfers"]["shared"] = [("Shares", SHARES_DIR)]
         config.sections["transfers"]["rescanonstartup"] = False
 
-        shares = Shares(None, config, deque(), init_shares=False)
+        shares = Shares(None, deque(), init_shares=False)
         shares.rescan_shares(use_thread=False)
 
         # Check folders

@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -16,14 +16,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import sys
+
 from os.path import commonprefix
 
 from gi.repository import Gtk
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import add_alias
 from pynicotine.utils import get_alias
 from pynicotine.utils import is_alias
@@ -39,6 +41,7 @@ class ChatEntry:
     def __init__(self, frame, entry, completion, entity, message_class, send_message, command_list, is_chatroom=False):
 
         self.frame = frame
+        self.core = frame.core
         self.entry = entry
         self.completion = completion
         self.entity = entity
@@ -51,13 +54,9 @@ class ChatEntry:
         Accelerator("<Shift>Tab", entry, self.on_tab_complete_accelerator, True)
         Accelerator("Tab", entry, self.on_tab_complete_accelerator)
 
-        # Emoji Picker
-        try:
+        # Emoji Picker (disable on Windows and macOS for now until we render emoji properly there)
+        if sys.platform not in ("win32", "darwin"):
             self.entry.set_property("show-emoji-icon", True)
-
-        except TypeError:
-            # GTK version not supported
-            pass
 
         # Spell Check
         if config.sections["ui"]["spellcheck"]:
@@ -73,7 +72,7 @@ class ChatEntry:
 
     def on_enter(self, *_args):
 
-        if not self.frame.np.logged_in:
+        if self.core.user_status == UserStatus.OFFLINE:
             return
 
         text = self.entry.get_text()
@@ -122,37 +121,36 @@ class ChatEntry:
             arg_self = "" if self.is_chatroom else self.entity
 
         if cmd in ("/alias", "/al"):
-            parent = self.frame.np.chatrooms if self.is_chatroom else self.frame.np.privatechats
+            parent = self.core.chatrooms if self.is_chatroom else self.core.privatechat
             parent.echo_message(self.entity, add_alias(args))
 
             if config.sections["words"]["aliases"]:
-                self.frame.update_completions()
+                self.core.chatrooms.update_completions()
+                self.core.privatechat.update_completions()
 
         elif cmd in ("/unalias", "/un"):
-            parent = self.frame.np.chatrooms if self.is_chatroom else self.frame.np.privatechats
+            parent = self.core.chatrooms if self.is_chatroom else self.core.privatechat
             parent.echo_message(self.entity, unalias(args))
 
             if config.sections["words"]["aliases"]:
-                self.frame.update_completions()
+                self.core.chatrooms.update_completions()
+                self.core.privatechat.update_completions()
 
         elif cmd in ("/w", "/whois", "/info"):
             if arg_self:
-                self.frame.np.userinfo.request_user_info(arg_self)
-                self.frame.change_main_page("userinfo")
+                self.core.userinfo.request_user_info(arg_self)
 
         elif cmd in ("/b", "/browse"):
             if arg_self:
-                self.frame.np.userbrowse.browse_user(arg_self)
-                self.frame.change_main_page("userbrowse")
+                self.core.userbrowse.browse_user(arg_self)
 
         elif cmd == "/ip":
             if arg_self:
-                self.frame.np.request_ip_address(arg_self)
+                self.core.request_ip_address(arg_self)
 
         elif cmd == "/pm":
             if args:
-                self.frame.np.privatechats.show_user(args)
-                self.frame.change_main_page("private")
+                self.core.privatechat.show_user(args)
 
         elif cmd in ("/m", "/msg"):
             if args:
@@ -164,108 +162,101 @@ class ChatEntry:
                     msg = args_split[1]
 
                 if msg:
-                    self.frame.np.privatechats.show_user(user)
-                    self.frame.np.privatechats.send_message(user, msg)
-                    self.frame.change_main_page("private")
+                    self.core.privatechat.show_user(user)
+                    self.core.privatechat.send_message(user, msg)
 
         elif cmd in ("/s", "/search"):
             if args:
-                self.frame.np.search.do_search(args, "global")
-                self.frame.change_main_page("search")
+                self.core.search.do_search(args, "global")
 
         elif cmd in ("/us", "/usearch"):
             args_split = args.split(" ", maxsplit=1)
 
             if len(args_split) == 2:
-                self.frame.np.search.do_search(args_split[1], "user", user=args_split[0])
-                self.frame.change_main_page("search")
+                self.core.search.do_search(args_split[1], "user", user=args_split[0])
 
         elif cmd in ("/rs", "/rsearch"):
             if args:
-                self.frame.np.search.do_search(args, "rooms")
-                self.frame.change_main_page("search")
+                self.core.search.do_search(args, "rooms")
 
         elif cmd in ("/bs", "/bsearch"):
             if args:
-                self.frame.np.search.do_search(args, "buddies")
-                self.frame.change_main_page("search")
+                self.core.search.do_search(args, "buddies")
 
         elif cmd in ("/j", "/join"):
             if args:
-                self.frame.np.queue.append(slskmessages.JoinRoom(args))
+                self.core.chatrooms.show_room(args)
 
         elif cmd in ("/l", "/leave", "/p", "/part"):
             if args:
-                self.frame.np.queue.append(slskmessages.LeaveRoom(args))
+                self.core.chatrooms.remove_room(args)
             else:
-                self.frame.np.queue.append(slskmessages.LeaveRoom(self.entity))
+                self.core.chatrooms.remove_room(self.entity)
 
         elif cmd in ("/ad", "/add", "/buddy"):
             if args:
-                self.frame.np.userlist.add_user(args)
+                self.core.userlist.add_user(args)
 
         elif cmd in ("/rem", "/unbuddy"):
             if args:
-                self.frame.np.userlist.remove_user(args)
+                self.core.userlist.remove_user(args)
 
         elif cmd == "/ban":
             if args:
-                self.frame.np.network_filter.ban_user(args)
+                self.core.network_filter.ban_user(args)
 
         elif cmd == "/ignore":
             if args:
-                self.frame.np.network_filter.ignore_user(args)
+                self.core.network_filter.ignore_user(args)
 
         elif cmd == "/ignoreip":
             if args:
-                self.frame.np.network_filter.ignore_ip(args)
+                self.core.network_filter.ignore_ip(args)
 
         elif cmd == "/unban":
             if args:
-                self.frame.np.network_filter.unban_user(args)
+                self.core.network_filter.unban_user(args)
 
         elif cmd == "/unignore":
             if args:
-                self.frame.np.network_filter.unignore_user(args)
+                self.core.network_filter.unignore_user(args)
 
         elif cmd == "/ctcpversion":
             if arg_self:
-                self.frame.np.privatechats.show_user(arg_self)
-                self.frame.np.privatechats.send_message(arg_self, self.frame.np.privatechats.CTCP_VERSION)
+                self.core.privatechat.show_user(arg_self)
+                self.core.privatechat.send_message(arg_self, self.core.privatechat.CTCP_VERSION)
 
         elif cmd in ("/clear", "/cl"):
             if self.is_chatroom:
-                parent = self.frame.chatrooms.pages[self.entity]
+                self.core.chatrooms.clear_messages(self.entity)
             else:
-                parent = self.frame.privatechat.pages[self.entity]
-
-            parent.chat_textview.clear()
+                self.core.privatechat.clear_messages(self.entity)
 
         elif cmd in ("/a", "/away"):
-            self.frame.on_away()
+            self.core.set_away_mode(self.core.user_status != UserStatus.AWAY, save_state=True)
 
         elif cmd in ("/q", "/quit", "/exit"):
-            self.frame.np.quit()
+            self.core.confirm_quit()
 
         elif cmd in ("/c", "/close"):
-            self.frame.privatechat.pages[self.entity].on_close()
+            self.core.privatechat.remove_user(self.entity)
 
         elif cmd == "/now":
-            self.frame.np.now_playing.display_now_playing(
+            self.core.now_playing.display_now_playing(
                 callback=lambda np_message: self.send_message(self.entity, np_message))
 
         elif cmd == "/rescan":
-            self.frame.np.shares.rescan_shares()
+            self.core.shares.rescan_shares()
 
         elif cmd == "/toggle":
             if args:
-                self.frame.np.pluginhandler.toggle_plugin(args)
+                self.core.pluginhandler.toggle_plugin(args)
 
         elif self.is_chatroom:
-            self.frame.np.pluginhandler.trigger_public_command_event(self.entity, cmd[1:], args)
+            self.core.pluginhandler.trigger_public_command_event(self.entity, cmd[1:], args)
 
         elif not self.is_chatroom:
-            self.frame.np.pluginhandler.trigger_private_command_event(self.entity, cmd[1:], args)
+            self.core.pluginhandler.trigger_private_command_event(self.entity, cmd[1:], args)
 
     def on_tab_complete_accelerator(self, widget, state, backwards=False):
         """ Tab and Shift+Tab: tab complete chat """
@@ -564,6 +555,9 @@ class TextSearchBar:
 
     def on_search_match(self, search_type, restarted=False):
 
+        if not self.search_bar.get_search_mode():
+            return
+
         buffer = self.textview.get_buffer()
         query = self.entry.get_text()
 
@@ -617,19 +611,19 @@ class TextSearchBar:
     def on_hide_search_accelerator(self, *_args):
         """ Escape: hide search bar """
 
-        self.hide_search_bar()
+        self.hide()
         return True
 
     def on_show_search_accelerator(self, *_args):
         """ Ctrl+F: show search bar """
 
-        self.show_search_bar()
+        self.show()
         return True
 
-    def show_search_bar(self):
+    def show(self):
         self.search_bar.set_search_mode(True)
         self.entry.grab_focus()
 
-    def hide_search_bar(self):
+    def hide(self):
         self.search_bar.set_search_mode(False)
         self.focus_widget.grab_focus()

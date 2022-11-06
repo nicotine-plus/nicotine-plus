@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -24,7 +24,10 @@ def check_arguments():
 
     import argparse
     from pynicotine.config import config
-    parser = argparse.ArgumentParser(description=_("Nicotine+ is a Soulseek client"), add_help=False)
+
+    parser = argparse.ArgumentParser(
+        description=config.summary, epilog=_("Website: %s") % config.website_url, add_help=False
+    )
 
     # Visible arguments
     parser.add_argument(
@@ -37,19 +40,7 @@ def check_arguments():
     )
     parser.add_argument(
         "-u", "--user-data", metavar=_("dir"),
-        help=_("use non-default user data directory for e.g. list of downloads")
-    )
-    parser.add_argument(
-        "-p", "--plugins", metavar=_("dir"),
-        help=_("use non-default directory for plugins")
-    )
-    parser.add_argument(
-        "-t", "--enable-trayicon", action="store_true",
-        help=_("enable the tray icon")
-    )
-    parser.add_argument(
-        "-d", "--disable-trayicon", action="store_true",
-        help=_("disable the tray icon")
+        help=_("alternative directory for user data and plugins")
     )
     parser.add_argument(
         "-s", "--hidden", action="store_true",
@@ -80,7 +71,6 @@ def check_arguments():
     parser.add_argument("--ci-mode", action="store_true", help=argparse.SUPPRESS)
 
     args = parser.parse_args()
-    trayicon = None
     multi_instance = False
 
     if args.config:
@@ -92,41 +82,20 @@ def check_arguments():
     if args.user_data:
         config.data_dir = args.user_data
 
-    if args.plugins:
-        config.plugin_dir = args.plugins
-
-    if args.enable_trayicon:
-        trayicon = True
-
-    if args.disable_trayicon:
-        trayicon = False
-
-    return trayicon, args.headless, args.hidden, args.bindip, args.port, args.ci_mode, args.rescan, multi_instance
+    return args.headless, args.hidden, args.bindip, args.port, args.ci_mode, args.rescan, multi_instance
 
 
-def check_core_dependencies():
+def check_python_version():
 
-    # Require Python >= 3.5
+    # Require minimum Python version
+    python_version = (3, 6)
+
     import sys
-    try:
-        assert sys.version_info[:2] >= (3, 5), '.'.join(
-            map(str, sys.version_info[:3])
-        )
-
-    except AssertionError as error:
+    if sys.version_info < python_version:
         return _("""You are using an unsupported version of Python (%(old_version)s).
 You should install Python %(min_version)s or newer.""") % {
-            "old_version": error,
-            "min_version": "3.5"
-        }
-
-    # Require gdbm or semidbm, for faster loading of shelves
-    import importlib.util
-    if not importlib.util.find_spec("_gdbm") and \
-            not importlib.util.find_spec("semidbm"):
-        return _("Cannot find %(option1)s or %(option2)s, please install either one.") % {
-            "option1": "gdbm",
-            "option2": "semidbm"
+            "old_version": '.'.join(map(str, sys.version_info[:3])),
+            "min_version": '.'.join(map(str, python_version))
         }
 
     return None
@@ -153,38 +122,9 @@ def rescan_shares():
     return 0
 
 
-def run_headless(core, ci_mode):
-    """ Run application in headless (no GUI) mode """
-
-    import time
-
-    from pynicotine.config import config
-    from pynicotine.logfacility import log
-
-    config.load_config()
-    log.log_levels = set(["download", "upload"] + config.sections["logging"]["debugmodes"])
-
-    connect_ready = core.start()
-
-    if not connect_ready and not ci_mode:
-        return 1
-
-    connect_success = core.connect()
-
-    if not connect_success and not ci_mode:
-        return 1
-
-    while not core.shutdown:
-        time.sleep(0.2)
-
-    config.write_configuration()
-    return 0
-
-
 def run():
     """ Run application and return its exit code """
 
-    import importlib.util
     import io
     import sys
 
@@ -196,29 +136,19 @@ def run():
         import os
         import multiprocessing
 
-        # Support SSL in frozen Windows binaries
-        if sys.platform == "win32":
-            os.environ["SSL_CERT_FILE"] = os.path.join(os.path.dirname(sys.executable), "share/ssl/cert.pem")
+        # Set up paths for frozen binaries (Windows and macOS)
+        executable_folder = os.path.dirname(sys.executable)
+        os.environ["SSL_CERT_FILE"] = os.path.join(executable_folder, "lib/cert.pem")
 
-        # Support file scanning process in frozen Windows and macOS binaries
+        # Support file scanning process in frozen binaries
         multiprocessing.freeze_support()
-
-    # Require pynicotine module
-    if not importlib.util.find_spec("pynicotine"):
-        print("""Cannot find application modules.
-Perhaps they're installed in a directory which is not
-in an interpreter's module search path.
-(there could be a version mismatch between
-what version of Python was used to build the application
-binary package and what you try to run the application with).""")
-        return 1
 
     from pynicotine.logfacility import log
     from pynicotine.utils import rename_process
     rename_process(b"nicotine")
 
-    trayicon, headless, hidden, bindip, port, ci_mode, rescan, multi_instance = check_arguments()
-    error = check_core_dependencies()
+    headless, hidden, bindip, port, ci_mode, rescan, multi_instance = check_arguments()
+    error = check_python_version()
 
     if error:
         log.add(error)
@@ -239,13 +169,17 @@ binary package and what you try to run the application with).""")
     from pynicotine.pynicotine import NicotineCore
     core = NicotineCore(bindip, port)
 
-    # Run without a GUI
-    if headless:
-        return run_headless(core, ci_mode)
-
     # Initialize GTK-based GUI
-    from pynicotine.gtkgui import run_gui
-    return run_gui(core, trayicon, hidden, bindip, port, ci_mode, multi_instance)
+    if not headless:
+        from pynicotine.gtkgui import run_gui
+        exit_code = run_gui(core, hidden, ci_mode, multi_instance)
+
+        if exit_code is not None:
+            return exit_code
+
+    # Run without a GUI
+    from pynicotine.headless import run_headless
+    return run_headless(core, ci_mode)
 
 
 apply_translations()

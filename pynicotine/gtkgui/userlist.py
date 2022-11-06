@@ -1,8 +1,8 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 # COPYRIGHT (C) 2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
-# COPYRIGHT (C) 2009 Quinox <quinox@users.sf.net>
-# COPYRIGHT (C) 2006-2009 Daelstorm <daelstorm@gmail.com>
+# COPYRIGHT (C) 2009 quinox <quinox@users.sf.net>
+# COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
 # COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
 #
 # GNU GENERAL PUBLIC LICENSE
@@ -23,16 +23,15 @@
 
 import time
 
-from gi.repository import Gio
 from gi.repository import GObject
 from gi.repository import Gtk
 
 from pynicotine.config import config
-from pynicotine.gtkgui.widgets.dialogs import entry_dialog
-from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
+from pynicotine.gtkgui.widgets.dialogs import EntryDialog
+from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
-from pynicotine.gtkgui.widgets.theme import get_status_icon
+from pynicotine.gtkgui.widgets.theme import get_status_icon_name
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.treeview import save_columns
@@ -40,23 +39,29 @@ from pynicotine.gtkgui.widgets.treeview import show_country_tooltip
 from pynicotine.gtkgui.widgets.treeview import show_user_status_tooltip
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
 
 
-class UserList(UserInterface):
+class UserList:
 
-    def __init__(self, frame):
+    def __init__(self, frame, core):
 
-        super().__init__("ui/buddylist.ui")
+        ui_template = UserInterface(scope=self, path="buddylist.ui")
+        (
+            self.container,
+            self.list_view,
+            self.toolbar
+        ) = ui_template.widgets
 
         self.frame = frame
-        self.page_id = "userlist"
+        self.core = core
 
         # Columns
         self.user_iterators = {}
         self.usersmodel = Gtk.ListStore(
-            Gio.Icon,             # (0)  status icon
+            str,                  # (0)  status icon
             str,                  # (1)  flag
             str,                  # (2)  username
             str,                  # (3)  hspeed
@@ -75,7 +80,7 @@ class UserList(UserInterface):
 
         self.column_numbers = list(range(self.usersmodel.get_n_columns()))
         self.cols = cols = initialise_columns(
-            frame, "buddy_list", self.UserListTree,
+            frame, "buddy_list", self.list_view,
             ["status", _("Status"), 25, "icon", None],
             ["country", _("Country"), 25, "icon", None],
             ["user", _("User"), 250, "text", None],
@@ -85,7 +90,7 @@ class UserList(UserInterface):
             ["notify", _("Notify"), 0, "toggle", None],
             ["privileged", _("Prioritized"), 0, "toggle", None],
             ["last_seen", _("Last Seen"), 160, "text", None],
-            ["comments", _("Note"), 400, "edit", None]
+            ["comments", _("Note"), 400, "text", None]
         )
 
         cols["status"].set_sort_column_id(10)
@@ -103,18 +108,18 @@ class UserList(UserInterface):
         cols["country"].get_widget().hide()
 
         for render in cols["trusted"].get_cells():
-            render.connect('toggled', self.cell_toggle_callback, self.UserListTree, 5)
+            render.connect('toggled', self.cell_toggle_callback, self.list_view, 5)
 
         for render in cols["notify"].get_cells():
-            render.connect('toggled', self.cell_toggle_callback, self.UserListTree, 6)
+            render.connect('toggled', self.cell_toggle_callback, self.list_view, 6)
 
         for render in cols["privileged"].get_cells():
-            render.connect('toggled', self.cell_toggle_callback, self.UserListTree, 7)
+            render.connect('toggled', self.cell_toggle_callback, self.list_view, 7)
 
         for render in cols["comments"].get_cells():
-            render.connect('edited', self.cell_edited_callback, self.UserListTree, 9)
+            render.connect('edited', self.cell_edited_callback, self.list_view, 9)
 
-        self.UserListTree.set_model(self.usersmodel)
+        self.list_view.set_model(self.usersmodel)
 
         # Lists
         for row in config.sections["server"]["userlist"]:
@@ -122,17 +127,17 @@ class UserList(UserInterface):
 
         self.usersmodel.set_sort_column_id(2, Gtk.SortType.ASCENDING)
 
-        for combo_box in (self.frame.UserSearchCombo, self.frame.PrivateChatCombo, self.frame.UserInfoCombo,
-                          self.frame.UserBrowseCombo):
+        for combo_box in (self.frame.user_search_combobox, self.frame.userinfo_combobox,
+                          self.frame.userbrowse_combobox):
             combo_box.set_model(self.usersmodel)
             combo_box.set_entry_text_column(2)
 
             CompletionEntry(combo_box.get_child(), self.usersmodel, column=2)
 
         # Popup menus
-        self.popup_menu_private_rooms = PopupMenu(self.frame)
+        self.popup_menu_private_rooms = UserPopupMenu(self.frame)
 
-        self.popup_menu = popup = PopupMenu(frame, self.UserListTree, self.on_popup_menu)
+        self.popup_menu = popup = UserPopupMenu(frame, self.list_view, self.on_popup_menu)
         popup.setup_user_menu(page="userlist")
         popup.add_items(
             ("", None),
@@ -190,7 +195,7 @@ class UserList(UserInterface):
             country = ""
 
         row = [
-            get_status_icon(0),
+            get_status_icon_name(UserStatus.OFFLINE),
             get_flag_icon_name(country),
             username,
             "",
@@ -223,27 +228,25 @@ class UserList(UserInterface):
 
         return False
 
-    def on_add_user(self, widget, *_args):
+    def on_add_user(self, *_args):
 
-        username = widget.get_text()
+        username = self.frame.add_buddy_entry.get_text().strip()
 
         if not username:
             return
 
-        widget.set_text("")
-        self.frame.np.userlist.add_user(username)
+        self.frame.add_buddy_entry.set_text("")
+        self.core.userlist.add_user(username)
 
     def update(self):
 
         if config.sections["ui"]["buddylistinchatrooms"] in ("always", "chatrooms"):
             return
 
-        self.frame.userlist_status_page.set_visible(not self.user_iterators)
-        self.Main.set_visible(self.user_iterators)
+        self.frame.userlist_content.set_visible(self.user_iterators)
 
     def update_visuals(self):
-
-        for widget in list(self.__dict__.values()):
+        for widget in self.__dict__.values():
             update_widget_visuals(widget)
 
     def cell_toggle_callback(self, _widget, index, treeview, pos):
@@ -283,41 +286,42 @@ class UserList(UserInterface):
         self.usersmodel.set_value(iterator, 8, last_seen)
         self.usersmodel.set_value(iterator, 13, int(time_from_epoch))
 
-        if not online:
-            self.save_user_list()
-
     def set_note(self, iterator, store, note=None):
 
         if note is not None:
             store.set_value(iterator, 9, note)
             self.save_user_list()
 
-    @staticmethod
-    def get_selected_username(treeview):
+    def get_selected_username(self):
 
-        model, iterator = treeview.get_selection().get_selected()
+        model, iterator = self.list_view.get_selection().get_selected()
 
         if iterator is None:
             return None
 
         return model.get_value(iterator, 2)
 
-    def on_row_activated(self, treeview, _path, _column):
+    def on_row_activated(self, _treeview, _path, column):
 
-        user = self.get_selected_username(treeview)
+        user = self.get_selected_username()
 
-        if user is not None:
-            self.frame.np.privatechats.show_user(user)
-            self.frame.change_main_page("private")
+        if user is None:
+            return
 
-    def on_popup_menu(self, menu, widget):
+        if column.get_title() == "comments":
+            self.on_add_note()
+            return
 
-        username = self.get_selected_username(widget)
+        self.core.privatechat.show_user(user)
+
+    def on_popup_menu(self, menu, _widget):
+
+        username = self.get_selected_username()
         menu.set_user(username)
         menu.toggle_user_items()
         menu.populate_private_rooms(self.popup_menu_private_rooms)
 
-        private_rooms_enabled = (self.popup_menu_private_rooms.items and menu.user != self.frame.np.login_username)
+        private_rooms_enabled = (self.popup_menu_private_rooms.items and menu.user != self.core.login_username)
         menu.actions[_("Private Rooms")].set_enabled(private_rooms_enabled)
 
     def get_user_status(self, msg):
@@ -333,17 +337,12 @@ class UserList(UserInterface):
         if status == self.usersmodel.get_value(iterator, 10):
             return
 
-        status_icon = get_status_icon(status)
-
-        if status_icon is None:
-            return
-
         notify = self.usersmodel.get_value(iterator, 6)
 
         if notify:
-            if status == 1:
+            if status == UserStatus.AWAY:
                 status_text = _("User %s is away")
-            elif status == 2:
+            elif status == UserStatus.ONLINE:
                 status_text = _("User %s is online")
             else:
                 status_text = _("User %s is offline")
@@ -351,13 +350,15 @@ class UserList(UserInterface):
             log.add(status_text, user)
             self.frame.notifications.new_text_notification(status_text % user)
 
+        status_icon = get_status_icon_name(status)
+
         self.usersmodel.set_value(iterator, 0, status_icon)
         self.usersmodel.set_value(iterator, 10, status)
 
-        if status:  # online
+        if status in (UserStatus.ONLINE, UserStatus.AWAY):
             self.set_last_seen(user, online=True)
 
-        elif not self.usersmodel.get_value(iterator, 8):  # disconnected
+        elif not self.usersmodel.get_value(iterator, 8):
             self.set_last_seen(user)
 
     def get_user_stats(self, msg):
@@ -379,8 +380,8 @@ class UserList(UserInterface):
 
         self.usersmodel.set_value(iterator, 3, h_speed)
         self.usersmodel.set_value(iterator, 4, h_files)
-        self.usersmodel.set_value(iterator, 11, GObject.Value(GObject.TYPE_UINT64, avgspeed))
-        self.usersmodel.set_value(iterator, 12, GObject.Value(GObject.TYPE_UINT64, files))
+        self.usersmodel.set_value(iterator, 11, GObject.Value(GObject.TYPE_UINT, avgspeed))
+        self.usersmodel.set_value(iterator, 12, GObject.Value(GObject.TYPE_UINT, files))
 
     def set_user_country(self, user, country_code):
 
@@ -408,7 +409,7 @@ class UserList(UserInterface):
         self.user_iterators[user] = self.usersmodel.insert_with_valuesv(
             -1, self.column_numbers,
             [
-                get_status_icon(0),
+                get_status_icon_name(UserStatus.OFFLINE),
                 empty_str,
                 user,
                 empty_str,
@@ -453,14 +454,14 @@ class UserList(UserInterface):
                 hlast_seen, note, _status, _speed, _file_count, _last_seen, country) = i
             user_list.append([user, note, notify, prioritized, trusted, hlast_seen, country])
 
-        self.frame.np.userlist.save_user_list(user_list)
+        self.core.userlist.save_user_list(user_list)
 
     def save_columns(self):
-        save_columns("buddy_list", self.UserListTree.get_columns())
+        save_columns("buddy_list", self.list_view.get_columns())
 
     def on_trusted(self, action, state):
 
-        user = self.popup_menu.get_user()
+        user = self.get_selected_username()
         iterator = self.user_iterators.get(user)
 
         if iterator is None:
@@ -473,7 +474,7 @@ class UserList(UserInterface):
 
     def on_notify(self, action, state):
 
-        user = self.popup_menu.get_user()
+        user = self.get_selected_username()
         iterator = self.user_iterators.get(user)
 
         if iterator is None:
@@ -486,7 +487,7 @@ class UserList(UserInterface):
 
     def on_prioritized(self, action, state):
 
-        user = self.popup_menu.get_user()
+        user = self.get_selected_username()
         iterator = self.user_iterators.get(user)
 
         if iterator is None:
@@ -504,8 +505,7 @@ class UserList(UserInterface):
         if iterator is None:
             return
 
-        note = dialog.get_response_value()
-        dialog.destroy()
+        note = dialog.get_entry_value()
 
         if note is None:
             return
@@ -515,7 +515,7 @@ class UserList(UserInterface):
 
     def on_add_note(self, *_args):
 
-        user = self.popup_menu.get_user()
+        user = self.get_selected_username()
         iterator = self.user_iterators.get(user)
 
         if iterator is None:
@@ -523,24 +523,24 @@ class UserList(UserInterface):
 
         note = self.usersmodel.get_value(iterator, 9) or ""
 
-        entry_dialog(
-            parent=self.frame.MainWindow,
+        EntryDialog(
+            parent=self.frame.window,
             title=_("Add User Note"),
             message=_("Add a note about user %s:") % user,
             callback=self.on_add_note_response,
             callback_data=user,
             default=note
-        )
+        ).show()
 
     def on_remove_user(self, *_args):
-        self.frame.np.userlist.remove_user(self.popup_menu.get_user())
+        self.core.userlist.remove_user(self.get_selected_username())
 
     def server_disconnect(self):
 
         for i in self.usersmodel:
             iterator = i.iter
 
-            self.usersmodel.set_value(iterator, 0, get_status_icon(0))
+            self.usersmodel.set_value(iterator, 0, get_status_icon_name(UserStatus.OFFLINE))
             self.usersmodel.set_value(iterator, 3, "")
             self.usersmodel.set_value(iterator, 4, "")
             self.usersmodel.set_value(iterator, 10, 0)
@@ -550,3 +550,5 @@ class UserList(UserInterface):
             if not self.usersmodel.get_value(iterator, 8):
                 user = self.usersmodel.get_value(iterator, 2)
                 self.set_last_seen(user)
+
+        self.save_user_list()

@@ -1,4 +1,4 @@
-# Developing
+# Development
 
 This document contains important information about Nicotine+ design decisions and development procedures for maintainers, developers and code contributors alike.
 
@@ -8,25 +8,28 @@ This document contains important information about Nicotine+ design decisions an
  * [Dependencies](#dependencies)
  * [Profiling](#profiling)
  * [Continuous Integration Testing](#continuous-integration-testing)
+ * [Translations](#translations)
+ * [Soulseek Protocol](#soulseek-protocol)
  * [Releases](#releases)
 
-# Language and Toolkit
 
-## Python
+## Language and Toolkit
+
+### Python
 
 Nicotine+ is Python application, built on backend code from the PySoulSeek project started in 2001. We only allow Python code in the main client, as this makes it easy to distribute and run Nicotine+ on virtually any system. In turn, we are able to devote more time towards implementing bug fixes and additional functionality.
 
-We aim to support the oldest minor Python 3 version still used by supported releases of distributions and operating systems. The minimum version Nicotine+ currently supports is 3.5.
+We aim to support the oldest minor Python 3 version still used by supported releases of distributions and operating systems. The minimum version Nicotine+ currently supports is 3.6.
 
-## GTK
+### GTK
 
 Nicotine+ and its predecessors PySoulSeek and Nicotine were originally developed with GNU/Linux in mind, at a time when the official Soulseek client only supported Windows. The Nicotine project opted to use GTK as the GUI toolkit, as opposed to wxPython previously used by PySoulSeek. This decision was made due to various issues encountered in wxPython at the time, such as large memory overhead and long compile/build times.
 
-We are content with GTK, and have no plans of switching to another toolkit.
+GTK fits our needs, and we have no plans of switching to another toolkit.
 
-# Dependencies
+## Dependencies
 
-Nicotine+ aims to be as portable as possible, providing access to the Soulseek network for people who cannot run the official Soulseek client. Nicotine+ runs on almost any architecture and system available, and has active users on a plethora of different systems. This also means that the introduction of an external software depencency can cause issues for both packagers and users.
+Nicotine+ aims to be as portable as possible, providing access to the Soulseek network for people who cannot run the official Soulseek client. Nicotine+ runs on almost any architecture and system available, and has active users on a plethora of different systems. This also means that the introduction of an external software dependency can cause issues for both packagers and users.
 
 Dependencies preinstalled on most systems, as well as modules included in the Python Standard Library, should be preferred whenever possible. Avoid introducing "convenient" and "new hotness" dependencies, if the standard library already includes the required functionality to some degree. If a new dependency is necessary, think about the following points:
 
@@ -36,7 +39,8 @@ Dependencies preinstalled on most systems, as well as modules included in the Py
 
 The current dependencies for Nicotine+ are described in [DEPENDENCIES.md](DEPENDENCIES.md).
 
-# Profiling
+
+## Profiling
 
 Profiling code changes from time to time is important, to ensure that Nicotine+ performs well and uses few resources. Our goal is to develop a lightweight client than runs well on older hardware, as well as servers, which can be quite constrained.
 
@@ -44,13 +48,14 @@ Due to Python's interpreted nature, addressing performance issues can be a chall
 
  * Use different data structures and algorithms.
 
- * Use functionality included in the Python Standard Library when possible, instead of reimplementing the wheel. This is especially important when it comes to algorithms.
+ * Use functionality included in the Python Standard Library when possible, instead of reimplementing the wheel. Certain modules in the standard library are written in C, and can perform better than pure-Python counterparts, especially in hot code paths.
 
- * Look for alterative ways of accomplishing a task. Search engines help a lot here. Certain modules in the standard library are written in C, and can perform better than pure-Python counterparts, especially in hot code paths.
+ * Look for alternative ways of accomplishing a task, and compare the performance. Search engines help a lot here.
 
 [py-spy](https://github.com/benfred/py-spy) is an excellent tool for profiling Python applications in real time, and will save a lot of time in the long run.
 
-# Continuous Integration Testing
+
+## Continuous Integration Testing
 
 It is important that all patches pass unit testing. Unfortunately developers make all kinds of changes to their local development environment that can have unintended consequences. This means sometimes tests on the developer's computer pass when they should not, and other times failing when they should not have.
 
@@ -60,7 +65,8 @@ The key thing to remember is that in order to do this properly, this all needs t
 
 There are [different ways](https://wiki.debian.org/qa.debian.org#Other_distributions) of performing CI on different distros. The most common one is via the international [DEP-8](https://dep-team.pages.debian.net/deps/dep8/) standard as used by hundreds of different operating systems.
 
-## Autopkgtest
+### Autopkgtest
+
 On Debian based distributions, `autopkgtest` implements the DEP-8 standard. To create and use a build image environment for Ubuntu, follow these steps. First install the autopkgtest(1) tools:
 
 ```sh
@@ -81,11 +87,51 @@ autopkgtest --shell-fail --apt-upgrade . -- \
       --qemu-options='-enable-kvm'
 ```
 
-## Creating tests
+### Creating Tests
 
 Tests are defined in the *[test/](/test/)* folder, and should be expanded to cover larger parts of the client when possible.
 
-# Releases
+
+## Translations
+
+Translations are largely handled by [Weblate](https://weblate.org/), but certain manual operations need to be performed at times.
+
+### Adding a Language
+
+When Nicotine+ is translated into a new language, the following should be done:
+
+ * Update the copyright header of the XX.po file:
+```
+# Copyright (C) 20XX Nicotine+ Translators
+# This file is distributed under the same license as the Nicotine+ package.
+```
+ * Remove the `PACKAGE VERSION` value of `Project-Id-Version` in the XX.po file:
+```
+"Project-Id-Version: \n"
+```
+ * Add the language code to the [po/LINGUAS](/po/LINGUAS) and [test/unit/test_i18n.py](/test/unit/test_i18n.py) files
+
+### Updating Translation Template
+
+The translation template file [po/nicotine.pot](/po/nicotine.pot) should be updated after modifying strings in the codebase. To update the template, run the following command:
+
+```sh
+python3 po/update_pot.py
+```
+
+### Merging Translation Updates
+
+When translations are modified, Weblate creates a pull request with the changes within 24 hours. In order to preserve author information for commits, use the `Create a merge commit` option when merging the pull request.
+
+
+## Soulseek Protocol
+
+The Soulseek network uses its own protocol for interoperability between clients. The protocol is proprietary, and no official documentation is available. Nicotine+'s protocol implementation is developed by observing the behavior of the official Soulseek NS and SoulseekQt clients.
+
+[SLSKPROTOCOL.md](SLSKPROTOCOL.md) contains unofficial documentation maintained by the Nicotine+ team.
+
+
+## Releases
 
 Nicotine+ tries to follow [Semantic Versioning](https://semver.org/) when possible. As cited in the specification:
 
@@ -105,7 +151,7 @@ Release dates are not set in stone, as Nicotine+ development is done by voluntee
 
  * Releasing large updates can make it more difficult to pinpoint eventual issues that were introduced since the previous release.
 
-## Creating a new Nicotine+ release
+### Creating a Nicotine+ Release
 
 The following is a step-by-step guide detailing what a Nicotine+ maintainer should do when releasing a new version of Nicotine+.
 
@@ -126,7 +172,7 @@ python3 setup.py sdist
  5. Increase the Nicotine+ version number / add new version entries in the master branch. Nicotine+ uses [Semantic Versioning](https://semver.org/). The following files need to be modified:
     * [NEWS.md](/NEWS.md)
     * [README.md](/README.md)
-    * [data/org.nicotine_plus.Nicotine.metainfo.xml.in](/data/org.nicotine_plus.Nicotine.metainfo.xml.in)
+    * [data/org.nicotine_plus.Nicotine.appdata.xml.in](/data/org.nicotine_plus.Nicotine.appdata.xml.in)
     * [debian/changelog](/debian/changelog)
     * [pynicotine/config.py](/pynicotine/config.py)
 

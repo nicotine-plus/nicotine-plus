@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.0"/>
-  <object class="GtkBox" id="Main">
-    <property name="visible">False</property>
+  <object class="GtkBox" id="container">
+    <property name="visible">True</property>
     <property name="orientation">vertical</property>
     <property name="hexpand">True</property>
     <child>
       <object class="GtkBox">
         <property name="visible">True</property>
+        <property name="vexpand">True</property>
         <child>
           <object class="GtkScrolledWindow">
             <property name="visible">True</property>
-            <property name="vexpand">True</property>
+            <property name="hexpand">True</property>
             <child>
-              <object class="GtkTreeView" id="Transfers">
+              <object class="GtkTreeView" id="tree_view">
                 <property name="visible">True</property>
-                <property name="hexpand">True</property>
                 <property name="has-tooltip">True</property>
                 <property name="enable-tree-lines">True</property>
                 <property name="rubber-banding">True</property>
@@ -37,7 +37,7 @@
       </object>
     </child>
     <child>
-      <object class="GtkBox" id="TransferButtons">
+      <object class="GtkBox">
         <property name="visible">True</property>
         <property name="margin-start">6</property>
         <property name="margin-end">6</property>
@@ -49,8 +49,9 @@
             <property name="visible">True</property>
             <property name="spacing">6</property>
             <child>
-              <object class="GtkButton">
+              <object class="GtkButton" id="_abort_button">
                 <property name="visible">True</property>
+                <property name="tooltip-text" bind-source="_abort_label" bind-property="label" bind-flags="bidirectional|sync-create"/>
                 <signal name="clicked" handler="on_abort_transfer"/>
                 <child>
                   <object class="GtkBox">
@@ -63,10 +64,11 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkLabel">
+                      <object class="GtkLabel" id="_abort_label">
                         <property name="visible">True</property>
+                        <property name="ellipsize">end</property>
                         <property name="label" translatable="yes">Abort</property>
-                        <property name="use-underline">True</property>
+                        <property name="mnemonic-widget">_abort_button</property>
                       </object>
                     </child>
                   </object>
@@ -77,9 +79,10 @@
               </object>
             </child>
             <child>
-              <object class="GtkButton">
+              <object class="GtkButton" id="_abort_users_button">
                 <property name="visible">True</property>
-                <signal name="clicked" handler="on_abort_user"/>
+                <property name="tooltip-text" bind-source="_abort_users_label" bind-property="label" bind-flags="bidirectional|sync-create"/>
+                <signal name="clicked" handler="on_abort_users"/>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
@@ -91,9 +94,11 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkLabel">
+                      <object class="GtkLabel" id="_abort_users_label">
                         <property name="visible">True</property>
+                        <property name="ellipsize">end</property>
                         <property name="label" translatable="yes">Abort User(s)</property>
+                        <property name="mnemonic-widget">_abort_users_button</property>
                       </object>
                     </child>
                   </object>
@@ -104,9 +109,10 @@
               </object>
             </child>
             <child>
-              <object class="GtkButton">
+              <object class="GtkButton" id="_ban_users_button">
                 <property name="visible">True</property>
-                <signal name="clicked" handler="on_ban"/>
+                <property name="tooltip-text" bind-source="_ban_users_label" bind-property="label" bind-flags="bidirectional|sync-create"/>
+                <signal name="clicked" handler="on_ban_users"/>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
@@ -118,9 +124,11 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkLabel">
+                      <object class="GtkLabel" id="_ban_users_label">
                         <property name="visible">True</property>
+                        <property name="ellipsize">end</property>
                         <property name="label" translatable="yes">Ban User(s)</property>
+                        <property name="mnemonic-widget">_ban_users_button</property>
                       </object>
                     </child>
                   </object>
@@ -139,7 +147,7 @@
             <property name="halign">end</property>
             <property name="hexpand">True</property>
             <child>
-              <object class="GtkButton">
+              <object class="GtkButton" id="_clear_finished_button">
                 <property name="visible">True</property>
                 <property name="tooltip-text" translatable="yes">Clear all finished and cancelled uploads.</property>
                 <signal name="clicked" handler="on_clear_finished_aborted"/>
@@ -156,7 +164,9 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">True</property>
+                        <property name="ellipsize">end</property>
                         <property name="label" translatable="yes">Clear Finished</property>
+                        <property name="mnemonic-widget">_clear_finished_button</property>
                       </object>
                     </child>
                   </object>
@@ -167,19 +177,21 @@
               </object>
             </child>
             <child>
-              <object class="GtkMenuButton" id="ClearTransfers">
+              <object class="GtkMenuButton" id="clear_all_button">
                 <property name="visible">True</property>
                 <property name="direction">up</property>
                 <property name="tooltip-text" translatable="yes">Clear all uploads marked with a specific status.</property>
                 <child>
-                  <object class="GtkBox" id="ClearTransfersLabel">
+                  <object class="GtkBox">
                     <property name="visible">True</property>
                     <property name="spacing">6</property>
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">Clear Uploa_ds…</property>
+                        <property name="ellipsize">end</property>
+                        <property name="label" translatable="yes">Clear _All…</property>
                         <property name="use-underline">True</property>
+                        <property name="mnemonic-widget">clear_all_button</property>
                       </object>
                     </child>
                     <child>

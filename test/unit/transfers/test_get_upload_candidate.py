@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2022 Nicotine+ Team
+# COPYRIGHT (C) 2022 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -25,6 +25,8 @@ from unittest.mock import Mock
 from pynicotine.config import config
 from pynicotine.transfers import Transfers, Transfer
 
+NUM_ALLOWED_NONE = 2
+
 
 class GetUploadCandidateTest(unittest.TestCase):
 
@@ -48,13 +50,14 @@ class GetUploadCandidateTest(unittest.TestCase):
 
             transfer_list.append(transfer)
             self.transfers.append_upload(user, filename, transfer)
+            self.transfers.update_upload(transfer)
 
         return transfer_list
 
     def set_finished(self, transfer):
 
         transfer.status = "Finished"
-        self.transfers.update_user_counter(transfer.user)
+        self.transfers.update_upload(transfer)
         self.transfers.uploads.remove(transfer)
 
     def consume_transfers(self, queued, in_progress, clear_first=False):
@@ -76,9 +79,8 @@ class GetUploadCandidateTest(unittest.TestCase):
 
         candidates = []
         none_count = 0  # prevent infinite loop in case of bug or bad test setup
-        num_allowed_nones = 2
 
-        while len(self.transfers.uploads) > 0 and none_count < num_allowed_nones:
+        while len(self.transfers.uploads) > 0 and none_count < NUM_ALLOWED_NONE:
 
             # "finish" one in progress transfer, if any
             if clear_first and in_progress:
@@ -91,16 +93,10 @@ class GetUploadCandidateTest(unittest.TestCase):
 
             if not candidate:
                 none_count += 1
-                print("none_count: %i" % none_count)
-
-                if queued:
-                    print("Found no transfer candidates out of %i queued uploads" % len(queued))
-
                 candidates.append(None)
                 continue
 
             none_count = 0
-            print("Transfer candidate: %s" % candidate.user)
 
             candidates.append(candidate)
             queued.remove(candidate)
@@ -251,12 +247,13 @@ class GetUploadCandidateTest(unittest.TestCase):
                 "user1",
                 "user2",
                 "puser1",
-                "puser1"
+                "puser1",
+                "puser2"
             ],
             in_progress=[],
             expected=[
                 "puser1",
-                None,
+                "puser2",
                 "puser1",
                 "user1",
                 "user2",
@@ -388,12 +385,13 @@ class GetUploadCandidateTest(unittest.TestCase):
                 "user1",
                 "user2",
                 "puser1",
-                "puser1"
+                "puser1",
+                "puser2"
             ],
             in_progress=[],
             expected=[
                 "puser1",
-                None,
+                "puser2",
                 "puser1",
                 "user1",
                 "user2",

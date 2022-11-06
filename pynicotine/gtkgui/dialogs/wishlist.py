@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -16,64 +16,58 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import GLib
-from gi.repository import Gtk
-
 from pynicotine.config import config
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
-from pynicotine.gtkgui.widgets.dialogs import dialog_hide
-from pynicotine.gtkgui.widgets.dialogs import dialog_show
-from pynicotine.gtkgui.widgets.dialogs import entry_dialog
-from pynicotine.gtkgui.widgets.dialogs import generic_dialog
-from pynicotine.gtkgui.widgets.dialogs import option_dialog
+from pynicotine.gtkgui.widgets.dialogs import Dialog
+from pynicotine.gtkgui.widgets.dialogs import EntryDialog
+from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
-from pynicotine.gtkgui.widgets.treeview import initialise_columns
+from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.ui import UserInterface
 
 
-class WishList(UserInterface):
+class WishList(Dialog):
 
-    def __init__(self, frame, searches):
+    def __init__(self, frame, core, searches):
 
-        super().__init__("ui/dialogs/wishlist.ui")
+        self.core = core
+        self.searches = searches
 
-        self.dialog = generic_dialog(
-            parent=frame.MainWindow,
+        ui_template = UserInterface(scope=self, path="dialogs/wishlist.ui")
+        (
+            self.container,
+            self.list_container,
+            self.wish_entry
+        ) = ui_template.widgets
+
+        super().__init__(
+            parent=frame.window,
             modal=False,
-            content_box=self.main,
-            quit_callback=self.hide,
+            content_box=self.container,
+            show_callback=self.on_show,
             title=_("Wishlist"),
             width=600,
-            height=600
+            height=600,
+            close_destroy=False
         )
 
-        self.frame = frame
-        self.searches = searches
-        self.timer = None
-        self.wishes = {}
-
-        self.store = Gtk.ListStore(str)
-
-        self.column_numbers = list(range(self.store.get_n_columns()))
-        cols = initialise_columns(
-            frame, None, self.list_view,
-            ["wish", _("Wish"), -1, "text", None]
+        self.list_view = TreeView(
+            frame, parent=self.list_container, multi_select=True, activate_row_callback=self.on_edit_wish,
+            columns=[
+                {"column_id": "wish", "column_type": "text", "title": _("Wish"), "sort_column": 0,
+                 "default_sort_column": "ascending"}
+            ]
         )
-
-        cols["wish"].set_sort_column_id(0)
-
-        self.store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
-        self.list_view.set_model(self.store)
 
         for wish in config.sections["server"]["autosearch"]:
             wish = str(wish)
-            self.wishes[wish] = self.store.insert_with_valuesv(-1, self.column_numbers, [wish])
+            self.list_view.add_row([wish], select_row=False)
 
-        CompletionEntry(self.wish_entry, self.store)
+        CompletionEntry(self.wish_entry, self.list_view.model)
 
-        Accelerator("Delete", self.list_view, self.on_remove_wish)
-        Accelerator("<Shift>Tab", self.list_view, self.on_list_focus_entry_accelerator)  # skip column header
+        Accelerator("Delete", self.list_view.widget, self.on_remove_wish)
+        Accelerator("<Shift>Tab", self.list_view.widget, self.on_list_focus_entry_accelerator)  # skip column header
 
     def on_list_focus_entry_accelerator(self, *_args):
         self.wish_entry.grab_focus()
@@ -81,114 +75,99 @@ class WishList(UserInterface):
 
     def on_add_wish(self, *_args):
 
-        wish = self.wish_entry.get_text()
-        wish_exists = (wish in self.wishes)
+        wish = self.wish_entry.get_text().strip()
+
+        if not wish:
+            return
+
+        wish_exists = (wish in self.list_view.iterators)
         self.wish_entry.set_text("")
 
-        self.frame.np.search.add_wish(wish)
+        self.core.search.add_wish(wish)
 
         if not wish_exists:
             return
 
         self.select_wish(wish)
 
-    def on_edit_wish_response(self, dialog, response_id, old_wish):
+    def on_edit_wish_response(self, dialog, _response_id, old_wish):
 
-        wish = dialog.get_response_value()
-        dialog.destroy()
-
-        if response_id != Gtk.ResponseType.OK:
-            return
+        wish = dialog.get_entry_value().strip()
 
         if not wish:
             return
 
-        self.frame.np.search.remove_wish(old_wish)
-        self.frame.np.search.add_wish(wish)
+        self.core.search.remove_wish(old_wish)
+        self.core.search.add_wish(wish)
         self.select_wish(wish)
 
     def on_edit_wish(self, *_args):
 
-        model, paths = self.list_view.get_selection().get_selected_rows()
+        for iterator in self.list_view.get_selected_rows():
+            old_wish = self.list_view.get_row_value(iterator, 0)
 
-        for path in paths:
-            iterator = model.get_iter(path)
-            old_wish = model.get_value(iterator, 0)
-
-            entry_dialog(
+            EntryDialog(
                 parent=self.dialog,
                 title=_("Edit Wish"),
                 message=_("Enter new value for wish '%s':") % old_wish,
                 default=old_wish,
                 callback=self.on_edit_wish_response,
                 callback_data=old_wish
-            )
+            ).show()
             return
 
     def on_remove_wish(self, *_args):
 
-        model, paths = self.list_view.get_selection().get_selected_rows()
-
-        for path in reversed(paths):
-            iterator = model.get_iter(path)
-            wish = model.get_value(iterator, 0)
-            self.frame.np.search.remove_wish(wish)
+        for iterator in reversed(self.list_view.get_selected_rows()):
+            wish = self.list_view.get_row_value(iterator, 0)
+            self.core.search.remove_wish(wish)
 
         self.wish_entry.grab_focus()
         return True
 
-    def clear_wishlist_response(self, dialog, response_id, _data):
-
-        dialog.destroy()
+    def clear_wishlist_response(self, _dialog, response_id, _data):
 
         if response_id == 2:
-            for wish in self.wishes.copy():
-                self.frame.np.search.remove_wish(wish)
+            for wish in self.list_view.iterators.copy():
+                self.core.search.remove_wish(wish)
 
         self.wish_entry.grab_focus()
 
     def on_clear_wishlist(self, *_args):
 
-        option_dialog(
+        OptionDialog(
             parent=self.dialog,
             title=_('Clear Wishlist?'),
             message=_('Do you really want to clear your wishlist?'),
             callback=self.clear_wishlist_response
-        )
+        ).show()
 
     def add_wish(self, wish):
 
-        if wish not in self.wishes:
-            self.wishes[wish] = self.store.insert_with_valuesv(-1, self.column_numbers, [wish])
+        if wish not in self.list_view.iterators:
+            self.list_view.add_row([wish])
 
         self.update_wish_button(wish)
 
     def remove_wish(self, wish):
 
-        if wish in self.wishes:
-            self.store.remove(self.wishes[wish])
-            del self.wishes[wish]
+        iterator = self.list_view.iterators.get(wish)
+
+        if iterator is not None:
+            self.list_view.remove_row(iterator)
 
         self.update_wish_button(wish)
 
     def select_wish(self, wish):
 
-        wish_iterator = self.wishes.get(wish)
-        if wish_iterator is None:
-            return
+        iterator = self.list_view.iterators.get(wish)
 
-        self.list_view.set_cursor(self.store.get_path(wish_iterator))
-        self.list_view.grab_focus()
+        if iterator is not None:
+            self.list_view.select_row(iterator)
 
     def set_interval(self, msg):
-        self.frame.np.search.do_wishlist_search_interval()
-        self.timer = GLib.timeout_add_seconds(msg.seconds, self.frame.np.search.do_wishlist_search_interval)
-
-    def server_disconnect(self):
-
-        if self.timer is not None:
-            GLib.source_remove(self.timer)
-            self.timer = None
+        # Not used
+        pass
 
     def update_wish_button(self, wish):
 
@@ -198,13 +177,12 @@ class WishList(UserInterface):
 
     def update_visuals(self):
 
-        for widget in list(self.__dict__.values()):
+        for widget in self.__dict__.values():
             update_widget_visuals(widget)
 
-    def show(self, *_args):
+    def on_show(self, *_args):
 
-        dialog_show(self.dialog)
-        page = self.searches.get_nth_page(self.searches.get_current_page())
+        page = self.searches.get_current_page()
 
         if page is None:
             return
@@ -212,28 +190,24 @@ class WishList(UserInterface):
         text = None
 
         for tab in self.searches.pages.values():
-            if tab is not None and tab.Main == page:
+            if tab is not None and tab.container == page:
                 text = tab.text
                 break
 
         if not text:
-            self.list_view.get_selection().unselect_all()
+            self.list_view.unselect_all_rows()
             return
 
-        if text in self.wishes:
+        iterator = self.list_view.iterators.get(text)
+
+        if iterator is not None:
             # Highlight existing wish row
 
-            iterator = self.wishes[text]
-            self.list_view.set_cursor(self.store.get_path(iterator))
+            self.list_view.select_row(iterator)
             self.wish_entry.set_text("")
-            self.list_view.grab_focus()
             return
 
         # Pre-fill text field with search term from active search tab
-        self.list_view.get_selection().unselect_all()
+        self.list_view.unselect_all_rows()
         self.wish_entry.set_text(text)
         self.wish_entry.grab_focus()
-
-    def hide(self, *_args):
-        dialog_hide(self.dialog)
-        return True

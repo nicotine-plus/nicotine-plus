@@ -1,1 +1,5 @@
 blank_issues_enabled: false
+contact_links:
+  - name: Other
+    url: https://github.com/nicotine-plus/nicotine-plus/discussions/new
+    about: Question, discussion or anything else

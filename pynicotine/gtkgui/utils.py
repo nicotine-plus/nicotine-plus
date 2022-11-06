@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2021-2022 Nicotine+ Team
+# COPYRIGHT (C) 2021-2022 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -19,13 +19,15 @@
 from gi.repository import Gdk
 from gi.repository import Gtk
 
+from pynicotine.gtkgui.application import GTK_API_VERSION
+
 
 """ Clipboard """
 
 
 def copy_text(text):
 
-    if Gtk.get_major_version() == 4:
+    if GTK_API_VERSION >= 4:
         clipboard = Gdk.Display.get_default().get_clipboard()
         clipboard.set(text)
         return

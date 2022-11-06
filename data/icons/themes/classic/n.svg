@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="96" height="96">
-    <use xlink:href="#a" width="1293" height="804" transform="matrix(1 0 0 .99671 -950.831 -207.714)" fill="#4fbf32" stroke="#ddd7cb" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
-    <g transform="translate(-950.831 -208.557)">
-        <g id="a" fill="#f1a238" fill-opacity="1">
-            <path d="M951.785 318.741h43.412v-34.194h-43.412v34.194zM1040.987 318.741v-7.136h43.114v7.136h-43.114zM1040.987 305.361v-4.46h43.114v4.46h-43.114zM1040.987 294.36v-4.163h43.114v4.162h-43.114z" transform="matrix(.3489 0 0 .3489 620.838 185.388)"/>
-            <path d="M952.017 276.69l-.232-187.495h73.146c30.266 0 59.17 36.237 59.17 61.765v80.958h43.71v-43.412h44.006v43.412h43.114v44.601h-43.114v42.222h-44.007V276.52h-43.709v8.028h-43.114V150.96c0-6.895-7.149-18.948-16.056-18.948h-29.734v144.507l-43.18.171z" transform="matrix(.3489 0 0 .3489 620.838 185.388)"/>
-        </g>
-    </g>
-</svg>

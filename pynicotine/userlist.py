@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2021 Nicotine+ Team
+# COPYRIGHT (C) 2021-2022 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -16,22 +16,21 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from pynicotine.config import config
+from pynicotine.slskmessages import UserStatus
+
 
 class UserList:
 
-    def __init__(self, core, config, queue, ui_callback):
+    def __init__(self, core, queue, ui_callback=None):
 
         self.core = core
-        self.config = config
         self.queue = queue
-        self.ui_callback = None
-
-        if hasattr(ui_callback, "userlist"):
-            self.ui_callback = ui_callback.userlist
+        self.ui_callback = getattr(ui_callback, "userlist", None)
 
     def server_login(self):
 
-        for row in self.config.sections["server"]["userlist"]:
+        for row in config.sections["server"]["userlist"]:
             if row and isinstance(row, list):
                 user = str(row[0])
                 self.core.watch_user(user)
@@ -41,8 +40,12 @@ class UserList:
             self.ui_callback.server_disconnect()
 
     def add_user(self, user):
+
         if self.ui_callback:
             self.ui_callback.add_user(user)
+
+        if self.core.user_status == UserStatus.OFFLINE:
+            return
 
         # Request user status, speed and number of shared files
         self.core.watch_user(user, force_update=True)
@@ -55,10 +58,12 @@ class UserList:
             self.ui_callback.remove_user(user)
 
     def save_user_list(self, user_list):
-        self.config.sections["server"]["userlist"] = user_list
-        self.config.write_configuration()
+        config.sections["server"]["userlist"] = user_list
+        config.write_configuration()
 
     def get_user_status(self, msg):
+        """ Server code: 7 """
+
         if self.ui_callback:
             self.ui_callback.get_user_status(msg)
 
@@ -67,5 +72,7 @@ class UserList:
             self.ui_callback.set_user_country(user, country_code)
 
     def get_user_stats(self, msg):
+        """ Server code: 36 """
+
         if self.ui_callback:
             self.ui_callback.get_user_stats(msg)

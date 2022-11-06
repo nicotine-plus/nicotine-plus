@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -19,74 +19,167 @@
 import os
 import time
 
+from pynicotine import slskmessages
 from pynicotine.config import config
+from pynicotine.scheduler import scheduler
+
+
+class LogFile:
+
+    def __init__(self, path, handle):
+        self.path = path
+        self.handle = handle
+        self.last_active = time.time()
 
 
 class Logger:
+
+    PREFIXES = {
+        "download": "Download",
+        "upload": "Upload",
+        "search": "Search",
+        "chat": "Chat",
+        "connection": "Conn",
+        "message": "Msg",
+        "transfer": "Transfer",
+        "miscellaneous": "Misc"
+    }
+
+    EXCLUDED_MSGS = {
+        slskmessages.ChangePassword,
+        slskmessages.DistribEmbeddedMessage,
+        slskmessages.DistribSearch,
+        slskmessages.EmbeddedMessage,
+        slskmessages.PeerMessageProgress,
+        slskmessages.SetConnectionStats,
+        slskmessages.SharedFileList,
+        slskmessages.UnknownPeerMessage
+    }
 
     def __init__(self):
 
         self.listeners = set()
         self.log_levels = None
-        self.file_name = "debug_" + str(int(time.time()))
+        self.file_name = "debug_" + str(int(time.time())) + ".log"
+        self.log_files = {}
 
-    @staticmethod
-    def set_msg_prefix(level, msg):
+        self.add_listener(self.log_console)
+        scheduler.add(delay=10, callback=self._close_inactive_log_files, repeat=True)
 
-        if level == "download":
-            prefix = "Download"
-        elif level == "upload":
-            prefix = "Upload"
-        elif level == "search":
-            prefix = "Search"
-        elif level == "chat":
-            prefix = "Chat"
-        elif level == "connection":
-            prefix = "Conn"
-        elif level == "message":
-            prefix = "Msg"
-        elif level == "transfer":
-            prefix = "Transfer"
-        elif level == "miscellaneous":
-            prefix = "Misc"
-        else:
-            prefix = ""
+    def get_log_file(self, folder_path, base_name):
+
+        file_path = os.path.join(folder_path, base_name)
+        log_file = self.log_files.get(file_path)
+
+        if log_file is not None:
+            return log_file
+
+        from pynicotine.utils import encode_path
+
+        folder_path_encoded = encode_path(folder_path)
+        file_path_encoded = encode_path(file_path)
+
+        if not os.path.exists(folder_path_encoded):
+            os.makedirs(folder_path_encoded)
+
+        log_file = self.log_files[file_path] = LogFile(
+            path=file_path, handle=open(encode_path(file_path), 'ab'))  # pylint: disable=consider-using-with
+
+        # Disable file access for outsiders
+        os.chmod(file_path_encoded, 0o600)
+
+        return log_file
+
+    def write_log_file(self, folder_path, base_name, text, timestamp=None):
+
+        try:
+            log_file = self.get_log_file(folder_path, base_name)
+            timestamp_format = config.sections["logging"]["log_timestamp"]
+            text = "%s %s\n" % (time.strftime(timestamp_format, time.localtime(timestamp)), text)
+
+            log_file.handle.write(text.encode('utf-8', 'replace'))
+            log_file.last_active = time.time()
+
+        except Exception as error:
+            # Avoid infinite recursion
+            should_log_file = (folder_path != config.sections["logging"]["debuglogsdir"])
+
+            self.add(_("Couldn't write to log file \"%(filename)s\": %(error)s"), {
+                "filename": os.path.join(folder_path, base_name),
+                "error": error
+            }, should_log_file=should_log_file)
+
+    def close_log_file(self, log_file):
+
+        try:
+            log_file.handle.close()
+
+        except IOError as error:
+            self.add_debug("Failed to close log file \"%(filename)s\": %(error)s", {
+                "filename": log_file.path,
+                "error": error
+            })
+
+        del self.log_files[log_file.path]
+
+    def close_log_files(self):
+        for log_file in self.log_files.copy().values():
+            self.close_log_file(log_file)
+
+    def _close_inactive_log_files(self):
+
+        current_time = time.time()
+
+        for log_file in self.log_files.copy().values():
+            if (current_time - log_file.last_active) >= 10:
+                self.close_log_file(log_file)
+
+    def add_listener(self, callback):
+        self.listeners.add(callback)
+
+    def remove_listener(self, callback):
+        self.listeners.discard(callback)
+
+    def set_msg_prefix(self, level, msg):
+
+        prefix = self.PREFIXES.get(level)
 
         if prefix:
             msg = "[%s] %s" % (prefix, msg)
 
-        return str(msg)
+        return msg
 
-    def add(self, msg, msg_args=None, level=None):
+    def add(self, msg, msg_args=None, title=None, level=None, should_log_file=True):
 
-        if self.log_levels:
-            levels = self.log_levels
-        else:
-            levels = config.sections["logging"].get("debugmodes", "")
+        levels = self.log_levels if self.log_levels else config.sections["logging"].get("debugmodes", [])
 
-        # Important messages are always visible
-        if level and not level.startswith("important") and level not in levels:
+        if level and level not in levels:
             return
 
-        if not msg_args and level == "message":
+        if level == "message":
             # Compile message contents
-            msg = "%s %s" % (msg.__class__, self.contents(msg))
+            msg_class = msg.__class__
+
+            if msg_class in self.EXCLUDED_MSGS:
+                return
+
+            msg_direction = "OUT" if msg_args else "IN"
+            msg = "%s: %s %s" % (msg_direction, msg_class, self.contents(msg))
+            msg_args = None
 
         msg = self.set_msg_prefix(level, msg)
 
         if msg_args:
             msg = msg % msg_args
 
-        timestamp_format = config.sections["logging"].get("log_timestamp", "%Y-%m-%d %H:%M:%S")
-
-        if config.sections["logging"].get("debug_file_output", False):
-            folder = config.sections["logging"]["debuglogsdir"]
-
-            self.write_log(folder, self.file_name, msg, timestamp_format=timestamp_format)
+        if should_log_file and config.sections["logging"].get("debug_file_output", False):
+            self.write_log_file(
+                folder_path=config.sections["logging"]["debuglogsdir"], base_name=self.file_name, text=msg)
 
         for callback in self.listeners:
             try:
-                callback(timestamp_format, msg, level)
+                timestamp_format = config.sections["logging"].get("log_timestamp", "%Y-%m-%d %H:%M:%S")
+                callback(timestamp_format, msg, title, level)
             except Exception as error:
                 try:
                     print("Callback on %s failed: %s %s\n%s" % (callback, level, msg, error))
@@ -111,20 +204,14 @@ class Logger:
     def add_conn(self, msg, msg_args=None):
         self.add(msg, msg_args=msg_args, level="connection")
 
-    def add_msg_contents(self, msg, msg_args=None):
-        self.add(msg, msg_args=msg_args, level="message")
+    def add_msg_contents(self, msg, is_outgoing=False):
+        self.add(msg, msg_args=is_outgoing, level="message")
 
     def add_transfer(self, msg, msg_args=None):
         self.add(msg, msg_args=msg_args, level="transfer")
 
     def add_debug(self, msg, msg_args=None):
         self.add(msg, msg_args=msg_args, level="miscellaneous")
-
-    def add_important_error(self, msg, msg_args=None):
-        self.add(msg, msg_args=msg_args, level="important_error")
-
-    def add_important_info(self, msg, msg_args=None):
-        self.add(msg, msg_args=msg_args, level="important_info")
 
     @staticmethod
     def contents(obj):
@@ -134,63 +221,24 @@ class Logger:
         except AttributeError:
             return vars(obj)
 
-    def add_listener(self, callback):
-        self.listeners.add(callback)
-
-    def remove_listener(self, callback):
-        try:
-            self.listeners.remove(callback)
-        except KeyError:
-            self.add("Failed to remove listener %s, does not exist.", callback)
-
-    def log_transfer(self, msg, msg_args=None):
-
-        if not config.sections["logging"]["transfers"]:
-            return
-
-        folder = config.sections["logging"]["transferslogsdir"]
-        timestamp_format = config.sections["logging"]["log_timestamp"]
-
-        if msg_args:
-            msg = msg % msg_args
-
-        self.write_log(folder, "transfers", msg, timestamp_format=timestamp_format)
-
-    def write_log(self, logsdir, filename, msg, timestamp=None, timestamp_format="%Y-%m-%d %H:%M:%S"):
-
-        try:
-            from pynicotine.utils import clean_file
-            filename = clean_file(filename) + ".log"
-            path = os.path.join(logsdir, filename)
-            oldumask = os.umask(0o077)
-
-            if not os.path.exists(logsdir):
-                os.makedirs(logsdir)
-
-            with open(path, 'ab', 0) as logfile:
-                os.umask(oldumask)
-
-                text = "%s %s\n" % (time.strftime(timestamp_format, time.localtime(timestamp)), msg)
-                logfile.write(text.encode('utf-8', 'replace'))
-
-        except Exception as error:
-            self.add(_("Couldn't write to log file \"%(filename)s\": %(error)s") %
-                     {"filename": filename, "error": error})
-
-
-class Console:
-
-    def __init__(self, logger):
-        logger.add_listener(self.console_logger)
-
     @staticmethod
-    def console_logger(timestamp_format, msg, _level):
+    def log_console(timestamp_format, msg, _title, _level):
         try:
             print("[" + time.strftime(timestamp_format) + "] " + msg)
         except OSError:
             # stdout is gone
             pass
 
+    def log_transfer(self, msg, msg_args=None):
+
+        if not config.sections["logging"]["transfers"]:
+            return
+
+        if msg_args:
+            msg = msg % msg_args
+
+        self.write_log_file(
+            folder_path=config.sections["logging"]["transferslogsdir"], base_name="transfers.log", text=msg)
+
 
 log = Logger()
-Console(log)
