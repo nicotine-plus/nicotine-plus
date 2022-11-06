@@ -40,6 +40,8 @@ class UserList:
         for user in self.buddies:
             self.set_user_last_seen(user, online=False)
 
+        self.save_user_list()
+
         if self.ui_callback:
             self.ui_callback.server_disconnect()
 
@@ -175,11 +177,9 @@ class UserList:
 
         if online:
             self.buddies[user][5] = ""
-            self.save_user_list()
 
         elif not previous_last_seen:
             self.buddies[user][5] = time.strftime("%m/%d/%Y %H:%M:%S")
-            self.save_user_list()
 
         else:
             return
@@ -193,7 +193,6 @@ class UserList:
             return
 
         self.buddies[user][6] = "flag_" + country_code
-        self.save_user_list()
 
         if self.ui_callback:
             self.ui_callback.set_user_country(user, country_code)
