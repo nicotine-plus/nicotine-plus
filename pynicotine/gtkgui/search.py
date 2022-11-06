@@ -1465,10 +1465,10 @@ class Search:
         seperator_pattern = re.compile(r"(?:[|&,;\s])+(?<![!]\s)")
 
         if filter_country:
-            filter_country = seperator_pattern.split(filter_country)
+            filter_country = seperator_pattern.split(filter_country.upper())
 
         if filter_file_type:
-            filter_file_type = seperator_pattern.split(filter_file_type)
+            filter_file_type = seperator_pattern.split(filter_file_type.lower())
 
         filters = {
             "filterin": filter_in,
