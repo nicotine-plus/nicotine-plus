@@ -481,6 +481,7 @@ class NicotineCore:
 
         self.pluginhandler.server_disconnect_notification(msg.manual_disconnect if msg else True)
 
+        self.shares.server_disconnect()
         self.transfers.server_disconnect()
         self.search.server_disconnect()
         self.userlist.server_disconnect()

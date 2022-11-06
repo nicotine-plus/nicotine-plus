@@ -63,6 +63,7 @@ class PrivateChats:
 
     def server_disconnect(self):
 
+        self.private_message_queue.clear()
         self.away_message_users.clear()
 
         if self.ui_callback:
