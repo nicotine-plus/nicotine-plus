@@ -830,7 +830,7 @@ class Search:
         return operator.ge, condition
 
     def check_digit(self, result_filter, value, file_size=False):
-        """ Check if all conditions in result_filter match value """
+        """ Check if any conditions in result_filter match value """
 
         allowed = blocked = False
 
@@ -838,30 +838,36 @@ class Search:
             operation, digit = self.split_operator(condition)
 
             if file_size:
-                digit, factor = factorize(digit)  # File Size
-            else:
-                try:
-                    factor = 1
-                    digit = int(digit)  # Bitrate (or raw size, or seconds)
+                digit, factor = factorize(digit)
 
+                if digit is None:
+                    # Invalid Size unit
+                    continue
+
+                # Exact match unlikely, approximate to within +/- 0.1 MiB (or 1 MiB if over 100 MiB)
+                adjust = factor / 8 if factor > 1024 and digit < 104857600 else factor  # TODO: GiB
+
+            else:
+                adjust = 0
+
+                try:
+                    # Bitrate in Kb/s or Duration in seconds
+                    digit = int(digit)
                 except ValueError:
-                    if ":" not in digit:  # Duration
+                    if ":" not in digit:
+                        # Invalid syntax
                         continue
 
                     try:
-                        # Convert string from HH:MM:SS or MM:SS into Seconds as integer
+                        # Duration: Convert string from HH:MM:SS or MM:SS into Seconds as integer
                         digit = sum(x * int(t) for x, t in zip([1, 60, 3600], reversed(digit.split(":"))))
                     except ValueError:
+                        # Invalid Duration unit
                         continue
 
-            if digit is None:
-                continue
-
-            if factor > 1:
-                # Exact match is unlikely, so approximate within +/- 0.1 MiB or 1 MiB if over 100 MiB
-                adjust = factor / 8 if factor > 1024 and digit < 104857600 else factor  # TODO: GiB
-            else:
-                adjust = 0
+                    if operation is operator.gt:
+                        # Account for milliseconds in linear temporal value
+                        adjust = -1
 
             if operation in (operator.eq, operator.ne):
                 if (digit - adjust) <= value <= (digit + adjust):
@@ -870,7 +876,7 @@ class Search:
                 allowed = bool(operation is operator.ne)
                 continue
 
-            if operation(value, digit) and not blocked:
+            if operation(value, digit + adjust) and not blocked:
                 allowed = True
                 continue
 
