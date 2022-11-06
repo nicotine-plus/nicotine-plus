@@ -1232,7 +1232,7 @@ class NicotineFrame(Window):
                 focus_widget = self.userbrowse_entry
 
         elif page == self.userlist_page:
-            self.userlist.update()
+            self.userlist.update_visible()
 
             if self.userlist.container.get_visible():
                 focus_widget = self.userlist.list_view

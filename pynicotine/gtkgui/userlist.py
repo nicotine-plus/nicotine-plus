@@ -116,7 +116,7 @@ class UserList:
     def save_columns(self):
         self.list_view.save_columns()
 
-    def update(self):
+    def update_visible(self):
 
         if config.sections["ui"]["buddylistinchatrooms"] in ("always", "chatrooms"):
             return
@@ -214,30 +214,7 @@ class UserList:
 
     def add_user(self, user, row):
 
-        try:
-            note = str(row[1])
-        except IndexError:
-            note = ""
-
-        try:
-            notify = bool(row[2])
-        except IndexError:
-            notify = False
-
-        try:
-            prioritized = bool(row[3])
-        except IndexError:
-            prioritized = False
-
-        try:
-            trusted = bool(row[4])
-        except IndexError:
-            trusted = False
-
-        try:
-            last_seen = str(row[5])
-        except IndexError:
-            last_seen = ""
+        _user, note, notify, prioritized, trusted, last_seen, country = row
 
         try:
             time_from_epoch = time.mktime(time.strptime(last_seen, "%m/%d/%Y %H:%M:%S"))
@@ -245,17 +222,22 @@ class UserList:
             last_seen = _("Never seen")
             time_from_epoch = 0
 
-        try:
-            country = str(row[6])
-        except IndexError:
-            country = ""
-
         self.user_iterators[user] = self.list_view.add_row([
-            get_status_icon_name(UserStatus.OFFLINE), get_flag_icon_name(country), user, "", "", trusted, notify,
-            prioritized, last_seen, note, 0, 0, 0, time_from_epoch, country]
-        )
+            get_status_icon_name(UserStatus.OFFLINE),
+            get_flag_icon_name(country),
+            str(user),
+            "", "",
+            bool(trusted),
+            bool(notify),
+            bool(prioritized),
+            str(last_seen),
+            str(note),
+            0, 0, 0,
+            time_from_epoch,
+            str(country)
+        ])
 
-        self.update()
+        self.update_visible()
 
         if config.sections["words"]["buddies"]:
             self.frame.update_completions()
@@ -266,7 +248,7 @@ class UserList:
             self.list_view.remove_row(self.user_iterators[user])
             del self.user_iterators[user]
 
-        self.update()
+        self.update_visible()
 
         if config.sections["words"]["buddies"]:
             self.frame.update_completions()

@@ -46,22 +46,58 @@ class UserList:
     def load_users(self):
 
         for row in config.sections["server"]["userlist"]:
+            if not row:
+                continue
+
             user = row[0]
 
-            if isinstance(user, str):
-                self.add_user(user, row)
+            if not isinstance(user, str) or not isinstance(row, list):
+                continue
 
-    def add_user(self, user, row=None):
+            if user in self.buddies:
+                continue
+
+            num_items = len(row)
+
+            if num_items <= 1:
+                note = ""
+                row.append(note)
+
+            if num_items <= 2:
+                trusted = False
+                row.append(trusted)
+
+            if num_items <= 3:
+                notify = False
+                row.append(notify)
+
+            if num_items <= 4:
+                prioritized = False
+                row.append(prioritized)
+
+            if num_items <= 5:
+                last_seen = "Never seen"
+                row.append(last_seen)
+
+            if num_items <= 6:
+                country = ""
+                row.append(country)
+
+            self.buddies[user] = row
+
+            if self.ui_callback:
+                self.ui_callback.add_user(user, row)
+
+    def add_user(self, user):
 
         if user in self.buddies:
             return
 
-        new_user = (row is None)
+        note = country = ""
+        trusted = notify = prioritized = False
+        last_seen = "Never seen"
 
-        if not row or not isinstance(row, list):
-            row = [user, "", False, False, False, "Never seen", ""]
-
-        self.buddies[user] = row
+        self.buddies[user] = row = [user, note, trusted, notify, prioritized, last_seen, country]
         self.save_user_list()
 
         if self.ui_callback:
@@ -74,8 +110,7 @@ class UserList:
         self.core.watch_user(user, force_update=True)
 
         # Request user country
-        if new_user:
-            self.set_user_country(user, self.core.get_user_country(user))
+        self.set_user_country(user, self.core.get_user_country(user))
 
     def remove_user(self, user):
 
@@ -157,7 +192,7 @@ class UserList:
         if user not in self.buddies:
             return
 
-        self.buddies[user][6] = country_code
+        self.buddies[user][6] = "flag_" + country_code
         self.save_user_list()
 
         if self.ui_callback:
