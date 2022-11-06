@@ -111,7 +111,7 @@ class UserList:
         # Request user status, speed and number of shared files
         self.core.watch_user(user, force_update=True)
 
-        # Request user country
+        # Set user country if present
         self.set_user_country(user, self.core.get_user_country(user))
 
     def remove_user(self, user):
@@ -188,6 +188,9 @@ class UserList:
             self.ui_callback.set_user_last_seen(user, online)
 
     def set_user_country(self, user, country_code):
+
+        if not country_code:
+            return
 
         if user not in self.buddies:
             return
