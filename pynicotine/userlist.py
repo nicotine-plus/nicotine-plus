@@ -200,6 +200,7 @@ class UserList:
 
     def save_user_list(self):
         config.sections["server"]["userlist"] = list(self.buddies.values())
+        config.write_configuration()
 
     def get_user_status(self, msg):
         """ Server code: 7 """
