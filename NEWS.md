@@ -1,5 +1,21 @@
 # Release Notes
 
+## Version 3.2.7 (Development Version 1)
+
+### Corrections
+
+ * Fixed a crash when selecting a user picture
+ * Fixed a crash when removing private chat logs
+ * Fixed an issue where the main window could become unresponsive when showing it from the tray icon
+ * Windows: Fixed a possible crash when showing notification bubbles
+
+### Issues closed on GitHub
+
+ * Notification string too long (ValueError crash) on Windows ([#2233](https://github.com/nicotine-plus/nicotine-plus/issues/2233))
+ * Private chat, Delete chat log... >> Value: 'PrivateChats' object has no attribute 'history' ([#2247](https://github.com/nicotine-plus/nicotine-plus/issues/2247))
+ * Flatpak: uploading a profile picture crashes the application ([#2250](https://github.com/nicotine-plus/nicotine-plus/issues/2250))
+
+
 ## Version 3.2.6 (October 21, 2022)
 
 ### Changes
