@@ -144,6 +144,7 @@ class NicotineCore:
 
         self.transfers.init_transfers()
         self.privatechat.load_users()
+        self.userlist.load_users()
 
         self.pluginhandler = PluginHandler(self)
 

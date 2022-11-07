@@ -29,7 +29,6 @@ from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine import slskmessages
-from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
@@ -392,9 +391,7 @@ class UserPopupMenu(PopupMenu):
         add_to_list = _("_Add to Buddy List")
 
         if add_to_list in self.actions:
-            self.actions[add_to_list].set_state(
-                GLib.Variant("b", self.user in (i[0] for i in config.sections["server"]["userlist"]))
-            )
+            self.actions[add_to_list].set_state(GLib.Variant("b", self.user in self.core.userlist.buddies))
 
         self.actions[_("Ban User")].set_state(GLib.Variant("b", self.core.network_filter.is_user_banned(self.user)))
         self.actions[_("Ignore User")].set_state(

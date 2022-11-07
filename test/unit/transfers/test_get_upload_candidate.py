@@ -39,6 +39,7 @@ class GetUploadCandidateTest(unittest.TestCase):
 
         self.transfers = Transfers(Mock(), config, deque(), Mock())
         self.transfers.privileged_users = {"puser1", "puser2"}
+        self.transfers.core.userlist.buddies = {}
 
     def add_transfers(self, users, status):
 

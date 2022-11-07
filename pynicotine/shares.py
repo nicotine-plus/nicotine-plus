@@ -668,18 +668,18 @@ class Shares:
 
         if not realfilename.startswith("__INTERNAL_ERROR__"):
             if bshared_files is not None:
-                for row in config.sections["server"]["userlist"]:
-                    if row[0] != user:
-                        continue
+                user_row = self.core.userlist.buddies.get(user)
 
+                if user_row:
                     # Check if buddy is trusted
-                    if config.sections["transfers"]["buddysharestrustedonly"] and not row[4]:
-                        break
+                    if config.sections["transfers"]["buddysharestrustedonly"] and not user_row[4]:
+                        pass
 
-                    for fileinfo in bshared_files.get(str(folder), []):
-                        if file == fileinfo[0]:
-                            file_is_shared = True
-                            break
+                    else:
+                        for fileinfo in bshared_files.get(str(folder), []):
+                            if file == fileinfo[0]:
+                                file_is_shared = True
+                                break
 
             if not file_is_shared and shared_files is not None:
                 for fileinfo in shared_files.get(str(folder), []):
