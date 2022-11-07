@@ -806,7 +806,7 @@ class UserBrowse:
             message=_('Enter the name of the user you want to upload to:'),
             callback=self.on_upload_directory_to_response,
             callback_data=recurse,
-            droplist=self.core.userlist.buddies
+            droplist=sorted(self.core.userlist.buddies)
         ).show()
 
     def on_upload_directory_recursive_to(self, *_args):
@@ -1029,7 +1029,7 @@ class UserBrowse:
             title=_('Upload File(s) To User'),
             message=_('Enter the name of the user you want to upload to:'),
             callback=self.on_upload_files_response,
-            droplist=self.core.userlist.buddies
+            droplist=sorted(self.core.userlist.buddies)
         ).show()
 
     def on_play_files(self, *_args):
