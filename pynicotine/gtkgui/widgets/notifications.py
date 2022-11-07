@@ -138,7 +138,7 @@ class Notifications:
             self.application.send_notification(None, notification_popup)
 
             if config.sections["notifications"]["notification_popup_sound"]:
-                Gdk.beep()
+                Gdk.Display.get_default().beep()
 
         except Exception as error:
             log.add(_("Unable to show notification: %s"), str(error))
