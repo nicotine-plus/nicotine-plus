@@ -82,7 +82,7 @@ class Interests:
 
         self.recommendations_list_view = TreeView(
             frame, parent=self.recommendations_list_container,
-            search_column=1, activate_row_callback=self.on_r_row_activated,
+            activate_row_callback=self.on_r_row_activated,
             columns=[
                 # Visible columns
                 {"column_id": "rating", "column_type": "number", "title": _("Rating"), "width": 0,
@@ -96,7 +96,7 @@ class Interests:
 
         self.similar_users_list_view = TreeView(
             frame, parent=self.similar_users_list_container,
-            search_column=1, activate_row_callback=self.on_ru_row_activated, tooltip_callback=self.on_tooltip,
+            activate_row_callback=self.on_ru_row_activated, tooltip_callback=self.on_tooltip,
             columns=[
                 # Visible columns
                 {"column_id": "status", "column_type": "icon", "title": _("Status"), "width": 25,

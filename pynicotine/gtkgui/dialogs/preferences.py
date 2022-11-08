@@ -2120,7 +2120,7 @@ class PluginsFrame:
         self.selected_plugin = None
         self.descr_textview = TextView(self.PluginDescription)
         self.plugin_list_view = TreeView(
-            self.frame, parent=self.PluginTreeView, search_column=1, always_select=True,
+            self.frame, parent=self.PluginTreeView, always_select=True,
             select_row_callback=self.on_select_plugin,
             columns=[
                 # Visible columns

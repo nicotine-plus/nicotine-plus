@@ -19,7 +19,6 @@
                 <property name="has-tooltip">True</property>
                 <property name="enable-tree-lines">True</property>
                 <property name="rubber-banding">True</property>
-                <property name="search-column">2</property>
                 <signal name="query-tooltip" handler="on_tooltip"/>
                 <signal name="row-activated" handler="on_row_activated"/>
                 <child internal-child="selection">

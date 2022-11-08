@@ -27,6 +27,7 @@ from collections import OrderedDict
 
 from gi.repository import Gio
 from gi.repository import GLib
+from gi.repository import GObject
 from gi.repository import Gtk
 
 from pynicotine.config import config
@@ -42,11 +43,11 @@ from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 
 class TreeView:
 
-    def __init__(self, frame, parent, columns, search_column=0, multi_select=False, always_select=False,
+    def __init__(self, frame, parent, columns, multi_select=False, always_select=False,
                  name=None, activate_row_callback=None, select_row_callback=None, tooltip_callback=None):
 
         self.frame = frame
-        self.widget = Gtk.TreeView(search_column=search_column, visible=True)
+        self.widget = Gtk.TreeView(visible=True)
         self.widget_name = name
         self.columns = columns
         self.column_numbers = None
@@ -496,17 +497,27 @@ class TreeView:
         _model, iterator = selection.get_selected()
         callback(self, iterator)
 
-    def on_search_match(self, model, column, search_term, iterator):
+    def on_search_match(self, model, _column, search_term, iterator):
 
         if not search_term:
             return True
 
-        if search_term.lower() in model.get_value(iterator, column).lower():
-            if GTK_API_VERSION >= 4:
-                # Workaround: Disable scrolling animation, since it doesn't work in GTK 4
-                self.widget.queue_allocate()
+        for i, _column in enumerate(self.widget.get_columns()):
+            if model.get_column_type(i) != GObject.TYPE_STRING:
+                continue
 
-            return False
+            column_value = model.get_value(iterator, i).lower()
+
+            if column_value.startswith("nplus-"):
+                # Ignore icon name columns
+                continue
+
+            if search_term.lower() in column_value:
+                if GTK_API_VERSION >= 4:
+                    # Workaround: Disable scrolling animation, since it doesn't work in GTK 4
+                    self.widget.queue_allocate()
+
+                return False
 
         return True
 
@@ -718,17 +729,27 @@ def initialise_columns(frame, treeview_name, treeview, *args):
     return cols
 
 
-def on_search_match(model, column, search_term, iterator, treeview):
+def on_search_match(model, _column, search_term, iterator, treeview):
 
     if not search_term:
         return True
 
-    if search_term.lower() in model.get_value(iterator, column).lower():
-        if GTK_API_VERSION >= 4:
-            # Workaround: Disable scrolling animation, since it doesn't work in GTK 4
-            treeview.queue_allocate()
+    for i, _column in enumerate(treeview.get_columns()):
+        if model.get_column_type(i) != GObject.TYPE_STRING:
+            continue
 
-        return False
+        column_value = model.get_value(iterator, i).lower()
+
+        if column_value.startswith("nplus-"):
+            # Ignore icon name columns
+            continue
+
+        if search_term.lower() in column_value:
+            if GTK_API_VERSION >= 4:
+                # Workaround: Disable scrolling animation, since it doesn't work in GTK 4
+                treeview.queue_allocate()
+
+            return False
 
     return True
 

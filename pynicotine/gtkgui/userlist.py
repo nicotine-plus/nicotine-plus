@@ -58,7 +58,7 @@ class UserList:
         self.user_iterators = {}
         self.list_view = TreeView(
             frame, parent=self.list_container, name="buddy_list",
-            search_column=2, activate_row_callback=self.on_row_activated, tooltip_callback=self.on_tooltip,
+            activate_row_callback=self.on_row_activated, tooltip_callback=self.on_tooltip,
             columns=[
                 # Visible columns
                 {"column_id": "status", "column_type": "icon", "title": _("Status"), "width": 25,
