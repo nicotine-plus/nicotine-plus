@@ -66,7 +66,7 @@ class UserList:
                 {"column_id": "country", "column_type": "icon", "title": _("Country"), "width": 25,
                  "sort_column": 14, "hide_header": True},
                 {"column_id": "user", "column_type": "text", "title": _("User"), "width": 250,
-                 "sort_column": 2, "default_sort_column": "ascending"},
+                 "sort_column": 2, "default_sort_column": "ascending", "iterator_key": True},
                 {"column_id": "speed", "column_type": "number", "title": _("Speed"), "width": 150,
                  "sort_column": 11},
                 {"column_id": "files", "column_type": "number", "title": _("Files"), "width": 150,
