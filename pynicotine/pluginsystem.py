@@ -471,13 +471,13 @@ class PluginHandler:
             for command, data in plugin.commands.items():
                 disabled_interfaces = data.get("disable", [])
 
-                if not "chatroom" in disabled_interfaces:
+                if "chatroom" not in disabled_interfaces:
                     self.chatroom_commands["/" + command] = data
 
-                if not "private_chat" in disabled_interfaces:
+                if "private_chat" not in disabled_interfaces:
                     self.private_chat_commands["/" + command] = data
 
-                if not "cli" in disabled_interfaces:
+                if "cli" not in disabled_interfaces:
                     self.cli_commands["/" + command] = data
 
             for command, _func in plugin.__publiccommands__:
