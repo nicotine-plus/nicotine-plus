@@ -20,7 +20,7 @@
 import socket
 import threading
 
-from pynicotine.pluginsystem import BasePlugin, ResponseThrottle, returncode
+from pynicotine.pluginsystem import BasePlugin, ResponseThrottle
 from pynicotine.slskmessages import GetPeerAddress
 
 
@@ -117,5 +117,3 @@ class Plugin(BasePlugin):
             self.resolve(user, False)
         else:
             self.log("Provide a user name as parameter.")
-
-        return returncode['zap']

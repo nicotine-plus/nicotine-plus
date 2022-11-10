@@ -695,6 +695,8 @@ class PluginHandler:
 
     def _trigger_command(self, command, args, user=None, room=None):
 
+        command_found = False
+
         for module, plugin in self.enabled_plugins.items():
             if plugin is None:
                 continue
@@ -714,38 +716,26 @@ class PluginHandler:
                 commands = plugin.cli_commands
                 legacy_commands = []
 
-            return_value = None
-
             try:
                 for trigger, _data in commands.items():
                     break
 
-                if return_value is None:
+                if not command_found:
                     for trigger, func in legacy_commands:
                         if trigger == command:
-                            return_value = getattr(plugin, func.__name__)(self.command_source[1], args)
+                            getattr(plugin, func.__name__)(self.command_source[1], args)
+                            command_found = True
                             break
 
             except Exception:
                 self.show_plugin_error(module, sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
                 continue
 
-            if return_value is None:
-                # Nothing changed, continue to the next plugin
-                continue
-
-            if return_value == returncode['zap']:
-                self.command_source = None
-                return True
-
-            if return_value == returncode['pass']:
-                continue
-
-            log.add_debug("Plugin %(module)s returned something weird, '%(value)s', ignoring",
-                          {'module': module, 'value': str(return_value)})
+            if command_found:
+                break
 
         self.command_source = None
-        return False
+        return command_found
 
     def trigger_event(self, function_name, args):
         """ Triggers an event for the plugins. Since events and notifications
