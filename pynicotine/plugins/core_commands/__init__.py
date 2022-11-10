@@ -29,10 +29,11 @@ class Plugin(BasePlugin):
             "close": {
                 "description": "Close private chat",
                 "aliases": ["c"],
-                "disable": ["chatroom", "cli"],
+                "disable": ["cli"],
+                "group": "Private Chat",
                 "callback": self.close_command,
-                "usage": ["[user]"],
-                "group": "Private Chat"
+                "usage_chatroom": ["<user>"],
+                "usage_private_chat": ["[user]"]
             },
             "sample": {
                 "description": "Sample command description",
@@ -52,11 +53,10 @@ class Plugin(BasePlugin):
 
         if user not in self.core.privatechat.users:
             self.echo_message("Not messaging with user %s" % user)
-            return False
+            return
 
         self.echo_message("Closing private chat of user %s" % user)
         self.core.privatechat.remove_user(user)
-        return True
 
     def sample_command(self, _args, **_unused):
         self.echo_message("Hello")
