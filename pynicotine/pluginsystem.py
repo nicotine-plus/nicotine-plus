@@ -44,6 +44,9 @@ class BasePlugin:
     # Attributes that can be modified, see examples in the pynicotine/plugins/ folder
     __publiccommands__ = []
     __privatecommands__ = []
+    chatroom_commands = {}
+    private_chat_commands = {}
+    cli_commands = {}
     settings = {}
     metasettings = {}
 
@@ -208,9 +211,12 @@ class BasePlugin:
             # Function was not called from a command
             return
 
-        public_command, source = self.parent.command_source  # pylint: disable=no-member
-        function = self.send_public if public_command else self.send_private
+        command_type, source = self.parent.command_source  # pylint: disable=no-member
 
+        if command_type == "cli":
+            return
+
+        function = self.send_public if command_type == "chatroom" else self.send_private
         function(source, text)
 
     def echo_message(self, text, message_type="local"):
@@ -221,9 +227,13 @@ class BasePlugin:
             # Function was not called from a command
             return
 
-        public_command, source = self.parent.command_source  # pylint: disable=no-member
-        function = self.echo_public if public_command else self.echo_private
+        command_type, source = self.parent.command_source  # pylint: disable=no-member
 
+        if command_type == "cli":
+            print(text)
+            return
+
+        function = self.echo_public if command_type == "chatroom" else self.echo_private
         function(source, text, message_type)
 
     # Obsolete functions
@@ -339,6 +349,10 @@ class PluginHandler:
         self.enabled_plugins = {}
         self.command_source = None
 
+        self.chatroom_commands = {}
+        self.private_chat_commands = {}
+        self.cli_commands = {}
+
         # Load system-wide plugins
         prefix = os.path.dirname(os.path.realpath(__file__))
         self.plugin_folders.append(os.path.join(prefix, "plugins"))
@@ -368,10 +382,10 @@ class PluginHandler:
         if not config.sections["words"]["commands"]:
             return
 
-        if plugin.__publiccommands__:
+        if plugin.chatroom_commands or plugin.__publiccommands__:
             self.core.chatrooms.update_completions()
 
-        if plugin.__privatecommands__:
+        if plugin.private_chat_commands or plugin.__privatecommands__:
             self.core.privatechat.update_completions()
 
     def get_plugin_path(self, plugin_name):
@@ -458,6 +472,15 @@ class PluginHandler:
 
             plugin.init()
 
+            for command, data in plugin.chatroom_commands.items():
+                self.chatroom_commands["/" + command] = data
+
+            for command, data in plugin.private_chat_commands.items():
+                self.private_chat_commands["/" + command] = data
+
+            for command, data in plugin.cli_commands.items():
+                self.cli_commands["/" + command] = data
+
             for trigger, _func in plugin.__publiccommands__:
                 self.core.chatrooms.CMDS.add('/' + trigger + ' ')
 
@@ -514,6 +537,15 @@ class PluginHandler:
 
         try:
             plugin.disable()
+
+            for command in plugin.chatroom_commands:
+                self.chatroom_commands.pop('/' + command, None)
+
+            for command in plugin.private_chat_commands:
+                self.private_chat_commands.pop('/' + command, None)
+
+            for command in plugin.cli_commands:
+                self.cli_commands.pop('/' + command, None)
 
             for trigger, _func in plugin.__publiccommands__:
                 self.core.chatrooms.CMDS.remove('/' + trigger + ' ')
@@ -652,30 +684,47 @@ class PluginHandler:
         except KeyError:
             log.add_debug("No stored settings found for %s", plugin.human_name)
 
-    def trigger_public_command_event(self, room, command, args):
-        return self._trigger_command(command, room, args, public_command=True)
+    def trigger_chatroom_command_event(self, room, command, args):
+        return self._trigger_command(command, args, room=room)
 
-    def trigger_private_command_event(self, user, command, args):
-        return self._trigger_command(command, user, args, public_command=False)
+    def trigger_private_chat_command_event(self, user, command, args):
+        return self._trigger_command(command, args, user=user)
 
-    def trigger_cli_command_event(self, _command, _args):
-        return None
+    def trigger_cli_command_event(self, command, args):
+        return self._trigger_command(command, args)
 
-    def _trigger_command(self, command, source, args, public_command):
-
-        self.command_source = (public_command, source)
+    def _trigger_command(self, command, args, user=None, room=None):
 
         for module, plugin in self.enabled_plugins.items():
             if plugin is None:
                 continue
 
+            if room is not None:
+                self.command_source = ("chatroom", room)
+                commands = plugin.chatroom_commands
+                legacy_commands = plugin.__publiccommands__
+
+            elif user is not None:
+                self.command_source = ("private_chat", user)
+                commands = plugin.private_chat_commands
+                legacy_commands = plugin.__privatecommands__
+
+            else:
+                self.command_source = ("cli", None)
+                commands = plugin.cli_commands
+                legacy_commands = []
+
             return_value = None
-            commands = plugin.__publiccommands__ if public_command else plugin.__privatecommands__
 
             try:
-                for trigger, func in commands:
-                    if trigger == command:
-                        return_value = getattr(plugin, func.__name__)(source, args)
+                for trigger, _data in commands.items():
+                    break
+
+                if return_value is None:
+                    for trigger, func in legacy_commands:
+                        if trigger == command:
+                            return_value = getattr(plugin, func.__name__)(self.command_source[1], args)
+                            break
 
             except Exception:
                 self.show_plugin_error(module, sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])

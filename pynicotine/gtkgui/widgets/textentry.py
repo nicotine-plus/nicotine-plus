@@ -253,10 +253,10 @@ class ChatEntry:
                 self.core.pluginhandler.toggle_plugin(args)
 
         elif self.is_chatroom:
-            self.core.pluginhandler.trigger_public_command_event(self.entity, cmd[1:], args)
+            self.core.pluginhandler.trigger_chatroom_command_event(self.entity, cmd[1:], args)
 
         elif not self.is_chatroom:
-            self.core.pluginhandler.trigger_private_command_event(self.entity, cmd[1:], args)
+            self.core.pluginhandler.trigger_private_chat_command_event(self.entity, cmd[1:], args)
 
     def on_tab_complete_accelerator(self, widget, state, backwards=False):
         """ Tab and Shift+Tab: tab complete chat """
