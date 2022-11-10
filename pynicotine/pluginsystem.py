@@ -773,7 +773,8 @@ class PluginHandler:
 
             except Exception:
                 self.show_plugin_error(module, sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
-                continue
+                plugin = None
+                break
 
             if command_found:
                 plugin = None
