@@ -22,5 +22,17 @@ from pynicotine.pluginsystem import BasePlugin
 class Plugin(BasePlugin):
 
     def __init__(self, *args, **kwargs):
+
         super().__init__(*args, **kwargs)
-        self.chatroom_commands = self.private_chat_commands = self.cli_commands = {}
+
+        self.chatroom_commands = self.private_chat_commands = self.cli_commands = {
+            "sample": {
+                "callback": self.sample_command,
+                "description": "Sample command description",
+                "usage": ["<choice1|choice2>", "<something..>"],
+                "aliases": ["demo"]
+            }
+        }
+
+    def sample_command(self, *_unused):
+        self.echo_message("Hello")

@@ -695,6 +695,7 @@ class PluginHandler:
 
     def _trigger_command(self, command, args, user=None, room=None):
 
+        plugin = None
         command_found = False
 
         for module, plugin in self.enabled_plugins.items():
@@ -717,8 +718,49 @@ class PluginHandler:
                 legacy_commands = []
 
             try:
-                for trigger, _data in commands.items():
-                    break
+                for trigger, data in commands.items():
+                    aliases = data.get("aliases", [])
+
+                    if command != trigger and command not in aliases:
+                        continue
+
+                    command_found = True
+                    rejection_message = None
+                    usage = data.get("usage", [])
+                    args_split = args.split()
+                    num_args = len(args_split)
+                    num_required_args = 0
+
+                    for i, arg in enumerate(usage):
+                        if arg.startswith("<"):
+                            num_required_args += 1
+
+                        if num_args < num_required_args:
+                            rejection_message = "Missing argument"
+                            break
+
+                        if '|' not in arg:
+                            continue
+
+                        choices = arg[1:-1].split('|')
+
+                        if args_split[i] not in choices:
+                            rejection_message = "Invalid argument, possible choices: %s" % " | ".join(choices)
+                            break
+
+                    if rejection_message:
+                        plugin.echo_message(rejection_message)
+                        plugin.echo_message("Usage: %s %s" % ('/' + command, " ".join(usage)))
+                        break
+
+                    if room is not None:
+                        getattr(plugin, data.get("callback").__name__)(args, room=room)
+
+                    elif user is not None:
+                        getattr(plugin, data.get("callback").__name__)(args, user=user)
+
+                    else:
+                        getattr(plugin, data.get("callback").__name__)(args)
 
                 if not command_found:
                     for trigger, func in legacy_commands:
@@ -732,7 +774,11 @@ class PluginHandler:
                 continue
 
             if command_found:
+                plugin = None
                 break
+
+        if plugin:
+            plugin.echo_message("Unknown command: %s. Type /help for a list of commands." % ("/" + command))
 
         self.command_source = None
         return command_found
