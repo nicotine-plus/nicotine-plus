@@ -468,7 +468,9 @@ class PluginHandler:
 
             self.enabled_plugins[plugin_name] = plugin
             plugin.loaded_notification()
-            log.add(_("Loaded plugin %s"), plugin.human_name)
+
+            if plugin_name != "core_commands":
+                log.add(_("Loaded plugin %s"), plugin.human_name)
 
         except Exception:
             from traceback import format_exc
@@ -487,6 +489,9 @@ class PluginHandler:
                 for entry in os.scandir(encode_path(folder_path)):
                     file_path = entry.name.decode("utf-8", "replace")
 
+                    if file_path == "core_commands":
+                        continue
+
                     if entry.is_dir() and file_path not in plugin_list:
                         plugin_list.append(file_path)
 
@@ -497,6 +502,9 @@ class PluginHandler:
         return plugin_list
 
     def disable_plugin(self, plugin_name):
+
+        if plugin_name == "core_commands":
+            return False
 
         if plugin_name not in self.enabled_plugins:
             return False
@@ -558,7 +566,7 @@ class PluginHandler:
         plugin_info = {}
         plugin_path = self.get_plugin_path(plugin_name)
 
-        if plugin_path is None:
+        if plugin_path is None or plugin_name == "core_commands":
             return plugin_info
 
         info_path = os.path.join(plugin_path, 'PLUGININFO')
@@ -611,6 +619,8 @@ class PluginHandler:
 
         for plugin in to_enable:
             self.enable_plugin(plugin)
+
+        self.enable_plugin("core_commands")
 
     def plugin_settings(self, plugin_name, plugin):
 
