@@ -682,13 +682,13 @@ class PluginHandler:
             log.add_debug("No stored settings found for %s", plugin.human_name)
 
     def trigger_chatroom_command_event(self, room, command, args):
-        return self._trigger_command(command, args, room=room)
+        self._trigger_command(command, args, room=room)
 
     def trigger_private_chat_command_event(self, user, command, args):
-        return self._trigger_command(command, args, user=user)
+        self._trigger_command(command, args, user=user)
 
     def trigger_cli_command_event(self, command, args):
-        return self._trigger_command(command, args)
+        self._trigger_command(command, args)
 
     def _trigger_command(self, command, args, user=None, room=None):
 
@@ -784,7 +784,6 @@ class PluginHandler:
             plugin.echo_message("Unknown command: %s. Type /help for a list of commands." % ("/" + command))
 
         self.command_source = None
-        return command_found
 
     def trigger_event(self, function_name, args):
         """ Triggers an event for the plugins. Since events and notifications
