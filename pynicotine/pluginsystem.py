@@ -648,6 +648,9 @@ class PluginHandler:
     def trigger_private_command_event(self, user, command, args):
         return self._trigger_command(command, user, args, public_command=False)
 
+    def trigger_cli_command_event(self, _command, _args):
+        return None
+
     def _trigger_command(self, command, source, args, public_command):
 
         self.command_source = (public_command, source)

@@ -34,6 +34,7 @@ import signal
 import sys
 
 from collections import deque
+from threading import Thread
 
 from pynicotine import slskmessages
 from pynicotine import slskproto
@@ -105,6 +106,28 @@ class NicotineCore:
         self.watched_users = set()
         self.ip_requested = set()
 
+    def process_cli_input(self):
+
+        while not self.shutdown:
+            try:
+                user_input = input()
+
+            except EOFError:
+                return
+
+            if not user_input:
+                continue
+
+            command, *args = user_input.split(maxsplit=1)
+
+            if command.startswith("/"):
+                command = command[1:]
+
+            if args:
+                (args,) = args
+
+            self.network_callback([slskmessages.CLICommand(command, args)])
+
     """ Actions """
 
     def start(self, ui_callback, network_callback):
@@ -147,6 +170,8 @@ class NicotineCore:
         self.userlist.load_users()
 
         self.pluginhandler = PluginHandler(self)
+
+        Thread(target=self.process_cli_input, name="CLIInputProcessor", daemon=True).start()
 
         # Callback handlers for messages
         self.events = {
@@ -263,6 +288,7 @@ class NicotineCore:
             slskmessages.PrivateRoomRemoveOperator: self.chatrooms.private_room_remove_operator,
             slskmessages.PublicRoomMessage: self.chatrooms.public_room_message,
             slskmessages.ShowConnectionErrorMessage: self.show_connection_error_message,
+            slskmessages.CLICommand: self.cli_command,
             slskmessages.UnknownPeerMessage: self.dummy_message
         }
 
@@ -453,6 +479,9 @@ class NicotineCore:
     def dummy_message(msg):
         # Ignore received message
         pass
+
+    def cli_command(self, msg):
+        self.pluginhandler.trigger_cli_command_event(msg.command, msg.args or "")
 
     def show_connection_error_message(self, msg):
         """ Request UI to show error messages related to connectivity """
