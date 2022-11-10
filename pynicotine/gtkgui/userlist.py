@@ -55,7 +55,6 @@ class UserList:
         self.core = core
 
         # Columns
-        self.user_iterators = {}
         self.list_view = TreeView(
             frame, parent=self.list_container, name="buddy_list",
             activate_row_callback=self.on_row_activated, tooltip_callback=self.on_tooltip,
@@ -121,7 +120,7 @@ class UserList:
         if config.sections["ui"]["buddylistinchatrooms"] in ("always", "chatrooms"):
             return
 
-        self.frame.userlist_content.set_visible(self.user_iterators)
+        self.frame.userlist_content.set_visible(self.list_view.iterators)
 
     def update_visuals(self):
         for widget in self.__dict__.values():
@@ -162,7 +161,7 @@ class UserList:
     def get_user_status(self, msg):
 
         user = msg.user
-        iterator = self.user_iterators.get(user)
+        iterator = self.list_view.iterators.get(user)
 
         if iterator is None:
             return
@@ -193,7 +192,7 @@ class UserList:
     def get_user_stats(self, msg):
 
         user = msg.user
-        iterator = self.user_iterators.get(user)
+        iterator = self.list_view.iterators.get(user)
 
         if iterator is None:
             return
@@ -222,7 +221,7 @@ class UserList:
             last_seen = _("Never seen")
             time_from_epoch = 0
 
-        self.user_iterators[user] = self.list_view.add_row([
+        self.list_view.add_row([
             get_status_icon_name(UserStatus.OFFLINE),
             get_flag_icon_name(country),
             str(user),
@@ -244,10 +243,12 @@ class UserList:
 
     def remove_user(self, user):
 
-        if user in self.user_iterators:
-            self.list_view.remove_row(self.user_iterators[user])
-            del self.user_iterators[user]
+        iterator = self.list_view.iterators.get(user)
 
+        if iterator is None:
+            return
+
+        self.list_view.remove_row(iterator)
         self.update_visible()
 
         if config.sections["words"]["buddies"]:
@@ -255,35 +256,35 @@ class UserList:
 
     def set_user_note(self, user, note):
 
-        iterator = self.user_iterators.get(user)
+        iterator = self.list_view.iterators.get(user)
 
         if iterator is not None:
             self.list_view.set_row_value(iterator, 9, note)
 
     def set_user_trusted(self, user, trusted):
 
-        iterator = self.user_iterators.get(user)
+        iterator = self.list_view.iterators.get(user)
 
         if iterator is not None:
             self.list_view.set_row_value(iterator, 5, trusted)
 
     def set_user_notify(self, user, notify):
 
-        iterator = self.user_iterators.get(user)
+        iterator = self.list_view.iterators.get(user)
 
         if iterator is not None:
             self.list_view.set_row_value(iterator, 6, notify)
 
     def set_user_prioritized(self, user, prioritized):
 
-        iterator = self.user_iterators.get(user)
+        iterator = self.list_view.iterators.get(user)
 
         if iterator is not None:
             self.list_view.set_row_value(iterator, 7, prioritized)
 
     def set_user_last_seen(self, user, online):
 
-        iterator = self.user_iterators.get(user)
+        iterator = self.list_view.iterators.get(user)
 
         if iterator is None:
             return
@@ -300,7 +301,7 @@ class UserList:
 
     def set_user_country(self, user, country_code):
 
-        iterator = self.user_iterators.get(user)
+        iterator = self.list_view.iterators.get(user)
 
         if iterator is None:
             return
@@ -349,7 +350,7 @@ class UserList:
 
     def on_add_note_response(self, dialog, _response_id, user):
 
-        iterator = self.user_iterators.get(user)
+        iterator = self.list_view.iterators.get(user)
 
         if iterator is None:
             return
@@ -364,7 +365,7 @@ class UserList:
     def on_add_note(self, *_args):
 
         user = self.get_selected_username()
-        iterator = self.user_iterators.get(user)
+        iterator = self.list_view.iterators.get(user)
 
         if iterator is None:
             return
