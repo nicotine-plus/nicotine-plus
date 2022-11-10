@@ -233,9 +233,6 @@ class ChatEntry:
         elif cmd in ("/q", "/quit", "/exit"):
             self.core.confirm_quit()
 
-        elif cmd in ("/c", "/close"):
-            self.core.privatechat.remove_user(self.entity)
-
         elif cmd == "/now":
             self.core.now_playing.display_now_playing(
                 callback=lambda np_message: self.send_message(self.entity, np_message))

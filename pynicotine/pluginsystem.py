@@ -718,9 +718,15 @@ class PluginHandler:
                     if command != trigger and command not in aliases:
                         continue
 
+                    command_type = self.command_source[0]
+                    disabled_interfaces = data.get("disable", [])
+
+                    if command_type in disabled_interfaces:
+                        continue
+
                     command_found = True
                     rejection_message = None
-                    usage = data.get("usage_" + self.command_source[0], data.get("usage", []))
+                    usage = data.get("usage_" + command_type, data.get("usage", []))
                     args_split = args.split()
                     num_args = len(args_split)
                     num_required_args = 0
@@ -747,7 +753,7 @@ class PluginHandler:
                         plugin.echo_message("Usage: %s %s" % ('/' + command, " ".join(usage)))
                         break
 
-                    callback_name = data.get("callback_" + self.command_source[0], data.get("callback")).__name__
+                    callback_name = data.get("callback_" + command_type, data.get("callback")).__name__
 
                     if room is not None:
                         getattr(plugin, callback_name)(args, room=room)

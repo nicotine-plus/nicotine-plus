@@ -26,6 +26,14 @@ class Plugin(BasePlugin):
         super().__init__(*args, **kwargs)
 
         self.commands = {
+            "close": {
+                "description": "Close private chat",
+                "aliases": ["c"],
+                "disable": ["chatroom", "cli"],
+                "callback": self.close_command,
+                "usage": ["[user]"],
+                "group": "Private Chat"
+            },
             "sample": {
                 "description": "Sample command description",
                 "aliases": ["demo"],
@@ -36,6 +44,19 @@ class Plugin(BasePlugin):
                 "usage_chatroom": ["<choice55|choice2>"]
             }
         }
+
+    def close_command(self, args, user=None, **_unused):
+
+        if args:
+            user = args
+
+        if user not in self.core.privatechat.users:
+            self.echo_message("Not messaging with user %s" % user)
+            return False
+
+        self.echo_message("Closing private chat of user %s" % user)
+        self.core.privatechat.remove_user(user)
+        return True
 
     def sample_command(self, _args, **_unused):
         self.echo_message("Hello")
