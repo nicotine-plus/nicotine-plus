@@ -469,22 +469,25 @@ class PluginHandler:
             plugin.init()
 
             for command, data in plugin.commands.items():
+                command = "/" + command
                 disabled_interfaces = data.get("disable", [])
 
-                if "chatroom" not in disabled_interfaces:
-                    self.chatroom_commands["/" + command] = data
+                if "chatroom" not in disabled_interfaces and command not in self.chatroom_commands:
+                    self.chatroom_commands[command] = data
 
-                if "private_chat" not in disabled_interfaces:
-                    self.private_chat_commands["/" + command] = data
+                if "private_chat" not in disabled_interfaces and command not in self.private_chat_commands:
+                    self.private_chat_commands[command] = data
 
-                if "cli" not in disabled_interfaces:
-                    self.cli_commands["/" + command] = data
+                if "cli" not in disabled_interfaces and command not in self.cli_commands:
+                    self.cli_commands[command] = data
 
             for command, _func in plugin.__publiccommands__:
-                self.chatroom_commands["/" + command] = None
+                if command not in self.chatroom_commands:
+                    self.chatroom_commands["/" + command] = None
 
             for command, _func in plugin.__privatecommands__:
-                self.private_chat_commands["/" + command] = None
+                if command not in self.private_chat_commands:
+                    self.private_chat_commands["/" + command] = None
 
             self.update_completions(plugin)
 
@@ -642,14 +645,13 @@ class PluginHandler:
             return
 
         log.add(_("Loading plugin system"))
+        self.enable_plugin("core_commands")
 
         to_enable = config.sections["plugins"]["enabled"]
         log.add_debug("Enabled plugin(s): %s" % ', '.join(to_enable))
 
         for plugin in to_enable:
             self.enable_plugin(plugin)
-
-        self.enable_plugin("core_commands")
 
     def plugin_settings(self, plugin_name, plugin):
 
