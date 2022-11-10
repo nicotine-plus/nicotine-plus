@@ -24,15 +24,6 @@ from pynicotine.utils import get_completion_list
 
 class ChatRooms:
 
-    # List of allowed commands
-    CMDS = {
-        "/al ", "/alias ", "/un ", "/unalias ", "/w ", "/whois ", "/browse ", "/b ", "/ip ", "/pm ", "/m ", "/msg ",
-        "/s ", "/search ", "/us ", "/usearch ", "/rs ", "/rsearch ", "/bs ", "/bsearch ", "/j ", "/join ", "/l ",
-        "/leave ", "/p ", "/part ", "/ad ", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/ignoreip ",
-        "/unban ", "/unignore ", "/clear ", "/cl ", "/me ", "/a ", "/away ", "/q ", "/quit ", "/exit ", "/now ",
-        "/rescan ", "/info ", "/toggle "
-    }
-
     def __init__(self, core, queue, ui_callback=None):
 
         self.core = core
@@ -436,7 +427,7 @@ class ChatRooms:
 
     def update_completions(self):
 
-        self.completion_list = get_completion_list(self.CMDS, self.server_rooms)
+        self.completion_list = get_completion_list(list(self.core.pluginhandler.chatroom_commands), self.server_rooms)
 
         if self.ui_callback:
             self.ui_callback.set_completion_list(self.completion_list)

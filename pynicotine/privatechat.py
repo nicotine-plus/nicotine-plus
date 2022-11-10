@@ -25,15 +25,6 @@ from pynicotine.utils import get_completion_list
 
 class PrivateChat:
 
-    # List of allowed commands
-    CMDS = {
-        "/al ", "/alias ", "/un ", "/unalias ", "/w ", "/whois ", "/browse ", "/b ", "/ip ", "/pm ", "/m ", "/msg ",
-        "/s ", "/search ", "/us ", "/usearch ", "/rs ", "/rsearch ", "/bs ", "/bsearch ", "/j ", "/join ",
-        "/ad ", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/ignoreip ", "/unban ",
-        "/unignore ", "/c ", "/close ", "/clear ", "/cl ", "/me ", "/a ", "/away ", "/q ", "/quit ", "/exit ",
-        "/now ", "/rescan ", "/info ", "/toggle ", "/ctcpversion "
-    }
-
     CTCP_VERSION = "\x01VERSION\x01"
 
     def __init__(self, core, queue, ui_callback=None):
@@ -271,7 +262,8 @@ class PrivateChat:
 
     def update_completions(self):
 
-        self.completion_list = get_completion_list(self.CMDS, self.core.chatrooms.server_rooms)
+        self.completion_list = get_completion_list(
+            list(self.core.pluginhandler.private_chat_commands), self.core.chatrooms.server_rooms)
 
         if self.ui_callback:
             self.ui_callback.set_completion_list(self.completion_list)

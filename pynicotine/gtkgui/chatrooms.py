@@ -474,7 +474,7 @@ class ChatRoom:
 
         # Chat Entry
         ChatEntry(self.frame, self.chat_entry, chatrooms.completion, room, slskmessages.SayChatroom,
-                  self.core.chatrooms.send_message, self.core.chatrooms.CMDS, is_chatroom=True)
+                  self.core.chatrooms.send_message, is_chatroom=True)
 
         self.log_toggle.set_active(config.sections["logging"]["chatrooms"])
         if not self.log_toggle.get_active():

@@ -366,8 +366,6 @@ class PluginHandler:
         BasePlugin.core = self.core
         BasePlugin.frame = self.core.ui_callback
 
-        self.load_enabled()
-
     def quit(self):
 
         # Notify plugins
@@ -481,11 +479,11 @@ class PluginHandler:
             for command, data in plugin.cli_commands.items():
                 self.cli_commands["/" + command] = data
 
-            for trigger, _func in plugin.__publiccommands__:
-                self.core.chatrooms.CMDS.add('/' + trigger + ' ')
+            for command, _func in plugin.__publiccommands__:
+                self.chatroom_commands["/" + command] = None
 
-            for trigger, _func in plugin.__privatecommands__:
-                self.core.privatechat.CMDS.add('/' + trigger + ' ')
+            for command, _func in plugin.__privatecommands__:
+                self.private_chat_commands["/" + command] = None
 
             self.update_completions(plugin)
 
@@ -547,11 +545,11 @@ class PluginHandler:
             for command in plugin.cli_commands:
                 self.cli_commands.pop('/' + command, None)
 
-            for trigger, _func in plugin.__publiccommands__:
-                self.core.chatrooms.CMDS.remove('/' + trigger + ' ')
+            for command, _func in plugin.__publiccommands__:
+                self.chatroom_commands.pop('/' + command, None)
 
-            for trigger, _func in plugin.__privatecommands__:
-                self.core.privatechat.CMDS.remove('/' + trigger + ' ')
+            for command, _func in plugin.__privatecommands__:
+                self.private_chat_commands.pop('/' + command, None)
 
             self.update_completions(plugin)
             plugin.unloaded_notification()

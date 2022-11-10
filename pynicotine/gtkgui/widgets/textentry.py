@@ -38,7 +38,7 @@ from pynicotine.utils import unalias
 class ChatEntry:
     """ Custom text entry with support for chat commands and completions """
 
-    def __init__(self, frame, entry, completion, entity, message_class, send_message, command_list, is_chatroom=False):
+    def __init__(self, frame, entry, completion, entity, message_class, send_message, is_chatroom=False):
 
         self.frame = frame
         self.core = frame.core
@@ -47,7 +47,6 @@ class ChatEntry:
         self.entity = entity
         self.message_class = message_class
         self.send_message = send_message
-        self.command_list = command_list
         self.is_chatroom = is_chatroom
 
         entry.connect("activate", self.on_enter)

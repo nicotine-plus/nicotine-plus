@@ -164,12 +164,12 @@ class NicotineCore:
         self.userlist = UserList(self, self.queue, ui_callback)
         self.privatechat = PrivateChat(self, self.queue, ui_callback)
         self.chatrooms = ChatRooms(self, self.queue, ui_callback)
+        self.pluginhandler = PluginHandler(self)
 
         self.transfers.init_transfers()
         self.privatechat.load_users()
         self.userlist.load_users()
-
-        self.pluginhandler = PluginHandler(self)
+        self.pluginhandler.load_enabled()
 
         Thread(target=self.process_cli_input, name="CLIInputProcessor", daemon=True).start()
 
