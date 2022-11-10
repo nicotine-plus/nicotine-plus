@@ -25,14 +25,17 @@ class Plugin(BasePlugin):
 
         super().__init__(*args, **kwargs)
 
-        self.chatroom_commands = self.private_chat_commands = self.cli_commands = {
+        self.commands = {
             "sample": {
-                "callback": self.sample_command,
                 "description": "Sample command description",
+                "aliases": ["demo"],
+                "disable": ["private_chat"],
+                "callback": self.sample_command,
+                "callback_private_chat": self.sample_command,
                 "usage": ["<choice1|choice2>", "<something..>"],
-                "aliases": ["demo"]
+                "usage_chatroom": ["<choice55|choice2>"]
             }
         }
 
-    def sample_command(self, *_unused):
+    def sample_command(self, _args, **_unused):
         self.echo_message("Hello")

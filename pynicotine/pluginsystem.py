@@ -44,9 +44,7 @@ class BasePlugin:
     # Attributes that can be modified, see examples in the pynicotine/plugins/ folder
     __publiccommands__ = []
     __privatecommands__ = []
-    chatroom_commands = {}
-    private_chat_commands = {}
-    cli_commands = {}
+    commands = {}
     settings = {}
     metasettings = {}
 
@@ -380,10 +378,10 @@ class PluginHandler:
         if not config.sections["words"]["commands"]:
             return
 
-        if plugin.chatroom_commands or plugin.__publiccommands__:
+        if plugin.commands or plugin.__publiccommands__:
             self.core.chatrooms.update_completions()
 
-        if plugin.private_chat_commands or plugin.__privatecommands__:
+        if plugin.commands or plugin.__privatecommands__:
             self.core.privatechat.update_completions()
 
     def get_plugin_path(self, plugin_name):
@@ -470,14 +468,17 @@ class PluginHandler:
 
             plugin.init()
 
-            for command, data in plugin.chatroom_commands.items():
-                self.chatroom_commands["/" + command] = data
+            for command, data in plugin.commands.items():
+                disabled_interfaces = data.get("disable", [])
 
-            for command, data in plugin.private_chat_commands.items():
-                self.private_chat_commands["/" + command] = data
+                if not "chatroom" in disabled_interfaces:
+                    self.chatroom_commands["/" + command] = data
 
-            for command, data in plugin.cli_commands.items():
-                self.cli_commands["/" + command] = data
+                if not "private_chat" in disabled_interfaces:
+                    self.private_chat_commands["/" + command] = data
+
+                if not "cli" in disabled_interfaces:
+                    self.cli_commands["/" + command] = data
 
             for command, _func in plugin.__publiccommands__:
                 self.chatroom_commands["/" + command] = None
@@ -536,14 +537,12 @@ class PluginHandler:
         try:
             plugin.disable()
 
-            for command in plugin.chatroom_commands:
-                self.chatroom_commands.pop('/' + command, None)
+            for command in plugin.commands:
+                command = '/' + command
 
-            for command in plugin.private_chat_commands:
-                self.private_chat_commands.pop('/' + command, None)
-
-            for command in plugin.cli_commands:
-                self.cli_commands.pop('/' + command, None)
+                self.chatroom_commands.pop(command, None)
+                self.private_chat_commands.pop(command, None)
+                self.cli_commands.pop(command, None)
 
             for command, _func in plugin.__publiccommands__:
                 self.chatroom_commands.pop('/' + command, None)
@@ -702,21 +701,18 @@ class PluginHandler:
 
             if room is not None:
                 self.command_source = ("chatroom", room)
-                commands = plugin.chatroom_commands
                 legacy_commands = plugin.__publiccommands__
 
             elif user is not None:
                 self.command_source = ("private_chat", user)
-                commands = plugin.private_chat_commands
                 legacy_commands = plugin.__privatecommands__
 
             else:
                 self.command_source = ("cli", None)
-                commands = plugin.cli_commands
                 legacy_commands = []
 
             try:
-                for trigger, data in commands.items():
+                for trigger, data in plugin.commands.items():
                     aliases = data.get("aliases", [])
 
                     if command != trigger and command not in aliases:
@@ -724,7 +720,7 @@ class PluginHandler:
 
                     command_found = True
                     rejection_message = None
-                    usage = data.get("usage", [])
+                    usage = data.get("usage_" + self.command_source[0], data.get("usage", []))
                     args_split = args.split()
                     num_args = len(args_split)
                     num_required_args = 0
@@ -751,14 +747,16 @@ class PluginHandler:
                         plugin.echo_message("Usage: %s %s" % ('/' + command, " ".join(usage)))
                         break
 
+                    callback_name = data.get("callback_" + self.command_source[0], data.get("callback")).__name__
+
                     if room is not None:
-                        getattr(plugin, data.get("callback").__name__)(args, room=room)
+                        getattr(plugin, callback_name)(args, room=room)
 
                     elif user is not None:
-                        getattr(plugin, data.get("callback").__name__)(args, user=user)
+                        getattr(plugin, callback_name)(args, user=user)
 
                     else:
-                        getattr(plugin, data.get("callback").__name__)(args)
+                        getattr(plugin, callback_name)(args)
 
                 if not command_found:
                     for trigger, func in legacy_commands:
