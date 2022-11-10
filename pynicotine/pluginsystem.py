@@ -482,12 +482,14 @@ class PluginHandler:
                     self.cli_commands[command] = data
 
             for command, _func in plugin.__publiccommands__:
+                command = "/" + command
                 if command not in self.chatroom_commands:
-                    self.chatroom_commands["/" + command] = None
+                    self.chatroom_commands[command] = None
 
             for command, _func in plugin.__privatecommands__:
+                command = "/" + command
                 if command not in self.private_chat_commands:
-                    self.private_chat_commands["/" + command] = None
+                    self.private_chat_commands[command] = None
 
             self.update_completions(plugin)
 
