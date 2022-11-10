@@ -736,7 +736,7 @@ class PluginHandler:
                             num_required_args += 1
 
                         if num_args < num_required_args:
-                            rejection_message = "Missing argument"
+                            rejection_message = "Missing %s argument" % arg
                             break
 
                         if '|' not in arg:
