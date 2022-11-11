@@ -14,6 +14,7 @@
         <property name="visible">True</property>
         <property name="hexpand">True</property>
         <property name="width-chars">15</property>
+        <signal name="activate" handler="on_show_user"/>
       </object>
     </child>
     <child>

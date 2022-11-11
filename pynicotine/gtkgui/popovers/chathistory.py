@@ -55,7 +55,7 @@ class ChatHistory(Popover):
         self.core = core
 
         self.list_view = TreeView(
-            frame, parent=self.list_container, activate_row_callback=self.on_row_activated,
+            frame, parent=self.list_container, activate_row_callback=self.on_show_user,
             columns=[
                 {"column_id": "user", "column_type": "text", "title": _("User"), "width": 175,
                  "sort_column": 0},
@@ -120,11 +120,14 @@ class ChatHistory(Popover):
         for widget in self.__dict__.values():
             update_widget_visuals(widget)
 
-    def on_row_activated(self, list_view, iterator, _column_id):
-        username = list_view.get_row_value(iterator, 0)
+    def on_show_user(self, *_args):
 
-        self.core.privatechat.show_user(username)
-        self.popover.hide()
+        for iterator in self.list_view.get_selected_rows():
+            username = self.list_view.get_row_value(iterator, 0)
+
+            self.core.privatechat.show_user(username)
+            self.popover.hide()
+            return
 
     def on_search_accelerator(self, *_args):
         """ Ctrl+F: Search users """
