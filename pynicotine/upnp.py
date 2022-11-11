@@ -28,6 +28,7 @@ from pynicotine.utils import http_request
 
 MULTICAST_HOST = "239.255.255.250"
 MULTICAST_PORT = 1900
+MULTICAST_TTL = 2  # Should default to 2 according to UPnP specification
 RESPONSE_TIME_SECONDS = 1  # At least 1 second is sufficient according to UPnP specification
 
 
@@ -157,7 +158,7 @@ class SSDP:
 
         # Create a UDP socket and set its timeout
         with socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM, proto=socket.IPPROTO_UDP) as sock:
-            sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, RESPONSE_TIME_SECONDS)
+            sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, MULTICAST_TTL)
             sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
             sock.settimeout(RESPONSE_TIME_SECONDS)
             sock.bind((private_ip, 0))
