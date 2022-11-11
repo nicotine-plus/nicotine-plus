@@ -66,16 +66,16 @@ class UserList:
                 row.append(note)
 
             if num_items <= 2:
-                trusted = False
-                row.append(trusted)
-
-            if num_items <= 3:
                 notify = False
                 row.append(notify)
 
-            if num_items <= 4:
+            if num_items <= 3:
                 prioritized = False
                 row.append(prioritized)
+
+            if num_items <= 4:
+                trusted = False
+                row.append(trusted)
 
             if num_items <= 5:
                 last_seen = "Never seen"
@@ -135,23 +135,12 @@ class UserList:
         if self.ui_callback:
             self.ui_callback.set_user_note(user, note)
 
-    def set_user_trusted(self, user, trusted):
-
-        if user not in self.buddies:
-            return
-
-        self.buddies[user][2] = trusted
-        self.save_user_list()
-
-        if self.ui_callback:
-            self.ui_callback.set_user_trusted(user, trusted)
-
     def set_user_notify(self, user, notify):
 
         if user not in self.buddies:
             return
 
-        self.buddies[user][3] = notify
+        self.buddies[user][2] = notify
         self.save_user_list()
 
         if self.ui_callback:
@@ -162,11 +151,22 @@ class UserList:
         if user not in self.buddies:
             return
 
-        self.buddies[user][4] = prioritized
+        self.buddies[user][3] = prioritized
         self.save_user_list()
 
         if self.ui_callback:
             self.ui_callback.set_user_prioritized(user, prioritized)
+
+    def set_user_trusted(self, user, trusted):
+
+        if user not in self.buddies:
+            return
+
+        self.buddies[user][4] = trusted
+        self.save_user_list()
+
+        if self.ui_callback:
+            self.ui_callback.set_user_trusted(user, trusted)
 
     def set_user_last_seen(self, user, online):
 
