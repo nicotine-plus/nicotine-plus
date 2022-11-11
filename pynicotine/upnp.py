@@ -187,10 +187,10 @@ class SSDP:
 
             while True:
                 try:
-                    message = sock.recv(4096)
+                    message = sock.recv(65507)  # Maximum size of UDP message
                     SSDP.add_router(routers, SSDPResponse(message.decode('utf-8')))
 
-                except socket.error:
+                except socket.timeout:
                     break
 
             log.add_debug("UPnP: %s device(s) detected", str(len(routers)))
