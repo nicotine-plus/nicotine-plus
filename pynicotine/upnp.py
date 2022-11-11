@@ -123,7 +123,7 @@ class SSDP:
         return service_type, control_url
 
     @staticmethod
-    def add_service(services, ssdp_response):
+    def add_service(services, locations, ssdp_response):
 
         from urllib.parse import urlsplit
         response_headers = {k.upper(): v for k, v in ssdp_response.headers}
@@ -134,7 +134,14 @@ class SSDP:
             log.add_debug("UPnP: M-SEARCH response did not contain a LOCATION header: %s", ssdp_response.headers)
             return
 
-        url_parts = urlsplit(response_headers["LOCATION"])
+        location = response_headers["LOCATION"]
+
+        if location in locations:
+            log.add_debug("UPnP: Device location was previously processed, ignoring")
+            return
+
+        locations.add(location)
+        url_parts = urlsplit(location)
         service_type, control_url = SSDP.get_service_control_url(url_parts.scheme, url_parts.netloc, url_parts.path)
 
         if service_type is None or control_url is None:
@@ -144,7 +151,7 @@ class SSDP:
         log.add_debug("UPnP: Device details: service_type '%s'; control_url '%s'", (service_type, control_url))
 
         if service_type in services:
-            log.add_debug("UPnP: Service was already added, ignoring")
+            log.add_debug("UPnP: Service was previously added, ignoring")
             return
 
         services[service_type] = Service(service_type=service_type, url_scheme=url_parts.scheme,
@@ -189,12 +196,13 @@ class SSDP:
             wan_igd2.sendto(sock, (MULTICAST_HOST, MULTICAST_PORT))
             log.add_debug("UPnP: Sent M-SEARCH IGD request 2")
 
+            locations = set()
             services = {}
 
             while True:
                 try:
                     message = sock.recv(65507)  # Maximum size of UDP message
-                    SSDP.add_service(services, SSDPResponse(message.decode('utf-8')))
+                    SSDP.add_service(services, locations, SSDPResponse(message.decode('utf-8')))
 
                 except socket.timeout:
                     break
