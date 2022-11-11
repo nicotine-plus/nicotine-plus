@@ -30,6 +30,7 @@ MULTICAST_HOST = "239.255.255.250"
 MULTICAST_PORT = 1900
 MULTICAST_TTL = 2  # Should default to 2 according to UPnP specification
 MX_RESPONSE_DELAY = 1  # At least 1 second is sufficient according to UPnP specification
+HTTP_REQUEST_TIMEOUT = 2
 
 
 class Service:
@@ -97,7 +98,7 @@ class SSDP:
         try:
             from xml.etree import ElementTree
 
-            response = http_request(url_scheme, base_url, root_url, timeout=2)
+            response = http_request(url_scheme, base_url, root_url, timeout=HTTP_REQUEST_TIMEOUT)
             log.add_debug("UPnP: Device description response from %s://%s%s: %s",
                           (url_scheme, base_url, root_url, response.encode('utf-8')))
 
@@ -256,7 +257,7 @@ class UPnP:
 
         response = http_request(
             service.url_scheme, service.base_url, service.control_url,
-            request_type="POST", body=body, headers=headers)
+            request_type="POST", body=body, headers=headers, timeout=HTTP_REQUEST_TIMEOUT)
 
         xml = ElementTree.fromstring(response)
 
