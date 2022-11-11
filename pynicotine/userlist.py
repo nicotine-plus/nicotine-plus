@@ -99,7 +99,7 @@ class UserList:
         trusted = notify = prioritized = False
         last_seen = "Never seen"
 
-        self.buddies[user] = row = [user, note, trusted, notify, prioritized, last_seen, country]
+        self.buddies[user] = row = [user, note, notify, prioritized, trusted, last_seen, country]
         self.save_user_list()
 
         if self.ui_callback:
