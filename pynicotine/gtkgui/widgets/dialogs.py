@@ -184,19 +184,23 @@ class MessageDialog(Window):
                 break
 
         self.dialog = Gtk.MessageDialog(
-            transient_for=parent, destroy_with_parent=True, modal=parent.get_visible(),
-            message_type=message_type, default_width=width,
-            text=title, secondary_text=message
+            transient_for=parent, destroy_with_parent=True, message_type=message_type,
+            default_width=width, text=title, secondary_text=message
         )
         Window.__init__(self, self.dialog)
-        self.container = self.dialog.get_message_area()
         self.dialog.connect("response", self.on_response, callback, callback_data)
+
+        if parent:
+            # Only make dialog modal when parent is visible to prevent input/focus issues
+            self.dialog.set_modal(parent.get_visible())
 
         if not buttons:
             buttons = [(_("Close"), Gtk.ResponseType.CLOSE)]
 
         for button_label, response_type in buttons:
             self.dialog.add_button(button_label, response_type)
+
+        self.container = self.dialog.get_message_area()
 
         if GTK_API_VERSION >= 4:
             label = self.container.get_last_child()
