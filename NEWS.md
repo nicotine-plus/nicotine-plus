@@ -1,6 +1,6 @@
 # Release Notes
 
-## Version 3.2.7 (Development Version 1)
+## Version 3.2.7 (Release Candidate 1)
 
 ### Corrections
 
