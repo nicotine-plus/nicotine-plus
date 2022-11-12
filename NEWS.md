@@ -7,6 +7,7 @@
  * Fixed a crash when selecting a user picture
  * Fixed a crash when removing private chat logs
  * Fixed an issue where the main window could become unresponsive when showing it from the tray icon
+ * Minor fixes related to UPnP compatibility with certain routers
  * Windows: Fixed a possible crash when showing notification bubbles
 
 ### Issues closed on GitHub
