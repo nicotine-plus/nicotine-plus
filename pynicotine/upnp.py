@@ -28,7 +28,7 @@ MULTICAST_HOST = "239.255.255.250"
 MULTICAST_PORT = 1900
 MULTICAST_TTL = 2  # Should default to 2 according to UPnP specification
 MX_RESPONSE_DELAY = 1  # At least 1 second is sufficient according to UPnP specification
-HTTP_REQUEST_TIMEOUT = 2
+HTTP_REQUEST_TIMEOUT = 5
 
 
 class Service:
