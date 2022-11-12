@@ -485,7 +485,7 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
     If background is false the function will wait for all the launched
     processes to end before returning.
 
-    If the 'replacement' argument is given, every occurance of 'placeholder'
+    If the 'replacement' argument is given, every occurrence of 'placeholder'
     will be replaced by 'replacement'.
 
     If the command ends with the ampersand symbol background

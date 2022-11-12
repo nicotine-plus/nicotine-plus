@@ -1463,7 +1463,7 @@ class NicotineFrame(Window):
                 callback=self.shares_unavailable_response
             ).show()
 
-        # Avoid dialog appearing deactive if invoked during rescan on startup
+        # Avoid dialog appearing deactivate if invoked during rescan on startup
         GLib.idle_add(create_dialog)
 
     """ Chat """
@@ -1764,7 +1764,7 @@ class NicotineFrame(Window):
         if not self.window.get_property("visible"):
             return
 
-        # Save visible columns, incase application is killed later
+        # Save visible columns, in case application is killed later
         self.save_columns()
 
         # Close any visible dialogs
@@ -1777,7 +1777,7 @@ class NicotineFrame(Window):
         # Run in Background
         self.window.hide()
 
-        # Save config, incase application is killed later
+        # Save config, in case application is killed later
         config.write_configuration()
 
     def confirm_quit_response(self, dialog, response_id, _data):

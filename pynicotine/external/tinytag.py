@@ -514,7 +514,7 @@ class ID3(TinyTag):
 
     def __init__(self, filehandler, filesize, *args, **kwargs):
         TinyTag.__init__(self, filehandler, filesize, *args, **kwargs)
-        # save position after the ID3 tag for duration mesurement speedup
+        # save position after the ID3 tag for duration measurement speedup
         self._bytepos_after_id3v2 = None
 
     @classmethod

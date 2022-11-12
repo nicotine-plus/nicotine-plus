@@ -525,7 +525,7 @@ class PrivateChat:
 
     def set_completion_list(self, completion_list):
 
-        # Tab-complete the recepient username
+        # Tab-complete the recipient username
         completion_list.append(self.user)
 
         # No duplicates

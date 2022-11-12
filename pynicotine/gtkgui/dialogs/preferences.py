@@ -1953,7 +1953,7 @@ class NowPlayingFrame:
         ]
         self.custom_format_list = []
 
-        # Suppy the information needed for the Now Playing class to return a song
+        # Supply the information needed for the Now Playing class to return a song
         self.test_now_playing.connect(
             "clicked",
             self.core.now_playing.display_now_playing,

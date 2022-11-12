@@ -2759,7 +2759,7 @@ class TransferRequest(PeerMessage):
     A TransferResponse message is expected from the recipient, either allowing or
     rejecting the upload attempt.
 
-    This message was formely used to send a download request (direction 0) as well,
+    This message was formerly used to send a download request (direction 0) as well,
     but Nicotine+, Museek+ and the official clients use the QueueUpload message for
     this purpose today. """
 
