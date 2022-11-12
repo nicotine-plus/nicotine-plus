@@ -61,13 +61,12 @@ from pynicotine.userlist import UserList
 
 
 class NicotineCore:
-    """ NicotineCore contains handlers for various messages from the networking thread.
+    """ NicotineCore contains handlers for various messages from (mainly) the networking thread.
     This class links the networking thread and user interface. """
 
     def __init__(self, bindip, port):
 
         self.ui_callback = None
-        self.network_callback = None
         self.network_filter = None
         self.statistics = None
         self.shares = None
@@ -100,7 +99,7 @@ class NicotineCore:
         self.privileges_left = None
         self.ban_message = "You are banned from downloading my shared files. Ban message: \"%s\""
 
-        self.events = {}
+        self.message_callbacks = {}
         self.queue = deque()
         self.user_statuses = {}
         self.watched_users = set()
@@ -126,14 +125,14 @@ class NicotineCore:
             if args:
                 (args,) = args
 
-            self.network_callback([slskmessages.CLICommand(command, args)])
+            self.thread_callback([slskmessages.CLICommand(command, args)])
 
     """ Actions """
 
-    def start(self, ui_callback, network_callback):
+    def start(self, ui_callback, thread_callback):
 
         self.ui_callback = ui_callback
-        self.network_callback = network_callback
+        NicotineCore.thread_callback = thread_callback
         script_dir = os.path.dirname(__file__)
 
         log.add(_("Loading %(program)s %(version)s"), {"program": "Python", "version": config.python_version})
@@ -142,7 +141,7 @@ class NicotineCore:
         log.add(_("Loading %(program)s %(version)s"), {"program": config.application_name, "version": config.version})
 
         self.protothread = slskproto.SlskProtoThread(
-            core_callback=self.network_callback, queue=self.queue, bindip=self.bindip, port=self.port,
+            core_callback=self.thread_callback, queue=self.queue, bindip=self.bindip, port=self.port,
             interface=config.sections["server"]["interface"],
             port_range=config.sections["server"]["portrange"]
         )
@@ -155,9 +154,9 @@ class NicotineCore:
         self.statistics = Statistics(ui_callback)
         self.update_checker = UpdateChecker()
 
-        self.shares = Shares(self, self.queue, self.network_callback, ui_callback)
+        self.shares = Shares(self, self.queue, ui_callback)
         self.search = Search(self, self.queue, self.shares.share_dbs, self.geoip, ui_callback)
-        self.transfers = Transfers(self, self.queue, self.network_callback, ui_callback)
+        self.transfers = Transfers(self, self.queue, ui_callback)
         self.interests = Interests(self, self.queue, ui_callback)
         self.userbrowse = UserBrowse(self, ui_callback)
         self.userinfo = UserInfo(self, self.queue, ui_callback)
@@ -174,7 +173,7 @@ class NicotineCore:
         Thread(target=self.process_cli_input, name="CLIInputProcessor", daemon=True).start()
 
         # Callback handlers for messages
-        self.events = {
+        self.message_callbacks = {
             slskmessages.ServerDisconnect: self.server_disconnect,
             slskmessages.Login: self.login,
             slskmessages.ChangePassword: self.change_password,
@@ -204,8 +203,6 @@ class NicotineCore:
             slskmessages.GetUserStats: self.get_user_stats,
             slskmessages.Relogged: self.dummy_message,
             slskmessages.PeerInit: self.dummy_message,
-            slskmessages.CheckDownloadQueue: self.transfers.check_download_queue,
-            slskmessages.CheckUploadQueue: self.transfers.check_upload_queue,
             slskmessages.DownloadFile: self.transfers.file_download,
             slskmessages.UploadFile: self.transfers.file_upload,
             slskmessages.FileDownloadInit: self.transfers.file_download_init,
@@ -219,9 +216,6 @@ class NicotineCore:
             slskmessages.PlaceInQueue: self.transfers.place_in_queue,
             slskmessages.DownloadFileError: self.transfers.download_file_error,
             slskmessages.UploadFileError: self.transfers.upload_file_error,
-            slskmessages.RetryDownloadLimits: self.transfers.retry_download_limits,
-            slskmessages.RetryFailedUploads: self.transfers.retry_failed_uploads,
-            slskmessages.SaveTransfers: self.transfers.save_transfers,
             slskmessages.DownloadConnectionClosed: self.transfers.download_connection_closed,
             slskmessages.UploadConnectionClosed: self.transfers.upload_connection_closed,
             slskmessages.PeerConnectionClosed: self.peer_connection_closed,
@@ -259,7 +253,6 @@ class NicotineCore:
             slskmessages.DistribSearch: self.search.distrib_search,
             slskmessages.ResetDistributed: self.dummy_message,
             slskmessages.ServerTimeout: self.server_timeout,
-            slskmessages.TransferTimeout: self.transfers.transfer_timeout,
             slskmessages.SetConnectionStats: self.set_connection_stats,
             slskmessages.GlobalRecommendations: self.interests.global_recommendations,
             slskmessages.Recommendations: self.interests.recommendations,
@@ -289,6 +282,7 @@ class NicotineCore:
             slskmessages.PublicRoomMessage: self.chatrooms.public_room_message,
             slskmessages.ShowConnectionErrorMessage: self.show_connection_error_message,
             slskmessages.CLICommand: self.cli_command,
+            slskmessages.SchedulerCallback: self.scheduler_callback,
             slskmessages.UnknownPeerMessage: self.dummy_message
         }
 
@@ -459,21 +453,29 @@ class NicotineCore:
 
         self.watched_users.add(user)
 
-    """ Network Events """
+    """ Message Callbacks """
 
-    def network_event(self, msgs):
+    @classmethod
+    def thread_callback(cls, _msgs):
+        # Overridden by the frontend to call process_thread_callback in the main thread
+        pass
+
+    def process_thread_callback(self, msgs):
 
         for msg in msgs:
             if self.shutdown:
                 return
 
             try:
-                self.events[msg.__class__](msg)
+                self.message_callbacks[msg.__class__](msg)
 
             except KeyError:
                 log.add("No handler for class %s %s", (msg.__class__, dir(msg)))
 
         msgs.clear()
+
+    def scheduler_callback(self, msg):
+        msg.callback()
 
     @staticmethod
     def dummy_message(msg):

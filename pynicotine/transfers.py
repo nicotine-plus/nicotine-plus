@@ -97,7 +97,7 @@ class Transfer:
 class Transfers:
     """ This is the transfers manager """
 
-    def __init__(self, core, queue, network_callback, ui_callback=None):
+    def __init__(self, core, queue, ui_callback=None):
 
         self.core = core
         self.queue = queue
@@ -116,7 +116,6 @@ class Transfers:
         self.downloads_file_name = os.path.join(config.data_dir, 'downloads.json')
         self.uploads_file_name = os.path.join(config.data_dir, 'uploads.json')
 
-        self.network_callback = network_callback
         self.downloadsview = getattr(ui_callback, "downloads", None)
         self.uploadsview = getattr(ui_callback, "uploads", None)
 
@@ -127,7 +126,7 @@ class Transfers:
         self.retry_failed_uploads_timer_id = None
 
         # Save list of transfers every minute
-        scheduler.add(delay=60, callback=lambda: self.network_callback([slskmessages.SaveTransfers()]), repeat=True)
+        scheduler.add(delay=60, callback=self.save_transfers, repeat=True)
 
         self.update_download_filters()
 
@@ -154,24 +153,16 @@ class Transfers:
         self.transfer_timeout_timer_id = scheduler.add(delay=1, callback=self._check_transfer_timeouts, repeat=True)
 
         # Request queue position of queued downloads and retry failed downloads every 3 minutes
-        self.download_queue_timer_id = scheduler.add(
-            delay=180, callback=lambda: self.network_callback([slskmessages.CheckDownloadQueue()]), repeat=True
-        )
+        self.download_queue_timer_id = scheduler.add(delay=180, callback=self.check_download_queue, repeat=True)
 
         # Check if queued uploads can be started every 10 seconds
-        self.upload_queue_timer_id = scheduler.add(
-            delay=10, callback=lambda: self.network_callback([slskmessages.CheckUploadQueue()]), repeat=True
-        )
+        self.upload_queue_timer_id = scheduler.add(delay=10, callback=self.check_upload_queue, repeat=True)
 
         # Re-queue limited downloads every 12 minutes
-        self.retry_download_limits_timer_id = scheduler.add(
-            delay=720, callback=lambda: self.network_callback([slskmessages.RetryDownloadLimits()]), repeat=True
-        )
+        self.retry_download_limits_timer_id = scheduler.add(delay=720, callback=self.retry_download_limits, repeat=True)
 
         # Re-queue timed out uploads every 3 minutes
-        self.retry_failed_uploads_timer_id = scheduler.add(
-            delay=180, callback=lambda: self.network_callback([slskmessages.RetryFailedUploads()]), repeat=True
-        )
+        self.retry_failed_uploads_timer_id = scheduler.add(delay=180, callback=self.retry_failed_uploads, repeat=True)
 
         if self.downloadsview:
             self.downloadsview.server_login()
@@ -970,9 +961,7 @@ class Transfers:
 
         log.add_transfer("Received unknown upload response: %s", str(vars(msg)))
 
-    def transfer_timeout(self, msg):
-
-        transfer = msg.transfer
+    def transfer_timeout(self, transfer):
 
         log.add_transfer("Transfer %(filename)s with token %(token)s for user %(user)s timed out", {
             "filename": transfer.filename,
@@ -2037,7 +2026,7 @@ class Transfers:
                 # to the timeout value.
 
                 if (current_time - start_time) >= 45:
-                    self.network_callback([slskmessages.TransferTimeout(transfer)])
+                    self.transfer_timeout(transfer)
 
     def check_queue_upload_allowed(self, user, addr, filename, real_path, msg):
 
@@ -2076,7 +2065,7 @@ class Transfers:
 
         return True, None
 
-    def check_download_queue(self, *_args):
+    def check_download_queue(self):
 
         statuslist_failed = ("Connection timeout", "Local file error", "Remote file error")
 
@@ -2174,7 +2163,7 @@ class Transfers:
 
         return first_queued_transfers[target_user]
 
-    def check_upload_queue(self, *_args):
+    def check_upload_queue(self):
         """ Find next file to upload """
 
         if not self.uploads:
@@ -2247,7 +2236,7 @@ class Transfers:
         for download in downloads:
             self.retry_download(download)
 
-    def retry_download_limits(self, *_args):
+    def retry_download_limits(self):
 
         statuslist_limited = ("Too many files", "Too many megabytes")
 
@@ -2290,7 +2279,7 @@ class Transfers:
         for upload in uploads:
             self.retry_upload(upload)
 
-    def retry_failed_uploads(self, *_args):
+    def retry_failed_uploads(self):
 
         for upload in reversed(self.uploads):
             if upload.status == "Connection timeout":
@@ -2514,7 +2503,7 @@ class Transfers:
     def save_uploads_callback(self, filename):
         json.dump(self.get_uploads(), filename, ensure_ascii=False)
 
-    def save_transfers(self, *_args):
+    def save_transfers(self):
         """ Save list of transfers """
 
         if not self.allow_saving_transfers:

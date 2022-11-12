@@ -62,9 +62,9 @@ class Application:
     def run(self):
         return self.instance.run()
 
-    def network_callback(self, msgs):
+    def thread_callback(self, msgs):
         # High priority to ensure there are no delays
-        GLib.idle_add(self.core.network_event, msgs[:], priority=GLib.PRIORITY_HIGH_IDLE)
+        GLib.idle_add(self.core.process_thread_callback, msgs[:], priority=GLib.PRIORITY_HIGH_IDLE)
 
     def init_exception_handler(self):
 
@@ -104,7 +104,7 @@ class Application:
         from pynicotine.gtkgui.frame import NicotineFrame
 
         self.frame = NicotineFrame(self.instance, self.core, self.start_hidden, self.ci_mode)
-        self.core.start(ui_callback=self.frame, network_callback=self.network_callback)
+        self.core.start(ui_callback=self.frame, thread_callback=self.thread_callback)
         self.frame.init_window()
 
         if config.sections["server"]["auto_connect_startup"]:

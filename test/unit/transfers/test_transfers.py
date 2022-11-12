@@ -39,7 +39,7 @@ class TransfersTest(unittest.TestCase):
         config.load_config()
         config.sections["transfers"]["downloaddir"] = config.data_dir
 
-        self.transfers = Transfers(MagicMock(), deque(), Mock())
+        self.transfers = Transfers(MagicMock(), deque())
         self.transfers.init_transfers()
         self.transfers.server_login()
         self.transfers.allow_saving_transfers = False

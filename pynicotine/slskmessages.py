@@ -110,6 +110,12 @@ class InternalMessage:
     msgtype = MessageType.INTERNAL
 
 
+class SchedulerCallback(InternalMessage):
+
+    def __init__(self, callback=None):
+        self.callback = callback
+
+
 class CLICommand(InternalMessage):
 
     def __init__(self, command=None, args=None):
@@ -191,36 +197,6 @@ class PeerConnectionClosed(InternalMessage):
 
     def __init__(self, user=None):
         self.user = user
-
-
-class TransferTimeout(InternalMessage):
-
-    __slots__ = ("transfer",)
-
-    def __init__(self, transfer):
-        self.transfer = transfer
-
-
-class CheckDownloadQueue(InternalMessage):
-    """ Sent from a timer to the main thread to indicate that stuck downloads
-    should be checked. """
-
-
-class CheckUploadQueue(InternalMessage):
-    """ Sent from a timer to the main thread to indicate that the upload queue
-    should be checked. """
-
-
-class RetryDownloadLimits(InternalMessage):
-    pass
-
-
-class RetryFailedUploads(InternalMessage):
-    pass
-
-
-class SaveTransfers(InternalMessage):
-    pass
 
 
 class DownloadFile(InternalMessage):

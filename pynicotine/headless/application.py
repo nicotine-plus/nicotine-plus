@@ -34,14 +34,14 @@ class Application:
 
         self.core = core
         self.ci_mode = ci_mode
-        self.network_msgs = deque()
+        self.thread_messages = deque()
 
         config.load_config()
         log.log_levels = set(["download", "upload"] + config.sections["logging"]["debugmodes"])
 
     def run(self):
 
-        self.core.start(self, self.network_callback)
+        self.core.start(self, thread_callback=self.thread_callback)
         connect_success = self.core.connect()
 
         if not connect_success and not self.ci_mode:
@@ -50,13 +50,13 @@ class Application:
 
         # Main loop, process messages from networking thread
         while not self.core.shutdown:
-            if self.network_msgs:
+            if self.thread_messages:
                 msgs = []
 
-                while self.network_msgs:
-                    msgs.append(self.network_msgs.popleft())
+                while self.thread_messages:
+                    msgs.append(self.thread_messages.popleft())
 
-                self.core.network_event(msgs)
+                self.core.process_thread_callback(msgs)
 
             time.sleep(1 / 60)
 
@@ -64,8 +64,8 @@ class Application:
         config.write_configuration()
         return 0
 
-    def network_callback(self, msgs):
-        self.network_msgs.extend(msgs)
+    def thread_callback(self, msgs):
+        self.thread_messages.extend(msgs)
 
     def init_exception_handler(self):
 

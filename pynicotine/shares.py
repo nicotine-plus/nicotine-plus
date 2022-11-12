@@ -516,10 +516,9 @@ class Scanner:
 
 class Shares:
 
-    def __init__(self, core, queue, network_callback=None, ui_callback=None, init_shares=True):
+    def __init__(self, core, queue, ui_callback=None, init_shares=True):
 
         self.core = core
-        self.network_callback = network_callback
         self.ui_callback = ui_callback
         self.queue = queue
         self.share_dbs = {}
@@ -897,8 +896,8 @@ class Shares:
             self.send_num_shared_folders_files()
 
         # Process any file transfer queue requests that arrived while scanning
-        if self.network_callback:
-            self.network_callback(self.pending_network_msgs)
+        if self.core and self.core.thread_callback:
+            self.core.thread_callback(self.pending_network_msgs)
 
         return error
 

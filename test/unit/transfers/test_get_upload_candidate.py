@@ -37,7 +37,7 @@ class GetUploadCandidateTest(unittest.TestCase):
 
         config.load_config()
 
-        self.transfers = Transfers(Mock(), config, deque(), Mock())
+        self.transfers = Transfers(Mock(), deque())
         self.transfers.privileged_users = {"puser1", "puser2"}
         self.transfers.core.userlist.buddies = {}
 
