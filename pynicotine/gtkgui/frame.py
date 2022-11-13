@@ -1463,7 +1463,7 @@ class NicotineFrame(Window):
                 callback=self.shares_unavailable_response
             ).show()
 
-        # Avoid dialog appearing deactivate if invoked during rescan on startup
+        # Avoid dialog appearing inactive if invoked during rescan on startup
         GLib.idle_add(create_dialog)
 
     """ Chat """
