@@ -43,7 +43,7 @@ class Search:
         self.searches = {}
         self.token = int(random.random() * (2 ** 31 - 1))
         self.wishlist_interval = 0
-        self.wishlist_timer_id = None
+        self._wishlist_timer_id = None
 
         # Create wishlist searches
         for term in config.sections["server"]["autosearch"]:
@@ -56,7 +56,7 @@ class Search:
 
     def server_disconnect(self):
 
-        scheduler.cancel(self.wishlist_timer_id)
+        scheduler.cancel(self._wishlist_timer_id)
         self.wishlist_interval = 0
 
         if self.ui_callback:
@@ -311,8 +311,8 @@ class Search:
         if self.wishlist_interval > 0:
             log.add_search(_("Wishlist wait period set to %s seconds"), self.wishlist_interval)
 
-            scheduler.cancel(self.wishlist_timer_id)
-            self.wishlist_timer_id = scheduler.add(
+            scheduler.cancel(self._wishlist_timer_id)
+            self._wishlist_timer_id = scheduler.add(
                 delay=self.wishlist_interval, callback=self.do_wishlist_search_interval, repeat=True)
         else:
             log.add(_("Server does not permit performing wishlist searches at this time"))

@@ -28,15 +28,15 @@ from pynicotine.utils import http_request
 class UpdateChecker:
 
     def __init__(self):
-        self.thread = None
+        self._thread = None
 
     def check(self):
 
-        if self.thread and self.thread.is_alive():
+        if self._thread and self._thread.is_alive():
             return
 
-        self.thread = Thread(target=self._check, name="UpdateChecker", daemon=True)
-        self.thread.start()
+        self._thread = Thread(target=self._check, name="UpdateChecker", daemon=True)
+        self._thread.start()
 
     def _check(self):
 

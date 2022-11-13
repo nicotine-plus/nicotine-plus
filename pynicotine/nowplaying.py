@@ -35,7 +35,7 @@ class NowPlaying:
 
     def __init__(self):
 
-        self.bus = None
+        self._bus = None
         self.title_clear()
 
     def title_clear(self):
@@ -168,7 +168,7 @@ class NowPlaying:
         # https://media.readthedocs.org/pdf/mpris2/latest/mpris2.pdf
 
         from gi.repository import Gio  # pylint: disable=import-error
-        self.bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
+        self._bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
 
         dbus_mpris_service = 'org.mpris.MediaPlayer2.'
         dbus_mpris_player_service = 'org.mpris.MediaPlayer2.Player'
@@ -177,7 +177,7 @@ class NowPlaying:
 
         if not player:
             dbus_proxy = Gio.DBusProxy.new_sync(
-                self.bus, Gio.DBusProxyFlags.NONE, None,
+                self._bus, Gio.DBusProxyFlags.NONE, None,
                 'org.freedesktop.DBus', '/org/freedesktop/DBus', 'org.freedesktop.DBus', None
             )
 
@@ -201,7 +201,7 @@ class NowPlaying:
 
         try:
             dbus_proxy = Gio.DBusProxy.new_sync(
-                self.bus, Gio.DBusProxyFlags.NONE, None,
+                self._bus, Gio.DBusProxyFlags.NONE, None,
                 dbus_mpris_service + player, dbus_mpris_path, dbus_property, None
             )
 

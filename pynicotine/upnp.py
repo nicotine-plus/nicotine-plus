@@ -216,8 +216,8 @@ class UPnP:
     """ Class that handles UPnP Port Mapping """
 
     def __init__(self, port):
-        self.port = port
-        self.timer = None
+        self._port = port
+        self._timer = None
 
     @staticmethod
     def _request_port_mapping(service, protocol, public_port, private_ip, private_port,
@@ -280,7 +280,7 @@ class UPnP:
         return error_code, error_description
 
     @staticmethod
-    def find_local_ip_address():
+    def _find_local_ip_address():
 
         # Create a UDP socket
         with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as local_socket:
@@ -295,7 +295,7 @@ class UPnP:
         return ip_address
 
     @staticmethod
-    def find_service(private_ip):
+    def _find_service(private_ip):
 
         services = SSDP.get_services(private_ip)
         service = services.get("urn:schemas-upnp-org:service:WANIPConnection:2")
@@ -323,27 +323,27 @@ class UPnP:
             log.add_debug("UPnP: Creating Port Mapping rule...")
 
             # Find local IP address
-            local_ip_address = self.find_local_ip_address()
+            local_ip_address = self._find_local_ip_address()
 
             # Find router
-            service = self.find_service(local_ip_address)
+            service = self._find_service(local_ip_address)
 
             if not service:
                 raise RuntimeError(_("UPnP is not available on this network"))
 
             # Perform the port mapping
             log.add_debug("UPnP: Trying to redirect external WAN port %s TCP => %s port %s TCP", (
-                self.port,
+                self._port,
                 local_ip_address,
-                self.port
+                self._port
             ))
 
             error_code, error_description = self._request_port_mapping(
                 service=service,
                 protocol="TCP",
-                public_port=self.port,
+                public_port=self._port,
                 private_ip=local_ip_address,
-                private_port=self.port,
+                private_port=self._port,
                 mapping_description="NicotinePlus",
                 lease_duration=lease_duration
             )
@@ -360,7 +360,7 @@ class UPnP:
         except Exception as error:
             from traceback import format_exc
             log.add(_("UPnP: Failed to forward external port %(external_port)s: %(error)s"), {
-                "external_port": self.port,
+                "external_port": self._port,
                 "error": error
             })
             log.add_debug(format_exc())
@@ -368,9 +368,9 @@ class UPnP:
 
         log.add(_("UPnP: External port %(external_port)s successfully forwarded to local "
                   "IP address %(ip_address)s port %(local_port)s"), {
-            "external_port": self.port,
+            "external_port": self._port,
             "ip_address": local_ip_address,
-            "local_port": self.port
+            "local_port": self._port
         })
 
     def add_port_mapping(self, blocking=False):
@@ -398,7 +398,7 @@ class UPnP:
             return
 
         upnp_interval_seconds = upnp_interval * 60 * 60
-        self.timer = scheduler.add(delay=upnp_interval_seconds, callback=self.add_port_mapping)
+        self._timer = scheduler.add(delay=upnp_interval_seconds, callback=self.add_port_mapping)
 
     def cancel_timer(self):
-        scheduler.cancel(self.timer)
+        scheduler.cancel(self._timer)

@@ -789,7 +789,7 @@ class PluginHandler:
 
         self.command_source = None
 
-    def trigger_event(self, function_name, args):
+    def _trigger_event(self, function_name, args):
         """ Triggers an event for the plugins. Since events and notifications
         are precisely the same except for how n+ responds to them, both can be
         triggered by this function. """
@@ -835,102 +835,102 @@ class PluginHandler:
         return args
 
     def search_request_notification(self, searchterm, user, token):
-        self.trigger_event("search_request_notification", (searchterm, user, token))
+        self._trigger_event("search_request_notification", (searchterm, user, token))
 
     def distrib_search_notification(self, searchterm, user, token):
-        self.trigger_event("distrib_search_notification", (searchterm, user, token))
+        self._trigger_event("distrib_search_notification", (searchterm, user, token))
 
     def public_room_message_notification(self, room, user, line):
-        self.trigger_event("public_room_message_notification", (room, user, line))
+        self._trigger_event("public_room_message_notification", (room, user, line))
 
     def incoming_private_chat_event(self, user, line):
         if user != core.login_username:
             # dont trigger the scripts on our own talking - we've got "Outgoing" for that
-            return self.trigger_event("incoming_private_chat_event", (user, line))
+            return self._trigger_event("incoming_private_chat_event", (user, line))
 
         return user, line
 
     def incoming_private_chat_notification(self, user, line):
-        self.trigger_event("incoming_private_chat_notification", (user, line))
+        self._trigger_event("incoming_private_chat_notification", (user, line))
 
     def incoming_public_chat_event(self, room, user, line):
-        return self.trigger_event("incoming_public_chat_event", (room, user, line))
+        return self._trigger_event("incoming_public_chat_event", (room, user, line))
 
     def incoming_public_chat_notification(self, room, user, line):
-        self.trigger_event("incoming_public_chat_notification", (room, user, line))
+        self._trigger_event("incoming_public_chat_notification", (room, user, line))
 
     def outgoing_private_chat_event(self, user, line):
         if line is not None:
             # if line is None nobody actually said anything
-            return self.trigger_event("outgoing_private_chat_event", (user, line))
+            return self._trigger_event("outgoing_private_chat_event", (user, line))
 
         return user, line
 
     def outgoing_private_chat_notification(self, user, line):
-        self.trigger_event("outgoing_private_chat_notification", (user, line))
+        self._trigger_event("outgoing_private_chat_notification", (user, line))
 
     def outgoing_public_chat_event(self, room, line):
-        return self.trigger_event("outgoing_public_chat_event", (room, line))
+        return self._trigger_event("outgoing_public_chat_event", (room, line))
 
     def outgoing_public_chat_notification(self, room, line):
-        self.trigger_event("outgoing_public_chat_notification", (room, line))
+        self._trigger_event("outgoing_public_chat_notification", (room, line))
 
     def outgoing_global_search_event(self, text):
-        return self.trigger_event("outgoing_global_search_event", (text,))
+        return self._trigger_event("outgoing_global_search_event", (text,))
 
     def outgoing_room_search_event(self, rooms, text):
-        return self.trigger_event("outgoing_room_search_event", (rooms, text))
+        return self._trigger_event("outgoing_room_search_event", (rooms, text))
 
     def outgoing_buddy_search_event(self, text):
-        return self.trigger_event("outgoing_buddy_search_event", (text,))
+        return self._trigger_event("outgoing_buddy_search_event", (text,))
 
     def outgoing_user_search_event(self, users, text):
-        return self.trigger_event("outgoing_user_search_event", (users, text))
+        return self._trigger_event("outgoing_user_search_event", (users, text))
 
     def user_resolve_notification(self, user, ip_address, port, country=None):
         """Notification for user IP:Port resolving.
 
         Note that country is only set when the user requested the resolving"""
-        self.trigger_event("user_resolve_notification", (user, ip_address, port, country))
+        self._trigger_event("user_resolve_notification", (user, ip_address, port, country))
 
     def server_connect_notification(self):
-        self.trigger_event("server_connect_notification", (),)
+        self._trigger_event("server_connect_notification", (),)
 
     def server_disconnect_notification(self, userchoice):
-        self.trigger_event("server_disconnect_notification", (userchoice, ))
+        self._trigger_event("server_disconnect_notification", (userchoice, ))
 
     def join_chatroom_notification(self, room):
-        self.trigger_event("join_chatroom_notification", (room,))
+        self._trigger_event("join_chatroom_notification", (room,))
 
     def leave_chatroom_notification(self, room):
-        self.trigger_event("leave_chatroom_notification", (room,))
+        self._trigger_event("leave_chatroom_notification", (room,))
 
     def user_join_chatroom_notification(self, room, user):
-        self.trigger_event("user_join_chatroom_notification", (room, user,))
+        self._trigger_event("user_join_chatroom_notification", (room, user,))
 
     def user_leave_chatroom_notification(self, room, user):
-        self.trigger_event("user_leave_chatroom_notification", (room, user,))
+        self._trigger_event("user_leave_chatroom_notification", (room, user,))
 
     def user_stats_notification(self, user, stats):
-        self.trigger_event("user_stats_notification", (user, stats))
+        self._trigger_event("user_stats_notification", (user, stats))
 
     def user_status_notification(self, user, status, privileged):
-        self.trigger_event("user_status_notification", (user, status, privileged))
+        self._trigger_event("user_status_notification", (user, status, privileged))
 
     def upload_queued_notification(self, user, virtual_path, real_path):
-        self.trigger_event("upload_queued_notification", (user, virtual_path, real_path))
+        self._trigger_event("upload_queued_notification", (user, virtual_path, real_path))
 
     def upload_started_notification(self, user, virtual_path, real_path):
-        self.trigger_event("upload_started_notification", (user, virtual_path, real_path))
+        self._trigger_event("upload_started_notification", (user, virtual_path, real_path))
 
     def upload_finished_notification(self, user, virtual_path, real_path):
-        self.trigger_event("upload_finished_notification", (user, virtual_path, real_path))
+        self._trigger_event("upload_finished_notification", (user, virtual_path, real_path))
 
     def download_started_notification(self, user, virtual_path, real_path):
-        self.trigger_event("download_started_notification", (user, virtual_path, real_path))
+        self._trigger_event("download_started_notification", (user, virtual_path, real_path))
 
     def download_finished_notification(self, user, virtual_path, real_path):
-        self.trigger_event("download_finished_notification", (user, virtual_path, real_path))
+        self._trigger_event("download_finished_notification", (user, virtual_path, real_path))
 
     def shutdown_notification(self):
-        self.trigger_event("shutdown_notification", (),)
+        self._trigger_event("shutdown_notification", (),)

@@ -118,11 +118,11 @@ class Transfers:
         self.downloadsview = getattr(core.ui_callback, "downloads", None)
         self.uploadsview = getattr(core.ui_callback, "uploads", None)
 
-        self.transfer_timeout_timer_id = None
-        self.download_queue_timer_id = None
-        self.upload_queue_timer_id = None
-        self.retry_download_limits_timer_id = None
-        self.retry_failed_uploads_timer_id = None
+        self._transfer_timeout_timer_id = None
+        self._download_queue_timer_id = None
+        self._upload_queue_timer_id = None
+        self._retry_download_limits_timer_id = None
+        self._retry_failed_uploads_timer_id = None
 
     def init_transfers(self):
 
@@ -149,19 +149,20 @@ class Transfers:
         self.watch_stored_downloads()
 
         # Check for transfer timeouts
-        self.transfer_timeout_timer_id = scheduler.add(delay=1, callback=self._check_transfer_timeouts, repeat=True)
+        self._transfer_timeout_timer_id = scheduler.add(delay=1, callback=self._check_transfer_timeouts, repeat=True)
 
         # Request queue position of queued downloads and retry failed downloads every 3 minutes
-        self.download_queue_timer_id = scheduler.add(delay=180, callback=self.check_download_queue, repeat=True)
+        self._download_queue_timer_id = scheduler.add(delay=180, callback=self.check_download_queue, repeat=True)
 
         # Check if queued uploads can be started every 10 seconds
-        self.upload_queue_timer_id = scheduler.add(delay=10, callback=self.check_upload_queue, repeat=True)
+        self._upload_queue_timer_id = scheduler.add(delay=10, callback=self.check_upload_queue, repeat=True)
 
         # Re-queue limited downloads every 12 minutes
-        self.retry_download_limits_timer_id = scheduler.add(delay=720, callback=self.retry_download_limits, repeat=True)
+        self._retry_download_limits_timer_id = scheduler.add(
+            delay=720, callback=self.retry_download_limits, repeat=True)
 
         # Re-queue timed out uploads every 3 minutes
-        self.retry_failed_uploads_timer_id = scheduler.add(delay=180, callback=self.retry_failed_uploads, repeat=True)
+        self._retry_failed_uploads_timer_id = scheduler.add(delay=180, callback=self.retry_failed_uploads, repeat=True)
 
         if self.downloadsview:
             self.downloadsview.server_login()
@@ -2519,8 +2520,8 @@ class Transfers:
 
     def server_disconnect(self):
 
-        for timer_id in (self.transfer_timeout_timer_id, self.download_queue_timer_id, self.upload_queue_timer_id,
-                         self.retry_download_limits_timer_id, self.retry_failed_uploads_timer_id):
+        for timer_id in (self._transfer_timeout_timer_id, self._download_queue_timer_id, self._upload_queue_timer_id,
+                         self._retry_download_limits_timer_id, self._retry_failed_uploads_timer_id):
             scheduler.cancel(timer_id)
 
         need_update = False

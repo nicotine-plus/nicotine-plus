@@ -35,8 +35,7 @@ class Notifications:
             "private": []
         }
         self.tts = deque()
-        self.tts_thread = None
-        self.continue_playing = False
+        self._tts_thread = None
 
     """ Chat Hilites """
 
@@ -90,11 +89,11 @@ class Notifications:
 
         self.tts.append(message)
 
-        if self.tts_thread and self.tts_thread.is_alive():
+        if self._tts_thread and self._tts_thread.is_alive():
             return
 
-        self.tts_thread = Thread(target=self.play_tts, name="TTS", daemon=True)
-        self.tts_thread.start()
+        self._tts_thread = Thread(target=self.play_tts, name="TTS", daemon=True)
+        self._tts_thread.start()
 
     def play_tts(self):
 
