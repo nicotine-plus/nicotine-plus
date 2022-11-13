@@ -44,7 +44,6 @@ ILLEGALFILECHARS = ILLEGALPATHCHARS + ['\\', '/']
 LONG_PATH_PREFIX = "\\\\?\\"
 REPLACEMENTCHAR = '_'
 TRANSLATE_PUNCTUATION = str.maketrans(dict.fromkeys(PUNCTUATION, ' '))
-OPEN_SOULSEEK_URL = None
 
 
 def rename_process(new_name, debug_info=False):
@@ -195,7 +194,8 @@ def open_uri(uri):
             return True
 
         if protocol == "slsk":
-            OPEN_SOULSEEK_URL(uri.strip())  # pylint:disable=not-callable
+            from pynicotine.core import core
+            core.userbrowse.open_soulseek_url(uri.strip())
             return True
 
         # Situation 2, user did not define a way of handling the protocol

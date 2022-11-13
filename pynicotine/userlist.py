@@ -19,21 +19,19 @@
 import time
 
 from pynicotine.config import config
+from pynicotine.core import core
 from pynicotine.slskmessages import UserStatus
 
 
 class UserList:
 
-    def __init__(self, core, queue, ui_callback=None):
-
-        self.core = core
-        self.queue = queue
-        self.ui_callback = getattr(ui_callback, "userlist", None)
+    def __init__(self):
+        self.ui_callback = getattr(core.ui_callback, "userlist", None)
         self.buddies = {}
 
     def server_login(self):
         for user in self.buddies:
-            self.core.watch_user(user)
+            core.watch_user(user)
 
     def server_disconnect(self):
 
@@ -105,14 +103,14 @@ class UserList:
         if self.ui_callback:
             self.ui_callback.add_user(user, row)
 
-        if self.core.user_status == UserStatus.OFFLINE:
+        if core.user_status == UserStatus.OFFLINE:
             return
 
         # Request user status, speed and number of shared files
-        self.core.watch_user(user, force_update=True)
+        core.watch_user(user, force_update=True)
 
         # Set user country if present
-        self.set_user_country(user, self.core.get_user_country(user))
+        self.set_user_country(user, core.get_user_country(user))
 
     def remove_user(self, user):
 

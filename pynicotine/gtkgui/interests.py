@@ -22,6 +22,7 @@ from gi.repository import GLib
 from gi.repository import GObject
 
 from pynicotine.config import config
+from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
@@ -36,7 +37,7 @@ from pynicotine.utils import human_speed
 
 class Interests:
 
-    def __init__(self, frame, core):
+    def __init__(self, frame):
 
         ui_template = UserInterface(scope=self, path="interests.ui")
         (
@@ -59,7 +60,6 @@ class Interests:
             frame.interests_container.add(self.container)
 
         self.frame = frame
-        self.core = core
 
         self.populated_recommends = False
 
@@ -172,7 +172,7 @@ class Interests:
     def populate_recommendations(self):
         """ Populates the lists of recommendations and similar users if empty """
 
-        if self.populated_recommends or self.core.user_status == UserStatus.OFFLINE:
+        if self.populated_recommends or core.user_status == UserStatus.OFFLINE:
             return
 
         self.on_recommendations_clicked()
@@ -230,7 +230,7 @@ class Interests:
             return
 
         self.add_like_entry.set_text("")
-        self.core.interests.add_thing_i_like(item)
+        core.interests.add_thing_i_like(item)
 
     def on_add_thing_i_dislike(self, *_args):
 
@@ -240,14 +240,14 @@ class Interests:
             return
 
         self.add_dislike_entry.set_text("")
-        self.core.interests.add_thing_i_hate(item)
+        core.interests.add_thing_i_hate(item)
 
     def on_remove_thing_i_like(self, *_args):
 
         for iterator in self.likes_list_view.get_selected_rows():
             item = self.likes_list_view.get_row_value(iterator, 0)
 
-            self.core.interests.remove_thing_i_like(item)
+            core.interests.remove_thing_i_like(item)
             return
 
     def on_remove_thing_i_dislike(self, *_args):
@@ -255,7 +255,7 @@ class Interests:
         for iterator in self.dislikes_list_view.get_selected_rows():
             item = self.dislikes_list_view.get_row_value(iterator, 0)
 
-            self.core.interests.remove_thing_i_hate(item)
+            core.interests.remove_thing_i_hate(item)
             return
 
     def on_like_recommendation(self, action, state, list_view):
@@ -266,9 +266,9 @@ class Interests:
             item = list_view.get_row_value(iterator, column)
 
             if state.get_boolean():
-                self.core.interests.add_thing_i_like(item)
+                core.interests.add_thing_i_like(item)
             else:
-                self.core.interests.remove_thing_i_like(item)
+                core.interests.remove_thing_i_like(item)
 
             action.set_state(state)
             return
@@ -281,9 +281,9 @@ class Interests:
             item = list_view.get_row_value(iterator, column)
 
             if state.get_boolean():
-                self.core.interests.add_thing_i_hate(item)
+                core.interests.add_thing_i_hate(item)
             else:
-                self.core.interests.remove_thing_i_hate(item)
+                core.interests.remove_thing_i_hate(item)
 
             action.set_state(state)
             return
@@ -295,8 +295,8 @@ class Interests:
         for iterator in list_view.get_selected_rows():
             item = list_view.get_row_value(iterator, column)
 
-            self.core.interests.request_item_recommendations(item)
-            self.core.interests.request_item_similar_users(item)
+            core.interests.request_item_recommendations(item)
+            core.interests.request_item_similar_users(item)
             return
 
     def on_recommend_search(self, _action, _state, list_view):
@@ -312,13 +312,13 @@ class Interests:
     def on_recommendations_clicked(self, *_args):
 
         if not self.likes_list_view.iterators and not self.dislikes_list_view.iterators:
-            self.core.interests.request_global_recommendations()
+            core.interests.request_global_recommendations()
             return
 
-        self.core.interests.request_recommendations()
+        core.interests.request_recommendations()
 
     def on_similar_users_clicked(self, *_args):
-        self.core.interests.request_similar_users()
+        core.interests.request_similar_users()
 
     def set_recommendations(self, recommendations, item=None):
 
@@ -417,8 +417,8 @@ class Interests:
         for iterator in self.recommendations_list_view.get_selected_rows():
             item = self.recommendations_list_view.get_row_value(iterator, 1)
 
-            self.core.interests.request_item_recommendations(item)
-            self.core.interests.request_item_similar_users(item)
+            core.interests.request_item_recommendations(item)
+            core.interests.request_item_similar_users(item)
             return
 
     def on_popup_ru_menu(self, menu, *_args):
@@ -435,7 +435,7 @@ class Interests:
         for iterator in self.similar_users_list_view.get_selected_rows():
             user = self.similar_users_list_view.get_row_value(iterator, 1)
 
-            self.core.privatechat.show_user(user)
+            core.privatechat.show_user(user)
             return
 
     @staticmethod

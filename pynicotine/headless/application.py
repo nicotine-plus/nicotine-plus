@@ -23,16 +23,16 @@ import time
 from collections import deque
 
 from pynicotine.config import config
+from pynicotine.core import core
 from pynicotine.logfacility import log
 
 
 class Application:
 
-    def __init__(self, core, ci_mode):
+    def __init__(self, ci_mode):
 
         self.init_exception_handler()
 
-        self.core = core
         self.ci_mode = ci_mode
         self.thread_messages = deque()
 
@@ -41,22 +41,22 @@ class Application:
 
     def run(self):
 
-        self.core.start(self, thread_callback=self.thread_callback)
-        connect_success = self.core.connect()
+        core.start(self, thread_callback=self.thread_callback)
+        connect_success = core.connect()
 
         if not connect_success and not self.ci_mode:
             # Network error, exit code 1
             return 1
 
         # Main loop, process messages from networking thread
-        while not self.core.shutdown:
+        while not core.shutdown:
             if self.thread_messages:
                 msgs = []
 
                 while self.thread_messages:
                     msgs.append(self.thread_messages.popleft())
 
-                self.core.process_thread_callback(msgs)
+                core.process_thread_callback(msgs)
 
             time.sleep(1 / 60)
 
@@ -94,7 +94,7 @@ class Application:
         threading.Thread.__init__ = init_thread_excepthook
 
     def on_critical_error(self, _exc_type, exc_value, _exc_traceback):
-        self.core.quit()
+        core.quit()
         raise exc_value
 
     @staticmethod

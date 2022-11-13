@@ -20,15 +20,16 @@ from collections import deque
 from threading import Thread
 
 from pynicotine.config import config
+from pynicotine.core import core
 from pynicotine.logfacility import log
 from pynicotine.utils import execute_command
 
 
 class Notifications:
 
-    def __init__(self, ui_callback=None):
+    def __init__(self):
 
-        self.ui_callback = getattr(ui_callback, "notifications", None)
+        self.ui_callback = getattr(core.ui_callback, "notifications", None)
         self.chat_hilites = {
             "rooms": [],
             "private": []

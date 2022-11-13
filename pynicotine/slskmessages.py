@@ -138,7 +138,7 @@ class CloseConnectionIP(InternalMessage):
 
 
 class ServerConnect(InternalMessage):
-    """ NicotineCore sends this to make networking thread establish a server connection. """
+    """ Core sends this to make networking thread establish a server connection. """
 
     def __init__(self, addr=None, login=None):
         self.addr = addr

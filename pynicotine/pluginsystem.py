@@ -28,6 +28,7 @@ from time import time
 
 from pynicotine import slskmessages
 from pynicotine.config import config
+from pynicotine.core import core
 from pynicotine.logfacility import log
 from pynicotine.utils import encode_path
 
@@ -53,7 +54,7 @@ class BasePlugin:
     human_name = None     # Friendly plugin name specified in the PLUGININFO file
     parent = None         # Reference to PluginHandler
     config = None         # Reference to global Config handler
-    core = None           # Reference to NicotineCore
+    core = None           # Reference to Core
     frame = None          # Reference to NicotineFrame (GUI). Not accessible in headless/non-GUI mode. Use sparsely!
 
     def __init__(self):
@@ -174,7 +175,7 @@ class BasePlugin:
         log.add(self.human_name + ": " + msg, msg_args)
 
     def send_public(self, room, text):
-        self.core.queue.append(slskmessages.SayChatroom(room, text))
+        core.queue.append(slskmessages.SayChatroom(room, text))
 
     def send_private(self, user, text, show_ui=True, switch_page=True):
         """ Send user message in private.
@@ -182,24 +183,24 @@ class BasePlugin:
         switch_page controls whether the user's private chat view should be opened. """
 
         if show_ui:
-            self.core.privatechat.show_user(user, switch_page)
+            core.privatechat.show_user(user, switch_page)
 
-        self.core.privatechat.send_message(user, text)
+        core.privatechat.send_message(user, text)
 
     def echo_public(self, room, text, message_type="local"):
         """ Display a raw message in chat rooms (not sent to others).
         message_type changes the type (and color) of the message in the UI.
         available message_type values: action, remote, local, hilite """
 
-        self.core.chatrooms.echo_message(room, text, message_type)
+        core.chatrooms.echo_message(room, text, message_type)
 
     def echo_private(self, user, text, message_type="local"):
         """ Display a raw message in private (not sent to others).
         message_type changes the type (and color) of the message in the UI.
         available message_type values: action, remote, local, hilite """
 
-        self.core.privatechat.show_user(user)
-        self.core.privatechat.echo_message(user, text, message_type)
+        core.privatechat.show_user(user)
+        core.privatechat.echo_message(user, text, message_type)
 
     def send_message(self, text):
         """ Convenience function to send a message to the same user/room
@@ -263,7 +264,7 @@ class ResponseThrottle:
     Some of the throttle logic is guesswork as server code is closed source, but works adequately.
     """
 
-    def __init__(self, core, plugin_name, logging=False):
+    def __init__(self, core, plugin_name, logging=False):  # pylint: disable=redefined-outer-name
 
         self.core = core
         self.plugin_name = plugin_name
@@ -340,9 +341,8 @@ class ResponseThrottle:
 
 class PluginHandler:
 
-    def __init__(self, core):
+    def __init__(self):
 
-        self.core = core
         self.plugin_folders = []
         self.enabled_plugins = {}
         self.command_source = None
@@ -361,8 +361,8 @@ class PluginHandler:
 
         BasePlugin.parent = self
         BasePlugin.config = config
-        BasePlugin.core = self.core
-        BasePlugin.frame = self.core.ui_callback
+        BasePlugin.core = core
+        BasePlugin.frame = core.ui_callback
 
     def quit(self):
 
@@ -379,10 +379,10 @@ class PluginHandler:
             return
 
         if plugin.commands or plugin.__publiccommands__:
-            self.core.chatrooms.update_completions()
+            core.chatrooms.update_completions()
 
         if plugin.commands or plugin.__privatecommands__:
-            self.core.privatechat.update_completions()
+            core.privatechat.update_completions()
 
     def get_plugin_path(self, plugin_name):
 
@@ -844,7 +844,7 @@ class PluginHandler:
         self.trigger_event("public_room_message_notification", (room, user, line))
 
     def incoming_private_chat_event(self, user, line):
-        if user != self.core.login_username:
+        if user != core.login_username:
             # dont trigger the scripts on our own talking - we've got "Outgoing" for that
             return self.trigger_event("incoming_private_chat_event", (user, line))
 

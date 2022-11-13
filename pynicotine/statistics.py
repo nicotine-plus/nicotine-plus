@@ -19,14 +19,16 @@
 import time
 
 from pynicotine.config import config
+from pynicotine.core import core
 
 
 class Statistics:
 
-    def __init__(self, ui_callback=None):
-
-        self.ui_callback = getattr(ui_callback, "statistics", None)
+    def __init__(self):
+        self.ui_callback = getattr(core.ui_callback, "statistics", None)
         self.session_stats = {}
+
+    def load_statistics(self):
 
         # Only populate total since date on first run
         if (not config.sections["statistics"]["since_timestamp"]

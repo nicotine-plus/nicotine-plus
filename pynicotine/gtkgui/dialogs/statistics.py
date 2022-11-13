@@ -20,6 +20,7 @@ import time
 
 from gi.repository import Gtk
 
+from pynicotine.core import core
 from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.ui import UserInterface
@@ -29,9 +30,7 @@ from pynicotine.utils import humanize
 
 class Statistics(Dialog):
 
-    def __init__(self, frame, core):
-
-        self.core = core
+    def __init__(self, frame):
 
         ui_template = UserInterface(scope=self, path="dialogs/statistics.ui")
         (
@@ -88,7 +87,7 @@ class Statistics(Dialog):
 
     def on_reset_statistics_response(self, _dialog, response_id, _data):
         if response_id == 2:
-            self.core.statistics.reset_stats()
+            core.statistics.reset_stats()
 
     def on_reset_statistics(self, *_args):
 

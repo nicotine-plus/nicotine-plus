@@ -26,6 +26,7 @@ import time
 from gi.repository import GObject
 
 from pynicotine.config import config
+from pynicotine.core import core
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
@@ -42,7 +43,7 @@ from pynicotine.utils import human_speed
 
 class UserList:
 
-    def __init__(self, frame, core):
+    def __init__(self, frame):
 
         ui_template = UserInterface(scope=self, path="buddylist.ui")
         (
@@ -52,7 +53,6 @@ class UserList:
         ) = ui_template.widgets
 
         self.frame = frame
-        self.core = core
 
         # Columns
         self.list_view = TreeView(
@@ -146,7 +146,7 @@ class UserList:
             self.on_add_note()
             return
 
-        self.core.privatechat.show_user(user)
+        core.privatechat.show_user(user)
 
     def on_popup_menu(self, menu, _widget):
 
@@ -155,7 +155,7 @@ class UserList:
         menu.toggle_user_items()
         menu.populate_private_rooms(self.popup_menu_private_rooms)
 
-        private_rooms_enabled = (self.popup_menu_private_rooms.items and menu.user != self.core.login_username)
+        private_rooms_enabled = (self.popup_menu_private_rooms.items and menu.user != core.login_username)
         menu.actions[_("Private Rooms")].set_enabled(private_rooms_enabled)
 
     def get_user_status(self, msg):
@@ -322,31 +322,31 @@ class UserList:
             return
 
         self.frame.add_buddy_entry.set_text("")
-        self.core.userlist.add_user(username)
+        core.userlist.add_user(username)
 
     def on_remove_user(self, *_args):
-        self.core.userlist.remove_user(self.get_selected_username())
+        core.userlist.remove_user(self.get_selected_username())
 
     def on_trusted(self, list_view, iterator):
 
         user = list_view.get_row_value(iterator, 2)
         value = list_view.get_row_value(iterator, 5)
 
-        self.core.userlist.set_user_trusted(user, not value)
+        core.userlist.set_user_trusted(user, not value)
 
     def on_notify(self, list_view, iterator):
 
         user = list_view.get_row_value(iterator, 2)
         value = list_view.get_row_value(iterator, 6)
 
-        self.core.userlist.set_user_notify(user, not value)
+        core.userlist.set_user_notify(user, not value)
 
     def on_prioritized(self, list_view, iterator):
 
         user = list_view.get_row_value(iterator, 2)
         value = list_view.get_row_value(iterator, 7)
 
-        self.core.userlist.set_user_prioritized(user, not value)
+        core.userlist.set_user_prioritized(user, not value)
 
     def on_add_note_response(self, dialog, _response_id, user):
 
@@ -360,7 +360,7 @@ class UserList:
         if note is None:
             return
 
-        self.core.userlist.set_user_note(user, note)
+        core.userlist.set_user_note(user, note)
 
     def on_add_note(self, *_args):
 

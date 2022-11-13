@@ -23,8 +23,8 @@ from operator import itemgetter
 from threading import Thread
 
 from pynicotine import slskmessages
-from pynicotine import utils
 from pynicotine.config import config
+from pynicotine.core import core
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import clean_file
@@ -35,16 +35,13 @@ from pynicotine.utils import RestrictedUnpickler
 
 class UserBrowse:
 
-    def __init__(self, core, ui_callback=None):
-
-        self.core = core
+    def __init__(self):
         self.users = set()
-        self.ui_callback = getattr(ui_callback, "userbrowse", None)
-        utils.OPEN_SOULSEEK_URL = self.open_soulseek_url
+        self.ui_callback = getattr(core.ui_callback, "userbrowse", None)
 
     def server_login(self):
         for user in self.users:
-            self.core.watch_user(user)  # Get notified of user status
+            core.watch_user(user)  # Get notified of user status
 
     def server_disconnect(self):
         if self.ui_callback:
@@ -53,7 +50,7 @@ class UserBrowse:
     def send_upload_attempt_notification(self, username):
         """ Send notification to user when attempting to initiate upload from our end """
 
-        self.core.send_message_to_peer(username, slskmessages.UploadQueueNotification())
+        core.send_message_to_peer(username, slskmessages.UploadQueueNotification())
 
     def add_user(self, user):
         if user not in self.users:
@@ -87,7 +84,7 @@ class UserBrowse:
         username = config.sections["server"]["login"] or "Default"
 
         if username not in self.users or new_request:
-            msg = self.core.shares.get_compressed_shares_message("normal")
+            msg = core.shares.get_compressed_shares_message("normal")
             Thread(
                 target=self.parse_local_shares, args=(username, msg), name="LocalShareParser", daemon=True
             ).start()
@@ -100,7 +97,7 @@ class UserBrowse:
         username = config.sections["server"]["login"] or "Default"
 
         if username not in self.users or new_request:
-            msg = self.core.shares.get_compressed_shares_message("buddy")
+            msg = core.shares.get_compressed_shares_message("buddy")
             Thread(
                 target=self.parse_local_shares, args=(username, msg), name="LocalBuddyShareParser", daemon=True
             ).start()
@@ -124,14 +121,14 @@ class UserBrowse:
         user_exists = (username in self.users)
         self.show_user(username, path=path, switch_page=switch_page)
 
-        if self.core.user_status == UserStatus.OFFLINE:
+        if core.user_status == UserStatus.OFFLINE:
             self.show_connection_error(username)
             return
 
-        self.core.watch_user(username, force_update=True)
+        core.watch_user(username, force_update=True)
 
         if not user_exists or new_request:
-            self.core.send_message_to_peer(username, slskmessages.GetSharedFileList())
+            core.send_message_to_peer(username, slskmessages.GetSharedFileList())
 
     def create_user_shares_folder(self):
 
@@ -210,8 +207,7 @@ class UserBrowse:
         size = file_data[2]
         h_bitrate, _bitrate, h_length, _length = get_result_bitrate_length(size, file_data[4])
 
-        self.core.transfers.get_file(user, virtualpath, prefix,
-                                     size=size, bitrate=h_bitrate, length=h_length)
+        core.transfers.get_file(user, virtualpath, prefix, size=size, bitrate=h_bitrate, length=h_length)
 
     def download_folder(self, user, requested_folder, shares_list, prefix="", recurse=False):
 
@@ -230,10 +226,10 @@ class UserBrowse:
 
             # Remember custom download location
             if prefix:
-                self.core.transfers.requested_folders[user][folder] = prefix
+                core.transfers.requested_folders[user][folder] = prefix
 
             # Get final download destination
-            destination = self.core.transfers.get_folder_destination(user, folder, remove_prefix)
+            destination = core.transfers.get_folder_destination(user, folder, remove_prefix)
 
             if files:
                 if config.sections["transfers"]["reverseorder"]:
@@ -244,8 +240,8 @@ class UserBrowse:
                     size = file_data[2]
                     h_bitrate, _bitrate, h_length, _length = get_result_bitrate_length(size, file_data[4])
 
-                    self.core.transfers.get_file(user, virtualpath, destination,
-                                                 size=size, bitrate=h_bitrate, length=h_length)
+                    core.transfers.get_file(user, virtualpath, destination,
+                                            size=size, bitrate=h_bitrate, length=h_length)
 
             if not recurse:
                 # Downloading a single folder, no need to continue
@@ -256,7 +252,7 @@ class UserBrowse:
         virtualpath = "\\".join([folder, file_data[1]])
         size = file_data[2]
 
-        self.core.transfers.push_file(user, virtualpath, size, locally_queued=locally_queued)
+        core.transfers.push_file(user, virtualpath, size, locally_queued=locally_queued)
 
     def upload_folder(self, user, requested_folder, shares_list, recurse=False):
 
@@ -278,7 +274,7 @@ class UserBrowse:
                     filename = "\\".join([folder, file_data[1]])
                     size = file_data[2]
 
-                    self.core.transfers.push_file(user, filename, size, locally_queued=locally_queued)
+                    core.transfers.push_file(user, filename, size, locally_queued=locally_queued)
                     locally_queued = True
 
             if not recurse:

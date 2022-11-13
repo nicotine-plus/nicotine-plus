@@ -20,6 +20,7 @@ from gi.repository import Gdk
 from gi.repository import Gtk
 
 from pynicotine.config import config
+from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
 from pynicotine.gtkgui.widgets.window import Window
@@ -375,7 +376,7 @@ class PluginSettingsDialog(Dialog):
         self.plugin_settings = plugin_settings
         self.option_widgets = {}
 
-        plugin_name = frame.core.pluginhandler.get_plugin_info(plugin_id).get("Name", plugin_id)
+        plugin_name = core.pluginhandler.get_plugin_info(plugin_id).get("Name", plugin_id)
 
         cancel_button = Gtk.Button(label=_("_Cancel"), use_underline=True, visible=True)
         cancel_button.connect("clicked", self.on_cancel)
@@ -685,7 +686,7 @@ class PluginSettingsDialog(Dialog):
             if value is not None:
                 config.sections["plugins"][self.plugin_id.lower()][name] = value
 
-        self.frame.core.pluginhandler.plugin_settings(
-            self.plugin_id, self.frame.core.pluginhandler.enabled_plugins[self.plugin_id])
+        core.pluginhandler.plugin_settings(
+            self.plugin_id, core.pluginhandler.enabled_plugins[self.plugin_id])
 
         self.close()

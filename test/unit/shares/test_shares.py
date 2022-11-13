@@ -19,9 +19,6 @@
 import os
 import unittest
 
-from collections import deque
-from unittest.mock import Mock
-
 from pynicotine.config import config
 from pynicotine.shares import Shares
 
@@ -43,7 +40,7 @@ class SharesTest(unittest.TestCase):
         config.sections["transfers"]["shared"] = [("Shares", SHARES_DIR)]
         config.sections["transfers"]["rescanonstartup"] = False
 
-        shares = Shares(Mock(), deque(), init_shares=False)
+        shares = Shares()
         shares.rescan_shares(use_thread=False)
 
         # Verify that modification time was saved for shares folder
@@ -81,7 +78,7 @@ class SharesTest(unittest.TestCase):
         config.sections["transfers"]["shared"] = [("Shares", SHARES_DIR)]
         config.sections["transfers"]["rescanonstartup"] = False
 
-        shares = Shares(Mock(), deque(), init_shares=False)
+        shares = Shares()
         shares.rescan_shares(use_thread=False)
 
         # Check folders

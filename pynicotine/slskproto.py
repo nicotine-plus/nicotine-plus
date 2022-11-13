@@ -177,10 +177,9 @@ class PeerConnection(Connection):
         self.lastcallback = time.time()
 
 
-class SlskProtoThread(Thread):
+class SoulseekNetworkThread(Thread):
     """ This is a networking thread that actually does all the communication.
-    It sends data to the NicotineCore via a callback function and receives
-    data via a deque object. """
+    It sends data to the core via a callback function and receives data via a deque object. """
 
     """ The server and peers send each other small binary messages that start
     with length and message code followed by the actual message data. """
@@ -190,18 +189,17 @@ class SlskProtoThread(Thread):
     SOCKET_READ_BUFFER_SIZE = 1048576
     SOCKET_WRITE_BUFFER_SIZE = 1048576
 
-    def __init__(self, core_callback, queue, bindip, interface, port, port_range):
-        """ core_callback is a NicotineCore callback function to be called with messages
-        list as a parameter. queue is deque object that holds network messages from
-        NicotineCore. """
+    def __init__(self, callback, queue, bindip, interface, port, port_range):
+        """ callback is a Core callback function to be called with messages
+        list as a parameter. queue is deque object that holds network messages from Core. """
 
-        super().__init__(name="NetworkThread")
+        super().__init__(name="SoulseekNetworkThread")
 
         if sys.platform not in ("linux", "darwin"):
             # TODO: support custom network interface for other systems than Linux and macOS
             interface = None
 
-        self._core_callback = core_callback
+        self._callback = callback
         self._queue = queue
         self._callback_msgs = []
         self._pending_init_msgs = {}
@@ -404,7 +402,7 @@ class SlskProtoThread(Thread):
         self._callback_msgs.append(ServerDisconnect(self.manual_server_disconnect))
 
     def server_timeout(self):
-        self._core_callback([ServerTimeout()])
+        self._callback([ServerTimeout()])
 
     def set_server_timer(self):
 
@@ -1593,7 +1591,7 @@ class SlskProtoThread(Thread):
             finished = (conn_obj.filedown.leftbytes == 0)
 
             if finished or (current_time - conn_obj.lastcallback) > 1:
-                # We save resources by not sending data back to the NicotineCore
+                # We save resources by not sending data back to core
                 # every time a part of a file is downloaded
 
                 self._callback_msgs.append(copy.copy(conn_obj.filedown))
@@ -1997,7 +1995,7 @@ class SlskProtoThread(Thread):
                 current_time = time.time()
 
                 if finished or (current_time - conn_obj.lastcallback) > 1:
-                    # We save resources by not sending data back to the NicotineCore
+                    # We save resources by not sending data back to core
                     # every time a part of a file is uploaded
 
                     self._callback_msgs.append(copy.copy(conn_obj.fileupl))
@@ -2011,7 +2009,7 @@ class SlskProtoThread(Thread):
 
     def run(self):
 
-        self._core_callback([SetConnectionStats()])
+        self._callback([SetConnectionStats()])
 
         # Watch sockets for I/0 readiness with the selectors module. Only call register() after a socket
         # is bound, otherwise watching the socket not guaranteed to work (breaks on OpenBSD at least)
@@ -2039,7 +2037,7 @@ class SlskProtoThread(Thread):
             current_time = time.time()
             num_sockets = self._numsockets
 
-            # Send updated connection count to NicotineCore. Avoid sending too many
+            # Send updated connection count to core. Avoid sending too many
             # updates at once, if there are a lot of connections.
             if (current_time - self._last_conn_stat_time) >= 1:
                 self._callback_msgs.append(
@@ -2171,7 +2169,7 @@ class SlskProtoThread(Thread):
                 for msg in self._callback_msgs:
                     log.add_msg_contents(msg)
 
-                self._core_callback(self._callback_msgs)
+                self._callback(self._callback_msgs)
                 self._callback_msgs.clear()
 
             # Reset transfer speed limits

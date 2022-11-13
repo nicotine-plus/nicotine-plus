@@ -184,7 +184,7 @@ listfont =
 browserfont = 
 transfersfont = 
 last_tab_id = 
-modes_visible = {'search': True, 'downloads': True, 'uploads': True, 'userbrowse': True, 'userinfo': True, 'private': True, 'chatrooms': True, 'interests': True}
+modes_visible = {'search': True, 'downloads': True, 'uploads': True, 'userbrowse': True, 'userinfo': True, 'private': True, 'chatrooms': True, 'interests': True, 'userlist': True}
 modes_order = ['search', 'downloads', 'uploads', 'userbrowse', 'userinfo', 'private', 'userlist', 'chatrooms', 'interests']
 buddylistinchatrooms = tab
 trayicon = True
@@ -242,7 +242,7 @@ downloaded_size = 0
 started_uploads = 0
 completed_uploads = 0
 uploaded_size = 0
-since_timestamp = 0
+since_timestamp = 1668295335
 
 [userbrowse]
 expand_folders = True

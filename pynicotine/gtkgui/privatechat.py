@@ -30,6 +30,7 @@ from gi.repository import GLib
 
 from pynicotine import slskmessages
 from pynicotine.config import config
+from pynicotine.core import core
 from pynicotine.gtkgui.popovers.chathistory import ChatHistory
 from pynicotine.gtkgui.popovers.privatechatcommands import PrivateChatCommands
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
@@ -53,17 +54,17 @@ from pynicotine.utils import open_log
 
 class PrivateChats(IconNotebook):
 
-    def __init__(self, frame, core):
+    def __init__(self, frame):
 
         super().__init__(
-            frame, core,
+            frame,
             widget=frame.private_notebook,
             parent_page=frame.private_page,
             switch_page_callback=self.on_switch_chat
         )
 
         self.completion = ChatCompletion()
-        self.history = ChatHistory(frame, core)
+        self.history = ChatHistory(frame)
         self.command_help = None
 
         self.update_visuals()
@@ -78,7 +79,7 @@ class PrivateChats(IconNotebook):
                 continue
 
             self.completion.set_entry(tab.chat_entry)
-            tab.set_completion_list(self.core.privatechat.completion_list[:])
+            tab.set_completion_list(core.privatechat.completion_list[:])
 
             if self.command_help is None:
                 self.command_help = PrivateChatCommands(self.frame.window)
@@ -101,7 +102,7 @@ class PrivateChats(IconNotebook):
             return
 
         self.frame.private_entry.set_text("")
-        self.core.privatechat.show_user(username)
+        core.privatechat.show_user(username)
 
     def clear_messages(self, user):
 
@@ -129,7 +130,7 @@ class PrivateChats(IconNotebook):
             self.set_user_status(page.container, msg.user, msg.status)
             page.update_remote_username_tag(msg.status)
 
-        if msg.user == self.core.login_username:
+        if msg.user == core.login_username:
             for page in self.pages.values():
                 # We've enabled/disabled away mode, update our username color in all chats
                 page.update_local_username_tag(msg.status)
@@ -226,11 +227,10 @@ class PrivateChat:
         self.user = user
         self.chats = chats
         self.frame = chats.frame
-        self.core = chats.core
 
         self.loaded = False
         self.offline_message = False
-        self.status = self.core.user_statuses.get(user, UserStatus.OFFLINE)
+        self.status = core.user_statuses.get(user, UserStatus.OFFLINE)
 
         self.chat_view = TextView(self.chat_view, font="chatfont")
 
@@ -240,7 +240,7 @@ class PrivateChat:
 
         # Chat Entry
         ChatEntry(self.frame, self.chat_entry, chats.completion, user, slskmessages.MessageUser,
-                  self.core.privatechat.send_message)
+                  core.privatechat.send_message)
 
         self.log_toggle.set_active(config.sections["logging"]["privatechat"])
 
@@ -427,7 +427,7 @@ class PrivateChat:
                                    username=self.user, usertag=usertag)
 
         if self.speech_toggle.get_active():
-            self.core.notifications.new_tts(
+            core.notifications.new_tts(
                 config.sections["ui"]["speechprivate"], {"user": self.user, "message": speech}
             )
 
@@ -450,7 +450,7 @@ class PrivateChat:
 
     def send_message(self, text):
 
-        my_username = self.core.login_username
+        my_username = core.login_username
 
         if text.startswith("/me "):
             line = "* %s %s" % (my_username, text[4:])
@@ -490,7 +490,7 @@ class PrivateChat:
         color = get_user_status_color(self.status)
         self.tag_username = self.chat_view.create_tag(color, callback=self.user_name_event, username=self.user)
 
-        color = get_user_status_color(self.core.user_status)
+        color = get_user_status_color(core.user_status)
         my_username = config.sections["server"]["login"]
         self.tag_my_username = self.chat_view.create_tag(color, callback=self.user_name_event, username=my_username)
 
@@ -518,7 +518,7 @@ class PrivateChat:
         self.chat_entry.grab_focus()
 
     def on_close(self, *_args):
-        self.core.privatechat.remove_user(self.user)
+        core.privatechat.remove_user(self.user)
 
     def on_close_all_tabs(self, *_args):
         self.chats.remove_all_pages()

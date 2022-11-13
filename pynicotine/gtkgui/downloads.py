@@ -24,6 +24,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from pynicotine.config import config
+from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.transferlist import TransferList
 from pynicotine.gtkgui.utils import copy_text
@@ -33,7 +34,7 @@ from pynicotine.utils import open_file_path
 
 class Downloads(TransferList):
 
-    def __init__(self, frame, core):
+    def __init__(self, frame):
 
         self.path_separator = '/'
         self.path_label = _("Path")
@@ -47,7 +48,7 @@ class Downloads(TransferList):
         self.expand_icon = frame.downloads_expand_icon
         self.grouping_button = frame.downloads_grouping_button
 
-        TransferList.__init__(self, frame, core, transfer_type="download")
+        TransferList.__init__(self, frame, transfer_type="download")
 
         if GTK_API_VERSION >= 4:
             frame.downloads_content.append(self.container)
@@ -68,17 +69,17 @@ class Downloads(TransferList):
         self.popup_menu_clear.update_model()
 
     def retry_selected_transfers(self):
-        self.core.transfers.retry_downloads(self.selected_transfers)
+        core.transfers.retry_downloads(self.selected_transfers)
 
     def abort_selected_transfers(self):
-        self.core.transfers.abort_downloads(self.selected_transfers)
+        core.transfers.abort_downloads(self.selected_transfers)
 
     def clear_selected_transfers(self):
-        self.core.transfers.clear_downloads(downloads=self.selected_transfers)
+        core.transfers.clear_downloads(downloads=self.selected_transfers)
 
     def on_clear_queued_response(self, _dialog, response_id, _data):
         if response_id == 2:
-            self.core.transfers.clear_downloads(statuses=["Queued"])
+            core.transfers.clear_downloads(statuses=["Queued"])
 
     def on_try_clear_queued(self, *_args):
 
@@ -91,7 +92,7 @@ class Downloads(TransferList):
 
     def on_clear_all_response(self, _dialog, response_id, _data):
         if response_id == 2:
-            self.core.transfers.clear_downloads()
+            core.transfers.clear_downloads()
 
     def on_try_clear_all(self, *_args):
 
@@ -104,7 +105,7 @@ class Downloads(TransferList):
 
     def folder_download_response(self, _dialog, response_id, msg):
         if response_id == 2:
-            self.core.transfers.folder_contents_response(msg, check_num_files=False)
+            core.transfers.folder_contents_response(msg, check_num_files=False)
 
     def download_large_folder(self, username, folder, numfiles, msg):
 
@@ -122,7 +123,7 @@ class Downloads(TransferList):
         transfer = next(iter(self.selected_transfers), None)
 
         if transfer:
-            url = self.core.userbrowse.get_soulseek_url(transfer.user, transfer.filename)
+            url = core.userbrowse.get_soulseek_url(transfer.user, transfer.filename)
             copy_text(url)
 
     def on_copy_dir_url(self, *_args):
@@ -130,7 +131,7 @@ class Downloads(TransferList):
         transfer = next(iter(self.selected_transfers), None)
 
         if transfer:
-            url = self.core.userbrowse.get_soulseek_url(
+            url = core.userbrowse.get_soulseek_url(
                 transfer.user, transfer.filename.rsplit('\\', 1)[0] + '\\')
             copy_text(url)
 
@@ -156,7 +157,7 @@ class Downloads(TransferList):
                 # If this file doesn't exist anymore, it may have finished downloading and have been renamed.
                 # Try looking in the download directory and match the original filename and size.
 
-                file_path = self.core.transfers.get_existing_download_path(
+                file_path = core.transfers.get_existing_download_path(
                     transfer.user, transfer.filename, transfer.path, transfer.size, always_return=True)
 
             open_file_path(file_path, command=config.sections["players"]["default"])
@@ -171,26 +172,26 @@ class Downloads(TransferList):
             folder = transfer.filename.rsplit('\\', 1)[0] + '\\'
 
             if user not in requested_users and folder not in requested_folders:
-                self.core.userbrowse.browse_user(user, path=folder)
+                core.userbrowse.browse_user(user, path=folder)
 
                 requested_users.add(user)
                 requested_folders.add(folder)
 
     def on_clear_queued(self, *_args):
-        self.core.transfers.clear_downloads(statuses=["Queued"])
+        core.transfers.clear_downloads(statuses=["Queued"])
 
     def on_clear_finished(self, *_args):
-        self.core.transfers.clear_downloads(statuses=["Finished"])
+        core.transfers.clear_downloads(statuses=["Finished"])
 
     def on_clear_paused(self, *_args):
-        self.core.transfers.clear_downloads(statuses=["Paused"])
+        core.transfers.clear_downloads(statuses=["Paused"])
 
     def on_clear_finished_filtered(self, *_args):
-        self.core.transfers.clear_downloads(statuses=["Finished", "Filtered"])
+        core.transfers.clear_downloads(statuses=["Finished", "Filtered"])
 
     def on_clear_failed(self, *_args):
-        self.core.transfers.clear_downloads(
+        core.transfers.clear_downloads(
             statuses=["Connection timeout", "Local file error", "Remote file error", "File not shared"])
 
     def on_clear_filtered(self, *_args):
-        self.core.transfers.clear_downloads(statuses=["Filtered"])
+        core.transfers.clear_downloads(statuses=["Filtered"])

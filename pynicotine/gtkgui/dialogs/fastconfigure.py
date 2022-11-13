@@ -23,6 +23,7 @@ import os
 from gi.repository import Gtk
 
 from pynicotine.config import config
+from pynicotine.core import core
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
 from pynicotine.gtkgui.widgets.filechooser import FolderChooser
 from pynicotine.gtkgui.widgets.dialogs import Dialog
@@ -34,9 +35,8 @@ from pynicotine.utils import open_uri
 
 class FastConfigure(Dialog):
 
-    def __init__(self, frame, core):
+    def __init__(self, frame):
 
-        self.core = core
         self.rescan_required = False
         self.finished = False
 
@@ -165,7 +165,7 @@ class FastConfigure(Dialog):
         shared = config.sections["transfers"]["shared"]
         buddy_shared = config.sections["transfers"]["buddyshared"]
 
-        virtual = self.core.shares.get_normalized_virtual_name(virtual, shared_folders=(shared + buddy_shared))
+        virtual = core.shares.get_normalized_virtual_name(virtual, shared_folders=(shared + buddy_shared))
         folder = self.shares_list_view.get_row_value(iterator, 1)
         old_virtual = self.shares_list_view.get_row_value(iterator, 0)
         old_mapping = (old_virtual, folder)
@@ -239,7 +239,7 @@ class FastConfigure(Dialog):
     def on_close(self, *_args):
 
         if self.rescan_required:
-            self.core.shares.rescan_shares()
+            core.shares.rescan_shares()
 
         if not self.finished:
             return True
@@ -249,7 +249,7 @@ class FastConfigure(Dialog):
             config.sections["server"]["login"] = self.username_entry.get_text()
             config.sections["server"]["passw"] = self.password_entry.get_text()
 
-        self.core.connect()
+        core.connect()
         return True
 
     def on_show(self, *_args):
@@ -264,7 +264,7 @@ class FastConfigure(Dialog):
         self.password_entry.set_text(config.sections["server"]["passw"])
 
         # port_page
-        url = config.portchecker_url % str(self.core.protothread.listenport)
+        url = config.portchecker_url % str(core.protothread.listenport)
         text = "<a href='" + url + "' title='" + url + "'>" + _("Check Port Status") + "</a>"
         self.check_port_label.set_markup(text)
         self.check_port_label.connect("activate-link", lambda x, url: open_uri(url))

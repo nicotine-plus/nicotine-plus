@@ -24,6 +24,7 @@ def check_arguments():
 
     import argparse
     from pynicotine.config import config
+    from pynicotine.core import core
 
     parser = argparse.ArgumentParser(
         description=config.summary, epilog=_("Website: %s") % config.website_url, add_help=False
@@ -82,7 +83,10 @@ def check_arguments():
     if args.user_data:
         config.data_dir = args.user_data
 
-    return args.headless, args.hidden, args.bindip, args.port, args.ci_mode, args.rescan, multi_instance
+    core.bindip = args.bindip
+    core.port = args.port
+
+    return args.headless, args.hidden, args.ci_mode, args.rescan, multi_instance
 
 
 def check_python_version():
@@ -103,16 +107,13 @@ You should install Python %(min_version)s or newer.""") % {
 
 def rescan_shares():
 
-    from collections import deque
-
     from pynicotine.config import config
+    from pynicotine.core import core
     from pynicotine.logfacility import log
-    from pynicotine.shares import Shares
 
     config.load_config()
-
-    shares = Shares(None, config, deque(), init_shares=False)
-    error = shares.rescan_shares(use_thread=False)
+    core.init_components()
+    error = core.shares.rescan_shares(use_thread=False)
 
     if error:
         log.add("--------------------------------------------------")
@@ -147,7 +148,7 @@ def run():
     from pynicotine.utils import rename_process
     rename_process(b"nicotine")
 
-    headless, hidden, bindip, port, ci_mode, rescan, multi_instance = check_arguments()
+    headless, hidden, ci_mode, rescan, multi_instance = check_arguments()
     error = check_python_version()
 
     if error:
@@ -165,21 +166,17 @@ def run():
     if rescan:
         return rescan_shares()
 
-    # Initialize core
-    from pynicotine.pynicotine import NicotineCore
-    core = NicotineCore(bindip, port)
-
     # Initialize GTK-based GUI
     if not headless:
         from pynicotine.gtkgui import run_gui
-        exit_code = run_gui(core, hidden, ci_mode, multi_instance)
+        exit_code = run_gui(hidden, ci_mode, multi_instance)
 
         if exit_code is not None:
             return exit_code
 
     # Run without a GUI
     from pynicotine.headless import run_headless
-    return run_headless(core, ci_mode)
+    return run_headless(ci_mode)
 
 
 apply_translations()
