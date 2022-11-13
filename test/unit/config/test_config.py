@@ -17,13 +17,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import unittest
+
+from unittest import TestCase
 
 from pynicotine.config import config
 from pynicotine.utils import encode_path
 
 
-class ConfigTest(unittest.TestCase):
+class ConfigTest(TestCase):
 
     def setUp(self):
 

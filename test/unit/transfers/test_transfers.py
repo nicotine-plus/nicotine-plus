@@ -17,15 +17,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import unittest
 
-from collections import OrderedDict
+from unittest import TestCase
 
 from pynicotine.config import config
 from pynicotine.core import core
 
 
-class TransfersTest(unittest.TestCase):
+class TransfersTest(TestCase):
 
     def setUp(self):
 
@@ -195,7 +194,7 @@ class TransfersTest(unittest.TestCase):
         user = "random"
         target_folder = "share\\Soulseek"
 
-        shares_list = OrderedDict([
+        shares_list = dict([
             ('share\\Music', [
                 (1, 'music1.mp3', 1000000, '', {}),
                 (1, 'music2.mp3', 2000000, '', {})

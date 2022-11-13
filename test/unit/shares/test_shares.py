@@ -17,7 +17,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import unittest
+
+from unittest import TestCase
 
 from pynicotine.config import config
 from pynicotine.core import core
@@ -25,7 +26,7 @@ from pynicotine.core import core
 SHARES_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), ".sharedfiles")
 
 
-class SharesTest(unittest.TestCase):
+class SharesTest(TestCase):
 
     def setUp(self):
 

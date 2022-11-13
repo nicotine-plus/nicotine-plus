@@ -18,13 +18,14 @@
 
 import datetime
 import socket
-import unittest
+
+from unittest import TestCase
 
 from pynicotine.config import config
 from pynicotine.updatechecker import UpdateChecker
 
 
-class VersionTest(unittest.TestCase):
+class VersionTest(TestCase):
 
     def test_dev_version(self):
 

@@ -17,7 +17,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import unittest
+
+from unittest import TestCase
 
 from pynicotine.config import config
 from pynicotine.core import core
@@ -26,7 +27,7 @@ from pynicotine.transfers import Transfer
 NUM_ALLOWED_NONE = 2
 
 
-class GetUploadCandidateTest(unittest.TestCase):
+class GetUploadCandidateTest(TestCase):
 
     def setUp(self):
 
