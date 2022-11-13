@@ -37,7 +37,6 @@ import time
 
 from collections import defaultdict
 from collections import deque
-from collections import OrderedDict
 from operator import itemgetter
 
 from pynicotine import slskmessages
@@ -2093,7 +2092,7 @@ class Transfers:
         active_statuses = ("Getting status", "Transferring")
         privileged_queue = False
 
-        first_queued_transfers = OrderedDict()
+        first_queued_transfers = {}
         queued_users = {}
         uploading_users = set()
 

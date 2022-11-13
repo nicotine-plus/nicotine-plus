@@ -24,8 +24,6 @@
 
 import time
 
-from collections import OrderedDict
-
 from gi.repository import GObject
 from gi.repository import Gtk
 
@@ -86,8 +84,8 @@ class TransferList:
         self.file_properties = None
 
         # Use dict instead of list for faster membership checks
-        self.selected_users = OrderedDict()
-        self.selected_transfers = OrderedDict()
+        self.selected_users = {}
+        self.selected_transfers = {}
 
         # Status list
         self.statuses = {

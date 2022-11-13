@@ -23,8 +23,6 @@
 import random
 import string
 
-from collections import OrderedDict
-
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import GObject
@@ -201,7 +199,7 @@ class TreeView:
         height_padding = 4
         width_padding = 10
 
-        cols = OrderedDict()
+        cols = {}
         num_cols = len(columns)
         column_config = None
 
@@ -616,7 +614,7 @@ def collapse_treeview(treeview, grouping_mode):
 
 def initialise_columns(frame, treeview_name, treeview, *args):
 
-    cols = OrderedDict()
+    cols = {}
     num_cols = len(args)
     column_config = None
 

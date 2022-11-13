@@ -19,8 +19,6 @@
 import os
 import sys
 
-from collections import OrderedDict
-
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
@@ -46,7 +44,7 @@ class BaseImplementation:
     def __init__(self, frame):
 
         self.frame = frame
-        self.menu_items = OrderedDict()
+        self.menu_items = {}
         self.menu_item_id = 1
 
         self.create_menu()
@@ -398,7 +396,7 @@ class StatusNotifierImplementation(BaseImplementation):
                 bus_type=Gio.BusType.SESSION
             )
 
-            self._items = OrderedDict()
+            self._items = {}
             self._revision = 0
 
             for method_name, in_args, out_args, callback in (

@@ -25,7 +25,6 @@ import operator
 import re
 
 from collections import defaultdict
-from collections import OrderedDict
 
 from gi.repository import GObject
 from gi.repository import Gtk
@@ -345,8 +344,8 @@ class Search:
         self.max_limited = False
 
         # Use dict instead of list for faster membership checks
-        self.selected_users = OrderedDict()
-        self.selected_results = OrderedDict()
+        self.selected_users = {}
+        self.selected_results = {}
 
         self.operators = {
             '<': operator.lt,
