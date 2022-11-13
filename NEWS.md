@@ -300,10 +300,10 @@ WINDOWS USERS: The installer format has changed in Nicotine+ 3.2.0 and above. If
  * Text Entry should validate and execute upon input when focus moves away (Result Filters) ([#1498](https://github.com/nicotine-plus/nicotine-plus/issues/1498))
  * Text Entry should respond to a zero-length string created by any keypress event to force clear the filter (Result Filters) ([#1499](https://github.com/nicotine-plus/nicotine-plus/issues/1499))
  * Fix missing Alt+R accelerator for Result Filter bar show/hide button in Search Files ([#1500](https://github.com/nicotine-plus/nicotine-plus/issues/1500))
- * Redundent Find pop-up TextBox in Search Files TreeView widget hinders Ctrl+F so it needs to be disabled ([#1501](https://github.com/nicotine-plus/nicotine-plus/issues/1501))
+ * Redundant Find pop-up TextBox in Search Files TreeView widget hinders Ctrl+F so it needs to be disabled ([#1501](https://github.com/nicotine-plus/nicotine-plus/issues/1501))
  * Primary Tab Bar fails to surrender focus after second mouse-click (Main Window) ([#1502](https://github.com/nicotine-plus/nicotine-plus/issues/1502))
  * Put the options for Tab Label Colors into the Tab section (Preferences) ([#1505](https://github.com/nicotine-plus/nicotine-plus/issues/1505))
- * Scrap the redundant 'Clear All Colors' button from User Interface catagory (Preferences) ([#1506](https://github.com/nicotine-plus/nicotine-plus/issues/1506))
+ * Scrap the redundant 'Clear All Colors' button from User Interface category (Preferences) ([#1506](https://github.com/nicotine-plus/nicotine-plus/issues/1506))
  * General captions of General sections generally conflict with General category name, in general (Preferences) ([#1507](https://github.com/nicotine-plus/nicotine-plus/issues/1507))
  * Dialog box drawn larger than small screen size makes OK and Apply buttons invisible (Preferences) ([#1508](https://github.com/nicotine-plus/nicotine-plus/issues/1508))
  * Remove Alt+F accelerator from Clear Finished button in Downloads and Uploads (Transfers) ([#1510](https://github.com/nicotine-plus/nicotine-plus/issues/1510))
@@ -326,7 +326,7 @@ WINDOWS USERS: The installer format has changed in Nicotine+ 3.2.0 and above. If
  * Bug: 3.2.0 dev Arch Linux Error loading plugin libhunspell and libaspell ([#1548](https://github.com/nicotine-plus/nicotine-plus/issues/1548))
  * Arch Linux GTK 4.4.0 crashes upon quitting if double login ([#1552](https://github.com/nicotine-plus/nicotine-plus/issues/1552))
  * Arch Linux GTK 4.4.0 Allocation width too small needs at least 31x25 ([#1553](https://github.com/nicotine-plus/nicotine-plus/issues/1553))
- * Moving mouse over the dragging-point of a column/frame doesnt change the mouse pointer ([#1561](https://github.com/nicotine-plus/nicotine-plus/issues/1561))
+ * Moving mouse over the dragging-point of a column/frame doesn't change the mouse pointer ([#1561](https://github.com/nicotine-plus/nicotine-plus/issues/1561))
  * \[3.2.0.dev1\] Always crash on leave Public room feed tab close (Chat Rooms) ([#1562](https://github.com/nicotine-plus/nicotine-plus/issues/1562))
  * Uploads with special characters in path cancelled ([#1564](https://github.com/nicotine-plus/nicotine-plus/issues/1564))
  * UPnP doesn't work ([#1566](https://github.com/nicotine-plus/nicotine-plus/issues/1566))
@@ -701,7 +701,7 @@ WINDOWS USERS: The installer format has changed in Nicotine+ 3.2.0 and above. If
  * Introduced a new design utilizing header bars (to use the old design, uncheck Menu -> View -> Use Header Bar)
  * Improved UI responsiveness when scanning shares
  * Improved UI performance when multiple tabs are open
- * Added transfer statitics dialog
+ * Added transfer statistics dialog
  * Added help window for keyboard shortcuts
  * Added an option to set a global font
  * Added support for text completion when typing in the search entry
@@ -840,7 +840,7 @@ Issues closed on GitHub
  * Compile pytaglib for Python 2 or 3? - Error Trying To Run 2.1.1 ([#726](https://github.com/nicotine-plus/nicotine-plus/issues/726))
  * Follow X Session Management Protocol ([#729](https://github.com/nicotine-plus/nicotine-plus/issues/729))
  * sometimes, nicotine eats all memory ([#750](https://github.com/nicotine-plus/nicotine-plus/issues/750))
- * provided extentions doesn't load ([#761](https://github.com/nicotine-plus/nicotine-plus/issues/761))
+ * provided extensions doesn't load ([#761](https://github.com/nicotine-plus/nicotine-plus/issues/761))
  * Enabled plugins are no more activated at startup ([#762](https://github.com/nicotine-plus/nicotine-plus/issues/762))
  * Plugin properties aren't editable ([#763](https://github.com/nicotine-plus/nicotine-plus/issues/763))
  * some users aren't browsable ([#766](https://github.com/nicotine-plus/nicotine-plus/issues/766))
@@ -887,7 +887,7 @@ Issues closed on GitHub
  * Added option to enable dark mode theme
  * Added option to copy a previous search term when right-clicking a search tab
  * Replaced text search dialog with search bar
- * If mutiple file transfers are in progress, the UI now updates properly
+ * If multiple file transfers are in progress, the UI now updates properly
  * Auto-joining the public chat room now works properly
  * Copying text with Ctrl-C now works properly again
  * Added option to log debug messages to file
@@ -952,7 +952,7 @@ Issues closed on GitHub
  * Question : how to auto-join a room ? ([#464](https://github.com/nicotine-plus/nicotine-plus/issues/464))
  * Every you can right click a user, but not in the chat, there it's left click. ([#466](https://github.com/nicotine-plus/nicotine-plus/issues/466))
  * Tree view expand/collapse is not respected on new transfer ([#473](https://github.com/nicotine-plus/nicotine-plus/issues/473))
- * application content is not diplayed properly with tabs set to side ([#474](https://github.com/nicotine-plus/nicotine-plus/issues/474))
+ * application content is not displayed properly with tabs set to side ([#474](https://github.com/nicotine-plus/nicotine-plus/issues/474))
  * Completed downloads are re-Queued ([#477](https://github.com/nicotine-plus/nicotine-plus/issues/477))
  * search tab "close thistab" missing if 3 tabs are open ([#481](https://github.com/nicotine-plus/nicotine-plus/issues/481))
  * close button in About Nicotine+ doesn't work ([#485](https://github.com/nicotine-plus/nicotine-plus/issues/485))
@@ -1053,13 +1053,13 @@ Issues closed on GitHub
  * Compiled 'Master Branch' - Nicotine is Black Blank Screen? ([#140](https://github.com/nicotine-plus/nicotine-plus/issues/140))
  * Question: 1.4.3 - Columns Hiding? ([#143](https://github.com/nicotine-plus/nicotine-plus/issues/143))
  * info user correct extra typo ([#144](https://github.com/nicotine-plus/nicotine-plus/issues/144))
- * select user transfert does not select anything ([#145](https://github.com/nicotine-plus/nicotine-plus/issues/145))
+ * select user transfer does not select anything ([#145](https://github.com/nicotine-plus/nicotine-plus/issues/145))
  * clicking hyperlinks does not open browser ([#146](https://github.com/nicotine-plus/nicotine-plus/issues/146))
  * left click does not work on users nickname in rooms ([#147](https://github.com/nicotine-plus/nicotine-plus/issues/147))
  * Interest tab : text zone too small ([#148](https://github.com/nicotine-plus/nicotine-plus/issues/148))
  * request : adding file chooser preview widget in info user picture setting ([#149](https://github.com/nicotine-plus/nicotine-plus/issues/149))
  * menu separator does not follow gtk+ rules ([#151](https://github.com/nicotine-plus/nicotine-plus/issues/151))
- * 1.4.3 Linux - Hidding Tabs - Always Opens Now Under Buddy List ([#154](https://github.com/nicotine-plus/nicotine-plus/issues/154))
+ * 1.4.3 Linux - Hiding Tabs - Always Opens Now Under Buddy List ([#154](https://github.com/nicotine-plus/nicotine-plus/issues/154))
  * strace shows weird file access syscalls ([#155](https://github.com/nicotine-plus/nicotine-plus/issues/155))
  * (world) flags missing at startup / and buddy list ([#161](https://github.com/nicotine-plus/nicotine-plus/issues/161))
  * setup.py: DistutilsFileError ([#164](https://github.com/nicotine-plus/nicotine-plus/issues/164))
@@ -1084,7 +1084,7 @@ Issues closed on GitHub
  * Private Chat tab does not get notified on receiving a message ([#299](https://github.com/nicotine-plus/nicotine-plus/issues/299))
  * RMB doesn't select what's underneath it ([#300](https://github.com/nicotine-plus/nicotine-plus/issues/300))
  * unable to download to created folder ([#301](https://github.com/nicotine-plus/nicotine-plus/issues/301))
- * status never reach 100% becasue of filtered files ([#302](https://github.com/nicotine-plus/nicotine-plus/issues/302))
+ * status never reach 100% because of filtered files ([#302](https://github.com/nicotine-plus/nicotine-plus/issues/302))
  * twice downloaded same folder, aborted duplicate files, remove aborted does not remove ([#305](https://github.com/nicotine-plus/nicotine-plus/issues/305))
  * downloading folder from user browse doesn't work ([#311](https://github.com/nicotine-plus/nicotine-plus/issues/311))
  * cannot connect ([#312](https://github.com/nicotine-plus/nicotine-plus/issues/312))
@@ -1616,7 +1616,7 @@ Issues closed on GitHub
  * Notify popups for buddies with "notify" enabled :)
  * Read chatroom logs (and attempt to parse them) when rejoining a room.
    Parsing will not work if the logs do not use the default timestamp format.
-   Chat room and Private chat logs are in seperate sub-directories, now.
+   Chat room and Private chat logs are in separate sub-directories, now.
  * Threaded /aliases and /now commands (GUI no longer freezes)
  * Use the /detach and /attach chatroom commands to pop chatrooms and private
    chats into their own windows.
@@ -1646,7 +1646,7 @@ Issues closed on GitHub
 
 ### Bug Fixes
 
- * Renabled the 'if i.size is None' check which should fix some upload issues
+ * Re-enabled the 'if i.size is None' check which should fix some upload issues
  * Fixed a error message printed after aborting an upload directory popup
  * Fixed a major slowdown in needConfig function (was reading shares data)
  * Pressing enter in Search Filter entry boxes now works again
@@ -1703,8 +1703,8 @@ Issues closed on GitHub
  * Changed Audio Player Syntax it now uses "$" as the filename
  * Exit dialog can be disabled in Settings->UI
  * When a config option is detected as unset, print it in the log window.
- * Move Icon theme and trayicon settings to a seperate frame
- * Move sound effect and audio player settings to a seperate frame
+ * Move Icon theme and trayicon settings to a separate frame
+ * Move sound effect and audio player settings to a separate frame
  * Reopen Settings dialog, if a setting is not set.
 
 ### Networking
@@ -1774,7 +1774,7 @@ Issues closed on GitHub
  * Added some padding around various widgets
  * Tabs can be reordered on the fly, now (Requires PyGTK 2.10) Also, Chat Room
    tab positions are saved in their reordered position.
- * Per-file identation consistancy was drastically improved. transfers.py,
+ * Per-file indentation consistency was drastically improved. transfers.py,
    slskproto.py and a few others were really bad.
 
 ### Settings
@@ -1935,7 +1935,7 @@ Issues closed on GitHub
  * Hacked apart Systraywin32 from Gajim to work with Nicotine+ on Windows
    requires pywin32 which you can download from here:
    http://sourceforge.net/project/showfiles.php?group_id=78018
- * Fixed a bug with the Trayicon intially being icon-less
+ * Fixed a bug with the Trayicon initially being icon-less
 
 ### Translations
 
@@ -1949,7 +1949,7 @@ Issues closed on GitHub
 Bugfix release
 
  * Made TrayIcon not attempt to load on 'win32' operating systems
- * Fixed trayicon bug that caused error messages everytime the Settings
+ * Fixed trayicon bug that caused error messages every time the Settings
    window's Apply or Okay button was pressed when the trayicon isn't loaded.
    (reported by renu_mulitiplus)
  * Fixed displaying your own Userinfo image on Windows.
@@ -2482,7 +2482,7 @@ The final version
  * Pyslsk will ping the server every 30 seconds (rewrote it to be
    gui-independent)
  * Search history (remembers 10 last searches)
- * Log window is now collapsable (state is remembered between sessions),
+ * Log window is now collapsible (state is remembered between sessions),
    rewrote it to look prettier than hyriand's version
  * Resizable panels aren't deleted anymore when made really small
  * Userinfo and browse tabs show user status
@@ -2548,7 +2548,7 @@ the "crash-on-tab in an empty notebook" problem and handles ctrl-c gracefully
 
 ## Version 1.1.2 (April 29, 2003)
 
- * Fixed a race condition occuring on SMP machines
+ * Fixed a race condition occurring on SMP machines
  * Added remembered/wishlist searches from Hyriand's patch
  * Fixed stuck "Requesting file"
  * Sometimes transfer timers were not cancelled properly
@@ -2645,7 +2645,7 @@ the "crash-on-tab in an empty notebook" problem and handles ctrl-c gracefully
  * If your name was mentioned in a chat room, the chat tab will be
    highlighted with a yellow bird, not with the blue one. Also, the line
    containing  your username will be red. (based on patch from Hyriand)
- * pyslsk now sends speed statistics to the server after a successfull download
+ * pyslsk now sends speed statistics to the server after a successful download
  * Fixed the GUI freeze when someone is queueing a lot of files
  * "Download containing folder" was not working in all cases
  * Reduced rescan time
@@ -2812,7 +2812,7 @@ the "crash-on-tab in an empty notebook" problem and handles ctrl-c gracefully
 
 ## Version 0.4.10a (December 24, 2002)
 
- * Fixed a problem with upgarding shared files list to the new format
+ * Fixed a problem with upgrading shared files list to the new format
 
 
 ## Version 0.4.10 (December 23, 2002)
@@ -3046,7 +3046,7 @@ Dedicated to the memory of my father.
 
 ## Version 0.1.1 (April 3, 2002)
 
- * Fixed an embarrasing bug where clicking OK in settings window did
+ * Fixed an embarrassing bug where clicking OK in settings window did
    not actually change the settings
  * Active transfers are now correctly saved and resumed
 

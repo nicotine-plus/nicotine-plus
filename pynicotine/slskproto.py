@@ -2060,7 +2060,7 @@ class SoulseekNetworkThread(Thread):
                 output_list = {key.fileobj for key, event in key_events if event & selectors.EVENT_WRITE}
 
             except OSError as error:
-                # Error recieved; terminate networking loop
+                # Error received; terminate networking loop
 
                 log.add("Major Socket Error: Networking terminated! %s", error)
                 self.abort()
