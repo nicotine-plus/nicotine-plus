@@ -82,6 +82,7 @@ class Core:
 
         self.queue = deque()
         self.message_callbacks = {}
+        self.user_addresses = {}
         self.user_statuses = {}
         self.watched_users = set()
         self.ip_requested = set()
@@ -108,7 +109,8 @@ class Core:
 
         self.queue.clear()
         self.protothread = SoulseekNetworkThread(
-            callback=self.thread_callback, queue=self.queue, bindip=self.bindip, port=self.port,
+            callback=self.thread_callback, queue=self.queue, user_addresses=self.user_addresses,
+            bindip=self.bindip, port=self.port,
             interface=config.sections["server"]["interface"],
             port_range=config.sections["server"]["portrange"]
         )
@@ -429,9 +431,9 @@ class Core:
         if self.user_status == slskmessages.UserStatus.OFFLINE:
             return None
 
-        user_address = self.protothread.user_addresses.get(user)
+        user_address = self.user_addresses.get(user)
 
-        if user_address and user != self.protothread.server_username:
+        if user_address and user != self.login_username:
             ip_address, _port = user_address
             country_code = self.geoip.get_country_code(ip_address)
             return country_code

@@ -199,7 +199,7 @@ class PrivateChat:
             if core.network_filter.is_user_ignored(user):
                 return
 
-            user_address = core.protothread.user_addresses.get(user)
+            user_address = core.user_addresses.get(user)
 
             if user_address is not None:
                 ip_address, _port = user_address

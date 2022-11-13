@@ -1186,7 +1186,7 @@ class Transfers:
                 log.add_upload(
                     _("Upload started: user %(user)s, IP address %(ip)s, file %(file)s"), {
                         "user": username,
-                        "ip": core.protothread.user_addresses.get(username),
+                        "ip": core.user_addresses.get(username),
                         "file": filename
                     }
                 )
@@ -1954,7 +1954,7 @@ class Transfers:
         log.add_upload(
             _("Upload finished: user %(user)s, IP address %(ip)s, file %(file)s"), {
                 'user': transfer.user,
-                'ip': core.protothread.user_addresses.get(transfer.user),
+                'ip': core.user_addresses.get(transfer.user),
                 'file': transfer.filename
             }
         )

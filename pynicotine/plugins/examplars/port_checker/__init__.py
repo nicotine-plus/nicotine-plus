@@ -73,7 +73,7 @@ class Plugin(BasePlugin):
 
     def resolve(self, user, announce):
 
-        user_address = self.core.protothread.user_addresses.get(user)
+        user_address = self.core.user_addresses.get(user)
 
         if user_address is not None:
             ip_address, port = user_address

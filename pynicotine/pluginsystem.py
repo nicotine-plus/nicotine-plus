@@ -292,7 +292,7 @@ class ResponseThrottle:
         last_request = self.plugin_usage[room]['last_request']
 
         try:
-            _ip_address, port = self.core.protothread.user_addresses[nick]
+            _ip_address, port = self.core.user_addresses[nick]
         except Exception:
             port = True
 

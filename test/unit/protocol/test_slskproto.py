@@ -81,7 +81,7 @@ class SoulseekNetworkTest(unittest.TestCase):
         self.queue = deque()
         config.sections["server"]["upnp"] = False
         self.protothread = SoulseekNetworkThread(
-            callback=Mock(), queue=self.queue, interface='', bindip='',
+            callback=Mock(), queue=self.queue, user_addresses={}, interface='', bindip='',
             port=None, port_range=(1024, 65535)
         )
         self.protothread.start()
@@ -94,7 +94,7 @@ class SoulseekNetworkTest(unittest.TestCase):
         self.protothread.abort()
 
         sleep(SLSKPROTO_RUN_TIME / 2)
-        self.assertIsNone(self.protothread.server_socket)
+        self.assertIsNone(self.protothread._server_socket)  # pylint: disable=protected-access
 
     @unittest.mock.patch('socket.socket')
     def test_server_conn(self, _mock_socket):
@@ -105,14 +105,19 @@ class SoulseekNetworkTest(unittest.TestCase):
         sleep(SLSKPROTO_RUN_TIME)
 
         if hasattr(socket, 'TCP_KEEPIDLE') or hasattr(socket, 'TCP_KEEPALIVE'):
-            self.assertEqual(self.protothread.server_socket.setsockopt.call_count, 6)  # pylint: disable=no-member
+            self.assertEqual(
+                self.protothread._server_socket.setsockopt.call_count, 6)  # pylint: disable=no-member,protected-access
 
         elif hasattr(socket, 'SIO_KEEPALIVE_VALS'):
-            self.assertEqual(self.protothread.server_socket.ioctl.call_count, 1)       # pylint: disable=no-member
-            self.assertEqual(self.protothread.server_socket.setsockopt.call_count, 3)  # pylint: disable=no-member
+            self.assertEqual(
+                self.protothread._server_socket.ioctl.call_count, 1)       # pylint: disable=no-member,protected-access
+            self.assertEqual(
+                self.protothread._server_socket.setsockopt.call_count, 3)  # pylint: disable=no-member,protected-access
 
-        self.assertEqual(self.protothread.server_socket.setblocking.call_count, 1)     # pylint: disable=no-member
-        self.assertEqual(self.protothread.server_socket.connect_ex.call_count, 1)      # pylint: disable=no-member
+        self.assertEqual(
+            self.protothread._server_socket.setblocking.call_count, 1)     # pylint: disable=no-member,protected-access
+        self.assertEqual(
+            self.protothread._server_socket.connect_ex.call_count, 1)      # pylint: disable=no-member,protected-access
 
     def test_login(self):
 

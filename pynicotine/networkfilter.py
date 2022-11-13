@@ -35,7 +35,7 @@ class NetworkFilter:
         either block_unblock_user_ip_callback or ignore_unignore_user_ip_callback
         is called. """
 
-        if user in core.protothread.user_addresses:
+        if user in core.user_addresses:
             return False
 
         if list_type == "block":
@@ -60,7 +60,7 @@ class NetworkFilter:
         if self._request_ip(user, "add", list_type):
             return None
 
-        ip_address, _port = core.protothread.user_addresses[user]
+        ip_address, _port = core.user_addresses[user]
 
         if ip_address not in ip_list or ip_list[ip_address] != user:
             ip_list[ip_address] = user
@@ -86,7 +86,7 @@ class NetworkFilter:
         if self._request_ip(user, "remove", list_type):
             return
 
-        ip_address, _port = core.protothread.user_addresses[user]
+        ip_address, _port = core.user_addresses[user]
 
         if ip_address in ip_list:
             del ip_list[ip_address]
@@ -193,7 +193,7 @@ class NetworkFilter:
         """ When we know a user's IP address has changed, we call this function to
         update the IP saved in lists. """
 
-        user_address = core.protothread.user_addresses.get(user)
+        user_address = core.user_addresses.get(user)
 
         if not user_address:
             # User is offline
@@ -246,7 +246,7 @@ class NetworkFilter:
         if request is None:
             return False
 
-        if user not in core.protothread.user_addresses:
+        if user not in core.user_addresses:
             # User is offline
             return False
 
@@ -302,7 +302,7 @@ class NetworkFilter:
         if request is None:
             return False
 
-        if user not in core.protothread.user_addresses:
+        if user not in core.user_addresses:
             # User is offline
             return False
 
@@ -324,7 +324,7 @@ class NetworkFilter:
 
     def is_user_ip_ignored(self, user):
 
-        user_address = core.protothread.user_addresses.get(user)
+        user_address = core.user_addresses.get(user)
 
         if user_address:
             ip_address, _port = user_address
