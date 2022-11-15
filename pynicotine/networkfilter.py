@@ -19,6 +19,7 @@
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
+from pynicotine.events import events
 
 
 class NetworkFilter:
@@ -27,6 +28,8 @@ class NetworkFilter:
     def __init__(self):
         self.ipblock_requested = {}
         self.ipignore_requested = {}
+
+        events.connect("peer-address", self._get_peer_address)
 
     """ General """
 
@@ -211,6 +214,17 @@ class NetworkFilter:
         if cached_ignored_ip is not None and cached_ignored_ip != new_ip:
             self.unignore_user_ip(user)
             self.ignore_user_ip(user)
+
+    def _get_peer_address(self, msg):
+        """ Server code: 3 """
+
+        user = msg.user
+
+        # If the IP address changed, make sure our IP block/ignore list reflects this
+        self.update_saved_user_ip_filters(user)
+
+        self.block_unblock_user_ip_callback(user)
+        self.ignore_unignore_user_ip_callback(user)
 
     """ Banning """
 

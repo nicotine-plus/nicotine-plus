@@ -24,29 +24,30 @@ from collections import deque
 
 from pynicotine.config import config
 from pynicotine.core import core
+from pynicotine.events import events
 from pynicotine.logfacility import log
 
 
 class Application:
 
-    def __init__(self, ci_mode):
+    def __init__(self):
 
         self.init_exception_handler()
 
-        self.ci_mode = ci_mode
         self.thread_messages = deque()
-
-        config.load_config()
         log.log_levels = set(["download", "upload"] + config.sections["logging"]["debugmodes"])
+
+        for event_name, callback in (
+            ("new-text-notification", self.new_text_notification),
+            ("shares-unavailable", self.shares_unavailable),
+            ("thread-callback", self.thread_callback)
+        ):
+            events.connect(event_name, callback)
 
     def run(self):
 
-        core.start(self, thread_callback=self.thread_callback)
-        connect_success = core.connect()
-
-        if not connect_success and not self.ci_mode:
-            # Network error, exit code 1
-            return 1
+        core.start()
+        core.connect()
 
         # Main loop, process messages from networking thread
         while not core.shutdown:
@@ -101,54 +102,13 @@ class Application:
     def on_critical_error_threading(args):
         raise args.exc_value
 
+    def new_text_notification(self, message, title=None):
+
+        if title:
+            message = "%s: %s" % (title, message)
+
+        log.add(message)
+
     def shares_unavailable(self, shares):
         for virtual_name, folder_path in shares:
             log.add("• \"%s\" %s" % (virtual_name, folder_path))
-
-    def show_scan_progress(self):
-        # Not implemented
-        pass
-
-    def set_scan_progress(self, value):
-        # Not implemented
-        pass
-
-    def set_scan_indeterminate(self):
-        # Not implemented
-        pass
-
-    def hide_scan_progress(self):
-        # Not implemented
-        pass
-
-    def invalid_password(self):
-        # Not implemented
-        pass
-
-    def server_login(self):
-        # Not implemented
-        pass
-
-    def set_away_mode(self, is_away):
-        # Not implemented
-        pass
-
-    def set_connection_stats(self, msg):
-        # Not implemented
-        pass
-
-    def server_disconnect(self):
-        # Not implemented
-        pass
-
-    def setup(self):
-        # Not implemented
-        pass
-
-    def confirm_quit(self, _remember):
-        # Not implemented
-        pass
-
-    def quit(self):
-        # Not implemented
-        pass

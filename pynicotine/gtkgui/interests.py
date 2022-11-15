@@ -23,6 +23,7 @@ from gi.repository import GObject
 
 from pynicotine.config import config
 from pynicotine.core import core
+from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
@@ -152,9 +153,29 @@ class Interests:
         popup = UserPopupMenu(self.frame, self.similar_users_list_view.widget, self.on_popup_ru_menu)
         popup.setup_user_menu()
 
+        for event_name, callback in (
+            ("add-dislike", self.add_thing_i_hate),
+            ("add-interest", self.add_thing_i_like),
+            ("global-recommendations", self.global_recommendations),
+            ("item-recommendations", self.item_recommendations),
+            ("item-similar-users", self.item_similar_users),
+            ("recommendations", self.recommendations),
+            ("remove-dislike", self.remove_thing_i_hate),
+            ("remove-interest", self.remove_thing_i_like),
+            ("server-login", self.server_login),
+            ("server-disconnect", self.server_disconnect),
+            ("similar-users", self.similar_users),
+            ("user-stats", self.get_user_stats),
+            ("user-status", self.get_user_status)
+        ):
+            events.connect(event_name, callback)
+
         self.update_visuals()
 
-    def server_login(self):
+    def server_login(self, msg):
+
+        if not msg.success:
+            return
 
         self.recommendations_button.set_sensitive(True)
         self.similar_users_button.set_sensitive(True)
@@ -165,7 +186,7 @@ class Interests:
 
         self.populate_recommendations()
 
-    def server_disconnect(self):
+    def server_disconnect(self, _msg):
         self.recommendations_button.set_sensitive(False)
         self.similar_users_button.set_sensitive(False)
 
@@ -434,7 +455,7 @@ class Interests:
         for iterator in self.similar_users_list_view.get_selected_rows():
             user = self.similar_users_list_view.get_row_value(iterator, 1)
 
-            core.userinfo.request_user_info(user)
+            core.userinfo.show_user(user)
             return
 
     @staticmethod

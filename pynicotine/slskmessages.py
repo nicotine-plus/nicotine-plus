@@ -171,7 +171,7 @@ class SendNetworkMessage(InternalMessage):
         self.message = message
 
 
-class ShowConnectionErrorMessage(InternalMessage):
+class PeerConnectionError(InternalMessage):
 
     def __init__(self, user=None, msgs=None, offline=False):
         self.user = user
@@ -179,16 +179,19 @@ class ShowConnectionErrorMessage(InternalMessage):
         self.offline = offline
 
 
-class PeerMessageProgress(InternalMessage):
+class UserInfoProgress(InternalMessage):
     """ Used to indicate progress of long transfers. """
 
     __slots__ = ("user", "msg_type", "position", "total")
 
-    def __init__(self, user=None, msg_type=None, position=None, total=None):
+    def __init__(self, user=None, position=None, total=None):
         self.user = user
-        self.msg_type = msg_type
         self.position = position
         self.total = total
+
+
+class SharedFileListProgress(UserInfoProgress):
+    pass
 
 
 class PeerConnectionClosed(InternalMessage):
@@ -2296,8 +2299,9 @@ class SharedFileList(PeerMessage):
     """ A peer responds with a list of shared files when we've sent
     a GetSharedFileList. """
 
-    def __init__(self, init=None, shares=None):
+    def __init__(self, init=None, user=None, shares=None):
         self.init = init
+        self.user = user
         self.list = shares
         self.unknown = 0
         self.privatelist = []
@@ -2617,7 +2621,7 @@ class PMessageUser(PeerMessage):
     """ Peer code: 22 """
     """ Chat phrase sent to someone or received by us in private.
     This is a Nicotine+ extension to the Soulseek protocol. """
-    """ DEPRECATED """
+    """ OBSOLETE """
 
     def __init__(self, init=None, user=None, msg=None):
         self.init = init
@@ -3213,7 +3217,7 @@ PEER_MESSAGE_CODES = {
     FileSearchResult: 9,
     UserInfoRequest: 15,
     UserInfoReply: 16,
-    PMessageUser: 22,             # Deprecated
+    PMessageUser: 22,             # Obsolete
     FolderContentsRequest: 36,
     FolderContentsResponse: 37,
     TransferRequest: 40,

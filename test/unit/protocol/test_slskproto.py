@@ -82,25 +82,24 @@ class SoulseekNetworkTest(TestCase):
         self.queue = deque()
         config.sections["server"]["upnp"] = False
         self.protothread = SoulseekNetworkThread(
-            callback=Mock(), queue=self.queue, user_addresses={}, interface='', bindip='',
+            queue=self.queue, user_addresses={}, interface='', bindip='',
             port=None, port_range=(1024, 65535)
         )
         self.protothread.start()
+        self.protothread._enable_message_queue()  # pylint: disable=protected-access
 
         # Slight delay to allow the network thread to fully start
         sleep(SLSKPROTO_RUN_TIME / 2)
 
     def tearDown(self):
 
-        self.protothread.abort()
+        self.protothread._quit()  # pylint: disable=protected-access
 
         sleep(SLSKPROTO_RUN_TIME / 2)
         self.assertIsNone(self.protothread._server_socket)  # pylint: disable=protected-access
 
     @patch('socket.socket')
     def test_server_conn(self, _mock_socket):
-
-        self.protothread.server_disconnected = False
 
         self.queue.append(ServerConnect(addr=('0.0.0.0', 0), login=('dummy', 'dummy')))
         sleep(SLSKPROTO_RUN_TIME)
@@ -122,7 +121,6 @@ class SoulseekNetworkTest(TestCase):
 
     def test_login(self):
 
-        self.protothread.server_disconnected = False
         self.queue.append(ServerConnect(addr=('0.0.0.0', 0), login=('username', 'password')))
 
         sleep(SLSKPROTO_RUN_TIME / 2)

@@ -27,6 +27,7 @@ from gi.repository import GObject
 
 from pynicotine.config import config
 from pynicotine.core import core
+from pynicotine.events import events
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
@@ -107,8 +108,24 @@ class UserList:
             ("", None),
             ("#" + _("Add User _Note…"), self.on_add_note),
             (">" + _("Private Rooms"), self.popup_menu_private_rooms),
-            ("#" + _("_Remove"), self.on_remove_user)
+            ("#" + _("_Remove"), self.on_remove_buddy)
         )
+
+        # Events
+        for event_name, callback in (
+            ("add-buddy", self.add_buddy),
+            ("buddy-note", self.buddy_note),
+            ("buddy-notify", self.buddy_notify),
+            ("buddy-last-seen", self.buddy_last_seen),
+            ("buddy-prioritized", self.buddy_prioritized),
+            ("buddy-trusted", self.buddy_trusted),
+            ("remove-buddy", self.remove_buddy),
+            ("server-disconnect", self.server_disconnect),
+            ("user-country", self.user_country),
+            ("user-stats", self.get_user_stats),
+            ("user-status", self.get_user_status)
+        ):
+            events.connect(event_name, callback)
 
         self.update_visuals()
 
@@ -211,7 +228,7 @@ class UserList:
         self.list_view.set_row_value(iterator, 11, GObject.Value(GObject.TYPE_UINT, avgspeed))
         self.list_view.set_row_value(iterator, 12, GObject.Value(GObject.TYPE_UINT, files))
 
-    def add_user(self, user, row):
+    def add_buddy(self, user, row):
 
         _user, note, notify, prioritized, trusted, last_seen, country = row
 
@@ -241,7 +258,7 @@ class UserList:
         if config.sections["words"]["buddies"]:
             self.frame.update_completions()
 
-    def remove_user(self, user):
+    def remove_buddy(self, user):
 
         iterator = self.list_view.iterators.get(user)
 
@@ -254,35 +271,35 @@ class UserList:
         if config.sections["words"]["buddies"]:
             self.frame.update_completions()
 
-    def set_user_note(self, user, note):
+    def buddy_note(self, user, note):
 
         iterator = self.list_view.iterators.get(user)
 
         if iterator is not None:
             self.list_view.set_row_value(iterator, 9, note)
 
-    def set_user_trusted(self, user, trusted):
+    def buddy_trusted(self, user, trusted):
 
         iterator = self.list_view.iterators.get(user)
 
         if iterator is not None:
             self.list_view.set_row_value(iterator, 5, trusted)
 
-    def set_user_notify(self, user, notify):
+    def buddy_notify(self, user, notify):
 
         iterator = self.list_view.iterators.get(user)
 
         if iterator is not None:
             self.list_view.set_row_value(iterator, 6, notify)
 
-    def set_user_prioritized(self, user, prioritized):
+    def buddy_prioritized(self, user, prioritized):
 
         iterator = self.list_view.iterators.get(user)
 
         if iterator is not None:
             self.list_view.set_row_value(iterator, 7, prioritized)
 
-    def set_user_last_seen(self, user, online):
+    def buddy_last_seen(self, user, online):
 
         iterator = self.list_view.iterators.get(user)
 
@@ -299,7 +316,7 @@ class UserList:
         self.list_view.set_row_value(iterator, 8, last_seen)
         self.list_view.set_row_value(iterator, 13, int(time_from_epoch))
 
-    def set_user_country(self, user, country_code):
+    def user_country(self, user, country_code):
 
         iterator = self.list_view.iterators.get(user)
 
@@ -314,7 +331,7 @@ class UserList:
         self.list_view.set_row_value(iterator, 1, flag_icon)
         self.list_view.set_row_value(iterator, 14, "flag_" + country_code)
 
-    def on_add_user(self, *_args):
+    def on_add_buddy(self, *_args):
 
         username = self.frame.add_buddy_entry.get_text().strip()
 
@@ -322,31 +339,31 @@ class UserList:
             return
 
         self.frame.add_buddy_entry.set_text("")
-        core.userlist.add_user(username)
+        core.userlist.add_buddy(username)
 
-    def on_remove_user(self, *_args):
-        core.userlist.remove_user(self.get_selected_username())
+    def on_remove_buddy(self, *_args):
+        core.userlist.remove_buddy(self.get_selected_username())
 
     def on_trusted(self, list_view, iterator):
 
         user = list_view.get_row_value(iterator, 2)
         value = list_view.get_row_value(iterator, 5)
 
-        core.userlist.set_user_trusted(user, not value)
+        core.userlist.set_buddy_trusted(user, not value)
 
     def on_notify(self, list_view, iterator):
 
         user = list_view.get_row_value(iterator, 2)
         value = list_view.get_row_value(iterator, 6)
 
-        core.userlist.set_user_notify(user, not value)
+        core.userlist.set_buddy_notify(user, not value)
 
     def on_prioritized(self, list_view, iterator):
 
         user = list_view.get_row_value(iterator, 2)
         value = list_view.get_row_value(iterator, 7)
 
-        core.userlist.set_user_prioritized(user, not value)
+        core.userlist.set_buddy_prioritized(user, not value)
 
     def on_add_note_response(self, dialog, _response_id, user):
 
@@ -360,7 +377,7 @@ class UserList:
         if note is None:
             return
 
-        core.userlist.set_user_note(user, note)
+        core.userlist.set_buddy_note(user, note)
 
     def on_add_note(self, *_args):
 
@@ -395,7 +412,7 @@ class UserList:
 
         return False
 
-    def server_disconnect(self):
+    def server_disconnect(self, _msg):
 
         for iterator in self.list_view.get_all_rows():
             self.list_view.set_row_value(iterator, 0, get_status_icon_name(UserStatus.OFFLINE))

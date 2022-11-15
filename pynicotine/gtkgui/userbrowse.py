@@ -29,6 +29,7 @@ from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.core import core
+from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.dialogs.fileproperties import FileProperties
 from pynicotine.gtkgui.utils import copy_text
@@ -62,8 +63,20 @@ class UserBrowses(IconNotebook):
             widget=frame.userbrowse_notebook,
             parent_page=frame.userbrowse_page
         )
-
         self.file_properties = None
+
+        # Events
+        for event_name, callback in (
+            ("peer-connection-closed", self.peer_connection_error),
+            ("peer-connection-error", self.peer_connection_error),
+            ("server-disconnect", self.server_disconnect),
+            ("shared-file-list-progress", self.shared_file_list_progress),
+            ("shared-file-list-response", self.shared_file_list),
+            ("user-browse-remove-user", self.remove_user),
+            ("user-browse-show-user", self.show_user),
+            ("user-status", self.get_user_status)
+        ):
+            events.connect(event_name, callback)
 
     def on_get_shares(self, *_args):
 
@@ -125,17 +138,9 @@ class UserBrowses(IconNotebook):
         self.remove_page(page.container)
         del self.pages[user]
 
-    def show_connection_error(self, user):
-        if user in self.pages:
-            self.pages[user].show_connection_error()
-
-    def peer_message_progress(self, msg):
+    def peer_connection_error(self, msg):
         if msg.user in self.pages:
-            self.pages[msg.user].peer_message_progress(msg)
-
-    def peer_connection_closed(self, msg):
-        if msg.user in self.pages:
-            self.pages[msg.user].peer_connection_closed()
+            self.pages[msg.user].peer_connection_error()
 
     def get_user_status(self, msg):
 
@@ -143,19 +148,22 @@ class UserBrowses(IconNotebook):
             page = self.pages[msg.user]
             self.set_user_status(page.container, msg.user, msg.status)
 
-    def _shared_file_list(self, user, msg):
+    def shared_file_list_progress(self, msg):
+        if msg.user in self.pages:
+            self.pages[msg.user].shared_file_list_progress(msg)
+
+    def shared_file_list(self, msg):
+
+        user = msg.init.target_user
+
         if user in self.pages:
             self.pages[user].shared_file_list(msg)
-
-    def shared_file_list(self, user, msg):
-        # We can potentially arrive here from a different thread. Run in main thread.
-        GLib.idle_add(self._shared_file_list, user, msg)
 
     def update_visuals(self):
         for page in self.pages.values():
             page.update_visuals()
 
-    def server_disconnect(self):
+    def server_disconnect(self, _msg):
         for user, page in self.pages.items():
             self.set_user_status(page.container, user, UserStatus.OFFLINE)
 
@@ -535,7 +543,10 @@ class UserBrowse:
 
         self.set_finished()
 
-    def show_connection_error(self):
+    def peer_connection_error(self):
+
+        if self.refresh_button.get_sensitive():
+            return
 
         self.retry_button.show()
         self.info_bar.show_message(
@@ -564,7 +575,7 @@ class UserBrowse:
 
         self.refresh_button.set_sensitive(False)
 
-    def peer_message_progress(self, msg):
+    def shared_file_list_progress(self, msg):
 
         self.indeterminate_progress = False
 
@@ -576,10 +587,6 @@ class UserBrowse:
             fraction = float(msg.position) / msg.total
 
         self.progress_bar.set_fraction(fraction)
-
-    def peer_connection_closed(self):
-        if not self.refresh_button.get_sensitive():
-            self.show_connection_error()
 
     def set_finished(self):
 

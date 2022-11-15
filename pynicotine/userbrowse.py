@@ -25,7 +25,9 @@ from threading import Thread
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
+from pynicotine.events import events
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import PeerInit
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import clean_file
 from pynicotine.utils import encode_path
@@ -37,46 +39,41 @@ class UserBrowse:
 
     def __init__(self):
         self.users = set()
-        self.ui_callback = getattr(core.ui_callback, "userbrowse", None)
+        events.connect("server-login", self._server_login)
 
-    def server_login(self):
+    def _server_login(self, msg):
+
+        if not msg.success:
+            return
+
         for user in self.users:
             core.watch_user(user)  # Get notified of user status
-
-    def server_disconnect(self):
-        if self.ui_callback:
-            self.ui_callback.server_disconnect()
 
     def send_upload_attempt_notification(self, username):
         """ Send notification to user when attempting to initiate upload from our end """
 
         core.send_message_to_peer(username, slskmessages.UploadQueueNotification())
 
-    def add_user(self, user):
+    def show_user(self, user, path=None, local_shares_type=None, switch_page=True):
+
         if user not in self.users:
             self.users.add(user)
 
+        events.emit(
+            "user-browse-show-user", user=user, path=path, local_shares_type=local_shares_type, switch_page=switch_page)
+
     def remove_user(self, user):
-
         self.users.remove(user)
-
-        if self.ui_callback:
-            self.ui_callback.remove_user(user)
-
-    def show_user(self, user, path=None, local_shares_type=None, switch_page=True):
-
-        self.add_user(user)
-
-        if self.ui_callback:
-            self.ui_callback.show_user(user, path, local_shares_type, switch_page)
+        events.emit("user-browse-remove-user", user)
 
     def parse_local_shares(self, username, msg):
         """ Parse a local shares list and show it in the UI """
 
         built = msg.make_network_message()
         msg.parse_network_message(built)
+        msg.init = PeerInit(target_user=username)
 
-        self.shared_file_list(msg, username)
+        events.emit("thread-callback", [msg])
 
     def browse_local_public_shares(self, path=None, new_request=None):
         """ Browse your own public shares """
@@ -122,7 +119,7 @@ class UserBrowse:
         self.show_user(username, path=path, switch_page=switch_page)
 
         if core.user_status == UserStatus.OFFLINE:
-            self.show_connection_error(username)
+            events.emit("peer-connection-error", username)
             return
 
         core.watch_user(username, force_update=True)
@@ -176,10 +173,10 @@ class UserBrowse:
         username = filename.replace('\\', os.sep).split(os.sep)[-1]
         self.show_user(username)
 
-        msg = slskmessages.SharedFileList()
+        msg = slskmessages.SharedFileList(init=PeerInit(target_user=username))
         msg.list = shares_list
 
-        self.shared_file_list(msg, username)
+        events.emit("shared-file-list", msg)
 
     def save_shares_list_to_disk(self, user, shares_list):
 
@@ -296,30 +293,3 @@ class UserBrowse:
 
         except Exception:
             log.add(_("Invalid Soulseek URL: %s"), url)
-
-    def show_connection_error(self, username):
-        if self.ui_callback:
-            self.ui_callback.show_connection_error(username)
-
-    def peer_message_progress(self, msg):
-        if self.ui_callback:
-            self.ui_callback.peer_message_progress(msg)
-
-    def peer_connection_closed(self, msg):
-        if self.ui_callback:
-            self.ui_callback.peer_connection_closed(msg)
-
-    def get_user_status(self, msg):
-        """ Server code: 7 """
-
-        if self.ui_callback:
-            self.ui_callback.get_user_status(msg)
-
-    def shared_file_list(self, msg, user=None):
-        """ Peer code: 5 """
-
-        if user is None:
-            user = msg.init.target_user
-
-        if self.ui_callback:
-            self.ui_callback.shared_file_list(user, msg)

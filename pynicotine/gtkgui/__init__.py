@@ -114,7 +114,7 @@ def apply_gtk_translations():
         locale.bindtextdomain(TRANSLATION_DOMAIN, mo_path)
 
 
-def run_gui(hidden, ci_mode, multi_instance):
+def run(hidden, ci_mode, multi_instance):
     """ Run Nicotine+ GTK GUI """
 
     if getattr(sys, 'frozen', False):

@@ -112,7 +112,6 @@ def rescan_shares():
     from pynicotine.logfacility import log
 
     config.load_config()
-    core.init_components()
     error = core.shares.rescan_shares(use_thread=False)
 
     if error:
@@ -163,20 +162,23 @@ def run():
     except Exception as error:
         log.add("Faulthandler module could not be enabled. Error: %s" % error)
 
+    from pynicotine.core import core
+    core.init_components(enable_cli=True)
+
     if rescan:
         return rescan_shares()
 
     # Initialize GTK-based GUI
     if not headless:
-        from pynicotine.gtkgui import run_gui
-        exit_code = run_gui(hidden, ci_mode, multi_instance)
+        from pynicotine import gtkgui as application
+        exit_code = application.run(hidden, ci_mode, multi_instance)
 
         if exit_code is not None:
             return exit_code
 
     # Run without a GUI
-    from pynicotine.headless import run_headless
-    return run_headless(ci_mode)
+    from pynicotine import headless as application
+    return application.run()
 
 
 apply_translations()

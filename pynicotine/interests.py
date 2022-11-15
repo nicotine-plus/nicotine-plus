@@ -19,14 +19,24 @@
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
+from pynicotine.events import events
 
 
 class Interests:
 
     def __init__(self):
-        self.ui_callback = getattr(core.ui_callback, "interests", None)
 
-    def server_login(self):
+        for event_name, callback in (
+            ("item-similar-users", self._item_similar_users),
+            ("server-login", self._server_login),
+            ("similar-users", self._similar_users)
+        ):
+            events.connect(event_name, callback)
+
+    def _server_login(self, msg):
+
+        if not msg.success:
+            return
 
         for item in config.sections["interests"]["likes"]:
             if not isinstance(item, str):
@@ -46,13 +56,6 @@ class Interests:
             if item:
                 core.queue.append(slskmessages.AddThingIHate(item))
 
-        if self.ui_callback:
-            self.ui_callback.server_login()
-
-    def server_disconnect(self):
-        if self.ui_callback:
-            self.ui_callback.server_disconnect()
-
     def add_thing_i_like(self, item):
 
         item = item.strip().lower()
@@ -67,8 +70,7 @@ class Interests:
         config.write_configuration()
         core.queue.append(slskmessages.AddThingILike(item))
 
-        if self.ui_callback:
-            self.ui_callback.add_thing_i_like(item)
+        events.emit("add-interest", item)
 
     def add_thing_i_hate(self, item):
 
@@ -84,8 +86,7 @@ class Interests:
         config.write_configuration()
         core.queue.append(slskmessages.AddThingIHate(item))
 
-        if self.ui_callback:
-            self.ui_callback.add_thing_i_hate(item)
+        events.emit("add-dislike", item)
 
     def remove_thing_i_like(self, item):
 
@@ -99,8 +100,7 @@ class Interests:
         config.write_configuration()
         core.queue.append(slskmessages.RemoveThingILike(item))
 
-        if self.ui_callback:
-            self.ui_callback.remove_thing_i_like(item)
+        events.emit("remove-interest", item)
 
     def remove_thing_i_hate(self, item):
 
@@ -114,8 +114,7 @@ class Interests:
         config.write_configuration()
         core.queue.append(slskmessages.RemoveThingIHate(item))
 
-        if self.ui_callback:
-            self.ui_callback.remove_thing_i_hate(item)
+        events.emit("remove-dislike", item)
 
     def request_global_recommendations(self):
         core.queue.append(slskmessages.GlobalRecommendations())
@@ -132,52 +131,16 @@ class Interests:
     def request_similar_users(self):
         core.queue.append(slskmessages.SimilarUsers())
 
-    def global_recommendations(self, msg):
-        """ Server code: 56 """
-
-        if self.ui_callback:
-            self.ui_callback.global_recommendations(msg)
-
-    def item_recommendations(self, msg):
-        """ Server code: 111 """
-
-        if self.ui_callback:
-            self.ui_callback.item_recommendations(msg)
-
-    def recommendations(self, msg):
-        """ Server code: 54 """
-
-        if self.ui_callback:
-            self.ui_callback.recommendations(msg)
-
-    def similar_users(self, msg):
+    def _similar_users(self, msg):
         """ Server code: 110 """
 
-        if self.ui_callback:
-            self.ui_callback.similar_users(msg)
-
         for user in msg.users:
             # Request user status, speed and number of shared files
             core.watch_user(user, force_update=True)
 
-    def item_similar_users(self, msg):
+    def _item_similar_users(self, msg):
         """ Server code: 112 """
 
-        if self.ui_callback:
-            self.ui_callback.item_similar_users(msg)
-
         for user in msg.users:
             # Request user status, speed and number of shared files
             core.watch_user(user, force_update=True)
-
-    def get_user_status(self, msg):
-        """ Server code: 7 """
-
-        if self.ui_callback:
-            self.ui_callback.get_user_status(msg)
-
-    def get_user_stats(self, msg):
-        """ Server code: 36 """
-
-        if self.ui_callback:
-            self.ui_callback.get_user_stats(msg)

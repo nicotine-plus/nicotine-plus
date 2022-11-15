@@ -21,6 +21,7 @@ import time
 from gi.repository import Gtk
 
 from pynicotine.core import core
+from pynicotine.events import events
 from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.ui import UserInterface
@@ -63,6 +64,8 @@ class Statistics(Dialog):
             resizable=False,
             close_destroy=False
         )
+
+        events.connect("update-stat-value", self.update_stat_value)
 
     def update_stat_value(self, stat_id, session_value, total_value):
 

@@ -30,6 +30,7 @@ from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.core import core
+from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.filechooser import FileChooserSave
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
@@ -57,6 +58,22 @@ class UserInfos(IconNotebook):
             parent_page=frame.userinfo_page
         )
 
+        # Events
+        for event_name, callback in (
+            ("peer-connection-closed", self.peer_connection_error),
+            ("peer-connection-error", self.peer_connection_error),
+            ("server-disconnect", self.server_disconnect),
+            ("user-country", self.user_country),
+            ("user-info-progress", self.user_info_progress),
+            ("user-info-remove-user", self.remove_user),
+            ("user-info-reply", self.user_info_reply),
+            ("user-info-show-user", self.show_user),
+            ("user-interests", self.user_interests),
+            ("user-stats", self.get_user_stats),
+            ("user-status", self.get_user_status)
+        ):
+            events.connect(event_name, callback)
+
     def on_get_user_info(self, *_args):
 
         username = self.frame.userinfo_entry.get_text().strip()
@@ -65,9 +82,9 @@ class UserInfos(IconNotebook):
             return
 
         self.frame.userinfo_entry.set_text("")
-        core.userinfo.request_user_info(username)
+        core.userinfo.show_user(username)
 
-    def show_user(self, user, switch_page=True):
+    def show_user(self, user, switch_page=True, **_unused):
 
         if user not in self.pages:
             self.pages[user] = page = UserInfo(self, user)
@@ -90,17 +107,9 @@ class UserInfos(IconNotebook):
         self.remove_page(page.container)
         del self.pages[user]
 
-    def show_connection_error(self, user):
-        if user in self.pages:
-            self.pages[user].show_connection_error()
-
-    def peer_message_progress(self, msg):
+    def peer_connection_error(self, msg):
         if msg.user in self.pages:
-            self.pages[msg.user].peer_message_progress(msg)
-
-    def peer_connection_closed(self, msg):
-        if msg.user in self.pages:
-            self.pages[msg.user].peer_connection_closed()
+            self.pages[msg.user].peer_connection_error()
 
     def get_user_stats(self, msg):
         if msg.user in self.pages:
@@ -112,15 +121,22 @@ class UserInfos(IconNotebook):
             page = self.pages[msg.user]
             self.set_user_status(page.container, msg.user, msg.status)
 
-    def set_user_country(self, user, country_code):
+    def user_country(self, user, country_code):
         if user in self.pages:
-            self.pages[user].set_user_country(country_code)
+            self.pages[user].user_country(country_code)
 
     def user_interests(self, msg):
         if msg.user in self.pages:
             self.pages[msg.user].user_interests(msg)
 
-    def user_info_reply(self, user, msg):
+    def user_info_progress(self, msg):
+        if msg.user in self.pages:
+            self.pages[msg.user].user_info_progress(msg)
+
+    def user_info_reply(self, msg):
+
+        user = msg.init.target_user
+
         if user in self.pages:
             self.pages[user].user_info_reply(msg)
 
@@ -128,7 +144,7 @@ class UserInfos(IconNotebook):
         for page in self.pages.values():
             page.update_visuals()
 
-    def server_disconnect(self):
+    def server_disconnect(self, _msg):
         for user, page in self.pages.items():
             self.set_user_status(page.container, user, UserStatus.OFFLINE)
 
@@ -351,7 +367,10 @@ class UserInfo:
         picture_zoomed = self.picture_data_scaled.scale_simple(width, height, GdkPixbuf.InterpType.NEAREST)
         self.set_pixbuf(picture_zoomed)
 
-    def show_connection_error(self):
+    def peer_connection_error(self):
+
+        if self.refresh_button.get_sensitive():
+            return
 
         self.info_bar.show_message(
             _("Unable to request information from user. Either you both have a closed listening "
@@ -389,7 +408,7 @@ class UserInfo:
         self.info_bar.set_visible(False)
         self.refresh_button.set_sensitive(False)
 
-    def peer_message_progress(self, msg):
+    def user_info_progress(self, msg):
 
         self.indeterminate_progress = False
 
@@ -401,10 +420,6 @@ class UserInfo:
             fraction = float(msg.position) / msg.total
 
         self.progress_bar.set_fraction(fraction)
-
-    def peer_connection_closed(self):
-        if not self.refresh_button.get_sensitive():
-            self.show_connection_error()
 
     """ Network Messages """
 
@@ -435,7 +450,7 @@ class UserInfo:
         self.shared_files_label.set_text(humanize(msg.files))
         self.shared_folders_label.set_text(humanize(msg.dirs))
 
-    def set_user_country(self, country_code):
+    def user_country(self, country_code):
 
         if not country_code:
             return
@@ -482,7 +497,7 @@ class UserInfo:
         core.userbrowse.browse_user(self.user)
 
     def on_add_to_list(self, *_args):
-        core.userlist.add_user(self.user)
+        core.userlist.add_buddy(self.user)
 
     def on_ban_user(self, *_args):
         core.network_filter.ban_user(self.user)
@@ -531,7 +546,7 @@ class UserInfo:
 
     def on_refresh(self, *_args):
         self.set_in_progress()
-        core.userinfo.request_user_info(self.user)
+        core.userinfo.show_user(self.user, refresh=True)
 
     def on_focus(self, *_args):
         self.description_view.textview.grab_focus()

@@ -220,14 +220,6 @@ class TransferList:
         self.transfer_list = transfer_list
         self.update_model()
 
-    def server_login(self):
-        # Not needed
-        pass
-
-    def server_disconnect(self):
-        # Not needed
-        pass
-
     def save_columns(self):
         save_columns(self.type, self.tree_view.get_columns())
 
@@ -309,7 +301,7 @@ class TransferList:
         self.last_redraw_time = current_time
         self.tree_view.queue_draw()
 
-    def update_model(self, transfer=None, forceupdate=False, update_parent=True):
+    def update_model(self, transfer=None, update_parent=True, forceupdate=False):
 
         if not forceupdate and self.frame.current_page_id != self.transfer_page.id:
             # No need to do unnecessary work if transfers are not visible

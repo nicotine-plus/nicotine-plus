@@ -220,7 +220,7 @@ class BaseImplementation:
         if not user:
             return
 
-        core.userinfo.request_user_info(user)
+        core.userinfo.show_user(user)
         self.frame.show()
 
     def on_get_a_users_info(self, *_args):

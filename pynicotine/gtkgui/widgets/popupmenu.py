@@ -454,7 +454,7 @@ class UserPopupMenu(PopupMenu):
         core.request_ip_address(self.user)
 
     def on_get_user_info(self, *_args):
-        core.userinfo.request_user_info(self.user)
+        core.userinfo.show_user(self.user)
 
     def on_browse_user(self, *_args):
         core.userbrowse.browse_user(self.user)
@@ -481,9 +481,9 @@ class UserPopupMenu(PopupMenu):
             return
 
         if state.get_boolean():
-            core.userlist.add_user(self.user)
+            core.userlist.add_buddy(self.user)
         else:
-            core.userlist.remove_user(self.user)
+            core.userlist.remove_buddy(self.user)
 
         action.set_state(state)
 
