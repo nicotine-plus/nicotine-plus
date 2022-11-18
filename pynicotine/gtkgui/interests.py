@@ -219,10 +219,7 @@ class Interests:
             self.dislikes_list_view.remove_row(iterator)
 
     def recommend_search(self, item):
-
-        self.frame.search_entry.set_text(item)
-        self.frame.change_main_page(self.frame.search_page)
-        GLib.idle_add(lambda: self.frame.search_entry.grab_focus() == -1, priority=GLib.PRIORITY_HIGH_IDLE)
+        core.search.do_search(item, mode="global")
 
     def on_add_thing_i_like(self, *_args):
 
