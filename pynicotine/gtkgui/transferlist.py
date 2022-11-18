@@ -24,7 +24,6 @@
 
 import time
 
-from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
 
@@ -281,7 +280,6 @@ class TransferList:
 
         self.frame.search_entry.set_text(transfer.filename.rsplit("\\", 1)[1])
         self.frame.change_main_page(self.frame.search_page)
-        GLib.idle_add(lambda: self.frame.search_entry.grab_focus() == -1, priority=GLib.PRIORITY_HIGH_IDLE)
 
     def translate_status(self, status):
 

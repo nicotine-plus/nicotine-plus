@@ -1546,6 +1546,11 @@ class Search:
         self.update_result_counter()
 
     def on_focus(self, *_args):
+
+        if self.frame.search_entry.get_text():
+            # Search entry contains text, let it grab focus instead
+            return
+
         self.tree_view.grab_focus()
 
     def on_close(self, *_args):

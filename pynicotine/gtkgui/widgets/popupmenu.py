@@ -445,7 +445,6 @@ class UserPopupMenu(PopupMenu):
         self.frame.search_mode_action.change_state(GLib.Variant("s", "user"))
         self.frame.user_search_entry.set_text(self.user)
         self.frame.change_main_page(self.frame.search_page)
-        GLib.idle_add(lambda: self.frame.search_entry.grab_focus() == -1, priority=GLib.PRIORITY_HIGH_IDLE)
 
     def on_send_message(self, *_args):
         core.privatechat.show_user(self.user)
