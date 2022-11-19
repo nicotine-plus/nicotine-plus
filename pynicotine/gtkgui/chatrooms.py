@@ -847,6 +847,10 @@ class ChatRoom:
         if mentioned:
             # We were mentioned, update tray icon and show urgency hint
             self.frame.notifications.add("rooms", user, room)
+            log.add(_("%(user)s mentioned you in the %(room)s room"), {
+                'user': user,
+                'room': room
+            })
             return
 
         if not public and config.sections["notifications"]["notification_popup_chatroom"]:
