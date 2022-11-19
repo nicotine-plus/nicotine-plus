@@ -20,6 +20,7 @@ from gi.repository import Gdk
 from gi.repository import Gtk
 
 from pynicotine.config import config
+from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
 from pynicotine.gtkgui.widgets.window import Window
@@ -184,19 +185,23 @@ class MessageDialog(Window):
                 break
 
         self.dialog = Gtk.MessageDialog(
-            transient_for=parent, destroy_with_parent=True, modal=parent.get_visible(),
-            message_type=message_type, default_width=width,
-            text=title, secondary_text=message
+            transient_for=parent, destroy_with_parent=True, message_type=message_type,
+            default_width=width, text=title, secondary_text=message
         )
         Window.__init__(self, self.dialog)
-        self.container = self.dialog.get_message_area()
         self.dialog.connect("response", self.on_response, callback, callback_data)
+
+        if parent:
+            # Only make dialog modal when parent is visible to prevent input/focus issues
+            self.dialog.set_modal(parent.get_visible())
 
         if not buttons:
             buttons = [(_("Close"), Gtk.ResponseType.CLOSE)]
 
         for button_label, response_type in buttons:
             self.dialog.add_button(button_label, response_type)
+
+        self.container = self.dialog.get_message_area()
 
         if GTK_API_VERSION >= 4:
             label = self.container.get_last_child()
@@ -371,7 +376,7 @@ class PluginSettingsDialog(Dialog):
         self.plugin_settings = plugin_settings
         self.option_widgets = {}
 
-        plugin_name = frame.core.pluginhandler.get_plugin_info(plugin_id).get("Name", plugin_id)
+        plugin_name = core.pluginhandler.get_plugin_info(plugin_id).get("Name", plugin_id)
 
         cancel_button = Gtk.Button(label=_("_Cancel"), use_underline=True, visible=True)
         cancel_button.connect("clicked", self.on_cancel)
@@ -681,7 +686,7 @@ class PluginSettingsDialog(Dialog):
             if value is not None:
                 config.sections["plugins"][self.plugin_id.lower()][name] = value
 
-        self.frame.core.pluginhandler.plugin_settings(
-            self.plugin_id, self.frame.core.pluginhandler.enabled_plugins[self.plugin_id])
+        core.pluginhandler.plugin_settings(
+            self.plugin_id, core.pluginhandler.enabled_plugins[self.plugin_id])
 
         self.close()

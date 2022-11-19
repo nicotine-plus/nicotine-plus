@@ -33,6 +33,7 @@ from threading import Thread
 
 from pynicotine import slskmessages
 from pynicotine.config import config
+from pynicotine.core import core
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import UINT_LIMIT
 from pynicotine.slskmessages import UserStatus
@@ -516,12 +517,8 @@ class Scanner:
 
 class Shares:
 
-    def __init__(self, core, queue, network_callback=None, ui_callback=None, init_shares=True):
+    def __init__(self):
 
-        self.core = core
-        self.network_callback = network_callback
-        self.ui_callback = ui_callback
-        self.queue = queue
         self.share_dbs = {}
         self.requested_share_times = {}
         self.pending_network_msgs = []
@@ -544,10 +541,9 @@ class Shares:
             ("buddymtimes", os.path.join(config.data_dir, "buddymtimes.db"))
         ]
 
-        if not init_shares:
-            return
-
-        self.init_shares()
+    def server_disconnect(self):
+        self.requested_share_times.clear()
+        self.pending_network_msgs.clear()
 
     """ Shares-related actions """
 
@@ -664,18 +660,18 @@ class Shares:
 
         if not realfilename.startswith("__INTERNAL_ERROR__"):
             if bshared_files is not None:
-                for row in config.sections["server"]["userlist"]:
-                    if row[0] != user:
-                        continue
+                user_row = core.userlist.buddies.get(user)
 
+                if user_row:
                     # Check if buddy is trusted
-                    if config.sections["transfers"]["buddysharestrustedonly"] and not row[4]:
-                        break
+                    if config.sections["transfers"]["buddysharestrustedonly"] and not user_row[4]:
+                        pass
 
-                    for fileinfo in bshared_files.get(str(folder), []):
-                        if file == fileinfo[0]:
-                            file_is_shared = True
-                            break
+                    else:
+                        for fileinfo in bshared_files.get(str(folder), []):
+                            if file == fileinfo[0]:
+                                file_is_shared = True
+                                break
 
             if not file_is_shared and shared_files is not None:
                 for fileinfo in shared_files.get(str(folder), []):
@@ -728,7 +724,7 @@ class Shares:
     def send_num_shared_folders_files(self):
         """ Send number publicly shared files to the server. """
 
-        if not (self.core and self.core.user_status != UserStatus.OFFLINE):
+        if not (core and core.user_status != UserStatus.OFFLINE):
             return
 
         if self.rescanning:
@@ -750,7 +746,7 @@ class Shares:
                 sharedfolders = len(list(shared))
                 sharedfiles = len(list(index))
 
-            self.queue.append(slskmessages.SharedFoldersFiles(sharedfolders, sharedfiles))
+            core.queue.append(slskmessages.SharedFoldersFiles(sharedfolders, sharedfiles))
 
         except Exception as error:
             log.add(_("Failed to send number of shared files to the server: %s"), error)
@@ -810,14 +806,14 @@ class Shares:
                     log.add(template, args, log_level)
 
                 elif isinstance(item, float):
-                    if self.ui_callback:
-                        self.ui_callback.set_scan_progress(item)
+                    if core.ui_callback:
+                        core.ui_callback.set_scan_progress(item)
                     else:
                         log.add(_("Rescan progress: %s"), str(int(item * 100)) + " %")
 
-                elif item == "indeterminate" and self.ui_callback:
-                    self.ui_callback.show_scan_progress()
-                    self.ui_callback.set_scan_indeterminate()
+                elif item == "indeterminate" and core.ui_callback:
+                    core.ui_callback.show_scan_progress()
+                    core.ui_callback.set_scan_indeterminate()
 
                 elif isinstance(item, slskmessages.SharedFileList):
                     if item.type == "normal":
@@ -855,8 +851,8 @@ class Shares:
                 log.add(_("Rescan aborted due to unavailable shares"))
                 rescan = False
 
-                if self.ui_callback:
-                    self.ui_callback.shares_unavailable(unavailable_shares)
+                if core.ui_callback:
+                    core.ui_callback.shares_unavailable(unavailable_shares)
 
                 if not init:
                     return None
@@ -882,8 +878,8 @@ class Shares:
         # Let the scanner process do its thing
         error = self.process_scanner_messages(scanner, scanner_queue)
 
-        if self.ui_callback:
-            self.ui_callback.hide_scan_progress()
+        if core.ui_callback:
+            core.ui_callback.hide_scan_progress()
 
         # Scanning done, load shares in the main process again
         self.load_shares(self.share_dbs, self.share_db_paths)
@@ -893,8 +889,8 @@ class Shares:
             self.send_num_shared_folders_files()
 
         # Process any file transfer queue requests that arrived while scanning
-        if self.network_callback:
-            self.network_callback(self.pending_network_msgs)
+        if core.thread_callback:
+            core.thread_callback(self.pending_network_msgs)
 
         return error
 
@@ -916,11 +912,11 @@ class Shares:
         log.add(_("User %(user)s is browsing your list of shared files"), {'user': user})
 
         ip_address, _port = msg.init.addr
-        checkuser, reason = self.core.network_filter.check_user(user, ip_address)
+        checkuser, reason = core.network_filter.check_user(user, ip_address)
 
         if not checkuser:
-            message = self.core.ban_message % reason
-            self.core.privatechat.send_automatic_message(user, message)
+            message = core.ban_message % reason
+            core.privatechat.send_automatic_message(user, message)
 
         shares_list = None
 
@@ -937,7 +933,7 @@ class Shares:
             shares_list = slskmessages.SharedFileList(init=msg.init)
 
         shares_list.init = msg.init
-        self.queue.append(shares_list)
+        core.queue.append(shares_list)
 
     def folder_contents_request(self, msg):
         """ Peer code: 36 """
@@ -945,11 +941,11 @@ class Shares:
         init = msg.init
         ip_address, _port = msg.init.addr
         username = msg.init.target_user
-        checkuser, reason = self.core.network_filter.check_user(username, ip_address)
+        checkuser, reason = core.network_filter.check_user(username, ip_address)
 
         if not checkuser:
-            message = self.core.ban_message % reason
-            self.core.privatechat.send_automatic_message(username, message)
+            message = core.ban_message % reason
+            core.privatechat.send_automatic_message(username, message)
 
         normalshares = self.share_dbs.get("streams")
         buddyshares = self.share_dbs.get("buddystreams")
@@ -966,12 +962,12 @@ class Shares:
         if checkuser:
             try:
                 if msg.dir in shares:
-                    self.queue.append(slskmessages.FolderContentsResponse(
+                    core.queue.append(slskmessages.FolderContentsResponse(
                         init=init, directory=msg.dir, token=msg.token, shares=shares[msg.dir]))
                     return
 
                 if msg.dir.rstrip('\\') in shares:
-                    self.queue.append(slskmessages.FolderContentsResponse(
+                    core.queue.append(slskmessages.FolderContentsResponse(
                         init=init, directory=msg.dir, token=msg.token, shares=shares[msg.dir.rstrip('\\')]))
                     return
 
@@ -979,7 +975,7 @@ class Shares:
                 log.add(_("Failed to fetch the shared folder %(folder)s: %(error)s"),
                         {"folder": msg.dir, "error": error})
 
-            self.queue.append(slskmessages.FolderContentsResponse(init=init, directory=msg.dir, token=msg.token))
+            core.queue.append(slskmessages.FolderContentsResponse(init=init, directory=msg.dir, token=msg.token))
 
     """ Quit """
 

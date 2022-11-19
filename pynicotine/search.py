@@ -28,6 +28,7 @@ from operator import itemgetter
 
 from pynicotine import slskmessages
 from pynicotine.config import config
+from pynicotine.core import core
 from pynicotine.logfacility import log
 from pynicotine.scheduler import scheduler
 from pynicotine.slskmessages import increment_token
@@ -36,17 +37,13 @@ from pynicotine.utils import TRANSLATE_PUNCTUATION
 
 class Search:
 
-    def __init__(self, core, queue, share_dbs, geoip, ui_callback=None):
+    def __init__(self):
 
-        self.core = core
-        self.queue = queue
-        self.ui_callback = getattr(ui_callback, "search", None)
+        self.ui_callback = getattr(core.ui_callback, "search", None)
         self.searches = {}
         self.token = int(random.random() * (2 ** 31 - 1))
         self.wishlist_interval = 0
-        self.wishlist_timer_id = None
-        self.share_dbs = share_dbs
-        self.geoip = geoip
+        self._wishlist_timer_id = None
 
         # Create wishlist searches
         for term in config.sections["server"]["autosearch"]:
@@ -59,7 +56,7 @@ class Search:
 
     def server_disconnect(self):
 
-        scheduler.cancel(self.wishlist_timer_id)
+        scheduler.cancel(self._wishlist_timer_id)
         self.wishlist_interval = 0
 
         if self.ui_callback:
@@ -73,12 +70,12 @@ class Search:
         for file in visible_files:
             user, fullpath, destination, size, bitrate, length = file
 
-            self.core.transfers.get_file(
+            core.transfers.get_file(
                 user, fullpath, destination,
                 size=size, bitrate=bitrate, length=length)
 
         # Ask for the rest of the files in the folder
-        self.core.transfers.get_folder(user, folder)
+        core.transfers.get_folder(user, folder)
 
     """ Outgoing search requests """
 
@@ -117,8 +114,8 @@ class Search:
         users = []
 
         if mode == "global":
-            if self.core:
-                feedback = self.core.pluginhandler.outgoing_global_search_event(search_term)
+            if core:
+                feedback = core.pluginhandler.outgoing_global_search_event(search_term)
 
                 if feedback is not None:
                     search_term = feedback[0]
@@ -127,15 +124,15 @@ class Search:
             if not room:
                 room = _("Joined Rooms ")
 
-            if self.core:
-                feedback = self.core.pluginhandler.outgoing_room_search_event(room, search_term)
+            if core:
+                feedback = core.pluginhandler.outgoing_room_search_event(room, search_term)
 
                 if feedback is not None:
                     room, search_term = feedback
 
         elif mode == "buddies":
-            if self.core:
-                feedback = self.core.pluginhandler.outgoing_buddy_search_event(search_term)
+            if core:
+                feedback = core.pluginhandler.outgoing_buddy_search_event(search_term)
 
                 if feedback is not None:
                     search_term = feedback[0]
@@ -144,11 +141,11 @@ class Search:
             if user:
                 users.append(user)
 
-            if self.core:
+            if core:
                 if not users:
-                    users.append(self.core.login_username)
+                    users.append(core.login_username)
 
-                feedback = self.core.pluginhandler.outgoing_user_search_event(users, search_term)
+                feedback = core.pluginhandler.outgoing_user_search_event(users, search_term)
 
                 if feedback is not None:
                     users, search_term = feedback
@@ -221,32 +218,29 @@ class Search:
             self.ui_callback.do_search(self.token, search_term, mode, room, users, switch_page)
 
     def do_global_search(self, text):
-        self.queue.append(slskmessages.FileSearch(self.token, text))
+        core.queue.append(slskmessages.FileSearch(self.token, text))
 
         """ Request a list of related searches from the server.
         Seemingly non-functional since 2018 (always receiving empty lists). """
 
-        # self.queue.append(slskmessages.RelatedSearch(text))
+        # core.queue.append(slskmessages.RelatedSearch(text))
 
     def do_rooms_search(self, text, room=None):
 
         if room != _("Joined Rooms "):
-            self.queue.append(slskmessages.RoomSearch(room, self.token, text))
+            core.queue.append(slskmessages.RoomSearch(room, self.token, text))
 
-        elif self.core.chatrooms.ui_callback is not None:
-            for joined_room in self.core.chatrooms.ui_callback.pages:
-                self.queue.append(slskmessages.RoomSearch(joined_room, self.token, text))
+        elif core.chatrooms.ui_callback is not None:
+            for joined_room in core.chatrooms.ui_callback.pages:
+                core.queue.append(slskmessages.RoomSearch(joined_room, self.token, text))
 
     def do_buddies_search(self, text):
-
-        for row in config.sections["server"]["userlist"]:
-            if row and isinstance(row, list):
-                user = str(row[0])
-                self.queue.append(slskmessages.UserSearch(user, self.token, text))
+        for user in core.userlist.buddies:
+            core.queue.append(slskmessages.UserSearch(user, self.token, text))
 
     def do_peer_search(self, text, users):
         for user in users:
-            self.queue.append(slskmessages.UserSearch(user, self.token, text))
+            core.queue.append(slskmessages.UserSearch(user, self.token, text))
 
     def do_wishlist_search(self, token, text):
 
@@ -258,7 +252,7 @@ class Search:
         log.add_search(_("Searching for wishlist item \"%s\""), text)
 
         self.add_allowed_token(token)
-        self.queue.append(slskmessages.WishlistSearch(token, text))
+        core.queue.append(slskmessages.WishlistSearch(token, text))
 
     def do_wishlist_search_interval(self):
 
@@ -317,8 +311,8 @@ class Search:
         if self.wishlist_interval > 0:
             log.add_search(_("Wishlist wait period set to %s seconds"), self.wishlist_interval)
 
-            scheduler.cancel(self.wishlist_timer_id)
-            self.wishlist_timer_id = scheduler.add(
+            scheduler.cancel(self._wishlist_timer_id)
+            self._wishlist_timer_id = scheduler.add(
                 delay=self.wishlist_interval, callback=self.do_wishlist_search_interval, repeat=True)
         else:
             log.add(_("Server does not permit performing wishlist searches at this time"))
@@ -340,14 +334,14 @@ class Search:
         username = msg.init.target_user
         ip_address = msg.init.addr[0]
 
-        if self.core.network_filter.is_user_ignored(username):
+        if core.network_filter.is_user_ignored(username):
             return
 
-        if self.core.network_filter.is_ip_ignored(ip_address):
+        if core.network_filter.is_ip_ignored(ip_address):
             return
 
         if ip_address:
-            country = self.geoip.get_country_code(ip_address)
+            country = core.geoip.get_country_code(ip_address)
         else:
             country = ""
 
@@ -360,13 +354,13 @@ class Search:
         """ Server code: 26, 42 and 120 """
 
         self.process_search_request(msg.searchterm, msg.user, msg.token, direct=True)
-        self.core.pluginhandler.search_request_notification(msg.searchterm, msg.user, msg.token)
+        core.pluginhandler.search_request_notification(msg.searchterm, msg.user, msg.token)
 
     def distrib_search(self, msg):
         """ Distrib code: 3 """
 
         self.process_search_request(msg.searchterm, msg.user, msg.token, direct=False)
-        self.core.pluginhandler.distrib_search_notification(msg.searchterm, msg.user, msg.token)
+        core.pluginhandler.distrib_search_notification(msg.searchterm, msg.user, msg.token)
 
     """ Incoming search requests """
 
@@ -456,7 +450,7 @@ class Search:
             # Don't return _any_ results when this option is disabled
             return
 
-        if not direct and user == self.core.login_username:
+        if not direct and user == core.login_username:
             # We shouldn't send a search response if we initiated the search request,
             # unless we're specifically searching our own username
             return
@@ -491,15 +485,15 @@ class Search:
             # Don't send search response if search term contains too few characters
             return
 
-        checkuser, _reason = self.core.network_filter.check_user(user, None)
+        checkuser, _reason = core.network_filter.check_user(user, None)
 
         if not checkuser:
             return
 
         if checkuser == 2:
-            wordindex = self.share_dbs.get("buddywordindex")
+            wordindex = core.shares.share_dbs.get("buddywordindex")
         else:
-            wordindex = self.share_dbs.get("wordindex")
+            wordindex = core.shares.share_dbs.get("wordindex")
 
         if wordindex is None:
             return
@@ -511,9 +505,9 @@ class Search:
             return
 
         if checkuser == 2:
-            fileindex = self.share_dbs.get("buddyfileindex")
+            fileindex = core.shares.share_dbs.get("buddyfileindex")
         else:
-            fileindex = self.share_dbs.get("fileindex")
+            fileindex = core.shares.share_dbs.get("fileindex")
 
         if fileindex is None:
             return
@@ -541,16 +535,16 @@ class Search:
 
         fileinfos.sort(key=itemgetter(1))
 
-        uploadspeed = self.core.transfers.upload_speed
-        queuesize = self.core.transfers.get_upload_queue_size()
-        slotsavail = self.core.transfers.allow_new_uploads()
+        uploadspeed = core.transfers.upload_speed
+        queuesize = core.transfers.get_upload_queue_size()
+        slotsavail = core.transfers.allow_new_uploads()
         fifoqueue = config.sections["transfers"]["fifoqueue"]
 
         message = slskmessages.FileSearchResult(
-            None, self.core.login_username,
+            None, core.login_username,
             token, fileinfos, slotsavail, uploadspeed, queuesize, fifoqueue)
 
-        self.core.send_message_to_peer(user, message)
+        core.send_message_to_peer(user, message)
 
         log.add_search(_("User %(user)s is searching for \"%(query)s\", found %(num)i results"), {
             'user': user,

@@ -44,18 +44,9 @@
         <property name="visible">True</property>
         <property name="vexpand">True</property>
         <child>
-          <object class="GtkScrolledWindow">
+          <object class="GtkScrolledWindow" id="list_container">
             <property name="visible">True</property>
             <property name="hexpand">True</property>
-            <child>
-              <object class="GtkTreeView" id="list_view">
-                <property name="visible">True</property>
-                <property name="has-tooltip">True</property>
-                <property name="search-column">2</property>
-                <signal name="query-tooltip" handler="on_tooltip"/>
-                <signal name="row-activated" handler="on_row_activated"/>
-              </object>
-            </child>
           </object>
         </child>
       </object>

@@ -17,19 +17,18 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import unittest
 
-from collections import deque
+from unittest import TestCase
 
 from pynicotine.config import config
-from pynicotine.search import Search
+from pynicotine.core import core
 from pynicotine.slskmessages import increment_token
 
 SEARCH_TEXT = '70 gwen "test" -mp3 -nothanks a:b;c+d +++---}[ *ello [[ @@ auto -no yes'
 SEARCH_MODE = 'global'
 
 
-class SearchTest(unittest.TestCase):
+class SearchTest(TestCase):
 
     def setUp(self):
 
@@ -37,21 +36,20 @@ class SearchTest(unittest.TestCase):
         config.filename = os.path.join(config.data_dir, "temp_config")
 
         config.load_config()
-
-        self.search = Search(None, deque(), None, None)
+        core.init_components()
 
     def test_do_search(self):
         """ Test the do_search function, including the outgoing search term and search history """
 
-        old_token = self.search.token
+        old_token = core.search.token
 
         # Try a search with special characters removed
 
         config.sections["searches"]["remove_special_chars"] = True
-        search_term, search_term_without_special, *_unused = self.search.process_search_term(SEARCH_TEXT, SEARCH_MODE)
-        self.search.do_search(SEARCH_TEXT, SEARCH_MODE)
+        search_term, search_term_without_special, *_unused = core.search.process_search_term(SEARCH_TEXT, SEARCH_MODE)
+        core.search.do_search(SEARCH_TEXT, SEARCH_MODE)
 
-        self.assertEqual(self.search.token, old_token + 1)
+        self.assertEqual(core.search.token, old_token + 1)
         self.assertEqual(search_term, "70 gwen test a b c d auto yes -mp3 -nothanks *ello -no")
         self.assertEqual(search_term_without_special, "70 gwen test a b c d auto yes")
         self.assertEqual(config.sections["searches"]["history"][0], search_term)
@@ -59,8 +57,8 @@ class SearchTest(unittest.TestCase):
         # Try a search without special characters removed
 
         config.sections["searches"]["remove_special_chars"] = False
-        search_term, search_term_without_special, *_unused = self.search.process_search_term(SEARCH_TEXT, SEARCH_MODE)
-        self.search.do_search(SEARCH_TEXT, SEARCH_MODE)
+        search_term, search_term_without_special, *_unused = core.search.process_search_term(SEARCH_TEXT, SEARCH_MODE)
+        core.search.do_search(SEARCH_TEXT, SEARCH_MODE)
 
         self.assertEqual(search_term, '70 gwen "test" a:b;c+d +++---}[ [[ @@ auto yes -mp3 -nothanks *ello -no')
         self.assertEqual(search_term_without_special, '70 gwen "test" a:b;c+d +++---}[ [[ @@ auto yes')
@@ -71,27 +69,27 @@ class SearchTest(unittest.TestCase):
     def test_search_token_increment(self):
         """ Test that search token increments work properly """
 
-        old_token = self.search.token
+        old_token = core.search.token
 
-        self.search.token = increment_token(self.search.token)
-        self.assertEqual(old_token, self.search.token - 1)
+        core.search.token = increment_token(core.search.token)
+        self.assertEqual(old_token, core.search.token - 1)
 
     def test_wishlist_add(self):
         """ Test that items are added to the wishlist properly """
 
-        old_token = self.search.token
+        old_token = core.search.token
 
         # First item
 
-        self.search.add_wish(SEARCH_TEXT)
+        core.search.add_wish(SEARCH_TEXT)
         self.assertEqual(config.sections["server"]["autosearch"][0], SEARCH_TEXT)
-        self.assertEqual(self.search.token, old_token + 1)
-        self.assertEqual(self.search.token, self.search.token)
+        self.assertEqual(core.search.token, old_token + 1)
+        self.assertEqual(core.search.token, core.search.token)
 
         # Second item
 
         new_item = SEARCH_TEXT + "1"
-        self.search.add_wish(new_item)
+        core.search.add_wish(new_item)
         self.assertEqual(config.sections["server"]["autosearch"][0], SEARCH_TEXT)
         self.assertEqual(config.sections["server"]["autosearch"][1], new_item)
 
@@ -109,12 +107,12 @@ class SearchTest(unittest.TestCase):
         excluded_words = ["linux", "game"]
         partial_words = ["stem"]
 
-        results = self.search.create_search_result_list(search_term, word_index, excluded_words, partial_words)
+        results = core.search.create_search_result_list(search_term, word_index, excluded_words, partial_words)
         self.assertEqual(results, {37, 38})
 
         search_term = "linux game lts music iso cd"
         excluded_words = ["linux", "game", "music", "cd"]
         partial_words = []
 
-        results = self.search.create_search_result_list(search_term, word_index, excluded_words, partial_words)
+        results = core.search.create_search_result_list(search_term, word_index, excluded_words, partial_words)
         self.assertEqual(results, set())

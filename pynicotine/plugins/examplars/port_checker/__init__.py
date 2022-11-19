@@ -20,7 +20,7 @@
 import socket
 import threading
 
-from pynicotine.pluginsystem import BasePlugin, ResponseThrottle, returncode
+from pynicotine.pluginsystem import BasePlugin, ResponseThrottle
 from pynicotine.slskmessages import GetPeerAddress
 
 
@@ -73,7 +73,7 @@ class Plugin(BasePlugin):
 
     def resolve(self, user, announce):
 
-        user_address = self.core.protothread.user_addresses.get(user)
+        user_address = self.core.user_addresses.get(user)
 
         if user_address is not None:
             ip_address, port = user_address
@@ -117,5 +117,3 @@ class Plugin(BasePlugin):
             self.resolve(user, False)
         else:
             self.log("Provide a user name as parameter.")
-
-        return returncode['zap']

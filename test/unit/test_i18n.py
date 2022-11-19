@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import unittest
+from unittest import TestCase
 
 from pynicotine.i18n import build_translations
 from pynicotine.i18n import get_translation_paths
@@ -25,7 +25,7 @@ LANGUAGES = ("ca", "cs", "da", "de", "eo", "es_CL", "es_ES", "eu", "fi", "fr", "
              "pl", "pt_BR", "ru", "sk", "sv", "tr", "uk", "zh_Hans")
 
 
-class I18nTest(unittest.TestCase):
+class I18nTest(TestCase):
 
     def test_build_translations(self):
 

@@ -27,6 +27,7 @@ from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine.config import config
+from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
@@ -232,7 +233,7 @@ class IconNotebook:
     - Dropdown menu for unread tabs
     """
 
-    def __init__(self, frame, core, widget, parent_page=None, switch_page_callback=None, reorder_page_callback=None):
+    def __init__(self, frame, widget, parent_page=None, switch_page_callback=None, reorder_page_callback=None):
 
         self.widget = widget
         self.widget.connect("page-reordered", self.on_reorder_page)
@@ -240,7 +241,6 @@ class IconNotebook:
         self.widget.connect("switch-page", self.on_switch_page)
 
         self.frame = frame
-        self.core = core
         self.parent_page = parent_page
         self.switch_page_callback = switch_page_callback
         self.reorder_page_callback = reorder_page_callback
@@ -369,7 +369,7 @@ class IconNotebook:
         self.append_page_label(page, label_tab, label_tab_menu)
 
         if user is not None:
-            status = self.core.user_statuses.get(user, UserStatus.OFFLINE)
+            status = core.user_statuses.get(user, UserStatus.OFFLINE)
             self.set_user_status(page, text, status)
 
     def remove_page(self, page):

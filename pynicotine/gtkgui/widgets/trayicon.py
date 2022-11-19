@@ -19,13 +19,12 @@
 import os
 import sys
 
-from collections import OrderedDict
-
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine.config import config
+from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_GUI_DIR
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.logfacility import log
@@ -42,11 +41,10 @@ class ImplementationUnavailable(Exception):
 
 class BaseImplementation:
 
-    def __init__(self, frame, core):
+    def __init__(self, frame):
 
         self.frame = frame
-        self.core = core
-        self.menu_items = OrderedDict()
+        self.menu_items = {}
         self.menu_item_id = 1
 
         self.create_menu()
@@ -112,7 +110,7 @@ class BaseImplementation:
         self.create_item()
 
         self.create_item(_("Preferences"), self.frame.on_preferences)
-        self.create_item(_("Quit"), self.core.quit)
+        self.create_item(_("Quit"), core.quit)
 
     def update_window_visibility(self):
 
@@ -125,7 +123,7 @@ class BaseImplementation:
 
     def update_user_status(self):
 
-        sensitive = self.core.user_status != UserStatus.OFFLINE
+        sensitive = core.user_status != UserStatus.OFFLINE
 
         for item in (self.away_item, self.send_message_item,
                      self.lookup_info_item, self.lookup_shares_item):
@@ -135,7 +133,7 @@ class BaseImplementation:
 
         self.set_item_visible(self.connect_item, not sensitive)
         self.set_item_visible(self.disconnect_item, sensitive)
-        self.set_item_toggled(self.away_item, self.core.user_status == UserStatus.AWAY)
+        self.set_item_toggled(self.away_item, core.user_status == UserStatus.AWAY)
 
         self.update_icon()
         self.update_menu()
@@ -150,15 +148,15 @@ class BaseImplementation:
             return
 
         # Check for hilites, and display hilite icon if there is a room or private hilite
-        if (self.core.notifications
-                and (self.core.notifications.chat_hilites["rooms"]
-                     or self.core.notifications.chat_hilites["private"])):
+        if (core.notifications
+                and (core.notifications.chat_hilites["rooms"]
+                     or core.notifications.chat_hilites["private"])):
             icon_name = "msg"
 
-        elif self.core.user_status == UserStatus.ONLINE:
+        elif core.user_status == UserStatus.ONLINE:
             icon_name = "connect"
 
-        elif self.core.user_status == UserStatus.AWAY:
+        elif core.user_status == UserStatus.AWAY:
             icon_name = "away"
 
         else:
@@ -202,18 +200,17 @@ class BaseImplementation:
         if not user:
             return
 
-        self.core.privatechat.show_user(user)
+        core.privatechat.show_user(user)
         self.frame.show()
 
     def on_open_private_chat(self, *_args):
 
-        users = (i[0] for i in config.sections["server"]["userlist"])
         EntryDialog(
             parent=self.frame.application.get_active_window(),
             title=config.application_name + ": " + _("Start Messaging"),
             message=_('Enter the name of the user whom you want to send a message:'),
             callback=self.on_open_private_chat_response,
-            droplist=users
+            droplist=sorted(core.userlist.buddies)
         ).show()
 
     def on_get_a_users_info_response(self, dialog, _response_id, _data):
@@ -223,18 +220,17 @@ class BaseImplementation:
         if not user:
             return
 
-        self.core.userinfo.request_user_info(user)
+        core.userinfo.request_user_info(user)
         self.frame.show()
 
     def on_get_a_users_info(self, *_args):
 
-        users = (i[0] for i in config.sections["server"]["userlist"])
         EntryDialog(
             parent=self.frame.application.get_active_window(),
             title=config.application_name + ": " + _("Request User Info"),
             message=_('Enter the name of the user whose info you want to see:'),
             callback=self.on_get_a_users_info_response,
-            droplist=users
+            droplist=sorted(core.userlist.buddies)
         ).show()
 
     def on_get_a_users_shares_response(self, dialog, _response_id, _data):
@@ -244,18 +240,17 @@ class BaseImplementation:
         if not user:
             return
 
-        self.core.userbrowse.browse_user(user)
+        core.userbrowse.browse_user(user)
         self.frame.show()
 
     def on_get_a_users_shares(self, *_args):
 
-        users = (i[0] for i in config.sections["server"]["userlist"])
         EntryDialog(
             parent=self.frame.application.get_active_window(),
             title=config.application_name + ": " + _("Request Shares List"),
             message=_('Enter the name of the user whose shares you want to see:'),
             callback=self.on_get_a_users_shares_response,
-            droplist=users
+            droplist=sorted(core.userlist.buddies)
         ).show()
 
     def is_visible(self):  # pylint:disable=no-self-use
@@ -401,7 +396,7 @@ class StatusNotifierImplementation(BaseImplementation):
                 bus_type=Gio.BusType.SESSION
             )
 
-            self._items = OrderedDict()
+            self._items = {}
             self._revision = 0
 
             for method_name, in_args, out_args, callback in (
@@ -513,9 +508,9 @@ class StatusNotifierImplementation(BaseImplementation):
             super().unregister()
             self.menu.unregister()
 
-    def __init__(self, frame, core):
+    def __init__(self, frame):
 
-        super().__init__(frame, core)
+        super().__init__(frame)
 
         self.tray_icon = None
         self.custom_icons = False
@@ -634,9 +629,9 @@ class StatusNotifierImplementation(BaseImplementation):
 
 class StatusIconImplementation(BaseImplementation):
 
-    def __init__(self, frame, core):
+    def __init__(self, frame):
 
-        super().__init__(frame, core)
+        super().__init__(frame)
 
         if not hasattr(Gtk, "StatusIcon") or sys.platform == "darwin" or os.getenv("WAYLAND_DISPLAY"):
             # GtkStatusIcon does not work on macOS and Wayland
@@ -725,10 +720,9 @@ class StatusIconImplementation(BaseImplementation):
 
 class TrayIcon:
 
-    def __init__(self, frame, core):
+    def __init__(self, frame):
 
         self.frame = frame
-        self.core = core
         self.available = True
         self.implementation = None
 
@@ -762,11 +756,11 @@ class TrayIcon:
 
         if self.implementation is None:
             try:
-                self.implementation = StatusNotifierImplementation(self.frame, self.core)
+                self.implementation = StatusNotifierImplementation(self.frame)
 
             except ImplementationUnavailable:
                 try:
-                    self.implementation = StatusIconImplementation(self.frame, self.core)
+                    self.implementation = StatusIconImplementation(self.frame)
 
                 except ImplementationUnavailable:
                     self.available = False

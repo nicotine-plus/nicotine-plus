@@ -18,26 +18,16 @@
 
 from pynicotine import slskmessages
 from pynicotine.config import config
+from pynicotine.core import core
 from pynicotine.logfacility import log
 from pynicotine.utils import get_completion_list
 
 
 class ChatRooms:
 
-    # List of allowed commands
-    CMDS = {
-        "/al ", "/alias ", "/un ", "/unalias ", "/w ", "/whois ", "/browse ", "/b ", "/ip ", "/pm ", "/m ", "/msg ",
-        "/s ", "/search ", "/us ", "/usearch ", "/rs ", "/rsearch ", "/bs ", "/bsearch ", "/j ", "/join ", "/l ",
-        "/leave ", "/p ", "/part ", "/ad ", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/ignoreip ",
-        "/unban ", "/unignore ", "/clear ", "/cl ", "/me ", "/a ", "/away ", "/q ", "/quit ", "/exit ", "/now ",
-        "/rescan ", "/info ", "/toggle "
-    }
+    def __init__(self):
 
-    def __init__(self, core, queue, ui_callback=None):
-
-        self.core = core
-        self.queue = queue
-        self.ui_callback = getattr(ui_callback, "chatrooms", None)
+        self.ui_callback = getattr(core.ui_callback, "chatrooms", None)
         self.server_rooms = set()
         self.joined_rooms = set()
         self.private_rooms = config.sections["private_rooms"]["rooms"]
@@ -52,10 +42,10 @@ class ChatRooms:
 
         for room in join_list:
             if room == "Public ":
-                self.queue.append(slskmessages.JoinPublicRoom())
+                core.queue.append(slskmessages.JoinPublicRoom())
 
             elif isinstance(room, str):
-                self.queue.append(slskmessages.JoinRoom(room))
+                core.queue.append(slskmessages.JoinRoom(room))
 
         if self.ui_callback:
             self.ui_callback.server_login()
@@ -72,10 +62,10 @@ class ChatRooms:
         if room == "Public ":
             # Fake a JoinRoom protocol message
             self.join_room(slskmessages.JoinRoom(room))
-            self.queue.append(slskmessages.JoinPublicRoom())
+            core.queue.append(slskmessages.JoinPublicRoom())
 
         elif room not in self.joined_rooms:
-            self.queue.append(slskmessages.JoinRoom(room, private))
+            core.queue.append(slskmessages.JoinRoom(room, private))
             return
 
         if self.ui_callback:
@@ -84,9 +74,9 @@ class ChatRooms:
     def remove_room(self, room):
 
         if room == "Public ":
-            self.queue.append(slskmessages.LeavePublicRoom())
+            core.queue.append(slskmessages.LeavePublicRoom())
         else:
-            self.queue.append(slskmessages.LeaveRoom(room))
+            core.queue.append(slskmessages.LeaveRoom(room))
 
         self.joined_rooms.discard(room)
 
@@ -106,15 +96,15 @@ class ChatRooms:
 
     def send_message(self, room, message):
 
-        event = self.core.pluginhandler.outgoing_public_chat_event(room, message)
+        event = core.pluginhandler.outgoing_public_chat_event(room, message)
         if event is None:
             return
 
         room, message = event
-        message = self.core.privatechat.auto_replace(message)
+        message = core.privatechat.auto_replace(message)
 
-        self.queue.append(slskmessages.SayChatroom(room, message))
-        self.core.pluginhandler.outgoing_public_chat_notification(room, message)
+        core.queue.append(slskmessages.SayChatroom(room, message))
+        core.pluginhandler.outgoing_public_chat_notification(room, message)
 
     def create_private_room(self, room, owner=None, operators=None):
 
@@ -143,24 +133,24 @@ class ChatRooms:
 
     def is_private_room_owned(self, room):
         private_room = self.private_rooms.get(room)
-        return private_room is not None and private_room["owner"] == self.core.login_username
+        return private_room is not None and private_room["owner"] == core.login_username
 
     def is_private_room_member(self, room):
         return room in self.private_rooms
 
     def is_private_room_operator(self, room):
         private_room = self.private_rooms.get(room)
-        return private_room is not None and self.core.login_username in private_room["operators"]
+        return private_room is not None and core.login_username in private_room["operators"]
 
     def request_room_list(self):
-        self.queue.append(slskmessages.RoomList())
+        core.queue.append(slskmessages.RoomList())
 
     def request_private_room_disown(self, room):
 
         if not self.is_private_room_owned(room):
             return
 
-        self.queue.append(slskmessages.PrivateRoomDisown(room))
+        core.queue.append(slskmessages.PrivateRoomDisown(room))
         del self.private_rooms[room]
 
     def request_private_room_dismember(self, room):
@@ -168,11 +158,11 @@ class ChatRooms:
         if not self.is_private_room_member(room):
             return
 
-        self.queue.append(slskmessages.PrivateRoomDismember(room))
+        core.queue.append(slskmessages.PrivateRoomDismember(room))
         del self.private_rooms[room]
 
     def request_private_room_toggle(self, enabled):
-        self.queue.append(slskmessages.PrivateRoomToggle(enabled))
+        core.queue.append(slskmessages.PrivateRoomToggle(enabled))
 
     def get_user_stats(self, msg):
         """ Server code: 36 """
@@ -191,7 +181,7 @@ class ChatRooms:
         if self.ui_callback:
             self.ui_callback.join_room(msg)
 
-        self.core.pluginhandler.join_chatroom_notification(msg.room)
+        core.pluginhandler.join_chatroom_notification(msg.room)
 
     def leave_room(self, msg):
         """ Server code: 15 """
@@ -199,7 +189,7 @@ class ChatRooms:
         if self.ui_callback:
             self.ui_callback.leave_room(msg)
 
-        self.core.pluginhandler.leave_chatroom_notification(msg.room)
+        core.pluginhandler.leave_chatroom_notification(msg.room)
 
     def get_user_status(self, msg):
         """ Server code: 7 """
@@ -248,7 +238,7 @@ class ChatRooms:
 
         private_room = self.private_rooms.get(msg.room)
 
-        if private_room is not None and private_room["owner"] == self.core.login_username:
+        if private_room is not None and private_room["owner"] == core.login_username:
             private_room["owner"] = None
 
         if self.ui_callback:
@@ -305,8 +295,8 @@ class ChatRooms:
 
         private_room = self.private_rooms.get(msg.room)
 
-        if private_room is not None and self.core.login_username not in private_room["operators"]:
-            private_room["operators"].append(self.core.login_username)
+        if private_room is not None and core.login_username not in private_room["operators"]:
+            private_room["operators"].append(core.login_username)
 
         if self.ui_callback:
             self.ui_callback.private_room_operator_added(msg)
@@ -316,8 +306,8 @@ class ChatRooms:
 
         private_room = self.private_rooms.get(msg.room)
 
-        if private_room is not None and self.core.login_username in private_room["operators"]:
-            private_room["operators"].remove(self.core.login_username)
+        if private_room is not None and core.login_username in private_room["operators"]:
+            private_room["operators"].remove(core.login_username)
 
         if self.ui_callback:
             self.ui_callback.private_room_operator_removed(msg)
@@ -341,12 +331,12 @@ class ChatRooms:
         if self.ui_callback:
             self.ui_callback.public_room_message(msg)
 
-        self.core.pluginhandler.public_room_message_notification(msg.room, msg.user, msg.msg)
+        core.pluginhandler.public_room_message_notification(msg.room, msg.user, msg.msg)
 
     def room_list(self, msg):
         """ Server code: 64 """
 
-        login_username = self.core.login_username
+        login_username = core.login_username
 
         for room in msg.rooms:
             self.server_rooms.add(room[0])
@@ -385,7 +375,7 @@ class ChatRooms:
             "message": msg.msg
         })
 
-        event = self.core.pluginhandler.incoming_public_chat_event(msg.room, msg.user, msg.msg)
+        event = core.pluginhandler.incoming_public_chat_event(msg.room, msg.user, msg.msg)
         if event is None:
             return
 
@@ -394,7 +384,7 @@ class ChatRooms:
         if self.ui_callback:
             self.ui_callback.say_chat_room(msg)
 
-        self.core.pluginhandler.incoming_public_chat_notification(msg.room, msg.user, msg.msg)
+        core.pluginhandler.incoming_public_chat_notification(msg.room, msg.user, msg.msg)
 
     def set_user_country(self, user, country):
         if self.ui_callback:
@@ -424,7 +414,7 @@ class ChatRooms:
         if self.ui_callback:
             self.ui_callback.user_joined_room(msg)
 
-        self.core.pluginhandler.user_join_chatroom_notification(msg.room, msg.userdata.username)
+        core.pluginhandler.user_join_chatroom_notification(msg.room, msg.userdata.username)
 
     def user_left_room(self, msg):
         """ Server code: 17 """
@@ -432,11 +422,11 @@ class ChatRooms:
         if self.ui_callback:
             self.ui_callback.user_left_room(msg)
 
-        self.core.pluginhandler.user_leave_chatroom_notification(msg.room, msg.username)
+        core.pluginhandler.user_leave_chatroom_notification(msg.room, msg.username)
 
     def update_completions(self):
 
-        self.completion_list = get_completion_list(self.CMDS, self.server_rooms)
+        self.completion_list = get_completion_list(list(core.pluginhandler.chatroom_commands), self.server_rooms)
 
         if self.ui_callback:
             self.ui_callback.set_completion_list(self.completion_list)

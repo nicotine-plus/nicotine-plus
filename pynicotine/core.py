@@ -34,39 +34,20 @@ import signal
 import sys
 
 from collections import deque
+from threading import Thread
 
 from pynicotine import slskmessages
-from pynicotine import slskproto
-from pynicotine.chatrooms import ChatRooms
 from pynicotine.config import config
-from pynicotine.geoip import GeoIP
-from pynicotine.interests import Interests
 from pynicotine.logfacility import log
-from pynicotine.networkfilter import NetworkFilter
-from pynicotine.notifications import Notifications
-from pynicotine.nowplaying import NowPlaying
-from pynicotine.pluginsystem import PluginHandler
-from pynicotine.privatechat import PrivateChat
-from pynicotine.search import Search
-from pynicotine.shares import Shares
-from pynicotine.slskmessages import LoginFailure
-from pynicotine.slskmessages import UserStatus
-from pynicotine.statistics import Statistics
-from pynicotine.transfers import Transfers
-from pynicotine.updatechecker import UpdateChecker
-from pynicotine.userbrowse import UserBrowse
-from pynicotine.userinfo import UserInfo
-from pynicotine.userlist import UserList
 
 
-class NicotineCore:
-    """ NicotineCore contains handlers for various messages from the networking thread.
+class Core:
+    """ Core contains handlers for various messages from (mainly) the networking thread.
     This class links the networking thread and user interface. """
 
-    def __init__(self, bindip, port):
+    def __init__(self):
 
         self.ui_callback = None
-        self.network_callback = None
         self.network_filter = None
         self.statistics = None
         self.shares = None
@@ -89,28 +70,97 @@ class NicotineCore:
         for signal_type in (signal.SIGINT, signal.SIGTERM):
             signal.signal(signal_type, self.quit)
 
-        self.bindip = bindip
-        self.port = port
+        self.bindip = None
+        self.port = None
 
         self.shutdown = False
-        self.user_status = UserStatus.OFFLINE
+        self.user_status = slskmessages.UserStatus.OFFLINE
         self.login_username = None  # Only present while logged in
         self.user_ip_address = None
         self.privileges_left = None
         self.ban_message = "You are banned from downloading my shared files. Ban message: \"%s\""
 
-        self.events = {}
         self.queue = deque()
+        self.message_callbacks = {}
+        self.user_addresses = {}
         self.user_statuses = {}
         self.watched_users = set()
         self.ip_requested = set()
 
+    def init_components(self):
+
+        from pynicotine.chatrooms import ChatRooms
+        from pynicotine.geoip import GeoIP
+        from pynicotine.interests import Interests
+        from pynicotine.networkfilter import NetworkFilter
+        from pynicotine.notifications import Notifications
+        from pynicotine.nowplaying import NowPlaying
+        from pynicotine.pluginsystem import PluginHandler
+        from pynicotine.privatechat import PrivateChat
+        from pynicotine.search import Search
+        from pynicotine.shares import Shares
+        from pynicotine.slskproto import SoulseekNetworkThread
+        from pynicotine.statistics import Statistics
+        from pynicotine.transfers import Transfers
+        from pynicotine.updatechecker import UpdateChecker
+        from pynicotine.userbrowse import UserBrowse
+        from pynicotine.userinfo import UserInfo
+        from pynicotine.userlist import UserList
+
+        self.queue.clear()
+        self.protothread = SoulseekNetworkThread(
+            callback=self.thread_callback, queue=self.queue, user_addresses=self.user_addresses,
+            bindip=self.bindip, port=self.port,
+            interface=config.sections["server"]["interface"],
+            port_range=config.sections["server"]["portrange"]
+        )
+
+        self.geoip = GeoIP()
+        self.notifications = Notifications()
+        self.network_filter = NetworkFilter()
+        self.now_playing = NowPlaying()
+        self.statistics = Statistics()
+        self.update_checker = UpdateChecker()
+
+        self.shares = Shares()
+        self.search = Search()
+        self.transfers = Transfers()
+        self.interests = Interests()
+        self.userbrowse = UserBrowse()
+        self.userinfo = UserInfo()
+        self.userlist = UserList()
+        self.privatechat = PrivateChat()
+        self.chatrooms = ChatRooms()
+        self.pluginhandler = PluginHandler()
+
+    def process_cli_input(self):
+
+        while not self.shutdown:
+            try:
+                user_input = input()
+
+            except EOFError:
+                return
+
+            if not user_input:
+                continue
+
+            command, *args = user_input.split(maxsplit=1)
+
+            if command.startswith("/"):
+                command = command[1:]
+
+            if args:
+                (args,) = args
+
+            self.thread_callback([slskmessages.CLICommand(command, args)])
+
     """ Actions """
 
-    def start(self, ui_callback, network_callback):
+    def start(self, ui_callback, thread_callback):
 
         self.ui_callback = ui_callback
-        self.network_callback = network_callback
+        self.thread_callback = thread_callback
         script_dir = os.path.dirname(__file__)
 
         log.add(_("Loading %(program)s %(version)s"), {"program": "Python", "version": config.python_version})
@@ -118,37 +168,20 @@ class NicotineCore:
         log.add_debug("Using %(program)s executable: %(exe)s", {"program": config.application_name, "exe": script_dir})
         log.add(_("Loading %(program)s %(version)s"), {"program": config.application_name, "version": config.version})
 
-        self.protothread = slskproto.SlskProtoThread(
-            core_callback=self.network_callback, queue=self.queue, bindip=self.bindip, port=self.port,
-            interface=config.sections["server"]["interface"],
-            port_range=config.sections["server"]["portrange"]
-        )
+        self.init_components()
+
         self.protothread.start()
-
-        self.geoip = GeoIP()
-        self.notifications = Notifications(ui_callback)
-        self.network_filter = NetworkFilter(self, self.queue, self.geoip)
-        self.now_playing = NowPlaying()
-        self.statistics = Statistics(ui_callback)
-        self.update_checker = UpdateChecker()
-
-        self.shares = Shares(self, self.queue, self.network_callback, ui_callback)
-        self.search = Search(self, self.queue, self.shares.share_dbs, self.geoip, ui_callback)
-        self.transfers = Transfers(self, self.queue, self.network_callback, ui_callback)
-        self.interests = Interests(self, self.queue, ui_callback)
-        self.userbrowse = UserBrowse(self, ui_callback)
-        self.userinfo = UserInfo(self, self.queue, ui_callback)
-        self.userlist = UserList(self, self.queue, ui_callback)
-        self.privatechat = PrivateChat(self, self.queue, ui_callback)
-        self.chatrooms = ChatRooms(self, self.queue, ui_callback)
-
+        self.shares.init_shares()
         self.transfers.init_transfers()
+        self.statistics.load_statistics()
         self.privatechat.load_users()
+        self.userlist.load_users()
+        self.pluginhandler.load_enabled()
 
-        self.pluginhandler = PluginHandler(self)
+        Thread(target=self.process_cli_input, name="CLIInputProcessor", daemon=True).start()
 
         # Callback handlers for messages
-        self.events = {
+        self.message_callbacks = {
             slskmessages.ServerDisconnect: self.server_disconnect,
             slskmessages.Login: self.login,
             slskmessages.ChangePassword: self.change_password,
@@ -178,8 +211,6 @@ class NicotineCore:
             slskmessages.GetUserStats: self.get_user_stats,
             slskmessages.Relogged: self.dummy_message,
             slskmessages.PeerInit: self.dummy_message,
-            slskmessages.CheckDownloadQueue: self.transfers.check_download_queue,
-            slskmessages.CheckUploadQueue: self.transfers.check_upload_queue,
             slskmessages.DownloadFile: self.transfers.file_download,
             slskmessages.UploadFile: self.transfers.file_upload,
             slskmessages.FileDownloadInit: self.transfers.file_download_init,
@@ -193,9 +224,6 @@ class NicotineCore:
             slskmessages.PlaceInQueue: self.transfers.place_in_queue,
             slskmessages.DownloadFileError: self.transfers.download_file_error,
             slskmessages.UploadFileError: self.transfers.upload_file_error,
-            slskmessages.RetryDownloadLimits: self.transfers.retry_download_limits,
-            slskmessages.RetryFailedUploads: self.transfers.retry_failed_uploads,
-            slskmessages.SaveTransfers: self.transfers.save_transfers,
             slskmessages.DownloadConnectionClosed: self.transfers.download_connection_closed,
             slskmessages.UploadConnectionClosed: self.transfers.upload_connection_closed,
             slskmessages.PeerConnectionClosed: self.peer_connection_closed,
@@ -233,7 +261,6 @@ class NicotineCore:
             slskmessages.DistribSearch: self.search.distrib_search,
             slskmessages.ResetDistributed: self.dummy_message,
             slskmessages.ServerTimeout: self.server_timeout,
-            slskmessages.TransferTimeout: self.transfers.transfer_timeout,
             slskmessages.SetConnectionStats: self.set_connection_stats,
             slskmessages.GlobalRecommendations: self.interests.global_recommendations,
             slskmessages.Recommendations: self.interests.recommendations,
@@ -262,6 +289,8 @@ class NicotineCore:
             slskmessages.PrivateRoomRemoveOperator: self.chatrooms.private_room_remove_operator,
             slskmessages.PublicRoomMessage: self.chatrooms.public_room_message,
             slskmessages.ShowConnectionErrorMessage: self.show_connection_error_message,
+            slskmessages.CLICommand: self.cli_command,
+            slskmessages.SchedulerCallback: self.scheduler_callback,
             slskmessages.UnknownPeerMessage: self.dummy_message
         }
 
@@ -372,7 +401,7 @@ class NicotineCore:
         if save_state:
             config.sections["server"]["away"] = is_away
 
-        self.user_status = UserStatus.AWAY if is_away else UserStatus.ONLINE
+        self.user_status = slskmessages.UserStatus.AWAY if is_away else slskmessages.UserStatus.ONLINE
         self.request_set_status(is_away and 1 or 2)
 
         # Reset away message users
@@ -399,12 +428,12 @@ class NicotineCore:
         """ Retrieve a user's country code if previously cached, otherwise request
         user's IP address to determine country """
 
-        if self.user_status == UserStatus.OFFLINE:
+        if self.user_status == slskmessages.UserStatus.OFFLINE:
             return None
 
-        user_address = self.protothread.user_addresses.get(user)
+        user_address = self.user_addresses.get(user)
 
-        if user_address and user != self.protothread.server_username:
+        if user_address and user != self.login_username:
             ip_address, _port = user_address
             country_code = self.geoip.get_country_code(ip_address)
             return country_code
@@ -418,7 +447,7 @@ class NicotineCore:
         """ Tell the server we want to be notified of status/stat updates
         for a user """
 
-        if self.user_status == UserStatus.OFFLINE:
+        if self.user_status == slskmessages.UserStatus.OFFLINE:
             return
 
         if not force_update and user in self.watched_users:
@@ -432,26 +461,36 @@ class NicotineCore:
 
         self.watched_users.add(user)
 
-    """ Network Events """
+    """ Message Callbacks """
 
-    def network_event(self, msgs):
+    def thread_callback(self, _msgs):  # pylint: disable=method-hidden
+        # Overridden by the frontend to call process_thread_callback in the main thread
+        pass
+
+    def process_thread_callback(self, msgs):
 
         for msg in msgs:
             if self.shutdown:
                 return
 
             try:
-                self.events[msg.__class__](msg)
+                self.message_callbacks[msg.__class__](msg)
 
             except KeyError:
                 log.add("No handler for class %s %s", (msg.__class__, dir(msg)))
 
         msgs.clear()
 
+    def scheduler_callback(self, msg):
+        msg.callback()
+
     @staticmethod
     def dummy_message(msg):
         # Ignore received message
         pass
+
+    def cli_command(self, msg):
+        self.pluginhandler.trigger_cli_command_event(msg.command, msg.args or "")
 
     def show_connection_error_message(self, msg):
         """ Request UI to show error messages related to connectivity """
@@ -487,7 +526,7 @@ class NicotineCore:
 
     def server_disconnect(self, msg=None):
 
-        self.user_status = UserStatus.OFFLINE
+        self.user_status = slskmessages.UserStatus.OFFLINE
 
         # Clean up connections
         self.user_statuses.clear()
@@ -495,6 +534,7 @@ class NicotineCore:
 
         self.pluginhandler.server_disconnect_notification(msg.manual_disconnect if msg else True)
 
+        self.shares.server_disconnect()
         self.transfers.server_disconnect()
         self.search.server_disconnect()
         self.userlist.server_disconnect()
@@ -514,7 +554,7 @@ class NicotineCore:
         """ Server code: 1 """
 
         if msg.success:
-            self.user_status = UserStatus.ONLINE
+            self.user_status = slskmessages.UserStatus.ONLINE
             self.login_username = msg.username
 
             self.set_away_mode(config.sections["server"]["away"])
@@ -542,7 +582,7 @@ class NicotineCore:
             self.pluginhandler.server_connect_notification()
 
         else:
-            if msg.reason == LoginFailure.PASSWORD:
+            if msg.reason == slskmessages.LoginFailure.PASSWORD:
                 self.ui_callback.invalid_password()
                 return
 
@@ -619,7 +659,8 @@ class NicotineCore:
             else:
                 self.transfers.remove_from_privileged(user)
 
-        if status not in (UserStatus.OFFLINE, UserStatus.ONLINE, UserStatus.AWAY):
+        if status not in (slskmessages.UserStatus.OFFLINE, slskmessages.UserStatus.ONLINE,
+                          slskmessages.UserStatus.AWAY):
             log.add_debug("Received an unknown status %(status)s for user %(user)s from the server", {
                 "status": status,
                 "user": user
@@ -725,3 +766,6 @@ class NicotineCore:
         config.write_configuration()
 
         log.add(_("Your password has been changed"), title=_("Password Changed"))
+
+
+core = Core()

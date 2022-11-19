@@ -110,6 +110,19 @@ class InternalMessage:
     msgtype = MessageType.INTERNAL
 
 
+class SchedulerCallback(InternalMessage):
+
+    def __init__(self, callback=None):
+        self.callback = callback
+
+
+class CLICommand(InternalMessage):
+
+    def __init__(self, command=None, args=None):
+        self.command = command
+        self.args = args
+
+
 class CloseConnection(InternalMessage):
 
     def __init__(self, sock=None):
@@ -125,7 +138,7 @@ class CloseConnectionIP(InternalMessage):
 
 
 class ServerConnect(InternalMessage):
-    """ NicotineCore sends this to make networking thread establish a server connection. """
+    """ Core sends this to make networking thread establish a server connection. """
 
     def __init__(self, addr=None, login=None):
         self.addr = addr
@@ -184,36 +197,6 @@ class PeerConnectionClosed(InternalMessage):
 
     def __init__(self, user=None):
         self.user = user
-
-
-class TransferTimeout(InternalMessage):
-
-    __slots__ = ("transfer",)
-
-    def __init__(self, transfer):
-        self.transfer = transfer
-
-
-class CheckDownloadQueue(InternalMessage):
-    """ Sent from a timer to the main thread to indicate that stuck downloads
-    should be checked. """
-
-
-class CheckUploadQueue(InternalMessage):
-    """ Sent from a timer to the main thread to indicate that the upload queue
-    should be checked. """
-
-
-class RetryDownloadLimits(InternalMessage):
-    pass
-
-
-class RetryFailedUploads(InternalMessage):
-    pass
-
-
-class SaveTransfers(InternalMessage):
-    pass
 
 
 class DownloadFile(InternalMessage):
@@ -2752,7 +2735,7 @@ class TransferRequest(PeerMessage):
     A TransferResponse message is expected from the recipient, either allowing or
     rejecting the upload attempt.
 
-    This message was formely used to send a download request (direction 0) as well,
+    This message was formerly used to send a download request (direction 0) as well,
     but Nicotine+, Museek+ and the official clients use the QueueUpload message for
     this purpose today. """
 

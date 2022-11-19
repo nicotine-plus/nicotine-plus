@@ -63,7 +63,7 @@ autoclear_uploads = False
 uploadsinsubdirs = True
 rescanonstartup = True
 enablefilters = False
-downloadregexp = 
+downloadregexp = (\\(.*\.url|albumart(_{........-....-....-....-............}_)?(_?(large|small))?\.jpg|desktop\.ini|folder\.jpg|thumbs\.db)$)
 downloadfilters = [['desktop.ini', 1], ['folder.jpg', 1], ['*.url', 1], ['thumbs.db', 1], ['albumart(_{........-....-....-....-............}_)?(_?(large|small))?\\.jpg', 0]]
 download_doubleclick = 1
 upload_doubleclick = 1
@@ -184,7 +184,7 @@ listfont =
 browserfont = 
 transfersfont = 
 last_tab_id = 
-modes_visible = {'search': True, 'downloads': True, 'uploads': True, 'userbrowse': True, 'userinfo': True, 'private': True, 'chatrooms': True, 'interests': True}
+modes_visible = {'search': True, 'downloads': True, 'uploads': True, 'userbrowse': True, 'userinfo': True, 'private': True, 'chatrooms': True, 'interests': True, 'userlist': True}
 modes_order = ['search', 'downloads', 'uploads', 'userbrowse', 'userinfo', 'private', 'userlist', 'chatrooms', 'interests']
 buddylistinchatrooms = tab
 trayicon = True
@@ -242,7 +242,7 @@ downloaded_size = 0
 started_uploads = 0
 completed_uploads = 0
 uploaded_size = 0
-since_timestamp = 0
+since_timestamp = 1668295335
 
 [userbrowse]
 expand_folders = True

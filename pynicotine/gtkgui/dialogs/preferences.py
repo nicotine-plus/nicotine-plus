@@ -35,6 +35,7 @@ from gi.repository import Gtk
 from gi.repository import Pango
 
 from pynicotine.config import config
+from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.popovers.searchfilterhelp import SearchFilterHelp
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
@@ -70,7 +71,6 @@ class NetworkFrame:
 
         self.preferences = preferences
         self.frame = preferences.frame
-        self.core = preferences.core
         self.portmap_required = False
 
         self.options = {
@@ -98,12 +98,12 @@ class NetworkFrame:
             self.Server.set_text("%s:%i" % (server["server"][0], server["server"][1]))
 
         text = _("<b>%(ip)s</b>, port %(port)s") % {
-            "ip": self.core.user_ip_address or _("Unknown"),
-            "port": self.core.protothread.listenport or _("Unknown")
+            "ip": core.user_ip_address or _("Unknown"),
+            "port": core.protothread.listenport or _("Unknown")
         }
         self.CurrentPort.set_markup(text)
 
-        url = config.portchecker_url % str(self.core.protothread.listenport)
+        url = config.portchecker_url % str(core.protothread.listenport)
         text = "<a href='" + url + "' title='" + url + "'>" + _("Check Port Status") + "</a>"
         self.CheckPortLabel.set_markup(text)
         self.CheckPortLabel.connect("activate-link", lambda x, url: open_uri(url))
@@ -170,7 +170,7 @@ class NetworkFrame:
 
         password = dialog.get_entry_value()
 
-        if user_status != self.core.user_status:
+        if user_status != core.user_status:
             MessageDialog(
                 parent=self.preferences.dialog,
                 title=_("Password Change Rejected"),
@@ -182,16 +182,16 @@ class NetworkFrame:
             self.on_change_password()
             return
 
-        if self.core.user_status == UserStatus.OFFLINE:
+        if core.user_status == UserStatus.OFFLINE:
             config.sections["server"]["passw"] = password
             config.write_configuration()
             return
 
-        self.core.request_change_password(password)
+        core.request_change_password(password)
 
     def on_change_password(self, *_args):
 
-        if self.core.user_status != UserStatus.OFFLINE:
+        if core.user_status != UserStatus.OFFLINE:
             message = _("Enter a new password for your Soulseek account:")
         else:
             message = (_("You are currently logged out of the Soulseek network. If you want to change "
@@ -205,7 +205,7 @@ class NetworkFrame:
             message=message,
             visibility=False,
             callback=self.on_change_password_response,
-            callback_data=self.core.user_status
+            callback_data=core.user_status
         ).show()
 
     def on_toggle_upnp(self, widget, *_args):
@@ -451,7 +451,6 @@ class SharesFrame:
 
         self.preferences = preferences
         self.frame = preferences.frame
-        self.core = preferences.core
 
         self.rescan_required = False
         self.shareddirs = []
@@ -537,7 +536,7 @@ class SharesFrame:
         if folder in (x[1] for x in self.shareddirs + self.bshareddirs):
             return
 
-        virtual = self.core.shares.get_normalized_virtual_name(
+        virtual = core.shares.get_normalized_virtual_name(
             os.path.basename(os.path.normpath(folder)), shared_folders=(self.shareddirs + self.bshareddirs)
         )
         self.shares_list_view.add_row([virtual, folder, False])
@@ -566,7 +565,7 @@ class SharesFrame:
         if not virtual:
             return
 
-        virtual = self.core.shares.get_normalized_virtual_name(
+        virtual = core.shares.get_normalized_virtual_name(
             virtual, shared_folders=(self.shareddirs + self.bshareddirs)
         )
         folder = self.shares_list_view.get_row_value(iterator, 1)
@@ -1932,7 +1931,6 @@ class NowPlayingFrame:
 
         self.preferences = preferences
         self.frame = preferences.frame
-        self.core = preferences.core
 
         self.options = {
             "players": {
@@ -1953,10 +1951,10 @@ class NowPlayingFrame:
         ]
         self.custom_format_list = []
 
-        # Suppy the information needed for the Now Playing class to return a song
+        # Supply the information needed for the Now Playing class to return a song
         self.test_now_playing.connect(
             "clicked",
-            self.core.now_playing.display_now_playing,
+            core.now_playing.display_now_playing,
             self.set_now_playing_example,  # Callback to update the song displayed
             self.get_player,               # Callback to retrieve selected player
             self.get_command,              # Callback to retrieve command text
@@ -2108,7 +2106,6 @@ class PluginsFrame:
 
         self.preferences = preferences
         self.frame = preferences.frame
-        self.core = preferences.core
 
         self.options = {
             "plugins": {
@@ -2120,7 +2117,7 @@ class PluginsFrame:
         self.selected_plugin = None
         self.descr_textview = TextView(self.PluginDescription)
         self.plugin_list_view = TreeView(
-            self.frame, parent=self.PluginTreeView, search_column=1, always_select=True,
+            self.frame, parent=self.PluginTreeView, always_select=True,
             select_row_callback=self.on_select_plugin,
             columns=[
                 # Visible columns
@@ -2140,9 +2137,9 @@ class PluginsFrame:
 
         self.preferences.set_widgets_data(self.options)
 
-        for plugin_id in sorted(self.core.pluginhandler.list_installed_plugins()):
+        for plugin_id in sorted(core.pluginhandler.list_installed_plugins()):
             try:
-                info = self.core.pluginhandler.get_plugin_info(plugin_id)
+                info = core.pluginhandler.get_plugin_info(plugin_id)
             except OSError:
                 continue
 
@@ -2163,7 +2160,7 @@ class PluginsFrame:
         }
 
     def check_properties_button(self, plugin):
-        self.PluginProperties.set_sensitive(bool(self.core.pluginhandler.get_plugin_settings(plugin)))
+        self.PluginProperties.set_sensitive(bool(core.pluginhandler.get_plugin_settings(plugin)))
 
     def on_select_plugin(self, list_view, iterator):
 
@@ -2172,7 +2169,7 @@ class PluginsFrame:
             info = {}
         else:
             self.selected_plugin = list_view.get_row_value(iterator, 2)
-            info = self.core.pluginhandler.get_plugin_info(self.selected_plugin)
+            info = core.pluginhandler.get_plugin_info(self.selected_plugin)
 
         self.PluginName.set_markup("<b>%(name)s</b>" % {"name": info.get("Name", self.selected_plugin)})
         self.PluginVersion.set_markup("<b>%(version)s</b>" % {"version": info.get("Version", '-')})
@@ -2191,10 +2188,10 @@ class PluginsFrame:
         list_view.set_row_value(iterator, 0, not value)
 
         if not value:
-            self.core.pluginhandler.enable_plugin(plugin_id)
+            core.pluginhandler.enable_plugin(plugin_id)
             self.enabled_plugins.append(plugin_id)
         else:
-            self.core.pluginhandler.disable_plugin(plugin_id)
+            core.pluginhandler.disable_plugin(plugin_id)
             self.enabled_plugins.remove(plugin_id)
 
         self.check_properties_button(plugin_id)
@@ -2204,19 +2201,19 @@ class PluginsFrame:
         if self.PluginsEnable.get_active():
             # Enable all selected plugins
             for plugin_id in self.enabled_plugins:
-                self.core.pluginhandler.enable_plugin(plugin_id)
+                core.pluginhandler.enable_plugin(plugin_id)
 
             self.check_properties_button(self.selected_plugin)
             return
 
         # Disable all plugins
-        for plugin in self.core.pluginhandler.enabled_plugins.copy():
-            self.core.pluginhandler.disable_plugin(plugin)
+        for plugin in core.pluginhandler.enabled_plugins.copy():
+            core.pluginhandler.disable_plugin(plugin)
 
         self.PluginProperties.set_sensitive(False)
 
     def on_add_plugins(self, *_args):
-        open_file_path(self.core.pluginhandler.user_plugin_folder, create_folder=True)
+        open_file_path(core.pluginhandler.user_plugin_folder, create_folder=True)
 
     def on_plugin_properties(self, *_args):
 
@@ -2227,16 +2224,15 @@ class PluginsFrame:
             self.frame,
             self.preferences,
             plugin_id=self.selected_plugin,
-            plugin_settings=self.core.pluginhandler.get_plugin_settings(self.selected_plugin)
+            plugin_settings=core.pluginhandler.get_plugin_settings(self.selected_plugin)
         ).show()
 
 
 class Preferences(Dialog):
 
-    def __init__(self, frame, core):
+    def __init__(self, frame):
 
         self.frame = frame
-        self.core = core
 
         ui_template = UserInterface(scope=self, path="dialogs/preferences.ui")
         (
@@ -2549,9 +2545,9 @@ class Preferences(Dialog):
             config.sections[key].update(data)
 
         if portmap_required:
-            self.core.protothread.upnp.add_port_mapping()
+            core.protothread.upnp.add_port_mapping()
         else:
-            self.core.protothread.upnp.cancel_timer()
+            core.protothread.upnp.cancel_timer()
 
         if theme_required:
             # Dark mode
@@ -2582,7 +2578,7 @@ class Preferences(Dialog):
             self.frame.update_completions()
 
         if ip_block_required:
-            self.core.network_filter.close_blocked_ip_connections()
+            core.network_filter.close_blocked_ip_connections()
 
         if search_required:
             self.frame.search.populate_search_history()
@@ -2592,9 +2588,9 @@ class Preferences(Dialog):
         self.frame.privatechat.toggle_chat_buttons()
 
         # Transfers
-        self.core.transfers.update_limits()
-        self.core.transfers.update_download_filters()
-        self.core.transfers.check_upload_queue()
+        core.transfers.update_limits()
+        core.transfers.update_download_filters()
+        core.transfers.check_upload_queue()
 
         # Tray icon
         if not config.sections["ui"]["trayicon"] and self.frame.tray_icon.is_visible():
@@ -2625,7 +2621,7 @@ class Preferences(Dialog):
             return
 
         if rescan_required:
-            self.core.shares.rescan_shares()
+            core.shares.rescan_shares()
 
         self.close()
 

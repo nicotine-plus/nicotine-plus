@@ -379,10 +379,10 @@
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="margin-start">12</property>
-                    <property name="label" translatable="yes">Multiple conditions can be specified with spaces or | pipe seperators:
-    &gt;6:00 &lt;12:00 to show files between 6 and 12 minutes long.
-    !6:54 !5:43 !4:32 to hide some specific files from the results.
-    =5:34 =4:23 =3:05 to show only files with specific durations.</property>
+                    <property name="label" translatable="yes">Multiple conditions can be specified with spaces or | pipe separators:
+    &gt;6:00|&lt;12:00 to show files between 6 and 12 minutes long.
+    !9:54|!8:43|!7:32 to hide some specific files from the results.
+    =5:34|=4:23|=3:05 to include files with specific durations.</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
                   </object>
@@ -448,7 +448,7 @@
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="margin-start">12</property>
-                <property name="label" translatable="yes">Show only those results from users which have at least one upload slot free, i.e. files that are availiable immediately.</property>
+                <property name="label" translatable="yes">Show only those results from users which have at least one upload slot free, i.e. files that are available immediately.</property>
                 <property name="selectable">True</property>
                 <property name="wrap">True</property>
               </object>

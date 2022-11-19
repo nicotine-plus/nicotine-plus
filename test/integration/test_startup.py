@@ -19,7 +19,9 @@
 import os
 import subprocess
 import sys
-import unittest
+
+from unittest import skipIf
+from unittest import TestCase
 
 USER_DATA = os.path.dirname(os.path.realpath(__file__))
 CONFIG_FILE = os.path.join(USER_DATA, "config")
@@ -31,7 +33,7 @@ COMMANDS = (
 )
 
 
-class StartupTest(unittest.TestCase):
+class StartupTest(TestCase):
 
     def test_startup(self):
         """ Verify that regular startup works """
@@ -49,7 +51,7 @@ class StartupTest(unittest.TestCase):
 
             self.assertTrue(is_success)
 
-    @unittest.skipIf((sys.platform == "win32"), "CLI tests are currently flaky in Windows CI")
+    @skipIf((sys.platform == "win32"), "CLI tests are currently flaky in Windows CI")
     def test_cli(self):
         """ Verify that CLI-exclusive functionality works """
 

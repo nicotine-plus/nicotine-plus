@@ -28,6 +28,7 @@ from time import time
 
 from pynicotine import slskmessages
 from pynicotine.config import config
+from pynicotine.core import core
 from pynicotine.logfacility import log
 from pynicotine.utils import encode_path
 
@@ -44,6 +45,7 @@ class BasePlugin:
     # Attributes that can be modified, see examples in the pynicotine/plugins/ folder
     __publiccommands__ = []
     __privatecommands__ = []
+    commands = {}
     settings = {}
     metasettings = {}
 
@@ -52,7 +54,7 @@ class BasePlugin:
     human_name = None     # Friendly plugin name specified in the PLUGININFO file
     parent = None         # Reference to PluginHandler
     config = None         # Reference to global Config handler
-    core = None           # Reference to NicotineCore
+    core = None           # Reference to Core
     frame = None          # Reference to NicotineFrame (GUI). Not accessible in headless/non-GUI mode. Use sparsely!
 
     def __init__(self):
@@ -173,7 +175,7 @@ class BasePlugin:
         log.add(self.human_name + ": " + msg, msg_args)
 
     def send_public(self, room, text):
-        self.core.queue.append(slskmessages.SayChatroom(room, text))
+        core.queue.append(slskmessages.SayChatroom(room, text))
 
     def send_private(self, user, text, show_ui=True, switch_page=True):
         """ Send user message in private.
@@ -181,24 +183,24 @@ class BasePlugin:
         switch_page controls whether the user's private chat view should be opened. """
 
         if show_ui:
-            self.core.privatechat.show_user(user, switch_page)
+            core.privatechat.show_user(user, switch_page)
 
-        self.core.privatechat.send_message(user, text)
+        core.privatechat.send_message(user, text)
 
     def echo_public(self, room, text, message_type="local"):
         """ Display a raw message in chat rooms (not sent to others).
         message_type changes the type (and color) of the message in the UI.
         available message_type values: action, remote, local, hilite """
 
-        self.core.chatrooms.echo_message(room, text, message_type)
+        core.chatrooms.echo_message(room, text, message_type)
 
     def echo_private(self, user, text, message_type="local"):
         """ Display a raw message in private (not sent to others).
         message_type changes the type (and color) of the message in the UI.
         available message_type values: action, remote, local, hilite """
 
-        self.core.privatechat.show_user(user)
-        self.core.privatechat.echo_message(user, text, message_type)
+        core.privatechat.show_user(user)
+        core.privatechat.echo_message(user, text, message_type)
 
     def send_message(self, text):
         """ Convenience function to send a message to the same user/room
@@ -208,9 +210,12 @@ class BasePlugin:
             # Function was not called from a command
             return
 
-        public_command, source = self.parent.command_source  # pylint: disable=no-member
-        function = self.send_public if public_command else self.send_private
+        command_type, source = self.parent.command_source  # pylint: disable=no-member
 
+        if command_type == "cli":
+            return
+
+        function = self.send_public if command_type == "chatroom" else self.send_private
         function(source, text)
 
     def echo_message(self, text, message_type="local"):
@@ -221,9 +226,13 @@ class BasePlugin:
             # Function was not called from a command
             return
 
-        public_command, source = self.parent.command_source  # pylint: disable=no-member
-        function = self.echo_public if public_command else self.echo_private
+        command_type, source = self.parent.command_source  # pylint: disable=no-member
 
+        if command_type == "cli":
+            print(text)
+            return
+
+        function = self.echo_public if command_type == "chatroom" else self.echo_private
         function(source, text, message_type)
 
     # Obsolete functions
@@ -255,7 +264,7 @@ class ResponseThrottle:
     Some of the throttle logic is guesswork as server code is closed source, but works adequately.
     """
 
-    def __init__(self, core, plugin_name, logging=False):
+    def __init__(self, core, plugin_name, logging=False):  # pylint: disable=redefined-outer-name
 
         self.core = core
         self.plugin_name = plugin_name
@@ -283,7 +292,7 @@ class ResponseThrottle:
         last_request = self.plugin_usage[room]['last_request']
 
         try:
-            _ip_address, port = self.core.protothread.user_addresses[nick]
+            _ip_address, port = self.core.user_addresses[nick]
         except Exception:
             port = True
 
@@ -332,12 +341,15 @@ class ResponseThrottle:
 
 class PluginHandler:
 
-    def __init__(self, core):
+    def __init__(self):
 
-        self.core = core
         self.plugin_folders = []
         self.enabled_plugins = {}
         self.command_source = None
+
+        self.chatroom_commands = {}
+        self.private_chat_commands = {}
+        self.cli_commands = {}
 
         # Load system-wide plugins
         prefix = os.path.dirname(os.path.realpath(__file__))
@@ -349,10 +361,8 @@ class PluginHandler:
 
         BasePlugin.parent = self
         BasePlugin.config = config
-        BasePlugin.core = self.core
-        BasePlugin.frame = self.core.ui_callback
-
-        self.load_enabled()
+        BasePlugin.core = core
+        BasePlugin.frame = core.ui_callback
 
     def quit(self):
 
@@ -368,11 +378,11 @@ class PluginHandler:
         if not config.sections["words"]["commands"]:
             return
 
-        if plugin.__publiccommands__:
-            self.core.chatrooms.update_completions()
+        if plugin.commands or plugin.__publiccommands__:
+            core.chatrooms.update_completions()
 
-        if plugin.__privatecommands__:
-            self.core.privatechat.update_completions()
+        if plugin.commands or plugin.__privatecommands__:
+            core.privatechat.update_completions()
 
     def get_plugin_path(self, plugin_name):
 
@@ -458,17 +468,36 @@ class PluginHandler:
 
             plugin.init()
 
-            for trigger, _func in plugin.__publiccommands__:
-                self.core.chatrooms.CMDS.add('/' + trigger + ' ')
+            for command, data in plugin.commands.items():
+                command = "/" + command
+                disabled_interfaces = data.get("disable", [])
 
-            for trigger, _func in plugin.__privatecommands__:
-                self.core.privatechat.CMDS.add('/' + trigger + ' ')
+                if "chatroom" not in disabled_interfaces and command not in self.chatroom_commands:
+                    self.chatroom_commands[command] = data
+
+                if "private_chat" not in disabled_interfaces and command not in self.private_chat_commands:
+                    self.private_chat_commands[command] = data
+
+                if "cli" not in disabled_interfaces and command not in self.cli_commands:
+                    self.cli_commands[command] = data
+
+            for command, _func in plugin.__publiccommands__:
+                command = "/" + command
+                if command not in self.chatroom_commands:
+                    self.chatroom_commands[command] = None
+
+            for command, _func in plugin.__privatecommands__:
+                command = "/" + command
+                if command not in self.private_chat_commands:
+                    self.private_chat_commands[command] = None
 
             self.update_completions(plugin)
 
             self.enabled_plugins[plugin_name] = plugin
             plugin.loaded_notification()
-            log.add(_("Loaded plugin %s"), plugin.human_name)
+
+            if plugin_name != "core_commands":
+                log.add(_("Loaded plugin %s"), plugin.human_name)
 
         except Exception:
             from traceback import format_exc
@@ -487,6 +516,9 @@ class PluginHandler:
                 for entry in os.scandir(encode_path(folder_path)):
                     file_path = entry.name.decode("utf-8", "replace")
 
+                    if file_path == "core_commands":
+                        continue
+
                     if entry.is_dir() and file_path not in plugin_list:
                         plugin_list.append(file_path)
 
@@ -498,6 +530,9 @@ class PluginHandler:
 
     def disable_plugin(self, plugin_name):
 
+        if plugin_name == "core_commands":
+            return False
+
         if plugin_name not in self.enabled_plugins:
             return False
 
@@ -507,11 +542,18 @@ class PluginHandler:
         try:
             plugin.disable()
 
-            for trigger, _func in plugin.__publiccommands__:
-                self.core.chatrooms.CMDS.remove('/' + trigger + ' ')
+            for command in plugin.commands:
+                command = '/' + command
 
-            for trigger, _func in plugin.__privatecommands__:
-                self.core.privatechat.CMDS.remove('/' + trigger + ' ')
+                self.chatroom_commands.pop(command, None)
+                self.private_chat_commands.pop(command, None)
+                self.cli_commands.pop(command, None)
+
+            for command, _func in plugin.__publiccommands__:
+                self.chatroom_commands.pop('/' + command, None)
+
+            for command, _func in plugin.__privatecommands__:
+                self.private_chat_commands.pop('/' + command, None)
 
             self.update_completions(plugin)
             plugin.unloaded_notification()
@@ -558,7 +600,7 @@ class PluginHandler:
         plugin_info = {}
         plugin_path = self.get_plugin_path(plugin_name)
 
-        if plugin_path is None:
+        if plugin_path is None or plugin_name == "core_commands":
             return plugin_info
 
         info_path = os.path.join(plugin_path, 'PLUGININFO')
@@ -605,6 +647,7 @@ class PluginHandler:
             return
 
         log.add(_("Loading plugin system"))
+        self.enable_plugin("core_commands")
 
         to_enable = config.sections["plugins"]["enabled"]
         log.add_debug("Enabled plugin(s): %s" % ', '.join(to_enable))
@@ -642,50 +685,111 @@ class PluginHandler:
         except KeyError:
             log.add_debug("No stored settings found for %s", plugin.human_name)
 
-    def trigger_public_command_event(self, room, command, args):
-        return self._trigger_command(command, room, args, public_command=True)
+    def trigger_chatroom_command_event(self, room, command, args):
+        self._trigger_command(command, args, room=room)
 
-    def trigger_private_command_event(self, user, command, args):
-        return self._trigger_command(command, user, args, public_command=False)
+    def trigger_private_chat_command_event(self, user, command, args):
+        self._trigger_command(command, args, user=user)
 
-    def _trigger_command(self, command, source, args, public_command):
+    def trigger_cli_command_event(self, command, args):
+        self._trigger_command(command, args)
 
-        self.command_source = (public_command, source)
+    def _trigger_command(self, command, args, user=None, room=None):
+
+        plugin = None
+        command_found = False
 
         for module, plugin in self.enabled_plugins.items():
             if plugin is None:
                 continue
 
-            return_value = None
-            commands = plugin.__publiccommands__ if public_command else plugin.__privatecommands__
+            if room is not None:
+                self.command_source = ("chatroom", room)
+                legacy_commands = plugin.__publiccommands__
+
+            elif user is not None:
+                self.command_source = ("private_chat", user)
+                legacy_commands = plugin.__privatecommands__
+
+            else:
+                self.command_source = ("cli", None)
+                legacy_commands = []
 
             try:
-                for trigger, func in commands:
-                    if trigger == command:
-                        return_value = getattr(plugin, func.__name__)(source, args)
+                for trigger, data in plugin.commands.items():
+                    aliases = data.get("aliases", [])
+
+                    if command != trigger and command not in aliases:
+                        continue
+
+                    command_type = self.command_source[0]
+                    disabled_interfaces = data.get("disable", [])
+
+                    if command_type in disabled_interfaces:
+                        continue
+
+                    command_found = True
+                    rejection_message = None
+                    usage = data.get("usage_" + command_type, data.get("usage", []))
+                    args_split = args.split()
+                    num_args = len(args_split)
+                    num_required_args = 0
+
+                    for i, arg in enumerate(usage):
+                        if arg.startswith("<"):
+                            num_required_args += 1
+
+                        if num_args < num_required_args:
+                            rejection_message = "Missing %s argument" % arg
+                            break
+
+                        if '|' not in arg:
+                            continue
+
+                        choices = arg[1:-1].split('|')
+
+                        if args_split[i] not in choices:
+                            rejection_message = "Invalid argument, possible choices: %s" % " | ".join(choices)
+                            break
+
+                    if rejection_message:
+                        plugin.echo_message(rejection_message)
+                        plugin.echo_message("Usage: %s %s" % ('/' + command, " ".join(usage)))
+                        break
+
+                    callback_name = data.get("callback_" + command_type, data.get("callback")).__name__
+
+                    if room is not None:
+                        getattr(plugin, callback_name)(args, room=room)
+
+                    elif user is not None:
+                        getattr(plugin, callback_name)(args, user=user)
+
+                    else:
+                        getattr(plugin, callback_name)(args)
+
+                if not command_found:
+                    for trigger, func in legacy_commands:
+                        if trigger == command:
+                            getattr(plugin, func.__name__)(self.command_source[1], args)
+                            command_found = True
+                            break
 
             except Exception:
                 self.show_plugin_error(module, sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
-                continue
+                plugin = None
+                break
 
-            if return_value is None:
-                # Nothing changed, continue to the next plugin
-                continue
+            if command_found:
+                plugin = None
+                break
 
-            if return_value == returncode['zap']:
-                self.command_source = None
-                return True
-
-            if return_value == returncode['pass']:
-                continue
-
-            log.add_debug("Plugin %(module)s returned something weird, '%(value)s', ignoring",
-                          {'module': module, 'value': str(return_value)})
+        if plugin:
+            plugin.echo_message("Unknown command: %s. Type /help for a list of commands." % ("/" + command))
 
         self.command_source = None
-        return False
 
-    def trigger_event(self, function_name, args):
+    def _trigger_event(self, function_name, args):
         """ Triggers an event for the plugins. Since events and notifications
         are precisely the same except for how n+ responds to them, both can be
         triggered by this function. """
@@ -731,102 +835,102 @@ class PluginHandler:
         return args
 
     def search_request_notification(self, searchterm, user, token):
-        self.trigger_event("search_request_notification", (searchterm, user, token))
+        self._trigger_event("search_request_notification", (searchterm, user, token))
 
     def distrib_search_notification(self, searchterm, user, token):
-        self.trigger_event("distrib_search_notification", (searchterm, user, token))
+        self._trigger_event("distrib_search_notification", (searchterm, user, token))
 
     def public_room_message_notification(self, room, user, line):
-        self.trigger_event("public_room_message_notification", (room, user, line))
+        self._trigger_event("public_room_message_notification", (room, user, line))
 
     def incoming_private_chat_event(self, user, line):
-        if user != self.core.login_username:
+        if user != core.login_username:
             # dont trigger the scripts on our own talking - we've got "Outgoing" for that
-            return self.trigger_event("incoming_private_chat_event", (user, line))
+            return self._trigger_event("incoming_private_chat_event", (user, line))
 
         return user, line
 
     def incoming_private_chat_notification(self, user, line):
-        self.trigger_event("incoming_private_chat_notification", (user, line))
+        self._trigger_event("incoming_private_chat_notification", (user, line))
 
     def incoming_public_chat_event(self, room, user, line):
-        return self.trigger_event("incoming_public_chat_event", (room, user, line))
+        return self._trigger_event("incoming_public_chat_event", (room, user, line))
 
     def incoming_public_chat_notification(self, room, user, line):
-        self.trigger_event("incoming_public_chat_notification", (room, user, line))
+        self._trigger_event("incoming_public_chat_notification", (room, user, line))
 
     def outgoing_private_chat_event(self, user, line):
         if line is not None:
             # if line is None nobody actually said anything
-            return self.trigger_event("outgoing_private_chat_event", (user, line))
+            return self._trigger_event("outgoing_private_chat_event", (user, line))
 
         return user, line
 
     def outgoing_private_chat_notification(self, user, line):
-        self.trigger_event("outgoing_private_chat_notification", (user, line))
+        self._trigger_event("outgoing_private_chat_notification", (user, line))
 
     def outgoing_public_chat_event(self, room, line):
-        return self.trigger_event("outgoing_public_chat_event", (room, line))
+        return self._trigger_event("outgoing_public_chat_event", (room, line))
 
     def outgoing_public_chat_notification(self, room, line):
-        self.trigger_event("outgoing_public_chat_notification", (room, line))
+        self._trigger_event("outgoing_public_chat_notification", (room, line))
 
     def outgoing_global_search_event(self, text):
-        return self.trigger_event("outgoing_global_search_event", (text,))
+        return self._trigger_event("outgoing_global_search_event", (text,))
 
     def outgoing_room_search_event(self, rooms, text):
-        return self.trigger_event("outgoing_room_search_event", (rooms, text))
+        return self._trigger_event("outgoing_room_search_event", (rooms, text))
 
     def outgoing_buddy_search_event(self, text):
-        return self.trigger_event("outgoing_buddy_search_event", (text,))
+        return self._trigger_event("outgoing_buddy_search_event", (text,))
 
     def outgoing_user_search_event(self, users, text):
-        return self.trigger_event("outgoing_user_search_event", (users, text))
+        return self._trigger_event("outgoing_user_search_event", (users, text))
 
     def user_resolve_notification(self, user, ip_address, port, country=None):
         """Notification for user IP:Port resolving.
 
         Note that country is only set when the user requested the resolving"""
-        self.trigger_event("user_resolve_notification", (user, ip_address, port, country))
+        self._trigger_event("user_resolve_notification", (user, ip_address, port, country))
 
     def server_connect_notification(self):
-        self.trigger_event("server_connect_notification", (),)
+        self._trigger_event("server_connect_notification", (),)
 
     def server_disconnect_notification(self, userchoice):
-        self.trigger_event("server_disconnect_notification", (userchoice, ))
+        self._trigger_event("server_disconnect_notification", (userchoice, ))
 
     def join_chatroom_notification(self, room):
-        self.trigger_event("join_chatroom_notification", (room,))
+        self._trigger_event("join_chatroom_notification", (room,))
 
     def leave_chatroom_notification(self, room):
-        self.trigger_event("leave_chatroom_notification", (room,))
+        self._trigger_event("leave_chatroom_notification", (room,))
 
     def user_join_chatroom_notification(self, room, user):
-        self.trigger_event("user_join_chatroom_notification", (room, user,))
+        self._trigger_event("user_join_chatroom_notification", (room, user,))
 
     def user_leave_chatroom_notification(self, room, user):
-        self.trigger_event("user_leave_chatroom_notification", (room, user,))
+        self._trigger_event("user_leave_chatroom_notification", (room, user,))
 
     def user_stats_notification(self, user, stats):
-        self.trigger_event("user_stats_notification", (user, stats))
+        self._trigger_event("user_stats_notification", (user, stats))
 
     def user_status_notification(self, user, status, privileged):
-        self.trigger_event("user_status_notification", (user, status, privileged))
+        self._trigger_event("user_status_notification", (user, status, privileged))
 
     def upload_queued_notification(self, user, virtual_path, real_path):
-        self.trigger_event("upload_queued_notification", (user, virtual_path, real_path))
+        self._trigger_event("upload_queued_notification", (user, virtual_path, real_path))
 
     def upload_started_notification(self, user, virtual_path, real_path):
-        self.trigger_event("upload_started_notification", (user, virtual_path, real_path))
+        self._trigger_event("upload_started_notification", (user, virtual_path, real_path))
 
     def upload_finished_notification(self, user, virtual_path, real_path):
-        self.trigger_event("upload_finished_notification", (user, virtual_path, real_path))
+        self._trigger_event("upload_finished_notification", (user, virtual_path, real_path))
 
     def download_started_notification(self, user, virtual_path, real_path):
-        self.trigger_event("download_started_notification", (user, virtual_path, real_path))
+        self._trigger_event("download_started_notification", (user, virtual_path, real_path))
 
     def download_finished_notification(self, user, virtual_path, real_path):
-        self.trigger_event("download_finished_notification", (user, virtual_path, real_path))
+        self._trigger_event("download_finished_notification", (user, virtual_path, real_path))
 
     def shutdown_notification(self):
-        self.trigger_event("shutdown_notification", (),)
+        self._trigger_event("shutdown_notification", (),)

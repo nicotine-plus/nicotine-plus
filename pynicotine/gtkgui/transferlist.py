@@ -24,8 +24,6 @@
 
 import time
 
-from collections import OrderedDict
-
 from gi.repository import GObject
 from gi.repository import Gtk
 
@@ -58,7 +56,7 @@ class TransferList:
     path_separator = path_label = retry_label = abort_label = None
     transfer_page = user_counter = file_counter = expand_button = expand_icon = grouping_button = None
 
-    def __init__(self, frame, core, transfer_type):
+    def __init__(self, frame, transfer_type):
 
         ui_template = UserInterface(scope=self, path=transfer_type + "s.ui")
         (
@@ -68,7 +66,6 @@ class TransferList:
         ) = ui_template.widgets
 
         self.frame = frame
-        self.core = core
         self.type = transfer_type
 
         if GTK_API_VERSION >= 4:
@@ -87,8 +84,8 @@ class TransferList:
         self.file_properties = None
 
         # Use dict instead of list for faster membership checks
-        self.selected_users = OrderedDict()
-        self.selected_transfers = OrderedDict()
+        self.selected_users = {}
+        self.selected_transfers = {}
 
         # Status list
         self.statuses = {
@@ -892,7 +889,7 @@ class TransferList:
 
         if data:
             if self.file_properties is None:
-                self.file_properties = FileProperties(self.frame, self.core, download_button=False)
+                self.file_properties = FileProperties(self.frame, download_button=False)
 
             self.file_properties.update_properties(data, total_size=selected_size)
             self.file_properties.show()

@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import unittest
+from unittest import TestCase
 
 from pynicotine.slskmessages import AckNotifyPrivileges
 from pynicotine.slskmessages import AddUser
@@ -41,7 +41,7 @@ from pynicotine.slskmessages import SetWaitPort
 from pynicotine.slskmessages import SlskMessage
 
 
-class SlskMessageTest(unittest.TestCase):
+class SlskMessageTest(TestCase):
 
     def test_pack_objects(self):
         # Arrange
@@ -62,7 +62,7 @@ class SlskMessageTest(unittest.TestCase):
         self.assertEqual(b'\n\x00\x00\x00teststring', str_message)
 
 
-class LoginMessageTest(unittest.TestCase):
+class LoginMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
@@ -78,7 +78,7 @@ class LoginMessageTest(unittest.TestCase):
             message)
 
 
-class ChangePasswordMessageTest(unittest.TestCase):
+class ChangePasswordMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
@@ -93,7 +93,7 @@ class ChangePasswordMessageTest(unittest.TestCase):
             message)
 
 
-class SetWaitPortMessageTest(unittest.TestCase):
+class SetWaitPortMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
@@ -108,7 +108,7 @@ class SetWaitPortMessageTest(unittest.TestCase):
             message)
 
 
-class GetPeerAddressMessageTest(unittest.TestCase):
+class GetPeerAddressMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
@@ -123,7 +123,7 @@ class GetPeerAddressMessageTest(unittest.TestCase):
             message)
 
 
-class AddUserMessageTest(unittest.TestCase):
+class AddUserMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
@@ -138,7 +138,7 @@ class AddUserMessageTest(unittest.TestCase):
             message)
 
 
-class RemoveUserMessageTest(unittest.TestCase):
+class RemoveUserMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
@@ -153,7 +153,7 @@ class RemoveUserMessageTest(unittest.TestCase):
             message)
 
 
-class GetUserStatusMessageTest(unittest.TestCase):
+class GetUserStatusMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
@@ -168,7 +168,7 @@ class GetUserStatusMessageTest(unittest.TestCase):
             message)
 
 
-class FileSearchTest(unittest.TestCase):
+class FileSearchTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
@@ -183,7 +183,7 @@ class FileSearchTest(unittest.TestCase):
             message)
 
 
-class SetStatusMessageTest(unittest.TestCase):
+class SetStatusMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
@@ -198,7 +198,7 @@ class SetStatusMessageTest(unittest.TestCase):
             message)
 
 
-class NotifyPrivilegesMessageTest(unittest.TestCase):
+class NotifyPrivilegesMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
@@ -213,7 +213,7 @@ class NotifyPrivilegesMessageTest(unittest.TestCase):
             message)
 
 
-class AckNotifyPrivilegesMessageTest(unittest.TestCase):
+class AckNotifyPrivilegesMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
@@ -228,7 +228,7 @@ class AckNotifyPrivilegesMessageTest(unittest.TestCase):
             message)
 
 
-class JoinPublicRoomMessageTest(unittest.TestCase):
+class JoinPublicRoomMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
@@ -243,7 +243,7 @@ class JoinPublicRoomMessageTest(unittest.TestCase):
             message)
 
 
-class LeavePublicRoomMessageTest(unittest.TestCase):
+class LeavePublicRoomMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
@@ -258,11 +258,11 @@ class LeavePublicRoomMessageTest(unittest.TestCase):
             message)
 
 
-class PublicRoomMessageMessageTest(unittest.TestCase):
+class PublicRoomMessageMessageTest(TestCase):
     ...
 
 
-class SayChatroomMessageTest(unittest.TestCase):
+class SayChatroomMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
@@ -277,7 +277,7 @@ class SayChatroomMessageTest(unittest.TestCase):
             message)
 
 
-class JoinRoomMessageTest(unittest.TestCase):
+class JoinRoomMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
@@ -297,15 +297,15 @@ class JoinRoomMessageTest(unittest.TestCase):
             message_private)
 
 
-class PrivateRoomUsersMessageTest(unittest.TestCase):
+class PrivateRoomUsersMessageTest(TestCase):
     ...
 
 
-class PrivateRoomOwnedMessageTest(unittest.TestCase):
+class PrivateRoomOwnedMessageTest(TestCase):
     ...
 
 
-class PrivateRoomAddUserMessageTest(unittest.TestCase):
+class PrivateRoomAddUserMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
@@ -320,7 +320,7 @@ class PrivateRoomAddUserMessageTest(unittest.TestCase):
             message)
 
 
-class PrivateRoomDismemberMessageTest(unittest.TestCase):
+class PrivateRoomDismemberMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
@@ -335,7 +335,7 @@ class PrivateRoomDismemberMessageTest(unittest.TestCase):
             message)
 
 
-class PrivateRoomDisownMessageTest(unittest.TestCase):
+class PrivateRoomDisownMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
@@ -350,7 +350,7 @@ class PrivateRoomDisownMessageTest(unittest.TestCase):
             message)
 
 
-class PrivateRoomSomethingMessageTest(unittest.TestCase):
+class PrivateRoomSomethingMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
@@ -365,7 +365,7 @@ class PrivateRoomSomethingMessageTest(unittest.TestCase):
             message)
 
 
-class PrivateRoomRemoveUserMessageTest(unittest.TestCase):
+class PrivateRoomRemoveUserMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange

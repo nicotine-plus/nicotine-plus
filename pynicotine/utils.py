@@ -44,7 +44,6 @@ ILLEGALFILECHARS = ILLEGALPATHCHARS + ['\\', '/']
 LONG_PATH_PREFIX = "\\\\?\\"
 REPLACEMENTCHAR = '_'
 TRANSLATE_PUNCTUATION = str.maketrans(dict.fromkeys(PUNCTUATION, ' '))
-OPEN_SOULSEEK_URL = None
 
 
 def rename_process(new_name, debug_info=False):
@@ -195,7 +194,8 @@ def open_uri(uri):
             return True
 
         if protocol == "slsk":
-            OPEN_SOULSEEK_URL(uri.strip())  # pylint:disable=not-callable
+            from pynicotine.core import core
+            core.userbrowse.open_soulseek_url(uri.strip())
             return True
 
         # Situation 2, user did not define a way of handling the protocol
@@ -485,7 +485,7 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
     If background is false the function will wait for all the launched
     processes to end before returning.
 
-    If the 'replacement' argument is given, every occurance of 'placeholder'
+    If the 'replacement' argument is given, every occurrence of 'placeholder'
     will be replaced by 'replacement'.
 
     If the command ends with the ampersand symbol background

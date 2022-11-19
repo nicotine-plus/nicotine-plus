@@ -18,15 +18,13 @@
 
 from pynicotine import slskmessages
 from pynicotine.config import config
+from pynicotine.core import core
 
 
 class Interests:
 
-    def __init__(self, core, queue, ui_callback=None):
-
-        self.core = core
-        self.queue = queue
-        self.ui_callback = getattr(ui_callback, "interests", None)
+    def __init__(self):
+        self.ui_callback = getattr(core.ui_callback, "interests", None)
 
     def server_login(self):
 
@@ -37,7 +35,7 @@ class Interests:
             item = item.strip().lower()
 
             if item:
-                self.queue.append(slskmessages.AddThingILike(item))
+                core.queue.append(slskmessages.AddThingILike(item))
 
         for item in config.sections["interests"]["dislikes"]:
             if not isinstance(item, str):
@@ -46,7 +44,7 @@ class Interests:
             item = item.strip().lower()
 
             if item:
-                self.queue.append(slskmessages.AddThingIHate(item))
+                core.queue.append(slskmessages.AddThingIHate(item))
 
         if self.ui_callback:
             self.ui_callback.server_login()
@@ -67,7 +65,7 @@ class Interests:
 
         config.sections["interests"]["likes"].append(item)
         config.write_configuration()
-        self.queue.append(slskmessages.AddThingILike(item))
+        core.queue.append(slskmessages.AddThingILike(item))
 
         if self.ui_callback:
             self.ui_callback.add_thing_i_like(item)
@@ -84,7 +82,7 @@ class Interests:
 
         config.sections["interests"]["dislikes"].append(item)
         config.write_configuration()
-        self.queue.append(slskmessages.AddThingIHate(item))
+        core.queue.append(slskmessages.AddThingIHate(item))
 
         if self.ui_callback:
             self.ui_callback.add_thing_i_hate(item)
@@ -99,7 +97,7 @@ class Interests:
 
         config.sections["interests"]["likes"].remove(item)
         config.write_configuration()
-        self.queue.append(slskmessages.RemoveThingILike(item))
+        core.queue.append(slskmessages.RemoveThingILike(item))
 
         if self.ui_callback:
             self.ui_callback.remove_thing_i_like(item)
@@ -114,25 +112,25 @@ class Interests:
 
         config.sections["interests"]["dislikes"].remove(item)
         config.write_configuration()
-        self.queue.append(slskmessages.RemoveThingIHate(item))
+        core.queue.append(slskmessages.RemoveThingIHate(item))
 
         if self.ui_callback:
             self.ui_callback.remove_thing_i_hate(item)
 
     def request_global_recommendations(self):
-        self.queue.append(slskmessages.GlobalRecommendations())
+        core.queue.append(slskmessages.GlobalRecommendations())
 
     def request_item_recommendations(self, item):
-        self.queue.append(slskmessages.ItemRecommendations(item))
+        core.queue.append(slskmessages.ItemRecommendations(item))
 
     def request_item_similar_users(self, item):
-        self.queue.append(slskmessages.ItemSimilarUsers(item))
+        core.queue.append(slskmessages.ItemSimilarUsers(item))
 
     def request_recommendations(self):
-        self.queue.append(slskmessages.Recommendations())
+        core.queue.append(slskmessages.Recommendations())
 
     def request_similar_users(self):
-        self.queue.append(slskmessages.SimilarUsers())
+        core.queue.append(slskmessages.SimilarUsers())
 
     def global_recommendations(self, msg):
         """ Server code: 56 """
@@ -160,7 +158,7 @@ class Interests:
 
         for user in msg.users:
             # Request user status, speed and number of shared files
-            self.core.watch_user(user, force_update=True)
+            core.watch_user(user, force_update=True)
 
     def item_similar_users(self, msg):
         """ Server code: 112 """
@@ -170,7 +168,7 @@ class Interests:
 
         for user in msg.users:
             # Request user status, speed and number of shared files
-            self.core.watch_user(user, force_update=True)
+            core.watch_user(user, force_update=True)
 
     def get_user_status(self, msg):
         """ Server code: 7 """

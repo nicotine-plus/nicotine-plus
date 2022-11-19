@@ -28,6 +28,7 @@ from gi.repository import GObject
 from gi.repository import Gtk
 
 from pynicotine.config import config
+from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.dialogs.fileproperties import FileProperties
 from pynicotine.gtkgui.utils import copy_text
@@ -54,10 +55,10 @@ from pynicotine.utils import open_file_path
 
 class UserBrowses(IconNotebook):
 
-    def __init__(self, frame, core):
+    def __init__(self, frame):
 
         super().__init__(
-            frame, core,
+            frame,
             widget=frame.userbrowse_notebook,
             parent_page=frame.userbrowse_page
         )
@@ -74,17 +75,17 @@ class UserBrowses(IconNotebook):
         self.frame.userbrowse_entry.set_text("")
 
         if entry_text.startswith("slsk://"):
-            self.core.userbrowse.open_soulseek_url(entry_text)
+            core.userbrowse.open_soulseek_url(entry_text)
         else:
-            self.core.userbrowse.browse_user(entry_text)
+            core.userbrowse.browse_user(entry_text)
 
     def on_load_from_disk_selected(self, selected, _data):
         for filename in selected:
-            self.core.userbrowse.load_shares_list_from_disk(filename)
+            core.userbrowse.load_shares_list_from_disk(filename)
 
     def on_load_from_disk(self, *_args):
 
-        shares_folder = self.core.userbrowse.create_user_shares_folder()
+        shares_folder = core.userbrowse.create_user_shares_folder()
 
         FileChooser(
             parent=self.frame.window,
@@ -181,7 +182,6 @@ class UserBrowse:
 
         self.userbrowses = userbrowses
         self.frame = userbrowses.frame
-        self.core = userbrowses.core
         self.user = user
         self.indeterminate_progress = True
         self.local_shares_type = None
@@ -750,14 +750,14 @@ class UserBrowse:
     def on_download_directory(self, *_args):
 
         if self.selected_folder is not None:
-            self.core.userbrowse.download_folder(self.user, self.selected_folder, self.shares)
+            core.userbrowse.download_folder(self.user, self.selected_folder, self.shares)
 
     def on_download_directory_recursive(self, *_args):
-        self.core.userbrowse.download_folder(self.user, self.selected_folder, self.shares, prefix="", recurse=True)
+        core.userbrowse.download_folder(self.user, self.selected_folder, self.shares, prefix="", recurse=True)
 
     def on_download_directory_to_selected(self, selected, recurse):
-        self.core.userbrowse.download_folder(self.user, self.selected_folder, self.shares,
-                                             prefix=os.path.join(selected, ""), recurse=recurse)
+        core.userbrowse.download_folder(self.user, self.selected_folder, self.shares,
+                                        prefix=os.path.join(selected, ""), recurse=recurse)
 
     def on_download_directory_to(self, *_args, recurse=False):
 
@@ -785,8 +785,8 @@ class UserBrowse:
         if not user or folder is None:
             return
 
-        self.core.userbrowse.send_upload_attempt_notification(user)
-        self.core.userbrowse.upload_folder(user, folder, self.shares, recurse=recurse)
+        core.userbrowse.send_upload_attempt_notification(user)
+        core.userbrowse.upload_folder(user, folder, self.shares, recurse=recurse)
 
     def on_upload_directory_to(self, *_args, recurse=False):
 
@@ -794,14 +794,6 @@ class UserBrowse:
 
         if folder is None:
             return
-
-        users = []
-        for row in config.sections["server"]["userlist"]:
-            if row and isinstance(row, list):
-                user = str(row[0])
-                users.append(user)
-
-        users.sort()
 
         if recurse:
             str_title = _("Upload Folder (with Subfolders) To User")
@@ -814,7 +806,7 @@ class UserBrowse:
             message=_('Enter the name of the user you want to upload to:'),
             callback=self.on_upload_directory_to_response,
             callback_data=recurse,
-            droplist=users
+            droplist=sorted(core.userlist.buddies)
         ).show()
 
     def on_upload_directory_recursive_to(self, *_args):
@@ -833,7 +825,7 @@ class UserBrowse:
             return
 
         path = self.selected_folder + '\\'
-        url = self.core.userbrowse.get_soulseek_url(self.user, path)
+        url = core.userbrowse.get_soulseek_url(self.user, path)
         copy_text(url)
 
     """ Key Bindings (folder_tree_view) """
@@ -992,7 +984,7 @@ class UserBrowse:
             if file_data[1] not in self.selected_files:
                 continue
 
-            self.core.userbrowse.download_file(self.user, folder, file_data, prefix=prefix)
+            core.userbrowse.download_file(self.user, folder, file_data, prefix=prefix)
 
     def on_download_files_to_selected(self, selected, _data):
         self.on_download_files(prefix=selected)
@@ -1025,32 +1017,24 @@ class UserBrowse:
         if not user or folder is None:
             return
 
-        self.core.userbrowse.send_upload_attempt_notification(user)
+        core.userbrowse.send_upload_attempt_notification(user)
 
         for basename, size in self.selected_files.items():
-            self.core.userbrowse.upload_file(user, folder, (None, basename, size))
+            core.userbrowse.upload_file(user, folder, (None, basename, size))
 
     def on_upload_files(self, *_args):
 
-        users = []
-
-        for row in config.sections["server"]["userlist"]:
-            if row and isinstance(row, list):
-                user = str(row[0])
-                users.append(user)
-
-        users.sort()
         EntryDialog(
             parent=self.frame.window,
             title=_('Upload File(s) To User'),
             message=_('Enter the name of the user you want to upload to:'),
             callback=self.on_upload_files_response,
-            droplist=users
+            droplist=sorted(core.userlist.buddies)
         ).show()
 
     def on_play_files(self, *_args):
 
-        path = self.core.shares.virtual2real(self.selected_folder)
+        path = core.shares.virtual2real(self.selected_folder)
 
         for base_name in self.selected_files:
             open_file_path(file_path=os.path.join(path, base_name),
@@ -1061,7 +1045,7 @@ class UserBrowse:
         if self.selected_folder is None:
             return
 
-        open_file_path(file_path=self.core.shares.virtual2real(self.selected_folder),
+        open_file_path(file_path=core.shares.virtual2real(self.selected_folder),
                        command=config.sections["ui"]["filemanager"])
 
     def on_file_properties(self, _action, _state, all_files=False):
@@ -1105,7 +1089,7 @@ class UserBrowse:
 
         if data:
             if self.userbrowses.file_properties is None:
-                self.userbrowses.file_properties = FileProperties(self.frame, self.core)
+                self.userbrowses.file_properties = FileProperties(self.frame, core)
 
             self.userbrowses.file_properties.update_properties(data, selected_size, selected_length)
             self.userbrowses.file_properties.show()
@@ -1124,7 +1108,7 @@ class UserBrowse:
             return
 
         path = "\\".join([self.selected_folder, next(iter(self.selected_files))])
-        url = self.core.userbrowse.get_soulseek_url(self.user, path)
+        url = core.userbrowse.get_soulseek_url(self.user, path)
         copy_text(url)
 
     """ Key Bindings (file_list_view) """
@@ -1270,7 +1254,7 @@ class UserBrowse:
         self.find_search_matches()
 
     def on_save(self, *_args):
-        self.core.userbrowse.save_shares_list_to_disk(self.user, list(self.shares.items()))
+        core.userbrowse.save_shares_list_to_disk(self.user, list(self.shares.items()))
 
     def on_refresh(self, *_args):
 
@@ -1283,7 +1267,7 @@ class UserBrowse:
         self.info_bar.set_visible(False)
 
         self.set_in_progress()
-        self.core.userbrowse.browse_user(self.user, local_shares_type=self.local_shares_type, new_request=True)
+        core.userbrowse.browse_user(self.user, local_shares_type=self.local_shares_type, new_request=True)
 
     def on_focus(self):
 
@@ -1294,7 +1278,7 @@ class UserBrowse:
         self.folder_tree_view.grab_focus()
 
     def on_close(self, *_args):
-        self.core.userbrowse.remove_user(self.user)
+        core.userbrowse.remove_user(self.user)
 
     def on_close_all_tabs(self, *_args):
         self.userbrowses.remove_all_pages()

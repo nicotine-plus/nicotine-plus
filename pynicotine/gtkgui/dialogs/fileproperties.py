@@ -18,6 +18,7 @@
 
 from gi.repository import Gtk
 
+from pynicotine.core import core
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.utils import human_length
@@ -28,9 +29,8 @@ from pynicotine.utils import humanize
 
 class FileProperties(Dialog):
 
-    def __init__(self, frame, core, download_button=True):
+    def __init__(self, frame, download_button=True):
 
-        self.core = core
         self.properties = {}
         self.total_size = 0
         self.total_length = 0
@@ -164,7 +164,7 @@ class FileProperties(Dialog):
 
         properties = self.properties[self.current_index]
 
-        self.core.transfers.get_file(
+        core.transfers.get_file(
             properties["user"], properties["fn"], size=properties["size"],
             bitrate=properties.get("bitrate"), length=properties.get("length")
         )

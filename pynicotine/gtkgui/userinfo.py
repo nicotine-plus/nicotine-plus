@@ -29,7 +29,7 @@ from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine.config import config
-from pynicotine.geoip import GeoIP
+from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.filechooser import FileChooserSave
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
@@ -49,10 +49,10 @@ from pynicotine.utils import human_speed
 
 class UserInfos(IconNotebook):
 
-    def __init__(self, frame, core):
+    def __init__(self, frame):
 
         super().__init__(
-            frame, core,
+            frame,
             widget=frame.userinfo_notebook,
             parent_page=frame.userinfo_page
         )
@@ -65,7 +65,7 @@ class UserInfos(IconNotebook):
             return
 
         self.frame.userinfo_entry.set_text("")
-        self.core.userinfo.request_user_info(username)
+        core.userinfo.request_user_info(username)
 
     def show_user(self, user, switch_page=True):
 
@@ -164,7 +164,6 @@ class UserInfo:
 
         self.userinfos = userinfos
         self.frame = userinfos.frame
-        self.core = userinfos.core
 
         self.info_bar = InfoBar(self.info_bar, button=self.retry_button)
         self.description_view = TextView(self.description_view)
@@ -441,7 +440,7 @@ class UserInfo:
         if not country_code:
             return
 
-        country = GeoIP.country_code_to_name(country_code)
+        country = core.geoip.country_code_to_name(country_code)
         country_text = "%s (%s)" % (country, country_code)
 
         self.country_label.set_text(country_text)
@@ -474,27 +473,27 @@ class UserInfo:
         self.frame.interests.toggle_menu_items(menu, self.dislikes_list_view, column=0)
 
     def on_send_message(self, *_args):
-        self.core.privatechat.show_user(self.user)
+        core.privatechat.show_user(self.user)
 
     def on_show_ip_address(self, *_args):
-        self.core.request_ip_address(self.user)
+        core.request_ip_address(self.user)
 
     def on_browse_user(self, *_args):
-        self.core.userbrowse.browse_user(self.user)
+        core.userbrowse.browse_user(self.user)
 
     def on_add_to_list(self, *_args):
-        self.core.userlist.add_user(self.user)
+        core.userlist.add_user(self.user)
 
     def on_ban_user(self, *_args):
-        self.core.network_filter.ban_user(self.user)
+        core.network_filter.ban_user(self.user)
 
     def on_ignore_user(self, *_args):
-        self.core.network_filter.ignore_user(self.user)
+        core.network_filter.ignore_user(self.user)
 
     def on_save_picture_response(self, file_path, *_args):
         _success, picture_bytes = self.picture_data_original.save_to_bufferv(
             type="png", option_keys=[], option_values=[])
-        self.core.userinfo.save_user_picture(file_path, picture_bytes)
+        core.userinfo.save_user_picture(file_path, picture_bytes)
 
     def on_save_picture(self, *_args):
 
@@ -532,13 +531,13 @@ class UserInfo:
 
     def on_refresh(self, *_args):
         self.set_in_progress()
-        self.core.userinfo.request_user_info(self.user)
+        core.userinfo.request_user_info(self.user)
 
     def on_focus(self, *_args):
         self.description_view.textview.grab_focus()
 
     def on_close(self, *_args):
-        self.core.userinfo.remove_user(self.user)
+        core.userinfo.remove_user(self.user)
 
     def on_close_all_tabs(self, *_args):
         self.userinfos.remove_all_pages()

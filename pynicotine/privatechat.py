@@ -18,6 +18,7 @@
 
 from pynicotine import slskmessages
 from pynicotine.config import config
+from pynicotine.core import core
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import get_completion_list
@@ -25,22 +26,11 @@ from pynicotine.utils import get_completion_list
 
 class PrivateChat:
 
-    # List of allowed commands
-    CMDS = {
-        "/al ", "/alias ", "/un ", "/unalias ", "/w ", "/whois ", "/browse ", "/b ", "/ip ", "/pm ", "/m ", "/msg ",
-        "/s ", "/search ", "/us ", "/usearch ", "/rs ", "/rsearch ", "/bs ", "/bsearch ", "/j ", "/join ",
-        "/ad ", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/ignoreip ", "/unban ",
-        "/unignore ", "/c ", "/close ", "/clear ", "/cl ", "/me ", "/a ", "/away ", "/q ", "/quit ", "/exit ",
-        "/now ", "/rescan ", "/info ", "/toggle ", "/ctcpversion "
-    }
-
     CTCP_VERSION = "\x01VERSION\x01"
 
-    def __init__(self, core, queue, ui_callback=None):
+    def __init__(self):
 
-        self.core = core
-        self.queue = queue
-        self.ui_callback = getattr(ui_callback, "privatechat", None)
+        self.ui_callback = getattr(core.ui_callback, "privatechat", None)
         self.completion_list = []
         self.private_message_queue = {}
         self.away_message_users = set()
@@ -53,13 +43,14 @@ class PrivateChat:
     def server_login(self):
 
         for user in self.users:
-            self.core.watch_user(user)  # Get notified of user status
+            core.watch_user(user)  # Get notified of user status
 
         if self.ui_callback:
             self.ui_callback.server_login()
 
     def server_disconnect(self):
 
+        self.private_message_queue.clear()
         self.away_message_users.clear()
 
         if self.ui_callback:
@@ -98,7 +89,7 @@ class PrivateChat:
         if self.ui_callback:
             self.ui_callback.show_user(user, switch_page)
 
-        self.core.watch_user(user)
+        core.watch_user(user)
 
     def load_users(self):
 
@@ -167,7 +158,7 @@ class PrivateChat:
 
     def send_message(self, user, message):
 
-        user_text = self.core.pluginhandler.outgoing_private_chat_event(user, message)
+        user_text = core.pluginhandler.outgoing_private_chat_event(user, message)
         if user_text is None:
             return
 
@@ -178,8 +169,8 @@ class PrivateChat:
         else:
             message = ui_message = self.auto_replace(message)
 
-        self.queue.append(slskmessages.MessageUser(user, message))
-        self.core.pluginhandler.outgoing_private_chat_notification(user, message)
+        core.queue.append(slskmessages.MessageUser(user, message))
+        core.pluginhandler.outgoing_private_chat_notification(user, message)
 
         if self.ui_callback:
             self.ui_callback.send_message(user, ui_message)
@@ -201,29 +192,29 @@ class PrivateChat:
                 "message": msg.msg
             })
 
-            self.queue.append(slskmessages.MessageAcked(msg.msgid))
+            core.queue.append(slskmessages.MessageAcked(msg.msgid))
 
         if user != "server":
             # Check ignore status for all other users except "server"
-            if self.core.network_filter.is_user_ignored(user):
+            if core.network_filter.is_user_ignored(user):
                 return
 
-            user_address = self.core.protothread.user_addresses.get(user)
+            user_address = core.user_addresses.get(user)
 
             if user_address is not None:
                 ip_address, _port = user_address
-                if self.core.network_filter.is_ip_ignored(ip_address):
+                if core.network_filter.is_ip_ignored(ip_address):
                     return
 
             elif not queued_message:
                 # Ask for user's IP address and queue the private message until we receive the address
                 if user not in self.private_message_queue:
-                    self.queue.append(slskmessages.GetPeerAddress(user))
+                    core.queue.append(slskmessages.GetPeerAddress(user))
 
                 self.private_message_queue_add(msg)
                 return
 
-        user_text = self.core.pluginhandler.incoming_private_chat_event(user, msg.msg)
+        user_text = core.pluginhandler.incoming_private_chat_event(user, msg.msg)
         if user_text is None:
             return
 
@@ -241,7 +232,7 @@ class PrivateChat:
         if self.ui_callback:
             self.ui_callback.message_user(msg)
 
-        self.core.pluginhandler.incoming_private_chat_notification(user, msg.msg)
+        core.pluginhandler.incoming_private_chat_notification(user, msg.msg)
 
         if ctcpversion and not config.sections["server"]["ctcpmsgs"]:
             self.send_message(user, "%s %s" % (config.application_name, config.version))
@@ -252,7 +243,7 @@ class PrivateChat:
 
         autoreply = config.sections["server"]["autoreply"]
 
-        if autoreply and self.core.user_status == UserStatus.AWAY and user not in self.away_message_users:
+        if autoreply and core.user_status == UserStatus.AWAY and user not in self.away_message_users:
             self.send_automatic_message(user, autoreply)
             self.away_message_users.add(user)
 
@@ -270,7 +261,8 @@ class PrivateChat:
 
     def update_completions(self):
 
-        self.completion_list = get_completion_list(self.CMDS, self.core.chatrooms.server_rooms)
+        self.completion_list = get_completion_list(
+            list(core.pluginhandler.private_chat_commands), core.chatrooms.server_rooms)
 
         if self.ui_callback:
             self.ui_callback.set_completion_list(self.completion_list)

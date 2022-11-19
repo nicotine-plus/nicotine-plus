@@ -25,6 +25,7 @@ from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine.config import config
+from pynicotine.core import core
 
 GTK_API_VERSION = Gtk.get_major_version()
 GTK_GUI_DIR = os.path.normpath(os.path.dirname(os.path.realpath(__file__)))
@@ -32,7 +33,7 @@ GTK_GUI_DIR = os.path.normpath(os.path.dirname(os.path.realpath(__file__)))
 
 class Application:
 
-    def __init__(self, core, start_hidden, ci_mode, multi_instance):
+    def __init__(self, start_hidden, ci_mode, multi_instance):
 
         self.instance = Gtk.Application(application_id=config.application_id)
         GLib.set_application_name(config.application_name)
@@ -44,7 +45,6 @@ class Application:
         # Show errors in the GUI from here on
         self.init_exception_handler()
 
-        self.core = core
         self.frame = None
         self.start_hidden = start_hidden
         self.ci_mode = ci_mode
@@ -62,9 +62,9 @@ class Application:
     def run(self):
         return self.instance.run()
 
-    def network_callback(self, msgs):
+    def thread_callback(self, msgs):
         # High priority to ensure there are no delays
-        GLib.idle_add(self.core.network_event, msgs[:], priority=GLib.PRIORITY_HIGH_IDLE)
+        GLib.idle_add(core.process_thread_callback, msgs[:], priority=GLib.PRIORITY_HIGH_IDLE)
 
     def init_exception_handler(self):
 
@@ -103,12 +103,12 @@ class Application:
 
         from pynicotine.gtkgui.frame import NicotineFrame
 
-        self.frame = NicotineFrame(self.instance, self.core, self.start_hidden, self.ci_mode)
-        self.core.start(ui_callback=self.frame, network_callback=self.network_callback)
+        self.frame = NicotineFrame(self.instance, self.start_hidden, self.ci_mode)
+        core.start(ui_callback=self.frame, thread_callback=self.thread_callback)
         self.frame.init_window()
 
         if config.sections["server"]["auto_connect_startup"]:
-            self.core.connect()
+            core.connect()
 
     def on_critical_error_response(self, _dialog, response_id, data):
 
@@ -123,18 +123,18 @@ class Application:
             return
 
         loop.quit()
-        self.core.quit()
+        core.quit()
 
     def on_critical_error(self, exc_type, exc_value, exc_traceback):
 
         if self.ci_mode:
-            self.core.quit()
+            core.quit()
             raise exc_value
 
         from traceback import format_tb
 
         # Check if exception occurred in a plugin
-        if self.core.pluginhandler is not None:
+        if core.pluginhandler is not None:
             traceback = exc_traceback
 
             while True:
@@ -143,11 +143,11 @@ class Application:
 
                 filename = traceback.tb_frame.f_code.co_filename
 
-                for plugin_name in self.core.pluginhandler.enabled_plugins:
-                    path = self.core.pluginhandler.get_plugin_path(plugin_name)
+                for plugin_name in core.pluginhandler.enabled_plugins:
+                    path = core.pluginhandler.get_plugin_path(plugin_name)
 
                     if filename.startswith(path):
-                        self.core.pluginhandler.show_plugin_error(
+                        core.pluginhandler.show_plugin_error(
                             plugin_name, exc_type, exc_value, exc_traceback)
                         return
 

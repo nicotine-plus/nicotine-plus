@@ -18,16 +18,13 @@
 
 from pynicotine import slskmessages
 from pynicotine.config import config
+from pynicotine.core import core
 
 
 class NetworkFilter:
     """ Functions related to banning, blocking and ignoring users """
 
-    def __init__(self, core, queue, geoip):
-
-        self.core = core
-        self.queue = queue
-        self.geoip = geoip
+    def __init__(self):
         self.ipblock_requested = {}
         self.ipignore_requested = {}
 
@@ -38,7 +35,7 @@ class NetworkFilter:
         either block_unblock_user_ip_callback or ignore_unignore_user_ip_callback
         is called. """
 
-        if user in self.core.protothread.user_addresses:
+        if user in core.user_addresses:
             return False
 
         if list_type == "block":
@@ -49,7 +46,7 @@ class NetworkFilter:
         if user not in request_list:
             request_list[user] = action
 
-        self.queue.append(slskmessages.GetPeerAddress(user))
+        core.queue.append(slskmessages.GetPeerAddress(user))
         return True
 
     def _add_user_ip_to_list(self, user, list_type):
@@ -63,7 +60,7 @@ class NetworkFilter:
         if self._request_ip(user, "add", list_type):
             return None
 
-        ip_address, _port = self.core.protothread.user_addresses[user]
+        ip_address, _port = core.user_addresses[user]
 
         if ip_address not in ip_list or ip_list[ip_address] != user:
             ip_list[ip_address] = user
@@ -89,7 +86,7 @@ class NetworkFilter:
         if self._request_ip(user, "remove", list_type):
             return
 
-        ip_address, _port = self.core.protothread.user_addresses[user]
+        ip_address, _port = core.user_addresses[user]
 
         if ip_address in ip_list:
             del ip_list[ip_address]
@@ -160,11 +157,10 @@ class NetworkFilter:
 
             return 0, "Banned"
 
-        for row in config.sections["server"]["userlist"]:
-            if row[0] != user:
-                continue
+        user_row = core.userlist.buddies.get(user)
 
-            if config.sections["transfers"]["buddysharestrustedonly"] and not row[4]:
+        if user_row:
+            if config.sections["transfers"]["buddysharestrustedonly"] and not user_row[4]:
                 # Only trusted buddies allowed, and user isn't trusted
                 return 1, ""
 
@@ -174,7 +170,7 @@ class NetworkFilter:
         if ip_address is None or not config.sections["transfers"]["geoblock"]:
             return 1, ""
 
-        country_code = self.geoip.get_country_code(ip_address)
+        country_code = core.geoip.get_country_code(ip_address)
 
         # Please note that all country codes are stored in the same string at the first index
         # of an array, separated by commas (no idea why this decision was made...)
@@ -191,13 +187,13 @@ class NetworkFilter:
         """ Close all connections whose IP address exists in the block list """
 
         for ip_address in config.sections["server"]["ipblocklist"]:
-            self.queue.append(slskmessages.CloseConnectionIP(ip_address))
+            core.queue.append(slskmessages.CloseConnectionIP(ip_address))
 
     def update_saved_user_ip_filters(self, user):
         """ When we know a user's IP address has changed, we call this function to
         update the IP saved in lists. """
 
-        user_address = self.core.protothread.user_addresses.get(user)
+        user_address = core.user_addresses.get(user)
 
         if not user_address:
             # User is offline
@@ -226,7 +222,7 @@ class NetworkFilter:
         config.sections["server"]["banlist"].append(user)
         config.write_configuration()
 
-        self.core.transfers.ban_users({user})
+        core.transfers.ban_users({user})
 
     def unban_user(self, user):
 
@@ -238,7 +234,7 @@ class NetworkFilter:
         ip_address = self._add_user_ip_to_list(user, "block")
 
         if ip_address:
-            self.queue.append(slskmessages.CloseConnectionIP(ip_address))
+            core.queue.append(slskmessages.CloseConnectionIP(ip_address))
 
     def unblock_user_ip(self, user):
         self._remove_user_ip_from_list(user, "block")
@@ -250,7 +246,7 @@ class NetworkFilter:
         if request is None:
             return False
 
-        if user not in self.core.protothread.user_addresses:
+        if user not in core.user_addresses:
             # User is offline
             return False
 
@@ -306,7 +302,7 @@ class NetworkFilter:
         if request is None:
             return False
 
-        if user not in self.core.protothread.user_addresses:
+        if user not in core.user_addresses:
             # User is offline
             return False
 
@@ -328,7 +324,7 @@ class NetworkFilter:
 
     def is_user_ip_ignored(self, user):
 
-        user_address = self.core.protothread.user_addresses.get(user)
+        user_address = core.user_addresses.get(user)
 
         if user_address:
             ip_address, _port = user_address

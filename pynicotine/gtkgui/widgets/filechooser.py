@@ -34,7 +34,10 @@ class FileChooser:
     active_chooser = None  # Class variable keeping the file chooser object alive
 
     def __init__(self, parent, callback, callback_data=None, title=_("Select a File"),
-                 initial_folder='~', action=Gtk.FileChooserAction.OPEN, multiple=False):
+                 initial_folder=None, action=Gtk.FileChooserAction.OPEN, multiple=False):
+
+        if not initial_folder:
+            initial_folder = os.path.expanduser('~')
 
         self.file_chooser = Gtk.FileChooserNative(
             transient_for=parent,
@@ -46,15 +49,12 @@ class FileChooser:
         self.file_chooser.set_modal(True)
         self.file_chooser.set_select_multiple(multiple)
 
-        initial_folder = os.path.expanduser(initial_folder)
-
         if GTK_API_VERSION >= 4:
-            initial_folder = Gio.File.new_for_path(initial_folder)
+            self.file_chooser.set_current_folder(Gio.File.new_for_path(initial_folder))
+            return
 
-        else:
-            # Display network shares
-            self.file_chooser.set_local_only(False)  # pylint: disable=no-member
-
+        # Display network shares
+        self.file_chooser.set_local_only(False)  # pylint: disable=no-member
         self.file_chooser.set_current_folder(initial_folder)
 
     @staticmethod
@@ -85,7 +85,7 @@ class FileChooser:
 class FolderChooser(FileChooser):
 
     def __init__(self, parent, callback, callback_data=None, title=_("Select a Folder"),
-                 initial_folder='~', multiple=False):
+                 initial_folder=None, multiple=False):
 
         super().__init__(parent, callback, callback_data, title, initial_folder,
                          action=Gtk.FileChooserAction.SELECT_FOLDER, multiple=multiple)
@@ -94,7 +94,7 @@ class FolderChooser(FileChooser):
 class ImageChooser(FileChooser):
 
     def __init__(self, parent, callback, callback_data=None, title=_("Select an Image"),
-                 initial_folder='~', multiple=False):
+                 initial_folder=None, multiple=False):
 
         super().__init__(parent, callback, callback_data, title, initial_folder,
                          multiple=multiple)
@@ -128,7 +128,7 @@ class ImageChooser(FileChooser):
 class FileChooserSave(FileChooser):
 
     def __init__(self, parent, callback, callback_data=None, title=_("Save as…"),
-                 initial_folder='~', initial_file='', multiple=False):
+                 initial_folder=None, initial_file='', multiple=False):
 
         super().__init__(parent, callback, callback_data, title, initial_folder,
                          action=Gtk.FileChooserAction.SAVE, multiple=multiple)
@@ -151,7 +151,7 @@ class FileChooserButton:
         self.button = button
         self.chooser_type = chooser_type
         self.selected_function = selected_function
-        self.path = ""
+        self.path = None
 
         if chooser_type == "folder":
             icon_name = "folder-symbolic"
@@ -199,10 +199,7 @@ class FileChooserButton:
             ).show()
             return
 
-        if self.path:
-            folder_path = os.path.dirname(self.path)
-        else:
-            folder_path = ""
+        folder_path = os.path.dirname(self.path) if self.path else None
 
         if self.chooser_type == "image":
             ImageChooser(

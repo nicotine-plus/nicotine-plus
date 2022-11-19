@@ -277,7 +277,7 @@ class GeoIP:
     def __init__(self):
 
         from pynicotine.external.ip2location import IP2Location
-        self.ip2location = IP2Location(os.path.join(os.path.dirname(__file__), "external", "ipcountrydb.bin"))
+        self._ip2location = IP2Location(os.path.join(os.path.dirname(__file__), "external", "ipcountrydb.bin"))
 
     @classmethod
     def country_code_to_name(cls, country_code):
@@ -290,7 +290,7 @@ class GeoIP:
 
     def get_country_code(self, addr):
 
-        country_code = self.ip2location.get_country_code(addr)
+        country_code = self._ip2location.get_country_code(addr)
 
         if country_code == "-":
             country_code = ""

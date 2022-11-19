@@ -35,6 +35,7 @@ from gi.repository import Pango
 from pynicotine import slskmessages
 from pynicotine.chatrooms import Tickers
 from pynicotine.config import config
+from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.popovers.chatroomcommands import ChatRoomCommands
 from pynicotine.gtkgui.popovers.roomlist import RoomList
@@ -69,10 +70,10 @@ from pynicotine.utils import PUNCTUATION
 
 class ChatRooms(IconNotebook):
 
-    def __init__(self, frame, core):
+    def __init__(self, frame):
 
         super().__init__(
-            frame, core,
+            frame,
             widget=frame.chatrooms_notebook,
             parent_page=frame.chatrooms_page,
             switch_page_callback=self.on_switch_chat,
@@ -81,7 +82,7 @@ class ChatRooms(IconNotebook):
 
         self.autojoin_rooms = set()
         self.completion = ChatCompletion()
-        self.roomlist = RoomList(frame, core)
+        self.roomlist = RoomList(frame)
         self.command_help = None
 
         if GTK_API_VERSION >= 4:
@@ -130,7 +131,7 @@ class ChatRooms(IconNotebook):
                 continue
 
             self.completion.set_entry(tab.chat_entry)
-            tab.set_completion_list(self.core.chatrooms.completion_list[:])
+            tab.set_completion_list(core.chatrooms.completion_list[:])
 
             if self.command_help is None:
                 self.command_help = ChatRoomCommands(self.frame.window)
@@ -151,7 +152,7 @@ class ChatRooms(IconNotebook):
 
         if response_id == 2:
             # Create a new room
-            self.core.chatrooms.show_room(room, private)
+            core.chatrooms.show_room(room, private)
 
     def on_create_room(self, *_args):
 
@@ -160,7 +161,7 @@ class ChatRooms(IconNotebook):
         if not room:
             return
 
-        if room not in self.core.chatrooms.server_rooms and room not in self.core.chatrooms.private_rooms:
+        if room not in core.chatrooms.server_rooms and room not in core.chatrooms.private_rooms:
             OptionDialog(
                 parent=self.frame.window,
                 title=_('Create New Room?'),
@@ -171,7 +172,7 @@ class ChatRooms(IconNotebook):
             ).show()
 
         else:
-            self.core.chatrooms.show_room(room)
+            core.chatrooms.show_room(room)
 
         self.frame.chatrooms_entry.set_text("")
 
@@ -247,7 +248,7 @@ class ChatRooms(IconNotebook):
             self.autojoin_rooms.remove(msg.room)
         else:
             # Did not auto-join room, switch to tab
-            self.core.chatrooms.show_room(msg.room)
+            core.chatrooms.show_room(msg.room)
 
         if msg.room == "Public ":
             self.roomlist.toggle_public_feed(True)
@@ -439,7 +440,6 @@ class ChatRoom:
 
         self.chatrooms = chatrooms
         self.frame = chatrooms.frame
-        self.core = chatrooms.core
         self.room = room
 
         if GTK_API_VERSION >= 4:
@@ -456,7 +456,7 @@ class ChatRoom:
             self.chat_paned.child_set_property(self.chat_container, "shrink", False)
 
         self.tickers = Tickers()
-        self.room_wall = RoomWall(self.frame, self.core, self)
+        self.room_wall = RoomWall(self.frame, self)
         self.loaded = False
 
         self.users = {}
@@ -474,7 +474,7 @@ class ChatRoom:
 
         # Chat Entry
         ChatEntry(self.frame, self.chat_entry, chatrooms.completion, room, slskmessages.SayChatroom,
-                  self.core.chatrooms.send_message, self.core.chatrooms.CMDS, is_chatroom=True)
+                  core.chatrooms.send_message, is_chatroom=True)
 
         self.log_toggle.set_active(config.sections["logging"]["chatrooms"])
         if not self.log_toggle.get_active():
@@ -644,7 +644,7 @@ class ChatRoom:
         flag_icon = get_flag_icon_name(country)
 
         # Request user's IP address, so we can get the country and ignore messages by IP
-        self.core.queue.append(slskmessages.GetPeerAddress(username))
+        core.queue.append(slskmessages.GetPeerAddress(username))
 
         h_speed = ""
         avgspeed = userdata.avgspeed
@@ -658,12 +658,12 @@ class ChatRoom:
         weight = Pango.Weight.NORMAL
         underline = Pango.Underline.NONE
 
-        if self.room in self.core.chatrooms.private_rooms:
-            if username == self.core.chatrooms.private_rooms[self.room]["owner"]:
+        if self.room in core.chatrooms.private_rooms:
+            if username == core.chatrooms.private_rooms[self.room]["owner"]:
                 weight = Pango.Weight.BOLD
                 underline = Pango.Underline.SINGLE
 
-            elif username in self.core.chatrooms.private_rooms[self.room]["operators"]:
+            elif username in core.chatrooms.private_rooms[self.room]["operators"]:
                 weight = Pango.Weight.BOLD
                 underline = Pango.Underline.NONE
 
@@ -738,7 +738,7 @@ class ChatRoom:
                     tag = self.tag_action
 
                 if user != login:
-                    self.chat_view.append_line(self.core.privatechat.censor_chat(line), tag=tag, username=user,
+                    self.chat_view.append_line(core.privatechat.censor_chat(line), tag=tag, username=user,
                                                usertag=usertag)
                 else:
                     self.chat_view.append_line(line, tag=tag, username=user, usertag=usertag)
@@ -754,7 +754,7 @@ class ChatRoom:
         menu.toggle_user_items()
         menu.populate_private_rooms(menu_private_rooms)
 
-        private_rooms_enabled = (menu_private_rooms.items and menu.user != self.core.login_username)
+        private_rooms_enabled = (menu_private_rooms.items and menu.user != core.login_username)
         menu.actions[_("Private Rooms")].set_enabled(private_rooms_enabled)
 
     def on_find_activity_log(self, *_args):
@@ -778,7 +778,7 @@ class ChatRoom:
         user = self.get_selected_username(treeview)
 
         if user is not None:
-            self.core.privatechat.show_user(user)
+            core.privatechat.show_user(user)
 
     def on_popup_menu_user(self, menu, treeview):
         user = self.get_selected_username(treeview)
@@ -799,8 +799,8 @@ class ChatRoom:
         self.tickers.clear_tickers()
 
         for user, message in msg.msgs:
-            if self.core.network_filter.is_user_ignored(user) or \
-                    self.core.network_filter.is_user_ip_ignored(user):
+            if core.network_filter.is_user_ignored(user) or \
+                    core.network_filter.is_user_ip_ignored(user):
                 # User ignored, ignore Ticker messages
                 continue
 
@@ -810,7 +810,7 @@ class ChatRoom:
 
         user = msg.user
 
-        if self.core.network_filter.is_user_ignored(user) or self.core.network_filter.is_user_ip_ignored(user):
+        if core.network_filter.is_user_ignored(user) or core.network_filter.is_user_ip_ignored(user):
             # User ignored, ignore Ticker messages
             return
 
@@ -828,7 +828,7 @@ class ChatRoom:
 
         self.chatrooms.request_tab_hilite(self.container, mentioned)
 
-        if public and room in self.core.chatrooms.joined_rooms:
+        if public and room in core.chatrooms.joined_rooms:
             # Don't show notifications about the Public feed that's duplicated in an open tab
             return
 
@@ -881,13 +881,13 @@ class ChatRoom:
 
         user = msg.user
 
-        if self.core.network_filter.is_user_ignored(user):
+        if core.network_filter.is_user_ignored(user):
             return
 
-        if self.core.network_filter.is_user_ip_ignored(user):
+        if core.network_filter.is_user_ip_ignored(user):
             return
 
-        login_username = self.core.login_username
+        login_username = core.login_username
         text = msg.msg
         room = msg.room
 
@@ -915,12 +915,12 @@ class ChatRoom:
 
         if user != login_username:
             self.chat_view.append_line(
-                self.core.privatechat.censor_chat(line), tag=tag,
+                core.privatechat.censor_chat(line), tag=tag,
                 username=user, usertag=usertag, timestamp_format=timestamp_format
             )
 
             if self.speech_toggle.get_active():
-                self.core.notifications.new_tts(
+                core.notifications.new_tts(
                     config.sections["ui"]["speechrooms"], {"room": room, "user": user, "message": speech}
                 )
 
@@ -958,8 +958,8 @@ class ChatRoom:
         # Add to completion list, and completion drop-down
         self.chatrooms.completion.add_completion(username)
 
-        if not self.core.network_filter.is_user_ignored(username) and \
-                not self.core.network_filter.is_user_ip_ignored(username):
+        if not core.network_filter.is_user_ignored(username) and \
+                not core.network_filter.is_user_ip_ignored(username):
             timestamp_format = config.sections["logging"]["rooms_timestamp"]
             self.activity_view.append_line(_("%s joined the room") % username, tag=self.tag_log,
                                            timestamp_format=timestamp_format)
@@ -975,11 +975,11 @@ class ChatRoom:
             return
 
         # Remove from completion list, and completion drop-down
-        if username not in (i[0] for i in config.sections["server"]["userlist"]):
+        if username not in core.userlist.buddies:
             self.chatrooms.completion.remove_completion(username)
 
-        if not self.core.network_filter.is_user_ignored(username) and \
-                not self.core.network_filter.is_user_ip_ignored(username):
+        if not core.network_filter.is_user_ignored(username) and \
+                not core.network_filter.is_user_ip_ignored(username):
             timestamp_format = config.sections["logging"]["rooms_timestamp"]
             self.activity_view.append_line(_("%s left the room") % username, tag=self.tag_log,
                                            timestamp_format=timestamp_format)
@@ -1035,8 +1035,8 @@ class ChatRoom:
             # left the room before an offline status is sent.
             return
 
-        if not self.core.network_filter.is_user_ignored(user) and \
-                not self.core.network_filter.is_user_ip_ignored(user):
+        if not core.network_filter.is_user_ignored(user) and \
+                not core.network_filter.is_user_ip_ignored(user):
             timestamp_format = config.sections["logging"]["rooms_timestamp"]
             self.activity_view.append_line(action % user, tag=self.tag_log, timestamp_format=timestamp_format)
 
@@ -1165,7 +1165,7 @@ class ChatRoom:
         self.count_users()
 
         # Build completion list
-        self.set_completion_list(self.core.chatrooms.completion_list[:])
+        self.set_completion_list(core.chatrooms.completion_list[:])
 
         # Update all username tags in chat log
         for username in self.tag_users:
@@ -1193,7 +1193,7 @@ class ChatRoom:
             self.chatrooms.roomlist.public_feed_toggle.set_active(False)
             return
 
-        self.core.chatrooms.remove_room(self.room)
+        core.chatrooms.remove_room(self.room)
 
     @staticmethod
     def on_tooltip(widget, pos_x, pos_y, _keyboard_mode, tooltip):

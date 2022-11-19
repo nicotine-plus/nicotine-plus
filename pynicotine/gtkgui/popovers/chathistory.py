@@ -23,6 +23,7 @@ import time
 from collections import deque
 
 from pynicotine.config import config
+from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.popover import Popover
@@ -35,7 +36,7 @@ from pynicotine.utils import encode_path
 
 class ChatHistory(Popover):
 
-    def __init__(self, frame, core):
+    def __init__(self, frame):
 
         ui_template = UserInterface(scope=self, path="popovers/chathistory.ui")
         (
@@ -52,10 +53,9 @@ class ChatHistory(Popover):
         )
 
         self.frame = frame
-        self.core = core
 
         self.list_view = TreeView(
-            frame, parent=self.list_container, activate_row_callback=self.on_row_activated,
+            frame, parent=self.list_container, activate_row_callback=self.on_show_user,
             columns=[
                 {"column_id": "user", "column_type": "text", "title": _("User"), "width": 175,
                  "sort_column": 0},
@@ -120,11 +120,14 @@ class ChatHistory(Popover):
         for widget in self.__dict__.values():
             update_widget_visuals(widget)
 
-    def on_row_activated(self, list_view, iterator):
-        username = list_view.get_row_value(iterator, 0)
+    def on_show_user(self, *_args):
 
-        self.core.privatechat.show_user(username)
-        self.popover.hide()
+        for iterator in self.list_view.get_selected_rows():
+            username = self.list_view.get_row_value(iterator, 0)
+
+            core.privatechat.show_user(username)
+            self.popover.hide()
+            return
 
     def on_search_accelerator(self, *_args):
         """ Ctrl+F: Search users """

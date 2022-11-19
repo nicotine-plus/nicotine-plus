@@ -23,10 +23,9 @@
 import random
 import string
 
-from collections import OrderedDict
-
 from gi.repository import Gio
 from gi.repository import GLib
+from gi.repository import GObject
 from gi.repository import Gtk
 
 from pynicotine.config import config
@@ -42,12 +41,12 @@ from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 
 class TreeView:
 
-    def __init__(self, frame, parent, columns, search_column=0, multi_select=False, always_select=False,
-                 tree_view_name=None, activate_row_callback=None, select_row_callback=None, tooltip_callback=None):
+    def __init__(self, frame, parent, columns, multi_select=False, always_select=False,
+                 name=None, activate_row_callback=None, select_row_callback=None, tooltip_callback=None):
 
         self.frame = frame
-        self.widget = Gtk.TreeView(search_column=search_column, visible=True)
-        self.widget_name = tree_view_name
+        self.widget = Gtk.TreeView(visible=True)
+        self.widget_name = name
         self.columns = columns
         self.column_numbers = None
         self.model = None
@@ -200,7 +199,7 @@ class TreeView:
         height_padding = 4
         width_padding = 10
 
-        cols = OrderedDict()
+        cols = {}
         num_cols = len(columns)
         column_config = None
 
@@ -322,6 +321,47 @@ class TreeView:
 
         self.widget.set_model(self.model)
 
+    def save_columns(self, subpage=None):
+        """ Save a treeview's column widths and visibilities for the next session """
+
+        saved_columns = {}
+        column_config = config.sections["columns"]
+
+        for column in self.widget.get_columns():
+            title = column.get_title()
+            width = column.get_width()
+            visible = column.get_visible()
+
+            """ A column width of zero should not be saved to the config.
+            When a column is hidden, the correct width will be remembered during the
+            run it was hidden. Subsequent runs will yield a zero width, so we
+            attempt to re-use a previously saved non-zero column width instead. """
+            try:
+                if width <= 0:
+                    if not visible:
+                        saved_columns[title] = {
+                            "visible": visible,
+                            "width": column_config[self.widget_name][title]["width"]
+                        }
+
+                    continue
+
+            except KeyError:
+                # No previously saved width, going with zero
+                pass
+
+            saved_columns[title] = {"visible": visible, "width": width}
+
+        if subpage is not None:
+            try:
+                column_config[self.widget_name]
+            except KeyError:
+                column_config[self.widget_name] = {}
+
+            column_config[self.widget_name][subpage] = saved_columns
+        else:
+            column_config[self.widget_name] = saved_columns
+
     def add_row(self, values, select_row=True, prepend=False):
 
         position = 0 if prepend else -1
@@ -334,6 +374,17 @@ class TreeView:
             self.select_row(iterator)
 
         return iterator
+
+    def get_all_rows(self):
+
+        iterators = []
+        iterator = self.model.get_iter_first()
+
+        while iterator is not None:
+            iterators.append(iterator)
+            iterator = self.model.iter_next(iterator)
+
+        return iterators
 
     def get_selected_rows(self):
 
@@ -416,27 +467,55 @@ class TreeView:
     def show_user_status_tooltip(self, pos_x, pos_y, tooltip, column):
         return self.show_tooltip(pos_x, pos_y, tooltip, column, ("status",), self.get_user_status_tooltip_text)
 
+    @staticmethod
+    def get_country_tooltip_text(column_value, strip_prefix):
+
+        if not column_value.startswith(strip_prefix):
+            return _("Unknown")
+
+        country_code = column_value[len(strip_prefix):]
+
+        if country_code:
+            country = GeoIP.country_code_to_name(country_code)
+            return "%s (%s)" % (country, country_code)
+
+        return _("Earth")
+
+    def show_country_tooltip(self, pos_x, pos_y, tooltip, column, strip_prefix='flag_'):
+        return self.show_tooltip(pos_x, pos_y, tooltip, column, ("country",), get_country_tooltip_text,
+                                 strip_prefix)
+
     def on_toggle(self, _widget, path, callback):
         callback(self, self.model.get_iter(path))
 
-    def on_activate_row(self, _widget, path, _column, callback):
-        callback(self, self.model.get_iter(path))
+    def on_activate_row(self, _widget, path, column, callback):
+        callback(self, self.model.get_iter(path), column.get_title())
 
     def on_select_row(self, selection, callback):
         _model, iterator = selection.get_selected()
         callback(self, iterator)
 
-    def on_search_match(self, model, column, search_term, iterator):
+    def on_search_match(self, model, _column, search_term, iterator):
 
         if not search_term:
             return True
 
-        if search_term.lower() in model.get_value(iterator, column).lower():
-            if GTK_API_VERSION >= 4:
-                # Workaround: Disable scrolling animation, since it doesn't work in GTK 4
-                self.widget.queue_allocate()
+        for i, _column in enumerate(self.widget.get_columns()):
+            if model.get_column_type(i) != GObject.TYPE_STRING:
+                continue
 
-            return False
+            column_value = model.get_value(iterator, i).lower()
+
+            if column_value.startswith("nplus-"):
+                # Ignore icon name columns
+                continue
+
+            if search_term.lower() in column_value:
+                if GTK_API_VERSION >= 4:
+                    # Workaround: Disable scrolling animation, since it doesn't work in GTK 4
+                    self.widget.queue_allocate()
+
+                return False
 
         return True
 
@@ -535,7 +614,7 @@ def collapse_treeview(treeview, grouping_mode):
 
 def initialise_columns(frame, treeview_name, treeview, *args):
 
-    cols = OrderedDict()
+    cols = {}
     num_cols = len(args)
     column_config = None
 
@@ -648,17 +727,27 @@ def initialise_columns(frame, treeview_name, treeview, *args):
     return cols
 
 
-def on_search_match(model, column, search_term, iterator, treeview):
+def on_search_match(model, _column, search_term, iterator, treeview):
 
     if not search_term:
         return True
 
-    if search_term.lower() in model.get_value(iterator, column).lower():
-        if GTK_API_VERSION >= 4:
-            # Workaround: Disable scrolling animation, since it doesn't work in GTK 4
-            treeview.queue_allocate()
+    for i, _column in enumerate(treeview.get_columns()):
+        if model.get_column_type(i) != GObject.TYPE_STRING:
+            continue
 
-        return False
+        column_value = model.get_value(iterator, i).lower()
+
+        if column_value.startswith("nplus-"):
+            # Ignore icon name columns
+            continue
+
+        if search_term.lower() in column_value:
+            if GTK_API_VERSION >= 4:
+                # Workaround: Disable scrolling animation, since it doesn't work in GTK 4
+                treeview.queue_allocate()
+
+            return False
 
     return True
 
