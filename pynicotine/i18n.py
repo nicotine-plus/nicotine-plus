@@ -55,73 +55,42 @@ def _set_default_system_language():
         os.environ["LANGUAGE"] = language
 
 
+def get_translation_mo_path():
+    """ Retrieves the appropriate path for translation files, based on how Nicotine+ is installed """
+
+    # Running from Git
+    local_mo_path = os.path.join(BASE_FOLDER, "mo")
+
+    if gettext.find(TRANSLATION_DOMAIN, localedir=local_mo_path):
+        return local_mo_path
+
+    # Windows/macOS builds
+    if getattr(sys, 'frozen', False):
+        executable_folder = os.path.dirname(sys.executable)
+
+        if sys.platform == "darwin":
+            prefix = os.path.abspath(os.path.join(executable_folder, "..", "Resources"))
+        else:
+            prefix = executable_folder
+
+    # Flatpak
+    elif os.path.exists("/.flatpak-info"):
+        prefix = "/app"
+
+    # Other Unix-like systems
+    else:
+        prefix = sys.prefix
+
+    return os.path.join(prefix, "share", "locale")
+
+
 def apply_translations():
-    """Function dealing with translations and locales.
 
-    We try to autodetect the language and fix the locale.
-
-    If something goes wrong we fall back to no translation.
-
-    This function also try to find translation files in the project path first:
-    $(PROJECT_PATH)/mo/$(LANG)/LC_MESSAGES/nicotine.mo
-
-    If no translations are found we fall back to the system path for locates:
-    /usr/share/locale/$(LANG)/LC_MESSAGES
-
-    Note: To the best of my knowledge when we are in a python venv
-    falling back to the system path does not work."""
-
-    libintl_path = None
-    executable_folder = os.path.dirname(sys.executable)
-    resources_folder = executable_folder
+    # Use the same language as the rest of the system
     _set_default_system_language()
 
-    # Load library for translating non-Python content, e.g. GTK ui files
-    if sys.platform == "win32":
-        libintl_path = "libintl-8.dll"
-
-        if getattr(sys, 'frozen', False):
-            libintl_path = os.path.join(executable_folder, "lib", libintl_path)
-
-    elif sys.platform == "darwin":
-        libintl_path = "libintl.8.dylib"
-
-        if getattr(sys, 'frozen', False):
-            libintl_path = os.path.join(executable_folder, libintl_path)
-            resources_folder = os.path.abspath(os.path.join(executable_folder, "..", "Resources"))
-
-    # Local path where to find translation (mo) files
-    local_mo_path = os.path.join(BASE_FOLDER, "mo")
-    use_local_path = gettext.find(TRANSLATION_DOMAIN, localedir=local_mo_path)
-
-    if not use_local_path:
-        if getattr(sys, 'frozen', False):
-            prefix = resources_folder
-
-        elif os.path.exists("/.flatpak-info"):
-            prefix = "/app"
-
-        else:
-            prefix = sys.prefix
-
-        mo_path = os.path.join(prefix, "share", "locale")
-
-    else:
-        mo_path = local_mo_path
-
-    if libintl_path is not None:
-        import ctypes
-        libintl = ctypes.cdll.LoadLibrary(libintl_path)
-
-        # Arguments need to be encoded, otherwise translations fail
-        libintl.bindtextdomain(TRANSLATION_DOMAIN.encode(), mo_path.encode(sys.getfilesystemencoding()))
-        libintl.bind_textdomain_codeset(TRANSLATION_DOMAIN.encode(), b"UTF-8")
-
-    elif hasattr(locale, "bindtextdomain") and hasattr(locale, "textdomain"):
-        locale.bindtextdomain(TRANSLATION_DOMAIN, mo_path)
-
     # Install translations for Python
-    gettext.install(TRANSLATION_DOMAIN, mo_path)
+    gettext.install(TRANSLATION_DOMAIN, get_translation_mo_path())
 
 
 def build_translations():
