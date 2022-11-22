@@ -28,9 +28,10 @@ from pynicotine.utils import http_request
 
 MULTICAST_HOST = "239.255.255.250"
 MULTICAST_PORT = 1900
-MULTICAST_TTL = 2  # Should default to 2 according to UPnP specification
-MX_RESPONSE_DELAY = 1  # At least 1 second is sufficient according to UPnP specification
+MULTICAST_TTL = 2         # Should default to 2 according to UPnP specification
+MX_RESPONSE_DELAY = 1     # At least 1 second is sufficient according to UPnP specification
 HTTP_REQUEST_TIMEOUT = 5
+RENEWAL_INTERVAL = 14400  # 4 hours
 
 
 class Service:
@@ -329,7 +330,7 @@ class UPnP:
             service = self._find_service(local_ip_address)
 
             if not service:
-                raise RuntimeError(_("UPnP is not available on this network"))
+                raise RuntimeError(_("No UPnP devices found"))
 
             # Perform the port mapping
             log.add_debug("UPnP: Trying to redirect external WAN port %s TCP => %s port %s TCP", (
@@ -392,13 +393,7 @@ class UPnP:
         The default interval is 4 hours. """
 
         self.cancel_timer()
-        upnp_interval = config.sections["server"]["upnp_interval"]
-
-        if upnp_interval < 1:
-            return
-
-        upnp_interval_seconds = upnp_interval * 60 * 60
-        self._timer = scheduler.add(delay=upnp_interval_seconds, callback=self.add_port_mapping)
+        self._timer = scheduler.add(delay=RENEWAL_INTERVAL, callback=self.add_port_mapping)
 
     def cancel_timer(self):
         scheduler.cancel(self._timer)

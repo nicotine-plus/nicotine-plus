@@ -67,7 +67,7 @@ class NetworkFrame:
         # pylint: disable=invalid-name
         (self.AutoAway, self.AutoConnectStartup, self.AutoReply, self.CheckPortLabel,
          self.CurrentPort, self.FirstPort, self.Interface, self.InterfaceLabel, self.LastPort, self.Login, self.Main,
-         self.Server, self.UPnPInterval, self.UseUPnP, self.ctcptogglebutton) = ui_template.widgets
+         self.Server, self.UseUPnP, self.ctcptogglebutton) = ui_template.widgets
 
         self.preferences = preferences
         self.frame = preferences.frame
@@ -82,7 +82,6 @@ class NetworkFrame:
                 "autoreply": self.AutoReply,
                 "interface": self.Interface,
                 "upnp": self.UseUPnP,
-                "upnp_interval": self.UPnPInterval,
                 "auto_connect_startup": self.AutoConnectStartup,
                 "ctcpmsgs": self.ctcptogglebutton
             }
@@ -160,7 +159,6 @@ class NetworkFrame:
                 "autoreply": self.AutoReply.get_text(),
                 "interface": self.Interface.get_active_text(),
                 "upnp": self.UseUPnP.get_active(),
-                "upnp_interval": self.UPnPInterval.get_value_as_int(),
                 "auto_connect_startup": self.AutoConnectStartup.get_active(),
                 "ctcpmsgs": not self.ctcptogglebutton.get_active()
             }
@@ -210,9 +208,6 @@ class NetworkFrame:
 
     def on_toggle_upnp(self, widget, *_args):
         self.portmap_required = widget.get_active()
-
-    def on_modify_upnp_interval(self, *_args):
-        self.portmap_required = True
 
 
 class DownloadsFrame:
