@@ -35,7 +35,7 @@ class UserList:
             ("server-disconnect", self._server_disconnect),
             ("start", self._start),
             ("user-country", self._user_country),
-            ("user-status", self._get_user_status)
+            ("user-status", self._user_status)
         ):
             events.connect(event_name, callback)
 
@@ -200,7 +200,7 @@ class UserList:
         config.sections["server"]["userlist"] = list(self.buddies.values())
         config.write_configuration()
 
-    def _get_user_status(self, msg):
+    def _user_status(self, msg):
         """ Server code: 7 """
 
         self.set_buddy_last_seen(msg.user, online=bool(msg.status))

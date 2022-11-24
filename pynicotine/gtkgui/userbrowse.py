@@ -74,7 +74,7 @@ class UserBrowses(IconNotebook):
             ("shared-file-list-response", self.shared_file_list),
             ("user-browse-remove-user", self.remove_user),
             ("user-browse-show-user", self.show_user),
-            ("user-status", self.get_user_status)
+            ("user-status", self.user_status)
         ):
             events.connect(event_name, callback)
 
@@ -139,25 +139,32 @@ class UserBrowses(IconNotebook):
         del self.pages[user]
 
     def peer_connection_error(self, msg):
-        if msg.user in self.pages:
-            self.pages[msg.user].peer_connection_error()
 
-    def get_user_status(self, msg):
+        page = self.pages.get(msg.user)
 
-        if msg.user in self.pages:
-            page = self.pages[msg.user]
+        if page is not None:
+            page.peer_connection_error()
+
+    def user_status(self, msg):
+
+        page = self.pages.get(msg.user)
+
+        if page is not None:
             self.set_user_status(page.container, msg.user, msg.status)
 
     def shared_file_list_progress(self, msg):
-        if msg.user in self.pages:
-            self.pages[msg.user].shared_file_list_progress(msg)
+
+        page = self.pages.get(msg.user)
+
+        if page is not None:
+            page.shared_file_list_progress(msg)
 
     def shared_file_list(self, msg):
 
-        user = msg.init.target_user
+        page = self.pages.get(msg.init.target_user)
 
-        if user in self.pages:
-            self.pages[user].shared_file_list(msg)
+        if page is not None:
+            page.shared_file_list(msg)
 
     def update_visuals(self):
         for page in self.pages.values():

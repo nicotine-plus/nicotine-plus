@@ -99,8 +99,8 @@ class Core:
             ("server-disconnect", self._server_disconnect),
             ("server-login", self._server_login),
             ("server-timeout", self._server_timeout),
-            ("user-stats", self._get_user_stats),
-            ("user-status", self._get_user_status),
+            ("user-stats", self._user_stats),
+            ("user-status", self._user_status),
             ("watch-user", self._add_user)
         ):
             events.connect(event_name, callback)
@@ -539,7 +539,7 @@ class Core:
         # User does not exist, server will not keep us informed if the user is created later
         self.watched_users.discard(msg.user)
 
-    def _get_user_status(self, msg):
+    def _user_status(self, msg):
         """ Server code: 7 """
 
         user = msg.user
@@ -557,7 +557,7 @@ class Core:
 
         self.pluginhandler.user_status_notification(user, status, msg.privileged)
 
-    def _get_user_stats(self, msg):
+    def _user_stats(self, msg):
         """ Server code: 36 """
 
         stats = {

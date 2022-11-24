@@ -110,8 +110,8 @@ class ChatRooms(IconNotebook):
             ("user-country", self.user_country),
             ("user-joined-room", self.user_joined_room),
             ("user-left-room", self.user_left_room),
-            ("user-stats", self.get_user_stats),
-            ("user-status", self.get_user_status)
+            ("user-stats", self.user_stats),
+            ("user-status", self.user_status)
         ):
             events.connect(event_name, callback)
 
@@ -204,6 +204,7 @@ class ChatRooms(IconNotebook):
     def clear_room_messages(self, room):
 
         page = self.pages.get(room)
+
         if page is not None:
             page.chat_view.clear()
             page.activity_view.clear()
@@ -261,7 +262,7 @@ class ChatRooms(IconNotebook):
         page = self.pages.get(msg.room)
 
         if page is not None:
-            page.rejoined(msg.users)
+            page.join_room(msg)
             return
 
         self.pages[msg.room] = tab = ChatRoom(self, msg.room, msg.users)
@@ -284,13 +285,13 @@ class ChatRooms(IconNotebook):
         user_count = 0
         self.roomlist.update_room(msg.room, user_count)
 
-    def get_user_stats(self, msg):
+    def user_stats(self, msg):
         for page in self.pages.values():
-            page.get_user_stats(msg.user, msg.avgspeed, msg.files)
+            page.user_stats(msg)
 
-    def get_user_status(self, msg):
+    def user_status(self, msg):
         for page in self.pages.values():
-            page.get_user_status(msg)
+            page.user_status(msg)
 
     def user_country(self, user, country):
         for page in self.pages.values():
@@ -299,48 +300,56 @@ class ChatRooms(IconNotebook):
     def user_joined_room(self, msg):
 
         page = self.pages.get(msg.room)
+
         if page is not None:
-            page.user_joined_room(msg.userdata)
+            page.user_joined_room(msg)
 
     def user_left_room(self, msg):
 
         page = self.pages.get(msg.room)
+
         if page is not None:
-            page.user_left_room(msg.username)
+            page.user_left_room(msg)
 
     def ticker_set(self, msg):
 
         page = self.pages.get(msg.room)
+
         if page is not None:
             page.ticker_set(msg)
 
     def ticker_add(self, msg):
 
         page = self.pages.get(msg.room)
+
         if page is not None:
             page.ticker_add(msg)
 
     def ticker_remove(self, msg):
 
         page = self.pages.get(msg.room)
+
         if page is not None:
             page.ticker_remove(msg)
 
     def echo_room_message(self, room, text, message_type):
 
         page = self.pages.get(room)
+
         if page is not None:
             page.echo_room_message(text, message_type)
 
     def say_chat_room(self, msg):
 
         page = self.pages.get(msg.room)
+
         if page is not None:
             page.say_chat_room(msg)
 
     def public_room_message(self, msg):
 
         page = self.pages.get("Public ")
+
         if page is not None:
             page.say_chat_room(msg, public=True)
 
@@ -921,8 +930,9 @@ class ChatRoom:
 
         self.chat_view.append_line(text, tag, timestamp_format=timestamp_format)
 
-    def user_joined_room(self, userdata):
+    def user_joined_room(self, msg):
 
+        userdata = msg.userdata
         username = userdata.username
 
         if username in self.users:
@@ -942,7 +952,9 @@ class ChatRoom:
         self.update_user_tag(username)
         self.count_users()
 
-    def user_left_room(self, username):
+    def user_left_room(self, msg):
+
+        username = msg.username
 
         if username not in self.users:
             return
@@ -969,24 +981,26 @@ class ChatRoom:
         self.users_label.set_text(humanize(user_count))
         self.chatrooms.roomlist.update_room(self.room, user_count)
 
-    def get_user_stats(self, user, avgspeed, files):
+    def user_stats(self, msg):
 
-        iterator = self.users.get(user)
+        iterator = self.users.get(msg.user)
 
         if iterator is None:
             return
 
+        speed = msg.avgspeed
+        num_files = msg.files
         h_speed = ""
 
-        if avgspeed > 0:
-            h_speed = human_speed(avgspeed)
+        if speed > 0:
+            h_speed = human_speed(speed)
 
         self.usersmodel.set_value(iterator, 3, h_speed)
-        self.usersmodel.set_value(iterator, 4, humanize(files))
-        self.usersmodel.set_value(iterator, 6, GObject.Value(GObject.TYPE_UINT, avgspeed))
-        self.usersmodel.set_value(iterator, 7, GObject.Value(GObject.TYPE_UINT, files))
+        self.usersmodel.set_value(iterator, 4, humanize(num_files))
+        self.usersmodel.set_value(iterator, 6, GObject.Value(GObject.TYPE_UINT, speed))
+        self.usersmodel.set_value(iterator, 7, GObject.Value(GObject.TYPE_UINT, num_files))
 
-    def get_user_status(self, msg):
+    def user_status(self, msg):
 
         user = msg.user
         iterator = self.users.get(user)
@@ -1112,14 +1126,14 @@ class ChatRoom:
         for username in self.tag_users:
             self.update_user_tag(username)
 
-    def rejoined(self, users):
+    def join_room(self, msg):
 
         # Temporarily disable sorting for increased performance
         sort_column, sort_type = self.usersmodel.get_sort_column_id()
         self.usersmodel.set_default_sort_func(lambda *args: 0)
         self.usersmodel.set_sort_column_id(-1, Gtk.SortType.ASCENDING)
 
-        for userdata in users:
+        for userdata in msg.users:
             username = userdata.username
 
             if username in self.users:

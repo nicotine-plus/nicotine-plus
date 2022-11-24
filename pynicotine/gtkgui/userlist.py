@@ -122,8 +122,8 @@ class UserList:
             ("remove-buddy", self.remove_buddy),
             ("server-disconnect", self.server_disconnect),
             ("user-country", self.user_country),
-            ("user-stats", self.get_user_stats),
-            ("user-status", self.get_user_status)
+            ("user-stats", self.user_stats),
+            ("user-status", self.user_status)
         ):
             events.connect(event_name, callback)
 
@@ -175,7 +175,7 @@ class UserList:
         private_rooms_enabled = (self.popup_menu_private_rooms.items and menu.user != core.login_username)
         menu.actions[_("Private Rooms")].set_enabled(private_rooms_enabled)
 
-    def get_user_status(self, msg):
+    def user_status(self, msg):
 
         user = msg.user
         iterator = self.list_view.iterators.get(user)
@@ -206,7 +206,7 @@ class UserList:
         self.list_view.set_row_value(iterator, 0, status_icon)
         self.list_view.set_row_value(iterator, 10, status)
 
-    def get_user_stats(self, msg):
+    def user_stats(self, msg):
 
         user = msg.user
         iterator = self.list_view.iterators.get(user)

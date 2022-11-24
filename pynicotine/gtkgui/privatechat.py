@@ -77,7 +77,7 @@ class PrivateChats(IconNotebook):
             ("send-private-message", self.send_message),
             ("server-login", self.server_login),
             ("server-disconnect", self.server_disconnect),
-            ("user-status", self.get_user_status)
+            ("user-status", self.user_status)
         ):
             events.connect(event_name, callback)
 
@@ -121,6 +121,7 @@ class PrivateChats(IconNotebook):
     def clear_messages(self, user):
 
         page = self.pages.get(user)
+
         if page is not None:
             page.chat_view.clear()
 
@@ -137,9 +138,10 @@ class PrivateChats(IconNotebook):
                 self.frame.notifications.clear("private", user)
                 break
 
-    def get_user_status(self, msg):
+    def user_status(self, msg):
 
         page = self.pages.get(msg.user)
+
         if page is not None:
             self.set_user_status(page.container, msg.user, msg.status)
             page.update_remote_username_tag(msg.status)
@@ -175,18 +177,21 @@ class PrivateChats(IconNotebook):
     def echo_message(self, user, text, message_type):
 
         page = self.pages.get(user)
+
         if page is not None:
             page.echo_message(text, message_type)
 
     def send_message(self, user, text):
 
         page = self.pages.get(user)
+
         if page is not None:
             page.send_message(text)
 
     def message_user(self, msg, **_unused):
 
         page = self.pages.get(msg.user)
+
         if page is not None:
             page.message_user(msg)
 

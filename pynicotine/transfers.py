@@ -145,8 +145,8 @@ class Transfers:
             ("upload-denied", self._upload_denied),
             ("upload-failed", self._upload_failed),
             ("upload-file-error", self._upload_file_error),
-            ("user-stats", self._get_user_stats),
-            ("user-status", self._get_user_status)
+            ("user-stats", self._user_stats),
+            ("user-status", self._user_status)
         ):
             events.connect(event_name, callback)
 
@@ -609,7 +609,7 @@ class Transfers:
 
     """ Events """
 
-    def _get_user_status(self, msg):
+    def _user_status(self, msg):
         """ Server code: 7 """
         """ We get a status of a user and if he's online, we request a file from him """
 
@@ -674,7 +674,7 @@ class Transfers:
         else:
             events.emit("remove-privileged-user", msg.user)
 
-    def _get_user_stats(self, msg):
+    def _user_stats(self, msg):
         """ Server code: 36 """
 
         if msg.user == core.login_username:

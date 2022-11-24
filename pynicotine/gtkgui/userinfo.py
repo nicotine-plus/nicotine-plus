@@ -69,8 +69,8 @@ class UserInfos(IconNotebook):
             ("user-info-reply", self.user_info_reply),
             ("user-info-show-user", self.show_user),
             ("user-interests", self.user_interests),
-            ("user-stats", self.get_user_stats),
-            ("user-status", self.get_user_status)
+            ("user-stats", self.user_stats),
+            ("user-status", self.user_status)
         ):
             events.connect(event_name, callback)
 
@@ -108,37 +108,53 @@ class UserInfos(IconNotebook):
         del self.pages[user]
 
     def peer_connection_error(self, msg):
-        if msg.user in self.pages:
-            self.pages[msg.user].peer_connection_error()
 
-    def get_user_stats(self, msg):
-        if msg.user in self.pages:
-            self.pages[msg.user].get_user_stats(msg)
+        page = self.pages.get(msg.user)
 
-    def get_user_status(self, msg):
+        if page is not None:
+            page.peer_connection_error()
 
-        if msg.user in self.pages:
-            page = self.pages[msg.user]
+    def user_stats(self, msg):
+
+        page = self.pages.get(msg.user)
+
+        if page is not None:
+            page.user_stats(msg)
+
+    def user_status(self, msg):
+
+        page = self.pages.get(msg.user)
+
+        if page is not None:
             self.set_user_status(page.container, msg.user, msg.status)
 
     def user_country(self, user, country_code):
-        if user in self.pages:
-            self.pages[user].user_country(country_code)
+
+        page = self.pages.get(user)
+
+        if page is not None:
+            page.user_country(country_code)
 
     def user_interests(self, msg):
-        if msg.user in self.pages:
-            self.pages[msg.user].user_interests(msg)
+
+        page = self.pages.get(msg.user)
+
+        if page is not None:
+            page.user_interests(msg)
 
     def user_info_progress(self, msg):
-        if msg.user in self.pages:
-            self.pages[msg.user].user_info_progress(msg)
+
+        page = self.pages.get(msg.user)
+
+        if page is not None:
+            page.user_info_progress(msg)
 
     def user_info_reply(self, msg):
 
-        user = msg.init.target_user
+        page = self.pages.get(msg.init.target_user)
 
-        if user in self.pages:
-            self.pages[user].user_info_reply(msg)
+        if page is not None:
+            page.user_info_reply(msg)
 
     def update_visuals(self):
         for page in self.pages.values():
@@ -442,7 +458,7 @@ class UserInfo:
         self.info_bar.set_visible(False)
         self.set_finished()
 
-    def get_user_stats(self, msg):
+    def user_stats(self, msg):
 
         if msg.avgspeed > 0:
             self.upload_speed_label.set_text(human_speed(msg.avgspeed))

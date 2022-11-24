@@ -165,8 +165,8 @@ class Interests:
             ("server-login", self.server_login),
             ("server-disconnect", self.server_disconnect),
             ("similar-users", self.similar_users),
-            ("user-stats", self.get_user_stats),
-            ("user-status", self.get_user_status)
+            ("user-stats", self.user_stats),
+            ("user-status", self.user_status)
         ):
             events.connect(event_name, callback)
 
@@ -381,7 +381,7 @@ class Interests:
     def item_similar_users(self, msg):
         self.set_similar_users(msg.users, msg.thing)
 
-    def get_user_status(self, msg):
+    def user_status(self, msg):
 
         iterator = self.similar_users_list_view.iterators.get(msg.user)
 
@@ -394,7 +394,7 @@ class Interests:
         self.similar_users_list_view.set_row_value(iterator, 0, status_icon)
         self.similar_users_list_view.set_row_value(iterator, 4, status)
 
-    def get_user_stats(self, msg):
+    def user_stats(self, msg):
 
         iterator = self.similar_users_list_view.iterators.get(msg.user)
 
