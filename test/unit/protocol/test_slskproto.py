@@ -31,7 +31,7 @@ from unittest.mock import patch
 
 from pynicotine.config import config
 from pynicotine.slskproto import SoulseekNetworkThread
-from pynicotine.slskmessages import ServerConnect, Login, SetWaitPort
+from pynicotine.slskmessages import ServerConnect, SetWaitPort
 from pynicotine.utils import encode_path
 
 # Time (in s) needed for SoulseekNetworkThread main loop to run at least once
