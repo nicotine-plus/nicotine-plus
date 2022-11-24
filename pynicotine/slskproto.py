@@ -60,7 +60,7 @@ from pynicotine.slskmessages import EmbeddedMessage
 from pynicotine.slskmessages import FileOffset
 from pynicotine.slskmessages import FileDownloadInit
 from pynicotine.slskmessages import FileUploadInit
-from pynicotine.slskmessages import FileSearchResult
+from pynicotine.slskmessages import FileSearchResponse
 from pynicotine.slskmessages import GetPeerAddress
 from pynicotine.slskmessages import GetUserStats
 from pynicotine.slskmessages import GetUserStatus
@@ -86,13 +86,13 @@ from pynicotine.slskmessages import SetConnectionStats
 from pynicotine.slskmessages import SetDownloadLimit
 from pynicotine.slskmessages import SetUploadLimit
 from pynicotine.slskmessages import SetWaitPort
-from pynicotine.slskmessages import SharedFileList
+from pynicotine.slskmessages import SharedFileListResponse
 from pynicotine.slskmessages import SharedFileListProgress
 from pynicotine.slskmessages import UploadConnectionClosed
 from pynicotine.slskmessages import UploadFile
 from pynicotine.slskmessages import UploadFileError
 from pynicotine.slskmessages import UserInfoProgress
-from pynicotine.slskmessages import UserInfoReply
+from pynicotine.slskmessages import UserInfoResponse
 from pynicotine.slskmessages import UserStatus
 from pynicotine.slskmessages import increment_token
 from pynicotine.upnp import UPnP
@@ -1511,11 +1511,11 @@ class SoulseekNetworkThread(Thread):
                 # Send progress to the main thread
                 peer_class = PEER_MESSAGE_CLASSES[msgtype]
 
-                if peer_class is SharedFileList:
+                if peer_class is SharedFileListResponse:
                     self._callback_msgs.append(
                         SharedFileListProgress(conn_obj.init.target_user, buffer_len, msgsize_total))
 
-                elif peer_class is UserInfoReply:
+                elif peer_class is UserInfoResponse:
                     self._callback_msgs.append(
                         UserInfoProgress(conn_obj.init.target_user, buffer_len, msgsize_total))
 
@@ -1532,7 +1532,7 @@ class SoulseekNetworkThread(Thread):
                 msg = self._unpack_network_message(
                     msg_class, msg_buffer_mem[idx + 8:idx + msgsize_total], msgsize - 4, "peer", conn_obj.init)
 
-                if msg_class is FileSearchResult:
+                if msg_class is FileSearchResponse:
                     search_result_received = True
 
                 if msg is not None:

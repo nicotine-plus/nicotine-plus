@@ -1151,7 +1151,7 @@ class PlaceInLineResponse(ServerMessage):
     """ Server code: 60 """
     """ The server sends this to indicate change in place in queue while we're
     waiting for files from another peer. """
-    """ OBSOLETE, use PlaceInQueue peer message """
+    """ OBSOLETE, use PlaceInQueueResponse peer message """
 
     def __init__(self, user=None, token=None, place=None):
         self.token = token
@@ -2279,7 +2279,7 @@ class PeerMessage(SlskMessage):
         return pos, size
 
 
-class GetSharedFileList(PeerMessage):
+class SharedFileListRequest(PeerMessage):
     """ Peer code: 4 """
     """ We send this to a peer to ask for a list of shared files. """
 
@@ -2294,10 +2294,10 @@ class GetSharedFileList(PeerMessage):
         pass
 
 
-class SharedFileList(PeerMessage):
+class SharedFileListResponse(PeerMessage):
     """ Peer code: 5 """
     """ A peer responds with a list of shared files when we've sent
-    a GetSharedFileList. """
+    a SharedFileListRequest. """
 
     def __init__(self, init=None, user=None, shares=None):
         self.init = init
@@ -2418,7 +2418,7 @@ class FileSearchRequest(PeerMessage):
         pos, self.searchterm = self.unpack_string(message, pos)
 
 
-class FileSearchResult(PeerMessage):
+class FileSearchResponse(PeerMessage):
     """ Peer code: 9 """
     """ A peer sends this message when it has a file search match. The token is
     taken from original FileSearch, UserSearch or RoomSearch server message. """
@@ -2568,7 +2568,7 @@ class UserInfoRequest(PeerMessage):
         pass
 
 
-class UserInfoReply(PeerMessage):
+class UserInfoResponse(PeerMessage):
     """ Peer code: 16 """
     """ A peer responds with this after we've sent a UserInfoRequest. """
 
@@ -2840,7 +2840,7 @@ class QueueUpload(PeerMessage):
         _pos, self.file = self.unpack_string(message)
 
 
-class PlaceInQueue(PeerMessage):
+class PlaceInQueueResponse(PeerMessage):
     """ Peer code: 44 """
     """ The peer replies with the upload queue placement of the requested file. """
 
@@ -3211,12 +3211,12 @@ PEER_INIT_MESSAGE_CODES = {
 }
 
 PEER_MESSAGE_CODES = {
-    GetSharedFileList: 4,
-    SharedFileList: 5,
+    SharedFileListRequest: 4,
+    SharedFileListResponse: 5,
     FileSearchRequest: 8,         # Obsolete
-    FileSearchResult: 9,
+    FileSearchResponse: 9,
     UserInfoRequest: 15,
-    UserInfoReply: 16,
+    UserInfoResponse: 16,
     PMessageUser: 22,             # Obsolete
     FolderContentsRequest: 36,
     FolderContentsResponse: 37,
@@ -3224,7 +3224,7 @@ PEER_MESSAGE_CODES = {
     TransferResponse: 41,
     PlaceholdUpload: 42,          # Obsolete
     QueueUpload: 43,
-    PlaceInQueue: 44,
+    PlaceInQueueResponse: 44,
     UploadFailed: 46,
     UploadDenied: 50,
     PlaceInQueueRequest: 51,

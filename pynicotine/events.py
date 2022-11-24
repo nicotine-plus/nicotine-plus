@@ -117,7 +117,7 @@ EVENT_NAMES = set([
     "add-wish",
     "distributed-search-request",
     "do-search",
-    "file-search-result",
+    "file-search-response",
     "remove-search",
     "remove-wish",
     "server-search-request",
@@ -170,8 +170,8 @@ EVENT_NAMES = set([
     # User info
     "user-info-progress",
     "user-info-remove-user",
-    "user-info-reply",
     "user-info-request",
+    "user-info-response",
     "user-info-show-user",
     "user-interests",
 ])

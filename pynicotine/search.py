@@ -52,7 +52,7 @@ class Search:
 
         for event_name, callback in (
             ("distributed-search-request", self._distrib_search),
-            ("file-search-result", self._file_search_result),
+            ("file-search-response", self._file_search_response),
             ("server-disconnect", self._server_disconnect),
             ("server-search-request", self._search_request),
             ("set-wishlist-interval", self._set_wishlist_interval)
@@ -314,7 +314,7 @@ class Search:
         else:
             log.add(_("Server does not permit performing wishlist searches at this time"))
 
-    def _file_search_result(self, msg):
+    def _file_search_response(self, msg):
         """ Peer message: 9 """
 
         if msg.token not in slskmessages.SEARCH_TOKENS_ALLOWED:
@@ -526,7 +526,7 @@ class Search:
         slotsavail = core.transfers.allow_new_uploads()
         fifoqueue = config.sections["transfers"]["fifoqueue"]
 
-        message = slskmessages.FileSearchResult(
+        message = slskmessages.FileSearchResponse(
             None, core.login_username,
             token, fileinfos, slotsavail, uploadspeed, queuesize, fifoqueue)
 

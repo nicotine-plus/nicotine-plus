@@ -125,7 +125,7 @@ class UserBrowse:
         core.watch_user(username, force_update=True)
 
         if not user_exists or new_request:
-            core.send_message_to_peer(username, slskmessages.GetSharedFileList())
+            core.send_message_to_peer(username, slskmessages.SharedFileListRequest())
 
     def create_user_shares_folder(self):
 
@@ -173,7 +173,7 @@ class UserBrowse:
         username = filename.replace('\\', os.sep).split(os.sep)[-1]
         self.show_user(username)
 
-        msg = slskmessages.SharedFileList(init=PeerInit(target_user=username))
+        msg = slskmessages.SharedFileListResponse(init=PeerInit(target_user=username))
         msg.list = shares_list
 
         events.emit("shared-file-list", msg)

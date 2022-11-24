@@ -146,7 +146,7 @@ class Scanner:
         else:
             streams = self.share_dbs.get("buddystreams")
 
-        compressed_shares = slskmessages.SharedFileList(shares=streams)
+        compressed_shares = slskmessages.SharedFileListResponse(shares=streams)
         compressed_shares.make_network_message()
         compressed_shares.list = None
         compressed_shares.type = share_type
@@ -466,7 +466,7 @@ class Scanner:
     def get_dir_stream(folder):
         """ Pack all files and metadata in directory """
 
-        message = slskmessages.FileSearchResult()
+        message = slskmessages.FileSearchResponse()
         stream = bytearray()
         stream.extend(message.pack_uint32(len(folder)))
 
@@ -525,8 +525,8 @@ class Shares:
         self.pending_network_msgs = []
         self.rescanning = False
         self.should_compress_shares = False
-        self.compressed_shares_normal = slskmessages.SharedFileList()
-        self.compressed_shares_buddy = slskmessages.SharedFileList()
+        self.compressed_shares_normal = slskmessages.SharedFileListResponse()
+        self.compressed_shares_buddy = slskmessages.SharedFileListResponse()
 
         self.convert_shares()
         self.share_db_paths = [
@@ -547,7 +547,7 @@ class Shares:
             ("quit", self._quit),
             ("server-disconnect", self._server_disconnect),
             ("server-login", self._server_login),
-            ("shared-file-list-request", self._get_shared_file_list),
+            ("shared-file-list-request", self._shared_file_list_request),
             ("start", self._start)
         ):
             events.connect(event_name, callback)
@@ -829,7 +829,7 @@ class Shares:
                     events.emit("show-scan-progress")
                     events.emit("set-scan-indeterminate")
 
-                elif isinstance(item, slskmessages.SharedFileList):
+                elif isinstance(item, slskmessages.SharedFileListResponse):
                     if item.type == "normal":
                         self.compressed_shares_normal = item
 
@@ -906,7 +906,7 @@ class Shares:
 
     """ Network Messages """
 
-    def _get_shared_file_list(self, msg):
+    def _shared_file_list_request(self, msg):
         """ Peer code: 4 """
 
         user = msg.init.target_user
@@ -940,7 +940,7 @@ class Shares:
 
         if not shares_list:
             # Nyah, Nyah
-            shares_list = slskmessages.SharedFileList(init=msg.init)
+            shares_list = slskmessages.SharedFileListResponse(init=msg.init)
 
         shares_list.init = msg.init
         core.queue.append(shares_list)

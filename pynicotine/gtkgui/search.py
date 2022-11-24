@@ -103,7 +103,7 @@ class Searches(IconNotebook):
         for event_name, callback in (
             ("do-search", self.do_search),
             ("remove-search", self.remove_search),
-            ("file-search-result", self.file_search_result)
+            ("file-search-response", self.file_search_response)
         ):
             events.connect(event_name, callback)
 
@@ -243,7 +243,7 @@ class Searches(IconNotebook):
                          close_callback=tab.on_close, full_text=full_text)
         tab.set_label(self.get_tab_label_inner(tab.container))
 
-    def file_search_result(self, msg):
+    def file_search_response(self, msg):
 
         tab = self.pages.get(msg.token)
 
@@ -265,7 +265,7 @@ class Searches(IconNotebook):
             tab.update_result_counter()
             return
 
-        tab.file_search_result(msg)
+        tab.file_search_response(msg)
 
     def update_visuals(self):
 
@@ -666,7 +666,7 @@ class Search:
 
         return update_ui
 
-    def file_search_result(self, msg):
+    def file_search_response(self, msg):
 
         user = msg.init.target_user
 

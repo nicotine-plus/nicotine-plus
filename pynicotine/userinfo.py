@@ -146,4 +146,4 @@ class UserInfo:
             uploadallowed = 0
 
         core.queue.append(
-            slskmessages.UserInfoReply(msg.init, descr, pic, totalupl, queuesize, slotsavail, uploadallowed))
+            slskmessages.UserInfoResponse(msg.init, descr, pic, totalupl, queuesize, slotsavail, uploadallowed))

@@ -1561,7 +1561,7 @@ class Transfers:
                     break
 
         if queue_position > 0:
-            core.queue.append(slskmessages.PlaceInQueue(init=msg.init, filename=filename, place=queue_position))
+            core.queue.append(slskmessages.PlaceInQueueResponse(init=msg.init, filename=filename, place=queue_position))
 
         if transfer is None:
             return

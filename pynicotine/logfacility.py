@@ -52,8 +52,8 @@ class Logger:
         slskmessages.DistribSearch,
         slskmessages.EmbeddedMessage,
         slskmessages.SetConnectionStats,
-        slskmessages.SharedFileList,
         slskmessages.SharedFileListProgress,
+        slskmessages.SharedFileListResponse,
         slskmessages.UnknownPeerMessage,
         slskmessages.UserInfoProgress,
     }

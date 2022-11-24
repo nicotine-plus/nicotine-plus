@@ -66,7 +66,7 @@ class UserInfos(IconNotebook):
             ("user-country", self.user_country),
             ("user-info-progress", self.user_info_progress),
             ("user-info-remove-user", self.remove_user),
-            ("user-info-reply", self.user_info_reply),
+            ("user-info-response", self.user_info_response),
             ("user-info-show-user", self.show_user),
             ("user-interests", self.user_interests),
             ("user-stats", self.user_stats),
@@ -149,12 +149,12 @@ class UserInfos(IconNotebook):
         if page is not None:
             page.user_info_progress(msg)
 
-    def user_info_reply(self, msg):
+    def user_info_response(self, msg):
 
         page = self.pages.get(msg.init.target_user)
 
         if page is not None:
-            page.user_info_reply(msg)
+            page.user_info_response(msg)
 
     def update_visuals(self):
         for page in self.pages.values():
@@ -439,7 +439,7 @@ class UserInfo:
 
     """ Network Messages """
 
-    def user_info_reply(self, msg):
+    def user_info_response(self, msg):
 
         if msg is None:
             return
