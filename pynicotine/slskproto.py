@@ -191,23 +191,16 @@ class SoulseekNetworkThread(Thread):
     SOCKET_READ_BUFFER_SIZE = 1048576
     SOCKET_WRITE_BUFFER_SIZE = 1048576
 
-    def __init__(self, queue, user_addresses, bindip, interface, port, port_range):
+    def __init__(self, queue, user_addresses):
         """ queue is deque object that holds network messages from Core. """
 
         super().__init__(name="SoulseekNetworkThread")
-
-        if sys.platform not in ("linux", "darwin"):
-            # TODO: support custom network interface for other systems than Linux and macOS
-            interface = None
 
         self.listenport = None
         self.upnp = None
 
         self._queue = queue
         self._user_addresses = user_addresses
-        self._bindip = bindip
-        self._portrange = (port, port) if port else port_range
-        self._interface = interface
         self._callback_msgs = []
         self._pending_init_msgs = {}
         self._token_init_msgs = {}
@@ -217,6 +210,9 @@ class SoulseekNetworkThread(Thread):
 
         self._selector = None
         self._listen_socket = None
+        self._listen_port_range = None
+        self._bound_ip = None
+        self._interface = None
 
         self._server_socket = None
         self._server_address = None
@@ -273,23 +269,56 @@ class SoulseekNetworkThread(Thread):
 
     """ General """
 
-    def validate_listen_port(self):
+    def _create_listen_socket(self):
+
+        self._listen_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self._listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self._listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.SOCKET_READ_BUFFER_SIZE)
+        self._listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, self.SOCKET_WRITE_BUFFER_SIZE)
+        self._listen_socket.setblocking(False)
+        self._bind_listen_port()
+
+        self._selector.register(self._listen_socket, selectors.EVENT_READ)
+
+    def _close_listen_socket(self):
+
+        if self._listen_socket is None:
+            return
+
+        self._selector.unregister(self._listen_socket)
+        self._close_socket(self._listen_socket, shutdown=False)
+        self._listen_socket = None
+        self.listenport = None
+
+    def _bind_listen_port(self):
+
+        if not self._validate_network_interface():
+            return
+
+        if self._interface and not self._bound_ip:
+            self._bind_to_network_interface(self._listen_socket, self._interface)
+
+        ip_address = self._bound_ip or ''
+
+        for listenport in range(int(self._listen_port_range[0]), int(self._listen_port_range[1]) + 1):
+            try:
+                self._listen_socket.bind((ip_address, listenport))
+                self._listen_socket.listen()
+                self.listenport = listenport
+                log.add(_("Listening on port: %i"), listenport)
+                log.add_debug("Maximum number of concurrent connections (sockets): %i", MAXSOCKETS)
+                break
+
+            except OSError as error:
+                log.add_debug("Cannot listen on port %(port)s: %(error)s", {"port": listenport, "error": error})
+                continue
+
+    def _validate_listen_port(self):
 
         if self.listenport is not None:
             return True
 
         return False
-
-    def validate_network_interface(self):
-
-        try:
-            if self._interface and self._interface not in (name for _i, name in socket.if_nameindex()):
-                return False
-
-        except AttributeError:
-            pass
-
-        return True
 
     @staticmethod
     def _get_interface_ip_address(if_name):
@@ -314,12 +343,12 @@ class SoulseekNetworkThread(Thread):
         try:
             if sys.platform == "linux":
                 sock.setsockopt(socket.SOL_SOCKET, 25, if_name.encode())
-                self._bindip = None
+                self._bound_ip = None
                 return
 
             if sys.platform == "darwin":
                 sock.setsockopt(socket.IPPROTO_IP, 25, socket.if_nametoindex(if_name))
-                self._bindip = None
+                self._bound_ip = None
                 return
 
         except PermissionError:
@@ -327,30 +356,18 @@ class SoulseekNetworkThread(Thread):
 
         # System does not support changing the network interface
         # Retrieve the IP address of the interface, and bind to it instead
-        self._bindip = self._get_interface_ip_address(if_name)
+        self._bound_ip = self._get_interface_ip_address(if_name)
 
-    def _bind_listen_port(self):
+    def _validate_network_interface(self):
 
-        if not self.validate_network_interface():
-            return
+        try:
+            if self._interface and self._interface not in (name for _i, name in socket.if_nameindex()):
+                return False
 
-        if self._interface and not self._bindip:
-            self._bind_to_network_interface(self._listen_socket, self._interface)
+        except AttributeError:
+            pass
 
-        ip_address = self._bindip or ''
-
-        for listenport in range(int(self._portrange[0]), int(self._portrange[1]) + 1):
-            try:
-                self._listen_socket.bind((ip_address, listenport))
-                self._listen_socket.listen()
-                self.listenport = listenport
-                log.add(_("Listening on port: %i"), listenport)
-                log.add_debug("Maximum number of concurrent connections (sockets): %i", MAXSOCKETS)
-                break
-
-            except OSError as error:
-                log.add_debug("Cannot listen on port %(port)s: %(error)s", {"port": listenport, "error": error})
-                continue
+        return True
 
     def _server_connect(self, msg_obj):
         """ We're connecting to the server """
@@ -358,7 +375,16 @@ class SoulseekNetworkThread(Thread):
         if self._server_socket:
             return
 
-        valid_network_interface = self.validate_network_interface()
+        if sys.platform not in ("linux", "darwin"):
+            # TODO: support custom network interface for other systems than Linux and macOS
+            self._interface = None
+        else:
+            self._interface = msg_obj.interface
+
+        self._bound_ip = msg_obj.bound_ip
+        self._listen_port_range = msg_obj.listen_port_range
+
+        valid_network_interface = self._validate_network_interface()
 
         if not valid_network_interface:
             message = _(
@@ -369,16 +395,17 @@ class SoulseekNetworkThread(Thread):
             self._process_queue = False
             return
 
-        valid_listen_port = self.validate_listen_port()
+        self._create_listen_socket()
+        valid_listen_port = self._validate_listen_port()
 
         if not valid_listen_port:
             message = _(
                 "The range you specified for client connection ports was "
-                "{}-{}, but none of these were usable. Increase and/or ".format(self._portrange[0],
-                                                                                self._portrange[1])
+                "{}-{}, but none of these were usable. Increase and/or ".format(self._listen_port_range[0],
+                                                                                self._listen_port_range[1])
                 + "move the range and restart Nicotine+."
             )
-            if self._portrange[0] < 1024:
+            if self._listen_port_range[0] < 1024:
                 message += "\n\n" + _(
                     "Note that part of your range lies below 1024, this is usually not allowed on"
                     " most operating systems with the exception of Windows."
@@ -387,6 +414,7 @@ class SoulseekNetworkThread(Thread):
             self._process_queue = False
             return
 
+        self.upnp.port = self.listenport
         self._manual_server_disconnect = False
         scheduler.cancel(self._server_timer)
 
@@ -399,7 +427,9 @@ class SoulseekNetworkThread(Thread):
         """ We're disconnecting from the server, clean up """
 
         self._process_queue = False
-        self._server_socket = None
+        self._bound_ip = self._interface = self._listen_port_range = self._server_socket = None
+
+        self._close_listen_socket()
 
         for sock in self._conns.copy():
             self._close_connection(self._conns, sock, callback=False)
@@ -1125,8 +1155,8 @@ class SoulseekNetworkThread(Thread):
             # Detect if our connection to the server is still alive
             self._set_server_socket_keepalive(server_socket)
 
-            if self._bindip:
-                server_socket.bind((self._bindip, 0))
+            if self._bound_ip:
+                server_socket.bind((self._bound_ip, 0))
 
             elif self._interface:
                 self._bind_to_network_interface(server_socket, self._interface)
@@ -1172,6 +1202,9 @@ class SoulseekNetworkThread(Thread):
 
                     elif msg_class is Login:
                         if msg.success:
+                            # Ensure listening port is open
+                            self.upnp.add_port_mapping(blocking=True)
+
                             # Check for indirect connection timeouts
                             self._conn_timeouts_timer_id = scheduler.add(
                                 delay=1, callback=self._check_indirect_connection_timeouts, repeat=True
@@ -1475,8 +1508,8 @@ class SoulseekNetworkThread(Thread):
             sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.SOCKET_READ_BUFFER_SIZE)
             sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, self.SOCKET_WRITE_BUFFER_SIZE)
 
-            if self._bindip:
-                sock.bind((self._bindip, 0))
+            if self._bound_ip:
+                sock.bind((self._bound_ip, 0))
 
             elif self._interface:
                 self._bind_to_network_interface(sock, self._interface)
@@ -2053,22 +2086,11 @@ class SoulseekNetworkThread(Thread):
     def run(self):
 
         events.emit("thread-callback", [SetConnectionStats()])
+        self.upnp = UPnP()
 
         # Watch sockets for I/0 readiness with the selectors module. Only call register() after a socket
         # is bound, otherwise watching the socket not guaranteed to work (breaks on OpenBSD at least)
         self._selector = selectors.DefaultSelector()
-
-        self._listen_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self._listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self._listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.SOCKET_READ_BUFFER_SIZE)
-        self._listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, self.SOCKET_WRITE_BUFFER_SIZE)
-        self._listen_socket.setblocking(False)
-        self._bind_listen_port()
-
-        self._selector.register(self._listen_socket, selectors.EVENT_READ)
-
-        self.upnp = UPnP(self.listenport)
-        self.upnp.add_port_mapping(blocking=True)
 
         while not self._want_abort:
 
@@ -2224,9 +2246,6 @@ class SoulseekNetworkThread(Thread):
             time.sleep(1 / 60)
 
         # Networking thread aborted
-        self._selector.unregister(self._listen_socket)
-        self._close_socket(self._listen_socket, shutdown=False)
-
         self._manual_server_disconnect = True
         self._server_disconnect()
         self._selector.close()

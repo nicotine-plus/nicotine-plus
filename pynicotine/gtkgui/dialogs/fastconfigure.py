@@ -30,7 +30,6 @@ from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.ui import UserInterface
-from pynicotine.utils import open_uri
 
 
 class FastConfigure(Dialog):
@@ -43,8 +42,9 @@ class FastConfigure(Dialog):
         ui_template = UserInterface(scope=self, path="dialogs/fastconfigure.ui")
         (
             self.account_page,
-            self.check_port_label,
             self.download_folder_button,
+            self.first_port_entry,
+            self.last_port_entry,
             self.main_icon,
             self.next_button,
             self.password_entry,
@@ -244,6 +244,11 @@ class FastConfigure(Dialog):
         if not self.finished:
             return True
 
+        # port_page
+        first_port = min(self.first_port_entry.get_value_as_int(), self.last_port_entry.get_value_as_int())
+        last_port = max(self.first_port_entry.get_value_as_int(), self.last_port_entry.get_value_as_int())
+        config.sections["server"]["portrange"] = (first_port, last_port)
+
         # account_page
         if config.need_config():
             config.sections["server"]["login"] = self.username_entry.get_text()
@@ -264,10 +269,9 @@ class FastConfigure(Dialog):
         self.password_entry.set_text(config.sections["server"]["passw"])
 
         # port_page
-        url = config.portchecker_url % str(core.protothread.listenport)
-        text = "<a href='" + url + "' title='" + url + "'>" + _("Check Port Status") + "</a>"
-        self.check_port_label.set_markup(text)
-        self.check_port_label.connect("activate-link", lambda x, url: open_uri(url))
+        first_port, last_port = config.sections["server"]["portrange"]
+        self.first_port_entry.set_value(first_port)
+        self.last_port_entry.set_value(last_port)
 
         # share_page
         if config.sections['transfers']['downloaddir']:

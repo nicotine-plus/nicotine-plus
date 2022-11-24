@@ -137,7 +137,7 @@
                             <property name="visible">True</property>
                             <property name="hexpand">True</property>
                             <property name="xalign">0</property>
-                            <property name="label" translatable="yes">Listening port range (requires a restart):</property>
+                            <property name="label" translatable="yes">Listening port range:</property>
                             <property name="wrap">True</property>
                             <property name="wrap-mode">word-char</property>
                             <property name="mnemonic-widget">FirstPort</property>
@@ -395,7 +395,7 @@
             <child>
               <object class="GtkLabel" id="InterfaceLabel">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">Network interface (requires a restart):</property>
+                <property name="label" translatable="yes">Network interface:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>

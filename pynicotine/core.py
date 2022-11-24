@@ -139,12 +139,7 @@ class Core:
         log.add(_("Loading %(program)s %(version)s"), {"program": config.application_name, "version": config.version})
 
         self.queue.clear()
-        self.protothread = SoulseekNetworkThread(
-            queue=self.queue, user_addresses=self.user_addresses,
-            bindip=self.bindip, port=self.port,
-            interface=config.sections["server"]["interface"],
-            port_range=config.sections["server"]["portrange"]
-        )
+        self.protothread = SoulseekNetworkThread(queue=self.queue, user_addresses=self.user_addresses)
 
         self.geoip = GeoIP()
         self.notifications = Notifications()
@@ -351,12 +346,15 @@ class Core:
             events.emit("setup")
             return
 
-        addr = config.sections["server"]["server"]
-        login = config.sections["server"]["login"]
-        password = config.sections["server"]["passw"]
-
         events.emit("enable-message-queue")
-        self.queue.append(slskmessages.ServerConnect(addr, login=(login, password)))
+
+        self.queue.append(slskmessages.ServerConnect(
+            addr=config.sections["server"]["server"],
+            login=(config.sections["server"]["login"], config.sections["server"]["passw"]),
+            interface=config.sections["server"]["interface"],
+            bound_ip=self.bindip,
+            listen_port_range=(self.port, self.port) if self.port else config.sections["server"]["portrange"]
+        ))
         return
 
     def disconnect(self):

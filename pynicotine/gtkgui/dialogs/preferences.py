@@ -102,7 +102,7 @@ class NetworkFrame:
         }
         self.CurrentPort.set_markup(text)
 
-        url = config.portchecker_url % str(core.protothread.listenport)
+        url = config.portchecker_url % str(core.protothread.listenport or server["portrange"][0])
         text = "<a href='" + url + "' title='" + url + "'>" + _("Check Port Status") + "</a>"
         self.CheckPortLabel.set_markup(text)
         self.CheckPortLabel.connect("activate-link", lambda x, url: open_uri(url))

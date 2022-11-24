@@ -216,8 +216,8 @@ class SSDP:
 class UPnP:
     """ Class that handles UPnP Port Mapping """
 
-    def __init__(self, port):
-        self._port = port
+    def __init__(self):
+        self._port = None
         self._timer = None
 
     @staticmethod
