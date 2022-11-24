@@ -31,6 +31,7 @@ from gi.repository import GLib
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
+from pynicotine.events import events
 from pynicotine.gtkgui.popovers.chathistory import ChatHistory
 from pynicotine.gtkgui.popovers.privatechatcommands import PrivateChatCommands
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
@@ -66,6 +67,19 @@ class PrivateChats(IconNotebook):
         self.completion = ChatCompletion()
         self.history = ChatHistory(frame)
         self.command_help = None
+
+        for event_name, callback in (
+            ("clear-private-messages", self.clear_messages),
+            ("echo-private-message", self.echo_message),
+            ("message-user", self.message_user),
+            ("private-chat-show-user", self.show_user),
+            ("private-chat-remove-user", self.remove_user),
+            ("send-private-message", self.send_message),
+            ("server-login", self.server_login),
+            ("server-disconnect", self.server_disconnect),
+            ("user-status", self.get_user_status)
+        ):
+            events.connect(event_name, callback)
 
         self.update_visuals()
 
@@ -170,7 +184,7 @@ class PrivateChats(IconNotebook):
         if page is not None:
             page.send_message(text)
 
-    def message_user(self, msg):
+    def message_user(self, msg, **_unused):
 
         page = self.pages.get(msg.user)
         if page is not None:
@@ -197,11 +211,15 @@ class PrivateChats(IconNotebook):
 
         self.history.update_visuals()
 
-    def server_login(self):
+    def server_login(self, msg):
+
+        if not msg.success:
+            return
+
         for page in self.pages.values():
             page.server_login()
 
-    def server_disconnect(self):
+    def server_disconnect(self, _msg):
 
         for user, page in self.pages.items():
             page.server_disconnect()

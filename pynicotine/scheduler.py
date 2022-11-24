@@ -21,6 +21,9 @@ import time
 
 from threading import Thread
 
+from pynicotine.events import events
+from pynicotine.slskmessages import SchedulerCallback
+
 
 class Scheduler(Thread):
     """ Class that allows for scheduling one-time and repeating events """
@@ -36,21 +39,15 @@ class Scheduler(Thread):
 
     def _callback_one_time(self, callback, event_id):
 
-        from pynicotine.core import core
-        from pynicotine.slskmessages import SchedulerCallback
-
         self._events.pop(event_id, None)
 
         # Run callback in the main thread
-        core.thread_callback([SchedulerCallback(callback)])
+        events.emit("thread-callback", [SchedulerCallback(callback)])
 
     def _callback_repeat(self, delay, callback, event_id):
 
-        from pynicotine.core import core
-        from pynicotine.slskmessages import SchedulerCallback
-
         # Run callback in the main thread
-        core.thread_callback([SchedulerCallback(callback)])
+        events.emit("thread-callback", [SchedulerCallback(callback)])
 
         self._add_repeat(delay, callback, event_id)
 

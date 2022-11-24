@@ -19,6 +19,7 @@
 import os
 
 from unittest import TestCase
+from unittest.mock import Mock
 
 from pynicotine.config import config
 from pynicotine.core import core
@@ -31,12 +32,11 @@ class TransfersTest(TestCase):
         config.data_dir = os.path.dirname(os.path.realpath(__file__))
         config.filename = os.path.join(config.data_dir, "temp_config")
 
-        config.load_config()
+        core.init_components()
         config.sections["transfers"]["downloaddir"] = config.data_dir
 
-        core.init_components()
-        core.transfers.init_transfers()
-        core.transfers.server_login()
+        core.transfers._start()  # pylint: disable=protected-access
+        core.transfers._server_login(Mock())  # pylint: disable=protected-access
         core.transfers.allow_saving_transfers = False
 
     def test_load_downloads(self):
@@ -71,7 +71,7 @@ class TransfersTest(TestCase):
         is identical to the one we loaded. Ignore transfer 13, since its missing
         properties will be added at the end of the session. """
 
-        core.transfers.server_disconnect()
+        core.transfers._server_disconnect(Mock())  # pylint: disable=protected-access
 
         old_transfers = core.transfers.load_transfers_file(core.transfers.downloads_file_name)[:12]
 

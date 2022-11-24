@@ -27,6 +27,7 @@ from gi.repository import Gio
 
 from pynicotine.config import config
 from pynicotine.core import core
+from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.logfacility import log
 from pynicotine.utils import truncate_string_byte
@@ -41,6 +42,8 @@ class Notifications:
 
         if sys.platform == "win32":
             self.win_notification = WinNotify(self.frame.tray_icon)
+
+        events.connect("new-text-notification", self.new_text_notification)
 
     def add(self, location, user, room=None):
 

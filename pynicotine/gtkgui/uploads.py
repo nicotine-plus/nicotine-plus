@@ -26,6 +26,7 @@ import os
 
 from pynicotine.config import config
 from pynicotine.core import core
+from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.transferlist import TransferList
 from pynicotine.gtkgui.utils import copy_text
@@ -69,6 +70,21 @@ class Uploads(TransferList):
             ("#" + _("Everything…"), self.on_try_clear_all),
         )
         self.popup_menu_clear.update_model()
+
+        for event_name, callback in (
+            ("abort-upload", self.abort_transfer),
+            ("abort-uploads", self.abort_transfers),
+            ("clear-upload", self.clear_transfer),
+            ("clear-uploads", self.clear_transfers),
+            ("start", self.start),
+            ("update-upload", self.update_model),
+            ("update-uploads", self.update_model),
+            ("upload-notification", self.new_transfer_notification)
+        ):
+            events.connect(event_name, callback)
+
+    def start(self):
+        self.init_transfers(core.transfers.uploads)
 
     def retry_selected_transfers(self):
         core.transfers.retry_uploads(self.selected_transfers)

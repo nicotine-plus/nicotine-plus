@@ -133,7 +133,7 @@ class ChatEntry:
 
         elif cmd in ("/w", "/whois", "/info"):
             if arg_self:
-                core.userinfo.request_user_info(arg_self)
+                core.userinfo.show_user(arg_self)
 
         elif cmd in ("/b", "/browse"):
             if arg_self:
@@ -190,11 +190,11 @@ class ChatEntry:
 
         elif cmd in ("/ad", "/add", "/buddy"):
             if args:
-                core.userlist.add_user(args)
+                core.userlist.add_buddy(args)
 
         elif cmd in ("/rem", "/unbuddy"):
             if args:
-                core.userlist.remove_user(args)
+                core.userlist.remove_buddy(args)
 
         elif cmd == "/ban":
             if args:
@@ -223,9 +223,9 @@ class ChatEntry:
 
         elif cmd in ("/clear", "/cl"):
             if self.is_chatroom:
-                core.chatrooms.clear_messages(self.entity)
+                core.chatrooms.clear_room_messages(self.entity)
             else:
-                core.privatechat.clear_messages(self.entity)
+                core.privatechat.clear_private_messages(self.entity)
 
         elif cmd in ("/a", "/away"):
             core.set_away_mode(core.user_status != UserStatus.AWAY, save_state=True)

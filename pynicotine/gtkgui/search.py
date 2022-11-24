@@ -31,6 +31,7 @@ from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.core import core
+from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.dialogs.fileproperties import FileProperties
 from pynicotine.gtkgui.dialogs.wishlist import WishList
@@ -98,6 +99,14 @@ class Searches(IconNotebook):
 
         self.file_properties = None
         self.wish_list = WishList(frame, self)
+
+        for event_name, callback in (
+            ("do-search", self.do_search),
+            ("remove-search", self.remove_search),
+            ("file-search-result", self.file_search_result)
+        ):
+            events.connect(event_name, callback)
+
         self.populate_search_history()
         self.update_visuals()
 
@@ -234,12 +243,17 @@ class Searches(IconNotebook):
                          close_callback=tab.on_close, full_text=full_text)
         tab.set_label(self.get_tab_label_inner(tab.container))
 
-    def show_search_result(self, msg, username, country):
+    def file_search_result(self, msg):
 
         tab = self.pages.get(msg.token)
 
         if tab is None:
-            search_term = core.search.searches[msg.token]["term"]
+            search_item = core.search.searches.get(msg.token)
+
+            if search_item is None:
+                return
+
+            search_term = search_item["term"]
             mode = "wishlist"
             mode_label = _("Wish")
             tab = self.create_tab(msg.token, search_term, mode, mode_label, showtab=False)
@@ -251,16 +265,7 @@ class Searches(IconNotebook):
             tab.update_result_counter()
             return
 
-        tab.add_user_results(msg, username, country)
-
-    def add_wish(self, wish):
-        self.wish_list.add_wish(wish)
-
-    def remove_wish(self, wish):
-        self.wish_list.remove_wish(wish)
-
-    def set_wishlist_interval(self, msg):
-        self.wish_list.set_interval(msg)
+        tab.file_search_result(msg)
 
     def update_visuals(self):
 
@@ -268,14 +273,6 @@ class Searches(IconNotebook):
             page.update_visuals()
 
         self.wish_list.update_visuals()
-
-    def server_login(self):
-        # Not needed
-        pass
-
-    def server_disconnect(self):
-        # Not needed
-        pass
 
 
 class Search:
@@ -669,12 +666,23 @@ class Search:
 
         return update_ui
 
-    def add_user_results(self, msg, user, country):
+    def file_search_result(self, msg):
+
+        user = msg.init.target_user
 
         if user in self.users:
             return
 
         self.users.add(user)
+        ip_address = msg.init.addr[0]
+
+        if ip_address:
+            country = core.geoip.get_country_code(ip_address)
+        else:
+            country = ""
+
+        if country == "-":
+            country = ""
 
         if msg.freeulslots:
             inqueue = 0

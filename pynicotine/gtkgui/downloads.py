@@ -25,6 +25,7 @@
 
 from pynicotine.config import config
 from pynicotine.core import core
+from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.transferlist import TransferList
 from pynicotine.gtkgui.utils import copy_text
@@ -68,6 +69,22 @@ class Downloads(TransferList):
         )
         self.popup_menu_clear.update_model()
 
+        for event_name, callback in (
+            ("abort-download", self.abort_transfer),
+            ("abort-downloads", self.abort_transfers),
+            ("clear-download", self.clear_transfer),
+            ("clear-downloads", self.clear_transfers),
+            ("download-large-folder", self.download_large_folder),
+            ("download-notification", self.new_transfer_notification),
+            ("start", self.start),
+            ("update-download", self.update_model),
+            ("update-downloads", self.update_model)
+        ):
+            events.connect(event_name, callback)
+
+    def start(self):
+        self.init_transfers(core.transfers.downloads)
+
     def retry_selected_transfers(self):
         core.transfers.retry_downloads(self.selected_transfers)
 
@@ -105,7 +122,7 @@ class Downloads(TransferList):
 
     def folder_download_response(self, _dialog, response_id, msg):
         if response_id == 2:
-            core.transfers.folder_contents_response(msg, check_num_files=False)
+            events.emit("folder-contents-response", msg, check_num_files=False)
 
     def download_large_folder(self, username, folder, numfiles, msg):
 

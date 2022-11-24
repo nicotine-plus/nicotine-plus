@@ -34,6 +34,7 @@ from threading import Thread
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
+from pynicotine.events import events
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import UINT_LIMIT
 from pynicotine.slskmessages import UserStatus
@@ -541,18 +542,34 @@ class Shares:
             ("buddymtimes", os.path.join(config.data_dir, "buddymtimes.db"))
         ]
 
-    def server_disconnect(self):
-        self.requested_share_times.clear()
-        self.pending_network_msgs.clear()
+        for event_name, callback in (
+            ("folder-contents-request", self._folder_contents_request),
+            ("quit", self._quit),
+            ("server-disconnect", self._server_disconnect),
+            ("server-login", self._server_login),
+            ("shared-file-list-request", self._get_shared_file_list),
+            ("start", self._start)
+        ):
+            events.connect(event_name, callback)
 
-    """ Shares-related actions """
-
-    def init_shares(self):
+    def _start(self):
 
         rescan_startup = (config.sections["transfers"]["rescanonstartup"]
                           and not config.need_config())
 
         self.rescan_shares(init=True, rescan=rescan_startup)
+
+    def _quit(self):
+        self.close_shares(self.share_dbs)
+
+    def _server_login(self, _msg):
+        self.send_num_shared_folders_files()
+
+    def _server_disconnect(self, _msg):
+        self.requested_share_times.clear()
+        self.pending_network_msgs.clear()
+
+    """ Shares-related actions """
 
     def virtual2real(self, path):
 
@@ -806,14 +823,11 @@ class Shares:
                     log.add(template, args, log_level)
 
                 elif isinstance(item, float):
-                    if core.ui_callback:
-                        core.ui_callback.set_scan_progress(item)
-                    else:
-                        log.add(_("Rescan progress: %s"), str(int(item * 100)) + " %")
+                    events.emit("set-scan-progress", item)
 
-                elif item == "indeterminate" and core.ui_callback:
-                    core.ui_callback.show_scan_progress()
-                    core.ui_callback.set_scan_indeterminate()
+                elif item == "indeterminate":
+                    events.emit("show-scan-progress")
+                    events.emit("set-scan-indeterminate")
 
                 elif isinstance(item, slskmessages.SharedFileList):
                     if item.type == "normal":
@@ -851,8 +865,7 @@ class Shares:
                 log.add(_("Rescan aborted due to unavailable shares"))
                 rescan = False
 
-                if core.ui_callback:
-                    core.ui_callback.shares_unavailable(unavailable_shares)
+                events.emit("shares_unavailable", unavailable_shares)
 
                 if not init:
                     return None
@@ -877,9 +890,7 @@ class Shares:
 
         # Let the scanner process do its thing
         error = self.process_scanner_messages(scanner, scanner_queue)
-
-        if core.ui_callback:
-            core.ui_callback.hide_scan_progress()
+        events.emit("hide-scan-progress")
 
         # Scanning done, load shares in the main process again
         self.load_shares(self.share_dbs, self.share_db_paths)
@@ -889,14 +900,13 @@ class Shares:
             self.send_num_shared_folders_files()
 
         # Process any file transfer queue requests that arrived while scanning
-        if core.thread_callback:
-            core.thread_callback(self.pending_network_msgs)
+        events.emit("thread-callback", self.pending_network_msgs)
 
         return error
 
     """ Network Messages """
 
-    def get_shared_file_list(self, msg):
+    def _get_shared_file_list(self, msg):
         """ Peer code: 4 """
 
         user = msg.init.target_user
@@ -935,7 +945,7 @@ class Shares:
         shares_list.init = msg.init
         core.queue.append(shares_list)
 
-    def folder_contents_request(self, msg):
+    def _folder_contents_request(self, msg):
         """ Peer code: 36 """
 
         init = msg.init
@@ -976,8 +986,3 @@ class Shares:
                         {"folder": msg.dir, "error": error})
 
             core.queue.append(slskmessages.FolderContentsResponse(init=init, directory=msg.dir, token=msg.token))
-
-    """ Quit """
-
-    def quit(self):
-        self.close_shares(self.share_dbs)

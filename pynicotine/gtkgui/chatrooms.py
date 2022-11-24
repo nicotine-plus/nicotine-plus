@@ -36,6 +36,7 @@ from pynicotine import slskmessages
 from pynicotine.chatrooms import Tickers
 from pynicotine.config import config
 from pynicotine.core import core
+from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.popovers.chatroomcommands import ChatRoomCommands
 from pynicotine.gtkgui.popovers.roomlist import RoomList
@@ -89,6 +90,30 @@ class ChatRooms(IconNotebook):
             self.frame.chatrooms_paned.set_resize_start_child(True)
         else:
             self.frame.chatrooms_paned.child_set_property(self.frame.chatrooms_container, "resize", True)
+
+        for event_name, callback in (
+            ("clear-room-messages", self.clear_room_messages),
+            ("echo-room-message", self.echo_room_message),
+            ("join-room", self.join_room),
+            ("private-room-added", self.private_room_added),
+            ("public-room-message", self.public_room_message),
+            ("remove-room", self.remove_room),
+            ("room-completion-list", self.set_completion_list),
+            ("room-list", self.room_list),
+            ("say-chat-room", self.say_chat_room),
+            ("server-login", self.server_login),
+            ("server-disconnect", self.server_disconnect),
+            ("show-room", self.show_room),
+            ("ticker-add", self.ticker_add),
+            ("ticker-remove", self.ticker_remove),
+            ("ticker-set", self.ticker_set),
+            ("user-country", self.user_country),
+            ("user-joined-room", self.user_joined_room),
+            ("user-left-room", self.user_left_room),
+            ("user-stats", self.get_user_stats),
+            ("user-status", self.get_user_status)
+        ):
+            events.connect(event_name, callback)
 
         self.update_visuals()
 
@@ -176,7 +201,7 @@ class ChatRooms(IconNotebook):
 
         self.frame.chatrooms_entry.set_text("")
 
-    def clear_messages(self, room):
+    def clear_room_messages(self, room):
 
         page = self.pages.get(room)
         if page is not None:
@@ -255,53 +280,9 @@ class ChatRooms(IconNotebook):
         else:
             self.frame.room_search_combobox.append_text(msg.room)
 
-    def leave_room(self, msg):
-        # Not needed
-        pass
-
-    def private_room_users(self, msg):
-        # Not needed
-        pass
-
-    def private_room_owned(self, msg):
-        # Not needed
-        pass
-
-    def private_room_add_user(self, msg):
-        # Not needed
-        pass
-
-    def private_room_remove_user(self, msg):
-        # Not needed
-        pass
-
-    def private_room_operator_added(self, msg):
-        # Not needed
-        pass
-
-    def private_room_operator_removed(self, msg):
-        # Not needed
-        pass
-
-    def private_room_add_operator(self, msg):
-        # Not needed
-        pass
-
-    def private_room_remove_operator(self, msg):
-        # Not needed
-        pass
-
     def private_room_added(self, msg):
         user_count = 0
         self.roomlist.update_room(msg.room, user_count)
-
-    def private_room_removed(self, msg):
-        # Not needed
-        pass
-
-    def private_room_disown(self, msg):
-        # Not needed
-        pass
 
     def get_user_stats(self, msg):
         for page in self.pages.values():
@@ -311,9 +292,9 @@ class ChatRooms(IconNotebook):
         for page in self.pages.values():
             page.get_user_status(msg)
 
-    def set_user_country(self, user, country):
+    def user_country(self, user, country):
         for page in self.pages.values():
-            page.set_user_country(user, country)
+            page.user_country(user, country)
 
     def user_joined_room(self, msg):
 
@@ -345,11 +326,11 @@ class ChatRooms(IconNotebook):
         if page is not None:
             page.ticker_remove(msg)
 
-    def echo_message(self, room, text, message_type):
+    def echo_room_message(self, room, text, message_type):
 
         page = self.pages.get(room)
         if page is not None:
-            page.echo_message(text, message_type)
+            page.echo_room_message(text, message_type)
 
     def say_chat_room(self, msg):
 
@@ -393,13 +374,16 @@ class ChatRooms(IconNotebook):
         for page in self.pages.values():
             page.save_columns()
 
-    def server_login(self):
+    def server_login(self, msg):
+
+        if not msg.success:
+            return
 
         for room in config.sections["server"]["autojoin"]:
             if isinstance(room, str):
                 self.autojoin_rooms.add(room)
 
-    def server_disconnect(self):
+    def server_disconnect(self, _msg):
 
         self.roomlist.clear()
         self.autojoin_rooms.clear()
@@ -642,10 +626,6 @@ class ChatRoom:
         country = userdata.country or ""  # country can be None, ensure string is used
         status_icon = get_status_icon_name(status)
         flag_icon = get_flag_icon_name(country)
-
-        # Request user's IP address, so we can get the country and ignore messages by IP
-        core.queue.append(slskmessages.GetPeerAddress(username))
-
         h_speed = ""
         avgspeed = userdata.avgspeed
 
@@ -880,13 +860,6 @@ class ChatRoom:
     def say_chat_room(self, msg, public=False):
 
         user = msg.user
-
-        if core.network_filter.is_user_ignored(user):
-            return
-
-        if core.network_filter.is_user_ip_ignored(user):
-            return
-
         login_username = core.login_username
         text = msg.msg
         room = msg.room
@@ -938,7 +911,7 @@ class ChatRoom:
                 base_name=clean_file(self.room) + ".log", text=line
             )
 
-    def echo_message(self, text, message_type):
+    def echo_room_message(self, text, message_type):
 
         tag = self.tag_action
         timestamp_format = config.sections["logging"]["rooms_timestamp"]
@@ -1047,7 +1020,7 @@ class ChatRoom:
 
         self.update_user_tag(user)
 
-    def set_user_country(self, user, country):
+    def user_country(self, user, country):
 
         iterator = self.users.get(user)
 
@@ -1058,7 +1031,7 @@ class ChatRoom:
             # Country didn't change, no need to update
             return
 
-        flag_icon = get_flag_icon_name(country)
+        flag_icon = get_flag_icon_name(country or "")
 
         if not flag_icon:
             return

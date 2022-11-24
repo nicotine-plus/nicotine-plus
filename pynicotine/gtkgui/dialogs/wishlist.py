@@ -18,6 +18,7 @@
 
 from pynicotine.config import config
 from pynicotine.core import core
+from pynicotine.events import events
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
@@ -68,6 +69,12 @@ class WishList(Dialog):
 
         Accelerator("Delete", self.list_view.widget, self.on_remove_wish)
         Accelerator("<Shift>Tab", self.list_view.widget, self.on_list_focus_entry_accelerator)  # skip column header
+
+        for event_name, callback in (
+            ("add-wish", self.add_wish),
+            ("remove-wish", self.remove_wish)
+        ):
+            events.connect(event_name, callback)
 
     def on_list_focus_entry_accelerator(self, *_args):
         self.wish_entry.grab_focus()
@@ -164,10 +171,6 @@ class WishList(Dialog):
 
         if iterator is not None:
             self.list_view.select_row(iterator)
-
-    def set_interval(self, msg):
-        # Not used
-        pass
 
     def update_wish_button(self, wish):
 

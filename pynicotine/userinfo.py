@@ -21,6 +21,7 @@ import time
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
+from pynicotine.events import events
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import encode_path
@@ -31,43 +32,40 @@ class UserInfo:
 
     def __init__(self):
 
-        self.ui_callback = getattr(core.ui_callback, "userinfo", None)
         self.users = set()
         self.requested_info_times = {}
 
-    def server_login(self):
+        for event_name, callback in (
+            ("server-login", self._server_login),
+            ("server-disconnect", self._server_disconnect),
+            ("user-info-request", self._user_info_request)
+        ):
+            events.connect(event_name, callback)
+
+    def _server_login(self, msg):
+
+        if not msg.success:
+            return
+
         for user in self.users:
             core.watch_user(user)  # Get notified of user status
 
-    def server_disconnect(self):
-
+    def _server_disconnect(self, _msg):
         self.requested_info_times.clear()
 
-        if self.ui_callback:
-            self.ui_callback.server_disconnect()
+    def show_user(self, user, refresh=False, switch_page=True):
 
-    def add_user(self, user):
         if user not in self.users:
             self.users.add(user)
+            refresh = True
 
-    def remove_user(self, user):
-
-        self.users.remove(user)
-
-        if self.ui_callback:
-            self.ui_callback.remove_user(user)
-
-    def show_user(self, user, switch_page=True):
-        if self.ui_callback:
-            self.ui_callback.show_user(user, switch_page)
-
-    def request_user_info(self, user, switch_page=True):
-
-        self.add_user(user)
-        self.show_user(user, switch_page)
+        events.emit("user-info-show-user", user=user, refresh=refresh, switch_page=switch_page)
 
         if core.user_status == UserStatus.OFFLINE:
-            self.show_connection_error(user)
+            events.emit("peer-connection-error", user)
+            return
+
+        if not refresh:
             return
 
         # Request user description, picture and queue information
@@ -79,12 +77,12 @@ class UserInfo:
         # Request user interests
         core.queue.append(slskmessages.UserInterests(user))
 
-        # Request user country
-        self.set_user_country(user, core.get_user_country(user))
+        # Set user country
+        events.emit("user-country", user, core.get_user_country(user))
 
-    def show_connection_error(self, username):
-        if self.ui_callback:
-            self.ui_callback.show_connection_error(username)
+    def remove_user(self, user):
+        self.users.remove(user)
+        events.emit("user-info-remove-user", user)
 
     @staticmethod
     def save_user_picture(file_path, picture_bytes):
@@ -101,31 +99,7 @@ class UserInfo:
                 "error": error
             })
 
-    def peer_message_progress(self, msg):
-        if self.ui_callback:
-            self.ui_callback.peer_message_progress(msg)
-
-    def peer_connection_closed(self, msg):
-        if self.ui_callback:
-            self.ui_callback.peer_connection_closed(msg)
-
-    def get_user_stats(self, msg):
-        """ Server code: 36 """
-
-        if self.ui_callback:
-            self.ui_callback.get_user_stats(msg)
-
-    def get_user_status(self, msg):
-        """ Server code: 7 """
-
-        if self.ui_callback:
-            self.ui_callback.get_user_status(msg)
-
-    def set_user_country(self, user, country_code):
-        if self.ui_callback:
-            self.ui_callback.set_user_country(user, country_code)
-
-    def user_info_request(self, msg):
+    def _user_info_request(self, msg):
         """ Peer code: 15 """
 
         user = msg.init.target_user
@@ -173,16 +147,3 @@ class UserInfo:
 
         core.queue.append(
             slskmessages.UserInfoReply(msg.init, descr, pic, totalupl, queuesize, slotsavail, uploadallowed))
-
-    def user_info_reply(self, msg):
-        """ Peer code: 16 """
-
-        if self.ui_callback:
-            user = msg.init.target_user
-            self.ui_callback.user_info_reply(user, msg)
-
-    def user_interests(self, msg):
-        """ Server code: 57 """
-
-        if self.ui_callback:
-            self.ui_callback.user_interests(msg)

@@ -31,6 +31,7 @@ from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.core import core
+from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.chatrooms import ChatRooms
 from pynicotine.gtkgui.dialogs.about import About
@@ -74,11 +75,10 @@ from pynicotine.utils import open_uri
 
 class NicotineFrame(Window):
 
-    def __init__(self, application, start_hidden, ci_mode):
+    def __init__(self, application, start_hidden):
 
         self.application = application
         self.start_hidden = start_hidden
-        self.ci_mode = ci_mode
         self.current_page_id = ""
         self.auto_away = False
         self.away_timer_id = None
@@ -239,11 +239,10 @@ class NicotineFrame(Window):
         self.log_search_bar = TextSearchBar(self.log_view.textview, self.log_search_bar, self.log_search_entry)
 
         self.create_log_context_menu()
-        log.add_listener(self.log_callback)
+        events.connect("log-message", self.log_callback)
 
         """ Configuration """
 
-        config.load_config()
         config.gtk_version = "%s.%s.%s" % (GTK_API_VERSION, Gtk.get_minor_version(), Gtk.get_micro_version())
         log.add(_("Loading %(program)s %(version)s"), {"program": "GTK", "version": config.gtk_version})
 
@@ -290,6 +289,25 @@ class NicotineFrame(Window):
         self.set_main_tabs_order()
         self.set_main_tabs_visibility()
         self.set_last_session_tab()
+
+        """ Events """
+
+        for event_name, callback in (
+            ("confirm-quit", self.confirm_quit),
+            ("hide-scan-progress", self.hide_scan_progress),
+            ("invalid-password", self.invalid_password),
+            ("quit", self.quit),
+            ("server-login", self.server_login),
+            ("server-disconnect", self.server_disconnect),
+            ("set-away-mode", self.set_away_mode),
+            ("set-connection-stats", self.set_connection_stats),
+            ("set-scan-indeterminate", self.set_scan_indeterminate),
+            ("set-scan-progress", self.set_scan_progress),
+            ("setup", self.setup),
+            ("show-scan-progress", self.show_scan_progress),
+            ("shares-unavailable", self.shares_unavailable)
+        ):
+            events.connect(event_name, callback)
 
         """ Apply UI Customizations """
 
@@ -443,7 +461,10 @@ class NicotineFrame(Window):
 
     """ Connection """
 
-    def server_login(self):
+    def server_login(self, msg):
+
+        if not msg.success:
+            return
 
         focus_widget = None
         self.update_user_status()
@@ -460,7 +481,7 @@ class NicotineFrame(Window):
         if focus_widget is not None:
             GLib.idle_add(lambda: focus_widget.grab_focus() == -1, priority=GLib.PRIORITY_HIGH_IDLE)
 
-    def server_disconnect(self):
+    def server_disconnect(self, _msg):
         self.update_user_status()
 
     def invalid_password_response(self, _dialog, response_id, _data):
@@ -1545,8 +1566,8 @@ class NicotineFrame(Window):
 
     """ User Actions """
 
-    def on_add_user(self, *_args):
-        self.userlist.on_add_user()
+    def on_add_buddy(self, *_args):
+        self.userlist.on_add_buddy()
 
     """ Various """
 
@@ -1756,7 +1777,6 @@ class NicotineFrame(Window):
         # Save visible columns
         self.save_columns()
 
-        log.remove_listener(self.log_callback)
         config.write_configuration()
 
     def hide(self):

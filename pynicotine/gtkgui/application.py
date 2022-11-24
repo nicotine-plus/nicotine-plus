@@ -26,6 +26,7 @@ from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.core import core
+from pynicotine.events import events
 
 GTK_API_VERSION = Gtk.get_major_version()
 GTK_GUI_DIR = os.path.normpath(os.path.dirname(os.path.realpath(__file__)))
@@ -51,6 +52,7 @@ class Application:
 
         self.instance.connect("activate", self.on_activate)
         self.instance.connect("shutdown", self.on_shutdown)
+        events.connect("thread-callback", self.thread_callback)
 
         try:
             Gtk.ListStore.insert_with_valuesv
@@ -103,8 +105,8 @@ class Application:
 
         from pynicotine.gtkgui.frame import NicotineFrame
 
-        self.frame = NicotineFrame(self.instance, self.start_hidden, self.ci_mode)
-        core.start(ui_callback=self.frame, thread_callback=self.thread_callback)
+        self.frame = NicotineFrame(self.instance, self.start_hidden)
+        core.start()
         self.frame.init_window()
 
         if config.sections["server"]["auto_connect_startup"]:

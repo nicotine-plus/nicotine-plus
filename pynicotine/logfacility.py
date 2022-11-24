@@ -21,6 +21,7 @@ import time
 
 from pynicotine import slskmessages
 from pynicotine.config import config
+from pynicotine.events import events
 from pynicotine.scheduler import scheduler
 
 
@@ -50,23 +51,22 @@ class Logger:
         slskmessages.DistribEmbeddedMessage,
         slskmessages.DistribSearch,
         slskmessages.EmbeddedMessage,
-        slskmessages.PeerMessageProgress,
         slskmessages.SetConnectionStats,
         slskmessages.SharedFileList,
-        slskmessages.UnknownPeerMessage
+        slskmessages.SharedFileListProgress,
+        slskmessages.UnknownPeerMessage,
+        slskmessages.UserInfoProgress,
     }
 
     def __init__(self):
 
-        self.listeners = set()
         self.log_levels = None
         self.file_name = "debug_" + str(int(time.time())) + ".log"
         self.log_files = {}
 
-        self.add_listener(self.log_console)
         scheduler.add(delay=10, callback=self._close_inactive_log_files, repeat=True)
 
-    def get_log_file(self, folder_path, base_name):
+    def _get_log_file(self, folder_path, base_name):
 
         file_path = os.path.join(folder_path, base_name)
         log_file = self.log_files.get(file_path)
@@ -93,7 +93,7 @@ class Logger:
     def write_log_file(self, folder_path, base_name, text, timestamp=None):
 
         try:
-            log_file = self.get_log_file(folder_path, base_name)
+            log_file = self._get_log_file(folder_path, base_name)
             timestamp_format = config.sections["logging"]["log_timestamp"]
             text = "%s %s\n" % (time.strftime(timestamp_format, time.localtime(timestamp)), text)
 
@@ -134,13 +134,7 @@ class Logger:
             if (current_time - log_file.last_active) >= 10:
                 self.close_log_file(log_file)
 
-    def add_listener(self, callback):
-        self.listeners.add(callback)
-
-    def remove_listener(self, callback):
-        self.listeners.discard(callback)
-
-    def set_msg_prefix(self, level, msg):
+    def _set_msg_prefix(self, level, msg):
 
         prefix = self.PREFIXES.get(level)
 
@@ -167,7 +161,7 @@ class Logger:
             msg = "%s: %s %s" % (msg_direction, msg_class, self.contents(msg))
             msg_args = None
 
-        msg = self.set_msg_prefix(level, msg)
+        msg = self._set_msg_prefix(level, msg)
 
         if msg_args:
             msg = msg % msg_args
@@ -176,16 +170,15 @@ class Logger:
             self.write_log_file(
                 folder_path=config.sections["logging"]["debuglogsdir"], base_name=self.file_name, text=msg)
 
-        for callback in self.listeners:
+        try:
+            timestamp_format = config.sections["logging"].get("log_timestamp", "%Y-%m-%d %H:%M:%S")
+            events.emit("log-message", timestamp_format, msg, title, level)
+        except Exception as error:
             try:
-                timestamp_format = config.sections["logging"].get("log_timestamp", "%Y-%m-%d %H:%M:%S")
-                callback(timestamp_format, msg, title, level)
-            except Exception as error:
-                try:
-                    print("Callback on %s failed: %s %s\n%s" % (callback, level, msg, error))
-                except OSError:
-                    # stdout is gone
-                    pass
+                print("Log callback failed: %s %s\n%s" % (level, msg, error))
+            except OSError:
+                # stdout is gone
+                pass
 
     def add_download(self, msg, msg_args=None):
         self.log_transfer(msg, msg_args)
@@ -213,22 +206,6 @@ class Logger:
     def add_debug(self, msg, msg_args=None):
         self.add(msg, msg_args=msg_args, level="miscellaneous")
 
-    @staticmethod
-    def contents(obj):
-        """ Returns variables for object, for debug output """
-        try:
-            return {s: getattr(obj, s) for s in obj.__slots__ if hasattr(obj, s)}
-        except AttributeError:
-            return vars(obj)
-
-    @staticmethod
-    def log_console(timestamp_format, msg, _title, _level):
-        try:
-            print("[" + time.strftime(timestamp_format) + "] " + msg)
-        except OSError:
-            # stdout is gone
-            pass
-
     def log_transfer(self, msg, msg_args=None):
 
         if not config.sections["logging"]["transfers"]:
@@ -239,6 +216,14 @@ class Logger:
 
         self.write_log_file(
             folder_path=config.sections["logging"]["transferslogsdir"], base_name="transfers.log", text=msg)
+
+    @staticmethod
+    def contents(obj):
+        """ Returns variables for object, for debug output """
+        try:
+            return {s: getattr(obj, s) for s in obj.__slots__ if hasattr(obj, s)}
+        except AttributeError:
+            return vars(obj)
 
 
 log = Logger()

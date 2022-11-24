@@ -30,6 +30,7 @@ import time
 
 from threading import Thread
 
+from pynicotine.events import events
 from pynicotine.logfacility import log
 from pynicotine.scheduler import scheduler
 from pynicotine.slskmessages import DISTRIBUTED_MESSAGE_CLASSES
@@ -71,8 +72,8 @@ from pynicotine.slskmessages import PossibleParents
 from pynicotine.slskmessages import ParentMinSpeed
 from pynicotine.slskmessages import ParentSpeedRatio
 from pynicotine.slskmessages import PeerConnectionClosed
+from pynicotine.slskmessages import PeerConnectionError
 from pynicotine.slskmessages import PeerInit
-from pynicotine.slskmessages import PeerMessageProgress
 from pynicotine.slskmessages import PierceFireWall
 from pynicotine.slskmessages import Relogged
 from pynicotine.slskmessages import ResetDistributed
@@ -86,10 +87,11 @@ from pynicotine.slskmessages import SetDownloadLimit
 from pynicotine.slskmessages import SetUploadLimit
 from pynicotine.slskmessages import SetWaitPort
 from pynicotine.slskmessages import SharedFileList
-from pynicotine.slskmessages import ShowConnectionErrorMessage
+from pynicotine.slskmessages import SharedFileListProgress
 from pynicotine.slskmessages import UploadConnectionClosed
 from pynicotine.slskmessages import UploadFile
 from pynicotine.slskmessages import UploadFileError
+from pynicotine.slskmessages import UserInfoProgress
 from pynicotine.slskmessages import UserInfoReply
 from pynicotine.slskmessages import UserStatus
 from pynicotine.slskmessages import increment_token
@@ -138,13 +140,13 @@ class Connection:
     addr is (ip, port) pair, ibuf and obuf are input and output msgBuffer,
     init is a PeerInit object (see slskmessages docstrings). """
 
-    __slots__ = ("sock", "addr", "events", "ibuf", "obuf", "lastactive", "lastreadlength")
+    __slots__ = ("sock", "addr", "selector_events", "ibuf", "obuf", "lastactive", "lastreadlength")
 
-    def __init__(self, sock=None, addr=None, events=None):
+    def __init__(self, sock=None, addr=None, selector_events=None):
 
         self.sock = sock
         self.addr = addr
-        self.events = events
+        self.selector_events = selector_events
         self.ibuf = bytearray()
         self.obuf = bytearray()
         self.lastactive = time.time()
@@ -155,9 +157,9 @@ class ServerConnection(Connection):
 
     __slots__ = ("login",)
 
-    def __init__(self, sock=None, addr=None, events=None, login=None):
+    def __init__(self, sock=None, addr=None, selector_events=None, login=None):
 
-        super().__init__(sock, addr, events)
+        super().__init__(sock, addr, selector_events)
 
         self.login = login
 
@@ -166,9 +168,9 @@ class PeerConnection(Connection):
 
     __slots__ = ("init", "fileinit", "filedown", "fileupl", "lastcallback")
 
-    def __init__(self, sock=None, addr=None, events=None, init=None):
+    def __init__(self, sock=None, addr=None, selector_events=None, init=None):
 
-        super().__init__(sock, addr, events)
+        super().__init__(sock, addr, selector_events)
 
         self.init = init
         self.fileinit = None
@@ -189,9 +191,8 @@ class SoulseekNetworkThread(Thread):
     SOCKET_READ_BUFFER_SIZE = 1048576
     SOCKET_WRITE_BUFFER_SIZE = 1048576
 
-    def __init__(self, callback, queue, user_addresses, bindip, interface, port, port_range):
-        """ callback is a Core callback function to be called with messages
-        list as a parameter. queue is deque object that holds network messages from Core. """
+    def __init__(self, queue, user_addresses, bindip, interface, port, port_range):
+        """ queue is deque object that holds network messages from Core. """
 
         super().__init__(name="SoulseekNetworkThread")
 
@@ -200,19 +201,18 @@ class SoulseekNetworkThread(Thread):
             interface = None
 
         self.listenport = None
-        self.portrange = (port, port) if port else port_range
-        self.interface = interface
-        self.server_disconnected = True
         self.upnp = None
 
-        self._callback = callback
         self._queue = queue
         self._user_addresses = user_addresses
         self._bindip = bindip
+        self._portrange = (port, port) if port else port_range
+        self._interface = interface
         self._callback_msgs = []
         self._pending_init_msgs = {}
         self._token_init_msgs = {}
         self._username_init_msgs = {}
+        self._process_queue = False
         self._want_abort = False
 
         self._selector = None
@@ -257,6 +257,20 @@ class SoulseekNetworkThread(Thread):
         self._last_cycle_loop_count = 0
         self._loops_per_second = 0
 
+        for event_name, callback in (
+            ("enable-message-queue", self._enable_message_queue),
+            ("quit", self._quit),
+            ("start", self.start)
+        ):
+            events.connect(event_name, callback)
+
+    def _enable_message_queue(self):
+        self._queue.clear()
+        self._process_queue = True
+
+    def _quit(self):
+        self._want_abort = True
+
     """ General """
 
     def validate_listen_port(self):
@@ -269,17 +283,13 @@ class SoulseekNetworkThread(Thread):
     def validate_network_interface(self):
 
         try:
-            if self.interface and self.interface not in (name for _i, name in socket.if_nameindex()):
+            if self._interface and self._interface not in (name for _i, name in socket.if_nameindex()):
                 return False
 
         except AttributeError:
             pass
 
         return True
-
-    def abort(self):
-        """ Call this to abort the thread """
-        self._want_abort = True
 
     @staticmethod
     def _get_interface_ip_address(if_name):
@@ -324,12 +334,12 @@ class SoulseekNetworkThread(Thread):
         if not self.validate_network_interface():
             return
 
-        if self.interface and not self._bindip:
-            self._bind_to_network_interface(self._listen_socket, self.interface)
+        if self._interface and not self._bindip:
+            self._bind_to_network_interface(self._listen_socket, self._interface)
 
         ip_address = self._bindip or ''
 
-        for listenport in range(int(self.portrange[0]), int(self.portrange[1]) + 1):
+        for listenport in range(int(self._portrange[0]), int(self._portrange[1]) + 1):
             try:
                 self._listen_socket.bind((ip_address, listenport))
                 self._listen_socket.listen()
@@ -348,7 +358,35 @@ class SoulseekNetworkThread(Thread):
         if self._server_socket:
             return
 
-        self.server_disconnected = False
+        valid_network_interface = self.validate_network_interface()
+
+        if not valid_network_interface:
+            message = _(
+                "The network interface you specified, '%s', does not exist. Change or remove the specified "
+                "network interface and restart Nicotine+."
+            )
+            log.add(message, self._interface, title=_("Unknown Network Interface"))
+            self._process_queue = False
+            return
+
+        valid_listen_port = self.validate_listen_port()
+
+        if not valid_listen_port:
+            message = _(
+                "The range you specified for client connection ports was "
+                "{}-{}, but none of these were usable. Increase and/or ".format(self._portrange[0],
+                                                                                self._portrange[1])
+                + "move the range and restart Nicotine+."
+            )
+            if self._portrange[0] < 1024:
+                message += "\n\n" + _(
+                    "Note that part of your range lies below 1024, this is usually not allowed on"
+                    " most operating systems with the exception of Windows."
+                )
+            log.add(message, title=_("Port Unavailable"))
+            self._process_queue = False
+            return
+
         self._manual_server_disconnect = False
         scheduler.cancel(self._server_timer)
 
@@ -360,7 +398,7 @@ class SoulseekNetworkThread(Thread):
     def _server_disconnect(self):
         """ We're disconnecting from the server, clean up """
 
-        self.server_disconnected = True
+        self._process_queue = False
         self._server_socket = None
 
         for sock in self._conns.copy():
@@ -407,7 +445,7 @@ class SoulseekNetworkThread(Thread):
         self._callback_msgs.append(ServerDisconnect(self._manual_server_disconnect))
 
     def _server_timeout(self):
-        self._callback([ServerTimeout()])
+        events.emit("thread-callback", [ServerTimeout()])
 
     def _set_server_timer(self):
 
@@ -508,7 +546,7 @@ class SoulseekNetworkThread(Thread):
                         'token': init.token
                     })
 
-                    self._callback_msgs.append(ShowConnectionErrorMessage(username, init.outgoing_msgs[:]))
+                    self._callback_msgs.append(PeerConnectionError(username, init.outgoing_msgs[:]))
 
                     self._token_init_msgs.pop(init.token, None)
                     init.outgoing_msgs.clear()
@@ -593,15 +631,15 @@ class SoulseekNetworkThread(Thread):
 
         return distrib_msg
 
-    def _modify_connection_events(self, conn_obj, events):
+    def _modify_connection_events(self, conn_obj, selector_events):
 
-        if conn_obj.events != events:
+        if conn_obj.selector_events != selector_events:
             log.add_conn("Modifying selector events for connection to %(addr)s: %(events)s", {
                 "addr": conn_obj.addr,
-                "events": events
+                "events": selector_events
             })
-            self._selector.modify(conn_obj.sock, events)
-            conn_obj.events = events
+            self._selector.modify(conn_obj.sock, selector_events)
+            conn_obj.selector_events = selector_events
 
     def _process_conn_messages(self, init):
         """ A connection is established with the peer, time to queue up our peer
@@ -927,7 +965,7 @@ class SoulseekNetworkThread(Thread):
 
         init = conn_obj.init
 
-        if sock is self._parent_socket and not self.server_disconnected:
+        if sock is self._parent_socket and self._process_queue:
             self._send_have_no_parent()
 
         elif self._is_download(conn_obj):
@@ -1076,8 +1114,9 @@ class SoulseekNetworkThread(Thread):
 
         try:
             self._server_socket = server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            events = selectors.EVENT_READ | selectors.EVENT_WRITE
-            conn_obj = ServerConnection(sock=server_socket, addr=msg_obj.addr, events=events, login=msg_obj.login)
+            selector_events = selectors.EVENT_READ | selectors.EVENT_WRITE
+            conn_obj = ServerConnection(
+                sock=server_socket, addr=msg_obj.addr, selector_events=selector_events, login=msg_obj.login)
 
             server_socket.setblocking(False)
             server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.SOCKET_READ_BUFFER_SIZE)
@@ -1089,12 +1128,12 @@ class SoulseekNetworkThread(Thread):
             if self._bindip:
                 server_socket.bind((self._bindip, 0))
 
-            elif self.interface:
-                self._bind_to_network_interface(server_socket, self.interface)
+            elif self._interface:
+                self._bind_to_network_interface(server_socket, self._interface)
 
             server_socket.connect_ex(msg_obj.addr)
 
-            self._selector.register(server_socket, events)
+            self._selector.register(server_socket, selector_events)
             self._connsinprogress[server_socket] = conn_obj
             self._numsockets += 1
 
@@ -1204,7 +1243,7 @@ class SoulseekNetworkThread(Thread):
                             # attempt a direct connection to the peer/user
                             if user_offline:
                                 self._callback_msgs.append(
-                                    ShowConnectionErrorMessage(user, init.outgoing_msgs[:], offline=True))
+                                    PeerConnectionError(user, init.outgoing_msgs[:], offline=True))
                             else:
                                 init.addr = addr
                                 self._connect_to_peer(user, addr, init)
@@ -1429,8 +1468,8 @@ class SoulseekNetworkThread(Thread):
 
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            events = selectors.EVENT_READ | selectors.EVENT_WRITE
-            conn_obj = PeerConnection(sock=sock, addr=msg_obj.addr, events=events, init=msg_obj.init)
+            selector_events = selectors.EVENT_READ | selectors.EVENT_WRITE
+            conn_obj = PeerConnection(sock=sock, addr=msg_obj.addr, selector_events=selector_events, init=msg_obj.init)
 
             sock.setblocking(False)
             sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.SOCKET_READ_BUFFER_SIZE)
@@ -1439,12 +1478,12 @@ class SoulseekNetworkThread(Thread):
             if self._bindip:
                 sock.bind((self._bindip, 0))
 
-            elif self.interface:
-                self._bind_to_network_interface(sock, self.interface)
+            elif self._interface:
+                self._bind_to_network_interface(sock, self._interface)
 
             sock.connect_ex(msg_obj.addr)
 
-            self._selector.register(sock, events)
+            self._selector.register(sock, selector_events)
             self._connsinprogress[sock] = conn_obj
             self._numsockets += 1
 
@@ -1469,12 +1508,16 @@ class SoulseekNetworkThread(Thread):
             msgsize_total = msgsize + 4
 
             try:
+                # Send progress to the main thread
                 peer_class = PEER_MESSAGE_CLASSES[msgtype]
 
-                if peer_class in (SharedFileList, UserInfoReply):
-                    # Send progress to the main thread
+                if peer_class is SharedFileList:
                     self._callback_msgs.append(
-                        PeerMessageProgress(conn_obj.init.target_user, peer_class, buffer_len, msgsize_total))
+                        SharedFileListProgress(conn_obj.init.target_user, buffer_len, msgsize_total))
+
+                elif peer_class is UserInfoReply:
+                    self._callback_msgs.append(
+                        UserInfoProgress(conn_obj.init.target_user, buffer_len, msgsize_total))
 
             except KeyError:
                 pass
@@ -1892,8 +1935,7 @@ class SoulseekNetworkThread(Thread):
             msgs.append(self._queue.popleft())
 
         for msg_obj in msgs:
-            if self.server_disconnected:
-                # Disconnected from server, stop processing queue
+            if not self._process_queue:
                 return
 
             msg_type = msg_obj.msgtype
@@ -2010,7 +2052,7 @@ class SoulseekNetworkThread(Thread):
 
     def run(self):
 
-        self._callback([SetConnectionStats()])
+        events.emit("thread-callback", [SetConnectionStats()])
 
         # Watch sockets for I/0 readiness with the selectors module. Only call register() after a socket
         # is bound, otherwise watching the socket not guaranteed to work (breaks on OpenBSD at least)
@@ -2030,8 +2072,7 @@ class SoulseekNetworkThread(Thread):
 
         while not self._want_abort:
 
-            if self.server_disconnected:
-                # We're not connected to the server at the moment
+            if not self._process_queue:
                 time.sleep(0.1)
                 continue
 
@@ -2063,7 +2104,7 @@ class SoulseekNetworkThread(Thread):
                 # Error received; terminate networking loop
 
                 log.add("Major Socket Error: Networking terminated! %s", error)
-                self.abort()
+                self._quit()
                 break
 
             except ValueError as error:
@@ -2076,22 +2117,22 @@ class SoulseekNetworkThread(Thread):
                 continue
 
             # Manage incoming connections to listen socket
-            if self._numsockets < MAXSOCKETS and not self.server_disconnected and self._listen_socket in input_list:
+            if self._numsockets < MAXSOCKETS and self._process_queue and self._listen_socket in input_list:
                 try:
                     incsock, incaddr = self._listen_socket.accept()
                 except Exception:
                     time.sleep(0.01)
                 else:
-                    events = selectors.EVENT_READ
+                    selector_events = selectors.EVENT_READ
                     incsock.setblocking(False)
 
-                    self._conns[incsock] = PeerConnection(sock=incsock, addr=incaddr, events=events)
+                    self._conns[incsock] = PeerConnection(sock=incsock, addr=incaddr, selector_events=selector_events)
                     self._numsockets += 1
                     log.add_conn("Incoming connection from %s", str(incaddr))
 
                     # Event flags are modified to include 'write' in subsequent loops, if necessary.
                     # Don't do it here, otherwise connections may break.
-                    self._selector.register(incsock, events)
+                    self._selector.register(incsock, selector_events)
 
             # Manage outgoing connections in progress
             for sock_in_progress, conn_obj in self._connsinprogress.copy().items():
@@ -2170,7 +2211,7 @@ class SoulseekNetworkThread(Thread):
                 for msg in self._callback_msgs:
                     log.add_msg_contents(msg)
 
-                self._callback(self._callback_msgs)
+                events.emit("thread-callback", self._callback_msgs)
                 self._callback_msgs.clear()
 
             # Reset transfer speed limits

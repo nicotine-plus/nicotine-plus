@@ -1327,8 +1327,8 @@
                                             <property name="placeholder-text" translatable="yes">Add buddy…</property>
                                             <property name="tooltip-text" translatable="yes">Enter the username of the person you want to add to your buddy list</property>
                                             <property name="primary-icon-name">avatar-default-symbolic</property>
-                                            <signal name="activate" handler="on_add_user"/>
-                                            <signal name="icon-press" handler="on_add_user"/>
+                                            <signal name="activate" handler="on_add_buddy"/>
+                                            <signal name="icon-press" handler="on_add_buddy"/>
                                           </object>
                                         </child>
                                       </object>

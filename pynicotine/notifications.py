@@ -20,7 +20,7 @@ from collections import deque
 from threading import Thread
 
 from pynicotine.config import config
-from pynicotine.core import core
+from pynicotine.events import events
 from pynicotine.logfacility import log
 from pynicotine.utils import execute_command
 
@@ -29,7 +29,6 @@ class Notifications:
 
     def __init__(self):
 
-        self.ui_callback = getattr(core.ui_callback, "notifications", None)
         self.chat_hilites = {
             "rooms": [],
             "private": []
@@ -58,15 +57,7 @@ class Notifications:
     """ Text Notification """
 
     def new_text_notification(self, message, title=None):
-
-        if self.ui_callback:
-            self.ui_callback.new_text_notification(message, title)
-            return
-
-        if title:
-            message = "%s: %s" % (title, message)
-
-        log.add(message)
+        events.emit("new-text-notification", message, title)
 
     """ TTS """
 

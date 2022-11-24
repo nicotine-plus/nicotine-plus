@@ -29,6 +29,7 @@ from time import time
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
+from pynicotine.events import events
 from pynicotine.logfacility import log
 from pynicotine.utils import encode_path
 
@@ -55,7 +56,6 @@ class BasePlugin:
     parent = None         # Reference to PluginHandler
     config = None         # Reference to global Config handler
     core = None           # Reference to Core
-    frame = None          # Reference to NicotineFrame (GUI). Not accessible in headless/non-GUI mode. Use sparsely!
 
     def __init__(self):
         # The plugin class is initializing, plugin settings are not available yet
@@ -362,9 +362,30 @@ class PluginHandler:
         BasePlugin.parent = self
         BasePlugin.config = config
         BasePlugin.core = core
-        BasePlugin.frame = core.ui_callback
 
-    def quit(self):
+        for event_name, callback in (
+            ("start", self._start),
+            ("quit", self._quit)
+        ):
+            events.connect(event_name, callback)
+
+    def _start(self):
+
+        enable = config.sections["plugins"]["enable"]
+
+        if not enable:
+            return
+
+        log.add(_("Loading plugin system"))
+        self.enable_plugin("core_commands")
+
+        to_enable = config.sections["plugins"]["enabled"]
+        log.add_debug("Enabled plugin(s): %s" % ', '.join(to_enable))
+
+        for plugin in to_enable:
+            self.enable_plugin(plugin)
+
+    def _quit(self):
 
         # Notify plugins
         self.shutdown_notification()
@@ -639,21 +660,6 @@ class PluginHandler:
 
     def save_enabled(self):
         config.sections["plugins"]["enabled"] = list(self.enabled_plugins)
-
-    def load_enabled(self):
-        enable = config.sections["plugins"]["enable"]
-
-        if not enable:
-            return
-
-        log.add(_("Loading plugin system"))
-        self.enable_plugin("core_commands")
-
-        to_enable = config.sections["plugins"]["enabled"]
-        log.add_debug("Enabled plugin(s): %s" % ', '.join(to_enable))
-
-        for plugin in to_enable:
-            self.enable_plugin(plugin)
 
     def plugin_settings(self, plugin_name, plugin):
 

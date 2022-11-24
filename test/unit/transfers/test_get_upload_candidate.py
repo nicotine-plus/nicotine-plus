@@ -34,8 +34,6 @@ class GetUploadCandidateTest(TestCase):
         config.data_dir = os.path.dirname(os.path.realpath(__file__))
         config.filename = os.path.join(config.data_dir, "temp_config")
 
-        config.load_config()
-
         core.init_components()
         core.transfers.privileged_users = {"puser1", "puser2"}
 
