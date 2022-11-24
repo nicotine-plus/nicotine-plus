@@ -92,7 +92,7 @@ class Searches(IconNotebook):
         frame.search_mode_label.set_label(self.modes["global"])
 
         if GTK_API_VERSION >= 4:
-            frame.search_mode_button.get_first_child().get_style_context().add_class("arrow-button")
+            frame.search_mode_button.get_first_child().add_css_class("arrow-button")
 
         CompletionEntry(frame.room_search_entry, frame.room_search_combobox.get_model())
         CompletionEntry(frame.search_entry, frame.search_combobox.get_model())

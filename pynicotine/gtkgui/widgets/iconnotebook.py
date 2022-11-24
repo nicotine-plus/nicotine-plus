@@ -92,16 +92,17 @@ class TabLabel(Gtk.Box):
 
         if GTK_API_VERSION >= 4:
             self.close_button = Gtk.Button.new_from_icon_name("window-close-symbolic")
+            self.close_button.add_css_class("flat")
             self.close_button.is_close_button = True
             self.close_button.get_child().is_close_button = True
             self.append(self.close_button)  # pylint: disable=no-member
         else:
             self.close_button = Gtk.Button.new_from_icon_name("window-close-symbolic",
                                                               Gtk.IconSize.BUTTON)  # pylint: disable=no-member
+            self.close_button.get_style_context().add_class("flat")
             self.add(self.close_button)  # pylint: disable=no-member
             self.close_button.add_events(Gdk.EventMask.SCROLL_MASK | Gdk.EventMask.SMOOTH_SCROLL_MASK)
 
-        self.close_button.get_style_context().add_class("flat")
         self.close_button.set_tooltip_text(_("Close tab"))
         self.close_button.show()
 
@@ -252,6 +253,8 @@ class IconNotebook:
         self.pages = {}
         self.set_show_tabs(False)
 
+        style_classes = ("circular", "flat")
+
         if GTK_API_VERSION >= 4:
             if parent_page is not None:
                 content_box = parent_page.get_first_child()
@@ -260,6 +263,9 @@ class IconNotebook:
             self.window = self.widget.get_root()
             self.unread_button.set_has_frame(False)                        # pylint: disable=no-member
             self.unread_button.set_icon_name("emblem-important-symbolic")  # pylint: disable=no-member
+
+            for style_class in style_classes:
+                self.unread_button.add_css_class(style_class)
 
             self.scroll_controller = Gtk.EventControllerScroll(flags=Gtk.EventControllerScrollFlags.BOTH_AXES)
             self.scroll_controller.connect("scroll", self.on_tab_scroll)
@@ -288,14 +294,13 @@ class IconNotebook:
             self.window = self.widget.get_toplevel()
             self.unread_button.set_image(Gtk.Image(icon_name="emblem-important-symbolic"))  # pylint: disable=no-member
 
+            for style_class in style_classes:
+                self.unread_button.get_style_context().add_class(style_class)
+
             self.widget.add_events(Gdk.EventMask.SCROLL_MASK | Gdk.EventMask.SMOOTH_SCROLL_MASK)
             self.widget.connect("scroll-event", self.on_tab_scroll_event)
 
             self.widget.popup_enable()
-
-        style_context = self.unread_button.get_style_context()
-        for style_class in ("circular", "flat"):
-            style_context.add_class(style_class)
 
         self.widget.set_action_widget(self.unread_button, Gtk.PackType.END)
 

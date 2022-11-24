@@ -740,17 +740,17 @@ class TransferList:
 
         mode = state.get_string()
         active = mode != "ungrouped"
-        grouping_button_style = self.grouping_button.get_parent().get_style_context()
         popover = self.grouping_button.get_popover()
 
         if popover is not None:
             popover.hide()
 
-        # Ensure buttons are flat in libadwaita
-        if active:
-            grouping_button_style.add_class("linked")
-        else:
-            grouping_button_style.remove_class("linked")
+        if GTK_API_VERSION >= 4:
+            # Ensure buttons are flat in libadwaita
+            if active:
+                self.grouping_button.get_parent().add_css_class("linked")
+            else:
+                self.grouping_button.get_parent().remove_css_class("linked")
 
         config.sections["transfers"]["group%ss" % self.type] = mode
         self.tree_view.set_show_expanders(active)

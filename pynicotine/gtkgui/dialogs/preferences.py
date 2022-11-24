@@ -2256,11 +2256,13 @@ class Preferences(Dialog):
             close_destroy=False
         )
 
-        # Scroll to focused widgets
-        if GTK_API_VERSION == 3:
-            self.viewport.set_focus_vadjustment(self.content.get_vadjustment())
+        if GTK_API_VERSION >= 4:
+            self.dialog.add_css_class("preferences-border")
+        else:
+            self.dialog.get_style_context().add_class("preferences-border")
 
-        self.dialog.get_style_context().add_class("preferences-border")
+            # Scroll to focused widgets
+            self.viewport.set_focus_vadjustment(self.content.get_vadjustment())
 
         self.pages = {}
         self.page_ids = [

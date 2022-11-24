@@ -56,7 +56,6 @@ class Dialog(Window):
             resizable=resizable
         )
         Window.__init__(self, self.dialog)
-        self.dialog.get_style_context().add_class("generic-dialog")
         dialog_content_area = self.dialog.get_content_area()
 
         if buttons:
@@ -64,9 +63,13 @@ class Dialog(Window):
                 self.dialog.add_action_widget(button, response_type)
 
         if GTK_API_VERSION >= 4:
+            self.dialog.add_css_class("generic-dialog")
+
             if content_box:
                 dialog_content_area.append(content_box)
         else:
+            self.dialog.get_style_context().add_class("generic-dialog")
+
             if content_box:
                 dialog_content_area.add(content_box)
 
@@ -405,7 +408,11 @@ class PluginSettingsDialog(Dialog):
             height=425,
             close_destroy=True
         )
-        self.dialog.get_style_context().add_class("preferences")
+
+        if GTK_API_VERSION >= 4:
+            self.dialog.add_css_class("preferences")
+        else:
+            self.dialog.get_style_context().add_class("preferences")
 
         self._add_options()
 

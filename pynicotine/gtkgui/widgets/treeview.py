@@ -80,7 +80,11 @@ class TreeView:
 
         self.widget.set_fixed_height_mode(True)
         self.widget.set_search_equal_func(self.on_search_match)
-        self.widget.get_style_context().add_class("treeview-spacing")
+
+        if GTK_API_VERSION >= 4:
+            self.widget.add_css_class("treeview-spacing")
+        else:
+            self.widget.get_style_context().add_class("treeview-spacing")
 
     def _append_columns(self, cols, column_config):
 
@@ -714,8 +718,12 @@ def initialise_columns(frame, treeview_name, treeview, *args):
 
     append_columns(treeview, cols, column_config)
     hide_columns(treeview, cols, column_config)
-    treeview.get_style_context().add_class("treeview-spacing")
     treeview.set_fixed_height_mode(True)
+
+    if GTK_API_VERSION >= 4:
+        treeview.add_css_class("treeview-spacing")
+    else:
+        treeview.get_style_context().add_class("treeview-spacing")
 
     treeview.set_search_equal_func(on_search_match, treeview)
     treeview.connect("columns-changed", set_last_column_autosize)

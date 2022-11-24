@@ -35,13 +35,15 @@ class Popover:
         self.default_height = height
 
         self.popover = Gtk.Popover(child=content_box)
-        self.popover.get_style_context().add_class("generic-popover")
         self.popover.connect("notify::visible", self._on_show)
         self.popover.connect("closed", self._on_close)
 
         if GTK_API_VERSION >= 4:
             # Workaround for https://gitlab.gnome.org/GNOME/gtk/-/issues/4529
             self.popover.set_autohide(False)  # pylint: disable=no-member
+            self.popover.add_css_class("generic-popover")
+        else:
+            self.popover.get_style_context().add_class("generic-popover")
 
     def _on_show(self, _popover, param):
 
