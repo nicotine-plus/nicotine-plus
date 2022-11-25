@@ -681,6 +681,9 @@ class Transfers:
 
     def _peer_connection_error(self, msg):
 
+        if msg.msgs is None:
+            return
+
         for i in msg.msgs:
             if i.__class__ in (slskmessages.TransferRequest, slskmessages.FileUploadInit):
                 self._cant_connect_upload(msg.user, i.token, msg.offline)
