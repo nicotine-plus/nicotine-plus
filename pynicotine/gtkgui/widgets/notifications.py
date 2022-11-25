@@ -43,7 +43,7 @@ class Notifications:
         if sys.platform == "win32":
             self.win_notification = WinNotify(self.frame.tray_icon)
 
-        events.connect("new-text-notification", self.new_text_notification)
+        events.connect("show-text-notification", self._show_text_notification)
 
     def add(self, location, user, room=None):
 
@@ -90,14 +90,9 @@ class Notifications:
             # Allow for the possibility the username is not available
             room = core.notifications.chat_hilites["rooms"][-1]
 
-            if user is None:
-                self.frame.window.set_title(
-                    app_name + " - " + _("You've been mentioned in the %(room)s room") % {'room': room}
-                )
-            else:
-                self.frame.window.set_title(
-                    app_name + " - " + _("%(user)s mentioned you in the %(room)s room") % {'user': user, 'room': room}
-                )
+            self.frame.window.set_title(
+                app_name + " - " + _("Mentioned by %(user)s in Room %(room)s") % {'user': user, 'room': room}
+            )
 
     def set_urgency_hint(self, enabled):
 
@@ -113,7 +108,7 @@ class Notifications:
             # No support for urgency hints
             pass
 
-    def new_text_notification(self, message, title=None, priority=Gio.NotificationPriority.NORMAL):
+    def _show_text_notification(self, message, title=None, high_priority=False):
 
         if title is None:
             title = config.application_name
@@ -133,6 +128,8 @@ class Notifications:
                     winsound.PlaySound("SystemAsterisk", winsound.SND_ALIAS)
 
                 return
+
+            priority = Gio.NotificationPriority.HIGH if high_priority else Gio.NotificationPriority.NORMAL
 
             notification_popup = Gio.Notification.new(title)
             notification_popup.set_body(message)

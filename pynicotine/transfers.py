@@ -32,7 +32,6 @@ import json
 import os
 import os.path
 import re
-import stat
 import time
 
 from collections import defaultdict
@@ -1135,11 +1134,10 @@ class Transfers:
                     os.makedirs(incomplete_folder_encoded)
 
                 if not os.access(incomplete_folder_encoded, os.R_OK | os.W_OK | os.X_OK):
-                    raise OSError("Download directory %s Permissions error.\nDir Permissions: %s" %
-                                  (incomplete_folder, oct(os.stat(incomplete_folder_encoded)[stat.ST_MODE] & 0o777)))
+                    raise OSError(_("Cannot access folder %s") % incomplete_folder)
 
             except OSError as error:
-                log.add(_("OS error: %s"), error)
+                log.add(_("Download folder error: %s"), error)
                 self.download_folder_error(download, error)
 
             else:
@@ -1917,12 +1915,12 @@ class Transfers:
     def file_downloaded_actions(self, user, filepath):
 
         if config.sections["notifications"]["notification_popup_file"]:
-            core.notifications.new_text_notification(
+            core.notifications.show_text_notification(
                 _("%(file)s downloaded from %(user)s") % {
                     'user': user,
                     'file': filepath.rsplit(os.sep, 1)[1]
                 },
-                title=_("File downloaded")
+                title=_("File Downloaded")
             )
 
         if config.sections["transfers"]["afterfinish"]:
@@ -1946,12 +1944,12 @@ class Transfers:
             return
 
         if config.sections["notifications"]["notification_popup_folder"]:
-            core.notifications.new_text_notification(
+            core.notifications.show_text_notification(
                 _("%(folder)s downloaded from %(user)s") % {
                     'user': user,
                     'folder': folderpath
                 },
-                title=_("Folder downloaded")
+                title=_("Folder Downloaded")
             )
 
         if config.sections["transfers"]["afterfolder"]:
@@ -1965,8 +1963,7 @@ class Transfers:
     def download_folder_error(self, transfer, error):
 
         self.abort_download(transfer, abort_reason="Download folder error")
-        core.notifications.new_text_notification(
-            _("OS error: %s") % error, title=_("Download folder error"))
+        core.notifications.show_text_notification(error, title=_("Download Folder Error"), high_priority=True)
 
     def download_finished(self, transfer, file_handle=None):
 

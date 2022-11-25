@@ -30,7 +30,7 @@ EVENT_NAMES = set([
     "hide-scan-progress",
     "invalid-password",
     "log-message",
-    "new-text-notification",
+    "show-text-notification",
     "peer-address",
     "peer-connection-closed",
     "peer-connection-error",

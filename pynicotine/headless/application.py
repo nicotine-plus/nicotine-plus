@@ -38,7 +38,6 @@ class Application:
         log.log_levels = set(["download", "upload"] + config.sections["logging"]["debugmodes"])
 
         for event_name, callback in (
-            ("new-text-notification", self.new_text_notification),
             ("shares-unavailable", self.shares_unavailable),
             ("thread-callback", self.thread_callback)
         ):
@@ -101,13 +100,6 @@ class Application:
     @staticmethod
     def on_critical_error_threading(args):
         raise args.exc_value
-
-    def new_text_notification(self, message, title=None):
-
-        if title:
-            message = "%s: %s" % (title, message)
-
-        log.add(message)
 
     def shares_unavailable(self, shares):
         for virtual_name, folder_path in shares:

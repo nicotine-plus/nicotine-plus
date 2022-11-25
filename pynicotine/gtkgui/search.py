@@ -716,7 +716,7 @@ class Search:
                 self.showtab = True
 
                 if self.mode == "wishlist" and config.sections["notifications"]["notification_popup_wish"]:
-                    core.notifications.new_text_notification(self.text, title=_("Wishlist item found"))
+                    core.notifications.show_text_notification(self.text, title=_("Wishlist Results Found"))
 
             self.searches.request_tab_hilite(self.container)
 

@@ -25,7 +25,6 @@ import os
 
 from collections import deque
 
-from gi.repository import Gio
 from gi.repository import GLib
 
 from pynicotine import slskmessages
@@ -105,7 +104,7 @@ class PrivateChats(IconNotebook):
                 tab.load()
 
             # Remove hilite if selected tab belongs to a user in the hilite list
-            self.frame.notifications.clear("private", user)
+            self.frame.notifications.clear("private", user=user)
             break
 
     def on_get_private_chat(self, *_args):
@@ -135,7 +134,7 @@ class PrivateChats(IconNotebook):
         for user, tab in self.pages.items():
             if tab.container == page:
                 # Remove hilite
-                self.frame.notifications.clear("private", user)
+                self.frame.notifications.clear("private", user=user)
                 break
 
     def user_status(self, msg):
@@ -353,7 +352,7 @@ class PrivateChat:
     def clear(self):
 
         self.chat_view.clear()
-        self.frame.notifications.clear("private", self.user)
+        self.frame.notifications.clear("private", user=self.user)
 
         for menu in (self.popup_menu_user_chat, self.popup_menu_user_tab, self.popup_menu):
             menu.clear()
@@ -409,10 +408,10 @@ class PrivateChat:
         self.frame.notifications.add("private", self.user)
 
         if config.sections["notifications"]["notification_popup_private_message"]:
-            self.frame.notifications.new_text_notification(
+            core.notifications.show_text_notification(
                 text,
-                title=_("Private message from %s") % self.user,
-                priority=Gio.NotificationPriority.HIGH
+                title=_("Private Message from %(user)s") % {'user': self.user},
+                high_priority=True
             )
 
     def message_user(self, msg):

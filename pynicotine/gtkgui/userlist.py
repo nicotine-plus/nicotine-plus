@@ -36,7 +36,6 @@ from pynicotine.gtkgui.widgets.theme import get_status_icon_name
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.ui import UserInterface
-from pynicotine.logfacility import log
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
@@ -187,19 +186,6 @@ class UserList:
 
         if status == self.list_view.get_row_value(iterator, 10):
             return
-
-        notify = self.list_view.get_row_value(iterator, 6)
-
-        if notify:
-            if status == UserStatus.AWAY:
-                status_text = _("User %s is away")
-            elif status == UserStatus.ONLINE:
-                status_text = _("User %s is online")
-            else:
-                status_text = _("User %s is offline")
-
-            log.add(status_text, user)
-            self.frame.notifications.new_text_notification(status_text % user)
 
         status_icon = get_status_icon_name(status)
 

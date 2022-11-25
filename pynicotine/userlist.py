@@ -21,6 +21,7 @@ import time
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
+from pynicotine.logfacility import log
 from pynicotine.slskmessages import UserStatus
 
 
@@ -203,4 +204,25 @@ class UserList:
     def _user_status(self, msg):
         """ Server code: 7 """
 
-        self.set_buddy_last_seen(msg.user, online=bool(msg.status))
+        user = msg.user
+
+        if user not in self.buddies:
+            return
+
+        notify = self.buddies[user][2]
+        self.set_buddy_last_seen(user, online=bool(msg.status))
+
+        if not notify:
+            return
+
+        if msg.status == UserStatus.AWAY:
+            status_text = _("%(user)s is away")
+
+        elif msg.status == UserStatus.ONLINE:
+            status_text = _("%(user)s is online")
+
+        else:
+            status_text = _("%(user)s is offline")
+
+        log.add(status_text, {"user": user})
+        core.notifications.show_text_notification(status_text % {"user": user}, title=_("Buddy Online Status"))

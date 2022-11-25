@@ -26,7 +26,6 @@ import os
 
 from collections import deque
 
-from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
@@ -168,7 +167,7 @@ class ChatRooms(IconNotebook):
                 tab.load()
 
             # Remove hilite
-            self.frame.notifications.clear("rooms", None, room)
+            self.frame.notifications.clear("rooms", room=room)
             break
 
     def on_create_room_response(self, dialog, response_id, room):
@@ -219,7 +218,7 @@ class ChatRooms(IconNotebook):
         for room, tab in self.pages.items():
             if tab.container == page:
                 # Remove hilite
-                self.frame.notifications.clear("rooms", None, room)
+                self.frame.notifications.clear("rooms", room=room)
                 break
 
     def room_list(self, msg):
@@ -821,12 +820,15 @@ class ChatRoom:
             # Don't show notifications about the Public feed that's duplicated in an open tab
             return
 
-        if mentioned and config.sections["notifications"]["notification_popup_chatroom_mention"]:
-            self.frame.notifications.new_text_notification(
-                text,
-                title=_("%(user)s mentioned you in the %(room)s room") % {"user": user, "room": room},
-                priority=Gio.NotificationPriority.HIGH
-            )
+        if mentioned:
+            log.add(_("%(user)s mentioned you in room %(room)s") % {"user": user, "room": room})
+
+            if config.sections["notifications"]["notification_popup_chatroom_mention"]:
+                core.notifications.show_text_notification(
+                    text,
+                    title=_("Mentioned by %(user)s in Room %(room)s") % {"user": user, "room": room},
+                    high_priority=True
+                )
 
         if (self.chatrooms.get_current_page() == self.container
                 and self.frame.current_page_id == self.frame.chatrooms_page.id and self.frame.window.is_active()):
@@ -840,10 +842,10 @@ class ChatRoom:
 
         if not public and config.sections["notifications"]["notification_popup_chatroom"]:
             # Don't show notifications for "Public " room, they're too noisy
-            self.frame.notifications.new_text_notification(
+            core.notifications.show_text_notification(
                 text,
-                title=_("Message by %(user)s in the %(room)s room") % {"user": user, "room": room},
-                priority=Gio.NotificationPriority.HIGH
+                title=_("Message by %(user)s in Room %(room)s") % {"user": user, "room": room},
+                high_priority=True
             )
 
     @staticmethod

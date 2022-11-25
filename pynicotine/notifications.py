@@ -56,8 +56,8 @@ class Notifications:
 
     """ Text Notification """
 
-    def new_text_notification(self, message, title=None):
-        events.emit("new-text-notification", message, title)
+    def show_text_notification(self, message, title=None, high_priority=False):
+        events.emit("show-text-notification", message, title=title, high_priority=high_priority)
 
     """ TTS """
 
