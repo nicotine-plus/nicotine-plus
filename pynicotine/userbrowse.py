@@ -176,7 +176,7 @@ class UserBrowse:
         msg = slskmessages.SharedFileListResponse(init=PeerInit(target_user=username))
         msg.list = shares_list
 
-        events.emit("shared-file-list", msg)
+        events.emit("shared-file-list-response", msg)
 
     def save_shares_list_to_disk(self, user, shares_list):
 
