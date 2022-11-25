@@ -87,6 +87,7 @@ class NicotineFrame(Window):
         self.scan_progress_indeterminate = False
 
         # Initialize these windows/dialogs later when necessary
+        self.about = None
         self.fast_configure = None
         self.preferences = None
         self.shortcuts = None
@@ -729,7 +730,11 @@ class NicotineFrame(Window):
         core.update_checker.check()
 
     def on_about(self, *_args):
-        About(self).show()
+
+        if self.about is None:
+            self.about = About(self)
+
+        self.about.show()
 
     """ Actions """
 

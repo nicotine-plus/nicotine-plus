@@ -30,6 +30,7 @@ This module contains configuration classes for Nicotine.
 
 import configparser
 import os
+import platform
 import sys
 
 from ast import literal_eval
@@ -55,7 +56,7 @@ class Config:
         config_dir, self.data_dir = self.get_user_directories()
         self.filename = os.path.join(config_dir, "config")
         self.version = "3.3.0.dev3"
-        self.python_version = sys.version
+        self.python_version = platform.python_version()
         self.gtk_version = ""
 
         self.application_name = "Nicotine+"
@@ -66,7 +67,7 @@ class Config:
 © 2003–2004 Nicotine Contributors
 © 2001–2003 PySoulSeek Contributors"""
 
-        self.website_url = "https://nicotine-plus.org/"
+        self.website_url = "https://nicotine-plus.org"
         self.privileges_url = "https://www.slsknet.org/userlogin.php?username=%s"
         self.portchecker_url = "http://tools.slsknet.org/porttest.php?port=%s"
         self.issue_tracker_url = "https://github.com/nicotine-plus/nicotine-plus/issues"
