@@ -443,7 +443,7 @@ class PluginSettingsDialog(Dialog):
         ok_button.connect("clicked", self.on_ok)
 
         if GTK_API_VERSION >= 4:
-            ok_button.add_css_class("suggested-action")
+            ok_button.add_css_class("suggested-action")  # pylint: disable=no-member
         else:
             ok_button.get_style_context().add_class("suggested-action")
 
