@@ -455,6 +455,7 @@ class TransferList(UserInterface):
             transfer.current_byte_offset = current_bytes
 
         if transfer.size != total_size:
+            self.transfersmodel.set_value(initer, 5, self.get_percent(current_bytes, total_size))
             self.transfersmodel.set_value(initer, 6, "%s / %s" % (human_size(current_bytes), human_size(total_size)))
             self.transfersmodel.set_value(initer, 10, GObject.Value(GObject.TYPE_UINT64, total_size))
             transfer.size = total_size
@@ -496,13 +497,12 @@ class TransferList(UserInterface):
                 self.transfersmodel.set_value(initer, 15, GObject.Value(GObject.TYPE_UINT64, left))
 
             if self.transfersmodel.get_value(initer, 11) != current_byte_offset:
-                percent = self.get_percent(current_byte_offset, size)
-
-                self.transfersmodel.set_value(initer, 5, percent)
+                self.transfersmodel.set_value(initer, 5, self.get_percent(current_byte_offset, size))
                 self.transfersmodel.set_value(initer, 6, self.get_hsize(current_byte_offset, size))
                 self.transfersmodel.set_value(initer, 11, GObject.Value(GObject.TYPE_UINT64, current_byte_offset))
 
             elif self.transfersmodel.get_value(initer, 10) != size:
+                self.transfersmodel.set_value(initer, 5, self.get_percent(current_byte_offset, size))
                 self.transfersmodel.set_value(initer, 6, self.get_hsize(current_byte_offset, size))
                 self.transfersmodel.set_value(initer, 10, GObject.Value(GObject.TYPE_UINT64, size))
 
