@@ -46,7 +46,6 @@
         <child>
           <object class="GtkImage" id="main_icon">
             <property name="visible">True</property>
-            <property name="can-focus">True</property>
             <property name="halign">center</property>
             <property name="pixel-size">128</property>
           </object>
@@ -84,7 +83,7 @@
           </object>
         </child>
         <child>
-          <object class="GtkButton">
+          <object class="GtkButton" id="set_up_button">
             <property name="visible">True</property>
             <property name="halign">center</property>
             <property name="height-request">42</property>

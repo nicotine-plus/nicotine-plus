@@ -65,7 +65,6 @@ class FileProperties(Dialog):
             buttons_start=(self.previous_button, self.next_button),
             buttons_end=(self.download_button,) if download_button else (),
             default_button=self.next_button,
-            show_callback=self.on_show,
             title=_("File Properties"),
             width=600,
             close_destroy=False
@@ -162,6 +161,3 @@ class FileProperties(Dialog):
             properties["user"], properties["fn"], size=properties["size"],
             bitrate=properties.get("bitrate"), length=properties.get("length")
         )
-
-    def on_show(self, *_args):
-        self.next_button.grab_focus()

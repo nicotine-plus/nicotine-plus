@@ -48,6 +48,7 @@ class FastConfigure(Dialog):
             self.password_entry,
             self.port_page,
             self.previous_button,
+            self.set_up_button,
             self.share_page,
             self.shares_list_container,
             self.stack,
@@ -205,7 +206,10 @@ class FastConfigure(Dialog):
 
         page = self.stack.get_visible_child()
 
-        if page == self.account_page:
+        if page == self.welcome_page:
+            self.set_up_button.grab_focus()
+
+        elif page == self.account_page:
             self.username_entry.grab_focus()
 
         self.reset_completeness()
@@ -259,6 +263,9 @@ class FastConfigure(Dialog):
 
         self.rescan_required = False
         self.stack.set_visible_child(self.welcome_page)
+
+        # welcome_page
+        self.set_up_button.grab_focus()
 
         # account_page
         self.account_page.set_visible(config.need_config())

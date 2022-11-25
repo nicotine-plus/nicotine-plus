@@ -38,6 +38,7 @@ class Dialog(Window):
         self.modal = modal
         self.default_width = width
         self.default_height = height
+        self.default_button = default_button
         self.close_destroy = close_destroy
 
         self.show_callback = show_callback
@@ -193,6 +194,16 @@ class Dialog(Window):
 
         self.window.set_default_size(dialog_width, dialog_height)
 
+    def _focus_default_button(self):
+
+        if not self.default_button:
+            return
+
+        if not self.default_button.get_visible():
+            return
+
+        self.default_button.grab_focus()
+
     def set_title(self, title):
         self.window.set_title(title)
 
@@ -206,6 +217,9 @@ class Dialog(Window):
 
         # Shrink the dialog if it's larger than the main window
         self._resize_dialog()
+
+        # Focus default button
+        self._focus_default_button()
 
         # Show the dialog
         self.window.present()
@@ -225,7 +239,7 @@ class MessageDialog(Window):
         # Prioritize modal non-message dialogs as parent
         for active_dialog in reversed(Window.active_dialogs):
             if isinstance(active_dialog, Dialog) and active_dialog.modal:
-                parent = active_dialog.dialog
+                parent = active_dialog.window
                 break
 
         self.dialog = Gtk.MessageDialog(
