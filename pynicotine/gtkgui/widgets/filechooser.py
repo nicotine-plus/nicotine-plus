@@ -79,9 +79,7 @@ class FileChooser:
 
         else:
             selected_file = dialog.get_file()
-
-            if selected_file:
-                selected = selected_file.get_path()
+            selected = selected_file.get_path() if selected_file else None
 
         FileChooser.active_chooser = None
         dialog.destroy()
