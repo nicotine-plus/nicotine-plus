@@ -115,6 +115,10 @@ class ChatHistory(Popover):
 
                 line_username = line[start:end]
 
+                if username == line_username:
+                    # Nothing to do, username is already correct
+                    break
+
                 if username_chars.issubset(line_username):
                     username = line_username
                     break
