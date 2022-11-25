@@ -381,7 +381,7 @@ class TransferList:
     def update_parent_row(self, initer, key, folder=False):
 
         speed = 0.0
-        total_size = current_bytes = 0
+        total_size = current_byte_offset = 0
         elapsed = 0
         salient_status = ""
 
@@ -412,13 +412,13 @@ class TransferList:
 
             elapsed += transfer.time_elapsed or 0
             total_size += transfer.size or 0
-            current_bytes += transfer.current_byte_offset or 0
+            current_byte_offset += transfer.current_byte_offset or 0
 
             iterator = self.transfersmodel.iter_next(iterator)
 
         transfer = self.transfersmodel.get_value(initer, 16)
         total_size = min(total_size, UINT64_LIMIT)
-        current_bytes = min(current_bytes, UINT64_LIMIT)
+        current_byte_offset = min(current_byte_offset, UINT64_LIMIT)
 
         if transfer.status != salient_status:
             self.transfersmodel.set_value(initer, 3, self.translate_status(salient_status))
@@ -430,22 +430,22 @@ class TransferList:
             transfer.speed = speed
 
         if transfer.time_elapsed != elapsed:
-            left = (total_size - current_bytes) / speed if speed and total_size > current_bytes else 0
+            left = (total_size - current_byte_offset) / speed if speed and total_size > current_byte_offset else 0
             self.transfersmodel.set_value(initer, 8, self.get_helapsed(elapsed))
             self.transfersmodel.set_value(initer, 9, self.get_hleft(left))
             self.transfersmodel.set_value(initer, 14, elapsed)
             self.transfersmodel.set_value(initer, 15, GObject.Value(GObject.TYPE_UINT64, left))
             transfer.time_elapsed = elapsed
 
-        if transfer.current_byte_offset != current_bytes:
-            self.transfersmodel.set_value(initer, 5, self.get_percent(current_bytes, total_size))
-            self.transfersmodel.set_value(initer, 6, "%s / %s" % (human_size(current_bytes), human_size(total_size)))
-            self.transfersmodel.set_value(initer, 11, GObject.Value(GObject.TYPE_UINT64, current_bytes))
-            transfer.current_byte_offset = current_bytes
+        if transfer.current_byte_offset != current_byte_offset:
+            self.transfersmodel.set_value(initer, 5, self.get_percent(current_byte_offset, total_size))
+            self.transfersmodel.set_value(initer, 6, self.get_hsize(current_byte_offset, total_size))
+            self.transfersmodel.set_value(initer, 11, GObject.Value(GObject.TYPE_UINT64, current_byte_offset))
+            transfer.current_byte_offset = current_byte_offset
 
         if transfer.size != total_size:
-            self.transfersmodel.set_value(initer, 5, self.get_percent(current_bytes, total_size))
-            self.transfersmodel.set_value(initer, 6, "%s / %s" % (human_size(current_bytes), human_size(total_size)))
+            self.transfersmodel.set_value(initer, 5, self.get_percent(current_byte_offset, total_size))
+            self.transfersmodel.set_value(initer, 6, self.get_hsize(current_byte_offset, total_size))
             self.transfersmodel.set_value(initer, 10, GObject.Value(GObject.TYPE_UINT64, total_size))
             transfer.size = total_size
 
