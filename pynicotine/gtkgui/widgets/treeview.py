@@ -82,7 +82,7 @@ class TreeView:
         self.widget.set_search_equal_func(self.on_search_match)
 
         if GTK_API_VERSION >= 4:
-            self.widget.add_css_class("treeview-spacing")
+            self.widget.add_css_class("treeview-spacing")  # pylint: disable=no-member
         else:
             self.widget.get_style_context().add_class("treeview-spacing")
 

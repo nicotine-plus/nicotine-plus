@@ -265,7 +265,7 @@ class IconNotebook:
             self.unread_button.set_icon_name("emblem-important-symbolic")  # pylint: disable=no-member
 
             for style_class in style_classes:
-                self.unread_button.add_css_class(style_class)
+                self.unread_button.add_css_class(style_class)              # pylint: disable=no-member
 
             self.scroll_controller = Gtk.EventControllerScroll(flags=Gtk.EventControllerScrollFlags.BOTH_AXES)
             self.scroll_controller.connect("scroll", self.on_tab_scroll)
