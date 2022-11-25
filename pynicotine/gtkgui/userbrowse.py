@@ -105,7 +105,7 @@ class UserBrowses(IconNotebook):
             title=_("Select a Saved Shares List File"),
             callback=self.on_load_from_disk_selected,
             initial_folder=shares_folder,
-            multiple=True
+            select_multiple=True
         ).show()
 
     def show_user(self, user, path=None, local_shares_type=None, switch_page=True):

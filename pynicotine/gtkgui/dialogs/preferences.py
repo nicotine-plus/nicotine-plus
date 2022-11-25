@@ -549,7 +549,7 @@ class SharesFrame:
             parent=self.preferences.dialog,
             callback=self.on_add_shared_dir_selected,
             title=_("Add a Shared Folder"),
-            multiple=True
+            select_multiple=True
         ).show()
 
     def on_edit_shared_dir_response(self, dialog, _response_id, iterator):

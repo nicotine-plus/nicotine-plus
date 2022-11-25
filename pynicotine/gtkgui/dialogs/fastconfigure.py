@@ -152,7 +152,7 @@ class FastConfigure(Dialog):
             parent=self.dialog,
             title=_("Add a Shared Folder"),
             callback=self.on_add_share_selected,
-            multiple=True
+            select_multiple=True
         ).show()
 
     def on_edit_share_response(self, dialog, _response_id, iterator):
