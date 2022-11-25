@@ -1127,21 +1127,13 @@ class Transfers:
                 else:
                     incomplete_folder = self.get_default_download_folder(username)
 
-            try:
-                incomplete_folder_encoded = encode_path(incomplete_folder)
-
-                if not os.path.isdir(incomplete_folder_encoded):
-                    os.makedirs(incomplete_folder_encoded)
-
-                if not os.access(incomplete_folder_encoded, os.R_OK | os.W_OK | os.X_OK):
-                    raise OSError(_("Cannot access folder %s") % incomplete_folder)
-
-            except OSError as error:
-                log.add(_("Download folder error: %s"), error)
-                self.download_folder_error(download, error)
-
             else:
                 try:
+                    incomplete_folder_encoded = encode_path(incomplete_folder)
+
+                    if not os.path.isdir(incomplete_folder_encoded):
+                        os.makedirs(incomplete_folder_encoded)
+
                     incomplete_path = self.get_incomplete_file_path(incomplete_folder, username, filename)
                     file_handle = open(encode_path(incomplete_path), 'ab+')  # pylint: disable=consider-using-with
 
@@ -1163,8 +1155,10 @@ class Transfers:
                     offset = file_handle.seek(0, os.SEEK_END)
 
                 except OSError as error:
-                    log.add(_("Download I/O error: %s"), error)
-                    self.abort_download(download, abort_reason="Local file error")
+                    log.add(_("Cannot download file to %(path)s: %(error)s"), {"path": incomplete_path, "error": error})
+                    self.abort_download(download, abort_reason="Download folder error")
+                    core.notifications.show_text_notification(
+                        str(error), title=_("Download Folder Error"), high_priority=True)
                     need_update = False
 
                 else:
@@ -1960,11 +1954,6 @@ class Transfers:
             except Exception:
                 log.add(_("Trouble executing on folder: %s"), config.sections["transfers"]["afterfolder"])
 
-    def download_folder_error(self, transfer, error):
-
-        self.abort_download(transfer, abort_reason="Download folder error")
-        core.notifications.show_text_notification(error, title=_("Download Folder Error"), high_priority=True)
-
     def download_finished(self, transfer, file_handle=None):
 
         self.close_file(file_handle, transfer)
@@ -1988,7 +1977,8 @@ class Transfers:
                     'error': error
                 }
             )
-            self.download_folder_error(transfer, error)
+            self.abort_download(transfer, abort_reason="Download folder error")
+            core.notifications.show_text_notification(str(error), title=_("Download Folder Error"), high_priority=True)
             return
 
         transfer.status = "Finished"
