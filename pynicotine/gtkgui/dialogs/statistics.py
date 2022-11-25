@@ -18,8 +18,6 @@
 
 import time
 
-from gi.repository import Gtk
-
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.widgets.dialogs import Dialog
@@ -57,12 +55,14 @@ class Statistics(Dialog):
         super().__init__(
             parent=frame.window,
             content_box=self.container,
-            buttons=[(self.close_button, Gtk.ResponseType.CANCEL),
-                     (self.reset_button, Gtk.ResponseType.NONE)],
+            buttons_start=(self.close_button,),
+            buttons_end=(self.reset_button,),
+            default_button=self.close_button,
             title=_("Transfer Statistics"),
             width=450,
             resizable=False,
-            close_destroy=False
+            close_destroy=False,
+            show_title_buttons=False
         )
 
         events.connect("update-stat-value", self.update_stat_value)
@@ -95,7 +95,7 @@ class Statistics(Dialog):
     def on_reset_statistics(self, *_args):
 
         OptionDialog(
-            parent=self.dialog,
+            parent=self.window,
             title=_('Reset Transfer Statistics?'),
             message=_('Do you really want to reset transfer statistics?'),
             callback=self.on_reset_statistics_response

@@ -16,8 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk
-
 from pynicotine.core import core
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.gtkgui.widgets.dialogs import Dialog
@@ -60,17 +58,13 @@ class FileProperties(Dialog):
             self.username_value_label
         ) = ui_template.widgets
 
-        buttons = [(self.previous_button, Gtk.ResponseType.HELP),
-                   (self.next_button, Gtk.ResponseType.HELP)]
-
-        if download_button:
-            buttons.append((self.download_button, Gtk.ResponseType.NONE))
-
         Dialog.__init__(
             self,
             parent=frame.window,
             content_box=self.container,
-            buttons=buttons,
+            buttons_start=(self.previous_button, self.next_button),
+            buttons_end=(self.download_button,) if download_button else (),
+            default_button=self.next_button,
             show_callback=self.on_show,
             title=_("File Properties"),
             width=600,

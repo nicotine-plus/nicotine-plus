@@ -170,7 +170,7 @@ class NetworkFrame:
 
         if user_status != core.user_status:
             MessageDialog(
-                parent=self.preferences.dialog,
+                parent=self.preferences.window,
                 title=_("Password Change Rejected"),
                 message=("Since your login status changed, your password has not been changed. Please try again.")
             ).show()
@@ -198,7 +198,7 @@ class NetworkFrame:
                        + _("Enter password to use when logging in:"))
 
         EntryDialog(
-            parent=self.preferences.dialog,
+            parent=self.preferences.window,
             title=_("Change Password"),
             message=message,
             visibility=False,
@@ -226,9 +226,9 @@ class DownloadsFrame:
         self.preferences = preferences
         self.frame = preferences.frame
 
-        self.incomplete_dir = FileChooserButton(self.IncompleteDir, preferences.dialog, "folder")
-        self.download_dir = FileChooserButton(self.DownloadDir, preferences.dialog, "folder")
-        self.upload_dir = FileChooserButton(self.UploadDir, preferences.dialog, "folder")
+        self.incomplete_dir = FileChooserButton(self.IncompleteDir, preferences.window, "folder")
+        self.download_dir = FileChooserButton(self.DownloadDir, preferences.window, "folder")
+        self.upload_dir = FileChooserButton(self.UploadDir, preferences.window, "folder")
 
         self.filter_list_view = TreeView(
             self.frame, parent=self.FilterView, multi_select=True, activate_row_callback=self.on_edit_filter,
@@ -328,7 +328,7 @@ class DownloadsFrame:
     def on_add_filter(self, *_args):
 
         EntryDialog(
-            parent=self.preferences.dialog,
+            parent=self.preferences.window,
             title=_("Add Download Filter"),
             message=_("Enter a new download filter:"),
             callback=self.on_add_filter_response,
@@ -358,7 +358,7 @@ class DownloadsFrame:
             escaped = self.filter_list_view.get_row_value(iterator, 1)
 
             EntryDialog(
-                parent=self.preferences.dialog,
+                parent=self.preferences.window,
                 title=_("Edit Download Filter"),
                 message=_("Modify the following download filter:"),
                 callback=self.on_edit_filter_response,
@@ -546,7 +546,7 @@ class SharesFrame:
     def on_add_shared_dir(self, *_args):
 
         FolderChooser(
-            parent=self.preferences.dialog,
+            parent=self.preferences.window,
             callback=self.on_add_shared_dir_selected,
             title=_("Add a Shared Folder"),
             select_multiple=True
@@ -588,7 +588,7 @@ class SharesFrame:
             buddy_only = self.shares_list_view.get_row_value(iterator, 2)
 
             EntryDialog(
-                parent=self.preferences.dialog,
+                parent=self.preferences.window,
                 title=_("Edit Shared Folder"),
                 message=_("Enter new virtual name for '%(dir)s':") % {'dir': folder},
                 default=virtual_name,
@@ -690,7 +690,7 @@ class UserInfoFrame:
         self.preferences = preferences
         self.frame = preferences.frame
 
-        self.image_chooser = FileChooserButton(self.ImageChooser, preferences.dialog, "image")
+        self.image_chooser = FileChooserButton(self.ImageChooser, preferences.window, "image")
 
         self.options = {
             "userinfo": {
@@ -796,7 +796,7 @@ class IgnoredUsersFrame:
     def on_add_ignored(self, *_args):
 
         EntryDialog(
-            parent=self.preferences.dialog,
+            parent=self.preferences.window,
             title=_("Ignore User"),
             message=_("Enter the name of the user you want to ignore:"),
             callback=self.on_add_ignored_response
@@ -837,7 +837,7 @@ class IgnoredUsersFrame:
     def on_add_ignored_ip(self, *_args):
 
         EntryDialog(
-            parent=self.preferences.dialog,
+            parent=self.preferences.window,
             title=_("Ignore IP Address"),
             message=_("Enter an IP address you want to ignore:") + " " + _("* is a wildcard"),
             callback=self.on_add_ignored_ip_response
@@ -945,7 +945,7 @@ class BannedUsersFrame:
     def on_add_banned(self, *_args):
 
         EntryDialog(
-            parent=self.preferences.dialog,
+            parent=self.preferences.window,
             title=_("Ban User"),
             message=_("Enter the name of the user you want to ban:"),
             callback=self.on_add_banned_response
@@ -987,7 +987,7 @@ class BannedUsersFrame:
     def on_add_blocked(self, *_args):
 
         EntryDialog(
-            parent=self.preferences.dialog,
+            parent=self.preferences.window,
             title=_("Block IP Address"),
             message=_("Enter an IP address you want to block:") + " " + _("* is a wildcard"),
             callback=self.on_add_blocked_response
@@ -1165,7 +1165,7 @@ class ChatsFrame:
     def on_add_censored(self, *_args):
 
         EntryDialog(
-            parent=self.preferences.dialog,
+            parent=self.preferences.window,
             title=_("Censor Pattern"),
             message=_("Enter a pattern you want to censor. Add spaces around the pattern if you don't "
                       "want to match strings inside words (may fail at the beginning and end of lines)."),
@@ -1191,7 +1191,7 @@ class ChatsFrame:
             pattern = self.censor_list_view.get_row_value(iterator, 0)
 
             EntryDialog(
-                parent=self.preferences.dialog,
+                parent=self.preferences.window,
                 title=_("Edit Censored Pattern"),
                 message=_("Enter a pattern you want to censor. Add spaces around the pattern if you don't "
                           "want to match strings inside words (may fail at the beginning and end of lines)."),
@@ -1223,7 +1223,7 @@ class ChatsFrame:
     def on_add_replacement(self, *_args):
 
         EntryDialog(
-            parent=self.preferences.dialog,
+            parent=self.preferences.window,
             title=_("Add Replacement"),
             message=_("Enter a text pattern and what to replace it with"),
             callback=self.on_add_replacement_response,
@@ -1252,7 +1252,7 @@ class ChatsFrame:
             replacement = self.replacement_list_view.get_row_value(iterator, 1)
 
             EntryDialog(
-                parent=self.preferences.dialog,
+                parent=self.preferences.window,
                 title=_("Edit Replacement"),
                 message=_("Enter a text pattern and what to replace it with:"),
                 callback=self.on_edit_replacement_response,
@@ -1304,7 +1304,7 @@ class UserInterfaceFrame:
         self.frame = preferences.frame
         self.theme_required = False
 
-        self.theme_dir = FileChooserButton(self.ThemeDir, preferences.dialog, "folder")
+        self.theme_dir = FileChooserButton(self.ThemeDir, preferences.window, "folder")
 
         self.tabs = {
             "search": self.EnableSearchTab,
@@ -1610,10 +1610,10 @@ class LoggingFrame:
         self.preferences = preferences
         self.frame = preferences.frame
 
-        self.private_log_dir = FileChooserButton(self.PrivateLogDir, preferences.dialog, "folder")
-        self.room_log_dir = FileChooserButton(self.RoomLogDir, preferences.dialog, "folder")
-        self.transfers_log_dir = FileChooserButton(self.TransfersLogDir, preferences.dialog, "folder")
-        self.debug_log_dir = FileChooserButton(self.DebugLogDir, preferences.dialog, "folder")
+        self.private_log_dir = FileChooserButton(self.PrivateLogDir, preferences.window, "folder")
+        self.room_log_dir = FileChooserButton(self.RoomLogDir, preferences.window, "folder")
+        self.transfers_log_dir = FileChooserButton(self.TransfersLogDir, preferences.window, "folder")
+        self.debug_log_dir = FileChooserButton(self.DebugLogDir, preferences.window, "folder")
 
         self.options = {
             "logging": {
@@ -1669,7 +1669,7 @@ class SearchesFrame:
         self.frame = preferences.frame
         self.search_required = False
 
-        self.filter_help = SearchFilterHelp(self.preferences.dialog)
+        self.filter_help = SearchFilterHelp(self.preferences.window)
         self.ShowSearchHelp.set_popover(self.filter_help.popover)
 
         self.options = {
@@ -1867,7 +1867,7 @@ class UrlHandlersFrame:
     def on_add_handler(self, *_args):
 
         EntryDialog(
-            parent=self.preferences.dialog,
+            parent=self.preferences.window,
             title=_("Add URL Handler"),
             message=_("Enter the protocol and the command for the URL handler:"),
             callback=self.on_add_handler_response,
@@ -1895,7 +1895,7 @@ class UrlHandlersFrame:
             command = self.protocol_list_view.get_row_value(iterator, 1)
 
             EntryDialog(
-                parent=self.preferences.dialog,
+                parent=self.preferences.window,
                 title=_("Edit Command"),
                 message=_("Enter a new command for protocol %s:") % protocol,
                 callback=self.on_edit_handler_response,
@@ -2244,22 +2244,21 @@ class Preferences(Dialog):
         super().__init__(
             parent=frame.window,
             content_box=self.container,
-            buttons=[(self.cancel_button, Gtk.ResponseType.CANCEL),
-                     (self.export_button, Gtk.ResponseType.HELP),
-                     (self.apply_button, Gtk.ResponseType.APPLY),
-                     (self.ok_button, Gtk.ResponseType.OK)],
-            default_response=Gtk.ResponseType.OK,
+            buttons_start=(self.cancel_button, self.export_button),
+            buttons_end=(self.apply_button, self.ok_button),
+            default_button=self.ok_button,
             close_callback=self.on_close,
             title=_("Preferences"),
             width=960,
             height=650,
-            close_destroy=False
+            close_destroy=False,
+            show_title_buttons=False
         )
 
         if GTK_API_VERSION >= 4:
-            self.dialog.add_css_class("preferences-border")
+            self.window.add_css_class("preferences-border")
         else:
-            self.dialog.get_style_context().add_class("preferences-border")
+            self.window.get_style_context().add_class("preferences-border")
 
             # Scroll to focused widgets
             self.viewport.set_focus_vadjustment(self.content.get_vadjustment())
@@ -2635,7 +2634,7 @@ class Preferences(Dialog):
     def on_back_up_config(self, *_args):
 
         FileChooserSave(
-            parent=self.dialog,
+            parent=self.window,
             callback=self.on_back_up_config_response,
             initial_folder=os.path.dirname(config.filename),
             initial_file="config backup %s.tar.bz2" % (time.strftime("%Y-%m-%d %H_%M_%S")),

@@ -154,21 +154,10 @@ def set_global_css():
         margin: 0;
     }
 
-    .generic-dialog .dialog-action-area {
-        /* Add missing spacing to dialog action buttons */
-        padding: 0;
-        margin: 0 6px;
-    }
-
-    .generic-dialog .dialog-action-area button {
-        /* Add missing spacing to dialog action buttons */
-        margin: 6px 0;
-    }
-
     /* Borders */
 
     .border-top,
-    .preferences-border .dialog-action-box {
+    .preferences-border .action-area {
         border-top: 1px solid @borders;
     }
 

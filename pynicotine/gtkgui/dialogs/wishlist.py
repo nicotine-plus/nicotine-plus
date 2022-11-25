@@ -114,7 +114,7 @@ class WishList(Dialog):
             old_wish = self.list_view.get_row_value(iterator, 0)
 
             EntryDialog(
-                parent=self.dialog,
+                parent=self.window,
                 title=_("Edit Wish"),
                 message=_("Enter new value for wish '%s':") % old_wish,
                 default=old_wish,
@@ -143,7 +143,7 @@ class WishList(Dialog):
     def on_clear_wishlist(self, *_args):
 
         OptionDialog(
-            parent=self.dialog,
+            parent=self.window,
             title=_('Clear Wishlist?'),
             message=_('Do you really want to clear your wishlist?'),
             callback=self.clear_wishlist_response

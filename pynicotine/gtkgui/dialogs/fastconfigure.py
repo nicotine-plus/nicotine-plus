@@ -20,8 +20,6 @@
 
 import os
 
-from gi.repository import Gtk
-
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
@@ -63,9 +61,9 @@ class FastConfigure(Dialog):
         super().__init__(
             parent=frame.window,
             content_box=self.stack,
-            buttons=[(self.previous_button, Gtk.ResponseType.HELP),
-                     (self.next_button, Gtk.ResponseType.APPLY)],
-            default_response=Gtk.ResponseType.APPLY,
+            buttons_start=(self.previous_button,),
+            buttons_end=(self.next_button,),
+            default_button=self.next_button,
             show_callback=self.on_show,
             close_callback=self.on_close,
             width=720,
@@ -78,7 +76,7 @@ class FastConfigure(Dialog):
 
         # Page specific, share_page
         self.download_folder_button = FileChooserButton(
-            self.download_folder_button, self.dialog, "folder", selected_function=self.on_download_folder_selected)
+            self.download_folder_button, self.window, "folder", selected_function=self.on_download_folder_selected)
 
         self.shares_list_view = TreeView(
             frame, parent=self.shares_list_container, multi_select=True, activate_row_callback=self.on_edit_share,
@@ -149,7 +147,7 @@ class FastConfigure(Dialog):
     def on_add_share(self, *_args):
 
         FolderChooser(
-            parent=self.dialog,
+            parent=self.window,
             title=_("Add a Shared Folder"),
             callback=self.on_add_share_selected,
             select_multiple=True
@@ -184,7 +182,7 @@ class FastConfigure(Dialog):
             folder = self.shares_list_view.get_row_value(iterator, 1)
 
             EntryDialog(
-                parent=self.dialog,
+                parent=self.window,
                 title=_("Edit Shared Folder"),
                 message=_("Enter new virtual name for '%(dir)s':") % {'dir': folder},
                 default=virtual_name,
