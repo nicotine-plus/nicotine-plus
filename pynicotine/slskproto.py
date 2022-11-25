@@ -851,7 +851,7 @@ class SlskProtoThread(threading.Thread):
         )
 
         login, password = conn_obj.login
-        self.user_addresses[login] = self._listen_socket.getsockname()
+        self.user_addresses[login] = self.listen_socket.getsockname()
         conn_obj.login = True
 
         self.server_address = addr
