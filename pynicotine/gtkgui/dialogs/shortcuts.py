@@ -22,17 +22,17 @@ from pynicotine.gtkgui.widgets.ui import UserInterface
 
 class Shortcuts(Dialog):
 
-    def __init__(self, frame):
+    def __init__(self, application):
 
         ui_template = UserInterface(scope=self, path="dialogs/shortcuts.ui")
         self.dialog, self.emoji_shortcut = ui_template.widgets
 
         super().__init__(
             dialog=self.dialog,
-            parent=frame.window,
+            parent=application.window,
             close_destroy=False
         )
-        frame.window.set_help_overlay(self.dialog)
+        application.window.set_help_overlay(self.dialog)
 
         # Workaround for off-centered dialog on first run
         self.dialog.show()

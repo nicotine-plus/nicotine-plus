@@ -39,9 +39,9 @@ from pynicotine.utils import unalias
 class ChatEntry:
     """ Custom text entry with support for chat commands and completions """
 
-    def __init__(self, frame, entry, completion, entity, message_class, send_message, is_chatroom=False):
+    def __init__(self, application, entry, completion, entity, message_class, send_message, is_chatroom=False):
 
-        self.frame = frame
+        self.application = application
         self.entry = entry
         self.completion = completion
         self.entity = entity
@@ -59,13 +59,13 @@ class ChatEntry:
 
         # Spell Check
         if config.sections["ui"]["spellcheck"]:
-            if not self.frame.spell_checker:
-                self.frame.init_spell_checker()
+            if not self.application.spell_checker:
+                self.application.init_spell_checker()
 
-            if self.frame.spell_checker:
+            if self.application.spell_checker:
                 from gi.repository import Gspell  # pylint:disable=no-name-in-module
                 spell_buffer = Gspell.EntryBuffer.get_from_gtk_entry_buffer(entry.get_buffer())
-                spell_buffer.set_spell_checker(self.frame.spell_checker)
+                spell_buffer.set_spell_checker(self.application.spell_checker)
                 spell_view = Gspell.Entry.get_from_gtk_entry(entry)
                 spell_view.set_inline_spell_checking(True)
 

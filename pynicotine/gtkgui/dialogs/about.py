@@ -323,7 +323,7 @@ Copyright (c) 2017 IP2Location.com
 <a href="https://github.com/chrislim2888/IP2Location-Python">https://github.com/chrislim2888/IP2Location-Python</a>
 """)
 
-    def __init__(self, frame):
+    def __init__(self, application):
 
         ui_template = UserInterface(scope=self, path="dialogs/about.ui")
         (
@@ -339,7 +339,7 @@ Copyright (c) 2017 IP2Location.com
         ) = ui_template.widgets
 
         super().__init__(
-            parent=frame.window,
+            parent=application.window,
             content_box=self.container,
             close_callback=self.on_close,
             title=_("About"),

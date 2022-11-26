@@ -45,19 +45,19 @@ class Dialog(Window):
         self.close_callback = close_callback
 
         if dialog:
-            self.window = dialog
+            super().__init__(dialog)
             self._set_dialog_properties()
             return
 
         container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, vexpand=True, visible=True)
-        self.window = Gtk.Window(
+        window = Gtk.Window(
             default_width=width,
             default_height=height,
             resizable=resizable,
             child=container
         )
-        Window.__init__(self, self.window)
-        Accelerator("Escape", self.window, self.close)
+        super().__init__(window)
+        Accelerator("Escape", window, self.close)
 
         if content_box:
             if GTK_API_VERSION >= 4:
@@ -72,10 +72,10 @@ class Dialog(Window):
 
         if default_button:
             if GTK_API_VERSION >= 4:
-                self.window.set_default_widget(default_button)  # pylint: disable=no-member
+                window.set_default_widget(default_button)  # pylint: disable=no-member
             else:
                 default_button.set_can_default(True)            # pylint: disable=no-member
-                self.window.set_default(default_button)         # pylint: disable=no-member
+                window.set_default(default_button)         # pylint: disable=no-member
 
         self.set_title(title)
         self._set_dialog_properties()
@@ -167,7 +167,9 @@ class Dialog(Window):
             self.window.set_property("window-position", Gtk.WindowPosition.CENTER_ON_PARENT)
 
         self.window.connect("show", self._on_show)
-        self.window.set_transient_for(self.parent)
+
+        if self.parent:
+            self.window.set_transient_for(self.parent.window)
 
     def _resize_dialog(self):
 
@@ -180,11 +182,8 @@ class Dialog(Window):
         if not dialog_width and not dialog_height:
             return
 
-        if GTK_API_VERSION >= 4:
-            main_window_width = self.parent.get_width()
-            main_window_height = self.parent.get_height()
-        else:
-            main_window_width, main_window_height = self.parent.get_size()
+        main_window_width = self.parent.get_width()
+        main_window_height = self.parent.get_height()
 
         if main_window_width and dialog_width > main_window_width:
             dialog_width = main_window_width - 30
@@ -204,16 +203,13 @@ class Dialog(Window):
 
         self.default_button.grab_focus()
 
-    def set_title(self, title):
-        self.window.set_title(title)
-
     def show(self):
 
         if self not in Window.active_dialogs:
             Window.active_dialogs.append(self)
 
         # Check if dialog should be modal
-        self.window.set_modal(self.modal and self.parent.get_visible())
+        self.window.set_modal(self.modal and self.parent.is_visible())
 
         # Shrink the dialog if it's larger than the main window
         self._resize_dialog()
@@ -239,27 +235,27 @@ class MessageDialog(Window):
         # Prioritize modal non-message dialogs as parent
         for active_dialog in reversed(Window.active_dialogs):
             if isinstance(active_dialog, Dialog) and active_dialog.modal:
-                parent = active_dialog.window
+                parent = active_dialog
                 break
 
-        self.dialog = Gtk.MessageDialog(
-            transient_for=parent, destroy_with_parent=True, message_type=message_type,
+        window = Gtk.MessageDialog(
+            transient_for=parent.window if parent else None, destroy_with_parent=True, message_type=message_type,
             default_width=width, text=title, secondary_text=message
         )
-        Window.__init__(self, self.dialog)
-        self.dialog.connect("response", self.on_response, callback, callback_data)
+        super().__init__(window)
+        window.connect("response", self.on_response, callback, callback_data)
 
         if parent:
             # Only make dialog modal when parent is visible to prevent input/focus issues
-            self.dialog.set_modal(parent.get_visible())
+            window.set_modal(parent.is_visible())
 
         if not buttons:
             buttons = [(_("Close"), Gtk.ResponseType.CLOSE)]
 
         for button_label, response_type in buttons:
-            self.dialog.add_button(button_label, response_type)
+            window.add_button(button_label, response_type)
 
-        self.container = self.dialog.get_message_area()
+        self.container = window.get_message_area()
 
         if GTK_API_VERSION >= 4:
             label = self.container.get_last_child()
@@ -294,11 +290,12 @@ class MessageDialog(Window):
         if self not in Window.active_dialogs:
             return
 
+        Window.active_dialogs.remove(self)
+
         if callback and response_id not in (Gtk.ResponseType.CANCEL, Gtk.ResponseType.CLOSE,
                                             Gtk.ResponseType.DELETE_EVENT):
             callback(self, response_id, callback_data)
 
-        Window.active_dialogs.remove(self)
         dialog.close()
 
     def show(self):
@@ -306,10 +303,10 @@ class MessageDialog(Window):
         if self not in Window.active_dialogs:
             Window.active_dialogs.append(self)
 
-        self.dialog.present()
+        self.window.present()
 
     def close(self):
-        self.dialog.close()
+        self.window.close()
 
 
 class EntryDialog(MessageDialog):
@@ -380,7 +377,7 @@ class EntryDialog(MessageDialog):
         return entry
 
     def on_activate_entry(self, *_args):
-        self.dialog.response(Gtk.ResponseType.OK)
+        self.window.response(Gtk.ResponseType.OK)
 
     def get_entry_value(self):
         return self.entry.get_text()
@@ -426,10 +423,9 @@ class OptionDialog(MessageDialog):
 
 class PluginSettingsDialog(Dialog):
 
-    def __init__(self, frame, preferences, plugin_id, plugin_settings):
+    def __init__(self, application, plugin_id, plugin_settings):
 
-        self.frame = frame
-        self.preferences = preferences
+        self.application = application
         self.plugin_id = plugin_id
         self.plugin_settings = plugin_settings
         self.option_widgets = {}
@@ -458,7 +454,7 @@ class PluginSettingsDialog(Dialog):
         scrolled_window.set_property("child", self.primary_container)
 
         super().__init__(
-            parent=preferences.window,
+            parent=application.preferences,
             content_box=scrolled_window,
             buttons_start=(cancel_button,),
             buttons_end=(ok_button,),
@@ -508,14 +504,14 @@ class PluginSettingsDialog(Dialog):
 
         label = self._generate_widget_container(description, button)
         label.set_mnemonic_widget(button)
-        self.preferences.set_widget(button, option_value)
+        self.application.preferences.set_widget(button, option_value)
 
     def _add_boolean_option(self, option_name, option_value, description):
 
         self.option_widgets[option_name] = button = Gtk.CheckButton(label=description, receives_default=True,
                                                                     visible=True)
         self._generate_widget_container("", button)
-        self.preferences.set_widget(button, option_value)
+        self.application.preferences.set_widget(button, option_value)
 
         if GTK_API_VERSION >= 4:
             button.get_last_child().set_wrap(True)  # pylint: disable=no-member
@@ -547,7 +543,7 @@ class PluginSettingsDialog(Dialog):
 
         label.set_mnemonic_widget(self.option_widgets[option_name])
         self.option_widgets[option_name].group_radios = group_radios
-        self.preferences.set_widget(self.option_widgets[option_name], option_value)
+        self.application.preferences.set_widget(self.option_widgets[option_name], option_value)
 
     def _add_dropdown_option(self, option_name, option_value, description, items):
 
@@ -558,7 +554,7 @@ class PluginSettingsDialog(Dialog):
         for text_label in items:
             combobox.append(id=text_label, text=text_label)
 
-        self.preferences.set_widget(combobox, option_value)
+        self.application.preferences.set_widget(combobox, option_value)
 
     def _add_entry_option(self, option_name, option_value, description):
 
@@ -567,7 +563,7 @@ class PluginSettingsDialog(Dialog):
         label = self._generate_widget_container(description, entry)
         label.set_mnemonic_widget(entry)
 
-        self.preferences.set_widget(entry, option_value)
+        self.application.preferences.set_widget(entry, option_value)
 
     def _add_textview_option(self, option_name, option_value, description):
 
@@ -579,7 +575,7 @@ class PluginSettingsDialog(Dialog):
         )
         label = self._generate_widget_container(description, frame_container, vertical=True)
         label.set_mnemonic_widget(textview)
-        self.preferences.set_widget(textview, option_value)
+        self.application.preferences.set_widget(textview, option_value)
 
         scrolled_window = Gtk.ScrolledWindow(hexpand=True, vexpand=True, min_content_height=125,
                                              visible=True)
@@ -599,13 +595,13 @@ class PluginSettingsDialog(Dialog):
 
         from pynicotine.gtkgui.widgets.treeview import TreeView
         self.option_widgets[option_name] = treeview = TreeView(
-            self.frame, parent=scrolled_window,
+            self.application.window, parent=scrolled_window,
             columns=[
                 {"column_id": description, "column_type": "text", "title": description, "sort_column": 0}
             ]
         )
         frame_container.set_property("child", scrolled_window)
-        self.preferences.set_widget(treeview, option_value)
+        self.application.preferences.set_widget(treeview, option_value)
 
         box = Gtk.Box(spacing=6, visible=True)
 
@@ -645,7 +641,7 @@ class PluginSettingsDialog(Dialog):
         self.option_widgets[option_name] = FileChooserButton(button_widget, self.window, file_chooser_type)
         label.set_mnemonic_widget(button_widget)
 
-        self.preferences.set_widget(self.option_widgets[option_name], option_value)
+        self.application.preferences.set_widget(self.option_widgets[option_name], option_value)
 
     def _add_options(self):
 
@@ -702,7 +698,7 @@ class PluginSettingsDialog(Dialog):
     def on_add(self, _widget, treeview, description):
 
         EntryDialog(
-            parent=self.window,
+            parent=self,
             title=description,
             callback=self.on_add_response,
             callback_data=treeview
@@ -725,7 +721,7 @@ class PluginSettingsDialog(Dialog):
             value = treeview.get_row_value(iterator, 0)
 
             EntryDialog(
-                parent=self.window,
+                parent=self,
                 title=description,
                 callback=self.on_edit_response,
                 callback_data=(treeview, iterator),
@@ -744,7 +740,7 @@ class PluginSettingsDialog(Dialog):
     def on_ok(self, *_args):
 
         for name in self.plugin_settings:
-            value = self.preferences.get_widget_data(self.option_widgets[name])
+            value = self.application.preferences.get_widget_data(self.option_widgets[name])
 
             if value is not None:
                 config.sections["plugins"][self.plugin_id.lower()][name] = value

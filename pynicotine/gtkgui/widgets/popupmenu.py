@@ -20,9 +20,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import random
-import string
-
 from gi.repository import Gdk
 from gi.repository import Gio
 from gi.repository import GLib
@@ -42,10 +39,12 @@ from pynicotine.utils import TRANSLATE_PUNCTUATION
 
 class PopupMenu:
 
-    def __init__(self, frame, parent=None, callback=None, connect_events=True):
+    popup_id_counter = 0
+
+    def __init__(self, application, parent=None, callback=None, connect_events=True):
 
         self.model = Gio.Menu()
-        self.frame = frame
+        self.application = application
         self.parent = parent
         self.callback = callback
 
@@ -65,7 +64,8 @@ class PopupMenu:
         self.menu_section = None
         self.editing = False
 
-        self.popup_id = ''.join(random.choice(string.digits) for _ in range(8))
+        PopupMenu.popup_id_counter += 1
+        self.popup_id = str(PopupMenu.popup_id_counter)
 
         self.user = None
         self.useritem = None
@@ -105,7 +105,7 @@ class PopupMenu:
         state = GLib.Variant("b", False) if stateful else None
         action = Gio.SimpleAction(name=action_id, state=state)
 
-        self.frame.window.add_action(action)
+        self.application.add_action(action)
         return action
 
     def _create_menu_item(self, item):
@@ -141,7 +141,7 @@ class PopupMenu:
 
         else:
             normalized_label = "-".join(label.translate(TRANSLATE_PUNCTUATION).lower().split())
-            action_id = "win." + (normalized_label + "-" + self.popup_id)
+            action_id = "app." + ("menu-" + normalized_label + "-" + self.popup_id)
             action = self._create_action(action_id[4:], (boolean or choice))
 
         if choice and len(item) > 2 and isinstance(item[2], str):
@@ -219,7 +219,7 @@ class PopupMenu:
         self.model.remove_all()
 
         for action in self.actions.values():
-            self.frame.window.remove_action(action.get_name())
+            self.application.remove_action(action.get_name())
 
         self.actions.clear()
         self.items.clear()
@@ -442,10 +442,10 @@ class UserPopupMenu(PopupMenu):
 
     def on_search_user(self, *_args):
 
-        self.frame.search_mode_action.change_state(GLib.Variant("s", "user"))
-        self.frame.user_search_entry.set_text(self.user)
-        self.frame.change_main_page(self.frame.search_page)
-        GLib.idle_add(lambda: self.frame.search_entry.grab_focus() == -1, priority=GLib.PRIORITY_HIGH_IDLE)
+        self.application.window.lookup_action("search-mode").change_state(GLib.Variant("s", "user"))
+        self.application.window.user_search_entry.set_text(self.user)
+        self.application.window.change_main_page(self.application.window.search_page)
+        GLib.idle_add(lambda: self.application.window.search_entry.grab_focus() == -1, priority=GLib.PRIORITY_HIGH_IDLE)
 
     def on_send_message(self, *_args):
         core.privatechat.show_user(self.user)
@@ -568,7 +568,7 @@ class UserPopupMenu(PopupMenu):
             message += "\n\n" + error
 
         EntryDialog(
-            parent=self.frame.window,
+            parent=self.application.window,
             title=_("Gift Privileges"),
             message=message,
             callback=self.on_give_privileges_response

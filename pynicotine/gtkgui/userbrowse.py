@@ -34,7 +34,6 @@ from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.dialogs.fileproperties import FileProperties
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
-from pynicotine.gtkgui.widgets.filechooser import FileChooser
 from pynicotine.gtkgui.widgets.filechooser import FolderChooser
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.infobar import InfoBar
@@ -56,12 +55,12 @@ from pynicotine.utils import open_file_path
 
 class UserBrowses(IconNotebook):
 
-    def __init__(self, frame):
+    def __init__(self, window):
 
         super().__init__(
-            frame,
-            widget=frame.userbrowse_notebook,
-            parent_page=frame.userbrowse_page
+            window,
+            widget=window.userbrowse_notebook,
+            parent_page=window.userbrowse_page
         )
         self.file_properties = None
 
@@ -80,33 +79,17 @@ class UserBrowses(IconNotebook):
 
     def on_get_shares(self, *_args):
 
-        entry_text = self.frame.userbrowse_entry.get_text().strip()
+        entry_text = self.window.userbrowse_entry.get_text().strip()
 
         if not entry_text:
             return
 
-        self.frame.userbrowse_entry.set_text("")
+        self.window.userbrowse_entry.set_text("")
 
         if entry_text.startswith("slsk://"):
             core.userbrowse.open_soulseek_url(entry_text)
         else:
             core.userbrowse.browse_user(entry_text)
-
-    def on_load_from_disk_selected(self, selected, _data):
-        for filename in selected:
-            core.userbrowse.load_shares_list_from_disk(filename)
-
-    def on_load_from_disk(self, *_args):
-
-        shares_folder = core.userbrowse.create_user_shares_folder()
-
-        FileChooser(
-            parent=self.frame.window,
-            title=_("Select a Saved Shares List File"),
-            callback=self.on_load_from_disk_selected,
-            initial_folder=shares_folder,
-            select_multiple=True
-        ).show()
 
     def show_user(self, user, path=None, local_shares_type=None, switch_page=True):
 
@@ -125,7 +108,7 @@ class UserBrowses(IconNotebook):
 
         if switch_page:
             self.set_current_page(page.container)
-            self.frame.change_main_page(self.frame.userbrowse_page)
+            self.window.change_main_page(self.window.userbrowse_page)
 
     def remove_user(self, user):
 
@@ -196,7 +179,7 @@ class UserBrowse:
         ) = ui_template.widgets
 
         self.userbrowses = userbrowses
-        self.frame = userbrowses.frame
+        self.window = userbrowses.window
         self.user = user
         self.indeterminate_progress = True
         self.local_shares_type = None
@@ -223,7 +206,7 @@ class UserBrowse:
         self.dir_store = Gtk.TreeStore(str)
         self.dir_column_numbers = list(range(self.dir_store.get_n_columns()))
         cols = initialise_columns(
-            self.frame, None, self.folder_tree_view,
+            self.window, None, self.folder_tree_view,
             ["folder", _("Folder"), -1, "text", None]
         )
         cols["folder"].set_sort_column_id(0)
@@ -232,7 +215,7 @@ class UserBrowse:
         self.folder_tree_view.set_model(self.dir_store)
 
         # Popup Menu (folder_tree_view)
-        self.user_popup_menu = UserPopupMenu(self.frame, None, self.on_tab_popup)
+        self.user_popup_menu = UserPopupMenu(self.window.application, None, self.on_tab_popup)
         self.user_popup_menu.setup_user_menu(user, page="userbrowse")
         self.user_popup_menu.add_items(
             ("", None),
@@ -241,7 +224,7 @@ class UserBrowse:
             ("#" + _("_Close Tab"), self.on_close)
         )
 
-        self.folder_popup_menu = PopupMenu(self.frame, self.folder_tree_view, self.on_folder_popup_menu)
+        self.folder_popup_menu = PopupMenu(self.window.application, self.folder_tree_view, self.on_folder_popup_menu)
 
         if user == config.sections["server"]["login"]:
             self.folder_popup_menu.add_items(
@@ -286,7 +269,7 @@ class UserBrowse:
         self.file_column_offsets = {}
         self.file_column_numbers = list(range(self.file_store.get_n_columns()))
         cols = initialise_columns(
-            self.frame, "user_browse", self.file_list_view,
+            self.window, "user_browse", self.file_list_view,
             ["filename", _("Filename"), 600, "text", None],
             ["size", _("Size"), 100, "number", None],
             ["bitrate", _("Bitrate"), 100, "number", None],
@@ -304,7 +287,7 @@ class UserBrowse:
             column.connect("notify::x-offset", self.on_column_position_changed)
 
         # Popup Menu (file_list_view)
-        self.file_popup_menu = FilePopupMenu(self.frame, self.file_list_view, self.on_file_popup_menu)
+        self.file_popup_menu = FilePopupMenu(self.window.application, self.file_list_view, self.on_file_popup_menu)
 
         if user == config.sections["server"]["login"]:
             self.file_popup_menu.add_items(
@@ -781,7 +764,7 @@ class UserBrowse:
             str_title = _("Select Destination Folder")
 
         FolderChooser(
-            parent=self.frame.window,
+            parent=self.window,
             title=str_title,
             callback=self.on_download_directory_to_selected,
             callback_data=recurse,
@@ -815,7 +798,7 @@ class UserBrowse:
             str_title = _("Upload Folder To User")
 
         EntryDialog(
-            parent=self.frame.window,
+            parent=self.window,
             title=str_title,
             message=_('Enter the name of the user you want to upload to:'),
             callback=self.on_upload_directory_to_response,
@@ -1017,7 +1000,7 @@ class UserBrowse:
             path = download_folder
 
         FolderChooser(
-            parent=self.frame.window,
+            parent=self.window,
             title=_("Select Destination Folder for File(s)"),
             callback=self.on_download_files_to_selected,
             initial_folder=path
@@ -1039,7 +1022,7 @@ class UserBrowse:
     def on_upload_files(self, *_args):
 
         EntryDialog(
-            parent=self.frame.window,
+            parent=self.window,
             title=_('Upload File(s) To User'),
             message=_('Enter the name of the user you want to upload to:'),
             callback=self.on_upload_files_response,
@@ -1103,7 +1086,7 @@ class UserBrowse:
 
         if data:
             if self.userbrowses.file_properties is None:
-                self.userbrowses.file_properties = FileProperties(self.frame, core)
+                self.userbrowses.file_properties = FileProperties(self.window.application, core)
 
             self.userbrowses.file_properties.update_properties(data, selected_size, selected_length)
             self.userbrowses.file_properties.show()

@@ -234,14 +234,14 @@ class IconNotebook:
     - Dropdown menu for unread tabs
     """
 
-    def __init__(self, frame, widget, parent_page=None, switch_page_callback=None, reorder_page_callback=None):
+    def __init__(self, window, widget, parent_page=None, switch_page_callback=None, reorder_page_callback=None):
 
         self.widget = widget
         self.widget.connect("page-reordered", self.on_reorder_page)
         self.widget.connect("page-removed", self.on_remove_page)
         self.widget.connect("switch-page", self.on_switch_page)
 
-        self.frame = frame
+        self.window = window
         self.parent_page = parent_page
         self.switch_page_callback = switch_page_callback
         self.reorder_page_callback = reorder_page_callback
@@ -260,7 +260,6 @@ class IconNotebook:
                 content_box = parent_page.get_first_child()
                 content_box.connect("show", self.on_show_parent_page)
 
-            self.window = self.widget.get_root()
             self.unread_button.set_has_frame(False)                        # pylint: disable=no-member
             self.unread_button.set_icon_name("emblem-important-symbolic")  # pylint: disable=no-member
 
@@ -291,7 +290,6 @@ class IconNotebook:
                 content_box = parent_page.get_children()[0]
                 content_box.connect("show", self.on_show_parent_page)
 
-            self.window = self.widget.get_toplevel()
             self.unread_button.set_image(Gtk.Image(icon_name="emblem-important-symbolic"))  # pylint: disable=no-member
 
             for style_class in style_classes:
@@ -304,7 +302,7 @@ class IconNotebook:
 
         self.widget.set_action_widget(self.unread_button, Gtk.PackType.END)
 
-        self.popup_menu_unread = PopupMenu(self.frame, connect_events=False)
+        self.popup_menu_unread = PopupMenu(self.window.application, connect_events=False)
         self.unread_button.set_menu_model(self.popup_menu_unread.model)
         self.unread_pages = []
 
@@ -461,9 +459,9 @@ class IconNotebook:
         if self.parent_page is not None:
             page_active = (self.get_current_page() == page)
 
-            if self.frame.current_page_id != self.parent_page.id or not page_active:
+            if self.window.current_page_id != self.parent_page.id or not page_active:
                 # Highlight top-level tab
-                self.frame.notebook.request_tab_hilite(self.parent_page, mentioned)
+                self.window.notebook.request_tab_hilite(self.parent_page, mentioned)
 
             if page_active:
                 return
@@ -504,7 +502,7 @@ class IconNotebook:
         self.unread_button.hide()
 
         if self.parent_page is not None:
-            self.frame.notebook.remove_tab_hilite(self.parent_page)
+            self.window.notebook.remove_tab_hilite(self.parent_page)
 
     def set_unread_page(self, _action, _state, page):
         self.set_current_page(page)
@@ -573,7 +571,7 @@ class IconNotebook:
             return
 
         # Focus the default widget on the page
-        if self.frame.current_page_id == self.parent_page.id:
+        if self.window.current_page_id == self.parent_page.id:
             GLib.idle_add(new_page.focus_callback, priority=GLib.PRIORITY_HIGH_IDLE)
 
         # Dismiss tab highlight

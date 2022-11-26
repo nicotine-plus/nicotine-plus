@@ -57,7 +57,7 @@ class TransferList:
     deprioritized_statuses = ()
     transfer_page = user_counter = file_counter = expand_button = expand_icon = grouping_button = None
 
-    def __init__(self, frame, transfer_type):
+    def __init__(self, window, transfer_type):
 
         ui_template = UserInterface(scope=self, path=transfer_type + "s.ui")
         (
@@ -66,7 +66,7 @@ class TransferList:
             self.tree_view
         ) = ui_template.widgets
 
-        self.frame = frame
+        self.window = window
         self.type = transfer_type
 
         if GTK_API_VERSION >= 4:
@@ -118,7 +118,7 @@ class TransferList:
         self.h_adjustment = self.tree_view.get_parent().get_hadjustment()
         self.column_numbers = list(range(self.transfersmodel.get_n_columns()))
         self.cols = cols = initialise_columns(
-            frame, transfer_type, self.tree_view,
+            window, transfer_type, self.tree_view,
             ["user", _("User"), 200, "text", None],
             ["path", self.path_label, 400, "text", None],
             ["filename", _("Filename"), 400, "text", None],
@@ -143,7 +143,7 @@ class TransferList:
         cols["time_left"].set_sort_column_id(15)
 
         menu = create_grouping_menu(
-            frame.window, config.sections["transfers"]["group%ss" % transfer_type], self.on_toggle_tree)
+            window, config.sections["transfers"]["group%ss" % transfer_type], self.on_toggle_tree)
         self.grouping_button.set_menu_model(menu)
 
         if GTK_API_VERSION >= 4:
@@ -152,18 +152,18 @@ class TransferList:
         self.expand_button.connect("toggled", self.on_expand_tree)
         self.expand_button.set_active(config.sections["transfers"]["%ssexpanded" % transfer_type])
 
-        self.popup_menu_users = UserPopupMenu(frame)
-        self.popup_menu_clear = PopupMenu(frame)
+        self.popup_menu_users = UserPopupMenu(window.application)
+        self.popup_menu_clear = PopupMenu(window.application)
         self.clear_all_button.set_menu_model(self.popup_menu_clear.model)
 
-        self.popup_menu_copy = PopupMenu(frame)
+        self.popup_menu_copy = PopupMenu(window.application)
         self.popup_menu_copy.add_items(
             ("#" + _("Copy _File Path"), self.on_copy_file_path),
             ("#" + _("Copy _URL"), self.on_copy_url),
             ("#" + _("Copy Folder U_RL"), self.on_copy_dir_url)
         )
 
-        self.popup_menu = FilePopupMenu(frame, self.tree_view, self.on_popup_menu)
+        self.popup_menu = FilePopupMenu(window.application, self.tree_view, self.on_popup_menu)
         self.popup_menu.add_items(
             ("#" + "selected_files", None),
             ("", None),
@@ -258,8 +258,8 @@ class TransferList:
             self.selected_users[transfer.user] = None
 
     def new_transfer_notification(self, finished=False):
-        if self.frame.current_page_id != self.transfer_page.id:
-            self.frame.notebook.request_tab_hilite(self.transfer_page, mentioned=finished)
+        if self.window.current_page_id != self.transfer_page.id:
+            self.window.notebook.request_tab_hilite(self.transfer_page, mentioned=finished)
 
     def on_file_search(self, *_args):
 
@@ -268,8 +268,8 @@ class TransferList:
         if not transfer:
             return
 
-        self.frame.search_entry.set_text(transfer.filename.rsplit("\\", 1)[1])
-        self.frame.change_main_page(self.frame.search_page)
+        self.window.search_entry.set_text(transfer.filename.rsplit("\\", 1)[1])
+        self.window.change_main_page(self.window.search_page)
 
     def translate_status(self, status):
 
@@ -301,7 +301,7 @@ class TransferList:
 
     def update_model(self, transfer=None, update_parent=True, forceupdate=False):
 
-        if not forceupdate and self.frame.current_page_id != self.transfer_page.id:
+        if not forceupdate and self.window.current_page_id != self.transfer_page.id:
             # No need to do unnecessary work if transfers are not visible
             return
 
@@ -707,7 +707,7 @@ class TransferList:
         # Multiple users, create submenus for each user
         if len(self.selected_users) > 1:
             for user in self.selected_users:
-                popup = UserPopupMenu(self.frame)
+                popup = UserPopupMenu(self.window.application)
                 self.add_popup_menu_user(popup, user)
                 self.popup_menu_users.add_items((">" + user, popup))
                 self.popup_menu_users.update_model()
@@ -879,7 +879,7 @@ class TransferList:
 
         if data:
             if self.file_properties is None:
-                self.file_properties = FileProperties(self.frame, download_button=False)
+                self.file_properties = FileProperties(self.window.application, download_button=False)
 
             self.file_properties.update_properties(data, total_size=selected_size)
             self.file_properties.show()

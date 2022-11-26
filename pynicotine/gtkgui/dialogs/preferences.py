@@ -58,9 +58,9 @@ from pynicotine.utils import open_uri
 from pynicotine.utils import unescape
 
 
-class NetworkFrame:
+class NetworkPage:
 
-    def __init__(self, preferences):
+    def __init__(self, application):
 
         ui_template = UserInterface(scope=self, path="settings/network.ui")
 
@@ -69,8 +69,7 @@ class NetworkFrame:
          self.CurrentPort, self.FirstPort, self.Interface, self.InterfaceLabel, self.LastPort, self.Login, self.Main,
          self.Server, self.UseUPnP, self.ctcptogglebutton) = ui_template.widgets
 
-        self.preferences = preferences
-        self.frame = preferences.frame
+        self.application = application
         self.portmap_required = False
 
         self.options = {
@@ -89,7 +88,7 @@ class NetworkFrame:
 
     def set_settings(self):
 
-        self.preferences.set_widgets_data(self.options)
+        self.application.preferences.set_widgets_data(self.options)
 
         server = config.sections["server"]
 
@@ -170,7 +169,7 @@ class NetworkFrame:
 
         if user_status != core.user_status:
             MessageDialog(
-                parent=self.preferences.window,
+                parent=self.application.preferences,
                 title=_("Password Change Rejected"),
                 message=("Since your login status changed, your password has not been changed. Please try again.")
             ).show()
@@ -198,7 +197,7 @@ class NetworkFrame:
                        + _("Enter password to use when logging in:"))
 
         EntryDialog(
-            parent=self.preferences.window,
+            parent=self.application.preferences,
             title=_("Change Password"),
             message=message,
             visibility=False,
@@ -210,9 +209,9 @@ class NetworkFrame:
         self.portmap_required = widget.get_active()
 
 
-class DownloadsFrame:
+class DownloadsPage:
 
-    def __init__(self, preferences):
+    def __init__(self, application):
 
         ui_template = UserInterface(scope=self, path="settings/downloads.ui")
 
@@ -223,15 +222,14 @@ class DownloadsFrame:
          self.Main, self.RemoteDownloads, self.UploadDir, self.UploadsAllowed,
          self.UsernameSubfolders, self.VerifiedLabel) = ui_template.widgets
 
-        self.preferences = preferences
-        self.frame = preferences.frame
+        self.application = application
 
-        self.incomplete_dir = FileChooserButton(self.IncompleteDir, preferences.window, "folder")
-        self.download_dir = FileChooserButton(self.DownloadDir, preferences.window, "folder")
-        self.upload_dir = FileChooserButton(self.UploadDir, preferences.window, "folder")
+        self.incomplete_dir = FileChooserButton(self.IncompleteDir, application.preferences, "folder")
+        self.download_dir = FileChooserButton(self.DownloadDir, application.preferences, "folder")
+        self.upload_dir = FileChooserButton(self.UploadDir, application.preferences, "folder")
 
         self.filter_list_view = TreeView(
-            self.frame, parent=self.FilterView, multi_select=True, activate_row_callback=self.on_edit_filter,
+            application.window, parent=self.FilterView, multi_select=True, activate_row_callback=self.on_edit_filter,
             columns=[
                 {"column_id": "filter", "column_type": "text", "title": _("Filter"), "sort_column": 0,
                  "width": 150, "expand_column": True},
@@ -263,7 +261,7 @@ class DownloadsFrame:
     def set_settings(self):
 
         self.filter_list_view.clear()
-        self.preferences.set_widgets_data(self.options)
+        self.application.preferences.set_widgets_data(self.options)
 
     def get_settings(self):
 
@@ -328,7 +326,7 @@ class DownloadsFrame:
     def on_add_filter(self, *_args):
 
         EntryDialog(
-            parent=self.preferences.window,
+            parent=self.application.preferences,
             title=_("Add Download Filter"),
             message=_("Enter a new download filter:"),
             callback=self.on_add_filter_response,
@@ -358,7 +356,7 @@ class DownloadsFrame:
             escaped = self.filter_list_view.get_row_value(iterator, 1)
 
             EntryDialog(
-                parent=self.preferences.window,
+                parent=self.application.preferences,
                 title=_("Edit Download Filter"),
                 message=_("Modify the following download filter:"),
                 callback=self.on_edit_filter_response,
@@ -435,24 +433,23 @@ class DownloadsFrame:
             self.VerifiedLabel.set_text(_("Filters Successful"))
 
 
-class SharesFrame:
+class SharesPage:
 
-    def __init__(self, preferences):
+    def __init__(self, application):
 
         ui_template = UserInterface(scope=self, path="settings/shares.ui")
 
         # pylint: disable=invalid-name
         (self.BuddySharesTrustedOnly, self.Main, self.RescanOnStartup, self.Shares) = ui_template.widgets
 
-        self.preferences = preferences
-        self.frame = preferences.frame
+        self.application = application
 
         self.rescan_required = False
         self.shareddirs = []
         self.bshareddirs = []
 
         self.shares_list_view = TreeView(
-            self.frame, parent=self.Shares, multi_select=True, activate_row_callback=self.on_edit_shared_dir,
+            application.window, parent=self.Shares, multi_select=True, activate_row_callback=self.on_edit_shared_dir,
             columns=[
                 {"column_id": "virtual_folder", "column_type": "text", "title": _("Virtual Folder"), "width": 65,
                  "sort_column": 0, "expand_column": True},
@@ -474,7 +471,7 @@ class SharesFrame:
 
         self.shares_list_view.clear()
 
-        self.preferences.set_widgets_data(self.options)
+        self.application.preferences.set_widgets_data(self.options)
 
         self.shareddirs = config.sections["transfers"]["shared"][:]
         self.bshareddirs = config.sections["transfers"]["buddyshared"][:]
@@ -546,7 +543,7 @@ class SharesFrame:
     def on_add_shared_dir(self, *_args):
 
         FolderChooser(
-            parent=self.preferences.window,
+            parent=self.application.preferences,
             callback=self.on_add_shared_dir_selected,
             title=_("Add a Shared Folder"),
             select_multiple=True
@@ -588,7 +585,7 @@ class SharesFrame:
             buddy_only = self.shares_list_view.get_row_value(iterator, 2)
 
             EntryDialog(
-                parent=self.preferences.window,
+                parent=self.application.preferences,
                 title=_("Edit Shared Folder"),
                 message=_("Enter new virtual name for '%(dir)s':") % {'dir': folder},
                 default=virtual_name,
@@ -619,9 +616,9 @@ class SharesFrame:
             self.rescan_required = True
 
 
-class UploadsFrame:
+class UploadsPage:
 
-    def __init__(self, preferences):
+    def __init__(self, application):
 
         ui_template = UserInterface(scope=self, path="settings/uploads.ui")
 
@@ -631,8 +628,7 @@ class UploadsFrame:
          self.MaxUserQueue, self.PreferFriends, self.QueueBandwidth, self.QueueSlots, self.QueueUseBandwidth,
          self.QueueUseSlots, self.UploadDoubleClick) = ui_template.widgets
 
-        self.preferences = preferences
-        self.frame = preferences.frame
+        self.application = application
 
         self.options = {
             "transfers": {
@@ -654,7 +650,7 @@ class UploadsFrame:
         }
 
     def set_settings(self):
-        self.preferences.set_widgets_data(self.options)
+        self.application.preferences.set_widgets_data(self.options)
 
     def get_settings(self):
 
@@ -678,19 +674,17 @@ class UploadsFrame:
         }
 
 
-class UserInfoFrame:
+class UserInfoPage:
 
-    def __init__(self, preferences):
+    def __init__(self, application):
 
         ui_template = UserInterface(scope=self, path="settings/userinfo.ui")
 
         # pylint: disable=invalid-name
         self.Description, self.ImageChooser, self.Main = ui_template.widgets
 
-        self.preferences = preferences
-        self.frame = preferences.frame
-
-        self.image_chooser = FileChooserButton(self.ImageChooser, preferences.window, "image")
+        self.application = application
+        self.image_chooser = FileChooserButton(self.ImageChooser, application.preferences, "image")
 
         self.options = {
             "userinfo": {
@@ -701,7 +695,7 @@ class UserInfoFrame:
 
     def set_settings(self):
 
-        self.preferences.set_widgets_data(self.options)
+        self.application.preferences.set_widgets_data(self.options)
 
         if config.sections["userinfo"]["descr"] is not None:
             descr = unescape(config.sections["userinfo"]["descr"])
@@ -727,21 +721,20 @@ class UserInfoFrame:
         self.image_chooser.clear()
 
 
-class IgnoredUsersFrame:
+class IgnoredUsersPage:
 
-    def __init__(self, preferences):
+    def __init__(self, application):
 
         ui_template = UserInterface(scope=self, path="settings/ignore.ui")
 
         # pylint: disable=invalid-name
         self.IgnoredIPs, self.IgnoredUsers, self.Main = ui_template.widgets
 
-        self.preferences = preferences
-        self.frame = self.preferences.frame
+        self.application = application
 
         self.ignored_users = []
         self.ignored_users_list_view = TreeView(
-            self.frame, parent=self.IgnoredUsers, multi_select=True,
+            application.window, parent=self.IgnoredUsers, multi_select=True,
             columns=[
                 {"column_id": "username", "column_type": "text", "title": _("Username"), "sort_column": 0}
             ]
@@ -749,7 +742,7 @@ class IgnoredUsersFrame:
 
         self.ignored_ips = {}
         self.ignored_ips_list_view = TreeView(
-            self.frame, parent=self.IgnoredIPs, multi_select=True,
+            application.window, parent=self.IgnoredIPs, multi_select=True,
             columns=[
                 {"column_id": "ip_address", "column_type": "text", "title": _("IP Address"), "sort_column": 0,
                  "width": 50, "expand_column": True},
@@ -772,7 +765,7 @@ class IgnoredUsersFrame:
         self.ignored_users.clear()
         self.ignored_ips.clear()
 
-        self.preferences.set_widgets_data(self.options)
+        self.application.preferences.set_widgets_data(self.options)
 
         self.ignored_users = config.sections["server"]["ignorelist"][:]
         self.ignored_ips = config.sections["server"]["ipignorelist"].copy()
@@ -796,7 +789,7 @@ class IgnoredUsersFrame:
     def on_add_ignored(self, *_args):
 
         EntryDialog(
-            parent=self.preferences.window,
+            parent=self.application.preferences,
             title=_("Ignore User"),
             message=_("Enter the name of the user you want to ignore:"),
             callback=self.on_add_ignored_response
@@ -837,7 +830,7 @@ class IgnoredUsersFrame:
     def on_add_ignored_ip(self, *_args):
 
         EntryDialog(
-            parent=self.preferences.window,
+            parent=self.application.preferences,
             title=_("Ignore IP Address"),
             message=_("Enter an IP address you want to ignore:") + " " + _("* is a wildcard"),
             callback=self.on_add_ignored_ip_response
@@ -852,9 +845,9 @@ class IgnoredUsersFrame:
             del self.ignored_ips[ip_address]
 
 
-class BannedUsersFrame:
+class BannedUsersPage:
 
-    def __init__(self, preferences):
+    def __init__(self, application):
 
         ui_template = UserInterface(scope=self, path="settings/ban.ui")
 
@@ -862,13 +855,12 @@ class BannedUsersFrame:
         (self.BannedList, self.BlockedList, self.CustomBan, self.CustomGeoBlock, self.GeoBlock, self.GeoBlockCC,
          self.Main, self.UseCustomBan, self.UseCustomGeoBlock) = ui_template.widgets
 
-        self.preferences = preferences
-        self.frame = preferences.frame
+        self.application = application
         self.ip_block_required = False
 
         self.banned_users = []
         self.banned_users_list_view = TreeView(
-            self.frame, parent=self.BannedList, multi_select=True,
+            application.window, parent=self.BannedList, multi_select=True,
             columns=[
                 {"column_id": "username", "column_type": "text", "title": _("Username"), "sort_column": 0}
             ]
@@ -876,7 +868,7 @@ class BannedUsersFrame:
 
         self.banned_ips = {}
         self.banned_ips_list_view = TreeView(
-            self.frame, parent=self.BlockedList, multi_select=True,
+            application.window, parent=self.BlockedList, multi_select=True,
             columns=[
                 {"column_id": "ip_address", "column_type": "text", "title": _("IP Address"), "sort_column": 0,
                  "width": 50, "expand_column": True},
@@ -907,7 +899,7 @@ class BannedUsersFrame:
         self.banned_users.clear()
         self.banned_ips.clear()
 
-        self.preferences.set_widgets_data(self.options)
+        self.application.preferences.set_widgets_data(self.options)
 
         self.banned_users = config.sections["server"]["banlist"][:]
         self.banned_ips = config.sections["server"]["ipblocklist"].copy()
@@ -945,7 +937,7 @@ class BannedUsersFrame:
     def on_add_banned(self, *_args):
 
         EntryDialog(
-            parent=self.preferences.window,
+            parent=self.application.preferences,
             title=_("Ban User"),
             message=_("Enter the name of the user you want to ban:"),
             callback=self.on_add_banned_response
@@ -987,7 +979,7 @@ class BannedUsersFrame:
     def on_add_blocked(self, *_args):
 
         EntryDialog(
-            parent=self.preferences.window,
+            parent=self.application.preferences,
             title=_("Block IP Address"),
             message=_("Enter an IP address you want to block:") + " " + _("* is a wildcard"),
             callback=self.on_add_blocked_response
@@ -1002,9 +994,9 @@ class BannedUsersFrame:
             del self.banned_ips[ip_address]
 
 
-class ChatsFrame:
+class ChatsPage:
 
-    def __init__(self, preferences):
+    def __init__(self, application):
 
         ui_template = UserInterface(scope=self, path="settings/chats.ui")
 
@@ -1019,13 +1011,12 @@ class ChatsFrame:
          self.RoomLogLines, self.RoomMessage, self.SpellCheck,
          self.TTSCommand, self.TextToSpeech) = ui_template.widgets
 
-        self.preferences = preferences
-        self.frame = preferences.frame
+        self.application = application
         self.completion_required = False
 
         self.censored_patterns = []
         self.censor_list_view = TreeView(
-            self.frame, parent=self.CensorList, multi_select=True, activate_row_callback=self.on_edit_censored,
+            application.window, parent=self.CensorList, multi_select=True, activate_row_callback=self.on_edit_censored,
             columns=[
                 {"column_id": "pattern", "column_type": "text", "title": _("Pattern"), "sort_column": 0}
             ]
@@ -1033,7 +1024,8 @@ class ChatsFrame:
 
         self.replacements = {}
         self.replacement_list_view = TreeView(
-            self.frame, parent=self.ReplacementList, multi_select=True, activate_row_callback=self.on_edit_replacement,
+            application.window, parent=self.ReplacementList, multi_select=True,
+            activate_row_callback=self.on_edit_replacement,
             columns=[
                 {"column_id": "pattern", "column_type": "text", "title": _("Pattern"), "sort_column": 0,
                  "width": 100, "expand_column": True},
@@ -1085,7 +1077,7 @@ class ChatsFrame:
         self.censored_patterns.clear()
         self.replacements.clear()
 
-        self.preferences.set_widgets_data(self.options)
+        self.application.preferences.set_widgets_data(self.options)
 
         try:
             gi.require_version('Gspell', '1')
@@ -1165,7 +1157,7 @@ class ChatsFrame:
     def on_add_censored(self, *_args):
 
         EntryDialog(
-            parent=self.preferences.window,
+            parent=self.application.preferences,
             title=_("Censor Pattern"),
             message=_("Enter a pattern you want to censor. Add spaces around the pattern if you don't "
                       "want to match strings inside words (may fail at the beginning and end of lines)."),
@@ -1191,7 +1183,7 @@ class ChatsFrame:
             pattern = self.censor_list_view.get_row_value(iterator, 0)
 
             EntryDialog(
-                parent=self.preferences.window,
+                parent=self.application.preferences,
                 title=_("Edit Censored Pattern"),
                 message=_("Enter a pattern you want to censor. Add spaces around the pattern if you don't "
                           "want to match strings inside words (may fail at the beginning and end of lines)."),
@@ -1223,7 +1215,7 @@ class ChatsFrame:
     def on_add_replacement(self, *_args):
 
         EntryDialog(
-            parent=self.preferences.window,
+            parent=self.application.preferences,
             title=_("Add Replacement"),
             message=_("Enter a text pattern and what to replace it with"),
             callback=self.on_add_replacement_response,
@@ -1252,7 +1244,7 @@ class ChatsFrame:
             replacement = self.replacement_list_view.get_row_value(iterator, 1)
 
             EntryDialog(
-                parent=self.preferences.window,
+                parent=self.application.preferences,
                 title=_("Edit Replacement"),
                 message=_("Enter a text pattern and what to replace it with:"),
                 callback=self.on_edit_replacement_response,
@@ -1272,9 +1264,9 @@ class ChatsFrame:
             del self.replacements[replacement]
 
 
-class UserInterfaceFrame:
+class UserInterfacePage:
 
-    def __init__(self, preferences):
+    def __init__(self, application):
 
         ui_template = UserInterface(scope=self, path="settings/userinterface.ui")
 
@@ -1300,11 +1292,10 @@ class UserInterfaceFrame:
          self.UserBrowsePosition, self.UserInfoPosition, self.UsernameHotspots,
          self.UsernameStyle) = ui_template.widgets
 
-        self.preferences = preferences
-        self.frame = preferences.frame
+        self.application = application
         self.theme_required = False
 
-        self.theme_dir = FileChooserButton(self.ThemeDir, preferences.window, "folder")
+        self.theme_dir = FileChooserButton(self.ThemeDir, application.preferences, "folder")
 
         self.tabs = {
             "search": self.EnableSearchTab,
@@ -1335,7 +1326,7 @@ class UserInterfaceFrame:
             ("nplus-hilite3", _("Highlight"), 16),
             (config.application_id, _("Window"), 64)]
 
-        if self.frame.tray_icon.available:
+        if application.tray_icon.available:
             icon_list += [
                 (config.application_id + "-connect", _("Connected (Tray)"), 16),
                 (config.application_id + "-disconnect", _("Disconnected (Tray)"), 16),
@@ -1437,10 +1428,10 @@ class UserInterfaceFrame:
 
     def set_settings(self):
 
-        self.preferences.set_widgets_data(self.options)
+        self.application.preferences.set_widgets_data(self.options)
         self.theme_required = False
 
-        self.TraySettings.set_visible(self.frame.tray_icon.available)
+        self.TraySettings.set_visible(self.application.tray_icon.available)
 
         for page_id, enabled in config.sections["ui"]["modes_visible"].items():
             widget = self.tabs.get(page_id)
@@ -1596,9 +1587,9 @@ class UserInterfaceFrame:
         self.theme_required = True
 
 
-class LoggingFrame:
+class LoggingPage:
 
-    def __init__(self, preferences):
+    def __init__(self, application):
 
         ui_template = UserInterface(scope=self, path="settings/log.ui")
 
@@ -1607,13 +1598,12 @@ class LoggingFrame:
          self.LogPrivate, self.LogRooms, self.LogTransfers, self.Main, self.PrivateLogDir,
          self.RoomLogDir, self.TransfersLogDir) = ui_template.widgets
 
-        self.preferences = preferences
-        self.frame = preferences.frame
+        self.application = application
 
-        self.private_log_dir = FileChooserButton(self.PrivateLogDir, preferences.window, "folder")
-        self.room_log_dir = FileChooserButton(self.RoomLogDir, preferences.window, "folder")
-        self.transfers_log_dir = FileChooserButton(self.TransfersLogDir, preferences.window, "folder")
-        self.debug_log_dir = FileChooserButton(self.DebugLogDir, preferences.window, "folder")
+        self.private_log_dir = FileChooserButton(self.PrivateLogDir, application.preferences, "folder")
+        self.room_log_dir = FileChooserButton(self.RoomLogDir, application.preferences, "folder")
+        self.transfers_log_dir = FileChooserButton(self.TransfersLogDir, application.preferences, "folder")
+        self.debug_log_dir = FileChooserButton(self.DebugLogDir, application.preferences, "folder")
 
         self.options = {
             "logging": {
@@ -1630,7 +1620,7 @@ class LoggingFrame:
         }
 
     def set_settings(self):
-        self.preferences.set_widgets_data(self.options)
+        self.application.preferences.set_widgets_data(self.options)
 
     def get_settings(self):
 
@@ -1652,9 +1642,9 @@ class LoggingFrame:
         self.LogFileFormat.set_text(config.defaults["logging"]["log_timestamp"])
 
 
-class SearchesFrame:
+class SearchesPage:
 
-    def __init__(self, preferences):
+    def __init__(self, application):
 
         ui_template = UserInterface(scope=self, path="settings/search.ui")
 
@@ -1665,11 +1655,10 @@ class SearchesFrame:
          self.RemoveSpecialChars, self.ShowPrivateSearchResults, self.ShowSearchHelp,
          self.ToggleResults) = ui_template.widgets
 
-        self.preferences = preferences
-        self.frame = preferences.frame
+        self.application = application
         self.search_required = False
 
-        self.filter_help = SearchFilterHelp(self.preferences.window)
+        self.filter_help = SearchFilterHelp(application.preferences)
         self.ShowSearchHelp.set_popover(self.filter_help.popover)
 
         self.options = {
@@ -1689,7 +1678,7 @@ class SearchesFrame:
     def set_settings(self):
 
         searches = config.sections["searches"]
-        self.preferences.set_widgets_data(self.options)
+        self.application.preferences.set_widgets_data(self.options)
         self.search_required = False
 
         if searches["defilter"] is not None:
@@ -1753,25 +1742,24 @@ class SearchesFrame:
         self.search_required = True
 
     def on_clear_search_history(self, *_args):
-        self.frame.search.clear_search_history()
+        self.application.window.search.clear_search_history()
         self.ClearSearchHistorySuccess.show()
 
     def on_clear_filter_history(self, *_args):
-        self.frame.search.clear_filter_history()
+        self.application.window.search.clear_filter_history()
         self.ClearFilterHistorySuccess.show()
 
 
-class UrlHandlersFrame:
+class UrlHandlersPage:
 
-    def __init__(self, preferences):
+    def __init__(self, application):
 
         ui_template = UserInterface(scope=self, path="settings/urlhandlers.ui")
 
         # pylint: disable=invalid-name
         (self.FileManagerCombo, self.Main, self.ProtocolHandlers, self.audioPlayerCombo) = ui_template.widgets
 
-        self.preferences = preferences
-        self.frame = preferences.frame
+        self.application = application
 
         self.options = {
             "urls": {
@@ -1809,7 +1797,8 @@ class UrlHandlersFrame:
 
         self.protocols = {}
         self.protocol_list_view = TreeView(
-            self.frame, parent=self.ProtocolHandlers, multi_select=True, activate_row_callback=self.on_edit_handler,
+            application.window, parent=self.ProtocolHandlers, multi_select=True,
+            activate_row_callback=self.on_edit_handler,
             columns=[
                 {"column_id": "protocol", "column_type": "text", "title": _("Protocol"), "sort_column": 0,
                  "width": 120, "expand_column": True, "iterator_key": True},
@@ -1823,7 +1812,7 @@ class UrlHandlersFrame:
         self.protocol_list_view.clear()
         self.protocols.clear()
 
-        self.preferences.set_widgets_data(self.options)
+        self.application.preferences.set_widgets_data(self.options)
 
         self.protocols = config.sections["urls"]["protocols"].copy()
 
@@ -1867,7 +1856,7 @@ class UrlHandlersFrame:
     def on_add_handler(self, *_args):
 
         EntryDialog(
-            parent=self.preferences.window,
+            parent=self.application.preferences,
             title=_("Add URL Handler"),
             message=_("Enter the protocol and the command for the URL handler:"),
             callback=self.on_add_handler_response,
@@ -1895,7 +1884,7 @@ class UrlHandlersFrame:
             command = self.protocol_list_view.get_row_value(iterator, 1)
 
             EntryDialog(
-                parent=self.preferences.window,
+                parent=self.application.preferences,
                 title=_("Edit Command"),
                 message=_("Enter a new command for protocol %s:") % protocol,
                 callback=self.on_edit_handler_response,
@@ -1914,9 +1903,9 @@ class UrlHandlersFrame:
             del self.protocols[protocol]
 
 
-class NowPlayingFrame:
+class NowPlayingPage:
 
-    def __init__(self, preferences):
+    def __init__(self, application):
 
         ui_template = UserInterface(scope=self, path="settings/nowplaying.ui")
 
@@ -1924,8 +1913,7 @@ class NowPlayingFrame:
         (self.Example, self.Legend, self.Main, self.NPCommand, self.NPFormat, self.NP_lastfm, self.NP_listenbrainz,
          self.NP_mpris, self.NP_other, self.player_input, self.test_now_playing) = ui_template.widgets
 
-        self.preferences = preferences
-        self.frame = preferences.frame
+        self.application = application
 
         self.options = {
             "players": {
@@ -1958,7 +1946,7 @@ class NowPlayingFrame:
 
     def set_settings(self):
 
-        self.preferences.set_widgets_data(self.options)
+        self.application.preferences.set_widgets_data(self.options)
 
         # Save reference to format list for get_settings()
         self.custom_format_list = config.sections["players"]["npformatlist"]
@@ -2089,9 +2077,9 @@ class NowPlayingFrame:
         }
 
 
-class PluginsFrame:
+class PluginsPage:
 
-    def __init__(self, preferences):
+    def __init__(self, application):
 
         ui_template = UserInterface(scope=self, path="settings/plugin.ui")
 
@@ -2099,8 +2087,7 @@ class PluginsFrame:
         (self.Main, self.PluginAuthor, self.PluginDescription, self.PluginName,
          self.PluginProperties, self.PluginTreeView, self.PluginVersion, self.PluginsEnable) = ui_template.widgets
 
-        self.preferences = preferences
-        self.frame = preferences.frame
+        self.application = application
 
         self.options = {
             "plugins": {
@@ -2112,7 +2099,7 @@ class PluginsFrame:
         self.selected_plugin = None
         self.descr_textview = TextView(self.PluginDescription)
         self.plugin_list_view = TreeView(
-            self.frame, parent=self.PluginTreeView, always_select=True,
+            application.window, parent=self.PluginTreeView, always_select=True,
             select_row_callback=self.on_select_plugin,
             columns=[
                 # Visible columns
@@ -2130,7 +2117,7 @@ class PluginsFrame:
         self.enabled_plugins.clear()
         self.plugin_list_view.clear()
 
-        self.preferences.set_widgets_data(self.options)
+        self.application.preferences.set_widgets_data(self.options)
 
         for plugin_id in sorted(core.pluginhandler.list_installed_plugins()):
             try:
@@ -2216,8 +2203,7 @@ class PluginsFrame:
             return
 
         PluginSettingsDialog(
-            self.frame,
-            self.preferences,
+            self.application,
             plugin_id=self.selected_plugin,
             plugin_settings=core.pluginhandler.get_plugin_settings(self.selected_plugin)
         ).show()
@@ -2225,9 +2211,9 @@ class PluginsFrame:
 
 class Preferences(Dialog):
 
-    def __init__(self, frame):
+    def __init__(self, application):
 
-        self.frame = frame
+        self.application = application
 
         ui_template = UserInterface(scope=self, path="dialogs/preferences.ui")
         (
@@ -2242,7 +2228,7 @@ class Preferences(Dialog):
         ) = ui_template.widgets
 
         super().__init__(
-            parent=frame.window,
+            parent=application.window,
             content_box=self.container,
             buttons_start=(self.cancel_button, self.export_button),
             buttons_end=(self.apply_button, self.ok_button),
@@ -2294,7 +2280,6 @@ class Preferences(Dialog):
 
             self.preferences_list.insert(box, -1)
 
-        self.set_active_page("network")
         self.update_visuals()
 
     def update_visuals(self, scope=None):
@@ -2549,39 +2534,41 @@ class Preferences(Dialog):
             # Dark mode
             dark_mode_state = config.sections["ui"]["dark_mode"]
             set_dark_mode(dark_mode_state)
-            self.frame.dark_mode_action.set_state(GLib.Variant("b", dark_mode_state))
+            self.application.lookup_action("dark-mode").set_state(GLib.Variant("b", dark_mode_state))
 
             set_global_font(config.sections["ui"]["globalfont"])
 
-            self.frame.chatrooms.update_visuals()
-            self.frame.privatechat.update_visuals()
-            self.frame.search.update_visuals()
-            self.frame.downloads.update_visuals()
-            self.frame.uploads.update_visuals()
-            self.frame.userinfo.update_visuals()
-            self.frame.userbrowse.update_visuals()
-            self.frame.userlist.update_visuals()
-            self.frame.interests.update_visuals()
+            self.application.window.chatrooms.update_visuals()
+            self.application.window.privatechat.update_visuals()
+            self.application.window.search.update_visuals()
+            self.application.window.downloads.update_visuals()
+            self.application.window.uploads.update_visuals()
+            self.application.window.userinfo.update_visuals()
+            self.application.window.userbrowse.update_visuals()
+            self.application.window.userlist.update_visuals()
+            self.application.window.interests.update_visuals()
 
-            self.frame.update_visuals()
+            self.application.window.update_visuals()
+            self.application.wish_list.update_visuals()
             self.update_visuals()
 
             # Icons
             load_custom_icons(update=True)
-            self.frame.tray_icon.update_icon_theme()
+            self.application.tray_icon.update_icon_theme()
 
         if completion_required:
-            self.frame.update_completions()
+            core.chatrooms.update_completions()
+            core.privatechat.update_completions()
 
         if ip_block_required:
             core.network_filter.close_blocked_ip_connections()
 
         if search_required:
-            self.frame.search.populate_search_history()
+            self.application.window.search.populate_search_history()
 
         # Chatrooms
-        self.frame.chatrooms.toggle_chat_buttons()
-        self.frame.privatechat.toggle_chat_buttons()
+        self.application.window.chatrooms.toggle_chat_buttons()
+        self.application.window.privatechat.toggle_chat_buttons()
 
         # Transfers
         core.transfers.update_limits()
@@ -2589,24 +2576,25 @@ class Preferences(Dialog):
         core.transfers.check_upload_queue()
 
         # Tray icon
-        if not config.sections["ui"]["trayicon"] and self.frame.tray_icon.is_visible():
-            self.frame.tray_icon.hide()
+        if not config.sections["ui"]["trayicon"] and self.application.tray_icon.is_visible():
+            self.application.tray_icon.hide()
 
-        elif config.sections["ui"]["trayicon"] and not self.frame.tray_icon.is_visible():
-            self.frame.tray_icon.load()
+        elif config.sections["ui"]["trayicon"] and not self.application.tray_icon.is_visible():
+            self.application.tray_icon.load()
 
         # Main notebook
-        self.frame.set_tab_positions()
-        self.frame.set_main_tabs_visibility()
-        self.frame.notebook.set_tab_text_colors()
+        self.application.window.set_tab_positions()
+        self.application.window.set_main_tabs_visibility()
+        self.application.window.notebook.set_tab_text_colors()
 
-        for i in range(self.frame.notebook.get_n_pages()):
-            page = self.frame.notebook.get_nth_page(i)
-            self.frame.set_tab_expand(page)
+        for i in range(self.application.window.notebook.get_n_pages()):
+            page = self.application.window.notebook.get_nth_page(i)
+            self.application.window.set_tab_expand(page)
 
         # Other notebooks
-        for notebook in (self.frame.chatrooms, self.frame.privatechat, self.frame.userinfo,
-                         self.frame.userbrowse, self.frame.search):
+        for notebook in (self.application.window.chatrooms, self.application.window.privatechat,
+                         self.application.window.userinfo, self.application.window.userbrowse,
+                         self.application.window.search):
             notebook.set_tab_closers()
             notebook.set_tab_text_colors()
 
@@ -2622,10 +2610,10 @@ class Preferences(Dialog):
         self.close()
 
         if not config.sections["ui"]["trayicon"]:
-            self.frame.show()
+            self.application.window.show()
 
         if config.need_config():
-            GLib.idle_add(self.frame.setup)
+            GLib.idle_add(self.application.setup)
 
     @staticmethod
     def on_back_up_config_response(selected, _data):
@@ -2634,7 +2622,7 @@ class Preferences(Dialog):
     def on_back_up_config(self, *_args):
 
         FileChooserSave(
-            parent=self.window,
+            parent=self,
             callback=self.on_back_up_config_response,
             initial_folder=os.path.dirname(config.filename),
             initial_file="config backup %s.tar.bz2" % (time.strftime("%Y-%m-%d %H_%M_%S")),
@@ -2675,8 +2663,8 @@ class Preferences(Dialog):
                 self.viewport.remove(old_page)
 
         if page_id not in self.pages:
-            class_name = page_id.title().replace("-", "") + "Frame"
-            self.pages[page_id] = page = getattr(sys.modules[__name__], class_name)(self)
+            class_name = page_id.title().replace("-", "") + "Page"
+            self.pages[page_id] = page = getattr(sys.modules[__name__], class_name)(self.application)
             page.set_settings()
 
             for obj in page.__dict__.values():

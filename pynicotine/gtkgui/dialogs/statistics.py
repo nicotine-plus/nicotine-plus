@@ -18,6 +18,7 @@
 
 import time
 
+from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.widgets.dialogs import Dialog
@@ -29,7 +30,7 @@ from pynicotine.utils import humanize
 
 class Statistics(Dialog):
 
-    def __init__(self, frame):
+    def __init__(self, application):
 
         ui_template = UserInterface(scope=self, path="dialogs/statistics.ui")
         (
@@ -53,7 +54,7 @@ class Statistics(Dialog):
         ) = ui_template.widgets
 
         super().__init__(
-            parent=frame.window,
+            parent=application.window,
             content_box=self.container,
             buttons_start=(self.close_button,),
             buttons_end=(self.reset_button,),
@@ -66,6 +67,9 @@ class Statistics(Dialog):
         )
 
         events.connect("update-stat-value", self.update_stat_value)
+
+        for stat_id in config.defaults["statistics"]:
+            core.statistics.update_ui(stat_id)
 
     def update_stat_value(self, stat_id, session_value, total_value):
 
@@ -95,7 +99,7 @@ class Statistics(Dialog):
     def on_reset_statistics(self, *_args):
 
         OptionDialog(
-            parent=self.window,
+            parent=self,
             title=_('Reset Transfer Statistics?'),
             message=_('Do you really want to reset transfer statistics?'),
             callback=self.on_reset_statistics_response

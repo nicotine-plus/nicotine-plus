@@ -28,20 +28,18 @@ from gi.repository import Gio
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
-from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.logfacility import log
 from pynicotine.utils import truncate_string_byte
 
 
 class Notifications:
 
-    def __init__(self, frame):
+    def __init__(self, application):
 
-        self.frame = frame
-        self.application = Gio.Application.get_default()
+        self.application = application
 
         if sys.platform == "win32":
-            self.win_notification = WinNotify(self.frame.tray_icon)
+            self.win_notification = WinNotify(self.application.tray_icon)
 
         events.connect("show-text-notification", self._show_text_notification)
 
@@ -50,9 +48,9 @@ class Notifications:
         item = room if location == "rooms" else user
 
         if core.notifications.add_hilite_item(location, item):
-            self.frame.tray_icon.update_icon()
+            self.application.tray_icon.update_icon()
 
-        if config.sections["ui"]["urgencyhint"] and not self.frame.window.is_active():
+        if config.sections["ui"]["urgencyhint"] and not self.application.window.is_active():
             self.set_urgency_hint(True)
 
         self.set_title(user)
@@ -63,7 +61,7 @@ class Notifications:
 
         if core.notifications.remove_hilite_item(location, item):
             self.set_title(item)
-            self.frame.tray_icon.update_icon()
+            self.application.tray_icon.update_icon()
 
     def set_title(self, user=None):
 
@@ -72,7 +70,7 @@ class Notifications:
         if (not core.notifications.chat_hilites["rooms"]
                 and not core.notifications.chat_hilites["private"]):
             # Reset Title
-            self.frame.window.set_title(app_name)
+            self.application.window.set_title(app_name)
             return
 
         if not config.sections["notifications"]["notification_window_title"]:
@@ -82,7 +80,7 @@ class Notifications:
             # Private Chats have a higher priority
             user = core.notifications.chat_hilites["private"][-1]
 
-            self.frame.window.set_title(
+            self.application.window.set_title(
                 app_name + " - " + _("Private Message from %(user)s") % {'user': user}
             )
 
@@ -90,16 +88,13 @@ class Notifications:
             # Allow for the possibility the username is not available
             room = core.notifications.chat_hilites["rooms"][-1]
 
-            self.frame.window.set_title(
+            self.application.window.set_title(
                 app_name + " - " + _("Mentioned by %(user)s in Room %(room)s") % {'user': user, 'room': room}
             )
 
     def set_urgency_hint(self, enabled):
 
-        if GTK_API_VERSION >= 4:
-            surface = self.frame.window.get_surface()
-        else:
-            surface = self.frame.window.get_window()
+        surface = self.application.window.get_surface()
 
         try:
             surface.set_urgency_hint(enabled)

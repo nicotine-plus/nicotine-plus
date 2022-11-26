@@ -62,7 +62,7 @@ class FileChooser:
             # GTK < 4.10
             self.using_new_api = False
             self.file_chooser = Gtk.FileChooserNative(
-                transient_for=parent,
+                transient_for=parent.window,
                 title=title,
                 select_multiple=select_multiple,
                 modal=True,
@@ -122,7 +122,7 @@ class FileChooser:
             self.file_chooser.show()
             return
 
-        self.select_method(parent=self.parent, callback=self.on_finish, **self.select_args)
+        self.select_method(parent=self.parent.window, callback=self.on_finish, **self.select_args)
 
 
 class FolderChooser(FileChooser):

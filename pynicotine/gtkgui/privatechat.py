@@ -54,17 +54,17 @@ from pynicotine.utils import open_log
 
 class PrivateChats(IconNotebook):
 
-    def __init__(self, frame):
+    def __init__(self, window):
 
         super().__init__(
-            frame,
-            widget=frame.private_notebook,
-            parent_page=frame.private_page,
+            window,
+            widget=window.private_notebook,
+            parent_page=window.private_page,
             switch_page_callback=self.on_switch_chat
         )
 
         self.completion = ChatCompletion()
-        self.history = ChatHistory(frame)
+        self.history = ChatHistory(window)
         self.command_help = None
 
         for event_name, callback in (
@@ -84,7 +84,7 @@ class PrivateChats(IconNotebook):
 
     def on_switch_chat(self, _notebook, page, _page_num):
 
-        if self.frame.current_page_id != self.frame.private_page.id:
+        if self.window.current_page_id != self.window.private_page.id:
             return
 
         for user, tab in self.pages.items():
@@ -95,7 +95,7 @@ class PrivateChats(IconNotebook):
             tab.set_completion_list(core.privatechat.completion_list[:])
 
             if self.command_help is None:
-                self.command_help = PrivateChatCommands(self.frame.window)
+                self.command_help = PrivateChatCommands(self.window)
 
             self.command_help.popover.unparent()
             tab.help_button.set_popover(self.command_help.popover)
@@ -104,17 +104,17 @@ class PrivateChats(IconNotebook):
                 tab.load()
 
             # Remove hilite if selected tab belongs to a user in the hilite list
-            self.frame.notifications.clear("private", user=user)
+            self.window.application.notifications.clear("private", user=user)
             break
 
     def on_get_private_chat(self, *_args):
 
-        username = self.frame.private_entry.get_text().strip()
+        username = self.window.private_entry.get_text().strip()
 
         if not username:
             return
 
-        self.frame.private_entry.set_text("")
+        self.window.private_entry.set_text("")
         core.privatechat.show_user(username)
 
     def clear_messages(self, user):
@@ -126,7 +126,7 @@ class PrivateChats(IconNotebook):
 
     def clear_notifications(self):
 
-        if self.frame.current_page_id != self.frame.private_page.id:
+        if self.window.current_page_id != self.window.private_page.id:
             return
 
         page = self.get_current_page()
@@ -134,7 +134,7 @@ class PrivateChats(IconNotebook):
         for user, tab in self.pages.items():
             if tab.container == page:
                 # Remove hilite
-                self.frame.notifications.clear("private", user=user)
+                self.window.application.notifications.clear("private", user=user)
                 break
 
     def user_status(self, msg):
@@ -160,7 +160,7 @@ class PrivateChats(IconNotebook):
 
         if switch_page:
             self.set_current_page(self.pages[user].container)
-            self.frame.change_main_page(self.frame.private_page)
+            self.window.change_main_page(self.window.private_page)
 
     def remove_user(self, user):
 
@@ -248,7 +248,7 @@ class PrivateChat:
 
         self.user = user
         self.chats = chats
-        self.frame = chats.frame
+        self.window = chats.window
 
         self.loaded = False
         self.offline_message = False
@@ -261,15 +261,16 @@ class PrivateChat:
                                         controller_widget=self.container, focus_widget=self.chat_entry)
 
         # Chat Entry
-        ChatEntry(self.frame, self.chat_entry, chats.completion, user, slskmessages.MessageUser,
+        ChatEntry(self.window, self.chat_entry, chats.completion, user, slskmessages.MessageUser,
                   core.privatechat.send_message)
 
         self.log_toggle.set_active(config.sections["logging"]["privatechat"])
 
         self.toggle_chat_buttons()
 
-        self.popup_menu_user_chat = UserPopupMenu(self.frame, self.chat_view.textview, connect_events=False)
-        self.popup_menu_user_tab = UserPopupMenu(self.frame, None, self.on_popup_menu_user)
+        self.popup_menu_user_chat = UserPopupMenu(self.window.application, self.chat_view.textview,
+                                                  connect_events=False)
+        self.popup_menu_user_tab = UserPopupMenu(self.window.application, None, self.on_popup_menu_user)
 
         for menu in (self.popup_menu_user_chat, self.popup_menu_user_tab):
             menu.setup_user_menu(user, page="privatechat")
@@ -279,7 +280,7 @@ class PrivateChat:
                 ("#" + _("_Close Tab"), self.on_close)
             )
 
-        self.popup_menu = PopupMenu(self.frame, self.chat_view.textview, self.on_popup_menu_chat)
+        self.popup_menu = PopupMenu(self.window.application, self.chat_view.textview, self.on_popup_menu_chat)
         self.popup_menu.add_items(
             ("#" + _("Find…"), self.on_find_chat_log),
             ("", None),
@@ -352,7 +353,7 @@ class PrivateChat:
     def clear(self):
 
         self.chat_view.clear()
-        self.frame.notifications.clear("private", user=self.user)
+        self.window.application.notifications.clear("private", user=self.user)
 
         for menu in (self.popup_menu_user_chat, self.popup_menu_user_tab, self.popup_menu):
             menu.clear()
@@ -389,7 +390,7 @@ class PrivateChat:
     def on_delete_chat_log(self, *_args):
 
         OptionDialog(
-            parent=self.frame.window,
+            parent=self.window,
             title=_('Delete Logged Messages?'),
             message=_('Do you really want to permanently delete all logged messages for this user?'),
             callback=self.on_delete_chat_log_response
@@ -400,12 +401,12 @@ class PrivateChat:
         self.chats.request_tab_hilite(self.container)
 
         if (self.chats.get_current_page() == self.container
-                and self.frame.current_page_id == self.frame.private_page.id and self.frame.window.is_active()):
+                and self.window.current_page_id == self.window.private_page.id and self.window.is_active()):
             # Don't show notifications if the chat is open and the window is in use
             return
 
         # Update tray icon and show urgency hint
-        self.frame.notifications.add("private", self.user)
+        self.window.application.notifications.add("private", self.user)
 
         if config.sections["notifications"]["notification_popup_private_message"]:
             core.notifications.show_text_notification(

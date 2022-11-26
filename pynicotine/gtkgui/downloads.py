@@ -35,7 +35,7 @@ from pynicotine.utils import open_file_path
 
 class Downloads(TransferList):
 
-    def __init__(self, frame):
+    def __init__(self, window):
 
         self.path_separator = '/'
         self.path_label = _("Path")
@@ -43,19 +43,19 @@ class Downloads(TransferList):
         self.abort_label = _("P_ause")
         self.deprioritized_statuses = ("", "Paused", "Finished", "Filtered")
 
-        self.transfer_page = frame.downloads_page
-        self.user_counter = frame.download_users_label
-        self.file_counter = frame.download_files_label
-        self.expand_button = frame.downloads_expand_button
-        self.expand_icon = frame.downloads_expand_icon
-        self.grouping_button = frame.downloads_grouping_button
+        self.transfer_page = window.downloads_page
+        self.user_counter = window.download_users_label
+        self.file_counter = window.download_files_label
+        self.expand_button = window.downloads_expand_button
+        self.expand_icon = window.downloads_expand_icon
+        self.grouping_button = window.downloads_grouping_button
 
-        TransferList.__init__(self, frame, transfer_type="download")
+        TransferList.__init__(self, window, transfer_type="download")
 
         if GTK_API_VERSION >= 4:
-            frame.downloads_content.append(self.container)
+            window.downloads_content.append(self.container)
         else:
-            frame.downloads_content.add(self.container)
+            window.downloads_content.add(self.container)
 
         self.popup_menu_clear.add_items(
             ("#" + _("Finished / Filtered"), self.on_clear_finished_filtered),
@@ -101,7 +101,7 @@ class Downloads(TransferList):
     def on_try_clear_queued(self, *_args):
 
         OptionDialog(
-            parent=self.frame.window,
+            parent=self.window,
             title=_('Clear Queued Downloads'),
             message=_('Do you really want to clear all queued downloads?'),
             callback=self.on_clear_queued_response
@@ -114,7 +114,7 @@ class Downloads(TransferList):
     def on_try_clear_all(self, *_args):
 
         OptionDialog(
-            parent=self.frame.window,
+            parent=self.window,
             title=_('Clear All Downloads'),
             message=_('Do you really want to clear all downloads?'),
             callback=self.on_clear_all_response
@@ -127,7 +127,7 @@ class Downloads(TransferList):
     def download_large_folder(self, username, folder, numfiles, msg):
 
         OptionDialog(
-            parent=self.frame.window,
+            parent=self.window,
             title=_("Download %(num)i files?") % {'num': numfiles},
             message=_("Do you really want to download %(num)i files from %(user)s's folder %(folder)s?") % {
                 'num': numfiles, 'user': username, 'folder': folder},

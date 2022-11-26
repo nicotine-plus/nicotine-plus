@@ -71,11 +71,8 @@ class Popover:
         if not popover_width and not popover_height:
             return
 
-        if GTK_API_VERSION >= 4:
-            main_window_width = self.window.get_width()
-            main_window_height = self.window.get_height()
-        else:
-            main_window_width, main_window_height = self.window.get_size()
+        main_window_width = self.window.get_width()
+        main_window_height = self.window.get_height()
 
         if main_window_width and popover_width > main_window_width:
             popover_width = main_window_width - 60

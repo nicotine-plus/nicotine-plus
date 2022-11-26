@@ -43,7 +43,7 @@ from pynicotine.utils import human_speed
 
 class UserList:
 
-    def __init__(self, frame):
+    def __init__(self, window):
 
         ui_template = UserInterface(scope=self, path="buddylist.ui")
         (
@@ -52,11 +52,11 @@ class UserList:
             self.toolbar
         ) = ui_template.widgets
 
-        self.frame = frame
+        self.window = window
 
         # Columns
         self.list_view = TreeView(
-            frame, parent=self.list_container, name="buddy_list",
+            window, parent=self.list_container, name="buddy_list",
             activate_row_callback=self.on_row_activated, tooltip_callback=self.on_tooltip,
             columns=[
                 # Visible columns
@@ -91,17 +91,17 @@ class UserList:
         )
 
         # Lists
-        for combo_box in (self.frame.user_search_combobox, self.frame.userinfo_combobox,
-                          self.frame.userbrowse_combobox):
+        for combo_box in (self.window.user_search_combobox, self.window.userinfo_combobox,
+                          self.window.userbrowse_combobox):
             combo_box.set_model(self.list_view.model)
             combo_box.set_entry_text_column(2)
 
             CompletionEntry(combo_box.get_child(), self.list_view.model, column=2)
 
         # Popup menus
-        self.popup_menu_private_rooms = UserPopupMenu(self.frame)
+        self.popup_menu_private_rooms = UserPopupMenu(window.application)
 
-        self.popup_menu = popup = UserPopupMenu(frame, self.list_view.widget, self.on_popup_menu)
+        self.popup_menu = popup = UserPopupMenu(window.application, self.list_view.widget, self.on_popup_menu)
         popup.setup_user_menu(page="userlist")
         popup.add_items(
             ("", None),
@@ -136,7 +136,7 @@ class UserList:
         if config.sections["ui"]["buddylistinchatrooms"] in ("always", "chatrooms"):
             return
 
-        self.frame.userlist_content.set_visible(self.list_view.iterators)
+        self.window.userlist_content.set_visible(self.list_view.iterators)
 
     def update_visuals(self):
         for widget in self.__dict__.values():
@@ -242,7 +242,8 @@ class UserList:
         self.update_visible()
 
         if config.sections["words"]["buddies"]:
-            self.frame.update_completions()
+            core.chatrooms.update_completions()
+            core.privatechat.update_completions()
 
     def remove_buddy(self, user):
 
@@ -255,7 +256,8 @@ class UserList:
         self.update_visible()
 
         if config.sections["words"]["buddies"]:
-            self.frame.update_completions()
+            core.chatrooms.update_completions()
+            core.privatechat.update_completions()
 
     def buddy_note(self, user, note):
 
@@ -319,12 +321,12 @@ class UserList:
 
     def on_add_buddy(self, *_args):
 
-        username = self.frame.add_buddy_entry.get_text().strip()
+        username = self.window.add_buddy_entry.get_text().strip()
 
         if not username:
             return
 
-        self.frame.add_buddy_entry.set_text("")
+        self.window.add_buddy_entry.set_text("")
         core.userlist.add_buddy(username)
 
     def on_remove_buddy(self, *_args):
@@ -376,7 +378,7 @@ class UserList:
         note = self.list_view.get_row_value(iterator, 9) or ""
 
         EntryDialog(
-            parent=self.frame.window,
+            parent=self.window,
             title=_("Add User Note"),
             message=_("Add a note about user %s:") % user,
             callback=self.on_add_note_response,
