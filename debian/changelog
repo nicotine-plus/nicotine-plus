@@ -1,8 +1,8 @@
-nicotine (3.3.0-dev4) jammy; urgency=medium
+nicotine (4.0.0-dev1) jammy; urgency=medium
 
   * Development version.
 
- -- Mat <mail@mathias.is>  Fri, 25 Nov 2022 21:05:54 +0300
+ -- Mat <mail@mathias.is>  Sat, 26 Nov 2022 12:02:15 +0300
 
 nicotine (3.2.6-1) jammy; urgency=medium
 
