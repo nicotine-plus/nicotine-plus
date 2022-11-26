@@ -369,6 +369,27 @@ class SoulseekNetworkThread(Thread):
 
         return True
 
+    def _find_local_ip_address(self):
+
+        # Create a UDP socket
+        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as local_socket:
+
+            # Use the interface we have selected
+            if self._bound_ip:
+                local_socket.bind((self._bound_ip, 0))
+
+            elif self._interface:
+                self._bind_to_network_interface(local_socket, self._interface)
+
+            # Send a broadcast packet on a local address (doesn't need to be reachable,
+            # but MacOS requires port to be non-zero)
+            local_socket.connect_ex(("10.255.255.255", 1))
+
+            # This returns the "primary" IP on the local box, even if that IP is a NAT/private/internal IP
+            ip_address = local_socket.getsockname()[0]
+
+        return ip_address
+
     def _server_connect(self, msg_obj):
         """ We're connecting to the server """
 
@@ -414,7 +435,6 @@ class SoulseekNetworkThread(Thread):
             self._process_queue = False
             return
 
-        self.upnp.port = self.listenport
         self._manual_server_disconnect = False
         scheduler.cancel(self._server_timer)
 
@@ -430,6 +450,7 @@ class SoulseekNetworkThread(Thread):
         self._bound_ip = self._interface = self._listen_port_range = self._server_socket = None
 
         self._close_listen_socket()
+        self.upnp.cancel_timer()
 
         for sock in self._conns.copy():
             self._close_connection(self._conns, sock, callback=False)
@@ -1203,6 +1224,8 @@ class SoulseekNetworkThread(Thread):
                     elif msg_class is Login:
                         if msg.success:
                             # Ensure listening port is open
+                            self.upnp.port = self.listenport
+                            self.upnp.local_ip_address = self._find_local_ip_address()
                             self.upnp.add_port_mapping(blocking=True)
 
                             # Check for indirect connection timeouts
