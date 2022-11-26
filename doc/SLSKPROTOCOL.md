@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on November 24, 2022
+Last updated on November 26, 2022
 
 Since the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify or extend the protocol in ways that negatively impact the network.
 
@@ -82,20 +82,29 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
 
 ### Transfer Status Strings
 
+#### In Use
+
 | String                | Comments                                    |
 | --------------------- | ------------------------------------------- |
-| Banned                |                                             |
-| Blocked country       |                                             |
+| Banned                | SoulseekQt uses 'File not shared.' instead  |
 | Cancelled             |                                             |
 | Complete              |                                             |
 | Disallowed extension  | Sent by Soulseek NS for filtered extensions |
-| File not shared       |                                             |
-| File not shared.      | Newer variant containing a dot              |
-| Pending shutdown.     |                                             |
+| File not shared.      | Note: Ends with a dot                       |
+| Pending shutdown.     | Note: Ends with a dot                       |
 | Queued                |                                             |
 | Remote file error     |                                             |
 | Too many files        |                                             |
 | Too many megabytes    |                                             |
+
+#### Deprecated
+
+| String                             | Comments                                                    |
+| ---------------------------------- | ----------------------------------------------------------- |
+| Blocked country                    | Exclusive to Nicotine+, no longer used in Nicotine+ >=3.2.0 |
+| File not shared                    | Exclusive to Nicotine+, no longer used in Nicotine+ >=3.1.1 |
+| User limit of x megabytes exceeded | Exclusive to Nicotine+, no longer used in Nicotine+ >=3.1.1 |
+| User limit of x files exceeded     | Exclusive to Nicotine+, no longer used in Nicotine+ >=3.1.1 |
 
 ### File Attribute Types
 

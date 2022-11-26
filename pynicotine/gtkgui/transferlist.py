@@ -54,6 +54,7 @@ from pynicotine.utils import humanize
 class TransferList:
 
     path_separator = path_label = retry_label = abort_label = None
+    deprioritized_statuses = ()
     transfer_page = user_counter = file_counter = expand_button = expand_icon = grouping_button = None
 
     def __init__(self, frame, transfer_type):
@@ -97,22 +98,20 @@ class TransferList:
             "Connection timeout": _("Connection timeout"),
             "Pending shutdown.": _("Pending shutdown"),
             "User logged off": _("User logged off"),
-            "Disallowed extension": _("Disallowed extension"),  # Sent by Soulseek NS for filtered extensions
+            "Disallowed extension": _("Disallowed extension"),
             "Cancelled": _("Cancelled"),
             "Paused": _("Paused"),
             "Finished": _("Finished"),
             "Filtered": _("Filtered"),
             "Banned": _("Banned"),
-            "Blocked country": _("Blocked country"),
             "Too many files": _("Too many files"),
             "Too many megabytes": _("Too many megabytes"),
             "File not shared": _("File not shared"),
-            "File not shared.": _("File not shared"),  # Newer variant containing a dot
+            "File not shared.": _("File not shared"),
             "Download folder error": _("Download folder error"),
             "Local file error": _("Local file error"),
             "Remote file error": _("Remote file error")
         }
-        self.deprioritized_statuses = ("", "Paused", "Finished", "Filtered")
 
         self.create_model()
 
