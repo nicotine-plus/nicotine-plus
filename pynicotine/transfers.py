@@ -2396,7 +2396,7 @@ class Transfers:
 
         events.emit("abort-downloads", downloads, abort_reason)
 
-    def abort_upload(self, upload, denied_message=None, abort_reason="Aborted", update_parent=True):
+    def abort_upload(self, upload, denied_message=None, abort_reason="Cancelled", update_parent=True):
 
         log.add_transfer(("Aborting upload, user \"%(user)s\", filename \"%(filename)s\", token \"%(token)s\", "
                           "status \"%(status)s\""), {
@@ -2435,7 +2435,7 @@ class Transfers:
 
         events.emit("abort-upload", upload, abort_reason, update_parent)
 
-    def abort_uploads(self, uploads, denied_message=None, abort_reason="Aborted"):
+    def abort_uploads(self, uploads, denied_message=None, abort_reason="Cancelled"):
 
         for upload in uploads:
             if upload.status not in (abort_reason, "Finished"):

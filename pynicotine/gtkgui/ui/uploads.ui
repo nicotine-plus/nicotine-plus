@@ -149,7 +149,7 @@
               <object class="GtkButton" id="_clear_finished_button">
                 <property name="visible">True</property>
                 <property name="tooltip-text" translatable="yes">Clear all finished and cancelled uploads.</property>
-                <signal name="clicked" handler="on_clear_finished_aborted"/>
+                <signal name="clicked" handler="on_clear_finished_cancelled"/>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>

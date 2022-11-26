@@ -98,7 +98,6 @@ class TransferList:
             "Pending shutdown.": _("Pending shutdown"),
             "User logged off": _("User logged off"),
             "Disallowed extension": _("Disallowed extension"),  # Sent by Soulseek NS for filtered extensions
-            "Aborted": _("Aborted"),
             "Cancelled": _("Cancelled"),
             "Paused": _("Paused"),
             "Finished": _("Finished"),
@@ -113,7 +112,7 @@ class TransferList:
             "Local file error": _("Local file error"),
             "Remote file error": _("Remote file error")
         }
-        self.deprioritized_statuses = ("", "Paused", "Aborted", "Finished", "Filtered")
+        self.deprioritized_statuses = ("", "Paused", "Finished", "Filtered")
 
         self.create_model()
 

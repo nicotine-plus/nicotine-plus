@@ -41,6 +41,7 @@ class Downloads(TransferList):
         self.path_label = _("Path")
         self.retry_label = _("_Resume")
         self.abort_label = _("P_ause")
+        self.deprioritized_statuses = ("", "Paused", "Finished", "Filtered")
 
         self.transfer_page = frame.downloads_page
         self.user_counter = frame.download_users_label

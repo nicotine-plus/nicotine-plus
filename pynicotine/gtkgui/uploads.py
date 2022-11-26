@@ -42,6 +42,7 @@ class Uploads(TransferList):
         self.path_label = _("Folder")
         self.retry_label = _("_Retry")
         self.abort_label = _("_Abort")
+        self.deprioritized_statuses = ("", "Cancelled", "Finished")
 
         self.transfer_page = frame.uploads_page
         self.user_counter = frame.upload_users_label
@@ -58,11 +59,11 @@ class Uploads(TransferList):
             frame.uploads_content.add(self.container)
 
         self.popup_menu_clear.add_items(
-            ("#" + _("Finished / Aborted / Failed"), self.on_clear_finished_failed),
-            ("#" + _("Finished / Aborted"), self.on_clear_finished_aborted),
+            ("#" + _("Finished / Cancelled / Failed"), self.on_clear_finished_failed),
+            ("#" + _("Finished / Cancelled"), self.on_clear_finished_cancelled),
             ("", None),
             ("#" + _("Finished"), self.on_clear_finished),
-            ("#" + _("Aborted"), self.on_clear_aborted),
+            ("#" + _("Cancelled"), self.on_clear_cancelled),
             ("#" + _("Failed"), self.on_clear_failed),
             ("#" + _("User logged off"), self.on_clear_logged_out),
             ("#" + _("Queued…"), self.on_try_clear_queued),
@@ -186,8 +187,8 @@ class Uploads(TransferList):
     def on_clear_finished(self, *_args):
         core.transfers.clear_uploads(statuses=["Finished"])
 
-    def on_clear_aborted(self, *_args):
-        core.transfers.clear_uploads(statuses=["Aborted", "Cancelled", "Disallowed extension"])
+    def on_clear_cancelled(self, *_args):
+        core.transfers.clear_uploads(statuses=["Cancelled", "Disallowed extension"])
 
     def on_clear_failed(self, *_args):
         core.transfers.clear_uploads(statuses=["Connection timeout", "Local file error", "Remote file error"])
@@ -195,10 +196,10 @@ class Uploads(TransferList):
     def on_clear_logged_out(self, *_args):
         core.transfers.clear_uploads(statuses=["User logged off"])
 
-    def on_clear_finished_aborted(self, *_args):
-        core.transfers.clear_uploads(statuses=["Aborted", "Cancelled", "Disallowed extension", "Finished"])
+    def on_clear_finished_cancelled(self, *_args):
+        core.transfers.clear_uploads(statuses=["Cancelled", "Disallowed extension", "Finished"])
 
     def on_clear_finished_failed(self, *_args):
         core.transfers.clear_uploads(
-            statuses=["Aborted", "Cancelled", "Disallowed extension", "Finished", "Connection timeout",
+            statuses=["Cancelled", "Disallowed extension", "Finished", "Connection timeout",
                       "Local file error", "Remote file error"])
