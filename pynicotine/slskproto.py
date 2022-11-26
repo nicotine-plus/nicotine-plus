@@ -408,11 +408,8 @@ class SoulseekNetworkThread(Thread):
         valid_network_interface = self._validate_network_interface()
 
         if not valid_network_interface:
-            message = _(
-                "The network interface you specified, '%s', does not exist. Change or remove the specified "
-                "network interface and restart Nicotine+."
-            )
-            log.add(message, self._interface, title=_("Unknown Network Interface"))
+            log.add(_("The network interface you specified, '%s', does not exist"), self._interface,
+                    title=_("Unknown Network Interface"))
             self._process_queue = False
             return
 
@@ -424,7 +421,7 @@ class SoulseekNetworkThread(Thread):
                 "The range you specified for client connection ports was "
                 "{}-{}, but none of these were usable. Increase and/or ".format(self._listen_port_range[0],
                                                                                 self._listen_port_range[1])
-                + "move the range and restart Nicotine+."
+                + "move the range."
             )
             if self._listen_port_range[0] < 1024:
                 message += "\n\n" + _(
