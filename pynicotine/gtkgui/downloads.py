@@ -62,7 +62,6 @@ class Downloads(TransferList):
             ("", None),
             ("#" + _("Finished"), self.on_clear_finished),
             ("#" + _("Paused"), self.on_clear_paused),
-            ("#" + _("Failed"), self.on_clear_failed),
             ("#" + _("Filtered"), self.on_clear_filtered),
             ("#" + _("Queued…"), self.on_try_clear_queued),
             ("", None),
@@ -206,10 +205,6 @@ class Downloads(TransferList):
 
     def on_clear_finished_filtered(self, *_args):
         core.transfers.clear_downloads(statuses=["Finished", "Filtered"])
-
-    def on_clear_failed(self, *_args):
-        core.transfers.clear_downloads(
-            statuses=["Connection timeout", "Local file error", "Remote file error", "File not shared"])
 
     def on_clear_filtered(self, *_args):
         core.transfers.clear_downloads(statuses=["Filtered"])
