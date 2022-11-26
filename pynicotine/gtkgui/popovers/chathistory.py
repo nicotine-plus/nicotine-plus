@@ -81,6 +81,7 @@ class ChatHistory(Popover):
 
         username = os.path.basename(file_path[:-4]).decode("utf-8", "replace")
         is_safe_username = ("_" not in username)
+        login_username = config.sections["server"]["login"]
 
         read_num_lines = 1 if is_safe_username else 25
         latest_message = None
@@ -102,6 +103,9 @@ class ChatHistory(Popover):
                         break
 
                     username_chars = set(username.replace("_", ""))
+
+                if login_username in line:
+                    continue
 
                 if " [" not in line or "] " not in line:
                     continue
