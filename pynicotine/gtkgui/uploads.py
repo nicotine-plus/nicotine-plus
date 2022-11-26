@@ -65,7 +65,7 @@ class Uploads(TransferList):
             ("#" + _("Finished"), self.on_clear_finished),
             ("#" + _("Cancelled"), self.on_clear_cancelled),
             ("#" + _("Failed"), self.on_clear_failed),
-            ("#" + _("User logged off"), self.on_clear_logged_out),
+            ("#" + _("User Logged Off"), self.on_clear_logged_off),
             ("#" + _("Queued…"), self.on_try_clear_queued),
             ("", None),
             ("#" + _("Everything…"), self.on_try_clear_all),
@@ -193,7 +193,7 @@ class Uploads(TransferList):
     def on_clear_failed(self, *_args):
         core.transfers.clear_uploads(statuses=["Connection timeout", "Local file error", "Remote file error"])
 
-    def on_clear_logged_out(self, *_args):
+    def on_clear_logged_off(self, *_args):
         core.transfers.clear_uploads(statuses=["User logged off"])
 
     def on_clear_finished_cancelled(self, *_args):
