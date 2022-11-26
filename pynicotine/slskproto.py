@@ -339,6 +339,27 @@ class SlskProtoThread(threading.Thread):
                 log.add_debug("Cannot listen on port %(port)s: %(error)s", {"port": listenport, "error": error})
                 continue
 
+    def find_local_ip_address(self):
+
+        # Create a UDP socket
+        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as local_socket:
+
+            # Use the interface we have selected
+            if self.bindip:
+                local_socket.bind((self.bindip, 0))
+
+            elif self.interface:
+                self.bind_to_network_interface(local_socket, self.interface)
+
+            # Send a broadcast packet on a local address (doesn't need to be reachable,
+            # but MacOS requires port to be non-zero)
+            local_socket.connect_ex(("10.255.255.255", 1))
+
+            # This returns the "primary" IP on the local box, even if that IP is a NAT/private/internal IP
+            ip_address = local_socket.getsockname()[0]
+
+        return ip_address
+
     def server_connect(self, msg_obj):
         """ We're connecting to the server """
 
@@ -2041,7 +2062,7 @@ class SlskProtoThread(threading.Thread):
 
         self.selector.register(self.listen_socket, selectors.EVENT_READ)
 
-        self.upnp = UPnP(self.listenport)
+        self.upnp = UPnP(port=self.listenport, local_ip_address=self.find_local_ip_address())
         self.upnp.add_port_mapping(blocking=True)
 
         while not self._want_abort:
