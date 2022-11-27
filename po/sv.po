@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-15 21:58+0300\n"
-"PO-Revision-Date: 2022-08-31 18:23+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2022-11-22 14:43+0000\n"
+"Last-Translator: Micke Nilsson <mikni@proton.me>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/sv/>\n"
 "Language: sv\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.14.1-dev\n"
+"X-Generator: Weblate 4.15-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -24,17 +24,14 @@ msgid "Nicotine+"
 msgstr "Nicotine+"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:9
-#, fuzzy
 msgid "Graphical client for the Soulseek network"
-msgstr "Grafisk klient för peer-to-peer-nätverket Soulseek"
+msgstr "Grafisk klient för Soulseek-nätverket"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:11
-#, fuzzy
 msgid "Nicotine+ is a graphical client for the Soulseek peer-to-peer network."
-msgstr "Nicotine+ är en grafisk klient för Soulseek peer-to-peer-nätverket."
+msgstr "Grafisk klient för peer-to-peer-nätverket Soulseek"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:15
-#, fuzzy
 msgid ""
 "Nicotine+ aims to be a pleasant, free and open source (FOSS) alternative to "
 "the official Soulseek client, providing additional functionality while "
@@ -51,7 +48,6 @@ msgid "Nicotine+ Team"
 msgstr "Nicotine+ Team"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:6
-#, fuzzy
 msgid "Soulseek Client"
 msgstr "Soulseek-klient"
 
@@ -66,29 +62,25 @@ msgid "Soulseek;Nicotine;sharing;music;P2P;peer-to-peer;GTK;"
 msgstr "Soulseek;Nicotine;delning;musik;P2P;peer-to-peer;GTK;"
 
 #: pynicotine/__init__.py:29
-#, fuzzy, python-format
+#, python-format
 msgid "Website: %s"
-msgstr "Körde: %s"
+msgstr "Webbplats: %s"
 
 #: pynicotine/__init__.py:35
-#, fuzzy
 msgid "show this help message and exit"
 msgstr "visa det här hjälpmeddelandet och avsluta"
 
 #: pynicotine/__init__.py:38
-#, fuzzy
 msgid "file"
 msgstr "fil"
 
 #: pynicotine/__init__.py:39
-#, fuzzy
 msgid "use non-default configuration file"
 msgstr "använda en konfigurationsfil som inte är standard"
 
 #: pynicotine/__init__.py:42 pynicotine/__init__.py:46
-#, fuzzy
 msgid "dir"
-msgstr "dir"
+msgstr "katalog"
 
 #: pynicotine/__init__.py:43
 #, fuzzy
