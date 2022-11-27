@@ -47,7 +47,8 @@ def install_pacman():
     subprocess.check_call(["pacman", "--noconfirm", "-S", "--needed"] + packages)
 
     # Downgrade Cairo for now due to text rendering performance issues
-    downgrade_packages = [prefix + "cairo-1.17.4-4-any.pkg.tar.zst"]
+    downgrade_packages = [prefix + "cairo-1.17.4-4-any.pkg.tar.zst",
+                          prefix + "pango-1.50.11-1-any.pkg.tar.zst"]
 
     for package in downgrade_packages:
         subprocess.check_call(["curl", "-O", "https://repo.msys2.org/mingw/%s/%s" % (mingw_type, package)])
