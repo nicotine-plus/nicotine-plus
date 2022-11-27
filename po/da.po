@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-11-28 00:38+0200\n"
-"PO-Revision-Date: 2022-08-31 18:23+0000\n"
+"PO-Revision-Date: 2022-11-27 22:56+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Danish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/da/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.14.1-dev\n"
+"X-Generator: Weblate 4.15-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -1595,13 +1595,17 @@ msgid "Remember choice"
 msgstr "Husk valg"
 
 #: pynicotine/gtkgui/application.py:436
+#, fuzzy
 msgid "Shares Not Available"
-msgstr ""
+msgstr "Aktier ikke tilgængelige"
 
 #: pynicotine/gtkgui/application.py:437
+#, fuzzy
 msgid ""
 "Verify that external disks are mounted and folder permissions are correct."
 msgstr ""
+"Kontroller, at eksterne diske er monteret, og at mappetilladelserne er "
+"korrekte."
 
 #: pynicotine/gtkgui/application.py:439 pynicotine/gtkgui/application.py:464
 #: pynicotine/gtkgui/widgets/dialogs.py:435
@@ -1616,8 +1620,9 @@ msgid "_Retry"
 msgstr "Forsøg igen"
 
 #: pynicotine/gtkgui/application.py:441
+#, fuzzy
 msgid "_Force Rescan"
-msgstr ""
+msgstr "_Tving genscanning"
 
 #: pynicotine/gtkgui/application.py:456
 #, fuzzy
@@ -2448,9 +2453,9 @@ msgid "Transfer Statistics"
 msgstr "Overførsler"
 
 #: pynicotine/gtkgui/dialogs/statistics.py:82
-#, python-format
+#, fuzzy, python-format
 msgid "Total Since %(date)s"
-msgstr ""
+msgstr "I alt siden %(date)s"
 
 #: pynicotine/gtkgui/dialogs/statistics.py:103
 #, fuzzy
@@ -3108,8 +3113,9 @@ msgid "[PRIVATE]  %s"
 msgstr "[PRIVAT]"
 
 #: pynicotine/gtkgui/search.py:714
+#, fuzzy
 msgid "Wishlist Results Found"
-msgstr ""
+msgstr "Ønskelisteresultater fundet"
 
 #: pynicotine/gtkgui/search.py:969
 #, fuzzy, python-format
@@ -4119,8 +4125,9 @@ msgid "Failed to send number of shared files to the server: %s"
 msgstr "Antallet af delte filer kunne ikke sendes til serveren: %s"
 
 #: pynicotine/shares.py:865
+#, fuzzy
 msgid "Rescan aborted due to unavailable shares"
-msgstr ""
+msgstr "Genscanning afbrudt på grund af utilgængelige delinger"
 
 #: pynicotine/shares.py:922
 #, fuzzy, python-format
@@ -4143,9 +4150,9 @@ msgid "Listening on port: %i"
 msgstr "Lytter på port %i"
 
 #: pynicotine/slskproto.py:413
-#, python-format
+#, fuzzy, python-format
 msgid "Specified network interface '%s' does not exist"
-msgstr ""
+msgstr "Den specificerede netværksgrænseflade '%s' findes ikke"
 
 #: pynicotine/slskproto.py:414
 #, fuzzy
@@ -4153,9 +4160,9 @@ msgid "Unknown Network Interface"
 msgstr "Interface"
 
 #: pynicotine/slskproto.py:422
-#, python-format
+#, fuzzy, python-format
 msgid "No listening port is available in the specified port range %s–%s"
-msgstr ""
+msgstr "Ingen lytteport er tilgængelig i det angivne portområde %s–%s"
 
 #: pynicotine/slskproto.py:423
 #, fuzzy
@@ -4324,9 +4331,9 @@ msgid "Out of Date"
 msgstr "Forældet"
 
 #: pynicotine/updatechecker.py:50
-#, python-format
+#, fuzzy, python-format
 msgid "Version %(version)s is available, released on %(date)s"
-msgstr ""
+msgstr "Version %(version)s er tilgængelig, udgivet på %(date)s"
 
 #: pynicotine/updatechecker.py:56
 #, fuzzy, python-format
@@ -4349,8 +4356,9 @@ msgid "Invalid response: %s"
 msgstr "Fejlagtig SoulSeek-meta-url: %s"
 
 #: pynicotine/upnp.py:318
+#, fuzzy
 msgid "No UPnP devices found"
-msgstr ""
+msgstr "Ingen UPnP-enheder fundet"
 
 #: pynicotine/upnp.py:343
 #, fuzzy, python-format
@@ -4532,16 +4540,19 @@ msgid "R_oom Wall"
 msgstr "Værelse væg"
 
 #: pynicotine/gtkgui/ui/dialogs/about.ui:95
+#, fuzzy
 msgid "Created by"
-msgstr ""
+msgstr "Lavet af"
 
 #: pynicotine/gtkgui/ui/dialogs/about.ui:135
+#, fuzzy
 msgid "Translated by"
-msgstr ""
+msgstr "Oversat af"
 
 #: pynicotine/gtkgui/ui/dialogs/about.ui:175
+#, fuzzy
 msgid "License"
-msgstr ""
+msgstr "Licens"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:6
 #, fuzzy
@@ -4603,10 +4614,13 @@ msgstr ""
 "lytteporte er åbne."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:280
+#, fuzzy
 msgid ""
 "Choose a range to select a listening port from. The first available port in "
 "the range will be used."
 msgstr ""
+"Vælg en rækkevidde at vælge en lytteport fra. Den første tilgængelige port i "
+"rækken vil blive brugt."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:302
 #: pynicotine/gtkgui/ui/settings/network.ui:166
@@ -5197,8 +5211,9 @@ msgstr ""
 "modtage meddelelser, når de er online"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1452
+#, fuzzy
 msgid "Join or create room…"
-msgstr ""
+msgstr "Deltag eller opret rum…"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1453
 #, fuzzy
@@ -6988,8 +7003,9 @@ msgid "Chat room mentions"
 msgstr "Færdiggørelse"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:427
+#, fuzzy
 msgid "Wishlist item found"
-msgstr ""
+msgstr "Ønskeliste vare fundet"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:454
 #, fuzzy
