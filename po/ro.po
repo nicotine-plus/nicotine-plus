@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-11-28 00:38+0200\n"
-"PO-Revision-Date: 2022-11-15 23:27+0000\n"
+"PO-Revision-Date: 2022-11-27 22:57+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ro/>\n"
@@ -1605,13 +1605,17 @@ msgid "Remember choice"
 msgstr "Amintiți-vă alegerea"
 
 #: pynicotine/gtkgui/application.py:436
+#, fuzzy
 msgid "Shares Not Available"
-msgstr ""
+msgstr "Acțiuni nu sunt disponibile"
 
 #: pynicotine/gtkgui/application.py:437
+#, fuzzy
 msgid ""
 "Verify that external disks are mounted and folder permissions are correct."
 msgstr ""
+"Verificați dacă discurile externe sunt montate și că permisiunile pentru "
+"foldere sunt corecte."
 
 #: pynicotine/gtkgui/application.py:439 pynicotine/gtkgui/application.py:464
 #: pynicotine/gtkgui/widgets/dialogs.py:435
@@ -1627,8 +1631,9 @@ msgid "_Retry"
 msgstr "_Reîncercați"
 
 #: pynicotine/gtkgui/application.py:441
+#, fuzzy
 msgid "_Force Rescan"
-msgstr ""
+msgstr "_Forțați Rescanarea"
 
 #: pynicotine/gtkgui/application.py:456
 #, fuzzy
@@ -2479,9 +2484,9 @@ msgid "Transfer Statistics"
 msgstr "Statistici de transfer"
 
 #: pynicotine/gtkgui/dialogs/statistics.py:82
-#, python-format
+#, fuzzy, python-format
 msgid "Total Since %(date)s"
-msgstr ""
+msgstr "Total de la %(date)s"
 
 #: pynicotine/gtkgui/dialogs/statistics.py:103
 #, fuzzy
@@ -3157,8 +3162,9 @@ msgid "[PRIVATE]  %s"
 msgstr "[PRIVAT] %s"
 
 #: pynicotine/gtkgui/search.py:714
+#, fuzzy
 msgid "Wishlist Results Found"
-msgstr ""
+msgstr "S-au găsit rezultatele listei de dorințe"
 
 #: pynicotine/gtkgui/search.py:969
 #, fuzzy, python-format
@@ -4182,8 +4188,9 @@ msgid "Failed to send number of shared files to the server: %s"
 msgstr "Nu s-a trimis numărul de fișiere partajate către server: %s"
 
 #: pynicotine/shares.py:865
+#, fuzzy
 msgid "Rescan aborted due to unavailable shares"
-msgstr ""
+msgstr "Rescanarea a fost anulată din cauza partajărilor indisponibile"
 
 #: pynicotine/shares.py:922
 #, fuzzy, python-format
@@ -4208,9 +4215,9 @@ msgid "Listening on port: %i"
 msgstr "Ascultare pe portul: %i"
 
 #: pynicotine/slskproto.py:413
-#, python-format
+#, fuzzy, python-format
 msgid "Specified network interface '%s' does not exist"
-msgstr ""
+msgstr "Interfața de rețea specificată „%s” nu există"
 
 #: pynicotine/slskproto.py:414
 #, fuzzy
@@ -4218,9 +4225,11 @@ msgid "Unknown Network Interface"
 msgstr "Interfața cu utilizatorul"
 
 #: pynicotine/slskproto.py:422
-#, python-format
+#, fuzzy, python-format
 msgid "No listening port is available in the specified port range %s–%s"
 msgstr ""
+"Niciun port de ascultare nu este disponibil în intervalul de porturi "
+"specificat %s–%s"
 
 #: pynicotine/slskproto.py:423
 #, fuzzy
@@ -4390,9 +4399,9 @@ msgid "Out of Date"
 msgstr "Expirat"
 
 #: pynicotine/updatechecker.py:50
-#, python-format
+#, fuzzy, python-format
 msgid "Version %(version)s is available, released on %(date)s"
-msgstr ""
+msgstr "Versiunea %(version)s este disponibilă, lansată pe %(date)s"
 
 #: pynicotine/updatechecker.py:56
 #, fuzzy, python-format
@@ -4415,8 +4424,9 @@ msgid "Invalid response: %s"
 msgstr "Răspuns nevalid: %s"
 
 #: pynicotine/upnp.py:318
+#, fuzzy
 msgid "No UPnP devices found"
-msgstr ""
+msgstr "Nu s-au găsit dispozitive UPnP"
 
 #: pynicotine/upnp.py:343
 #, fuzzy, python-format
@@ -4601,16 +4611,19 @@ msgid "R_oom Wall"
 msgstr "R_oom Wall"
 
 #: pynicotine/gtkgui/ui/dialogs/about.ui:95
+#, fuzzy
 msgid "Created by"
-msgstr ""
+msgstr "Creat de"
 
 #: pynicotine/gtkgui/ui/dialogs/about.ui:135
+#, fuzzy
 msgid "Translated by"
-msgstr ""
+msgstr "Tradus de"
 
 #: pynicotine/gtkgui/ui/dialogs/about.ui:175
+#, fuzzy
 msgid "License"
-msgstr ""
+msgstr "Licență"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:6
 #, fuzzy
@@ -4672,10 +4685,13 @@ msgstr ""
 "utilizatori ale căror porturi de ascultare sunt deschise."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:280
+#, fuzzy
 msgid ""
 "Choose a range to select a listening port from. The first available port in "
 "the range will be used."
 msgstr ""
+"Alegeți un interval din care să selectați un port de ascultare. Va fi "
+"folosit primul port disponibil din gamă."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:302
 #: pynicotine/gtkgui/ui/settings/network.ui:166
@@ -5279,8 +5295,9 @@ msgstr ""
 "pentru a primi notificări atunci când sunt online"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1452
+#, fuzzy
 msgid "Join or create room…"
-msgstr ""
+msgstr "Alăturați-vă sau creați o cameră…"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1453
 #, fuzzy
@@ -7128,8 +7145,9 @@ msgid "Chat room mentions"
 msgstr "Mențiuni din camera de chat"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:427
+#, fuzzy
 msgid "Wishlist item found"
-msgstr ""
+msgstr "Articol din lista de dorințe găsit"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:454
 #, fuzzy
