@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-11-28 00:38+0200\n"
-"PO-Revision-Date: 2022-08-31 18:23+0000\n"
+"PO-Revision-Date: 2022-11-27 22:57+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/cs/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Weblate 4.14.1-dev\n"
+"X-Generator: Weblate 4.15-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -1585,13 +1585,16 @@ msgid "Remember choice"
 msgstr "Pamatujte si volbu"
 
 #: pynicotine/gtkgui/application.py:436
+#, fuzzy
 msgid "Shares Not Available"
-msgstr ""
+msgstr "Akcie nejsou k dispozici"
 
 #: pynicotine/gtkgui/application.py:437
+#, fuzzy
 msgid ""
 "Verify that external disks are mounted and folder permissions are correct."
 msgstr ""
+"Ověřte, že jsou připojeny externí disky a že jsou správná oprávnění složky."
 
 #: pynicotine/gtkgui/application.py:439 pynicotine/gtkgui/application.py:464
 #: pynicotine/gtkgui/widgets/dialogs.py:435
@@ -1607,8 +1610,9 @@ msgid "_Retry"
 msgstr "_Retry"
 
 #: pynicotine/gtkgui/application.py:441
+#, fuzzy
 msgid "_Force Rescan"
-msgstr ""
+msgstr "_Vynutit opětovné skenování"
 
 #: pynicotine/gtkgui/application.py:456
 #, fuzzy
@@ -2454,9 +2458,9 @@ msgid "Transfer Statistics"
 msgstr "Statistiky převodu"
 
 #: pynicotine/gtkgui/dialogs/statistics.py:82
-#, python-format
+#, fuzzy, python-format
 msgid "Total Since %(date)s"
-msgstr ""
+msgstr "Celkem od %(date)s"
 
 #: pynicotine/gtkgui/dialogs/statistics.py:103
 #, fuzzy
@@ -3130,8 +3134,9 @@ msgid "[PRIVATE]  %s"
 msgstr "[SOUKROMÉ]"
 
 #: pynicotine/gtkgui/search.py:714
+#, fuzzy
 msgid "Wishlist Results Found"
-msgstr ""
+msgstr "Výsledky v seznamu přání nalezeny"
 
 #: pynicotine/gtkgui/search.py:969
 #, fuzzy, python-format
@@ -4140,8 +4145,10 @@ msgid "Failed to send number of shared files to the server: %s"
 msgstr "Nepodařilo se odeslat počet sdílených souborů na server: %s"
 
 #: pynicotine/shares.py:865
+#, fuzzy
 msgid "Rescan aborted due to unavailable shares"
 msgstr ""
+"Opětovné skenování bylo přerušeno z důvodu nedostupnosti sdílených položek"
 
 #: pynicotine/shares.py:922
 #, fuzzy, python-format
@@ -4166,9 +4173,9 @@ msgid "Listening on port: %i"
 msgstr "Poslech na portu %i"
 
 #: pynicotine/slskproto.py:413
-#, python-format
+#, fuzzy, python-format
 msgid "Specified network interface '%s' does not exist"
-msgstr ""
+msgstr "Zadané síťové rozhraní '%s' neexistuje"
 
 #: pynicotine/slskproto.py:414
 #, fuzzy
@@ -4176,9 +4183,9 @@ msgid "Unknown Network Interface"
 msgstr "Uživatelské rozhraní"
 
 #: pynicotine/slskproto.py:422
-#, python-format
+#, fuzzy, python-format
 msgid "No listening port is available in the specified port range %s–%s"
-msgstr ""
+msgstr "V zadaném rozsahu portů %s–%s není k dispozici žádný naslouchací port"
 
 #: pynicotine/slskproto.py:423
 #, fuzzy
@@ -4348,9 +4355,9 @@ msgid "Out of Date"
 msgstr "Zastaralé"
 
 #: pynicotine/updatechecker.py:50
-#, python-format
+#, fuzzy, python-format
 msgid "Version %(version)s is available, released on %(date)s"
-msgstr ""
+msgstr "Verze %(version)s je k dispozici, vydaná na %(date)s"
 
 #: pynicotine/updatechecker.py:56
 #, fuzzy, python-format
@@ -4373,8 +4380,9 @@ msgid "Invalid response: %s"
 msgstr "Neplatná adresa URL Soulseek: %s"
 
 #: pynicotine/upnp.py:318
+#, fuzzy
 msgid "No UPnP devices found"
-msgstr ""
+msgstr "Nebyla nalezena žádná zařízení UPnP"
 
 #: pynicotine/upnp.py:343
 #, fuzzy, python-format
@@ -4558,16 +4566,19 @@ msgid "R_oom Wall"
 msgstr "Stěna místnosti"
 
 #: pynicotine/gtkgui/ui/dialogs/about.ui:95
+#, fuzzy
 msgid "Created by"
-msgstr ""
+msgstr "Vytvořil"
 
 #: pynicotine/gtkgui/ui/dialogs/about.ui:135
+#, fuzzy
 msgid "Translated by"
-msgstr ""
+msgstr "Přeloženo"
 
 #: pynicotine/gtkgui/ui/dialogs/about.ui:175
+#, fuzzy
 msgid "License"
-msgstr ""
+msgstr "Licence"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:6
 #, fuzzy
@@ -4625,10 +4636,13 @@ msgstr ""
 "uživatelům, jejichž odposlouchávací porty jsou otevřené."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:280
+#, fuzzy
 msgid ""
 "Choose a range to select a listening port from. The first available port in "
 "the range will be used."
 msgstr ""
+"Vyberte rozsah pro výběr naslouchacího portu. Bude použit první dostupný "
+"port v rozsahu."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:302
 #: pynicotine/gtkgui/ui/settings/network.ui:166
@@ -5220,8 +5234,9 @@ msgstr ""
 "a přijímání oznámení, když jsou online"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1452
+#, fuzzy
 msgid "Join or create room…"
-msgstr ""
+msgstr "Připojte se nebo vytvořte místnost…"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1453
 #, fuzzy
@@ -7045,8 +7060,9 @@ msgid "Chat room mentions"
 msgstr "Dokončení"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:427
+#, fuzzy
 msgid "Wishlist item found"
-msgstr ""
+msgstr "Byla nalezena položka seznamu přání"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:454
 #, fuzzy
