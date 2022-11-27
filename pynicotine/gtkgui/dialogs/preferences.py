@@ -2534,7 +2534,7 @@ class Preferences(Dialog):
             # Dark mode
             dark_mode_state = config.sections["ui"]["dark_mode"]
             set_dark_mode(dark_mode_state)
-            self.application.lookup_action("dark-mode").set_state(GLib.Variant("b", dark_mode_state))
+            self.application.lookup_action("prefer-dark-mode").set_state(GLib.Variant("b", dark_mode_state))
 
             set_global_font(config.sections["ui"]["globalfont"])
 
