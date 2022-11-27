@@ -270,7 +270,7 @@ class MessageDialog(Window):
         frame = Gtk.Frame(margin_top=6, visible=True)
         scrolled_window = Gtk.ScrolledWindow(min_content_height=75, max_content_height=200, hexpand=True,
                                              vexpand=True, propagate_natural_height=True, visible=True)
-        textview = Gtk.TextView(left_margin=8, right_margin=8, top_margin=5, bottom_margin=5, editable=False,
+        textview = Gtk.TextView(left_margin=12, right_margin=12, top_margin=8, bottom_margin=8, editable=False,
                                 cursor_visible=False, pixels_above_lines=1, pixels_below_lines=1,
                                 wrap_mode=Gtk.WrapMode.WORD_CHAR, visible=True)
 
@@ -570,7 +570,7 @@ class PluginSettingsDialog(Dialog):
         frame_container = Gtk.Frame(visible=True)
         self.option_widgets[option_name] = textview = Gtk.TextView(
             accepts_tab=False, pixels_above_lines=1, pixels_below_lines=1,
-            left_margin=8, right_margin=8, top_margin=5, bottom_margin=5,
+            left_margin=12, right_margin=12, top_margin=8, bottom_margin=8,
             wrap_mode=Gtk.WrapMode.WORD_CHAR, visible=True
         )
         label = self._generate_widget_container(description, frame_container, vertical=True)
