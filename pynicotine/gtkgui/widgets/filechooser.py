@@ -244,6 +244,6 @@ class FileChooserButton:
 
     def clear(self):
 
-        self.path = ""
+        self.path = None
         self.button.set_tooltip_text(None)
         self.label.set_label(_("(None)"))
