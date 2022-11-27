@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-15 21:58+0300\n"
-"PO-Revision-Date: 2022-10-01 12:01+0000\n"
+"PO-Revision-Date: 2022-11-21 19:48+0000\n"
 "Last-Translator: Havokdan <havokdan@yahoo.com.br>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/pt_BR/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.14.1\n"
+"X-Generator: Weblate 4.15-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -276,17 +276,14 @@ msgid "Burundi"
 msgstr "Burundi"
 
 #: pynicotine/geoip/geoip.py:48
-#, fuzzy
 msgid "Benin"
 msgstr "Benim"
 
 #: pynicotine/geoip/geoip.py:49
-#, fuzzy
 msgid "Saint Barthelemy"
-msgstr "São Barthelemy"
+msgstr "São Bartolomeu"
 
 #: pynicotine/geoip/geoip.py:50
-#, fuzzy
 msgid "Bermuda"
 msgstr "Bermudas"
 
@@ -300,26 +297,22 @@ msgid "Bolivia"
 msgstr "Bolívia"
 
 #: pynicotine/geoip/geoip.py:53
-#, fuzzy
 msgid "Bonaire, Sint Eustatius and Saba"
-msgstr "Bonaire, Sint Eustatius e Saba"
+msgstr "Bonaire, Santo Eustáquio e Saba"
 
 #: pynicotine/geoip/geoip.py:54
 msgid "Brazil"
 msgstr "Brasil"
 
 #: pynicotine/geoip/geoip.py:55
-#, fuzzy
 msgid "Bahamas"
 msgstr "Bahamas"
 
 #: pynicotine/geoip/geoip.py:56
-#, fuzzy
 msgid "Bhutan"
 msgstr "Butão"
 
 #: pynicotine/geoip/geoip.py:57
-#, fuzzy
 msgid "Bouvet Island"
 msgstr "Ilha Bouvet"
 
@@ -2067,7 +2060,7 @@ msgstr "Downloads"
 #: pynicotine/gtkgui/ui/settings/uploads.ui:47
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:192
 msgid "Uploads"
-msgstr "Uploads"
+msgstr "Envios"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2290
 #: pynicotine/gtkgui/ui/settings/search.ui:33
@@ -2508,7 +2501,7 @@ msgstr "Downloads: %(speed)s"
 #: pynicotine/gtkgui/frame.py:1704
 #, python-format
 msgid "Uploads: %(speed)s"
-msgstr "Uploads: %(speed)s"
+msgstr "Envios: %(speed)s"
 
 #: pynicotine/gtkgui/frame.py:1775
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:259
