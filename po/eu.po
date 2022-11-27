@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-11-28 00:38+0200\n"
-"PO-Revision-Date: 2022-08-31 18:23+0000\n"
+"PO-Revision-Date: 2022-11-27 22:56+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Basque <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/eu/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.14.1-dev\n"
+"X-Generator: Weblate 4.15-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -1602,13 +1602,17 @@ msgid "Remember choice"
 msgstr "Gogoratu aukera"
 
 #: pynicotine/gtkgui/application.py:436
+#, fuzzy
 msgid "Shares Not Available"
-msgstr ""
+msgstr "Akzioak ez daude erabilgarri"
 
 #: pynicotine/gtkgui/application.py:437
+#, fuzzy
 msgid ""
 "Verify that external disks are mounted and folder permissions are correct."
 msgstr ""
+"Egiaztatu kanpoko diskoak muntatuta daudela eta karpeta-baimenak zuzenak "
+"direla."
 
 #: pynicotine/gtkgui/application.py:439 pynicotine/gtkgui/application.py:464
 #: pynicotine/gtkgui/widgets/dialogs.py:435
@@ -1623,8 +1627,9 @@ msgid "_Retry"
 msgstr "Saiatu be_rriro"
 
 #: pynicotine/gtkgui/application.py:441
+#, fuzzy
 msgid "_Force Rescan"
-msgstr ""
+msgstr "_Behartu berriro eskaneatzea"
 
 #: pynicotine/gtkgui/application.py:456
 #, fuzzy
@@ -2455,9 +2460,9 @@ msgid "Transfer Statistics"
 msgstr "Transferentzien Estatistikak"
 
 #: pynicotine/gtkgui/dialogs/statistics.py:82
-#, python-format
+#, fuzzy, python-format
 msgid "Total Since %(date)s"
-msgstr ""
+msgstr "Guztira %(date)s geroztik"
 
 #: pynicotine/gtkgui/dialogs/statistics.py:103
 #, fuzzy
@@ -3115,8 +3120,9 @@ msgid "[PRIVATE]  %s"
 msgstr "[PRIBATUA]"
 
 #: pynicotine/gtkgui/search.py:714
+#, fuzzy
 msgid "Wishlist Results Found"
-msgstr ""
+msgstr "Desioen zerrendako emaitzak aurkitu dira"
 
 #: pynicotine/gtkgui/search.py:969
 #, fuzzy, python-format
@@ -4111,8 +4117,9 @@ msgid "Failed to send number of shared files to the server: %s"
 msgstr "Ezin izan da partekatutako fitxategi kopurua zerbitzarira bidali: %s"
 
 #: pynicotine/shares.py:865
+#, fuzzy
 msgid "Rescan aborted due to unavailable shares"
-msgstr ""
+msgstr "Berriro eskaneatzea bertan behera utzi da partekatzerik ez dagoelako"
 
 #: pynicotine/shares.py:922
 #, fuzzy, python-format
@@ -4138,9 +4145,9 @@ msgid "Listening on port: %i"
 msgstr "%i ataka entzuten"
 
 #: pynicotine/slskproto.py:413
-#, python-format
+#, fuzzy, python-format
 msgid "Specified network interface '%s' does not exist"
-msgstr ""
+msgstr "Zehaztutako sare-interfazea '%s' ez dago"
 
 #: pynicotine/slskproto.py:414
 #, fuzzy
@@ -4148,9 +4155,10 @@ msgid "Unknown Network Interface"
 msgstr "Erabiltzaile Interfazea"
 
 #: pynicotine/slskproto.py:422
-#, python-format
+#, fuzzy, python-format
 msgid "No listening port is available in the specified port range %s–%s"
 msgstr ""
+"Ez dago entzuteko atakarik erabilgarri zehaztutako ataka barrutian %s–%s"
 
 #: pynicotine/slskproto.py:423
 #, fuzzy
@@ -4327,9 +4335,9 @@ msgid "Out of Date"
 msgstr "Zaharkiturik"
 
 #: pynicotine/updatechecker.py:50
-#, python-format
+#, fuzzy, python-format
 msgid "Version %(version)s is available, released on %(date)s"
-msgstr ""
+msgstr "%(version)s bertsioa eskuragarri dago, %(date)s-n argitaratua"
 
 #: pynicotine/updatechecker.py:56
 #, fuzzy, python-format
@@ -4352,8 +4360,9 @@ msgid "Invalid response: %s"
 msgstr "Soulseek URL baliogabea: %s"
 
 #: pynicotine/upnp.py:318
+#, fuzzy
 msgid "No UPnP devices found"
-msgstr ""
+msgstr "Ez da UPnP gailurik aurkitu"
 
 #: pynicotine/upnp.py:343
 #, fuzzy, python-format
@@ -4543,16 +4552,19 @@ msgid "R_oom Wall"
 msgstr "Gelako horma"
 
 #: pynicotine/gtkgui/ui/dialogs/about.ui:95
+#, fuzzy
 msgid "Created by"
-msgstr ""
+msgstr "Sortua"
 
 #: pynicotine/gtkgui/ui/dialogs/about.ui:135
+#, fuzzy
 msgid "Translated by"
-msgstr ""
+msgstr "Itzulpena"
 
 #: pynicotine/gtkgui/ui/dialogs/about.ui:175
+#, fuzzy
 msgid "License"
-msgstr ""
+msgstr "Lizentzia"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:6
 #, fuzzy
@@ -4611,10 +4623,13 @@ msgstr ""
 "erabiltzaileekin bakarrik konektatu ahal izango zara."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:280
+#, fuzzy
 msgid ""
 "Choose a range to select a listening port from. The first available port in "
 "the range will be used."
 msgstr ""
+"Aukeratu tarte bat entzuteko ataka bat hautatzeko. Barrutiko lehen portu "
+"erabilgarri bat erabiliko da."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:302
 #: pynicotine/gtkgui/ui/settings/network.ui:166
@@ -5207,8 +5222,9 @@ msgstr ""
 "jakinarazpenak jasotzeko konektatuta daudenean"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1452
+#, fuzzy
 msgid "Join or create room…"
-msgstr ""
+msgstr "Sartu edo sortu gela…"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1453
 #, fuzzy
@@ -7008,8 +7024,9 @@ msgid "Chat room mentions"
 msgstr "Osaketa"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:427
+#, fuzzy
 msgid "Wishlist item found"
-msgstr ""
+msgstr "Desioen zerrendako elementua aurkitu da"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:454
 #, fuzzy
