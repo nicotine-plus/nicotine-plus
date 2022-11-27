@@ -22,6 +22,7 @@ This module implements Soulseek networking protocol.
 """
 
 import copy
+import errno
 import selectors
 import socket
 import struct
@@ -2115,21 +2116,28 @@ class SlskProtoThread(threading.Thread):
 
             # Manage incoming connections to listen socket
             if self._numsockets < MAXSOCKETS and not self.server_disconnected and self.listen_socket in input_list:
-                try:
-                    incsock, incaddr = self.listen_socket.accept()
-                except Exception:
-                    time.sleep(0.01)
-                else:
-                    events = selectors.EVENT_READ
-                    incsock.setblocking(False)
+                while True:
+                    try:
+                        incoming_sock, incoming_addr = self.listen_socket.accept()
 
-                    self._conns[incsock] = PeerConnection(sock=incsock, addr=incaddr, events=events)
+                    except OSError as error:
+                        if error.errno == errno.EAGAIN:
+                            # No more incoming connections
+                            break
+
+                        log.add_conn("Incoming connection failed: %s", error)
+                        break
+
+                    events = selectors.EVENT_READ
+                    incoming_sock.setblocking(False)
+
+                    self._conns[incoming_sock] = PeerConnection(sock=incoming_sock, addr=incoming_addr, events=events)
                     self._numsockets += 1
-                    log.add_conn("Incoming connection from %s", str(incaddr))
+                    log.add_conn("Incoming connection from %s", str(incoming_addr))
 
                     # Event flags are modified to include 'write' in subsequent loops, if necessary.
                     # Don't do it here, otherwise connections may break.
-                    self.selector.register(incsock, events)
+                    self.selector.register(incoming_sock, events)
 
             # Manage outgoing connections in progress
             for sock_in_progress, conn_obj in self._connsinprogress.copy().items():
