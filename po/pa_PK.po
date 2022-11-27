@@ -8,13 +8,16 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-11-28 00:38+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2022-11-27 22:57+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Punjabi (Pakistan) <https://hosted.weblate.org/projects/"
+"nicotine-plus/nicotine-plus/pa_PK/>\n"
 "Language: pa_PK\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 4.15-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -1589,13 +1592,16 @@ msgid "Remember choice"
 msgstr "ਚੋਣ ਨੂੰ ਯਾਦ ਰੱਖੋ"
 
 #: pynicotine/gtkgui/application.py:436
+#, fuzzy
 msgid "Shares Not Available"
-msgstr ""
+msgstr "ਸ਼ੇਅਰ ਉਪਲਬਧ ਨਹੀਂ ਹਨ"
 
 #: pynicotine/gtkgui/application.py:437
+#, fuzzy
 msgid ""
 "Verify that external disks are mounted and folder permissions are correct."
 msgstr ""
+"ਜਾਂਚ ਕਰੋ ਕਿ ਬਾਹਰੀ ਡਿਸਕਾਂ ਮਾਊਂਟ ਕੀਤੀਆਂ ਗਈਆਂ ਹਨ ਅਤੇ ਫੋਲਡਰ ਅਨੁਮਤੀਆਂ ਸਹੀ ਹਨ।"
 
 #: pynicotine/gtkgui/application.py:439 pynicotine/gtkgui/application.py:464
 #: pynicotine/gtkgui/widgets/dialogs.py:435
@@ -1611,8 +1617,9 @@ msgid "_Retry"
 msgstr "_ਮੁੜ ਕੋਸ਼ਿਸ਼ ਕਰੋ"
 
 #: pynicotine/gtkgui/application.py:441
+#, fuzzy
 msgid "_Force Rescan"
-msgstr ""
+msgstr "_ਫੋਰਸ ਰੀਸਕੈਨ ਕਰੋ"
 
 #: pynicotine/gtkgui/application.py:456
 #, fuzzy
@@ -2456,9 +2463,9 @@ msgid "Transfer Statistics"
 msgstr "ਟ੍ਰਾਂਸਫਰ ਅੰਕੜੇ"
 
 #: pynicotine/gtkgui/dialogs/statistics.py:82
-#, python-format
+#, fuzzy, python-format
 msgid "Total Since %(date)s"
-msgstr ""
+msgstr "%(date)s ਤੋਂ ਕੁੱਲ"
 
 #: pynicotine/gtkgui/dialogs/statistics.py:103
 #, fuzzy
@@ -3132,8 +3139,9 @@ msgid "[PRIVATE]  %s"
 msgstr "[ਪ੍ਰਾਈਵੇਟ] %s"
 
 #: pynicotine/gtkgui/search.py:714
+#, fuzzy
 msgid "Wishlist Results Found"
-msgstr ""
+msgstr "ਵਿਸ਼ਲਿਸਟ ਨਤੀਜੇ ਮਿਲੇ ਹਨ"
 
 #: pynicotine/gtkgui/search.py:969
 #, fuzzy, python-format
@@ -4144,8 +4152,9 @@ msgid "Failed to send number of shared files to the server: %s"
 msgstr "ਸਰਵਰ ਨੂੰ ਸ਼ੇਅਰ ਕੀਤੀਆਂ ਫਾਈਲਾਂ ਦੀ ਗਿਣਤੀ ਭੇਜਣ ਵਿੱਚ ਅਸਫਲ: %s"
 
 #: pynicotine/shares.py:865
+#, fuzzy
 msgid "Rescan aborted due to unavailable shares"
-msgstr ""
+msgstr "ਅਣਉਪਲਬਧ ਸ਼ੇਅਰਾਂ ਕਾਰਨ ਮੁੜ-ਸਕੈਨ ਅਧੂਰਾ ਛੱਡਿਆ ਗਿਆ"
 
 #: pynicotine/shares.py:922
 #, fuzzy, python-format
@@ -4168,9 +4177,9 @@ msgid "Listening on port: %i"
 msgstr "ਪੋਰਟ 'ਤੇ ਸੁਣਨਾ: %i"
 
 #: pynicotine/slskproto.py:413
-#, python-format
+#, fuzzy, python-format
 msgid "Specified network interface '%s' does not exist"
-msgstr ""
+msgstr "ਨਿਰਧਾਰਿਤ ਨੈੱਟਵਰਕ ਇੰਟਰਫੇਸ '%s' ਮੌਜੂਦ ਨਹੀਂ ਹੈ"
 
 #: pynicotine/slskproto.py:414
 #, fuzzy
@@ -4178,9 +4187,9 @@ msgid "Unknown Network Interface"
 msgstr "ਯੂਜ਼ਰ ਇੰਟਰਫੇਸ"
 
 #: pynicotine/slskproto.py:422
-#, python-format
+#, fuzzy, python-format
 msgid "No listening port is available in the specified port range %s–%s"
-msgstr ""
+msgstr "ਨਿਰਧਾਰਤ ਪੋਰਟ ਰੇਂਜ %s–%s ਵਿੱਚ ਕੋਈ ਸੁਣਨ ਵਾਲਾ ਪੋਰਟ ਉਪਲਬਧ ਨਹੀਂ ਹੈ"
 
 #: pynicotine/slskproto.py:423
 #, fuzzy
@@ -4348,9 +4357,9 @@ msgid "Out of Date"
 msgstr "ਤਾਰੀਕ ਤੋ ਬਾਆਦ"
 
 #: pynicotine/updatechecker.py:50
-#, python-format
+#, fuzzy, python-format
 msgid "Version %(version)s is available, released on %(date)s"
-msgstr ""
+msgstr "ਸੰਸਕਰਣ %(version)s ਉਪਲਬਧ ਹੈ, %(date)s ਨੂੰ ਜਾਰੀ ਕੀਤਾ ਗਿਆ ਹੈ"
 
 #: pynicotine/updatechecker.py:56
 #, fuzzy, python-format
@@ -4373,8 +4382,9 @@ msgid "Invalid response: %s"
 msgstr "ਅਵੈਧ ਜਵਾਬ: %s"
 
 #: pynicotine/upnp.py:318
+#, fuzzy
 msgid "No UPnP devices found"
-msgstr ""
+msgstr "ਕੋਈ UPnP ਡਿਵਾਈਸ ਨਹੀਂ ਮਿਲੀ"
 
 #: pynicotine/upnp.py:343
 #, fuzzy, python-format
@@ -4559,16 +4569,19 @@ msgid "R_oom Wall"
 msgstr "R_oom ਕੰਧ"
 
 #: pynicotine/gtkgui/ui/dialogs/about.ui:95
+#, fuzzy
 msgid "Created by"
-msgstr ""
+msgstr "ਦੁਆਰਾ ਬਣਾਇਆ ਗਿਆ"
 
 #: pynicotine/gtkgui/ui/dialogs/about.ui:135
+#, fuzzy
 msgid "Translated by"
-msgstr ""
+msgstr "ਦੁਆਰਾ ਅਨੁਵਾਦ ਕੀਤਾ ਗਿਆ"
 
 #: pynicotine/gtkgui/ui/dialogs/about.ui:175
+#, fuzzy
 msgid "License"
-msgstr ""
+msgstr "ਲਾਇਸੰਸ"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:6
 #, fuzzy
@@ -4628,10 +4641,13 @@ msgstr ""
 "ਦੇ ਸੁਣਨ ਵਾਲੇ ਪੋਰਟ ਖੁੱਲ੍ਹੇ ਹਨ।"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:280
+#, fuzzy
 msgid ""
 "Choose a range to select a listening port from. The first available port in "
 "the range will be used."
 msgstr ""
+"ਸੁਣਨ ਵਾਲੇ ਪੋਰਟ ਨੂੰ ਚੁਣਨ ਲਈ ਇੱਕ ਰੇਂਜ ਚੁਣੋ। ਰੇਂਜ ਵਿੱਚ ਪਹਿਲੀ ਉਪਲਬਧ ਪੋਰਟ ਦੀ ਵਰਤੋਂ"
+" ਕੀਤੀ ਜਾਵੇਗੀ।"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:302
 #: pynicotine/gtkgui/ui/settings/network.ui:166
@@ -5219,8 +5235,9 @@ msgstr ""
 "ਕਰਨ ਲਈ ਉਹਨਾਂ ਨੂੰ ਦੋਸਤਾਂ ਵਜੋਂ ਸ਼ਾਮਲ ਕਰੋ"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1452
+#, fuzzy
 msgid "Join or create room…"
-msgstr ""
+msgstr "ਸ਼ਾਮਲ ਹੋਵੋ ਜਾਂ ਕਮਰਾ ਬਣਾਓ…"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1453
 #, fuzzy
@@ -7024,8 +7041,9 @@ msgid "Chat room mentions"
 msgstr "ਚੈਟ ਰੂਮ ਦਾ ਜ਼ਿਕਰ ਹੈ"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:427
+#, fuzzy
 msgid "Wishlist item found"
-msgstr ""
+msgstr "ਵਿਸ਼ਲਿਸਟ ਆਈਟਮ ਮਿਲੀ"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:454
 #, fuzzy
