@@ -22,6 +22,7 @@ This module implements Soulseek networking protocol.
 """
 
 import copy
+import errno
 import selectors
 import socket
 import struct
@@ -2161,21 +2162,30 @@ class SoulseekNetworkThread(Thread):
 
             # Manage incoming connections to listen socket
             if self._numsockets < MAXSOCKETS and self._process_queue and self._listen_socket in input_list:
-                try:
-                    incsock, incaddr = self._listen_socket.accept()
-                except Exception:
-                    time.sleep(0.01)
-                else:
-                    selector_events = selectors.EVENT_READ
-                    incsock.setblocking(False)
+                while True:
+                    try:
+                        incoming_sock, incoming_addr = self._listen_socket.accept()
 
-                    self._conns[incsock] = PeerConnection(sock=incsock, addr=incaddr, selector_events=selector_events)
+                    except OSError as error:
+                        if error.errno == errno.EAGAIN:
+                            # No more incoming connections
+                            break
+
+                        log.add_conn("Incoming connection failed: %s", error)
+                        break
+
+                    selector_events = selectors.EVENT_READ
+                    incoming_sock.setblocking(False)
+
+                    self._conns[incoming_sock] = PeerConnection(
+                        sock=incoming_sock, addr=incoming_addr, selector_events=selector_events
+                    )
                     self._numsockets += 1
-                    log.add_conn("Incoming connection from %s", str(incaddr))
+                    log.add_conn("Incoming connection from %s", str(incoming_addr))
 
                     # Event flags are modified to include 'write' in subsequent loops, if necessary.
                     # Don't do it here, otherwise connections may break.
-                    self._selector.register(incsock, selector_events)
+                    self._selector.register(incoming_sock, selector_events)
 
             # Manage outgoing connections in progress
             for sock_in_progress, conn_obj in self._connsinprogress.copy().items():
