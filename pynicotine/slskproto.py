@@ -410,7 +410,7 @@ class SoulseekNetworkThread(Thread):
         valid_network_interface = self._validate_network_interface()
 
         if not valid_network_interface:
-            log.add(_("The network interface you specified, '%s', does not exist"), self._interface,
+            log.add(_("Specified network interface '%s' does not exist"), self._interface,
                     title=_("Unknown Network Interface"))
             self._process_queue = False
             return
@@ -419,18 +419,8 @@ class SoulseekNetworkThread(Thread):
         valid_listen_port = self._validate_listen_port()
 
         if not valid_listen_port:
-            message = _(
-                "The range you specified for client connection ports was "
-                "{}-{}, but none of these were usable. Increase and/or ".format(self._listen_port_range[0],
-                                                                                self._listen_port_range[1])
-                + "move the range."
-            )
-            if self._listen_port_range[0] < 1024:
-                message += "\n\n" + _(
-                    "Note that part of your range lies below 1024, this is usually not allowed on"
-                    " most operating systems with the exception of Windows."
-                )
-            log.add(message, title=_("Port Unavailable"))
+            log.add(_("No listening port is available in the specified port range %s–%s"), self._listen_port_range,
+                    title=_("Listening Port Unavailable"))
             self._process_queue = False
             return
 
