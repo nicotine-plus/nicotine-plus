@@ -185,6 +185,7 @@ class SlskProtoThread(threading.Thread):
 
     IN_PROGRESS_STALE_AFTER = 2
     CONNECTION_MAX_IDLE = 60
+    CONNECTION_BACKLOG_LENGTH = 4096
     SOCKET_READ_BUFFER_SIZE = 1048576
     SOCKET_WRITE_BUFFER_SIZE = 1048576
 
@@ -329,7 +330,7 @@ class SlskProtoThread(threading.Thread):
         for listenport in range(int(self.portrange[0]), int(self.portrange[1]) + 1):
             try:
                 self.listen_socket.bind((ip_address, listenport))
-                self.listen_socket.listen()
+                self.listen_socket.listen(self.CONNECTION_BACKLOG_LENGTH)
                 self.listenport = listenport
                 log.add(_("Listening on port: %i"), listenport)
                 log.add_debug("Maximum number of concurrent connections (sockets): %i", MAXSOCKETS)
