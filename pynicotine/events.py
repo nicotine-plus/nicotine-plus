@@ -177,10 +177,6 @@ EVENT_NAMES = set([
 ])
 
 
-class UnknownEvent(Exception):
-    pass
-
-
 class Events:
 
     def __init__(self):
@@ -189,7 +185,7 @@ class Events:
     def connect(self, event_name, function):
 
         if event_name not in EVENT_NAMES:
-            raise UnknownEvent("Unknown event %s" % event_name)
+            raise ValueError("Unknown event %s" % event_name)
 
         if event_name not in self._callbacks:
             self._callbacks[event_name] = []
