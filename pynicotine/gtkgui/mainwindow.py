@@ -838,6 +838,10 @@ class MainWindow(Window):
         if not self.current_page_id:
             return
 
+        if self.header_bar.get_focus_child():
+            # Unfocus the header bar
+            self.notebook.grab_focus()
+
         title_widget = getattr(self, self.current_page_id + "_title")
         end_widget = getattr(self, self.current_page_id + "_end")
         self.header_title.remove(title_widget)

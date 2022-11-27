@@ -306,6 +306,9 @@ class IconNotebook:
         self.unread_button.set_menu_model(self.popup_menu_unread.model)
         self.unread_pages = []
 
+    def grab_focus(self):
+        self.widget.grab_focus()
+
     """ Tabs """
 
     def get_labels(self, page):
