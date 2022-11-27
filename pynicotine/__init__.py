@@ -16,18 +16,24 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import argparse
+import io
+import os
+import sys
+
+from pynicotine.config import config
+from pynicotine.core import core
 from pynicotine.i18n import apply_translations
+from pynicotine.logfacility import log
+from pynicotine.utils import rename_process
 
 
 def check_arguments():
     """ Parse command line arguments specified by the user """
 
-    import argparse
-    from pynicotine.config import config
-    from pynicotine.core import core
-
     parser = argparse.ArgumentParser(
-        description=config.summary, epilog=_("Website: %s") % config.website_url, add_help=False
+        description=_("Graphical client for the Soulseek peer-to-peer network"),
+        epilog=_("Website: %s") % config.website_url, add_help=False
     )
 
     # Visible arguments
@@ -94,7 +100,6 @@ def check_python_version():
     # Require minimum Python version
     python_version = (3, 6)
 
-    import sys
     if sys.version_info < python_version:
         return _("""You are using an unsupported version of Python (%(old_version)s).
 You should install Python %(min_version)s or newer.""") % {
@@ -106,10 +111,6 @@ You should install Python %(min_version)s or newer.""") % {
 
 
 def rescan_shares():
-
-    from pynicotine.config import config
-    from pynicotine.core import core
-    from pynicotine.logfacility import log
 
     config.load_config()
     error = core.shares.rescan_shares(use_thread=False)
@@ -125,15 +126,11 @@ def rescan_shares():
 def run():
     """ Run application and return its exit code """
 
-    import io
-    import sys
-
     # Always use UTF-8 for print()
     if sys.stdout is not None:
         sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding="utf-8", line_buffering=True)
 
     if getattr(sys, 'frozen', False):
-        import os
         import multiprocessing
 
         # Set up paths for frozen binaries (Windows and macOS)
@@ -143,8 +140,6 @@ def run():
         # Support file scanning process in frozen binaries
         multiprocessing.freeze_support()
 
-    from pynicotine.logfacility import log
-    from pynicotine.utils import rename_process
     rename_process(b"nicotine")
 
     headless, hidden, ci_mode, rescan, multi_instance = check_arguments()
@@ -162,7 +157,6 @@ def run():
     except Exception as error:
         log.add("Faulthandler module could not be enabled. Error: %s" % error)
 
-    from pynicotine.core import core
     core.init_components(enable_cli=True)
 
     if rescan:
