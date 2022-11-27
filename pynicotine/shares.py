@@ -865,7 +865,7 @@ class Shares:
                 log.add(_("Rescan aborted due to unavailable shares"))
                 rescan = False
 
-                events.emit("shares_unavailable", unavailable_shares)
+                events.emit("shares-unavailable", unavailable_shares)
 
                 if not init:
                     return None
