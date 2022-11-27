@@ -752,6 +752,9 @@ class Config:
                 self.parser.add_section(section)
 
             for option, value in options.items():
+                if value is None:
+                    value = ""
+
                 self.parser.set(section, option, str(value))
 
         # Remove legacy config options
