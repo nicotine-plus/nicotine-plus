@@ -18,6 +18,7 @@
 
 import socket
 
+from http.client import HTTPException
 from threading import Thread
 
 from pynicotine.config import config
@@ -273,7 +274,7 @@ class UPnP:
         xml = ElementTree.fromstring(response)
 
         if xml.find(".//{http://schemas.xmlsoap.org/soap/envelope/}Body") is None:
-            raise Exception(_("Invalid response: %s") % response.encode('utf-8'))
+            raise HTTPException(_("Invalid response: %s") % response.encode('utf-8'))
 
         log.add_debug("UPnP: Add port mapping response: %s", response.encode('utf-8'))
 
@@ -339,8 +340,8 @@ class UPnP:
                 return
 
             if error_code or error_description:
-                raise Exception(_("Error code %(code)s: %(description)s") %
-                                {"code": error_code, "description": error_description})
+                raise HTTPException(_("Error code %(code)s: %(description)s") %
+                                    {"code": error_code, "description": error_description})
 
         except Exception as error:
             from traceback import format_exc
