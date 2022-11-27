@@ -6,16 +6,16 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-11-28 00:38+0200\n"
-"PO-Revision-Date: 2022-08-31 18:23+0000\n"
+"PO-Revision-Date: 2022-11-27 22:57+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Spanish (Chile) <https://hosted.weblate.org/projects/nicotine-"
-"plus/nicotine-plus/es_CL/>\n"
+"Language-Team: Spanish (Chile) <https://hosted.weblate.org/projects/"
+"nicotine-plus/nicotine-plus/es_CL/>\n"
 "Language: es_CL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.14.1-dev\n"
+"X-Generator: Weblate 4.15-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -1321,13 +1321,17 @@ msgid "Remember choice"
 msgstr "Recordar la elección"
 
 #: pynicotine/gtkgui/application.py:436
+#, fuzzy
 msgid "Shares Not Available"
-msgstr ""
+msgstr "Acciones no disponibles"
 
 #: pynicotine/gtkgui/application.py:437
+#, fuzzy
 msgid ""
 "Verify that external disks are mounted and folder permissions are correct."
 msgstr ""
+"Verifique que los discos externos estén montados y que los permisos de las "
+"carpetas sean correctos."
 
 #: pynicotine/gtkgui/application.py:439 pynicotine/gtkgui/application.py:464
 #: pynicotine/gtkgui/widgets/dialogs.py:435
@@ -1341,8 +1345,9 @@ msgid "_Retry"
 msgstr "_Reintentar"
 
 #: pynicotine/gtkgui/application.py:441
+#, fuzzy
 msgid "_Force Rescan"
-msgstr ""
+msgstr "_Forzar reescaneado"
 
 #: pynicotine/gtkgui/application.py:456
 msgid "Invalid Password"
@@ -2082,9 +2087,9 @@ msgid "Transfer Statistics"
 msgstr "Estadísticas de transferencia"
 
 #: pynicotine/gtkgui/dialogs/statistics.py:82
-#, python-format
+#, fuzzy, python-format
 msgid "Total Since %(date)s"
-msgstr ""
+msgstr "Total desde %(date)s"
 
 #: pynicotine/gtkgui/dialogs/statistics.py:103
 msgid "Reset Transfer Statistics?"
@@ -2648,8 +2653,9 @@ msgid "[PRIVATE]  %s"
 msgstr "[PRIVADO]  %s"
 
 #: pynicotine/gtkgui/search.py:714
+#, fuzzy
 msgid "Wishlist Results Found"
-msgstr ""
+msgstr "Resultados de la lista de deseos encontrados"
 
 #: pynicotine/gtkgui/search.py:969
 #, python-format
@@ -3551,8 +3557,9 @@ msgid "Failed to send number of shared files to the server: %s"
 msgstr "Fallo al enviar el número de archivos compartidos al servidor: %s"
 
 #: pynicotine/shares.py:865
+#, fuzzy
 msgid "Rescan aborted due to unavailable shares"
-msgstr ""
+msgstr "Reanálisis abortado debido a recursos compartidos no disponibles"
 
 #: pynicotine/shares.py:922
 #, python-format
@@ -3578,9 +3585,9 @@ msgid "Listening on port: %i"
 msgstr "Escuchando en el puerto %i"
 
 #: pynicotine/slskproto.py:413
-#, python-format
+#, fuzzy, python-format
 msgid "Specified network interface '%s' does not exist"
-msgstr ""
+msgstr "La interfaz de red especificada '%s' no existe"
 
 #: pynicotine/slskproto.py:414
 #, fuzzy
@@ -3588,9 +3595,11 @@ msgid "Unknown Network Interface"
 msgstr "Interfaz de usuario"
 
 #: pynicotine/slskproto.py:422
-#, python-format
+#, fuzzy, python-format
 msgid "No listening port is available in the specified port range %s–%s"
 msgstr ""
+"No hay ningún puerto de escucha disponible en el intervalo de puertos "
+"especificado %s–%s"
 
 #: pynicotine/slskproto.py:423
 #, fuzzy
@@ -3760,9 +3769,9 @@ msgid "Out of Date"
 msgstr "Desactualizado"
 
 #: pynicotine/updatechecker.py:50
-#, python-format
+#, fuzzy, python-format
 msgid "Version %(version)s is available, released on %(date)s"
-msgstr ""
+msgstr "La versión %(version)s está disponible, lanzada el %(date)s"
 
 #: pynicotine/updatechecker.py:56
 #, fuzzy, python-format
@@ -3785,8 +3794,9 @@ msgid "Invalid response: %s"
 msgstr "Respuesta no válida: %s"
 
 #: pynicotine/upnp.py:318
+#, fuzzy
 msgid "No UPnP devices found"
-msgstr ""
+msgstr "No se encontraron dispositivos UPnP"
 
 #: pynicotine/upnp.py:343
 #, python-format
@@ -3969,16 +3979,19 @@ msgid "R_oom Wall"
 msgstr "Muro de la sala"
 
 #: pynicotine/gtkgui/ui/dialogs/about.ui:95
+#, fuzzy
 msgid "Created by"
-msgstr ""
+msgstr "Creado por"
 
 #: pynicotine/gtkgui/ui/dialogs/about.ui:135
+#, fuzzy
 msgid "Translated by"
-msgstr ""
+msgstr "Traducido por"
 
 #: pynicotine/gtkgui/ui/dialogs/about.ui:175
+#, fuzzy
 msgid "License"
-msgstr ""
+msgstr "Licencia"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:6
 msgid "_Previous"
@@ -4031,10 +4044,13 @@ msgstr ""
 "cuyos puertos de escucha estén abiertos."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:280
+#, fuzzy
 msgid ""
 "Choose a range to select a listening port from. The first available port in "
 "the range will be used."
 msgstr ""
+"Elija un rango para seleccionar un puerto de escucha. Se utilizará el primer "
+"puerto disponible en el rango."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:302
 #: pynicotine/gtkgui/ui/settings/network.ui:166
@@ -4550,8 +4566,9 @@ msgstr ""
 "específicas y recibir notificaciones cuando estén conectados"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1452
+#, fuzzy
 msgid "Join or create room…"
-msgstr ""
+msgstr "Únete o crea una sala…"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1453
 msgid ""
@@ -6143,8 +6160,9 @@ msgid "Chat room mentions"
 msgstr "Menciones de las salas de chat"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:427
+#, fuzzy
 msgid "Wishlist item found"
-msgstr ""
+msgstr "Artículo de la lista de deseos encontrado"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:454
 msgid "Secondary Tabs"
