@@ -53,11 +53,15 @@ class Search:
         for event_name, callback in (
             ("distributed-search-request", self._distrib_search),
             ("file-search-response", self._file_search_response),
+            ("quit", self._quit),
             ("server-disconnect", self._server_disconnect),
             ("server-search-request", self._search_request),
             ("set-wishlist-interval", self._set_wishlist_interval)
         ):
             events.connect(event_name, callback)
+
+    def _quit(self):
+        self.searches.clear()
 
     def _server_disconnect(self, _msg):
         scheduler.cancel(self._wishlist_timer_id)

@@ -162,7 +162,15 @@ class Transfers:
         self.update_download_filters()
 
     def _quit(self):
+
         self.save_transfers()
+        self.allow_saving_transfers = False
+
+        self.downloads.clear()
+        self.uploads.clear()
+
+        self.upload_speed = 0
+        self.token = 0
 
     def _server_login(self, msg):
 
@@ -220,6 +228,8 @@ class Transfers:
         self.requested_folders.clear()
         self.transfer_request_times.clear()
         self.user_update_counters.clear()
+
+        self.user_update_counter = 0
 
     """ Load Transfers """
 

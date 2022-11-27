@@ -25,8 +25,14 @@ from pynicotine.events import events
 class Statistics:
 
     def __init__(self):
+
         self.session_stats = {}
-        events.connect("start", self._start)
+
+        for event_name, callback in (
+            ("quit", self._quit),
+            ("start", self._start)
+        ):
+            events.connect(event_name, callback)
 
     def _start(self):
 
@@ -40,6 +46,9 @@ class Statistics:
 
         for stat_id in config.defaults["statistics"]:
             self.update_ui(stat_id)
+
+    def _quit(self):
+        self.session_stats.clear()
 
     def append_stat_value(self, stat_id, stat_value):
 

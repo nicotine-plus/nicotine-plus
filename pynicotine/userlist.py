@@ -32,6 +32,7 @@ class UserList:
         self.buddies = {}
 
         for event_name, callback in (
+            ("quit", self._quit),
             ("server-login", self._server_login),
             ("server-disconnect", self._server_disconnect),
             ("start", self._start),
@@ -82,6 +83,9 @@ class UserList:
 
             self.buddies[user] = row
             events.emit("add-buddy", user, row)
+
+    def _quit(self):
+        self.buddies.clear()
 
     def _server_login(self, msg):
 

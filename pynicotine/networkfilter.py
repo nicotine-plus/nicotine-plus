@@ -29,7 +29,15 @@ class NetworkFilter:
         self.ipblock_requested = {}
         self.ipignore_requested = {}
 
-        events.connect("peer-address", self._get_peer_address)
+        for event_name, callback in (
+            ("peer-address", self._get_peer_address),
+            ("server-disconnect", self._server_disconnect)
+        ):
+            events.connect(event_name, callback)
+
+    def _server_disconnect(self, _msg):
+        self.ipblock_requested.clear()
+        self.ipignore_requested.clear()
 
     """ General """
 

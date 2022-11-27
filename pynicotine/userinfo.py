@@ -36,11 +36,15 @@ class UserInfo:
         self.requested_info_times = {}
 
         for event_name, callback in (
+            ("quit", self._quit),
             ("server-login", self._server_login),
             ("server-disconnect", self._server_disconnect),
             ("user-info-request", self._user_info_request)
         ):
             events.connect(event_name, callback)
+
+    def _quit(self):
+        self.users.clear()
 
     def _server_login(self, msg):
 

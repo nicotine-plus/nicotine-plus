@@ -43,6 +43,7 @@ class PrivateChat:
         for event_name, callback in (
             ("message-user", self._message_user),
             ("peer-address", self._get_peer_address),
+            ("quit", self._quit),
             ("server-login", self._server_login),
             ("server-disconnect", self._server_disconnect),
             ("start", self._start),
@@ -60,6 +61,10 @@ class PrivateChat:
                 self.show_user(user, switch_page=False)
 
         self.update_completions()
+
+    def _quit(self):
+        self.completion_list.clear()
+        self.users.clear()
 
     def _server_login(self, msg):
 

@@ -49,6 +49,7 @@ class ChatRooms:
             ("private-room-toggle", self._private_room_toggle),
             ("private-room-users", self._private_room_users),
             ("public-room-message", self._public_room_message),
+            ("quit", self._quit),
             ("room-list", self._room_list),
             ("say-chat-room", self._say_chat_room),
             ("server-login", self._server_login),
@@ -57,6 +58,10 @@ class ChatRooms:
             ("user-left-room", self._user_left_room)
         ):
             events.connect(event_name, callback)
+
+    def _quit(self):
+        self.joined_rooms.clear()
+        self.completion_list.clear()
 
     def _server_login(self, msg):
 

@@ -36,6 +36,12 @@ class Notifications:
         self.tts = deque()
         self._tts_thread = None
 
+        events.connect("quit", self._quit)
+
+    def _quit(self):
+        self.chat_hilites.clear()
+        self.tts.clear()
+
     """ Chat Hilites """
 
     def add_hilite_item(self, location, item):

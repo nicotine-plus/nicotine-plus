@@ -38,8 +38,17 @@ from pynicotine.utils import RestrictedUnpickler
 class UserBrowse:
 
     def __init__(self):
+
         self.users = set()
-        events.connect("server-login", self._server_login)
+
+        for event_name, callback in (
+            ("quit", self._quit),
+            ("server-login", self._server_login)
+        ):
+            events.connect(event_name, callback)
+
+    def _quit(self):
+        self.users.clear()
 
     def _server_login(self, msg):
 

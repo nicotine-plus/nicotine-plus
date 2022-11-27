@@ -329,8 +329,8 @@ class Core:
         # Indicate that a shutdown has started, to prevent UI callbacks from networking thread
         self.shutdown = True
 
+        events.emit("server-disconnect", slskmessages.ServerDisconnect(manual_disconnect=True))
         events.emit("quit")
-        self._server_disconnect()
 
         log.add(_("Quit %(program)s %(version)s, %(status)s!"), {
             "program": config.application_name,
@@ -457,7 +457,7 @@ class Core:
         if not config.need_config():
             self.connect()
 
-    def _server_disconnect(self, msg=None):
+    def _server_disconnect(self, msg):
 
         self.user_status = slskmessages.UserStatus.OFFLINE
 
@@ -466,7 +466,7 @@ class Core:
         self.watched_users.clear()
 
         if self.pluginhandler:
-            self.pluginhandler.server_disconnect_notification(msg.manual_disconnect if msg else True)
+            self.pluginhandler.server_disconnect_notification(msg.manual_disconnect)
 
         self.login_username = None
 
