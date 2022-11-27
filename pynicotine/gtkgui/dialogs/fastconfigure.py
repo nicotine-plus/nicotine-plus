@@ -32,7 +32,7 @@ from pynicotine.gtkgui.widgets.ui import UserInterface
 
 class FastConfigure(Dialog):
 
-    def __init__(self, frame):
+    def __init__(self, application):
 
         self.rescan_required = False
         self.finished = False
@@ -60,7 +60,7 @@ class FastConfigure(Dialog):
         self.pages = [self.welcome_page, self.account_page, self.port_page, self.share_page, self.summary_page]
 
         super().__init__(
-            parent=frame.window,
+            parent=application.window,
             content_box=self.stack,
             buttons_start=(self.previous_button,),
             buttons_end=(self.next_button,),
@@ -77,10 +77,11 @@ class FastConfigure(Dialog):
 
         # Page specific, share_page
         self.download_folder_button = FileChooserButton(
-            self.download_folder_button, self.window, "folder", selected_function=self.on_download_folder_selected)
+            self.download_folder_button, self, "folder", selected_function=self.on_download_folder_selected)
 
         self.shares_list_view = TreeView(
-            frame, parent=self.shares_list_container, multi_select=True, activate_row_callback=self.on_edit_share,
+            application.window, parent=self.shares_list_container, multi_select=True,
+            activate_row_callback=self.on_edit_share,
             columns=[
                 {"column_id": "virtual_folder", "column_type": "text", "title": _("Virtual Folder"), "width": 1,
                  "sort_column": 0, "expand_column": True},
@@ -148,7 +149,7 @@ class FastConfigure(Dialog):
     def on_add_share(self, *_args):
 
         FolderChooser(
-            parent=self.window,
+            parent=self,
             title=_("Add a Shared Folder"),
             callback=self.on_add_share_selected,
             select_multiple=True
@@ -183,7 +184,7 @@ class FastConfigure(Dialog):
             folder = self.shares_list_view.get_row_value(iterator, 1)
 
             EntryDialog(
-                parent=self.window,
+                parent=self,
                 title=_("Edit Shared Folder"),
                 message=_("Enter new virtual name for '%(dir)s':") % {'dir': folder},
                 default=virtual_name,

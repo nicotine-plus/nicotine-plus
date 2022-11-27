@@ -27,7 +27,7 @@ from pynicotine.utils import humanize
 
 class FileProperties(Dialog):
 
-    def __init__(self, frame, download_button=True):
+    def __init__(self, application, download_button=True):
 
         self.properties = {}
         self.total_size = 0
@@ -60,7 +60,7 @@ class FileProperties(Dialog):
 
         Dialog.__init__(
             self,
-            parent=frame.window,
+            parent=application.window,
             content_box=self.container,
             buttons_start=(self.previous_button, self.next_button),
             buttons_end=(self.download_button,) if download_button else (),

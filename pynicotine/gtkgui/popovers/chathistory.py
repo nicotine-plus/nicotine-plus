@@ -36,7 +36,7 @@ from pynicotine.utils import encode_path
 
 class ChatHistory(Popover):
 
-    def __init__(self, frame):
+    def __init__(self, window):
 
         ui_template = UserInterface(scope=self, path="popovers/chathistory.ui")
         (
@@ -46,16 +46,14 @@ class ChatHistory(Popover):
         ) = ui_template.widgets
 
         super().__init__(
-            window=frame.window,
+            window=window,
             content_box=self.container,
             width=1000,
             height=700
         )
 
-        self.frame = frame
-
         self.list_view = TreeView(
-            frame, parent=self.list_container, activate_row_callback=self.on_show_user,
+            window, parent=self.list_container, activate_row_callback=self.on_show_user,
             columns=[
                 {"column_id": "user", "column_type": "text", "title": _("User"), "width": 175,
                  "sort_column": 0},
@@ -65,12 +63,12 @@ class ChatHistory(Popover):
         self.list_view.set_search_entry(self.search_entry)
 
         Accelerator("<Primary>f", self.popover, self.on_search_accelerator)
-        CompletionEntry(frame.private_entry, self.list_view.model, column=0)
+        CompletionEntry(window.private_entry, self.list_view.model, column=0)
 
         if GTK_API_VERSION >= 4:
-            frame.private_history_button.get_first_child().add_css_class("arrow-button")
+            window.private_history_button.get_first_child().add_css_class("arrow-button")
 
-        frame.private_history_button.set_popover(self.popover)
+        window.private_history_button.set_popover(self.popover)
         self.load_users()
 
     def load_user(self, file_path):

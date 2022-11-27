@@ -50,12 +50,12 @@ from pynicotine.utils import human_speed
 
 class UserInfos(IconNotebook):
 
-    def __init__(self, frame):
+    def __init__(self, window):
 
         super().__init__(
-            frame,
-            widget=frame.userinfo_notebook,
-            parent_page=frame.userinfo_page
+            window,
+            widget=window.userinfo_notebook,
+            parent_page=window.userinfo_page
         )
 
         # Events
@@ -76,12 +76,12 @@ class UserInfos(IconNotebook):
 
     def on_get_user_info(self, *_args):
 
-        username = self.frame.userinfo_entry.get_text().strip()
+        username = self.window.userinfo_entry.get_text().strip()
 
         if not username:
             return
 
-        self.frame.userinfo_entry.set_text("")
+        self.window.userinfo_entry.set_text("")
         core.userinfo.show_user(username)
 
     def show_user(self, user, switch_page=True, **_unused):
@@ -94,7 +94,7 @@ class UserInfos(IconNotebook):
 
         if switch_page:
             self.set_current_page(self.pages[user].container)
-            self.frame.change_main_page(self.frame.userinfo_page)
+            self.window.change_main_page(self.window.userinfo_page)
 
     def remove_user(self, user):
 
@@ -195,7 +195,7 @@ class UserInfo:
         ) = ui_template.widgets
 
         self.userinfos = userinfos
-        self.frame = userinfos.frame
+        self.window = userinfos.window
 
         self.info_bar = InfoBar(self.info_bar, button=self.retry_button)
         self.description_view = TextView(self.description_view)
@@ -225,7 +225,7 @@ class UserInfo:
 
         # Set up likes list
         self.likes_list_view = TreeView(
-            self.frame, parent=self.likes_list_container,
+            self.window, parent=self.likes_list_container,
             columns=[
                 {"column_id": "likes", "column_type": "text", "title": _("Likes"), "sort_column": 0,
                  "default_sort_column": "ascending"}
@@ -234,7 +234,7 @@ class UserInfo:
 
         # Set up dislikes list
         self.dislikes_list_view = TreeView(
-            self.frame, parent=self.dislikes_list_container,
+            self.window, parent=self.dislikes_list_container,
             columns=[
                 {"column_id": "dislikes", "column_type": "text", "title": _("Dislikes"), "sort_column": 0,
                  "default_sort_column": "ascending"}
@@ -242,7 +242,7 @@ class UserInfo:
         )
 
         # Popup menus
-        self.user_popup_menu = UserPopupMenu(self.frame, None, self.on_tab_popup)
+        self.user_popup_menu = UserPopupMenu(self.window.application, None, self.on_tab_popup)
         self.user_popup_menu.setup_user_menu(user, page="userinfo")
         self.user_popup_menu.add_items(
             ("", None),
@@ -251,18 +251,20 @@ class UserInfo:
         )
 
         def get_interest_items(list_view):
-            return (("$" + _("I _Like This"), self.frame.interests.on_like_recommendation, list_view),
-                    ("$" + _("I _Dislike This"), self.frame.interests.on_dislike_recommendation, list_view),
+            return (("$" + _("I _Like This"), self.window.interests.on_like_recommendation, list_view),
+                    ("$" + _("I _Dislike This"), self.window.interests.on_dislike_recommendation, list_view),
                     ("", None),
-                    ("#" + _("_Search for Item"), self.frame.interests.on_recommend_search, list_view))
+                    ("#" + _("_Search for Item"), self.window.interests.on_recommend_search, list_view))
 
-        self.likes_popup_menu = PopupMenu(self.frame, self.likes_list_view.widget, self.on_popup_likes_menu)
+        self.likes_popup_menu = PopupMenu(self.window.application, self.likes_list_view.widget,
+                                          self.on_popup_likes_menu)
         self.likes_popup_menu.add_items(*get_interest_items(self.likes_list_view))
 
-        self.dislikes_popup_menu = PopupMenu(self.frame, self.dislikes_list_view.widget, self.on_popup_dislikes_menu)
+        self.dislikes_popup_menu = PopupMenu(self.window.application, self.dislikes_list_view.widget,
+                                             self.on_popup_dislikes_menu)
         self.dislikes_popup_menu.add_items(*get_interest_items(self.dislikes_list_view))
 
-        self.picture_popup_menu = PopupMenu(self.frame, self.picture_view)
+        self.picture_popup_menu = PopupMenu(self.window.application, self.picture_view)
         self.picture_popup_menu.add_items(
             ("#" + _("Zoom 1:1"), self.make_zoom_normal),
             ("#" + _("Zoom In"), self.make_zoom_in),
@@ -498,10 +500,10 @@ class UserInfo:
         self.user_popup_menu.toggle_user_items()
 
     def on_popup_likes_menu(self, menu, *_args):
-        self.frame.interests.toggle_menu_items(menu, self.likes_list_view, column=0)
+        self.window.interests.toggle_menu_items(menu, self.likes_list_view, column=0)
 
     def on_popup_dislikes_menu(self, menu, *_args):
-        self.frame.interests.toggle_menu_items(menu, self.dislikes_list_view, column=0)
+        self.window.interests.toggle_menu_items(menu, self.dislikes_list_view, column=0)
 
     def on_send_message(self, *_args):
         core.privatechat.show_user(self.user)
@@ -532,7 +534,7 @@ class UserInfo:
             return
 
         FileChooserSave(
-            parent=self.frame.window,
+            parent=self.window,
             callback=self.on_save_picture_response,
             initial_folder=config.sections["transfers"]["downloaddir"],
             initial_file="%s %s.png" % (self.user, time.strftime("%Y-%m-%d %H_%M_%S"))

@@ -19,6 +19,8 @@
 import os
 import sys
 
+from pynicotine.logfacility import log
+
 
 def check_gtk_version():
 
@@ -78,42 +80,6 @@ def check_gtk_version():
     return None
 
 
-def apply_gtk_translations():
-
-    libintl_path = None
-    executable_folder = os.path.dirname(sys.executable)
-
-    # Load library for translating non-Python content, e.g. GTK ui files
-    if sys.platform == "win32":
-        libintl_path = "libintl-8.dll"
-
-        if getattr(sys, 'frozen', False):
-            libintl_path = os.path.join(executable_folder, "lib", libintl_path)
-
-    elif sys.platform == "darwin":
-        libintl_path = "libintl.8.dylib"
-
-        if getattr(sys, 'frozen', False):
-            libintl_path = os.path.join(executable_folder, libintl_path)
-
-    import locale
-    from pynicotine.i18n import get_translation_mo_path
-    from pynicotine.i18n import TRANSLATION_DOMAIN
-
-    mo_path = get_translation_mo_path()
-
-    if libintl_path is not None:
-        import ctypes
-        libintl = ctypes.cdll.LoadLibrary(libintl_path)
-
-        # Arguments need to be encoded, otherwise translations fail
-        libintl.bindtextdomain(TRANSLATION_DOMAIN.encode(), mo_path.encode(sys.getfilesystemencoding()))
-        libintl.bind_textdomain_codeset(TRANSLATION_DOMAIN.encode(), b"UTF-8")
-
-    elif hasattr(locale, "bindtextdomain") and hasattr(locale, "textdomain"):
-        locale.bindtextdomain(TRANSLATION_DOMAIN, mo_path)
-
-
 def run(hidden, ci_mode, multi_instance):
     """ Run Nicotine+ GTK GUI """
 
@@ -139,7 +105,6 @@ def run(hidden, ci_mode, multi_instance):
         # 'win32' PangoCairo backend on Windows is too slow, use 'fontconfig' instead
         os.environ["PANGOCAIRO_BACKEND"] = "fontconfig"
 
-    from pynicotine.logfacility import log
     error = check_gtk_version()
 
     if error:
@@ -153,5 +118,4 @@ def run(hidden, ci_mode, multi_instance):
         return None
 
     from pynicotine.gtkgui.application import Application
-    apply_gtk_translations()
     return Application(hidden, ci_mode, multi_instance).run()

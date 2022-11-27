@@ -213,7 +213,7 @@
                                           <object class="GtkButton">
                                             <property name="visible">True</property>
                                             <property name="tooltip-text" translatable="yes">Configure Searches</property>
-                                            <signal name="clicked" handler="on_configure_searches"/>
+                                            <property name="action-name">app.configure-searches</property>
                                             <child>
                                               <object class="GtkImage">
                                                 <property name="visible">True</property>
@@ -349,7 +349,7 @@
                                               <object class="GtkButton" id="_download_users_button">
                                                 <property name="visible">True</property>
                                                 <property name="tooltip-text" translatable="yes">Users</property>
-                                                <signal name="clicked" handler="on_transfer_statistics"/>
+                                                <property name="action-name">app.transfer-statistics</property>
                                                 <child>
                                                   <object class="GtkLabel" id="download_users_label">
                                                     <property name="visible">True</property>
@@ -390,7 +390,7 @@
                                               <object class="GtkButton" id="_download_files_button">
                                                 <property name="visible">True</property>
                                                 <property name="tooltip-text" translatable="yes">Files</property>
-                                                <signal name="clicked" handler="on_transfer_statistics"/>
+                                                <property name="action-name">app.transfer-statistics</property>
                                                 <child>
                                                   <object class="GtkLabel" id="download_files_label">
                                                     <property name="visible">True</property>
@@ -458,7 +458,7 @@
                                           <object class="GtkButton">
                                             <property name="visible">True</property>
                                             <property name="tooltip-text" translatable="yes">Configure Downloads</property>
-                                            <signal name="clicked" handler="on_configure_downloads"/>
+                                            <property name="action-name">app.configure-downloads</property>
                                             <child>
                                               <object class="GtkImage">
                                                 <property name="visible">True</property>
@@ -592,7 +592,7 @@
                                               <object class="GtkButton" id="_upload_users_button">
                                                 <property name="visible">True</property>
                                                 <property name="tooltip-text" translatable="yes">Users</property>
-                                                <signal name="clicked" handler="on_transfer_statistics"/>
+                                                <property name="action-name">app.transfer-statistics</property>
                                                 <child>
                                                   <object class="GtkLabel" id="upload_users_label">
                                                     <property name="visible">True</property>
@@ -633,7 +633,7 @@
                                               <object class="GtkButton" id="_upload_files_button">
                                                 <property name="visible">True</property>
                                                 <property name="tooltip-text" translatable="yes">Files</property>
-                                                <signal name="clicked" handler="on_transfer_statistics"/>
+                                                <property name="action-name">app.transfer-statistics</property>
                                                 <child>
                                                   <object class="GtkLabel" id="upload_files_label">
                                                     <property name="visible">True</property>
@@ -701,7 +701,7 @@
                                           <object class="GtkButton">
                                             <property name="visible">True</property>
                                             <property name="tooltip-text" translatable="yes">Configure Uploads</property>
-                                            <signal name="clicked" handler="on_configure_uploads"/>
+                                            <property name="action-name">app.configure-uploads</property>
                                             <child>
                                               <object class="GtkImage">
                                                 <property name="visible">True</property>
@@ -846,7 +846,7 @@
                                         <child>
                                           <object class="GtkButton" id="_load_from_disk_button">
                                             <property name="visible">True</property>
-                                            <signal name="clicked" handler="on_load_from_disk"/>
+                                            <property name="action-name">app.load-shares-from-disk</property>
                                             <child>
                                               <object class="GtkBox">
                                                 <property name="visible">True</property>
@@ -877,7 +877,7 @@
                                           <object class="GtkButton">
                                             <property name="visible">True</property>
                                             <property name="tooltip-text" translatable="yes">Configure Shares</property>
-                                            <signal name="clicked" handler="on_configure_shares"/>
+                                            <property name="action-name">app.configure-shares</property>
                                             <child>
                                               <object class="GtkImage">
                                                 <property name="visible">True</property>
@@ -1024,7 +1024,7 @@
                                         <child>
                                           <object class="GtkButton" id="_update_info_button">
                                             <property name="visible">True</property>
-                                            <signal name="clicked" handler="on_update_user_info"/>
+                                            <property name="action-name">app.update-user-info</property>
                                             <child>
                                               <object class="GtkBox">
                                                 <property name="visible">True</property>
@@ -1203,7 +1203,7 @@
                                           <object class="GtkButton">
                                             <property name="visible">True</property>
                                             <property name="tooltip-text" translatable="yes">Configure Chats</property>
-                                            <signal name="clicked" handler="on_configure_chats"/>
+                                            <property name="action-name">app.configure-chats</property>
                                             <child>
                                               <object class="GtkImage">
                                                 <property name="visible">True</property>
@@ -1492,7 +1492,7 @@
                                               <object class="GtkButton">
                                                 <property name="visible">True</property>
                                                 <property name="tooltip-text" translatable="yes">Configure Chats</property>
-                                                <signal name="clicked" handler="on_configure_chats"/>
+                                                <property name="action-name">app.configure-chats</property>
                                                 <child>
                                                   <object class="GtkImage">
                                                     <property name="visible">True</property>
@@ -1731,7 +1731,7 @@
                   <object class="GtkButton" id="_connections_button">
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Connections</property>
-                    <signal name="clicked" handler="on_transfer_statistics"/>
+                    <property name="action-name">app.transfer-statistics</property>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
@@ -1763,7 +1763,7 @@
                   <object class="GtkButton" id="_download_status_button">
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Downloading (speed / active users)</property>
-                    <signal name="clicked" handler="on_configure_downloads"/>
+                    <property name="action-name">app.configure-downloads</property>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
@@ -1794,7 +1794,7 @@
                   <object class="GtkButton" id="_upload_status_button">
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Uploading (speed / active users)</property>
-                    <signal name="clicked" handler="on_configure_uploads"/>
+                    <property name="action-name">app.configure-uploads</property>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
@@ -1843,7 +1843,7 @@
                   <object class="GtkButton" id="user_status_button">
                     <property name="visible">True</property>
                     <property name="sensitive">False</property>
-                    <signal name="clicked" handler="on_away"/>
+                    <property name="action-name">app.away</property>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>

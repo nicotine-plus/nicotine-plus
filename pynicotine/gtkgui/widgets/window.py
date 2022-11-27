@@ -30,6 +30,8 @@ class Window:
 
     def __init__(self, window):
 
+        self.window = window
+
         signal_name = "notify::focus-widget" if GTK_API_VERSION >= 4 else "set-focus"
         window.connect(signal_name, self.on_focus_widget_changed)
 
@@ -43,6 +45,38 @@ class Window:
             return
 
         widget.handler_unblock_by_func(callback)
+
+    def get_surface(self):
+
+        if GTK_API_VERSION >= 4:
+            return self.window.get_surface()
+
+        return self.window.get_window()
+
+    def get_width(self):
+
+        if GTK_API_VERSION >= 4:
+            return self.window.get_width()
+
+        width, _height = self.window.get_size()
+        return width
+
+    def get_height(self):
+
+        if GTK_API_VERSION >= 4:
+            return self.window.get_height()
+
+        _width, height = self.window.get_size()
+        return height
+
+    def is_active(self):
+        return self.window.is_active()
+
+    def is_visible(self):
+        return self.window.get_visible()
+
+    def set_title(self, title):
+        self.window.set_title(title)
 
     @staticmethod
     def on_popover_closed(popover):

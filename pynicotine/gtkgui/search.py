@@ -34,7 +34,6 @@ from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.dialogs.fileproperties import FileProperties
-from pynicotine.gtkgui.dialogs.wishlist import WishList
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.filechooser import FolderChooser
@@ -64,12 +63,12 @@ from pynicotine.utils import human_speed
 
 class Searches(IconNotebook):
 
-    def __init__(self, frame):
+    def __init__(self, window):
 
         super().__init__(
-            frame,
-            widget=frame.search_notebook,
-            parent_page=frame.search_page,
+            window,
+            widget=window.search_notebook,
+            parent_page=window.search_page,
             switch_page_callback=self.on_switch_search_page
         )
 
@@ -80,7 +79,7 @@ class Searches(IconNotebook):
             "user": _("_User")
         }
 
-        mode_menu = PopupMenu(frame)
+        mode_menu = PopupMenu(window.application)
         mode_menu.add_items(
             ("O" + self.modes["global"], "win.search-mode", "global"),
             ("O" + self.modes["buddies"], "win.search-mode", "buddies"),
@@ -88,17 +87,16 @@ class Searches(IconNotebook):
             ("O" + self.modes["user"], "win.search-mode", "user")
         )
         mode_menu.update_model()
-        frame.search_mode_button.set_menu_model(mode_menu.model)
-        frame.search_mode_label.set_label(self.modes["global"])
+        window.search_mode_button.set_menu_model(mode_menu.model)
+        window.search_mode_label.set_label(self.modes["global"])
 
         if GTK_API_VERSION >= 4:
-            frame.search_mode_button.get_first_child().add_css_class("arrow-button")
+            window.search_mode_button.get_first_child().add_css_class("arrow-button")
 
-        CompletionEntry(frame.room_search_entry, frame.room_search_combobox.get_model())
-        CompletionEntry(frame.search_entry, frame.search_combobox.get_model())
+        CompletionEntry(window.room_search_entry, window.room_search_combobox.get_model())
+        CompletionEntry(window.search_entry, window.search_combobox.get_model())
 
         self.file_properties = None
-        self.wish_list = WishList(frame, self)
 
         for event_name, callback in (
             ("do-search", self.do_search),
@@ -112,7 +110,7 @@ class Searches(IconNotebook):
 
     def on_switch_search_page(self, _notebook, page, _page_num):
 
-        if self.frame.current_page_id != self.frame.search_page.id:
+        if self.window.current_page_id != self.window.search_page.id:
             return
 
         for tab in self.pages.values():
@@ -127,40 +125,40 @@ class Searches(IconNotebook):
         action.set_state(state)
         search_mode = state.get_string()
 
-        self.frame.search_mode_label.set_label(self.modes[search_mode])
+        self.window.search_mode_label.set_label(self.modes[search_mode])
 
-        self.frame.user_search_combobox.set_visible(search_mode == "user")
-        self.frame.room_search_combobox.set_visible(search_mode == "rooms")
+        self.window.user_search_combobox.set_visible(search_mode == "user")
+        self.window.room_search_combobox.set_visible(search_mode == "rooms")
 
         # Hide popover after click
-        self.frame.search_mode_button.get_popover().hide()
+        self.window.search_mode_button.get_popover().hide()
 
     def on_search(self):
 
-        text = self.frame.search_entry.get_text().strip()
+        text = self.window.search_entry.get_text().strip()
 
         if not text:
             return
 
-        mode = self.frame.search_mode_action.get_state().get_string()
-        room = self.frame.room_search_entry.get_text()
-        user = self.frame.user_search_entry.get_text()
+        mode = self.window.lookup_action("search-mode").get_state().get_string()
+        room = self.window.room_search_entry.get_text()
+        user = self.window.user_search_entry.get_text()
 
-        self.frame.search_entry.set_text("")
+        self.window.search_entry.set_text("")
         core.search.do_search(text, mode, room=room, user=user)
 
     def populate_search_history(self):
 
         should_enable_history = config.sections["searches"]["enable_history"]
 
-        self.frame.search_combobox.remove_all()
-        self.frame.search_combobox_button.set_visible(should_enable_history)
+        self.window.search_combobox.remove_all()
+        self.window.search_combobox_button.set_visible(should_enable_history)
 
         if not should_enable_history:
             return
 
         for term in config.sections["searches"]["history"]:
-            self.frame.search_combobox.append_text(str(term))
+            self.window.search_combobox.append_text(str(term))
 
     def do_search(self, token, search_term, mode, room=None, users=None, switch_page=True):
 
@@ -179,7 +177,7 @@ class Searches(IconNotebook):
 
         if switch_page:
             self.set_current_page(tab.container)
-            self.frame.change_main_page(self.frame.search_page)
+            self.window.change_main_page(self.window.search_page)
 
         # Repopulate the combo list
         self.populate_search_history()
@@ -197,12 +195,12 @@ class Searches(IconNotebook):
 
     def clear_search_history(self):
 
-        self.frame.search_entry.set_text("")
+        self.window.search_entry.set_text("")
 
         config.sections["searches"]["history"] = []
         config.write_configuration()
 
-        self.frame.search_combobox.remove_all()
+        self.window.search_combobox.remove_all()
 
     def clear_filter_history(self):
 
@@ -268,11 +266,8 @@ class Searches(IconNotebook):
         tab.file_search_response(msg)
 
     def update_visuals(self):
-
         for page in self.pages.values():
             page.update_visuals()
-
-        self.wish_list.update_visuals()
 
 
 class Search:
@@ -305,7 +300,7 @@ class Search:
         ) = ui_template.widgets
 
         self.searches = searches
-        self.frame = searches.frame
+        self.window = searches.window
 
         self.text = text
         self.searchterm_words_include = []
@@ -361,7 +356,7 @@ class Search:
         self.column_numbers = list(range(self.resultsmodel.get_n_columns()))
         color_col = 17
         self.cols = cols = initialise_columns(
-            self.frame, "file_search", self.tree_view,
+            self.window, "file_search", self.tree_view,
             ["id", _("ID"), 50, "number", color_col],
             ["user", _("User"), 200, "text", color_col],
             ["country", _("Country"), 25, "icon", None],
@@ -401,16 +396,16 @@ class Search:
         self.update_visuals()
 
         # Popup menus
-        self.popup_menu_users = UserPopupMenu(self.frame)
+        self.popup_menu_users = UserPopupMenu(self.window.application)
 
-        self.popup_menu_copy = PopupMenu(self.frame)
+        self.popup_menu_copy = PopupMenu(self.window.application)
         self.popup_menu_copy.add_items(
             ("#" + _("Copy _File Path"), self.on_copy_file_path),
             ("#" + _("Copy _URL"), self.on_copy_url),
             ("#" + _("Copy Folder U_RL"), self.on_copy_dir_url)
         )
 
-        self.popup_menu = FilePopupMenu(self.frame, self.tree_view, self.on_popup_menu)
+        self.popup_menu = FilePopupMenu(self.window.application, self.tree_view, self.on_popup_menu)
         self.popup_menu.add_items(
             ("#" + "selected_files", None),
             ("", None),
@@ -426,7 +421,7 @@ class Search:
             (">" + _("User(s)"), self.popup_menu_users)
         )
 
-        self.tab_menu = PopupMenu(self.frame)
+        self.tab_menu = PopupMenu(self.window.application)
         self.tab_menu.add_items(
             ("#" + _("Copy Search Term"), self.on_copy_search_term),
             ("", None),
@@ -443,7 +438,7 @@ class Search:
         Accelerator("<Alt>Return", self.tree_view, self.on_file_properties_accelerator)
 
         # Grouping
-        menu = create_grouping_menu(self.frame.window, config.sections["searches"]["group_searches"], self.on_group)
+        menu = create_grouping_menu(self.window, config.sections["searches"]["group_searches"], self.on_group)
         self.grouping_button.set_menu_model(menu)
 
         self.expand_button.set_active(config.sections["searches"]["expand_searches"])
@@ -1061,7 +1056,7 @@ class Search:
         # Multiple users, create submenus for each user
         if len(self.selected_users) > 1:
             for user in self.selected_users:
-                popup = UserPopupMenu(self.frame)
+                popup = UserPopupMenu(self.window.application)
                 self.add_popup_menu_user(popup, user)
                 self.popup_menu_users.add_items((">" + user, popup))
                 self.popup_menu_users.update_model()
@@ -1250,7 +1245,7 @@ class Search:
 
         if data:
             if self.searches.file_properties is None:
-                self.searches.file_properties = FileProperties(self.frame, core)
+                self.searches.file_properties = FileProperties(self.window.application, core)
 
             self.searches.file_properties.update_properties(data, selected_size, selected_length)
             self.searches.file_properties.show()
@@ -1273,7 +1268,7 @@ class Search:
     def on_download_files_to(self, *_args):
 
         FolderChooser(
-            parent=self.frame.window,
+            parent=self.window,
             title=_("Select Destination Folder for File(s)"),
             callback=self.on_download_files_to_selected,
             initial_folder=config.sections["transfers"]["downloaddir"]
@@ -1325,7 +1320,7 @@ class Search:
     def on_download_folders_to(self, *_args):
 
         FolderChooser(
-            parent=self.frame.window,
+            parent=self.window,
             title=_("Select Destination Folder"),
             callback=self.on_download_folders_to_selected,
             initial_folder=config.sections["transfers"]["downloaddir"]
@@ -1361,7 +1356,7 @@ class Search:
         if self.num_results_found > self.num_results_visible:
             self.on_clear_filters()
         else:
-            self.frame.on_preferences(page_id="searches")
+            self.window.application.lookup_action("configure-searches").emit("activate")
 
     def on_group(self, action, state):
 
@@ -1555,7 +1550,7 @@ class Search:
 
     def on_focus(self, *_args):
 
-        if self.frame.search_entry.get_text():
+        if self.window.search_entry.get_text():
             # Search entry contains text, let it grab focus instead
             return
 

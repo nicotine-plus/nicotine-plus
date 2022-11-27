@@ -41,10 +41,10 @@ from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 
 class TreeView:
 
-    def __init__(self, frame, parent, columns, multi_select=False, always_select=False,
+    def __init__(self, window, parent, columns, multi_select=False, always_select=False,
                  name=None, activate_row_callback=None, select_row_callback=None, tooltip_callback=None):
 
-        self.frame = frame
+        self.window = window
         self.widget = Gtk.TreeView(visible=True)
         self.widget_name = name
         self.columns = columns
@@ -58,8 +58,8 @@ class TreeView:
         self.initialise_columns(columns)
 
         Accelerator("<Primary>c", self.widget, self.on_copy_cell_data_accelerator)
-        self.column_menu = self.widget.column_menu = PopupMenu(self.frame, self.widget, callback=self._press_header,
-                                                               connect_events=False)
+        self.column_menu = self.widget.column_menu = PopupMenu(
+            self.window.application, self.widget, callback=self._press_header, connect_events=False)
 
         if multi_select:
             self.widget.set_rubber_banding(True)
@@ -616,7 +616,7 @@ def collapse_treeview(treeview, grouping_mode):
             iterator = model.iter_next(iterator)
 
 
-def initialise_columns(frame, treeview_name, treeview, *args):
+def initialise_columns(window, treeview_name, treeview, *args):
 
     cols = {}
     num_cols = len(args)
@@ -730,7 +730,7 @@ def initialise_columns(frame, treeview_name, treeview, *args):
     treeview.emit("columns-changed")
 
     Accelerator("<Primary>c", treeview, on_copy_cell_data_accelerator)
-    treeview.column_menu = PopupMenu(frame, treeview, callback=press_header, connect_events=False)
+    treeview.column_menu = PopupMenu(window.application, treeview, callback=press_header, connect_events=False)
 
     return cols
 

@@ -36,7 +36,7 @@ from pynicotine.utils import open_file_path
 
 class Uploads(TransferList):
 
-    def __init__(self, frame):
+    def __init__(self, window):
 
         self.path_separator = '\\'
         self.path_label = _("Folder")
@@ -44,19 +44,19 @@ class Uploads(TransferList):
         self.abort_label = _("_Abort")
         self.deprioritized_statuses = ("", "Cancelled", "Finished")
 
-        self.transfer_page = frame.uploads_page
-        self.user_counter = frame.upload_users_label
-        self.file_counter = frame.upload_files_label
-        self.expand_button = frame.uploads_expand_button
-        self.expand_icon = frame.uploads_expand_icon
-        self.grouping_button = frame.uploads_grouping_button
+        self.transfer_page = window.uploads_page
+        self.user_counter = window.upload_users_label
+        self.file_counter = window.upload_files_label
+        self.expand_button = window.uploads_expand_button
+        self.expand_icon = window.uploads_expand_icon
+        self.grouping_button = window.uploads_grouping_button
 
-        TransferList.__init__(self, frame, transfer_type="upload")
+        TransferList.__init__(self, window, transfer_type="upload")
 
         if GTK_API_VERSION >= 4:
-            frame.uploads_content.append(self.container)
+            window.uploads_content.append(self.container)
         else:
-            frame.uploads_content.add(self.container)
+            window.uploads_content.add(self.container)
 
         self.popup_menu_clear.add_items(
             ("#" + _("Finished / Cancelled / Failed"), self.on_clear_finished_failed),
@@ -103,7 +103,7 @@ class Uploads(TransferList):
     def on_try_clear_queued(self, *_args):
 
         OptionDialog(
-            parent=self.frame.window,
+            parent=self.window,
             title=_('Clear Queued Uploads'),
             message=_('Do you really want to clear all queued uploads?'),
             callback=self.on_clear_queued_response
@@ -116,7 +116,7 @@ class Uploads(TransferList):
     def on_try_clear_all(self, *_args):
 
         OptionDialog(
-            parent=self.frame.window,
+            parent=self.window,
             title=_('Clear All Uploads'),
             message=_('Do you really want to clear all uploads?'),
             callback=self.on_clear_all_response

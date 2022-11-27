@@ -33,7 +33,7 @@ from pynicotine.gtkgui.widgets.ui import UserInterface
 
 class RoomList(Popover):
 
-    def __init__(self, frame):
+    def __init__(self, window):
 
         ui_template = UserInterface(scope=self, path="popovers/roomlist.ui")
         (
@@ -46,13 +46,12 @@ class RoomList(Popover):
         ) = ui_template.widgets
 
         super().__init__(
-            window=frame.window,
+            window=window,
             content_box=self.container,
             width=350,
             height=500
         )
 
-        self.frame = frame
         self.room_iters = {}
         self.initializing_feed = False
 
@@ -71,7 +70,7 @@ class RoomList(Popover):
         self.column_numbers = list(range(self.room_model.get_n_columns()))
         attribute_columns = (2, 3)
         self.cols = initialise_columns(
-            frame, None, self.list_view,
+            window, None, self.list_view,
             ["room", _("Room"), 260, "text", attribute_columns],
             ["users", _("Users"), 100, "number", attribute_columns]
         )
@@ -79,7 +78,7 @@ class RoomList(Popover):
         self.cols["users"].set_sort_column_id(1)
 
         self.popup_room = None
-        self.popup_menu = PopupMenu(self.frame, self.list_view, self.on_popup_menu)
+        self.popup_menu = PopupMenu(window.application, self.list_view, self.on_popup_menu)
         self.popup_menu.add_items(
             ("#" + _("Join Room"), self.on_popup_join),
             ("#" + _("Leave Room"), self.on_popup_leave),
@@ -92,12 +91,12 @@ class RoomList(Popover):
         self.private_room_toggle.connect("toggled", self.on_toggle_accept_private_room)
 
         Accelerator("<Primary>f", self.popover, self.on_search_accelerator)
-        CompletionEntry(frame.chatrooms_entry, self.room_model, column=0)
+        CompletionEntry(window.chatrooms_entry, self.room_model, column=0)
 
         if GTK_API_VERSION >= 4:
-            frame.room_list_button.get_first_child().add_css_class("arrow-button")
+            window.room_list_button.get_first_child().add_css_class("arrow-button")
 
-        frame.room_list_button.set_popover(self.popover)
+        window.room_list_button.set_popover(self.popover)
 
     @staticmethod
     def get_selected_room(treeview):

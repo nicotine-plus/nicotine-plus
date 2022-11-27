@@ -24,7 +24,6 @@
 
 import time
 
-import gi
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
@@ -34,11 +33,6 @@ from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.chatrooms import ChatRooms
-from pynicotine.gtkgui.dialogs.about import About
-from pynicotine.gtkgui.dialogs.fastconfigure import FastConfigure
-from pynicotine.gtkgui.dialogs.preferences import Preferences
-from pynicotine.gtkgui.dialogs.shortcuts import Shortcuts
-from pynicotine.gtkgui.dialogs.statistics import Statistics
 from pynicotine.gtkgui.downloads import Downloads
 from pynicotine.gtkgui.interests import Interests
 from pynicotine.gtkgui.privatechat import PrivateChats
@@ -49,31 +43,25 @@ from pynicotine.gtkgui.userinfo import UserInfos
 from pynicotine.gtkgui.userlist import UserList
 from pynicotine.gtkgui.widgets.iconnotebook import TabLabel
 from pynicotine.gtkgui.widgets.dialogs import MessageDialog
-from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
-from pynicotine.gtkgui.widgets.notifications import Notifications
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import get_status_icon_name
 from pynicotine.gtkgui.widgets.theme import load_icons
-from pynicotine.gtkgui.widgets.theme import set_dark_mode
 from pynicotine.gtkgui.widgets.theme import set_global_style
 from pynicotine.gtkgui.widgets.theme import set_use_header_bar
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
-from pynicotine.gtkgui.widgets.trayicon import TrayIcon
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.gtkgui.widgets.window import Window
-from pynicotine.logfacility import log
 from pynicotine.scheduler import scheduler
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import human_speed
 from pynicotine.utils import open_file_path
 from pynicotine.utils import open_log
-from pynicotine.utils import open_uri
 
 
-class NicotineFrame(Window):
+class MainWindow(Window):
 
     def __init__(self, application, start_hidden):
 
@@ -86,12 +74,7 @@ class NicotineFrame(Window):
         self.gesture_click = None
         self.scan_progress_indeterminate = False
 
-        # Initialize these windows/dialogs later when necessary
-        self.about = None
-        self.fast_configure = None
-        self.preferences = None
-        self.shortcuts = None
-        self.spell_checker = None
+        application.connect("shutdown", self.on_shutdown)
 
         """ Load UI """
 
@@ -242,20 +225,9 @@ class NicotineFrame(Window):
         self.create_log_context_menu()
         events.connect("log-message", self.log_callback)
 
-        """ Configuration """
-
-        config.gtk_version = "%s.%s.%s" % (GTK_API_VERSION, Gtk.get_minor_version(), Gtk.get_micro_version())
-        log.add(_("Loading %(program)s %(version)s"), {"program": "GTK", "version": config.gtk_version})
-
         """ Icons """
 
         load_icons()
-
-        """ Tray Icon/Notifications """
-
-        self.tray_icon = TrayIcon(self)
-        self.notifications = Notifications(self)
-        self.statistics = Statistics(self)
 
         """ Notebook Tabs """
 
@@ -294,19 +266,14 @@ class NicotineFrame(Window):
         """ Events """
 
         for event_name, callback in (
-            ("confirm-quit", self.confirm_quit),
             ("hide-scan-progress", self.hide_scan_progress),
-            ("invalid-password", self.invalid_password),
-            ("quit", self.quit),
             ("server-login", self.server_login),
             ("server-disconnect", self.server_disconnect),
             ("set-away-mode", self.set_away_mode),
             ("set-connection-stats", self.set_connection_stats),
             ("set-scan-indeterminate", self.set_scan_indeterminate),
             ("set-scan-progress", self.set_scan_progress),
-            ("setup", self.setup),
-            ("show-scan-progress", self.show_scan_progress),
-            ("shares-unavailable", self.shares_unavailable)
+            ("show-scan-progress", self.show_scan_progress)
         ):
             events.connect(event_name, callback)
 
@@ -317,17 +284,10 @@ class NicotineFrame(Window):
 
     """ Initialize """
 
-    def setup(self):
-
-        if self.fast_configure is None:
-            self.fast_configure = FastConfigure(self)
-
-        self.fast_configure.show()
-
     def init_window(self):
 
         # Set main window title and icon
-        self.window.set_title(config.application_name)
+        self.set_title(config.application_name)
         self.window.set_default_icon_name(config.application_id)
 
         # Set main window size
@@ -390,15 +350,8 @@ class NicotineFrame(Window):
         if not self.start_hidden and not config.sections["ui"]["startup_hidden"]:
             self.show()
 
-    def init_spell_checker(self):
-
-        try:
-            gi.require_version('Gspell', '1')
-            from gi.repository import Gspell
-            self.spell_checker = Gspell.Checker()
-
-        except (ImportError, ValueError):
-            self.spell_checker = False
+    def set_help_overlay(self, help_overlay):
+        self.window.set_help_overlay(help_overlay)
 
     def update_visuals(self):
         for widget in self.__dict__.values():
@@ -415,7 +368,7 @@ class NicotineFrame(Window):
         self.privatechat.clear_notifications()
         self.on_cancel_auto_away()
 
-        self.notifications.set_urgency_hint(False)
+        self.application.notifications.set_urgency_hint(False)
 
     @staticmethod
     def on_window_property_changed(window, param, config_property):
@@ -438,15 +391,7 @@ class NicotineFrame(Window):
         config.sections["ui"]["yposition"] = y_pos
 
     def on_window_visible_changed(self, *_args):
-        self.tray_icon.update_window_visibility()
-
-    def on_window_hide_unhide(self, *_args):
-
-        if self.window.get_property("visible"):
-            self.hide()
-            return
-
-        self.show()
+        self.application.tray_icon.update_window_visibility()
 
     def save_columns(self, *_args):
         for page in (self.userlist, self.chatrooms, self.downloads, self.uploads):
@@ -485,25 +430,6 @@ class NicotineFrame(Window):
     def server_disconnect(self, _msg):
         self.update_user_status()
 
-    def invalid_password_response(self, _dialog, response_id, _data):
-        if response_id == 2:
-            self.on_preferences(page_id="network")
-
-    def invalid_password(self):
-
-        title = _("Invalid Password")
-        msg = _("User %s already exists, and the password you entered is invalid. Please choose another username "
-                "if this is your first time logging in.") % config.sections["server"]["login"]
-
-        OptionDialog(
-            parent=self.window,
-            title=title,
-            message=msg,
-            first_button=_("_Cancel"),
-            second_button=_("Change _Login Details"),
-            callback=self.invalid_password_response
-        ).show()
-
     def update_user_status(self):
 
         status = core.user_status
@@ -511,13 +437,14 @@ class NicotineFrame(Window):
         is_away = (status == UserStatus.AWAY)
 
         # Action status
-        self.connect_action.set_enabled(not is_online)
-        self.disconnect_action.set_enabled(is_online)
-        self.soulseek_privileges_action.set_enabled(is_online)
-        self.away_accelerator_action.set_enabled(is_online)
+        self.application.lookup_action("connect").set_enabled(not is_online)
+        self.application.lookup_action("disconnect").set_enabled(is_online)
+        self.application.lookup_action("soulseek-privileges").set_enabled(is_online)
+        self.application.lookup_action("away-accel").set_enabled(is_online)
+        self.application.lookup_action("away").set_enabled(is_online)
 
         self.user_status_button.set_sensitive(is_online)
-        self.tray_icon.update_user_status()
+        self.application.tray_icon.update_user_status()
 
         # Away mode
         if not is_away:
@@ -547,47 +474,7 @@ class NicotineFrame(Window):
 
     """ Action Callbacks """
 
-    # File
-
-    def on_connect(self, *_args):
-        core.connect()
-
-    def on_disconnect(self, *_args):
-        core.disconnect()
-
-    def on_soulseek_privileges(self, *_args):
-
-        import urllib.parse
-
-        login = urllib.parse.quote(core.login_username)
-        open_uri(config.privileges_url % login)
-        core.request_check_privileges()
-
-    def on_wishlist(self, *_args):
-        self.search.wish_list.show()
-
-    def on_fast_configure(self, *_args):
-        self.setup()
-
-    def on_preferences(self, *_args, page_id=None):
-
-        if self.preferences is None:
-            self.preferences = Preferences(self)
-
-        self.preferences.set_settings()
-        self.preferences.set_active_page(page_id)
-        self.preferences.show()
-
     # View
-
-    @staticmethod
-    def on_prefer_dark_mode(action, *_args):
-
-        state = config.sections["ui"]["dark_mode"]
-        set_dark_mode(not state)
-        action.set_state(GLib.Variant("b", not state))
-
-        config.sections["ui"]["dark_mode"] = not state
 
     def set_show_header_bar(self, show):
 
@@ -692,51 +579,13 @@ class NicotineFrame(Window):
 
         config.sections["ui"]["buddylistinchatrooms"] = mode
 
-    # Shares
-
-    def on_configure_shares(self, *_args):
-        self.on_preferences(page_id="shares")
-
-    def on_rescan_shares(self, *_args):
-        core.shares.rescan_shares()
-
-    def on_browse_public_shares(self, *_args):
-        core.userbrowse.browse_local_public_shares(new_request=True)
-
-    def on_browse_buddy_shares(self, *_args):
-        core.userbrowse.browse_local_buddy_shares(new_request=True)
-
-    # Help
-
-    def on_keyboard_shortcuts(self, *_args):
-
-        if self.shortcuts is None:
-            self.shortcuts = Shortcuts(self)
-
-        self.shortcuts.show()
-
-    def on_transfer_statistics(self, *_args):
-        self.statistics.show()
-
-    @staticmethod
-    def on_report_bug(*_args):
-        open_uri(config.issue_tracker_url)
-
-    @staticmethod
-    def on_improve_translations(*_args):
-        open_uri(config.translations_url)
-
-    def on_check_latest_version(self, *_args):
-        core.update_checker.check()
-
-    def on_about(self, *_args):
-
-        if self.about is None:
-            self.about = About(self)
-
-        self.about.show()
-
     """ Actions """
+
+    def add_action(self, action):
+        self.window.add_action(action)
+
+    def lookup_action(self, action_name):
+        return self.window.lookup_action(action_name)
 
     def set_up_actions(self):
 
@@ -745,50 +594,24 @@ class NicotineFrame(Window):
         if GTK_API_VERSION == 3:
             action = Gio.SimpleAction(name="menu")
             action.connect("activate", self.on_menu)
-            self.application.add_action(action)
+            self.add_action(action)
 
         action = Gio.SimpleAction(name="change-focus-view")
         action.connect("activate", self.on_change_focus_view)
-        self.window.add_action(action)
+        self.add_action(action)
         self.application.set_accels_for_action("win.change-focus-view", ["F6"])
 
-        # File
-
-        self.connect_action = Gio.SimpleAction(name="connect")
-        self.connect_action.connect("activate", self.on_connect)
-        self.application.add_action(self.connect_action)
-        self.application.set_accels_for_action("app.connect", ["<Shift><Primary>c"])
-
-        self.disconnect_action = Gio.SimpleAction(name="disconnect", enabled=False)
-        self.disconnect_action.connect("activate", self.on_disconnect)
-        self.application.add_action(self.disconnect_action)
-        self.application.set_accels_for_action("app.disconnect", ["<Shift><Primary>d"])
-
-        self.soulseek_privileges_action = Gio.SimpleAction(name="soulseek-privileges", enabled=False)
-        self.soulseek_privileges_action.connect("activate", self.on_soulseek_privileges)
-        self.application.add_action(self.soulseek_privileges_action)
-
-        action = Gio.SimpleAction(name="preferences")
-        action.connect("activate", self.on_preferences)
-        self.application.add_action(action)
-        self.application.set_accels_for_action("app.preferences", ["<Primary>comma", "<Primary>p"])
-
         # View
-
-        state = config.sections["ui"]["dark_mode"]
-        self.dark_mode_action = Gio.SimpleAction(name="prefer-dark-mode", state=GLib.Variant("b", state))
-        self.dark_mode_action.connect("change-state", self.on_prefer_dark_mode)
-        self.window.add_action(self.dark_mode_action)
 
         state = config.sections["ui"]["header_bar"]
         action = Gio.SimpleAction(name="show-header-bar", state=GLib.Variant("b", state))
         action.connect("change-state", self.on_show_header_bar)
-        self.window.add_action(action)
+        self.add_action(action)
 
         state = not config.sections["logging"]["logcollapsed"]
         action = Gio.SimpleAction(name="show-log-history", state=GLib.Variant("b", state))
         action.connect("change-state", self.on_show_log_history)
-        self.window.add_action(action)
+        self.add_action(action)
         self.application.set_accels_for_action("win.show-log-history", ["<Primary>l"])
         self.set_show_log_history(state)
 
@@ -797,129 +620,49 @@ class NicotineFrame(Window):
         if state not in ("tab", "chatrooms", "always"):
             state = "tab"
 
-        self.toggle_buddy_list_action = Gio.SimpleAction(
+        action = Gio.SimpleAction(
             name="toggle-buddy-list", parameter_type=GLib.VariantType("s"), state=GLib.Variant("s", state))
-        self.toggle_buddy_list_action.connect("change-state", self.on_toggle_buddy_list)
-        self.window.add_action(self.toggle_buddy_list_action)
+        action.connect("change-state", self.on_toggle_buddy_list)
+        self.add_action(action)
         self.set_toggle_buddy_list(state, force_show=False)
-
-        # Shares
-
-        action = Gio.SimpleAction(name="rescan-shares")
-        action.connect("activate", self.on_rescan_shares)
-        self.application.add_action(action)
-        self.application.set_accels_for_action("app.rescan-shares", ["<Shift><Primary>r"])
-
-        # Help
-
-        action = Gio.SimpleAction(name="keyboard-shortcuts")
-        action.connect("activate", self.on_keyboard_shortcuts)
-        self.application.add_action(action)
-        self.application.set_accels_for_action("app.keyboard-shortcuts", ["<Primary>question", "F1"])
 
         # Search
 
-        self.search_mode_action = Gio.SimpleAction(
+        action = Gio.SimpleAction(
             name="search-mode", parameter_type=GLib.VariantType("s"), state=GLib.Variant("s", "global"))
-        self.search_mode_action.connect("change-state", self.search.on_search_mode)
-        self.window.add_action(self.search_mode_action)
-
-        action = Gio.SimpleAction(name="wishlist")
-        action.connect("activate", self.on_wishlist)
-        self.application.add_action(action)
-        self.application.set_accels_for_action("app.wishlist", ["<Shift><Primary>w"])
+        action.connect("change-state", self.search.on_search_mode)
+        self.add_action(action)
 
         # Notebook Tabs
 
         action = Gio.SimpleAction(name="close-tab")
         action.connect("activate", self.on_close_tab)
-        self.window.add_action(action)
+        self.add_action(action)
         self.application.set_accels_for_action("win.close-tab", ["<Primary>F4", "<Primary>w"])
 
         action = Gio.SimpleAction(name="cycle-tabs")
         action.connect("activate", self.on_cycle_tabs)
-        self.window.add_action(action)
+        self.add_action(action)
         self.application.set_accels_for_action("win.cycle-tabs", ["<Primary>Tab"])
 
         action = Gio.SimpleAction(name="cycle-tabs-reverse")
         action.connect("activate", self.on_cycle_tabs, True)
-        self.window.add_action(action)
+        self.add_action(action)
         self.application.set_accels_for_action("win.cycle-tabs-reverse", ["<Primary><Shift>Tab"])
 
         for num in range(1, 10):
             action = Gio.SimpleAction(name="primary-tab-" + str(num))
             action.connect("activate", self.on_change_primary_tab, num)
-            self.window.add_action(action)
+            self.add_action(action)
             self.application.set_accels_for_action("win.primary-tab-" + str(num),
                                                    ["<Primary>" + str(num), "<Alt>" + str(num)])
 
-        # Logging
-
-        state = ("download" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction(name="log-downloads", state=GLib.Variant("b", state))
-        action.connect("change-state", self.on_debug_downloads)
-        self.window.add_action(action)
-
-        state = ("upload" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction(name="log-uploads", state=GLib.Variant("b", state))
-        action.connect("change-state", self.on_debug_uploads)
-        self.window.add_action(action)
-
-        state = ("search" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction(name="log-searches", state=GLib.Variant("b", state))
-        action.connect("change-state", self.on_debug_searches)
-        self.window.add_action(action)
-
-        state = ("chat" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction(name="log-chat", state=GLib.Variant("b", state))
-        action.connect("change-state", self.on_debug_chat)
-        self.window.add_action(action)
-
-        state = ("connection" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction(name="log-connections", state=GLib.Variant("b", state))
-        action.connect("change-state", self.on_debug_connections)
-        self.window.add_action(action)
-
-        state = ("message" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction(name="log-messages", state=GLib.Variant("b", state))
-        action.connect("change-state", self.on_debug_messages)
-        self.window.add_action(action)
-
-        state = ("transfer" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction(name="log-transfers", state=GLib.Variant("b", state))
-        action.connect("change-state", self.on_debug_transfers)
-        self.window.add_action(action)
-
-        state = ("miscellaneous" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction(name="log-miscellaneous", state=GLib.Variant("b", state))
-        action.connect("change-state", self.on_debug_miscellaneous)
-        self.window.add_action(action)
-
-        # Status Bar Buttons
-
-        state = config.sections["transfers"]["usealtlimits"]
-        self.alt_speed_action = Gio.SimpleAction(name="alternative-speed-limit", state=GLib.Variant("b", state))
-        self.alt_speed_action.connect("change-state", self.on_alternative_speed_limit)
-        self.application.add_action(self.alt_speed_action)
-        self.update_alternative_speed_icon(state)
-
-        # Shortcut Key Actions
-
-        self.away_accelerator_action = Gio.SimpleAction(name="away", enabled=False)
-        self.away_accelerator_action.cooldown_time = 0  # needed to prevent server ban
-        self.away_accelerator_action.connect("activate", self.on_away_accelerator)
-        self.application.add_action(self.away_accelerator_action)
-        self.application.set_accels_for_action("app.away", ["<Primary>h"])
-
         action = Gio.SimpleAction(name="close")  # 'When closing Nicotine+'
         action.connect("activate", self.on_close_request)
-        self.application.add_action(action)
-        self.application.set_accels_for_action("app.close", ["<Primary>q"])
+        self.add_action(action)
+        self.application.set_accels_for_action("win.close", ["<Primary>q"])
 
-        action = Gio.SimpleAction(name="force-quit")
-        action.connect("activate", core.quit)
-        self.application.add_action(action)
-        self.application.set_accels_for_action("app.force-quit", ["<Primary><Alt>q"])
+        self.update_alternative_speed_icon(config.sections["transfers"]["usealtlimits"])
 
     """ Primary Menus """
 
@@ -943,12 +686,12 @@ class NicotineFrame(Window):
 
         menu.add_items(
             ("", None),
-            ("#" + label, self.on_quit)
+            ("#" + label, "app.quit")
         )
 
     def create_file_menu(self):
 
-        menu = PopupMenu(self)
+        menu = PopupMenu(self.application)
         self.add_connection_section(menu)
         self.add_preferences_item(menu)
         self.add_quit_item(menu)
@@ -957,9 +700,9 @@ class NicotineFrame(Window):
 
     def create_view_menu(self):
 
-        menu = PopupMenu(self)
+        menu = PopupMenu(self.application)
         menu.add_items(
-            ("$" + _("Prefer Dark _Mode"), "win.prefer-dark-mode"),
+            ("$" + _("Prefer Dark _Mode"), "app.prefer-dark-mode"),
             ("$" + _("Use _Header Bar"), "win.show-header-bar"),
             ("$" + _("Show _Log History Pane"), "win.show-log-history"),
             ("", None),
@@ -974,21 +717,21 @@ class NicotineFrame(Window):
 
         menu.add_items(
             ("#" + _("_Rescan Shares"), "app.rescan-shares"),
-            ("#" + _("_Configure Shares"), self.on_configure_shares),
+            ("#" + _("_Configure Shares"), "app.configure-shares"),
             ("", None)
         )
 
     def add_browse_shares_section(self, menu):
 
         menu.add_items(
-            ("#" + _("_Browse Public Shares"), self.on_browse_public_shares),
-            ("#" + _("Bro_wse Buddy Shares"), self.on_browse_buddy_shares),
+            ("#" + _("_Browse Public Shares"), "app.browse-public-shares"),
+            ("#" + _("Bro_wse Buddy Shares"), "app.browse-buddy-shares"),
             ("", None)
         )
 
     def create_shares_menu(self):
 
-        menu = PopupMenu(self)
+        menu = PopupMenu(self.application)
         self.add_configure_shares_section(menu)
         self.add_browse_shares_section(menu)
 
@@ -996,17 +739,17 @@ class NicotineFrame(Window):
 
     def create_help_menu(self):
 
-        menu = PopupMenu(self)
+        menu = PopupMenu(self.application)
         menu.add_items(
             ("#" + _("_Keyboard Shortcuts"), "app.keyboard-shortcuts"),
-            ("#" + _("_Setup Assistant"), self.on_fast_configure),
-            ("#" + _("_Transfer Statistics"), self.on_transfer_statistics),
+            ("#" + _("_Setup Assistant"), "app.setup-assistant"),
+            ("#" + _("_Transfer Statistics"), "app.transfer-statistics"),
             ("", None),
-            ("#" + _("Report a _Bug"), self.on_report_bug),
-            ("#" + _("Improve T_ranslations"), self.on_improve_translations),
-            ("#" + _("Check _Latest Version"), self.on_check_latest_version),
+            ("#" + _("Report a _Bug"), "app.report-bug"),
+            ("#" + _("Improve T_ranslations"), "app.improve-translations"),
+            ("#" + _("Check _Latest Version"), "app.check-latest-version"),
             ("", None),
-            ("#" + _("_About Nicotine+"), self.on_about)
+            ("#" + _("_About Nicotine+"), "app.about")
         )
 
         return menu
@@ -1014,7 +757,7 @@ class NicotineFrame(Window):
     def create_hamburger_menu(self):
         """ Menu button menu (header bar enabled) """
 
-        menu = PopupMenu(self)
+        menu = PopupMenu(self.application)
         self.add_connection_section(menu)
 
         menu.add_items(
@@ -1035,7 +778,7 @@ class NicotineFrame(Window):
     def create_menu_bar(self):
         """ Classic menu bar (header bar disabled) """
 
-        menu = PopupMenu(self)
+        menu = PopupMenu(self.application)
         menu.add_items(
             (">" + _("_File"), self.create_file_menu()),
             (">" + _("_View"), self.create_view_menu()),
@@ -1071,7 +814,7 @@ class NicotineFrame(Window):
             self.window.set_show_menubar(False)
 
             if GTK_API_VERSION == 3:
-                self.application.set_accels_for_action("app.menu", ["F10"])
+                self.application.set_accels_for_action("win.menu", ["F10"])
 
                 # Avoid "Untitled window" in certain desktop environments
                 self.header_bar.set_title(self.window.get_title())
@@ -1118,7 +861,7 @@ class NicotineFrame(Window):
 
             if GTK_API_VERSION == 3:
                 # Don't override builtin accelerator for menu bar
-                self.application.set_accels_for_action("app.menu", [])
+                self.application.set_accels_for_action("win.menu", [])
 
             if self.window.get_titlebar():
                 self.window.unrealize()
@@ -1352,7 +1095,7 @@ class NicotineFrame(Window):
     def show_tab(self, page):
 
         if page == self.userlist_page:
-            self.on_toggle_buddy_list(self.toggle_buddy_list_action, GLib.Variant("s", "tab"))
+            self.lookup_action("toggle-buddy-list").emit("activate", GLib.Variant("s", "tab"))
 
         config.sections["ui"]["modes_visible"][page.id] = True
         page.show()
@@ -1440,16 +1183,10 @@ class NicotineFrame(Window):
 
     """ Search """
 
-    def on_configure_searches(self, *_args):
-        self.on_preferences(page_id="searches")
-
     def on_search(self, *_args):
         self.search.on_search()
 
     """ User Info """
-
-    def on_update_user_info(self, *_args):
-        self.on_preferences(page_id="user-info")
 
     def on_get_user_info(self, *_args):
         self.userinfo.on_get_user_info()
@@ -1459,53 +1196,13 @@ class NicotineFrame(Window):
     def on_get_shares(self, *_args):
         self.userbrowse.on_get_shares()
 
-    def on_load_from_disk(self, *_args):
-        self.userbrowse.on_load_from_disk()
-
-    def shares_unavailable_response(self, _dialog, response_id, _data):
-
-        if response_id == 2:  # 'Retry'
-            core.shares.rescan_shares()
-
-        elif response_id == 3:  # 'Force Rescan'
-            core.shares.rescan_shares(force=True)
-
-    def shares_unavailable(self, shares):
-
-        shares_list_message = ""
-
-        for virtual_name, folder_path in shares:
-            shares_list_message += "• \"%s\" %s\n" % (virtual_name, folder_path)
-
-        def create_dialog():
-            OptionDialog(
-                parent=self.window,
-                title=_("Shares Not Available"),
-                message=_("Verify that external disks are mounted and folder permissions are correct."),
-                long_message=shares_list_message,
-                first_button=_("_Cancel"),
-                second_button=_("_Retry"),
-                third_button=_("_Force Rescan"),
-                callback=self.shares_unavailable_response
-            ).show()
-
-        # Avoid dialog appearing inactive if invoked during rescan on startup
-        GLib.idle_add(create_dialog)
-
     """ Chat """
-
-    def on_configure_chats(self, *_args):
-        self.on_preferences(page_id="chats")
 
     def on_get_private_chat(self, *_args):
         self.privatechat.on_get_private_chat()
 
     def on_create_room(self, *_args):
         self.chatrooms.on_create_room()
-
-    def update_completions(self):
-        core.chatrooms.update_completions()
-        core.privatechat.update_completions()
 
     """ Away Mode """
 
@@ -1554,52 +1251,29 @@ class NicotineFrame(Window):
             self.set_auto_away(False)
             self.away_cooldown_time = current_time
 
-    def on_away_accelerator(self, *_args):
-        """ Ctrl+H: Away/Online toggle """
-
-        current_time = time.time()
-
-        if (current_time - self.away_accelerator_action.cooldown_time) >= 1:
-            # Prevent rapid key-repeat toggling to avoid server ban
-            self.on_away()
-            self.away_accelerator_action.cooldown_time = current_time
-
-    def on_away(self, *_args):
-        """ Away/Online status button """
-
-        core.set_away_mode(core.user_status != UserStatus.AWAY, save_state=True)
-
     """ User Actions """
 
     def on_add_buddy(self, *_args):
         self.userlist.on_add_buddy()
 
-    """ Various """
-
-    def on_configure_downloads(self, *_args):
-        self.on_preferences(page_id="downloads")
-
-    def on_configure_uploads(self, *_args):
-        self.on_preferences(page_id="uploads")
-
     """ Log Pane """
 
     def create_log_context_menu(self):
 
-        popup_menu_log_categories = PopupMenu(self)
+        popup_menu_log_categories = PopupMenu(self.application)
         popup_menu_log_categories.add_items(
-            ("$" + _("Downloads"), "win.log-downloads"),
-            ("$" + _("Uploads"), "win.log-uploads"),
-            ("$" + _("Search"), "win.log-searches"),
-            ("$" + _("Chat"), "win.log-chat"),
+            ("$" + _("Downloads"), "app.log-downloads"),
+            ("$" + _("Uploads"), "app.log-uploads"),
+            ("$" + _("Search"), "app.log-searches"),
+            ("$" + _("Chat"), "app.log-chat"),
             ("", None),
-            ("$" + _("[Debug] Connections"), "win.log-connections"),
-            ("$" + _("[Debug] Messages"), "win.log-messages"),
-            ("$" + _("[Debug] Transfers"), "win.log-transfers"),
-            ("$" + _("[Debug] Miscellaneous"), "win.log-miscellaneous"),
+            ("$" + _("[Debug] Connections"), "app.log-connections"),
+            ("$" + _("[Debug] Messages"), "app.log-messages"),
+            ("$" + _("[Debug] Transfers"), "app.log-transfers"),
+            ("$" + _("[Debug] Miscellaneous"), "app.log-miscellaneous"),
         )
 
-        PopupMenu(self, self.log_view.textview, self.on_popup_menu_log).add_items(
+        PopupMenu(self.application, self.log_view.textview, self.on_popup_menu_log).add_items(
             ("#" + _("_Find…"), self.on_find_log_window),
             ("", None),
             ("#" + _("_Copy"), self.log_view.on_copy_text),
@@ -1619,7 +1293,7 @@ class NicotineFrame(Window):
     def update_log(self, timestamp_format, msg, title, level):
 
         if title:
-            MessageDialog(parent=self.window, title=title, message=msg).show()
+            MessageDialog(parent=self, title=title, message=msg).show()
 
         # Keep verbose debug messages out of statusbar to make it more useful
         if level not in ("transfer", "connection", "message", "miscellaneous"):
@@ -1645,49 +1319,6 @@ class NicotineFrame(Window):
         self.log_view.on_clear_all_text()
         self.set_status_text("")
 
-    @staticmethod
-    def add_debug_level(debug_level):
-        if debug_level not in config.sections["logging"]["debugmodes"]:
-            config.sections["logging"]["debugmodes"].append(debug_level)
-
-    @staticmethod
-    def remove_debug_level(debug_level):
-        if debug_level in config.sections["logging"]["debugmodes"]:
-            config.sections["logging"]["debugmodes"].remove(debug_level)
-
-    def set_debug_level(self, action, state, level):
-
-        if state.get_boolean():
-            self.add_debug_level(level)
-        else:
-            self.remove_debug_level(level)
-
-        action.set_state(state)
-
-    def on_debug_downloads(self, action, state):
-        self.set_debug_level(action, state, "download")
-
-    def on_debug_uploads(self, action, state):
-        self.set_debug_level(action, state, "upload")
-
-    def on_debug_searches(self, action, state):
-        self.set_debug_level(action, state, "search")
-
-    def on_debug_chat(self, action, state):
-        self.set_debug_level(action, state, "chat")
-
-    def on_debug_connections(self, action, state):
-        self.set_debug_level(action, state, "connection")
-
-    def on_debug_messages(self, action, state):
-        self.set_debug_level(action, state, "message")
-
-    def on_debug_transfers(self, action, state):
-        self.set_debug_level(action, state, "transfer")
-
-    def on_debug_miscellaneous(self, action, state):
-        self.set_debug_level(action, state, "miscellaneous")
-
     """ Status Bar """
 
     def set_status_text(self, msg):
@@ -1707,11 +1338,11 @@ class NicotineFrame(Window):
 
         if self.download_status_label.get_text() != download_bandwidth_text:
             self.download_status_label.set_text(download_bandwidth_text)
-            self.tray_icon.set_download_status(_("Downloads: %(speed)s") % {'speed': download_bandwidth})
+            self.application.tray_icon.set_download_status(_("Downloads: %(speed)s") % {'speed': download_bandwidth})
 
         if self.upload_status_label.get_text() != upload_bandwidth_text:
             self.upload_status_label.set_text(upload_bandwidth_text)
-            self.tray_icon.set_upload_status(_("Uploads: %(speed)s") % {'speed': upload_bandwidth})
+            self.application.tray_icon.set_upload_status(_("Uploads: %(speed)s") % {'speed': upload_bandwidth})
 
     def show_scan_progress(self):
         GLib.idle_add(self.scan_progress_bar.show)
@@ -1748,17 +1379,6 @@ class NicotineFrame(Window):
 
         self.alt_speed_icon.set_property("icon-name", icon_name)
 
-    def on_alternative_speed_limit(self, *_args):
-
-        state = config.sections["transfers"]["usealtlimits"]
-        self.alt_speed_action.set_state(GLib.Variant("b", not state))
-
-        config.sections["transfers"]["usealtlimits"] = not state
-
-        self.update_alternative_speed_icon(not state)
-        core.transfers.update_limits()
-        self.tray_icon.update_alternative_speed_limit_status()
-
     """ Exit """
 
     def on_close_request(self, *_args):
@@ -1770,23 +1390,15 @@ class NicotineFrame(Window):
         core.confirm_quit(remember=True)
         return True
 
-    def on_quit(self, *_args):
-        core.confirm_quit()
-        return True
-
-    def on_shutdown(self):
-
-        # Explicitly hide tray icon, otherwise it will not disappear on Windows
-        self.tray_icon.hide()
+    def on_shutdown(self, *_args):
 
         # Save visible columns
         self.save_columns()
-
         config.write_configuration()
 
     def hide(self):
 
-        if not self.window.get_property("visible"):
+        if not self.is_visible():
             return
 
         # Save visible columns, in case application is killed later
@@ -1796,43 +1408,8 @@ class NicotineFrame(Window):
         for dialog in reversed(Window.active_dialogs):
             dialog.close()
 
-        if not self.tray_icon.is_visible():
-            log.add(_("Nicotine+ is running in the background"))
-
         # Run in Background
         self.window.hide()
 
         # Save config, in case application is killed later
         config.write_configuration()
-
-    def confirm_quit_response(self, dialog, response_id, _data):
-
-        remember = dialog.option.get_active()
-
-        if response_id == 2:  # 'Quit'
-            if remember:
-                config.sections["ui"]["exitdialog"] = 0
-
-            core.quit()
-
-        elif response_id == 3:  # 'Run in Background'
-            if remember:
-                config.sections["ui"]["exitdialog"] = 2
-
-            if self.window.get_property("visible"):
-                self.hide()
-
-    def confirm_quit(self, remember=True):
-
-        OptionDialog(
-            parent=self.window,
-            title=_('Quit Nicotine+'),
-            message=_('Do you really want to exit?'),
-            second_button=_("_Quit"),
-            third_button=_("_Run in Background") if self.window.get_property("visible") else None,
-            option_label=_("Remember choice") if remember else None,
-            callback=self.confirm_quit_response
-        ).show()
-
-    def quit(self):
-        self.application.quit()

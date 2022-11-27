@@ -41,9 +41,9 @@ class ImplementationUnavailable(Exception):
 
 class BaseImplementation:
 
-    def __init__(self, frame):
+    def __init__(self, application):
 
-        self.frame = frame
+        self.application = application
         self.menu_items = {}
         self.menu_item_id = 1
 
@@ -85,10 +85,10 @@ class BaseImplementation:
 
     def create_menu(self):
 
-        self.show_item = self.create_item(_("Show Nicotine+"), self.frame.on_window_hide_unhide)
-        self.hide_item = self.create_item(_("Hide Nicotine+"), self.frame.on_window_hide_unhide)
+        self.show_item = self.create_item(_("Show Nicotine+"), self.on_window_hide_unhide)
+        self.hide_item = self.create_item(_("Hide Nicotine+"), self.on_window_hide_unhide)
         self.alt_speed_item = self.create_item(
-            _("Alternative Speed Limits"), self.frame.on_alternative_speed_limit, check=True)
+            _("Alternative Speed Limits"), self.application.on_alternative_speed_limit, check=True)
 
         self.create_item()
 
@@ -97,9 +97,9 @@ class BaseImplementation:
 
         self.create_item()
 
-        self.connect_item = self.create_item(_("Connect"), self.frame.on_connect)
-        self.disconnect_item = self.create_item(_("Disconnect"), self.frame.on_disconnect)
-        self.away_item = self.create_item(_("Away"), self.frame.on_away, check=True)
+        self.connect_item = self.create_item(_("Connect"), self.application.on_connect)
+        self.disconnect_item = self.create_item(_("Disconnect"), self.application.on_disconnect)
+        self.away_item = self.create_item(_("Away"), self.application.on_away, check=True)
 
         self.create_item()
 
@@ -109,12 +109,15 @@ class BaseImplementation:
 
         self.create_item()
 
-        self.create_item(_("Preferences"), self.frame.on_preferences)
+        self.create_item(_("Preferences"), self.application.on_preferences)
         self.create_item(_("Quit"), core.quit)
 
     def update_window_visibility(self):
 
-        visible = self.frame.window.get_property("visible")
+        if self.application.window is None:
+            return
+
+        visible = self.application.window.is_visible()
 
         self.set_item_visible(self.show_item, not visible)
         self.set_item_visible(self.hide_item, visible)
@@ -185,13 +188,21 @@ class BaseImplementation:
         self.set_item_text(self.uploads_item, status)
         self.update_menu()
 
+    def on_window_hide_unhide(self, *_args):
+
+        if self.application.window.is_visible():
+            self.application.window.hide()
+            return
+
+        self.application.window.show()
+
     def on_downloads(self, *_args):
-        self.frame.change_main_page(self.frame.downloads_page)
-        self.frame.show()
+        self.application.window.change_main_page(self.application.window.downloads_page)
+        self.application.window.show()
 
     def on_uploads(self, *_args):
-        self.frame.change_main_page(self.frame.uploads_page)
-        self.frame.show()
+        self.application.window.change_main_page(self.application.window.uploads_page)
+        self.application.window.show()
 
     def on_open_private_chat_response(self, dialog, _response_id, _data):
 
@@ -201,12 +212,12 @@ class BaseImplementation:
             return
 
         core.privatechat.show_user(user)
-        self.frame.show()
+        self.application.window.show()
 
     def on_open_private_chat(self, *_args):
 
         EntryDialog(
-            parent=self.frame.application.get_active_window(),
+            parent=self.application.window,
             title=config.application_name + ": " + _("Start Messaging"),
             message=_('Enter the name of the user whom you want to send a message:'),
             callback=self.on_open_private_chat_response,
@@ -221,12 +232,12 @@ class BaseImplementation:
             return
 
         core.userinfo.show_user(user)
-        self.frame.show()
+        self.application.window.show()
 
     def on_get_a_users_info(self, *_args):
 
         EntryDialog(
-            parent=self.frame.application.get_active_window(),
+            parent=self.application.window,
             title=config.application_name + ": " + _("Request User Info"),
             message=_('Enter the name of the user whose info you want to see:'),
             callback=self.on_get_a_users_info_response,
@@ -241,12 +252,12 @@ class BaseImplementation:
             return
 
         core.userbrowse.browse_user(user)
-        self.frame.show()
+        self.application.window.show()
 
     def on_get_a_users_shares(self, *_args):
 
         EntryDialog(
-            parent=self.frame.application.get_active_window(),
+            parent=self.application.window,
             title=config.application_name + ": " + _("Request Shares List"),
             message=_('Enter the name of the user whose shares you want to see:'),
             callback=self.on_get_a_users_shares_response,
@@ -508,16 +519,16 @@ class StatusNotifierImplementation(BaseImplementation):
             super().unregister()
             self.menu.unregister()
 
-    def __init__(self, frame):
+    def __init__(self, application):
 
-        super().__init__(frame)
+        super().__init__(application)
 
         self.tray_icon = None
         self.custom_icons = False
 
         try:
             self.bus = Gio.bus_get_sync(Gio.BusType.SESSION)
-            self.tray_icon = self.StatusNotifierItemService(activate_callback=frame.on_window_hide_unhide)
+            self.tray_icon = self.StatusNotifierItemService(activate_callback=self.on_window_hide_unhide)
             self.tray_icon.register()
 
             self.bus.call_sync(
@@ -629,16 +640,16 @@ class StatusNotifierImplementation(BaseImplementation):
 
 class StatusIconImplementation(BaseImplementation):
 
-    def __init__(self, frame):
+    def __init__(self, application):
 
-        super().__init__(frame)
+        super().__init__(application)
 
         if not hasattr(Gtk, "StatusIcon") or sys.platform == "darwin" or os.getenv("WAYLAND_DISPLAY"):
             # GtkStatusIcon does not work on macOS and Wayland
             raise ImplementationUnavailable("StatusIcon implementation not available")
 
         self.tray_icon = Gtk.StatusIcon(tooltip_text=config.application_name)
-        self.tray_icon.connect("activate", self.frame.on_window_hide_unhide)
+        self.tray_icon.connect("activate", self.on_window_hide_unhide)
         self.tray_icon.connect("popup-menu", self.on_status_icon_popup)
 
         self.gtk_menu = self.build_gtk_menu()
@@ -720,9 +731,9 @@ class StatusIconImplementation(BaseImplementation):
 
 class TrayIcon:
 
-    def __init__(self, frame):
+    def __init__(self, application):
 
-        self.frame = frame
+        self.application = application
         self.available = True
         self.implementation = None
 
@@ -756,11 +767,11 @@ class TrayIcon:
 
         if self.implementation is None:
             try:
-                self.implementation = StatusNotifierImplementation(self.frame)
+                self.implementation = StatusNotifierImplementation(self.application)
 
             except ImplementationUnavailable:
                 try:
-                    self.implementation = StatusIconImplementation(self.frame)
+                    self.implementation = StatusIconImplementation(self.application)
 
                 except ImplementationUnavailable:
                     self.available = False

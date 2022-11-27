@@ -38,7 +38,7 @@ from pynicotine.utils import human_speed
 
 class Interests:
 
-    def __init__(self, frame):
+    def __init__(self, window):
 
         ui_template = UserInterface(scope=self, path="interests.ui")
         (
@@ -56,17 +56,16 @@ class Interests:
         ) = ui_template.widgets
 
         if GTK_API_VERSION >= 4:
-            frame.interests_container.append(self.container)
+            window.interests_container.append(self.container)
         else:
-            frame.interests_container.add(self.container)
+            window.interests_container.add(self.container)
 
-        self.frame = frame
-
+        self.window = window
         self.populated_recommends = False
 
         # Columns
         self.likes_list_view = TreeView(
-            frame, parent=self.likes_list_container,
+            window, parent=self.likes_list_container,
             columns=[
                 {"column_id": "likes", "column_type": "text", "title": _("Likes"), "sort_column": 0,
                  "default_sort_column": "ascending"}
@@ -74,7 +73,7 @@ class Interests:
         )
 
         self.dislikes_list_view = TreeView(
-            frame, parent=self.dislikes_list_container,
+            window, parent=self.dislikes_list_container,
             columns=[
                 {"column_id": "dislikes", "column_type": "text", "title": _("Dislikes"), "sort_column": 0,
                  "default_sort_column": "ascending"}
@@ -82,7 +81,7 @@ class Interests:
         )
 
         self.recommendations_list_view = TreeView(
-            frame, parent=self.recommendations_list_container,
+            window, parent=self.recommendations_list_container,
             activate_row_callback=self.on_r_row_activated,
             columns=[
                 # Visible columns
@@ -96,7 +95,7 @@ class Interests:
         )
 
         self.similar_users_list_view = TreeView(
-            frame, parent=self.similar_users_list_container,
+            window, parent=self.similar_users_list_container,
             activate_row_callback=self.on_ru_row_activated, tooltip_callback=self.on_tooltip,
             columns=[
                 # Visible columns
@@ -125,7 +124,7 @@ class Interests:
                 self.add_thing_i_hate(item)
 
         # Popup menus
-        popup = PopupMenu(self.frame, self.likes_list_view.widget)
+        popup = PopupMenu(self.window.application, self.likes_list_view.widget)
         popup.add_items(
             ("#" + _("Re_commendations for Item"), self.on_recommend_item, self.likes_list_view),
             ("#" + _("_Search for Item"), self.on_recommend_search, self.likes_list_view),
@@ -133,7 +132,7 @@ class Interests:
             ("#" + _("_Remove Item"), self.on_remove_thing_i_like)
         )
 
-        popup = PopupMenu(self.frame, self.dislikes_list_view.widget)
+        popup = PopupMenu(self.window.application, self.dislikes_list_view.widget)
         popup.add_items(
             ("#" + _("Re_commendations for Item"), self.on_recommend_item, self.dislikes_list_view),
             ("#" + _("_Search for Item"), self.on_recommend_search, self.dislikes_list_view),
@@ -141,7 +140,7 @@ class Interests:
             ("#" + _("_Remove Item"), self.on_remove_thing_i_dislike)
         )
 
-        popup = PopupMenu(self.frame, self.recommendations_list_view.widget, self.on_popup_r_menu)
+        popup = PopupMenu(self.window.application, self.recommendations_list_view.widget, self.on_popup_r_menu)
         popup.add_items(
             ("$" + _("I _Like This"), self.on_like_recommendation, self.recommendations_list_view),
             ("$" + _("I _Dislike This"), self.on_dislike_recommendation, self.recommendations_list_view),
@@ -150,7 +149,7 @@ class Interests:
             ("#" + _("_Search for Item"), self.on_recommend_search, self.recommendations_list_view)
         )
 
-        popup = UserPopupMenu(self.frame, self.similar_users_list_view.widget, self.on_popup_ru_menu)
+        popup = UserPopupMenu(self.window.application, self.similar_users_list_view.widget, self.on_popup_ru_menu)
         popup.setup_user_menu()
 
         for event_name, callback in (
@@ -180,7 +179,7 @@ class Interests:
         self.recommendations_button.set_sensitive(True)
         self.similar_users_button.set_sensitive(True)
 
-        if self.frame.current_page_id != self.frame.interests_page.id:
+        if self.window.current_page_id != self.window.interests_page.id:
             # Only populate recommendations if the tab is open on login
             return
 

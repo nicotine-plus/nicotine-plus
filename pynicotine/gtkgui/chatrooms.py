@@ -70,25 +70,25 @@ from pynicotine.utils import PUNCTUATION
 
 class ChatRooms(IconNotebook):
 
-    def __init__(self, frame):
+    def __init__(self, window):
 
         super().__init__(
-            frame,
-            widget=frame.chatrooms_notebook,
-            parent_page=frame.chatrooms_page,
+            window,
+            widget=window.chatrooms_notebook,
+            parent_page=window.chatrooms_page,
             switch_page_callback=self.on_switch_chat,
             reorder_page_callback=self.on_reordered_page
         )
 
         self.autojoin_rooms = set()
         self.completion = ChatCompletion()
-        self.roomlist = RoomList(frame)
+        self.roomlist = RoomList(window)
         self.command_help = None
 
         if GTK_API_VERSION >= 4:
-            self.frame.chatrooms_paned.set_resize_start_child(True)
+            self.window.chatrooms_paned.set_resize_start_child(True)
         else:
-            self.frame.chatrooms_paned.child_set_property(self.frame.chatrooms_container, "resize", True)
+            self.window.chatrooms_paned.child_set_property(self.window.chatrooms_container, "resize", True)
 
         for event_name, callback in (
             ("clear-room-messages", self.clear_room_messages),
@@ -147,7 +147,7 @@ class ChatRooms(IconNotebook):
 
     def on_switch_chat(self, _notebook, page, _page_num):
 
-        if self.frame.current_page_id != self.frame.chatrooms_page.id:
+        if self.window.current_page_id != self.window.chatrooms_page.id:
             return
 
         for room, tab in self.pages.items():
@@ -158,7 +158,7 @@ class ChatRooms(IconNotebook):
             tab.set_completion_list(core.chatrooms.completion_list[:])
 
             if self.command_help is None:
-                self.command_help = ChatRoomCommands(self.frame.window)
+                self.command_help = ChatRoomCommands(self.window)
 
             self.command_help.popover.unparent()
             tab.help_button.set_popover(self.command_help.popover)
@@ -167,7 +167,7 @@ class ChatRooms(IconNotebook):
                 tab.load()
 
             # Remove hilite
-            self.frame.notifications.clear("rooms", room=room)
+            self.window.application.notifications.clear("rooms", room=room)
             break
 
     def on_create_room_response(self, dialog, response_id, room):
@@ -180,14 +180,14 @@ class ChatRooms(IconNotebook):
 
     def on_create_room(self, *_args):
 
-        room = self.frame.chatrooms_entry.get_text().strip()
+        room = self.window.chatrooms_entry.get_text().strip()
 
         if not room:
             return
 
         if room not in core.chatrooms.server_rooms and room not in core.chatrooms.private_rooms:
             OptionDialog(
-                parent=self.frame.window,
+                parent=self.window,
                 title=_('Create New Room?'),
                 message=_('Do you really want to create a new room "%s"?') % room,
                 option_label=_("Make room private"),
@@ -198,7 +198,7 @@ class ChatRooms(IconNotebook):
         else:
             core.chatrooms.show_room(room)
 
-        self.frame.chatrooms_entry.set_text("")
+        self.window.chatrooms_entry.set_text("")
 
     def clear_room_messages(self, room):
 
@@ -210,7 +210,7 @@ class ChatRooms(IconNotebook):
 
     def clear_notifications(self):
 
-        if self.frame.current_page_id != self.frame.chatrooms_page.id:
+        if self.window.current_page_id != self.window.chatrooms_page.id:
             return
 
         page = self.get_current_page()
@@ -218,7 +218,7 @@ class ChatRooms(IconNotebook):
         for room, tab in self.pages.items():
             if tab.container == page:
                 # Remove hilite
-                self.frame.notifications.clear("rooms", room=room)
+                self.window.application.notifications.clear("rooms", room=room)
                 break
 
     def room_list(self, msg):
@@ -226,7 +226,8 @@ class ChatRooms(IconNotebook):
         self.roomlist.set_room_list(msg.rooms, msg.ownedprivaterooms, msg.otherprivaterooms)
 
         if config.sections["words"]["roomnames"]:
-            self.frame.update_completions()
+            core.chatrooms.update_completions()
+            core.privatechat.update_completions()
 
     def show_room(self, room):
 
@@ -234,7 +235,7 @@ class ChatRooms(IconNotebook):
 
         if page is not None:
             self.set_current_page(page.container)
-            self.frame.change_main_page(self.frame.chatrooms_page)
+            self.window.change_main_page(self.window.chatrooms_page)
 
     def remove_room(self, room):
 
@@ -250,11 +251,11 @@ class ChatRooms(IconNotebook):
         if room == "Public ":
             self.roomlist.toggle_public_feed(False)
         else:
-            self.frame.room_search_combobox.remove_all()
-            self.frame.room_search_combobox.append_text("Joined Rooms ")
+            self.window.room_search_combobox.remove_all()
+            self.window.room_search_combobox.append_text("Joined Rooms ")
 
             for joined_room in self.pages:
-                self.frame.room_search_combobox.append_text(joined_room)
+                self.window.room_search_combobox.append_text(joined_room)
 
     def join_room(self, msg):
 
@@ -278,7 +279,7 @@ class ChatRooms(IconNotebook):
         if msg.room == "Public ":
             self.roomlist.toggle_public_feed(True)
         else:
-            self.frame.room_search_combobox.append_text(msg.room)
+            self.window.room_search_combobox.append_text(msg.room)
 
     def private_room_added(self, msg):
         user_count = 0
@@ -431,7 +432,7 @@ class ChatRoom:
         ) = ui_template.widgets
 
         self.chatrooms = chatrooms
-        self.frame = chatrooms.frame
+        self.window = chatrooms.window
         self.room = room
 
         if GTK_API_VERSION >= 4:
@@ -448,7 +449,7 @@ class ChatRoom:
             self.chat_paned.child_set_property(self.chat_container, "shrink", False)
 
         self.tickers = Tickers()
-        self.room_wall = RoomWall(self.frame, self)
+        self.room_wall = RoomWall(self.window, self)
         self.loaded = False
 
         self.users = {}
@@ -465,7 +466,7 @@ class ChatRoom:
                                              controller_widget=self.chat_container, focus_widget=self.chat_entry)
 
         # Chat Entry
-        ChatEntry(self.frame, self.chat_entry, chatrooms.completion, room, slskmessages.SayChatroom,
+        ChatEntry(self.window, self.chat_entry, chatrooms.completion, room, slskmessages.SayChatroom,
                   core.chatrooms.send_message, is_chatroom=True)
 
         self.log_toggle.set_active(config.sections["logging"]["chatrooms"])
@@ -498,7 +499,7 @@ class ChatRoom:
         self.column_numbers = list(range(self.usersmodel.get_n_columns()))
         attribute_columns = (9, 10)
         self.cols = cols = initialise_columns(
-            self.frame, ("chat_room", room), self.users_list_view,
+            self.window, ("chat_room", room), self.users_list_view,
             ["status", _("Status"), 25, "icon", None],
             ["country", _("Country"), 25, "icon", None],
             ["user", _("User"), 155, "text", attribute_columns],
@@ -520,11 +521,13 @@ class ChatRoom:
 
         self.usersmodel.set_sort_column_id(2, Gtk.SortType.ASCENDING)
 
-        self.popup_menu_private_rooms_chat = UserPopupMenu(self.frame)
-        self.popup_menu_private_rooms_list = UserPopupMenu(self.frame)
+        self.popup_menu_private_rooms_chat = UserPopupMenu(self.window.application)
+        self.popup_menu_private_rooms_list = UserPopupMenu(self.window.application)
 
-        self.popup_menu_user_chat = UserPopupMenu(self.frame, self.chat_view.textview, connect_events=False)
-        self.popup_menu_user_list = UserPopupMenu(self.frame, self.users_list_view, self.on_popup_menu_user)
+        self.popup_menu_user_chat = UserPopupMenu(self.window.application, self.chat_view.textview,
+                                                  connect_events=False)
+        self.popup_menu_user_list = UserPopupMenu(self.window.application, self.users_list_view,
+                                                  self.on_popup_menu_user)
 
         for menu, menu_private_rooms in (
             (self.popup_menu_user_chat, self.popup_menu_private_rooms_chat),
@@ -537,7 +540,8 @@ class ChatRoom:
                 (">" + _("Private Rooms"), menu_private_rooms)
             )
 
-        self.popup_menu_activity_view = PopupMenu(self.frame, self.activity_view.textview, self.on_popup_menu_log)
+        self.popup_menu_activity_view = PopupMenu(self.window.application, self.activity_view.textview,
+                                                  self.on_popup_menu_log)
         self.popup_menu_activity_view.add_items(
             ("#" + _("Find…"), self.on_find_activity_log),
             ("", None),
@@ -549,7 +553,7 @@ class ChatRoom:
             ("#" + _("_Leave Room"), self.on_leave_room)
         )
 
-        self.popup_menu_chat_view = PopupMenu(self.frame, self.chat_view.textview, self.on_popup_menu_chat)
+        self.popup_menu_chat_view = PopupMenu(self.window.application, self.chat_view.textview, self.on_popup_menu_chat)
         self.popup_menu_chat_view.add_items(
             ("#" + _("Find…"), self.on_find_room_log),
             ("", None),
@@ -564,7 +568,7 @@ class ChatRoom:
             ("#" + _("_Leave Room"), self.on_leave_room)
         )
 
-        self.tab_menu = PopupMenu(self.frame)
+        self.tab_menu = PopupMenu(self.window.application)
         self.tab_menu.add_items(
             ("#" + _("_Leave Room"), self.on_leave_room)
         )
@@ -580,12 +584,8 @@ class ChatRoom:
     def load(self):
 
         # Get the X position of the rightmost edge of the user list, and set the width to 400
-        if GTK_API_VERSION >= 4:
-            window_width = self.frame.window.get_width()
-        else:
-            window_width, _window_height = self.frame.window.get_size()
-
-        position = (self.frame.chatrooms_paned.get_position() or self.frame.horizontal_paned.get_position()
+        window_width = self.window.get_width()
+        position = (self.window.chatrooms_paned.get_position() or self.window.horizontal_paned.get_position()
                     or window_width)
         self.users_paned.set_position(position - 400)
 
@@ -831,13 +831,13 @@ class ChatRoom:
                 )
 
         if (self.chatrooms.get_current_page() == self.container
-                and self.frame.current_page_id == self.frame.chatrooms_page.id and self.frame.window.is_active()):
+                and self.window.current_page_id == self.window.chatrooms_page.id and self.window.is_active()):
             # Don't show notifications if the chat is open and the window is in use
             return
 
         if mentioned:
             # We were mentioned, update tray icon and show urgency hint
-            self.frame.notifications.add("rooms", user, room)
+            self.window.application.notifications.add("rooms", user, room)
             return
 
         if not public and config.sections["notifications"]["notification_popup_chatroom"]:
@@ -1221,14 +1221,11 @@ class ChatRoom:
     def on_delete_room_log(self, *_args):
 
         OptionDialog(
-            parent=self.frame.window,
+            parent=self.window,
             title=_('Delete Logged Messages?'),
             message=_('Do you really want to permanently delete all logged messages for this room?'),
             callback=self.on_delete_room_log_response
         ).show()
-
-    def on_configure_ignored_users(self, *_args):
-        self.frame.on_preferences(page_id="ignored-users")
 
     def set_completion_list(self, completion_list):
 
