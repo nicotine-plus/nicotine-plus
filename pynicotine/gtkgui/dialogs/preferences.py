@@ -2549,7 +2549,7 @@ class Preferences(Dialog):
             self.application.window.interests.update_visuals()
 
             self.application.window.update_visuals()
-            self.application.wish_list.update_visuals()
+            self.application.wishlist.update_visuals()
             self.update_visuals()
 
             # Icons
