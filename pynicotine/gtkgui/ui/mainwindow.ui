@@ -24,7 +24,7 @@
     <child>
       <object class="GtkMenuButton" id="header_menu">
         <property name="visible">True</property>
-        <property name="tooltip-text" translatable="yes">Menu</property>
+        <property name="tooltip-text" translatable="yes">Main Menu</property>
         <child>
           <object class="GtkImage">
             <property name="visible">True</property>
@@ -1762,7 +1762,7 @@
                 <child>
                   <object class="GtkButton" id="_download_status_button">
                     <property name="visible">True</property>
-                    <property name="tooltip-text" translatable="yes">Downloading (speed / active users)</property>
+                    <property name="tooltip-text" translatable="yes">Downloading (Speed / Active Users)</property>
                     <property name="action-name">app.configure-downloads</property>
                     <child>
                       <object class="GtkBox">
@@ -1793,7 +1793,7 @@
                 <child>
                   <object class="GtkButton" id="_upload_status_button">
                     <property name="visible">True</property>
-                    <property name="tooltip-text" translatable="yes">Uploading (speed / active users)</property>
+                    <property name="tooltip-text" translatable="yes">Uploading (Speed / Active Users)</property>
                     <property name="action-name">app.configure-uploads</property>
                     <child>
                       <object class="GtkBox">
@@ -1824,7 +1824,7 @@
                 <child>
                   <object class="GtkToggleButton">
                     <property name="visible">True</property>
-                    <property name="tooltip-text" translatable="yes">Enable alternative download and upload speed limits</property>
+                    <property name="tooltip-text" translatable="yes">Use Alternative Transfer Speed Limits</property>
                     <property name="action-name">app.alternative-speed-limit</property>
                     <child>
                       <object class="GtkImage" id="alt_speed_icon">

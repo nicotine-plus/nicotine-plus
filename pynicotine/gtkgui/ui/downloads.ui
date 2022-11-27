@@ -148,7 +148,7 @@
             <child>
               <object class="GtkButton" id="_clear_finished_button">
                 <property name="visible">True</property>
-                <property name="tooltip-text" translatable="yes">Clear all finished and filtered downloads.</property>
+                <property name="tooltip-text" translatable="yes">Clear All Finished/Filtered Downloads</property>
                 <signal name="clicked" handler="on_clear_finished_filtered"/>
                 <child>
                   <object class="GtkBox">
@@ -179,7 +179,7 @@
               <object class="GtkMenuButton" id="clear_all_button">
                 <property name="visible">True</property>
                 <property name="direction">up</property>
-                <property name="tooltip-text" translatable="yes">Clear all downloads marked with a specific status.</property>
+                <property name="tooltip-text" translatable="yes">Clear Downloads With Specific Status</property>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>

@@ -138,7 +138,7 @@
                         <child>
                           <object class="GtkMenuButton" id="help_button">
                             <property name="visible">True</property>
-                            <property name="tooltip-text" translatable="yes">Chat room command help</property>
+                            <property name="tooltip-text" translatable="yes">Chat Room Command Help</property>
                             <child>
                               <object class="GtkImage">
                                 <property name="visible">True</property>
@@ -250,7 +250,7 @@
                     <child>
                       <object class="GtkMenuButton" id="room_wall_button">
                         <property name="visible">True</property>
-                        <property name="tooltip-text" translatable="yes">Room wall</property>
+                        <property name="tooltip-text" translatable="yes">Room Wall</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>

@@ -148,7 +148,7 @@
             <child>
               <object class="GtkButton" id="_clear_finished_button">
                 <property name="visible">True</property>
-                <property name="tooltip-text" translatable="yes">Clear all finished and cancelled uploads.</property>
+                <property name="tooltip-text" translatable="yes">Clear All Finished/Cancelled Uploads</property>
                 <signal name="clicked" handler="on_clear_finished_cancelled"/>
                 <child>
                   <object class="GtkBox">
@@ -179,7 +179,7 @@
               <object class="GtkMenuButton" id="clear_all_button">
                 <property name="visible">True</property>
                 <property name="direction">up</property>
-                <property name="tooltip-text" translatable="yes">Clear all uploads marked with a specific status.</property>
+                <property name="tooltip-text" translatable="yes">Clear Uploads With Specific Status</property>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>

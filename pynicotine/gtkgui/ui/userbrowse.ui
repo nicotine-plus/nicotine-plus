@@ -155,7 +155,7 @@
                                   <object class="GtkSearchEntry" id="search_entry">
                                     <property name="visible">True</property>
                                     <property name="hexpand">True</property>
-                                    <property name="tooltip-text" translatable="yes">Search files and folders (exact match)</property>
+                                    <property name="tooltip-text" translatable="yes">Search Files and Folders</property>
                                     <property name="width-chars">18</property>
                                     <signal name="activate" handler="on_search"/>
                                   </object>
@@ -163,7 +163,7 @@
                                 <child>
                                   <object class="GtkButton">
                                     <property name="visible">True</property>
-                                    <property name="tooltip-text" translatable="yes">Save shares list to disk</property>
+                                    <property name="tooltip-text" translatable="yes">Save Shares List to Disk</property>
                                     <signal name="clicked" handler="on_save"/>
                                     <child>
                                       <object class="GtkImage">

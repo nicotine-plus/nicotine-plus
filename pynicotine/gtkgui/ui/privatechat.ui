@@ -81,7 +81,7 @@
             <child>
               <object class="GtkMenuButton" id="help_button">
                 <property name="visible">True</property>
-                <property name="tooltip-text" translatable="yes">Private chat command help</property>
+                <property name="tooltip-text" translatable="yes">Private Chat Command Help</property>
                 <child>
                   <object class="GtkImage">
                     <property name="visible">True</property>
