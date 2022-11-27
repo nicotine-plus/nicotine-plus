@@ -466,7 +466,7 @@ class ChatRoom:
                                              controller_widget=self.chat_container, focus_widget=self.chat_entry)
 
         # Chat Entry
-        ChatEntry(self.window, self.chat_entry, chatrooms.completion, room, slskmessages.SayChatroom,
+        ChatEntry(self.window.application, self.chat_entry, chatrooms.completion, room, slskmessages.SayChatroom,
                   core.chatrooms.send_message, is_chatroom=True)
 
         self.log_toggle.set_active(config.sections["logging"]["chatrooms"])
