@@ -2538,6 +2538,9 @@ class Preferences(Dialog):
 
             set_global_font(config.sections["ui"]["globalfont"])
 
+            if self.application.wishlist is not None:
+                self.application.wishlist.update_visuals()
+
             self.application.window.chatrooms.update_visuals()
             self.application.window.privatechat.update_visuals()
             self.application.window.search.update_visuals()
@@ -2549,7 +2552,6 @@ class Preferences(Dialog):
             self.application.window.interests.update_visuals()
 
             self.application.window.update_visuals()
-            self.application.wishlist.update_visuals()
             self.update_visuals()
 
             # Icons
