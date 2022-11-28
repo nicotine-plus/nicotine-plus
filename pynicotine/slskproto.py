@@ -2151,8 +2151,8 @@ class SoulseekNetworkThread(Thread):
                 continue
 
             # Manage incoming connections to listen socket
-            if self._numsockets < MAXSOCKETS and self._process_queue and self._listen_socket in input_list:
-                while True:
+            if self._process_queue and self._listen_socket in input_list:
+                while self._numsockets < MAXSOCKETS:
                     try:
                         incoming_sock, incoming_addr = self._listen_socket.accept()
 
