@@ -370,16 +370,6 @@ class Application:
         action.connect("change-state", self.on_debug_miscellaneous)
         self.add_action(action)
 
-    @staticmethod
-    def add_debug_level(debug_level):
-        if debug_level not in config.sections["logging"]["debugmodes"]:
-            config.sections["logging"]["debugmodes"].append(debug_level)
-
-    @staticmethod
-    def remove_debug_level(debug_level):
-        if debug_level in config.sections["logging"]["debugmodes"]:
-            config.sections["logging"]["debugmodes"].remove(debug_level)
-
     """ Core Events """
 
     def on_confirm_quit_response(self, dialog, response_id, _data):
@@ -495,9 +485,9 @@ class Application:
     def on_set_debug_level(self, action, state, level):
 
         if state.get_boolean():
-            self.add_debug_level(level)
+            log.add_log_level(level)
         else:
-            self.remove_debug_level(level)
+            log.remove_log_level(level)
 
         action.set_state(state)
 

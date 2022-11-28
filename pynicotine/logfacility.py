@@ -33,17 +33,29 @@ class LogFile:
         self.last_active = time.time()
 
 
+class LogLevel:
+    DEFAULT = "default"
+    DOWNLOAD = "download"
+    UPLOAD = "upload"
+    SEARCH = "search"
+    CHAT = "chat"
+    CONNECTION = "connection"
+    MESSAGE = "message"
+    TRANSFER = "transfer"
+    MISCELLANEOUS = "miscellaneous"
+
+
 class Logger:
 
     PREFIXES = {
-        "download": "Download",
-        "upload": "Upload",
-        "search": "Search",
-        "chat": "Chat",
-        "connection": "Conn",
-        "message": "Msg",
-        "transfer": "Transfer",
-        "miscellaneous": "Misc"
+        LogLevel.DOWNLOAD: "Download",
+        LogLevel.UPLOAD: "Upload",
+        LogLevel.SEARCH: "Search",
+        LogLevel.CHAT: "Chat",
+        LogLevel.CONNECTION: "Conn",
+        LogLevel.MESSAGE: "Msg",
+        LogLevel.TRANSFER: "Transfer",
+        LogLevel.MISCELLANEOUS: "Misc"
     }
 
     EXCLUDED_MSGS = {
@@ -60,16 +72,47 @@ class Logger:
 
     def __init__(self):
 
-        self.log_levels = None
         self.file_name = "debug_" + str(int(time.time())) + ".log"
-        self.log_files = {}
+        self._log_levels = {LogLevel.DEFAULT}
+        self._log_files = {}
 
         scheduler.add(delay=10, callback=self._close_inactive_log_files, repeat=True)
+
+    def init_log_levels(self):
+
+        self._log_levels = {LogLevel.DEFAULT}
+
+        for level in config.sections["logging"]["debugmodes"]:
+            self._log_levels.add(level)
+
+    def add_log_level(self, log_level, is_permanent=True):
+
+        self._log_levels.add(log_level)
+
+        if not is_permanent:
+            return
+
+        log_levels = config.sections["logging"]["debugmodes"]
+
+        if log_level not in log_levels:
+            log_levels.append(log_level)
+
+    def remove_log_level(self, log_level, is_permanent=True):
+
+        self._log_levels.discard(log_level)
+
+        if not is_permanent:
+            return
+
+        log_levels = config.sections["logging"]["debugmodes"]
+
+        if log_level in log_levels:
+            log_levels.remove(log_level)
 
     def _get_log_file(self, folder_path, base_name):
 
         file_path = os.path.join(folder_path, base_name)
-        log_file = self.log_files.get(file_path)
+        log_file = self._log_files.get(file_path)
 
         if log_file is not None:
             return log_file
@@ -82,7 +125,7 @@ class Logger:
         if not os.path.exists(folder_path_encoded):
             os.makedirs(folder_path_encoded)
 
-        log_file = self.log_files[file_path] = LogFile(
+        log_file = self._log_files[file_path] = LogFile(
             path=file_path, handle=open(encode_path(file_path), 'ab'))  # pylint: disable=consider-using-with
 
         # Disable file access for outsiders
@@ -120,37 +163,38 @@ class Logger:
                 "error": error
             })
 
-        del self.log_files[log_file.path]
+        del self._log_files[log_file.path]
 
     def close_log_files(self):
-        for log_file in self.log_files.copy().values():
+        for log_file in self._log_files.copy().values():
             self.close_log_file(log_file)
 
     def _close_inactive_log_files(self):
 
         current_time = time.time()
 
-        for log_file in self.log_files.copy().values():
+        for log_file in self._log_files.copy().values():
             if (current_time - log_file.last_active) >= 10:
                 self.close_log_file(log_file)
 
-    def _set_msg_prefix(self, level, msg):
+    def _format_log_message(self, level, msg, msg_args):
 
         prefix = self.PREFIXES.get(level)
+
+        if msg_args:
+            msg = msg % msg_args
 
         if prefix:
             msg = "[%s] %s" % (prefix, msg)
 
         return msg
 
-    def add(self, msg, msg_args=None, title=None, level=None, should_log_file=True):
+    def add(self, msg, msg_args=None, title=None, level=LogLevel.DEFAULT, should_log_file=True):
 
-        levels = self.log_levels if self.log_levels else config.sections["logging"].get("debugmodes", [])
-
-        if level and level not in levels:
+        if level not in self._log_levels:
             return
 
-        if level == "message":
+        if level == LogLevel.MESSAGE:
             # Compile message contents
             msg_class = msg.__class__
 
@@ -161,10 +205,7 @@ class Logger:
             msg = "%s: %s %s" % (msg_direction, msg_class, self.contents(msg))
             msg_args = None
 
-        msg = self._set_msg_prefix(level, msg)
-
-        if msg_args:
-            msg = msg % msg_args
+        msg = self._format_log_message(level, msg, msg_args)
 
         if should_log_file and config.sections["logging"].get("debug_file_output", False):
             self.write_log_file(
@@ -173,38 +214,40 @@ class Logger:
         try:
             timestamp_format = config.sections["logging"].get("log_timestamp", "%Y-%m-%d %H:%M:%S")
             events.emit("log-message", timestamp_format, msg, title, level)
+
         except Exception as error:
             try:
                 print("Log callback failed: %s %s\n%s" % (level, msg, error))
+
             except OSError:
                 # stdout is gone
                 pass
 
     def add_download(self, msg, msg_args=None):
         self.log_transfer(msg, msg_args)
-        self.add(msg, msg_args=msg_args, level="download")
+        self.add(msg, msg_args=msg_args, level=LogLevel.DOWNLOAD)
 
     def add_upload(self, msg, msg_args=None):
         self.log_transfer(msg, msg_args)
-        self.add(msg, msg_args=msg_args, level="upload")
+        self.add(msg, msg_args=msg_args, level=LogLevel.UPLOAD)
 
     def add_search(self, msg, msg_args=None):
-        self.add(msg, msg_args=msg_args, level="search")
+        self.add(msg, msg_args=msg_args, level=LogLevel.SEARCH)
 
     def add_chat(self, msg, msg_args=None):
-        self.add(msg, msg_args=msg_args, level="chat")
+        self.add(msg, msg_args=msg_args, level=LogLevel.CHAT)
 
     def add_conn(self, msg, msg_args=None):
-        self.add(msg, msg_args=msg_args, level="connection")
+        self.add(msg, msg_args=msg_args, level=LogLevel.CONNECTION)
 
     def add_msg_contents(self, msg, is_outgoing=False):
-        self.add(msg, msg_args=is_outgoing, level="message")
+        self.add(msg, msg_args=is_outgoing, level=LogLevel.MESSAGE)
 
     def add_transfer(self, msg, msg_args=None):
-        self.add(msg, msg_args=msg_args, level="transfer")
+        self.add(msg, msg_args=msg_args, level=LogLevel.TRANSFER)
 
     def add_debug(self, msg, msg_args=None):
-        self.add(msg, msg_args=msg_args, level="miscellaneous")
+        self.add(msg, msg_args=msg_args, level=LogLevel.MISCELLANEOUS)
 
     def log_transfer(self, msg, msg_args=None):
 

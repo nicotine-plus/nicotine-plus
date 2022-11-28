@@ -597,6 +597,7 @@ class Config:
         self.config_loaded = True
 
         from pynicotine.logfacility import log
+        log.init_log_levels()
         log.add_debug("Using configuration: %(file)s", {"file": self.filename})
 
     def parse_config(self, filename):

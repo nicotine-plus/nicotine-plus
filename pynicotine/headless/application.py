@@ -33,9 +33,10 @@ class Application:
     def __init__(self):
 
         self.init_exception_handler()
-
         self.thread_messages = deque()
-        log.log_levels = set(["download", "upload"] + config.sections["logging"]["debugmodes"])
+
+        for log_level in ("download", "upload"):
+            log.add_log_level(log_level, is_permanent=False)
 
         for event_name, callback in (
             ("shares-unavailable", self.shares_unavailable),
