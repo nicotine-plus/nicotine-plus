@@ -54,6 +54,7 @@ from pynicotine.gtkgui.widgets.treeview import show_file_path_tooltip
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import SEARCH_TOKENS_ALLOWED
 from pynicotine.utils import get_result_bitrate_length
 from pynicotine.utils import factorize
 from pynicotine.utils import humanize
@@ -242,6 +243,9 @@ class Searches(IconNotebook):
         tab.set_label(self.get_tab_label_inner(tab.container))
 
     def file_search_response(self, msg):
+
+        if msg.token not in SEARCH_TOKENS_ALLOWED:
+            return
 
         tab = self.pages.get(msg.token)
 
