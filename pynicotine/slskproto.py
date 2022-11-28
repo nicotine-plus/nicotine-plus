@@ -209,7 +209,7 @@ class SoulseekNetworkThread(Thread):
         self._pending_init_msgs = {}
         self._token_init_msgs = {}
         self._username_init_msgs = {}
-        self._process_queue = False
+        self._should_process_queue = False
         self._want_abort = False
 
         self._selector = None
@@ -266,7 +266,7 @@ class SoulseekNetworkThread(Thread):
 
     def _enable_message_queue(self):
         self._queue.clear()
-        self._process_queue = True
+        self._should_process_queue = True
 
     def _quit(self):
         self._want_abort = True
@@ -414,7 +414,7 @@ class SoulseekNetworkThread(Thread):
         if not valid_network_interface:
             log.add(_("Specified network interface '%s' does not exist"), self._interface,
                     title=_("Unknown Network Interface"))
-            self._process_queue = False
+            self._should_process_queue = False
             return
 
         self._create_listen_socket()
@@ -423,7 +423,7 @@ class SoulseekNetworkThread(Thread):
         if not valid_listen_port:
             log.add(_("No listening port is available in the specified port range %s–%s"), self._listen_port_range,
                     title=_("Listening Port Unavailable"))
-            self._process_queue = False
+            self._should_process_queue = False
             return
 
         self._manual_server_disconnect = False
@@ -437,7 +437,7 @@ class SoulseekNetworkThread(Thread):
     def _server_disconnect(self):
         """ We're disconnecting from the server, clean up """
 
-        self._process_queue = False
+        self._should_process_queue = False
         self._bound_ip = self._interface = self._listen_port_range = self._server_socket = None
 
         self._close_listen_socket()
@@ -1007,7 +1007,7 @@ class SoulseekNetworkThread(Thread):
 
         init = conn_obj.init
 
-        if sock is self._parent_socket and self._process_queue:
+        if sock is self._parent_socket and self._should_process_queue:
             self._send_have_no_parent()
 
         elif self._is_download(conn_obj):
@@ -2120,7 +2120,7 @@ class SoulseekNetworkThread(Thread):
             msgs.append(self._queue.popleft())
 
         for msg_obj in msgs:
-            if not self._process_queue:
+            if not self._should_process_queue:
                 return
 
             msg_type = msg_obj.msgtype
@@ -2235,7 +2235,7 @@ class SoulseekNetworkThread(Thread):
 
         while not self._want_abort:
 
-            if not self._process_queue:
+            if not self._should_process_queue:
                 time.sleep(0.1)
                 continue
 
@@ -2248,6 +2248,14 @@ class SoulseekNetworkThread(Thread):
                 self._callback_msgs.append(
                     SetConnectionStats(self._numsockets, self._total_downloads, self._total_download_bandwidth,
                                        self._total_uploads, self._total_upload_bandwidth))
+
+                # Close stale outgoing connection attempts
+                for sock, conn_obj in self._connsinprogress.copy().items():
+                    self._close_conn_in_progress_if_stale(conn_obj, sock, current_time)
+
+                # Close inactive connections
+                for sock, conn_obj in self._conns.copy().items():
+                    self._close_connection_if_inactive(conn_obj, sock, current_time, num_sockets)
 
                 self._total_download_bandwidth = 0
                 self._total_upload_bandwidth = 0
@@ -2275,14 +2283,6 @@ class SoulseekNetworkThread(Thread):
 
             # Process read/write for connections
             self._process_ready_sockets(selector_keys, current_time)
-
-            # Close stale outgoing connection attempts
-            for sock, conn_obj in self._connsinprogress.copy().items():
-                self._close_conn_in_progress_if_stale(conn_obj, sock, current_time)
-
-            # Close inactive connections
-            for sock, conn_obj in self._conns.copy().items():
-                self._close_connection_if_inactive(conn_obj, sock, current_time, num_sockets)
 
             # Inform the main thread
             if self._callback_msgs:
