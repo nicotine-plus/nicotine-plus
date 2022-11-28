@@ -1076,22 +1076,25 @@ class SoulseekNetworkThread(Thread):
 
         del self._username_init_msgs[init_key]
 
+    def _close_conn_in_progress_if_stale(self, conn_obj, sock, current_time):
+
+        if (current_time - conn_obj.lastactive) > self.IN_PROGRESS_STALE_AFTER:
+            # Connection failed
+            self._connect_error("Timed out", conn_obj)
+            self._close_connection(self._connsinprogress, sock, callback=False)
+
     def _close_connection_if_inactive(self, conn_obj, sock, current_time, num_sockets):
 
         if sock is self._server_socket:
-            return False
+            return
 
         if num_sockets >= MAXSOCKETS and not self._connection_still_active(conn_obj):
             # Connection limit reached, close connection if inactive
             self._close_connection(self._conns, sock)
-            return True
 
-        if (current_time - conn_obj.lastactive) > self.CONNECTION_MAX_IDLE:
+        elif (current_time - conn_obj.lastactive) > self.CONNECTION_MAX_IDLE:
             # No recent activity, peer connection is stale
             self._close_connection(self._conns, sock)
-            return True
-
-        return False
 
     def _close_connection_by_ip(self, ip_address):
 
@@ -1372,12 +1375,13 @@ class SoulseekNetworkThread(Thread):
 
     def _process_peer_init_input(self, conn_obj, msg_buffer):
 
+        init = None
         msg_buffer_mem = memoryview(msg_buffer)
         buffer_len = len(msg_buffer_mem)
         idx = 0
 
         # Peer init messages are 8 bytes or greater in length
-        while buffer_len >= 8 and conn_obj.init is None:
+        while buffer_len >= 8 and init is None:
             msgsize = UINT_UNPACK(msg_buffer_mem[idx:idx + 4])[0]
             msgsize_total = msgsize + 4
 
@@ -1404,14 +1408,14 @@ class SoulseekNetworkThread(Thread):
                         log.add_conn("List of stored PeerInit messages: %s", str(self._token_init_msgs))
                         log.add_conn("Attempting to fetch PeerInit message for token %s", msg.token)
 
-                        conn_obj.init = init = self._token_init_msgs.pop(msg.token, None)
+                        init = self._token_init_msgs.pop(msg.token, None)
 
                         if init is None:
                             log.add_conn(("Indirect connection attempt with token %s previously expired, "
                                           "closing connection"), msg.token)
                             conn_obj.ibuf = bytearray()
                             self._close_connection(self._conns, conn_obj.sock)
-                            return
+                            return None
 
                         self._add_init_message(init)
 
@@ -1440,12 +1444,12 @@ class SoulseekNetworkThread(Thread):
                         if not self._verify_peer_connection_type(conn_type):
                             conn_obj.ibuf = bytearray()
                             self._close_connection(self._conns, conn_obj.sock)
-                            return
+                            return None
 
                         self._replace_existing_connection(msg)
 
-                        conn_obj.init = msg
-                        conn_obj.init.addr = addr
+                        init = msg
+                        init.addr = addr
 
                         self._add_init_message(msg)
                         self._process_conn_messages(msg)
@@ -1461,13 +1465,15 @@ class SoulseekNetworkThread(Thread):
 
                 conn_obj.ibuf = bytearray()
                 self._close_connection(self._conns, conn_obj.sock)
-                return
+                return None
 
             idx += msgsize_total
             buffer_len -= msgsize_total
 
         if idx:
             conn_obj.ibuf = msg_buffer[idx:]
+
+        return init
 
     def _process_peer_init_output(self, msg_obj):
 
@@ -1951,6 +1957,119 @@ class SoulseekNetworkThread(Thread):
 
     """ Input/Output """
 
+    def _process_ready_input_socket(self, sock, conn_obj_in_progress=None, conn_obj_established=None):
+
+        if sock is self._listen_socket:
+            # Manage incoming connections to listening socket
+            while self._numsockets < MAXSOCKETS:
+                try:
+                    incoming_sock, incoming_addr = sock.accept()
+
+                except OSError as error:
+                    if error.errno == errno.EAGAIN:
+                        # No more incoming connections
+                        break
+
+                    log.add_conn("Incoming connection failed: %s", error)
+                    break
+
+                selector_events = selectors.EVENT_READ
+                incoming_sock.setblocking(False)
+
+                self._conns[incoming_sock] = PeerConnection(
+                    sock=incoming_sock, addr=incoming_addr, selector_events=selector_events
+                )
+                self._numsockets += 1
+                log.add_conn("Incoming connection from %s", str(incoming_addr))
+
+                # Event flags are modified to include 'write' in subsequent loops, if necessary.
+                # Don't do it here, otherwise connections may break.
+                self._selector.register(incoming_sock, selector_events)
+
+        elif conn_obj_in_progress is not None:
+            try:
+                # Check if the socket has any data for us
+                sock.recv(1, socket.MSG_PEEK)
+
+            except OSError as error:
+                self._connect_error(error, conn_obj_in_progress)
+                self._close_connection(self._connsinprogress, sock, callback=False)
+                return False
+
+        elif conn_obj_established is not None:
+            if self._is_download(conn_obj_established):
+                self._set_conn_speed_limit(sock, self._download_limit_split, self._dlimits)
+
+            try:
+                if not self._read_data(conn_obj_established):
+                    # No data received, socket was likely closed remotely
+                    self._close_connection(self._conns, sock)
+                    return False
+
+            except OSError as error:
+                log.add_conn(("Cannot read data from connection %(addr)s, closing connection. "
+                              "Error: %(error)s"), {
+                    "addr": conn_obj_established.addr,
+                    "error": error
+                })
+                self._close_connection(self._conns, sock)
+                return False
+
+            if conn_obj_established.ibuf:
+                self._process_conn_incoming_messages(conn_obj_established)
+
+        return True
+
+    def _process_ready_output_socket(self, sock, current_time, conn_obj_in_progress=None, conn_obj_established=None):
+
+        if conn_obj_in_progress is not None:
+            try:
+                # Connection has been established
+                conn_obj_in_progress.lastactive = current_time
+
+                if sock is self._server_socket:
+                    self._establish_outgoing_server_connection(conn_obj_in_progress)
+                else:
+                    self._establish_outgoing_peer_connection(conn_obj_in_progress)
+
+                del self._connsinprogress[sock]
+
+            except OSError as error:
+                self._connect_error(error, conn_obj_in_progress)
+                self._close_connection(self._connsinprogress, sock, callback=False)
+                return False
+
+        elif conn_obj_established is not None:
+            if self._is_upload(conn_obj_established):
+                self._set_conn_speed_limit(sock, self._upload_limit_split, self._ulimits)
+
+            try:
+                self._write_data(conn_obj_established)
+
+            except OSError as error:
+                log.add_conn("Cannot write data to connection %(addr)s, closing connection. Error: %(error)s", {
+                    "addr": conn_obj_established.addr,
+                    "error": error
+                })
+                self._close_connection(self._conns, sock)
+                return False
+
+        return True
+
+    def _process_ready_sockets(self, selector_keys, current_time):
+
+        for selector_key, selector_events in selector_keys:
+            sock = selector_key.fileobj
+            conn_obj_in_progress = self._connsinprogress.get(sock)
+            conn_obj_established = self._conns.get(sock)
+
+            if selector_events & selectors.EVENT_READ:
+                if not self._process_ready_input_socket(sock, conn_obj_in_progress, conn_obj_established):
+                    continue
+
+            if selector_events & selectors.EVENT_WRITE:
+                self._process_ready_output_socket(sock, current_time, conn_obj_in_progress, conn_obj_established)
+
     def _process_conn_incoming_messages(self, conn_obj):
 
         if conn_obj.sock is self._server_socket:
@@ -1960,8 +2079,10 @@ class SoulseekNetworkThread(Thread):
         init = conn_obj.init
 
         if init is None:
-            self._process_peer_init_input(conn_obj, conn_obj.ibuf)
-            return
+            conn_obj.init = init = self._process_peer_init_input(conn_obj, conn_obj.ibuf)
+
+            if init is None:
+                return
 
         if init.conn_type == ConnectionType.PEER:
             self._process_peer_input(conn_obj, conn_obj.ibuf)
@@ -2007,14 +2128,9 @@ class SoulseekNetworkThread(Thread):
     def _read_data(self, conn_obj):
 
         sock = conn_obj.sock
-
-        # Check for a download limit
-        if sock in self._dlimits:
-            limit = self._dlimits[sock]
-        else:
-            limit = None
-
+        limit = self._dlimits.get(sock)
         conn_obj.lastactive = time.time()
+
         data = sock.recv(conn_obj.lastreadlength)
         conn_obj.ibuf.extend(data)
 
@@ -2022,7 +2138,6 @@ class SoulseekNetworkThread(Thread):
             # Unlimited download data
             if len(data) >= conn_obj.lastreadlength // 2:
                 conn_obj.lastreadlength = conn_obj.lastreadlength * 2
-
         else:
             # Speed Limited Download data (transfers)
             conn_obj.lastreadlength = limit
@@ -2035,12 +2150,7 @@ class SoulseekNetworkThread(Thread):
     def _write_data(self, conn_obj):
 
         sock = conn_obj.sock
-
-        if sock in self._ulimits:
-            limit = self._ulimits[sock]
-        else:
-            limit = None
-
+        limit = self._ulimits.get(sock)
         prev_active = conn_obj.lastactive
         conn_obj.lastactive = time.time()
 
@@ -2130,124 +2240,30 @@ class SoulseekNetworkThread(Thread):
 
             # Check which connections are ready to send/receive data
             try:
-                key_events = self._selector.select(timeout=-1)
-                input_list = {key.fileobj for key, event in key_events if event & selectors.EVENT_READ}
-                output_list = {key.fileobj for key, event in key_events if event & selectors.EVENT_WRITE}
+                selector_keys = self._selector.select(timeout=-1)
 
             except OSError as error:
                 # Error received; terminate networking loop
-
                 log.add("Major Socket Error: Networking terminated! %s", error)
                 self._quit()
                 break
 
             except ValueError as error:
                 # Possibly opened too many sockets
-
                 log.add("select ValueError: %s", error)
                 time.sleep(0.1)
-
-                self._callback_msgs.clear()
                 continue
 
-            # Manage incoming connections to listen socket
-            if self._process_queue and self._listen_socket in input_list:
-                while self._numsockets < MAXSOCKETS:
-                    try:
-                        incoming_sock, incoming_addr = self._listen_socket.accept()
+            # Process read/write for connections
+            self._process_ready_sockets(selector_keys, current_time)
 
-                    except OSError as error:
-                        if error.errno == errno.EAGAIN:
-                            # No more incoming connections
-                            break
+            # Close stale outgoing connection attempts
+            for sock, conn_obj in self._connsinprogress.copy().items():
+                self._close_conn_in_progress_if_stale(conn_obj, sock, current_time)
 
-                        log.add_conn("Incoming connection failed: %s", error)
-                        break
-
-                    selector_events = selectors.EVENT_READ
-                    incoming_sock.setblocking(False)
-
-                    self._conns[incoming_sock] = PeerConnection(
-                        sock=incoming_sock, addr=incoming_addr, selector_events=selector_events
-                    )
-                    self._numsockets += 1
-                    log.add_conn("Incoming connection from %s", str(incoming_addr))
-
-                    # Event flags are modified to include 'write' in subsequent loops, if necessary.
-                    # Don't do it here, otherwise connections may break.
-                    self._selector.register(incoming_sock, selector_events)
-
-            # Manage outgoing connections in progress
-            for sock_in_progress, conn_obj in self._connsinprogress.copy().items():
-                if (current_time - conn_obj.lastactive) > self.IN_PROGRESS_STALE_AFTER:
-                    # Connection failed
-
-                    self._connect_error("Timed out", conn_obj)
-                    self._close_connection(self._connsinprogress, sock_in_progress, callback=False)
-                    continue
-
-                try:
-                    if sock_in_progress in input_list:
-                        # Check if the socket has any data for us
-                        sock_in_progress.recv(1, socket.MSG_PEEK)
-
-                    if sock_in_progress in output_list:
-                        # Connection has been established
-
-                        conn_obj.lastactive = time.time()
-
-                        if sock_in_progress is self._server_socket:
-                            self._establish_outgoing_server_connection(conn_obj)
-                        else:
-                            self._establish_outgoing_peer_connection(conn_obj)
-
-                        del self._connsinprogress[sock_in_progress]
-
-                except OSError as error:
-                    self._connect_error(error, conn_obj)
-                    self._close_connection(self._connsinprogress, sock_in_progress, callback=False)
-
-            # Process read/write for active connections
+            # Close inactive connections
             for sock, conn_obj in self._conns.copy().items():
-                if self._close_connection_if_inactive(conn_obj, sock, current_time, num_sockets):
-                    continue
-
-                if sock in input_list:
-                    if self._is_download(conn_obj):
-                        self._set_conn_speed_limit(sock, self._download_limit_split, self._dlimits)
-
-                    try:
-                        if not self._read_data(conn_obj):
-                            # No data received, socket was likely closed remotely
-                            self._close_connection(self._conns, sock)
-                            continue
-
-                    except OSError as error:
-                        log.add_conn(("Cannot read data from connection %(addr)s, closing connection. "
-                                      "Error: %(error)s"), {
-                            "addr": conn_obj.addr,
-                            "error": error
-                        })
-                        self._close_connection(self._conns, sock)
-                        continue
-
-                if conn_obj.ibuf:
-                    self._process_conn_incoming_messages(conn_obj)
-
-                if sock in output_list:
-                    if self._is_upload(conn_obj):
-                        self._set_conn_speed_limit(sock, self._upload_limit_split, self._ulimits)
-
-                    try:
-                        self._write_data(conn_obj)
-
-                    except Exception as err:
-                        log.add_conn("Cannot write data to connection %(addr)s, closing connection. Error: %(error)s", {
-                            "addr": conn_obj.addr,
-                            "error": err
-                        })
-                        self._close_connection(self._conns, sock)
-                        continue
+                self._close_connection_if_inactive(conn_obj, sock, current_time, num_sockets)
 
             # Inform the main thread
             if self._callback_msgs:
