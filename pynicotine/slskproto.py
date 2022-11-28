@@ -2115,8 +2115,8 @@ class SlskProtoThread(threading.Thread):
                 continue
 
             # Manage incoming connections to listen socket
-            if self._numsockets < MAXSOCKETS and not self.server_disconnected and self.listen_socket in input_list:
-                while True:
+            if not self.server_disconnected and self.listen_socket in input_list:
+                while self._numsockets < MAXSOCKETS:
                     try:
                         incoming_sock, incoming_addr = self.listen_socket.accept()
 
