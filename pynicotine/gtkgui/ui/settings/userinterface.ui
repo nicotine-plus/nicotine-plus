@@ -77,6 +77,32 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">True</property>
+                        <property name="label" translatable="yes">Language (requires a restart):</property>
+                        <property name="xalign">0</property>
+                        <property name="wrap">True</property>
+                        <property name="wrap-mode">word-char</property>
+                        <property name="mnemonic-widget">Language</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkComboBoxText" id="Language">
+                        <property name="visible">True</property>
+                        <property name="valign">center</property>
+                        <items>
+                          <item id="" translatable="yes">System Default</item>
+                        </items>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="homogeneous">True</property>
+                    <property name="spacing">12</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
                         <property name="label" translatable="yes">When closing Nicotine+:</property>
                         <property name="xalign">0</property>
                         <property name="wrap">True</property>

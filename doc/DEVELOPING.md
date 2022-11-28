@@ -109,7 +109,7 @@ When Nicotine+ is translated into a new language, the following should be done:
 ```
 "Project-Id-Version: \n"
 ```
- * Add the language code to the [po/LINGUAS](/po/LINGUAS) and [test/unit/test_i18n.py](/test/unit/test_i18n.py) files
+ * Add the language code to the [po/LINGUAS](/po/LINGUAS) and [pynicotine/i18n.py](/pynicotine/i18n.py) files
 
 ### Updating Translation Template
 

@@ -112,7 +112,6 @@ You should install Python %(min_version)s or newer.""") % {
 
 def rescan_shares():
 
-    config.load_config()
     error = core.shares.rescan_shares(use_thread=False)
 
     if error:

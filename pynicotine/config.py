@@ -326,6 +326,7 @@ class Config:
                 "private_search_results": True
             },
             "ui": {
+                "language": "",
                 "dark_mode": False,
                 "header_bar": True,
                 "icontheme": "",
@@ -595,6 +596,11 @@ class Config:
             pass
 
         self.config_loaded = True
+        language = self.sections["ui"]["language"]
+
+        if language:
+            from pynicotine.i18n import apply_translations
+            apply_translations(language)
 
         from pynicotine.logfacility import log
         log.init_log_levels()

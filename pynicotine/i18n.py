@@ -25,13 +25,38 @@ import sys
 CURRENT_FOLDER = os.path.dirname(os.path.realpath(__file__))
 BASE_FOLDER = os.path.normpath(os.path.join(CURRENT_FOLDER, ".."))
 TRANSLATION_DOMAIN = "nicotine"
+LANGUAGES = (
+    ("ca", "Català"),
+    ("cs", "Čeština"),
+    ("da", "Dansk"),
+    ("de", "Deutsch"),
+    ("en", "English"),
+    ("eo", "Esperanto"),
+    ("es_CL", "Español (Chile)"),
+    ("es_ES", "Español (España)"),
+    ("eu", "Euskara"),
+    ("fi", "Suomi"),
+    ("fr", "Français"),
+    ("hu", "Magyar"),
+    ("it", "Italiano"),
+    ("lt", "Lietuvių"),
+    ("lv", "Latviešu"),
+    ("nb_NO", "Norsk bokmål"),
+    ("nl", "Nederlands"),
+    ("pl", "Polski"),
+    ("pt_BR", "Português (Brasil)"),
+    ("ru", "Русский"),
+    ("sk", "Slovenčina"),
+    ("sv", "Svenska"),
+    ("tr", "Türkçe"),
+    ("uk", "Українська"),
+    ("zh_Hans", "汉语")
+)
 
 
-def _set_default_system_language():
+def _set_default_system_language(language=None):
     """ Extracts the default system language and applies it on systems that don't
     set the 'LANGUAGE' environment variable by default (Windows, macOS) """
-
-    language = None
 
     if os.getenv("LANGUAGE") is None:
         if sys.platform == "win32":
@@ -84,10 +109,10 @@ def get_translation_mo_path():
     return os.path.join(prefix, "share", "locale")
 
 
-def apply_translations():
+def apply_translations(language=None):
 
     # Use the same language as the rest of the system
-    _set_default_system_language()
+    _set_default_system_language(language)
 
     # Install translations for Python
     gettext.install(TRANSLATION_DOMAIN, get_translation_mo_path())

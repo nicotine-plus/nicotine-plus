@@ -20,9 +20,7 @@ from unittest import TestCase
 
 from pynicotine.i18n import build_translations
 from pynicotine.i18n import get_translation_paths
-
-LANGUAGES = ("ca", "cs", "da", "de", "eo", "es_CL", "es_ES", "eu", "fi", "fr", "hu", "it", "lt", "lv", "nb_NO", "nl",
-             "pl", "pt_BR", "ru", "sk", "sv", "tr", "uk", "zh_Hans")
+from pynicotine.i18n import LANGUAGES
 
 
 class I18nTest(TestCase):
@@ -32,8 +30,14 @@ class I18nTest(TestCase):
         languages = build_translations()
         mo_files = get_translation_paths()
 
-        for lang in LANGUAGES:
-            self.assertIn(lang, languages)
+        for language_code, _language_name in LANGUAGES:
+            if language_code == "en":
+                # English is the default language
+                continue
+
+            self.assertIn(language_code, languages)
             self.assertIn(
-                ("share/locale/" + lang + "/LC_MESSAGES", ["mo/" + lang + "/LC_MESSAGES/nicotine.mo"]),
-                mo_files)
+                ("share/locale/" + language_code + "/LC_MESSAGES",
+                 ["mo/" + language_code + "/LC_MESSAGES/nicotine.mo"]),
+                mo_files
+            )
