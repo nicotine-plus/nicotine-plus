@@ -90,10 +90,6 @@ def apply_translations(language=None):
     gettext.install(TRANSLATION_DOMAIN, LOCALE_PATH)
 
 
-def is_translation_available():
-    return bool(gettext.find(TRANSLATION_DOMAIN, localedir=LOCALE_PATH))
-
-
 def build_translations():
     """ Builds .mo translation files in the 'mo' folder of the project repository """
 

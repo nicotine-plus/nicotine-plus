@@ -23,8 +23,8 @@ import sys
 
 from pynicotine.config import config
 from pynicotine.core import core
+from pynicotine.i18n import LOCALE_PATH
 from pynicotine.i18n import apply_translations
-from pynicotine.i18n import is_translation_available
 from pynicotine.logfacility import log
 from pynicotine.utils import rename_process
 
@@ -159,7 +159,7 @@ def run():
 
     core.init_components(enable_cli=True)
 
-    if not is_translation_available():
+    if not os.path.isdir(LOCALE_PATH):
         log.add("Translation files (.mo) are unavailable, using default English strings")
 
     if rescan:
