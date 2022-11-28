@@ -19,6 +19,7 @@
 import os
 import sys
 
+from pynicotine.config import config
 from pynicotine.logfacility import log
 
 
@@ -77,6 +78,7 @@ def check_gtk_version():
     except (ImportError, ValueError):
         pass
 
+    config.gtk_version = "%s.%s.%s" % (gtk_major_version, Gtk.get_minor_version(), Gtk.get_micro_version())
     return None
 
 
@@ -116,6 +118,8 @@ def run(hidden, ci_mode, multi_instance):
     if not ci_mode and Gdk.Display.get_default() is None:
         log.add(_("No graphical environment available, using headless (no GUI) mode"))
         return None
+
+    log.add(_("Loading %(program)s %(version)s"), {"program": "GTK", "version": config.gtk_version})
 
     from pynicotine.gtkgui.application import Application
     return Application(hidden, ci_mode, multi_instance).run()

@@ -52,9 +52,6 @@ class Application:
         self.init_exception_handler()
         self.apply_gtk_translations()
 
-        config.gtk_version = "%s.%s.%s" % (GTK_API_VERSION, Gtk.get_minor_version(), Gtk.get_micro_version())
-        log.add(_("Loading %(program)s %(version)s"), {"program": "GTK", "version": config.gtk_version})
-
         self.start_hidden = start_hidden
         self.ci_mode = ci_mode
 
