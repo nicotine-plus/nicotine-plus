@@ -24,6 +24,7 @@ import sys
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.i18n import apply_translations
+from pynicotine.i18n import is_translation_available
 from pynicotine.logfacility import log
 from pynicotine.utils import rename_process
 
@@ -157,6 +158,9 @@ def run():
         log.add("Faulthandler module could not be enabled. Error: %s" % error)
 
     core.init_components(enable_cli=True)
+
+    if not is_translation_available():
+        log.add("Translation files (.mo) are unavailable, using default English strings")
 
     if rescan:
         return rescan_shares()
