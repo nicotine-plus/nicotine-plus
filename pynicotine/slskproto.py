@@ -150,7 +150,7 @@ class Connection:
         self.selector_events = selector_events
         self.ibuf = bytearray()
         self.obuf = bytearray()
-        self.lastactive = 0
+        self.lastactive = time.time()
         self.lastreadlength = 100 * 1024
 
 
@@ -178,7 +178,7 @@ class PeerConnection(Connection):
         self.filedown = None
         self.fileupl = None
         self.has_post_init_activity = False
-        self.lastcallback = 0
+        self.lastcallback = time.time()
 
 
 class SoulseekNetworkThread(Thread):
