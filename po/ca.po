@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-11-28 00:38+0200\n"
-"PO-Revision-Date: 2022-11-28 11:55+0000\n"
+"PO-Revision-Date: 2022-11-28 13:44+0000\n"
 "Last-Translator: Maite Guix <maite.guix@gmail.com>\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ca/>\n"
@@ -1315,7 +1315,6 @@ msgid "Shares Not Available"
 msgstr "Recursos compartits no disponibles"
 
 #: pynicotine/gtkgui/application.py:437
-#, fuzzy
 msgid ""
 "Verify that external disks are mounted and folder permissions are correct."
 msgstr ""
@@ -1334,7 +1333,6 @@ msgid "_Retry"
 msgstr "_Torna-ho a provar"
 
 #: pynicotine/gtkgui/application.py:441
-#, fuzzy
 msgid "_Force Rescan"
 msgstr "_Força la nova exploració"
 
@@ -1489,18 +1487,18 @@ msgid "--- old messages above ---"
 msgstr "--- missatges antics a dalt ---"
 
 #: pynicotine/gtkgui/chatrooms.py:824
-#, fuzzy, python-format
+#, python-format
 msgid "%(user)s mentioned you in room %(room)s"
 msgstr "%(user)s t'ha mencionat a la sala %(room)s"
 
 #: pynicotine/gtkgui/chatrooms.py:829
 #: pynicotine/gtkgui/widgets/notifications.py:92
-#, fuzzy, python-format
+#, python-format
 msgid "Mentioned by %(user)s in Room %(room)s"
 msgstr "Missatge de %(user)s a la sala %(room)s"
 
 #: pynicotine/gtkgui/chatrooms.py:847
-#, fuzzy, python-format
+#, python-format
 msgid "Message by %(user)s in Room %(room)s"
 msgstr "Missatge de %(user)s a la sala %(room)s"
 
@@ -1543,14 +1541,12 @@ msgstr ""
 "Vols suprimir permanentment tots els missatges registrats per a aquesta sala?"
 
 #: pynicotine/gtkgui/dialogs/about.py:345
-#, fuzzy
 msgid "About"
-msgstr "Djibouti"
+msgstr "Quan a"
 
 #: pynicotine/gtkgui/dialogs/about.py:360
-#, fuzzy
 msgid "Website"
-msgstr "Lloc web: %s"
+msgstr "Lloc web"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:86
 #: pynicotine/gtkgui/dialogs/preferences.py:454
@@ -2061,7 +2057,7 @@ msgid "Transfer Statistics"
 msgstr "Estadístiques de transferència"
 
 #: pynicotine/gtkgui/dialogs/statistics.py:82
-#, fuzzy, python-format
+#, python-format
 msgid "Total Since %(date)s"
 msgstr "Total des de %(date)s"
 
@@ -2625,7 +2621,6 @@ msgid "[PRIVATE]  %s"
 msgstr "[PRIVATE]  %s"
 
 #: pynicotine/gtkgui/search.py:714
-#, fuzzy
 msgid "Wishlist Results Found"
 msgstr "S'han trobat resultats de la llista de desitjos"
 
@@ -2776,21 +2771,18 @@ msgid "_Abort"
 msgstr "_Avortar"
 
 #: pynicotine/gtkgui/uploads.py:62
-#, fuzzy
 msgid "Finished / Cancelled / Failed"
 msgstr "Finalitzat / Avortat / Error"
 
 #: pynicotine/gtkgui/uploads.py:63
-#, fuzzy
 msgid "Finished / Cancelled"
-msgstr "Acabada / filtrada"
+msgstr "Finalitzat / Cancel·lat"
 
 #: pynicotine/gtkgui/uploads.py:67
 msgid "Failed"
 msgstr "Ha fallat"
 
 #: pynicotine/gtkgui/uploads.py:68
-#, fuzzy
 msgid "User Logged Off"
 msgstr "Usuari desconnectat"
 
@@ -3091,9 +3083,8 @@ msgid "(None)"
 msgstr "(Cap)"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:106
-#, fuzzy
 msgid "Close Tab"
-msgstr "_Tancar la pestanya"
+msgstr "Tancar la pestanya"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:250
 msgid "Unread Tabs"
@@ -3308,9 +3299,8 @@ msgstr "Last.fm: proporciona el teu nom d'usuari i la clau d'API de Last.fm"
 #: pynicotine/nowplaying.py:212 pynicotine/nowplaying.py:258
 #: pynicotine/nowplaying.py:268 pynicotine/nowplaying.py:276
 #: pynicotine/nowplaying.py:291 pynicotine/nowplaying.py:306
-#, fuzzy
 msgid "Now Playing Error"
-msgstr "Format de Reproduint ara"
+msgstr "Format de «Reproduint ara»"
 
 #: pynicotine/nowplaying.py:136
 #, python-format
@@ -3550,14 +3540,13 @@ msgid "Listening on port: %i"
 msgstr "Escoltant al port: %i"
 
 #: pynicotine/slskproto.py:413
-#, fuzzy, python-format
+#, python-format
 msgid "Specified network interface '%s' does not exist"
 msgstr "La interfície de xarxa especificada '%s' no existeix"
 
 #: pynicotine/slskproto.py:414
-#, fuzzy
 msgid "Unknown Network Interface"
-msgstr "Interfície d'usuari"
+msgstr "Interfície de xarxa desconeguda"
 
 #: pynicotine/slskproto.py:422
 #, fuzzy, python-format
@@ -3792,7 +3781,7 @@ msgstr "No es pot crear el directori \"%(folder)s\", error: %(error)s"
 #: pynicotine/userbrowse.py:179
 #, python-format
 msgid "Loading Shares from disk failed: %(error)s"
-msgstr "No s'ha pogut carregar els recursos compartits des del disc: %(error)s"
+msgstr "No s'han pogut carregar els recursos compartits des del disc: %(error)s"
 
 #: pynicotine/userbrowse.py:204
 #, python-format
@@ -4469,9 +4458,8 @@ msgid "_Open List"
 msgstr "_Obrir llista"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:879
-#, fuzzy
 msgid "Configure Shares"
-msgstr "_Configurar els recursos compartits"
+msgstr "Configurar els recursos compartits"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:946
 msgid ""
@@ -6290,9 +6278,8 @@ msgid "Search Files and Folders"
 msgstr "Cercar fitxers i carpetes (coincidència exacta)"
 
 #: pynicotine/gtkgui/ui/userbrowse.ui:166
-#, fuzzy
 msgid "Save Shares List to Disk"
-msgstr "_Desar la llista de recursos compartits al disc"
+msgstr "Desar la llista de recursos compartits al disc"
 
 #: pynicotine/gtkgui/ui/userbrowse.ui:182
 #, fuzzy
