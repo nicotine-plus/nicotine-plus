@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-11-28 00:38+0200\n"
-"PO-Revision-Date: 2022-11-28 18:32+0000\n"
+"PO-Revision-Date: 2022-11-28 22:41+0000\n"
 "Last-Translator: Maite Guix <maite.guix@gmail.com>\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ca/>\n"
@@ -6227,9 +6227,8 @@ msgid "Shared"
 msgstr "Compartit"
 
 #: pynicotine/gtkgui/ui/userbrowse.ui:158
-#, fuzzy
 msgid "Search Files and Folders"
-msgstr "Cercar fitxers i carpetes (coincidència exacta)"
+msgstr "Cercar fitxers i carpetes"
 
 #: pynicotine/gtkgui/ui/userbrowse.ui:166
 msgid "Save Shares List to Disk"
