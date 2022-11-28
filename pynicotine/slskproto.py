@@ -150,7 +150,7 @@ class Connection:
         self.selector_events = selector_events
         self.ibuf = bytearray()
         self.obuf = bytearray()
-        self.lastactive = time.time()
+        self.lastactive = 0
         self.lastreadlength = 100 * 1024
 
 
@@ -178,7 +178,7 @@ class PeerConnection(Connection):
         self.filedown = None
         self.fileupl = None
         self.has_post_init_activity = False
-        self.lastcallback = time.time()
+        self.lastcallback = 0
 
 
 class SoulseekNetworkThread(Thread):
@@ -252,7 +252,7 @@ class SoulseekNetworkThread(Thread):
         self._total_downloads = 0
         self._total_download_bandwidth = 0
         self._total_upload_bandwidth = 0
-        self._last_cycle_time = time.time()
+        self._last_cycle_time = 0
         self._current_cycle_loop_count = 0
         self._last_cycle_loop_count = 0
         self._loops_per_second = 0
@@ -547,11 +547,9 @@ class SoulseekNetworkThread(Thread):
 
         self._download_limit_split = int(limit)
 
-    def _calc_loops_per_second(self):
+    def _calc_loops_per_second(self, current_time):
         """ Calculate number of loops per second. This value is used to split the
         per-second transfer speed limit evenly for each loop. """
-
-        current_time = time.time()
 
         if current_time - self._last_cycle_time >= 1:
             self._loops_per_second = (self._last_cycle_loop_count + self._current_cycle_loop_count) // 2
@@ -1976,7 +1974,7 @@ class SoulseekNetworkThread(Thread):
 
     """ Input/Output """
 
-    def _process_ready_input_socket(self, sock, conn_obj_in_progress=None, conn_obj_established=None):
+    def _process_ready_input_socket(self, sock, current_time, conn_obj_in_progress=None, conn_obj_established=None):
 
         if sock is self._listen_socket:
             # Manage incoming connections to listening socket
@@ -2020,7 +2018,7 @@ class SoulseekNetworkThread(Thread):
                 self._set_conn_speed_limit(sock, self._download_limit_split, self._dlimits)
 
             try:
-                if not self._read_data(conn_obj_established):
+                if not self._read_data(conn_obj_established, current_time):
                     # No data received, socket was likely closed remotely
                     self._close_connection(self._conns, sock)
                     return False
@@ -2063,7 +2061,7 @@ class SoulseekNetworkThread(Thread):
                 self._set_conn_speed_limit(sock, self._upload_limit_split, self._ulimits)
 
             try:
-                self._write_data(conn_obj_established)
+                self._write_data(conn_obj_established, current_time)
 
             except OSError as error:
                 log.add_conn("Cannot write data to connection %(addr)s, closing connection. Error: %(error)s", {
@@ -2083,7 +2081,7 @@ class SoulseekNetworkThread(Thread):
             conn_obj_established = self._conns.get(sock)
 
             if selector_events & selectors.EVENT_READ:
-                if not self._process_ready_input_socket(sock, conn_obj_in_progress, conn_obj_established):
+                if not self._process_ready_input_socket(sock, current_time, conn_obj_in_progress, conn_obj_established):
                     continue
 
             if selector_events & selectors.EVENT_WRITE:
@@ -2144,11 +2142,11 @@ class SoulseekNetworkThread(Thread):
             elif msg_type == MessageType.SERVER:
                 self._process_server_output(msg_obj)
 
-    def _read_data(self, conn_obj):
+    def _read_data(self, conn_obj, current_time):
 
         sock = conn_obj.sock
         limit = self._dlimits.get(sock)
-        conn_obj.lastactive = time.time()
+        conn_obj.lastactive = current_time
 
         data = sock.recv(conn_obj.lastreadlength)
         conn_obj.ibuf.extend(data)
@@ -2166,12 +2164,12 @@ class SoulseekNetworkThread(Thread):
 
         return True
 
-    def _write_data(self, conn_obj):
+    def _write_data(self, conn_obj, current_time):
 
         sock = conn_obj.sock
         limit = self._ulimits.get(sock)
         prev_active = conn_obj.lastactive
-        conn_obj.lastactive = time.time()
+        conn_obj.lastactive = current_time
 
         if conn_obj.obuf:
             if limit is None:
@@ -2209,7 +2207,6 @@ class SoulseekNetworkThread(Thread):
 
             if finished or bytes_send > 0:
                 self._total_upload_bandwidth += bytes_send
-                current_time = time.time()
 
                 if finished or (current_time - conn_obj.lastcallback) > 1:
                     # We save resources by not sending data back to core
@@ -2296,7 +2293,7 @@ class SoulseekNetworkThread(Thread):
             self._ulimits = {}
             self._dlimits = {}
 
-            self._calc_loops_per_second()
+            self._calc_loops_per_second(current_time)
 
             # Don't exhaust the CPU
             time.sleep(1 / 60)
