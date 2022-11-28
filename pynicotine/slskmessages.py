@@ -22,6 +22,8 @@ import struct
 import zlib
 
 from operator import itemgetter
+from socket import inet_aton
+from socket import inet_ntoa
 
 from pynicotine.config import config
 
@@ -33,9 +35,9 @@ server messages and p2p messages (between clients). """
 UINT_LIMIT = 4294967295
 UINT64_LIMIT = 18446744073709551615
 
-INT_UNPACK = struct.Struct("<i").unpack
-UINT_UNPACK = struct.Struct("<I").unpack
-UINT64_UNPACK = struct.Struct("<Q").unpack
+INT_UNPACK = struct.Struct("<i").unpack_from
+UINT_UNPACK = struct.Struct("<I").unpack_from
+UINT64_UNPACK = struct.Struct("<Q").unpack_from
 
 INT_PACK = struct.Struct("<i").pack
 UINT_PACK = struct.Struct("<I").pack
@@ -344,7 +346,7 @@ class SlskMessage:
     @staticmethod
     def unpack_bytes(message, start=0):
 
-        length = UINT_UNPACK(message[start:start + 4])[0]
+        length = UINT_UNPACK(message, start)[0]
         content = message[start + 4:start + length + 4]
 
         return start + 4 + length, content
@@ -359,7 +361,7 @@ class SlskMessage:
     @staticmethod
     def unpack_string(message, start=0):
 
-        length = UINT_UNPACK(message[start:start + 4])[0]
+        length = UINT_UNPACK(message, start)[0]
         string = message[start + 4:start + length + 4]
 
         try:
@@ -381,7 +383,7 @@ class SlskMessage:
 
     @staticmethod
     def unpack_ip(message, start=0):
-        return start + 4, socket.inet_ntoa(bytes(message[start:start + 4][::-1]))
+        return start + 4, inet_ntoa(message[start:start + 4][::-1].tobytes())
 
     @staticmethod
     def unpack_uint8(message, start=0):
@@ -389,15 +391,15 @@ class SlskMessage:
 
     @staticmethod
     def unpack_int32(message, start=0):
-        return start + 4, INT_UNPACK(message[start:start + 4])[0]
+        return start + 4, INT_UNPACK(message, start)[0]
 
     @staticmethod
     def unpack_uint32(message, start=0):
-        return start + 4, UINT_UNPACK(message[start:start + 4])[0]
+        return start + 4, UINT_UNPACK(message, start)[0]
 
     @staticmethod
     def unpack_uint64(message, start=0):
-        return start + 8, UINT64_UNPACK(message[start:start + 8])[0]
+        return start + 8, UINT64_UNPACK(message, start)[0]
 
     def parse_network_message(self, _message):
         """ Extracts information from the message and sets up fields
@@ -1422,7 +1424,7 @@ class SearchParent(ServerMessage):
         return '.'.join(strlist)
 
     def make_network_message(self):
-        return self.pack_uint32(socket.inet_aton(self.strunreverse(self.parentip)))
+        return self.pack_uint32(inet_aton(self.strunreverse(self.parentip)))
 
 
 class ParentMinSpeed(ServerMessage):
