@@ -25,7 +25,6 @@
 This module contains utility functions.
 """
 
-import json
 import os
 import pickle
 import sys
@@ -238,38 +237,6 @@ def open_log_callback(path):
 
 def delete_log_callback(path):
     os.remove(encode_path(path))
-
-
-def get_latest_version():
-
-    response = http_request(
-        "https", "pypi.org", "/pypi/nicotine-plus/json",
-        headers={"User-Agent": config.application_name}
-    )
-    data = json.loads(response)
-
-    hlatest = data['info']['version']
-    latest = int(make_version(hlatest))
-
-    try:
-        date = data['releases'][hlatest][0]['upload_time']
-    except Exception:
-        date = None
-
-    return hlatest, latest, date
-
-
-def make_version(version):
-
-    major, minor, patch = version.split(".")[:3]
-    stable = 1
-
-    if "dev" in version or "rc" in version:
-        # Example: 2.0.1.dev1
-        # A dev version will be one less than a stable version
-        stable = 0
-
-    return (int(major) << 24) + (int(minor) << 16) + (int(patch.split("rc", 1)[0]) << 8) + stable
 
 
 def human_length(seconds):
