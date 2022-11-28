@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-11-28 00:38+0200\n"
-"PO-Revision-Date: 2022-11-27 22:57+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2022-11-28 11:55+0000\n"
+"Last-Translator: Maite Guix <maite.guix@gmail.com>\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ca/>\n"
 "Language: ca\n"
@@ -54,9 +54,8 @@ msgid "Graphical client for the Soulseek peer-to-peer network"
 msgstr "Client gràfic per a la xarxa P2P de Soulseek"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:12
-#, fuzzy
 msgid "Soulseek;Nicotine;sharing;chat;messaging;P2P;peer-to-peer;GTK;"
-msgstr "Soulseek; Nicotine;compartir;música; P2P;d'igual a igual; GTK;"
+msgstr "Soulseek;Nicotine;compartir;xat;missatgeria;P2P;d'igual a igual;GTK;"
 
 #: pynicotine/__init__.py:36
 #, python-format
@@ -80,9 +79,8 @@ msgid "dir"
 msgstr "dir"
 
 #: pynicotine/__init__.py:50
-#, fuzzy
 msgid "alternative directory for user data and plugins"
-msgstr "utilitzar un directori no predeterminat per als connectors"
+msgstr "directori alternatiu per a dades d'usuari i connectors"
 
 #: pynicotine/__init__.py:54
 msgid "start the program without showing window"
@@ -201,9 +199,8 @@ msgid "Unable to connect to the server. Reason: %s"
 msgstr "No es pot connectar al servidor. Motiu: %s"
 
 #: pynicotine/core.py:497
-#, fuzzy
 msgid "Cannot Connect"
-msgstr "Connectar"
+msgstr "No es pot connectar"
 
 #: pynicotine/core.py:520
 #, python-format
@@ -213,7 +210,7 @@ msgstr ""
 "línia"
 
 #: pynicotine/core.py:523
-#, fuzzy, python-format
+#, python-format
 msgid "IP address of user %(user)s: %(ip)s, port %(port)i%(country)s"
 msgstr "L'adreça IP d'usuari %(user)s és %(ip)s, port %(port)i%(country)s"
 
@@ -223,9 +220,8 @@ msgid "IP Address"
 msgstr "Adreça IP"
 
 #: pynicotine/core.py:574
-#, fuzzy
 msgid "Soulseek Announcement"
-msgstr "Client de Soulseek"
+msgstr "Anunci de Soulseek"
 
 #: pynicotine/core.py:582
 #, python-format
@@ -233,7 +229,6 @@ msgid "%i privileged users"
 msgstr "%i usuaris amb privilegis"
 
 #: pynicotine/core.py:592
-#, fuzzy
 msgid ""
 "You have no Soulseek privileges. Privileges are not required, but allow your "
 "downloads to be queued ahead of non-privileged users."
@@ -242,22 +237,21 @@ msgstr ""
 "teves descàrregues es posin en cua abans que els usuaris no privilegiats."
 
 #: pynicotine/core.py:595
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of "
 "Soulseek privileges left"
 msgstr ""
-"Queden %(days)i dies, %(hours)i hores, %(minutes)i minuts, %(seconds)i "
-"segons de privilegis de descàrrega."
+"%(days)i dies, %(hours)i hores, %(minutes)i minuts, %(seconds)i segons de "
+"privilegis soulseek"
 
 #: pynicotine/core.py:613
 msgid "Your password has been changed"
 msgstr "S'ha canviat la contrasenya"
 
 #: pynicotine/core.py:613
-#, fuzzy
 msgid "Password Changed"
-msgstr "Canvi de contrasenya rebutjat"
+msgstr "S'ha canviat la contrasenya"
 
 #: pynicotine/geoip.py:24
 msgid "Andorra"
@@ -1317,9 +1311,8 @@ msgid "Remember choice"
 msgstr "Recordar l'elecció"
 
 #: pynicotine/gtkgui/application.py:436
-#, fuzzy
 msgid "Shares Not Available"
-msgstr "Accions no disponibles"
+msgstr "Recursos compartits no disponibles"
 
 #: pynicotine/gtkgui/application.py:437
 #, fuzzy
@@ -1993,7 +1986,7 @@ msgstr "Interfície d'usuari"
 #: pynicotine/gtkgui/dialogs/preferences.py:2256
 #: pynicotine/gtkgui/ui/settings/shares.ui:11
 msgid "Shares"
-msgstr "Compartits"
+msgstr "Recursos compartits"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2257
 #: pynicotine/gtkgui/mainwindow.py:944 pynicotine/gtkgui/mainwindow.py:1269
@@ -2302,7 +2295,7 @@ msgstr "_Configurar els recursos compartits"
 
 #: pynicotine/gtkgui/mainwindow.py:727
 msgid "_Browse Public Shares"
-msgstr "_ Examinar per compartits públics"
+msgstr "_ Navegar per compartits públics"
 
 #: pynicotine/gtkgui/mainwindow.py:728
 msgid "Bro_wse Buddy Shares"
@@ -2362,7 +2355,7 @@ msgstr "Cercar fitxers"
 #: pynicotine/gtkgui/ui/mainwindow.ui:935
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:204
 msgid "Browse Shares"
-msgstr "Examinar els compartits"
+msgstr "Navegar per compartits"
 
 #: pynicotine/gtkgui/mainwindow.py:948 pynicotine/gtkgui/ui/mainwindow.ui:1261
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:746
@@ -3528,11 +3521,10 @@ msgid "Failed to send number of shared files to the server: %s"
 msgstr "No s'ha pogut enviar el nombre de fitxers compartits al servidor: %s"
 
 #: pynicotine/shares.py:865
-#, fuzzy
 msgid "Rescan aborted due to unavailable shares"
 msgstr ""
-"S'ha cancel·lat la tornada de l'exploració perquè no hi ha hagut recursos "
-"compartits"
+"S'ha cancel·lat la reexploració perquè els recursos compartits no estàn "
+"disponibles"
 
 #: pynicotine/shares.py:922
 #, python-format
@@ -3549,7 +3541,7 @@ msgstr "No s'ha pogut recuperar la carpeta compartida %(folder)s: %(error)s"
 #, python-format
 msgid "Unable to read shares database. Please rescan your shares. Error: %s"
 msgstr ""
-"No es pot llegir la base de dades compartides. Torna a examinar les teus "
+"No es pot llegir la base de dades de compartits. Torna a examinar les teus "
 "compartits. Error: %s"
 
 #: pynicotine/slskproto.py:310
