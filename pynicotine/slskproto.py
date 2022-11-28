@@ -163,7 +163,7 @@ class ServerConnection(Connection):
 
 class PeerConnection(Connection):
 
-    __slots__ = ("init", "fileinit", "filedown", "fileupl", "lastcallback")
+    __slots__ = ("init", "fileinit", "filedown", "fileupl", "has_post_init_activity", "lastcallback")
 
     def __init__(self, sock=None, addr=None, events=None, init=None):
 
@@ -173,6 +173,7 @@ class PeerConnection(Connection):
         self.fileinit = None
         self.filedown = None
         self.fileupl = None
+        self.has_post_init_activity = False
         self.lastcallback = time.time()
 
 
@@ -186,6 +187,7 @@ class SlskProtoThread(threading.Thread):
 
     IN_PROGRESS_STALE_AFTER = 2
     CONNECTION_MAX_IDLE = 60
+    CONNECTION_MAX_IDLE_GHOST = 10
     CONNECTION_BACKLOG_LENGTH = 4096
     SOCKET_READ_BUFFER_SIZE = 1048576
     SOCKET_WRITE_BUFFER_SIZE = 1048576
@@ -1044,7 +1046,18 @@ class SlskProtoThread(threading.Thread):
             self.close_connection(self._conns, sock)
             return True
 
-        if (current_time - conn_obj.lastactive) > self.CONNECTION_MAX_IDLE:
+        time_diff = (current_time - conn_obj.lastactive)
+
+        if not conn_obj.has_post_init_activity and time_diff > self.CONNECTION_MAX_IDLE_GHOST:
+            # "Ghost" connections can appear when an indirect connection is established,
+            # search results arrive, we close the connection, and the direct connection attempt
+            # succeeds afterwrds. Since the peer already sent a search result message, this connection
+            # idles without any messages ever being sent beyond PeerInit. Close it sooner than regular
+            # idling connections to prevent connections from piling up.
+            self.close_connection(self._conns, sock)
+            return True
+
+        if time_diff > self.CONNECTION_MAX_IDLE:
             # No recent activity, peer connection is stale
             self.close_connection(self._conns, sock)
             return True
@@ -1551,6 +1564,7 @@ class SlskProtoThread(threading.Thread):
 
         if idx:
             conn_obj.ibuf = msg_buffer[idx:]
+            conn_obj.has_post_init_activity = True
 
         if search_result_received and not self.connection_still_active(conn_obj):
             # Forcibly close peer connection. Only used after receiving a search result,
@@ -1580,6 +1594,7 @@ class SlskProtoThread(threading.Thread):
         conn_obj.obuf.extend(msg_obj.pack_uint32(PEER_MESSAGE_CODES[msg_class]))
         conn_obj.obuf.extend(msg)
 
+        conn_obj.has_post_init_activity = True
         self.modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
 
     """ File Connection """
@@ -1658,6 +1673,7 @@ class SlskProtoThread(threading.Thread):
 
         if idx:
             conn_obj.ibuf = msg_buffer[idx:]
+            conn_obj.has_post_init_activity = True
 
     def process_file_output(self, msg_obj):
 
@@ -1692,6 +1708,7 @@ class SlskProtoThread(threading.Thread):
             conn_obj = self._conns[msg_obj.init.sock]
             conn_obj.obuf.extend(msg)
 
+        conn_obj.has_post_init_activity = True
         self.modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
 
     """ Distributed Connection """
@@ -1816,6 +1833,7 @@ class SlskProtoThread(threading.Thread):
 
         if idx:
             conn_obj.ibuf = msg_buffer[idx:]
+            conn_obj.has_post_init_activity = True
 
     def process_distrib_output(self, msg_obj):
 
@@ -1839,6 +1857,7 @@ class SlskProtoThread(threading.Thread):
         conn_obj.obuf.extend(msg_obj.pack_uint8(DISTRIBUTED_MESSAGE_CODES[msg_class]))
         conn_obj.obuf.extend(msg)
 
+        conn_obj.has_post_init_activity = True
         self.modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
 
     """ Internal Messages """
