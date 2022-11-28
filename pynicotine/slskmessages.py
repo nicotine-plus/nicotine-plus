@@ -17,13 +17,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import socket
-import struct
 import zlib
 
 from operator import itemgetter
 from socket import inet_aton
 from socket import inet_ntoa
+from struct import Struct
 
 from pynicotine.config import config
 
@@ -35,13 +34,13 @@ server messages and p2p messages (between clients). """
 UINT_LIMIT = 4294967295
 UINT64_LIMIT = 18446744073709551615
 
-INT_UNPACK = struct.Struct("<i").unpack_from
-UINT_UNPACK = struct.Struct("<I").unpack_from
-UINT64_UNPACK = struct.Struct("<Q").unpack_from
+INT_UNPACK = Struct("<i").unpack_from
+UINT_UNPACK = Struct("<I").unpack_from
+UINT64_UNPACK = Struct("<Q").unpack_from
 
-INT_PACK = struct.Struct("<i").pack
-UINT_PACK = struct.Struct("<I").pack
-UINT64_PACK = struct.Struct("<Q").pack
+INT_PACK = Struct("<i").pack
+UINT_PACK = Struct("<I").pack
+UINT64_PACK = Struct("<Q").pack
 
 SEARCH_TOKENS_ALLOWED = set()
 
