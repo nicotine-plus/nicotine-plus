@@ -16,28 +16,27 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import glob
+import os
+
 from unittest import TestCase
 
-from pynicotine.i18n import build_translations
-from pynicotine.i18n import get_translation_paths
 from pynicotine.i18n import LANGUAGES
+from pynicotine.i18n import LOCALE_PATH
+from pynicotine.i18n import build_translations
 
 
 class I18nTest(TestCase):
 
     def test_build_translations(self):
 
-        languages = build_translations()
-        mo_files = get_translation_paths()
+        built_language_codes = build_translations()
+        mo_file_paths = glob.glob(os.path.join(LOCALE_PATH, "**", "*.mo"), recursive=True)
 
         for language_code, _language_name in LANGUAGES:
             if language_code == "en":
                 # English is the default language
                 continue
 
-            self.assertIn(language_code, languages)
-            self.assertIn(
-                ("share/locale/" + language_code + "/LC_MESSAGES",
-                 ["mo/" + language_code + "/LC_MESSAGES/nicotine.mo"]),
-                mo_files
-            )
+            self.assertIn(language_code, built_language_codes)
+            self.assertIn(os.path.join(LOCALE_PATH, language_code, "LC_MESSAGES", "nicotine.mo"), mo_file_paths)

@@ -172,21 +172,19 @@ class Application:
                 libintl_path = os.path.join(executable_folder, libintl_path)
 
         import locale
-        from pynicotine.i18n import get_translation_mo_path
+        from pynicotine.i18n import LOCALE_PATH
         from pynicotine.i18n import TRANSLATION_DOMAIN
-
-        mo_path = get_translation_mo_path()
 
         if libintl_path is not None:
             import ctypes
             libintl = ctypes.cdll.LoadLibrary(libintl_path)
 
             # Arguments need to be encoded, otherwise translations fail
-            libintl.bindtextdomain(TRANSLATION_DOMAIN.encode(), mo_path.encode(sys.getfilesystemencoding()))
+            libintl.bindtextdomain(TRANSLATION_DOMAIN.encode(), LOCALE_PATH.encode(sys.getfilesystemencoding()))
             libintl.bind_textdomain_codeset(TRANSLATION_DOMAIN.encode(), b"UTF-8")
 
         elif hasattr(locale, "bindtextdomain") and hasattr(locale, "textdomain"):
-            locale.bindtextdomain(TRANSLATION_DOMAIN, mo_path)
+            locale.bindtextdomain(TRANSLATION_DOMAIN, LOCALE_PATH)
 
     def set_up_actions(self):
 

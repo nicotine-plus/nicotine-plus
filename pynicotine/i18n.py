@@ -24,6 +24,7 @@ import sys
 
 CURRENT_FOLDER = os.path.dirname(os.path.realpath(__file__))
 BASE_FOLDER = os.path.normpath(os.path.join(CURRENT_FOLDER, ".."))
+LOCALE_PATH = os.path.join(CURRENT_FOLDER, "locale")
 TRANSLATION_DOMAIN = "nicotine"
 LANGUAGES = (
     ("ca", "Català"),
@@ -80,42 +81,13 @@ def _set_default_system_language(language=None):
         os.environ["LANGUAGE"] = language
 
 
-def get_translation_mo_path():
-    """ Retrieves the appropriate path for translation files, based on how Nicotine+ is installed """
-
-    # Running from Git
-    local_mo_path = os.path.join(BASE_FOLDER, "mo")
-
-    if gettext.find(TRANSLATION_DOMAIN, localedir=local_mo_path):
-        return local_mo_path
-
-    # Windows/macOS builds
-    if getattr(sys, 'frozen', False):
-        executable_folder = os.path.dirname(sys.executable)
-
-        if sys.platform == "darwin":
-            prefix = os.path.abspath(os.path.join(executable_folder, "..", "Resources"))
-        else:
-            prefix = executable_folder
-
-    # Flatpak
-    elif os.path.exists("/.flatpak-info"):
-        prefix = "/app"
-
-    # Other Unix-like systems
-    else:
-        prefix = sys.prefix
-
-    return os.path.join(prefix, "share", "locale")
-
-
 def apply_translations(language=None):
 
     # Use the same language as the rest of the system
     _set_default_system_language(language)
 
     # Install translations for Python
-    gettext.install(TRANSLATION_DOMAIN, get_translation_mo_path())
+    gettext.install(TRANSLATION_DOMAIN, LOCALE_PATH)
 
 
 def build_translations():
@@ -128,11 +100,11 @@ def build_translations():
         lang = os.path.basename(po_file[:-3])
         languages.append(lang)
 
-        mo_dir = os.path.join("mo", lang, "LC_MESSAGES")
-        mo_file = os.path.join(mo_dir, "nicotine.mo")
+        lc_messages_dir = os.path.join(LOCALE_PATH, lang, "LC_MESSAGES")
+        mo_file = os.path.join(lc_messages_dir, "nicotine.mo")
 
-        if not os.path.exists(mo_dir):
-            os.makedirs(mo_dir)
+        if not os.path.exists(lc_messages_dir):
+            os.makedirs(lc_messages_dir)
 
         subprocess.check_call(["msgfmt", "--check", po_file, "-o", mo_file])
 
@@ -145,20 +117,3 @@ def build_translations():
         subprocess.check_call(["msgfmt", "--xml", "--template=" + appdata_file, "-d", "po", "-o", appdata_file[:-3]])
 
     return languages
-
-
-def get_translation_paths():
-    """ Returns the target path and current path of built .mo translation files """
-
-    mo_entries = []
-
-    for po_file in glob.glob(os.path.join(BASE_FOLDER, "po", "*.po")):
-        lang = os.path.basename(po_file[:-3])
-
-        mo_dir = os.path.join("mo", lang, "LC_MESSAGES")
-        mo_file = os.path.join(mo_dir, "nicotine.mo")
-
-        targetpath = os.path.join("share", "locale", lang, "LC_MESSAGES")
-        mo_entries.append((targetpath, [mo_file]))
-
-    return mo_entries

@@ -265,10 +265,6 @@ def add_translations():
     languages = tuple(build_translations())
 
     add_files(
-        folder_path=os.path.join(PROJECT_PATH, "mo"), output_path="share/locale",
-        starts_with=languages, ends_with="nicotine.mo", recursive=True, resource=True
-    )
-    add_files(
         folder_path=os.path.join(SYS_BASE, "share/locale"), output_path="share/locale",
         starts_with=languages, ends_with="gtk%s0.mo" % GTK_VERSION, recursive=True, resource=True
     )
