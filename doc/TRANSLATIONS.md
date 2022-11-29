@@ -76,7 +76,7 @@ If Nicotine+ doesn't find the `.mo` files in your project folder, it will fall b
 
 ## Testing Different Languages
 
-Nicotine+ will try to autodetect your language based on what locale you are using. For testing purposes Nicotine+ can be forced to use another language. You can do this by selecting a language in Preferences -> User Interface.
+Nicotine+ will try to automatically detect your language based on the system locale, or it can be manually selected in Preferences -> User Interface -> Language (requires a restart).
 
 
 ## Adding Yourself to Translators
