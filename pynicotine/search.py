@@ -284,6 +284,7 @@ class Search:
 
         if wish not in config.sections["server"]["autosearch"]:
             config.sections["server"]["autosearch"].append(wish)
+            config.write_configuration()
 
         self.add_search(wish, "wishlist", ignore=True)
 
@@ -293,6 +294,7 @@ class Search:
 
         if wish in config.sections["server"]["autosearch"]:
             config.sections["server"]["autosearch"].remove(wish)
+            config.write_configuration()
 
             for search in self.searches.values():
                 if search["term"] == wish and search["mode"] == "wishlist":
