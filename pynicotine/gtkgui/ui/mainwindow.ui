@@ -1336,7 +1336,37 @@
                                     <child>
                                       <object class="GtkBox" id="userlist_end">
                                         <property name="visible">True</property>
+                                        <property name="spacing">6</property>
                                         <property name="valign">center</property>
+                                        <child>
+                                          <object class="GtkButton" id="_message_buddies_button">
+                                            <property name="visible">True</property>
+                                            <property name="action-name">app.message-buddies</property>
+                                            <child>
+                                              <object class="GtkBox">
+                                                <property name="visible">True</property>
+                                                <property name="spacing">6</property>
+                                                <child>
+                                                  <object class="GtkImage">
+                                                    <property name="visible">True</property>
+                                                    <property name="icon-name">mail-message-new-symbolic</property>
+                                                  </object>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkLabel">
+                                                    <property name="visible">True</property>
+                                                    <property name="label" translatable="yes">_Message All</property>
+                                                    <property name="use-underline">True</property>
+                                                    <property name="mnemonic-widget">_message_buddies_button</property>
+                                                  </object>
+                                                </child>
+                                              </object>
+                                            </child>
+                                            <style>
+                                              <class name="image-text-button"/>
+                                            </style>
+                                          </object>
+                                        </child>
                                       </object>
                                     </child>
                                   </object>
@@ -1842,7 +1872,6 @@
                 <child>
                   <object class="GtkButton" id="user_status_button">
                     <property name="visible">True</property>
-                    <property name="sensitive">False</property>
                     <property name="action-name">app.away</property>
                     <child>
                       <object class="GtkBox">

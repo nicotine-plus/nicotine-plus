@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on November 26, 2022
+Last updated on November 29, 2022
 
 Since the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify or extend the protocol in ways that negatively impact the network.
 
@@ -1742,7 +1742,7 @@ The server sends us a list of operators in a specific room, that we can remove o
 
 ### MessageUsers
 
-Sends a broadcast private message to the given list of users.
+Sends a broadcast private message to the given list of online users.
 
 ### Data Order
 

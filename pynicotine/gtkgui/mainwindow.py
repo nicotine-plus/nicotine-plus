@@ -438,12 +438,11 @@ class MainWindow(Window):
 
         # Action status
         self.application.lookup_action("connect").set_enabled(not is_online)
-        self.application.lookup_action("disconnect").set_enabled(is_online)
-        self.application.lookup_action("soulseek-privileges").set_enabled(is_online)
-        self.application.lookup_action("away-accel").set_enabled(is_online)
-        self.application.lookup_action("away").set_enabled(is_online)
 
-        self.user_status_button.set_sensitive(is_online)
+        for action_name in ("disconnect", "soulseek-privileges", "away-accel", "away",
+                            "message-downloading-users", "message-buddies"):
+            self.application.lookup_action(action_name).set_enabled(is_online)
+
         self.application.tray_icon.update_user_status()
 
         # Away mode

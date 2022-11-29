@@ -167,6 +167,22 @@ class PrivateChat:
 
         events.emit("send-private-message", user, ui_message)
 
+    def send_message_users(self, target, message):
+
+        if not message:
+            return
+
+        users = None
+
+        if target == "buddies":
+            users = set(core.userlist.buddies)
+
+        elif target == "downloading":
+            users = core.transfers.get_downloading_users()
+
+        if users:
+            core.queue.append(slskmessages.MessageUsers(users, message))
+
     def _get_peer_address(self, msg):
         """ Server code: 3 """
         """ Received a user's IP address, process any queued private messages and check

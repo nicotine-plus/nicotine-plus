@@ -312,14 +312,14 @@ class MessageDialog(Window):
 class EntryDialog(MessageDialog):
 
     def __init__(self, parent, title, callback, message=None, callback_data=None, default="", use_second_entry=False,
-                 second_default="", option_label="", option_value=False, visibility=True,
+                 second_default="", option_label="", option_value=False, action_button_label=_("_OK"), visibility=True,
                  droplist=None, second_droplist=None):
 
         super().__init__(parent=parent, title=title, message=message, message_type=Gtk.MessageType.OTHER,
                          callback=callback, callback_data=callback_data, width=500,
                          buttons=[
-                             (_("Cancel"), Gtk.ResponseType.CANCEL),
-                             (_("OK"), Gtk.ResponseType.OK)])
+                             (_("_Cancel"), Gtk.ResponseType.CANCEL),
+                             (action_button_label, Gtk.ResponseType.OK)])
 
         if droplist:
             self.entry = self._add_combobox(droplist, visibility)

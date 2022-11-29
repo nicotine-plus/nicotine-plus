@@ -2080,7 +2080,7 @@ class PrivateRoomOwned(ServerMessage):
 
 class MessageUsers(ServerMessage):
     """ Server code: 149 """
-    """ Sends a broadcast private message to the given list of users. """
+    """ Sends a broadcast private message to the given list of online users. """
 
     def __init__(self, users=None, msg=None):
         self.users = users
@@ -2094,6 +2094,7 @@ class MessageUsers(ServerMessage):
             msg.extend(self.pack_string(user))
 
         msg.extend(self.pack_string(self.msg))
+        return msg
 
 
 class JoinPublicRoom(ServerMessage):

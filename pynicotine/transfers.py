@@ -1833,6 +1833,17 @@ class Transfers:
 
         return sum(1 for upload in self.uploads if upload.status == "Queued")
 
+    def get_downloading_users(self):
+
+        statuses = ("Queued", "Getting status", "Transferring")
+        users = set()
+
+        for upload in self.uploads:
+            if upload.status in statuses:
+                users.add(upload.user)
+
+        return users
+
     def get_default_download_folder(self, user):
 
         downloaddir = config.sections["transfers"]["downloaddir"]

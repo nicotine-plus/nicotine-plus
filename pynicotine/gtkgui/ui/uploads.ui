@@ -176,6 +176,36 @@
               </object>
             </child>
             <child>
+              <object class="GtkButton" id="_message_all_button">
+                <property name="visible">True</property>
+                <property name="tooltip-text" translatable="yes">Message All</property>
+                <property name="action-name">app.message-downloading-users</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="spacing">6</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">True</property>
+                        <property name="icon-name">mail-message-new-symbolic</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="ellipsize">end</property>
+                        <property name="label" translatable="yes">Message All</property>
+                        <property name="mnemonic-widget">_message_all_button</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <style>
+                  <class name="flat"/>
+                </style>
+              </object>
+            </child>
+            <child>
               <object class="GtkMenuButton" id="clear_all_button">
                 <property name="visible">True</property>
                 <property name="direction">up</property>

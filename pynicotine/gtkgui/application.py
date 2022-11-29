@@ -224,6 +224,14 @@ class Application:
         action.connect("change-state", self.on_alternative_speed_limit)
         self.add_action(action)
 
+        action = Gio.SimpleAction(name="message-downloading-users", enabled=False)
+        action.connect("activate", self.on_message_downloading_users)
+        self.add_action(action)
+
+        action = Gio.SimpleAction(name="message-buddies", enabled=False)
+        action.connect("activate", self.on_message_buddies)
+        self.add_action(action)
+
         action = Gio.SimpleAction(name="wishlist")
         action.connect("activate", self.on_wishlist)
         self.add_action(action)
@@ -560,6 +568,39 @@ class Application:
             self.about = About(self)
 
         self.about.show()
+
+    def on_message_users_response(self, dialog, _response_id, target):
+
+        message = dialog.get_entry_value()
+
+        if message:
+            core.privatechat.send_message_users(target, message)
+
+    def on_message_downloading_users(self, *_args):
+
+        from pynicotine.gtkgui.widgets.dialogs import EntryDialog
+
+        EntryDialog(
+            parent=self.window,
+            title=_("Message Downloading Users"),
+            message=_("Send private message to all users who are downloading from you:"),
+            action_button_label=_("_Send Message"),
+            callback=self.on_message_users_response,
+            callback_data="downloading"
+        ).show()
+
+    def on_message_buddies(self, *_args):
+
+        from pynicotine.gtkgui.widgets.dialogs import EntryDialog
+
+        EntryDialog(
+            parent=self.window,
+            title=_("Message Buddies"),
+            message=_("Send private message to all online buddies:"),
+            action_button_label=_("_Send Message"),
+            callback=self.on_message_users_response,
+            callback_data="buddies"
+        ).show()
 
     def on_rescan_shares(self, *_args):
         core.shares.rescan_shares()
