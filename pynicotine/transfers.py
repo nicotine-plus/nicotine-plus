@@ -2461,7 +2461,7 @@ class Transfers:
 
         events.emit("clear-download", download, update_parent)
 
-    def clear_downloads(self, downloads=None, statuses=None):
+    def clear_downloads(self, downloads=None, statuses=None, clear_deleted=False):
 
         if downloads is None:
             # Clear all downloads
@@ -2471,9 +2471,17 @@ class Transfers:
             if statuses and download.status not in statuses:
                 continue
 
+            if clear_deleted:
+                if download.status != "Finished":
+                    continue
+
+                if core.transfers.get_existing_download_path(
+                        download.user, download.filename, download.path, download.size):
+                    continue
+
             self.clear_download(download, update_parent=False)
 
-        events.emit("clear-downloads", downloads, statuses)
+        events.emit("clear-downloads", downloads, statuses, clear_deleted)
 
     def clear_upload(self, upload, denied_message=None, update_parent=True):
 

@@ -683,7 +683,7 @@ class TransferList:
             self.update_parent_rows(transfer)
             self.update_num_users_files()
 
-    def clear_transfers(self, _transfers, _statuses):
+    def clear_transfers(self, *_args):
         self.update_parent_rows()
         self.update_num_users_files()
 

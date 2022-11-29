@@ -63,6 +63,7 @@ class Downloads(TransferList):
             ("#" + _("Finished"), self.on_clear_finished),
             ("#" + _("Paused"), self.on_clear_paused),
             ("#" + _("Filtered"), self.on_clear_filtered),
+            ("#" + _("Deleted"), self.on_clear_deleted),
             ("#" + _("Queued…"), self.on_try_clear_queued),
             ("", None),
             ("#" + _("Everything…"), self.on_try_clear_all),
@@ -208,3 +209,6 @@ class Downloads(TransferList):
 
     def on_clear_filtered(self, *_args):
         core.transfers.clear_downloads(statuses=["Filtered"])
+
+    def on_clear_deleted(self, *_args):
+        core.transfers.clear_downloads(clear_deleted=True)

@@ -179,7 +179,7 @@
               <object class="GtkMenuButton" id="clear_all_button">
                 <property name="visible">True</property>
                 <property name="direction">up</property>
-                <property name="tooltip-text" translatable="yes">Clear Downloads With Specific Status</property>
+                <property name="tooltip-text" translatable="yes">Clear Specific Downloads</property>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
