@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-11-28 00:38+0200\n"
-"PO-Revision-Date: 2022-11-28 22:41+0000\n"
+"PO-Revision-Date: 2022-11-29 14:53+0000\n"
 "Last-Translator: Maite Guix <maite.guix@gmail.com>\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ca/>\n"
@@ -3813,17 +3813,17 @@ msgstr "L'usuari %(user)s està llegint la teva informació d'usuari"
 #: pynicotine/userlist.py:223
 #, python-format
 msgid "%(user)s is away"
-msgstr "L'usuari %s és absent"
+msgstr "%(user)s és absent"
 
 #: pynicotine/userlist.py:226
 #, python-format
 msgid "%(user)s is online"
-msgstr "L'usuari %s està en línia"
+msgstr "%(user)s està en línia"
 
 #: pynicotine/userlist.py:229
 #, python-format
 msgid "%(user)s is offline"
-msgstr "L'usuari %s està fora de línia"
+msgstr "%(user)s està fora de línia"
 
 #: pynicotine/userlist.py:232
 msgid "Buddy Online Status"
@@ -4300,7 +4300,7 @@ msgstr "Netejar"
 
 #: pynicotine/gtkgui/ui/downloads.ui:151
 msgid "Clear All Finished/Filtered Downloads"
-msgstr "Netejar totes les descàrregues acabades i filtrades."
+msgstr "Netejar totes les descàrregues acabades i filtrades"
 
 #: pynicotine/gtkgui/ui/downloads.ui:167 pynicotine/gtkgui/ui/uploads.ui:167
 msgid "Clear Finished"
@@ -6235,7 +6235,6 @@ msgid "Save Shares List to Disk"
 msgstr "Desar la llista de recursos compartits al disc"
 
 #: pynicotine/gtkgui/ui/userbrowse.ui:182
-#, fuzzy
 msgid "Refresh Files"
 msgstr "Actualitzar fitxers"
 
