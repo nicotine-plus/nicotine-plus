@@ -356,7 +356,7 @@ class UserPopupMenu(PopupMenu):
             self.add_items(("#" + _("_Browse Files"), self.on_browse_user))
 
         if page != "userlist":
-            self.add_items(("$" + _("_Add to Buddy List"), self.on_add_to_list))
+            self.add_items(("$" + _("_Add Buddy"), self.on_add_to_list))
 
         self.add_items(
             ("#" + _("_Gift Privileges…"), self.on_give_privileges),
@@ -388,7 +388,7 @@ class UserPopupMenu(PopupMenu):
         self.editing = True
         self.actions[_("_Gift Privileges…")].set_enabled(bool(core.privileges_left))
 
-        add_to_list = _("_Add to Buddy List")
+        add_to_list = _("_Add Buddy")
 
         if add_to_list in self.actions:
             self.actions[add_to_list].set_state(GLib.Variant("b", self.user in core.userlist.buddies))

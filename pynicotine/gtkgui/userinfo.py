@@ -60,9 +60,15 @@ class UserInfos(IconNotebook):
 
         # Events
         for event_name, callback in (
+            ("add-buddy", self.add_remove_buddy),
+            ("ban-user", self.ban_unban_user),
+            ("ignore-user", self.ignore_unignore_user),
             ("peer-connection-closed", self.peer_connection_error),
             ("peer-connection-error", self.peer_connection_error),
+            ("remove-buddy", self.add_remove_buddy),
             ("server-disconnect", self.server_disconnect),
+            ("unban-user", self.ban_unban_user),
+            ("unignore-user", self.ignore_unignore_user),
             ("user-country", self.user_country),
             ("user-info-progress", self.user_info_progress),
             ("user-info-remove-user", self.remove_user),
@@ -106,6 +112,27 @@ class UserInfos(IconNotebook):
         page.clear()
         self.remove_page(page.container)
         del self.pages[user]
+
+    def ban_unban_user(self, user):
+
+        page = self.pages.get(user)
+
+        if page is not None:
+            page.update_ban_button_state()
+
+    def ignore_unignore_user(self, user):
+
+        page = self.pages.get(user)
+
+        if page is not None:
+            page.update_ignore_button_state()
+
+    def add_remove_buddy(self, user, *_args):
+
+        page = self.pages.get(user)
+
+        if page is not None:
+            page.update_buddy_button_state()
 
     def peer_connection_error(self, msg):
 
@@ -171,6 +198,8 @@ class UserInfo:
 
         ui_template = UserInterface(scope=self, path="userinfo.ui")
         (
+            self.add_remove_buddy_label,
+            self.ban_unban_user_label,
             self.container,
             self.country_icon,
             self.country_label,
@@ -178,6 +207,7 @@ class UserInfo:
             self.dislikes_list_container,
             self.free_upload_slots_label,
             self.horizontal_paned,
+            self.ignore_unignore_user_label,
             self.info_bar,
             self.likes_list_container,
             self.picture_container,
@@ -273,6 +303,7 @@ class UserInfo:
             ("#" + _("Save Picture"), self.on_save_picture)
         )
 
+        self.update_button_states()
         self.update_visuals()
         self.set_in_progress()
 
@@ -439,6 +470,26 @@ class UserInfo:
 
         self.progress_bar.set_fraction(fraction)
 
+    """ Button States """
+
+    def update_buddy_button_state(self):
+        label = _("Remove _Buddy") if self.user in core.userlist.buddies else _("Add _Buddy")
+        self.add_remove_buddy_label.set_text_with_mnemonic(label)
+
+    def update_ban_button_state(self):
+        label = _("Unban User") if core.network_filter.is_user_banned(self.user) else _("Ban User")
+        self.ban_unban_user_label.set_text(label)
+
+    def update_ignore_button_state(self):
+        label = _("Unignore User") if core.network_filter.is_user_ignored(self.user) else _("Ignore User")
+        self.ignore_unignore_user_label.set_text(label)
+
+    def update_button_states(self):
+
+        self.update_buddy_button_state()
+        self.update_ban_button_state()
+        self.update_ignore_button_state()
+
     """ Network Messages """
 
     def user_info_response(self, msg):
@@ -514,13 +565,28 @@ class UserInfo:
     def on_browse_user(self, *_args):
         core.userbrowse.browse_user(self.user)
 
-    def on_add_to_list(self, *_args):
+    def on_add_remove_buddy(self, *_args):
+
+        if self.user in core.userlist.buddies:
+            core.userlist.remove_buddy(self.user)
+            return
+
         core.userlist.add_buddy(self.user)
 
-    def on_ban_user(self, *_args):
+    def on_ban_unban_user(self, *_args):
+
+        if core.network_filter.is_user_banned(self.user):
+            core.network_filter.unban_user(self.user)
+            return
+
         core.network_filter.ban_user(self.user)
 
-    def on_ignore_user(self, *_args):
+    def on_ignore_unignore_user(self, *_args):
+
+        if core.network_filter.is_user_ignored(self.user):
+            core.network_filter.unignore_user(self.user)
+            return
+
         core.network_filter.ignore_user(self.user)
 
     def on_save_picture_response(self, file_path, *_args):

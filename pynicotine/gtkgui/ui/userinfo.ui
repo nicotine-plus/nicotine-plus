@@ -464,9 +464,9 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton" id="_add_buddy_button">
+                  <object class="GtkButton" id="_add_remove_buddy_button">
                     <property name="visible">True</property>
-                    <signal name="clicked" handler="on_add_to_list"/>
+                    <signal name="clicked" handler="on_add_remove_buddy"/>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
@@ -478,11 +478,10 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkLabel">
+                          <object class="GtkLabel" id="add_remove_buddy_label">
                             <property name="visible">True</property>
-                            <property name="label" translatable="yes">_Add to Buddy List</property>
                             <property name="use-underline">True</property>
-                            <property name="mnemonic-widget">_add_buddy_button</property>
+                            <property name="mnemonic-widget">_add_remove_buddy_button</property>
                             <attributes>
                               <attribute name="weight" value="normal"/>
                             </attributes>
@@ -496,9 +495,9 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton" id="_ban_user_button">
+                  <object class="GtkButton" id="_ban_unban_user_button">
                     <property name="visible">True</property>
-                    <signal name="clicked" handler="on_ban_user"/>
+                    <signal name="clicked" handler="on_ban_unban_user"/>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
@@ -510,10 +509,9 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkLabel">
+                          <object class="GtkLabel" id="ban_unban_user_label">
                             <property name="visible">True</property>
-                            <property name="label" translatable="yes">Ban User</property>
-                            <property name="mnemonic-widget">_ban_user_button</property>
+                            <property name="mnemonic-widget">_ban_unban_user_button</property>
                             <attributes>
                               <attribute name="weight" value="normal"/>
                             </attributes>
@@ -527,9 +525,9 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton" id="_ignore_user_button">
+                  <object class="GtkButton" id="_ignore_unignore_user_button">
                     <property name="visible">True</property>
-                    <signal name="clicked" handler="on_ignore_user"/>
+                    <signal name="clicked" handler="on_ignore_unignore_user"/>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
@@ -541,10 +539,9 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkLabel">
+                          <object class="GtkLabel" id="ignore_unignore_user_label">
                             <property name="visible">True</property>
-                            <property name="label" translatable="yes">Ignore User</property>
-                            <property name="mnemonic-widget">_ignore_user_button</property>
+                            <property name="mnemonic-widget">_ignore_unignore_user_button</property>
                             <attributes>
                               <attribute name="weight" value="normal"/>
                             </attributes>

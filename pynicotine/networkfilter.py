@@ -245,12 +245,17 @@ class NetworkFilter:
         config.write_configuration()
 
         core.transfers.ban_users({user})
+        events.emit("ban-user", user)
 
     def unban_user(self, user):
 
-        if self.is_user_banned(user):
-            config.sections["server"]["banlist"].remove(user)
-            config.write_configuration()
+        if not self.is_user_banned(user):
+            return
+
+        config.sections["server"]["banlist"].remove(user)
+        config.write_configuration()
+
+        events.emit("unban-user", user)
 
     def block_user_ip(self, user):
         ip_address = self._add_user_ip_to_list(user, "block")
@@ -291,14 +296,24 @@ class NetworkFilter:
     """ Ignoring """
 
     def ignore_user(self, user):
-        if not self.is_user_ignored(user):
-            config.sections["server"]["ignorelist"].append(user)
-            config.write_configuration()
+
+        if self.is_user_ignored(user):
+            return
+
+        config.sections["server"]["ignorelist"].append(user)
+        config.write_configuration()
+
+        events.emit("ignore-user", user)
 
     def unignore_user(self, user):
-        if self.is_user_ignored(user):
-            config.sections["server"]["ignorelist"].remove(user)
-            config.write_configuration()
+
+        if not self.is_user_ignored(user):
+            return
+
+        config.sections["server"]["ignorelist"].remove(user)
+        config.write_configuration()
+
+        events.emit("unignore-user", user)
 
     def ignore_ip(self, ip_address):
 

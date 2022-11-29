@@ -104,6 +104,12 @@ EVENT_NAMES = set([
     "remove-interest",
     "similar-users",
 
+    # Network filter
+    "ban-user",
+    "ignore-user",
+    "unban-user",
+    "unignore-user",
+
     # Private chat
     "clear-private-messages",
     "echo-private-message",
