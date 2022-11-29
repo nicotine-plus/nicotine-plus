@@ -21,7 +21,6 @@ import json
 import re
 
 from pynicotine.pluginsystem import BasePlugin
-from pynicotine.utils import http_request
 from pynicotine.utils import human_length
 from pynicotine.utils import humanize
 
@@ -116,18 +115,17 @@ class Plugin(BasePlugin):
             return None
 
         try:
-            response = http_request(
-                'https', 'www.googleapis.com',
-                '/youtube/v3/videos?part=snippet,statistics,contentDetails&id={}&key={}'.format(
-                    video_id, self.settings['api_key']),
-                headers={'User-Agent': self.config.application_name})
+            from urllib.request import urlopen
+            with urlopen(("https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics,contentDetails"
+                          "&id=%s&key=%s" % (video_id, self.settings['api_key'])), timeout=10) as response:
+                response_body = response.read().decode("utf-8")
 
         except Exception as error:
             self.log('Failed to connect to www.googleapis.com: %s', error)
             return None
 
         try:
-            data = json.loads(response)
+            data = json.loads(response_body)
 
         except Exception as error:
             self.log('Failed to parse response from www.googleapis.com: %s', str(error))

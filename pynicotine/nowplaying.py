@@ -25,7 +25,6 @@ import json
 from pynicotine.config import config
 from pynicotine.logfacility import log
 from pynicotine.utils import execute_command
-from pynicotine.utils import http_request
 from pynicotine.utils import human_length
 
 
@@ -127,10 +126,10 @@ class NowPlaying:
             return None
 
         try:
-            response = http_request(
-                "https", "ws.audioscrobbler.com",
-                "/2.0/?method=user.getrecenttracks&user=" + user + "&api_key=" + apikey + "&limit=1&format=json",
-                headers={"User-Agent": config.application_name})
+            from urllib.request import urlopen
+            with urlopen(("https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=%s&api_key=%s"
+                          "&limit=1&format=json" % (user, apikey)), timeout=10) as response:
+                response_body = response.read().decode("utf-8")
 
         except Exception as error:
             log.add(_("Last.fm: Could not connect to Audioscrobbler: %(error)s"), {"error": error},
@@ -138,7 +137,7 @@ class NowPlaying:
             return None
 
         try:
-            json_api = json.loads(response)
+            json_api = json.loads(response_body)
             lastplayed = json_api["recenttracks"]["track"]
 
             try:
@@ -157,7 +156,7 @@ class NowPlaying:
 
         except Exception:
             log.add(_("Last.fm: Could not get recent track from Audioscrobbler: %(error)s"),
-                    {"error": response}, title=_("Now Playing Error"))
+                    {"error": response_body}, title=_("Now Playing Error"))
             return None
 
         return True
@@ -259,9 +258,9 @@ class NowPlaying:
             return None
 
         try:
-            response = http_request('https', 'api.listenbrainz.org',
-                                    '/1/user/{}/playing-now'.format(username),
-                                    headers={'User-Agent': config.application_name})
+            from urllib.request import urlopen
+            with urlopen("https://api.listenbrainz.org/1/user/%s/playing-now" % username, timeout=10) as response:
+                response_body = response.read().decode("utf-8")
 
         except Exception as error:
             log.add(_("ListenBrainz: Could not connect to ListenBrainz: %(error)s"), {'error': error},
@@ -269,7 +268,7 @@ class NowPlaying:
             return None
 
         try:
-            json_api = json.loads(response)['payload']
+            json_api = json.loads(response_body)['payload']
 
             if not json_api['playing_now']:
                 log.add(_("ListenBrainz: You don\'t seem to be listening to anything right now"),
@@ -288,7 +287,7 @@ class NowPlaying:
 
         except Exception:
             log.add(_("ListenBrainz: Could not get current track from ListenBrainz: %(error)s"),
-                    {'error': str(response)}, title=_("Now Playing Error"))
+                    {'error': response_body}, title=_("Now Playing Error"))
         return None
 
     def other(self, command):

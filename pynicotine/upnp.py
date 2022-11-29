@@ -18,13 +18,12 @@
 
 import socket
 
-from http.client import HTTPException
 from threading import Thread
+from urllib.parse import urlsplit
 
 from pynicotine.config import config
 from pynicotine.logfacility import log
 from pynicotine.scheduler import scheduler
-from pynicotine.utils import http_request
 
 
 MULTICAST_HOST = "239.255.255.250"
@@ -36,11 +35,8 @@ RENEWAL_INTERVAL = 14400  # 4 hours
 
 
 class Service:
-    def __init__(self, service_type, url_scheme, base_url, root_url, control_url):
+    def __init__(self, service_type, control_url):
         self.service_type = service_type
-        self.url_scheme = url_scheme
-        self.base_url = base_url
-        self.root_url = root_url
         self.control_url = control_url
 
 
@@ -92,19 +88,21 @@ class SSDPRequest:
 class SSDP:
 
     @staticmethod
-    def get_service_control_url(url_scheme, base_url, root_url):
+    def get_service_control_url(location_url):
 
         service_type = None
         control_url = None
 
         try:
+            from urllib.request import urlopen
             from xml.etree import ElementTree
 
-            response = http_request(url_scheme, base_url, root_url, timeout=HTTP_REQUEST_TIMEOUT)
-            log.add_debug("UPnP: Device description response from %s://%s%s: %s",
-                          (url_scheme, base_url, root_url, response.encode('utf-8')))
+            with urlopen(location_url, timeout=HTTP_REQUEST_TIMEOUT) as response:
+                response_body = response.read()
 
-            xml = ElementTree.fromstring(response)
+            log.add_debug("UPnP: Device description response from %s: %s", (location_url, response_body))
+
+            xml = ElementTree.fromstring(response_body.decode("utf-8"))
 
             for service in xml.findall(".//{urn:schemas-upnp-org:device-1-0}service"):
                 found_service_type = service.find(".//{urn:schemas-upnp-org:device-1-0}serviceType").text
@@ -119,17 +117,14 @@ class SSDP:
 
         except Exception as error:
             # Invalid response
-            log.add_debug("UPnP: Invalid device description response from %s://%s%s: %s",
-                          (url_scheme, base_url, root_url, error))
+            log.add_debug("UPnP: Invalid device description response from %s: %s", (location_url, error))
 
         return service_type, control_url
 
     @staticmethod
     def add_service(services, locations, ssdp_response):
 
-        from urllib.parse import urlsplit
         response_headers = {k.upper(): v for k, v in ssdp_response.headers}
-
         log.add_debug("UPnP: Device search response: %s", bytes(ssdp_response))
 
         if "LOCATION" not in response_headers:
@@ -143,8 +138,10 @@ class SSDP:
             return
 
         locations.add(location)
+
         url_parts = urlsplit(location)
-        service_type, control_url = SSDP.get_service_control_url(url_parts.scheme, url_parts.netloc, url_parts.path)
+        service_type, control_url = SSDP.get_service_control_url(location)
+        control_url = url_parts.scheme + "://" + url_parts.netloc + control_url
 
         if service_type is None or control_url is None:
             log.add_debug("UPnP: No router with UPnP enabled in device search response, ignoring")
@@ -156,8 +153,7 @@ class SSDP:
             log.add_debug("UPnP: Service was previously added, ignoring")
             return
 
-        services[service_type] = Service(service_type=service_type, url_scheme=url_parts.scheme,
-                                         base_url=url_parts.netloc, root_url=url_parts.path, control_url=control_url)
+        services[service_type] = Service(service_type=service_type, control_url=control_url)
 
         log.add_debug("UPnP: Added service to list")
 
@@ -231,16 +227,20 @@ class UPnP:
         If a port mapping already exists, it is updated with a lease period of 24 hours.
         """
 
+        from urllib.request import Request
+        from urllib.request import urlopen
         from xml.etree import ElementTree
 
-        url = '%s%s' % (service.base_url, service.control_url)
+        service_type = service.service_type
+        control_url = service.control_url
+
         log.add_debug("UPnP: Adding port mapping (%s %s/%s, %s) at url '%s'",
-                      (private_ip, private_port, protocol, service.service_type, url))
+                      (private_ip, private_port, protocol, service_type, control_url))
 
         headers = {
-            "Host": service.base_url,
+            "Host": urlsplit(control_url).netloc,
             "Content-Type": "text/xml; charset=utf-8",
-            "SOAPACTION": '"%s#AddPortMapping"' % service.service_type
+            "SOAPACTION": '"%s#AddPortMapping"' % service_type
         }
 
         body = (
@@ -260,23 +260,21 @@ class UPnP:
              + '</u:AddPortMapping>'
              + '</s:Body>'
              + '</s:Envelope>\r\n') %
-            (service.service_type, public_port, protocol, private_port, private_ip,
-             mapping_description, lease_duration)
+            (service_type, public_port, protocol, private_port, private_ip, mapping_description, lease_duration)
         ).encode('utf-8')
 
         log.add_debug("UPnP: Add port mapping request headers: %s", headers)
         log.add_debug("UPnP: Add port mapping request contents: %s", body)
 
-        response = http_request(
-            service.url_scheme, service.base_url, service.control_url,
-            request_type="POST", body=body, headers=headers, timeout=HTTP_REQUEST_TIMEOUT)
+        with urlopen(Request(control_url, data=body, headers=headers), timeout=HTTP_REQUEST_TIMEOUT) as response:
+            response_body = response.read()
 
-        xml = ElementTree.fromstring(response)
+        xml = ElementTree.fromstring(response_body.decode("utf-8"))
 
         if xml.find(".//{http://schemas.xmlsoap.org/soap/envelope/}Body") is None:
-            raise HTTPException(_("Invalid response: %s") % response.encode('utf-8'))
+            raise RuntimeError(_("Invalid response: %s") % response_body)
 
-        log.add_debug("UPnP: Add port mapping response: %s", response.encode('utf-8'))
+        log.add_debug("UPnP: Add port mapping response: %s", response_body)
 
         error_code = xml.findtext(".//{urn:schemas-upnp-org:control-1-0}errorCode")
         error_description = xml.findtext(".//{urn:schemas-upnp-org:control-1-0}errorDescription")
@@ -340,8 +338,8 @@ class UPnP:
                 return
 
             if error_code or error_description:
-                raise HTTPException(_("Error code %(code)s: %(description)s") %
-                                    {"code": error_code, "description": error_description})
+                raise RuntimeError(_("Error code %(code)s: %(description)s") %
+                                   {"code": error_code, "description": error_description})
 
         except Exception as error:
             from traceback import format_exc

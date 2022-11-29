@@ -633,45 +633,6 @@ def write_file_and_backup(path, callback, protect=False):
         os.umask(oldumask)
 
 
-def http_request(url_scheme, base_url, path, request_type="GET", body="", headers=None, timeout=10, redirect_depth=0):
-
-    if headers is None:
-        headers = {}
-
-    import http.client
-
-    if redirect_depth > 15:
-        raise http.client.HTTPException("Redirected too many times, giving up")
-
-    if url_scheme == "https":
-        conn = http.client.HTTPSConnection(base_url, timeout=timeout)
-    else:
-        conn = http.client.HTTPConnection(base_url, timeout=timeout)
-
-    try:
-        conn.request(request_type, path, body=body, headers=headers)
-        response = conn.getresponse()
-        redirect = response.getheader('Location')
-
-        if redirect:
-            from urllib.parse import urlparse
-            parsed_url = urlparse(redirect)
-            redirect_depth += 1
-
-            return http_request(
-                parsed_url.scheme, parsed_url.netloc, parsed_url.path,
-                request_type, body, headers, timeout, redirect_depth
-            )
-
-        contents = response.read().decode("utf-8")
-
-    finally:
-        # Always close connection, even when errors occur
-        conn.close()
-
-    return contents
-
-
 class RestrictedUnpickler(pickle.Unpickler):
     """
     Don't allow code execution from pickles

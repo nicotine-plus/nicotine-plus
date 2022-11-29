@@ -22,7 +22,6 @@ from threading import Thread
 
 from pynicotine.config import config
 from pynicotine.logfacility import log
-from pynicotine.utils import http_request
 
 
 class UpdateChecker:
@@ -80,12 +79,11 @@ class UpdateChecker:
     @classmethod
     def retrieve_latest_version(cls):
 
-        response = http_request(
-            "https", "pypi.org", "/pypi/nicotine-plus/json",
-            headers={"User-Agent": config.application_name}
-        )
-        data = json.loads(response)
+        from urllib.request import urlopen
+        with urlopen("https://pypi.org/pypi/nicotine-plus/json", timeout=5) as response:
+            response_body = response.read().decode("utf-8")
 
+        data = json.loads(response_body)
         h_latest_version = data['info']['version']
         latest_version = cls.create_integer_version(h_latest_version)
 
