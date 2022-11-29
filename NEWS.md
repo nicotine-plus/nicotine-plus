@@ -8,7 +8,9 @@
  * Fixed a crash when removing private chat logs
  * Fixed an issue where the main window could become unresponsive when showing it from the tray icon
  * Minor fixes related to UPnP compatibility with certain routers
+ * Reduce the number of connection timeouts when searching for popular files
  * Windows: Fixed a possible crash when showing notification bubbles
+ * Android (Termux): Fixed a crash when starting Nicotine+ in headless mode
 
 ### Issues closed on GitHub
 
