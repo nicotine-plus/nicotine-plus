@@ -68,16 +68,6 @@ def check_gtk_version():
             "major_version": gtk_major_version,
             "complete_version": '.'.join(map(str, gtk_version))}
 
-    try:
-        if os.getenv("NICOTINE_LIBADWAITA") == '1':
-            gi.require_version('Adw', '1')
-
-            from gi.repository import Adw
-            Adw.init()
-
-    except (ImportError, ValueError):
-        pass
-
     config.gtk_version = "%s.%s.%s" % (gtk_major_version, Gtk.get_minor_version(), Gtk.get_micro_version())
     return None
 
