@@ -491,6 +491,10 @@ class PluginHandler:
                 for entry in os.scandir(encode_path(folder_path)):
                     file_path = entry.name.decode("utf-8", "replace")
 
+                    if sys.platform in ("win32", "darwin") and file_path == "now_playing_sender":
+                        # MPRIS is not available on Windows and macOS
+                        continue
+
                     if entry.is_dir() and file_path not in plugin_list:
                         plugin_list.append(file_path)
 
