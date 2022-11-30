@@ -1229,6 +1229,9 @@ class ChatRoom:
 
     def set_completion_list(self, completion_list):
 
+        if not config.sections["words"]["tab"]:
+            return
+
         # We want to include users for this room only
         if config.sections["words"]["roomusers"]:
             completion_list += self.users

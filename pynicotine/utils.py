@@ -791,37 +791,6 @@ def get_alias(command):
     return ""
 
 
-""" Chat Completion """
-
-
-def get_completion_list(commands, rooms):
-
-    config_words = config.sections["words"]
-
-    if not config_words["tab"]:
-        return []
-
-    completion_list = [config.sections["server"]["login"], "nicotine"]
-
-    if config_words["roomnames"]:
-        completion_list += rooms
-
-    if config_words["buddies"]:
-        for i in config.sections["server"]["userlist"]:
-            if i and isinstance(i, list):
-                user = str(i[0])
-                completion_list.append(user)
-
-    if config_words["aliases"]:
-        for k in config.sections["server"]["command_aliases"]:
-            completion_list.append("/" + str(k))
-
-    if config_words["commands"]:
-        completion_list += commands
-
-    return completion_list
-
-
 """ Debugging """
 
 

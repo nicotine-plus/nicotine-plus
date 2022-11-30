@@ -22,7 +22,6 @@ from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import UserStatus
-from pynicotine.utils import get_completion_list
 
 
 class PrivateChat:
@@ -267,7 +266,19 @@ class PrivateChat:
 
     def update_completions(self):
 
-        self.completion_list = get_completion_list(
-            list(core.pluginhandler.private_chat_commands), core.chatrooms.server_rooms)
+        self.completion_list = [config.sections["server"]["login"]]
+
+        if config.sections["words"]["roomnames"]:
+            self.completion_list += core.chatrooms.server_rooms
+
+        if config.sections["words"]["buddies"]:
+            self.completion_list += list(core.userlist.buddies)
+
+        if config.sections["words"]["aliases"]:
+            for k in config.sections["server"]["command_aliases"]:
+                self.completion_list.append("/" + str(k))
+
+        if config.sections["words"]["commands"]:
+            self.completion_list += list(core.pluginhandler.private_chat_commands)
 
         events.emit("private-chat-completion-list", self.completion_list)

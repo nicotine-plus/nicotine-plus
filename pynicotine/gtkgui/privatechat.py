@@ -71,6 +71,7 @@ class PrivateChats(IconNotebook):
             ("clear-private-messages", self.clear_messages),
             ("echo-private-message", self.echo_message),
             ("message-user", self.message_user),
+            ("private-chat-completion-list", self.set_completion_list),
             ("private-chat-show-user", self.show_user),
             ("private-chat-remove-user", self.remove_user),
             ("send-private-message", self.send_message),
@@ -547,6 +548,9 @@ class PrivateChat:
         self.chats.remove_all_pages()
 
     def set_completion_list(self, completion_list):
+
+        if not config.sections["words"]["tab"]:
+            return
 
         # Tab-complete the recipient username
         completion_list.append(self.user)
