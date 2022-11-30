@@ -1,8 +1,8 @@
-nicotine (3.2.7-rc1) kinetic; urgency=medium
+nicotine (3.2.7-1) kinetic; urgency=medium
 
-  * Release candidate 1.
+  * Latest upstream.
 
- -- Mat <mail@mathias.is>  Sat, 12 Nov 2022 19:23:36 +0300
+ -- Mat <mail@mathias.is>  Wed, 30 Nov 2022 23:29:12 +0300
 
 nicotine (3.2.6-1) jammy; urgency=medium
 
