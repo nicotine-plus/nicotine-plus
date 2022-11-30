@@ -149,11 +149,8 @@ class WishList(Dialog):
         ).show()
 
     def add_wish(self, wish):
-
         if wish not in self.list_view.iterators:
             self.list_view.add_row([wish])
-
-        self.update_wish_button(wish)
 
     def remove_wish(self, wish):
 
@@ -162,20 +159,12 @@ class WishList(Dialog):
         if iterator is not None:
             self.list_view.remove_row(iterator)
 
-        self.update_wish_button(wish)
-
     def select_wish(self, wish):
 
         iterator = self.list_view.iterators.get(wish)
 
         if iterator is not None:
             self.list_view.select_row(iterator)
-
-    def update_wish_button(self, wish):
-
-        for page in self.application.window.search.pages.values():
-            if page.text == wish:
-                page.update_wish_button()
 
     def update_visuals(self):
 

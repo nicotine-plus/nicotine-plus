@@ -100,8 +100,10 @@ class Searches(IconNotebook):
         self.file_properties = None
 
         for event_name, callback in (
+            ("add-wish", self.update_wish_button),
             ("do-search", self.do_search),
             ("remove-search", self.remove_search),
+            ("remove-wish", self.update_wish_button),
             ("file-search-response", self.file_search_response)
         ):
             events.connect(event_name, callback)
@@ -268,6 +270,12 @@ class Searches(IconNotebook):
             return
 
         tab.file_search_response(msg)
+
+    def update_wish_button(self, wish):
+
+        for page in self.pages.values():
+            if page.text == wish:
+                page.update_wish_button()
 
     def update_visuals(self):
         for page in self.pages.values():
