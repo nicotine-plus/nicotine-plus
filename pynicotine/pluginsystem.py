@@ -376,6 +376,10 @@ class PluginHandler:
 
     def get_plugin_path(self, plugin_name):
 
+        if sys.platform in ("win32", "darwin") and plugin_name == "now_playing_sender":
+            # MPRIS is not available on Windows and macOS
+            return None
+
         for folder_path in self.plugindirs:
             file_path = os.path.join(folder_path, plugin_name)
 
