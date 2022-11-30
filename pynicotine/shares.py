@@ -31,6 +31,7 @@ import time
 
 from threading import Thread
 
+from pynicotine import rename_process
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
@@ -40,7 +41,6 @@ from pynicotine.slskmessages import UINT_LIMIT
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import TRANSLATE_PUNCTUATION
 from pynicotine.utils import encode_path
-from pynicotine.utils import rename_process
 
 """ Check if there's an appropriate (performant) database type for shelves """
 

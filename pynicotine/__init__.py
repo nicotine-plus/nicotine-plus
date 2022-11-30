@@ -26,7 +26,6 @@ from pynicotine.core import core
 from pynicotine.i18n import LOCALE_PATH
 from pynicotine.i18n import apply_translations
 from pynicotine.logfacility import log
-from pynicotine.utils import rename_process
 
 
 def check_arguments():
@@ -109,6 +108,38 @@ You should install Python %(min_version)s or newer.""") % {
         }
 
     return None
+
+
+def rename_process(new_name, debug_info=False):
+
+    errors = []
+
+    # Renaming ourselves for pkill et al.
+    try:
+        import ctypes
+        # GNU/Linux style
+        libc = ctypes.CDLL(None)
+        libc.prctl(15, new_name, 0, 0, 0)
+
+    except Exception as error:
+        errors.append(error)
+        errors.append("Failed GNU/Linux style")
+
+        try:
+            import ctypes
+            # BSD style
+            libc = ctypes.CDLL(None)
+            libc.setproctitle(new_name)
+
+        except Exception as second_error:
+            errors.append(second_error)
+            errors.append("Failed BSD style")
+
+    if debug_info and errors:
+        msg = ["Errors occurred while trying to change process name:"]
+        for i in errors:
+            msg.append("%s" % (i,))
+        log.add('\n'.join(msg))
 
 
 def rescan_shares():
