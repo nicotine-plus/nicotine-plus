@@ -139,7 +139,7 @@ class Config:
         return True
 
     def create_data_folder(self):
-        """ Create the folder for storing data in (aliases, shared files etc.),
+        """ Create the folder for storing data in (shared files etc.),
         if the folder doesn't exist """
 
         from pynicotine.utils import encode_path
@@ -575,21 +575,6 @@ class Config:
 
             if shared_folder not in shares and virtual_name not in (x[0] for x in shares):
                 shares.append(shared_folder)
-
-        # Load command aliases from legacy file
-        try:
-            from pynicotine.utils import encode_path
-            encoded_alias_path = encode_path(self.filename + ".alias")
-
-            if not self.sections["server"]["command_aliases"] and os.path.exists(encoded_alias_path):
-                with open(encoded_alias_path, 'rb') as file_handle:
-                    from pynicotine.utils import RestrictedUnpickler
-
-                    self.sections["server"]["command_aliases"] = RestrictedUnpickler(
-                        file_handle, encoding='utf-8').load()
-
-        except Exception:
-            pass
 
         self.config_loaded = True
         language = self.sections["ui"]["language"]

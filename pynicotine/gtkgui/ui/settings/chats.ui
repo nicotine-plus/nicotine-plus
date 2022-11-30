@@ -282,19 +282,6 @@
                             </child>
                           </object>
                         </child>
-                        <child>
-                          <object class="GtkFlowBoxChild">
-                            <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                            <child>
-                              <object class="GtkCheckButton" id="CompleteAliasesCheck">
-                                <property name="label" translatable="yes">Command aliases</property>
-                                <property name="visible">True</property>
-                                <signal name="toggled" handler="on_completion_changed"/>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
                       </object>
                     </child>
                   </object>

@@ -386,10 +386,6 @@ class ChatRooms:
         if config.sections["words"]["buddies"]:
             self.completion_list += list(core.userlist.buddies)
 
-        if config.sections["words"]["aliases"]:
-            for k in config.sections["server"]["command_aliases"]:
-                self.completion_list.append("/" + str(k))
-
         if config.sections["words"]["commands"]:
             self.completion_list += list(core.pluginhandler.chatroom_commands)
 

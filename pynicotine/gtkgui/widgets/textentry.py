@@ -25,12 +25,7 @@ from gi.repository import Gtk
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
-from pynicotine.logfacility import log
 from pynicotine.slskmessages import UserStatus
-from pynicotine.utils import add_alias
-from pynicotine.utils import get_alias
-from pynicotine.utils import is_alias
-from pynicotine.utils import unalias
 
 
 """ Text Entry-related """
@@ -79,15 +74,6 @@ class ChatEntry:
         if not text:
             return
 
-        if is_alias(text):
-            alias_text = get_alias(text)
-
-            if not alias_text:
-                log.add(_('Alias "%s" returned nothing'), text)
-                return
-
-            text = alias_text
-
         is_double_slash_cmd = text.startswith("//")
         is_single_slash_cmd = (text.startswith("/") and not is_double_slash_cmd)
 
@@ -115,23 +101,7 @@ class ChatEntry:
             args = ""
             arg_self = "" if self.is_chatroom else self.entity
 
-        if cmd in ("/alias", "/al"):
-            parent = core.chatrooms if self.is_chatroom else core.privatechat
-            parent.echo_message(self.entity, add_alias(args))
-
-            if config.sections["words"]["aliases"]:
-                core.chatrooms.update_completions()
-                core.privatechat.update_completions()
-
-        elif cmd in ("/unalias", "/un"):
-            parent = core.chatrooms if self.is_chatroom else core.privatechat
-            parent.echo_message(self.entity, unalias(args))
-
-            if config.sections["words"]["aliases"]:
-                core.chatrooms.update_completions()
-                core.privatechat.update_completions()
-
-        elif cmd in ("/w", "/whois", "/info"):
+        if cmd in ("/w", "/whois", "/info"):
             if arg_self:
                 core.userinfo.show_user(arg_self)
 
