@@ -544,6 +544,10 @@ class PluginHandler:
                     if file_path == "core_commands":
                         continue
 
+                    if sys.platform in ("win32", "darwin") and file_path == "now_playing_sender":
+                        # MPRIS is not available on Windows and macOS
+                        continue
+
                     if entry.is_dir() and file_path not in plugin_list:
                         plugin_list.append(file_path)
 
