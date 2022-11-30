@@ -1954,6 +1954,9 @@ class NowPlayingPage:
             self.get_format                # Callback to retrieve format text
         )
 
+        if sys.platform in ("win32", "darwin"):
+            self.NP_mpris.hide()
+
     def set_settings(self):
 
         self.application.preferences.set_widgets_data(self.options)
@@ -1995,6 +1998,9 @@ class NowPlayingPage:
         elif self.NP_other.get_active():
             player = "other"
 
+        if sys.platform in ("win32", "darwin") and player == "mpris":
+            player = "lastfm"
+
         return player
 
     def get_command(self):
@@ -2004,6 +2010,9 @@ class NowPlayingPage:
         return self.NPFormat.get_active_text()
 
     def set_player(self, player):
+
+        if sys.platform in ("win32", "darwin") and player == "mpris":
+            player = "lastfm"
 
         if player == "lastfm":
             self.NP_lastfm.set_active(True)

@@ -555,10 +555,6 @@ class Config:
             )
         }
 
-        # Windows specific stuff
-        if sys.platform == "win32":
-            self.defaults['players']['npplayer'] = 'other'
-
         # Initialize config with default values
         for key, value in self.defaults.items():
             self.sections[key] = value.copy()
