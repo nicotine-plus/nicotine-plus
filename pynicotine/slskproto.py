@@ -1398,6 +1398,7 @@ class SoulseekNetworkThread(Thread):
 
             if msgsize_total > buffer_len or msgsize < 0:
                 # Invalid message size or buffer is being filled
+                conn_obj.has_post_init_activity = True
                 break
 
             msgtype = msg_buffer_mem[idx + 4]
@@ -1806,6 +1807,7 @@ class SoulseekNetworkThread(Thread):
 
             if msgsize_total > buffer_len or msgsize < 0:
                 # Invalid message size or buffer is being filled
+                conn_obj.has_post_init_activity = True
                 break
 
             msgtype = msg_buffer_mem[idx + 4]
