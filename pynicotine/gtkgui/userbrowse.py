@@ -46,8 +46,8 @@ from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.treeview import save_columns
 from pynicotine.gtkgui.widgets.treeview import show_file_path_tooltip
 from pynicotine.gtkgui.widgets.ui import UserInterface
+from pynicotine.slskmessages import FileListMessage
 from pynicotine.slskmessages import UserStatus
-from pynicotine.utils import get_result_bitrate_length
 from pynicotine.utils import human_size
 from pynicotine.utils import humanize
 from pynicotine.utils import open_file_path
@@ -615,7 +615,7 @@ class UserBrowse:
 
         for _code, filename, size, _ext, attrs, *_unused in files:
             selected_folder_size += size
-            h_bitrate, bitrate, h_length, length = get_result_bitrate_length(size, attrs)
+            h_bitrate, bitrate, h_length, length = FileListMessage.parse_result_bitrate_length(size, attrs)
 
             file_row = [filename, human_size(size), h_bitrate, h_length,
                         GObject.Value(GObject.TYPE_UINT64, size),
@@ -1062,7 +1062,8 @@ class UserBrowse:
                 filename = file_data[1]
                 file_size = file_data[2]
                 virtual_path = "\\".join([folder, filename])
-                h_bitrate, _bitrate, h_length, length = get_result_bitrate_length(file_size, file_data[4])
+                h_bitrate, _bitrate, h_length, length = FileListMessage.parse_result_bitrate_length(
+                    file_size, file_data[4])
                 selected_size += file_size
                 selected_length += length
 

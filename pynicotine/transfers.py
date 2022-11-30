@@ -45,13 +45,13 @@ from pynicotine.events import events
 from pynicotine.logfacility import log
 from pynicotine.scheduler import scheduler
 from pynicotine.slskmessages import increment_token
+from pynicotine.slskmessages import FileListMessage
 from pynicotine.slskmessages import TransferDirection
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import execute_command
 from pynicotine.utils import clean_file
 from pynicotine.utils import clean_path
 from pynicotine.utils import encode_path
-from pynicotine.utils import get_result_bitrate_length
 from pynicotine.utils import human_speed
 from pynicotine.utils import load_file
 from pynicotine.utils import truncate_string_byte
@@ -778,7 +778,7 @@ class Transfers:
                 for file in files:
                     virtualpath = directory.rstrip('\\') + '\\' + file[1]
                     size = file[2]
-                    h_bitrate, _bitrate, h_length, _length = get_result_bitrate_length(size, file[4])
+                    h_bitrate, _bitrate, h_length, _length = FileListMessage.parse_result_bitrate_length(size, file[4])
 
                     self.get_file(
                         username, virtualpath, path=destination,

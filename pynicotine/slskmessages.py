@@ -25,6 +25,7 @@ from socket import inet_ntoa
 from struct import Struct
 
 from pynicotine.config import config
+from pynicotine.utils import human_length
 
 """ This module contains message classes, that networking and UI thread
 exchange. Basically there are three types of messages: internal messages,
@@ -2284,6 +2285,145 @@ class PeerMessage(SlskMessage):
         return pos, size
 
 
+class FileListMessage(PeerMessage):
+
+    @classmethod
+    def pack_file_info(cls, fileinfo):
+
+        msg = bytearray()
+        msg.extend(cls.pack_uint8(1))
+        msg.extend(cls.pack_string(fileinfo[0]))
+        msg.extend(cls.pack_uint64(fileinfo[1]))
+
+        if fileinfo[2] is None or fileinfo[3] is None:
+            # No metadata
+            msg.extend(cls.pack_string(''))
+            msg.extend(cls.pack_uint32(0))
+        else:
+            # FileExtension, NumAttributes
+            msg.extend(cls.pack_string("mp3"))
+            msg.extend(cls.pack_uint32(3))
+
+            audio_info = fileinfo[2]
+            bitdepth = len(audio_info) > 3 and audio_info[3]
+
+            # Lossless audio file
+            if bitdepth:
+                # Duration
+                msg.extend(cls.pack_uint32(1))
+                msg.extend(cls.pack_uint32(fileinfo[3] or 0))
+
+                # Sample rate
+                msg.extend(cls.pack_uint32(4))
+                msg.extend(cls.pack_uint32(audio_info[2] or 0))
+
+                # Bit depth
+                msg.extend(cls.pack_uint32(5))
+                msg.extend(cls.pack_uint32(bitdepth or 0))
+
+            # Lossy audio file
+            else:
+                # Bitrate
+                msg.extend(cls.pack_uint32(0))
+                msg.extend(cls.pack_uint32(audio_info[0] or 0))
+
+                # Duration
+                msg.extend(cls.pack_uint32(1))
+                msg.extend(cls.pack_uint32(fileinfo[3] or 0))
+
+                # VBR
+                msg.extend(cls.pack_uint32(2))
+                msg.extend(cls.pack_uint32(audio_info[1] or 0))
+
+        return msg
+
+    @staticmethod
+    def parse_file_attributes(attributes):
+
+        try:
+            bitrate = attributes.get(str(FileAttribute.BITRATE))
+            length = attributes.get(str(FileAttribute.DURATION))
+            vbr = attributes.get(str(FileAttribute.VBR))
+            sample_rate = attributes.get(str(FileAttribute.SAMPLE_RATE))
+            bit_depth = attributes.get(str(FileAttribute.BIT_DEPTH))
+
+        except AttributeError:
+            # Legacy attribute list format used for shares lists saved in Nicotine+ 3.2.2 and earlier
+            bitrate = length = vbr = sample_rate = bit_depth = None
+
+            if len(attributes) == 3:
+                attribute1, attribute2, attribute3 = attributes
+
+                if attribute3 in (0, 1):
+                    bitrate = attribute1
+                    length = attribute2
+                    vbr = attribute3
+
+                elif attribute3 > 1:
+                    length = attribute1
+                    sample_rate = attribute2
+                    bit_depth = attribute3
+
+            elif len(attributes) == 2:
+                attribute1, attribute2 = attributes
+
+                if attribute2 in (0, 1):
+                    bitrate = attribute1
+                    vbr = attribute2
+
+                elif attribute1 >= 8000 and attribute2 <= 64:
+                    sample_rate = attribute1
+                    bit_depth = attribute2
+
+                else:
+                    bitrate = attribute1
+                    length = attribute2
+
+        return bitrate, length, vbr, sample_rate, bit_depth
+
+    @classmethod
+    def parse_result_bitrate_length(cls, filesize, attributes):
+
+        bitrate, length, vbr, sample_rate, bit_depth = cls.parse_file_attributes(attributes)
+
+        if bitrate is None:
+            if sample_rate and bit_depth:
+                # Bitrate = sample rate (Hz) * word length (bits) * channel count
+                # Bitrate = 44100 * 16 * 2
+                bitrate = (sample_rate * bit_depth * 2) // 1000
+
+            else:
+                bitrate = -1
+
+        if length is None:
+            if bitrate > 0:
+                # Dividing the file size by the bitrate in Bytes should give us a good enough approximation
+                length = filesize / (bitrate * 125)
+
+            else:
+                length = -1
+
+        # Ignore invalid values
+        if bitrate <= 0 or bitrate > UINT_LIMIT:
+            bitrate = 0
+            h_bitrate = ""
+
+        else:
+            h_bitrate = str(bitrate)
+
+            if vbr == 1:
+                h_bitrate += " (vbr)"
+
+        if length < 0 or length > UINT_LIMIT:
+            length = 0
+            h_length = ""
+
+        else:
+            h_length = human_length(length)
+
+        return h_bitrate, bitrate, h_length, length
+
+
 class SharedFileListRequest(PeerMessage):
     """ Peer code: 4 """
     """ We send this to a peer to ask for a list of shared files. """
@@ -2299,7 +2439,7 @@ class SharedFileListRequest(PeerMessage):
         pass
 
 
-class SharedFileListResponse(PeerMessage):
+class SharedFileListResponse(FileListMessage):
     """ Peer code: 5 """
     """ A peer responds with a list of shared files when we've sent
     a SharedFileListRequest. """
@@ -2423,7 +2563,7 @@ class FileSearchRequest(PeerMessage):
         pos, self.searchterm = self.unpack_string(message, pos)
 
 
-class FileSearchResponse(PeerMessage):
+class FileSearchResponse(FileListMessage):
     """ Peer code: 9 """
     """ A peer sends this message when it has a file search match. The token is
     taken from original FileSearch, UserSearch or RoomSearch server message. """
@@ -2443,54 +2583,6 @@ class FileSearchResponse(PeerMessage):
         self.inqueue = inqueue
         self.fifoqueue = fifoqueue
         self.unknown = 0
-
-    def pack_file_info(self, fileinfo):
-        msg = bytearray()
-        msg.extend(self.pack_uint8(1))
-        msg.extend(self.pack_string(fileinfo[0]))
-        msg.extend(self.pack_uint64(fileinfo[1]))
-
-        if fileinfo[2] is None or fileinfo[3] is None:
-            # No metadata
-            msg.extend(self.pack_string(''))
-            msg.extend(self.pack_uint32(0))
-        else:
-            # FileExtension, NumAttributes
-            msg.extend(self.pack_string("mp3"))
-            msg.extend(self.pack_uint32(3))
-
-            audio_info = fileinfo[2]
-            bitdepth = len(audio_info) > 3 and audio_info[3]
-
-            # Lossless audio file
-            if bitdepth:
-                # Duration
-                msg.extend(self.pack_uint32(1))
-                msg.extend(self.pack_uint32(fileinfo[3] or 0))
-
-                # Sample rate
-                msg.extend(self.pack_uint32(4))
-                msg.extend(self.pack_uint32(audio_info[2] or 0))
-
-                # Bit depth
-                msg.extend(self.pack_uint32(5))
-                msg.extend(self.pack_uint32(bitdepth or 0))
-
-            # Lossy audio file
-            else:
-                # Bitrate
-                msg.extend(self.pack_uint32(0))
-                msg.extend(self.pack_uint32(audio_info[0] or 0))
-
-                # Duration
-                msg.extend(self.pack_uint32(1))
-                msg.extend(self.pack_uint32(fileinfo[3] or 0))
-
-                # VBR
-                msg.extend(self.pack_uint32(2))
-                msg.extend(self.pack_uint32(audio_info[1] or 0))
-
-        return msg
 
     def make_network_message(self):
         msg = bytearray()

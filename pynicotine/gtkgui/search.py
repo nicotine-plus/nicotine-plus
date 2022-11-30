@@ -55,7 +55,7 @@ from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import SEARCH_TOKENS_ALLOWED
-from pynicotine.utils import get_result_bitrate_length
+from pynicotine.slskmessages import FileListMessage
 from pynicotine.utils import factorize
 from pynicotine.utils import humanize
 from pynicotine.utils import human_size
@@ -640,7 +640,7 @@ class Search:
 
             size = result[2]
             h_size = human_size(size)
-            h_bitrate, bitrate, h_length, length = get_result_bitrate_length(size, result[4])
+            h_bitrate, bitrate, h_length, length = FileListMessage.parse_result_bitrate_length(size, result[4])
 
             if private:
                 name = _("[PRIVATE]  %s") % name

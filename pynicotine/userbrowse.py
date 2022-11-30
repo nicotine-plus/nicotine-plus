@@ -27,11 +27,11 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import FileListMessage
 from pynicotine.slskmessages import PeerInit
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import clean_file
 from pynicotine.utils import encode_path
-from pynicotine.utils import get_result_bitrate_length
 from pynicotine.utils import RestrictedUnpickler
 
 
@@ -211,7 +211,7 @@ class UserBrowse:
 
         virtualpath = "\\".join([folder, file_data[1]])
         size = file_data[2]
-        h_bitrate, _bitrate, h_length, _length = get_result_bitrate_length(size, file_data[4])
+        h_bitrate, _bitrate, h_length, _length = FileListMessage.parse_result_bitrate_length(size, file_data[4])
 
         core.transfers.get_file(user, virtualpath, prefix, size=size, bitrate=h_bitrate, length=h_length)
 
@@ -244,7 +244,8 @@ class UserBrowse:
                 for file_data in files:
                     virtualpath = "\\".join([folder, file_data[1]])
                     size = file_data[2]
-                    h_bitrate, _bitrate, h_length, _length = get_result_bitrate_length(size, file_data[4])
+                    h_bitrate, _bitrate, h_length, _length = FileListMessage.parse_result_bitrate_length(
+                        size, file_data[4])
 
                     core.transfers.get_file(user, virtualpath, destination,
                                             size=size, bitrate=h_bitrate, length=h_length)

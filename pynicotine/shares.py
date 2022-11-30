@@ -32,12 +32,15 @@ import time
 from threading import Thread
 
 from pynicotine import rename_process
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import UINT_LIMIT
+from pynicotine.slskmessages import FileListMessage
+from pynicotine.slskmessages import FolderContentsResponse
+from pynicotine.slskmessages import SharedFileListResponse
+from pynicotine.slskmessages import SharedFoldersFiles
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import TRANSLATE_PUNCTUATION
 from pynicotine.utils import encode_path
@@ -146,7 +149,7 @@ class Scanner:
         else:
             streams = self.share_dbs.get("buddystreams")
 
-        compressed_shares = slskmessages.SharedFileListResponse(shares=streams)
+        compressed_shares = SharedFileListResponse(shares=streams)
         compressed_shares.make_network_message()
         compressed_shares.list = None
         compressed_shares.type = share_type
@@ -466,12 +469,11 @@ class Scanner:
     def get_dir_stream(folder):
         """ Pack all files and metadata in directory """
 
-        message = slskmessages.FileSearchResponse()
         stream = bytearray()
-        stream.extend(message.pack_uint32(len(folder)))
+        stream.extend(FileListMessage.pack_uint32(len(folder)))
 
         for fileinfo in folder:
-            stream.extend(message.pack_file_info(fileinfo))
+            stream.extend(FileListMessage.pack_file_info(fileinfo))
 
         return stream
 
@@ -525,8 +527,8 @@ class Shares:
         self.pending_network_msgs = []
         self.rescanning = False
         self.should_compress_shares = False
-        self.compressed_shares_normal = slskmessages.SharedFileListResponse()
-        self.compressed_shares_buddy = slskmessages.SharedFileListResponse()
+        self.compressed_shares_normal = SharedFileListResponse()
+        self.compressed_shares_buddy = SharedFileListResponse()
 
         self.convert_shares()
         self.share_db_paths = [
@@ -763,7 +765,7 @@ class Shares:
                 sharedfolders = len(list(shared))
                 sharedfiles = len(list(index))
 
-            core.queue.append(slskmessages.SharedFoldersFiles(sharedfolders, sharedfiles))
+            core.queue.append(SharedFoldersFiles(sharedfolders, sharedfiles))
 
         except Exception as error:
             log.add(_("Failed to send number of shared files to the server: %s"), error)
@@ -829,7 +831,7 @@ class Shares:
                     events.emit("show-scan-progress")
                     events.emit("set-scan-indeterminate")
 
-                elif isinstance(item, slskmessages.SharedFileListResponse):
+                elif isinstance(item, SharedFileListResponse):
                     if item.type == "normal":
                         self.compressed_shares_normal = item
 
@@ -940,7 +942,7 @@ class Shares:
 
         if not shares_list:
             # Nyah, Nyah
-            shares_list = slskmessages.SharedFileListResponse(init=msg.init)
+            shares_list = SharedFileListResponse(init=msg.init)
 
         shares_list.init = msg.init
         core.queue.append(shares_list)
@@ -972,12 +974,12 @@ class Shares:
         if checkuser:
             try:
                 if msg.dir in shares:
-                    core.queue.append(slskmessages.FolderContentsResponse(
+                    core.queue.append(FolderContentsResponse(
                         init=init, directory=msg.dir, token=msg.token, shares=shares[msg.dir]))
                     return
 
                 if msg.dir.rstrip('\\') in shares:
-                    core.queue.append(slskmessages.FolderContentsResponse(
+                    core.queue.append(FolderContentsResponse(
                         init=init, directory=msg.dir, token=msg.token, shares=shares[msg.dir.rstrip('\\')]))
                     return
 
@@ -985,4 +987,4 @@ class Shares:
                 log.add(_("Failed to fetch the shared folder %(folder)s: %(error)s"),
                         {"folder": msg.dir, "error": error})
 
-            core.queue.append(slskmessages.FolderContentsResponse(init=init, directory=msg.dir, token=msg.token))
+            core.queue.append(FolderContentsResponse(init=init, directory=msg.dir, token=msg.token))

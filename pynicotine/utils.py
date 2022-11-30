@@ -30,9 +30,6 @@ import pickle
 import sys
 import webbrowser
 
-from pynicotine.slskmessages import FileAttribute
-from pynicotine.slskmessages import UINT_LIMIT
-
 FILE_SIZE_SUFFIXES = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
 PUNCTUATION = ['!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>',
                '?', '@', '[', '\\', ']', '^', '_', '`', '{', '|', '}', '~', '–', '—', '‐', '’', '“', '”', '…']
@@ -87,97 +84,6 @@ def encode_path(path, prefix=True):
     return path.encode("utf-8")
 
 
-def _try_open_uri(uri):
-
-    if sys.platform not in ("darwin", "win32"):
-        try:
-            from gi.repository import Gio  # pylint: disable=import-error
-            Gio.AppInfo.launch_default_for_uri(uri)
-            return
-
-        except Exception:
-            # Fall back to webbrowser module
-            pass
-
-    if not webbrowser.open(uri):
-        raise webbrowser.Error("No known URI provider available")
-
-
-def open_file_path(file_path, command=None, create_folder=False, create_file=False):
-    """ Currently used to either open a folder or play an audio file
-    Tries to run a user-specified command first, and falls back to
-    the system default. """
-
-    if file_path is None:
-        return False
-
-    try:
-        file_path = os.path.normpath(file_path)
-        file_path_encoded = encode_path(file_path)
-
-        if not os.path.exists(file_path_encoded):
-            if create_folder:
-                os.makedirs(file_path_encoded)
-
-            elif create_file:
-                with open(file_path_encoded, "w", encoding="utf-8"):
-                    # Create empty file
-                    pass
-            else:
-                raise FileNotFoundError("File path does not exist")
-
-        if command and "$" in command:
-            execute_command(command, file_path)
-
-        elif sys.platform == "win32":
-            os.startfile(file_path_encoded)  # pylint: disable=no-member
-
-        elif sys.platform == "darwin":
-            execute_command("open $", file_path)
-
-        else:
-            _try_open_uri("file:///" + file_path)
-
-    except Exception as error:
-        from pynicotine.logfacility import log
-        log.add(_("Cannot open file path %(path)s: %(error)s"), {"path": file_path, "error": error})
-        return False
-
-    return True
-
-
-def open_uri(uri):
-    """ Open a URI in an external (web) browser. The given argument has
-    to be a properly formed URI including the scheme (fe. HTTP). """
-
-    from pynicotine.config import config
-
-    try:
-        # Situation 1, user defined a way of handling the protocol
-        protocol = uri[:uri.find(":")]
-        protocol_handlers = config.sections["urls"]["protocols"]
-
-        if protocol in protocol_handlers and protocol_handlers[protocol]:
-            execute_command(protocol_handlers[protocol], uri)
-            return True
-
-        if protocol == "slsk":
-            from pynicotine.core import core
-            core.userbrowse.open_soulseek_url(uri.strip())
-            return True
-
-        # Situation 2, user did not define a way of handling the protocol
-        _try_open_uri(uri)
-
-        return True
-
-    except Exception as error:
-        from pynicotine.logfacility import log
-        log.add(_("Cannot open URL %(url)s: %(error)s"), {"url": uri, "error": error})
-
-    return False
-
-
 def human_length(seconds):
 
     minutes, seconds = divmod(seconds, 60)
@@ -192,94 +98,6 @@ def human_length(seconds):
         ret = '%i:%02i' % (minutes, seconds)
 
     return ret
-
-
-def get_file_attributes(attributes):
-
-    try:
-        bitrate = attributes.get(str(FileAttribute.BITRATE))
-        length = attributes.get(str(FileAttribute.DURATION))
-        vbr = attributes.get(str(FileAttribute.VBR))
-        sample_rate = attributes.get(str(FileAttribute.SAMPLE_RATE))
-        bit_depth = attributes.get(str(FileAttribute.BIT_DEPTH))
-
-    except AttributeError:
-        # Legacy attribute list format used for shares lists saved in Nicotine+ 3.2.2 and earlier
-        bitrate = length = vbr = sample_rate = bit_depth = None
-
-        if len(attributes) == 3:
-            attribute1, attribute2, attribute3 = attributes
-
-            if attribute3 in (0, 1):
-                bitrate = attribute1
-                length = attribute2
-                vbr = attribute3
-
-            elif attribute3 > 1:
-                length = attribute1
-                sample_rate = attribute2
-                bit_depth = attribute3
-
-        elif len(attributes) == 2:
-            attribute1, attribute2 = attributes
-
-            if attribute2 in (0, 1):
-                bitrate = attribute1
-                vbr = attribute2
-
-            elif attribute1 >= 8000 and attribute2 <= 64:
-                sample_rate = attribute1
-                bit_depth = attribute2
-
-            else:
-                bitrate = attribute1
-                length = attribute2
-
-    return bitrate, length, vbr, sample_rate, bit_depth
-
-
-def get_result_bitrate_length(filesize, attributes):
-    """ Used to get the audio bitrate and length of search results and
-    user browse files """
-
-    bitrate, length, vbr, sample_rate, bit_depth = get_file_attributes(attributes)
-
-    if bitrate is None:
-        if sample_rate and bit_depth:
-            # Bitrate = sample rate (Hz) * word length (bits) * channel count
-            # Bitrate = 44100 * 16 * 2
-            bitrate = (sample_rate * bit_depth * 2) // 1000
-
-        else:
-            bitrate = -1
-
-    if length is None:
-        if bitrate > 0:
-            # Dividing the file size by the bitrate in Bytes should give us a good enough approximation
-            length = filesize / (bitrate * 125)
-
-        else:
-            length = -1
-
-    # Ignore invalid values
-    if bitrate <= 0 or bitrate > UINT_LIMIT:
-        bitrate = 0
-        h_bitrate = ""
-
-    else:
-        h_bitrate = str(bitrate)
-
-        if vbr == 1:
-            h_bitrate += " (vbr)"
-
-    if length < 0 or length > UINT_LIMIT:
-        length = 0
-        h_length = ""
-
-    else:
-        h_length = human_length(length)
-
-    return h_bitrate, bitrate, h_length, length
 
 
 def _human_speed_or_size(unit):
@@ -488,6 +306,97 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
         return True
 
     return procs[-1].communicate()[0]
+
+
+def _try_open_uri(uri):
+
+    if sys.platform not in ("darwin", "win32"):
+        try:
+            from gi.repository import Gio  # pylint: disable=import-error
+            Gio.AppInfo.launch_default_for_uri(uri)
+            return
+
+        except Exception:
+            # Fall back to webbrowser module
+            pass
+
+    if not webbrowser.open(uri):
+        raise webbrowser.Error("No known URI provider available")
+
+
+def open_file_path(file_path, command=None, create_folder=False, create_file=False):
+    """ Currently used to either open a folder or play an audio file
+    Tries to run a user-specified command first, and falls back to
+    the system default. """
+
+    if file_path is None:
+        return False
+
+    try:
+        file_path = os.path.normpath(file_path)
+        file_path_encoded = encode_path(file_path)
+
+        if not os.path.exists(file_path_encoded):
+            if create_folder:
+                os.makedirs(file_path_encoded)
+
+            elif create_file:
+                with open(file_path_encoded, "w", encoding="utf-8"):
+                    # Create empty file
+                    pass
+            else:
+                raise FileNotFoundError("File path does not exist")
+
+        if command and "$" in command:
+            execute_command(command, file_path)
+
+        elif sys.platform == "win32":
+            os.startfile(file_path_encoded)  # pylint: disable=no-member
+
+        elif sys.platform == "darwin":
+            execute_command("open $", file_path)
+
+        else:
+            _try_open_uri("file:///" + file_path)
+
+    except Exception as error:
+        from pynicotine.logfacility import log
+        log.add(_("Cannot open file path %(path)s: %(error)s"), {"path": file_path, "error": error})
+        return False
+
+    return True
+
+
+def open_uri(uri):
+    """ Open a URI in an external (web) browser. The given argument has
+    to be a properly formed URI including the scheme (fe. HTTP). """
+
+    from pynicotine.config import config
+
+    try:
+        # Situation 1, user defined a way of handling the protocol
+        protocol = uri[:uri.find(":")]
+        protocol_handlers = config.sections["urls"]["protocols"]
+
+        if protocol in protocol_handlers and protocol_handlers[protocol]:
+            execute_command(protocol_handlers[protocol], uri)
+            return True
+
+        if protocol == "slsk":
+            from pynicotine.core import core
+            core.userbrowse.open_soulseek_url(uri.strip())
+            return True
+
+        # Situation 2, user did not define a way of handling the protocol
+        _try_open_uri(uri)
+
+        return True
+
+    except Exception as error:
+        from pynicotine.logfacility import log
+        log.add(_("Cannot open URL %(url)s: %(error)s"), {"url": uri, "error": error})
+
+    return False
 
 
 def load_file(path, load_func, use_old_file=False):
