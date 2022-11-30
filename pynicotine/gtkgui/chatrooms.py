@@ -60,11 +60,9 @@ from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import clean_file
-from pynicotine.utils import delete_log
 from pynicotine.utils import encode_path
 from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
-from pynicotine.utils import open_log
 from pynicotine.utils import PUNCTUATION
 
 
@@ -1209,12 +1207,12 @@ class ChatRoom:
             config.sections["logging"]["rooms"].append(self.room)
 
     def on_view_room_log(self, *_args):
-        open_log(config.sections["logging"]["roomlogsdir"], self.room)
+        log.open_log(config.sections["logging"]["roomlogsdir"], self.room)
 
     def on_delete_room_log_response(self, _dialog, response_id, _data):
 
         if response_id == 2:
-            delete_log(config.sections["logging"]["roomlogsdir"], self.room)
+            log.delete_log(config.sections["logging"]["roomlogsdir"], self.room)
             self.activity_view.clear()
             self.chat_view.clear()
 

@@ -23,6 +23,9 @@ from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.events import events
 from pynicotine.scheduler import scheduler
+from pynicotine.utils import clean_file
+from pynicotine.utils import encode_path
+from pynicotine.utils import open_file_path
 
 
 class LogFile:
@@ -78,6 +81,8 @@ class Logger:
 
         scheduler.add(delay=10, callback=self._close_inactive_log_files, repeat=True)
 
+    """ Log Levels """
+
     def init_log_levels(self):
 
         self._log_levels = {LogLevel.DEFAULT}
@@ -109,6 +114,8 @@ class Logger:
         if log_level in log_levels:
             log_levels.remove(log_level)
 
+    """ Log Files """
+
     def _get_log_file(self, folder_path, base_name):
 
         file_path = os.path.join(folder_path, base_name)
@@ -116,8 +123,6 @@ class Logger:
 
         if log_file is not None:
             return log_file
-
-        from pynicotine.utils import encode_path
 
         folder_path_encoded = encode_path(folder_path)
         file_path_encoded = encode_path(file_path)
@@ -176,6 +181,45 @@ class Logger:
         for log_file in self._log_files.copy().values():
             if (current_time - log_file.last_active) >= 10:
                 self.close_log_file(log_file)
+
+    def open_log(self, folder, filename):
+        self._handle_log(folder, filename, self.open_log_callback)
+
+    def delete_log(self, folder, filename):
+        self._handle_log(folder, filename, self.delete_log_callback)
+
+    def _handle_log(self, folder, filename, callback):
+
+        folder_encoded = encode_path(folder)
+        path = os.path.join(folder, clean_file(filename) + ".log")
+
+        try:
+            if not os.path.isdir(folder_encoded):
+                os.makedirs(folder_encoded)
+
+            callback(path)
+
+        except Exception as error:
+            log.add(_("Cannot access log file %(path)s: %(error)s"), {"path": path, "error": error})
+
+    def open_log_callback(self, path):
+        open_file_path(path, create_file=True)
+
+    def delete_log_callback(self, path):
+        os.remove(encode_path(path))
+
+    def log_transfer(self, msg, msg_args=None):
+
+        if not config.sections["logging"]["transfers"]:
+            return
+
+        if msg_args:
+            msg = msg % msg_args
+
+        self.write_log_file(
+            folder_path=config.sections["logging"]["transferslogsdir"], base_name="transfers.log", text=msg)
+
+    """ Log Messages """
 
     def _format_log_message(self, level, msg, msg_args):
 
@@ -248,17 +292,6 @@ class Logger:
 
     def add_debug(self, msg, msg_args=None):
         self.add(msg, msg_args=msg_args, level=LogLevel.MISCELLANEOUS)
-
-    def log_transfer(self, msg, msg_args=None):
-
-        if not config.sections["logging"]["transfers"]:
-            return
-
-        if msg_args:
-            msg = msg % msg_args
-
-        self.write_log_file(
-            folder_path=config.sections["logging"]["transferslogsdir"], base_name="transfers.log", text=msg)
 
     @staticmethod
     def contents(obj):

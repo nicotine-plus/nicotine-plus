@@ -30,8 +30,6 @@ import pickle
 import sys
 import webbrowser
 
-from pynicotine.config import config
-from pynicotine.logfacility import log
 from pynicotine.slskmessages import FileAttribute
 from pynicotine.slskmessages import UINT_LIMIT
 
@@ -43,38 +41,6 @@ ILLEGALFILECHARS = ILLEGALPATHCHARS + ['\\', '/']
 LONG_PATH_PREFIX = "\\\\?\\"
 REPLACEMENTCHAR = '_'
 TRANSLATE_PUNCTUATION = str.maketrans(dict.fromkeys(PUNCTUATION, ' '))
-
-
-def rename_process(new_name, debug_info=False):
-
-    errors = []
-
-    # Renaming ourselves for pkill et al.
-    try:
-        import ctypes
-        # GNU/Linux style
-        libc = ctypes.CDLL(None)
-        libc.prctl(15, new_name, 0, 0, 0)
-
-    except Exception as error:
-        errors.append(error)
-        errors.append("Failed GNU/Linux style")
-
-        try:
-            import ctypes
-            # BSD style
-            libc = ctypes.CDLL(None)
-            libc.setproctitle(new_name)
-
-        except Exception as second_error:
-            errors.append(second_error)
-            errors.append("Failed BSD style")
-
-    if debug_info and errors:
-        msg = ["Errors occurred while trying to change process name:"]
-        for i in errors:
-            msg.append("%s" % (i,))
-        log.add('\n'.join(msg))
 
 
 def clean_file(filename):
@@ -173,6 +139,7 @@ def open_file_path(file_path, command=None, create_folder=False, create_file=Fal
             _try_open_uri("file:///" + file_path)
 
     except Exception as error:
+        from pynicotine.logfacility import log
         log.add(_("Cannot open file path %(path)s: %(error)s"), {"path": file_path, "error": error})
         return False
 
@@ -182,6 +149,8 @@ def open_file_path(file_path, command=None, create_folder=False, create_file=Fal
 def open_uri(uri):
     """ Open a URI in an external (web) browser. The given argument has
     to be a properly formed URI including the scheme (fe. HTTP). """
+
+    from pynicotine.config import config
 
     try:
         # Situation 1, user defined a way of handling the protocol
@@ -203,40 +172,10 @@ def open_uri(uri):
         return True
 
     except Exception as error:
+        from pynicotine.logfacility import log
         log.add(_("Cannot open URL %(url)s: %(error)s"), {"url": uri, "error": error})
 
     return False
-
-
-def open_log(folder, filename):
-    _handle_log(folder, filename, open_log_callback)
-
-
-def delete_log(folder, filename):
-    _handle_log(folder, filename, delete_log_callback)
-
-
-def _handle_log(folder, filename, callback):
-
-    folder_encoded = encode_path(folder)
-    path = os.path.join(folder, clean_file(filename) + ".log")
-
-    try:
-        if not os.path.isdir(folder_encoded):
-            os.makedirs(folder_encoded)
-
-        callback(path)
-
-    except Exception as error:
-        log.add(_("Cannot access log file %(path)s: %(error)s"), {"path": path, "error": error})
-
-
-def open_log_callback(path):
-    open_file_path(path, create_file=True)
-
-
-def delete_log_callback(path):
-    os.remove(encode_path(path))
 
 
 def human_length(seconds):
@@ -479,6 +418,7 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
     if command.endswith("&"):
         command = command[:-1]
         if returnoutput:
+            from pynicotine.logfacility import log
             log.add("Yikes, I was asked to return output but I'm also asked to launch "
                     "the process in the background. returnoutput gets precedent.")
         else:
@@ -569,6 +509,7 @@ def load_file(path, load_func, use_old_file=False):
         return load_func(path)
 
     except Exception as error:
+        from pynicotine.logfacility import log
         log.add(_("Something went wrong while reading file %(filename)s: %(error)s"),
                 {"filename": path, "error": error})
 
@@ -594,6 +535,7 @@ def write_file_and_backup(path, callback, protect=False):
                 os.chmod(path_old_encoded, 0o600)
 
     except Exception as error:
+        from pynicotine.logfacility import log
         log.add(_("Unable to back up file %(path)s: %(error)s"), {
             "path": path,
             "error": error
@@ -613,6 +555,7 @@ def write_file_and_backup(path, callback, protect=False):
             os.fsync(file_handle.fileno())
 
     except Exception as error:
+        from pynicotine.logfacility import log
         log.add(_("Unable to save file %(path)s: %(error)s"), {
             "path": path,
             "error": error
@@ -649,6 +592,7 @@ class RestrictedUnpickler(pickle.Unpickler):
 
 def add_alias(rest):
 
+    from pynicotine.config import config
     aliases = config.sections["server"]["command_aliases"]
 
     if rest:
@@ -675,6 +619,7 @@ def add_alias(rest):
 
 def unalias(rest):
 
+    from pynicotine.config import config
     aliases = config.sections["server"]["command_aliases"]
 
     if rest and rest in aliases:
@@ -691,6 +636,7 @@ def is_alias(command):
     if not command.startswith("/"):
         return False
 
+    from pynicotine.config import config
     base_command = command[1:].split(" ")[0]
 
     if base_command in config.sections["server"]["command_aliases"]:
@@ -700,6 +646,8 @@ def is_alias(command):
 
 
 def get_alias(command):
+
+    from pynicotine.config import config
 
     def getpart(line):
 
@@ -786,6 +734,7 @@ def get_alias(command):
         return ret
 
     except Exception as error:
+        from pynicotine.logfacility import log
         log.add("%s", error)
 
     return ""
@@ -797,6 +746,8 @@ def get_alias(command):
 def debug(*args):
     """ Prints debugging info. """
 
+    from pynicotine.logfacility import log
+
     truncated_args = [arg[:200] if isinstance(arg, str) else arg for arg in args]
     log.add('*' * 8, truncated_args)
 
@@ -805,6 +756,7 @@ def strace(function):
     """ Decorator for debugging """
 
     from itertools import chain
+    from pynicotine.logfacility import log
 
     def newfunc(*args, **kwargs):
         name = function.__name__

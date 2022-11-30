@@ -54,11 +54,11 @@ from pynicotine.gtkgui.widgets.theme import set_use_header_bar
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.gtkgui.widgets.window import Window
+from pynicotine.logfacility import log
 from pynicotine.scheduler import scheduler
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import human_speed
 from pynicotine.utils import open_file_path
-from pynicotine.utils import open_log
 
 
 class MainWindow(Window):
@@ -1316,7 +1316,7 @@ class MainWindow(Window):
 
     @staticmethod
     def on_view_transfer_log(*_args):
-        open_log(config.sections["logging"]["transferslogsdir"], "transfers")
+        log.open_log(config.sections["logging"]["transferslogsdir"], "transfers")
 
     def on_clear_log_view(self, *_args):
         self.log_view.on_clear_all_text()

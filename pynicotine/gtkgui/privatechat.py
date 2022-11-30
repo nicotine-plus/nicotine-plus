@@ -47,9 +47,7 @@ from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import clean_file
-from pynicotine.utils import delete_log
 from pynicotine.utils import encode_path
-from pynicotine.utils import open_log
 
 
 class PrivateChats(IconNotebook):
@@ -379,12 +377,12 @@ class PrivateChat:
         self.search_bar.show()
 
     def on_view_chat_log(self, *_args):
-        open_log(config.sections["logging"]["privatelogsdir"], self.user)
+        log.open_log(config.sections["logging"]["privatelogsdir"], self.user)
 
     def on_delete_chat_log_response(self, _dialog, response_id, _data):
 
         if response_id == 2:
-            delete_log(config.sections["logging"]["privatelogsdir"], self.user)
+            log.delete_log(config.sections["logging"]["privatelogsdir"], self.user)
             self.chats.history.remove_user(self.user)
             self.chat_view.clear()
 
