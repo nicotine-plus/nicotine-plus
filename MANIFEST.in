@@ -2,6 +2,7 @@
 # https://packaging.python.org/en/latest/guides/using-manifest-in/
 
 recursive-include data *.in
+recursive-include doc *
 recursive-include po *
 recursive-include pynicotine *
 recursive-include test *
