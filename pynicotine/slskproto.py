@@ -317,13 +317,6 @@ class SoulseekNetworkThread(Thread):
                 log.add_debug("Cannot listen on port %(port)s: %(error)s", {"port": listenport, "error": error})
                 continue
 
-    def _validate_listen_port(self):
-
-        if self.listenport is not None:
-            return True
-
-        return False
-
     @staticmethod
     def _get_interface_ip_address(if_name):
 
@@ -414,18 +407,15 @@ class SoulseekNetworkThread(Thread):
         self._bound_ip = msg_obj.bound_ip
         self._listen_port_range = msg_obj.listen_port_range
 
-        valid_network_interface = self._validate_network_interface()
-
-        if not valid_network_interface:
+        if not self._validate_network_interface():
             log.add(_("Specified network interface '%s' does not exist"), self._interface,
                     title=_("Unknown Network Interface"))
             self._should_process_queue = False
             return
 
         self._create_listen_socket()
-        valid_listen_port = self._validate_listen_port()
 
-        if not valid_listen_port:
+        if self.listenport is None:
             log.add(_("No listening port is available in the specified port range %s–%s"), self._listen_port_range,
                     title=_("Listening Port Unavailable"))
             self._should_process_queue = False
@@ -944,8 +934,7 @@ class SoulseekNetworkThread(Thread):
             )
         )
 
-        if self.listenport is not None:
-            self._queue.append(SetWaitPort(self.listenport))
+        self._queue.append(SetWaitPort(self.listenport))
 
     def _replace_existing_connection(self, init):
 
