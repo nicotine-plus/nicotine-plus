@@ -85,5 +85,10 @@ class Popover:
     def show(self):
         self.popover.popup()
 
-    def close(self):
-        self.popover.popdown()
+    def close(self, use_transition=True):
+
+        if use_transition:
+            self.popover.popdown()
+            return
+
+        self.popover.set_visible(False)

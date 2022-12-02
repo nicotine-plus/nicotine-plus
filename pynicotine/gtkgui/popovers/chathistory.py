@@ -169,7 +169,7 @@ class ChatHistory(Popover):
             username = self.list_view.get_row_value(iterator, 0)
 
             core.privatechat.show_user(username)
-            self.popover.set_visible(False)
+            self.close(use_transition=False)
             return
 
     def on_search_accelerator(self, *_args):
