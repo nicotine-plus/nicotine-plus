@@ -118,7 +118,7 @@ class NetworkPage:
 
         self.on_toggle_upnp(self.UseUPnP)
 
-        if sys.platform not in ("linux", "darwin"):
+        if sys.platform == "win32":
             for widget in (self.InterfaceLabel, self.Interface):
                 widget.get_parent().hide()
 

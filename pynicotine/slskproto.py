@@ -132,6 +132,7 @@ else:
 
     MAXSOCKETS = min(max(int(MAXFILELIMIT * 0.75), 50), 3072)
 
+SIOCGIFADDR = 0x8915 if sys.platform == "linux" else 0xc0206921  # 0xc0206921 for *BSD, macOS
 UINT_UNPACK = struct.Struct("<I").unpack
 DOUBLE_UINT_UNPACK = struct.Struct("<II").unpack
 
@@ -325,7 +326,7 @@ class SoulseekNetworkThread(Thread):
             sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
             ip_if = fcntl.ioctl(sock.fileno(),
-                                0x8915,  # SIOCGIFADDR
+                                SIOCGIFADDR,
                                 struct.pack('256s', if_name.encode()[:15]))
 
             ip_address = socket.inet_ntoa(ip_if[20:24])
@@ -398,8 +399,8 @@ class SoulseekNetworkThread(Thread):
         if self._server_socket:
             return
 
-        if sys.platform not in ("linux", "darwin"):
-            # TODO: support custom network interface for other systems than Linux and macOS
+        if sys.platform == "win32":
+            # TODO: support custom network interface on Windows
             self._interface = None
         else:
             self._interface = msg_obj.interface
