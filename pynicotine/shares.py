@@ -822,7 +822,7 @@ class Shares:
 
                 if isinstance(item, tuple):
                     template, args, log_level = item
-                    log.add(template, args, log_level)
+                    log.add(template, msg_args=args, level=log_level)
 
                 elif isinstance(item, float):
                     events.emit("set-scan-progress", item)
