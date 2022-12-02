@@ -328,9 +328,7 @@ class SlskProtoThread(threading.Thread):
         if self.interface and not self.bindip:
             self.bind_to_network_interface(self.listen_socket, self.interface)
 
-        # Bind to the user requested IP address, find our current local IP address otherwise
-        # Do not use 0.0.0.0 here! Windows doesn't support connect() calls to it locally (WinError 10057)
-        ip_address = self.bindip or self.find_local_ip_address()
+        ip_address = self.bindip or "0.0.0.0"
 
         for listenport in range(int(self.portrange[0]), int(self.portrange[1]) + 1):
             try:
@@ -883,7 +881,7 @@ class SlskProtoThread(threading.Thread):
         )
 
         login, password = conn_obj.login
-        self.user_addresses[login] = self.listen_socket.getsockname()
+        self.user_addresses[login] = (self.find_local_ip_address(), self.listenport)
         conn_obj.login = True
 
         self.server_address = addr
