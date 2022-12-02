@@ -1,5 +1,12 @@
 # Release Notes
 
+## Version 3.2.8 (Development Version 1)
+
+### Corrections
+
+ * Windows: Fixed an issue viewing personal user info page
+
+
 ## Version 3.2.7 (December 1, 2022)
 
 ### Corrections
