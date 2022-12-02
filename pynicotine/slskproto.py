@@ -328,7 +328,9 @@ class SlskProtoThread(threading.Thread):
         if self.interface and not self.bindip:
             self.bind_to_network_interface(self.listen_socket, self.interface)
 
-        ip_address = self.bindip or ''
+        # Bind to the user requested IP address, find our current local IP address otherwise
+        # Do not use 0.0.0.0 here! Windows doesn't support connect() calls to it locally (WinError 10057)
+        ip_address = self.bindip or self.find_local_ip_address()
 
         for listenport in range(int(self.portrange[0]), int(self.portrange[1]) + 1):
             try:
@@ -355,12 +357,17 @@ class SlskProtoThread(threading.Thread):
             elif self.interface:
                 self.bind_to_network_interface(local_socket, self.interface)
 
-            # Send a broadcast packet on a local address (doesn't need to be reachable,
-            # but MacOS requires port to be non-zero)
-            local_socket.connect_ex(("10.255.255.255", 1))
+            try:
+                # Send a broadcast packet on a local address (doesn't need to be reachable,
+                # but MacOS requires port to be non-zero)
+                local_socket.connect(("152.89.162.24", 1))
 
-            # This returns the "primary" IP on the local box, even if that IP is a NAT/private/internal IP
-            ip_address = local_socket.getsockname()[0]
+                # This returns the "primary" IP on the local box, even if that IP is a NAT/private/internal IP
+                ip_address = local_socket.getsockname()[0]
+
+            except OSError:
+                # Fall back to localhost
+                ip_address = "127.0.0.1"
 
         return ip_address
 
