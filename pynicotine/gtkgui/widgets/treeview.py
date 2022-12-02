@@ -515,10 +515,6 @@ class TreeView:
                 continue
 
             if search_term.lower() in column_value:
-                if GTK_API_VERSION >= 4:
-                    # Workaround: Disable scrolling animation, since it doesn't work in GTK 4
-                    self.widget.queue_allocate()
-
                 return False
 
         return True
@@ -751,10 +747,6 @@ def on_search_match(model, _column, search_term, iterator, treeview):
             continue
 
         if search_term.lower() in column_value:
-            if GTK_API_VERSION >= 4:
-                # Workaround: Disable scrolling animation, since it doesn't work in GTK 4
-                treeview.queue_allocate()
-
             return False
 
     return True
