@@ -302,9 +302,7 @@ class SoulseekNetworkThread(Thread):
         if self._interface and not self._bound_ip:
             self._bind_to_network_interface(self._listen_socket, self._interface)
 
-        # Bind to the user requested IP address, find our current local IP address otherwise
-        # Do not use 0.0.0.0 here! Windows doesn't support connect() calls to it locally (WinError 10057)
-        ip_address = self._bound_ip or self._find_local_ip_address()
+        ip_address = self._bound_ip or "0.0.0.0"
 
         for listenport in range(int(self._listen_port_range[0]), int(self._listen_port_range[1]) + 1):
             try:
@@ -923,7 +921,7 @@ class SoulseekNetworkThread(Thread):
         )
 
         login, password = conn_obj.login
-        self._user_addresses[login] = self._listen_socket.getsockname()
+        self._user_addresses[login] = (self._find_local_ip_address(), self.listenport)
         conn_obj.login = True
 
         self._server_address = addr
@@ -1234,8 +1232,7 @@ class SoulseekNetworkThread(Thread):
                     elif msg_class is Login:
                         if msg.success:
                             # Ensure listening port is open
-                            self.upnp.port = self.listenport
-                            self.upnp.local_ip_address = self._find_local_ip_address()
+                            self.upnp.local_ip_address, self.upnp.port = self._user_addresses[self._server_username]
                             self.upnp.add_port_mapping(blocking=True)
 
                             # Check for indirect connection timeouts
