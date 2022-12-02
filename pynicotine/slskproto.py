@@ -302,7 +302,9 @@ class SoulseekNetworkThread(Thread):
         if self._interface and not self._bound_ip:
             self._bind_to_network_interface(self._listen_socket, self._interface)
 
-        ip_address = self._bound_ip or ''
+        # Bind to the user requested IP address, find our current local IP address otherwise
+        # Do not use 0.0.0.0 here! Windows doesn't support connect() calls to it locally (WinError 10057)
+        ip_address = self._bound_ip or self._find_local_ip_address()
 
         for listenport in range(int(self._listen_port_range[0]), int(self._listen_port_range[1]) + 1):
             try:
@@ -385,12 +387,17 @@ class SoulseekNetworkThread(Thread):
             elif self._interface:
                 self._bind_to_network_interface(local_socket, self._interface)
 
-            # Send a broadcast packet on a local address (doesn't need to be reachable,
-            # but MacOS requires port to be non-zero)
-            local_socket.connect_ex(("10.255.255.255", 1))
+            try:
+                # Send a broadcast packet on a local address (doesn't need to be reachable,
+                # but MacOS requires port to be non-zero)
+                local_socket.connect(("152.89.162.24", 1))
 
-            # This returns the "primary" IP on the local box, even if that IP is a NAT/private/internal IP
-            ip_address = local_socket.getsockname()[0]
+                # This returns the "primary" IP on the local box, even if that IP is a NAT/private/internal IP
+                ip_address = local_socket.getsockname()[0]
+
+            except OSError:
+                # Fall back to localhost
+                ip_address = "127.0.0.1"
 
         return ip_address
 
