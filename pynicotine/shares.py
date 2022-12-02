@@ -35,6 +35,7 @@ from pynicotine import rename_process
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
+from pynicotine.logfacility import LogLevel
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import UINT_LIMIT
 from pynicotine.slskmessages import FileListMessage
@@ -113,15 +114,15 @@ class Scanner:
             if self.rescan:
                 start_num_folders = len(list(self.share_dbs.get("buddyfiles", {})))
 
-                self.queue.put((_("Rescanning shares…"), None, None))
+                self.queue.put((_("Rescanning shares…"), None, LogLevel.DEFAULT))
                 self.queue.put((_("%(num)s folders found before rescan, rebuilding…"),
-                               {"num": start_num_folders}, None))
+                               {"num": start_num_folders}, LogLevel.DEFAULT))
 
                 new_mtimes, new_files, new_streams = self.rescan_dirs("normal", rebuild=self.rebuild)
                 _new_mtimes, new_files, _new_streams = self.rescan_dirs("buddy", new_mtimes, new_files,
                                                                         new_streams, self.rebuild)
 
-                self.queue.put((_("Rescan complete: %(num)s folders found"), {"num": len(new_files)}, None))
+                self.queue.put((_("Rescan complete: %(num)s folders found"), {"num": len(new_files)}, LogLevel.DEFAULT))
 
                 self.create_compressed_shares()
 
@@ -134,7 +135,7 @@ class Scanner:
                   "report with this stack trace included: %(trace)s"), {
                     "dir": self.config.data_dir,
                     "trace": "\n" + format_exc()
-                }, None
+                }, LogLevel.DEFAULT
             ))
             self.queue.put(Exception("Scanning failed"))
 
@@ -229,7 +230,7 @@ class Scanner:
 
             except Exception as error:
                 self.queue.put((_("Can't save %(filename)s: %(error)s"),
-                                {"filename": destination + ".db", "error": error}, None))
+                                {"filename": destination + ".db", "error": error}, LogLevel.DEFAULT))
                 return
 
     def rescan_dirs(self, share_type, mtimes=None, files=None, streams=None, rebuild=False):
@@ -286,7 +287,7 @@ class Scanner:
                 self.queue.put((_("Error while scanning folder %(path)s: %(error)s"), {
                     'path': folder,
                     'error': error
-                }, None))
+                }, LogLevel.DEFAULT))
 
         # Save data to databases
         new_mtimes["__NICOTINE_SHARE_VERSION__"] = self.version
@@ -361,7 +362,7 @@ class Scanner:
                 self.queue.put(("Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'", {
                     'vdir': virtual_folder,
                     'dir': folder
-                }, "miscellaneous"))
+                }, LogLevel.MISCELLANEOUS))
 
         try:
             with os.scandir(encode_path(folder, prefix=False)) as entries:
@@ -383,7 +384,7 @@ class Scanner:
 
                         except Exception as error:
                             self.queue.put((_("Error while scanning file %(path)s: %(error)s"),
-                                           {'path': entry.path, 'error': error}, None))
+                                           {'path': entry.path, 'error': error}, LogLevel.DEFAULT))
 
                         continue
 
@@ -402,7 +403,7 @@ class Scanner:
 
         except OSError as error:
             self.queue.put((_("Error while scanning folder %(path)s: %(error)s"),
-                           {'path': folder, 'error': error}, None))
+                           {'path': folder, 'error': error}, LogLevel.DEFAULT))
 
         if not folder_unchanged:
             files[virtual_folder] = file_list
@@ -429,7 +430,7 @@ class Scanner:
 
             except Exception as error:
                 self.queue.put((_("Error while scanning metadata for file %(path)s: %(error)s"),
-                               {'path': pathname, 'error': error}, None))
+                               {'path': pathname, 'error': error}, LogLevel.DEFAULT))
 
         if audio is not None:
             bitrate = audio.bitrate
