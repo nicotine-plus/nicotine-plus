@@ -205,7 +205,7 @@ class RoomList(Popover):
 
     def on_popup_join(self, *_args):
         core.chatrooms.show_room(self.popup_room)
-        self.popover.hide()
+        self.popover.set_visible(False)
 
     def on_toggle_public_feed(self, *_args):
 
@@ -214,7 +214,7 @@ class RoomList(Popover):
 
         if self.public_feed_toggle.get_active():
             core.chatrooms.show_room("Public ")
-            self.popover.hide()
+            self.popover.set_visible(False)
             return
 
         core.chatrooms.remove_room("Public ")

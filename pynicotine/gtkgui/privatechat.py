@@ -374,7 +374,7 @@ class PrivateChat:
         self.speech_toggle.set_visible(config.sections["ui"]["speechenabled"])
 
     def on_find_chat_log(self, *_args):
-        self.search_bar.show()
+        self.search_bar.set_visible(True)
 
     def on_view_chat_log(self, *_args):
         log.open_log(config.sections["logging"]["privatelogsdir"], self.user)

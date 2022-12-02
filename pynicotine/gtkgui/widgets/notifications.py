@@ -202,7 +202,7 @@ class WinNotify:
 
         if not has_tray_icon:
             # Tray icon was disabled by the user. Enable it temporarily to show a notification.
-            self.tray_icon.show()
+            self.tray_icon.set_visible(True)
 
         # Need to account for the null terminated character appended to the message length by Windows
         self.nid.sz_info_title = truncate_string_byte(title, byte_limit=63, ellipsize=True)
@@ -212,4 +212,4 @@ class WinNotify:
         time.sleep(timeout)
 
         if not has_tray_icon:
-            self.tray_icon.hide()
+            self.tray_icon.set_visible(False)

@@ -511,8 +511,8 @@ class ChatRoom:
         cols["speed"].set_sort_column_id(6)
         cols["files"].set_sort_column_id(7)
 
-        cols["status"].get_widget().hide()
-        cols["country"].get_widget().hide()
+        cols["status"].get_widget().set_visible(False)
+        cols["country"].get_widget().set_visible(False)
 
         for userdata in users:
             self.add_user_row(userdata)
@@ -612,7 +612,7 @@ class ChatRoom:
 
         for widget in (self.activity_container, self.users_container, self.chat_entry,
                        self.room_wall_button, self.help_button):
-            widget.hide()
+            widget.set_visible(False)
 
         self.users_action_row.remove(self.auto_join_toggle)
 
@@ -744,10 +744,10 @@ class ChatRoom:
         menu.actions[_("Private Rooms")].set_enabled(private_rooms_enabled)
 
     def on_find_activity_log(self, *_args):
-        self.activity_search_bar.show()
+        self.activity_search_bar.set_visible(True)
 
     def on_find_room_log(self, *_args):
-        self.chat_search_bar.show()
+        self.chat_search_bar.set_visible(True)
 
     @staticmethod
     def get_selected_username(treeview):

@@ -104,7 +104,7 @@ class TabLabel(Gtk.Box):
             self.close_button.add_events(Gdk.EventMask.SCROLL_MASK | Gdk.EventMask.SMOOTH_SCROLL_MASK)
 
         self.close_button.set_tooltip_text(_("Close Tab"))
-        self.close_button.show()
+        self.close_button.set_visible(True)
 
         if self.close_callback is not None:
             self.close_button.connect("clicked", self.close_callback)
@@ -193,7 +193,7 @@ class TabLabel(Gtk.Box):
 
         icon_name = "nplus-hilite" if self.mentioned else "nplus-hilite3"
         self.end_icon.set_property("icon-name", icon_name)
-        self.end_icon.show()
+        self.end_icon.set_visible(True)
 
     def remove_hilite(self):
 
@@ -203,7 +203,7 @@ class TabLabel(Gtk.Box):
         self._set_text_color(config.sections["ui"]["tab_default"])
 
         self.end_icon.set_property("icon-name", None)
-        self.end_icon.hide()
+        self.end_icon.set_visible(False)
 
     def set_status_icon(self, status):
         icon_name = get_status_icon_name(status)
@@ -359,11 +359,11 @@ class IconNotebook:
             label_tab.gesture_click = Gtk.GestureClick()
             label_tab.add_controller(label_tab.gesture_click)  # pylint: disable=no-member
 
-            page.get_first_child().hide()
+            page.get_first_child().set_visible(False)
         else:
             label_tab.gesture_click = Gtk.GestureMultiPress(widget=label_tab)
 
-            page.get_children()[0].hide()
+            page.get_children()[0].set_visible(False)
 
         label_tab.gesture_click.set_button(Gdk.BUTTON_MIDDLE)
         label_tab.gesture_click.connect("pressed", label_tab.close_callback, page)
@@ -491,7 +491,7 @@ class IconNotebook:
 
         self.unread_pages.append(page)
         self.update_unread_pages_menu()
-        self.unread_button.show()
+        self.unread_button.set_visible(True)
 
     def remove_unread_page(self, page):
 
@@ -502,7 +502,7 @@ class IconNotebook:
         if self.unread_pages:
             return
 
-        self.unread_button.hide()
+        self.unread_button.set_visible(False)
 
         if self.parent_page is not None:
             self.window.notebook.remove_tab_hilite(self.parent_page)
@@ -564,11 +564,11 @@ class IconNotebook:
         current_page = self.get_current_page()
 
         if GTK_API_VERSION >= 4:
-            current_page.get_first_child().hide()
-            new_page.get_first_child().show()
+            current_page.get_first_child().set_visible(False)
+            new_page.get_first_child().set_visible(True)
         else:
-            current_page.get_children()[0].hide()
-            new_page.get_children()[0].show()
+            current_page.get_children()[0].set_visible(False)
+            new_page.get_children()[0].set_visible(True)
 
         if self.parent_page is None:
             return

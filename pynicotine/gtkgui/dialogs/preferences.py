@@ -120,7 +120,7 @@ class NetworkPage:
 
         if sys.platform == "win32":
             for widget in (self.InterfaceLabel, self.Interface):
-                widget.get_parent().hide()
+                widget.get_parent().set_visible(False)
 
             return
 
@@ -1087,7 +1087,7 @@ class ChatsPage:
             from gi.repository import Gspell  # noqa: F401; pylint:disable=unused-import
 
         except (ImportError, ValueError):
-            self.SpellCheck.hide()
+            self.SpellCheck.set_visible(False)
 
         self.censored_patterns = config.sections["words"]["censored"][:]
         self.replacements = config.sections["words"]["autoreplaced"].copy()
@@ -1718,8 +1718,8 @@ class SearchesPage:
             if num_filters > 7:
                 self.FilterLength.set_text(str(searches["defilter"][7]))
 
-        self.ClearSearchHistorySuccess.hide()
-        self.ClearFilterHistorySuccess.hide()
+        self.ClearSearchHistorySuccess.set_visible(False)
+        self.ClearFilterHistorySuccess.set_visible(False)
 
     def get_settings(self):
 
@@ -1753,11 +1753,11 @@ class SearchesPage:
 
     def on_clear_search_history(self, *_args):
         self.application.window.search.clear_search_history()
-        self.ClearSearchHistorySuccess.show()
+        self.ClearSearchHistorySuccess.set_visible(True)
 
     def on_clear_filter_history(self, *_args):
         self.application.window.search.clear_filter_history()
-        self.ClearFilterHistorySuccess.show()
+        self.ClearFilterHistorySuccess.set_visible(True)
 
 
 class UrlHandlersPage:
@@ -1954,8 +1954,7 @@ class NowPlayingPage:
             self.get_format                # Callback to retrieve format text
         )
 
-        if sys.platform in ("win32", "darwin"):
-            self.NP_mpris.hide()
+        self.NP_mpris.set_visible(sys.platform not in ("win32", "darwin"))
 
     def set_settings(self):
 
@@ -2598,7 +2597,7 @@ class Preferences(Dialog):
 
         # Tray icon
         if not config.sections["ui"]["trayicon"] and self.application.tray_icon.is_visible():
-            self.application.tray_icon.hide()
+            self.application.tray_icon.set_visible(False)
 
         elif config.sections["ui"]["trayicon"] and not self.application.tray_icon.is_visible():
             self.application.tray_icon.load()

@@ -306,7 +306,7 @@ class TreeView:
                 label.get_parent().set_halign(Gtk.Align.END)
 
             if column_data.get("hide_header"):
-                column.get_widget().hide()
+                column.get_widget().set_visible(False)
 
             if column_data.get("expand_column"):
                 column.set_expand(True)

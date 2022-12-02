@@ -150,7 +150,7 @@ class Dialog(Window):
             return False
 
         # Hide the dialog
-        self.window.hide()
+        self.window.set_visible(False)
 
         # "Soft-delete" the dialog. This is necessary to prevent the dialog from
         # appearing in window peek on Windows

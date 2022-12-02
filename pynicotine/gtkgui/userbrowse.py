@@ -525,7 +525,7 @@ class UserBrowse:
             self.browse_queued_path()
 
         else:
-            self.retry_button.hide()
+            self.retry_button.set_visible(False)
             self.info_bar.show_message(
                 _("User's list of shared files is empty. Either the user is not sharing anything, "
                   "or they are sharing files privately.")
@@ -538,7 +538,7 @@ class UserBrowse:
         if self.refresh_button.get_sensitive():
             return
 
-        self.retry_button.show()
+        self.retry_button.set_visible(True)
         self.info_bar.show_message(
             _("Unable to request shared files from user. Either the user is offline, you both have "
               "a closed listening port, or there's a temporary connectivity issue."),

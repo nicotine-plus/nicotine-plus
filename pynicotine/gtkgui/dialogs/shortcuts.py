@@ -35,5 +35,5 @@ class Shortcuts(Dialog):
         application.window.set_help_overlay(self.dialog)
 
         # Workaround for off-centered dialog on first run
-        self.dialog.show()
-        self.dialog.hide()
+        self.dialog.set_visible(True)
+        self.dialog.set_visible(False)

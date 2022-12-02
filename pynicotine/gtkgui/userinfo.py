@@ -349,7 +349,7 @@ class UserInfo:
                 self.picture.clear()
 
             self.picture_data_original = self.picture_data_scaled = None
-            self.placeholder_picture.show()
+            self.placeholder_picture.set_visible(True)
             return
 
         try:
@@ -370,7 +370,7 @@ class UserInfo:
             self.set_pixbuf(self.picture_data_scaled)
 
             self.actual_zoom = 0
-            self.picture_view.show()
+            self.picture_view.set_visible(True)
 
         except Exception as error:
             log.add(_("Failed to load picture for user %(user)s: %(error)s"), {

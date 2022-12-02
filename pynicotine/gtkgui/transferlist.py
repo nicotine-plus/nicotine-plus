@@ -741,7 +741,7 @@ class TransferList:
         popover = self.grouping_button.get_popover()
 
         if popover is not None:
-            popover.hide()
+            popover.set_visible(False)
 
         if GTK_API_VERSION >= 4:
             # Ensure buttons are flat in libadwaita

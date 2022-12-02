@@ -134,7 +134,7 @@ class Searches(IconNotebook):
         self.window.room_search_combobox.set_visible(search_mode == "rooms")
 
         # Hide popover after click
-        self.window.search_mode_button.get_popover().hide()
+        self.window.search_mode_button.get_popover().set_visible(False)
 
     def on_search(self):
 
@@ -392,7 +392,7 @@ class Search:
         cols["bitrate"].set_sort_column_id(10)
         cols["length"].set_sort_column_id(16)
 
-        cols["country"].get_widget().hide()
+        cols["country"].get_widget().set_visible(False)
 
         for column in self.tree_view.get_columns():
             self.column_offsets[column.get_title()] = 0
@@ -1030,7 +1030,7 @@ class Search:
     def update_wish_button(self):
 
         if self.mode not in ("global", "wishlist"):
-            self.add_wish_button.hide()
+            self.add_wish_button.set_visible(False)
             return
 
         if not core.search.is_wish(self.text):
@@ -1377,7 +1377,7 @@ class Search:
         popover = self.grouping_button.get_popover()
 
         if popover is not None:
-            popover.hide()
+            popover.set_visible(False)
 
         config.sections["searches"]["group_searches"] = mode
         self.cols["id"].set_visible(not active)

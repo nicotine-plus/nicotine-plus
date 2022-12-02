@@ -518,7 +518,7 @@ class MainWindow(Window):
                 return
 
             self.buddy_list_container.remove(self.userlist.container)
-            self.buddy_list_container.hide()
+            self.buddy_list_container.set_visible(False)
 
         elif self.userlist.container.get_parent() == self.chatrooms_buddy_list_container:
 
@@ -526,7 +526,7 @@ class MainWindow(Window):
                 return
 
             self.chatrooms_buddy_list_container.remove(self.userlist.container)
-            self.chatrooms_buddy_list_container.hide()
+            self.chatrooms_buddy_list_container.set_visible(False)
 
         elif self.userlist.container.get_parent() == self.userlist_content:
 
@@ -543,8 +543,8 @@ class MainWindow(Window):
             else:
                 self.buddy_list_container.add(self.userlist.container)
 
-            self.userlist.toolbar.show()
-            self.buddy_list_container.show()
+            self.userlist.toolbar.set_visible(True)
+            self.buddy_list_container.set_visible(True)
             return
 
         if mode == "chatrooms":
@@ -554,11 +554,11 @@ class MainWindow(Window):
             else:
                 self.chatrooms_buddy_list_container.add(self.userlist.container)
 
-            self.userlist.toolbar.show()
-            self.chatrooms_buddy_list_container.show()
+            self.userlist.toolbar.set_visible(True)
+            self.chatrooms_buddy_list_container.set_visible(True)
             return
 
-        self.userlist.toolbar.hide()
+        self.userlist.toolbar.set_visible(False)
 
         if GTK_API_VERSION >= 4:
             self.userlist_content.append(self.userlist.container)
@@ -860,7 +860,7 @@ class MainWindow(Window):
 
         if not self.window.get_show_menubar():
             self.window.set_show_menubar(True)
-            self.header_menu.get_popover().hide()
+            self.header_menu.get_popover().set_visible(False)
 
             if GTK_API_VERSION == 3:
                 # Don't override builtin accelerator for menu bar
@@ -872,7 +872,7 @@ class MainWindow(Window):
                 self.window.map()
 
         toolbar = getattr(self, page_id + "_toolbar")
-        toolbar.show()
+        toolbar.set_visible(True)
 
     def hide_current_toolbar(self):
         """ Hide the current toolbar """
@@ -881,7 +881,7 @@ class MainWindow(Window):
             return
 
         toolbar = getattr(self, self.current_page_id + "_toolbar")
-        toolbar.hide()
+        toolbar.set_visible(False)
 
     def set_active_header_bar(self, page_id):
         """ Switch out the active headerbar for another one. This is used when
@@ -1101,14 +1101,14 @@ class MainWindow(Window):
             self.lookup_action("toggle-buddy-list").emit("activate", GLib.Variant("s", "tab"))
 
         config.sections["ui"]["modes_visible"][page.id] = True
-        page.show()
+        page.set_visible(True)
 
         self.notebook.set_show_tabs(True)
 
     def hide_tab(self, page):
 
         config.sections["ui"]["modes_visible"][page.id] = False
-        page.hide()
+        page.set_visible(False)
 
         if self.notebook.get_n_pages() <= 1:
             self.notebook.set_show_tabs(False)
@@ -1308,7 +1308,7 @@ class MainWindow(Window):
         menu.actions[_("_Copy")].set_enabled(self.log_view.get_has_selection())
 
     def on_find_log_window(self, *_args):
-        self.log_search_bar.show()
+        self.log_search_bar.set_visible(True)
 
     @staticmethod
     def on_view_debug_logs(*_args):
@@ -1412,7 +1412,7 @@ class MainWindow(Window):
             dialog.close()
 
         # Run in Background
-        self.window.hide()
+        self.window.set_visible(False)
 
         # Save config, in case application is killed later
         config.write_configuration()

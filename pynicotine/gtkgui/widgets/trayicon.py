@@ -268,11 +268,7 @@ class BaseImplementation:
         # Implemented in subclasses
         return False
 
-    def show(self):
-        # Implemented in subclasses
-        pass
-
-    def hide(self):
+    def set_visible(self, _visible):
         # Implemented in subclasses
         pass
 
@@ -625,15 +621,10 @@ class StatusNotifierImplementation(BaseImplementation):
     def is_visible(self):
         return self.tray_icon.properties["Status"].value == "Active"
 
-    def show(self):
+    def set_visible(self, visible):
 
-        status = "Active"
-        self.tray_icon.properties["Status"].value = status
-        self.tray_icon.emit_signal("NewStatus", status)
+        status = "Active" if visible else "Passive"
 
-    def hide(self):
-
-        status = "Passive"
         self.tray_icon.properties["Status"].value = status
         self.tray_icon.emit_signal("NewStatus", status)
 
@@ -703,7 +694,7 @@ class StatusIconImplementation(BaseImplementation):
 
             item["gtk_menu_item"] = gtk_menu_item
 
-            gtk_menu_item.show()
+            gtk_menu_item.set_visible(True)
             gtk_menu.append(gtk_menu_item)
 
         return gtk_menu
@@ -714,19 +705,8 @@ class StatusIconImplementation(BaseImplementation):
     def is_visible(self):
         return self.tray_icon.get_visible() and self.tray_icon.is_embedded()
 
-    def show(self):
-
-        if self.is_visible():
-            return
-
-        self.tray_icon.set_visible(True)
-
-    def hide(self):
-
-        if not self.is_visible():
-            return
-
-        self.tray_icon.set_visible(False)
+    def set_visible(self, visible):
+        self.tray_icon.set_visible(visible)
 
 
 class TrayIcon:
@@ -779,11 +759,7 @@ class TrayIcon:
 
             self.refresh_state()
 
-        if config.sections["ui"]["trayicon"]:
-            self.show()
-            return
-
-        self.hide()
+        self.set_visible(config.sections["ui"]["trayicon"])
 
     def update_window_visibility(self):
         if self.implementation:
@@ -827,10 +803,6 @@ class TrayIcon:
 
         return False
 
-    def show(self):
+    def set_visible(self, visible):
         if self.implementation:
-            self.implementation.show()
-
-    def hide(self):
-        if self.implementation:
-            self.implementation.hide()
+            self.implementation.set_visible(visible)

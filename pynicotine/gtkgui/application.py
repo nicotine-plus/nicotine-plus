@@ -796,7 +796,7 @@ class Application:
 
     def on_shutdown(self, *_args):
         # Explicitly hide tray icon, otherwise it will not disappear on Windows
-        self.tray_icon.hide()
+        self.tray_icon.set_visible(False)
 
     def on_force_quit(self, *_args):
         core.quit()
