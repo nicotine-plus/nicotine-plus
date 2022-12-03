@@ -4,6 +4,7 @@
 
 ### Corrections
 
+ * Improve file scanning performance on systems other than Windows
  * Windows: Fixed an issue viewing personal user info page
 
 
