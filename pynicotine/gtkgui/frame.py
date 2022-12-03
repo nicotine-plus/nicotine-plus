@@ -1771,6 +1771,9 @@ class NicotineFrame(UserInterface, Window):
 
     def set_scan_indeterminate(self):
 
+        if self.scan_progress_indeterminate:
+            return
+
         self.scan_progress_indeterminate = True
 
         self.scan_progress_bar.pulse()
