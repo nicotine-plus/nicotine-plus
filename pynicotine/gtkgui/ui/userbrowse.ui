@@ -155,6 +155,7 @@
                                   <object class="GtkSearchEntry" id="search_entry">
                                     <property name="visible">True</property>
                                     <property name="hexpand">True</property>
+                                    <property name="sensitive" bind-source="refresh_button" bind-property="sensitive" bind-flags="bidirectional|sync-create"/>
                                     <property name="tooltip-text" translatable="yes">Search Files and Folders</property>
                                     <property name="width-chars">18</property>
                                     <signal name="activate" handler="on_search"/>
@@ -163,6 +164,7 @@
                                 <child>
                                   <object class="GtkButton">
                                     <property name="visible">True</property>
+                                    <property name="sensitive" bind-source="refresh_button" bind-property="sensitive" bind-flags="bidirectional|sync-create"/>
                                     <property name="tooltip-text" translatable="yes">Save Shares List to Disk</property>
                                     <signal name="clicked" handler="on_save"/>
                                     <child>
