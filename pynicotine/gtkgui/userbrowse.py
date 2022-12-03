@@ -186,7 +186,6 @@ class UserBrowse:
         self.num_folders = 0
         self.share_size = 0
 
-        self.shares = {}
         self.dir_iters = {}
         self.dir_user_data = {}
         self.file_iters = {}
@@ -393,8 +392,6 @@ class UserBrowse:
         self.selected_folder = None
         self.selected_files.clear()
 
-        self.shares.clear()
-
         self.folder_tree_view.set_model(None)
         self.file_list_view.set_model(None)
 
@@ -417,10 +414,8 @@ class UserBrowse:
         size, num_folders = self.create_folder_tree(shares)
 
         if private_shares:
-            shares = shares + private_shares
             private_size, num_private_folders = self.create_folder_tree(private_shares, private=True)
 
-        self.shares = dict(shares)
         self.share_size = size + private_size
         self.num_folders = num_folders + num_private_folders
 
@@ -596,7 +591,7 @@ class UserBrowse:
         self.file_list_view.set_model(self.file_store)
 
         self.selected_folder = directory
-        files = self.shares.get(directory)
+        files = core.userbrowse.user_shares[self.user].get(directory)
 
         if not files:
             return
@@ -643,7 +638,7 @@ class UserBrowse:
         self.search_list.clear()
         temp_list = set()
 
-        for directory, files in self.shares.items():
+        for directory, files in core.userbrowse.user_shares[self.user].items():
 
             if self.query in directory.lower():
                 temp_list.add(directory)
@@ -731,20 +726,19 @@ class UserBrowse:
 
         self.set_directory(iterator.user_data)
 
-    def on_folder_popup_menu(self, menu, _treeview):
+    def on_folder_popup_menu(self, *_args):
         self.user_popup_menu.toggle_user_items()
-        menu.actions[_("F_ile Properties")].set_enabled(bool(self.shares.get(self.selected_folder)))
 
     def on_download_directory(self, *_args):
 
         if self.selected_folder is not None:
-            core.userbrowse.download_folder(self.user, self.selected_folder, self.shares)
+            core.userbrowse.download_folder(self.user, self.selected_folder)
 
     def on_download_directory_recursive(self, *_args):
-        core.userbrowse.download_folder(self.user, self.selected_folder, self.shares, prefix="", recurse=True)
+        core.userbrowse.download_folder(self.user, self.selected_folder, prefix="", recurse=True)
 
     def on_download_directory_to_selected(self, selected, recurse):
-        core.userbrowse.download_folder(self.user, self.selected_folder, self.shares,
+        core.userbrowse.download_folder(self.user, self.selected_folder,
                                         prefix=os.path.join(selected, ""), recurse=recurse)
 
     def on_download_directory_to(self, *_args, recurse=False):
@@ -774,7 +768,7 @@ class UserBrowse:
             return
 
         core.userbrowse.send_upload_attempt_notification(user)
-        core.userbrowse.upload_folder(user, folder, self.shares, recurse=recurse)
+        core.userbrowse.upload_folder(user, folder, recurse=recurse)
 
     def on_upload_directory_to(self, *_args, recurse=False):
 
@@ -962,7 +956,7 @@ class UserBrowse:
     def on_download_files(self, *_args, prefix=""):
 
         folder = self.selected_folder
-        files = self.shares.get(folder)
+        files = core.userbrowse.user_shares[self.user].get(folder)
 
         if not files:
             return
@@ -1044,7 +1038,7 @@ class UserBrowse:
         selected_length = 0
 
         if all_files:
-            files = self.shares.get(folder)
+            files = core.userbrowse.user_shares[self.user].get(folder)
 
             if not files:
                 return
@@ -1243,7 +1237,7 @@ class UserBrowse:
         self.find_search_matches()
 
     def on_save(self, *_args):
-        core.userbrowse.save_shares_list_to_disk(self.user, list(self.shares.items()))
+        core.userbrowse.save_shares_list_to_disk(self.user)
 
     def on_refresh(self, *_args):
 

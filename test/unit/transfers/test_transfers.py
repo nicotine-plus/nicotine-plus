@@ -194,7 +194,7 @@ class TransfersTest(TestCase):
         user = "random"
         target_folder = "share\\Soulseek"
 
-        shares_list = dict([
+        core.userbrowse.user_shares[user] = dict([
             ('share\\Music', [
                 (1, 'music1.mp3', 1000000, '', {}),
                 (1, 'music2.mp3', 2000000, '', {})
@@ -218,7 +218,7 @@ class TransfersTest(TestCase):
         ])
 
         core.transfers.downloads.clear()
-        core.userbrowse.download_folder(user, target_folder, shares_list, prefix="test", recurse=True)
+        core.userbrowse.download_folder(user, target_folder, prefix="test", recurse=True)
 
         self.assertEqual(len(core.transfers.downloads), 6)
 
