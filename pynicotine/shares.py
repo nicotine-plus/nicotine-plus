@@ -307,7 +307,7 @@ class Scanner:
         return new_mtimes, new_files, new_streams
 
     @staticmethod
-    def is_hidden(folder, filename=None, entry_stat=None):
+    def is_hidden(folder, filename=None, entry=None):
         """ Stop sharing any dot/hidden directories/files """
 
         # If the last folder in the path starts with a dot, we exclude it
@@ -327,11 +327,13 @@ class Scanner:
                 # Root directories are marked as hidden, but we allow scanning them
                 return False
 
-            if entry_stat is None:
+            if entry is None:
                 if filename is not None:
                     entry_stat = os.stat(encode_path(folder + '\\' + filename))
                 else:
                     entry_stat = os.stat(encode_path(folder))
+            else:
+                entry_stat = entry.stat()
 
             return entry_stat.st_file_attributes & stat.FILE_ATTRIBUTE_HIDDEN
 
@@ -367,19 +369,17 @@ class Scanner:
         try:
             with os.scandir(encode_path(folder, prefix=False)) as entries:
                 for entry in entries:
-                    entry_stat = entry.stat()
-
                     if entry.is_file():
                         try:
                             if not folder_unchanged:
                                 filename = entry.name.decode("utf-8", "replace")
 
-                                if self.is_hidden(folder, filename, entry_stat):
+                                if self.is_hidden(folder, filename, entry):
                                     continue
 
                                 # Get the metadata of the file
                                 path = entry.path.decode("utf-8", "replace")
-                                data = self.get_file_info(filename, path, self.tinytag, entry_stat)
+                                data = self.get_file_info(filename, path, entry)
                                 file_list.append(data)
 
                         except Exception as error:
@@ -390,11 +390,11 @@ class Scanner:
 
                     path = entry.path.decode("utf-8", "replace").replace('\\', os.sep)
 
-                    if self.is_hidden(path, entry_stat=entry_stat):
+                    if self.is_hidden(path, entry=entry):
                         continue
 
                     dir_files, dir_streams, dir_mtimes = self.get_files_list(
-                        path, oldmtimes, oldfiles, oldstreams, rebuild, entry_stat
+                        path, oldmtimes, oldfiles, oldstreams, rebuild, entry.stat()
                     )
 
                     files = {**files, **dir_files}
@@ -411,22 +411,24 @@ class Scanner:
 
         return files, streams, mtimes
 
-    def get_file_info(self, name, pathname, tinytag, file_stat=None):
+    def get_file_info(self, name, pathname, entry=None):
         """ Get file metadata """
 
         audio = None
         audio_info = None
         duration = None
 
-        if file_stat is None:
+        if entry is None:
             file_stat = os.stat(encode_path(pathname))
+        else:
+            file_stat = entry.stat()
 
         size = file_stat.st_size
 
         # We skip metadata scanning of files without meaningful content
         if size > 128:
             try:
-                audio = tinytag.get(encode_path(pathname), size, tags=False)
+                audio = self.tinytag.get(encode_path(pathname), size, tags=False)
 
             except Exception as error:
                 self.queue.put((_("Error while scanning metadata for file %(path)s: %(error)s"),
