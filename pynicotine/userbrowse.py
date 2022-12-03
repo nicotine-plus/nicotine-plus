@@ -65,10 +65,6 @@ class UserBrowse:
         core.send_message_to_peer(username, slskmessages.UploadQueueNotification())
 
     def show_user(self, user, path=None, local_shares_type=None, switch_page=True):
-
-        if user not in self.user_shares:
-            self.user_shares[user] = None
-
         events.emit(
             "user-browse-show-user", user=user, path=path, local_shares_type=local_shares_type, switch_page=switch_page)
 
@@ -117,6 +113,14 @@ class UserBrowse:
         if not username:
             return
 
+        user_exists = (username in self.user_shares)
+
+        if not user_exists:
+            self.user_shares[username] = {}
+        else:
+            # Use clear() to release memory faster
+            self.user_shares[username].clear()
+
         if username == (config.sections["server"]["login"] or "Default"):
             if local_shares_type == "normal":
                 self.browse_local_public_shares(path, new_request)
@@ -125,7 +129,6 @@ class UserBrowse:
             self.browse_local_buddy_shares(path, new_request)
             return
 
-        user_exists = (username in self.user_shares)
         self.show_user(username, path=path, switch_page=switch_page)
 
         if core.user_status == UserStatus.OFFLINE:
