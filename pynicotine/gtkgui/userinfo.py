@@ -302,7 +302,7 @@ class UserInfo(UserInterface):
             max_height = allocation.height - 72
 
             # Keep the original picture size for saving to disk
-            data_stream = Gio.MemoryInputStream.new_from_data(data, None)
+            data_stream = Gio.MemoryInputStream.new_from_bytes(GLib.Bytes(data))
             self.picture_data_original = GdkPixbuf.Pixbuf.new_from_stream(data_stream, cancellable=None)
             picture_width = self.picture_data_original.get_width()
             picture_height = self.picture_data_original.get_height()
