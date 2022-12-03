@@ -64,7 +64,7 @@ class UserBrowse:
 
         core.send_message_to_peer(username, slskmessages.UploadQueueNotification())
 
-    def show_user(self, user, path=None, local_shares_type=None, switch_page=True):
+    def _show_user(self, user, path=None, local_shares_type=None, switch_page=True):
         events.emit(
             "user-browse-show-user", user=user, path=path, local_shares_type=local_shares_type, switch_page=switch_page)
 
@@ -92,7 +92,7 @@ class UserBrowse:
                 target=self.parse_local_shares, args=(username, msg), name="LocalShareParser", daemon=True
             ).start()
 
-        self.show_user(username, path=path, local_shares_type="normal")
+        self._show_user(username, path=path, local_shares_type="normal")
 
     def browse_local_buddy_shares(self, path=None, new_request=False):
         """ Browse your own buddy shares """
@@ -105,7 +105,7 @@ class UserBrowse:
                 target=self.parse_local_shares, args=(username, msg), name="LocalBuddyShareParser", daemon=True
             ).start()
 
-        self.show_user(username, path=path, local_shares_type="buddy")
+        self._show_user(username, path=path, local_shares_type="buddy")
 
     def browse_user(self, username, path=None, local_shares_type=None, new_request=False, switch_page=True):
         """ Browse a user's shares """
@@ -117,7 +117,8 @@ class UserBrowse:
 
         if not user_exists:
             self.user_shares[username] = {}
-        else:
+
+        elif new_request:
             # Use clear() to release memory faster
             self.user_shares[username].clear()
 
@@ -129,7 +130,7 @@ class UserBrowse:
             self.browse_local_buddy_shares(path, new_request)
             return
 
-        self.show_user(username, path=path, switch_page=switch_page)
+        self._show_user(username, path=path, switch_page=switch_page)
 
         if core.user_status == UserStatus.OFFLINE:
             events.emit("peer-connection-error", slskmessages.PeerConnectionError(username))
@@ -184,7 +185,7 @@ class UserBrowse:
             return
 
         username = filename.replace('\\', os.sep).split(os.sep)[-1]
-        self.show_user(username)
+        self._show_user(username)
 
         msg = slskmessages.SharedFileListResponse(init=PeerInit(target_user=username))
         msg.list = shares_list
