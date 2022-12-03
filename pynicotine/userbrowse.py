@@ -65,6 +65,10 @@ class UserBrowse:
         core.send_message_to_peer(username, slskmessages.UploadQueueNotification())
 
     def _show_user(self, user, path=None, local_shares_type=None, switch_page=True):
+
+        if user not in self.user_shares:
+            self.user_shares[user] = {}
+
         events.emit(
             "user-browse-show-user", user=user, path=path, local_shares_type=local_shares_type, switch_page=switch_page)
 
@@ -113,14 +117,10 @@ class UserBrowse:
         if not username:
             return
 
-        user_exists = (username in self.user_shares)
+        user_share = self.user_shares.get(username)
 
-        if not user_exists:
-            self.user_shares[username] = {}
-
-        elif new_request:
-            # Use clear() to release memory faster
-            self.user_shares[username].clear()
+        if user_share and new_request:
+            user_share.clear()
 
         if username == (config.sections["server"]["login"] or "Default"):
             if local_shares_type == "normal":
@@ -138,7 +138,7 @@ class UserBrowse:
 
         core.watch_user(username, force_update=True)
 
-        if not user_exists or new_request:
+        if not user_share or new_request:
             core.send_message_to_peer(username, slskmessages.SharedFileListRequest())
 
     def create_user_shares_folder(self):
@@ -185,6 +185,11 @@ class UserBrowse:
             return
 
         username = filename.replace('\\', os.sep).split(os.sep)[-1]
+        user_share = self.user_shares.get(username)
+
+        if user_share:
+            user_share.clear()
+
         self._show_user(username)
 
         msg = slskmessages.SharedFileListResponse(init=PeerInit(target_user=username))
