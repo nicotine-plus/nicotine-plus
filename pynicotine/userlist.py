@@ -30,6 +30,7 @@ class UserList:
     def __init__(self):
 
         self.buddies = {}
+        self.allow_saving_buddies = False
 
         for event_name, callback in (
             ("quit", self._quit),
@@ -84,8 +85,11 @@ class UserList:
             self.buddies[user] = row
             events.emit("add-buddy", user, row)
 
+        self.allow_saving_buddies = True
+
     def _quit(self):
         self.buddies.clear()
+        self.allow_saving_buddies = False
 
     def _server_login(self, msg):
 
@@ -202,6 +206,10 @@ class UserList:
         self.buddies[user][6] = "flag_" + country_code
 
     def save_buddy_list(self):
+
+        if not self.allow_saving_buddies:
+            return
+
         config.sections["server"]["userlist"] = list(self.buddies.values())
         config.write_configuration()
 
