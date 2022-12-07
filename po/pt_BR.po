@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-01 03:44+0200\n"
-"PO-Revision-Date: 2022-11-30 14:56+0000\n"
+"PO-Revision-Date: 2022-12-02 11:56+0000\n"
 "Last-Translator: Havokdan <havokdan@yahoo.com.br>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/pt_BR/>\n"
@@ -1569,25 +1569,25 @@ msgstr "Alterar _Detalhes de login"
 
 #: pynicotine/gtkgui/application.py:585
 msgid "Message Downloading Users"
-msgstr ""
+msgstr "Mensagens de Usuários que estão Baixando"
 
 #: pynicotine/gtkgui/application.py:586
 msgid "Send private message to all users who are downloading from you:"
 msgstr ""
+"Envia mensagem privada para todos os usuários que estão baixando arquivos de "
+"você:"
 
 #: pynicotine/gtkgui/application.py:587 pynicotine/gtkgui/application.py:600
-#, fuzzy
 msgid "_Send Message"
-msgstr "Enviar Mensagem"
+msgstr "_Enviar Mensagem"
 
 #: pynicotine/gtkgui/application.py:598
-#, fuzzy
 msgid "Message Buddies"
-msgstr "Mensagens"
+msgstr "Mensagens de Amigos"
 
 #: pynicotine/gtkgui/application.py:599
 msgid "Send private message to all online buddies:"
-msgstr ""
+msgstr "Enviar mensagens privadas para todos os amigos online:"
 
 #: pynicotine/gtkgui/application.py:624
 msgid "Select a Saved Shares List File"
@@ -2361,7 +2361,7 @@ msgstr "Filtrado"
 
 #: pynicotine/gtkgui/downloads.py:66
 msgid "Deleted"
-msgstr ""
+msgstr "Excluído"
 
 #: pynicotine/gtkgui/downloads.py:67 pynicotine/gtkgui/uploads.py:69
 msgid "Queued…"
@@ -3150,24 +3150,20 @@ msgstr ""
 "temporário."
 
 #: pynicotine/gtkgui/userinfo.py:476
-#, fuzzy
 msgid "Remove _Buddy"
-msgstr "Remover De_sejo"
+msgstr "Remover _Amigo"
 
 #: pynicotine/gtkgui/userinfo.py:476
-#, fuzzy
 msgid "Add _Buddy"
-msgstr "Adicionar amigo…"
+msgstr "Adicionar _Amigo"
 
 #: pynicotine/gtkgui/userinfo.py:480
-#, fuzzy
 msgid "Unban User"
-msgstr "Banir Usuário"
+msgstr "Desbanir Usuário"
 
 #: pynicotine/gtkgui/userinfo.py:484
-#, fuzzy
 msgid "Unignore User"
-msgstr "Ignorar Usuário"
+msgstr "Designorar Usuário"
 
 #: pynicotine/gtkgui/userinfo.py:506
 msgid "Yes"
@@ -3376,9 +3372,8 @@ msgstr "_Navegar Arquivos"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:359
 #: pynicotine/gtkgui/widgets/popupmenu.py:391
-#, fuzzy
 msgid "_Add Buddy"
-msgstr "Adicionar amigo…"
+msgstr "_Adicionar Amigo"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:362
 #: pynicotine/gtkgui/widgets/popupmenu.py:389
@@ -4555,9 +4550,8 @@ msgid "Clear Finished"
 msgstr "Limpar Concluídos"
 
 #: pynicotine/gtkgui/ui/downloads.ui:182
-#, fuzzy
 msgid "Clear Specific Downloads"
-msgstr "Limpar Todos os Downloads"
+msgstr "Limpar downloads específicos"
 
 #: pynicotine/gtkgui/ui/downloads.ui:191 pynicotine/gtkgui/ui/uploads.ui:221
 msgid "Clear _All…"
@@ -4727,9 +4721,8 @@ msgstr ""
 "particular"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1358
-#, fuzzy
 msgid "_Message All"
-msgstr "Mensagens"
+msgstr "_Mensagens para Todos"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1424
 msgid ""
@@ -6213,14 +6206,12 @@ msgid "By default the leftmost tab is activated at startup"
 msgstr "Por padrão, a aba mais à esquerda é ativada na inicialização"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:80
-#, fuzzy
 msgid "Language (requires a restart):"
-msgstr "Faixa das portas de escuta (requer uma reinicialização):"
+msgstr "Idioma (requer uma reinicialização):"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:92
-#, fuzzy
 msgid "System Default"
-msgstr "Padrão"
+msgstr "Padrão do Sistema"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:106
 msgid "When closing Nicotine+:"
@@ -6477,14 +6468,12 @@ msgid "Clear All Finished/Cancelled Uploads"
 msgstr "Limpar todos os uploads concluídos/cancelados"
 
 #: pynicotine/gtkgui/ui/uploads.ui:181 pynicotine/gtkgui/ui/uploads.ui:197
-#, fuzzy
 msgid "Message All"
-msgstr "Mensagens"
+msgstr "Mensagens para Todos"
 
 #: pynicotine/gtkgui/ui/uploads.ui:212
-#, fuzzy
 msgid "Clear Specific Uploads"
-msgstr "Limpar Todos os Uploads"
+msgstr "Limpar uploads específicos"
 
 #: pynicotine/gtkgui/ui/userbrowse.ui:120
 msgid "Shared"
