@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-01 03:44+0200\n"
-"PO-Revision-Date: 2022-11-28 06:04+0000\n"
+"PO-Revision-Date: 2022-12-02 00:59+0000\n"
 "Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/tr/>\n"
@@ -1356,25 +1356,23 @@ msgstr "_Oturum Açma Bilgilerini Değiştir"
 
 #: pynicotine/gtkgui/application.py:585
 msgid "Message Downloading Users"
-msgstr ""
+msgstr "İndiren Kullanıcılara Mesaj Gönder"
 
 #: pynicotine/gtkgui/application.py:586
 msgid "Send private message to all users who are downloading from you:"
-msgstr ""
+msgstr "Sizden indirme yapan tüm kullanıcılara özel mesaj gönderin:"
 
 #: pynicotine/gtkgui/application.py:587 pynicotine/gtkgui/application.py:600
-#, fuzzy
 msgid "_Send Message"
-msgstr "Mesaj Gönder"
+msgstr "Mesaj _Gönder"
 
 #: pynicotine/gtkgui/application.py:598
-#, fuzzy
 msgid "Message Buddies"
-msgstr "Mesajlar"
+msgstr "Mesaj Arkadaşları"
 
 #: pynicotine/gtkgui/application.py:599
 msgid "Send private message to all online buddies:"
-msgstr ""
+msgstr "Tüm çevrim içi arkadaşlara özel mesaj gönderin:"
 
 #: pynicotine/gtkgui/application.py:624
 msgid "Select a Saved Shares List File"
@@ -2148,7 +2146,7 @@ msgstr "Filtrelendi"
 
 #: pynicotine/gtkgui/downloads.py:66
 msgid "Deleted"
-msgstr ""
+msgstr "Silindi"
 
 #: pynicotine/gtkgui/downloads.py:67 pynicotine/gtkgui/uploads.py:69
 msgid "Queued…"
@@ -2937,24 +2935,20 @@ msgstr ""
 "kapalı, kullanıcı çevrim dışı ya da geçici bir bağlantı sorunu var."
 
 #: pynicotine/gtkgui/userinfo.py:476
-#, fuzzy
 msgid "Remove _Buddy"
-msgstr "_Dileği Kaldır"
+msgstr "Arkadaşı _Kaldır"
 
 #: pynicotine/gtkgui/userinfo.py:476
-#, fuzzy
 msgid "Add _Buddy"
-msgstr "Arkadaş ekle…"
+msgstr "Arkadaş _Ekle"
 
 #: pynicotine/gtkgui/userinfo.py:480
-#, fuzzy
 msgid "Unban User"
-msgstr "Kullanıcıyı Yasakla"
+msgstr "Kullanıcının Yasağını Kaldır"
 
 #: pynicotine/gtkgui/userinfo.py:484
-#, fuzzy
 msgid "Unignore User"
-msgstr "Kullanıcıyı Yok Say"
+msgstr "Kullanıcıyı Yok Saymayı Kaldır"
 
 #: pynicotine/gtkgui/userinfo.py:506
 msgid "Yes"
@@ -3163,9 +3157,8 @@ msgstr "Dosyalara _Göz At"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:359
 #: pynicotine/gtkgui/widgets/popupmenu.py:391
-#, fuzzy
 msgid "_Add Buddy"
-msgstr "Arkadaş ekle…"
+msgstr "Arkadaş _Ekle"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:362
 #: pynicotine/gtkgui/widgets/popupmenu.py:389
@@ -4330,9 +4323,8 @@ msgid "Clear Finished"
 msgstr "Tamamlananları Temizle"
 
 #: pynicotine/gtkgui/ui/downloads.ui:182
-#, fuzzy
 msgid "Clear Specific Downloads"
-msgstr "Tüm İndirmeleri Temizle"
+msgstr "Belirli İndirmeleri Temizle"
 
 #: pynicotine/gtkgui/ui/downloads.ui:191 pynicotine/gtkgui/ui/uploads.ui:221
 msgid "Clear _All…"
@@ -4499,9 +4491,8 @@ msgstr ""
 "girin"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1358
-#, fuzzy
 msgid "_Message All"
-msgstr "Mesajlar"
+msgstr "Tümüne _Mesaj Gönder"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1424
 msgid ""
@@ -5981,14 +5972,12 @@ msgid "By default the leftmost tab is activated at startup"
 msgstr "Öntanımlı olarak, en soldaki sekme başlangıçta etkinleştirilir"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:80
-#, fuzzy
 msgid "Language (requires a restart):"
-msgstr "Dinleme bağlantı noktası aralığı (yeniden başlatma gerektirir):"
+msgstr "Dil (yeniden başlatma gerektirir):"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:92
-#, fuzzy
 msgid "System Default"
-msgstr "Öntanımlı"
+msgstr "Sistem Öntanımlı Değeri"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:106
 msgid "When closing Nicotine+:"
@@ -6242,14 +6231,12 @@ msgid "Clear All Finished/Cancelled Uploads"
 msgstr "Tamamlanan ve iptal edilen tüm yüklemeleri temizle"
 
 #: pynicotine/gtkgui/ui/uploads.ui:181 pynicotine/gtkgui/ui/uploads.ui:197
-#, fuzzy
 msgid "Message All"
-msgstr "Mesajlar"
+msgstr "Tümüne Mesaj Gönder"
 
 #: pynicotine/gtkgui/ui/uploads.ui:212
-#, fuzzy
 msgid "Clear Specific Uploads"
-msgstr "Tüm Yüklemeleri Temizle"
+msgstr "Belirli Yüklemeleri Temizle"
 
 #: pynicotine/gtkgui/ui/userbrowse.ui:120
 msgid "Shared"
