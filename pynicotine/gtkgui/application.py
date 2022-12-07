@@ -102,7 +102,16 @@ class Application:
     def remove_action(self, action):
         self._instance.remove_action(action)
 
+    def get_accels_for_action(self, action):
+        return self._instance.get_accels_for_action(action)
+
     def set_accels_for_action(self, action, accels):
+
+        if GTK_API_VERSION >= 4 and sys.platform != "darwin":
+            # Use Command key instead of Ctrl in accelerators on macOS
+            for i, accelerator in enumerate(accels):
+                accels[i] = accelerator.replace("<Primary>", "<Meta>")
+
         self._instance.set_accels_for_action(action, accels)
 
     def add_window(self, window):
@@ -193,12 +202,10 @@ class Application:
         action = Gio.SimpleAction(name="connect")
         action.connect("activate", self.on_connect)
         self.add_action(action)
-        self.set_accels_for_action("app.connect", ["<Shift><Primary>c"])
 
         action = Gio.SimpleAction(name="disconnect", enabled=False)
         action.connect("activate", self.on_disconnect)
         self.add_action(action)
-        self.set_accels_for_action("app.disconnect", ["<Shift><Primary>d"])
 
         action = Gio.SimpleAction(name="soulseek-privileges", enabled=False)
         action.connect("activate", self.on_soulseek_privileges)
@@ -208,7 +215,6 @@ class Application:
         action.cooldown_time = 0  # needed to prevent server ban
         action.connect("activate", self.on_away_accelerator)
         self.add_action(action)
-        self.set_accels_for_action("app.away-accel", ["<Primary>h"])
 
         action = Gio.SimpleAction(name="away", enabled=False)
         action.connect("activate", self.on_away)
@@ -235,12 +241,10 @@ class Application:
         action = Gio.SimpleAction(name="wishlist")
         action.connect("activate", self.on_wishlist)
         self.add_action(action)
-        self.set_accels_for_action("app.wishlist", ["<Shift><Primary>w"])
 
         action = Gio.SimpleAction(name="force-quit")
         action.connect("activate", self.on_force_quit)
         self.add_action(action)
-        self.set_accels_for_action("app.force-quit", ["<Primary><Alt>q"])
 
         action = Gio.SimpleAction(name="quit")
         action.connect("activate", self.on_quit)
@@ -251,7 +255,6 @@ class Application:
         action = Gio.SimpleAction(name="rescan-shares")
         action.connect("activate", self.on_rescan_shares)
         self.add_action(action)
-        self.set_accels_for_action("app.rescan-shares", ["<Shift><Primary>r"])
 
         action = Gio.SimpleAction(name="browse-public-shares")
         action.connect("activate", self.on_browse_public_shares)
@@ -270,7 +273,6 @@ class Application:
         action = Gio.SimpleAction(name="keyboard-shortcuts")
         action.connect("activate", self.on_keyboard_shortcuts)
         self.add_action(action)
-        self.set_accels_for_action("app.keyboard-shortcuts", ["<Primary>question", "F1"])
 
         action = Gio.SimpleAction(name="setup-assistant")
         action.connect("activate", self.on_fast_configure)
@@ -301,7 +303,6 @@ class Application:
         action = Gio.SimpleAction(name="preferences")
         action.connect("activate", self.on_preferences)
         self.add_action(action)
-        self.set_accels_for_action("app.preferences", ["<Primary>comma", "<Primary>p"])
 
         action = Gio.SimpleAction(name="configure-shares")
         action.connect("activate", self.on_configure_shares)
@@ -372,6 +373,61 @@ class Application:
         action = Gio.SimpleAction(name="log-miscellaneous", state=GLib.Variant("b", state))
         action.connect("change-state", self.on_debug_miscellaneous)
         self.add_action(action)
+
+    def set_up_action_accels(self):
+
+        for action_name, accelerators in (
+            # Global accelerators
+            ("app.connect", ["<Shift><Primary>c"]),
+            ("app.disconnect", ["<Shift><Primary>d"]),
+            ("app.away-accel", ["<Primary>h"]),
+            ("app.wishlist", ["<Shift><Primary>w"]),
+            ("app.force-quit", ["<Primary><Alt>q"]),
+            ("app.rescan-shares", ["<Shift><Primary>r"]),
+            ("app.keyboard-shortcuts", ["<Primary>question", "F1"]),
+            ("app.preferences", ["<Primary>comma", "<Primary>p"]),
+
+            # Other accelerators (logic defined elsewhere, actions only used for shortcuts dialog)
+            ("accel.cut-clipboard", ["<Primary>x"]),
+            ("accel.copy-clipboard", ["<Primary>c"]),
+            ("accel.paste-clipboard", ["<Primary>v"]),
+            ("accel.insert-emoji", ["<Primary>period"]),
+            ("accel.select-all", ["<Primary>a"]),
+            ("accel.find", ["<Primary>f"]),
+            ("accel.find-next-match", ["<Primary>g"]),
+            ("accel.find-previous-match", ["<Shift><Primary>g"]),
+            ("accel.refresh", ["<Primary>r", "F5"]),
+            ("accel.remove", ["Delete"]),
+            ("accel.toggle-row-expand", ["<Primary>backslash"]),
+            ("accel.save", ["<Primary>s"]),
+            ("accel.download-to", ["<Primary>Return"]),
+            ("accel.file-properties", ["<Alt>Return"]),
+            ("accel.back", ["BackSpace"]),
+            ("accel.retry-transfer", ["r"]),
+            ("accel.abort-transfer", ["t"])
+        ):
+            self.set_accels_for_action(action_name, accelerators)
+
+        if GTK_API_VERSION == 3 or sys.platform != "darwin":
+            return
+
+        # Built-in GTK shortcuts use Ctrl key on macOS, add shortcuts that use Command key
+        for widget in (Gtk.Text, Gtk.TextView):
+            for action_name, accelerator in (
+                ("cut-clipboard", "<Meta>x"),
+                ("copy-clipboard", "<Meta>c"),
+                ("paste-clipboard", "<Meta>v"),
+                ("selection.select-all", "<Meta>a"),
+                ("misc.insert-emoji", "<Meta>period"),
+                ("text.undo", "<Meta>z"),
+                ("text.redo", "<Shift><Meta>u")
+            ):
+                widget.add_shortcut(
+                    Gtk.Shortcut(
+                        trigger=Gtk.ShortcutTrigger.parse_string(accelerator),
+                        action=Gtk.NamedAction.new(action_name),
+                    )
+                )
 
     """ Core Events """
 
@@ -783,6 +839,7 @@ class Application:
         from pynicotine.gtkgui.widgets.trayicon import TrayIcon
 
         self.set_up_actions()
+        self.set_up_action_accels()
 
         self.tray_icon = TrayIcon(self)
         self.notifications = Notifications(self)

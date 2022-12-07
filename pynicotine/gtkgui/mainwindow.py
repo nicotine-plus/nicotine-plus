@@ -254,6 +254,7 @@ class MainWindow(Window):
         """ Actions and Menu """
 
         self.set_up_actions()
+        self.set_up_action_accels()
         self.set_up_menu()
 
         """ Tab Visibility/Order """
@@ -591,14 +592,13 @@ class MainWindow(Window):
         # Main
 
         if GTK_API_VERSION == 3:
-            action = Gio.SimpleAction(name="menu")
+            action = Gio.SimpleAction(name="main-menu")
             action.connect("activate", self.on_menu)
             self.add_action(action)
 
         action = Gio.SimpleAction(name="change-focus-view")
         action.connect("activate", self.on_change_focus_view)
         self.add_action(action)
-        self.application.set_accels_for_action("win.change-focus-view", ["F6"])
 
         # View
 
@@ -611,7 +611,6 @@ class MainWindow(Window):
         action = Gio.SimpleAction(name="show-log-history", state=GLib.Variant("b", state))
         action.connect("change-state", self.on_show_log_history)
         self.add_action(action)
-        self.application.set_accels_for_action("win.show-log-history", ["<Primary>l"])
         self.set_show_log_history(state)
 
         state = config.sections["ui"]["buddylistinchatrooms"]
@@ -637,31 +636,43 @@ class MainWindow(Window):
         action = Gio.SimpleAction(name="close-tab")
         action.connect("activate", self.on_close_tab)
         self.add_action(action)
-        self.application.set_accels_for_action("win.close-tab", ["<Primary>F4", "<Primary>w"])
 
         action = Gio.SimpleAction(name="cycle-tabs")
         action.connect("activate", self.on_cycle_tabs)
         self.add_action(action)
-        self.application.set_accels_for_action("win.cycle-tabs", ["<Primary>Tab"])
 
         action = Gio.SimpleAction(name="cycle-tabs-reverse")
         action.connect("activate", self.on_cycle_tabs, True)
         self.add_action(action)
-        self.application.set_accels_for_action("win.cycle-tabs-reverse", ["<Primary><Shift>Tab"])
 
         for num in range(1, 10):
             action = Gio.SimpleAction(name="primary-tab-" + str(num))
             action.connect("activate", self.on_change_primary_tab, num)
             self.add_action(action)
-            self.application.set_accels_for_action("win.primary-tab-" + str(num),
-                                                   ["<Primary>" + str(num), "<Alt>" + str(num)])
 
         action = Gio.SimpleAction(name="close")  # 'When closing Nicotine+'
         action.connect("activate", self.on_close_request)
         self.add_action(action)
-        self.application.set_accels_for_action("win.close", ["<Primary>q"])
 
         self.update_alternative_speed_icon(config.sections["transfers"]["usealtlimits"])
+
+    def set_up_action_accels(self):
+
+        for action_name, accelerators in (
+            ("win.main-menu", ["F10"]),
+            ("win.context-menu", ["<Shift>F10"]),
+            ("win.change-focus-view", ["F6"]),
+            ("win.show-log-history", ["<Primary>l"]),
+            ("win.close-tab", ["<Primary>F4", "<Primary>w"]),
+            ("win.cycle-tabs", ["<Primary>Tab"]),
+            ("win.cycle-tabs-reverse", ["<Primary><Shift>Tab"]),
+            ("win.close", ["<Primary>q"])
+        ):
+            self.application.set_accels_for_action(action_name, accelerators)
+
+        for num in range(1, 10):
+            self.application.set_accels_for_action("win.primary-tab-" + str(num),
+                                                   ["<Primary>" + str(num), "<Alt>" + str(num)])
 
     """ Primary Menus """
 
@@ -813,7 +824,7 @@ class MainWindow(Window):
             self.window.set_show_menubar(False)
 
             if GTK_API_VERSION == 3:
-                self.application.set_accels_for_action("win.menu", ["F10"])
+                self.lookup_action("main-menu").set_enabled(True)
 
                 # Avoid "Untitled window" in certain desktop environments
                 self.header_bar.set_title(self.window.get_title())
@@ -864,7 +875,7 @@ class MainWindow(Window):
 
             if GTK_API_VERSION == 3:
                 # Don't override builtin accelerator for menu bar
-                self.application.set_accels_for_action("win.menu", [])
+                self.lookup_action("main-menu").set_enabled(False)
 
             if self.window.get_titlebar():
                 self.window.unrealize()

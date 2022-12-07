@@ -514,6 +514,8 @@ class TextSearchBar:
 
         for widget in (controller_widget, entry):
             Accelerator("Escape", widget, self.on_hide_search_accelerator)
+            Accelerator("<Primary>g", widget, self.on_search_next_match)
+            Accelerator("<Shift><Primary>g", widget, self.on_search_previous_match)
 
     def on_search_match(self, search_type, restarted=False):
 

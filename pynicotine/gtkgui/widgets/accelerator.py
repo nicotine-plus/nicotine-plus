@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import sys
+
 from gi.repository import Gdk
 from gi.repository import Gtk
 
@@ -30,16 +32,16 @@ class Accelerator:
     def __init__(self, accelerator, widget, callback, user_data=None):
 
         if GTK_API_VERSION >= 4:
-            shortcut_controller = Gtk.ShortcutController()
-            shortcut_controller.set_scope(Gtk.ShortcutScope.LOCAL)
-            shortcut_controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
-            shortcut_controller.add_shortcut(
+            if sys.platform != "darwin":
+                # Use Command key instead of Ctrl in accelerators on macOS
+                accelerator = accelerator.replace("<Primary>", "<Meta>")
+
+            widget.add_shortcut(
                 Gtk.Shortcut(
                     trigger=Gtk.ShortcutTrigger.parse_string(accelerator),
                     action=Gtk.CallbackAction.new(callback, user_data),
                 )
             )
-            widget.add_controller(shortcut_controller)
             return
 
         # GTK 3 replacement for Gtk.ShortcutController
