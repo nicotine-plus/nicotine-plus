@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-01 03:44+0200\n"
-"PO-Revision-Date: 2022-11-27 22:57+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2022-12-03 14:12+0000\n"
+"Last-Translator: Pagal3 <p4gal3@protonmail.com>\n"
 "Language-Team: Latvian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/lv/>\n"
 "Language: lv\n"
@@ -55,9 +55,8 @@ msgid "Graphical client for the Soulseek peer-to-peer network"
 msgstr "Grafiskais klients Soulseek peer-to-peer tīklam"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:12
-#, fuzzy
 msgid "Soulseek;Nicotine;sharing;chat;messaging;P2P;peer-to-peer;GTK;"
-msgstr "Soulseek;Nicotine;kopīgošana;mūzika;P2P;peer-to-peer;GTK;"
+msgstr "Soulseek;Nicotine;kopīgošana;tērzēšana;ziņapmaiņa;P2P;peer-to-peer;GTK;"
 
 #: pynicotine/__init__.py:36
 #, python-format
@@ -81,9 +80,8 @@ msgid "dir"
 msgstr "dir"
 
 #: pynicotine/__init__.py:50
-#, fuzzy
 msgid "alternative directory for user data and plugins"
-msgstr "spraudņiem izmantot ne-noklusējuma direktoriju"
+msgstr "alternatīva direktorija lietotāja datiem un spraudņiem"
 
 #: pynicotine/__init__.py:54
 msgid "start the program without showing window"
@@ -200,9 +198,8 @@ msgid "Unable to connect to the server. Reason: %s"
 msgstr "Nevar izveidot savienojumu ar serveri. Iemesls: %s"
 
 #: pynicotine/core.py:497
-#, fuzzy
 msgid "Cannot Connect"
-msgstr "Savienot"
+msgstr "Nevar izveidot savienojumu"
 
 #: pynicotine/core.py:520
 #, python-format
@@ -210,9 +207,9 @@ msgid "Cannot retrieve the IP of user %s, since this user is offline"
 msgstr "Nevar izgūt lietotāja %s IP, jo šis lietotājs ir bezsaistē"
 
 #: pynicotine/core.py:523
-#, fuzzy, python-format
+#, python-format
 msgid "IP address of user %(user)s: %(ip)s, port %(port)i%(country)s"
-msgstr "Lietotāja %(user)s IP adrese ir %(ip)s, ports %(port)i%(country)s"
+msgstr "Lietotāja %(user)s IP adrese: %(ip)s, ports %(port)i%(country)s"
 
 #: pynicotine/core.py:528 pynicotine/gtkgui/dialogs/preferences.py:750
 #: pynicotine/gtkgui/dialogs/preferences.py:876
@@ -220,9 +217,8 @@ msgid "IP Address"
 msgstr "IP adrese"
 
 #: pynicotine/core.py:574
-#, fuzzy
 msgid "Soulseek Announcement"
-msgstr "Soulseek Klients"
+msgstr "Soulseek paziņojums"
 
 #: pynicotine/core.py:582
 #, python-format
@@ -230,31 +226,30 @@ msgid "%i privileged users"
 msgstr "%i priviliģēti lietotāji"
 
 #: pynicotine/core.py:592
-#, fuzzy
 msgid ""
 "You have no Soulseek privileges. Privileges are not required, but allow your "
 "downloads to be queued ahead of non-privileged users."
 msgstr ""
-"Jums nav nekādu privilēģiju. Privilēģijas nav nepieciešamas, bet tās ļauj "
-"Jūsu lejupielādēm būt rindā pirms lietotājiem, kuriem nav privilēģiju."
+"Jums nav nekādu Soulseek privilēģiju. Privilēģijas nav nepieciešamas, bet "
+"tās ļauj Jūsu lejupielādēm būt rindā pirms lietotājiem, kuriem nav "
+"privilēģiju."
 
 #: pynicotine/core.py:595
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of "
 "Soulseek privileges left"
 msgstr ""
-"Atlikušas %(days)i dienas, %(hours)i stundas, %(minutes)i minūtes, "
-"%(seconds)i sekundes lejupielādes privilēģiju."
+"Atlikušas %(days)i dienas, %(hours)i stundas, %(minutes)i minūtes, %(seconds)"
+"i sekundes Soulseek privilēģijām."
 
 #: pynicotine/core.py:613
 msgid "Your password has been changed"
 msgstr "Jūsu parole ir nomainīta"
 
 #: pynicotine/core.py:613
-#, fuzzy
 msgid "Password Changed"
-msgstr "Paroles maiņa noraidīta"
+msgstr "Parole nomainīta"
 
 #: pynicotine/geoip.py:24
 msgid "Andorra"
@@ -1310,16 +1305,14 @@ msgid "Remember choice"
 msgstr "Atcerēties izvēli"
 
 #: pynicotine/gtkgui/application.py:429
-#, fuzzy
 msgid "Shares Not Available"
-msgstr "Akcijas nav pieejamas"
+msgstr "Koplietojumi nav pieejami"
 
 #: pynicotine/gtkgui/application.py:430
-#, fuzzy
 msgid ""
 "Verify that external disks are mounted and folder permissions are correct."
 msgstr ""
-"Pārbaudiet, vai ir uzstādīti ārējie diski un vai mapju atļaujas ir pareizas."
+"Pārbaudiet, vai ārējie diski ir uzstādīti un mapju atļaujas ir pareizas."
 
 #: pynicotine/gtkgui/application.py:432 pynicotine/gtkgui/application.py:457
 #: pynicotine/gtkgui/widgets/dialogs.py:321
@@ -1334,9 +1327,8 @@ msgid "_Retry"
 msgstr "_Mēģināt vēlreiz"
 
 #: pynicotine/gtkgui/application.py:434
-#, fuzzy
 msgid "_Force Rescan"
-msgstr "_Piespiedu atkārtota skenēšana"
+msgstr "_Piespiedu pārskenēšana"
 
 #: pynicotine/gtkgui/application.py:449
 msgid "Invalid Password"
@@ -1357,25 +1349,23 @@ msgstr "Mainīt _pierakstīšanās informāciju"
 
 #: pynicotine/gtkgui/application.py:585
 msgid "Message Downloading Users"
-msgstr ""
+msgstr "Sūtīt ziņu lejupielādējošajiem lietotājiem"
 
 #: pynicotine/gtkgui/application.py:586
 msgid "Send private message to all users who are downloading from you:"
-msgstr ""
+msgstr "Nosūtiet privātu ziņu visiem lietotājiem, kas no Jums lejupielādē:"
 
 #: pynicotine/gtkgui/application.py:587 pynicotine/gtkgui/application.py:600
-#, fuzzy
 msgid "_Send Message"
-msgstr "Sūtīt ziņu"
+msgstr "_Sūtīt ziņu"
 
 #: pynicotine/gtkgui/application.py:598
-#, fuzzy
 msgid "Message Buddies"
-msgstr "Uzticamie draugi"
+msgstr "Sūtīt ziņu draugiem"
 
 #: pynicotine/gtkgui/application.py:599
 msgid "Send private message to all online buddies:"
-msgstr ""
+msgstr "Sūtīt privātu ziņu visiem tiešsaistes draugiem:"
 
 #: pynicotine/gtkgui/application.py:624
 msgid "Select a Saved Shares List File"
@@ -1510,18 +1500,18 @@ msgid "--- old messages above ---"
 msgstr "--- vecās ziņas augstāk ---"
 
 #: pynicotine/gtkgui/chatrooms.py:822
-#, fuzzy, python-format
+#, python-format
 msgid "%(user)s mentioned you in room %(room)s"
-msgstr "%(user)s pieminēja Jūs %(room)s istabā"
+msgstr "%(user)s pieminēja Jūs istabā %(room)s"
 
 #: pynicotine/gtkgui/chatrooms.py:827
 #: pynicotine/gtkgui/widgets/notifications.py:92
-#, fuzzy, python-format
+#, python-format
 msgid "Mentioned by %(user)s in Room %(room)s"
-msgstr "Ziņa no %(user)s istabā %(room)s"
+msgstr "Jūs pieminēja %(user)s istabā %(room)s"
 
 #: pynicotine/gtkgui/chatrooms.py:845
-#, fuzzy, python-format
+#, python-format
 msgid "Message by %(user)s in Room %(room)s"
 msgstr "Ziņa no %(user)s istabā %(room)s"
 
@@ -1565,14 +1555,12 @@ msgstr ""
 "šai istabai?"
 
 #: pynicotine/gtkgui/dialogs/about.py:345
-#, fuzzy
 msgid "About"
-msgstr "Džibutija"
+msgstr "Par"
 
 #: pynicotine/gtkgui/dialogs/about.py:360
-#, fuzzy
 msgid "Website"
-msgstr "Vietne: %s"
+msgstr "Vietne"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:86
 #: pynicotine/gtkgui/dialogs/preferences.py:457
@@ -2079,7 +2067,7 @@ msgid "Transfer Statistics"
 msgstr "Pārsūtīšanas statistika"
 
 #: pynicotine/gtkgui/dialogs/statistics.py:82
-#, fuzzy, python-format
+#, python-format
 msgid "Total Since %(date)s"
 msgstr "Kopā kopš %(date)s"
 
@@ -2149,7 +2137,7 @@ msgstr "Filtrēts"
 
 #: pynicotine/gtkgui/downloads.py:66
 msgid "Deleted"
-msgstr ""
+msgstr "Izdzēsts"
 
 #: pynicotine/gtkgui/downloads.py:67 pynicotine/gtkgui/uploads.py:69
 msgid "Queued…"
@@ -2648,9 +2636,8 @@ msgid "[PRIVATE]  %s"
 msgstr "[PRIVĀTS] %s"
 
 #: pynicotine/gtkgui/search.py:726
-#, fuzzy
 msgid "Wishlist Results Found"
-msgstr "Atrasti vēlmju saraksta rezultāti"
+msgstr "Atrastie vēlmju saraksta rezultāti"
 
 #: pynicotine/gtkgui/search.py:981
 #, python-format
@@ -2799,21 +2786,18 @@ msgid "_Abort"
 msgstr "_Pārtraukt"
 
 #: pynicotine/gtkgui/uploads.py:62
-#, fuzzy
 msgid "Finished / Cancelled / Failed"
-msgstr "Pabeigts / Pārtraukts / Neizdevās"
+msgstr "Pabeigts / Atcelts / Neizdevās"
 
 #: pynicotine/gtkgui/uploads.py:63
-#, fuzzy
 msgid "Finished / Cancelled"
-msgstr "Pabeigts / Filtrēts"
+msgstr "Pabeigts / Atcelts"
 
 #: pynicotine/gtkgui/uploads.py:67
 msgid "Failed"
 msgstr "Neizdevies"
 
 #: pynicotine/gtkgui/uploads.py:68
-#, fuzzy
 msgid "User Logged Off"
 msgstr "Lietotājs ir atteicies"
 
@@ -2942,24 +2926,20 @@ msgstr ""
 "savienojuma problēma."
 
 #: pynicotine/gtkgui/userinfo.py:476
-#, fuzzy
 msgid "Remove _Buddy"
-msgstr "Noņemt vēl_mi"
+msgstr "Noņemt _draugu"
 
 #: pynicotine/gtkgui/userinfo.py:476
-#, fuzzy
 msgid "Add _Buddy"
-msgstr "Pievienot draugu…"
+msgstr "Pievienot _draugu"
 
 #: pynicotine/gtkgui/userinfo.py:480
-#, fuzzy
 msgid "Unban User"
-msgstr "Aizliegt lietotāju"
+msgstr "Atbloķēt lietotāju"
 
 #: pynicotine/gtkgui/userinfo.py:484
-#, fuzzy
 msgid "Unignore User"
-msgstr "Ignorēt lietotāju"
+msgstr "Beigt lietotāja ignorēšanu"
 
 #: pynicotine/gtkgui/userinfo.py:506
 msgid "Yes"
@@ -3127,7 +3107,6 @@ msgid "(None)"
 msgstr "(Neviens)"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:106
-#, fuzzy
 msgid "Close Tab"
 msgstr "Aizvērt _cilni"
 
@@ -3169,9 +3148,8 @@ msgstr "_Pārlūkot failus"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:359
 #: pynicotine/gtkgui/widgets/popupmenu.py:391
-#, fuzzy
 msgid "_Add Buddy"
-msgstr "Pievienot draugu…"
+msgstr "Pievienot _draugu"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:362
 #: pynicotine/gtkgui/widgets/popupmenu.py:389
@@ -3348,9 +3326,8 @@ msgstr "Last.fm: Lūdzu, norādiet savu Last.fm lietotājvārdu un API atslēgu"
 #: pynicotine/nowplaying.py:215 pynicotine/nowplaying.py:261
 #: pynicotine/nowplaying.py:271 pynicotine/nowplaying.py:279
 #: pynicotine/nowplaying.py:294 pynicotine/nowplaying.py:309
-#, fuzzy
 msgid "Now Playing Error"
-msgstr "Tagad Atskaņo formāts"
+msgstr "Tagad Atskaņošanas kļūda"
 
 #: pynicotine/nowplaying.py:139
 #, python-format
