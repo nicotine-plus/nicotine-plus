@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-01 03:44+0200\n"
-"PO-Revision-Date: 2022-11-27 22:56+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2022-12-07 01:49+0000\n"
+"Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
 "Language: de\n"
@@ -56,7 +56,6 @@ msgid "Graphical client for the Soulseek peer-to-peer network"
 msgstr "Grafischer Client für das Soulseek Peer-to-Peer-Netzwerk"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:12
-#, fuzzy
 msgid "Soulseek;Nicotine;sharing;chat;messaging;P2P;peer-to-peer;GTK;"
 msgstr "Soulseek;Nicotine;Austausch;Musik;P2P;Peer-to-Peer;GTK;"
 
@@ -82,9 +81,8 @@ msgid "dir"
 msgstr "Ordner"
 
 #: pynicotine/__init__.py:50
-#, fuzzy
 msgid "alternative directory for user data and plugins"
-msgstr "nicht standardmäßiges Verzeichnis für Plugins verwenden"
+msgstr "alternatives Verzeichnis für Benutzerdaten und Plugins"
 
 #: pynicotine/__init__.py:54
 msgid "start the program without showing window"
@@ -204,7 +202,6 @@ msgid "Unable to connect to the server. Reason: %s"
 msgstr "Es kann keine Verbindung zum Server hergestellt werden. Grund: %s"
 
 #: pynicotine/core.py:497
-#, fuzzy
 msgid "Cannot Connect"
 msgstr "Verbinden nicht möglich"
 
@@ -216,9 +213,9 @@ msgstr ""
 "Benutzer offline ist"
 
 #: pynicotine/core.py:523
-#, fuzzy, python-format
+#, python-format
 msgid "IP address of user %(user)s: %(ip)s, port %(port)i%(country)s"
-msgstr "IP-Adresse von %(user)s ist %(ip)s, Port %(port)i, %(country)s"
+msgstr "IP-Adresse des Benutzers %(user)s: %(ip)s, Port %(port)i%(country)s"
 
 #: pynicotine/core.py:528 pynicotine/gtkgui/dialogs/preferences.py:750
 #: pynicotine/gtkgui/dialogs/preferences.py:876
@@ -226,9 +223,8 @@ msgid "IP Address"
 msgstr "IP-Adresse"
 
 #: pynicotine/core.py:574
-#, fuzzy
 msgid "Soulseek Announcement"
-msgstr "Soulseek-Client"
+msgstr "Soulseek-Ankündigung"
 
 #: pynicotine/core.py:582
 #, python-format
@@ -236,32 +232,30 @@ msgid "%i privileged users"
 msgstr "%i privilegierte Benutzer"
 
 #: pynicotine/core.py:592
-#, fuzzy
 msgid ""
 "You have no Soulseek privileges. Privileges are not required, but allow your "
 "downloads to be queued ahead of non-privileged users."
 msgstr ""
-"Sie haben keine Privilegien. Privilegien sind nicht erforderlich, "
+"Sie haben keine Soulseek Privilegien. Privilegien sind nicht erforderlich, "
 "ermöglichen es aber, dass Ihre Downloads vor nicht privilegierten Benutzern "
 "in die Warteschlange gestellt werden."
 
 #: pynicotine/core.py:595
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of "
 "Soulseek privileges left"
 msgstr ""
 "%(days)i Tage, %(hours)i Stunden, %(minutes)i Minuten, %(seconds)i Sekunden "
-"verbleibende Download-Rechte."
+"an Soulseek-Rechten übrig"
 
 #: pynicotine/core.py:613
 msgid "Your password has been changed"
 msgstr "Ihr Passwort wurde geändert"
 
 #: pynicotine/core.py:613
-#, fuzzy
 msgid "Password Changed"
-msgstr "Passwortänderung abgelehnt"
+msgstr "Passwort geändert"
 
 #: pynicotine/geoip.py:24
 msgid "Andorra"
@@ -1319,12 +1313,10 @@ msgid "Remember choice"
 msgstr "Auswahl merken"
 
 #: pynicotine/gtkgui/application.py:429
-#, fuzzy
 msgid "Shares Not Available"
-msgstr "Anteile nicht verfügbar"
+msgstr "Teile nicht verfügbar"
 
 #: pynicotine/gtkgui/application.py:430
-#, fuzzy
 msgid ""
 "Verify that external disks are mounted and folder permissions are correct."
 msgstr ""
@@ -1344,9 +1336,8 @@ msgid "_Retry"
 msgstr "Wiederholen"
 
 #: pynicotine/gtkgui/application.py:434
-#, fuzzy
 msgid "_Force Rescan"
-msgstr "/rescan"
+msgstr "_Neues Scannen erzwingen"
 
 #: pynicotine/gtkgui/application.py:449
 msgid "Invalid Password"
@@ -6385,12 +6376,10 @@ msgid "Search Files and Folders"
 msgstr "Suche in Dateien und Ordnern (exakte Übereinstimmung)"
 
 #: pynicotine/gtkgui/ui/userbrowse.ui:166
-#, fuzzy
 msgid "Save Shares List to Disk"
-msgstr "Freibabenliste speichern"
+msgstr "Freigabeliste speichern"
 
 #: pynicotine/gtkgui/ui/userbrowse.ui:182
-#, fuzzy
 msgid "Refresh Files"
 msgstr "Dateien aktualisieren"
 
