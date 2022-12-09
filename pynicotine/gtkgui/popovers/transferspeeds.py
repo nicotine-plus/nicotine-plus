@@ -58,7 +58,7 @@ class TransferSpeeds(Popover):
             config.sections["transfers"][use_limit_config_key] = "alternative"
 
         else:
-            config.sections["transfers"][use_limit_config_key] = "disable"
+            config.sections["transfers"][use_limit_config_key] = "unlimited"
 
         if prev_active_limit != config.sections["transfers"][use_limit_config_key]:
             update_transfer_limits = getattr(core.transfers, f"update_{self.transfer_type}_limits")

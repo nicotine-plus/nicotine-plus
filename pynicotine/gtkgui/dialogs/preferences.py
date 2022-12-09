@@ -288,7 +288,7 @@ class DownloadsPage:
             use_speed_limit = "alternative"
 
         else:
-            use_speed_limit = "disable"
+            use_speed_limit = "unlimited"
 
         download_filters = []
 
@@ -691,7 +691,7 @@ class UploadsPage:
             use_speed_limit = "alternative"
 
         else:
-            use_speed_limit = "disable"
+            use_speed_limit = "unlimited"
 
         return {
             "transfers": {

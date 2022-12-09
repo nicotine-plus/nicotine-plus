@@ -192,10 +192,10 @@ class Config:
                 "shared": [],
                 "buddyshared": [],
                 "uploadbandwidth": 50,
-                "use_upload_speed_limit": "disable",
+                "use_upload_speed_limit": "unlimited",
                 "uploadlimit": 1000,
                 "uploadlimitalt": 100,
-                "use_download_speed_limit": "disable",
+                "use_download_speed_limit": "unlimited",
                 "downloadlimit": 1000,
                 "downloadlimitalt": 100,
                 "preferfriends": False,
@@ -583,7 +583,7 @@ class Config:
                         use_speed_limit = "primary"
 
                     else:
-                        use_speed_limit = "disable"
+                        use_speed_limit = "unlimited"
 
                     self.sections[section][option] = use_speed_limit
                     continue
@@ -597,7 +597,7 @@ class Config:
                         use_speed_limit = "primary"
 
                     else:
-                        use_speed_limit = "disable"
+                        use_speed_limit = "unlimited"
 
                     self.sections[section][option] = use_speed_limit
                     continue

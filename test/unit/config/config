@@ -67,8 +67,8 @@ buddysharestrustedonly = False
 usernamesubfolders = False
 uploadlimitalt = 100
 downloadlimitalt = 100
-use_upload_speed_limit = disable
-use_download_speed_limit = disable
+use_upload_speed_limit = unlimited
+use_download_speed_limit = unlimited
 
 [userinfo]
 descr = ''
