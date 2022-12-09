@@ -299,8 +299,10 @@ class Core:
 
     @staticmethod
     def log_cli(timestamp_format, msg, _title, _level):
+
+        timestamp = time.strftime(timestamp_format)
+
         try:
-            timestamp = time.strftime(timestamp_format)
             print(f"[{timestamp}] {msg}")
         except OSError:
             # stdout is gone

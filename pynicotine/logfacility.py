@@ -143,12 +143,12 @@ class Logger:
 
     def write_log_file(self, folder_path, base_name, text, timestamp=None):
 
-        try:
-            log_file = self._get_log_file(folder_path, base_name)
-            timestamp_format = config.sections["logging"]["log_timestamp"]
-            timestamp = time.strftime(timestamp_format, time.localtime(timestamp))
-            text = f"{timestamp} {text}\n"
+        log_file = self._get_log_file(folder_path, base_name)
+        timestamp_format = config.sections["logging"]["log_timestamp"]
+        timestamp = time.strftime(timestamp_format, time.localtime(timestamp))
+        text = f"{timestamp} {text}\n"
 
+        try:
             log_file.handle.write(text.encode('utf-8', 'replace'))
             log_file.last_active = time.time()
 
