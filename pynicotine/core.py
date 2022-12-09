@@ -443,7 +443,7 @@ class Core:
                 events.emit(event_name, msg)
 
             except KeyError:
-                log.add("No handler for class %s %s", (msg.__class__, dir(msg)))
+                log.add("No handler for class %s %s", (msg.__class__, msg))
 
         msgs.clear()
 

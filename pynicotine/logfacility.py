@@ -243,13 +243,11 @@ class Logger:
 
         if level == LogLevel.MESSAGE:
             # Compile message contents
-            msg_class = msg.__class__
-
-            if msg_class in self.EXCLUDED_MSGS:
+            if msg.__class__ in self.EXCLUDED_MSGS:
                 return
 
             msg_direction = "OUT" if msg_args else "IN"
-            msg = "%s: %s %s" % (msg_direction, msg_class, self.contents(msg))
+            msg = f"{msg_direction}: {msg}"
             msg_args = None
 
         msg = self._format_log_message(level, msg, msg_args)
@@ -295,14 +293,6 @@ class Logger:
 
     def add_debug(self, msg, msg_args=None):
         self.add(msg, msg_args=msg_args, level=LogLevel.MISCELLANEOUS)
-
-    @staticmethod
-    def contents(obj):
-        """ Returns variables for object, for debug output """
-        try:
-            return {s: getattr(obj, s) for s in obj.__slots__ if hasattr(obj, s)}
-        except AttributeError:
-            return vars(obj)
 
 
 log = Logger()

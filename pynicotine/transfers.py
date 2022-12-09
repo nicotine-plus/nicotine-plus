@@ -934,7 +934,7 @@ class Transfers:
 
         log.add_transfer("Denied file request: User %(user)s, %(msg)s", {
             'user': user,
-            'msg': str(vars(msg))
+            'msg': msg
         })
 
         return slskmessages.TransferResponse(allowed=False, reason=cancel_reason, token=token)
@@ -1052,7 +1052,7 @@ class Transfers:
             self.check_upload_queue()
             return
 
-        log.add_transfer("Received unknown upload response: %s", str(vars(msg)))
+        log.add_transfer("Received unknown upload response: %s", msg)
 
     def _transfer_timeout(self, transfer):
 

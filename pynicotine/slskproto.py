@@ -1360,7 +1360,7 @@ class SoulseekNetworkThread(Thread):
         if self._server_socket not in self._conns:
             log.add_conn("Cannot send the message over the closed connection: %(type)s %(msg_obj)s", {
                 'type': msg_class,
-                'msg_obj': vars(msg_obj)
+                'msg_obj': msg_obj
             })
             return
 
@@ -1488,7 +1488,7 @@ class SoulseekNetworkThread(Thread):
         if msg_obj.sock not in self._conns:
             log.add_conn("Cannot send the message over the closed connection: %(type)s %(msg_obj)s", {
                 'type': msg_class,
-                'msg_obj': vars(msg_obj)
+                'msg_obj': msg_obj
             })
             return
 
@@ -1627,7 +1627,7 @@ class SoulseekNetworkThread(Thread):
         if msg_obj.init.sock not in self._conns:
             log.add_conn("Cannot send the message over the closed connection: %(type)s %(msg_obj)s", {
                 'type': msg_class,
-                'msg_obj': vars(msg_obj)
+                'msg_obj': msg_obj
             })
             return
 
@@ -1730,7 +1730,7 @@ class SoulseekNetworkThread(Thread):
         if msg_obj.init.sock not in self._conns:
             log.add_conn("Cannot send the message over the closed connection: %(type)s %(msg_obj)s", {
                 'type': msg_class,
-                'msg_obj': vars(msg_obj)
+                'msg_obj': msg_obj
             })
             return
 
@@ -1891,7 +1891,7 @@ class SoulseekNetworkThread(Thread):
         if msg_obj.init.sock not in self._conns:
             log.add_conn("Cannot send the message over the closed connection: %(type)s %(msg_obj)s", {
                 'type': msg_class,
-                'msg_obj': vars(msg_obj)
+                'msg_obj': msg_obj
             })
             return
 
