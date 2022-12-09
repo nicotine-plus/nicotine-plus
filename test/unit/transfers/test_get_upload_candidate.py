@@ -42,7 +42,7 @@ class GetUploadCandidateTest(TestCase):
         transfer_list = []
 
         for user in users:
-            filename = "%s/%i" % (user, len(core.transfers.uploads))
+            filename = f"{user}/{len(core.transfers.uploads)}"
             transfer = Transfer(user=user, path=filename, status=status)
 
             transfer_list.append(transfer)

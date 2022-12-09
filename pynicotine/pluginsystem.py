@@ -753,7 +753,7 @@ class PluginHandler:
                             num_required_args += 1
 
                         if num_args < num_required_args:
-                            rejection_message = "Missing %s argument" % arg
+                            rejection_message = f"Missing {arg} argument"
                             break
 
                         if '|' not in arg:
@@ -762,12 +762,12 @@ class PluginHandler:
                         choices = arg[1:-1].split('|')
 
                         if args_split[i] not in choices:
-                            rejection_message = "Invalid argument, possible choices: %s" % " | ".join(choices)
+                            rejection_message = f"Invalid argument, possible choices: {' | '.join(choices)}"
                             break
 
                     if rejection_message:
                         plugin.echo_message(rejection_message)
-                        plugin.echo_message("Usage: %s %s" % ('/' + command, " ".join(usage)))
+                        plugin.echo_message(f"Usage: {'/' + command} {' '.join(usage)}")
                         break
 
                     callback_name = data.get("callback_" + command_type, data.get("callback")).__name__
@@ -798,7 +798,7 @@ class PluginHandler:
                 break
 
         if plugin:
-            plugin.echo_message("Unknown command: %s. Type /help for a list of commands." % ("/" + command))
+            plugin.echo_message(f"Unknown command: {'/' + command}. Type /help for a list of commands.")
 
         self.command_source = None
 

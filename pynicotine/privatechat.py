@@ -143,7 +143,7 @@ class PrivateChat:
             self.private_message_queue[user].append(msg)
 
     def send_automatic_message(self, user, message):
-        self.send_message(user, "[Automatic Message] " + message)
+        self.send_message(user, f"[Automatic Message] {message}")
 
     def echo_message(self, user, message, message_type="local"):
         events.emit("echo-private-message", user, message, message_type)

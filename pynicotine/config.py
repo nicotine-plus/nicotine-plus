@@ -616,7 +616,7 @@ class Config:
             sys.exit()
 
         from pynicotine.utils import encode_path
-        conv_filename = encode_path(self.filename + ".conv")
+        conv_filename = encode_path(f"{self.filename}.conv")
         os.replace(self.filename, conv_filename)
 
         with open(conv_filename, 'rb') as file_handle:

@@ -195,7 +195,7 @@ class Logger:
     def _handle_log(self, folder, filename, callback):
 
         folder_encoded = encode_path(folder)
-        path = os.path.join(folder, clean_file(filename) + ".log")
+        path = os.path.join(folder, f"{clean_file(filename)}.log")
 
         try:
             if not os.path.isdir(folder_encoded):

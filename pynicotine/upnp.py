@@ -141,7 +141,7 @@ class SSDP:
 
         url_parts = urlsplit(location)
         service_type, control_url = SSDP.get_service_control_url(location)
-        control_url = url_parts.scheme + "://" + url_parts.netloc + control_url
+        control_url = f"{url_parts.scheme}://{url_parts.netloc}{control_url}"
 
         if service_type is None or control_url is None:
             log.add_debug("UPnP: No router with UPnP enabled in device search response, ignoring")

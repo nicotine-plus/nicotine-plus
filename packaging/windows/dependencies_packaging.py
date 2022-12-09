@@ -30,8 +30,8 @@ CURRENT_PATH = os.path.dirname(os.path.abspath(__file__))
 def install_pacman():
     """ Install dependencies from the main MinGW repos """
 
-    prefix = "mingw-w64-" + ARCH + "-"
-    packages = [prefix + "python-cx-freeze"]
+    prefix = f"mingw-w64-{ARCH}-"
+    packages = [f"{prefix}python-cx-freeze"]
 
     subprocess.check_call(["pacman", "--noconfirm", "-S", "--needed"] + packages)
 

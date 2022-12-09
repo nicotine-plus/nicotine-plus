@@ -403,9 +403,9 @@ def load_file(path, load_func, use_old_file=False):
 
     try:
         if use_old_file:
-            path = path + ".old"
+            path = f"{path}.old"
 
-        elif os.path.isfile(encode_path(path + ".old")):
+        elif os.path.isfile(encode_path(f"{path}.old")):
             path_encoded = encode_path(path)
 
             if not os.path.isfile(path_encoded):
@@ -433,7 +433,7 @@ def load_file(path, load_func, use_old_file=False):
 def write_file_and_backup(path, callback, protect=False):
 
     path_encoded = encode_path(path)
-    path_old_encoded = encode_path(path + ".old")
+    path_old_encoded = encode_path(f"{path}.old")
 
     # Back up old file to path.old
     try:
@@ -515,9 +515,9 @@ def strace(function):
 
     def newfunc(*args, **kwargs):
         name = function.__name__
-        log.add("%s(%s)" % (name, ", ".join(map(repr, chain(args, list(kwargs.values()))))))
+        log.add(f"{name}({', '.join(map(repr, chain(args, list(kwargs.values()))))})")
         retvalue = function(*args, **kwargs)
-        log.add("%s(%s): %s" % (name, ", ".join(map(repr, chain(args, list(kwargs.values())))), repr(retvalue)))
+        log.add(f"{name}({', '.join(map(repr, chain(args, list(kwargs.values()))))}): {repr(retvalue)}")
         return retvalue
 
     return newfunc

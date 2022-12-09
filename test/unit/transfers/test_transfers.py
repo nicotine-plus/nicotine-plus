@@ -135,7 +135,7 @@ class TransfersTest(TestCase):
 
         # Short file extension
         virtual_path = ("Music\\Test\\片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片"
-                        + "片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片.mp3")
+                        "片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片.mp3")
         incomplete_path = core.transfers.get_incomplete_file_path(incomplete_folder, user, virtual_path)
 
         self.assertEqual(len(os.path.basename(incomplete_path).encode('utf-8')), 253)
@@ -150,7 +150,7 @@ class TransfersTest(TestCase):
 
         # Long file extension
         virtual_path = ("Music\\Test\\abc123456.片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片"
-                        + "片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片")
+                        "片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片")
         incomplete_path = core.transfers.get_incomplete_file_path(incomplete_folder, user, virtual_path)
 
         self.assertEqual(len(os.path.basename(incomplete_path).encode('utf-8')), 253)

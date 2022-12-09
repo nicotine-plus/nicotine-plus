@@ -87,7 +87,7 @@ class SearchTest(TestCase):
 
         # Second item
 
-        new_item = SEARCH_TEXT + "1"
+        new_item = f"{SEARCH_TEXT}1"
         core.search.add_wish(new_item)
         self.assertEqual(config.sections["server"]["autosearch"][0], SEARCH_TEXT)
         self.assertEqual(config.sections["server"]["autosearch"][1], new_item)

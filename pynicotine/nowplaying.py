@@ -152,11 +152,10 @@ class NowPlaying:
                 # On rare occasions, the track dictionary is not wrapped in a list
                 pass
 
-            self.title["artist"] = lastplayed["artist"]["#text"]
-            self.title["title"] = lastplayed["name"]
-            self.title["album"] = lastplayed["album"]["#text"]
-            self.title["nowplaying"] = "%s: %s - %s - %s" % (
-                _("Last played"), self.title["artist"], self.title["album"], self.title["title"])
+            self.title["artist"] = artist = lastplayed["artist"]["#text"]
+            self.title["title"] = title = lastplayed["name"]
+            self.title["album"] = album = lastplayed["album"]["#text"]
+            self.title["nowplaying"] = f"{_('Last played')}: {artist} - {album} - {title}"
 
         except Exception:
             log.add(_("Last.fm: Could not get recent track from Audioscrobbler: %(error)s"),
@@ -281,11 +280,10 @@ class NowPlaying:
 
             track = json_api['listens'][0]['track_metadata']
 
-            self.title['artist'] = track['artist_name']
-            self.title['title'] = track['track_name']
-            self.title['album'] = track['release_name']
-            self.title['nowplaying'] = '%s: %s - %s - %s' % (
-                _('Playing now'), self.title['artist'], self.title['album'], self.title['title'])
+            self.title['artist'] = artist = track['artist_name']
+            self.title['title'] = title = track['track_name']
+            self.title['album'] = album = track['release_name']
+            self.title["nowplaying"] = f"{_('Playing now')}: {artist} - {album} - {title}"
 
             return True
 
