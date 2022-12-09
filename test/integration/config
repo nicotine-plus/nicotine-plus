@@ -29,8 +29,6 @@ usernamesubfolders = False
 shared = []
 buddyshared = []
 uploadbandwidth = 10
-uselimit = False
-usealtlimits = False
 uploadlimit = 1000
 uploadlimitalt = 100
 downloadlimit = 0
@@ -69,6 +67,8 @@ download_doubleclick = 1
 upload_doubleclick = 1
 downloadsexpanded = True
 uploadsexpanded = True
+use_upload_speed_limit = disable
+use_download_speed_limit = False
 
 [userinfo]
 descr = ''

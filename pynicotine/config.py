@@ -192,8 +192,6 @@ class Config:
                 "shared": [],
                 "buddyshared": [],
                 "uploadbandwidth": 50,
-                "uselimit": False,
-                "usealtlimits": False,
                 "use_upload_speed_limit": "disable",
                 "uploadlimit": 1000,
                 "uploadlimitalt": 100,
@@ -459,7 +457,9 @@ class Config:
                 "geopanic",
                 "enablebuddyshares",
                 "friendsonly",
-                "enabletransferbuttons"
+                "enabletransferbuttons",
+                "uselimit",
+                "usealtlimits"
             ),
             "server": (
                 "lastportstatuscheck",
@@ -557,10 +557,6 @@ class Config:
             )
         }
 
-        # Initialize config with default values
-        for key, value in self.defaults.items():
-            self.sections[key] = value.copy()
-
         self.create_config_folder()
         self.create_data_folder()
 
@@ -568,6 +564,46 @@ class Config:
 
         # Update config values from file
         self.set_config()
+
+        # Add any default options not present in the config file
+        for section, options in self.defaults.items():
+            if section not in self.sections:
+                self.sections[section] = {}
+
+            for option, value in options.items():
+                if option in self.sections[section]:
+                    continue
+
+                # Migrate download speed limit preference
+                if option == "use_download_speed_limit" and section == "transfers":
+                    if self.sections[section].get("usealtlimits", False):
+                        use_speed_limit = "enable_alt"
+
+                    elif self.sections[section].get("downloadlimit", 0):
+                        use_speed_limit = "enable"
+
+                    else:
+                        use_speed_limit = "disable"
+
+                    self.sections[section][option] = use_speed_limit
+                    continue
+
+                # Migrate upload speed limit preference
+                if option == "use_upload_speed_limit" and section == "transfers":
+                    if self.sections[section].get("usealtlimits", False):
+                        use_speed_limit = "enable_alt"
+
+                    elif self.sections[section].get("uselimit", False):
+                        use_speed_limit = "enable"
+
+                    else:
+                        use_speed_limit = "disable"
+
+                    self.sections[section][option] = use_speed_limit
+                    continue
+
+                # Set default value
+                self.sections[section][option] = value
 
         # Convert special download folder share to regular share
         if self.sections["transfers"].get("sharedownloaddir", False):
