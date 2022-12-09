@@ -131,8 +131,8 @@ class NowPlaying:
 
         try:
             from urllib.request import urlopen
-            with urlopen(("https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=%s&api_key=%s"
-                          "&limit=1&format=json" % (user, apikey)), timeout=10) as response:
+            with urlopen((f"https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={user}&api_key={apikey}"
+                          f"&limit=1&format=json"), timeout=10) as response:
                 response_body = response.read().decode("utf-8")
 
         except Exception as error:
@@ -263,7 +263,7 @@ class NowPlaying:
 
         try:
             from urllib.request import urlopen
-            with urlopen("https://api.listenbrainz.org/1/user/%s/playing-now" % username, timeout=10) as response:
+            with urlopen(f"https://api.listenbrainz.org/1/user/{username}/playing-now", timeout=10) as response:
                 response_body = response.read().decode("utf-8")
 
         except Exception as error:

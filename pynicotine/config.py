@@ -774,7 +774,7 @@ class Config:
 
         try:
             if os.path.exists(filename_encoded):
-                raise FileExistsError("File %s exists" % filename)
+                raise FileExistsError(f"File {filename} exists")
 
             import tarfile
             with tarfile.open(filename_encoded, "w:bz2") as tar:

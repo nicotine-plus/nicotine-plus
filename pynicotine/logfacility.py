@@ -146,7 +146,8 @@ class Logger:
         try:
             log_file = self._get_log_file(folder_path, base_name)
             timestamp_format = config.sections["logging"]["log_timestamp"]
-            text = "%s %s\n" % (time.strftime(timestamp_format, time.localtime(timestamp)), text)
+            timestamp = time.strftime(timestamp_format, time.localtime(timestamp))
+            text = f"{timestamp} {text}\n"
 
             log_file.handle.write(text.encode('utf-8', 'replace'))
             log_file.last_active = time.time()
@@ -232,7 +233,7 @@ class Logger:
             msg = msg % msg_args
 
         if prefix:
-            msg = "[%s] %s" % (prefix, msg)
+            msg = f"[{prefix}] {msg}"
 
         return msg
 
@@ -262,7 +263,7 @@ class Logger:
 
         except Exception as error:
             try:
-                print("Log callback failed: %s %s\n%s" % (level, msg, error))
+                print(f"Log callback failed: {level} {msg}\n{error}")
 
             except OSError:
                 # stdout is gone

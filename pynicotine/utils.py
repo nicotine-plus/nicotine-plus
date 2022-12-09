@@ -86,30 +86,28 @@ def encode_path(path, prefix=True):
 
 def human_length(seconds):
 
-    minutes, seconds = divmod(seconds, 60)
+    minutes, seconds = divmod(int(seconds), 60)
     hours, minutes = divmod(minutes, 60)
     days, hours = divmod(hours, 24)
 
     if days > 0:
-        ret = '%i:%02i:%02i:%02i' % (days, hours, minutes, seconds)
-    elif hours > 0:
-        ret = '%i:%02i:%02i' % (hours, minutes, seconds)
-    else:
-        ret = '%i:%02i' % (minutes, seconds)
+        return f"{days}:{hours:02d}:{minutes:02d}:{seconds:02d}"
 
-    return ret
+    if hours > 0:
+        return f"{hours}:{minutes:02d}:{seconds:02d}"
+
+    return f"{minutes}:{seconds:02d}"
 
 
 def _human_speed_or_size(unit):
 
-    template = "%.3g %s"
     try:
         for suffix in FILE_SIZE_SUFFIXES:
             if unit < 1024:
                 if unit > 999:
-                    template = "%.4g %s"
+                    return f"{unit:.4g} {suffix}"
 
-                return template % (unit, suffix)
+                return f"{unit:.3g} {suffix}"
 
             unit /= 1024
 
@@ -128,7 +126,7 @@ def human_size(filesize):
 
 
 def humanize(number):
-    return "{:n}".format(number)
+    return f"{number:n}"
 
 
 def factorize(filesize, base=1024):
@@ -299,8 +297,10 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
             procs[-1].wait()
 
     except Exception as error:
-        raise RuntimeError("Problem while executing command %s (%s of %s)" %
-                           (subcommands[len(procs)], len(procs) + 1, len(subcommands))) from error
+        command = subcommands[len(procs)]
+        command_no = len(procs) + 1
+        num_commands = len(subcommands)
+        raise RuntimeError(f"Problem while executing command {command} ({command_no} of {num_commands}") from error
 
     if not returnoutput:
         return True
@@ -492,8 +492,7 @@ class RestrictedUnpickler(pickle.Unpickler):
 
     def find_class(self, module, name):
         # Forbid all globals
-        raise pickle.UnpicklingError("global '%s.%s' is forbidden" %
-                                     (module, name))
+        raise pickle.UnpicklingError(f"global '{module}.{name}' is forbidden")
 
 
 """ Debugging """

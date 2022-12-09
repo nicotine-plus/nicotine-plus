@@ -62,7 +62,7 @@ class SSDPRequest:
     def __init__(self, search_target):
 
         self.headers = {
-            "HOST": "%s:%s" % (MULTICAST_HOST, MULTICAST_PORT),
+            "HOST": f"{MULTICAST_HOST}:{MULTICAST_PORT}",
             "ST": search_target,
             "MAN": '"ssdp:discover"',
             "MX": str(MX_RESPONSE_DELAY)
@@ -79,8 +79,8 @@ class SSDPRequest:
 
         headers = ["M-SEARCH * HTTP/1.1"]
 
-        for header in self.headers.items():
-            headers.append("%s: %s" % header)
+        for header_name, header_value in self.headers.items():
+            headers.append(f"{header_name}: {header_value}")
 
         return '\r\n'.join(headers).encode('utf-8') + b'\r\n\r\n'
 
@@ -240,7 +240,7 @@ class UPnP:
         headers = {
             "Host": urlsplit(control_url).netloc,
             "Content-Type": "text/xml; charset=utf-8",
-            "SOAPACTION": '"%s#AddPortMapping"' % service_type
+            "SOAPACTION": f'"{service_type}#AddPortMapping"'
         }
 
         body = (
@@ -272,7 +272,7 @@ class UPnP:
         xml = ElementTree.fromstring(response_body.decode("utf-8"))
 
         if xml.find(".//{http://schemas.xmlsoap.org/soap/envelope/}Body") is None:
-            raise RuntimeError(_("Invalid response: %s") % response_body)
+            raise RuntimeError(f"Invalid response: {response_body}")
 
         log.add_debug("UPnP: Add port mapping response: %s", response_body)
 
@@ -338,8 +338,7 @@ class UPnP:
                 return
 
             if error_code or error_description:
-                raise RuntimeError(_("Error code %(code)s: %(description)s") %
-                                   {"code": error_code, "description": error_description})
+                raise RuntimeError(f"Error code {error_code}: {error_description}")
 
         except Exception as error:
             from traceback import format_exc

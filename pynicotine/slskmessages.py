@@ -2620,7 +2620,7 @@ class FileListMessage(PeerMessage):
         if length is None:
             if bitrate > 0:
                 # Dividing the file size by the bitrate in Bytes should give us a good enough approximation
-                length = filesize / (bitrate * 125)
+                length = filesize // (bitrate * 125)
 
             else:
                 length = -1

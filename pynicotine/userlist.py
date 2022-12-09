@@ -203,7 +203,7 @@ class UserList:
         if user not in self.buddies:
             return
 
-        self.buddies[user][6] = "flag_" + country_code
+        self.buddies[user][6] = f"flag_{country_code}"
 
     def save_buddy_list(self):
 

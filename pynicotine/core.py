@@ -300,7 +300,8 @@ class Core:
     @staticmethod
     def log_cli(timestamp_format, msg, _title, _level):
         try:
-            print("[" + time.strftime(timestamp_format) + "] " + msg)
+            timestamp = time.strftime(timestamp_format)
+            print(f"[{timestamp}] {msg}")
         except OSError:
             # stdout is gone
             pass
@@ -511,8 +512,8 @@ class Core:
         self.pluginhandler.user_resolve_notification(user, msg.ip_address, msg.port, country_code)
 
         if country_code:
-            country = " (%(cc)s / %(country)s)" % {
-                'cc': country_code, 'country': self.geoip.country_code_to_name(country_code)}
+            country_name = self.geoip.country_code_to_name(country_code)
+            country = f" ({country_code} / {country_name})"
         else:
             country = ""
 

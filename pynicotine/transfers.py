@@ -1859,7 +1859,7 @@ class Transfers:
 
             except Exception as error:
                 log.add(_("Unable to save download to username subfolder, falling back "
-                          "to default download folder. Error: %s") % error)
+                          "to default download folder. Error: %s"), error)
 
         return downloaddir
 
@@ -1884,7 +1884,7 @@ class Transfers:
                 # Found a previous download with a matching file size
                 return download_path
 
-            basename = basename_root + " (" + str(counter) + ")" + extension
+            basename = f"{basename_root} ({counter}){extension}"
             download_path = os.path.join(folder, basename)
             counter += 1
 
@@ -1901,7 +1901,7 @@ class Transfers:
         from hashlib import md5
         md5sum = md5()
         md5sum.update((virtual_path + username).encode('utf-8'))
-        prefix = "INCOMPLETE" + md5sum.hexdigest()
+        prefix = f"INCOMPLETE{md5sum.hexdigest()}"
 
         # Ensure file name doesn't exceed 255 bytes in length
         base_name, extension = os.path.splitext(clean_file(virtual_path.replace('/', '\\').split('\\')[-1]))
@@ -1925,7 +1925,7 @@ class Transfers:
         counter = 1
 
         while os.path.exists(encode_path(name)):
-            name = filename + " (" + str(counter) + ")" + extension
+            name = f"{filename} ({counter}){extension}"
             counter += 1
 
         return name
@@ -2290,10 +2290,11 @@ class Transfers:
         message via the transfers, and clear the transfers from the
         uploads list. """
 
+        if not ban_message and config.sections["transfers"]["usecustomban"]:
+            ban_message = config.sections["transfers"]["customban"]
+
         if ban_message:
-            banmsg = "Banned (%s)" % ban_message
-        elif config.sections["transfers"]["usecustomban"]:
-            banmsg = "Banned (%s)" % config.sections["transfers"]["customban"]
+            banmsg = f"Banned ({ban_message})"
         else:
             banmsg = "Banned"
 
@@ -2532,7 +2533,7 @@ class Transfers:
                 dfilter = dfilter.replace("\\*", ".*")
 
             try:
-                re.compile("(" + dfilter + ")")
+                re.compile(f"({dfilter})")
                 outfilter += dfilter
 
                 if item is not download_filters[-1]:
@@ -2561,7 +2562,7 @@ class Transfers:
         errors = ""
 
         for dfilter, error in failed.items():
-            errors += "Filter: %s Error: %s " % (dfilter, error)
+            errors += f"Filter: {dfilter} Error: {error} "
 
         log.add(_("Error: %(num)d Download filters failed! %(error)s "), {'num': len(failed), 'error': errors})
 

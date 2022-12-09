@@ -70,7 +70,7 @@ def check_arguments():
         help=_("start the program in headless mode (no GUI)")
     )
     parser.add_argument(
-        "-v", "--version", action="version", version="%s %s" % (config.application_name, config.version),
+        "-v", "--version", action="version", version=f"{config.application_name} {config.version}",
         help=_("display version and exit")
     )
 
@@ -138,7 +138,7 @@ def rename_process(new_name, debug_info=False):
     if debug_info and errors:
         msg = ["Errors occurred while trying to change process name:"]
         for i in errors:
-            msg.append("%s" % (i,))
+            msg.append(str(i))
         log.add('\n'.join(msg))
 
 
@@ -186,7 +186,7 @@ def run():
         faulthandler.enable()
 
     except Exception as error:
-        log.add("Faulthandler module could not be enabled. Error: %s" % error)
+        log.add(f"Faulthandler module could not be enabled. Error: {error}")
 
     core.init_components(enable_cli=True)
 

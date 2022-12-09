@@ -191,7 +191,7 @@ class Events:
     def connect(self, event_name, function):
 
         if event_name not in EVENT_NAMES:
-            raise ValueError("Unknown event %s" % event_name)
+            raise ValueError(f"Unknown event {event_name}")
 
         if event_name not in self._callbacks:
             self._callbacks[event_name] = []

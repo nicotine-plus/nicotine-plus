@@ -328,8 +328,7 @@ class ResponseThrottle:
                 willing_to_respond, reason = False, "Responded in multiple rooms enough"
 
         if self.logging and not willing_to_respond:
-            base_log_msg = "{} plugin request rejected - room '{}', nick '{}'".format(self.plugin_name, room, nick)
-            log.add_debug("{} - {}".format(base_log_msg, reason))
+            log.add_debug(f"{self.plugin_name} plugin request rejected - room '{room}', nick '{nick}' - {reason}")
 
         return willing_to_respond
 
@@ -380,7 +379,7 @@ class PluginHandler:
         self.enable_plugin("core_commands")
 
         to_enable = config.sections["plugins"]["enabled"]
-        log.add_debug("Enabled plugin(s): %s" % ', '.join(to_enable))
+        log.add_debug(f"Enabled plugin(s): {', '.join(to_enable)}")
 
         for plugin in to_enable:
             self.enable_plugin(plugin)

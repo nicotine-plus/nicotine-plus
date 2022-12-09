@@ -104,4 +104,4 @@ class Application:
 
     def shares_unavailable(self, shares):
         for virtual_name, folder_path in shares:
-            log.add("• \"%s\" %s" % (virtual_name, folder_path))
+            log.add(f"• \"{virtual_name}\" {folder_path}")

@@ -1827,7 +1827,7 @@ class SoulseekNetworkThread(Thread):
                             # There are rare cases of parents sending a branch level value of -1,
                             # presumably buggy clients
                             log.add_conn(("Received an invalid branch level value %(level)s from user %(user)s. "
-                                          "Closing connection.") % {"level": msg.value, "user": msg.init.target_user})
+                                          "Closing connection."), {"level": msg.value, "user": msg.init.target_user})
                             conn_obj.ibuf = bytearray()
                             self._close_connection(self._conns, conn_obj.sock)
                             return

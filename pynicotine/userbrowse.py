@@ -301,7 +301,8 @@ class UserBrowse:
     @staticmethod
     def get_soulseek_url(user, path):
         import urllib.parse
-        return "slsk://" + urllib.parse.quote("%s/%s" % (user, path.replace("\\", "/")))
+        path = path.replace("\\", "/")
+        return "slsk://" + urllib.parse.quote(f"{user}/{path}")
 
     def open_soulseek_url(self, url):
 

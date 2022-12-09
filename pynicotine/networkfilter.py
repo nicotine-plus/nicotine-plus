@@ -164,7 +164,8 @@ class NetworkFilter:
 
         if self.is_user_banned(user) or (ip_address is not None and self.is_ip_blocked(ip_address)):
             if config.sections["transfers"]["usecustomban"]:
-                return 0, "Banned (%s)" % config.sections["transfers"]["customban"]
+                ban_message = config.sections["transfers"]["customban"]
+                return 0, f"Banned ({ban_message})"
 
             return 0, "Banned"
 
@@ -188,7 +189,8 @@ class NetworkFilter:
 
         if country_code and config.sections["transfers"]["geoblockcc"][0].find(country_code) >= 0:
             if config.sections["transfers"]["usecustomgeoblock"]:
-                return 0, "Banned (%s)" % config.sections["transfers"]["customgeoblock"]
+                ban_message = config.sections["transfers"]["customgeoblock"]
+                return 0, f"Banned ({ban_message})"
 
             return 0, "Banned"
 

@@ -64,11 +64,11 @@ class MockSocket(Mock):
 
     @staticmethod
     def send(data):
-        print("sending data {}".format(data))
+        print(f"sending data {data}")
 
     @staticmethod
     def recv(bufsize):
-        print("recving {} data".format(bufsize))
+        print(f"recving {bufsize} data")
         return b''
 
 

@@ -495,8 +495,8 @@ class Scanner:
         last_percent = 0.0
 
         for file_num, folder in enumerate(shared_files, start=1):
-            # Truncate the percentage to two decimal places to avoid sending data to the GUI thread too often
-            percent = float("%.2f" % (file_num / num_shared_files))
+            # Truncate the percentage to two decimal places to avoid sending data to the main process too often
+            percent = float(f"{(file_num / num_shared_files):.2f}")
 
             if last_percent < percent <= 1.0:
                 self.queue.put(percent)

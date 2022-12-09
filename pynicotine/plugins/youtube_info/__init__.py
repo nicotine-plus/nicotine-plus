@@ -110,14 +110,16 @@ class Plugin(BasePlugin):
 
     def parse_response(self, video_id):
 
-        if not self.settings['api_key']:
+        api_key = self.settings['api_key']
+
+        if not api_key:
             self.log('No API key specified')
             return None
 
         try:
             from urllib.request import urlopen
-            with urlopen(("https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics,contentDetails"
-                          "&id=%s&key=%s" % (video_id, self.settings['api_key'])), timeout=10) as response:
+            with urlopen((f"https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics,contentDetails"
+                          f"&id={video_id}&key={api_key}"), timeout=10) as response:
                 response_body = response.read().decode("utf-8")
 
         except Exception as error:

@@ -252,7 +252,7 @@ class PrivateChat:
         core.pluginhandler.incoming_private_chat_notification(user, msg.msg)
 
         if ctcpversion and not config.sections["server"]["ctcpmsgs"]:
-            self.send_message(user, "%s %s" % (config.application_name, config.version))
+            self.send_message(user, f"{config.application_name} {config.version}")
 
         if not msg.newmessage:
             # Message was sent while offline, don't auto-reply
