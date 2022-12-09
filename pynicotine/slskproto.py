@@ -1953,12 +1953,11 @@ class SoulseekNetworkThread(Thread):
             self._calc_download_limit()
 
         elif msg_class is SetUploadLimit:
-            if msg_obj.uselimit:
+            if msg_obj.limit > 0:
                 if msg_obj.limitby:
                     self._calc_upload_limit_function = self._calc_upload_limit
                 else:
                     self._calc_upload_limit_function = self._calc_upload_limit_by_transfer
-
             else:
                 self._calc_upload_limit_function = self._calc_upload_limit_none
 

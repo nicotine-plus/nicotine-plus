@@ -134,18 +134,23 @@
           </object>
         </child>
         <child>
+          <object class="GtkRadioButton" id="UnlimitedDownloadSpeed">
+            <property name="visible">True</property>
+            <property name="hexpand">True</property>
+            <property name="label" translatable="yes">Unlimited download speed</property>
+            <property name="active">True</property>
+          </object>
+        </child>
+        <child>
           <object class="GtkBox">
             <property name="visible">True</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkLabel">
-                <property name="label" translatable="yes">Limit download speed to (KiB/s):</property>
+              <object class="GtkRadioButton" id="UseDownloadSpeedLimit">
+                <property name="label" translatable="yes">Use download speed limit (KiB/s):</property>
                 <property name="hexpand">True</property>
                 <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="wrap">True</property>
-                <property name="wrap-mode">word-char</property>
-                <property name="mnemonic-widget">DownloadSpeed</property>
+                <property name="group">UnlimitedDownloadSpeed</property>
               </object>
             </child>
             <child>
@@ -165,14 +170,11 @@
             <property name="visible">True</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkLabel">
-                <property name="label" translatable="yes">Alternative download speed limit (KiB/s):</property>
+              <object class="GtkRadioButton" id="UseAltDownloadSpeedLimit">
+                <property name="label" translatable="yes">Use alternative download speed limit (KiB/s):</property>
                 <property name="hexpand">True</property>
                 <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="wrap">True</property>
-                <property name="wrap-mode">word-char</property>
-                <property name="mnemonic-widget">DownloadSpeedAlternative</property>
+                <property name="group">UnlimitedDownloadSpeed</property>
               </object>
             </child>
             <child>

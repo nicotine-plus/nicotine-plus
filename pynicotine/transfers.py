@@ -178,7 +178,8 @@ class Transfers:
             return
 
         self.requested_folders.clear()
-        self.update_limits()
+        self.update_download_limits()
+        self.update_upload_limits()
         self.watch_stored_downloads()
 
         # Check for transfer timeouts
@@ -474,33 +475,36 @@ class Transfers:
 
     """ Limits """
 
-    def _update_regular_limits(self):
-        """ Sends the regular speed limits to the networking thread """
+    def update_download_limits(self):
 
-        uselimit = config.sections["transfers"]["uselimit"]
-        uploadlimit = config.sections["transfers"]["uploadlimit"]
-        limitby = config.sections["transfers"]["limitby"]
+        use_speed_limit = config.sections["transfers"]["use_download_speed_limit"]
 
-        core.queue.append(slskmessages.SetUploadLimit(uselimit, uploadlimit, limitby))
-        core.queue.append(slskmessages.SetDownloadLimit(config.sections["transfers"]["downloadlimit"]))
+        if use_speed_limit == "enable":
+            speed_limit = config.sections["transfers"]["downloadlimit"]
 
-    def _update_alt_limits(self):
-        """ Sends the alternative speed limits to the networking thread """
+        elif use_speed_limit == "enable_alt":
+            speed_limit = config.sections["transfers"]["downloadlimitalt"]
 
-        uselimit = True
-        uploadlimit = config.sections["transfers"]["uploadlimitalt"]
-        limitby = config.sections["transfers"]["limitby"]
+        else:
+            speed_limit = 0
 
-        core.queue.append(slskmessages.SetUploadLimit(uselimit, uploadlimit, limitby))
-        core.queue.append(slskmessages.SetDownloadLimit(config.sections["transfers"]["downloadlimitalt"]))
+        core.queue.append(slskmessages.SetDownloadLimit(speed_limit))
 
-    def update_limits(self):
+    def update_upload_limits(self):
 
-        if config.sections["transfers"]["usealtlimits"]:
-            self._update_alt_limits()
-            return
+        use_speed_limit = config.sections["transfers"]["use_upload_speed_limit"]
+        limit_by = config.sections["transfers"]["limitby"]
 
-        self._update_regular_limits()
+        if use_speed_limit == "enable":
+            speed_limit = config.sections["transfers"]["uploadlimit"]
+
+        elif use_speed_limit == "enable_alt":
+            speed_limit = config.sections["transfers"]["uploadlimitalt"]
+
+        else:
+            speed_limit = 0
+
+        core.queue.append(slskmessages.SetUploadLimit(speed_limit, limit_by))
 
     def queue_limit_reached(self, user):
 

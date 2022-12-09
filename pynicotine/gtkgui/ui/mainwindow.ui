@@ -1790,10 +1790,9 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton" id="_download_status_button">
+                  <object class="GtkMenuButton" id="download_status_button">
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Downloading (Speed / Active Users)</property>
-                    <property name="action-name">app.configure-downloads</property>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
@@ -1807,7 +1806,7 @@
                         <child>
                           <object class="GtkLabel" id="download_status_label">
                             <property name="visible">True</property>
-                            <property name="mnemonic-widget">_download_status_button</property>
+                            <property name="mnemonic-widget">download_status_button</property>
                             <attributes>
                               <attribute name="weight" value="normal"/>
                             </attributes>
@@ -1821,10 +1820,9 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton" id="_upload_status_button">
+                  <object class="GtkMenuButton" id="upload_status_button">
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Uploading (Speed / Active Users)</property>
-                    <property name="action-name">app.configure-uploads</property>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
@@ -1838,7 +1836,7 @@
                         <child>
                           <object class="GtkLabel" id="upload_status_label">
                             <property name="visible">True</property>
-                            <property name="mnemonic-widget">_upload_status_button</property>
+                            <property name="mnemonic-widget">upload_status_button</property>
                             <attributes>
                               <attribute name="weight" value="normal"/>
                             </attributes>
@@ -1848,24 +1846,6 @@
                     </child>
                     <style>
                       <class name="flat"/>
-                    </style>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkToggleButton">
-                    <property name="visible">True</property>
-                    <property name="tooltip-text" translatable="yes">Use Alternative Transfer Speed Limits</property>
-                    <property name="action-name">app.alternative-speed-limit</property>
-                    <child>
-                      <object class="GtkImage" id="alt_speed_icon">
-                        <property name="visible">True</property>
-                        <property name="icon-name">media-seek-backward-symbolic</property>
-                      </object>
-                    </child>
-                    <style>
-                      <class name="circular"/>
-                      <class name="flat"/>
-                      <class name="image-button"/>
                     </style>
                   </object>
                 </child>

@@ -81,7 +81,6 @@ class MainWindow(Window):
         ui_template = UserInterface(scope=self, path="mainwindow.ui")
         (
             self.add_buddy_entry,
-            self.alt_speed_icon,
             self.buddy_list_container,
             self.chatrooms_buddy_list_container,
             self.chatrooms_container,
@@ -95,6 +94,7 @@ class MainWindow(Window):
             self.chatrooms_toolbar_contents,
             self.connections_label,
             self.download_files_label,
+            self.download_status_button,
             self.download_status_label,
             self.download_users_label,
             self.downloads_content,
@@ -148,6 +148,7 @@ class MainWindow(Window):
             self.search_toolbar_contents,
             self.status_label,
             self.upload_files_label,
+            self.upload_status_button,
             self.upload_status_label,
             self.upload_users_label,
             self.uploads_content,
@@ -653,8 +654,6 @@ class MainWindow(Window):
         action = Gio.SimpleAction(name="close")  # 'When closing Nicotine+'
         action.connect("activate", self.on_close_request)
         self.add_action(action)
-
-        self.update_alternative_speed_icon(config.sections["transfers"]["usealtlimits"])
 
     def set_up_action_accels(self):
 
@@ -1386,15 +1385,6 @@ class MainWindow(Window):
     def hide_scan_progress(self):
         self.scan_progress_indeterminate = False
         GLib.idle_add(self.scan_progress_bar.hide)
-
-    def update_alternative_speed_icon(self, active):
-
-        if active:
-            icon_name = "media-skip-backward-symbolic"
-        else:
-            icon_name = "media-seek-backward-symbolic"
-
-        self.alt_speed_icon.set_property("icon-name", icon_name)
 
     """ Exit """
 

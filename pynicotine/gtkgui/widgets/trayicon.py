@@ -87,8 +87,6 @@ class BaseImplementation:
 
         self.show_item = self.create_item(_("Show Nicotine+"), self.on_window_hide_unhide)
         self.hide_item = self.create_item(_("Hide Nicotine+"), self.on_window_hide_unhide)
-        self.alt_speed_item = self.create_item(
-            _("Alternative Speed Limits"), self.application.on_alternative_speed_limit, check=True)
 
         self.create_item()
 
@@ -139,10 +137,6 @@ class BaseImplementation:
         self.set_item_toggled(self.away_item, core.user_status == UserStatus.AWAY)
 
         self.update_icon()
-        self.update_menu()
-
-    def update_alternative_speed_limit_status(self):
-        self.set_item_toggled(self.alt_speed_item, config.sections["transfers"]["usealtlimits"])
         self.update_menu()
 
     def update_icon(self, force_update=False):
@@ -772,10 +766,6 @@ class TrayIcon:
         if self.implementation:
             self.implementation.update_user_status()
 
-    def update_alternative_speed_limit_status(self):
-        if self.implementation:
-            self.implementation.update_alternative_speed_limit_status()
-
     def update_icon(self, force_update=False):
         if self.implementation:
             self.implementation.update_icon(force_update)
@@ -797,7 +787,6 @@ class TrayIcon:
         self.update_icon(force_update=True)
         self.update_window_visibility()
         self.update_user_status()
-        self.update_alternative_speed_limit_status()
 
     def is_visible(self):
 

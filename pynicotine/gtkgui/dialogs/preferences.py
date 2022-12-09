@@ -223,7 +223,8 @@ class DownloadsPage:
         (self.AfterDownload, self.AfterFolder, self.AutoclearFinished,
          self.DownloadDir, self.DownloadDoubleClick, self.DownloadFilter, self.DownloadReverseOrder,
          self.DownloadSpeed, self.DownloadSpeedAlternative, self.FilterView, self.IncompleteDir,
-         self.Main, self.RemoteDownloads, self.UploadDir, self.UploadsAllowed,
+         self.Main, self.RemoteDownloads, self.UnlimitedDownloadSpeed, self.UploadDir, self.UploadsAllowed,
+         self.UseAltDownloadSpeedLimit, self.UseDownloadSpeedLimit,
          self.UsernameSubfolders, self.VerifiedLabel) = ui_template.widgets
 
         self.application = application
@@ -267,15 +268,27 @@ class DownloadsPage:
         self.filter_list_view.clear()
         self.application.preferences.set_widgets_data(self.options)
 
+        use_speed_limit = config.sections["transfers"]["use_download_speed_limit"]
+
+        if use_speed_limit == "enable":
+            self.UseDownloadSpeedLimit.set_active(True)
+
+        elif use_speed_limit == "enable_alt":
+            self.UseAltDownloadSpeedLimit.set_active(True)
+
+        else:
+            self.UnlimitedDownloadSpeed.set_active(True)
+
     def get_settings(self):
 
-        try:
-            uploadallowed = self.UploadsAllowed.get_active()
-        except Exception:
-            uploadallowed = 0
+        if self.UseDownloadSpeedLimit.get_active():
+            use_speed_limit = "enable"
 
-        if not self.RemoteDownloads.get_active():
-            uploadallowed = 0
+        elif self.UseAltDownloadSpeedLimit.get_active():
+            use_speed_limit = "enable_alt"
+
+        else:
+            use_speed_limit = "disable"
 
         download_filters = []
 
@@ -290,12 +303,13 @@ class DownloadsPage:
                 "autoclear_downloads": self.AutoclearFinished.get_active(),
                 "reverseorder": self.DownloadReverseOrder.get_active(),
                 "remotedownloads": self.RemoteDownloads.get_active(),
-                "uploadallowed": uploadallowed,
+                "uploadallowed": self.UploadsAllowed.get_active(),
                 "incompletedir": self.incomplete_dir.get_path(),
                 "downloaddir": self.download_dir.get_path(),
                 "uploaddir": self.upload_dir.get_path(),
                 "downloadfilters": download_filters,
                 "enablefilters": self.DownloadFilter.get_active(),
+                "use_download_speed_limit": use_speed_limit,
                 "downloadlimit": self.DownloadSpeed.get_value_as_int(),
                 "downloadlimitalt": self.DownloadSpeedAlternative.get_value_as_int(),
                 "usernamesubfolders": self.UsernameSubfolders.get_active(),
@@ -627,10 +641,11 @@ class UploadsPage:
         ui_template = UserInterface(scope=self, path="settings/uploads.ui")
 
         # pylint: disable=invalid-name
-        (self.AutoclearFinished, self.FirstInFirstOut, self.FriendsNoLimits, self.Limit,
+        (self.AutoclearFinished, self.FirstInFirstOut, self.FriendsNoLimits,
          self.LimitSpeed, self.LimitSpeedAlternative, self.LimitTotalTransfers, self.Main, self.MaxUserFiles,
          self.MaxUserQueue, self.PreferFriends, self.QueueBandwidth, self.QueueSlots, self.QueueUseBandwidth,
-         self.QueueUseSlots, self.UploadDoubleClick) = ui_template.widgets
+         self.QueueUseSlots, self.UnlimitedUploadSpeed, self.UploadDoubleClick, self.UseAltUploadSpeedLimit,
+         self.UseUploadSpeedLimit) = ui_template.widgets
 
         self.application = application
 
@@ -640,7 +655,6 @@ class UploadsPage:
                 "uploadbandwidth": self.QueueBandwidth,
                 "useupslots": self.QueueUseSlots,
                 "uploadslots": self.QueueSlots,
-                "uselimit": self.Limit,
                 "uploadlimit": self.LimitSpeed,
                 "uploadlimitalt": self.LimitSpeedAlternative,
                 "fifoqueue": self.FirstInFirstOut,
@@ -654,9 +668,30 @@ class UploadsPage:
         }
 
     def set_settings(self):
+
         self.application.preferences.set_widgets_data(self.options)
 
+        use_speed_limit = config.sections["transfers"]["use_upload_speed_limit"]
+
+        if use_speed_limit == "enable":
+            self.UseUploadSpeedLimit.set_active(True)
+
+        elif use_speed_limit == "enable_alt":
+            self.UseAltUploadSpeedLimit.set_active(True)
+
+        else:
+            self.UnlimitedUploadSpeed.set_active(True)
+
     def get_settings(self):
+
+        if self.UseUploadSpeedLimit.get_active():
+            use_speed_limit = "enable"
+
+        elif self.UseAltUploadSpeedLimit.get_active():
+            use_speed_limit = "enable_alt"
+
+        else:
+            use_speed_limit = "disable"
 
         return {
             "transfers": {
@@ -664,7 +699,7 @@ class UploadsPage:
                 "uploadbandwidth": self.QueueBandwidth.get_value_as_int(),
                 "useupslots": self.QueueUseSlots.get_active(),
                 "uploadslots": self.QueueSlots.get_value_as_int(),
-                "uselimit": self.Limit.get_active(),
+                "use_upload_speed_limit": use_speed_limit,
                 "uploadlimit": self.LimitSpeed.get_value_as_int(),
                 "uploadlimitalt": self.LimitSpeedAlternative.get_value_as_int(),
                 "fifoqueue": bool(self.FirstInFirstOut.get_active()),
@@ -2597,8 +2632,9 @@ class Preferences(Dialog):
         self.application.window.privatechat.toggle_chat_buttons()
 
         # Transfers
-        core.transfers.update_limits()
+        core.transfers.update_download_limits()
         core.transfers.update_download_filters()
+        core.transfers.update_upload_limits()
         core.transfers.check_upload_queue()
 
         # Tray icon

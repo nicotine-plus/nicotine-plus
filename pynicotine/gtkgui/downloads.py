@@ -27,6 +27,7 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.popovers.downloadspeeds import DownloadSpeeds
 from pynicotine.gtkgui.transferlist import TransferList
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
@@ -82,6 +83,8 @@ class Downloads(TransferList):
             ("update-downloads", self.update_model)
         ):
             events.connect(event_name, callback)
+
+        self.download_speeds = DownloadSpeeds(window)
 
     def start(self):
         self.init_transfers(core.transfers.downloads)

@@ -225,11 +225,6 @@ class Application:
         action.connect("change-state", self.on_prefer_dark_mode)
         self.add_action(action)
 
-        state = config.sections["transfers"]["usealtlimits"]
-        action = Gio.SimpleAction(name="alternative-speed-limit", state=GLib.Variant("b", state))
-        action.connect("change-state", self.on_alternative_speed_limit)
-        self.add_action(action)
-
         action = Gio.SimpleAction(name="message-downloading-users", enabled=False)
         action.connect("activate", self.on_message_downloading_users)
         self.add_action(action)
@@ -729,17 +724,6 @@ class Application:
         """ Away/Online status button """
 
         core.set_away_mode(core.user_status != UserStatus.AWAY, save_state=True)
-
-    def on_alternative_speed_limit(self, *_args):
-
-        state = config.sections["transfers"]["usealtlimits"]
-        self.lookup_action("alternative-speed-limit").set_state(GLib.Variant("b", not state))
-
-        config.sections["transfers"]["usealtlimits"] = not state
-
-        self.window.update_alternative_speed_icon(not state)
-        core.transfers.update_limits()
-        self.tray_icon.update_alternative_speed_limit_status()
 
     """ Running """
 

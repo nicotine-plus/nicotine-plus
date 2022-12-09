@@ -28,6 +28,7 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.popovers.uploadspeeds import UploadSpeeds
 from pynicotine.gtkgui.transferlist import TransferList
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
@@ -83,6 +84,8 @@ class Uploads(TransferList):
             ("upload-notification", self.new_transfer_notification)
         ):
             events.connect(event_name, callback)
+
+        self.upload_speeds = UploadSpeeds(window)
 
     def start(self):
         self.init_transfers(core.transfers.uploads)

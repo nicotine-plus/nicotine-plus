@@ -293,10 +293,9 @@ class UploadConnectionClosed(InternalMessage):
 class SetUploadLimit(InternalMessage):
     """ Sent by the GUI thread to indicate changes in bandwidth shaping rules"""
 
-    __slots__ = ("uselimit", "limit", "limitby")
+    __slots__ = ("limit", "limitby")
 
-    def __init__(self, uselimit, limit, limitby):
-        self.uselimit = uselimit
+    def __init__(self, limit, limitby):
         self.limit = limit
         self.limitby = limitby
 
