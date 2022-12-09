@@ -774,7 +774,7 @@ class Application:
 
         loop = GLib.MainLoop()
         error = (f"Nicotine+ Version: {config.version}\nGTK Version: {config.gtk_version}\n"
-                 f"Python Version: {config.python_version}\n\n"
+                 f"Python Version: {config.python_version} ({sys.platform})\n\n"
                  f"Type: {exc_type}\nValue: {exc_value}\nTraceback: {''.join(format_tb(exc_traceback))}")
 
         OptionDialog(
