@@ -481,7 +481,7 @@ class TreeView:
 
         if country_code:
             country_name = GeoIP.country_code_to_name(country_code)
-            return f"{country_name} {country_code}"
+            return f"{country_name} ({country_code})"
 
         return _("Earth")
 
@@ -955,7 +955,7 @@ def get_country_tooltip_text(column_value, strip_prefix):
 
     if country_code:
         country_name = GeoIP.country_code_to_name(country_code)
-        return f"{country_name} {country_code}"
+        return f"{country_name} ({country_code})"
 
     return _("Earth")
 
