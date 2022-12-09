@@ -2639,11 +2639,13 @@ class Preferences(Dialog):
 
     def on_back_up_config(self, *_args):
 
+        current_date_time = time.strftime("%Y-%m-%d_%H-%M-%S")
+
         FileChooserSave(
             parent=self,
             callback=self.on_back_up_config_response,
             initial_folder=os.path.dirname(config.filename),
-            initial_file="config backup %s.tar.bz2" % (time.strftime("%Y-%m-%d %H_%M_%S")),
+            initial_file=f"config_backup_{current_date_time}.tar.bz2",
             title=_("Pick a File Name for Config Backup")
         ).show()
 

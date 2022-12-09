@@ -599,11 +599,13 @@ class UserInfo:
         if self.picture_data_original is None:
             return
 
+        current_date_time = time.strftime("%Y-%m-%d_%H-%M-%S")
+
         FileChooserSave(
             parent=self.window,
             callback=self.on_save_picture_response,
             initial_folder=config.sections["transfers"]["downloaddir"],
-            initial_file="%s %s.png" % (self.user, time.strftime("%Y-%m-%d %H_%M_%S"))
+            initial_file=f"{self.user}_{current_date_time}.png"
         ).show()
 
     def on_scroll(self, _controller=None, _scroll_x=0, scroll_y=0):
