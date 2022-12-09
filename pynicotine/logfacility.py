@@ -75,7 +75,10 @@ class Logger:
 
     def __init__(self):
 
-        self.file_name = "debug_" + str(int(time.time())) + ".log"
+        current_date_time = time.strftime("%Y-%m-%d_%H-%M-%S")
+        self.debug_file_name = f"debug_{current_date_time}.log"
+        self.transfers_file_name = f"transfers_{current_date_time}.log"
+
         self._log_levels = {LogLevel.DEFAULT}
         self._log_files = {}
 
@@ -217,7 +220,7 @@ class Logger:
             msg = msg % msg_args
 
         self.write_log_file(
-            folder_path=config.sections["logging"]["transferslogsdir"], base_name="transfers.log", text=msg)
+            folder_path=config.sections["logging"]["transferslogsdir"], base_name=self.transfers_file_name, text=msg)
 
     """ Log Messages """
 
@@ -253,7 +256,7 @@ class Logger:
 
         if should_log_file and config.sections["logging"].get("debug_file_output", False):
             self.write_log_file(
-                folder_path=config.sections["logging"]["debuglogsdir"], base_name=self.file_name, text=msg)
+                folder_path=config.sections["logging"]["debuglogsdir"], base_name=self.debug_file_name, text=msg)
 
         try:
             timestamp_format = config.sections["logging"].get("log_timestamp", "%Y-%m-%d %H:%M:%S")
