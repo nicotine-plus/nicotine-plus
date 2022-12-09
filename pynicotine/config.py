@@ -579,7 +579,7 @@ class Config:
                     if self.sections[section].get("usealtlimits", False):
                         use_speed_limit = "enable_alt"
 
-                    elif self.sections[section].get("downloadlimit", 0):
+                    elif self.sections[section].get("downloadlimit", 0) > 0:
                         use_speed_limit = "enable"
 
                     else:

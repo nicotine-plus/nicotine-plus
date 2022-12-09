@@ -68,7 +68,7 @@ upload_doubleclick = 1
 downloadsexpanded = True
 uploadsexpanded = True
 use_upload_speed_limit = disable
-use_download_speed_limit = False
+use_download_speed_limit = disable
 
 [userinfo]
 descr = ''

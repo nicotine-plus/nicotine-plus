@@ -68,7 +68,7 @@ usernamesubfolders = False
 uploadlimitalt = 100
 downloadlimitalt = 100
 use_upload_speed_limit = disable
-use_download_speed_limit = False
+use_download_speed_limit = disable
 
 [userinfo]
 descr = ''
