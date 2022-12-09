@@ -107,7 +107,7 @@ class Application:
 
     def set_accels_for_action(self, action, accels):
 
-        if GTK_API_VERSION >= 4 and sys.platform != "darwin":
+        if GTK_API_VERSION >= 4 and sys.platform == "darwin":
             # Use Command key instead of Ctrl in accelerators on macOS
             for i, accelerator in enumerate(accels):
                 accels[i] = accelerator.replace("<Primary>", "<Meta>")

@@ -32,7 +32,7 @@ class Accelerator:
     def __init__(self, accelerator, widget, callback, user_data=None):
 
         if GTK_API_VERSION >= 4:
-            if sys.platform != "darwin":
+            if sys.platform == "darwin":
                 # Use Command key instead of Ctrl in accelerators on macOS
                 accelerator = accelerator.replace("<Primary>", "<Meta>")
 
