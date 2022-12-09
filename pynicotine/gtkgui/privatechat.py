@@ -313,7 +313,7 @@ class PrivateChat:
         if not numlines:
             return
 
-        filename = clean_file(self.user) + ".log"
+        filename = f"{clean_file(self.user)}.log"
         path = os.path.join(config.sections["logging"]["privatelogsdir"], filename)
 
         try:
@@ -424,11 +424,11 @@ class PrivateChat:
         self.show_notification(text)
 
         if text.startswith("/me "):
-            line = "* %s %s" % (self.user, text[4:])
+            line = f"* {self.user} {text[4:]}"
             tag = self.tag_action
             speech = line[2:]
         else:
-            line = "[%s] %s" % (self.user, text)
+            line = f"[{self.user}] {text}"
             tag = self.tag_remote
             speech = text
 
@@ -455,7 +455,7 @@ class PrivateChat:
 
         if self.log_toggle.get_active():
             log.write_log_file(
-                folder_path=config.sections["logging"]["privatelogsdir"], base_name=clean_file(self.user) + ".log",
+                folder_path=config.sections["logging"]["privatelogsdir"], base_name=f"{clean_file(self.user)}.log",
                 text=line, timestamp=timestamp
             )
             self.chats.history.update_user(self.user, line, add_timestamp=True)
@@ -465,8 +465,8 @@ class PrivateChat:
         tag = self.tag_local
         timestamp_format = config.sections["logging"]["private_timestamp"]
 
-        if hasattr(self, "tag_" + str(message_type)):
-            tag = getattr(self, "tag_" + str(message_type))
+        if hasattr(self, f"tag_{message_type}"):
+            tag = getattr(self, f"tag_{message_type}")
 
         self.chat_view.append_line(text, tag=tag, timestamp_format=timestamp_format)
 
@@ -475,10 +475,10 @@ class PrivateChat:
         my_username = core.login_username
 
         if text.startswith("/me "):
-            line = "* %s %s" % (my_username, text[4:])
+            line = f"* {my_username} {text[4:]}"
             tag = self.tag_action
         else:
-            line = "[%s] %s" % (my_username, text)
+            line = f"[{my_username}] {text}"
             tag = self.tag_local
 
         self.chat_view.append_line(line, tag=tag, timestamp_format=config.sections["logging"]["private_timestamp"],
@@ -487,7 +487,7 @@ class PrivateChat:
         if self.log_toggle.get_active():
             log.write_log_file(
                 folder_path=config.sections["logging"]["privatelogsdir"],
-                base_name=clean_file(self.user) + ".log", text=line
+                base_name=f"{clean_file(self.user)}.log", text=line
             )
             self.chats.history.update_user(self.user, line, add_timestamp=True)
 

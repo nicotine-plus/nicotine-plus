@@ -679,7 +679,7 @@ class ChatRoom:
         if not numlines:
             return
 
-        filename = clean_file(self.room) + ".log"
+        filename = f"{clean_file(self.room)}.log"
         path = os.path.join(config.sections["logging"]["roomlogsdir"], filename)
 
         try:
@@ -882,14 +882,14 @@ class ChatRoom:
 
         if text.startswith("/me "):
             tag = self.tag_action
-            line = "* %s %s" % (user, text[4:])
+            line = f"* {user} {text[4:]}"
             speech = line[2:]
         else:
-            line = "[%s] %s" % (user, text)
+            line = f"[{user}] {text}"
             speech = text
 
         if public:
-            line = "%s | %s" % (room, line)
+            line = f"{room} | {line}"
 
         line = "\n-- ".join(line.split("\n"))
         usertag = self.get_user_tag(user)
@@ -917,7 +917,7 @@ class ChatRoom:
         if self.log_toggle.get_active():
             log.write_log_file(
                 folder_path=config.sections["logging"]["roomlogsdir"],
-                base_name=clean_file(self.room) + ".log", text=line
+                base_name=f"{clean_file(self.room)}.log", text=line
             )
 
     def echo_room_message(self, text, message_type):
@@ -925,8 +925,8 @@ class ChatRoom:
         tag = self.tag_action
         timestamp_format = config.sections["logging"]["rooms_timestamp"]
 
-        if hasattr(self, "tag_" + str(message_type)):
-            tag = getattr(self, "tag_" + str(message_type))
+        if hasattr(self, f"tag_{message_type}"):
+            tag = getattr(self, f"tag_{message_type}")
 
         self.chat_view.append_line(text, tag, timestamp_format=timestamp_format)
 

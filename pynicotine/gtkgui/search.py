@@ -233,7 +233,7 @@ class Searches(IconNotebook):
     def show_tab(self, tab, text):
 
         if tab.mode_label is not None:
-            full_text = "(%s) %s" % (tab.mode_label, text)
+            full_text = f"({tab.mode_label}) {text}"
             length = 25
         else:
             full_text = text
@@ -982,7 +982,7 @@ class Search:
         else:
             self.filters_label.set_label(_("_Result Filters"))
 
-        self.filters_label.set_tooltip_text("%d active filter(s)" % count)
+        self.filters_label.set_tooltip_text(_("%d active filter(s)") % count)
 
     def clear_model(self, stored_results=False):
 
@@ -1159,7 +1159,7 @@ class Search:
 
             # Display total results on the tooltip, but only if we know the exact number of results
             if self.max_limited:
-                total = "> " + str(self.max_limit) + "+"
+                total = f"> {self.max_limit}+"
             else:
                 total = self.num_results_found
 
@@ -1240,7 +1240,8 @@ class Search:
             selected_size += file_size
             selected_length += self.resultsmodel.get_value(iterator, 16)
             country_code = self.resultsmodel.get_value(iterator, 12)
-            country = "%s (%s)" % (core.geoip.country_code_to_name(country_code), country_code)
+            country_name = core.geoip.country_code_to_name(country_code)
+            country = f"{country_name} ({country_code})"
 
             data.append({
                 "user": self.resultsmodel.get_value(iterator, 1),

@@ -480,8 +480,8 @@ class TreeView:
         country_code = column_value[len(strip_prefix):]
 
         if country_code:
-            country = GeoIP.country_code_to_name(country_code)
-            return "%s (%s)" % (country, country_code)
+            country_name = GeoIP.country_code_to_name(country_code)
+            return f"{country_name} {country_code}"
 
         return _("Earth")
 
@@ -565,13 +565,13 @@ def create_grouping_menu(window, active_mode, callback):
     action_id = "grouping-" + ''.join(random.choice(string.digits) for _ in range(8))
     menu = Gio.Menu()
 
-    menuitem = Gio.MenuItem.new(_("Ungrouped"), "win." + action_id + "::ungrouped")
+    menuitem = Gio.MenuItem.new(_("Ungrouped"), f"win.{action_id}::ungrouped")
     menu.append_item(menuitem)
 
-    menuitem = Gio.MenuItem.new(_("Group by Folder"), "win." + action_id + "::folder_grouping")
+    menuitem = Gio.MenuItem.new(_("Group by Folder"), f"win.{action_id}::folder_grouping")
     menu.append_item(menuitem)
 
-    menuitem = Gio.MenuItem.new(_("Group by User"), "win." + action_id + "::user_grouping")
+    menuitem = Gio.MenuItem.new(_("Group by User"), f"win.{action_id}::user_grouping")
     menu.append_item(menuitem)
 
     state = GLib.Variant("s", verify_grouping_mode(active_mode))
@@ -954,8 +954,8 @@ def get_country_tooltip_text(column_value, strip_prefix):
     country_code = column_value[len(strip_prefix):]
 
     if country_code:
-        country = GeoIP.country_code_to_name(country_code)
-        return "%s (%s)" % (country, country_code)
+        country_name = GeoIP.country_code_to_name(country_code)
+        return f"{country_name} {country_code}"
 
     return _("Earth")
 

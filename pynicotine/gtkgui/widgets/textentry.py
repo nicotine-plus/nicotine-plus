@@ -381,7 +381,7 @@ class ChatCompletion:
             suffix = " ".join(current_text[i:].split(" "))
 
             # add the matching word
-            new_text = "%s %s%s" % (prefix, completion_value, suffix)
+            new_text = f"{prefix} {completion_value}{suffix}"
             # set back the whole text
             self.entry.set_text(new_text)
             # move the cursor at the end

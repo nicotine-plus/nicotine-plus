@@ -354,11 +354,10 @@ Copyright (c) 2017 IP2Location.com
 
         for label_widget, text in (
             (self.application_name_label, config.application_name),
-            (self.version_label, "%s   •   Python %s   •   GTK %s" %
-                                 (config.version, config.python_version, config.gtk_version)),
-            (self.website_label, "<a href='%(url)s' title='%(url)s'>%(label)s</a>" %
-                                 {"url": config.website_url, "label": _("Website")}),
-            (self.copyright_label, "<small>%s</small>" % config.copyright),
+            (self.version_label, (f"{config.version}   •   Python {config.python_version}   •   "
+                                  f"GTK {config.gtk_version}")),
+            (self.website_label, f"<a href='{config.website_url}' title='{config.website_url}'>{_('Website')}</a>"),
+            (self.copyright_label, f"<small>{config.copyright}</small>"),
             (self.authors_label, self.AUTHORS),
             (self.translators_label, self.TRANSLATORS),
             (self.license_label, self.LICENSE)

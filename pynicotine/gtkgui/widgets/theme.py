@@ -357,17 +357,17 @@ def load_custom_icons(update=False):
         ("hilite", "nplus-hilite"),
         ("hilite3", "nplus-hilite3"),
         ("trayicon_away", "nplus-tray-away"),
-        ("trayicon_away", config.application_id + "-away"),
+        ("trayicon_away", f"{config.application_id}-away"),
         ("trayicon_connect", "nplus-tray-connect"),
-        ("trayicon_connect", config.application_id + "-connect"),
+        ("trayicon_connect", f"{config.application_id}-connect"),
         ("trayicon_disconnect", "nplus-tray-disconnect"),
-        ("trayicon_disconnect", config.application_id + "-disconnect"),
+        ("trayicon_disconnect", f"{config.application_id}-disconnect"),
         ("trayicon_msg", "nplus-tray-msg"),
-        ("trayicon_msg", config.application_id + "-msg"),
+        ("trayicon_msg", f"{config.application_id}-msg"),
         ("n", config.application_id),
-        ("n", config.application_id + "-symbolic")
+        ("n", f"{config.application_id}-symbolic")
     )
-    extensions = ["jpg", "jpeg", "bmp", "png", "svg"]
+    extensions = [".jpg", ".jpeg", ".bmp", ".png", ".svg"]
 
     # Move custom icons to internal icon theme location
     for (original_name, replacement_name) in icon_names:
@@ -377,7 +377,7 @@ def load_custom_icons(update=False):
 
         while not path or (exts and not loaded):
             extension = exts.pop()
-            path = os.path.join(user_icon_theme_path, "%s.%s" % (original_name, extension))
+            path = os.path.join(user_icon_theme_path, original_name + extension)
 
             try:
                 path_encoded = encode_path(path)
@@ -385,7 +385,7 @@ def load_custom_icons(update=False):
                 if os.path.isfile(path_encoded):
                     os.symlink(
                         path_encoded,
-                        encode_path(os.path.join(icon_theme_path, "%s.%s" % (replacement_name, extension)))
+                        encode_path(os.path.join(icon_theme_path, replacement_name + extension))
                     )
                     loaded = True
 
@@ -424,7 +424,7 @@ def get_flag_icon_name(country):
     if not country:
         return ""
 
-    return "nplus-flag-" + country
+    return f"nplus-flag-{country}"
 
 
 def get_status_icon_name(status):
@@ -466,8 +466,10 @@ def parse_color_string(color_string):
     """ Take a color string, e.g. BLUE, and return a HEX color code """
 
     if color_string and COLOR_RGBA.parse(color_string):
-        color_hex = "#%02X%02X%02X" % (
-            round(COLOR_RGBA.red * 255), round(COLOR_RGBA.green * 255), round(COLOR_RGBA.blue * 255))
+        red_hex = round(COLOR_RGBA.red * 255)
+        green_hex = round(COLOR_RGBA.green * 255)
+        blue_hex = round(COLOR_RGBA.blue * 255)
+        color_hex = f"#{red_hex:02X}{green_hex:02X}{blue_hex:02X)}"
         return color_hex
 
     return None

@@ -155,7 +155,8 @@ class ChatHistory(Popover):
 
         if add_timestamp:
             timestamp_format = config.sections["logging"]["log_timestamp"]
-            message = "%s %s" % (time.strftime(timestamp_format), message)
+            timestamp = time.strftime(timestamp_format)
+            message = f"{timestamp} {message}"
 
         self.list_view.add_row([username, message], select_row=False, prepend=True)
 

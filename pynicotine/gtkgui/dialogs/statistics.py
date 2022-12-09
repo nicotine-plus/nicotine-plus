@@ -87,10 +87,10 @@ class Statistics(Dialog):
             total_value = humanize(total_value)
 
         if session_value is not None:
-            getattr(self, stat_id + "_session_label").set_text(session_value)
+            getattr(self, f"{stat_id}_session_label").set_text(session_value)
 
         if total_value is not None:
-            getattr(self, stat_id + "_total_label").set_text(total_value)
+            getattr(self, f"{stat_id}_total_label").set_text(total_value)
 
     def on_reset_statistics_response(self, _dialog, response_id, _data):
         if response_id == 2:

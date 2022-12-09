@@ -524,8 +524,8 @@ class UserInfo:
         if not country_code:
             return
 
-        country = core.geoip.country_code_to_name(country_code)
-        country_text = "%s (%s)" % (country, country_code)
+        country_name = core.geoip.country_code_to_name(country_code)
+        country_text = f"{country_name} ({country_code})"
 
         self.country_label.set_text(country_text)
 

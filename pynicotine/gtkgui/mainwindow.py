@@ -646,7 +646,7 @@ class MainWindow(Window):
         self.add_action(action)
 
         for num in range(1, 10):
-            action = Gio.SimpleAction(name="primary-tab-" + str(num))
+            action = Gio.SimpleAction(name=f"primary-tab-{num}")
             action.connect("activate", self.on_change_primary_tab, num)
             self.add_action(action)
 
@@ -671,8 +671,8 @@ class MainWindow(Window):
             self.application.set_accels_for_action(action_name, accelerators)
 
         for num in range(1, 10):
-            self.application.set_accels_for_action("win.primary-tab-" + str(num),
-                                                   ["<Primary>" + str(num), "<Alt>" + str(num)])
+            self.application.set_accels_for_action(f"win.primary-tab-{num}",
+                                                   [f"<Primary>{num}", f"<Alt>{num}"])
 
     """ Primary Menus """
 
@@ -829,10 +829,10 @@ class MainWindow(Window):
                 # Avoid "Untitled window" in certain desktop environments
                 self.header_bar.set_title(self.window.get_title())
 
-        title_widget = getattr(self, page_id + "_title")
+        title_widget = getattr(self, f"{page_id}_title")
         title_widget.get_parent().remove(title_widget)
 
-        end_widget = getattr(self, page_id + "_end")
+        end_widget = getattr(self, f"{page_id}_end")
         end_widget.get_parent().remove(end_widget)
 
         if GTK_API_VERSION >= 4:
@@ -852,12 +852,12 @@ class MainWindow(Window):
             # Unfocus the header bar
             self.notebook.grab_focus()
 
-        title_widget = getattr(self, self.current_page_id + "_title")
-        end_widget = getattr(self, self.current_page_id + "_end")
+        title_widget = getattr(self, f"{self.current_page_id}_title")
+        end_widget = getattr(self, f"{self.current_page_id}_end")
         self.header_title.remove(title_widget)
         self.header_end_container.remove(end_widget)
 
-        toolbar = getattr(self, self.current_page_id + "_toolbar_contents")
+        toolbar = getattr(self, f"{self.current_page_id}_toolbar_contents")
 
         if GTK_API_VERSION >= 4:
             toolbar.append(title_widget)
@@ -882,7 +882,7 @@ class MainWindow(Window):
                 self.window.set_titlebar(None)
                 self.window.map()
 
-        toolbar = getattr(self, page_id + "_toolbar")
+        toolbar = getattr(self, f"{page_id}_toolbar")
         toolbar.set_visible(True)
 
     def hide_current_toolbar(self):
@@ -891,7 +891,7 @@ class MainWindow(Window):
         if not self.current_page_id:
             return
 
-        toolbar = getattr(self, self.current_page_id + "_toolbar")
+        toolbar = getattr(self, f"{self.current_page_id}_toolbar")
         toolbar.set_visible(False)
 
     def set_active_header_bar(self, page_id):
@@ -913,7 +913,7 @@ class MainWindow(Window):
     def on_change_focus_view(self, *_args):
         """ F6: move focus between header bar/toolbar and main content """
 
-        title_widget = getattr(self, self.current_page_id + "_title")
+        title_widget = getattr(self, f"{self.current_page_id}_title")
 
         # Find the correct widget to focus in the main view
         if title_widget.get_focus_child():
@@ -929,7 +929,7 @@ class MainWindow(Window):
 
             except AttributeError:
                 # No notebook present, attempt to focus the main content widget
-                content_widget = getattr(self, self.current_page_id + "_content")
+                content_widget = getattr(self, f"{self.current_page_id}_content")
 
                 if content_widget.child_focus(Gtk.DirectionType.TAB_FORWARD):
                     # Found a focusable widget
@@ -937,11 +937,11 @@ class MainWindow(Window):
 
         # Find the correct widget to focus in the header bar/toolbar
         try:
-            entry_widget = getattr(self, self.current_page_id + "_entry")
+            entry_widget = getattr(self, f"{self.current_page_id}_entry")
             entry_widget.grab_focus()
 
         except AttributeError:
-            title_widget = getattr(self, self.current_page_id + "_title")
+            title_widget = getattr(self, f"{self.current_page_id}_title")
             title_widget.child_focus(Gtk.DirectionType.TAB_FORWARD)
 
     """ Main Notebook """
@@ -1128,7 +1128,7 @@ class MainWindow(Window):
 
         for order, page_id in enumerate(config.sections["ui"]["modes_order"]):
             try:
-                page = getattr(self, page_id + "_page")
+                page = getattr(self, f"{page_id}_page")
 
             except AttributeError:
                 continue
@@ -1161,7 +1161,7 @@ class MainWindow(Window):
         last_tab_id = config.sections["ui"]["last_tab_id"]
 
         try:
-            page = getattr(self, last_tab_id + "_page")
+            page = getattr(self, f"{last_tab_id}_page")
 
         except AttributeError:
             return

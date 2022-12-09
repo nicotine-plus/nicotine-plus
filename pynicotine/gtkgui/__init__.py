@@ -68,7 +68,7 @@ def check_gtk_version():
             "major_version": gtk_major_version,
             "complete_version": '.'.join(map(str, gtk_version))}
 
-    config.gtk_version = "%s.%s.%s" % (gtk_major_version, Gtk.get_minor_version(), Gtk.get_micro_version())
+    config.gtk_version = f"{gtk_major_version}.{Gtk.get_minor_version()}.{Gtk.get_micro_version()}"
     return None
 
 

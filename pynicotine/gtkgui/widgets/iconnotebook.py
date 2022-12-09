@@ -154,10 +154,11 @@ class TabLabel(Gtk.Box):
 
         if color_hex:
             from html import escape
-            self.label.set_markup("<span foreground=\"%s\">%s</span>" % (color_hex, escape(self.text)))
+            escaped_text = escape(self.text)
+            self.label.set_markup(f"<span foreground=\"{color_hex}\">{escaped_text}</span>")
             return
 
-        self.label.set_text("%s" % self.text)
+        self.label.set_text(self.text)
 
     def set_centered(self, centered):
         self.centered = centered
@@ -536,7 +537,7 @@ class IconNotebook:
             status_text = _("Offline")
 
         if not config.sections["ui"]["tab_status_icons"]:
-            tab_text = "%s (%s)" % (user[:15], status_text)
+            tab_text = f"{user[:15]} ({status_text})"
         else:
             tab_text = user
 
@@ -548,7 +549,7 @@ class IconNotebook:
         tab_label.set_text(tab_text)
         menu_label.set_text(tab_text)
 
-        tab_label.set_tooltip_text("%s (%s)" % (user, status_text))
+        tab_label.set_tooltip_text(f"{user} ({status_text})")
 
     """ Signals """
 

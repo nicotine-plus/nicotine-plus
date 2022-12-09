@@ -53,8 +53,7 @@ class RoomWall(Popover):
     def update_message_list(self):
 
         tickers = self.room.tickers.get_tickers()
-        self.room_wall_textview.append_line(
-            "%s" % ("\n".join(["> [%s] %s" % (user, msg) for user, msg in tickers])))
+        self.room_wall_textview.append_line("\n".join([f"> [{user}] {msg}" for user, msg in tickers]))
 
     def clear_room_wall_message(self, update_list=True):
 
@@ -77,7 +76,7 @@ class RoomWall(Popover):
 
         if entry_text:
             user = core.login_username
-            self.room_wall_textview.append_line("> [%s] %s" % (user, entry_text))
+            self.room_wall_textview.append_line(f"> [{user}] {entry_text}")
 
         self.update_message_list()
 

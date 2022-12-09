@@ -165,7 +165,7 @@ class BaseImplementation:
         else:
             icon_name = "disconnect"
 
-        icon_name = config.application_id + "-" + icon_name
+        icon_name = f"{config.application_id}-{icon_name}"
         self.set_icon_name(icon_name)
 
     def set_icon_name(self, icon_name):
@@ -218,7 +218,7 @@ class BaseImplementation:
 
         EntryDialog(
             parent=self.application.window,
-            title=config.application_name + ": " + _("Start Messaging"),
+            title=_("Start Messaging"),
             message=_('Enter the name of the user whom you want to send a message:'),
             callback=self.on_open_private_chat_response,
             droplist=sorted(core.userlist.buddies)
@@ -238,7 +238,7 @@ class BaseImplementation:
 
         EntryDialog(
             parent=self.application.window,
-            title=config.application_name + ": " + _("Request User Info"),
+            title=_("Request User Info"),
             message=_('Enter the name of the user whose info you want to see:'),
             callback=self.on_get_a_users_info_response,
             droplist=sorted(core.userlist.buddies)
@@ -258,7 +258,7 @@ class BaseImplementation:
 
         EntryDialog(
             parent=self.application.window,
-            title=config.application_name + ": " + _("Request Shares List"),
+            title=_("Request Shares List"),
             message=_('Enter the name of the user whose shares you want to see:'),
             callback=self.on_get_a_users_shares_response,
             droplist=sorted(core.userlist.buddies)
@@ -313,26 +313,26 @@ class StatusNotifierImplementation(BaseImplementation):
 
         def register(self):
 
-            xml_output = "<node name='/'><interface name='%s'>" % self._interface_name
+            xml_output = f"<node name='/'><interface name='{self._interface_name}'>"
 
             for property_name, prop in self.properties.items():
-                xml_output += "<property name='%s' type='%s' access='read'/>" % (property_name, prop.signature)
+                xml_output += f"<property name='{property_name}' type='{prop.signature}' access='read'/>"
 
             for method_name, method in self.methods.items():
-                xml_output += "<method name='%s'>" % method_name
+                xml_output += f"<method name='{method_name}'>"
 
                 for in_signature in method.in_args:
-                    xml_output += "<arg type='%s' direction='in'/>" % in_signature
+                    xml_output += f"<arg type='{in_signature}' direction='in'/>"
                 for out_signature in method.out_args:
-                    xml_output += "<arg type='%s' direction='out'/>" % out_signature
+                    xml_output += f"<arg type='{out_signature}' direction='out'/>"
 
                 xml_output += "</method>"
 
             for signal_name, signal in self.signals.items():
-                xml_output += "<signal name='%s'>" % signal_name
+                xml_output += f"<signal name='{signal_name}'>"
 
                 for signature in signal.args:
-                    xml_output += "<arg type='%s'/>" % signature
+                    xml_output += f"<arg type='{signature}'/>"
 
                 xml_output += "</signal>"
 
@@ -347,7 +347,7 @@ class StatusNotifierImplementation(BaseImplementation):
             )
 
             if not registration_id:
-                raise GLib.Error("Failed to register object with path %s" % self._object_path)
+                raise GLib.Error(f"Failed to register object with path {self._object_path}")
 
             self._registration_id = registration_id
 
@@ -370,22 +370,25 @@ class StatusNotifierImplementation(BaseImplementation):
 
         def emit_signal(self, name, *args):
 
+            arg_types = "".join(self.signals[name].args)
+
             self._bus.emit_signal(
                 None,
                 self._object_path,
                 self._interface_name,
                 name,
-                GLib.Variant("(%s)" % "".join(self.signals[name].args), args)
+                GLib.Variant(f"({arg_types})", args)
             )
 
         def on_method_call(self, _connection, _sender, _path, _interface_name, method_name, parameters, invocation):
 
             method = self.methods[method_name]
             result = method.callback(*parameters.unpack())
+            out_arg_types = "".join(method.out_args)
             return_value = None
 
             if method.out_args:
-                return_value = GLib.Variant("(%s)" % "".join(method.out_args), result)
+                return_value = GLib.Variant(f"({out_arg_types})", result)
 
             invocation.return_value(return_value)
 
@@ -541,7 +544,7 @@ class StatusNotifierImplementation(BaseImplementation):
             if self.tray_icon is not None:
                 self.tray_icon.unregister()
 
-            raise ImplementationUnavailable("StatusNotifier implementation not available: %s" % error) from error
+            raise ImplementationUnavailable(f"StatusNotifier implementation not available: {error}") from error
 
         self.update_menu()
         self.update_icon_theme()
@@ -553,7 +556,7 @@ class StatusNotifierImplementation(BaseImplementation):
         if not icon_path:
             return False
 
-        icon_scheme = config.application_id + "-" + icon_name + "."
+        icon_scheme = f"{config.application_id}-{icon_name}."
 
         try:
             with os.scandir(encode_path(icon_path)) as entries:

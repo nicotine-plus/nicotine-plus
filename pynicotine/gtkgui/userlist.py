@@ -317,7 +317,7 @@ class UserList:
             return
 
         self.list_view.set_row_value(iterator, 1, flag_icon)
-        self.list_view.set_row_value(iterator, 14, "flag_" + country_code)
+        self.list_view.set_row_value(iterator, 14, f"flag_{country_code}")
 
     def on_add_buddy(self, *_args):
 

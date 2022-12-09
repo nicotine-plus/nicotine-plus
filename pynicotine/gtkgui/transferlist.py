@@ -59,7 +59,7 @@ class TransferList:
 
     def __init__(self, window, transfer_type):
 
-        ui_template = UserInterface(scope=self, path=transfer_type + "s.ui")
+        ui_template = UserInterface(scope=self, path=f"{transfer_type}s.ui")
         (
             self.clear_all_button,
             self.container,
@@ -143,14 +143,14 @@ class TransferList:
         cols["time_left"].set_sort_column_id(15)
 
         menu = create_grouping_menu(
-            window, config.sections["transfers"]["group%ss" % transfer_type], self.on_toggle_tree)
+            window, config.sections["transfers"][f"group{transfer_type}s"], self.on_toggle_tree)
         self.grouping_button.set_menu_model(menu)
 
         if GTK_API_VERSION >= 4:
             self.grouping_button.get_first_child().add_css_class("image-button")
 
         self.expand_button.connect("toggled", self.on_expand_tree)
-        self.expand_button.set_active(config.sections["transfers"]["%ssexpanded" % transfer_type])
+        self.expand_button.set_active(config.sections["transfers"][f"{transfer_type}sexpanded"])
 
         self.popup_menu_users = UserPopupMenu(window.application)
         self.popup_menu_clear = PopupMenu(window.application)
@@ -358,7 +358,7 @@ class TransferList:
 
     @staticmethod
     def get_hsize(current_byte_offset, size):
-        return "%s / %s" % (human_size(current_byte_offset), human_size(size))
+        return f"{human_size(current_byte_offset)} / {human_size(size)}"
 
     @staticmethod
     def get_hspeed(speed):
@@ -456,7 +456,7 @@ class TransferList:
 
         if modifier and status == "Queued":
             # Priority status
-            status = status + " (%s)" % modifier
+            status = status + f" ({modifier})"
 
         size = transfer.size or 0
         speed = transfer.speed or 0
@@ -731,7 +731,7 @@ class TransferList:
 
         self.expand_icon.set_property("icon-name", icon_name)
 
-        config.sections["transfers"]["%ssexpanded" % self.type] = expanded
+        config.sections["transfers"][f"{self.type}sexpanded"] = expanded
         config.write_configuration()
 
     def on_toggle_tree(self, action, state):
@@ -750,7 +750,7 @@ class TransferList:
             else:
                 self.grouping_button.get_parent().remove_css_class("linked")
 
-        config.sections["transfers"]["group%ss" % self.type] = mode
+        config.sections["transfers"][f"group{self.type}s"] = mode
         self.tree_view.set_show_expanders(active)
         self.expand_button.set_visible(active)
 
@@ -784,7 +784,7 @@ class TransferList:
             return
 
         self.select_transfers()
-        action = config.sections["transfers"]["%s_doubleclick" % self.type]
+        action = config.sections["transfers"][f"{self.type}_doubleclick"]
 
         if action == 1:    # Send to Player
             self.on_play_files()

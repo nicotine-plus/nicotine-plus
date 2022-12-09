@@ -475,7 +475,7 @@ class Application:
         shares_list_message = ""
 
         for virtual_name, folder_path in shares:
-            shares_list_message += "• \"%s\" %s\n" % (virtual_name, folder_path)
+            shares_list_message += f"• \"{virtual_name}\" {folder_path}\n"
 
         def create_dialog():
             from pynicotine.gtkgui.widgets.dialogs import OptionDialog
@@ -789,10 +789,9 @@ class Application:
         from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 
         loop = GLib.MainLoop()
-        error = ("Nicotine+ Version: %s\nGTK Version: %s\nPython Version: %s\n\n"
-                 "Type: %s\nValue: %s\nTraceback: %s" %
-                 (config.version, config.gtk_version, config.python_version, exc_type,
-                  exc_value, ''.join(format_tb(exc_traceback))))
+        error = (f"Nicotine+ Version: {config.version}\nGTK Version: {config.gtk_version}\n"
+                 f"Python Version: {config.python_version}\n\n"
+                 f"Type: {exc_type}\nValue: {exc_value}\nTraceback: {''.join(format_tb(exc_traceback))}")
 
         OptionDialog(
             parent=self.window,

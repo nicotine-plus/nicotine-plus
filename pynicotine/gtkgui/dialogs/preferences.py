@@ -96,7 +96,8 @@ class NetworkPage:
         server = config.sections["server"]
 
         if server["server"] is not None:
-            self.Server.set_text("%s:%i" % (server["server"][0], server["server"][1]))
+            server_address, server_port = server["server"]
+            self.Server.set_text(f"{server_address}:{server_port}")
 
         text = _("<b>%(ip)s</b>, port %(port)s") % {
             "ip": core.user_ip_address or _("Unknown"),
@@ -105,8 +106,8 @@ class NetworkPage:
         self.CurrentPort.set_markup(text)
 
         url = config.portchecker_url % str(core.protothread.listenport or server["portrange"][0])
-        text = "<a href='" + url + "' title='" + url + "'>" + _("Check Port Status") + "</a>"
-        self.CheckPortLabel.set_markup(text)
+        port_status_label = _("Check Port Status")
+        self.CheckPortLabel.set_markup(f"<a href='{url}' title='{url}'>{port_status_label}</a>")
         self.CheckPortLabel.connect("activate-link", lambda x, url: open_uri(url))
 
         if server["portrange"] is not None:
@@ -431,7 +432,7 @@ class DownloadsPage:
                 'error': errors}
             )
 
-            self.VerifiedLabel.set_markup("<span foreground=\"#e04f5e\">%s</span>" % error)
+            self.VerifiedLabel.set_markup(f"<span foreground=\"#e04f5e\">{error}</span>")
         else:
             self.VerifiedLabel.set_text(_("Filters Successful"))
 
@@ -1332,10 +1333,10 @@ class UserInterfacePage:
 
         if application.tray_icon.available:
             icon_list += [
-                (config.application_id + "-connect", _("Connected (Tray)"), 16),
-                (config.application_id + "-disconnect", _("Disconnected (Tray)"), 16),
-                (config.application_id + "-away", _("Away (Tray)"), 16),
-                (config.application_id + "-msg", _("Message (Tray)"), 16)]
+                (f"{config.application_id}-connect", _("Connected (Tray)"), 16),
+                (f"{config.application_id}-disconnect", _("Disconnected (Tray)"), 16),
+                (f"{config.application_id}-away", _("Away (Tray)"), 16),
+                (f"{config.application_id}-msg", _("Message (Tray)"), 16)]
 
         for icon_name, label, pixel_size in icon_list:
             box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, valign=Gtk.Align.CENTER, spacing=6, visible=True)
@@ -1567,9 +1568,12 @@ class UserInterfacePage:
     def on_color_set(self, widget):
 
         rgba = widget.get_rgba()
-        color = "#%02X%02X%02X" % (round(rgba.red * 255), round(rgba.green * 255), round(rgba.blue * 255))
+        red_hex = round(rgba.red * 255)
+        green_hex = round(rgba.green * 255)
+        blue_hex = round(rgba.blue * 255)
+        color_hex = f"#{red_hex:02X}{green_hex:02X}{blue_hex:02X)}"
         entry = getattr(self, Gtk.Buildable.get_name(widget).replace("Pick", "Entry"))
-        entry.set_text(color)
+        entry.set_text(color_hex)
 
     def on_default_color(self, widget, *_args):
 
@@ -2169,13 +2173,17 @@ class PluginsPage:
             self.selected_plugin = list_view.get_row_value(iterator, 2)
             info = core.pluginhandler.get_plugin_info(self.selected_plugin)
 
-        self.PluginName.set_markup("<b>%(name)s</b>" % {"name": info.get("Name", self.selected_plugin)})
-        self.PluginVersion.set_markup("<b>%(version)s</b>" % {"version": info.get("Version", '-')})
-        self.PluginAuthor.set_markup("<b>%(author)s</b>" % {"author": ", ".join(info.get("Authors", '-'))})
+        plugin_name = info.get("Name", self.selected_plugin)
+        plugin_version = info.get("Version", '-')
+        plugin_authors = ", ".join(info.get("Authors", '-'))
+        plugin_description = info.get("Description", '').replace(r'\n', '\n')
+
+        self.PluginName.set_markup(f"<b>{plugin_name}</b>")
+        self.PluginVersion.set_markup(f"<b>{plugin_version}/b>")
+        self.PluginAuthor.set_markup(f"<b>{plugin_authors}</b>")
 
         self.descr_textview.clear()
-        self.descr_textview.append_line("%(description)s" % {
-            "description": info.get("Description", '').replace(r'\n', '\n')})
+        self.descr_textview.append_line(plugin_description)
 
         self.check_properties_button(self.selected_plugin)
 
