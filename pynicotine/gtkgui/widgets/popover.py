@@ -39,8 +39,6 @@ class Popover:
         self.popover.connect("closed", self._on_close)
 
         if GTK_API_VERSION >= 4:
-            # Workaround for https://gitlab.gnome.org/GNOME/gtk/-/issues/4529
-            self.popover.set_autohide(False)               # pylint: disable=no-member
             self.popover.add_css_class("generic-popover")  # pylint: disable=no-member
         else:
             self.popover.get_style_context().add_class("generic-popover")
