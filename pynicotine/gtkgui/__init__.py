@@ -43,7 +43,7 @@ def check_gtk_version():
         import gi
 
     except ImportError:
-        return _("Cannot find %s, please install it.") % "pygobject"
+        return _("Cannot find %s, please install it.") % ("pygobject",)
 
     try:
         api_version = (gtk_major_version, 0)
