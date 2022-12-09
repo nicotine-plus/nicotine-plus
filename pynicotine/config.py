@@ -577,10 +577,10 @@ class Config:
                 # Migrate download speed limit preference
                 if option == "use_download_speed_limit" and section == "transfers":
                     if self.sections[section].get("usealtlimits", False):
-                        use_speed_limit = "enable_alt"
+                        use_speed_limit = "alternative"
 
                     elif self.sections[section].get("downloadlimit", 0) > 0:
-                        use_speed_limit = "enable"
+                        use_speed_limit = "primary"
 
                     else:
                         use_speed_limit = "disable"
@@ -591,10 +591,10 @@ class Config:
                 # Migrate upload speed limit preference
                 if option == "use_upload_speed_limit" and section == "transfers":
                     if self.sections[section].get("usealtlimits", False):
-                        use_speed_limit = "enable_alt"
+                        use_speed_limit = "alternative"
 
                     elif self.sections[section].get("uselimit", False):
-                        use_speed_limit = "enable"
+                        use_speed_limit = "primary"
 
                     else:
                         use_speed_limit = "disable"

@@ -479,10 +479,10 @@ class Transfers:
 
         use_speed_limit = config.sections["transfers"]["use_download_speed_limit"]
 
-        if use_speed_limit == "enable":
+        if use_speed_limit == "primary":
             speed_limit = config.sections["transfers"]["downloadlimit"]
 
-        elif use_speed_limit == "enable_alt":
+        elif use_speed_limit == "alternative":
             speed_limit = config.sections["transfers"]["downloadlimitalt"]
 
         else:
@@ -495,10 +495,10 @@ class Transfers:
         use_speed_limit = config.sections["transfers"]["use_upload_speed_limit"]
         limit_by = config.sections["transfers"]["limitby"]
 
-        if use_speed_limit == "enable":
+        if use_speed_limit == "primary":
             speed_limit = config.sections["transfers"]["uploadlimit"]
 
-        elif use_speed_limit == "enable_alt":
+        elif use_speed_limit == "alternative":
             speed_limit = config.sections["transfers"]["uploadlimitalt"]
 
         else:

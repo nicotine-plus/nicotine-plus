@@ -52,10 +52,10 @@ class TransferSpeeds(Popover):
         prev_active_limit = config.sections["transfers"][use_limit_config_key]
 
         if self.use_limit_radio.get_active():
-            config.sections["transfers"][use_limit_config_key] = "enable"
+            config.sections["transfers"][use_limit_config_key] = "primary"
 
         elif self.use_alt_limit_radio.get_active():
-            config.sections["transfers"][use_limit_config_key] = "enable_alt"
+            config.sections["transfers"][use_limit_config_key] = "alternative"
 
         else:
             config.sections["transfers"][use_limit_config_key] = "disable"
@@ -95,10 +95,10 @@ class TransferSpeeds(Popover):
 
         use_speed_limit = config.sections["transfers"][f"use_{self.transfer_type}_speed_limit"]
 
-        if use_speed_limit == "enable":
+        if use_speed_limit == "primary":
             self.use_limit_radio.set_active(True)
 
-        elif use_speed_limit == "enable_alt":
+        elif use_speed_limit == "alternative":
             self.use_alt_limit_radio.set_active(True)
 
         else:

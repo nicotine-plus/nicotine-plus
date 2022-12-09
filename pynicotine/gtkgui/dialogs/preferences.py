@@ -270,10 +270,10 @@ class DownloadsPage:
 
         use_speed_limit = config.sections["transfers"]["use_download_speed_limit"]
 
-        if use_speed_limit == "enable":
+        if use_speed_limit == "primary":
             self.UseDownloadSpeedLimit.set_active(True)
 
-        elif use_speed_limit == "enable_alt":
+        elif use_speed_limit == "alternative":
             self.UseAltDownloadSpeedLimit.set_active(True)
 
         else:
@@ -282,10 +282,10 @@ class DownloadsPage:
     def get_settings(self):
 
         if self.UseDownloadSpeedLimit.get_active():
-            use_speed_limit = "enable"
+            use_speed_limit = "primary"
 
         elif self.UseAltDownloadSpeedLimit.get_active():
-            use_speed_limit = "enable_alt"
+            use_speed_limit = "alternative"
 
         else:
             use_speed_limit = "disable"
@@ -673,10 +673,10 @@ class UploadsPage:
 
         use_speed_limit = config.sections["transfers"]["use_upload_speed_limit"]
 
-        if use_speed_limit == "enable":
+        if use_speed_limit == "primary":
             self.UseUploadSpeedLimit.set_active(True)
 
-        elif use_speed_limit == "enable_alt":
+        elif use_speed_limit == "alternative":
             self.UseAltUploadSpeedLimit.set_active(True)
 
         else:
@@ -685,10 +685,10 @@ class UploadsPage:
     def get_settings(self):
 
         if self.UseUploadSpeedLimit.get_active():
-            use_speed_limit = "enable"
+            use_speed_limit = "primary"
 
         elif self.UseAltUploadSpeedLimit.get_active():
-            use_speed_limit = "enable_alt"
+            use_speed_limit = "alternative"
 
         else:
             use_speed_limit = "disable"
