@@ -19,7 +19,7 @@ You need to download and install Nicotine+ from the link above every time you wa
 
 Unstable [Flatpak](https://www.flatpak.org/setup/) packages are built after every commit to the 3.2.x branch.
 
-- [Download Unstable Flatpak Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/3.2.x/flatpak-package.zip)
+- [Download Unstable Flatpak Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/3.2.x/flatpak-package-x86_64.zip)
 
 ### Other
 
