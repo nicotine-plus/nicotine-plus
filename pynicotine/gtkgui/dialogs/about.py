@@ -150,11 +150,11 @@ Inactive
    - Maintainer (2001–2003)
 
 >> <b>Nir Arbel</b>
-   - Helped with many protocol questions I had, and of course he designed and implemented the whole system.
+   - Helped with many protocol questions, and of course he designed and implemented the whole system
 
 >> <b>Brett W. Thompson (Zip)</b>
-   - I used his client code to get an initial impression of how the system works.
-   - Supplied the patch for logging chat conversations.
+   - His client code was used to get an initial impression of how the system works
+   - Supplied the patch for logging chat conversations
 
 >> <b>Josselin Mouette</b>
    - Official Debian package maintainer
