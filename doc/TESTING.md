@@ -29,7 +29,7 @@ Unlike the repository installation method, you need to download and install Nico
 
 Unstable [Flatpak](https://www.flatpak.org/setup/) packages are built after every commit to the master branch.
 
-- [Download Unstable Flatpak Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/flatpak-package.zip)
+- [Download Unstable Flatpak Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/flatpak-package-x86_64.zip)
 
 ### Other
 
