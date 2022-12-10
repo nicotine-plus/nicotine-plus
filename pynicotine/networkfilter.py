@@ -169,10 +169,10 @@ class NetworkFilter:
 
             return 0, "Banned"
 
-        user_row = core.userlist.buddies.get(user)
+        user_data = core.userlist.buddies.get(user)
 
-        if user_row:
-            if config.sections["transfers"]["buddysharestrustedonly"] and not user_row[4]:
+        if user_data:
+            if config.sections["transfers"]["buddysharestrustedonly"] and not user_data.is_trusted:
                 # Only trusted buddies allowed, and user isn't trusted
                 return 1, ""
 

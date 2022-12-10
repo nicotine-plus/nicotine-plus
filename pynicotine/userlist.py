@@ -25,6 +25,23 @@ from pynicotine.logfacility import log
 from pynicotine.slskmessages import UserStatus
 
 
+class Buddy:
+    __slots__ = ("username", "note", "notify_status", "is_prioritized", "is_trusted", "last_seen",
+                 "country", "status")
+
+    def __init__(self, username, note, notify_status, is_prioritized, is_trusted, last_seen,
+                 country, status):
+
+        self.username = username
+        self.note = note
+        self.notify_status = notify_status
+        self.is_prioritized = is_prioritized
+        self.is_trusted = is_trusted
+        self.last_seen = last_seen
+        self.country = country
+        self.status = status
+
+
 class UserList:
 
     def __init__(self):
@@ -82,8 +99,19 @@ class UserList:
                 country = ""
                 row.append(country)
 
-            self.buddies[user] = row
-            events.emit("add-buddy", user, row)
+            _user, note, notify_status, is_prioritized, is_trusted, last_seen, country = row
+
+            self.buddies[user] = user_data = Buddy(
+                username=user,
+                note=note,
+                notify_status=notify_status,
+                is_prioritized=is_prioritized,
+                is_trusted=is_trusted,
+                last_seen=last_seen,
+                country=country,
+                status=UserStatus.OFFLINE
+            )
+            events.emit("add-buddy", user, user_data)
 
         self.allow_saving_buddies = True
 
@@ -101,8 +129,9 @@ class UserList:
 
     def _server_disconnect(self, _msg):
 
-        for user in self.buddies:
-            self.set_buddy_last_seen(user, online=False)
+        for user, user_data in self.buddies.items():
+            user_data.status = UserStatus.OFFLINE
+            self.set_buddy_last_seen(user, is_online=False)
 
         self.save_buddy_list()
 
@@ -112,13 +141,22 @@ class UserList:
             return
 
         note = country = ""
-        trusted = notify = prioritized = False
+        is_trusted = notify_status = is_prioritized = False
         last_seen = "Never seen"
 
-        self.buddies[user] = row = [user, note, notify, prioritized, trusted, last_seen, country]
+        self.buddies[user] = user_data = Buddy(
+            username=user,
+            note=note,
+            notify_status=notify_status,
+            is_prioritized=is_prioritized,
+            is_trusted=is_trusted,
+            last_seen=last_seen,
+            country=country,
+            status=UserStatus.OFFLINE
+        )
         self.save_buddy_list()
 
-        events.emit("add-buddy", user, row)
+        events.emit("add-buddy", user, user_data)
 
         if core.user_status == UserStatus.OFFLINE:
             return
@@ -142,7 +180,7 @@ class UserList:
         if user not in self.buddies:
             return
 
-        self.buddies[user][1] = note
+        self.buddies[user].note = note
         self.save_buddy_list()
 
         events.emit("buddy-note", user, note)
@@ -152,7 +190,7 @@ class UserList:
         if user not in self.buddies:
             return
 
-        self.buddies[user][2] = notify
+        self.buddies[user].notify_status = notify
         self.save_buddy_list()
 
         events.emit("buddy-notify", user, notify)
@@ -162,7 +200,7 @@ class UserList:
         if user not in self.buddies:
             return
 
-        self.buddies[user][3] = prioritized
+        self.buddies[user].is_prioritized = prioritized
         self.save_buddy_list()
 
         events.emit("buddy-prioritized", user, prioritized)
@@ -172,28 +210,28 @@ class UserList:
         if user not in self.buddies:
             return
 
-        self.buddies[user][4] = trusted
+        self.buddies[user].is_trusted = trusted
         self.save_buddy_list()
 
         events.emit("buddy-trusted", user, trusted)
 
-    def set_buddy_last_seen(self, user, online):
+    def set_buddy_last_seen(self, user, is_online):
 
         if user not in self.buddies:
             return
 
-        previous_last_seen = self.buddies[user][5]
+        previous_last_seen = self.buddies[user].last_seen
 
-        if online:
-            self.buddies[user][5] = ""
+        if is_online:
+            self.buddies[user].last_seen = ""
 
         elif not previous_last_seen:
-            self.buddies[user][5] = time.strftime("%m/%d/%Y %H:%M:%S")
+            self.buddies[user].last_seen = time.strftime("%m/%d/%Y %H:%M:%S")
 
         else:
             return
 
-        events.emit("buddy-last-seen", user, online)
+        events.emit("buddy-last-seen", user, is_online)
 
     def _user_country(self, user, country_code):
 
@@ -203,14 +241,27 @@ class UserList:
         if user not in self.buddies:
             return
 
-        self.buddies[user][6] = f"flag_{country_code}"
+        self.buddies[user].country = f"flag_{country_code}"
 
     def save_buddy_list(self):
 
         if not self.allow_saving_buddies:
             return
 
-        config.sections["server"]["userlist"] = list(self.buddies.values())
+        user_rows = []
+
+        for user, user_data in self.buddies.items():
+            user_rows.append([
+                user,
+                user_data.note,
+                user_data.notify_status,
+                user_data.is_prioritized,
+                user_data.is_trusted,
+                user_data.last_seen,
+                user_data.country
+            ])
+
+        config.sections["server"]["userlist"] = user_rows
         config.write_configuration()
 
     def _user_status(self, msg):
@@ -221,8 +272,14 @@ class UserList:
         if user not in self.buddies:
             return
 
-        notify = self.buddies[user][2]
-        self.set_buddy_last_seen(user, online=bool(msg.status))
+        if msg.status == self.buddies[user].status:
+            # Buddy status didn't change, don't show notification'
+            return
+
+        self.buddies[user].status = msg.status
+        self.set_buddy_last_seen(user, is_online=bool(msg.status))
+
+        notify = self.buddies[user].notify_status
 
         if not notify:
             return

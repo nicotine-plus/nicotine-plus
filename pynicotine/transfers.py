@@ -431,15 +431,15 @@ class Transfers:
         if not user:
             return False
 
-        user_row = core.userlist.buddies.get(user)
+        user_data = core.userlist.buddies.get(user)
 
-        if user_row:
+        if user_data:
             # All users
             if config.sections["transfers"]["preferfriends"]:
                 return True
 
             # Only explicitly prioritized users
-            return bool(user_row[3])  # Prioritized column
+            return bool(user_data.is_prioritized)
 
         return False
 
@@ -1779,9 +1779,9 @@ class Transfers:
 
             if transfers["uploadallowed"] == 3:
                 # Trusted buddies
-                user_row = core.userlist.buddies.get(user)
+                user_data = core.userlist.buddies.get(user)
 
-                if user_row and user_row[4]:
+                if user_data and user_data.is_trusted:
                     return True
 
         return False

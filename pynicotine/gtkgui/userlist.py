@@ -214,9 +214,9 @@ class UserList:
         self.list_view.set_row_value(iterator, 11, GObject.Value(GObject.TYPE_UINT, avgspeed))
         self.list_view.set_row_value(iterator, 12, GObject.Value(GObject.TYPE_UINT, files))
 
-    def add_buddy(self, user, row):
+    def add_buddy(self, user, user_data):
 
-        _user, note, notify, prioritized, trusted, last_seen, country = row
+        last_seen = user_data.last_seen
 
         try:
             time_from_epoch = time.mktime(time.strptime(last_seen, "%m/%d/%Y %H:%M:%S"))
@@ -225,18 +225,18 @@ class UserList:
             time_from_epoch = 0
 
         self.list_view.add_row([
-            get_status_icon_name(UserStatus.OFFLINE),
-            get_flag_icon_name(country),
+            get_status_icon_name(user_data.status),
+            get_flag_icon_name(user_data.country),
             str(user),
             "", "",
-            bool(trusted),
-            bool(notify),
-            bool(prioritized),
+            bool(user_data.is_trusted),
+            bool(user_data.notify_status),
+            bool(user_data.is_prioritized),
             str(last_seen),
-            str(note),
+            str(user_data.note),
             0, 0, 0,
             time_from_epoch,
-            str(country)
+            str(user_data.country)
         ])
 
         self.update_visible()

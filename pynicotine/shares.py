@@ -682,11 +682,11 @@ class Shares:
 
         if not realfilename.startswith("__INTERNAL_ERROR__"):
             if bshared_files is not None:
-                user_row = core.userlist.buddies.get(user)
+                user_data = core.userlist.buddies.get(user)
 
-                if user_row:
+                if user_data:
                     # Check if buddy is trusted
-                    if config.sections["transfers"]["buddysharestrustedonly"] and not user_row[4]:
+                    if config.sections["transfers"]["buddysharestrustedonly"] and not user_data.is_trusted:
                         pass
 
                     else:
