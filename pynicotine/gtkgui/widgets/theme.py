@@ -516,19 +516,14 @@ def _get_custom_font_css():
 def _get_custom_color_css():
 
     css = bytearray()
-
-    list_text_color = config.sections["ui"]["search"]
-    tab_text_color = config.sections["ui"]["tab_default"]
-    tab_changed_text_color = config.sections["ui"]["tab_changed"]
-    tab_hilite_text_color = config.sections["ui"]["tab_hilite"]
-    text_entry_background_color = config.sections["ui"]["textbg"]
-    text_entry_text_color = config.sections["ui"]["inputcolor"]
+    treeview_text_color = config.sections["ui"]["search"]
 
     for css_selector, color in (
-        (".notebook-tab", tab_text_color),
-        (".notebook-tab-changed", tab_changed_text_color),
-        (".notebook-tab-hilite", tab_hilite_text_color),
-        ("entry", text_entry_text_color)
+        (".notebook-tab", config.sections["ui"]["tab_default"]),
+        (".notebook-tab-changed", config.sections["ui"]["tab_changed"]),
+        (".notebook-tab-hilite", config.sections["ui"]["tab_hilite"]),
+        ("entry", config.sections["ui"]["inputcolor"]),
+        ("treeview", treeview_text_color)
     ):
         if color:
             css.extend(
@@ -539,26 +534,26 @@ def _get_custom_color_css():
                 """.encode("utf-8")
             )
 
-    if text_entry_background_color:
-        css.extend(
-            f"""
-            {Gtk.STYLE_CLASS_ENTRY} {{
-                background-color: {text_entry_background_color};
-            }}
-            """.encode("utf-8")
-        )
+    for css_selector, color in (
+        ("entry", config.sections["ui"]["textbg"]),
+    ):
+        if color:
+            css.extend(
+                f"""
+                {css_selector} {{
+                    background-color: {color};
+                }}
+                """.encode("utf-8")
+            )
 
-    if list_text_color:
+    # Reset treeview column header colors
+    if treeview_text_color:
         css.extend(
-            f"""
-            treeview {{
-                color: {list_text_color};
-            }}
-
-            treeview header {{
+            b"""
+            treeview header {
                 color: initial;
-            }}
-            """.encode("utf-8")
+            }
+            """
         )
 
     return css
