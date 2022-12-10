@@ -39,7 +39,6 @@ from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
-from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
@@ -183,10 +182,6 @@ class UserInfos(IconNotebook):
         if page is not None:
             page.user_info_response(msg)
 
-    def update_visuals(self):
-        for page in self.pages.values():
-            page.update_visuals()
-
     def server_disconnect(self, _msg):
         for user, page in self.pages.items():
             self.set_user_status(page.container, user, UserStatus.OFFLINE)
@@ -304,7 +299,6 @@ class UserInfo:
         )
 
         self.update_button_states()
-        self.update_visuals()
         self.set_in_progress()
 
     def clear(self):
@@ -324,10 +318,6 @@ class UserInfo:
     def save_columns(self):
         # Unused
         pass
-
-    def update_visuals(self):
-        for widget in self.__dict__.values():
-            update_widget_visuals(widget)
 
     """ General """
 

@@ -51,7 +51,6 @@ from pynicotine.gtkgui.widgets.theme import get_status_icon_name
 from pynicotine.gtkgui.widgets.theme import load_icons
 from pynicotine.gtkgui.widgets.theme import set_global_style
 from pynicotine.gtkgui.widgets.theme import set_use_header_bar
-from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.gtkgui.widgets.window import Window
 from pynicotine.logfacility import log
@@ -284,7 +283,6 @@ class MainWindow(Window):
         """ Apply UI Customizations """
 
         set_global_style()
-        self.update_visuals()
 
     """ Initialize """
 
@@ -356,10 +354,6 @@ class MainWindow(Window):
 
     def set_help_overlay(self, help_overlay):
         self.window.set_help_overlay(help_overlay)
-
-    def update_visuals(self):
-        for widget in self.__dict__.values():
-            update_widget_visuals(widget)
 
     """ Window State """
 

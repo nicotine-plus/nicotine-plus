@@ -22,7 +22,6 @@ from pynicotine import slskmessages
 from pynicotine.core import core
 from pynicotine.gtkgui.widgets.popover import Popover
 from pynicotine.gtkgui.widgets.textview import TextView
-from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.ui import UserInterface
 
 
@@ -87,10 +86,6 @@ class RoomWall(Popover):
             return
 
         self.clear_room_wall_message()
-
-    def update_visuals(self):
-        for widget in self.__dict__.values():
-            update_widget_visuals(widget)
 
     def on_show(self, *_args):
 

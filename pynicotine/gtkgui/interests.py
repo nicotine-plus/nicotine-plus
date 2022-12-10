@@ -29,7 +29,6 @@ from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.theme import get_status_icon_name
-from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import humanize
@@ -168,8 +167,6 @@ class Interests:
             ("user-status", self.user_status)
         ):
             events.connect(event_name, callback)
-
-        self.update_visuals()
 
     def server_login(self, msg):
 
@@ -460,7 +457,3 @@ class Interests:
     @staticmethod
     def on_tooltip(list_view, pos_x, pos_y, _keyboard_mode, tooltip):
         return list_view.show_user_status_tooltip(pos_x, pos_y, tooltip, column=4)
-
-    def update_visuals(self):
-        for widget in self.__dict__.values():
-            update_widget_visuals(widget)

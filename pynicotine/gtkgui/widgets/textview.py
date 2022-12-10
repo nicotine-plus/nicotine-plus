@@ -35,7 +35,7 @@ from pynicotine.utils import open_uri
 
 class TextView:
 
-    def __init__(self, textview, font=None, auto_scroll=False, parse_urls=True):
+    def __init__(self, textview, auto_scroll=False, parse_urls=True):
 
         self.textview = textview
         self.textbuffer = textview.get_buffer()
@@ -43,7 +43,6 @@ class TextView:
         self.adjustment = self.scrollable.get_vadjustment()
         scrollable_container = self.scrollable.get_ancestor(Gtk.Box)
 
-        self.font = font
         self.auto_scroll = self.should_auto_scroll = auto_scroll
         self.parse_urls = parse_urls
         self.tag_urls = {}
@@ -213,16 +212,13 @@ class TextView:
 
     """ Text Tags (usernames, URLs) """
 
-    def create_tag(self, color=None, callback=None, username=None, url=None):
+    def create_tag(self, color_id=None, callback=None, username=None, url=None):
 
         tag = self.textbuffer.create_tag()
 
-        if color:
-            update_tag_visuals(tag, color=color)
-            tag.color = color
-
-        if self.font:
-            update_tag_visuals(tag, font=self.font)
+        if color_id:
+            update_tag_visuals(tag, color_id=color_id)
+            tag.color_id = color_id
 
         if url:
             if url[:4] == "www.":
@@ -236,12 +232,12 @@ class TextView:
 
         return tag
 
-    def update_tag(self, tag, color=None):
+    def update_tag(self, tag, color_id=None):
 
-        if color is not None:
-            tag.color = color
+        if color_id is not None:
+            tag.color_id = color_id
 
-        update_tag_visuals(tag, tag.color, self.font)
+        update_tag_visuals(tag, color_id=tag.color_id)
 
     def update_tags(self):
         for tag in self.tag_urls.values():

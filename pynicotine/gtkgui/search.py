@@ -43,7 +43,6 @@ from pynicotine.gtkgui.widgets.popupmenu import FilePopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
-from pynicotine.gtkgui.widgets.theme import set_widget_fg_bg_css
 from pynicotine.gtkgui.widgets.treeview import collapse_treeview
 from pynicotine.gtkgui.widgets.treeview import create_grouping_menu
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
@@ -51,7 +50,6 @@ from pynicotine.gtkgui.widgets.treeview import save_columns
 from pynicotine.gtkgui.widgets.treeview import select_user_row_iter
 from pynicotine.gtkgui.widgets.treeview import show_country_tooltip
 from pynicotine.gtkgui.widgets.treeview import show_file_path_tooltip
-from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import SEARCH_TOKENS_ALLOWED
@@ -109,7 +107,6 @@ class Searches(IconNotebook):
             events.connect(event_name, callback)
 
         self.populate_search_history()
-        self.update_visuals()
 
     def on_switch_search_page(self, _notebook, page, _page_num):
 
@@ -277,10 +274,6 @@ class Searches(IconNotebook):
             if page.text == wish:
                 page.update_wish_button()
 
-    def update_visuals(self):
-        for page in self.pages.values():
-            page.update_visuals()
-
 
 class Search:
 
@@ -404,8 +397,6 @@ class Search:
             self.tree_view.add_controller(focus_controller)
         else:
             self.tree_view.connect("focus-in-event", self.on_refilter)
-
-        self.update_visuals()
 
         # Popup menus
         self.popup_menu_users = UserPopupMenu(self.window.application)
@@ -1171,10 +1162,6 @@ class Search:
 
         self.results_label.set_text(humanize(self.num_results_visible) + str_plus)
 
-    def update_visuals(self):
-        for widget in self.__dict__.values():
-            update_widget_visuals(widget, list_font_target="searchfont")
-
     def on_column_position_changed(self, column, _param):
         """ Save column position and width to config """
 
@@ -1500,15 +1487,23 @@ class Search:
         self.active_filter_count = 0
 
         # Set red background if invalid regex pattern is detected
-        if filter_in is None:
-            set_widget_fg_bg_css(self.filter_include_combobox.get_child(), bg_color="#e04f5e", fg_color="white")
-        else:
-            update_widget_visuals(self.filter_include_combobox.get_child())
+        filter_include_entry = self.filter_include_combobox.get_child()
+        filter_exclude_entry = self.filter_exclude_combobox.get_child()
 
-        if filter_out is None:
-            set_widget_fg_bg_css(self.filter_exclude_combobox.get_child(), bg_color="#e04f5e", fg_color="white")
-        else:
-            update_widget_visuals(self.filter_exclude_combobox.get_child())
+        for filter_regex, entry in (
+            (filter_in, filter_include_entry),
+            (filter_out, filter_exclude_entry)
+        ):
+            if filter_regex is None:
+                if GTK_API_VERSION >= 4:
+                    entry.add_css_class("error")
+                else:
+                    entry.get_style_provider().add_class("error")
+            else:
+                if GTK_API_VERSION >= 4:
+                    entry.remove_css_class("error")
+                else:
+                    entry.get_style_provider().remove_css_class("error")
 
         # Add filters to history
         for filter_id, value in filters.items():

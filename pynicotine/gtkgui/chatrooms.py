@@ -48,10 +48,9 @@ from pynicotine.gtkgui.widgets.textentry import ChatCompletion
 from pynicotine.gtkgui.widgets.textentry import ChatEntry
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
 from pynicotine.gtkgui.widgets.textview import TextView
+from pynicotine.gtkgui.widgets.theme import USER_STATUS_COLORS
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
 from pynicotine.gtkgui.widgets.theme import get_status_icon_name
-from pynicotine.gtkgui.widgets.theme import get_user_status_color
-from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.treeview import save_columns
 from pynicotine.gtkgui.widgets.treeview import show_country_tooltip
@@ -111,8 +110,6 @@ class ChatRooms(IconNotebook):
             ("user-status", self.user_status)
         ):
             events.connect(event_name, callback)
-
-        self.update_visuals()
 
     def on_reordered_page(self, notebook, _page, _page_num):
 
@@ -364,13 +361,9 @@ class ChatRooms(IconNotebook):
                 tab.set_completion_list(completion_list[:])
                 break
 
-    def update_visuals(self):
-
+    def update_tags(self):
         for page in self.pages.values():
-            page.update_visuals()
             page.update_tags()
-
-        self.roomlist.update_visuals()
 
     def save_columns(self):
 
@@ -452,8 +445,8 @@ class ChatRoom:
 
         self.users = {}
 
-        self.activity_view = TextView(self.activity_view, font="chatfont")
-        self.chat_view = TextView(self.chat_view, font="chatfont")
+        self.activity_view = TextView(self.activity_view)
+        self.chat_view = TextView(self.chat_view)
 
         # Event Text Search
         self.activity_search_bar = TextSearchBar(self.activity_view.textview, self.activity_search_bar,
@@ -576,7 +569,6 @@ class ChatRoom:
 
         self.count_users()
         self.create_tags()
-        self.update_visuals()
         self.read_room_logs()
 
     def load(self):
@@ -1053,13 +1045,6 @@ class ChatRoom:
         self.usersmodel.set_value(iterator, 1, flag_icon)
         self.usersmodel.set_value(iterator, 8, country)
 
-    def update_visuals(self):
-
-        for widget in self.__dict__.values():
-            update_widget_visuals(widget)
-
-        self.room_wall.update_visuals()
-
     def user_name_event(self, pos_x, pos_y, user):
 
         menu = self.popup_menu_user_chat
@@ -1095,7 +1080,7 @@ class ChatRoom:
             color = "useroffline"
         else:
             status = self.usersmodel.get_value(self.users[username], 5)
-            color = get_user_status_color(status)
+            color = USER_STATUS_COLORS.get(status)
 
         self.chat_view.update_tag(self.tag_users[username], color)
 
@@ -1106,6 +1091,8 @@ class ChatRoom:
 
         for tag in self.tag_users.values():
             self.chat_view.update_tag(tag)
+
+        self.chat_view.update_tags()
 
     def save_columns(self):
         save_columns("chat_room", self.users_list_view.get_columns(), subpage=self.room)

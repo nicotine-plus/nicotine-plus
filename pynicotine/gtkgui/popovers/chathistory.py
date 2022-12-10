@@ -28,7 +28,6 @@ from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.popover import Popover
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
-from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.utils import encode_path
@@ -159,10 +158,6 @@ class ChatHistory(Popover):
             message = f"{timestamp} {message}"
 
         self.list_view.add_row([username, message], select_row=False, prepend=True)
-
-    def update_visuals(self):
-        for widget in self.__dict__.values():
-            update_widget_visuals(widget)
 
     def on_show_user(self, *_args):
 

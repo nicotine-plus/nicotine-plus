@@ -48,6 +48,7 @@ try:
 except (ImportError, ValueError):
     pass
 
+CUSTOM_CSS_PROVIDER = Gtk.CssProvider()
 GTK_SETTINGS = Gtk.Settings.get_default()
 USE_COLOR_SCHEME_PORTAL = (sys.platform not in ("win32", "darwin") and not LIBADWAITA)
 
@@ -117,31 +118,17 @@ def set_dark_mode(enabled):
     GTK_SETTINGS.set_property("gtk-application-prefer-dark-theme", enabled)
 
 
-def set_global_font(font_name):
-
-    if font_name == "Normal":
-        GTK_SETTINGS.reset_property("gtk-font-name")
-        return
-
-    GTK_SETTINGS.set_property("gtk-font-name", font_name)
-
-
 def set_use_header_bar(enabled):
     GTK_SETTINGS.set_property("gtk-dialogs-use-header", enabled)
 
 
 def set_visual_settings():
 
-    global_font = config.sections["ui"]["globalfont"]
-    set_dark_mode(config.sections["ui"]["dark_mode"])
-
-    if global_font and global_font != "Normal":
-        set_global_font(global_font)
-
     if sys.platform == "darwin":
         # Left align window controls on macOS
         GTK_SETTINGS.set_property("gtk-decoration-layout", "close,minimize,maximize:")
 
+    set_dark_mode(config.sections["ui"]["dark_mode"])
     set_use_header_bar(config.sections["ui"]["header_bar"])
 
 
@@ -301,6 +288,7 @@ def set_global_css():
 def set_global_style():
     set_visual_settings()
     set_global_css()
+    update_custom_css()
 
 
 """ Icons """
@@ -467,114 +455,152 @@ def on_icon_theme_changed(*_args):
 ICON_THEME.connect("changed", on_icon_theme_changed)
 
 
-""" Widget Fonts and Colors """
+""" Fonts and Colors """
 
 
-COLOR_RGBA = Gdk.RGBA()
+PANGO_STYLES = {
+    Pango.Style.NORMAL: "normal",
+    Pango.Style.ITALIC: "italic"
+}
+PANGO_WEIGHTS = {
+    Pango.Weight.THIN: 100,
+    Pango.Weight.ULTRALIGHT: 200,
+    Pango.Weight.LIGHT: 300,
+    Pango.Weight.SEMILIGHT: 350,
+    Pango.Weight.BOOK: 380,
+    Pango.Weight.NORMAL: 400,
+    Pango.Weight.MEDIUM: 500,
+    Pango.Weight.SEMIBOLD: 600,
+    Pango.Weight.BOLD: 700,
+    Pango.Weight.ULTRABOLD: 800,
+    Pango.Weight.HEAVY: 900,
+    Pango.Weight.ULTRAHEAVY: 1000
+}
+USER_STATUS_COLORS = {
+    UserStatus.AWAY: "useraway",
+    UserStatus.ONLINE: "useronline",
+    UserStatus.OFFLINE: "useroffline"
+}
 
 
-def get_user_status_color(status):
+def _get_custom_font_css():
 
-    if status == UserStatus.AWAY:
-        return "useraway"
+    css = bytearray()
 
-    if status == UserStatus.ONLINE:
-        return "useronline"
+    for css_selector, font in (
+        ("window, popover", config.sections["ui"]["globalfont"]),
+        ("treeview", config.sections["ui"]["listfont"]),
+        ("textview", config.sections["ui"]["textviewfont"]),
+        (".chat-view", config.sections["ui"]["chatfont"]),
+        (".search-view", config.sections["ui"]["searchfont"]),
+        (".transfers-view", config.sections["ui"]["transfersfont"]),
+        (".userbrowse-view", config.sections["ui"]["browserfont"])
+    ):
+        font_description = Pango.FontDescription.from_string(font)
 
-    return "useroffline"
+        if font_description.get_set_fields() & (Pango.FontMask.FAMILY | Pango.FontMask.SIZE):
+            css.extend(
+                f"""
+                {css_selector} {{
+                    font-family: {font_description.get_family()};
+                    font-size: {font_description.get_size() // 1024}pt;
+                    font-style: {PANGO_STYLES.get(font_description.get_style(), "normal")};
+                    font-weight: {PANGO_WEIGHTS.get(font_description.get_weight(), "normal")};
+                }}
+                """.encode("utf-8")
+            )
 
-
-def parse_color_string(color_string):
-    """ Take a color string, e.g. BLUE, and return a HEX color code """
-
-    if color_string and COLOR_RGBA.parse(color_string):
-        red_hex = round(COLOR_RGBA.red * 255)
-        green_hex = round(COLOR_RGBA.green * 255)
-        blue_hex = round(COLOR_RGBA.blue * 255)
-        color_hex = f"#{red_hex:02X}{green_hex:02X}{blue_hex:02X}"
-        return color_hex
-
-    return None
-
-
-def set_list_color(listview, color):
-
-    for column in listview.get_columns():
-        for cell in column.get_cells():
-            if isinstance(cell, (Gtk.CellRendererText, Gtk.CellRendererCombo)):
-                set_widget_color(cell, color)
+    return css
 
 
-def set_list_font(listview, font):
+def _get_custom_color_css():
 
-    for column in listview.get_columns():
-        for cell in column.get_cells():
-            if isinstance(cell, (Gtk.CellRendererText, Gtk.CellRendererCombo)):
-                set_widget_font(cell, font)
+    css = bytearray()
+
+    list_text_color = config.sections["ui"]["search"]
+    tab_text_color = config.sections["ui"]["tab_default"]
+    tab_changed_text_color = config.sections["ui"]["tab_changed"]
+    tab_hilite_text_color = config.sections["ui"]["tab_hilite"]
+    text_entry_background_color = config.sections["ui"]["textbg"]
+    text_entry_text_color = config.sections["ui"]["inputcolor"]
+
+    for css_selector, color in (
+        (".notebook-tab", tab_text_color),
+        (".notebook-tab-changed", tab_changed_text_color),
+        (".notebook-tab-hilite", tab_hilite_text_color),
+        ("entry", text_entry_text_color)
+    ):
+        if color:
+            css.extend(
+                f"""
+                {css_selector} {{
+                    color: {color};
+                }}
+                """.encode("utf-8")
+            )
+
+    if text_entry_background_color:
+        css.extend(
+            f"""
+            {Gtk.STYLE_CLASS_ENTRY} {{
+                background-color: {text_entry_background_color};
+            }}
+            """.encode("utf-8")
+        )
+
+    if list_text_color:
+        css.extend(
+            f"""
+            treeview {{
+                color: {list_text_color};
+            }}
+
+            treeview header {{
+                color: initial;
+            }}
+            """.encode("utf-8")
+        )
+
+    return css
 
 
-def set_widget_color(widget, color):
+def update_custom_css():
 
-    if color:
-        widget.set_property("foreground", color)
+    css = bytearray(b" ")
+    css.extend(_get_custom_font_css())
+    css.extend(_get_custom_color_css())
+
+    CUSTOM_CSS_PROVIDER.load_from_data(css)
+
+    if GTK_API_VERSION >= 4:
+        Gtk.StyleContext.add_provider_for_display(  # pylint: disable=no-member
+            Gdk.Display.get_default(), CUSTOM_CSS_PROVIDER, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+        )
     else:
-        widget.set_property("foreground-set", False)
+        Gtk.StyleContext.add_provider_for_screen(  # pylint: disable=no-member
+            Gdk.Screen.get_default(), CUSTOM_CSS_PROVIDER, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+        )
 
 
-css_providers = {}
+def update_tag_visuals(tag, color_id):
 
+    color_hex = config.sections["ui"].get(color_id)
 
-def set_widget_fg_bg_css(widget, bg_color=None, fg_color=None):
-
-    class_name = "widget_custom_color"
-    css = "." + class_name + " {"
-
-    bg_color_hex = parse_color_string(bg_color)
-    fg_color_hex = parse_color_string(fg_color)
-
-    if bg_color_hex is not None:
-        css += "background: " + bg_color_hex + ";"
-
-    if fg_color_hex is not None:
-        css += "color: " + fg_color_hex + ";"
-
-    css += "}"
-
-    context = widget.get_style_context()
-
-    if widget not in css_providers:
-        css_providers[widget] = Gtk.CssProvider()
-        context.add_provider(css_providers[widget], Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
-        context.add_class(class_name)
-
-    css_providers[widget].load_from_data(css.encode('utf-8'))
-
-
-def set_widget_font(widget, font):
-    widget.set_property("font", font)
-
-
-def update_tag_visuals(tag, color=None, font=None):
-
-    config_ui = config.sections["ui"]
-
-    if font:
-        set_widget_font(tag, config_ui[font])
-
-    if color is None:
+    if not color_hex:
+        tag.set_property("foreground-set", False)
         return
 
-    set_widget_color(tag, config_ui[color])
+    tag.set_property("foreground", color_hex)
 
     # URLs
-    if color == "urlcolor":
+    if color_id == "urlcolor":
         tag.set_property("underline", Pango.Underline.SINGLE)
 
     # Hotspots
-    if color not in ("useraway", "useronline", "useroffline"):
+    if color_id not in ("useraway", "useronline", "useroffline"):
         return
 
-    usernamestyle = config_ui["usernamestyle"]
+    usernamestyle = config.sections["ui"]["usernamestyle"]
 
     if usernamestyle == "bold":
         tag.set_property("weight", Pango.Weight.BOLD)
@@ -590,28 +616,3 @@ def update_tag_visuals(tag, color=None, font=None):
         tag.set_property("underline", Pango.Underline.SINGLE)
     else:
         tag.set_property("underline", Pango.Underline.NONE)
-
-
-def update_widget_visuals(widget, list_font_target="listfont"):
-
-    from pynicotine.gtkgui.widgets.textview import TextView
-
-    config_ui = config.sections["ui"]
-
-    if isinstance(widget, Gtk.ComboBox) and widget.get_has_entry() or isinstance(widget, Gtk.Entry):
-        if isinstance(widget, Gtk.ComboBox):
-            widget = widget.get_child()
-
-        set_widget_fg_bg_css(
-            widget,
-            bg_color=config_ui["textbg"],
-            fg_color=config_ui["inputcolor"]
-        )
-
-    elif isinstance(widget, TextView):
-        # Update URL tag colors
-        widget.update_tags()
-
-    elif isinstance(widget, Gtk.TreeView):
-        set_list_color(widget, config_ui["search"])
-        set_list_font(widget, config_ui[list_font_target])

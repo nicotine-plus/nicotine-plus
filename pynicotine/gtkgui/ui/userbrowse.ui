@@ -233,6 +233,9 @@
                                     <property name="mode">browse</property>
                                   </object>
                                 </child>
+                                <style>
+                                  <class name="userbrowse-view"/>
+                                </style>
                               </object>
                             </child>
                           </object>
@@ -288,6 +291,9 @@
                                 </child>
                               </object>
                             </child>
+                            <style>
+                              <class name="userbrowse-view"/>
+                            </style>
                           </object>
                         </child>
                       </object>

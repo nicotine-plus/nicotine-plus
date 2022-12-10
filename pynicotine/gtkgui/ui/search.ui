@@ -450,6 +450,9 @@
                     </child>
                   </object>
                 </child>
+                <style>
+                  <class name="search-view"/>
+                </style>
               </object>
             </child>
           </object>

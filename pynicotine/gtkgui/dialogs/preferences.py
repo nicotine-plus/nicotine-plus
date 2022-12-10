@@ -50,8 +50,7 @@ from pynicotine.gtkgui.widgets.dialogs import PluginSettingsDialog
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import load_custom_icons
 from pynicotine.gtkgui.widgets.theme import set_dark_mode
-from pynicotine.gtkgui.widgets.theme import set_global_font
-from pynicotine.gtkgui.widgets.theme import update_widget_visuals
+from pynicotine.gtkgui.widgets.theme import update_custom_css
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.i18n import LANGUAGES
@@ -446,7 +445,7 @@ class DownloadsPage:
                 'error': errors}
             )
 
-            self.VerifiedLabel.set_markup(f"<span foreground=\"#e04f5e\">{error}</span>")
+            self.VerifiedLabel.set_text(error)
         else:
             self.VerifiedLabel.set_text(_("Filters Successful"))
 
@@ -1310,22 +1309,22 @@ class UserInterfacePage:
         # pylint: disable=invalid-name
         (self.ChatRoomsPosition, self.CloseAction, self.DarkMode,
          self.DefaultBrowserFont, self.DefaultChatFont, self.DefaultGlobalFont, self.DefaultListFont,
-         self.DefaultSearchFont, self.DefaultTheme, self.DefaultTransfersFont, self.EnableChatroomsTab,
-         self.EnableDownloadsTab, self.EnableInterestsTab, self.EnablePrivateTab, self.EnableSearchTab,
-         self.EnableUploadsTab, self.EnableUserBrowseTab, self.EnableUserInfoTab, self.EnableUserListTab,
-         self.EntryAway, self.EntryBackground, self.EntryChangedTab, self.EntryHighlight, self.EntryHighlightTab,
-         self.EntryImmediate, self.EntryInput, self.EntryLocal, self.EntryMe, self.EntryOffline, self.EntryOnline,
-         self.EntryQueue, self.EntryRegularTab, self.EntryRemote, self.EntryURL, self.FilePathTooltips,
-         self.IconView, self.Language, self.Main, self.MainPosition, self.NotificationPopupChatroom,
-         self.NotificationPopupChatroomMention, self.NotificationPopupFile, self.NotificationPopupFolder,
-         self.NotificationPopupPrivateMessage, self.NotificationPopupSound, self.NotificationPopupWish,
-         self.NotificationTabColors, self.NotificationWindowTitle, self.PickAway, self.PickBackground,
-         self.PickChangedTab, self.PickHighlight, self.PickHighlightTab, self.PickImmediate, self.PickInput,
-         self.PickLocal, self.PickMe, self.PickOffline, self.PickOnline, self.PickQueue, self.PickRegularTab,
-         self.PickRemote, self.PickURL, self.PrivateChatPosition, self.ReverseFilePaths,
+         self.DefaultSearchFont, self.DefaultTextViewFont, self.DefaultTheme, self.DefaultTransfersFont,
+         self.EnableChatroomsTab, self.EnableDownloadsTab, self.EnableInterestsTab, self.EnablePrivateTab,
+         self.EnableSearchTab, self.EnableUploadsTab, self.EnableUserBrowseTab, self.EnableUserInfoTab,
+         self.EnableUserListTab, self.EntryAway, self.EntryBackground, self.EntryChangedTab, self.EntryHighlight,
+         self.EntryHighlightTab, self.EntryImmediate, self.EntryInput, self.EntryLocal, self.EntryMe,
+         self.EntryOffline, self.EntryOnline, self.EntryQueue, self.EntryRegularTab, self.EntryRemote,
+         self.EntryURL, self.FilePathTooltips, self.IconView, self.Language, self.Main, self.MainPosition,
+         self.NotificationPopupChatroom, self.NotificationPopupChatroomMention, self.NotificationPopupFile,
+         self.NotificationPopupFolder, self.NotificationPopupPrivateMessage, self.NotificationPopupSound,
+         self.NotificationPopupWish, self.NotificationTabColors, self.NotificationWindowTitle, self.PickAway,
+         self.PickBackground, self.PickChangedTab, self.PickHighlight, self.PickHighlightTab, self.PickImmediate,
+         self.PickInput, self.PickLocal, self.PickMe, self.PickOffline, self.PickOnline, self.PickQueue,
+         self.PickRegularTab, self.PickRemote, self.PickURL, self.PrivateChatPosition, self.ReverseFilePaths,
          self.SearchPosition, self.SelectBrowserFont, self.SelectChatFont, self.SelectGlobalFont, self.SelectListFont,
-         self.SelectSearchFont, self.SelectTransfersFont, self.StartupHidden, self.TabClosers, self.TabSelectPrevious,
-         self.TabStatusIcons, self.ThemeDir, self.TraySettings, self.TrayiconCheck,
+         self.SelectSearchFont, self.SelectTextViewFont, self.SelectTransfersFont, self.StartupHidden, self.TabClosers,
+         self.TabSelectPrevious, self.TabStatusIcons, self.ThemeDir, self.TraySettings, self.TrayiconCheck,
          self.UserBrowsePosition, self.UserInfoPosition, self.UsernameHotspots,
          self.UsernameStyle) = ui_template.widgets
 
@@ -1403,8 +1402,9 @@ class UserInterfacePage:
                 "language": self.Language,
 
                 "globalfont": self.SelectGlobalFont,
-                "chatfont": self.SelectChatFont,
                 "listfont": self.SelectListFont,
+                "textviewfont": self.SelectTextViewFont,
+                "chatfont": self.SelectChatFont,
                 "searchfont": self.SelectSearchFont,
                 "transfersfont": self.SelectTransfersFont,
                 "browserfont": self.SelectBrowserFont,
@@ -1507,8 +1507,9 @@ class UserInterfacePage:
                 "language": self.Language.get_active_id(),
 
                 "globalfont": self.SelectGlobalFont.get_font(),
-                "chatfont": self.SelectChatFont.get_font(),
                 "listfont": self.SelectListFont.get_font(),
+                "textviewfont": self.SelectTextViewFont.get_font(),
+                "chatfont": self.SelectChatFont.get_font(),
                 "searchfont": self.SelectSearchFont.get_font(),
                 "transfersfont": self.SelectTransfersFont.get_font(),
                 "browserfont": self.SelectBrowserFont.get_font(),
@@ -1603,10 +1604,11 @@ class UserInterfacePage:
     def on_color_set(self, widget):
 
         rgba = widget.get_rgba()
-        red_hex = round(rgba.red * 255)
-        green_hex = round(rgba.green * 255)
-        blue_hex = round(rgba.blue * 255)
-        color_hex = f"#{red_hex:02X}{green_hex:02X}{blue_hex:02X)}"
+        red_color = round(rgba.red * 255)
+        green_color = round(rgba.green * 255)
+        blue_color = round(rgba.blue * 255)
+        color_hex = f"#{red_color:02X}{green_color:02X}{blue_color:02X}"
+
         entry = getattr(self, Gtk.Buildable.get_name(widget).replace("Pick", "Entry"))
         entry.set_text(color_hex)
 
@@ -2339,19 +2341,6 @@ class Preferences(Dialog):
 
             self.preferences_list.insert(box, -1)
 
-        self.update_visuals()
-
-    def update_visuals(self, scope=None):
-
-        if not scope:
-            for page in self.pages.values():
-                self.update_visuals(page)
-
-            scope = self
-
-        for widget in scope.__dict__.values():
-            update_widget_visuals(widget)
-
     def set_active_page(self, page_id):
 
         if page_id is None:
@@ -2595,23 +2584,11 @@ class Preferences(Dialog):
             set_dark_mode(dark_mode_state)
             self.application.lookup_action("prefer-dark-mode").set_state(GLib.Variant("b", dark_mode_state))
 
-            set_global_font(config.sections["ui"]["globalfont"])
+            # Fonts and colors
+            update_custom_css()
 
-            if self.application.wishlist is not None:
-                self.application.wishlist.update_visuals()
-
-            self.application.window.chatrooms.update_visuals()
-            self.application.window.privatechat.update_visuals()
-            self.application.window.search.update_visuals()
-            self.application.window.downloads.update_visuals()
-            self.application.window.uploads.update_visuals()
-            self.application.window.userinfo.update_visuals()
-            self.application.window.userbrowse.update_visuals()
-            self.application.window.userlist.update_visuals()
-            self.application.window.interests.update_visuals()
-
-            self.application.window.update_visuals()
-            self.update_visuals()
+            self.application.window.chatrooms.update_tags()
+            self.application.window.privatechat.update_tags()
 
             # Icons
             load_custom_icons(update=True)
@@ -2771,8 +2748,6 @@ class Preferences(Dialog):
             page.Main.set_margin_end(18)
             page.Main.set_margin_top(14)
             page.Main.set_margin_bottom(18)
-
-            self.update_visuals(page)
 
         self.viewport.set_property("child", self.pages[page_id].Main)
 

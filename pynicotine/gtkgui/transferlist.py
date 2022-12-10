@@ -35,7 +35,6 @@ from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import FilePopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
-from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import collapse_treeview
 from pynicotine.gtkgui.widgets.treeview import create_grouping_menu
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
@@ -183,8 +182,6 @@ class TransferList:
             (">" + _("User(s)"), self.popup_menu_users)
         )
 
-        self.update_visuals()
-
     def create_model(self):
         """ Create a tree model based on the grouping mode. Scrolling performance of Gtk.TreeStore
         is bad with large plain lists, so use Gtk.ListStore in ungrouped mode where no tree structure
@@ -220,10 +217,6 @@ class TransferList:
 
     def save_columns(self):
         save_columns(self.type, self.tree_view.get_columns())
-
-    def update_visuals(self):
-        for widget in self.__dict__.values():
-            update_widget_visuals(widget, list_font_target="transfersfont")
 
     def select_transfers(self):
 

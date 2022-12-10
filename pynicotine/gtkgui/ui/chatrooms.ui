@@ -53,6 +53,9 @@
                                 <property name="right-margin">10</property>
                                 <property name="top-margin">5</property>
                                 <property name="bottom-margin">5</property>
+                                <style>
+                                  <class name="chat-view"/>
+                                </style>
                               </object>
                             </child>
                           </object>
@@ -98,6 +101,9 @@
                                 <property name="right-margin">10</property>
                                 <property name="top-margin">5</property>
                                 <property name="bottom-margin">5</property>
+                                <style>
+                                  <class name="chat-view"/>
+                                </style>
                               </object>
                             </child>
                           </object>

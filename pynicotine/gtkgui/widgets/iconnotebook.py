@@ -32,7 +32,6 @@ from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.theme import get_status_icon_name
-from pynicotine.gtkgui.widgets.theme import parse_color_string
 from pynicotine.slskmessages import UserStatus
 
 
@@ -59,6 +58,7 @@ class TabLabel(Gtk.Box):
         self.box = Gtk.Box(spacing=6, visible=True)
 
         self.label = Gtk.Label(halign=Gtk.Align.START, hexpand=True, single_line_mode=True, visible=True)
+        self.label.get_style_context().add_class("notebook-tab")
         self.full_text = full_text
         self.set_text(label)
 
@@ -148,18 +148,6 @@ class TabLabel(Gtk.Box):
         else:
             self.set_halign(Gtk.Align.FILL)
 
-    def _set_text_color(self, color):
-
-        color_hex = parse_color_string(color)
-
-        if color_hex:
-            from html import escape
-            escaped_text = escape(self.text)
-            self.label.set_markup(f"<span foreground=\"{color_hex}\">{escaped_text}</span>")
-            return
-
-        self.label.set_text(self.text)
-
     def set_centered(self, centered):
         self.centered = centered
         self._pack_children()
@@ -176,21 +164,18 @@ class TabLabel(Gtk.Box):
 
     def request_hilite(self, mentioned=False):
 
+        self.remove_hilite()
         self.highlighted = True
 
         # Chat mentions have priority over normal notifications
         if not self.mentioned:
             self.mentioned = mentioned
 
-        color = config.sections["ui"]["tab_default"]
-
         if config.sections["notifications"]["notification_tab_colors"]:
             if self.mentioned:
-                color = config.sections["ui"]["tab_hilite"]
+                self.label.get_style_context().add_class("notebook-tab-hilite")
             else:
-                color = config.sections["ui"]["tab_changed"]
-
-        self._set_text_color(color)
+                self.label.get_style_context().add_class("notebook-tab-changed")
 
         icon_name = "nplus-hilite" if self.mentioned else "nplus-hilite3"
         self.end_icon.set_property("icon-name", icon_name)
@@ -201,7 +186,8 @@ class TabLabel(Gtk.Box):
         self.highlighted = False
         self.mentioned = False
 
-        self._set_text_color(config.sections["ui"]["tab_default"])
+        self.label.get_style_context().remove_class("notebook-tab-changed")
+        self.label.get_style_context().remove_class("notebook-tab-hilite")
 
         self.end_icon.set_property("icon-name", None)
         self.end_icon.set_visible(False)
@@ -215,14 +201,7 @@ class TabLabel(Gtk.Box):
         self.start_icon.set_visible(visible)
 
     def set_text(self, text):
-
-        self.text = text
-
-        if self.highlighted:
-            self.request_hilite()
-            return
-
-        self._set_text_color(config.sections["ui"]["tab_default"])
+        self.label.set_text(text)
 
     def get_text(self):
         return self.label.get_text()

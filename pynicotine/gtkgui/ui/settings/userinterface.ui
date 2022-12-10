@@ -1512,11 +1512,11 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">Chat font:</property>
+                <property name="label" translatable="yes">List font:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
-                <property name="mnemonic-widget">SelectChatFont</property>
+                <property name="mnemonic-widget">SelectListFont</property>
               </object>
             </child>
             <child>
@@ -1524,7 +1524,7 @@
                 <property name="visible">True</property>
                 <property name="valign">center</property>
                 <child>
-                  <object class="GtkFontButton" id="SelectChatFont">
+                  <object class="GtkFontButton" id="SelectListFont">
                     <property name="visible">True</property>
                     <property name="hexpand">True</property>
                     <property name="use-font">True</property>
@@ -1532,7 +1532,7 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton" id="DefaultChatFont">
+                  <object class="GtkButton" id="DefaultListFont">
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Clear</property>
                     <signal name="clicked" handler="on_default_font"/>
@@ -1559,11 +1559,11 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">List font:</property>
+                <property name="label" translatable="yes">Text view font:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
-                <property name="mnemonic-widget">SelectListFont</property>
+                <property name="mnemonic-widget">SelectTextViewFont</property>
               </object>
             </child>
             <child>
@@ -1571,7 +1571,7 @@
                 <property name="visible">True</property>
                 <property name="valign">center</property>
                 <child>
-                  <object class="GtkFontButton" id="SelectListFont">
+                  <object class="GtkFontButton" id="SelectTextViewFont">
                     <property name="visible">True</property>
                     <property name="hexpand">True</property>
                     <property name="use-font">True</property>
@@ -1579,7 +1579,54 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton" id="DefaultListFont">
+                  <object class="GtkButton" id="DefaultTextViewFont">
+                    <property name="visible">True</property>
+                    <property name="tooltip-text" translatable="yes">Clear</property>
+                    <signal name="clicked" handler="on_default_font"/>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">True</property>
+                        <property name="icon-name">edit-clear-symbolic</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <style>
+                  <class name="linked"/>
+                </style>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">True</property>
+            <property name="spacing">12</property>
+            <property name="homogeneous">True</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Chat font:</property>
+                <property name="xalign">0</property>
+                <property name="wrap">True</property>
+                <property name="wrap-mode">word-char</property>
+                <property name="mnemonic-widget">SelectChatFont</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="valign">center</property>
+                <child>
+                  <object class="GtkFontButton" id="SelectChatFont">
+                    <property name="visible">True</property>
+                    <property name="hexpand">True</property>
+                    <property name="use-font">True</property>
+                    <signal name="font-set" handler="on_theme_changed"/>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="DefaultChatFont">
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Clear</property>
                     <signal name="clicked" handler="on_default_font"/>

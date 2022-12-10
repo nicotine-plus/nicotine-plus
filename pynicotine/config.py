@@ -358,6 +358,7 @@ class Config:
                 "tabsearch": "Top",
                 "tab_status_icons": True,
                 "globalfont": "",
+                "textviewfont": "",
                 "chatfont": "",
                 "tabclosers": True,
                 "searchfont": "",

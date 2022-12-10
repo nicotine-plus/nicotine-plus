@@ -41,8 +41,7 @@ from pynicotine.gtkgui.widgets.textentry import ChatCompletion
 from pynicotine.gtkgui.widgets.textentry import ChatEntry
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
 from pynicotine.gtkgui.widgets.textview import TextView
-from pynicotine.gtkgui.widgets.theme import get_user_status_color
-from pynicotine.gtkgui.widgets.theme import update_widget_visuals
+from pynicotine.gtkgui.widgets.theme import USER_STATUS_COLORS
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import UserStatus
@@ -78,8 +77,6 @@ class PrivateChats(IconNotebook):
             ("user-status", self.user_status)
         ):
             events.connect(event_name, callback)
-
-        self.update_visuals()
 
     def on_switch_chat(self, _notebook, page, _page_num):
 
@@ -206,13 +203,9 @@ class PrivateChats(IconNotebook):
                 tab.set_completion_list(completion_list[:])
                 break
 
-    def update_visuals(self):
-
+    def update_tags(self):
         for page in self.pages.values():
-            page.update_visuals()
             page.update_tags()
-
-        self.history.update_visuals()
 
     def server_login(self, msg):
 
@@ -253,7 +246,7 @@ class PrivateChat:
         self.offline_message = False
         self.status = core.user_statuses.get(user, UserStatus.OFFLINE)
 
-        self.chat_view = TextView(self.chat_view, font="chatfont")
+        self.chat_view = TextView(self.chat_view)
 
         # Text Search
         self.search_bar = TextSearchBar(self.chat_view.textview, self.search_bar, self.search_entry,
@@ -296,8 +289,6 @@ class PrivateChat:
         )
 
         self.create_tags()
-        self.update_visuals()
-
         self.read_private_log()
 
     def load(self):
@@ -491,10 +482,6 @@ class PrivateChat:
             )
             self.chats.history.update_user(self.user, line, add_timestamp=True)
 
-    def update_visuals(self):
-        for widget in self.__dict__.values():
-            update_widget_visuals(widget)
-
     def user_name_event(self, pos_x, pos_y, user):
 
         self.popup_menu_user_chat.update_model()
@@ -509,10 +496,10 @@ class PrivateChat:
         self.tag_action = self.chat_view.create_tag("chatme")
         self.tag_hilite = self.chat_view.create_tag("chathilite")
 
-        color = get_user_status_color(self.status)
+        color = USER_STATUS_COLORS.get(self.status)
         self.tag_username = self.chat_view.create_tag(color, callback=self.user_name_event, username=self.user)
 
-        color = get_user_status_color(core.user_status)
+        color = USER_STATUS_COLORS.get(core.user_status)
         my_username = config.sections["server"]["login"]
         self.tag_my_username = self.chat_view.create_tag(color, callback=self.user_name_event, username=my_username)
 
@@ -523,11 +510,11 @@ class PrivateChat:
 
         self.status = status
 
-        color = get_user_status_color(status)
+        color = USER_STATUS_COLORS.get(status)
         self.chat_view.update_tag(self.tag_username, color)
 
     def update_local_username_tag(self, status):
-        color = get_user_status_color(status)
+        color = USER_STATUS_COLORS.get(status)
         self.chat_view.update_tag(self.tag_my_username, color)
 
     def update_tags(self):
@@ -535,6 +522,8 @@ class PrivateChat:
         for tag in (self.tag_remote, self.tag_local, self.tag_action, self.tag_hilite,
                     self.tag_username, self.tag_my_username):
             self.chat_view.update_tag(tag)
+
+        self.chat_view.update_tags()
 
     def on_focus(self, *_args):
         self.chat_entry.grab_focus()

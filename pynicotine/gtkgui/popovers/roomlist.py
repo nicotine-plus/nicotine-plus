@@ -26,7 +26,6 @@ from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.popover import Popover
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
-from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.ui import UserInterface
 
@@ -242,10 +241,6 @@ class RoomList(Popover):
 
         self.search_entry.grab_focus()
         return True
-
-    def update_visuals(self):
-        for widget in self.__dict__.values():
-            update_widget_visuals(widget)
 
     def clear(self):
         self.room_model.clear()

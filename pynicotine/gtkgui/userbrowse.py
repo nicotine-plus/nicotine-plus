@@ -40,7 +40,6 @@ from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import FilePopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
-from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.treeview import save_columns
 from pynicotine.gtkgui.widgets.treeview import show_file_path_tooltip
@@ -147,10 +146,6 @@ class UserBrowses(IconNotebook):
 
         if page is not None:
             page.shared_file_list(msg)
-
-    def update_visuals(self):
-        for page in self.pages.values():
-            page.update_visuals()
 
     def server_disconnect(self, _msg):
         for user, page in self.pages.items():
@@ -364,7 +359,6 @@ class UserBrowse:
         Accelerator("<Primary>s", self.container, self.on_save_accelerator)  # Save Shares List
 
         self.expand_button.set_active(config.sections["userbrowse"]["expand_folders"])
-        self.update_visuals()
         self.set_in_progress()
 
     def clear(self):
@@ -377,10 +371,6 @@ class UserBrowse:
 
     def set_label(self, label):
         self.user_popup_menu.set_parent(label)
-
-    def update_visuals(self):
-        for widget in self.__dict__.values():
-            update_widget_visuals(widget, list_font_target="browserfont")
 
     """ Folder/File Views """
 

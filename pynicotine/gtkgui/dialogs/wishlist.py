@@ -24,7 +24,6 @@ from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
-from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.ui import UserInterface
 
@@ -165,11 +164,6 @@ class WishList(Dialog):
 
         if iterator is not None:
             self.list_view.select_row(iterator)
-
-    def update_visuals(self):
-
-        for widget in self.__dict__.values():
-            update_widget_visuals(widget)
 
     def on_show(self, *_args):
 

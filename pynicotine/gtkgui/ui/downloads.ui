@@ -28,6 +28,9 @@
                 </child>
               </object>
             </child>
+            <style>
+              <class name="transfers-view"/>
+            </style>
           </object>
         </child>
         <style>

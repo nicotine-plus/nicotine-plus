@@ -33,7 +33,6 @@ from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
 from pynicotine.gtkgui.widgets.theme import get_status_icon_name
-from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.slskmessages import UserStatus
@@ -126,8 +125,6 @@ class UserList:
         ):
             events.connect(event_name, callback)
 
-        self.update_visuals()
-
     def save_columns(self):
         self.list_view.save_columns()
 
@@ -137,10 +134,6 @@ class UserList:
             return
 
         self.window.userlist_content.set_visible(self.list_view.iterators)
-
-    def update_visuals(self):
-        for widget in self.__dict__.values():
-            update_widget_visuals(widget)
 
     def get_selected_username(self):
 
