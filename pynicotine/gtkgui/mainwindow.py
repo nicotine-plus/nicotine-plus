@@ -1346,8 +1346,8 @@ class MainWindow(Window):
         total_conns_text = repr(msg.total_conns)
         download_bandwidth = human_speed(msg.download_bandwidth)
         upload_bandwidth = human_speed(msg.upload_bandwidth)
-        download_bandwidth_text = f"{download_bandwidth} ({msg.download_conns})"
-        upload_bandwidth_text = f"{upload_bandwidth} ({msg.upload_conns})"
+        download_bandwidth_text = f"{download_bandwidth} ( {msg.download_conns} )"
+        upload_bandwidth_text = f"{upload_bandwidth} ( {msg.upload_conns} )"
 
         if self.connections_label.get_text() != total_conns_text:
             self.connections_label.set_text(total_conns_text)
