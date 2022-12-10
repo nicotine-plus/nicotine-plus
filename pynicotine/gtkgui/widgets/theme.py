@@ -203,6 +203,12 @@ def set_global_css():
         font-weight: 800;
         font-size: 15pt;
     }
+
+    /* Text Formatting */
+
+    .underline {
+        text-decoration-line: underline;
+    }
     """
 
     css_gtk3 = b"""

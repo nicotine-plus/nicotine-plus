@@ -27,7 +27,6 @@ import time
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
-from gi.repository import Pango
 
 from pynicotine.config import config
 from pynicotine.core import core
@@ -1376,13 +1375,17 @@ class MainWindow(Window):
             label = self.upload_status_label
             config_key = "use_upload_speed_limit"
 
-        attributes = Pango.AttrList()
-        attributes.insert(Pango.attr_weight_new(Pango.Weight.NORMAL))
-
         if config.sections["transfers"][config_key] == "alternative":
-            attributes.insert(Pango.attr_underline_new(Pango.Underline.SINGLE))
+            if GTK_API_VERSION >= 4:
+                label.add_css_class("underline")
+            else:
+                label.get_style_context().add_class("underline")
+            return
 
-        label.set_attributes(attributes)
+        if GTK_API_VERSION >= 4:
+            label.remove_css_class("underline")
+        else:
+            label.get_style_context().remove_class("underline")
 
     def show_scan_progress(self):
         GLib.idle_add(self.scan_progress_bar.show)
