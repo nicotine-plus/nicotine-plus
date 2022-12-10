@@ -23,7 +23,6 @@ from gi.repository import Gdk
 from gi.repository import GLib
 from gi.repository import Gtk
 
-from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.widgets.theme import update_tag_visuals
@@ -136,7 +135,7 @@ class TextView:
             line = "\n" + line
 
         # Tag usernames with popup menu creating tag, and away/online/offline colors
-        if username and config.sections["ui"]["usernamehotspots"] and username in line:
+        if username and username in line:
             start = line.find(username)
 
             self._insert_text(line[:start], tag)

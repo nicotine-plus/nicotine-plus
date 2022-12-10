@@ -1325,8 +1325,7 @@ class UserInterfacePage:
          self.SearchPosition, self.SelectBrowserFont, self.SelectChatFont, self.SelectGlobalFont, self.SelectListFont,
          self.SelectSearchFont, self.SelectTextViewFont, self.SelectTransfersFont, self.StartupHidden, self.TabClosers,
          self.TabSelectPrevious, self.TabStatusIcons, self.ThemeDir, self.TraySettings, self.TrayiconCheck,
-         self.UserBrowsePosition, self.UserInfoPosition, self.UsernameHotspots,
-         self.UsernameStyle) = ui_template.widgets
+         self.UserBrowsePosition, self.UserInfoPosition, self.UsernameStyle) = ui_template.widgets
 
         self.application = application
         self.theme_required = False
@@ -1436,7 +1435,6 @@ class UserInterfacePage:
                 "useraway": self.EntryAway,
                 "useronline": self.EntryOnline,
                 "useroffline": self.EntryOffline,
-                "usernamehotspots": self.UsernameHotspots,
                 "urlcolor": self.EntryURL,
                 "tab_default": self.EntryRegularTab,
                 "tab_hilite": self.EntryHighlightTab,
@@ -1543,7 +1541,6 @@ class UserInterfacePage:
                 "useraway": self.EntryAway.get_text(),
                 "useronline": self.EntryOnline.get_text(),
                 "useroffline": self.EntryOffline.get_text(),
-                "usernamehotspots": self.UsernameHotspots.get_active(),
                 "tab_hilite": self.EntryHighlightTab.get_text(),
                 "tab_default": self.EntryRegularTab.get_text(),
                 "tab_changed": self.EntryChangedTab.get_text(),

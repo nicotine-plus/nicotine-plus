@@ -786,13 +786,6 @@
             <property name="spacing">12</property>
             <property name="orientation">vertical</property>
             <child>
-              <object class="GtkCheckButton" id="UsernameHotspots">
-                <property name="label" translatable="yes">Colored and clickable usernames</property>
-                <property name="visible">True</property>
-                <property name="use-underline">True</property>
-              </object>
-            </child>
-            <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
                 <property name="homogeneous">True</property>
