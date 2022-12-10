@@ -160,6 +160,8 @@ class Transfers:
         scheduler.add(delay=60, callback=self.save_transfers, repeat=True)
 
         self.update_download_filters()
+        self.update_download_limits()
+        self.update_upload_limits()
 
     def _quit(self):
 
@@ -477,6 +479,11 @@ class Transfers:
 
     def update_download_limits(self):
 
+        events.emit("update-download-limits")
+
+        if core.user_status == UserStatus.OFFLINE:
+            return
+
         use_speed_limit = config.sections["transfers"]["use_download_speed_limit"]
 
         if use_speed_limit == "primary":
@@ -491,6 +498,11 @@ class Transfers:
         core.queue.append(slskmessages.SetDownloadLimit(speed_limit))
 
     def update_upload_limits(self):
+
+        events.emit("update-upload-limits")
+
+        if core.user_status == UserStatus.OFFLINE:
+            return
 
         use_speed_limit = config.sections["transfers"]["use_upload_speed_limit"]
         limit_by = config.sections["transfers"]["limitby"]

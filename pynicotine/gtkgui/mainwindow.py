@@ -27,6 +27,7 @@ import time
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
+from gi.repository import Pango
 
 from pynicotine.config import config
 from pynicotine.core import core
@@ -275,7 +276,9 @@ class MainWindow(Window):
             ("set-connection-stats", self.set_connection_stats),
             ("set-scan-indeterminate", self.set_scan_indeterminate),
             ("set-scan-progress", self.set_scan_progress),
-            ("show-scan-progress", self.show_scan_progress)
+            ("show-scan-progress", self.show_scan_progress),
+            ("update-download-limits", self.update_download_limits),
+            ("update-upload-limits", self.update_upload_limits)
         ):
             events.connect(event_name, callback)
 
@@ -1343,8 +1346,8 @@ class MainWindow(Window):
         total_conns_text = repr(msg.total_conns)
         download_bandwidth = human_speed(msg.download_bandwidth)
         upload_bandwidth = human_speed(msg.upload_bandwidth)
-        download_bandwidth_text = "%(speed)s (%(num)i)" % {'num': msg.download_conns, 'speed': download_bandwidth}
-        upload_bandwidth_text = "%(speed)s (%(num)i)" % {'num': msg.upload_conns, 'speed': upload_bandwidth}
+        download_bandwidth_text = f"{download_bandwidth} ({msg.download_conns})"
+        upload_bandwidth_text = f"{upload_bandwidth} ({msg.upload_conns})"
 
         if self.connections_label.get_text() != total_conns_text:
             self.connections_label.set_text(total_conns_text)
@@ -1356,6 +1359,30 @@ class MainWindow(Window):
         if self.upload_status_label.get_text() != upload_bandwidth_text:
             self.upload_status_label.set_text(upload_bandwidth_text)
             self.application.tray_icon.set_upload_status(_("Uploads: %(speed)s") % {'speed': upload_bandwidth})
+
+    def update_download_limits(self):
+        self.update_bandwidth_label_underlines(transfer_type="download")
+
+    def update_upload_limits(self):
+        self.update_bandwidth_label_underlines(transfer_type="upload")
+
+    def update_bandwidth_label_underlines(self, transfer_type):
+        """ Underline status bar bandwidth labels when alternative speed limits are active """
+
+        if transfer_type == "download":
+            label = self.download_status_label
+            config_key = "use_download_speed_limit"
+        else:
+            label = self.upload_status_label
+            config_key = "use_upload_speed_limit"
+
+        attributes = Pango.AttrList()
+        attributes.insert(Pango.attr_weight_new(Pango.Weight.NORMAL))
+
+        if config.sections["transfers"][config_key] == "alternative":
+            attributes.insert(Pango.attr_underline_new(Pango.Underline.LOW))
+
+        label.set_attributes(attributes)
 
     def show_scan_progress(self):
         GLib.idle_add(self.scan_progress_bar.show)
