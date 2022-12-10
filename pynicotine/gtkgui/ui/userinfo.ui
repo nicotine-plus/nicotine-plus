@@ -144,7 +144,7 @@
                                 <property name="visible">True</property>
                                 <property name="spacing">24</property>
                                 <child>
-                                  <object class="GtkLabel">shared_folders_label
+                                  <object class="GtkLabel">
                                     <property name="visible">True</property>
                                     <property name="hexpand">True</property>
                                     <property name="label" translatable="yes">Shared Folders</property>
