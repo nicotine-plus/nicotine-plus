@@ -469,7 +469,7 @@ def parse_color_string(color_string):
         red_hex = round(COLOR_RGBA.red * 255)
         green_hex = round(COLOR_RGBA.green * 255)
         blue_hex = round(COLOR_RGBA.blue * 255)
-        color_hex = f"#{red_hex:02X}{green_hex:02X}{blue_hex:02X)}"
+        color_hex = f"#{red_hex:02X}{green_hex:02X}{blue_hex:02X}"
         return color_hex
 
     return None
