@@ -1369,7 +1369,7 @@ class Search:
         if self.num_results_found > self.num_results_visible:
             self.on_clear_filters()
         else:
-            self.window.application.lookup_action("configure-searches").emit("activate")
+            self.window.application.lookup_action("configure-searches").activate()
 
     def on_group(self, action, state):
 
