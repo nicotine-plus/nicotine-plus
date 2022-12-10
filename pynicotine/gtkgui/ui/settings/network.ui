@@ -40,9 +40,9 @@
             <property name="selectable">True</property>
             <property name="xalign">0</property>
             <property name="wrap">True</property>
-            <attributes>
-              <attribute name="weight" value="bold"/>
-            </attributes>
+            <style>
+              <class name="heading"/>
+            </style>
           </object>
         </child>
         <child>
@@ -237,7 +237,6 @@
                                 <property name="label" translatable="yes">Check Port Status</property>
                                 <property name="wrap">True</property>
                                 <property name="wrap-mode">word-char</property>
-                                <property name="use-markup">True</property>
                               </object>
                             </child>
                           </object>
@@ -265,9 +264,9 @@
             <property name="selectable">True</property>
             <property name="xalign">0</property>
             <property name="wrap">True</property>
-            <attributes>
-              <attribute name="weight" value="bold"/>
-            </attributes>
+            <style>
+              <class name="heading"/>
+            </style>
           </object>
         </child>
         <child>
@@ -336,9 +335,9 @@
             <property name="selectable">True</property>
             <property name="xalign">0</property>
             <property name="wrap">True</property>
-            <attributes>
-              <attribute name="weight" value="bold"/>
-            </attributes>
+            <style>
+              <class name="heading"/>
+            </style>
           </object>
         </child>
         <child>

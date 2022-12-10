@@ -340,9 +340,9 @@
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
                                                 <property name="label" bind-source="_download_users_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
-                                                <attributes>
-                                                  <attribute name="weight" value="bold"/>
-                                                </attributes>
+                                                <style>
+                                                  <class name="heading"/>
+                                                </style>
                                               </object>
                                             </child>
                                             <child>
@@ -355,10 +355,8 @@
                                                     <property name="visible">True</property>
                                                     <property name="label">0</property>
                                                     <property name="mnemonic-widget">_download_users_button</property>
-                                                    <attributes>
-                                                      <attribute name="weight" value="bold"/>
-                                                    </attributes>
                                                     <style>
+                                                      <class name="bold"/>
                                                       <class name="dim-label"/>
                                                     </style>
                                                   </object>
@@ -381,9 +379,9 @@
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
                                                 <property name="label" bind-source="_download_files_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
-                                                <attributes>
-                                                  <attribute name="weight" value="bold"/>
-                                                </attributes>
+                                                <style>
+                                                  <class name="heading"/>
+                                                </style>
                                               </object>
                                             </child>
                                             <child>
@@ -396,10 +394,8 @@
                                                     <property name="visible">True</property>
                                                     <property name="label">0</property>
                                                     <property name="mnemonic-widget">_download_files_button</property>
-                                                    <attributes>
-                                                      <attribute name="weight" value="bold"/>
-                                                    </attributes>
                                                     <style>
+                                                      <class name="bold"/>
                                                       <class name="dim-label"/>
                                                     </style>
                                                   </object>
@@ -583,9 +579,9 @@
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
                                                 <property name="label" bind-source="_upload_users_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
-                                                <attributes>
-                                                  <attribute name="weight" value="bold"/>
-                                                </attributes>
+                                                <style>
+                                                  <class name="heading"/>
+                                                </style>
                                               </object>
                                             </child>
                                             <child>
@@ -598,10 +594,8 @@
                                                     <property name="visible">True</property>
                                                     <property name="label">0</property>
                                                     <property name="mnemonic-widget">_upload_users_button</property>
-                                                    <attributes>
-                                                      <attribute name="weight" value="bold"/>
-                                                    </attributes>
                                                     <style>
+                                                      <class name="bold"/>
                                                       <class name="dim-label"/>
                                                     </style>
                                                   </object>
@@ -624,9 +618,9 @@
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
                                                 <property name="label" bind-source="_upload_files_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
-                                                <attributes>
-                                                  <attribute name="weight" value="bold"/>
-                                                </attributes>
+                                                <style>
+                                                  <class name="heading"/>
+                                                </style>
                                               </object>
                                             </child>
                                             <child>
@@ -639,10 +633,8 @@
                                                     <property name="visible">True</property>
                                                     <property name="label">0</property>
                                                     <property name="mnemonic-widget">_upload_files_button</property>
-                                                    <attributes>
-                                                      <attribute name="weight" value="bold"/>
-                                                    </attributes>
                                                     <style>
+                                                      <class name="bold"/>
                                                       <class name="dim-label"/>
                                                     </style>
                                                   </object>
@@ -1777,9 +1769,9 @@
                             <property name="visible">True</property>
                             <property name="label">0</property>
                             <property name="mnemonic-widget">_connections_button</property>
-                            <attributes>
-                              <attribute name="weight" value="normal"/>
-                            </attributes>
+                            <style>
+                              <class name="normal"/>
+                            </style>
                           </object>
                         </child>
                       </object>
@@ -1807,9 +1799,9 @@
                           <object class="GtkLabel" id="download_status_label">
                             <property name="visible">True</property>
                             <property name="mnemonic-widget">download_status_button</property>
-                            <attributes>
-                              <attribute name="weight" value="normal"/>
-                            </attributes>
+                            <style>
+                              <class name="normal"/>
+                            </style>
                           </object>
                         </child>
                       </object>
@@ -1837,9 +1829,9 @@
                           <object class="GtkLabel" id="upload_status_label">
                             <property name="visible">True</property>
                             <property name="mnemonic-widget">upload_status_button</property>
-                            <attributes>
-                              <attribute name="weight" value="normal"/>
-                            </attributes>
+                            <style>
+                              <class name="normal"/>
+                            </style>
                           </object>
                         </child>
                       </object>
@@ -1868,9 +1860,9 @@
                             <property name="visible">True</property>
                             <property name="label" translatable="yes">Offline</property>
                             <property name="mnemonic-widget">user_status_button</property>
-                            <attributes>
-                              <attribute name="weight" value="normal"/>
-                            </attributes>
+                            <style>
+                              <class name="normal"/>
+                            </style>
                           </object>
                         </child>
                       </object>

@@ -176,9 +176,9 @@
                         <property name="xalign">0</property>
                         <property name="label" translatable="yes">Username</property>
                         <property name="mnemonic-widget">username_entry</property>
-                        <attributes>
-                          <attribute name="weight" value="bold"/>
-                        </attributes>
+                        <style>
+                          <class name="heading"/>
+                        </style>
                       </object>
                     </child>
                     <child>
@@ -208,9 +208,9 @@
                         <property name="xalign">0</property>
                         <property name="label" translatable="yes">Password</property>
                         <property name="mnemonic-widget">password_entry</property>
-                        <attributes>
-                          <attribute name="weight" value="bold"/>
-                        </attributes>
+                        <style>
+                          <class name="heading"/>
+                        </style>
                       </object>
                     </child>
                     <child>
@@ -345,9 +345,9 @@
                 <property name="justify">center</property>
                 <property name="max-width-chars">60</property>
                 <property name="wrap">True</property>
-                <attributes>
-                  <attribute name="weight" value="bold"/>
-                </attributes>
+                <style>
+                  <class name="heading"/>
+                </style>
               </object>
             </child>
             <child>
@@ -372,9 +372,9 @@
                 <property name="justify">center</property>
                 <property name="max-width-chars">60</property>
                 <property name="wrap">True</property>
-                <attributes>
-                  <attribute name="weight" value="bold"/>
-                </attributes>
+                <style>
+                  <class name="heading"/>
+                </style>
               </object>
             </child>
             <child>

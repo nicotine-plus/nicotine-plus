@@ -2213,9 +2213,9 @@ class PluginsPage:
         plugin_authors = ", ".join(info.get("Authors", '-'))
         plugin_description = info.get("Description", '').replace(r'\n', '\n')
 
-        self.PluginName.set_markup(f"<b>{plugin_name}</b>")
-        self.PluginVersion.set_markup(f"<b>{plugin_version}</b>")
-        self.PluginAuthor.set_markup(f"<b>{plugin_authors}</b>")
+        self.PluginName.set_text(plugin_name)
+        self.PluginVersion.set_text(plugin_version)
+        self.PluginAuthor.set_text(plugin_authors)
 
         self.descr_textview.clear()
         self.descr_textview.append_line(plugin_description)

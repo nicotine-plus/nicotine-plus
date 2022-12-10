@@ -204,7 +204,23 @@ def set_global_css():
         font-size: 15pt;
     }
 
+    .heading {
+        font-weight: bold;
+    }
+
     /* Text Formatting */
+
+    .bold {
+        font-weight: bold;
+    }
+
+    .italic {
+        font-style: italic;
+    }
+
+    .normal {
+        font-weight: normal;
+    }
 
     .underline {
         text-decoration-line: underline;

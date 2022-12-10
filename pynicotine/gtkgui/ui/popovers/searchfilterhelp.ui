@@ -27,9 +27,9 @@
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">Search Result Filters</property>
                 <property name="selectable">True</property>
-                <attributes>
-                  <attribute name="weight" value="bold"/>
-                </attributes>
+                <style>
+                  <class name="heading"/>
+                </style>
               </object>
             </child>
             <child>
@@ -66,9 +66,9 @@
                 <property name="label" translatable="yes">Result Filter Usage</property>
                 <property name="margin-top">6</property>
                 <property name="selectable">True</property>
-                <attributes>
-                  <attribute name="weight" value="bold"/>
-                </attributes>
+                <style>
+                  <class name="heading"/>
+                </style>
               </object>
             </child>
             <child>
@@ -77,9 +77,9 @@
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">Include Text</property>
                 <property name="selectable">True</property>
-                <attributes>
-                  <attribute name="style" value="italic"/>
-                </attributes>
+                <style>
+                  <class name="italic"/>
+                </style>
               </object>
             </child>
             <child>
@@ -126,9 +126,9 @@
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">Exclude Text</property>
                 <property name="selectable">True</property>
-                <attributes>
-                  <attribute name="style" value="italic"/>
-                </attributes>
+                <style>
+                  <class name="italic"/>
+                </style>
               </object>
             </child>
             <child>
@@ -147,9 +147,9 @@
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">File Type</property>
                 <property name="selectable">True</property>
-                <attributes>
-                  <attribute name="style" value="italic"/>
-                </attributes>
+                <style>
+                  <class name="italic"/>
+                </style>
               </object>
             </child>
             <child>
@@ -190,9 +190,9 @@
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">File Size</property>
                 <property name="selectable">True</property>
-                <attributes>
-                  <attribute name="style" value="italic"/>
-                </attributes>
+                <style>
+                  <class name="italic"/>
+                </style>
               </object>
             </child>
             <child>
@@ -283,9 +283,9 @@
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">Bitrate</property>
                 <property name="selectable">True</property>
-                <attributes>
-                  <attribute name="style" value="italic"/>
-                </attributes>
+                <style>
+                  <class name="italic"/>
+                </style>
               </object>
             </child>
             <child>
@@ -334,9 +334,9 @@
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">Duration</property>
                 <property name="selectable">True</property>
-                <attributes>
-                  <attribute name="style" value="italic"/>
-                </attributes>
+                <style>
+                  <class name="italic"/>
+                </style>
               </object>
             </child>
             <child>
@@ -407,9 +407,9 @@
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">Country</property>
                 <property name="selectable">True</property>
-                <attributes>
-                  <attribute name="style" value="italic"/>
-                </attributes>
+                <style>
+                  <class name="italic"/>
+                </style>
               </object>
             </child>
             <child>
@@ -439,9 +439,9 @@
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">Free Slot</property>
                 <property name="selectable">True</property>
-                <attributes>
-                  <attribute name="style" value="italic"/>
-                </attributes>
+                <style>
+                  <class name="italic"/>
+                </style>
               </object>
             </child>
             <child>
@@ -460,9 +460,9 @@
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">Clear</property>
                 <property name="selectable">True</property>
-                <attributes>
-                  <attribute name="style" value="italic"/>
-                </attributes>
+                <style>
+                  <class name="italic"/>
+                </style>
               </object>
             </child>
             <child>

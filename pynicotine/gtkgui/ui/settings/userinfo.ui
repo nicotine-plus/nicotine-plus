@@ -14,9 +14,9 @@
         <property name="xalign">0</property>
         <property name="wrap">True</property>
         <property name="mnemonic-widget">Description</property>
-        <attributes>
-          <attribute name="weight" value="bold"/>
-        </attributes>
+        <style>
+          <class name="heading"/>
+        </style>
       </object>
     </child>
     <child>
@@ -65,9 +65,9 @@
                     <property name="label" translatable="yes">Picture:</property>
                     <property name="margin-start">6</property>
                     <property name="mnemonic-widget">ImageChooser</property>
-                    <attributes>
-                      <attribute name="weight" value="bold"/>
-                    </attributes>
+                    <style>
+                      <class name="bold"/>
+                    </style>
                   </object>
                 </child>
                 <child>

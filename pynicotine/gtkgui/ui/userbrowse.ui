@@ -69,9 +69,9 @@
                                       <object class="GtkLabel">
                                         <property name="visible">True</property>
                                         <property name="label" bind-source="_num_folders_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
-                                        <attributes>
-                                          <attribute name="weight" value="bold"/>
-                                        </attributes>
+                                        <style>
+                                          <class name="heading"/>
+                                        </style>
                                       </object>
                                     </child>
                                     <child>
@@ -83,10 +83,8 @@
                                             <property name="visible">True</property>
                                             <property name="label">0</property>
                                             <property name="mnemonic-widget">_num_folders_button</property>
-                                            <attributes>
-                                              <attribute name="weight" value="bold"/>
-                                            </attributes>
                                             <style>
+                                              <class name="bold"/>
                                               <class name="dim-label"/>
                                             </style>
                                           </object>
@@ -109,9 +107,9 @@
                                       <object class="GtkLabel">
                                         <property name="visible">True</property>
                                         <property name="label" bind-source="_share_size_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
-                                        <attributes>
-                                          <attribute name="weight" value="bold"/>
-                                        </attributes>
+                                        <style>
+                                          <class name="heading"/>
+                                        </style>
                                       </object>
                                     </child>
                                     <child>
@@ -123,10 +121,8 @@
                                             <property name="visible">True</property>
                                             <property name="label">0.0 B</property>
                                             <property name="mnemonic-widget">_share_size_button</property>
-                                            <attributes>
-                                              <attribute name="weight" value="bold"/>
-                                            </attributes>
                                             <style>
+                                              <class name="bold"/>
                                               <class name="dim-label"/>
                                             </style>
                                           </object>

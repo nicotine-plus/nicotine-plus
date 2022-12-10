@@ -34,9 +34,9 @@
             <property name="label" translatable="yes">Current Session</property>
             <property name="selectable">True</property>
             <property name="xalign">0</property>
-            <attributes>
-              <attribute name="weight" value="bold"/>
-            </attributes>
+            <style>
+              <class name="heading"/>
+            </style>
           </object>
         </child>
         <child>
@@ -211,9 +211,9 @@
             <property name="label" translatable="yes">Total</property>
             <property name="selectable">True</property>
             <property name="xalign">0</property>
-            <attributes>
-              <attribute name="weight" value="bold"/>
-            </attributes>
+            <style>
+              <class name="heading"/>
+            </style>
           </object>
         </child>
         <child>

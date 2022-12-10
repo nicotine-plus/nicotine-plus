@@ -29,9 +29,9 @@
                 <property name="label" translatable="yes">Chat Room Commands</property>
                 <property name="selectable">True</property>
                 <property name="wrap">True</property>
-                <attributes>
-                  <attribute name="weight" value="bold"/>
-                </attributes>
+                <style>
+                  <class name="heading"/>
+                </style>
               </object>
             </child>
             <child>
@@ -46,9 +46,9 @@
                     <property name="label" translatable="yes">/join /j 'room'</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
-                    <attributes>
-                      <attribute name="style" value="italic"/>
-                    </attributes>
+                    <style>
+                      <class name="italic"/>
+                    </style>
                   </object>
                 </child>
                 <child>
@@ -74,9 +74,9 @@
                     <property name="label">/leave /l /part /p</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
-                    <attributes>
-                      <attribute name="style" value="italic"/>
-                    </attributes>
+                    <style>
+                      <class name="italic"/>
+                    </style>
                   </object>
                 </child>
                 <child>
@@ -102,9 +102,9 @@
                     <property name="label">/clear /cl</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
-                    <attributes>
-                      <attribute name="style" value="italic"/>
-                    </attributes>
+                    <style>
+                      <class name="italic"/>
+                    </style>
                   </object>
                 </child>
                 <child>
@@ -130,9 +130,9 @@
                     <property name="label" translatable="yes">/me 'message'</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
-                    <attributes>
-                      <attribute name="style" value="italic"/>
-                    </attributes>
+                    <style>
+                      <class name="italic"/>
+                    </style>
                   </object>
                 </child>
                 <child>
@@ -163,9 +163,9 @@
                     <property name="label">/now</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
-                    <attributes>
-                      <attribute name="style" value="italic"/>
-                    </attributes>
+                    <style>
+                      <class name="italic"/>
+                    </style>
                   </object>
                 </child>
                 <child>
@@ -191,9 +191,9 @@
                     <property name="label">/away /a</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
-                    <attributes>
-                      <attribute name="style" value="italic"/>
-                    </attributes>
+                    <style>
+                      <class name="italic"/>
+                    </style>
                   </object>
                 </child>
                 <child>
@@ -219,9 +219,9 @@
                     <property name="label">/rescan</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
-                    <attributes>
-                      <attribute name="style" value="italic"/>
-                    </attributes>
+                    <style>
+                      <class name="italic"/>
+                    </style>
                   </object>
                 </child>
                 <child>
@@ -247,9 +247,9 @@
                     <property name="label">/quit /q /exit</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
-                    <attributes>
-                      <attribute name="style" value="italic"/>
-                    </attributes>
+                    <style>
+                      <class name="italic"/>
+                    </style>
                   </object>
                 </child>
                 <child>
@@ -275,9 +275,9 @@
                 <property name="label" translatable="yes">Users</property>
                 <property name="selectable">True</property>
                 <property name="wrap">True</property>
-                <attributes>
-                  <attribute name="weight" value="bold"/>
-                </attributes>
+                <style>
+                  <class name="heading"/>
+                </style>
               </object>
             </child>
             <child>
@@ -292,9 +292,9 @@
                     <property name="label" translatable="yes">/add /ad 'user'</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
-                    <attributes>
-                      <attribute name="style" value="italic"/>
-                    </attributes>
+                    <style>
+                      <class name="italic"/>
+                    </style>
                   </object>
                 </child>
                 <child>
@@ -320,9 +320,9 @@
                     <property name="label" translatable="yes">/rem /unbuddy 'user'</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
-                    <attributes>
-                      <attribute name="style" value="italic"/>
-                    </attributes>
+                    <style>
+                      <class name="italic"/>
+                    </style>
                   </object>
                 </child>
                 <child>
@@ -348,9 +348,9 @@
                     <property name="label" translatable="yes">/ban 'user'</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
-                    <attributes>
-                      <attribute name="style" value="italic"/>
-                    </attributes>
+                    <style>
+                      <class name="italic"/>
+                    </style>
                   </object>
                 </child>
                 <child>
@@ -376,9 +376,9 @@
                     <property name="label" translatable="yes">/unban 'user'</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
-                    <attributes>
-                      <attribute name="style" value="italic"/>
-                    </attributes>
+                    <style>
+                      <class name="italic"/>
+                    </style>
                   </object>
                 </child>
                 <child>
@@ -404,9 +404,9 @@
                     <property name="label" translatable="yes">/ignore 'user'</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
-                    <attributes>
-                      <attribute name="style" value="italic"/>
-                    </attributes>
+                    <style>
+                      <class name="italic"/>
+                    </style>
                   </object>
                 </child>
                 <child>
@@ -432,9 +432,9 @@
                     <property name="label" translatable="yes">/unignore 'user'</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
-                    <attributes>
-                      <attribute name="style" value="italic"/>
-                    </attributes>
+                    <style>
+                      <class name="italic"/>
+                    </style>
                   </object>
                 </child>
                 <child>
@@ -460,9 +460,9 @@
                     <property name="label" translatable="yes">/browse /b 'user'</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
-                    <attributes>
-                      <attribute name="style" value="italic"/>
-                    </attributes>
+                    <style>
+                      <class name="italic"/>
+                    </style>
                   </object>
                 </child>
                 <child>
@@ -488,9 +488,9 @@
                     <property name="label" translatable="yes">/whois /w 'user'</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
-                    <attributes>
-                      <attribute name="style" value="italic"/>
-                    </attributes>
+                    <style>
+                      <class name="italic"/>
+                    </style>
                   </object>
                 </child>
                 <child>
@@ -516,9 +516,9 @@
                     <property name="label" translatable="yes">/ip 'user'</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
-                    <attributes>
-                      <attribute name="style" value="italic"/>
-                    </attributes>
+                    <style>
+                      <class name="italic"/>
+                    </style>
                   </object>
                 </child>
                 <child>
@@ -544,9 +544,9 @@
                 <property name="label" translatable="yes">Search</property>
                 <property name="selectable">True</property>
                 <property name="wrap">True</property>
-                <attributes>
-                  <attribute name="weight" value="bold"/>
-                </attributes>
+                <style>
+                  <class name="heading"/>
+                </style>
               </object>
             </child>
             <child>
@@ -561,9 +561,9 @@
                     <property name="label" translatable="yes">/search /s 'query'</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
-                    <attributes>
-                      <attribute name="style" value="italic"/>
-                    </attributes>
+                    <style>
+                      <class name="italic"/>
+                    </style>
                   </object>
                 </child>
                 <child>
@@ -589,9 +589,9 @@
                     <property name="label" translatable="yes">/rsearch /rs 'query'</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
-                    <attributes>
-                      <attribute name="style" value="italic"/>
-                    </attributes>
+                    <style>
+                      <class name="italic"/>
+                    </style>
                   </object>
                 </child>
                 <child>
@@ -617,9 +617,9 @@
                     <property name="label" translatable="yes">/bsearch /bs 'query'</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
-                    <attributes>
-                      <attribute name="style" value="italic"/>
-                    </attributes>
+                    <style>
+                      <class name="italic"/>
+                    </style>
                   </object>
                 </child>
                 <child>
@@ -645,9 +645,9 @@
                     <property name="label" translatable="yes">/usearch /us 'user' 'query'</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
-                    <attributes>
-                      <attribute name="style" value="italic"/>
-                    </attributes>
+                    <style>
+                      <class name="italic"/>
+                    </style>
                   </object>
                 </child>
                 <child>
@@ -673,9 +673,9 @@
                 <property name="label" translatable="yes">Private Chat</property>
                 <property name="selectable">True</property>
                 <property name="wrap">True</property>
-                <attributes>
-                  <attribute name="weight" value="bold"/>
-                </attributes>
+                <style>
+                  <class name="heading"/>
+                </style>
               </object>
             </child>
             <child>
@@ -690,9 +690,9 @@
                     <property name="label" translatable="yes">/msg 'user' 'message'</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
-                    <attributes>
-                      <attribute name="style" value="italic"/>
-                    </attributes>
+                    <style>
+                      <class name="italic"/>
+                    </style>
                   </object>
                 </child>
                 <child>
@@ -718,9 +718,9 @@
                     <property name="label" translatable="yes">/pm 'user'</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
-                    <attributes>
-                      <attribute name="style" value="italic"/>
-                    </attributes>
+                    <style>
+                      <class name="italic"/>
+                    </style>
                   </object>
                 </child>
                 <child>

@@ -19,9 +19,9 @@
             <property name="label" translatable="yes">Buddies</property>
             <property name="margin-start">6</property>
             <property name="margin-end">12</property>
-            <attributes>
-              <attribute name="weight" value="bold"/>
-            </attributes>
+            <style>
+              <class name="heading"/>
+            </style>
           </object>
         </child>
         <child>

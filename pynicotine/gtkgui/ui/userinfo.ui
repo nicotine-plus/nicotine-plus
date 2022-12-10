@@ -331,9 +331,9 @@
                             <property name="margin-top">12</property>
                             <property name="margin-bottom">12</property>
                             <property name="label" translatable="yes">Interests</property>
-                            <attributes>
-                              <attribute name="weight" value="bold"/>
-                            </attributes>
+                            <style>
+                              <class name="heading"/>
+                            </style>
                           </object>
                         </child>
                         <child>
@@ -419,9 +419,9 @@
                             <property name="label" translatable="yes">Send M_essage</property>
                             <property name="use-underline">True</property>
                             <property name="mnemonic-widget">_send_message_button</property>
-                            <attributes>
-                              <attribute name="weight" value="normal"/>
-                            </attributes>
+                            <style>
+                              <class name="normal"/>
+                            </style>
                           </object>
                         </child>
                       </object>
@@ -451,9 +451,9 @@
                             <property name="label" translatable="yes">_Browse Files</property>
                             <property name="use-underline">True</property>
                             <property name="mnemonic-widget">_browse_files_button</property>
-                            <attributes>
-                              <attribute name="weight" value="normal"/>
-                            </attributes>
+                            <style>
+                              <class name="normal"/>
+                            </style>
                           </object>
                         </child>
                       </object>
@@ -482,9 +482,9 @@
                             <property name="visible">True</property>
                             <property name="use-underline">True</property>
                             <property name="mnemonic-widget">_add_remove_buddy_button</property>
-                            <attributes>
-                              <attribute name="weight" value="normal"/>
-                            </attributes>
+                            <style>
+                              <class name="normal"/>
+                            </style>
                           </object>
                         </child>
                       </object>
@@ -512,9 +512,9 @@
                           <object class="GtkLabel" id="ban_unban_user_label">
                             <property name="visible">True</property>
                             <property name="mnemonic-widget">_ban_unban_user_button</property>
-                            <attributes>
-                              <attribute name="weight" value="normal"/>
-                            </attributes>
+                            <style>
+                              <class name="normal"/>
+                            </style>
                           </object>
                         </child>
                       </object>
@@ -542,9 +542,9 @@
                           <object class="GtkLabel" id="ignore_unignore_user_label">
                             <property name="visible">True</property>
                             <property name="mnemonic-widget">_ignore_unignore_user_button</property>
-                            <attributes>
-                              <attribute name="weight" value="normal"/>
-                            </attributes>
+                            <style>
+                              <class name="normal"/>
+                            </style>
                           </object>
                         </child>
                       </object>
@@ -574,9 +574,9 @@
                             <property name="label" translatable="yes">Show IP A_ddress</property>
                             <property name="use-underline">True</property>
                             <property name="mnemonic-widget">_show_ip_address_button</property>
-                            <attributes>
-                              <attribute name="weight" value="normal"/>
-                            </attributes>
+                            <style>
+                              <class name="normal"/>
+                            </style>
                           </object>
                         </child>
                       </object>
@@ -607,9 +607,9 @@
                             <property name="label" translatable="yes">Save _Picture</property>
                             <property name="use-underline">True</property>
                             <property name="mnemonic-widget">_save_picture_button</property>
-                            <attributes>
-                              <attribute name="weight" value="normal"/>
-                            </attributes>
+                            <style>
+                              <class name="normal"/>
+                            </style>
                           </object>
                         </child>
                       </object>
@@ -645,9 +645,9 @@
                             <property name="label" translatable="yes">_Refresh Info</property>
                             <property name="use-underline">True</property>
                             <property name="mnemonic-widget">refresh_button</property>
-                            <attributes>
-                              <attribute name="weight" value="normal"/>
-                            </attributes>
+                            <style>
+                              <class name="normal"/>
+                            </style>
                           </object>
                         </child>
                       </object>
