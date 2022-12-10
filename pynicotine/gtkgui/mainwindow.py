@@ -1380,7 +1380,7 @@ class MainWindow(Window):
         attributes.insert(Pango.attr_weight_new(Pango.Weight.NORMAL))
 
         if config.sections["transfers"][config_key] == "alternative":
-            attributes.insert(Pango.attr_underline_new(Pango.Underline.LOW))
+            attributes.insert(Pango.attr_underline_new(Pango.Underline.SINGLE))
 
         label.set_attributes(attributes)
 
