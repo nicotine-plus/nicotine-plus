@@ -1358,24 +1358,27 @@ class UserInterfacePage:
 
         # Icon preview
         icon_list = [
-            ("nplus-status-online", _("Connected"), 16),
-            ("nplus-status-offline", _("Disconnected"), 16),
-            ("nplus-status-away", _("Away"), 16),
-            ("nplus-hilite", _("Highlight"), 16),
-            ("nplus-hilite3", _("Highlight"), 16),
-            (config.application_id, _("Window"), 64)]
+            ("nplus-status-online", _("Online"), 16, "user-status"),
+            ("nplus-status-away", _("Away"), 16, "user-status"),
+            ("nplus-status-offline", _("Offline"), 16, "user-status"),
+            ("nplus-hilite3", _("Tab Changed"), 16, "notebook-tab-changed"),
+            ("nplus-hilite", _("Tab Highlight"), 16, "notebook-tab-highlight"),
+            (config.application_id, _("Window"), 64, None)]
 
         if application.tray_icon.available:
             icon_list += [
-                (f"{config.application_id}-connect", _("Connected (Tray)"), 16),
-                (f"{config.application_id}-disconnect", _("Disconnected (Tray)"), 16),
-                (f"{config.application_id}-away", _("Away (Tray)"), 16),
-                (f"{config.application_id}-msg", _("Message (Tray)"), 16)]
+                (f"{config.application_id}-connect", _("Online (Tray)"), 16, None),
+                (f"{config.application_id}-away", _("Away (Tray)"), 16, None),
+                (f"{config.application_id}-disconnect", _("Offline (Tray)"), 16, None),
+                (f"{config.application_id}-msg", _("Message (Tray)"), 16, None)]
 
-        for icon_name, label, pixel_size in icon_list:
+        for icon_name, label, pixel_size, css_class in icon_list:
             box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, valign=Gtk.Align.CENTER, spacing=6, visible=True)
             icon = Gtk.Image(icon_name=icon_name, pixel_size=pixel_size, visible=True)
             label = Gtk.Label(label=label, xalign=0.5, wrap=True, visible=True)
+
+            if css_class:
+                add_css_class(icon, css_class)
 
             if GTK_API_VERSION >= 4:
                 box.append(icon)   # pylint: disable=no-member

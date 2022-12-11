@@ -554,7 +554,7 @@ def _get_custom_color_css():
     for css_selector, color in (
         (".notebook-tab", config.sections["ui"]["tab_default"]),
         (".notebook-tab-changed", config.sections["ui"]["tab_changed"]),
-        (".notebook-tab-hilite", config.sections["ui"]["tab_hilite"]),
+        (".notebook-tab-highlight", config.sections["ui"]["tab_hilite"]),
         ("entry", config.sections["ui"]["inputcolor"]),
         ("treeview", treeview_text_color)
     ):

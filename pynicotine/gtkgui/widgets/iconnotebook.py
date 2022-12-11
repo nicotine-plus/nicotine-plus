@@ -173,7 +173,7 @@ class TabLabel(Gtk.Box):
             self.mentioned = mentioned
 
         if self.mentioned:
-            add_css_class(self, "notebook-tab-hilite")
+            add_css_class(self, "notebook-tab-highlight")
         else:
             add_css_class(self, "notebook-tab-changed")
 
@@ -187,7 +187,7 @@ class TabLabel(Gtk.Box):
         self.mentioned = False
 
         remove_css_class(self, "notebook-tab-changed")
-        remove_css_class(self, "notebook-tab-hilite")
+        remove_css_class(self, "notebook-tab-highlight")
 
         self.end_icon.set_property("icon-name", None)
         self.end_icon.set_visible(False)
