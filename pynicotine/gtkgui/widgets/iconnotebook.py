@@ -177,7 +177,7 @@ class TabLabel(Gtk.Box):
         else:
             add_css_class(self, "notebook-tab-changed")
 
-        icon_name = "nplus-hilite-symbolic" if self.mentioned else "nplus-hilite3-symbolic"
+        icon_name = "nplus-tab-highlight-symbolic" if self.mentioned else "nplus-tab-changed-symbolic"
         self.end_icon.set_property("icon-name", icon_name)
         self.end_icon.set_visible(True)
 
