@@ -203,6 +203,7 @@ urgencyhint = True
 file_path_tooltips = True
 reverse_file_paths = True
 language = 
+textviewfont = 
 
 [private_rooms]
 rooms = {}

@@ -429,7 +429,7 @@ class PrivateChat:
             tag = usertag = self.tag_hilite
 
             if not self.offline_message:
-                self.chat_view.append_line(_("* Message(s) sent while you were offline."), tag=tag,
+                self.chat_view.append_line(_("* Messages sent while you were offline"), tag=tag,
                                            timestamp_format=timestamp_format)
                 self.offline_message = True
 

@@ -222,7 +222,7 @@ class UserBrowse:
         if user == config.sections["server"]["login"]:
             self.folder_popup_menu.add_items(
                 ("#" + _("Upload Folder…"), self.on_upload_directory_to),
-                ("#" + _("Upload Folder & Subfolder(s)…"), self.on_upload_directory_recursive_to),
+                ("#" + _("Upload Folder & Subfolders…"), self.on_upload_directory_recursive_to),
                 ("", None),
                 ("#" + _("Open in File _Manager"), self.on_file_manager),
                 ("#" + _("F_ile Properties"), self.on_file_properties, True),
@@ -236,8 +236,8 @@ class UserBrowse:
             self.folder_popup_menu.add_items(
                 ("#" + _("_Download Folder"), self.on_download_directory),
                 ("#" + _("Download Folder _To…"), self.on_download_directory_to),
-                ("#" + _("Download Folder & Subfolder(s)"), self.on_download_directory_recursive),
-                ("#" + _("Download Folder & Subfolder(s) To…"), self.on_download_directory_recursive_to),
+                ("#" + _("Download Folder & Subfolders"), self.on_download_directory_recursive),
+                ("#" + _("Download Folder & Subfolders To…"), self.on_download_directory_recursive_to),
                 ("", None),
                 ("#" + _("F_ile Properties"), self.on_file_properties, True),
                 ("", None),
@@ -973,7 +973,7 @@ class UserBrowse:
 
         FolderChooser(
             parent=self.window,
-            title=_("Select Destination Folder for File(s)"),
+            title=_("Select Destination Folder for Files"),
             callback=self.on_download_files_to_selected,
             initial_folder=path
         ).show()

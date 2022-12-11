@@ -423,7 +423,7 @@ class Search:
             ("#" + _("F_ile Properties"), self.on_file_properties),
             ("", None),
             (">" + _("Copy"), self.popup_menu_copy),
-            (">" + _("User(s)"), self.popup_menu_users)
+            (">" + _("User Actions"), self.popup_menu_users)
         )
 
         self.tab_menu = PopupMenu(self.window.application)
@@ -1067,7 +1067,7 @@ class Search:
                 self.popup_menu_users.update_model()
             return
 
-        # Single user, add items directly to "User(s)" submenu
+        # Single user, add items directly to "User Actions" submenu
         user = next(iter(self.selected_users), None)
         self.add_popup_menu_user(self.popup_menu_users, user)
 
