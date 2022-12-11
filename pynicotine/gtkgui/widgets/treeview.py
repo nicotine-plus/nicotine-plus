@@ -981,9 +981,6 @@ def show_country_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn, strip_pr
 
 def show_file_path_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn, transfer=False):
 
-    if not config.sections["ui"]["file_path_tooltips"]:
-        return False
-
     function = get_file_path_tooltip_text if not transfer else get_transfer_file_path_tooltip_text
 
     return show_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn,

@@ -1316,7 +1316,7 @@ class UserInterfacePage:
          self.EnableUserListTab, self.EntryAway, self.EntryBackground, self.EntryChangedTab, self.EntryHighlight,
          self.EntryHighlightTab, self.EntryImmediate, self.EntryInput, self.EntryLocal, self.EntryMe,
          self.EntryOffline, self.EntryOnline, self.EntryQueue, self.EntryRegularTab, self.EntryRemote,
-         self.EntryURL, self.FilePathTooltips, self.IconView, self.Language, self.Main, self.MainPosition,
+         self.EntryURL, self.IconView, self.Language, self.Main, self.MainPosition,
          self.NotificationPopupChatroom, self.NotificationPopupChatroomMention, self.NotificationPopupFile,
          self.NotificationPopupFolder, self.NotificationPopupPrivateMessage, self.NotificationPopupSound,
          self.NotificationPopupWish, self.NotificationWindowTitle, self.PickAway,
@@ -1412,7 +1412,6 @@ class UserInterfacePage:
                 "browserfont": self.SelectBrowserFont,
                 "usernamestyle": self.UsernameStyle,
 
-                "file_path_tooltips": self.FilePathTooltips,
                 "reverse_file_paths": self.ReverseFilePaths,
 
                 "tabmain": self.MainPosition,
@@ -1514,7 +1513,6 @@ class UserInterfacePage:
                 "browserfont": self.SelectBrowserFont.get_font(),
                 "usernamestyle": self.UsernameStyle.get_active_id(),
 
-                "file_path_tooltips": self.FilePathTooltips.get_active(),
                 "reverse_file_paths": self.ReverseFilePaths.get_active(),
 
                 "tabmain": self.MainPosition.get_active_id(),
