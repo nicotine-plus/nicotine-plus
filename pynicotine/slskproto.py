@@ -2068,9 +2068,13 @@ class SoulseekNetworkThread(Thread):
 
         return True
 
-    def _process_ready_sockets(self, selector_keys, current_time):
+    def _process_ready_sockets(self, current_time):
 
-        for selector_key, selector_events in selector_keys:
+        if self._listen_socket is None:
+            # We can't call select() when no sockets are registered (WinError 10022)
+            return
+
+        for selector_key, selector_events in self._selector.select(timeout=-1):
             sock = selector_key.fileobj
             conn_obj_in_progress = self._connsinprogress.get(sock)
             conn_obj_established = self._conns.get(sock)
@@ -2254,27 +2258,10 @@ class SoulseekNetworkThread(Thread):
                 self._last_conn_stat_time = current_time
 
             # Process queue messages
-            if self._queue:
-                self._process_queue_messages()
+            self._process_queue_messages()
 
             # Check which connections are ready to send/receive data
-            try:
-                selector_keys = self._selector.select(timeout=-1)
-
-            except OSError as error:
-                # Error received; terminate networking loop
-                log.add("Major Socket Error: Networking terminated! %s", error)
-                self._quit()
-                break
-
-            except ValueError as error:
-                # Possibly opened too many sockets
-                log.add("select ValueError: %s", error)
-                time.sleep(0.1)
-                continue
-
-            # Process read/write for connections
-            self._process_ready_sockets(selector_keys, current_time)
+            self._process_ready_sockets(current_time)
 
             # Inform the main thread
             if self._callback_msgs:
