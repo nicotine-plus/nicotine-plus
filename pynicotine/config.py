@@ -566,56 +566,6 @@ class Config:
         # Update config values from file
         self.set_config()
 
-        # Add any default options not present in the config file
-        for section, options in self.defaults.items():
-            if section not in self.sections:
-                self.sections[section] = {}
-
-            for option, value in options.items():
-                if option in self.sections[section]:
-                    continue
-
-                # Migrate download speed limit preference
-                if option == "use_download_speed_limit" and section == "transfers":
-                    if self.sections[section].get("usealtlimits", False):
-                        use_speed_limit = "alternative"
-
-                    elif self.sections[section].get("downloadlimit", 0) > 0:
-                        use_speed_limit = "primary"
-
-                    else:
-                        use_speed_limit = "unlimited"
-
-                    self.sections[section][option] = use_speed_limit
-                    continue
-
-                # Migrate upload speed limit preference
-                if option == "use_upload_speed_limit" and section == "transfers":
-                    if self.sections[section].get("usealtlimits", False):
-                        use_speed_limit = "alternative"
-
-                    elif self.sections[section].get("uselimit", False):
-                        use_speed_limit = "primary"
-
-                    else:
-                        use_speed_limit = "unlimited"
-
-                    self.sections[section][option] = use_speed_limit
-                    continue
-
-                # Set default value
-                self.sections[section][option] = value
-
-        # Convert special download folder share to regular share
-        if self.sections["transfers"].get("sharedownloaddir", False):
-            shares = self.sections["transfers"]["shared"]
-            virtual_name = "Downloaded"
-            shared_folder = (virtual_name, self.sections["transfers"]["downloaddir"])
-
-            if shared_folder not in shares and virtual_name not in (x[0] for x in shares):
-                shares.append(shared_folder)
-
-        self.config_loaded = True
         language = self.sections["ui"]["language"]
 
         if language:
@@ -746,24 +696,71 @@ class Config:
                             (val[:120] + '…') if len(val) > 120 else val
                         ))
 
-        server = self.sections["server"]
+        # Add any default options not present in the config file
+        for section, options in self.defaults.items():
+            if section not in self.sections:
+                self.sections[section] = {}
+
+            for option, value in options.items():
+                if option in self.sections[section]:
+                    continue
+
+                # Migrate download speed limit preference
+                if option == "use_download_speed_limit" and section == "transfers":
+                    if self.sections[section].get("usealtlimits", False):
+                        use_speed_limit = "alternative"
+
+                    elif self.sections[section].get("downloadlimit", 0) > 0:
+                        use_speed_limit = "primary"
+
+                    else:
+                        use_speed_limit = "unlimited"
+
+                    self.sections[section][option] = use_speed_limit
+                    continue
+
+                # Migrate upload speed limit preference
+                if option == "use_upload_speed_limit" and section == "transfers":
+                    if self.sections[section].get("usealtlimits", False):
+                        use_speed_limit = "alternative"
+
+                    elif self.sections[section].get("uselimit", False):
+                        use_speed_limit = "primary"
+
+                    else:
+                        use_speed_limit = "unlimited"
+
+                    self.sections[section][option] = use_speed_limit
+                    continue
+
+                # Set default value
+                self.sections[section][option] = value
+
+        # Convert special download folder share to regular share
+        if self.sections["transfers"].get("sharedownloaddir", False):
+            shares = self.sections["transfers"]["shared"]
+            virtual_name = "Downloaded"
+            shared_folder = (virtual_name, self.sections["transfers"]["downloaddir"])
+
+            if shared_folder not in shares and virtual_name not in (x[0] for x in shares):
+                shares.append(shared_folder)
 
         # Check if server value is valid
-        if (len(server["server"]) != 2
-                or not isinstance(server["server"][0], str)
-                or not isinstance(server["server"][1], int)):
+        server_addr = self.sections["server"]["server"]
 
-            server["server"] = self.defaults["server"]["server"]
+        if (len(server_addr) != 2 or not isinstance(server_addr[0], str) or not isinstance(server_addr[1], int)):
+            self.sections["server"]["server"] = self.defaults["server"]["server"]
 
         # Check if port range value is valid
-        if (len(server["portrange"]) != 2
-                or not all(isinstance(i, int) for i in server["portrange"])):
+        port_range = self.sections["server"]["portrange"]
 
-            server["portrange"] = self.defaults["server"]["portrange"]
-
+        if (len(port_range) != 2 or not all(isinstance(i, int) for i in port_range)):
+            self.sections["server"]["portrange"] = self.defaults["server"]["portrange"]
         else:
             # Setting the port range in numerical order
-            server["portrange"] = (min(server["portrange"]), max(server["portrange"]))
+            self.sections["server"]["portrange"] = (min(port_range), max(port_range))
+
+        self.config_loaded = True
 
     def write_config_callback(self, filename):
         self.parser.write(filename)
