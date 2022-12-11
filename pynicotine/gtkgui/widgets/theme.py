@@ -575,7 +575,7 @@ def _get_custom_color_css():
             css.extend(
                 f"""
                 {css_selector} {{
-                    background-color: {color};
+                    background: {color};
                 }}
                 """.encode("utf-8")
             )
