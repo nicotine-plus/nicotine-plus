@@ -48,6 +48,7 @@ from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.dialogs import MessageDialog
 from pynicotine.gtkgui.widgets.dialogs import PluginSettingsDialog
 from pynicotine.gtkgui.widgets.textview import TextView
+from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.gtkgui.widgets.theme import load_custom_icons
 from pynicotine.gtkgui.widgets.theme import set_dark_mode
 from pynicotine.gtkgui.widgets.theme import update_custom_css
@@ -2299,11 +2300,9 @@ class Preferences(Dialog):
             show_title_buttons=False
         )
 
-        if GTK_API_VERSION >= 4:
-            self.window.add_css_class("preferences-border")
-        else:
-            self.window.get_style_context().add_class("preferences-border")
+        add_css_class(self.window, "preferences-border")
 
+        if GTK_API_VERSION == 3:
             # Scroll to focused widgets
             self.viewport.set_focus_vadjustment(self.content.get_vadjustment())
 

@@ -23,6 +23,7 @@ from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
+from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.gtkgui.widgets.window import Window
 
 """ Dialogs """
@@ -107,15 +108,13 @@ class Dialog(Window):
         action_area_end = Gtk.Box(halign=Gtk.Align.END, hexpand=True, homogeneous=True,
                                   margin_start=6, margin_end=6, margin_top=6, margin_bottom=6, spacing=6, visible=True)
 
-        if GTK_API_VERSION >= 4:
-            action_area.add_css_class("action-area")  # pylint: disable=no-member
+        add_css_class(action_area, "action-area")
 
+        if GTK_API_VERSION >= 4:
             container.append(action_area)             # pylint: disable=no-member
             action_area.append(action_area_start)     # pylint: disable=no-member
             action_area.append(action_area_end)       # pylint: disable=no-member
         else:
-            action_area.get_style_context().add_class("action-area")
-
             container.add(action_area)                # pylint: disable=no-member
             action_area.add(action_area_start)        # pylint: disable=no-member
             action_area.add(action_area_end)          # pylint: disable=no-member
@@ -437,11 +436,7 @@ class PluginSettingsDialog(Dialog):
 
         ok_button = Gtk.Button(label=_("_OK"), use_underline=True, visible=True)
         ok_button.connect("clicked", self.on_ok)
-
-        if GTK_API_VERSION >= 4:
-            ok_button.add_css_class("suggested-action")  # pylint: disable=no-member
-        else:
-            ok_button.get_style_context().add_class("suggested-action")
+        add_css_class(ok_button, "suggested-action")
 
         self.primary_container = Gtk.Box(
             orientation=Gtk.Orientation.VERTICAL, width_request=340, visible=True,

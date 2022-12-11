@@ -483,6 +483,24 @@ USER_STATUS_COLORS = {
 }
 
 
+def add_css_class(widget, css_class):
+
+    if GTK_API_VERSION >= 4:
+        widget.add_css_class(css_class)              # pylint: disable=no-member
+        return
+
+    widget.get_style_context().add_class(css_class)  # pylint: disable=no-member
+
+
+def remove_css_class(widget, css_class):
+
+    if GTK_API_VERSION >= 4:
+        widget.remove_css_class(css_class)              # pylint: disable=no-member
+        return
+
+    widget.get_style_context().remove_class(css_class)  # pylint: disable=no-member
+
+
 def _get_custom_font_css():
 
     css = bytearray()

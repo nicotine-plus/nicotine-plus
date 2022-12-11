@@ -31,7 +31,9 @@ from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
+from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.gtkgui.widgets.theme import get_status_icon_name
+from pynicotine.gtkgui.widgets.theme import remove_css_class
 from pynicotine.slskmessages import UserStatus
 
 
@@ -92,17 +94,16 @@ class TabLabel(Gtk.Box):
 
         if GTK_API_VERSION >= 4:
             self.close_button = Gtk.Button.new_from_icon_name("window-close-symbolic")
-            self.close_button.add_css_class("flat")
             self.close_button.is_close_button = True
             self.close_button.get_child().is_close_button = True
             self.append(self.close_button)  # pylint: disable=no-member
         else:
             self.close_button = Gtk.Button.new_from_icon_name("window-close-symbolic",
                                                               Gtk.IconSize.BUTTON)  # pylint: disable=no-member
-            self.close_button.get_style_context().add_class("flat")
             self.add(self.close_button)  # pylint: disable=no-member
             self.close_button.add_events(Gdk.EventMask.SCROLL_MASK | Gdk.EventMask.SMOOTH_SCROLL_MASK)
 
+        add_css_class(self.close_button, "flat")
         self.close_button.set_tooltip_text(_("Close Tab"))
         self.close_button.set_visible(True)
 
@@ -173,9 +174,9 @@ class TabLabel(Gtk.Box):
 
         if config.sections["notifications"]["notification_tab_colors"]:
             if self.mentioned:
-                self.label.get_style_context().add_class("notebook-tab-hilite")
+                add_css_class(self.label, "notebook-tab-hilite")
             else:
-                self.label.get_style_context().add_class("notebook-tab-changed")
+                add_css_class(self.label, "notebook-tab-changed")
 
         icon_name = "nplus-hilite" if self.mentioned else "nplus-hilite3"
         self.end_icon.set_property("icon-name", icon_name)
@@ -186,8 +187,8 @@ class TabLabel(Gtk.Box):
         self.highlighted = False
         self.mentioned = False
 
-        self.label.get_style_context().remove_class("notebook-tab-changed")
-        self.label.get_style_context().remove_class("notebook-tab-hilite")
+        remove_css_class(self.label, "notebook-tab-changed")
+        remove_css_class(self.label, "notebook-tab-hilite")
 
         self.end_icon.set_property("icon-name", None)
         self.end_icon.set_visible(False)
@@ -233,7 +234,8 @@ class IconNotebook:
         self.pages = {}
         self.set_show_tabs(False)
 
-        style_classes = ("circular", "flat")
+        for style_class in ("circular", "flat"):
+            add_css_class(self.unread_button, style_class)
 
         if GTK_API_VERSION >= 4:
             if parent_page is not None:
@@ -242,9 +244,6 @@ class IconNotebook:
 
             self.unread_button.set_has_frame(False)                        # pylint: disable=no-member
             self.unread_button.set_icon_name("emblem-important-symbolic")  # pylint: disable=no-member
-
-            for style_class in style_classes:
-                self.unread_button.add_css_class(style_class)              # pylint: disable=no-member
 
             self.scroll_controller = Gtk.EventControllerScroll(flags=Gtk.EventControllerScrollFlags.BOTH_AXES)
             self.scroll_controller.connect("scroll", self.on_tab_scroll)
@@ -271,9 +270,6 @@ class IconNotebook:
                 content_box.connect("show", self.on_show_parent_page)
 
             self.unread_button.set_image(Gtk.Image(icon_name="emblem-important-symbolic"))  # pylint: disable=no-member
-
-            for style_class in style_classes:
-                self.unread_button.get_style_context().add_class(style_class)
 
             self.widget.add_events(Gdk.EventMask.SCROLL_MASK | Gdk.EventMask.SMOOTH_SCROLL_MASK)
             self.widget.connect("scroll-event", self.on_tab_scroll_event)

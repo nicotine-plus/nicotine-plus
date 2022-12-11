@@ -35,6 +35,8 @@ from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import FilePopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
+from pynicotine.gtkgui.widgets.theme import add_css_class
+from pynicotine.gtkgui.widgets.theme import remove_css_class
 from pynicotine.gtkgui.widgets.treeview import collapse_treeview
 from pynicotine.gtkgui.widgets.treeview import create_grouping_menu
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
@@ -146,7 +148,7 @@ class TransferList:
         self.grouping_button.set_menu_model(menu)
 
         if GTK_API_VERSION >= 4:
-            self.grouping_button.get_first_child().add_css_class("image-button")
+            add_css_class(widget=self.grouping_button.get_first_child(), css_class="image-button")
 
         self.expand_button.connect("toggled", self.on_expand_tree)
         self.expand_button.set_active(config.sections["transfers"][f"{transfer_type}sexpanded"])
@@ -738,10 +740,8 @@ class TransferList:
 
         if GTK_API_VERSION >= 4:
             # Ensure buttons are flat in libadwaita
-            if active:
-                self.grouping_button.get_parent().add_css_class("linked")
-            else:
-                self.grouping_button.get_parent().remove_css_class("linked")
+            css_class_function = add_css_class if active else remove_css_class
+            css_class_function(widget=self.grouping_button.get_parent(), css_class="linked")
 
         config.sections["transfers"][f"group{self.type}s"] = mode
         self.tree_view.set_show_expanders(active)

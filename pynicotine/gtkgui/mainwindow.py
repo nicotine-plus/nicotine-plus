@@ -47,8 +47,10 @@ from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
 from pynicotine.gtkgui.widgets.textview import TextView
+from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.gtkgui.widgets.theme import get_status_icon_name
 from pynicotine.gtkgui.widgets.theme import load_icons
+from pynicotine.gtkgui.widgets.theme import remove_css_class
 from pynicotine.gtkgui.widgets.theme import set_global_style
 from pynicotine.gtkgui.widgets.theme import set_use_header_bar
 from pynicotine.gtkgui.widgets.ui import UserInterface
@@ -1370,16 +1372,10 @@ class MainWindow(Window):
             config_key = "use_upload_speed_limit"
 
         if config.sections["transfers"][config_key] == "alternative":
-            if GTK_API_VERSION >= 4:
-                label.add_css_class("underline")
-            else:
-                label.get_style_context().add_class("underline")
+            add_css_class(label, "underline")
             return
 
-        if GTK_API_VERSION >= 4:
-            label.remove_css_class("underline")
-        else:
-            label.get_style_context().remove_class("underline")
+        remove_css_class(label, "underline")
 
     def show_scan_progress(self):
         GLib.idle_add(self.scan_progress_bar.show)

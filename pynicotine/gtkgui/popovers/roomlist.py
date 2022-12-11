@@ -26,6 +26,7 @@ from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.popover import Popover
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
+from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.ui import UserInterface
 
@@ -93,7 +94,7 @@ class RoomList(Popover):
         CompletionEntry(window.chatrooms_entry, self.room_model, column=0)
 
         if GTK_API_VERSION >= 4:
-            window.room_list_button.get_first_child().add_css_class("arrow-button")
+            add_css_class(widget=window.room_list_button.get_first_child(), css_class="arrow-button")
 
         window.room_list_button.set_popover(self.popover)
 

@@ -28,6 +28,7 @@ from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.popover import Popover
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
+from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.utils import encode_path
@@ -65,7 +66,7 @@ class ChatHistory(Popover):
         CompletionEntry(window.private_entry, self.list_view.model, column=0)
 
         if GTK_API_VERSION >= 4:
-            window.private_history_button.get_first_child().add_css_class("arrow-button")
+            add_css_class(widget=window.private_history_button.get_first_child(), css_class="arrow-button")
 
         window.private_history_button.set_popover(self.popover)
         self.load_users()

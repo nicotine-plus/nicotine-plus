@@ -42,7 +42,9 @@ from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import FilePopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
+from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
+from pynicotine.gtkgui.widgets.theme import remove_css_class
 from pynicotine.gtkgui.widgets.treeview import collapse_treeview
 from pynicotine.gtkgui.widgets.treeview import create_grouping_menu
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
@@ -90,7 +92,7 @@ class Searches(IconNotebook):
         window.search_mode_label.set_label(self.modes["global"])
 
         if GTK_API_VERSION >= 4:
-            window.search_mode_button.get_first_child().add_css_class("arrow-button")
+            add_css_class(window.search_mode_button.get_first_child(), "arrow-button")
 
         CompletionEntry(window.room_search_entry, window.room_search_combobox.get_model())
         CompletionEntry(window.search_entry, window.search_combobox.get_model())
@@ -1494,16 +1496,8 @@ class Search:
             (filter_in, filter_include_entry),
             (filter_out, filter_exclude_entry)
         ):
-            if filter_regex is None:
-                if GTK_API_VERSION >= 4:
-                    entry.add_css_class("error")
-                else:
-                    entry.get_style_provider().add_class("error")
-            else:
-                if GTK_API_VERSION >= 4:
-                    entry.remove_css_class("error")
-                else:
-                    entry.get_style_provider().remove_css_class("error")
+            css_class_function = add_css_class if filter_regex is None else remove_css_class
+            css_class_function(entry, "error")
 
         # Add filters to history
         for filter_id, value in filters.items():

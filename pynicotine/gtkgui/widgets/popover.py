@@ -19,6 +19,7 @@
 from gi.repository import Gtk
 
 from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.widgets.theme import add_css_class
 
 """ Popover """
 
@@ -38,10 +39,7 @@ class Popover:
         self.popover.connect("notify::visible", self._on_show)
         self.popover.connect("closed", self._on_close)
 
-        if GTK_API_VERSION >= 4:
-            self.popover.add_css_class("generic-popover")  # pylint: disable=no-member
-        else:
-            self.popover.get_style_context().add_class("generic-popover")
+        add_css_class(self.popover, "generic-popover")
 
     def _on_show(self, _popover, param):
 

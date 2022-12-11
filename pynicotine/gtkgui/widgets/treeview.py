@@ -34,6 +34,7 @@ from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
+from pynicotine.gtkgui.widgets.theme import add_css_class
 
 
 """ Treeview """
@@ -81,10 +82,7 @@ class TreeView:
         self.widget.set_fixed_height_mode(True)
         self.widget.set_search_equal_func(self.on_search_match)
 
-        if GTK_API_VERSION >= 4:
-            self.widget.add_css_class("treeview-spacing")  # pylint: disable=no-member
-        else:
-            self.widget.get_style_context().add_class("treeview-spacing")
+        add_css_class(self.widget, "treeview-spacing")
 
     def _append_columns(self, cols, column_config):
 
@@ -716,10 +714,7 @@ def initialise_columns(window, treeview_name, treeview, *args):
     hide_columns(treeview, cols, column_config)
     treeview.set_fixed_height_mode(True)
 
-    if GTK_API_VERSION >= 4:
-        treeview.add_css_class("treeview-spacing")
-    else:
-        treeview.get_style_context().add_class("treeview-spacing")
+    add_css_class(treeview, "treeview-spacing")
 
     treeview.set_search_equal_func(on_search_match, treeview)
     treeview.connect("columns-changed", set_last_column_autosize)
