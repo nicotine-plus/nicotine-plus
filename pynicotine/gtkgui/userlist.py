@@ -31,8 +31,8 @@ from pynicotine.events import events
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
+from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
-from pynicotine.gtkgui.widgets.theme import get_status_icon_name
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.slskmessages import UserStatus
@@ -169,20 +169,21 @@ class UserList:
 
     def user_status(self, msg):
 
-        user = msg.user
-        iterator = self.list_view.iterators.get(user)
+        iterator = self.list_view.iterators.get(msg.user)
 
         if iterator is None:
             return
 
         status = msg.status
+        status_icon_name = USER_STATUS_ICON_NAMES.get(status)
+
+        if not status_icon_name:
+            return
 
         if status == self.list_view.get_row_value(iterator, 10):
             return
 
-        status_icon = get_status_icon_name(status)
-
-        self.list_view.set_row_value(iterator, 0, status_icon)
+        self.list_view.set_row_value(iterator, 0, status_icon_name)
         self.list_view.set_row_value(iterator, 10, status)
 
     def user_stats(self, msg):
@@ -218,7 +219,7 @@ class UserList:
             time_from_epoch = 0
 
         self.list_view.add_row([
-            get_status_icon_name(user_data.status),
+            USER_STATUS_ICON_NAMES.get(user_data.status, ""),
             get_flag_icon_name(user_data.country),
             str(user),
             "", "",
@@ -304,12 +305,12 @@ class UserList:
         if iterator is None:
             return
 
-        flag_icon = get_flag_icon_name(country_code or "")
+        flag_icon_name = get_flag_icon_name(country_code or "")
 
-        if not flag_icon:
+        if not flag_icon_name:
             return
 
-        self.list_view.set_row_value(iterator, 1, flag_icon)
+        self.list_view.set_row_value(iterator, 1, flag_icon_name)
         self.list_view.set_row_value(iterator, 14, f"flag_{country_code}")
 
     def on_add_buddy(self, *_args):
@@ -396,7 +397,7 @@ class UserList:
     def server_disconnect(self, _msg):
 
         for iterator in self.list_view.get_all_rows():
-            self.list_view.set_row_value(iterator, 0, get_status_icon_name(UserStatus.OFFLINE))
+            self.list_view.set_row_value(iterator, 0, USER_STATUS_ICON_NAMES[UserStatus.OFFLINE])
             self.list_view.set_row_value(iterator, 3, "")
             self.list_view.set_row_value(iterator, 4, "")
             self.list_view.set_row_value(iterator, 10, 0)

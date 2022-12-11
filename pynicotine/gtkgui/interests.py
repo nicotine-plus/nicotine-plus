@@ -28,7 +28,7 @@ from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.treeview import TreeView
-from pynicotine.gtkgui.widgets.theme import get_status_icon_name
+from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import humanize
@@ -367,8 +367,11 @@ class Interests:
         self.similar_users_list_view.clear()
 
         for user in users:
-            self.similar_users_list_view.add_row(
-                [get_status_icon_name(UserStatus.OFFLINE), user, "", "0", 0, 0, 0], select_row=False)
+            self.similar_users_list_view.add_row([
+                USER_STATUS_ICON_NAMES[UserStatus.OFFLINE],
+                user,
+                "", "0", 0, 0, 0
+            ], select_row=False)
 
     def similar_users(self, msg):
         # Sort users by rating (largest number of identical likes)
@@ -385,9 +388,12 @@ class Interests:
             return
 
         status = msg.status
-        status_icon = get_status_icon_name(status)
+        status_icon_name = USER_STATUS_ICON_NAMES.get(status)
 
-        self.similar_users_list_view.set_row_value(iterator, 0, status_icon)
+        if not status_icon_name:
+            return
+
+        self.similar_users_list_view.set_row_value(iterator, 0, status_icon_name)
         self.similar_users_list_view.set_row_value(iterator, 4, status)
 
     def user_stats(self, msg):

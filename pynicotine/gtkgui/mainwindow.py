@@ -47,8 +47,8 @@ from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
 from pynicotine.gtkgui.widgets.textview import TextView
+from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
 from pynicotine.gtkgui.widgets.theme import add_css_class
-from pynicotine.gtkgui.widgets.theme import get_status_icon_name
 from pynicotine.gtkgui.widgets.theme import load_icons
 from pynicotine.gtkgui.widgets.theme import remove_css_class
 from pynicotine.gtkgui.widgets.theme import set_global_style
@@ -454,7 +454,6 @@ class MainWindow(Window):
 
         # Status bar
         username = core.login_username
-        icon_name = get_status_icon_name(status)
 
         if status == UserStatus.AWAY:
             status_text = _("Away")
@@ -469,7 +468,7 @@ class MainWindow(Window):
         if self.user_status_button.get_tooltip_text() != username:
             self.user_status_button.set_tooltip_text(username)
 
-        self.user_status_icon.set_property("icon-name", icon_name)
+        self.user_status_icon.set_property("icon-name", USER_STATUS_ICON_NAMES[status])
         self.user_status_label.set_text(status_text)
 
     """ Action Callbacks """

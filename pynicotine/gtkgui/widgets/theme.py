@@ -300,6 +300,12 @@ if GTK_API_VERSION >= 4:
 else:
     ICON_THEME = Gtk.IconTheme.get_default()  # pylint: disable=no-member
 
+USER_STATUS_ICON_NAMES = {
+    UserStatus.ONLINE: "nplus-status-online-symbolic",
+    UserStatus.AWAY: "nplus-status-away-symbolic",
+    UserStatus.OFFLINE: "nplus-status-offline-symbolic"
+}
+
 
 def load_custom_icons(update=False):
     """ Load custom icon theme if one is selected """
@@ -438,17 +444,6 @@ def get_flag_icon_name(country):
     return f"nplus-flag-{country}"
 
 
-def get_status_icon_name(status):
-
-    if status == UserStatus.AWAY:
-        return "nplus-status-away-symbolic"
-
-    if status == UserStatus.ONLINE:
-        return "nplus-status-online-symbolic"
-
-    return "nplus-status-offline-symbolic"
-
-
 def on_icon_theme_changed(*_args):
     load_custom_icons()
 
@@ -478,8 +473,8 @@ PANGO_WEIGHTS = {
     Pango.Weight.ULTRAHEAVY: 1000
 }
 USER_STATUS_COLORS = {
-    UserStatus.AWAY: "useraway",
     UserStatus.ONLINE: "useronline",
+    UserStatus.AWAY: "useraway",
     UserStatus.OFFLINE: "useroffline"
 }
 

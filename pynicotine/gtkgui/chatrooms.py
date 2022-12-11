@@ -49,8 +49,8 @@ from pynicotine.gtkgui.widgets.textentry import ChatEntry
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_COLORS
+from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
-from pynicotine.gtkgui.widgets.theme import get_status_icon_name
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.treeview import save_columns
 from pynicotine.gtkgui.widgets.treeview import show_country_tooltip
@@ -622,8 +622,8 @@ class ChatRoom:
         username = userdata.username
         status = userdata.status
         country = userdata.country or ""  # country can be None, ensure string is used
-        status_icon = get_status_icon_name(status)
-        flag_icon = get_flag_icon_name(country)
+        status_icon_name = USER_STATUS_ICON_NAMES.get(status, "")
+        flag_icon_name = get_flag_icon_name(country)
         h_speed = ""
         avgspeed = userdata.avgspeed
 
@@ -648,8 +648,8 @@ class ChatRoom:
         iterator = self.usersmodel.insert_with_valuesv(
             -1, self.column_numbers,
             [
-                status_icon,
-                flag_icon,
+                status_icon_name,
+                flag_icon_name,
                 username,
                 h_speed,
                 h_files,
@@ -933,11 +933,11 @@ class ChatRoom:
         # Add to completion list, and completion drop-down
         self.chatrooms.completion.add_completion(username)
 
-        if not core.network_filter.is_user_ignored(username) and \
-                not core.network_filter.is_user_ip_ignored(username):
-            timestamp_format = config.sections["logging"]["rooms_timestamp"]
-            self.activity_view.append_line(_("%s joined the room") % username, tag=self.tag_log,
-                                           timestamp_format=timestamp_format)
+        if not core.network_filter.is_user_ignored(username) and not core.network_filter.is_user_ip_ignored(username):
+            self.activity_view.append_line(
+                _("%s joined the room") % username, tag=self.tag_log,
+                timestamp_format=config.sections["logging"]["rooms_timestamp"]
+            )
 
         self.add_user_row(userdata)
 
@@ -1001,27 +1001,30 @@ class ChatRoom:
             return
 
         status = msg.status
+        status_icon_name = USER_STATUS_ICON_NAMES.get(status)
+
+        if not status_icon_name:
+            return
 
         if status == self.usersmodel.get_value(iterator, 5):
             return
 
         if status == UserStatus.AWAY:
             action = _("%s has gone away")
+
         elif status == UserStatus.ONLINE:
             action = _("%s has returned")
+
         else:
             # If we reach this point, the server did something wrong. The user should have
             # left the room before an offline status is sent.
             return
 
-        if not core.network_filter.is_user_ignored(user) and \
-                not core.network_filter.is_user_ip_ignored(user):
-            timestamp_format = config.sections["logging"]["rooms_timestamp"]
-            self.activity_view.append_line(action % user, tag=self.tag_log, timestamp_format=timestamp_format)
+        if not core.network_filter.is_user_ignored(user) and not core.network_filter.is_user_ip_ignored(user):
+            self.activity_view.append_line(
+                action % user, tag=self.tag_log, timestamp_format=config.sections["logging"]["rooms_timestamp"])
 
-        status_icon = get_status_icon_name(status)
-
-        self.usersmodel.set_value(iterator, 0, status_icon)
+        self.usersmodel.set_value(iterator, 0, status_icon_name)
         self.usersmodel.set_value(iterator, 5, status)
 
         self.update_user_tag(user)
@@ -1037,12 +1040,12 @@ class ChatRoom:
             # Country didn't change, no need to update
             return
 
-        flag_icon = get_flag_icon_name(country or "")
+        flag_icon_name = get_flag_icon_name(country or "")
 
-        if not flag_icon:
+        if not flag_icon_name:
             return
 
-        self.usersmodel.set_value(iterator, 1, flag_icon)
+        self.usersmodel.set_value(iterator, 1, flag_icon_name)
         self.usersmodel.set_value(iterator, 8, country)
 
     def user_name_event(self, pos_x, pos_y, user):

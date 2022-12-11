@@ -48,6 +48,7 @@ from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.dialogs import MessageDialog
 from pynicotine.gtkgui.widgets.dialogs import PluginSettingsDialog
 from pynicotine.gtkgui.widgets.textview import TextView
+from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
 from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.gtkgui.widgets.theme import load_custom_icons
 from pynicotine.gtkgui.widgets.theme import set_dark_mode
@@ -1358,9 +1359,9 @@ class UserInterfacePage:
 
         # Icon preview
         icon_list = [
-            ("nplus-status-online-symbolic", _("Online"), 16, "user-status"),
-            ("nplus-status-away-symbolic", _("Away"), 16, "user-status"),
-            ("nplus-status-offline-symbolic", _("Offline"), 16, "user-status"),
+            (USER_STATUS_ICON_NAMES[UserStatus.ONLINE], _("Online"), 16, "user-status"),
+            (USER_STATUS_ICON_NAMES[UserStatus.AWAY], _("Away"), 16, "user-status"),
+            (USER_STATUS_ICON_NAMES[UserStatus.OFFLINE], _("Offline"), 16, "user-status"),
             ("nplus-tab-changed-symbolic", _("Tab Changed"), 16, "notebook-tab-changed"),
             ("nplus-tab-highlight-symbolic", _("Tab Highlight"), 16, "notebook-tab-highlight"),
             (config.application_id, _("Window"), 64, None)]

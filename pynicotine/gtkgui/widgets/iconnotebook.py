@@ -31,8 +31,8 @@ from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
+from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
 from pynicotine.gtkgui.widgets.theme import add_css_class
-from pynicotine.gtkgui.widgets.theme import get_status_icon_name
 from pynicotine.gtkgui.widgets.theme import remove_css_class
 from pynicotine.slskmessages import UserStatus
 
@@ -194,9 +194,12 @@ class TabLabel(Gtk.Box):
 
     def set_status_icon(self, status):
 
-        icon_name = get_status_icon_name(status)
-        self.set_start_icon_name(icon_name)
+        icon_name = USER_STATUS_ICON_NAMES.get(status)
 
+        if not icon_name:
+            return
+
+        self.set_start_icon_name(icon_name)
         add_css_class(self.start_icon, "user-status")
 
     def set_start_icon_name(self, icon_name):
