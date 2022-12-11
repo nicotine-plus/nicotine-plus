@@ -34,6 +34,13 @@ from pynicotine.utils import open_uri
 
 class TextView:
 
+    if GTK_API_VERSION >= 4:
+        POINTER_CURSOR = Gdk.Cursor(name="pointer")
+        TEXT_CURSOR = Gdk.Cursor(name="text")
+    else:
+        POINTER_CURSOR = Gdk.Cursor.new_from_name(Gdk.Display.get_default(), "pointer")
+        TEXT_CURSOR = Gdk.Cursor.new_from_name(Gdk.Display.get_default(), "text")
+
     def __init__(self, textview, auto_scroll=False, parse_urls=True):
 
         self.textview = textview
@@ -61,8 +68,6 @@ class TextView:
             self.gesture_click_secondary = Gtk.GestureClick()
             scrollable_container.add_controller(self.gesture_click_secondary)
 
-            self.pointer_cursor = Gdk.Cursor(name="pointer")
-            self.text_cursor = Gdk.Cursor(name="text")
             self.cursor_window = self.textview
 
             self.motion_controller = Gtk.EventControllerMotion()
@@ -72,8 +77,6 @@ class TextView:
             self.gesture_click_primary = Gtk.GestureMultiPress(widget=scrollable_container)
             self.gesture_click_secondary = Gtk.GestureMultiPress(widget=scrollable_container)
 
-            self.pointer_cursor = Gdk.Cursor.new_from_name(textview.get_display(), "pointer")
-            self.text_cursor = Gdk.Cursor.new_from_name(textview.get_display(), "text")
             self.cursor_window = None
 
             textview.connect("motion-notify-event", self.on_move_cursor_event)
@@ -189,14 +192,14 @@ class TextView:
 
     def update_cursor(self, pos_x, pos_y):
 
-        cursor = self.text_cursor
+        cursor = self.TEXT_CURSOR
 
         if self.cursor_window is None:
             self.cursor_window = self.textview.get_window(Gtk.TextWindowType.TEXT)
 
         for tag in self.get_tags_for_pos(pos_x, pos_y):
             if hasattr(tag, "url") or hasattr(tag, "username"):
-                cursor = self.pointer_cursor
+                cursor = self.POINTER_CURSOR
                 break
 
         if cursor != self.cursor_window.get_cursor():
