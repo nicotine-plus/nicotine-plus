@@ -172,11 +172,10 @@ class TabLabel(Gtk.Box):
         if not self.mentioned:
             self.mentioned = mentioned
 
-        if config.sections["notifications"]["notification_tab_colors"]:
-            if self.mentioned:
-                add_css_class(self, "notebook-tab-hilite")
-            else:
-                add_css_class(self, "notebook-tab-changed")
+        if self.mentioned:
+            add_css_class(self, "notebook-tab-hilite")
+        else:
+            add_css_class(self, "notebook-tab-changed")
 
         icon_name = "nplus-hilite" if self.mentioned else "nplus-hilite3"
         self.end_icon.set_property("icon-name", icon_name)

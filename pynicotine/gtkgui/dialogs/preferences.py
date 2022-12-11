@@ -1319,7 +1319,7 @@ class UserInterfacePage:
          self.EntryURL, self.FilePathTooltips, self.IconView, self.Language, self.Main, self.MainPosition,
          self.NotificationPopupChatroom, self.NotificationPopupChatroomMention, self.NotificationPopupFile,
          self.NotificationPopupFolder, self.NotificationPopupPrivateMessage, self.NotificationPopupSound,
-         self.NotificationPopupWish, self.NotificationTabColors, self.NotificationWindowTitle, self.PickAway,
+         self.NotificationPopupWish, self.NotificationWindowTitle, self.PickAway,
          self.PickBackground, self.PickChangedTab, self.PickHighlight, self.PickHighlightTab, self.PickImmediate,
          self.PickInput, self.PickLocal, self.PickMe, self.PickOffline, self.PickOnline, self.PickQueue,
          self.PickRegularTab, self.PickRemote, self.PickURL, self.PrivateChatPosition, self.ReverseFilePaths,
@@ -1388,7 +1388,6 @@ class UserInterfacePage:
 
         self.options = {
             "notifications": {
-                "notification_tab_colors": self.NotificationTabColors,
                 "notification_window_title": self.NotificationWindowTitle,
                 "notification_popup_sound": self.NotificationPopupSound,
                 "notification_popup_file": self.NotificationPopupFile,
@@ -1492,7 +1491,6 @@ class UserInterfacePage:
 
         return {
             "notifications": {
-                "notification_tab_colors": self.NotificationTabColors.get_active(),
                 "notification_window_title": self.NotificationWindowTitle.get_active(),
                 "notification_popup_sound": self.NotificationPopupSound.get_active(),
                 "notification_popup_file": self.NotificationPopupFile.get_active(),

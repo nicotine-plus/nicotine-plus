@@ -1319,12 +1319,6 @@
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="NotificationTabColors">
-            <property name="visible">True</property>
-            <property name="label" translatable="yes">Notification changes the tab's text color</property>
-          </object>
-        </child>
-        <child>
           <object class="GtkBox">
             <property name="visible">True</property>
             <property name="spacing">12</property>
