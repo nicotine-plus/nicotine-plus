@@ -201,6 +201,7 @@ class TabLabel(Gtk.Box):
 
     def set_start_icon_name(self, icon_name):
         self.start_icon.set_property("icon-name", icon_name)
+        self.start_icon.set_visible(True)
 
     def set_text(self, text):
         self.label.set_text(text)
