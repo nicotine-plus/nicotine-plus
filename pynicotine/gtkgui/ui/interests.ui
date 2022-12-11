@@ -245,6 +245,9 @@
                           <object class="GtkScrolledWindow" id="similar_users_list_container">
                             <property name="visible">True</property>
                             <property name="hexpand">True</property>
+                            <style>
+                              <class name="user-status"/>
+                            </style>
                           </object>
                         </child>
                       </object>

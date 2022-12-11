@@ -534,6 +534,21 @@ def _get_custom_font_css():
 def _get_custom_color_css():
 
     css = bytearray()
+
+    # User status colors
+    online_color = config.sections["ui"]["useronline"]
+    away_color = config.sections["ui"]["useraway"]
+    offline_color = config.sections["ui"]["useroffline"]
+
+    css.extend(
+        f"""
+        .user-status {{
+            -gtk-icon-palette: success {online_color}, warning {away_color}, error {offline_color};
+        }}
+        """.encode("utf-8")
+    )
+
+    # Text colors
     treeview_text_color = config.sections["ui"]["search"]
 
     for css_selector, color in (
@@ -552,6 +567,7 @@ def _get_custom_color_css():
                 """.encode("utf-8")
             )
 
+    # Background colors
     for css_selector, color in (
         ("entry", config.sections["ui"]["textbg"]),
     ):

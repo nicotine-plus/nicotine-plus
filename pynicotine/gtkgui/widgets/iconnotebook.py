@@ -45,6 +45,7 @@ class TabLabel(Gtk.Box):
     def __init__(self, label="", full_text="", close_button_visible=False, close_callback=None):
 
         Gtk.Box.__init__(self, hexpand=False, visible=True)
+        add_css_class(self, "notebook-tab")
 
         self.highlighted = False
         self.mentioned = False
@@ -60,7 +61,6 @@ class TabLabel(Gtk.Box):
         self.box = Gtk.Box(spacing=6, visible=True)
 
         self.label = Gtk.Label(halign=Gtk.Align.START, hexpand=True, single_line_mode=True, visible=True)
-        self.label.get_style_context().add_class("notebook-tab")
         self.full_text = full_text
         self.set_text(label)
 
@@ -174,9 +174,9 @@ class TabLabel(Gtk.Box):
 
         if config.sections["notifications"]["notification_tab_colors"]:
             if self.mentioned:
-                add_css_class(self.label, "notebook-tab-hilite")
+                add_css_class(self, "notebook-tab-hilite")
             else:
-                add_css_class(self.label, "notebook-tab-changed")
+                add_css_class(self, "notebook-tab-changed")
 
         icon_name = "nplus-hilite" if self.mentioned else "nplus-hilite3"
         self.end_icon.set_property("icon-name", icon_name)
@@ -187,15 +187,18 @@ class TabLabel(Gtk.Box):
         self.highlighted = False
         self.mentioned = False
 
-        remove_css_class(self.label, "notebook-tab-changed")
-        remove_css_class(self.label, "notebook-tab-hilite")
+        remove_css_class(self, "notebook-tab-changed")
+        remove_css_class(self, "notebook-tab-hilite")
 
         self.end_icon.set_property("icon-name", None)
         self.end_icon.set_visible(False)
 
     def set_status_icon(self, status):
+
         icon_name = get_status_icon_name(status)
         self.set_start_icon_name(icon_name, visible=config.sections["ui"]["tab_status_icons"])
+
+        add_css_class(self.start_icon, "user-status")
 
     def set_start_icon_name(self, icon_name, visible=True):
         self.start_icon.set_property("icon-name", icon_name)

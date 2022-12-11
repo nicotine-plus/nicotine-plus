@@ -231,6 +231,9 @@
                             <signal name="row-activated" handler="on_row_activated"/>
                           </object>
                         </child>
+                        <style>
+                          <class name="user-status"/>
+                        </style>
                       </object>
                     </child>
                   </object>
