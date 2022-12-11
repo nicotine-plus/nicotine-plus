@@ -1325,7 +1325,7 @@ class UserInterfacePage:
          self.PickRegularTab, self.PickRemote, self.PickURL, self.PrivateChatPosition, self.ReverseFilePaths,
          self.SearchPosition, self.SelectBrowserFont, self.SelectChatFont, self.SelectGlobalFont, self.SelectListFont,
          self.SelectSearchFont, self.SelectTextViewFont, self.SelectTransfersFont, self.StartupHidden, self.TabClosers,
-         self.TabSelectPrevious, self.TabStatusIcons, self.ThemeDir, self.TraySettings, self.TrayiconCheck,
+         self.TabSelectPrevious, self.ThemeDir, self.TraySettings, self.TrayiconCheck,
          self.UserBrowsePosition, self.UserInfoPosition, self.UsernameStyle) = ui_template.widgets
 
         self.application = application
@@ -1420,7 +1420,6 @@ class UserInterfacePage:
                 "tabbrowse": self.UserBrowsePosition,
                 "tab_select_previous": self.TabSelectPrevious,
                 "tabclosers": self.TabClosers,
-                "tab_status_icons": self.TabStatusIcons,
 
                 "icontheme": self.theme_dir,
 
@@ -1524,7 +1523,6 @@ class UserInterfacePage:
                 "modes_visible": enabled_tabs,
                 "tab_select_previous": self.TabSelectPrevious.get_active(),
                 "tabclosers": self.TabClosers.get_active(),
-                "tab_status_icons": self.TabStatusIcons.get_active(),
 
                 "icontheme": self.theme_dir.get_path(),
 

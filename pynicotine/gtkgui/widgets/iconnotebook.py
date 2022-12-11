@@ -195,13 +195,12 @@ class TabLabel(Gtk.Box):
     def set_status_icon(self, status):
 
         icon_name = get_status_icon_name(status)
-        self.set_start_icon_name(icon_name, visible=config.sections["ui"]["tab_status_icons"])
+        self.set_start_icon_name(icon_name)
 
         add_css_class(self.start_icon, "user-status")
 
-    def set_start_icon_name(self, icon_name, visible=True):
+    def set_start_icon_name(self, icon_name):
         self.start_icon.set_property("icon-name", icon_name)
-        self.start_icon.set_visible(visible)
 
     def set_text(self, text):
         self.label.set_text(text)
@@ -513,18 +512,13 @@ class IconNotebook:
         else:
             status_text = _("Offline")
 
-        if not config.sections["ui"]["tab_status_icons"]:
-            tab_text = f"{user[:15]} ({status_text})"
-        else:
-            tab_text = user
-
         tab_label, menu_label = self.get_labels(page)
 
         tab_label.set_status_icon(status)
         menu_label.set_status_icon(status)
 
-        tab_label.set_text(tab_text)
-        menu_label.set_text(tab_text)
+        tab_label.set_text(user)
+        menu_label.set_text(user)
 
         tab_label.set_tooltip_text(f"{user} ({status_text})")
 
