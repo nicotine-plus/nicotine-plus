@@ -361,11 +361,11 @@ def load_custom_icons(update=False):
         return
 
     icon_names = (
-        ("away", "nplus-status-away"),
-        ("online", "nplus-status-online"),
-        ("offline", "nplus-status-offline"),
-        ("hilite", "nplus-hilite"),
-        ("hilite3", "nplus-hilite3"),
+        ("away", "nplus-status-away-symbolic"),
+        ("online", "nplus-status-online-symbolic"),
+        ("offline", "nplus-status-offline-symbolic"),
+        ("hilite", "nplus-hilite-symbolic"),
+        ("hilite3", "nplus-hilite3-symbolic"),
         ("trayicon_away", "nplus-tray-away"),
         ("trayicon_away", f"{config.application_id}-away"),
         ("trayicon_connect", "nplus-tray-connect"),
@@ -440,12 +440,12 @@ def get_flag_icon_name(country):
 def get_status_icon_name(status):
 
     if status == UserStatus.AWAY:
-        return "nplus-status-away"
+        return "nplus-status-away-symbolic"
 
     if status == UserStatus.ONLINE:
-        return "nplus-status-online"
+        return "nplus-status-online-symbolic"
 
-    return "nplus-status-offline"
+    return "nplus-status-offline-symbolic"
 
 
 def on_icon_theme_changed(*_args):

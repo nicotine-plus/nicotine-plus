@@ -1358,11 +1358,11 @@ class UserInterfacePage:
 
         # Icon preview
         icon_list = [
-            ("nplus-status-online", _("Online"), 16, "user-status"),
-            ("nplus-status-away", _("Away"), 16, "user-status"),
-            ("nplus-status-offline", _("Offline"), 16, "user-status"),
-            ("nplus-hilite3", _("Tab Changed"), 16, "notebook-tab-changed"),
-            ("nplus-hilite", _("Tab Highlight"), 16, "notebook-tab-highlight"),
+            ("nplus-status-online-symbolic", _("Online"), 16, "user-status"),
+            ("nplus-status-away-symbolic", _("Away"), 16, "user-status"),
+            ("nplus-status-offline-symbolic", _("Offline"), 16, "user-status"),
+            ("nplus-hilite3-symbolic", _("Tab Changed"), 16, "notebook-tab-changed"),
+            ("nplus-hilite-symbolic", _("Tab Highlight"), 16, "notebook-tab-highlight"),
             (config.application_id, _("Window"), 64, None)]
 
         if application.tray_icon.available:
