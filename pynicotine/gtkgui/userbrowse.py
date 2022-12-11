@@ -345,13 +345,10 @@ class UserBrowse:
         for widget in (self.container, self.folder_tree_view, self.file_list_view):
             Accelerator("<Primary>f", widget, self.on_search_accelerator)  # Find focus
 
-        for widget in (self.container, self.search_entry):
-            Accelerator("<Primary>g", widget, self.on_search_next_accelerator)  # Next search match
-            Accelerator("<Shift><Primary>g", widget, self.on_search_previous_accelerator)
-
-        Accelerator("Escape", self.search_entry, self.on_search_escape_accelerator)
         Accelerator("F3", self.container, self.on_search_next_accelerator)
         Accelerator("<Shift>F3", self.container, self.on_search_previous_accelerator)
+        Accelerator("<Primary>g", self.container, self.on_search_next_accelerator)  # Next search match
+        Accelerator("<Shift><Primary>g", self.container, self.on_search_previous_accelerator)
 
         Accelerator("<Primary>backslash", self.container, self.on_expand_accelerator)  # expand / collapse all (button)
         Accelerator("F5", self.container, self.on_refresh_accelerator)

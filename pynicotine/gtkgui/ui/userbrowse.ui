@@ -155,6 +155,9 @@
                                     <property name="tooltip-text" translatable="yes">Search Files and Folders</property>
                                     <property name="width-chars">18</property>
                                     <signal name="activate" handler="on_search"/>
+                                    <signal name="next-match" handler="on_search_next_accelerator"/>
+                                    <signal name="previous-match" handler="on_search_previous_accelerator"/>
+                                    <signal name="stop-search" handler="on_search_escape_accelerator"/>
                                   </object>
                                 </child>
                                 <child>

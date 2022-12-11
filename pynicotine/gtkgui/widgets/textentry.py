@@ -503,6 +503,7 @@ class TextSearchBar:
 
         self.entry.connect("activate", self.on_search_next_match)
         self.entry.connect("search-changed", self.on_search_changed)
+        self.entry.connect("stop-search", self.on_hide_search_accelerator)
 
         self.entry.connect("previous-match", self.on_search_previous_match)
         self.entry.connect("next-match", self.on_search_next_match)
@@ -511,11 +512,9 @@ class TextSearchBar:
             controller_widget = textview
 
         Accelerator("<Primary>f", controller_widget, self.on_show_search_accelerator)
-
-        for widget in (controller_widget, entry):
-            Accelerator("Escape", widget, self.on_hide_search_accelerator)
-            Accelerator("<Primary>g", widget, self.on_search_next_match)
-            Accelerator("<Shift><Primary>g", widget, self.on_search_previous_match)
+        Accelerator("Escape", controller_widget, self.on_hide_search_accelerator)
+        Accelerator("<Primary>g", controller_widget, self.on_search_next_match)
+        Accelerator("<Shift><Primary>g", controller_widget, self.on_search_previous_match)
 
     def on_search_match(self, search_type, restarted=False):
 

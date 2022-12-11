@@ -222,7 +222,8 @@ class MainWindow(Window):
         """ Logging """
 
         self.log_view = TextView(self.log_view, auto_scroll=True, parse_urls=False)
-        self.log_search_bar = TextSearchBar(self.log_view.textview, self.log_search_bar, self.log_search_entry)
+        self.log_search_bar = TextSearchBar(self.log_view.textview, self.log_search_bar, self.log_search_entry,
+                                            controller_widget=self.log_container)
 
         self.create_log_context_menu()
         events.connect("log-message", self.log_callback)
