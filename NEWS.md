@@ -5,7 +5,12 @@
 ### Corrections
 
  * Improve file scanning performance on systems other than Windows
+ * Windows: Fixed a crash when sending Nicotine+ to the background from the confirmation dialog
  * Windows: Fixed an issue viewing personal user info page
+
+### Issues closed on GitHub
+
+ * Nicotine+ v3.2.7 crashes when sent to background (Windows 10) ([#2276](https://github.com/nicotine-plus/nicotine-plus/issues/2276))
 
 
 ## Version 3.2.7 (December 1, 2022)

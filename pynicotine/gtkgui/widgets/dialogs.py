@@ -214,11 +214,12 @@ class MessageDialog(Window):
         if self not in Window.active_dialogs:
             return
 
+        Window.active_dialogs.remove(self)
+
         if callback and response_id not in (Gtk.ResponseType.CANCEL, Gtk.ResponseType.CLOSE,
                                             Gtk.ResponseType.DELETE_EVENT):
             callback(self, response_id, callback_data)
 
-        Window.active_dialogs.remove(self)
         dialog.close()
 
     def show(self):
