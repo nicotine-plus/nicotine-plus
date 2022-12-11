@@ -193,6 +193,7 @@ def set_global_css():
 
     .heading {
         font-weight: bold;
+        font-size: initial;
     }
 
     /* Text Formatting */
