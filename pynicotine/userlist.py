@@ -294,4 +294,4 @@ class UserList:
             status_text = _("%(user)s is offline")
 
         log.add(status_text, {"user": user})
-        core.notifications.show_text_notification(status_text % {"user": user}, title=_("Buddy Status"))
+        core.notifications.show_notification(status_text % {"user": user}, title=_("Buddy Status"))

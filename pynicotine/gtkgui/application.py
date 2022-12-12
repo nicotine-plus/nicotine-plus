@@ -327,6 +327,24 @@ class Application:
         action.connect("activate", self.on_update_user_info)
         self.add_action(action)
 
+        # Notifications
+
+        action = Gio.SimpleAction(name="chatroom-notification-activated", parameter_type=GLib.VariantType("s"))
+        action.connect("activate", self.on_chatroom_notification_activated)
+        self.add_action(action)
+
+        action = Gio.SimpleAction(name="download-notification-activated", parameter_type=GLib.VariantType("s"))
+        action.connect("activate", self.on_download_notification_activated)
+        self.add_action(action)
+
+        action = Gio.SimpleAction(name="private-chat-notification-activated", parameter_type=GLib.VariantType("s"))
+        action.connect("activate", self.on_private_chat_notification_activated)
+        self.add_action(action)
+
+        action = Gio.SimpleAction(name="search-notification-activated", parameter_type=GLib.VariantType("s"))
+        action.connect("activate", self.on_search_notification_activated)
+        self.add_action(action)
+
         # Logging
 
         state = ("download" in config.sections["logging"]["debugmodes"])
@@ -535,6 +553,31 @@ class Application:
         self.preferences.set_settings()
         self.preferences.set_active_page(page_id)
         self.preferences.show()
+
+    def on_chatroom_notification_activated(self, _action, room_variant):
+
+        room = room_variant.get_string()
+        core.chatrooms.show_room(room)
+
+        self.window.show()
+
+    def on_download_notification_activated(self, _action):
+        self.window.change_main_page(self.window.downloads_page)
+        self.window.show()
+
+    def on_private_chat_notification_activated(self, _action, user_variant):
+
+        user = user_variant.get_string()
+        core.privatechat.show_user(user)
+
+        self.window.show()
+
+    def on_search_notification_activated(self, _action, search_token_variant):
+
+        search_token = int(search_token_variant.get_string())
+        core.search.show_search(search_token)
+
+        self.window.show()
 
     def on_set_debug_level(self, action, state, level):
 

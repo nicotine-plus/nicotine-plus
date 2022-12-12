@@ -30,7 +30,6 @@ EVENT_NAMES = set([
     "hide-scan-progress",
     "invalid-password",
     "log-message",
-    "show-text-notification",
     "peer-address",
     "peer-connection-closed",
     "peer-connection-error",
@@ -54,6 +53,13 @@ EVENT_NAMES = set([
     "user-stats",
     "user-status",
     "watch-user",
+
+    # Notification messages
+    "show-notification",
+    "show-chatroom-notification",
+    "show-download-notification",
+    "show-private-chat-notification",
+    "show-search-notification",
 
     # Buddy list
     "add-buddy",
@@ -128,6 +134,7 @@ EVENT_NAMES = set([
     "remove-wish",
     "server-search-request",
     "set-wishlist-interval",
+    "show-search",
 
     # Statistics
     "update-stat-value",

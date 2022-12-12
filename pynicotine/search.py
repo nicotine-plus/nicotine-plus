@@ -113,6 +113,9 @@ class Search:
 
         events.emit("remove-search", token)
 
+    def show_search(self, token):
+        events.emit("show-search", token)
+
     def process_search_term(self, search_term, mode, room=None, user=None):
 
         users = []

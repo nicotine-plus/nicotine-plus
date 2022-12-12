@@ -814,8 +814,8 @@ class ChatRoom:
             log.add(_("%(user)s mentioned you in room %(room)s") % {"user": user, "room": room})
 
             if config.sections["notifications"]["notification_popup_chatroom_mention"]:
-                core.notifications.show_text_notification(
-                    text,
+                core.notifications.show_chatroom_notification(
+                    room, text,
                     title=_("Mentioned by %(user)s in Room %(room)s") % {"user": user, "room": room},
                     high_priority=True
                 )
@@ -832,10 +832,9 @@ class ChatRoom:
 
         if not public and config.sections["notifications"]["notification_popup_chatroom"]:
             # Don't show notifications for "Public " room, they're too noisy
-            core.notifications.show_text_notification(
-                text,
-                title=_("Message by %(user)s in Room %(room)s") % {"user": user, "room": room},
-                high_priority=True
+            core.notifications.show_chatroom_notification(
+                room, text,
+                title=_("Message by %(user)s in Room %(room)s") % {"user": user, "room": room}
             )
 
     @staticmethod

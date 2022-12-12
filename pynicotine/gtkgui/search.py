@@ -102,9 +102,10 @@ class Searches(IconNotebook):
         for event_name, callback in (
             ("add-wish", self.update_wish_button),
             ("do-search", self.do_search),
+            ("file-search-response", self.file_search_response),
             ("remove-search", self.remove_search),
             ("remove-wish", self.update_wish_button),
-            ("file-search-response", self.file_search_response)
+            ("show-search", self.show_search)
         ):
             events.connect(event_name, callback)
 
@@ -162,6 +163,33 @@ class Searches(IconNotebook):
         for term in config.sections["searches"]["history"]:
             self.window.search_combobox.append_text(str(term))
 
+    def create_page(self, token, text, mode=None, mode_label=None, show_page=True):
+
+        page = self.pages.get(token)
+
+        if page is None:
+            self.pages[token] = page = Search(self, text, token, mode, mode_label, show_page)
+        else:
+            mode = page.mode
+            mode_label = page.mode_label
+
+        if not show_page:
+            return page
+
+        if mode_label is not None:
+            full_text = f"({mode_label}) {text}"
+            length = 25
+        else:
+            full_text = text
+            length = 20
+
+        label = full_text[:length]
+        self.append_page(page.container, label, focus_callback=page.on_focus,
+                         close_callback=page.on_close, full_text=full_text)
+        page.set_label(self.get_tab_label_inner(page.container))
+
+        return page
+
     def do_search(self, token, search_term, mode, room=None, users=None, switch_page=True):
 
         mode_label = None
@@ -175,14 +203,23 @@ class Searches(IconNotebook):
         elif mode == "buddies":
             mode_label = _("Buddies")
 
-        tab = self.create_tab(token, search_term, mode, mode_label)
+        self.create_page(token, search_term, mode, mode_label)
 
         if switch_page:
-            self.set_current_page(tab.container)
-            self.window.change_main_page(self.window.search_page)
+            self.show_search(token)
 
         # Repopulate the combo list
         self.populate_search_history()
+
+    def show_search(self, token):
+
+        page = self.pages.get(token)
+
+        if page is None:
+            return
+
+        self.set_current_page(page.container)
+        self.window.change_main_page(self.window.search_page)
 
     def remove_search(self, token):
 
@@ -220,37 +257,14 @@ class Searches(IconNotebook):
         for page in self.pages.values():
             page.update_filter_comboboxes()
 
-    def create_tab(self, token, text, mode, mode_label, showtab=True):
-
-        self.pages[token] = tab = Search(self, text, token, mode, mode_label, showtab)
-
-        if showtab:
-            self.show_tab(tab, text)
-
-        return tab
-
-    def show_tab(self, tab, text):
-
-        if tab.mode_label is not None:
-            full_text = f"({tab.mode_label}) {text}"
-            length = 25
-        else:
-            full_text = text
-            length = 20
-
-        label = full_text[:length]
-        self.append_page(tab.container, label, focus_callback=tab.on_focus,
-                         close_callback=tab.on_close, full_text=full_text)
-        tab.set_label(self.get_tab_label_inner(tab.container))
-
     def file_search_response(self, msg):
 
         if msg.token not in SEARCH_TOKENS_ALLOWED:
             return
 
-        tab = self.pages.get(msg.token)
+        page = self.pages.get(msg.token)
 
-        if tab is None:
+        if page is None:
             search_item = core.search.searches.get(msg.token)
 
             if search_item is None:
@@ -259,16 +273,16 @@ class Searches(IconNotebook):
             search_term = search_item["term"]
             mode = "wishlist"
             mode_label = _("Wish")
-            tab = self.create_tab(msg.token, search_term, mode, mode_label, showtab=False)
+            page = self.create_page(msg.token, search_term, mode, mode_label, show_page=False)
 
         # No more things to add because we've reached the result limit
-        if tab.num_results_found >= tab.max_limit:
+        if page.num_results_found >= page.max_limit:
             core.search.remove_allowed_token(msg.token)
-            tab.max_limited = True
-            tab.update_result_counter()
+            page.max_limited = True
+            page.update_result_counter()
             return
 
-        tab.file_search_response(msg)
+        page.file_search_response(msg)
 
     def update_wish_button(self, wish):
 
@@ -279,7 +293,7 @@ class Searches(IconNotebook):
 
 class Search:
 
-    def __init__(self, searches, text, token, mode, mode_label, showtab):
+    def __init__(self, searches, text, token, mode, mode_label, show_page):
 
         ui_template = UserInterface(scope=self, path="search.ui")
         (
@@ -328,7 +342,7 @@ class Search:
         self.token = token
         self.mode = mode
         self.mode_label = mode_label
-        self.showtab = showtab
+        self.show_page = show_page
         self.usersiters = {}
         self.directoryiters = {}
         self.users = set()
@@ -711,12 +725,15 @@ class Search:
 
         if update_ui:
             # If this search wasn't initiated by us (e.g. wishlist), and the results aren't spoofed, show tab
-            if not self.showtab:
-                self.searches.show_tab(self, self.text)
-                self.showtab = True
+            if not self.show_page:
+                self.searches.create_page(self.token, self.text)
+                self.show_page = True
 
                 if self.mode == "wishlist" and config.sections["notifications"]["notification_popup_wish"]:
-                    core.notifications.show_text_notification(self.text, title=_("Wishlist Results Found"))
+                    core.notifications.show_search_notification(
+                        str(self.token), self.text,
+                        title=_("Wishlist Results Found")
+                    )
 
             self.searches.request_tab_hilite(self.container)
 

@@ -24,6 +24,7 @@ from threading import Thread
 
 from gi.repository import Gdk
 from gi.repository import Gio
+from gi.repository import GLib
 
 from pynicotine.config import config
 from pynicotine.core import core
@@ -41,7 +42,14 @@ class Notifications:
         if sys.platform == "win32":
             self.win_notification = WinNotify(self.application.tray_icon)
 
-        events.connect("show-text-notification", self._show_text_notification)
+        for event_name, callback in (
+            ("show-notification", self._show_notification),
+            ("show-chatroom-notification", self._show_chatroom_notification),
+            ("show-download-notification", self._show_download_notification),
+            ("show-private-chat-notification", self._show_private_chat_notification),
+            ("show-search-notification", self._show_search_notification)
+        ):
+            events.connect(event_name, callback)
 
     def add(self, location, user, room=None):
 
@@ -101,7 +109,7 @@ class Notifications:
             # No support for urgency hints
             pass
 
-    def _show_text_notification(self, message, title=None, high_priority=False):
+    def _show_notification(self, message, title=None, action=None, action_target=None, high_priority=False):
 
         if title is None:
             title = config.application_name
@@ -124,17 +132,38 @@ class Notifications:
 
             priority = Gio.NotificationPriority.HIGH if high_priority else Gio.NotificationPriority.NORMAL
 
-            notification_popup = Gio.Notification.new(title)
-            notification_popup.set_body(message)
-            notification_popup.set_priority(priority)
+            notification = Gio.Notification.new(title)
+            notification.set_body(message)
+            notification.set_priority(priority)
 
-            self.application.send_notification(None, notification_popup)
+            if action:
+                action_target_variant = GLib.Variant("s", action_target) if action_target else None
+                notification.set_default_action_and_target(action, action_target_variant)
+
+            self.application.send_notification(None, notification)
 
             if config.sections["notifications"]["notification_popup_sound"]:
                 Gdk.Display.get_default().beep()
 
         except Exception as error:
             log.add(_("Unable to show notification: %s"), str(error))
+
+    def _show_chatroom_notification(self, room, message, title=None, high_priority=False):
+        self._show_notification(
+            message, title, action="app.chatroom-notification-activated", action_target=room,
+            high_priority=high_priority)
+
+    def _show_download_notification(self, message, title=None, high_priority=False):
+        self._show_notification(
+            message, title, action="app.download-notification-activated", high_priority=high_priority)
+
+    def _show_private_chat_notification(self, user, message, title=None):
+        self._show_notification(
+            message, title, action="app.private-chat-notification-activated", action_target=user, high_priority=True)
+
+    def _show_search_notification(self, search_token, message, title=None):
+        self._show_notification(
+            message, title, action="app.search-notification-activated", action_target=search_token, high_priority=True)
 
 
 class WinNotify:

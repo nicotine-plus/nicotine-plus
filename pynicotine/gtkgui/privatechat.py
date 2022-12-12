@@ -399,10 +399,9 @@ class PrivateChat:
         self.window.application.notifications.add("private", self.user)
 
         if config.sections["notifications"]["notification_popup_private_message"]:
-            core.notifications.show_text_notification(
-                text,
-                title=_("Private Message from %(user)s") % {'user': self.user},
-                high_priority=True
+            core.notifications.show_private_chat_notification(
+                self.user, text,
+                title=_("Private Message from %(user)s") % {'user': self.user}
             )
 
     def message_user(self, msg):

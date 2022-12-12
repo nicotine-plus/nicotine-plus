@@ -1186,7 +1186,7 @@ class Transfers:
                 except OSError as error:
                     log.add(_("Cannot download file to %(path)s: %(error)s"), {"path": incomplete_path, "error": error})
                     self.abort_download(download, abort_reason="Download folder error")
-                    core.notifications.show_text_notification(
+                    core.notifications.show_download_notification(
                         str(error), title=_("Download Folder Error"), high_priority=True)
                     need_update = False
 
@@ -1949,7 +1949,7 @@ class Transfers:
     def file_downloaded_actions(self, user, filepath):
 
         if config.sections["notifications"]["notification_popup_file"]:
-            core.notifications.show_text_notification(
+            core.notifications.show_download_notification(
                 _("%(file)s downloaded from %(user)s") % {
                     'user': user,
                     'file': filepath.rsplit(os.sep, 1)[1]
@@ -1978,7 +1978,7 @@ class Transfers:
             return
 
         if config.sections["notifications"]["notification_popup_folder"]:
-            core.notifications.show_text_notification(
+            core.notifications.show_download_notification(
                 _("%(folder)s downloaded from %(user)s") % {
                     'user': user,
                     'folder': folderpath
@@ -2018,7 +2018,9 @@ class Transfers:
                 }
             )
             self.abort_download(transfer, abort_reason="Download folder error")
-            core.notifications.show_text_notification(str(error), title=_("Download Folder Error"), high_priority=True)
+            core.notifications.show_download_notification(
+                str(error), title=_("Download Folder Error"), high_priority=True
+            )
             return
 
         transfer.status = "Finished"
