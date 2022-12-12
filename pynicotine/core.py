@@ -358,7 +358,6 @@ class Core:
             bound_ip=self.bindip,
             listen_port_range=(self.port, self.port) if self.port else config.sections["server"]["portrange"]
         ))
-        return
 
     def disconnect(self):
         self.queue.append(slskmessages.ServerDisconnect())

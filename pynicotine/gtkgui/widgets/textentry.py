@@ -521,17 +521,17 @@ class TextSearchBar:
         if not self.search_bar.get_search_mode():
             return
 
-        buffer = self.textview.get_buffer()
+        text_buffer = self.textview.get_buffer()
         query = self.entry.get_text()
 
         self.textview.emit("select-all", False)
 
         if search_type == "typing":
-            start, end = buffer.get_bounds()
+            start, end = text_buffer.get_bounds()
             iterator = start
         else:
-            current = buffer.get_mark("insert")
-            iterator = buffer.get_iter_at_mark(current)
+            current = text_buffer.get_mark("insert")
+            iterator = text_buffer.get_iter_at_mark(current)
 
         if search_type == "previous":
             match = iterator.backward_search(
@@ -544,21 +544,21 @@ class TextSearchBar:
             match_start, match_end = match
 
             if search_type == "previous":
-                buffer.place_cursor(match_start)
-                buffer.select_range(match_start, match_end)
+                text_buffer.place_cursor(match_start)
+                text_buffer.select_range(match_start, match_end)
             else:
-                buffer.place_cursor(match_end)
-                buffer.select_range(match_end, match_start)
+                text_buffer.place_cursor(match_end)
+                text_buffer.select_range(match_end, match_start)
 
             self.textview.scroll_to_iter(match_start, 0, False, 0.5, 0.5)
 
         elif not restarted and search_type != "typing":
-            start, end = buffer.get_bounds()
+            start, end = text_buffer.get_bounds()
 
             if search_type == "previous":
-                buffer.place_cursor(end)
+                text_buffer.place_cursor(end)
             elif search_type == "next":
-                buffer.place_cursor(start)
+                text_buffer.place_cursor(start)
 
             self.on_search_match(search_type, restarted=True)
 

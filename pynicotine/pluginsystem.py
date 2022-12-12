@@ -82,90 +82,119 @@ class BasePlugin:
         pass
 
     def public_room_message_notification(self, room, user, line):
+        # Override method in plugin
         pass
 
     def search_request_notification(self, searchterm, user, token):
+        # Override method in plugin
         pass
 
     def distrib_search_notification(self, searchterm, user, token):
+        # Override method in plugin
         pass
 
     def incoming_private_chat_event(self, user, line):
+        # Override method in plugin
         pass
 
     def incoming_private_chat_notification(self, user, line):
+        # Override method in plugin
         pass
 
     def incoming_public_chat_event(self, room, user, line):
+        # Override method in plugin
         pass
 
     def incoming_public_chat_notification(self, room, user, line):
+        # Override method in plugin
         pass
 
     def outgoing_private_chat_event(self, user, line):
+        # Override method in plugin
         pass
 
     def outgoing_private_chat_notification(self, user, line):
+        # Override method in plugin
         pass
 
     def outgoing_public_chat_event(self, room, line):
+        # Override method in plugin
         pass
 
     def outgoing_public_chat_notification(self, room, line):
+        # Override method in plugin
         pass
 
     def outgoing_global_search_event(self, text):
+        # Override method in plugin
         pass
 
     def outgoing_room_search_event(self, rooms, text):
+        # Override method in plugin
         pass
 
     def outgoing_buddy_search_event(self, text):
+        # Override method in plugin
         pass
 
     def outgoing_user_search_event(self, users, text):
+        # Override method in plugin
         pass
 
     def user_resolve_notification(self, user, ip_address, port, country):
+        # Override method in plugin
         pass
 
     def server_connect_notification(self):
+        # Override method in plugin
         pass
 
     def server_disconnect_notification(self, userchoice):
+        # Override method in plugin
         pass
 
     def join_chatroom_notification(self, room):
+        # Override method in plugin
         pass
 
     def leave_chatroom_notification(self, room):
+        # Override method in plugin
         pass
 
     def user_join_chatroom_notification(self, room, user):
+        # Override method in plugin
         pass
 
     def user_leave_chatroom_notification(self, room, user):
+        # Override method in plugin
         pass
 
     def user_stats_notification(self, user, stats):
+        # Override method in plugin
         pass
 
     def user_status_notification(self, user, status, privileged):
+        # Override method in plugin
         pass
 
     def upload_queued_notification(self, user, virtual_path, real_path):
+        # Override method in plugin
         pass
 
     def upload_started_notification(self, user, virtual_path, real_path):
+        # Override method in plugin
         pass
 
     def upload_finished_notification(self, user, virtual_path, real_path):
+        # Override method in plugin
         pass
 
     def download_started_notification(self, user, virtual_path, real_path):
+        # Override method in plugin
         pass
 
     def download_finished_notification(self, user, virtual_path, real_path):
+        # Override method in plugin
         pass
 
     # The following are functions to make your life easier,
@@ -215,8 +244,8 @@ class BasePlugin:
         if command_type == "cli":
             return
 
-        function = self.send_public if command_type == "chatroom" else self.send_private
-        function(source, text)
+        func = self.send_public if command_type == "chatroom" else self.send_private
+        func(source, text)
 
     def echo_message(self, text, message_type="local"):
         """ Convenience function to display a raw message the same window
@@ -232,8 +261,8 @@ class BasePlugin:
             print(text)
             return
 
-        function = self.echo_public if command_type == "chatroom" else self.echo_private
-        function(source, text, message_type)
+        func = self.echo_public if command_type == "chatroom" else self.echo_private
+        func(source, text, message_type)
 
     # Obsolete functions
 

@@ -675,7 +675,7 @@ class Shares:
             "path": realfilename
         })
 
-        folder, _sep, file = virtualfilename.rpartition('\\')
+        folder_path, _sep, basename = virtualfilename.rpartition('\\')
         shared_files = self.share_dbs.get("files")
         bshared_files = self.share_dbs.get("buddyfiles")
         file_is_shared = False
@@ -690,14 +690,14 @@ class Shares:
                         pass
 
                     else:
-                        for fileinfo in bshared_files.get(str(folder), []):
-                            if file == fileinfo[0]:
+                        for fileinfo in bshared_files.get(str(folder_path), []):
+                            if basename == fileinfo[0]:
                                 file_is_shared = True
                                 break
 
             if not file_is_shared and shared_files is not None:
-                for fileinfo in shared_files.get(str(folder), []):
-                    if file == fileinfo[0]:
+                for fileinfo in shared_files.get(str(folder_path), []):
+                    if basename == fileinfo[0]:
                         file_is_shared = True
                         break
 

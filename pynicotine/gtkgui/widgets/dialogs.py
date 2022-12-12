@@ -273,8 +273,8 @@ class MessageDialog(Window):
                                 cursor_visible=False, pixels_above_lines=1, pixels_below_lines=1,
                                 wrap_mode=Gtk.WrapMode.WORD_CHAR, visible=True)
 
-        buffer = textview.get_buffer()
-        buffer.set_text(long_message)
+        text_buffer = textview.get_buffer()
+        text_buffer.set_text(long_message)
 
         frame.set_property("child", scrolled_window)
         scrolled_window.set_property("child", textview)

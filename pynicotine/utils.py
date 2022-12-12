@@ -175,8 +175,8 @@ def truncate_string_byte(string, byte_limit, encoding='utf-8', ellipsize=False):
         return string
 
     if ellipsize:
-        ellipsis = "…".encode(encoding)
-        string_bytes = string_bytes[:max(byte_limit - len(ellipsis), 0)].rstrip() + ellipsis
+        ellipsis_char = "…".encode(encoding)
+        string_bytes = string_bytes[:max(byte_limit - len(ellipsis_char), 0)].rstrip() + ellipsis_char
     else:
         string_bytes = string_bytes[:byte_limit]
 

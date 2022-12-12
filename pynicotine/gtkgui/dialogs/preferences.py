@@ -743,12 +743,12 @@ class UserInfoPage:
 
     def get_settings(self):
 
-        buffer = self.Description.get_buffer()
+        text_buffer = self.Description.get_buffer()
 
-        start = buffer.get_start_iter()
-        end = buffer.get_end_iter()
+        start = text_buffer.get_start_iter()
+        end = text_buffer.get_end_iter()
 
-        descr = repr(buffer.get_text(start, end, True).replace("; ", ", "))
+        descr = repr(text_buffer.get_text(start, end, True).replace("; ", ", "))
 
         return {
             "userinfo": {
@@ -2378,10 +2378,10 @@ class Preferences(Dialog):
             return widget.get_text()
 
         if isinstance(widget, Gtk.TextView):
-            buffer = widget.get_buffer()
-            start, end = buffer.get_bounds()
+            text_buffer = widget.get_buffer()
+            start, end = text_buffer.get_bounds()
 
-            return widget.get_buffer().get_text(start, end, True)
+            return text_buffer.get_text(start, end, True)
 
         if isinstance(widget, Gtk.CheckButton):
             try:
