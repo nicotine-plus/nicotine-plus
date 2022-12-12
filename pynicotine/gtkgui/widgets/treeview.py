@@ -502,7 +502,7 @@ class TreeView:
         if not search_term:
             return True
 
-        for i, _column in enumerate(self.widget.get_columns()):
+        for i in range(self.widget.get_n_columns()):
             if model.get_column_type(i) != GObject.TYPE_STRING:
                 continue
 
@@ -731,7 +731,7 @@ def on_search_match(model, _column, search_term, iterator, treeview):
     if not search_term:
         return True
 
-    for i, _column in enumerate(treeview.get_columns()):
+    for i in range(treeview.get_n_columns()):
         if model.get_column_type(i) != GObject.TYPE_STRING:
             continue
 
