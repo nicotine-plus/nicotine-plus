@@ -358,7 +358,7 @@ class SlskProtoThread(threading.Thread):
             try:
                 # Send a broadcast packet on a local address (doesn't need to be reachable,
                 # but MacOS requires port to be non-zero)
-                local_socket.connect(("152.89.162.24", 1))
+                local_socket.connect(("10.255.255.255", 1))
 
                 # This returns the "primary" IP on the local box, even if that IP is a NAT/private/internal IP
                 ip_address = local_socket.getsockname()[0]
