@@ -137,8 +137,10 @@ class Notifications:
             notification.set_priority(priority)
 
             if action:
-                action_target_variant = GLib.Variant("s", action_target) if action_target else None
-                notification.set_default_action_and_target(action, action_target_variant)
+                if action_target:
+                    notification.set_default_action_and_target(action, GLib.Variant("s", action_target))
+                else:
+                    notification.set_default_action(action)
 
             self.application.send_notification(None, notification)
 

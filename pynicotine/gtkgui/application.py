@@ -333,7 +333,7 @@ class Application:
         action.connect("activate", self.on_chatroom_notification_activated)
         self.add_action(action)
 
-        action = Gio.SimpleAction(name="download-notification-activated", parameter_type=GLib.VariantType("s"))
+        action = Gio.SimpleAction(name="download-notification-activated")
         action.connect("activate", self.on_download_notification_activated)
         self.add_action(action)
 
@@ -561,7 +561,7 @@ class Application:
 
         self.window.show()
 
-    def on_download_notification_activated(self, _action):
+    def on_download_notification_activated(self, *_args):
         self.window.change_main_page(self.window.downloads_page)
         self.window.show()
 
