@@ -145,10 +145,21 @@ class Uploads(TransferList):
 
     def on_open_file_manager(self, *_args):
 
+        command = config.sections["ui"]["filemanager"]
         transfer = next(iter(self.selected_transfers), None)
 
-        if transfer:
-            open_file_path(file_path=transfer.path, command=config.sections["ui"]["filemanager"])
+        if not transfer:
+            return
+
+        if "$" in command and len(self.selected_transfers) == 1:
+            # Try to select the file in the manager if configured
+            base_name = str.split(transfer.filename, '\\')[-1]
+            file_path = os.path.join(transfer.path, base_name)
+        else:
+            # Open into a folder without selecting a file
+            file_path = transfer.path
+
+        open_file_path(file_path, command=command)
 
     def on_play_files(self, *_args):
 
