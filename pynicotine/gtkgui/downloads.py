@@ -158,15 +158,30 @@ class Downloads(TransferList):
 
     def on_open_file_manager(self, *_args):
 
+        command = config.sections["ui"]["filemanager"]
         download_folder = config.sections["transfers"]["downloaddir"]
         folder_path = config.sections["transfers"]["incompletedir"] or download_folder
+        file_path = None
 
         for transfer in self.selected_transfers:
-            if transfer.status == "Finished":
+            if "$" in command and len(self.selected_transfers) == 1:
+                # Try to select the file in the manager if configured
+                if transfer.file is not None:
+                    # Incomplete
+                    file_path = transfer.file.name.decode("utf-8", "replace")
+                    break
+                else:
+                    # Finished
+                    file_path = core.transfers.get_existing_download_path(
+                        transfer.user, transfer.filename, transfer.path, transfer.size, always_return=True)
+                    break
+
+            elif transfer.status == "Finished":
+                # Open into a folder without selecting a file
                 folder_path = transfer.path or download_folder
                 break
 
-        open_file_path(folder_path, command=config.sections["ui"]["filemanager"])
+        open_file_path(file_path or folder_path, command=command)
 
     def on_play_files(self, *_args):
 
