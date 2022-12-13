@@ -382,6 +382,9 @@
                 <property name="visible">True</property>
                 <property name="valign">center</property>
                 <property name="width-chars">16</property>
+                <property name="secondary-icon-name">edit-undo-symbolic</property>
+                <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
+                <signal name="icon-press" handler="on_default_server"/>
               </object>
             </child>
           </object>

@@ -213,6 +213,10 @@ class NetworkPage:
     def on_toggle_upnp(self, widget, *_args):
         self.portmap_required = widget.get_active()
 
+    def on_default_server(self, *_args):
+        server_address, server_port = config.defaults["server"]["server"]
+        self.Server.set_text(f"{server_address}:{server_port}")
+
 
 class DownloadsPage:
 
