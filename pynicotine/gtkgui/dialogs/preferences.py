@@ -858,7 +858,7 @@ class IgnoredUsersPage:
 
         ip_address = dialog.get_entry_value()
 
-        if ip_address is None or ip_address == "" or ip_address.count(".") != 3:
+        if not ip_address or ip_address.count(".") != 3:
             return
 
         for chars in ip_address.split("."):
@@ -898,17 +898,24 @@ class BannedUsersPage:
     def __init__(self, application):
 
         ui_template = UserInterface(scope=self, path="settings/ban.ui")
-
-        # pylint: disable=invalid-name
-        (self.BannedList, self.BlockedList, self.CustomBan, self.CustomGeoBlock, self.GeoBlock, self.GeoBlockCC,
-         self.Main, self.UseCustomBan, self.UseCustomGeoBlock) = ui_template.widgets
+        (
+            self.Main,  # pylint: disable=invalid-name
+            self.ban_message_entry,
+            self.ban_message_toggle,
+            self.banned_ips_container,
+            self.banned_users_container,
+            self.geo_block_country_entry,
+            self.geo_block_message_entry,
+            self.geo_block_message_toggle,
+            self.geo_block_toggle
+        ) = ui_template.widgets
 
         self.application = application
         self.ip_block_required = False
 
         self.banned_users = []
         self.banned_users_list_view = TreeView(
-            application.window, parent=self.BannedList, multi_select=True,
+            application.window, parent=self.banned_users_container, multi_select=True,
             columns=[
                 {"column_id": "username", "column_type": "text", "title": _("Username"), "sort_column": 0}
             ]
@@ -916,7 +923,7 @@ class BannedUsersPage:
 
         self.banned_ips = {}
         self.banned_ips_list_view = TreeView(
-            application.window, parent=self.BlockedList, multi_select=True,
+            application.window, parent=self.banned_ips_container, multi_select=True,
             columns=[
                 {"column_id": "ip_address", "column_type": "text", "title": _("IP Address"), "sort_column": 0,
                  "width": 50, "expand_column": True},
@@ -931,12 +938,12 @@ class BannedUsersPage:
                 "ipblocklist": self.banned_ips_list_view
             },
             "transfers": {
-                "usecustomban": self.UseCustomBan,
-                "customban": self.CustomBan,
-                "geoblock": self.GeoBlock,
-                "geoblockcc": self.GeoBlockCC,
-                "usecustomgeoblock": self.UseCustomGeoBlock,
-                "customgeoblock": self.CustomGeoBlock
+                "usecustomban": self.ban_message_toggle,
+                "customban": self.ban_message_entry,
+                "geoblock": self.geo_block_toggle,
+                "geoblockcc": None,
+                "usecustomgeoblock": self.geo_block_message_toggle,
+                "customgeoblock": self.geo_block_message_entry
             }
         }
 
@@ -951,7 +958,7 @@ class BannedUsersPage:
 
         self.banned_users = config.sections["server"]["banlist"][:]
         self.banned_ips = config.sections["server"]["ipblocklist"].copy()
-        self.GeoBlockCC.set_text(config.sections["transfers"]["geoblockcc"][0])
+        self.geo_block_country_entry.set_text(config.sections["transfers"]["geoblockcc"][0])
 
         self.ip_block_required = False
 
@@ -965,16 +972,16 @@ class BannedUsersPage:
                 "ipblocklist": self.banned_ips.copy()
             },
             "transfers": {
-                "usecustomban": self.UseCustomBan.get_active(),
-                "customban": self.CustomBan.get_text(),
-                "geoblock": self.GeoBlock.get_active(),
-                "geoblockcc": [self.GeoBlockCC.get_text().upper()],
-                "usecustomgeoblock": self.UseCustomGeoBlock.get_active(),
-                "customgeoblock": self.CustomGeoBlock.get_text()
+                "usecustomban": self.ban_message_toggle.get_active(),
+                "customban": self.ban_message_entry.get_text(),
+                "geoblock": self.geo_block_toggle.get_active(),
+                "geoblockcc": [self.geo_block_country_entry.get_text().upper()],
+                "usecustomgeoblock": self.geo_block_message_toggle.get_active(),
+                "customgeoblock": self.geo_block_message_entry.get_text()
             }
         }
 
-    def on_add_banned_response(self, dialog, _response_id, _data):
+    def on_add_banned_user_response(self, dialog, _response_id, _data):
 
         user = dialog.get_entry_value()
 
@@ -982,16 +989,16 @@ class BannedUsersPage:
             self.banned_users.append(user)
             self.banned_users_list_view.add_row([user])
 
-    def on_add_banned(self, *_args):
+    def on_add_banned_user(self, *_args):
 
         EntryDialog(
             parent=self.application.preferences,
             title=_("Ban User"),
             message=_("Enter the name of the user you want to ban:"),
-            callback=self.on_add_banned_response
+            callback=self.on_add_banned_user_response
         ).show()
 
-    def on_remove_banned(self, *_args):
+    def on_remove_banned_user(self, *_args):
 
         for iterator in reversed(self.banned_users_list_view.get_selected_rows()):
             user = self.banned_users_list_view.get_row_value(iterator, 0)
@@ -999,24 +1006,21 @@ class BannedUsersPage:
             self.banned_users_list_view.remove_row(iterator)
             self.banned_users.remove(user)
 
-    def on_add_blocked_response(self, dialog, _response_id, _data):
+    def on_add_banned_ip_response(self, dialog, _response_id, _data):
 
         ip_address = dialog.get_entry_value()
 
-        if ip_address is None or ip_address == "" or ip_address.count(".") != 3:
+        if not ip_address or ip_address.count(".") != 3:
             return
 
         for chars in ip_address.split("."):
-
             if chars == "*":
                 continue
+
             if not chars.isdigit():
                 return
 
-            try:
-                if int(chars) > 255:
-                    return
-            except Exception:
+            if int(chars) > 255:
                 return
 
         if ip_address not in self.banned_ips:
@@ -1024,16 +1028,16 @@ class BannedUsersPage:
             self.banned_ips_list_view.add_row([ip_address, ""])
             self.ip_block_required = True
 
-    def on_add_blocked(self, *_args):
+    def on_add_banned_ip(self, *_args):
 
         EntryDialog(
             parent=self.application.preferences,
             title=_("Block IP Address"),
             message=_("Enter an IP address you want to block:") + " " + _("* is a wildcard"),
-            callback=self.on_add_blocked_response
+            callback=self.on_add_banned_ip_response
         ).show()
 
-    def on_remove_blocked(self, *_args):
+    def on_remove_banned_ip(self, *_args):
 
         for iterator in reversed(self.banned_ips_list_view.get_selected_rows()):
             ip_address = self.banned_ips_list_view.get_row_value(iterator, 0)
