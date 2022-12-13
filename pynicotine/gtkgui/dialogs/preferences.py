@@ -775,15 +775,17 @@ class IgnoredUsersPage:
     def __init__(self, application):
 
         ui_template = UserInterface(scope=self, path="settings/ignore.ui")
-
-        # pylint: disable=invalid-name
-        self.IgnoredIPs, self.IgnoredUsers, self.Main = ui_template.widgets
+        (
+            self.Main,  # pylint: disable=invalid-name
+            self.ignored_ips_container,
+            self.ignored_users_container
+        ) = ui_template.widgets
 
         self.application = application
 
         self.ignored_users = []
         self.ignored_users_list_view = TreeView(
-            application.window, parent=self.IgnoredUsers, multi_select=True,
+            application.window, parent=self.ignored_users_container, multi_select=True,
             columns=[
                 {"column_id": "username", "column_type": "text", "title": _("Username"), "sort_column": 0}
             ]
@@ -791,7 +793,7 @@ class IgnoredUsersPage:
 
         self.ignored_ips = {}
         self.ignored_ips_list_view = TreeView(
-            application.window, parent=self.IgnoredIPs, multi_select=True,
+            application.window, parent=self.ignored_ips_container, multi_select=True,
             columns=[
                 {"column_id": "ip_address", "column_type": "text", "title": _("IP Address"), "sort_column": 0,
                  "width": 50, "expand_column": True},
@@ -827,7 +829,7 @@ class IgnoredUsersPage:
             }
         }
 
-    def on_add_ignored_response(self, dialog, _response_id, _data):
+    def on_add_ignored_user_response(self, dialog, _response_id, _data):
 
         user = dialog.get_entry_value()
 
@@ -835,16 +837,16 @@ class IgnoredUsersPage:
             self.ignored_users.append(user)
             self.ignored_users_list_view.add_row([str(user)])
 
-    def on_add_ignored(self, *_args):
+    def on_add_ignored_user(self, *_args):
 
         EntryDialog(
             parent=self.application.preferences,
             title=_("Ignore User"),
             message=_("Enter the name of the user you want to ignore:"),
-            callback=self.on_add_ignored_response
+            callback=self.on_add_ignored_user_response
         ).show()
 
-    def on_remove_ignored(self, *_args):
+    def on_remove_ignored_user(self, *_args):
 
         for iterator in reversed(self.ignored_users_list_view.get_selected_rows()):
             user = self.ignored_users_list_view.get_row_value(iterator, 0)
@@ -860,16 +862,13 @@ class IgnoredUsersPage:
             return
 
         for chars in ip_address.split("."):
-
             if chars == "*":
                 continue
+
             if not chars.isdigit():
                 return
 
-            try:
-                if int(chars) > 255:
-                    return
-            except Exception:
+            if int(chars) > 255:
                 return
 
         if ip_address not in self.ignored_ips:
