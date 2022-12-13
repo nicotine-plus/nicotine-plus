@@ -29,7 +29,7 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
-            <property name="label" translatable="yes">Chat History</property>
+            <property name="label" translatable="yes">Chats</property>
             <property name="halign">start</property>
             <property name="selectable">True</property>
             <property name="xalign">0</property>
@@ -40,8 +40,21 @@
           </object>
         </child>
         <child>
+          <object class="GtkCheckButton" id="SpellCheck">
+            <property name="label" translatable="yes">Enable spell checker (requires a restart)</property>
+            <property name="visible">True</property>
+          </object>
+        </child>
+        <child>
           <object class="GtkCheckButton" id="ReopenPrivateChats">
             <property name="label" translatable="yes">Restore previously open private chats on startup</property>
+            <property name="visible">True</property>
+            <property name="use-underline">True</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="ctcp_toggle">
+            <property name="label" translatable="yes">Enable CTCP-like private message responses (client version)</property>
             <property name="visible">True</property>
             <property name="use-underline">True</property>
           </object>
@@ -128,12 +141,6 @@
                 <property name="visible">True</property>
                 <property name="spacing">12</property>
                 <property name="orientation">vertical</property>
-                <child>
-                  <object class="GtkCheckButton" id="SpellCheck">
-                    <property name="label" translatable="yes">Enable spell checker (requires a restart)</property>
-                    <property name="visible">True</property>
-                  </object>
-                </child>
                 <child>
                   <object class="GtkCheckButton" id="CompletionTabCheck">
                     <property name="label" translatable="yes">Enable tab-key completion</property>

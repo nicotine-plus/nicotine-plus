@@ -73,7 +73,6 @@ class NetworkPage:
             self.auto_connect_startup_toggle,
             self.auto_reply_message_entry,
             self.check_port_status_label,
-            self.ctcp_toggle,
             self.current_port_label,
             self.first_port_spinner,
             self.last_port_spinner,
@@ -98,8 +97,7 @@ class NetworkPage:
                 "autoreply": self.auto_reply_message_entry,
                 "interface": self.network_interface_combobox,
                 "upnp": self.upnp_toggle,
-                "auto_connect_startup": self.auto_connect_startup_toggle,
-                "ctcpmsgs": None  # Special case in set_settings
+                "auto_connect_startup": self.auto_connect_startup_toggle
             }
         }
 
@@ -141,8 +139,6 @@ class NetworkPage:
         self.first_port_spinner.set_value(first_port)
         self.last_port_spinner.set_value(last_port)
 
-        self.ctcp_toggle.set_active(not config.sections["server"]["ctcpmsgs"])
-
         self.portmap_required = False
 
     def get_settings(self):
@@ -172,8 +168,7 @@ class NetworkPage:
                 "autoreply": self.auto_reply_message_entry.get_text(),
                 "interface": self.network_interface_combobox.get_active_text(),
                 "upnp": self.upnp_toggle.get_active(),
-                "auto_connect_startup": self.auto_connect_startup_toggle.get_active(),
-                "ctcpmsgs": not self.ctcp_toggle.get_active()
+                "auto_connect_startup": self.auto_connect_startup_toggle.get_active()
             }
         }
 
@@ -1062,7 +1057,7 @@ class ChatsPage:
          self.PrivateLogLines, self.PrivateMessage,
          self.ReopenPrivateChats, self.ReplaceCheck, self.ReplacementList,
          self.RoomLogLines, self.RoomMessage, self.SpellCheck,
-         self.TTSCommand, self.TextToSpeech) = ui_template.widgets
+         self.TTSCommand, self.TextToSpeech, self.ctcp_toggle) = ui_template.widgets
 
         self.application = application
         self.completion_required = False
@@ -1088,6 +1083,9 @@ class ChatsPage:
         )
 
         self.options = {
+            "server": {
+                "ctcpmsgs": None  # Special case in set_settings
+            },
             "logging": {
                 "readroomlines": self.RoomLogLines,
                 "readprivatelines": self.PrivateLogLines,
@@ -1138,6 +1136,8 @@ class ChatsPage:
         except (ImportError, ValueError):
             self.SpellCheck.set_visible(False)
 
+        self.ctcp_toggle.set_active(not config.sections["server"]["ctcpmsgs"])
+
         self.censored_patterns = config.sections["words"]["censored"][:]
         self.replacements = config.sections["words"]["autoreplaced"].copy()
 
@@ -1148,6 +1148,9 @@ class ChatsPage:
         self.completion_required = False
 
         return {
+            "server": {
+                "ctcpmsgs": not self.ctcp_toggle.get_active()
+            },
             "logging": {
                 "readroomlines": self.RoomLogLines.get_value_as_int(),
                 "readprivatelines": self.PrivateLogLines.get_value_as_int(),
