@@ -1982,10 +1982,12 @@ class UrlHandlersPage:
             del self.protocols[protocol]
 
     def on_default_media_player(self, *_args):
-        self.media_player_combobox.get_child().set_text("")
+        default_media_player = config.defaults["players"]["default"]
+        self.media_player_combobox.get_child().set_text(default_media_player)
 
     def on_default_file_manager(self, *_args):
-        self.file_manager_combobox.get_child().set_text("")
+        default_file_manager = config.defaults["ui"]["filemanager"]
+        self.file_manager_combobox.get_child().set_text(default_file_manager)
 
 
 class NowPlayingPage:
