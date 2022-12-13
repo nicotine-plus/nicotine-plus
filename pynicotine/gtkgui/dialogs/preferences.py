@@ -217,6 +217,10 @@ class NetworkPage:
     def on_toggle_upnp(self, *_args):
         self.portmap_required = self.upnp_toggle.get_active()
 
+    def on_default_server(self, *_args):
+        server_address, server_port = config.defaults["server"]["server"]
+        self.soulseek_server_entry.set_text(f"{server_address}:{server_port}")
+
 
 class DownloadsPage:
 
