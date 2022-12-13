@@ -1654,30 +1654,45 @@ class LoggingPage:
     def __init__(self, application):
 
         ui_template = UserInterface(scope=self, path="settings/log.ui")
-
-        # pylint: disable=invalid-name
-        (self.DebugLogDir, self.LogDebug, self.LogFileFormat,
-         self.LogPrivate, self.LogRooms, self.LogTransfers, self.Main, self.PrivateLogDir,
-         self.RoomLogDir, self.TransfersLogDir) = ui_template.widgets
+        (
+            self.Main,  # pylint: disable=invalid-name
+            self.chatroom_log_folder_button,
+            self.debug_log_folder_button,
+            self.log_chatroom_toggle,
+            self.log_debug_toggle,
+            self.log_private_chat_toggle,
+            self.log_timestamp_format_entry,
+            self.log_transfer_toggle,
+            self.private_chat_log_folder_button,
+            self.transfer_log_folder_button
+        ) = ui_template.widgets
 
         self.application = application
 
-        self.private_log_dir = FileChooserButton(self.PrivateLogDir, application.preferences, "folder")
-        self.room_log_dir = FileChooserButton(self.RoomLogDir, application.preferences, "folder")
-        self.transfers_log_dir = FileChooserButton(self.TransfersLogDir, application.preferences, "folder")
-        self.debug_log_dir = FileChooserButton(self.DebugLogDir, application.preferences, "folder")
+        self.private_chat_log_folder_button = FileChooserButton(
+            self.private_chat_log_folder_button, parent=application.preferences, chooser_type="folder"
+        )
+        self.chatroom_log_folder_button = FileChooserButton(
+            self.chatroom_log_folder_button, parent=application.preferences, chooser_type="folder"
+        )
+        self.transfer_log_folder_button = FileChooserButton(
+            self.transfer_log_folder_button, parent=application.preferences, chooser_type="folder"
+        )
+        self.debug_log_folder_button = FileChooserButton(
+            self.debug_log_folder_button, parent=application.preferences, chooser_type="folder"
+        )
 
         self.options = {
             "logging": {
-                "privatechat": self.LogPrivate,
-                "privatelogsdir": self.private_log_dir,
-                "chatrooms": self.LogRooms,
-                "roomlogsdir": self.room_log_dir,
-                "transfers": self.LogTransfers,
-                "transferslogsdir": self.transfers_log_dir,
-                "debug_file_output": self.LogDebug,
-                "debuglogsdir": self.debug_log_dir,
-                "log_timestamp": self.LogFileFormat
+                "privatechat": self.log_private_chat_toggle,
+                "privatelogsdir": self.private_chat_log_folder_button,
+                "chatrooms": self.log_chatroom_toggle,
+                "roomlogsdir": self.chatroom_log_folder_button,
+                "transfers": self.log_transfer_toggle,
+                "transferslogsdir": self.transfer_log_folder_button,
+                "debug_file_output": self.log_debug_toggle,
+                "debuglogsdir": self.debug_log_folder_button,
+                "log_timestamp": self.log_timestamp_format_entry
             }
         }
 
@@ -1688,20 +1703,20 @@ class LoggingPage:
 
         return {
             "logging": {
-                "privatechat": self.LogPrivate.get_active(),
-                "privatelogsdir": self.private_log_dir.get_path(),
-                "chatrooms": self.LogRooms.get_active(),
-                "roomlogsdir": self.room_log_dir.get_path(),
-                "transfers": self.LogTransfers.get_active(),
-                "transferslogsdir": self.transfers_log_dir.get_path(),
-                "debug_file_output": self.LogDebug.get_active(),
-                "debuglogsdir": self.debug_log_dir.get_path(),
-                "log_timestamp": self.LogFileFormat.get_text()
+                "privatechat": self.log_private_chat_toggle.get_active(),
+                "privatelogsdir": self.private_chat_log_folder_button.get_path(),
+                "chatrooms": self.log_chatroom_toggle.get_active(),
+                "roomlogsdir": self.chatroom_log_folder_button.get_path(),
+                "transfers": self.log_transfer_toggle.get_active(),
+                "transferslogsdir": self.transfer_log_folder_button.get_path(),
+                "debug_file_output": self.log_debug_toggle.get_active(),
+                "debuglogsdir": self.debug_log_folder_button.get_path(),
+                "log_timestamp": self.log_timestamp_format_entry.get_text()
             }
         }
 
     def on_default_timestamp(self, *_args):
-        self.LogFileFormat.set_text(config.defaults["logging"]["log_timestamp"])
+        self.log_timestamp_format_entry.set_text(config.defaults["logging"]["log_timestamp"])
 
 
 class SearchesPage:
