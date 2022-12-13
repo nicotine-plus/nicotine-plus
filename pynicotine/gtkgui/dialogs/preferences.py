@@ -78,7 +78,7 @@ class NetworkPage:
             self.last_port_spinner,
             self.network_interface_combobox,
             self.network_interface_label,
-            self.soulseek_server_label,
+            self.soulseek_server_entry,
             self.upnp_toggle,
             self.username_entry
         ) = ui_template.widgets
@@ -134,7 +134,7 @@ class NetworkPage:
 
         # Special options
         server_hostname, server_port = config.sections["server"]["server"]
-        self.soulseek_server_label.set_text(f"{server_hostname}:{server_port}")
+        self.soulseek_server_entry.set_text(f"{server_hostname}:{server_port}")
 
         self.first_port_spinner.set_value(first_port)
         self.last_port_spinner.set_value(last_port)
@@ -146,7 +146,7 @@ class NetworkPage:
         self.portmap_required = False
 
         try:
-            server_addr = self.soulseek_server_label.get_text().split(":")
+            server_addr = self.soulseek_server_entry.get_text().split(":")
             server_addr[1] = int(server_addr[1])
             server_addr = tuple(server_addr)
 
