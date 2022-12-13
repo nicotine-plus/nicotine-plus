@@ -1,24 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.0"/>
-  <object class="GtkAdjustment" id="adjustment_FirstPort">
+  <object class="GtkAdjustment" id="_first_port_adjustment">
     <property name="lower">1024</property>
     <property name="upper">65535</property>
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
-  <object class="GtkAdjustment" id="adjustment_LastPort">
+  <object class="GtkAdjustment" id="_last_port_adjustment">
     <property name="lower">1024</property>
     <property name="upper">65535</property>
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
-  <object class="GtkAdjustment" id="adjustment_UPnPInterval">
-    <property name="upper">12</property>
-    <property name="step-increment">1</property>
-    <property name="page-increment">1</property>
-  </object>
-  <object class="GtkAdjustment" id="adjustment_AutoAway">
+  <object class="GtkAdjustment" id="_auto_away_adjustment">
     <property name="upper">10000</property>
     <property name="step-increment">5</property>
     <property name="page-increment">10</property>
@@ -81,7 +76,7 @@
                             <property name="xalign">0</property>
                             <property name="wrap">True</property>
                             <property name="wrap-mode">word-char</property>
-                            <property name="mnemonic-widget">Login</property>
+                            <property name="mnemonic-widget">username_entry</property>
                           </object>
                         </child>
                         <child>
@@ -90,7 +85,7 @@
                             <property name="spacing">12</property>
                             <property name="valign">center</property>
                             <child>
-                              <object class="GtkEntry" id="Login">
+                              <object class="GtkEntry" id="username_entry">
                                 <property name="visible">True</property>
                                 <property name="hexpand">True</property>
                                 <property name="width-chars">12</property>
@@ -140,7 +135,7 @@
                             <property name="label" translatable="yes">Listening port range:</property>
                             <property name="wrap">True</property>
                             <property name="wrap-mode">word-char</property>
-                            <property name="mnemonic-widget">FirstPort</property>
+                            <property name="mnemonic-widget">first_port_spinner</property>
                           </object>
                         </child>
                         <child>
@@ -156,11 +151,11 @@
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <child>
-                                  <object class="GtkSpinButton" id="FirstPort">
+                                  <object class="GtkSpinButton" id="first_port_spinner">
                                     <property name="visible">True</property>
                                     <property name="halign">end</property>
                                     <property name="valign">center</property>
-                                    <property name="adjustment">adjustment_FirstPort</property>
+                                    <property name="adjustment">_first_port_adjustment</property>
                                     <property name="numeric">True</property>
                                     <property name="max-width-chars">6</property>
                                     <property name="tooltip-text" translatable="yes">First Port</property>
@@ -185,9 +180,9 @@
                                       </object>
                                     </child>
                                     <child>
-                                      <object class="GtkSpinButton" id="LastPort">
+                                      <object class="GtkSpinButton" id="last_port_spinner">
                                         <property name="visible">True</property>
-                                        <property name="adjustment">adjustment_LastPort</property>
+                                        <property name="adjustment">_last_port_adjustment</property>
                                         <property name="numeric">True</property>
                                         <property name="max-width-chars">6</property>
                                         <property name="tooltip-text" translatable="yes">Last Port</property>
@@ -214,7 +209,7 @@
                             <property name="label" translatable="yes">Public IP address:</property>
                             <property name="wrap">True</property>
                             <property name="wrap-mode">word-char</property>
-                            <property name="mnemonic-widget">CurrentPort</property>
+                            <property name="mnemonic-widget">current_port_label</property>
                           </object>
                         </child>
                         <child>
@@ -222,7 +217,7 @@
                             <property name="visible">True</property>
                             <property name="spacing">18</property>
                             <child>
-                              <object class="GtkLabel" id="CurrentPort">
+                              <object class="GtkLabel" id="current_port_label">
                                 <property name="visible">True</property>
                                 <property name="xalign">0</property>
                                 <property name="label" translatable="yes">Unknown</property>
@@ -232,7 +227,7 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="CheckPortLabel">
+                              <object class="GtkLabel" id="check_port_status_label">
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">Check Port Status</property>
                                 <property name="wrap">True</property>
@@ -282,13 +277,13 @@
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
                 <property name="xalign">0</property>
-                <property name="mnemonic-widget">AutoAway</property>
+                <property name="mnemonic-widget">auto_away_spinner</property>
               </object>
             </child>
             <child>
-              <object class="GtkSpinButton" id="AutoAway">
+              <object class="GtkSpinButton" id="auto_away_spinner">
                 <property name="visible">True</property>
-                <property name="adjustment">adjustment_AutoAway</property>
+                <property name="adjustment">_auto_away_adjustment</property>
                 <property name="numeric">True</property>
                 <property name="valign">center</property>
                 <property name="max-width-chars">6</property>
@@ -308,11 +303,11 @@
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
                 <property name="xalign">0</property>
-                <property name="mnemonic-widget">AutoReply</property>
+                <property name="mnemonic-widget">auto_reply_message_entry</property>
               </object>
             </child>
             <child>
-              <object class="GtkEntry" id="AutoReply">
+              <object class="GtkEntry" id="auto_reply_message_entry">
                 <property name="visible">True</property>
                 <property name="valign">center</property>
                 <property name="width-chars">16</property>
@@ -341,14 +336,14 @@
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="AutoConnectStartup">
+          <object class="GtkCheckButton" id="auto_connect_startup_toggle">
             <property name="label" translatable="yes">Auto-connect to server on startup</property>
             <property name="visible">True</property>
             <property name="use-underline">True</property>
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="UseUPnP">
+          <object class="GtkCheckButton" id="upnp_toggle">
             <property name="label" translatable="yes">Use UPnP to forward listening port</property>
             <property name="visible">True</property>
             <property name="use-underline">True</property>
@@ -356,7 +351,7 @@
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="ctcptogglebutton">
+          <object class="GtkCheckButton" id="ctcp_toggle">
             <property name="label" translatable="yes">Enable CTCP-like private message responses (client version)</property>
             <property name="visible">True</property>
             <property name="use-underline">True</property>
@@ -374,11 +369,11 @@
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
-                <property name="mnemonic-widget">Server</property>
+                <property name="mnemonic-widget">soulseek_server_entry</property>
               </object>
             </child>
             <child>
-              <object class="GtkEntry" id="Server">
+              <object class="GtkEntry" id="soulseek_server_entry">
                 <property name="visible">True</property>
                 <property name="valign">center</property>
                 <property name="width-chars">16</property>
@@ -395,17 +390,17 @@
             <property name="homogeneous">True</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkLabel" id="InterfaceLabel">
+              <object class="GtkLabel" id="network_interface_label">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Network interface:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
-                <property name="mnemonic-widget">Interface</property>
+                <property name="mnemonic-widget">network_interface_combobox</property>
               </object>
             </child>
             <child>
-              <object class="GtkComboBoxText" id="Interface">
+              <object class="GtkComboBoxText" id="network_interface_combobox">
                 <property name="visible">True</property>
                 <property name="has-entry">True</property>
                 <property name="tooltip-text" translatable="yes">Binds connections to a specific network interface, useful for e.g. ensuring a VPN is used at all times. Leave empty to use any available interface. Only change this value if you know what you are doing.</property>

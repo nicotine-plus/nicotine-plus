@@ -67,26 +67,39 @@ class NetworkPage:
     def __init__(self, application):
 
         ui_template = UserInterface(scope=self, path="settings/network.ui")
-
-        # pylint: disable=invalid-name
-        (self.AutoAway, self.AutoConnectStartup, self.AutoReply, self.CheckPortLabel,
-         self.CurrentPort, self.FirstPort, self.Interface, self.InterfaceLabel, self.LastPort, self.Login, self.Main,
-         self.Server, self.UseUPnP, self.ctcptogglebutton) = ui_template.widgets
+        (
+            self.Main,  # pylint: disable=invalid-name
+            self.auto_away_spinner,
+            self.auto_connect_startup_toggle,
+            self.auto_reply_message_entry,
+            self.check_port_status_label,
+            self.ctcp_toggle,
+            self.current_port_label,
+            self.first_port_spinner,
+            self.last_port_spinner,
+            self.network_interface_combobox,
+            self.network_interface_label,
+            self.soulseek_server_entry,
+            self.upnp_toggle,
+            self.username_entry
+        ) = ui_template.widgets
 
         self.application = application
         self.portmap_required = False
 
+        self.check_port_status_label.connect("activate-link", lambda x, url: open_uri(url))
+
         self.options = {
             "server": {
-                "server": None,
-                "login": self.Login,
-                "portrange": None,
-                "autoaway": self.AutoAway,
-                "autoreply": self.AutoReply,
-                "interface": self.Interface,
-                "upnp": self.UseUPnP,
-                "auto_connect_startup": self.AutoConnectStartup,
-                "ctcpmsgs": self.ctcptogglebutton
+                "server": None,  # Special case in set_settings
+                "login": self.username_entry,
+                "portrange": None,  # Special case in set_settings
+                "autoaway": self.auto_away_spinner,
+                "autoreply": self.auto_reply_message_entry,
+                "interface": self.network_interface_combobox,
+                "upnp": self.upnp_toggle,
+                "auto_connect_startup": self.auto_connect_startup_toggle,
+                "ctcpmsgs": None  # Special case in set_settings
             }
         }
 
@@ -94,47 +107,41 @@ class NetworkPage:
 
         self.application.preferences.set_widgets_data(self.options)
 
-        server = config.sections["server"]
+        # Listening port status
+        first_port, last_port = config.sections["server"]["portrange"]
 
-        if server["server"] is not None:
-            server_address, server_port = server["server"]
-            self.Server.set_text(f"{server_address}:{server_port}")
-
-        text = _("<b>%(ip)s</b>, port %(port)s") % {
+        self.current_port_label.set_markup(_("<b>%(ip)s</b>, port %(port)s") % {
             "ip": core.user_ip_address or _("Unknown"),
             "port": core.protothread.listenport or _("Unknown")
-        }
-        self.CurrentPort.set_markup(text)
+        })
 
-        url = config.portchecker_url % str(core.protothread.listenport or server["portrange"][0])
-        port_status_label = _("Check Port Status")
-        self.CheckPortLabel.set_markup(f"<a href='{url}' title='{url}'>{port_status_label}</a>")
-        self.CheckPortLabel.connect("activate-link", lambda x, url: open_uri(url))
+        url = config.portchecker_url % str(core.protothread.listenport or first_port)
+        port_status_text = _("Check Port Status")
+        self.check_port_status_label.set_markup(f"<a href='{url}' title='{url}'>{port_status_text}</a>")
 
-        if server["portrange"] is not None:
-            self.FirstPort.set_value(server["portrange"][0])
-            self.LastPort.set_value(server["portrange"][1])
-
-        if server["ctcpmsgs"] is not None:
-            self.ctcptogglebutton.set_active(not server["ctcpmsgs"])
-
-        self.on_toggle_upnp(self.UseUPnP)
-
+        # Network interfaces
         if sys.platform == "win32":
-            for widget in (self.InterfaceLabel, self.Interface):
+            for widget in (self.network_interface_combobox, self.network_interface_label):
                 widget.get_parent().set_visible(False)
+        else:
+            self.network_interface_combobox.remove_all()
+            self.network_interface_combobox.append_text("")
 
-            return
+            try:
+                for _i, interface in socket.if_nameindex():
+                    self.network_interface_combobox.append_text(interface)
 
-        self.Interface.remove_all()
-        self.Interface.append_text("")
+            except (AttributeError, OSError):
+                pass
 
-        try:
-            for _i, interface in socket.if_nameindex():
-                self.Interface.append_text(interface)
+        # Special options
+        server_hostname, server_port = config.sections["server"]["server"]
+        self.soulseek_server_entry.set_text(f"{server_hostname}:{server_port}")
 
-        except (AttributeError, OSError):
-            pass
+        self.first_port_spinner.set_value(first_port)
+        self.last_port_spinner.set_value(last_port)
+
+        self.ctcp_toggle.set_active(not config.sections["server"]["ctcpmsgs"])
 
         self.portmap_required = False
 
@@ -143,28 +150,30 @@ class NetworkPage:
         self.portmap_required = False
 
         try:
-            server = self.Server.get_text().split(":")
-            server[1] = int(server[1])
-            server = tuple(server)
+            server_addr = self.soulseek_server_entry.get_text().split(":")
+            server_addr[1] = int(server_addr[1])
+            server_addr = tuple(server_addr)
 
         except Exception:
-            server = config.defaults["server"]["server"]
+            server_addr = config.defaults["server"]["server"]
 
-        firstport = min(self.FirstPort.get_value_as_int(), self.LastPort.get_value_as_int())
-        lastport = max(self.FirstPort.get_value_as_int(), self.LastPort.get_value_as_int())
-        portrange = (firstport, lastport)
+        first_port = self.first_port_spinner.get_value_as_int()
+        last_port = self.last_port_spinner.get_value_as_int()
+
+        if first_port > last_port:
+            first_port, last_port = last_port, first_port
 
         return {
             "server": {
-                "server": server,
-                "login": self.Login.get_text(),
-                "portrange": portrange,
-                "autoaway": self.AutoAway.get_value_as_int(),
-                "autoreply": self.AutoReply.get_text(),
-                "interface": self.Interface.get_active_text(),
-                "upnp": self.UseUPnP.get_active(),
-                "auto_connect_startup": self.AutoConnectStartup.get_active(),
-                "ctcpmsgs": not self.ctcptogglebutton.get_active()
+                "server": server_addr,
+                "login": self.username_entry.get_text(),
+                "portrange": (first_port, last_port),
+                "autoaway": self.auto_away_spinner.get_value_as_int(),
+                "autoreply": self.auto_reply_message_entry.get_text(),
+                "interface": self.network_interface_combobox.get_active_text(),
+                "upnp": self.upnp_toggle.get_active(),
+                "auto_connect_startup": self.auto_connect_startup_toggle.get_active(),
+                "ctcpmsgs": not self.ctcp_toggle.get_active()
             }
         }
 
@@ -210,12 +219,12 @@ class NetworkPage:
             callback_data=core.user_status
         ).show()
 
-    def on_toggle_upnp(self, widget, *_args):
-        self.portmap_required = widget.get_active()
+    def on_toggle_upnp(self, *_args):
+        self.portmap_required = self.upnp_toggle.get_active()
 
     def on_default_server(self, *_args):
         server_address, server_port = config.defaults["server"]["server"]
-        self.Server.set_text(f"{server_address}:{server_port}")
+        self.soulseek_server_entry.set_text(f"{server_address}:{server_port}")
 
 
 class DownloadsPage:
