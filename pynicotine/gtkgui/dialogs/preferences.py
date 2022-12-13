@@ -735,46 +735,39 @@ class UserInfoPage:
     def __init__(self, application):
 
         ui_template = UserInterface(scope=self, path="settings/userinfo.ui")
-
-        # pylint: disable=invalid-name
-        self.Description, self.ImageChooser, self.Main = ui_template.widgets
+        (
+            self.Main,  # pylint: disable=invalid-name
+            self.description_text_view,
+            self.select_picture_button
+        ) = ui_template.widgets
 
         self.application = application
-        self.image_chooser = FileChooserButton(self.ImageChooser, application.preferences, "image")
+        self.select_picture_button = FileChooserButton(self.select_picture_button, application.preferences, "image")
 
         self.options = {
             "userinfo": {
-                "descr": None,
-                "pic": self.image_chooser
+                "descr": self.description_text_view,
+                "pic": self.select_picture_button
             }
         }
 
     def set_settings(self):
-
         self.application.preferences.set_widgets_data(self.options)
-
-        if config.sections["userinfo"]["descr"] is not None:
-            descr = unescape(config.sections["userinfo"]["descr"])
-            self.Description.get_buffer().set_text(descr)
 
     def get_settings(self):
 
-        text_buffer = self.Description.get_buffer()
-
-        start = text_buffer.get_start_iter()
-        end = text_buffer.get_end_iter()
-
-        descr = repr(text_buffer.get_text(start, end, True).replace("; ", ", "))
+        text_buffer = self.description_text_view.get_buffer()
+        start, end = text_buffer.get_bounds()
 
         return {
             "userinfo": {
-                "descr": descr,
-                "pic": self.image_chooser.get_path()
+                "descr": repr(text_buffer.get_text(start, end, True)),
+                "pic": self.select_picture_button.get_path()
             }
         }
 
-    def on_default_image(self, *_args):
-        self.image_chooser.clear()
+    def on_reset_picture(self, *_args):
+        self.select_picture_button.clear()
 
 
 class IgnoredUsersPage:
@@ -2472,7 +2465,7 @@ class Preferences(Dialog):
 
         elif isinstance(widget, Gtk.TextView):
             if isinstance(value, (str, int)):
-                widget.get_buffer().set_text(value)
+                widget.get_buffer().set_text(unescape(value))
 
         elif isinstance(widget, Gtk.CheckButton):
             try:
