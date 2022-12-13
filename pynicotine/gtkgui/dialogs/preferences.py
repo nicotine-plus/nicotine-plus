@@ -1964,6 +1964,12 @@ class UrlHandlersPage:
             self.protocol_list_view.remove_row(iterator)
             del self.protocols[protocol]
 
+    def on_default_media_player(self, *_args):
+        self.audioPlayerCombo.get_child().set_text("")
+
+    def on_default_file_manager(self, *_args):
+        self.FileManagerCombo.get_child().set_text("")
+
 
 class NowPlayingPage:
 
