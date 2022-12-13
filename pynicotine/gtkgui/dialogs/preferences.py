@@ -468,8 +468,8 @@ class SharesPage:
         (
             self.Main,  # pylint: disable=invalid-name
             self.buddy_shares_trusted_only_toggle,
-            self.list_container,
-            self.rescan_on_startup_toggle
+            self.rescan_on_startup_toggle,
+            self.shares_list_container
         ) = ui_template.widgets
 
         self.application = application
@@ -479,7 +479,7 @@ class SharesPage:
         self.buddy_shared_folders = []
 
         self.shares_list_view = TreeView(
-            application.window, parent=self.list_container, multi_select=True,
+            application.window, parent=self.shares_list_container, multi_select=True,
             activate_row_callback=self.on_edit_shared_folder,
             columns=[
                 {"column_id": "virtual_folder", "column_type": "text", "title": _("Virtual Folder"), "width": 65,
@@ -1817,9 +1817,12 @@ class UrlHandlersPage:
     def __init__(self, application):
 
         ui_template = UserInterface(scope=self, path="settings/urlhandlers.ui")
-
-        # pylint: disable=invalid-name
-        (self.FileManagerCombo, self.Main, self.ProtocolHandlers, self.audioPlayerCombo) = ui_template.widgets
+        (
+            self.Main,  # pylint: disable=invalid-name
+            self.file_manager_combobox,
+            self.media_player_combobox,
+            self.protocol_list_container
+        ) = ui_template.widgets
 
         self.application = application
 
@@ -1828,10 +1831,10 @@ class UrlHandlersPage:
                 "protocols": None
             },
             "ui": {
-                "filemanager": self.FileManagerCombo
+                "filemanager": self.file_manager_combobox
             },
             "players": {
-                "default": self.audioPlayerCombo
+                "default": self.media_player_combobox
             }
         }
 
@@ -1859,7 +1862,7 @@ class UrlHandlersPage:
 
         self.protocols = {}
         self.protocol_list_view = TreeView(
-            application.window, parent=self.ProtocolHandlers, multi_select=True,
+            application.window, parent=self.protocol_list_container, multi_select=True,
             activate_row_callback=self.on_edit_handler,
             columns=[
                 {"column_id": "protocol", "column_type": "text", "title": _("Protocol"), "sort_column": 0,
@@ -1891,10 +1894,10 @@ class UrlHandlersPage:
                 "protocols": self.protocols.copy()
             },
             "ui": {
-                "filemanager": self.FileManagerCombo.get_active_text()
+                "filemanager": self.file_manager_combobox.get_active_text()
             },
             "players": {
-                "default": self.audioPlayerCombo.get_active_text()
+                "default": self.media_player_combobox.get_active_text()
             }
         }
 
@@ -1965,10 +1968,10 @@ class UrlHandlersPage:
             del self.protocols[protocol]
 
     def on_default_media_player(self, *_args):
-        self.audioPlayerCombo.get_child().set_text("")
+        self.media_player_combobox.get_child().set_text("")
 
     def on_default_file_manager(self, *_args):
-        self.FileManagerCombo.get_child().set_text("")
+        self.file_manager_combobox.get_child().set_text("")
 
 
 class NowPlayingPage:

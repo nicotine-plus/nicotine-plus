@@ -58,7 +58,7 @@
             <property name="visible">True</property>
             <property name="orientation">vertical</property>
             <child>
-              <object class="GtkScrolledWindow" id="list_container">
+              <object class="GtkScrolledWindow" id="shares_list_container">
                 <property name="visible">True</property>
                 <property name="hexpand">True</property>
                 <property name="vexpand">True</property>
