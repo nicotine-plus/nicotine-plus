@@ -7,7 +7,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-01 03:44+0200\n"
 "PO-Revision-Date: 2022-12-14 17:49+0000\n"
-"Last-Translator: Han Boetes <hboetes@gmail.com>\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
 "Language: de\n"
@@ -1375,8 +1375,9 @@ msgid "Message Buddies"
 msgstr "Nachrichten"
 
 #: pynicotine/gtkgui/application.py:599
+#, fuzzy
 msgid "Send private message to all online buddies:"
-msgstr ""
+msgstr "Private Nachricht an alle Online-Buddies senden:"
 
 #: pynicotine/gtkgui/application.py:624
 msgid "Select a Saved Shares List File"
@@ -2153,8 +2154,9 @@ msgid "Filtered"
 msgstr "Gefiltert"
 
 #: pynicotine/gtkgui/downloads.py:66
+#, fuzzy
 msgid "Deleted"
-msgstr ""
+msgstr "Gelöscht"
 
 #: pynicotine/gtkgui/downloads.py:67 pynicotine/gtkgui/uploads.py:69
 msgid "Queued…"
