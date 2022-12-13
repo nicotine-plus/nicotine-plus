@@ -169,11 +169,12 @@ class Downloads(TransferList):
                 if transfer.file is not None:
                     # Incomplete
                     file_path = transfer.file.name.decode("utf-8", "replace")
-                    break
                 else:
                     # Finished
                     file_path = core.transfers.get_existing_download_path(
                         transfer.user, transfer.filename, transfer.path, transfer.size, always_return=True)
+
+                if file_path is not None:
                     break
 
             elif transfer.status == "Finished":
