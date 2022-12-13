@@ -232,6 +232,7 @@
                           </object>
                         </child>
                         <style>
+                          <class name="colored-icon"/>
                           <class name="user-status"/>
                         </style>
                       </object>

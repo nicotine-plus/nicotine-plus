@@ -300,10 +300,11 @@ if GTK_API_VERSION >= 4:
 else:
     ICON_THEME = Gtk.IconTheme.get_default()  # pylint: disable=no-member
 
+CUSTOM_ICON_THEME_NAME = ".nicotine-icon-theme"
 USER_STATUS_ICON_NAMES = {
-    UserStatus.ONLINE: "nplus-status-online-symbolic",
-    UserStatus.AWAY: "nplus-status-away-symbolic",
-    UserStatus.OFFLINE: "nplus-status-offline-symbolic"
+    UserStatus.ONLINE: "nplus-status-online",
+    UserStatus.AWAY: "nplus-status-away",
+    UserStatus.OFFLINE: "nplus-status-offline"
 }
 
 
@@ -313,13 +314,12 @@ def load_custom_icons(update=False):
     if update:
         GTK_SETTINGS.reset_property("gtk-icon-theme-name")
 
-    icon_theme_name = ".nicotine-icon-theme"
-    icon_theme_path = os.path.join(config.data_dir, icon_theme_name)
+    icon_theme_path = os.path.join(config.data_dir, CUSTOM_ICON_THEME_NAME)
     icon_theme_path_encoded = encode_path(icon_theme_path)
 
     parent_icon_theme_name = GTK_SETTINGS.get_property("gtk-icon-theme-name")
 
-    if icon_theme_name == parent_icon_theme_name:
+    if parent_icon_theme_name == CUSTOM_ICON_THEME_NAME:
         return
 
     try:
@@ -368,11 +368,11 @@ def load_custom_icons(update=False):
         return
 
     icon_names = (
-        ("away", "nplus-status-away-symbolic"),
-        ("online", "nplus-status-online-symbolic"),
-        ("offline", "nplus-status-offline-symbolic"),
-        ("hilite", "nplus-tab-highlight-symbolic"),
-        ("hilite3", "nplus-tab-changed-symbolic"),
+        ("away", USER_STATUS_ICON_NAMES[UserStatus.AWAY]),
+        ("online", USER_STATUS_ICON_NAMES[UserStatus.ONLINE]),
+        ("offline", USER_STATUS_ICON_NAMES[UserStatus.OFFLINE]),
+        ("hilite", "nplus-tab-highlight"),
+        ("hilite3", "nplus-tab-changed"),
         ("trayicon_away", "nplus-tray-away"),
         ("trayicon_away", f"{config.application_id}-away"),
         ("trayicon_connect", "nplus-tray-connect"),
@@ -413,7 +413,7 @@ def load_custom_icons(update=False):
                 })
 
     # Enable custom icon theme
-    GTK_SETTINGS.set_property("gtk-icon-theme-name", icon_theme_name)
+    GTK_SETTINGS.set_property("gtk-icon-theme-name", CUSTOM_ICON_THEME_NAME)
 
 
 def load_icons():
@@ -591,7 +591,14 @@ def _get_custom_color_css():
 
 def update_custom_css():
 
-    css = bytearray(b" ")
+    using_custom_icon_theme = (GTK_SETTINGS.get_property("gtk-icon-theme-name") == CUSTOM_ICON_THEME_NAME)
+    css = bytearray(
+        f"""
+        .colored-icon {{
+            -gtk-icon-style: {"regular" if using_custom_icon_theme else "symbolic"};
+        }}
+        """.encode("utf-8")
+    )
     css.extend(_get_custom_font_css())
     css.extend(_get_custom_color_css())
 

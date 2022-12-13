@@ -1375,26 +1375,26 @@ class UserInterfacePage:
 
         # Icon preview
         icon_list = [
-            (USER_STATUS_ICON_NAMES[UserStatus.ONLINE], _("Online"), 16, "user-status"),
-            (USER_STATUS_ICON_NAMES[UserStatus.AWAY], _("Away"), 16, "user-status"),
-            (USER_STATUS_ICON_NAMES[UserStatus.OFFLINE], _("Offline"), 16, "user-status"),
-            ("nplus-tab-changed-symbolic", _("Tab Changed"), 16, "notebook-tab-changed"),
-            ("nplus-tab-highlight-symbolic", _("Tab Highlight"), 16, "notebook-tab-highlight"),
-            (config.application_id, _("Window"), 64, None)]
+            (USER_STATUS_ICON_NAMES[UserStatus.ONLINE], _("Online"), 16, ("colored-icon", "user-status")),
+            (USER_STATUS_ICON_NAMES[UserStatus.AWAY], _("Away"), 16, ("colored-icon", "user-status")),
+            (USER_STATUS_ICON_NAMES[UserStatus.OFFLINE], _("Offline"), 16, ("colored-icon", "user-status")),
+            ("nplus-tab-changed", _("Tab Changed"), 16, ("colored-icon", "notebook-tab-changed")),
+            ("nplus-tab-highlight", _("Tab Highlight"), 16, ("colored-icon", "notebook-tab-highlight")),
+            (config.application_id, _("Window"), 64, ())]
 
         if application.tray_icon.available:
             icon_list += [
-                (f"{config.application_id}-connect", _("Online (Tray)"), 16, None),
-                (f"{config.application_id}-away", _("Away (Tray)"), 16, None),
-                (f"{config.application_id}-disconnect", _("Offline (Tray)"), 16, None),
-                (f"{config.application_id}-msg", _("Message (Tray)"), 16, None)]
+                (f"{config.application_id}-connect", _("Online (Tray)"), 16, ()),
+                (f"{config.application_id}-away", _("Away (Tray)"), 16, ()),
+                (f"{config.application_id}-disconnect", _("Offline (Tray)"), 16, ()),
+                (f"{config.application_id}-msg", _("Message (Tray)"), 16, ())]
 
-        for icon_name, label, pixel_size, css_class in icon_list:
+        for icon_name, label, pixel_size, css_classes in icon_list:
             box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, valign=Gtk.Align.CENTER, spacing=6, visible=True)
             icon = Gtk.Image(icon_name=icon_name, pixel_size=pixel_size, visible=True)
             label = Gtk.Label(label=label, xalign=0.5, wrap=True, visible=True)
 
-            if css_class:
+            for css_class in css_classes:
                 add_css_class(icon, css_class)
 
             if GTK_API_VERSION >= 4:
@@ -2618,15 +2618,15 @@ class Preferences(Dialog):
             set_dark_mode(dark_mode_state)
             self.application.lookup_action("prefer-dark-mode").set_state(GLib.Variant("b", dark_mode_state))
 
+            # Icons
+            load_custom_icons(update=True)
+            self.application.tray_icon.update_icon_theme()
+
             # Fonts and colors
             update_custom_css()
 
             self.application.window.chatrooms.update_tags()
             self.application.window.privatechat.update_tags()
-
-            # Icons
-            load_custom_icons(update=True)
-            self.application.tray_icon.update_icon_theme()
 
         if completion_required:
             core.chatrooms.update_completions()

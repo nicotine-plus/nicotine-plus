@@ -1852,8 +1852,9 @@
                         <child>
                           <object class="GtkImage" id="user_status_icon">
                             <property name="visible">True</property>
-                            <property name="icon-name">nplus-status-offline-symbolic</property>
+                            <property name="icon-name">nplus-status-offline</property>
                             <style>
+                              <class name="colored-icon"/>
                               <class name="user-status"/>
                             </style>
                           </object>

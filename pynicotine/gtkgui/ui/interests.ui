@@ -246,6 +246,7 @@
                             <property name="visible">True</property>
                             <property name="hexpand">True</property>
                             <style>
+                              <class name="colored-icon"/>
                               <class name="user-status"/>
                             </style>
                           </object>
