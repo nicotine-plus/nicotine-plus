@@ -465,32 +465,36 @@ class SharesPage:
     def __init__(self, application):
 
         ui_template = UserInterface(scope=self, path="settings/shares.ui")
-
-        # pylint: disable=invalid-name
-        (self.BuddySharesTrustedOnly, self.Main, self.RescanOnStartup, self.Shares) = ui_template.widgets
+        (
+            self.Main,  # pylint: disable=invalid-name
+            self.buddy_shares_trusted_only_toggle,
+            self.list_container,
+            self.rescan_on_startup_toggle
+        ) = ui_template.widgets
 
         self.application = application
 
         self.rescan_required = False
-        self.shareddirs = []
-        self.bshareddirs = []
+        self.shared_folders = []
+        self.buddy_shared_folders = []
 
         self.shares_list_view = TreeView(
-            application.window, parent=self.Shares, multi_select=True, activate_row_callback=self.on_edit_shared_dir,
+            application.window, parent=self.list_container, multi_select=True,
+            activate_row_callback=self.on_edit_shared_folder,
             columns=[
                 {"column_id": "virtual_folder", "column_type": "text", "title": _("Virtual Folder"), "width": 65,
                  "sort_column": 0, "expand_column": True},
                 {"column_id": "folder", "column_type": "text", "title": _("Folder"), "width": 150,
                  "sort_column": 1, "expand_column": True},
                 {"column_id": "buddies", "column_type": "toggle", "title": _("Buddy-only"), "width": 0,
-                 "sort_column": 2, "toggle_callback": self.cell_toggle_callback},
+                 "sort_column": 2, "toggle_callback": self.on_toggle_folder_buddy_only},
             ]
         )
 
         self.options = {
             "transfers": {
-                "rescanonstartup": self.RescanOnStartup,
-                "buddysharestrustedonly": self.BuddySharesTrustedOnly
+                "rescanonstartup": self.rescan_on_startup_toggle,
+                "buddysharestrustedonly": self.buddy_shares_trusted_only_toggle
             }
         }
 
@@ -500,14 +504,16 @@ class SharesPage:
 
         self.application.preferences.set_widgets_data(self.options)
 
-        self.shareddirs = config.sections["transfers"]["shared"][:]
-        self.bshareddirs = config.sections["transfers"]["buddyshared"][:]
+        self.shared_folders = config.sections["transfers"]["shared"][:]
+        self.buddy_shared_folders = config.sections["transfers"]["buddyshared"][:]
 
-        for virtual, folder, *_unused in self.bshareddirs:
-            self.shares_list_view.add_row([str(virtual), str(folder), True], select_row=False)
+        for virtual_name, folder_path, *_unused in self.buddy_shared_folders:
+            is_buddy_only = True
+            self.shares_list_view.add_row([str(virtual_name), str(folder_path), is_buddy_only], select_row=False)
 
-        for virtual, folder, *_unused in self.shareddirs:
-            self.shares_list_view.add_row([str(virtual), str(folder), False], select_row=False)
+        for virtual_name, folder_path, *_unused in self.shared_folders:
+            is_buddy_only = False
+            self.shares_list_view.add_row([str(virtual_name), str(folder_path), is_buddy_only], select_row=False)
 
         self.rescan_required = False
 
@@ -515,127 +521,129 @@ class SharesPage:
 
         return {
             "transfers": {
-                "shared": self.shareddirs[:],
-                "buddyshared": self.bshareddirs[:],
-                "rescanonstartup": self.RescanOnStartup.get_active(),
-                "buddysharestrustedonly": self.BuddySharesTrustedOnly.get_active()
+                "shared": self.shared_folders[:],
+                "buddyshared": self.buddy_shared_folders[:],
+                "rescanonstartup": self.rescan_on_startup_toggle.get_active(),
+                "buddysharestrustedonly": self.buddy_shares_trusted_only_toggle.get_active()
             }
         }
 
-    def set_shared_dir_buddy_only(self, iterator, buddy_only):
+    def _set_shared_folder_buddy_only(self, iterator, is_buddy_only):
 
-        if buddy_only == self.shares_list_view.get_row_value(iterator, 2):
+        if is_buddy_only == self.shares_list_view.get_row_value(iterator, 2):
             return
 
-        virtual = self.shares_list_view.get_row_value(iterator, 0)
-        directory = self.shares_list_view.get_row_value(iterator, 1)
-        share = (virtual, directory)
         self.rescan_required = True
 
-        self.shares_list_view.set_row_value(iterator, 2, buddy_only)
+        virtual_name = self.shares_list_view.get_row_value(iterator, 0)
+        folder_path = self.shares_list_view.get_row_value(iterator, 1)
+        mapping = (virtual_name, folder_path)
 
-        if buddy_only:
-            self.shareddirs.remove(share)
-            self.bshareddirs.append(share)
+        self.shares_list_view.set_row_value(iterator, 2, is_buddy_only)
+
+        if is_buddy_only:
+            self.shared_folders.remove(mapping)
+            self.buddy_shared_folders.append(mapping)
             return
 
-        self.bshareddirs.remove(share)
-        self.shareddirs.append(share)
+        self.buddy_shared_folders.remove(mapping)
+        self.shared_folders.append(mapping)
 
-    def cell_toggle_callback(self, list_view, iterator):
-        buddy_only = not list_view.get_row_value(iterator, 2)
-        self.set_shared_dir_buddy_only(iterator, buddy_only)
+    def on_add_shared_folder_selected(self, selected, _data):
 
-    def add_shared_dir(self, folder):
+        for folder_path in selected:
+            if folder_path is None:
+                continue
 
-        if folder is None:
-            return
+            if folder_path in (x[1] for x in self.shared_folders + self.buddy_shared_folders):
+                continue
 
-        # If the directory is already shared
-        if folder in (x[1] for x in self.shareddirs + self.bshareddirs):
-            return
+            self.rescan_required = True
 
-        virtual = core.shares.get_normalized_virtual_name(
-            os.path.basename(os.path.normpath(folder)), shared_folders=(self.shareddirs + self.bshareddirs)
-        )
-        self.shares_list_view.add_row([virtual, folder, False])
-        self.shareddirs.append((virtual, folder))
-        self.rescan_required = True
+            virtual_name = core.shares.get_normalized_virtual_name(
+                os.path.basename(os.path.normpath(folder_path)),
+                shared_folders=(self.shared_folders + self.buddy_shared_folders)
+            )
+            mapping = (virtual_name, folder_path)
+            is_buddy_only = False
 
-    def on_add_shared_dir_selected(self, selected, _data):
+            self.shares_list_view.add_row([virtual_name, folder_path, is_buddy_only])
+            self.shared_folders.append(mapping)
 
-        for folder in selected:
-            self.add_shared_dir(folder)
-
-    def on_add_shared_dir(self, *_args):
+    def on_add_shared_folder(self, *_args):
 
         FolderChooser(
             parent=self.application.preferences,
-            callback=self.on_add_shared_dir_selected,
+            callback=self.on_add_shared_folder_selected,
             title=_("Add a Shared Folder"),
             select_multiple=True
         ).show()
 
-    def on_edit_shared_dir_response(self, dialog, _response_id, iterator):
+    def on_edit_shared_folder_response(self, dialog, _response_id, iterator):
 
-        virtual = dialog.get_entry_value()
-        buddy_only = dialog.get_option_value()
+        virtual_name = dialog.get_entry_value()
+        is_buddy_only = dialog.get_option_value()
 
-        if not virtual:
+        if not virtual_name:
             return
 
-        virtual = core.shares.get_normalized_virtual_name(
-            virtual, shared_folders=(self.shareddirs + self.bshareddirs)
-        )
-        folder = self.shares_list_view.get_row_value(iterator, 1)
-        old_virtual = self.shares_list_view.get_row_value(iterator, 0)
-        old_mapping = (old_virtual, folder)
-        new_mapping = (virtual, folder)
-
-        if old_mapping in self.bshareddirs:
-            shared_dirs = self.bshareddirs
-        else:
-            shared_dirs = self.shareddirs
-
-        shared_dirs.remove(old_mapping)
-        shared_dirs.append(new_mapping)
-
-        self.shares_list_view.set_row_value(iterator, 0, virtual)
-        self.set_shared_dir_buddy_only(iterator, buddy_only)
         self.rescan_required = True
 
-    def on_edit_shared_dir(self, *_args):
+        virtual_name = core.shares.get_normalized_virtual_name(
+            virtual_name, shared_folders=(self.shared_folders + self.buddy_shared_folders)
+        )
+        old_virtual_name = self.shares_list_view.get_row_value(iterator, 0)
+        folder_path = self.shares_list_view.get_row_value(iterator, 1)
+
+        old_mapping = (old_virtual_name, folder_path)
+        new_mapping = (virtual_name, folder_path)
+
+        if old_mapping in self.buddy_shared_folders:
+            shared_folders = self.buddy_shared_folders
+        else:
+            shared_folders = self.shared_folders
+
+        shared_folders.remove(old_mapping)
+        shared_folders.append(new_mapping)
+
+        self.shares_list_view.set_row_value(iterator, 0, virtual_name)
+        self._set_shared_folder_buddy_only(iterator, is_buddy_only)
+
+    def on_edit_shared_folder(self, *_args):
 
         for iterator in self.shares_list_view.get_selected_rows():
             virtual_name = self.shares_list_view.get_row_value(iterator, 0)
-            folder = self.shares_list_view.get_row_value(iterator, 1)
-            buddy_only = self.shares_list_view.get_row_value(iterator, 2)
+            folder_path = self.shares_list_view.get_row_value(iterator, 1)
+            is_buddy_only = self.shares_list_view.get_row_value(iterator, 2)
 
             EntryDialog(
                 parent=self.application.preferences,
                 title=_("Edit Shared Folder"),
-                message=_("Enter new virtual name for '%(dir)s':") % {'dir': folder},
+                message=_("Enter new virtual name for '%(dir)s':") % {'dir': folder_path},
                 default=virtual_name,
-                option_value=buddy_only,
+                option_value=is_buddy_only,
                 option_label=_("Share with buddies only"),
-                callback=self.on_edit_shared_dir_response,
+                callback=self.on_edit_shared_folder_response,
                 callback_data=iterator
             ).show()
             return
 
-    def on_remove_shared_dir(self, *_args):
+    def on_toggle_folder_buddy_only(self, list_view, iterator):
+        self._set_shared_folder_buddy_only(iterator, is_buddy_only=not list_view.get_row_value(iterator, 2))
+
+    def on_remove_shared_folder(self, *_args):
 
         iterators = reversed(self.shares_list_view.get_selected_rows())
 
         for iterator in iterators:
-            virtual = self.shares_list_view.get_row_value(iterator, 0)
-            folder = self.shares_list_view.get_row_value(iterator, 1)
-            mapping = (virtual, folder)
+            virtual_name = self.shares_list_view.get_row_value(iterator, 0)
+            folder_path = self.shares_list_view.get_row_value(iterator, 1)
+            mapping = (virtual_name, folder_path)
 
-            if mapping in self.bshareddirs:
-                self.bshareddirs.remove(mapping)
+            if mapping in self.buddy_shared_folders:
+                self.buddy_shared_folders.remove(mapping)
             else:
-                self.shareddirs.remove(mapping)
+                self.shared_folders.remove(mapping)
 
             self.shares_list_view.remove_row(iterator)
 

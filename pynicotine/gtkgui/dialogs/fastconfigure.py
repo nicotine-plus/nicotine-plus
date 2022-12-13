@@ -81,7 +81,7 @@ class FastConfigure(Dialog):
 
         self.shares_list_view = TreeView(
             application.window, parent=self.shares_list_container, multi_select=True,
-            activate_row_callback=self.on_edit_share,
+            activate_row_callback=self.on_edit_shared_folder,
             columns=[
                 {"column_id": "virtual_folder", "column_type": "text", "title": _("Virtual Folder"), "width": 1,
                  "sort_column": 0, "expand_column": True},
@@ -118,89 +118,90 @@ class FastConfigure(Dialog):
     def on_download_folder_selected(self):
         config.sections['transfers']['downloaddir'] = self.download_folder_button.get_path()
 
-    def on_add_share_selected(self, selected, _data):
+    def on_add_shared_folder_selected(self, selected, _data):
 
-        shared = config.sections["transfers"]["shared"]
-        buddy_shared = config.sections["transfers"]["buddyshared"]
+        shared_folders = config.sections["transfers"]["shared"]
+        buddy_shared_folders = config.sections["transfers"]["buddyshared"]
 
-        for folder in selected:
+        for folder_path in selected:
+            if folder_path is None:
+                continue
 
-            # If the folder is already shared
-            if folder in (x[1] for x in shared + buddy_shared):
+            if folder_path in (x[1] for x in shared_folders + buddy_shared_folders):
                 return
-
-            virtual = os.path.basename(os.path.normpath(folder))
-
-            # Remove slashes from share name to avoid path conflicts
-            virtual = virtual.replace('/', '_').replace('\\', '_')
-            virtual_final = virtual
-
-            counter = 1
-            while virtual_final in (x[0] for x in shared + buddy_shared):
-                virtual_final = virtual + str(counter)
-                counter += 1
-
-            # The share is unique: we can add it
-            self.shares_list_view.add_row([virtual, folder])
-            config.sections["transfers"]["shared"].append((virtual, folder))
 
             self.rescan_required = True
 
-    def on_add_share(self, *_args):
+            virtual_name = core.shares.get_normalized_virtual_name(
+                os.path.basename(os.path.normpath(folder_path)),
+                shared_folders=(shared_folders + buddy_shared_folders)
+            )
+            mapping = (virtual_name, folder_path)
+
+            self.shares_list_view.add_row(mapping)
+            config.sections["transfers"]["shared"].append(mapping)
+
+    def on_add_shared_folder(self, *_args):
 
         FolderChooser(
             parent=self,
             title=_("Add a Shared Folder"),
-            callback=self.on_add_share_selected,
+            callback=self.on_add_shared_folder_selected,
             select_multiple=True
         ).show()
 
-    def on_edit_share_response(self, dialog, _response_id, iterator):
+    def on_edit_shared_folder_response(self, dialog, _response_id, iterator):
 
-        virtual = dialog.get_entry_value()
+        virtual_name = dialog.get_entry_value()
 
-        if not virtual:
+        if not virtual_name:
             return
 
-        shared = config.sections["transfers"]["shared"]
-        buddy_shared = config.sections["transfers"]["buddyshared"]
-
-        virtual = core.shares.get_normalized_virtual_name(virtual, shared_folders=(shared + buddy_shared))
-        folder = self.shares_list_view.get_row_value(iterator, 1)
-        old_virtual = self.shares_list_view.get_row_value(iterator, 0)
-        old_mapping = (old_virtual, folder)
-        new_mapping = (virtual, folder)
-
-        shared.remove(old_mapping)
-        shared.append(new_mapping)
-
-        self.shares_list_view.set_row_value(iterator, 0, virtual)
         self.rescan_required = True
 
-    def on_edit_share(self, *_args):
+        shared_folders = config.sections["transfers"]["shared"]
+        buddy_shared_folders = config.sections["transfers"]["buddyshared"]
+
+        virtual_name = core.shares.get_normalized_virtual_name(
+            virtual_name, shared_folders=(shared_folders + buddy_shared_folders)
+        )
+        old_virtual_name = self.shares_list_view.get_row_value(iterator, 0)
+        folder_path = self.shares_list_view.get_row_value(iterator, 1)
+
+        old_mapping = (old_virtual_name, folder_path)
+        new_mapping = (virtual_name, folder_path)
+
+        shared_folders.remove(old_mapping)
+        shared_folders.append(new_mapping)
+
+        self.shares_list_view.set_row_value(iterator, 0, virtual_name)
+
+    def on_edit_shared_folder(self, *_args):
 
         for iterator in self.shares_list_view.get_selected_rows():
             virtual_name = self.shares_list_view.get_row_value(iterator, 0)
-            folder = self.shares_list_view.get_row_value(iterator, 1)
+            folder_path = self.shares_list_view.get_row_value(iterator, 1)
 
             EntryDialog(
                 parent=self,
                 title=_("Edit Shared Folder"),
-                message=_("Enter new virtual name for '%(dir)s':") % {'dir': folder},
+                message=_("Enter new virtual name for '%(dir)s':") % {'dir': folder_path},
                 default=virtual_name,
-                callback=self.on_edit_share_response,
+                callback=self.on_edit_shared_folder_response,
                 callback_data=iterator
             ).show()
             return
 
-    def on_remove_share(self, *_args):
+    def on_remove_shared_folder(self, *_args):
 
         for iterator in reversed(self.shares_list_view.get_selected_rows()):
-            virtual = self.shares_list_view.get_row_value(iterator, 0)
-            folder = self.shares_list_view.get_row_value(iterator, 1)
+            virtual_name = self.shares_list_view.get_row_value(iterator, 0)
+            folder_path = self.shares_list_view.get_row_value(iterator, 1)
+            mapping = (virtual_name, folder_path)
 
-            config.sections["transfers"]["shared"].remove((virtual, folder))
+            config.sections["transfers"]["shared"].remove(mapping)
             self.shares_list_view.remove_row(iterator)
+
             self.rescan_required = True
 
     def on_page_change(self, *_args):

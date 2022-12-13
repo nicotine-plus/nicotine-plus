@@ -413,10 +413,10 @@
                         <property name="margin-bottom">6</property>
                         <property name="spacing">6</property>
                         <child>
-                          <object class="GtkButton" id="_add_share_button">
+                          <object class="GtkButton" id="_add_shared_folder_button">
                             <property name="visible">True</property>
                             <property name="tooltip-text" translatable="yes">Add…</property>
-                            <signal name="clicked" handler="on_add_share"/>
+                            <signal name="clicked" handler="on_add_shared_folder"/>
                             <child>
                               <object class="GtkBox">
                                 <property name="visible">True</property>
@@ -433,7 +433,7 @@
                                     <property name="ellipsize">end</property>
                                     <property name="label" translatable="yes">Add…</property>
                                     <property name="use-underline">True</property>
-                                    <property name="mnemonic-widget">_add_share_button</property>
+                                    <property name="mnemonic-widget">_add_shared_folder_button</property>
                                   </object>
                                 </child>
                               </object>
@@ -444,10 +444,10 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkButton" id="_edit_share_button">
+                          <object class="GtkButton" id="_edit_shared_folder_button">
                             <property name="visible">True</property>
                             <property name="tooltip-text" translatable="yes">Edit…</property>
-                            <signal name="clicked" handler="on_edit_share"/>
+                            <signal name="clicked" handler="on_edit_shared_folder"/>
                             <child>
                               <object class="GtkBox">
                                 <property name="visible">True</property>
@@ -464,7 +464,7 @@
                                     <property name="ellipsize">end</property>
                                     <property name="label" translatable="yes">Edit…</property>
                                     <property name="use-underline">True</property>
-                                    <property name="mnemonic-widget">_edit_share_button</property>
+                                    <property name="mnemonic-widget">_edit_shared_folder_button</property>
                                   </object>
                                 </child>
                               </object>
@@ -475,10 +475,10 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkButton" id="_remove_share_button">
+                          <object class="GtkButton" id="_remove_shared_folder_button">
                             <property name="visible">True</property>
                             <property name="tooltip-text" translatable="yes">Remove</property>
-                            <signal name="clicked" handler="on_remove_share"/>
+                            <signal name="clicked" handler="on_remove_shared_folder"/>
                             <child>
                               <object class="GtkBox">
                                 <property name="visible">True</property>
@@ -495,7 +495,7 @@
                                     <property name="ellipsize">end</property>
                                     <property name="label" translatable="yes">Remove</property>
                                     <property name="use-underline">True</property>
-                                    <property name="mnemonic-widget">_remove_share_button</property>
+                                    <property name="mnemonic-widget">_remove_shared_folder_button</property>
                                   </object>
                                 </child>
                               </object>
