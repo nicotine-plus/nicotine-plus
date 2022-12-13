@@ -2181,24 +2181,30 @@ class PluginsPage:
     def __init__(self, application):
 
         ui_template = UserInterface(scope=self, path="settings/plugin.ui")
-
-        # pylint: disable=invalid-name
-        (self.Main, self.PluginAuthor, self.PluginDescription, self.PluginName,
-         self.PluginProperties, self.PluginTreeView, self.PluginVersion, self.PluginsEnable) = ui_template.widgets
+        (
+            self.Main,  # pylint: disable=invalid-name
+            self.enable_plugins_toggle,
+            self.plugin_authors_label,
+            self.plugin_description_view,
+            self.plugin_list_container,
+            self.plugin_name_label,
+            self.plugin_settings_button,
+            self.plugin_version_label
+        ) = ui_template.widgets
 
         self.application = application
+        self.enabled_plugins = []
+        self.selected_plugin = None
 
         self.options = {
             "plugins": {
-                "enable": self.PluginsEnable
+                "enable": self.enable_plugins_toggle
             }
         }
 
-        self.enabled_plugins = []
-        self.selected_plugin = None
-        self.descr_textview = TextView(self.PluginDescription)
+        self.plugin_description_view = TextView(self.plugin_description_view)
         self.plugin_list_view = TreeView(
-            application.window, parent=self.PluginTreeView, always_select=True,
+            application.window, parent=self.plugin_list_container, always_select=True,
             select_row_callback=self.on_select_plugin,
             columns=[
                 # Visible columns
@@ -2235,13 +2241,13 @@ class PluginsPage:
 
         return {
             "plugins": {
-                "enable": self.PluginsEnable.get_active(),
+                "enable": self.enable_plugins_toggle.get_active(),
                 "enabled": self.enabled_plugins[:]
             }
         }
 
-    def check_properties_button(self, plugin):
-        self.PluginProperties.set_sensitive(bool(core.pluginhandler.get_plugin_settings(plugin)))
+    def check_plugin_settings_button(self, plugin):
+        self.plugin_settings_button.set_sensitive(bool(core.pluginhandler.get_plugin_settings(plugin)))
 
     def on_select_plugin(self, list_view, iterator):
 
@@ -2257,14 +2263,14 @@ class PluginsPage:
         plugin_authors = ", ".join(info.get("Authors", '-'))
         plugin_description = info.get("Description", '').replace(r'\n', '\n')
 
-        self.PluginName.set_text(plugin_name)
-        self.PluginVersion.set_text(plugin_version)
-        self.PluginAuthor.set_text(plugin_authors)
+        self.plugin_name_label.set_text(plugin_name)
+        self.plugin_version_label.set_text(plugin_version)
+        self.plugin_authors_label.set_text(plugin_authors)
 
-        self.descr_textview.clear()
-        self.descr_textview.append_line(plugin_description)
+        self.plugin_description_view.clear()
+        self.plugin_description_view.append_line(plugin_description)
 
-        self.check_properties_button(self.selected_plugin)
+        self.check_plugin_settings_button(self.selected_plugin)
 
     def on_plugin_toggle(self, list_view, iterator):
 
@@ -2279,28 +2285,28 @@ class PluginsPage:
             core.pluginhandler.disable_plugin(plugin_id)
             self.enabled_plugins.remove(plugin_id)
 
-        self.check_properties_button(plugin_id)
+        self.check_plugin_settings_button(plugin_id)
 
-    def on_plugins_enable(self, *_args):
+    def on_enable_plugins(self, *_args):
 
-        if self.PluginsEnable.get_active():
+        if self.enable_plugins_toggle.get_active():
             # Enable all selected plugins
             for plugin_id in self.enabled_plugins:
                 core.pluginhandler.enable_plugin(plugin_id)
 
-            self.check_properties_button(self.selected_plugin)
+            self.check_plugin_settings_button(self.selected_plugin)
             return
 
         # Disable all plugins
         for plugin in core.pluginhandler.enabled_plugins.copy():
             core.pluginhandler.disable_plugin(plugin)
 
-        self.PluginProperties.set_sensitive(False)
+        self.plugin_settings_button.set_sensitive(False)
 
     def on_add_plugins(self, *_args):
         open_file_path(core.pluginhandler.user_plugin_folder, create_folder=True)
 
-    def on_plugin_properties(self, *_args):
+    def on_plugin_settings(self, *_args):
 
         if self.selected_plugin is None:
             return
