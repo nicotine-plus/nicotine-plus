@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-01 03:44+0200\n"
-"PO-Revision-Date: 2022-11-27 22:57+0000\n"
+"PO-Revision-Date: 2022-12-14 17:50+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/zh_Hans/>\n"
@@ -1604,12 +1604,14 @@ msgid "Change _Login Details"
 msgstr "更改_登录详情"
 
 #: pynicotine/gtkgui/application.py:585
+#, fuzzy
 msgid "Message Downloading Users"
-msgstr ""
+msgstr "留言下载用户"
 
 #: pynicotine/gtkgui/application.py:586
+#, fuzzy
 msgid "Send private message to all users who are downloading from you:"
-msgstr ""
+msgstr "向所有从您这里下载的用户发送私信："
 
 #: pynicotine/gtkgui/application.py:587 pynicotine/gtkgui/application.py:600
 #, fuzzy
@@ -1622,8 +1624,9 @@ msgid "Message Buddies"
 msgstr "值得信赖的伙伴"
 
 #: pynicotine/gtkgui/application.py:599
+#, fuzzy
 msgid "Send private message to all online buddies:"
-msgstr ""
+msgstr "给所有在线好友发私信："
 
 #: pynicotine/gtkgui/application.py:624
 msgid "Select a Saved Shares List File"
@@ -2406,8 +2409,9 @@ msgid "Filtered"
 msgstr "过滤"
 
 #: pynicotine/gtkgui/downloads.py:66
+#, fuzzy
 msgid "Deleted"
-msgstr ""
+msgstr "已删除"
 
 #: pynicotine/gtkgui/downloads.py:67 pynicotine/gtkgui/uploads.py:69
 msgid "Queued…"
