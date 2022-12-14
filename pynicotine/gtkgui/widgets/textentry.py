@@ -77,8 +77,8 @@ class ChatEntry:
         is_double_slash_cmd = text.startswith("//")
         is_single_slash_cmd = (text.startswith("/") and not is_double_slash_cmd)
 
-        if not is_single_slash_cmd or text.startswith("/me"):
-            # Regular chat message (/me is sent as plain text)
+        if not is_single_slash_cmd:
+            # Regular chat message
 
             self.entry.set_text("")
 
@@ -91,134 +91,20 @@ class ChatEntry:
 
         cmd_split = text.split(maxsplit=1)
         cmd = cmd_split[0]
+        args = cmd_split[1] if len(cmd_split) == 2 else ""
+
+        # Allow the command line to be edited if parsing rejects the line or if the plugin returns False
+        if self.is_chatroom:
+            if not core.pluginhandler.trigger_chatroom_command_event(self.entity, cmd[1:], args):
+                self.entry.grab_focus()
+                return
+
+        elif not core.pluginhandler.trigger_private_chat_command_event(self.entity, cmd[1:], args):
+            self.entry.grab_focus()
+            return
 
         # Clear chat entry
         self.entry.set_text("")
-
-        if len(cmd_split) == 2:
-            args = arg_self = cmd_split[1]
-        else:
-            args = ""
-            arg_self = "" if self.is_chatroom else self.entity
-
-        if cmd in ("/w", "/whois", "/info"):
-            if arg_self:
-                core.userinfo.show_user(arg_self)
-
-        elif cmd in ("/b", "/browse"):
-            if arg_self:
-                core.userbrowse.browse_user(arg_self)
-
-        elif cmd == "/ip":
-            if arg_self:
-                core.request_ip_address(arg_self)
-
-        elif cmd == "/pm":
-            if args:
-                core.privatechat.show_user(args)
-
-        elif cmd in ("/m", "/msg"):
-            if args:
-                args_split = args.split(" ", maxsplit=1)
-                user = args_split[0]
-                msg = None
-
-                if len(args_split) == 2:
-                    msg = args_split[1]
-
-                if msg:
-                    core.privatechat.show_user(user)
-                    core.privatechat.send_message(user, msg)
-
-        elif cmd in ("/s", "/search"):
-            if args:
-                core.search.do_search(args, "global")
-
-        elif cmd in ("/us", "/usearch"):
-            args_split = args.split(" ", maxsplit=1)
-
-            if len(args_split) == 2:
-                core.search.do_search(args_split[1], "user", user=args_split[0])
-
-        elif cmd in ("/rs", "/rsearch"):
-            if args:
-                core.search.do_search(args, "rooms")
-
-        elif cmd in ("/bs", "/bsearch"):
-            if args:
-                core.search.do_search(args, "buddies")
-
-        elif cmd in ("/j", "/join"):
-            if args:
-                core.chatrooms.show_room(args)
-
-        elif cmd in ("/l", "/leave", "/p", "/part"):
-            if args:
-                core.chatrooms.remove_room(args)
-            else:
-                core.chatrooms.remove_room(self.entity)
-
-        elif cmd in ("/ad", "/add", "/buddy"):
-            if args:
-                core.userlist.add_buddy(args)
-
-        elif cmd in ("/rem", "/unbuddy"):
-            if args:
-                core.userlist.remove_buddy(args)
-
-        elif cmd == "/ban":
-            if args:
-                core.network_filter.ban_user(args)
-
-        elif cmd == "/ignore":
-            if args:
-                core.network_filter.ignore_user(args)
-
-        elif cmd == "/ignoreip":
-            if args:
-                core.network_filter.ignore_ip(args)
-
-        elif cmd == "/unban":
-            if args:
-                core.network_filter.unban_user(args)
-
-        elif cmd == "/unignore":
-            if args:
-                core.network_filter.unignore_user(args)
-
-        elif cmd == "/ctcpversion":
-            if arg_self:
-                core.privatechat.show_user(arg_self)
-                core.privatechat.send_message(arg_self, core.privatechat.CTCP_VERSION)
-
-        elif cmd in ("/clear", "/cl"):
-            if self.is_chatroom:
-                core.chatrooms.clear_room_messages(self.entity)
-            else:
-                core.privatechat.clear_private_messages(self.entity)
-
-        elif cmd in ("/a", "/away"):
-            core.set_away_mode(core.user_status != UserStatus.AWAY, save_state=True)
-
-        elif cmd in ("/q", "/quit", "/exit"):
-            core.confirm_quit()
-
-        elif cmd == "/now":
-            core.now_playing.display_now_playing(
-                callback=lambda np_message: self.send_message(self.entity, np_message))
-
-        elif cmd == "/rescan":
-            core.shares.rescan_shares()
-
-        elif cmd == "/toggle":
-            if args:
-                core.pluginhandler.toggle_plugin(args)
-
-        elif self.is_chatroom:
-            core.pluginhandler.trigger_chatroom_command_event(self.entity, cmd[1:], args)
-
-        elif not self.is_chatroom:
-            core.pluginhandler.trigger_private_chat_command_event(self.entity, cmd[1:], args)
 
     def on_tab_complete_accelerator(self, widget, state, backwards=False):
         """ Tab and Shift+Tab: tab complete chat """
