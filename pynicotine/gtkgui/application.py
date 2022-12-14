@@ -117,9 +117,6 @@ class Application:
     def add_window(self, window):
         self._instance.add_window(window)
 
-    def get_active_window(self):
-        return self._instance.get_active_window()
-
     def set_menubar(self, model):
         self._instance.set_menubar(model)
 
@@ -853,11 +850,9 @@ class Application:
 
     def on_activate(self, *_args):
 
-        active_window = self.get_active_window()
-
-        if active_window:
+        if self.window:
             # Show the window of the running application instance
-            active_window.present()
+            self.window.show()
             return
 
         from pynicotine.gtkgui.mainwindow import MainWindow
@@ -871,7 +866,6 @@ class Application:
         self.notifications = Notifications(self)
         self.window = MainWindow(self, self.start_hidden)
 
-        self.window.init_window()
         core.start()
 
         if config.sections["server"]["auto_connect_startup"]:

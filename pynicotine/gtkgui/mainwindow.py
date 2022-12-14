@@ -68,6 +68,7 @@ class MainWindow(Window):
 
         self.application = application
         self.start_hidden = start_hidden
+        self.initialized = False
         self.current_page_id = ""
         self.auto_away = False
         self.away_timer_id = None
@@ -286,6 +287,11 @@ class MainWindow(Window):
         """ Apply UI Customizations """
 
         set_global_style()
+
+        """ Show Window """
+
+        self.init_window()
+        self.initialized = True
 
     """ Initialize """
 
@@ -904,7 +910,7 @@ class MainWindow(Window):
 
         self.current_page_id = page_id
 
-        if self.application.get_active_window():
+        if self.initialized:
             config.sections["ui"]["last_tab_id"] = page_id
 
     def on_change_focus_view(self, *_args):
@@ -1026,7 +1032,7 @@ class MainWindow(Window):
 
     def on_page_reordered(self, *_args):
 
-        if not self.application.get_active_window():
+        if not self.initialized:
             # Don't save the tab order until the window is ready
             return
 
