@@ -264,19 +264,8 @@ class BasePlugin:
         func = self.echo_public if command_type == "chatroom" else self.echo_private
         func(source, text, message_type)
 
-    # Obsolete functions
-
-    def saypublic(self, _room, _text):
-        self.log("saypublic(room, text) is obsolete, please use send_public(room, text)")
-
-    def sayprivate(self, _user, _text):
-        self.log("sayprivate(user, text) is obsolete, please use send_private(user, text)")
-
-    def sendprivate(self, _user, _text):
-        self.log("sendprivate(user, text) is obsolete, please use send_private(user, text, show_ui=False)")
-
-    def fakepublic(self, _room, _user, _text):
-        self.log("fakepublic(room, user, text) is obsolete, please use echo_public(room, text)")
+    def output(self, text):
+        self.echo_message(text, message_type="command")
 
 
 class ResponseThrottle:
@@ -795,8 +784,8 @@ class PluginHandler:
                             break
 
                     if rejection_message:
-                        plugin.echo_message(rejection_message)
-                        plugin.echo_message(f"Usage: {'/' + command} {' '.join(usage)}")
+                        plugin.output(rejection_message)
+                        plugin.output(f"Usage: {'/' + command} {' '.join(usage)}")
                         break
 
                     callback_name = data.get("callback_" + command_type, data.get("callback")).__name__
@@ -827,7 +816,7 @@ class PluginHandler:
                 break
 
         if plugin:
-            plugin.echo_message(f"Unknown command: {'/' + command}. Type /help for a list of commands.")
+            plugin.output(f"Unknown command: {'/' + command}. Type /help for a list of commands.")
 
         self.command_source = None
 

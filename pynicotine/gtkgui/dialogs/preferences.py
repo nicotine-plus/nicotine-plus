@@ -1334,20 +1334,20 @@ class UserInterfacePage:
          self.DefaultSearchFont, self.DefaultTextViewFont, self.DefaultTheme, self.DefaultTransfersFont,
          self.EnableChatroomsTab, self.EnableDownloadsTab, self.EnableInterestsTab, self.EnablePrivateTab,
          self.EnableSearchTab, self.EnableUploadsTab, self.EnableUserBrowseTab, self.EnableUserInfoTab,
-         self.EnableUserListTab, self.EntryAway, self.EntryBackground, self.EntryChangedTab, self.EntryHighlight,
-         self.EntryHighlightTab, self.EntryImmediate, self.EntryInput, self.EntryLocal, self.EntryMe,
-         self.EntryOffline, self.EntryOnline, self.EntryQueue, self.EntryRegularTab, self.EntryRemote,
+         self.EnableUserListTab, self.EntryAway, self.EntryBackground, self.EntryChangedTab, self.EntryCommand,
+         self.EntryHighlight, self.EntryHighlightTab, self.EntryImmediate, self.EntryInput, self.EntryLocal,
+         self.EntryMe, self.EntryOffline, self.EntryOnline, self.EntryQueue, self.EntryRegularTab, self.EntryRemote,
          self.EntryURL, self.IconView, self.Language, self.Main, self.MainPosition,
          self.NotificationPopupChatroom, self.NotificationPopupChatroomMention, self.NotificationPopupFile,
          self.NotificationPopupFolder, self.NotificationPopupPrivateMessage, self.NotificationPopupSound,
          self.NotificationPopupWish, self.NotificationWindowTitle, self.PickAway,
-         self.PickBackground, self.PickChangedTab, self.PickHighlight, self.PickHighlightTab, self.PickImmediate,
-         self.PickInput, self.PickLocal, self.PickMe, self.PickOffline, self.PickOnline, self.PickQueue,
-         self.PickRegularTab, self.PickRemote, self.PickURL, self.PrivateChatPosition, self.ReverseFilePaths,
-         self.SearchPosition, self.SelectBrowserFont, self.SelectChatFont, self.SelectGlobalFont, self.SelectListFont,
-         self.SelectSearchFont, self.SelectTextViewFont, self.SelectTransfersFont, self.StartupHidden, self.TabClosers,
-         self.TabSelectPrevious, self.ThemeDir, self.TraySettings, self.TrayiconCheck,
-         self.UserBrowsePosition, self.UserInfoPosition, self.UsernameStyle) = ui_template.widgets
+         self.PickBackground, self.PickChangedTab, self.PickCommand, self.PickHighlight, self.PickHighlightTab,
+         self.PickImmediate, self.PickInput, self.PickLocal, self.PickMe, self.PickOffline, self.PickOnline,
+         self.PickQueue, self.PickRegularTab, self.PickRemote, self.PickURL, self.PrivateChatPosition,
+         self.ReverseFilePaths, self.SearchPosition, self.SelectBrowserFont, self.SelectChatFont, self.SelectGlobalFont,
+         self.SelectListFont, self.SelectSearchFont, self.SelectTextViewFont, self.SelectTransfersFont,
+         self.StartupHidden, self.TabClosers, self.TabSelectPrevious, self.ThemeDir, self.TraySettings,
+         self.TrayiconCheck, self.UserBrowsePosition, self.UserInfoPosition, self.UsernameStyle) = ui_template.widgets
 
         self.application = application
         self.theme_required = False
@@ -1448,6 +1448,7 @@ class UserInterfacePage:
 
                 "chatlocal": self.EntryLocal,
                 "chatremote": self.EntryRemote,
+                "chatcommand": self.EntryCommand,
                 "chatme": self.EntryMe,
                 "chathilite": self.EntryHighlight,
                 "textbg": self.EntryBackground,
@@ -1472,6 +1473,7 @@ class UserInterfacePage:
             "ui": {
                 "chatlocal": self.PickLocal,
                 "chatremote": self.PickRemote,
+                "chatcommand": self.PickCommand,
                 "chatme": self.PickMe,
                 "chathilite": self.PickHighlight,
                 "textbg": self.PickBackground,
@@ -1550,6 +1552,7 @@ class UserInterfacePage:
 
                 "chatlocal": self.EntryLocal.get_text(),
                 "chatremote": self.EntryRemote.get_text(),
+                "chatcommand": self.EntryCommand.get_text(),
                 "chatme": self.EntryMe.get_text(),
                 "chathilite": self.EntryHighlight.get_text(),
                 "urlcolor": self.EntryURL.get_text(),

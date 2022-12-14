@@ -60,3 +60,4 @@ class Plugin(BasePlugin):
 
     def sample_command(self, _args, **_unused):
         self.echo_message("Hello")
+        self.core.confirm_quit()
