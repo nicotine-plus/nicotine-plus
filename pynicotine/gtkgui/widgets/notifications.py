@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import sys
 import time
 
@@ -129,6 +130,11 @@ class Notifications:
                     winsound.PlaySound("SystemAsterisk", winsound.SND_ALIAS)
 
                 return
+
+            if os.environ.get("XDG_SESSION_DESKTOP") == "unity":
+                # Unity doesn't support default click actions, and replaces the notification with a dialog.
+                # Prevent this from happening.
+                action = None
 
             priority = Gio.NotificationPriority.HIGH if high_priority else Gio.NotificationPriority.NORMAL
 
