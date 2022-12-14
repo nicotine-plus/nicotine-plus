@@ -83,7 +83,7 @@ class Dialog(Window):
 
     def _init_header_bar(self, buttons_start=(), buttons_end=(), show_title_buttons=True):
 
-        header_bar = Gtk.HeaderBar(visible=True)
+        header_bar = Gtk.HeaderBar()
         self.window.set_titlebar(header_bar)
 
         if GTK_API_VERSION >= 4:
@@ -96,6 +96,8 @@ class Dialog(Window):
 
         for button in reversed(buttons_end):
             header_bar.pack_end(button)
+
+        header_bar.set_visible(True)
 
     def _init_action_area(self, container, buttons_start=(), buttons_end=()):
 
