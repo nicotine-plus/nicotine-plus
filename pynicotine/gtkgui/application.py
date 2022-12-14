@@ -520,7 +520,7 @@ class Application:
                 "if this is your first time logging in.") % config.sections["server"]["login"]
 
         OptionDialog(
-            parent=self.get_active_window(),
+            parent=self.window,
             title=title,
             message=msg,
             first_button=_("_Cancel"),
