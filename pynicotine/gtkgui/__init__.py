@@ -34,7 +34,7 @@ def check_gtk_version():
 
     if os.getenv("NICOTINE_LIBADWAITA") is None:
         os.environ["NICOTINE_LIBADWAITA"] = str(int(
-            sys.platform in ("win32", "darwin") or os.environ.get("DESKTOP_SESSION") == "gnome"
+            sys.platform in ("win32", "darwin") or os.environ.get("XDG_SESSION_DESKTOP") == "gnome"
         ))
 
     gtk_major_version, *_unused = gtk_version
