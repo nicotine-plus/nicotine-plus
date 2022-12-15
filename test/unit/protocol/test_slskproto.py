@@ -104,7 +104,10 @@ class SlskProtoTest(unittest.TestCase):
         self.queue.append(ServerConnect(addr=('0.0.0.0', 0), login=('dummy', 'dummy')))
         sleep(SLSKPROTO_RUN_TIME)
 
-        if hasattr(socket, 'TCP_KEEPIDLE') or hasattr(socket, 'TCP_KEEPALIVE'):
+        if hasattr(socket, 'TCP_USER_TIMEOUT'):
+            self.assertEqual(self.protothread.server_socket.setsockopt.call_count, 7)  # pylint: disable=no-member
+
+        elif hasattr(socket, 'TCP_KEEPIDLE') or hasattr(socket, 'TCP_KEEPALIVE'):
             self.assertEqual(self.protothread.server_socket.setsockopt.call_count, 6)  # pylint: disable=no-member
 
         elif hasattr(socket, 'SIO_KEEPALIVE_VALS'):
