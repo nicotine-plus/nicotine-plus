@@ -1120,11 +1120,11 @@ class SoulseekNetworkThread(Thread):
     """ Server Connection """
 
     @staticmethod
-    def _set_server_socket_keepalive(server_socket, idle=10, interval=4):
+    def _set_server_socket_keepalive(server_socket, idle=10, interval=2):
         """ Ensure we are disconnected from the server in case of connectivity issues,
         by sending TCP keepalive pings. Assuming default values are used, once we reach
-        10 seconds of idle time, we start sending keepalive pings once every 4 seconds.
-        If 10 failed pings have been sent in a row (40 seconds), the connection is presumed
+        10 seconds of idle time, we start sending keepalive pings once every 2 seconds.
+        If 10 failed pings have been sent in a row (20 seconds), the connection is presumed
         dead. """
 
         count = 10
