@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-01 03:44+0200\n"
-"PO-Revision-Date: 2022-12-02 00:59+0000\n"
-"Last-Translator: dtalens <databio@gmail.com>\n"
+"PO-Revision-Date: 2022-12-14 17:50+0000\n"
+"Last-Translator: Maite Guix <maite.guix@gmail.com>\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ca/>\n"
 "Language: ca\n"
@@ -1357,7 +1357,7 @@ msgstr "Canviar els detalls d'_inici de sessió"
 
 #: pynicotine/gtkgui/application.py:585
 msgid "Message Downloading Users"
-msgstr ""
+msgstr "Enviar un missatge als usuaris que estan descarregant"
 
 #: pynicotine/gtkgui/application.py:586
 msgid "Send private message to all users who are downloading from you:"
@@ -1370,9 +1370,8 @@ msgid "_Send Message"
 msgstr "_Envia missatge"
 
 #: pynicotine/gtkgui/application.py:598
-#, fuzzy
 msgid "Message Buddies"
-msgstr "Amics de confiança"
+msgstr "Enviar missatge a amics"
 
 #: pynicotine/gtkgui/application.py:599
 msgid "Send private message to all online buddies:"
@@ -2949,9 +2948,8 @@ msgid "Unban User"
 msgstr "Desbloqueja usuari"
 
 #: pynicotine/gtkgui/userinfo.py:484
-#, fuzzy
 msgid "Unignore User"
-msgstr "Ignorar usuari"
+msgstr "Deixar d'ignorar l'usuari"
 
 #: pynicotine/gtkgui/userinfo.py:506
 msgid "Yes"
@@ -3160,9 +3158,8 @@ msgstr "_Examinar fitxers"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:359
 #: pynicotine/gtkgui/widgets/popupmenu.py:391
-#, fuzzy
 msgid "_Add Buddy"
-msgstr "Afegir amic…"
+msgstr "_Afegir amic"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:362
 #: pynicotine/gtkgui/widgets/popupmenu.py:389
@@ -4344,9 +4341,8 @@ msgid "Clear Finished"
 msgstr "Netejar finalitzades"
 
 #: pynicotine/gtkgui/ui/downloads.ui:182
-#, fuzzy
 msgid "Clear Specific Downloads"
-msgstr "Netejar totes les descàrregues"
+msgstr "Netejar descàrregues específiques"
 
 #: pynicotine/gtkgui/ui/downloads.ui:191 pynicotine/gtkgui/ui/uploads.ui:221
 msgid "Clear _All…"
@@ -4517,9 +4513,8 @@ msgstr ""
 "privat"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1358
-#, fuzzy
 msgid "_Message All"
-msgstr "Missatge (safata)"
+msgstr "_Enviar un missatge a tots"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1424
 msgid ""
@@ -6008,14 +6003,12 @@ msgid "By default the leftmost tab is activated at startup"
 msgstr "Per defecte, la pestanya més a l'esquerra s'activa a l'inici"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:80
-#, fuzzy
 msgid "Language (requires a restart):"
-msgstr "Interval de ports d'escolta (cal reiniciar):"
+msgstr "Idioma (cal reiniciar):"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:92
-#, fuzzy
 msgid "System Default"
-msgstr "Per defecte"
+msgstr "Sistema per defecte"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:106
 msgid "When closing Nicotine+:"
@@ -6272,14 +6265,12 @@ msgid "Clear All Finished/Cancelled Uploads"
 msgstr "Esborrar totes les càrregues finalitzades / cancel·lades"
 
 #: pynicotine/gtkgui/ui/uploads.ui:181 pynicotine/gtkgui/ui/uploads.ui:197
-#, fuzzy
 msgid "Message All"
-msgstr "Missatge (safata)"
+msgstr "Enviar un missatge a tots"
 
 #: pynicotine/gtkgui/ui/uploads.ui:212
-#, fuzzy
 msgid "Clear Specific Uploads"
-msgstr "Netejar totes les pujades"
+msgstr "Esborrar càrregues específiques"
 
 #: pynicotine/gtkgui/ui/userbrowse.ui:120
 msgid "Shared"
