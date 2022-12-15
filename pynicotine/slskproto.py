@@ -281,9 +281,12 @@ class SoulseekNetworkThread(Thread):
         self._listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.SOCKET_READ_BUFFER_SIZE)
         self._listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, self.SOCKET_WRITE_BUFFER_SIZE)
         self._listen_socket.setblocking(False)
-        self._bind_listen_port()
+
+        if not self._bind_listen_port():
+            return False
 
         self._selector.register(self._listen_socket, selectors.EVENT_READ)
+        return True
 
     def _close_listen_socket(self):
 
@@ -297,11 +300,14 @@ class SoulseekNetworkThread(Thread):
 
     def _bind_listen_port(self):
 
-        if not self._validate_network_interface():
-            return
-
         if self._interface and not self._bound_ip:
-            self._bind_to_network_interface(self._listen_socket, self._interface)
+            try:
+                self._bind_to_network_interface(self._listen_socket, self._interface)
+
+            except OSError:
+                log.add(_("Specified network interface '%s' is not available"), self._interface,
+                        title=_("Unknown Network Interface"))
+                return False
 
         ip_address = self._bound_ip or "0.0.0.0"
 
@@ -312,11 +318,15 @@ class SoulseekNetworkThread(Thread):
                 self.listenport = listenport
                 log.add(_("Listening on port: %i"), listenport)
                 log.add_debug("Maximum number of concurrent connections (sockets): %i", MAXSOCKETS)
-                break
+                return True
 
             except OSError as error:
                 log.add_debug("Cannot listen on port %(port)s: %(error)s", {"port": listenport, "error": error})
                 continue
+
+        log.add(_("No listening port is available in the specified port range %s–%s"), self._listen_port_range,
+                title=_("Listening Port Unavailable"))
+        return False
 
     @staticmethod
     def _get_interface_ip_address(if_name):
@@ -355,17 +365,6 @@ class SoulseekNetworkThread(Thread):
         # System does not support changing the network interface
         # Retrieve the IP address of the interface, and bind to it instead
         self._bound_ip = self._get_interface_ip_address(if_name)
-
-    def _validate_network_interface(self):
-
-        try:
-            if self._interface and self._interface not in (name for _i, name in socket.if_nameindex()):
-                return False
-
-        except AttributeError:
-            pass
-
-        return True
 
     def _find_local_ip_address(self):
 
@@ -408,17 +407,7 @@ class SoulseekNetworkThread(Thread):
         self._bound_ip = msg_obj.bound_ip
         self._listen_port_range = msg_obj.listen_port_range
 
-        if not self._validate_network_interface():
-            log.add(_("Specified network interface '%s' does not exist"), self._interface,
-                    title=_("Unknown Network Interface"))
-            self._should_process_queue = False
-            return
-
-        self._create_listen_socket()
-
-        if self.listenport is None:
-            log.add(_("No listening port is available in the specified port range %s–%s"), self._listen_port_range,
-                    title=_("Listening Port Unavailable"))
+        if not self._create_listen_socket():
             self._should_process_queue = False
             return
 
