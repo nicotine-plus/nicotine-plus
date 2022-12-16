@@ -1146,25 +1146,25 @@ class Transfers:
                 core.queue.append(slskmessages.CloseConnection(msg.init.sock))
                 return
 
-            incomplete_folder = config.sections["transfers"]["incompletedir"]
+            incomplete_folder_path = config.sections["transfers"]["incompletedir"]
             need_update = True
             download.sock = msg.init.sock
 
-            if not incomplete_folder:
+            if not incomplete_folder_path:
                 if download.path:
-                    incomplete_folder = download.path
+                    incomplete_folder_path = download.path
                 else:
-                    incomplete_folder = self.get_default_download_folder(username)
+                    incomplete_folder_path = self.get_default_download_folder(username)
 
             else:
                 try:
-                    incomplete_folder_encoded = encode_path(incomplete_folder)
+                    incomplete_folder_path_encoded = encode_path(incomplete_folder_path)
 
-                    if not os.path.isdir(incomplete_folder_encoded):
-                        os.makedirs(incomplete_folder_encoded)
+                    if not os.path.isdir(incomplete_folder_path_encoded):
+                        os.makedirs(incomplete_folder_path_encoded)
 
-                    incomplete_path = self.get_incomplete_file_path(incomplete_folder, username, filename)
-                    file_handle = open(encode_path(incomplete_path), 'ab+')  # pylint: disable=consider-using-with
+                    incomplete_file_path = self.get_incomplete_file_path(incomplete_folder_path, username, filename)
+                    file_handle = open(encode_path(incomplete_file_path), 'ab+')  # pylint: disable=consider-using-with
 
                     try:
                         import fcntl
@@ -1184,7 +1184,10 @@ class Transfers:
                     offset = file_handle.seek(0, os.SEEK_END)
 
                 except OSError as error:
-                    log.add(_("Cannot download file to %(path)s: %(error)s"), {"path": incomplete_path, "error": error})
+                    log.add(_("Cannot download file to %(path)s: %(error)s"), {
+                        "path": incomplete_file_path,
+                        "error": error
+                    })
                     self.abort_download(download, abort_reason="Download folder error")
                     core.notifications.show_download_notification(
                         str(error), title=_("Download Folder Error"), high_priority=True)
@@ -1198,7 +1201,7 @@ class Transfers:
                     download.start_time = download.last_update - download.time_elapsed
 
                     core.statistics.append_stat_value("started_downloads", 1)
-                    core.pluginhandler.download_started_notification(username, filename, incomplete_path)
+                    core.pluginhandler.download_started_notification(username, filename, incomplete_file_path)
 
                     log.add_download(
                         _("Download started: user %(user)s, file %(file)s"), {
@@ -1879,20 +1882,38 @@ class Transfers:
 
         return downloaddir
 
+    def get_basename_byte_limit(self, folder_path):
+
+        try:
+            max_bytes = os.statvfs(folder_path).f_namemax
+
+        except (AttributeError, OSError):
+            max_bytes = 255
+
+        return max_bytes
+
     def get_download_destination(self, user, virtual_path, target_path):
         """ Returns the download destination of a virtual file path """
 
         folder_path = target_path if target_path else self.get_default_download_folder(user)
-        basename = clean_file(virtual_path.replace('/', '\\').split('\\')[-1])
+        max_bytes = self.get_basename_byte_limit(folder_path)
 
-        return folder_path, basename
+        basename = clean_file(virtual_path.replace('/', '\\').split('\\')[-1])
+        basename_no_extension, extension = os.path.splitext(basename)
+        basename_limit = max_bytes - len(extension.encode('utf-8'))
+        basename_no_extension = truncate_string_byte(basename_no_extension, max(0, basename_limit))
+
+        if basename_limit < 0:
+            extension = truncate_string_byte(extension, max_bytes)
+
+        return folder_path, basename_no_extension + extension
 
     def get_existing_download_path(self, user, virtual_path, target_path, size, always_return=False):
         """ Returns the download path of a previous download, if available """
 
-        folder, basename = self.get_download_destination(user, virtual_path, target_path)
-        basename_root, extension = os.path.splitext(basename)
-        download_path = os.path.join(folder, basename)
+        folder_path, basename = self.get_download_destination(user, virtual_path, target_path)
+        basename_no_extension, extension = os.path.splitext(basename)
+        download_path = os.path.join(folder_path, basename)
         counter = 1
 
         while os.path.isfile(encode_path(download_path)):
@@ -1900,8 +1921,8 @@ class Transfers:
                 # Found a previous download with a matching file size
                 return download_path
 
-            basename = f"{basename_root} ({counter}){extension}"
-            download_path = os.path.join(folder, basename)
+            basename = f"{basename_no_extension} ({counter}){extension}"
+            download_path = os.path.join(folder_path, basename)
             counter += 1
 
         if always_return:
@@ -1910,8 +1931,7 @@ class Transfers:
 
         return None
 
-    @staticmethod
-    def get_incomplete_file_path(incomplete_folder, username, virtual_path):
+    def get_incomplete_file_path(self, incomplete_folder_path, username, virtual_path):
         """ Returns the path to store a download while it's still transferring """
 
         from hashlib import md5
@@ -1919,32 +1939,35 @@ class Transfers:
         md5sum.update((virtual_path + username).encode('utf-8'))
         prefix = f"INCOMPLETE{md5sum.hexdigest()}"
 
-        # Ensure file name doesn't exceed 255 bytes in length
-        base_name, extension = os.path.splitext(clean_file(virtual_path.replace('/', '\\').split('\\')[-1]))
-        base_name_limit = 255 - len(prefix) - len(extension.encode('utf-8'))
-        base_name = truncate_string_byte(base_name, base_name_limit)
+        # Ensure file name length doesn't exceed file system limit
+        max_bytes = self.get_basename_byte_limit(incomplete_folder_path)
 
-        if base_name_limit < 0:
-            extension = truncate_string_byte(extension, 255 - len(prefix))
+        basename = clean_file(virtual_path.replace('/', '\\').split('\\')[-1])
+        basename_no_extension, extension = os.path.splitext(basename)
+        basename_limit = max_bytes - len(prefix) - len(extension.encode('utf-8'))
+        basename_no_extension = truncate_string_byte(basename_no_extension, max(0, basename_limit))
 
-        return os.path.join(incomplete_folder, prefix + base_name + extension)
+        if basename_limit < 0:
+            extension = truncate_string_byte(extension, max_bytes - len(prefix))
 
-    @staticmethod
-    def get_renamed(name):
+        return os.path.join(incomplete_folder_path, prefix + basename_no_extension + extension)
+
+    def get_renamed(self, folder_path, basename):
         """ When a transfer is finished, we remove INCOMPLETE~ or INCOMPLETE
         prefix from the file's name.
 
         Checks if a file with the same name already exists, and adds a number
         to the file name if that's the case. """
 
-        filename, extension = os.path.splitext(name)
+        file_path = os.path.join(folder_path, basename)
+        file_path_no_extension, extension = os.path.splitext(file_path)
         counter = 1
 
-        while os.path.exists(encode_path(name)):
-            name = f"{filename} ({counter}){extension}"
+        while os.path.exists(encode_path(file_path)):
+            file_path = f"{file_path_no_extension} ({counter}){extension}"
             counter += 1
 
-        return name
+        return file_path
 
     def file_downloaded_actions(self, user, filepath):
 
@@ -2000,7 +2023,7 @@ class Transfers:
 
         folder, basename = self.get_download_destination(transfer.user, transfer.filename, transfer.path)
         folder_encoded = encode_path(folder)
-        newname = self.get_renamed(os.path.join(folder, basename))
+        newname = self.get_renamed(folder, basename)
 
         try:
             if not os.path.isdir(folder_encoded):
