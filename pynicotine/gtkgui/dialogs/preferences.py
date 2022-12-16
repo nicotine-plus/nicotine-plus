@@ -911,7 +911,7 @@ class BannedUsersPage:
         ) = ui_template.widgets
 
         self.application = application
-        self.ip_block_required = False
+        self.ip_ban_required = False
 
         self.banned_users = []
         self.banned_users_list_view = TreeView(
@@ -960,11 +960,11 @@ class BannedUsersPage:
         self.banned_ips = config.sections["server"]["ipblocklist"].copy()
         self.geo_block_country_entry.set_text(config.sections["transfers"]["geoblockcc"][0])
 
-        self.ip_block_required = False
+        self.ip_ban_required = False
 
     def get_settings(self):
 
-        self.ip_block_required = False
+        self.ip_ban_required = False
 
         return {
             "server": {
@@ -1026,14 +1026,14 @@ class BannedUsersPage:
         if ip_address not in self.banned_ips:
             self.banned_ips[ip_address] = ""
             self.banned_ips_list_view.add_row([ip_address, ""])
-            self.ip_block_required = True
+            self.ip_ban_required = True
 
     def on_add_banned_ip(self, *_args):
 
         EntryDialog(
             parent=self.application.preferences,
-            title=_("Block IP Address"),
-            message=_("Enter an IP address you want to block:") + " " + _("* is a wildcard"),
+            title=_("Ban IP Address"),
+            message=_("Enter an IP address you want to ban:") + " " + _("* is a wildcard"),
             callback=self.on_add_banned_ip_response
         ).show()
 
@@ -2596,10 +2596,10 @@ class Preferences(Dialog):
             completion_required = False
 
         try:
-            ip_block_required = self.pages["banned-users"].ip_block_required
+            ip_ban_required = self.pages["banned-users"].ip_ban_required
 
         except KeyError:
-            ip_block_required = False
+            ip_ban_required = False
 
         try:
             search_required = self.pages["searches"].search_required
@@ -2612,12 +2612,12 @@ class Preferences(Dialog):
                 options[key].update(data)
 
         return (portmap_required, rescan_required, theme_required, completion_required,
-                ip_block_required, search_required, options)
+                ip_ban_required, search_required, options)
 
     def update_settings(self, settings_closed=False):
 
         (portmap_required, rescan_required, theme_required, completion_required,
-            ip_block_required, search_required, options) = self.get_settings()
+            ip_ban_required, search_required, options) = self.get_settings()
 
         for key, data in options.items():
             config.sections[key].update(data)
@@ -2647,8 +2647,8 @@ class Preferences(Dialog):
             core.chatrooms.update_completions()
             core.privatechat.update_completions()
 
-        if ip_block_required:
-            core.network_filter.close_blocked_ip_connections()
+        if ip_ban_required:
+            core.network_filter.close_banned_ip_connections()
 
         if search_required:
             self.application.window.search.populate_search_history()

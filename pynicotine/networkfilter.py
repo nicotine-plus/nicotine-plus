@@ -23,11 +23,11 @@ from pynicotine.events import events
 
 
 class NetworkFilter:
-    """ Functions related to banning, blocking and ignoring users """
+    """ Functions related to banning and ignoring users """
 
     def __init__(self):
-        self.ipblock_requested = {}
-        self.ipignore_requested = {}
+        self.ip_ban_requested = {}
+        self.ip_ignore_requested = {}
 
         for event_name, callback in (
             ("peer-address", self._get_peer_address),
@@ -36,23 +36,23 @@ class NetworkFilter:
             events.connect(event_name, callback)
 
     def _server_disconnect(self, _msg):
-        self.ipblock_requested.clear()
-        self.ipignore_requested.clear()
+        self.ip_ban_requested.clear()
+        self.ip_ignore_requested.clear()
 
     """ General """
 
     def _request_ip(self, user, action, list_type):
         """ Ask for the IP address of a user. Once a GetPeerAddress response arrives,
-        either block_unblock_user_ip_callback or ignore_unignore_user_ip_callback
+        either ban_unban_user_ip_callback or ignore_unignore_user_ip_callback
         is called. """
 
         if user in core.user_addresses:
             return False
 
-        if list_type == "block":
-            request_list = self.ipblock_requested
+        if list_type == "ban":
+            request_list = self.ip_ban_requested
         else:
-            request_list = self.ipignore_requested
+            request_list = self.ip_ignore_requested
 
         if user not in request_list:
             request_list[user] = action
@@ -63,7 +63,7 @@ class NetworkFilter:
     def _add_user_ip_to_list(self, user, list_type):
         """ Add the current IP of a user to a list. """
 
-        if list_type == "block":
+        if list_type == "ban":
             ip_list = config.sections["server"]["ipblocklist"]
         else:
             ip_list = config.sections["server"]["ipignorelist"]
@@ -82,8 +82,8 @@ class NetworkFilter:
     def _remove_user_ip_from_list(self, user, list_type):
         """ Attempt to remove the previously saved IP address of a user from a list. """
 
-        if list_type == "block":
-            cached_ip = self.get_cached_blocked_user_ip(user)
+        if list_type == "ban":
+            cached_ip = self.get_cached_banned_user_ip(user)
             ip_list = config.sections["server"]["ipblocklist"]
         else:
             cached_ip = self.get_cached_ignored_user_ip(user)
@@ -106,7 +106,7 @@ class NetworkFilter:
     def _get_cached_user_ip(self, user, list_type):
         """ Retrieve the IP address of a user previously saved in a list. """
 
-        if list_type == "block":
+        if list_type == "ban":
             ip_list = config.sections["server"]["ipblocklist"]
         else:
             ip_list = config.sections["server"]["ipignorelist"]
@@ -124,7 +124,7 @@ class NetworkFilter:
         if address is None:
             return True
 
-        if list_type == "block":
+        if list_type == "ban":
             ip_list = config.sections["server"]["ipblocklist"]
         else:
             ip_list = config.sections["server"]["ipignorelist"]
@@ -152,17 +152,17 @@ class NetworkFilter:
 
                 # Last time around
                 if seg == 4:
-                    # Wildcard blocked
+                    # Wildcard ban
                     return True
 
-        # Not blocked
+        # Not banned
         return False
 
     def check_user(self, user, ip_address):
         """ Check if this user is banned, geoip-blocked, and which shares
         it is allowed to access based on transfer and shares settings. """
 
-        if self.is_user_banned(user) or (ip_address is not None and self.is_ip_blocked(ip_address)):
+        if self.is_user_banned(user) or (ip_address is not None and self.is_ip_banned(ip_address)):
             if config.sections["transfers"]["usecustomban"]:
                 ban_message = config.sections["transfers"]["customban"]
                 return 0, f"Banned ({ban_message})"
@@ -196,8 +196,8 @@ class NetworkFilter:
 
         return 1, ""
 
-    def close_blocked_ip_connections(self):
-        """ Close all connections whose IP address exists in the block list """
+    def close_banned_ip_connections(self):
+        """ Close all connections whose IP address exists in the ban list """
 
         for ip_address in config.sections["server"]["ipblocklist"]:
             core.queue.append(slskmessages.CloseConnectionIP(ip_address))
@@ -213,11 +213,11 @@ class NetworkFilter:
             return
 
         new_ip, _new_port = user_address
-        cached_blocked_ip = self.get_cached_blocked_user_ip(user)
+        cached_banned_ip = self.get_cached_banned_user_ip(user)
 
-        if cached_blocked_ip is not None and cached_blocked_ip != new_ip:
-            self.unblock_user_ip(user)
-            self.block_user_ip(user)
+        if cached_banned_ip is not None and cached_banned_ip != new_ip:
+            self.unban_user_ip(user)
+            self.ban_user_ip(user)
 
         cached_ignored_ip = self.get_cached_ignored_user_ip(user)
 
@@ -230,10 +230,10 @@ class NetworkFilter:
 
         user = msg.user
 
-        # If the IP address changed, make sure our IP block/ignore list reflects this
+        # If the IP address changed, make sure our IP ban/ignore list reflects this
         self.update_saved_user_ip_filters(user)
 
-        self.block_unblock_user_ip_callback(user)
+        self.ban_unban_user_ip_callback(user)
         self.ignore_unignore_user_ip_callback(user)
 
     """ Banning """
@@ -259,18 +259,18 @@ class NetworkFilter:
 
         events.emit("unban-user", user)
 
-    def block_user_ip(self, user):
-        ip_address = self._add_user_ip_to_list(user, "block")
+    def ban_user_ip(self, user):
+        ip_address = self._add_user_ip_to_list(user, "ban")
 
         if ip_address:
             core.queue.append(slskmessages.CloseConnectionIP(ip_address))
 
-    def unblock_user_ip(self, user):
-        self._remove_user_ip_from_list(user, "block")
+    def unban_user_ip(self, user):
+        self._remove_user_ip_from_list(user, "ban")
 
-    def block_unblock_user_ip_callback(self, user):
+    def ban_unban_user_ip_callback(self, user):
 
-        request = self.ipblock_requested.pop(user, None)
+        request = self.ip_ban_requested.pop(user, None)
 
         if request is None:
             return False
@@ -280,20 +280,20 @@ class NetworkFilter:
             return False
 
         if request == "remove":
-            self.unblock_user_ip(user)
+            self.unban_user_ip(user)
         else:
-            self.block_user_ip(user)
+            self.ban_user_ip(user)
 
         return True
 
-    def get_cached_blocked_user_ip(self, user):
-        return self._get_cached_user_ip(user, "block")
+    def get_cached_banned_user_ip(self, user):
+        return self._get_cached_user_ip(user, "ban")
 
     def is_user_banned(self, user):
         return user in config.sections["server"]["banlist"]
 
-    def is_ip_blocked(self, address):
-        return self._is_ip_in_list(address, "block")
+    def is_ip_banned(self, address):
+        return self._is_ip_in_list(address, "ban")
 
     """ Ignoring """
 
@@ -322,10 +322,10 @@ class NetworkFilter:
         if not ip_address or ip_address.count(".") != 3:
             return
 
-        ipignorelist = config.sections["server"]["ipignorelist"]
+        ip_ignore_list = config.sections["server"]["ipignorelist"]
 
-        if ip_address not in ipignorelist:
-            ipignorelist[ip_address] = ""
+        if ip_address not in ip_ignore_list:
+            ip_ignore_list[ip_address] = ""
             config.write_configuration()
 
     def ignore_user_ip(self, user):
@@ -336,7 +336,7 @@ class NetworkFilter:
 
     def ignore_unignore_user_ip_callback(self, user):
 
-        request = self.ipignore_requested.pop(user, None)
+        request = self.ip_ignore_requested.pop(user, None)
 
         if request is None:
             return False
