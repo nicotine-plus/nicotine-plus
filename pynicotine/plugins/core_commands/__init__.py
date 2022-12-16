@@ -153,60 +153,30 @@ class Plugin(BasePlugin):
                 "usage_private_chat": ["[buddy]"]
             },
             "ban": {
-                "callback": self.ban_user_command,
-                "description": _("Stop connections from user"),
-                "group": _("Users"),
-                "usage": ["<user>"],
-                "usage_private_chat": ["[user]"]
+                "callback": self.ban_command,
+                "description": _("Stop connections from user or IP address"),
+                "group": _("Network Filters"),
+                "usage": ["<user or ip>"],
+                "usage_private_chat": ["[user]", "[ip]"]
             },
             "unban": {
-                "callback": self.unban_user_command,
-                "description": _("Remove user from ban list"),
-                "group": _("Users"),
-                "usage": ["<user>"],
-                "usage_private_chat": ["[user]"]
-            },
-            "block": {  # new
-                "callback": self.ban_user_ip_command,
-                "description": _("Stop all connections from same IP as user"),
+                "callback": self.unban_command,
+                "description": _("Remove user or IP address from ban lists"),
                 "group": _("Network Filters"),
-                "usage": ["<user>"],
-                "usage_private_chat": ["[user]"]
-            },
-            "unblock": {  # new
-                "callback": self.unban_user_ip_command,
-                "description": _("Remove user's IP address from block list"),
-                "group": _("Network Filters"),
-                "usage": ["<user>"],
-                "usage_private_chat": ["[user]"]
+                "usage": ["<user or IP>"],
+                "usage_private_chat": ["[user]", "[ip]"]
             },
             "ignore": {
-                "callback": self.ignore_user_command,
-                "description": _("Silence chat messages from user"),
-                "disable": ["cli"],
-                "group": _("Users"),
-                "usage": ["<user>"],
-                "usage_private_chat": ["[user]"]
-            },
-            "unignore": {
-                "callback": self.unignore_user_command,
-                "description": _("Remove user from chat ignore list"),
-                "disable": ["cli"],
-                "group": _("Users"),
-                "usage": ["<user>"],
-                "usage_private_chat": ["[user]"]
-            },
-            "ignoreip": {
-                "callback": self.ignore_user_ip_command,
-                "description": _("Silence chat messages from IP address of user"),
+                "callback": self.ignore_command,
+                "description": _("Silence chat messages from user or IP address"),
                 "disable": ["cli"],
                 "group": _("Network Filters"),
                 "usage": ["<user or ip>"],
                 "usage_private_chat": ["[user]", "[ip]"]
             },
-            "unignoreip": {  # new
-                "callback": self.unignore_user_ip_command,
-                "description": _("Remove user's IP address from chat ignore list"),
+            "unignore": {
+                "callback": self.unignore_command,
+                "description": _("Remove user or IP address from chat ignore lists"),
                 "disable": ["cli"],
                 "group": _("Network Filters"),
                 "usage": ["<user or ip>"],
@@ -367,7 +337,7 @@ class Plugin(BasePlugin):
 
     """ "Chats" """
 
-    def clear_command(self, _args, user=None, room=None):
+    def clear_command(self, args, user=None, room=None):
 
         if args:
             return
@@ -502,49 +472,43 @@ class Plugin(BasePlugin):
 
         self.core.userlist.remove_buddy(user)
 
-    def ban_user_command(self, args, user=None, **_unused):
+    def ban_command(self, args, user=None, **_unused):
 
-        if args:
-            user = args
-
-        self.core.network_filter.ban_user(user)
-
-    def unban_user_command(self, args, user=None, **_unused):
-
-        if args:
-            user = args
-
-        self.core.network_filter.unban_user(user)
-
-    def ban_user_ip_command(self, args, user=None, **_unused):
+        if self.is_ip_address(args):
+            # TODO: self.core.network_filter.ban_ip(args)  # function does not exist
+            #
+            #       if username is known from cached network ip address lookup:
+            #           self.core.network_filter.ban_user_ip(username)  # only username is supported as argument
+            #       else:
+            #           # append ip address value into config ["ipblocklist"]
+            self.output(f"Not implemented (ban by ip), entered arguments: ip_address='{args}' is_ip_address=True")
+            return
 
         if args:
             user = args
 
         self.core.network_filter.ban_user_ip(user)
+        self.core.network_filter.ban_user(user)
 
-    def unban_user_ip_command(self, args, user=None, **_unused):
+    def unban_command(self, args, user=None, **_unused):
+
+        if self.is_ip_address(args):
+            # TODO: self.core.network_filter.unban_ip(args)  # function does not exist
+            #
+            #       if username is known from cached ip address or is in ["ipblocklist"]):
+            #           self.core.network_filter.ban_user_ip(username)  # only username is supported as argument
+            #       elif username="":
+            #           # discard matching ip address value(s) from config ["ipblocklist"] and ["banlist"] lists
+            self.output(f"Not implemented (unban by ip), entered arguments: ip_address='{args}' is_ip_address=True")
+            return
 
         if args:
             user = args
 
         self.core.network_filter.unban_user_ip(user)
+        self.core.network_filter.unban_user(user)
 
-    def ignore_user_command(self, args, user=None, **_unused):
-
-        if args:
-            user = args
-
-        self.core.network_filter.ignore_user(user)
-
-    def unignore_user_command(self, args, user=None, **_unused):
-
-        if args:
-            user = args
-
-        self.core.network_filter.unignore_user(user)
-
-    def ignore_user_ip_command(self, args, user=None, **_unused):
+    def ignore_command(self, args, user=None, **_unused):
 
         if self.is_ip_address(args):
             self.core.network_filter.ignore_ip(args)
@@ -554,11 +518,17 @@ class Plugin(BasePlugin):
             user = args
 
         self.core.network_filter.ignore_user_ip(user)
+        self.core.network_filter.ignore_user(user)
 
-    def unignore_user_ip_command(self, args, user=None, **_unused):
+    def unignore_command(self, args, user=None, **_unused):
 
         if self.is_ip_address(args):
-            # TODO: self.core.network_filter.unignore_ip(args)
+            # TODO: self.core.network_filter.unignore_ip(args)  # function does not exist
+            #
+            #       if username is known from cached ip address or is in ["ipignorelist"]:
+            #           self.core.network_filter.unignore_user_ip(username)  # only username is supported as argument
+            #       elif username="":
+            #           # discard matching value(s) from config ["ipignorelist"] and ["ignorelist"] lists
             self.output(f"Not implemented (unignore by ip), entered arguments: ip_address='{args}' is_ip_address=True")
             return
 
@@ -566,9 +536,11 @@ class Plugin(BasePlugin):
             user = args
 
         self.core.network_filter.unignore_user_ip(user)
+        self.core.network_filter.unignore_user(user)
 
     @staticmethod
     def is_ip_address(ip_address):
+        """ Check if the given value is an IPv4 address or not """
 
         if not ip_address or ip_address.count(".") != 3:
             return False
