@@ -406,7 +406,6 @@ class TreeView:
 
     def select_row(self, iterator):
         self.widget.set_cursor(self.model.get_path(iterator))
-        self.widget.grab_focus()
 
     def remove_row(self, iterator):
         del self.iterators[self._iter_keys[iterator.user_data]]

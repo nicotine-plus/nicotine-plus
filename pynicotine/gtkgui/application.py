@@ -864,7 +864,11 @@ class Application:
 
         self.tray_icon = TrayIcon(self)
         self.notifications = Notifications(self)
-        self.window = MainWindow(self, self.start_hidden)
+        self.window = MainWindow(self)
+
+        # Check command line option and config option
+        if not self.start_hidden and not config.sections["ui"]["startup_hidden"]:
+            self.window.show()
 
         core.start()
 

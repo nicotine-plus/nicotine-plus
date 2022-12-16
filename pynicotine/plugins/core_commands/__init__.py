@@ -167,14 +167,14 @@ class Plugin(BasePlugin):
                 "usage_private_chat": ["[user]"]
             },
             "block": {  # new
-                "callback": self.block_user_ip_command,
+                "callback": self.ban_user_ip_command,
                 "description": _("Stop all connections from same IP as user"),
                 "group": _("Network Filters"),
                 "usage": ["<user>"],
                 "usage_private_chat": ["[user]"]
             },
             "unblock": {  # new
-                "callback": self.unblock_user_ip_command,
+                "callback": self.unban_user_ip_command,
                 "description": _("Remove user's IP address from block list"),
                 "group": _("Network Filters"),
                 "usage": ["<user>"],
@@ -516,19 +516,19 @@ class Plugin(BasePlugin):
 
         self.core.network_filter.unban_user(user)
 
-    def block_user_ip_command(self, args, user=None, **_unused):
+    def ban_user_ip_command(self, args, user=None, **_unused):
 
         if args:
             user = args
 
-        self.core.network_filter.block_user_ip(user)
+        self.core.network_filter.ban_user_ip(user)
 
-    def unblock_user_ip_command(self, args, user=None, **_unused):
+    def unban_user_ip_command(self, args, user=None, **_unused):
 
         if args:
             user = args
 
-        self.core.network_filter.unblock_user_ip(user)
+        self.core.network_filter.unban_user_ip(user)
 
     def ignore_user_command(self, args, user=None, **_unused):
 

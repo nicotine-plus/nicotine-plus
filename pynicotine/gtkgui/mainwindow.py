@@ -64,10 +64,9 @@ from pynicotine.utils import open_file_path
 
 class MainWindow(Window):
 
-    def __init__(self, application, start_hidden):
+    def __init__(self, application):
 
         self.application = application
-        self.start_hidden = start_hidden
         self.initialized = False
         self.current_page_id = ""
         self.auto_away = False
@@ -356,10 +355,6 @@ class MainWindow(Window):
             self.window.connect("notify::is-maximized", self.on_window_property_changed, "maximized")
 
         self.application.add_window(self.window)
-
-        # Check command line option and config option
-        if not self.start_hidden and not config.sections["ui"]["startup_hidden"]:
-            self.show()
 
     def set_help_overlay(self, help_overlay):
         self.window.set_help_overlay(help_overlay)

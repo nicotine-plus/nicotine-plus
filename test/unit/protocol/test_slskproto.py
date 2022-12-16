@@ -101,7 +101,11 @@ class SoulseekNetworkTest(TestCase):
         self.queue.append(ServerConnect(addr=('0.0.0.0', 0), login=('dummy', 'dummy'), listen_port_range=(1024, 65535)))
         sleep(SLSKPROTO_RUN_TIME)
 
-        if hasattr(socket, 'TCP_KEEPIDLE') or hasattr(socket, 'TCP_KEEPALIVE'):
+        if hasattr(socket, 'TCP_USER_TIMEOUT'):
+            self.assertEqual(
+                self.protothread._server_socket.setsockopt.call_count, 10)  # pylint: disable=no-member,protected-access
+
+        elif hasattr(socket, 'TCP_KEEPIDLE') or hasattr(socket, 'TCP_KEEPALIVE'):
             self.assertEqual(
                 self.protothread._server_socket.setsockopt.call_count, 9)  # pylint: disable=no-member,protected-access
 

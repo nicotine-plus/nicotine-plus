@@ -364,7 +364,7 @@ class UserPopupMenu(PopupMenu):
             ("$" + _("Ban User"), self.on_ban_user),
             ("$" + _("Ignore User"), self.on_ignore_user),
             ("", None),
-            ("$" + _("Ban IP Address"), self.on_block_user),
+            ("$" + _("Ban IP Address"), self.on_ban_ip),
             ("$" + _("Ignore IP Address"), self.on_ignore_ip),
             ("#" + _("Show IP A_ddress"), self.on_show_ip_address)
         )
@@ -397,7 +397,7 @@ class UserPopupMenu(PopupMenu):
         self.actions[_("Ignore User")].set_state(
             GLib.Variant("b", core.network_filter.is_user_ignored(self.user)))
         self.actions[_("Ban IP Address")].set_state(
-            GLib.Variant("b", core.network_filter.get_cached_blocked_user_ip(self.user) or False))
+            GLib.Variant("b", core.network_filter.get_cached_banned_user_ip(self.user) or False))
         self.actions[_("Ignore IP Address")].set_state(
             GLib.Variant("b", core.network_filter.get_cached_ignored_user_ip(self.user) or False))
 
@@ -499,15 +499,15 @@ class UserPopupMenu(PopupMenu):
 
         action.set_state(state)
 
-    def on_block_user(self, action, state):
+    def on_ban_ip(self, action, state):
 
         if self.editing:
             return
 
         if state.get_boolean():
-            core.network_filter.block_user_ip(self.user)
+            core.network_filter.ban_user_ip(self.user)
         else:
-            core.network_filter.unblock_user_ip(self.user)
+            core.network_filter.unban_user_ip(self.user)
 
         action.set_state(state)
 
