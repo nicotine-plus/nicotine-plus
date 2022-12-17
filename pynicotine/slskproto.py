@@ -1964,7 +1964,7 @@ class SoulseekNetworkThread(Thread):
 
     """ Input/Output """
 
-    def _process_ready_input_socket(self, sock, current_time, conn_obj_in_progress=None, conn_obj_established=None):
+    def _process_ready_input_socket(self, sock, current_time):
 
         if sock is self._listen_socket:
             # Manage incoming connections to listening socket
@@ -1993,7 +1993,11 @@ class SoulseekNetworkThread(Thread):
                 # Don't do it here, otherwise connections may break.
                 self._selector.register(incoming_sock, selector_events)
 
-        elif conn_obj_in_progress is not None:
+            return
+
+        conn_obj_in_progress = self._connsinprogress.get(sock)
+
+        if conn_obj_in_progress is not None:
             try:
                 # Check if the socket has any data for us
                 sock.recv(1, socket.MSG_PEEK)
@@ -2001,9 +2005,12 @@ class SoulseekNetworkThread(Thread):
             except OSError as error:
                 self._connect_error(error, conn_obj_in_progress)
                 self._close_connection(self._connsinprogress, sock, callback=False)
-                return False
 
-        elif conn_obj_established is not None:
+            return
+
+        conn_obj_established = self._conns.get(sock)
+
+        if conn_obj_established is not None:
             if self._is_download(conn_obj_established):
                 self._set_conn_speed_limit(sock, self._download_limit_split, self._dlimits)
 
@@ -2011,7 +2018,7 @@ class SoulseekNetworkThread(Thread):
                 if not self._read_data(conn_obj_established, current_time):
                     # No data received, socket was likely closed remotely
                     self._close_connection(self._conns, sock)
-                    return False
+                    return
 
             except OSError as error:
                 log.add_conn(("Cannot read data from connection %(addr)s, closing connection. "
@@ -2020,14 +2027,14 @@ class SoulseekNetworkThread(Thread):
                     "error": error
                 })
                 self._close_connection(self._conns, sock)
-                return False
+                return
 
             if conn_obj_established.ibuf:
                 self._process_conn_incoming_messages(conn_obj_established)
 
-        return True
+    def _process_ready_output_socket(self, sock, current_time):
 
-    def _process_ready_output_socket(self, sock, current_time, conn_obj_in_progress=None, conn_obj_established=None):
+        conn_obj_in_progress = self._connsinprogress.get(sock)
 
         if conn_obj_in_progress is not None:
             try:
@@ -2044,9 +2051,12 @@ class SoulseekNetworkThread(Thread):
             except OSError as error:
                 self._connect_error(error, conn_obj_in_progress)
                 self._close_connection(self._connsinprogress, sock, callback=False)
-                return False
 
-        elif conn_obj_established is not None:
+            return
+
+        conn_obj_established = self._conns.get(sock)
+
+        if conn_obj_established is not None:
             if self._is_upload(conn_obj_established):
                 self._set_conn_speed_limit(sock, self._upload_limit_split, self._ulimits)
 
@@ -2059,9 +2069,6 @@ class SoulseekNetworkThread(Thread):
                     "error": error
                 })
                 self._close_connection(self._conns, sock)
-                return False
-
-        return True
 
     def _process_ready_sockets(self, current_time):
 
@@ -2071,15 +2078,12 @@ class SoulseekNetworkThread(Thread):
 
         for selector_key, selector_events in self._selector.select(timeout=-1):
             sock = selector_key.fileobj
-            conn_obj_in_progress = self._connsinprogress.get(sock)
-            conn_obj_established = self._conns.get(sock)
 
             if selector_events & selectors.EVENT_READ:
-                if not self._process_ready_input_socket(sock, current_time, conn_obj_in_progress, conn_obj_established):
-                    continue
+                self._process_ready_input_socket(sock, current_time)
 
             if selector_events & selectors.EVENT_WRITE:
-                self._process_ready_output_socket(sock, current_time, conn_obj_in_progress, conn_obj_established)
+                self._process_ready_output_socket(sock, current_time)
 
     def _process_conn_incoming_messages(self, conn_obj):
 
