@@ -29,6 +29,8 @@ import stat
 import sys
 import time
 
+from multiprocessing import Process
+from multiprocessing import Queue
 from threading import Thread
 
 from pynicotine import rename_process
@@ -79,11 +81,13 @@ else:
     sys.exit()
 
 
-class Scanner:
+class Scanner(Process):
     """ Separate process responsible for building shares. It handles scanning of
     folders and files, as well as building databases and writing them to disk. """
 
     def __init__(self, config_obj, queue, shared_folders, share_db_paths, init=False, rescan=True, rebuild=False):
+
+        super().__init__(daemon=True)
 
         self.config = config_obj
         self.queue = queue
@@ -777,17 +781,7 @@ class Shares:
 
     def build_scanner_process(self, shared_folders=None, init=False, rescan=True, rebuild=False):
 
-        import multiprocessing
-
-        # Frozen binaries only support fork (if not on Windows)
-        if sys.platform != "win32" and getattr(sys, 'frozen', False):
-            start_method = "fork"
-        else:
-            start_method = "spawn"
-
-        multiprocessing.set_start_method(start_method, force=True)
-
-        scanner_queue = multiprocessing.Queue()
+        scanner_queue = Queue()
         scanner = Scanner(
             config,
             scanner_queue,
@@ -797,8 +791,6 @@ class Shares:
             rescan,
             rebuild
         )
-        scanner = multiprocessing.Process(target=scanner.run)
-        scanner.daemon = True
         return scanner, scanner_queue
 
     def rebuild_shares(self, use_thread=True):
