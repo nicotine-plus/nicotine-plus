@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-01 03:44+0200\n"
-"PO-Revision-Date: 2022-12-04 12:36+0000\n"
+"PO-Revision-Date: 2022-12-18 15:47+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.15-dev\n"
+"X-Generator: Weblate 4.15.1-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -1298,7 +1298,7 @@ msgstr "Wil je echt afsluiten?"
 
 #: pynicotine/gtkgui/application.py:403 pynicotine/gtkgui/mainwindow.py:684
 msgid "_Quit"
-msgstr "_Ontslag nemen"
+msgstr "_Afsluiten"
 
 #: pynicotine/gtkgui/application.py:404
 msgid "_Run in Background"
