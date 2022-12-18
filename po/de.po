@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-01 03:44+0200\n"
-"PO-Revision-Date: 2022-12-14 17:49+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2022-12-18 15:47+0000\n"
+"Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
 "Language: de\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.15-dev\n"
+"X-Generator: Weblate 4.15.1-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -1370,14 +1370,12 @@ msgid "_Send Message"
 msgstr "_Nachricht senden"
 
 #: pynicotine/gtkgui/application.py:598
-#, fuzzy
 msgid "Message Buddies"
-msgstr "Nachrichten"
+msgstr "Freunde Nachricht senden"
 
 #: pynicotine/gtkgui/application.py:599
-#, fuzzy
 msgid "Send private message to all online buddies:"
-msgstr "Private Nachricht an alle Online-Buddies senden:"
+msgstr "Private Nachricht an alle Online-Freunde senden:"
 
 #: pynicotine/gtkgui/application.py:624
 msgid "Select a Saved Shares List File"
@@ -1513,18 +1511,18 @@ msgid "--- old messages above ---"
 msgstr "–––hier drüber alte Nachrichten–––"
 
 #: pynicotine/gtkgui/chatrooms.py:822
-#, fuzzy, python-format
+#, python-format
 msgid "%(user)s mentioned you in room %(room)s"
 msgstr "%(user)s hat dich im Raum „%(room)s“ erwähnt"
 
 #: pynicotine/gtkgui/chatrooms.py:827
 #: pynicotine/gtkgui/widgets/notifications.py:92
-#, fuzzy, python-format
+#, python-format
 msgid "Mentioned by %(user)s in Room %(room)s"
-msgstr "Nachricht von %(user)s im Raum %(room)s"
+msgstr "Erwähnt von %(user)s in Raum %(room)s"
 
 #: pynicotine/gtkgui/chatrooms.py:845
-#, fuzzy, python-format
+#, python-format
 msgid "Message by %(user)s in Room %(room)s"
 msgstr "Nachricht von %(user)s im Raum %(room)s"
 
@@ -1568,12 +1566,10 @@ msgstr ""
 "dauerhaft löschen?"
 
 #: pynicotine/gtkgui/dialogs/about.py:345
-#, fuzzy
 msgid "About"
-msgstr "Dschibuti"
+msgstr "Über"
 
 #: pynicotine/gtkgui/dialogs/about.py:360
-#, fuzzy
 msgid "Website"
 msgstr "Webseite: %s"
 
@@ -2085,7 +2081,7 @@ msgid "Transfer Statistics"
 msgstr "Transferstatistik"
 
 #: pynicotine/gtkgui/dialogs/statistics.py:82
-#, fuzzy, python-format
+#, python-format
 msgid "Total Since %(date)s"
 msgstr "Gesamt seit %(date)s"
 
@@ -2154,7 +2150,6 @@ msgid "Filtered"
 msgstr "Gefiltert"
 
 #: pynicotine/gtkgui/downloads.py:66
-#, fuzzy
 msgid "Deleted"
 msgstr "Gelöscht"
 
@@ -2656,7 +2651,6 @@ msgid "[PRIVATE]  %s"
 msgstr "[PRIVAT] %s"
 
 #: pynicotine/gtkgui/search.py:726
-#, fuzzy
 msgid "Wishlist Results Found"
 msgstr "Wunschzettel-Ergebnisse gefunden"
 
@@ -2807,21 +2801,18 @@ msgid "_Abort"
 msgstr "_Abbrechen"
 
 #: pynicotine/gtkgui/uploads.py:62
-#, fuzzy
 msgid "Finished / Cancelled / Failed"
-msgstr "Beendet / Abgebrochen / Gescheitert"
+msgstr "Beendet / Abgebrochen / Fehlgeschlagen"
 
 #: pynicotine/gtkgui/uploads.py:63
-#, fuzzy
 msgid "Finished / Cancelled"
-msgstr "Beendet / Gefiltert"
+msgstr "Fertig / Abgebrochen"
 
 #: pynicotine/gtkgui/uploads.py:67
 msgid "Failed"
 msgstr "Gescheitert"
 
 #: pynicotine/gtkgui/uploads.py:68
-#, fuzzy
 msgid "User Logged Off"
 msgstr "Benutzer abgemeldet"
 
@@ -2950,24 +2941,20 @@ msgstr ""
 "oder es gibt ein vorübergehendes Verbindungsproblem."
 
 #: pynicotine/gtkgui/userinfo.py:476
-#, fuzzy
 msgid "Remove _Buddy"
-msgstr "_Wunsch entfernen"
+msgstr "_Freund entfernen"
 
 #: pynicotine/gtkgui/userinfo.py:476
-#, fuzzy
 msgid "Add _Buddy"
-msgstr "Freund hinzufügen…"
+msgstr "_Freund hinzufügen"
 
 #: pynicotine/gtkgui/userinfo.py:480
-#, fuzzy
 msgid "Unban User"
-msgstr "Benutzer blocken"
+msgstr "Benutzer entsperren"
 
 #: pynicotine/gtkgui/userinfo.py:484
-#, fuzzy
 msgid "Unignore User"
-msgstr "Benutzer ignorieren"
+msgstr "Benutzer nicht ignorieren"
 
 #: pynicotine/gtkgui/userinfo.py:506
 msgid "Yes"
@@ -3135,7 +3122,6 @@ msgid "(None)"
 msgstr "(Keine)"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:106
-#, fuzzy
 msgid "Close Tab"
 msgstr "Tab schließen"
 
@@ -3177,9 +3163,8 @@ msgstr "Dateien durchsehen"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:359
 #: pynicotine/gtkgui/widgets/popupmenu.py:391
-#, fuzzy
 msgid "_Add Buddy"
-msgstr "Freund hinzufügen…"
+msgstr "Freund _hinzufügen"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:362
 #: pynicotine/gtkgui/widgets/popupmenu.py:389
@@ -3365,9 +3350,8 @@ msgstr ""
 #: pynicotine/nowplaying.py:215 pynicotine/nowplaying.py:261
 #: pynicotine/nowplaying.py:271 pynicotine/nowplaying.py:279
 #: pynicotine/nowplaying.py:294 pynicotine/nowplaying.py:309
-#, fuzzy
 msgid "Now Playing Error"
-msgstr "Jetzt spielendes Format"
+msgstr "Jetzt spielendes Fehler"
 
 #: pynicotine/nowplaying.py:139
 #, python-format
@@ -3583,7 +3567,6 @@ msgstr ""
 "werden: %s"
 
 #: pynicotine/shares.py:867
-#, fuzzy
 msgid "Rescan aborted due to unavailable shares"
 msgstr "Erneuter Scan wegen nicht verfügbarer Freigaben abgebrochen"
 
@@ -3610,14 +3593,13 @@ msgid "Listening on port: %i"
 msgstr "Hören am Port: %i"
 
 #: pynicotine/slskproto.py:415
-#, fuzzy, python-format
+#, python-format
 msgid "Specified network interface '%s' does not exist"
 msgstr "Angegebene Netzwerkschnittstelle '%s' existiert nicht"
 
 #: pynicotine/slskproto.py:416
-#, fuzzy
 msgid "Unknown Network Interface"
-msgstr "Oberfläche"
+msgstr "Unbekannte Netzwerkschnittstelle"
 
 #: pynicotine/slskproto.py:424
 #, fuzzy, python-format
