@@ -474,69 +474,59 @@ class Plugin(BasePlugin):
 
     def ban_command(self, args, user=None, **_unused):
 
+        banned_ip_address = None
+
         if self.is_ip_address(args):
-            # TODO: self.core.network_filter.ban_ip(args)  # function does not exist
-            #
-            #       if username is known from cached network ip address lookup:
-            #           self.core.network_filter.ban_user_ip(username)  # only username is supported as argument
-            #       else:
-            #           # append ip address value into config ["ipblocklist"]
-            self.output(f"Not implemented (ban by ip), entered arguments: ip_address='{args}' is_ip_address=True")
-            return
+            banned_ip_address = self.core.network_filter.ban_user_ip(ip=args)
+        else:
+            if args:
+                user = args
 
-        if args:
-            user = args
+            self.core.network_filter.ban_user(user)
 
-        self.core.network_filter.ban_user_ip(user)
-        self.core.network_filter.ban_user(user)
+        self.output(_("Banned %s") % (banned_ip_address or user))
 
     def unban_command(self, args, user=None, **_unused):
 
         if self.is_ip_address(args):
-            # TODO: self.core.network_filter.unban_ip(args)  # function does not exist
-            #
-            #       if username is known from cached ip address or is in ["ipblocklist"]):
-            #           self.core.network_filter.ban_user_ip(username)  # only username is supported as argument
-            #       elif username="":
-            #           # discard matching ip address value(s) from config ["ipblocklist"] and ["banlist"] lists
-            self.output(f"Not implemented (unban by ip), entered arguments: ip_address='{args}' is_ip_address=True")
-            return
+            unbanned_ip_address = self.core.network_filter.unban_user_ip(ip=args)
 
-        if args:
+        elif args:
             user = args
 
-        self.core.network_filter.unban_user_ip(user)
+        # Remove username-based filter as well as IP-based filter if exists
+        unbanned_ip_address = self.core.network_filter.unban_user_ip(user)
         self.core.network_filter.unban_user(user)
+
+        self.output(_("Unbanned %s") % (unbanned_ip_address or user))
 
     def ignore_command(self, args, user=None, **_unused):
 
+        ignored_ip_address = None
+
         if self.is_ip_address(args):
-            self.core.network_filter.ignore_ip(args)
-            return
+            ignored_ip_address = self.core.network_filter.ignore_user_ip(ip=args)
+        else:
+            if args:
+                user = args
 
-        if args:
-            user = args
+            self.core.network_filter.ignore_user(user)
 
-        self.core.network_filter.ignore_user_ip(user)
-        self.core.network_filter.ignore_user(user)
+        self.output(_("Ignored %s") % (ignored_ip_address or user))
 
     def unignore_command(self, args, user=None, **_unused):
 
         if self.is_ip_address(args):
-            # TODO: self.core.network_filter.unignore_ip(args)  # function does not exist
-            #
-            #       if username is known from cached ip address or is in ["ipignorelist"]:
-            #           self.core.network_filter.unignore_user_ip(username)  # only username is supported as argument
-            #       elif username="":
-            #           # discard matching value(s) from config ["ipignorelist"] and ["ignorelist"] lists
-            self.output(f"Not implemented (unignore by ip), entered arguments: ip_address='{args}' is_ip_address=True")
-            return
+            unignored_ip_address = self.core.network_filter.unignore_user_ip(ip=args)
 
-        if args:
+        elif args:
             user = args
 
-        self.core.network_filter.unignore_user_ip(user)
+        # Remove username-based filter as well as IP-based filter if exists
+        unignored_ip_address = self.core.network_filter.unignore_user_ip(user)
         self.core.network_filter.unignore_user(user)
+
+        self.output(_("Unignored %s") % (unignored_ip_address or user))
 
     @staticmethod
     def is_ip_address(ip_address):
