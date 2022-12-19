@@ -152,6 +152,31 @@ class Plugin(BasePlugin):
                 "usage": ["<buddy>"],
                 "usage_private_chat": ["[buddy]"]
             },
+            "info": {
+                "aliases": ["whois", "w"],
+                "callback": self.whois_user_command,
+                "description": _("Show user profile information and interests"),
+                "disable": ["cli"],
+                "group": _("Users"),
+                "usage": ["<user>"],
+                "usage_private_chat": ["[user]"]
+            },
+            "browse": {
+                "aliases": ["b"],
+                "callback": self.browse_user_command,
+                "description": _("Browse files of user"),
+                "disable": ["cli"],
+                "group": _("Users"),
+                "usage": ["<user>"],
+                "usage_private_chat": ["[user]"]
+            },
+            "ip": {
+                "callback": self.ip_user_command,
+                "description": _("Show IP address of user or username from IP"),
+                "group": _("Network Filters"),
+                "usage": ["<user or ip>"],
+                "usage_private_chat": ["[user]", "[ip]"]
+            },
             "ban": {
                 "callback": self.ban_command,
                 "description": _("Stop connections from user or IP address"),
@@ -163,7 +188,7 @@ class Plugin(BasePlugin):
                 "callback": self.unban_command,
                 "description": _("Remove user or IP address from ban lists"),
                 "group": _("Network Filters"),
-                "usage": ["<user or IP>"],
+                "usage": ["<user or ip>"],
                 "usage_private_chat": ["[user]", "[ip]"]
             },
             "ignore": {
@@ -181,31 +206,6 @@ class Plugin(BasePlugin):
                 "group": _("Network Filters"),
                 "usage": ["<user or ip>"],
                 "usage_private_chat": ["[user]", "[ip]"]
-            },
-            "ip": {
-                "callback": self.ip_user_command,
-                "description": _("Show IP address of user"),
-                "group": _("Network Filters"),
-                "usage": ["<user>"],
-                "usage_private_chat": ["[user]"]
-            },
-            "whois": {
-                "aliases": ["info", "w"],
-                "callback": self.whois_user_command,
-                "description": _("Show info about user"),
-                "disable": ["cli"],
-                "group": _("Users"),
-                "usage": ["<user>"],
-                "usage_private_chat": ["[user]"]
-            },
-            "browse": {
-                "aliases": ["b"],
-                "callback": self.browse_user_command,
-                "description": _("Browse files of user"),
-                "disable": ["cli"],
-                "group": _("Users"),
-                "usage": ["<user>"],
-                "usage_private_chat": ["[user]"]
             },
             "search": {
                 "aliases": ["s"],
@@ -474,85 +474,72 @@ class Plugin(BasePlugin):
 
     def ban_command(self, args, user=None, **_unused):
 
-        banned_ip_address = None
-
-        if self.is_ip_address(args):
-            banned_ip_address = self.core.network_filter.ban_user_ip(ip=args)
+        if self.core.network_filter.is_ip_address(args):
+            banned_ip_address = self.core.network_filter.ban_user_ip(ip_address=args)
         else:
             if args:
                 user = args
 
+            banned_ip_address = None
             self.core.network_filter.ban_user(user)
 
         self.output(_("Banned %s") % (banned_ip_address or user))
 
     def unban_command(self, args, user=None, **_unused):
 
-        if self.is_ip_address(args):
-            unbanned_ip_address = self.core.network_filter.unban_user_ip(ip=args)
+        if self.core.network_filter.is_ip_address(args):
+            unbanned_ip_address = self.core.network_filter.unban_user_ip(ip_address=args)
+        else:
+            if args:
+                user = args
 
-        elif args:
-            user = args
-
-        # Remove username-based filter as well as IP-based filter if exists
-        unbanned_ip_address = self.core.network_filter.unban_user_ip(user)
-        self.core.network_filter.unban_user(user)
+            unbanned_ip_address = self.core.network_filter.unban_user_ip(user)
+            self.core.network_filter.unban_user(user)
 
         self.output(_("Unbanned %s") % (unbanned_ip_address or user))
 
     def ignore_command(self, args, user=None, **_unused):
 
-        ignored_ip_address = None
-
-        if self.is_ip_address(args):
-            ignored_ip_address = self.core.network_filter.ignore_user_ip(ip=args)
+        if self.core.network_filter.is_ip_address(args):
+            ignored_ip_address = self.core.network_filter.ignore_user_ip(ip_address=args)
         else:
             if args:
                 user = args
 
+            ignored_ip_address = None
             self.core.network_filter.ignore_user(user)
 
         self.output(_("Ignored %s") % (ignored_ip_address or user))
 
     def unignore_command(self, args, user=None, **_unused):
 
-        if self.is_ip_address(args):
-            unignored_ip_address = self.core.network_filter.unignore_user_ip(ip=args)
+        if self.core.network_filter.is_ip_address(args):
+            unignored_ip_address = self.core.network_filter.unignore_user_ip(ip_address=args)
+        else:
+            if args:
+                user = args
 
-        elif args:
-            user = args
-
-        # Remove username-based filter as well as IP-based filter if exists
-        unignored_ip_address = self.core.network_filter.unignore_user_ip(user)
-        self.core.network_filter.unignore_user(user)
+            unignored_ip_address = self.core.network_filter.unignore_user_ip(user)
+            self.core.network_filter.unignore_user(user)
 
         self.output(_("Unignored %s") % (unignored_ip_address or user))
 
-    @staticmethod
-    def is_ip_address(ip_address):
-        """ Check if the given value is an IPv4 address or not """
-
-        if not ip_address or ip_address.count(".") != 3:
-            return False
-
-        for part in ip_address.split("."):
-            if part == "*":
-                continue
-
-            if not part.isdigit():
-                return False
-
-            if 0 > int(part) > 255:
-                return False
-
-        return True
-
     def ip_user_command(self, args, user=None, **_unused):
+
+        if self.core.network_filter.is_ip_address(args):
+            self.output(self.core.network_filter.get_known_username(args))
+            return
 
         if args:
             user = args
 
-        self.core.request_ip_address(user)
+        known_ip_address = self.core.network_filter.get_known_ip_address(user) or False
+
+        if not known_ip_address:
+            self.core.request_ip_address(user)
+            return
+
+        self.output(known_ip_address)
 
     def whois_user_command(self, args, user=None, **_unused):
 
@@ -640,14 +627,19 @@ class Plugin(BasePlugin):
         else:
             interface = "cli"
 
-        if not force:  # and interface != "cli":  # TODO
-            self.output("Headless quit needs [force] due to no support for cli confirmation prompt in core")
-            self.log(f"Asking to exit application on {interface} command {args}")
+        if not force:
+            self.log(f"Asking to exit application on {interface} command {args}")  # TODO: remove debug log code
+
             self.core.confirm_quit()
-            return
+
+            if interface == "cli":
+                self.output("Headless quit needs [force] due to no support for cli confirmation prompt in core")  # TODO
+
+            return True
 
         self.log(f"Quitting on {interface} command {args}")
         self.core.quit()
+        return True
 
     def shutdown_notification(self):
         self.log("Shutdown!")

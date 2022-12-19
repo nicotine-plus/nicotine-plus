@@ -31,23 +31,15 @@ class NetworkFilter:
 
         for event_name, callback in (
             ("peer-address", self._get_peer_address),
-            ("server-disconnect", self._server_disconnect)
         ):
             events.connect(event_name, callback)
-
-    def _server_disconnect(self, _msg):
-        self.ip_ban_requested.clear()
-        self.ip_ignore_requested.clear()
 
     """ IP Filter List Management """
 
     def _request_ip(self, user, action, list_type):
-        """ Ask for the IP address of a user. Once a GetPeerAddress response arrives,
-        either ban_unban_user_ip_callback or ignore_unignore_user_ip_callback
-        is called. """
-
-        if user in core.user_addresses:
-            return False
+        """ Ask for the IP address of an offline user. Once a GetPeerAddress
+         response arrives, either ban_unban_user_ip_callback or
+         ignore_unignore_user_ip_callback is called. """
 
         if list_type == "ban":
             request_list = self.ip_ban_requested
@@ -58,7 +50,6 @@ class NetworkFilter:
             request_list[user] = action
 
         core.queue.append(slskmessages.GetPeerAddress(user))
-        return True
 
     def _add_user_ip_to_list(self, list_type, user, ip_address):
         """ Add the current IP address and username of a user to a list """
@@ -68,21 +59,28 @@ class NetworkFilter:
         else:
             ip_list = config.sections["server"]["ipignorelist"]
 
-        if ip_address and not user:
+        if self.is_ip_address(ip_address) and not user:
             # Try to get a username from currently active connections
             user = self.get_known_username(ip_address) or ""
 
-        elif user and not ip_address:
+        elif user and not self.is_ip_address(ip_address):
             # Try to get an address from currently active connections
             ip_address = self.get_known_ip_address(user)
 
             if ip_address is None:
-                return self._request_ip(user, "add", list_type)
+                # User offline, queue a callback to add the filter later
+                self._request_ip(user, "add", list_type)
+
+                # Add a dummy address for now, so that it can be updated
+                # by _update_saved_user_ip_address() during the callback
+                ip_address = "0.0.0.0"
 
         if ip_address not in ip_list or ip_list[ip_address] != user:
+            # TODO: cache more than one user per IP address (store list or dict instead of string value?)
             ip_list[ip_address] = user
             config.write_configuration()
 
+        # Close connection and print output as confirmation
         return ip_address
 
     def _remove_user_ip_from_list(self, list_type, user, ip_address):
@@ -95,18 +93,22 @@ class NetworkFilter:
             cached_ip = self.get_cached_ignored_user_ip(user)
             ip_list = config.sections["server"]["ipignorelist"]
 
-        if user and not ip_address:
+        if user and not self.is_ip_address(ip_address):
+            # Try to get an address from currently active connections
             ip_address = cached_ip or self.get_known_ip_address(user)
 
             if ip_address is None:
+                # User offline, queue a callback to remove the filter later
                 self._request_ip(user, "remove", list_type)
-                return None
 
-        removed_user = ip_list.pop(ip_address, False)
+                # Print output as confirmation
+                return user
 
-        if removed_user:
+        if ip_address in ip_list:
+            del ip_list[ip_address]
             config.write_configuration()
 
+        # Print output as confirmation
         return ip_address
 
     """ IP List Lookup Functions """
@@ -148,6 +150,25 @@ class NetworkFilter:
 
         return None
 
+    @staticmethod
+    def is_ip_address(ip_address, wildcard=True):
+        """ Check if the given value is an IPv4 address or not """
+
+        if not ip_address or ip_address.count(".") != 3:
+            return False
+
+        for part in ip_address.split("."):
+            if wildcard and part == "*":
+                continue
+
+            if not part.isdigit():
+                return False
+
+            if int(part) > 255:
+                return False
+
+        return True
+
     """ IP Filter Rule Processing """
 
     @staticmethod
@@ -156,7 +177,7 @@ class NetworkFilter:
         the address is paired with. """
 
         if address is None:
-            return True
+            return True  # TODO: Ambiguous false-positive, consider returning None?
 
         s_address = address.split(".")
 
@@ -229,7 +250,8 @@ class NetworkFilter:
         """ Close all connections whose IP address exists in the ban list """
 
         for ip_address in config.sections["server"]["ipblocklist"]:
-            core.queue.append(slskmessages.CloseConnectionIP(ip_address))
+            if "*" not in ip_address:
+                core.queue.append(slskmessages.CloseConnectionIP(ip_address))
 
     """ Callbacks """
 
@@ -263,6 +285,7 @@ class NetworkFilter:
         # If the IP address changed, make sure our IP ban/ignore list reflects this
         self._update_saved_user_ip_address(user, ip_address)
 
+        # Check pending "add" and "remove" requests for IP-based filtering by username
         self._ban_unban_user_ip_callback(user, ip_address)
         self._ignore_unignore_user_ip_callback(user, ip_address)
 
@@ -289,35 +312,35 @@ class NetworkFilter:
 
         events.emit("unban-user", user)
 
-    def ban_user_ip(self, user=None, ip=None):
+    def ban_user_ip(self, user=None, ip_address=None):
 
-        banned_ip_address = self._add_user_ip_to_list("ban", user, ip)
+        banned_ip_address = self._add_user_ip_to_list("ban", user, ip_address)
 
-        if banned_ip_address:
+        if self.is_ip_address(banned_ip_address, wildcard=False):
             core.queue.append(slskmessages.CloseConnectionIP(banned_ip_address))
 
         return banned_ip_address
 
-    def unban_user_ip(self, user=None, ip=None):
-        return self._remove_user_ip_from_list("ban", user, ip)
+    def unban_user_ip(self, user=None, ip_address=None):
+        return self._remove_user_ip_from_list("ban", user, ip_address)
 
-    def _ban_unban_user_ip_callback(self, user, ip):
+    def _ban_unban_user_ip_callback(self, user, ip_address):
 
         request = self.ip_ban_requested.pop(user, None)
 
         if request is None:
-            return False
+            # No action was requested for this user
+            return
 
-        if not ip and user not in core.user_addresses:
+        if not ip_address and user not in core.user_addresses:
             # IP address not specified and user is offline
-            return False
+            # TODO: This condition is redundant, since this is called from _get_peer_address()
+            return  # pointless returning anything because the return chain is lost in _get_peer_address()
 
         if request == "remove":
-            self.unban_user_ip(user, ip)
+            self.unban_user_ip(user, ip_address)
         else:
-            self.ban_user_ip(user, ip)
-
-        return True
+            self.ban_user_ip(user, ip_address)
 
     def get_cached_banned_user_ip(self, user):
         return self._get_cached_user_ip(user, config.sections["server"]["ipblocklist"])
@@ -350,29 +373,29 @@ class NetworkFilter:
 
         events.emit("unignore-user", user)
 
-    def ignore_user_ip(self, user=None, ip=None):
-        return self._add_user_ip_to_list("ignore", user, ip)
+    def ignore_user_ip(self, user=None, ip_address=None):
+        return self._add_user_ip_to_list("ignore", user, ip_address)
 
-    def unignore_user_ip(self, user=None, ip=None):
-        return self._remove_user_ip_from_list("ignore", user, ip)
+    def unignore_user_ip(self, user=None, ip_address=None):
+        return self._remove_user_ip_from_list("ignore", user, ip_address)
 
-    def _ignore_unignore_user_ip_callback(self, user, ip):
+    def _ignore_unignore_user_ip_callback(self, user, ip_address):
 
         request = self.ip_ignore_requested.pop(user, None)
 
         if request is None:
-            return False
+            # No action was requested for this user
+            return
 
-        if not ip and user not in core.user_addresses:
+        if not ip_address and user not in core.user_addresses:
             # IP address not specified and user is offline
-            return False
+            # TODO: This condition is redundant, since this is called from _get_peer_address()
+            return
 
         if request == "remove":
-            self.unignore_user_ip(user, ip)
+            self.unignore_user_ip(user, ip_address)
         else:
-            self.ignore_user_ip(user, ip)
-
-        return True
+            self.ignore_user_ip(user, ip_address)
 
     def get_cached_ignored_user_ip(self, user):
         return self._get_cached_user_ip(user, config.sections["server"]["ipignorelist"])
