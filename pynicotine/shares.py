@@ -897,8 +897,10 @@ class Shares:
             self.send_num_shared_folders_files()
 
         # Process any file transfer queue requests that arrived while scanning
-        events.emit("thread-callback", self.pending_network_msgs)
+        for msg in self.pending_network_msgs:
+            core.protothread.emit_network_message_event(msg)
 
+        self.pending_network_msgs.clear()
         return error
 
     """ Network Messages """

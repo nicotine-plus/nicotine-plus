@@ -1337,13 +1337,14 @@ class MainWindow(Window):
         self.status_label.set_text(msg)
         self.status_label.set_tooltip_text(msg)
 
-    def set_connection_stats(self, msg):
+    def set_connection_stats(self, total_conns=0, download_conns=0, download_bandwidth=0,
+                             upload_conns=0, upload_bandwidth=0):
 
-        total_conns_text = repr(msg.total_conns)
-        download_bandwidth = human_speed(msg.download_bandwidth)
-        upload_bandwidth = human_speed(msg.upload_bandwidth)
-        download_bandwidth_text = f"{download_bandwidth} ( {msg.download_conns} )"
-        upload_bandwidth_text = f"{upload_bandwidth} ( {msg.upload_conns} )"
+        total_conns_text = repr(total_conns)
+        download_bandwidth = human_speed(download_bandwidth)
+        upload_bandwidth = human_speed(upload_bandwidth)
+        download_bandwidth_text = f"{download_bandwidth} ( {download_conns} )"
+        upload_bandwidth_text = f"{upload_bandwidth} ( {upload_conns} )"
 
         if self.connections_label.get_text() != total_conns_text:
             self.connections_label.set_text(total_conns_text)

@@ -66,11 +66,8 @@ class Logger:
         slskmessages.DistribEmbeddedMessage,
         slskmessages.DistribSearch,
         slskmessages.EmbeddedMessage,
-        slskmessages.SetConnectionStats,
-        slskmessages.SharedFileListProgress,
         slskmessages.SharedFileListResponse,
-        slskmessages.UnknownPeerMessage,
-        slskmessages.UserInfoProgress,
+        slskmessages.UnknownPeerMessage
     }
 
     def __init__(self):

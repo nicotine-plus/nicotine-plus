@@ -76,7 +76,7 @@ class Application:
             ("quit", self._instance.quit),
             ("setup", self.on_fast_configure),
             ("shares-unavailable", self.on_shares_unavailable),
-            ("thread-callback", self.on_thread_callback)
+            ("thread-event", self.on_thread_event)
         ):
             events.connect(event_name, callback)
 
@@ -844,9 +844,16 @@ class Application:
 
         GLib.idle_add(self._on_critical_error_threading, args)
 
-    def on_thread_callback(self, msgs):
+    def _on_thread_event(self, event_name, *args, **kwargs):
+
+        if core.shutdown:
+            return
+
+        events.emit(event_name, *args, **kwargs)
+
+    def on_thread_event(self, event_name, *args, **kwargs):
         # High priority to ensure there are no delays
-        GLib.idle_add(core.process_thread_callback, msgs[:], priority=GLib.PRIORITY_HIGH_IDLE)
+        GLib.idle_add(self._on_thread_event, event_name, *args, **kwargs, priority=GLib.PRIORITY_HIGH_IDLE)
 
     def on_activate(self, *_args):
 

@@ -83,7 +83,7 @@ class UserBrowse:
         msg.parse_network_message(built)
         msg.init = PeerInit(target_user=username)
 
-        events.emit("thread-callback", [msg])
+        events.emit_main_thread("shared-file-list-response", msg)
 
     def browse_local_public_shares(self, path=None, new_request=None):
         """ Browse your own public shares """
@@ -133,7 +133,7 @@ class UserBrowse:
         self._show_user(username, path=path, switch_page=switch_page)
 
         if core.user_status == UserStatus.OFFLINE:
-            events.emit("peer-connection-error", slskmessages.PeerConnectionError(username))
+            events.emit("peer-connection-error", username)
             return
 
         core.watch_user(username, force_update=True)

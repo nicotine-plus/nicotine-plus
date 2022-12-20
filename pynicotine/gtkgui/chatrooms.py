@@ -383,7 +383,7 @@ class ChatRooms(IconNotebook):
             if isinstance(room, str):
                 self.autojoin_rooms.add(room)
 
-    def server_disconnect(self, _msg):
+    def server_disconnect(self, *_args):
 
         self.roomlist.clear()
         self.autojoin_rooms.clear()

@@ -705,17 +705,17 @@ class Transfers:
         if msg.user == core.login_username:
             self.upload_speed = msg.avgspeed
 
-    def _peer_connection_error(self, msg):
+    def _peer_connection_error(self, user, msgs=None, is_offline=False):
 
-        if msg.msgs is None:
+        if msgs is None:
             return
 
-        for i in msg.msgs:
+        for i in msgs:
             if i.__class__ in (slskmessages.TransferRequest, slskmessages.FileUploadInit):
-                self._cant_connect_upload(msg.user, i.token, msg.offline)
+                self._cant_connect_upload(user, i.token, is_offline)
 
             elif i.__class__ is slskmessages.QueueUpload:
-                self._cant_connect_queue_file(msg.user, i.file, msg.offline)
+                self._cant_connect_queue_file(user, i.file, is_offline)
 
     def _cant_connect_queue_file(self, username, filename, offline):
         """ We can't connect to the user, either way (QueueUpload). """
@@ -1092,25 +1092,19 @@ class Transfers:
 
         self.check_upload_queue()
 
-    def _download_file_error(self, msg):
+    def _download_file_error(self, username, token, error):
         """ Networking thread encountered a local file error for download """
-
-        username = msg.user
-        token = msg.token
 
         for download in self.downloads:
             if download.token != token or download.user != username:
                 continue
 
             self.abort_download(download, abort_reason="Local file error")
-            log.add(_("Download I/O error: %s"), msg.error)
+            log.add(_("Download I/O error: %s"), error)
             return
 
-    def _upload_file_error(self, msg):
+    def _upload_file_error(self, username, token, error):
         """ Networking thread encountered a local file error for upload """
-
-        username = msg.user
-        token = msg.token
 
         for upload in self.uploads:
             if upload.token != token or upload.user != username:
@@ -1118,7 +1112,7 @@ class Transfers:
 
             self.abort_upload(upload, abort_reason="Local file error")
 
-            log.add(_("Upload I/O error: %s"), msg.error)
+            log.add(_("Upload I/O error: %s"), error)
             self.check_upload_queue()
             return
 
@@ -1399,11 +1393,8 @@ class Transfers:
             })
             return
 
-    def _file_download_progress(self, msg):
+    def _file_download_progress(self, username, token, bytes_left):
         """ A file download is in progress """
-
-        username = msg.init.target_user
-        token = msg.token
 
         for download in self.downloads:
             if download.token != token or download.user != username:
@@ -1417,7 +1408,7 @@ class Transfers:
 
             download.status = "Transferring"
             download.time_elapsed = current_time - download.start_time
-            download.current_byte_offset = current_byte_offset = (size - msg.leftbytes)
+            download.current_byte_offset = current_byte_offset = (size - bytes_left)
             byte_difference = current_byte_offset - download.last_byte_offset
 
             if byte_difference:
@@ -1435,11 +1426,8 @@ class Transfers:
             self.update_download(download)
             return
 
-    def _file_upload_progress(self, msg):
+    def _file_upload_progress(self, username, token, offset, bytes_sent):
         """ A file upload is in progress """
-
-        username = msg.init.target_user
-        token = msg.token
 
         for upload in self.uploads:
             if upload.token != token or upload.user != username:
@@ -1452,11 +1440,11 @@ class Transfers:
             size = upload.size
 
             if not upload.last_byte_offset:
-                upload.last_byte_offset = msg.offset
+                upload.last_byte_offset = offset
 
             upload.status = "Transferring"
             upload.time_elapsed = current_time - upload.start_time
-            upload.current_byte_offset = current_byte_offset = (msg.offset + msg.sentbytes)
+            upload.current_byte_offset = current_byte_offset = (offset + bytes_sent)
             byte_difference = current_byte_offset - upload.last_byte_offset
 
             if byte_difference:
@@ -1474,11 +1462,8 @@ class Transfers:
             self.update_upload(upload)
             return
 
-    def _download_connection_closed(self, msg):
+    def _download_connection_closed(self, username, token):
         """ A file download connection has closed for any reason """
-
-        username = msg.user
-        token = msg.token
 
         for download in self.downloads:
             if download.token != token or download.user != username:
@@ -1499,12 +1484,8 @@ class Transfers:
             self.abort_download(download, abort_reason=status)
             return
 
-    def _upload_connection_closed(self, msg):
+    def _upload_connection_closed(self, username, token, timed_out):
         """ A file upload connection has closed for any reason """
-
-        username = msg.user
-        token = msg.token
-        timed_out = msg.timed_out
 
         # We need a copy due to upload auto-clearing modifying the deque during iteration
         for upload in self.uploads.copy():

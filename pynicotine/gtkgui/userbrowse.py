@@ -119,9 +119,9 @@ class UserBrowses(IconNotebook):
         self.remove_page(page.container)
         del self.pages[user]
 
-    def peer_connection_error(self, msg):
+    def peer_connection_error(self, user, *_args):
 
-        page = self.pages.get(msg.user)
+        page = self.pages.get(user)
 
         if page is not None:
             page.peer_connection_error()
@@ -133,12 +133,12 @@ class UserBrowses(IconNotebook):
         if page is not None:
             self.set_user_status(page.container, msg.user, msg.status)
 
-    def shared_file_list_progress(self, msg):
+    def shared_file_list_progress(self, user, position, total):
 
-        page = self.pages.get(msg.user)
+        page = self.pages.get(user)
 
         if page is not None:
-            page.shared_file_list_progress(msg)
+            page.shared_file_list_progress(position, total)
 
     def shared_file_list(self, msg):
 
@@ -147,7 +147,7 @@ class UserBrowses(IconNotebook):
         if page is not None:
             page.shared_file_list(msg)
 
-    def server_disconnect(self, _msg):
+    def server_disconnect(self, *_args):
         for user, page in self.pages.items():
             self.set_user_status(page.container, user, UserStatus.OFFLINE)
 
@@ -542,16 +542,16 @@ class UserBrowse:
 
         self.refresh_button.set_sensitive(False)
 
-    def shared_file_list_progress(self, msg):
+    def shared_file_list_progress(self, position, total):
 
         self.indeterminate_progress = False
 
-        if msg.total == 0 or msg.position == 0:
+        if total == 0 or position == 0:
             fraction = 0.0
-        elif msg.position >= msg.total:
+        elif position >= total:
             fraction = 1.0
         else:
-            fraction = float(msg.position) / msg.total
+            fraction = float(position) / total
 
         self.progress_bar.set_fraction(fraction)
 

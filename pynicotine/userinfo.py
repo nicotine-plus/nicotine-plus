@@ -66,7 +66,7 @@ class UserInfo:
         events.emit("user-info-show-user", user=user, refresh=refresh, switch_page=switch_page)
 
         if core.user_status == UserStatus.OFFLINE:
-            events.emit("peer-connection-error", slskmessages.PeerConnectionError(user))
+            events.emit("peer-connection-error", user)
             return
 
         if not refresh:
