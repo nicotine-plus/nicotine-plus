@@ -489,6 +489,9 @@ class Plugin(BasePlugin):
 
         if self.core.network_filter.is_ip_address(args):
             unbanned_ip_address = self.core.network_filter.unban_user_ip(ip_address=args)
+
+            self.core.network_filter.unban_user(
+                self.core.network_filter.get_known_username(unbanned_ip_address) or unbanned_ip_address)
         else:
             if args:
                 user = args
@@ -515,6 +518,9 @@ class Plugin(BasePlugin):
 
         if self.core.network_filter.is_ip_address(args):
             unignored_ip_address = self.core.network_filter.unignore_user_ip(ip_address=args)
+
+            self.core.network_filter.unignore_user(
+                self.core.network_filter.get_known_username(unignored_ip_address) or unignored_ip_address)
         else:
             if args:
                 user = args
