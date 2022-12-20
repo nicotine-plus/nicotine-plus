@@ -858,22 +858,13 @@ class IgnoredUsersPage:
 
         ip_address = dialog.get_entry_value()
 
-        if not ip_address or ip_address.count(".") != 3:
+        if not core.network_filter.is_ip_address(ip_address):
             return
 
-        for chars in ip_address.split("."):
-            if chars == "*":
-                continue
-
-            if not chars.isdigit():
-                return
-
-            if int(chars) > 255:
-                return
-
         if ip_address not in self.ignored_ips:
-            self.ignored_ips[ip_address] = ""
-            self.ignored_ips_list_view.add_row([ip_address, ""])
+            user = core.network_filter.get_known_username(ip_address) or ""
+            self.ignored_ips[ip_address] = user
+            self.ignored_ips_list_view.add_row([ip_address, user])
 
     def on_add_ignored_ip(self, *_args):
 
@@ -1010,22 +1001,13 @@ class BannedUsersPage:
 
         ip_address = dialog.get_entry_value()
 
-        if not ip_address or ip_address.count(".") != 3:
+        if not core.network_filter.is_ip_address(ip_address):
             return
 
-        for chars in ip_address.split("."):
-            if chars == "*":
-                continue
-
-            if not chars.isdigit():
-                return
-
-            if int(chars) > 255:
-                return
-
         if ip_address not in self.banned_ips:
-            self.banned_ips[ip_address] = ""
-            self.banned_ips_list_view.add_row([ip_address, ""])
+            user = core.network_filter.get_known_username(ip_address) or ""
+            self.banned_ips[ip_address] = user
+            self.banned_ips_list_view.add_row([ip_address, user])
             self.ip_ban_required = True
 
     def on_add_banned_ip(self, *_args):
