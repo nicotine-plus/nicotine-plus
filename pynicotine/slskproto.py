@@ -2037,8 +2037,7 @@ class SoulseekNetworkThread(Thread):
                 self._close_connection(self._conns, sock)
                 return
 
-            if conn_obj_established.ibuf:
-                self._process_conn_incoming_messages(conn_obj_established)
+            self._process_conn_incoming_messages(conn_obj_established)
 
     def _process_ready_output_socket(self, sock, current_time):
 
@@ -2094,6 +2093,9 @@ class SoulseekNetworkThread(Thread):
 
     def _process_conn_incoming_messages(self, conn_obj):
 
+        if not conn_obj.ibuf:
+            return
+
         if conn_obj.sock is self._server_socket:
             self._process_server_input(conn_obj, conn_obj.ibuf)
             return
@@ -2103,7 +2105,7 @@ class SoulseekNetworkThread(Thread):
         if init is None:
             conn_obj.init = init = self._process_peer_init_input(conn_obj, conn_obj.ibuf)
 
-            if init is None:
+            if init is None or not conn_obj.ibuf:
                 return
 
         if init.conn_type == ConnectionType.PEER:
