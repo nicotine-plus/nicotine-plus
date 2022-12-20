@@ -4,7 +4,9 @@
 
 ### Corrections
 
- * Improve file scanning performance on systems other than Windows
+ * Improved file scanning performance on systems other than Windows
+ * Fixed a regression where uploads through the legacy file transfer system failed in some cases
+ * Fixed an issue where finished zero-byte file downloads displayed a "Connection timeout" error
  * Windows: Fixed a crash when sending Nicotine+ to the background from the confirmation dialog
  * Windows: Fixed an issue viewing personal user info page
 
