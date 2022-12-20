@@ -1951,6 +1951,9 @@ class Transfers:
 
         self.close_file(file_handle, transfer)
 
+        if transfer in self.transfer_request_times:
+            del self.transfer_request_times[transfer]
+
         folder, basename = self.get_download_destination(transfer.user, transfer.filename, transfer.path)
         folder_encoded = encode_path(folder)
         newname = self.get_renamed(os.path.join(folder, basename))
@@ -2005,6 +2008,9 @@ class Transfers:
     def upload_finished(self, transfer, file_handle=None):
 
         self.close_file(file_handle, transfer)
+
+        if transfer in self.transfer_request_times:
+            del self.transfer_request_times[transfer]
 
         transfer.status = "Finished"
         transfer.current_byte_offset = transfer.size
