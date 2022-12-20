@@ -1931,17 +1931,25 @@ class SoulseekNetworkThread(Thread):
             self._manual_server_disconnect = True
             self._server_disconnect()
 
-        elif msg_class is DownloadFile and msg_obj.init.sock in self._conns:
-            self._conns[msg_obj.init.sock].filedown = msg_obj
+        elif msg_class is DownloadFile:
+            conn_obj = self._conns.get(msg_obj.init.sock)
 
-            self._total_downloads += 1
-            self._calc_download_limit()
+            if conn_obj is not None:
+                conn_obj.filedown = msg_obj
 
-        elif msg_class is UploadFile and msg_obj.init.sock in self._conns:
-            self._conns[msg_obj.init.sock].fileupl = msg_obj
+                self._total_downloads += 1
+                self._calc_download_limit()
+                self._process_conn_incoming_messages(conn_obj)
 
-            self._total_uploads += 1
-            self._calc_upload_limit_function()
+        elif msg_class is UploadFile:
+            conn_obj = self._conns.get(msg_obj.init.sock)
+
+            if conn_obj is not None:
+                conn_obj.fileupl = msg_obj
+
+                self._total_uploads += 1
+                self._calc_upload_limit_function()
+                self._process_conn_incoming_messages(conn_obj)
 
         elif msg_class is SetDownloadLimit:
             self._download_limit = msg_obj.limit * 1024
@@ -2051,8 +2059,7 @@ class SoulseekNetworkThread(Thread):
             except OSError as error:
                 self._connect_error(error, conn_obj_in_progress)
                 self._close_connection(self._connsinprogress, sock, callback=False)
-
-            return
+                return
 
         conn_obj_established = self._conns.get(sock)
 
