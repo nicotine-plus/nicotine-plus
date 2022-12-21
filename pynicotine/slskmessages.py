@@ -2880,18 +2880,17 @@ class FolderContentsRequest(PeerMessage):
     """ Peer code: 36 """
     """ We ask the peer to send us the contents of a single folder. """
 
-    __slots__ = ("init", "dir", "token", "legacy_client")
+    __slots__ = ("init", "dir", "token")
 
-    def __init__(self, init=None, directory=None, token=None, legacy_client=None):
+    def __init__(self, init=None, directory=None, token=None):
         self.init = init
         self.dir = directory
         self.token = token
-        self.legacy_client = legacy_client
 
     def make_network_message(self):
         msg = bytearray()
         msg.extend(self.pack_uint32(self.token))
-        msg.extend(self.pack_string(self.dir, latin1=self.legacy_client))
+        msg.extend(self.pack_string(self.dir, latin1=True))
 
         return msg
 
@@ -2920,9 +2919,9 @@ class FolderContentsResponse(PeerMessage):
     def _parse_network_message(self, message):
         shares = {}
         pos, self.token = self.unpack_uint32(message)
-        pos, self.dir = self.unpack_string(message, pos)
+        pos, folder = self.unpack_string(message, pos)
 
-        shares[self.dir] = {}
+        shares[folder] = {}
 
         pos, ndir = self.unpack_uint32(message, pos)
 
@@ -2931,7 +2930,7 @@ class FolderContentsResponse(PeerMessage):
             directory = directory.replace('/', '\\')
             pos, nfiles = self.unpack_uint32(message, pos)
 
-            shares[self.dir][directory] = []
+            shares[folder][directory] = []
 
             for _ in range(nfiles):
                 pos, code = self.unpack_uint8(message, pos)
@@ -2947,7 +2946,7 @@ class FolderContentsResponse(PeerMessage):
                     pos, attr = self.unpack_uint32(message, pos)
                     attrs[str(attrnum)] = attr
 
-                shares[self.dir][directory].append((code, name, size, ext, attrs))
+                shares[folder][directory].append((code, name, size, ext, attrs))
 
         self.list = shares
 
