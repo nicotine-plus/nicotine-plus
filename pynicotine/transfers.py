@@ -765,7 +765,9 @@ class Transfers:
         skip the files in subfolders """
 
         username = msg.init.target_user
+        folder_path = msg.dir
         file_list = msg.list
+        files_found = False
 
         log.add_transfer("Received response for folder content request from user %s", username)
 
@@ -795,10 +797,19 @@ class Transfers:
                     virtualpath = directory.rstrip('\\') + '\\' + file[1]
                     size = file[2]
                     h_bitrate, _bitrate, h_length, _length = FileListMessage.parse_result_bitrate_length(size, file[4])
+                    files_found = True
 
                     self.get_file(
                         username, virtualpath, path=destination,
                         size=size, bitrate=h_bitrate, length=h_length)
+
+        if not files_found:
+            log.add_transfer(("User %(user)s sent no contents for folder %(folder_path)s. Requesting "
+                              "folder as latin-1."), {
+                "user": username,
+                "folder_path": folder_path
+            })
+            self.get_folder(username, folder_path, legacy_client=True)
 
     def _queue_upload(self, msg):
         """ Peer code: 43 """
@@ -1590,8 +1601,9 @@ class Transfers:
 
     """ Transfer Actions """
 
-    def get_folder(self, user, folder):
-        core.send_message_to_peer(user, slskmessages.FolderContentsRequest(directory=folder, token=1))
+    def get_folder(self, user, folder, legacy_client=False):
+        core.send_message_to_peer(
+            user, slskmessages.FolderContentsRequest(directory=folder, token=1, legacy_client=legacy_client))
 
     def get_file(self, user, filename, path="", transfer=None, size=0, bitrate=None, length=None, ui_callback=True):
 
