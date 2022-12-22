@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2023 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -43,6 +43,19 @@ class Plugin(BasePlugin):
                 "callback_private_chat": self.sample_command,
                 "usage": ["<choice1|choice2>", "<something..>"],
                 "usage_chatroom": ["<choice55|choice2>"]
+            },
+            "rescan": {
+                "callback": self.rescan_command,
+                "description": _("Rescan shares"),
+                "group": _("Configure Shares"),
+                "usage": ["[-force]"]
+            },
+            "shares": {
+                "aliases": ["ls"],
+                "callback": self.list_shares_command,
+                "description": _("List shares"),
+                "group": _("Configure Shares"),
+                "usage": ["[public]", "[buddy]"]
             }
         }
 
@@ -62,3 +75,38 @@ class Plugin(BasePlugin):
     def sample_command(self, _args, **_unused):
         self.output("Hello")
         return True
+
+    """ Configure Shares """
+
+    def rescan_command(self, args, **_unused):
+
+        force = (args.lstrip("- ") in ("force", "f"))
+
+        if args and not force:
+            self.output("Invalid option")
+            return False
+
+        self.core.shares.rescan_shares(force=force)
+        return True
+
+    def list_shares_command(self, args, **_unused):
+
+        share_groups = self.core.shares.get_shared_folders()
+        num_total = num_listed = 0
+
+        for share_index, share_group in enumerate(share_groups):
+            group_name = "buddy" if share_index == 1 else "public"
+            num_shares = len(share_group)
+            num_total += num_shares
+
+            if not num_shares or args and group_name not in args.lower():
+                continue
+
+            self.output("\n" + f"{num_shares} {group_name} shares:")
+
+            for virtual_name, folder_path, *_unused in share_group:
+                self.output(f"• \"{virtual_name}\" {folder_path}")
+
+            num_listed += num_shares
+
+        self.output("\n" + f"{num_listed} shares listed ({num_total} configured)")
