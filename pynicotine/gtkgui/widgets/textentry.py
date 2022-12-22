@@ -176,7 +176,7 @@ class ChatEntry:
 
         elif cmd == "/ignoreip":
             if args:
-                core.network_filter.ignore_ip(args)
+                core.network_filter.ignore_user_ip(ip_address=args)
 
         elif cmd == "/unban":
             if args:
