@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-01 03:44+0200\n"
-"PO-Revision-Date: 2022-12-02 11:56+0000\n"
+"PO-Revision-Date: 2022-12-20 22:48+0000\n"
 "Last-Translator: Havokdan <havokdan@yahoo.com.br>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/pt_BR/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.15-dev\n"
+"X-Generator: Weblate 4.15.1-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -3079,7 +3079,7 @@ msgstr "Baixar Pasta(s) & Subpasta(s) Para…"
 
 #: pynicotine/gtkgui/userbrowse.py:296
 msgid "Up_load File(s)…"
-msgstr "Up_load de Arquivo(s)"
+msgstr "Up_load de Arquivo(s)…"
 
 #: pynicotine/gtkgui/userbrowse.py:530
 msgid ""
@@ -3195,7 +3195,7 @@ msgstr "Observação"
 
 #: pynicotine/gtkgui/userlist.py:108
 msgid "Add User _Note…"
-msgstr "Adicionar _Nota sobre o Usuário"
+msgstr "Adicionar _Nota sobre o Usuário…"
 
 #: pynicotine/gtkgui/userlist.py:110
 msgid "_Remove"
