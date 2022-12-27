@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2022-12-14 17:50+0000\n"
+"PO-Revision-Date: 2022-12-27 21:00+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/zh_Hans/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.15-dev\n"
+"X-Generator: Weblate 4.15.1-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -6813,8 +6813,9 @@ msgid "List font:"
 msgstr "列表字体："
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1605
+#, fuzzy
 msgid "Text view font:"
-msgstr ""
+msgstr "文本视图字体："
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1652
 #, fuzzy
