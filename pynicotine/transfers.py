@@ -1178,8 +1178,8 @@ class Transfers:
                     offset = file_handle.seek(0, os.SEEK_END)
 
                 except OSError as error:
-                    log.add(_("Cannot download file to %(path)s: %(error)s"), {
-                        "path": incomplete_file_path,
+                    log.add(_("Cannot save file in %(folder_path)s: %(error)s"), {
+                        "folder_path": incomplete_folder_path,
                         "error": error
                     })
                     self.abort_download(download, abort_reason="Download folder error")
