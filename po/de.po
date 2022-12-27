@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2022-12-27 21:00+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2022-12-27 21:49+0000\n"
+"Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
 "Language: de\n"
@@ -1556,7 +1556,7 @@ msgstr "–––Verbindung wiederhergestellt–––"
 
 #: pynicotine/gtkgui/chatrooms.py:1217 pynicotine/gtkgui/privatechat.py:384
 msgid "Delete Logged Messages?"
-msgstr "Geloggte Nachrichten löschen?"
+msgstr "Protokollierte Nachrichten löschen?"
 
 #: pynicotine/gtkgui/chatrooms.py:1218
 msgid ""
@@ -1768,9 +1768,8 @@ msgid "Ban IP Address"
 msgstr "IP-Adresse sperren"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1036
-#, fuzzy
 msgid "Enter an IP address you want to ban:"
-msgstr "Geben Sie eine IP-Adresse ein, die Sie blockieren möchten:"
+msgstr "Gebe die IP-Adresse ein, die du sperren möchtest:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1073
 #: pynicotine/gtkgui/dialogs/preferences.py:1082
@@ -1860,32 +1859,28 @@ msgid "Offline"
 msgstr "Offline"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1385
-#, fuzzy
 msgid "Tab Changed"
-msgstr "Veränderter Status"
+msgstr "Tab geändert"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1386
-#, fuzzy
 msgid "Tab Highlight"
-msgstr "Hervorgehoben"
+msgstr "Tab-Hervorhebung"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1387
 msgid "Window"
 msgstr "Fenster"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1391
-#, fuzzy
 msgid "Online (Tray)"
-msgstr "Verbunden (Fach)"
+msgstr "Online (Fach)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1392
 msgid "Away (Tray)"
 msgstr "Abwesend (Fach)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1393
-#, fuzzy
 msgid "Offline (Tray)"
-msgstr "Offline"
+msgstr "Offline (Fach)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1394
 msgid "Message (Tray)"
@@ -2544,9 +2539,8 @@ msgid "Private Message from %(user)s"
 msgstr "Private Nachricht von %(user)s"
 
 #: pynicotine/gtkgui/privatechat.py:431
-#, fuzzy
 msgid "* Messages sent while you were offline"
-msgstr "* Nachricht(en), die gesendet wurde(n), während du offline warst."
+msgstr "* Nachrichten, die gesendet wurden, während du offline warst."
 
 #: pynicotine/gtkgui/search.py:77
 msgid "_Global"
@@ -2626,9 +2620,8 @@ msgid "F_ile Properties"
 msgstr "_Dateieigenschaften"
 
 #: pynicotine/gtkgui/search.py:440 pynicotine/gtkgui/transferlist.py:184
-#, fuzzy
 msgid "User Actions"
-msgstr "Übertragungsaktionen"
+msgstr "Benutzeraktionen"
 
 #: pynicotine/gtkgui/search.py:445
 msgid "Copy Search Term"
@@ -2666,9 +2659,9 @@ msgid "_Result Filters"
 msgstr "_Ergebnisfilter"
 
 #: pynicotine/gtkgui/search.py:995
-#, fuzzy, python-format
+#, python-format
 msgid "%d active filter(s)"
-msgstr "Aktive Filter löschen"
+msgstr "%d aktive Filter"
 
 #: pynicotine/gtkgui/search.py:1048
 msgid "Add Wi_sh"
@@ -2848,9 +2841,8 @@ msgid "Upload Folder…"
 msgstr "Ordner hochladen…"
 
 #: pynicotine/gtkgui/userbrowse.py:225
-#, fuzzy
 msgid "Upload Folder & Subfolders…"
-msgstr "Ordner & Unterordner hochladen…"
+msgstr "Ordner & Unterordner hochladen …"
 
 #: pynicotine/gtkgui/userbrowse.py:227 pynicotine/gtkgui/userbrowse.py:293
 msgid "Open in File _Manager"
@@ -2869,14 +2861,12 @@ msgid "Download Folder _To…"
 msgstr "Ordner herunterladen _zu…"
 
 #: pynicotine/gtkgui/userbrowse.py:239
-#, fuzzy
 msgid "Download Folder & Subfolders"
 msgstr "Ordner und Unterordner herunterladen"
 
 #: pynicotine/gtkgui/userbrowse.py:240
-#, fuzzy
 msgid "Download Folder & Subfolders To…"
-msgstr "Ordner & Unterordner herunterladen zu…"
+msgstr "Ordner & Unterordner herunterladen zu …"
 
 #: pynicotine/gtkgui/userbrowse.py:289
 msgid "Up_load File(s)…"
@@ -2916,9 +2906,8 @@ msgid "Enter the name of the user you want to upload to:"
 msgstr "Geben Sie den Namen des Benutzers ein, an den Sie hochladen möchten:"
 
 #: pynicotine/gtkgui/userbrowse.py:976
-#, fuzzy
 msgid "Select Destination Folder for Files"
-msgstr "Zielordner für Datei(en) auswählen"
+msgstr "Zielordner für Dateien auswählen"
 
 #: pynicotine/gtkgui/userbrowse.py:998
 msgid "Upload File(s) To User"
@@ -3581,9 +3570,9 @@ msgstr ""
 "Freigaben erneut. Fehler: %s"
 
 #: pynicotine/slskproto.py:297
-#, fuzzy, python-format
+#, python-format
 msgid "Specified network interface '%s' is not available"
-msgstr "Angegebene Netzwerkschnittstelle '%s' existiert nicht"
+msgstr "Angegebene Netzwerkschnittstelle '%s' ist nicht verfügbar"
 
 #: pynicotine/slskproto.py:298
 msgid "Unknown Network Interface"
@@ -3654,9 +3643,9 @@ msgstr ""
 "Fehler: %s"
 
 #: pynicotine/transfers.py:1181
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot save file in %(folder_path)s: %(error)s"
-msgstr "Dateipfad %(path)s kann nicht geöffnet werden: %(error)s"
+msgstr "Datei kann nicht gespeichert werden in %(folder_path)s: %(error)s"
 
 #: pynicotine/transfers.py:1187 pynicotine/transfers.py:2029
 msgid "Download Folder Error"
@@ -3861,9 +3850,8 @@ msgid "%(user)s is offline"
 msgstr "%(user)s ist offline"
 
 #: pynicotine/userlist.py:297
-#, fuzzy
 msgid "Buddy Status"
-msgstr "Freund Online Status"
+msgstr "Freund Status"
 
 #: pynicotine/utils.py:364
 #, python-format
@@ -4733,15 +4721,13 @@ msgstr "Download Geschwindigkeitsbegrenzungen"
 
 #: pynicotine/gtkgui/ui/popovers/downloadspeeds.ui:38
 #: pynicotine/gtkgui/ui/settings/downloads.ui:140
-#, fuzzy
 msgid "Unlimited download speed"
-msgstr "Upload-Geschwindigkeit begrenzen auf:"
+msgstr "Unbegrenzte Download-Geschwindigkeit"
 
 #: pynicotine/gtkgui/ui/popovers/downloadspeeds.ui:49
 #: pynicotine/gtkgui/ui/settings/downloads.ui:150
-#, fuzzy
 msgid "Use download speed limit (KiB/s):"
-msgstr "Alternative Geschwindigkeitsbegrenzung beim Herunterladen (KiB/s):"
+msgstr "Download-Geschwindigkeitsbegrenzung (KiB/s) verwenden:"
 
 #: pynicotine/gtkgui/ui/popovers/downloadspeeds.ui:59
 #: pynicotine/gtkgui/ui/popovers/downloadspeeds.ui:85
@@ -4757,9 +4743,10 @@ msgstr "Kibibytes (2^10 Bytes) pro Sekunde."
 
 #: pynicotine/gtkgui/ui/popovers/downloadspeeds.ui:75
 #: pynicotine/gtkgui/ui/settings/downloads.ui:174
-#, fuzzy
 msgid "Use alternative download speed limit (KiB/s):"
-msgstr "Alternative Geschwindigkeitsbegrenzung beim Herunterladen (KiB/s):"
+msgstr ""
+"Alternative Geschwindigkeitsbegrenzung für das Herunterladen verwenden (KiB/"
+"s):"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:29
 msgid "Private Chat Commands"
@@ -5118,21 +5105,18 @@ msgstr "Upload-Geschwindigkeitsbegrenzungen"
 
 #: pynicotine/gtkgui/ui/popovers/uploadspeeds.ui:38
 #: pynicotine/gtkgui/ui/settings/uploads.ui:157
-#, fuzzy
 msgid "Unlimited upload speed"
-msgstr "Upload-Geschwindigkeit begrenzen auf:"
+msgstr "Unbegrenzte Upload-Geschwindigkeit"
 
 #: pynicotine/gtkgui/ui/popovers/uploadspeeds.ui:49
 #: pynicotine/gtkgui/ui/settings/uploads.ui:167
-#, fuzzy
 msgid "Use upload speed limit (KiB/s):"
-msgstr "Alternative Upload-Geschwindigkeitsgrenze (KiB/s):"
+msgstr "Upload-Geschwindigkeitsbegrenzung verwenden (KiB/s):"
 
 #: pynicotine/gtkgui/ui/popovers/uploadspeeds.ui:75
 #: pynicotine/gtkgui/ui/settings/uploads.ui:191
-#, fuzzy
 msgid "Use alternative upload speed limit (KiB/s):"
-msgstr "Alternative Upload-Geschwindigkeitsgrenze (KiB/s):"
+msgstr "Alternative Upload-Geschwindigkeitsgrenze verwenden (KiB/s):"
 
 #: pynicotine/gtkgui/ui/privatechat.ui:87
 msgid "Private Chat Command Help"
@@ -5690,9 +5674,8 @@ msgid "Version:"
 msgstr "Version:"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:229
-#, fuzzy
 msgid "Created by:"
-msgstr "Erstellt von"
+msgstr "Erstellt von:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:45
 msgid "Enable search history"
@@ -6057,9 +6040,8 @@ msgid "Chat room mentions"
 msgstr "Chatraum-Erwähnungen"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:453
-#, fuzzy
 msgid "Wishlist results found"
-msgstr "Wunschzettel-Ergebnisse gefunden"
+msgstr "Wunschzettelergebnisse gefunden"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:480
 msgid "Secondary Tabs"
@@ -6133,9 +6115,8 @@ msgid "Local text color:"
 msgstr "Lokale Textfarbe:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:904
-#, fuzzy
 msgid "Command output text color:"
-msgstr "Entfernte Textfarbe:"
+msgstr "Textfarbe der Befehlsausgabe:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:946
 msgid "/me action text color:"
@@ -6162,24 +6143,20 @@ msgid "Text entry text color:"
 msgstr "Farbe der Texteingabe:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1188
-#, fuzzy
 msgid "User Statuses"
-msgstr "Vereinigte Staaten"
+msgstr "Benutzerstatus"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1210
-#, fuzzy
 msgid "Online color:"
-msgstr "Online-Textfarbe:"
+msgstr "Online-Farbe:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1252
-#, fuzzy
 msgid "Away color:"
-msgstr "Textfarbe abwesend:"
+msgstr "Abwesend Farbe:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1294
-#, fuzzy
 msgid "Offline color:"
-msgstr "Offline-Textfarbe:"
+msgstr "Offline Farbe:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1340
 msgid "Tab Labels"
@@ -6210,7 +6187,6 @@ msgid "List font:"
 msgstr "Schriftart für Listen:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1605
-#, fuzzy
 msgid "Text view font:"
 msgstr "Schriftart der Textansicht:"
 
