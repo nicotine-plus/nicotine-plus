@@ -347,13 +347,16 @@ class SlskProtoThread(threading.Thread):
 
         # Create a UDP socket
         with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as local_socket:
+            try:
+                # Use the interface we have selected
+                if self.bindip:
+                    local_socket.bind((self.bindip, 0))
 
-            # Use the interface we have selected
-            if self.bindip:
-                local_socket.bind((self.bindip, 0))
+                elif self.interface:
+                    self.bind_to_network_interface(local_socket, self.interface)
 
-            elif self.interface:
-                self.bind_to_network_interface(local_socket, self.interface)
+            except OSError as error:
+                log.add_conn("Cannot bind to network interface: %s", error)
 
             try:
                 # Send a broadcast packet on a local address (doesn't need to be reachable,
