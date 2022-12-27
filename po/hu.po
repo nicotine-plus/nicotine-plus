@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2022-12-27 21:49+0000\n"
+"PO-Revision-Date: 2022-12-27 21:55+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -1767,7 +1767,7 @@ msgstr "Szűrő"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:250
 msgid "Escaped"
-msgstr "Lelépett"
+msgstr "Kilépett"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:357
 msgid "Add Download Filter"
@@ -1857,7 +1857,7 @@ msgstr "IP cím tiltása"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1036
 msgid "Enter an IP address you want to ban:"
-msgstr "Írja be a kitiltani kívánt IP-címet:"
+msgstr "Írja be a tiltani kívánt IP-címet:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1073
 #: pynicotine/gtkgui/dialogs/preferences.py:1082
@@ -1951,9 +1951,8 @@ msgid "Tab Changed"
 msgstr "A lap megváltozott"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1386
-#, fuzzy
 msgid "Tab Highlight"
-msgstr "Fontos"
+msgstr "Kiemelt(fontos) lap"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1387
 msgid "Window"
