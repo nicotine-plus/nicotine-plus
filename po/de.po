@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2022-12-25 16:49+0000\n"
-"Last-Translator: Han Boetes <hboetes@gmail.com>\n"
+"PO-Revision-Date: 2022-12-27 21:00+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
 "Language: de\n"
@@ -6210,8 +6210,9 @@ msgid "List font:"
 msgstr "Schriftart für Listen:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1605
+#, fuzzy
 msgid "Text view font:"
-msgstr ""
+msgstr "Schriftart der Textansicht:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1652
 msgid "Chat font:"
