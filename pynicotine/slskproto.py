@@ -1133,7 +1133,8 @@ class SlskProtoThread(threading.Thread):
             )
 
         if hasattr(socket, 'TCP_USER_TIMEOUT'):
-            server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_USER_TIMEOUT, timeout_seconds * 1000)
+            server_socket.setsockopt(
+                socket.IPPROTO_TCP, socket.TCP_USER_TIMEOUT, timeout_seconds * 1000)  # pylint: disable=no-member
 
     def init_server_conn(self, msg_obj):
 
