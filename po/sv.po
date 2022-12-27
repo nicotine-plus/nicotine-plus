@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2022-12-20 22:48+0000\n"
-"Last-Translator: Micke Nilsson <mikni@proton.me>\n"
+"PO-Revision-Date: 2022-12-27 21:00+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/sv/>\n"
 "Language: sv\n"
@@ -7175,8 +7175,9 @@ msgid "List font:"
 msgstr "Lista teckensnitt:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1605
+#, fuzzy
 msgid "Text view font:"
-msgstr ""
+msgstr "Teckensnitt för textvy:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1652
 #, fuzzy
