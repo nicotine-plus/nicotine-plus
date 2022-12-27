@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2022-12-27 21:00+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2022-12-27 21:05+0000\n"
+"Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
 "Language: nl\n"
@@ -4680,7 +4680,7 @@ msgstr "Download Snelheidslimieten"
 #: pynicotine/gtkgui/ui/popovers/downloadspeeds.ui:38
 #: pynicotine/gtkgui/ui/settings/downloads.ui:140
 msgid "Unlimited download speed"
-msgstr "Geen maximum download snelheid:"
+msgstr "Onbeperkte downloadsnelheid"
 
 #: pynicotine/gtkgui/ui/popovers/downloadspeeds.ui:49
 #: pynicotine/gtkgui/ui/settings/downloads.ui:150
@@ -5062,12 +5062,12 @@ msgstr "Upload Snelheid Limieten"
 #: pynicotine/gtkgui/ui/popovers/uploadspeeds.ui:38
 #: pynicotine/gtkgui/ui/settings/uploads.ui:157
 msgid "Unlimited upload speed"
-msgstr "Geen maximale uploadsnelheid"
+msgstr "Onbeperkte uploadsnelheid"
 
 #: pynicotine/gtkgui/ui/popovers/uploadspeeds.ui:49
 #: pynicotine/gtkgui/ui/settings/uploads.ui:167
 msgid "Use upload speed limit (KiB/s):"
-msgstr "Gebruik maximale uploadsnelheids (KiB/s):"
+msgstr "Gebruik upload snelheidslimiet (KiB/s):"
 
 #: pynicotine/gtkgui/ui/popovers/uploadspeeds.ui:75
 #: pynicotine/gtkgui/ui/settings/uploads.ui:191
@@ -5734,7 +5734,7 @@ msgstr "Zoekopdrachten korter dan dit aantal tekens worden genegeerd:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:510
 msgid "Maximum search results to send per search request:"
-msgstr "Maximaal te verzenden zoekresultaten per zoekopdracht:"
+msgstr "Maximaal aantal te verzenden zoekresultaten per zoekopdracht:"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:25
 msgid ""
@@ -5803,7 +5803,7 @@ msgstr "Wachtrijbeperkingen gelden niet voor vrienden"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:243
 msgid "Each user may queue a maximum of either:"
-msgstr "Elke gebruiker kan maximaal één van beide in de wachtrij plaatsen:"
+msgstr "Elke gebruiker kan maximaal in één wachtrij staan:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:257
 msgid "Mebibytes (2^20 bytes)."
@@ -6135,7 +6135,6 @@ msgid "List font:"
 msgstr "Lijst lettertype:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1605
-#, fuzzy
 msgid "Text view font:"
 msgstr "Lettertype tekstweergave:"
 
