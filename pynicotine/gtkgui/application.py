@@ -776,10 +776,28 @@ class Application:
 
             copy_text(error)
             open_uri(config.issue_tracker_url)
+
+            self.show_critical_error_dialog(error, loop)
             return
 
         loop.quit()
         core.quit()
+
+    def show_critical_error_dialog(self, error, loop):
+
+        from pynicotine.gtkgui.widgets.dialogs import OptionDialog
+
+        OptionDialog(
+            parent=self.window,
+            title=_("Critical Error"),
+            message=_("Nicotine+ has encountered a critical error and needs to exit. "
+                      "Please copy the following message and include it in a bug report:"),
+            long_message=error,
+            first_button=_("_Quit Nicotine+"),
+            second_button=_("_Copy & Report Bug"),
+            callback=self.on_critical_error_response,
+            callback_data=(loop, error)
+        ).show()
 
     def on_critical_error(self, exc_type, exc_value, exc_traceback):
 
@@ -810,28 +828,14 @@ class Application:
                 traceback = traceback.tb_next
 
         # Show critical error dialog
-        from pynicotine.gtkgui.widgets.dialogs import OptionDialog
-
         loop = GLib.MainLoop()
         error = (f"Nicotine+ Version: {config.version}\nGTK Version: {config.gtk_version}\n"
                  f"Python Version: {config.python_version} ({sys.platform})\n\n"
                  f"Type: {exc_type}\nValue: {exc_value}\nTraceback: {''.join(format_tb(exc_traceback))}")
-
-        OptionDialog(
-            parent=self.window,
-            title=_("Critical Error"),
-            message=_("Nicotine+ has encountered a critical error and needs to exit. "
-                      "Please copy the following message and include it in a bug report:"),
-            long_message=error,
-            first_button=_("_Quit Nicotine+"),
-            second_button=_("_Copy & Report Bug"),
-            callback=self.on_critical_error_response,
-            callback_data=(loop, error)
-        ).show()
+        self.show_critical_error_dialog(error, loop)
 
         # Keep dialog open if error occurs on startup
         loop.run()
-
         raise exc_value
 
     @staticmethod
