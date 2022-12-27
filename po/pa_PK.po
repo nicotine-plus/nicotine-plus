@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2022-11-27 22:57+0000\n"
+"PO-Revision-Date: 2022-12-27 21:00+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Punjabi (Pakistan) <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/pa_PK/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.15-dev\n"
+"X-Generator: Weblate 4.15.1-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -1641,12 +1641,15 @@ msgid "Change _Login Details"
 msgstr "_ਲੌਗਇਨ ਵੇਰਵੇ ਬਦਲੋ"
 
 #: pynicotine/gtkgui/application.py:676
+#, fuzzy
 msgid "Message Downloading Users"
-msgstr ""
+msgstr "ਸੁਨੇਹਾ ਡਾਊਨਲੋਡ ਕਰਨ ਵਾਲੇ ਉਪਭੋਗਤਾ"
 
 #: pynicotine/gtkgui/application.py:677
+#, fuzzy
 msgid "Send private message to all users who are downloading from you:"
 msgstr ""
+"ਉਹਨਾਂ ਸਾਰੇ ਉਪਭੋਗਤਾਵਾਂ ਨੂੰ ਨਿੱਜੀ ਸੰਦੇਸ਼ ਭੇਜੋ ਜੋ ਤੁਹਾਡੇ ਤੋਂ ਡਾਊਨਲੋਡ ਕਰ ਰਹੇ ਹਨ:"
 
 #: pynicotine/gtkgui/application.py:678 pynicotine/gtkgui/application.py:691
 #, fuzzy
@@ -1659,8 +1662,9 @@ msgid "Message Buddies"
 msgstr "ਭਰੋਸੇਮੰਦ ਬੱਡੀਜ਼"
 
 #: pynicotine/gtkgui/application.py:690
+#, fuzzy
 msgid "Send private message to all online buddies:"
-msgstr ""
+msgstr "ਸਾਰੇ ਔਨਲਾਈਨ ਦੋਸਤਾਂ ਨੂੰ ਨਿੱਜੀ ਸੰਦੇਸ਼ ਭੇਜੋ:"
 
 #: pynicotine/gtkgui/application.py:715
 #, fuzzy
@@ -2577,8 +2581,9 @@ msgid "Filtered"
 msgstr "ਫਿਲਟਰ ਕੀਤਾ"
 
 #: pynicotine/gtkgui/downloads.py:67
+#, fuzzy
 msgid "Deleted"
-msgstr ""
+msgstr "ਮਿਟਾਇਆ ਗਿਆ"
 
 #: pynicotine/gtkgui/downloads.py:68 pynicotine/gtkgui/uploads.py:70
 #, fuzzy
@@ -7200,8 +7205,9 @@ msgid "List font:"
 msgstr "ਸੂਚੀ ਫੌਂਟ:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1605
+#, fuzzy
 msgid "Text view font:"
-msgstr ""
+msgstr "ਟੈਕਸਟ ਵਿਊ ਫੌਂਟ:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1652
 #, fuzzy
