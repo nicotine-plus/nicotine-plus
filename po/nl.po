@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2022-12-27 21:05+0000\n"
+"PO-Revision-Date: 2022-12-28 18:23+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -2531,7 +2531,7 @@ msgstr "Privébericht van %(user)s"
 
 #: pynicotine/gtkgui/privatechat.py:431
 msgid "* Messages sent while you were offline"
-msgstr "* Berichten verzonden terwijl je offline was."
+msgstr "* Berichten verzonden terwijl je offline was"
 
 #: pynicotine/gtkgui/search.py:77
 msgid "_Global"
