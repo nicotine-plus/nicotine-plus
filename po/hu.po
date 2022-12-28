@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2022-12-28 04:57+0000\n"
+"PO-Revision-Date: 2022-12-28 21:55+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -4607,14 +4607,13 @@ msgid "Show Log History Pane"
 msgstr "Naplótábla megjelenítése"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:29
-#, fuzzy
 msgid "Chat Room Commands"
-msgstr "Chatszoba parancs súgó"
+msgstr "Csevegőszoba parancsok"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:46
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:656
 msgid "/join /j 'room'"
-msgstr "/join /j 'szoba'"
+msgstr "/csatlakozás /cs 'room'"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:58
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:668
@@ -4622,9 +4621,8 @@ msgid "Join room 'room'"
 msgstr "Belépés a szobába"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:86
-#, fuzzy
 msgid "Leave current room"
-msgstr "Kilépés a szobából"
+msgstr "A szoba elhagyása"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:114
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:85
@@ -4657,14 +4655,12 @@ msgid "Rescan shares"
 msgstr "Megosztás aktualizálása"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:292
-#, fuzzy
 msgid "/add /ad 'user'"
-msgstr "/add /ad 'user'"
+msgstr "/ad /hozzáad 'user'"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:304
-#, fuzzy
 msgid "Add user 'user' to your buddy list"
-msgstr "'User' user hozzáadása a tiltólistához"
+msgstr "'user' felhasználó hozzáadása a barátlistához"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:320
 #, fuzzy
