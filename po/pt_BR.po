@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2022-12-28 04:57+0000\n"
-"Last-Translator: Jordan Rodrigues <jordanrodrigues@hotmail.co.uk>\n"
+"PO-Revision-Date: 2022-12-28 18:23+0000\n"
+"Last-Translator: Havokdan <havokdan@yahoo.com.br>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -2081,18 +2081,16 @@ msgid "Window"
 msgstr "Janela"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1391
-#, fuzzy
 msgid "Online (Tray)"
-msgstr "Conectado (Bandeja)"
+msgstr "Online (Bandeja)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1392
 msgid "Away (Tray)"
 msgstr "Ausente (Bandeja)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1393
-#, fuzzy
 msgid "Offline (Tray)"
-msgstr "Desconectado"
+msgstr "Offline (Bandeja)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1394
 msgid "Message (Tray)"
@@ -2870,9 +2868,9 @@ msgid "_Result Filters"
 msgstr "_Filtros de Resultados"
 
 #: pynicotine/gtkgui/search.py:995
-#, fuzzy, python-format
+#, python-format
 msgid "%d active filter(s)"
-msgstr "Limpar filtros ativos"
+msgstr "%d filtro(s) ativo(s)"
 
 #: pynicotine/gtkgui/search.py:1048
 msgid "Add Wi_sh"
@@ -4047,9 +4045,8 @@ msgid "%(user)s is offline"
 msgstr "%(user)s está offline"
 
 #: pynicotine/userlist.py:297
-#, fuzzy
 msgid "Buddy Status"
-msgstr "Status de Amigos Online"
+msgstr "Status de Amigos"
 
 #: pynicotine/utils.py:364
 #, python-format
@@ -4918,9 +4915,8 @@ msgstr "Velocidade de download ilimitado"
 
 #: pynicotine/gtkgui/ui/popovers/downloadspeeds.ui:49
 #: pynicotine/gtkgui/ui/settings/downloads.ui:150
-#, fuzzy
 msgid "Use download speed limit (KiB/s):"
-msgstr "Limite de velocidade de download alternativo (KiB/s):"
+msgstr "Usar limite de velocidade de download (KiB/s):"
 
 #: pynicotine/gtkgui/ui/popovers/downloadspeeds.ui:59
 #: pynicotine/gtkgui/ui/popovers/downloadspeeds.ui:85
@@ -4936,9 +4932,8 @@ msgstr "Kibibytes (2^10 bytes) por segundo."
 
 #: pynicotine/gtkgui/ui/popovers/downloadspeeds.ui:75
 #: pynicotine/gtkgui/ui/settings/downloads.ui:174
-#, fuzzy
 msgid "Use alternative download speed limit (KiB/s):"
-msgstr "Limite de velocidade de download alternativo (KiB/s):"
+msgstr "Usar limite alternativo de velocidade de download (KiB/s):"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:29
 msgid "Private Chat Commands"
@@ -6222,7 +6217,6 @@ msgid "Chat room mentions"
 msgstr "Menções da sala de bate-papo"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:453
-#, fuzzy
 msgid "Wishlist results found"
 msgstr "Resultados da lista de desejos encontrados"
 
@@ -6330,19 +6324,16 @@ msgid "User Statuses"
 msgstr "Statuses do Usuário"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1210
-#, fuzzy
 msgid "Online color:"
-msgstr "Cor do texto online:"
+msgstr "Cor do online:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1252
-#, fuzzy
 msgid "Away color:"
-msgstr "Cor do texto ausente:"
+msgstr "Cor do ausente:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1294
-#, fuzzy
 msgid "Offline color:"
-msgstr "Cor do texto offline:"
+msgstr "Cor do offline:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1340
 msgid "Tab Labels"
@@ -6373,7 +6364,6 @@ msgid "List font:"
 msgstr "Fonte da lista:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1605
-#, fuzzy
 msgid "Text view font:"
 msgstr "Fonte de exibição de texto:"
 
