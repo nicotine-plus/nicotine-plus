@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2022-12-27 21:49+0000\n"
+"PO-Revision-Date: 2022-12-28 18:23+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
@@ -236,7 +236,7 @@ msgid ""
 "You have no Soulseek privileges. Privileges are not required, but allow your "
 "downloads to be queued ahead of non-privileged users."
 msgstr ""
-"Sie haben keine Soulseek Privilegien. Privilegien sind nicht erforderlich, "
+"Sie haben keine Soulseek Privilegien. Die sind nicht erforderlich, "
 "ermöglichen es aber, dass Ihre Downloads vor nicht privilegierten Benutzern "
 "in die Warteschlange gestellt werden."
 
@@ -2540,7 +2540,7 @@ msgstr "Private Nachricht von %(user)s"
 
 #: pynicotine/gtkgui/privatechat.py:431
 msgid "* Messages sent while you were offline"
-msgstr "* Nachrichten, die gesendet wurden, während du offline warst."
+msgstr "* Nachrichten, die gesendet wurden, während du offline warst"
 
 #: pynicotine/gtkgui/search.py:77
 msgid "_Global"
@@ -6224,7 +6224,7 @@ msgstr "Benutzer sperren"
 
 #: pynicotine/gtkgui/ui/uploads.ui:154
 msgid "Clear All Finished/Cancelled Uploads"
-msgstr "Alle abgeschlossenen und abgebrochenen Uploads löschen."
+msgstr "Alle abgeschlossenen und abgebrochenen Uploads löschen"
 
 #: pynicotine/gtkgui/ui/uploads.ui:184 pynicotine/gtkgui/ui/uploads.ui:200
 msgid "Message All"
