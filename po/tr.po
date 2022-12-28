@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2022-12-27 21:00+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2022-12-28 04:57+0000\n"
+"Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/tr/>\n"
 "Language: tr\n"
@@ -1763,7 +1763,6 @@ msgid "Ban IP Address"
 msgstr "IP Adresini Yasakla"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1036
-#, fuzzy
 msgid "Enter an IP address you want to ban:"
 msgstr "Engellemek istediğiniz bir IP adresi girin:"
 
@@ -1855,32 +1854,28 @@ msgid "Offline"
 msgstr "Çevrim dışı"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1385
-#, fuzzy
 msgid "Tab Changed"
-msgstr "Parola Değiştirildi"
+msgstr "Sekme Değiştirildi"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1386
-#, fuzzy
 msgid "Tab Highlight"
-msgstr "Vurgula"
+msgstr "Sekme Vurgula"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1387
 msgid "Window"
 msgstr "Pencere"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1391
-#, fuzzy
 msgid "Online (Tray)"
-msgstr "Bağlandı (Tepsi)"
+msgstr "Çevrim içi (Tepsi)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1392
 msgid "Away (Tray)"
 msgstr "Uzakta (Tepsi)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1393
-#, fuzzy
 msgid "Offline (Tray)"
-msgstr "Çevrim dışı"
+msgstr "Çevrim dışı (Tepsi)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1394
 msgid "Message (Tray)"
@@ -2539,9 +2534,8 @@ msgid "Private Message from %(user)s"
 msgstr "%(user)s Kullanıcısından Özel Mesaj"
 
 #: pynicotine/gtkgui/privatechat.py:431
-#, fuzzy
 msgid "* Messages sent while you were offline"
-msgstr "* Siz çevrim dışıyken gönderilen mesaj(lar)."
+msgstr "* Siz çevrim dışıyken gönderilen mesajlar"
 
 #: pynicotine/gtkgui/search.py:77
 msgid "_Global"
@@ -2621,9 +2615,8 @@ msgid "F_ile Properties"
 msgstr "Do_sya Özellikleri"
 
 #: pynicotine/gtkgui/search.py:440 pynicotine/gtkgui/transferlist.py:184
-#, fuzzy
 msgid "User Actions"
-msgstr "Aktarım Eylemleri"
+msgstr "Kullanıcı Eylemleri"
 
 #: pynicotine/gtkgui/search.py:445
 msgid "Copy Search Term"
@@ -2661,9 +2654,9 @@ msgid "_Result Filters"
 msgstr "_Sonuç Filtreleri"
 
 #: pynicotine/gtkgui/search.py:995
-#, fuzzy, python-format
+#, python-format
 msgid "%d active filter(s)"
-msgstr "Etkin Filtreleri Temizle"
+msgstr "%d etkin filtre"
 
 #: pynicotine/gtkgui/search.py:1048
 msgid "Add Wi_sh"
@@ -2843,9 +2836,8 @@ msgid "Upload Folder…"
 msgstr "Klasörü Yükle…"
 
 #: pynicotine/gtkgui/userbrowse.py:225
-#, fuzzy
 msgid "Upload Folder & Subfolders…"
-msgstr "Klasörü ve Alt Klasör(ler)i Yükle…"
+msgstr "Klasörü ve Alt Klasörleri Yükle…"
 
 #: pynicotine/gtkgui/userbrowse.py:227 pynicotine/gtkgui/userbrowse.py:293
 msgid "Open in File _Manager"
@@ -2864,14 +2856,12 @@ msgid "Download Folder _To…"
 msgstr "K_lasör(ler)ı Şuraya İndir…"
 
 #: pynicotine/gtkgui/userbrowse.py:239
-#, fuzzy
 msgid "Download Folder & Subfolders"
-msgstr "Klasörü ve Alt Klasör(ler)i İndir"
+msgstr "Klasörü ve Alt Klasörleri İndir"
 
 #: pynicotine/gtkgui/userbrowse.py:240
-#, fuzzy
 msgid "Download Folder & Subfolders To…"
-msgstr "Klasörü ve Alt Klasör(ler)i Şuraya İndir…"
+msgstr "Klasörü ve Alt Klasörleri Şuraya İndir…"
 
 #: pynicotine/gtkgui/userbrowse.py:289
 msgid "Up_load File(s)…"
@@ -2911,9 +2901,8 @@ msgid "Enter the name of the user you want to upload to:"
 msgstr "Yüklemek istediğiniz kullanıcının adını girin:"
 
 #: pynicotine/gtkgui/userbrowse.py:976
-#, fuzzy
 msgid "Select Destination Folder for Files"
-msgstr "Dosya(lar) için Hedef Klasörü Seç"
+msgstr "Dosyalar için Hedef Klasörü Seç"
 
 #: pynicotine/gtkgui/userbrowse.py:998
 msgid "Upload File(s) To User"
@@ -3556,9 +3545,9 @@ msgstr ""
 "Hata: %s"
 
 #: pynicotine/slskproto.py:297
-#, fuzzy, python-format
+#, python-format
 msgid "Specified network interface '%s' is not available"
-msgstr "Belirtilen ağ arayüzü '%s' yok"
+msgstr "Belirtilen ağ arayüzü '%s' kullanılamıyor"
 
 #: pynicotine/slskproto.py:298
 msgid "Unknown Network Interface"
@@ -3627,9 +3616,9 @@ msgid "Can't get an exclusive lock on file - I/O error: %s"
 msgstr "Dosya üzerinde özel kilit alınamıyor - G/Ç hatası: %s"
 
 #: pynicotine/transfers.py:1181
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot save file in %(folder_path)s: %(error)s"
-msgstr "%(path)s dosya yolu açılamıyor: %(error)s"
+msgstr "Dosya %(folder_path)s içine kaydedilemiyor: %(error)s"
 
 #: pynicotine/transfers.py:1187 pynicotine/transfers.py:2029
 msgid "Download Folder Error"
@@ -3834,9 +3823,8 @@ msgid "%(user)s is offline"
 msgstr "%(user)s kullanıcısı çevrim dışı"
 
 #: pynicotine/userlist.py:297
-#, fuzzy
 msgid "Buddy Status"
-msgstr "Arkadaş Çevrim İçi Durumu"
+msgstr "Arkadaş Durumu"
 
 #: pynicotine/utils.py:364
 #, python-format
@@ -4690,15 +4678,13 @@ msgstr "İndirme Hızı Sınırları"
 
 #: pynicotine/gtkgui/ui/popovers/downloadspeeds.ui:38
 #: pynicotine/gtkgui/ui/settings/downloads.ui:140
-#, fuzzy
 msgid "Unlimited download speed"
-msgstr "Yükleme hızını sınırla:"
+msgstr "Sınırsız indirme hızı"
 
 #: pynicotine/gtkgui/ui/popovers/downloadspeeds.ui:49
 #: pynicotine/gtkgui/ui/settings/downloads.ui:150
-#, fuzzy
 msgid "Use download speed limit (KiB/s):"
-msgstr "Alternatif indirme hızı sınırı (KiB/s):"
+msgstr "İndirme hızı sınırı kullan (KiB/s):"
 
 #: pynicotine/gtkgui/ui/popovers/downloadspeeds.ui:59
 #: pynicotine/gtkgui/ui/popovers/downloadspeeds.ui:85
@@ -4714,9 +4700,8 @@ msgstr "Kibibayt (2^10 bayt) / saniye."
 
 #: pynicotine/gtkgui/ui/popovers/downloadspeeds.ui:75
 #: pynicotine/gtkgui/ui/settings/downloads.ui:174
-#, fuzzy
 msgid "Use alternative download speed limit (KiB/s):"
-msgstr "Alternatif indirme hızı sınırı (KiB/s):"
+msgstr "Alternatif indirme hızı sınırı kullan (KiB/s):"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:29
 msgid "Private Chat Commands"
@@ -5069,21 +5054,18 @@ msgstr "Yükleme Hızı Sınırları"
 
 #: pynicotine/gtkgui/ui/popovers/uploadspeeds.ui:38
 #: pynicotine/gtkgui/ui/settings/uploads.ui:157
-#, fuzzy
 msgid "Unlimited upload speed"
-msgstr "Yükleme hızını sınırla:"
+msgstr "Sınırsız yükleme hızı"
 
 #: pynicotine/gtkgui/ui/popovers/uploadspeeds.ui:49
 #: pynicotine/gtkgui/ui/settings/uploads.ui:167
-#, fuzzy
 msgid "Use upload speed limit (KiB/s):"
-msgstr "Alternatif yükleme hızı sınırı (KiB/s):"
+msgstr "Yükleme hızı sınırı kullan (KiB/s):"
 
 #: pynicotine/gtkgui/ui/popovers/uploadspeeds.ui:75
 #: pynicotine/gtkgui/ui/settings/uploads.ui:191
-#, fuzzy
 msgid "Use alternative upload speed limit (KiB/s):"
-msgstr "Alternatif yükleme hızı sınırı (KiB/s):"
+msgstr "Alternatif yükleme hızı sınırı kullan (KiB/s):"
 
 #: pynicotine/gtkgui/ui/privatechat.ui:87
 msgid "Private Chat Command Help"
@@ -5639,9 +5621,8 @@ msgid "Version:"
 msgstr "Sürüm:"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:229
-#, fuzzy
 msgid "Created by:"
-msgstr "Oluşturan"
+msgstr "Oluşturan:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:45
 msgid "Enable search history"
@@ -6001,9 +5982,8 @@ msgid "Chat room mentions"
 msgstr "Sohbet odasında bahsedilmeler"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:453
-#, fuzzy
 msgid "Wishlist results found"
-msgstr "İstek Listesi Sonuçları Bulundu"
+msgstr "İstek listesi sonuçları bulundu"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:480
 msgid "Secondary Tabs"
@@ -6077,9 +6057,8 @@ msgid "Local text color:"
 msgstr "Yerel metin rengi:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:904
-#, fuzzy
 msgid "Command output text color:"
-msgstr "Uzak metin rengi:"
+msgstr "Komut çıktısı metin rengi:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:946
 msgid "/me action text color:"
@@ -6106,24 +6085,20 @@ msgid "Text entry text color:"
 msgstr "Metin girdisi metin rengi:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1188
-#, fuzzy
 msgid "User Statuses"
-msgstr "Amerika Birleşik Devletleri"
+msgstr "Kullanıcı Durumları"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1210
-#, fuzzy
 msgid "Online color:"
-msgstr "Çevrim içi metni rengi:"
+msgstr "Çevrim içi rengi:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1252
-#, fuzzy
 msgid "Away color:"
-msgstr "Uzakta metni rengi:"
+msgstr "Uzakta rengi:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1294
-#, fuzzy
 msgid "Offline color:"
-msgstr "Çevrim dışı metni rengi:"
+msgstr "Çevrim dışı rengi:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1340
 msgid "Tab Labels"
@@ -6154,7 +6129,6 @@ msgid "List font:"
 msgstr "Liste yazı tipi:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1605
-#, fuzzy
 msgid "Text view font:"
 msgstr "Metin görünümü yazı tipi:"
 
