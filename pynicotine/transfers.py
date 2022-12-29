@@ -2034,6 +2034,7 @@ class Transfers:
         transfer.current_byte_offset = transfer.size
         transfer.sock = None
         transfer.token = None
+        transfer.path = folder
 
         core.statistics.append_stat_value("completed_downloads", 1)
 
