@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2022-12-28 18:23+0000\n"
-"Last-Translator: Havokdan <havokdan@yahoo.com.br>\n"
+"PO-Revision-Date: 2022-12-29 11:42+0000\n"
+"Last-Translator: Mathias <mail@mathias.is>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -3841,7 +3841,7 @@ msgstr "Não foi possível obter um arquivo de trava exclusivo - erro de E/S: %s
 #: pynicotine/transfers.py:1181
 #, python-format
 msgid "Cannot save file in %(folder_path)s: %(error)s"
-msgstr "Não é possível salvar o arquivo em %(%(folder_path)s: %(error)s"
+msgstr "Não é possível salvar o arquivo em %(folder_path)s: %(error)s"
 
 #: pynicotine/transfers.py:1187 pynicotine/transfers.py:2029
 msgid "Download Folder Error"
