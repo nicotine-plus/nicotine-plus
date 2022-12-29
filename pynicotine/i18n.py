@@ -28,11 +28,9 @@ LOCALE_PATH = os.path.join(CURRENT_FOLDER, "locale")
 TRANSLATION_DOMAIN = "nicotine"
 LANGUAGES = (
     ("ca", "Català"),
-    ("cs", "Čeština"),
     ("da", "Dansk"),
     ("de", "Deutsch"),
     ("en", "English"),
-    ("eo", "Esperanto"),
     ("es_CL", "Español (Chile)"),
     ("es_ES", "Español (España)"),
     ("eu", "Euskara"),
@@ -94,13 +92,13 @@ def build_translations():
     """ Builds .mo translation files in the 'mo' folder of the project repository """
 
     import subprocess
-    languages = []
 
-    for po_file in glob.glob(os.path.join(BASE_FOLDER, "po", "*.po")):
-        lang = os.path.basename(po_file[:-3])
-        languages.append(lang)
+    for language_code, _language_name in LANGUAGES:
+        if language_code == "en":
+            continue
 
-        lc_messages_dir = os.path.join(LOCALE_PATH, lang, "LC_MESSAGES")
+        lc_messages_dir = os.path.join(LOCALE_PATH, language_code, "LC_MESSAGES")
+        po_file = os.path.join(BASE_FOLDER, "po", f"{language_code}.po")
         mo_file = os.path.join(lc_messages_dir, "nicotine.mo")
 
         if not os.path.exists(lc_messages_dir):
@@ -115,5 +113,3 @@ def build_translations():
 
     for appdata_file in glob.glob(os.path.join(BASE_FOLDER, "data", "*.appdata.xml.in")):
         subprocess.check_call(["msgfmt", "--xml", f"--template={appdata_file}", "-d", "po", "-o", appdata_file[:-3]])
-
-    return languages
