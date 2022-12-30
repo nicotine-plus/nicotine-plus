@@ -23,6 +23,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
+
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
@@ -158,12 +160,13 @@ class Downloads(TransferList):
 
     def on_open_file_manager(self, *_args):
 
-        download_folder = config.sections["transfers"]["downloaddir"]
-        folder_path = config.sections["transfers"]["incompletedir"] or download_folder
-
         for transfer in self.selected_transfers:
+            file_path = core.transfers.get_current_download_file_path(
+                transfer.user, transfer.filename, transfer.path, transfer.size)
+            folder_path = os.path.dirname(file_path)
+
             if transfer.status == "Finished":
-                folder_path = transfer.path or download_folder
+                # Prioritize finished downloads
                 break
 
         open_file_path(folder_path, command=config.sections["ui"]["filemanager"])
@@ -171,15 +174,8 @@ class Downloads(TransferList):
     def on_play_files(self, *_args):
 
         for transfer in self.selected_transfers:
-            if transfer.file is not None:
-                file_path = transfer.file.name.decode("utf-8", "replace")
-
-            else:
-                # If this file doesn't exist anymore, it may have finished downloading and have been renamed.
-                # Try looking in the download directory and match the original filename and size.
-
-                file_path = core.transfers.get_existing_download_path(
-                    transfer.user, transfer.filename, transfer.path, transfer.size, always_return=True)
+            file_path = core.transfers.get_current_download_file_path(
+                transfer.user, transfer.filename, transfer.path, transfer.size)
 
             open_file_path(file_path, command=config.sections["players"]["default"])
 
