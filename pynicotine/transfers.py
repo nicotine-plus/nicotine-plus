@@ -1590,6 +1590,9 @@ class Transfers:
 
         path = clean_path(path, absolute=True)
 
+        if not path:
+            path = self.get_default_download_folder(user)
+
         if transfer is None:
             for download in self.downloads:
                 if download.filename == filename and download.path == path and download.user == user:
@@ -1892,10 +1895,12 @@ class Transfers:
 
         return corrected_basename
 
-    def get_complete_download_file_path(self, user, virtual_path, custom_folder_path, size):
+    def get_complete_download_file_path(self, user, virtual_path, download_folder_path, size):
         """ Returns the download path of a complete download, if available """
 
-        download_folder_path = custom_folder_path or self.get_default_download_folder(user)
+        if not download_folder_path:
+            download_folder_path = self.get_default_download_folder(user)
+
         basename = self.get_download_basename(virtual_path, download_folder_path)
         basename_no_extension, extension = os.path.splitext(basename)
         download_file_path = os.path.join(download_folder_path, basename)
@@ -1934,10 +1939,10 @@ class Transfers:
 
         return os.path.join(incomplete_folder_path, prefix + basename_no_extension + extension)
 
-    def get_current_download_file_path(self, username, virtual_path, custom_folder_path, size):
+    def get_current_download_file_path(self, username, virtual_path, download_folder_path, size):
         """ Returns the current file path of a download """
 
-        return (self.get_complete_download_file_path(username, virtual_path, custom_folder_path, size)
+        return (self.get_complete_download_file_path(username, virtual_path, download_folder_path, size)
                 or self.get_incomplete_download_file_path(username, virtual_path))
 
     def file_downloaded_actions(self, user, filepath):

@@ -112,7 +112,7 @@ class TransfersTest(TestCase):
 
         self.assertEqual(transfer.user, "newuser")
         self.assertEqual(transfer.filename, "Hello\\Path\\File.mp3")
-        self.assertEqual(transfer.path, "")
+        self.assertEqual(transfer.path, config.data_dir)
 
     def test_push_upload(self):
         """ Verify that new uploads are prepended to the list """
