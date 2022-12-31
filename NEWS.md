@@ -7,12 +7,17 @@
  * Improved file scanning performance on systems other than Windows
  * Fixed a regression where uploads through the legacy file transfer system failed in some cases
  * Fixed an issue where finished zero-byte file downloads displayed a "Connection timeout" error
+ * Fixed an issue where Nicotine+ did not reconnect to the server on connection failure in some cases
+ * Fixed a rare crash when scanning shares
  * Windows: Fixed a crash when sending Nicotine+ to the background from the confirmation dialog
  * Windows: Fixed an issue viewing personal user info page
 
 ### Issues closed on GitHub
 
+ * Automatically reconnect to a server after connection failure ([#2168](https://github.com/nicotine-plus/nicotine-plus/issues/2168))
  * Nicotine+ v3.2.7 crashes when sent to background (Windows 10) ([#2276](https://github.com/nicotine-plus/nicotine-plus/issues/2276))
+ * Error launching Nicotine+ ([#2282](https://github.com/nicotine-plus/nicotine-plus/issues/2282))
+ * UPnP: Critical error when network interface not available ([#2289](https://github.com/nicotine-plus/nicotine-plus/issues/2289))
 
 
 ## Version 3.2.7 (December 1, 2022)
