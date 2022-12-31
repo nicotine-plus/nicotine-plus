@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import sys
 import threading
 import time
 
@@ -193,10 +194,11 @@ class Logger:
                 callback(timestamp_format, msg, level)
             except Exception as error:
                 try:
-                    print("Callback on %s failed: %s %s\n%s" % (callback, level, msg, error))
+                    print("Callback on %s failed: %s %s\n%s" % (callback, level, msg, error), flush=True)
+
                 except OSError:
-                    # stdout is gone
-                    pass
+                    # stdout is gone, prevent future errors
+                    sys.stdout = open(os.devnull, "w", encoding="utf-8")  # pylint: disable=consider-using-with
 
     def add_download(self, msg, msg_args=None):
         self.log_transfer(msg, msg_args)
@@ -241,10 +243,11 @@ class Logger:
     @staticmethod
     def log_console(timestamp_format, msg, _level):
         try:
-            print("[" + time.strftime(timestamp_format) + "] " + msg)
+            print("[" + time.strftime(timestamp_format) + "] " + msg, flush=True)
+
         except OSError:
-            # stdout is gone
-            pass
+            # stdout is gone, prevent future errors
+            sys.stdout = open(os.devnull, "w", encoding="utf-8")  # pylint: disable=consider-using-with
 
     def log_transfer(self, msg, msg_args=None):
 
