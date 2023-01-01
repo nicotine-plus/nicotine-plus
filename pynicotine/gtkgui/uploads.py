@@ -41,6 +41,7 @@ class Uploads(TransferList):
         self.retry_label = _("_Retry")
         self.abort_label = _("_Abort")
         self.aborted_status = "Aborted"
+        self.deprioritized_statuses = {"Cancelled", "Finished"}
 
         self.transfer_page = frame.uploads_page
         self.user_counter = frame.upload_users_label
