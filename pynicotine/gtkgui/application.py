@@ -76,7 +76,7 @@ class Application:
             ("quit", self._instance.quit),
             ("setup", self.on_fast_configure),
             ("shares-unavailable", self.on_shares_unavailable),
-            ("thread-callback", self.on_thread_callback)
+            ("thread-event", self.on_thread_event)
         ):
             events.connect(event_name, callback)
 
@@ -116,9 +116,6 @@ class Application:
 
     def add_window(self, window):
         self._instance.add_window(window)
-
-    def get_active_window(self):
-        return self._instance.get_active_window()
 
     def set_menubar(self, model):
         self._instance.set_menubar(model)
@@ -520,7 +517,7 @@ class Application:
                 "if this is your first time logging in.") % config.sections["server"]["login"]
 
         OptionDialog(
-            parent=self.get_active_window(),
+            parent=self.window,
             title=title,
             message=msg,
             first_button=_("_Cancel"),
@@ -779,10 +776,28 @@ class Application:
 
             copy_text(error)
             open_uri(config.issue_tracker_url)
+
+            self.show_critical_error_dialog(error, loop)
             return
 
         loop.quit()
         core.quit()
+
+    def show_critical_error_dialog(self, error, loop):
+
+        from pynicotine.gtkgui.widgets.dialogs import OptionDialog
+
+        OptionDialog(
+            parent=self.window,
+            title=_("Critical Error"),
+            message=_("Nicotine+ has encountered a critical error and needs to exit. "
+                      "Please copy the following message and include it in a bug report:"),
+            long_message=error,
+            first_button=_("_Quit Nicotine+"),
+            second_button=_("_Copy & Report Bug"),
+            callback=self.on_critical_error_response,
+            callback_data=(loop, error)
+        ).show()
 
     def on_critical_error(self, exc_type, exc_value, exc_traceback):
 
@@ -813,28 +828,14 @@ class Application:
                 traceback = traceback.tb_next
 
         # Show critical error dialog
-        from pynicotine.gtkgui.widgets.dialogs import OptionDialog
-
         loop = GLib.MainLoop()
         error = (f"Nicotine+ Version: {config.version}\nGTK Version: {config.gtk_version}\n"
                  f"Python Version: {config.python_version} ({sys.platform})\n\n"
                  f"Type: {exc_type}\nValue: {exc_value}\nTraceback: {''.join(format_tb(exc_traceback))}")
-
-        OptionDialog(
-            parent=self.window,
-            title=_("Critical Error"),
-            message=_("Nicotine+ has encountered a critical error and needs to exit. "
-                      "Please copy the following message and include it in a bug report:"),
-            long_message=error,
-            first_button=_("_Quit Nicotine+"),
-            second_button=_("_Copy & Report Bug"),
-            callback=self.on_critical_error_response,
-            callback_data=(loop, error)
-        ).show()
+        self.show_critical_error_dialog(error, loop)
 
         # Keep dialog open if error occurs on startup
         loop.run()
-
         raise exc_value
 
     @staticmethod
@@ -847,17 +848,22 @@ class Application:
 
         GLib.idle_add(self._on_critical_error_threading, args)
 
-    def on_thread_callback(self, msgs):
+    def _on_thread_event(self, event_name, *args, **kwargs):
+
+        if core.shutdown:
+            return
+
+        events.emit(event_name, *args, **kwargs)
+
+    def on_thread_event(self, event_name, *args, **kwargs):
         # High priority to ensure there are no delays
-        GLib.idle_add(core.process_thread_callback, msgs[:], priority=GLib.PRIORITY_HIGH_IDLE)
+        GLib.idle_add(self._on_thread_event, event_name, *args, **kwargs, priority=GLib.PRIORITY_HIGH_IDLE)
 
     def on_activate(self, *_args):
 
-        active_window = self.get_active_window()
-
-        if active_window:
+        if self.window:
             # Show the window of the running application instance
-            active_window.present()
+            self.window.show()
             return
 
         from pynicotine.gtkgui.mainwindow import MainWindow
@@ -869,9 +875,12 @@ class Application:
 
         self.tray_icon = TrayIcon(self)
         self.notifications = Notifications(self)
-        self.window = MainWindow(self, self.start_hidden)
+        self.window = MainWindow(self)
 
-        self.window.init_window()
+        # Check command line option and config option
+        if not self.start_hidden and not config.sections["ui"]["startup_hidden"]:
+            self.window.show()
+
         core.start()
 
         if config.sections["server"]["auto_connect_startup"]:

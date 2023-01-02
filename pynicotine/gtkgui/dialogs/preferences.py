@@ -468,8 +468,8 @@ class SharesPage:
         (
             self.Main,  # pylint: disable=invalid-name
             self.buddy_shares_trusted_only_toggle,
-            self.list_container,
-            self.rescan_on_startup_toggle
+            self.rescan_on_startup_toggle,
+            self.shares_list_container
         ) = ui_template.widgets
 
         self.application = application
@@ -479,7 +479,7 @@ class SharesPage:
         self.buddy_shared_folders = []
 
         self.shares_list_view = TreeView(
-            application.window, parent=self.list_container, multi_select=True,
+            application.window, parent=self.shares_list_container, multi_select=True,
             activate_row_callback=self.on_edit_shared_folder,
             columns=[
                 {"column_id": "virtual_folder", "column_type": "text", "title": _("Virtual Folder"), "width": 65,
@@ -775,15 +775,17 @@ class IgnoredUsersPage:
     def __init__(self, application):
 
         ui_template = UserInterface(scope=self, path="settings/ignore.ui")
-
-        # pylint: disable=invalid-name
-        self.IgnoredIPs, self.IgnoredUsers, self.Main = ui_template.widgets
+        (
+            self.Main,  # pylint: disable=invalid-name
+            self.ignored_ips_container,
+            self.ignored_users_container
+        ) = ui_template.widgets
 
         self.application = application
 
         self.ignored_users = []
         self.ignored_users_list_view = TreeView(
-            application.window, parent=self.IgnoredUsers, multi_select=True,
+            application.window, parent=self.ignored_users_container, multi_select=True,
             columns=[
                 {"column_id": "username", "column_type": "text", "title": _("Username"), "sort_column": 0}
             ]
@@ -791,7 +793,7 @@ class IgnoredUsersPage:
 
         self.ignored_ips = {}
         self.ignored_ips_list_view = TreeView(
-            application.window, parent=self.IgnoredIPs, multi_select=True,
+            application.window, parent=self.ignored_ips_container, multi_select=True,
             columns=[
                 {"column_id": "ip_address", "column_type": "text", "title": _("IP Address"), "sort_column": 0,
                  "width": 50, "expand_column": True},
@@ -827,7 +829,7 @@ class IgnoredUsersPage:
             }
         }
 
-    def on_add_ignored_response(self, dialog, _response_id, _data):
+    def on_add_ignored_user_response(self, dialog, _response_id, _data):
 
         user = dialog.get_entry_value()
 
@@ -835,16 +837,16 @@ class IgnoredUsersPage:
             self.ignored_users.append(user)
             self.ignored_users_list_view.add_row([str(user)])
 
-    def on_add_ignored(self, *_args):
+    def on_add_ignored_user(self, *_args):
 
         EntryDialog(
             parent=self.application.preferences,
             title=_("Ignore User"),
             message=_("Enter the name of the user you want to ignore:"),
-            callback=self.on_add_ignored_response
+            callback=self.on_add_ignored_user_response
         ).show()
 
-    def on_remove_ignored(self, *_args):
+    def on_remove_ignored_user(self, *_args):
 
         for iterator in reversed(self.ignored_users_list_view.get_selected_rows()):
             user = self.ignored_users_list_view.get_row_value(iterator, 0)
@@ -856,20 +858,17 @@ class IgnoredUsersPage:
 
         ip_address = dialog.get_entry_value()
 
-        if ip_address is None or ip_address == "" or ip_address.count(".") != 3:
+        if not ip_address or ip_address.count(".") != 3:
             return
 
         for chars in ip_address.split("."):
-
             if chars == "*":
                 continue
+
             if not chars.isdigit():
                 return
 
-            try:
-                if int(chars) > 255:
-                    return
-            except Exception:
+            if int(chars) > 255:
                 return
 
         if ip_address not in self.ignored_ips:
@@ -899,17 +898,24 @@ class BannedUsersPage:
     def __init__(self, application):
 
         ui_template = UserInterface(scope=self, path="settings/ban.ui")
-
-        # pylint: disable=invalid-name
-        (self.BannedList, self.BlockedList, self.CustomBan, self.CustomGeoBlock, self.GeoBlock, self.GeoBlockCC,
-         self.Main, self.UseCustomBan, self.UseCustomGeoBlock) = ui_template.widgets
+        (
+            self.Main,  # pylint: disable=invalid-name
+            self.ban_message_entry,
+            self.ban_message_toggle,
+            self.banned_ips_container,
+            self.banned_users_container,
+            self.geo_block_country_entry,
+            self.geo_block_message_entry,
+            self.geo_block_message_toggle,
+            self.geo_block_toggle
+        ) = ui_template.widgets
 
         self.application = application
-        self.ip_block_required = False
+        self.ip_ban_required = False
 
         self.banned_users = []
         self.banned_users_list_view = TreeView(
-            application.window, parent=self.BannedList, multi_select=True,
+            application.window, parent=self.banned_users_container, multi_select=True,
             columns=[
                 {"column_id": "username", "column_type": "text", "title": _("Username"), "sort_column": 0}
             ]
@@ -917,7 +923,7 @@ class BannedUsersPage:
 
         self.banned_ips = {}
         self.banned_ips_list_view = TreeView(
-            application.window, parent=self.BlockedList, multi_select=True,
+            application.window, parent=self.banned_ips_container, multi_select=True,
             columns=[
                 {"column_id": "ip_address", "column_type": "text", "title": _("IP Address"), "sort_column": 0,
                  "width": 50, "expand_column": True},
@@ -932,12 +938,12 @@ class BannedUsersPage:
                 "ipblocklist": self.banned_ips_list_view
             },
             "transfers": {
-                "usecustomban": self.UseCustomBan,
-                "customban": self.CustomBan,
-                "geoblock": self.GeoBlock,
-                "geoblockcc": self.GeoBlockCC,
-                "usecustomgeoblock": self.UseCustomGeoBlock,
-                "customgeoblock": self.CustomGeoBlock
+                "usecustomban": self.ban_message_toggle,
+                "customban": self.ban_message_entry,
+                "geoblock": self.geo_block_toggle,
+                "geoblockcc": None,
+                "usecustomgeoblock": self.geo_block_message_toggle,
+                "customgeoblock": self.geo_block_message_entry
             }
         }
 
@@ -952,13 +958,13 @@ class BannedUsersPage:
 
         self.banned_users = config.sections["server"]["banlist"][:]
         self.banned_ips = config.sections["server"]["ipblocklist"].copy()
-        self.GeoBlockCC.set_text(config.sections["transfers"]["geoblockcc"][0])
+        self.geo_block_country_entry.set_text(config.sections["transfers"]["geoblockcc"][0])
 
-        self.ip_block_required = False
+        self.ip_ban_required = False
 
     def get_settings(self):
 
-        self.ip_block_required = False
+        self.ip_ban_required = False
 
         return {
             "server": {
@@ -966,16 +972,16 @@ class BannedUsersPage:
                 "ipblocklist": self.banned_ips.copy()
             },
             "transfers": {
-                "usecustomban": self.UseCustomBan.get_active(),
-                "customban": self.CustomBan.get_text(),
-                "geoblock": self.GeoBlock.get_active(),
-                "geoblockcc": [self.GeoBlockCC.get_text().upper()],
-                "usecustomgeoblock": self.UseCustomGeoBlock.get_active(),
-                "customgeoblock": self.CustomGeoBlock.get_text()
+                "usecustomban": self.ban_message_toggle.get_active(),
+                "customban": self.ban_message_entry.get_text(),
+                "geoblock": self.geo_block_toggle.get_active(),
+                "geoblockcc": [self.geo_block_country_entry.get_text().upper()],
+                "usecustomgeoblock": self.geo_block_message_toggle.get_active(),
+                "customgeoblock": self.geo_block_message_entry.get_text()
             }
         }
 
-    def on_add_banned_response(self, dialog, _response_id, _data):
+    def on_add_banned_user_response(self, dialog, _response_id, _data):
 
         user = dialog.get_entry_value()
 
@@ -983,16 +989,16 @@ class BannedUsersPage:
             self.banned_users.append(user)
             self.banned_users_list_view.add_row([user])
 
-    def on_add_banned(self, *_args):
+    def on_add_banned_user(self, *_args):
 
         EntryDialog(
             parent=self.application.preferences,
             title=_("Ban User"),
             message=_("Enter the name of the user you want to ban:"),
-            callback=self.on_add_banned_response
+            callback=self.on_add_banned_user_response
         ).show()
 
-    def on_remove_banned(self, *_args):
+    def on_remove_banned_user(self, *_args):
 
         for iterator in reversed(self.banned_users_list_view.get_selected_rows()):
             user = self.banned_users_list_view.get_row_value(iterator, 0)
@@ -1000,41 +1006,38 @@ class BannedUsersPage:
             self.banned_users_list_view.remove_row(iterator)
             self.banned_users.remove(user)
 
-    def on_add_blocked_response(self, dialog, _response_id, _data):
+    def on_add_banned_ip_response(self, dialog, _response_id, _data):
 
         ip_address = dialog.get_entry_value()
 
-        if ip_address is None or ip_address == "" or ip_address.count(".") != 3:
+        if not ip_address or ip_address.count(".") != 3:
             return
 
         for chars in ip_address.split("."):
-
             if chars == "*":
                 continue
+
             if not chars.isdigit():
                 return
 
-            try:
-                if int(chars) > 255:
-                    return
-            except Exception:
+            if int(chars) > 255:
                 return
 
         if ip_address not in self.banned_ips:
             self.banned_ips[ip_address] = ""
             self.banned_ips_list_view.add_row([ip_address, ""])
-            self.ip_block_required = True
+            self.ip_ban_required = True
 
-    def on_add_blocked(self, *_args):
+    def on_add_banned_ip(self, *_args):
 
         EntryDialog(
             parent=self.application.preferences,
-            title=_("Block IP Address"),
-            message=_("Enter an IP address you want to block:") + " " + _("* is a wildcard"),
-            callback=self.on_add_blocked_response
+            title=_("Ban IP Address"),
+            message=_("Enter an IP address you want to ban:") + " " + _("* is a wildcard"),
+            callback=self.on_add_banned_ip_response
         ).show()
 
-    def on_remove_blocked(self, *_args):
+    def on_remove_banned_ip(self, *_args):
 
         for iterator in reversed(self.banned_ips_list_view.get_selected_rows()):
             ip_address = self.banned_ips_list_view.get_row_value(iterator, 0)
@@ -1331,20 +1334,20 @@ class UserInterfacePage:
          self.DefaultSearchFont, self.DefaultTextViewFont, self.DefaultTheme, self.DefaultTransfersFont,
          self.EnableChatroomsTab, self.EnableDownloadsTab, self.EnableInterestsTab, self.EnablePrivateTab,
          self.EnableSearchTab, self.EnableUploadsTab, self.EnableUserBrowseTab, self.EnableUserInfoTab,
-         self.EnableUserListTab, self.EntryAway, self.EntryBackground, self.EntryChangedTab, self.EntryHighlight,
-         self.EntryHighlightTab, self.EntryImmediate, self.EntryInput, self.EntryLocal, self.EntryMe,
-         self.EntryOffline, self.EntryOnline, self.EntryQueue, self.EntryRegularTab, self.EntryRemote,
+         self.EnableUserListTab, self.EntryAway, self.EntryBackground, self.EntryChangedTab, self.EntryCommand,
+         self.EntryHighlight, self.EntryHighlightTab, self.EntryImmediate, self.EntryInput, self.EntryLocal,
+         self.EntryMe, self.EntryOffline, self.EntryOnline, self.EntryQueue, self.EntryRegularTab, self.EntryRemote,
          self.EntryURL, self.IconView, self.Language, self.Main, self.MainPosition,
          self.NotificationPopupChatroom, self.NotificationPopupChatroomMention, self.NotificationPopupFile,
          self.NotificationPopupFolder, self.NotificationPopupPrivateMessage, self.NotificationPopupSound,
          self.NotificationPopupWish, self.NotificationWindowTitle, self.PickAway,
-         self.PickBackground, self.PickChangedTab, self.PickHighlight, self.PickHighlightTab, self.PickImmediate,
-         self.PickInput, self.PickLocal, self.PickMe, self.PickOffline, self.PickOnline, self.PickQueue,
-         self.PickRegularTab, self.PickRemote, self.PickURL, self.PrivateChatPosition, self.ReverseFilePaths,
-         self.SearchPosition, self.SelectBrowserFont, self.SelectChatFont, self.SelectGlobalFont, self.SelectListFont,
-         self.SelectSearchFont, self.SelectTextViewFont, self.SelectTransfersFont, self.StartupHidden, self.TabClosers,
-         self.TabSelectPrevious, self.ThemeDir, self.TraySettings, self.TrayiconCheck,
-         self.UserBrowsePosition, self.UserInfoPosition, self.UsernameStyle) = ui_template.widgets
+         self.PickBackground, self.PickChangedTab, self.PickCommand, self.PickHighlight, self.PickHighlightTab,
+         self.PickImmediate, self.PickInput, self.PickLocal, self.PickMe, self.PickOffline, self.PickOnline,
+         self.PickQueue, self.PickRegularTab, self.PickRemote, self.PickURL, self.PrivateChatPosition,
+         self.ReverseFilePaths, self.SearchPosition, self.SelectBrowserFont, self.SelectChatFont, self.SelectGlobalFont,
+         self.SelectListFont, self.SelectSearchFont, self.SelectTextViewFont, self.SelectTransfersFont,
+         self.StartupHidden, self.TabClosers, self.TabSelectPrevious, self.ThemeDir, self.TraySettings,
+         self.TrayiconCheck, self.UserBrowsePosition, self.UserInfoPosition, self.UsernameStyle) = ui_template.widgets
 
         self.application = application
         self.theme_required = False
@@ -1376,26 +1379,26 @@ class UserInterfacePage:
 
         # Icon preview
         icon_list = [
-            (USER_STATUS_ICON_NAMES[UserStatus.ONLINE], _("Online"), 16, "user-status"),
-            (USER_STATUS_ICON_NAMES[UserStatus.AWAY], _("Away"), 16, "user-status"),
-            (USER_STATUS_ICON_NAMES[UserStatus.OFFLINE], _("Offline"), 16, "user-status"),
-            ("nplus-tab-changed-symbolic", _("Tab Changed"), 16, "notebook-tab-changed"),
-            ("nplus-tab-highlight-symbolic", _("Tab Highlight"), 16, "notebook-tab-highlight"),
-            (config.application_id, _("Window"), 64, None)]
+            (USER_STATUS_ICON_NAMES[UserStatus.ONLINE], _("Online"), 16, ("colored-icon", "user-status")),
+            (USER_STATUS_ICON_NAMES[UserStatus.AWAY], _("Away"), 16, ("colored-icon", "user-status")),
+            (USER_STATUS_ICON_NAMES[UserStatus.OFFLINE], _("Offline"), 16, ("colored-icon", "user-status")),
+            ("nplus-tab-changed", _("Tab Changed"), 16, ("colored-icon", "notebook-tab-changed")),
+            ("nplus-tab-highlight", _("Tab Highlight"), 16, ("colored-icon", "notebook-tab-highlight")),
+            (config.application_id, _("Window"), 64, ())]
 
         if application.tray_icon.available:
             icon_list += [
-                (f"{config.application_id}-connect", _("Online (Tray)"), 16, None),
-                (f"{config.application_id}-away", _("Away (Tray)"), 16, None),
-                (f"{config.application_id}-disconnect", _("Offline (Tray)"), 16, None),
-                (f"{config.application_id}-msg", _("Message (Tray)"), 16, None)]
+                (f"{config.application_id}-connect", _("Online (Tray)"), 16, ()),
+                (f"{config.application_id}-away", _("Away (Tray)"), 16, ()),
+                (f"{config.application_id}-disconnect", _("Offline (Tray)"), 16, ()),
+                (f"{config.application_id}-msg", _("Message (Tray)"), 16, ())]
 
-        for icon_name, label, pixel_size, css_class in icon_list:
+        for icon_name, label, pixel_size, css_classes in icon_list:
             box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, valign=Gtk.Align.CENTER, spacing=6, visible=True)
             icon = Gtk.Image(icon_name=icon_name, pixel_size=pixel_size, visible=True)
             label = Gtk.Label(label=label, xalign=0.5, wrap=True, visible=True)
 
-            if css_class:
+            for css_class in css_classes:
                 add_css_class(icon, css_class)
 
             if GTK_API_VERSION >= 4:
@@ -1445,6 +1448,7 @@ class UserInterfacePage:
 
                 "chatlocal": self.EntryLocal,
                 "chatremote": self.EntryRemote,
+                "chatcommand": self.EntryCommand,
                 "chatme": self.EntryMe,
                 "chathilite": self.EntryHighlight,
                 "textbg": self.EntryBackground,
@@ -1469,6 +1473,7 @@ class UserInterfacePage:
             "ui": {
                 "chatlocal": self.PickLocal,
                 "chatremote": self.PickRemote,
+                "chatcommand": self.PickCommand,
                 "chatme": self.PickMe,
                 "chathilite": self.PickHighlight,
                 "textbg": self.PickBackground,
@@ -1547,6 +1552,7 @@ class UserInterfacePage:
 
                 "chatlocal": self.EntryLocal.get_text(),
                 "chatremote": self.EntryRemote.get_text(),
+                "chatcommand": self.EntryCommand.get_text(),
                 "chatme": self.EntryMe.get_text(),
                 "chathilite": self.EntryHighlight.get_text(),
                 "urlcolor": self.EntryURL.get_text(),
@@ -1654,30 +1660,45 @@ class LoggingPage:
     def __init__(self, application):
 
         ui_template = UserInterface(scope=self, path="settings/log.ui")
-
-        # pylint: disable=invalid-name
-        (self.DebugLogDir, self.LogDebug, self.LogFileFormat,
-         self.LogPrivate, self.LogRooms, self.LogTransfers, self.Main, self.PrivateLogDir,
-         self.RoomLogDir, self.TransfersLogDir) = ui_template.widgets
+        (
+            self.Main,  # pylint: disable=invalid-name
+            self.chatroom_log_folder_button,
+            self.debug_log_folder_button,
+            self.log_chatroom_toggle,
+            self.log_debug_toggle,
+            self.log_private_chat_toggle,
+            self.log_timestamp_format_entry,
+            self.log_transfer_toggle,
+            self.private_chat_log_folder_button,
+            self.transfer_log_folder_button
+        ) = ui_template.widgets
 
         self.application = application
 
-        self.private_log_dir = FileChooserButton(self.PrivateLogDir, application.preferences, "folder")
-        self.room_log_dir = FileChooserButton(self.RoomLogDir, application.preferences, "folder")
-        self.transfers_log_dir = FileChooserButton(self.TransfersLogDir, application.preferences, "folder")
-        self.debug_log_dir = FileChooserButton(self.DebugLogDir, application.preferences, "folder")
+        self.private_chat_log_folder_button = FileChooserButton(
+            self.private_chat_log_folder_button, parent=application.preferences, chooser_type="folder"
+        )
+        self.chatroom_log_folder_button = FileChooserButton(
+            self.chatroom_log_folder_button, parent=application.preferences, chooser_type="folder"
+        )
+        self.transfer_log_folder_button = FileChooserButton(
+            self.transfer_log_folder_button, parent=application.preferences, chooser_type="folder"
+        )
+        self.debug_log_folder_button = FileChooserButton(
+            self.debug_log_folder_button, parent=application.preferences, chooser_type="folder"
+        )
 
         self.options = {
             "logging": {
-                "privatechat": self.LogPrivate,
-                "privatelogsdir": self.private_log_dir,
-                "chatrooms": self.LogRooms,
-                "roomlogsdir": self.room_log_dir,
-                "transfers": self.LogTransfers,
-                "transferslogsdir": self.transfers_log_dir,
-                "debug_file_output": self.LogDebug,
-                "debuglogsdir": self.debug_log_dir,
-                "log_timestamp": self.LogFileFormat
+                "privatechat": self.log_private_chat_toggle,
+                "privatelogsdir": self.private_chat_log_folder_button,
+                "chatrooms": self.log_chatroom_toggle,
+                "roomlogsdir": self.chatroom_log_folder_button,
+                "transfers": self.log_transfer_toggle,
+                "transferslogsdir": self.transfer_log_folder_button,
+                "debug_file_output": self.log_debug_toggle,
+                "debuglogsdir": self.debug_log_folder_button,
+                "log_timestamp": self.log_timestamp_format_entry
             }
         }
 
@@ -1688,20 +1709,20 @@ class LoggingPage:
 
         return {
             "logging": {
-                "privatechat": self.LogPrivate.get_active(),
-                "privatelogsdir": self.private_log_dir.get_path(),
-                "chatrooms": self.LogRooms.get_active(),
-                "roomlogsdir": self.room_log_dir.get_path(),
-                "transfers": self.LogTransfers.get_active(),
-                "transferslogsdir": self.transfers_log_dir.get_path(),
-                "debug_file_output": self.LogDebug.get_active(),
-                "debuglogsdir": self.debug_log_dir.get_path(),
-                "log_timestamp": self.LogFileFormat.get_text()
+                "privatechat": self.log_private_chat_toggle.get_active(),
+                "privatelogsdir": self.private_chat_log_folder_button.get_path(),
+                "chatrooms": self.log_chatroom_toggle.get_active(),
+                "roomlogsdir": self.chatroom_log_folder_button.get_path(),
+                "transfers": self.log_transfer_toggle.get_active(),
+                "transferslogsdir": self.transfer_log_folder_button.get_path(),
+                "debug_file_output": self.log_debug_toggle.get_active(),
+                "debuglogsdir": self.debug_log_folder_button.get_path(),
+                "log_timestamp": self.log_timestamp_format_entry.get_text()
             }
         }
 
     def on_default_timestamp(self, *_args):
-        self.LogFileFormat.set_text(config.defaults["logging"]["log_timestamp"])
+        self.log_timestamp_format_entry.set_text(config.defaults["logging"]["log_timestamp"])
 
 
 class SearchesPage:
@@ -1817,9 +1838,12 @@ class UrlHandlersPage:
     def __init__(self, application):
 
         ui_template = UserInterface(scope=self, path="settings/urlhandlers.ui")
-
-        # pylint: disable=invalid-name
-        (self.FileManagerCombo, self.Main, self.ProtocolHandlers, self.audioPlayerCombo) = ui_template.widgets
+        (
+            self.Main,  # pylint: disable=invalid-name
+            self.file_manager_combobox,
+            self.media_player_combobox,
+            self.protocol_list_container
+        ) = ui_template.widgets
 
         self.application = application
 
@@ -1828,10 +1852,10 @@ class UrlHandlersPage:
                 "protocols": None
             },
             "ui": {
-                "filemanager": self.FileManagerCombo
+                "filemanager": self.file_manager_combobox
             },
             "players": {
-                "default": self.audioPlayerCombo
+                "default": self.media_player_combobox
             }
         }
 
@@ -1859,7 +1883,7 @@ class UrlHandlersPage:
 
         self.protocols = {}
         self.protocol_list_view = TreeView(
-            application.window, parent=self.ProtocolHandlers, multi_select=True,
+            application.window, parent=self.protocol_list_container, multi_select=True,
             activate_row_callback=self.on_edit_handler,
             columns=[
                 {"column_id": "protocol", "column_type": "text", "title": _("Protocol"), "sort_column": 0,
@@ -1891,10 +1915,10 @@ class UrlHandlersPage:
                 "protocols": self.protocols.copy()
             },
             "ui": {
-                "filemanager": self.FileManagerCombo.get_active_text()
+                "filemanager": self.file_manager_combobox.get_active_text()
             },
             "players": {
-                "default": self.audioPlayerCombo.get_active_text()
+                "default": self.media_player_combobox.get_active_text()
             }
         }
 
@@ -1963,6 +1987,14 @@ class UrlHandlersPage:
 
             self.protocol_list_view.remove_row(iterator)
             del self.protocols[protocol]
+
+    def on_default_media_player(self, *_args):
+        default_media_player = config.defaults["players"]["default"]
+        self.media_player_combobox.get_child().set_text(default_media_player)
+
+    def on_default_file_manager(self, *_args):
+        default_file_manager = config.defaults["ui"]["filemanager"]
+        self.file_manager_combobox.get_child().set_text(default_file_manager)
 
 
 class NowPlayingPage:
@@ -2152,24 +2184,30 @@ class PluginsPage:
     def __init__(self, application):
 
         ui_template = UserInterface(scope=self, path="settings/plugin.ui")
-
-        # pylint: disable=invalid-name
-        (self.Main, self.PluginAuthor, self.PluginDescription, self.PluginName,
-         self.PluginProperties, self.PluginTreeView, self.PluginVersion, self.PluginsEnable) = ui_template.widgets
+        (
+            self.Main,  # pylint: disable=invalid-name
+            self.enable_plugins_toggle,
+            self.plugin_authors_label,
+            self.plugin_description_view,
+            self.plugin_list_container,
+            self.plugin_name_label,
+            self.plugin_settings_button,
+            self.plugin_version_label
+        ) = ui_template.widgets
 
         self.application = application
+        self.enabled_plugins = []
+        self.selected_plugin = None
 
         self.options = {
             "plugins": {
-                "enable": self.PluginsEnable
+                "enable": self.enable_plugins_toggle
             }
         }
 
-        self.enabled_plugins = []
-        self.selected_plugin = None
-        self.descr_textview = TextView(self.PluginDescription)
+        self.plugin_description_view = TextView(self.plugin_description_view)
         self.plugin_list_view = TreeView(
-            application.window, parent=self.PluginTreeView, always_select=True,
+            application.window, parent=self.plugin_list_container, always_select=True,
             select_row_callback=self.on_select_plugin,
             columns=[
                 # Visible columns
@@ -2206,13 +2244,13 @@ class PluginsPage:
 
         return {
             "plugins": {
-                "enable": self.PluginsEnable.get_active(),
+                "enable": self.enable_plugins_toggle.get_active(),
                 "enabled": self.enabled_plugins[:]
             }
         }
 
-    def check_properties_button(self, plugin):
-        self.PluginProperties.set_sensitive(bool(core.pluginhandler.get_plugin_settings(plugin)))
+    def check_plugin_settings_button(self, plugin):
+        self.plugin_settings_button.set_sensitive(bool(core.pluginhandler.get_plugin_settings(plugin)))
 
     def on_select_plugin(self, list_view, iterator):
 
@@ -2228,14 +2266,14 @@ class PluginsPage:
         plugin_authors = ", ".join(info.get("Authors", '-'))
         plugin_description = info.get("Description", '').replace(r'\n', '\n')
 
-        self.PluginName.set_text(plugin_name)
-        self.PluginVersion.set_text(plugin_version)
-        self.PluginAuthor.set_text(plugin_authors)
+        self.plugin_name_label.set_text(plugin_name)
+        self.plugin_version_label.set_text(plugin_version)
+        self.plugin_authors_label.set_text(plugin_authors)
 
-        self.descr_textview.clear()
-        self.descr_textview.append_line(plugin_description)
+        self.plugin_description_view.clear()
+        self.plugin_description_view.append_line(plugin_description)
 
-        self.check_properties_button(self.selected_plugin)
+        self.check_plugin_settings_button(self.selected_plugin)
 
     def on_plugin_toggle(self, list_view, iterator):
 
@@ -2250,28 +2288,28 @@ class PluginsPage:
             core.pluginhandler.disable_plugin(plugin_id)
             self.enabled_plugins.remove(plugin_id)
 
-        self.check_properties_button(plugin_id)
+        self.check_plugin_settings_button(plugin_id)
 
-    def on_plugins_enable(self, *_args):
+    def on_enable_plugins(self, *_args):
 
-        if self.PluginsEnable.get_active():
+        if self.enable_plugins_toggle.get_active():
             # Enable all selected plugins
             for plugin_id in self.enabled_plugins:
                 core.pluginhandler.enable_plugin(plugin_id)
 
-            self.check_properties_button(self.selected_plugin)
+            self.check_plugin_settings_button(self.selected_plugin)
             return
 
         # Disable all plugins
         for plugin in core.pluginhandler.enabled_plugins.copy():
             core.pluginhandler.disable_plugin(plugin)
 
-        self.PluginProperties.set_sensitive(False)
+        self.plugin_settings_button.set_sensitive(False)
 
     def on_add_plugins(self, *_args):
         open_file_path(core.pluginhandler.user_plugin_folder, create_folder=True)
 
-    def on_plugin_properties(self, *_args):
+    def on_plugin_settings(self, *_args):
 
         if self.selected_plugin is None:
             return
@@ -2558,10 +2596,10 @@ class Preferences(Dialog):
             completion_required = False
 
         try:
-            ip_block_required = self.pages["banned-users"].ip_block_required
+            ip_ban_required = self.pages["banned-users"].ip_ban_required
 
         except KeyError:
-            ip_block_required = False
+            ip_ban_required = False
 
         try:
             search_required = self.pages["searches"].search_required
@@ -2574,12 +2612,12 @@ class Preferences(Dialog):
                 options[key].update(data)
 
         return (portmap_required, rescan_required, theme_required, completion_required,
-                ip_block_required, search_required, options)
+                ip_ban_required, search_required, options)
 
     def update_settings(self, settings_closed=False):
 
         (portmap_required, rescan_required, theme_required, completion_required,
-            ip_block_required, search_required, options) = self.get_settings()
+            ip_ban_required, search_required, options) = self.get_settings()
 
         for key, data in options.items():
             config.sections[key].update(data)
@@ -2595,22 +2633,22 @@ class Preferences(Dialog):
             set_dark_mode(dark_mode_state)
             self.application.lookup_action("prefer-dark-mode").set_state(GLib.Variant("b", dark_mode_state))
 
+            # Icons
+            load_custom_icons(update=True)
+            self.application.tray_icon.update_icon_theme()
+
             # Fonts and colors
             update_custom_css()
 
             self.application.window.chatrooms.update_tags()
             self.application.window.privatechat.update_tags()
 
-            # Icons
-            load_custom_icons(update=True)
-            self.application.tray_icon.update_icon_theme()
-
         if completion_required:
             core.chatrooms.update_completions()
             core.privatechat.update_completions()
 
-        if ip_block_required:
-            core.network_filter.close_blocked_ip_connections()
+        if ip_ban_required:
+            core.network_filter.close_banned_ip_connections()
 
         if search_required:
             self.application.window.search.populate_search_history()

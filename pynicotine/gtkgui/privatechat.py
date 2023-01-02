@@ -66,7 +66,7 @@ class PrivateChats(IconNotebook):
 
         for event_name, callback in (
             ("clear-private-messages", self.clear_messages),
-            ("echo-private-message", self.echo_message),
+            ("echo-private-message", self.echo_private_message),
             ("message-user", self.message_user),
             ("private-chat-completion-list", self.set_completion_list),
             ("private-chat-show-user", self.show_user),
@@ -169,12 +169,12 @@ class PrivateChats(IconNotebook):
         self.remove_page(page.container)
         del self.pages[user]
 
-    def echo_message(self, user, text, message_type):
+    def echo_private_message(self, user, text, message_type):
 
         page = self.pages.get(user)
 
         if page is not None:
-            page.echo_message(text, message_type)
+            page.echo_private_message(text, message_type)
 
     def send_message(self, user, text):
 
@@ -215,7 +215,7 @@ class PrivateChats(IconNotebook):
         for page in self.pages.values():
             page.server_login()
 
-    def server_disconnect(self, _msg):
+    def server_disconnect(self, *_args):
 
         for user, page in self.pages.items():
             page.server_disconnect()
@@ -450,13 +450,17 @@ class PrivateChat:
             )
             self.chats.history.update_user(self.user, line, add_timestamp=True)
 
-    def echo_message(self, text, message_type):
-
-        tag = self.tag_local
-        timestamp_format = config.sections["logging"]["private_timestamp"]
+    def echo_private_message(self, text, message_type):
 
         if hasattr(self, f"tag_{message_type}"):
             tag = getattr(self, f"tag_{message_type}")
+        else:
+            tag = self.tag_local
+
+        if message_type != "command":
+            timestamp_format = config.sections["logging"]["private_timestamp"]
+        else:
+            timestamp_format = None
 
         self.chat_view.append_line(text, tag=tag, timestamp_format=timestamp_format)
 
@@ -492,6 +496,7 @@ class PrivateChat:
 
         self.tag_remote = self.chat_view.create_tag("chatremote")
         self.tag_local = self.chat_view.create_tag("chatlocal")
+        self.tag_command = self.chat_view.create_tag("chatcommand")
         self.tag_action = self.chat_view.create_tag("chatme")
         self.tag_hilite = self.chat_view.create_tag("chathilite")
 
@@ -518,7 +523,7 @@ class PrivateChat:
 
     def update_tags(self):
 
-        for tag in (self.tag_remote, self.tag_local, self.tag_action, self.tag_hilite,
+        for tag in (self.tag_remote, self.tag_local, self.tag_command, self.tag_action, self.tag_hilite,
                     self.tag_username, self.tag_my_username):
             self.chat_view.update_tag(tag)
 

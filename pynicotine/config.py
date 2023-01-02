@@ -333,6 +333,7 @@ class Config:
                 "chatme": "#908e8b",
                 "chatremote": "",
                 "chatlocal": "",
+                "chatcommand": "#908e8b",
                 "chathilite": "#5288ce",
                 "urlcolor": "#5288ce",
                 "useronline": "#16bb5c",

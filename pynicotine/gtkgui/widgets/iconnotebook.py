@@ -177,9 +177,10 @@ class TabLabel(Gtk.Box):
         else:
             add_css_class(self, "notebook-tab-changed")
 
-        icon_name = "nplus-tab-highlight-symbolic" if self.mentioned else "nplus-tab-changed-symbolic"
+        icon_name = "nplus-tab-highlight" if self.mentioned else "nplus-tab-changed"
         self.end_icon.set_property("icon-name", icon_name)
         self.end_icon.set_visible(True)
+        add_css_class(self.end_icon, "colored-icon")
 
     def remove_hilite(self):
 
@@ -191,6 +192,7 @@ class TabLabel(Gtk.Box):
 
         self.end_icon.set_property("icon-name", None)
         self.end_icon.set_visible(False)
+        remove_css_class(self.end_icon, "colored-icon")
 
     def set_status_icon(self, status):
 

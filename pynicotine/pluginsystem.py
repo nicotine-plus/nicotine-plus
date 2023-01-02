@@ -264,19 +264,8 @@ class BasePlugin:
         func = self.echo_public if command_type == "chatroom" else self.echo_private
         func(source, text, message_type)
 
-    # Obsolete functions
-
-    def saypublic(self, _room, _text):
-        self.log("saypublic(room, text) is obsolete, please use send_public(room, text)")
-
-    def sayprivate(self, _user, _text):
-        self.log("sayprivate(user, text) is obsolete, please use send_private(user, text)")
-
-    def sendprivate(self, _user, _text):
-        self.log("sendprivate(user, text) is obsolete, please use send_private(user, text, show_ui=False)")
-
-    def fakepublic(self, _room, _user, _text):
-        self.log("fakepublic(room, user, text) is obsolete, please use echo_public(room, text)")
+    def output(self, text):
+        self.echo_message(text, message_type="command")
 
 
 class ResponseThrottle:
@@ -728,18 +717,19 @@ class PluginHandler:
             log.add_debug("No stored settings found for %s", plugin.human_name)
 
     def trigger_chatroom_command_event(self, room, command, args):
-        self._trigger_command(command, args, room=room)
+        return self._trigger_command(command, args, room=room)
 
     def trigger_private_chat_command_event(self, user, command, args):
-        self._trigger_command(command, args, user=user)
+        return self._trigger_command(command, args, user=user)
 
     def trigger_cli_command_event(self, command, args):
-        self._trigger_command(command, args)
+        return self._trigger_command(command, args)
 
     def _trigger_command(self, command, args, user=None, room=None):
 
         plugin = None
         command_found = False
+        is_successful = False
 
         for module, plugin in self.enabled_plugins.items():
             if plugin is None:
@@ -795,25 +785,30 @@ class PluginHandler:
                             break
 
                     if rejection_message:
-                        plugin.echo_message(rejection_message)
-                        plugin.echo_message(f"Usage: {'/' + command} {' '.join(usage)}")
+                        plugin.output(rejection_message)
+                        plugin.output(f"Usage: {'/' + command} {' '.join(usage)}")
                         break
 
                     callback_name = data.get("callback_" + command_type, data.get("callback")).__name__
 
                     if room is not None:
-                        getattr(plugin, callback_name)(args, room=room)
+                        is_successful = getattr(plugin, callback_name)(args, room=room)
 
                     elif user is not None:
-                        getattr(plugin, callback_name)(args, user=user)
+                        is_successful = getattr(plugin, callback_name)(args, user=user)
 
                     else:
-                        getattr(plugin, callback_name)(args)
+                        is_successful = getattr(plugin, callback_name)(args)
+
+                    if is_successful is None:
+                        # Command didn't return anything, default to success
+                        is_successful = True
 
                 if not command_found:
                     for trigger, func in legacy_commands:
                         if trigger == command:
                             getattr(plugin, func.__name__)(self.command_source[1], args)
+                            is_successful = True
                             command_found = True
                             break
 
@@ -827,9 +822,10 @@ class PluginHandler:
                 break
 
         if plugin:
-            plugin.echo_message(f"Unknown command: {'/' + command}. Type /help for a list of commands.")
+            plugin.output(f"Unknown command: {'/' + command}. Type /help for a list of commands.")
 
         self.command_source = None
+        return is_successful
 
     def _trigger_event(self, function_name, args):
         """ Triggers an event for the plugins. Since events and notifications

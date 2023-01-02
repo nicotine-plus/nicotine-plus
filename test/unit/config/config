@@ -204,6 +204,7 @@ file_path_tooltips = True
 reverse_file_paths = True
 language = 
 textviewfont = 
+chatcommand = #908e8b
 
 [private_rooms]
 rooms = {}

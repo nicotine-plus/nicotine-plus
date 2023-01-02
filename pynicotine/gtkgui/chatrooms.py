@@ -383,7 +383,7 @@ class ChatRooms(IconNotebook):
             if isinstance(room, str):
                 self.autojoin_rooms.add(room)
 
-    def server_disconnect(self, _msg):
+    def server_disconnect(self, *_args):
 
         self.roomlist.clear()
         self.autojoin_rooms.clear()
@@ -913,11 +913,15 @@ class ChatRoom:
 
     def echo_room_message(self, text, message_type):
 
-        tag = self.tag_action
-        timestamp_format = config.sections["logging"]["rooms_timestamp"]
-
         if hasattr(self, f"tag_{message_type}"):
             tag = getattr(self, f"tag_{message_type}")
+        else:
+            tag = self.tag_local
+
+        if message_type != "command":
+            timestamp_format = config.sections["logging"]["rooms_timestamp"]
+        else:
+            timestamp_format = None
 
         self.chat_view.append_line(text, tag, timestamp_format=timestamp_format)
 
@@ -1060,6 +1064,7 @@ class ChatRoom:
 
         self.tag_remote = self.chat_view.create_tag("chatremote")
         self.tag_local = self.chat_view.create_tag("chatlocal")
+        self.tag_command = self.chat_view.create_tag("chatcommand")
         self.tag_action = self.chat_view.create_tag("chatme")
         self.tag_hilite = self.chat_view.create_tag("chathilite")
 
@@ -1088,7 +1093,7 @@ class ChatRoom:
 
     def update_tags(self):
 
-        for tag in (self.tag_remote, self.tag_local, self.tag_action, self.tag_hilite, self.tag_log):
+        for tag in (self.tag_remote, self.tag_local, self.tag_command, self.tag_action, self.tag_hilite, self.tag_log):
             self.chat_view.update_tag(tag)
 
         for tag in self.tag_users.values():

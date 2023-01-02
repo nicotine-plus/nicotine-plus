@@ -126,21 +126,6 @@ class InternalMessage(Message):
     msgtype = MessageType.INTERNAL
 
 
-class SchedulerCallback(InternalMessage):
-    __slots__ = ("callback",)
-
-    def __init__(self, callback=None):
-        self.callback = callback
-
-
-class CLICommand(InternalMessage):
-    __slots__ = ("command", "args")
-
-    def __init__(self, command=None, args=None):
-        self.command = command
-        self.args = args
-
-
 class CloseConnection(InternalMessage):
     __slots__ = ("sock",)
 
@@ -178,10 +163,6 @@ class ServerDisconnect(InternalMessage):
         self.manual_disconnect = manual_disconnect
 
 
-class ServerTimeout(InternalMessage):
-    __slots__ = ()
-
-
 class InitPeerConnection(InternalMessage):
     __slots__ = ("addr", "init")
 
@@ -196,37 +177,6 @@ class SendNetworkMessage(InternalMessage):
     def __init__(self, user=None, message=None):
         self.user = user
         self.message = message
-
-
-class PeerConnectionError(InternalMessage):
-    __slots__ = ("user", "msgs", "offline")
-
-    def __init__(self, user=None, msgs=None, offline=False):
-        self.user = user
-        self.msgs = msgs
-        self.offline = offline
-
-
-class UserInfoProgress(InternalMessage):
-    """ Used to indicate progress of long transfers. """
-
-    __slots__ = ("user", "position", "total")
-
-    def __init__(self, user=None, position=None, total=None):
-        self.user = user
-        self.position = position
-        self.total = total
-
-
-class SharedFileListProgress(UserInfoProgress):
-    __slots__ = ()
-
-
-class PeerConnectionClosed(InternalMessage):
-    __slots__ = ("user",)
-
-    def __init__(self, user=None):
-        self.user = user
 
 
 class DownloadFile(InternalMessage):
@@ -254,42 +204,6 @@ class UploadFile(InternalMessage):
         self.offset = offset
 
 
-class DownloadFileError(InternalMessage):
-    """ Sent by networking thread to indicate that a file error occurred during
-    filetransfer. """
-
-    __slots__ = ("user", "token", "file", "error")
-
-    def __init__(self, user=None, token=None, file=None, error=None):
-        self.user = user
-        self.token = token
-        self.file = file
-        self.error = error
-
-
-class UploadFileError(DownloadFileError):
-    __slots__ = ()
-
-
-class DownloadConnectionClosed(InternalMessage):
-    """ Sent by networking thread to indicate a file transfer connection has been closed """
-
-    __slots__ = ("user", "token")
-
-    def __init__(self, user=None, token=None):
-        self.user = user
-        self.token = token
-
-
-class UploadConnectionClosed(InternalMessage):
-    __slots__ = ("user", "token", "timed_out")
-
-    def __init__(self, user=None, token=None, timed_out=None):
-        self.user = user
-        self.token = token
-        self.timed_out = timed_out
-
-
 class SetUploadLimit(InternalMessage):
     """ Sent by the GUI thread to indicate changes in bandwidth shaping rules"""
 
@@ -307,20 +221,6 @@ class SetDownloadLimit(InternalMessage):
 
     def __init__(self, limit):
         self.limit = limit
-
-
-class SetConnectionStats(InternalMessage):
-    """ Sent by networking thread to update the number of current
-    connections shown in the GUI. """
-
-    __slots__ = ("total_conns", "download_conns", "download_bandwidth", "upload_conns", "upload_bandwidth")
-
-    def __init__(self, total_conns=0, download_conns=0, download_bandwidth=0, upload_conns=0, upload_bandwidth=0):
-        self.total_conns = total_conns
-        self.download_conns = download_conns
-        self.download_bandwidth = download_bandwidth
-        self.upload_conns = upload_conns
-        self.upload_bandwidth = upload_bandwidth
 
 
 class SlskMessage(Message):
@@ -3469,6 +3369,76 @@ class DistribEmbeddedMessage(DistribMessage):
     def parse_network_message(self, message):
         pos, self.distrib_code = self.unpack_uint8(message, 3)
         self.distrib_message = message[pos:]
+
+
+"""
+Message Events
+"""
+
+
+NETWORK_MESSAGE_EVENTS = {
+    AddUser: "watch-user",
+    AdminMessage: "admin-message",
+    ChangePassword: "change-password",
+    CheckPrivileges: "check-privileges",
+    ConnectToPeer: "connect-to-peer",
+    DistribSearch: "distributed-search-request",
+    FileDownloadInit: "file-download-init",
+    FileSearch: "server-search-request",
+    FileSearchResponse: "file-search-response",
+    FileUploadInit: "file-upload-init",
+    FolderContentsRequest: "folder-contents-request",
+    FolderContentsResponse: "folder-contents-response",
+    GetPeerAddress: "peer-address",
+    GetUserStats: "user-stats",
+    GetUserStatus: "user-status",
+    GlobalRecommendations: "global-recommendations",
+    ItemRecommendations: "item-recommendations",
+    ItemSimilarUsers: "item-similar-users",
+    JoinRoom: "join-room",
+    LeaveRoom: "leave-room",
+    Login: "server-login",
+    MessageUser: "message-user",
+    PlaceInQueueRequest: "place-in-queue-request",
+    PlaceInQueueResponse: "place-in-queue-response",
+    PrivateRoomAddOperator: "private-room-add-operator",
+    PrivateRoomAddUser: "private-room-add-user",
+    PrivateRoomAdded: "private-room-added",
+    PrivateRoomDisown: "private-room-disown",
+    PrivateRoomOperatorAdded: "private-room-operator-added",
+    PrivateRoomOperatorRemoved: "private-room-operator-removed",
+    PrivateRoomOwned: "private-room-owned",
+    PrivateRoomRemoveOperator: "private-room-remove-operator",
+    PrivateRoomRemoveUser: "private-room-remove-user",
+    PrivateRoomRemoved: "private-room-removed",
+    PrivateRoomToggle: "private-room-toggle",
+    PrivateRoomUsers: "private-room-users",
+    PrivilegedUsers: "privileged-users",
+    PublicRoomMessage: "public-room-message",
+    QueueUpload: "queue-upload",
+    Recommendations: "recommendations",
+    RoomList: "room-list",
+    RoomSearch: "server-search-request",
+    RoomTickerAdd: "ticker-add",
+    RoomTickerRemove: "ticker-remove",
+    RoomTickerState: "ticker-set",
+    SayChatroom: "say-chat-room",
+    SharedFileListRequest: "shared-file-list-request",
+    SharedFileListResponse: "shared-file-list-response",
+    SimilarUsers: "similar-users",
+    TransferRequest: "transfer-request",
+    TransferResponse: "transfer-response",
+    UploadDenied: "upload-denied",
+    UploadFailed: "upload-failed",
+    UploadFile: "file-upload-progress",
+    UserInfoRequest: "user-info-request",
+    UserInfoResponse: "user-info-response",
+    UserInterests: "user-interests",
+    UserJoinedRoom: "user-joined-room",
+    UserLeftRoom: "user-left-room",
+    UserSearch: "server-search-request",
+    WishlistInterval: "set-wishlist-interval"
+}
 
 
 """

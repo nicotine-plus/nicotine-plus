@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import sys
 import time
 
@@ -136,7 +137,9 @@ class Notifications:
             notification.set_body(message)
             notification.set_priority(priority)
 
-            if action:
+            # Unity doesn't support default click actions, and replaces the notification with a dialog.
+            # Disable actions to prevent this from happening.
+            if action and os.environ.get("XDG_SESSION_DESKTOP") != "unity":
                 if action_target:
                     notification.set_default_action_and_target(action, GLib.Variant("s", action_target))
                 else:

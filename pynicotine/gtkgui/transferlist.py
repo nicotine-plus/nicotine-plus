@@ -376,7 +376,7 @@ class TransferList:
         speed = 0.0
         total_size = current_byte_offset = 0
         elapsed = 0
-        salient_status = ""
+        parent_status = "Finished"
 
         iterator = self.transfersmodel.iter_children(initer)
 
@@ -392,11 +392,13 @@ class TransferList:
             status = transfer.status
 
             if status == "Transferring":
+                # "Transferring" status always has the highest priority
+                parent_status = status
                 speed += transfer.speed or 0
-                salient_status = status
 
-            elif salient_status in self.deprioritized_statuses:
-                salient_status = status
+            elif parent_status in self.deprioritized_statuses and status != "Finished":
+                # "Finished" status always has the lowest priority
+                parent_status = status
 
             if status == "Filtered":
                 # We don't want to count filtered files when calculating the progress
@@ -413,9 +415,9 @@ class TransferList:
         total_size = min(total_size, UINT64_LIMIT)
         current_byte_offset = min(current_byte_offset, UINT64_LIMIT)
 
-        if transfer.status != salient_status:
-            self.transfersmodel.set_value(initer, 3, self.translate_status(salient_status))
-            transfer.status = salient_status
+        if transfer.status != parent_status:
+            self.transfersmodel.set_value(initer, 3, self.translate_status(parent_status))
+            transfer.status = parent_status
 
         if transfer.speed != speed:
             self.transfersmodel.set_value(initer, 7, self.get_hspeed(speed))

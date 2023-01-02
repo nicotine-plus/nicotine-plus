@@ -18,7 +18,9 @@
 
 from pynicotine.config import config
 from pynicotine.core import core
+from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.popover import Popover
+from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.gtkgui.widgets.ui import UserInterface
 
 
@@ -45,6 +47,9 @@ class TransferSpeeds(Popover):
 
         menu_button = getattr(window, f"{transfer_type}_status_button")
         menu_button.set_popover(self.popover)
+
+        if GTK_API_VERSION >= 4:
+            add_css_class(widget=menu_button.get_first_child(), css_class="flat")
 
     def on_active_limit_toggled(self, *_args):
 

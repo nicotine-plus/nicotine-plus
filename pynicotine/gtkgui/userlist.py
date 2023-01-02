@@ -231,7 +231,7 @@ class UserList:
             0, 0, 0,
             time_from_epoch,
             str(user_data.country)
-        ])
+        ], select_row=core.userlist.allow_saving_buddies)
 
         self.update_visible()
 
@@ -322,6 +322,7 @@ class UserList:
 
         self.window.add_buddy_entry.set_text("")
         core.userlist.add_buddy(username)
+        self.list_view.grab_focus()
 
     def on_remove_buddy(self, *_args):
         core.userlist.remove_buddy(self.get_selected_username())
@@ -394,7 +395,7 @@ class UserList:
 
         return False
 
-    def server_disconnect(self, _msg):
+    def server_disconnect(self, *_args):
 
         for iterator in self.list_view.get_all_rows():
             self.list_view.set_row_value(iterator, 0, USER_STATUS_ICON_NAMES[UserStatus.OFFLINE])

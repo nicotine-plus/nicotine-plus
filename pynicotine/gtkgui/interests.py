@@ -182,7 +182,7 @@ class Interests:
 
         self.populate_recommendations()
 
-    def server_disconnect(self, _msg):
+    def server_disconnect(self, *_args):
         self.recommendations_button.set_sensitive(False)
         self.similar_users_button.set_sensitive(False)
 
@@ -207,7 +207,7 @@ class Interests:
         iterator = self.likes_list_view.iterators.get(item)
 
         if iterator is None:
-            self.likes_list_view.add_row([item], select_row=False)
+            self.likes_list_view.add_row([item])
 
     def add_thing_i_hate(self, item):
 
@@ -219,7 +219,7 @@ class Interests:
         iterator = self.dislikes_list_view.iterators.get(item)
 
         if iterator is None:
-            self.dislikes_list_view.add_row([item], select_row=False)
+            self.dislikes_list_view.add_row([item])
 
     def remove_thing_i_like(self, item):
 

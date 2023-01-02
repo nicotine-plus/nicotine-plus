@@ -36,7 +36,6 @@ EVENT_NAMES = set([
     "privileged-users",
     "quit",
     "remove-privileged-user",
-    "scheduler-callback",
     "server-login",
     "server-disconnect",
     "server-timeout",
@@ -49,6 +48,7 @@ EVENT_NAMES = set([
     "shares-unavailable",
     "start",
     "thread-callback",
+    "thread-event",
     "user-country",
     "user-stats",
     "user-status",
@@ -213,6 +213,9 @@ class Events:
     def emit(self, event_name, *args, **kwargs):
         for function in self._callbacks.get(event_name, []):
             function(*args, **kwargs)
+
+    def emit_main_thread(self, event_name, *args, **kwargs):
+        self.emit("thread-event", event_name, *args, **kwargs)
 
 
 events = Events()
