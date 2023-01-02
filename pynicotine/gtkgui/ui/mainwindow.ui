@@ -958,7 +958,7 @@
                         </child>
                       </object>
                     </child>
-                    <!-- User Info -->
+                    <!-- User Profile -->
                     <child>
                       <object class="GtkBox" id="userinfo_page">
                         <property name="visible">False</property>
@@ -997,8 +997,8 @@
                                                 <property name="placeholder-text" translatable="yes">Username…</property>
                                                 <property name="tooltip-text" translatable="yes">Enter the username of the person whose information you want to see</property>
                                                 <property name="primary-icon-name">avatar-default-symbolic</property>
-                                                <signal name="activate" handler="on_get_user_info"/>
-                                                <signal name="icon-press" handler="on_get_user_info"/>
+                                                <signal name="activate" handler="on_show_user_profile"/>
+                                                <signal name="icon-press" handler="on_show_user_profile"/>
                                               </object>
                                             </child>
                                             <style>
@@ -1014,9 +1014,9 @@
                                         <property name="spacing">6</property>
                                         <property name="valign">center</property>
                                         <child>
-                                          <object class="GtkButton" id="_update_info_button">
+                                          <object class="GtkButton" id="_update_profile_button">
                                             <property name="visible">True</property>
-                                            <property name="action-name">app.update-user-info</property>
+                                            <property name="action-name">app.update-user-profile</property>
                                             <child>
                                               <object class="GtkBox">
                                                 <property name="visible">True</property>
@@ -1030,9 +1030,9 @@
                                                 <child>
                                                   <object class="GtkLabel">
                                                     <property name="visible">True</property>
-                                                    <property name="label" translatable="yes">Update I_nfo</property>
+                                                    <property name="label" translatable="yes">_Update Profile</property>
                                                     <property name="use-underline">True</property>
-                                                    <property name="mnemonic-widget">_update_info_button</property>
+                                                    <property name="mnemonic-widget">_update_profile_button</property>
                                                   </object>
                                                 </child>
                                               </object>
@@ -1085,7 +1085,7 @@
                                         <child>
                                           <object class="GtkLabel">
                                             <property name="visible">True</property>
-                                            <property name="label" translatable="yes">User Info</property>
+                                            <property name="label" translatable="yes">User Profiles</property>
                                             <property name="justify">center</property>
                                             <property name="wrap">True</property>
                                             <style>
