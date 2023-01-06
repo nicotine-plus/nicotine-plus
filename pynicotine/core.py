@@ -464,8 +464,8 @@ class Core:
         days = hours // 24
 
         if msg.seconds == 0:
-            log.add(_("You have no Soulseek privileges. With privileges your downloads "
-                      "will always be first in the download queue."))
+            log.add(_("You have no Soulseek privileges. While your privileges are active, your downloads "
+                      "will be queued ahead of those of non-privileged users."))
         else:
             log.add(_("%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of "
                       "Soulseek privileges left"), {
