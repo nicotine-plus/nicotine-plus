@@ -9,7 +9,7 @@
  * Fixed an issue where finished zero-byte file downloads displayed a "Connection timeout" error
  * Fixed an issue where Nicotine+ did not reconnect to the server on connection failure in some cases
  * Fixed a rare crash when scanning shares
- * Windows: Fixed a crash when sending Nicotine+ to the background from the confirmation dialog
+ * Windows: Fixed a crash when sending Nicotine+ to the background from the quit confirmation dialog
  * Windows: Fixed an issue viewing personal user info page
 
 ### Issues closed on GitHub
