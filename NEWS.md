@@ -10,7 +10,7 @@
  * Fixed an issue where Nicotine+ did not reconnect to the server on connection failure in some cases
  * Fixed a rare crash when scanning shares
  * Windows: Fixed a crash when sending Nicotine+ to the background from the quit confirmation dialog
- * Windows: Fixed an issue viewing personal user info page
+ * Windows: Fixed an issue that prevented viewing own personal user info page
 
 ### Issues closed on GitHub
 
