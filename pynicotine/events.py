@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-EVENT_NAMES = set([
+EVENT_NAMES = {
     # General
     "add-privileged-user",
     "admin-message",
@@ -189,7 +189,7 @@ EVENT_NAMES = set([
     "user-info-response",
     "user-info-show-user",
     "user-interests",
-])
+}
 
 
 class Events:
