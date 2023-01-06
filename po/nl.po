@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2022-12-28 18:23+0000\n"
+"PO-Revision-Date: 2023-01-06 10:02+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -251,7 +251,7 @@ msgstr "Uw wachtwoord is gewijzigd"
 
 #: pynicotine/core.py:487
 msgid "Password Changed"
-msgstr "Paswoord gewijzigd"
+msgstr "Wachtwoord gewijzigd"
 
 #: pynicotine/geoip.py:24
 msgid "Andorra"
