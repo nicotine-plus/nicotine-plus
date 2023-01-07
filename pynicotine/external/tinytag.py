@@ -74,6 +74,8 @@ def _bytes_to_int(b):
 
 
 class TinyTag(object):
+    _extension_mapping = None
+
     def __init__(self, filehandler=None, filesize=0, ignore_errors=False):
         # This is required for compatibility between python2 and python3
         # in python2 there is a difference between `str` and `unicode`
@@ -109,7 +111,6 @@ class TinyTag(object):
         self._load_image = False
         self._image_data = None
         self._ignore_errors = ignore_errors
-        self._mapping = None
 
     def as_dict(self):
         return {k: v for k, v in self.__dict__.items() if not k.startswith('_')}
@@ -121,10 +122,10 @@ class TinyTag(object):
     def get_image(self):
         return self._image_data
 
-    def get(self, filename, size, tags=True, duration=True, image=False, ignore_errors=False, encoding=None):
-        parser_class = None
-        if self._mapping is None:
-            self._mapping = {
+    def get(cls, filename, size, tags=True, duration=True, image=False, ignore_errors=False, encoding=None):
+        filename_lower = filename.lower()
+        if not cls._extension_mapping:
+            cls._extension_mapping = {
                 (b'.mp1', b'.mp2', b'.mp3'): ID3,
                 (b'.oga', b'.ogg', b'.opus'): Ogg,
                 (b'.wav',): Wave,
@@ -133,18 +134,17 @@ class TinyTag(object):
                 (b'.m4b', b'.m4a', b'.m4r', b'.m4v', b'.mp4'): MP4,
                 (b'.aiff', b'.aifc', b'.aif', b'.afc'): Aiff
             }
-        for ext, tagclass in self._mapping.items():
-            if filename.lower().endswith(ext):
-                parser_class = tagclass
-        if parser_class is None:
-            return None
-        with io.open(filename, 'rb') as af:
-            tag = parser_class(af, size, ignore_errors=ignore_errors)
-            tag._filename = filename
-            tag._default_encoding = encoding
-            tag.load(tags=tags, duration=duration, image=image)
-            tag.extra = dict(tag.extra)  # turn default dict into dict so that it can throw KeyError
-            return tag
+        for ext, tagclass in cls._extension_mapping.items():
+            if not filename_lower.endswith(ext):
+                continue
+            with io.open(filename, 'rb') as af:
+                tag = tagclass(af, size, ignore_errors=ignore_errors)
+                tag._filename = filename
+                tag._default_encoding = encoding
+                tag.load(tags=tags, duration=duration, image=image)
+                tag.extra = dict(tag.extra)  # turn default dict into dict so that it can throw KeyError
+                return tag
+        return None
 
     def __str__(self):
         return json.dumps(OrderedDict(sorted(self.as_dict().items())))

@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import sys
 import time
 
 from pynicotine import slskmessages
@@ -260,11 +261,11 @@ class Logger:
 
         except Exception as error:
             try:
-                print(f"Log callback failed: {level} {msg}\n{error}")
+                print(f"Log callback failed: {level} {msg}\n{error}", flush=True)
 
             except OSError:
-                # stdout is gone
-                pass
+                # stdout is gone, prevent future errors
+                sys.stdout = open(os.devnull, "w", encoding="utf-8")  # pylint: disable=consider-using-with
 
     def add_download(self, msg, msg_args=None):
         self.log_transfer(msg, msg_args)

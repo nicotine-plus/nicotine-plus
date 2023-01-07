@@ -41,7 +41,7 @@ jobs:
       options: --privileged
     steps:
     - uses: actions/checkout@v3
-    - uses: bilelmoussaoui/flatpak-github-actions/flatpak-builder@v4
+    - uses: flatpak/flatpak-github-actions/flatpak-builder@v5
       with:
         bundle: flatpak-package.flatpak
         manifest-path: packaging/flatpak/org.nicotine_plus.Nicotine.json
@@ -52,17 +52,16 @@ jobs:
     runs-on: windows-2019
     strategy:
       matrix:
-        include: [
-          { msystem: MINGW64, arch: x86_64 },
-          { msystem: MINGW32, arch: i686 },
-        ]
+        include:
+          - { msystem: MINGW64, arch: x86_64, gtk: 3, libadwaita: 0 }
+          - { msystem: MINGW32, arch: i686, gtk: 3, libadwaita: 0 }
     defaults:
       run:
         shell: msys2 {0}
     env:
       ARCH: ${{ matrix.arch }}
-      NICOTINE_GTK_VERSION: 3
-      NICOTINE_LIBADWAITA: 0
+      NICOTINE_GTK_VERSION: ${{ matrix.gtk }}
+      NICOTINE_LIBADWAITA: ${{ matrix.libadwaita }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -73,18 +72,22 @@ jobs:
         uses: msys2/setup-msys2@v2
         with:
           msystem: ${{ matrix.msystem }}
-          update: true
+          release: false
+          install: >-
+            mingw-w64-${{ matrix.arch }}-gettext
+            mingw-w64-${{ matrix.arch }}-gtk${{ matrix.gtk }}
+            mingw-w64-${{ matrix.arch }}-python-chardet
+            mingw-w64-${{ matrix.arch }}-python-cx-freeze
+            mingw-w64-${{ matrix.arch }}-python-flake8
+            mingw-w64-${{ matrix.arch }}-python-pip
+            mingw-w64-${{ matrix.arch }}-python-pylint
+            mingw-w64-${{ matrix.arch }}-python-gobject
 
-      - name: Install build dependencies
-        run: |
-          sed -i s'/SigLevel.*/SigLevel = Never/'g /etc/pacman.conf
-          pacman --noconfirm -S --needed mingw-w64-$ARCH-python
-          python3 packaging/windows/dependencies_core.py
-          python3 packaging/windows/dependencies_packaging.py
+      - name: Install additional dependencies
+        run: python3 packaging/windows/dependencies.py
 
       - name: Freeze application
-        run: |
-          python3 packaging/windows/setup.py bdist_msi
+        run: python3 packaging/windows/setup.py bdist_msi
 
       - name: Archive installer artifacts
         uses: actions/upload-artifact@v3

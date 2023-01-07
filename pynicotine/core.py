@@ -189,10 +189,11 @@ class Core:
         timestamp = time.strftime(timestamp_format)
 
         try:
-            print(f"[{timestamp}] {msg}")
+            print(f"[{timestamp}] {msg}", flush=True)
+
         except OSError:
-            # stdout is gone
-            pass
+            # stdout is gone, prevent future errors
+            sys.stdout = open(os.devnull, "w", encoding="utf-8")  # pylint: disable=consider-using-with
 
     """ Actions """
 

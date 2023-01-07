@@ -112,7 +112,7 @@ class TransfersTest(TestCase):
 
         self.assertEqual(transfer.user, "newuser")
         self.assertEqual(transfer.filename, "Hello\\Path\\File.mp3")
-        self.assertEqual(transfer.path, "")
+        self.assertEqual(transfer.path, config.data_dir)
 
     def test_push_upload(self):
         """ Verify that new uploads are prepended to the list """
@@ -130,14 +130,13 @@ class TransfersTest(TestCase):
         The basename can be shorter than 255 bytes when a truncated multi-byte character is discarded. """
 
         user = "abc"
-        incomplete_folder_path = "incomplete_downloads"
         finished_folder_path = "/path/to/somewhere/downloads"
 
         # Short file extension
         virtual_path = ("Music\\Test\\片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片"
                         "片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片"
                         "片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片.mp3")
-        incomplete_file_path = core.transfers.get_incomplete_file_path(incomplete_folder_path, user, virtual_path)
+        incomplete_file_path = core.transfers.get_incomplete_download_file_path(user, virtual_path)
         incomplete_basename = os.path.basename(incomplete_file_path)
 
         self.assertLess(
@@ -151,7 +150,7 @@ class TransfersTest(TestCase):
         virtual_path = ("Music\\Test\\abc123456.片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片"
                         "片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片"
                         "片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片")
-        incomplete_file_path = core.transfers.get_incomplete_file_path(incomplete_folder_path, user, virtual_path)
+        incomplete_file_path = core.transfers.get_incomplete_download_file_path(user, virtual_path)
         incomplete_basename = os.path.basename(incomplete_file_path)
 
         self.assertLess(
@@ -165,7 +164,7 @@ class TransfersTest(TestCase):
         basename = ("片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片"
                     "片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片"
                     "片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片.mp3")
-        _folder_path, finished_basename = core.transfers.get_download_destination(user, basename, finished_folder_path)
+        finished_basename = core.transfers.get_download_basename(basename, finished_folder_path)
 
         self.assertLess(
             len(finished_basename.encode('utf-8')),
@@ -177,7 +176,7 @@ class TransfersTest(TestCase):
         basename = ("abc123456.片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片"
                     "片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片"
                     "片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片")
-        _folder_path, finished_basename = core.transfers.get_download_destination(user, basename, finished_folder_path)
+        finished_basename = core.transfers.get_download_basename(basename, finished_folder_path)
 
         self.assertLess(
             len(finished_basename.encode('utf-8')),

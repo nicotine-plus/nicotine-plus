@@ -104,5 +104,6 @@ functionality while keeping current with the Soulseek protocol.""",
         ],
         python_requires=">=3.6",
         install_requires=["PyGObject>=3.22"],
+        extras_require={"test": ["flake8", "pylint"]},
         cmdclass={"build_py": BuildPyCommand}
     )
