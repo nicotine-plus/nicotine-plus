@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016-2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
@@ -952,7 +952,7 @@ class MainWindow(Window):
             ("downloads", _("Downloads"), "document-save-symbolic"),
             ("uploads", _("Uploads"), "emblem-shared-symbolic"),
             ("userbrowse", _("Browse Shares"), "folder-symbolic"),
-            ("userinfo", _("User Info"), "avatar-default-symbolic"),
+            ("userinfo", _("User Profiles"), "avatar-default-symbolic"),
             ("private", _("Private Chat"), "mail-unread-symbolic"),
             ("userlist", _("Buddies"), "contact-new-symbolic"),
             ("chatrooms", _("Chat Rooms"), "user-available-symbolic"),
@@ -1200,8 +1200,8 @@ class MainWindow(Window):
 
     """ User Info """
 
-    def on_get_user_info(self, *_args):
-        self.userinfo.on_get_user_info()
+    def on_show_user_profile(self, *_args):
+        self.userinfo.on_show_user_profile()
 
     """ Shares """
 

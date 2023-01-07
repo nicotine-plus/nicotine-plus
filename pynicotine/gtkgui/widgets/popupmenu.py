@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2009 quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
@@ -346,11 +346,11 @@ class UserPopupMenu(PopupMenu):
             ("", None)
         )
 
+        if page != "userinfo":
+            self.add_items(("#" + _("View User _Profile"), self.on_user_profile))
+
         if page != "privatechat":
             self.add_items(("#" + _("Send M_essage"), self.on_send_message))
-
-        if page != "userinfo":
-            self.add_items(("#" + _("Show User I_nfo"), self.on_get_user_info))
 
         if page != "userbrowse":
             self.add_items(("#" + _("_Browse Files"), self.on_browse_user))
@@ -453,7 +453,7 @@ class UserPopupMenu(PopupMenu):
     def on_show_ip_address(self, *_args):
         core.request_ip_address(self.user)
 
-    def on_get_user_info(self, *_args):
+    def on_user_profile(self, *_args):
         core.userinfo.show_user(self.user)
 
     def on_browse_user(self, *_args):

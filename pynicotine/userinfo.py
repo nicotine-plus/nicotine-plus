@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2021-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2021-2023 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -118,7 +118,7 @@ class UserInfo:
         self.requested_info_times[user] = request_time
 
         if core.login_username != user:
-            log.add(_("User %(user)s is reading your user info"), {'user': user})
+            log.add(_("User %(user)s is viewing your profile"), {'user': user})
 
         status, reason = core.network_filter.check_user(user, ip_address)
 

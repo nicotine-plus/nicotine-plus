@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -320,8 +320,8 @@ class Application:
         action.connect("activate", self.on_configure_ignored_users)
         self.add_action(action)
 
-        action = Gio.SimpleAction(name="update-user-info")
-        action.connect("activate", self.on_update_user_info)
+        action = Gio.SimpleAction(name="update-user-profile")
+        action.connect("activate", self.on_update_user_profile)
         self.add_action(action)
 
         # Notifications
@@ -733,8 +733,8 @@ class Application:
     def on_configure_uploads(self, *_args):
         self.on_preferences(page_id="uploads")
 
-    def on_update_user_info(self, *_args):
-        self.on_preferences(page_id="user-info")
+    def on_update_user_profile(self, *_args):
+        self.on_preferences(page_id="user-profile")
 
     def on_configure_ignored_users(self, *_args):
         self.on_preferences(page_id="ignored-users")

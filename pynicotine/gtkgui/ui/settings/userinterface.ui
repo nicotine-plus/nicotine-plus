@@ -239,7 +239,7 @@
                             <property name="can-focus">False</property>
                             <child>
                               <object class="GtkCheckButton" id="EnableUserInfoTab">
-                                <property name="label" translatable="yes">User Info</property>
+                                <property name="label" translatable="yes">User Profiles</property>
                                 <property name="visible">True</property>
                               </object>
                             </child>

@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -204,8 +204,8 @@ Inactive
 
 >> <b>English</b>
    - slook (2021–2023)
-   - Han Boetes (hboetes) (2021–2022)
-   - Mat (mathiascode) (2020–2022)
+   - Han Boetes (hboetes) (2021–2023)
+   - Mat (mathiascode) (2020–2023)
    - Michael Labouebe (gfarmerfr) (2016)
    - daelstorm (2004–2009)
    - Ingmar K. Steen (Hyriand) (2003–2004)
