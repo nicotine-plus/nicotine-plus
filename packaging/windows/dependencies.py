@@ -21,7 +21,7 @@ import os
 import subprocess
 import sys
 
-""" Script used to install core dependencies in MinGW """
+""" Script used to install dependencies in MinGW """
 
 
 def install_pacman():
@@ -36,6 +36,7 @@ def install_pacman():
     packages = [prefix + "gettext",
                 prefix + "gtk" + gtk_version,
                 prefix + "python-chardet",
+                prefix + "python-cx-freeze",
                 prefix + "python-flake8",
                 prefix + "python-pip",
                 prefix + "python-pylint",

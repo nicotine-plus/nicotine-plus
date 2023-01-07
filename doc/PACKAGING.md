@@ -69,8 +69,7 @@ Install dependencies:
 export NICOTINE_GTK_VERSION=3
 export ARCH=x86_64
 pacman --noconfirm -S --needed mingw-w64-$ARCH-python
-python3 packaging/windows/dependencies_core.py
-python3 packaging/windows/dependencies_packaging.py
+python3 packaging/windows/dependencies.py
 ```
 
 Build the application:

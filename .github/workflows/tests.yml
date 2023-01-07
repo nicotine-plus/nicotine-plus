@@ -69,15 +69,17 @@ jobs:
 
   windows:
     runs-on: windows-latest
+    strategy:
+      matrix:
+        include:
+          - { msystem: MINGW64, arch: x86_64, gtk: 3 }
+          - { msystem: MINGW64, arch: x86_64, gtk: 4 }
     defaults:
       run:
         shell: msys2 {0}
-    strategy:
-      matrix:
-        gtk: [3, 4]
     env:
+      ARCH: ${{ matrix.arch }}
       NICOTINE_GTK_VERSION: ${{ matrix.gtk }}
-      GSK_RENDERER: cairo
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -87,13 +89,20 @@ jobs:
       - name: Setup msys2
         uses: msys2/setup-msys2@v2
         with:
-          msystem: MINGW64
-          update: true
+          msystem: ${{ matrix.msystem }}
+          release: false
+          install: >-
+            mingw-w64-${{ matrix.arch }}-gettext
+            mingw-w64-${{ matrix.arch }}-gtk${{ matrix.gtk }}
+            mingw-w64-${{ matrix.arch }}-python-chardet
+            mingw-w64-${{ matrix.arch }}-python-cx-freeze
+            mingw-w64-${{ matrix.arch }}-python-flake8
+            mingw-w64-${{ matrix.arch }}-python-pip
+            mingw-w64-${{ matrix.arch }}-python-pylint
+            mingw-w64-${{ matrix.arch }}-python-gobject
 
-      - name: Install dependencies
-        run: |
-          pacman --noconfirm -S --needed mingw-w64-x86_64-python
-          python3 packaging/windows/dependencies_core.py
+      - name: Install additional dependencies
+        run: python3 packaging/windows/dependencies.py
 
       - name: Flake8 linter
         run: python3 -m flake8
