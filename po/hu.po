@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2022-12-29 02:35+0000\n"
+"PO-Revision-Date: 2023-01-01 19:40+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -372,7 +372,7 @@ msgstr "Bolívia"
 
 #: pynicotine/geoip.py:53
 msgid "Bonaire, Sint Eustatius and Saba"
-msgstr "Bonaire, Sint Eustatius and Saba"
+msgstr "Bonaire, St. Eustatius és Saba"
 
 #: pynicotine/geoip.py:54
 msgid "Brazil"
@@ -483,7 +483,6 @@ msgid "Germany"
 msgstr "Németország"
 
 #: pynicotine/geoip.py:81
-#, fuzzy
 msgid "Djibouti"
 msgstr "Dzsibuti"
 
@@ -1141,7 +1140,6 @@ msgid "Sweden"
 msgstr "Svédország"
 
 #: pynicotine/geoip.py:222
-#, fuzzy
 msgid "Singapore"
 msgstr "Szingapúr"
 
@@ -4896,7 +4894,6 @@ msgstr ""
 "finomítására szolgálnak."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:48
-#, fuzzy
 msgid ""
 "Each list of search results has its own filter which can be revealed by "
 "toggling the Result Filters button. A filter is made up of multiple fields, "
@@ -4904,15 +4901,11 @@ msgid ""
 "Filtering is applied immediately to results already received, and also to "
 "those yet to arrive."
 msgstr ""
-"A keresési eredmények minden egyes listája saját szűrővel rendelkezik, amely "
-"az Eredményszűrők gomb bekapcsolásával jeleníthető meg. Egy szűrő több "
+"Minden keresési eredménylistának saját szűrője van, amelyet az "
+"Eredményszűrők gomb megnyomásával lehet megjeleníteni. Egy szűrő több "
 "mezőből áll, amelyek mindegyike akkor kerül alkalmazásra, ha bármelyik "
-"mezőben megnyomja az Entert. A szűrés a már beérkezett és a még be nem "
-"érkezett találatokra is azonnal alkalmazható. A teljes találatok újbóli "
-"megtekintéséhez egyszerűen törölje a szűrőt az összes kifejezésről, és "
-"alkalmazza újra. Ahogy a neve is mutatja, a keresési eredmények szűrője nem "
-"tudja kibővíteni az eredeti keresést, csak leszűkíteni tudja azt. A keresési "
-"feltételek kiszélesítéséhez vagy módosításához végezzen új keresést."
+"mezőjében lenyomja az Enter billentyűt. A szűrést azonnal alkalmazza a már "
+"beérkezett és a még beérkező eredményekre is."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:57
 msgid ""
@@ -4925,19 +4918,17 @@ msgstr ""
 "bővítéséhez vagy módosításához hajtson végre új keresést."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:66
-#, fuzzy
 msgid "Result Filter Usage"
-msgstr "Szűrési eredmélyek"
+msgstr "Keresési eredményszűrő használata"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:78
-#, fuzzy
 msgid "Include Text"
-msgstr "Szöveg beillesztése"
+msgstr "Tartalmazza a szöveget"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:95
-#, fuzzy
 msgid "Files, folders and usernames containing this text will be shown."
-msgstr "Az ezt a szöveget tartalmazó fájlok és mappák megjelennek."
+msgstr ""
+"Ezt a szöveget tartalmazó fájlok, mappák és felhasználónevek jelennek meg."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:105
 #, fuzzy
@@ -4960,41 +4951,36 @@ msgstr ""
 "    Példa: Spears|Brittany|My beautiful album|hello"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:127
-#, fuzzy
 msgid "Exclude Text"
-msgstr "Szöveg kizárása"
+msgstr "Nem tartalmazza a szöveget"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:139
-#, fuzzy
 msgid ""
 "As above, but files, folders and usernames are filtered out if the text "
 "matches."
 msgstr ""
-"Mint fent, de a fájlok és mappák kiszűrésre kerülnek, ha a szöveg egyezik."
+"Mint a fenti, de a fájlok, mappák és felhasználónevek kiszűrésre kerülnek, "
+"ha a szöveg egyezik."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:148
-#, fuzzy
 msgid "File Type"
-msgstr "Fájltípusok"
+msgstr "Fájltípus"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:160
-#, fuzzy
 msgid "Filters files based upon their file extension."
-msgstr "A fájlok szűrése a fájlkiterjesztésük alapján."
+msgstr "Fájlok szűrése a fájlkiterjesztésük alapján."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:170
-#, fuzzy
 msgid ""
 "Multiple file extensions can be specified, which in turn will broaden the "
 "list of results.\n"
 "    Example: flac|wav|ape"
 msgstr ""
-"Több fájlkiterjesztés is megadható, ami viszont bővíti a találatok "
-"listáját.\n"
-"    Példa: flac|wav|ape"
+"Több fájlkiterjesztés is megadható, ami viszont bővíti a találatok listáját."
+"\n"
+"    Például: flac|wav|ape"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:181
-#, fuzzy
 msgid ""
 "It is also possible to invert the filter, specifying file extensions you "
 "don't want in your results.\n"
@@ -5002,55 +4988,49 @@ msgid ""
 msgstr ""
 "Lehetőség van a szűrő megfordítására is, megadva azokat a "
 "fájlkiterjesztéseket, amelyeket nem szeretne az eredményekben látni.\n"
-"    Példa: !mp3|!jpg"
+"    Például: !mp3|!jpg"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:191
-#, fuzzy
 msgid "File Size"
-msgstr "Fájl mérete"
+msgstr "Fájlméret"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:208
-#, fuzzy
 msgid "Filters files based upon their file size."
-msgstr "A fájlok szűrése a fájlméretük alapján."
+msgstr "Fájlok szűrése a fájlméretük alapján."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:218
-#, fuzzy
 msgid ""
 "By default, the unit used is bytes and files greater than or equal to the "
 "value will be matched."
 msgstr ""
-"Alapértelmezés szerint a használt egység bájt, és az értéknél nagyobb vagy "
-"azzal megegyező fájlokat egyeztetni fogja."
+"Alapértelmezés szerint a használt mértékegység bájt és az értéknél nagyobb "
+"vagy azzal egyenlő fájlok illeszkednek."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:228
-#, fuzzy
 msgid ""
 "Append b, k, m, or g (alternatively kib, mib, or gib) to specify byte, "
 "kibibyte, mebibyte, or gibibyte units:\n"
 "    20m to show files larger than 20 MiB (mebibytes)."
 msgstr ""
-"A b, k, m vagy g (vagy kib, mib vagy gib) toldalékkal adhatja meg a bájt, "
-"kibibájt, mebájt vagy gibájt egységeket:\n"
-"    <1024k 1024 kibibájt (azaz 1 mebibájt) vagy annál kisebb fájlokat talál."
+"Kezdő betűjükkel, b, k, m és g (vagy kib, mib vagy gib) toldalékkal adhatja "
+"meg a bájt, kilóbájt, megabájt vagy gigabájt egységeket:\n"
+"    20 m a 20 MiB-nál (megabájt) nagyobb fájlok megjelenítéséhez."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:239
-#, fuzzy
 msgid ""
 "Prepend = to a value to specify an exact match:\n"
 "    =1024 only matches files that are 1 KiB (kibibyte)."
 msgstr ""
-"A pontos egyezés megadásához az = érték elé kell állítani:\n"
-"    =1024 csak az 1024 bájt méretű (azaz 1 kibibájt) fájlokra illik."
+"Az = (egyenlő) jelet a pontos egyezés megadásához az érték elé kell tenni:\n"
+"    =1024 csak az 1KiB méretű (kilóbájt) fájlokra illik."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:250
-#, fuzzy
 msgid ""
 "Prepend ! to a value to exclude files of a specific size:\n"
 "    !30.5m to hide files that are 30.5 MiB (mebibytes)."
 msgstr ""
-"A pontos egyezés megadásához az = érték elé kell állítani:\n"
-"    =1024 csak az 1024 bájt méretű (azaz 1 kibibájt) fájlokra illik."
+"! elöl, az adott méretű fájlok kizárásához:\n"
+"    !30,5 m a 30,5 MiB (megabájt) méretű fájlok elrejtéséhez."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:261
 msgid ""
@@ -5064,25 +5044,23 @@ msgstr ""
 "    de kisebb mint 1 GiB (gigabájt) fájlok megjelenítése."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:273
-#, fuzzy
 msgid ""
 "The better-known variants kb, mb, and gb can also be used for kilobyte, "
 "megabyte, and gigabyte units."
 msgstr ""
-"Az egyszerűség kedvéért a legismertebb kilo-, mega- és gigabájt egységek "
-"helyett a kb, mb és gb változatok is használhatók."
+"A kb, mb és gb ismertebb változatai, a kilóbájt, megabájt és gigabájt "
+"egységek is használhatók."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:301
-#, fuzzy
 msgid "Filters files based upon their bitrate."
-msgstr "A fájlok szűrése a bitráta alapján."
+msgstr "Fájlok szűrése a bitrátájuk alapján."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:311
 msgid ""
 "Values must be entered as numeric digits only. The unit is always Kb/s "
 "(Kilobits per second)."
 msgstr ""
-"Az értékeket számjegykkel kell megadni. A mértékegység mindig Kb/s (Kilobit/"
+"Az értékeket számjegykkel kell megadni. A mértékegység mindig Kb/s (Kilóbit/"
 "s)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:321
@@ -5092,15 +5070,14 @@ msgid ""
 "    >256|<1411 to show files with a bitrate of at least 256 Kb/s\n"
 "    with a maximum bitrate of 1411 Kb/s."
 msgstr ""
-"A fájlmérethez (fent) hasonlóan az =, !, < és > operátorok használhatók, és "
+"A fájlmérethez (fent) hasonlóan használhatók az operátorok =, !, < és > és "
 "több feltétel is megadható a „|” csővel:\n"
 "    >256|<1411 , a legalább 256 Kb/s bitsebességű\n"
 "    és 1411 Kb/s maximális bitsebességű fájlok megjelenítése."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:352
-#, fuzzy
 msgid "Filters files based upon their duration."
-msgstr "A fájlok szűrése a bitráta alapján."
+msgstr "Fájlok szűrése a bitrátájuk alapján."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:362
 msgid ""
@@ -5108,7 +5085,7 @@ msgid ""
 "matched, unless an operator (=, !, <, or >) is used."
 msgstr ""
 "Alapértelmezés szerint a megadott időtartamnál hosszabb vagy azzal megegyező "
-"fájlok illeszkednek, kivéve, ha (=, !, < vagy > operátort használ."
+"fájlok illeszkednek, kivéve ha operátort (=, !, <, vagy >) használ."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:372
 msgid ""
@@ -5161,18 +5138,16 @@ msgstr ""
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:440
 #: pynicotine/gtkgui/ui/search.ui:377
 #: pynicotine/gtkgui/ui/settings/search.ui:371
-#, fuzzy
 msgid "Free Slot"
-msgstr "Szabad szál"
+msgstr "Szabad feltöltési szál"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:452
-#, fuzzy
 msgid ""
 "Show only those results from users which have at least one upload slot free, "
 "i.e. files that are available immediately."
 msgstr ""
-"Csak olyan felhasználók eredményeinek megjelenítése, akiknek legalább egy "
-"feltöltési helyük van. Ez a szűrő azonnal alkalmazásra kerül."
+"Csak azokat a találatokat jelenítse meg a felhasználóktól, ahol legalább egy "
+"feltöltési szál szabad, azaz olyan fájlokat amelyek azonnal elérhetőek."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:473
 msgid "To view the full results again, simply clear all active filters."
@@ -5187,7 +5162,6 @@ msgstr "További szűrési lehetőségekért lásd a beállításokat."
 
 #: pynicotine/gtkgui/ui/popovers/uploadspeeds.ui:25
 #: pynicotine/gtkgui/ui/settings/uploads.ui:106
-#, fuzzy
 msgid "Upload Speed Limits"
 msgstr "Feltöltési sebességhatárok"
 
@@ -5214,31 +5188,27 @@ msgid "Private Chat Command Help"
 msgstr "Privát csevegőparancs segítség"
 
 #: pynicotine/gtkgui/ui/search.ui:30
-#, fuzzy
 msgid "Results"
 msgstr "Eredmények"
 
 #: pynicotine/gtkgui/ui/search.ui:185
-#, fuzzy
 msgid "Include text…"
-msgstr "Beleértve a szöveget…"
+msgstr "Tartalmazza a szöveget…"
 
 #: pynicotine/gtkgui/ui/search.ui:186
 #: pynicotine/gtkgui/ui/settings/search.ui:175
-#, fuzzy
 msgid ""
 "Filter in results whose file paths contain the specified text. Multiple "
 "phrases and words can be specified, e.g. exact phrase|music|term|exact "
 "phrase two"
 msgstr ""
 "Azoknak az eredményeknek a szűrése, amelyek fájlútvonalai tartalmazzák a "
-"megadott szöveget. Több kifejezés és szó is megadható, pl. pontos kifejezés|"
-"zene|kifejezés|pontos kifejezés kettő"
+"megadott szöveget. Több kifejezés és szó is megadható, pl. pontos "
+"kifejezés|zene|kifejezés|2. pontos kifejezés"
 
 #: pynicotine/gtkgui/ui/search.ui:213
-#, fuzzy
 msgid "Exclude text…"
-msgstr "Szöveg kizárása…"
+msgstr "Nem tartalmazza a szöveget…"
 
 #: pynicotine/gtkgui/ui/search.ui:214
 #: pynicotine/gtkgui/ui/settings/search.ui:200
@@ -5257,12 +5227,10 @@ msgstr "Fájltípus…"
 
 #: pynicotine/gtkgui/ui/search.ui:242
 #: pynicotine/gtkgui/ui/settings/search.ui:228
-#, fuzzy
 msgid "File type, e.g. flac|wav|ape or !mp3|!m4a"
 msgstr "Fájltípus, pl. flac|wav|ape vagy !mp3|!m4a"
 
 #: pynicotine/gtkgui/ui/search.ui:269
-#, fuzzy
 msgid "File size…"
 msgstr "Fájlméret…"
 
@@ -5289,7 +5257,6 @@ msgstr "Országkód…"
 
 #: pynicotine/gtkgui/ui/search.ui:358
 #: pynicotine/gtkgui/ui/settings/search.ui:349
-#, fuzzy
 msgid "Country code, e.g. US|GB|ES or !DE|!GB"
 msgstr "Országkód, pl. US|GB|ES vagy !DE|!GB"
 
@@ -5299,12 +5266,11 @@ msgid "Clear Active Filters"
 msgstr "Minden eredmény tisztítása"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:35
-#, fuzzy
 msgid ""
 "Prohibit users from accessing your shared files, based on username, IP "
 "address or country."
 msgstr ""
-"Felhasználónév, IP-cím vagy ország alapján megtilthatja a felhasználóknak a "
+"Felhasználónév, IP-cím vagy ország alapján letiltja a felhasználóknak a "
 "megosztott fájlok elérését."
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:49
@@ -5312,7 +5278,6 @@ msgid "Country codes to block (comma separated):"
 msgstr "Országkódok tiltása (vesszővel elválasztva):"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:56
-#, fuzzy
 msgid "Codes must be in ISO 3166-2 format."
 msgstr "A kódoknak ISO 3166-2 formátumban kell lenniük."
 
@@ -5322,9 +5287,8 @@ msgid "Use custom geo block message:"
 msgstr "Egyedi tiltóüzenet használata:"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:72
-#, fuzzy
 msgid "Sent to users as the reason for being geo blocked."
-msgstr "A felhasználóknak a földrajzi blokkolás okaként elküldve."
+msgstr "Elküldve a felhasználóknak a kizárás földrajzi okaként."
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:92
 msgid "Use custom ban message:"
@@ -6427,7 +6391,6 @@ msgid "List font:"
 msgstr "Lista betűtípus:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1605
-#, fuzzy
 msgid "Text view font:"
 msgstr "Szövegnézet betűtípusa:"
 
