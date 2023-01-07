@@ -203,7 +203,7 @@ Inactive
    - Ingmar K. Steen (Hyriand) (2003–2004)
 
 >> <b>English</b>
-   - slook (2021–2022)
+   - slook (2021–2023)
    - Han Boetes (hboetes) (2021–2022)
    - Mat (mathiascode) (2020–2022)
    - Michael Labouebe (gfarmerfr) (2016)
