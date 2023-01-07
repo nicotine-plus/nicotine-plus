@@ -7,9 +7,10 @@ This document contains important information about Nicotine+ design decisions an
  * [Language and Toolkit](#language-and-toolkit)
  * [Dependencies](#dependencies)
  * [Profiling](#profiling)
+ * [Debug Logging](#debug-logging)
+ * [Soulseek Protocol](#soulseek-protocol)
  * [Continuous Integration Testing](#continuous-integration-testing)
  * [Translations](#translations)
- * [Soulseek Protocol](#soulseek-protocol)
  * [Releases](#releases)
 
 
@@ -34,7 +35,6 @@ Nicotine+ aims to be as portable as possible, providing access to the Soulseek n
 Dependencies preinstalled on most systems, as well as modules included in the Python Standard Library, should be preferred whenever possible. Avoid introducing "convenient" and "new hotness" dependencies, if the standard library already includes the required functionality to some degree. If a new dependency is necessary, think about the following points:
 
  * Prefer pure-Python dependencies, as these are more likely to work well on less common systems and architectures.
-
  * Attempt to find small, maintainable dependencies that can be bundled with the Nicotine+ source code (and give proper attribution). External dependencies can behave surprisingly different on some systems, and be quite outdated on older systems. Use common sense though; do not bundle security-critical dependencies, rapidly changing APIs etc.
 
 The current dependencies for Nicotine+ are described in [DEPENDENCIES.md](DEPENDENCIES.md).
@@ -47,12 +47,34 @@ Profiling code changes from time to time is important, to ensure that Nicotine+ 
 Due to Python's interpreted nature, addressing performance issues can be a challenge. There is no straightforward way of solving every performance issue, but these points generally help:
 
  * Use different data structures and algorithms.
-
  * Use functionality included in the Python Standard Library when possible, instead of reimplementing the wheel. Certain modules in the standard library are written in C, and can perform better than pure-Python counterparts, especially in hot code paths.
-
  * Look for alternative ways of accomplishing a task, and compare the performance. Search engines help a lot here.
 
 [py-spy](https://github.com/benfred/py-spy) is an excellent tool for profiling Python applications in real time, and will save a lot of time in the long run.
+
+
+## Debug Logging
+
+Verbose logging can be enabled to ease debugging. The following log categories are available:
+
+ * Connections – Logging related to networking ([slskproto.py](/pynicotine/slskproto.py))
+ * Messages – Incoming and outgoing protocol messages ([slskmessages.py](/pynicotine/slskmessages.py))
+ * Transfers – Logging related to file transfers ([transfers.py](/pynicotine/transfers.py))
+ * Miscellaneous – General debug log messages
+
+In order to enable debug logging:
+
+ * `Menu -> View -> Show Log History Pane`
+ * Right-click the log history pane to show the context menu. Enable the log categories you need in the `Log Categories` submenu.
+
+If you want to log debug messages to file, `Menu -> Preferences -> Logging -> Log debug messages to file`. Remember to disable debug logging when you no longer need it, since it impacts performance.
+
+
+## Soulseek Protocol
+
+The Soulseek network uses its own protocol for interoperability between clients. The protocol is proprietary, and no official documentation is available. Nicotine+'s protocol implementation is developed by observing the behavior of the official Soulseek NS and SoulseekQt clients.
+
+[SLSKPROTOCOL.md](SLSKPROTOCOL.md) contains unofficial documentation maintained by the Nicotine+ team.
 
 
 ## Continuous Integration Testing
@@ -109,7 +131,7 @@ When Nicotine+ is translated into a new language, the following should be done:
 ```
 "Project-Id-Version: \n"
 ```
- * Add the language code to the [po/LINGUAS](/po/LINGUAS) and [test/unit/test_i18n.py](/test/unit/test_i18n.py) files
+ * Add the language code to the [po/LINGUAS](/po/LINGUAS) and [pynicotine/i18n.py](/pynicotine/i18n.py) files
 
 ### Updating Translation Template
 
@@ -122,13 +144,6 @@ python3 po/update_pot.py
 ### Merging Translation Updates
 
 When translations are modified, Weblate creates a pull request with the changes within 24 hours. In order to preserve author information for commits, use the `Create a merge commit` option when merging the pull request.
-
-
-## Soulseek Protocol
-
-The Soulseek network uses its own protocol for interoperability between clients. The protocol is proprietary, and no official documentation is available. Nicotine+'s protocol implementation is developed by observing the behavior of the official Soulseek NS and SoulseekQt clients.
-
-[SLSKPROTOCOL.md](SLSKPROTOCOL.md) contains unofficial documentation maintained by the Nicotine+ team.
 
 
 ## Releases

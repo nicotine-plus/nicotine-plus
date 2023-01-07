@@ -127,14 +127,11 @@
  - Maintainer (2001–2003)
 
 ### Nir Arbel
- - Helped with many protocol questions I had, and of
-   course he designed and implemented the whole
-   system.
+ - Helped with many protocol questions, and of course he designed and implemented the whole system
 
 ### Brett W. Thompson (Zip)
- - I used his client code to get an initial impression
-   of how the system works.
- - Supplied the patch for logging chat conversations.
+ - His client code was used to get an initial impression of how the system works
+ - Supplied the patch for logging chat conversations
 
 ### Josselin Mouette
  - Official Debian package maintainer
@@ -146,8 +143,7 @@
  - Fink package maintainer
 
 ### Ingmar K. Steen (Hyriand)
- - Patches for upload bandwidth management, banning,
-   various UI improvements and more
+ - Patches for upload bandwidth management, banning, various UI improvements and more
 
 ### Geert Kloosterman
  - A script for importing Windows Soulseek configuration
@@ -166,9 +162,6 @@
 
 # Third-Party Attributions
 
- - This program includes IP2Location LITE data available from:  
-   https://lite.ip2location.com
-
  - Country flags licensed under the MIT License.  
    Copyright (c) 2016–2017 Bowtie AB  
    Copyright (c) 2018–2020 Jack Marsh  
@@ -176,4 +169,13 @@
 
  - tinytag licensed under the MIT License.  
    Copyright (c) 2014–2022 Tom Wallroth  
-   https://github.com/devsnd/tinytag/
+   https://github.com/devsnd/tinytag
+
+ - Country database licensed under the CC-BY-SA-4.0 License.
+   Copyright (c) 2001-2022 Hexasoft Development Sdn. Bhd.
+   This program includes IP2Location LITE data available from:
+   https://lite.ip2location.com
+
+ - Country database reader licensed under the MIT License.
+   Copyright (c) 2017 IP2Location.com
+   https://github.com/chrislim2888/IP2Location-Python

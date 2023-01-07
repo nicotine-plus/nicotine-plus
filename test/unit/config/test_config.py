@@ -54,7 +54,7 @@ class ConfigTest(TestCase):
             self.assertIn("newname", file_handle.read())
 
         # Verify that the backup is valid
-        old_config = encode_path(config.filename + ".old")
+        old_config = encode_path(f"{config.filename}.old")
         self.assertTrue(os.path.exists(old_config))
 
         with open(old_config, encoding="utf-8") as file_handle:

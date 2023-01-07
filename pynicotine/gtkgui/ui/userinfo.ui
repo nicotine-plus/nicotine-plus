@@ -144,7 +144,7 @@
                                 <property name="visible">True</property>
                                 <property name="spacing">24</property>
                                 <child>
-                                  <object class="GtkLabel">shared_folders_label
+                                  <object class="GtkLabel">
                                     <property name="visible">True</property>
                                     <property name="hexpand">True</property>
                                     <property name="label" translatable="yes">Shared Folders</property>
@@ -331,9 +331,9 @@
                             <property name="margin-top">12</property>
                             <property name="margin-bottom">12</property>
                             <property name="label" translatable="yes">Interests</property>
-                            <attributes>
-                              <attribute name="weight" value="bold"/>
-                            </attributes>
+                            <style>
+                              <class name="heading"/>
+                            </style>
                           </object>
                         </child>
                         <child>
@@ -419,9 +419,9 @@
                             <property name="label" translatable="yes">Send M_essage</property>
                             <property name="use-underline">True</property>
                             <property name="mnemonic-widget">_send_message_button</property>
-                            <attributes>
-                              <attribute name="weight" value="normal"/>
-                            </attributes>
+                            <style>
+                              <class name="normal"/>
+                            </style>
                           </object>
                         </child>
                       </object>
@@ -451,9 +451,9 @@
                             <property name="label" translatable="yes">_Browse Files</property>
                             <property name="use-underline">True</property>
                             <property name="mnemonic-widget">_browse_files_button</property>
-                            <attributes>
-                              <attribute name="weight" value="normal"/>
-                            </attributes>
+                            <style>
+                              <class name="normal"/>
+                            </style>
                           </object>
                         </child>
                       </object>
@@ -464,9 +464,9 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton" id="_add_buddy_button">
+                  <object class="GtkButton" id="_add_remove_buddy_button">
                     <property name="visible">True</property>
-                    <signal name="clicked" handler="on_add_to_list"/>
+                    <signal name="clicked" handler="on_add_remove_buddy"/>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
@@ -478,14 +478,13 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkLabel">
+                          <object class="GtkLabel" id="add_remove_buddy_label">
                             <property name="visible">True</property>
-                            <property name="label" translatable="yes">_Add to Buddy List</property>
                             <property name="use-underline">True</property>
-                            <property name="mnemonic-widget">_add_buddy_button</property>
-                            <attributes>
-                              <attribute name="weight" value="normal"/>
-                            </attributes>
+                            <property name="mnemonic-widget">_add_remove_buddy_button</property>
+                            <style>
+                              <class name="normal"/>
+                            </style>
                           </object>
                         </child>
                       </object>
@@ -496,9 +495,9 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton" id="_ban_user_button">
+                  <object class="GtkButton" id="_ban_unban_user_button">
                     <property name="visible">True</property>
-                    <signal name="clicked" handler="on_ban_user"/>
+                    <signal name="clicked" handler="on_ban_unban_user"/>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
@@ -510,13 +509,12 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkLabel">
+                          <object class="GtkLabel" id="ban_unban_user_label">
                             <property name="visible">True</property>
-                            <property name="label" translatable="yes">Ban User</property>
-                            <property name="mnemonic-widget">_ban_user_button</property>
-                            <attributes>
-                              <attribute name="weight" value="normal"/>
-                            </attributes>
+                            <property name="mnemonic-widget">_ban_unban_user_button</property>
+                            <style>
+                              <class name="normal"/>
+                            </style>
                           </object>
                         </child>
                       </object>
@@ -527,9 +525,9 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton" id="_ignore_user_button">
+                  <object class="GtkButton" id="_ignore_unignore_user_button">
                     <property name="visible">True</property>
-                    <signal name="clicked" handler="on_ignore_user"/>
+                    <signal name="clicked" handler="on_ignore_unignore_user"/>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
@@ -541,13 +539,12 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkLabel">
+                          <object class="GtkLabel" id="ignore_unignore_user_label">
                             <property name="visible">True</property>
-                            <property name="label" translatable="yes">Ignore User</property>
-                            <property name="mnemonic-widget">_ignore_user_button</property>
-                            <attributes>
-                              <attribute name="weight" value="normal"/>
-                            </attributes>
+                            <property name="mnemonic-widget">_ignore_unignore_user_button</property>
+                            <style>
+                              <class name="normal"/>
+                            </style>
                           </object>
                         </child>
                       </object>
@@ -577,9 +574,9 @@
                             <property name="label" translatable="yes">Show IP A_ddress</property>
                             <property name="use-underline">True</property>
                             <property name="mnemonic-widget">_show_ip_address_button</property>
-                            <attributes>
-                              <attribute name="weight" value="normal"/>
-                            </attributes>
+                            <style>
+                              <class name="normal"/>
+                            </style>
                           </object>
                         </child>
                       </object>
@@ -610,9 +607,9 @@
                             <property name="label" translatable="yes">Save _Picture</property>
                             <property name="use-underline">True</property>
                             <property name="mnemonic-widget">_save_picture_button</property>
-                            <attributes>
-                              <attribute name="weight" value="normal"/>
-                            </attributes>
+                            <style>
+                              <class name="normal"/>
+                            </style>
                           </object>
                         </child>
                       </object>
@@ -648,9 +645,9 @@
                             <property name="label" translatable="yes">_Refresh Info</property>
                             <property name="use-underline">True</property>
                             <property name="mnemonic-widget">refresh_button</property>
-                            <attributes>
-                              <attribute name="weight" value="normal"/>
-                            </attributes>
+                            <style>
+                              <class name="normal"/>
+                            </style>
                           </object>
                         </child>
                       </object>

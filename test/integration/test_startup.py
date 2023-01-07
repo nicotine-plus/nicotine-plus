@@ -26,10 +26,8 @@ from unittest import TestCase
 USER_DATA = os.path.dirname(os.path.realpath(__file__))
 CONFIG_FILE = os.path.join(USER_DATA, "config")
 COMMANDS = (
-    ["python3", "-m", "pynicotine",
-        "--config=" + CONFIG_FILE, "--user-data=" + USER_DATA, "--ci-mode"],               # GUI
-    ["python3", "-m", "pynicotine",
-        "--config=" + CONFIG_FILE, "--user-data=" + USER_DATA, "--ci-mode", "--headless"]  # Headless
+    ["python3", "-m", "pynicotine", f"--config={CONFIG_FILE}", f"--user-data={USER_DATA}", "--ci-mode"],  # GUI
+    ["python3", "-m", "pynicotine", f"--config={CONFIG_FILE}", f"--user-data={USER_DATA}", "--ci-mode", "--headless"]
 )
 
 
@@ -61,7 +59,7 @@ class StartupTest(TestCase):
         # Check for " 0 folders found after rescan" in output. Text strings are translatable,
         # so we can't match them directly.
         output = subprocess.check_output(
-            ["python3", "-m", "pynicotine", "--config=" + CONFIG_FILE, "--user-data=" + USER_DATA, "--rescan"],
+            ["python3", "-m", "pynicotine", f"--config={CONFIG_FILE}", f"--user-data={USER_DATA}", "--rescan"],
             timeout=10
         )
         self.assertIn(" 0 ", str(output))

@@ -1,5 +1,44 @@
 # Release Notes
 
+## Version 3.2.8 (January 6, 2023)
+
+### Corrections
+
+ * Improved file scanning performance on systems other than Windows
+ * Fixed a regression where uploads through the legacy file transfer system failed in some cases
+ * Fixed an issue where finished zero-byte file downloads displayed a "Connection timeout" error
+ * Fixed an issue where Nicotine+ did not reconnect to the server on connection failure in some cases
+ * Fixed a rare crash when scanning shares
+ * Windows: Fixed a crash when sending Nicotine+ to the background from the quit confirmation dialog
+ * Windows: Fixed an issue that prevented viewing own personal user info page
+
+### Issues closed on GitHub
+
+ * Automatically reconnect to a server after connection failure ([#2168](https://github.com/nicotine-plus/nicotine-plus/issues/2168))
+ * Nicotine+ v3.2.7 crashes when sent to background (Windows 10) ([#2276](https://github.com/nicotine-plus/nicotine-plus/issues/2276))
+ * Error launching Nicotine+ ([#2282](https://github.com/nicotine-plus/nicotine-plus/issues/2282))
+ * UPnP: Critical error when network interface not available ([#2289](https://github.com/nicotine-plus/nicotine-plus/issues/2289))
+
+
+## Version 3.2.7 (December 1, 2022)
+
+### Corrections
+
+ * Fixed a crash when selecting a user picture
+ * Fixed a crash when removing private chat logs
+ * Fixed an issue where the main window could become unresponsive when showing it from the tray icon
+ * Minor fixes related to UPnP compatibility with certain routers
+ * Reduce the number of connection timeouts when searching for popular files
+ * Windows: Fixed a possible crash when showing notification bubbles
+ * Android (Termux): Fixed a crash when starting Nicotine+ in headless mode
+
+### Issues closed on GitHub
+
+ * Notification string too long (ValueError crash) on Windows ([#2233](https://github.com/nicotine-plus/nicotine-plus/issues/2233))
+ * Private chat, Delete chat log... >> Value: 'PrivateChats' object has no attribute 'history' ([#2247](https://github.com/nicotine-plus/nicotine-plus/issues/2247))
+ * Flatpak: uploading a profile picture crashes the application ([#2250](https://github.com/nicotine-plus/nicotine-plus/issues/2250))
+
+
 ## Version 3.2.6 (October 21, 2022)
 
 ### Changes

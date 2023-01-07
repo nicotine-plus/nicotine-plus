@@ -52,11 +52,13 @@ class Plugin(BasePlugin):
             user = args
 
         if user not in self.core.privatechat.users:
-            self.echo_message("Not messaging with user %s" % user)
-            return
+            self.output(f"Not messaging with user {user}")
+            return False
 
-        self.echo_message("Closing private chat of user %s" % user)
+        self.output(f"Closing private chat of user {user}")
         self.core.privatechat.remove_user(user)
+        return True
 
     def sample_command(self, _args, **_unused):
-        self.echo_message("Hello")
+        self.output("Hello")
+        return True

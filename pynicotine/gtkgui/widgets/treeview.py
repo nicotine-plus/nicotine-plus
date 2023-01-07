@@ -34,6 +34,7 @@ from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
+from pynicotine.gtkgui.widgets.theme import add_css_class
 
 
 """ Treeview """
@@ -41,10 +42,10 @@ from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 
 class TreeView:
 
-    def __init__(self, frame, parent, columns, multi_select=False, always_select=False,
+    def __init__(self, window, parent, columns, multi_select=False, always_select=False,
                  name=None, activate_row_callback=None, select_row_callback=None, tooltip_callback=None):
 
-        self.frame = frame
+        self.window = window
         self.widget = Gtk.TreeView(visible=True)
         self.widget_name = name
         self.columns = columns
@@ -58,8 +59,8 @@ class TreeView:
         self.initialise_columns(columns)
 
         Accelerator("<Primary>c", self.widget, self.on_copy_cell_data_accelerator)
-        self.column_menu = self.widget.column_menu = PopupMenu(self.frame, self.widget, callback=self._press_header,
-                                                               connect_events=False)
+        self.column_menu = self.widget.column_menu = PopupMenu(
+            self.window.application, self.widget, callback=self._press_header, connect_events=False)
 
         if multi_select:
             self.widget.set_rubber_banding(True)
@@ -80,7 +81,8 @@ class TreeView:
 
         self.widget.set_fixed_height_mode(True)
         self.widget.set_search_equal_func(self.on_search_match)
-        self.widget.get_style_context().add_class("treeview-spacing")
+
+        add_css_class(self.widget, "treeview-spacing")
 
     def _append_columns(self, cols, column_config):
 
@@ -302,7 +304,7 @@ class TreeView:
                 label.get_parent().set_halign(Gtk.Align.END)
 
             if column_data.get("hide_header"):
-                column.get_widget().hide()
+                column.get_widget().set_visible(False)
 
             if column_data.get("expand_column"):
                 column.set_expand(True)
@@ -404,7 +406,6 @@ class TreeView:
 
     def select_row(self, iterator):
         self.widget.set_cursor(self.model.get_path(iterator))
-        self.widget.grab_focus()
 
     def remove_row(self, iterator):
         del self.iterators[self._iter_keys[iterator.user_data]]
@@ -476,8 +477,8 @@ class TreeView:
         country_code = column_value[len(strip_prefix):]
 
         if country_code:
-            country = GeoIP.country_code_to_name(country_code)
-            return "%s (%s)" % (country, country_code)
+            country_name = GeoIP.country_code_to_name(country_code)
+            return f"{country_name} ({country_code})"
 
         return _("Earth")
 
@@ -500,7 +501,7 @@ class TreeView:
         if not search_term:
             return True
 
-        for i, _column in enumerate(self.widget.get_columns()):
+        for i in range(self.widget.get_n_columns()):
             if model.get_column_type(i) != GObject.TYPE_STRING:
                 continue
 
@@ -511,10 +512,6 @@ class TreeView:
                 continue
 
             if search_term.lower() in column_value:
-                if GTK_API_VERSION >= 4:
-                    # Workaround: Disable scrolling animation, since it doesn't work in GTK 4
-                    self.widget.queue_allocate()
-
                 return False
 
         return True
@@ -565,13 +562,13 @@ def create_grouping_menu(window, active_mode, callback):
     action_id = "grouping-" + ''.join(random.choice(string.digits) for _ in range(8))
     menu = Gio.Menu()
 
-    menuitem = Gio.MenuItem.new(_("Ungrouped"), "win." + action_id + "::ungrouped")
+    menuitem = Gio.MenuItem.new(_("Ungrouped"), f"win.{action_id}::ungrouped")
     menu.append_item(menuitem)
 
-    menuitem = Gio.MenuItem.new(_("Group by Folder"), "win." + action_id + "::folder_grouping")
+    menuitem = Gio.MenuItem.new(_("Group by Folder"), f"win.{action_id}::folder_grouping")
     menu.append_item(menuitem)
 
-    menuitem = Gio.MenuItem.new(_("Group by User"), "win." + action_id + "::user_grouping")
+    menuitem = Gio.MenuItem.new(_("Group by User"), f"win.{action_id}::user_grouping")
     menu.append_item(menuitem)
 
     state = GLib.Variant("s", verify_grouping_mode(active_mode))
@@ -612,7 +609,7 @@ def collapse_treeview(treeview, grouping_mode):
             iterator = model.iter_next(iterator)
 
 
-def initialise_columns(frame, treeview_name, treeview, *args):
+def initialise_columns(window, treeview_name, treeview, *args):
 
     cols = {}
     num_cols = len(args)
@@ -714,15 +711,16 @@ def initialise_columns(frame, treeview_name, treeview, *args):
 
     append_columns(treeview, cols, column_config)
     hide_columns(treeview, cols, column_config)
-    treeview.get_style_context().add_class("treeview-spacing")
     treeview.set_fixed_height_mode(True)
+
+    add_css_class(treeview, "treeview-spacing")
 
     treeview.set_search_equal_func(on_search_match, treeview)
     treeview.connect("columns-changed", set_last_column_autosize)
     treeview.emit("columns-changed")
 
     Accelerator("<Primary>c", treeview, on_copy_cell_data_accelerator)
-    treeview.column_menu = PopupMenu(frame, treeview, callback=press_header, connect_events=False)
+    treeview.column_menu = PopupMenu(window.application, treeview, callback=press_header, connect_events=False)
 
     return cols
 
@@ -732,7 +730,7 @@ def on_search_match(model, _column, search_term, iterator, treeview):
     if not search_term:
         return True
 
-    for i, _column in enumerate(treeview.get_columns()):
+    for i in range(treeview.get_n_columns()):
         if model.get_column_type(i) != GObject.TYPE_STRING:
             continue
 
@@ -743,10 +741,6 @@ def on_search_match(model, _column, search_term, iterator, treeview):
             continue
 
         if search_term.lower() in column_value:
-            if GTK_API_VERSION >= 4:
-                # Workaround: Disable scrolling animation, since it doesn't work in GTK 4
-                treeview.queue_allocate()
-
             return False
 
     return True
@@ -954,8 +948,8 @@ def get_country_tooltip_text(column_value, strip_prefix):
     country_code = column_value[len(strip_prefix):]
 
     if country_code:
-        country = GeoIP.country_code_to_name(country_code)
-        return "%s (%s)" % (country, country_code)
+        country_name = GeoIP.country_code_to_name(country_code)
+        return f"{country_name} ({country_code})"
 
     return _("Earth")
 
@@ -986,13 +980,10 @@ def show_country_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn, strip_pr
 
 def show_file_path_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn, transfer=False):
 
-    if not config.sections["ui"]["file_path_tooltips"]:
-        return False
-
-    function = get_file_path_tooltip_text if not transfer else get_transfer_file_path_tooltip_text
+    func = get_file_path_tooltip_text if not transfer else get_transfer_file_path_tooltip_text
 
     return show_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn,
-                        ("folder", "filename", "path"), function)
+                        ("folder", "filename", "path"), func)
 
 
 def show_user_status_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn):

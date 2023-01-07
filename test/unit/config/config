@@ -28,7 +28,6 @@ uploaddir =
 shared = []
 buddyshared = []
 uploadbandwidth = 10
-uselimit = False
 uploadlimit = 150
 downloadlimit = 0
 preferfriends = False
@@ -66,9 +65,10 @@ downloadsexpanded = True
 uploadsexpanded = True
 buddysharestrustedonly = False
 usernamesubfolders = False
-usealtlimits = False
 uploadlimitalt = 100
 downloadlimitalt = 100
+use_upload_speed_limit = unlimited
+use_download_speed_limit = unlimited
 
 [userinfo]
 descr = ''
@@ -202,6 +202,9 @@ maximized = True
 urgencyhint = True
 file_path_tooltips = True
 reverse_file_paths = True
+language = 
+textviewfont = 
+chatcommand = #908e8b
 
 [private_rooms]
 rooms = {}

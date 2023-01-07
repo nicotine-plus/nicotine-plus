@@ -53,6 +53,9 @@
                                 <property name="right-margin">10</property>
                                 <property name="top-margin">5</property>
                                 <property name="bottom-margin">5</property>
+                                <style>
+                                  <class name="chat-view"/>
+                                </style>
                               </object>
                             </child>
                           </object>
@@ -98,6 +101,9 @@
                                 <property name="right-margin">10</property>
                                 <property name="top-margin">5</property>
                                 <property name="bottom-margin">5</property>
+                                <style>
+                                  <class name="chat-view"/>
+                                </style>
                               </object>
                             </child>
                           </object>
@@ -138,7 +144,7 @@
                         <child>
                           <object class="GtkMenuButton" id="help_button">
                             <property name="visible">True</property>
-                            <property name="tooltip-text" translatable="yes">Chat room command help</property>
+                            <property name="tooltip-text" translatable="yes">Chat Room Command Help</property>
                             <child>
                               <object class="GtkImage">
                                 <property name="visible">True</property>
@@ -180,25 +186,23 @@
                       <object class="GtkLabel">
                         <property name="visible">True</property>
                         <property name="label" bind-source="_users_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
-                        <attributes>
-                          <attribute name="weight" value="bold"/>
-                        </attributes>
+                        <style>
+                          <class name="heading"/>
+                        </style>
                       </object>
                     </child>
                     <child>
                       <object class="GtkButton" id="_users_button">
                         <property name="visible">True</property>
                         <property name="tooltip-text" translatable="yes">Users</property>
-                        <signal name="clicked" handler="on_configure_ignored_users"/>
+                        <property name="action-name">app.configure-ignored-users</property>
                         <child>
                           <object class="GtkLabel" id="users_label">
                             <property name="visible">True</property>
                             <property name="label">0</property>
                             <property name="mnemonic-widget">_users_button</property>
-                            <attributes>
-                              <attribute name="weight" value="bold"/>
-                            </attributes>
                             <style>
+                              <class name="bold"/>
                               <class name="dim-label"/>
                             </style>
                           </object>
@@ -227,6 +231,10 @@
                             <signal name="row-activated" handler="on_row_activated"/>
                           </object>
                         </child>
+                        <style>
+                          <class name="colored-icon"/>
+                          <class name="user-status"/>
+                        </style>
                       </object>
                     </child>
                   </object>
@@ -250,7 +258,7 @@
                     <child>
                       <object class="GtkMenuButton" id="room_wall_button">
                         <property name="visible">True</property>
-                        <property name="tooltip-text" translatable="yes">Room wall</property>
+                        <property name="tooltip-text" translatable="yes">Room Wall</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>

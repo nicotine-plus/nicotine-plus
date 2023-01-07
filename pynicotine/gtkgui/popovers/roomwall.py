@@ -22,13 +22,12 @@ from pynicotine import slskmessages
 from pynicotine.core import core
 from pynicotine.gtkgui.widgets.popover import Popover
 from pynicotine.gtkgui.widgets.textview import TextView
-from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.ui import UserInterface
 
 
 class RoomWall(Popover):
 
-    def __init__(self, frame, room):
+    def __init__(self, window, room):
 
         ui_template = UserInterface(scope=self, path="popovers/roomwall.ui")
         (
@@ -38,14 +37,13 @@ class RoomWall(Popover):
         ) = ui_template.widgets
 
         super().__init__(
-            window=frame.window,
+            window=window,
             content_box=self.container,
             show_callback=self.on_show,
             width=600,
             height=500
         )
 
-        self.frame = frame
         self.room = room
         self.room_wall_textview = TextView(self.message_view)
 
@@ -54,8 +52,7 @@ class RoomWall(Popover):
     def update_message_list(self):
 
         tickers = self.room.tickers.get_tickers()
-        self.room_wall_textview.append_line(
-            "%s" % ("\n".join(["> [%s] %s" % (user, msg) for user, msg in tickers])))
+        self.room_wall_textview.append_line("\n".join([f"> [{user}] {msg}" for user, msg in tickers]))
 
     def clear_room_wall_message(self, update_list=True):
 
@@ -78,7 +75,7 @@ class RoomWall(Popover):
 
         if entry_text:
             user = core.login_username
-            self.room_wall_textview.append_line("> [%s] %s" % (user, entry_text))
+            self.room_wall_textview.append_line(f"> [{user}] {entry_text}")
 
         self.update_message_list()
 
@@ -89,10 +86,6 @@ class RoomWall(Popover):
             return
 
         self.clear_room_wall_message()
-
-    def update_visuals(self):
-        for widget in self.__dict__.values():
-            update_widget_visuals(widget)
 
     def on_show(self, *_args):
 

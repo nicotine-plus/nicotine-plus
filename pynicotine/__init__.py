@@ -16,18 +16,25 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import argparse
+import io
+import multiprocessing
+import os
+import sys
+
+from pynicotine.config import config
+from pynicotine.core import core
+from pynicotine.i18n import LOCALE_PATH
 from pynicotine.i18n import apply_translations
+from pynicotine.logfacility import log
 
 
 def check_arguments():
     """ Parse command line arguments specified by the user """
 
-    import argparse
-    from pynicotine.config import config
-    from pynicotine.core import core
-
     parser = argparse.ArgumentParser(
-        description=config.summary, epilog=_("Website: %s") % config.website_url, add_help=False
+        description=_("Graphical client for the Soulseek peer-to-peer network"),
+        epilog=_("Website: %s") % config.website_url, add_help=False
     )
 
     # Visible arguments
@@ -64,7 +71,7 @@ def check_arguments():
         help=_("start the program in headless mode (no GUI)")
     )
     parser.add_argument(
-        "-v", "--version", action="version", version="%s %s" % (config.application_name, config.version),
+        "-v", "--version", action="version", version=f"{config.application_name} {config.version}",
         help=_("display version and exit")
     )
 
@@ -94,7 +101,6 @@ def check_python_version():
     # Require minimum Python version
     python_version = (3, 6)
 
-    import sys
     if sys.version_info < python_version:
         return _("""You are using an unsupported version of Python (%(old_version)s).
 You should install Python %(min_version)s or newer.""") % {
@@ -105,14 +111,65 @@ You should install Python %(min_version)s or newer.""") % {
     return None
 
 
+def set_up_python():
+
+    is_frozen = getattr(sys, "frozen", False)
+
+    # Always use UTF-8 for print()
+    if sys.stdout is not None:
+        sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding="utf-8", line_buffering=True)
+
+    if is_frozen:
+        # Set up paths for frozen binaries (Windows and macOS)
+        executable_folder = os.path.dirname(sys.executable)
+        os.environ["SSL_CERT_FILE"] = os.path.join(executable_folder, "lib/cert.pem")
+
+        # Support file scanning process in frozen binaries
+        multiprocessing.freeze_support()
+
+    # Frozen binaries only support fork (if not on Windows)
+    if sys.platform != "win32" and is_frozen:
+        start_method = "fork"
+    else:
+        start_method = "spawn"
+
+    multiprocessing.set_start_method(start_method)
+
+
+def rename_process(new_name, debug_info=False):
+
+    errors = []
+
+    # Renaming ourselves for pkill et al.
+    try:
+        import ctypes
+        # GNU/Linux style
+        libc = ctypes.CDLL(None)
+        libc.prctl(15, new_name, 0, 0, 0)
+
+    except Exception as error:
+        errors.append(error)
+        errors.append("Failed GNU/Linux style")
+
+        try:
+            import ctypes
+            # BSD style
+            libc = ctypes.CDLL(None)
+            libc.setproctitle(new_name)
+
+        except Exception as second_error:
+            errors.append(second_error)
+            errors.append("Failed BSD style")
+
+    if debug_info and errors:
+        msg = ["Errors occurred while trying to change process name:"]
+        for i in errors:
+            msg.append(str(i))
+        log.add('\n'.join(msg))
+
+
 def rescan_shares():
 
-    from pynicotine.config import config
-    from pynicotine.core import core
-    from pynicotine.logfacility import log
-
-    config.load_config()
-    core.init_components()
     error = core.shares.rescan_shares(use_thread=False)
 
     if error:
@@ -126,26 +183,7 @@ def rescan_shares():
 def run():
     """ Run application and return its exit code """
 
-    import io
-    import sys
-
-    # Always use UTF-8 for print()
-    if sys.stdout is not None:
-        sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding="utf-8", line_buffering=True)
-
-    if getattr(sys, 'frozen', False):
-        import os
-        import multiprocessing
-
-        # Set up paths for frozen binaries (Windows and macOS)
-        executable_folder = os.path.dirname(sys.executable)
-        os.environ["SSL_CERT_FILE"] = os.path.join(executable_folder, "lib/cert.pem")
-
-        # Support file scanning process in frozen binaries
-        multiprocessing.freeze_support()
-
-    from pynicotine.logfacility import log
-    from pynicotine.utils import rename_process
+    set_up_python()
     rename_process(b"nicotine")
 
     headless, hidden, ci_mode, rescan, multi_instance = check_arguments()
@@ -161,22 +199,27 @@ def run():
         faulthandler.enable()
 
     except Exception as error:
-        log.add("Faulthandler module could not be enabled. Error: %s" % error)
+        log.add(f"Faulthandler module could not be enabled. Error: {error}")
+
+    core.init_components(enable_cli=True)
+
+    if not os.path.isdir(LOCALE_PATH):
+        log.add("Translation files (.mo) are unavailable, using default English strings")
 
     if rescan:
         return rescan_shares()
 
     # Initialize GTK-based GUI
     if not headless:
-        from pynicotine.gtkgui import run_gui
-        exit_code = run_gui(hidden, ci_mode, multi_instance)
+        from pynicotine import gtkgui as application
+        exit_code = application.run(hidden, ci_mode, multi_instance)
 
         if exit_code is not None:
             return exit_code
 
     # Run without a GUI
-    from pynicotine.headless import run_headless
-    return run_headless(ci_mode)
+    from pynicotine import headless as application
+    return application.run()
 
 
 apply_translations()

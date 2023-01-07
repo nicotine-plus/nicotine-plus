@@ -76,11 +76,7 @@ If Nicotine+ doesn't find the `.mo` files in your project folder, it will fall b
 
 ## Testing Different Languages
 
-Nicotine+ will try to autodetect your language based on what locale you are using. For testing purposes Nicotine+ can be forced to use another language. You can do this by specifying a locale before starting Nicotine+, e.g.:
-
-* English: `LANGUAGE=en_US.UTF-8 python3 nicotine`
-* French: `LANGUAGE=fr_FR.UTF-8 python3 nicotine`
-* ...
+Nicotine+ will try to automatically detect your language based on the system locale, or it can be manually selected in Preferences -> User Interface -> Language (requires a restart).
 
 
 ## Adding Yourself to Translators

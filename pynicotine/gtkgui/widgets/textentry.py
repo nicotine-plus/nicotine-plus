@@ -25,12 +25,7 @@ from gi.repository import Gtk
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
-from pynicotine.logfacility import log
 from pynicotine.slskmessages import UserStatus
-from pynicotine.utils import add_alias
-from pynicotine.utils import get_alias
-from pynicotine.utils import is_alias
-from pynicotine.utils import unalias
 
 
 """ Text Entry-related """
@@ -39,9 +34,9 @@ from pynicotine.utils import unalias
 class ChatEntry:
     """ Custom text entry with support for chat commands and completions """
 
-    def __init__(self, frame, entry, completion, entity, message_class, send_message, is_chatroom=False):
+    def __init__(self, application, entry, completion, entity, message_class, send_message, is_chatroom=False):
 
-        self.frame = frame
+        self.application = application
         self.entry = entry
         self.completion = completion
         self.entity = entity
@@ -59,13 +54,13 @@ class ChatEntry:
 
         # Spell Check
         if config.sections["ui"]["spellcheck"]:
-            if not self.frame.spell_checker:
-                self.frame.init_spell_checker()
+            if not self.application.spell_checker:
+                self.application.init_spell_checker()
 
-            if self.frame.spell_checker:
+            if self.application.spell_checker:
                 from gi.repository import Gspell  # pylint:disable=no-name-in-module
                 spell_buffer = Gspell.EntryBuffer.get_from_gtk_entry_buffer(entry.get_buffer())
-                spell_buffer.set_spell_checker(self.frame.spell_checker)
+                spell_buffer.set_spell_checker(self.application.spell_checker)
                 spell_view = Gspell.Entry.get_from_gtk_entry(entry)
                 spell_view.set_inline_spell_checking(True)
 
@@ -78,15 +73,6 @@ class ChatEntry:
 
         if not text:
             return
-
-        if is_alias(text):
-            alias_text = get_alias(text)
-
-            if not alias_text:
-                log.add(_('Alias "%s" returned nothing'), text)
-                return
-
-            text = alias_text
 
         is_double_slash_cmd = text.startswith("//")
         is_single_slash_cmd = (text.startswith("/") and not is_double_slash_cmd)
@@ -115,25 +101,9 @@ class ChatEntry:
             args = ""
             arg_self = "" if self.is_chatroom else self.entity
 
-        if cmd in ("/alias", "/al"):
-            parent = core.chatrooms if self.is_chatroom else core.privatechat
-            parent.echo_message(self.entity, add_alias(args))
-
-            if config.sections["words"]["aliases"]:
-                core.chatrooms.update_completions()
-                core.privatechat.update_completions()
-
-        elif cmd in ("/unalias", "/un"):
-            parent = core.chatrooms if self.is_chatroom else core.privatechat
-            parent.echo_message(self.entity, unalias(args))
-
-            if config.sections["words"]["aliases"]:
-                core.chatrooms.update_completions()
-                core.privatechat.update_completions()
-
-        elif cmd in ("/w", "/whois", "/info"):
+        if cmd in ("/w", "/whois", "/info"):
             if arg_self:
-                core.userinfo.request_user_info(arg_self)
+                core.userinfo.show_user(arg_self)
 
         elif cmd in ("/b", "/browse"):
             if arg_self:
@@ -190,11 +160,11 @@ class ChatEntry:
 
         elif cmd in ("/ad", "/add", "/buddy"):
             if args:
-                core.userlist.add_user(args)
+                core.userlist.add_buddy(args)
 
         elif cmd in ("/rem", "/unbuddy"):
             if args:
-                core.userlist.remove_user(args)
+                core.userlist.remove_buddy(args)
 
         elif cmd == "/ban":
             if args:
@@ -223,9 +193,9 @@ class ChatEntry:
 
         elif cmd in ("/clear", "/cl"):
             if self.is_chatroom:
-                core.chatrooms.clear_messages(self.entity)
+                core.chatrooms.clear_room_messages(self.entity)
             else:
-                core.privatechat.clear_messages(self.entity)
+                core.privatechat.clear_private_messages(self.entity)
 
         elif cmd in ("/a", "/away"):
             core.set_away_mode(core.user_status != UserStatus.AWAY, save_state=True)
@@ -411,7 +381,7 @@ class ChatCompletion:
             suffix = " ".join(current_text[i:].split(" "))
 
             # add the matching word
-            new_text = "%s %s%s" % (prefix, completion_value, suffix)
+            new_text = f"{prefix} {completion_value}{suffix}"
             # set back the whole text
             self.entry.set_text(new_text)
             # move the cursor at the end
@@ -533,6 +503,7 @@ class TextSearchBar:
 
         self.entry.connect("activate", self.on_search_next_match)
         self.entry.connect("search-changed", self.on_search_changed)
+        self.entry.connect("stop-search", self.on_hide_search_accelerator)
 
         self.entry.connect("previous-match", self.on_search_previous_match)
         self.entry.connect("next-match", self.on_search_next_match)
@@ -541,26 +512,26 @@ class TextSearchBar:
             controller_widget = textview
 
         Accelerator("<Primary>f", controller_widget, self.on_show_search_accelerator)
-
-        for widget in (controller_widget, entry):
-            Accelerator("Escape", widget, self.on_hide_search_accelerator)
+        Accelerator("Escape", controller_widget, self.on_hide_search_accelerator)
+        Accelerator("<Primary>g", controller_widget, self.on_search_next_match)
+        Accelerator("<Shift><Primary>g", controller_widget, self.on_search_previous_match)
 
     def on_search_match(self, search_type, restarted=False):
 
         if not self.search_bar.get_search_mode():
             return
 
-        buffer = self.textview.get_buffer()
+        text_buffer = self.textview.get_buffer()
         query = self.entry.get_text()
 
         self.textview.emit("select-all", False)
 
         if search_type == "typing":
-            start, end = buffer.get_bounds()
+            start, end = text_buffer.get_bounds()
             iterator = start
         else:
-            current = buffer.get_mark("insert")
-            iterator = buffer.get_iter_at_mark(current)
+            current = text_buffer.get_mark("insert")
+            iterator = text_buffer.get_iter_at_mark(current)
 
         if search_type == "previous":
             match = iterator.backward_search(
@@ -573,21 +544,21 @@ class TextSearchBar:
             match_start, match_end = match
 
             if search_type == "previous":
-                buffer.place_cursor(match_start)
-                buffer.select_range(match_start, match_end)
+                text_buffer.place_cursor(match_start)
+                text_buffer.select_range(match_start, match_end)
             else:
-                buffer.place_cursor(match_end)
-                buffer.select_range(match_end, match_start)
+                text_buffer.place_cursor(match_end)
+                text_buffer.select_range(match_end, match_start)
 
             self.textview.scroll_to_iter(match_start, 0, False, 0.5, 0.5)
 
         elif not restarted and search_type != "typing":
-            start, end = buffer.get_bounds()
+            start, end = text_buffer.get_bounds()
 
             if search_type == "previous":
-                buffer.place_cursor(end)
+                text_buffer.place_cursor(end)
             elif search_type == "next":
-                buffer.place_cursor(start)
+                text_buffer.place_cursor(start)
 
             self.on_search_match(search_type, restarted=True)
 
@@ -603,19 +574,21 @@ class TextSearchBar:
     def on_hide_search_accelerator(self, *_args):
         """ Escape: hide search bar """
 
-        self.hide()
+        self.set_visible(False)
         return True
 
     def on_show_search_accelerator(self, *_args):
         """ Ctrl+F: show search bar """
 
-        self.show()
+        self.set_visible(True)
         return True
 
-    def show(self):
-        self.search_bar.set_search_mode(True)
-        self.entry.grab_focus()
+    def set_visible(self, visible):
 
-    def hide(self):
+        if visible:
+            self.search_bar.set_search_mode(True)
+            self.entry.grab_focus()
+            return
+
         self.search_bar.set_search_mode(False)
         self.focus_widget.grab_focus()

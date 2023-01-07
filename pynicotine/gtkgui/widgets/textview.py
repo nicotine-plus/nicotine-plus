@@ -23,7 +23,6 @@ from gi.repository import Gdk
 from gi.repository import GLib
 from gi.repository import Gtk
 
-from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.widgets.theme import update_tag_visuals
@@ -35,7 +34,14 @@ from pynicotine.utils import open_uri
 
 class TextView:
 
-    def __init__(self, textview, font=None, auto_scroll=False, parse_urls=True):
+    if GTK_API_VERSION >= 4:
+        POINTER_CURSOR = Gdk.Cursor(name="pointer")
+        TEXT_CURSOR = Gdk.Cursor(name="text")
+    else:
+        POINTER_CURSOR = Gdk.Cursor.new_from_name(Gdk.Display.get_default(), "pointer")
+        TEXT_CURSOR = Gdk.Cursor.new_from_name(Gdk.Display.get_default(), "text")
+
+    def __init__(self, textview, auto_scroll=False, parse_urls=True):
 
         self.textview = textview
         self.textbuffer = textview.get_buffer()
@@ -43,7 +49,6 @@ class TextView:
         self.adjustment = self.scrollable.get_vadjustment()
         scrollable_container = self.scrollable.get_ancestor(Gtk.Box)
 
-        self.font = font
         self.auto_scroll = self.should_auto_scroll = auto_scroll
         self.parse_urls = parse_urls
         self.tag_urls = {}
@@ -63,8 +68,6 @@ class TextView:
             self.gesture_click_secondary = Gtk.GestureClick()
             scrollable_container.add_controller(self.gesture_click_secondary)
 
-            self.pointer_cursor = Gdk.Cursor(name="pointer")
-            self.text_cursor = Gdk.Cursor(name="text")
             self.cursor_window = self.textview
 
             self.motion_controller = Gtk.EventControllerMotion()
@@ -74,8 +77,6 @@ class TextView:
             self.gesture_click_primary = Gtk.GestureMultiPress(widget=scrollable_container)
             self.gesture_click_secondary = Gtk.GestureMultiPress(widget=scrollable_container)
 
-            self.pointer_cursor = Gdk.Cursor.new_from_name(textview.get_display(), "pointer")
-            self.text_cursor = Gdk.Cursor.new_from_name(textview.get_display(), "text")
             self.cursor_window = None
 
             textview.connect("motion-notify-event", self.on_move_cursor_event)
@@ -137,7 +138,7 @@ class TextView:
             line = "\n" + line
 
         # Tag usernames with popup menu creating tag, and away/online/offline colors
-        if username and config.sections["ui"]["usernamehotspots"] and username in line:
+        if username and username in line:
             start = line.find(username)
 
             self._insert_text(line[:start], tag)
@@ -191,14 +192,14 @@ class TextView:
 
     def update_cursor(self, pos_x, pos_y):
 
-        cursor = self.text_cursor
+        cursor = self.TEXT_CURSOR
 
         if self.cursor_window is None:
             self.cursor_window = self.textview.get_window(Gtk.TextWindowType.TEXT)
 
         for tag in self.get_tags_for_pos(pos_x, pos_y):
             if hasattr(tag, "url") or hasattr(tag, "username"):
-                cursor = self.pointer_cursor
+                cursor = self.POINTER_CURSOR
                 break
 
         if cursor != self.cursor_window.get_cursor():
@@ -213,16 +214,13 @@ class TextView:
 
     """ Text Tags (usernames, URLs) """
 
-    def create_tag(self, color=None, callback=None, username=None, url=None):
+    def create_tag(self, color_id=None, callback=None, username=None, url=None):
 
         tag = self.textbuffer.create_tag()
 
-        if color:
-            update_tag_visuals(tag, color=color)
-            tag.color = color
-
-        if self.font:
-            update_tag_visuals(tag, font=self.font)
+        if color_id:
+            update_tag_visuals(tag, color_id=color_id)
+            tag.color_id = color_id
 
         if url:
             if url[:4] == "www.":
@@ -236,12 +234,12 @@ class TextView:
 
         return tag
 
-    def update_tag(self, tag, color=None):
+    def update_tag(self, tag, color_id=None):
 
-        if color is not None:
-            tag.color = color
+        if color_id is not None:
+            tag.color_id = color_id
 
-        update_tag_visuals(tag, tag.color, self.font)
+        update_tag_visuals(tag, color_id=tag.color_id)
 
     def update_tags(self):
         for tag in self.tag_urls.values():

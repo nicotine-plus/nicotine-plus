@@ -23,9 +23,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
+
 from pynicotine.config import config
 from pynicotine.core import core
+from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.popovers.downloadspeeds import DownloadSpeeds
 from pynicotine.gtkgui.transferlist import TransferList
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
@@ -34,39 +38,58 @@ from pynicotine.utils import open_file_path
 
 class Downloads(TransferList):
 
-    def __init__(self, frame):
+    def __init__(self, window):
 
         self.path_separator = '/'
         self.path_label = _("Path")
         self.retry_label = _("_Resume")
         self.abort_label = _("P_ause")
+        self.deprioritized_statuses = {"Paused", "Finished", "Filtered"}
 
-        self.transfer_page = frame.downloads_page
-        self.user_counter = frame.download_users_label
-        self.file_counter = frame.download_files_label
-        self.expand_button = frame.downloads_expand_button
-        self.expand_icon = frame.downloads_expand_icon
-        self.grouping_button = frame.downloads_grouping_button
+        self.transfer_page = window.downloads_page
+        self.user_counter = window.download_users_label
+        self.file_counter = window.download_files_label
+        self.expand_button = window.downloads_expand_button
+        self.expand_icon = window.downloads_expand_icon
+        self.grouping_button = window.downloads_grouping_button
 
-        TransferList.__init__(self, frame, transfer_type="download")
+        TransferList.__init__(self, window, transfer_type="download")
 
         if GTK_API_VERSION >= 4:
-            frame.downloads_content.append(self.container)
+            window.downloads_content.append(self.container)
         else:
-            frame.downloads_content.add(self.container)
+            window.downloads_content.add(self.container)
 
         self.popup_menu_clear.add_items(
             ("#" + _("Finished / Filtered"), self.on_clear_finished_filtered),
             ("", None),
             ("#" + _("Finished"), self.on_clear_finished),
             ("#" + _("Paused"), self.on_clear_paused),
-            ("#" + _("Failed"), self.on_clear_failed),
             ("#" + _("Filtered"), self.on_clear_filtered),
+            ("#" + _("Deleted"), self.on_clear_deleted),
             ("#" + _("Queued…"), self.on_try_clear_queued),
             ("", None),
             ("#" + _("Everything…"), self.on_try_clear_all),
         )
         self.popup_menu_clear.update_model()
+
+        for event_name, callback in (
+            ("abort-download", self.abort_transfer),
+            ("abort-downloads", self.abort_transfers),
+            ("clear-download", self.clear_transfer),
+            ("clear-downloads", self.clear_transfers),
+            ("download-large-folder", self.download_large_folder),
+            ("download-notification", self.new_transfer_notification),
+            ("start", self.start),
+            ("update-download", self.update_model),
+            ("update-downloads", self.update_model)
+        ):
+            events.connect(event_name, callback)
+
+        self.download_speeds = DownloadSpeeds(window)
+
+    def start(self):
+        self.init_transfers(core.transfers.downloads)
 
     def retry_selected_transfers(self):
         core.transfers.retry_downloads(self.selected_transfers)
@@ -84,7 +107,7 @@ class Downloads(TransferList):
     def on_try_clear_queued(self, *_args):
 
         OptionDialog(
-            parent=self.frame.window,
+            parent=self.window,
             title=_('Clear Queued Downloads'),
             message=_('Do you really want to clear all queued downloads?'),
             callback=self.on_clear_queued_response
@@ -97,7 +120,7 @@ class Downloads(TransferList):
     def on_try_clear_all(self, *_args):
 
         OptionDialog(
-            parent=self.frame.window,
+            parent=self.window,
             title=_('Clear All Downloads'),
             message=_('Do you really want to clear all downloads?'),
             callback=self.on_clear_all_response
@@ -105,12 +128,12 @@ class Downloads(TransferList):
 
     def folder_download_response(self, _dialog, response_id, msg):
         if response_id == 2:
-            core.transfers.folder_contents_response(msg, check_num_files=False)
+            events.emit("folder-contents-response", msg, check_num_files=False)
 
     def download_large_folder(self, username, folder, numfiles, msg):
 
         OptionDialog(
-            parent=self.frame.window,
+            parent=self.window,
             title=_("Download %(num)i files?") % {'num': numfiles},
             message=_("Do you really want to download %(num)i files from %(user)s's folder %(folder)s?") % {
                 'num': numfiles, 'user': username, 'folder': folder},
@@ -137,12 +160,13 @@ class Downloads(TransferList):
 
     def on_open_file_manager(self, *_args):
 
-        download_folder = config.sections["transfers"]["downloaddir"]
-        folder_path = config.sections["transfers"]["incompletedir"] or download_folder
-
         for transfer in self.selected_transfers:
+            file_path = core.transfers.get_current_download_file_path(
+                transfer.user, transfer.filename, transfer.path, transfer.size)
+            folder_path = os.path.dirname(file_path)
+
             if transfer.status == "Finished":
-                folder_path = transfer.path or download_folder
+                # Prioritize finished downloads
                 break
 
         open_file_path(folder_path, command=config.sections["ui"]["filemanager"])
@@ -150,15 +174,8 @@ class Downloads(TransferList):
     def on_play_files(self, *_args):
 
         for transfer in self.selected_transfers:
-            if transfer.file is not None:
-                file_path = transfer.file.name.decode("utf-8", "replace")
-
-            else:
-                # If this file doesn't exist anymore, it may have finished downloading and have been renamed.
-                # Try looking in the download directory and match the original filename and size.
-
-                file_path = core.transfers.get_existing_download_path(
-                    transfer.user, transfer.filename, transfer.path, transfer.size, always_return=True)
+            file_path = core.transfers.get_current_download_file_path(
+                transfer.user, transfer.filename, transfer.path, transfer.size)
 
             open_file_path(file_path, command=config.sections["players"]["default"])
 
@@ -189,9 +206,8 @@ class Downloads(TransferList):
     def on_clear_finished_filtered(self, *_args):
         core.transfers.clear_downloads(statuses=["Finished", "Filtered"])
 
-    def on_clear_failed(self, *_args):
-        core.transfers.clear_downloads(
-            statuses=["Connection timeout", "Local file error", "Remote file error", "File not shared"])
-
     def on_clear_filtered(self, *_args):
         core.transfers.clear_downloads(statuses=["Filtered"])
+
+    def on_clear_deleted(self, *_args):
+        core.transfers.clear_downloads(clear_deleted=True)

@@ -34,8 +34,6 @@ class GetUploadCandidateTest(TestCase):
         config.data_dir = os.path.dirname(os.path.realpath(__file__))
         config.filename = os.path.join(config.data_dir, "temp_config")
 
-        config.load_config()
-
         core.init_components()
         core.transfers.privileged_users = {"puser1", "puser2"}
 
@@ -44,7 +42,7 @@ class GetUploadCandidateTest(TestCase):
         transfer_list = []
 
         for user in users:
-            filename = "%s/%i" % (user, len(core.transfers.uploads))
+            filename = f"{user}/{len(core.transfers.uploads)}"
             transfer = Transfer(user=user, path=filename, status=status)
 
             transfer_list.append(transfer)

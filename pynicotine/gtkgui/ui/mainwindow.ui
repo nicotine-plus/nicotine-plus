@@ -24,7 +24,7 @@
     <child>
       <object class="GtkMenuButton" id="header_menu">
         <property name="visible">True</property>
-        <property name="tooltip-text" translatable="yes">Menu</property>
+        <property name="tooltip-text" translatable="yes">Main Menu</property>
         <child>
           <object class="GtkImage">
             <property name="visible">True</property>
@@ -213,7 +213,7 @@
                                           <object class="GtkButton">
                                             <property name="visible">True</property>
                                             <property name="tooltip-text" translatable="yes">Configure Searches</property>
-                                            <signal name="clicked" handler="on_configure_searches"/>
+                                            <property name="action-name">app.configure-searches</property>
                                             <child>
                                               <object class="GtkImage">
                                                 <property name="visible">True</property>
@@ -340,25 +340,23 @@
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
                                                 <property name="label" bind-source="_download_users_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
-                                                <attributes>
-                                                  <attribute name="weight" value="bold"/>
-                                                </attributes>
+                                                <style>
+                                                  <class name="heading"/>
+                                                </style>
                                               </object>
                                             </child>
                                             <child>
                                               <object class="GtkButton" id="_download_users_button">
                                                 <property name="visible">True</property>
                                                 <property name="tooltip-text" translatable="yes">Users</property>
-                                                <signal name="clicked" handler="on_transfer_statistics"/>
+                                                <property name="action-name">app.transfer-statistics</property>
                                                 <child>
                                                   <object class="GtkLabel" id="download_users_label">
                                                     <property name="visible">True</property>
                                                     <property name="label">0</property>
                                                     <property name="mnemonic-widget">_download_users_button</property>
-                                                    <attributes>
-                                                      <attribute name="weight" value="bold"/>
-                                                    </attributes>
                                                     <style>
+                                                      <class name="bold"/>
                                                       <class name="dim-label"/>
                                                     </style>
                                                   </object>
@@ -381,25 +379,23 @@
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
                                                 <property name="label" bind-source="_download_files_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
-                                                <attributes>
-                                                  <attribute name="weight" value="bold"/>
-                                                </attributes>
+                                                <style>
+                                                  <class name="heading"/>
+                                                </style>
                                               </object>
                                             </child>
                                             <child>
                                               <object class="GtkButton" id="_download_files_button">
                                                 <property name="visible">True</property>
                                                 <property name="tooltip-text" translatable="yes">Files</property>
-                                                <signal name="clicked" handler="on_transfer_statistics"/>
+                                                <property name="action-name">app.transfer-statistics</property>
                                                 <child>
                                                   <object class="GtkLabel" id="download_files_label">
                                                     <property name="visible">True</property>
                                                     <property name="label">0</property>
                                                     <property name="mnemonic-widget">_download_files_button</property>
-                                                    <attributes>
-                                                      <attribute name="weight" value="bold"/>
-                                                    </attributes>
                                                     <style>
+                                                      <class name="bold"/>
                                                       <class name="dim-label"/>
                                                     </style>
                                                   </object>
@@ -458,7 +454,7 @@
                                           <object class="GtkButton">
                                             <property name="visible">True</property>
                                             <property name="tooltip-text" translatable="yes">Configure Downloads</property>
-                                            <signal name="clicked" handler="on_configure_downloads"/>
+                                            <property name="action-name">app.configure-downloads</property>
                                             <child>
                                               <object class="GtkImage">
                                                 <property name="visible">True</property>
@@ -583,25 +579,23 @@
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
                                                 <property name="label" bind-source="_upload_users_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
-                                                <attributes>
-                                                  <attribute name="weight" value="bold"/>
-                                                </attributes>
+                                                <style>
+                                                  <class name="heading"/>
+                                                </style>
                                               </object>
                                             </child>
                                             <child>
                                               <object class="GtkButton" id="_upload_users_button">
                                                 <property name="visible">True</property>
                                                 <property name="tooltip-text" translatable="yes">Users</property>
-                                                <signal name="clicked" handler="on_transfer_statistics"/>
+                                                <property name="action-name">app.transfer-statistics</property>
                                                 <child>
                                                   <object class="GtkLabel" id="upload_users_label">
                                                     <property name="visible">True</property>
                                                     <property name="label">0</property>
                                                     <property name="mnemonic-widget">_upload_users_button</property>
-                                                    <attributes>
-                                                      <attribute name="weight" value="bold"/>
-                                                    </attributes>
                                                     <style>
+                                                      <class name="bold"/>
                                                       <class name="dim-label"/>
                                                     </style>
                                                   </object>
@@ -624,25 +618,23 @@
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
                                                 <property name="label" bind-source="_upload_files_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
-                                                <attributes>
-                                                  <attribute name="weight" value="bold"/>
-                                                </attributes>
+                                                <style>
+                                                  <class name="heading"/>
+                                                </style>
                                               </object>
                                             </child>
                                             <child>
                                               <object class="GtkButton" id="_upload_files_button">
                                                 <property name="visible">True</property>
                                                 <property name="tooltip-text" translatable="yes">Files</property>
-                                                <signal name="clicked" handler="on_transfer_statistics"/>
+                                                <property name="action-name">app.transfer-statistics</property>
                                                 <child>
                                                   <object class="GtkLabel" id="upload_files_label">
                                                     <property name="visible">True</property>
                                                     <property name="label">0</property>
                                                     <property name="mnemonic-widget">_upload_files_button</property>
-                                                    <attributes>
-                                                      <attribute name="weight" value="bold"/>
-                                                    </attributes>
                                                     <style>
+                                                      <class name="bold"/>
                                                       <class name="dim-label"/>
                                                     </style>
                                                   </object>
@@ -701,7 +693,7 @@
                                           <object class="GtkButton">
                                             <property name="visible">True</property>
                                             <property name="tooltip-text" translatable="yes">Configure Uploads</property>
-                                            <signal name="clicked" handler="on_configure_uploads"/>
+                                            <property name="action-name">app.configure-uploads</property>
                                             <child>
                                               <object class="GtkImage">
                                                 <property name="visible">True</property>
@@ -846,7 +838,7 @@
                                         <child>
                                           <object class="GtkButton" id="_load_from_disk_button">
                                             <property name="visible">True</property>
-                                            <signal name="clicked" handler="on_load_from_disk"/>
+                                            <property name="action-name">app.load-shares-from-disk</property>
                                             <child>
                                               <object class="GtkBox">
                                                 <property name="visible">True</property>
@@ -877,7 +869,7 @@
                                           <object class="GtkButton">
                                             <property name="visible">True</property>
                                             <property name="tooltip-text" translatable="yes">Configure Shares</property>
-                                            <signal name="clicked" handler="on_configure_shares"/>
+                                            <property name="action-name">app.configure-shares</property>
                                             <child>
                                               <object class="GtkImage">
                                                 <property name="visible">True</property>
@@ -966,7 +958,7 @@
                         </child>
                       </object>
                     </child>
-                    <!-- User Info -->
+                    <!-- User Profile -->
                     <child>
                       <object class="GtkBox" id="userinfo_page">
                         <property name="visible">False</property>
@@ -1005,8 +997,8 @@
                                                 <property name="placeholder-text" translatable="yes">Username…</property>
                                                 <property name="tooltip-text" translatable="yes">Enter the username of the person whose information you want to see</property>
                                                 <property name="primary-icon-name">avatar-default-symbolic</property>
-                                                <signal name="activate" handler="on_get_user_info"/>
-                                                <signal name="icon-press" handler="on_get_user_info"/>
+                                                <signal name="activate" handler="on_show_user_profile"/>
+                                                <signal name="icon-press" handler="on_show_user_profile"/>
                                               </object>
                                             </child>
                                             <style>
@@ -1022,9 +1014,9 @@
                                         <property name="spacing">6</property>
                                         <property name="valign">center</property>
                                         <child>
-                                          <object class="GtkButton" id="_update_info_button">
+                                          <object class="GtkButton" id="_update_profile_button">
                                             <property name="visible">True</property>
-                                            <signal name="clicked" handler="on_update_user_info"/>
+                                            <property name="action-name">app.update-user-profile</property>
                                             <child>
                                               <object class="GtkBox">
                                                 <property name="visible">True</property>
@@ -1038,9 +1030,9 @@
                                                 <child>
                                                   <object class="GtkLabel">
                                                     <property name="visible">True</property>
-                                                    <property name="label" translatable="yes">Update I_nfo</property>
+                                                    <property name="label" translatable="yes">_Update Profile</property>
                                                     <property name="use-underline">True</property>
-                                                    <property name="mnemonic-widget">_update_info_button</property>
+                                                    <property name="mnemonic-widget">_update_profile_button</property>
                                                   </object>
                                                 </child>
                                               </object>
@@ -1093,7 +1085,7 @@
                                         <child>
                                           <object class="GtkLabel">
                                             <property name="visible">True</property>
-                                            <property name="label" translatable="yes">User Info</property>
+                                            <property name="label" translatable="yes">User Profiles</property>
                                             <property name="justify">center</property>
                                             <property name="wrap">True</property>
                                             <style>
@@ -1203,7 +1195,7 @@
                                           <object class="GtkButton">
                                             <property name="visible">True</property>
                                             <property name="tooltip-text" translatable="yes">Configure Chats</property>
-                                            <signal name="clicked" handler="on_configure_chats"/>
+                                            <property name="action-name">app.configure-chats</property>
                                             <child>
                                               <object class="GtkImage">
                                                 <property name="visible">True</property>
@@ -1327,8 +1319,8 @@
                                             <property name="placeholder-text" translatable="yes">Add buddy…</property>
                                             <property name="tooltip-text" translatable="yes">Enter the username of the person you want to add to your buddy list</property>
                                             <property name="primary-icon-name">avatar-default-symbolic</property>
-                                            <signal name="activate" handler="on_add_user"/>
-                                            <signal name="icon-press" handler="on_add_user"/>
+                                            <signal name="activate" handler="on_add_buddy"/>
+                                            <signal name="icon-press" handler="on_add_buddy"/>
                                           </object>
                                         </child>
                                       </object>
@@ -1336,7 +1328,37 @@
                                     <child>
                                       <object class="GtkBox" id="userlist_end">
                                         <property name="visible">True</property>
+                                        <property name="spacing">6</property>
                                         <property name="valign">center</property>
+                                        <child>
+                                          <object class="GtkButton" id="_message_buddies_button">
+                                            <property name="visible">True</property>
+                                            <property name="action-name">app.message-buddies</property>
+                                            <child>
+                                              <object class="GtkBox">
+                                                <property name="visible">True</property>
+                                                <property name="spacing">6</property>
+                                                <child>
+                                                  <object class="GtkImage">
+                                                    <property name="visible">True</property>
+                                                    <property name="icon-name">mail-send-symbolic</property>
+                                                  </object>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkLabel">
+                                                    <property name="visible">True</property>
+                                                    <property name="label" translatable="yes">_Message All</property>
+                                                    <property name="use-underline">True</property>
+                                                    <property name="mnemonic-widget">_message_buddies_button</property>
+                                                  </object>
+                                                </child>
+                                              </object>
+                                            </child>
+                                            <style>
+                                              <class name="image-text-button"/>
+                                            </style>
+                                          </object>
+                                        </child>
                                       </object>
                                     </child>
                                   </object>
@@ -1492,7 +1514,7 @@
                                               <object class="GtkButton">
                                                 <property name="visible">True</property>
                                                 <property name="tooltip-text" translatable="yes">Configure Chats</property>
-                                                <signal name="clicked" handler="on_configure_chats"/>
+                                                <property name="action-name">app.configure-chats</property>
                                                 <child>
                                                   <object class="GtkImage">
                                                     <property name="visible">True</property>
@@ -1731,7 +1753,7 @@
                   <object class="GtkButton" id="_connections_button">
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Connections</property>
-                    <signal name="clicked" handler="on_transfer_statistics"/>
+                    <property name="action-name">app.transfer-statistics</property>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
@@ -1747,9 +1769,9 @@
                             <property name="visible">True</property>
                             <property name="label">0</property>
                             <property name="mnemonic-widget">_connections_button</property>
-                            <attributes>
-                              <attribute name="weight" value="normal"/>
-                            </attributes>
+                            <style>
+                              <class name="normal"/>
+                            </style>
                           </object>
                         </child>
                       </object>
@@ -1760,10 +1782,9 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton" id="_download_status_button">
+                  <object class="GtkMenuButton" id="download_status_button">
                     <property name="visible">True</property>
-                    <property name="tooltip-text" translatable="yes">Downloading (speed / active users)</property>
-                    <signal name="clicked" handler="on_configure_downloads"/>
+                    <property name="tooltip-text" translatable="yes">Downloading (Speed / Active Users)</property>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
@@ -1777,10 +1798,10 @@
                         <child>
                           <object class="GtkLabel" id="download_status_label">
                             <property name="visible">True</property>
-                            <property name="mnemonic-widget">_download_status_button</property>
-                            <attributes>
-                              <attribute name="weight" value="normal"/>
-                            </attributes>
+                            <property name="mnemonic-widget">download_status_button</property>
+                            <style>
+                              <class name="normal"/>
+                            </style>
                           </object>
                         </child>
                       </object>
@@ -1791,10 +1812,9 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton" id="_upload_status_button">
+                  <object class="GtkMenuButton" id="upload_status_button">
                     <property name="visible">True</property>
-                    <property name="tooltip-text" translatable="yes">Uploading (speed / active users)</property>
-                    <signal name="clicked" handler="on_configure_uploads"/>
+                    <property name="tooltip-text" translatable="yes">Uploading (Speed / Active Users)</property>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
@@ -1808,10 +1828,10 @@
                         <child>
                           <object class="GtkLabel" id="upload_status_label">
                             <property name="visible">True</property>
-                            <property name="mnemonic-widget">_upload_status_button</property>
-                            <attributes>
-                              <attribute name="weight" value="normal"/>
-                            </attributes>
+                            <property name="mnemonic-widget">upload_status_button</property>
+                            <style>
+                              <class name="normal"/>
+                            </style>
                           </object>
                         </child>
                       </object>
@@ -1822,28 +1842,9 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkToggleButton">
-                    <property name="visible">True</property>
-                    <property name="tooltip-text" translatable="yes">Enable alternative download and upload speed limits</property>
-                    <property name="action-name">app.alternative-speed-limit</property>
-                    <child>
-                      <object class="GtkImage" id="alt_speed_icon">
-                        <property name="visible">True</property>
-                        <property name="icon-name">media-seek-backward-symbolic</property>
-                      </object>
-                    </child>
-                    <style>
-                      <class name="circular"/>
-                      <class name="flat"/>
-                      <class name="image-button"/>
-                    </style>
-                  </object>
-                </child>
-                <child>
                   <object class="GtkButton" id="user_status_button">
                     <property name="visible">True</property>
-                    <property name="sensitive">False</property>
-                    <signal name="clicked" handler="on_away"/>
+                    <property name="action-name">app.away</property>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
@@ -1852,6 +1853,10 @@
                           <object class="GtkImage" id="user_status_icon">
                             <property name="visible">True</property>
                             <property name="icon-name">nplus-status-offline</property>
+                            <style>
+                              <class name="colored-icon"/>
+                              <class name="user-status"/>
+                            </style>
                           </object>
                         </child>
                         <child>
@@ -1859,9 +1864,9 @@
                             <property name="visible">True</property>
                             <property name="label" translatable="yes">Offline</property>
                             <property name="mnemonic-widget">user_status_button</property>
-                            <attributes>
-                              <attribute name="weight" value="normal"/>
-                            </attributes>
+                            <style>
+                              <class name="normal"/>
+                            </style>
                           </object>
                         </child>
                       </object>

@@ -19,26 +19,24 @@
 import socket
 
 from threading import Thread
+from urllib.parse import urlsplit
 
 from pynicotine.config import config
 from pynicotine.logfacility import log
 from pynicotine.scheduler import scheduler
-from pynicotine.utils import http_request
 
 
 MULTICAST_HOST = "239.255.255.250"
 MULTICAST_PORT = 1900
-MULTICAST_TTL = 2  # Should default to 2 according to UPnP specification
-MX_RESPONSE_DELAY = 1  # At least 1 second is sufficient according to UPnP specification
+MULTICAST_TTL = 2         # Should default to 2 according to UPnP specification
+MX_RESPONSE_DELAY = 1     # At least 1 second is sufficient according to UPnP specification
 HTTP_REQUEST_TIMEOUT = 5
+RENEWAL_INTERVAL = 14400  # 4 hours
 
 
 class Service:
-    def __init__(self, service_type, url_scheme, base_url, root_url, control_url):
+    def __init__(self, service_type, control_url):
         self.service_type = service_type
-        self.url_scheme = url_scheme
-        self.base_url = base_url
-        self.root_url = root_url
         self.control_url = control_url
 
 
@@ -64,7 +62,7 @@ class SSDPRequest:
     def __init__(self, search_target):
 
         self.headers = {
-            "HOST": "%s:%s" % (MULTICAST_HOST, MULTICAST_PORT),
+            "HOST": f"{MULTICAST_HOST}:{MULTICAST_PORT}",
             "ST": search_target,
             "MAN": '"ssdp:discover"',
             "MX": str(MX_RESPONSE_DELAY)
@@ -81,8 +79,8 @@ class SSDPRequest:
 
         headers = ["M-SEARCH * HTTP/1.1"]
 
-        for header in self.headers.items():
-            headers.append("%s: %s" % header)
+        for header_name, header_value in self.headers.items():
+            headers.append(f"{header_name}: {header_value}")
 
         return '\r\n'.join(headers).encode('utf-8') + b'\r\n\r\n'
 
@@ -90,19 +88,21 @@ class SSDPRequest:
 class SSDP:
 
     @staticmethod
-    def get_service_control_url(url_scheme, base_url, root_url):
+    def get_service_control_url(location_url):
 
         service_type = None
         control_url = None
 
         try:
+            from urllib.request import urlopen
             from xml.etree import ElementTree
 
-            response = http_request(url_scheme, base_url, root_url, timeout=HTTP_REQUEST_TIMEOUT)
-            log.add_debug("UPnP: Device description response from %s://%s%s: %s",
-                          (url_scheme, base_url, root_url, response.encode('utf-8')))
+            with urlopen(location_url, timeout=HTTP_REQUEST_TIMEOUT) as response:
+                response_body = response.read()
 
-            xml = ElementTree.fromstring(response)
+            log.add_debug("UPnP: Device description response from %s: %s", (location_url, response_body))
+
+            xml = ElementTree.fromstring(response_body.decode("utf-8"))
 
             for service in xml.findall(".//{urn:schemas-upnp-org:device-1-0}service"):
                 found_service_type = service.find(".//{urn:schemas-upnp-org:device-1-0}serviceType").text
@@ -117,17 +117,14 @@ class SSDP:
 
         except Exception as error:
             # Invalid response
-            log.add_debug("UPnP: Invalid device description response from %s://%s%s: %s",
-                          (url_scheme, base_url, root_url, error))
+            log.add_debug("UPnP: Invalid device description response from %s: %s", (location_url, error))
 
         return service_type, control_url
 
     @staticmethod
     def add_service(services, locations, ssdp_response):
 
-        from urllib.parse import urlsplit
         response_headers = {k.upper(): v for k, v in ssdp_response.headers}
-
         log.add_debug("UPnP: Device search response: %s", bytes(ssdp_response))
 
         if "LOCATION" not in response_headers:
@@ -141,8 +138,10 @@ class SSDP:
             return
 
         locations.add(location)
+
         url_parts = urlsplit(location)
-        service_type, control_url = SSDP.get_service_control_url(url_parts.scheme, url_parts.netloc, url_parts.path)
+        service_type, control_url = SSDP.get_service_control_url(location)
+        control_url = f"{url_parts.scheme}://{url_parts.netloc}{control_url}"
 
         if service_type is None or control_url is None:
             log.add_debug("UPnP: No router with UPnP enabled in device search response, ignoring")
@@ -154,8 +153,7 @@ class SSDP:
             log.add_debug("UPnP: Service was previously added, ignoring")
             return
 
-        services[service_type] = Service(service_type=service_type, url_scheme=url_parts.scheme,
-                                         base_url=url_parts.netloc, root_url=url_parts.path, control_url=control_url)
+        services[service_type] = Service(service_type=service_type, control_url=control_url)
 
         log.add_debug("UPnP: Added service to list")
 
@@ -215,8 +213,10 @@ class SSDP:
 class UPnP:
     """ Class that handles UPnP Port Mapping """
 
-    def __init__(self, port):
-        self._port = port
+    def __init__(self):
+
+        self.port = None
+        self.local_ip_address = None
         self._timer = None
 
     @staticmethod
@@ -227,16 +227,20 @@ class UPnP:
         If a port mapping already exists, it is updated with a lease period of 24 hours.
         """
 
+        from urllib.request import Request
+        from urllib.request import urlopen
         from xml.etree import ElementTree
 
-        url = '%s%s' % (service.base_url, service.control_url)
+        service_type = service.service_type
+        control_url = service.control_url
+
         log.add_debug("UPnP: Adding port mapping (%s %s/%s, %s) at url '%s'",
-                      (private_ip, private_port, protocol, service.service_type, url))
+                      (private_ip, private_port, protocol, service_type, control_url))
 
         headers = {
-            "Host": service.base_url,
+            "Host": urlsplit(control_url).netloc,
             "Content-Type": "text/xml; charset=utf-8",
-            "SOAPACTION": '"%s#AddPortMapping"' % service.service_type
+            "SOAPACTION": f'"{service_type}#AddPortMapping"'
         }
 
         body = (
@@ -256,43 +260,26 @@ class UPnP:
              + '</u:AddPortMapping>'
              + '</s:Body>'
              + '</s:Envelope>\r\n') %
-            (service.service_type, public_port, protocol, private_port, private_ip,
-             mapping_description, lease_duration)
+            (service_type, public_port, protocol, private_port, private_ip, mapping_description, lease_duration)
         ).encode('utf-8')
 
         log.add_debug("UPnP: Add port mapping request headers: %s", headers)
         log.add_debug("UPnP: Add port mapping request contents: %s", body)
 
-        response = http_request(
-            service.url_scheme, service.base_url, service.control_url,
-            request_type="POST", body=body, headers=headers, timeout=HTTP_REQUEST_TIMEOUT)
+        with urlopen(Request(control_url, data=body, headers=headers), timeout=HTTP_REQUEST_TIMEOUT) as response:
+            response_body = response.read()
 
-        xml = ElementTree.fromstring(response)
+        xml = ElementTree.fromstring(response_body.decode("utf-8"))
 
         if xml.find(".//{http://schemas.xmlsoap.org/soap/envelope/}Body") is None:
-            raise Exception(_("Invalid response: %s") % response.encode('utf-8'))
+            raise RuntimeError(f"Invalid response: {response_body}")
 
-        log.add_debug("UPnP: Add port mapping response: %s", response.encode('utf-8'))
+        log.add_debug("UPnP: Add port mapping response: %s", response_body)
 
         error_code = xml.findtext(".//{urn:schemas-upnp-org:control-1-0}errorCode")
         error_description = xml.findtext(".//{urn:schemas-upnp-org:control-1-0}errorDescription")
 
         return error_code, error_description
-
-    @staticmethod
-    def _find_local_ip_address():
-
-        # Create a UDP socket
-        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as local_socket:
-
-            # Send a broadcast packet on a local address (doesn't need to be reachable,
-            # but MacOS requires port to be non-zero)
-            local_socket.connect(("10.255.255.255", 1))
-
-            # This returns the "primary" IP on the local box, even if that IP is a NAT/private/internal IP
-            ip_address = local_socket.getsockname()[0]
-
-        return ip_address
 
     @staticmethod
     def _find_service(private_ip):
@@ -322,28 +309,25 @@ class UPnP:
         try:
             log.add_debug("UPnP: Creating Port Mapping rule...")
 
-            # Find local IP address
-            local_ip_address = self._find_local_ip_address()
-
             # Find router
-            service = self._find_service(local_ip_address)
+            service = self._find_service(self.local_ip_address)
 
             if not service:
-                raise RuntimeError(_("UPnP is not available on this network"))
+                raise RuntimeError(_("No UPnP devices found"))
 
             # Perform the port mapping
             log.add_debug("UPnP: Trying to redirect external WAN port %s TCP => %s port %s TCP", (
-                self._port,
-                local_ip_address,
-                self._port
+                self.port,
+                self.local_ip_address,
+                self.port
             ))
 
             error_code, error_description = self._request_port_mapping(
                 service=service,
                 protocol="TCP",
-                public_port=self._port,
-                private_ip=local_ip_address,
-                private_port=self._port,
+                public_port=self.port,
+                private_ip=self.local_ip_address,
+                private_port=self.port,
                 mapping_description="NicotinePlus",
                 lease_duration=lease_duration
             )
@@ -354,13 +338,12 @@ class UPnP:
                 return
 
             if error_code or error_description:
-                raise Exception(_("Error code %(code)s: %(description)s") %
-                                {"code": error_code, "description": error_description})
+                raise RuntimeError(f"Error code {error_code}: {error_description}")
 
         except Exception as error:
             from traceback import format_exc
             log.add(_("UPnP: Failed to forward external port %(external_port)s: %(error)s"), {
-                "external_port": self._port,
+                "external_port": self.port,
                 "error": error
             })
             log.add_debug(format_exc())
@@ -368,9 +351,9 @@ class UPnP:
 
         log.add(_("UPnP: External port %(external_port)s successfully forwarded to local "
                   "IP address %(ip_address)s port %(local_port)s"), {
-            "external_port": self._port,
-            "ip_address": local_ip_address,
-            "local_port": self._port
+            "external_port": self.port,
+            "ip_address": self.local_ip_address,
+            "local_port": self.port
         })
 
     def add_port_mapping(self, blocking=False):
@@ -392,13 +375,7 @@ class UPnP:
         The default interval is 4 hours. """
 
         self.cancel_timer()
-        upnp_interval = config.sections["server"]["upnp_interval"]
-
-        if upnp_interval < 1:
-            return
-
-        upnp_interval_seconds = upnp_interval * 60 * 60
-        self._timer = scheduler.add(delay=upnp_interval_seconds, callback=self.add_port_mapping)
+        self._timer = scheduler.add(delay=RENEWAL_INTERVAL, callback=self.add_port_mapping)
 
     def cancel_timer(self):
         scheduler.cancel(self._timer)

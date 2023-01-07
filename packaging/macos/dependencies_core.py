@@ -33,7 +33,7 @@ def install_brew():
                 "flake8",
                 "gettext",
                 "gobject-introspection",
-                "gtk+" + gtk_version,
+                f"gtk+{gtk_version}",
                 "pygobject3",
                 "pylint"]
 

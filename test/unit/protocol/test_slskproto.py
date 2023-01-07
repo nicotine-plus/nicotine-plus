@@ -31,7 +31,7 @@ from unittest.mock import patch
 
 from pynicotine.config import config
 from pynicotine.slskproto import SoulseekNetworkThread
-from pynicotine.slskmessages import ServerConnect, Login, SetWaitPort
+from pynicotine.slskmessages import ServerConnect, SetWaitPort
 from pynicotine.utils import encode_path
 
 # Time (in s) needed for SoulseekNetworkThread main loop to run at least once
@@ -64,11 +64,11 @@ class MockSocket(Mock):
 
     @staticmethod
     def send(data):
-        print("sending data {}".format(data))
+        print(f"sending data {data}")
 
     @staticmethod
     def recv(bufsize):
-        print("recving {} data".format(bufsize))
+        print(f"recving {bufsize} data")
         return b''
 
 
@@ -81,18 +81,16 @@ class SoulseekNetworkTest(TestCase):
 
         self.queue = deque()
         config.sections["server"]["upnp"] = False
-        self.protothread = SoulseekNetworkThread(
-            callback=Mock(), queue=self.queue, user_addresses={}, interface='', bindip='',
-            port=None, port_range=(1024, 65535)
-        )
+        self.protothread = SoulseekNetworkThread(queue=self.queue, user_addresses={})
         self.protothread.start()
+        self.protothread._enable_message_queue()  # pylint: disable=protected-access
 
         # Slight delay to allow the network thread to fully start
         sleep(SLSKPROTO_RUN_TIME / 2)
 
     def tearDown(self):
 
-        self.protothread.abort()
+        self.protothread._quit()  # pylint: disable=protected-access
 
         sleep(SLSKPROTO_RUN_TIME / 2)
         self.assertIsNone(self.protothread._server_socket)  # pylint: disable=protected-access
@@ -100,34 +98,34 @@ class SoulseekNetworkTest(TestCase):
     @patch('socket.socket')
     def test_server_conn(self, _mock_socket):
 
-        self.protothread.server_disconnected = False
-
-        self.queue.append(ServerConnect(addr=('0.0.0.0', 0), login=('dummy', 'dummy')))
+        self.queue.append(ServerConnect(addr=('0.0.0.0', 0), login=('dummy', 'dummy'), listen_port_range=(1024, 65535)))
         sleep(SLSKPROTO_RUN_TIME)
 
-        if hasattr(socket, 'TCP_KEEPIDLE') or hasattr(socket, 'TCP_KEEPALIVE'):
+        if hasattr(socket, 'TCP_USER_TIMEOUT'):
             self.assertEqual(
-                self.protothread._server_socket.setsockopt.call_count, 6)  # pylint: disable=no-member,protected-access
+                self.protothread._server_socket.setsockopt.call_count, 10)  # pylint: disable=no-member,protected-access
+
+        elif hasattr(socket, 'TCP_KEEPIDLE') or hasattr(socket, 'TCP_KEEPALIVE'):
+            self.assertEqual(
+                self.protothread._server_socket.setsockopt.call_count, 9)  # pylint: disable=no-member,protected-access
 
         elif hasattr(socket, 'SIO_KEEPALIVE_VALS'):
             self.assertEqual(
                 self.protothread._server_socket.ioctl.call_count, 1)       # pylint: disable=no-member,protected-access
             self.assertEqual(
-                self.protothread._server_socket.setsockopt.call_count, 3)  # pylint: disable=no-member,protected-access
+                self.protothread._server_socket.setsockopt.call_count, 6)  # pylint: disable=no-member,protected-access
 
         self.assertEqual(
-            self.protothread._server_socket.setblocking.call_count, 1)     # pylint: disable=no-member,protected-access
+            self.protothread._server_socket.setblocking.call_count, 2)     # pylint: disable=no-member,protected-access
         self.assertEqual(
             self.protothread._server_socket.connect_ex.call_count, 1)      # pylint: disable=no-member,protected-access
 
     def test_login(self):
 
-        self.protothread.server_disconnected = False
-        self.queue.append(ServerConnect(addr=('0.0.0.0', 0), login=('username', 'password')))
+        self.queue.append(ServerConnect(addr=('0.0.0.0', 0), login=('dummy', 'dummy'), listen_port_range=(1024, 65535)))
 
         sleep(SLSKPROTO_RUN_TIME / 2)
 
-        self.queue.append(Login('username', 'password', 160, 1))
         self.queue.append(SetWaitPort(1))
 
         sleep(SLSKPROTO_RUN_TIME)

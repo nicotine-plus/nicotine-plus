@@ -23,12 +23,12 @@ from gi.repository import GObject
 
 from pynicotine.config import config
 from pynicotine.core import core
+from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.treeview import TreeView
-from pynicotine.gtkgui.widgets.theme import get_status_icon_name
-from pynicotine.gtkgui.widgets.theme import update_widget_visuals
+from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import humanize
@@ -37,7 +37,7 @@ from pynicotine.utils import human_speed
 
 class Interests:
 
-    def __init__(self, frame):
+    def __init__(self, window):
 
         ui_template = UserInterface(scope=self, path="interests.ui")
         (
@@ -55,17 +55,16 @@ class Interests:
         ) = ui_template.widgets
 
         if GTK_API_VERSION >= 4:
-            frame.interests_container.append(self.container)
+            window.interests_container.append(self.container)
         else:
-            frame.interests_container.add(self.container)
+            window.interests_container.add(self.container)
 
-        self.frame = frame
-
+        self.window = window
         self.populated_recommends = False
 
         # Columns
         self.likes_list_view = TreeView(
-            frame, parent=self.likes_list_container,
+            window, parent=self.likes_list_container,
             columns=[
                 {"column_id": "likes", "column_type": "text", "title": _("Likes"), "sort_column": 0,
                  "default_sort_column": "ascending"}
@@ -73,7 +72,7 @@ class Interests:
         )
 
         self.dislikes_list_view = TreeView(
-            frame, parent=self.dislikes_list_container,
+            window, parent=self.dislikes_list_container,
             columns=[
                 {"column_id": "dislikes", "column_type": "text", "title": _("Dislikes"), "sort_column": 0,
                  "default_sort_column": "ascending"}
@@ -81,7 +80,7 @@ class Interests:
         )
 
         self.recommendations_list_view = TreeView(
-            frame, parent=self.recommendations_list_container,
+            window, parent=self.recommendations_list_container,
             activate_row_callback=self.on_r_row_activated,
             columns=[
                 # Visible columns
@@ -95,7 +94,7 @@ class Interests:
         )
 
         self.similar_users_list_view = TreeView(
-            frame, parent=self.similar_users_list_container,
+            window, parent=self.similar_users_list_container,
             activate_row_callback=self.on_ru_row_activated, tooltip_callback=self.on_tooltip,
             columns=[
                 # Visible columns
@@ -124,7 +123,7 @@ class Interests:
                 self.add_thing_i_hate(item)
 
         # Popup menus
-        popup = PopupMenu(self.frame, self.likes_list_view.widget)
+        popup = PopupMenu(self.window.application, self.likes_list_view.widget)
         popup.add_items(
             ("#" + _("Re_commendations for Item"), self.on_recommend_item, self.likes_list_view),
             ("#" + _("_Search for Item"), self.on_recommend_search, self.likes_list_view),
@@ -132,7 +131,7 @@ class Interests:
             ("#" + _("_Remove Item"), self.on_remove_thing_i_like)
         )
 
-        popup = PopupMenu(self.frame, self.dislikes_list_view.widget)
+        popup = PopupMenu(self.window.application, self.dislikes_list_view.widget)
         popup.add_items(
             ("#" + _("Re_commendations for Item"), self.on_recommend_item, self.dislikes_list_view),
             ("#" + _("_Search for Item"), self.on_recommend_search, self.dislikes_list_view),
@@ -140,7 +139,7 @@ class Interests:
             ("#" + _("_Remove Item"), self.on_remove_thing_i_dislike)
         )
 
-        popup = PopupMenu(self.frame, self.recommendations_list_view.widget, self.on_popup_r_menu)
+        popup = PopupMenu(self.window.application, self.recommendations_list_view.widget, self.on_popup_r_menu)
         popup.add_items(
             ("$" + _("I _Like This"), self.on_like_recommendation, self.recommendations_list_view),
             ("$" + _("I _Dislike This"), self.on_dislike_recommendation, self.recommendations_list_view),
@@ -149,23 +148,41 @@ class Interests:
             ("#" + _("_Search for Item"), self.on_recommend_search, self.recommendations_list_view)
         )
 
-        popup = UserPopupMenu(self.frame, self.similar_users_list_view.widget, self.on_popup_ru_menu)
+        popup = UserPopupMenu(self.window.application, self.similar_users_list_view.widget, self.on_popup_ru_menu)
         popup.setup_user_menu()
 
-        self.update_visuals()
+        for event_name, callback in (
+            ("add-dislike", self.add_thing_i_hate),
+            ("add-interest", self.add_thing_i_like),
+            ("global-recommendations", self.global_recommendations),
+            ("item-recommendations", self.item_recommendations),
+            ("item-similar-users", self.item_similar_users),
+            ("recommendations", self.recommendations),
+            ("remove-dislike", self.remove_thing_i_hate),
+            ("remove-interest", self.remove_thing_i_like),
+            ("server-login", self.server_login),
+            ("server-disconnect", self.server_disconnect),
+            ("similar-users", self.similar_users),
+            ("user-stats", self.user_stats),
+            ("user-status", self.user_status)
+        ):
+            events.connect(event_name, callback)
 
-    def server_login(self):
+    def server_login(self, msg):
+
+        if not msg.success:
+            return
 
         self.recommendations_button.set_sensitive(True)
         self.similar_users_button.set_sensitive(True)
 
-        if self.frame.current_page_id != self.frame.interests_page.id:
+        if self.window.current_page_id != self.window.interests_page.id:
             # Only populate recommendations if the tab is open on login
             return
 
         self.populate_recommendations()
 
-    def server_disconnect(self):
+    def server_disconnect(self, *_args):
         self.recommendations_button.set_sensitive(False)
         self.similar_users_button.set_sensitive(False)
 
@@ -190,7 +207,7 @@ class Interests:
         iterator = self.likes_list_view.iterators.get(item)
 
         if iterator is None:
-            self.likes_list_view.add_row([item], select_row=False)
+            self.likes_list_view.add_row([item])
 
     def add_thing_i_hate(self, item):
 
@@ -202,7 +219,7 @@ class Interests:
         iterator = self.dislikes_list_view.iterators.get(item)
 
         if iterator is None:
-            self.dislikes_list_view.add_row([item], select_row=False)
+            self.dislikes_list_view.add_row([item])
 
     def remove_thing_i_like(self, item):
 
@@ -350,8 +367,11 @@ class Interests:
         self.similar_users_list_view.clear()
 
         for user in users:
-            self.similar_users_list_view.add_row(
-                [get_status_icon_name(UserStatus.OFFLINE), user, "", "0", 0, 0, 0], select_row=False)
+            self.similar_users_list_view.add_row([
+                USER_STATUS_ICON_NAMES[UserStatus.OFFLINE],
+                user,
+                "", "0", 0, 0, 0
+            ], select_row=False)
 
     def similar_users(self, msg):
         # Sort users by rating (largest number of identical likes)
@@ -360,7 +380,7 @@ class Interests:
     def item_similar_users(self, msg):
         self.set_similar_users(msg.users, msg.thing)
 
-    def get_user_status(self, msg):
+    def user_status(self, msg):
 
         iterator = self.similar_users_list_view.iterators.get(msg.user)
 
@@ -368,12 +388,15 @@ class Interests:
             return
 
         status = msg.status
-        status_icon = get_status_icon_name(status)
+        status_icon_name = USER_STATUS_ICON_NAMES.get(status)
 
-        self.similar_users_list_view.set_row_value(iterator, 0, status_icon)
+        if not status_icon_name:
+            return
+
+        self.similar_users_list_view.set_row_value(iterator, 0, status_icon_name)
         self.similar_users_list_view.set_row_value(iterator, 4, status)
 
-    def get_user_stats(self, msg):
+    def user_stats(self, msg):
 
         iterator = self.similar_users_list_view.iterators.get(msg.user)
 
@@ -434,13 +457,9 @@ class Interests:
         for iterator in self.similar_users_list_view.get_selected_rows():
             user = self.similar_users_list_view.get_row_value(iterator, 1)
 
-            core.userinfo.request_user_info(user)
+            core.userinfo.show_user(user)
             return
 
     @staticmethod
     def on_tooltip(list_view, pos_x, pos_y, _keyboard_mode, tooltip):
         return list_view.show_user_status_tooltip(pos_x, pos_y, tooltip, column=4)
-
-    def update_visuals(self):
-        for widget in self.__dict__.values():
-            update_widget_visuals(widget)

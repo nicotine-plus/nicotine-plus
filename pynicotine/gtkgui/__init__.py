@@ -19,6 +19,9 @@
 import os
 import sys
 
+from pynicotine.config import config
+from pynicotine.logfacility import log
+
 
 def check_gtk_version():
 
@@ -31,7 +34,7 @@ def check_gtk_version():
 
     if os.getenv("NICOTINE_LIBADWAITA") is None:
         os.environ["NICOTINE_LIBADWAITA"] = str(int(
-            sys.platform in ("win32", "darwin") or os.environ.get("DESKTOP_SESSION") == "gnome"
+            sys.platform in ("win32", "darwin") or os.environ.get("XDG_SESSION_DESKTOP") == "gnome"
         ))
 
     gtk_major_version, *_unused = gtk_version
@@ -40,7 +43,7 @@ def check_gtk_version():
         import gi
 
     except ImportError:
-        return _("Cannot find %s, please install it.") % "pygobject"
+        return _("Cannot find %s, please install it.") % ("pygobject",)
 
     try:
         api_version = (gtk_major_version, 0)
@@ -65,20 +68,11 @@ def check_gtk_version():
             "major_version": gtk_major_version,
             "complete_version": '.'.join(map(str, gtk_version))}
 
-    try:
-        if os.getenv("NICOTINE_LIBADWAITA") == '1':
-            gi.require_version('Adw', '1')
-
-            from gi.repository import Adw
-            Adw.init()
-
-    except (ImportError, ValueError):
-        pass
-
+    config.gtk_version = f"{gtk_major_version}.{Gtk.get_minor_version()}.{Gtk.get_micro_version()}"
     return None
 
 
-def run_gui(hidden, ci_mode, multi_instance):
+def run(hidden, ci_mode, multi_instance):
     """ Run Nicotine+ GTK GUI """
 
     if getattr(sys, 'frozen', False):
@@ -103,7 +97,6 @@ def run_gui(hidden, ci_mode, multi_instance):
         # 'win32' PangoCairo backend on Windows is too slow, use 'fontconfig' instead
         os.environ["PANGOCAIRO_BACKEND"] = "fontconfig"
 
-    from pynicotine.logfacility import log
     error = check_gtk_version()
 
     if error:
@@ -115,6 +108,8 @@ def run_gui(hidden, ci_mode, multi_instance):
     if not ci_mode and Gdk.Display.get_default() is None:
         log.add(_("No graphical environment available, using headless (no GUI) mode"))
         return None
+
+    log.add(_("Loading %(program)s %(version)s"), {"program": "GTK", "version": config.gtk_version})
 
     from pynicotine.gtkgui.application import Application
     return Application(hidden, ci_mode, multi_instance).run()

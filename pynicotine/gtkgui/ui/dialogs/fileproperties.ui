@@ -18,7 +18,7 @@
   </object>
   <object class="GtkButton" id="previous_button">
     <property name="visible">True</property>
-    <property name="tooltip-text" translatable="yes">Previous file</property>
+    <property name="tooltip-text" translatable="yes">Previous File</property>
     <signal name="clicked" handler="on_previous"/>
     <child>
       <object class="GtkImage">
@@ -32,7 +32,7 @@
   </object>
   <object class="GtkButton" id="next_button">
     <property name="visible">True</property>
-    <property name="tooltip-text" translatable="yes">Next file</property>
+    <property name="tooltip-text" translatable="yes">Next File</property>
     <signal name="clicked" handler="on_next"/>
     <child>
       <object class="GtkImage">
@@ -46,7 +46,7 @@
   </object>
   <object class="GtkButton" id="download_button">
     <property name="visible">True</property>
-    <property name="tooltip-text" translatable="yes">Download file</property>
+    <property name="tooltip-text" translatable="yes">Download File</property>
     <signal name="clicked" handler="on_download_item"/>
     <child>
       <object class="GtkImage">

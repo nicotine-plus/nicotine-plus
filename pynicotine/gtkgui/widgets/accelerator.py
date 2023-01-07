@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import sys
+
 from gi.repository import Gdk
 from gi.repository import Gtk
 
@@ -27,19 +29,38 @@ from pynicotine.gtkgui.application import GTK_API_VERSION
 
 class Accelerator:
 
+    if GTK_API_VERSION >= 4:
+        shortcut_controllers = {}
+        shortcut_triggers = {}
+    else:
+        KEYMAP = Gdk.Keymap.get_for_display(Gdk.Display.get_default())
+        keycodes_mods = {}
+
     def __init__(self, accelerator, widget, callback, user_data=None):
 
         if GTK_API_VERSION >= 4:
-            shortcut_controller = Gtk.ShortcutController()
-            shortcut_controller.set_scope(Gtk.ShortcutScope.LOCAL)
-            shortcut_controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+            if sys.platform == "darwin":
+                # Use Command key instead of Ctrl in accelerators on macOS
+                accelerator = accelerator.replace("<Primary>", "<Meta>")
+
+            shortcut_controller = self.shortcut_controllers.get(widget)
+            shortcut_trigger = self.shortcut_triggers.get(accelerator)
+
+            if not shortcut_controller:
+                self.shortcut_controllers[widget] = shortcut_controller = Gtk.ShortcutController(
+                    propagation_phase=Gtk.PropagationPhase.CAPTURE
+                )
+                widget.add_controller(shortcut_controller)
+
+            if not shortcut_trigger:
+                self.shortcut_triggers[accelerator] = shortcut_trigger = Gtk.ShortcutTrigger.parse_string(accelerator)
+
             shortcut_controller.add_shortcut(
                 Gtk.Shortcut(
-                    trigger=Gtk.ShortcutTrigger.parse_string(accelerator),
-                    action=Gtk.CallbackAction.new(callback, user_data),
+                    trigger=shortcut_trigger,
+                    action=Gtk.CallbackAction.new(callback, user_data)
                 )
             )
-            widget.add_controller(shortcut_controller)
             return
 
         # GTK 3 replacement for Gtk.ShortcutController
@@ -49,23 +70,23 @@ class Accelerator:
 
         widget.connect("key-press-event", self._activate_accelerator)
 
-    @staticmethod
-    def parse_accelerator(accelerator):
+    @classmethod
+    def parse_accelerator(cls, accelerator):
 
-        keycodes = []
-        *_args, key, mods = Gtk.accelerator_parse(accelerator)
+        keycodes_mods_accel = cls.keycodes_mods.get(accelerator)
 
-        if not key:
-            return keycodes, mods
+        if not keycodes_mods_accel:
+            *_args, key, mods = Gtk.accelerator_parse(accelerator)
 
-        if GTK_API_VERSION >= 4:
-            _valid, keys = Gdk.Display.get_default().map_keyval(key)
-        else:
-            keymap = Gdk.Keymap.get_for_display(Gdk.Display.get_default())
-            _valid, keys = keymap.get_entries_for_keyval(key)
+            if key:
+                _valid, keys = cls.KEYMAP.get_entries_for_keyval(key)
+                keycodes = {key.keycode for key in keys}
+            else:
+                keycodes = []
 
-        keycodes = {key.keycode for key in keys}
-        return keycodes, mods
+            cls.keycodes_mods[accelerator] = keycodes_mods_accel = (keycodes, mods)
+
+        return keycodes_mods_accel
 
     def _activate_accelerator(self, widget, event):
 
@@ -88,7 +109,7 @@ class Accelerator:
         return self.callback(widget, None, self.user_data)
 
 
-if GTK_API_VERSION != 4:
+if GTK_API_VERSION == 3:
     ALL_MODIFIERS = (Accelerator.parse_accelerator("<Primary>")[1]
                      | Accelerator.parse_accelerator("<Shift>")[1]
                      | Accelerator.parse_accelerator("<Alt>")[1])

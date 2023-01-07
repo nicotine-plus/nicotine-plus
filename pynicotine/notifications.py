@@ -20,7 +20,7 @@ from collections import deque
 from threading import Thread
 
 from pynicotine.config import config
-from pynicotine.core import core
+from pynicotine.events import events
 from pynicotine.logfacility import log
 from pynicotine.utils import execute_command
 
@@ -29,13 +29,18 @@ class Notifications:
 
     def __init__(self):
 
-        self.ui_callback = getattr(core.ui_callback, "notifications", None)
         self.chat_hilites = {
             "rooms": [],
             "private": []
         }
         self.tts = deque()
         self._tts_thread = None
+
+        events.connect("quit", self._quit)
+
+    def _quit(self):
+        self.chat_hilites.clear()
+        self.tts.clear()
 
     """ Chat Hilites """
 
@@ -55,18 +60,22 @@ class Notifications:
         self.chat_hilites[location].remove(item)
         return True
 
-    """ Text Notification """
+    """ Notification Messages """
 
-    def new_text_notification(self, message, title=None):
+    def show_notification(self, message, title=None):
+        events.emit("show-notification", message, title=title)
 
-        if self.ui_callback:
-            self.ui_callback.new_text_notification(message, title)
-            return
+    def show_chatroom_notification(self, room, message, title=None, high_priority=False):
+        events.emit("show-chatroom-notification", room, message, title=title, high_priority=high_priority)
 
-        if title:
-            message = "%s: %s" % (title, message)
+    def show_download_notification(self, message, title=None, high_priority=False):
+        events.emit("show-download-notification", message, title=title, high_priority=high_priority)
 
-        log.add(message)
+    def show_private_chat_notification(self, user, message, title=None):
+        events.emit("show-private-chat-notification", user, message, title=title)
+
+    def show_search_notification(self, search_token, message, title=None):
+        events.emit("show-search-notification", search_token, message, title=title)
 
     """ TTS """
 

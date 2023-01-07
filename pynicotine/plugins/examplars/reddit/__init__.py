@@ -23,7 +23,6 @@ from itertools import islice
 
 from pynicotine.pluginsystem import BasePlugin
 from pynicotine.pluginsystem import returncode
-from pynicotine.utils import http_request
 
 
 class Plugin(BasePlugin):
@@ -46,19 +45,20 @@ class Plugin(BasePlugin):
     def reddit_command(self, _source, subreddit):
 
         try:
-            response = http_request('https', 'www.reddit.com', '/r/' + subreddit + '/.json',
-                                    headers={"User-Agent": self.config.application_name})
+            from urllib.request import urlopen
+            with urlopen("https://www.reddit.com/r/%s/.json" % subreddit, timeout=10) as response:
+                response_body = response.read().decode("utf-8")
 
         except Exception as error:
             self.log("Could not connect to Reddit: %(error)s", {"error": error})
             return returncode['zap']
 
         try:
-            response = json.loads(response)
+            response = json.loads(response_body)
 
             for post in islice(response['data']['children'], self.settings['reddit_links']):
                 post_data = post['data']
-                self.echo_message("{}: {}".format(post_data['title'], post_data['url']))
+                self.echo_message("%s: %s" % (post_data['title'], post_data['url']))
 
         except Exception as error:
             self.log("Failed to parse response from Reddit: %(error)s", {"error": error})

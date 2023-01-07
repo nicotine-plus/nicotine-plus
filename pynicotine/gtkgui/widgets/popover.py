@@ -19,6 +19,7 @@
 from gi.repository import Gtk
 
 from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.widgets.theme import add_css_class
 
 """ Popover """
 
@@ -35,13 +36,10 @@ class Popover:
         self.default_height = height
 
         self.popover = Gtk.Popover(child=content_box)
-        self.popover.get_style_context().add_class("generic-popover")
         self.popover.connect("notify::visible", self._on_show)
         self.popover.connect("closed", self._on_close)
 
-        if GTK_API_VERSION >= 4:
-            # Workaround for https://gitlab.gnome.org/GNOME/gtk/-/issues/4529
-            self.popover.set_autohide(False)  # pylint: disable=no-member
+        add_css_class(self.popover, "generic-popover")
 
     def _on_show(self, _popover, param):
 
@@ -69,11 +67,8 @@ class Popover:
         if not popover_width and not popover_height:
             return
 
-        if GTK_API_VERSION >= 4:
-            main_window_width = self.window.get_width()
-            main_window_height = self.window.get_height()
-        else:
-            main_window_width, main_window_height = self.window.get_size()
+        main_window_width = self.window.get_width()
+        main_window_height = self.window.get_height()
 
         if main_window_width and popover_width > main_window_width:
             popover_width = main_window_width - 60
@@ -86,5 +81,10 @@ class Popover:
     def show(self):
         self.popover.popup()
 
-    def close(self):
-        self.popover.popdown()
+    def close(self, use_transition=True):
+
+        if use_transition:
+            self.popover.popdown()
+            return
+
+        self.popover.set_visible(False)

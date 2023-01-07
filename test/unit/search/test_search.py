@@ -35,7 +35,6 @@ class SearchTest(TestCase):
         config.data_dir = os.path.dirname(os.path.realpath(__file__))
         config.filename = os.path.join(config.data_dir, "temp_config")
 
-        config.load_config()
         core.init_components()
 
     def test_do_search(self):
@@ -88,7 +87,7 @@ class SearchTest(TestCase):
 
         # Second item
 
-        new_item = SEARCH_TEXT + "1"
+        new_item = f"{SEARCH_TEXT}1"
         core.search.add_wish(new_item)
         self.assertEqual(config.sections["server"]["autosearch"][0], SEARCH_TEXT)
         self.assertEqual(config.sections["server"]["autosearch"][1], new_item)

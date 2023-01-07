@@ -29,6 +29,7 @@ from operator import itemgetter
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
+from pynicotine.events import events
 from pynicotine.logfacility import log
 from pynicotine.scheduler import scheduler
 from pynicotine.slskmessages import increment_token
@@ -39,7 +40,6 @@ class Search:
 
     def __init__(self):
 
-        self.ui_callback = getattr(core.ui_callback, "search", None)
         self.searches = {}
         self.token = int(random.random() * (2 ** 31 - 1))
         self.wishlist_interval = 0
@@ -50,17 +50,22 @@ class Search:
             self.token = increment_token(self.token)
             self.searches[self.token] = {"id": self.token, "term": term, "mode": "wishlist", "ignore": True}
 
-    def server_login(self):
-        if self.ui_callback:
-            self.ui_callback.server_login()
+        for event_name, callback in (
+            ("distributed-search-request", self._distrib_search),
+            ("file-search-response", self._file_search_response),
+            ("quit", self._quit),
+            ("server-disconnect", self._server_disconnect),
+            ("server-search-request", self._search_request),
+            ("set-wishlist-interval", self._set_wishlist_interval)
+        ):
+            events.connect(event_name, callback)
 
-    def server_disconnect(self):
+    def _quit(self):
+        self.searches.clear()
 
+    def _server_disconnect(self, _msg):
         scheduler.cancel(self._wishlist_timer_id)
         self.wishlist_interval = 0
-
-        if self.ui_callback:
-            self.ui_callback.server_disconnect()
 
     def request_folder_download(self, user, folder, visible_files):
 
@@ -106,8 +111,10 @@ class Search:
         else:
             del self.searches[token]
 
-        if self.ui_callback:
-            self.ui_callback.remove_search(token)
+        events.emit("remove-search", token)
+
+    def show_search(self, token):
+        events.emit("show-search", token)
 
     def process_search_term(self, search_term, mode, room=None, user=None):
 
@@ -214,8 +221,7 @@ class Search:
 
         self.add_search(search_term, mode, ignore=False)
 
-        if self.ui_callback:
-            self.ui_callback.do_search(self.token, search_term, mode, room, users, switch_page)
+        events.emit("do-search", self.token, search_term, mode, room, users, switch_page)
 
     def do_global_search(self, text):
         core.queue.append(slskmessages.FileSearch(self.token, text))
@@ -229,10 +235,10 @@ class Search:
 
         if room != _("Joined Rooms "):
             core.queue.append(slskmessages.RoomSearch(room, self.token, text))
+            return
 
-        elif core.chatrooms.ui_callback is not None:
-            for joined_room in core.chatrooms.ui_callback.pages:
-                core.queue.append(slskmessages.RoomSearch(joined_room, self.token, text))
+        for joined_room in core.chatrooms.joined_rooms:
+            core.queue.append(slskmessages.RoomSearch(joined_room, self.token, text))
 
     def do_buddies_search(self, text):
         for user in core.userlist.buddies:
@@ -281,29 +287,29 @@ class Search:
 
         if wish not in config.sections["server"]["autosearch"]:
             config.sections["server"]["autosearch"].append(wish)
+            config.write_configuration()
 
         self.add_search(wish, "wishlist", ignore=True)
 
-        if self.ui_callback:
-            self.ui_callback.add_wish(wish)
+        events.emit("add-wish", wish)
 
     def remove_wish(self, wish):
 
         if wish in config.sections["server"]["autosearch"]:
             config.sections["server"]["autosearch"].remove(wish)
+            config.write_configuration()
 
             for search in self.searches.values():
                 if search["term"] == wish and search["mode"] == "wishlist":
                     del search
                     break
 
-        if self.ui_callback:
-            self.ui_callback.remove_wish(wish)
+        events.emit("remove-wish", wish)
 
     def is_wish(self, wish):
         return wish in config.sections["server"]["autosearch"]
 
-    def set_wishlist_interval(self, msg):
+    def _set_wishlist_interval(self, msg):
         """ Server code: 104 """
 
         self.wishlist_interval = msg.seconds
@@ -317,46 +323,35 @@ class Search:
         else:
             log.add(_("Server does not permit performing wishlist searches at this time"))
 
-        if self.ui_callback:
-            self.ui_callback.set_wishlist_interval(msg)
-
-    def file_search_result(self, msg):
+    def _file_search_response(self, msg):
         """ Peer message: 9 """
 
-        if not self.ui_callback or msg.token not in slskmessages.SEARCH_TOKENS_ALLOWED:
+        if msg.token not in slskmessages.SEARCH_TOKENS_ALLOWED:
             return
 
         search = self.searches.get(msg.token)
 
         if search is None or search["ignore"]:
+            msg.token = None
             return
 
         username = msg.init.target_user
         ip_address = msg.init.addr[0]
 
         if core.network_filter.is_user_ignored(username):
+            msg.token = None
             return
 
         if core.network_filter.is_ip_ignored(ip_address):
-            return
+            msg.token = None
 
-        if ip_address:
-            country = core.geoip.get_country_code(ip_address)
-        else:
-            country = ""
-
-        if country == "-":
-            country = ""
-
-        self.ui_callback.show_search_result(msg, username, country)
-
-    def search_request(self, msg):
+    def _search_request(self, msg):
         """ Server code: 26, 42 and 120 """
 
         self.process_search_request(msg.searchterm, msg.user, msg.token, direct=True)
         core.pluginhandler.search_request_notification(msg.searchterm, msg.user, msg.token)
 
-    def distrib_search(self, msg):
+    def _distrib_search(self, msg):
         """ Distrib code: 3 """
 
         self.process_search_request(msg.searchterm, msg.user, msg.token, direct=False)
@@ -540,7 +535,7 @@ class Search:
         slotsavail = core.transfers.allow_new_uploads()
         fifoqueue = config.sections["transfers"]["fifoqueue"]
 
-        message = slskmessages.FileSearchResult(
+        message = slskmessages.FileSearchResponse(
             None, core.login_username,
             token, fileinfos, slotsavail, uploadspeed, queuesize, fifoqueue)
 

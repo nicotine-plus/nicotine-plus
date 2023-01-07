@@ -34,8 +34,8 @@ from setuptools import setup
 from setuptools.command.build_py import build_py
 
 from pynicotine.config import config
+from pynicotine.i18n import LOCALE_PATH
 from pynicotine.i18n import build_translations
-from pynicotine.i18n import get_translation_paths
 
 
 class BuildPyCommand(build_py):
@@ -75,7 +75,7 @@ functionality while keeping current with the Soulseek protocol.""",
             "Topic :: System :: Networking"
         ],
         packages=find_packages(include=["pynicotine", "pynicotine.*"]),
-        package_data={"": ["*.bin", "*.ui", "PLUGININFO"]},
+        package_data={"": ["*.bin", "*.ui", "PLUGININFO"] + glob.glob(LOCALE_PATH + "/**/*.mo", recursive=True)},
         scripts=["nicotine"],
         data_files=[
             ("share/applications", ["data/%s.desktop" % config.application_id]),
@@ -101,8 +101,9 @@ functionality while keeping current with the Soulseek protocol.""",
                 ["pynicotine/gtkgui/icons/hicolor/symbolic/apps/%s-symbolic.svg" % config.application_id]),
             ("share/icons/hicolor/scalable/intl", glob.glob("pynicotine/gtkgui/icons/hicolor/scalable/intl/*.svg")),
             ("share/icons/hicolor/scalable/status", glob.glob("pynicotine/gtkgui/icons/hicolor/scalable/status/*.svg"))
-        ] + get_translation_paths(),
+        ],
         python_requires=">=3.6",
         install_requires=["PyGObject>=3.22"],
+        extras_require={"test": ["flake8", "pylint"]},
         cmdclass={"build_py": BuildPyCommand}
     )

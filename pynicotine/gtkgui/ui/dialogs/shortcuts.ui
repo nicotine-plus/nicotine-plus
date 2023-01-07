@@ -30,7 +30,7 @@
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">True</property>
-                <property name="action-name">app.away</property>
+                <property name="action-name">app.away-accel</property>
                 <property name="title" translatable="yes">Away</property>
               </object>
             </child>
@@ -65,7 +65,7 @@
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">True</property>
-                <property name="action-name">app.close</property>
+                <property name="action-name">win.close</property>
                 <property name="title" translatable="yes">Quit / Run in Background</property>
               </object>
             </child>
@@ -85,14 +85,14 @@
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">True</property>
-                <property name="accelerator">F10</property>
+                <property name="action-name">win.main-menu</property>
                 <property name="title" translatable="yes">Open Main Menu</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">True</property>
-                <property name="accelerator">&lt;Shift&gt;F10</property>
+                <property name="action-name">win.context-menu</property>
                 <property name="title" translatable="yes">Open Context Menu</property>
               </object>
             </child>
@@ -105,7 +105,7 @@
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">True</property>
-                <property name="accelerator">&lt;Ctrl&gt;1...9</property>
+                <property name="accelerator">&lt;Alt&gt;1...9</property>
                 <property name="title" translatable="yes">Change Main Tab</property>
               </object>
             </child>
@@ -139,14 +139,14 @@
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">True</property>
-                <property name="accelerator">&lt;Primary&gt;c</property>
+                <property name="action-name">accel.copy-clipboard</property>
                 <property name="title" translatable="yes">Copy Selected Cell</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">True</property>
-                <property name="accelerator">Delete</property>
+                <property name="action-name">accel.remove</property>
                 <property name="title" translatable="yes">Remove Selected Row</property>
               </object>
             </child>
@@ -159,56 +159,56 @@
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">True</property>
-                <property name="accelerator">&lt;Primary&gt;x</property>
+                <property name="action-name">accel.cut-clipboard</property>
                 <property name="title" translatable="yes">Cut</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">True</property>
-                <property name="accelerator">&lt;Primary&gt;c</property>
+                <property name="action-name">accel.copy-clipboard</property>
                 <property name="title" translatable="yes">Copy</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">True</property>
-                <property name="accelerator">&lt;Primary&gt;v</property>
+                <property name="action-name">accel.paste-clipboard</property>
                 <property name="title" translatable="yes">Paste</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut" id="emoji_shortcut">
                 <property name="visible">True</property>
-                <property name="accelerator">&lt;Primary&gt;period</property>
+                <property name="action-name">accel.insert-emoji</property>
                 <property name="title" translatable="yes">Insert Emoji</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">True</property>
-                <property name="accelerator">&lt;Primary&gt;a</property>
+                <property name="action-name">accel.select-all</property>
                 <property name="title" translatable="yes">Select All</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">True</property>
-                <property name="accelerator">&lt;Primary&gt;f</property>
+                <property name="action-name">accel.find</property>
                 <property name="title" translatable="yes">Find</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">True</property>
-                <property name="accelerator">&lt;Primary&gt;g</property>
+                <property name="action-name">accel.find-next-match</property>
                 <property name="title" translatable="yes">Find Next Match</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">True</property>
-                <property name="accelerator">&lt;Shift&gt;&lt;Primary&gt;g</property>
+                <property name="action-name">accel.find-previous-match</property>
                 <property name="title" translatable="yes">Find Previous Match</property>
               </object>
             </child>
@@ -221,14 +221,14 @@
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">True</property>
-                <property name="accelerator">r</property>
+                <property name="action-name">accel.retry-transfer</property>
                 <property name="title" translatable="yes">Resume / Retry Transfer</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">True</property>
-                <property name="accelerator">t</property>
+                <property name="action-name">accel.abort-transfer</property>
                 <property name="title" translatable="yes">Pause / Abort Transfer</property>
               </object>
             </child>
@@ -241,49 +241,49 @@
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">True</property>
-                <property name="accelerator">&lt;Primary&gt;Return</property>
+                <property name="action-name">accel.download-to</property>
                 <property name="title" translatable="yes">Download / Upload To</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">True</property>
-                <property name="accelerator">&lt;Alt&gt;Return</property>
+                <property name="action-name">accel.file-properties</property>
                 <property name="title" translatable="yes">File Properties</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">True</property>
-                <property name="accelerator">&lt;Primary&gt;S</property>
+                <property name="action-name">accel.save</property>
                 <property name="title" translatable="yes">Save List to Disk</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">True</property>
-                <property name="accelerator">&lt;Primary&gt;G</property>
+                <property name="action-name">accel.find-next-match</property>
                 <property name="title" translatable="yes">Find Next Match</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">True</property>
-                <property name="accelerator">&lt;Primary&gt;R</property>
+                <property name="action-name">accel.refresh</property>
                 <property name="title" translatable="yes">Refresh</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">True</property>
-                <property name="accelerator">&lt;Primary&gt;backslash</property>
+                <property name="action-name">accel.toggle-row-expand</property>
                 <property name="title" translatable="yes">Expand / Collapse All</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">True</property>
-                <property name="accelerator">BackSpace</property>
+                <property name="action-name">accel.back</property>
                 <property name="title" translatable="yes">Back to Parent Folder</property>
               </object>
             </child>
@@ -296,14 +296,14 @@
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">True</property>
-                <property name="accelerator">&lt;Primary&gt;f Escape</property>
+                <property name="action-name">accel.find</property>
                 <property name="title" translatable="yes">Result Filters</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">True</property>
-                <property name="accelerator">&lt;Alt&gt;Return</property>
+                <property name="action-name">accel.file-properties</property>
                 <property name="title" translatable="yes">File Properties</property>
               </object>
             </child>

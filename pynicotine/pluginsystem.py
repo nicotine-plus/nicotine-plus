@@ -29,6 +29,7 @@ from time import time
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
+from pynicotine.events import events
 from pynicotine.logfacility import log
 from pynicotine.utils import encode_path
 
@@ -55,7 +56,6 @@ class BasePlugin:
     parent = None         # Reference to PluginHandler
     config = None         # Reference to global Config handler
     core = None           # Reference to Core
-    frame = None          # Reference to NicotineFrame (GUI). Not accessible in headless/non-GUI mode. Use sparsely!
 
     def __init__(self):
         # The plugin class is initializing, plugin settings are not available yet
@@ -82,90 +82,119 @@ class BasePlugin:
         pass
 
     def public_room_message_notification(self, room, user, line):
+        # Override method in plugin
         pass
 
     def search_request_notification(self, searchterm, user, token):
+        # Override method in plugin
         pass
 
     def distrib_search_notification(self, searchterm, user, token):
+        # Override method in plugin
         pass
 
     def incoming_private_chat_event(self, user, line):
+        # Override method in plugin
         pass
 
     def incoming_private_chat_notification(self, user, line):
+        # Override method in plugin
         pass
 
     def incoming_public_chat_event(self, room, user, line):
+        # Override method in plugin
         pass
 
     def incoming_public_chat_notification(self, room, user, line):
+        # Override method in plugin
         pass
 
     def outgoing_private_chat_event(self, user, line):
+        # Override method in plugin
         pass
 
     def outgoing_private_chat_notification(self, user, line):
+        # Override method in plugin
         pass
 
     def outgoing_public_chat_event(self, room, line):
+        # Override method in plugin
         pass
 
     def outgoing_public_chat_notification(self, room, line):
+        # Override method in plugin
         pass
 
     def outgoing_global_search_event(self, text):
+        # Override method in plugin
         pass
 
     def outgoing_room_search_event(self, rooms, text):
+        # Override method in plugin
         pass
 
     def outgoing_buddy_search_event(self, text):
+        # Override method in plugin
         pass
 
     def outgoing_user_search_event(self, users, text):
+        # Override method in plugin
         pass
 
     def user_resolve_notification(self, user, ip_address, port, country):
+        # Override method in plugin
         pass
 
     def server_connect_notification(self):
+        # Override method in plugin
         pass
 
     def server_disconnect_notification(self, userchoice):
+        # Override method in plugin
         pass
 
     def join_chatroom_notification(self, room):
+        # Override method in plugin
         pass
 
     def leave_chatroom_notification(self, room):
+        # Override method in plugin
         pass
 
     def user_join_chatroom_notification(self, room, user):
+        # Override method in plugin
         pass
 
     def user_leave_chatroom_notification(self, room, user):
+        # Override method in plugin
         pass
 
     def user_stats_notification(self, user, stats):
+        # Override method in plugin
         pass
 
     def user_status_notification(self, user, status, privileged):
+        # Override method in plugin
         pass
 
     def upload_queued_notification(self, user, virtual_path, real_path):
+        # Override method in plugin
         pass
 
     def upload_started_notification(self, user, virtual_path, real_path):
+        # Override method in plugin
         pass
 
     def upload_finished_notification(self, user, virtual_path, real_path):
+        # Override method in plugin
         pass
 
     def download_started_notification(self, user, virtual_path, real_path):
+        # Override method in plugin
         pass
 
     def download_finished_notification(self, user, virtual_path, real_path):
+        # Override method in plugin
         pass
 
     # The following are functions to make your life easier,
@@ -215,8 +244,8 @@ class BasePlugin:
         if command_type == "cli":
             return
 
-        function = self.send_public if command_type == "chatroom" else self.send_private
-        function(source, text)
+        func = self.send_public if command_type == "chatroom" else self.send_private
+        func(source, text)
 
     def echo_message(self, text, message_type="local"):
         """ Convenience function to display a raw message the same window
@@ -232,22 +261,11 @@ class BasePlugin:
             print(text)
             return
 
-        function = self.echo_public if command_type == "chatroom" else self.echo_private
-        function(source, text, message_type)
+        func = self.echo_public if command_type == "chatroom" else self.echo_private
+        func(source, text, message_type)
 
-    # Obsolete functions
-
-    def saypublic(self, _room, _text):
-        self.log("saypublic(room, text) is obsolete, please use send_public(room, text)")
-
-    def sayprivate(self, _user, _text):
-        self.log("sayprivate(user, text) is obsolete, please use send_private(user, text)")
-
-    def sendprivate(self, _user, _text):
-        self.log("sendprivate(user, text) is obsolete, please use send_private(user, text, show_ui=False)")
-
-    def fakepublic(self, _room, _user, _text):
-        self.log("fakepublic(room, user, text) is obsolete, please use echo_public(room, text)")
+    def output(self, text):
+        self.echo_message(text, message_type="command")
 
 
 class ResponseThrottle:
@@ -328,8 +346,7 @@ class ResponseThrottle:
                 willing_to_respond, reason = False, "Responded in multiple rooms enough"
 
         if self.logging and not willing_to_respond:
-            base_log_msg = "{} plugin request rejected - room '{}', nick '{}'".format(self.plugin_name, room, nick)
-            log.add_debug("{} - {}".format(base_log_msg, reason))
+            log.add_debug(f"{self.plugin_name} plugin request rejected - room '{room}', nick '{nick}' - {reason}")
 
         return willing_to_respond
 
@@ -362,9 +379,30 @@ class PluginHandler:
         BasePlugin.parent = self
         BasePlugin.config = config
         BasePlugin.core = core
-        BasePlugin.frame = core.ui_callback
 
-    def quit(self):
+        for event_name, callback in (
+            ("start", self._start),
+            ("quit", self._quit)
+        ):
+            events.connect(event_name, callback)
+
+    def _start(self):
+
+        enable = config.sections["plugins"]["enable"]
+
+        if not enable:
+            return
+
+        log.add(_("Loading plugin system"))
+        self.enable_plugin("core_commands")
+
+        to_enable = config.sections["plugins"]["enabled"]
+        log.add_debug(f"Enabled plugin(s): {', '.join(to_enable)}")
+
+        for plugin in to_enable:
+            self.enable_plugin(plugin)
+
+    def _quit(self):
 
         # Notify plugins
         self.shutdown_notification()
@@ -404,6 +442,10 @@ class PluginHandler:
             self.enable_plugin(plugin_name)
 
     def load_plugin(self, plugin_name):
+
+        if sys.platform in ("win32", "darwin") and plugin_name == "now_playing_sender":
+            # MPRIS is not available on Windows and macOS
+            return None
 
         try:
             # Import builtin plugin
@@ -517,6 +559,10 @@ class PluginHandler:
                     file_path = entry.name.decode("utf-8", "replace")
 
                     if file_path == "core_commands":
+                        continue
+
+                    if sys.platform in ("win32", "darwin") and file_path == "now_playing_sender":
+                        # MPRIS is not available on Windows and macOS
                         continue
 
                     if entry.is_dir() and file_path not in plugin_list:
@@ -640,21 +686,6 @@ class PluginHandler:
     def save_enabled(self):
         config.sections["plugins"]["enabled"] = list(self.enabled_plugins)
 
-    def load_enabled(self):
-        enable = config.sections["plugins"]["enable"]
-
-        if not enable:
-            return
-
-        log.add(_("Loading plugin system"))
-        self.enable_plugin("core_commands")
-
-        to_enable = config.sections["plugins"]["enabled"]
-        log.add_debug("Enabled plugin(s): %s" % ', '.join(to_enable))
-
-        for plugin in to_enable:
-            self.enable_plugin(plugin)
-
     def plugin_settings(self, plugin_name, plugin):
 
         plugin_name = plugin_name.lower()
@@ -686,18 +717,19 @@ class PluginHandler:
             log.add_debug("No stored settings found for %s", plugin.human_name)
 
     def trigger_chatroom_command_event(self, room, command, args):
-        self._trigger_command(command, args, room=room)
+        return self._trigger_command(command, args, room=room)
 
     def trigger_private_chat_command_event(self, user, command, args):
-        self._trigger_command(command, args, user=user)
+        return self._trigger_command(command, args, user=user)
 
     def trigger_cli_command_event(self, command, args):
-        self._trigger_command(command, args)
+        return self._trigger_command(command, args)
 
     def _trigger_command(self, command, args, user=None, room=None):
 
         plugin = None
         command_found = False
+        is_successful = False
 
         for module, plugin in self.enabled_plugins.items():
             if plugin is None:
@@ -740,7 +772,7 @@ class PluginHandler:
                             num_required_args += 1
 
                         if num_args < num_required_args:
-                            rejection_message = "Missing %s argument" % arg
+                            rejection_message = f"Missing {arg} argument"
                             break
 
                         if '|' not in arg:
@@ -749,29 +781,34 @@ class PluginHandler:
                         choices = arg[1:-1].split('|')
 
                         if args_split[i] not in choices:
-                            rejection_message = "Invalid argument, possible choices: %s" % " | ".join(choices)
+                            rejection_message = f"Invalid argument, possible choices: {' | '.join(choices)}"
                             break
 
                     if rejection_message:
-                        plugin.echo_message(rejection_message)
-                        plugin.echo_message("Usage: %s %s" % ('/' + command, " ".join(usage)))
+                        plugin.output(rejection_message)
+                        plugin.output(f"Usage: {'/' + command} {' '.join(usage)}")
                         break
 
                     callback_name = data.get("callback_" + command_type, data.get("callback")).__name__
 
                     if room is not None:
-                        getattr(plugin, callback_name)(args, room=room)
+                        is_successful = getattr(plugin, callback_name)(args, room=room)
 
                     elif user is not None:
-                        getattr(plugin, callback_name)(args, user=user)
+                        is_successful = getattr(plugin, callback_name)(args, user=user)
 
                     else:
-                        getattr(plugin, callback_name)(args)
+                        is_successful = getattr(plugin, callback_name)(args)
+
+                    if is_successful is None:
+                        # Command didn't return anything, default to success
+                        is_successful = True
 
                 if not command_found:
                     for trigger, func in legacy_commands:
                         if trigger == command:
                             getattr(plugin, func.__name__)(self.command_source[1], args)
+                            is_successful = True
                             command_found = True
                             break
 
@@ -785,9 +822,10 @@ class PluginHandler:
                 break
 
         if plugin:
-            plugin.echo_message("Unknown command: %s. Type /help for a list of commands." % ("/" + command))
+            plugin.output(f"Unknown command: {'/' + command}. Type /help for a list of commands.")
 
         self.command_source = None
+        return is_successful
 
     def _trigger_event(self, function_name, args):
         """ Triggers an event for the plugins. Since events and notifications

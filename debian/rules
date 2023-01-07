@@ -5,13 +5,16 @@
 #	Copyright (C) 2016 Kip Warner. Released under the GPLv3 or later.
 #
 
-# Output every command that modifies files on the build system...
+# Output every command that modifies files on the build system
 export DH_VERBOSE=1
 export DH_OPTIONS=-v
+
+# Disable tests requiring internet connection
+export PYBUILD_TEST_ARGS=-k "not test_update_check"
 
 %:
 	dh $@ --with python3 --buildsystem=pybuild
 
-# Enforce xz compression format for increased compatibility with older systems...
+# Enforce xz compression format for increased compatibility with older systems
 override_dh_builddeb:
 	dh_builddeb -- -Zxz

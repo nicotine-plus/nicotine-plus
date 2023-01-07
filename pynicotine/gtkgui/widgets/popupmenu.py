@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2009 quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
@@ -20,9 +20,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import random
-import string
-
 from gi.repository import Gdk
 from gi.repository import Gio
 from gi.repository import GLib
@@ -42,10 +39,12 @@ from pynicotine.utils import TRANSLATE_PUNCTUATION
 
 class PopupMenu:
 
-    def __init__(self, frame, parent=None, callback=None, connect_events=True):
+    popup_id_counter = 0
+
+    def __init__(self, application, parent=None, callback=None, connect_events=True):
 
         self.model = Gio.Menu()
-        self.frame = frame
+        self.application = application
         self.parent = parent
         self.callback = callback
 
@@ -65,7 +64,8 @@ class PopupMenu:
         self.menu_section = None
         self.editing = False
 
-        self.popup_id = ''.join(random.choice(string.digits) for _ in range(8))
+        PopupMenu.popup_id_counter += 1
+        self.popup_id = PopupMenu.popup_id_counter
 
         self.user = None
         self.useritem = None
@@ -105,7 +105,7 @@ class PopupMenu:
         state = GLib.Variant("b", False) if stateful else None
         action = Gio.SimpleAction(name=action_id, state=state)
 
-        self.frame.window.add_action(action)
+        self.application.add_action(action)
         return action
 
     def _create_menu_item(self, item):
@@ -141,12 +141,12 @@ class PopupMenu:
 
         else:
             normalized_label = "-".join(label.translate(TRANSLATE_PUNCTUATION).lower().split())
-            action_id = "win." + (normalized_label + "-" + self.popup_id)
+            action_id = f"app.menu-{normalized_label}-{self.popup_id}"
             action = self._create_action(action_id[4:], (boolean or choice))
 
         if choice and len(item) > 2 and isinstance(item[2], str):
             # Choice target name
-            action_id = action_id + "::" + item[2]
+            action_id = f"{action_id}::{item[2]}"
 
         menuitem = Gio.MenuItem.new(label, action_id)
 
@@ -219,7 +219,7 @@ class PopupMenu:
         self.model.remove_all()
 
         for action in self.actions.values():
-            self.frame.window.remove_action(action.get_name())
+            self.application.remove_action(action.get_name())
 
         self.actions.clear()
         self.items.clear()
@@ -346,17 +346,17 @@ class UserPopupMenu(PopupMenu):
             ("", None)
         )
 
+        if page != "userinfo":
+            self.add_items(("#" + _("View User _Profile"), self.on_user_profile))
+
         if page != "privatechat":
             self.add_items(("#" + _("Send M_essage"), self.on_send_message))
-
-        if page != "userinfo":
-            self.add_items(("#" + _("Show User I_nfo"), self.on_get_user_info))
 
         if page != "userbrowse":
             self.add_items(("#" + _("_Browse Files"), self.on_browse_user))
 
         if page != "userlist":
-            self.add_items(("$" + _("_Add to Buddy List"), self.on_add_to_list))
+            self.add_items(("$" + _("_Add Buddy"), self.on_add_to_list))
 
         self.add_items(
             ("#" + _("_Gift Privileges…"), self.on_give_privileges),
@@ -364,7 +364,7 @@ class UserPopupMenu(PopupMenu):
             ("$" + _("Ban User"), self.on_ban_user),
             ("$" + _("Ignore User"), self.on_ignore_user),
             ("", None),
-            ("$" + _("Ban IP Address"), self.on_block_user),
+            ("$" + _("Ban IP Address"), self.on_ban_ip),
             ("$" + _("Ignore IP Address"), self.on_ignore_ip),
             ("#" + _("Show IP A_ddress"), self.on_show_ip_address)
         )
@@ -388,7 +388,7 @@ class UserPopupMenu(PopupMenu):
         self.editing = True
         self.actions[_("_Gift Privileges…")].set_enabled(bool(core.privileges_left))
 
-        add_to_list = _("_Add to Buddy List")
+        add_to_list = _("_Add Buddy")
 
         if add_to_list in self.actions:
             self.actions[add_to_list].set_state(GLib.Variant("b", self.user in core.userlist.buddies))
@@ -397,7 +397,7 @@ class UserPopupMenu(PopupMenu):
         self.actions[_("Ignore User")].set_state(
             GLib.Variant("b", core.network_filter.is_user_ignored(self.user)))
         self.actions[_("Ban IP Address")].set_state(
-            GLib.Variant("b", core.network_filter.get_cached_blocked_user_ip(self.user) or False))
+            GLib.Variant("b", core.network_filter.get_cached_banned_user_ip(self.user) or False))
         self.actions[_("Ignore IP Address")].set_state(
             GLib.Variant("b", core.network_filter.get_cached_ignored_user_ip(self.user) or False))
 
@@ -442,10 +442,10 @@ class UserPopupMenu(PopupMenu):
 
     def on_search_user(self, *_args):
 
-        self.frame.search_mode_action.change_state(GLib.Variant("s", "user"))
-        self.frame.user_search_entry.set_text(self.user)
-        self.frame.change_main_page(self.frame.search_page)
-        GLib.idle_add(lambda: self.frame.search_entry.grab_focus() == -1, priority=GLib.PRIORITY_HIGH_IDLE)
+        self.application.window.lookup_action("search-mode").change_state(GLib.Variant("s", "user"))
+        self.application.window.user_search_entry.set_text(self.user)
+        self.application.window.change_main_page(self.application.window.search_page)
+        GLib.idle_add(lambda: self.application.window.search_entry.grab_focus() == -1, priority=GLib.PRIORITY_HIGH_IDLE)
 
     def on_send_message(self, *_args):
         core.privatechat.show_user(self.user)
@@ -453,8 +453,8 @@ class UserPopupMenu(PopupMenu):
     def on_show_ip_address(self, *_args):
         core.request_ip_address(self.user)
 
-    def on_get_user_info(self, *_args):
-        core.userinfo.request_user_info(self.user)
+    def on_user_profile(self, *_args):
+        core.userinfo.show_user(self.user)
 
     def on_browse_user(self, *_args):
         core.userbrowse.browse_user(self.user)
@@ -481,9 +481,9 @@ class UserPopupMenu(PopupMenu):
             return
 
         if state.get_boolean():
-            core.userlist.add_user(self.user)
+            core.userlist.add_buddy(self.user)
         else:
-            core.userlist.remove_user(self.user)
+            core.userlist.remove_buddy(self.user)
 
         action.set_state(state)
 
@@ -499,15 +499,15 @@ class UserPopupMenu(PopupMenu):
 
         action.set_state(state)
 
-    def on_block_user(self, action, state):
+    def on_ban_ip(self, action, state):
 
         if self.editing:
             return
 
         if state.get_boolean():
-            core.network_filter.block_user_ip(self.user)
+            core.network_filter.ban_user_ip(self.user)
         else:
-            core.network_filter.unblock_user_ip(self.user)
+            core.network_filter.unban_user_ip(self.user)
 
         action.set_state(state)
 
@@ -568,7 +568,7 @@ class UserPopupMenu(PopupMenu):
             message += "\n\n" + error
 
         EntryDialog(
-            parent=self.frame.window,
+            parent=self.application.window,
             title=_("Gift Privileges"),
             message=message,
             callback=self.on_give_privileges_response

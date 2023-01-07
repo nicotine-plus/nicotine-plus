@@ -27,15 +27,14 @@ from gi.repository import GObject
 
 from pynicotine.config import config
 from pynicotine.core import core
+from pynicotine.events import events
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
+from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
-from pynicotine.gtkgui.widgets.theme import get_status_icon_name
-from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.ui import UserInterface
-from pynicotine.logfacility import log
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
@@ -43,7 +42,7 @@ from pynicotine.utils import human_speed
 
 class UserList:
 
-    def __init__(self, frame):
+    def __init__(self, window):
 
         ui_template = UserInterface(scope=self, path="buddylist.ui")
         (
@@ -52,11 +51,11 @@ class UserList:
             self.toolbar
         ) = ui_template.widgets
 
-        self.frame = frame
+        self.window = window
 
         # Columns
         self.list_view = TreeView(
-            frame, parent=self.list_container, name="buddy_list",
+            window, parent=self.list_container, name="buddy_list",
             activate_row_callback=self.on_row_activated, tooltip_callback=self.on_tooltip,
             columns=[
                 # Visible columns
@@ -91,26 +90,40 @@ class UserList:
         )
 
         # Lists
-        for combo_box in (self.frame.user_search_combobox, self.frame.userinfo_combobox,
-                          self.frame.userbrowse_combobox):
+        for combo_box in (self.window.user_search_combobox, self.window.userinfo_combobox,
+                          self.window.userbrowse_combobox):
             combo_box.set_model(self.list_view.model)
             combo_box.set_entry_text_column(2)
 
             CompletionEntry(combo_box.get_child(), self.list_view.model, column=2)
 
         # Popup menus
-        self.popup_menu_private_rooms = UserPopupMenu(self.frame)
+        self.popup_menu_private_rooms = UserPopupMenu(window.application)
 
-        self.popup_menu = popup = UserPopupMenu(frame, self.list_view.widget, self.on_popup_menu)
+        self.popup_menu = popup = UserPopupMenu(window.application, self.list_view.widget, self.on_popup_menu)
         popup.setup_user_menu(page="userlist")
         popup.add_items(
             ("", None),
             ("#" + _("Add User _Note…"), self.on_add_note),
             (">" + _("Private Rooms"), self.popup_menu_private_rooms),
-            ("#" + _("_Remove"), self.on_remove_user)
+            ("#" + _("_Remove"), self.on_remove_buddy)
         )
 
-        self.update_visuals()
+        # Events
+        for event_name, callback in (
+            ("add-buddy", self.add_buddy),
+            ("buddy-note", self.buddy_note),
+            ("buddy-notify", self.buddy_notify),
+            ("buddy-last-seen", self.buddy_last_seen),
+            ("buddy-prioritized", self.buddy_prioritized),
+            ("buddy-trusted", self.buddy_trusted),
+            ("remove-buddy", self.remove_buddy),
+            ("server-disconnect", self.server_disconnect),
+            ("user-country", self.user_country),
+            ("user-stats", self.user_stats),
+            ("user-status", self.user_status)
+        ):
+            events.connect(event_name, callback)
 
     def save_columns(self):
         self.list_view.save_columns()
@@ -120,11 +133,7 @@ class UserList:
         if config.sections["ui"]["buddylistinchatrooms"] in ("always", "chatrooms"):
             return
 
-        self.frame.userlist_content.set_visible(self.list_view.iterators)
-
-    def update_visuals(self):
-        for widget in self.__dict__.values():
-            update_widget_visuals(widget)
+        self.window.userlist_content.set_visible(self.list_view.iterators)
 
     def get_selected_username(self):
 
@@ -158,38 +167,26 @@ class UserList:
         private_rooms_enabled = (self.popup_menu_private_rooms.items and menu.user != core.login_username)
         menu.actions[_("Private Rooms")].set_enabled(private_rooms_enabled)
 
-    def get_user_status(self, msg):
+    def user_status(self, msg):
 
-        user = msg.user
-        iterator = self.list_view.iterators.get(user)
+        iterator = self.list_view.iterators.get(msg.user)
 
         if iterator is None:
             return
 
         status = msg.status
+        status_icon_name = USER_STATUS_ICON_NAMES.get(status)
+
+        if not status_icon_name:
+            return
 
         if status == self.list_view.get_row_value(iterator, 10):
             return
 
-        notify = self.list_view.get_row_value(iterator, 6)
-
-        if notify:
-            if status == UserStatus.AWAY:
-                status_text = _("User %s is away")
-            elif status == UserStatus.ONLINE:
-                status_text = _("User %s is online")
-            else:
-                status_text = _("User %s is offline")
-
-            log.add(status_text, user)
-            self.frame.notifications.new_text_notification(status_text % user)
-
-        status_icon = get_status_icon_name(status)
-
-        self.list_view.set_row_value(iterator, 0, status_icon)
+        self.list_view.set_row_value(iterator, 0, status_icon_name)
         self.list_view.set_row_value(iterator, 10, status)
 
-    def get_user_stats(self, msg):
+    def user_stats(self, msg):
 
         user = msg.user
         iterator = self.list_view.iterators.get(user)
@@ -211,9 +208,9 @@ class UserList:
         self.list_view.set_row_value(iterator, 11, GObject.Value(GObject.TYPE_UINT, avgspeed))
         self.list_view.set_row_value(iterator, 12, GObject.Value(GObject.TYPE_UINT, files))
 
-    def add_user(self, user, row):
+    def add_buddy(self, user, user_data):
 
-        _user, note, notify, prioritized, trusted, last_seen, country = row
+        last_seen = user_data.last_seen
 
         try:
             time_from_epoch = time.mktime(time.strptime(last_seen, "%m/%d/%Y %H:%M:%S"))
@@ -222,26 +219,27 @@ class UserList:
             time_from_epoch = 0
 
         self.list_view.add_row([
-            get_status_icon_name(UserStatus.OFFLINE),
-            get_flag_icon_name(country),
+            USER_STATUS_ICON_NAMES.get(user_data.status, ""),
+            get_flag_icon_name(user_data.country),
             str(user),
             "", "",
-            bool(trusted),
-            bool(notify),
-            bool(prioritized),
+            bool(user_data.is_trusted),
+            bool(user_data.notify_status),
+            bool(user_data.is_prioritized),
             str(last_seen),
-            str(note),
+            str(user_data.note),
             0, 0, 0,
             time_from_epoch,
-            str(country)
-        ])
+            str(user_data.country)
+        ], select_row=core.userlist.allow_saving_buddies)
 
         self.update_visible()
 
         if config.sections["words"]["buddies"]:
-            self.frame.update_completions()
+            core.chatrooms.update_completions()
+            core.privatechat.update_completions()
 
-    def remove_user(self, user):
+    def remove_buddy(self, user):
 
         iterator = self.list_view.iterators.get(user)
 
@@ -252,37 +250,38 @@ class UserList:
         self.update_visible()
 
         if config.sections["words"]["buddies"]:
-            self.frame.update_completions()
+            core.chatrooms.update_completions()
+            core.privatechat.update_completions()
 
-    def set_user_note(self, user, note):
+    def buddy_note(self, user, note):
 
         iterator = self.list_view.iterators.get(user)
 
         if iterator is not None:
             self.list_view.set_row_value(iterator, 9, note)
 
-    def set_user_trusted(self, user, trusted):
+    def buddy_trusted(self, user, trusted):
 
         iterator = self.list_view.iterators.get(user)
 
         if iterator is not None:
             self.list_view.set_row_value(iterator, 5, trusted)
 
-    def set_user_notify(self, user, notify):
+    def buddy_notify(self, user, notify):
 
         iterator = self.list_view.iterators.get(user)
 
         if iterator is not None:
             self.list_view.set_row_value(iterator, 6, notify)
 
-    def set_user_prioritized(self, user, prioritized):
+    def buddy_prioritized(self, user, prioritized):
 
         iterator = self.list_view.iterators.get(user)
 
         if iterator is not None:
             self.list_view.set_row_value(iterator, 7, prioritized)
 
-    def set_user_last_seen(self, user, online):
+    def buddy_last_seen(self, user, online):
 
         iterator = self.list_view.iterators.get(user)
 
@@ -299,54 +298,55 @@ class UserList:
         self.list_view.set_row_value(iterator, 8, last_seen)
         self.list_view.set_row_value(iterator, 13, int(time_from_epoch))
 
-    def set_user_country(self, user, country_code):
+    def user_country(self, user, country_code):
 
         iterator = self.list_view.iterators.get(user)
 
         if iterator is None:
             return
 
-        flag_icon = get_flag_icon_name(country_code or "")
+        flag_icon_name = get_flag_icon_name(country_code or "")
 
-        if not flag_icon:
+        if not flag_icon_name:
             return
 
-        self.list_view.set_row_value(iterator, 1, flag_icon)
-        self.list_view.set_row_value(iterator, 14, "flag_" + country_code)
+        self.list_view.set_row_value(iterator, 1, flag_icon_name)
+        self.list_view.set_row_value(iterator, 14, f"flag_{country_code}")
 
-    def on_add_user(self, *_args):
+    def on_add_buddy(self, *_args):
 
-        username = self.frame.add_buddy_entry.get_text().strip()
+        username = self.window.add_buddy_entry.get_text().strip()
 
         if not username:
             return
 
-        self.frame.add_buddy_entry.set_text("")
-        core.userlist.add_user(username)
+        self.window.add_buddy_entry.set_text("")
+        core.userlist.add_buddy(username)
+        self.list_view.grab_focus()
 
-    def on_remove_user(self, *_args):
-        core.userlist.remove_user(self.get_selected_username())
+    def on_remove_buddy(self, *_args):
+        core.userlist.remove_buddy(self.get_selected_username())
 
     def on_trusted(self, list_view, iterator):
 
         user = list_view.get_row_value(iterator, 2)
         value = list_view.get_row_value(iterator, 5)
 
-        core.userlist.set_user_trusted(user, not value)
+        core.userlist.set_buddy_trusted(user, not value)
 
     def on_notify(self, list_view, iterator):
 
         user = list_view.get_row_value(iterator, 2)
         value = list_view.get_row_value(iterator, 6)
 
-        core.userlist.set_user_notify(user, not value)
+        core.userlist.set_buddy_notify(user, not value)
 
     def on_prioritized(self, list_view, iterator):
 
         user = list_view.get_row_value(iterator, 2)
         value = list_view.get_row_value(iterator, 7)
 
-        core.userlist.set_user_prioritized(user, not value)
+        core.userlist.set_buddy_prioritized(user, not value)
 
     def on_add_note_response(self, dialog, _response_id, user):
 
@@ -360,7 +360,7 @@ class UserList:
         if note is None:
             return
 
-        core.userlist.set_user_note(user, note)
+        core.userlist.set_buddy_note(user, note)
 
     def on_add_note(self, *_args):
 
@@ -373,7 +373,7 @@ class UserList:
         note = self.list_view.get_row_value(iterator, 9) or ""
 
         EntryDialog(
-            parent=self.frame.window,
+            parent=self.window,
             title=_("Add User Note"),
             message=_("Add a note about user %s:") % user,
             callback=self.on_add_note_response,
@@ -395,10 +395,10 @@ class UserList:
 
         return False
 
-    def server_disconnect(self):
+    def server_disconnect(self, *_args):
 
         for iterator in self.list_view.get_all_rows():
-            self.list_view.set_row_value(iterator, 0, get_status_icon_name(UserStatus.OFFLINE))
+            self.list_view.set_row_value(iterator, 0, USER_STATUS_ICON_NAMES[UserStatus.OFFLINE])
             self.list_view.set_row_value(iterator, 3, "")
             self.list_view.set_row_value(iterator, 4, "")
             self.list_view.set_row_value(iterator, 10, 0)
