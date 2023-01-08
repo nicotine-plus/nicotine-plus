@@ -182,7 +182,7 @@ class Interests:
 
         self.populate_recommendations()
 
-    def server_disconnect(self, _msg):
+    def server_disconnect(self, *_args):
         self.recommendations_button.set_sensitive(False)
         self.similar_users_button.set_sensitive(False)
 

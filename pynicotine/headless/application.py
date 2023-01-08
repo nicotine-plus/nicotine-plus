@@ -33,14 +33,14 @@ class Application:
     def __init__(self):
 
         self.init_exception_handler()
-        self.thread_messages = deque()
+        self.thread_events = deque()
 
         for log_level in ("download", "upload"):
             log.add_log_level(log_level, is_permanent=False)
 
         for event_name, callback in (
             ("shares-unavailable", self.shares_unavailable),
-            ("thread-callback", self.thread_callback)
+            ("thread-event", self.thread_event)
         ):
             events.connect(event_name, callback)
 
@@ -49,15 +49,16 @@ class Application:
         core.start()
         core.connect()
 
-        # Main loop, process messages from networking thread
+        # Main loop, process events from threads
         while not core.shutdown:
-            if self.thread_messages:
-                msgs = []
+            if self.thread_events:
+                event_list = []
 
-                while self.thread_messages:
-                    msgs.append(self.thread_messages.popleft())
+                while self.thread_events:
+                    event_list.append(self.thread_events.popleft())
 
-                core.process_thread_callback(msgs)
+                for event_name, args, kwargs in event_list:
+                    events.emit(event_name, *args, **kwargs)
 
             time.sleep(1 / 60)
 
@@ -65,8 +66,8 @@ class Application:
         config.write_configuration()
         return 0
 
-    def thread_callback(self, msgs):
-        self.thread_messages.extend(msgs)
+    def thread_event(self, event_name, *args, **kwargs):
+        self.thread_events.append((event_name, args, kwargs))
 
     def init_exception_handler(self):
 

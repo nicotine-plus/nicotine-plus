@@ -18,6 +18,7 @@
 
 import argparse
 import io
+import multiprocessing
 import os
 import sys
 
@@ -110,6 +111,31 @@ You should install Python %(min_version)s or newer.""") % {
     return None
 
 
+def set_up_python():
+
+    is_frozen = getattr(sys, "frozen", False)
+
+    # Always use UTF-8 for print()
+    if sys.stdout is not None:
+        sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding="utf-8", line_buffering=True)
+
+    if is_frozen:
+        # Set up paths for frozen binaries (Windows and macOS)
+        executable_folder = os.path.dirname(sys.executable)
+        os.environ["SSL_CERT_FILE"] = os.path.join(executable_folder, "lib/cert.pem")
+
+        # Support file scanning process in frozen binaries
+        multiprocessing.freeze_support()
+
+    # Frozen binaries only support fork (if not on Windows)
+    if sys.platform != "win32" and is_frozen:
+        start_method = "fork"
+    else:
+        start_method = "spawn"
+
+    multiprocessing.set_start_method(start_method)
+
+
 def rename_process(new_name, debug_info=False):
 
     errors = []
@@ -157,20 +183,7 @@ def rescan_shares():
 def run():
     """ Run application and return its exit code """
 
-    # Always use UTF-8 for print()
-    if sys.stdout is not None:
-        sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding="utf-8", line_buffering=True)
-
-    if getattr(sys, 'frozen', False):
-        import multiprocessing
-
-        # Set up paths for frozen binaries (Windows and macOS)
-        executable_folder = os.path.dirname(sys.executable)
-        os.environ["SSL_CERT_FILE"] = os.path.join(executable_folder, "lib/cert.pem")
-
-        # Support file scanning process in frozen binaries
-        multiprocessing.freeze_support()
-
+    set_up_python()
     rename_process(b"nicotine")
 
     headless, hidden, ci_mode, rescan, multi_instance = check_arguments()

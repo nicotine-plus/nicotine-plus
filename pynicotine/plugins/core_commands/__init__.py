@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2023 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -242,8 +242,9 @@ class Plugin(BasePlugin):
             "shares": {
                 "aliases": ["ls"],
                 "callback": self.list_shares_command,
-                "description": _("List configured shares"),
-                "group": _("Configure Shares")
+                "description": _("List shares"),
+                "group": _("Configure Shares"),
+                "usage": ["[public]", "[buddy]"]
             },
             "share": {
                 "callback": self.share_command,
@@ -416,7 +417,7 @@ class Plugin(BasePlugin):
         self.core.now_playing.display_now_playing(
             callback=lambda np_message: self.echo_message(np_message))
 
-    """ "Configure Shares" """
+    """ Configure Shares """
 
     def rescan_command(self, args, **_unused):
 
@@ -429,11 +430,27 @@ class Plugin(BasePlugin):
         self.core.shares.rescan_shares(force=force)
         return True
 
-    def list_shares_command(self, _args, **_unused):
-        # TODO: self.output(self.core.shares.list_shares())
-        #       (Status) Group "Virtual Name" Folder Path
+    def list_shares_command(self, args, **_unused):
 
-        self.output("Not implemented")
+        share_groups = self.core.shares.get_shared_folders()
+        num_total = num_listed = 0
+
+        for share_index, share_group in enumerate(share_groups):
+            group_name = "buddy" if share_index == 1 else "public"
+            num_shares = len(share_group)
+            num_total += num_shares
+
+            if not num_shares or args and group_name not in args.lower():
+                continue
+
+            self.output("\n" + f"{num_shares} {group_name} shares:")
+
+            for virtual_name, folder_path, *_unused in share_group:
+                self.output(f"• \"{virtual_name}\" {folder_path}")
+
+            num_listed += num_shares
+
+        self.output("\n" + f"{num_listed} shares listed ({num_total} configured)")
 
     def share_command(self, args, **_unused):
 

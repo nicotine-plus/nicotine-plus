@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
@@ -383,7 +383,7 @@ class ChatRooms(IconNotebook):
             if isinstance(room, str):
                 self.autojoin_rooms.add(room)
 
-    def server_disconnect(self, _msg):
+    def server_disconnect(self, *_args):
 
         self.roomlist.clear()
         self.autojoin_rooms.clear()
@@ -756,7 +756,7 @@ class ChatRoom:
         user = self.get_selected_username(treeview)
 
         if user is not None:
-            core.privatechat.show_user(user)
+            core.userinfo.show_user(user)
 
     def on_popup_menu_user(self, menu, treeview):
         user = self.get_selected_username(treeview)

@@ -43,7 +43,7 @@ class Uploads(TransferList):
         self.path_label = _("Folder")
         self.retry_label = _("_Retry")
         self.abort_label = _("_Abort")
-        self.deprioritized_statuses = ("", "Cancelled", "Finished")
+        self.deprioritized_statuses = {"Cancelled", "Finished"}
 
         self.transfer_page = window.uploads_page
         self.user_counter = window.upload_users_label

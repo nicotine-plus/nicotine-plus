@@ -30,7 +30,7 @@ class I18nTest(TestCase):
 
     def test_build_translations(self):
 
-        built_language_codes = build_translations()
+        build_translations()
         mo_file_paths = glob.glob(os.path.join(LOCALE_PATH, "**", "*.mo"), recursive=True)
 
         for language_code, _language_name in LANGUAGES:
@@ -38,5 +38,4 @@ class I18nTest(TestCase):
                 # English is the default language
                 continue
 
-            self.assertIn(language_code, built_language_codes)
             self.assertIn(os.path.join(LOCALE_PATH, language_code, "LC_MESSAGES", "nicotine.mo"), mo_file_paths)

@@ -86,7 +86,7 @@ class ChatRooms:
 
         if room == "Public ":
             # Fake a JoinRoom protocol message
-            events.emit("thread-callback", [slskmessages.JoinRoom(room)])
+            events.emit("join-room", slskmessages.JoinRoom(room))
             core.queue.append(slskmessages.JoinPublicRoom())
 
         elif room not in self.joined_rooms:

@@ -215,7 +215,7 @@ class PrivateChats(IconNotebook):
         for page in self.pages.values():
             page.server_login()
 
-    def server_disconnect(self, _msg):
+    def server_disconnect(self, *_args):
 
         for user, page in self.pages.items():
             page.server_disconnect()

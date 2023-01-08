@@ -19,30 +19,6 @@
     ],
     "modules": [
         {
-            "name": "gspell",
-            "config-opts": [
-                "--disable-gtk-doc",
-                "--disable-static",
-                "--disable-vala",
-                "--disable-valgrind"
-            ],
-            "cleanup": [
-                "/bin",
-                "/include",
-                "/lib/debug",
-                "/lib/pkgconfig",
-                "/lib/*.la",
-                "/share/gtk-doc"
-            ],
-            "sources": [
-                {
-                    "url": "https://download.gnome.org/sources/gspell/1.10/gspell-1.10.0.tar.xz",
-                    "sha256": "803bb884c0215d3fd22a85d7f30423aff88d9792f05a5199d8a489a2ffaae1da",
-                    "type": "archive"
-                }
-            ]
-        },
-        {
             "name": "nicotine-plus",
             "buildsystem": "simple",
             "build-commands": [

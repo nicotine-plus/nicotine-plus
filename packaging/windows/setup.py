@@ -261,12 +261,13 @@ def add_ssl_certs():
 
 def add_translations():
 
+    from pynicotine.i18n import LANGUAGES           # noqa: E402  # pylint: disable=import-error
     from pynicotine.i18n import build_translations  # noqa: E402  # pylint: disable=import-error
-    languages = tuple(build_translations())
+    build_translations()
 
     add_files(
         folder_path=os.path.join(SYS_BASE, "share/locale"), output_path="share/locale",
-        starts_with=languages, ends_with="gtk%s0.mo" % GTK_VERSION, recursive=True, resource=True
+        starts_with=tuple(i[0] for i in LANGUAGES), ends_with="gtk%s0.mo" % GTK_VERSION, recursive=True, resource=True
     )
 
 

@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016-2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
@@ -952,7 +952,7 @@ class MainWindow(Window):
             ("downloads", _("Downloads"), "document-save-symbolic"),
             ("uploads", _("Uploads"), "emblem-shared-symbolic"),
             ("userbrowse", _("Browse Shares"), "folder-symbolic"),
-            ("userinfo", _("User Info"), "avatar-default-symbolic"),
+            ("userinfo", _("User Profiles"), "avatar-default-symbolic"),
             ("private", _("Private Chat"), "mail-unread-symbolic"),
             ("userlist", _("Buddies"), "contact-new-symbolic"),
             ("chatrooms", _("Chat Rooms"), "user-available-symbolic"),
@@ -1200,8 +1200,8 @@ class MainWindow(Window):
 
     """ User Info """
 
-    def on_get_user_info(self, *_args):
-        self.userinfo.on_get_user_info()
+    def on_show_user_profile(self, *_args):
+        self.userinfo.on_show_user_profile()
 
     """ Shares """
 
@@ -1337,13 +1337,14 @@ class MainWindow(Window):
         self.status_label.set_text(msg)
         self.status_label.set_tooltip_text(msg)
 
-    def set_connection_stats(self, msg):
+    def set_connection_stats(self, total_conns=0, download_conns=0, download_bandwidth=0,
+                             upload_conns=0, upload_bandwidth=0):
 
-        total_conns_text = repr(msg.total_conns)
-        download_bandwidth = human_speed(msg.download_bandwidth)
-        upload_bandwidth = human_speed(msg.upload_bandwidth)
-        download_bandwidth_text = f"{download_bandwidth} ( {msg.download_conns} )"
-        upload_bandwidth_text = f"{upload_bandwidth} ( {msg.upload_conns} )"
+        total_conns_text = repr(total_conns)
+        download_bandwidth = human_speed(download_bandwidth)
+        upload_bandwidth = human_speed(upload_bandwidth)
+        download_bandwidth_text = f"{download_bandwidth} ( {download_conns} )"
+        upload_bandwidth_text = f"{upload_bandwidth} ( {upload_conns} )"
 
         if self.connections_label.get_text() != total_conns_text:
             self.connections_label.set_text(total_conns_text)

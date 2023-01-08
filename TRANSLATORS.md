@@ -19,9 +19,9 @@
  - Ingmar K. Steen (Hyriand) (2003–2004)
 
 ## English
- - slook (2021–2022)
- - Han Boetes (hboetes) (2021–2022)
- - Mat (mathiascode) (2020–2022)
+ - slook (2021–2023)
+ - Han Boetes (hboetes) (2021–2023)
+ - Mat (mathiascode) (2020–2023)
  - Michael Labouebe (gfarmerfr) (2016)
  - daelstorm (2004–2009)
  - Ingmar K. Steen (Hyriand) (2003–2004)

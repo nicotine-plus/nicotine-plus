@@ -95,10 +95,10 @@ class Core:
             ("cli-command", self._cli_command),
             ("peer-address", self._get_peer_address),
             ("privileged-users", self._privileged_users),
-            ("scheduler-callback", self._scheduler_callback),
             ("server-disconnect", self._server_disconnect),
             ("server-login", self._server_login),
             ("server-timeout", self._server_timeout),
+            ("thread-callback", self._thread_callback),
             ("user-stats", self._user_stats),
             ("user-status", self._user_status),
             ("watch-user", self._add_user)
@@ -159,120 +159,6 @@ class Core:
         self.chatrooms = ChatRooms()
         self.pluginhandler = PluginHandler()
 
-        self.message_events = {
-            slskmessages.ServerDisconnect: "server-disconnect",
-            slskmessages.Login: "server-login",
-            slskmessages.ChangePassword: "change-password",
-            slskmessages.MessageUser: "message-user",
-            slskmessages.PMessageUser: None,
-            slskmessages.ExactFileSearch: None,
-            slskmessages.RoomAdded: None,
-            slskmessages.RoomRemoved: None,
-            slskmessages.UserJoinedRoom: "user-joined-room",
-            slskmessages.SayChatroom: "say-chat-room",
-            slskmessages.JoinRoom: "join-room",
-            slskmessages.UserLeftRoom: "user-left-room",
-            slskmessages.CantCreateRoom: None,
-            slskmessages.QueuedDownloads: None,
-            slskmessages.GetPeerAddress: "peer-address",
-            slskmessages.UserInfoResponse: "user-info-response",
-            slskmessages.UserInfoRequest: "user-info-request",
-            slskmessages.PierceFireWall: None,
-            slskmessages.ConnectToPeer: "connect-to-peer",
-            slskmessages.CantConnectToPeer: None,
-            slskmessages.UserInfoProgress: "user-info-progress",
-            slskmessages.SharedFileListProgress: "shared-file-list-progress",
-            slskmessages.SharedFileListResponse: "shared-file-list-response",
-            slskmessages.SharedFileListRequest: "shared-file-list-request",
-            slskmessages.FileSearchRequest: None,
-            slskmessages.FileSearchResponse: "file-search-response",
-            slskmessages.GetUserStatus: "user-status",
-            slskmessages.GetUserStats: "user-stats",
-            slskmessages.Relogged: None,
-            slskmessages.PeerInit: None,
-            slskmessages.DownloadFile: "file-download-progress",
-            slskmessages.UploadFile: "file-upload-progress",
-            slskmessages.FileDownloadInit: "file-download-init",
-            slskmessages.FileUploadInit: "file-upload-init",
-            slskmessages.FileOffset: None,
-            slskmessages.TransferRequest: "transfer-request",
-            slskmessages.TransferResponse: "transfer-response",
-            slskmessages.QueueUpload: "queue-upload",
-            slskmessages.UploadDenied: "upload-denied",
-            slskmessages.UploadFailed: "upload-failed",
-            slskmessages.PlaceInQueueResponse: "place-in-queue-response",
-            slskmessages.DownloadFileError: "download-file-error",
-            slskmessages.UploadFileError: "upload-file-error",
-            slskmessages.DownloadConnectionClosed: "download-connection-closed",
-            slskmessages.UploadConnectionClosed: "upload-connection-closed",
-            slskmessages.PeerConnectionClosed: "peer-connection-closed",
-            slskmessages.FolderContentsResponse: "folder-contents-response",
-            slskmessages.FolderContentsRequest: "folder-contents-request",
-            slskmessages.RoomList: "room-list",
-            slskmessages.LeaveRoom: "leave-room",
-            slskmessages.GlobalUserList: None,
-            slskmessages.AddUser: "watch-user",
-            slskmessages.PrivilegedUsers: "privileged-users",
-            slskmessages.AddToPrivileged: None,
-            slskmessages.CheckPrivileges: "check-privileges",
-            slskmessages.ServerPing: None,
-            slskmessages.ParentMinSpeed: None,
-            slskmessages.ParentSpeedRatio: None,
-            slskmessages.ParentInactivityTimeout: None,
-            slskmessages.SearchInactivityTimeout: None,
-            slskmessages.MinParentsInCache: None,
-            slskmessages.WishlistInterval: "set-wishlist-interval",
-            slskmessages.DistribAliveInterval: None,
-            slskmessages.DistribChildDepth: None,
-            slskmessages.DistribBranchLevel: None,
-            slskmessages.DistribBranchRoot: None,
-            slskmessages.AdminMessage: "admin-message",
-            slskmessages.TunneledMessage: None,
-            slskmessages.PlaceholdUpload: None,
-            slskmessages.PlaceInQueueRequest: "place-in-queue-request",
-            slskmessages.UploadQueueNotification: None,
-            slskmessages.FileSearch: "server-search-request",
-            slskmessages.RoomSearch: "server-search-request",
-            slskmessages.UserSearch: "server-search-request",
-            slskmessages.RelatedSearch: None,
-            slskmessages.PossibleParents: None,
-            slskmessages.DistribAlive: None,
-            slskmessages.DistribSearch: "distributed-search-request",
-            slskmessages.ResetDistributed: None,
-            slskmessages.ServerTimeout: "server-timeout",
-            slskmessages.SetConnectionStats: "set-connection-stats",
-            slskmessages.GlobalRecommendations: "global-recommendations",
-            slskmessages.Recommendations: "recommendations",
-            slskmessages.ItemRecommendations: "item-recommendations",
-            slskmessages.SimilarUsers: "similar-users",
-            slskmessages.ItemSimilarUsers: "item-similar-users",
-            slskmessages.UserInterests: "user-interests",
-            slskmessages.RoomTickerState: "ticker-set",
-            slskmessages.RoomTickerAdd: "ticker-add",
-            slskmessages.RoomTickerRemove: "ticker-remove",
-            slskmessages.UserPrivileged: None,
-            slskmessages.AckNotifyPrivileges: None,
-            slskmessages.NotifyPrivileges: None,
-            slskmessages.PrivateRoomUsers: "private-room-users",
-            slskmessages.PrivateRoomOwned: "private-room-owned",
-            slskmessages.PrivateRoomAddUser: "private-room-add-user",
-            slskmessages.PrivateRoomRemoveUser: "private-room-remove-user",
-            slskmessages.PrivateRoomAdded: "private-room-added",
-            slskmessages.PrivateRoomRemoved: "private-room-removed",
-            slskmessages.PrivateRoomDisown: "private-room-disown",
-            slskmessages.PrivateRoomToggle: "private-room-toggle",
-            slskmessages.PrivateRoomSomething: None,
-            slskmessages.PrivateRoomOperatorAdded: "private-room-operator-added",
-            slskmessages.PrivateRoomOperatorRemoved: "private-room-operator-removed",
-            slskmessages.PrivateRoomAddOperator: "private-room-add-operator",
-            slskmessages.PrivateRoomRemoveOperator: "private-room-remove-operator",
-            slskmessages.PublicRoomMessage: "public-room-message",
-            slskmessages.PeerConnectionError: "peer-connection-error",
-            slskmessages.CLICommand: "cli-command",
-            slskmessages.SchedulerCallback: "scheduler-callback",
-            slskmessages.UnknownPeerMessage: None
-        }
-
     """ CLI """
 
     def process_cli_input(self):
@@ -295,7 +181,7 @@ class Core:
             if args:
                 (args,) = args
 
-            events.emit("thread-callback", [slskmessages.CLICommand(command, args)])
+            events.emit_main_thread("cli-command", command, args)
 
     @staticmethod
     def log_cli(timestamp_format, msg, _title, _level):
@@ -303,10 +189,11 @@ class Core:
         timestamp = time.strftime(timestamp_format)
 
         try:
-            print(f"[{timestamp}] {msg}")
+            print(f"[{timestamp}] {msg}", flush=True)
+
         except OSError:
-            # stdout is gone
-            pass
+            # stdout is gone, prevent future errors
+            sys.stdout = open(os.devnull, "w", encoding="utf-8")  # pylint: disable=consider-using-with
 
     """ Actions """
 
@@ -331,8 +218,9 @@ class Core:
 
         # Indicate that a shutdown has started, to prevent UI callbacks from networking thread
         self.shutdown = True
+        manual_disconnect = True
 
-        events.emit("server-disconnect", slskmessages.ServerDisconnect(manual_disconnect=True))
+        events.emit("server-disconnect", manual_disconnect)
         events.emit("quit")
 
         log.add(_("Quit %(program)s %(version)s, %(status)s!"), {
@@ -434,32 +322,17 @@ class Core:
 
     """ Message Callbacks """
 
-    def process_thread_callback(self, msgs):
+    def _thread_callback(self, callback, *args, **kwargs):
+        callback(*args, **kwargs)
 
-        for msg in msgs:
-            if self.shutdown:
-                return
+    def _cli_command(self, command, args):
+        self.pluginhandler.trigger_cli_command_event(command, args or "")
 
-            try:
-                event_name = self.message_events[msg.__class__]
-                events.emit(event_name, msg)
-
-            except KeyError:
-                log.add("No handler for class %s %s", (msg.__class__, msg))
-
-        msgs.clear()
-
-    def _scheduler_callback(self, msg):
-        msg.callback()
-
-    def _cli_command(self, msg):
-        self.pluginhandler.trigger_cli_command_event(msg.command, msg.args or "")
-
-    def _server_timeout(self, _msg):
+    def _server_timeout(self):
         if not config.need_config():
             self.connect()
 
-    def _server_disconnect(self, msg):
+    def _server_disconnect(self, manual_disconnect=False):
 
         self.user_status = slskmessages.UserStatus.OFFLINE
 
@@ -468,7 +341,7 @@ class Core:
         self.watched_users.clear()
 
         if self.pluginhandler:
-            self.pluginhandler.server_disconnect_notification(msg.manual_disconnect)
+            self.pluginhandler.server_disconnect_notification(manual_disconnect)
 
         self.login_username = None
 

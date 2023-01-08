@@ -395,7 +395,7 @@ class UserList:
 
         return False
 
-    def server_disconnect(self, _msg):
+    def server_disconnect(self, *_args):
 
         for iterator in self.list_view.get_all_rows():
             self.list_view.set_row_value(iterator, 0, USER_STATUS_ICON_NAMES[UserStatus.OFFLINE])

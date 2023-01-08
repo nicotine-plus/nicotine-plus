@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2010 quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
@@ -79,7 +79,7 @@ class UserInfos(IconNotebook):
         ):
             events.connect(event_name, callback)
 
-    def on_get_user_info(self, *_args):
+    def on_show_user_profile(self, *_args):
 
         username = self.window.userinfo_entry.get_text().strip()
 
@@ -133,9 +133,9 @@ class UserInfos(IconNotebook):
         if page is not None:
             page.update_buddy_button_state()
 
-    def peer_connection_error(self, msg):
+    def peer_connection_error(self, user, *_args):
 
-        page = self.pages.get(msg.user)
+        page = self.pages.get(user)
 
         if page is not None:
             page.peer_connection_error()
@@ -168,12 +168,12 @@ class UserInfos(IconNotebook):
         if page is not None:
             page.user_interests(msg)
 
-    def user_info_progress(self, msg):
+    def user_info_progress(self, user, position, total):
 
-        page = self.pages.get(msg.user)
+        page = self.pages.get(user)
 
         if page is not None:
-            page.user_info_progress(msg)
+            page.user_info_progress(position, total)
 
     def user_info_response(self, msg):
 
@@ -182,7 +182,7 @@ class UserInfos(IconNotebook):
         if page is not None:
             page.user_info_response(msg)
 
-    def server_disconnect(self, _msg):
+    def server_disconnect(self, *_args):
         for user, page in self.pages.items():
             self.set_user_status(page.container, user, UserStatus.OFFLINE)
 
@@ -447,16 +447,16 @@ class UserInfo:
         self.info_bar.set_visible(False)
         self.refresh_button.set_sensitive(False)
 
-    def user_info_progress(self, msg):
+    def user_info_progress(self, position, total):
 
         self.indeterminate_progress = False
 
-        if msg.total == 0 or msg.position == 0:
+        if total == 0 or position == 0:
             fraction = 0.0
-        elif msg.position >= msg.total:
+        elif position >= total:
             fraction = 1.0
         else:
-            fraction = float(msg.position) / msg.total
+            fraction = float(position) / total
 
         self.progress_bar.set_fraction(fraction)
 

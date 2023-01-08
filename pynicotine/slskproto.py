@@ -21,7 +21,6 @@
 This module implements Soulseek networking protocol.
 """
 
-import copy
 import errno
 import selectors
 import socket
@@ -36,6 +35,7 @@ from pynicotine.logfacility import log
 from pynicotine.scheduler import scheduler
 from pynicotine.slskmessages import DISTRIBUTED_MESSAGE_CLASSES
 from pynicotine.slskmessages import DISTRIBUTED_MESSAGE_CODES
+from pynicotine.slskmessages import NETWORK_MESSAGE_EVENTS
 from pynicotine.slskmessages import PEER_MESSAGE_CLASSES
 from pynicotine.slskmessages import PEER_MESSAGE_CODES
 from pynicotine.slskmessages import PEER_INIT_MESSAGE_CLASSES
@@ -54,9 +54,7 @@ from pynicotine.slskmessages import DistribBranchLevel
 from pynicotine.slskmessages import DistribBranchRoot
 from pynicotine.slskmessages import DistribEmbeddedMessage
 from pynicotine.slskmessages import DistribSearch
-from pynicotine.slskmessages import DownloadConnectionClosed
 from pynicotine.slskmessages import DownloadFile
-from pynicotine.slskmessages import DownloadFileError
 from pynicotine.slskmessages import EmbeddedMessage
 from pynicotine.slskmessages import FileOffset
 from pynicotine.slskmessages import FileDownloadInit
@@ -72,8 +70,6 @@ from pynicotine.slskmessages import MessageType
 from pynicotine.slskmessages import PossibleParents
 from pynicotine.slskmessages import ParentMinSpeed
 from pynicotine.slskmessages import ParentSpeedRatio
-from pynicotine.slskmessages import PeerConnectionClosed
-from pynicotine.slskmessages import PeerConnectionError
 from pynicotine.slskmessages import PeerInit
 from pynicotine.slskmessages import PierceFireWall
 from pynicotine.slskmessages import Relogged
@@ -82,17 +78,11 @@ from pynicotine.slskmessages import RoomList
 from pynicotine.slskmessages import SendNetworkMessage
 from pynicotine.slskmessages import ServerConnect
 from pynicotine.slskmessages import ServerDisconnect
-from pynicotine.slskmessages import ServerTimeout
-from pynicotine.slskmessages import SetConnectionStats
 from pynicotine.slskmessages import SetDownloadLimit
 from pynicotine.slskmessages import SetUploadLimit
 from pynicotine.slskmessages import SetWaitPort
 from pynicotine.slskmessages import SharedFileListResponse
-from pynicotine.slskmessages import SharedFileListProgress
-from pynicotine.slskmessages import UploadConnectionClosed
 from pynicotine.slskmessages import UploadFile
-from pynicotine.slskmessages import UploadFileError
-from pynicotine.slskmessages import UserInfoProgress
 from pynicotine.slskmessages import UserInfoResponse
 from pynicotine.slskmessages import UserStatus
 from pynicotine.slskmessages import increment_token
@@ -206,7 +196,6 @@ class SoulseekNetworkThread(Thread):
 
         self._queue = queue
         self._user_addresses = user_addresses
-        self._callback_msgs = []
         self._pending_init_msgs = {}
         self._token_init_msgs = {}
         self._username_init_msgs = {}
@@ -446,7 +435,7 @@ class SoulseekNetworkThread(Thread):
             return
 
         # Reset connection stats
-        self._callback_msgs.append(SetConnectionStats())
+        events.emit_main_thread("set-connection-stats")
 
         if not self._server_address:
             # We didn't successfully establish a connection to the server
@@ -469,10 +458,10 @@ class SoulseekNetworkThread(Thread):
 
         self._server_address = None
         self._server_username = None
-        self._callback_msgs.append(ServerDisconnect(self._manual_server_disconnect))
+        events.emit_main_thread("server-disconnect", self._manual_server_disconnect)
 
     def _server_timeout(self):
-        events.emit("thread-callback", [ServerTimeout()])
+        events.emit_main_thread("server-timeout")
 
     def _set_server_timer(self):
 
@@ -571,7 +560,7 @@ class SoulseekNetworkThread(Thread):
                         'token': init.token
                     })
 
-                    self._callback_msgs.append(PeerConnectionError(username, init.outgoing_msgs[:]))
+                    events.emit_main_thread("peer-connection-error", username, init.outgoing_msgs)
 
                     self._token_init_msgs.pop(init.token, None)
                     init.outgoing_msgs.clear()
@@ -655,6 +644,17 @@ class SoulseekNetworkThread(Thread):
         distrib_msg.parse_network_message(msg.distrib_message)
 
         return distrib_msg
+
+    def emit_network_message_event(self, msg):
+
+        if msg is None:
+            return
+
+        log.add_msg_contents(msg)
+        event_name = NETWORK_MESSAGE_EVENTS.get(msg.__class__)
+
+        if event_name:
+            events.emit_main_thread(event_name, msg)
 
     def _modify_connection_events(self, conn_obj, selector_events):
 
@@ -999,9 +999,7 @@ class SoulseekNetworkThread(Thread):
                 self._total_download_bandwidth = 0
 
             if callback:
-                self._callback_msgs.append(DownloadConnectionClosed(
-                    user=init.target_user, token=conn_obj.filedown.token
-                ))
+                events.emit_main_thread("download-connection-closed", init.target_user, conn_obj.filedown.token)
 
             self._calc_download_limit()
 
@@ -1013,15 +1011,13 @@ class SoulseekNetworkThread(Thread):
 
             if callback:
                 timed_out = (time.time() - conn_obj.lastactive) > self.CONNECTION_MAX_IDLE
-                self._callback_msgs.append(UploadConnectionClosed(
-                    user=init.target_user, token=conn_obj.fileupl.token, timed_out=timed_out
-                ))
+                events.emit_main_thread("upload-connection-closed", init.target_user, conn_obj.fileupl.token, timed_out)
 
             self._calc_upload_limit_function()
 
         elif init is not None:
             if callback:
-                self._callback_msgs.append(PeerConnectionClosed(user=init.target_user))
+                events.emit_main_thread("peer-connection-closed", init.target_user)
 
         else:
             # No peer init message present, nothing to do
@@ -1290,8 +1286,8 @@ class SoulseekNetworkThread(Thread):
                             # We now have the IP address for a user we previously didn't know,
                             # attempt a direct connection to the peer/user
                             if user_offline:
-                                self._callback_msgs.append(
-                                    PeerConnectionError(user, init.outgoing_msgs[:], offline=True))
+                                events.emit_main_thread(
+                                    "peer-connection-error", user, init.outgoing_msgs[:], is_offline=True)
                             else:
                                 init.addr = addr
                                 self._connect_to_peer(user, addr, init)
@@ -1332,8 +1328,7 @@ class SoulseekNetworkThread(Thread):
 
                         self._send_have_no_parent()
 
-                    if msg is not None:
-                        self._callback_msgs.append(msg)
+                    self.emit_network_message_event(msg)
 
             else:
                 log.add_debug("Server message type %(type)i size %(size)i contents %(msg_buffer)s unknown", {
@@ -1455,7 +1450,7 @@ class SoulseekNetworkThread(Thread):
                         self._add_init_message(msg)
                         self._process_conn_messages(msg)
 
-                    self._callback_msgs.append(msg)
+                    self.emit_network_message_event(msg)
 
             else:
                 log.add_debug("Peer init message type %(type)i size %(size)i contents %(msg_buffer)s unknown", {
@@ -1564,12 +1559,12 @@ class SoulseekNetworkThread(Thread):
                 peer_class = PEER_MESSAGE_CLASSES[msgtype]
 
                 if peer_class is SharedFileListResponse:
-                    self._callback_msgs.append(
-                        SharedFileListProgress(conn_obj.init.target_user, buffer_len, msgsize_total))
+                    events.emit_main_thread(
+                        "shared-file-list-progress", conn_obj.init.target_user, buffer_len, msgsize_total)
 
                 elif peer_class is UserInfoResponse:
-                    self._callback_msgs.append(
-                        UserInfoProgress(conn_obj.init.target_user, buffer_len, msgsize_total))
+                    events.emit_main_thread(
+                        "user-info-progress", conn_obj.init.target_user, buffer_len, msgsize_total)
 
             except KeyError:
                 pass
@@ -1587,8 +1582,7 @@ class SoulseekNetworkThread(Thread):
                 if msg_class is FileSearchResponse:
                     search_result_received = True
 
-                if msg is not None:
-                    self._callback_msgs.append(msg)
+                self.emit_network_message_event(msg)
 
             else:
                 host, port = conn_obj.addr
@@ -1664,7 +1658,7 @@ class SoulseekNetworkThread(Thread):
                 FileDownloadInit, msg_buffer_mem[:msgsize], msgsize, "file", conn_obj.init)
 
             if msg is not None and msg.token is not None:
-                self._callback_msgs.append(msg)
+                self.emit_network_message_event(msg)
                 conn_obj.fileinit = msg
 
         elif conn_obj.filedown is not None:
@@ -1676,9 +1670,8 @@ class SoulseekNetworkThread(Thread):
                     conn_obj.filedown.file.write(added_bytes)
 
                 except (OSError, ValueError) as error:
-                    self._callback_msgs.append(
-                        DownloadFileError(conn_obj.filedown.token, conn_obj.filedown.file, error)
-                    )
+                    events.emit_main_thread(
+                        "download-file-error", conn_obj.filedown.token, conn_obj.filedown.file, error)
                     self._close_connection(self._conns, conn_obj.sock)
 
                 added_bytes_len = len(added_bytes)
@@ -1692,7 +1685,8 @@ class SoulseekNetworkThread(Thread):
                 # We save resources by not sending data back to core
                 # every time a part of a file is downloaded
 
-                self._callback_msgs.append(copy.copy(conn_obj.filedown))
+                events.emit_main_thread("file-download-progress", conn_obj.filedown.init.target_user,
+                                        conn_obj.filedown.token, conn_obj.filedown.leftbytes)
                 conn_obj.lastcallback = current_time
 
             if finished:
@@ -1703,7 +1697,7 @@ class SoulseekNetworkThread(Thread):
             msg = self._unpack_network_message(FileOffset, msg_buffer_mem[:msgsize], msgsize, "file", conn_obj.init)
 
             if msg is not None and msg.offset is not None:
-                self._callback_msgs.append(msg)
+                self.emit_network_message_event(msg)
                 conn_obj.fileupl.offset = msg.offset
 
                 try:
@@ -1711,7 +1705,7 @@ class SoulseekNetworkThread(Thread):
                     self._modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
 
                 except (OSError, ValueError) as error:
-                    self._callback_msgs.append(UploadFileError(conn_obj.fileupl.token, conn_obj.fileupl.file, error))
+                    events.emit_main_thread("upload-file-error", conn_obj.fileupl.token, conn_obj.fileupl.file, error)
                     self._close_connection(self._conns, conn_obj.sock)
 
         if idx:
@@ -1740,7 +1734,7 @@ class SoulseekNetworkThread(Thread):
             conn_obj.fileinit = msg_obj
             conn_obj.obuf.extend(msg)
 
-            self._callback_msgs.append(msg_obj)
+            self.emit_network_message_event(msg_obj)
 
         elif msg_class is FileOffset:
             msg = self._pack_network_message(msg_obj)
@@ -1858,8 +1852,7 @@ class SoulseekNetworkThread(Thread):
                         self._queue.append(BranchRoot(msg.user))
                         log.add_conn("Our branch root is user %s", msg.user)
 
-                    if msg is not None:
-                        self._callback_msgs.append(msg)
+                    self.emit_network_message_event(msg)
 
             else:
                 log.add_debug("Distrib message type %(type)i size %(size)i contents %(msg_buffer)s unknown", {
@@ -1931,17 +1924,25 @@ class SoulseekNetworkThread(Thread):
             self._manual_server_disconnect = True
             self._server_disconnect()
 
-        elif msg_class is DownloadFile and msg_obj.init.sock in self._conns:
-            self._conns[msg_obj.init.sock].filedown = msg_obj
+        elif msg_class is DownloadFile:
+            conn_obj = self._conns.get(msg_obj.init.sock)
 
-            self._total_downloads += 1
-            self._calc_download_limit()
+            if conn_obj is not None:
+                conn_obj.filedown = msg_obj
 
-        elif msg_class is UploadFile and msg_obj.init.sock in self._conns:
-            self._conns[msg_obj.init.sock].fileupl = msg_obj
+                self._total_downloads += 1
+                self._calc_download_limit()
+                self._process_conn_incoming_messages(conn_obj)
 
-            self._total_uploads += 1
-            self._calc_upload_limit_function()
+        elif msg_class is UploadFile:
+            conn_obj = self._conns.get(msg_obj.init.sock)
+
+            if conn_obj is not None:
+                conn_obj.fileupl = msg_obj
+
+                self._total_uploads += 1
+                self._calc_upload_limit_function()
+                self._process_conn_incoming_messages(conn_obj)
 
         elif msg_class is SetDownloadLimit:
             self._download_limit = msg_obj.limit * 1024
@@ -1964,7 +1965,7 @@ class SoulseekNetworkThread(Thread):
 
     """ Input/Output """
 
-    def _process_ready_input_socket(self, sock, current_time, conn_obj_in_progress=None, conn_obj_established=None):
+    def _process_ready_input_socket(self, sock, current_time):
 
         if sock is self._listen_socket:
             # Manage incoming connections to listening socket
@@ -1993,7 +1994,11 @@ class SoulseekNetworkThread(Thread):
                 # Don't do it here, otherwise connections may break.
                 self._selector.register(incoming_sock, selector_events)
 
-        elif conn_obj_in_progress is not None:
+            return
+
+        conn_obj_in_progress = self._connsinprogress.get(sock)
+
+        if conn_obj_in_progress is not None:
             try:
                 # Check if the socket has any data for us
                 sock.recv(1, socket.MSG_PEEK)
@@ -2001,9 +2006,12 @@ class SoulseekNetworkThread(Thread):
             except OSError as error:
                 self._connect_error(error, conn_obj_in_progress)
                 self._close_connection(self._connsinprogress, sock, callback=False)
-                return False
 
-        elif conn_obj_established is not None:
+            return
+
+        conn_obj_established = self._conns.get(sock)
+
+        if conn_obj_established is not None:
             if self._is_download(conn_obj_established):
                 self._set_conn_speed_limit(sock, self._download_limit_split, self._dlimits)
 
@@ -2011,7 +2019,7 @@ class SoulseekNetworkThread(Thread):
                 if not self._read_data(conn_obj_established, current_time):
                     # No data received, socket was likely closed remotely
                     self._close_connection(self._conns, sock)
-                    return False
+                    return
 
             except OSError as error:
                 log.add_conn(("Cannot read data from connection %(addr)s, closing connection. "
@@ -2020,14 +2028,13 @@ class SoulseekNetworkThread(Thread):
                     "error": error
                 })
                 self._close_connection(self._conns, sock)
-                return False
+                return
 
-            if conn_obj_established.ibuf:
-                self._process_conn_incoming_messages(conn_obj_established)
+            self._process_conn_incoming_messages(conn_obj_established)
 
-        return True
+    def _process_ready_output_socket(self, sock, current_time):
 
-    def _process_ready_output_socket(self, sock, current_time, conn_obj_in_progress=None, conn_obj_established=None):
+        conn_obj_in_progress = self._connsinprogress.get(sock)
 
         if conn_obj_in_progress is not None:
             try:
@@ -2044,9 +2051,11 @@ class SoulseekNetworkThread(Thread):
             except OSError as error:
                 self._connect_error(error, conn_obj_in_progress)
                 self._close_connection(self._connsinprogress, sock, callback=False)
-                return False
+                return
 
-        elif conn_obj_established is not None:
+        conn_obj_established = self._conns.get(sock)
+
+        if conn_obj_established is not None:
             if self._is_upload(conn_obj_established):
                 self._set_conn_speed_limit(sock, self._upload_limit_split, self._ulimits)
 
@@ -2059,9 +2068,6 @@ class SoulseekNetworkThread(Thread):
                     "error": error
                 })
                 self._close_connection(self._conns, sock)
-                return False
-
-        return True
 
     def _process_ready_sockets(self, current_time):
 
@@ -2071,17 +2077,17 @@ class SoulseekNetworkThread(Thread):
 
         for selector_key, selector_events in self._selector.select(timeout=-1):
             sock = selector_key.fileobj
-            conn_obj_in_progress = self._connsinprogress.get(sock)
-            conn_obj_established = self._conns.get(sock)
 
             if selector_events & selectors.EVENT_READ:
-                if not self._process_ready_input_socket(sock, current_time, conn_obj_in_progress, conn_obj_established):
-                    continue
+                self._process_ready_input_socket(sock, current_time)
 
             if selector_events & selectors.EVENT_WRITE:
-                self._process_ready_output_socket(sock, current_time, conn_obj_in_progress, conn_obj_established)
+                self._process_ready_output_socket(sock, current_time)
 
     def _process_conn_incoming_messages(self, conn_obj):
+
+        if not conn_obj.ibuf:
+            return
 
         if conn_obj.sock is self._server_socket:
             self._process_server_input(conn_obj, conn_obj.ibuf)
@@ -2092,7 +2098,7 @@ class SoulseekNetworkThread(Thread):
         if init is None:
             conn_obj.init = init = self._process_peer_init_input(conn_obj, conn_obj.ibuf)
 
-            if init is None:
+            if init is None or not conn_obj.ibuf:
                 return
 
         if init.conn_type == ConnectionType.PEER:
@@ -2193,7 +2199,7 @@ class SoulseekNetworkThread(Thread):
                         self._modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
 
             except (OSError, ValueError) as error:
-                self._callback_msgs.append(UploadFileError(conn_obj.fileupl.token, conn_obj.fileupl.file, error))
+                events.emit_main_thread("upload-file-error", conn_obj.fileupl.token, conn_obj.fileupl.file, error)
                 self._close_connection(self._conns, sock)
 
             # bytes_send can be zero if the offset equals the file size, check finished status here
@@ -2206,7 +2212,8 @@ class SoulseekNetworkThread(Thread):
                     # We save resources by not sending data back to core
                     # every time a part of a file is uploaded
 
-                    self._callback_msgs.append(copy.copy(conn_obj.fileupl))
+                    events.emit_main_thread("file-upload-progress", conn_obj.fileupl.init.target_user,
+                                            conn_obj.fileupl.token, conn_obj.fileupl.offset, conn_obj.fileupl.sentbytes)
                     conn_obj.lastcallback = current_time
 
         if not conn_obj.obuf:
@@ -2217,7 +2224,7 @@ class SoulseekNetworkThread(Thread):
 
     def run(self):
 
-        events.emit("thread-callback", [SetConnectionStats()])
+        events.emit_main_thread("set-connection-stats")
         self.upnp = UPnP()
 
         # Watch sockets for I/0 readiness with the selectors module. Only call register() after a socket
@@ -2236,9 +2243,9 @@ class SoulseekNetworkThread(Thread):
             # Send updated connection count to core. Avoid sending too many
             # updates at once, if there are a lot of connections.
             if (current_time - self._last_conn_stat_time) >= 1:
-                self._callback_msgs.append(
-                    SetConnectionStats(self._numsockets, self._total_downloads, self._total_download_bandwidth,
-                                       self._total_uploads, self._total_upload_bandwidth))
+                events.emit_main_thread("set-connection-stats", self._numsockets, self._total_downloads,
+                                        self._total_download_bandwidth, self._total_uploads,
+                                        self._total_upload_bandwidth)
 
                 # Close stale outgoing connection attempts
                 for sock, conn_obj in self._connsinprogress.copy().items():
@@ -2257,14 +2264,6 @@ class SoulseekNetworkThread(Thread):
 
             # Check which connections are ready to send/receive data
             self._process_ready_sockets(current_time)
-
-            # Inform the main thread
-            if self._callback_msgs:
-                for msg in self._callback_msgs:
-                    log.add_msg_contents(msg)
-
-                events.emit("thread-callback", self._callback_msgs)
-                self._callback_msgs.clear()
 
             # Reset transfer speed limits
             self._ulimits = {}
