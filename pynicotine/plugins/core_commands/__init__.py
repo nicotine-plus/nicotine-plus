@@ -336,7 +336,7 @@ class Plugin(BasePlugin):
         self.output(output)
         return True
 
-    """ "Chats" """
+    """ Chats """
 
     def clear_command(self, args, user=None, room=None):
 
@@ -410,7 +410,7 @@ class Plugin(BasePlugin):
 
         self.send_public(room, text)
 
-    """ "Now Playing" """
+    """ Now Playing """
 
     def now_playing_command(self, _args, **_unused):
         # TODO: Untested, move np into a new plugin
@@ -473,7 +473,7 @@ class Plugin(BasePlugin):
         # TODO: remove this debug output line
         self.output(f"Not implemented. Entered arguments: group='{group}' name='{name}'")
 
-    """ "Users" """
+    """ Users """
 
     def add_buddy_command(self, args, user=None, **_unused):
 
@@ -488,6 +488,8 @@ class Plugin(BasePlugin):
             user = args
 
         self.core.userlist.remove_buddy(user)
+
+    """ Network Filters """
 
     def ban_command(self, args, user=None, **_unused):
 
@@ -578,7 +580,7 @@ class Plugin(BasePlugin):
 
         self.core.userbrowse.browse_user(user)
 
-    """ "Search" """
+    """ Search Files """
 
     def search_user_command(self, args, user=None, **_unused):
 
@@ -615,7 +617,7 @@ class Plugin(BasePlugin):
     def search_buddies_command(self, args, **_unused):
         self.core.search.do_search(args, "buddies")
 
-    """ Application Core "Commands" """
+    """ Core Application Commands """
 
     def away_command(self, _args, **_unused):
         self.core.set_away_mode(self.core.user_status != 1, save_state=True)  # 1 = UserStatus.AWAY
