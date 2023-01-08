@@ -128,7 +128,7 @@ class FastConfigure(Dialog):
                 continue
 
             if folder_path in (x[1] for x in shared_folders + buddy_shared_folders):
-                return
+                continue
 
             self.rescan_required = True
 
