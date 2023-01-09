@@ -18,8 +18,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
@@ -120,26 +118,14 @@ class FastConfigure(Dialog):
 
     def on_add_shared_folder_selected(self, selected, _data):
 
-        shared_folders = config.sections["transfers"]["shared"]
-        buddy_shared_folders = config.sections["transfers"]["buddyshared"]
-
         for folder_path in selected:
-            if folder_path is None:
+            new_mapping = core.shares.new_folder_mapping(folder_path=folder_path)
+
+            if not new_mapping:
                 continue
 
-            if folder_path in (x[1] for x in shared_folders + buddy_shared_folders):
-                continue
-
+            self.shares_list_view.add_row(new_mapping)
             self.rescan_required = True
-
-            virtual_name = core.shares.get_normalized_virtual_name(
-                os.path.basename(os.path.normpath(folder_path)),
-                shared_folders=(shared_folders + buddy_shared_folders)
-            )
-            mapping = (virtual_name, folder_path)
-
-            self.shares_list_view.add_row(mapping)
-            config.sections["transfers"]["shared"].append(mapping)
 
     def on_add_shared_folder(self, *_args):
 
@@ -152,29 +138,16 @@ class FastConfigure(Dialog):
 
     def on_edit_shared_folder_response(self, dialog, _response_id, iterator):
 
-        virtual_name = dialog.get_entry_value()
-
-        if not virtual_name:
-            return
-
-        self.rescan_required = True
-
-        shared_folders = config.sections["transfers"]["shared"]
-        buddy_shared_folders = config.sections["transfers"]["buddyshared"]
-
-        virtual_name = core.shares.get_normalized_virtual_name(
-            virtual_name, shared_folders=(shared_folders + buddy_shared_folders)
-        )
-        old_virtual_name = self.shares_list_view.get_row_value(iterator, 0)
+        new_virtual_name = dialog.get_entry_value()
         folder_path = self.shares_list_view.get_row_value(iterator, 1)
 
-        old_mapping = (old_virtual_name, folder_path)
-        new_mapping = (virtual_name, folder_path)
+        new_mapping = core.shares.new_folder_mapping("public", new_virtual_name, folder_path)
 
-        shared_folders.remove(old_mapping)
-        shared_folders.append(new_mapping)
+        if not new_mapping:
+            return
 
-        self.shares_list_view.set_row_value(iterator, 0, virtual_name)
+        self.shares_list_view.set_row_value(iterator, 0, new_mapping[0])
+        self.rescan_required = True
 
     def on_edit_shared_folder(self, *_args):
 

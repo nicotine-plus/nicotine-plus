@@ -606,14 +606,14 @@ class Shares:
         return mapping
 
     @staticmethod
-    def get_normalized_virtual_name(virtual_name, shared_folders):
+    def _get_normalized_virtual_name(virtual_name, shared_folders):
 
         # Provide a default name for root folders
         if not virtual_name:
             virtual_name = "Shared"
 
-        # Remove slashes from share name to avoid path conflicts
-        virtual_name = virtual_name.replace('/', '_').replace('\\', '_')
+        # Remove slashes and trailing spaces/quotes from share name to avoid path conflicts
+        virtual_name = virtual_name.replace('/', '_').replace('\\', '_').strip(' "')
         new_virtual_name = str(virtual_name)
 
         # Check if virtual share name is already in use
@@ -623,6 +623,80 @@ class Shares:
             counter += 1
 
         return new_virtual_name
+
+    def new_folder_mapping(self, group_name="public", new_virtual_name=None, folder_path=None, share_groups=None):
+        """ Add new shared folder_path, or remap existing shared folder_path
+        to new_virtual_name and/or into different share new_group_name.
+        folder_path is the only required argument """
+
+        if folder_path is None or not os.access(encode_path(folder_path), os.R_OK):
+            # Support free text entry from share CLI core command argument
+            log.add(_("Cannot share inaccessible folder %(folder_path)s"), {"folder_path": str(folder_path)})
+            return False
+
+        if share_groups is None:
+            # FastConfigure and CLI map directly into config to update immediately
+            use_config_keys = True
+            share_groups = self.get_shared_folders(use_config_keys)
+        else:
+            # Preferences dialog has own variables to update on Apply or discard on Cancel
+            use_config_keys = False
+
+        # Two share groups are defined {0: "public", 1: "buddy"}
+        group_index = 1 if group_name == "buddy" else 0
+        old_mapping = False
+
+        for shared_group_index, shared_folders in enumerate(share_groups):
+            # Support any number of share groups for checking existing entries,
+            # the group name is only used for the debug log messages
+            shared_group_name = "buddy" if shared_group_index == 1 else "public"
+
+            for shared_virtual_name, shared_folder_path, *_unused in shared_folders:
+                if folder_path == shared_folder_path:
+                    log.add_debug(f"Already mapped {shared_group_name} share \"{shared_virtual_name}\" {folder_path}")
+
+                    if new_virtual_name is None:
+                        # Adding a new share, but this folder_path already exists
+
+                        # Keep existing name when switching groups
+                        new_virtual_name = shared_virtual_name
+
+                    if shared_group_index == group_index and shared_virtual_name == new_virtual_name:
+                        # Editing a share, but not changed group nor name, no op
+                        return False
+
+                    # Adding or Editing share name and/or switching group, found old share to remove
+                    old_mapping = (shared_virtual_name, shared_folder_path)
+
+                    log.add_debug(f"Remapping {group_name} share \"{shared_virtual_name}\" {folder_path}")
+                    break
+
+            if old_mapping and old_mapping in shared_folders:
+                # Remove old share, and stop looping share_groups
+                shared_folders.remove(old_mapping)
+                break
+
+        # Create new share with unique name
+        virtual_name = self._get_normalized_virtual_name(
+            new_virtual_name or os.path.basename(os.path.normpath(folder_path)),
+            shared_folders=(share_groups[0] + share_groups[1])
+        )
+        new_mapping = (virtual_name, folder_path)
+
+        # Support any number of share groups for creating new shared folder entry
+        shared_folders = share_groups[group_index]
+        shared_folders.append(new_mapping)
+
+        if use_config_keys:
+            log.add_transfer("Added %(group_name)s share \"%(virtual_name)s\" %(folder_path)s", {
+                "group_name": group_name,
+                "virtual_name": virtual_name,
+                "folder_path": folder_path
+            })
+            config.write_configuration()
+
+        # Update calling list view or show CLI confirmation message
+        return new_mapping
 
     def convert_shares(self):
         """ Convert fs-based shared to virtual shared (pre 1.4.0) """
@@ -796,12 +870,18 @@ class Shares:
     def rebuild_shares(self, use_thread=True):
         return self.rescan_shares(rebuild=True, use_thread=use_thread)
 
-    def get_shared_folders(self):
+    def get_shared_folders(self, use_config_keys=False):
 
-        shared_folders = config.sections["transfers"]["shared"][:]
-        shared_folders_buddy = config.sections["transfers"]["buddyshared"][:]
+        if use_config_keys:
+            # FastConfigure and CLI map directly into config for add/remove share
+            shared_folders_public = config.sections["transfers"]["shared"]
+            shared_folders_buddy = config.sections["transfers"]["buddyshared"]
+        else:
+            # Shares, Scanner and Transfers does not want to modify the keys
+            shared_folders_public = config.sections["transfers"]["shared"][:]
+            shared_folders_buddy = config.sections["transfers"]["buddyshared"][:]
 
-        return shared_folders, shared_folders_buddy
+        return shared_folders_public, shared_folders_buddy
 
     def process_scanner_messages(self, scanner, scanner_queue):
 
