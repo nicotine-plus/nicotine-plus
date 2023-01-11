@@ -19,14 +19,22 @@
 import time
 
 from pynicotine.config import config
+from pynicotine.events import events
 
 
 class Statistics:
 
-    def __init__(self, ui_callback=None):
+    def __init__(self):
 
-        self.ui_callback = getattr(ui_callback, "statistics", None)
         self.session_stats = {}
+
+        for event_name, callback in (
+            ("quit", self._quit),
+            ("start", self._start)
+        ):
+            events.connect(event_name, callback)
+
+    def _start(self):
 
         # Only populate total since date on first run
         if (not config.sections["statistics"]["since_timestamp"]
@@ -39,6 +47,9 @@ class Statistics:
         for stat_id in config.defaults["statistics"]:
             self.update_ui(stat_id)
 
+    def _quit(self):
+        self.session_stats.clear()
+
     def append_stat_value(self, stat_id, stat_value):
 
         self.session_stats[stat_id] += stat_value
@@ -47,10 +58,10 @@ class Statistics:
 
     def update_ui(self, stat_id):
 
-        if self.ui_callback:
-            session_stat_value = self.session_stats[stat_id]
-            total_stat_value = config.sections["statistics"][stat_id]
-            self.ui_callback.update_stat_value(stat_id, session_stat_value, total_stat_value)
+        session_stat_value = self.session_stats[stat_id]
+        total_stat_value = config.sections["statistics"][stat_id]
+
+        events.emit("update-stat-value", stat_id, session_stat_value, total_stat_value)
 
     def reset_stats(self):
 

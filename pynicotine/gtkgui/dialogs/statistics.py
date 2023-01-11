@@ -18,8 +18,9 @@
 
 import time
 
-from gi.repository import Gtk
-
+from pynicotine.config import config
+from pynicotine.core import core
+from pynicotine.events import events
 from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.ui import UserInterface
@@ -29,9 +30,7 @@ from pynicotine.utils import humanize
 
 class Statistics(Dialog):
 
-    def __init__(self, frame, core):
-
-        self.core = core
+    def __init__(self, application):
 
         ui_template = UserInterface(scope=self, path="dialogs/statistics.ui")
         (
@@ -55,15 +54,22 @@ class Statistics(Dialog):
         ) = ui_template.widgets
 
         super().__init__(
-            parent=frame.window,
+            parent=application.window,
             content_box=self.container,
-            buttons=[(self.close_button, Gtk.ResponseType.CANCEL),
-                     (self.reset_button, Gtk.ResponseType.NONE)],
+            buttons_start=(self.close_button,),
+            buttons_end=(self.reset_button,),
+            default_button=self.close_button,
             title=_("Transfer Statistics"),
             width=450,
             resizable=False,
-            close_destroy=False
+            close_destroy=False,
+            show_title_buttons=False
         )
+
+        events.connect("update-stat-value", self.update_stat_value)
+
+        for stat_id in config.defaults["statistics"]:
+            core.statistics.update_ui(stat_id)
 
     def update_stat_value(self, stat_id, session_value, total_value):
 
@@ -81,19 +87,19 @@ class Statistics(Dialog):
             total_value = humanize(total_value)
 
         if session_value is not None:
-            getattr(self, stat_id + "_session_label").set_text(session_value)
+            getattr(self, f"{stat_id}_session_label").set_text(session_value)
 
         if total_value is not None:
-            getattr(self, stat_id + "_total_label").set_text(total_value)
+            getattr(self, f"{stat_id}_total_label").set_text(total_value)
 
     def on_reset_statistics_response(self, _dialog, response_id, _data):
         if response_id == 2:
-            self.core.statistics.reset_stats()
+            core.statistics.reset_stats()
 
     def on_reset_statistics(self, *_args):
 
         OptionDialog(
-            parent=self.dialog,
+            parent=self,
             title=_('Reset Transfer Statistics?'),
             message=_('Do you really want to reset transfer statistics?'),
             callback=self.on_reset_statistics_response

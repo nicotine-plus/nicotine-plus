@@ -23,40 +23,42 @@ import time
 from collections import deque
 
 from pynicotine.config import config
+from pynicotine.core import core
+from pynicotine.events import events
 from pynicotine.logfacility import log
 
 
 class Application:
 
-    def __init__(self, core, ci_mode):
+    def __init__(self):
 
         self.init_exception_handler()
+        self.thread_events = deque()
 
-        self.core = core
-        self.ci_mode = ci_mode
-        self.network_msgs = deque()
+        for log_level in ("download", "upload"):
+            log.add_log_level(log_level, is_permanent=False)
 
-        config.load_config()
-        log.log_levels = set(["download", "upload"] + config.sections["logging"]["debugmodes"])
+        for event_name, callback in (
+            ("shares-unavailable", self.shares_unavailable),
+            ("thread-event", self.thread_event)
+        ):
+            events.connect(event_name, callback)
 
     def run(self):
 
-        self.core.start(self, self.network_callback)
-        connect_success = self.core.connect()
+        core.start()
+        core.connect()
 
-        if not connect_success and not self.ci_mode:
-            # Network error, exit code 1
-            return 1
+        # Main loop, process events from threads
+        while not core.shutdown:
+            if self.thread_events:
+                event_list = []
 
-        # Main loop, process messages from networking thread
-        while not self.core.shutdown:
-            if self.network_msgs:
-                msgs = []
+                while self.thread_events:
+                    event_list.append(self.thread_events.popleft())
 
-                while self.network_msgs:
-                    msgs.append(self.network_msgs.popleft())
-
-                self.core.network_event(msgs)
+                for event_name, args, kwargs in event_list:
+                    events.emit(event_name, *args, **kwargs)
 
             time.sleep(1 / 60)
 
@@ -64,8 +66,8 @@ class Application:
         config.write_configuration()
         return 0
 
-    def network_callback(self, msgs):
-        self.network_msgs.extend(msgs)
+    def thread_event(self, event_name, *args, **kwargs):
+        self.thread_events.append((event_name, args, kwargs))
 
     def init_exception_handler(self):
 
@@ -94,7 +96,7 @@ class Application:
         threading.Thread.__init__ = init_thread_excepthook
 
     def on_critical_error(self, _exc_type, exc_value, _exc_traceback):
-        self.core.quit()
+        core.quit()
         raise exc_value
 
     @staticmethod
@@ -103,52 +105,4 @@ class Application:
 
     def shares_unavailable(self, shares):
         for virtual_name, folder_path in shares:
-            log.add("• \"%s\" %s" % (virtual_name, folder_path))
-
-    def show_scan_progress(self):
-        # Not implemented
-        pass
-
-    def set_scan_progress(self, value):
-        # Not implemented
-        pass
-
-    def set_scan_indeterminate(self):
-        # Not implemented
-        pass
-
-    def hide_scan_progress(self):
-        # Not implemented
-        pass
-
-    def invalid_password(self):
-        # Not implemented
-        pass
-
-    def server_login(self):
-        # Not implemented
-        pass
-
-    def set_away_mode(self, is_away):
-        # Not implemented
-        pass
-
-    def set_connection_stats(self, msg):
-        # Not implemented
-        pass
-
-    def server_disconnect(self):
-        # Not implemented
-        pass
-
-    def setup(self):
-        # Not implemented
-        pass
-
-    def confirm_quit(self, _remember):
-        # Not implemented
-        pass
-
-    def quit(self):
-        # Not implemented
-        pass
+            log.add(f"• \"{virtual_name}\" {folder_path}")

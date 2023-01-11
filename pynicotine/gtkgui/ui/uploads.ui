@@ -19,7 +19,6 @@
                 <property name="has-tooltip">True</property>
                 <property name="enable-tree-lines">True</property>
                 <property name="rubber-banding">True</property>
-                <property name="search-column">0</property>
                 <signal name="query-tooltip" handler="on_tooltip"/>
                 <signal name="row-activated" handler="on_row_activated"/>
                 <child internal-child="selection">
@@ -29,6 +28,9 @@
                 </child>
               </object>
             </child>
+            <style>
+              <class name="transfers-view"/>
+            </style>
           </object>
         </child>
         <style>
@@ -149,8 +151,8 @@
             <child>
               <object class="GtkButton" id="_clear_finished_button">
                 <property name="visible">True</property>
-                <property name="tooltip-text" translatable="yes">Clear all finished and cancelled uploads.</property>
-                <signal name="clicked" handler="on_clear_finished_aborted"/>
+                <property name="tooltip-text" translatable="yes">Clear All Finished/Cancelled Uploads</property>
+                <signal name="clicked" handler="on_clear_finished_cancelled"/>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
@@ -177,10 +179,40 @@
               </object>
             </child>
             <child>
+              <object class="GtkButton" id="_message_all_button">
+                <property name="visible">True</property>
+                <property name="tooltip-text" translatable="yes">Message All</property>
+                <property name="action-name">app.message-downloading-users</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="spacing">6</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">True</property>
+                        <property name="icon-name">mail-send-symbolic</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="ellipsize">end</property>
+                        <property name="label" translatable="yes">Message All</property>
+                        <property name="mnemonic-widget">_message_all_button</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <style>
+                  <class name="flat"/>
+                </style>
+              </object>
+            </child>
+            <child>
               <object class="GtkMenuButton" id="clear_all_button">
                 <property name="visible">True</property>
                 <property name="direction">up</property>
-                <property name="tooltip-text" translatable="yes">Clear all uploads marked with a specific status.</property>
+                <property name="tooltip-text" translatable="yes">Clear Specific Uploads</property>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>

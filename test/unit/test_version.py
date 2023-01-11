@@ -17,14 +17,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import datetime
-import socket
-import unittest
+
+from unittest import TestCase
 
 from pynicotine.config import config
 from pynicotine.updatechecker import UpdateChecker
 
 
-class VersionTest(unittest.TestCase):
+class VersionTest(TestCase):
 
     def test_dev_version(self):
 
@@ -40,13 +40,8 @@ class VersionTest(unittest.TestCase):
         self.assertIsInstance(local_version, int)
 
         # Validate version of latest release
-        try:
-            _hlatest_version, latest_version, date = UpdateChecker.retrieve_latest_version()
-            self.assertIsInstance(latest_version, int)
-
-        except socket.gaierror:
-            print("No internet access, skipping update check test!")
-            return
+        _hlatest_version, latest_version, date = UpdateChecker.retrieve_latest_version()
+        self.assertIsInstance(latest_version, int)
 
         # Validate date of latest release
         date_format = "%Y-%m-%dT%H:%M:%S"

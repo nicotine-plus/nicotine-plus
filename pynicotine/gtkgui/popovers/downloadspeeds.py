@@ -1,5 +1,4 @@
-#!/usr/bin/env python3
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2022 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -17,24 +16,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-import subprocess
-
-""" Script used to install packaging dependencies in MinGW """
+from pynicotine.gtkgui.popovers.transferspeeds import TransferSpeeds
 
 
-ARCH = os.environ.get("ARCH") or "x86_64"
-CURRENT_PATH = os.path.dirname(os.path.abspath(__file__))
+class DownloadSpeeds(TransferSpeeds):
 
-
-def install_pacman():
-    """ Install dependencies from the main MinGW repos """
-
-    prefix = "mingw-w64-" + ARCH + "-"
-    packages = [prefix + "python-cx-freeze"]
-
-    subprocess.check_call(["pacman", "--noconfirm", "-S", "--needed"] + packages)
-
-
-if __name__ == '__main__':
-    install_pacman()
+    def __init__(self, window):
+        super().__init__(window=window, transfer_type="download")

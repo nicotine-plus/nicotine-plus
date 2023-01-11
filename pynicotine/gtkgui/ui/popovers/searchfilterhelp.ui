@@ -27,9 +27,9 @@
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">Search Result Filters</property>
                 <property name="selectable">True</property>
-                <attributes>
-                  <attribute name="weight" value="bold"/>
-                </attributes>
+                <style>
+                  <class name="heading"/>
+                </style>
               </object>
             </child>
             <child>
@@ -66,9 +66,9 @@
                 <property name="label" translatable="yes">Result Filter Usage</property>
                 <property name="margin-top">6</property>
                 <property name="selectable">True</property>
-                <attributes>
-                  <attribute name="weight" value="bold"/>
-                </attributes>
+                <style>
+                  <class name="heading"/>
+                </style>
               </object>
             </child>
             <child>
@@ -77,9 +77,9 @@
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">Include Text</property>
                 <property name="selectable">True</property>
-                <attributes>
-                  <attribute name="style" value="italic"/>
-                </attributes>
+                <style>
+                  <class name="italic"/>
+                </style>
               </object>
             </child>
             <child>
@@ -92,7 +92,7 @@
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="margin-start">12</property>
-                    <property name="label" translatable="yes">Files and folders containing this text will be shown.</property>
+                    <property name="label" translatable="yes">Files, folders and usernames containing this text will be shown.</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
                   </object>
@@ -126,9 +126,9 @@
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">Exclude Text</property>
                 <property name="selectable">True</property>
-                <attributes>
-                  <attribute name="style" value="italic"/>
-                </attributes>
+                <style>
+                  <class name="italic"/>
+                </style>
               </object>
             </child>
             <child>
@@ -136,7 +136,7 @@
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="margin-start">12</property>
-                <property name="label" translatable="yes">As above, but files and folders are filtered out if the text matches.</property>
+                <property name="label" translatable="yes">As above, but files, folders and usernames are filtered out if the text matches.</property>
                 <property name="selectable">True</property>
                 <property name="wrap">True</property>
               </object>
@@ -147,9 +147,9 @@
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">File Type</property>
                 <property name="selectable">True</property>
-                <attributes>
-                  <attribute name="style" value="italic"/>
-                </attributes>
+                <style>
+                  <class name="italic"/>
+                </style>
               </object>
             </child>
             <child>
@@ -190,9 +190,9 @@
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">File Size</property>
                 <property name="selectable">True</property>
-                <attributes>
-                  <attribute name="style" value="italic"/>
-                </attributes>
+                <style>
+                  <class name="italic"/>
+                </style>
               </object>
             </child>
             <child>
@@ -283,9 +283,9 @@
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">Bitrate</property>
                 <property name="selectable">True</property>
-                <attributes>
-                  <attribute name="style" value="italic"/>
-                </attributes>
+                <style>
+                  <class name="italic"/>
+                </style>
               </object>
             </child>
             <child>
@@ -334,9 +334,9 @@
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">Duration</property>
                 <property name="selectable">True</property>
-                <attributes>
-                  <attribute name="style" value="italic"/>
-                </attributes>
+                <style>
+                  <class name="italic"/>
+                </style>
               </object>
             </child>
             <child>
@@ -381,7 +381,7 @@
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="margin-start">12</property>
-                    <property name="label" translatable="yes">Multiple conditions can be specified with | pipe seperators:
+                    <property name="label" translatable="yes">Multiple conditions can be specified with | pipe separators:
     &gt;6:00|&lt;12:00 to show files between 6 and 12 minutes long.
     !9:54|!8:43|!7:32 to hide some specific files from the results.
     =5:34|=4:23|=3:05 to include files with specific durations.</property>
@@ -407,9 +407,9 @@
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">Country</property>
                 <property name="selectable">True</property>
-                <attributes>
-                  <attribute name="style" value="italic"/>
-                </attributes>
+                <style>
+                  <class name="italic"/>
+                </style>
               </object>
             </child>
             <child>
@@ -439,9 +439,9 @@
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">Free Slot</property>
                 <property name="selectable">True</property>
-                <attributes>
-                  <attribute name="style" value="italic"/>
-                </attributes>
+                <style>
+                  <class name="italic"/>
+                </style>
               </object>
             </child>
             <child>
@@ -449,7 +449,7 @@
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="margin-start">12</property>
-                <property name="label" translatable="yes">Show only those results from users which have at least one upload slot free, i.e. files that are availiable immediately.</property>
+                <property name="label" translatable="yes">Show only those results from users which have at least one upload slot free, i.e. files that are available immediately.</property>
                 <property name="selectable">True</property>
                 <property name="wrap">True</property>
               </object>
@@ -460,9 +460,9 @@
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">Clear</property>
                 <property name="selectable">True</property>
-                <attributes>
-                  <attribute name="style" value="italic"/>
-                </attributes>
+                <style>
+                  <class name="italic"/>
+                </style>
               </object>
             </child>
             <child>

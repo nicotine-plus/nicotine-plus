@@ -18,10 +18,10 @@
             <property name="selectable">True</property>
             <property name="xalign">0</property>
             <property name="wrap">True</property>
-            <property name="mnemonic-widget">ProtocolHandlers</property>
-            <attributes>
-              <attribute name="weight" value="bold"/>
-            </attributes>
+            <property name="mnemonic-widget">protocol_list_container</property>
+            <style>
+              <class name="heading"/>
+            </style>
           </object>
         </child>
         <child>
@@ -52,11 +52,11 @@
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
                 <property name="xalign">0</property>
-                <property name="mnemonic-widget">audioPlayerCombo</property>
+                <property name="mnemonic-widget">media_player_combobox</property>
               </object>
             </child>
             <child>
-              <object class="GtkComboBoxText" id="audioPlayerCombo">
+              <object class="GtkComboBoxText" id="media_player_combobox">
                 <property name="visible">True</property>
                 <property name="has-entry">True</property>
                 <property name="valign">center</property>
@@ -71,6 +71,9 @@
                 <child internal-child="entry">
                   <object class="GtkEntry">
                     <property name="width-chars">12</property>
+                    <property name="secondary-icon-name">edit-undo-symbolic</property>
+                    <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
+                    <signal name="icon-press" handler="on_default_media_player"/>
                   </object>
                 </child>
               </object>
@@ -89,11 +92,11 @@
                 <property name="label" translatable="yes">File manager command:</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
-                <property name="mnemonic-widget">FileManagerCombo</property>
+                <property name="mnemonic-widget">file_manager_combobox</property>
               </object>
             </child>
             <child>
-              <object class="GtkComboBoxText" id="FileManagerCombo">
+              <object class="GtkComboBoxText" id="file_manager_combobox">
                 <property name="visible">True</property>
                 <property name="has-entry">True</property>
                 <property name="valign">center</property>
@@ -112,6 +115,9 @@
                 <child internal-child="entry">
                   <object class="GtkEntry">
                     <property name="width-chars">12</property>
+                    <property name="secondary-icon-name">edit-undo-symbolic</property>
+                    <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
+                    <signal name="icon-press" handler="on_default_file_manager"/>
                   </object>
                 </child>
               </object>
@@ -129,7 +135,7 @@
             <property name="visible">True</property>
             <property name="orientation">vertical</property>
             <child>
-              <object class="GtkScrolledWindow" id="ProtocolHandlers">
+              <object class="GtkScrolledWindow" id="protocol_list_container">
                 <property name="visible">True</property>
                 <property name="hexpand">True</property>
                 <property name="vexpand">True</property>

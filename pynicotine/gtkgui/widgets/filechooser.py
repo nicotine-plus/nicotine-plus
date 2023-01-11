@@ -20,6 +20,7 @@ import os
 
 from gi.repository import GdkPixbuf
 from gi.repository import Gio
+from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Pango
 
@@ -34,75 +35,132 @@ class FileChooser:
     active_chooser = None  # Class variable keeping the file chooser object alive
 
     def __init__(self, parent, callback, callback_data=None, title=_("Select a File"),
-                 initial_folder='~', action=Gtk.FileChooserAction.OPEN, multiple=False):
+                 initial_folder=None, select_multiple=False):
 
-        self.file_chooser = Gtk.FileChooserNative(
-            transient_for=parent,
-            title=title,
-            action=action
-        )
+        if not initial_folder:
+            initial_folder = os.path.expanduser('~')
 
-        self.file_chooser.connect("response", self.on_response, callback, callback_data)
-        self.file_chooser.set_modal(True)
-        self.file_chooser.set_select_multiple(multiple)
+        self.parent = parent
+        self.callback = callback
+        self.callback_data = callback_data
+        self.select_multiple = select_multiple
 
-        initial_folder = os.path.expanduser(initial_folder)
+        try:
+            # GTK >= 4.10
+            self.using_new_api = True
+            self.file_chooser = Gtk.FileDialog(title=title, modal=True)
+            self.select_args = {}
+
+            if select_multiple:
+                self.select_method = self.file_chooser.open_multiple
+                self.finish_method = self.file_chooser.open_multiple_finish
+            else:
+                self.select_method = self.file_chooser.open
+                self.finish_method = self.file_chooser.open_finish
+
+        except AttributeError:
+            # GTK < 4.10
+            self.using_new_api = False
+            self.file_chooser = Gtk.FileChooserNative(
+                transient_for=parent.window,
+                title=title,
+                select_multiple=select_multiple,
+                modal=True,
+                action=Gtk.FileChooserAction.OPEN
+            )
+            self.file_chooser.connect("response", self.on_response)
 
         if GTK_API_VERSION >= 4:
-            initial_folder = Gio.File.new_for_path(initial_folder)
-
-        else:
-            # Display network shares
-            self.file_chooser.set_local_only(False)  # pylint: disable=no-member
-
-        self.file_chooser.set_current_folder(initial_folder)
-
-    @staticmethod
-    def on_response(dialog, response_id, callback, callback_data):
-
-        if dialog.get_select_multiple():
-            selected = [i.get_path() for i in dialog.get_files()]
-
-        else:
-            selected_file = dialog.get_file()
-
-            if selected_file:
-                selected = selected_file.get_path()
-
-        FileChooser.active_chooser = None
-        dialog.destroy()
-
-        if response_id != Gtk.ResponseType.ACCEPT or not selected:
+            self.file_chooser.set_current_folder(Gio.File.new_for_path(initial_folder))
             return
 
-        callback(selected, callback_data)
+        # Display network shares
+        self.file_chooser.set_local_only(False)  # pylint: disable=no-member
+        self.file_chooser.set_current_folder(initial_folder)
+
+    def on_finish(self, _dialog, result):
+
+        FileChooser.active_chooser = None
+
+        try:
+            selected_result = self.finish_method(result)
+
+        except GLib.GError:
+            # Nothing was selected
+            return
+
+        if self.select_multiple:
+            selected = [i.get_path() for i in selected_result]
+        else:
+            selected = selected_result.get_path()
+
+        if selected:
+            self.callback(selected, self.callback_data)
+
+    def on_response(self, _dialog, response_id):
+
+        FileChooser.active_chooser = None
+        self.file_chooser.destroy()
+
+        if response_id != Gtk.ResponseType.ACCEPT:
+            return
+
+        if self.select_multiple:
+            selected = [i.get_path() for i in self.file_chooser.get_files()]
+        else:
+            selected_file = self.file_chooser.get_file()
+            selected = selected_file.get_path() if selected_file else None
+
+        if selected:
+            self.callback(selected, self.callback_data)
 
     def show(self):
+
         FileChooser.active_chooser = self
-        self.file_chooser.show()
+
+        if not self.using_new_api:
+            self.file_chooser.show()
+            return
+
+        self.select_method(parent=self.parent.window, callback=self.on_finish, **self.select_args)
 
 
 class FolderChooser(FileChooser):
 
     def __init__(self, parent, callback, callback_data=None, title=_("Select a Folder"),
-                 initial_folder='~', multiple=False):
+                 initial_folder=None, select_multiple=False):
 
-        super().__init__(parent, callback, callback_data, title, initial_folder,
-                         action=Gtk.FileChooserAction.SELECT_FOLDER, multiple=multiple)
+        super().__init__(parent, callback, callback_data, title, initial_folder, select_multiple=select_multiple)
+
+        if not self.using_new_api:
+            self.file_chooser.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
+            return
+
+        if select_multiple:
+            self.select_method = self.file_chooser.select_multiple_folders
+            self.finish_method = self.file_chooser.select_multiple_folders_finish
+            return
+
+        self.select_method = self.file_chooser.select_folder
+        self.finish_method = self.file_chooser.select_folder_finish
 
 
 class ImageChooser(FileChooser):
 
     def __init__(self, parent, callback, callback_data=None, title=_("Select an Image"),
-                 initial_folder='~', multiple=False):
+                 initial_folder=None, select_multiple=False):
 
-        super().__init__(parent, callback, callback_data, title, initial_folder,
-                         multiple=multiple)
+        super().__init__(parent, callback, callback_data, title, initial_folder, select_multiple=select_multiple)
 
         # Only show image files
         file_filter = Gtk.FileFilter()
         file_filter.set_name(_("All images"))
         file_filter.add_pixbuf_formats()
+
+        if self.using_new_api:
+            self.file_chooser.set_current_filter(file_filter)
+            return
+
         self.file_chooser.set_filter(file_filter)
 
         if GTK_API_VERSION == 3:
@@ -128,17 +186,23 @@ class ImageChooser(FileChooser):
 class FileChooserSave(FileChooser):
 
     def __init__(self, parent, callback, callback_data=None, title=_("Save as…"),
-                 initial_folder='~', initial_file='', multiple=False):
+                 initial_folder=None, initial_file=''):
 
-        super().__init__(parent, callback, callback_data, title, initial_folder,
-                         action=Gtk.FileChooserAction.SAVE, multiple=multiple)
+        super().__init__(parent, callback, callback_data, title, initial_folder)
 
         if GTK_API_VERSION == 3:
             # Display hidden files
             self.file_chooser.set_show_hidden(True)                # pylint: disable=no-member
             self.file_chooser.set_do_overwrite_confirmation(True)  # pylint: disable=no-member
 
-        self.file_chooser.set_current_name(initial_file)
+        if not self.using_new_api:
+            self.file_chooser.set_action(Gtk.FileChooserAction.SAVE)
+            self.file_chooser.set_current_name(initial_file)
+            return
+
+        self.select_args = {"current_name": initial_file}
+        self.select_method = self.file_chooser.save
+        self.finish_method = self.file_chooser.save_finish
 
 
 class FileChooserButton:
@@ -151,7 +215,7 @@ class FileChooserButton:
         self.button = button
         self.chooser_type = chooser_type
         self.selected_function = selected_function
-        self.path = ""
+        self.path = None
 
         if chooser_type == "folder":
             icon_name = "folder-symbolic"
@@ -199,10 +263,7 @@ class FileChooserButton:
             ).show()
             return
 
-        if self.path:
-            folder_path = os.path.dirname(self.path)
-        else:
-            folder_path = ""
+        folder_path = os.path.dirname(self.path) if self.path else None
 
         if self.chooser_type == "image":
             ImageChooser(
@@ -232,6 +293,6 @@ class FileChooserButton:
 
     def clear(self):
 
-        self.path = ""
+        self.path = None
         self.button.set_tooltip_text(None)
         self.label.set_label(_("(None)"))

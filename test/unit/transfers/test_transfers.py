@@ -17,43 +17,35 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import unittest
 
-from collections import deque
-from collections import OrderedDict
-from unittest.mock import MagicMock
+from unittest import TestCase
 from unittest.mock import Mock
 
 from pynicotine.config import config
-from pynicotine.userbrowse import UserBrowse
-from pynicotine.transfers import Transfers
+from pynicotine.core import core
 
 
-class TransfersTest(unittest.TestCase):
+class TransfersTest(TestCase):
 
     def setUp(self):
 
         config.data_dir = os.path.dirname(os.path.realpath(__file__))
         config.filename = os.path.join(config.data_dir, "temp_config")
 
-        config.load_config()
+        core.init_components()
         config.sections["transfers"]["downloaddir"] = config.data_dir
 
-        self.transfers = Transfers(MagicMock(), deque(), Mock())
-        self.transfers.init_transfers()
-        self.transfers.server_login()
-        self.transfers.allow_saving_transfers = False
-
-        self.userbrowse = UserBrowse(MagicMock(), Mock())
-        self.userbrowse.core.transfers = self.transfers
+        core.transfers._start()  # pylint: disable=protected-access
+        core.transfers._server_login(Mock())  # pylint: disable=protected-access
+        core.transfers.allow_saving_transfers = False
 
     def test_load_downloads(self):
         """ Test loading a downloads.json file """
 
-        self.assertEqual(len(self.transfers.queue), 2)
-        self.assertEqual(len(self.transfers.downloads), 13)
+        self.assertEqual(len(core.queue), 0)
+        self.assertEqual(len(core.transfers.downloads), 13)
 
-        transfer = self.transfers.downloads[0]
+        transfer = core.transfers.downloads[0]
 
         self.assertEqual(transfer.user, "user13")
         self.assertEqual(transfer.filename, "Downloaded\\Song13.mp3")
@@ -63,7 +55,7 @@ class TransfersTest(unittest.TestCase):
         self.assertIsNone(transfer.bitrate)
         self.assertIsNone(transfer.length)
 
-        transfer = self.transfers.downloads[12]
+        transfer = core.transfers.downloads[12]
 
         self.assertEqual(transfer.user, "user1")
         self.assertEqual(transfer.filename, "Downloaded\\Song1.mp3")
@@ -78,21 +70,21 @@ class TransfersTest(unittest.TestCase):
         is identical to the one we loaded. Ignore transfer 13, since its missing
         properties will be added at the end of the session. """
 
-        self.transfers.abort_transfers()
+        core.transfers._server_disconnect(Mock())  # pylint: disable=protected-access
 
-        old_transfers = self.transfers.load_transfers_file(self.transfers.downloads_file_name)[:12]
+        old_transfers = core.transfers.load_transfers_file(core.transfers.downloads_file_name)[:12]
 
-        saved_transfers = self.transfers.get_downloads()[:12]
+        saved_transfers = core.transfers.get_downloads()[:12]
         self.assertEqual(old_transfers, saved_transfers)
 
     def test_load_uploads(self):
         """ Test loading a uploads.json file """
 
         # Only finished uploads are loaded, other types should never be stored
-        self.assertEqual(len(self.transfers.uploads), 3)
-        self.assertEqual(len(self.transfers.queue), 2)
+        self.assertEqual(len(core.transfers.uploads), 3)
+        self.assertEqual(len(core.queue), 0)
 
-        transfer = self.transfers.uploads[0]
+        transfer = core.transfers.uploads[0]
 
         self.assertEqual(transfer.user, "user5")
         self.assertEqual(transfer.filename, "Junk\\Song5.mp3")
@@ -102,7 +94,7 @@ class TransfersTest(unittest.TestCase):
         self.assertIsNone(transfer.bitrate)
         self.assertIsNone(transfer.length)
 
-        transfer = self.transfers.uploads[2]
+        transfer = core.transfers.uploads[2]
 
         self.assertEqual(transfer.user, "user3")
         self.assertEqual(transfer.filename, "Junk\\Song3.flac")
@@ -115,79 +107,102 @@ class TransfersTest(unittest.TestCase):
     def test_queue_download(self):
         """ Verify that new downloads are prepended to the list """
 
-        self.transfers.get_file("newuser", "Hello\\Path\\File.mp3", "")
-        transfer = self.transfers.downloads[0]
+        core.transfers.get_file("newuser", "Hello\\Path\\File.mp3", "")
+        transfer = core.transfers.downloads[0]
 
         self.assertEqual(transfer.user, "newuser")
         self.assertEqual(transfer.filename, "Hello\\Path\\File.mp3")
-        self.assertEqual(transfer.path, "")
+        self.assertEqual(transfer.path, config.data_dir)
 
     def test_push_upload(self):
         """ Verify that new uploads are prepended to the list """
 
-        self.transfers.push_file("newuser2", "Hello\\Upload\\File.mp3", 2000, "/home/test")
-        self.transfers.push_file("newuser99", "Home\\None.mp3", 100, "/home/more")
-        transfer = self.transfers.uploads[1]
+        core.transfers.push_file("newuser2", "Hello\\Upload\\File.mp3", 2000, "/home/test")
+        core.transfers.push_file("newuser99", "Home\\None.mp3", 100, "/home/more")
+        transfer = core.transfers.uploads[1]
 
         self.assertEqual(transfer.user, "newuser2")
         self.assertEqual(transfer.filename, "Hello\\Upload\\File.mp3")
         self.assertEqual(transfer.path, "/home/test")
 
-    def test_incomplete_download_path(self):
-        """ Verify that the basename in incomplete download paths doesn't exceed 255 bytes.
+    def test_long_basename(self):
+        """ Verify that the basename in download paths doesn't exceed 255 bytes.
         The basename can be shorter than 255 bytes when a truncated multi-byte character is discarded. """
 
         user = "abc"
-        incomplete_folder = "incomplete_downloads"
+        finished_folder_path = "/path/to/somewhere/downloads"
 
         # Short file extension
         virtual_path = ("Music\\Test\\片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片"
-                        + "片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片.mp3")
-        incomplete_path = self.transfers.get_incomplete_file_path(incomplete_folder, user, virtual_path)
+                        "片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片"
+                        "片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片.mp3")
+        incomplete_file_path = core.transfers.get_incomplete_download_file_path(user, virtual_path)
+        incomplete_basename = os.path.basename(incomplete_file_path)
 
-        self.assertEqual(len(os.path.basename(incomplete_path).encode('utf-8')), 253)
-        self.assertEqual(
-            incomplete_path,
-            os.path.join(
-                incomplete_folder,
-                ("INCOMPLETEeded5d7eb6768cac99e7575549a45126片片片片片片片片片片片片片片片片片片片片片片片片"
-                 "片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片.mp3")
-            )
+        self.assertLess(
+            len(incomplete_basename.encode('utf-8')),
+            core.transfers.get_basename_byte_limit(config.data_dir)
         )
+        self.assertTrue(incomplete_basename.startswith("INCOMPLETE42d26e9276e024cdaeac645438912b88"))
+        self.assertTrue(incomplete_basename.endswith(".mp3"))
 
         # Long file extension
         virtual_path = ("Music\\Test\\abc123456.片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片"
-                        + "片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片")
-        incomplete_path = self.transfers.get_incomplete_file_path(incomplete_folder, user, virtual_path)
+                        "片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片"
+                        "片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片")
+        incomplete_file_path = core.transfers.get_incomplete_download_file_path(user, virtual_path)
+        incomplete_basename = os.path.basename(incomplete_file_path)
 
-        self.assertEqual(len(os.path.basename(incomplete_path).encode('utf-8')), 253)
-        self.assertEqual(
-            incomplete_path,
-            os.path.join(
-                incomplete_folder,
-                ("INCOMPLETEcc5054eeb2a488b3a0287fda4c938ef2.片片片片片片片片片片片片片片片片片片片片片片片"
-                 "片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片")
-            )
+        self.assertLess(
+            len(incomplete_basename.encode('utf-8')),
+            core.transfers.get_basename_byte_limit(config.data_dir)
         )
+        self.assertTrue(incomplete_basename.startswith("INCOMPLETEf98e3f07a3fc60e114534045f26707d2."))
+        self.assertTrue(incomplete_basename.endswith("片"))
+
+        # Finished download
+        basename = ("片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片"
+                    "片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片"
+                    "片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片.mp3")
+        finished_basename = core.transfers.get_download_basename(basename, finished_folder_path)
+
+        self.assertLess(
+            len(finished_basename.encode('utf-8')),
+            core.transfers.get_basename_byte_limit(config.data_dir)
+        )
+        self.assertTrue(finished_basename.startswith("片"))
+        self.assertTrue(finished_basename.endswith(".mp3"))
+
+        basename = ("abc123456.片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片"
+                    "片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片"
+                    "片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片")
+        finished_basename = core.transfers.get_download_basename(basename, finished_folder_path)
+
+        self.assertLess(
+            len(finished_basename.encode('utf-8')),
+            core.transfers.get_basename_byte_limit(config.data_dir)
+        )
+        self.assertTrue(finished_basename.startswith(".片"))
+        self.assertTrue(finished_basename.endswith("片"))
 
     def test_download_folder_destination(self):
         """ Verify that the correct download destination is used """
 
         user = "newuser"
         folder = "Hello\\Path"
-        destination_default = self.transfers.get_folder_destination(user, folder)
+        destination_default = core.transfers.get_folder_destination(user, folder)
 
-        self.transfers.requested_folders[user][folder] = "test"
-        destination_custom = self.transfers.get_folder_destination(user, folder)
+        core.transfers.requested_folders[user][folder] = "test"
+        destination_custom = core.transfers.get_folder_destination(user, folder)
 
         config.sections["transfers"]["usernamesubfolders"] = True
-        destination_user = self.transfers.get_folder_destination(user, folder)
+        destination_user = core.transfers.get_folder_destination(user, folder)
 
         folder = "Hello"
-        destination_root = self.transfers.get_folder_destination(user, folder)
+        destination_root = core.transfers.get_folder_destination(user, folder)
 
         folder = "Hello\\Path\\Depth\\Test"
-        destination_depth = self.transfers.get_folder_destination(user, folder)
+        destination_depth = core.transfers.get_folder_destination(user, folder)
 
         self.assertEqual(destination_default, os.path.join(config.data_dir, "Path"))
         self.assertEqual(destination_custom, os.path.join("test", "Path"))
@@ -201,7 +216,7 @@ class TransfersTest(unittest.TestCase):
         user = "random"
         target_folder = "share\\Soulseek"
 
-        shares_list = OrderedDict([
+        core.userbrowse.user_shares[user] = dict([
             ('share\\Music', [
                 (1, 'music1.mp3', 1000000, '', {}),
                 (1, 'music2.mp3', 2000000, '', {})
@@ -224,14 +239,14 @@ class TransfersTest(unittest.TestCase):
             ])
         ])
 
-        self.transfers.downloads.clear()
-        self.userbrowse.download_folder(user, target_folder, shares_list, prefix="test", recurse=True)
+        core.transfers.downloads.clear()
+        core.userbrowse.download_folder(user, target_folder, prefix="test", recurse=True)
 
-        self.assertEqual(len(self.transfers.downloads), 6)
+        self.assertEqual(len(core.transfers.downloads), 6)
 
-        self.assertEqual(self.transfers.downloads[0].path, os.path.join("test", "Soulseek", "folder2", "folder3"))
-        self.assertEqual(self.transfers.downloads[1].path, os.path.join("test", "Soulseek", "folder2"))
-        self.assertEqual(self.transfers.downloads[2].path, os.path.join("test", "Soulseek", "folder1", "folder"))
-        self.assertEqual(self.transfers.downloads[3].path, os.path.join("test", "Soulseek", "folder1"))
-        self.assertEqual(self.transfers.downloads[4].path, os.path.join("test", "Soulseek"))
-        self.assertEqual(self.transfers.downloads[5].path, os.path.join("test", "Soulseek"))
+        self.assertEqual(core.transfers.downloads[0].path, os.path.join("test", "Soulseek", "folder2", "folder3"))
+        self.assertEqual(core.transfers.downloads[1].path, os.path.join("test", "Soulseek", "folder2"))
+        self.assertEqual(core.transfers.downloads[2].path, os.path.join("test", "Soulseek", "folder1", "folder"))
+        self.assertEqual(core.transfers.downloads[3].path, os.path.join("test", "Soulseek", "folder1"))
+        self.assertEqual(core.transfers.downloads[4].path, os.path.join("test", "Soulseek"))
+        self.assertEqual(core.transfers.downloads[5].path, os.path.join("test", "Soulseek"))

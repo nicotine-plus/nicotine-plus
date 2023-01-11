@@ -16,8 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk
-
+from pynicotine.core import core
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.utils import human_length
@@ -28,9 +27,8 @@ from pynicotine.utils import humanize
 
 class FileProperties(Dialog):
 
-    def __init__(self, frame, core, download_button=True):
+    def __init__(self, application, download_button=True):
 
-        self.core = core
         self.properties = {}
         self.total_size = 0
         self.total_length = 0
@@ -60,18 +58,13 @@ class FileProperties(Dialog):
             self.username_value_label
         ) = ui_template.widgets
 
-        buttons = [(self.previous_button, Gtk.ResponseType.HELP),
-                   (self.next_button, Gtk.ResponseType.HELP)]
-
-        if download_button:
-            buttons.append((self.download_button, Gtk.ResponseType.NONE))
-
         Dialog.__init__(
             self,
-            parent=frame.window,
+            parent=application.window,
             content_box=self.container,
-            buttons=buttons,
-            show_callback=self.on_show,
+            buttons_start=(self.previous_button, self.next_button),
+            buttons_end=(self.download_button,) if download_button else (),
+            default_button=self.next_button,
             title=_("File Properties"),
             width=600,
             close_destroy=False
@@ -101,9 +94,12 @@ class FileProperties(Dialog):
         for button in (self.previous_button, self.next_button):
             button.set_visible(len(self.properties) > 1)
 
+        h_size = human_size(properties["size"])
+        bytes_size = humanize(properties["size"])
+
         self.filename_value_label.set_text(str(properties["filename"]))
         self.folder_value_label.set_text(str(properties["directory"]))
-        self.filesize_value_label.set_text("%s (%s B)" % (human_size(properties["size"]), humanize(properties["size"])))
+        self.filesize_value_label.set_text(f"{h_size} ({bytes_size} B)")
         self.username_value_label.set_text(str(properties["user"]))
 
         path = properties.get("path") or ""
@@ -164,10 +160,7 @@ class FileProperties(Dialog):
 
         properties = self.properties[self.current_index]
 
-        self.core.transfers.get_file(
+        core.transfers.get_file(
             properties["user"], properties["fn"], size=properties["size"],
             bitrate=properties.get("bitrate"), length=properties.get("length")
         )
-
-    def on_show(self, *_args):
-        self.next_button.grab_focus()

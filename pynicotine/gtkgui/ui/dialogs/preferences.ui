@@ -24,6 +24,9 @@
     <property name="label" translatable="yes">_OK</property>
     <property name="use-underline">True</property>
     <signal name="clicked" handler="on_ok"/>
+    <style>
+      <class name="suggested-action"/>
+    </style>
   </object>
   <object class="GtkBox" id="container">
     <property name="visible">True</property>

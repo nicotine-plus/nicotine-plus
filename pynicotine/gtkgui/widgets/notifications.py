@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import sys
 import time
 
@@ -24,32 +25,41 @@ from threading import Thread
 
 from gi.repository import Gdk
 from gi.repository import Gio
+from gi.repository import GLib
 
 from pynicotine.config import config
-from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.core import core
+from pynicotine.events import events
 from pynicotine.logfacility import log
 from pynicotine.utils import truncate_string_byte
 
 
 class Notifications:
 
-    def __init__(self, frame, core):
+    def __init__(self, application):
 
-        self.frame = frame
-        self.core = core
-        self.application = Gio.Application.get_default()
+        self.application = application
 
         if sys.platform == "win32":
-            self.win_notification = WinNotify(self.frame.tray_icon)
+            self.win_notification = WinNotify(self.application.tray_icon)
+
+        for event_name, callback in (
+            ("show-notification", self._show_notification),
+            ("show-chatroom-notification", self._show_chatroom_notification),
+            ("show-download-notification", self._show_download_notification),
+            ("show-private-chat-notification", self._show_private_chat_notification),
+            ("show-search-notification", self._show_search_notification)
+        ):
+            events.connect(event_name, callback)
 
     def add(self, location, user, room=None):
 
         item = room if location == "rooms" else user
 
-        if self.core.notifications.add_hilite_item(location, item):
-            self.frame.tray_icon.update_icon()
+        if core.notifications.add_hilite_item(location, item):
+            self.application.tray_icon.update_icon()
 
-        if config.sections["ui"]["urgencyhint"] and not self.frame.window.is_active():
+        if config.sections["ui"]["urgencyhint"] and not self.application.window.is_active():
             self.set_urgency_hint(True)
 
         self.set_title(user)
@@ -58,50 +68,40 @@ class Notifications:
 
         item = room if location == "rooms" else user
 
-        if self.core.notifications.remove_hilite_item(location, item):
+        if core.notifications.remove_hilite_item(location, item):
             self.set_title(item)
-            self.frame.tray_icon.update_icon()
+            self.application.tray_icon.update_icon()
 
     def set_title(self, user=None):
 
         app_name = config.application_name
 
-        if (not self.core.notifications.chat_hilites["rooms"]
-                and not self.core.notifications.chat_hilites["private"]):
+        if (not core.notifications.chat_hilites["rooms"]
+                and not core.notifications.chat_hilites["private"]):
             # Reset Title
-            self.frame.window.set_title(app_name)
+            self.application.window.set_title(app_name)
             return
 
         if not config.sections["notifications"]["notification_window_title"]:
             return
 
-        if self.core.notifications.chat_hilites["private"]:
+        if core.notifications.chat_hilites["private"]:
             # Private Chats have a higher priority
-            user = self.core.notifications.chat_hilites["private"][-1]
+            user = core.notifications.chat_hilites["private"][-1]
+            notification_text = _("Private Message from %(user)s") % {'user': user}
 
-            self.frame.window.set_title(
-                app_name + " - " + _("Private Message from %(user)s") % {'user': user}
-            )
+            self.application.window.set_title(f"{app_name} - {notification_text}")
 
-        elif self.core.notifications.chat_hilites["rooms"]:
+        elif core.notifications.chat_hilites["rooms"]:
             # Allow for the possibility the username is not available
-            room = self.core.notifications.chat_hilites["rooms"][-1]
+            room = core.notifications.chat_hilites["rooms"][-1]
+            notification_text = _("Mentioned by %(user)s in Room %(room)s") % {'user': user, 'room': room}
 
-            if user is None:
-                self.frame.window.set_title(
-                    app_name + " - " + _("You've been mentioned in the %(room)s room") % {'room': room}
-                )
-            else:
-                self.frame.window.set_title(
-                    app_name + " - " + _("%(user)s mentioned you in the %(room)s room") % {'user': user, 'room': room}
-                )
+            self.application.window.set_title(f"{app_name} - {notification_text}")
 
     def set_urgency_hint(self, enabled):
 
-        if GTK_API_VERSION >= 4:
-            surface = self.frame.window.get_surface()
-        else:
-            surface = self.frame.window.get_window()
+        surface = self.application.window.get_surface()
 
         try:
             surface.set_urgency_hint(enabled)
@@ -110,7 +110,7 @@ class Notifications:
             # No support for urgency hints
             pass
 
-    def new_text_notification(self, message, title=None, priority=Gio.NotificationPriority.NORMAL):
+    def _show_notification(self, message, title=None, action=None, action_target=None, high_priority=False):
 
         if title is None:
             title = config.application_name
@@ -131,17 +131,44 @@ class Notifications:
 
                 return
 
-            notification_popup = Gio.Notification.new(title)
-            notification_popup.set_body(message)
-            notification_popup.set_priority(priority)
+            priority = Gio.NotificationPriority.HIGH if high_priority else Gio.NotificationPriority.NORMAL
 
-            self.application.send_notification(None, notification_popup)
+            notification = Gio.Notification.new(title)
+            notification.set_body(message)
+            notification.set_priority(priority)
+
+            # Unity doesn't support default click actions, and replaces the notification with a dialog.
+            # Disable actions to prevent this from happening.
+            if action and os.environ.get("XDG_SESSION_DESKTOP") != "unity":
+                if action_target:
+                    notification.set_default_action_and_target(action, GLib.Variant("s", action_target))
+                else:
+                    notification.set_default_action(action)
+
+            self.application.send_notification(None, notification)
 
             if config.sections["notifications"]["notification_popup_sound"]:
-                Gdk.beep()
+                Gdk.Display.get_default().beep()
 
         except Exception as error:
             log.add(_("Unable to show notification: %s"), str(error))
+
+    def _show_chatroom_notification(self, room, message, title=None, high_priority=False):
+        self._show_notification(
+            message, title, action="app.chatroom-notification-activated", action_target=room,
+            high_priority=high_priority)
+
+    def _show_download_notification(self, message, title=None, high_priority=False):
+        self._show_notification(
+            message, title, action="app.download-notification-activated", high_priority=high_priority)
+
+    def _show_private_chat_notification(self, user, message, title=None):
+        self._show_notification(
+            message, title, action="app.private-chat-notification-activated", action_target=user, high_priority=True)
+
+    def _show_search_notification(self, search_token, message, title=None):
+        self._show_notification(
+            message, title, action="app.search-notification-activated", action_target=search_token, high_priority=True)
 
 
 class WinNotify:
@@ -207,7 +234,7 @@ class WinNotify:
 
         if not has_tray_icon:
             # Tray icon was disabled by the user. Enable it temporarily to show a notification.
-            self.tray_icon.show()
+            self.tray_icon.set_visible(True)
 
         # Need to account for the null terminated character appended to the message length by Windows
         self.nid.sz_info_title = truncate_string_byte(title, byte_limit=63, ellipsize=True)
@@ -217,4 +244,4 @@ class WinNotify:
         time.sleep(timeout)
 
         if not has_tray_icon:
-            self.tray_icon.hide()
+            self.tray_icon.set_visible(False)

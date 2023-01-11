@@ -22,9 +22,9 @@
                 <property name="margin-top">12</property>
                 <property name="margin-bottom">12</property>
                 <property name="label" translatable="yes">Personal Interests</property>
-                <attributes>
-                  <attribute name="weight" value="bold"/>
-                </attributes>
+                <style>
+                  <class name="heading"/>
+                </style>
               </object>
             </child>
             <child>
@@ -69,9 +69,9 @@
                 <property name="margin-top">12</property>
                 <property name="margin-bottom">12</property>
                 <property name="label" translatable="yes">Personal Dislikes</property>
-                <attributes>
-                  <attribute name="weight" value="bold"/>
-                </attributes>
+                <style>
+                  <class name="heading"/>
+                </style>
               </object>
             </child>
             <child>
@@ -141,9 +141,9 @@
                             <property name="single-line-mode">True</property>
                             <property name="wrap">True</property>
                             <property name="label" translatable="yes">Recommendations</property>
-                            <attributes>
-                              <attribute name="weight" value="bold"/>
-                            </attributes>
+                            <style>
+                              <class name="heading"/>
+                            </style>
                           </object>
                         </child>
                         <child>
@@ -151,7 +151,7 @@
                             <property name="visible">True</property>
                             <property name="sensitive">False</property>
                             <property name="valign">center</property>
-                            <property name="tooltip-text" translatable="yes">Refresh list of recommendations</property>
+                            <property name="tooltip-text" translatable="yes">Refresh Recommendations</property>
                             <signal name="clicked" handler="on_recommendations_clicked"/>
                             <child>
                               <object class="GtkImage">
@@ -211,9 +211,9 @@
                             <property name="single-line-mode">True</property>
                             <property name="wrap">True</property>
                             <property name="label" translatable="yes">Similar Users</property>
-                            <attributes>
-                              <attribute name="weight" value="bold"/>
-                            </attributes>
+                            <style>
+                              <class name="heading"/>
+                            </style>
                           </object>
                         </child>
                         <child>
@@ -221,7 +221,7 @@
                             <property name="visible">True</property>
                             <property name="sensitive">False</property>
                             <property name="valign">center</property>
-                            <property name="tooltip-text" translatable="yes">Show users with similar interests</property>
+                            <property name="tooltip-text" translatable="yes">Refresh Similar Users</property>
                             <signal name="clicked" handler="on_similar_users_clicked"/>
                             <child>
                               <object class="GtkImage">
@@ -245,6 +245,10 @@
                           <object class="GtkScrolledWindow" id="similar_users_list_container">
                             <property name="visible">True</property>
                             <property name="hexpand">True</property>
+                            <style>
+                              <class name="colored-icon"/>
+                              <class name="user-status"/>
+                            </style>
                           </object>
                         </child>
                       </object>

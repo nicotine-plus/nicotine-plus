@@ -21,7 +21,6 @@ import json
 import re
 
 from pynicotine.pluginsystem import BasePlugin
-from pynicotine.utils import http_request
 from pynicotine.utils import human_length
 from pynicotine.utils import humanize
 
@@ -96,7 +95,7 @@ class Plugin(BasePlugin):
 
     def get_video_id(self, mode, source, line):
 
-        match = re.search(r'(https?://((m|music)\.)?|www\.)youtu(\.be/|be(-nocookie)?\.com/(embed/|watch\S+v=))'
+        match = re.search(r'(https?://((m|music)\.)?|www\.)youtu(\.be/|be\.com/(shorts/|watch\S+v=))'
                           r'(?P<video_id>[-\w]{11})', line)
         if not match:
             return None
@@ -111,23 +110,24 @@ class Plugin(BasePlugin):
 
     def parse_response(self, video_id):
 
-        if not self.settings['api_key']:
+        api_key = self.settings['api_key']
+
+        if not api_key:
             self.log('No API key specified')
             return None
 
         try:
-            response = http_request(
-                'https', 'www.googleapis.com',
-                '/youtube/v3/videos?part=snippet,statistics,contentDetails&id={}&key={}'.format(
-                    video_id, self.settings['api_key']),
-                headers={'User-Agent': self.config.application_name})
+            from urllib.request import urlopen
+            with urlopen((f"https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics,contentDetails"
+                          f"&id={video_id}&key={api_key}"), timeout=10) as response:
+                response_body = response.read().decode("utf-8")
 
         except Exception as error:
             self.log('Failed to connect to www.googleapis.com: %s', error)
             return None
 
         try:
-            data = json.loads(response)
+            data = json.loads(response_body)
 
         except Exception as error:
             self.log('Failed to parse response from www.googleapis.com: %s', str(error))

@@ -18,9 +18,9 @@
             <property name="selectable">True</property>
             <property name="xalign">0</property>
             <property name="wrap">True</property>
-            <attributes>
-              <attribute name="weight" value="bold"/>
-            </attributes>
+            <style>
+              <class name="heading"/>
+            </style>
           </object>
         </child>
         <child>
@@ -44,17 +44,17 @@
                 <property name="spacing">12</property>
                 <property name="homogeneous">True</property>
                 <child>
-                  <object class="GtkCheckButton" id="GeoBlock">
+                  <object class="GtkCheckButton" id="geo_block_toggle">
                     <property name="visible">True</property>
                     <property name="label" translatable="yes">Country codes to block (comma separated):</property>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkEntry" id="GeoBlockCC">
+                  <object class="GtkEntry" id="geo_block_country_entry">
                     <property name="visible">True</property>
                     <property name="width-chars">15</property>
                     <property name="tooltip-text" translatable="yes">Codes must be in ISO 3166-2 format.</property>
-                    <property name="sensitive" bind-source="GeoBlock" bind-property="active" bind-flags="bidirectional|sync-create"/>
+                    <property name="sensitive" bind-source="geo_block_toggle" bind-property="active" bind-flags="bidirectional|sync-create"/>
                     <property name="valign">center</property>
                   </object>
                 </child>
@@ -66,17 +66,17 @@
                 <property name="spacing">12</property>
                 <property name="homogeneous">True</property>
                 <child>
-                  <object class="GtkCheckButton" id="UseCustomGeoBlock">
+                  <object class="GtkCheckButton" id="geo_block_message_toggle">
                     <property name="visible">True</property>
                     <property name="label" translatable="yes">Use custom geo block message:</property>
                     <property name="tooltip-text" translatable="yes">Sent to users as the reason for being geo blocked.</property>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkEntry" id="CustomGeoBlock">
+                  <object class="GtkEntry" id="geo_block_message_entry">
                     <property name="visible">True</property>
                     <property name="width-chars">15</property>
-                    <property name="sensitive" bind-source="UseCustomGeoBlock" bind-property="active" bind-flags="bidirectional|sync-create"/>
+                    <property name="sensitive" bind-source="geo_block_message_toggle" bind-property="active" bind-flags="bidirectional|sync-create"/>
                     <property name="valign">center</property>
                   </object>
                 </child>
@@ -88,17 +88,17 @@
                 <property name="spacing">12</property>
                 <property name="homogeneous">True</property>
                 <child>
-                  <object class="GtkCheckButton" id="UseCustomBan">
+                  <object class="GtkCheckButton" id="ban_message_toggle">
                     <property name="label" translatable="yes">Use custom ban message:</property>
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Sent to users as the reason for being banned.</property>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkEntry" id="CustomBan">
+                  <object class="GtkEntry" id="ban_message_entry">
                     <property name="visible">True</property>
                     <property name="width-chars">15</property>
-                    <property name="sensitive" bind-source="UseCustomBan" bind-property="active" bind-flags="bidirectional|sync-create"/>
+                    <property name="sensitive" bind-source="ban_message_toggle" bind-property="active" bind-flags="bidirectional|sync-create"/>
                     <property name="valign">center</property>
                   </object>
                 </child>
@@ -134,9 +134,9 @@
                     <property name="halign">start</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
-                    <attributes>
-                      <attribute name="weight" value="bold"/>
-                    </attributes>
+                    <style>
+                      <class name="heading"/>
+                    </style>
                   </object>
                 </child>
                 <child>
@@ -148,7 +148,7 @@
                         <property name="visible">True</property>
                         <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkScrolledWindow" id="BannedList">
+                          <object class="GtkScrolledWindow" id="banned_users_container">
                             <property name="visible">True</property>
                             <property name="height-request">200</property>
                             <property name="hexpand">True</property>
@@ -167,10 +167,10 @@
                             <property name="margin-bottom">6</property>
                             <property name="spacing">6</property>
                             <child>
-                              <object class="GtkButton" id="_add_user_button">
+                              <object class="GtkButton" id="_add_banned_user_button">
                                 <property name="visible">True</property>
                                 <property name="tooltip-text" translatable="yes">Add…</property>
-                                <signal name="clicked" handler="on_add_banned"/>
+                                <signal name="clicked" handler="on_add_banned_user"/>
                                 <child>
                                   <object class="GtkBox">
                                     <property name="visible">True</property>
@@ -187,7 +187,7 @@
                                         <property name="ellipsize">end</property>
                                         <property name="label" translatable="yes">Add…</property>
                                         <property name="use-underline">True</property>
-                                        <property name="mnemonic-widget">_add_user_button</property>
+                                        <property name="mnemonic-widget">_add_banned_user_button</property>
                                       </object>
                                     </child>
                                   </object>
@@ -198,10 +198,10 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkButton" id="_remove_user_button">
+                              <object class="GtkButton" id="_remove_banned_user_button">
                                 <property name="visible">True</property>
                                 <property name="tooltip-text" translatable="yes">Remove</property>
-                                <signal name="clicked" handler="on_remove_banned"/>
+                                <signal name="clicked" handler="on_remove_banned_user"/>
                                 <child>
                                   <object class="GtkBox">
                                     <property name="visible">True</property>
@@ -218,7 +218,7 @@
                                         <property name="ellipsize">end</property>
                                         <property name="label" translatable="yes">Remove</property>
                                         <property name="use-underline">True</property>
-                                        <property name="mnemonic-widget">_remove_user_button</property>
+                                        <property name="mnemonic-widget">_remove_banned_user_button</property>
                                       </object>
                                     </child>
                                   </object>
@@ -255,9 +255,9 @@
                     <property name="halign">start</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
-                    <attributes>
-                      <attribute name="weight" value="bold"/>
-                    </attributes>
+                    <style>
+                      <class name="heading"/>
+                    </style>
                   </object>
                 </child>
                 <child>
@@ -269,7 +269,7 @@
                         <property name="visible">True</property>
                         <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkScrolledWindow" id="BlockedList">
+                          <object class="GtkScrolledWindow" id="banned_ips_container">
                             <property name="visible">True</property>
                             <property name="height-request">200</property>
                             <property name="width-request">260</property>
@@ -289,10 +289,10 @@
                             <property name="margin-bottom">6</property>
                             <property name="spacing">6</property>
                             <child>
-                              <object class="GtkButton" id="_add_ip_button">
+                              <object class="GtkButton" id="_add_banned_ip_button">
                                 <property name="visible">True</property>
                                 <property name="tooltip-text" translatable="yes">Add…</property>
-                                <signal name="clicked" handler="on_add_blocked"/>
+                                <signal name="clicked" handler="on_add_banned_ip"/>
                                 <child>
                                   <object class="GtkBox">
                                     <property name="visible">True</property>
@@ -309,7 +309,7 @@
                                         <property name="ellipsize">end</property>
                                         <property name="label" translatable="yes">Add…</property>
                                         <property name="use-underline">True</property>
-                                        <property name="mnemonic-widget">_add_ip_button</property>
+                                        <property name="mnemonic-widget">_add_banned_ip_button</property>
                                       </object>
                                     </child>
                                   </object>
@@ -320,10 +320,10 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkButton" id="_remove_ip_button">
+                              <object class="GtkButton" id="_remove_banned_ip_button">
                                 <property name="visible">True</property>
                                 <property name="tooltip-text" translatable="yes">Remove</property>
-                                <signal name="clicked" handler="on_remove_blocked"/>
+                                <signal name="clicked" handler="on_remove_banned_ip"/>
                                 <child>
                                   <object class="GtkBox">
                                     <property name="visible">True</property>
@@ -340,7 +340,7 @@
                                         <property name="ellipsize">end</property>
                                         <property name="label" translatable="yes">Remove</property>
                                         <property name="use-underline">True</property>
-                                        <property name="mnemonic-widget">_remove_ip_button</property>
+                                        <property name="mnemonic-widget">_remove_banned_ip_button</property>
                                       </object>
                                     </child>
                                   </object>

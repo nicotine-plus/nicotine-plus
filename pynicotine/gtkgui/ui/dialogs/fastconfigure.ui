@@ -11,6 +11,21 @@
     <property name="visible">True</property>
     <property name="use-underline">True</property>
     <signal name="clicked" handler="on_next"/>
+    <style>
+      <class name="suggested-action"/>
+    </style>
+  </object>
+  <object class="GtkAdjustment" id="_first_port_adjustment">
+    <property name="lower">1024</property>
+    <property name="upper">65535</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">10</property>
+  </object>
+  <object class="GtkAdjustment" id="_last_port_adjustment">
+    <property name="lower">1024</property>
+    <property name="upper">65535</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">10</property>
   </object>
   <object class="GtkStack" id="stack">
     <property name="visible">True</property>
@@ -31,6 +46,7 @@
         <child>
           <object class="GtkImage" id="main_icon">
             <property name="visible">True</property>
+            <property name="can-focus">True</property>
             <property name="halign">center</property>
             <property name="pixel-size">128</property>
           </object>
@@ -68,7 +84,7 @@
           </object>
         </child>
         <child>
-          <object class="GtkButton">
+          <object class="GtkButton" id="set_up_button">
             <property name="visible">True</property>
             <property name="halign">center</property>
             <property name="height-request">42</property>
@@ -160,9 +176,9 @@
                         <property name="xalign">0</property>
                         <property name="label" translatable="yes">Username</property>
                         <property name="mnemonic-widget">username_entry</property>
-                        <attributes>
-                          <attribute name="weight" value="bold"/>
-                        </attributes>
+                        <style>
+                          <class name="heading"/>
+                        </style>
                       </object>
                     </child>
                     <child>
@@ -192,9 +208,9 @@
                         <property name="xalign">0</property>
                         <property name="label" translatable="yes">Password</property>
                         <property name="mnemonic-widget">password_entry</property>
-                        <attributes>
-                          <attribute name="weight" value="bold"/>
-                        </attributes>
+                        <style>
+                          <class name="heading"/>
+                        </style>
                       </object>
                     </child>
                     <child>
@@ -251,7 +267,7 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">The default listening port '2234' works fine in most cases. If you need to use a different port, you will be able to modify it in the preferences later.</property>
+                <property name="label" translatable="yes">If your listening port is closed, you will only be able to connect to users whose listening ports are open.</property>
                 <property name="selectable">True</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
@@ -261,7 +277,7 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">If your listening port is closed, you will only be able to connect to users whose listening ports are open.</property>
+                <property name="label" translatable="yes">Choose a range to select a listening port from. The first available port in the range will be used.</property>
                 <property name="selectable">True</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
@@ -271,14 +287,36 @@
           </object>
         </child>
         <child>
-          <object class="GtkLabel" id="check_port_label">
+          <object class="GtkBox">
             <property name="visible">True</property>
-            <property name="label" translatable="yes">Check Port Status</property>
             <property name="halign">center</property>
-            <property name="use-markup">True</property>
-            <attributes>
-              <attribute name="weight" value="bold"/>
-            </attributes>
+            <property name="spacing">12</property>
+            <child>
+              <object class="GtkSpinButton" id="first_port_entry">
+                <property name="visible">True</property>
+                <property name="halign">end</property>
+                <property name="valign">center</property>
+                <property name="adjustment">_first_port_adjustment</property>
+                <property name="numeric">True</property>
+                <property name="max-width-chars">6</property>
+                <property name="tooltip-text" translatable="yes">First Port</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">to</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkSpinButton" id="last_port_entry">
+                <property name="visible">True</property>
+                <property name="adjustment">_last_port_adjustment</property>
+                <property name="numeric">True</property>
+                <property name="max-width-chars">6</property>
+                <property name="tooltip-text" translatable="yes">Last Port</property>
+              </object>
+            </child>
           </object>
         </child>
       </object>
@@ -307,9 +345,9 @@
                 <property name="justify">center</property>
                 <property name="max-width-chars">60</property>
                 <property name="wrap">True</property>
-                <attributes>
-                  <attribute name="weight" value="bold"/>
-                </attributes>
+                <style>
+                  <class name="heading"/>
+                </style>
               </object>
             </child>
             <child>
@@ -334,9 +372,9 @@
                 <property name="justify">center</property>
                 <property name="max-width-chars">60</property>
                 <property name="wrap">True</property>
-                <attributes>
-                  <attribute name="weight" value="bold"/>
-                </attributes>
+                <style>
+                  <class name="heading"/>
+                </style>
               </object>
             </child>
             <child>
@@ -375,10 +413,10 @@
                         <property name="margin-bottom">6</property>
                         <property name="spacing">6</property>
                         <child>
-                          <object class="GtkButton" id="_add_share_button">
+                          <object class="GtkButton" id="_add_shared_folder_button">
                             <property name="visible">True</property>
                             <property name="tooltip-text" translatable="yes">Add…</property>
-                            <signal name="clicked" handler="on_add_share"/>
+                            <signal name="clicked" handler="on_add_shared_folder"/>
                             <child>
                               <object class="GtkBox">
                                 <property name="visible">True</property>
@@ -395,7 +433,7 @@
                                     <property name="ellipsize">end</property>
                                     <property name="label" translatable="yes">Add…</property>
                                     <property name="use-underline">True</property>
-                                    <property name="mnemonic-widget">_add_share_button</property>
+                                    <property name="mnemonic-widget">_add_shared_folder_button</property>
                                   </object>
                                 </child>
                               </object>
@@ -406,10 +444,10 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkButton" id="_edit_share_button">
+                          <object class="GtkButton" id="_edit_shared_folder_button">
                             <property name="visible">True</property>
                             <property name="tooltip-text" translatable="yes">Edit…</property>
-                            <signal name="clicked" handler="on_edit_share"/>
+                            <signal name="clicked" handler="on_edit_shared_folder"/>
                             <child>
                               <object class="GtkBox">
                                 <property name="visible">True</property>
@@ -426,7 +464,7 @@
                                     <property name="ellipsize">end</property>
                                     <property name="label" translatable="yes">Edit…</property>
                                     <property name="use-underline">True</property>
-                                    <property name="mnemonic-widget">_edit_share_button</property>
+                                    <property name="mnemonic-widget">_edit_shared_folder_button</property>
                                   </object>
                                 </child>
                               </object>
@@ -437,10 +475,10 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkButton" id="_remove_share_button">
+                          <object class="GtkButton" id="_remove_shared_folder_button">
                             <property name="visible">True</property>
                             <property name="tooltip-text" translatable="yes">Remove</property>
-                            <signal name="clicked" handler="on_remove_share"/>
+                            <signal name="clicked" handler="on_remove_shared_folder"/>
                             <child>
                               <object class="GtkBox">
                                 <property name="visible">True</property>
@@ -457,7 +495,7 @@
                                     <property name="ellipsize">end</property>
                                     <property name="label" translatable="yes">Remove</property>
                                     <property name="use-underline">True</property>
-                                    <property name="mnemonic-widget">_remove_share_button</property>
+                                    <property name="mnemonic-widget">_remove_shared_folder_button</property>
                                   </object>
                                 </child>
                               </object>

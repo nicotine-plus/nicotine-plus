@@ -17,8 +17,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-def run_headless(core, ci_mode):
+def run():
     """ Run application in headless (no GUI) mode """
 
     from pynicotine.headless.application import Application
-    return Application(core, ci_mode).run()
+    return Application().run()

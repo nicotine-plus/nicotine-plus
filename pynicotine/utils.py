@@ -25,16 +25,10 @@
 This module contains utility functions.
 """
 
-import json
 import os
 import pickle
 import sys
 import webbrowser
-
-from pynicotine.config import config
-from pynicotine.logfacility import log
-from pynicotine.slskmessages import FileAttribute
-from pynicotine.slskmessages import UINT_LIMIT
 
 FILE_SIZE_SUFFIXES = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
 PUNCTUATION = ['!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>',
@@ -44,39 +38,6 @@ ILLEGALFILECHARS = ILLEGALPATHCHARS + ['\\', '/']
 LONG_PATH_PREFIX = "\\\\?\\"
 REPLACEMENTCHAR = '_'
 TRANSLATE_PUNCTUATION = str.maketrans(dict.fromkeys(PUNCTUATION, ' '))
-OPEN_SOULSEEK_URL = None
-
-
-def rename_process(new_name, debug_info=False):
-
-    errors = []
-
-    # Renaming ourselves for pkill et al.
-    try:
-        import ctypes
-        # GNU/Linux style
-        libc = ctypes.CDLL(None)
-        libc.prctl(15, new_name, 0, 0, 0)
-
-    except Exception as error:
-        errors.append(error)
-        errors.append("Failed GNU/Linux style")
-
-        try:
-            import ctypes
-            # BSD style
-            libc = ctypes.CDLL(None)
-            libc.setproctitle(new_name)
-
-        except Exception as second_error:
-            errors.append(second_error)
-            errors.append("Failed BSD style")
-
-    if debug_info and errors:
-        msg = ["Errors occurred while trying to change process name:"]
-        for i in errors:
-            msg.append("%s" % (i,))
-        log.add('\n'.join(msg))
 
 
 def clean_file(filename):
@@ -123,269 +84,30 @@ def encode_path(path, prefix=True):
     return path.encode("utf-8")
 
 
-def _try_open_uri(uri):
-
-    if sys.platform not in ("darwin", "win32"):
-        try:
-            from gi.repository import Gio  # pylint: disable=import-error
-            Gio.AppInfo.launch_default_for_uri(uri)
-            return
-
-        except Exception:
-            # Fall back to webbrowser module
-            pass
-
-    if not webbrowser.open(uri):
-        raise webbrowser.Error("No known URI provider available")
-
-
-def open_file_path(file_path, command=None, create_folder=False, create_file=False):
-    """ Currently used to either open a folder or play an audio file
-    Tries to run a user-specified command first, and falls back to
-    the system default. """
-
-    if file_path is None:
-        return False
-
-    try:
-        file_path = os.path.normpath(file_path)
-        file_path_encoded = encode_path(file_path)
-
-        if not os.path.exists(file_path_encoded):
-            if create_folder:
-                os.makedirs(file_path_encoded)
-
-            elif create_file:
-                with open(file_path_encoded, "w", encoding="utf-8"):
-                    # Create empty file
-                    pass
-            else:
-                raise FileNotFoundError("File path does not exist")
-
-        if command and "$" in command:
-            execute_command(command, file_path)
-
-        elif sys.platform == "win32":
-            os.startfile(file_path_encoded)  # pylint: disable=no-member
-
-        elif sys.platform == "darwin":
-            execute_command("open $", file_path)
-
-        else:
-            _try_open_uri("file:///" + file_path)
-
-    except Exception as error:
-        log.add(_("Cannot open file path %(path)s: %(error)s"), {"path": file_path, "error": error})
-        return False
-
-    return True
-
-
-def open_uri(uri):
-    """ Open a URI in an external (web) browser. The given argument has
-    to be a properly formed URI including the scheme (fe. HTTP). """
-
-    try:
-        # Situation 1, user defined a way of handling the protocol
-        protocol = uri[:uri.find(":")]
-        protocol_handlers = config.sections["urls"]["protocols"]
-
-        if protocol in protocol_handlers and protocol_handlers[protocol]:
-            execute_command(protocol_handlers[protocol], uri)
-            return True
-
-        if protocol == "slsk":
-            OPEN_SOULSEEK_URL(uri.strip())  # pylint:disable=not-callable
-            return True
-
-        # Situation 2, user did not define a way of handling the protocol
-        _try_open_uri(uri)
-
-        return True
-
-    except Exception as error:
-        log.add(_("Cannot open URL %(url)s: %(error)s"), {"url": uri, "error": error})
-
-    return False
-
-
-def open_log(folder, filename):
-    _handle_log(folder, filename, open_log_callback)
-
-
-def delete_log(folder, filename):
-    _handle_log(folder, filename, delete_log_callback)
-
-
-def _handle_log(folder, filename, callback):
-
-    folder_encoded = encode_path(folder)
-    path = os.path.join(folder, clean_file(filename) + ".log")
-
-    try:
-        if not os.path.isdir(folder_encoded):
-            os.makedirs(folder_encoded)
-
-        callback(path)
-
-    except Exception as error:
-        log.add(_("Cannot access log file %(path)s: %(error)s"), {"path": path, "error": error})
-
-
-def open_log_callback(path):
-    open_file_path(path, create_file=True)
-
-
-def delete_log_callback(path):
-    os.remove(encode_path(path))
-
-
-def get_latest_version():
-
-    response = http_request(
-        "https", "pypi.org", "/pypi/nicotine-plus/json",
-        headers={"User-Agent": config.application_name}
-    )
-    data = json.loads(response)
-
-    hlatest = data['info']['version']
-    latest = int(make_version(hlatest))
-
-    try:
-        date = data['releases'][hlatest][0]['upload_time']
-    except Exception:
-        date = None
-
-    return hlatest, latest, date
-
-
-def make_version(version):
-
-    major, minor, patch = version.split(".")[:3]
-    stable = 1
-
-    if "dev" in version or "rc" in version:
-        # Example: 2.0.1.dev1
-        # A dev version will be one less than a stable version
-        stable = 0
-
-    return (int(major) << 24) + (int(minor) << 16) + (int(patch.split("rc", 1)[0]) << 8) + stable
-
-
 def human_length(seconds):
 
-    minutes, seconds = divmod(seconds, 60)
+    minutes, seconds = divmod(int(seconds), 60)
     hours, minutes = divmod(minutes, 60)
     days, hours = divmod(hours, 24)
 
     if days > 0:
-        ret = '%i:%02i:%02i:%02i' % (days, hours, minutes, seconds)
-    elif hours > 0:
-        ret = '%i:%02i:%02i' % (hours, minutes, seconds)
-    else:
-        ret = '%i:%02i' % (minutes, seconds)
+        return f"{days}:{hours:02d}:{minutes:02d}:{seconds:02d}"
 
-    return ret
+    if hours > 0:
+        return f"{hours}:{minutes:02d}:{seconds:02d}"
 
-
-def get_file_attributes(attributes):
-
-    try:
-        bitrate = attributes.get(str(FileAttribute.BITRATE))
-        length = attributes.get(str(FileAttribute.DURATION))
-        vbr = attributes.get(str(FileAttribute.VBR))
-        sample_rate = attributes.get(str(FileAttribute.SAMPLE_RATE))
-        bit_depth = attributes.get(str(FileAttribute.BIT_DEPTH))
-
-    except AttributeError:
-        # Legacy attribute list format used for shares lists saved in Nicotine+ 3.2.2 and earlier
-        bitrate = length = vbr = sample_rate = bit_depth = None
-
-        if len(attributes) == 3:
-            attribute1, attribute2, attribute3 = attributes
-
-            if attribute3 in (0, 1):
-                bitrate = attribute1
-                length = attribute2
-                vbr = attribute3
-
-            elif attribute3 > 1:
-                length = attribute1
-                sample_rate = attribute2
-                bit_depth = attribute3
-
-        elif len(attributes) == 2:
-            attribute1, attribute2 = attributes
-
-            if attribute2 in (0, 1):
-                bitrate = attribute1
-                vbr = attribute2
-
-            elif attribute1 >= 8000 and attribute2 <= 64:
-                sample_rate = attribute1
-                bit_depth = attribute2
-
-            else:
-                bitrate = attribute1
-                length = attribute2
-
-    return bitrate, length, vbr, sample_rate, bit_depth
-
-
-def get_result_bitrate_length(filesize, attributes):
-    """ Used to get the audio bitrate and length of search results and
-    user browse files """
-
-    bitrate, length, vbr, sample_rate, bit_depth = get_file_attributes(attributes)
-
-    if bitrate is None:
-        if sample_rate and bit_depth:
-            # Bitrate = sample rate (Hz) * word length (bits) * channel count
-            # Bitrate = 44100 * 16 * 2
-            bitrate = (sample_rate * bit_depth * 2) // 1000
-
-        else:
-            bitrate = -1
-
-    if length is None:
-        if bitrate > 0:
-            # Dividing the file size by the bitrate in Bytes should give us a good enough approximation
-            length = filesize / (bitrate * 125)
-
-        else:
-            length = -1
-
-    # Ignore invalid values
-    if bitrate <= 0 or bitrate > UINT_LIMIT:
-        bitrate = 0
-        h_bitrate = ""
-
-    else:
-        h_bitrate = str(bitrate)
-
-        if vbr == 1:
-            h_bitrate += " (vbr)"
-
-    if length < 0 or length > UINT_LIMIT:
-        length = 0
-        h_length = ""
-
-    else:
-        h_length = human_length(length)
-
-    return h_bitrate, bitrate, h_length, length
+    return f"{minutes}:{seconds:02d}"
 
 
 def _human_speed_or_size(unit):
 
-    template = "%.3g %s"
     try:
         for suffix in FILE_SIZE_SUFFIXES:
             if unit < 1024:
                 if unit > 999:
-                    template = "%.4g %s"
+                    return f"{unit:.4g} {suffix}"
 
-                return template % (unit, suffix)
+                return f"{unit:.3g} {suffix}"
 
             unit /= 1024
 
@@ -404,7 +126,7 @@ def human_size(filesize):
 
 
 def humanize(number):
-    return "{:n}".format(number)
+    return f"{number:n}"
 
 
 def factorize(filesize, base=1024):
@@ -453,8 +175,8 @@ def truncate_string_byte(string, byte_limit, encoding='utf-8', ellipsize=False):
         return string
 
     if ellipsize:
-        ellipsis = "…".encode(encoding)
-        string_bytes = string_bytes[:max(byte_limit - len(ellipsis), 0)].rstrip() + ellipsis
+        ellipsis_char = "…".encode(encoding)
+        string_bytes = string_bytes[:max(byte_limit - len(ellipsis_char), 0)].rstrip() + ellipsis_char
     else:
         string_bytes = string_bytes[:byte_limit]
 
@@ -485,7 +207,7 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
     If background is false the function will wait for all the launched
     processes to end before returning.
 
-    If the 'replacement' argument is given, every occurance of 'placeholder'
+    If the 'replacement' argument is given, every occurrence of 'placeholder'
     will be replaced by 'replacement'.
 
     If the command ends with the ampersand symbol background
@@ -512,6 +234,7 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
     if command.endswith("&"):
         command = command[:-1]
         if returnoutput:
+            from pynicotine.logfacility import log
             log.add("Yikes, I was asked to return output but I'm also asked to launch "
                     "the process in the background. returnoutput gets precedent.")
         else:
@@ -574,8 +297,10 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
             procs[-1].wait()
 
     except Exception as error:
-        raise RuntimeError("Problem while executing command %s (%s of %s)" %
-                           (subcommands[len(procs)], len(procs) + 1, len(subcommands))) from error
+        command = subcommands[len(procs)]
+        command_no = len(procs) + 1
+        num_commands = len(subcommands)
+        raise RuntimeError(f"Problem while executing command {command} ({command_no} of {num_commands}") from error
 
     if not returnoutput:
         return True
@@ -583,13 +308,104 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
     return procs[-1].communicate()[0]
 
 
+def _try_open_uri(uri):
+
+    if sys.platform not in ("darwin", "win32"):
+        try:
+            from gi.repository import Gio  # pylint: disable=import-error
+            Gio.AppInfo.launch_default_for_uri(uri)
+            return
+
+        except Exception:
+            # Fall back to webbrowser module
+            pass
+
+    if not webbrowser.open(uri):
+        raise webbrowser.Error("No known URI provider available")
+
+
+def open_file_path(file_path, command=None, create_folder=False, create_file=False):
+    """ Currently used to either open a folder or play an audio file
+    Tries to run a user-specified command first, and falls back to
+    the system default. """
+
+    if file_path is None:
+        return False
+
+    try:
+        file_path = os.path.normpath(file_path)
+        file_path_encoded = encode_path(file_path)
+
+        if not os.path.exists(file_path_encoded):
+            if create_folder:
+                os.makedirs(file_path_encoded)
+
+            elif create_file:
+                with open(file_path_encoded, "w", encoding="utf-8"):
+                    # Create empty file
+                    pass
+            else:
+                raise FileNotFoundError("File path does not exist")
+
+        if command and "$" in command:
+            execute_command(command, file_path)
+
+        elif sys.platform == "win32":
+            os.startfile(file_path_encoded)  # pylint: disable=no-member
+
+        elif sys.platform == "darwin":
+            execute_command("open $", file_path)
+
+        else:
+            _try_open_uri("file:///" + file_path)
+
+    except Exception as error:
+        from pynicotine.logfacility import log
+        log.add(_("Cannot open file path %(path)s: %(error)s"), {"path": file_path, "error": error})
+        return False
+
+    return True
+
+
+def open_uri(uri):
+    """ Open a URI in an external (web) browser. The given argument has
+    to be a properly formed URI including the scheme (fe. HTTP). """
+
+    from pynicotine.config import config
+
+    try:
+        # Situation 1, user defined a way of handling the protocol
+        protocol = uri[:uri.find(":")]
+        protocol_handlers = config.sections["urls"]["protocols"]
+
+        if protocol in protocol_handlers and protocol_handlers[protocol]:
+            execute_command(protocol_handlers[protocol], uri)
+            return True
+
+        if protocol == "slsk":
+            from pynicotine.core import core
+            core.userbrowse.open_soulseek_url(uri.strip())
+            return True
+
+        # Situation 2, user did not define a way of handling the protocol
+        _try_open_uri(uri)
+
+        return True
+
+    except Exception as error:
+        from pynicotine.logfacility import log
+        log.add(_("Cannot open URL %(url)s: %(error)s"), {"url": uri, "error": error})
+
+    return False
+
+
 def load_file(path, load_func, use_old_file=False):
 
     try:
         if use_old_file:
-            path = path + ".old"
+            path = f"{path}.old"
 
-        elif os.path.isfile(encode_path(path + ".old")):
+        elif os.path.isfile(encode_path(f"{path}.old")):
             path_encoded = encode_path(path)
 
             if not os.path.isfile(path_encoded):
@@ -602,6 +418,7 @@ def load_file(path, load_func, use_old_file=False):
         return load_func(path)
 
     except Exception as error:
+        from pynicotine.logfacility import log
         log.add(_("Something went wrong while reading file %(filename)s: %(error)s"),
                 {"filename": path, "error": error})
 
@@ -616,7 +433,7 @@ def load_file(path, load_func, use_old_file=False):
 def write_file_and_backup(path, callback, protect=False):
 
     path_encoded = encode_path(path)
-    path_old_encoded = encode_path(path + ".old")
+    path_old_encoded = encode_path(f"{path}.old")
 
     # Back up old file to path.old
     try:
@@ -627,6 +444,7 @@ def write_file_and_backup(path, callback, protect=False):
                 os.chmod(path_old_encoded, 0o600)
 
     except Exception as error:
+        from pynicotine.logfacility import log
         log.add(_("Unable to back up file %(path)s: %(error)s"), {
             "path": path,
             "error": error
@@ -646,6 +464,7 @@ def write_file_and_backup(path, callback, protect=False):
             os.fsync(file_handle.fileno())
 
     except Exception as error:
+        from pynicotine.logfacility import log
         log.add(_("Unable to save file %(path)s: %(error)s"), {
             "path": path,
             "error": error
@@ -666,45 +485,6 @@ def write_file_and_backup(path, callback, protect=False):
         os.umask(oldumask)
 
 
-def http_request(url_scheme, base_url, path, request_type="GET", body="", headers=None, timeout=10, redirect_depth=0):
-
-    if headers is None:
-        headers = {}
-
-    import http.client
-
-    if redirect_depth > 15:
-        raise http.client.HTTPException("Redirected too many times, giving up")
-
-    if url_scheme == "https":
-        conn = http.client.HTTPSConnection(base_url, timeout=timeout)
-    else:
-        conn = http.client.HTTPConnection(base_url, timeout=timeout)
-
-    try:
-        conn.request(request_type, path, body=body, headers=headers)
-        response = conn.getresponse()
-        redirect = response.getheader('Location')
-
-        if redirect:
-            from urllib.parse import urlparse
-            parsed_url = urlparse(redirect)
-            redirect_depth += 1
-
-            return http_request(
-                parsed_url.scheme, parsed_url.netloc, parsed_url.path,
-                request_type, body, headers, timeout, redirect_depth
-            )
-
-        contents = response.read().decode("utf-8")
-
-    finally:
-        # Always close connection, even when errors occur
-        conn.close()
-
-    return contents
-
-
 class RestrictedUnpickler(pickle.Unpickler):
     """
     Don't allow code execution from pickles
@@ -712,186 +492,7 @@ class RestrictedUnpickler(pickle.Unpickler):
 
     def find_class(self, module, name):
         # Forbid all globals
-        raise pickle.UnpicklingError("global '%s.%s' is forbidden" %
-                                     (module, name))
-
-
-""" Command Aliases """
-
-
-def add_alias(rest):
-
-    aliases = config.sections["server"]["command_aliases"]
-
-    if rest:
-        args = rest.split(" ", 1)
-
-        if len(args) == 2:
-            if args[0] in ("alias", "unalias"):
-                return "I will not alias that!\n"
-
-            aliases[args[0]] = args[1]
-
-        if args[0] in aliases:
-            return "Alias %s: %s\n" % (args[0], aliases[args[0]])
-
-        return _("No such alias (%s)") % rest + "\n"
-
-    msg = "\n" + _("Aliases:") + "\n"
-
-    for key, value in aliases.items():
-        msg = msg + "%s: %s\n" % (key, value)
-
-    return msg + "\n"
-
-
-def unalias(rest):
-
-    aliases = config.sections["server"]["command_aliases"]
-
-    if rest and rest in aliases:
-        action = aliases[rest]
-        del aliases[rest]
-
-        return _("Removed alias %(alias)s: %(action)s\n") % {'alias': rest, 'action': action}
-
-    return _("No such alias (%(alias)s)\n") % {'alias': rest}
-
-
-def is_alias(command):
-
-    if not command.startswith("/"):
-        return False
-
-    base_command = command[1:].split(" ")[0]
-
-    if base_command in config.sections["server"]["command_aliases"]:
-        return True
-
-    return False
-
-
-def get_alias(command):
-
-    def getpart(line):
-
-        if line[0] != "(":
-            return ""
-
-        i = 1
-        ret = ""
-        level = 0
-
-        while i < len(line):
-            if line[i] == "(":
-                level = level + 1
-
-            if line[i] == ")":
-                if level == 0:
-                    return ret
-
-                level = level - 1
-
-            ret = ret + line[i]
-            i = i + 1
-
-        return ""
-
-    try:
-        command = command[1:].split(" ")
-        alias = config.sections["server"]["command_aliases"][command[0]]
-        param_string_found = False
-        ret = ""
-        i = 0
-
-        while i < len(alias):
-            if alias[i:i + 2] == "$(":
-                arg = getpart(alias[i + 1:])
-
-                if not arg:
-                    ret = ret + "$"
-                    i = i + 1
-                    continue
-
-                i = i + len(arg) + 3
-                args = arg.split("=", 1)
-
-                if len(args) > 1:
-                    default = args[1]
-                else:
-                    default = ""
-
-                args = args[0].split(":")
-
-                if len(args) == 1:
-                    first = last = int(args[0])
-                else:
-                    if args[0]:
-                        first = int(args[0])
-                    else:
-                        first = 1
-
-                    if args[1]:
-                        last = int(args[1])
-                    else:
-                        last = len(command)
-
-                value = " ".join(command[first:last + 1])
-
-                if not value:
-                    value = default
-
-                ret = ret + value
-                param_string_found = True
-
-            else:
-                ret = ret + alias[i]
-                i = i + 1
-
-                if not param_string_found and i == len(alias) and alias.startswith("/"):
-                    # Reached the end of alias contents, append potential arguments passed to the command
-                    args = " ".join(command[1:])
-
-                    if args:
-                        ret = ret + " " + args
-
-        return ret
-
-    except Exception as error:
-        log.add("%s", error)
-
-    return ""
-
-
-""" Chat Completion """
-
-
-def get_completion_list(commands, rooms):
-
-    config_words = config.sections["words"]
-
-    if not config_words["tab"]:
-        return []
-
-    completion_list = [config.sections["server"]["login"], "nicotine"]
-
-    if config_words["roomnames"]:
-        completion_list += rooms
-
-    if config_words["buddies"]:
-        for i in config.sections["server"]["userlist"]:
-            if i and isinstance(i, list):
-                user = str(i[0])
-                completion_list.append(user)
-
-    if config_words["aliases"]:
-        for k in config.sections["server"]["command_aliases"]:
-            completion_list.append("/" + str(k))
-
-    if config_words["commands"]:
-        completion_list += commands
-
-    return completion_list
+        raise pickle.UnpicklingError(f"global '{module}.{name}' is forbidden")
 
 
 """ Debugging """
@@ -899,6 +500,8 @@ def get_completion_list(commands, rooms):
 
 def debug(*args):
     """ Prints debugging info. """
+
+    from pynicotine.logfacility import log
 
     truncated_args = [arg[:200] if isinstance(arg, str) else arg for arg in args]
     log.add('*' * 8, truncated_args)
@@ -908,12 +511,13 @@ def strace(function):
     """ Decorator for debugging """
 
     from itertools import chain
+    from pynicotine.logfacility import log
 
     def newfunc(*args, **kwargs):
         name = function.__name__
-        log.add("%s(%s)" % (name, ", ".join(map(repr, chain(args, list(kwargs.values()))))))
+        log.add(f"{name}({', '.join(map(repr, chain(args, list(kwargs.values()))))})")
         retvalue = function(*args, **kwargs)
-        log.add("%s(%s): %s" % (name, ", ".join(map(repr, chain(args, list(kwargs.values())))), repr(retvalue)))
+        log.add(f"{name}({', '.join(map(repr, chain(args, list(kwargs.values()))))}): {repr(retvalue)}")
         return retvalue
 
     return newfunc

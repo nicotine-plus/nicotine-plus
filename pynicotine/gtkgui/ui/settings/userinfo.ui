@@ -13,10 +13,10 @@
         <property name="selectable">True</property>
         <property name="xalign">0</property>
         <property name="wrap">True</property>
-        <property name="mnemonic-widget">Description</property>
-        <attributes>
-          <attribute name="weight" value="bold"/>
-        </attributes>
+        <property name="mnemonic-widget">description_text_view</property>
+        <style>
+          <class name="heading"/>
+        </style>
       </object>
     </child>
     <child>
@@ -33,15 +33,15 @@
                 <property name="hexpand">True</property>
                 <property name="vexpand">True</property>
                 <child>
-                  <object class="GtkTextView" id="Description">
+                  <object class="GtkTextView" id="description_text_view">
                     <property name="visible">True</property>
                     <property name="accepts-tab">False</property>
                     <property name="pixels-above-lines">1</property>
                     <property name="pixels-below-lines">1</property>
-                    <property name="left-margin">8</property>
-                    <property name="right-margin">8</property>
-                    <property name="top-margin">5</property>
-                    <property name="bottom-margin">5</property>
+                    <property name="left-margin">12</property>
+                    <property name="right-margin">12</property>
+                    <property name="top-margin">8</property>
+                    <property name="bottom-margin">8</property>
                     <property name="wrap-mode">word-char</property>
                   </object>
                 </child>
@@ -64,14 +64,14 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Picture:</property>
                     <property name="margin-start">6</property>
-                    <property name="mnemonic-widget">ImageChooser</property>
-                    <attributes>
-                      <attribute name="weight" value="bold"/>
-                    </attributes>
+                    <property name="mnemonic-widget">select_picture_button</property>
+                    <style>
+                      <class name="bold"/>
+                    </style>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton" id="ImageChooser">
+                  <object class="GtkButton" id="select_picture_button">
                     <property name="visible">True</property>
                     <property name="hexpand">True</property>
                     <style>
@@ -83,7 +83,7 @@
                   <object class="GtkButton" id="_reset_picture_button">
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Reset Picture</property>
-                    <signal name="clicked" handler="on_default_image"/>
+                    <signal name="clicked" handler="on_reset_picture"/>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>

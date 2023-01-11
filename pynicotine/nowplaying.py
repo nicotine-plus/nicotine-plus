@@ -21,11 +21,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import json
+import sys
 
 from pynicotine.config import config
 from pynicotine.logfacility import log
 from pynicotine.utils import execute_command
-from pynicotine.utils import http_request
 from pynicotine.utils import human_length
 
 
@@ -35,7 +35,7 @@ class NowPlaying:
 
     def __init__(self):
 
-        self.bus = None
+        self._bus = None
         self.title_clear()
 
     def title_clear(self):
@@ -62,6 +62,9 @@ class NowPlaying:
 
         if get_player is None:
             player = config.sections["players"]["npplayer"]
+
+            if sys.platform in ("win32", "darwin") and player == "mpris":
+                player = "lastfm"
         else:
             player = get_player()
 
@@ -127,10 +130,10 @@ class NowPlaying:
             return None
 
         try:
-            response = http_request(
-                "https", "ws.audioscrobbler.com",
-                "/2.0/?method=user.getrecenttracks&user=" + user + "&api_key=" + apikey + "&limit=1&format=json",
-                headers={"User-Agent": config.application_name})
+            from urllib.request import urlopen
+            with urlopen((f"https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={user}&api_key={apikey}"
+                          f"&limit=1&format=json"), timeout=10) as response:
+                response_body = response.read().decode("utf-8")
 
         except Exception as error:
             log.add(_("Last.fm: Could not connect to Audioscrobbler: %(error)s"), {"error": error},
@@ -138,7 +141,7 @@ class NowPlaying:
             return None
 
         try:
-            json_api = json.loads(response)
+            json_api = json.loads(response_body)
             lastplayed = json_api["recenttracks"]["track"]
 
             try:
@@ -149,15 +152,14 @@ class NowPlaying:
                 # On rare occasions, the track dictionary is not wrapped in a list
                 pass
 
-            self.title["artist"] = lastplayed["artist"]["#text"]
-            self.title["title"] = lastplayed["name"]
-            self.title["album"] = lastplayed["album"]["#text"]
-            self.title["nowplaying"] = "%s: %s - %s - %s" % (
-                _("Last played"), self.title["artist"], self.title["album"], self.title["title"])
+            self.title["artist"] = artist = lastplayed["artist"]["#text"]
+            self.title["title"] = title = lastplayed["name"]
+            self.title["album"] = album = lastplayed["album"]["#text"]
+            self.title["nowplaying"] = f"{_('Last played')}: {artist} - {album} - {title}"
 
         except Exception:
             log.add(_("Last.fm: Could not get recent track from Audioscrobbler: %(error)s"),
-                    {"error": response}, title=_("Now Playing Error"))
+                    {"error": response_body}, title=_("Now Playing Error"))
             return None
 
         return True
@@ -168,7 +170,7 @@ class NowPlaying:
         # https://media.readthedocs.org/pdf/mpris2/latest/mpris2.pdf
 
         from gi.repository import Gio  # pylint: disable=import-error
-        self.bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
+        self._bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
 
         dbus_mpris_service = 'org.mpris.MediaPlayer2.'
         dbus_mpris_player_service = 'org.mpris.MediaPlayer2.Player'
@@ -177,7 +179,7 @@ class NowPlaying:
 
         if not player:
             dbus_proxy = Gio.DBusProxy.new_sync(
-                self.bus, Gio.DBusProxyFlags.NONE, None,
+                self._bus, Gio.DBusProxyFlags.NONE, None,
                 'org.freedesktop.DBus', '/org/freedesktop/DBus', 'org.freedesktop.DBus', None
             )
 
@@ -201,7 +203,7 @@ class NowPlaying:
 
         try:
             dbus_proxy = Gio.DBusProxy.new_sync(
-                self.bus, Gio.DBusProxyFlags.NONE, None,
+                self._bus, Gio.DBusProxyFlags.NONE, None,
                 dbus_mpris_service + player, dbus_mpris_path, dbus_property, None
             )
 
@@ -259,9 +261,9 @@ class NowPlaying:
             return None
 
         try:
-            response = http_request('https', 'api.listenbrainz.org',
-                                    '/1/user/{}/playing-now'.format(username),
-                                    headers={'User-Agent': config.application_name})
+            from urllib.request import urlopen
+            with urlopen(f"https://api.listenbrainz.org/1/user/{username}/playing-now", timeout=10) as response:
+                response_body = response.read().decode("utf-8")
 
         except Exception as error:
             log.add(_("ListenBrainz: Could not connect to ListenBrainz: %(error)s"), {'error': error},
@@ -269,7 +271,7 @@ class NowPlaying:
             return None
 
         try:
-            json_api = json.loads(response)['payload']
+            json_api = json.loads(response_body)['payload']
 
             if not json_api['playing_now']:
                 log.add(_("ListenBrainz: You don\'t seem to be listening to anything right now"),
@@ -278,17 +280,16 @@ class NowPlaying:
 
             track = json_api['listens'][0]['track_metadata']
 
-            self.title['artist'] = track['artist_name']
-            self.title['title'] = track['track_name']
-            self.title['album'] = track['release_name']
-            self.title['nowplaying'] = '%s: %s - %s - %s' % (
-                _('Playing now'), self.title['artist'], self.title['album'], self.title['title'])
+            self.title['artist'] = artist = track['artist_name']
+            self.title['title'] = title = track['track_name']
+            self.title['album'] = album = track['release_name']
+            self.title["nowplaying"] = f"{_('Playing now')}: {artist} - {album} - {title}"
 
             return True
 
         except Exception:
             log.add(_("ListenBrainz: Could not get current track from ListenBrainz: %(error)s"),
-                    {'error': str(response)}, title=_("Now Playing Error"))
+                    {'error': response_body}, title=_("Now Playing Error"))
         return None
 
     def other(self, command):

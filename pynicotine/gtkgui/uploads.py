@@ -25,7 +25,10 @@
 import os
 
 from pynicotine.config import config
+from pynicotine.core import core
+from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.popovers.uploadspeeds import UploadSpeeds
 from pynicotine.gtkgui.transferlist import TransferList
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
@@ -34,59 +37,89 @@ from pynicotine.utils import open_file_path
 
 class Uploads(TransferList):
 
-    def __init__(self, frame, core):
+    def __init__(self, window):
 
         self.path_separator = '\\'
         self.path_label = _("Folder")
         self.retry_label = _("_Retry")
         self.abort_label = _("_Abort")
-        self.aborted_status = "Aborted"
+        self.deprioritized_statuses = {"Cancelled", "Finished"}
 
-        self.transfer_page = frame.uploads_page
-        self.user_counter = frame.upload_users_label
-        self.file_counter = frame.upload_files_label
-        self.expand_button = frame.uploads_expand_button
-        self.expand_icon = frame.uploads_expand_icon
-        self.grouping_button = frame.uploads_grouping_button
+        self.transfer_page = window.uploads_page
+        self.user_counter = window.upload_users_label
+        self.file_counter = window.upload_files_label
+        self.expand_button = window.uploads_expand_button
+        self.expand_icon = window.uploads_expand_icon
+        self.grouping_button = window.uploads_grouping_button
 
-        TransferList.__init__(self, frame, core, transfer_type="upload")
+        TransferList.__init__(self, window, transfer_type="upload")
 
         if GTK_API_VERSION >= 4:
-            frame.uploads_content.append(self.container)
+            window.uploads_content.append(self.container)
         else:
-            frame.uploads_content.add(self.container)
+            window.uploads_content.add(self.container)
 
         self.popup_menu_clear.add_items(
-            ("#" + _("Finished / Aborted / Failed"), self.on_clear_finished_failed),
-            ("#" + _("Finished / Aborted"), self.on_clear_finished_aborted),
+            ("#" + _("Finished / Cancelled / Failed"), self.on_clear_finished_failed),
+            ("#" + _("Finished / Cancelled"), self.on_clear_finished_cancelled),
             ("", None),
             ("#" + _("Finished"), self.on_clear_finished),
-            ("#" + _("Aborted"), self.on_clear_aborted),
+            ("#" + _("Cancelled"), self.on_clear_cancelled),
             ("#" + _("Failed"), self.on_clear_failed),
-            ("#" + _("User logged off"), self.on_clear_logged_out),
+            ("#" + _("User Logged Off"), self.on_clear_logged_off),
             ("#" + _("Queued…"), self.on_try_clear_queued),
             ("", None),
             ("#" + _("Everything…"), self.on_try_clear_all),
         )
         self.popup_menu_clear.update_model()
 
-    def retry_transfers(self):
-        for transfer in self.selected_transfers:
-            self.core.transfers.retry_upload(transfer)
+        for event_name, callback in (
+            ("abort-upload", self.abort_transfer),
+            ("abort-uploads", self.abort_transfers),
+            ("clear-upload", self.clear_transfer),
+            ("clear-uploads", self.clear_transfers),
+            ("start", self.start),
+            ("update-upload", self.update_model),
+            ("update-uploads", self.update_model),
+            ("upload-notification", self.new_transfer_notification)
+        ):
+            events.connect(event_name, callback)
+
+        self.upload_speeds = UploadSpeeds(window)
+
+    def start(self):
+        self.init_transfers(core.transfers.uploads)
+
+    def retry_selected_transfers(self):
+        core.transfers.retry_uploads(self.selected_transfers)
+
+    def abort_selected_transfers(self):
+        core.transfers.abort_uploads(self.selected_transfers, denied_message="Cancelled")
+
+    def clear_selected_transfers(self):
+        core.transfers.clear_uploads(uploads=self.selected_transfers)
+
+    def on_clear_queued_response(self, _dialog, response_id, _data):
+        if response_id == 2:
+            core.transfers.clear_uploads(statuses=["Queued"])
 
     def on_try_clear_queued(self, *_args):
 
         OptionDialog(
-            parent=self.frame.window,
+            parent=self.window,
             title=_('Clear Queued Uploads'),
             message=_('Do you really want to clear all queued uploads?'),
             callback=self.on_clear_queued_response
         ).show()
 
+    def on_clear_all_response(self, _dialog, response_id, _data):
+        if response_id == 2:
+            core.transfers.clear_uploads()
+
     def on_try_clear_all(self, *_args):
 
         OptionDialog(
-            parent=self.frame.window,
+            parent=self.window,
             title=_('Clear All Uploads'),
             message=_('Do you really want to clear all uploads?'),
             callback=self.on_clear_all_response
@@ -98,7 +131,7 @@ class Uploads(TransferList):
 
         if transfer:
             user = config.sections["server"]["login"]
-            url = self.core.userbrowse.get_soulseek_url(user, transfer.filename)
+            url = core.userbrowse.get_soulseek_url(user, transfer.filename)
             copy_text(url)
 
     def on_copy_dir_url(self, *_args):
@@ -107,7 +140,7 @@ class Uploads(TransferList):
 
         if transfer:
             user = config.sections["server"]["login"]
-            url = self.core.userbrowse.get_soulseek_url(user, transfer.filename.rsplit('\\', 1)[0] + '\\')
+            url = core.userbrowse.get_soulseek_url(user, transfer.filename.rsplit('\\', 1)[0] + '\\')
             copy_text(url)
 
     def on_open_file_manager(self, *_args):
@@ -135,7 +168,7 @@ class Uploads(TransferList):
         user = config.sections["server"]["login"]
         folder = transfer.filename.rsplit('\\', 1)[0] + '\\'
 
-        self.core.userbrowse.browse_user(user, path=folder)
+        core.userbrowse.browse_user(user, path=folder)
 
     def on_abort_users(self, *_args):
 
@@ -145,24 +178,31 @@ class Uploads(TransferList):
             if transfer.user in self.selected_users and transfer not in self.selected_transfers:
                 self.selected_transfers[transfer] = None
 
-        self.abort_transfers()
+        self.abort_selected_transfers()
 
     def on_ban_users(self, *_args):
         self.select_transfers()
-        self.core.transfers.ban_users(self.selected_users)
+        core.transfers.ban_users(self.selected_users)
 
-    def on_clear_aborted(self, *_args):
-        self.clear_transfers(["Aborted", "Cancelled", "Disallowed extension"])
+    def on_clear_queued(self, *_args):
+        core.transfers.clear_uploads(statuses=["Queued"])
+
+    def on_clear_finished(self, *_args):
+        core.transfers.clear_uploads(statuses=["Finished"])
+
+    def on_clear_cancelled(self, *_args):
+        core.transfers.clear_uploads(statuses=["Cancelled", "Disallowed extension"])
 
     def on_clear_failed(self, *_args):
-        self.clear_transfers(["Connection timeout", "Local file error", "Remote file error"])
+        core.transfers.clear_uploads(statuses=["Connection timeout", "Local file error", "Remote file error"])
 
-    def on_clear_logged_out(self, *_args):
-        self.clear_transfers(["User logged off"])
+    def on_clear_logged_off(self, *_args):
+        core.transfers.clear_uploads(statuses=["User logged off"])
 
-    def on_clear_finished_aborted(self, *_args):
-        self.clear_transfers(["Aborted", "Cancelled", "Disallowed extension", "Finished"])
+    def on_clear_finished_cancelled(self, *_args):
+        core.transfers.clear_uploads(statuses=["Cancelled", "Disallowed extension", "Finished"])
 
     def on_clear_finished_failed(self, *_args):
-        self.clear_transfers(["Aborted", "Cancelled", "Disallowed extension", "Finished",
-                              "Connection timeout", "Local file error", "Remote file error"])
+        core.transfers.clear_uploads(
+            statuses=["Cancelled", "Disallowed extension", "Finished", "Connection timeout",
+                      "Local file error", "Remote file error"])

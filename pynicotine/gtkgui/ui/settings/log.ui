@@ -18,34 +18,34 @@
             <property name="selectable">True</property>
             <property name="xalign">0</property>
             <property name="wrap">True</property>
-            <attributes>
-              <attribute name="weight" value="bold"/>
-            </attributes>
+            <style>
+              <class name="heading"/>
+            </style>
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="LogRooms">
+          <object class="GtkCheckButton" id="log_chatroom_toggle">
             <property name="label" translatable="yes">Log chatrooms by default</property>
             <property name="visible">True</property>
             <property name="use-underline">True</property>
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="LogPrivate">
+          <object class="GtkCheckButton" id="log_private_chat_toggle">
             <property name="label" translatable="yes">Log private chat by default</property>
             <property name="visible">True</property>
             <property name="use-underline">True</property>
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="LogTransfers">
+          <object class="GtkCheckButton" id="log_transfer_toggle">
             <property name="label" translatable="yes">Log transfers to file</property>
             <property name="visible">True</property>
             <property name="use-underline">True</property>
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="LogDebug">
+          <object class="GtkCheckButton" id="log_debug_toggle">
             <property name="label" translatable="yes">Log debug messages to file</property>
             <property name="visible">True</property>
             <property name="use-underline">True</property>
@@ -63,11 +63,11 @@
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
-                <property name="mnemonic-widget">LogFileFormat</property>
+                <property name="mnemonic-widget">log_timestamp_format_entry</property>
               </object>
             </child>
             <child>
-              <object class="GtkEntry" id="LogFileFormat">
+              <object class="GtkEntry" id="log_timestamp_format_entry">
                 <property name="visible">True</property>
                 <property name="valign">center</property>
                 <property name="tooltip-text">https://docs.python.org/3/library/time.html</property>
@@ -94,9 +94,9 @@
             <property name="selectable">True</property>
             <property name="xalign">0</property>
             <property name="wrap">True</property>
-            <attributes>
-              <attribute name="weight" value="bold"/>
-            </attributes>
+            <style>
+              <class name="heading"/>
+            </style>
           </object>
         </child>
         <child>
@@ -111,11 +111,11 @@
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
-                <property name="mnemonic-widget">RoomLogDir</property>
+                <property name="mnemonic-widget">chatroom_log_folder_button</property>
               </object>
             </child>
             <child>
-              <object class="GtkButton" id="RoomLogDir">
+              <object class="GtkButton" id="chatroom_log_folder_button">
                 <property name="visible">True</property>
                 <property name="valign">center</property>
               </object>
@@ -134,11 +134,11 @@
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
-                <property name="mnemonic-widget">PrivateLogDir</property>
+                <property name="mnemonic-widget">private_chat_log_folder_button</property>
               </object>
             </child>
             <child>
-              <object class="GtkButton" id="PrivateLogDir">
+              <object class="GtkButton" id="private_chat_log_folder_button">
                 <property name="visible">True</property>
                 <property name="valign">center</property>
               </object>
@@ -157,11 +157,11 @@
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
-                <property name="mnemonic-widget">TransfersLogDir</property>
+                <property name="mnemonic-widget">transfer_log_folder_button</property>
               </object>
             </child>
             <child>
-              <object class="GtkButton" id="TransfersLogDir">
+              <object class="GtkButton" id="transfer_log_folder_button">
                 <property name="visible">True</property>
                 <property name="valign">center</property>
               </object>
@@ -180,11 +180,11 @@
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
-                <property name="mnemonic-widget">DebugLogDir</property>
+                <property name="mnemonic-widget">debug_log_folder_button</property>
               </object>
             </child>
             <child>
-              <object class="GtkButton" id="DebugLogDir">
+              <object class="GtkButton" id="debug_log_folder_button">
                 <property name="visible">True</property>
                 <property name="valign">center</property>
               </object>

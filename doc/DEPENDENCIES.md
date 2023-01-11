@@ -28,60 +28,64 @@
 
 ### GNU/Linux
 
-#### Installing Required Runtime Dependencies
+#### Installing Runtime Dependencies
 
-- On Debian/Ubuntu based distributions:
+- On Debian/Ubuntu-based distributions:
 
 ```sh
-sudo apt install gir1.2-gtk-3.0 python3-gi python3-gdbm
+sudo apt install gir1.2-gspell-1 gir1.2-gtk-3.0 python3-gi python3-gdbm
 ```
 
-- On Redhat/Fedora based distributions:
+- On Redhat/Fedora-based distributions:
 
 ```sh
-sudo dnf install gtk3 python3-gobject
+sudo dnf install gspell gtk3 python3-gobject
 ```
 
-#### Installing Recommended Runtime Dependencies
-
-- On Debian/Ubuntu based distributions:
+- On SUSE-based distributions:
 
 ```sh
-sudo apt install gir1.2-gspell-1
-```
-
-- On Redhat/Fedora based distributions:
-
-```sh
-sudo dnf install gspell
+sudo zypper install typelib-1_0-Gspell-1 typelib-1_0-Gtk-3_0 python3-gobject python3-dbm
 ```
 
 #### Installing Build Dependencies
 
-- On Debian/Ubuntu based distributions:
+- On Debian/Ubuntu-based distributions:
 
 ```sh
 sudo apt install gettext python3-setuptools
 ```
 
-- On Redhat/Fedora based distributions:
+- On Redhat/Fedora-based distributions:
 
 ```sh
 sudo dnf install gettext python3-setuptools
 ```
 
-#### Installing Test Dependencies
-
-- On Debian/Ubuntu based distributions:
+- On SUSE-based distributions:
 
 ```sh
-sudo apt install gir1.2-gtk-3.0 pylint3 python3-flake8 python3-gi
+sudo zypper install gettext-runtime python3-setuptools
 ```
 
-- On Redhat/Fedora based distributions:
+#### Installing Test Dependencies
+
+- On Debian/Ubuntu-based distributions:
 
 ```sh
-sudo dnf install gtk3 pylint python3-flake8 python3-gobject
+sudo apt install pylint3 python3-flake8
+```
+
+- On Redhat/Fedora-based distributions:
+
+```sh
+sudo dnf install pylint python3-flake8
+```
+
+- On SUSE-based distributions:
+
+```sh
+sudo zypper install python3-pylint python3-flake8
 ```
 
 ### Windows and macOS

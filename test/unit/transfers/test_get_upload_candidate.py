@@ -17,53 +17,50 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import unittest
 
-from collections import deque
-from unittest.mock import Mock
+from unittest import TestCase
 
 from pynicotine.config import config
-from pynicotine.transfers import Transfers, Transfer
+from pynicotine.core import core
+from pynicotine.transfers import Transfer
 
 NUM_ALLOWED_NONE = 2
 
 
-class GetUploadCandidateTest(unittest.TestCase):
+class GetUploadCandidateTest(TestCase):
 
     def setUp(self):
 
         config.data_dir = os.path.dirname(os.path.realpath(__file__))
         config.filename = os.path.join(config.data_dir, "temp_config")
 
-        config.load_config()
-
-        self.transfers = Transfers(Mock(), config, deque(), Mock())
-        self.transfers.privileged_users = {"puser1", "puser2"}
+        core.init_components()
+        core.transfers.privileged_users = {"puser1", "puser2"}
 
     def add_transfers(self, users, status):
 
         transfer_list = []
 
         for user in users:
-            filename = "%s/%i" % (user, len(self.transfers.uploads))
+            filename = f"{user}/{len(core.transfers.uploads)}"
             transfer = Transfer(user=user, path=filename, status=status)
 
             transfer_list.append(transfer)
-            self.transfers.append_upload(user, filename, transfer)
-            self.transfers.update_upload(transfer)
+            core.transfers.append_upload(user, filename, transfer)
+            core.transfers.update_upload(transfer)
 
         return transfer_list
 
     def set_finished(self, transfer):
 
         transfer.status = "Finished"
-        self.transfers.update_upload(transfer)
-        self.transfers.uploads.remove(transfer)
+        core.transfers.update_upload(transfer)
+        core.transfers.uploads.remove(transfer)
 
     def consume_transfers(self, queued, in_progress, clear_first=False):
-        """Call self.transfers.get_upload_candidate until no uploads are left.
+        """Call core.transfers.get_upload_candidate until no uploads are left.
 
-        Transfers should be added to self.transfers in the desired starting
+        Transfers should be added to core.transfers in the desired starting
         states already.
 
         One in progress upload will be removed each time get_upload_candidate
@@ -80,13 +77,13 @@ class GetUploadCandidateTest(unittest.TestCase):
         candidates = []
         none_count = 0  # prevent infinite loop in case of bug or bad test setup
 
-        while len(self.transfers.uploads) > 0 and none_count < NUM_ALLOWED_NONE:
+        while len(core.transfers.uploads) > 0 and none_count < NUM_ALLOWED_NONE:
 
             # "finish" one in progress transfer, if any
             if clear_first and in_progress:
                 self.set_finished(in_progress.pop(0))
 
-            candidate = self.transfers.get_upload_candidate()
+            candidate = core.transfers.get_upload_candidate()
 
             if not clear_first and in_progress:
                 self.set_finished(in_progress.pop(0))

@@ -23,95 +23,104 @@ from operator import itemgetter
 from threading import Thread
 
 from pynicotine import slskmessages
-from pynicotine import utils
 from pynicotine.config import config
+from pynicotine.core import core
+from pynicotine.events import events
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import FileListMessage
+from pynicotine.slskmessages import PeerInit
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import clean_file
 from pynicotine.utils import encode_path
-from pynicotine.utils import get_result_bitrate_length
 from pynicotine.utils import RestrictedUnpickler
 
 
 class UserBrowse:
 
-    def __init__(self, core, ui_callback=None):
+    def __init__(self):
 
-        self.core = core
-        self.users = set()
-        self.ui_callback = getattr(ui_callback, "userbrowse", None)
-        utils.OPEN_SOULSEEK_URL = self.open_soulseek_url
+        self.user_shares = {}
 
-    def server_login(self):
-        for user in self.users:
-            self.core.watch_user(user)  # Get notified of user status
+        for event_name, callback in (
+            ("quit", self._quit),
+            ("server-login", self._server_login),
+            ("shared-file-list-response", self._shared_file_list_response)
+        ):
+            events.connect(event_name, callback)
 
-    def server_disconnect(self):
-        if self.ui_callback:
-            self.ui_callback.server_disconnect()
+    def _quit(self):
+        self.user_shares.clear()
+
+    def _server_login(self, msg):
+
+        if not msg.success:
+            return
+
+        for user in self.user_shares:
+            core.watch_user(user)  # Get notified of user status
 
     def send_upload_attempt_notification(self, username):
         """ Send notification to user when attempting to initiate upload from our end """
 
-        self.core.send_message_to_peer(username, slskmessages.UploadQueueNotification())
+        core.send_message_to_peer(username, slskmessages.UploadQueueNotification())
 
-    def add_user(self, user):
-        if user not in self.users:
-            self.users.add(user)
+    def _show_user(self, user, path=None, local_shares_type=None, switch_page=True):
+
+        if user not in self.user_shares:
+            self.user_shares[user] = {}
+
+        events.emit(
+            "user-browse-show-user", user=user, path=path, local_shares_type=local_shares_type, switch_page=switch_page)
 
     def remove_user(self, user):
-
-        self.users.remove(user)
-
-        if self.ui_callback:
-            self.ui_callback.remove_user(user)
-
-    def show_user(self, user, path=None, local_shares_type=None, switch_page=True):
-
-        self.add_user(user)
-
-        if self.ui_callback:
-            self.ui_callback.show_user(user, path, local_shares_type, switch_page)
+        del self.user_shares[user]
+        events.emit("user-browse-remove-user", user)
 
     def parse_local_shares(self, username, msg):
         """ Parse a local shares list and show it in the UI """
 
         built = msg.make_network_message()
         msg.parse_network_message(built)
+        msg.init = PeerInit(target_user=username)
 
-        self.shared_file_list(msg, username)
+        events.emit_main_thread("shared-file-list-response", msg)
 
     def browse_local_public_shares(self, path=None, new_request=None):
         """ Browse your own public shares """
 
         username = config.sections["server"]["login"] or "Default"
 
-        if username not in self.users or new_request:
-            msg = self.core.shares.get_compressed_shares_message("normal")
+        if username not in self.user_shares or new_request:
+            msg = core.shares.get_compressed_shares_message("normal")
             Thread(
                 target=self.parse_local_shares, args=(username, msg), name="LocalShareParser", daemon=True
             ).start()
 
-        self.show_user(username, path=path, local_shares_type="normal")
+        self._show_user(username, path=path, local_shares_type="normal")
 
     def browse_local_buddy_shares(self, path=None, new_request=False):
         """ Browse your own buddy shares """
 
         username = config.sections["server"]["login"] or "Default"
 
-        if username not in self.users or new_request:
-            msg = self.core.shares.get_compressed_shares_message("buddy")
+        if username not in self.user_shares or new_request:
+            msg = core.shares.get_compressed_shares_message("buddy")
             Thread(
                 target=self.parse_local_shares, args=(username, msg), name="LocalBuddyShareParser", daemon=True
             ).start()
 
-        self.show_user(username, path=path, local_shares_type="buddy")
+        self._show_user(username, path=path, local_shares_type="buddy")
 
     def browse_user(self, username, path=None, local_shares_type=None, new_request=False, switch_page=True):
         """ Browse a user's shares """
 
         if not username:
             return
+
+        user_share = self.user_shares.get(username)
+
+        if user_share and new_request:
+            user_share.clear()
 
         if username == (config.sections["server"]["login"] or "Default"):
             if local_shares_type == "normal":
@@ -121,17 +130,16 @@ class UserBrowse:
             self.browse_local_buddy_shares(path, new_request)
             return
 
-        user_exists = (username in self.users)
-        self.show_user(username, path=path, switch_page=switch_page)
+        self._show_user(username, path=path, switch_page=switch_page)
 
-        if self.core.user_status == UserStatus.OFFLINE:
-            self.show_connection_error(username)
+        if core.user_status == UserStatus.OFFLINE:
+            events.emit("peer-connection-error", username)
             return
 
-        self.core.watch_user(username, force_update=True)
+        core.watch_user(username, force_update=True)
 
-        if not user_exists or new_request:
-            self.core.send_message_to_peer(username, slskmessages.GetSharedFileList())
+        if not user_share or new_request:
+            core.send_message_to_peer(username, slskmessages.SharedFileListRequest())
 
     def create_user_shares_folder(self):
 
@@ -177,14 +185,19 @@ class UserBrowse:
             return
 
         username = filename.replace('\\', os.sep).split(os.sep)[-1]
-        self.show_user(username)
+        user_share = self.user_shares.get(username)
 
-        msg = slskmessages.SharedFileList()
+        if user_share:
+            user_share.clear()
+
+        self._show_user(username)
+
+        msg = slskmessages.SharedFileListResponse(init=PeerInit(target_user=username))
         msg.list = shares_list
 
-        self.shared_file_list(msg, username)
+        events.emit("shared-file-list-response", msg)
 
-    def save_shares_list_to_disk(self, user, shares_list):
+    def save_shares_list_to_disk(self, user):
 
         shares_folder = self.create_user_shares_folder()
 
@@ -196,7 +209,7 @@ class UserBrowse:
 
             with open(encode_path(path), "w", encoding="utf-8") as file_handle:
                 # Add line breaks for readability, but avoid indentation to decrease file size
-                json.dump(shares_list, file_handle, ensure_ascii=False, indent=0)
+                json.dump(list(self.user_shares[user].items()), file_handle, ensure_ascii=False, indent=0)
 
             log.add(_("Saved list of shared files for user '%(user)s' to %(dir)s"),
                     {'user': user, 'dir': shares_folder})
@@ -208,19 +221,18 @@ class UserBrowse:
 
         virtualpath = "\\".join([folder, file_data[1]])
         size = file_data[2]
-        h_bitrate, _bitrate, h_length, _length = get_result_bitrate_length(size, file_data[4])
+        h_bitrate, _bitrate, h_length, _length = FileListMessage.parse_result_bitrate_length(size, file_data[4])
 
-        self.core.transfers.get_file(user, virtualpath, prefix,
-                                     size=size, bitrate=h_bitrate, length=h_length)
+        core.transfers.get_file(user, virtualpath, prefix, size=size, bitrate=h_bitrate, length=h_length)
 
-    def download_folder(self, user, requested_folder, shares_list, prefix="", recurse=False):
+    def download_folder(self, user, requested_folder, prefix="", recurse=False):
 
         if requested_folder is None:
             return
 
         remove_prefix = requested_folder.rsplit('\\', 1)[0]
 
-        for folder, files in shares_list.items():
+        for folder, files in self.user_shares[user].items():
             if not recurse and requested_folder != folder:
                 continue
 
@@ -230,10 +242,10 @@ class UserBrowse:
 
             # Remember custom download location
             if prefix:
-                self.core.transfers.requested_folders[user][folder] = prefix
+                core.transfers.requested_folders[user][folder] = prefix
 
             # Get final download destination
-            destination = self.core.transfers.get_folder_destination(user, folder, remove_prefix)
+            destination = core.transfers.get_folder_destination(user, folder, remove_prefix)
 
             if files:
                 if config.sections["transfers"]["reverseorder"]:
@@ -242,10 +254,11 @@ class UserBrowse:
                 for file_data in files:
                     virtualpath = "\\".join([folder, file_data[1]])
                     size = file_data[2]
-                    h_bitrate, _bitrate, h_length, _length = get_result_bitrate_length(size, file_data[4])
+                    h_bitrate, _bitrate, h_length, _length = FileListMessage.parse_result_bitrate_length(
+                        size, file_data[4])
 
-                    self.core.transfers.get_file(user, virtualpath, destination,
-                                                 size=size, bitrate=h_bitrate, length=h_length)
+                    core.transfers.get_file(user, virtualpath, destination,
+                                            size=size, bitrate=h_bitrate, length=h_length)
 
             if not recurse:
                 # Downloading a single folder, no need to continue
@@ -256,14 +269,14 @@ class UserBrowse:
         virtualpath = "\\".join([folder, file_data[1]])
         size = file_data[2]
 
-        self.core.transfers.push_file(user, virtualpath, size, locally_queued=locally_queued)
+        core.transfers.push_file(user, virtualpath, size, locally_queued=locally_queued)
 
-    def upload_folder(self, user, requested_folder, shares_list, recurse=False):
+    def upload_folder(self, user, requested_folder, recurse=False):
 
         if not requested_folder or not user:
             return
 
-        for folder, files in shares_list.items():
+        for folder, files in self.user_shares[user].items():
             if not recurse and requested_folder != folder:
                 continue
 
@@ -278,7 +291,7 @@ class UserBrowse:
                     filename = "\\".join([folder, file_data[1]])
                     size = file_data[2]
 
-                    self.core.transfers.push_file(user, filename, size, locally_queued=locally_queued)
+                    core.transfers.push_file(user, filename, size, locally_queued=locally_queued)
                     locally_queued = True
 
             if not recurse:
@@ -288,7 +301,8 @@ class UserBrowse:
     @staticmethod
     def get_soulseek_url(user, path):
         import urllib.parse
-        return "slsk://" + urllib.parse.quote("%s/%s" % (user, path.replace("\\", "/")))
+        path = path.replace("\\", "/")
+        return "slsk://" + urllib.parse.quote(f"{user}/{path}")
 
     def open_soulseek_url(self, url):
 
@@ -301,29 +315,9 @@ class UserBrowse:
         except Exception:
             log.add(_("Invalid Soulseek URL: %s"), url)
 
-    def show_connection_error(self, username):
-        if self.ui_callback:
-            self.ui_callback.show_connection_error(username)
+    def _shared_file_list_response(self, msg):
 
-    def peer_message_progress(self, msg):
-        if self.ui_callback:
-            self.ui_callback.peer_message_progress(msg)
+        user = msg.init.target_user
 
-    def peer_connection_closed(self, msg):
-        if self.ui_callback:
-            self.ui_callback.peer_connection_closed(msg)
-
-    def get_user_status(self, msg):
-        """ Server code: 7 """
-
-        if self.ui_callback:
-            self.ui_callback.get_user_status(msg)
-
-    def shared_file_list(self, msg, user=None):
-        """ Peer code: 5 """
-
-        if user is None:
-            user = msg.init.target_user
-
-        if self.ui_callback:
-            self.ui_callback.shared_file_list(user, msg)
+        if user in self.user_shares:
+            self.user_shares[user] = dict(msg.list + msg.privatelist)
