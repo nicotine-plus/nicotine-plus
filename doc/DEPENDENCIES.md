@@ -28,44 +28,24 @@
 
 ### GNU/Linux
 
-#### Installing Required Runtime Dependencies
+#### Installing Runtime Dependencies
 
 - On Debian/Ubuntu-based distributions:
 
 ```sh
-sudo apt install gir1.2-gtk-3.0 python3-gi python3-gdbm
+sudo apt install gir1.2-gspell-1 gir1.2-gtk-3.0 python3-gi python3-gdbm
 ```
 
 - On Redhat/Fedora-based distributions:
 
 ```sh
-sudo dnf install gtk3 python3-gobject
+sudo dnf install gspell gtk3 python3-gobject
 ```
 
 - On SUSE-based distributions:
 
 ```sh
-sudo zypper install typelib-1_0-Gtk-3_0 python3-gobject python3-dbm
-```
-
-#### Installing Recommended Runtime Dependencies
-
-- On Debian/Ubuntu-based distributions:
-
-```sh
-sudo apt install gir1.2-gspell-1
-```
-
-- On Redhat/Fedora-based distributions:
-
-```sh
-sudo dnf install gspell
-```
-
-- On SUSE-based distributions:
-
-```sh
-sudo zypper install typelib-1_0-Gspell-1
+sudo zypper install typelib-1_0-Gspell-1 typelib-1_0-Gtk-3_0 python3-gobject python3-dbm
 ```
 
 #### Installing Build Dependencies
