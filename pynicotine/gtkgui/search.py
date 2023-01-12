@@ -889,18 +889,14 @@ class Search:
                         # Invalid Duration unit
                         continue
 
-                    if operation is operator.gt:
-                        # Account for milliseconds in linear temporal value
-                        adjust = -1
+            if (digit - adjust) <= value <= (digit + adjust):
+                if operation is operator.eq:
+                    return True
 
-            if operation in (operator.eq, operator.ne):
-                if (digit - adjust) <= value <= (digit + adjust):
-                    return bool(operation is operator.eq)
+                if operation is operator.ne:
+                    return False
 
-                allowed = bool(operation is operator.ne)
-                continue
-
-            if operation(value, digit + adjust) and not blocked:
+            elif operation(value, digit) and not blocked:
                 allowed = True
                 continue
 
