@@ -1299,7 +1299,7 @@ class MainWindow(Window):
         )
 
     def log_callback(self, timestamp_format, msg, title, level):
-        GLib.idle_add(self.update_log, timestamp_format, msg, title, level, priority=GLib.PRIORITY_LOW)
+        events.emit_main_thread("thread-callback", self.update_log, timestamp_format, msg, title, level)
 
     def update_log(self, timestamp_format, msg, title, level):
 
