@@ -830,8 +830,8 @@ class Search:
     """ Result Filters """
 
     @staticmethod
-    def split_operator(condition):
-        """ Returns: specified or default operator, digit """
+    def _split_operator(condition):
+        """ Returns: (operation, digit) """
 
         operators = {
             '<': operator.lt,
@@ -859,7 +859,7 @@ class Search:
         allowed = blocked = False
 
         for condition in result_filter:
-            operation, digit = self.split_operator(condition)
+            operation, digit = self._split_operator(condition)
 
             if file_size:
                 digit, factor = factorize(digit)
