@@ -257,7 +257,7 @@ class Logger:
 
         try:
             timestamp_format = config.sections["logging"].get("log_timestamp", "%Y-%m-%d %H:%M:%S")
-            events.emit("log-message", timestamp_format, msg, title, level)
+            events.emit_main_thread("log-message", timestamp_format, msg, title, level)
 
         except Exception as error:
             try:
