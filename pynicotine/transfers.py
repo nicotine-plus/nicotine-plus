@@ -1586,7 +1586,8 @@ class Transfers:
     def get_folder(self, user, folder):
         core.send_message_to_peer(user, slskmessages.FolderContentsRequest(directory=folder, token=1))
 
-    def get_file(self, user, filename, path="", transfer=None, size=0, bitrate=None, length=None, ui_callback=True):
+    def get_file(self, user, filename, path="", transfer=None, size=0, bitrate=None, length=None,
+                 bypass_filter=False, ui_callback=True):
 
         path = clean_path(path, absolute=True)
 
@@ -1618,7 +1619,7 @@ class Transfers:
 
         core.watch_user(user)
 
-        if config.sections["transfers"]["enablefilters"]:
+        if not bypass_filter and config.sections["transfers"]["enablefilters"]:
             try:
                 downloadregexp = re.compile(config.sections["transfers"]["downloadregexp"], flags=re.IGNORECASE)
 
@@ -2333,7 +2334,7 @@ class Transfers:
 
         self.check_upload_queue()
 
-    def retry_download(self, transfer):
+    def retry_download(self, transfer, bypass_filter=False):
 
         if transfer.status in ("Transferring", "Finished"):
             return
@@ -2341,11 +2342,19 @@ class Transfers:
         user = transfer.user
 
         self.abort_download(transfer, abort_reason=None)
-        self.get_file(user, transfer.filename, path=transfer.path, transfer=transfer)
+        self.get_file(user, transfer.filename, path=transfer.path, transfer=transfer, bypass_filter=bypass_filter)
 
     def retry_downloads(self, downloads):
+
+        num_downloads = len(downloads)
+
         for download in downloads:
-            self.retry_download(download)
+            # Provide a way to bypass download filters in case the user actually wants a file.
+            # To avoid accidentally bypassing filters, ensure that only a single file is selected,
+            # and it has the "Filtered" status.
+
+            bypass_filter = (num_downloads == 1 and download.status == "Filtered")
+            self.retry_download(download, bypass_filter)
 
     def retry_download_limits(self):
 
