@@ -229,7 +229,6 @@ class Config:
                 "downloadregexp": "",
                 "downloadfilters": [
                     ["desktop.ini", 1],
-                    ["folder.jpg", 1],
                     ["*.url", 1],
                     ["thumbs.db", 1],
                     ["albumart(_{........-....-....-....-............}_)?(_?(large|small))?\\.jpg", 0]
