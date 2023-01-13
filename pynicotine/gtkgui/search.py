@@ -360,15 +360,6 @@ class Search:
         self.selected_users = {}
         self.selected_results = {}
 
-        self.operators = {
-            '<': operator.lt,
-            '<=': operator.le,
-            '==': operator.eq,
-            '!=': operator.ne,
-            '>=': operator.ge,
-            '>': operator.gt
-        }
-
         # Columns
         self.treeview_name = "file_search"
         self.create_model()
@@ -852,21 +843,51 @@ class Search:
 
     """ Result Filters """
 
+    @staticmethod
+    def _split_operator(condition):
+        """ Returns: (operation, digit) """
+
+        operators = {
+            '<': operator.lt,
+            '<=': operator.le,
+            '==': operator.eq,
+            '!=': operator.ne,
+            '>=': operator.ge,
+            '>': operator.gt
+        }
+
+        if condition.startswith((">=", "<=", "==", "!=")):
+            return operators.get(condition[:2]), condition[2:]
+
+        if condition.startswith((">", "<")):
+            return operators.get(condition[:1]), condition[1:]
+
+        if condition.startswith(("=", "!")):
+            return operators.get(condition[:1] + "="), condition[1:]
+
+        return operator.ge, condition
+
     def check_digit(self, result_filter, value, file_size=False):
 
         allowed = blocked = False
 
         for condition in result_filter:
-            if condition.startswith((">", "<", "=", "!")):
-                used_operator, digit = condition[:1] + "=", condition[1:]
-            else:
-                used_operator, digit = ">=", condition
+            operation, digit = self._split_operator(condition)
 
             if file_size:
                 digit, factor = factorize(digit)  # File Size
+
+                if digit is None:
+                    # Invalid Size unit
+                    continue
+
+                # Exact match unlikely, approximate to within +/- 0.1 MiB (or 1 MiB if over 100 MiB)
+                adjust = factor / 8 if factor > 1024 and digit < 104857600 else factor  # TODO: GiB
+
             else:
+                adjust = 0
+
                 try:
-                    factor = 1
                     digit = int(digit)  # Bitrate (or raw size, or seconds)
 
                 except ValueError:
@@ -879,25 +900,14 @@ class Search:
                     except ValueError:
                         continue
 
-            if digit is None:
-                continue
-
-            if factor > 1 and used_operator in ("==", "!="):
-                # Exact match is unlikely, so approximate within +/- 0.1 MiB or 1 MiB if over 100 MiB
-                adjust = factor / 8 if factor > 1024 and digit < 104857600 else factor  # TODO: GiB
-
-                if (digit - adjust) <= value <= (digit + adjust):
-                    if used_operator == "!=":
-                        return False
-
+            if (digit - adjust) <= value <= (digit + adjust):
+                if operation is operator.eq:
                     return True
 
-                allowed = used_operator == "!="
-                continue
+                if operation is operator.ne:
+                    return False
 
-            operation = self.operators.get(used_operator)
-
-            if operation(value, digit) and not blocked:
+            elif operation(value, digit) and not blocked:
                 allowed = True
                 continue
 
