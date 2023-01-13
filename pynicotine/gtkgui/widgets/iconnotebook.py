@@ -523,6 +523,9 @@ class IconNotebook:
     def on_remove_page(self, _notebook, new_page, _page_num):
         self.remove_unread_page(new_page)
 
+    def on_remove_all_pages(self, *_args):
+        self.remove_all_pages()
+
     def on_switch_page(self, _notebook, new_page, page_num):
 
         if self.switch_page_callback is not None:
@@ -592,6 +595,11 @@ class IconNotebook:
             self.popup_menu_pages.add_items(
                 ("#" + tab_label.get_text(), self.on_show_page, page)
             )
+
+        self.popup_menu_pages.add_items(
+            ("", None),
+            ("#" + _("Close All Tabs…"), self.on_remove_all_pages)
+        )
 
         self.popup_menu_pages.update_model()
 
