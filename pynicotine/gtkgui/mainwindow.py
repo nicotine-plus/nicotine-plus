@@ -965,12 +965,11 @@ class MainWindow(Window):
             page = self.notebook.get_nth_page(i)
             page.id = tab_id
 
-            menu_label = TabLabel(tab_text)
             tab_label = TabLabel(tab_text)
             tab_label.set_start_icon_name(tab_icon_name)
 
             # Apply tab label
-            self.notebook.set_labels(page, tab_label, menu_label)
+            self.notebook.set_tab_label(page, tab_label)
             self.notebook.set_tab_reorderable(page, True)
             self.set_tab_expand(page)
 
@@ -1052,7 +1051,7 @@ class MainWindow(Window):
         if page is None:
             return False
 
-        tab_label, _menu_label = notebook.get_labels(page)
+        tab_label = notebook.get_tab_label(page)
         tab_label.close_callback()
         return True
 
