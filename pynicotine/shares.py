@@ -820,11 +820,11 @@ class Shares:
                     log.add(template, msg_args=args, level=log_level)
 
                 elif isinstance(item, float):
-                    events.emit("set-scan-progress", item)
+                    events.emit_main_thread("set-scan-progress", item)
 
                 elif item == "indeterminate":
-                    events.emit("show-scan-progress")
-                    events.emit("set-scan-indeterminate")
+                    events.emit_main_thread("show-scan-progress")
+                    events.emit_main_thread("set-scan-indeterminate")
 
                 elif isinstance(item, SharedFileListResponse):
                     if item.type == "normal":
@@ -887,7 +887,7 @@ class Shares:
 
         # Let the scanner process do its thing
         error = self.process_scanner_messages(scanner, scanner_queue)
-        events.emit("hide-scan-progress")
+        events.emit_main_thread("hide-scan-progress")
 
         # Scanning done, load shares in the main process again
         self.load_shares(self.share_dbs, self.share_db_paths)

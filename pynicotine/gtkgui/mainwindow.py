@@ -1379,11 +1379,11 @@ class MainWindow(Window):
         remove_css_class(label, "underline")
 
     def show_scan_progress(self):
-        GLib.idle_add(self.scan_progress_bar.show)
+        self.scan_progress_bar.show()
 
     def set_scan_progress(self, value):
         self.scan_progress_indeterminate = False
-        GLib.idle_add(self.scan_progress_bar.set_fraction, value)
+        self.scan_progress_bar.set_fraction(value)
 
     def set_scan_indeterminate(self):
 
@@ -1405,7 +1405,7 @@ class MainWindow(Window):
 
     def hide_scan_progress(self):
         self.scan_progress_indeterminate = False
-        GLib.idle_add(self.scan_progress_bar.hide)
+        self.scan_progress_bar.hide()
 
     """ Exit """
 
