@@ -226,7 +226,7 @@ class MainWindow(Window):
                                             controller_widget=self.log_container)
 
         self.create_log_context_menu()
-        events.connect("log-message", self.update_log)
+        events.connect("log-message", self.log_callback)
 
         """ Icons """
 
@@ -1297,6 +1297,9 @@ class MainWindow(Window):
             ("", None),
             ("#" + _("Clear Log View"), self.on_clear_log_view)
         )
+
+    def log_callback(self, timestamp_format, msg, title, level):
+        GLib.idle_add(self.update_log, timestamp_format, msg, title, level, priority=GLib.PRIORITY_LOW)
 
     def update_log(self, timestamp_format, msg, title, level):
 
