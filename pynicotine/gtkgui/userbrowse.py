@@ -592,9 +592,10 @@ class UserBrowse:
 
         for _code, filename, size, _ext, attrs, *_unused in files:
             selected_folder_size += size
+            h_size = humanize(size) if config.sections["ui"]["exact_file_sizes"] else human_size(size)
             h_bitrate, bitrate, h_length, length = FileListMessage.parse_result_bitrate_length(size, attrs)
 
-            file_row = [filename, human_size(size), h_bitrate, h_length,
+            file_row = [filename, h_size, h_bitrate, h_length,
                         GObject.Value(GObject.TYPE_UINT64, size),
                         GObject.Value(GObject.TYPE_UINT, bitrate),
                         GObject.Value(GObject.TYPE_UINT, length)]

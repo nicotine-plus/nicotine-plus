@@ -402,7 +402,8 @@ class Config:
                 "maximized": True,
                 "urgencyhint": True,
                 "file_path_tooltips": True,
-                "reverse_file_paths": True
+                "reverse_file_paths": True,
+                "exact_file_sizes": False
             },
             "private_rooms": {
                 "rooms": {}

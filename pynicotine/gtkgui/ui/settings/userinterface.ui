@@ -649,7 +649,14 @@
             <property name="orientation">vertical</property>
             <child>
               <object class="GtkCheckButton" id="ReverseFilePaths">
-                <property name="label" translatable="yes">Show reverse file paths in search and transfer views (requires a restart)</property>
+                <property name="label" translatable="yes">Show reverse file paths (requires a restart)</property>
+                <property name="visible">True</property>
+                <property name="use-underline">True</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkCheckButton" id="ExactFileSizes">
+                <property name="label" translatable="yes">Show exact file sizes (requires a restart)</property>
                 <property name="visible">True</property>
                 <property name="use-underline">True</property>
               </object>
