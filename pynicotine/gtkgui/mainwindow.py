@@ -501,7 +501,7 @@ class MainWindow(Window):
         self.log_view.auto_scroll = show
 
         if show:
-            GLib.idle_add(self.log_view.scroll_bottom)
+            self.log_view.scroll_bottom()
 
     def on_show_log_history(self, action, *_args):
 

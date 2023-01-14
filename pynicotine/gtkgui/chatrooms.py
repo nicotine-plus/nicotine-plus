@@ -569,7 +569,6 @@ class ChatRoom:
 
         self.count_users()
         self.create_tags()
-        self.read_room_logs()
 
     def load(self):
 
@@ -579,10 +578,9 @@ class ChatRoom:
                     or window_width)
         self.users_paned.set_position(position - 400)
 
-        # Scroll chat to bottom
-        GLib.idle_add(self.activity_view.scroll_bottom)
-        GLib.idle_add(self.chat_view.scroll_bottom)
-        self.loaded = self.activity_view.auto_scroll = self.chat_view.auto_scroll = True
+        # Room logs
+        self.read_room_logs()
+        self.loaded = True
 
     def clear(self):
 
@@ -664,6 +662,13 @@ class ChatRoom:
 
         self.users[username] = iterator
 
+    def read_room_logs_finished(self):
+
+        self.activity_view.scroll_bottom()
+        self.chat_view.scroll_bottom()
+
+        self.activity_view.auto_scroll = self.chat_view.auto_scroll = True
+
     def read_room_logs(self):
 
         numlines = config.sections["logging"]["readroomlines"]
@@ -678,6 +683,8 @@ class ChatRoom:
             self.append_log_lines(path, numlines)
         except OSError:
             pass
+
+        GLib.idle_add(self.read_room_logs_finished)
 
     def append_log_lines(self, path, numlines):
 
