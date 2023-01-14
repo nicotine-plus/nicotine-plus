@@ -427,7 +427,7 @@ class MainWindow(Window):
             focus_widget = self.search_entry
 
         if focus_widget is not None:
-            GLib.idle_add(lambda: focus_widget.grab_focus() == -1, priority=GLib.PRIORITY_HIGH_IDLE)
+            focus_widget.grab_focus()
 
     def server_disconnect(self, _msg):
         self.update_user_status()
