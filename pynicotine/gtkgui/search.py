@@ -244,13 +244,9 @@ class Searches(IconNotebook):
     def clear_filter_history(self):
 
         # Clear filter history in config
-        config.sections["searches"]["filterin"] = config.defaults["searches"]["filterin"]
-        config.sections["searches"]["filterout"] = config.defaults["searches"]["filterout"]
-        config.sections["searches"]["filtertype"] = config.defaults["searches"]["filtertype"]
-        config.sections["searches"]["filtersize"] = config.defaults["searches"]["filtersize"]
-        config.sections["searches"]["filterbr"] = config.defaults["searches"]["filterbr"]
-        config.sections["searches"]["filterlength"] = config.defaults["searches"]["filterlength"]
-        config.sections["searches"]["filtercc"] = config.defaults["searches"]["filtercc"]
+        for filter_id in ("filterin", "filterout", "filtertype", "filtersize", "filterbr", "filterlength", "filtercc"):
+            config.sections["searches"][filter_id] = []
+
         config.write_configuration()
 
         # Update filters in search tabs
@@ -531,11 +527,24 @@ class Search:
 
     def update_filter_comboboxes(self):
 
+        filter_presets = {
+            "filtersize": [">50MiB", ">20MiB <50MiB", ">10MiB <20MiB", ">5MiB <10MiB", "<=5MiB"],
+            "filterbr": ["!0", "128|<224", ">160 <=320", "=320 =1411", ">320"],
+            "filtertype": ["flac wav aiff cue acc", "mp3 m4a ogg opus", "mp4 m4v mkv mpg mov webm", "!mp3 !wma]"],
+            "filterlength": [">12:00", ">8:00 <12:00", ">5:00 <8:00", "<=5:00 !0", "=0"]
+        }
+
         for filter_id, widget in self.filter_comboboxes.items():
             widget.remove_all()
 
             for value in config.sections["searches"][filter_id]:
                 widget.append_text(value)
+
+            if filter_id in filter_presets and filter_presets[filter_id]:
+                widget.append_text("")
+
+                for value in filter_presets[filter_id]:
+                    widget.append_text(value)
 
     def populate_filters(self):
 
@@ -896,7 +905,7 @@ class Search:
                 if operation is operator.ne:
                     return False
 
-            elif operation(value, digit) and not blocked:
+            if operation(value, digit) and not blocked:
                 allowed = True
                 continue
 
@@ -1530,7 +1539,7 @@ class Search:
                 value = value.pattern
 
             elif filter_id in ("filtersize", "filterbr", "filtercc", "filtertype", "filterlength"):
-                value = "|".join(value)
+                value = " ".join(value)
 
             self.push_history(filter_id, value)
             self.active_filter_count += 1

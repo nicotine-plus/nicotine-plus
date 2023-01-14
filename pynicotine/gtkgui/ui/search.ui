@@ -239,7 +239,7 @@
                               <object class="GtkEntry">
                                 <property name="width-chars">12</property>
                                 <property name="placeholder-text" translatable="yes">File type…</property>
-                                <property name="tooltip-text" translatable="yes">File type, e.g. flac wav !mp3 !m4a</property>
+                                <property name="tooltip-text" translatable="yes">File type, e.g. flac wav or !mp3 !m4a</property>
                                 <property name="primary-icon-name">text-x-generic-symbolic</property>
                                 <signal name="activate" handler="on_refilter"/>
                                 <signal name="changed" handler="on_filter_entry_changed"/>
@@ -355,7 +355,7 @@
                                   <object class="GtkEntry">
                                     <property name="width-chars">12</property>
                                     <property name="placeholder-text" translatable="yes">Country code…</property>
-                                    <property name="tooltip-text" translatable="yes">Country code, e.g. US ES !DE !GB</property>
+                                    <property name="tooltip-text" translatable="yes">Country code, e.g. US ES or !DE !GB</property>
                                     <property name="primary-icon-name">mark-location-symbolic</property>
                                     <signal name="activate" handler="on_refilter"/>
                                     <signal name="changed" handler="on_filter_entry_changed"/>
