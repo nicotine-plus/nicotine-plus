@@ -263,13 +263,13 @@ class PrivateChat(UserInterface):
         self.create_tags()
         self.update_visuals()
 
-        self.read_private_log()
-
     def load(self):
+        self.read_private_log()
+        self.loaded = True
 
-        # Scroll chat to bottom
-        GLib.idle_add(self.chat_view.scroll_bottom)
-        self.loaded = self.chat_view.auto_scroll = True
+    def read_private_log_finished(self):
+        self.chat_view.scroll_bottom()
+        self.chat_view.auto_scroll = True
 
     def read_private_log(self):
 
@@ -282,6 +282,8 @@ class PrivateChat(UserInterface):
             self.append_log_lines(path, numlines)
         except OSError:
             pass
+
+        GLib.idle_add(self.read_private_log_finished)
 
     def append_log_lines(self, path, numlines):
 
