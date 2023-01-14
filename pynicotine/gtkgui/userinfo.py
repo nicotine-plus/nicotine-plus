@@ -133,7 +133,7 @@ class UserInfos(IconNotebook):
         if page is not None:
             page.update_buddy_button_state()
 
-    def peer_connection_error(self, user, *_args):
+    def peer_connection_error(self, user, *_args, **_kwargs):
 
         page = self.pages.get(user)
 

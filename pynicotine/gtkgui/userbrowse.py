@@ -119,7 +119,7 @@ class UserBrowses(IconNotebook):
         self.remove_page(page.container)
         del self.pages[user]
 
-    def peer_connection_error(self, user, *_args):
+    def peer_connection_error(self, user, *_args, **_kwargs):
 
         page = self.pages.get(user)
 

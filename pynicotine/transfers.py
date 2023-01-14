@@ -717,7 +717,7 @@ class Transfers:
             elif i.__class__ is slskmessages.QueueUpload:
                 self._cant_connect_queue_file(user, i.file, is_offline)
 
-    def _cant_connect_queue_file(self, username, filename, offline):
+    def _cant_connect_queue_file(self, username, filename, is_offline):
         """ We can't connect to the user, either way (QueueUpload). """
 
         for download in self.downloads:
@@ -729,11 +729,11 @@ class Transfers:
                 "user": username
             })
 
-            self.abort_download(download, abort_reason="User logged off" if offline else "Connection timeout")
+            self.abort_download(download, abort_reason="User logged off" if is_offline else "Connection timeout")
             core.watch_user(username)
             break
 
-    def _cant_connect_upload(self, username, token, offline):
+    def _cant_connect_upload(self, username, token, is_offline):
         """ We can't connect to the user, either way (TransferRequest, FileUploadInit). """
 
         for upload in self.uploads:
@@ -750,10 +750,10 @@ class Transfers:
                 log.add_transfer("Existing file connection for upload with token %s already exists?", token)
                 return
 
-            upload_cleared = offline and self.auto_clear_upload(upload)
+            upload_cleared = is_offline and self.auto_clear_upload(upload)
 
             if not upload_cleared:
-                self.abort_upload(upload, abort_reason="User logged off" if offline else "Connection timeout")
+                self.abort_upload(upload, abort_reason="User logged off" if is_offline else "Connection timeout")
 
             core.watch_user(username)
             self.check_upload_queue()
