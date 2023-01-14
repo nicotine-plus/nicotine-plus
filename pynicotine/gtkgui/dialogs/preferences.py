@@ -2703,7 +2703,7 @@ class Preferences(Dialog):
             self.application.window.show()
 
         if config.need_config():
-            GLib.idle_add(self.application.setup)
+            core.setup()
 
     @staticmethod
     def on_back_up_config_response(selected, _data):
