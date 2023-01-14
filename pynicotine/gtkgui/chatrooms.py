@@ -569,6 +569,7 @@ class ChatRoom:
 
         self.count_users()
         self.create_tags()
+        self.read_room_logs()
 
     def load(self):
 
@@ -578,8 +579,7 @@ class ChatRoom:
                     or window_width)
         self.users_paned.set_position(position - 400)
 
-        # Room logs
-        self.read_room_logs()
+        GLib.idle_add(self.read_room_logs_finished)
         self.loaded = True
 
     def clear(self):
@@ -683,8 +683,6 @@ class ChatRoom:
             self.append_log_lines(path, numlines)
         except OSError:
             pass
-
-        GLib.idle_add(self.read_room_logs_finished)
 
     def append_log_lines(self, path, numlines):
 

@@ -289,9 +289,10 @@ class PrivateChat:
         )
 
         self.create_tags()
+        self.read_private_log()
 
     def load(self):
-        self.read_private_log()
+        GLib.idle_add(self.read_private_log_finished)
         self.loaded = True
 
     def read_private_log_finished(self):
@@ -312,8 +313,6 @@ class PrivateChat:
             self.append_log_lines(path, numlines)
         except OSError:
             pass
-
-        GLib.idle_add(self.read_private_log_finished)
 
     def append_log_lines(self, path, numlines):
 
