@@ -481,27 +481,23 @@ class Application:
 
     def on_shares_unavailable(self, shares):
 
+        from pynicotine.gtkgui.widgets.dialogs import OptionDialog
+
         shares_list_message = ""
 
         for virtual_name, folder_path in shares:
             shares_list_message += f"• \"{virtual_name}\" {folder_path}\n"
 
-        def create_dialog():
-            from pynicotine.gtkgui.widgets.dialogs import OptionDialog
-
-            OptionDialog(
-                parent=self.window,
-                title=_("Shares Not Available"),
-                message=_("Verify that external disks are mounted and folder permissions are correct."),
-                long_message=shares_list_message,
-                first_button=_("_Cancel"),
-                second_button=_("_Retry"),
-                third_button=_("_Force Rescan"),
-                callback=self.on_shares_unavailable_response
-            ).show()
-
-        # Avoid dialog appearing inactive if invoked during rescan on startup
-        GLib.idle_add(create_dialog)
+        OptionDialog(
+            parent=self.window,
+            title=_("Shares Not Available"),
+            message=_("Verify that external disks are mounted and folder permissions are correct."),
+            long_message=shares_list_message,
+            first_button=_("_Cancel"),
+            second_button=_("_Retry"),
+            third_button=_("_Force Rescan"),
+            callback=self.on_shares_unavailable_response
+        ).show()
 
     def on_invalid_password_response(self, _dialog, response_id, _data):
         if response_id == 2:
