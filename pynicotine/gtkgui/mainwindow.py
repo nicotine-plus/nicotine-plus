@@ -351,7 +351,6 @@ class MainWindow(Window):
         else:
             self.window.connect("delete-event", self.on_close_request)
 
-            self.window.connect("size-allocate", self.on_window_size_changed)
             self.window.connect("notify::is-maximized", self.on_window_property_changed, "maximized")
 
         self.application.add_window(self.window)
@@ -372,12 +371,18 @@ class MainWindow(Window):
 
         self.application.notifications.set_urgency_hint(False)
 
+        # Moving/reszing does trigger notify::is-active on GTK 3
+        self.save_window_size(window)
+
     @staticmethod
     def on_window_property_changed(window, param, config_property):
         config.sections["ui"][config_property] = window.get_property(param.name)
 
     @staticmethod
-    def on_window_size_changed(window, _allocation):
+    def save_window_size(window):
+
+        if GTK_API_VERSION >= 4:
+            return
 
         if config.sections["ui"]["maximized"]:
             return
