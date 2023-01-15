@@ -62,6 +62,7 @@
               <object class="GtkEntry" id="chat_entry">
                 <property name="visible">True</property>
                 <property name="hexpand">True</property>
+                <property name="placeholder-text" translatable="yes">Send message…</property>
                 <property name="width-chars">8</property>
               </object>
             </child>
