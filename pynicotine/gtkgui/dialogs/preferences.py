@@ -1337,7 +1337,7 @@ class UserInterfacePage:
          self.EnableUserListTab, self.EntryAway, self.EntryBackground, self.EntryChangedTab, self.EntryCommand,
          self.EntryHighlight, self.EntryHighlightTab, self.EntryImmediate, self.EntryInput, self.EntryLocal,
          self.EntryMe, self.EntryOffline, self.EntryOnline, self.EntryQueue, self.EntryRegularTab, self.EntryRemote,
-         self.EntryURL, self.IconView, self.Language, self.Main, self.MainPosition,
+         self.EntryURL, self.ExactFileSizes, self.IconView, self.Language, self.Main, self.MainPosition,
          self.NotificationPopupChatroom, self.NotificationPopupChatroomMention, self.NotificationPopupFile,
          self.NotificationPopupFolder, self.NotificationPopupPrivateMessage, self.NotificationPopupSound,
          self.NotificationPopupWish, self.NotificationWindowTitle, self.PickAway,
@@ -1434,6 +1434,7 @@ class UserInterfacePage:
                 "usernamestyle": self.UsernameStyle,
 
                 "reverse_file_paths": self.ReverseFilePaths,
+                "exact_file_sizes": self.ExactFileSizes,
 
                 "tabmain": self.MainPosition,
                 "tabrooms": self.ChatRoomsPosition,
@@ -1537,6 +1538,7 @@ class UserInterfacePage:
                 "usernamestyle": self.UsernameStyle.get_active_id(),
 
                 "reverse_file_paths": self.ReverseFilePaths.get_active(),
+                "exact_file_sizes": self.ExactFileSizes.get_active(),
 
                 "tabmain": self.MainPosition.get_active_id(),
                 "tabrooms": self.ChatRoomsPosition.get_active_id(),
@@ -2701,7 +2703,7 @@ class Preferences(Dialog):
             self.application.window.show()
 
         if config.need_config():
-            GLib.idle_add(self.application.setup)
+            core.setup()
 
     @staticmethod
     def on_back_up_config_response(selected, _data):

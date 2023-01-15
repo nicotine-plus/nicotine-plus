@@ -717,7 +717,7 @@ class Transfers:
             elif i.__class__ is slskmessages.QueueUpload:
                 self._cant_connect_queue_file(user, i.file, is_offline)
 
-    def _cant_connect_queue_file(self, username, filename, offline):
+    def _cant_connect_queue_file(self, username, filename, is_offline):
         """ We can't connect to the user, either way (QueueUpload). """
 
         for download in self.downloads:
@@ -729,11 +729,11 @@ class Transfers:
                 "user": username
             })
 
-            self.abort_download(download, abort_reason="User logged off" if offline else "Connection timeout")
+            self.abort_download(download, abort_reason="User logged off" if is_offline else "Connection timeout")
             core.watch_user(username)
             break
 
-    def _cant_connect_upload(self, username, token, offline):
+    def _cant_connect_upload(self, username, token, is_offline):
         """ We can't connect to the user, either way (TransferRequest, FileUploadInit). """
 
         for upload in self.uploads:
@@ -750,10 +750,10 @@ class Transfers:
                 log.add_transfer("Existing file connection for upload with token %s already exists?", token)
                 return
 
-            upload_cleared = offline and self.auto_clear_upload(upload)
+            upload_cleared = is_offline and self.auto_clear_upload(upload)
 
             if not upload_cleared:
-                self.abort_upload(upload, abort_reason="User logged off" if offline else "Connection timeout")
+                self.abort_upload(upload, abort_reason="User logged off" if is_offline else "Connection timeout")
 
             core.watch_user(username)
             self.check_upload_queue()
@@ -1586,7 +1586,8 @@ class Transfers:
     def get_folder(self, user, folder):
         core.send_message_to_peer(user, slskmessages.FolderContentsRequest(directory=folder, token=1))
 
-    def get_file(self, user, filename, path="", transfer=None, size=0, bitrate=None, length=None, ui_callback=True):
+    def get_file(self, user, filename, path="", transfer=None, size=0, bitrate=None, length=None,
+                 bypass_filter=False, ui_callback=True):
 
         path = clean_path(path, absolute=True)
 
@@ -1618,7 +1619,7 @@ class Transfers:
 
         core.watch_user(user)
 
-        if config.sections["transfers"]["enablefilters"]:
+        if not bypass_filter and config.sections["transfers"]["enablefilters"]:
             try:
                 downloadregexp = re.compile(config.sections["transfers"]["downloadregexp"], flags=re.IGNORECASE)
 
@@ -2333,7 +2334,7 @@ class Transfers:
 
         self.check_upload_queue()
 
-    def retry_download(self, transfer):
+    def retry_download(self, transfer, bypass_filter=False):
 
         if transfer.status in ("Transferring", "Finished"):
             return
@@ -2341,11 +2342,19 @@ class Transfers:
         user = transfer.user
 
         self.abort_download(transfer, abort_reason=None)
-        self.get_file(user, transfer.filename, path=transfer.path, transfer=transfer)
+        self.get_file(user, transfer.filename, path=transfer.path, transfer=transfer, bypass_filter=bypass_filter)
 
     def retry_downloads(self, downloads):
+
+        num_downloads = len(downloads)
+
         for download in downloads:
-            self.retry_download(download)
+            # Provide a way to bypass download filters in case the user actually wants a file.
+            # To avoid accidentally bypassing filters, ensure that only a single file is selected,
+            # and it has the "Filtered" status.
+
+            bypass_filter = (num_downloads == 1 and download.status == "Filtered")
+            self.retry_download(download, bypass_filter)
 
     def retry_download_limits(self):
 

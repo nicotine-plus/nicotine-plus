@@ -200,6 +200,9 @@ class Core:
     def start(self):
         events.emit("start")
 
+    def setup(self):
+        events.emit("setup")
+
     def confirm_quit(self, remember=False):
 
         if config.sections["ui"]["exitdialog"] != 0:  # 0: 'Quit program'
@@ -234,7 +237,7 @@ class Core:
 
         if config.need_config():
             log.add(_("You need to specify a username and password before connecting…"))
-            events.emit("setup")
+            self.setup()
             return
 
         events.emit("enable-message-queue")

@@ -20,7 +20,6 @@ import re
 import time
 
 from gi.repository import Gdk
-from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine.gtkgui.application import GTK_API_VERSION
@@ -46,20 +45,19 @@ class TextView:
         self.textview = textview
         self.textbuffer = textview.get_buffer()
         self.scrollable = textview.get_ancestor(Gtk.ScrolledWindow)
-        self.adjustment = self.scrollable.get_vadjustment()
         scrollable_container = self.scrollable.get_ancestor(Gtk.Box)
 
-        self.auto_scroll = self.should_auto_scroll = auto_scroll
+        self.adjustment = self.scrollable.get_vadjustment()
+        self.auto_scroll = auto_scroll
+        self.adjustment_bottom = self.adjustment_value = 0
+        self.adjustment.connect("notify::upper", self.on_adjustment_upper_changed)
+        self.adjustment.connect("notify::value", self.on_adjustment_value_changed)
+
+        self.pressed_x = self.pressed_y = 0
+        self.max_num_lines = 50000
         self.parse_urls = parse_urls
         self.tag_urls = {}
         self.url_regex = re.compile("(\\w+\\://[^\\s]+)|(www\\.\\w+\\.[^\\s]+)|(mailto\\:[^\\s]+)")
-
-        self.pressed_x = 0
-        self.pressed_y = 0
-        self.max_num_lines = 50000
-
-        self.adjustment.connect("notify::upper", self.on_adjustment_changed)
-        self.adjustment.connect("notify::value", self.on_adjustment_changed, True)
 
         if GTK_API_VERSION >= 4:
             self.gesture_click_primary = Gtk.GestureClick()
@@ -88,13 +86,9 @@ class TextView:
         self.gesture_click_secondary.set_button(Gdk.BUTTON_SECONDARY)
         self.gesture_click_secondary.connect("pressed", self.on_pressed_secondary)
 
-    def scroll_bottom(self, *_args):
-
-        if not self.textview.get_realized():
-            # Avoid GTK warnings
-            return
-
-        self.adjustment.set_value(self.adjustment.get_upper() - self.adjustment.get_page_size())
+    def scroll_bottom(self):
+        self.adjustment_value = (self.adjustment.get_upper() - self.adjustment.get_page_size())
+        self.adjustment.set_value(self.adjustment_value)
 
     def _insert_text(self, text, tag=None):
 
@@ -304,15 +298,22 @@ class TextView:
     def on_clear_all_text(self, *_args):
         self.clear()
 
-    def on_adjustment_changed(self, adjustment, _param, force_scroll=False):
+    def on_adjustment_upper_changed(self, *_args):
 
-        if not self.auto_scroll:
+        new_adjustment_bottom = (self.adjustment.get_upper() - self.adjustment.get_page_size())
+
+        if self.auto_scroll and (self.adjustment_bottom - self.adjustment_value) <= 0:
+            # Scroll to bottom if we were at the bottom previously
+            self.scroll_bottom()
+
+        self.adjustment_bottom = new_adjustment_bottom
+
+    def on_adjustment_value_changed(self, *_args):
+
+        new_value = self.adjustment.get_value()
+
+        if new_value.is_integer() and (0 < new_value < self.adjustment_bottom):
+            # The textview scrolls up on its own sometimes. Ignore these garbage values.
             return
 
-        if force_scroll or not self.should_auto_scroll:
-            # Scroll to bottom if we were at the bottom previously
-            bottom = adjustment.get_upper() - adjustment.get_page_size()
-            self.should_auto_scroll = (bottom - adjustment.get_value() <= 0)
-
-        if self.should_auto_scroll:
-            GLib.idle_add(self.scroll_bottom, priority=GLib.PRIORITY_LOW)
+        self.adjustment_value = new_value

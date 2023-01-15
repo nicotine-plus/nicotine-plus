@@ -165,7 +165,6 @@ class Dialog(Window):
             self.window.connect("close-request", self._on_close_request)
         else:
             self.window.connect("delete-event", self._on_close_request)
-            self.window.set_property("window-position", Gtk.WindowPosition.CENTER_ON_PARENT)
 
         self.window.connect("show", self._on_show)
 

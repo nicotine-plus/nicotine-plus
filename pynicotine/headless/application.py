@@ -20,8 +20,6 @@ import sys
 import threading
 import time
 
-from collections import deque
-
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
@@ -33,14 +31,12 @@ class Application:
     def __init__(self):
 
         self.init_exception_handler()
-        self.thread_events = deque()
 
         for log_level in ("download", "upload"):
             log.add_log_level(log_level, is_permanent=False)
 
         for event_name, callback in (
             ("shares-unavailable", self.shares_unavailable),
-            ("thread-event", self.thread_event)
         ):
             events.connect(event_name, callback)
 
@@ -51,23 +47,12 @@ class Application:
 
         # Main loop, process events from threads
         while not core.shutdown:
-            if self.thread_events:
-                event_list = []
-
-                while self.thread_events:
-                    event_list.append(self.thread_events.popleft())
-
-                for event_name, args, kwargs in event_list:
-                    events.emit(event_name, *args, **kwargs)
-
+            events.process_thread_events()
             time.sleep(1 / 60)
 
         # Shut down with exit code 0 (success)
         config.write_configuration()
         return 0
-
-    def thread_event(self, event_name, *args, **kwargs):
-        self.thread_events.append((event_name, args, kwargs))
 
     def init_exception_handler(self):
 

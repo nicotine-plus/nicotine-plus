@@ -229,7 +229,6 @@ class Config:
                 "downloadregexp": "",
                 "downloadfilters": [
                     ["desktop.ini", 1],
-                    ["folder.jpg", 1],
                     ["*.url", 1],
                     ["thumbs.db", 1],
                     ["albumart(_{........-....-....-....-............}_)?(_?(large|small))?\\.jpg", 0]
@@ -403,7 +402,8 @@ class Config:
                 "maximized": True,
                 "urgencyhint": True,
                 "file_path_tooltips": True,
-                "reverse_file_paths": True
+                "reverse_file_paths": True,
+                "exact_file_sizes": False
             },
             "private_rooms": {
                 "rooms": {}

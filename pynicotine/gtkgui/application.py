@@ -75,8 +75,7 @@ class Application:
             ("invalid-password", self.on_invalid_password),
             ("quit", self._instance.quit),
             ("setup", self.on_fast_configure),
-            ("shares-unavailable", self.on_shares_unavailable),
-            ("thread-event", self.on_thread_event)
+            ("shares-unavailable", self.on_shares_unavailable)
         ):
             events.connect(event_name, callback)
 
@@ -848,16 +847,9 @@ class Application:
 
         GLib.idle_add(self._on_critical_error_threading, args)
 
-    def _on_thread_event(self, event_name, *args, **kwargs):
-
-        if core.shutdown:
-            return
-
-        events.emit(event_name, *args, **kwargs)
-
-    def on_thread_event(self, event_name, *args, **kwargs):
-        # High priority to ensure there are no delays
-        GLib.idle_add(self._on_thread_event, event_name, *args, **kwargs, priority=GLib.PRIORITY_HIGH_IDLE)
+    def on_process_thread_events(self):
+        events.process_thread_events()
+        return not core.shutdown
 
     def on_activate(self, *_args):
 
@@ -885,6 +877,10 @@ class Application:
 
         if config.sections["server"]["auto_connect_startup"]:
             core.connect()
+
+        # Process thread events 60 times per second
+        # High priority to ensure there are no delays
+        GLib.timeout_add(1000 / 60, self.on_process_thread_events, priority=GLib.PRIORITY_HIGH_IDLE)
 
     def on_shutdown(self, *_args):
         # Explicitly hide tray icon, otherwise it will not disappear on Windows

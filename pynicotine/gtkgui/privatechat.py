@@ -292,10 +292,12 @@ class PrivateChat:
         self.read_private_log()
 
     def load(self):
+        GLib.idle_add(self.read_private_log_finished)
+        self.loaded = True
 
-        # Scroll chat to bottom
-        GLib.idle_add(self.chat_view.scroll_bottom)
-        self.loaded = self.chat_view.auto_scroll = True
+    def read_private_log_finished(self):
+        self.chat_view.scroll_bottom()
+        self.chat_view.auto_scroll = True
 
     def read_private_log(self):
 

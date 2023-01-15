@@ -803,7 +803,7 @@ class Shares:
 
         return shared_folders, shared_folders_buddy
 
-    def process_scanner_messages(self, scanner, scanner_queue):
+    def process_scanner_messages(self, scanner, scanner_queue, emit_event):
 
         while scanner.is_alive():
             # Cooldown
@@ -820,11 +820,11 @@ class Shares:
                     log.add(template, msg_args=args, level=log_level)
 
                 elif isinstance(item, float):
-                    events.emit("set-scan-progress", item)
+                    emit_event("set-scan-progress", item)
 
                 elif item == "indeterminate":
-                    events.emit("show-scan-progress")
-                    events.emit("set-scan-indeterminate")
+                    emit_event("show-scan-progress")
+                    emit_event("set-scan-indeterminate")
 
                 elif isinstance(item, SharedFileListResponse):
                     if item.type == "normal":
@@ -877,17 +877,18 @@ class Shares:
 
         if use_thread:
             Thread(
-                target=self._process_scanner, args=(scanner, scanner_queue), name="ProcessShareScanner", daemon=True
+                target=self._process_scanner, args=(scanner, scanner_queue, events.emit_main_thread),
+                name="ProcessShareScanner", daemon=True
             ).start()
             return None
 
-        return self._process_scanner(scanner, scanner_queue)
+        return self._process_scanner(scanner, scanner_queue, events.emit)
 
-    def _process_scanner(self, scanner, scanner_queue):
+    def _process_scanner(self, scanner, scanner_queue, emit_event):
 
         # Let the scanner process do its thing
-        error = self.process_scanner_messages(scanner, scanner_queue)
-        events.emit("hide-scan-progress")
+        error = self.process_scanner_messages(scanner, scanner_queue, emit_event)
+        emit_event("hide-scan-progress")
 
         # Scanning done, load shares in the main process again
         self.load_shares(self.share_dbs, self.share_db_paths)

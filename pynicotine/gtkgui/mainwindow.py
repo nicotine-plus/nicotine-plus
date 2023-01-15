@@ -427,7 +427,7 @@ class MainWindow(Window):
             focus_widget = self.search_entry
 
         if focus_widget is not None:
-            GLib.idle_add(lambda: focus_widget.grab_focus() == -1, priority=GLib.PRIORITY_HIGH_IDLE)
+            focus_widget.grab_focus()
 
     def server_disconnect(self, _msg):
         self.update_user_status()
@@ -501,7 +501,7 @@ class MainWindow(Window):
         self.log_view.auto_scroll = show
 
         if show:
-            GLib.idle_add(self.log_view.scroll_bottom)
+            self.log_view.scroll_bottom()
 
     def on_show_log_history(self, action, *_args):
 
@@ -965,12 +965,11 @@ class MainWindow(Window):
             page = self.notebook.get_nth_page(i)
             page.id = tab_id
 
-            menu_label = TabLabel(tab_text)
             tab_label = TabLabel(tab_text)
             tab_label.set_start_icon_name(tab_icon_name)
 
             # Apply tab label
-            self.notebook.set_labels(page, tab_label, menu_label)
+            self.notebook.set_tab_label(page, tab_label)
             self.notebook.set_tab_reorderable(page, True)
             self.set_tab_expand(page)
 
@@ -1052,7 +1051,7 @@ class MainWindow(Window):
         if page is None:
             return False
 
-        tab_label, _menu_label = notebook.get_labels(page)
+        tab_label = notebook.get_tab_label(page)
         tab_label.close_callback()
         return True
 
@@ -1300,7 +1299,7 @@ class MainWindow(Window):
         )
 
     def log_callback(self, timestamp_format, msg, title, level):
-        GLib.idle_add(self.update_log, timestamp_format, msg, title, level, priority=GLib.PRIORITY_LOW)
+        events.emit_main_thread("thread-callback", self.update_log, timestamp_format, msg, title, level)
 
     def update_log(self, timestamp_format, msg, title, level):
 
@@ -1380,11 +1379,11 @@ class MainWindow(Window):
         remove_css_class(label, "underline")
 
     def show_scan_progress(self):
-        GLib.idle_add(self.scan_progress_bar.show)
+        self.scan_progress_bar.show()
 
     def set_scan_progress(self, value):
         self.scan_progress_indeterminate = False
-        GLib.idle_add(self.scan_progress_bar.set_fraction, value)
+        self.scan_progress_bar.set_fraction(value)
 
     def set_scan_indeterminate(self):
 
@@ -1406,7 +1405,7 @@ class MainWindow(Window):
 
     def hide_scan_progress(self):
         self.scan_progress_indeterminate = False
-        GLib.idle_add(self.scan_progress_bar.hide)
+        self.scan_progress_bar.hide()
 
     """ Exit """
 

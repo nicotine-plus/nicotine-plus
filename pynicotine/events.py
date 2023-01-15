@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from collections import deque
+
 
 EVENT_NAMES = {
     # General
@@ -48,7 +50,6 @@ EVENT_NAMES = {
     "shares-unavailable",
     "start",
     "thread-callback",
-    "thread-event",
     "user-country",
     "user-stats",
     "user-status",
@@ -196,6 +197,7 @@ class Events:
 
     def __init__(self):
         self._callbacks = {}
+        self._thread_events = deque()
 
     def connect(self, event_name, function):
 
@@ -215,7 +217,21 @@ class Events:
             function(*args, **kwargs)
 
     def emit_main_thread(self, event_name, *args, **kwargs):
-        self.emit("thread-event", event_name, *args, **kwargs)
+        self._thread_events.append((event_name, args, kwargs))
+
+    def process_thread_events(self):
+        """ Called by the main loop 60 times per second to emit thread events in the main thread """
+
+        if not self._thread_events:
+            return
+
+        event_list = []
+
+        while self._thread_events:
+            event_list.append(self._thread_events.popleft())
+
+        for event_name, args, kwargs in event_list:
+            self.emit(event_name, *args, **kwargs)
 
 
 events = Events()

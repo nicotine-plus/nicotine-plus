@@ -2051,7 +2051,8 @@ class SoulseekNetworkThread(Thread):
             except OSError as error:
                 self._connect_error(error, conn_obj_in_progress)
                 self._close_connection(self._connsinprogress, sock, callback=False)
-                return
+
+            return
 
         conn_obj_established = self._conns.get(sock)
 
@@ -2171,15 +2172,12 @@ class SoulseekNetworkThread(Thread):
         prev_active = conn_obj.lastactive
         conn_obj.lastactive = current_time
 
-        if conn_obj.obuf:
-            if limit is None:
-                bytes_send = sock.send(conn_obj.obuf)
-            else:
-                bytes_send = sock.send(conn_obj.obuf[:limit])
-
-            conn_obj.obuf = conn_obj.obuf[bytes_send:]
+        if limit is None:
+            bytes_send = sock.send(conn_obj.obuf)
         else:
-            bytes_send = 0
+            bytes_send = sock.send(conn_obj.obuf[:limit])
+
+        conn_obj.obuf = conn_obj.obuf[bytes_send:]
 
         if self._is_upload(conn_obj) and conn_obj.fileupl.offset is not None:
             conn_obj.fileupl.sentbytes += bytes_send
