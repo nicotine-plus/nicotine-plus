@@ -28,12 +28,12 @@ class Window:
 
     active_dialogs = []  # Class variable keeping dialog objects alive
 
-    def __init__(self, window):
+    def __init__(self, widget):
 
-        self.widget = window
+        self.widget = widget
 
         signal_name = "notify::focus-widget" if GTK_API_VERSION >= 4 else "set-focus"
-        window.connect(signal_name, self.on_focus_widget_changed)
+        widget.connect(signal_name, self.on_focus_widget_changed)
 
     def connect_signal(self, widget, signal, callback):
 
@@ -118,22 +118,22 @@ class Window:
         if GTK_API_VERSION >= 4:
             combobox.grab_focus()
 
-    def on_focus_widget_changed(self, window, *_args):
+    def on_focus_widget_changed(self, *_args):
 
-        widget = window.get_focus()
+        focus_widget = self.widget.get_focus()
 
-        if widget is None:
+        if focus_widget is None:
             return
 
         # Workaround for GTK 4 issue where wrong widget receives focus after closing popover
         if GTK_API_VERSION >= 4:
-            popover = widget.get_ancestor(Gtk.Popover)
+            popover = focus_widget.get_ancestor(Gtk.Popover)
 
             if popover is not None:
                 self.connect_signal(popover, "closed", self.on_popover_closed)
                 return
 
-        combobox = widget.get_ancestor(Gtk.ComboBoxText)
+        combobox = focus_widget.get_ancestor(Gtk.ComboBoxText)
 
         if combobox is not None:
             self.connect_signal(combobox, "notify::popup-shown", self.on_combobox_popup_shown)

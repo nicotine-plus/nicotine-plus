@@ -34,19 +34,19 @@ from pynicotine.slskmessages import UserStatus
 class ChatEntry:
     """ Custom text entry with support for chat commands and completions """
 
-    def __init__(self, application, entry, completion, entity, message_class, send_message, is_chatroom=False):
+    def __init__(self, application, widget, completion, entity, message_class, send_message, is_chatroom=False):
 
         self.application = application
-        self.widget = entry
+        self.widget = widget
         self.completion = completion
         self.entity = entity
         self.message_class = message_class
         self.send_message = send_message
         self.is_chatroom = is_chatroom
 
-        entry.connect("activate", self.on_enter)
-        Accelerator("<Shift>Tab", entry, self.on_tab_complete_accelerator, True)
-        Accelerator("Tab", entry, self.on_tab_complete_accelerator)
+        widget.connect("activate", self.on_enter)
+        Accelerator("<Shift>Tab", widget, self.on_tab_complete_accelerator, True)
+        Accelerator("Tab", widget, self.on_tab_complete_accelerator)
 
         # Emoji Picker (disable on Windows and macOS for now until we render emoji properly there)
         if sys.platform not in ("win32", "darwin"):
@@ -59,9 +59,9 @@ class ChatEntry:
 
             if self.application.spell_checker:
                 from gi.repository import Gspell  # pylint:disable=no-name-in-module
-                spell_buffer = Gspell.EntryBuffer.get_from_gtk_entry_buffer(entry.get_buffer())
+                spell_buffer = Gspell.EntryBuffer.get_from_gtk_entry_buffer(widget.get_buffer())
                 spell_buffer.set_spell_checker(self.application.spell_checker)
-                spell_view = Gspell.Entry.get_from_gtk_entry(entry)
+                spell_view = Gspell.Entry.get_from_gtk_entry(widget)
                 spell_view.set_inline_spell_checking(True)
 
     def on_enter(self, *_args):
@@ -459,7 +459,7 @@ class ChatCompletion:
 
 class CompletionEntry:
 
-    def __init__(self, entry, model, column=0):
+    def __init__(self, widget, model, column=0):
 
         self.model = model
         self.column = column
@@ -468,7 +468,7 @@ class CompletionEntry:
                                          popup_single_match=False, model=model)
         completion.set_text_column(column)
         completion.set_match_func(self.entry_completion_find_match)
-        entry.set_completion(completion)
+        widget.set_completion(completion)
 
     def entry_completion_find_match(self, _completion, entry_text, iterator):
 

@@ -23,9 +23,9 @@ from pynicotine.gtkgui.application import GTK_API_VERSION
 
 class InfoBar:
 
-    def __init__(self, info_bar, button=None):
+    def __init__(self, widget, button=None):
 
-        self.widget = info_bar
+        self.widget = widget
         self.revealer = self.widget.get_ancestor(Gtk.Revealer)
         self.label = Gtk.Label(height_request=24, hexpand=True, margin_start=3, margin_end=3, wrap=True,
                                visible=True, xalign=0)

@@ -94,6 +94,7 @@ class MainWindow(Window):
             self.chatrooms_toolbar,
             self.chatrooms_toolbar_contents,
             self.connections_label,
+            self.container,
             self.download_files_label,
             self.download_status_button,
             self.download_status_label,
@@ -188,11 +189,10 @@ class MainWindow(Window):
             self.userlist_title,
             self.userlist_toolbar,
             self.userlist_toolbar_contents,
-            self.vertical_paned,
-            self.windows
+            self.vertical_paned
         ) = ui_template.widgets
-        super().__init__(self.windows)
 
+        super().__init__(widget=Gtk.ApplicationWindow(child=self.container))
         self.header_bar.pack_end(self.header_end)
 
         if GTK_API_VERSION >= 4:

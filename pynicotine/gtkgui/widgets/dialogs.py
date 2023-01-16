@@ -31,7 +31,7 @@ from pynicotine.gtkgui.widgets.window import Window
 
 class Dialog(Window):
 
-    def __init__(self, dialog=None, parent=None, content_box=None, buttons_start=(), buttons_end=(),
+    def __init__(self, widget=None, parent=None, content_box=None, buttons_start=(), buttons_end=(),
                  default_button=None, show_callback=None, close_callback=None, title="", width=0, height=0,
                  modal=True, resizable=True, close_destroy=True, show_title_buttons=True):
 
@@ -45,20 +45,20 @@ class Dialog(Window):
         self.show_callback = show_callback
         self.close_callback = close_callback
 
-        if dialog:
-            super().__init__(dialog)
+        if widget:
+            super().__init__(widget=widget)
             self._set_dialog_properties()
             return
 
         container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, vexpand=True, visible=True)
-        window = Gtk.Window(
+        widget = Gtk.Window(
             default_width=width,
             default_height=height,
             resizable=resizable,
             child=container
         )
-        super().__init__(window)
-        Accelerator("Escape", window, self.close)
+        super().__init__(widget)
+        Accelerator("Escape", widget, self.close)
 
         if content_box:
             if GTK_API_VERSION >= 4:
@@ -73,10 +73,10 @@ class Dialog(Window):
 
         if default_button:
             if GTK_API_VERSION >= 4:
-                window.set_default_widget(default_button)  # pylint: disable=no-member
+                widget.set_default_widget(default_button)  # pylint: disable=no-member
             else:
-                default_button.set_can_default(True)            # pylint: disable=no-member
-                window.set_default(default_button)         # pylint: disable=no-member
+                default_button.set_can_default(True)       # pylint: disable=no-member
+                widget.set_default(default_button)         # pylint: disable=no-member
 
         self.set_title(title)
         self._set_dialog_properties()
@@ -238,24 +238,24 @@ class MessageDialog(Window):
                 parent = active_dialog
                 break
 
-        window = Gtk.MessageDialog(
+        widget = Gtk.MessageDialog(
             transient_for=parent.widget if parent else None, destroy_with_parent=True, message_type=message_type,
             default_width=width, text=title, secondary_text=message
         )
-        super().__init__(window)
-        window.connect("response", self.on_response, callback, callback_data)
+        super().__init__(widget=widget)
+        widget.connect("response", self.on_response, callback, callback_data)
 
         if parent:
             # Only make dialog modal when parent is visible to prevent input/focus issues
-            window.set_modal(parent.is_visible())
+            widget.set_modal(parent.is_visible())
 
         if not buttons:
             buttons = [(_("Close"), Gtk.ResponseType.CLOSE)]
 
         for button_label, response_type in buttons:
-            window.add_button(button_label, response_type)
+            widget.add_button(button_label, response_type)
 
-        self.container = window.get_message_area()
+        self.container = widget.get_message_area()
 
         if GTK_API_VERSION >= 4:
             label = self.container.get_last_child()
@@ -285,7 +285,7 @@ class MessageDialog(Window):
         else:
             self.container.add(frame)
 
-    def on_response(self, dialog, response_id, callback, callback_data):
+    def on_response(self, _widget, response_id, callback, callback_data):
 
         if self not in Window.active_dialogs:
             return
@@ -296,7 +296,7 @@ class MessageDialog(Window):
                                             Gtk.ResponseType.DELETE_EVENT):
             callback(self, response_id, callback_data)
 
-        dialog.close()
+        self.widget.close()
 
     def show(self):
 
@@ -681,10 +681,9 @@ class PluginSettingsDialog(Dialog):
                 self._add_file_option(
                     option_name, option_value, description, file_chooser_type=data.get("chooser"))
 
-    @staticmethod
-    def on_add_response(dialog, _response_id, treeview):
+    def on_add_response(self, window, _response_id, treeview):
 
-        value = dialog.get_entry_value()
+        value = window.get_entry_value()
 
         if not value:
             return
@@ -700,10 +699,9 @@ class PluginSettingsDialog(Dialog):
             callback_data=treeview
         ).show()
 
-    @staticmethod
-    def on_edit_response(dialog, _response_id, data):
+    def on_edit_response(self, window, _response_id, data):
 
-        value = dialog.get_entry_value()
+        value = window.get_entry_value()
 
         if not value:
             return
@@ -725,8 +723,7 @@ class PluginSettingsDialog(Dialog):
             ).show()
             return
 
-    @staticmethod
-    def on_remove(_widget, treeview):
+    def on_remove(self, _widget, treeview):
         for iterator in reversed(treeview.get_selected_rows()):
             treeview.remove_row(iterator)
 
