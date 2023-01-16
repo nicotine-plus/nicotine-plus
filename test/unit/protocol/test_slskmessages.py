@@ -24,9 +24,9 @@ from pynicotine.slskmessages import ChangePassword
 from pynicotine.slskmessages import FileSearch
 from pynicotine.slskmessages import GetPeerAddress
 from pynicotine.slskmessages import GetUserStatus
-from pynicotine.slskmessages import JoinPublicRoom
+from pynicotine.slskmessages import JoinGlobalRoom
 from pynicotine.slskmessages import JoinRoom
-from pynicotine.slskmessages import LeavePublicRoom
+from pynicotine.slskmessages import LeaveGlobalRoom
 from pynicotine.slskmessages import Login
 from pynicotine.slskmessages import NotifyPrivileges
 from pynicotine.slskmessages import PrivateRoomAddUser
@@ -228,11 +228,11 @@ class AckNotifyPrivilegesMessageTest(TestCase):
             message)
 
 
-class JoinPublicRoomMessageTest(TestCase):
+class JoinGlobalRoomMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
-        obj = JoinPublicRoom()
+        obj = JoinGlobalRoom()
 
         # Act
         message = obj.make_network_message()
@@ -243,11 +243,11 @@ class JoinPublicRoomMessageTest(TestCase):
             message)
 
 
-class LeavePublicRoomMessageTest(TestCase):
+class LeaveGlobalRoomMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
-        obj = LeavePublicRoom()
+        obj = LeaveGlobalRoom()
 
         # Act
         message = obj.make_network_message()
@@ -258,7 +258,7 @@ class LeavePublicRoomMessageTest(TestCase):
             message)
 
 
-class PublicRoomMessageMessageTest(TestCase):
+class GlobalRoomMessageMessageTest(TestCase):
     ...
 
 

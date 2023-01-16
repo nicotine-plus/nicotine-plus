@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on November 29, 2022
+Last updated on January 16, 2023
 
 Since the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify or extend the protocol in ways that negatively impact the network.
 
@@ -250,9 +250,9 @@ but it handles the protocol well enough (and can be modified).
 | 146  | [Private Room Operator Removed](#server-code-146) |            |
 | 148  | [Private Room Owned](#server-code-148)            |            |
 | 149  | [Message Users](#server-code-149)                 |            |
-| 150  | [Ask Public Chat](#server-code-150)               | Deprecated |
-| 151  | [Stop Public Chat](#server-code-151)              | Deprecated |
-| 152  | [Public Chat Message](#server-code-152)           | Deprecated |
+| 150  | [Join Global Room](#server-code-150)              | Deprecated |
+| 151  | [Leave Global Room](#server-code-151)             | Deprecated |
+| 152  | [Global Room Message](#server-code-152)           | Deprecated |
 | 153  | [Related Searches](#server-code-153)              | Obsolete   |
 | 1001 | [Can't Connect To Peer](#server-code-1001)        |            |
 | 1003 | [Can't Create Room](#server-code-1003)            |            |
@@ -1756,7 +1756,7 @@ Sends a broadcast private message to the given list of online users.
 
 ## Server Code 150
 
-### JoinPublicRoom
+### JoinGlobalRoom
 
 **DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
@@ -1771,7 +1771,7 @@ We ask the server to send us messages from all public rooms, also known as publi
 
 ## Server Code 151
 
-### LeavePublicRoom
+### LeaveGlobalRoom
 
 **DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
@@ -1786,7 +1786,7 @@ We ask the server to stop sending us messages from all public rooms, also known 
 
 ## Server Code 152
 
-### PublicRoomMessage
+### GlobalRoomMessage
 
 **DEPRECATED, used in Soulseek NS but not SoulseekQt**
 

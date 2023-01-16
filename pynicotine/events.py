@@ -74,6 +74,7 @@ EVENT_NAMES = {
     # Chatrooms
     "clear-room-messages",
     "echo-room-message",
+    "global-room-message",
     "join-room",
     "leave-room",
     "private-room-add-operator",
@@ -88,7 +89,6 @@ EVENT_NAMES = {
     "private-room-removed",
     "private-room-toggle",
     "private-room-users",
-    "public-room-message",
     "remove-room",
     "room-completion-list",
     "room-list",

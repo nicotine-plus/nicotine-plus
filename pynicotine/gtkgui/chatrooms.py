@@ -90,9 +90,9 @@ class ChatRooms(IconNotebook):
         for event_name, callback in (
             ("clear-room-messages", self.clear_room_messages),
             ("echo-room-message", self.echo_room_message),
+            ("global-room-message", self.global_room_message),
             ("join-room", self.join_room),
             ("private-room-added", self.private_room_added),
-            ("public-room-message", self.public_room_message),
             ("remove-room", self.remove_room),
             ("room-completion-list", self.set_completion_list),
             ("room-list", self.room_list),
@@ -243,7 +243,7 @@ class ChatRooms(IconNotebook):
         self.remove_page(page.container)
         del self.pages[room]
 
-        if room == "Public ":
+        if room == core.chatrooms.GLOBAL_ROOM_NAME:
             self.roomlist.toggle_public_feed(False)
         else:
             self.window.room_search_combobox.remove_all()
@@ -271,7 +271,7 @@ class ChatRooms(IconNotebook):
             # Did not auto-join room, switch to tab
             core.chatrooms.show_room(msg.room)
 
-        if msg.room == "Public ":
+        if msg.room == core.chatrooms.GLOBAL_ROOM_NAME:
             self.roomlist.toggle_public_feed(True)
         else:
             self.window.room_search_combobox.append_text(msg.room)
@@ -341,12 +341,12 @@ class ChatRooms(IconNotebook):
         if page is not None:
             page.say_chat_room(msg)
 
-    def public_room_message(self, msg):
+    def global_room_message(self, msg):
 
-        page = self.pages.get("Public ")
+        page = self.pages.get(core.chatrooms.GLOBAL_ROOM_NAME)
 
         if page is not None:
-            page.say_chat_room(msg, public=True)
+            page.say_chat_room(msg, is_global=True)
 
     def toggle_chat_buttons(self):
         for page in self.pages.values():
@@ -597,7 +597,7 @@ class ChatRoom:
 
     def setup_public_feed(self):
 
-        if self.room != "Public ":
+        if self.room != core.chatrooms.GLOBAL_ROOM_NAME:
             return
 
         for widget in (self.activity_container, self.users_container, self.chat_entry,
@@ -802,7 +802,7 @@ class ChatRoom:
     def ticker_remove(self, msg):
         self.tickers.remove_ticker(msg.user)
 
-    def show_notification(self, login, room, user, text, tag, public=False):
+    def show_notification(self, login, room, user, text, tag, is_global=False):
 
         if user == login:
             return
@@ -811,7 +811,7 @@ class ChatRoom:
 
         self.chatrooms.request_tab_hilite(self.container, mentioned)
 
-        if public and room in core.chatrooms.joined_rooms:
+        if is_global and room in core.chatrooms.joined_rooms:
             # Don't show notifications about the Public feed that's duplicated in an open tab
             return
 
@@ -835,8 +835,8 @@ class ChatRoom:
             self.window.application.notifications.add("rooms", user, room)
             return
 
-        if not public and config.sections["notifications"]["notification_popup_chatroom"]:
-            # Don't show notifications for "Public " room, they're too noisy
+        if not is_global and config.sections["notifications"]["notification_popup_chatroom"]:
+            # Don't show notifications for public feed room, they're too noisy
             core.notifications.show_chatroom_notification(
                 room, text,
                 title=_("Message by %(user)s in Room %(room)s") % {"user": user, "room": room}
@@ -862,7 +862,7 @@ class ChatRoom:
 
         return start if whole else -1
 
-    def say_chat_room(self, msg, public=False):
+    def say_chat_room(self, msg, is_global=False):
 
         user = msg.user
         login_username = core.login_username
@@ -884,7 +884,7 @@ class ChatRoom:
             line = f"[{user}] {text}"
             speech = text
 
-        if public:
+        if is_global:
             line = f"{room} | {line}"
 
         line = "\n-- ".join(line.split("\n"))
@@ -908,7 +908,7 @@ class ChatRoom:
                 username=user, usertag=usertag, timestamp_format=timestamp_format
             )
 
-        self.show_notification(login_username, room, user, speech, tag, public)
+        self.show_notification(login_username, room, user, speech, tag, is_global)
 
         if self.log_toggle.get_active():
             log.write_log_file(
@@ -1175,7 +1175,7 @@ class ChatRoom:
 
     def on_leave_room(self, *_args):
 
-        if self.room == "Public ":
+        if self.room == core.chatrooms.GLOBAL_ROOM_NAME:
             self.chatrooms.roomlist.public_feed_toggle.set_active(False)
             return
 

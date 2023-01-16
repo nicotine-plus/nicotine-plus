@@ -213,11 +213,11 @@ class RoomList(Popover):
             return
 
         if self.public_feed_toggle.get_active():
-            core.chatrooms.show_room("Public ")
+            core.chatrooms.show_room(core.chatrooms.GLOBAL_ROOM_NAME)
             self.close(use_transition=False)
             return
 
-        core.chatrooms.remove_room("Public ")
+        core.chatrooms.remove_room(core.chatrooms.GLOBAL_ROOM_NAME)
 
     def on_popup_private_room_disown(self, *_args):
         core.chatrooms.request_private_room_disown(self.popup_room)

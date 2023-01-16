@@ -2203,7 +2203,7 @@ class MessageUsers(ServerMessage):
         return msg
 
 
-class JoinPublicRoom(ServerMessage):
+class JoinGlobalRoom(ServerMessage):
     """ Server code: 150 """
     """ We ask the server to send us messages from all public rooms, also
     known as public room feed. """
@@ -2215,7 +2215,7 @@ class JoinPublicRoom(ServerMessage):
         return b""
 
 
-class LeavePublicRoom(ServerMessage):
+class LeaveGlobalRoom(ServerMessage):
     """ Server code: 151 """
     """ We ask the server to stop sending us messages from all public rooms,
     also known as public room feed. """
@@ -2227,7 +2227,7 @@ class LeavePublicRoom(ServerMessage):
         return b""
 
 
-class PublicRoomMessage(ServerMessage):
+class GlobalRoomMessage(ServerMessage):
     """ Server code: 152 """
     """ The server sends this when a new message has been written in the public
     room feed (every single line written in every public room). """
@@ -3393,6 +3393,7 @@ NETWORK_MESSAGE_EVENTS = {
     GetUserStats: "user-stats",
     GetUserStatus: "user-status",
     GlobalRecommendations: "global-recommendations",
+    GlobalRoomMessage: "global-room-message",
     ItemRecommendations: "item-recommendations",
     ItemSimilarUsers: "item-similar-users",
     JoinRoom: "join-room",
@@ -3414,7 +3415,6 @@ NETWORK_MESSAGE_EVENTS = {
     PrivateRoomToggle: "private-room-toggle",
     PrivateRoomUsers: "private-room-users",
     PrivilegedUsers: "privileged-users",
-    PublicRoomMessage: "public-room-message",
     QueueUpload: "queue-upload",
     Recommendations: "recommendations",
     RoomList: "room-list",
@@ -3537,9 +3537,9 @@ SERVER_MESSAGE_CODES = {
     PrivateRoomOperatorRemoved: 146,
     PrivateRoomOwned: 148,
     MessageUsers: 149,
-    JoinPublicRoom: 150,          # Deprecated
-    LeavePublicRoom: 151,         # Deprecated
-    PublicRoomMessage: 152,       # Deprecated
+    JoinGlobalRoom: 150,          # Deprecated
+    LeaveGlobalRoom: 151,         # Deprecated
+    GlobalRoomMessage: 152,       # Deprecated
     RelatedSearch: 153,           # Obsolete
     CantConnectToPeer: 1001,
     CantCreateRoom: 1003
