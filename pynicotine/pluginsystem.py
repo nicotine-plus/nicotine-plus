@@ -837,10 +837,7 @@ class PluginHandler:
         for module, plugin in self.enabled_plugins.items():
             try:
                 if hasattr(plugin, function_name_camelcase):
-                    plugin.log("%(old_function)s is deprecated, please use %(new_function)s" % {
-                        "old_function": function_name_camelcase,
-                        "new_function": function_name
-                    })
+                    plugin.log(f"{function_name_camelcase} is deprecated, please use {function_name}")
                     return_value = getattr(plugin, function_name_camelcase)(*args)
                 else:
                     return_value = getattr(plugin, function_name)(*args)

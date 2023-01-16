@@ -164,7 +164,7 @@ class Logger:
         try:
             log_file.handle.close()
 
-        except IOError as error:
+        except OSError as error:
             self.add_debug('Failed to close log file "%(filename)s": %(error)s', {
                 "filename": log_file.path,
                 "error": error
