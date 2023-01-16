@@ -625,7 +625,7 @@ class UserInfo:
         core.userinfo.show_user(self.user, refresh=True)
 
     def on_focus(self, *_args):
-        self.description_view.textview.grab_focus()
+        self.description_view.widget.grab_focus()
 
     def on_close(self, *_args):
         core.userinfo.remove_user(self.user)

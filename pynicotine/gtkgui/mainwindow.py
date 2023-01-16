@@ -189,9 +189,9 @@ class MainWindow(Window):
             self.userlist_toolbar,
             self.userlist_toolbar_contents,
             self.vertical_paned,
-            self.window
+            self.windows
         ) = ui_template.widgets
-        super().__init__(self.window)
+        super().__init__(self.windows)
 
         self.header_bar.pack_end(self.header_end)
 
@@ -222,7 +222,7 @@ class MainWindow(Window):
         """ Logging """
 
         self.log_view = TextView(self.log_view, auto_scroll=True, parse_urls=False)
-        self.log_search_bar = TextSearchBar(self.log_view.textview, self.log_search_bar, self.log_search_entry,
+        self.log_search_bar = TextSearchBar(self.log_view.widget, self.log_search_bar, self.log_search_entry,
                                             controller_widget=self.log_container)
 
         self.create_log_context_menu()
@@ -298,10 +298,10 @@ class MainWindow(Window):
 
         # Set main window title and icon
         self.set_title(config.application_name)
-        self.window.set_default_icon_name(config.application_id)
+        self.widget.set_default_icon_name(config.application_id)
 
         # Set main window size
-        self.window.set_default_size(width=config.sections["ui"]["width"],
+        self.widget.set_default_size(width=config.sections["ui"]["width"],
                                      height=config.sections["ui"]["height"])
 
         # Set main window position
@@ -310,46 +310,46 @@ class MainWindow(Window):
             y_pos = config.sections["ui"]["yposition"]
 
             if x_pos == -1 and y_pos == -1:
-                self.window.set_position(Gtk.WindowPosition.CENTER)
+                self.widget.set_position(Gtk.WindowPosition.CENTER)
             else:
-                self.window.move(x_pos, y_pos)
+                self.widget.move(x_pos, y_pos)
 
         # Maximize main window if necessary
         if config.sections["ui"]["maximized"]:
-            self.window.maximize()
+            self.widget.maximize()
 
         # Auto-away mode
         if GTK_API_VERSION >= 4:
             self.gesture_click = Gtk.GestureClick()
-            self.window.add_controller(self.gesture_click)
+            self.widget.add_controller(self.gesture_click)
 
             key_controller = Gtk.EventControllerKey()
             key_controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
             key_controller.connect("key-released", self.on_cancel_auto_away)
-            self.window.add_controller(key_controller)
+            self.widget.add_controller(key_controller)
 
         else:
-            self.gesture_click = Gtk.GestureMultiPress(widget=self.window)
-            self.window.connect("key-release-event", self.on_cancel_auto_away)
+            self.gesture_click = Gtk.GestureMultiPress(widget=self.widget)
+            self.widget.connect("key-release-event", self.on_cancel_auto_away)
 
         self.gesture_click.set_button(0)
         self.gesture_click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
         self.gesture_click.connect("pressed", self.on_cancel_auto_away)
 
         # Clear notifications when main window is focused
-        self.window.connect("notify::is-active", self.on_window_active_changed)
-        self.window.connect("notify::visible", self.on_window_visible_changed)
+        self.widget.connect("notify::is-active", self.on_window_active_changed)
+        self.widget.connect("notify::visible", self.on_window_visible_changed)
 
         # System window close (X)
         if GTK_API_VERSION >= 4:
-            self.window.connect("close-request", self.on_close_request)
+            self.widget.connect("close-request", self.on_close_request)
         else:
-            self.window.connect("delete-event", self.on_close_request)
+            self.widget.connect("delete-event", self.on_close_request)
 
-        self.application.add_window(self.window)
+        self.application.add_window(self.widget)
 
     def set_help_overlay(self, help_overlay):
-        self.window.set_help_overlay(help_overlay)
+        self.widget.set_help_overlay(help_overlay)
 
     """ Window State """
 
@@ -398,11 +398,11 @@ class MainWindow(Window):
 
     def show(self):
 
-        self.window.present()
+        self.widget.present()
 
         if GTK_API_VERSION == 3:
             # Fix for Windows where minimized window is not shown when unhiding from tray
-            self.window.deiconify()
+            self.widget.deiconify()
 
     """ Connection """
 
@@ -579,10 +579,10 @@ class MainWindow(Window):
     """ Actions """
 
     def add_action(self, action):
-        self.window.add_action(action)
+        self.widget.add_action(action)
 
     def lookup_action(self, action_name):
-        return self.window.lookup_action(action_name)
+        return self.widget.lookup_action(action_name)
 
     def set_up_actions(self):
 
@@ -814,15 +814,15 @@ class MainWindow(Window):
     def show_header_bar(self, page_id):
         """ Set a headerbar for the main window (client side decorations enabled) """
 
-        if self.window.get_titlebar() != self.header_bar:
-            self.window.set_titlebar(self.header_bar)
-            self.window.set_show_menubar(False)
+        if self.widget.get_titlebar() != self.header_bar:
+            self.widget.set_titlebar(self.header_bar)
+            self.widget.set_show_menubar(False)
 
             if GTK_API_VERSION == 3:
                 self.lookup_action("main-menu").set_enabled(True)
 
                 # Avoid "Untitled window" in certain desktop environments
-                self.header_bar.set_title(self.window.get_title())
+                self.header_bar.set_title(self.widget.get_title())
 
         title_widget = getattr(self, f"{page_id}_title")
         title_widget.get_parent().remove(title_widget)
@@ -864,18 +864,18 @@ class MainWindow(Window):
     def show_toolbar(self, page_id):
         """ Show the non-CSD toolbar """
 
-        if not self.window.get_show_menubar():
-            self.window.set_show_menubar(True)
+        if not self.widget.get_show_menubar():
+            self.widget.set_show_menubar(True)
             self.header_menu.get_popover().set_visible(False)
 
             if GTK_API_VERSION == 3:
                 # Don't override builtin accelerator for menu bar
                 self.lookup_action("main-menu").set_enabled(False)
 
-            if self.window.get_titlebar():
-                self.window.unrealize()
-                self.window.set_titlebar(None)
-                self.window.map()
+            if self.widget.get_titlebar():
+                self.widget.unrealize()
+                self.widget.set_titlebar(None)
+                self.widget.map()
 
         toolbar = getattr(self, f"{page_id}_toolbar")
         toolbar.set_visible(True)
@@ -1281,7 +1281,7 @@ class MainWindow(Window):
             ("$" + _("[Debug] Miscellaneous"), "app.log-miscellaneous"),
         )
 
-        PopupMenu(self.application, self.log_view.textview, self.on_popup_menu_log).add_items(
+        PopupMenu(self.application, self.log_view.widget, self.on_popup_menu_log).add_items(
             ("#" + _("_Find…"), self.on_find_log_window),
             ("", None),
             ("#" + _("_Copy"), self.log_view.on_copy_text),
@@ -1434,7 +1434,7 @@ class MainWindow(Window):
             dialog.close()
 
         # Run in Background
-        self.window.set_visible(False)
+        self.widget.set_visible(False)
 
         # Save config, in case application is killed later
         config.write_configuration()

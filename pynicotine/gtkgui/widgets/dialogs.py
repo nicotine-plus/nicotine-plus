@@ -84,7 +84,7 @@ class Dialog(Window):
     def _init_header_bar(self, buttons_start=(), buttons_end=(), show_title_buttons=True):
 
         header_bar = Gtk.HeaderBar()
-        self.window.set_titlebar(header_bar)
+        self.widget.set_titlebar(header_bar)
 
         if GTK_API_VERSION >= 4:
             header_bar.set_show_title_buttons(show_title_buttons)  # pylint: disable=no-member
@@ -151,29 +151,29 @@ class Dialog(Window):
             return False
 
         # Hide the dialog
-        self.window.set_visible(False)
+        self.widget.set_visible(False)
 
         # "Soft-delete" the dialog. This is necessary to prevent the dialog from
         # appearing in window peek on Windows
-        self.window.unrealize()
+        self.widget.unrealize()
 
         return True
 
     def _set_dialog_properties(self):
 
         if GTK_API_VERSION >= 4:
-            self.window.connect("close-request", self._on_close_request)
+            self.widget.connect("close-request", self._on_close_request)
         else:
-            self.window.connect("delete-event", self._on_close_request)
+            self.widget.connect("delete-event", self._on_close_request)
 
-        self.window.connect("show", self._on_show)
+        self.widget.connect("show", self._on_show)
 
         if self.parent:
-            self.window.set_transient_for(self.parent.window)
+            self.widget.set_transient_for(self.parent.widget)
 
     def _resize_dialog(self):
 
-        if self.window.get_visible():
+        if self.widget.get_visible():
             return
 
         dialog_width = self.default_width
@@ -191,7 +191,7 @@ class Dialog(Window):
         if main_window_height and dialog_height > main_window_height:
             dialog_height = main_window_height - 30
 
-        self.window.set_default_size(dialog_width, dialog_height)
+        self.widget.set_default_size(dialog_width, dialog_height)
 
     def _focus_default_button(self):
 
@@ -209,7 +209,7 @@ class Dialog(Window):
             Window.active_dialogs.append(self)
 
         # Check if dialog should be modal
-        self.window.set_modal(self.modal and self.parent.is_visible())
+        self.widget.set_modal(self.modal and self.parent.is_visible())
 
         # Shrink the dialog if it's larger than the main window
         self._resize_dialog()
@@ -218,10 +218,10 @@ class Dialog(Window):
         self._focus_default_button()
 
         # Show the dialog
-        self.window.present()
+        self.widget.present()
 
     def close(self, *_args):
-        self.window.close()
+        self.widget.close()
 
 
 """ Message Dialogs """
@@ -239,7 +239,7 @@ class MessageDialog(Window):
                 break
 
         window = Gtk.MessageDialog(
-            transient_for=parent.window if parent else None, destroy_with_parent=True, message_type=message_type,
+            transient_for=parent.widget if parent else None, destroy_with_parent=True, message_type=message_type,
             default_width=width, text=title, secondary_text=message
         )
         super().__init__(window)
@@ -303,10 +303,10 @@ class MessageDialog(Window):
         if self not in Window.active_dialogs:
             Window.active_dialogs.append(self)
 
-        self.window.present()
+        self.widget.present()
 
     def close(self):
-        self.window.close()
+        self.widget.close()
 
 
 class EntryDialog(MessageDialog):
@@ -377,7 +377,7 @@ class EntryDialog(MessageDialog):
         return entry
 
     def on_activate_entry(self, *_args):
-        self.window.response(Gtk.ResponseType.OK)
+        self.widget.response(Gtk.ResponseType.OK)
 
     def get_entry_value(self):
         return self.entry.get_text()
@@ -634,7 +634,7 @@ class PluginSettingsDialog(Dialog):
         button_widget = Gtk.Button(hexpand=True, valign=Gtk.Align.CENTER, visible=True)
         label = self._generate_widget_container(description, button_widget)
 
-        self.option_widgets[option_name] = FileChooserButton(button_widget, self.window, file_chooser_type)
+        self.option_widgets[option_name] = FileChooserButton(button_widget, self.widget, file_chooser_type)
         label.set_mnemonic_widget(button_widget)
 
         self.application.preferences.set_widget(self.option_widgets[option_name], option_value)

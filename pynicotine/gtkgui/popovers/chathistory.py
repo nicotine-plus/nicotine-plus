@@ -62,13 +62,13 @@ class ChatHistory(Popover):
         )
         self.list_view.set_search_entry(self.search_entry)
 
-        Accelerator("<Primary>f", self.popover, self.on_search_accelerator)
+        Accelerator("<Primary>f", self.widget, self.on_search_accelerator)
         CompletionEntry(window.private_entry, self.list_view.model, column=0)
 
         if GTK_API_VERSION >= 4:
             add_css_class(widget=window.private_history_button.get_first_child(), css_class="arrow-button")
 
-        window.private_history_button.set_popover(self.popover)
+        window.private_history_button.set_popover(self.widget)
         self.load_users()
 
     def load_user(self, file_path):

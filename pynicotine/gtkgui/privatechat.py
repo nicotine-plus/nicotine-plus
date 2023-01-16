@@ -93,8 +93,8 @@ class PrivateChats(IconNotebook):
             if self.command_help is None:
                 self.command_help = PrivateChatCommands(self.window)
 
-            self.command_help.popover.unparent()
-            tab.help_button.set_popover(self.command_help.popover)
+            self.command_help.widget.unparent()
+            tab.help_button.set_popover(self.command_help.widget)
 
             if not tab.loaded:
                 tab.load()
@@ -249,7 +249,7 @@ class PrivateChat:
         self.chat_view = TextView(self.chat_view)
 
         # Text Search
-        self.search_bar = TextSearchBar(self.chat_view.textview, self.search_bar, self.search_entry,
+        self.search_bar = TextSearchBar(self.chat_view.widget, self.search_bar, self.search_entry,
                                         controller_widget=self.container, focus_widget=self.chat_entry)
 
         # Chat Entry
@@ -260,7 +260,7 @@ class PrivateChat:
 
         self.toggle_chat_buttons()
 
-        self.popup_menu_user_chat = UserPopupMenu(self.window.application, self.chat_view.textview,
+        self.popup_menu_user_chat = UserPopupMenu(self.window.application, self.chat_view.widget,
                                                   connect_events=False)
         self.popup_menu_user_tab = UserPopupMenu(self.window.application, None, self.on_popup_menu_user)
 
@@ -272,7 +272,7 @@ class PrivateChat:
                 ("#" + _("_Close Tab"), self.on_close)
             )
 
-        self.popup_menu = PopupMenu(self.window.application, self.chat_view.textview, self.on_popup_menu_chat)
+        self.popup_menu = PopupMenu(self.window.application, self.chat_view.widget, self.on_popup_menu_chat)
         self.popup_menu.add_items(
             ("#" + _("Find…"), self.on_find_chat_log),
             ("", None),

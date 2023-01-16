@@ -1744,7 +1744,7 @@ class SearchesPage:
         self.search_required = False
 
         self.filter_help = SearchFilterHelp(application.preferences)
-        self.ShowSearchHelp.set_popover(self.filter_help.popover)
+        self.ShowSearchHelp.set_popover(self.filter_help.widget)
 
         self.options = {
             "searches": {
@@ -2355,7 +2355,7 @@ class Preferences(Dialog):
             show_title_buttons=False
         )
 
-        add_css_class(self.window, "preferences-border")
+        add_css_class(self.widget, "preferences-border")
 
         if GTK_API_VERSION == 3:
             # Scroll to focused widgets

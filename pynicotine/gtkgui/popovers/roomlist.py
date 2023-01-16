@@ -90,13 +90,13 @@ class RoomList(Popover):
         self.private_room_toggle.set_active(config.sections["server"]["private_chatrooms"])
         self.private_room_toggle.connect("toggled", self.on_toggle_accept_private_room)
 
-        Accelerator("<Primary>f", self.popover, self.on_search_accelerator)
+        Accelerator("<Primary>f", self.widget, self.on_search_accelerator)
         CompletionEntry(window.chatrooms_entry, self.room_model, column=0)
 
         if GTK_API_VERSION >= 4:
             add_css_class(widget=window.room_list_button.get_first_child(), css_class="arrow-button")
 
-        window.room_list_button.set_popover(self.popover)
+        window.room_list_button.set_popover(self.widget)
 
     @staticmethod
     def get_selected_room(treeview):

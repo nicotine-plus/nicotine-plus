@@ -42,7 +42,7 @@ class TextView:
 
     def __init__(self, textview, auto_scroll=False, parse_urls=True):
 
-        self.textview = textview
+        self.widget = textview
         self.textbuffer = textview.get_buffer()
         self.scrollable = textview.get_ancestor(Gtk.ScrolledWindow)
         scrollable_container = self.scrollable.get_ancestor(Gtk.Box)
@@ -66,7 +66,7 @@ class TextView:
             self.gesture_click_secondary = Gtk.GestureClick()
             scrollable_container.add_controller(self.gesture_click_secondary)
 
-            self.cursor_window = self.textview
+            self.cursor_window = self.widget
 
             self.motion_controller = Gtk.EventControllerMotion()
             self.motion_controller.connect("motion", self.on_move_cursor)
@@ -167,8 +167,8 @@ class TextView:
 
     def get_tags_for_pos(self, pos_x, pos_y):
 
-        buf_x, buf_y = self.textview.window_to_buffer_coords(Gtk.TextWindowType.WIDGET, pos_x, pos_y)
-        over_text, iterator, _trailing = self.textview.get_iter_at_position(buf_x, buf_y)
+        buf_x, buf_y = self.widget.window_to_buffer_coords(Gtk.TextWindowType.WIDGET, pos_x, pos_y)
+        over_text, iterator, _trailing = self.widget.get_iter_at_position(buf_x, buf_y)
 
         if not over_text:
             # Iterators are returned for whitespace after the last character, avoid accidental URL clicks
@@ -189,7 +189,7 @@ class TextView:
         cursor = self.TEXT_CURSOR
 
         if self.cursor_window is None:
-            self.cursor_window = self.textview.get_window(Gtk.TextWindowType.TEXT)
+            self.cursor_window = self.widget.get_window(Gtk.TextWindowType.TEXT)
 
         for tag in self.get_tags_for_pos(pos_x, pos_y):
             if hasattr(tag, "url") or hasattr(tag, "username"):
@@ -282,14 +282,14 @@ class TextView:
         self.update_cursor(event.x, event.y)
 
     def on_copy_text(self, *_args):
-        self.textview.emit("copy-clipboard")
+        self.widget.emit("copy-clipboard")
 
     def on_copy_link(self, *_args):
         copy_text(self.get_url_for_current_pos())
 
     def on_copy_all_text(self, *_args):
 
-        textbuffer = self.textview.get_buffer()
+        textbuffer = self.widget.get_buffer()
         start_iter, end_iter = textbuffer.get_bounds()
         text = textbuffer.get_text(start_iter, end_iter, True)
 

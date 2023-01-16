@@ -37,7 +37,7 @@ class ChatEntry:
     def __init__(self, application, entry, completion, entity, message_class, send_message, is_chatroom=False):
 
         self.application = application
-        self.entry = entry
+        self.widget = entry
         self.completion = completion
         self.entity = entity
         self.message_class = message_class
@@ -50,7 +50,7 @@ class ChatEntry:
 
         # Emoji Picker (disable on Windows and macOS for now until we render emoji properly there)
         if sys.platform not in ("win32", "darwin"):
-            self.entry.set_property("show-emoji-icon", True)
+            self.widget.set_property("show-emoji-icon", True)
 
         # Spell Check
         if config.sections["ui"]["spellcheck"]:
@@ -69,7 +69,7 @@ class ChatEntry:
         if core.user_status == UserStatus.OFFLINE:
             return
 
-        text = self.entry.get_text()
+        text = self.widget.get_text()
 
         if not text:
             return
@@ -80,7 +80,7 @@ class ChatEntry:
         if not is_single_slash_cmd or text.startswith("/me"):
             # Regular chat message (/me is sent as plain text)
 
-            self.entry.set_text("")
+            self.widget.set_text("")
 
             if is_double_slash_cmd:
                 # Remove first slash and send the rest of the command as plain text
@@ -93,7 +93,7 @@ class ChatEntry:
         cmd = cmd_split[0]
 
         # Clear chat entry
-        self.entry.set_text("")
+        self.widget.set_text("")
 
         if len(cmd_split) == 2:
             args = arg_self = cmd_split[1]
@@ -461,7 +461,6 @@ class CompletionEntry:
 
     def __init__(self, entry, model, column=0):
 
-        self.entry = entry
         self.model = model
         self.column = column
 

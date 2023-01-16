@@ -155,8 +155,8 @@ class ChatRooms(IconNotebook):
             if self.command_help is None:
                 self.command_help = ChatRoomCommands(self.window)
 
-            self.command_help.popover.unparent()
-            tab.help_button.set_popover(self.command_help.popover)
+            self.command_help.widget.unparent()
+            tab.help_button.set_popover(self.command_help.widget)
 
             if not tab.loaded:
                 tab.load()
@@ -449,11 +449,11 @@ class ChatRoom:
         self.chat_view = TextView(self.chat_view)
 
         # Event Text Search
-        self.activity_search_bar = TextSearchBar(self.activity_view.textview, self.activity_search_bar,
+        self.activity_search_bar = TextSearchBar(self.activity_view.widget, self.activity_search_bar,
                                                  self.activity_search_entry)
 
         # Chat Text Search
-        self.chat_search_bar = TextSearchBar(self.chat_view.textview, self.chat_search_bar, self.chat_search_entry,
+        self.chat_search_bar = TextSearchBar(self.chat_view.widget, self.chat_search_bar, self.chat_search_entry,
                                              controller_widget=self.chat_container, focus_widget=self.chat_entry)
 
         # Chat Entry
@@ -515,7 +515,7 @@ class ChatRoom:
         self.popup_menu_private_rooms_chat = UserPopupMenu(self.window.application)
         self.popup_menu_private_rooms_list = UserPopupMenu(self.window.application)
 
-        self.popup_menu_user_chat = UserPopupMenu(self.window.application, self.chat_view.textview,
+        self.popup_menu_user_chat = UserPopupMenu(self.window.application, self.chat_view.widget,
                                                   connect_events=False)
         self.popup_menu_user_list = UserPopupMenu(self.window.application, self.users_list_view,
                                                   self.on_popup_menu_user)
@@ -531,7 +531,7 @@ class ChatRoom:
                 (">" + _("Private Rooms"), menu_private_rooms)
             )
 
-        self.popup_menu_activity_view = PopupMenu(self.window.application, self.activity_view.textview,
+        self.popup_menu_activity_view = PopupMenu(self.window.application, self.activity_view.widget,
                                                   self.on_popup_menu_log)
         self.popup_menu_activity_view.add_items(
             ("#" + _("Find…"), self.on_find_activity_log),
@@ -544,7 +544,7 @@ class ChatRoom:
             ("#" + _("_Leave Room"), self.on_leave_room)
         )
 
-        self.popup_menu_chat_view = PopupMenu(self.window.application, self.chat_view.textview, self.on_popup_menu_chat)
+        self.popup_menu_chat_view = PopupMenu(self.window.application, self.chat_view.widget, self.on_popup_menu_chat)
         self.popup_menu_chat_view.add_items(
             ("#" + _("Find…"), self.on_find_room_log),
             ("", None),
