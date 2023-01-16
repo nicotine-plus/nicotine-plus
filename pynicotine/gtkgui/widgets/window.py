@@ -69,8 +69,18 @@ class Window:
         _width, height = self.window.get_size()
         return height
 
+    def get_position(self):
+
+        if GTK_API_VERSION >= 4:
+            return None
+
+        return self.window.get_position()
+
     def is_active(self):
         return self.window.is_active()
+
+    def is_maximized(self):
+        return self.window.is_maximized()
 
     def is_visible(self):
         return self.window.get_visible()
@@ -108,9 +118,9 @@ class Window:
         if GTK_API_VERSION >= 4:
             combobox.grab_focus()
 
-    def on_focus_widget_changed(self, window, arg):
+    def on_focus_widget_changed(self, window, *_args):
 
-        widget = window.get_property(arg.name) if GTK_API_VERSION >= 4 else arg
+        widget = window.get_focus()
 
         if widget is None:
             return

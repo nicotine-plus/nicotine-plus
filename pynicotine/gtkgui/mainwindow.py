@@ -340,19 +340,11 @@ class MainWindow(Window):
         self.window.connect("notify::is-active", self.on_window_active_changed)
         self.window.connect("notify::visible", self.on_window_visible_changed)
 
-        # System window close (X) and window state
+        # System window close (X)
         if GTK_API_VERSION >= 4:
             self.window.connect("close-request", self.on_close_request)
-
-            self.window.connect("notify::default-width", self.on_window_property_changed, "width")
-            self.window.connect("notify::default-height", self.on_window_property_changed, "height")
-            self.window.connect("notify::maximized", self.on_window_property_changed, "maximized")
-
         else:
             self.window.connect("delete-event", self.on_close_request)
-
-            self.window.connect("size-allocate", self.on_window_size_changed)
-            self.window.connect("notify::is-maximized", self.on_window_property_changed, "maximized")
 
         self.application.add_window(self.window)
 
@@ -361,9 +353,11 @@ class MainWindow(Window):
 
     """ Window State """
 
-    def on_window_active_changed(self, window, param):
+    def on_window_active_changed(self, *_args):
 
-        if not window.get_property(param.name):
+        self.save_window_state()
+
+        if not self.is_active():
             return
 
         self.chatrooms.clear_notifications()
@@ -372,32 +366,35 @@ class MainWindow(Window):
 
         self.application.notifications.set_urgency_hint(False)
 
-    @staticmethod
-    def on_window_property_changed(window, param, config_property):
-        config.sections["ui"][config_property] = window.get_property(param.name)
-
-    @staticmethod
-    def on_window_size_changed(window, _allocation):
-
-        if config.sections["ui"]["maximized"]:
-            return
-
-        width, height = window.get_size()
-
-        config.sections["ui"]["width"] = width
-        config.sections["ui"]["height"] = height
-
-        x_pos, y_pos = window.get_position()
-
-        config.sections["ui"]["xposition"] = x_pos
-        config.sections["ui"]["yposition"] = y_pos
-
     def on_window_visible_changed(self, *_args):
         self.application.tray_icon.update_window_visibility()
 
     def save_columns(self, *_args):
         for page in (self.userlist, self.chatrooms, self.downloads, self.uploads):
             page.save_columns()
+
+    def save_window_state(self):
+
+        config.sections["ui"]["maximized"] = self.is_maximized()
+
+        if config.sections["ui"]["maximized"]:
+            return
+
+        width = self.get_width()
+        height = self.get_height()
+
+        config.sections["ui"]["width"] = width
+        config.sections["ui"]["height"] = height
+
+        position = self.get_position()
+
+        if position is None:
+            return
+
+        x_pos, y_pos = position
+
+        config.sections["ui"]["xposition"] = x_pos
+        config.sections["ui"]["yposition"] = y_pos
 
     def show(self):
 
