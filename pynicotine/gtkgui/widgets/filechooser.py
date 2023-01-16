@@ -49,7 +49,6 @@ class FileChooser:
             # GTK >= 4.10
             self.using_new_api = True
             self.file_chooser = Gtk.FileDialog(title=title, modal=True)
-            self.select_args = {}
 
             if select_multiple:
                 self.select_method = self.file_chooser.open_multiple
@@ -124,7 +123,7 @@ class FileChooser:
             self.file_chooser.show()
             return
 
-        self.select_method(parent=self.parent.widget, callback=self.on_finish, **self.select_args)
+        self.select_method(parent=self.parent.widget, callback=self.on_finish)
 
 
 class FolderChooser(FileChooser):
@@ -202,9 +201,10 @@ class FileChooserSave(FileChooser):
             self.file_chooser.set_current_name(initial_file)
             return
 
-        self.select_args = {"current_name": initial_file}
         self.select_method = self.file_chooser.save
         self.finish_method = self.file_chooser.save_finish
+
+        self.file_chooser.set_initial_name(initial_file)
 
 
 class FileChooserButton:
