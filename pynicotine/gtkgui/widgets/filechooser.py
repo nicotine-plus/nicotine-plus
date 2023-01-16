@@ -38,7 +38,7 @@ class FileChooser:
                  initial_folder=None, select_multiple=False):
 
         if not initial_folder:
-            initial_folder = os.path.expanduser('~')
+            initial_folder = os.path.expanduser("~")
 
         self.parent = parent
         self.callback = callback
@@ -188,7 +188,7 @@ class ImageChooser(FileChooser):
 class FileChooserSave(FileChooser):
 
     def __init__(self, parent, callback, callback_data=None, title=_("Save as…"),
-                 initial_folder=None, initial_file=''):
+                 initial_folder=None, initial_file=""):
 
         super().__init__(parent, callback, callback_data, title, initial_folder)
 

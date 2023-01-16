@@ -429,14 +429,14 @@ class ChatCompletion:
             return True
 
         if not self.midwaycompletion:
-            self.completions['completions'] = self.get_completions(text, self.completion_list)
+            self.completions["completions"] = self.get_completions(text, self.completion_list)
 
-            if self.completions['completions']:
+            if self.completions["completions"]:
                 self.midwaycompletion = True
-                self.completions['currentindex'] = -1
+                self.completions["currentindex"] = -1
                 currentnick = text
         else:
-            currentnick = self.completions['completions'][self.completions['currentindex']]
+            currentnick = self.completions["completions"][self.completions["currentindex"]]
 
         if self.midwaycompletion:
             # We're still completing, block handler to avoid modifying midwaycompletion value
@@ -447,10 +447,10 @@ class ChatCompletion:
                 if backwards:
                     direction = -1  # Backward cycle
 
-                self.completions['currentindex'] = ((self.completions['currentindex'] + direction) %
-                                                    len(self.completions['completions']))
+                self.completions["currentindex"] = ((self.completions["currentindex"] + direction) %
+                                                    len(self.completions["completions"]))
 
-                newnick = self.completions['completions'][self.completions['currentindex']]
+                newnick = self.completions["completions"][self.completions["currentindex"]]
                 self.entry.insert_text(newnick, preix)
                 self.entry.set_position(preix + len(newnick))
 

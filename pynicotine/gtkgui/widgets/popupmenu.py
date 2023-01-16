@@ -379,7 +379,7 @@ class UserPopupMenu(PopupMenu):
         if not self.useritem:
             return
 
-        self.useritem.set_label(user.replace('_', '__'))  # Escape underscores to disable mnemonics
+        self.useritem.set_label(user.replace("_", "__"))  # Escape underscores to disable mnemonics
         self.model.remove(0)
         self.model.prepend_item(self.useritem)
 

@@ -38,9 +38,9 @@ from pynicotine.utils import encode_path
 
 LIBADWAITA = None
 try:
-    if os.getenv("NICOTINE_LIBADWAITA") == '1':
+    if os.getenv("NICOTINE_LIBADWAITA") == "1":
         import gi
-        gi.require_version('Adw', '1')
+        gi.require_version("Adw", "1")
 
         from gi.repository import Adw
         LIBADWAITA = Adw

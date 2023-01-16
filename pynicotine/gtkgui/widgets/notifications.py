@@ -88,14 +88,14 @@ class Notifications:
         if core.notifications.chat_hilites["private"]:
             # Private Chats have a higher priority
             user = core.notifications.chat_hilites["private"][-1]
-            notification_text = _("Private Message from %(user)s") % {'user': user}
+            notification_text = _("Private Message from %(user)s") % {"user": user}
 
             self.application.window.set_title(f"{app_name} - {notification_text}")
 
         elif core.notifications.chat_hilites["rooms"]:
             # Allow for the possibility the username is not available
             room = core.notifications.chat_hilites["rooms"][-1]
-            notification_text = _("Mentioned by %(user)s in Room %(room)s") % {'user': user, 'room': room}
+            notification_text = _("Mentioned by %(user)s in Room %(room)s") % {"user": user, "room": room}
 
             self.application.window.set_title(f"{app_name} - {notification_text}")
 

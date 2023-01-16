@@ -100,8 +100,8 @@ class Statistics(Dialog):
 
         OptionDialog(
             parent=self,
-            title=_('Reset Transfer Statistics?'),
-            message=_('Do you really want to reset transfer statistics?'),
+            title=_("Reset Transfer Statistics?"),
+            message=_("Do you really want to reset transfer statistics?"),
             callback=self.on_reset_statistics_response
         ).show()
 

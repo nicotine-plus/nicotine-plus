@@ -142,8 +142,8 @@ class WishList(Dialog):
 
         OptionDialog(
             parent=self,
-            title=_('Clear Wishlist?'),
-            message=_('Do you really want to clear your wishlist?'),
+            title=_("Clear Wishlist?"),
+            message=_("Do you really want to clear your wishlist?"),
             callback=self.clear_wishlist_response
         ).show()
 

@@ -446,13 +446,13 @@ class DownloadsPage:
 
             for dfilter, error in failed.items():
                 errors += "Filter: %(filter)s Error: %(error)s " % {
-                    'filter': dfilter,
-                    'error': error
+                    "filter": dfilter,
+                    "error": error
                 }
 
             error = _("%(num)d Failed! %(error)s " % {
-                'num': len(failed),
-                'error': errors}
+                "num": len(failed),
+                "error": errors}
             )
 
             self.VerifiedLabel.set_text(error)
@@ -619,7 +619,7 @@ class SharesPage:
             EntryDialog(
                 parent=self.application.preferences,
                 title=_("Edit Shared Folder"),
-                message=_("Enter new virtual name for '%(dir)s':") % {'dir': folder_path},
+                message=_("Enter new virtual name for '%(dir)s':") % {"dir": folder_path},
                 default=virtual_name,
                 option_value=is_buddy_only,
                 option_label=_("Share with buddies only"),
@@ -1134,7 +1134,7 @@ class ChatsPage:
         self.application.preferences.set_widgets_data(self.options)
 
         try:
-            gi.require_version('Gspell', '1')
+            gi.require_version("Gspell", "1")
             from gi.repository import Gspell  # noqa: F401; pylint:disable=unused-import
 
         except (ImportError, ValueError):
@@ -1880,7 +1880,7 @@ class UrlHandlersPage:
             "links -g $",
             "dillo $",
             "konqueror $",
-            "\"c:\\Program Files\\Mozilla Firefox\\Firefox.exe\" $"
+            '"c:\\Program Files\\Mozilla Firefox\\Firefox.exe" $'
         ]
 
         self.protocols = {}
@@ -2101,7 +2101,7 @@ class NowPlayingPage:
 
         if player == "lastfm":
             self.NP_lastfm.set_active(True)
-        elif player == 'listenbrainz':
+        elif player == "listenbrainz":
             self.NP_listenbrainz.set_active(True)
         elif player == "other":
             self.NP_other.set_active(True)
@@ -2134,8 +2134,8 @@ class NowPlayingPage:
             if item == "$t":
                 legend += _("Title")
             elif item == "$n":
-                legend += _("Now Playing (typically \"%(artist)s - %(title)s\")") % {
-                    'artist': _("Artist"), 'title': _("Title")}
+                legend += _('Now Playing (typically "%(artist)s - %(title)s")') % {
+                    "artist": _("Artist"), "title": _("Title")}
             elif item == "$l":
                 legend += _("Duration")
             elif item == "$r":
@@ -2235,7 +2235,7 @@ class PluginsPage:
             except OSError:
                 continue
 
-            plugin_name = info.get('Name', plugin_id)
+            plugin_name = info.get("Name", plugin_id)
             enabled = (plugin_id in config.sections["plugins"]["enabled"])
             self.plugin_list_view.add_row([enabled, plugin_name, plugin_id], select_row=False)
 
@@ -2264,9 +2264,9 @@ class PluginsPage:
             info = core.pluginhandler.get_plugin_info(self.selected_plugin)
 
         plugin_name = info.get("Name", self.selected_plugin)
-        plugin_version = info.get("Version", '-')
-        plugin_authors = ", ".join(info.get("Authors", '-'))
-        plugin_description = info.get("Description", '').replace(r'\n', '\n')
+        plugin_version = info.get("Version", "-")
+        plugin_authors = ", ".join(info.get("Authors", "-"))
+        plugin_description = info.get("Description", "").replace(r"\n", "\n")
 
         self.plugin_name_label.set_text(plugin_name)
         self.plugin_version_label.set_text(plugin_version)

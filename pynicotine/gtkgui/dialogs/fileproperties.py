@@ -78,13 +78,13 @@ class FileProperties(Dialog):
 
         if self.total_length:
             self.set_title(_("File Properties (%(num)i of %(total)i  /  %(size)s  /  %(length)s)") % {
-                'num': index, 'total': total_files, 'size': total_size,
-                'length': human_length(self.total_length)
+                "num": index, "total": total_files, "size": total_size,
+                "length": human_length(self.total_length)
             })
             return
 
         self.set_title(_("File Properties (%(num)i of %(total)i  /  %(size)s)") % {
-                       'num': index, 'total': total_files, 'size': total_size})
+                       "num": index, "total": total_files, "size": total_size})
 
     def update_current_file(self):
         """ Updates the UI with properties for the selected file """
