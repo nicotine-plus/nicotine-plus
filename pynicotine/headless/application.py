@@ -35,11 +35,6 @@ class Application:
         for log_level in ("download", "upload"):
             log.add_log_level(log_level, is_permanent=False)
 
-        for event_name, callback in (
-            ("shares-unavailable", self.shares_unavailable),
-        ):
-            events.connect(event_name, callback)
-
     def run(self):
 
         core.start()
@@ -87,7 +82,3 @@ class Application:
     @staticmethod
     def on_critical_error_threading(args):
         raise args.exc_value
-
-    def shares_unavailable(self, shares):
-        for virtual_name, folder_path in shares:
-            log.add(f"• \"{virtual_name}\" {folder_path}")

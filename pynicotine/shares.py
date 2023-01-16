@@ -859,7 +859,7 @@ class Shares:
             unavailable_shares = self.check_shares_available()
 
             if unavailable_shares:
-                log.add(_("Rescan aborted due to unavailable shares"))
+                log.add(_("Rescan aborted due to unavailable shares: %s"), unavailable_shares)
                 rescan = False
 
                 events.emit("shares-unavailable", unavailable_shares)
