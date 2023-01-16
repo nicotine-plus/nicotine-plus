@@ -619,9 +619,9 @@ class ChatRoom:
 
         username = userdata.username
         status = userdata.status
-        country = userdata.country or ""  # country can be None, ensure string is used
+        country_code = userdata.country or ""  # country can be None, ensure string is used
         status_icon_name = USER_STATUS_ICON_NAMES.get(status, "")
-        flag_icon_name = get_flag_icon_name(country)
+        flag_icon_name = get_flag_icon_name(country_code)
         h_speed = ""
         avgspeed = userdata.avgspeed
 
@@ -654,7 +654,7 @@ class ChatRoom:
                 status,
                 GObject.Value(GObject.TYPE_UINT, avgspeed),
                 GObject.Value(GObject.TYPE_UINT, files),
-                country,
+                country_code,
                 weight,
                 underline
             ]
@@ -1037,24 +1037,24 @@ class ChatRoom:
 
         self.update_user_tag(user)
 
-    def user_country(self, user, country):
+    def user_country(self, user, country_code):
 
         iterator = self.users.get(user)
 
         if iterator is None:
             return
 
-        if self.usersmodel.get_value(iterator, 8) == country:
+        if self.usersmodel.get_value(iterator, 8) == country_code:
             # Country didn't change, no need to update
             return
 
-        flag_icon_name = get_flag_icon_name(country or "")
+        flag_icon_name = get_flag_icon_name(country_code)
 
         if not flag_icon_name:
             return
 
         self.usersmodel.set_value(iterator, 1, flag_icon_name)
-        self.usersmodel.set_value(iterator, 8, country)
+        self.usersmodel.set_value(iterator, 8, country_code)
 
     def user_name_event(self, pos_x, pos_y, user):
 
@@ -1185,7 +1185,7 @@ class ChatRoom:
     def on_tooltip(widget, pos_x, pos_y, _keyboard_mode, tooltip):
 
         status_tooltip = show_user_status_tooltip(widget, pos_x, pos_y, tooltip, 5)
-        country_tooltip = show_country_tooltip(widget, pos_x, pos_y, tooltip, 8, strip_prefix="")
+        country_tooltip = show_country_tooltip(widget, pos_x, pos_y, tooltip, 8)
 
         if status_tooltip:
             return status_tooltip

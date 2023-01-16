@@ -519,7 +519,7 @@ class UserInfo:
 
         self.country_label.set_text(country_text)
 
-        icon_name = get_flag_icon_name(country_code or "")
+        icon_name = get_flag_icon_name(country_code)
 
         self.country_icon.set_property("icon-name", icon_name)
         self.country_icon.set_visible(bool(icon_name))

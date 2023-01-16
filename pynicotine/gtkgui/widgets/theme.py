@@ -436,12 +436,10 @@ def load_icons():
 
 def get_flag_icon_name(country):
 
-    country = country.lower().replace("flag_", "")
-
     if not country:
         return ""
 
-    return f"nplus-flag-{country}"
+    return f"nplus-flag-{country.lower()}"
 
 
 def on_icon_theme_changed(*_args):

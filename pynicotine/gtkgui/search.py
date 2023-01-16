@@ -170,7 +170,6 @@ class Searches(IconNotebook):
         if page is None:
             self.pages[token] = page = Search(self, text, token, mode, mode_label, show_page)
         else:
-            mode = page.mode
             mode_label = page.mode_label
 
         if not show_page:
@@ -514,7 +513,7 @@ class Search:
     @staticmethod
     def on_tooltip(widget, pos_x, pos_y, _keyboard_mode, tooltip):
 
-        country_tooltip = show_country_tooltip(widget, pos_x, pos_y, tooltip, 12, strip_prefix="")
+        country_tooltip = show_country_tooltip(widget, pos_x, pos_y, tooltip, 12)
         file_path_tooltip = show_file_path_tooltip(widget, pos_x, pos_y, tooltip, 11)
 
         if country_tooltip:
@@ -585,7 +584,7 @@ class Search:
 
         self.on_refilter()
 
-    def add_result_list(self, result_list, user, country, inqueue, ulspeed, h_speed,
+    def add_result_list(self, result_list, user, country_code, inqueue, ulspeed, h_speed,
                         h_queue, color, private=False):
         """ Adds a list of search results to the treeview. Lists can either contain publicly or
         privately shared files. """
@@ -647,7 +646,7 @@ class Search:
                 [
                     self.num_results_found,
                     user,
-                    get_flag_icon_name(country),
+                    get_flag_icon_name(country_code),
                     h_speed,
                     h_queue,
                     directory,
@@ -657,7 +656,7 @@ class Search:
                     h_length,
                     GObject.Value(GObject.TYPE_UINT, bitrate),
                     fullpath,
-                    country,
+                    country_code,
                     GObject.Value(GObject.TYPE_UINT64, size),
                     GObject.Value(GObject.TYPE_UINT, ulspeed),
                     GObject.Value(GObject.TYPE_UINT, inqueue),
@@ -680,14 +679,7 @@ class Search:
 
         self.users.add(user)
         ip_address = msg.init.addr[0]
-
-        if ip_address:
-            country = core.geoip.get_country_code(ip_address)
-        else:
-            country = ""
-
-        if country == "-":
-            country = ""
+        country_code = core.geoip.get_country_code(ip_address)
 
         if msg.freeulslots:
             inqueue = 0
@@ -705,11 +697,11 @@ class Search:
         color_id = "search" if msg.freeulslots else "searchq"
         color = config.sections["ui"][color_id] or None
 
-        update_ui = self.add_result_list(msg.list, user, country, inqueue, ulspeed, h_speed, h_queue, color)
+        update_ui = self.add_result_list(msg.list, user, country_code, inqueue, ulspeed, h_speed, h_queue, color)
 
         if msg.privatelist:
             update_ui_private = self.add_result_list(
-                msg.privatelist, user, country, inqueue, ulspeed, h_speed, h_queue, color, private=True)
+                msg.privatelist, user, country_code, inqueue, ulspeed, h_speed, h_queue, color, private=True)
 
             if not update_ui and update_ui_private:
                 update_ui = True
@@ -743,7 +735,7 @@ class Search:
 
     def add_row_to_model(self, row):
         (_counter, user, flag, h_speed, h_queue, directory, _filename, _h_size, _h_bitrate,
-            _h_length, _bitrate, fullpath, country, _size, speed, queue, _length, color) = row
+            _h_length, _bitrate, fullpath, country_code, _size, speed, queue, _length, color) = row
 
         expand_user = False
         expand_folder = False
@@ -770,7 +762,7 @@ class Search:
                         empty_str,
                         empty_int,
                         empty_str,
-                        country,
+                        country_code,
                         empty_int,
                         speed,
                         queue,
@@ -807,7 +799,7 @@ class Search:
                             empty_str,
                             empty_int,
                             fullpath.rsplit("\\", 1)[0] + "\\",
-                            country,
+                            country_code,
                             empty_int,
                             speed,
                             queue,
@@ -1336,7 +1328,7 @@ class Search:
                 destination = core.transfers.get_folder_destination(user, folder, remove_destination=False)
 
                 (_counter, user, _flag, _h_speed, _h_queue, _directory, _filename,
-                    _h_size, h_bitrate, h_length, _bitrate, fullpath, _country, size, _speed,
+                    _h_size, h_bitrate, h_length, _bitrate, fullpath, _country_code, size, _speed,
                     _queue, _length, _color) = row
                 visible_files.append(
                     (user, fullpath, destination, size.get_value(), h_bitrate, h_length))
