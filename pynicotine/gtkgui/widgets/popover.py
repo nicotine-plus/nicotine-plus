@@ -36,14 +36,14 @@ class Popover:
         self.default_height = height
 
         self.popover = Gtk.Popover(child=content_box)
-        self.popover.connect("notify::visible", self._on_show)
+        self.popover.connect("notify::visible", self._on_visible_changed)
         self.popover.connect("closed", self._on_close)
 
         add_css_class(self.popover, "generic-popover")
 
-    def _on_show(self, _popover, param):
+    def _on_visible_changed(self, *_args):
 
-        if not self.popover.get_property(param.name):
+        if not self.popover.is_visible():
             return
 
         if GTK_API_VERSION >= 4:

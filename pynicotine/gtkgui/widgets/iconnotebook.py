@@ -569,9 +569,9 @@ class IconNotebook:
     def on_pages_button_pressed(self, *args):
 
         if GTK_API_VERSION >= 4:
-            popover, param, *_unused = args
+            popover, *_unused = args
 
-            if not popover.get_property(param.name):
+            if not popover.is_visible():
                 return
 
         self.popup_menu_pages.clear()
