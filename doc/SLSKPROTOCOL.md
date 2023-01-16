@@ -163,8 +163,8 @@ but it handles the protocol well enough (and can be modified).
 | 1    | [Login](#server-code-1)                           |            |
 | 2    | [Set Listen Port](#server-code-2)                 |            |
 | 3    | [Get Peer Address](#server-code-3)                |            |
-| 5    | [Add User](#server-code-5)                        |            |
-| 6    | [Remove User](#server-code-6)                     |            |
+| 5    | [Watch User](#server-code-5)                      |            |
+| 6    | [Unwatch User](#server-code-6)                    |            |
 | 7    | [Get User Status](#server-code-7)                 |            |
 | 13   | [Say in Chat Room](#server-code-13)               |            |
 | 14   | [Join Room](#server-code-14)                      |            |
@@ -335,7 +335,7 @@ We send this to the server to ask for a peer's address (IP address and port), gi
 
 ## Server Code 5
 
-### AddUser
+### WatchUser
 
 Used to be kept updated about a user's stats. When a user's stats have changed, the server sends a [GetUserStats](#server-code-36) response message with the new user stats.
 
@@ -357,7 +357,7 @@ Used to be kept updated about a user's stats. When a user's stats have changed, 
 
 ## Server Code 6
 
-### RemoveUser
+### UnwatchUser
 
 Used when we no longer want to be kept updated about a user's stats.
 
@@ -655,7 +655,7 @@ We send this to server to indicate the number of folder and files that we share.
 
 ### GetUserStats
 
-The server sends this to indicate a change in a user's statistics, if we've requested to watch the user in [AddUser](#server-code-5) previously. A user's stats can also be requested by sending a [GetUserStats](#server-code-36) message to the server, but [AddUser](#server-code-5) should be used instead.
+The server sends this to indicate a change in a user's statistics, if we've requested to watch the user in [WatchUser](#server-code-5) previously. A user's stats can also be requested by sending a [GetUserStats](#server-code-36) message to the server, but [WatchUser](#server-code-5) should be used instead.
 
 ### Data Order
 
@@ -1419,7 +1419,7 @@ We send this after a finished upload to let the server update the speed statisti
 
 ### UserPrivileged
 
-**DEPRECATED, use [AddUser](#server-code-5) and [GetUserStatus](#server-code-7) server messages**
+**DEPRECATED, use [WatchUser](#server-code-5) and [GetUserStatus](#server-code-7) server messages**
 
 We ask the server whether a user is privileged or not.
 

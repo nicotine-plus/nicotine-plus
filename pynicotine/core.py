@@ -102,7 +102,7 @@ class Core:
             ("thread-callback", self._thread_callback),
             ("user-stats", self._user_stats),
             ("user-status", self._user_status),
-            ("watch-user", self._add_user)
+            ("watch-user", self._watch_user)
         ):
             events.connect(event_name, callback)
 
@@ -345,7 +345,7 @@ class Core:
             # Already being watched, and we don't need to re-fetch the status/stats
             return
 
-        self.queue.append(slskmessages.AddUser(user))
+        self.queue.append(slskmessages.WatchUser(user))
 
         # Get privilege status
         self.queue.append(slskmessages.GetUserStatus(user))
@@ -434,7 +434,7 @@ class Core:
             "country": country
         }, title=_("IP Address"))
 
-    def _add_user(self, msg):
+    def _watch_user(self, msg):
         """ Server code: 5 """
 
         if msg.userexists:

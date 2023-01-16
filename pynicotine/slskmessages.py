@@ -436,7 +436,7 @@ class GetPeerAddress(ServerMessage):
         pos, self.port = self.unpack_uint32(message, pos)
 
 
-class AddUser(ServerMessage):
+class WatchUser(ServerMessage):
     """ Server code: 5 """
     """ Used to be kept updated about a user's stats. When a user's
     stats have changed, the server sends a GetUserStats response message
@@ -479,7 +479,7 @@ class AddUser(ServerMessage):
         pos, self.country = self.unpack_string(message, pos)
 
 
-class RemoveUser(ServerMessage):
+class UnwatchUser(ServerMessage):
     """ Server code: 6 """
     """ Used when we no longer want to be kept updated about a
     user's stats. """
@@ -923,9 +923,9 @@ class SharedFoldersFiles(ServerMessage):
 class GetUserStats(ServerMessage):
     """ Server code: 36 """
     """ The server sends this to indicate a change in a user's statistics,
-    if we've requested to watch the user in AddUser previously. A user's
+    if we've requested to watch the user in WatchUser previously. A user's
     stats can also be requested by sending a GetUserStats message to the
-    server, but AddUser should be used instead. """
+    server, but WatchUser should be used instead. """
 
     __slots__ = ("user", "avgspeed", "uploadnum", "files", "dirs")
 
@@ -1841,7 +1841,7 @@ class SendUploadSpeed(ServerMessage):
 class UserPrivileged(ServerMessage):
     """ Server code: 122 """
     """ We ask the server whether a user is privileged or not. """
-    """ DEPRECATED, use AddUser and GetUserStatus server messages """
+    """ DEPRECATED, use WatchUser and GetUserStatus server messages """
 
     __slots__ = ("user", "privileged")
 
@@ -3377,7 +3377,6 @@ Message Events
 
 
 NETWORK_MESSAGE_EVENTS = {
-    AddUser: "watch-user",
     AdminMessage: "admin-message",
     ChangePassword: "change-password",
     CheckPrivileges: "check-privileges",
@@ -3437,6 +3436,7 @@ NETWORK_MESSAGE_EVENTS = {
     UserJoinedRoom: "user-joined-room",
     UserLeftRoom: "user-left-room",
     UserSearch: "server-search-request",
+    WatchUser: "watch-user",
     WishlistInterval: "set-wishlist-interval"
 }
 
@@ -3450,8 +3450,8 @@ SERVER_MESSAGE_CODES = {
     Login: 1,
     SetWaitPort: 2,
     GetPeerAddress: 3,
-    AddUser: 5,
-    RemoveUser: 6,
+    WatchUser: 5,
+    UnwatchUser: 6,
     GetUserStatus: 7,
     SayChatroom: 13,
     JoinRoom: 14,
