@@ -267,18 +267,15 @@ class MessageDialog(Window):
         if not long_message:
             return
 
-        frame = Gtk.Frame(margin_top=6, visible=True)
-        scrolled_window = Gtk.ScrolledWindow(min_content_height=75, max_content_height=200, hexpand=True,
-                                             vexpand=True, propagate_natural_height=True, visible=True)
         textview = Gtk.TextView(left_margin=12, right_margin=12, top_margin=8, bottom_margin=8, editable=False,
                                 cursor_visible=False, pixels_above_lines=1, pixels_below_lines=1,
                                 wrap_mode=Gtk.WrapMode.WORD_CHAR, visible=True)
+        scrolled_window = Gtk.ScrolledWindow(child=textview, min_content_height=75, max_content_height=200,
+                                             hexpand=True, vexpand=True, propagate_natural_height=True, visible=True)
+        frame = Gtk.Frame(child=scrolled_window, margin_top=6, visible=True)
 
         text_buffer = textview.get_buffer()
         text_buffer.set_text(long_message)
-
-        frame.set_property("child", scrolled_window)
-        scrolled_window.set_property("child", textview)
 
         if GTK_API_VERSION >= 4:
             self.container.append(frame)
@@ -444,10 +441,9 @@ class PluginSettingsDialog(Dialog):
             margin_top=14, margin_bottom=14, margin_start=18, margin_end=18, spacing=12
         )
         scrolled_window = Gtk.ScrolledWindow(
-            hexpand=True, vexpand=True, min_content_height=300,
+            child=self.primary_container, hexpand=True, vexpand=True, min_content_height=300,
             hscrollbar_policy=Gtk.PolicyType.NEVER, vscrollbar_policy=Gtk.PolicyType.AUTOMATIC, visible=True
         )
-        scrolled_window.set_property("child", self.primary_container)
 
         super().__init__(
             parent=application.preferences,
@@ -563,31 +559,26 @@ class PluginSettingsDialog(Dialog):
 
     def _add_textview_option(self, option_name, option_value, description):
 
-        frame_container = Gtk.Frame(visible=True)
         self.option_widgets[option_name] = textview = Gtk.TextView(
             accepts_tab=False, pixels_above_lines=1, pixels_below_lines=1,
             left_margin=12, right_margin=12, top_margin=8, bottom_margin=8,
             wrap_mode=Gtk.WrapMode.WORD_CHAR, visible=True
         )
+        scrolled_window = Gtk.ScrolledWindow(child=textview, hexpand=True, vexpand=True, min_content_height=125,
+                                             visible=True)
+        frame_container = Gtk.Frame(child=scrolled_window, visible=True)
         label = self._generate_widget_container(description, frame_container, vertical=True)
         label.set_mnemonic_widget(textview)
         self.application.preferences.set_widget(textview, option_value)
 
-        scrolled_window = Gtk.ScrolledWindow(hexpand=True, vexpand=True, min_content_height=125,
-                                             visible=True)
-
-        frame_container.set_property("child", scrolled_window)
-        scrolled_window.set_property("child", textview)
-
     def _add_list_option(self, option_name, option_value, description):
-
-        container = Gtk.Box(spacing=6, visible=True)
-        frame_container = Gtk.Frame(visible=True)
 
         scrolled_window = Gtk.ScrolledWindow(
             hexpand=True, vexpand=True, min_content_height=125,
             hscrollbar_policy=Gtk.PolicyType.AUTOMATIC, vscrollbar_policy=Gtk.PolicyType.AUTOMATIC, visible=True
         )
+        frame_container = Gtk.Frame(child=scrolled_window, visible=True)
+        container = Gtk.Box(spacing=6, visible=True)
 
         from pynicotine.gtkgui.widgets.treeview import TreeView
         self.option_widgets[option_name] = treeview = TreeView(
@@ -596,7 +587,6 @@ class PluginSettingsDialog(Dialog):
                 {"column_id": description, "column_type": "text", "title": description, "sort_column": 0}
             ]
         )
-        frame_container.set_property("child", scrolled_window)
         self.application.preferences.set_widget(treeview, option_value)
 
         box = Gtk.Box(spacing=6, visible=True)
