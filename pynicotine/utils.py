@@ -30,14 +30,14 @@ import pickle
 import sys
 import webbrowser
 
-FILE_SIZE_SUFFIXES = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
-PUNCTUATION = ['!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>',
-               '?', '@', '[', '\\', ']', '^', '_', '`', '{', '|', '}', '~', '–', '—', '‐', '’', '“', '”', '…']
-ILLEGALPATHCHARS = ['?', ':', '>', '<', '|', '*', '"']
-ILLEGALFILECHARS = ILLEGALPATHCHARS + ['\\', '/']
+FILE_SIZE_SUFFIXES = ["B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"]
+PUNCTUATION = ["!", '"', "#", "$", "%", "&", "'", "(", ")", "*", "+", ",", "-", ".", "/", ":", ";", "<", "=", ">",
+               "?", "@", "[", "\\", "]", "^", "_", "`", "{", "|", "}", "~", "–", "—", "‐", "’", "“", "”", "…"]
+ILLEGALPATHCHARS = ["?", ":", ">", "<", "|", "*", '"']
+ILLEGALFILECHARS = ILLEGALPATHCHARS + ["\\", "/"]
 LONG_PATH_PREFIX = "\\\\?\\"
-REPLACEMENTCHAR = '_'
-TRANSLATE_PUNCTUATION = str.maketrans(dict.fromkeys(PUNCTUATION, ' '))
+REPLACEMENTCHAR = "_"
+TRANSLATE_PUNCTUATION = str.maketrans(dict.fromkeys(PUNCTUATION, " "))
 
 
 def clean_file(filename):
@@ -53,18 +53,18 @@ def clean_path(path, absolute=False):
     # Without hacks it is (up to Vista) not possible to have more
     # than 26 drives mounted, so we can assume a '[a-zA-Z]:\' prefix
     # for drives - we shouldn't escape that
-    drive = ''
-    if absolute and path[1:3] == ':\\' and path[0:1] and path[0].isalpha():
+    drive = ""
+    if absolute and path[1:3] == ":\\" and path[0:1] and path[0].isalpha():
         drive = path[:3]
         path = path[3:]
 
     for char in ILLEGALPATHCHARS:
         path = path.replace(char, REPLACEMENTCHAR)
 
-    path = ''.join([drive, path])
+    path = "".join([drive, path])
 
     # Path can never end with a period or space on Windows machines
-    path = path.rstrip('. ')
+    path = path.rstrip(". ")
 
     return path
 
@@ -74,9 +74,9 @@ def encode_path(path, prefix=True):
     On Windows, also append prefix to enable extended-length path. """
 
     if sys.platform == "win32" and prefix:
-        path = path.replace('/', '\\')
+        path = path.replace("/", "\\")
 
-        if path.startswith('\\\\'):
+        if path.startswith("\\\\"):
             path = "UNC" + path[1:]
 
         path = LONG_PATH_PREFIX + path
@@ -136,11 +136,11 @@ def factorize(filesize, base=1024):
     if not filesize:
         return None, None
 
-    if filesize[-1:].lower() == 'b':
+    if filesize[-1:].lower() == "b":
         base = 1000  # Byte suffix detected, prepare to use decimal if necessary
         filesize = filesize[:-1]
 
-    if filesize[-1:].lower() == 'i':
+    if filesize[-1:].lower() == "i":
         base = 1024  # Binary requested, stop using decimal
         filesize = filesize[:-1]
 
@@ -165,7 +165,7 @@ def factorize(filesize, base=1024):
         return None, factor
 
 
-def truncate_string_byte(string, byte_limit, encoding='utf-8', ellipsize=False):
+def truncate_string_byte(string, byte_limit, encoding="utf-8", ellipsize=False):
     """ Truncates a string to fit inside a byte limit """
 
     string_bytes = string.encode(encoding)
@@ -180,13 +180,13 @@ def truncate_string_byte(string, byte_limit, encoding='utf-8', ellipsize=False):
     else:
         string_bytes = string_bytes[:byte_limit]
 
-    return string_bytes.decode(encoding, 'ignore')
+    return string_bytes.decode(encoding, "ignore")
 
 
 def unescape(string):
     """Removes quotes from the beginning and end of strings, and unescapes it."""
 
-    string = string.encode('latin-1', 'backslashreplace').decode('unicode-escape')
+    string = string.encode("latin-1", "backslashreplace").decode("unicode-escape")
 
     try:
         if (string[0] == string[-1]) and string.startswith(("'", '"')):
@@ -197,7 +197,7 @@ def unescape(string):
     return string
 
 
-def execute_command(command, replacement=None, background=True, returnoutput=False, placeholder='$'):
+def execute_command(command, replacement=None, background=True, returnoutput=False, placeholder="$"):
     """Executes a string with commands, with partial support for bash-style quoting and pipes.
 
     The different parts of the command should be separated by spaces, a double
@@ -247,20 +247,20 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
 
         (pre, argument, post) = unparsed.split('"', 2)
         if pre:
-            arguments += pre.rstrip(' ').split(' ')
+            arguments += pre.rstrip(" ").split(" ")
 
         arguments.append(argument)
-        unparsed = post.lstrip(' ')
+        unparsed = post.lstrip(" ")
 
     if unparsed:
-        arguments += unparsed.split(' ')
+        arguments += unparsed.split(" ")
 
     # arguments is now: ['C:\Program Files\WinAmp\WinAmp.exe', '--xforce', '--title=My Title', '$', '|', 'flite', '-t']
     subcommands = []
     current = []
 
     for argument in arguments:
-        if argument in ('|',):
+        if argument in ("|",):
             subcommands.append(current)
             current = []
         else:
@@ -504,7 +504,7 @@ def debug(*args):
     from pynicotine.logfacility import log
 
     truncated_args = [arg[:200] if isinstance(arg, str) else arg for arg in args]
-    log.add('*' * 8, truncated_args)
+    log.add("*" * 8, truncated_args)
 
 
 def strace(function):

@@ -48,5 +48,5 @@ def generate_sha256_hashes():
             file_handle.write(output)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     generate_sha256_hashes()

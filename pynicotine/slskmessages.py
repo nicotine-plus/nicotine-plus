@@ -63,19 +63,19 @@ Constants
 
 
 class MessageType:
-    INTERNAL = 'N'
-    INIT = 'I'
-    SERVER = 'S'
-    PEER = 'P'
-    FILE = 'F'
-    DISTRIBUTED = 'D'
+    INTERNAL = "N"
+    INIT = "I"
+    SERVER = "S"
+    PEER = "P"
+    FILE = "F"
+    DISTRIBUTED = "D"
 
 
 class ConnectionType:
-    SERVER = 'S'
-    PEER = 'P'
-    FILE = 'F'
-    DISTRIBUTED = 'D'
+    SERVER = "S"
+    PEER = "P"
+    FILE = "F"
+    DISTRIBUTED = "D"
 
 
 class LoginFailure:
@@ -811,7 +811,7 @@ class FileSearch(ServerMessage):
         self.user = None
 
         if text:
-            self.searchterm = ' '.join(x for x in text.split() if x != '-')
+            self.searchterm = " ".join(x for x in text.split() if x != "-")
 
     def make_network_message(self):
         msg = bytearray()
@@ -1432,7 +1432,7 @@ class SearchParent(ServerMessage):
     def strunreverse(string):
         strlist = string.split(".")
         strlist.reverse()
-        return '.'.join(strlist)
+        return ".".join(strlist)
 
     def make_network_message(self):
         return self.pack_uint32(inet_aton(self.strunreverse(self.parentip)))
@@ -1806,7 +1806,7 @@ class RoomSearch(ServerMessage):
     def __init__(self, room=None, token=None, text=""):
         self.room = room
         self.token = token
-        self.searchterm = ' '.join([x for x in text.split() if x != '-'])
+        self.searchterm = " ".join([x for x in text.split() if x != "-"])
         self.user = None
 
     def make_network_message(self):
@@ -2418,7 +2418,7 @@ class FileListMessage(PeerMessage):
 
         if fileinfo[2] is None or fileinfo[3] is None:
             # No metadata
-            msg.extend(cls.pack_string(''))
+            msg.extend(cls.pack_string(""))
             msg.extend(cls.pack_uint32(0))
         else:
             # FileExtension, NumAttributes
@@ -2626,7 +2626,7 @@ class SharedFileListResponse(FileListMessage):
         shares = []
         for _ in range(ndir):
             pos, directory = self.unpack_string(message, pos)
-            directory = directory.replace('/', '\\')
+            directory = directory.replace("/", "\\")
             pos, nfiles = self.unpack_uint32(message, pos)
 
             files = []
@@ -2750,7 +2750,7 @@ class FileSearchResponse(FileListMessage):
                     pos, attr = self.unpack_uint32(message, pos)
                     attrs[str(attrnum)] = attr
 
-            results.append((code, name.replace('/', '\\'), size, ext, attrs))
+            results.append((code, name.replace("/", "\\"), size, ext, attrs))
 
         results.sort(key=itemgetter(1))
         return pos, results
@@ -2927,7 +2927,7 @@ class FolderContentsResponse(PeerMessage):
 
         for _ in range(ndir):
             pos, directory = self.unpack_string(message, pos)
-            directory = directory.replace('/', '\\')
+            directory = directory.replace("/", "\\")
             pos, nfiles = self.unpack_uint32(message, pos)
 
             shares[folder][directory] = []

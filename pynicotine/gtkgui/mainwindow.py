@@ -1347,11 +1347,11 @@ class MainWindow(Window):
 
         if self.download_status_label.get_text() != download_bandwidth_text:
             self.download_status_label.set_text(download_bandwidth_text)
-            self.application.tray_icon.set_download_status(_("Downloads: %(speed)s") % {'speed': download_bandwidth})
+            self.application.tray_icon.set_download_status(_("Downloads: %(speed)s") % {"speed": download_bandwidth})
 
         if self.upload_status_label.get_text() != upload_bandwidth_text:
             self.upload_status_label.set_text(upload_bandwidth_text)
-            self.application.tray_icon.set_upload_status(_("Uploads: %(speed)s") % {'speed': upload_bandwidth})
+            self.application.tray_icon.set_upload_status(_("Uploads: %(speed)s") % {"speed": upload_bandwidth})
 
     def update_download_limits(self):
         self.update_bandwidth_label_underlines(transfer_type="download")

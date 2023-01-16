@@ -434,14 +434,14 @@ class UserBrowse:
             current_path = None
             root_processed = False
 
-            for subfolder in folder.split('\\'):
+            for subfolder in folder.split("\\"):
                 parent = self.dir_iters.get(current_path)
 
                 if not root_processed:
                     current_path = subfolder
                     root_processed = True
                 else:
-                    current_path = '\\'.join([current_path, subfolder])
+                    current_path = "\\".join([current_path, subfolder])
 
                 if current_path in self.dir_iters:
                     # Folder was already added to tree
@@ -449,7 +449,7 @@ class UserBrowse:
 
                 if not subfolder:
                     # Most likely a root folder
-                    subfolder = '\\'
+                    subfolder = "\\"
 
                 if private:
                     subfolder = _("[PRIVATE]  %s") % subfolder
@@ -773,7 +773,7 @@ class UserBrowse:
         EntryDialog(
             parent=self.window,
             title=str_title,
-            message=_('Enter the name of the user you want to upload to:'),
+            message=_("Enter the name of the user you want to upload to:"),
             callback=self.on_upload_directory_to_response,
             callback_data=recurse,
             droplist=sorted(core.userlist.buddies)
@@ -794,7 +794,7 @@ class UserBrowse:
         if self.selected_folder is None:
             return
 
-        path = self.selected_folder + '\\'
+        path = self.selected_folder + "\\"
         url = core.userbrowse.get_soulseek_url(self.user, path)
         copy_text(url)
 
@@ -996,8 +996,8 @@ class UserBrowse:
 
         EntryDialog(
             parent=self.window,
-            title=_('Upload File(s) To User'),
-            message=_('Enter the name of the user you want to upload to:'),
+            title=_("Upload File(s) To User"),
+            message=_("Enter the name of the user you want to upload to:"),
             callback=self.on_upload_files_response,
             droplist=sorted(core.userlist.buddies)
         ).show()

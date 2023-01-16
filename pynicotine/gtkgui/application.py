@@ -125,7 +125,7 @@ class Application:
     def init_spell_checker(self):
 
         try:
-            gi.require_version('Gspell', '1')
+            gi.require_version("Gspell", "1")
             from gi.repository import Gspell
             self.spell_checker = Gspell.Checker()
 
@@ -141,13 +141,13 @@ class Application:
         if sys.platform == "win32":
             libintl_path = "libintl-8.dll"
 
-            if getattr(sys, 'frozen', False):
+            if getattr(sys, "frozen", False):
                 libintl_path = os.path.join(executable_folder, "lib", libintl_path)
 
         elif sys.platform == "darwin":
             libintl_path = "libintl.8.dylib"
 
-            if getattr(sys, 'frozen', False):
+            if getattr(sys, "frozen", False):
                 libintl_path = os.path.join(executable_folder, libintl_path)
 
         import locale
@@ -437,8 +437,8 @@ class Application:
 
         OptionDialog(
             parent=self.window,
-            title=_('Quit Nicotine+'),
-            message=_('Do you really want to exit?'),
+            title=_("Quit Nicotine+"),
+            message=_("Do you really want to exit?"),
             second_button=_("_Quit"),
             third_button=_("_Run in Background") if self.window.is_visible() else None,
             option_label=_("Remember choice") if remember else None,
@@ -460,7 +460,7 @@ class Application:
         shares_list_message = ""
 
         for virtual_name, folder_path in shares:
-            shares_list_message += f"• \"{virtual_name}\" {folder_path}\n"
+            shares_list_message += f'• "{virtual_name}" {folder_path}\n'
 
         OptionDialog(
             parent=self.window,

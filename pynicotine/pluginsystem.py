@@ -35,9 +35,9 @@ from pynicotine.utils import encode_path
 
 
 returncode = {
-    'break': 0,  # don't give other plugins the event, do let n+ process it
-    'zap': 1,    # don't give other plugins the event, don't let n+ process it
-    'pass': 2    # do give other plugins the event, do let n+ process it
+    "break": 0,  # don't give other plugins the event, do let n+ process it
+    "zap": 1,    # don't give other plugins the event, don't let n+ process it
+    "pass": 2    # do give other plugins the event, do let n+ process it
 }                # returning nothing is the same as 'pass'
 
 
@@ -303,11 +303,11 @@ class ResponseThrottle:
         current_time = time()
 
         if room not in self.plugin_usage:
-            self.plugin_usage[room] = {'last_time': 0, 'last_request': "", 'last_nick': ""}
+            self.plugin_usage[room] = {"last_time": 0, "last_request": "", "last_nick": ""}
 
-        last_time = self.plugin_usage[room]['last_time']
-        last_nick = self.plugin_usage[room]['last_nick']
-        last_request = self.plugin_usage[room]['last_request']
+        last_time = self.plugin_usage[room]["last_time"]
+        last_nick = self.plugin_usage[room]["last_nick"]
+        last_request = self.plugin_usage[room]["last_request"]
 
         try:
             _ip_address, port = self.core.user_addresses[nick]
@@ -335,7 +335,7 @@ class ResponseThrottle:
             recent_responses = 0
 
             for responded_room, room_dict in self.plugin_usage.items():
-                if (current_time - room_dict['last_time']) < seconds_limit_min:
+                if (current_time - room_dict["last_time"]) < seconds_limit_min:
                     recent_responses += 1
 
                     if responded_room == room:
@@ -353,7 +353,7 @@ class ResponseThrottle:
     def responded(self):
         # possible TODO's: we could actually say public the msg here
         # make more stateful - track past msg's as additional responder willingness criteria, etc
-        self.plugin_usage[self.room] = {'last_time': time(), 'last_request': self.request, 'last_nick': self.nick}
+        self.plugin_usage[self.room] = {"last_time": time(), "last_request": self.request, "last_nick": self.nick}
 
 
 class PluginHandler:
@@ -464,7 +464,7 @@ class PluginHandler:
             sys.path.append(path)
 
             import importlib.util
-            spec = importlib.util.spec_from_file_location(plugin_name, os.path.join(path, '__init__.py'))
+            spec = importlib.util.spec_from_file_location(plugin_name, os.path.join(path, "__init__.py"))
             plugin = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(plugin)
 
@@ -544,7 +544,7 @@ class PluginHandler:
         except Exception:
             from traceback import format_exc
             log.add(_("Unable to load plugin %(module)s\n%(exc_trace)s"),
-                    {'module': plugin_name, 'exc_trace': format_exc()})
+                    {"module": plugin_name, "exc_trace": format_exc()})
             return False
 
         return True
@@ -589,17 +589,17 @@ class PluginHandler:
             plugin.disable()
 
             for command in plugin.commands:
-                command = '/' + command
+                command = "/" + command
 
                 self.chatroom_commands.pop(command, None)
                 self.private_chat_commands.pop(command, None)
                 self.cli_commands.pop(command, None)
 
             for command, _func in plugin.__publiccommands__:
-                self.chatroom_commands.pop('/' + command, None)
+                self.chatroom_commands.pop("/" + command, None)
 
             for command, _func in plugin.__privatecommands__:
-                self.private_chat_commands.pop('/' + command, None)
+                self.private_chat_commands.pop("/" + command, None)
 
             self.update_completions(plugin)
             plugin.unloaded_notification()
@@ -608,7 +608,7 @@ class PluginHandler:
         except Exception:
             from traceback import format_exc
             log.add(_("Unable to unload plugin %(module)s\n%(exc_trace)s"),
-                    {'module': plugin_name, 'exc_trace': format_exc()})
+                    {"module": plugin_name, "exc_trace": format_exc()})
             return False
 
         finally:
@@ -649,7 +649,7 @@ class PluginHandler:
         if plugin_path is None or plugin_name == "core_commands":
             return plugin_info
 
-        info_path = os.path.join(plugin_path, 'PLUGININFO')
+        info_path = os.path.join(plugin_path, "PLUGININFO")
 
         with open(encode_path(info_path), encoding="utf-8") as file_handle:
             for line in file_handle:
@@ -677,10 +677,10 @@ class PluginHandler:
 
         log.add(_("Plugin %(module)s failed with error %(errortype)s: %(error)s.\n"
                   "Trace: %(trace)s"), {
-            'module': plugin_name,
-            'errortype': exc_type,
-            'error': exc_value,
-            'trace': ''.join(format_tb(exc_traceback))
+            "module": plugin_name,
+            "errortype": exc_type,
+            "error": exc_value,
+            "trace": "".join(format_tb(exc_traceback))
         })
 
     def save_enabled(self):
@@ -709,8 +709,8 @@ class PluginHandler:
 
                 else:
                     log.add_debug("Stored setting '%(key)s' is no longer present in the '%(name)s' plugin", {
-                        'key': key,
-                        'name': plugin_name
+                        "key": key,
+                        "name": plugin_name
                     })
 
         except KeyError:
@@ -775,10 +775,10 @@ class PluginHandler:
                             rejection_message = f"Missing {arg} argument"
                             break
 
-                        if '|' not in arg:
+                        if "|" not in arg:
                             continue
 
-                        choices = arg[1:-1].split('|')
+                        choices = arg[1:-1].split("|")
 
                         if args_split[i] not in choices:
                             rejection_message = f"Invalid argument, possible choices: {' | '.join(choices)}"
@@ -832,7 +832,7 @@ class PluginHandler:
         are precisely the same except for how n+ responds to them, both can be
         triggered by this function. """
 
-        function_name_camelcase = function_name.title().replace('_', '')
+        function_name_camelcase = function_name.title().replace("_", "")
 
         for module, plugin in self.enabled_plugins.items():
             try:
@@ -858,17 +858,17 @@ class PluginHandler:
                 args = return_value
                 continue
 
-            if return_value == returncode['zap']:
+            if return_value == returncode["zap"]:
                 return None
 
-            if return_value == returncode['break']:
+            if return_value == returncode["break"]:
                 return args
 
-            if return_value == returncode['pass']:
+            if return_value == returncode["pass"]:
                 continue
 
             log.add_debug("Plugin %(module)s returned something weird, '%(value)s', ignoring",
-                          {'module': module, 'value': return_value})
+                          {"module": module, "value": return_value})
 
         return args
 

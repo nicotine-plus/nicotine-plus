@@ -80,7 +80,7 @@ class Core:
         self.login_username = None  # Only present while logged in
         self.user_ip_address = None
         self.privileges_left = None
-        self.ban_message = "You are banned from downloading my shared files. Ban message: \"%s\""
+        self.ban_message = 'You are banned from downloading my shared files. Ban message: "%s"'
 
         self.queue = deque()
         self.message_events = {}
@@ -428,10 +428,10 @@ class Core:
             return
 
         log.add(_("IP address of user %(user)s: %(ip)s, port %(port)i%(country)s"), {
-            'user': user,
-            'ip': msg.ip_address,
-            'port': msg.port,
-            'country': country
+            "user": user,
+            "ip": msg.ip_address,
+            "port": msg.port,
+            "country": country
         }, title=_("IP Address"))
 
     def _add_user(self, msg):
@@ -466,10 +466,10 @@ class Core:
         """ Server code: 36 """
 
         stats = {
-            'avgspeed': msg.avgspeed,
-            'uploadnum': msg.uploadnum,
-            'files': msg.files,
-            'dirs': msg.dirs,
+            "avgspeed": msg.avgspeed,
+            "uploadnum": msg.uploadnum,
+            "files": msg.files,
+            "dirs": msg.dirs,
         }
 
         self.pluginhandler.user_stats_notification(msg.user, stats)
@@ -501,10 +501,10 @@ class Core:
         else:
             log.add(_("%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of "
                       "Soulseek privileges left"), {
-                'days': days,
-                'hours': hours % 24,
-                'minutes': mins % 60,
-                'seconds': msg.seconds % 60
+                "days": days,
+                "hours": hours % 24,
+                "minutes": mins % 60,
+                "seconds": msg.seconds % 60
             })
 
         self.privileges_left = msg.seconds

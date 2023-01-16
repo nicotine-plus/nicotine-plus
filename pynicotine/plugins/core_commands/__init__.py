@@ -105,7 +105,7 @@ class Plugin(BasePlugin):
             self.output("\n" + f"{num_shares} {group_name} shares:")
 
             for virtual_name, folder_path, *_unused in share_group:
-                self.output(f"• \"{virtual_name}\" {folder_path}")
+                self.output(f'• "{virtual_name}" {folder_path}')
 
             num_listed += num_shares
 

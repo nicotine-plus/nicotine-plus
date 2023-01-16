@@ -383,8 +383,8 @@ class PrivateChat:
 
         OptionDialog(
             parent=self.window,
-            title=_('Delete Logged Messages?'),
-            message=_('Do you really want to permanently delete all logged messages for this user?'),
+            title=_("Delete Logged Messages?"),
+            message=_("Do you really want to permanently delete all logged messages for this user?"),
             callback=self.on_delete_chat_log_response
         ).show()
 
@@ -403,7 +403,7 @@ class PrivateChat:
         if config.sections["notifications"]["notification_popup_private_message"]:
             core.notifications.show_private_chat_notification(
                 self.user, text,
-                title=_("Private Message from %(user)s") % {'user': self.user}
+                title=_("Private Message from %(user)s") % {"user": self.user}
             )
 
     def message_user(self, msg):

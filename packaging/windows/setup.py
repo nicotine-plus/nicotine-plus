@@ -60,8 +60,8 @@ COPYRIGHT = config.copyright
 
 SCRIPT_NAME = "nicotine"
 MODULE_NAME = "pynicotine"
-GTK_VERSION = os.environ.get("NICOTINE_GTK_VERSION") or '3'
-USE_LIBADWAITA = GTK_VERSION == '4' and os.environ.get("NICOTINE_LIBADWAITA") == '1'
+GTK_VERSION = os.environ.get("NICOTINE_GTK_VERSION") or "3"
+USE_LIBADWAITA = GTK_VERSION == "4" and os.environ.get("NICOTINE_LIBADWAITA") == "1"
 
 include_files = []
 include_resources = []
@@ -76,7 +76,7 @@ def add_file(file_path, output_path, resource=False):
 
 def process_files(folder_path, callback, callback_data=None, starts_with=None, ends_with=None, recursive=False):
 
-    for full_path in glob.glob(os.path.join(folder_path, '**'), recursive=recursive):
+    for full_path in glob.glob(os.path.join(folder_path, "**"), recursive=recursive):
         short_path = os.path.relpath(full_path, folder_path)
 
         if starts_with and not short_path.startswith(starts_with):
@@ -156,7 +156,7 @@ def add_typelibs():
         "freetype2-"
     ]
 
-    if GTK_VERSION == '4':
+    if GTK_VERSION == "4":
         required_typelibs += [
             "Graphene-",
             "Gsk-",
@@ -318,7 +318,7 @@ setup(
                 ("NSHumanReadableCopyright", COPYRIGHT)
             ],
             include_resources=include_resources,
-            codesign_identity='-',
+            codesign_identity="-",
             codesign_deep=True
         ),
         "bdist_dmg": dict(

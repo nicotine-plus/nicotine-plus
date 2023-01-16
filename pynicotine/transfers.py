@@ -111,8 +111,8 @@ class Transfers:
         self.user_update_counter = 0
         self.user_update_counters = {}
 
-        self.downloads_file_name = os.path.join(config.data_dir, 'downloads.json')
-        self.uploads_file_name = os.path.join(config.data_dir, 'uploads.json')
+        self.downloads_file_name = os.path.join(config.data_dir, "downloads.json")
+        self.uploads_file_name = os.path.join(config.data_dir, "uploads.json")
 
         self._transfer_timeout_timer_id = None
         self._download_queue_timer_id = None
@@ -239,9 +239,9 @@ class Transfers:
     def get_download_queue_file_name(self):
 
         data_dir = config.data_dir
-        downloads_file_json = os.path.join(data_dir, 'downloads.json')
-        downloads_file_1_4_2 = os.path.join(data_dir, 'config.transfers.pickle')
-        downloads_file_1_4_1 = os.path.join(data_dir, 'transfers.pickle')
+        downloads_file_json = os.path.join(data_dir, "downloads.json")
+        downloads_file_1_4_2 = os.path.join(data_dir, "config.transfers.pickle")
+        downloads_file_1_4_1 = os.path.join(data_dir, "transfers.pickle")
 
         if os.path.exists(encode_path(downloads_file_json)):
             # New file format
@@ -261,7 +261,7 @@ class Transfers:
     def get_upload_list_file_name(self):
 
         data_dir = config.data_dir
-        uploads_file_json = os.path.join(data_dir, 'uploads.json')
+        uploads_file_json = os.path.join(data_dir, "uploads.json")
 
         return uploads_file_json
 
@@ -792,7 +792,7 @@ class Transfers:
                 })
 
                 for file in files:
-                    virtualpath = directory.rstrip('\\') + '\\' + file[1]
+                    virtualpath = directory.rstrip("\\") + "\\" + file[1]
                     size = file[2]
                     h_bitrate, _bitrate, h_length, _length = FileListMessage.parse_result_bitrate_length(size, file[4])
 
@@ -937,7 +937,7 @@ class Transfers:
         if accepted and self.can_upload(user):
             path = ""
             if config.sections["transfers"]["uploadsinsubdirs"]:
-                parentdir = filename.replace('/', '\\').split('\\')[-2]
+                parentdir = filename.replace("/", "\\").split("\\")[-2]
                 path = os.path.join(config.sections["transfers"]["uploaddir"], user, parentdir)
 
             transfer = Transfer(user=user, filename=filename, path=path, status="Queued",
@@ -949,8 +949,8 @@ class Transfers:
             return slskmessages.TransferResponse(allowed=True, token=token)
 
         log.add_transfer("Denied file request: User %(user)s, %(msg)s", {
-            'user': user,
-            'msg': msg
+            "user": user,
+            "msg": msg
         })
 
         return slskmessages.TransferResponse(allowed=False, reason=cancel_reason, token=token)
@@ -1151,7 +1151,7 @@ class Transfers:
                     os.makedirs(incomplete_folder_path_encoded)
 
                 incomplete_file_path = self.get_incomplete_download_file_path(username, filename)
-                file_handle = open(encode_path(incomplete_file_path), 'ab+')  # pylint: disable=consider-using-with
+                file_handle = open(encode_path(incomplete_file_path), "ab+")  # pylint: disable=consider-using-with
 
                 try:
                     import fcntl
@@ -1683,8 +1683,8 @@ class Transfers:
             transfer.token = None
 
         log.add_transfer("Initializing upload request for file %(file)s to user %(user)s", {
-            'file': filename,
-            'user': user
+            "file": filename,
+            "user": user
         })
 
         core.watch_user(user)
@@ -1781,11 +1781,11 @@ class Transfers:
 
     def get_folder_destination(self, user, folder, remove_prefix="", remove_destination=True):
 
-        if not remove_prefix and '\\' in folder:
-            remove_prefix = folder.rsplit('\\', 1)[0]
+        if not remove_prefix and "\\" in folder:
+            remove_prefix = folder.rsplit("\\", 1)[0]
 
         # Get the last folders in folder path, excluding remove_prefix
-        target_folders = folder.replace(remove_prefix, "").lstrip('\\').replace('\\', os.sep)
+        target_folders = folder.replace(remove_prefix, "").lstrip("\\").replace("\\", os.sep)
 
         # Check if a custom download location was specified
         if (user in self.requested_folders and folder in self.requested_folders[user]
@@ -1875,9 +1875,9 @@ class Transfers:
 
         max_bytes = self.get_basename_byte_limit(download_folder_path)
 
-        basename = clean_file(virtual_path.replace('/', '\\').split('\\')[-1])
+        basename = clean_file(virtual_path.replace("/", "\\").split("\\")[-1])
         basename_no_extension, extension = os.path.splitext(basename)
-        basename_limit = max_bytes - len(extension.encode('utf-8'))
+        basename_limit = max_bytes - len(extension.encode("utf-8"))
         basename_no_extension = truncate_string_byte(basename_no_extension, max(0, basename_limit))
 
         if basename_limit < 0:
@@ -1923,16 +1923,16 @@ class Transfers:
 
         from hashlib import md5
         md5sum = md5()
-        md5sum.update((virtual_path + username).encode('utf-8'))
+        md5sum.update((virtual_path + username).encode("utf-8"))
         prefix = f"INCOMPLETE{md5sum.hexdigest()}"
 
         # Ensure file name length doesn't exceed file system limit
         incomplete_folder_path = config.sections["transfers"]["incompletedir"]
         max_bytes = self.get_basename_byte_limit(incomplete_folder_path)
 
-        basename = clean_file(virtual_path.replace('/', '\\').split('\\')[-1])
+        basename = clean_file(virtual_path.replace("/", "\\").split("\\")[-1])
         basename_no_extension, extension = os.path.splitext(basename)
-        basename_limit = max_bytes - len(prefix) - len(extension.encode('utf-8'))
+        basename_limit = max_bytes - len(prefix) - len(extension.encode("utf-8"))
         basename_no_extension = truncate_string_byte(basename_no_extension, max(0, basename_limit))
 
         if basename_limit < 0:
@@ -1951,8 +1951,8 @@ class Transfers:
         if config.sections["notifications"]["notification_popup_file"]:
             core.notifications.show_download_notification(
                 _("%(file)s downloaded from %(user)s") % {
-                    'user': user,
-                    'file': filepath.rsplit(os.sep, 1)[1]
+                    "user": user,
+                    "file": filepath.rsplit(os.sep, 1)[1]
                 },
                 title=_("File Downloaded")
             )
@@ -1980,8 +1980,8 @@ class Transfers:
         if config.sections["notifications"]["notification_popup_folder"]:
             core.notifications.show_download_notification(
                 _("%(folder)s downloaded from %(user)s") % {
-                    'user': user,
-                    'folder': folderpath
+                    "user": user,
+                    "folder": folderpath
                 },
                 title=_("Folder Downloaded")
             )
@@ -2016,9 +2016,9 @@ class Transfers:
         except OSError as error:
             log.add(
                 _("Couldn't move '%(tempfile)s' to '%(file)s': %(error)s"), {
-                    'tempfile': file_handle.name.decode("utf-8", "replace"),
-                    'file': download_file_path,
-                    'error': error
+                    "tempfile": file_handle.name.decode("utf-8", "replace"),
+                    "file": download_file_path,
+                    "error": error
                 }
             )
             self.abort_download(transfer, abort_reason="Download folder error")
@@ -2049,8 +2049,8 @@ class Transfers:
 
         log.add_download(
             _("Download finished: user %(user)s, file %(file)s"), {
-                'user': transfer.user,
-                'file': transfer.filename
+                "user": transfer.user,
+                "file": transfer.filename
             }
         )
 
@@ -2068,9 +2068,9 @@ class Transfers:
 
         log.add_upload(
             _("Upload finished: user %(user)s, IP address %(ip)s, file %(file)s"), {
-                'user': transfer.user,
-                'ip': core.user_addresses.get(transfer.user),
-                'file': transfer.filename
+                "user": transfer.user,
+                "ip": core.user_addresses.get(transfer.user),
+                "file": transfer.filename
             }
         )
 
@@ -2293,8 +2293,8 @@ class Transfers:
 
         log.add_transfer(
             "Checked upload queue, attempting to upload file %(file)s to user %(user)s", {
-                'file': upload_candidate.filename,
-                'user': user
+                "file": upload_candidate.filename,
+                "user": user
             }
         )
 
@@ -2408,8 +2408,8 @@ class Transfers:
 
     def abort_download(self, download, abort_reason="Paused", update_parent=True):
 
-        log.add_transfer(("Aborting download, user \"%(user)s\", filename \"%(filename)s\", token \"%(token)s\", "
-                          "status \"%(status)s\""), {
+        log.add_transfer(('Aborting download, user "%(user)s", filename "%(filename)s", token "%(token)s", '
+                          'status "%(status)s"'), {
             "user": download.user,
             "filename": download.filename,
             "token": download.token,
@@ -2453,8 +2453,8 @@ class Transfers:
 
     def abort_upload(self, upload, denied_message=None, abort_reason="Cancelled", update_parent=True):
 
-        log.add_transfer(("Aborting upload, user \"%(user)s\", filename \"%(filename)s\", token \"%(token)s\", "
-                          "status \"%(status)s\""), {
+        log.add_transfer(('Aborting upload, user "%(user)s", filename "%(filename)s", token "%(token)s", '
+                          'status "%(status)s"'), {
             "user": upload.user,
             "filename": upload.filename,
             "token": upload.token,
@@ -2597,7 +2597,7 @@ class Transfers:
         for dfilter, error in failed.items():
             errors += f"Filter: {dfilter} Error: {error} "
 
-        log.add(_("Error: %(num)d Download filters failed! %(error)s "), {'num': len(failed), 'error': errors})
+        log.add(_("Error: %(num)d Download filters failed! %(error)s "), {"num": len(failed), "error": errors})
 
     """ Saving """
 

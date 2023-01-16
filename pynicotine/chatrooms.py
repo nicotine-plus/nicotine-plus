@@ -319,8 +319,8 @@ class ChatRooms:
                 self.private_rooms[room[0]] = {"users": [], "joined": room[1], "operators": [], "owner": login_username}
                 continue
 
-            room_data['joined'] = room[1]
-            room_data['owner'] = login_username
+            room_data["joined"] = room[1]
+            room_data["owner"] = login_username
 
         for room in msg.otherprivaterooms:
             room_data = self.private_rooms.get(room[0])
@@ -329,10 +329,10 @@ class ChatRooms:
                 self.private_rooms[room[0]] = {"users": [], "joined": room[1], "operators": [], "owner": None}
                 continue
 
-            room_data['joined'] = room[1]
+            room_data["joined"] = room[1]
 
-            if room_data['owner'] == login_username:
-                room_data['owner'] = None
+            if room_data["owner"] == login_username:
+                room_data["owner"] = None
 
     def _say_chat_room(self, msg):
         """ Server code: 13 """

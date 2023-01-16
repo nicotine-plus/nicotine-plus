@@ -162,17 +162,17 @@ class Search:
 
         # Get excluded words (starting with "-")
         search_term_words = search_term.split()
-        search_term_words_special = [p for p in search_term_words if p.startswith(('-', '*')) and len(p) > 1]
+        search_term_words_special = [p for p in search_term_words if p.startswith(("-", "*")) and len(p) > 1]
 
         # Remove words starting with "-", results containing these are excluded by us later
-        search_term_without_special = ' '.join(p for p in search_term_words if p not in search_term_words_special)
+        search_term_without_special = " ".join(p for p in search_term_words if p not in search_term_words_special)
 
         if config.sections["searches"]["remove_special_chars"]:
             """
             Remove special characters from search term
             SoulseekQt doesn't seem to send search results if special characters are included (July 7, 2020)
             """
-            stripped_search_term = ' '.join(search_term_without_special.translate(TRANSLATE_PUNCTUATION).split())
+            stripped_search_term = " ".join(search_term_without_special.translate(TRANSLATE_PUNCTUATION).split())
 
             # Only modify search term if string also contains non-special characters
             if stripped_search_term:
@@ -255,7 +255,7 @@ class Search:
         if not text:
             return
 
-        log.add_search(_("Searching for wishlist item \"%s\""), text)
+        log.add_search(_('Searching for wishlist item "%s"'), text)
 
         self.add_allowed_token(token)
         core.queue.append(slskmessages.WishlistSearch(token, text))
@@ -459,16 +459,16 @@ class Search:
         excluded_words = []
         partial_words = []
 
-        if '-' in searchterm or '*' in searchterm:
+        if "-" in searchterm or "*" in searchterm:
             for word in searchterm.split():
                 if len(word) < 1:
                     continue
 
-                if word.startswith('-'):
+                if word.startswith("-"):
                     for subword in word.translate(TRANSLATE_PUNCTUATION).split():
                         excluded_words.append(subword)
 
-                elif word.startswith('*'):
+                elif word.startswith("*"):
                     for subword in word.translate(TRANSLATE_PUNCTUATION).split():
                         partial_words.append(subword)
 
@@ -517,7 +517,7 @@ class Search:
                 fileinfos.append(fileinfo)
 
         if numresults != len(fileinfos):
-            log.add_debug(("Error: File index inconsistency while responding to search request \"%(query)s\". "
+            log.add_debug(('Error: File index inconsistency while responding to search request "%(query)s". '
                            "Expected %(expected_num)i results, but found %(total_num)i results in database."), {
                 "query": searchterm_old,
                 "expected_num": numresults,
@@ -541,8 +541,8 @@ class Search:
 
         core.send_message_to_peer(user, message)
 
-        log.add_search(_("User %(user)s is searching for \"%(query)s\", found %(num)i results"), {
-            'user': user,
-            'query': searchterm_old,
-            'num': numresults
+        log.add_search(_('User %(user)s is searching for "%(query)s", found %(num)i results'), {
+            "user": user,
+            "query": searchterm_old,
+            "num": numresults
         })

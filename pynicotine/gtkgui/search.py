@@ -328,11 +328,11 @@ class Search:
         self.searchterm_words_ignore = []
 
         for word in text.lower().split():
-            if word.startswith('*'):
+            if word.startswith("*"):
                 if len(word) > 1:
                     self.searchterm_words_include.append(word[1:])
 
-            elif word.startswith('-'):
+            elif word.startswith("-"):
                 if len(word) > 1:
                     self.searchterm_words_ignore.append(word[1:])
 
@@ -603,7 +603,7 @@ class Search:
             if any(word in fullpath_lower for word in self.searchterm_words_ignore):
                 # Filter out results with filtered words (e.g. nicotine -music)
                 log.add_debug(("Filtered out excluded search result %(filepath)s from user %(user)s for "
-                               "search term \"%(query)s\""), {
+                               'search term "%(query)s"'), {
                     "filepath": fullpath,
                     "user": user,
                     "query": self.text
@@ -613,7 +613,7 @@ class Search:
             if not any(word in fullpath_lower for word in self.searchterm_words_include):
                 # Certain users may send us wrong results, filter out such ones
                 log.add_search(_("Filtered out incorrect search result %(filepath)s from user %(user)s for "
-                                 "search query \"%(query)s\""), {
+                                 'search query "%(query)s"'), {
                     "filepath": fullpath,
                     "user": user,
                     "query": self.text
@@ -621,7 +621,7 @@ class Search:
                 continue
 
             self.num_results_found += 1
-            fullpath_split = fullpath.split('\\')
+            fullpath_split = fullpath.split("\\")
 
             if config.sections["ui"]["reverse_file_paths"]:
                 # Reverse file path, file name is the first item. next() retrieves the name and removes
@@ -634,7 +634,7 @@ class Search:
                 name = fullpath_split.pop()
 
             # Join the resulting items into a folder path
-            directory = '\\'.join(fullpath_split)
+            directory = "\\".join(fullpath_split)
 
             size = result[2]
             h_size = humanize(size) if config.sections["ui"]["exact_file_sizes"] else human_size(size)
@@ -806,7 +806,7 @@ class Search:
                             empty_str,
                             empty_str,
                             empty_int,
-                            fullpath.rsplit('\\', 1)[0] + '\\',
+                            fullpath.rsplit("\\", 1)[0] + "\\",
                             country,
                             empty_int,
                             speed,
@@ -848,12 +848,12 @@ class Search:
         """ Returns: (operation, digit) """
 
         operators = {
-            '<': operator.lt,
-            '<=': operator.le,
-            '==': operator.eq,
-            '!=': operator.ne,
-            '>=': operator.ge,
-            '>': operator.gt
+            "<": operator.lt,
+            "<=": operator.le,
+            "==": operator.eq,
+            "!=": operator.ne,
+            ">=": operator.ge,
+            ">": operator.gt
         }
 
         if condition.startswith((">=", "<=", "==", "!=")):
@@ -1235,7 +1235,7 @@ class Search:
 
         for iterator in self.selected_results.values():
             user = self.resultsmodel.get_value(iterator, 1)
-            folder = self.resultsmodel.get_value(iterator, 11).rsplit('\\', 1)[0] + '\\'
+            folder = self.resultsmodel.get_value(iterator, 11).rsplit("\\", 1)[0] + "\\"
 
             if user not in requested_users and folder not in requested_folders:
                 core.userbrowse.browse_user(user, path=folder)
@@ -1251,7 +1251,7 @@ class Search:
 
         for iterator in self.selected_results.values():
             virtual_path = self.resultsmodel.get_value(iterator, 11)
-            directory, filename = virtual_path.rsplit('\\', 1)
+            directory, filename = virtual_path.rsplit("\\", 1)
             file_size = self.resultsmodel.get_value(iterator, 13)
             selected_size += file_size
             selected_length += self.resultsmodel.get_value(iterator, 16)
@@ -1315,7 +1315,7 @@ class Search:
 
         for iterator in self.selected_results.values():
             user = self.resultsmodel.get_value(iterator, 1)
-            folder = self.resultsmodel.get_value(iterator, 11).rsplit('\\', 1)[0]
+            folder = self.resultsmodel.get_value(iterator, 11).rsplit("\\", 1)[0]
 
             if folder in requested_folders[user]:
                 """ Ensure we don't send folder content requests for a folder more than once,
@@ -1328,7 +1328,7 @@ class Search:
             for row in self.all_data:
 
                 # Find the wanted directory
-                if folder != row[11].rsplit('\\', 1)[0]:
+                if folder != row[11].rsplit("\\", 1)[0]:
                     continue
 
                 # remove_destination is False because we need the destination for the full folder
@@ -1376,7 +1376,7 @@ class Search:
         for iterator in self.selected_results.values():
             user = self.resultsmodel.get_value(iterator, 1)
             filepath = self.resultsmodel.get_value(iterator, 11)
-            url = core.userbrowse.get_soulseek_url(user, filepath.rsplit('\\', 1)[0] + '\\')
+            url = core.userbrowse.get_soulseek_url(user, filepath.rsplit("\\", 1)[0] + "\\")
             copy_text(url)
             return
 

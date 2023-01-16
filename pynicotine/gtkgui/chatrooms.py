@@ -183,7 +183,7 @@ class ChatRooms(IconNotebook):
         if room not in core.chatrooms.server_rooms and room not in core.chatrooms.private_rooms:
             OptionDialog(
                 parent=self.window,
-                title=_('Create New Room?'),
+                title=_("Create New Room?"),
                 message=_('Do you really want to create a new room "%s"?') % room,
                 option_label=_("Make room private"),
                 callback=self.on_create_room_response,
@@ -849,7 +849,7 @@ class ChatRoom:
         if word not in text:
             return -1
 
-        word_boundaries = [' '] + PUNCTUATION
+        word_boundaries = [" "] + PUNCTUATION
         whole = False
         start = 0
 
@@ -1219,8 +1219,8 @@ class ChatRoom:
 
         OptionDialog(
             parent=self.window,
-            title=_('Delete Logged Messages?'),
-            message=_('Do you really want to permanently delete all logged messages for this room?'),
+            title=_("Delete Logged Messages?"),
+            message=_("Do you really want to permanently delete all logged messages for this room?"),
             callback=self.on_delete_room_log_response
         ).show()
 
