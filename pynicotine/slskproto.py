@@ -1483,27 +1483,15 @@ class SoulseekNetworkThread(Thread):
             return
 
         # Pack peer init messages
-        if msg_class is PierceFireWall:
-            conn_obj = self._conns[msg_obj.sock]
-            msg = self._pack_network_message(msg_obj)
+        conn_obj = self._conns[msg_obj.sock]
+        msg = self._pack_network_message(msg_obj)
 
-            if msg is None:
-                return
+        if msg is None:
+            return
 
-            conn_obj.obuf.extend(msg_obj.pack_uint32(len(msg) + 1))
-            conn_obj.obuf.extend(msg_obj.pack_uint8(PEER_INIT_MESSAGE_CODES[msg_class]))
-            conn_obj.obuf.extend(msg)
-
-        elif msg_class is PeerInit:
-            conn_obj = self._conns[msg_obj.sock]
-            msg = self._pack_network_message(msg_obj)
-
-            if msg is None:
-                return
-
-            conn_obj.obuf.extend(msg_obj.pack_uint32(len(msg) + 1))
-            conn_obj.obuf.extend(msg_obj.pack_uint8(PEER_INIT_MESSAGE_CODES[msg_class]))
-            conn_obj.obuf.extend(msg)
+        conn_obj.obuf.extend(msg_obj.pack_uint32(len(msg) + 1))
+        conn_obj.obuf.extend(msg_obj.pack_uint8(PEER_INIT_MESSAGE_CODES[msg_class]))
+        conn_obj.obuf.extend(msg)
 
         self._modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
 
