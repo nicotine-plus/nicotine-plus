@@ -26,6 +26,12 @@ class Plugin(BasePlugin):
         super().__init__(*args, **kwargs)
 
         self.commands = {
+            "quit": {
+                "aliases": ["q", "exit"],
+                "callback": self.quit_command,
+                "description": _("Quit Nicotine+"),
+                "usage": ["[-force]"]
+            },
             "close": {
                 "description": "Close private chat",
                 "aliases": ["c"],
@@ -58,6 +64,49 @@ class Plugin(BasePlugin):
                 "usage": ["[public]", "[buddy]"]
             }
         }
+
+    """ Application Commands """
+
+    def quit_command(self, args, user=None, room=None):
+
+        force = (args.lstrip("- ") in ("force", "f"))
+
+        if args and not force:
+            self.output("Invalid option")
+            return False
+
+        # TODO: remove debug log code
+        if user is not None:
+            interface = "private_chat"
+
+        elif room is not None:
+            interface = "chatroom"
+
+        else:
+            interface = "cli"
+
+        if not force:
+            self.log(f"Asking to exit application on {interface} command {args}")  # TODO: remove debug log code
+
+            self.core.confirm_quit()
+
+            if interface == "cli":
+                self.output("Headless quit needs [force] due to no support for cli confirmation prompt in core")  # TODO
+
+                # choice = input("Test try entering something with the keyboard (Y/N):")
+
+                # self.output(f"You entered {choice}")
+
+                # if choice in ("Y", "y"):
+                 #   self.core.quit()
+
+            return True
+
+        self.log(f"Quitting on {interface} command {args}")
+        self.core.quit()
+        return True
+
+    """ Private Chats """
 
     def close_command(self, args, user=None, **_unused):
 

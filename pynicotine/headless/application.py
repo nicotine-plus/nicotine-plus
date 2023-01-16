@@ -34,6 +34,11 @@ class Application:
         for log_level in ("download", "upload"):
             log.add_log_level(log_level, is_permanent=False)
 
+        for event_name, callback in (
+            ("confirm-quit", self.on_confirm_quit),
+        ):
+            events.connect(event_name, callback)
+
     def run(self):
 
         core.start()
@@ -51,3 +56,16 @@ class Application:
     def exception_hook(self, _exc_type, exc_value, _exc_traceback, *_unused):
         core.quit()
         raise exc_value
+
+    def on_confirm_quit(self, _remember):
+        # Not implemented.
+        log.add("Headless was asked to quit")  # TODO: Need Y/N prompt
+
+        # FIXME: The prompt doesn't appear until after something is entered...
+        choice = input("Test try entering something with the keyboard (Y/N):")
+
+        print(f"You entered {choice}")
+
+        if choice in ("Y", "y"):
+            core.quit()
+
