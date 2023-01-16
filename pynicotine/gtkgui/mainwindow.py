@@ -41,7 +41,6 @@ from pynicotine.gtkgui.uploads import Uploads
 from pynicotine.gtkgui.userbrowse import UserBrowses
 from pynicotine.gtkgui.userinfo import UserInfos
 from pynicotine.gtkgui.userlist import UserList
-from pynicotine.gtkgui.widgets.iconnotebook import TabLabel
 from pynicotine.gtkgui.widgets.dialogs import MessageDialog
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
@@ -85,16 +84,17 @@ class MainWindow(Window):
             self.buddy_list_container,
             self.chatrooms_buddy_list_container,
             self.chatrooms_container,
+            self.chatrooms_content,
             self.chatrooms_end,
             self.chatrooms_entry,
-            self.chatrooms_notebook,
             self.chatrooms_page,
             self.chatrooms_paned,
             self.chatrooms_title,
             self.chatrooms_toolbar,
-            self.chatrooms_toolbar_contents,
+            self.chatrooms_toolbar_content,
             self.connections_label,
             self.container,
+            self.content,
             self.download_files_label,
             self.download_status_button,
             self.download_status_label,
@@ -107,7 +107,7 @@ class MainWindow(Window):
             self.downloads_page,
             self.downloads_title,
             self.downloads_toolbar,
-            self.downloads_toolbar_contents,
+            self.downloads_toolbar_content,
             self.header_bar,
             self.header_end,
             self.header_end_container,
@@ -119,35 +119,34 @@ class MainWindow(Window):
             self.interests_page,
             self.interests_title,
             self.interests_toolbar,
-            self.interests_toolbar_contents,
+            self.interests_toolbar_content,
             self.log_container,
             self.log_search_bar,
             self.log_search_entry,
             self.log_view_container,
-            self.notebook,
+            self.private_content,
             self.private_end,
             self.private_entry,
             self.private_history_button,
-            self.private_notebook,
             self.private_page,
             self.private_title,
             self.private_toolbar,
-            self.private_toolbar_contents,
+            self.private_toolbar_content,
             self.room_list_button,
             self.room_search_combobox,
             self.room_search_entry,
             self.scan_progress_bar,
             self.search_combobox,
             self.search_combobox_button,
+            self.search_content,
             self.search_end,
             self.search_entry,
             self.search_mode_button,
             self.search_mode_label,
-            self.search_notebook,
             self.search_page,
             self.search_title,
             self.search_toolbar,
-            self.search_toolbar_contents,
+            self.search_toolbar_content,
             self.status_label,
             self.upload_files_label,
             self.upload_status_button,
@@ -161,34 +160,34 @@ class MainWindow(Window):
             self.uploads_page,
             self.uploads_title,
             self.uploads_toolbar,
-            self.uploads_toolbar_contents,
+            self.uploads_toolbar_content,
             self.user_search_combobox,
             self.user_search_entry,
             self.user_status_button,
             self.user_status_icon,
             self.user_status_label,
             self.userbrowse_combobox,
+            self.userbrowse_content,
             self.userbrowse_end,
             self.userbrowse_entry,
-            self.userbrowse_notebook,
             self.userbrowse_page,
             self.userbrowse_title,
             self.userbrowse_toolbar,
-            self.userbrowse_toolbar_contents,
+            self.userbrowse_toolbar_content,
             self.userinfo_combobox,
+            self.userinfo_content,
             self.userinfo_end,
             self.userinfo_entry,
-            self.userinfo_notebook,
             self.userinfo_page,
             self.userinfo_title,
             self.userinfo_toolbar,
-            self.userinfo_toolbar_contents,
+            self.userinfo_toolbar_content,
             self.userlist_content,
             self.userlist_end,
             self.userlist_page,
             self.userlist_title,
             self.userlist_toolbar,
-            self.userlist_toolbar_contents,
+            self.userlist_toolbar_content,
             self.vertical_paned
         ) = ui_template.widgets
 
@@ -214,8 +213,8 @@ class MainWindow(Window):
             self.horizontal_paned.child_set_property(self.buddy_list_container, "resize", False)
             self.chatrooms_paned.child_set_property(self.chatrooms_buddy_list_container, "resize", False)
 
-            self.vertical_paned.child_set_property(self.notebook, "resize", True)
-            self.vertical_paned.child_set_property(self.notebook, "shrink", False)
+            self.vertical_paned.child_set_property(self.content, "resize", True)
+            self.vertical_paned.child_set_property(self.content, "shrink", False)
             self.vertical_paned.child_set_property(self.log_container, "resize", False)
             self.vertical_paned.child_set_property(self.log_container, "shrink", False)
 
@@ -238,11 +237,10 @@ class MainWindow(Window):
         # Initialize main notebook
         self.notebook = IconNotebook(
             self,
-            widget=self.notebook,
+            parent=self.content,
             switch_page_callback=self.on_switch_page,
             reorder_page_callback=self.on_page_reordered
         )
-        self.initialize_main_tabs()
 
         # Initialize other notebooks
         self.interests = Interests(self)
@@ -263,6 +261,7 @@ class MainWindow(Window):
 
         """ Tab Visibility/Order """
 
+        self.append_main_tabs()
         self.set_tab_positions()
         self.set_main_tabs_order()
         self.set_main_tabs_visibility()
@@ -853,7 +852,7 @@ class MainWindow(Window):
         self.header_title.remove(title_widget)
         self.header_end_container.remove(end_widget)
 
-        toolbar = getattr(self, f"{self.current_page_id}_toolbar_contents")
+        toolbar = getattr(self, f"{self.current_page_id}_toolbar_content")
 
         if GTK_API_VERSION >= 4:
             toolbar.append(title_widget)
@@ -942,7 +941,7 @@ class MainWindow(Window):
 
     """ Main Notebook """
 
-    def initialize_main_tabs(self):
+    def append_main_tabs(self):
 
         # Translation for the labels of tabs, icon names
         tab_data = [
@@ -957,17 +956,14 @@ class MainWindow(Window):
             ("interests", _("Interests"), "emblem-default-symbolic")
         ]
 
-        # Initialize tabs labels
-        for i in range(self.notebook.get_n_pages()):
-            tab_id, tab_text, tab_icon_name = tab_data[i]
-            page = self.notebook.get_nth_page(i)
+        for tab_id, tab_text, tab_icon_name in tab_data:
+            page = getattr(self, f"{tab_id}_page")
             page.id = tab_id
 
-            tab_label = TabLabel(tab_text)
-            tab_label.set_start_icon_name(tab_icon_name)
+            self.notebook.append_page(page, tab_text)
 
-            # Apply tab label
-            self.notebook.set_tab_label(page, tab_label)
+            tab_label = self.notebook.get_tab_label(page)
+            tab_label.set_start_icon_name(tab_icon_name)
             self.notebook.set_tab_reorderable(page, True)
             self.set_tab_expand(page)
 
@@ -1109,7 +1105,7 @@ class MainWindow(Window):
         config.sections["ui"]["modes_visible"][page.id] = True
         page.set_visible(True)
 
-        self.notebook.set_show_tabs(True)
+        self.content.set_visible(True)
 
     def hide_tab(self, page):
 
@@ -1117,7 +1113,7 @@ class MainWindow(Window):
         page.set_visible(False)
 
         if self.notebook.get_n_pages() <= 1:
-            self.notebook.set_show_tabs(False)
+            self.content.set_visible(False)
 
     def set_main_tabs_order(self):
 

@@ -71,7 +71,7 @@ class ChatRooms(IconNotebook):
 
         super().__init__(
             window,
-            widget=window.chatrooms_notebook,
+            parent=window.chatrooms_content,
             parent_page=window.chatrooms_page,
             switch_page_callback=self.on_switch_chat,
             reorder_page_callback=self.on_reordered_page

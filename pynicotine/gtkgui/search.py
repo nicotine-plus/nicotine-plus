@@ -68,7 +68,7 @@ class Searches(IconNotebook):
 
         super().__init__(
             window,
-            widget=window.search_notebook,
+            parent=window.search_content,
             parent_page=window.search_page,
             switch_page_callback=self.on_switch_search_page
         )

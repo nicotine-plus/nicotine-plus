@@ -53,7 +53,7 @@ class UserInfos(IconNotebook):
 
         super().__init__(
             window,
-            widget=window.userinfo_notebook,
+            parent=window.userinfo_content,
             parent_page=window.userinfo_page
         )
 

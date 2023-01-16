@@ -55,7 +55,7 @@ class PrivateChats(IconNotebook):
 
         super().__init__(
             window,
-            widget=window.private_notebook,
+            parent=window.private_content,
             parent_page=window.private_page,
             switch_page_callback=self.on_switch_chat
         )

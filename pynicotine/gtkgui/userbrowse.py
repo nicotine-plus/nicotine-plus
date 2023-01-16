@@ -57,7 +57,7 @@ class UserBrowses(IconNotebook):
 
         super().__init__(
             window,
-            widget=window.userbrowse_notebook,
+            parent=window.userbrowse_content,
             parent_page=window.userbrowse_page
         )
         self.file_properties = None
