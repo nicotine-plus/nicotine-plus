@@ -176,7 +176,7 @@ class TextView:
 
     def get_text(self):
         start_iter, end_iter = self.textbuffer.get_bounds()
-        return self.textbuffer.get_text(start_iter, end_iter, True)
+        return self.textbuffer.get_text(start_iter, end_iter, include_hidden_chars=True)
 
     def get_tags_for_pos(self, pos_x, pos_y):
 
@@ -301,12 +301,7 @@ class TextView:
         copy_text(self.get_url_for_current_pos())
 
     def on_copy_all_text(self, *_args):
-
-        textbuffer = self.widget.get_buffer()
-        start_iter, end_iter = textbuffer.get_bounds()
-        text = textbuffer.get_text(start_iter, end_iter, True)
-
-        copy_text(text)
+        copy_text(self.get_text())
 
     def on_clear_all_text(self, *_args):
         self.clear()
