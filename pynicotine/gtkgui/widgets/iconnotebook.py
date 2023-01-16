@@ -264,7 +264,7 @@ class IconNotebook:
             self.scroll_controller = Gtk.EventControllerScroll(flags=Gtk.EventControllerScrollFlags.BOTH_AXES)
             self.scroll_controller.connect("scroll", self.on_tab_scroll)
 
-            tab_bar = self.widget.get_first_child()
+            tab_bar = self.widget.get_first_child()                # pylint: disable=no-member
             tab_bar.add_controller(self.scroll_controller)
 
             # GTK 4 workaround to prevent notebook tabs from being activated when pressing close button
@@ -278,7 +278,7 @@ class IconNotebook:
             self.gesture_click.connect("pressed", self.on_notebook_click_pressed)
             self.gesture_click.connect("released", self.on_notebook_click_released)
 
-            self.widget.add_controller(self.gesture_click)
+            self.widget.add_controller(self.gesture_click)         # pylint: disable=no-member
 
         else:
             parent.add(self.widget)
@@ -424,9 +424,9 @@ class IconNotebook:
         tab_label = self.get_tab_label(page)
 
         if GTK_API_VERSION >= 4:
-            self.widget.get_page(page).set_property("tab-expand", expand)
+            self.widget.get_page(page).set_property("tab-expand", expand)  # pylint: disable=no-member
         else:
-            self.widget.child_set_property(page, "tab-expand", expand)  # pylint: disable=no-member
+            self.widget.child_set_property(page, "tab-expand", expand)     # pylint: disable=no-member
 
         tab_label.set_centered(expand)
 
@@ -646,7 +646,7 @@ class IconNotebook:
 
     def on_notebook_click_pressed(self, controller, _num_p, pressed_x, pressed_y):
 
-        widget = self.widget.pick(pressed_x, pressed_y, Gtk.PickFlags.DEFAULT)
+        widget = self.widget.pick(pressed_x, pressed_y, Gtk.PickFlags.DEFAULT)  # pylint: disable=no-member
 
         if not hasattr(widget, "is_close_button"):
             return False
@@ -660,7 +660,7 @@ class IconNotebook:
         if not self.close_button_pressed:
             return False
 
-        widget = self.widget.pick(pressed_x, pressed_y, Gtk.PickFlags.DEFAULT)
+        widget = self.widget.pick(pressed_x, pressed_y, Gtk.PickFlags.DEFAULT)  # pylint: disable=no-member
         self.close_button_pressed = False
 
         if not hasattr(widget, "is_close_button"):
