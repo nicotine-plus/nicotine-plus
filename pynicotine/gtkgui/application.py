@@ -48,10 +48,6 @@ class Application:
         if multi_instance:
             self._instance.set_flags(Gio.ApplicationFlags.NON_UNIQUE)
 
-        # Show errors in the GUI from here on
-        self.init_exception_handler()
-        self.apply_gtk_translations()
-
         self.start_hidden = start_hidden
         self.ci_mode = ci_mode
 
@@ -66,6 +62,10 @@ class Application:
         self.tray_icon = None
         self.notifications = None
         self.spell_checker = None
+
+        # Show errors in the GUI from here on
+        sys.excepthook = self.on_critical_error
+        self.apply_gtk_translations()
 
         self.connect("activate", self.on_activate)
         self.connect("shutdown", self.on_shutdown)
@@ -121,32 +121,6 @@ class Application:
 
     def send_notification(self, event_id, notification):
         self._instance.send_notification(event_id, notification)
-
-    def init_exception_handler(self):
-
-        sys.excepthook = self.on_critical_error
-
-        if hasattr(threading, "excepthook"):
-            threading.excepthook = self.on_critical_error_threading
-            return
-
-        # Workaround for Python <= 3.7
-        init_thread = threading.Thread.__init__
-
-        def init_thread_excepthook(self, *args, **kwargs):
-
-            init_thread(self, *args, **kwargs)
-            run_thread = self.run
-
-            def run_with_excepthook(*args2, **kwargs2):
-                try:
-                    run_thread(*args2, **kwargs2)
-                except Exception:
-                    GLib.idle_add(sys.excepthook, *sys.exc_info())
-
-            self.run = run_with_excepthook
-
-        threading.Thread.__init__ = init_thread_excepthook
 
     def init_spell_checker(self):
 
@@ -762,6 +736,9 @@ class Application:
 
     """ Running """
 
+    def raise_exception(self, exc_value):
+        raise exc_value
+
     def on_critical_error_response(self, _dialog, response_id, data):
 
         loop, error = data
@@ -794,11 +771,12 @@ class Application:
             callback_data=(loop, error)
         ).show()
 
-    def on_critical_error(self, exc_type, exc_value, exc_traceback):
+    def _on_critical_error(self, exc_type, exc_value, exc_traceback):
 
         if self.ci_mode:
             core.quit()
-            raise exc_value
+            self.raise_exception(exc_value)
+            return
 
         from traceback import format_tb
 
@@ -831,17 +809,16 @@ class Application:
 
         # Keep dialog open if error occurs on startup
         loop.run()
-        raise exc_value
+        self.raise_exception(exc_value)
 
-    @staticmethod
-    def _on_critical_error_threading(args):
-        raise args.exc_value
+    def on_critical_error(self, _exc_type, exc_value, _exc_traceback, *_unused):
 
-    def on_critical_error_threading(self, args):
-        """ Exception that originated in a thread.
-        Raising an exception here calls sys.excepthook(), which in turn shows an error dialog. """
+        if threading.current_thread() is threading.main_thread():
+            self._on_critical_error(_exc_type, exc_value, _exc_traceback)
+            return
 
-        GLib.idle_add(self._on_critical_error_threading, args)
+        # Raise exception in the main thread
+        GLib.idle_add(self.raise_exception, exc_value)
 
     def on_process_thread_events(self):
         events.process_thread_events()

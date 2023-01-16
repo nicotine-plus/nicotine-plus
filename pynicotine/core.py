@@ -32,6 +32,7 @@ This is the actual client code. Actual GUI classes are in the separate modules
 import os
 import signal
 import sys
+import threading
 import time
 
 from collections import deque
@@ -125,6 +126,7 @@ class Core:
         from pynicotine.userinfo import UserInfo
         from pynicotine.userlist import UserList
 
+        self._init_thread_exception_hook()
         config.load_config()
 
         if enable_cli:
@@ -158,6 +160,33 @@ class Core:
         self.privatechat = PrivateChat()
         self.chatrooms = ChatRooms()
         self.pluginhandler = PluginHandler()
+
+    def _init_thread_exception_hook(self):
+
+        def thread_excepthook(args):
+            sys.excepthook(*args)
+
+        if hasattr(threading, "excepthook"):
+            threading.excepthook = thread_excepthook
+            return
+
+        # Workaround for Python <= 3.7
+        init_thread = threading.Thread.__init__
+
+        def init_thread_excepthook(self, *args, **kwargs):
+
+            init_thread(self, *args, **kwargs)
+            run_thread = self.run
+
+            def run_with_excepthook(*args2, **kwargs2):
+                try:
+                    run_thread(*args2, **kwargs2)
+                except Exception:
+                    thread_excepthook(sys.exc_info())
+
+            self.run = run_with_excepthook
+
+        threading.Thread.__init__ = init_thread_excepthook
 
     """ CLI """
 
