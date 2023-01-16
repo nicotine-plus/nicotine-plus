@@ -401,7 +401,7 @@ class ChatRoom:
             self.activity_container,
             self.activity_search_bar,
             self.activity_search_entry,
-            self.activity_view,
+            self.activity_view_container,
             self.auto_join_toggle,
             self.chat_container,
             self.chat_entry,
@@ -409,7 +409,7 @@ class ChatRoom:
             self.chat_paned,
             self.chat_search_bar,
             self.chat_search_entry,
-            self.chat_view,
+            self.chat_view_container,
             self.container,
             self.help_button,
             self.log_toggle,
@@ -445,8 +445,10 @@ class ChatRoom:
 
         self.users = {}
 
-        self.activity_view = TextView(self.activity_view)
-        self.chat_view = TextView(self.chat_view)
+        self.activity_view = TextView(self.activity_view_container, editable=False, horizontal_margin=10,
+                                      vertical_margin=5, pixels_below_lines=2)
+        self.chat_view = TextView(self.chat_view_container, editable=False, horizontal_margin=10,
+                                  vertical_margin=5, pixels_below_lines=2)
 
         # Event Text Search
         self.activity_search_bar = TextSearchBar(self.activity_view.widget, self.activity_search_bar,

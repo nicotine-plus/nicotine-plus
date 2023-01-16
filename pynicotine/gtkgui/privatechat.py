@@ -229,7 +229,7 @@ class PrivateChat:
         ui_template = UserInterface(scope=self, path="privatechat.ui")
         (
             self.chat_entry,
-            self.chat_view,
+            self.chat_view_container,
             self.container,
             self.help_button,
             self.log_toggle,
@@ -246,7 +246,8 @@ class PrivateChat:
         self.offline_message = False
         self.status = core.user_statuses.get(user, UserStatus.OFFLINE)
 
-        self.chat_view = TextView(self.chat_view)
+        self.chat_view = TextView(self.chat_view_container, editable=False, horizontal_margin=10,
+                                  vertical_margin=5, pixels_below_lines=2)
 
         # Text Search
         self.search_bar = TextSearchBar(self.chat_view.widget, self.search_bar, self.search_entry,

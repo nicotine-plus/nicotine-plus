@@ -40,11 +40,20 @@ class TextView:
         POINTER_CURSOR = Gdk.Cursor.new_from_name(Gdk.Display.get_default(), "pointer")
         TEXT_CURSOR = Gdk.Cursor.new_from_name(Gdk.Display.get_default(), "text")
 
-    def __init__(self, textview, auto_scroll=False, parse_urls=True):
+    def __init__(self, parent, auto_scroll=False, parse_urls=True, editable=True,
+                 horizontal_margin=12, vertical_margin=8, pixels_above_lines=1, pixels_below_lines=1):
 
-        self.widget = textview
-        self.textbuffer = textview.get_buffer()
-        self.scrollable = textview.get_ancestor(Gtk.ScrolledWindow)
+        self.widget = Gtk.TextView(
+            accepts_tab=False, cursor_visible=editable, editable=editable,
+            left_margin=horizontal_margin, right_margin=horizontal_margin,
+            top_margin=vertical_margin, bottom_margin=vertical_margin,
+            pixels_above_lines=pixels_above_lines, pixels_below_lines=pixels_below_lines,
+            wrap_mode=Gtk.WrapMode.WORD_CHAR, visible=True
+        )
+        parent.set_property("child", self.widget)
+
+        self.textbuffer = self.widget.get_buffer()
+        self.scrollable = self.widget.get_ancestor(Gtk.ScrolledWindow)
         scrollable_container = self.scrollable.get_ancestor(Gtk.Box)
 
         self.adjustment = self.scrollable.get_vadjustment()
@@ -70,14 +79,14 @@ class TextView:
 
             self.motion_controller = Gtk.EventControllerMotion()
             self.motion_controller.connect("motion", self.on_move_cursor)
-            textview.add_controller(self.motion_controller)
+            self.widget.add_controller(self.motion_controller)
         else:
             self.gesture_click_primary = Gtk.GestureMultiPress(widget=scrollable_container)
             self.gesture_click_secondary = Gtk.GestureMultiPress(widget=scrollable_container)
 
             self.cursor_window = None
 
-            textview.connect("motion-notify-event", self.on_move_cursor_event)
+            self.widget.connect("motion-notify-event", self.on_move_cursor_event)
 
         self.gesture_click_primary.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
         self.gesture_click_primary.connect("released", self.on_released_primary)
@@ -165,6 +174,10 @@ class TextView:
     def get_has_selection(self):
         return self.textbuffer.get_has_selection()
 
+    def get_text(self):
+        start_iter, end_iter = self.textbuffer.get_bounds()
+        return self.textbuffer.get_text(start_iter, end_iter, True)
+
     def get_tags_for_pos(self, pos_x, pos_y):
 
         buf_x, buf_y = self.widget.window_to_buffer_coords(Gtk.TextWindowType.WIDGET, pos_x, pos_y)
@@ -189,7 +202,7 @@ class TextView:
         cursor = self.TEXT_CURSOR
 
         if self.cursor_window is None:
-            self.cursor_window = self.widget.get_window(Gtk.TextWindowType.TEXT)
+            self.cursor_window = self.widget.get_window(Gtk.TextWindowType.TEXT)  # pylint: disable=no-member
 
         for tag in self.get_tags_for_pos(pos_x, pos_y):
             if hasattr(tag, "url") or hasattr(tag, "username"):

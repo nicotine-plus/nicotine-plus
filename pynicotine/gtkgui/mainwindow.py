@@ -123,7 +123,7 @@ class MainWindow(Window):
             self.log_container,
             self.log_search_bar,
             self.log_search_entry,
-            self.log_view,
+            self.log_view_container,
             self.notebook,
             self.private_end,
             self.private_entry,
@@ -221,7 +221,8 @@ class MainWindow(Window):
 
         """ Logging """
 
-        self.log_view = TextView(self.log_view, auto_scroll=True, parse_urls=False)
+        self.log_view = TextView(self.log_view_container, auto_scroll=True, parse_urls=False, editable=False,
+                                 vertical_margin=5, pixels_below_lines=2)
         self.log_search_bar = TextSearchBar(self.log_view.widget, self.log_search_bar, self.log_search_entry,
                                             controller_widget=self.log_container)
 

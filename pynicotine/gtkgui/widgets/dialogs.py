@@ -23,6 +23,7 @@ from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
+from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.gtkgui.widgets.window import Window
 
@@ -267,20 +268,20 @@ class MessageDialog(Window):
         if not long_message:
             return
 
-        textview = Gtk.TextView(left_margin=12, right_margin=12, top_margin=8, bottom_margin=8, editable=False,
-                                cursor_visible=False, pixels_above_lines=1, pixels_below_lines=1,
-                                wrap_mode=Gtk.WrapMode.WORD_CHAR, visible=True)
-        scrolled_window = Gtk.ScrolledWindow(child=textview, min_content_height=75, max_content_height=200,
+        box = Gtk.Box(visible=True)
+        scrolled_window = Gtk.ScrolledWindow(min_content_height=75, max_content_height=200,
                                              hexpand=True, vexpand=True, propagate_natural_height=True, visible=True)
-        frame = Gtk.Frame(child=scrolled_window, margin_top=6, visible=True)
-
-        text_buffer = textview.get_buffer()
-        text_buffer.set_text(long_message)
+        frame = Gtk.Frame(child=box, margin_top=6, visible=True)
 
         if GTK_API_VERSION >= 4:
-            self.container.append(frame)
+            box.append(scrolled_window)   # pylint: disable=no-member
+            self.container.append(frame)  # pylint: disable=no-member
         else:
-            self.container.add(frame)
+            box.add(scrolled_window)      # pylint: disable=no-member
+            self.container.add(frame)     # pylint: disable=no-member
+
+        textview = TextView(scrolled_window, editable=False)
+        textview.append_line(long_message)
 
     def on_response(self, _widget, response_id, callback, callback_data):
 
@@ -559,16 +560,19 @@ class PluginSettingsDialog(Dialog):
 
     def _add_textview_option(self, option_name, option_value, description):
 
-        self.option_widgets[option_name] = textview = Gtk.TextView(
-            accepts_tab=False, pixels_above_lines=1, pixels_below_lines=1,
-            left_margin=12, right_margin=12, top_margin=8, bottom_margin=8,
-            wrap_mode=Gtk.WrapMode.WORD_CHAR, visible=True
-        )
-        scrolled_window = Gtk.ScrolledWindow(child=textview, hexpand=True, vexpand=True, min_content_height=125,
+        box = Gtk.Box(visible=True)
+        scrolled_window = Gtk.ScrolledWindow(hexpand=True, vexpand=True, min_content_height=125,
                                              visible=True)
-        frame_container = Gtk.Frame(child=scrolled_window, visible=True)
+        frame_container = Gtk.Frame(child=box, visible=True)
+
+        if GTK_API_VERSION >= 4:
+            box.append(scrolled_window)  # pylint: disable=no-member
+        else:
+            box.add(scrolled_window)     # pylint: disable=no-member
+
+        self.option_widgets[option_name] = textview = TextView(scrolled_window)
         label = self._generate_widget_container(description, frame_container, vertical=True)
-        label.set_mnemonic_widget(textview)
+        label.set_mnemonic_widget(textview.widget)
         self.application.preferences.set_widget(textview, option_value)
 
     def _add_list_option(self, option_name, option_value, description):

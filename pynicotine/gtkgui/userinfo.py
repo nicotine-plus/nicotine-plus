@@ -198,7 +198,7 @@ class UserInfo:
             self.container,
             self.country_icon,
             self.country_label,
-            self.description_view,
+            self.description_view_container,
             self.dislikes_list_container,
             self.free_upload_slots_label,
             self.horizontal_paned,
@@ -223,7 +223,7 @@ class UserInfo:
         self.window = userinfos.window
 
         self.info_bar = InfoBar(self.info_bar, button=self.retry_button)
-        self.description_view = TextView(self.description_view)
+        self.description_view = TextView(self.description_view_container, editable=False, vertical_margin=5)
         self.user_label.set_text(user)
 
         if GTK_API_VERSION >= 4:

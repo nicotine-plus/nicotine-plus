@@ -737,31 +737,30 @@ class UserProfilePage:
         ui_template = UserInterface(scope=self, path="settings/userinfo.ui")
         (
             self.Main,  # pylint: disable=invalid-name
-            self.description_text_view,
+            self.description_view_container,
             self.select_picture_button
         ) = ui_template.widgets
 
         self.application = application
+        self.description_view = TextView(self.description_view_container, parse_urls=False)
         self.select_picture_button = FileChooserButton(self.select_picture_button, application.preferences, "image")
 
         self.options = {
             "userinfo": {
-                "descr": self.description_text_view,
+                "descr": self.description_view,
                 "pic": self.select_picture_button
             }
         }
 
     def set_settings(self):
+        self.description_view.clear()
         self.application.preferences.set_widgets_data(self.options)
 
     def get_settings(self):
 
-        text_buffer = self.description_text_view.get_buffer()
-        start, end = text_buffer.get_bounds()
-
         return {
             "userinfo": {
-                "descr": repr(text_buffer.get_text(start, end, True)),
+                "descr": repr(self.description_view.get_text()),
                 "pic": self.select_picture_button.get_path()
             }
         }
@@ -2190,7 +2189,7 @@ class PluginsPage:
             self.Main,  # pylint: disable=invalid-name
             self.enable_plugins_toggle,
             self.plugin_authors_label,
-            self.plugin_description_view,
+            self.plugin_description_view_container,
             self.plugin_list_container,
             self.plugin_name_label,
             self.plugin_settings_button,
@@ -2207,7 +2206,8 @@ class PluginsPage:
             }
         }
 
-        self.plugin_description_view = TextView(self.plugin_description_view)
+        self.plugin_description_view = TextView(self.plugin_description_view_container, editable=False,
+                                                pixels_below_lines=2)
         self.plugin_list_view = TreeView(
             application.window, parent=self.plugin_list_container, always_select=True,
             select_row_callback=self.on_select_plugin,
@@ -2434,11 +2434,8 @@ class Preferences(Dialog):
         if isinstance(widget, Gtk.Entry):
             return widget.get_text()
 
-        if isinstance(widget, Gtk.TextView):
-            text_buffer = widget.get_buffer()
-            start, end = text_buffer.get_bounds()
-
-            return text_buffer.get_text(start, end, True)
+        if isinstance(widget, TextView):
+            return repr(widget.get_text())
 
         if isinstance(widget, Gtk.CheckButton):
             try:
@@ -2476,8 +2473,8 @@ class Preferences(Dialog):
         elif isinstance(widget, Gtk.Entry):
             widget.set_text("")
 
-        elif isinstance(widget, Gtk.TextView):
-            widget.get_buffer().set_text("")
+        elif isinstance(widget, TextView):
+            widget.clear()
 
         elif isinstance(widget, Gtk.CheckButton):
             widget.set_active(0)
@@ -2503,9 +2500,9 @@ class Preferences(Dialog):
             if isinstance(value, (str, int)):
                 widget.set_text(value)
 
-        elif isinstance(widget, Gtk.TextView):
-            if isinstance(value, (str, int)):
-                widget.get_buffer().set_text(unescape(value))
+        elif isinstance(widget, TextView):
+            if isinstance(value, str):
+                widget.append_line(unescape(value))
 
         elif isinstance(widget, Gtk.CheckButton):
             try:
