@@ -51,14 +51,14 @@ class Application:
         config.write_configuration()
         return 0
 
-    def exception_hook(self, _exc_type, exc_value, _exc_traceback, *_unused):
+    def exception_hook(self, _exc_type, exc_value, _exc_traceback):
         core.quit()
         raise exc_value
 
     def on_shares_unavailable_response(self, user_input):
 
         if user_input == "test":
-            log.add("works")
+            core.shares.rescan_shares()
             return
 
         log.add("no")

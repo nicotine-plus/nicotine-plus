@@ -811,7 +811,7 @@ class Application:
         loop.run()
         self.raise_exception(exc_value)
 
-    def on_critical_error(self, _exc_type, exc_value, _exc_traceback, *_unused):
+    def on_critical_error(self, _exc_type, exc_value, _exc_traceback):
 
         if threading.current_thread() is threading.main_thread():
             self._on_critical_error(_exc_type, exc_value, _exc_traceback)

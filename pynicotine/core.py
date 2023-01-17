@@ -75,6 +75,7 @@ class Core:
         self.port = None
 
         self.shutdown = False
+        self.enable_cli = False
         self.user_status = slskmessages.UserStatus.OFFLINE
         self.login_username = None  # Only present while logged in
         self.user_ip_address = None
@@ -124,11 +125,12 @@ class Core:
         from pynicotine.userinfo import UserInfo
         from pynicotine.userlist import UserList
 
+        self.enable_cli = enable_cli
         self._init_thread_exception_hook()
         config.load_config()
 
         if enable_cli:
-            cli.enable()
+            cli.enable_logging()
 
         script_dir = os.path.dirname(__file__)
 
@@ -161,7 +163,7 @@ class Core:
     def _init_thread_exception_hook(self):
 
         def thread_excepthook(args):
-            sys.excepthook(*args)
+            sys.excepthook(*args[:3])
 
         if hasattr(threading, "excepthook"):
             threading.excepthook = thread_excepthook
@@ -188,6 +190,10 @@ class Core:
     """ Actions """
 
     def start(self):
+
+        if self.enable_cli:
+            cli.enable_prompt()
+
         events.emit("start")
 
     def setup(self):

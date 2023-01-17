@@ -26,6 +26,7 @@ EVENT_NAMES = {
     "change-password",
     "check-privileges",
     "cli-command",
+    "cli-prompt-finished",
     "confirm-quit",
     "connect-to-peer",
     "enable-message-queue",

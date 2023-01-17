@@ -20,6 +20,7 @@ import os
 import sys
 import time
 
+from collections import deque
 from threading import Thread
 
 from pynicotine.events import events
@@ -31,13 +32,18 @@ class CLIInputProcessor(Thread):
 
         super().__init__(name="CLIInputProcessor", daemon=True)
 
+        self.has_custom_prompt = False
         self.prompt_message = ""
         self.prompt_callback = None
 
     def run(self):
 
         while True:
-            self._handle_prompt()
+            try:
+                self._handle_prompt()
+
+            except EOFError:
+                return
 
             # Small time window to set custom prompt
             time.sleep(0.75)
@@ -69,10 +75,15 @@ class CLIInputProcessor(Thread):
     def _handle_prompt(self):
 
         callback = self.prompt_callback
+        self.has_custom_prompt = (callback is not None)
+
         user_input = input(self.prompt_message)
 
+        self.has_custom_prompt = False
         self.prompt_message = ""
         self.prompt_callback = None
+
+        events.emit("cli-prompt-finished")
 
         # Check if custom prompt is active
         if self._handle_prompt_callback(user_input, callback):
@@ -86,25 +97,47 @@ class CLI:
 
     def __init__(self):
         self._input_processor = CLIInputProcessor()
+        self._log_message_queue = deque(maxlen=1000)
 
-    def enable(self):
+    def enable_prompt(self):
         self._input_processor.start()
-        events.connect("log-message", self._log_message)
+
+    def enable_logging(self):
+
+        for event_name, callback in (
+            ("cli-prompt-finished", self._cli_prompt_finished),
+            ("log-message", self._log_message)
+        ):
+            events.connect(event_name, callback)
 
     def prompt(self, message, callback):
         self._input_processor.prompt_message = message
         self._input_processor.prompt_callback = callback
 
-    def _log_message(self, timestamp_format, msg, _title, _level):
-
-        timestamp = time.strftime(timestamp_format)
+    def _print_log_message(self, log_message):
 
         try:
-            print(f"[{timestamp}] {msg}", flush=True)
+            print(log_message, flush=True)
 
         except OSError:
             # stdout is gone, prevent future errors
             sys.stdout = open(os.devnull, "w", encoding="utf-8")  # pylint: disable=consider-using-with
+
+    def _cli_prompt_finished(self):
+        while self._log_message_queue:
+            self._print_log_message(self._log_message_queue.popleft())
+
+    def _log_message(self, timestamp_format, msg, _title, _level):
+
+        timestamp = time.strftime(timestamp_format)
+        log_message = f"[{timestamp}] {msg}"
+
+        if self._input_processor.has_custom_prompt:
+            # Don't print log messages while custom prompt is active
+            self._log_message_queue.append(log_message)
+            return
+
+        self._print_log_message(log_message)
 
 
 cli = CLI()
