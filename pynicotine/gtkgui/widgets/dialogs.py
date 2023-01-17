@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gi.repository import Gdk
+from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine.config import config
@@ -63,7 +64,8 @@ class Dialog(Window):
         Accelerator("Escape", widget, self.close)
 
         if GTK_API_VERSION == 3:
-            widget.set_type_hint(Gdk.WindowTypeHint.DIALOG)  # pylint: disable=no-member
+            widget.set_position(Gtk.WindowPosition.CENTER_ON_PARENT)  # pylint: disable=no-member
+            widget.set_type_hint(Gdk.WindowTypeHint.DIALOG)           # pylint: disable=no-member
 
         if content_box:
             if GTK_API_VERSION >= 4:
@@ -208,13 +210,14 @@ class Dialog(Window):
 
         self.default_button.grab_focus()
 
+    def _finish_show(self):
+        self.widget.set_modal(self.modal and self.parent.is_visible())
+        self.widget.present()
+
     def show(self):
 
         if self not in Window.active_dialogs:
             Window.active_dialogs.append(self)
-
-        # Check if dialog should be modal
-        self.widget.set_modal(self.modal and self.parent.is_visible())
 
         # Shrink the dialog if it's larger than the main window
         self._resize_dialog()
@@ -222,8 +225,13 @@ class Dialog(Window):
         # Focus default button
         self._focus_default_button()
 
+        if not self.parent.is_visible():
+            # In case parent window appears a few frames later, ensure dialog is modal
+            GLib.idle_add(self._finish_show)
+            return
+
         # Show the dialog
-        self.widget.present()
+        self._finish_show()
 
     def close(self, *_args):
         self.widget.close()
@@ -243,19 +251,14 @@ class MessageDialog(Window):
                 parent = active_dialog
                 break
 
+        self.parent = parent
+
         widget = Gtk.MessageDialog(
             transient_for=parent.widget if parent else None, destroy_with_parent=True, message_type=message_type,
             default_width=width, text=title, secondary_text=message
         )
         super().__init__(widget=widget)
         widget.connect("response", self.on_response, callback, callback_data)
-
-        if GTK_API_VERSION == 3:
-            widget.set_type_hint(Gdk.WindowTypeHint.DIALOG)  # pylint: disable=no-member
-
-        if parent:
-            # Only make dialog modal when parent is visible to prevent input/focus issues
-            widget.set_modal(parent.is_visible())
 
         if not buttons:
             buttons = [(_("Close"), Gtk.ResponseType.CLOSE)]
@@ -303,12 +306,22 @@ class MessageDialog(Window):
 
         self.widget.close()
 
+    def _finish_show(self):
+        self.widget.set_modal(self.parent.is_visible())
+        self.widget.present()
+
     def show(self):
 
         if self not in Window.active_dialogs:
             Window.active_dialogs.append(self)
 
-        self.widget.present()
+        if not self.parent.is_visible():
+            # In case parent window appears a few frames later, ensure dialog is modal
+            GLib.idle_add(self._finish_show)
+            return
+
+        # Show the dialog
+        self._finish_show()
 
     def close(self):
         self.widget.close()
