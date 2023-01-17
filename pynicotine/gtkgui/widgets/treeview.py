@@ -429,7 +429,7 @@ class TreeView:
     def set_search_entry(self, entry):
         self.widget.set_search_entry(entry)
 
-    def show_tooltip(self, pos_x, pos_y, tooltip, sourcecolumn, column_titles, text_function, strip_prefix=""):
+    def show_tooltip(self, pos_x, pos_y, tooltip, sourcecolumn, column_titles, text_function):
 
         try:
             bin_x, bin_y = self.widget.convert_widget_to_bin_window_coords(pos_x, pos_y)
@@ -447,7 +447,7 @@ class TreeView:
         # Update tooltip position
         self.widget.set_tooltip_cell(tooltip, path, column, None)
 
-        text = text_function(column_value, strip_prefix)
+        text = text_function(column_value)
         if not text:
             return False
 
@@ -455,7 +455,7 @@ class TreeView:
         return True
 
     @staticmethod
-    def get_user_status_tooltip_text(column_value, _strip_prefix):
+    def get_user_status_tooltip_text(column_value):
 
         if column_value == 1:
             return _("Away")
@@ -469,12 +469,7 @@ class TreeView:
         return self.show_tooltip(pos_x, pos_y, tooltip, column, ("status",), self.get_user_status_tooltip_text)
 
     @staticmethod
-    def get_country_tooltip_text(column_value, strip_prefix):
-
-        if not column_value.startswith(strip_prefix):
-            return _("Unknown")
-
-        country_code = column_value[len(strip_prefix):]
+    def get_country_tooltip_text(country_code):
 
         if country_code:
             country_name = GeoIP.country_code_to_name(country_code)
@@ -482,9 +477,8 @@ class TreeView:
 
         return _("Earth")
 
-    def show_country_tooltip(self, pos_x, pos_y, tooltip, column, strip_prefix='flag_'):
-        return self.show_tooltip(pos_x, pos_y, tooltip, column, ("country",), get_country_tooltip_text,
-                                 strip_prefix)
+    def show_country_tooltip(self, pos_x, pos_y, tooltip, column):
+        return self.show_tooltip(pos_x, pos_y, tooltip, column, ("country",), get_country_tooltip_text)
 
     def on_toggle(self, _widget, path, callback):
         callback(self, self.model.get_iter(path))
@@ -559,7 +553,7 @@ def verify_grouping_mode(mode):
 
 def create_grouping_menu(window, active_mode, callback):
 
-    action_id = "grouping-" + ''.join(random.choice(string.digits) for _ in range(8))
+    action_id = "grouping-" + "".join(random.choice(string.digits) for _ in range(8))
     menu = Gio.Menu()
 
     menuitem = Gio.MenuItem.new(_("Ungrouped"), f"win.{action_id}::ungrouped")
@@ -913,7 +907,7 @@ def set_treeview_selected_row(treeview, bin_x, bin_y):
         selection.unselect_all()
 
 
-def show_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn, column_titles, text_function, strip_prefix=""):
+def show_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn, column_titles, text_function):
 
     try:
         bin_x, bin_y = treeview.convert_widget_to_bin_window_coords(pos_x, pos_y)
@@ -932,7 +926,7 @@ def show_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn, column_titles, t
     # Update tooltip position
     treeview.set_tooltip_cell(tooltip, path, column, None)
 
-    text = text_function(column_value, strip_prefix)
+    text = text_function(column_value)
     if not text:
         return False
 
@@ -940,12 +934,7 @@ def show_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn, column_titles, t
     return True
 
 
-def get_country_tooltip_text(column_value, strip_prefix):
-
-    if not column_value.startswith(strip_prefix):
-        return _("Unknown")
-
-    country_code = column_value[len(strip_prefix):]
+def get_country_tooltip_text(country_code):
 
     if country_code:
         country_name = GeoIP.country_code_to_name(country_code)
@@ -954,15 +943,15 @@ def get_country_tooltip_text(column_value, strip_prefix):
     return _("Earth")
 
 
-def get_file_path_tooltip_text(column_value, _strip_prefix):
+def get_file_path_tooltip_text(column_value):
     return column_value
 
 
-def get_transfer_file_path_tooltip_text(column_value, _strip_prefix):
+def get_transfer_file_path_tooltip_text(column_value):
     return column_value.filename or column_value.path
 
 
-def get_user_status_tooltip_text(column_value, _strip_prefix):
+def get_user_status_tooltip_text(column_value):
 
     if column_value == 1:
         return _("Away")
@@ -973,9 +962,9 @@ def get_user_status_tooltip_text(column_value, _strip_prefix):
     return _("Offline")
 
 
-def show_country_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn, strip_prefix='flag_'):
+def show_country_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn):
     return show_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn,
-                        ("country",), get_country_tooltip_text, strip_prefix)
+                        ("country",), get_country_tooltip_text)
 
 
 def show_file_path_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn, transfer=False):

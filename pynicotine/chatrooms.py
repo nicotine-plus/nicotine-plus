@@ -24,6 +24,7 @@ from pynicotine.logfacility import log
 
 
 class ChatRooms:
+    GLOBAL_ROOM_NAME = "Public "  # Trailing space to avoid conflict with regular rooms
 
     def __init__(self):
 
@@ -33,6 +34,7 @@ class ChatRooms:
         self.completion_list = []
 
         for event_name, callback in (
+            ("global-room-message", self._global_room_message),
             ("join-room", self._join_room),
             ("leave-room", self._leave_room),
             ("private-room-add-operator", self._private_room_add_operator),
@@ -47,7 +49,6 @@ class ChatRooms:
             ("private-room-removed", self._private_room_removed),
             ("private-room-toggle", self._private_room_toggle),
             ("private-room-users", self._private_room_users),
-            ("public-room-message", self._public_room_message),
             ("quit", self._quit),
             ("room-list", self._room_list),
             ("say-chat-room", self._say_chat_room),
@@ -73,8 +74,8 @@ class ChatRooms:
             join_list = config.sections["server"]["autojoin"]
 
         for room in join_list:
-            if room == "Public ":
-                core.queue.append(slskmessages.JoinPublicRoom())
+            if room == self.GLOBAL_ROOM_NAME:
+                core.queue.append(slskmessages.JoinGlobalRoom())
 
             elif isinstance(room, str):
                 core.queue.append(slskmessages.JoinRoom(room))
@@ -84,10 +85,10 @@ class ChatRooms:
 
     def show_room(self, room, private=False):
 
-        if room == "Public ":
+        if room == self.GLOBAL_ROOM_NAME:
             # Fake a JoinRoom protocol message
             events.emit("join-room", slskmessages.JoinRoom(room))
-            core.queue.append(slskmessages.JoinPublicRoom())
+            core.queue.append(slskmessages.JoinGlobalRoom())
 
         elif room not in self.joined_rooms:
             core.queue.append(slskmessages.JoinRoom(room, private))
@@ -97,8 +98,8 @@ class ChatRooms:
 
     def remove_room(self, room):
 
-        if room == "Public ":
-            core.queue.append(slskmessages.LeavePublicRoom())
+        if room == self.GLOBAL_ROOM_NAME:
+            core.queue.append(slskmessages.LeaveGlobalRoom())
         else:
             core.queue.append(slskmessages.LeaveRoom(room))
 
@@ -299,7 +300,7 @@ class ChatRooms:
 
         private_room["operators"] = msg.operators
 
-    def _public_room_message(self, msg):
+    def _global_room_message(self, msg):
         """ Server code: 152 """
 
         core.pluginhandler.public_room_message_notification(msg.room, msg.user, msg.msg)
@@ -319,8 +320,8 @@ class ChatRooms:
                 self.private_rooms[room[0]] = {"users": [], "joined": room[1], "operators": [], "owner": login_username}
                 continue
 
-            room_data['joined'] = room[1]
-            room_data['owner'] = login_username
+            room_data["joined"] = room[1]
+            room_data["owner"] = login_username
 
         for room in msg.otherprivaterooms:
             room_data = self.private_rooms.get(room[0])
@@ -329,10 +330,10 @@ class ChatRooms:
                 self.private_rooms[room[0]] = {"users": [], "joined": room[1], "operators": [], "owner": None}
                 continue
 
-            room_data['joined'] = room[1]
+            room_data["joined"] = room[1]
 
-            if room_data['owner'] == login_username:
-                room_data['owner'] = None
+            if room_data["owner"] == login_username:
+                room_data["owner"] = None
 
     def _say_chat_room(self, msg):
         """ Server code: 13 """

@@ -26,6 +26,12 @@ class Plugin(BasePlugin):
         super().__init__(*args, **kwargs)
 
         self.commands = {
+            "quit": {
+                "aliases": ["q", "exit"],
+                "callback": self.quit_command,
+                "description": _("Quit Nicotine+"),
+                "usage": ["[-force]"]
+            },
             "close": {
                 "description": "Close private chat",
                 "aliases": ["c"],
@@ -70,6 +76,25 @@ class Plugin(BasePlugin):
                 "usage": ["<virtual name or folder path>"]
             }
         }
+
+    """ Application Commands """
+
+    def quit_command(self, args, **_unused):
+
+        force = (args.lstrip("- ") in ("force", "f"))
+
+        if args and not force:
+            self.output("Invalid option")
+            return False
+
+        if force:
+            self.core.quit()
+        else:
+            self.core.confirm_quit()
+
+        return True
+
+    """ Private Chats """
 
     def close_command(self, args, user=None, **_unused):
 
@@ -117,7 +142,7 @@ class Plugin(BasePlugin):
             self.output("\n" + f"{num_shares} {group_name} shares:")
 
             for virtual_name, folder_path, *_unused in share_group:
-                self.output(f"• \"{virtual_name}\" {folder_path}")
+                self.output(f'• "{virtual_name}" {folder_path}')
 
             num_listed += num_shares
 

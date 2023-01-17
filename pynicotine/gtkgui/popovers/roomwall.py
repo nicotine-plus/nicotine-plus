@@ -33,7 +33,7 @@ class RoomWall(Popover):
         (
             self.container,
             self.message_entry,
-            self.message_view,
+            self.message_view_container,
         ) = ui_template.widgets
 
         super().__init__(
@@ -45,14 +45,15 @@ class RoomWall(Popover):
         )
 
         self.room = room
-        self.room_wall_textview = TextView(self.message_view)
+        self.message_view = TextView(self.message_view_container, editable=False, vertical_margin=4,
+                                     pixels_above_lines=3, pixels_below_lines=3)
 
-        room.room_wall_button.set_popover(self.popover)
+        room.room_wall_button.set_popover(self.widget)
 
     def update_message_list(self):
 
         tickers = self.room.tickers.get_tickers()
-        self.room_wall_textview.append_line("\n".join([f"> [{user}] {msg}" for user, msg in tickers]))
+        self.message_view.append_line("\n".join([f"> [{user}] {msg}" for user, msg in tickers]))
 
     def clear_room_wall_message(self, update_list=True):
 
@@ -60,7 +61,7 @@ class RoomWall(Popover):
         self.message_entry.set_text("")
 
         self.room.tickers.remove_ticker(core.login_username)
-        self.room_wall_textview.clear()
+        self.message_view.clear()
 
         if update_list:
             core.queue.append(slskmessages.RoomTickerSet(self.room.room, ""))
@@ -75,7 +76,7 @@ class RoomWall(Popover):
 
         if entry_text:
             user = core.login_username
-            self.room_wall_textview.append_line(f"> [{user}] {entry_text}")
+            self.message_view.append_line(f"> [{user}] {entry_text}")
 
         self.update_message_list()
 
@@ -89,7 +90,7 @@ class RoomWall(Popover):
 
     def on_show(self, *_args):
 
-        self.room_wall_textview.clear()
+        self.message_view.clear()
         self.update_message_list()
 
         login_username = core.login_username

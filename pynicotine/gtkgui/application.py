@@ -48,10 +48,6 @@ class Application:
         if multi_instance:
             self._instance.set_flags(Gio.ApplicationFlags.NON_UNIQUE)
 
-        # Show errors in the GUI from here on
-        self.init_exception_handler()
-        self.apply_gtk_translations()
-
         self.start_hidden = start_hidden
         self.ci_mode = ci_mode
 
@@ -67,6 +63,10 @@ class Application:
         self.notifications = None
         self.spell_checker = None
 
+        # Show errors in the GUI from here on
+        sys.excepthook = self.on_critical_error
+        self.apply_gtk_translations()
+
         self.connect("activate", self.on_activate)
         self.connect("shutdown", self.on_shutdown)
 
@@ -75,8 +75,7 @@ class Application:
             ("invalid-password", self.on_invalid_password),
             ("quit", self._instance.quit),
             ("setup", self.on_fast_configure),
-            ("shares-unavailable", self.on_shares_unavailable),
-            ("thread-event", self.on_thread_event)
+            ("shares-unavailable", self.on_shares_unavailable)
         ):
             events.connect(event_name, callback)
 
@@ -123,36 +122,10 @@ class Application:
     def send_notification(self, event_id, notification):
         self._instance.send_notification(event_id, notification)
 
-    def init_exception_handler(self):
-
-        sys.excepthook = self.on_critical_error
-
-        if hasattr(threading, "excepthook"):
-            threading.excepthook = self.on_critical_error_threading
-            return
-
-        # Workaround for Python <= 3.7
-        init_thread = threading.Thread.__init__
-
-        def init_thread_excepthook(self, *args, **kwargs):
-
-            init_thread(self, *args, **kwargs)
-            run_thread = self.run
-
-            def run_with_excepthook(*args2, **kwargs2):
-                try:
-                    run_thread(*args2, **kwargs2)
-                except Exception:
-                    GLib.idle_add(sys.excepthook, *sys.exc_info())
-
-            self.run = run_with_excepthook
-
-        threading.Thread.__init__ = init_thread_excepthook
-
     def init_spell_checker(self):
 
         try:
-            gi.require_version('Gspell', '1')
+            gi.require_version("Gspell", "1")
             from gi.repository import Gspell
             self.spell_checker = Gspell.Checker()
 
@@ -168,13 +141,13 @@ class Application:
         if sys.platform == "win32":
             libintl_path = "libintl-8.dll"
 
-            if getattr(sys, 'frozen', False):
+            if getattr(sys, "frozen", False):
                 libintl_path = os.path.join(executable_folder, "lib", libintl_path)
 
         elif sys.platform == "darwin":
             libintl_path = "libintl.8.dylib"
 
-            if getattr(sys, 'frozen', False):
+            if getattr(sys, "frozen", False):
                 libintl_path = os.path.join(executable_folder, libintl_path)
 
         import locale
@@ -464,8 +437,8 @@ class Application:
 
         OptionDialog(
             parent=self.window,
-            title=_('Quit Nicotine+'),
-            message=_('Do you really want to exit?'),
+            title=_("Quit Nicotine+"),
+            message=_("Do you really want to exit?"),
             second_button=_("_Quit"),
             third_button=_("_Run in Background") if self.window.is_visible() else None,
             option_label=_("Remember choice") if remember else None,
@@ -482,27 +455,23 @@ class Application:
 
     def on_shares_unavailable(self, shares):
 
+        from pynicotine.gtkgui.widgets.dialogs import OptionDialog
+
         shares_list_message = ""
 
         for virtual_name, folder_path in shares:
-            shares_list_message += f"• \"{virtual_name}\" {folder_path}\n"
+            shares_list_message += f'• "{virtual_name}" {folder_path}\n'
 
-        def create_dialog():
-            from pynicotine.gtkgui.widgets.dialogs import OptionDialog
-
-            OptionDialog(
-                parent=self.window,
-                title=_("Shares Not Available"),
-                message=_("Verify that external disks are mounted and folder permissions are correct."),
-                long_message=shares_list_message,
-                first_button=_("_Cancel"),
-                second_button=_("_Retry"),
-                third_button=_("_Force Rescan"),
-                callback=self.on_shares_unavailable_response
-            ).show()
-
-        # Avoid dialog appearing inactive if invoked during rescan on startup
-        GLib.idle_add(create_dialog)
+        OptionDialog(
+            parent=self.window,
+            title=_("Shares Not Available"),
+            message=_("Verify that external disks are mounted and folder permissions are correct."),
+            long_message=shares_list_message,
+            first_button=_("_Cancel"),
+            second_button=_("_Retry"),
+            third_button=_("_Force Rescan"),
+            callback=self.on_shares_unavailable_response
+        ).show()
 
     def on_invalid_password_response(self, _dialog, response_id, _data):
         if response_id == 2:
@@ -767,6 +736,9 @@ class Application:
 
     """ Running """
 
+    def raise_exception(self, exc_value):
+        raise exc_value
+
     def on_critical_error_response(self, _dialog, response_id, data):
 
         loop, error = data
@@ -799,11 +771,12 @@ class Application:
             callback_data=(loop, error)
         ).show()
 
-    def on_critical_error(self, exc_type, exc_value, exc_traceback):
+    def _on_critical_error(self, exc_type, exc_value, exc_traceback):
 
         if self.ci_mode:
             core.quit()
-            raise exc_value
+            self.raise_exception(exc_value)
+            return
 
         from traceback import format_tb
 
@@ -836,28 +809,20 @@ class Application:
 
         # Keep dialog open if error occurs on startup
         loop.run()
-        raise exc_value
+        self.raise_exception(exc_value)
 
-    @staticmethod
-    def _on_critical_error_threading(args):
-        raise args.exc_value
+    def on_critical_error(self, _exc_type, exc_value, _exc_traceback):
 
-    def on_critical_error_threading(self, args):
-        """ Exception that originated in a thread.
-        Raising an exception here calls sys.excepthook(), which in turn shows an error dialog. """
-
-        GLib.idle_add(self._on_critical_error_threading, args)
-
-    def _on_thread_event(self, event_name, *args, **kwargs):
-
-        if core.shutdown:
+        if threading.current_thread() is threading.main_thread():
+            self._on_critical_error(_exc_type, exc_value, _exc_traceback)
             return
 
-        events.emit(event_name, *args, **kwargs)
+        # Raise exception in the main thread
+        GLib.idle_add(self.raise_exception, exc_value)
 
-    def on_thread_event(self, event_name, *args, **kwargs):
-        # High priority to ensure there are no delays
-        GLib.idle_add(self._on_thread_event, event_name, *args, **kwargs, priority=GLib.PRIORITY_HIGH_IDLE)
+    def on_process_thread_events(self):
+        events.process_thread_events()
+        return not core.shutdown
 
     def on_activate(self, *_args):
 
@@ -877,14 +842,18 @@ class Application:
         self.notifications = Notifications(self)
         self.window = MainWindow(self)
 
-        # Check command line option and config option
-        if not self.start_hidden and not config.sections["ui"]["startup_hidden"]:
-            self.window.show()
-
         core.start()
 
         if config.sections["server"]["auto_connect_startup"]:
             core.connect()
+
+        # Check command line option and config option
+        if not self.start_hidden and not config.sections["ui"]["startup_hidden"]:
+            self.window.show()
+
+        # Process thread events 60 times per second
+        # High priority to ensure there are no delays
+        GLib.timeout_add(1000 / 60, self.on_process_thread_events, priority=GLib.PRIORITY_HIGH_IDLE)
 
     def on_shutdown(self, *_args):
         # Explicitly hide tray icon, otherwise it will not disappear on Windows

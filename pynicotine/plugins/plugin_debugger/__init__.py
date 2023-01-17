@@ -26,28 +26,28 @@ class Plugin(BasePlugin):
 
         super().__init__(*args, **kwargs)
 
-        self.log('__init__()')
+        self.log("__init__()")
 
     def init(self):
-        self.log('init()')
+        self.log("init()")
 
     def disable(self):
-        self.log('disable()')
+        self.log("disable()")
 
     def loaded_notification(self):
-        self.log('loaded_notification()')
+        self.log("loaded_notification()")
 
     def unloaded_notification(self):
-        self.log('unloaded_notification()')
+        self.log("unloaded_notification()")
 
     def shutdown_notification(self):
-        self.log('shutdown_notification()')
+        self.log("shutdown_notification()")
 
     def public_room_message_notification(self, room, user, line):
-        self.log('public_room_message_notification(room=%s, user=%s, line=%s)', (room, user, line))
+        self.log("public_room_message_notification(room=%s, user=%s, line=%s)", (room, user, line))
 
     def search_request_notification(self, searchterm, user, token):
-        self.log('search_request_notification(searchterm=%s, user=%s, token=%s)', (searchterm, user, token))
+        self.log("search_request_notification(searchterm=%s, user=%s, token=%s)", (searchterm, user, token))
 
     def distrib_search_notification(self, searchterm, user, token):
         # Verbose:
@@ -55,85 +55,85 @@ class Plugin(BasePlugin):
         pass
 
     def incoming_private_chat_event(self, user, line):
-        self.log('incoming_private_chat_event(user=%s, line=%s)', (user, line))
+        self.log("incoming_private_chat_event(user=%s, line=%s)", (user, line))
 
     def incoming_private_chat_notification(self, user, line):
-        self.log('incoming_private_chat_notification(user=%s, line=%s)', (user, line))
+        self.log("incoming_private_chat_notification(user=%s, line=%s)", (user, line))
 
     def incoming_public_chat_event(self, room, user, line):
-        self.log('incoming_public_chat_event(room=%s, user=%s, line=%s)', (room, user, line))
+        self.log("incoming_public_chat_event(room=%s, user=%s, line=%s)", (room, user, line))
 
     def incoming_public_chat_notification(self, room, user, line):
-        self.log('incoming_public_chat_notification(room=%s, user=%s, line=%s)', (room, user, line))
+        self.log("incoming_public_chat_notification(room=%s, user=%s, line=%s)", (room, user, line))
 
     def outgoing_private_chat_event(self, user, line):
-        self.log('outgoing_private_chat_event(user=%s, line=%s)', (user, line))
+        self.log("outgoing_private_chat_event(user=%s, line=%s)", (user, line))
 
     def outgoing_private_chat_notification(self, user, line):
-        self.log('outgoing_private_chat_notification(user=%s, line=%s)', (user, line))
+        self.log("outgoing_private_chat_notification(user=%s, line=%s)", (user, line))
 
     def outgoing_public_chat_event(self, room, line):
-        self.log('outgoing_public_chat_event(room=%s, line=%s)', (room, line))
+        self.log("outgoing_public_chat_event(room=%s, line=%s)", (room, line))
 
     def outgoing_public_chat_notification(self, room, line):
-        self.log('outgoing_public_chat_notification(room=%s, line=%s)', (room, line))
+        self.log("outgoing_public_chat_notification(room=%s, line=%s)", (room, line))
 
     def outgoing_global_search_event(self, text):
-        self.log('outgoing_global_search_event(text=%s)', (text,))
+        self.log("outgoing_global_search_event(text=%s)", (text,))
 
     def outgoing_room_search_event(self, rooms, text):
-        self.log('outgoing_room_search_event(rooms=%s, text=%s)', (rooms, text))
+        self.log("outgoing_room_search_event(rooms=%s, text=%s)", (rooms, text))
 
     def outgoing_buddy_search_event(self, text):
-        self.log('outgoing_buddy_search_event(text=%s)', (text,))
+        self.log("outgoing_buddy_search_event(text=%s)", (text,))
 
     def outgoing_user_search_event(self, users, text):
-        self.log('outgoing_user_search_event(users=%s, text=%s)', (users, text))
+        self.log("outgoing_user_search_event(users=%s, text=%s)", (users, text))
 
     def user_resolve_notification(self, user, ip_address, port, country):
-        self.log('user_resolve_notification(user=%s, ip_address=%s, port=%s, country=%s)',
+        self.log("user_resolve_notification(user=%s, ip_address=%s, port=%s, country=%s)",
                  (user, ip_address, port, country))
 
     def server_connect_notification(self):
-        self.log('server_connect_notification()')
+        self.log("server_connect_notification()")
 
     def server_disconnect_notification(self, userchoice):
-        self.log('server_disconnect_notification(userchoice=%s)', (userchoice,))
+        self.log("server_disconnect_notification(userchoice=%s)", (userchoice,))
 
     def join_chatroom_notification(self, room):
-        self.log('join_chatroom_notification(room=%s)', (room,))
+        self.log("join_chatroom_notification(room=%s)", (room,))
 
     def leave_chatroom_notification(self, room):
-        self.log('leave_chatroom_notification(room=%s)', (room,))
+        self.log("leave_chatroom_notification(room=%s)", (room,))
 
     def user_join_chatroom_notification(self, room, user):
-        self.log('user_join_chatroom_notification(room=%s, user=%s)', (room, user,))
+        self.log("user_join_chatroom_notification(room=%s, user=%s)", (room, user,))
 
     def user_leave_chatroom_notification(self, room, user):
-        self.log('user_leave_chatroom_notification(room=%s, user=%s)', (room, user,))
+        self.log("user_leave_chatroom_notification(room=%s, user=%s)", (room, user,))
 
     def user_stats_notification(self, user, stats):
-        self.log('user_stats_notification(user=%s, stats=%s)', (user, stats))
+        self.log("user_stats_notification(user=%s, stats=%s)", (user, stats))
 
     def user_status_notification(self, user, status, privileged):
-        self.log('user_status_notification(user=%s, status=%s, privileged=%s)', (user, status, privileged))
+        self.log("user_status_notification(user=%s, status=%s, privileged=%s)", (user, status, privileged))
 
     def upload_queued_notification(self, user, virtual_path, real_path):
-        self.log('upload_queued_notification(user=%s, virtual_path=%s, real_path=%s)',
+        self.log("upload_queued_notification(user=%s, virtual_path=%s, real_path=%s)",
                  (user, virtual_path, real_path))
 
     def upload_started_notification(self, user, virtual_path, real_path):
-        self.log('upload_started_notification(user=%s, virtual_path=%s, real_path=%s)',
+        self.log("upload_started_notification(user=%s, virtual_path=%s, real_path=%s)",
                  (user, virtual_path, real_path))
 
     def upload_finished_notification(self, user, virtual_path, real_path):
-        self.log('upload_finished_notification(user=%s, virtual_path=%s, real_path=%s)',
+        self.log("upload_finished_notification(user=%s, virtual_path=%s, real_path=%s)",
                  (user, virtual_path, real_path))
 
     def download_started_notification(self, user, virtual_path, real_path):
-        self.log('download_started_notification(user=%s, virtual_path=%s, real_path=%s)',
+        self.log("download_started_notification(user=%s, virtual_path=%s, real_path=%s)",
                  (user, virtual_path, real_path))
 
     def download_finished_notification(self, user, virtual_path, real_path):
-        self.log('download_finished_notification(user=%s, virtual_path=%s, real_path=%s)',
+        self.log("download_finished_notification(user=%s, virtual_path=%s, real_path=%s)",
                  (user, virtual_path, real_path))

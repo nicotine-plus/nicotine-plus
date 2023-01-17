@@ -27,12 +27,12 @@ class Plugin(BasePlugin):
         super().__init__(*args, **kwargs)
 
         self.settings = {
-            'rooms': ['testroom']
+            "rooms": ["testroom"]
         }
         self.metasettings = {
-            'rooms': {
-                'description': 'Rooms to broadcast in',
-                'type': 'list string'
+            "rooms": {
+                "description": "Rooms to broadcast in",
+                "type": "list string"
             }
         }
 
@@ -42,10 +42,10 @@ class Plugin(BasePlugin):
         self.bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
         self.signal_id = None
 
-        self.dbus_mpris_service = 'org.mpris.MediaPlayer2.'
-        self.dbus_mpris_player_service = 'org.mpris.MediaPlayer2.Player'
-        self.dbus_mpris_path = '/org/mpris/MediaPlayer2'
-        self.dbus_property = 'org.freedesktop.DBus.Properties'
+        self.dbus_mpris_service = "org.mpris.MediaPlayer2."
+        self.dbus_mpris_player_service = "org.mpris.MediaPlayer2.Player"
+        self.dbus_mpris_path = "/org/mpris/MediaPlayer2"
+        self.dbus_property = "org.freedesktop.DBus.Properties"
 
         self.add_mpris_signal_receiver()
 
@@ -72,7 +72,7 @@ class Plugin(BasePlugin):
         if not player:
             dbus_proxy = Gio.DBusProxy.new_sync(
                 self.bus, Gio.DBusProxyFlags.NONE, None,
-                'org.freedesktop.DBus', '/org/freedesktop/DBus', 'org.freedesktop.DBus', None)
+                "org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus", None)
 
             names = dbus_proxy.ListNames()
 
@@ -90,7 +90,7 @@ class Plugin(BasePlugin):
             self.bus, Gio.DBusProxyFlags.NONE, None,
             self.dbus_mpris_service + player, self.dbus_mpris_path, self.dbus_property, None)
 
-        metadata = dbus_proxy.Get('(ss)', self.dbus_mpris_player_service, 'Metadata')
+        metadata = dbus_proxy.Get("(ss)", self.dbus_mpris_player_service, "Metadata")
         song_url = metadata.get("xesam:url")
 
         return song_url
@@ -98,7 +98,7 @@ class Plugin(BasePlugin):
     def send_now_playing(self):
         """ Broadcast Now Playing in selected rooms """
 
-        for room in self.settings['rooms']:
+        for room in self.settings["rooms"]:
             playing = self.core.now_playing.get_np()
 
             if playing:

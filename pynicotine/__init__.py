@@ -104,8 +104,8 @@ def check_python_version():
     if sys.version_info < python_version:
         return _("""You are using an unsupported version of Python (%(old_version)s).
 You should install Python %(min_version)s or newer.""") % {
-            "old_version": '.'.join(map(str, sys.version_info[:3])),
-            "min_version": '.'.join(map(str, python_version))
+            "old_version": ".".join(map(str, sys.version_info[:3])),
+            "min_version": ".".join(map(str, python_version))
         }
 
     return None
@@ -165,7 +165,7 @@ def rename_process(new_name, debug_info=False):
         msg = ["Errors occurred while trying to change process name:"]
         for i in errors:
             msg.append(str(i))
-        log.add('\n'.join(msg))
+        log.add("\n".join(msg))
 
 
 def rescan_shares():

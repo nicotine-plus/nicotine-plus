@@ -45,7 +45,7 @@ class BuildPyCommand(build_py):
         build_py.run(self)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     setup(
         name="nicotine-plus",

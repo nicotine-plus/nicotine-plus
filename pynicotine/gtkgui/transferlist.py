@@ -325,7 +325,7 @@ class TransferList:
         if self.tree_users != "ungrouped":
             if transfer is not None:
                 username = transfer.user
-                path = transfer.path if self.type == "download" else transfer.filename.rsplit('\\', 1)[0]
+                path = transfer.path if self.type == "download" else transfer.filename.rsplit("\\", 1)[0]
                 user_path = username + path
 
                 user_path_iter = self.paths.get(user_path)
@@ -547,7 +547,7 @@ class TransferList:
 
                 """ Paths can be empty if files are downloaded individually, make sure we
                 don't add files to the wrong user in the TreeView """
-                full_path = path = transfer.path if self.type == "download" else transfer.filename.rsplit('\\', 1)[0]
+                full_path = path = transfer.path if self.type == "download" else transfer.filename.rsplit("\\", 1)[0]
                 user_path = user + path
 
                 if config.sections["ui"]["reverse_file_paths"]:
@@ -590,7 +590,7 @@ class TransferList:
             # Group by folder, path not visible
             path = ""
         else:
-            path = transfer.path if self.type == "download" else transfer.filename.rsplit('\\', 1)[0]
+            path = transfer.path if self.type == "download" else transfer.filename.rsplit("\\", 1)[0]
 
             if config.sections["ui"]["reverse_file_paths"]:
                 path = self.path_separator.join(reversed(path.split(self.path_separator)))

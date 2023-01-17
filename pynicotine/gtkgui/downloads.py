@@ -40,7 +40,7 @@ class Downloads(TransferList):
 
     def __init__(self, window):
 
-        self.path_separator = '/'
+        self.path_separator = "/"
         self.path_label = _("Path")
         self.retry_label = _("_Resume")
         self.abort_label = _("P_ause")
@@ -108,8 +108,8 @@ class Downloads(TransferList):
 
         OptionDialog(
             parent=self.window,
-            title=_('Clear Queued Downloads'),
-            message=_('Do you really want to clear all queued downloads?'),
+            title=_("Clear Queued Downloads"),
+            message=_("Do you really want to clear all queued downloads?"),
             callback=self.on_clear_queued_response
         ).show()
 
@@ -121,8 +121,8 @@ class Downloads(TransferList):
 
         OptionDialog(
             parent=self.window,
-            title=_('Clear All Downloads'),
-            message=_('Do you really want to clear all downloads?'),
+            title=_("Clear All Downloads"),
+            message=_("Do you really want to clear all downloads?"),
             callback=self.on_clear_all_response
         ).show()
 
@@ -134,9 +134,9 @@ class Downloads(TransferList):
 
         OptionDialog(
             parent=self.window,
-            title=_("Download %(num)i files?") % {'num': numfiles},
+            title=_("Download %(num)i files?") % {"num": numfiles},
             message=_("Do you really want to download %(num)i files from %(user)s's folder %(folder)s?") % {
-                'num': numfiles, 'user': username, 'folder': folder},
+                "num": numfiles, "user": username, "folder": folder},
             callback=self.folder_download_response,
             callback_data=msg
         ).show()
@@ -155,7 +155,7 @@ class Downloads(TransferList):
 
         if transfer:
             url = core.userbrowse.get_soulseek_url(
-                transfer.user, transfer.filename.rsplit('\\', 1)[0] + '\\')
+                transfer.user, transfer.filename.rsplit("\\", 1)[0] + "\\")
             copy_text(url)
 
     def on_open_file_manager(self, *_args):
@@ -186,7 +186,7 @@ class Downloads(TransferList):
 
         for transfer in self.selected_transfers:
             user = transfer.user
-            folder = transfer.filename.rsplit('\\', 1)[0] + '\\'
+            folder = transfer.filename.rsplit("\\", 1)[0] + "\\"
 
             if user not in requested_users and folder not in requested_folders:
                 core.userbrowse.browse_user(user, path=folder)

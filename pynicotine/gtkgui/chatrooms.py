@@ -71,7 +71,7 @@ class ChatRooms(IconNotebook):
 
         super().__init__(
             window,
-            widget=window.chatrooms_notebook,
+            parent=window.chatrooms_content,
             parent_page=window.chatrooms_page,
             switch_page_callback=self.on_switch_chat,
             reorder_page_callback=self.on_reordered_page
@@ -90,9 +90,9 @@ class ChatRooms(IconNotebook):
         for event_name, callback in (
             ("clear-room-messages", self.clear_room_messages),
             ("echo-room-message", self.echo_room_message),
+            ("global-room-message", self.global_room_message),
             ("join-room", self.join_room),
             ("private-room-added", self.private_room_added),
-            ("public-room-message", self.public_room_message),
             ("remove-room", self.remove_room),
             ("room-completion-list", self.set_completion_list),
             ("room-list", self.room_list),
@@ -155,8 +155,8 @@ class ChatRooms(IconNotebook):
             if self.command_help is None:
                 self.command_help = ChatRoomCommands(self.window)
 
-            self.command_help.popover.unparent()
-            tab.help_button.set_popover(self.command_help.popover)
+            self.command_help.widget.unparent()
+            tab.help_button.set_popover(self.command_help.widget)
 
             if not tab.loaded:
                 tab.load()
@@ -183,7 +183,7 @@ class ChatRooms(IconNotebook):
         if room not in core.chatrooms.server_rooms and room not in core.chatrooms.private_rooms:
             OptionDialog(
                 parent=self.window,
-                title=_('Create New Room?'),
+                title=_("Create New Room?"),
                 message=_('Do you really want to create a new room "%s"?') % room,
                 option_label=_("Make room private"),
                 callback=self.on_create_room_response,
@@ -243,7 +243,7 @@ class ChatRooms(IconNotebook):
         self.remove_page(page.container)
         del self.pages[room]
 
-        if room == "Public ":
+        if room == core.chatrooms.GLOBAL_ROOM_NAME:
             self.roomlist.toggle_public_feed(False)
         else:
             self.window.room_search_combobox.remove_all()
@@ -271,7 +271,7 @@ class ChatRooms(IconNotebook):
             # Did not auto-join room, switch to tab
             core.chatrooms.show_room(msg.room)
 
-        if msg.room == "Public ":
+        if msg.room == core.chatrooms.GLOBAL_ROOM_NAME:
             self.roomlist.toggle_public_feed(True)
         else:
             self.window.room_search_combobox.append_text(msg.room)
@@ -341,12 +341,12 @@ class ChatRooms(IconNotebook):
         if page is not None:
             page.say_chat_room(msg)
 
-    def public_room_message(self, msg):
+    def global_room_message(self, msg):
 
-        page = self.pages.get("Public ")
+        page = self.pages.get(core.chatrooms.GLOBAL_ROOM_NAME)
 
         if page is not None:
-            page.say_chat_room(msg, public=True)
+            page.say_chat_room(msg, is_global=True)
 
     def toggle_chat_buttons(self):
         for page in self.pages.values():
@@ -401,7 +401,7 @@ class ChatRoom:
             self.activity_container,
             self.activity_search_bar,
             self.activity_search_entry,
-            self.activity_view,
+            self.activity_view_container,
             self.auto_join_toggle,
             self.chat_container,
             self.chat_entry,
@@ -409,7 +409,7 @@ class ChatRoom:
             self.chat_paned,
             self.chat_search_bar,
             self.chat_search_entry,
-            self.chat_view,
+            self.chat_view_container,
             self.container,
             self.help_button,
             self.log_toggle,
@@ -445,15 +445,17 @@ class ChatRoom:
 
         self.users = {}
 
-        self.activity_view = TextView(self.activity_view)
-        self.chat_view = TextView(self.chat_view)
+        self.activity_view = TextView(self.activity_view_container, editable=False, horizontal_margin=10,
+                                      vertical_margin=5, pixels_below_lines=2)
+        self.chat_view = TextView(self.chat_view_container, editable=False, horizontal_margin=10,
+                                  vertical_margin=5, pixels_below_lines=2)
 
         # Event Text Search
-        self.activity_search_bar = TextSearchBar(self.activity_view.textview, self.activity_search_bar,
+        self.activity_search_bar = TextSearchBar(self.activity_view.widget, self.activity_search_bar,
                                                  self.activity_search_entry)
 
         # Chat Text Search
-        self.chat_search_bar = TextSearchBar(self.chat_view.textview, self.chat_search_bar, self.chat_search_entry,
+        self.chat_search_bar = TextSearchBar(self.chat_view.widget, self.chat_search_bar, self.chat_search_entry,
                                              controller_widget=self.chat_container, focus_widget=self.chat_entry)
 
         # Chat Entry
@@ -515,7 +517,7 @@ class ChatRoom:
         self.popup_menu_private_rooms_chat = UserPopupMenu(self.window.application)
         self.popup_menu_private_rooms_list = UserPopupMenu(self.window.application)
 
-        self.popup_menu_user_chat = UserPopupMenu(self.window.application, self.chat_view.textview,
+        self.popup_menu_user_chat = UserPopupMenu(self.window.application, self.chat_view.widget,
                                                   connect_events=False)
         self.popup_menu_user_list = UserPopupMenu(self.window.application, self.users_list_view,
                                                   self.on_popup_menu_user)
@@ -531,7 +533,7 @@ class ChatRoom:
                 (">" + _("Private Rooms"), menu_private_rooms)
             )
 
-        self.popup_menu_activity_view = PopupMenu(self.window.application, self.activity_view.textview,
+        self.popup_menu_activity_view = PopupMenu(self.window.application, self.activity_view.widget,
                                                   self.on_popup_menu_log)
         self.popup_menu_activity_view.add_items(
             ("#" + _("Find…"), self.on_find_activity_log),
@@ -544,7 +546,7 @@ class ChatRoom:
             ("#" + _("_Leave Room"), self.on_leave_room)
         )
 
-        self.popup_menu_chat_view = PopupMenu(self.window.application, self.chat_view.textview, self.on_popup_menu_chat)
+        self.popup_menu_chat_view = PopupMenu(self.window.application, self.chat_view.widget, self.on_popup_menu_chat)
         self.popup_menu_chat_view.add_items(
             ("#" + _("Find…"), self.on_find_room_log),
             ("", None),
@@ -579,10 +581,8 @@ class ChatRoom:
                     or window_width)
         self.users_paned.set_position(position - 400)
 
-        # Scroll chat to bottom
-        GLib.idle_add(self.activity_view.scroll_bottom)
-        GLib.idle_add(self.chat_view.scroll_bottom)
-        self.loaded = self.activity_view.auto_scroll = self.chat_view.auto_scroll = True
+        GLib.idle_add(self.read_room_logs_finished)
+        self.loaded = True
 
     def clear(self):
 
@@ -599,7 +599,7 @@ class ChatRoom:
 
     def setup_public_feed(self):
 
-        if self.room != "Public ":
+        if self.room != core.chatrooms.GLOBAL_ROOM_NAME:
             return
 
         for widget in (self.activity_container, self.users_container, self.chat_entry,
@@ -621,9 +621,9 @@ class ChatRoom:
 
         username = userdata.username
         status = userdata.status
-        country = userdata.country or ""  # country can be None, ensure string is used
+        country_code = userdata.country or ""  # country can be None, ensure string is used
         status_icon_name = USER_STATUS_ICON_NAMES.get(status, "")
-        flag_icon_name = get_flag_icon_name(country)
+        flag_icon_name = get_flag_icon_name(country_code)
         h_speed = ""
         avgspeed = userdata.avgspeed
 
@@ -656,13 +656,20 @@ class ChatRoom:
                 status,
                 GObject.Value(GObject.TYPE_UINT, avgspeed),
                 GObject.Value(GObject.TYPE_UINT, files),
-                country,
+                country_code,
                 weight,
                 underline
             ]
         )
 
         self.users[username] = iterator
+
+    def read_room_logs_finished(self):
+
+        self.activity_view.scroll_bottom()
+        self.chat_view.scroll_bottom()
+
+        self.activity_view.auto_scroll = self.chat_view.auto_scroll = True
 
     def read_room_logs(self):
 
@@ -797,7 +804,7 @@ class ChatRoom:
     def ticker_remove(self, msg):
         self.tickers.remove_ticker(msg.user)
 
-    def show_notification(self, login, room, user, text, tag, public=False):
+    def show_notification(self, login, room, user, text, tag, is_global=False):
 
         if user == login:
             return
@@ -806,7 +813,7 @@ class ChatRoom:
 
         self.chatrooms.request_tab_hilite(self.container, mentioned)
 
-        if public and room in core.chatrooms.joined_rooms:
+        if is_global and room in core.chatrooms.joined_rooms:
             # Don't show notifications about the Public feed that's duplicated in an open tab
             return
 
@@ -830,8 +837,8 @@ class ChatRoom:
             self.window.application.notifications.add("rooms", user, room)
             return
 
-        if not public and config.sections["notifications"]["notification_popup_chatroom"]:
-            # Don't show notifications for "Public " room, they're too noisy
+        if not is_global and config.sections["notifications"]["notification_popup_chatroom"]:
+            # Don't show notifications for public feed room, they're too noisy
             core.notifications.show_chatroom_notification(
                 room, text,
                 title=_("Message by %(user)s in Room %(room)s") % {"user": user, "room": room}
@@ -844,7 +851,7 @@ class ChatRoom:
         if word not in text:
             return -1
 
-        word_boundaries = [' '] + PUNCTUATION
+        word_boundaries = [" "] + PUNCTUATION
         whole = False
         start = 0
 
@@ -857,7 +864,7 @@ class ChatRoom:
 
         return start if whole else -1
 
-    def say_chat_room(self, msg, public=False):
+    def say_chat_room(self, msg, is_global=False):
 
         user = msg.user
         login_username = core.login_username
@@ -879,7 +886,7 @@ class ChatRoom:
             line = f"[{user}] {text}"
             speech = text
 
-        if public:
+        if is_global:
             line = f"{room} | {line}"
 
         line = "\n-- ".join(line.split("\n"))
@@ -903,7 +910,7 @@ class ChatRoom:
                 username=user, usertag=usertag, timestamp_format=timestamp_format
             )
 
-        self.show_notification(login_username, room, user, speech, tag, public)
+        self.show_notification(login_username, room, user, speech, tag, is_global)
 
         if self.log_toggle.get_active():
             log.write_log_file(
@@ -1032,24 +1039,24 @@ class ChatRoom:
 
         self.update_user_tag(user)
 
-    def user_country(self, user, country):
+    def user_country(self, user, country_code):
 
         iterator = self.users.get(user)
 
         if iterator is None:
             return
 
-        if self.usersmodel.get_value(iterator, 8) == country:
+        if self.usersmodel.get_value(iterator, 8) == country_code:
             # Country didn't change, no need to update
             return
 
-        flag_icon_name = get_flag_icon_name(country or "")
+        flag_icon_name = get_flag_icon_name(country_code)
 
         if not flag_icon_name:
             return
 
         self.usersmodel.set_value(iterator, 1, flag_icon_name)
-        self.usersmodel.set_value(iterator, 8, country)
+        self.usersmodel.set_value(iterator, 8, country_code)
 
     def user_name_event(self, pos_x, pos_y, user):
 
@@ -1170,7 +1177,7 @@ class ChatRoom:
 
     def on_leave_room(self, *_args):
 
-        if self.room == "Public ":
+        if self.room == core.chatrooms.GLOBAL_ROOM_NAME:
             self.chatrooms.roomlist.public_feed_toggle.set_active(False)
             return
 
@@ -1180,7 +1187,7 @@ class ChatRoom:
     def on_tooltip(widget, pos_x, pos_y, _keyboard_mode, tooltip):
 
         status_tooltip = show_user_status_tooltip(widget, pos_x, pos_y, tooltip, 5)
-        country_tooltip = show_country_tooltip(widget, pos_x, pos_y, tooltip, 8, strip_prefix="")
+        country_tooltip = show_country_tooltip(widget, pos_x, pos_y, tooltip, 8)
 
         if status_tooltip:
             return status_tooltip
@@ -1214,8 +1221,8 @@ class ChatRoom:
 
         OptionDialog(
             parent=self.window,
-            title=_('Delete Logged Messages?'),
-            message=_('Do you really want to permanently delete all logged messages for this room?'),
+            title=_("Delete Logged Messages?"),
+            message=_("Do you really want to permanently delete all logged messages for this room?"),
             callback=self.on_delete_room_log_response
         ).show()
 

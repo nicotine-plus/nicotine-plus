@@ -32,7 +32,7 @@
       </object>
     </child>
     <child>
-      <object class="GtkRadioButton" id="unlimited_speed_radio">
+      <object class="GtkRadioButton" id="use_unlimited_speed_radio">
         <property name="visible">True</property>
         <property name="hexpand">True</property>
         <property name="label" translatable="yes">Unlimited download speed</property>
@@ -49,7 +49,7 @@
             <property name="label" translatable="yes">Use download speed limit (KiB/s):</property>
             <property name="hexpand">True</property>
             <property name="visible">True</property>
-            <property name="group">unlimited_speed_radio</property>
+            <property name="group">use_unlimited_speed_radio</property>
             <signal name="toggled" handler="on_active_limit_toggled"/>
           </object>
         </child>
@@ -75,7 +75,7 @@
             <property name="label" translatable="yes">Use alternative download speed limit (KiB/s):</property>
             <property name="hexpand">True</property>
             <property name="visible">True</property>
-            <property name="group">unlimited_speed_radio</property>
+            <property name="group">use_unlimited_speed_radio</property>
             <signal name="toggled" handler="on_active_limit_toggled"/>
           </object>
         </child>

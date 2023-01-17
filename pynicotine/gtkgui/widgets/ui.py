@@ -39,7 +39,7 @@ class UserInterface:
             with open(encode_path(os.path.join(GTK_GUI_DIR, "ui", path)), encoding="utf-8") as file_handle:
                 if GTK_API_VERSION >= 4:
                     self.ui_data[path] = file_handle.read().replace(
-                        "GtkRadioButton", "GtkCheckButton").replace("\"can-focus\"", "\"focusable\"")
+                        "GtkRadioButton", "GtkCheckButton").replace('"can-focus"', '"focusable"')
                 else:
                     self.ui_data[path] = file_handle.read()
 
