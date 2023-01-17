@@ -35,7 +35,11 @@ class Application:
         for log_level in ("download", "upload"):
             log.add_log_level(log_level, is_permanent=False)
 
-        events.connect("shares-unavailable", self.on_shares_unavailable)
+        for event_name, callback in (
+            ("confirm-quit", self.on_confirm_quit),
+            ("shares-unavailable", self.on_shares_unavailable)
+        ):
+            events.connect(event_name, callback)
 
     def run(self):
 
@@ -54,6 +58,13 @@ class Application:
     def exception_hook(self, _exc_type, exc_value, _exc_traceback):
         core.quit()
         raise exc_value
+
+    def on_confirm_quit_response(self, user_input):
+        if user_input.lower().startswith("y"):
+            core.quit()
+
+    def on_confirm_quit(self, _remember):
+        cli.prompt("Do you really want to quit Nicotine+ (Y/N)?: ", callback=self.on_confirm_quit_response)
 
     def on_shares_unavailable_response(self, user_input):
 
