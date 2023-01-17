@@ -24,6 +24,7 @@ from collections import deque
 from threading import Thread
 
 from pynicotine.events import events
+from pynicotine.logfacility import log
 
 
 class CLIInputProcessor(Thread):
@@ -42,7 +43,8 @@ class CLIInputProcessor(Thread):
             try:
                 self._handle_prompt()
 
-            except EOFError:
+            except Exception as error:
+                log.add_debug("CLI input prompt is no longer available: %s", error)
                 return
 
             # Small time window to set custom prompt
