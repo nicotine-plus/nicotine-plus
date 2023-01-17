@@ -381,6 +381,7 @@ class PluginHandler:
         BasePlugin.core = core
 
         for event_name, callback in (
+            ("cli-command", self._cli_command),
             ("start", self._start),
             ("quit", self._quit)
         ):
@@ -410,6 +411,9 @@ class PluginHandler:
         # Disable plugins
         for plugin in self.list_installed_plugins():
             self.disable_plugin(plugin)
+
+    def _cli_command(self, command, args):
+        self.trigger_cli_command_event(command, args or "")
 
     def update_completions(self, plugin):
 

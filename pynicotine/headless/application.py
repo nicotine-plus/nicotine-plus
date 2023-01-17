@@ -19,6 +19,7 @@
 import sys
 import time
 
+from pynicotine.cli import cli
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
@@ -36,6 +37,7 @@ class Application:
 
         for event_name, callback in (
             ("confirm-quit", self.on_confirm_quit),
+            ("shares-unavailable", self.on_shares_unavailable)
         ):
             events.connect(event_name, callback)
 
@@ -57,15 +59,20 @@ class Application:
         core.quit()
         raise exc_value
 
-    def on_confirm_quit(self, _remember):
-        # Not implemented.
-        log.add("Headless was asked to quit")  # TODO: Need Y/N prompt
-
-        # FIXME: The prompt doesn't appear until after something is entered...
-        choice = input("Test try entering something with the keyboard (Y/N):")
-
-        print(f"You entered {choice}")
-
-        if choice in ("Y", "y"):
+    def on_confirm_quit_response(self, user_input):
+        if user_input.lower().startswith("y"):
             core.quit()
 
+    def on_confirm_quit(self, _remember):
+        cli.prompt("Do you really want to quit Nicotine+ (Y/N)?: ", callback=self.on_confirm_quit_response)
+
+    def on_shares_unavailable_response(self, user_input):
+
+        if user_input == "test":
+            log.add("works")
+            return
+
+        log.add("no")
+
+    def on_shares_unavailable(self, _shares):
+        cli.prompt("Enter some text: ", callback=self.on_shares_unavailable_response)

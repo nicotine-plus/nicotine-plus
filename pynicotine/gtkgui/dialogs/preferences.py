@@ -446,13 +446,13 @@ class DownloadsPage:
 
             for dfilter, error in failed.items():
                 errors += "Filter: %(filter)s Error: %(error)s " % {
-                    'filter': dfilter,
-                    'error': error
+                    "filter": dfilter,
+                    "error": error
                 }
 
             error = _("%(num)d Failed! %(error)s " % {
-                'num': len(failed),
-                'error': errors}
+                "num": len(failed),
+                "error": errors}
             )
 
             self.VerifiedLabel.set_text(error)
@@ -619,7 +619,7 @@ class SharesPage:
             EntryDialog(
                 parent=self.application.preferences,
                 title=_("Edit Shared Folder"),
-                message=_("Enter new virtual name for '%(dir)s':") % {'dir': folder_path},
+                message=_("Enter new virtual name for '%(dir)s':") % {"dir": folder_path},
                 default=virtual_name,
                 option_value=is_buddy_only,
                 option_label=_("Share with buddies only"),
@@ -737,31 +737,30 @@ class UserProfilePage:
         ui_template = UserInterface(scope=self, path="settings/userinfo.ui")
         (
             self.Main,  # pylint: disable=invalid-name
-            self.description_text_view,
+            self.description_view_container,
             self.select_picture_button
         ) = ui_template.widgets
 
         self.application = application
+        self.description_view = TextView(self.description_view_container, parse_urls=False)
         self.select_picture_button = FileChooserButton(self.select_picture_button, application.preferences, "image")
 
         self.options = {
             "userinfo": {
-                "descr": self.description_text_view,
+                "descr": self.description_view,
                 "pic": self.select_picture_button
             }
         }
 
     def set_settings(self):
+        self.description_view.clear()
         self.application.preferences.set_widgets_data(self.options)
 
     def get_settings(self):
 
-        text_buffer = self.description_text_view.get_buffer()
-        start, end = text_buffer.get_bounds()
-
         return {
             "userinfo": {
-                "descr": repr(text_buffer.get_text(start, end, True)),
+                "descr": repr(self.description_view.get_text()),
                 "pic": self.select_picture_button.get_path()
             }
         }
@@ -1134,7 +1133,7 @@ class ChatsPage:
         self.application.preferences.set_widgets_data(self.options)
 
         try:
-            gi.require_version('Gspell', '1')
+            gi.require_version("Gspell", "1")
             from gi.repository import Gspell  # noqa: F401; pylint:disable=unused-import
 
         except (ImportError, ValueError):
@@ -1744,7 +1743,7 @@ class SearchesPage:
         self.search_required = False
 
         self.filter_help = SearchFilterHelp(application.preferences)
-        self.ShowSearchHelp.set_popover(self.filter_help.popover)
+        self.ShowSearchHelp.set_popover(self.filter_help.widget)
 
         self.options = {
             "searches": {
@@ -1880,7 +1879,7 @@ class UrlHandlersPage:
             "links -g $",
             "dillo $",
             "konqueror $",
-            "\"c:\\Program Files\\Mozilla Firefox\\Firefox.exe\" $"
+            '"c:\\Program Files\\Mozilla Firefox\\Firefox.exe" $'
         ]
 
         self.protocols = {}
@@ -2101,7 +2100,7 @@ class NowPlayingPage:
 
         if player == "lastfm":
             self.NP_lastfm.set_active(True)
-        elif player == 'listenbrainz':
+        elif player == "listenbrainz":
             self.NP_listenbrainz.set_active(True)
         elif player == "other":
             self.NP_other.set_active(True)
@@ -2134,8 +2133,8 @@ class NowPlayingPage:
             if item == "$t":
                 legend += _("Title")
             elif item == "$n":
-                legend += _("Now Playing (typically \"%(artist)s - %(title)s\")") % {
-                    'artist': _("Artist"), 'title': _("Title")}
+                legend += _('Now Playing (typically "%(artist)s - %(title)s")') % {
+                    "artist": _("Artist"), "title": _("Title")}
             elif item == "$l":
                 legend += _("Duration")
             elif item == "$r":
@@ -2190,7 +2189,7 @@ class PluginsPage:
             self.Main,  # pylint: disable=invalid-name
             self.enable_plugins_toggle,
             self.plugin_authors_label,
-            self.plugin_description_view,
+            self.plugin_description_view_container,
             self.plugin_list_container,
             self.plugin_name_label,
             self.plugin_settings_button,
@@ -2207,7 +2206,8 @@ class PluginsPage:
             }
         }
 
-        self.plugin_description_view = TextView(self.plugin_description_view)
+        self.plugin_description_view = TextView(self.plugin_description_view_container, editable=False,
+                                                pixels_below_lines=2)
         self.plugin_list_view = TreeView(
             application.window, parent=self.plugin_list_container, always_select=True,
             select_row_callback=self.on_select_plugin,
@@ -2235,7 +2235,7 @@ class PluginsPage:
             except OSError:
                 continue
 
-            plugin_name = info.get('Name', plugin_id)
+            plugin_name = info.get("Name", plugin_id)
             enabled = (plugin_id in config.sections["plugins"]["enabled"])
             self.plugin_list_view.add_row([enabled, plugin_name, plugin_id], select_row=False)
 
@@ -2264,9 +2264,9 @@ class PluginsPage:
             info = core.pluginhandler.get_plugin_info(self.selected_plugin)
 
         plugin_name = info.get("Name", self.selected_plugin)
-        plugin_version = info.get("Version", '-')
-        plugin_authors = ", ".join(info.get("Authors", '-'))
-        plugin_description = info.get("Description", '').replace(r'\n', '\n')
+        plugin_version = info.get("Version", "-")
+        plugin_authors = ", ".join(info.get("Authors", "-"))
+        plugin_description = info.get("Description", "").replace(r"\n", "\n")
 
         self.plugin_name_label.set_text(plugin_name)
         self.plugin_version_label.set_text(plugin_version)
@@ -2355,7 +2355,7 @@ class Preferences(Dialog):
             show_title_buttons=False
         )
 
-        add_css_class(self.window, "preferences-border")
+        add_css_class(self.widget, "preferences-border")
 
         if GTK_API_VERSION == 3:
             # Scroll to focused widgets
@@ -2434,11 +2434,8 @@ class Preferences(Dialog):
         if isinstance(widget, Gtk.Entry):
             return widget.get_text()
 
-        if isinstance(widget, Gtk.TextView):
-            text_buffer = widget.get_buffer()
-            start, end = text_buffer.get_bounds()
-
-            return text_buffer.get_text(start, end, True)
+        if isinstance(widget, TextView):
+            return repr(widget.get_text())
 
         if isinstance(widget, Gtk.CheckButton):
             try:
@@ -2476,8 +2473,8 @@ class Preferences(Dialog):
         elif isinstance(widget, Gtk.Entry):
             widget.set_text("")
 
-        elif isinstance(widget, Gtk.TextView):
-            widget.get_buffer().set_text("")
+        elif isinstance(widget, TextView):
+            widget.clear()
 
         elif isinstance(widget, Gtk.CheckButton):
             widget.set_active(0)
@@ -2503,9 +2500,9 @@ class Preferences(Dialog):
             if isinstance(value, (str, int)):
                 widget.set_text(value)
 
-        elif isinstance(widget, Gtk.TextView):
-            if isinstance(value, (str, int)):
-                widget.get_buffer().set_text(unescape(value))
+        elif isinstance(widget, TextView):
+            if isinstance(value, str):
+                widget.append_line(unescape(value))
 
         elif isinstance(widget, Gtk.CheckButton):
             try:

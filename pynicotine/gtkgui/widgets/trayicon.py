@@ -213,7 +213,7 @@ class BaseImplementation:
         EntryDialog(
             parent=self.application.window,
             title=_("Start Messaging"),
-            message=_('Enter the name of the user whom you want to send a message:'),
+            message=_("Enter the name of the user whom you want to send a message:"),
             callback=self.on_open_private_chat_response,
             droplist=sorted(core.userlist.buddies)
         ).show()
@@ -233,7 +233,7 @@ class BaseImplementation:
         EntryDialog(
             parent=self.application.window,
             title=_("View User Profile"),
-            message=_('Enter the name of the user whose profile you want to see:'),
+            message=_("Enter the name of the user whose profile you want to see:"),
             callback=self.on_get_a_users_info_response,
             droplist=sorted(core.userlist.buddies)
         ).show()
@@ -253,7 +253,7 @@ class BaseImplementation:
         EntryDialog(
             parent=self.application.window,
             title=_("Browse Shares"),
-            message=_('Enter the name of the user whose shares you want to see:'),
+            message=_("Enter the name of the user whose shares you want to see:"),
             callback=self.on_get_a_users_shares_response,
             droplist=sorted(core.userlist.buddies)
         ).show()

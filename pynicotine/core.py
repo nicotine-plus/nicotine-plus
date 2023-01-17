@@ -33,12 +33,11 @@ import os
 import signal
 import sys
 import threading
-import time
 
 from collections import deque
-from threading import Thread
 
 from pynicotine import slskmessages
+from pynicotine.cli import cli
 from pynicotine.config import config
 from pynicotine.events import events
 from pynicotine.logfacility import log
@@ -93,7 +92,6 @@ class Core:
             ("admin-message", self._admin_message),
             ("change-password", self._change_password),
             ("check-privileges", self._check_privileges),
-            ("cli-command", self._cli_command),
             ("peer-address", self._get_peer_address),
             ("privileged-users", self._privileged_users),
             ("server-disconnect", self._server_disconnect),
@@ -102,7 +100,7 @@ class Core:
             ("thread-callback", self._thread_callback),
             ("user-stats", self._user_stats),
             ("user-status", self._user_status),
-            ("watch-user", self._add_user)
+            ("watch-user", self._watch_user)
         ):
             events.connect(event_name, callback)
 
@@ -130,8 +128,7 @@ class Core:
         config.load_config()
 
         if enable_cli:
-            events.connect("log-message", self.log_cli)
-            Thread(target=self.process_cli_input, name="CLIInputProcessor", daemon=True).start()
+            cli.enable()
 
         script_dir = os.path.dirname(__file__)
 
@@ -187,42 +184,6 @@ class Core:
             self.run = run_with_excepthook
 
         threading.Thread.__init__ = init_thread_excepthook
-
-    """ CLI """
-
-    def process_cli_input(self):
-
-        while not self.shutdown:
-            try:
-                user_input = input()
-
-            except EOFError:
-                return
-
-            if not user_input:
-                continue
-
-            command, *args = user_input.split(maxsplit=1)
-
-            if command.startswith("/"):
-                command = command[1:]
-
-            if args:
-                (args,) = args
-
-            events.emit_main_thread("cli-command", command, args)
-
-    @staticmethod
-    def log_cli(timestamp_format, msg, _title, _level):
-
-        timestamp = time.strftime(timestamp_format)
-
-        try:
-            print(f"[{timestamp}] {msg}", flush=True)
-
-        except OSError:
-            # stdout is gone, prevent future errors
-            sys.stdout = open(os.devnull, "w", encoding="utf-8")  # pylint: disable=consider-using-with
 
     """ Actions """
 
@@ -345,7 +306,7 @@ class Core:
             # Already being watched, and we don't need to re-fetch the status/stats
             return
 
-        self.queue.append(slskmessages.AddUser(user))
+        self.queue.append(slskmessages.WatchUser(user))
 
         # Get privilege status
         self.queue.append(slskmessages.GetUserStatus(user))
@@ -356,9 +317,6 @@ class Core:
 
     def _thread_callback(self, callback, *args, **kwargs):
         callback(*args, **kwargs)
-
-    def _cli_command(self, command, args):
-        self.pluginhandler.trigger_cli_command_event(command, args or "")
 
     def _server_timeout(self):
         if not config.need_config():
@@ -434,7 +392,7 @@ class Core:
             "country": country
         }, title=_("IP Address"))
 
-    def _add_user(self, msg):
+    def _watch_user(self, msg):
         """ Server code: 5 """
 
         if msg.userexists:

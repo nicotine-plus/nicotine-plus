@@ -53,7 +53,7 @@ class UserInfos(IconNotebook):
 
         super().__init__(
             window,
-            widget=window.userinfo_notebook,
+            parent=window.userinfo_content,
             parent_page=window.userinfo_page
         )
 
@@ -198,7 +198,7 @@ class UserInfo:
             self.container,
             self.country_icon,
             self.country_label,
-            self.description_view,
+            self.description_view_container,
             self.dislikes_list_container,
             self.free_upload_slots_label,
             self.horizontal_paned,
@@ -223,7 +223,7 @@ class UserInfo:
         self.window = userinfos.window
 
         self.info_bar = InfoBar(self.info_bar, button=self.retry_button)
-        self.description_view = TextView(self.description_view)
+        self.description_view = TextView(self.description_view_container, editable=False, vertical_margin=5)
         self.user_label.set_text(user)
 
         if GTK_API_VERSION >= 4:
@@ -519,7 +519,7 @@ class UserInfo:
 
         self.country_label.set_text(country_text)
 
-        icon_name = get_flag_icon_name(country_code or "")
+        icon_name = get_flag_icon_name(country_code)
 
         self.country_icon.set_property("icon-name", icon_name)
         self.country_icon.set_visible(bool(icon_name))
@@ -625,7 +625,7 @@ class UserInfo:
         core.userinfo.show_user(self.user, refresh=True)
 
     def on_focus(self, *_args):
-        self.description_view.textview.grab_focus()
+        self.description_view.widget.grab_focus()
 
     def on_close(self, *_args):
         core.userinfo.remove_user(self.user)

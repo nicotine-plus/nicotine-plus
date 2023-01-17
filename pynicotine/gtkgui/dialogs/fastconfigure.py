@@ -116,7 +116,7 @@ class FastConfigure(Dialog):
         self.reset_completeness()
 
     def on_download_folder_selected(self):
-        config.sections['transfers']['downloaddir'] = self.download_folder_button.get_path()
+        config.sections["transfers"]["downloaddir"] = self.download_folder_button.get_path()
 
     def on_add_shared_folder_selected(self, selected, _data):
 
@@ -185,7 +185,7 @@ class FastConfigure(Dialog):
             EntryDialog(
                 parent=self,
                 title=_("Edit Shared Folder"),
-                message=_("Enter new virtual name for '%(dir)s':") % {'dir': folder_path},
+                message=_("Enter new virtual name for '%(dir)s':") % {"dir": folder_path},
                 default=virtual_name,
                 callback=self.on_edit_shared_folder_response,
                 callback_data=iterator
@@ -281,9 +281,9 @@ class FastConfigure(Dialog):
         self.last_port_entry.set_value(last_port)
 
         # share_page
-        if config.sections['transfers']['downloaddir']:
+        if config.sections["transfers"]["downloaddir"]:
             self.download_folder_button.set_path(
-                config.sections['transfers']['downloaddir']
+                config.sections["transfers"]["downloaddir"]
             )
 
         self.shares_list_view.clear()

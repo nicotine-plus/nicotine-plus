@@ -282,11 +282,12 @@ class GeoIP:
     @classmethod
     def country_code_to_name(cls, country_code):
 
-        try:
-            return cls.COUNTRY_LIST[country_code]
+        country_code = country_code.upper()
 
-        except KeyError:
+        if country_code not in cls.COUNTRY_LIST:
             return country_code
+
+        return cls.COUNTRY_LIST[country_code]
 
     def get_country_code(self, addr):
 

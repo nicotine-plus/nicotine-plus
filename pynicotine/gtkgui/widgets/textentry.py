@@ -34,23 +34,23 @@ from pynicotine.slskmessages import UserStatus
 class ChatEntry:
     """ Custom text entry with support for chat commands and completions """
 
-    def __init__(self, application, entry, completion, entity, message_class, send_message, is_chatroom=False):
+    def __init__(self, application, widget, completion, entity, message_class, send_message, is_chatroom=False):
 
         self.application = application
-        self.entry = entry
+        self.widget = widget
         self.completion = completion
         self.entity = entity
         self.message_class = message_class
         self.send_message = send_message
         self.is_chatroom = is_chatroom
 
-        entry.connect("activate", self.on_enter)
-        Accelerator("<Shift>Tab", entry, self.on_tab_complete_accelerator, True)
-        Accelerator("Tab", entry, self.on_tab_complete_accelerator)
+        widget.connect("activate", self.on_enter)
+        Accelerator("<Shift>Tab", widget, self.on_tab_complete_accelerator, True)
+        Accelerator("Tab", widget, self.on_tab_complete_accelerator)
 
         # Emoji Picker (disable on Windows and macOS for now until we render emoji properly there)
         if sys.platform not in ("win32", "darwin"):
-            self.entry.set_property("show-emoji-icon", True)
+            self.widget.set_property("show-emoji-icon", True)
 
         # Spell Check
         if config.sections["ui"]["spellcheck"]:
@@ -59,9 +59,9 @@ class ChatEntry:
 
             if self.application.spell_checker:
                 from gi.repository import Gspell  # pylint:disable=no-name-in-module
-                spell_buffer = Gspell.EntryBuffer.get_from_gtk_entry_buffer(entry.get_buffer())
+                spell_buffer = Gspell.EntryBuffer.get_from_gtk_entry_buffer(widget.get_buffer())
                 spell_buffer.set_spell_checker(self.application.spell_checker)
-                spell_view = Gspell.Entry.get_from_gtk_entry(entry)
+                spell_view = Gspell.Entry.get_from_gtk_entry(widget)
                 spell_view.set_inline_spell_checking(True)
 
     def on_enter(self, *_args):
@@ -69,7 +69,7 @@ class ChatEntry:
         if core.user_status == UserStatus.OFFLINE:
             return
 
-        text = self.entry.get_text()
+        text = self.widget.get_text()
 
         if not text:
             return
@@ -80,7 +80,7 @@ class ChatEntry:
         if not is_single_slash_cmd or text.startswith("/me"):
             # Regular chat message (/me is sent as plain text)
 
-            self.entry.set_text("")
+            self.widget.set_text("")
 
             if is_double_slash_cmd:
                 # Remove first slash and send the rest of the command as plain text
@@ -93,7 +93,7 @@ class ChatEntry:
         cmd = cmd_split[0]
 
         # Clear chat entry
-        self.entry.set_text("")
+        self.widget.set_text("")
 
         if len(cmd_split) == 2:
             args = arg_self = cmd_split[1]
@@ -429,14 +429,14 @@ class ChatCompletion:
             return True
 
         if not self.midwaycompletion:
-            self.completions['completions'] = self.get_completions(text, self.completion_list)
+            self.completions["completions"] = self.get_completions(text, self.completion_list)
 
-            if self.completions['completions']:
+            if self.completions["completions"]:
                 self.midwaycompletion = True
-                self.completions['currentindex'] = -1
+                self.completions["currentindex"] = -1
                 currentnick = text
         else:
-            currentnick = self.completions['completions'][self.completions['currentindex']]
+            currentnick = self.completions["completions"][self.completions["currentindex"]]
 
         if self.midwaycompletion:
             # We're still completing, block handler to avoid modifying midwaycompletion value
@@ -447,10 +447,10 @@ class ChatCompletion:
                 if backwards:
                     direction = -1  # Backward cycle
 
-                self.completions['currentindex'] = ((self.completions['currentindex'] + direction) %
-                                                    len(self.completions['completions']))
+                self.completions["currentindex"] = ((self.completions["currentindex"] + direction) %
+                                                    len(self.completions["completions"]))
 
-                newnick = self.completions['completions'][self.completions['currentindex']]
+                newnick = self.completions["completions"][self.completions["currentindex"]]
                 self.entry.insert_text(newnick, preix)
                 self.entry.set_position(preix + len(newnick))
 
@@ -459,9 +459,8 @@ class ChatCompletion:
 
 class CompletionEntry:
 
-    def __init__(self, entry, model, column=0):
+    def __init__(self, widget, model, column=0):
 
-        self.entry = entry
         self.model = model
         self.column = column
 
@@ -469,7 +468,7 @@ class CompletionEntry:
                                          popup_single_match=False, model=model)
         completion.set_text_column(column)
         completion.set_match_func(self.entry_completion_find_match)
-        entry.set_completion(completion)
+        widget.set_completion(completion)
 
     def entry_completion_find_match(self, _completion, entry_text, iterator):
 

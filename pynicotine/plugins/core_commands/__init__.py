@@ -67,7 +67,7 @@ class Plugin(BasePlugin):
 
     """ Application Commands """
 
-    def quit_command(self, args, user=None, room=None):
+    def quit_command(self, args, **_unused):
 
         force = (args.lstrip("- ") in ("force", "f"))
 
@@ -75,35 +75,11 @@ class Plugin(BasePlugin):
             self.output("Invalid option")
             return False
 
-        # TODO: remove debug log code
-        if user is not None:
-            interface = "private_chat"
-
-        elif room is not None:
-            interface = "chatroom"
-
+        if force:
+            self.core.quit()
         else:
-            interface = "cli"
-
-        if not force:
-            self.log(f"Asking to exit application on {interface} command {args}")  # TODO: remove debug log code
-
             self.core.confirm_quit()
 
-            if interface == "cli":
-                self.output("Headless quit needs [force] due to no support for cli confirmation prompt in core")  # TODO
-
-                # choice = input("Test try entering something with the keyboard (Y/N):")
-
-                # self.output(f"You entered {choice}")
-
-                # if choice in ("Y", "y"):
-                 #   self.core.quit()
-
-            return True
-
-        self.log(f"Quitting on {interface} command {args}")
-        self.core.quit()
         return True
 
     """ Private Chats """

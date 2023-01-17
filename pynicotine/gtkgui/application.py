@@ -842,14 +842,14 @@ class Application:
         self.notifications = Notifications(self)
         self.window = MainWindow(self)
 
-        # Check command line option and config option
-        if not self.start_hidden and not config.sections["ui"]["startup_hidden"]:
-            self.window.show()
-
         core.start()
 
         if config.sections["server"]["auto_connect_startup"]:
             core.connect()
+
+        # Check command line option and config option
+        if not self.start_hidden and not config.sections["ui"]["startup_hidden"]:
+            self.window.show()
 
         # Process thread events 60 times per second
         # High priority to ensure there are no delays
