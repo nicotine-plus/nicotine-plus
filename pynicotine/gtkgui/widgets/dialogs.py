@@ -61,6 +61,9 @@ class Dialog(Window):
         super().__init__(widget)
         Accelerator("Escape", widget, self.close)
 
+        if GTK_API_VERSION == 3:
+            widget.set_type_hint(Gdk.WindowTypeHint.DIALOG)  # pylint: disable=no-member
+
         if content_box:
             if GTK_API_VERSION >= 4:
                 container.append(content_box)  # pylint: disable=no-member
@@ -245,6 +248,9 @@ class MessageDialog(Window):
         )
         super().__init__(widget=widget)
         widget.connect("response", self.on_response, callback, callback_data)
+
+        if GTK_API_VERSION == 3:
+            widget.set_type_hint(Gdk.WindowTypeHint.DIALOG)  # pylint: disable=no-member
 
         if parent:
             # Only make dialog modal when parent is visible to prevent input/focus issues
