@@ -200,9 +200,6 @@ class ChatEntry:
         elif cmd in ("/a", "/away"):
             core.set_away_mode(core.user_status != UserStatus.AWAY, save_state=True)
 
-        elif cmd in ("/q", "/quit", "/exit"):
-            core.confirm_quit()
-
         elif cmd == "/now":
             core.now_playing.display_now_playing(
                 callback=lambda np_message: self.send_message(self.entity, np_message))
