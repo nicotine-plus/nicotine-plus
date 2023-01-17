@@ -1731,31 +1731,46 @@ class SearchesPage:
     def __init__(self, application):
 
         ui_template = UserInterface(scope=self, path="settings/search.ui")
-
-        # pylint: disable=invalid-name
-        (self.ClearFilterHistorySuccess, self.ClearSearchHistorySuccess, self.EnableFilters, self.EnableSearchHistory,
-         self.FilterBR, self.FilterCC, self.FilterFree, self.FilterIn, self.FilterLength, self.FilterOut,
-         self.FilterSize, self.FilterType, self.Main, self.MaxDisplayedResults, self.MaxResults, self.MinSearchChars,
-         self.RemoveSpecialChars, self.ShowPrivateSearchResults, self.ShowSearchHelp,
-         self.ToggleResults) = ui_template.widgets
+        (
+            self.Main,  # pylint: disable=invalid-name
+            self.cleared_filter_history_icon,
+            self.cleared_search_history_icon,
+            self.enable_default_filters_toggle,
+            self.enable_search_history_toggle,
+            self.filter_bitrate_entry,
+            self.filter_country_entry,
+            self.filter_exclude_entry,
+            self.filter_file_size_entry,
+            self.filter_file_type_entry,
+            self.filter_free_slot_toggle,
+            self.filter_help_button,
+            self.filter_include_entry,
+            self.filter_length_entry,
+            self.max_displayed_results_spinner,
+            self.max_sent_results_spinner,
+            self.min_search_term_length_spinner,
+            self.remove_special_chars_toggle,
+            self.repond_search_requests_toggle,
+            self.show_private_results_toggle
+        ) = ui_template.widgets
 
         self.application = application
         self.search_required = False
 
         self.filter_help = SearchFilterHelp(application.preferences)
-        self.ShowSearchHelp.set_popover(self.filter_help.widget)
+        self.filter_help_button.set_popover(self.filter_help.widget)
 
         self.options = {
             "searches": {
-                "maxresults": self.MaxResults,
-                "enablefilters": self.EnableFilters,
+                "maxresults": self.max_sent_results_spinner,
+                "enablefilters": self.enable_default_filters_toggle,
                 "defilter": None,
-                "search_results": self.ToggleResults,
-                "max_displayed_results": self.MaxDisplayedResults,
-                "min_search_chars": self.MinSearchChars,
-                "remove_special_chars": self.RemoveSpecialChars,
-                "enable_history": self.EnableSearchHistory,
-                "private_search_results": self.ShowPrivateSearchResults
+                "search_results": self.repond_search_requests_toggle,
+                "max_displayed_results": self.max_displayed_results_spinner,
+                "min_search_chars": self.min_search_term_length_spinner,
+                "remove_special_chars": self.remove_special_chars_toggle,
+                "enable_history": self.enable_search_history_toggle,
+                "private_search_results": self.show_private_results_toggle
             }
         }
 
@@ -1769,31 +1784,31 @@ class SearchesPage:
             num_filters = len(searches["defilter"])
 
             if num_filters > 0:
-                self.FilterIn.set_text(str(searches["defilter"][0]))
+                self.filter_include_entry.set_text(str(searches["defilter"][0]))
 
             if num_filters > 1:
-                self.FilterOut.set_text(str(searches["defilter"][1]))
+                self.filter_exclude_entry.set_text(str(searches["defilter"][1]))
 
             if num_filters > 2:
-                self.FilterSize.set_text(str(searches["defilter"][2]))
+                self.filter_file_size_entry.set_text(str(searches["defilter"][2]))
 
             if num_filters > 3:
-                self.FilterBR.set_text(str(searches["defilter"][3]))
+                self.filter_bitrate_entry.set_text(str(searches["defilter"][3]))
 
             if num_filters > 4:
-                self.FilterFree.set_active(searches["defilter"][4])
+                self.filter_free_slot_toggle.set_active(searches["defilter"][4])
 
             if num_filters > 5:
-                self.FilterCC.set_text(str(searches["defilter"][5]))
+                self.filter_country_entry.set_text(str(searches["defilter"][5]))
 
             if num_filters > 6:
-                self.FilterType.set_text(str(searches["defilter"][6]))
+                self.filter_file_type_entry.set_text(str(searches["defilter"][6]))
 
             if num_filters > 7:
-                self.FilterLength.set_text(str(searches["defilter"][7]))
+                self.filter_length_entry.set_text(str(searches["defilter"][7]))
 
-        self.ClearSearchHistorySuccess.set_visible(False)
-        self.ClearFilterHistorySuccess.set_visible(False)
+        self.cleared_search_history_icon.set_visible(False)
+        self.cleared_filter_history_icon.set_visible(False)
 
     def get_settings(self):
 
@@ -1801,24 +1816,24 @@ class SearchesPage:
 
         return {
             "searches": {
-                "maxresults": self.MaxResults.get_value_as_int(),
-                "enablefilters": self.EnableFilters.get_active(),
+                "maxresults": self.max_sent_results_spinner.get_value_as_int(),
+                "enablefilters": self.enable_default_filters_toggle.get_active(),
                 "defilter": [
-                    self.FilterIn.get_text(),
-                    self.FilterOut.get_text(),
-                    self.FilterSize.get_text(),
-                    self.FilterBR.get_text(),
-                    self.FilterFree.get_active(),
-                    self.FilterCC.get_text(),
-                    self.FilterType.get_text(),
-                    self.FilterLength.get_text()
+                    self.filter_include_entry.get_text(),
+                    self.filter_exclude_entry.get_text(),
+                    self.filter_file_size_entry.get_text(),
+                    self.filter_bitrate_entry.get_text(),
+                    self.filter_free_slot_toggle.get_active(),
+                    self.filter_country_entry.get_text(),
+                    self.filter_file_type_entry.get_text(),
+                    self.filter_length_entry.get_text()
                 ],
-                "search_results": self.ToggleResults.get_active(),
-                "max_displayed_results": self.MaxDisplayedResults.get_value_as_int(),
-                "min_search_chars": self.MinSearchChars.get_value_as_int(),
-                "remove_special_chars": self.RemoveSpecialChars.get_active(),
-                "enable_history": self.EnableSearchHistory.get_active(),
-                "private_search_results": self.ShowPrivateSearchResults.get_active()
+                "search_results": self.repond_search_requests_toggle.get_active(),
+                "max_displayed_results": self.max_displayed_results_spinner.get_value_as_int(),
+                "min_search_chars": self.min_search_term_length_spinner.get_value_as_int(),
+                "remove_special_chars": self.remove_special_chars_toggle.get_active(),
+                "enable_history": self.enable_search_history_toggle.get_active(),
+                "private_search_results": self.show_private_results_toggle.get_active()
             }
         }
 
@@ -1827,11 +1842,11 @@ class SearchesPage:
 
     def on_clear_search_history(self, *_args):
         self.application.window.search.clear_search_history()
-        self.ClearSearchHistorySuccess.set_visible(True)
+        self.cleared_search_history_icon.set_visible(True)
 
     def on_clear_filter_history(self, *_args):
         self.application.window.search.clear_filter_history()
-        self.ClearFilterHistorySuccess.set_visible(True)
+        self.cleared_filter_history_icon.set_visible(True)
 
 
 class UrlHandlersPage:
