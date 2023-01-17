@@ -48,7 +48,7 @@ class FileChooser:
         try:
             # GTK >= 4.10
             self.using_new_api = True
-            self.file_chooser = Gtk.FildeDialog(title=title, modal=True)
+            self.file_chooser = Gtk.FileDialog(title=title, modal=True)
 
             if select_multiple:
                 self.select_method = self.file_chooser.open_multiple

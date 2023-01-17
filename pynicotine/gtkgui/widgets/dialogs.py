@@ -317,7 +317,7 @@ class MessageDialog(Window):
 
         if not self.parent.is_visible():
             # In case parent window appears a few frames later, ensure dialog is modal
-            GLib.timeout_add(75, self._finish_show, priority=GLib.PRIORITY_LOW)
+            GLib.idle_add(self._finish_show, priority=GLib.PRIORITY_LOW)
             return
 
         # Show the dialog
