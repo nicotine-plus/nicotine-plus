@@ -777,81 +777,46 @@
         <child>
           <object class="GtkBox">
             <property name="visible">True</property>
-            <property name="spacing">12</property>
+            <property name="spacing">24</property>
             <property name="orientation">vertical</property>
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
-                <property name="homogeneous">True</property>
                 <property name="spacing">12</property>
+                <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkLabel">
+                  <object class="GtkCheckButton" id="UsernameHotspots">
+                    <property name="label" translatable="yes">Enable colored usernames</property>
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">Chat username appearance:</property>
-                    <property name="xalign">0</property>
-                    <property name="wrap">True</property>
-                    <property name="wrap-mode">word-char</property>
-                    <property name="mnemonic-widget">UsernameStyle</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkComboBoxText" id="UsernameStyle">
-                    <property name="visible">True</property>
-                    <property name="valign">center</property>
-                    <signal name="changed" handler="on_colors_changed"/>
-                    <items>
-                      <item id="bold" translatable="yes">bold</item>
-                      <item id="italic" translatable="yes">italic</item>
-                      <item id="underline" translatable="yes">underline</item>
-                      <item id="normal" translatable="yes">normal</item>
-                    </items>
-                  </object>
-                </child>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="visible">True</property>
-            <property name="orientation">vertical</property>
-            <property name="spacing">12</property>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="homogeneous">True</property>
-                <property name="spacing">12</property>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">Remote text color:</property>
-                    <property name="xalign">0</property>
-                    <property name="wrap">True</property>
-                    <property name="wrap-mode">word-char</property>
-                    <property name="mnemonic-widget">PickRemote</property>
+                    <signal name="toggled" handler="on_colors_changed"/>
                   </object>
                 </child>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
+                    <property name="homogeneous">True</property>
                     <property name="spacing">12</property>
-                    <property name="valign">center</property>
                     <child>
-                      <object class="GtkColorButton" id="PickRemote">
+                      <object class="GtkLabel">
                         <property name="visible">True</property>
-                        <property name="valign">center</property>
-                        <signal name="color-set" handler="on_color_set"/>
+                        <property name="label" translatable="yes">Chat username appearance:</property>
+                        <property name="xalign">0</property>
+                        <property name="wrap">True</property>
+                        <property name="wrap-mode">word-char</property>
+                        <property name="mnemonic-widget">UsernameStyle</property>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkEntry" id="EntryRemote">
+                      <object class="GtkComboBoxText" id="UsernameStyle">
                         <property name="visible">True</property>
-                        <property name="hexpand">True</property>
-                        <property name="width-chars">7</property>
-                        <property name="secondary-icon-name">edit-undo-symbolic</property>
-                        <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
-                        <signal name="icon-press" handler="on_default_color"/>
+                        <property name="valign">center</property>
                         <signal name="changed" handler="on_colors_changed"/>
+                        <items>
+                          <item id="bold" translatable="yes">bold</item>
+                          <item id="italic" translatable="yes">italic</item>
+                          <item id="underline" translatable="yes">underline</item>
+                          <item id="normal" translatable="yes">normal</item>
+                        </items>
                       </object>
                     </child>
                   </object>
@@ -861,207 +826,256 @@
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
-                <property name="homogeneous">True</property>
                 <property name="spacing">12</property>
+                <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkLabel">
+                  <object class="GtkBox">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">Local text color:</property>
-                    <property name="xalign">0</property>
-                    <property name="wrap">True</property>
-                    <property name="wrap-mode">word-char</property>
-                    <property name="mnemonic-widget">PickLocal</property>
+                    <property name="homogeneous">True</property>
+                    <property name="spacing">12</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Remote text color:</property>
+                        <property name="xalign">0</property>
+                        <property name="wrap">True</property>
+                        <property name="wrap-mode">word-char</property>
+                        <property name="mnemonic-widget">PickRemote</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="visible">True</property>
+                        <property name="spacing">12</property>
+                        <property name="valign">center</property>
+                        <child>
+                          <object class="GtkColorButton" id="PickRemote">
+                            <property name="visible">True</property>
+                            <property name="valign">center</property>
+                            <signal name="color-set" handler="on_color_set"/>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkEntry" id="EntryRemote">
+                            <property name="visible">True</property>
+                            <property name="hexpand">True</property>
+                            <property name="width-chars">7</property>
+                            <property name="secondary-icon-name">edit-undo-symbolic</property>
+                            <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
+                            <signal name="icon-press" handler="on_default_color"/>
+                            <signal name="changed" handler="on_colors_changed"/>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
                   </object>
                 </child>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
+                    <property name="homogeneous">True</property>
                     <property name="spacing">12</property>
-                    <property name="valign">center</property>
                     <child>
-                      <object class="GtkColorButton" id="PickLocal">
+                      <object class="GtkLabel">
                         <property name="visible">True</property>
+                        <property name="label" translatable="yes">Local text color:</property>
+                        <property name="xalign">0</property>
+                        <property name="wrap">True</property>
+                        <property name="wrap-mode">word-char</property>
+                        <property name="mnemonic-widget">PickLocal</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="visible">True</property>
+                        <property name="spacing">12</property>
                         <property name="valign">center</property>
-                        <signal name="color-set" handler="on_color_set"/>
+                        <child>
+                          <object class="GtkColorButton" id="PickLocal">
+                            <property name="visible">True</property>
+                            <property name="valign">center</property>
+                            <signal name="color-set" handler="on_color_set"/>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkEntry" id="EntryLocal">
+                            <property name="visible">True</property>
+                            <property name="hexpand">True</property>
+                            <property name="width-chars">7</property>
+                            <property name="secondary-icon-name">edit-undo-symbolic</property>
+                            <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
+                            <signal name="icon-press" handler="on_default_color"/>
+                            <signal name="changed" handler="on_colors_changed"/>
+                          </object>
+                        </child>
                       </object>
                     </child>
-                    <child>
-                      <object class="GtkEntry" id="EntryLocal">
-                        <property name="visible">True</property>
-                        <property name="hexpand">True</property>
-                        <property name="width-chars">7</property>
-                        <property name="secondary-icon-name">edit-undo-symbolic</property>
-                        <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
-                        <signal name="icon-press" handler="on_default_color"/>
-                        <signal name="changed" handler="on_colors_changed"/>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="homogeneous">True</property>
-                <property name="spacing">12</property>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">Command output text color:</property>
-                    <property name="xalign">0</property>
-                    <property name="wrap">True</property>
-                    <property name="wrap-mode">word-char</property>
-                    <property name="mnemonic-widget">PickCommand</property>
                   </object>
                 </child>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
+                    <property name="homogeneous">True</property>
                     <property name="spacing">12</property>
-                    <property name="valign">center</property>
                     <child>
-                      <object class="GtkColorButton" id="PickCommand">
+                      <object class="GtkLabel">
                         <property name="visible">True</property>
+                        <property name="label" translatable="yes">Command output text color:</property>
+                        <property name="xalign">0</property>
+                        <property name="wrap">True</property>
+                        <property name="wrap-mode">word-char</property>
+                        <property name="mnemonic-widget">PickCommand</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="visible">True</property>
+                        <property name="spacing">12</property>
                         <property name="valign">center</property>
-                        <signal name="color-set" handler="on_color_set"/>
+                        <child>
+                          <object class="GtkColorButton" id="PickCommand">
+                            <property name="visible">True</property>
+                            <property name="valign">center</property>
+                            <signal name="color-set" handler="on_color_set"/>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkEntry" id="EntryCommand">
+                            <property name="visible">True</property>
+                            <property name="hexpand">True</property>
+                            <property name="width-chars">7</property>
+                            <property name="secondary-icon-name">edit-undo-symbolic</property>
+                            <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
+                            <signal name="icon-press" handler="on_default_color"/>
+                            <signal name="changed" handler="on_colors_changed"/>
+                          </object>
+                        </child>
                       </object>
                     </child>
-                    <child>
-                      <object class="GtkEntry" id="EntryCommand">
-                        <property name="visible">True</property>
-                        <property name="hexpand">True</property>
-                        <property name="width-chars">7</property>
-                        <property name="secondary-icon-name">edit-undo-symbolic</property>
-                        <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
-                        <signal name="icon-press" handler="on_default_color"/>
-                        <signal name="changed" handler="on_colors_changed"/>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="homogeneous">True</property>
-                <property name="spacing">12</property>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">/me action text color:</property>
-                    <property name="xalign">0</property>
-                    <property name="wrap">True</property>
-                    <property name="wrap-mode">word-char</property>
-                    <property name="mnemonic-widget">PickMe</property>
                   </object>
                 </child>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
+                    <property name="homogeneous">True</property>
                     <property name="spacing">12</property>
-                    <property name="valign">center</property>
                     <child>
-                      <object class="GtkColorButton" id="PickMe">
+                      <object class="GtkLabel">
                         <property name="visible">True</property>
+                        <property name="label" translatable="yes">/me action text color:</property>
+                        <property name="xalign">0</property>
+                        <property name="wrap">True</property>
+                        <property name="wrap-mode">word-char</property>
+                        <property name="mnemonic-widget">PickMe</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="visible">True</property>
+                        <property name="spacing">12</property>
                         <property name="valign">center</property>
-                        <signal name="color-set" handler="on_color_set"/>
+                        <child>
+                          <object class="GtkColorButton" id="PickMe">
+                            <property name="visible">True</property>
+                            <property name="valign">center</property>
+                            <signal name="color-set" handler="on_color_set"/>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkEntry" id="EntryMe">
+                            <property name="visible">True</property>
+                            <property name="hexpand">True</property>
+                            <property name="width-chars">7</property>
+                            <property name="secondary-icon-name">edit-undo-symbolic</property>
+                            <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
+                            <signal name="icon-press" handler="on_default_color"/>
+                            <signal name="changed" handler="on_colors_changed"/>
+                          </object>
+                        </child>
                       </object>
                     </child>
-                    <child>
-                      <object class="GtkEntry" id="EntryMe">
-                        <property name="visible">True</property>
-                        <property name="hexpand">True</property>
-                        <property name="width-chars">7</property>
-                        <property name="secondary-icon-name">edit-undo-symbolic</property>
-                        <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
-                        <signal name="icon-press" handler="on_default_color"/>
-                        <signal name="changed" handler="on_colors_changed"/>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="homogeneous">True</property>
-                <property name="spacing">12</property>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">Highlighted text color:</property>
-                    <property name="xalign">0</property>
-                    <property name="wrap">True</property>
-                    <property name="wrap-mode">word-char</property>
-                    <property name="mnemonic-widget">PickHighlight</property>
                   </object>
                 </child>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
+                    <property name="homogeneous">True</property>
                     <property name="spacing">12</property>
-                    <property name="valign">center</property>
                     <child>
-                      <object class="GtkColorButton" id="PickHighlight">
+                      <object class="GtkLabel">
                         <property name="visible">True</property>
+                        <property name="label" translatable="yes">Highlighted text color:</property>
+                        <property name="xalign">0</property>
+                        <property name="wrap">True</property>
+                        <property name="wrap-mode">word-char</property>
+                        <property name="mnemonic-widget">PickHighlight</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="visible">True</property>
+                        <property name="spacing">12</property>
                         <property name="valign">center</property>
-                        <signal name="color-set" handler="on_color_set"/>
+                        <child>
+                          <object class="GtkColorButton" id="PickHighlight">
+                            <property name="visible">True</property>
+                            <property name="valign">center</property>
+                            <signal name="color-set" handler="on_color_set"/>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkEntry" id="EntryHighlight">
+                            <property name="visible">True</property>
+                            <property name="hexpand">True</property>
+                            <property name="width-chars">7</property>
+                            <property name="secondary-icon-name">edit-undo-symbolic</property>
+                            <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
+                            <signal name="icon-press" handler="on_default_color"/>
+                            <signal name="changed" handler="on_colors_changed"/>
+                          </object>
+                        </child>
                       </object>
                     </child>
-                    <child>
-                      <object class="GtkEntry" id="EntryHighlight">
-                        <property name="visible">True</property>
-                        <property name="hexpand">True</property>
-                        <property name="width-chars">7</property>
-                        <property name="secondary-icon-name">edit-undo-symbolic</property>
-                        <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
-                        <signal name="icon-press" handler="on_default_color"/>
-                        <signal name="changed" handler="on_colors_changed"/>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="homogeneous">True</property>
-                <property name="spacing">12</property>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">URL link text color:</property>
-                    <property name="xalign">0</property>
-                    <property name="wrap">True</property>
-                    <property name="wrap-mode">word-char</property>
-                    <property name="mnemonic-widget">PickURL</property>
                   </object>
                 </child>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
+                    <property name="homogeneous">True</property>
                     <property name="spacing">12</property>
-                    <property name="valign">center</property>
                     <child>
-                      <object class="GtkColorButton" id="PickURL">
+                      <object class="GtkLabel">
                         <property name="visible">True</property>
-                        <property name="valign">center</property>
-                        <signal name="color-set" handler="on_color_set"/>
+                        <property name="label" translatable="yes">URL link text color:</property>
+                        <property name="xalign">0</property>
+                        <property name="wrap">True</property>
+                        <property name="wrap-mode">word-char</property>
+                        <property name="mnemonic-widget">PickURL</property>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkEntry" id="EntryURL">
+                      <object class="GtkBox">
                         <property name="visible">True</property>
-                        <property name="hexpand">True</property>
-                        <property name="width-chars">7</property>
-                        <property name="secondary-icon-name">edit-undo-symbolic</property>
-                        <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
-                        <signal name="icon-press" handler="on_default_color"/>
-                        <signal name="changed" handler="on_colors_changed"/>
+                        <property name="spacing">12</property>
+                        <property name="valign">center</property>
+                        <child>
+                          <object class="GtkColorButton" id="PickURL">
+                            <property name="visible">True</property>
+                            <property name="valign">center</property>
+                            <signal name="color-set" handler="on_color_set"/>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkEntry" id="EntryURL">
+                            <property name="visible">True</property>
+                            <property name="hexpand">True</property>
+                            <property name="width-chars">7</property>
+                            <property name="secondary-icon-name">edit-undo-symbolic</property>
+                            <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
+                            <signal name="icon-press" handler="on_default_color"/>
+                            <signal name="changed" handler="on_colors_changed"/>
+                          </object>
+                        </child>
                       </object>
                     </child>
                   </object>
