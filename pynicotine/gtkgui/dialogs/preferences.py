@@ -227,23 +227,44 @@ class DownloadsPage:
     def __init__(self, application):
 
         ui_template = UserInterface(scope=self, path="settings/downloads.ui")
-
-        # pylint: disable=invalid-name
-        (self.AfterDownload, self.AfterFolder, self.AutoclearFinished,
-         self.DownloadDir, self.DownloadDoubleClick, self.DownloadFilter, self.DownloadReverseOrder,
-         self.DownloadSpeed, self.DownloadSpeedAlternative, self.FilterView, self.IncompleteDir,
-         self.Main, self.RemoteDownloads, self.UnlimitedDownloadSpeed, self.UploadDir, self.UploadsAllowed,
-         self.UseAltDownloadSpeedLimit, self.UseDownloadSpeedLimit,
-         self.UsernameSubfolders, self.VerifiedLabel) = ui_template.widgets
+        (
+            self.Main,  # pylint: disable=invalid-name
+            self.accept_sent_files_toggle,
+            self.alt_speed_spinner,
+            self.autoclear_downloads_toggle,
+            self.download_double_click_combobox,
+            self.download_folder_button,
+            self.download_reverse_order_toggle,
+            self.enable_username_subfolders_toggle,
+            self.enable_filters_toggle,
+            self.file_finished_command_entry,
+            self.filter_list_container,
+            self.filter_status_label,
+            self.folder_finished_command_entry,
+            self.incomplete_folder_button,
+            self.received_folder_button,
+            self.sent_files_permission_combobox,
+            self.speed_spinner,
+            self.use_alt_speed_limit_radio,
+            self.use_speed_limit_radio,
+            self.use_unlimited_speed_radio
+        ) = ui_template.widgets
 
         self.application = application
 
-        self.incomplete_dir = FileChooserButton(self.IncompleteDir, application.preferences, "folder")
-        self.download_dir = FileChooserButton(self.DownloadDir, application.preferences, "folder")
-        self.upload_dir = FileChooserButton(self.UploadDir, application.preferences, "folder")
+        self.download_folder_button = FileChooserButton(
+            self.download_folder_button, parent=application.preferences, chooser_type="folder"
+        )
+        self.incomplete_folder_button = FileChooserButton(
+            self.incomplete_folder_button, parent=application.preferences, chooser_type="folder"
+        )
+        self.received_folder_button = FileChooserButton(
+            self.received_folder_button, parent=application.preferences, chooser_type="folder"
+        )
 
         self.filter_list_view = TreeView(
-            application.window, parent=self.FilterView, multi_select=True, activate_row_callback=self.on_edit_filter,
+            application.window, parent=self.filter_list_container, multi_select=True,
+            activate_row_callback=self.on_edit_filter,
             columns=[
                 {"column_id": "filter", "column_type": "text", "title": _("Filter"), "sort_column": 0,
                  "width": 150, "expand_column": True},
@@ -254,21 +275,21 @@ class DownloadsPage:
 
         self.options = {
             "transfers": {
-                "autoclear_downloads": self.AutoclearFinished,
-                "reverseorder": self.DownloadReverseOrder,
-                "remotedownloads": self.RemoteDownloads,
-                "uploadallowed": self.UploadsAllowed,
-                "incompletedir": self.incomplete_dir,
-                "downloaddir": self.download_dir,
-                "uploaddir": self.upload_dir,
+                "autoclear_downloads": self.autoclear_downloads_toggle,
+                "reverseorder": self.download_reverse_order_toggle,
+                "remotedownloads": self.accept_sent_files_toggle,
+                "uploadallowed": self.sent_files_permission_combobox,
+                "incompletedir": self.incomplete_folder_button,
+                "downloaddir": self.download_folder_button,
+                "uploaddir": self.received_folder_button,
                 "downloadfilters": self.filter_list_view,
-                "enablefilters": self.DownloadFilter,
-                "downloadlimit": self.DownloadSpeed,
-                "downloadlimitalt": self.DownloadSpeedAlternative,
-                "usernamesubfolders": self.UsernameSubfolders,
-                "afterfinish": self.AfterDownload,
-                "afterfolder": self.AfterFolder,
-                "download_doubleclick": self.DownloadDoubleClick
+                "enablefilters": self.enable_filters_toggle,
+                "downloadlimit": self.speed_spinner,
+                "downloadlimitalt": self.alt_speed_spinner,
+                "usernamesubfolders": self.enable_username_subfolders_toggle,
+                "afterfinish": self.file_finished_command_entry,
+                "afterfolder": self.folder_finished_command_entry,
+                "download_doubleclick": self.download_double_click_combobox
             }
         }
 
@@ -280,20 +301,20 @@ class DownloadsPage:
         use_speed_limit = config.sections["transfers"]["use_download_speed_limit"]
 
         if use_speed_limit == "primary":
-            self.UseDownloadSpeedLimit.set_active(True)
+            self.use_speed_limit_radio.set_active(True)
 
         elif use_speed_limit == "alternative":
-            self.UseAltDownloadSpeedLimit.set_active(True)
+            self.use_alt_speed_limit_radio.set_active(True)
 
         else:
-            self.UnlimitedDownloadSpeed.set_active(True)
+            self.use_unlimited_speed_radio.set_active(True)
 
     def get_settings(self):
 
-        if self.UseDownloadSpeedLimit.get_active():
+        if self.use_speed_limit_radio.get_active():
             use_speed_limit = "primary"
 
-        elif self.UseAltDownloadSpeedLimit.get_active():
+        elif self.use_alt_speed_limit_radio.get_active():
             use_speed_limit = "alternative"
 
         else:
@@ -309,22 +330,22 @@ class DownloadsPage:
 
         return {
             "transfers": {
-                "autoclear_downloads": self.AutoclearFinished.get_active(),
-                "reverseorder": self.DownloadReverseOrder.get_active(),
-                "remotedownloads": self.RemoteDownloads.get_active(),
-                "uploadallowed": self.UploadsAllowed.get_active(),
-                "incompletedir": self.incomplete_dir.get_path(),
-                "downloaddir": self.download_dir.get_path(),
-                "uploaddir": self.upload_dir.get_path(),
+                "autoclear_downloads": self.autoclear_downloads_toggle.get_active(),
+                "reverseorder": self.download_reverse_order_toggle.get_active(),
+                "remotedownloads": self.accept_sent_files_toggle.get_active(),
+                "uploadallowed": self.sent_files_permission_combobox.get_active(),
+                "incompletedir": self.incomplete_folder_button.get_path(),
+                "downloaddir": self.download_folder_button.get_path(),
+                "uploaddir": self.received_folder_button.get_path(),
                 "downloadfilters": download_filters,
-                "enablefilters": self.DownloadFilter.get_active(),
+                "enablefilters": self.enable_filters_toggle.get_active(),
                 "use_download_speed_limit": use_speed_limit,
-                "downloadlimit": self.DownloadSpeed.get_value_as_int(),
-                "downloadlimitalt": self.DownloadSpeedAlternative.get_value_as_int(),
-                "usernamesubfolders": self.UsernameSubfolders.get_active(),
-                "afterfinish": self.AfterDownload.get_text(),
-                "afterfolder": self.AfterFolder.get_text(),
-                "download_doubleclick": self.DownloadDoubleClick.get_active()
+                "downloadlimit": self.speed_spinner.get_value_as_int(),
+                "downloadlimitalt": self.alt_speed_spinner.get_value_as_int(),
+                "usernamesubfolders": self.enable_username_subfolders_toggle.get_active(),
+                "afterfinish": self.file_finished_command_entry.get_text(),
+                "afterfolder": self.folder_finished_command_entry.get_text(),
+                "download_doubleclick": self.download_double_click_combobox.get_active()
             }
         }
 
@@ -455,9 +476,9 @@ class DownloadsPage:
                 "error": errors}
             )
 
-            self.VerifiedLabel.set_text(error)
+            self.filter_status_label.set_text(error)
         else:
-            self.VerifiedLabel.set_text(_("Filters Successful"))
+            self.filter_status_label.set_text(_("Filters Successful"))
 
 
 class SharesPage:
@@ -743,7 +764,8 @@ class UserProfilePage:
 
         self.application = application
         self.description_view = TextView(self.description_view_container, parse_urls=False)
-        self.select_picture_button = FileChooserButton(self.select_picture_button, application.preferences, "image")
+        self.select_picture_button = FileChooserButton(
+            self.select_picture_button, parent=application.preferences, chooser_type="image")
 
         self.options = {
             "userinfo": {

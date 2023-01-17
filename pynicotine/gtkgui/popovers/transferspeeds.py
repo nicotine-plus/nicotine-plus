@@ -35,9 +35,10 @@ class TransferSpeeds(Popover):
             self.alt_speed_spinner,
             self.container,
             self.speed_spinner,
-            self.unlimited_speed_radio,
             self.use_alt_limit_radio,
-            self.use_limit_radio) = ui_template.widgets
+            self.use_limit_radio,
+            self.use_unlimited_speed_radio
+        ) = ui_template.widgets
 
         super().__init__(
             window=window,
@@ -107,4 +108,4 @@ class TransferSpeeds(Popover):
             self.use_alt_limit_radio.set_active(True)
 
         else:
-            self.unlimited_speed_radio.set_active(True)
+            self.use_unlimited_speed_radio.set_active(True)
