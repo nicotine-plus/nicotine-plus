@@ -326,13 +326,6 @@
                     <property name="visible">True</property>
                   </object>
                 </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="spacing">12</property>
-                <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
@@ -455,151 +448,6 @@
                             <signal name="changed" handler="on_colors_changed"/>
                           </object>
                         </child>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="spacing">12</property>
-                <property name="orientation">vertical</property>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <property name="homogeneous">True</property>
-                    <property name="spacing">12</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Main tab bar position:</property>
-                        <property name="wrap">True</property>
-                        <property name="wrap-mode">word-char</property>
-                        <property name="mnemonic-widget">MainPosition</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkComboBoxText" id="MainPosition">
-                        <property name="visible">True</property>
-                        <property name="valign">center</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <property name="homogeneous">True</property>
-                    <property name="spacing">12</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Search Files tab bar position:</property>
-                        <property name="mnemonic-widget">SearchPosition</property>
-                        <property name="wrap">True</property>
-                        <property name="wrap-mode">word-char</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkComboBoxText" id="SearchPosition">
-                        <property name="visible">True</property>
-                        <property name="valign">center</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <property name="homogeneous">True</property>
-                    <property name="spacing">12</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Browse Shares tab bar position:</property>
-                        <property name="mnemonic-widget">UserBrowsePosition</property>
-                        <property name="wrap">True</property>
-                        <property name="wrap-mode">word-char</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkComboBoxText" id="UserBrowsePosition">
-                        <property name="visible">True</property>
-                        <property name="valign">center</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <property name="homogeneous">True</property>
-                    <property name="spacing">12</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="xalign">0</property>
-                        <property name="label" translatable="yes">User Profiles tab bar position:</property>
-                        <property name="mnemonic-widget">UserInfoPosition</property>
-                        <property name="wrap">True</property>
-                        <property name="wrap-mode">word-char</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkComboBoxText" id="UserInfoPosition">
-                        <property name="visible">True</property>
-                        <property name="valign">center</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <property name="homogeneous">True</property>
-                    <property name="spacing">12</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Private Chat tab bar position:</property>
-                        <property name="mnemonic-widget">PrivateChatPosition</property>
-                        <property name="wrap">True</property>
-                        <property name="wrap-mode">word-char</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkComboBoxText" id="PrivateChatPosition">
-                        <property name="visible">True</property>
-                        <property name="valign">center</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <property name="homogeneous">True</property>
-                    <property name="spacing">12</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Chat Rooms tab bar position:</property>
-                        <property name="mnemonic-widget">ChatRoomsPosition</property>
-                        <property name="wrap">True</property>
-                        <property name="wrap-mode">word-char</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkComboBoxText" id="ChatRoomsPosition">
-                        <property name="visible">True</property>
-                        <property name="valign">center</property>
                       </object>
                     </child>
                   </object>
@@ -747,6 +595,235 @@
                               <object class="GtkCheckButton" id="EnableInterestsTab">
                                 <property name="label" translatable="yes">Interests</property>
                                 <property name="visible">True</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <style>
+                  <class name="view"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFrame">
+                <property name="visible">True</property>
+                <property name="vexpand">True</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="spacing">12</property>
+                    <property name="margin-start">12</property>
+                    <property name="margin-end">12</property>
+                    <property name="margin-top">12</property>
+                    <property name="margin-bottom">12</property>
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Tab bar positions:</property>
+                        <property name="halign">start</property>
+                        <property name="selectable">True</property>
+                        <property name="xalign">0</property>
+                        <property name="opacity">0.6</property>
+                        <property name="wrap">True</property>
+                        <property name="wrap-mode">word-char</property>
+                        <style>
+                          <class name="heading"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkFlowBox">
+                        <property name="visible">True</property>
+                        <property name="homogeneous">True</property>
+                        <property name="column-spacing">18</property>
+                        <property name="row-spacing">10</property>
+                        <property name="min-children-per-line">1</property>
+                        <property name="max-children-per-line">3</property>
+                        <property name="margin-start">6</property>
+                        <property name="margin-end">6</property>
+                        <property name="margin-bottom">6</property>
+                        <property name="selection-mode">none</property>
+                        <child>
+                          <object class="GtkFlowBoxChild">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="visible">True</property>
+                                <property name="homogeneous">True</property>
+                                <property name="spacing">18</property>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">0</property>
+                                    <property name="label" translatable="yes">Main tabs</property>
+                                    <property name="wrap">True</property>
+                                    <property name="wrap-mode">word-char</property>
+                                    <property name="xalign">1</property>
+                                    <property name="mnemonic-widget">MainPosition</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkComboBoxText" id="MainPosition">
+                                    <property name="visible">True</property>
+                                    <property name="valign">center</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkFlowBoxChild">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="visible">True</property>
+                                <property name="homogeneous">True</property>
+                                <property name="spacing">18</property>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">0</property>
+                                    <property name="label" translatable="yes">Search Files</property>
+                                    <property name="mnemonic-widget">SearchPosition</property>
+                                    <property name="wrap">True</property>
+                                    <property name="wrap-mode">word-char</property>
+                                    <property name="xalign">1</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkComboBoxText" id="SearchPosition">
+                                    <property name="visible">True</property>
+                                    <property name="valign">center</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkFlowBoxChild">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="visible">True</property>
+                                <property name="homogeneous">True</property>
+                                <property name="spacing">18</property>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">0</property>
+                                    <property name="label" translatable="yes">Browse Shares</property>
+                                    <property name="mnemonic-widget">UserBrowsePosition</property>
+                                    <property name="wrap">True</property>
+                                    <property name="wrap-mode">word-char</property>
+                                    <property name="xalign">1</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkComboBoxText" id="UserBrowsePosition">
+                                    <property name="visible">True</property>
+                                    <property name="valign">center</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkFlowBoxChild">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="visible">True</property>
+                                <property name="homogeneous">True</property>
+                                <property name="spacing">18</property>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">0</property>
+                                    <property name="label" translatable="yes">User Profiles</property>
+                                    <property name="mnemonic-widget">UserInfoPosition</property>
+                                    <property name="wrap">True</property>
+                                    <property name="wrap-mode">word-char</property>
+                                    <property name="xalign">1</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkComboBoxText" id="UserInfoPosition">
+                                    <property name="visible">True</property>
+                                    <property name="valign">center</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkFlowBoxChild">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="visible">True</property>
+                                <property name="homogeneous">True</property>
+                                <property name="spacing">18</property>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">0</property>
+                                    <property name="label" translatable="yes">Private Chat</property>
+                                    <property name="mnemonic-widget">PrivateChatPosition</property>
+                                    <property name="wrap">True</property>
+                                    <property name="wrap-mode">word-char</property>
+                                    <property name="xalign">1</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkComboBoxText" id="PrivateChatPosition">
+                                    <property name="visible">True</property>
+                                    <property name="valign">center</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkFlowBoxChild">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="visible">True</property>
+                                <property name="homogeneous">True</property>
+                                <property name="spacing">18</property>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">0</property>
+                                    <property name="label" translatable="yes">Chat Rooms</property>
+                                    <property name="mnemonic-widget">ChatRoomsPosition</property>
+                                    <property name="wrap">True</property>
+                                    <property name="wrap-mode">word-char</property>
+                                    <property name="xalign">1</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkComboBoxText" id="ChatRoomsPosition">
+                                    <property name="visible">True</property>
+                                    <property name="valign">center</property>
+                                  </object>
+                                </child>
                               </object>
                             </child>
                           </object>
