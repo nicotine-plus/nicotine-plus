@@ -260,6 +260,8 @@ class Plugin(BasePlugin):
             }
         }
 
+    """ Application Commands """
+
     def help_command(self, args, user=None, room=None):
 
         if user is not None:
@@ -336,6 +338,36 @@ class Plugin(BasePlugin):
         self.output(output)
         return True
 
+    def away_command(self, _args, **_unused):
+        self.core.set_away_mode(self.core.user_status != 1, save_state=True)  # 1 = UserStatus.AWAY
+        self.output(_("Status is now %s") % (_("Online") if self.core.user_status == 2 else _("Away")))
+
+    def hello_command(self, args, **_unused):
+        self.output(_("Hello there!") + " " + args)
+
+    def plugin_handler_command(self, args, **_unused):
+
+        args_split = args.split(maxsplit=1)
+        action, plugin_name = args_split[0], args_split[1].strip('"')
+        func = getattr(self.parent, f"{action}_plugin")
+
+        return func(plugin_name)
+
+    def quit_command(self, args, **_unused):
+
+        force = (args.lstrip("- ") in ("force", "f"))
+
+        if args and not force:
+            self.output("Invalid option")
+            return False
+
+        if force:
+            self.core.quit()
+        else:
+            self.core.confirm_quit()
+
+        return True
+
     """ Chats """
 
     def clear_command(self, args, user=None, room=None):
@@ -348,6 +380,11 @@ class Plugin(BasePlugin):
 
         elif user is not None:
             self.core.privatechat.clear_private_messages(user)
+
+    def me_chat_command(self, args, **_unused):
+        self.send_message("/me " + args)  # /me is sent as plain text
+
+    """ Private Chats """
 
     def close_command(self, args, user=None, **_unused):
 
@@ -375,6 +412,18 @@ class Plugin(BasePlugin):
 
         self.send_private(user, ctcp_query)
 
+    def msg_chat_command(self, args, **_unused):
+
+        args_split = args.split(maxsplit=1)
+        user, text = args_split[0], args_split[1]
+
+        self.send_private(user, text, show_ui=True, switch_page=False)
+
+    def pm_chat_command(self, args, **_unused):
+        self.core.privatechat.show_user(args)
+
+    """ Chat Rooms """
+
     def join_chat_command(self, args, **_unused):
         self.core.chatrooms.show_room(args)
 
@@ -389,19 +438,6 @@ class Plugin(BasePlugin):
 
         self.core.chatrooms.remove_room(room)
         return True
-
-    def me_chat_command(self, args, **_unused):
-        self.send_message("/me " + args)  # /me is sent as plain text
-
-    def msg_chat_command(self, args, **_unused):
-
-        args_split = args.split(maxsplit=1)
-        user, text = args_split[0], args_split[1]
-
-        self.send_private(user, text, show_ui=True, switch_page=False)
-
-    def pm_chat_command(self, args, **_unused):
-        self.core.privatechat.show_user(args)
 
     def say_chat_command(self, args, **_unused):
 
@@ -446,7 +482,7 @@ class Plugin(BasePlugin):
             self.output("\n" + f"{num_shares} {group_name} shares:")
 
             for virtual_name, folder_path, *_unused in share_group:
-                self.output(f"• \"{virtual_name}\" {folder_path}")
+                self.output(f'• "{virtual_name}" {folder_path}')
 
             num_listed += num_shares
 
@@ -616,55 +652,3 @@ class Plugin(BasePlugin):
 
     def search_buddies_command(self, args, **_unused):
         self.core.search.do_search(args, "buddies")
-
-    """ Core Application Commands """
-
-    def away_command(self, _args, **_unused):
-        self.core.set_away_mode(self.core.user_status != 1, save_state=True)  # 1 = UserStatus.AWAY
-        self.output(_("Status is now %s") % (_("Online") if self.core.user_status == 2 else _("Away")))
-
-    def hello_command(self, args, **_unused):
-        self.output(_("Hello there!") + " " + args)
-
-    def plugin_handler_command(self, args, **_unused):
-
-        args_split = args.split(maxsplit=1)
-        action, plugin_name = args_split[0], args_split[1].strip('"')
-        func = getattr(self.parent, f"{action}_plugin")
-
-        return func(plugin_name)
-
-    def quit_command(self, args, user=None, room=None):
-
-        force = (args.lstrip("- ") in ("force", "f"))
-
-        if args and not force:
-            self.output("Invalid option")
-            return False
-
-        # TODO: remove debug log code
-        if user is not None:
-            interface = "private_chat"
-
-        elif room is not None:
-            interface = "chatroom"
-
-        else:
-            interface = "cli"
-
-        if not force:
-            self.log(f"Asking to exit application on {interface} command {args}")  # TODO: remove debug log code
-
-            self.core.confirm_quit()
-
-            if interface == "cli":
-                self.output("Headless quit needs [force] due to no support for cli confirmation prompt in core")  # TODO
-
-            return True
-
-        self.log(f"Quitting on {interface} command {args}")
-        self.core.quit()
-        return True
-
-    def shutdown_notification(self):
-        self.log("Shutdown!")

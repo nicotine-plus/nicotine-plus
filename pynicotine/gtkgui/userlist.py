@@ -210,6 +210,7 @@ class UserList:
 
     def add_buddy(self, user, user_data):
 
+        country_code = user_data.country.replace("flag_", "")
         last_seen = user_data.last_seen
 
         try:
@@ -220,7 +221,7 @@ class UserList:
 
         self.list_view.add_row([
             USER_STATUS_ICON_NAMES.get(user_data.status, ""),
-            get_flag_icon_name(user_data.country),
+            get_flag_icon_name(country_code),
             str(user),
             "", "",
             bool(user_data.is_trusted),
@@ -230,7 +231,7 @@ class UserList:
             str(user_data.note),
             0, 0, 0,
             time_from_epoch,
-            str(user_data.country)
+            str(country_code)
         ], select_row=core.userlist.allow_saving_buddies)
 
         self.update_visible()
@@ -305,13 +306,13 @@ class UserList:
         if iterator is None:
             return
 
-        flag_icon_name = get_flag_icon_name(country_code or "")
+        flag_icon_name = get_flag_icon_name(country_code)
 
         if not flag_icon_name:
             return
 
         self.list_view.set_row_value(iterator, 1, flag_icon_name)
-        self.list_view.set_row_value(iterator, 14, f"flag_{country_code}")
+        self.list_view.set_row_value(iterator, 14, country_code)
 
     def on_add_buddy(self, *_args):
 

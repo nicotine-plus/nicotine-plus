@@ -36,6 +36,6 @@ def upload_packages():
     subprocess.check_call([sys.executable, "-m", "twine", "upload", "dist/*"])
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     create_packages()
     upload_packages()

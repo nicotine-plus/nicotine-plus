@@ -152,7 +152,7 @@ class UserBrowse:
 
         except Exception as error:
             log.add(_("Can't create directory '%(folder)s', reported error: %(error)s"),
-                    {'folder': shares_folder, 'error': error})
+                    {"folder": shares_folder, "error": error})
             return None
 
         return shares_folder
@@ -167,7 +167,7 @@ class UserBrowse:
                 import bz2
 
                 with bz2.BZ2File(filename_encoded) as file_handle:
-                    shares_list = RestrictedUnpickler(file_handle, encoding='utf-8').load()
+                    shares_list = RestrictedUnpickler(file_handle, encoding="utf-8").load()
 
             except Exception:
                 # Try new format
@@ -181,10 +181,10 @@ class UserBrowse:
                     break
 
         except Exception as msg:
-            log.add(_("Loading Shares from disk failed: %(error)s"), {'error': msg})
+            log.add(_("Loading Shares from disk failed: %(error)s"), {"error": msg})
             return
 
-        username = filename.replace('\\', os.sep).split(os.sep)[-1]
+        username = filename.replace("\\", os.sep).split(os.sep)[-1]
         user_share = self.user_shares.get(username)
 
         if user_share:
@@ -212,10 +212,10 @@ class UserBrowse:
                 json.dump(list(self.user_shares[user].items()), file_handle, ensure_ascii=False, indent=0)
 
             log.add(_("Saved list of shared files for user '%(user)s' to %(dir)s"),
-                    {'user': user, 'dir': shares_folder})
+                    {"user": user, "dir": shares_folder})
 
         except Exception as error:
-            log.add(_("Can't save shares, '%(user)s', reported error: %(error)s"), {'user': user, 'error': error})
+            log.add(_("Can't save shares, '%(user)s', reported error: %(error)s"), {"user": user, "error": error})
 
     def download_file(self, user, folder, file_data, prefix=""):
 
@@ -230,7 +230,7 @@ class UserBrowse:
         if requested_folder is None:
             return
 
-        remove_prefix = requested_folder.rsplit('\\', 1)[0]
+        remove_prefix = requested_folder.rsplit("\\", 1)[0]
 
         for folder, files in self.user_shares[user].items():
             if not recurse and requested_folder != folder:

@@ -39,7 +39,7 @@ class Uploads(TransferList):
 
     def __init__(self, window):
 
-        self.path_separator = '\\'
+        self.path_separator = "\\"
         self.path_label = _("Folder")
         self.retry_label = _("_Retry")
         self.abort_label = _("_Abort")
@@ -107,8 +107,8 @@ class Uploads(TransferList):
 
         OptionDialog(
             parent=self.window,
-            title=_('Clear Queued Uploads'),
-            message=_('Do you really want to clear all queued uploads?'),
+            title=_("Clear Queued Uploads"),
+            message=_("Do you really want to clear all queued uploads?"),
             callback=self.on_clear_queued_response
         ).show()
 
@@ -120,8 +120,8 @@ class Uploads(TransferList):
 
         OptionDialog(
             parent=self.window,
-            title=_('Clear All Uploads'),
-            message=_('Do you really want to clear all uploads?'),
+            title=_("Clear All Uploads"),
+            message=_("Do you really want to clear all uploads?"),
             callback=self.on_clear_all_response
         ).show()
 
@@ -140,7 +140,7 @@ class Uploads(TransferList):
 
         if transfer:
             user = config.sections["server"]["login"]
-            url = core.userbrowse.get_soulseek_url(user, transfer.filename.rsplit('\\', 1)[0] + '\\')
+            url = core.userbrowse.get_soulseek_url(user, transfer.filename.rsplit("\\", 1)[0] + "\\")
             copy_text(url)
 
     def on_open_file_manager(self, *_args):
@@ -153,7 +153,7 @@ class Uploads(TransferList):
     def on_play_files(self, *_args):
 
         for transfer in self.selected_transfers:
-            base_name = str.split(transfer.filename, '\\')[-1]
+            base_name = str.split(transfer.filename, "\\")[-1]
 
             open_file_path(file_path=os.path.join(transfer.path, base_name),
                            command=config.sections["players"]["default"])
@@ -166,7 +166,7 @@ class Uploads(TransferList):
             return
 
         user = config.sections["server"]["login"]
-        folder = transfer.filename.rsplit('\\', 1)[0] + '\\'
+        folder = transfer.filename.rsplit("\\", 1)[0] + "\\"
 
         core.userbrowse.browse_user(user, path=folder)
 

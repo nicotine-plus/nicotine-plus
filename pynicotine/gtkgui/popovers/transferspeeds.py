@@ -35,9 +35,10 @@ class TransferSpeeds(Popover):
             self.alt_speed_spinner,
             self.container,
             self.speed_spinner,
-            self.unlimited_speed_radio,
             self.use_alt_limit_radio,
-            self.use_limit_radio) = ui_template.widgets
+            self.use_limit_radio,
+            self.use_unlimited_speed_radio
+        ) = ui_template.widgets
 
         super().__init__(
             window=window,
@@ -46,7 +47,7 @@ class TransferSpeeds(Popover):
         )
 
         menu_button = getattr(window, f"{transfer_type}_status_button")
-        menu_button.set_popover(self.popover)
+        menu_button.set_popover(self.widget)
 
         if GTK_API_VERSION >= 4:
             add_css_class(widget=menu_button.get_first_child(), css_class="flat")
@@ -107,4 +108,4 @@ class TransferSpeeds(Popover):
             self.use_alt_limit_radio.set_active(True)
 
         else:
-            self.unlimited_speed_radio.set_active(True)
+            self.use_unlimited_speed_radio.set_active(True)

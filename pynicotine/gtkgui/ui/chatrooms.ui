@@ -37,27 +37,13 @@
                         <property name="visible">True</property>
                         <property name="vexpand">True</property>
                         <child>
-                          <object class="GtkScrolledWindow">
+                          <object class="GtkScrolledWindow" id="activity_view_container">
                             <property name="visible">True</property>
                             <property name="hexpand">True</property>
                             <property name="height-request">48</property>
-                            <child>
-                              <object class="GtkTextView" id="activity_view">
-                                <property name="visible">True</property>
-                                <property name="editable">False</property>
-                                <property name="wrap-mode">word-char</property>
-                                <property name="cursor-visible">False</property>
-                                <property name="pixels-above-lines">1</property>
-                                <property name="pixels-below-lines">2</property>
-                                <property name="left-margin">10</property>
-                                <property name="right-margin">10</property>
-                                <property name="top-margin">5</property>
-                                <property name="bottom-margin">5</property>
-                                <style>
-                                  <class name="chat-view"/>
-                                </style>
-                              </object>
-                            </child>
+                            <style>
+                              <class name="chat-view"/>
+                            </style>
                           </object>
                         </child>
                       </object>
@@ -86,26 +72,12 @@
                         <property name="visible">True</property>
                         <property name="vexpand">True</property>
                         <child>
-                          <object class="GtkScrolledWindow">
+                          <object class="GtkScrolledWindow" id="chat_view_container">
                             <property name="visible">True</property>
                             <property name="hexpand">True</property>
-                            <child>
-                              <object class="GtkTextView" id="chat_view">
-                                <property name="visible">True</property>
-                                <property name="editable">False</property>
-                                <property name="wrap-mode">word-char</property>
-                                <property name="cursor-visible">False</property>
-                                <property name="pixels-above-lines">1</property>
-                                <property name="pixels-below-lines">2</property>
-                                <property name="left-margin">10</property>
-                                <property name="right-margin">10</property>
-                                <property name="top-margin">5</property>
-                                <property name="bottom-margin">5</property>
-                                <style>
-                                  <class name="chat-view"/>
-                                </style>
-                              </object>
-                            </child>
+                            <style>
+                              <class name="chat-view"/>
+                            </style>
                           </object>
                         </child>
                       </object>
@@ -122,6 +94,7 @@
                           <object class="GtkEntry" id="chat_entry">
                             <property name="visible">True</property>
                             <property name="hexpand">True</property>
+                            <property name="placeholder-text" translatable="yes">Send message…</property>
                             <property name="width-chars">8</property>
                           </object>
                         </child>

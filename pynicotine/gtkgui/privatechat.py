@@ -55,7 +55,7 @@ class PrivateChats(IconNotebook):
 
         super().__init__(
             window,
-            widget=window.private_notebook,
+            parent=window.private_content,
             parent_page=window.private_page,
             switch_page_callback=self.on_switch_chat
         )
@@ -93,8 +93,8 @@ class PrivateChats(IconNotebook):
             if self.command_help is None:
                 self.command_help = PrivateChatCommands(self.window)
 
-            self.command_help.popover.unparent()
-            tab.help_button.set_popover(self.command_help.popover)
+            self.command_help.widget.unparent()
+            tab.help_button.set_popover(self.command_help.widget)
 
             if not tab.loaded:
                 tab.load()
@@ -229,7 +229,7 @@ class PrivateChat:
         ui_template = UserInterface(scope=self, path="privatechat.ui")
         (
             self.chat_entry,
-            self.chat_view,
+            self.chat_view_container,
             self.container,
             self.help_button,
             self.log_toggle,
@@ -246,10 +246,11 @@ class PrivateChat:
         self.offline_message = False
         self.status = core.user_statuses.get(user, UserStatus.OFFLINE)
 
-        self.chat_view = TextView(self.chat_view)
+        self.chat_view = TextView(self.chat_view_container, editable=False, horizontal_margin=10,
+                                  vertical_margin=5, pixels_below_lines=2)
 
         # Text Search
-        self.search_bar = TextSearchBar(self.chat_view.textview, self.search_bar, self.search_entry,
+        self.search_bar = TextSearchBar(self.chat_view.widget, self.search_bar, self.search_entry,
                                         controller_widget=self.container, focus_widget=self.chat_entry)
 
         # Chat Entry
@@ -260,7 +261,7 @@ class PrivateChat:
 
         self.toggle_chat_buttons()
 
-        self.popup_menu_user_chat = UserPopupMenu(self.window.application, self.chat_view.textview,
+        self.popup_menu_user_chat = UserPopupMenu(self.window.application, self.chat_view.widget,
                                                   connect_events=False)
         self.popup_menu_user_tab = UserPopupMenu(self.window.application, None, self.on_popup_menu_user)
 
@@ -272,7 +273,7 @@ class PrivateChat:
                 ("#" + _("_Close Tab"), self.on_close)
             )
 
-        self.popup_menu = PopupMenu(self.window.application, self.chat_view.textview, self.on_popup_menu_chat)
+        self.popup_menu = PopupMenu(self.window.application, self.chat_view.widget, self.on_popup_menu_chat)
         self.popup_menu.add_items(
             ("#" + _("Find…"), self.on_find_chat_log),
             ("", None),
@@ -292,10 +293,12 @@ class PrivateChat:
         self.read_private_log()
 
     def load(self):
+        GLib.idle_add(self.read_private_log_finished)
+        self.loaded = True
 
-        # Scroll chat to bottom
-        GLib.idle_add(self.chat_view.scroll_bottom)
-        self.loaded = self.chat_view.auto_scroll = True
+    def read_private_log_finished(self):
+        self.chat_view.scroll_bottom()
+        self.chat_view.auto_scroll = True
 
     def read_private_log(self):
 
@@ -381,8 +384,8 @@ class PrivateChat:
 
         OptionDialog(
             parent=self.window,
-            title=_('Delete Logged Messages?'),
-            message=_('Do you really want to permanently delete all logged messages for this user?'),
+            title=_("Delete Logged Messages?"),
+            message=_("Do you really want to permanently delete all logged messages for this user?"),
             callback=self.on_delete_chat_log_response
         ).show()
 
@@ -401,7 +404,7 @@ class PrivateChat:
         if config.sections["notifications"]["notification_popup_private_message"]:
             core.notifications.show_private_chat_notification(
                 self.user, text,
-                title=_("Private Message from %(user)s") % {'user': self.user}
+                title=_("Private Message from %(user)s") % {"user": self.user}
             )
 
     def message_user(self, msg):

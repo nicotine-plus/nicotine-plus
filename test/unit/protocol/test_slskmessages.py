@@ -19,14 +19,13 @@
 from unittest import TestCase
 
 from pynicotine.slskmessages import AckNotifyPrivileges
-from pynicotine.slskmessages import AddUser
 from pynicotine.slskmessages import ChangePassword
 from pynicotine.slskmessages import FileSearch
 from pynicotine.slskmessages import GetPeerAddress
 from pynicotine.slskmessages import GetUserStatus
-from pynicotine.slskmessages import JoinPublicRoom
+from pynicotine.slskmessages import JoinGlobalRoom
 from pynicotine.slskmessages import JoinRoom
-from pynicotine.slskmessages import LeavePublicRoom
+from pynicotine.slskmessages import LeaveGlobalRoom
 from pynicotine.slskmessages import Login
 from pynicotine.slskmessages import NotifyPrivileges
 from pynicotine.slskmessages import PrivateRoomAddUser
@@ -34,11 +33,12 @@ from pynicotine.slskmessages import PrivateRoomDismember
 from pynicotine.slskmessages import PrivateRoomDisown
 from pynicotine.slskmessages import PrivateRoomRemoveUser
 from pynicotine.slskmessages import PrivateRoomSomething
-from pynicotine.slskmessages import RemoveUser
 from pynicotine.slskmessages import SayChatroom
 from pynicotine.slskmessages import SetStatus
 from pynicotine.slskmessages import SetWaitPort
 from pynicotine.slskmessages import SlskMessage
+from pynicotine.slskmessages import UnwatchUser
+from pynicotine.slskmessages import WatchUser
 
 
 class SlskMessageTest(TestCase):
@@ -123,11 +123,11 @@ class GetPeerAddressMessageTest(TestCase):
             message)
 
 
-class AddUserMessageTest(TestCase):
+class WatchUserMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
-        obj = AddUser(user='test')
+        obj = WatchUser(user='test')
 
         # Act
         message = obj.make_network_message()
@@ -138,11 +138,11 @@ class AddUserMessageTest(TestCase):
             message)
 
 
-class RemoveUserMessageTest(TestCase):
+class UnwatchUserMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
-        obj = RemoveUser(user='test')
+        obj = UnwatchUser(user='test')
 
         # Act
         message = obj.make_network_message()
@@ -228,11 +228,11 @@ class AckNotifyPrivilegesMessageTest(TestCase):
             message)
 
 
-class JoinPublicRoomMessageTest(TestCase):
+class JoinGlobalRoomMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
-        obj = JoinPublicRoom()
+        obj = JoinGlobalRoom()
 
         # Act
         message = obj.make_network_message()
@@ -243,11 +243,11 @@ class JoinPublicRoomMessageTest(TestCase):
             message)
 
 
-class LeavePublicRoomMessageTest(TestCase):
+class LeaveGlobalRoomMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
-        obj = LeavePublicRoom()
+        obj = LeaveGlobalRoom()
 
         # Act
         message = obj.make_network_message()
@@ -258,7 +258,7 @@ class LeavePublicRoomMessageTest(TestCase):
             message)
 
 
-class PublicRoomMessageMessageTest(TestCase):
+class GlobalRoomMessageMessageTest(TestCase):
     ...
 
 

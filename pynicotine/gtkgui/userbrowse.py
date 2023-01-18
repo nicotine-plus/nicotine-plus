@@ -57,7 +57,7 @@ class UserBrowses(IconNotebook):
 
         super().__init__(
             window,
-            widget=window.userbrowse_notebook,
+            parent=window.userbrowse_content,
             parent_page=window.userbrowse_page
         )
         self.file_properties = None
@@ -119,7 +119,7 @@ class UserBrowses(IconNotebook):
         self.remove_page(page.container)
         del self.pages[user]
 
-    def peer_connection_error(self, user, *_args):
+    def peer_connection_error(self, user, *_args, **_kwargs):
 
         page = self.pages.get(user)
 
@@ -434,14 +434,14 @@ class UserBrowse:
             current_path = None
             root_processed = False
 
-            for subfolder in folder.split('\\'):
+            for subfolder in folder.split("\\"):
                 parent = self.dir_iters.get(current_path)
 
                 if not root_processed:
                     current_path = subfolder
                     root_processed = True
                 else:
-                    current_path = '\\'.join([current_path, subfolder])
+                    current_path = "\\".join([current_path, subfolder])
 
                 if current_path in self.dir_iters:
                     # Folder was already added to tree
@@ -449,7 +449,7 @@ class UserBrowse:
 
                 if not subfolder:
                     # Most likely a root folder
-                    subfolder = '\\'
+                    subfolder = "\\"
 
                 if private:
                     subfolder = _("[PRIVATE]  %s") % subfolder
@@ -592,9 +592,10 @@ class UserBrowse:
 
         for _code, filename, size, _ext, attrs, *_unused in files:
             selected_folder_size += size
+            h_size = humanize(size) if config.sections["ui"]["exact_file_sizes"] else human_size(size)
             h_bitrate, bitrate, h_length, length = FileListMessage.parse_result_bitrate_length(size, attrs)
 
-            file_row = [filename, human_size(size), h_bitrate, h_length,
+            file_row = [filename, h_size, h_bitrate, h_length,
                         GObject.Value(GObject.TYPE_UINT64, size),
                         GObject.Value(GObject.TYPE_UINT, bitrate),
                         GObject.Value(GObject.TYPE_UINT, length)]
@@ -772,7 +773,7 @@ class UserBrowse:
         EntryDialog(
             parent=self.window,
             title=str_title,
-            message=_('Enter the name of the user you want to upload to:'),
+            message=_("Enter the name of the user you want to upload to:"),
             callback=self.on_upload_directory_to_response,
             callback_data=recurse,
             droplist=sorted(core.userlist.buddies)
@@ -793,7 +794,7 @@ class UserBrowse:
         if self.selected_folder is None:
             return
 
-        path = self.selected_folder + '\\'
+        path = self.selected_folder + "\\"
         url = core.userbrowse.get_soulseek_url(self.user, path)
         copy_text(url)
 
@@ -995,8 +996,8 @@ class UserBrowse:
 
         EntryDialog(
             parent=self.window,
-            title=_('Upload File(s) To User'),
-            message=_('Enter the name of the user you want to upload to:'),
+            title=_("Upload File(s) To User"),
+            message=_("Enter the name of the user you want to upload to:"),
             callback=self.on_upload_files_response,
             droplist=sorted(core.userlist.buddies)
         ).show()

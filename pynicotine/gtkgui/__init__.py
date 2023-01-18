@@ -26,10 +26,10 @@ from pynicotine.logfacility import log
 def check_gtk_version():
 
     # Require minor version of GTK
-    if os.getenv("NICOTINE_GTK_VERSION", '4') == '4':
+    if os.getenv("NICOTINE_GTK_VERSION", "4") == "4":
         gtk_version = (4, 6, 6)
     else:
-        os.environ["NICOTINE_LIBADWAITA"] = '0'
+        os.environ["NICOTINE_LIBADWAITA"] = "0"
         gtk_version = (3, 22, 30)
 
     if os.getenv("NICOTINE_LIBADWAITA") is None:
@@ -47,14 +47,14 @@ def check_gtk_version():
 
     try:
         api_version = (gtk_major_version, 0)
-        gi.require_version('Gtk', '.'.join(map(str, api_version)))
+        gi.require_version("Gtk", ".".join(map(str, api_version)))
 
     except ValueError:
         if gtk_major_version == 4:
-            os.environ["NICOTINE_GTK_VERSION"] = '3'
+            os.environ["NICOTINE_GTK_VERSION"] = "3"
             return check_gtk_version()
 
-        return _("Cannot find %s or newer, please install it.") % ("GTK " + '.'.join(map(str, gtk_version)))
+        return _("Cannot find %s or newer, please install it.") % ("GTK " + ".".join(map(str, gtk_version)))
 
     try:
         from gi.repository import Gtk
@@ -66,7 +66,7 @@ def check_gtk_version():
         return _("You are using an unsupported version of GTK %(major_version)s. You should install "
                  "GTK %(complete_version)s or newer.") % {
             "major_version": gtk_major_version,
-            "complete_version": '.'.join(map(str, gtk_version))}
+            "complete_version": ".".join(map(str, gtk_version))}
 
     config.gtk_version = f"{gtk_major_version}.{Gtk.get_minor_version()}.{Gtk.get_micro_version()}"
     return None
@@ -75,7 +75,7 @@ def check_gtk_version():
 def run(hidden, ci_mode, multi_instance):
     """ Run Nicotine+ GTK GUI """
 
-    if getattr(sys, 'frozen', False):
+    if getattr(sys, "frozen", False):
         # Set up paths for frozen binaries (Windows and macOS)
         executable_folder = os.path.dirname(sys.executable)
         resources_folder = executable_folder

@@ -27,17 +27,17 @@ class Plugin(BasePlugin):
         super().__init__(*args, **kwargs)
 
         self.settings = {
-            'maxscore': 0.6,
-            'minlength': 10
+            "maxscore": 0.6,
+            "minlength": 10
         }
         self.metasettings = {
-            'maxscore': {
-                'description': 'The maximum ratio of capitals before converting',
-                'type': 'float', 'minimum': 0, 'maximum': 1, 'stepsize': 0.1
+            "maxscore": {
+                "description": "The maximum ratio of capitals before converting",
+                "type": "float", "minimum": 0, "maximum": 1, "stepsize": 0.1
             },
-            'minlength': {
-                'description': 'Lines shorter than this will be ignored', 'type': 'integer',
-                'minimum': 0
+            "minlength": {
+                "description": "Lines shorter than this will be ignored", "type": "integer",
+                "minimum": 0
             }
         }
 
@@ -45,7 +45,7 @@ class Plugin(BasePlugin):
     def capitalize(text):
 
         # Dont alter words that look like protocol links (fe http://, ftp://)
-        if text.find('://') > -1:
+        if text.find("://") > -1:
             return text
 
         return text.capitalize()
@@ -70,8 +70,8 @@ class Plugin(BasePlugin):
 
         newline = line
 
-        if len(line) > self.settings['minlength'] and (score == -1 or score > self.settings['maxscore']):
-            newline = '. '.join([self.capitalize(x) for x in line.split('. ')])
+        if len(line) > self.settings["minlength"] and (score == -1 or score > self.settings["maxscore"]):
+            newline = ". ".join([self.capitalize(x) for x in line.split(". ")])
 
         if newline == line:
             return newline

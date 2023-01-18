@@ -227,23 +227,44 @@ class DownloadsPage:
     def __init__(self, application):
 
         ui_template = UserInterface(scope=self, path="settings/downloads.ui")
-
-        # pylint: disable=invalid-name
-        (self.AfterDownload, self.AfterFolder, self.AutoclearFinished,
-         self.DownloadDir, self.DownloadDoubleClick, self.DownloadFilter, self.DownloadReverseOrder,
-         self.DownloadSpeed, self.DownloadSpeedAlternative, self.FilterView, self.IncompleteDir,
-         self.Main, self.RemoteDownloads, self.UnlimitedDownloadSpeed, self.UploadDir, self.UploadsAllowed,
-         self.UseAltDownloadSpeedLimit, self.UseDownloadSpeedLimit,
-         self.UsernameSubfolders, self.VerifiedLabel) = ui_template.widgets
+        (
+            self.Main,  # pylint: disable=invalid-name
+            self.accept_sent_files_toggle,
+            self.alt_speed_spinner,
+            self.autoclear_downloads_toggle,
+            self.download_double_click_combobox,
+            self.download_folder_button,
+            self.download_reverse_order_toggle,
+            self.enable_username_subfolders_toggle,
+            self.enable_filters_toggle,
+            self.file_finished_command_entry,
+            self.filter_list_container,
+            self.filter_status_label,
+            self.folder_finished_command_entry,
+            self.incomplete_folder_button,
+            self.received_folder_button,
+            self.sent_files_permission_combobox,
+            self.speed_spinner,
+            self.use_alt_speed_limit_radio,
+            self.use_speed_limit_radio,
+            self.use_unlimited_speed_radio
+        ) = ui_template.widgets
 
         self.application = application
 
-        self.incomplete_dir = FileChooserButton(self.IncompleteDir, application.preferences, "folder")
-        self.download_dir = FileChooserButton(self.DownloadDir, application.preferences, "folder")
-        self.upload_dir = FileChooserButton(self.UploadDir, application.preferences, "folder")
+        self.download_folder_button = FileChooserButton(
+            self.download_folder_button, parent=application.preferences, chooser_type="folder"
+        )
+        self.incomplete_folder_button = FileChooserButton(
+            self.incomplete_folder_button, parent=application.preferences, chooser_type="folder"
+        )
+        self.received_folder_button = FileChooserButton(
+            self.received_folder_button, parent=application.preferences, chooser_type="folder"
+        )
 
         self.filter_list_view = TreeView(
-            application.window, parent=self.FilterView, multi_select=True, activate_row_callback=self.on_edit_filter,
+            application.window, parent=self.filter_list_container, multi_select=True,
+            activate_row_callback=self.on_edit_filter,
             columns=[
                 {"column_id": "filter", "column_type": "text", "title": _("Filter"), "sort_column": 0,
                  "width": 150, "expand_column": True},
@@ -254,21 +275,21 @@ class DownloadsPage:
 
         self.options = {
             "transfers": {
-                "autoclear_downloads": self.AutoclearFinished,
-                "reverseorder": self.DownloadReverseOrder,
-                "remotedownloads": self.RemoteDownloads,
-                "uploadallowed": self.UploadsAllowed,
-                "incompletedir": self.incomplete_dir,
-                "downloaddir": self.download_dir,
-                "uploaddir": self.upload_dir,
+                "autoclear_downloads": self.autoclear_downloads_toggle,
+                "reverseorder": self.download_reverse_order_toggle,
+                "remotedownloads": self.accept_sent_files_toggle,
+                "uploadallowed": self.sent_files_permission_combobox,
+                "incompletedir": self.incomplete_folder_button,
+                "downloaddir": self.download_folder_button,
+                "uploaddir": self.received_folder_button,
                 "downloadfilters": self.filter_list_view,
-                "enablefilters": self.DownloadFilter,
-                "downloadlimit": self.DownloadSpeed,
-                "downloadlimitalt": self.DownloadSpeedAlternative,
-                "usernamesubfolders": self.UsernameSubfolders,
-                "afterfinish": self.AfterDownload,
-                "afterfolder": self.AfterFolder,
-                "download_doubleclick": self.DownloadDoubleClick
+                "enablefilters": self.enable_filters_toggle,
+                "downloadlimit": self.speed_spinner,
+                "downloadlimitalt": self.alt_speed_spinner,
+                "usernamesubfolders": self.enable_username_subfolders_toggle,
+                "afterfinish": self.file_finished_command_entry,
+                "afterfolder": self.folder_finished_command_entry,
+                "download_doubleclick": self.download_double_click_combobox
             }
         }
 
@@ -280,20 +301,20 @@ class DownloadsPage:
         use_speed_limit = config.sections["transfers"]["use_download_speed_limit"]
 
         if use_speed_limit == "primary":
-            self.UseDownloadSpeedLimit.set_active(True)
+            self.use_speed_limit_radio.set_active(True)
 
         elif use_speed_limit == "alternative":
-            self.UseAltDownloadSpeedLimit.set_active(True)
+            self.use_alt_speed_limit_radio.set_active(True)
 
         else:
-            self.UnlimitedDownloadSpeed.set_active(True)
+            self.use_unlimited_speed_radio.set_active(True)
 
     def get_settings(self):
 
-        if self.UseDownloadSpeedLimit.get_active():
+        if self.use_speed_limit_radio.get_active():
             use_speed_limit = "primary"
 
-        elif self.UseAltDownloadSpeedLimit.get_active():
+        elif self.use_alt_speed_limit_radio.get_active():
             use_speed_limit = "alternative"
 
         else:
@@ -309,22 +330,22 @@ class DownloadsPage:
 
         return {
             "transfers": {
-                "autoclear_downloads": self.AutoclearFinished.get_active(),
-                "reverseorder": self.DownloadReverseOrder.get_active(),
-                "remotedownloads": self.RemoteDownloads.get_active(),
-                "uploadallowed": self.UploadsAllowed.get_active(),
-                "incompletedir": self.incomplete_dir.get_path(),
-                "downloaddir": self.download_dir.get_path(),
-                "uploaddir": self.upload_dir.get_path(),
+                "autoclear_downloads": self.autoclear_downloads_toggle.get_active(),
+                "reverseorder": self.download_reverse_order_toggle.get_active(),
+                "remotedownloads": self.accept_sent_files_toggle.get_active(),
+                "uploadallowed": self.sent_files_permission_combobox.get_active(),
+                "incompletedir": self.incomplete_folder_button.get_path(),
+                "downloaddir": self.download_folder_button.get_path(),
+                "uploaddir": self.received_folder_button.get_path(),
                 "downloadfilters": download_filters,
-                "enablefilters": self.DownloadFilter.get_active(),
+                "enablefilters": self.enable_filters_toggle.get_active(),
                 "use_download_speed_limit": use_speed_limit,
-                "downloadlimit": self.DownloadSpeed.get_value_as_int(),
-                "downloadlimitalt": self.DownloadSpeedAlternative.get_value_as_int(),
-                "usernamesubfolders": self.UsernameSubfolders.get_active(),
-                "afterfinish": self.AfterDownload.get_text(),
-                "afterfolder": self.AfterFolder.get_text(),
-                "download_doubleclick": self.DownloadDoubleClick.get_active()
+                "downloadlimit": self.speed_spinner.get_value_as_int(),
+                "downloadlimitalt": self.alt_speed_spinner.get_value_as_int(),
+                "usernamesubfolders": self.enable_username_subfolders_toggle.get_active(),
+                "afterfinish": self.file_finished_command_entry.get_text(),
+                "afterfolder": self.folder_finished_command_entry.get_text(),
+                "download_doubleclick": self.download_double_click_combobox.get_active()
             }
         }
 
@@ -446,18 +467,18 @@ class DownloadsPage:
 
             for dfilter, error in failed.items():
                 errors += "Filter: %(filter)s Error: %(error)s " % {
-                    'filter': dfilter,
-                    'error': error
+                    "filter": dfilter,
+                    "error": error
                 }
 
             error = _("%(num)d Failed! %(error)s " % {
-                'num': len(failed),
-                'error': errors}
+                "num": len(failed),
+                "error": errors}
             )
 
-            self.VerifiedLabel.set_text(error)
+            self.filter_status_label.set_text(error)
         else:
-            self.VerifiedLabel.set_text(_("Filters Successful"))
+            self.filter_status_label.set_text(_("Filters Successful"))
 
 
 class SharesPage:
@@ -619,7 +640,7 @@ class SharesPage:
             EntryDialog(
                 parent=self.application.preferences,
                 title=_("Edit Shared Folder"),
-                message=_("Enter new virtual name for '%(dir)s':") % {'dir': folder_path},
+                message=_("Enter new virtual name for '%(dir)s':") % {"dir": folder_path},
                 default=virtual_name,
                 option_value=is_buddy_only,
                 option_label=_("Share with buddies only"),
@@ -737,31 +758,31 @@ class UserProfilePage:
         ui_template = UserInterface(scope=self, path="settings/userinfo.ui")
         (
             self.Main,  # pylint: disable=invalid-name
-            self.description_text_view,
+            self.description_view_container,
             self.select_picture_button
         ) = ui_template.widgets
 
         self.application = application
-        self.select_picture_button = FileChooserButton(self.select_picture_button, application.preferences, "image")
+        self.description_view = TextView(self.description_view_container, parse_urls=False)
+        self.select_picture_button = FileChooserButton(
+            self.select_picture_button, parent=application.preferences, chooser_type="image")
 
         self.options = {
             "userinfo": {
-                "descr": self.description_text_view,
+                "descr": self.description_view,
                 "pic": self.select_picture_button
             }
         }
 
     def set_settings(self):
+        self.description_view.clear()
         self.application.preferences.set_widgets_data(self.options)
 
     def get_settings(self):
 
-        text_buffer = self.description_text_view.get_buffer()
-        start, end = text_buffer.get_bounds()
-
         return {
             "userinfo": {
-                "descr": repr(text_buffer.get_text(start, end, True)),
+                "descr": repr(self.description_view.get_text()),
                 "pic": self.select_picture_button.get_path()
             }
         }
@@ -1116,7 +1137,7 @@ class ChatsPage:
         self.application.preferences.set_widgets_data(self.options)
 
         try:
-            gi.require_version('Gspell', '1')
+            gi.require_version("Gspell", "1")
             from gi.repository import Gspell  # noqa: F401; pylint:disable=unused-import
 
         except (ImportError, ValueError):
@@ -1319,7 +1340,7 @@ class UserInterfacePage:
          self.EnableUserListTab, self.EntryAway, self.EntryBackground, self.EntryChangedTab, self.EntryCommand,
          self.EntryHighlight, self.EntryHighlightTab, self.EntryImmediate, self.EntryInput, self.EntryLocal,
          self.EntryMe, self.EntryOffline, self.EntryOnline, self.EntryQueue, self.EntryRegularTab, self.EntryRemote,
-         self.EntryURL, self.IconView, self.Language, self.Main, self.MainPosition,
+         self.EntryURL, self.ExactFileSizes, self.IconView, self.Language, self.Main, self.MainPosition,
          self.NotificationPopupChatroom, self.NotificationPopupChatroomMention, self.NotificationPopupFile,
          self.NotificationPopupFolder, self.NotificationPopupPrivateMessage, self.NotificationPopupSound,
          self.NotificationPopupWish, self.NotificationWindowTitle, self.PickAway,
@@ -1329,7 +1350,8 @@ class UserInterfacePage:
          self.ReverseFilePaths, self.SearchPosition, self.SelectBrowserFont, self.SelectChatFont, self.SelectGlobalFont,
          self.SelectListFont, self.SelectSearchFont, self.SelectTextViewFont, self.SelectTransfersFont,
          self.StartupHidden, self.TabClosers, self.TabSelectPrevious, self.ThemeDir, self.TraySettings,
-         self.TrayiconCheck, self.UserBrowsePosition, self.UserInfoPosition, self.UsernameStyle) = ui_template.widgets
+         self.TrayiconCheck, self.UserBrowsePosition, self.UserInfoPosition, self.UsernameHotspots,
+         self.UsernameStyle) = ui_template.widgets
 
         self.application = application
         self.theme_required = False
@@ -1416,6 +1438,7 @@ class UserInterfacePage:
                 "usernamestyle": self.UsernameStyle,
 
                 "reverse_file_paths": self.ReverseFilePaths,
+                "exact_file_sizes": self.ExactFileSizes,
 
                 "tabmain": self.MainPosition,
                 "tabrooms": self.ChatRoomsPosition,
@@ -1440,6 +1463,7 @@ class UserInterfacePage:
                 "useraway": self.EntryAway,
                 "useronline": self.EntryOnline,
                 "useroffline": self.EntryOffline,
+                "usernamehotspots": self.UsernameHotspots,
                 "urlcolor": self.EntryURL,
                 "tab_default": self.EntryRegularTab,
                 "tab_hilite": self.EntryHighlightTab,
@@ -1519,6 +1543,7 @@ class UserInterfacePage:
                 "usernamestyle": self.UsernameStyle.get_active_id(),
 
                 "reverse_file_paths": self.ReverseFilePaths.get_active(),
+                "exact_file_sizes": self.ExactFileSizes.get_active(),
 
                 "tabmain": self.MainPosition.get_active_id(),
                 "tabrooms": self.ChatRoomsPosition.get_active_id(),
@@ -1545,6 +1570,7 @@ class UserInterfacePage:
                 "useraway": self.EntryAway.get_text(),
                 "useronline": self.EntryOnline.get_text(),
                 "useroffline": self.EntryOffline.get_text(),
+                "usernamehotspots": self.UsernameHotspots.get_active(),
                 "tab_hilite": self.EntryHighlightTab.get_text(),
                 "tab_default": self.EntryRegularTab.get_text(),
                 "tab_changed": self.EntryChangedTab.get_text(),
@@ -1712,31 +1738,46 @@ class SearchesPage:
     def __init__(self, application):
 
         ui_template = UserInterface(scope=self, path="settings/search.ui")
-
-        # pylint: disable=invalid-name
-        (self.ClearFilterHistorySuccess, self.ClearSearchHistorySuccess, self.EnableFilters, self.EnableSearchHistory,
-         self.FilterBR, self.FilterCC, self.FilterFree, self.FilterIn, self.FilterLength, self.FilterOut,
-         self.FilterSize, self.FilterType, self.Main, self.MaxDisplayedResults, self.MaxResults, self.MinSearchChars,
-         self.RemoveSpecialChars, self.ShowPrivateSearchResults, self.ShowSearchHelp,
-         self.ToggleResults) = ui_template.widgets
+        (
+            self.Main,  # pylint: disable=invalid-name
+            self.cleared_filter_history_icon,
+            self.cleared_search_history_icon,
+            self.enable_default_filters_toggle,
+            self.enable_search_history_toggle,
+            self.filter_bitrate_entry,
+            self.filter_country_entry,
+            self.filter_exclude_entry,
+            self.filter_file_size_entry,
+            self.filter_file_type_entry,
+            self.filter_free_slot_toggle,
+            self.filter_help_button,
+            self.filter_include_entry,
+            self.filter_length_entry,
+            self.max_displayed_results_spinner,
+            self.max_sent_results_spinner,
+            self.min_search_term_length_spinner,
+            self.remove_special_chars_toggle,
+            self.repond_search_requests_toggle,
+            self.show_private_results_toggle
+        ) = ui_template.widgets
 
         self.application = application
         self.search_required = False
 
         self.filter_help = SearchFilterHelp(application.preferences)
-        self.ShowSearchHelp.set_popover(self.filter_help.popover)
+        self.filter_help_button.set_popover(self.filter_help.widget)
 
         self.options = {
             "searches": {
-                "maxresults": self.MaxResults,
-                "enablefilters": self.EnableFilters,
+                "maxresults": self.max_sent_results_spinner,
+                "enablefilters": self.enable_default_filters_toggle,
                 "defilter": None,
-                "search_results": self.ToggleResults,
-                "max_displayed_results": self.MaxDisplayedResults,
-                "min_search_chars": self.MinSearchChars,
-                "remove_special_chars": self.RemoveSpecialChars,
-                "enable_history": self.EnableSearchHistory,
-                "private_search_results": self.ShowPrivateSearchResults
+                "search_results": self.repond_search_requests_toggle,
+                "max_displayed_results": self.max_displayed_results_spinner,
+                "min_search_chars": self.min_search_term_length_spinner,
+                "remove_special_chars": self.remove_special_chars_toggle,
+                "enable_history": self.enable_search_history_toggle,
+                "private_search_results": self.show_private_results_toggle
             }
         }
 
@@ -1750,31 +1791,31 @@ class SearchesPage:
             num_filters = len(searches["defilter"])
 
             if num_filters > 0:
-                self.FilterIn.set_text(str(searches["defilter"][0]))
+                self.filter_include_entry.set_text(str(searches["defilter"][0]))
 
             if num_filters > 1:
-                self.FilterOut.set_text(str(searches["defilter"][1]))
+                self.filter_exclude_entry.set_text(str(searches["defilter"][1]))
 
             if num_filters > 2:
-                self.FilterSize.set_text(str(searches["defilter"][2]))
+                self.filter_file_size_entry.set_text(str(searches["defilter"][2]))
 
             if num_filters > 3:
-                self.FilterBR.set_text(str(searches["defilter"][3]))
+                self.filter_bitrate_entry.set_text(str(searches["defilter"][3]))
 
             if num_filters > 4:
-                self.FilterFree.set_active(searches["defilter"][4])
+                self.filter_free_slot_toggle.set_active(searches["defilter"][4])
 
             if num_filters > 5:
-                self.FilterCC.set_text(str(searches["defilter"][5]))
+                self.filter_country_entry.set_text(str(searches["defilter"][5]))
 
             if num_filters > 6:
-                self.FilterType.set_text(str(searches["defilter"][6]))
+                self.filter_file_type_entry.set_text(str(searches["defilter"][6]))
 
             if num_filters > 7:
-                self.FilterLength.set_text(str(searches["defilter"][7]))
+                self.filter_length_entry.set_text(str(searches["defilter"][7]))
 
-        self.ClearSearchHistorySuccess.set_visible(False)
-        self.ClearFilterHistorySuccess.set_visible(False)
+        self.cleared_search_history_icon.set_visible(False)
+        self.cleared_filter_history_icon.set_visible(False)
 
     def get_settings(self):
 
@@ -1782,24 +1823,24 @@ class SearchesPage:
 
         return {
             "searches": {
-                "maxresults": self.MaxResults.get_value_as_int(),
-                "enablefilters": self.EnableFilters.get_active(),
+                "maxresults": self.max_sent_results_spinner.get_value_as_int(),
+                "enablefilters": self.enable_default_filters_toggle.get_active(),
                 "defilter": [
-                    self.FilterIn.get_text(),
-                    self.FilterOut.get_text(),
-                    self.FilterSize.get_text(),
-                    self.FilterBR.get_text(),
-                    self.FilterFree.get_active(),
-                    self.FilterCC.get_text(),
-                    self.FilterType.get_text(),
-                    self.FilterLength.get_text()
+                    self.filter_include_entry.get_text(),
+                    self.filter_exclude_entry.get_text(),
+                    self.filter_file_size_entry.get_text(),
+                    self.filter_bitrate_entry.get_text(),
+                    self.filter_free_slot_toggle.get_active(),
+                    self.filter_country_entry.get_text(),
+                    self.filter_file_type_entry.get_text(),
+                    self.filter_length_entry.get_text()
                 ],
-                "search_results": self.ToggleResults.get_active(),
-                "max_displayed_results": self.MaxDisplayedResults.get_value_as_int(),
-                "min_search_chars": self.MinSearchChars.get_value_as_int(),
-                "remove_special_chars": self.RemoveSpecialChars.get_active(),
-                "enable_history": self.EnableSearchHistory.get_active(),
-                "private_search_results": self.ShowPrivateSearchResults.get_active()
+                "search_results": self.repond_search_requests_toggle.get_active(),
+                "max_displayed_results": self.max_displayed_results_spinner.get_value_as_int(),
+                "min_search_chars": self.min_search_term_length_spinner.get_value_as_int(),
+                "remove_special_chars": self.remove_special_chars_toggle.get_active(),
+                "enable_history": self.enable_search_history_toggle.get_active(),
+                "private_search_results": self.show_private_results_toggle.get_active()
             }
         }
 
@@ -1808,11 +1849,11 @@ class SearchesPage:
 
     def on_clear_search_history(self, *_args):
         self.application.window.search.clear_search_history()
-        self.ClearSearchHistorySuccess.set_visible(True)
+        self.cleared_search_history_icon.set_visible(True)
 
     def on_clear_filter_history(self, *_args):
         self.application.window.search.clear_filter_history()
-        self.ClearFilterHistorySuccess.set_visible(True)
+        self.cleared_filter_history_icon.set_visible(True)
 
 
 class UrlHandlersPage:
@@ -1860,7 +1901,7 @@ class UrlHandlersPage:
             "links -g $",
             "dillo $",
             "konqueror $",
-            "\"c:\\Program Files\\Mozilla Firefox\\Firefox.exe\" $"
+            '"c:\\Program Files\\Mozilla Firefox\\Firefox.exe" $'
         ]
 
         self.protocols = {}
@@ -2081,7 +2122,7 @@ class NowPlayingPage:
 
         if player == "lastfm":
             self.NP_lastfm.set_active(True)
-        elif player == 'listenbrainz':
+        elif player == "listenbrainz":
             self.NP_listenbrainz.set_active(True)
         elif player == "other":
             self.NP_other.set_active(True)
@@ -2114,8 +2155,8 @@ class NowPlayingPage:
             if item == "$t":
                 legend += _("Title")
             elif item == "$n":
-                legend += _("Now Playing (typically \"%(artist)s - %(title)s\")") % {
-                    'artist': _("Artist"), 'title': _("Title")}
+                legend += _('Now Playing (typically "%(artist)s - %(title)s")') % {
+                    "artist": _("Artist"), "title": _("Title")}
             elif item == "$l":
                 legend += _("Duration")
             elif item == "$r":
@@ -2170,7 +2211,7 @@ class PluginsPage:
             self.Main,  # pylint: disable=invalid-name
             self.enable_plugins_toggle,
             self.plugin_authors_label,
-            self.plugin_description_view,
+            self.plugin_description_view_container,
             self.plugin_list_container,
             self.plugin_name_label,
             self.plugin_settings_button,
@@ -2187,7 +2228,8 @@ class PluginsPage:
             }
         }
 
-        self.plugin_description_view = TextView(self.plugin_description_view)
+        self.plugin_description_view = TextView(self.plugin_description_view_container, editable=False,
+                                                pixels_below_lines=2)
         self.plugin_list_view = TreeView(
             application.window, parent=self.plugin_list_container, always_select=True,
             select_row_callback=self.on_select_plugin,
@@ -2215,7 +2257,7 @@ class PluginsPage:
             except OSError:
                 continue
 
-            plugin_name = info.get('Name', plugin_id)
+            plugin_name = info.get("Name", plugin_id)
             enabled = (plugin_id in config.sections["plugins"]["enabled"])
             self.plugin_list_view.add_row([enabled, plugin_name, plugin_id], select_row=False)
 
@@ -2244,9 +2286,9 @@ class PluginsPage:
             info = core.pluginhandler.get_plugin_info(self.selected_plugin)
 
         plugin_name = info.get("Name", self.selected_plugin)
-        plugin_version = info.get("Version", '-')
-        plugin_authors = ", ".join(info.get("Authors", '-'))
-        plugin_description = info.get("Description", '').replace(r'\n', '\n')
+        plugin_version = info.get("Version", "-")
+        plugin_authors = ", ".join(info.get("Authors", "-"))
+        plugin_description = info.get("Description", "").replace(r"\n", "\n")
 
         self.plugin_name_label.set_text(plugin_name)
         self.plugin_version_label.set_text(plugin_version)
@@ -2335,7 +2377,7 @@ class Preferences(Dialog):
             show_title_buttons=False
         )
 
-        add_css_class(self.window, "preferences-border")
+        add_css_class(self.widget, "preferences-border")
 
         if GTK_API_VERSION == 3:
             # Scroll to focused widgets
@@ -2414,11 +2456,8 @@ class Preferences(Dialog):
         if isinstance(widget, Gtk.Entry):
             return widget.get_text()
 
-        if isinstance(widget, Gtk.TextView):
-            text_buffer = widget.get_buffer()
-            start, end = text_buffer.get_bounds()
-
-            return text_buffer.get_text(start, end, True)
+        if isinstance(widget, TextView):
+            return repr(widget.get_text())
 
         if isinstance(widget, Gtk.CheckButton):
             try:
@@ -2456,8 +2495,8 @@ class Preferences(Dialog):
         elif isinstance(widget, Gtk.Entry):
             widget.set_text("")
 
-        elif isinstance(widget, Gtk.TextView):
-            widget.get_buffer().set_text("")
+        elif isinstance(widget, TextView):
+            widget.clear()
 
         elif isinstance(widget, Gtk.CheckButton):
             widget.set_active(0)
@@ -2483,9 +2522,9 @@ class Preferences(Dialog):
             if isinstance(value, (str, int)):
                 widget.set_text(value)
 
-        elif isinstance(widget, Gtk.TextView):
-            if isinstance(value, (str, int)):
-                widget.get_buffer().set_text(unescape(value))
+        elif isinstance(widget, TextView):
+            if isinstance(value, str):
+                widget.append_line(unescape(value))
 
         elif isinstance(widget, Gtk.CheckButton):
             try:
@@ -2683,7 +2722,7 @@ class Preferences(Dialog):
             self.application.window.show()
 
         if config.need_config():
-            GLib.idle_add(self.application.setup)
+            core.setup()
 
     @staticmethod
     def on_back_up_config_response(selected, _data):
