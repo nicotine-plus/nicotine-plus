@@ -31,8 +31,8 @@ from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
+from pynicotine.gtkgui.popovers.chatcommandhelp import ChatCommandHelp
 from pynicotine.gtkgui.popovers.chathistory import ChatHistory
-from pynicotine.gtkgui.popovers.privatechatcommands import PrivateChatCommands
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
@@ -91,7 +91,7 @@ class PrivateChats(IconNotebook):
             tab.set_completion_list(core.privatechat.completion_list[:])
 
             if self.command_help is None:
-                self.command_help = PrivateChatCommands(self.window)
+                self.command_help = ChatCommandHelp(window=self.window, interface="private_chat")
 
             self.command_help.widget.unparent()
             tab.help_button.set_popover(self.command_help.widget)
