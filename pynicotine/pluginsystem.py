@@ -505,7 +505,7 @@ class PluginHandler:
 
         try:
             BasePlugin.internal_name = plugin_name
-            BasePlugin.human_name = self.get_plugin_info(plugin_name).get("Name", plugin_name)
+            BasePlugin.human_name = human_name = self.get_plugin_info(plugin_name).get("Name", plugin_name)
 
             plugin = self.load_plugin(plugin_name)
 
@@ -517,6 +517,10 @@ class PluginHandler:
             for command, data in plugin.commands.items():
                 command = "/" + command
                 disabled_interfaces = data.get("disable", [])
+
+                if "group" not in data:
+                    # Group commands under human-friendly plugin name by default
+                    data["group"] = human_name
 
                 if "chatroom" not in disabled_interfaces and command not in self.chatroom_commands:
                     self.chatroom_commands[command] = data
