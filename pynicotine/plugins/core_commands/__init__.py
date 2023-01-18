@@ -25,17 +25,20 @@ class Plugin(BasePlugin):
 
         super().__init__(*args, **kwargs)
 
+        self.main_group_name = _("%s Commands") % self.config.application_name
         self.commands = {
             "help": {
                 "aliases": ["?"],
                 "callback": self.help_command,
                 "description": _("List available commands"),
+                "group": self.main_group_name,
                 "usage": ["[query]"]
             },
             "quit": {
                 "aliases": ["q", "exit"],
                 "callback": self.quit_command,
                 "description": _("Quit Nicotine+"),
+                "group": self.main_group_name,
                 "usage": ["[-force]"]
             },
             "close": {
@@ -49,6 +52,7 @@ class Plugin(BasePlugin):
             },
             "sample": {
                 "description": "Sample command description",
+                "group": self.main_group_name,
                 "aliases": ["demo"],
                 "disable": ["private_chat"],
                 "callback": self.sample_command,

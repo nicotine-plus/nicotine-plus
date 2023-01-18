@@ -736,7 +736,7 @@ class PluginHandler:
         for command, data in command_list.items():
             command_message = command
             description = _("No description")
-            group = _("%s Commands") % config.application_name
+            group = _("Miscellaneous")
 
             if data:
                 commands = ", /".join([command] + data.get("aliases", []))
