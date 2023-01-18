@@ -55,7 +55,6 @@ from pynicotine.gtkgui.widgets.theme import set_use_header_bar
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.gtkgui.widgets.window import Window
 from pynicotine.logfacility import log
-from pynicotine.scheduler import scheduler
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import human_speed
 from pynicotine.utils import open_file_path
@@ -1243,10 +1242,10 @@ class MainWindow(Window):
         away_interval = config.sections["server"]["autoaway"]
 
         if away_interval > 0:
-            self.away_timer_id = scheduler.add(delay=(60 * away_interval), callback=self.set_auto_away)
+            self.away_timer_id = events.schedule(delay=(60 * away_interval), callback=self.set_auto_away)
 
     def remove_away_timer(self):
-        scheduler.cancel(self.away_timer_id)
+        events.cancel_scheduled(self.away_timer_id)
 
     def on_cancel_auto_away(self, *_args):
 
@@ -1293,7 +1292,7 @@ class MainWindow(Window):
         )
 
     def log_callback(self, timestamp_format, msg, title, level):
-        events.emit_main_thread("thread-callback", self.update_log, timestamp_format, msg, title, level)
+        events.invoke_main_thread(self.update_log, timestamp_format, msg, title, level)
 
     def update_log(self, timestamp_format, msg, title, level):
 

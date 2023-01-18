@@ -32,7 +32,6 @@ from threading import Thread
 
 from pynicotine.events import events
 from pynicotine.logfacility import log
-from pynicotine.scheduler import scheduler
 from pynicotine.slskmessages import DISTRIBUTED_MESSAGE_CLASSES
 from pynicotine.slskmessages import DISTRIBUTED_MESSAGE_CODES
 from pynicotine.slskmessages import NETWORK_MESSAGE_EVENTS
@@ -401,7 +400,7 @@ class SoulseekNetworkThread(Thread):
             return
 
         self._manual_server_disconnect = False
-        scheduler.cancel(self._server_timer)
+        events.cancel_scheduled(self._server_timer)
 
         ip_address, port = msg_obj.addr
         log.add(_("Connecting to %(host)s:%(port)s"), {"host": ip_address, "port": port})
@@ -428,7 +427,7 @@ class SoulseekNetworkThread(Thread):
         self._token_init_msgs.clear()
         self._username_init_msgs.clear()
 
-        scheduler.cancel(self._conn_timeouts_timer_id)
+        events.cancel_scheduled(self._conn_timeouts_timer_id)
         self._out_indirect_conn_request_times.clear()
 
         if self._want_abort:
@@ -471,7 +470,7 @@ class SoulseekNetworkThread(Thread):
         elif 0 < self._server_timeout_value < 600:
             self._server_timeout_value = self._server_timeout_value * 2
 
-        self._server_timer = scheduler.add(delay=self._server_timeout_value, callback=self._server_timeout)
+        self._server_timer = events.schedule(delay=self._server_timeout_value, callback=self._server_timeout)
 
         log.add(_("The server seems to be down or not responding, retrying in %i seconds"),
                 self._server_timeout_value)
@@ -1217,7 +1216,7 @@ class SoulseekNetworkThread(Thread):
                             self.upnp.add_port_mapping(blocking=True)
 
                             # Check for indirect connection timeouts
-                            self._conn_timeouts_timer_id = scheduler.add(
+                            self._conn_timeouts_timer_id = events.schedule(
                                 delay=1, callback=self._check_indirect_connection_timeouts, repeat=True
                             )
 

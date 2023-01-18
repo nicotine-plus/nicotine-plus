@@ -23,7 +23,6 @@ import time
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.events import events
-from pynicotine.scheduler import scheduler
 from pynicotine.utils import clean_file
 from pynicotine.utils import encode_path
 from pynicotine.utils import open_file_path
@@ -80,7 +79,7 @@ class Logger:
         self._log_levels = {LogLevel.DEFAULT}
         self._log_files = {}
 
-        scheduler.add(delay=10, callback=self._close_inactive_log_files, repeat=True)
+        events.schedule(delay=10, callback=self._close_inactive_log_files, repeat=True)
 
     """ Log Levels """
 
