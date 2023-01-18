@@ -670,7 +670,7 @@ class PluginHandler:
             try:
                 for trigger, func in commands:
                     if trigger == command:
-                        return_value = getattr(plugin, func.__name__)(source, args)
+                        return_value = func(source, args)
 
             except Exception:
                 self.show_plugin_error(module, sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
