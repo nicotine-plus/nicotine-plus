@@ -96,11 +96,11 @@ class ChatEntry:
         # Allow the command line to be edited if parsing rejects the line or if the plugin returns False
         if self.is_chatroom:
             if not core.pluginhandler.trigger_chatroom_command_event(self.entity, cmd[1:], args):
-                self.entry.grab_focus()
+                self.widget.grab_focus()
                 return
 
         elif not core.pluginhandler.trigger_private_chat_command_event(self.entity, cmd[1:], args):
-            self.entry.grab_focus()
+            self.widget.grab_focus()
             return
 
         # Clear chat entry
