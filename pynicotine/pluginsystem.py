@@ -735,21 +735,16 @@ class PluginHandler:
 
         for command, data in command_list.items():
             command_message = command
-            aliases = usage = ""
             description = _("No description")
             group = _("%s Commands") % config.application_name
 
             if data:
-                aliases = ", /".join(data.get("aliases", []))
+                commands = ", /".join([command] + data.get("aliases", []))
+                parameters = " ".join(data.get(f"usage_{command_interface}", data.get("usage", [])))
+
+                command_message = f"{commands} {parameters}".strip()
                 description = data.get("description", description)
                 group = data.get("group", group)
-                usage = " ".join(data.get(f"usage_{command_interface}", data.get("usage", [])))
-
-            if aliases:
-                command_message += f", {aliases}"
-
-            if usage:
-                command_message += f" {usage}"
 
             if (search_query
                     and search_query not in group.lower()
