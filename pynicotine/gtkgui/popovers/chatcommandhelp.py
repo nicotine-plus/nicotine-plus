@@ -29,30 +29,18 @@ class ChatCommandHelp(Popover):
     def __init__(self, window, interface):
 
         self.interface = interface
-        self.container = Gtk.ScrolledWindow(visible=True)
+        self.scrollable = Gtk.ScrolledWindow(visible=True)
+        self.container = None
 
         super().__init__(
             window=window,
-            content_box=self.container,
+            content_box=self.scrollable,
+            show_callback=self._update_commands,
             width=600,
             height=450
         )
 
-        self.update_commands()
-
-    def update_commands(self):
-
-        main_content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, visible=True)
-
-        for group_name, commands in core.pluginhandler.get_command_descriptions(self.interface).items():
-            section_container = self._create_command_section(main_content, group_name)
-
-            for command_usage, description in commands:
-                self._create_command_row(section_container, command_usage, description)
-
-        self.container.set_property("child", main_content)
-
-    def _create_command_section(self, parent, group_name):
+    def _create_command_section(self, group_name):
 
         section_container = Gtk.Box(
             orientation=Gtk.Orientation.VERTICAL, margin_start=18, margin_end=18, margin_top=18, margin_bottom=18,
@@ -63,11 +51,11 @@ class ChatCommandHelp(Popover):
         add_css_class(section_label, "heading")
 
         if GTK_API_VERSION >= 4:
-            section_container.append(section_label)  # pylint: disable=no-member
-            parent.append(section_container)         # pylint: disable=no-member
+            section_container.append(section_label)   # pylint: disable=no-member
+            self.container.append(section_container)  # pylint: disable=no-member
         else:
-            section_container.add(section_label)     # pylint: disable=no-member
-            parent.add(section_container)            # pylint: disable=no-member
+            section_container.add(section_label)      # pylint: disable=no-member
+            self.container.add(section_container)     # pylint: disable=no-member
 
         return section_container
 
@@ -91,3 +79,22 @@ class ChatCommandHelp(Popover):
             parent.add(row)                # pylint: disable=no-member
 
         return row
+
+    def _update_commands(self, *_args):
+
+        if self.container:
+            if GTK_API_VERSION >= 4:
+                self.scrollable.set_child(None)         # pylint: disable=no-member
+            else:
+                self.scrollable.remove(self.container)  # pylint: disable=no-member
+
+        self.container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, visible=True)
+
+        for group_name, commands in core.pluginhandler.get_command_descriptions(self.interface).items():
+            section_container = self._create_command_section(group_name)
+
+            for command_usage, description in commands:
+                self._create_command_row(section_container, command_usage, description)
+
+        self.scrollable.set_property("child", self.container)
+        self.container.child_focus(Gtk.DirectionType.TAB_FORWARD)
