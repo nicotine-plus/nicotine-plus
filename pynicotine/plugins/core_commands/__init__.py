@@ -29,7 +29,7 @@ class Plugin(BasePlugin):
             "help": {
                 "aliases": ["?"],
                 "callback": self.help_command,
-                "description": "List commands",
+                "description": _("List available commands"),
                 "usage": ["[query]"]
             },
             "rescan": {
@@ -265,77 +265,39 @@ class Plugin(BasePlugin):
     def help_command(self, args, user=None, room=None):
 
         if user is not None:
-            command_list = self.parent.private_chat_commands
-            interface = "private_chat"  # _("_")
-            prefix = "/"
+            interface = "private_chat"
 
         elif room is not None:
-            command_list = self.parent.chatroom_commands
             interface = "chatroom"
-            prefix = "/"
 
         else:
-            command_list = self.parent.cli_commands
             interface = "cli"
-            prefix = ""
 
-        query = args.split(" ", maxsplit=1)[0].lower().lstrip("/")
-        command_groups = {}
-        num_commands = 0
+        search_query = " ".join(args.lower().split(" ", maxsplit=1))
+        command_groups = self.parent.get_command_descriptions(  # pylint: disable=no-member
+            interface, search_query=search_query
+        )
+        num_commands = sum(len(command_groups[x]) for x in command_groups)
+        output_text = ""
 
-        for command, data in command_list.items():
-            command_message = command
-            aliases = f", {prefix}".join(data.get("aliases", []))
-            description = data.get("description", "No description")
-            group = data.get("group", f"{self.config.application_name} {_('Commands')}")
-            usage = " ".join(data.get(f"usage_{interface}", data.get("usage", [])))
-
-            if aliases:
-                command_message += f", {prefix}" + aliases
-
-            if usage:
-                command_message += " " + usage
-
-            if args and query not in command_message and query not in group.lower():
-                continue
-
-            num_commands += 1
-
-            if interface == "cli":
-                # Improved layout for fixed width output
-                command_message = command_message.lstrip("/").ljust(24)
-
-            if group not in command_groups:
-                command_groups[group] = []
-
-            command_groups[group].append(f"    {command_message}  -  {description}")
-
-        if not num_commands:
-            self.output(f"Unknown command: {prefix}{query}. Type {prefix}help for a list of commands.")
-            return False
-
-        output = f"Listing {num_commands} {interface} commands"
-
-        if query:
-            output += " " + f"matching \"{query}\":"
+        if not search_query:
+            output_text += _("Listing %(num)i available commands:") % {"num": num_commands}
         else:
-            output += ":"
+            output_text += _('Listing %(num)i available commands matching "%(query)s":') % {
+                "num": num_commands,
+                "query": search_query
+            }
 
-        for group, commands in command_groups.items():
-            output += "\n\n" + "  " + group + ":"
+        for group_name, commands in command_groups.items():
+            output_text += f"\n\n{group_name}:"
 
-            for command in commands:
-                output += "\n" + command
+            for command_usage, description in commands:
+                output_text += f"\n	{command_usage}  -  {description}"
 
-        output += "\n"
+        if not search_query:
+            output_text += "\n\n" + _("Type %(command)s to list similar commands") % {"command": "/help [query]"}
 
-        if not query:
-            output += "\n" + f"Type {prefix}help [query] (without brackets) to list similar commands or aliases"
-
-        if prefix:
-            output += "\n" + "Start a command using / (forward slash)"
-
-        self.output(output)
+        self.output(output_text)
         return True
 
     def away_command(self, _args, **_unused):

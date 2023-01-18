@@ -37,7 +37,7 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
-from pynicotine.gtkgui.popovers.chatroomcommands import ChatRoomCommands
+from pynicotine.gtkgui.popovers.chatcommandhelp import ChatCommandHelp
 from pynicotine.gtkgui.popovers.roomlist import RoomList
 from pynicotine.gtkgui.popovers.roomwall import RoomWall
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
@@ -153,7 +153,7 @@ class ChatRooms(IconNotebook):
             tab.set_completion_list(core.chatrooms.completion_list[:])
 
             if self.command_help is None:
-                self.command_help = ChatRoomCommands(self.window)
+                self.command_help = ChatCommandHelp(window=self.window, interface="chatroom")
 
             self.command_help.widget.unparent()
             tab.help_button.set_popover(self.command_help.widget)
