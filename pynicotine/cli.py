@@ -55,7 +55,7 @@ class CLIInputProcessor(Thread):
         if not callback:
             return False
 
-        events.emit("thread-callback", callback, user_input)
+        events.invoke_main_thread(callback, user_input)
         return True
 
     def _handle_prompt_command(self, user_input):

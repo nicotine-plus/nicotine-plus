@@ -380,7 +380,7 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">Users on the Soulseek network will be able to download files from folders you share. Sharing files is crucial for the health of the Soulseek network.</property>
+                <property name="label" translatable="yes">Soulseek users will be able to download from your shares. Contribute to the Soulseek network by sharing your own collection and by resharing what you downloaded from other users.</property>
                 <property name="selectable">True</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>

@@ -22,8 +22,8 @@ from threading import Thread
 from urllib.parse import urlsplit
 
 from pynicotine.config import config
+from pynicotine.events import events
 from pynicotine.logfacility import log
-from pynicotine.scheduler import scheduler
 
 
 MULTICAST_HOST = "239.255.255.250"
@@ -375,7 +375,7 @@ class UPnP:
         The default interval is 4 hours. """
 
         self.cancel_timer()
-        self._timer = scheduler.add(delay=RENEWAL_INTERVAL, callback=self.add_port_mapping)
+        self._timer = events.schedule(delay=RENEWAL_INTERVAL, callback=self.add_port_mapping)
 
     def cancel_timer(self):
-        scheduler.cancel(self._timer)
+        events.cancel_scheduled(self._timer)
