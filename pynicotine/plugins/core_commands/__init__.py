@@ -25,11 +25,13 @@ class Plugin(BasePlugin):
 
         super().__init__(*args, **kwargs)
 
+        self.main_group_name = _("%s Commands") % self.config.application_name
         self.commands = {
             "help": {
                 "aliases": ["?"],
                 "callback": self.help_command,
                 "description": _("List available commands"),
+                "group": self.main_group_name,
                 "usage": ["[query]"]
             },
             "rescan": {
@@ -42,13 +44,13 @@ class Plugin(BasePlugin):
                 "aliases": ["echo", "greet"],
                 "callback": self.hello_command,
                 "description": "Print something",
-                "group": _("Message"),
                 "usage": ["[something..]"]
             },
             "away": {
                 "aliases": ["a"],
                 "callback": self.away_command,
-                "description": _("Toggle away status")
+                "description": _("Toggle away status"),
+                "group": self.main_group_name
             },
             "plugin": {
                 "callback": self.plugin_handler_command,
@@ -59,6 +61,7 @@ class Plugin(BasePlugin):
                 "aliases": ["q", "exit"],
                 "callback": self.quit_command,
                 "description": _("Quit Nicotine+"),
+                "group": self.main_group_name,
                 "usage": ["[-force]"]
             },
             "clear": {
