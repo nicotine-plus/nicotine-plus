@@ -52,11 +52,6 @@ class Plugin(BasePlugin):
                 "description": _("Toggle away status"),
                 "group": self.main_group_name
             },
-            "plugin": {
-                "callback": self.plugin_handler_command,
-                "description": _("Load or unload a plugin"),
-                "usage": ["<toggle|enable|disable>", "<plugin_name>"]
-            },
             "quit": {
                 "aliases": ["q", "exit"],
                 "callback": self.quit_command,
@@ -260,6 +255,12 @@ class Plugin(BasePlugin):
                 "description": _("Remove share"),
                 "group": _("Configure Shares"),
                 "usage": ["<public|buddy>", "<virtual name>"]
+            },
+            "plugin": {
+                "callback": self.plugin_handler_command,
+                "description": _("Load or unload a plugin"),
+                "group": _("Plugin Commands"),
+                "usage": ["<toggle|enable|disable>", "<plugin_name>"]
             }
         }
 
@@ -295,7 +296,7 @@ class Plugin(BasePlugin):
             output_text += f"\n\n{group_name}:"
 
             for command_usage, description in commands:
-                output_text += f"\n	{command_usage}  -  {description}"
+                output_text += f"\n	{command_usage}	-  {description}"  # alternate whitespace tabs in string
 
         if not search_query:
             output_text += "\n\n" + _("Type %(command)s to list similar commands") % {"command": "/help [query]"}
@@ -313,7 +314,7 @@ class Plugin(BasePlugin):
     def plugin_handler_command(self, args, **_unused):
 
         args_split = args.split(maxsplit=1)
-        action, plugin_name = args_split[0], args_split[1].strip('"')
+        action, plugin_name = args_split[0], args_split[1].strip('" ')
         func = getattr(self.parent, f"{action}_plugin")
 
         return func(plugin_name)
