@@ -600,15 +600,15 @@ class PluginHandler:
         try:
             plugin.disable()
 
-            for command in plugin.commands:
-                # FIXME: Don't pop commands with names that conflict with
-                #        those defined in core_commands
-
+            for command, data in plugin.commands.items():
                 command = "/" + command
 
-                self.chatroom_commands.pop(command, None)
-                self.private_chat_commands.pop(command, None)
-                self.cli_commands.pop(command, None)
+                for command_interface in ("chatroom", "private_chat", "cli"):
+                    command_list = getattr(self, f"{command_interface}_commands")
+
+                    # Remove only if data matches command as defined in this plugin
+                    if data == command_list.get(command, None):
+                        command_list.pop(command, None)
 
             for command, _func in plugin.__publiccommands__:
                 self.chatroom_commands.pop("/" + command, None)
