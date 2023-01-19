@@ -68,7 +68,7 @@ class Config:
 
         self.website_url = "https://nicotine-plus.org"
         self.privileges_url = "https://www.slsknet.org/userlogin.php?username=%s"
-        self.portchecker_url = "http://tools.slsknet.org/porttest.php?port=%s"
+        self.portchecker_url = "https://www.slsknet.org/porttest.php?port=%s"
         self.issue_tracker_url = "https://github.com/nicotine-plus/nicotine-plus/issues"
         self.translations_url = "https://nicotine-plus.org/doc/TRANSLATIONS"
 
