@@ -104,18 +104,22 @@ class NetworkPage:
     def set_settings(self):
 
         self.application.preferences.set_widgets_data(self.options)
+        unknown_label = _("Unknown")
 
         # Listening port status
-        first_port, last_port = config.sections["server"]["portrange"]
+        if core.protothread.listenport:
+            url = config.portchecker_url % str(core.protothread.listenport)
+            port_status_text = _("Check Port Status")
 
-        self.current_port_label.set_markup(_("<b>%(ip)s</b>, port %(port)s") % {
-            "ip": core.user_ip_address or _("Unknown"),
-            "port": core.protothread.listenport or _("Unknown")
-        })
-
-        url = config.portchecker_url % str(core.protothread.listenport or first_port)
-        port_status_text = _("Check Port Status")
-        self.check_port_status_label.set_markup(f"<a href='{url}' title='{url}'>{port_status_text}</a>")
+            self.current_port_label.set_markup(_("<b>%(ip)s</b>, port %(port)s") % {
+                "ip": core.user_ip_address or unknown_label,
+                "port": core.protothread.listenport or unknown_label
+            })
+            self.check_port_status_label.set_markup(f"<a href='{url}' title='{url}'>{port_status_text}</a>")
+            self.check_port_status_label.set_visible(True)
+        else:
+            self.current_port_label.set_markup(f"<b>{unknown_label}</b>")
+            self.check_port_status_label.set_visible(False)
 
         # Network interfaces
         if sys.platform == "win32":
@@ -136,6 +140,7 @@ class NetworkPage:
         server_hostname, server_port = config.sections["server"]["server"]
         self.soulseek_server_entry.set_text(f"{server_hostname}:{server_port}")
 
+        first_port, last_port = config.sections["server"]["portrange"]
         self.first_port_spinner.set_value(first_port)
         self.last_port_spinner.set_value(last_port)
 

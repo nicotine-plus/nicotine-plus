@@ -836,16 +836,16 @@ class PluginHandler:
                         plugin.output(f"Usage: {'/' + command} {' '.join(usage)}")
                         break
 
-                    callback_name = data.get("callback_" + command_type, data.get("callback")).__name__
+                    callback = data.get("callback_" + command_type, data.get("callback"))
 
                     if room is not None:
-                        is_successful = getattr(plugin, callback_name)(args, room=room)
+                        is_successful = callback(args, room=room)
 
                     elif user is not None:
-                        is_successful = getattr(plugin, callback_name)(args, user=user)
+                        is_successful = callback(args, user=user)
 
                     else:
-                        is_successful = getattr(plugin, callback_name)(args)
+                        is_successful = callback(args)
 
                     if is_successful is None:
                         # Command didn't return anything, default to success
@@ -854,7 +854,7 @@ class PluginHandler:
                 if not command_found:
                     for trigger, func in legacy_commands:
                         if trigger == command:
-                            getattr(plugin, func.__name__)(self.command_source[1], args)
+                            func(self.command_source[1], args)
                             is_successful = True
                             command_found = True
                             break
