@@ -148,16 +148,6 @@ class ChatEntry:
             if args:
                 core.search.do_search(args, "buddies")
 
-        elif cmd in ("/j", "/join"):
-            if args:
-                core.chatrooms.show_room(args)
-
-        elif cmd in ("/l", "/leave", "/p", "/part"):
-            if args:
-                core.chatrooms.remove_room(args)
-            else:
-                core.chatrooms.remove_room(self.entity)
-
         elif cmd in ("/ad", "/add", "/buddy"):
             if args:
                 core.userlist.add_buddy(args)
