@@ -41,6 +41,13 @@ class Plugin(BasePlugin):
                 "group": self.main_group_name,
                 "usage": ["[-force]"]
             },
+            "me": {
+                "callback": self.me_command,
+                "description": _("Say something in the third-person"),
+                "disable": ["cli"],
+                "group": _("Chat"),
+                "usage": ["<something..>"]
+            },
             "close": {
                 "description": "Close private chat",
                 "aliases": ["c"],
@@ -130,7 +137,12 @@ class Plugin(BasePlugin):
 
         return True
 
-    """ Private Chats """
+    """ Chat """
+
+    def me_command(self, args, **_unused):
+        self.send_message("/me " + args)  # /me is sent as plain text
+
+    """ Private Chat """
 
     def close_command(self, args, user=None, **_unused):
 
