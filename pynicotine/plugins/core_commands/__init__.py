@@ -72,6 +72,30 @@ class Plugin(BasePlugin):
                 "description": _("List shares"),
                 "group": _("Configure Shares"),
                 "usage": ["[public]", "[buddy]"]
+            },
+            "search": {
+                "aliases": ["s"],
+                "callback": self.search_command,
+                "description": _("Start global file search"),
+                "disable": ["cli"],
+                "group": _("Search Files"),
+                "usage": ["<query>"]
+            },
+            "rsearch": {
+                "aliases": ["rs"],
+                "callback": self.search_rooms_command,
+                "description": _("Search files in joined rooms"),
+                "disable": ["cli"],
+                "group": _("Search Files"),
+                "usage": ["<query>"]
+            },
+            "bsearch": {
+                "aliases": ["bs"],
+                "callback": self.search_buddies_command,
+                "description": _("Search files of all buddies"),
+                "disable": ["cli"],
+                "group": _("Search Files"),
+                "usage": ["<query>"]
             }
         }
 
@@ -183,3 +207,14 @@ class Plugin(BasePlugin):
             num_listed += num_shares
 
         self.output("\n" + f"{num_listed} shares listed ({num_total} configured)")
+
+    """ Search Files """
+
+    def search_command(self, args, **_unused):
+        self.core.search.do_search(args, "global")
+
+    def search_rooms_command(self, args, **_unused):
+        self.core.search.do_search(args, "rooms")
+
+    def search_buddies_command(self, args, **_unused):
+        self.core.search.do_search(args, "buddies")
