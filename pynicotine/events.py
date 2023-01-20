@@ -133,12 +133,12 @@ EVENT_NAMES = {
 
     # Search
     "add-wish",
-    "distributed-search-request",
     "do-search",
+    "file-search-request-distributed",
+    "file-search-request-server",
     "file-search-response",
     "remove-search",
     "remove-wish",
-    "server-search-request",
     "set-wishlist-interval",
     "show-search",
 

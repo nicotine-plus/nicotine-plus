@@ -50,11 +50,11 @@ class Search:
             self.searches[self.token] = {"id": self.token, "term": term, "mode": "wishlist", "ignore": True}
 
         for event_name, callback in (
-            ("distributed-search-request", self._distrib_search),
+            ("file-search-request-distributed", self._file_search_request_distributed),
+            ("file-search-request-server", self._file_search_request_server),
             ("file-search-response", self._file_search_response),
             ("quit", self._quit),
             ("server-disconnect", self._server_disconnect),
-            ("server-search-request", self._search_request),
             ("set-wishlist-interval", self._set_wishlist_interval)
         ):
             events.connect(event_name, callback)
@@ -344,13 +344,13 @@ class Search:
         if core.network_filter.is_ip_ignored(ip_address):
             msg.token = None
 
-    def _search_request(self, msg):
+    def _file_search_request_server(self, msg):
         """ Server code: 26, 42 and 120 """
 
         self.process_search_request(msg.searchterm, msg.user, msg.token, direct=True)
         core.pluginhandler.search_request_notification(msg.searchterm, msg.user, msg.token)
 
-    def _distrib_search(self, msg):
+    def _file_search_request_distributed(self, msg):
         """ Distrib code: 3 """
 
         self.process_search_request(msg.searchterm, msg.user, msg.token, direct=False)
