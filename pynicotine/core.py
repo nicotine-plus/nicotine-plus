@@ -255,7 +255,11 @@ class Core:
 
         self.queue.append(slskmessages.SendNetworkMessage(user, message))
 
-    def set_away_mode(self, is_away, save_state=False):
+    def set_away_mode(self, is_away=None, save_state=False):
+
+        if is_away is None:
+            # Toggle away status
+            is_away = (self.user_status != slskmessages.UserStatus.AWAY)
 
         if save_state:
             config.sections["server"]["away"] = is_away
@@ -265,6 +269,8 @@ class Core:
 
         # Reset away message users
         events.emit("set-away-mode", is_away)
+
+        return is_away
 
     def request_change_password(self, password):
         self.queue.append(slskmessages.ChangePassword(password))

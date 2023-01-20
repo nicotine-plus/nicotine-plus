@@ -732,7 +732,7 @@ class Application:
     def on_away(self, *_args):
         """ Away/Online status button """
 
-        core.set_away_mode(core.user_status != UserStatus.AWAY, save_state=True)
+        core.set_away_mode(save_state=True)
 
     """ Running """
 

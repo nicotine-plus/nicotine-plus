@@ -305,8 +305,18 @@ class Plugin(BasePlugin):
         return True
 
     def away_command(self, _args, **_unused):
-        self.core.set_away_mode(self.core.user_status != 1, save_state=True)  # 1 = UserStatus.AWAY
-        self.output(_("Status is now %s") % (_("Online") if self.core.user_status == 2 else _("Away")))
+
+        is_away = self.core.set_away_mode(save_state=True)
+        login_username = self.core.login_username
+
+        if login_username is None:
+            self.output(_("%(user)s is offline") % {"user": self.config.application_name})
+
+        elif is_away:
+            self.output(_("%(user)s is away") % {"user": login_username})
+
+        else:
+            self.output(_("%(user)s is online") % {"user": login_username})
 
     def hello_command(self, args, **_unused):
         self.output(_("Hello there!") + " " + args)
