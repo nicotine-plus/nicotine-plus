@@ -187,6 +187,9 @@ class PrivateChats:
     def get_user_status(self, msg):
         """ Server code: 7 """
 
+        if msg.status == UserStatus.OFFLINE:
+            self.private_message_queue.pop(msg.user, None)
+
         if self.ui_callback:
             self.ui_callback.get_user_status(msg)
 
