@@ -126,23 +126,11 @@ class ChatEntry:
                     core.privatechat.show_user(user)
                     core.privatechat.send_message(user, msg)
 
-        elif cmd in ("/s", "/search"):
-            if args:
-                core.search.do_search(args, "global")
-
         elif cmd in ("/us", "/usearch"):
             args_split = args.split(" ", maxsplit=1)
 
             if len(args_split) == 2:
                 core.search.do_search(args_split[1], "user", user=args_split[0])
-
-        elif cmd in ("/rs", "/rsearch"):
-            if args:
-                core.search.do_search(args, "rooms")
-
-        elif cmd in ("/bs", "/bsearch"):
-            if args:
-                core.search.do_search(args, "buddies")
 
         elif cmd in ("/ad", "/add", "/buddy"):
             if args:
