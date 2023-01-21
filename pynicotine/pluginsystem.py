@@ -546,8 +546,7 @@ class PluginHandler:
             self.enabled_plugins[plugin_name] = plugin
             plugin.loaded_notification()
 
-            if plugin_name != "core_commands":
-                log.add(_("Loaded plugin %s"), plugin.human_name)
+            log.add(_("Loaded plugin %s"), plugin.human_name)
 
         except Exception:
             from traceback import format_exc
@@ -653,11 +652,13 @@ class PluginHandler:
 
         plugin_info = {}
         plugin_path = self.get_plugin_path(plugin_name)
-
-        if plugin_path is None or plugin_name == "core_commands":
-            return plugin_info
-
         info_path = os.path.join(plugin_path, "PLUGININFO")
+
+        if plugin_name == "core_commands":
+            plugin_info["Name"] = (_("%s Commands") % config.application_name)
+
+        if plugin_path is None or not os.path.isfile(encode_path(info_path)):
+            return plugin_info
 
         with open(encode_path(info_path), encoding="utf-8") as file_handle:
             for line in file_handle:
