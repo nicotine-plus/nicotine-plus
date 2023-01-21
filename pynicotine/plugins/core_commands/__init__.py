@@ -67,6 +67,23 @@ class Plugin(BasePlugin):
                 "usage": ["<choice1|choice2>", "<something..>"],
                 "usage_chatroom": ["<choice55|choice2>"]
             },
+            "join": {
+                "aliases": ["j"],
+                "callback": self.join_command,
+                "description": _("Join chat room"),
+                "disable": ["cli"],
+                "group": _("Chat Rooms"),
+                "usage": ["<room>"]
+            },
+            "leave": {
+                "aliases": ["l"],
+                "callback": self.leave_command,
+                "description": _("Leave chat room"),
+                "disable": ["cli"],
+                "group": _("Chat Rooms"),
+                "usage": ["<room>"],
+                "usage_chatroom": ["[room]"]
+            },
             "rescan": {
                 "callback": self.rescan_command,
                 "description": _("Rescan shares"),
@@ -157,6 +174,23 @@ class Plugin(BasePlugin):
 
     def sample_command(self, _args, **_unused):
         self.output("Hello")
+        return True
+
+    """ Chat Rooms """
+
+    def join_command(self, args, **_unused):
+        self.core.chatrooms.show_room(args)
+
+    def leave_command(self, args, room=None, **_unused):
+
+        if args:
+            room = args
+
+        if room not in self.core.chatrooms.joined_rooms:
+            self.output(_("Not joined in room %s") % room)
+            return False
+
+        self.core.chatrooms.remove_room(room)
         return True
 
     """ Configure Shares """
