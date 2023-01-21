@@ -41,6 +41,13 @@ class Plugin(BasePlugin):
                 "group": self.main_group_name,
                 "usage": ["[-force]"]
             },
+            "me": {
+                "callback": self.me_command,
+                "description": _("Say something in the third-person"),
+                "disable": ["cli"],
+                "group": _("Chat"),
+                "usage": ["<something..>"]
+            },
             "close": {
                 "description": "Close private chat",
                 "aliases": ["c"],
@@ -49,6 +56,13 @@ class Plugin(BasePlugin):
                 "callback": self.close_command,
                 "usage_chatroom": ["<user>"],
                 "usage_private_chat": ["[user]"]
+            },
+            "pm": {
+                "callback": self.pm_command,
+                "description": _("Open private chat"),
+                "disable": ["cli"],
+                "group": _("Private Chat"),
+                "usage": ["<user>"]
             },
             "sample": {
                 "description": "Sample command description",
@@ -59,6 +73,23 @@ class Plugin(BasePlugin):
                 "callback_private_chat": self.sample_command,
                 "usage": ["<choice1|choice2>", "<something..>"],
                 "usage_chatroom": ["<choice55|choice2>"]
+            },
+            "join": {
+                "aliases": ["j"],
+                "callback": self.join_command,
+                "description": _("Join chat room"),
+                "disable": ["cli"],
+                "group": _("Chat Rooms"),
+                "usage": ["<room>"]
+            },
+            "leave": {
+                "aliases": ["l"],
+                "callback": self.leave_command,
+                "description": _("Leave chat room"),
+                "disable": ["cli"],
+                "group": _("Chat Rooms"),
+                "usage": ["<room>"],
+                "usage_chatroom": ["[room]"]
             },
             "rescan": {
                 "callback": self.rescan_command,
@@ -154,7 +185,12 @@ class Plugin(BasePlugin):
 
         return True
 
-    """ Private Chats """
+    """ Chat """
+
+    def me_command(self, args, **_unused):
+        self.send_message("/me " + args)  # /me is sent as plain text
+
+    """ Private Chat """
 
     def close_command(self, args, user=None, **_unused):
 
@@ -169,8 +205,28 @@ class Plugin(BasePlugin):
         self.core.privatechat.remove_user(user)
         return True
 
+    def pm_command(self, args, **_unused):
+        self.core.privatechat.show_user(args)
+
     def sample_command(self, _args, **_unused):
         self.output("Hello")
+        return True
+
+    """ Chat Rooms """
+
+    def join_command(self, args, **_unused):
+        self.core.chatrooms.show_room(args)
+
+    def leave_command(self, args, room=None, **_unused):
+
+        if args:
+            room = args
+
+        if room not in self.core.chatrooms.joined_rooms:
+            self.output(_("Not joined in room %s") % room)
+            return False
+
+        self.core.chatrooms.remove_room(room)
         return True
 
     """ Configure Shares """
