@@ -50,6 +50,13 @@ class Plugin(BasePlugin):
                 "usage_chatroom": ["<user>"],
                 "usage_private_chat": ["[user]"]
             },
+            "pm": {
+                "callback": self.pm_command,
+                "description": _("Open private chat"),
+                "disable": ["cli"],
+                "group": _("Private Chat"),
+                "usage": ["<user>"]
+            },
             "sample": {
                 "description": "Sample command description",
                 "group": self.main_group_name,
@@ -144,6 +151,9 @@ class Plugin(BasePlugin):
         self.output(f"Closing private chat of user {user}")
         self.core.privatechat.remove_user(user)
         return True
+
+    def pm_command(self, args, **_unused):
+        self.core.privatechat.show_user(args)
 
     def sample_command(self, _args, **_unused):
         self.output("Hello")
