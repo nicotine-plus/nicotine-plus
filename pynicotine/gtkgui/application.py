@@ -79,13 +79,6 @@ class Application:
         ):
             events.connect(event_name, callback)
 
-        try:
-            Gtk.ListStore.insert_with_valuesv
-
-        except AttributeError:
-            # GTK 4 replacement
-            Gtk.ListStore.insert_with_valuesv = Gtk.ListStore.insert_with_values  # pylint: disable=no-member
-
     def run(self):
         return self._instance.run()
 

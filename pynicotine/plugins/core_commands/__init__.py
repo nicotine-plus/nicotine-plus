@@ -71,14 +71,14 @@ class Plugin(BasePlugin):
             },
             "join": {
                 "aliases": ["j"],
-                "callback": self.join_chat_command,
+                "callback": self.join_command,
                 "description": _("Join chat room"),
                 "disable": ["cli"],
                 "group": _("Chat Rooms"),
                 "usage": ["<room>"]
             },
             "me": {
-                "callback": self.me_chat_command,
+                "callback": self.me_command,
                 "description": _("Say something in the third-person"),
                 "disable": ["cli"],
                 "group": _("Chat"),
@@ -86,21 +86,21 @@ class Plugin(BasePlugin):
             },
             "msg": {
                 "aliases": ["m"],
-                "callback": self.msg_chat_command,
+                "callback": self.msg_command,
                 "description": _("Send private message to user"),
                 "disable": ["cli"],
                 "group": _("Private Chat"),
                 "usage": ["<user>", "<message..>"]
             },
             "pm": {
-                "callback": self.pm_chat_command,
+                "callback": self.pm_command,
                 "description": _("Open private chat window for user"),
                 "disable": ["cli"],
                 "group": _("Private Chat"),
                 "usage": ["<user>"]
             },
             "say": {
-                "callback": self.say_chat_command,
+                "callback": self.say_command,
                 "description": _("Say message in specified chat room"),
                 "disable": ["cli"],
                 "group": _("Chat Rooms"),
@@ -340,7 +340,7 @@ class Plugin(BasePlugin):
 
         return True
 
-    """ Chats """
+    """ Chat """
 
     def clear_command(self, args, user=None, room=None):
 
@@ -353,10 +353,10 @@ class Plugin(BasePlugin):
         elif user is not None:
             self.core.privatechat.clear_private_messages(user)
 
-    def me_chat_command(self, args, **_unused):
+    def me_command(self, args, **_unused):
         self.send_message("/me " + args)  # /me is sent as plain text
 
-    """ Private Chats """
+    """ Private Chat """
 
     def close_command(self, args, user=None, **_unused):
 
@@ -384,19 +384,19 @@ class Plugin(BasePlugin):
 
         self.send_private(user, ctcp_query)
 
-    def msg_chat_command(self, args, **_unused):
+    def msg_command(self, args, **_unused):
 
         args_split = args.split(maxsplit=1)
         user, text = args_split[0], args_split[1]
 
         self.send_private(user, text, show_ui=True, switch_page=False)
 
-    def pm_chat_command(self, args, **_unused):
+    def pm_command(self, args, **_unused):
         self.core.privatechat.show_user(args)
 
     """ Chat Rooms """
 
-    def join_chat_command(self, args, **_unused):
+    def join_command(self, args, **_unused):
         self.core.chatrooms.show_room(args)
 
     def leave_command(self, args, room=None, **_unused):
@@ -411,7 +411,7 @@ class Plugin(BasePlugin):
         self.core.chatrooms.remove_room(room)
         return True
 
-    def say_chat_command(self, args, **_unused):
+    def say_command(self, args, **_unused):
 
         args_split = args.split(maxsplit=1)
         room, text = args_split[0], args_split[1]
