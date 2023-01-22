@@ -80,9 +80,6 @@ def run(hidden, ci_mode, multi_instance):
         os.environ["GSETTINGS_SCHEMA_DIR"] = os.path.join(executable_folder, "lib/schemas")
 
     if sys.platform == "win32":
-        # Disable client-side decorations when header bar is disabled
-        os.environ["GTK_CSD"] = "0"
-
         # 'win32' PangoCairo backend on Windows is too slow, use 'fontconfig' instead
         os.environ["PANGOCAIRO_BACKEND"] = "fontconfig"
 
