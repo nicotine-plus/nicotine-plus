@@ -516,19 +516,30 @@ class PluginHandler:
 
             for command, data in plugin.commands.items():
                 command = "/" + command
-                disabled_interfaces = data.get("disable", [])
 
                 if "group" not in data:
                     # Group commands under human-friendly plugin name by default
                     data["group"] = human_name
 
-                if "chatroom" not in disabled_interfaces and command not in self.chatroom_commands:
+                if data.get("usage_chatroom", True) is not False and command not in self.chatroom_commands:
+                    # Support boolean value to disable but don't require argument usage list parameter
+                    if data.get("usage_chatroom", True) is True:
+                        data["usage_chatroom"] = data.get("usage", [])
+
                     self.chatroom_commands[command] = data
 
-                if "private_chat" not in disabled_interfaces and command not in self.private_chat_commands:
+                if data.get("usage_private_chat", True) is not False and command not in self.private_chat_commands:
+                    # Support boolean value to disable but don't require argument usage list parameter
+                    if data.get("usage_private_chat", True) is True:
+                        data["usage_private_chat"] = data.get("usage", [])
+
                     self.private_chat_commands[command] = data
 
-                if "cli" not in disabled_interfaces and command not in self.cli_commands:
+                if data.get("usage_cli", True) is not False and command not in self.cli_commands:
+                    # Support boolean value to disable but don't require argument usage list parameter
+                    if data.get("usage_cli", True) is True:
+                        data["usage_cli"] = data.get("usage", [])
+
                     self.cli_commands[command] = data
 
             for command, _func in plugin.__publiccommands__:
@@ -744,7 +755,7 @@ class PluginHandler:
 
             if data:
                 commands = ", /".join([command] + data.get("aliases", []))
-                parameters = " ".join(data.get(f"usage_{command_interface}", data.get("usage", [])))
+                parameters = " ".join(data.get(f"usage_{command_interface}", []))
 
                 command_message = f"{commands} {parameters}".strip()
                 description = data.get("description", description)
@@ -802,14 +813,14 @@ class PluginHandler:
                         continue
 
                     command_type = self.command_source[0]
-                    disabled_interfaces = data.get("disable", [])
+                    usage = data.get("usage_" + command_type, [])
 
-                    if command_type in disabled_interfaces:
+                    if usage is False:
+                        # Exclude from this interface if False is explicit
                         continue
 
                     command_found = True
                     rejection_message = None
-                    usage = data.get("usage_" + command_type, data.get("usage", []))
                     args_split = args.split()
                     num_args = len(args_split)
                     num_required_args = 0

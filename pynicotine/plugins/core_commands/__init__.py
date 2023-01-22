@@ -44,43 +44,43 @@ class Plugin(BasePlugin):
             "me": {
                 "callback": self.me_command,
                 "description": _("Say something in the third-person"),
-                "disable": ["cli"],
                 "group": _("Chat"),
-                "usage": ["<something..>"]
+                "usage": ["<something..>"],
+                "usage_cli": False
             },
             "close": {
-                "description": "Close private chat",
                 "aliases": ["c"],
-                "disable": ["cli"],
-                "group": "Private Chat",
                 "callback": self.close_command,
+                "description": "Close private chat",
+                "group": "Private Chat",
                 "usage_chatroom": ["<user>"],
+                "usage_cli": False,
                 "usage_private_chat": ["[user]"]
             },
             "pm": {
                 "callback": self.pm_command,
                 "description": _("Open private chat"),
-                "disable": ["cli"],
                 "group": _("Private Chat"),
-                "usage": ["<user>"]
+                "usage": ["<user>"],
+                "usage_cli": False
             },
             "sample": {
                 "description": "Sample command description",
                 "group": self.main_group_name,
                 "aliases": ["demo"],
-                "disable": ["private_chat"],
                 "callback": self.sample_command,
                 "callback_private_chat": self.sample_command,
                 "usage": ["<choice1|choice2>", "<something..>"],
-                "usage_chatroom": ["<choice55|choice2>"]
+                "usage_chatroom": ["<choice55|choice2>"],
+                "usage_private_chat": False
             },
             "join": {
                 "aliases": ["j"],
                 "callback": self.join_command,
                 "description": _("Join chat room"),
-                "disable": ["cli"],
                 "group": _("Chat Rooms"),
-                "usage": ["<room>"]
+                "usage": ["<room>"],
+                "usage_cli": False
             },
             "leave": {
                 "aliases": ["l"],
@@ -89,7 +89,8 @@ class Plugin(BasePlugin):
                 "disable": ["cli"],
                 "group": _("Chat Rooms"),
                 "usage": ["<room>"],
-                "usage_chatroom": ["[room]"]
+                "usage_chatroom": ["[room]"],
+                "usage_cli": False
             },
             "rescan": {
                 "callback": self.rescan_command,
@@ -108,25 +109,25 @@ class Plugin(BasePlugin):
                 "aliases": ["s"],
                 "callback": self.search_command,
                 "description": _("Start global file search"),
-                "disable": ["cli"],
                 "group": _("Search Files"),
-                "usage": ["<query>"]
+                "usage": ["<query>"],
+                "usage_cli": False
             },
             "rsearch": {
                 "aliases": ["rs"],
                 "callback": self.search_rooms_command,
                 "description": _("Search files in joined rooms"),
-                "disable": ["cli"],
                 "group": _("Search Files"),
-                "usage": ["<query>"]
+                "usage": ["<query>"],
+                "usage_cli": False
             },
             "bsearch": {
                 "aliases": ["bs"],
                 "callback": self.search_buddies_command,
                 "description": _("Search files of all buddies"),
-                "disable": ["cli"],
                 "group": _("Search Files"),
-                "usage": ["<query>"]
+                "usage": ["<query>"],
+                "usage_cli": False
             }
         }
 
