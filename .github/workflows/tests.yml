@@ -91,6 +91,7 @@ jobs:
         with:
           msystem: ${{ matrix.msystem }}
           release: false
+          update: true
           install: >-
             mingw-w64-${{ matrix.arch }}-gettext
             mingw-w64-${{ matrix.arch }}-gtk${{ matrix.gtk }}

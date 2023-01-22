@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 # COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
 #
 # GNU GENERAL PUBLIC LICENSE
@@ -44,8 +44,14 @@ class Plugin(BasePlugin):
                 'type': 'int'
             }
         }
-        self.__publiccommands__ = self.__privatecommands__ = [('port', self.port_checker_command)]
-
+        self.commands = {
+            "port": {
+                "callback": self.port_checker_command,
+                "description": "Check firewall state of user",
+                "usage": ["<user>"],
+                "usage_private_chat": ["[user]"]
+            }
+        }
         self.throttle = ResponseThrottle(self.core, self.human_name)
         self.checkroom = "nicotine"
         self.pending_user = ""
@@ -111,9 +117,9 @@ class Plugin(BasePlugin):
 
         return 'closed'
 
-    def port_checker_command(self, _, user):
+    def port_checker_command(self, args, user=None, **_room):
 
-        if user:
-            self.resolve(user, False)
-        else:
-            self.log("Provide a user name as parameter.")
+        if args:
+            user = args
+
+        self.resolve(user, False)

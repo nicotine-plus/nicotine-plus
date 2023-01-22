@@ -31,7 +31,6 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
-from pynicotine.scheduler import scheduler
 from pynicotine.slskmessages import increment_token
 from pynicotine.utils import TRANSLATE_PUNCTUATION
 
@@ -51,11 +50,11 @@ class Search:
             self.searches[self.token] = {"id": self.token, "term": term, "mode": "wishlist", "ignore": True}
 
         for event_name, callback in (
-            ("distributed-search-request", self._distrib_search),
+            ("file-search-request-distributed", self._file_search_request_distributed),
+            ("file-search-request-server", self._file_search_request_server),
             ("file-search-response", self._file_search_response),
             ("quit", self._quit),
             ("server-disconnect", self._server_disconnect),
-            ("server-search-request", self._search_request),
             ("set-wishlist-interval", self._set_wishlist_interval)
         ):
             events.connect(event_name, callback)
@@ -64,7 +63,7 @@ class Search:
         self.searches.clear()
 
     def _server_disconnect(self, _msg):
-        scheduler.cancel(self._wishlist_timer_id)
+        events.cancel_scheduled(self._wishlist_timer_id)
         self.wishlist_interval = 0
 
     def request_folder_download(self, user, folder, visible_files):
@@ -317,8 +316,8 @@ class Search:
         if self.wishlist_interval > 0:
             log.add_search(_("Wishlist wait period set to %s seconds"), self.wishlist_interval)
 
-            scheduler.cancel(self._wishlist_timer_id)
-            self._wishlist_timer_id = scheduler.add(
+            events.cancel_scheduled(self._wishlist_timer_id)
+            self._wishlist_timer_id = events.schedule(
                 delay=self.wishlist_interval, callback=self.do_wishlist_search_interval, repeat=True)
         else:
             log.add(_("Server does not permit performing wishlist searches at this time"))
@@ -345,13 +344,13 @@ class Search:
         if core.network_filter.is_ip_ignored(ip_address):
             msg.token = None
 
-    def _search_request(self, msg):
+    def _file_search_request_server(self, msg):
         """ Server code: 26, 42 and 120 """
 
         self.process_search_request(msg.searchterm, msg.user, msg.token, direct=True)
         core.pluginhandler.search_request_notification(msg.searchterm, msg.user, msg.token)
 
-    def _distrib_search(self, msg):
+    def _file_search_request_distributed(self, msg):
         """ Distrib code: 3 """
 
         self.process_search_request(msg.searchterm, msg.user, msg.token, direct=False)

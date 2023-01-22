@@ -16,7 +16,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import time
+
 from collections import deque
+from threading import Thread
 
 
 EVENT_NAMES = {
@@ -129,12 +132,12 @@ EVENT_NAMES = {
 
     # Search
     "add-wish",
-    "distributed-search-request",
     "do-search",
+    "file-search-request-distributed",
+    "file-search-request-server",
     "file-search-response",
     "remove-search",
     "remove-wish",
-    "server-search-request",
     "set-wishlist-interval",
     "show-search",
 
@@ -197,8 +200,13 @@ EVENT_NAMES = {
 class Events:
 
     def __init__(self):
+
         self._callbacks = {}
         self._thread_events = deque()
+        self._scheduler_events = {}
+        self._scheduler_event_id = 0
+
+        Thread(target=self._run_scheduler, name="SchedulerThread", daemon=True).start()
 
     def connect(self, event_name, function):
 
@@ -220,6 +228,19 @@ class Events:
     def emit_main_thread(self, event_name, *args, **kwargs):
         self._thread_events.append((event_name, args, kwargs))
 
+    def invoke_main_thread(self, callback, *args, **kwargs):
+        self.emit_main_thread("thread-callback", callback, *args, **kwargs)
+
+    def schedule(self, delay, callback, repeat=False):
+
+        self._scheduler_event_id += 1
+        self._scheduler_events[self._scheduler_event_id] = ((time.time() + delay), delay, repeat, callback)
+
+        return self._scheduler_event_id
+
+    def cancel_scheduled(self, event_id):
+        self._scheduler_events.pop(event_id, None)
+
     def process_thread_events(self):
         """ Called by the main loop 60 times per second to emit thread events in the main thread """
 
@@ -233,6 +254,30 @@ class Events:
 
         for event_name, args, kwargs in event_list:
             self.emit(event_name, *args, **kwargs)
+
+    def _run_scheduler(self):
+
+        while True:
+            if not self._scheduler_events:
+                time.sleep(1)
+                continue
+
+            event_id, event_data = min(self._scheduler_events.items(), key=lambda x: x[1][0])  # Compare timestamps
+            event_time, delay, repeat, callback = event_data
+            current_time = time.time()
+            sleep_time = (event_time - current_time)
+
+            if sleep_time <= 0:
+                self.invoke_main_thread(callback)
+
+                if repeat:
+                    self._scheduler_events[event_id] = ((event_time + delay), delay, repeat, callback)
+                else:
+                    self._scheduler_events.pop(event_id, None)
+
+                continue
+
+            time.sleep(min(sleep_time, 1))
 
 
 events = Events()

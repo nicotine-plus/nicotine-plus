@@ -55,7 +55,6 @@ from pynicotine.gtkgui.widgets.theme import set_use_header_bar
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.gtkgui.widgets.window import Window
 from pynicotine.logfacility import log
-from pynicotine.scheduler import scheduler
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import human_speed
 from pynicotine.utils import open_file_path
@@ -66,7 +65,6 @@ class MainWindow(Window):
     def __init__(self, application):
 
         self.application = application
-        self.initialized = False
         self.current_page_id = ""
         self.auto_away = False
         self.away_timer_id = None
@@ -266,6 +264,7 @@ class MainWindow(Window):
         self.set_main_tabs_order()
         self.set_main_tabs_visibility()
         self.set_last_session_tab()
+        self.connect_tab_signals()
 
         """ Events """
 
@@ -290,7 +289,6 @@ class MainWindow(Window):
         """ Show Window """
 
         self.init_window()
-        self.initialized = True
 
     """ Initialize """
 
@@ -900,10 +898,7 @@ class MainWindow(Window):
             self.hide_current_toolbar()
             self.show_toolbar(page_id)
 
-        self.current_page_id = page_id
-
-        if self.initialized:
-            config.sections["ui"]["last_tab_id"] = page_id
+        self.current_page_id = config.sections["ui"]["last_tab_id"] = page_id
 
     def on_change_focus_view(self, *_args):
         """ F6: move focus between header bar/toolbar and main content """
@@ -967,6 +962,15 @@ class MainWindow(Window):
             self.notebook.set_tab_reorderable(page, True)
             self.set_tab_expand(page)
 
+    def connect_tab_signals(self):
+
+        self.notebook.connect_signals()
+        self.chatrooms.connect_signals()
+        self.search.connect_signals()
+        self.privatechat.connect_signals()
+        self.userinfo.connect_signals()
+        self.userbrowse.connect_signals()
+
     def on_switch_page(self, _notebook, page, _page_num):
 
         focus_widget = None
@@ -1019,10 +1023,6 @@ class MainWindow(Window):
             GLib.idle_add(lambda: focus_widget.grab_focus() == -1, priority=GLib.PRIORITY_HIGH_IDLE)
 
     def on_page_reordered(self, *_args):
-
-        if not self.initialized:
-            # Don't save the tab order until the window is ready
-            return
 
         page_ids = []
 
@@ -1243,10 +1243,10 @@ class MainWindow(Window):
         away_interval = config.sections["server"]["autoaway"]
 
         if away_interval > 0:
-            self.away_timer_id = scheduler.add(delay=(60 * away_interval), callback=self.set_auto_away)
+            self.away_timer_id = events.schedule(delay=(60 * away_interval), callback=self.set_auto_away)
 
     def remove_away_timer(self):
-        scheduler.cancel(self.away_timer_id)
+        events.cancel_scheduled(self.away_timer_id)
 
     def on_cancel_auto_away(self, *_args):
 
@@ -1293,7 +1293,7 @@ class MainWindow(Window):
         )
 
     def log_callback(self, timestamp_format, msg, title, level):
-        events.emit_main_thread("thread-callback", self.update_log, timestamp_format, msg, title, level)
+        events.invoke_main_thread(self.update_log, timestamp_format, msg, title, level)
 
     def update_log(self, timestamp_format, msg, title, level):
 

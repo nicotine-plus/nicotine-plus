@@ -239,12 +239,12 @@ class BasePlugin:
             # Function was not called from a command
             return
 
-        command_type, source = self.parent.command_source  # pylint: disable=no-member
+        command_interface, source = self.parent.command_source  # pylint: disable=no-member
 
-        if command_type == "cli":
+        if command_interface == "cli":
             return
 
-        func = self.send_public if command_type == "chatroom" else self.send_private
+        func = self.send_public if command_interface == "chatroom" else self.send_private
         func(source, text)
 
     def echo_message(self, text, message_type="local"):
@@ -255,13 +255,13 @@ class BasePlugin:
             # Function was not called from a command
             return
 
-        command_type, source = self.parent.command_source  # pylint: disable=no-member
+        command_interface, source = self.parent.command_source  # pylint: disable=no-member
 
-        if command_type == "cli":
+        if command_interface == "cli":
             print(text)
             return
 
-        func = self.echo_public if command_type == "chatroom" else self.echo_private
+        func = self.echo_public if command_interface == "chatroom" else self.echo_private
         func(source, text, message_type)
 
     def output(self, text):
@@ -505,7 +505,7 @@ class PluginHandler:
 
         try:
             BasePlugin.internal_name = plugin_name
-            BasePlugin.human_name = self.get_plugin_info(plugin_name).get("Name", plugin_name)
+            BasePlugin.human_name = human_name = self.get_plugin_info(plugin_name).get("Name", plugin_name)
 
             plugin = self.load_plugin(plugin_name)
 
@@ -517,6 +517,10 @@ class PluginHandler:
             for command, data in plugin.commands.items():
                 command = "/" + command
                 disabled_interfaces = data.get("disable", [])
+
+                if "group" not in data:
+                    # Group commands under human-friendly plugin name by default
+                    data["group"] = human_name
 
                 if "chatroom" not in disabled_interfaces and command not in self.chatroom_commands:
                     self.chatroom_commands[command] = data
@@ -720,6 +724,45 @@ class PluginHandler:
         except KeyError:
             log.add_debug("No stored settings found for %s", plugin.human_name)
 
+    def get_command_descriptions(self, command_interface, search_query=None):
+
+        command_groups = {}
+
+        if command_interface == "chatroom":
+            command_list = self.chatroom_commands
+
+        elif command_interface == "private_chat":
+            command_list = self.private_chat_commands
+
+        else:
+            command_list = self.cli_commands
+
+        for command, data in command_list.items():
+            command_message = command
+            description = _("No description")
+            group = _("Miscellaneous")
+
+            if data:
+                commands = ", /".join([command] + data.get("aliases", []))
+                parameters = " ".join(data.get(f"usage_{command_interface}", data.get("usage", [])))
+
+                command_message = f"{commands} {parameters}".strip()
+                description = data.get("description", description)
+                group = data.get("group", group)
+
+            if (search_query
+                    and search_query not in group.lower()
+                    and search_query not in command_message.lower()
+                    and search_query not in description.lower()):
+                continue
+
+            if group not in command_groups:
+                command_groups[group] = []
+
+            command_groups[group].append((command_message, description))
+
+        return command_groups
+
     def trigger_chatroom_command_event(self, room, command, args):
         return self._trigger_command(command, args, room=room)
 
@@ -758,15 +801,15 @@ class PluginHandler:
                     if command != trigger and command not in aliases:
                         continue
 
-                    command_type = self.command_source[0]
+                    command_interface = self.command_source[0]
                     disabled_interfaces = data.get("disable", [])
 
-                    if command_type in disabled_interfaces:
+                    if command_interface in disabled_interfaces:
                         continue
 
                     command_found = True
                     rejection_message = None
-                    usage = data.get("usage_" + command_type, data.get("usage", []))
+                    usage = data.get(f"usage_{command_interface}", data.get("usage", []))
                     args_split = args.split()
                     num_args = len(args_split)
                     num_required_args = 0
@@ -793,16 +836,16 @@ class PluginHandler:
                         plugin.output(f"Usage: {'/' + command} {' '.join(usage)}")
                         break
 
-                    callback_name = data.get("callback_" + command_type, data.get("callback")).__name__
+                    callback = data.get(f"callback_{command_interface}", data.get("callback"))
 
                     if room is not None:
-                        is_successful = getattr(plugin, callback_name)(args, room=room)
+                        is_successful = callback(args, room=room)
 
                     elif user is not None:
-                        is_successful = getattr(plugin, callback_name)(args, user=user)
+                        is_successful = callback(args, user=user)
 
                     else:
-                        is_successful = getattr(plugin, callback_name)(args)
+                        is_successful = callback(args)
 
                     if is_successful is None:
                         # Command didn't return anything, default to success
@@ -811,7 +854,7 @@ class PluginHandler:
                 if not command_found:
                     for trigger, func in legacy_commands:
                         if trigger == command:
-                            getattr(plugin, func.__name__)(self.command_source[1], args)
+                            func(self.command_source[1], args)
                             is_successful = True
                             command_found = True
                             break

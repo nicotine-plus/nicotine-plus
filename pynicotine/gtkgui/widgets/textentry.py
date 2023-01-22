@@ -77,8 +77,8 @@ class ChatEntry:
         is_double_slash_cmd = text.startswith("//")
         is_single_slash_cmd = (text.startswith("/") and not is_double_slash_cmd)
 
-        if not is_single_slash_cmd or text.startswith("/me"):
-            # Regular chat message (/me is sent as plain text)
+        if not is_single_slash_cmd:
+            # Regular chat message
 
             self.widget.set_text("")
 
@@ -113,10 +113,6 @@ class ChatEntry:
             if arg_self:
                 core.request_ip_address(arg_self)
 
-        elif cmd == "/pm":
-            if args:
-                core.privatechat.show_user(args)
-
         elif cmd in ("/m", "/msg"):
             if args:
                 args_split = args.split(" ", maxsplit=1)
@@ -130,33 +126,11 @@ class ChatEntry:
                     core.privatechat.show_user(user)
                     core.privatechat.send_message(user, msg)
 
-        elif cmd in ("/s", "/search"):
-            if args:
-                core.search.do_search(args, "global")
-
         elif cmd in ("/us", "/usearch"):
             args_split = args.split(" ", maxsplit=1)
 
             if len(args_split) == 2:
                 core.search.do_search(args_split[1], "user", user=args_split[0])
-
-        elif cmd in ("/rs", "/rsearch"):
-            if args:
-                core.search.do_search(args, "rooms")
-
-        elif cmd in ("/bs", "/bsearch"):
-            if args:
-                core.search.do_search(args, "buddies")
-
-        elif cmd in ("/j", "/join"):
-            if args:
-                core.chatrooms.show_room(args)
-
-        elif cmd in ("/l", "/leave", "/p", "/part"):
-            if args:
-                core.chatrooms.remove_room(args)
-            else:
-                core.chatrooms.remove_room(self.entity)
 
         elif cmd in ("/ad", "/add", "/buddy"):
             if args:

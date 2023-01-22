@@ -43,7 +43,6 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
-from pynicotine.scheduler import scheduler
 from pynicotine.slskmessages import increment_token
 from pynicotine.slskmessages import FileListMessage
 from pynicotine.slskmessages import TransferDirection
@@ -157,7 +156,7 @@ class Transfers:
         self.allow_saving_transfers = True
 
         # Save list of transfers every minute
-        scheduler.add(delay=60, callback=self.save_transfers, repeat=True)
+        events.schedule(delay=60, callback=self.save_transfers, repeat=True)
 
         self.update_download_filters()
         self.update_download_limits()
@@ -185,26 +184,27 @@ class Transfers:
         self.watch_stored_downloads()
 
         # Check for transfer timeouts
-        self._transfer_timeout_timer_id = scheduler.add(delay=1, callback=self._check_transfer_timeouts, repeat=True)
+        self._transfer_timeout_timer_id = events.schedule(delay=1, callback=self._check_transfer_timeouts, repeat=True)
 
         # Request queue position of queued downloads and retry failed downloads every 3 minutes
-        self._download_queue_timer_id = scheduler.add(delay=180, callback=self.check_download_queue, repeat=True)
+        self._download_queue_timer_id = events.schedule(delay=180, callback=self.check_download_queue, repeat=True)
 
         # Check if queued uploads can be started every 10 seconds
-        self._upload_queue_timer_id = scheduler.add(delay=10, callback=self.check_upload_queue, repeat=True)
+        self._upload_queue_timer_id = events.schedule(delay=10, callback=self.check_upload_queue, repeat=True)
 
         # Re-queue limited downloads every 12 minutes
-        self._retry_download_limits_timer_id = scheduler.add(
+        self._retry_download_limits_timer_id = events.schedule(
             delay=720, callback=self.retry_download_limits, repeat=True)
 
         # Re-queue timed out uploads every 3 minutes
-        self._retry_failed_uploads_timer_id = scheduler.add(delay=180, callback=self.retry_failed_uploads, repeat=True)
+        self._retry_failed_uploads_timer_id = events.schedule(
+            delay=180, callback=self.retry_failed_uploads, repeat=True)
 
     def _server_disconnect(self, _msg):
 
         for timer_id in (self._transfer_timeout_timer_id, self._download_queue_timer_id, self._upload_queue_timer_id,
                          self._retry_download_limits_timer_id, self._retry_failed_uploads_timer_id):
-            scheduler.cancel(timer_id)
+            events.cancel_scheduled(timer_id)
 
         need_update = False
 
