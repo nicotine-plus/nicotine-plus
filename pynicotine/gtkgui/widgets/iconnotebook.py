@@ -243,9 +243,6 @@ class IconNotebook:
         self.unread_pages = []
 
         self.widget = Gtk.Notebook(scrollable=True, show_border=False, visible=True)
-        self.widget.connect("page-reordered", self.on_reorder_page)
-        self.widget.connect("page-removed", self.on_remove_page)
-        self.widget.connect("switch-page", self.on_switch_page)
 
         self.pages_button_container = Gtk.Box(visible=(self.parent_page is not None))
         self.widget.set_action_widget(self.pages_button_container, Gtk.PackType.END)
@@ -521,6 +518,24 @@ class IconNotebook:
 
     """ Signals """
 
+    def emit_switch_page_signal(self):
+
+        curr_page = self.get_current_page()
+        curr_page_num = self.get_current_page_num()
+
+        if curr_page_num >= 0:
+            self.widget.emit("switch-page", curr_page, curr_page_num)
+
+    def connect_signals(self):
+
+        self.widget.connect("page-reordered", self.on_reorder_page)
+        self.widget.connect("page-removed", self.on_remove_page)
+        self.widget.connect("switch-page", self.on_switch_page)
+
+        if self.parent_page is None:
+            # Show active page and focus default widget
+            self.emit_switch_page_signal()
+
     def on_remove_page(self, _notebook, new_page, _page_num):
         self.remove_unread_page(new_page)
 
@@ -559,13 +574,8 @@ class IconNotebook:
     def on_show_page(self, _action, _state, page):
         self.set_current_page(page)
 
-    def on_show_parent_page(self, _widget):
-
-        curr_page = self.get_current_page()
-        curr_page_num = self.get_current_page_num()
-
-        if curr_page_num >= 0:
-            self.widget.emit("switch-page", curr_page, curr_page_num)
+    def on_show_parent_page(self, *_args):
+        self.emit_switch_page_signal()
 
     def on_pages_button_pressed(self, *args):
 

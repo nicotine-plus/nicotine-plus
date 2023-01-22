@@ -816,7 +816,7 @@ class PluginHandler:
 
                     command_found = True
                     rejection_message = None
-                    usage = data.get("usage_" + command_interface, data.get("usage", []))
+                    usage = data.get(f"usage_{command_interface}", data.get("usage", []))
                     args_split = args.split()
                     num_args = len(args_split)
                     num_required_args = 0
@@ -843,7 +843,7 @@ class PluginHandler:
                         plugin.output(f"Usage: {'/' + command} {' '.join(usage)}")
                         break
 
-                    callback = data.get("callback_" + command_interface, data.get("callback"))
+                    callback = data.get(f"callback_{command_interface}", data.get("callback"))
 
                     if room is not None:
                         is_successful = callback(args, room=room)
