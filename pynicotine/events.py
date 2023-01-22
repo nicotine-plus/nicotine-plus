@@ -19,7 +19,6 @@
 import time
 
 from collections import deque
-from operator import itemgetter
 from threading import Thread
 
 
@@ -263,7 +262,7 @@ class Events:
                 time.sleep(1)
                 continue
 
-            event_id, event_data = min(self._scheduler_events.items(), key=itemgetter(1))
+            event_id, event_data = min(self._scheduler_events.items(), key=lambda x: x[1][0])  # Compare timestamps
             event_time, delay, repeat, callback = event_data
             current_time = time.time()
             sleep_time = (event_time - current_time)
