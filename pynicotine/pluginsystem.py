@@ -239,12 +239,12 @@ class BasePlugin:
             # Function was not called from a command
             return
 
-        command_type, source = self.parent.command_source  # pylint: disable=no-member
+        command_interface, source = self.parent.command_source  # pylint: disable=no-member
 
-        if command_type == "cli":
+        if command_interface == "cli":
             return
 
-        func = self.send_public if command_type == "chatroom" else self.send_private
+        func = self.send_public if command_interface == "chatroom" else self.send_private
         func(source, text)
 
     def echo_message(self, text, message_type="local"):
@@ -255,13 +255,13 @@ class BasePlugin:
             # Function was not called from a command
             return
 
-        command_type, source = self.parent.command_source  # pylint: disable=no-member
+        command_interface, source = self.parent.command_source  # pylint: disable=no-member
 
-        if command_type == "cli":
+        if command_interface == "cli":
             print(text)
             return
 
-        func = self.echo_public if command_type == "chatroom" else self.echo_private
+        func = self.echo_public if command_interface == "chatroom" else self.echo_private
         func(source, text, message_type)
 
     def output(self, text):
@@ -801,15 +801,15 @@ class PluginHandler:
                     if command != trigger and command not in aliases:
                         continue
 
-                    command_type = self.command_source[0]
+                    command_interface = self.command_source[0]
                     disabled_interfaces = data.get("disable", [])
 
-                    if command_type in disabled_interfaces:
+                    if command_interface in disabled_interfaces:
                         continue
 
                     command_found = True
                     rejection_message = None
-                    usage = data.get("usage_" + command_type, data.get("usage", []))
+                    usage = data.get(f"usage_{command_interface}", data.get("usage", []))
                     args_split = args.split()
                     num_args = len(args_split)
                     num_required_args = 0
@@ -836,7 +836,7 @@ class PluginHandler:
                         plugin.output(f"Usage: {'/' + command} {' '.join(usage)}")
                         break
 
-                    callback = data.get("callback_" + command_type, data.get("callback"))
+                    callback = data.get(f"callback_{command_interface}", data.get("callback"))
 
                     if room is not None:
                         is_successful = callback(args, room=room)
