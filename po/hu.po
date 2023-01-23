@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2023-01-20 19:22+0000\n"
+"PO-Revision-Date: 2023-01-23 23:59+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.15.1\n"
+"X-Generator: Weblate 4.16-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -5091,8 +5091,8 @@ msgid ""
 "    >5:30 to show files at least 5 and a half minutes long.\n"
 "    <5:30:00 shows files less than 5 and a half hours long."
 msgstr ""
-"Adjon meg egy nyers értéket másodpercben, vagy használja a PP:SS és ÓÓ:PP:SS "
-"időformátumokat:\n"
+"Adjon meg egy nyers értéket másodpercekben, vagy használja a PP:SS és ÓÓ:PP:"
+"SS időformátumokat:\n"
 "    >5:30 legalább 5 és fél perces fájlok megjelenítéséhez.\n"
 "    <5:30:00 5 és fél óránál rövidebb fájlokat jelenít meg."
 
@@ -5260,16 +5260,16 @@ msgid ""
 "Prohibit users from accessing your shared files, based on username, IP "
 "address or country."
 msgstr ""
-"Felhasználónév, IP-cím vagy ország alapján letiltja a felhasználóknak a "
+"Felhasználónév, IP-cím vagy ország alapján tiltja a felhasználóknak a "
 "megosztott fájlok elérését."
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:49
 msgid "Country codes to block (comma separated):"
-msgstr "Országkódok tiltása (vesszővel elválasztva):"
+msgstr "Blokkolás országkódokkal (vesszővel elválasztva):"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:56
 msgid "Codes must be in ISO 3166-2 format."
-msgstr "A kódoknak ISO 3166-2 formátumban kell lenniük."
+msgstr "A kódoknak ISO 3166-2 formátumúaknak kell lenniük."
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:71
 msgid "Use custom geo block message:"
@@ -5326,15 +5326,15 @@ msgstr "A tabulátor billentyű lenyomásával végig lapozhat a befejezéseken"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:160
 msgid "Enable completion drop-down list"
-msgstr "Befejezés legördülő lista engedélyezése"
+msgstr "Befejezéslegördülő lista engedélyezése"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:168
 msgid "Hide drop-down when only one matches"
-msgstr "A legördülő menü elrejtése, ha csak egy egyezik"
+msgstr "A legördülő lista elrejtése ha csak egy egyezik"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:181
 msgid "Minimum characters required to display drop-down:"
-msgstr "A minimum karakterszám a legördülő menü megjelenítéséhez:"
+msgstr "A minimum karakterszám a legördülő lista megjelenítéséhez:"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:218
 msgid "Allowed chat completions:"
@@ -5420,9 +5420,8 @@ msgid "Censor"
 msgstr "Cenzor"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:531
-#, fuzzy
 msgid "Enable censoring of text patterns"
-msgstr "A szövegminták cenzúrázásának engedélyezése"
+msgstr "Engedélyezi a szövegminták cenzúrázását"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:544
 msgid "Replace censored letters with:"
@@ -5453,13 +5452,12 @@ msgid "Download folders in reverse alphanumerical order"
 msgstr "Könyvtárak letöltése fordított számsorrendben"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:51
-#, fuzzy
 msgid "Store completed downloads in username subfolders"
-msgstr "Letöltések tárolása a felhasználónév almappákban"
+msgstr "A befejezett letöltéseket tárolja a felhasználónév almappáiban"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:63
 msgid "Allow these users to send you files:"
-msgstr "Ezeknek az usereknek a fájlküldés engedélyezve:"
+msgstr "Engedélyezi ezeknek a felhasználóknak, hogy fájlokat küldjenek:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:74
 msgid "No one"
@@ -5470,9 +5468,8 @@ msgid "Everyone"
 msgstr "Mindenki"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:77
-#, fuzzy
 msgid "Trusted Buddies"
-msgstr "Megbízható Userek"
+msgstr "Megbízható barátok"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:91
 msgid "Double-click action for downloads:"
@@ -5500,37 +5497,34 @@ msgstr "Fájlok tallózása"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:202
 #: pynicotine/gtkgui/ui/userbrowse.ui:80
-#, fuzzy
 msgid "Folders"
 msgstr "Mappák"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:219
-#, fuzzy
 msgid "Incomplete file folder:"
-msgstr "Hiányos iratmappa:"
+msgstr "Hiányos fájlmappa:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:242
 msgid "Download folder:"
 msgstr "Letöltés mappa:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:265
-#, fuzzy
 msgid "Save buddies' uploads to:"
-msgstr "A haverok feltöltéseinek mentése:"
+msgstr "A barátok feltöltéseinek mentése ide:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:291
 msgid "Events"
 msgstr "Események"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:315
-#, fuzzy
 msgid "Run command after file download finishes ($ for file path):"
-msgstr "Parancsot futtat letöltés befejezése után ($ fájlnévhez):"
+msgstr ""
+"Futtassa a parancsot a fájlletöltés befejezése után ($ fájl elérési úthoz):"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:338
-#, fuzzy
 msgid "Run command after folder download finishes ($ for folder path):"
-msgstr "Parancsot futtat mappaletöltés befejezése után ($ mappaútvonalhoz):"
+msgstr ""
+"Futtasa a parancsot a mappaletöltés befejezése után ($ mappa elérési úthoz):"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:365
 msgid "Download Filters"
@@ -5546,9 +5540,9 @@ msgid ""
 "are supported if escaping is disabled. For simple filters, keeping escaping "
 "enabled is recommended."
 msgstr ""
-"<b>Szintaxis:</b> A betűk nem kis/nagybetű érzékenyek. Minden pontos Python "
-"kifejezés támogatott, ha a kilépés le van tiltva. Egyszerű szűrőkhöz hagyja "
-"engedélyezve a kilépést."
+"<b>Szintaxis:</b> A betűk nem kis- és nagybetű érzékenyek. Minden pontos "
+"Python kifejezés támogatott, ha az escape funkció tiltott. Egyszerű "
+"szűrőkhöz ajánlott az escape funkció engedélyezése."
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:422
 msgid "Add"
@@ -5564,17 +5558,15 @@ msgid "Verify Filters"
 msgstr "Szűrők ellenőrzése"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:589
-#, fuzzy
 msgid "Unverified"
-msgstr "<b>Ellenőrizetlen</b>"
+msgstr "Ellenőrizetlen"
 
 #: pynicotine/gtkgui/ui/settings/ignore.ui:35
-#, fuzzy
 msgid ""
 "Ignore chat messages and search results from users, based on username or IP "
 "address."
 msgstr ""
-"Figyelmen kívül hagyja a felhasználók csevegési üzeneteit és keresési "
+"Figyelmen kívül hagyja a felhasználók csevegés üzeneteit és keresési "
 "eredményeit a felhasználónév vagy az IP-cím alapján."
 
 #: pynicotine/gtkgui/ui/settings/log.ui:28
@@ -5586,13 +5578,12 @@ msgid "Log private chat by default"
 msgstr "Privát csevegés naplózása alapértelmezettként"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:42
-#, fuzzy
 msgid "Log transfers to file"
-msgstr "Napló átvitelek fájlba"
+msgstr "Átvitel naplózása fájlba"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:49
 msgid "Log debug messages to file"
-msgstr "A hibakeresési üzeneteket fájlba naplózza"
+msgstr "Hibakeresési üzenetek naplózása fájlba"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:62
 #, fuzzy
@@ -5624,13 +5615,12 @@ msgid "Debug logs folder:"
 msgstr "Hibakeresési naplók mappa:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:57
-#, fuzzy
 msgid ""
 "Log in to an existing Soulseek account or create a new one. Usernames are "
 "case-sensitive and unique."
 msgstr ""
 "Jelentkezzen be egy meglévő Soulseek fiókba, vagy hozzon létre egy újat. A "
-"felhasználónevek nagy- és kisbetűsek és egyediek."
+"felhasználónevek kis- és nagybetű érzékenyek és egyediek."
 
 #: pynicotine/gtkgui/ui/settings/network.ui:135
 msgid "Listening port range:"
@@ -5831,9 +5821,8 @@ msgid "Duration:"
 msgstr "Időtartam:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:336
-#, fuzzy
 msgid "Country Code:"
-msgstr "Ország:"
+msgstr "Országkód:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:373
 #, fuzzy
@@ -5848,29 +5837,25 @@ msgid "Result Filter Help"
 msgstr "Eredményszűrő súgó"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:427
-#, fuzzy
 msgid "Clear Filter History"
-msgstr "Szűrt tisztítása"
+msgstr "Szűrési előzmények törlése"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:453
-#, fuzzy
 msgid "Network Searches"
-msgstr "Keresések"
+msgstr "Hálózati keresések"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:470
-#, fuzzy
 msgid "Respond to search requests from other users"
-msgstr "Keresési eredmények küldésének engedélyezése másoknak"
+msgstr "Válaszoljon más felhasználók keresési kéréseire"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:471
-#, fuzzy
 msgid ""
 "If a user on the Soulseek network searches for a file that exists in your "
 "shares, search results will be sent to the user."
 msgstr ""
-"Ha egy felhasználó a Soulseek hálózaton olyan fájlt keres, amely az Ön "
-"megosztásaiban létezik, a keresési eredmények elküldésre kerülnek a "
-"felhasználónak."
+"Ha egy felhasználó a Soulseek hálózaton egy olyan fájlt keres, amely "
+"megtalálható az Ön megosztásaiban, a keresési eredmények elküldésre kerülnek "
+"a felhasználónak."
 
 #: pynicotine/gtkgui/ui/settings/search.ui:484
 #, fuzzy
