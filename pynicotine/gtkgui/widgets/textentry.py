@@ -165,12 +165,6 @@ class ChatEntry:
                 core.privatechat.show_user(arg_self)
                 core.privatechat.send_message(arg_self, core.privatechat.CTCP_VERSION)
 
-        elif cmd in ("/clear", "/cl"):
-            if self.is_chatroom:
-                core.chatrooms.clear_room_messages(self.entity)
-            else:
-                core.privatechat.clear_private_messages(self.entity)
-
         elif cmd in ("/a", "/away"):
             core.set_away_mode(core.user_status != UserStatus.AWAY, save_state=True)
 

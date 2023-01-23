@@ -38,6 +38,13 @@ class Plugin(BasePlugin):
                 "description": _("Quit Nicotine+"),
                 "usage": ["[-force]"]
             },
+            "clear": {
+                "aliases": ["cl"],
+                "callback": self.clear_command,
+                "description": _("Clear chat window"),
+                "disable": ["cli"],
+                "group": _("Chat"),
+            },
             "me": {
                 "callback": self.me_command,
                 "description": _("Say something in the third-person"),
@@ -182,6 +189,19 @@ class Plugin(BasePlugin):
         return True
 
     """ Chat """
+
+    def clear_command(self, args, user=None, room=None):
+
+        if args:
+            return False
+
+        if room is not None:
+            self.core.chatrooms.clear_room_messages(room)
+
+        elif user is not None:
+            self.core.privatechat.clear_private_messages(user)
+
+        return True
 
     def me_command(self, args, **_unused):
         self.send_message("/me " + args)  # /me is sent as plain text
