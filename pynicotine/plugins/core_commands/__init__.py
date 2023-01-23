@@ -265,17 +265,17 @@ class Plugin(BasePlugin):
     def help_command(self, args, user=None, room=None):
 
         if user is not None:
-            interface = "private_chat"
+            command_interface = "private_chat"
 
         elif room is not None:
-            interface = "chatroom"
+            command_interface = "chatroom"
 
         else:
-            interface = "cli"
+            command_interface = "cli"
 
         search_query = " ".join(args.lower().split(" ", maxsplit=1))
         command_groups = self.parent.get_command_descriptions(  # pylint: disable=no-member
-            interface, search_query=search_query
+            command_interface, search_query=search_query
         )
         num_commands = sum(len(command_groups[x]) for x in command_groups)
         output_text = ""
@@ -292,7 +292,7 @@ class Plugin(BasePlugin):
             output_text += f"\n\n{group_name}:"
 
             for command_usage, description in commands:
-                output_text += f"\n	{command_usage}	-  {description}"  # alternate whitespace tabs in string
+                output_text += f"\n\t{command_usage}  -  {description}"
 
         if not search_query:
             output_text += "\n\n" + _("Type %(command)s to list similar commands") % {"command": "/help [query]"}

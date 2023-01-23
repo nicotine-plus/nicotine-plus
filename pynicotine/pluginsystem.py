@@ -239,12 +239,12 @@ class BasePlugin:
             # Function was not called from a command
             return
 
-        command_type, source = self.parent.command_source  # pylint: disable=no-member
+        command_interface, source = self.parent.command_source  # pylint: disable=no-member
 
-        if command_type == "cli":
+        if command_interface == "cli":
             return
 
-        func = self.send_public if command_type == "chatroom" else self.send_private
+        func = self.send_public if command_interface == "chatroom" else self.send_private
         func(source, text)
 
     def echo_message(self, text, message_type="local"):
@@ -255,13 +255,13 @@ class BasePlugin:
             # Function was not called from a command
             return
 
-        command_type, source = self.parent.command_source  # pylint: disable=no-member
+        command_interface, source = self.parent.command_source  # pylint: disable=no-member
 
-        if command_type == "cli":
+        if command_interface == "cli":
             print(text)
             return
 
-        func = self.echo_public if command_type == "chatroom" else self.echo_private
+        func = self.echo_public if command_interface == "chatroom" else self.echo_private
         func(source, text, message_type)
 
     def output(self, text):
@@ -389,13 +389,12 @@ class PluginHandler:
 
     def _start(self):
 
-        enable = config.sections["plugins"]["enable"]
+        self.enable_plugin("core_commands")
 
-        if not enable:
+        if not config.sections["plugins"]["enable"]:
             return
 
         log.add(_("Loading plugin system"))
-        self.enable_plugin("core_commands")
 
         to_enable = config.sections["plugins"]["enabled"]
         log.add_debug(f"Enabled plugin(s): {', '.join(to_enable)}")
@@ -522,14 +521,18 @@ class PluginHandler:
                     # Group commands under human-friendly plugin name by default
                     data["group"] = human_name
 
-                if "chatroom" not in disabled_interfaces and command not in self.chatroom_commands:
-                    self.chatroom_commands[command] = data
+                for command_interface in ("chatroom", "private_chat", "cli"):
+                    if command_interface in disabled_interfaces:
+                        continue
 
-                if "private_chat" not in disabled_interfaces and command not in self.private_chat_commands:
-                    self.private_chat_commands[command] = data
+                    command_list = getattr(self, f"{command_interface}_commands")
 
-                if "cli" not in disabled_interfaces and command not in self.cli_commands:
-                    self.cli_commands[command] = data
+                    if command in command_list:
+                        log.add(_("Conflicting %(interface)s command in plugin %(name)s: %(command)s"),
+                                {"interface": command_interface, "name": human_name, "command": command})
+                        continue
+
+                    command_list[command] = data
 
             for command, _func in plugin.__publiccommands__:
                 command = "/" + command
@@ -595,12 +598,15 @@ class PluginHandler:
         try:
             plugin.disable()
 
-            for command in plugin.commands:
+            for command, data in plugin.commands.items():
                 command = "/" + command
 
-                self.chatroom_commands.pop(command, None)
-                self.private_chat_commands.pop(command, None)
-                self.cli_commands.pop(command, None)
+                for command_interface in ("chatroom", "private_chat", "cli"):
+                    command_list = getattr(self, f"{command_interface}_commands")
+
+                    # Remove only if data matches command as defined in this plugin
+                    if data == command_list.get(command, None):
+                        command_list.pop(command, None)
 
             for command, _func in plugin.__publiccommands__:
                 self.chatroom_commands.pop("/" + command, None)
@@ -652,13 +658,11 @@ class PluginHandler:
 
         plugin_info = {}
         plugin_path = self.get_plugin_path(plugin_name)
-        info_path = os.path.join(plugin_path, "PLUGININFO")
 
-        if plugin_name == "core_commands":
-            plugin_info["Name"] = (_("%s Commands") % config.application_name)
-
-        if plugin_path is None or not os.path.isfile(encode_path(info_path)):
+        if plugin_path is None:
             return plugin_info
+
+        info_path = os.path.join(plugin_path, "PLUGININFO")
 
         with open(encode_path(info_path), encoding="utf-8") as file_handle:
             for line in file_handle:
@@ -802,15 +806,15 @@ class PluginHandler:
                     if command != trigger and command not in aliases:
                         continue
 
-                    command_type = self.command_source[0]
+                    command_interface = self.command_source[0]
                     disabled_interfaces = data.get("disable", [])
 
-                    if command_type in disabled_interfaces:
+                    if command_interface in disabled_interfaces:
                         continue
 
                     command_found = True
                     rejection_message = None
-                    usage = data.get("usage_" + command_type, data.get("usage", []))
+                    usage = data.get(f"usage_{command_interface}", data.get("usage", []))
                     args_split = args.split()
                     num_args = len(args_split)
                     num_required_args = 0
@@ -837,7 +841,7 @@ class PluginHandler:
                         plugin.output(f"Usage: {'/' + command} {' '.join(usage)}")
                         break
 
-                    callback = data.get("callback_" + command_type, data.get("callback"))
+                    callback = data.get(f"callback_{command_interface}", data.get("callback"))
 
                     if room is not None:
                         is_successful = callback(args, room=room)
