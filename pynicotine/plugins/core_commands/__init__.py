@@ -158,7 +158,7 @@ class Plugin(BasePlugin):
             output_text += f"\n\n{group_name}:"
 
             for command_usage, description in commands:
-                output_text += f"\n	{command_usage}  -  {description}"
+                output_text += f"\n\t{command_usage}  -  {description}"
 
         if not search_query:
             output_text += "\n\n" + _("Type %(command)s to list similar commands") % {"command": "/help [query]"}
