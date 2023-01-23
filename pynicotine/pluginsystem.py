@@ -389,13 +389,12 @@ class PluginHandler:
 
     def _start(self):
 
-        enable = config.sections["plugins"]["enable"]
+        self.enable_plugin("core_commands")
 
-        if not enable:
+        if not config.sections["plugins"]["enable"]:
             return
 
         log.add(_("Loading plugin system"))
-        self.enable_plugin("core_commands")
 
         to_enable = config.sections["plugins"]["enabled"]
         log.add_debug(f"Enabled plugin(s): {', '.join(to_enable)}")
