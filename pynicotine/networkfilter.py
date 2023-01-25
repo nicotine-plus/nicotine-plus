@@ -103,8 +103,8 @@ class NetworkFilter:
 
         if user and not ip_address or ip_address is None:
             # Try to get an address from currently active connections
-            cached_ip = self._get_cached_user_ip(user, ip_list) or ""
-            ip_address = cached_ip or self.get_known_ip_address(user)
+            cached_ip = self._get_cached_user_ip(user, ip_list)
+            ip_address = cached_ip or self.get_known_ip_address(user) or ""
 
             if ip_address.startswith("?.?.?.?") or ip_address == "0.0.0.0":
                 # Allow deleting dummy entries (the offline default IP
