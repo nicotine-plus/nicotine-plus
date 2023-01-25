@@ -139,7 +139,7 @@ class NetworkFilter:
         return None
 
     @staticmethod
-    def get_known_ip_address(user):
+    def get_online_user_ip_address(user):
         """ Try to lookup an address from watched known connections,
         for updating an IP list item if the address is unspecified """
 
@@ -150,17 +150,16 @@ class NetworkFilter:
             return None
 
         user_ip_address, _user_port = user_address
-
         return user_ip_address
 
     @staticmethod
-    def get_known_username(ip_address):
+    def get_online_username(ip_address):
         """ Try to match a username from watched and known connections,
         for updating an IP list item if the username is unspecified """
 
-        for (user_name, user_address) in core.user_addresses.items():
+        for username, user_address in core.user_addresses.items():
             if ip_address == user_address[0]:
-                return user_name
+                return username
 
         return None
 
