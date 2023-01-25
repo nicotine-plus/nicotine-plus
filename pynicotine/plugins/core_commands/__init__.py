@@ -231,7 +231,7 @@ class Plugin(BasePlugin):
                 "description": _("Search a user's shared files"),
                 "disable": ["cli"],
                 "group": _("Search Files"),
-                "usage": ["<\"user name\">", "<query>"]
+                "usage": ["<user>", "<query>"]
             },
             "shares": {
                 "aliases": ["ls"],
@@ -319,8 +319,11 @@ class Plugin(BasePlugin):
 
     def plugin_handler_command(self, args, **_unused):
 
-        args_split = args.split(maxsplit=1)
-        action, plugin_name = args_split[0], args_split[1].strip('" ')
+        action, plugin_name = self.split_args(args, 2)
+
+        if not plugin_name:
+            return False
+
         func = getattr(self.parent, f"{action}_plugin")
 
         return func(plugin_name)
@@ -345,13 +348,15 @@ class Plugin(BasePlugin):
     def clear_command(self, args, user=None, room=None):
 
         if args:
-            return
+            return False
 
         if room is not None:
             self.core.chatrooms.clear_room_messages(room)
 
         elif user is not None:
             self.core.privatechat.clear_private_messages(user)
+
+        return True
 
     def me_command(self, args, **_unused):
         self.send_message("/me " + args)  # /me is sent as plain text
@@ -373,23 +378,27 @@ class Plugin(BasePlugin):
 
     def ctcp_command(self, args, user=None, **_unused):
 
-        args_split = args.split(maxsplit=1)
-        ctcp_query = getattr(self.core.privatechat, f"CTCP_{args_split[0].upper()}")
+        query, user = self.split_args(args, 2)
 
-        if len(args_split) > 1:
-            user = args_split[1]
+        if user is False:
+            return False
 
-        elif user is None:
+        if user is None:
             user = self.core.login_username
 
+        ctcp_query = getattr(self.core.privatechat, f"CTCP_{query.upper()}")
         self.send_private(user, ctcp_query)
+        return True
 
     def msg_command(self, args, **_unused):
 
-        args_split = args.split(maxsplit=1)
-        user, text = args_split[0], args_split[1]
+        user, text = self.split_args(args, 2)
+
+        if not text:
+            return False
 
         self.send_private(user, text, show_ui=True, switch_page=False)
+        return True
 
     def pm_command(self, args, **_unused):
         self.core.privatechat.show_user(args)
@@ -413,10 +422,13 @@ class Plugin(BasePlugin):
 
     def say_command(self, args, **_unused):
 
-        args_split = args.split(maxsplit=1)
-        room, text = args_split[0], args_split[1]
+        room, text = self.split_args(args, 2)
+
+        if not text:
+            return False
 
         self.send_public(room, text)
+        return True
 
     """ Now Playing """
 
@@ -462,8 +474,7 @@ class Plugin(BasePlugin):
 
     def share_command(self, args, **_unused):
 
-        args_split = args.split(maxsplit=1)
-        group, path = args_split[0], args_split[1]
+        group, path = self.split_args(args, 2)
 
         # TODO: self.core.shares.add_share()
         #       "virtual name" can be derived from the entered folder,
@@ -474,8 +485,7 @@ class Plugin(BasePlugin):
 
     def unshare_command(self, args, **_unused):
 
-        args_split = args.split(maxsplit=1)
-        group, name = args_split[0], args_split[1]
+        group, name = self.split_args(args, 2)
 
         # TODO: self.core.shares.remove_share()
         # TODO: remove this debug output line
@@ -590,32 +600,6 @@ class Plugin(BasePlugin):
 
     """ Search Files """
 
-    def search_user_command(self, args, user=None, **_unused):
-
-        from shlex import split
-
-        try:
-            args_split = split(args)
-
-        except ValueError as error:
-            self.output(error)
-            return False
-
-        # Support "user name" with spaces in optional quotes
-        user = args_split[0]
-
-        # Don't require quotes around search term query
-        if len(args_split) == 2:
-            query = args_split[1]
-        else:
-            query = args.strip('" ')[len(user):].strip('" ')
-
-        # TODO: remove this debug output line
-        self.output(f"Entered arguments: user='{user}' query='{query}'")
-
-        self.core.search.do_search(query, "user", user=user)
-        return True
-
     def search_command(self, args, **_unused):
         self.core.search.do_search(args, "global")
 
@@ -624,3 +608,13 @@ class Plugin(BasePlugin):
 
     def search_buddies_command(self, args, **_unused):
         self.core.search.do_search(args, "buddies")
+
+    def search_user_command(self, args, user=None, **_unused):
+
+        user, query = self.split_args(args, 2)
+
+        if not query:
+            return False
+
+        self.core.search.do_search(query, "user", user=user)
+        return True
