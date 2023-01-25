@@ -113,19 +113,6 @@ class ChatEntry:
             if arg_self:
                 core.request_ip_address(arg_self)
 
-        elif cmd in ("/m", "/msg"):
-            if args:
-                args_split = args.split(" ", maxsplit=1)
-                user = args_split[0]
-                msg = None
-
-                if len(args_split) == 2:
-                    msg = args_split[1]
-
-                if msg:
-                    core.privatechat.show_user(user)
-                    core.privatechat.send_message(user, msg)
-
         elif cmd in ("/us", "/usearch"):
             args_split = args.split(" ", maxsplit=1)
 
