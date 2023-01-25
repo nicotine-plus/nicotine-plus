@@ -435,7 +435,7 @@ class Plugin(BasePlugin):
     def now_playing_command(self, _args, **_unused):
         # TODO: Untested, move np into a new plugin
         self.core.now_playing.display_now_playing(
-            callback=lambda np_message: self.echo_message(np_message))
+            callback=lambda np_message: self.echo_message(np_message))  # pylint: disable=unnecessary-lambda
 
     """ Configure Shares """
 

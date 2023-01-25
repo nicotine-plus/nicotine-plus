@@ -30,7 +30,6 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
-from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import open_uri
 
 GTK_API_VERSION = Gtk.get_major_version()
