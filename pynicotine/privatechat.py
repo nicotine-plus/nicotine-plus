@@ -226,8 +226,7 @@ class PrivateChat:
             user_address = core.user_addresses.get(user)
 
             if user_address is not None:
-                ip_address, _port = user_address
-                if core.network_filter.is_ip_ignored(ip_address):
+                if core.network_filter.is_user_ip_ignored(user):
                     msg.user = None
                     return
 

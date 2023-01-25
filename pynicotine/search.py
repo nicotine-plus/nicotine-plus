@@ -341,7 +341,7 @@ class Search:
             msg.token = None
             return
 
-        if core.network_filter.is_ip_ignored(ip_address):
+        if core.network_filter.is_user_ip_ignored(username, ip_address):
             msg.token = None
 
     def _file_search_request_server(self, msg):

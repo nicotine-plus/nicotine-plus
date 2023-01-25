@@ -333,6 +333,7 @@ class Core:
         self.user_status = slskmessages.UserStatus.OFFLINE
 
         # Clean up connections
+        self.user_addresses.clear()
         self.user_statuses.clear()
         self.watched_users.clear()
 
