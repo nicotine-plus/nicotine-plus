@@ -272,7 +272,7 @@ class DownloadsPage:
             activate_row_callback=self.on_edit_filter,
             columns=[
                 {"column_id": "filter", "column_type": "text", "title": _("Filter"), "sort_column": 0,
-                 "width": 150, "expand_column": True},
+                 "width": 150, "expand_column": True, "default_sort_column": "ascending"},
                 {"column_id": "escaped", "column_type": "toggle", "title": _("Escaped"), "width": 0,
                  "sort_column": 1, "toggle_callback": self.on_toggle_escaped}
             ]
@@ -509,7 +509,7 @@ class SharesPage:
             activate_row_callback=self.on_edit_shared_folder,
             columns=[
                 {"column_id": "virtual_folder", "column_type": "text", "title": _("Virtual Folder"), "width": 65,
-                 "sort_column": 0, "expand_column": True},
+                 "sort_column": 0, "expand_column": True, "default_sort_column": "ascending"},
                 {"column_id": "folder", "column_type": "text", "title": _("Folder"), "width": 150,
                  "sort_column": 1, "expand_column": True},
                 {"column_id": "buddies", "column_type": "toggle", "title": _("Buddy-only"), "width": 0,
@@ -813,7 +813,8 @@ class IgnoredUsersPage:
         self.ignored_users_list_view = TreeView(
             application.window, parent=self.ignored_users_container, multi_select=True,
             columns=[
-                {"column_id": "username", "column_type": "text", "title": _("Username"), "sort_column": 0}
+                {"column_id": "username", "column_type": "text", "title": _("Username"), "sort_column": 0,
+                 "default_sort_column": "ascending"}
             ]
         )
 
@@ -824,7 +825,7 @@ class IgnoredUsersPage:
                 {"column_id": "ip_address", "column_type": "text", "title": _("IP Address"), "sort_column": 0,
                  "width": 50, "expand_column": True},
                 {"column_id": "user", "column_type": "text", "title": _("User"), "sort_column": 1,
-                 "expand_column": True}
+                 "expand_column": True, "default_sort_column": "ascending"}
             ]
         )
 
@@ -934,7 +935,8 @@ class BannedUsersPage:
         self.banned_users_list_view = TreeView(
             application.window, parent=self.banned_users_container, multi_select=True,
             columns=[
-                {"column_id": "username", "column_type": "text", "title": _("Username"), "sort_column": 0}
+                {"column_id": "username", "column_type": "text", "title": _("Username"), "sort_column": 0,
+                 "default_sort_column": "ascending"}
             ]
         )
 
@@ -945,7 +947,7 @@ class BannedUsersPage:
                 {"column_id": "ip_address", "column_type": "text", "title": _("IP Address"), "sort_column": 0,
                  "width": 50, "expand_column": True},
                 {"column_id": "user", "column_type": "text", "title": _("User"), "sort_column": 1,
-                 "expand_column": True}
+                 "expand_column": True, "default_sort_column": "ascending"}
             ]
         )
 
@@ -1078,7 +1080,8 @@ class ChatsPage:
         self.censor_list_view = TreeView(
             application.window, parent=self.CensorList, multi_select=True, activate_row_callback=self.on_edit_censored,
             columns=[
-                {"column_id": "pattern", "column_type": "text", "title": _("Pattern"), "sort_column": 0}
+                {"column_id": "pattern", "column_type": "text", "title": _("Pattern"), "sort_column": 0,
+                 "default_sort_column": "ascending"}
             ]
         )
 
@@ -1088,7 +1091,7 @@ class ChatsPage:
             activate_row_callback=self.on_edit_replacement,
             columns=[
                 {"column_id": "pattern", "column_type": "text", "title": _("Pattern"), "sort_column": 0,
-                 "width": 100, "expand_column": True},
+                 "width": 100, "expand_column": True, "default_sort_column": "ascending"},
                 {"column_id": "replacement", "column_type": "text", "title": _("Replacement"), "sort_column": 1,
                  "expand_column": True}
             ]
@@ -1915,7 +1918,7 @@ class UrlHandlersPage:
             activate_row_callback=self.on_edit_handler,
             columns=[
                 {"column_id": "protocol", "column_type": "text", "title": _("Protocol"), "sort_column": 0,
-                 "width": 120, "expand_column": True, "iterator_key": True},
+                 "width": 120, "expand_column": True, "iterator_key": True, "default_sort_column": "ascending"},
                 {"column_id": "command", "column_type": "text", "title": _("Command"), "sort_column": 1,
                  "expand_column": True}
             ]
@@ -2242,7 +2245,8 @@ class PluginsPage:
                 # Visible columns
                 {"column_id": "enabled", "column_type": "toggle", "title": _("Enabled"), "width": 0,
                  "sort_column": 0, "toggle_callback": self.on_plugin_toggle, "hide_header": True},
-                {"column_id": "plugin", "column_type": "text", "title": _("Plugin"), "sort_column": 1},
+                {"column_id": "plugin", "column_type": "text", "title": _("Plugin"), "sort_column": 1,
+                 "default_sort_column": "ascending"},
 
                 # Hidden data columns
                 {"column_id": "plugin_hidden", "data_type": str}
