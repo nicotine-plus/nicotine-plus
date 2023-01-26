@@ -272,21 +272,22 @@ class NetworkFilter:
 
     """ Callbacks """
 
-    def _update_saved_user_ip_addresses(self, ip_list, user, ip_address):
+    def _update_saved_user_ip_addresses(self, ip_list, username, ip_address):
         """ Check if a user's IP address has changed and update the lists """
 
-        previous_ip_addresses = self._get_previous_user_ip_addresses(user, ip_list)
+        previous_ip_addresses = self._get_previous_user_ip_addresses(username, ip_list)
 
         if not previous_ip_addresses:
             # User is not banned
             return
 
-        if ip_address not in previous_ip_addresses:
-            if user in previous_ip_addresses:
-                # Remove placeholder
-                self._remove_user_ips_from_list(ip_list, ip_addresses=[user])
+        ip_address_placeholder = f"? ({username})"
 
-            self._add_user_ip_to_list(ip_list, user, ip_address)
+        if ip_address_placeholder in previous_ip_addresses:
+            self._remove_user_ips_from_list(ip_list, ip_addresses=[ip_address_placeholder])
+
+        if ip_address not in previous_ip_addresses:
+            self._add_user_ip_to_list(ip_list, username, ip_address)
 
     def _get_peer_address(self, msg):
         """ Server code: 3 """
