@@ -26,6 +26,7 @@ class NetworkFilter:
     """ Functions related to banning and ignoring users """
 
     def __init__(self):
+
         self.ip_ban_requested = {}
         self.ip_ignore_requested = {}
 
@@ -41,102 +42,62 @@ class NetworkFilter:
 
     """ IP Filter List Management """
 
-    def _request_ip(self, user, action, list_type, online=True):
+    def _request_ip(self, user, action, request_list):
         """ Ask for the IP address of an unknown user. Once a GetPeerAddress
          response arrives, either ban_unban_user_ip_callback or
          ignore_unignore_user_ip_callback is called. """
 
-        if list_type == "ban":
-            request_list = self.ip_ban_requested
-        else:
-            request_list = self.ip_ignore_requested
-
         if user not in request_list:
             request_list[user] = action
 
-        if not online:
-            # We already know this user is probably offline
-            return
-
         core.queue.append(slskmessages.GetPeerAddress(user))
 
-    def _add_user_ip_to_list(self, list_type, user, ip_address):
+    def _add_user_ip_to_list(self, ip_list, username=None, ip_address=None):
         """ Add the current IP address and username of a user to a list """
 
-        if list_type == "ban":
-            ip_list = config.sections["server"]["ipblocklist"]
-        else:
-            ip_list = config.sections["server"]["ipignorelist"]
-
-        if self.is_ip_address(ip_address, allow_zero=False) and not user:
+        if not username:
             # Try to get a username from currently active connections
-            user = self.get_known_username(ip_address) or ""
+            username = self.get_online_username(ip_address)
 
-        elif user and not self.is_ip_address(ip_address, allow_zero=False):
-            # Try to get an address from currently active connections
-            ip_address = self.get_known_ip_address(user)
+        elif not self.is_ip_address(ip_address):
+            # Try to get a known address for the user, use username as placeholder otherwise
+            ip_addresses = self._get_user_ip_addresses(username, ip_list, request_action="add")
+            ip_address = next(iter(ip_addresses), f"? ({username})")
 
-            if not self.is_ip_address(ip_address, allow_zero=False):
-                cached_ip = self._get_cached_user_ip(user, ip_list) or ""
-                offline = cached_ip.startswith("?.?.?.?") or cached_ip == "0.0.0.0"
-
-                # Queue a callback to update the filter, only try one time
-                self._request_ip(user, "add", list_type, online=not offline)
-
-                # Add a unique dummy entry for now, so it can be updated later
-                ip_address = f"?.?.?.? [{user}]"
-
-        if ip_address not in ip_list or ip_list[ip_address] != user != "":
-            ip_list[ip_address] = user
+        if ip_address and (ip_address not in ip_list or ip_list[ip_address] != username):
+            ip_list[ip_address] = username
             config.write_configuration()
 
-        # Close connection and print output as confirmation on CLI
         return ip_address
 
-    def _remove_user_ip_from_list(self, list_type, user, ip_address):
+    def _remove_user_ips_from_list(self, ip_list, username=None, ip_addresses=None):
         """ Remove the previously saved IP address of a user from a list """
 
-        if list_type == "ban":
-            ip_list = config.sections["server"]["ipblocklist"]
-        else:
-            ip_list = config.sections["server"]["ipignorelist"]
+        if not ip_addresses:
+            # Try to get a known address for the user
+            ip_addresses = self._get_user_ip_addresses(username, ip_list, request_action="remove")
 
-        if user and not ip_address or ip_address is None:
-            # Try to get an address from currently active connections
-            cached_ip = self._get_cached_user_ip(user, ip_list) or ""
-            ip_address = cached_ip or self.get_known_ip_address(user)
+        for ip_address in ip_addresses:
+            if ip_address in ip_list:
+                del ip_list[ip_address]
 
-            if ip_address.startswith("?.?.?.?") or ip_address == "0.0.0.0":
-                # Allow deleting dummy entries (the offline default IP
-                # "0.0.0.0" entry is not saved in filters since 3.3.0)
-                pass
-
-            elif not self.is_ip_address(ip_address, allow_zero=False):
-                # IP unknown, queue a callback to remove the filter later
-                self._request_ip(user, "remove", list_type, online=True)
-
-                # Print output as confirmation on CLI also do username list
-                return user
-
-        if ip_address in ip_list:
-            del ip_list[ip_address]
-            config.write_configuration()
-
-        # Print output as confirmation on CLI
-        return ip_address
+        config.write_configuration()
+        return ip_addresses
 
     """ IP List Lookup Functions """
 
     @staticmethod
-    def _get_cached_user_ip(user, ip_list):
+    def _get_previous_user_ip_addresses(user, ip_list):
         """ Retrieve IP address of a user previously saved in an IP list, for
         setting Ban/Ignore IP Address check buttons in user actions menus """
 
+        ip_addresses = set()
+
         for ip_address, username in ip_list.items():
             if user == username:
-                return ip_address
+                ip_addresses.add(ip_address)
 
-        return None
+        return ip_addresses
 
     @staticmethod
     def get_online_user_ip_address(user):
@@ -151,6 +112,34 @@ class NetworkFilter:
 
         user_ip_address, _user_port = user_address
         return user_ip_address
+
+    def _get_user_ip_addresses(self, user, ip_list, request_action):
+        """ Returns the known IP addresses of a user, requests one otherwise """
+
+        ip_addresses = set()
+
+        if request_action == "add":
+            # Get current IP for user, if known
+            online_ip_address = self.get_online_user_ip_address(user)
+
+            if online_ip_address:
+                ip_addresses.add(online_ip_address)
+
+        elif request_action == "remove":
+            # Remove all known IP addresses for user
+            ip_addresses = self._get_previous_user_ip_addresses(user, ip_list)
+
+        if ip_addresses:
+            return ip_addresses
+
+        # User's IP address is unknown, request it from the server
+        if ip_list == config.sections["server"]["ipblocklist"]:
+            request_list = self.ip_ban_requested
+        else:
+            request_list = self.ip_ignore_requested
+
+        self._request_ip(user, request_action, request_list)
+        return ip_addresses
 
     @staticmethod
     def get_online_username(ip_address):
@@ -188,39 +177,49 @@ class NetworkFilter:
 
     """ IP Filter Rule Processing """
 
-    @staticmethod
-    def _is_ip_in_list(address, ip_list):
-        """ Check if an IP address exists in a list, disregarding the username
-        the address is paired with. """
+    def _check_user_ips_filtered(self, ip_list, username=None, ip_addresses=None):
+        """ Check if an IP address is present in a list """
 
-        if address is None:
-            return True
+        if not ip_addresses:
+            # Get all known IP addressed for user
+            ip_addresses = self._get_previous_user_ip_addresses(username, ip_list)
+            online_ip_address = self.get_online_user_ip_address(username)
 
-        s_address = address.split(".")
+            if online_ip_address:
+                ip_addresses.add(online_ip_address)
 
-        for ip_address in ip_list:
+            if username and f"? ({username})" in ip_addresses:
+                # Username placeholder present. We don't know the user's IP address yet, but we want to filter it.
+                return True
 
-            # No Wildcard in IP
-            if "*" not in ip_address:
-                if address == ip_address:
-                    return True
-                continue
+            if not ip_addresses:
+                return False
 
-            # Wildcard in IP
-            parts = ip_address.split(".")
-            seg = 0
+        for ip_address in ip_addresses:
+            s_address = ip_address.split(".")
 
-            for part in parts:
-                # Stop if there's no wildcard or matching string number
-                if part not in (s_address[seg], "*"):
-                    break
+            for address in ip_list:
+                # No Wildcard in IP
+                if "*" not in address:
+                    if ip_address == address:
+                        return True
+                    continue
 
-                seg += 1
+                # Wildcard in IP
+                parts = address.split(".")
+                seg = 0
 
-                # Last time around
-                if seg == 4:
-                    # Wildcard filter
-                    return True
+                for part in parts:
+                    # Stop if there's no wildcard or matching string number
+                    if part not in (s_address[seg], "*"):
+                        break
+
+                    seg += 1
+
+                    # Last time around
+                    if seg == 4:
+                        # Wildcard filter
+                        return True
 
         # Not filtered
         return False
@@ -229,7 +228,7 @@ class NetworkFilter:
         """ Check if this user is banned, geoip-blocked, and which shares
         it is allowed to access based on transfer and shares settings. """
 
-        if self.is_user_banned(user) or (ip_address is not None and self.is_ip_banned(ip_address)):
+        if self.is_user_banned(user) or self.is_user_ip_banned(user, ip_address):
             if config.sections["transfers"]["usecustomban"]:
                 ban_message = config.sections["transfers"]["customban"]
                 return 0, f"Banned ({ban_message})"
@@ -267,42 +266,42 @@ class NetworkFilter:
         """ Close all connections whose IP address exists in the ban list """
 
         for ip_address in config.sections["server"]["ipblocklist"]:
-            if not self.is_ip_address(ip_address, allow_wildcard=False, allow_zero=False):
-                # We can't close wildcard patterns nor dummy (zero) addresses
-                continue
-
-            core.queue.append(slskmessages.CloseConnectionIP(ip_address))
+            # We can't close wildcard patterns nor dummy (zero) addresses
+            if self.is_ip_address(ip_address, allow_wildcard=False, allow_zero=False):
+                core.queue.append(slskmessages.CloseConnectionIP(ip_address))
 
     """ Callbacks """
 
-    def _update_saved_user_ip_address(self, user, new_ip):
+    def _update_saved_user_ip_addresses(self, ip_list, user, ip_address):
         """ Check if a user's IP address has changed and update the lists """
 
-        cached_banned_ip = self.get_cached_banned_user_ip(user)
+        previous_ip_addresses = self._get_previous_user_ip_addresses(user, ip_list)
 
-        if cached_banned_ip is not None and cached_banned_ip != new_ip:
-            self.unban_user_ip(user, cached_banned_ip)
-            self.ban_user_ip(user, new_ip)
+        if not previous_ip_addresses:
+            # User is not banned
+            return
 
-        cached_ignored_ip = self.get_cached_ignored_user_ip(user)
+        if ip_address not in previous_ip_addresses:
+            if user in previous_ip_addresses:
+                # Remove placeholder
+                self._remove_user_ips_from_list(ip_list, ip_addresses=[user])
 
-        if cached_ignored_ip is not None and cached_ignored_ip != new_ip:
-            self.unignore_user_ip(user, cached_ignored_ip)
-            self.ignore_user_ip(user, new_ip)
+            self._add_user_ip_to_list(ip_list, user, ip_address)
 
     def _get_peer_address(self, msg):
         """ Server code: 3 """
 
-        ip_address = msg.ip_address
-
-        if not self.is_ip_address(ip_address, allow_zero=False):
-            # User is offline if ip_address "0.0.0.0" (not None!)
-            return
-
         user = msg.user
 
+        if user not in core.user_addresses:
+            # User is offline
+            return
+
+        ip_address = msg.ip_address
+
         # If the IP address changed, make sure our IP ban/ignore list reflects this
-        self._update_saved_user_ip_address(user, ip_address)
+        self._update_saved_user_ip_addresses(config.sections["server"]["ipblocklist"], user, ip_address)
+        self._update_saved_user_ip_addresses(config.sections["server"]["ipignorelist"], user, ip_address)
 
         # Check pending "add" and "remove" requests for IP-based filtering of previously offline users
         self._ban_unban_user_ip_callback(user, ip_address)
@@ -333,37 +332,37 @@ class NetworkFilter:
 
     def ban_user_ip(self, user=None, ip_address=None):
 
-        banned_ip_address = self._add_user_ip_to_list("ban", user, ip_address)
+        ip_address = self._add_user_ip_to_list(config.sections["server"]["ipblocklist"], user, ip_address)
 
-        if self.is_ip_address(banned_ip_address, allow_wildcard=False, allow_zero=False):
+        if self.is_ip_address(ip_address, allow_wildcard=False, allow_zero=False):
             # We can't close wildcard patterns nor dummy (zero) address entries
-            core.queue.append(slskmessages.CloseConnectionIP(banned_ip_address))
+            core.queue.append(slskmessages.CloseConnectionIP(ip_address))
 
-        return banned_ip_address
+        return ip_address
 
     def unban_user_ip(self, user=None, ip_address=None):
-        return self._remove_user_ip_from_list("ban", user, ip_address)
+        ip_addresses = {ip_address} if ip_address else set()
+        return self._remove_user_ips_from_list(config.sections["server"]["ipblocklist"], user, ip_addresses)
 
     def _ban_unban_user_ip_callback(self, user, ip_address):
 
         request = self.ip_ban_requested.pop(user, None)
 
-        if request is None:
-            return
-
-        if request == "remove":
-            self.unban_user_ip(user, ip_address)
-        else:
+        if request == "add":
             self.ban_user_ip(user, ip_address)
 
-    def get_cached_banned_user_ip(self, user):
-        return self._get_cached_user_ip(user, config.sections["server"]["ipblocklist"])
+        elif request == "remove":
+            self.unban_user_ip(user, ip_address)
+
+    def get_previous_banned_user_ips(self, user):
+        return self._get_previous_user_ip_addresses(user, config.sections["server"]["ipblocklist"])
 
     def is_user_banned(self, user):
         return user in config.sections["server"]["banlist"]
 
-    def is_ip_banned(self, address):
-        return self._is_ip_in_list(address, config.sections["server"]["ipblocklist"])
+    def is_user_ip_banned(self, user=None, ip_address=None):
+        ip_addresses = {ip_address} if ip_address else set()
+        return self._check_user_ips_filtered(config.sections["server"]["ipblocklist"], user, ip_addresses)
 
     """ Ignoring """
 
@@ -388,40 +387,28 @@ class NetworkFilter:
         events.emit("unignore-user", user)
 
     def ignore_user_ip(self, user=None, ip_address=None):
-        return self._add_user_ip_to_list("ignore", user, ip_address)
+        return self._add_user_ip_to_list(config.sections["server"]["ipignorelist"], user, ip_address)
 
     def unignore_user_ip(self, user=None, ip_address=None):
-        return self._remove_user_ip_from_list("ignore", user, ip_address)
+        ip_addresses = {ip_address} if ip_address else set()
+        return self._remove_user_ips_from_list(config.sections["server"]["ipignorelist"], user, ip_addresses)
 
     def _ignore_unignore_user_ip_callback(self, user, ip_address):
 
         request = self.ip_ignore_requested.pop(user, None)
 
-        if request is None:
-            return
-
-        if request == "remove":
-            self.unignore_user_ip(user, ip_address)
-        else:
+        if request == "add":
             self.ignore_user_ip(user, ip_address)
 
-    def get_cached_ignored_user_ip(self, user):
-        return self._get_cached_user_ip(user, config.sections["server"]["ipignorelist"])
+        elif request == "remove":
+            self.unignore_user_ip(user, ip_address)
+
+    def get_previous_ignored_user_ips(self, user):
+        return self._get_previous_user_ip_addresses(user, config.sections["server"]["ipignorelist"])
 
     def is_user_ignored(self, user):
         return user in config.sections["server"]["ignorelist"]
 
-    def is_ip_ignored(self, address):
-        return self._is_ip_in_list(address, config.sections["server"]["ipignorelist"])
-
-    def is_user_ip_ignored(self, user):
-
-        user_address = core.user_addresses.get(user)
-
-        if user_address:
-            ip_address, _port = user_address
-
-            if self.is_ip_ignored(ip_address):
-                return True
-
-        return False
+    def is_user_ip_ignored(self, user=None, ip_address=None):
+        ip_addresses = {ip_address} if ip_address else set()
+        return self._check_user_ips_filtered(config.sections["server"]["ipignorelist"], user, ip_addresses)
