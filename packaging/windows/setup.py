@@ -293,10 +293,10 @@ setup(
     version=VERSION,
     options={
         "build": dict(
-            build_base=BUILD_PATH,
-            build_exe=os.path.join(BUILD_PATH, "package", APPLICATION_NAME)
+            build_base=BUILD_PATH
         ),
         "build_exe": dict(
+            build_exe=os.path.join(BUILD_PATH, "package", APPLICATION_NAME),
             packages=[MODULE_NAME, "gi"],
             excludes=["tkinter"],
             include_files=include_files,
