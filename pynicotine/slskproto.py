@@ -406,6 +406,7 @@ class SlskProtoThread(threading.Thread):
         self._pending_init_msgs.clear()
         self._token_init_msgs.clear()
         self._username_init_msgs.clear()
+        self.user_addresses.clear()
 
         # Inform threads we've disconnected
         self.exit.set()
