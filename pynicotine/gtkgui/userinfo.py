@@ -423,7 +423,7 @@ class UserInfo:
 
         self.indeterminate_progress = False
 
-        self.userinfos.request_tab_hilite(self.container)
+        self.userinfos.request_tab_changed(self.container)
         self.progress_bar.set_fraction(1.0)
 
         self.refresh_button.set_sensitive(True)

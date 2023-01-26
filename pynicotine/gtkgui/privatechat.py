@@ -60,6 +60,7 @@ class PrivateChats(IconNotebook):
             switch_page_callback=self.on_switch_chat
         )
 
+        self.highlighted_users = []
         self.completion = ChatCompletion()
         self.history = ChatHistory(window)
         self.command_help = None
@@ -99,8 +100,8 @@ class PrivateChats(IconNotebook):
             if not tab.loaded:
                 tab.load()
 
-            # Remove hilite if selected tab belongs to a user in the hilite list
-            self.window.application.notifications.clear("private", user=user)
+            # Remove highlight if selected tab belongs to a user in the list of highlights
+            self.unhighlight_user(user)
             break
 
     def on_get_private_chat(self, *_args):
@@ -129,8 +130,8 @@ class PrivateChats(IconNotebook):
 
         for user, tab in self.pages.items():
             if tab.container == page:
-                # Remove hilite
-                self.window.application.notifications.clear("private", user=user)
+                # Remove highlight
+                self.unhighlight_user(user)
                 break
 
     def user_status(self, msg):
@@ -168,6 +169,27 @@ class PrivateChats(IconNotebook):
         page.clear()
         self.remove_page(page.container)
         del self.pages[user]
+
+    def highlight_user(self, user):
+
+        if not user or user in self.highlighted_users:
+            return
+
+        self.highlighted_users.append(user)
+        self.window.application.notifications.update_title()
+        self.window.application.tray_icon.update_icon()
+
+        if config.sections["ui"]["urgencyhint"] and not self.window.is_active():
+            self.window.application.notifications.set_urgency_hint(True)
+
+    def unhighlight_user(self, user):
+
+        if user not in self.highlighted_users:
+            return
+
+        self.highlighted_users.remove(user)
+        self.window.application.notifications.update_title()
+        self.window.application.tray_icon.update_icon()
 
     def echo_private_message(self, user, text, message_type):
 
@@ -328,16 +350,16 @@ class PrivateChat:
                 except UnicodeDecodeError:
                     line = line.decode("latin-1")
 
-                self.chat_view.append_line(line, tag=self.tag_hilite)
+                self.chat_view.append_line(line, tag=self.tag_highlight)
 
     def server_login(self):
         timestamp_format = config.sections["logging"]["private_timestamp"]
-        self.chat_view.append_line(_("--- reconnected ---"), tag=self.tag_hilite, timestamp_format=timestamp_format)
+        self.chat_view.append_line(_("--- reconnected ---"), tag=self.tag_highlight, timestamp_format=timestamp_format)
 
     def server_disconnect(self):
 
         timestamp_format = config.sections["logging"]["private_timestamp"]
-        self.chat_view.append_line(_("--- disconnected ---"), tag=self.tag_hilite, timestamp_format=timestamp_format)
+        self.chat_view.append_line(_("--- disconnected ---"), tag=self.tag_highlight, timestamp_format=timestamp_format)
         self.offline_message = False
 
         self.update_remote_username_tag(status=UserStatus.OFFLINE)
@@ -346,7 +368,7 @@ class PrivateChat:
     def clear(self):
 
         self.chat_view.clear()
-        self.window.application.notifications.clear("private", user=self.user)
+        self.chats.unhighlight_user(self.user)
 
         for menu in (self.popup_menu_user_chat, self.popup_menu_user_tab, self.popup_menu):
             menu.clear()
@@ -391,7 +413,7 @@ class PrivateChat:
 
     def show_notification(self, text):
 
-        self.chats.request_tab_hilite(self.container)
+        self.chats.request_tab_changed(self.container)
 
         if (self.chats.get_current_page() == self.container
                 and self.window.current_page_id == self.window.private_page.id and self.window.is_active()):
@@ -399,7 +421,7 @@ class PrivateChat:
             return
 
         # Update tray icon and show urgency hint
-        self.window.application.notifications.add("private", self.user)
+        self.chats.highlight_user(self.user)
 
         if config.sections["notifications"]["notification_popup_private_message"]:
             core.notifications.show_private_chat_notification(
@@ -428,7 +450,7 @@ class PrivateChat:
         timestamp_format = config.sections["logging"]["private_timestamp"]
 
         if not newmessage:
-            tag = usertag = self.tag_hilite
+            tag = usertag = self.tag_highlight
 
             if not self.offline_message:
                 self.chat_view.append_line(_("* Messages sent while you were offline"), tag=tag,
@@ -501,7 +523,7 @@ class PrivateChat:
         self.tag_local = self.chat_view.create_tag("chatlocal")
         self.tag_command = self.chat_view.create_tag("chatcommand")
         self.tag_action = self.chat_view.create_tag("chatme")
-        self.tag_hilite = self.chat_view.create_tag("chathilite")
+        self.tag_highlight = self.chat_view.create_tag("chathilite")
 
         color = USER_STATUS_COLORS.get(self.status)
         self.tag_username = self.chat_view.create_tag(color, callback=self.user_name_event, username=self.user)
@@ -526,7 +548,7 @@ class PrivateChat:
 
     def update_tags(self):
 
-        for tag in (self.tag_remote, self.tag_local, self.tag_command, self.tag_action, self.tag_hilite,
+        for tag in (self.tag_remote, self.tag_local, self.tag_command, self.tag_action, self.tag_highlight,
                     self.tag_username, self.tag_my_username):
             self.chat_view.update_tag(tag)
 

@@ -27,21 +27,21 @@ class Plugin(BasePlugin):
         super().__init__(*args, **kwargs)
 
         self.settings = {
-            'file': '/home/example/file.pdf',
-            'folder': '/home/example/folder',
-            'image': '/home/example/image.jpg',
+            "file": "/home/example/file.pdf",
+            "folder": "/home/example/folder",
+            "image": "/home/example/image.jpg",
         }
         self.metasettings = {
-            'file': {
-                'description': 'Select a file',
-                'type': 'file',
-                'chooser': 'file'},
-            'folder': {
-                'description': 'Select a folder',
-                'type': 'file',
-                'chooser': 'folder'},
-            'image': {
-                'description': 'Select an image',
-                'type': 'file',
-                'chooser': 'image'},
+            "file": {
+                "description": "Select a file",
+                "type": "file",
+                "chooser": "file"},
+            "folder": {
+                "description": "Select a folder",
+                "type": "file",
+                "chooser": "folder"},
+            "image": {
+                "description": "Select an image",
+                "type": "file",
+                "chooser": "image"},
         }
