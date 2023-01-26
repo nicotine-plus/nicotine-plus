@@ -25,7 +25,7 @@ from pynicotine.core import core
 from pynicotine.slskmessages import increment_token
 
 SEARCH_TEXT = '70 gwen "test" -mp3 -nothanks a:b;c+d +++---}[ *ello [[ @@ auto -no yes'
-SEARCH_MODE = 'global'
+SEARCH_MODE = "global"
 
 
 class SearchTest(TestCase):

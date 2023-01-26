@@ -32,15 +32,15 @@ class Plugin(BasePlugin):
         super().__init__(*args, **kwargs)
 
         self.settings = {
-            'reddit_links': 3
+            "reddit_links": 3
         }
         self.metasettings = {
-            'reddit_links': {
-                'description': 'Maximum number of links to provide',
-                'type': 'integer'
+            "reddit_links": {
+                "description": "Maximum number of links to provide",
+                "type": "integer"
             }
         }
-        self.__publiccommands__ = self.__privatecommands__ = [('reddit', self.reddit_command)]
+        self.__publiccommands__ = self.__privatecommands__ = [("reddit", self.reddit_command)]
 
     def reddit_command(self, _source, subreddit):
 
@@ -51,16 +51,16 @@ class Plugin(BasePlugin):
 
         except Exception as error:
             self.log("Could not connect to Reddit: %(error)s", {"error": error})
-            return returncode['zap']
+            return returncode["zap"]
 
         try:
             response = json.loads(response_body)
 
-            for post in islice(response['data']['children'], self.settings['reddit_links']):
-                post_data = post['data']
-                self.echo_message("%s: %s" % (post_data['title'], post_data['url']))
+            for post in islice(response["data"]["children"], self.settings["reddit_links"]):
+                post_data = post["data"]
+                self.echo_message("%s: %s" % (post_data["title"], post_data["url"]))
 
         except Exception as error:
             self.log("Failed to parse response from Reddit: %(error)s", {"error": error})
 
-        return returncode['zap']
+        return returncode["zap"]

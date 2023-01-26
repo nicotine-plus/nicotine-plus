@@ -44,12 +44,12 @@ class Plugin(BasePlugin):
             self.log("Forcing collection of generation %s...", str(i))
             self.log("Collected %s objects", str(gc.collect(i)))
 
-        unclaimed = ['A total of %s objects that could not be freed:' % len(gc.garbage)]
+        unclaimed = ["A total of %s objects that could not be freed:" % len(gc.garbage)]
 
         for i in gc.garbage:
-            unclaimed.append('%s: %s (%s)' % (type(i), str(i), repr(i)))
+            unclaimed.append("%s: %s (%s)" % (type(i), str(i), repr(i)))
 
-        self.log('\n'.join(unclaimed))
+        self.log("\n".join(unclaimed))
         self.log("Done.")
 
     def disable(self):
@@ -60,10 +60,10 @@ class Plugin(BasePlugin):
         self.log("[ Top 50 memory allocations ]\n")
 
         for i in range(50):
-            memory_stat = snapshot.statistics('lineno')[i]
+            memory_stat = snapshot.statistics("lineno")[i]
             self.log(str(memory_stat))
 
-            tb_stat = snapshot.statistics('traceback')[i]
+            tb_stat = snapshot.statistics("traceback")[i]
             self.log("%s memory blocks: %.1f KiB", (tb_stat.count, tb_stat.size / 1024))
             for line in tb_stat.traceback.format():
                 self.log(line)
