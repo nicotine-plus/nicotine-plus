@@ -33,6 +33,7 @@ class PrivateChat:
         self.completion_list = []
         self.private_message_queue = {}
         self.away_message_users = set()
+        self.highlighted_users = []
         self.users = set()
 
         # Clear list of previously open chats if we don't want to restore them
@@ -107,6 +108,22 @@ class PrivateChat:
         self.add_user(user)
         events.emit("private-chat-show-user", user, switch_page)
         core.watch_user(user)
+
+    def highlight_user(self, user):
+
+        if not user or user in self.highlighted_users:
+            return
+
+        self.highlighted_users.append(user)
+        events.emit("private-chat-highlight-user", user)
+
+    def unhighlight_user(self, user):
+
+        if user not in self.highlighted_users:
+            return
+
+        self.highlighted_users.remove(user)
+        events.emit("private-chat-unhighlight-user", user)
 
     def clear_private_messages(self, user):
         events.emit("clear-private-messages", user)

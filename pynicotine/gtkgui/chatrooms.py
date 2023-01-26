@@ -161,8 +161,8 @@ class ChatRooms(IconNotebook):
             if not tab.loaded:
                 tab.load()
 
-            # Remove hilite
-            self.window.application.notifications.clear("rooms", room=room)
+            # Remove highlight
+            core.chatrooms.unhighlight_room(room)
             break
 
     def on_create_room_response(self, dialog, response_id, room):
@@ -212,8 +212,8 @@ class ChatRooms(IconNotebook):
 
         for room, tab in self.pages.items():
             if tab.container == page:
-                # Remove hilite
-                self.window.application.notifications.clear("rooms", room=room)
+                # Remove highlight
+                core.chatrooms.unhighlight_room(room)
                 break
 
     def room_list(self, msg):
@@ -834,7 +834,7 @@ class ChatRoom:
 
         if mentioned:
             # We were mentioned, update tray icon and show urgency hint
-            self.window.application.notifications.add("rooms", user, room)
+            core.chatrooms.highlight_room(room)
             return
 
         if not is_global and config.sections["notifications"]["notification_popup_chatroom"]:

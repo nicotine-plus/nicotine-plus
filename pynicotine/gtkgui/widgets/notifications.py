@@ -44,40 +44,23 @@ class Notifications:
             self.win_notification = WinNotify(self.application.tray_icon)
 
         for event_name, callback in (
+            ("highlight-room", self._highlight_item),
+            ("private-chat-highlight-user", self._highlight_item),
+            ("private-chat-unhighlight-user", self._unhighlight_item),
             ("show-notification", self._show_notification),
             ("show-chatroom-notification", self._show_chatroom_notification),
             ("show-download-notification", self._show_download_notification),
             ("show-private-chat-notification", self._show_private_chat_notification),
-            ("show-search-notification", self._show_search_notification)
+            ("show-search-notification", self._show_search_notification),
+            ("unhighlight-room", self._unhighlight_item)
         ):
             events.connect(event_name, callback)
 
-    def add(self, location, user, room=None):
-
-        item = room if location == "rooms" else user
-
-        if core.notifications.add_hilite_item(location, item):
-            self.application.tray_icon.update_icon()
-
-        if config.sections["ui"]["urgencyhint"] and not self.application.window.is_active():
-            self.set_urgency_hint(True)
-
-        self.set_title(user)
-
-    def clear(self, location, user=None, room=None):
-
-        item = room if location == "rooms" else user
-
-        if core.notifications.remove_hilite_item(location, item):
-            self.set_title(item)
-            self.application.tray_icon.update_icon()
-
-    def set_title(self, user=None):
+    def update_title(self):
 
         app_name = config.application_name
 
-        if (not core.notifications.chat_hilites["rooms"]
-                and not core.notifications.chat_hilites["private"]):
+        if not core.chatrooms.highlighted_rooms and not core.privatechat.highlighted_users:
             # Reset Title
             self.application.window.set_title(app_name)
             return
@@ -85,16 +68,16 @@ class Notifications:
         if not config.sections["notifications"]["notification_window_title"]:
             return
 
-        if core.notifications.chat_hilites["private"]:
+        if core.privatechat.highlighted_users:
             # Private Chats have a higher priority
-            user = core.notifications.chat_hilites["private"][-1]
+            user = core.privatechat.highlighted_users[-1]
             notification_text = _("Private Message from %(user)s") % {"user": user}
 
             self.application.window.set_title(f"{app_name} - {notification_text}")
 
-        elif core.notifications.chat_hilites["rooms"]:
+        elif core.chatrooms.highlighted_rooms:
             # Allow for the possibility the username is not available
-            room = core.notifications.chat_hilites["rooms"][-1]
+            room = core.chatrooms.highlighted_rooms[-1]
             notification_text = _("Mentioned by %(user)s in Room %(room)s") % {"user": user, "room": room}
 
             self.application.window.set_title(f"{app_name} - {notification_text}")
@@ -109,6 +92,18 @@ class Notifications:
         except AttributeError:
             # No support for urgency hints
             pass
+
+    def _highlight_item(self, *_args):
+
+        if config.sections["ui"]["urgencyhint"] and not self.application.window.is_active():
+            self.set_urgency_hint(True)
+
+        self.update_title()
+        self.application.tray_icon.update_icon()
+
+    def _unhighlight_item(self, *_args):
+        self.update_title()
+        self.application.tray_icon.update_icon()
 
     def _show_notification(self, message, title=None, action=None, action_target=None, high_priority=False):
 

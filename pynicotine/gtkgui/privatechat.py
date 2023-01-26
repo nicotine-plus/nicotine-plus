@@ -99,8 +99,8 @@ class PrivateChats(IconNotebook):
             if not tab.loaded:
                 tab.load()
 
-            # Remove hilite if selected tab belongs to a user in the hilite list
-            self.window.application.notifications.clear("private", user=user)
+            # Remove highlight if selected tab belongs to a user in the list of highlights
+            core.privatechat.unhighlight_user(user)
             break
 
     def on_get_private_chat(self, *_args):
@@ -130,7 +130,7 @@ class PrivateChats(IconNotebook):
         for user, tab in self.pages.items():
             if tab.container == page:
                 # Remove hilite
-                self.window.application.notifications.clear("private", user=user)
+                core.privatechat.unhighlight_user(user)
                 break
 
     def user_status(self, msg):
@@ -346,7 +346,7 @@ class PrivateChat:
     def clear(self):
 
         self.chat_view.clear()
-        self.window.application.notifications.clear("private", user=self.user)
+        core.privatechat.unhighlight_user(self.user)
 
         for menu in (self.popup_menu_user_chat, self.popup_menu_user_tab, self.popup_menu):
             menu.clear()
@@ -399,7 +399,7 @@ class PrivateChat:
             return
 
         # Update tray icon and show urgency hint
-        self.window.application.notifications.add("private", self.user)
+        core.privatechat.highlight_user(self.user)
 
         if config.sections["notifications"]["notification_popup_private_message"]:
             core.notifications.show_private_chat_notification(
