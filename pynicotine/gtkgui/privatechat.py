@@ -129,7 +129,7 @@ class PrivateChats(IconNotebook):
 
         for user, tab in self.pages.items():
             if tab.container == page:
-                # Remove hilite
+                # Remove highlight
                 core.privatechat.unhighlight_user(user)
                 break
 
@@ -328,16 +328,16 @@ class PrivateChat:
                 except UnicodeDecodeError:
                     line = line.decode("latin-1")
 
-                self.chat_view.append_line(line, tag=self.tag_hilite)
+                self.chat_view.append_line(line, tag=self.tag_highlight)
 
     def server_login(self):
         timestamp_format = config.sections["logging"]["private_timestamp"]
-        self.chat_view.append_line(_("--- reconnected ---"), tag=self.tag_hilite, timestamp_format=timestamp_format)
+        self.chat_view.append_line(_("--- reconnected ---"), tag=self.tag_highlight, timestamp_format=timestamp_format)
 
     def server_disconnect(self):
 
         timestamp_format = config.sections["logging"]["private_timestamp"]
-        self.chat_view.append_line(_("--- disconnected ---"), tag=self.tag_hilite, timestamp_format=timestamp_format)
+        self.chat_view.append_line(_("--- disconnected ---"), tag=self.tag_highlight, timestamp_format=timestamp_format)
         self.offline_message = False
 
         self.update_remote_username_tag(status=UserStatus.OFFLINE)
@@ -391,7 +391,7 @@ class PrivateChat:
 
     def show_notification(self, text):
 
-        self.chats.request_tab_hilite(self.container)
+        self.chats.request_tab_changed(self.container)
 
         if (self.chats.get_current_page() == self.container
                 and self.window.current_page_id == self.window.private_page.id and self.window.is_active()):
@@ -428,7 +428,7 @@ class PrivateChat:
         timestamp_format = config.sections["logging"]["private_timestamp"]
 
         if not newmessage:
-            tag = usertag = self.tag_hilite
+            tag = usertag = self.tag_highlight
 
             if not self.offline_message:
                 self.chat_view.append_line(_("* Messages sent while you were offline"), tag=tag,
@@ -501,7 +501,7 @@ class PrivateChat:
         self.tag_local = self.chat_view.create_tag("chatlocal")
         self.tag_command = self.chat_view.create_tag("chatcommand")
         self.tag_action = self.chat_view.create_tag("chatme")
-        self.tag_hilite = self.chat_view.create_tag("chathilite")
+        self.tag_highlight = self.chat_view.create_tag("chathilite")
 
         color = USER_STATUS_COLORS.get(self.status)
         self.tag_username = self.chat_view.create_tag(color, callback=self.user_name_event, username=self.user)
@@ -526,7 +526,7 @@ class PrivateChat:
 
     def update_tags(self):
 
-        for tag in (self.tag_remote, self.tag_local, self.tag_command, self.tag_action, self.tag_hilite,
+        for tag in (self.tag_remote, self.tag_local, self.tag_command, self.tag_action, self.tag_highlight,
                     self.tag_username, self.tag_my_username):
             self.chat_view.update_tag(tag)
 
