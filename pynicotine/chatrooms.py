@@ -30,7 +30,6 @@ class ChatRooms:
 
         self.server_rooms = set()
         self.joined_rooms = set()
-        self.highlighted_rooms = []
         self.private_rooms = config.sections["private_rooms"]["rooms"]
         self.completion_list = []
 
@@ -62,7 +61,6 @@ class ChatRooms:
 
     def _quit(self):
         self.joined_rooms.clear()
-        self.highlighted_rooms.clear()
         self.completion_list.clear()
 
     def _server_login(self, msg):
@@ -111,22 +109,6 @@ class ChatRooms:
             del config.sections["columns"]["chat_room"][room]
 
         events.emit("remove-room", room)
-
-    def highlight_room(self, room):
-
-        if not room or room in self.highlighted_rooms:
-            return
-
-        self.highlighted_rooms.append(room)
-        events.emit("highlight-room", room)
-
-    def unhighlight_room(self, room):
-
-        if room not in self.highlighted_rooms:
-            return
-
-        self.highlighted_rooms.remove(room)
-        events.emit("unhighlight-room", room)
 
     def clear_room_messages(self, room):
         events.emit("clear-room-messages", room)

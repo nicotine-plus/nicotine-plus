@@ -78,6 +78,7 @@ class ChatRooms(IconNotebook):
         )
 
         self.autojoin_rooms = set()
+        self.highlighted_rooms = []
         self.completion = ChatCompletion()
         self.roomlist = RoomList(window)
         self.command_help = None
@@ -162,7 +163,7 @@ class ChatRooms(IconNotebook):
                 tab.load()
 
             # Remove highlight
-            core.chatrooms.unhighlight_room(room)
+            self.unhighlight_room(room)
             break
 
     def on_create_room_response(self, dialog, response_id, room):
@@ -213,7 +214,7 @@ class ChatRooms(IconNotebook):
         for room, tab in self.pages.items():
             if tab.container == page:
                 # Remove highlight
-                core.chatrooms.unhighlight_room(room)
+                self.unhighlight_room(room)
                 break
 
     def room_list(self, msg):
@@ -251,6 +252,27 @@ class ChatRooms(IconNotebook):
 
             for joined_room in self.pages:
                 self.window.room_search_combobox.append_text(joined_room)
+
+    def highlight_room(self, room):
+
+        if not room or room in self.highlighted_rooms:
+            return
+
+        self.highlighted_rooms.append(room)
+        self.window.application.notifications.update_title()
+        self.window.application.tray_icon.update_icon()
+
+        if config.sections["ui"]["urgencyhint"] and not self.window.is_active():
+            self.window.application.notifications.set_urgency_hint(True)
+
+    def unhighlight_room(self, room):
+
+        if room not in self.highlighted_rooms:
+            return
+
+        self.highlighted_rooms.remove(room)
+        self.window.application.notifications.update_title()
+        self.window.application.tray_icon.update_icon()
 
     def join_room(self, msg):
 
@@ -833,7 +855,7 @@ class ChatRoom:
 
         if mentioned:
             # We were mentioned, update tray icon and show urgency hint
-            core.chatrooms.highlight_room(room)
+            self.chatrooms.highlight_room(room)
             return
 
         if not is_global and config.sections["notifications"]["notification_popup_chatroom"]:

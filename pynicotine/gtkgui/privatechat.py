@@ -60,6 +60,7 @@ class PrivateChats(IconNotebook):
             switch_page_callback=self.on_switch_chat
         )
 
+        self.highlighted_users = []
         self.completion = ChatCompletion()
         self.history = ChatHistory(window)
         self.command_help = None
@@ -100,7 +101,7 @@ class PrivateChats(IconNotebook):
                 tab.load()
 
             # Remove highlight if selected tab belongs to a user in the list of highlights
-            core.privatechat.unhighlight_user(user)
+            self.unhighlight_user(user)
             break
 
     def on_get_private_chat(self, *_args):
@@ -130,7 +131,7 @@ class PrivateChats(IconNotebook):
         for user, tab in self.pages.items():
             if tab.container == page:
                 # Remove highlight
-                core.privatechat.unhighlight_user(user)
+                self.unhighlight_user(user)
                 break
 
     def user_status(self, msg):
@@ -168,6 +169,27 @@ class PrivateChats(IconNotebook):
         page.clear()
         self.remove_page(page.container)
         del self.pages[user]
+
+    def highlight_user(self, user):
+
+        if not user or user in self.highlighted_users:
+            return
+
+        self.highlighted_users.append(user)
+        self.window.application.notifications.update_title()
+        self.window.application.tray_icon.update_icon()
+
+        if config.sections["ui"]["urgencyhint"] and not self.window.is_active():
+            self.window.application.notifications.set_urgency_hint(True)
+
+    def unhighlight_user(self, user):
+
+        if user not in self.highlighted_users:
+            return
+
+        self.highlighted_users.remove(user)
+        self.window.application.notifications.update_title()
+        self.window.application.tray_icon.update_icon()
 
     def echo_private_message(self, user, text, message_type):
 
@@ -346,7 +368,7 @@ class PrivateChat:
     def clear(self):
 
         self.chat_view.clear()
-        core.privatechat.unhighlight_user(self.user)
+        self.chats.unhighlight_user(self.user)
 
         for menu in (self.popup_menu_user_chat, self.popup_menu_user_tab, self.popup_menu):
             menu.clear()
@@ -399,7 +421,7 @@ class PrivateChat:
             return
 
         # Update tray icon and show urgency hint
-        core.privatechat.highlight_user(self.user)
+        self.chats.highlight_user(self.user)
 
         if config.sections["notifications"]["notification_popup_private_message"]:
             core.notifications.show_private_chat_notification(

@@ -145,7 +145,9 @@ class BaseImplementation:
             return
 
         # Check for highlights, and display highlight icon if there is a highlighted room or private chat
-        if core.chatrooms.highlighted_rooms or core.privatechat.highlighted_users:
+        if (self.application.window
+                and (self.application.window.chatrooms.highlighted_rooms
+                     or self.application.window.privatechat.highlighted_users)):
             icon_name = "msg"
 
         elif core.user_status == UserStatus.ONLINE:

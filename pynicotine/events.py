@@ -79,7 +79,6 @@ EVENT_NAMES = {
     "clear-room-messages",
     "echo-room-message",
     "global-room-message",
-    "highlight-room",
     "join-room",
     "leave-room",
     "private-room-add-operator",
@@ -102,7 +101,6 @@ EVENT_NAMES = {
     "ticker-add",
     "ticker-remove",
     "ticker-set",
-    "unhighlight-room",
     "user-joined-room",
     "user-left-room",
 
@@ -128,10 +126,8 @@ EVENT_NAMES = {
     "echo-private-message",
     "message-user",
     "private-chat-completion-list",
-    "private-chat-highlight-user",
     "private-chat-remove-user",
     "private-chat-show-user",
-    "private-chat-unhighlight-user",
     "send-private-message",
 
     # Search

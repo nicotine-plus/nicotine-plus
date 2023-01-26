@@ -28,7 +28,6 @@ from gi.repository import Gio
 from gi.repository import GLib
 
 from pynicotine.config import config
-from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
 from pynicotine.utils import truncate_string_byte
@@ -44,15 +43,11 @@ class Notifications:
             self.win_notification = WinNotify(self.application.tray_icon)
 
         for event_name, callback in (
-            ("highlight-room", self._highlight_item),
-            ("private-chat-highlight-user", self._highlight_item),
-            ("private-chat-unhighlight-user", self._unhighlight_item),
             ("show-notification", self._show_notification),
             ("show-chatroom-notification", self._show_chatroom_notification),
             ("show-download-notification", self._show_download_notification),
             ("show-private-chat-notification", self._show_private_chat_notification),
-            ("show-search-notification", self._show_search_notification),
-            ("unhighlight-room", self._unhighlight_item)
+            ("show-search-notification", self._show_search_notification)
         ):
             events.connect(event_name, callback)
 
@@ -60,7 +55,8 @@ class Notifications:
 
         app_name = config.application_name
 
-        if not core.chatrooms.highlighted_rooms and not core.privatechat.highlighted_users:
+        if (not self.application.window.chatrooms.highlighted_rooms
+                and not self.application.window.privatechat.highlighted_users):
             # Reset Title
             self.application.window.set_title(app_name)
             return
@@ -68,16 +64,16 @@ class Notifications:
         if not config.sections["notifications"]["notification_window_title"]:
             return
 
-        if core.privatechat.highlighted_users:
+        if self.application.window.privatechat.highlighted_users:
             # Private Chats have a higher priority
-            user = core.privatechat.highlighted_users[-1]
+            user = self.application.window.privatechat.highlighted_users[-1]
             notification_text = _("Private Message from %(user)s") % {"user": user}
 
             self.application.window.set_title(f"{app_name} - {notification_text}")
 
-        elif core.chatrooms.highlighted_rooms:
+        elif self.application.window.chatrooms.highlighted_rooms:
             # Allow for the possibility the username is not available
-            room = core.chatrooms.highlighted_rooms[-1]
+            room = self.application.window.chatrooms.highlighted_rooms[-1]
             notification_text = _("Mentioned by %(user)s in Room %(room)s") % {"user": user, "room": room}
 
             self.application.window.set_title(f"{app_name} - {notification_text}")
@@ -92,18 +88,6 @@ class Notifications:
         except AttributeError:
             # No support for urgency hints
             pass
-
-    def _highlight_item(self, *_args):
-
-        if config.sections["ui"]["urgencyhint"] and not self.application.window.is_active():
-            self.set_urgency_hint(True)
-
-        self.update_title()
-        self.application.tray_icon.update_icon()
-
-    def _unhighlight_item(self, *_args):
-        self.update_title()
-        self.application.tray_icon.update_icon()
 
     def _show_notification(self, message, title=None, action=None, action_target=None, high_priority=False):
 
