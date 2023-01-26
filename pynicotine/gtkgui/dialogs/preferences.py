@@ -888,7 +888,7 @@ class IgnoredUsersPage:
             return
 
         if ip_address not in self.ignored_ips:
-            user = core.network_filter.get_known_username(ip_address) or ""
+            user = core.network_filter.get_online_username(ip_address) or ""
             self.ignored_ips[ip_address] = user
             self.ignored_ips_list_view.add_row([ip_address, user])
 
@@ -1031,7 +1031,7 @@ class BannedUsersPage:
             return
 
         if ip_address not in self.banned_ips:
-            user = core.network_filter.get_known_username(ip_address) or ""
+            user = core.network_filter.get_online_username(ip_address) or ""
             self.banned_ips[ip_address] = user
             self.banned_ips_list_view.add_row([ip_address, user])
             self.ip_ban_required = True
