@@ -144,10 +144,10 @@ class BaseImplementation:
         if not force_update and not self.is_visible():
             return
 
-        # Check for hilites, and display hilite icon if there is a room or private hilite
-        if (core.notifications
-                and (core.notifications.chat_hilites["rooms"]
-                     or core.notifications.chat_hilites["private"])):
+        # Check for highlights, and display highlight icon if there is a highlighted room or private chat
+        if (self.application.window
+                and (self.application.window.chatrooms.highlighted_rooms
+                     or self.application.window.privatechat.highlighted_users)):
             icon_name = "msg"
 
         elif core.user_status == UserStatus.ONLINE:

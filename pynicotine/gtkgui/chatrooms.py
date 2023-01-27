@@ -78,6 +78,7 @@ class ChatRooms(IconNotebook):
         )
 
         self.autojoin_rooms = set()
+        self.highlighted_rooms = []
         self.completion = ChatCompletion()
         self.roomlist = RoomList(window)
         self.command_help = None
@@ -161,8 +162,8 @@ class ChatRooms(IconNotebook):
             if not tab.loaded:
                 tab.load()
 
-            # Remove hilite
-            self.window.application.notifications.clear("rooms", room=room)
+            # Remove highlight
+            self.unhighlight_room(room)
             break
 
     def on_create_room_response(self, dialog, response_id, room):
@@ -212,8 +213,8 @@ class ChatRooms(IconNotebook):
 
         for room, tab in self.pages.items():
             if tab.container == page:
-                # Remove hilite
-                self.window.application.notifications.clear("rooms", room=room)
+                # Remove highlight
+                self.unhighlight_room(room)
                 break
 
     def room_list(self, msg):
@@ -251,6 +252,27 @@ class ChatRooms(IconNotebook):
 
             for joined_room in self.pages:
                 self.window.room_search_combobox.append_text(joined_room)
+
+    def highlight_room(self, room):
+
+        if not room or room in self.highlighted_rooms:
+            return
+
+        self.highlighted_rooms.append(room)
+        self.window.application.notifications.update_title()
+        self.window.application.tray_icon.update_icon()
+
+        if config.sections["ui"]["urgencyhint"] and not self.window.is_active():
+            self.window.application.notifications.set_urgency_hint(True)
+
+    def unhighlight_room(self, room):
+
+        if room not in self.highlighted_rooms:
+            return
+
+        self.highlighted_rooms.remove(room)
+        self.window.application.notifications.update_title()
+        self.window.application.tray_icon.update_icon()
 
     def join_room(self, msg):
 
@@ -714,7 +736,7 @@ class ChatRoom:
                             tag = self.tag_local
 
                         elif self.find_whole_word(login.lower(), line.lower(), after=end) > -1:
-                            tag = self.tag_hilite
+                            tag = self.tag_highlight
 
                         else:
                             tag = self.tag_remote
@@ -730,7 +752,7 @@ class ChatRoom:
 
             if lines:
                 timestamp_format = config.sections["logging"]["rooms_timestamp"]
-                self.chat_view.append_line(_("--- old messages above ---"), tag=self.tag_hilite,
+                self.chat_view.append_line(_("--- old messages above ---"), tag=self.tag_highlight,
                                            timestamp_format=timestamp_format)
 
     def populate_user_menu(self, user, menu, menu_private_rooms):
@@ -809,9 +831,8 @@ class ChatRoom:
         if user == login:
             return
 
-        mentioned = (tag == self.tag_hilite)
-
-        self.chatrooms.request_tab_hilite(self.container, mentioned)
+        mentioned = (tag == self.tag_highlight)
+        self.chatrooms.request_tab_changed(self.container, is_important=mentioned)
 
         if is_global and room in core.chatrooms.joined_rooms:
             # Don't show notifications about the Public feed that's duplicated in an open tab
@@ -834,7 +855,7 @@ class ChatRoom:
 
         if mentioned:
             # We were mentioned, update tray icon and show urgency hint
-            self.window.application.notifications.add("rooms", user, room)
+            self.chatrooms.highlight_room(room)
             return
 
         if not is_global and config.sections["notifications"]["notification_popup_chatroom"]:
@@ -874,7 +895,7 @@ class ChatRoom:
         if user == login_username:
             tag = self.tag_local
         elif self.find_whole_word(login_username.lower(), text.lower()) > -1:
-            tag = self.tag_hilite
+            tag = self.tag_highlight
         else:
             tag = self.tag_remote
 
@@ -1073,7 +1094,7 @@ class ChatRoom:
         self.tag_local = self.chat_view.create_tag("chatlocal")
         self.tag_command = self.chat_view.create_tag("chatcommand")
         self.tag_action = self.chat_view.create_tag("chatme")
-        self.tag_hilite = self.chat_view.create_tag("chathilite")
+        self.tag_highlight = self.chat_view.create_tag("chathilite")
 
         self.tag_users = {}
 
@@ -1100,7 +1121,8 @@ class ChatRoom:
 
     def update_tags(self):
 
-        for tag in (self.tag_remote, self.tag_local, self.tag_command, self.tag_action, self.tag_hilite, self.tag_log):
+        for tag in (self.tag_remote, self.tag_local, self.tag_command, self.tag_action,
+                    self.tag_highlight, self.tag_log):
             self.chat_view.update_tag(tag)
 
         for tag in self.tag_users.values():
@@ -1122,7 +1144,7 @@ class ChatRoom:
             del config.sections["columns"]["chat_room"][self.room]
 
         timestamp_format = config.sections["logging"]["rooms_timestamp"]
-        self.chat_view.append_line(_("--- disconnected ---"), tag=self.tag_hilite, timestamp_format=timestamp_format)
+        self.chat_view.append_line(_("--- disconnected ---"), tag=self.tag_highlight, timestamp_format=timestamp_format)
 
         for username in self.tag_users:
             self.update_user_tag(username)
@@ -1147,7 +1169,7 @@ class ChatRoom:
 
         # Spit this line into chat log
         timestamp_format = config.sections["logging"]["rooms_timestamp"]
-        self.chat_view.append_line(_("--- reconnected ---"), tag=self.tag_hilite, timestamp_format=timestamp_format)
+        self.chat_view.append_line(_("--- reconnected ---"), tag=self.tag_highlight, timestamp_format=timestamp_format)
 
         # Update user count
         self.count_users()

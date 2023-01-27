@@ -109,10 +109,6 @@ class ChatEntry:
             if arg_self:
                 core.userbrowse.browse_user(arg_self)
 
-        elif cmd == "/ip":
-            if arg_self:
-                core.request_ip_address(arg_self)
-
         elif cmd in ("/m", "/msg"):
             if args:
                 args_split = args.split(" ", maxsplit=1)

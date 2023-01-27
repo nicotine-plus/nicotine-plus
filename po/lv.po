@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2023-01-03 00:24+0000\n"
+"PO-Revision-Date: 2023-01-26 11:47+0000\n"
 "Last-Translator: Pagal3 <p4gal3@protonmail.com>\n"
 "Language-Team: Latvian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/lv/>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n % 10 == 0 || n % 100 >= 11 && n % 100 <= "
 "19) ? 0 : ((n % 10 == 1 && n % 100 != 11) ? 1 : 2);\n"
-"X-Generator: Weblate 4.15.1-dev\n"
+"X-Generator: Weblate 4.16-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -170,7 +170,7 @@ msgstr "Notiek iziešana no %(program)s %(version)s, %(status)s…"
 
 #: pynicotine/core.py:215
 msgid "terminating"
-msgstr "pārtraukšana"
+msgstr "pārtrauc"
 
 #: pynicotine/core.py:215
 msgid "application closing"
@@ -215,11 +215,11 @@ msgstr "Lietotāja %(user)s IP adrese: %(ip)s, ports %(port)i%(country)s"
 #: pynicotine/core.py:402 pynicotine/gtkgui/dialogs/preferences.py:798
 #: pynicotine/gtkgui/dialogs/preferences.py:928
 msgid "IP Address"
-msgstr "IP adrese"
+msgstr "IP Adrese"
 
 #: pynicotine/core.py:448
 msgid "Soulseek Announcement"
-msgstr "Soulseek paziņojums"
+msgstr "Soulseek Paziņojums"
 
 #: pynicotine/core.py:456
 #, python-format
@@ -250,7 +250,7 @@ msgstr "Jūsu parole ir nomainīta"
 
 #: pynicotine/core.py:487
 msgid "Password Changed"
-msgstr "Parole nomainīta"
+msgstr "Parole Nomainīta"
 
 #: pynicotine/geoip.py:24
 msgid "Andorra"
@@ -1299,7 +1299,7 @@ msgstr "_Iziet"
 
 #: pynicotine/gtkgui/application.py:470
 msgid "_Run in Background"
-msgstr "_Palaist fonā"
+msgstr "_Palaist Fonā"
 
 #: pynicotine/gtkgui/application.py:471
 msgid "Remember choice"
@@ -1307,7 +1307,7 @@ msgstr "Atcerēties izvēli"
 
 #: pynicotine/gtkgui/application.py:495
 msgid "Shares Not Available"
-msgstr "Koplietojumi nav pieejami"
+msgstr "Koplietojumi Nav Pieejami"
 
 #: pynicotine/gtkgui/application.py:496
 msgid ""
@@ -1329,11 +1329,11 @@ msgstr "_Mēģināt vēlreiz"
 
 #: pynicotine/gtkgui/application.py:500
 msgid "_Force Rescan"
-msgstr "_Piespiedu pārskenēšana"
+msgstr "_Piespiedu Pārskenēšana"
 
 #: pynicotine/gtkgui/application.py:515
 msgid "Invalid Password"
-msgstr "Nepareiza parole"
+msgstr "Nepareiza Parole"
 
 #: pynicotine/gtkgui/application.py:516
 #, python-format
@@ -1346,11 +1346,11 @@ msgstr ""
 
 #: pynicotine/gtkgui/application.py:524
 msgid "Change _Login Details"
-msgstr "Mainīt _pierakstīšanās informāciju"
+msgstr "Mainīt _Pierakstīšanās Informāciju"
 
 #: pynicotine/gtkgui/application.py:676
 msgid "Message Downloading Users"
-msgstr "Sūtīt ziņu lejupielādējošajiem lietotājiem"
+msgstr "Sūtīt Ziņu Lejupielādējošajiem Lietotājiem"
 
 #: pynicotine/gtkgui/application.py:677
 msgid "Send private message to all users who are downloading from you:"
@@ -1358,11 +1358,11 @@ msgstr "Nosūtiet privātu ziņu visiem lietotājiem, kas no Jums lejupielādē:
 
 #: pynicotine/gtkgui/application.py:678 pynicotine/gtkgui/application.py:691
 msgid "_Send Message"
-msgstr "_Sūtīt ziņu"
+msgstr "_Sūtīt Ziņu"
 
 #: pynicotine/gtkgui/application.py:689
 msgid "Message Buddies"
-msgstr "Sūtīt ziņu draugiem"
+msgstr "Sūtīt Ziņu Draugiem"
 
 #: pynicotine/gtkgui/application.py:690
 msgid "Send private message to all online buddies:"
@@ -1370,11 +1370,11 @@ msgstr "Sūtīt privātu ziņu visiem tiešsaistes draugiem:"
 
 #: pynicotine/gtkgui/application.py:715
 msgid "Select a Saved Shares List File"
-msgstr "Atlasiet saglabāto koplietojumu saraksta failu"
+msgstr "Atlasiet Saglabāto Koplietojumu Saraksta Failu"
 
 #: pynicotine/gtkgui/application.py:792
 msgid "Critical Error"
-msgstr "Kritiska kļūda"
+msgstr "Kritiska Kļūda"
 
 #: pynicotine/gtkgui/application.py:793
 msgid ""
@@ -1390,7 +1390,7 @@ msgstr "_Iziet no Nicotine+"
 
 #: pynicotine/gtkgui/application.py:797
 msgid "_Copy & Report Bug"
-msgstr "_Kopēt un ziņot par kļūdu"
+msgstr "_Kopēt un Ziņot par Kļūdu"
 
 #: pynicotine/gtkgui/chatrooms.py:186
 msgid "Create New Room?"

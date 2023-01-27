@@ -94,6 +94,13 @@ class Plugin(BasePlugin):
                 "usage": ["<room>"],
                 "usage_chatroom": ["[room]"]
             },
+            "ip": {
+                "callback": self.ip_address_command,
+                "description": _("Show IP address or username"),
+                "group": _("Network Filters"),
+                "usage": ["<user or ip>"],
+                "usage_private_chat": ["[user]", "[ip]"]
+            },
             "ban": {
                 "callback": self.ban_command,
                 "description": _("Block connections from user or IP address"),
@@ -277,6 +284,23 @@ class Plugin(BasePlugin):
 
     """ Network Filters """
 
+    def ip_address_command(self, args, user=None, **_unused):
+
+        if self.core.network_filter.is_ip_address(args):
+            self.output(self.core.network_filter.get_online_username(args))
+            return
+
+        if args:
+            user = args
+
+        online_ip_address = self.core.network_filter.get_online_user_ip_address(user)
+
+        if not online_ip_address:
+            self.core.request_ip_address(user)
+            return
+
+        self.output(online_ip_address)
+
     def ban_command(self, args, user=None, **_unused):
 
         if self.core.network_filter.is_ip_address(args):
@@ -294,9 +318,7 @@ class Plugin(BasePlugin):
 
         if self.core.network_filter.is_ip_address(args):
             unbanned_ip_addresses = self.core.network_filter.unban_user_ip(ip_address=args)
-
-            self.core.network_filter.unban_user(
-                self.core.network_filter.get_known_username(unbanned_ip_address) or unbanned_ip_address)
+            self.core.network_filter.unban_user(self.core.network_filter.get_online_username(args))
         else:
             if args:
                 user = args
@@ -323,9 +345,7 @@ class Plugin(BasePlugin):
 
         if self.core.network_filter.is_ip_address(args):
             unignored_ip_addresses = self.core.network_filter.unignore_user_ip(ip_address=args)
-
-            self.core.network_filter.unignore_user(
-                self.core.network_filter.get_known_username(unignored_ip_address) or unignored_ip_address)
+            self.core.network_filter.unignore_user(self.core.network_filter.get_online_username(args))
         else:
             if args:
                 user = args
