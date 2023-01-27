@@ -136,26 +136,6 @@ class ChatEntry:
             if args:
                 core.userlist.remove_buddy(args)
 
-        elif cmd == "/ban":
-            if args:
-                core.network_filter.ban_user(args)
-
-        elif cmd == "/ignore":
-            if args:
-                core.network_filter.ignore_user(args)
-
-        elif cmd == "/ignoreip":
-            if args:
-                core.network_filter.ignore_user_ip(ip_address=args)
-
-        elif cmd == "/unban":
-            if args:
-                core.network_filter.unban_user(args)
-
-        elif cmd == "/unignore":
-            if args:
-                core.network_filter.unignore_user(args)
-
         elif cmd == "/ctcpversion":
             if arg_self:
                 core.privatechat.show_user(arg_self)

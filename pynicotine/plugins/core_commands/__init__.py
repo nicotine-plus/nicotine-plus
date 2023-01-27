@@ -101,6 +101,36 @@ class Plugin(BasePlugin):
                 "usage": ["<user or ip>"],
                 "usage_private_chat": ["[user]", "[ip]"]
             },
+            "ban": {
+                "callback": self.ban_command,
+                "description": _("Block connections from user or IP address"),
+                "group": _("Network Filters"),
+                "usage": ["<user or ip>"],
+                "usage_private_chat": ["[user]", "[ip]"]
+            },
+            "unban": {
+                "callback": self.unban_command,
+                "description": _("Remove user or IP address from ban lists"),
+                "group": _("Network Filters"),
+                "usage": ["<user or ip>"],
+                "usage_private_chat": ["[user]", "[ip]"]
+            },
+            "ignore": {
+                "callback": self.ignore_command,
+                "description": _("Silence messages from user or IP address"),
+                "disable": ["cli"],
+                "group": _("Network Filters"),
+                "usage": ["<user or ip>"],
+                "usage_private_chat": ["[user]", "[ip]"]
+            },
+            "unignore": {
+                "callback": self.unignore_command,
+                "description": _("Remove user or IP address from ignore lists"),
+                "disable": ["cli"],
+                "group": _("Network Filters"),
+                "usage": ["<user or ip>"],
+                "usage_private_chat": ["[user]", "[ip]"]
+            },
             "rescan": {
                 "callback": self.rescan_command,
                 "description": _("Rescan shares"),
@@ -270,6 +300,60 @@ class Plugin(BasePlugin):
             return
 
         self.output(online_ip_address)
+
+    def ban_command(self, args, user=None, **_unused):
+
+        if self.core.network_filter.is_ip_address(args):
+            banned_ip_address = self.core.network_filter.ban_user_ip(ip_address=args)
+        else:
+            if args:
+                user = args
+
+            banned_ip_address = None
+            self.core.network_filter.ban_user(user)
+
+        self.output(_("Banned %s") % (banned_ip_address or user))
+
+    def unban_command(self, args, user=None, **_unused):
+
+        if self.core.network_filter.is_ip_address(args):
+            unbanned_ip_addresses = self.core.network_filter.unban_user_ip(ip_address=args)
+            self.core.network_filter.unban_user(self.core.network_filter.get_online_username(args))
+        else:
+            if args:
+                user = args
+
+            unbanned_ip_addresses = self.core.network_filter.unban_user_ip(user)
+            self.core.network_filter.unban_user(user)
+
+        self.output(_("Unbanned %s") % (" & ".join(unbanned_ip_addresses) or user))
+
+    def ignore_command(self, args, user=None, **_unused):
+
+        if self.core.network_filter.is_ip_address(args):
+            ignored_ip_address = self.core.network_filter.ignore_user_ip(ip_address=args)
+        else:
+            if args:
+                user = args
+
+            ignored_ip_address = None
+            self.core.network_filter.ignore_user(user)
+
+        self.output(_("Ignored %s") % (ignored_ip_address or user))
+
+    def unignore_command(self, args, user=None, **_unused):
+
+        if self.core.network_filter.is_ip_address(args):
+            unignored_ip_addresses = self.core.network_filter.unignore_user_ip(ip_address=args)
+            self.core.network_filter.unignore_user(self.core.network_filter.get_online_username(args))
+        else:
+            if args:
+                user = args
+
+            unignored_ip_addresses = self.core.network_filter.unignore_user_ip(user)
+            self.core.network_filter.unignore_user(user)
+
+        self.output(_("Unignored %s") % (" & ".join(unignored_ip_addresses) or user))
 
     """ Configure Shares """
 
