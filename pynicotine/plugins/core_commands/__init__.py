@@ -94,6 +94,13 @@ class Plugin(BasePlugin):
                 "usage": ["<room>"],
                 "usage_chatroom": ["[room]"]
             },
+            "ip": {
+                "callback": self.ip_address_command,
+                "description": _("Show IP address or username"),
+                "group": _("Network Filters"),
+                "usage": ["<user or ip>"],
+                "usage_private_chat": ["[user]", "[ip]"]
+            },
             "rescan": {
                 "callback": self.rescan_command,
                 "description": _("Rescan shares"),
@@ -244,6 +251,25 @@ class Plugin(BasePlugin):
 
         self.core.chatrooms.remove_room(room)
         return True
+
+    """ Network Filters """
+
+    def ip_address_command(self, args, user=None, **_unused):
+
+        if self.core.network_filter.is_ip_address(args):
+            self.output(self.core.network_filter.get_online_username(args))
+            return
+
+        if args:
+            user = args
+
+        online_ip_address = self.core.network_filter.get_online_user_ip_address(user)
+
+        if not online_ip_address:
+            self.core.request_ip_address(user)
+            return
+
+        self.output(online_ip_address)
 
     """ Configure Shares """
 
