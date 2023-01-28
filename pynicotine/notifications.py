@@ -29,36 +29,13 @@ class Notifications:
 
     def __init__(self):
 
-        self.chat_hilites = {
-            "rooms": [],
-            "private": []
-        }
         self.tts = deque()
         self._tts_thread = None
 
         events.connect("quit", self._quit)
 
     def _quit(self):
-        self.chat_hilites.clear()
         self.tts.clear()
-
-    """ Chat Hilites """
-
-    def add_hilite_item(self, location, item):
-
-        if not item or item in self.chat_hilites[location]:
-            return False
-
-        self.chat_hilites[location].append(item)
-        return True
-
-    def remove_hilite_item(self, location, item):
-
-        if item not in self.chat_hilites[location]:
-            return False
-
-        self.chat_hilites[location].remove(item)
-        return True
 
     """ Notification Messages """
 

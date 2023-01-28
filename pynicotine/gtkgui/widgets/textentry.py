@@ -109,10 +109,6 @@ class ChatEntry:
             if arg_self:
                 core.userbrowse.browse_user(arg_self)
 
-        elif cmd == "/ip":
-            if arg_self:
-                core.request_ip_address(arg_self)
-
         elif cmd in ("/us", "/usearch"):
             args_split = args.split(" ", maxsplit=1)
 
@@ -126,26 +122,6 @@ class ChatEntry:
         elif cmd in ("/rem", "/unbuddy"):
             if args:
                 core.userlist.remove_buddy(args)
-
-        elif cmd == "/ban":
-            if args:
-                core.network_filter.ban_user(args)
-
-        elif cmd == "/ignore":
-            if args:
-                core.network_filter.ignore_user(args)
-
-        elif cmd == "/ignoreip":
-            if args:
-                core.network_filter.ignore_ip(args)
-
-        elif cmd == "/unban":
-            if args:
-                core.network_filter.unban_user(args)
-
-        elif cmd == "/unignore":
-            if args:
-                core.network_filter.unignore_user(args)
 
         elif cmd == "/ctcpversion":
             if arg_self:

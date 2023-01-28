@@ -48,10 +48,10 @@ class SharesTest(TestCase):
         self.assertIn(SHARES_DIR, list(core.shares.share_dbs["mtimes"]))
 
         # Verify that shared files were added
-        self.assertIn(['dummy_file', 0, None, None], core.shares.share_dbs["files"]["Shares"])
+        self.assertIn(["dummy_file", 0, None, None], core.shares.share_dbs["files"]["Shares"])
         self.assertIn(
-            ['nicotinetestdata.mp3', 80919, (128, 0, 44100, None), 5], core.shares.share_dbs["files"]["Shares"])
-        self.assertIn(['nicotinevbr.mp3', 36609, (32, 1, 44100, None), 9], core.shares.share_dbs["files"]["Shares"])
+            ["nicotinetestdata.mp3", 80919, (128, 0, 44100, None), 5], core.shares.share_dbs["files"]["Shares"])
+        self.assertIn(["nicotinevbr.mp3", 36609, (32, 1, 44100, None), 9], core.shares.share_dbs["files"]["Shares"])
 
         # Verify that expected folder is empty
         self.assertEqual(len(core.shares.share_dbs["files"]["Shares\\folder2"]), 0)
@@ -62,15 +62,15 @@ class SharesTest(TestCase):
         ogg_indexes = list(word_index["ogg"])
 
         self.assertEqual(set(word_index), set(
-            ['nicotinetestdata', 'ogg', 'mp3', 'shares', 'file', 'dummy', 'folder1',
-             'folder2', 'nothing', 'something', 'test', 'nicotinevbr']
+            ["nicotinetestdata", "ogg", "mp3", "shares", "file", "dummy", "folder1",
+             "folder2", "nothing", "something", "test", "nicotinevbr"]
         ))
         self.assertEqual(len(nicotinetestdata_indexes), 2)
         self.assertEqual(len(ogg_indexes), 1)
 
         # File ID associated with word "ogg" should return our nicotinetestdata.ogg file
         self.assertIn(ogg_indexes[0], nicotinetestdata_indexes)
-        self.assertEqual(core.shares.share_dbs["fileindex"][str(ogg_indexes[0])][0], 'Shares\\nicotinetestdata.ogg')
+        self.assertEqual(core.shares.share_dbs["fileindex"][str(ogg_indexes[0])][0], "Shares\\nicotinetestdata.ogg")
 
     def test_hidden_file_folder_scan(self):
         """ Test that hidden files and folders are excluded """
