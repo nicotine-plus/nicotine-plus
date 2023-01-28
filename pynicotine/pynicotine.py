@@ -65,7 +65,6 @@ class NicotineCore:
     def __init__(self, bindip, port):
 
         self.ui_callback = None
-        self.network_callback = None
         self.network_filter = None
         self.statistics = None
         self.shares = None
@@ -99,16 +98,16 @@ class NicotineCore:
 
         self.events = {}
         self.queue = deque()
+        self.network_msgs = deque()
         self.user_statuses = {}
         self.watched_users = set()
         self.ip_requested = set()
 
     """ Actions """
 
-    def start(self, ui_callback, network_callback):
+    def start(self, ui_callback):
 
         self.ui_callback = ui_callback
-        self.network_callback = network_callback
         script_dir = os.path.dirname(__file__)
 
         log.add(_("Loading %(program)s %(version)s"), {"program": "Python", "version": config.python_version})
@@ -420,7 +419,18 @@ class NicotineCore:
 
     """ Network Events """
 
-    def network_event(self, msgs):
+    def network_callback(self, msgs):
+        self.network_msgs.extend(msgs)
+
+    def process_network_msgs(self):
+
+        if not self.network_msgs:
+            return
+
+        msgs = []
+
+        while self.network_msgs:
+            msgs.append(self.network_msgs.popleft())
 
         for msg in msgs:
             if self.shutdown:

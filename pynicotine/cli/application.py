@@ -20,8 +20,6 @@ import sys
 import threading
 import time
 
-from collections import deque
-
 from pynicotine.config import config
 from pynicotine.logfacility import log
 
@@ -34,14 +32,13 @@ class Application:
 
         self.core = core
         self.ci_mode = ci_mode
-        self.network_msgs = deque()
 
         config.load_config()
         log.log_levels = set(["download", "upload"] + config.sections["logging"]["debugmodes"])
 
     def run(self):
 
-        self.core.start(self, self.network_callback)
+        self.core.start(ui_callback=self)
         connect_success = self.core.connect()
 
         if not connect_success and not self.ci_mode:
@@ -50,22 +47,12 @@ class Application:
 
         # Main loop, process messages from networking thread
         while not self.core.shutdown:
-            if self.network_msgs:
-                msgs = []
-
-                while self.network_msgs:
-                    msgs.append(self.network_msgs.popleft())
-
-                self.core.network_event(msgs)
-
+            self.core.process_network_msgs()
             time.sleep(1 / 60)
 
         # Shut down with exit code 0 (success)
         config.write_configuration()
         return 0
-
-    def network_callback(self, msgs):
-        self.network_msgs.extend(msgs)
 
     def init_exception_handler(self):
 
