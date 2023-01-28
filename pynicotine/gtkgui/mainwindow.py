@@ -986,14 +986,14 @@ class MainWindow(Window):
 
         elif page == self.uploads_page:
             self.uploads.update_model(forceupdate=True)
-            self.notebook.remove_tab_hilite(self.uploads_page)
+            self.notebook.remove_tab_changed(self.uploads_page)
 
             if self.uploads.container.get_visible():
                 focus_widget = self.uploads.tree_view
 
         elif page == self.downloads_page:
             self.downloads.update_model(forceupdate=True)
-            self.notebook.remove_tab_hilite(self.downloads_page)
+            self.notebook.remove_tab_changed(self.downloads_page)
 
             if self.downloads.container.get_visible():
                 focus_widget = self.downloads.tree_view

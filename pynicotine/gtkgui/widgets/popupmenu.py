@@ -397,9 +397,9 @@ class UserPopupMenu(PopupMenu):
         self.actions[_("Ignore User")].set_state(
             GLib.Variant("b", core.network_filter.is_user_ignored(self.user)))
         self.actions[_("Ban IP Address")].set_state(
-            GLib.Variant("b", core.network_filter.get_cached_banned_user_ip(self.user) or False))
+            GLib.Variant("b", core.network_filter.is_user_ip_banned(self.user)))
         self.actions[_("Ignore IP Address")].set_state(
-            GLib.Variant("b", core.network_filter.get_cached_ignored_user_ip(self.user) or False))
+            GLib.Variant("b", core.network_filter.is_user_ip_ignored(self.user)))
 
         self.editing = False
 

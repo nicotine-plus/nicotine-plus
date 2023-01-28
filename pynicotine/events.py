@@ -126,8 +126,8 @@ EVENT_NAMES = {
     "echo-private-message",
     "message-user",
     "private-chat-completion-list",
-    "private-chat-show-user",
     "private-chat-remove-user",
+    "private-chat-show-user",
     "send-private-message",
 
     # Search

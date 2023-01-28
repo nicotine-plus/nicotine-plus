@@ -140,7 +140,7 @@ class TransfersTest(TestCase):
         incomplete_basename = os.path.basename(incomplete_file_path)
 
         self.assertLess(
-            len(incomplete_basename.encode('utf-8')),
+            len(incomplete_basename.encode("utf-8")),
             core.transfers.get_basename_byte_limit(config.data_dir)
         )
         self.assertTrue(incomplete_basename.startswith("INCOMPLETE42d26e9276e024cdaeac645438912b88"))
@@ -154,7 +154,7 @@ class TransfersTest(TestCase):
         incomplete_basename = os.path.basename(incomplete_file_path)
 
         self.assertLess(
-            len(incomplete_basename.encode('utf-8')),
+            len(incomplete_basename.encode("utf-8")),
             core.transfers.get_basename_byte_limit(config.data_dir)
         )
         self.assertTrue(incomplete_basename.startswith("INCOMPLETEf98e3f07a3fc60e114534045f26707d2."))
@@ -167,7 +167,7 @@ class TransfersTest(TestCase):
         finished_basename = core.transfers.get_download_basename(basename, finished_folder_path)
 
         self.assertLess(
-            len(finished_basename.encode('utf-8')),
+            len(finished_basename.encode("utf-8")),
             core.transfers.get_basename_byte_limit(config.data_dir)
         )
         self.assertTrue(finished_basename.startswith("片"))
@@ -179,7 +179,7 @@ class TransfersTest(TestCase):
         finished_basename = core.transfers.get_download_basename(basename, finished_folder_path)
 
         self.assertLess(
-            len(finished_basename.encode('utf-8')),
+            len(finished_basename.encode("utf-8")),
             core.transfers.get_basename_byte_limit(config.data_dir)
         )
         self.assertTrue(finished_basename.startswith(".片"))
@@ -217,25 +217,25 @@ class TransfersTest(TestCase):
         target_folder = "share\\Soulseek"
 
         core.userbrowse.user_shares[user] = dict([
-            ('share\\Music', [
-                (1, 'music1.mp3', 1000000, '', {}),
-                (1, 'music2.mp3', 2000000, '', {})
+            ("share\\Music", [
+                (1, "music1.mp3", 1000000, "", {}),
+                (1, "music2.mp3", 2000000, "", {})
             ]),
-            ('share\\Soulseek', [
-                (1, 'file1.mp3', 3000000, '', {}),
-                (1, 'file2.mp3', 4000000, '', {})
+            ("share\\Soulseek", [
+                (1, "file1.mp3", 3000000, "", {}),
+                (1, "file2.mp3", 4000000, "", {})
             ]),
-            ('share\\Soulseek\\folder1', [
-                (1, 'file3.mp3', 5000000, '', {})
+            ("share\\Soulseek\\folder1", [
+                (1, "file3.mp3", 5000000, "", {})
             ]),
-            ('share\\Soulseek\\folder1\\folder', [
-                (1, 'file4.mp3', 6000000, '', {})
+            ("share\\Soulseek\\folder1\\folder", [
+                (1, "file4.mp3", 6000000, "", {})
             ]),
-            ('share\\Soulseek\\folder2', [
-                (1, 'file5.mp3', 7000000, '', {})
+            ("share\\Soulseek\\folder2", [
+                (1, "file5.mp3", 7000000, "", {})
             ]),
-            ('share\\Soulseek\\folder2\\folder3', [
-                (1, 'file6.mp3', 8000000, '', {})
+            ("share\\Soulseek\\folder2\\folder3", [
+                (1, "file6.mp3", 8000000, "", {})
             ])
         ])
 

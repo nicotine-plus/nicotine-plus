@@ -559,7 +559,7 @@ class UserBrowse:
 
         self.indeterminate_progress = False
 
-        self.userbrowses.request_tab_hilite(self.container)
+        self.userbrowses.request_tab_changed(self.container)
         self.progress_bar.set_fraction(1.0)
         self.refresh_button.set_sensitive(True)
 
