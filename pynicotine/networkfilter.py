@@ -100,7 +100,7 @@ class NetworkFilter:
         return ip_addresses
 
     @staticmethod
-    def _get_online_user_ip_address(user):
+    def get_online_user_ip_address(user):
         """ Try to lookup an address from watched known connections,
         for updating an IP list item if the address is unspecified """
 
@@ -120,7 +120,7 @@ class NetworkFilter:
 
         if request_action == "add":
             # Get current IP for user, if known
-            online_ip_address = self._get_online_user_ip_address(user)
+            online_ip_address = self.get_online_user_ip_address(user)
 
             if online_ip_address:
                 ip_addresses.add(online_ip_address)
@@ -183,7 +183,7 @@ class NetworkFilter:
         if not ip_addresses:
             # Get all known IP addressed for user
             ip_addresses = self._get_previous_user_ip_addresses(username, ip_list)
-            online_ip_address = self._get_online_user_ip_address(username)
+            online_ip_address = self.get_online_user_ip_address(username)
 
             if online_ip_address:
                 ip_addresses.add(online_ip_address)
