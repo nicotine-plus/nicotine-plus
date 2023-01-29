@@ -841,7 +841,11 @@ class Application:
             core.connect()
 
         # Check command line option and config option
-        if not self.start_hidden and not config.sections["ui"]["startup_hidden"]:
+        start_hidden = (self.start_hidden or (self.tray_icon.available
+                                              and config.sections["ui"]["trayicon"]
+                                              and config.sections["ui"]["startup_hidden"]))
+
+        if not start_hidden:
             self.window.show()
 
         # Process thread events 60 times per second
