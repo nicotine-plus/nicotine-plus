@@ -102,6 +102,15 @@ class Plugin(BasePlugin):
                 "usage": ["<room>"],
                 "usage_chatroom": ["[room]"]
             },
+            "whois": {
+                "aliases": ["info", "w"],
+                "callback": self.whois_command,
+                "description": _("Show user profile information"),
+                "disable": ["cli"],
+                "group": _("Users"),
+                "usage": ["<user>"],
+                "usage_private_chat": ["[user]"]
+            },
             "ip": {
                 "callback": self.ip_address_command,
                 "description": _("Show IP address or username"),
@@ -296,6 +305,15 @@ class Plugin(BasePlugin):
 
         self.core.chatrooms.remove_room(room)
         return True
+
+    """ Users """
+
+    def whois_command(self, args, user=None, **_unused):
+
+        if args:
+            user = args
+
+        self.core.userinfo.show_user(user)
 
     """ Network Filters """
 
