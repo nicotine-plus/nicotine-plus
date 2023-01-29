@@ -86,6 +86,14 @@ class Plugin(BasePlugin):
                 "group": _("Private Chat"),
                 "usage": ["<user>", "<message..>"]
             },
+            "msg": {
+                "aliases": ["m"],
+                "callback": self.msg_command,
+                "description": _("Send private message to user"),
+                "disable": ["cli"],
+                "group": _("Private Chat"),
+                "usage": ["<user>", "<message..>"]
+            },
             "pm": {
                 "callback": self.pm_command,
                 "description": _("Open private chat window for user"),
