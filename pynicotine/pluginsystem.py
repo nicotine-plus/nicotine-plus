@@ -204,6 +204,11 @@ class BasePlugin:
         log.add(self.human_name + ": " + msg, msg_args)
 
     def send_public(self, room, text):
+        """ Send chat message to a room, must already be joined. """
+
+        if not text or room not in core.chatrooms.joined_rooms:
+            return
+
         core.queue.append(slskmessages.SayChatroom(room, text))
 
     def send_private(self, user, text, show_ui=True, switch_page=True):
