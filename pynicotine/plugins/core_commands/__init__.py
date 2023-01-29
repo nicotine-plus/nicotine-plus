@@ -102,6 +102,15 @@ class Plugin(BasePlugin):
                 "usage": ["<room>"],
                 "usage_chatroom": ["[room]"]
             },
+            "browse": {
+                "aliases": ["b"],
+                "callback": self.browse_user_command,
+                "description": _("Browse files of user"),
+                "disable": ["cli"],
+                "group": _("Users"),
+                "usage": ["<user>"],
+                "usage_private_chat": ["[user]"]
+            },
             "ip": {
                 "callback": self.ip_address_command,
                 "description": _("Show IP address or username"),
@@ -296,6 +305,15 @@ class Plugin(BasePlugin):
 
         self.core.chatrooms.remove_room(room)
         return True
+
+    """ Users """
+
+    def browse_user_command(self, args, user=None, **_unused):
+
+        if args:
+            user = args
+
+        self.core.userbrowse.browse_user(user)
 
     """ Network Filters """
 

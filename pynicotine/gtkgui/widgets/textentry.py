@@ -105,10 +105,6 @@ class ChatEntry:
             if arg_self:
                 core.userinfo.show_user(arg_self)
 
-        elif cmd in ("/b", "/browse"):
-            if arg_self:
-                core.userbrowse.browse_user(arg_self)
-
         elif cmd in ("/us", "/usearch"):
             args_split = args.split(" ", maxsplit=1)
 
