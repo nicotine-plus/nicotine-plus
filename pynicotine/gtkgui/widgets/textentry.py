@@ -115,14 +115,6 @@ class ChatEntry:
             if len(args_split) == 2:
                 core.search.do_search(args_split[1], "user", user=args_split[0])
 
-        elif cmd in ("/ad", "/add", "/buddy"):
-            if args:
-                core.userlist.add_buddy(args)
-
-        elif cmd in ("/rem", "/unbuddy"):
-            if args:
-                core.userlist.remove_buddy(args)
-
         elif cmd == "/ctcpversion":
             if arg_self:
                 core.privatechat.show_user(arg_self)
