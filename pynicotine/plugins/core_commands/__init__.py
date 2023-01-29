@@ -61,6 +61,14 @@ class Plugin(BasePlugin):
                 "usage_chatroom": ["<user>"],
                 "usage_private_chat": ["[user]"]
             },
+            "msg": {
+                "aliases": ["m"],
+                "callback": self.msg_command,
+                "description": _("Send private message to user"),
+                "disable": ["cli"],
+                "group": _("Private Chat"),
+                "usage": ["<user>", "<message..>"]
+            },
             "pm": {
                 "callback": self.pm_command,
                 "description": _("Open private chat"),
@@ -257,6 +265,13 @@ class Plugin(BasePlugin):
         self.output(f"Closing private chat of user {user}")
         self.core.privatechat.remove_user(user)
         return True
+
+    def msg_command(self, args, **_unused):
+
+        args_split = args.split(maxsplit=1)
+        user, text = args_split[0], args_split[1]
+
+        self.send_private(user, text, show_ui=True, switch_page=False)
 
     def pm_command(self, args, **_unused):
         self.core.privatechat.show_user(args)
