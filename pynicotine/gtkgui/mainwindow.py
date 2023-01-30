@@ -1387,7 +1387,7 @@ class MainWindow(Window):
         self.scan_progress_indeterminate = True
 
         self.scan_progress_bar.pulse()
-        GLib.timeout_add(500, self.pulse_scan_progress)
+        GLib.timeout_add_seconds(0.5, self.pulse_scan_progress)
 
     def pulse_scan_progress(self):
 

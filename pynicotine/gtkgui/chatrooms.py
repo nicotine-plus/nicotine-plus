@@ -168,7 +168,7 @@ class ChatRooms(IconNotebook):
 
     def on_create_room_response(self, dialog, response_id, room):
 
-        private = dialog.option.get_active()
+        private = dialog.get_option_value()
 
         if response_id == 2:
             # Create a new room

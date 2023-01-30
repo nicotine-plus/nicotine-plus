@@ -35,7 +35,8 @@ class ChatCommandHelp(Popover):
         super().__init__(
             window=window,
             content_box=self.scrollable,
-            show_callback=self._update_commands,
+            show_callback=self._on_show,
+            close_callback=self._on_close,
             width=600,
             height=450
         )
@@ -80,13 +81,7 @@ class ChatCommandHelp(Popover):
 
         return row
 
-    def _update_commands(self, *_args):
-
-        if self.container:
-            if GTK_API_VERSION >= 4:
-                self.scrollable.set_child(None)         # pylint: disable=no-member
-            else:
-                self.scrollable.remove(self.container)  # pylint: disable=no-member
+    def _on_show(self, *_args):
 
         self.container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, visible=True)
 
@@ -98,3 +93,13 @@ class ChatCommandHelp(Popover):
 
         self.scrollable.set_property("child", self.container)
         self.container.child_focus(Gtk.DirectionType.TAB_FORWARD)
+
+    def _on_close(self, *_args):
+
+        if not self.container:
+            return
+
+        if GTK_API_VERSION >= 4:
+            self.scrollable.set_child(None)         # pylint: disable=no-member
+        else:
+            self.scrollable.remove(self.container)  # pylint: disable=no-member

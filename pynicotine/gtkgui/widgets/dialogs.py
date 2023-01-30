@@ -251,8 +251,6 @@ class MessageDialog(Window):
                 parent = active_dialog
                 break
 
-        self.parent = parent
-
         widget = Gtk.MessageDialog(
             transient_for=parent.widget if parent else None, destroy_with_parent=True, message_type=message_type,
             default_width=width, text=title, secondary_text=message
@@ -266,7 +264,13 @@ class MessageDialog(Window):
         for button_label, response_type in buttons:
             widget.add_button(button_label, response_type)
 
-        self.container = widget.get_message_area()
+        self.parent = parent
+        self.container = self.widget.get_message_area()
+
+        self._make_message_selectable()
+        self._add_long_message(long_message)
+
+    def _make_message_selectable(self):
 
         if GTK_API_VERSION >= 4:
             label = self.container.get_last_child()
@@ -275,7 +279,9 @@ class MessageDialog(Window):
 
         label.set_selectable(True)
 
-        if not long_message:
+    def _add_long_message(self, text):
+
+        if not text:
             return
 
         box = Gtk.Box(visible=True)
@@ -291,7 +297,19 @@ class MessageDialog(Window):
             self.container.add(frame)     # pylint: disable=no-member
 
         textview = TextView(scrolled_window, editable=False)
-        textview.append_line(long_message)
+        textview.append_line(text)
+
+    def _add_option_toggle(self, option_label, option_value):
+
+        toggle = Gtk.CheckButton(label=option_label, active=option_value, visible=bool(option_label))
+
+        if option_label:
+            if GTK_API_VERSION >= 4:
+                self.container.append(toggle)
+            else:
+                self.container.add(toggle)
+
+        return toggle
 
     def on_response(self, _widget, response_id, callback, callback_data):
 
@@ -307,7 +325,7 @@ class MessageDialog(Window):
         self.widget.close()
 
     def _finish_show(self):
-        self.widget.set_modal(self.parent.is_visible())
+        self.widget.set_modal(self.parent and self.parent.is_visible())
         self.widget.present()
 
     def show(self):
@@ -315,7 +333,7 @@ class MessageDialog(Window):
         if self not in Window.active_dialogs:
             Window.active_dialogs.append(self)
 
-        if not self.parent.is_visible():
+        if self.parent and not self.parent.is_visible():
             # In case parent window appears a few frames later, ensure dialog is modal
             GLib.idle_add(self._finish_show, priority=GLib.PRIORITY_LOW)
             return
@@ -339,30 +357,12 @@ class EntryDialog(MessageDialog):
                              (_("_Cancel"), Gtk.ResponseType.CANCEL),
                              (action_button_label, Gtk.ResponseType.OK)])
 
-        if droplist:
-            self.entry = self._add_combobox(droplist, visibility)
-        else:
-            self.entry = self._add_entry(visibility)
-
-        self.entry.connect("activate", self.on_activate_entry)
-        self.entry.set_text(default)
+        self.toggle = self._add_option_toggle(option_label, option_value)
+        self.entry = self._add_entry_combobox(default, visibility, droplist)
+        self.second_entry = None
 
         if use_second_entry:
-            if second_droplist:
-                self.second_entry = self._add_combobox(second_droplist, visibility)
-            else:
-                self.second_entry = self._add_entry(visibility)
-
-            self.second_entry.connect("activate", self.on_activate_entry)
-            self.second_entry.set_text(second_default)
-
-        self.option = Gtk.CheckButton(label=option_label, active=option_value, visible=bool(option_label))
-
-        if option_label:
-            if GTK_API_VERSION >= 4:
-                self.container.append(self.option)
-            else:
-                self.container.add(self.option)
+            self.second_entry = self._add_entry_combobox(second_default, visibility, second_droplist)
 
     def _add_combobox(self, items, visibility=True):
 
@@ -394,6 +394,18 @@ class EntryDialog(MessageDialog):
 
         return entry
 
+    def _add_entry_combobox(self, default, visibility, droplist=None):
+
+        if droplist:
+            entry = self._add_combobox(droplist, visibility)
+        else:
+            entry = self._add_entry(visibility)
+
+        entry.connect("activate", self.on_activate_entry)
+        entry.set_text(default)
+
+        return entry
+
     def on_activate_entry(self, *_args):
         self.widget.response(Gtk.ResponseType.OK)
 
@@ -404,7 +416,7 @@ class EntryDialog(MessageDialog):
         return self.second_entry.get_text()
 
     def get_option_value(self):
-        return self.option.get_active()
+        return self.toggle.get_active()
 
 
 class OptionDialog(MessageDialog):
@@ -427,13 +439,10 @@ class OptionDialog(MessageDialog):
                          message_type=Gtk.MessageType.OTHER, callback=callback, callback_data=callback_data,
                          buttons=buttons)
 
-        self.option = Gtk.CheckButton(label=option_label, active=option_value, visible=bool(option_label))
+        self.toggle = self._add_option_toggle(option_label, option_value)
 
-        if option_label:
-            if GTK_API_VERSION >= 4:
-                self.container.append(self.option)
-            else:
-                self.container.add(self.option)
+    def get_option_value(self):
+        return self.toggle.get_active()
 
 
 """ Plugin Settings Dialog """

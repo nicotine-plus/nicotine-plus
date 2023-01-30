@@ -409,7 +409,7 @@ class Application:
 
     def on_confirm_quit_response(self, dialog, response_id, _data):
 
-        remember = dialog.option.get_active()
+        remember = dialog.get_option_value()
 
         if response_id == 2:  # 'Quit'
             if remember:
@@ -841,12 +841,16 @@ class Application:
             core.connect()
 
         # Check command line option and config option
-        if not self.start_hidden and not config.sections["ui"]["startup_hidden"]:
+        start_hidden = (self.start_hidden or (self.tray_icon.available
+                                              and config.sections["ui"]["trayicon"]
+                                              and config.sections["ui"]["startup_hidden"]))
+
+        if not start_hidden:
             self.window.show()
 
         # Process thread events 60 times per second
         # High priority to ensure there are no delays
-        GLib.timeout_add(1000 / 60, self.on_process_thread_events, priority=GLib.PRIORITY_HIGH_IDLE)
+        GLib.timeout_add_seconds(1 / 60, self.on_process_thread_events, priority=GLib.PRIORITY_HIGH_IDLE)
 
     def on_shutdown(self, *_args):
         # Explicitly hide tray icon, otherwise it will not disappear on Windows
