@@ -102,6 +102,13 @@ class Plugin(BasePlugin):
                 "usage": ["<room>"],
                 "usage_chatroom": ["[room]"]
             },
+            "say": {
+                "callback": self.say_command,
+                "description": _("Say message in specified chat room"),
+                "disable": ["cli"],
+                "group": _("Chat Rooms"),
+                "usage": ["<room>", "<message..>"]
+            },
             "add": {
                 "aliases": ["buddy"],
                 "callback": self.add_buddy_command,
@@ -337,6 +344,18 @@ class Plugin(BasePlugin):
             return False
 
         self.core.chatrooms.remove_room(room)
+        return True
+
+    def say_command(self, args, **_unused):
+
+        args_split = args.split(maxsplit=1)
+        room, text = args_split[0], args_split[1]
+
+        if room not in self.core.chatrooms.joined_rooms:
+            self.output(_("Not joined in room %s") % room)
+            return False
+
+        self.send_public(room, text)
         return True
 
     """ Users """
