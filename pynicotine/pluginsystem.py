@@ -321,8 +321,8 @@ class BasePlugin:
                         "num_quoted_args": len(quoted_positions)
                     })
 
-                # Wipe out all ambiguous arguments to avoid mismatching
-                arg_list = [arg_list[0]]
+                # Wipe out all arguments to avoid mismatching
+                arg_list = []
                 break
 
             if i in quoted_positions or i - 1 in quoted_positions:

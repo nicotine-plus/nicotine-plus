@@ -81,9 +81,8 @@ class Plugin(BasePlugin):
                 "aliases": ["demo"],
                 "disable": ["private_chat"],
                 "callback": self.sample_command,
-                "callback_private_chat": self.sample_command,
-                "usage": ["<choice1|choice2>", "<something..>"],
-                "usage_chatroom": ["<choice55|choice2>"]
+                "usage": ["<choice1|choice2>", "<second argument>", "<something else..>"],
+                "usage_chatroom": ["<choice55|choice2>", "<some thing>", "<something else..>"]
             },
             "join": {
                 "aliases": ["j"],
@@ -328,9 +327,11 @@ class Plugin(BasePlugin):
     def pm_command(self, args, **_unused):
         self.core.privatechat.show_user(args)
 
-    def sample_command(self, _args, **_unused):
-        self.output("Hello")
-        return True
+    def sample_command(self, args, **_unused):
+
+        one, two, three = self.split_args(args, 3)
+
+        self.output(f"Hello, testing 3 arguments: >{one}<  >{two}<  >{three}<")
 
     """ Chat Rooms """
 
@@ -351,8 +352,7 @@ class Plugin(BasePlugin):
 
     def say_command(self, args, **_unused):
 
-        args_split = args.split(maxsplit=1)
-        room, text = args_split[0], args_split[1]
+        room, text = self.split_args(args, 2)
 
         if room not in self.core.chatrooms.joined_rooms:
             self.output(_("Not joined in room %s") % room)
@@ -512,7 +512,10 @@ class Plugin(BasePlugin):
 
     def search_user_command(self, args, user=None, **_unused):
 
-        args_split = args.split(maxsplit=1)
-        user, query = args_split[0], args_split[1]
+        user, query = self.split_args(args, 2)
+
+        if not query:
+            return False
 
         self.core.search.do_search(query, "user", user=user)
+        return True
