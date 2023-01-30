@@ -101,14 +101,6 @@ class ChatEntry:
             args = ""
             arg_self = "" if self.is_chatroom else self.entity
 
-        elif cmd in ("/ad", "/add", "/buddy"):
-            if args:
-                core.userlist.add_buddy(args)
-
-        elif cmd in ("/rem", "/unbuddy"):
-            if args:
-                core.userlist.remove_buddy(args)
-
         elif cmd == "/ctcpversion":
             if arg_self:
                 core.privatechat.show_user(arg_self)

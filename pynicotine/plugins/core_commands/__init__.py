@@ -102,6 +102,22 @@ class Plugin(BasePlugin):
                 "usage": ["<room>"],
                 "usage_chatroom": ["[room]"]
             },
+            "add": {
+                "aliases": ["buddy"],
+                "callback": self.add_buddy_command,
+                "description": _("Add user to buddy list"),
+                "group": _("Users"),
+                "usage": ["<user>"],
+                "usage_private_chat": ["[user]"]
+            },
+            "rem": {
+                "aliases": ["unbuddy"],
+                "callback": self.remove_buddy_command,
+                "description": _("Remove buddy from buddy list"),
+                "group": _("Users"),
+                "usage": ["<buddy>"],
+                "usage_private_chat": ["[buddy]"]
+            },
             "browse": {
                 "aliases": ["b"],
                 "callback": self.browse_user_command,
@@ -324,6 +340,20 @@ class Plugin(BasePlugin):
         return True
 
     """ Users """
+
+    def add_buddy_command(self, args, user=None, **_unused):
+
+        if args:
+            user = args
+
+        self.core.userlist.add_buddy(user)
+
+    def remove_buddy_command(self, args, user=None, **_unused):
+
+        if args:
+            user = args
+
+        self.core.userlist.remove_buddy(user)
 
     def browse_user_command(self, args, user=None, **_unused):
 
