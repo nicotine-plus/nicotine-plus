@@ -86,14 +86,6 @@ class Plugin(BasePlugin):
                 "group": _("Private Chat"),
                 "usage": ["<user>", "<message..>"]
             },
-            "msg": {
-                "aliases": ["m"],
-                "callback": self.msg_command,
-                "description": _("Send private message to user"),
-                "disable": ["cli"],
-                "group": _("Private Chat"),
-                "usage": ["<user>", "<message..>"]
-            },
             "pm": {
                 "callback": self.pm_command,
                 "description": _("Open private chat window for user"),
@@ -181,7 +173,7 @@ class Plugin(BasePlugin):
             },
             "info": {
                 "aliases": ["whois", "w"],
-                "callback": self.whois_user_command,
+                "callback": self.whois_command,
                 "description": _("Show user profile information and interests"),
                 "disable": ["cli"],
                 "group": _("Users"),
@@ -433,71 +425,41 @@ class Plugin(BasePlugin):
         room, text = self.split_args(args, 2)
 
         if not text:
+            self.output(_("Not joined in room %s") % room)
             return False
 
         self.send_public(room, text)
         return True
 
-    """ Now Playing """
+    """ Users """
 
-    def now_playing_command(self, _args, **_unused):
-        # TODO: Untested, move np into a new plugin
-        self.core.now_playing.display_now_playing(
-            callback=lambda np_message: self.echo_message(np_message))  # pylint: disable=unnecessary-lambda
+    def add_buddy_command(self, args, user=None, **_unused):
 
-    """ Configure Shares """
+        if args:
+            user = args
 
-    def rescan_command(self, args, **_unused):
+        self.core.userlist.add_buddy(user)
 
-        force = (args.lstrip("- ") in ("force", "f"))
+    def remove_buddy_command(self, args, user=None, **_unused):
 
-        if args and not force:
-            self.output("Invalid option")
-            return False
+        if args:
+            user = args
 
-        self.core.shares.rescan_shares(force=force)
-        return True
+        self.core.userlist.remove_buddy(user)
 
-    def list_shares_command(self, args, **_unused):
+    def browse_user_command(self, args, user=None, **_unused):
 
-        share_groups = self.core.shares.get_shared_folders()
-        num_total = num_listed = 0
+        if args:
+            user = args
 
-        for share_index, share_group in enumerate(share_groups):
-            group_name = "buddy" if share_index == 1 else "public"
-            num_shares = len(share_group)
-            num_total += num_shares
+        self.core.userbrowse.browse_user(user)
 
-            if not num_shares or args and group_name not in args.lower():
-                continue
+    def whois_command(self, args, user=None, **_unused):
 
-            self.output("\n" + f"{num_shares} {group_name} shares:")
+        if args:
+            user = args
 
-            for virtual_name, folder_path, *_unused in share_group:
-                self.output(f'• "{virtual_name}" {folder_path}')
-
-            num_listed += num_shares
-
-        self.output("\n" + f"{num_listed} shares listed ({num_total} configured)")
-
-    def share_command(self, args, **_unused):
-
-        group, path = self.split_args(args, 2)
-
-        # TODO: self.core.shares.add_share()
-        #       "virtual name" can be derived from the entered folder,
-        #       so that it's not needed to specify a string manually.
-
-        # TODO: remove this debug output line
-        self.output(f"Not implemented. Entered arguments: group='{group}' path='{path}'")
-
-    def unshare_command(self, args, **_unused):
-
-        group, name = self.split_args(args, 2)
-
-        # TODO: self.core.shares.remove_share()
-        # TODO: remove this debug output line
-        self.output(f"Not implemented. Entered arguments: group='{group}' name='{name}'")
+        self.core.userinfo.show_user(user)
 
     """ Network Filters """
 
@@ -572,35 +534,46 @@ class Plugin(BasePlugin):
 
         self.output(_("Unignored %s") % (" & ".join(unignored_ip_addresses) or user))
 
-    """ Users """
+    """ Configure Shares """
 
-    def add_buddy_command(self, args, user=None, **_unused):
+    def rescan_command(self, args, **_unused):
 
-        if args:
-            user = args
+        force = (args.lstrip("- ") in ("force", "f"))
 
-        self.core.userlist.add_buddy(user)
+        if args and not force:
+            self.output("Invalid option")
+            return False
 
-    def remove_buddy_command(self, args, user=None, **_unused):
+        self.core.shares.rescan_shares(force=force)
+        return True
 
-        if args:
-            user = args
+    def list_shares_command(self, args, **_unused):
 
-        self.core.userlist.remove_buddy(user)
+        share_groups = self.core.shares.get_shared_folders()
+        num_total = num_listed = 0
 
-    def whois_user_command(self, args, user=None, **_unused):
+        for share_index, share_group in enumerate(share_groups):
+            group_name = "buddy" if share_index == 1 else "public"
+            num_shares = len(share_group)
+            num_total += num_shares
 
-        if args:
-            user = args
+            if not num_shares or args and group_name not in args.lower():
+                continue
 
-        self.core.userinfo.show_user(user)
+            self.output("\n" + f"{num_shares} {group_name} shares:")
 
-    def browse_user_command(self, args, user=None, **_unused):
+            for virtual_name, folder_path, *_unused in share_group:
+                self.output(f'• "{virtual_name}" {folder_path}')
 
-        if args:
-            user = args
+            num_listed += num_shares
 
-        self.core.userbrowse.browse_user(user)
+        self.output("\n" + f"{num_listed} shares listed ({num_total} configured)")
+
+    def share_command(self, _args, **_unused):
+        pass
+
+    def unshare_command(self, _args, **_unused):
+        pass
 
     """ Search Files """
 
@@ -622,3 +595,10 @@ class Plugin(BasePlugin):
 
         self.core.search.do_search(query, "user", user=user)
         return True
+
+    """ Now Playing """
+
+    def now_playing_command(self, _args, **_unused):
+        # TODO: Untested, move np into a new plugin
+        self.core.now_playing.display_now_playing(
+            callback=lambda np_message: self.echo_message(np_message))  # pylint: disable=unnecessary-lambda

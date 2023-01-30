@@ -441,8 +441,8 @@ class UserInfo:
         self.indeterminate_progress = True
 
         self.progress_bar.pulse()
-        GLib.timeout_add(320, self.pulse_progress, False)
-        GLib.timeout_add(1000, self.pulse_progress)
+        GLib.timeout_add_seconds(0.32, self.pulse_progress, False)
+        GLib.timeout_add_seconds(1, self.pulse_progress)
 
         self.info_bar.set_visible(False)
         self.refresh_button.set_sensitive(False)

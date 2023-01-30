@@ -570,7 +570,8 @@ class PluginHandler:
                 })
             return False
 
-        if plugin_name in self.enabled_plugins:
+        # Try to reload the plugin if it is already enabled
+        if plugin_name in self.enabled_plugins and not self.disable_plugin(plugin_name):
             return False
 
         try:
