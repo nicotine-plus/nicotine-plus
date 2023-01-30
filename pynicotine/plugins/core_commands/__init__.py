@@ -109,6 +109,40 @@ class Plugin(BasePlugin):
                 "group": _("Chat Rooms"),
                 "usage": ["<room>", "<message..>"]
             },
+            "add": {
+                "aliases": ["buddy"],
+                "callback": self.add_buddy_command,
+                "description": _("Add user to buddy list"),
+                "group": _("Users"),
+                "usage": ["<user>"],
+                "usage_private_chat": ["[user]"]
+            },
+            "rem": {
+                "aliases": ["unbuddy"],
+                "callback": self.remove_buddy_command,
+                "description": _("Remove buddy from buddy list"),
+                "group": _("Users"),
+                "usage": ["<buddy>"],
+                "usage_private_chat": ["[buddy]"]
+            },
+            "browse": {
+                "aliases": ["b"],
+                "callback": self.browse_user_command,
+                "description": _("Browse files of user"),
+                "disable": ["cli"],
+                "group": _("Users"),
+                "usage": ["<user>"],
+                "usage_private_chat": ["[user]"]
+            },
+            "whois": {
+                "aliases": ["info", "w"],
+                "callback": self.whois_command,
+                "description": _("Show user profile information"),
+                "disable": ["cli"],
+                "group": _("Users"),
+                "usage": ["<user>"],
+                "usage_private_chat": ["[user]"]
+            },
             "ip": {
                 "callback": self.ip_address_command,
                 "description": _("Show IP address or username"),
@@ -182,6 +216,14 @@ class Plugin(BasePlugin):
                 "disable": ["cli"],
                 "group": _("Search Files"),
                 "usage": ["<query>"]
+            },
+            "usearch": {
+                "aliases": ["us"],
+                "callback": self.search_user_command,
+                "description": _("Search a user's shared files"),
+                "disable": ["cli"],
+                "group": _("Search Files"),
+                "usage": ["<user>", "<query>"]
             }
         }
 
@@ -316,6 +358,36 @@ class Plugin(BasePlugin):
         self.send_public(room, text)
         return True
 
+    """ Users """
+
+    def add_buddy_command(self, args, user=None, **_unused):
+
+        if args:
+            user = args
+
+        self.core.userlist.add_buddy(user)
+
+    def remove_buddy_command(self, args, user=None, **_unused):
+
+        if args:
+            user = args
+
+        self.core.userlist.remove_buddy(user)
+
+    def browse_user_command(self, args, user=None, **_unused):
+
+        if args:
+            user = args
+
+        self.core.userbrowse.browse_user(user)
+
+    def whois_command(self, args, user=None, **_unused):
+
+        if args:
+            user = args
+
+        self.core.userinfo.show_user(user)
+
     """ Network Filters """
 
     def ip_address_command(self, args, user=None, **_unused):
@@ -434,3 +506,10 @@ class Plugin(BasePlugin):
 
     def search_buddies_command(self, args, **_unused):
         self.core.search.do_search(args, "buddies")
+
+    def search_user_command(self, args, user=None, **_unused):
+
+        args_split = args.split(maxsplit=1)
+        user, query = args_split[0], args_split[1]
+
+        self.core.search.do_search(query, "user", user=user)
