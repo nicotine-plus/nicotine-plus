@@ -65,6 +65,7 @@ from pynicotine.gtkgui.widgets.trayicon import TrayIcon
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.gtkgui.widgets.window import Window
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import LogMessage
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import get_latest_version
 from pynicotine.utils import human_speed
@@ -1666,7 +1667,8 @@ class NicotineFrame(UserInterface, Window):
         )
 
     def log_callback(self, timestamp_format, msg, level):
-        GLib.idle_add(self.update_log, timestamp_format, msg, level, priority=GLib.PRIORITY_LOW)
+        # Always call update_log in the main thread
+        self.core.network_callback([LogMessage(self.update_log, timestamp_format, msg, level)])
 
     def update_log(self, timestamp_format, msg, level):
 

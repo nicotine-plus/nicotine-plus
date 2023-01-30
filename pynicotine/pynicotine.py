@@ -148,6 +148,7 @@ class NicotineCore:
             slskmessages.ServerDisconnect: self.server_disconnect,
             slskmessages.Login: self.login,
             slskmessages.ChangePassword: self.change_password,
+            slskmessages.LogMessage: self.log_message,
             slskmessages.MessageUser: self.privatechats.message_user,
             slskmessages.PMessageUser: self.privatechats.p_message_user,
             slskmessages.ExactFileSearch: self.dummy_message,
@@ -345,6 +346,9 @@ class NicotineCore:
 
     def disconnect(self):
         self.queue.append(slskmessages.ServerDisconnect())
+
+    def log_message(self, msg):
+        msg.callback(msg.timestamp_format, msg.msg, msg.level)
 
     def send_message_to_peer(self, user, message):
         """ Sends message to a peer. Used when we know the username of a peer,

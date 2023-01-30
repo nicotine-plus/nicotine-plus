@@ -110,6 +110,15 @@ class InternalMessage:
     msgtype = MessageType.INTERNAL
 
 
+class LogMessage(InternalMessage):
+
+    def __init__(self, callback=None, timestamp_format=None, msg=None, level=None):
+        self.callback = callback
+        self.timestamp_format = timestamp_format
+        self.msg = msg
+        self.level = level
+
+
 class CloseConnection(InternalMessage):
 
     def __init__(self, sock=None):
