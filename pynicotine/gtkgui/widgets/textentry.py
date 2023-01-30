@@ -101,7 +101,7 @@ class ChatEntry:
             args = ""
             arg_self = "" if self.is_chatroom else self.entity
 
-        elif cmd == "/ctcpversion":
+        if cmd == "/ctcpversion":
             if arg_self:
                 core.privatechat.show_user(arg_self)
                 core.privatechat.send_message(arg_self, core.privatechat.CTCP_VERSION)
