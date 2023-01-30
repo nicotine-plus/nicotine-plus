@@ -101,20 +101,6 @@ class ChatEntry:
             args = ""
             arg_self = "" if self.is_chatroom else self.entity
 
-        if cmd in ("/w", "/whois", "/info"):
-            if arg_self:
-                core.userinfo.show_user(arg_self)
-
-        elif cmd in ("/b", "/browse"):
-            if arg_self:
-                core.userbrowse.browse_user(arg_self)
-
-        elif cmd in ("/us", "/usearch"):
-            args_split = args.split(" ", maxsplit=1)
-
-            if len(args_split) == 2:
-                core.search.do_search(args_split[1], "user", user=args_split[0])
-
         elif cmd == "/ctcpversion":
             if arg_self:
                 core.privatechat.show_user(arg_self)
