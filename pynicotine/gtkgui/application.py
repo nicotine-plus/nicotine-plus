@@ -409,7 +409,7 @@ class Application:
 
     def on_confirm_quit_response(self, dialog, response_id, _data):
 
-        remember = dialog.option.get_active()
+        remember = dialog.get_option_value()
 
         if response_id == 2:  # 'Quit'
             if remember:
