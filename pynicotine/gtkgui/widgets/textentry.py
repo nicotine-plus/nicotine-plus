@@ -101,14 +101,6 @@ class ChatEntry:
             args = ""
             arg_self = "" if self.is_chatroom else self.entity
 
-        if cmd in ("/w", "/whois", "/info"):
-            if arg_self:
-                core.userinfo.show_user(arg_self)
-
-        elif cmd in ("/b", "/browse"):
-            if arg_self:
-                core.userbrowse.browse_user(arg_self)
-
         elif cmd in ("/ad", "/add", "/buddy"):
             if args:
                 core.userlist.add_buddy(args)
