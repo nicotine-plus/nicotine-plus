@@ -193,6 +193,14 @@ class Plugin(BasePlugin):
                 "disable": ["cli"],
                 "group": _("Search Files"),
                 "usage": ["<query>"]
+            },
+            "usearch": {
+                "aliases": ["us"],
+                "callback": self.search_user_command,
+                "description": _("Search a user's shared files"),
+                "disable": ["cli"],
+                "group": _("Search Files"),
+                "usage": ["<user>", "<query>"]
             }
         }
 
@@ -449,3 +457,10 @@ class Plugin(BasePlugin):
 
     def search_buddies_command(self, args, **_unused):
         self.core.search.do_search(args, "buddies")
+
+    def search_user_command(self, args, user=None, **_unused):
+
+        args_split = args.split(maxsplit=1)
+        user, query = args_split[0], args_split[1]
+
+        self.core.search.do_search(query, "user", user=user)
