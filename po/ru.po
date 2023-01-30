@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2022-12-27 21:00+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2023-01-30 18:44+0000\n"
+"Last-Translator: Kirill Feoktistov <feoktistovk@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ru/>\n"
 "Language: ru\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.15.1-dev\n"
+"X-Generator: Weblate 4.16-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -81,9 +81,8 @@ msgid "dir"
 msgstr "каталог"
 
 #: pynicotine/__init__.py:51
-#, fuzzy
 msgid "alternative directory for user data and plugins"
-msgstr "использовать пользовательский каталог для плагинов"
+msgstr "альтернативный каталог для персональных данных и плагинов"
 
 #: pynicotine/__init__.py:55
 msgid "start the program without showing window"
@@ -243,13 +242,13 @@ msgstr ""
 "загрузки в очереди перед непривилегированными пользователями."
 
 #: pynicotine/core.py:469
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of "
 "Soulseek privileges left"
 msgstr ""
 "Осталось %(days)i дней, %(hours)i часов, %(minutes)i минут, %(seconds)i "
-"секунд."
+"секунд до окончания привилегий Soulseek"
 
 #: pynicotine/core.py:487
 msgid "Your password has been changed"
@@ -1317,17 +1316,13 @@ msgid "Remember choice"
 msgstr "Запомнить выбор"
 
 #: pynicotine/gtkgui/application.py:495
-#, fuzzy
 msgid "Shares Not Available"
-msgstr "Акции недоступны"
+msgstr "Общие каталоги не найдены"
 
 #: pynicotine/gtkgui/application.py:496
-#, fuzzy
 msgid ""
 "Verify that external disks are mounted and folder permissions are correct."
-msgstr ""
-"Убедитесь, что внешние диски смонтированы и права доступа к папкам указаны "
-"правильно."
+msgstr "Убедитесь, что внешние диски смонтированы и доступ к папкам разрешён."
 
 #: pynicotine/gtkgui/application.py:498 pynicotine/gtkgui/application.py:523
 #: pynicotine/gtkgui/widgets/dialogs.py:322
@@ -1371,10 +1366,9 @@ msgid "Message Downloading Users"
 msgstr "Пользователи загрузки сообщений"
 
 #: pynicotine/gtkgui/application.py:677
-#, fuzzy
 msgid "Send private message to all users who are downloading from you:"
 msgstr ""
-"Отправьте личное сообщение всем пользователям, которые скачивают у вас:"
+"Отправить личное сообщение всем пользователям, которые скачивали файлы у вас:"
 
 #: pynicotine/gtkgui/application.py:678 pynicotine/gtkgui/application.py:691
 #, fuzzy
@@ -1387,9 +1381,8 @@ msgid "Message Buddies"
 msgstr "Доверенные друзья"
 
 #: pynicotine/gtkgui/application.py:690
-#, fuzzy
 msgid "Send private message to all online buddies:"
-msgstr "Отправить личное сообщение всем друзьям в сети:"
+msgstr "Отправить личное сообщение всем друзьям, которые находятся в сети:"
 
 #: pynicotine/gtkgui/application.py:715
 msgid "Select a Saved Shares List File"
@@ -2557,9 +2550,8 @@ msgid "Private Message from %(user)s"
 msgstr "Личное сообщение от %(user)s"
 
 #: pynicotine/gtkgui/privatechat.py:431
-#, fuzzy
 msgid "* Messages sent while you were offline"
-msgstr "* Сообщение(я) было(и) получено(ы) пока вы были не в сети."
+msgstr "* Сообщения, которые вы получили пока были не в сети"
 
 #: pynicotine/gtkgui/search.py:77
 msgid "_Global"
@@ -2666,9 +2658,8 @@ msgid "[PRIVATE]  %s"
 msgstr "[ЧАСТНЫЙ]  %s"
 
 #: pynicotine/gtkgui/search.py:735
-#, fuzzy
 msgid "Wishlist Results Found"
-msgstr "Найдены результаты списка желаний"
+msgstr "Найдено желаемого"
 
 #: pynicotine/gtkgui/search.py:991
 #, python-format
@@ -2680,9 +2671,9 @@ msgid "_Result Filters"
 msgstr "_Фильтры результата"
 
 #: pynicotine/gtkgui/search.py:995
-#, fuzzy, python-format
+#, python-format
 msgid "%d active filter(s)"
-msgstr "Очистить все активные фильтры"
+msgstr "%d активные фильтры"
 
 #: pynicotine/gtkgui/search.py:1048
 msgid "Add Wi_sh"
@@ -2977,9 +2968,8 @@ msgid "Remove _Buddy"
 msgstr "Удалить из желаемого"
 
 #: pynicotine/gtkgui/userinfo.py:466
-#, fuzzy
 msgid "Add _Buddy"
-msgstr "Добавить друга…"
+msgstr "Добавить друга"
 
 #: pynicotine/gtkgui/userinfo.py:470
 #, fuzzy
@@ -3199,9 +3189,8 @@ msgstr "_Просмотр файлов"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:359
 #: pynicotine/gtkgui/widgets/popupmenu.py:391
-#, fuzzy
 msgid "_Add Buddy"
-msgstr "Добавить друга…"
+msgstr "Добавить друга"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:362
 #: pynicotine/gtkgui/widgets/popupmenu.py:389
@@ -3564,9 +3553,8 @@ msgid "Failed to send number of shared files to the server: %s"
 msgstr "Не удалось отправить на сервер количество раздач: %s"
 
 #: pynicotine/shares.py:862
-#, fuzzy
 msgid "Rescan aborted due to unavailable shares"
-msgstr "Повторное сканирование прервано из-за недоступности общих ресурсов"
+msgstr "Повторное сканирование прервано из-за недоступности общих каталогов"
 
 #: pynicotine/shares.py:921
 #, python-format
@@ -3601,15 +3589,13 @@ msgid "Listening on port: %i"
 msgstr "Прослушивание на порту %i"
 
 #: pynicotine/slskproto.py:316
-#, fuzzy, python-format
+#, python-format
 msgid "No listening port is available in the specified port range %s–%s"
-msgstr ""
-"Нет доступных прослушивающих портов в указанном диапазоне портов %s–%s."
+msgstr "Нет доступных прослушиваемых портов в указанном диапазоне %s–%s"
 
 #: pynicotine/slskproto.py:317
-#, fuzzy
 msgid "Listening Port Unavailable"
-msgstr "Прослушивать порт %i"
+msgstr "Прослушиваемый порт недоступен"
 
 #: pynicotine/slskproto.py:407
 #, python-format
@@ -3657,9 +3643,9 @@ msgid "Can't get an exclusive lock on file - I/O error: %s"
 msgstr "Не удалось эксклюзивно блокировать файл - ошибка ввода-вывода: %s"
 
 #: pynicotine/transfers.py:1181
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot save file in %(folder_path)s: %(error)s"
-msgstr "Не удается открыть путь к файлу %(path)s: %(error)s"
+msgstr "Не удаётся сохранить файл в %(folder_path)s: %(error)s"
 
 #: pynicotine/transfers.py:1187 pynicotine/transfers.py:2029
 #, fuzzy
@@ -3774,29 +3760,28 @@ msgid "Out of Date"
 msgstr "Устаревшая"
 
 #: pynicotine/updatechecker.py:49
-#, fuzzy, python-format
+#, python-format
 msgid "Version %(version)s is available, released on %(date)s"
-msgstr "Доступна версия %(version)s, выпущенная на %(date)s"
+msgstr "Доступна версия %(version)s, выпущенная %(date)s"
 
 #: pynicotine/updatechecker.py:55
-#, fuzzy, python-format
+#, python-format
 msgid "You are using a development version of %s"
-msgstr "Похоже, вы используете версию программы Nicotine+ для разработчиков."
+msgstr "Вы используете версию %s для разработчиков"
 
 #: pynicotine/updatechecker.py:58
-#, fuzzy, python-format
+#, python-format
 msgid "You are using the latest version of %s"
-msgstr "Вы используете последнюю версию программы Nicotine+."
+msgstr "Вы используете последнюю версию %s"
 
 #: pynicotine/updatechecker.py:62
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot retrieve latest version: %s"
-msgstr "Ошибка при получении последней версии"
+msgstr "Ошибка при загрузке последней версии: %s"
 
 #: pynicotine/upnp.py:316
-#, fuzzy
 msgid "No UPnP devices found"
-msgstr "Устройства UPnP не найдены"
+msgstr "Устройства с UPnP не найдены"
 
 #: pynicotine/upnp.py:345
 #, python-format
@@ -3853,19 +3838,19 @@ msgid "User %(user)s is reading your user info"
 msgstr "Пользователь %(user)s читает информацию о вас"
 
 #: pynicotine/userlist.py:288
-#, fuzzy, python-format
+#, python-format
 msgid "%(user)s is away"
-msgstr "%s отсутствует"
+msgstr "%(user)s отсутствует"
 
 #: pynicotine/userlist.py:291
-#, fuzzy, python-format
+#, python-format
 msgid "%(user)s is online"
-msgstr "%s в сети"
+msgstr "%(user)s в сети"
 
 #: pynicotine/userlist.py:294
-#, fuzzy, python-format
+#, python-format
 msgid "%(user)s is offline"
-msgstr "%s не в сети"
+msgstr "%(user)s не в сети"
 
 #: pynicotine/userlist.py:297
 #, fuzzy
@@ -3943,14 +3928,12 @@ msgid "R_oom Wall"
 msgstr "Стена комнаты"
 
 #: pynicotine/gtkgui/ui/dialogs/about.ui:95
-#, fuzzy
 msgid "Created by"
-msgstr "Сделано"
+msgstr "Создал"
 
 #: pynicotine/gtkgui/ui/dialogs/about.ui:135
-#, fuzzy
 msgid "Translated by"
-msgstr "Переведено"
+msgstr "Перевёл"
 
 #: pynicotine/gtkgui/ui/dialogs/about.ui:175
 #, fuzzy
@@ -4328,9 +4311,8 @@ msgid "Clear"
 msgstr "Очистить"
 
 #: pynicotine/gtkgui/ui/downloads.ui:154
-#, fuzzy
 msgid "Clear All Finished/Filtered Downloads"
-msgstr "Загрузка файла завершена."
+msgstr "Очистить список загруженных файлов"
 
 #: pynicotine/gtkgui/ui/downloads.ui:170 pynicotine/gtkgui/ui/uploads.ui:170
 msgid "Clear Finished"
@@ -4526,9 +4508,8 @@ msgstr ""
 "каталогами и получать уведомления, когда они в сети"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1474
-#, fuzzy
 msgid "Join or create room…"
-msgstr "Присоединяйтесь или создайте комнату…"
+msgstr "Присоединяйтесь к комнатам или создайте свою…"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1475
 msgid ""
@@ -4752,9 +4733,8 @@ msgstr "Ограничения скорости загрузки"
 
 #: pynicotine/gtkgui/ui/popovers/downloadspeeds.ui:38
 #: pynicotine/gtkgui/ui/settings/downloads.ui:140
-#, fuzzy
 msgid "Unlimited download speed"
-msgstr "Ограничить скорость отдачи:"
+msgstr "Неограниченная скорость загрузки"
 
 #: pynicotine/gtkgui/ui/popovers/downloadspeeds.ui:49
 #: pynicotine/gtkgui/ui/settings/downloads.ui:150
@@ -5131,9 +5111,8 @@ msgstr "Ограничения скорости отдачи"
 
 #: pynicotine/gtkgui/ui/popovers/uploadspeeds.ui:38
 #: pynicotine/gtkgui/ui/settings/uploads.ui:157
-#, fuzzy
 msgid "Unlimited upload speed"
-msgstr "Ограничить скорость отдачи:"
+msgstr "Неограниченная скорость отдачи"
 
 #: pynicotine/gtkgui/ui/popovers/uploadspeeds.ui:49
 #: pynicotine/gtkgui/ui/settings/uploads.ui:167
@@ -5593,9 +5572,8 @@ msgstr ""
 "пользователей уникальны и чувствительны к регистру."
 
 #: pynicotine/gtkgui/ui/settings/network.ui:135
-#, fuzzy
 msgid "Listening port range:"
-msgstr "Порт прослушивания не установлен"
+msgstr "Диапазон прослушиваемых портов:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:209
 msgid "Public IP address:"
@@ -5626,10 +5604,8 @@ msgid "Miscellaneous"
 msgstr "Разное"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:340
-#, fuzzy
 msgid "Use UPnP to forward listening port"
-msgstr ""
-"Использовать UPnP для проброса портов через мой роутер (интервал в часах):"
+msgstr "Использовать UPnP для проброса прослушиваемых портов"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:348
 msgid "Auto-connect to server on startup"
@@ -5640,9 +5616,8 @@ msgid "Soulseek server:"
 msgstr "Адрес сервера Soulseek:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:388
-#, fuzzy
 msgid "Network interface:"
-msgstr "Поиск файлов в сети"
+msgstr "Сетевой интерфейс:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:399
 msgid ""
@@ -5704,9 +5679,8 @@ msgid "Version:"
 msgstr "Версия:"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:229
-#, fuzzy
 msgid "Created by:"
-msgstr "Сделано"
+msgstr "Создано:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:45
 msgid "Enable search history"
@@ -6220,9 +6194,8 @@ msgid "List font:"
 msgstr "Шрифт списка:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1605
-#, fuzzy
 msgid "Text view font:"
-msgstr "Шрифт текстового представления:"
+msgstr "Шрифт при просмотре текста:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1652
 msgid "Chat font:"
@@ -6257,9 +6230,8 @@ msgid "Ban User(s)"
 msgstr "Заблокировать пользователя(ей)"
 
 #: pynicotine/gtkgui/ui/uploads.ui:154
-#, fuzzy
 msgid "Clear All Finished/Cancelled Uploads"
-msgstr "Автоочистка завершённых/отменённых раздач из списка передачи."
+msgstr "Очистить список завершённых раздач"
 
 #: pynicotine/gtkgui/ui/uploads.ui:184 pynicotine/gtkgui/ui/uploads.ui:200
 #, fuzzy

@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2023-01-30 08:40+0000\n"
+"PO-Revision-Date: 2023-01-30 19:52+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -5868,9 +5868,8 @@ msgstr ""
 "A kész/megszakított feltöltések automatikus törlése az átviteli listáról"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:71
-#, fuzzy
 msgid "Double-click action for uploads:"
-msgstr "Dupla kattintásos művelet feltöltésekhez:"
+msgstr "Dupla kattintás a feltöltésekhez:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:87
 #: pynicotine/gtkgui/ui/uploads.ui:72
@@ -5883,9 +5882,8 @@ msgid "Retry"
 msgstr "Újra"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:121
-#, fuzzy
 msgid "Limit upload speed:"
-msgstr "Feltöltési sebesség korlátozása erre:"
+msgstr "Feltöltési sebesség korlátozása:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:135
 msgid "Per transfer"
@@ -5900,9 +5898,8 @@ msgid "Queue Limits"
 msgstr "Sorok korlátozása"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:232
-#, fuzzy
 msgid "Queue limits do not apply to buddies"
-msgstr "Várakozási mérethatár nem érvényes a barátokra"
+msgstr "A sorkorlátozás nem vonatkozik a barátokra"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:243
 msgid "Each user may queue a maximum of either:"
@@ -5921,19 +5918,16 @@ msgid "files"
 msgstr "fájlok"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:309
-#, fuzzy
 msgid "Queue Behavior"
-msgstr "Sorban állás viselkedése"
+msgstr "Sorba állítási módszer"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:322
-#, fuzzy
 msgid "Prioritize all buddies"
-msgstr "Minden barátnak elsőbbség"
+msgstr "Elsőbbség az összes barátnak"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:333
-#, fuzzy
 msgid "Upload queue type:"
-msgstr "Feltöltés várósor típus:"
+msgstr "Feltöltési sortípus:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:344
 msgid ""
@@ -5941,14 +5935,14 @@ msgid ""
 "in queue.\n"
 "First In, First Out: Files will be uploaded in the order they were queued."
 msgstr ""
-"Round Robin: A fájlok ciklikusan töltődnek fel a sorban álló "
-"felhasználókhoz.\n"
-"Első be, első ki: A fájlok a sorba helyezés sorrendjében kerülnek "
-"feltöltésre."
+"Round Robin: A fájlok ciklikus módon lesznek feltöltve a sorban várakozó "
+"felhasználók számára.\n"
+"Első be, első ki: A fájlok feltöltése abban a sorrendben történik, ahogyan a "
+"sorba bekerültek."
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:347
 msgid "Round Robin"
-msgstr "Round Robin (várakozási módszer)"
+msgstr "Round Robin"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:348
 msgid "First In, First Out"
@@ -5960,9 +5954,8 @@ msgstr ""
 "Feltöltések sorba állítása, ha a teljes átviteli sebesség eléri a (KiB/s):"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:387
-#, fuzzy
 msgid "Limit number of upload slots to:"
-msgstr "Feltöltési szál korlátozása erre:"
+msgstr "Feltöltési szál korlátozása erre az értékre:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:388
 msgid ""
@@ -5982,9 +5975,8 @@ msgstr ""
 "konfigurálva."
 
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:51
-#, fuzzy
 msgid "Media player command:"
-msgstr "Zenelejátszó Parancs ($ fájlnévhez):"
+msgstr "Zenelejátszó parancs:"
 
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:92
 #, fuzzy
