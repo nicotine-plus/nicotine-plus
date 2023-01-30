@@ -101,10 +101,6 @@ class ChatEntry:
             args = ""
             arg_self = "" if self.is_chatroom else self.entity
 
-        if cmd in ("/w", "/whois", "/info"):
-            if arg_self:
-                core.userinfo.show_user(arg_self)
-
         elif cmd in ("/us", "/usearch"):
             args_split = args.split(" ", maxsplit=1)
 

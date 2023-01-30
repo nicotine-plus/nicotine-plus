@@ -111,6 +111,15 @@ class Plugin(BasePlugin):
                 "usage": ["<user>"],
                 "usage_private_chat": ["[user]"]
             },
+            "whois": {
+                "aliases": ["info", "w"],
+                "callback": self.whois_command,
+                "description": _("Show user profile information"),
+                "disable": ["cli"],
+                "group": _("Users"),
+                "usage": ["<user>"],
+                "usage_private_chat": ["[user]"]
+            },
             "ip": {
                 "callback": self.ip_address_command,
                 "description": _("Show IP address or username"),
@@ -314,6 +323,13 @@ class Plugin(BasePlugin):
             user = args
 
         self.core.userbrowse.browse_user(user)
+
+    def whois_command(self, args, user=None, **_unused):
+
+        if args:
+            user = args
+
+        self.core.userinfo.show_user(user)
 
     """ Network Filters """
 
