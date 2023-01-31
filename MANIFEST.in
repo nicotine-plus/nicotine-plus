@@ -1,12 +1,16 @@
 # This file is responsible for including all necessary files in the source distribution
 # https://packaging.python.org/en/latest/guides/using-manifest-in/
 
+include .flake8
+include .pylintrc
+include *.md
 recursive-include data *.in
 recursive-include doc *
 recursive-include po *
 recursive-include pynicotine *
 recursive-include test *
 
+exclude 404.md
 recursive-exclude * *.desktop
 recursive-exclude * *.appdata.xml
 recursive-exclude * *.mo
