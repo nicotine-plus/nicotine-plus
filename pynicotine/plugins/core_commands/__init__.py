@@ -263,6 +263,8 @@ class Plugin(BasePlugin):
 
         if not search_query:
             output_text += "\n\n" + _("Type %(command)s to list similar commands") % {"command": "/help [query]"}
+        elif not num_commands:
+            output_text += "\n" + _("Type %(command)s to list available commands") % {"command": "/help"}
 
         self.output(output_text)
         return True
