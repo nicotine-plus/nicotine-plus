@@ -110,9 +110,9 @@ class Application:
         self.core.start(ui_callback=self.frame)
         self.frame.init_window()
 
-        # Process network messages 60 times per second
+        # Process network messages 20 times per second
         # High priority to ensure there are no delays
-        GLib.timeout_add(1000 / 60, self.on_process_network_msgs, priority=GLib.PRIORITY_HIGH_IDLE)
+        GLib.timeout_add(50, self.on_process_network_msgs, priority=GLib.PRIORITY_HIGH_IDLE)
 
         if config.sections["server"]["auto_connect_startup"]:
             self.core.connect()

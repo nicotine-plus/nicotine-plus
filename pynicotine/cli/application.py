@@ -45,10 +45,10 @@ class Application:
             # Network error, exit code 1
             return 1
 
-        # Main loop, process messages from networking thread
+        # Main loop, process messages from networking thread 20 times per second
         while not self.core.shutdown:
             self.core.process_network_msgs()
-            time.sleep(1 / 60)
+            time.sleep(0.05)
 
         # Shut down with exit code 0 (success)
         config.write_configuration()
