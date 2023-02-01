@@ -2257,7 +2257,7 @@ class SoulseekNetworkThread(Thread):
             self._calc_loops_per_second(current_time)
 
             # Don't exhaust the CPU
-            time.sleep(0.02)
+            time.sleep(0.016)
 
         # Networking thread aborted
         self._manual_server_disconnect = True
