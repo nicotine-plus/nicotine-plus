@@ -848,9 +848,9 @@ class Application:
         if not start_hidden:
             self.window.show()
 
-        # Process thread events 60 times per second
+        # Process thread events 20 times per second
         # High priority to ensure there are no delays
-        GLib.timeout_add(1000 / 60, self.on_process_thread_events, priority=GLib.PRIORITY_HIGH_IDLE)
+        GLib.timeout_add(50, self.on_process_thread_events, priority=GLib.PRIORITY_HIGH_IDLE)
 
     def on_shutdown(self, *_args):
         # Explicitly hide tray icon, otherwise it will not disappear on Windows
