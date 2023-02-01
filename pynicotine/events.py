@@ -242,7 +242,7 @@ class Events:
         self._scheduler_events.pop(event_id, None)
 
     def process_thread_events(self):
-        """ Called by the main loop 60 times per second to emit thread events in the main thread """
+        """ Called by the main loop 50 times per second to emit thread events in the main thread """
 
         if not self._thread_events:
             return

@@ -49,7 +49,7 @@ class Application:
         # Main loop, process events from threads
         while not core.shutdown:
             events.process_thread_events()
-            time.sleep(1 / 60)
+            time.sleep(0.02)
 
         # Shut down with exit code 0 (success)
         config.write_configuration()
