@@ -874,7 +874,7 @@ class PluginHandler:
                 break
 
         if plugin:
-            plugin.output(f"Unknown command: {'/' + command}. Type /help for a list of commands.")
+            plugin.output(f"Unknown command: {'/' + command}. Type /help to list available commands.")
 
         self.command_source = None
         return is_successful
