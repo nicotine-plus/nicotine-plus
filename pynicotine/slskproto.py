@@ -532,7 +532,7 @@ class SoulseekNetworkThread(Thread):
             self._last_cycle_time = current_time
             self._current_cycle_loop_count = 0
         else:
-            self._current_cycle_loop_count = self._current_cycle_loop_count + 1
+            self._current_cycle_loop_count += 1
 
     def _set_conn_speed_limit(self, sock, limit, limits):
 
