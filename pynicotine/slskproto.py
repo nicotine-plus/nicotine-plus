@@ -184,6 +184,7 @@ class SoulseekNetworkThread(Thread):
     CONNECTION_BACKLOG_LENGTH = 4096
     SOCKET_READ_BUFFER_SIZE = 1048576
     SOCKET_WRITE_BUFFER_SIZE = 1048576
+    SLEEP_MIN_IDLE = 0.016  # ~60 times per second
 
     def __init__(self, queue, user_addresses):
         """ queue is deque object that holds network messages from Core. """
@@ -2258,7 +2259,7 @@ class SoulseekNetworkThread(Thread):
             self._calc_loops_per_second(current_time)
 
             # Don't exhaust the CPU
-            time.sleep(1 / 60)
+            time.sleep(self.SLEEP_MIN_IDLE)
 
         # Networking thread aborted
         self._manual_server_disconnect = True
