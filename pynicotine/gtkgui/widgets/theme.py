@@ -283,7 +283,13 @@ def set_global_css():
 
     if GTK_API_VERSION >= 4:
         css = css + css_gtk3_20 + css_gtk4
-        global_css_provider.load_from_data(css)
+
+        try:
+            global_css_provider.load_from_data(css)
+
+        except TypeError:
+            # https://gitlab.gnome.org/GNOME/pygobject/-/merge_requests/231
+            global_css_provider.load_from_data(css.decode("utf-8"), length=-1)
 
         Gtk.StyleContext.add_provider_for_display(  # pylint: disable=no-member
             Gdk.Display.get_default(), global_css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
@@ -555,7 +561,12 @@ def set_widget_fg_bg_css(widget, bg_color=None, fg_color=None):
         context.add_provider(css_providers[widget], Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
         context.add_class(class_name)
 
-    css_providers[widget].load_from_data(css.encode('utf-8'))
+    try:
+        css_providers[widget].load_from_data(css.encode('utf-8'))
+
+    except TypeError:
+        # https://gitlab.gnome.org/GNOME/pygobject/-/merge_requests/231
+        css_providers[widget].load_from_data(css, length=-1)
 
 
 def set_widget_font(widget, font):
