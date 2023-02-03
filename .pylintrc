@@ -89,7 +89,8 @@ disable=missing-class-docstring,
         duplicate-code,
         no-value-for-parameter,
         consider-using-f-string,
-        no-self-use
+        no-self-use,
+        superfluous-parens
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option
@@ -564,7 +565,5 @@ preferred-modules=
 
 [EXCEPTIONS]
 
-# Exceptions that will emit a warning when being caught. Defaults to
-# "BaseException, Exception".
-overgeneral-exceptions=BaseException,
-                       Exception
+# Exceptions that will emit a warning when being caught.
+overgeneral-exceptions=builtins.BaseException,builtins.Exception
