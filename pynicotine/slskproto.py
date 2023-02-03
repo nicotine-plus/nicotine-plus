@@ -2223,12 +2223,13 @@ class SoulseekNetworkThread(Thread):
                 continue
 
             current_time = time.time()
-            num_sockets = self._numsockets
 
             # Send updated connection count to core. Avoid sending too many
             # updates at once, if there are a lot of connections.
             if (current_time - self._last_conn_stat_time) >= 1:
-                events.emit_main_thread("set-connection-stats", self._numsockets, self._total_downloads,
+                num_sockets = self._numsockets
+
+                events.emit_main_thread("set-connection-stats", num_sockets, self._total_downloads,
                                         self._total_download_bandwidth, self._total_uploads,
                                         self._total_upload_bandwidth)
 
