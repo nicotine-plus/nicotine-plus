@@ -491,7 +491,7 @@ class Plugin(BasePlugin):
 
             self.output("\n" + f"{num_shares} {group_name} shares:")
 
-            for virtual_name, folder_path, *_unused in share_group:
+            for virtual_name, folder_path, *_ignored in share_group:
                 self.output(f'• "{virtual_name}" {folder_path}')
 
             num_listed += num_shares
@@ -509,7 +509,7 @@ class Plugin(BasePlugin):
     def search_buddies_command(self, args, **_unused):
         self.core.search.do_search(args, "buddies")
 
-    def search_user_command(self, args, user=None, **_unused):
+    def search_user_command(self, args, **_unused):
 
         args_split = args.split(maxsplit=1)
         user, query = args_split[0], args_split[1]
