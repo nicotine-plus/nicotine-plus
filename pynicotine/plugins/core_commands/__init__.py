@@ -52,30 +52,6 @@ class Plugin(BasePlugin):
                 "group": _("Chat"),
                 "usage": ["<something..>"]
             },
-            "close": {
-                "description": "Close private chat",
-                "aliases": ["c"],
-                "disable": ["cli"],
-                "group": "Private Chat",
-                "callback": self.close_command,
-                "usage_chatroom": ["<user>"],
-                "usage_private_chat": ["[user]"]
-            },
-            "msg": {
-                "aliases": ["m"],
-                "callback": self.msg_command,
-                "description": _("Send private message to user"),
-                "disable": ["cli"],
-                "group": _("Private Chat"),
-                "usage": ["<user>", "<message..>"]
-            },
-            "pm": {
-                "callback": self.pm_command,
-                "description": _("Open private chat"),
-                "disable": ["cli"],
-                "group": _("Private Chat"),
-                "usage": ["<user>"]
-            },
             "sample": {
                 "description": "Sample command description",
                 "aliases": ["demo"],
@@ -108,6 +84,30 @@ class Plugin(BasePlugin):
                 "disable": ["cli"],
                 "group": _("Chat Rooms"),
                 "usage": ["<room>", "<message..>"]
+            },
+            "pm": {
+                "callback": self.pm_command,
+                "description": _("Open private chat"),
+                "disable": ["cli"],
+                "group": _("Private Chat"),
+                "usage": ["<user>"]
+            },
+            "close": {
+                "description": "Close private chat",
+                "aliases": ["c"],
+                "disable": ["cli"],
+                "group": "Private Chat",
+                "callback": self.close_command,
+                "usage_chatroom": ["<user>"],
+                "usage_private_chat": ["[user]"]
+            },
+            "msg": {
+                "aliases": ["m"],
+                "callback": self.msg_command,
+                "description": _("Send private message to user"),
+                "disable": ["cli"],
+                "group": _("Private Chat"),
+                "usage": ["<user>", "<message..>"]
             },
             "add": {
                 "aliases": ["buddy"],
@@ -284,6 +284,9 @@ class Plugin(BasePlugin):
 
         return True
 
+    def sample_command(self, _args, **_unused):
+        self.output("Hello")
+
     """ Chat """
 
     def clear_command(self, args, user=None, room=None):
@@ -301,35 +304,6 @@ class Plugin(BasePlugin):
 
     def me_command(self, args, **_unused):
         self.send_message("/me " + args)  # /me is sent as plain text
-
-    """ Private Chat """
-
-    def close_command(self, args, user=None, **_unused):
-
-        if args:
-            user = args
-
-        if user not in self.core.privatechat.users:
-            self.output(f"Not messaging with user {user}")
-            return False
-
-        self.output(f"Closing private chat of user {user}")
-        self.core.privatechat.remove_user(user)
-        return True
-
-    def msg_command(self, args, **_unused):
-
-        args_split = args.split(maxsplit=1)
-        user, text = args_split[0], args_split[1]
-
-        self.send_private(user, text, show_ui=True, switch_page=False)
-
-    def pm_command(self, args, **_unused):
-        self.core.privatechat.show_user(args)
-
-    def sample_command(self, _args, **_unused):
-        self.output("Hello")
-        return True
 
     """ Chat Rooms """
 
@@ -359,6 +333,31 @@ class Plugin(BasePlugin):
 
         self.send_public(room, text)
         return True
+
+    """ Private Chat """
+
+    def pm_command(self, args, **_unused):
+        self.core.privatechat.show_user(args)
+
+    def close_command(self, args, user=None, **_unused):
+
+        if args:
+            user = args
+
+        if user not in self.core.privatechat.users:
+            self.output(f"Not messaging with user {user}")
+            return False
+
+        self.output(f"Closing private chat of user {user}")
+        self.core.privatechat.remove_user(user)
+        return True
+
+    def msg_command(self, args, **_unused):
+
+        args_split = args.split(maxsplit=1)
+        user, text = args_split[0], args_split[1]
+
+        self.send_private(user, text, show_ui=True, switch_page=False)
 
     """ Users """
 
