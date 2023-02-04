@@ -181,14 +181,14 @@ class NetworkFilter:
         """ Check if an IP address is present in a list """
 
         if not ip_addresses:
-            # Get all known IP addressed for user
+            # Get all known IP addresses for user
             ip_addresses = self._get_previous_user_ip_addresses(username, ip_list)
             online_ip_address = self.get_online_user_ip_address(username)
 
             if online_ip_address:
                 ip_addresses.add(online_ip_address)
 
-            if username and f"? ({username})" in ip_addresses:
+            elif username and f"? ({username})" in ip_addresses:
                 # Username placeholder present. We don't know the user's IP address yet, but we want to filter it.
                 return True
 
