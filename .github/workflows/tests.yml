@@ -59,6 +59,9 @@ jobs:
   fedora:
     runs-on: ubuntu-latest
     container: fedora:rawhide
+    strategy:
+      matrix:
+        gtk: [3, 4]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -66,7 +69,7 @@ jobs:
           fetch-depth: 0
 
       - name: Install dependencies
-        run: dnf -y install gettext gtk4 pylint python3-flake8 python3-gobject python3-pytest-xvfb
+        run: dnf -y install gettext gtk${{ matrix.gtk }} pylint python3-flake8 python3-gobject python3-pytest-xvfb
 
       - name: Flake8 linter
         run: python3 -m flake8
@@ -81,14 +84,12 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        include:
-          - { msystem: MINGW64, arch: x86_64, gtk: 3 }
-          - { msystem: MINGW64, arch: x86_64, gtk: 4 }
+        gtk: [3, 4]
     defaults:
       run:
         shell: msys2 {0}
     env:
-      ARCH: ${{ matrix.arch }}
+      ARCH: x86_64
       NICOTINE_GTK_VERSION: ${{ matrix.gtk }}
     steps:
       - name: Checkout code
@@ -99,17 +100,17 @@ jobs:
       - name: Setup msys2
         uses: msys2/setup-msys2@v2
         with:
-          msystem: ${{ matrix.msystem }}
+          msystem: MINGW64
           release: false
           install: >-
-            mingw-w64-${{ matrix.arch }}-gettext
-            mingw-w64-${{ matrix.arch }}-gtk${{ matrix.gtk }}
-            mingw-w64-${{ matrix.arch }}-python-chardet
-            mingw-w64-${{ matrix.arch }}-python-cx-freeze
-            mingw-w64-${{ matrix.arch }}-python-flake8
-            mingw-w64-${{ matrix.arch }}-python-pip
-            mingw-w64-${{ matrix.arch }}-python-pylint
-            mingw-w64-${{ matrix.arch }}-python-gobject
+            mingw-w64-${{ env.ARCH }}-gettext
+            mingw-w64-${{ env.ARCH }}-gtk${{ matrix.gtk }}
+            mingw-w64-${{ env.ARCH }}-python-chardet
+            mingw-w64-${{ env.ARCH }}-python-cx-freeze
+            mingw-w64-${{ env.ARCH }}-python-flake8
+            mingw-w64-${{ env.ARCH }}-python-pip
+            mingw-w64-${{ env.ARCH }}-python-pylint
+            mingw-w64-${{ env.ARCH }}-python-gobject
 
       - name: Install additional dependencies
         run: python3 packaging/windows/dependencies.py
