@@ -56,6 +56,27 @@ jobs:
       - name: Run autopkgtest
         run: sudo autopkgtest . -- null
 
+  fedora:
+    runs-on: ubuntu-latest
+    container: fedora:rawhide
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Install dependencies
+        run: dnf -y install gettext gtk4 pylint python3-flake8 python3-gobject python3-pytest-xvfb
+
+      - name: Flake8 linter
+        run: python3 -m flake8
+
+      - name: Pylint linter
+        run: python3 -m pylint pynicotine test
+
+      - name: Integration and unit tests
+        run: python3 -m pytest -s -v
+
   windows:
     runs-on: windows-latest
     strategy:
