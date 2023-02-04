@@ -49,7 +49,7 @@ LANGUAGES = (
     ("sv", "Svenska"),
     ("tr", "Türkçe"),
     ("uk", "Українська"),
-    ("zh_Hans", "汉语")
+    ("zh_CN", "汉语")
 )
 
 
