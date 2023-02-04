@@ -18,11 +18,12 @@
 
 import os
 
+from xml.etree import ElementTree
+
 from gi.repository import Gtk
 
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.application import GTK_GUI_DIR
-from pynicotine.i18n import TRANSLATION_DOMAIN
 from pynicotine.utils import encode_path
 
 
@@ -37,19 +38,26 @@ class UserInterface:
 
         if filename not in self.ui_data:
             with open(encode_path(os.path.join(GTK_GUI_DIR, filename)), encoding="utf-8") as file_handle:
+                ui_xml_tree = ElementTree.parse(file_handle)
+
+                for node in ui_xml_tree.iterfind('.//*[@translatable="yes"]'):
+                    node.text = _(node.text)
+                    del node.attrib["translatable"]
+
+                ui_xml_string = ElementTree.tostring(ui_xml_tree.getroot(), encoding="unicode")
+
                 if GTK_API_VERSION >= 4:
-                    self.ui_data[filename] = file_handle.read().replace(
-                        "GtkRadioButton", "GtkCheckButton").replace("\"can-focus\"", "\"focusable\"")
-                else:
-                    self.ui_data[filename] = file_handle.read()
+                    ui_xml_string = ui_xml_string.replace(
+                        "GtkRadioButton", "GtkCheckButton").replace('"can-focus"', '"focusable"')
+
+                self.ui_data[filename] = ui_xml_string
 
         if GTK_API_VERSION >= 4:
             self.builder = Gtk.Builder(self)
-            self.builder.set_translation_domain(TRANSLATION_DOMAIN)
             self.builder.add_from_string(self.ui_data[filename])
             Gtk.Buildable.get_name = Gtk.Buildable.get_buildable_id  # pylint: disable=no-member
         else:
-            self.builder = Gtk.Builder(translation_domain=TRANSLATION_DOMAIN)
+            self.builder = Gtk.Builder()
             self.builder.add_from_string(self.ui_data[filename])
             self.builder.connect_signals(self)                       # pylint: disable=no-member
 
