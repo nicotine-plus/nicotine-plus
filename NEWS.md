@@ -1,5 +1,17 @@
 # Release Notes
 
+## Version 3.2.9 (Development Version 1)
+
+### Corrections
+
+ * Fixed a crash on some systems after running for a few days
+ * Fixed an issue where some private messages were ignored after a user reconnected
+
+### Issues closed on GitHub
+
+ * Messages are wonky ([#2329](https://github.com/nicotine-plus/nicotine-plus/issues/2329))
+
+
 ## Version 3.2.8 (January 6, 2023)
 
 ### Corrections
