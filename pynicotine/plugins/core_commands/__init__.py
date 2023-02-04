@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from pynicotine.pluginsystem import BasePlugin
+from pynicotine.slskmessages import UserStatus
 
 
 class Plugin(BasePlugin):
@@ -31,6 +32,11 @@ class Plugin(BasePlugin):
                 "callback": self.help_command,
                 "description": _("List available commands"),
                 "usage": ["[query]"]
+            },
+            "away": {
+                "aliases": ["a"],
+                "callback": self.away_command,
+                "description": _("Toggle away status"),
             },
             "quit": {
                 "aliases": ["q", "exit"],
@@ -268,6 +274,15 @@ class Plugin(BasePlugin):
 
         self.output(output_text)
         return True
+
+    def away_command(self, _args, **_unused):
+
+        if self.core.user_status == UserStatus.OFFLINE:
+            self.output(_("Offline"))
+            return
+
+        self.core.set_away_mode(self.core.user_status != UserStatus.AWAY, save_state=True)
+        self.output(_("Online") if self.core.user_status == UserStatus.ONLINE else _("Away"))
 
     def quit_command(self, args, **_unused):
 

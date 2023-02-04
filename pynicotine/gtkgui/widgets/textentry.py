@@ -106,9 +106,6 @@ class ChatEntry:
                 core.privatechat.show_user(arg_self)
                 core.privatechat.send_message(arg_self, core.privatechat.CTCP_VERSION)
 
-        elif cmd in ("/a", "/away"):
-            core.set_away_mode(core.user_status != UserStatus.AWAY, save_state=True)
-
         elif cmd == "/now":
             core.now_playing.display_now_playing(
                 callback=lambda np_message: self.send_message(self.entity, np_message))
