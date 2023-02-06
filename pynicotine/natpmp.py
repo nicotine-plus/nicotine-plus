@@ -495,16 +495,21 @@ class NatPMP:
         self._timer = None
 
     @staticmethod
+    def is_valid_port(p):
+        # port 0 is used to remove mappings
+        return p in range(0, 65535+1)
+
+    @staticmethod
     def _request_port_mapping(proto, public_port, private_port, lifetime):
         proto = proto.upper()
 
         if proto not in NatPMP.VALID_PROTOS:
             raise Exception("Invalid protocol for forwarding: {}".format(proto))
 
-        if not is_valid_port(public_port):
+        if not NatPMP.is_valid_port(public_port):
             raise Exception("Invalid port for forwarding: {}".format(public_port))
 
-        if not is_valid_port(private_port):
+        if not NatPMP.is_valid_port(private_port):
             raise Exception("Invalid port for forwarding: {}".format(private_port))
 
         if proto == "TCP":
@@ -574,7 +579,3 @@ class NatPMP:
 
     def cancel_timer(self):
         events.cancel_scheduled(self._timer)
-
-
-def is_valid_port(p):
-    return p in range(1, 65535)
