@@ -555,6 +555,43 @@ class NatPMP:
         log.add("NatPMP: Internal {} port {} was successfully mapped to external port {}".format(
             self.proto, self.private_port, self.public_port))
 
+    def _remove_port_mapping(self):
+        """
+        This function supports removing a Port Mapping via the NAT-PMP protocol.
+        """
+
+        try:
+            log.add_debug("NatPMP: Removing Port Mapping rule...")
+
+            # Perform the port mapping
+            log.add_debug("NatPMP: Trying to unmap internal {} port {} to external port {}".format(
+                self.proto, self.private_port, self.public_port))
+
+            response = self._request_port_mapping(
+                proto=self.proto,
+                public_port=0,
+                private_port=self.private_port,
+                lifetime=0
+            )
+
+            if not response.successful():
+                log.add_debug("NatPMP: Port Unmapping failed. {}: {}".format(
+                    response.result, error_str(response.result)))
+                raise RuntimeError("Error code {}: {}".format(
+                    response.result, error_str(response.result)))
+
+        except Exception as error:
+            from traceback import format_exc
+            log.add("NatPMP: Failed to remove mapping of internal {} port {} "
+                    "to external port {}: {}".format(
+                        self.proto, self.private_port, self.public_port, error))
+            log.add_debug(format_exc())
+            return
+
+        log.add("NatPMP: Succesfully removed mapping of internal {} port {} "
+                "to external port {}".format(
+                    self.proto, self.private_port, self.public_port))
+
     def add_port_mapping(self, blocking=False):
 
         # Test if we want to do a port mapping
@@ -569,6 +606,17 @@ class NatPMP:
             Thread(target=self._update_port_mapping, name="NatPMPAddPortmapping", daemon=True).start()
 
         self._start_timer()
+
+    def remove_port_mapping(self, blocking=False):
+        # Test if we want to do a port mapping
+        if not config.sections["server"]["natpmp"]:
+            return
+
+        # Remove the mapping 
+        if blocking:
+            self._remove_port_mapping()
+        else:
+            Thread(target=self._remove_port_mapping, name="NatPMPRemovePortmapping", daemon=True).start()
 
     def _start_timer(self):
         """ Port mapping entries last 24 hours, we need to regularly renew them.
