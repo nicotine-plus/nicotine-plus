@@ -86,6 +86,7 @@ from pynicotine.slskmessages import UserInfoResponse
 from pynicotine.slskmessages import UserStatus
 from pynicotine.slskmessages import increment_token
 from pynicotine.upnp import UPnP
+from pynicotine.natpmp import NatPMP
 
 
 # Set the maximum number of open files to the hard limit reported by the OS.
@@ -193,6 +194,7 @@ class SoulseekNetworkThread(Thread):
 
         self.listenport = None
         self.upnp = None
+        self.natpmp = None
 
         self._queue = queue
         self._user_addresses = user_addresses
@@ -416,6 +418,7 @@ class SoulseekNetworkThread(Thread):
 
         self._close_listen_socket()
         self.upnp.cancel_timer()
+        self.natpmp.cancel_timer()
 
         for sock in self._conns.copy():
             self._close_connection(self._conns, sock, callback=False)
@@ -1212,9 +1215,16 @@ class SoulseekNetworkThread(Thread):
 
                     elif msg_class is Login:
                         if msg.success:
-                            # Ensure listening port is open
-                            self.upnp.local_ip_address, self.upnp.port = self._user_addresses[self._server_username]
+                            # map listening port
+                            local_ip_addr, port = self._user_addresses[self._server_username]
+                            ## UPnP
+                            self.upnp.local_ip_address, self.upnp.port = local_ip_addr, port
                             self.upnp.add_port_mapping(blocking=True)
+                            ## NAT-PMP
+                            self.natpmp.private_port = port
+                            self.natpmp.public_port = port
+                            ### don't block, because NAT-PMP can take a while to timeout and fail
+                            self.natpmp.add_port_mapping(blocking=False)
 
                             # Check for indirect connection timeouts
                             self._conn_timeouts_timer_id = events.schedule(
@@ -2212,6 +2222,7 @@ class SoulseekNetworkThread(Thread):
 
         events.emit_main_thread("set-connection-stats")
         self.upnp = UPnP()
+        self.natpmp = NatPMP()
 
         # Watch sockets for I/0 readiness with the selectors module. Only call register() after a socket
         # is bound, otherwise watching the socket not guaranteed to work (breaks on OpenBSD at least)
