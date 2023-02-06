@@ -235,11 +235,11 @@ class BasePlugin:
         """ Convenience function to send a message to the same user/room
         a plugin command runs for """
 
-        if self.parent.command_source is None:  # pylint: disable=no-member
+        if self.parent.command_source is None:
             # Function was not called from a command
             return
 
-        command_interface, source = self.parent.command_source  # pylint: disable=no-member
+        command_interface, source = self.parent.command_source
 
         if command_interface == "cli":
             return
@@ -251,11 +251,11 @@ class BasePlugin:
         """ Convenience function to display a raw message the same window
         a plugin command runs from """
 
-        if self.parent.command_source is None:  # pylint: disable=no-member
+        if self.parent.command_source is None:
             # Function was not called from a command
             return
 
-        command_interface, source = self.parent.command_source  # pylint: disable=no-member
+        command_interface, source = self.parent.command_source
 
         if command_interface == "cli":
             print(text)

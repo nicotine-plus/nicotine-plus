@@ -241,7 +241,7 @@ class Plugin(BasePlugin):
             command_interface = "cli"
 
         search_query = " ".join(args.lower().split(" ", maxsplit=1))
-        command_groups = self.parent.get_command_descriptions(  # pylint: disable=no-member
+        command_groups = self.parent.get_command_descriptions(
             command_interface, search_query=search_query
         )
         num_commands = sum(len(command_groups[x]) for x in command_groups)
