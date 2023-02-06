@@ -494,6 +494,12 @@ class NatPMP:
         self.private_port = None
         self._timer = None
 
+    def configured(self):
+        """
+        Returns true only if this instance is fully configured, thus ready to use. 
+        """
+        return self.public_port and self.private_port and self.proto
+
     @staticmethod
     def is_valid_port(p):
         # port 0 is used to remove mappings
@@ -599,6 +605,9 @@ class NatPMP:
             log.add_debug("NatPMP: disabled by configuration")
             return
 
+        if not self.configured():
+            return
+
         # Do the port mapping
         if blocking:
             self._update_port_mapping()
@@ -610,6 +619,9 @@ class NatPMP:
     def remove_port_mapping(self, blocking=False):
         # Test if we want to do a port mapping
         if not config.sections["server"]["natpmp"]:
+            return
+
+        if not self.configured():
             return
 
         # Remove the mapping 
