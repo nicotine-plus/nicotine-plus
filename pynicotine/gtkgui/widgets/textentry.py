@@ -113,10 +113,6 @@ class ChatEntry:
             core.now_playing.display_now_playing(
                 callback=lambda np_message: self.send_message(self.entity, np_message))
 
-        elif cmd == "/toggle":
-            if args:
-                core.pluginhandler.toggle_plugin(args)
-
         elif self.is_chatroom:
             core.pluginhandler.trigger_chatroom_command_event(self.entity, cmd[1:], args)
 

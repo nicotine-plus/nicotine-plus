@@ -440,9 +440,13 @@ class PluginHandler:
         enabled = plugin_name in self.enabled_plugins
 
         if enabled:
-            self.disable_plugin(plugin_name)
+            if self.disable_plugin(plugin_name):
+                config.sections["plugins"]["enabled"].remove(plugin_name)
         else:
-            self.enable_plugin(plugin_name)
+            if self.enable_plugin(plugin_name):
+                config.sections["plugins"]["enabled"].append(plugin_name)
+
+        config.write_configuration()
 
     def load_plugin(self, plugin_name):
 

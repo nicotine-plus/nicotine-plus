@@ -224,6 +224,12 @@ class Plugin(BasePlugin):
                 "disable": ["cli"],
                 "group": _("Search Files"),
                 "usage": ["<user>", "<query>"]
+            },
+            "plugin": {
+                "callback": self.plugin_handler_command,
+                "description": _("Manage plugin"),
+                "group": _("Plugin Commands"),
+                "usage": ["<toggle|info>", "<plugin_name>"]
             }
         }
 
@@ -514,3 +520,19 @@ class Plugin(BasePlugin):
         user, query = args_split[0], args_split[1]
 
         self.core.search.do_search(query, "user", user=user)
+
+    """ Plugin Commands """
+
+    def plugin_handler_command(self, args, **_unused):
+
+        args_split = args.split(maxsplit=1)
+        action, plugin_name = args_split[0], args_split[1]
+
+        if action == "toggle":
+            self.parent.toggle_plugin(plugin_name)
+
+        elif action == "info":
+            plugin_info = self.parent.get_plugin_info(plugin_name)
+
+            for key, value in plugin_info.items():
+                self.output(f"• {key}: {value}")
