@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2023-02-06 05:38+0000\n"
+"PO-Revision-Date: 2023-02-07 18:25+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -5927,7 +5927,7 @@ msgstr "Elsőbbség az összes barátnak"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:333
 msgid "Upload queue type:"
-msgstr "Feltöltési sortípus:"
+msgstr "Feltöltési sor típusa:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:344
 msgid ""
@@ -6107,7 +6107,7 @@ msgstr "Csevegőszoba lapsáv pozíciója:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:540
 msgid "Private chat tab bar position:"
-msgstr "A privát csevegés lapsávjának pozíciója:"
+msgstr "Privát csevegés lapsáv pozíciója:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:563
 msgid "Search tab bar position:"
@@ -6137,32 +6137,26 @@ msgid "Queued search result text color:"
 msgstr "Sorban álló keresési eredmény szövegének színe:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:783
-#, fuzzy
 msgid "Chat username appearance:"
-msgstr "Chat felhasználónév megjelenése:"
+msgstr "Csevegési felhasználónév megjelenése:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:796
-#, fuzzy
 msgid "bold"
 msgstr "félkövér"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:797
-#, fuzzy
 msgid "italic"
 msgstr "dőlt"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:798
-#, fuzzy
 msgid "underline"
-msgstr "Elérhető"
+msgstr "aláhúzott"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:799
-#, fuzzy
 msgid "normal"
-msgstr "hagyományos"
+msgstr "normál"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:820
-#, fuzzy
 msgid "Remote text color:"
 msgstr "Távoli szöveg színe:"
 
@@ -6171,9 +6165,8 @@ msgid "Local text color:"
 msgstr "Helyi szöveg színe:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:904
-#, fuzzy
 msgid "Command output text color:"
-msgstr "Távoli szöveg színe:"
+msgstr "Parancskimeneti szöveg színe:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:946
 #, fuzzy
