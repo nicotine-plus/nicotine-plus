@@ -21,7 +21,6 @@ import sys
 
 from gi.repository import Gio
 from gi.repository import GLib
-from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.core import core
@@ -626,86 +625,6 @@ class StatusNotifierImplementation(BaseImplementation):
         self.tray_icon.emit_signal("NewStatus", status)
 
 
-class StatusIconImplementation(BaseImplementation):
-
-    def __init__(self, application):
-
-        super().__init__(application)
-
-        if not hasattr(Gtk, "StatusIcon") or sys.platform == "darwin" or os.getenv("WAYLAND_DISPLAY"):
-            # GtkStatusIcon does not work on macOS and Wayland
-            raise ImplementationUnavailable("StatusIcon implementation not available")
-
-        self.tray_icon = Gtk.StatusIcon(tooltip_text=config.application_name)
-        self.tray_icon.connect("activate", self.on_window_hide_unhide)
-        self.tray_icon.connect("popup-menu", self.on_status_icon_popup)
-
-        self.gtk_menu = self.build_gtk_menu()
-
-    def on_status_icon_popup(self, _status_icon, button, _activate_time):
-
-        if button == 3:
-            time = Gtk.get_current_event_time()
-            self.gtk_menu.popup(None, None, None, None, button, time)
-
-    @staticmethod
-    def set_item_text(item, text):
-        BaseImplementation.set_item_text(item, text)
-        item["gtk_menu_item"].set_label(text)
-
-    @staticmethod
-    def set_item_sensitive(item, sensitive):
-        BaseImplementation.set_item_sensitive(item, sensitive)
-        item["gtk_menu_item"].set_sensitive(sensitive)
-
-    @staticmethod
-    def set_item_visible(item, visible):
-        BaseImplementation.set_item_visible(item, visible)
-        item["gtk_menu_item"].set_visible(visible)
-
-    @staticmethod
-    def set_item_toggled(item, toggled):
-
-        BaseImplementation.set_item_toggled(item, toggled)
-        gtk_menu_item = item["gtk_menu_item"]
-
-        with gtk_menu_item.handler_block(item["gtk_handler"]):
-            gtk_menu_item.set_active(toggled)
-
-    def build_gtk_menu(self):
-
-        gtk_menu = Gtk.Menu()
-
-        for item in self.menu_items.values():
-            text = item.get("text")
-
-            if text is None:
-                gtk_menu_item = Gtk.SeparatorMenuItem()
-            else:
-                if "toggled" in item:
-                    gtk_menu_item = Gtk.CheckMenuItem.new_with_label(text)
-                else:
-                    gtk_menu_item = Gtk.MenuItem.new_with_label(text)
-
-                item["gtk_handler"] = gtk_menu_item.connect("activate", item["callback"])
-
-            item["gtk_menu_item"] = gtk_menu_item
-
-            gtk_menu_item.set_visible(True)
-            gtk_menu.append(gtk_menu_item)
-
-        return gtk_menu
-
-    def set_icon_name(self, icon_name):
-        self.tray_icon.set_from_icon_name(icon_name)
-
-    def is_visible(self):
-        return self.tray_icon.get_visible() and self.tray_icon.is_embedded()
-
-    def set_visible(self, visible):
-        self.tray_icon.set_visible(visible)
-
-
 class TrayIcon:
 
     def __init__(self, application):
@@ -747,12 +666,8 @@ class TrayIcon:
                 self.implementation = StatusNotifierImplementation(self.application)
 
             except ImplementationUnavailable:
-                try:
-                    self.implementation = StatusIconImplementation(self.application)
-
-                except ImplementationUnavailable:
-                    self.available = False
-                    return
+                self.available = False
+                return
 
             self.refresh_state()
 
