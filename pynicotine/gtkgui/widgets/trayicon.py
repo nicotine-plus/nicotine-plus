@@ -681,9 +681,11 @@ class TrayIcon:
 
     def unload(self, *_args):
 
-        self.implementation.unload()
-        self.implementation = None
         self.available = False
+
+        if self.implementation:
+            self.implementation.unload()
+            self.implementation = None
 
     def update_window_visibility(self):
         if self.implementation:
