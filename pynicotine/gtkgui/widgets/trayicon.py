@@ -51,6 +51,10 @@ class BaseImplementation:
 
         self.create_menu()
 
+    def unload(self):
+        # Implemented in subclasses
+        pass
+
     def create_item(self, text=None, callback=None, check=False):
 
         item = {"id": self.menu_item_id, "sensitive": True, "visible": True}
@@ -552,13 +556,15 @@ class StatusNotifierImplementation(BaseImplementation):
             )
 
         except GLib.Error as error:
-            if self.tray_icon is not None:
-                self.tray_icon.unregister()
-
+            self.unload()
             raise ImplementationUnavailable("StatusNotifier implementation not available: %s" % error) from error
 
         self.update_menu()
         self.update_icon_theme()
+
+    def unload(self):
+        if self.tray_icon is not None:
+            self.tray_icon.unregister()
 
     @staticmethod
     def check_icon_path(icon_name, icon_path):
@@ -761,7 +767,7 @@ class TrayIcon:
             "org.kde.StatusNotifierWatcher",
             Gio.BusNameWatcherFlags.NONE,
             self.load,
-            None
+            self.unload
         )
 
     def load(self, *_args):
@@ -798,6 +804,12 @@ class TrayIcon:
             return
 
         self.hide()
+
+    def unload(self, *_args):
+
+        self.implementation.unload()
+        self.implementation = None
+        self.available = False
 
     def update_window_visibility(self):
         if self.implementation:
