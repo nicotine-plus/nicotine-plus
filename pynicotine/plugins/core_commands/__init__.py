@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from pynicotine.pluginsystem import BasePlugin
+from pynicotine.slskmessages import UserStatus
 
 
 class Plugin(BasePlugin):
@@ -31,6 +32,11 @@ class Plugin(BasePlugin):
                 "callback": self.help_command,
                 "description": _("List available commands"),
                 "usage": ["[query]"]
+            },
+            "away": {
+                "aliases": ["a"],
+                "callback": self.away_command,
+                "description": _("Toggle away status"),
             },
             "quit": {
                 "aliases": ["q", "exit"],
@@ -51,30 +57,6 @@ class Plugin(BasePlugin):
                 "disable": ["cli"],
                 "group": _("Chat"),
                 "usage": ["<something..>"]
-            },
-            "close": {
-                "description": "Close private chat",
-                "aliases": ["c"],
-                "disable": ["cli"],
-                "group": "Private Chat",
-                "callback": self.close_command,
-                "usage_chatroom": ["<user>"],
-                "usage_private_chat": ["[user]"]
-            },
-            "msg": {
-                "aliases": ["m"],
-                "callback": self.msg_command,
-                "description": _("Send private message to user"),
-                "disable": ["cli"],
-                "group": _("Private Chat"),
-                "usage": ["<user>", "<message..>"]
-            },
-            "pm": {
-                "callback": self.pm_command,
-                "description": _("Open private chat"),
-                "disable": ["cli"],
-                "group": _("Private Chat"),
-                "usage": ["<user>"]
             },
             "sample": {
                 "description": "Sample command description",
@@ -101,6 +83,71 @@ class Plugin(BasePlugin):
                 "group": _("Chat Rooms"),
                 "usage": ["<room>"],
                 "usage_chatroom": ["[room]"]
+            },
+            "say": {
+                "callback": self.say_command,
+                "description": _("Say message in specified chat room"),
+                "disable": ["cli"],
+                "group": _("Chat Rooms"),
+                "usage": ["<room>", "<message..>"]
+            },
+            "pm": {
+                "callback": self.pm_command,
+                "description": _("Open private chat"),
+                "disable": ["cli"],
+                "group": _("Private Chat"),
+                "usage": ["<user>"]
+            },
+            "close": {
+                "description": "Close private chat",
+                "aliases": ["c"],
+                "disable": ["cli"],
+                "group": "Private Chat",
+                "callback": self.close_command,
+                "usage_chatroom": ["<user>"],
+                "usage_private_chat": ["[user]"]
+            },
+            "msg": {
+                "aliases": ["m"],
+                "callback": self.msg_command,
+                "description": _("Send private message to user"),
+                "disable": ["cli"],
+                "group": _("Private Chat"),
+                "usage": ["<user>", "<message..>"]
+            },
+            "add": {
+                "aliases": ["buddy"],
+                "callback": self.add_buddy_command,
+                "description": _("Add user to buddy list"),
+                "group": _("Users"),
+                "usage": ["<user>"],
+                "usage_private_chat": ["[user]"]
+            },
+            "rem": {
+                "aliases": ["unbuddy"],
+                "callback": self.remove_buddy_command,
+                "description": _("Remove buddy from buddy list"),
+                "group": _("Users"),
+                "usage": ["<buddy>"],
+                "usage_private_chat": ["[buddy]"]
+            },
+            "browse": {
+                "aliases": ["b"],
+                "callback": self.browse_user_command,
+                "description": _("Browse files of user"),
+                "disable": ["cli"],
+                "group": _("Users"),
+                "usage": ["<user>"],
+                "usage_private_chat": ["[user]"]
+            },
+            "whois": {
+                "aliases": ["info", "w"],
+                "callback": self.whois_command,
+                "description": _("Show user profile information"),
+                "disable": ["cli"],
+                "group": _("Users"),
+                "usage": ["<user>"],
+                "usage_private_chat": ["[user]"]
             },
             "ip": {
                 "callback": self.ip_address_command,
@@ -175,6 +222,20 @@ class Plugin(BasePlugin):
                 "disable": ["cli"],
                 "group": _("Search Files"),
                 "usage": ["<query>"]
+            },
+            "usearch": {
+                "aliases": ["us"],
+                "callback": self.search_user_command,
+                "description": _("Search a user's shared files"),
+                "disable": ["cli"],
+                "group": _("Search Files"),
+                "usage": ["<user>", "<query>"]
+            },
+            "plugin": {
+                "callback": self.plugin_handler_command,
+                "description": _("Manage plugin"),
+                "group": _("Plugin Commands"),
+                "usage": ["<toggle|info>", "<plugin_name>"]
             }
         }
 
@@ -192,7 +253,7 @@ class Plugin(BasePlugin):
             command_interface = "cli"
 
         search_query = " ".join(args.lower().split(" ", maxsplit=1))
-        command_groups = self.parent.get_command_descriptions(  # pylint: disable=no-member
+        command_groups = self.parent.get_command_descriptions(
             command_interface, search_query=search_query
         )
         num_commands = sum(len(command_groups[x]) for x in command_groups)
@@ -214,9 +275,20 @@ class Plugin(BasePlugin):
 
         if not search_query:
             output_text += "\n\n" + _("Type %(command)s to list similar commands") % {"command": "/help [query]"}
+        elif not num_commands:
+            output_text += "\n" + _("Type %(command)s to list available commands") % {"command": "/help"}
 
         self.output(output_text)
         return True
+
+    def away_command(self, _args, **_unused):
+
+        if self.core.user_status == UserStatus.OFFLINE:
+            self.output(_("Offline"))
+            return
+
+        self.core.set_away_mode(self.core.user_status != UserStatus.AWAY, save_state=True)
+        self.output(_("Online") if self.core.user_status == UserStatus.ONLINE else _("Away"))
 
     def quit_command(self, args, **_unused):
 
@@ -232,6 +304,9 @@ class Plugin(BasePlugin):
             self.core.confirm_quit()
 
         return True
+
+    def sample_command(self, _args, **_unused):
+        self.output("Hello")
 
     """ Chat """
 
@@ -251,7 +326,39 @@ class Plugin(BasePlugin):
     def me_command(self, args, **_unused):
         self.send_message("/me " + args)  # /me is sent as plain text
 
+    """ Chat Rooms """
+
+    def join_command(self, args, **_unused):
+        self.core.chatrooms.show_room(args)
+
+    def leave_command(self, args, room=None, **_unused):
+
+        if args:
+            room = args
+
+        if room not in self.core.chatrooms.joined_rooms:
+            self.output(_("Not joined in room %s") % room)
+            return False
+
+        self.core.chatrooms.remove_room(room)
+        return True
+
+    def say_command(self, args, **_unused):
+
+        args_split = args.split(maxsplit=1)
+        room, text = args_split[0], args_split[1]
+
+        if room not in self.core.chatrooms.joined_rooms:
+            self.output(_("Not joined in room %s") % room)
+            return False
+
+        self.send_public(room, text)
+        return True
+
     """ Private Chat """
+
+    def pm_command(self, args, **_unused):
+        self.core.privatechat.show_user(args)
 
     def close_command(self, args, user=None, **_unused):
 
@@ -273,29 +380,35 @@ class Plugin(BasePlugin):
 
         self.send_private(user, text, show_ui=True, switch_page=False)
 
-    def pm_command(self, args, **_unused):
-        self.core.privatechat.show_user(args)
+    """ Users """
 
-    def sample_command(self, _args, **_unused):
-        self.output("Hello")
-        return True
-
-    """ Chat Rooms """
-
-    def join_command(self, args, **_unused):
-        self.core.chatrooms.show_room(args)
-
-    def leave_command(self, args, room=None, **_unused):
+    def add_buddy_command(self, args, user=None, **_unused):
 
         if args:
-            room = args
+            user = args
 
-        if room not in self.core.chatrooms.joined_rooms:
-            self.output(_("Not joined in room %s") % room)
-            return False
+        self.core.userlist.add_buddy(user)
 
-        self.core.chatrooms.remove_room(room)
-        return True
+    def remove_buddy_command(self, args, user=None, **_unused):
+
+        if args:
+            user = args
+
+        self.core.userlist.remove_buddy(user)
+
+    def browse_user_command(self, args, user=None, **_unused):
+
+        if args:
+            user = args
+
+        self.core.userbrowse.browse_user(user)
+
+    def whois_command(self, args, user=None, **_unused):
+
+        if args:
+            user = args
+
+        self.core.userinfo.show_user(user)
 
     """ Network Filters """
 
@@ -398,7 +511,7 @@ class Plugin(BasePlugin):
 
             self.output("\n" + f"{num_shares} {group_name} shares:")
 
-            for virtual_name, folder_path, *_unused in share_group:
+            for virtual_name, folder_path, *_ignored in share_group:
                 self.output(f'• "{virtual_name}" {folder_path}')
 
             num_listed += num_shares
@@ -415,3 +528,26 @@ class Plugin(BasePlugin):
 
     def search_buddies_command(self, args, **_unused):
         self.core.search.do_search(args, "buddies")
+
+    def search_user_command(self, args, **_unused):
+
+        args_split = args.split(maxsplit=1)
+        user, query = args_split[0], args_split[1]
+
+        self.core.search.do_search(query, "user", user=user)
+
+    """ Plugin Commands """
+
+    def plugin_handler_command(self, args, **_unused):
+
+        args_split = args.split(maxsplit=1)
+        action, plugin_name = args_split[0], args_split[1]
+
+        if action == "toggle":
+            self.parent.toggle_plugin(plugin_name)
+
+        elif action == "info":
+            plugin_info = self.parent.get_plugin_info(plugin_name)
+
+            for key, value in plugin_info.items():
+                self.output(f"• {key}: {value}")
