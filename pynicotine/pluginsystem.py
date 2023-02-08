@@ -435,16 +435,7 @@ class PluginHandler:
 
         return None
 
-    def toggle_plugin(self, plugin_name):
-
-        enabled = plugin_name in self.enabled_plugins
-
-        if enabled:
-            self.disable_plugin(plugin_name)
-        else:
-            self.enable_plugin(plugin_name)
-
-    def load_plugin(self, plugin_name):
+    def _import_plugin_instance(self, plugin_name):
 
         if sys.platform in ("win32", "darwin") and plugin_name == "now_playing_sender":
             # MPRIS is not available on Windows and macOS
@@ -506,7 +497,7 @@ class PluginHandler:
             BasePlugin.internal_name = plugin_name
             BasePlugin.human_name = human_name = self.get_plugin_info(plugin_name).get("Name", plugin_name)
 
-            plugin = self.load_plugin(plugin_name)
+            plugin = self._import_plugin_instance(plugin_name)
 
             if plugin is None:
                 return False
@@ -545,6 +536,9 @@ class PluginHandler:
                     self.private_chat_commands[command] = None
 
             self.update_completions(plugin)
+
+            if plugin_name not in config.sections["plugins"]["enabled"]:
+                config.sections["plugins"]["enabled"].append(plugin_name)
 
             self.enabled_plugins[plugin_name] = plugin
             plugin.loaded_notification()
@@ -639,10 +633,24 @@ class PluginHandler:
                     # Builtin module
                     continue
 
+            # All plugins are unloaded on shutdown, but we want to remember them
+            if not core.shutdown and plugin_name in config.sections["plugins"]["enabled"]:
+                config.sections["plugins"]["enabled"].remove(plugin_name)
+
             del self.enabled_plugins[plugin_name]
             del plugin
 
         return True
+
+    def toggle_plugin(self, plugin_name):
+
+        enabled = plugin_name in self.enabled_plugins
+
+        if enabled:
+            # Return False is plugin is unloaded
+            return not self.disable_plugin(plugin_name)
+
+        return self.enable_plugin(plugin_name)
 
     def get_plugin_settings(self, plugin_name):
 
@@ -695,9 +703,6 @@ class PluginHandler:
             "error": exc_value,
             "trace": "".join(format_tb(exc_traceback))
         })
-
-    def save_enabled(self):
-        config.sections["plugins"]["enabled"] = list(self.enabled_plugins)
 
     def plugin_settings(self, plugin_name, plugin):
 
