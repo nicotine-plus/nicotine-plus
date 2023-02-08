@@ -272,7 +272,7 @@ class DownloadsPage:
             activate_row_callback=self.on_edit_filter,
             columns=[
                 {"column_id": "filter", "column_type": "text", "title": _("Filter"), "sort_column": 0,
-                 "width": 150, "expand_column": True},
+                 "width": 150, "expand_column": True, "default_sort_column": "ascending"},
                 {"column_id": "escaped", "column_type": "toggle", "title": _("Escaped"), "width": 0,
                  "sort_column": 1, "toggle_callback": self.on_toggle_escaped}
             ]
@@ -509,7 +509,7 @@ class SharesPage:
             activate_row_callback=self.on_edit_shared_folder,
             columns=[
                 {"column_id": "virtual_folder", "column_type": "text", "title": _("Virtual Folder"), "width": 65,
-                 "sort_column": 0, "expand_column": True},
+                 "sort_column": 0, "expand_column": True, "default_sort_column": "ascending"},
                 {"column_id": "folder", "column_type": "text", "title": _("Folder"), "width": 150,
                  "sort_column": 1, "expand_column": True},
                 {"column_id": "buddies", "column_type": "toggle", "title": _("Buddy-only"), "width": 0,
@@ -799,7 +799,8 @@ class IgnoredUsersPage:
         self.ignored_users_list_view = TreeView(
             application.window, parent=self.ignored_users_container, multi_select=True,
             columns=[
-                {"column_id": "username", "column_type": "text", "title": _("Username"), "sort_column": 0}
+                {"column_id": "username", "column_type": "text", "title": _("Username"), "sort_column": 0,
+                 "default_sort_column": "ascending"}
             ]
         )
 
@@ -810,7 +811,7 @@ class IgnoredUsersPage:
                 {"column_id": "ip_address", "column_type": "text", "title": _("IP Address"), "sort_column": 0,
                  "width": 50, "expand_column": True},
                 {"column_id": "user", "column_type": "text", "title": _("User"), "sort_column": 1,
-                 "expand_column": True}
+                 "expand_column": True, "default_sort_column": "ascending"}
             ]
         )
 
@@ -870,22 +871,13 @@ class IgnoredUsersPage:
 
         ip_address = dialog.get_entry_value()
 
-        if not ip_address or ip_address.count(".") != 3:
+        if not core.network_filter.is_ip_address(ip_address):
             return
 
-        for chars in ip_address.split("."):
-            if chars == "*":
-                continue
-
-            if not chars.isdigit():
-                return
-
-            if int(chars) > 255:
-                return
-
         if ip_address not in self.ignored_ips:
-            self.ignored_ips[ip_address] = ""
-            self.ignored_ips_list_view.add_row([ip_address, ""])
+            user = core.network_filter.get_online_username(ip_address) or ""
+            self.ignored_ips[ip_address] = user
+            self.ignored_ips_list_view.add_row([ip_address, user])
 
     def on_add_ignored_ip(self, *_args):
 
@@ -929,7 +921,8 @@ class BannedUsersPage:
         self.banned_users_list_view = TreeView(
             application.window, parent=self.banned_users_container, multi_select=True,
             columns=[
-                {"column_id": "username", "column_type": "text", "title": _("Username"), "sort_column": 0}
+                {"column_id": "username", "column_type": "text", "title": _("Username"), "sort_column": 0,
+                 "default_sort_column": "ascending"}
             ]
         )
 
@@ -940,7 +933,7 @@ class BannedUsersPage:
                 {"column_id": "ip_address", "column_type": "text", "title": _("IP Address"), "sort_column": 0,
                  "width": 50, "expand_column": True},
                 {"column_id": "user", "column_type": "text", "title": _("User"), "sort_column": 1,
-                 "expand_column": True}
+                 "expand_column": True, "default_sort_column": "ascending"}
             ]
         )
 
@@ -1022,22 +1015,13 @@ class BannedUsersPage:
 
         ip_address = dialog.get_entry_value()
 
-        if not ip_address or ip_address.count(".") != 3:
+        if not core.network_filter.is_ip_address(ip_address):
             return
 
-        for chars in ip_address.split("."):
-            if chars == "*":
-                continue
-
-            if not chars.isdigit():
-                return
-
-            if int(chars) > 255:
-                return
-
         if ip_address not in self.banned_ips:
-            self.banned_ips[ip_address] = ""
-            self.banned_ips_list_view.add_row([ip_address, ""])
+            user = core.network_filter.get_online_username(ip_address) or ""
+            self.banned_ips[ip_address] = user
+            self.banned_ips_list_view.add_row([ip_address, user])
             self.ip_ban_required = True
 
     def on_add_banned_ip(self, *_args):
@@ -1082,7 +1066,8 @@ class ChatsPage:
         self.censor_list_view = TreeView(
             application.window, parent=self.CensorList, multi_select=True, activate_row_callback=self.on_edit_censored,
             columns=[
-                {"column_id": "pattern", "column_type": "text", "title": _("Pattern"), "sort_column": 0}
+                {"column_id": "pattern", "column_type": "text", "title": _("Pattern"), "sort_column": 0,
+                 "default_sort_column": "ascending"}
             ]
         )
 
@@ -1092,7 +1077,7 @@ class ChatsPage:
             activate_row_callback=self.on_edit_replacement,
             columns=[
                 {"column_id": "pattern", "column_type": "text", "title": _("Pattern"), "sort_column": 0,
-                 "width": 100, "expand_column": True},
+                 "width": 100, "expand_column": True, "default_sort_column": "ascending"},
                 {"column_id": "replacement", "column_type": "text", "title": _("Replacement"), "sort_column": 1,
                  "expand_column": True}
             ]
@@ -1919,7 +1904,7 @@ class UrlHandlersPage:
             activate_row_callback=self.on_edit_handler,
             columns=[
                 {"column_id": "protocol", "column_type": "text", "title": _("Protocol"), "sort_column": 0,
-                 "width": 120, "expand_column": True, "iterator_key": True},
+                 "width": 120, "expand_column": True, "iterator_key": True, "default_sort_column": "ascending"},
                 {"column_id": "command", "column_type": "text", "title": _("Command"), "sort_column": 1,
                  "expand_column": True}
             ]
@@ -2228,7 +2213,6 @@ class PluginsPage:
         ) = ui_template.widgets
 
         self.application = application
-        self.enabled_plugins = []
         self.selected_plugin = None
 
         self.options = {
@@ -2246,7 +2230,8 @@ class PluginsPage:
                 # Visible columns
                 {"column_id": "enabled", "column_type": "toggle", "title": _("Enabled"), "width": 0,
                  "sort_column": 0, "toggle_callback": self.on_plugin_toggle, "hide_header": True},
-                {"column_id": "plugin", "column_type": "text", "title": _("Plugin"), "sort_column": 1},
+                {"column_id": "plugin", "column_type": "text", "title": _("Plugin"), "sort_column": 1,
+                 "default_sort_column": "ascending"},
 
                 # Hidden data columns
                 {"column_id": "plugin_hidden", "data_type": str}
@@ -2255,7 +2240,6 @@ class PluginsPage:
 
     def set_settings(self):
 
-        self.enabled_plugins.clear()
         self.plugin_list_view.clear()
 
         self.application.preferences.set_widgets_data(self.options)
@@ -2270,15 +2254,11 @@ class PluginsPage:
             enabled = (plugin_id in config.sections["plugins"]["enabled"])
             self.plugin_list_view.add_row([enabled, plugin_name, plugin_id], select_row=False)
 
-            if enabled:
-                self.enabled_plugins.append(plugin_id)
-
     def get_settings(self):
 
         return {
             "plugins": {
-                "enable": self.enable_plugins_toggle.get_active(),
-                "enabled": self.enabled_plugins[:]
+                "enable": self.enable_plugins_toggle.get_active()
             }
         }
 
@@ -2311,23 +2291,18 @@ class PluginsPage:
     def on_plugin_toggle(self, list_view, iterator):
 
         plugin_id = list_view.get_row_value(iterator, 2)
-        value = list_view.get_row_value(iterator, 0)
-        list_view.set_row_value(iterator, 0, not value)
+        enabled = core.pluginhandler.toggle_plugin(plugin_id)
 
-        if not value:
-            core.pluginhandler.enable_plugin(plugin_id)
-            self.enabled_plugins.append(plugin_id)
-        else:
-            core.pluginhandler.disable_plugin(plugin_id)
-            self.enabled_plugins.remove(plugin_id)
-
+        list_view.set_row_value(iterator, 0, enabled)
         self.check_plugin_settings_button(plugin_id)
 
     def on_enable_plugins(self, *_args):
 
+        enabled_plugin_ids = config.sections["plugins"]["enabled"].copy()
+
         if self.enable_plugins_toggle.get_active():
             # Enable all selected plugins
-            for plugin_id in self.enabled_plugins:
+            for plugin_id in enabled_plugin_ids:
                 core.pluginhandler.enable_plugin(plugin_id)
 
             self.check_plugin_settings_button(self.selected_plugin)
@@ -2337,6 +2312,7 @@ class PluginsPage:
         for plugin in core.pluginhandler.enabled_plugins.copy():
             core.pluginhandler.disable_plugin(plugin)
 
+        config.sections["plugins"]["enabled"] = enabled_plugin_ids
         self.plugin_settings_button.set_sensitive(False)
 
     def on_add_plugins(self, *_args):

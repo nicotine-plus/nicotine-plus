@@ -204,6 +204,13 @@ def add_gtk():
         starts_with="libgtk-%s" % GTK_VERSION, ends_with=LIB_EXTENSION
     )
 
+    if GTK_VERSION == "4":
+        # ANGLE (OpenGL ES)
+        add_files(
+            folder_path=LIB_FOLDER, output_path=lib_output_path,
+            starts_with=("libEGL", "libGLESv1", "libGLESv2.", "libfeature"), ends_with=LIB_EXTENSION
+        )
+
     if USE_LIBADWAITA:
         add_files(
             folder_path=LIB_FOLDER, output_path=lib_output_path,
@@ -290,10 +297,10 @@ setup(
     version=VERSION,
     options={
         "build": dict(
-            build_base=BUILD_PATH,
-            build_exe=os.path.join(BUILD_PATH, "package", APPLICATION_NAME)
+            build_base=BUILD_PATH
         ),
         "build_exe": dict(
+            build_exe=os.path.join(BUILD_PATH, "package", APPLICATION_NAME),
             packages=[MODULE_NAME, "gi"],
             excludes=["tkinter"],
             include_files=include_files,

@@ -718,7 +718,7 @@ class Search:
                         title=_("Wishlist Results Found")
                     )
 
-            self.searches.request_tab_hilite(self.container)
+            self.searches.request_tab_changed(self.container)
 
         # Update number of results, even if they are all filtered
         self.update_result_counter()

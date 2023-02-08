@@ -58,7 +58,7 @@ class UpdateChecker:
                 message = _("You are using the latest version of %s") % config.application_name
 
         except Exception as error:
-            title = ("Latest Version Unknown")
+            title = _("Latest Version Unknown")
             message = _("Cannot retrieve latest version: %s") % error
 
         log.add(message, title=title)

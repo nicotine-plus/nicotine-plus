@@ -47,8 +47,7 @@ class TabLabel:
         self.container = Gtk.Box(hexpand=False, visible=True)
         add_css_class(self.container, "notebook-tab")
 
-        self.highlighted = False
-        self.mentioned = False
+        self.is_important = False
         self.centered = False
 
         if GTK_API_VERSION >= 4:
@@ -168,29 +167,27 @@ class TabLabel:
 
         self._remove_close_button()
 
-    def request_hilite(self, mentioned=False):
+    def request_changed(self, is_important=False):
 
-        self.remove_hilite()
-        self.highlighted = True
+        self.remove_changed()
 
         # Chat mentions have priority over normal notifications
-        if not self.mentioned:
-            self.mentioned = mentioned
+        if not self.is_important:
+            self.is_important = is_important
 
-        if self.mentioned:
+        if self.is_important:
             add_css_class(self.container, "notebook-tab-highlight")
         else:
             add_css_class(self.container, "notebook-tab-changed")
 
-        icon_name = "nplus-tab-highlight" if self.mentioned else "nplus-tab-changed"
+        icon_name = "nplus-tab-highlight" if self.is_important else "nplus-tab-changed"
         self.end_icon.set_property("icon-name", icon_name)
         self.end_icon.set_visible(True)
         add_css_class(self.end_icon, "colored-icon")
 
-    def remove_hilite(self):
+    def remove_changed(self):
 
-        self.highlighted = False
-        self.mentioned = False
+        self.is_important = False
 
         remove_css_class(self.container, "notebook-tab-changed")
         remove_css_class(self.container, "notebook-tab-highlight")
@@ -453,14 +450,14 @@ class IconNotebook:
 
     """ Tab Highlights """
 
-    def request_tab_hilite(self, page, mentioned=False):
+    def request_tab_changed(self, page, is_important=False):
 
         if self.parent_page is not None:
             page_active = (self.get_current_page() == page)
 
             if self.window.current_page_id != self.parent_page.id or not page_active:
                 # Highlight top-level tab
-                self.window.notebook.request_tab_hilite(self.parent_page, mentioned)
+                self.window.notebook.request_tab_changed(self.parent_page, is_important)
 
             if page_active:
                 return
@@ -468,12 +465,12 @@ class IconNotebook:
             self.append_unread_page(page)
 
         tab_label = self.get_tab_label(page)
-        tab_label.request_hilite(mentioned)
+        tab_label.request_changed(is_important)
 
-    def remove_tab_hilite(self, page):
+    def remove_tab_changed(self, page):
 
         tab_label = self.get_tab_label(page)
-        tab_label.remove_hilite()
+        tab_label.remove_changed()
 
         if self.parent_page is not None:
             self.remove_unread_page(page)
@@ -496,7 +493,7 @@ class IconNotebook:
             return
 
         if self.parent_page is not None:
-            self.window.notebook.remove_tab_hilite(self.parent_page)
+            self.window.notebook.remove_tab_changed(self.parent_page)
 
     """ Tab User Status """
 
@@ -565,7 +562,7 @@ class IconNotebook:
             GLib.idle_add(new_page.focus_callback, priority=GLib.PRIORITY_HIGH_IDLE)
 
         # Dismiss tab highlight
-        self.remove_tab_hilite(new_page)
+        self.remove_tab_changed(new_page)
 
     def on_reorder_page(self, _notebook, page, page_num):
         if self.reorder_page_callback is not None:

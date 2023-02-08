@@ -65,7 +65,6 @@ class Application:
 
         # Show errors in the GUI from here on
         sys.excepthook = self.on_critical_error
-        self.apply_gtk_translations()
 
         self.connect("activate", self.on_activate)
         self.connect("shutdown", self.on_shutdown)
@@ -124,39 +123,6 @@ class Application:
 
         except (ImportError, ValueError):
             self.spell_checker = False
-
-    def apply_gtk_translations(self):
-
-        libintl_path = None
-        executable_folder = os.path.dirname(sys.executable)
-
-        # Load library for translating non-Python content, e.g. GTK ui files
-        if sys.platform == "win32":
-            libintl_path = "libintl-8.dll"
-
-            if getattr(sys, "frozen", False):
-                libintl_path = os.path.join(executable_folder, "lib", libintl_path)
-
-        elif sys.platform == "darwin":
-            libintl_path = "libintl.8.dylib"
-
-            if getattr(sys, "frozen", False):
-                libintl_path = os.path.join(executable_folder, libintl_path)
-
-        import locale
-        from pynicotine.i18n import LOCALE_PATH
-        from pynicotine.i18n import TRANSLATION_DOMAIN
-
-        if libintl_path is not None:
-            import ctypes
-            libintl = ctypes.cdll.LoadLibrary(libintl_path)
-
-            # Arguments need to be encoded, otherwise translations fail
-            libintl.bindtextdomain(TRANSLATION_DOMAIN.encode(), LOCALE_PATH.encode(sys.getfilesystemencoding()))
-            libintl.bind_textdomain_codeset(TRANSLATION_DOMAIN.encode(), b"UTF-8")
-
-        elif hasattr(locale, "bindtextdomain") and hasattr(locale, "textdomain"):
-            locale.bindtextdomain(TRANSLATION_DOMAIN, LOCALE_PATH)
 
     def set_up_actions(self):
 
@@ -409,7 +375,7 @@ class Application:
 
     def on_confirm_quit_response(self, dialog, response_id, _data):
 
-        remember = dialog.option.get_active()
+        remember = dialog.get_option_value()
 
         if response_id == 2:  # 'Quit'
             if remember:
@@ -841,12 +807,16 @@ class Application:
             core.connect()
 
         # Check command line option and config option
-        if not self.start_hidden and not config.sections["ui"]["startup_hidden"]:
+        start_hidden = (self.start_hidden or (self.tray_icon.available
+                                              and config.sections["ui"]["trayicon"]
+                                              and config.sections["ui"]["startup_hidden"]))
+
+        if not start_hidden:
             self.window.show()
 
-        # Process thread events 60 times per second
+        # Process thread events 20 times per second
         # High priority to ensure there are no delays
-        GLib.timeout_add(1000 / 60, self.on_process_thread_events, priority=GLib.PRIORITY_HIGH_IDLE)
+        GLib.timeout_add(50, self.on_process_thread_events, priority=GLib.PRIORITY_HIGH_IDLE)
 
     def on_shutdown(self, *_args):
         # Explicitly hide tray icon, otherwise it will not disappear on Windows

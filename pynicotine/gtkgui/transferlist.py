@@ -254,7 +254,7 @@ class TransferList:
 
     def new_transfer_notification(self, finished=False):
         if self.window.current_page_id != self.transfer_page.id:
-            self.window.notebook.request_tab_hilite(self.transfer_page, mentioned=finished)
+            self.window.notebook.request_tab_changed(self.transfer_page, is_important=finished)
 
     def on_file_search(self, *_args):
 
@@ -400,7 +400,7 @@ class TransferList:
                 # "Finished" status always has the lowest priority
                 parent_status = status
 
-            if status == "Filtered":
+            if status == "Filtered" and transfer.filename:
                 # We don't want to count filtered files when calculating the progress
                 iterator = self.transfersmodel.iter_next(iterator)
                 continue

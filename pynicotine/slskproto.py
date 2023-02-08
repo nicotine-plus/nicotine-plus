@@ -184,6 +184,7 @@ class SoulseekNetworkThread(Thread):
     CONNECTION_BACKLOG_LENGTH = 4096
     SOCKET_READ_BUFFER_SIZE = 1048576
     SOCKET_WRITE_BUFFER_SIZE = 1048576
+    SLEEP_MIN_IDLE = 0.016  # ~60 times per second
 
     def __init__(self, queue, user_addresses):
         """ queue is deque object that holds network messages from Core. """
@@ -531,7 +532,7 @@ class SoulseekNetworkThread(Thread):
             self._last_cycle_time = current_time
             self._current_cycle_loop_count = 0
         else:
-            self._current_cycle_loop_count = self._current_cycle_loop_count + 1
+            self._current_cycle_loop_count += 1
 
     def _set_conn_speed_limit(self, sock, limit, limits):
 
@@ -2223,12 +2224,13 @@ class SoulseekNetworkThread(Thread):
                 continue
 
             current_time = time.time()
-            num_sockets = self._numsockets
 
             # Send updated connection count to core. Avoid sending too many
             # updates at once, if there are a lot of connections.
             if (current_time - self._last_conn_stat_time) >= 1:
-                events.emit_main_thread("set-connection-stats", self._numsockets, self._total_downloads,
+                num_sockets = self._numsockets
+
+                events.emit_main_thread("set-connection-stats", num_sockets, self._total_downloads,
                                         self._total_download_bandwidth, self._total_uploads,
                                         self._total_upload_bandwidth)
 
@@ -2257,7 +2259,7 @@ class SoulseekNetworkThread(Thread):
             self._calc_loops_per_second(current_time)
 
             # Don't exhaust the CPU
-            time.sleep(1 / 60)
+            time.sleep(self.SLEEP_MIN_IDLE)
 
         # Networking thread aborted
         self._manual_server_disconnect = True

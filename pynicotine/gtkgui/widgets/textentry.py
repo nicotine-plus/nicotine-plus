@@ -101,86 +101,14 @@ class ChatEntry:
             args = ""
             arg_self = "" if self.is_chatroom else self.entity
 
-        if cmd in ("/w", "/whois", "/info"):
-            if arg_self:
-                core.userinfo.show_user(arg_self)
-
-        elif cmd in ("/b", "/browse"):
-            if arg_self:
-                core.userbrowse.browse_user(arg_self)
-
-        elif cmd == "/ip":
-            if arg_self:
-                core.request_ip_address(arg_self)
-
-        elif cmd in ("/m", "/msg"):
-            if args:
-                args_split = args.split(" ", maxsplit=1)
-                user = args_split[0]
-                msg = None
-
-                if len(args_split) == 2:
-                    msg = args_split[1]
-
-                if msg:
-                    core.privatechat.show_user(user)
-                    core.privatechat.send_message(user, msg)
-
-        elif cmd in ("/us", "/usearch"):
-            args_split = args.split(" ", maxsplit=1)
-
-            if len(args_split) == 2:
-                core.search.do_search(args_split[1], "user", user=args_split[0])
-
-        elif cmd in ("/ad", "/add", "/buddy"):
-            if args:
-                core.userlist.add_buddy(args)
-
-        elif cmd in ("/rem", "/unbuddy"):
-            if args:
-                core.userlist.remove_buddy(args)
-
-        elif cmd == "/ban":
-            if args:
-                core.network_filter.ban_user(args)
-
-        elif cmd == "/ignore":
-            if args:
-                core.network_filter.ignore_user(args)
-
-        elif cmd == "/ignoreip":
-            if args:
-                core.network_filter.ignore_ip(args)
-
-        elif cmd == "/unban":
-            if args:
-                core.network_filter.unban_user(args)
-
-        elif cmd == "/unignore":
-            if args:
-                core.network_filter.unignore_user(args)
-
-        elif cmd == "/ctcpversion":
+        if cmd == "/ctcpversion":
             if arg_self:
                 core.privatechat.show_user(arg_self)
                 core.privatechat.send_message(arg_self, core.privatechat.CTCP_VERSION)
 
-        elif cmd in ("/clear", "/cl"):
-            if self.is_chatroom:
-                core.chatrooms.clear_room_messages(self.entity)
-            else:
-                core.privatechat.clear_private_messages(self.entity)
-
-        elif cmd in ("/a", "/away"):
-            core.set_away_mode(core.user_status != UserStatus.AWAY, save_state=True)
-
         elif cmd == "/now":
             core.now_playing.display_now_playing(
                 callback=lambda np_message: self.send_message(self.entity, np_message))
-
-        elif cmd == "/toggle":
-            if args:
-                core.pluginhandler.toggle_plugin(args)
 
         elif self.is_chatroom:
             core.pluginhandler.trigger_chatroom_command_event(self.entity, cmd[1:], args)

@@ -126,8 +126,8 @@ EVENT_NAMES = {
     "echo-private-message",
     "message-user",
     "private-chat-completion-list",
-    "private-chat-show-user",
     "private-chat-remove-user",
+    "private-chat-show-user",
     "send-private-message",
 
     # Search
@@ -242,7 +242,7 @@ class Events:
         self._scheduler_events.pop(event_id, None)
 
     def process_thread_events(self):
-        """ Called by the main loop 60 times per second to emit thread events in the main thread """
+        """ Called by the main loop 20 times per second to emit thread events in the main thread """
 
         if not self._thread_events:
             return

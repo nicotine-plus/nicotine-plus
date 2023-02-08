@@ -235,11 +235,11 @@ class BasePlugin:
         """ Convenience function to send a message to the same user/room
         a plugin command runs for """
 
-        if self.parent.command_source is None:  # pylint: disable=no-member
+        if self.parent.command_source is None:
             # Function was not called from a command
             return
 
-        command_interface, source = self.parent.command_source  # pylint: disable=no-member
+        command_interface, source = self.parent.command_source
 
         if command_interface == "cli":
             return
@@ -251,11 +251,11 @@ class BasePlugin:
         """ Convenience function to display a raw message the same window
         a plugin command runs from """
 
-        if self.parent.command_source is None:  # pylint: disable=no-member
+        if self.parent.command_source is None:
             # Function was not called from a command
             return
 
-        command_interface, source = self.parent.command_source  # pylint: disable=no-member
+        command_interface, source = self.parent.command_source
 
         if command_interface == "cli":
             print(text)
@@ -376,10 +376,6 @@ class PluginHandler:
         self.user_plugin_folder = os.path.join(config.data_dir, "plugins")
         self.plugin_folders.append(self.user_plugin_folder)
 
-        BasePlugin.parent = self
-        BasePlugin.config = config
-        BasePlugin.core = core
-
         for event_name, callback in (
             ("cli-command", self._cli_command),
             ("start", self._start),
@@ -389,13 +385,16 @@ class PluginHandler:
 
     def _start(self):
 
-        enable = config.sections["plugins"]["enable"]
+        BasePlugin.parent = self
+        BasePlugin.config = config
+        BasePlugin.core = core
 
-        if not enable:
+        self.enable_plugin("core_commands")
+
+        if not config.sections["plugins"]["enable"]:
             return
 
         log.add(_("Loading plugin system"))
-        self.enable_plugin("core_commands")
 
         to_enable = config.sections["plugins"]["enabled"]
         log.add_debug(f"Enabled plugin(s): {', '.join(to_enable)}")
@@ -436,16 +435,7 @@ class PluginHandler:
 
         return None
 
-    def toggle_plugin(self, plugin_name):
-
-        enabled = plugin_name in self.enabled_plugins
-
-        if enabled:
-            self.disable_plugin(plugin_name)
-        else:
-            self.enable_plugin(plugin_name)
-
-    def load_plugin(self, plugin_name):
+    def _import_plugin_instance(self, plugin_name):
 
         if sys.platform in ("win32", "darwin") and plugin_name == "now_playing_sender":
             # MPRIS is not available on Windows and macOS
@@ -507,7 +497,7 @@ class PluginHandler:
             BasePlugin.internal_name = plugin_name
             BasePlugin.human_name = human_name = self.get_plugin_info(plugin_name).get("Name", plugin_name)
 
-            plugin = self.load_plugin(plugin_name)
+            plugin = self._import_plugin_instance(plugin_name)
 
             if plugin is None:
                 return False
@@ -522,14 +512,18 @@ class PluginHandler:
                     # Group commands under human-friendly plugin name by default
                     data["group"] = human_name
 
-                if "chatroom" not in disabled_interfaces and command not in self.chatroom_commands:
-                    self.chatroom_commands[command] = data
+                for command_interface in ("chatroom", "private_chat", "cli"):
+                    if command_interface in disabled_interfaces:
+                        continue
 
-                if "private_chat" not in disabled_interfaces and command not in self.private_chat_commands:
-                    self.private_chat_commands[command] = data
+                    command_list = getattr(self, f"{command_interface}_commands")
 
-                if "cli" not in disabled_interfaces and command not in self.cli_commands:
-                    self.cli_commands[command] = data
+                    if command in command_list:
+                        log.add(_("Conflicting %(interface)s command in plugin %(name)s: %(command)s"),
+                                {"interface": command_interface, "name": human_name, "command": command})
+                        continue
+
+                    command_list[command] = data
 
             for command, _func in plugin.__publiccommands__:
                 command = "/" + command
@@ -543,11 +537,13 @@ class PluginHandler:
 
             self.update_completions(plugin)
 
+            if plugin_name not in config.sections["plugins"]["enabled"]:
+                config.sections["plugins"]["enabled"].append(plugin_name)
+
             self.enabled_plugins[plugin_name] = plugin
             plugin.loaded_notification()
 
-            if plugin_name != "core_commands":
-                log.add(_("Loaded plugin %s"), plugin.human_name)
+            log.add(_("Loaded plugin %s"), plugin.human_name)
 
         except Exception:
             from traceback import format_exc
@@ -596,12 +592,15 @@ class PluginHandler:
         try:
             plugin.disable()
 
-            for command in plugin.commands:
+            for command, data in plugin.commands.items():
                 command = "/" + command
 
-                self.chatroom_commands.pop(command, None)
-                self.private_chat_commands.pop(command, None)
-                self.cli_commands.pop(command, None)
+                for command_interface in ("chatroom", "private_chat", "cli"):
+                    command_list = getattr(self, f"{command_interface}_commands")
+
+                    # Remove only if data matches command as defined in this plugin
+                    if data == command_list.get(command, None):
+                        command_list.pop(command, None)
 
             for command, _func in plugin.__publiccommands__:
                 self.chatroom_commands.pop("/" + command, None)
@@ -634,10 +633,24 @@ class PluginHandler:
                     # Builtin module
                     continue
 
+            # All plugins are unloaded on shutdown, but we want to remember them
+            if not core.shutdown and plugin_name in config.sections["plugins"]["enabled"]:
+                config.sections["plugins"]["enabled"].remove(plugin_name)
+
             del self.enabled_plugins[plugin_name]
             del plugin
 
         return True
+
+    def toggle_plugin(self, plugin_name):
+
+        enabled = plugin_name in self.enabled_plugins
+
+        if enabled:
+            # Return False is plugin is unloaded
+            return not self.disable_plugin(plugin_name)
+
+        return self.enable_plugin(plugin_name)
 
     def get_plugin_settings(self, plugin_name):
 
@@ -654,7 +667,7 @@ class PluginHandler:
         plugin_info = {}
         plugin_path = self.get_plugin_path(plugin_name)
 
-        if plugin_path is None or plugin_name == "core_commands":
+        if plugin_path is None:
             return plugin_info
 
         info_path = os.path.join(plugin_path, "PLUGININFO")
@@ -690,9 +703,6 @@ class PluginHandler:
             "error": exc_value,
             "trace": "".join(format_tb(exc_traceback))
         })
-
-    def save_enabled(self):
-        config.sections["plugins"]["enabled"] = list(self.enabled_plugins)
 
     def plugin_settings(self, plugin_name, plugin):
 
@@ -869,7 +879,7 @@ class PluginHandler:
                 break
 
         if plugin:
-            plugin.output(f"Unknown command: {'/' + command}. Type /help for a list of commands.")
+            plugin.output(f"Unknown command: {'/' + command}. Type /help to list available commands.")
 
         self.command_source = None
         return is_successful
