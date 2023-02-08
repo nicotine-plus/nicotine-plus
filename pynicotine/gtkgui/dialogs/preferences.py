@@ -2312,9 +2312,11 @@ class PluginsPage:
 
     def on_enable_plugins(self, *_args):
 
+        enabled_plugin_ids = config.sections["plugins"]["enabled"].copy()
+
         if self.enable_plugins_toggle.get_active():
             # Enable all selected plugins
-            for plugin_id in config.sections["plugins"]["enabled"]:
+            for plugin_id in enabled_plugin_ids:
                 core.pluginhandler.enable_plugin(plugin_id)
 
             self.check_plugin_settings_button(self.selected_plugin)
@@ -2324,6 +2326,7 @@ class PluginsPage:
         for plugin in core.pluginhandler.enabled_plugins.copy():
             core.pluginhandler.disable_plugin(plugin)
 
+        config.sections["plugins"]["enabled"] = enabled_plugin_ids
         self.plugin_settings_button.set_sensitive(False)
 
     def on_add_plugins(self, *_args):
