@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2023-01-30 18:44+0000\n"
+"PO-Revision-Date: 2023-02-01 19:45+0000\n"
 "Last-Translator: Kirill Feoktistov <feoktistovk@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ru/>\n"
@@ -55,9 +55,9 @@ msgid "Graphical client for the Soulseek peer-to-peer network"
 msgstr "Графический клиент для одноранговой сети Soulseek"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:12
-#, fuzzy
 msgid "Soulseek;Nicotine;sharing;chat;messaging;P2P;peer-to-peer;GTK;"
-msgstr "Soulseek;Nicotine;обмен;музыка;P2P;одноранговая сеть;GTK;"
+msgstr ""
+"Soulseek;Nicotine;обмен;чат;обмен сообщениями;P2P;одноранговая сеть;GTK;"
 
 #: pynicotine/__init__.py:37
 #, python-format
@@ -135,7 +135,7 @@ msgstr ""
 #: pynicotine/chatrooms.py:247
 #, python-format
 msgid "You have been added to a private room: %(room)s"
-msgstr "Вы были добавлены в приватную комнату: %(room)s"
+msgstr "Вы были добавлены в чат: %(room)s"
 
 #: pynicotine/chatrooms.py:342
 #, python-format
@@ -200,9 +200,8 @@ msgid "Unable to connect to the server. Reason: %s"
 msgstr "Невозможно подключиться к серверу. Причина: %s"
 
 #: pynicotine/core.py:371
-#, fuzzy
 msgid "Cannot Connect"
-msgstr "Невозможно соединиться"
+msgstr "Не удаётся подключиться"
 
 #: pynicotine/core.py:394
 #, python-format
@@ -212,10 +211,9 @@ msgstr ""
 "сети"
 
 #: pynicotine/core.py:397
-#, fuzzy, python-format
+#, python-format
 msgid "IP address of user %(user)s: %(ip)s, port %(port)i%(country)s"
-msgstr ""
-"IP-адрес пользователя %(user)s %(ip)s, порт %(port)i, страна %(country)s"
+msgstr "IP-адрес пользователя %(user)s: %(ip)s, порт %(port)i%(country)s"
 
 #: pynicotine/core.py:402 pynicotine/gtkgui/dialogs/preferences.py:798
 #: pynicotine/gtkgui/dialogs/preferences.py:928
@@ -223,9 +221,8 @@ msgid "IP Address"
 msgstr "IP-адрес"
 
 #: pynicotine/core.py:448
-#, fuzzy
 msgid "Soulseek Announcement"
-msgstr "Клиент Soulseek"
+msgstr "Анонс Soulseek"
 
 #: pynicotine/core.py:456
 #, python-format
@@ -255,9 +252,8 @@ msgid "Your password has been changed"
 msgstr "Ваш пароль был изменён"
 
 #: pynicotine/core.py:487
-#, fuzzy
 msgid "Password Changed"
-msgstr "Изменение пароля отклонено"
+msgstr "Пароль изменён"
 
 #: pynicotine/geoip.py:24
 msgid "Andorra"
@@ -1337,9 +1333,8 @@ msgid "_Retry"
 msgstr "_Повторить"
 
 #: pynicotine/gtkgui/application.py:500
-#, fuzzy
 msgid "_Force Rescan"
-msgstr "_Принудительное повторное сканирование"
+msgstr "_Проверить принудительно"
 
 #: pynicotine/gtkgui/application.py:515
 msgid "Invalid Password"
@@ -1361,9 +1356,8 @@ msgid "Change _Login Details"
 msgstr "Изменить _данные для входа"
 
 #: pynicotine/gtkgui/application.py:676
-#, fuzzy
 msgid "Message Downloading Users"
-msgstr "Пользователи загрузки сообщений"
+msgstr "Написать скачивающим пользователям"
 
 #: pynicotine/gtkgui/application.py:677
 msgid "Send private message to all users who are downloading from you:"
@@ -1371,14 +1365,12 @@ msgstr ""
 "Отправить личное сообщение всем пользователям, которые скачивали файлы у вас:"
 
 #: pynicotine/gtkgui/application.py:678 pynicotine/gtkgui/application.py:691
-#, fuzzy
 msgid "_Send Message"
 msgstr "Отправить сообщение"
 
 #: pynicotine/gtkgui/application.py:689
-#, fuzzy
 msgid "Message Buddies"
-msgstr "Доверенные друзья"
+msgstr "Отправить сообщение друзьям"
 
 #: pynicotine/gtkgui/application.py:690
 msgid "Send private message to all online buddies:"
@@ -1419,7 +1411,7 @@ msgstr "Вы действительно хотите создать новую �
 
 #: pynicotine/gtkgui/chatrooms.py:188
 msgid "Make room private"
-msgstr "Сделать комнату приватной"
+msgstr "Сделать комнату частной"
 
 #: pynicotine/gtkgui/chatrooms.py:494 pynicotine/gtkgui/interests.py:101
 #: pynicotine/gtkgui/transferlist.py:126 pynicotine/gtkgui/userlist.py:62
@@ -1466,7 +1458,7 @@ msgstr "Иск_ать в файлах пользователя"
 #: pynicotine/gtkgui/chatrooms.py:531 pynicotine/gtkgui/chatrooms.py:736
 #: pynicotine/gtkgui/userlist.py:108 pynicotine/gtkgui/userlist.py:168
 msgid "Private Rooms"
-msgstr "Приватные комнаты"
+msgstr "Комнаты"
 
 #: pynicotine/gtkgui/chatrooms.py:537 pynicotine/gtkgui/chatrooms.py:549
 #: pynicotine/gtkgui/privatechat.py:277
@@ -1517,20 +1509,20 @@ msgid "--- old messages above ---"
 msgstr "--- старые сообщения выше ---"
 
 #: pynicotine/gtkgui/chatrooms.py:814
-#, fuzzy, python-format
+#, python-format
 msgid "%(user)s mentioned you in room %(room)s"
 msgstr "%(user)s упомянул вас в комнате %(room)s"
 
 #: pynicotine/gtkgui/chatrooms.py:819
 #: pynicotine/gtkgui/widgets/notifications.py:98
-#, fuzzy, python-format
+#, python-format
 msgid "Mentioned by %(user)s in Room %(room)s"
-msgstr "Сообщение от %(user)s в комнате %(room)s"
+msgstr "Вас упомянул %(user)s в комнате %(room)s"
 
 #: pynicotine/gtkgui/chatrooms.py:837
-#, fuzzy, python-format
+#, python-format
 msgid "Message by %(user)s in Room %(room)s"
-msgstr "Сообщение от %(user)s в комнате %(room)s"
+msgstr "Вам пришло сообщение от %(user)s в комнате %(room)s"
 
 #: pynicotine/gtkgui/chatrooms.py:941
 #, python-format
@@ -1571,9 +1563,8 @@ msgstr ""
 "Вы действительно хотите навсегда удалить все сообщения из этой комнаты?"
 
 #: pynicotine/gtkgui/dialogs/about.py:345
-#, fuzzy
 msgid "About"
-msgstr "Джибути"
+msgstr "О"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:86
 #: pynicotine/gtkgui/dialogs/preferences.py:485
@@ -1589,7 +1580,7 @@ msgstr "Каталог"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:105
 msgid "_Finish"
-msgstr "_Завершить"
+msgstr "Завершить"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:105
 msgid "_Next"
@@ -1773,9 +1764,8 @@ msgid "Ban IP Address"
 msgstr "Заблокировать IP-адрес"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1036
-#, fuzzy
 msgid "Enter an IP address you want to ban:"
-msgstr "Введите IP-адрес, который вы хотите заблокировать:"
+msgstr "Введите IP-адрес для блокировки:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1073
 #: pynicotine/gtkgui/dialogs/preferences.py:1082
@@ -1865,36 +1855,32 @@ msgid "Offline"
 msgstr "Не в сети"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1385
-#, fuzzy
 msgid "Tab Changed"
-msgstr "Изменение пароля отклонено"
+msgstr "Вкладка изменена"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1386
-#, fuzzy
 msgid "Tab Highlight"
-msgstr "Выделить"
+msgstr "Выделение вкладки"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1387
 msgid "Window"
 msgstr "Окно"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1391
-#, fuzzy
 msgid "Online (Tray)"
-msgstr "Соединён (Иконка)"
+msgstr "В сети (иконка)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1392
 msgid "Away (Tray)"
-msgstr "Отсутствую (Иконка)"
+msgstr "Отсутствую (иконка)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1393
-#, fuzzy
 msgid "Offline (Tray)"
-msgstr "Не в сети"
+msgstr "Не в сети (иконка)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1394
 msgid "Message (Tray)"
-msgstr "Сообщение (Иконка)"
+msgstr "Сообщение (иконка)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1889
 msgid "Protocol"
@@ -2102,7 +2088,7 @@ msgid "Transfer Statistics"
 msgstr "Статистика"
 
 #: pynicotine/gtkgui/dialogs/statistics.py:82
-#, fuzzy, python-format
+#, python-format
 msgid "Total Since %(date)s"
 msgstr "Всего с %(date)s"
 
@@ -2171,7 +2157,6 @@ msgid "Filtered"
 msgstr "Отфильтровано"
 
 #: pynicotine/gtkgui/downloads.py:67
-#, fuzzy
 msgid "Deleted"
 msgstr "Удалено"
 
@@ -2332,7 +2317,7 @@ msgstr "_Просмотр общедоступных каталогов"
 
 #: pynicotine/gtkgui/mainwindow.py:736
 msgid "Bro_wse Buddy Shares"
-msgstr "Прос_мотр каталогов друзей"
+msgstr "Просмотр общих файлов друга"
 
 #: pynicotine/gtkgui/mainwindow.py:752
 msgid "_Keyboard Shortcuts"
@@ -2394,7 +2379,7 @@ msgstr "Просмотр общих каталогов"
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:673
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:254
 msgid "Private Chat"
-msgstr "Приватный чат"
+msgstr "Чат"
 
 #: pynicotine/gtkgui/mainwindow.py:957 pynicotine/gtkgui/search.py:204
 #: pynicotine/gtkgui/ui/buddylist.ui:19 pynicotine/gtkgui/ui/mainwindow.ui:1405
@@ -2511,7 +2496,7 @@ msgstr "Покинуть комнату"
 #: pynicotine/gtkgui/popovers/roomlist.py:86
 #: pynicotine/gtkgui/popovers/roomlist.py:203
 msgid "Disown Private Room"
-msgstr "Удалить приватную комнату"
+msgstr "Удалить комнату"
 
 #: pynicotine/gtkgui/popovers/roomlist.py:87
 #: pynicotine/gtkgui/popovers/roomlist.py:204
@@ -2631,9 +2616,8 @@ msgid "F_ile Properties"
 msgstr "Свойства _файла"
 
 #: pynicotine/gtkgui/search.py:440 pynicotine/gtkgui/transferlist.py:184
-#, fuzzy
 msgid "User Actions"
-msgstr "Описание"
+msgstr "Действия пользователя"
 
 #: pynicotine/gtkgui/search.py:445
 msgid "Copy Search Term"
@@ -2818,9 +2802,8 @@ msgid "Finished / Cancelled / Failed"
 msgstr "Завершено / Прервано / Ошибка"
 
 #: pynicotine/gtkgui/uploads.py:64
-#, fuzzy
 msgid "Finished / Cancelled"
-msgstr "Завершено / Отфильтровано"
+msgstr "Завершено / Отменено"
 
 #: pynicotine/gtkgui/uploads.py:68
 msgid "Failed"
@@ -2877,14 +2860,12 @@ msgid "Download Folder _To…"
 msgstr "Скачать каталог _в…"
 
 #: pynicotine/gtkgui/userbrowse.py:239
-#, fuzzy
 msgid "Download Folder & Subfolders"
-msgstr "Скачать каталог и подкаталог(и)"
+msgstr "Скачать каталог(и) и подкаталог(и)"
 
 #: pynicotine/gtkgui/userbrowse.py:240
-#, fuzzy
 msgid "Download Folder & Subfolders To…"
-msgstr "Скачать каталог и подкаталог(и) в…"
+msgstr "Скачать каталог(и) и подкаталог(и) в…"
 
 #: pynicotine/gtkgui/userbrowse.py:289
 msgid "Up_load File(s)…"
@@ -2923,9 +2904,8 @@ msgid "Enter the name of the user you want to upload to:"
 msgstr "Введите имя пользователя, которому вы хотите раздать файлы:"
 
 #: pynicotine/gtkgui/userbrowse.py:976
-#, fuzzy
 msgid "Select Destination Folder for Files"
-msgstr "Выбрать каталог назначения для файлов"
+msgstr "Выбрать каталог назначения"
 
 #: pynicotine/gtkgui/userbrowse.py:998
 msgid "Upload File(s) To User"
@@ -2963,23 +2943,20 @@ msgstr ""
 "соединением."
 
 #: pynicotine/gtkgui/userinfo.py:466
-#, fuzzy
 msgid "Remove _Buddy"
-msgstr "Удалить из желаемого"
+msgstr "Удалить из списка друзей"
 
 #: pynicotine/gtkgui/userinfo.py:466
 msgid "Add _Buddy"
 msgstr "Добавить друга"
 
 #: pynicotine/gtkgui/userinfo.py:470
-#, fuzzy
 msgid "Unban User"
-msgstr "Заблокировать пользователя"
+msgstr "Разблокировать пользователя"
 
 #: pynicotine/gtkgui/userinfo.py:474
-#, fuzzy
 msgid "Unignore User"
-msgstr "Игнорировать пользователя"
+msgstr "Перестать игнорировать пользователя"
 
 #: pynicotine/gtkgui/userinfo.py:496
 msgid "Yes"
@@ -3205,12 +3182,12 @@ msgstr "Показать IP-а_дрес"
 #: pynicotine/gtkgui/widgets/popupmenu.py:424
 #, python-format
 msgid "Remove from Private Room %s"
-msgstr "Удалить из приватной комнаты %s"
+msgstr "Удалить из комнаты %s"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:426
 #, python-format
 msgid "Add to Private Room %s"
-msgstr "Пригласить в приватную комнату %s"
+msgstr "Пригласить в комнату %s"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:433
 #, python-format
@@ -3352,9 +3329,8 @@ msgstr "Last.fm: укажите имя пользователя и ключ API"
 #: pynicotine/nowplaying.py:214 pynicotine/nowplaying.py:260
 #: pynicotine/nowplaying.py:270 pynicotine/nowplaying.py:278
 #: pynicotine/nowplaying.py:292 pynicotine/nowplaying.py:307
-#, fuzzy
 msgid "Now Playing Error"
-msgstr "Формат"
+msgstr "Ошибка воспроизведения"
 
 #: pynicotine/nowplaying.py:139
 #, python-format
@@ -3574,14 +3550,13 @@ msgstr ""
 "список раздач. Ошибка: %s"
 
 #: pynicotine/slskproto.py:297
-#, fuzzy, python-format
+#, python-format
 msgid "Specified network interface '%s' is not available"
-msgstr "Указанный сетевой интерфейс «%s» не существует"
+msgstr "Указанный сетевой интерфейс '%s' не существует"
 
 #: pynicotine/slskproto.py:298
-#, fuzzy
 msgid "Unknown Network Interface"
-msgstr "Поведение"
+msgstr "Неизвестный сетевой интерфейс"
 
 #: pynicotine/slskproto.py:308
 #, python-format
@@ -3648,9 +3623,8 @@ msgid "Cannot save file in %(folder_path)s: %(error)s"
 msgstr "Не удаётся сохранить файл в %(folder_path)s: %(error)s"
 
 #: pynicotine/transfers.py:1187 pynicotine/transfers.py:2029
-#, fuzzy
 msgid "Download Folder Error"
-msgstr "Ошибка загрузки папки"
+msgstr "Ошибка загрузки"
 
 #: pynicotine/transfers.py:1201
 #, python-format
@@ -3750,14 +3724,12 @@ msgid "Error: %(num)d Download filters failed! %(error)s "
 msgstr "Ошибка: %(num)d Фильтры загрузки повреждены! %(error)s "
 
 #: pynicotine/updatechecker.py:45
-#, fuzzy
 msgid "Up to Date"
-msgstr "Новых версий нет"
+msgstr "Актуальная версия"
 
 #: pynicotine/updatechecker.py:48
-#, fuzzy
 msgid "Out of Date"
-msgstr "Устаревшая"
+msgstr "Устаревшая версия"
 
 #: pynicotine/updatechecker.py:49
 #, python-format
@@ -3853,9 +3825,8 @@ msgid "%(user)s is offline"
 msgstr "%(user)s не в сети"
 
 #: pynicotine/userlist.py:297
-#, fuzzy
 msgid "Buddy Status"
-msgstr "Имена друзей"
+msgstr "Статус друга"
 
 #: pynicotine/utils.py:364
 #, python-format
@@ -3936,7 +3907,6 @@ msgid "Translated by"
 msgstr "Перевёл"
 
 #: pynicotine/gtkgui/ui/dialogs/about.ui:175
-#, fuzzy
 msgid "License"
 msgstr "Лицензия"
 
@@ -3991,13 +3961,12 @@ msgstr ""
 "пользователям, чьи порты прослушивания открыты."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:280
-#, fuzzy
 msgid ""
 "Choose a range to select a listening port from. The first available port in "
 "the range will be used."
 msgstr ""
-"Выберите диапазон для выбора порта прослушивания. Будет использоваться "
-"первый доступный порт в диапазоне."
+"Выберите диапазон для подбора порта прослушивания. Будет использован первый "
+"доступный порт."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:302
 #: pynicotine/gtkgui/ui/settings/network.ui:161
@@ -4495,16 +4464,15 @@ msgid ""
 msgstr "Введите имя пользователя, чтобы начать с ним диалог"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1350
-#, fuzzy
 msgid "_Message All"
-msgstr "Сообщение (Иконка)"
+msgstr "Сообщение (иконка)"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1416
 msgid ""
 "Add users as buddies to share specific folders with them and receive "
 "notifications when they are online"
 msgstr ""
-"Добавляйте пользователей в список друзей, чтобы делиться с ними конкретными "
+"Добавляйте пользователей в список друзей, чтобы делиться с ними общими "
 "каталогами и получать уведомления, когда они в сети"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1474
@@ -4815,7 +4783,7 @@ msgstr "_Показать ленту сообщений публичного ч�
 
 #: pynicotine/gtkgui/ui/popovers/roomlist.ui:91
 msgid "_Accept private room invitations"
-msgstr "_Принять приглашение в приватную комнату"
+msgstr "Принять приглашение в комнату"
 
 #: pynicotine/gtkgui/ui/popovers/roomwall.ui:16
 msgid ""
@@ -6018,7 +5986,7 @@ msgstr "Показывать уведомление в заголовке окн
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:367
 msgid "Show notifications for:"
-msgstr "Показать уведомления для:"
+msgstr "Показ уведомлений:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:393
 msgid "Finished file downloads"
@@ -6030,15 +5998,15 @@ msgstr "Загрузка каталога завершена"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:417
 msgid "Private messages"
-msgstr "Приватных сообщений"
+msgstr "Личные сообщения"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:429
 msgid "Chat room messages"
-msgstr "Сообщений в чате"
+msgstr "Сообщения в чате"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:441
 msgid "Chat room mentions"
-msgstr "Упоминаний в чате"
+msgstr "Упоминания в чате"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:453
 #, fuzzy
@@ -6234,9 +6202,8 @@ msgid "Clear All Finished/Cancelled Uploads"
 msgstr "Очистить список завершённых раздач"
 
 #: pynicotine/gtkgui/ui/uploads.ui:184 pynicotine/gtkgui/ui/uploads.ui:200
-#, fuzzy
 msgid "Message All"
-msgstr "Сообщение (Иконка)"
+msgstr "Сообщение (иконка)"
 
 #: pynicotine/gtkgui/ui/uploads.ui:215
 #, fuzzy

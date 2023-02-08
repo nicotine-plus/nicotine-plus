@@ -73,7 +73,7 @@ class Notifications:
 
         elif self.application.window.chatrooms.highlighted_rooms:
             # Allow for the possibility the username is not available
-            room = self.application.window.chatrooms.highlighted_rooms[-1]
+            room, user = list(self.application.window.chatrooms.highlighted_rooms.items())[-1]
             notification_text = _("Mentioned by %(user)s in Room %(room)s") % {"user": user, "room": room}
 
             self.application.window.set_title(f"{app_name} - {notification_text}")
