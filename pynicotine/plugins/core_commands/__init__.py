@@ -248,9 +248,9 @@ class Plugin(BasePlugin):
             },
             "plugin": {
                 "callback": self.plugin_handler_command,
-                "description": _("Load or unload a plugin"),
+                "description": _("Manage plugin"),
                 "group": _("Plugin Commands"),
-                "usage": ["<toggle|enable|disable>", "<plugin_name>"]
+                "usage": ["<toggle|info>", "<plugin_name>"]
             },
             "now": {
                 "callback": self.now_playing_command,
@@ -274,7 +274,7 @@ class Plugin(BasePlugin):
             command_interface = "cli"
 
         search_query = " ".join(args.lower().split(" ", maxsplit=1))
-        command_groups = self.parent.get_command_descriptions(  # pylint: disable=no-member
+        command_groups = self.parent.get_command_descriptions(
             command_interface, search_query=search_query
         )
         num_commands = sum(len(command_groups[x]) for x in command_groups)
@@ -296,6 +296,8 @@ class Plugin(BasePlugin):
 
         if not search_query:
             output_text += "\n\n" + _("Type %(command)s to list similar commands") % {"command": "/help [query]"}
+        elif not num_commands:
+            output_text += "\n" + _("Type %(command)s to list available commands") % {"command": "/help"}
 
         self.output(output_text)
         return True
@@ -317,17 +319,6 @@ class Plugin(BasePlugin):
     def hello_command(self, args, **_unused):
         self.output(_("Hello there!") + " " + args)
 
-    def plugin_handler_command(self, args, **_unused):
-
-        action, plugin_name = self.split_args(args, 2)
-
-        if not plugin_name:
-            return False
-
-        func = getattr(self.parent, f"{action}_plugin")
-
-        return func(plugin_name)
-
     def quit_command(self, args, **_unused):
 
         force = (args.lstrip("- ") in ("force", "f"))
@@ -342,6 +333,9 @@ class Plugin(BasePlugin):
             self.core.confirm_quit()
 
         return True
+
+    def sample_command(self, _args, **_unused):
+        self.output("Hello")
 
     """ Chat """
 
@@ -562,7 +556,7 @@ class Plugin(BasePlugin):
 
             self.output("\n" + f"{num_shares} {group_name} shares:")
 
-            for virtual_name, folder_path, *_unused in share_group:
+            for virtual_name, folder_path, *_ignored in share_group:
                 self.output(f'• "{virtual_name}" {folder_path}')
 
             num_listed += num_shares
@@ -586,7 +580,7 @@ class Plugin(BasePlugin):
     def search_buddies_command(self, args, **_unused):
         self.core.search.do_search(args, "buddies")
 
-    def search_user_command(self, args, user=None, **_unused):
+    def search_user_command(self, args, **_unused):
 
         user, query = self.split_args(args, 2)
 
@@ -595,6 +589,22 @@ class Plugin(BasePlugin):
 
         self.core.search.do_search(query, "user", user=user)
         return True
+
+    """ Plugin Commands """
+
+    def plugin_handler_command(self, args, **_unused):
+
+        args_split = args.split(maxsplit=1)
+        action, plugin_name = args_split[0], args_split[1]
+
+        if action == "toggle":
+            self.parent.toggle_plugin(plugin_name)
+
+        elif action == "info":
+            plugin_info = self.parent.get_plugin_info(plugin_name)
+
+            for key, value in plugin_info.items():
+                self.output(f"• {key}: {value}")
 
     """ Now Playing """
 

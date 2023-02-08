@@ -78,7 +78,7 @@ class ChatRooms(IconNotebook):
         )
 
         self.autojoin_rooms = set()
-        self.highlighted_rooms = []
+        self.highlighted_rooms = {}
         self.completion = ChatCompletion()
         self.roomlist = RoomList(window)
         self.command_help = None
@@ -253,12 +253,12 @@ class ChatRooms(IconNotebook):
             for joined_room in self.pages:
                 self.window.room_search_combobox.append_text(joined_room)
 
-    def highlight_room(self, room):
+    def highlight_room(self, room, user):
 
         if not room or room in self.highlighted_rooms:
             return
 
-        self.highlighted_rooms.append(room)
+        self.highlighted_rooms[room] = user
         self.window.application.notifications.update_title()
         self.window.application.tray_icon.update_icon()
 
@@ -270,7 +270,7 @@ class ChatRooms(IconNotebook):
         if room not in self.highlighted_rooms:
             return
 
-        self.highlighted_rooms.remove(room)
+        del self.highlighted_rooms[room]
         self.window.application.notifications.update_title()
         self.window.application.tray_icon.update_icon()
 
@@ -855,7 +855,7 @@ class ChatRoom:
 
         if mentioned:
             # We were mentioned, update tray icon and show urgency hint
-            self.chatrooms.highlight_room(room)
+            self.chatrooms.highlight_room(room, user)
             return
 
         if not is_global and config.sections["notifications"]["notification_popup_chatroom"]:

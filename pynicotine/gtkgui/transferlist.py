@@ -400,7 +400,7 @@ class TransferList:
                 # "Finished" status always has the lowest priority
                 parent_status = status
 
-            if status == "Filtered":
+            if status == "Filtered" and transfer.filename:
                 # We don't want to count filtered files when calculating the progress
                 iterator = self.transfersmodel.iter_next(iterator)
                 continue

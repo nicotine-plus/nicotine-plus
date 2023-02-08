@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2023-01-30 19:52+0000\n"
+"PO-Revision-Date: 2023-02-07 18:25+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -5895,7 +5895,7 @@ msgstr "Az összes átvitel"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:219
 msgid "Queue Limits"
-msgstr "Sorok korlátozása"
+msgstr "Sorkorlátozás"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:232
 msgid "Queue limits do not apply to buddies"
@@ -5927,7 +5927,7 @@ msgstr "Elsőbbség az összes barátnak"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:333
 msgid "Upload queue type:"
-msgstr "Feltöltési sortípus:"
+msgstr "Feltöltési sor típusa:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:344
 msgid ""
@@ -5937,8 +5937,8 @@ msgid ""
 msgstr ""
 "Round Robin: A fájlok ciklikus módon lesznek feltöltve a sorban várakozó "
 "felhasználók számára.\n"
-"Első be, első ki: A fájlok feltöltése abban a sorrendben történik, ahogyan a "
-"sorba bekerültek."
+"Elsőnek be, elsőnek ki: A fájlok feltöltése abban a sorrendben történik, "
+"ahogyan a sorba bekerültek."
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:347
 msgid "Round Robin"
@@ -5946,7 +5946,7 @@ msgstr "Round Robin"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:348
 msgid "First In, First Out"
-msgstr "FIFO várakozási mód"
+msgstr "Elsőnek be, elsőnek ki"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:362
 msgid "Queue uploads if total transfer speed reaches (KiB/s):"
@@ -5970,131 +5970,112 @@ msgid ""
 "Instances of $ are replaced by the URL. Default system applications are used "
 "in cases where a protocol has not been configured."
 msgstr ""
-"A $ jelet felváltja egy URL hivatkozás. Az alapértelmezett "
-"rendszeralkalmazások olyan esetekben használatosak, amikor a protokoll nincs "
-"konfigurálva."
+"A $ jel helyére az URL kerül. Az alapértelmezett rendszeralkalmazások olyan "
+"esetekben használatosak, amikor a protokoll nincs konfigurálva."
 
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:51
 msgid "Media player command:"
 msgstr "Zenelejátszó parancs:"
 
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:92
-#, fuzzy
 msgid "File manager command:"
-msgstr "Fájlkezelő parancs ($ mappaútvonalhoz):"
+msgstr "Fájlkezelő parancs:"
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:11
 msgid "Self Description"
 msgstr "Önleírás"
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:65
-#, fuzzy
 msgid "Picture:"
 msgstr "Kép:"
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:85
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:101
-#, fuzzy
 msgid "Reset Picture"
 msgstr "Kép visszaállítása"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:38
-#, fuzzy
 msgid "Prefer dark mode"
 msgstr "Sötét üzemmód előnyben részesítése"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:40
-#, fuzzy
 msgid "Note that the operating system's theme may take precedence."
 msgstr ""
 "Vegye figyelembe, hogy az operációs rendszer témája elsőbbséget élvezhet."
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:50
-#, fuzzy
 msgid "Display tray icon"
 msgstr "Tálca ikon megjelenítése"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:58
-#, fuzzy
 msgid "Minimize to tray on startup"
-msgstr "Minimalizálás a tálcára indításkor"
+msgstr "Indításkor minimalizálja a tálcára"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:67
-#, fuzzy
 msgid "Restore the previously active main tab at startup"
-msgstr "Korábban megnyitott privát csevegések visszaállítása indításkor"
+msgstr "Indításkor állítsa vissza a korábban aktív főlapot"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:68
 msgid "By default the leftmost tab is activated at startup"
 msgstr "Alapértelmezés szerint a bal szélső lap az indításkor aktiválódik"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:80
-#, fuzzy
 msgid "Language (requires a restart):"
-msgstr "Fogadási port tartomány (újraindítás szükséges):"
+msgstr "Nyelv (újraindítás szükséges):"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:92
-#, fuzzy
 msgid "System Default"
-msgstr "Alapértelmezett"
+msgstr "Rendszer alapértelmezett"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:106
 msgid "When closing Nicotine+:"
 msgstr "A Nicotine+ bezárásakor:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:118
-#, fuzzy
 msgid "Quit program"
-msgstr "Program"
+msgstr "Kilépés a programból"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:119
-#, fuzzy
 msgid "Show confirmation dialog"
-msgstr "Megerősítő ablak mutatása a főablak bezárásakor"
+msgstr "Megerősítő párbeszéd megjelenítése"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:120
-#, fuzzy
 msgid "Run in the background"
-msgstr "futás a háttérben"
+msgstr "Futtatás a háttérben"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:135
 msgid "Tab bar position:"
 msgstr "A lapsáv helyzete:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:167
-#, fuzzy
 msgid "Visible main tabs:"
-msgstr "Látható elsődleges fülek:"
+msgstr "Látható fő lapok:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:317
-#, fuzzy
 msgid "Notifications"
 msgstr "Értesítések"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:340
-#, fuzzy
 msgid "Enable sound for notifications"
-msgstr "Hang engedélyezése a felugró értesítésekhez"
+msgstr "Hang engedélyezése az értesítésekhez"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:346
-#, fuzzy
 msgid "Show notification for private chats and mentions in the window title"
 msgstr ""
-"A privát csevegések és említések értesítésének megjelenítése az ablak címében"
+"A privát csevegések és az említések értesítéseinek megjelenítése az "
+"ablakcímmezőben"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:367
 msgid "Show notifications for:"
 msgstr "Értesítések megjelenítése a következőhöz:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:393
-#, fuzzy
 msgid "Finished file downloads"
-msgstr "Fájl letöltve"
+msgstr "Befejezett fájlletöltések"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:405
-#, fuzzy
 msgid "Finished folder downloads"
-msgstr "Letöltött mappa"
+msgstr "Befejezett mappaletöltések"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:417
 msgid "Private messages"
@@ -6102,97 +6083,80 @@ msgstr "Privát üzenetek"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:429
 msgid "Chat room messages"
-msgstr "Chatszoba üzenetek"
+msgstr "Csevegőszoba üzenetek"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:441
-#, fuzzy
 msgid "Chat room mentions"
-msgstr "Kiegészítés"
+msgstr "Csevegőszoba említések"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:453
-#, fuzzy
 msgid "Wishlist results found"
-msgstr "Kívánságlista eredményei"
+msgstr "Kívánságlista eredmények találhatók"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:480
-#, fuzzy
 msgid "Secondary Tabs"
 msgstr "Másodlagos lapok"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:497
-#, fuzzy
 msgid "Close-buttons on secondary tabs"
-msgstr "Bezárógombok a lapfüleken"
+msgstr "Bezárógombok a másodlagos lapokon"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:517
-#, fuzzy
 msgid "Chat room tab bar position:"
-msgstr "Csevegőszoba fül sáv pozíciója:"
+msgstr "Csevegőszoba lapsáv pozíciója:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:540
-#, fuzzy
 msgid "Private chat tab bar position:"
-msgstr "Privát chat formátum:"
+msgstr "Privát csevegés lapsáv pozíciója:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:563
-#, fuzzy
 msgid "Search tab bar position:"
-msgstr "Keresés lap sáv pozíciója:"
+msgstr "Keresés lapsáv pozíciója:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:586
-#, fuzzy
 msgid "User info tab bar position:"
-msgstr "Felhasználói információs sáv pozíciója:"
+msgstr "Felhasználói adatok lapsáv pozíciója:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:609
-#, fuzzy
 msgid "User browse tab bar position:"
-msgstr "Felhasználó böngészési lapsor pozíciója:"
+msgstr "Felhasználóböngészési lapsáv pozíciója:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:652
-#, fuzzy
 msgid ""
 "Show reverse file paths in search and transfer views (requires a restart)"
 msgstr ""
-"Fordított fájlútvonalak megjelenítése a keresési és átviteli nézetekben "
-"(újraindítást igényel)"
+"Fordított fájlútvonalak megjelenítése a keresési és az átviteli nézetekben ("
+"újraindítást igényel)"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:672
 msgid "List text color:"
-msgstr "Lista szövegének színe:"
+msgstr "Listaszöveg színe:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:714
-#, fuzzy
 msgid "Queued search result text color:"
-msgstr "Keresés a várólista szöveg színével:"
+msgstr "Sorban álló keresési eredmény szövegének színe:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:783
-#, fuzzy
 msgid "Chat username appearance:"
-msgstr "Chat felhasználónév megjelenése:"
+msgstr "Csevegési felhasználónév megjelenése:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:796
-#, fuzzy
 msgid "bold"
 msgstr "félkövér"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:797
-#, fuzzy
 msgid "italic"
 msgstr "dőlt"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:798
-#, fuzzy
 msgid "underline"
-msgstr "Elérhető"
+msgstr "aláhúzott"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:799
-#, fuzzy
 msgid "normal"
-msgstr "hagyományos"
+msgstr "normál"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:820
-#, fuzzy
 msgid "Remote text color:"
 msgstr "Távoli szöveg színe:"
 
@@ -6201,9 +6165,8 @@ msgid "Local text color:"
 msgstr "Helyi szöveg színe:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:904
-#, fuzzy
 msgid "Command output text color:"
-msgstr "Távoli szöveg színe:"
+msgstr "Parancskimeneti szöveg színe:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:946
 #, fuzzy
@@ -6216,24 +6179,20 @@ msgid "Highlighted text color:"
 msgstr "Kiemelt szöveg színe:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1030
-#, fuzzy
 msgid "URL link text color:"
-msgstr "URL-link szövegének színe:"
+msgstr "URL hivatkozás szöveg színe:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1077
-#, fuzzy
 msgid "Text Entries"
 msgstr "Szöveges bejegyzések"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1099
-#, fuzzy
 msgid "Text entry background color:"
 msgstr "Szövegbevitel háttérszíne:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1141
-#, fuzzy
 msgid "Text entry text color:"
-msgstr "Szövegbeviteli szöveg színe:"
+msgstr "Szövegbevitel szövegének a színe:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1188
 #, fuzzy
@@ -6261,14 +6220,12 @@ msgid "Tab Labels"
 msgstr "Lapcímkék"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1363
-#, fuzzy
 msgid "Regular tab label color:"
-msgstr "Normál fülcímke színe:"
+msgstr "Normál lapcímke színe:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1405
-#, fuzzy
 msgid "Changed tab label color:"
-msgstr "Megváltoztatta a lapcímke színét:"
+msgstr "A lapcímke színe megváltozott:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1447
 #, fuzzy
@@ -6351,49 +6308,40 @@ msgid "Shared"
 msgstr "Megosztott"
 
 #: pynicotine/gtkgui/ui/userbrowse.ui:155
-#, fuzzy
 msgid "Search Files and Folders"
-msgstr "Fájlok és mappák keresése (pontos egyezés)"
+msgstr "Fájlok és mappák keresése"
 
 #: pynicotine/gtkgui/ui/userbrowse.ui:167
-#, fuzzy
 msgid "Save Shares List to Disk"
-msgstr "Megosztási lista lemezre menté_se"
+msgstr "Megosztási lista lemezre mentése"
 
 #: pynicotine/gtkgui/ui/userbrowse.ui:183
-#, fuzzy
 msgid "Refresh Files"
 msgstr "Fájlok frissítése"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:123
-#, fuzzy
 msgid "Shared Files"
-msgstr "Fájlok _keresése"
+msgstr "Megosztott fájlok"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:150
-#, fuzzy
 msgid "Shared Folders"
-msgstr "Megosztás csak barátoknak"
+msgstr "Megosztott mappák"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:177
-#, fuzzy
 msgid "Upload Slots"
-msgstr "Feltöltések"
+msgstr "Feltöltési szálak"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:204
-#, fuzzy
 msgid "Queued Uploads"
-msgstr "Feltöltések"
+msgstr "Sorba állított feltöltések"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:231
-#, fuzzy
 msgid "Free Upload Slots"
-msgstr "Szabad szál"
+msgstr "Szabad feltöltési szál"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:258
-#, fuzzy
 msgid "Upload Speed"
-msgstr "Feltöltés"
+msgstr "Feltöltési sebesség"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:607
 #, fuzzy
