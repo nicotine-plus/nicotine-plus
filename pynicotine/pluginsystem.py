@@ -235,11 +235,11 @@ class BasePlugin:
         """ Convenience function to send a message to the same user/room
         a plugin command runs for """
 
-        if self.parent.command_source is None:  # pylint: disable=no-member
+        if self.parent.command_source is None:
             # Function was not called from a command
             return
 
-        command_interface, source = self.parent.command_source  # pylint: disable=no-member
+        command_interface, source = self.parent.command_source
 
         if command_interface == "cli":
             return
@@ -251,11 +251,11 @@ class BasePlugin:
         """ Convenience function to display a raw message the same window
         a plugin command runs from """
 
-        if self.parent.command_source is None:  # pylint: disable=no-member
+        if self.parent.command_source is None:
             # Function was not called from a command
             return
 
-        command_interface, source = self.parent.command_source  # pylint: disable=no-member
+        command_interface, source = self.parent.command_source
 
         if command_interface == "cli":
             print(text)
@@ -376,10 +376,6 @@ class PluginHandler:
         self.user_plugin_folder = os.path.join(config.data_dir, "plugins")
         self.plugin_folders.append(self.user_plugin_folder)
 
-        BasePlugin.parent = self
-        BasePlugin.config = config
-        BasePlugin.core = core
-
         for event_name, callback in (
             ("cli-command", self._cli_command),
             ("start", self._start),
@@ -388,6 +384,10 @@ class PluginHandler:
             events.connect(event_name, callback)
 
     def _start(self):
+
+        BasePlugin.parent = self
+        BasePlugin.config = config
+        BasePlugin.core = core
 
         self.enable_plugin("core_commands")
 
