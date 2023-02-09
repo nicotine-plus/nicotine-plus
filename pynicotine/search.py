@@ -479,7 +479,7 @@ class Search:
             # Don't send search response if search term contains too few characters
             return
 
-        checkuser, _reason = core.network_filter.check_user(user, None)
+        checkuser, _reason = core.network_filter.check_user(user)
 
         if not checkuser:
             return
