@@ -546,7 +546,7 @@ class Search:
             elif filter_id == "filtertype":
                 presets = ("flac|wav|ape|aiff|wv|cue", "mp3|m4a|aac|ogg|opus|wma", "!mp3")
 
-            widget.set_row_separator_func(None)
+            widget.set_row_separator_func(lambda *_args: 0)
             widget.remove_all()
 
             if presets:
