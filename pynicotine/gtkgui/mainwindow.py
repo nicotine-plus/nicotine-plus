@@ -938,8 +938,7 @@ class MainWindow(Window):
 
     def append_main_tabs(self):
 
-        # Translation for the labels of tabs, icon names
-        tab_data = [
+        for tab_id, tab_text, tab_icon_name in (
             ("search", _("Search Files"), "system-search-symbolic"),
             ("downloads", _("Downloads"), "document-save-symbolic"),
             ("uploads", _("Uploads"), "emblem-shared-symbolic"),
@@ -949,9 +948,7 @@ class MainWindow(Window):
             ("userlist", _("Buddies"), "contact-new-symbolic"),
             ("chatrooms", _("Chat Rooms"), "user-available-symbolic"),
             ("interests", _("Interests"), "emblem-default-symbolic")
-        ]
-
-        for tab_id, tab_text, tab_icon_name in tab_data:
+        ):
             page = getattr(self, f"{tab_id}_page")
             page.id = tab_id
 
