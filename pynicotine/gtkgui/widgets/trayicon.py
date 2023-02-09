@@ -336,11 +336,10 @@ class StatusNotifierImplementation(BaseImplementation):
             xml_output += "</interface></node>"
 
             registration_id = self._bus.register_object(
-                self._object_path,
-                Gio.DBusNodeInfo.new_for_xml(xml_output).interfaces[0],
-                self.on_method_call,
-                self.on_get_property,
-                None
+                object_path=self._object_path,
+                interface_info=Gio.DBusNodeInfo.new_for_xml(xml_output).interfaces[0],
+                method_call_closure=self.on_method_call,
+                get_property_closure=self.on_get_property
             )
 
             if not registration_id:
@@ -370,11 +369,11 @@ class StatusNotifierImplementation(BaseImplementation):
             arg_types = "".join(self.signals[name].args)
 
             self._bus.emit_signal(
-                None,
-                self._object_path,
-                self._interface_name,
-                name,
-                GLib.Variant(f"({arg_types})", args)
+                destination_bus_name=None,
+                object_path=self._object_path,
+                interface_name=self._interface_name,
+                signal_name=name,
+                parameters=GLib.Variant(f"({arg_types})", args)
             )
 
         def on_method_call(self, _connection, _sender, _path, _interface_name, method_name, parameters, invocation):
@@ -523,18 +522,19 @@ class StatusNotifierImplementation(BaseImplementation):
         self.custom_icons = False
 
         try:
-            self.bus = Gio.bus_get_sync(Gio.BusType.SESSION)
+            self.bus = Gio.bus_get_sync(bus_type=Gio.BusType.SESSION)
             self.tray_icon = self.StatusNotifierItemService(activate_callback=self.on_window_hide_unhide)
             self.tray_icon.register()
 
             self.bus.call_sync(
-                "org.kde.StatusNotifierWatcher",
-                "/StatusNotifierWatcher",
-                "org.kde.StatusNotifierWatcher",
-                "RegisterStatusNotifierItem",
-                GLib.Variant("(s)", ("/org/ayatana/NotificationItem/Nicotine",)),
-                None,
-                Gio.DBusCallFlags.NONE, -1
+                bus_name="org.kde.StatusNotifierWatcher",
+                object_path="/StatusNotifierWatcher",
+                interface_name="org.kde.StatusNotifierWatcher",
+                method_name="RegisterStatusNotifierItem",
+                parameters=GLib.Variant("(s)", ("/org/ayatana/NotificationItem/Nicotine",)),
+                reply_type=None,
+                flags=Gio.DBusCallFlags.NONE,
+                timeout_msec=-1
             )
 
         except GLib.Error as error:
@@ -648,11 +648,11 @@ class TrayIcon:
             return
 
         Gio.bus_watch_name(
-            Gio.BusType.SESSION,
-            "org.kde.StatusNotifierWatcher",
-            Gio.BusNameWatcherFlags.NONE,
-            self.load,
-            self.unload
+            bus_type=Gio.BusType.SESSION,
+            name="org.kde.StatusNotifierWatcher",
+            flags=Gio.BusNameWatcherFlags.NONE,
+            name_appeared_closure=self.load,
+            name_vanished_closure=self.unload
         )
 
     def load(self, *_args):
