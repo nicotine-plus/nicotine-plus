@@ -505,6 +505,9 @@ class PluginHandler:
             plugin.init()
 
             for command, data in plugin.commands.items():
+                if not data:
+                    continue
+
                 command = "/" + command
                 disabled_interfaces = data.get("disable", [])
 
@@ -512,11 +515,13 @@ class PluginHandler:
                     # Group commands under human-friendly plugin name by default
                     data["group"] = human_name
 
-                for command_interface in ("chatroom", "private_chat", "cli"):
+                for command_interface, command_list in (
+                    ("chatroom", self.chatroom_commands),
+                    ("private_chat", self.private_chat_commands),
+                    ("cli", self.cli_commands)
+                ):
                     if command_interface in disabled_interfaces:
                         continue
-
-                    command_list = getattr(self, f"{command_interface}_commands")
 
                     if command in command_list:
                         log.add(_("Conflicting %(interface)s command in plugin %(name)s: %(command)s"),
@@ -595,18 +600,20 @@ class PluginHandler:
             for command, data in plugin.commands.items():
                 command = "/" + command
 
-                for command_interface in ("chatroom", "private_chat", "cli"):
-                    command_list = getattr(self, f"{command_interface}_commands")
-
+                for command_list in (self.chatroom_commands, self.private_chat_commands, self.cli_commands):
                     # Remove only if data matches command as defined in this plugin
-                    if data == command_list.get(command, None):
-                        command_list.pop(command, None)
+                    if data and data == command_list.get(command):
+                        del command_list[command]
 
             for command, _func in plugin.__publiccommands__:
-                self.chatroom_commands.pop("/" + command, None)
+                command = "/" + command
+                if not self.chatroom_commands.get(command):
+                    self.chatroom_commands.pop(command, None)
 
             for command, _func in plugin.__privatecommands__:
-                self.private_chat_commands.pop("/" + command, None)
+                command = "/" + command
+                if not self.private_chat_commands.get(command):
+                    self.private_chat_commands.pop(command, None)
 
             self.update_completions(plugin)
             plugin.unloaded_notification()
