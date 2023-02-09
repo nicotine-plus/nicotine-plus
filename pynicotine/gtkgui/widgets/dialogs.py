@@ -494,13 +494,10 @@ class PluginSettingsDialog(Dialog):
     def _generate_label(text):
         return Gtk.Label(label=text, use_markup=True, hexpand=True, wrap=True, xalign=0, visible=bool(text))
 
-    def _generate_widget_container(self, description, child_widget, homogeneous=False, vertical=False):
+    def _generate_widget_container(self, description, child_widget, homogeneous=False,
+                                   orientation=Gtk.Orientation.HORIZONTAL):
 
-        container = Gtk.Box(homogeneous=homogeneous, spacing=12, visible=True)
-
-        if vertical:
-            container.set_orientation(Gtk.Orientation.VERTICAL)
-
+        container = Gtk.Box(homogeneous=homogeneous, orientation=orientation, spacing=12, visible=True)
         label = self._generate_label(description)
 
         if GTK_API_VERSION >= 4:
@@ -600,7 +597,7 @@ class PluginSettingsDialog(Dialog):
             box.add(scrolled_window)     # pylint: disable=no-member
 
         self.option_widgets[option_name] = textview = TextView(scrolled_window)
-        label = self._generate_widget_container(description, frame_container, vertical=True)
+        label = self._generate_widget_container(description, frame_container, orientation=Gtk.Orientation.VERTICAL)
         label.set_mnemonic_widget(textview.widget)
         self.application.preferences.set_widget(textview, option_value)
 
