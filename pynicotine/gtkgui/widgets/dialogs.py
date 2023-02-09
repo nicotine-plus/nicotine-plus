@@ -494,9 +494,9 @@ class PluginSettingsDialog(Dialog):
     def _generate_label(text):
         return Gtk.Label(label=text, use_markup=True, hexpand=True, wrap=True, xalign=0, visible=bool(text))
 
-    def _generate_widget_container(self, description, child_widget, vertical=False):
+    def _generate_widget_container(self, description, child_widget, homogeneous=False, vertical=False):
 
-        container = Gtk.Box(spacing=12, visible=True)
+        container = Gtk.Box(homogeneous=homogeneous, spacing=12, visible=True)
 
         if vertical:
             container.set_orientation(Gtk.Orientation.VERTICAL)
@@ -570,7 +570,7 @@ class PluginSettingsDialog(Dialog):
     def _add_dropdown_option(self, option_name, option_value, description, items):
 
         self.option_widgets[option_name] = combobox = Gtk.ComboBoxText(valign=Gtk.Align.CENTER, visible=True)
-        label = self._generate_widget_container(description, combobox)
+        label = self._generate_widget_container(description, combobox, homogeneous=True)
         label.set_mnemonic_widget(combobox)
 
         for text_label in items:
@@ -582,7 +582,7 @@ class PluginSettingsDialog(Dialog):
 
         self.option_widgets[option_name] = entry = Gtk.Entry(hexpand=True, valign=Gtk.Align.CENTER,
                                                              visible=True)
-        label = self._generate_widget_container(description, entry)
+        label = self._generate_widget_container(description, entry, homogeneous=True)
         label.set_mnemonic_widget(entry)
 
         self.application.preferences.set_widget(entry, option_value)
@@ -655,7 +655,7 @@ class PluginSettingsDialog(Dialog):
     def _add_file_option(self, option_name, option_value, description, file_chooser_type):
 
         button_widget = Gtk.Button(hexpand=True, valign=Gtk.Align.CENTER, visible=True)
-        label = self._generate_widget_container(description, button_widget)
+        label = self._generate_widget_container(description, button_widget, homogeneous=True)
 
         self.option_widgets[option_name] = FileChooserButton(button_widget, self.widget, file_chooser_type)
         label.set_mnemonic_widget(button_widget)
