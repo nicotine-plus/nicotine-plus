@@ -2530,7 +2530,7 @@ class FileListMessage(PeerMessage):
             h_bitrate = ""
 
         else:
-            h_bitrate = str(bitrate)
+            h_bitrate = f"{bitrate}"
 
             if vbr == 1:
                 h_bitrate += " (vbr)"
