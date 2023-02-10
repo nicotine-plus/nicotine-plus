@@ -26,8 +26,6 @@ from pynicotine.slskmessages import UserStatus
 
 class PrivateChat:
 
-    CTCP_VERSION = "\x01VERSION\x01"
-
     def __init__(self):
 
         self.completion_list = []
@@ -50,6 +48,21 @@ class PrivateChat:
             ("user-status", self._user_status)
         ):
             events.connect(event_name, callback)
+
+        self.ctcp_queries = {
+            "CLIENTINFO": {
+                "info": _("Index of query command keywords"),
+                "reply": self.ctcp_clientinfo_reply
+            },
+            "ERRMSG": {
+                "info": _("Used when an error needs a reply"),
+                "reply": self.ctcp_errmsg_reply
+            },
+            "VERSION": {
+                "info": _("Type and version of client"),
+                "reply": self.ctcp_version_reply
+            }
+        }
 
     def _start(self):
 
@@ -157,8 +170,8 @@ class PrivateChat:
 
         user, message = user_text
 
-        if message == self.CTCP_VERSION:
-            ui_message = "CTCP VERSION"
+        if message.startswith("\x01") and message.endswith("\x01"):
+            ui_message = f"CTCP {message[1:-1]}"
         else:
             message = ui_message = self.auto_replace(message)
 
@@ -249,26 +262,70 @@ class PrivateChat:
         _user, msg.msg = user_text
         msg.msg = self.censor_chat(msg.msg)
 
-        # SEND CLIENT VERSION to user if the following string is sent
-        ctcpversion = False
-        if msg.msg == self.CTCP_VERSION:
-            ctcpversion = True
-            msg.msg = "CTCP VERSION"
+        # Send CTCP response to user if a CTCP request query is received - experimental
+        ctcp_query = ctcp_reply = False
+        if msg.msg.startswith("\x01") and msg.msg.endswith("\x01"):
+            ctcp_query = msg.msg[1:-1].strip()
+            msg.msg = f"CTCP {ctcp_query}"
 
         core.pluginhandler.incoming_private_chat_notification(user, msg.msg)
 
-        if ctcpversion and not config.sections["server"]["ctcpmsgs"]:
-            self.send_message(user, f"{config.application_name} {config.version}")
+        if ctcp_query and not config.sections["server"]["ctcpmsgs"]:
+            for keyword, data in self.ctcp_queries.items():
+                if ctcp_query.startswith(keyword):
+                    args = ctcp_query[len(keyword):].strip()
+                    callback = data.get("reply", self.ctcp_errmsg_reply)
+                    ctcp_reply = callback(args, user=user)
+                    break
+
+            if not ctcp_reply:
+                ctcp_reply = self.ctcp_errmsg_reply(None)
 
         if not msg.newmessage:
             # Message was sent while offline, don't auto-reply
             return
+
+        if ctcp_reply:
+            self.send_message(user, f"{ctcp_query}: {ctcp_reply}")
 
         autoreply = config.sections["server"]["autoreply"]
 
         if autoreply and core.user_status == UserStatus.AWAY and user not in self.away_message_users:
             self.send_automatic_message(user, autoreply)
             self.away_message_users.add(user)
+
+    def ctcp_clientinfo_reply(self, args, user=None):
+
+        if not args:
+            reply_text = "You are my buddy. " if user in core.userlist.buddies else ""
+            keyword_list = list(self.ctcp_queries)
+            keyword_text = ' | '.join(keyword_list) or "I won't give any information."
+            num_keywords = len(keyword_list)
+            reply_text += f"Listing {num_keywords} available keywords... {keyword_text}"
+
+            return reply_text
+
+        for keyword, data in self.ctcp_queries.items():
+            if args.endswith(keyword):
+                command_info = f'{data.get("info", _("No description"))}'
+
+                return command_info
+
+        return "Unknown keyword, I don't have that information."
+
+    def ctcp_errmsg_reply(self, args, **_unused):
+
+        if args:
+            return "I get that, but nothing can be done about it."
+
+        return "Unknown keyword, use CLIENTINFO to list available keywords."
+
+    def ctcp_version_reply(self, args, **_unused):
+
+        if args:
+            return "I don't take any arguments."
+
+        return f"{config.application_name} {config.version}"
 
     def update_completions(self):
 

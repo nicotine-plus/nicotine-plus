@@ -82,6 +82,15 @@ class Plugin(BasePlugin):
                 "group": _CommandGroup.CHAT,
                 "usage": ["<something..>"]
             },
+            "ctcp": {
+                "callback": self.ctcp_command,
+                "callback_chatroom": self.ctcp_chatroom_command,
+                "description": _("Send client-to-client protocol query"),
+                "disable": ["cli"],
+                "group": _CommandGroup.CHAT,
+                "usage": ["<user>", "<query>"],
+                "usage_private_chat": ["<query>"]
+            },
             "join": {
                 "aliases": ["j"],
                 "callback": self.join_command,
@@ -542,3 +551,19 @@ class Plugin(BasePlugin):
 
             for key, value in plugin_info.items():
                 self.output(f"• {key}: {value}")
+
+    """ CTCP Commands """
+
+    def ctcp_chatroom_command(self, args, **_unused):
+
+        args_split = args.split(maxsplit=1)
+        user, query = args_split[0], args_split[1]
+
+        self.ctcp_command(query, user)
+
+    def ctcp_command(self, args, user=None, **_unused):
+
+        query = args.upper()
+        ctcp_query = f"\x01{query}\x01"
+
+        self.send_private(user, ctcp_query)
