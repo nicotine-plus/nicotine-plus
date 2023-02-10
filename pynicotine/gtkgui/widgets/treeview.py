@@ -34,6 +34,7 @@ from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
+from pynicotine.gtkgui.widgets.theme import FILE_TYPE_ICON_LABELS
 from pynicotine.gtkgui.widgets.theme import add_css_class
 
 
@@ -199,7 +200,7 @@ class TreeView:
 
         progress_padding = 1
         height_padding = 4
-        width_padding = 10
+        width_padding = 8 if GTK_API_VERSION >= 4 else 10
 
         cols = {}
         num_cols = len(columns)
@@ -241,7 +242,7 @@ class TreeView:
             if not isinstance(width, int):
                 width = None
 
-            xalign = 0
+            xalign = 0.0
 
             if column_type == "text":
                 renderer = Gtk.CellRendererText(single_paragraph_mode=True, xpad=width_padding, ypad=height_padding)
@@ -274,6 +275,12 @@ class TreeView:
                     else:
                         # Use the same size as the original icon
                         renderer.set_property("stock-size", 0)
+
+                if column_id == "file_type":
+                    renderer.set_property("xalign", 1.0)
+
+                    if GTK_API_VERSION == 3:
+                        renderer.set_property("xpad", 2)
 
                 column = Gtk.TreeViewColumn(column_id, renderer, icon_name=column_index)
 
@@ -611,7 +618,7 @@ def initialise_columns(window, treeview_name, treeview, *args):
 
     progress_padding = 1
     height_padding = 4
-    width_padding = 10
+    width_padding = 8 if GTK_API_VERSION >= 4 else 10
 
     for column_index, (column_id, title, width, column_type, extra) in enumerate(args):
         if treeview_name:
@@ -629,7 +636,7 @@ def initialise_columns(window, treeview_name, treeview, *args):
         if not isinstance(width, int):
             width = 0
 
-        xalign = 0
+        xalign = 0.0
 
         if column_type == "text":
             renderer = Gtk.CellRendererText(single_paragraph_mode=True, xpad=width_padding, ypad=height_padding)
@@ -660,6 +667,12 @@ def initialise_columns(window, treeview_name, treeview, *args):
                 else:
                     # Use the same size as the original icon
                     renderer.set_property("stock-size", 0)
+
+            if column_id == "file_type":
+                renderer.set_property("xalign", 1.0)
+
+                if GTK_API_VERSION == 3:
+                    renderer.set_property("xpad", 2)
 
             column = Gtk.TreeViewColumn(column_id, renderer, icon_name=column_index)
 
@@ -947,6 +960,10 @@ def get_file_path_tooltip_text(column_value):
     return column_value
 
 
+def get_file_type_tooltip_text(column_value):
+    return FILE_TYPE_ICON_LABELS.get(column_value, _("Unknown"))
+
+
 def get_transfer_file_path_tooltip_text(column_value):
     return column_value.filename or column_value.path
 
@@ -973,6 +990,11 @@ def show_file_path_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn, transf
 
     return show_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn,
                         ("folder", "filename", "path"), func)
+
+
+def show_file_type_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn):
+    return show_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn,
+                        ("file_type"), get_file_type_tooltip_text)
 
 
 def show_user_status_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn):

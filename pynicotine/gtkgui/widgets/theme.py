@@ -29,6 +29,7 @@ from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.application import GTK_GUI_DIR
 from pynicotine.logfacility import log
+from pynicotine.shares import FileTypes
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import encode_path
 
@@ -307,6 +308,14 @@ else:
     ICON_THEME = Gtk.IconTheme.get_default()  # pylint: disable=no-member
 
 CUSTOM_ICON_THEME_NAME = ".nicotine-icon-theme"
+FILE_TYPE_ICON_LABELS = {
+    "application-x-executable-symbolic": _("Executable"),
+    "audio-x-generic-symbolic": _("Audio"),
+    "image-x-generic-symbolic": _("Image"),
+    "package-x-generic-symbolic": _("Archive"),
+    "text-x-generic-symbolic": _("Document"),
+    "video-x-generic-symbolic": _("Video")
+}
 USER_STATUS_ICON_NAMES = {
     UserStatus.ONLINE: "nplus-status-online",
     UserStatus.AWAY: "nplus-status-away",
@@ -446,6 +455,33 @@ def get_flag_icon_name(country_code):
         return ""
 
     return f"nplus-flag-{country_code.lower()}"
+
+
+def get_file_type_icon_name(filename):
+
+    result = filename.rsplit(".", 1)
+
+    if len(result) < 2:
+        return "text-x-generic-symbolic"
+
+    extension = result[-1].lower()
+
+    if extension in FileTypes.AUDIO:
+        return "audio-x-generic-symbolic"
+
+    if extension in FileTypes.IMAGE:
+        return "image-x-generic-symbolic"
+
+    if extension in FileTypes.VIDEO:
+        return "video-x-generic-symbolic"
+
+    if extension in FileTypes.ARCHIVE:
+        return "package-x-generic-symbolic"
+
+    if extension in FileTypes.EXECUTABLE:
+        return "application-x-executable-symbolic"
+
+    return "text-x-generic-symbolic"
 
 
 def on_icon_theme_changed(*_args):

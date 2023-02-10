@@ -81,6 +81,28 @@ else:
     sys.exit()
 
 
+class FileTypes:
+    ARCHIVE = {
+        "7z", "apk", "appimage", "br", "bz2", "deb", "dmg", "flatpak", "gz", "iso", "jar", "lz", "lzma", "msi", "pkg",
+        "rar", "rpm", "tar", "tbz", "tbz2", "tgz", "xz", "zip", "zst"
+    }
+    AUDIO = {
+        "aac", "ac3", "afc", "aifc", "aif", "aiff", "ape", "dff", "dts", "flac", "it", "m4a", "mid", "midi", "mod",
+        "mp1", "mp2", "mp3", "oga", "ogg", "opus", "s3m", "wav", "wma", "wv", "xm"
+    }
+    EXECUTABLE = {
+        "bat", "exe", "sh"
+    }
+    IMAGE = {
+        "apng", "avif", "bmp", "gif", "heic", "heif", "ico", "jfif", "jp2", "jpg", "jpe", "jpeg", "png", "psd",
+        "raw", "svg", "svgz", "tif", "tiff", "webp"
+    }
+    VIDEO = {
+        "3gp", "amv", "asf", "avi", "f4v", "flv", "m2ts", "m2v", "m4p", "m4v", "mov", "mp4", "mpe", "mpeg", "mpg",
+        "mkv", "mts", "ogv", "ts", "vob", "webm", "wmv"
+    }
+
+
 class Scanner(Process):
     """ Separate process responsible for building shares. It handles scanning of
     folders and files, as well as building databases and writing them to disk. """
