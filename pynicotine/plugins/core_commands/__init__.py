@@ -20,6 +20,16 @@ from pynicotine.pluginsystem import BasePlugin
 from pynicotine.slskmessages import UserStatus
 
 
+class _CommandGroup:
+    CHAT = _("Chat")
+    CHAT_ROOMS = _("Chat Rooms")
+    PRIVATE_CHAT = _("Private Chat")
+    NETWORK_FILTERS = _("Network Filters")
+    SEARCH_FILES = _("Search Files")
+    SHARES = _("Shares")
+    USERS = _("Users")
+
+
 class Plugin(BasePlugin):
 
     def __init__(self, *args, **kwargs):
@@ -38,6 +48,20 @@ class Plugin(BasePlugin):
                 "callback": self.away_command,
                 "description": _("Toggle away status"),
             },
+            "plugin": {
+                "callback": self.plugin_handler_command,
+                "description": _("Manage plugins"),
+                "usage": ["<toggle|info>", "<plugin_name>"]
+            },
+            "sample": {
+                "aliases": ["demo"],
+                "description": "Sample command description",
+                "disable": ["private_chat"],
+                "callback": self.sample_command,
+                "callback_private_chat": self.sample_command,
+                "usage": ["<choice1|choice2>", "<something..>"],
+                "usage_chatroom": ["<choice55|choice2>"]
+            },
             "quit": {
                 "aliases": ["q", "exit"],
                 "callback": self.quit_command,
@@ -49,30 +73,21 @@ class Plugin(BasePlugin):
                 "callback": self.clear_command,
                 "description": _("Clear chat window"),
                 "disable": ["cli"],
-                "group": _("Chat"),
+                "group": _CommandGroup.CHAT,
             },
             "me": {
                 "callback": self.me_command,
                 "description": _("Say something in the third-person"),
                 "disable": ["cli"],
-                "group": _("Chat"),
+                "group": _CommandGroup.CHAT,
                 "usage": ["<something..>"]
-            },
-            "sample": {
-                "description": "Sample command description",
-                "aliases": ["demo"],
-                "disable": ["private_chat"],
-                "callback": self.sample_command,
-                "callback_private_chat": self.sample_command,
-                "usage": ["<choice1|choice2>", "<something..>"],
-                "usage_chatroom": ["<choice55|choice2>"]
             },
             "join": {
                 "aliases": ["j"],
                 "callback": self.join_command,
                 "description": _("Join chat room"),
                 "disable": ["cli"],
-                "group": _("Chat Rooms"),
+                "group": _CommandGroup.CHAT_ROOMS,
                 "usage": ["<room>"]
             },
             "leave": {
@@ -80,7 +95,7 @@ class Plugin(BasePlugin):
                 "callback": self.leave_command,
                 "description": _("Leave chat room"),
                 "disable": ["cli"],
-                "group": _("Chat Rooms"),
+                "group": _CommandGroup.CHAT_ROOMS,
                 "usage": ["<room>"],
                 "usage_chatroom": ["[room]"]
             },
@@ -88,22 +103,22 @@ class Plugin(BasePlugin):
                 "callback": self.say_command,
                 "description": _("Say message in specified chat room"),
                 "disable": ["cli"],
-                "group": _("Chat Rooms"),
+                "group": _CommandGroup.CHAT_ROOMS,
                 "usage": ["<room>", "<message..>"]
             },
             "pm": {
                 "callback": self.pm_command,
                 "description": _("Open private chat"),
                 "disable": ["cli"],
-                "group": _("Private Chat"),
+                "group": _CommandGroup.PRIVATE_CHAT,
                 "usage": ["<user>"]
             },
             "close": {
-                "description": "Close private chat",
                 "aliases": ["c"],
-                "disable": ["cli"],
-                "group": "Private Chat",
                 "callback": self.close_command,
+                "description": _("Close private chat"),
+                "disable": ["cli"],
+                "group": _CommandGroup.PRIVATE_CHAT,
                 "usage_chatroom": ["<user>"],
                 "usage_private_chat": ["[user]"]
             },
@@ -112,14 +127,14 @@ class Plugin(BasePlugin):
                 "callback": self.msg_command,
                 "description": _("Send private message to user"),
                 "disable": ["cli"],
-                "group": _("Private Chat"),
+                "group": _CommandGroup.PRIVATE_CHAT,
                 "usage": ["<user>", "<message..>"]
             },
             "add": {
                 "aliases": ["buddy"],
                 "callback": self.add_buddy_command,
                 "description": _("Add user to buddy list"),
-                "group": _("Users"),
+                "group": _CommandGroup.USERS,
                 "usage": ["<user>"],
                 "usage_private_chat": ["[user]"]
             },
@@ -127,7 +142,7 @@ class Plugin(BasePlugin):
                 "aliases": ["unbuddy"],
                 "callback": self.remove_buddy_command,
                 "description": _("Remove buddy from buddy list"),
-                "group": _("Users"),
+                "group": _CommandGroup.USERS,
                 "usage": ["<buddy>"],
                 "usage_private_chat": ["[buddy]"]
             },
@@ -136,7 +151,7 @@ class Plugin(BasePlugin):
                 "callback": self.browse_user_command,
                 "description": _("Browse files of user"),
                 "disable": ["cli"],
-                "group": _("Users"),
+                "group": _CommandGroup.USERS,
                 "usage": ["<user>"],
                 "usage_private_chat": ["[user]"]
             },
@@ -145,28 +160,28 @@ class Plugin(BasePlugin):
                 "callback": self.whois_command,
                 "description": _("Show user profile information"),
                 "disable": ["cli"],
-                "group": _("Users"),
+                "group": _CommandGroup.USERS,
                 "usage": ["<user>"],
                 "usage_private_chat": ["[user]"]
             },
             "ip": {
                 "callback": self.ip_address_command,
                 "description": _("Show IP address or username"),
-                "group": _("Network Filters"),
+                "group": _CommandGroup.NETWORK_FILTERS,
                 "usage": ["<user or ip>"],
                 "usage_private_chat": ["[user]", "[ip]"]
             },
             "ban": {
                 "callback": self.ban_command,
                 "description": _("Block connections from user or IP address"),
-                "group": _("Network Filters"),
+                "group": _CommandGroup.NETWORK_FILTERS,
                 "usage": ["<user or ip>"],
                 "usage_private_chat": ["[user]", "[ip]"]
             },
             "unban": {
                 "callback": self.unban_command,
                 "description": _("Remove user or IP address from ban lists"),
-                "group": _("Network Filters"),
+                "group": _CommandGroup.NETWORK_FILTERS,
                 "usage": ["<user or ip>"],
                 "usage_private_chat": ["[user]", "[ip]"]
             },
@@ -174,7 +189,7 @@ class Plugin(BasePlugin):
                 "callback": self.ignore_command,
                 "description": _("Silence messages from user or IP address"),
                 "disable": ["cli"],
-                "group": _("Network Filters"),
+                "group": _CommandGroup.NETWORK_FILTERS,
                 "usage": ["<user or ip>"],
                 "usage_private_chat": ["[user]", "[ip]"]
             },
@@ -182,21 +197,21 @@ class Plugin(BasePlugin):
                 "callback": self.unignore_command,
                 "description": _("Remove user or IP address from ignore lists"),
                 "disable": ["cli"],
-                "group": _("Network Filters"),
+                "group": _CommandGroup.NETWORK_FILTERS,
                 "usage": ["<user or ip>"],
                 "usage_private_chat": ["[user]", "[ip]"]
             },
             "rescan": {
                 "callback": self.rescan_command,
                 "description": _("Rescan shares"),
-                "group": _("Configure Shares"),
+                "group": _CommandGroup.SHARES,
                 "usage": ["[-force]"]
             },
             "shares": {
                 "aliases": ["ls"],
                 "callback": self.list_shares_command,
                 "description": _("List shares"),
-                "group": _("Configure Shares"),
+                "group": _CommandGroup.SHARES,
                 "usage": ["[public]", "[buddy]"]
             },
             "search": {
@@ -204,7 +219,7 @@ class Plugin(BasePlugin):
                 "callback": self.search_command,
                 "description": _("Start global file search"),
                 "disable": ["cli"],
-                "group": _("Search Files"),
+                "group": _CommandGroup.SEARCH_FILES,
                 "usage": ["<query>"]
             },
             "rsearch": {
@@ -212,7 +227,7 @@ class Plugin(BasePlugin):
                 "callback": self.search_rooms_command,
                 "description": _("Search files in joined rooms"),
                 "disable": ["cli"],
-                "group": _("Search Files"),
+                "group": _CommandGroup.SEARCH_FILES,
                 "usage": ["<query>"]
             },
             "bsearch": {
@@ -220,7 +235,7 @@ class Plugin(BasePlugin):
                 "callback": self.search_buddies_command,
                 "description": _("Search files of all buddies"),
                 "disable": ["cli"],
-                "group": _("Search Files"),
+                "group": _CommandGroup.SEARCH_FILES,
                 "usage": ["<query>"]
             },
             "usearch": {
@@ -228,14 +243,8 @@ class Plugin(BasePlugin):
                 "callback": self.search_user_command,
                 "description": _("Search a user's shared files"),
                 "disable": ["cli"],
-                "group": _("Search Files"),
+                "group": _CommandGroup.SEARCH_FILES,
                 "usage": ["<user>", "<query>"]
-            },
-            "plugin": {
-                "callback": self.plugin_handler_command,
-                "description": _("Manage plugin"),
-                "group": _("Plugin Commands"),
-                "usage": ["<toggle|info>", "<plugin_name>"]
             }
         }
 
