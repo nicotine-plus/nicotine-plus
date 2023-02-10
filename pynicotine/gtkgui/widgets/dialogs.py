@@ -36,7 +36,7 @@ class Dialog(Window):
 
     def __init__(self, widget=None, parent=None, content_box=None, buttons_start=(), buttons_end=(),
                  default_button=None, show_callback=None, close_callback=None, title="", width=0, height=0,
-                 modal=True, resizable=True, close_destroy=True, show_title_buttons=True):
+                 modal=True, resizable=True, close_destroy=True, show_title=True, show_title_buttons=True):
 
         self.parent = parent
         self.modal = modal
@@ -74,7 +74,7 @@ class Dialog(Window):
                 container.add(content_box)     # pylint: disable=no-member
 
         if config.sections["ui"]["header_bar"]:
-            self._init_header_bar(buttons_start, buttons_end, show_title_buttons)
+            self._init_header_bar(buttons_start, buttons_end, show_title, show_title_buttons)
         else:
             self._init_action_area(container, buttons_start, buttons_end)
 
@@ -88,15 +88,22 @@ class Dialog(Window):
         self.set_title(title)
         self._set_dialog_properties()
 
-    def _init_header_bar(self, buttons_start=(), buttons_end=(), show_title_buttons=True):
+    def _init_header_bar(self, buttons_start=(), buttons_end=(), show_title=True, show_title_buttons=True):
 
         header_bar = Gtk.HeaderBar()
         self.widget.set_titlebar(header_bar)
 
         if GTK_API_VERSION >= 4:
-            header_bar.set_show_title_buttons(show_title_buttons)  # pylint: disable=no-member
+            header_bar.set_show_title_buttons(show_title_buttons)    # pylint: disable=no-member
+
+            if not show_title:
+                header_bar.set_title_widget(Gtk.Box())               # pylint: disable=no-member
+                add_css_class(header_bar, "flat")
         else:
-            header_bar.set_show_close_button(show_title_buttons)   # pylint: disable=no-member
+            header_bar.set_show_close_button(show_title_buttons)     # pylint: disable=no-member
+
+            if not show_title:
+                header_bar.set_custom_title(Gtk.Box(visible=False))  # pylint: disable=no-member
 
         for button in buttons_start:
             header_bar.pack_start(button)

@@ -67,9 +67,11 @@ class FastConfigure(Dialog):
             default_button=self.next_button,
             show_callback=self.on_show,
             close_callback=self.on_close,
+            title=_("Setup Assistant"),
             width=720,
             height=450,
             resizable=False,
+            show_title=False,
             close_destroy=False
         )
 

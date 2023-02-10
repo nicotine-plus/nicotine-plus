@@ -349,6 +349,7 @@ Copyright (c) 2017 IP2Location.com
             width=425,
             height=500,
             resizable=False,
+            show_title=False,
             close_destroy=False
         )
 
