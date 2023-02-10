@@ -463,8 +463,8 @@ class PluginHandler:
             spec.loader.exec_module(plugin)
 
         instance = plugin.Plugin()
-        instance.internal_name = BasePlugin.internal_name
-        instance.human_name = BasePlugin.human_name
+        instance.internal_name = plugin_name
+        instance.human_name = self.get_plugin_info(plugin_name).get("Name", plugin_name)
 
         self.plugin_settings(plugin_name, instance)
 
@@ -494,9 +494,6 @@ class PluginHandler:
             return False
 
         try:
-            BasePlugin.internal_name = plugin_name
-            BasePlugin.human_name = human_name = self.get_plugin_info(plugin_name).get("Name", plugin_name)
-
             plugin = self._import_plugin_instance(plugin_name)
 
             if plugin is None:
@@ -513,7 +510,7 @@ class PluginHandler:
 
                 if "group" not in data:
                     # Group commands under human-friendly plugin name by default
-                    data["group"] = human_name
+                    data["group"] = plugin.human_name
 
                 for command_interface, command_list in (
                     ("chatroom", self.chatroom_commands),
@@ -525,7 +522,7 @@ class PluginHandler:
 
                     if command in command_list:
                         log.add(_("Conflicting %(interface)s command in plugin %(name)s: %(command)s"),
-                                {"interface": command_interface, "name": human_name, "command": command})
+                                {"interface": command_interface, "name": plugin.human_name, "command": command})
                         continue
 
                     command_list[command] = data
