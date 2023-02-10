@@ -218,8 +218,8 @@ class MainWindow(Window):
 
         """ Logging """
 
-        self.log_view = TextView(self.log_view_container, auto_scroll=True, parse_urls=False, editable=False,
-                                 vertical_margin=5, pixels_below_lines=2)
+        self.log_view = TextView(self.log_view_container, auto_scroll=not config.sections["logging"]["logcollapsed"],
+                                 parse_urls=False, editable=False, vertical_margin=5, pixels_below_lines=2)
         self.log_search_bar = TextSearchBar(self.log_view.widget, self.log_search_bar, self.log_search_entry,
                                             controller_widget=self.log_container)
 
@@ -471,9 +471,12 @@ class MainWindow(Window):
 
     # View
 
-    def set_show_header_bar(self, show):
+    def on_use_header_bar(self, action, state):
 
-        if show:
+        action.set_state(state)
+        enabled = state.get_boolean()
+
+        if enabled:
             self.hide_current_toolbar()
             self.show_header_bar(self.current_page_id)
 
@@ -481,30 +484,19 @@ class MainWindow(Window):
             self.hide_current_header_bar()
             self.show_toolbar(self.current_page_id)
 
-        set_use_header_bar(show)
+        set_use_header_bar(enabled)
+        config.sections["ui"]["header_bar"] = enabled
 
-    def on_show_header_bar(self, action, *_args):
+    def on_show_log_history(self, action, state):
 
-        state = config.sections["ui"]["header_bar"]
-        self.set_show_header_bar(not state)
-        action.set_state(GLib.Variant("b", not state))
+        action.set_state(state)
+        visible = state.get_boolean()
+        self.log_view.auto_scroll = visible
 
-        config.sections["ui"]["header_bar"] = not state
-
-    def set_show_log_history(self, show):
-
-        self.log_view.auto_scroll = show
-
-        if show:
+        if visible:
             self.log_view.scroll_bottom()
 
-    def on_show_log_history(self, action, *_args):
-
-        state = config.sections["logging"]["logcollapsed"]
-        self.set_show_log_history(state)
-        action.set_state(GLib.Variant("b", state))
-
-        config.sections["logging"]["logcollapsed"] = not state
+        config.sections["logging"]["logcollapsed"] = not visible
 
     def set_toggle_buddy_list(self, mode, force_show=True):
 
@@ -567,11 +559,10 @@ class MainWindow(Window):
     def on_toggle_buddy_list(self, action, state):
         """ Function used to switch around the UI the BuddyList position """
 
-        mode = state.get_string()
-
-        self.set_toggle_buddy_list(mode)
         action.set_state(state)
 
+        mode = state.get_string()
+        self.set_toggle_buddy_list(mode)
         config.sections["ui"]["buddylistinchatrooms"] = mode
 
     """ Actions """
@@ -597,16 +588,15 @@ class MainWindow(Window):
 
         # View
 
-        state = config.sections["ui"]["header_bar"]
-        action = Gio.SimpleAction(name="show-header-bar", state=GLib.Variant("b", state))
-        action.connect("change-state", self.on_show_header_bar)
+        state = GLib.Variant("b", config.sections["ui"]["header_bar"])
+        action = Gio.SimpleAction(name="use-header-bar", state=state)
+        action.connect("change-state", self.on_use_header_bar)
         self.add_action(action)
 
-        state = not config.sections["logging"]["logcollapsed"]
-        action = Gio.SimpleAction(name="show-log-history", state=GLib.Variant("b", state))
+        state = GLib.Variant("b", not config.sections["logging"]["logcollapsed"])
+        action = Gio.SimpleAction(name="show-log-history", state=state)
         action.connect("change-state", self.on_show_log_history)
         self.add_action(action)
-        self.set_show_log_history(state)
 
         state = config.sections["ui"]["buddylistinchatrooms"]
 
@@ -706,7 +696,7 @@ class MainWindow(Window):
         menu = PopupMenu(self.application)
         menu.add_items(
             ("$" + _("Prefer Dark _Mode"), "app.prefer-dark-mode"),
-            ("$" + _("Use _Header Bar"), "win.show-header-bar"),
+            ("$" + _("Use _Header Bar"), "win.use-header-bar"),
             ("$" + _("Show _Log History Pane"), "win.show-log-history"),
             ("", None),
             ("O" + _("Buddy List in Separate Tab"), "win.toggle-buddy-list", "tab"),
@@ -938,8 +928,7 @@ class MainWindow(Window):
 
     def append_main_tabs(self):
 
-        # Translation for the labels of tabs, icon names
-        tab_data = [
+        for tab_id, tab_text, tab_icon_name in (
             ("search", _("Search Files"), "system-search-symbolic"),
             ("downloads", _("Downloads"), "document-save-symbolic"),
             ("uploads", _("Uploads"), "emblem-shared-symbolic"),
@@ -949,9 +938,7 @@ class MainWindow(Window):
             ("userlist", _("Buddies"), "contact-new-symbolic"),
             ("chatrooms", _("Chat Rooms"), "user-available-symbolic"),
             ("interests", _("Interests"), "emblem-default-symbolic")
-        ]
-
-        for tab_id, tab_text, tab_icon_name in tab_data:
+        ):
             page = getattr(self, f"{tab_id}_page")
             page.id = tab_id
 

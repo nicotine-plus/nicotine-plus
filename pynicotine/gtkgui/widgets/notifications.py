@@ -124,7 +124,7 @@ class Notifications:
                 else:
                     notification.set_default_action(action)
 
-            self.application.send_notification(None, notification)
+            self.application.send_notification(event_id=None, notification=notification)
 
             if config.sections["notifications"]["notification_popup_sound"]:
                 Gdk.Display.get_default().beep()

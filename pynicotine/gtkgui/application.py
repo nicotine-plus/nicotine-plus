@@ -367,7 +367,7 @@ class Application:
                 widget.add_shortcut(
                     Gtk.Shortcut(
                         trigger=Gtk.ShortcutTrigger.parse_string(accelerator),
-                        action=Gtk.NamedAction.new(action_name),
+                        action=Gtk.NamedAction(action_name=action_name),
                     )
                 )
 

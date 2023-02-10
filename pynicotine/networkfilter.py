@@ -224,7 +224,7 @@ class NetworkFilter:
         # Not filtered
         return False
 
-    def check_user(self, user, ip_address):
+    def check_user(self, user, ip_address=None):
         """ Check if this user is banned, geoip-blocked, and which shares
         it is allowed to access based on transfer and shares settings. """
 

@@ -528,11 +528,14 @@ class Search:
         entry = combobox.get_child()
         entry.emit("activate")
 
+    def on_combobox_check_separator(self, model, iterator):
+        # Render empty value as separator
+        return not model.get_value(iterator, 0)
+
     def update_filter_comboboxes(self):
 
         for filter_id, widget in self.filter_comboboxes.items():
-            presets = ""
-            widget.remove_all()
+            presets = None
 
             if filter_id == "filterbr":
                 presets = ("0", "128", "160", "192", "256", "320")
@@ -543,12 +546,20 @@ class Search:
             elif filter_id == "filtertype":
                 presets = ("flac|wav|ape|aiff|wv|cue", "mp3|m4a|aac|ogg|opus|wma", "!mp3")
 
-            for value in presets:
-                widget.append_text(value)
+            widget.set_row_separator_func(lambda *_args: 0)
+            widget.remove_all()
+
+            if presets:
+                for value in presets:
+                    widget.append_text(value)
+
+                widget.append_text("")  # Separator
 
             for value in config.sections["searches"][filter_id]:
-                if value not in presets:
-                    widget.append_text(value)
+                widget.append_text(value)
+
+            if presets:
+                widget.set_row_separator_func(self.on_combobox_check_separator)
 
     def populate_filters(self):
 

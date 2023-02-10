@@ -39,13 +39,9 @@ class Plugin(BasePlugin):
         self.last_song_url = ""
         self.stop = False
 
-        self.bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
+        self.bus = Gio.bus_get_sync(bus_type=Gio.BusType.SESSION)
         self.signal_id = None
-
         self.dbus_mpris_service = "org.mpris.MediaPlayer2."
-        self.dbus_mpris_player_service = "org.mpris.MediaPlayer2.Player"
-        self.dbus_mpris_path = "/org/mpris/MediaPlayer2"
-        self.dbus_property = "org.freedesktop.DBus.Properties"
 
         self.add_mpris_signal_receiver()
 
@@ -56,8 +52,14 @@ class Plugin(BasePlugin):
         """ Receive updates related to MPRIS """
 
         self.signal_id = self.bus.signal_subscribe(
-            None, self.dbus_property, "PropertiesChanged", self.dbus_mpris_path,
-            None, Gio.DBusSignalFlags.NONE, self.song_change)
+            sender=None,
+            interface_name="org.freedesktop.DBus.Properties",
+            member="PropertiesChanged",
+            object_path="/org/mpris/MediaPlayer2",
+            arg0=None,
+            flags=Gio.DBusSignalFlags.NONE,
+            callback=self.song_change
+        )
 
     def remove_mpris_signal_receiver(self):
         """ Stop receiving updates related to MPRIS """
@@ -71,9 +73,13 @@ class Plugin(BasePlugin):
 
         if not player:
             dbus_proxy = Gio.DBusProxy.new_sync(
-                self.bus, Gio.DBusProxyFlags.NONE, None,
-                "org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus", None)
-
+                bus=self.bus,
+                flags=Gio.DBusProxyFlags.NONE,
+                info=None,
+                name="org.freedesktop.DBus",
+                object_path="/org/freedesktop/DBus",
+                interface_name="org.freedesktop.DBus"
+            )
             names = dbus_proxy.ListNames()
 
             for name in names:
@@ -87,10 +93,14 @@ class Plugin(BasePlugin):
         """ Returns the current song url for the selected MPRIS client """
 
         dbus_proxy = Gio.DBusProxy.new_sync(
-            self.bus, Gio.DBusProxyFlags.NONE, None,
-            self.dbus_mpris_service + player, self.dbus_mpris_path, self.dbus_property, None)
-
-        metadata = dbus_proxy.Get("(ss)", self.dbus_mpris_player_service, "Metadata")
+            bus=self.bus,
+            flags=Gio.DBusProxyFlags.NONE,
+            info=None,
+            name=self.dbus_mpris_service + player,
+            object_path="/org/mpris/MediaPlayer2",
+            interface_name="org.freedesktop.DBus.Properties"
+        )
+        metadata = dbus_proxy.Get("(ss)", "org.mpris.MediaPlayer2.Player", "Metadata")
         song_url = metadata.get("xesam:url")
 
         return song_url

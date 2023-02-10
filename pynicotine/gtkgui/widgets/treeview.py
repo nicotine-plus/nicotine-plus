@@ -445,7 +445,7 @@ class TreeView:
         column_value = self.model.get_value(iterator, sourcecolumn)
 
         # Update tooltip position
-        self.widget.set_tooltip_cell(tooltip, path, column, None)
+        self.widget.set_tooltip_cell(tooltip, path, column)
 
         text = text_function(column_value)
         if not text:
@@ -924,7 +924,7 @@ def show_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn, column_titles, t
     column_value = model.get_value(iterator, sourcecolumn)
 
     # Update tooltip position
-    treeview.set_tooltip_cell(tooltip, path, column, None)
+    treeview.set_tooltip_cell(tooltip, path, column)
 
     text = text_function(column_value)
     if not text:

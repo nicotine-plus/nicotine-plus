@@ -205,7 +205,8 @@ class Scanner(Process):
             real = real.rstrip("\\") + "\\"
 
             if path.startswith(real):
-                virtualpath = virtual + "\\" + path[len(real):]
+                path_no_prefix = path[len(real):]
+                virtualpath = f"{virtual}\\{path_no_prefix}"
                 return virtualpath
 
         return "__INTERNAL_ERROR__" + path
@@ -333,7 +334,7 @@ class Scanner(Process):
 
             if entry is None:
                 if filename is not None:
-                    entry_stat = os.stat(encode_path(folder + "\\" + filename))
+                    entry_stat = os.stat(encode_path(f"{folder}\\{filename}"))
                 else:
                     entry_stat = os.stat(encode_path(folder))
             else:
@@ -511,12 +512,12 @@ class Scanner(Process):
                 filename = fileinfo[0]
 
                 # Add to file index
-                fileinfo[0] = folder + "\\" + filename
-                fileindex_db[repr(file_index)] = fileinfo
+                fileinfo[0] = f"{folder}\\{filename}"
+                fileindex_db[f"{file_index}"] = fileinfo
 
                 # Collect words from filenames for Search index
                 # Use set to prevent duplicates
-                for k in set((folder + " " + filename).lower().translate(TRANSLATE_PUNCTUATION).split()):
+                for k in set((f"{folder} {filename}").lower().translate(TRANSLATE_PUNCTUATION).split()):
                     try:
                         wordindex[k].append(file_index)
                     except KeyError:
@@ -619,7 +620,7 @@ class Shares:
         # Check if virtual share name is already in use
         counter = 1
         while new_virtual_name in (x[0] for x in shared_folders):
-            new_virtual_name = virtual_name + str(counter)
+            new_virtual_name = f"{virtual_name}{counter}"
             counter += 1
 
         return new_virtual_name
