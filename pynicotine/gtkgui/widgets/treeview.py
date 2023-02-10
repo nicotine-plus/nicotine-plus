@@ -692,7 +692,7 @@ def initialise_columns(window, treeview_name, treeview, *args):
                 column.set_fixed_width(width)
 
         if isinstance(extra, int):
-            column.add_attribute(renderer, "foreground", extra)
+            column.add_attribute(renderer, "sensitive", extra)
 
         elif isinstance(extra, tuple):
             weight, underline = extra

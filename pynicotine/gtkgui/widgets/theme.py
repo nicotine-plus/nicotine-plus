@@ -150,6 +150,11 @@ def set_global_css():
         margin: 0;
     }
 
+    .search-view treeview:disabled {
+        /* Search results with no free slots have no style by default */
+        color: unset;
+    }
+
     /* Borders */
 
     .border-top,
@@ -592,7 +597,8 @@ def _get_custom_color_css():
         (".notebook-tab-changed", config.sections["ui"]["tab_changed"]),
         (".notebook-tab-highlight", config.sections["ui"]["tab_hilite"]),
         ("entry", config.sections["ui"]["inputcolor"]),
-        ("treeview", treeview_text_color)
+        ("treeview", treeview_text_color),
+        (".search-view treeview:disabled", config.sections["ui"]["searchq"])
     ):
         if color:
             css.extend(

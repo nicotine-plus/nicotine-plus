@@ -367,20 +367,20 @@ class Search:
 
         self.column_offsets = {}
         self.column_numbers = list(range(self.resultsmodel.get_n_columns()))
-        color_col = 18
+        has_free_slots_col = 18
         self.cols = cols = initialise_columns(
             self.window, "file_search", self.tree_view,
-            ["id", _("ID"), 50, "number", color_col],
-            ["user", _("User"), 200, "text", color_col],
+            ["id", _("ID"), 50, "number", has_free_slots_col],
+            ["user", _("User"), 200, "text", has_free_slots_col],
             ["country", _("Country"), 25, "icon", None],
-            ["speed", _("Speed"), 120, "number", color_col],
-            ["in_queue", _("In Queue"), 110, "number", color_col],
-            ["folder", _("Folder"), 400, "text", color_col],
-            ["file_type", _("File Type"), 40, "icon", None],
-            ["filename", _("Filename"), 400, "text", color_col],
-            ["size", _("Size"), 100, "number", color_col],
-            ["bitrate", _("Bitrate"), 100, "number", color_col],
-            ["length", _("Duration"), 100, "number", color_col]
+            ["speed", _("Speed"), 120, "number", has_free_slots_col],
+            ["in_queue", _("In Queue"), 110, "number", has_free_slots_col],
+            ["folder", _("Folder"), 400, "text", has_free_slots_col],
+            ["file_type", _("File Type"), 40, "icon", has_free_slots_col],
+            ["filename", _("Filename"), 400, "text", has_free_slots_col],
+            ["size", _("Size"), 100, "number", has_free_slots_col],
+            ["bitrate", _("Bitrate"), 100, "number", has_free_slots_col],
+            ["length", _("Duration"), 100, "number", has_free_slots_col]
         )
 
         cols["id"].set_sort_column_id(0)
@@ -499,7 +499,7 @@ class Search:
             GObject.TYPE_UINT,    # (15) speed
             GObject.TYPE_UINT,    # (16) queue
             GObject.TYPE_UINT,    # (17) length
-            str                   # (18) color
+            bool                  # (18) free slots
         )
 
         if self.grouping_mode is not None:
@@ -603,7 +603,7 @@ class Search:
         self.on_refilter()
 
     def add_result_list(self, result_list, user, country_code, inqueue, ulspeed, h_speed,
-                        h_queue, color, private=False):
+                        h_queue, has_free_slots, private=False):
         """ Adds a list of search results to the treeview. Lists can either contain publicly or
         privately shared files. """
 
@@ -680,7 +680,7 @@ class Search:
                     GObject.Value(GObject.TYPE_UINT, ulspeed),
                     GObject.Value(GObject.TYPE_UINT, inqueue),
                     GObject.Value(GObject.TYPE_UINT, length),
-                    GObject.Value(GObject.TYPE_STRING, color)
+                    has_free_slots
                 ]
             )
 
@@ -699,8 +699,9 @@ class Search:
         self.users.add(user)
         ip_address = msg.init.addr[0]
         country_code = core.geoip.get_country_code(ip_address)
+        has_free_slots = msg.freeulslots
 
-        if msg.freeulslots:
+        if has_free_slots:
             inqueue = 0
             h_queue = ""
         else:
@@ -713,14 +714,14 @@ class Search:
         if ulspeed > 0:
             h_speed = human_speed(ulspeed)
 
-        color_id = "search" if msg.freeulslots else "searchq"
-        color = config.sections["ui"][color_id] or None
-
-        update_ui = self.add_result_list(msg.list, user, country_code, inqueue, ulspeed, h_speed, h_queue, color)
+        update_ui = self.add_result_list(msg.list, user, country_code, inqueue, ulspeed, h_speed,
+                                         h_queue, has_free_slots)
 
         if msg.privatelist:
             update_ui_private = self.add_result_list(
-                msg.privatelist, user, country_code, inqueue, ulspeed, h_speed, h_queue, color, private=True)
+                msg.privatelist, user, country_code, inqueue, ulspeed, h_speed, h_queue,
+                has_free_slots, private=True
+            )
 
             if not update_ui and update_ui_private:
                 update_ui = True
@@ -754,7 +755,7 @@ class Search:
 
     def add_row_to_model(self, row):
         (_counter, user, flag, h_speed, h_queue, directory, _file_type, _filename, _h_size, _h_bitrate,
-            _h_length, _bitrate, fullpath, country_code, _size, speed, queue, _length, color) = row
+            _h_length, _bitrate, fullpath, country_code, _size, speed, queue, _length, has_free_slots) = row
 
         expand_user = False
         expand_folder = False
@@ -787,7 +788,7 @@ class Search:
                         speed,
                         queue,
                         empty_int,
-                        color
+                        has_free_slots
                     ]
                 )
 
@@ -825,7 +826,7 @@ class Search:
                             speed,
                             queue,
                             empty_int,
-                            color
+                            has_free_slots
                         ]
                     )
                     expand_folder = self.expand_button.get_active()
@@ -1350,7 +1351,7 @@ class Search:
 
                 (_counter, user, _flag, _h_speed, _h_queue, _directory, _filename,
                     _h_size, h_bitrate, h_length, _bitrate, fullpath, _country_code, size, _speed,
-                    _queue, _length, _color) = row
+                    _queue, _length, _has_free_slots) = row
                 visible_files.append(
                     (user, fullpath, destination, size.get_value(), h_bitrate, h_length))
 
