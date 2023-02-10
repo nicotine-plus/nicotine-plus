@@ -284,11 +284,11 @@ class Plugin(BasePlugin):
 
         if not search_query:
             output_text += "\n\n" + _("Type %(command)s to list similar commands") % {"command": "/help [query]"}
+
         elif not num_commands:
             output_text += "\n" + _("Type %(command)s to list available commands") % {"command": "/help"}
 
         self.output(output_text)
-        return True
 
     def away_command(self, _args, **_unused):
 
@@ -303,34 +303,23 @@ class Plugin(BasePlugin):
 
         force = (args.lstrip("- ") in ("force", "f"))
 
-        if args and not force:
-            self.output("Invalid option")
-            return False
-
         if force:
             self.core.quit()
         else:
             self.core.confirm_quit()
-
-        return True
 
     def sample_command(self, _args, **_unused):
         self.output("Hello")
 
     """ Chat """
 
-    def clear_command(self, args, user=None, room=None):
-
-        if args:
-            return False
+    def clear_command(self, _args, user=None, room=None):
 
         if room is not None:
             self.core.chatrooms.clear_room_messages(room)
 
         elif user is not None:
             self.core.privatechat.clear_private_messages(user)
-
-        return True
 
     def me_command(self, args, **_unused):
         self.send_message("/me " + args)  # /me is sent as plain text
@@ -495,15 +484,8 @@ class Plugin(BasePlugin):
     """ Configure Shares """
 
     def rescan_command(self, args, **_unused):
-
         force = (args.lstrip("- ") in ("force", "f"))
-
-        if args and not force:
-            self.output("Invalid option")
-            return False
-
         self.core.shares.rescan_shares(force=force)
-        return True
 
     def list_shares_command(self, args, **_unused):
 
