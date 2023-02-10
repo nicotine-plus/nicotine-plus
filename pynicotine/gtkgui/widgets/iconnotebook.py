@@ -204,6 +204,7 @@ class TabLabel:
             return
 
         self.set_start_icon_name(icon_name)
+        add_css_class(self.start_icon, "colored-icon")
         add_css_class(self.start_icon, "user-status")
 
     def set_start_icon_name(self, icon_name):
