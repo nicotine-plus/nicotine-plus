@@ -34,6 +34,7 @@ from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
+from pynicotine.gtkgui.widgets.theme import FILE_TYPE_ICON_LABELS
 from pynicotine.gtkgui.widgets.theme import add_css_class
 
 
@@ -49,11 +50,12 @@ class TreeView:
         self.widget = Gtk.TreeView(visible=True)
         self.widget_name = name
         self.columns = columns
-        self.column_numbers = None
         self.model = None
-        self.iterator_key_column = 0
         self.iterators = {}
+        self._iterator_key_column = 0
         self._iter_keys = {}
+        self._column_ids = {}
+        self._column_numbers = None
 
         parent.set_property("child", self.widget)
         self.initialise_columns(columns)
@@ -177,7 +179,7 @@ class TreeView:
         default_sort_type = None
         data_types = []
 
-        for column_data in columns:
+        for column_index, (column_id, column_data) in enumerate(columns.items()):
             data_type = column_data.get("data_type")
 
             if not data_type:
@@ -193,20 +195,20 @@ class TreeView:
                     data_type = str
 
             data_types.append(data_type)
+            self._column_ids[column_id] = column_index
 
         self.model = Gtk.ListStore(*data_types)
-        self.column_numbers = list(range(self.model.get_n_columns()))
+        self._column_numbers = list(self._column_ids.values())
 
         progress_padding = 1
         height_padding = 4
-        width_padding = 10
+        width_padding = 10 if GTK_API_VERSION >= 4 else 12
 
         cols = {}
         num_cols = len(columns)
         column_config = None
 
-        for column_index, column_data in enumerate(columns):
-            column_id = column_data["column_id"]
+        for column_index, (column_id, column_data) in enumerate(columns.items()):
             title = column_data.get("title")
 
             if title is None:
@@ -214,7 +216,7 @@ class TreeView:
                 break
 
             column_type = column_data["column_type"]
-            sort_column = column_data["sort_column"]
+            sort_column = column_data.get("sort_column", column_id)
             iterator_key = column_data.get("iterator_key")
             width = column_data.get("width")
             sort_type = column_data.get("default_sort_column")
@@ -224,7 +226,7 @@ class TreeView:
                 default_sort_type = Gtk.SortType.DESCENDING if sort_type == "descending" else Gtk.SortType.ASCENDING
 
             if iterator_key:
-                self.iterator_key_column = column_index
+                self._iterator_key_column = column_index
 
             if self.widget_name:
                 try:
@@ -232,16 +234,17 @@ class TreeView:
                 except KeyError:
                     column_config = config.sections["columns"][self.widget_name]
 
-                try:
-                    width = column_config[column_id]["width"]
-                except Exception:
-                    # Invalid value
-                    pass
+                if column_type != "icon":
+                    try:
+                        width = column_config[column_id]["width"]
+                    except Exception:
+                        # Invalid value
+                        pass
 
             if not isinstance(width, int):
                 width = None
 
-            xalign = 0
+            xalign = 0.0
 
             if column_type == "text":
                 renderer = Gtk.CellRendererText(single_paragraph_mode=True, xpad=width_padding, ypad=height_padding)
@@ -265,7 +268,7 @@ class TreeView:
                 column = Gtk.TreeViewColumn(column_id, renderer, active=column_index)
 
             elif column_type == "icon":
-                renderer = Gtk.CellRendererPixbuf()
+                renderer = Gtk.CellRendererPixbuf(xalign=1.0)
 
                 if column_id == "country":
                     if GTK_API_VERSION >= 4:
@@ -283,7 +286,7 @@ class TreeView:
             column.set_sizing(Gtk.TreeViewColumnSizing.FIXED)
 
             if width is not None:
-                column.set_resizable(True)
+                column.set_resizable(column_type != "icon")
 
                 if width > 0:
                     column.set_fixed_width(width)
@@ -293,7 +296,7 @@ class TreeView:
                 renderer.set_property("mode", Gtk.CellRendererMode.ACTIVATABLE)
 
             column.set_reorderable(True)
-            column.set_min_width(20)
+            column.set_min_width(24)
 
             label = Gtk.Label(label=title, margin_start=5, margin_end=5, mnemonic_widget=column_header, visible=True)
             column.set_widget(label)
@@ -309,7 +312,7 @@ class TreeView:
             if column_data.get("expand_column"):
                 column.set_expand(True)
 
-            column.set_sort_column_id(sort_column)
+            column.set_sort_column_id(self._column_ids[sort_column])
             cols[column_id] = column
 
         self._append_columns(cols, column_config)
@@ -319,7 +322,7 @@ class TreeView:
         self.widget.emit("columns-changed")
 
         if default_sort_column is not None:
-            self.model.set_sort_column_id(default_sort_column, default_sort_type)
+            self.model.set_sort_column_id(self._column_ids[default_sort_column], default_sort_type)
 
         self.widget.set_model(self.model)
 
@@ -367,9 +370,9 @@ class TreeView:
     def add_row(self, values, select_row=True, prepend=False):
 
         position = 0 if prepend else -1
-        key = values[self.iterator_key_column]
+        key = values[self._iterator_key_column]
 
-        self.iterators[key] = iterator = self.model.insert_with_valuesv(position, self.column_numbers, values)
+        self.iterators[key] = iterator = self.model.insert_with_valuesv(position, self._column_numbers, values)
         self._iter_keys[iterator.user_data] = key
 
         if select_row:
@@ -398,11 +401,11 @@ class TreeView:
 
         return iterators
 
-    def get_row_value(self, iterator, column_index):
-        return self.model.get_value(iterator, column_index)
+    def get_row_value(self, iterator, column_id):
+        return self.model.get_value(iterator, self._column_ids[column_id])
 
-    def set_row_value(self, iterator, column_index, value):
-        return self.model.set_value(iterator, column_index, value)
+    def set_row_value(self, iterator, column_id, value):
+        return self.model.set_value(iterator, self._column_ids[column_id], value)
 
     def select_row(self, iterator):
         self.widget.set_cursor(self.model.get_path(iterator))
@@ -429,7 +432,7 @@ class TreeView:
     def set_search_entry(self, entry):
         self.widget.set_search_entry(entry)
 
-    def show_tooltip(self, pos_x, pos_y, tooltip, sourcecolumn, column_titles, text_function, strip_prefix=""):
+    def show_tooltip(self, pos_x, pos_y, tooltip, column_id, column_titles, text_function):
 
         try:
             bin_x, bin_y = self.widget.convert_widget_to_bin_window_coords(pos_x, pos_y)
@@ -442,12 +445,12 @@ class TreeView:
             return False
 
         iterator = self.model.get_iter(path)
-        column_value = self.model.get_value(iterator, sourcecolumn)
+        column_value = self.get_row_value(iterator, column_id)
 
         # Update tooltip position
-        self.widget.set_tooltip_cell(tooltip, path, column, None)
+        self.widget.set_tooltip_cell(tooltip, path, column)
 
-        text = text_function(column_value, strip_prefix)
+        text = text_function(column_value)
         if not text:
             return False
 
@@ -455,7 +458,7 @@ class TreeView:
         return True
 
     @staticmethod
-    def get_user_status_tooltip_text(column_value, _strip_prefix):
+    def get_user_status_tooltip_text(column_value):
 
         if column_value == 1:
             return _("Away")
@@ -465,16 +468,11 @@ class TreeView:
 
         return _("Offline")
 
-    def show_user_status_tooltip(self, pos_x, pos_y, tooltip, column):
-        return self.show_tooltip(pos_x, pos_y, tooltip, column, ("status",), self.get_user_status_tooltip_text)
+    def show_user_status_tooltip(self, pos_x, pos_y, tooltip, column_id):
+        return self.show_tooltip(pos_x, pos_y, tooltip, column_id, ("status",), self.get_user_status_tooltip_text)
 
     @staticmethod
-    def get_country_tooltip_text(column_value, strip_prefix):
-
-        if not column_value.startswith(strip_prefix):
-            return _("Unknown")
-
-        country_code = column_value[len(strip_prefix):]
+    def get_country_tooltip_text(country_code):
 
         if country_code:
             country_name = GeoIP.country_code_to_name(country_code)
@@ -482,9 +480,8 @@ class TreeView:
 
         return _("Earth")
 
-    def show_country_tooltip(self, pos_x, pos_y, tooltip, column, strip_prefix='flag_'):
-        return self.show_tooltip(pos_x, pos_y, tooltip, column, ("country",), get_country_tooltip_text,
-                                 strip_prefix)
+    def show_country_tooltip(self, pos_x, pos_y, tooltip, column_id):
+        return self.show_tooltip(pos_x, pos_y, tooltip, column_id, ("country",), get_country_tooltip_text)
 
     def on_toggle(self, _widget, path, callback):
         callback(self, self.model.get_iter(path))
@@ -501,11 +498,11 @@ class TreeView:
         if not search_term:
             return True
 
-        for i in range(self.widget.get_n_columns()):
-            if model.get_column_type(i) != GObject.TYPE_STRING:
+        for column_index in self._column_ids.values():
+            if model.get_column_type(column_index) != GObject.TYPE_STRING:
                 continue
 
-            column_value = model.get_value(iterator, i).lower()
+            column_value = model.get_value(iterator, column_index).lower()
 
             if column_value.startswith("nplus-"):
                 # Ignore icon name columns
@@ -559,7 +556,7 @@ def verify_grouping_mode(mode):
 
 def create_grouping_menu(window, active_mode, callback):
 
-    action_id = "grouping-" + ''.join(random.choice(string.digits) for _ in range(8))
+    action_id = "grouping-" + "".join(random.choice(string.digits) for _ in range(8))
     menu = Gio.Menu()
 
     menuitem = Gio.MenuItem.new(_("Ungrouped"), f"win.{action_id}::ungrouped")
@@ -617,7 +614,7 @@ def initialise_columns(window, treeview_name, treeview, *args):
 
     progress_padding = 1
     height_padding = 4
-    width_padding = 10
+    width_padding = 10 if GTK_API_VERSION >= 4 else 12
 
     for column_index, (column_id, title, width, column_type, extra) in enumerate(args):
         if treeview_name:
@@ -626,16 +623,17 @@ def initialise_columns(window, treeview_name, treeview, *args):
             except KeyError:
                 column_config = config.sections["columns"][treeview_name]
 
-            try:
-                width = column_config[column_id]["width"]
-            except Exception:
-                # Invalid value
-                pass
+            if column_type != "icon":
+                try:
+                    width = column_config[column_id]["width"]
+                except Exception:
+                    # Invalid value
+                    pass
 
         if not isinstance(width, int):
             width = 0
 
-        xalign = 0
+        xalign = 0.0
 
         if column_type == "text":
             renderer = Gtk.CellRendererText(single_paragraph_mode=True, xpad=width_padding, ypad=height_padding)
@@ -657,7 +655,10 @@ def initialise_columns(window, treeview_name, treeview, *args):
             column = Gtk.TreeViewColumn(column_id, renderer, active=column_index)
 
         elif column_type == "icon":
-            renderer = Gtk.CellRendererPixbuf()
+            renderer = Gtk.CellRendererPixbuf(xalign=1.0)
+
+            if GTK_API_VERSION == 3:
+                renderer.set_property("xpad", 2)
 
             if column_id == "country":
                 if GTK_API_VERSION >= 4:
@@ -678,14 +679,13 @@ def initialise_columns(window, treeview_name, treeview, *args):
             column.set_resizable(False)
             column.set_expand(True)
         else:
-            column.set_resizable(True)
-            column.set_min_width(0)
+            column.set_resizable(column_type != "icon")
 
             if width > 0:
                 column.set_fixed_width(width)
 
         if isinstance(extra, int):
-            column.add_attribute(renderer, "foreground", extra)
+            column.add_attribute(renderer, "sensitive", extra)
 
         elif isinstance(extra, tuple):
             weight, underline = extra
@@ -697,7 +697,7 @@ def initialise_columns(window, treeview_name, treeview, *args):
             renderer.set_property("mode", Gtk.CellRendererMode.ACTIVATABLE)
 
         column.set_reorderable(True)
-        column.set_min_width(20)
+        column.set_min_width(24)
 
         label = Gtk.Label(label=title, margin_start=5, margin_end=5, mnemonic_widget=column_header, visible=True)
         column.set_widget(label)
@@ -913,7 +913,7 @@ def set_treeview_selected_row(treeview, bin_x, bin_y):
         selection.unselect_all()
 
 
-def show_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn, column_titles, text_function, strip_prefix=""):
+def show_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn, column_titles, text_function):
 
     try:
         bin_x, bin_y = treeview.convert_widget_to_bin_window_coords(pos_x, pos_y)
@@ -930,9 +930,9 @@ def show_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn, column_titles, t
     column_value = model.get_value(iterator, sourcecolumn)
 
     # Update tooltip position
-    treeview.set_tooltip_cell(tooltip, path, column, None)
+    treeview.set_tooltip_cell(tooltip, path, column)
 
-    text = text_function(column_value, strip_prefix)
+    text = text_function(column_value)
     if not text:
         return False
 
@@ -940,12 +940,7 @@ def show_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn, column_titles, t
     return True
 
 
-def get_country_tooltip_text(column_value, strip_prefix):
-
-    if not column_value.startswith(strip_prefix):
-        return _("Unknown")
-
-    country_code = column_value[len(strip_prefix):]
+def get_country_tooltip_text(country_code):
 
     if country_code:
         country_name = GeoIP.country_code_to_name(country_code)
@@ -954,15 +949,19 @@ def get_country_tooltip_text(column_value, strip_prefix):
     return _("Earth")
 
 
-def get_file_path_tooltip_text(column_value, _strip_prefix):
+def get_file_path_tooltip_text(column_value):
     return column_value
 
 
-def get_transfer_file_path_tooltip_text(column_value, _strip_prefix):
+def get_file_type_tooltip_text(column_value):
+    return FILE_TYPE_ICON_LABELS.get(column_value, _("Unknown"))
+
+
+def get_transfer_file_path_tooltip_text(column_value):
     return column_value.filename or column_value.path
 
 
-def get_user_status_tooltip_text(column_value, _strip_prefix):
+def get_user_status_tooltip_text(column_value):
 
     if column_value == 1:
         return _("Away")
@@ -973,9 +972,9 @@ def get_user_status_tooltip_text(column_value, _strip_prefix):
     return _("Offline")
 
 
-def show_country_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn, strip_prefix='flag_'):
+def show_country_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn):
     return show_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn,
-                        ("country",), get_country_tooltip_text, strip_prefix)
+                        ("country",), get_country_tooltip_text)
 
 
 def show_file_path_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn, transfer=False):
@@ -984,6 +983,11 @@ def show_file_path_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn, transf
 
     return show_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn,
                         ("folder", "filename", "path"), func)
+
+
+def show_file_type_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn):
+    return show_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn,
+                        ("file_type"), get_file_type_tooltip_text)
 
 
 def show_user_status_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn):

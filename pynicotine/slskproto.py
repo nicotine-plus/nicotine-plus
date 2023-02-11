@@ -32,7 +32,6 @@ from threading import Thread
 
 from pynicotine.events import events
 from pynicotine.logfacility import log
-from pynicotine.scheduler import scheduler
 from pynicotine.slskmessages import DISTRIBUTED_MESSAGE_CLASSES
 from pynicotine.slskmessages import DISTRIBUTED_MESSAGE_CODES
 from pynicotine.slskmessages import NETWORK_MESSAGE_EVENTS
@@ -185,6 +184,7 @@ class SoulseekNetworkThread(Thread):
     CONNECTION_BACKLOG_LENGTH = 4096
     SOCKET_READ_BUFFER_SIZE = 1048576
     SOCKET_WRITE_BUFFER_SIZE = 1048576
+    SLEEP_MIN_IDLE = 0.016  # ~60 times per second
 
     def __init__(self, queue, user_addresses):
         """ queue is deque object that holds network messages from Core. """
@@ -326,7 +326,7 @@ class SoulseekNetworkThread(Thread):
 
             ip_if = fcntl.ioctl(sock.fileno(),
                                 SIOCGIFADDR,
-                                struct.pack('256s', if_name.encode()[:15]))
+                                struct.pack("256s", if_name.encode()[:15]))
 
             ip_address = socket.inet_ntoa(ip_if[20:24])
 
@@ -401,10 +401,10 @@ class SoulseekNetworkThread(Thread):
             return
 
         self._manual_server_disconnect = False
-        scheduler.cancel(self._server_timer)
+        events.cancel_scheduled(self._server_timer)
 
         ip_address, port = msg_obj.addr
-        log.add(_("Connecting to %(host)s:%(port)s"), {'host': ip_address, 'port': port})
+        log.add(_("Connecting to %(host)s:%(port)s"), {"host": ip_address, "port": port})
 
         self._init_server_conn(msg_obj)
 
@@ -428,7 +428,7 @@ class SoulseekNetworkThread(Thread):
         self._token_init_msgs.clear()
         self._username_init_msgs.clear()
 
-        scheduler.cancel(self._conn_timeouts_timer_id)
+        events.cancel_scheduled(self._conn_timeouts_timer_id)
         self._out_indirect_conn_request_times.clear()
 
         if self._want_abort:
@@ -445,8 +445,8 @@ class SoulseekNetworkThread(Thread):
 
         log.add(
             _("Disconnected from server %(host)s:%(port)s"), {
-                'host': ip_address,
-                'port': port
+                "host": ip_address,
+                "port": port
             })
 
         if self._server_relogged:
@@ -471,7 +471,7 @@ class SoulseekNetworkThread(Thread):
         elif 0 < self._server_timeout_value < 600:
             self._server_timeout_value = self._server_timeout_value * 2
 
-        self._server_timer = scheduler.add(delay=self._server_timeout_value, callback=self._server_timeout)
+        self._server_timer = events.schedule(delay=self._server_timeout_value, callback=self._server_timeout)
 
         log.add(_("The server seems to be down or not responding, retrying in %i seconds"),
                 self._server_timeout_value)
@@ -532,7 +532,7 @@ class SoulseekNetworkThread(Thread):
             self._last_cycle_time = current_time
             self._current_cycle_loop_count = 0
         else:
-            self._current_cycle_loop_count = self._current_cycle_loop_count + 1
+            self._current_cycle_loop_count += 1
 
     def _set_conn_speed_limit(self, sock, limit, limits):
 
@@ -555,9 +555,9 @@ class SoulseekNetworkThread(Thread):
                 if (curtime - request_time) >= 20 and self._out_indirect_conn_request_times.pop(init, None):
                     log.add_conn(("Indirect connect request of type %(type)s to user %(user)s with "
                                   "token %(token)s expired, giving up"), {
-                        'type': conn_type,
-                        'user': username,
-                        'token': init.token
+                        "type": conn_type,
+                        "user": username,
+                        "token": init.token
                     })
 
                     events.emit_main_thread("peer-connection-error", username, init.outgoing_msgs)
@@ -570,7 +570,7 @@ class SoulseekNetworkThread(Thread):
 
         init = conn_obj.init
 
-        if init is not None and init.conn_type != 'P':
+        if init is not None and init.conn_type != "P":
             # Distributed and file connections are critical, always assume they are active
             return True
 
@@ -604,7 +604,7 @@ class SoulseekNetworkThread(Thread):
         except Exception:
             from traceback import format_exc
             log.add("Unable to pack message type %(msg_type)s. %(error)s",
-                    {'msg_type': msg_obj.__class__, 'error': format_exc()})
+                    {"msg_type": msg_obj.__class__, "error": format_exc()})
 
         return None
 
@@ -623,11 +623,11 @@ class SoulseekNetworkThread(Thread):
         except Exception as error:
             log.add_debug(("Unable to parse %(conn_type)s message type %(msg_type)s size %(size)i "
                            "contents %(msg_buffer)s: %(error)s"), {
-                'conn_type': conn_type,
-                'msg_type': msg_class,
-                'size': msg_size,
-                'msg_buffer': msg_buffer,
-                'error': error
+                "conn_type": conn_type,
+                "msg_type": msg_class,
+                "size": msg_size,
+                "msg_buffer": msg_buffer,
+                "error": error
             })
 
         return None
@@ -707,14 +707,14 @@ class SoulseekNetworkThread(Thread):
                     break
 
         log.add_conn("Sending message of type %(type)s to user %(user)s", {
-            'type': message.__class__,
-            'user': user
+            "type": message.__class__,
+            "user": user
         })
 
         if init is not None:
             log.add_conn("Found existing connection of type %(type)s for user %(user)s, using it.", {
-                'type': conn_type,
-                'user': user
+                "type": conn_type,
+                "user": user
             })
 
             init.outgoing_msgs.append(message)
@@ -754,7 +754,7 @@ class SoulseekNetworkThread(Thread):
             self._queue.append(GetPeerAddress(user))
 
             log.add_conn("Requesting address for user %(user)s", {
-                'user': user
+                "user": user
             })
 
         else:
@@ -772,9 +772,9 @@ class SoulseekNetworkThread(Thread):
         if self._has_existing_user_socket(user, conn_type):
             log.add_conn(("Direct connection of type %(type)s to user %(user)s %(addr)s requested, "
                           "but existing connection already exists"), {
-                'type': conn_type,
-                'user': user,
-                'addr': addr
+                "type": conn_type,
+                "user": user,
+                "addr": addr
             })
             return
 
@@ -786,9 +786,9 @@ class SoulseekNetworkThread(Thread):
         self._queue.append(InitPeerConnection(addr, init))
 
         log.add_conn("Attempting direct connection of type %(type)s to user %(user)s %(addr)s", {
-            'type': conn_type,
-            'user': user,
-            'addr': addr
+            "type": conn_type,
+            "user": user,
+            "addr": addr
         })
 
     def _connect_error(self, error, conn_obj):
@@ -798,9 +798,9 @@ class SoulseekNetworkThread(Thread):
 
             log.add(
                 _("Cannot connect to server %(host)s:%(port)s: %(error)s"), {
-                    'host': server_address,
-                    'port': port,
-                    'error': error
+                    "host": server_address,
+                    "port": port,
+                    "error": error
                 }
             )
             self._set_server_timer()
@@ -819,8 +819,8 @@ class SoulseekNetworkThread(Thread):
 
         log.add_conn(
             "Cannot respond to indirect connection request from user %(user)s. Error: %(error)s", {
-                'user': conn_obj.init.target_user,
-                'error': error
+                "user": conn_obj.init.target_user,
+                "error": error
             })
 
     def _connect_to_peer_indirect(self, init):
@@ -854,25 +854,25 @@ class SoulseekNetworkThread(Thread):
 
         log.add_conn(("Established outgoing connection of type %(type)s with user %(user)s. List of "
                       "outgoing messages: %(messages)s"), {
-            'type': conn_type,
-            'user': user,
-            'messages': init.outgoing_msgs
+            "type": conn_type,
+            "user": user,
+            "messages": init.outgoing_msgs
         })
 
         if init.indirect:
             log.add_conn(("Responding to indirect connection request of type %(type)s from "
                           "user %(user)s, token %(token)s"), {
-                'type': conn_type,
-                'user': user,
-                'token': token
+                "type": conn_type,
+                "user": user,
+                "token": token
             })
             self._queue.append(PierceFireWall(sock, token))
 
         else:
             # Direct connection established
             log.add_conn("Sending PeerInit message of type %(type)s to user %(user)s", {
-                'type': conn_type,
-                'user': user
+                "type": conn_type,
+                "user": user
             })
             self._queue.append(init)
 
@@ -882,8 +882,8 @@ class SoulseekNetworkThread(Thread):
             if self._out_indirect_conn_request_times.pop(init, None):
                 log.add_conn(("Stopping indirect connection attempt of type %(type)s to user "
                               "%(user)s"), {
-                    'type': conn_type,
-                    'user': user
+                    "type": conn_type,
+                    "user": user
                 })
 
         self._process_conn_messages(init)
@@ -895,8 +895,8 @@ class SoulseekNetworkThread(Thread):
 
         log.add(
             _("Connected to server %(host)s:%(port)s, logging in…"), {
-                'host': addr[0],
-                'port': addr[1]
+                "host": addr[0],
+                "port": addr[1]
             }
         )
 
@@ -1027,9 +1027,9 @@ class SoulseekNetworkThread(Thread):
         user = init.target_user
 
         log.add_conn("Removed connection of type %(type)s to user %(user)s %(addr)s", {
-            'type': conn_type,
-            'user': user,
-            'addr': conn_obj.addr
+            "type": conn_type,
+            "user": user,
+            "addr": conn_obj.addr
         })
 
         init_key = user + conn_type
@@ -1039,9 +1039,9 @@ class SoulseekNetworkThread(Thread):
             return
 
         log.add_conn("Removing PeerInit message of type %(type)s for user %(user)s %(addr)s", {
-            'type': conn_type,
-            'user': user,
-            'addr': conn_obj.addr
+            "type": conn_type,
+            "user": user,
+            "addr": conn_obj.addr
         })
 
         if init is not user_init:
@@ -1115,25 +1115,25 @@ class SoulseekNetworkThread(Thread):
         count = 10
         timeout_seconds = (idle + (interval * count))
 
-        if hasattr(socket, 'SO_KEEPALIVE'):
+        if hasattr(socket, "SO_KEEPALIVE"):
             server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)  # pylint: disable=no-member
 
-        if hasattr(socket, 'TCP_KEEPINTVL'):
+        if hasattr(socket, "TCP_KEEPINTVL"):
             server_socket.setsockopt(socket.IPPROTO_TCP,
                                      socket.TCP_KEEPINTVL, interval)  # pylint: disable=no-member
 
-        if hasattr(socket, 'TCP_KEEPCNT'):
+        if hasattr(socket, "TCP_KEEPCNT"):
             server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPCNT, count)  # pylint: disable=no-member
 
-        if hasattr(socket, 'TCP_KEEPIDLE'):
+        if hasattr(socket, "TCP_KEEPIDLE"):
             server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPIDLE, idle)  # pylint: disable=no-member
 
-        elif hasattr(socket, 'TCP_KEEPALIVE'):
+        elif hasattr(socket, "TCP_KEEPALIVE"):
             # macOS fallback
 
             server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPALIVE, idle)  # pylint: disable=no-member
 
-        elif hasattr(socket, 'SIO_KEEPALIVE_VALS'):
+        elif hasattr(socket, "SIO_KEEPALIVE_VALS"):
             # Windows fallback
             # Probe count is set to 10 on a system level, and can't be modified.
             # https://docs.microsoft.com/en-us/windows/win32/winsock/so-keepalive
@@ -1147,7 +1147,7 @@ class SoulseekNetworkThread(Thread):
                 )
             )
 
-        if hasattr(socket, 'TCP_USER_TIMEOUT'):
+        if hasattr(socket, "TCP_USER_TIMEOUT"):
             server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_USER_TIMEOUT, timeout_seconds * 1000)
 
     def _init_server_conn(self, msg_obj):
@@ -1217,7 +1217,7 @@ class SoulseekNetworkThread(Thread):
                             self.upnp.add_port_mapping(blocking=True)
 
                             # Check for indirect connection timeouts
-                            self._conn_timeouts_timer_id = scheduler.add(
+                            self._conn_timeouts_timer_id = events.schedule(
                                 delay=1, callback=self._check_indirect_connection_timeouts, repeat=True
                             )
 
@@ -1275,7 +1275,7 @@ class SoulseekNetworkThread(Thread):
                         if msg.port == 0:
                             log.add_conn(
                                 "Server reported port 0 for user %(user)s", {
-                                    'user': user
+                                    "user": user
                                 }
                             )
 
@@ -1332,9 +1332,9 @@ class SoulseekNetworkThread(Thread):
 
             else:
                 log.add_debug("Server message type %(type)i size %(size)i contents %(msg_buffer)s unknown", {
-                    'type': msgtype,
-                    'size': msgsize - 4,
-                    'msg_buffer': msg_buffer[idx + 8:idx + msgsize_total]
+                    "type": msgtype,
+                    "size": msgsize - 4,
+                    "msg_buffer": msg_buffer[idx + 8:idx + msgsize_total]
                 })
 
             idx += msgsize_total
@@ -1349,8 +1349,8 @@ class SoulseekNetworkThread(Thread):
 
         if self._server_socket not in self._conns:
             log.add_conn("Cannot send the message over the closed connection: %(type)s %(msg_obj)s", {
-                'type': msg_class,
-                'msg_obj': msg_obj
+                "type": msg_class,
+                "msg_obj": msg_obj
             })
             return
 
@@ -1432,9 +1432,9 @@ class SoulseekNetworkThread(Thread):
 
                         log.add_conn(("Received incoming direct connection of type %(type)s from user "
                                       "%(user)s %(addr)s"), {
-                            'type': conn_type,
-                            'user': user,
-                            'addr': addr
+                            "type": conn_type,
+                            "user": user,
+                            "addr": addr
                         })
 
                         if not self._verify_peer_connection_type(conn_type):
@@ -1454,9 +1454,9 @@ class SoulseekNetworkThread(Thread):
 
             else:
                 log.add_debug("Peer init message type %(type)i size %(size)i contents %(msg_buffer)s unknown", {
-                    'type': msgtype,
-                    'size': msgsize - 1,
-                    'msg_buffer': msg_buffer[idx + 5:idx + msgsize_total]
+                    "type": msgtype,
+                    "size": msgsize - 1,
+                    "msg_buffer": msg_buffer[idx + 5:idx + msgsize_total]
                 })
 
                 conn_obj.ibuf = bytearray()
@@ -1477,33 +1477,21 @@ class SoulseekNetworkThread(Thread):
 
         if msg_obj.sock not in self._conns:
             log.add_conn("Cannot send the message over the closed connection: %(type)s %(msg_obj)s", {
-                'type': msg_class,
-                'msg_obj': msg_obj
+                "type": msg_class,
+                "msg_obj": msg_obj
             })
             return
 
         # Pack peer init messages
-        if msg_class is PierceFireWall:
-            conn_obj = self._conns[msg_obj.sock]
-            msg = self._pack_network_message(msg_obj)
+        conn_obj = self._conns[msg_obj.sock]
+        msg = self._pack_network_message(msg_obj)
 
-            if msg is None:
-                return
+        if msg is None:
+            return
 
-            conn_obj.obuf.extend(msg_obj.pack_uint32(len(msg) + 1))
-            conn_obj.obuf.extend(msg_obj.pack_uint8(PEER_INIT_MESSAGE_CODES[msg_class]))
-            conn_obj.obuf.extend(msg)
-
-        elif msg_class is PeerInit:
-            conn_obj = self._conns[msg_obj.sock]
-            msg = self._pack_network_message(msg_obj)
-
-            if msg is None:
-                return
-
-            conn_obj.obuf.extend(msg_obj.pack_uint32(len(msg) + 1))
-            conn_obj.obuf.extend(msg_obj.pack_uint8(PEER_INIT_MESSAGE_CODES[msg_class]))
-            conn_obj.obuf.extend(msg)
+        conn_obj.obuf.extend(msg_obj.pack_uint32(len(msg) + 1))
+        conn_obj.obuf.extend(msg_obj.pack_uint8(PEER_INIT_MESSAGE_CODES[msg_class]))
+        conn_obj.obuf.extend(msg)
 
         self._modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
 
@@ -1588,12 +1576,12 @@ class SoulseekNetworkThread(Thread):
                 host, port = conn_obj.addr
                 log.add_debug(("Peer message type %(type)s size %(size)i contents %(msg_buffer)s unknown, "
                                "from user: %(user)s, %(host)s:%(port)s"), {
-                    'type': msgtype,
-                    'size': msgsize - 4,
-                    'msg_buffer': msg_buffer[idx + 8:idx + msgsize_total],
-                    'user': conn_obj.init.target_user,
-                    'host': host,
-                    'port': port
+                    "type": msgtype,
+                    "size": msgsize - 4,
+                    "msg_buffer": msg_buffer[idx + 8:idx + msgsize_total],
+                    "user": conn_obj.init.target_user,
+                    "host": host,
+                    "port": port
                 })
 
             idx += msgsize_total
@@ -1615,8 +1603,8 @@ class SoulseekNetworkThread(Thread):
 
         if msg_obj.init.sock not in self._conns:
             log.add_conn("Cannot send the message over the closed connection: %(type)s %(msg_obj)s", {
-                'type': msg_class,
-                'msg_obj': msg_obj
+                "type": msg_class,
+                "msg_obj": msg_obj
             })
             return
 
@@ -1718,8 +1706,8 @@ class SoulseekNetworkThread(Thread):
 
         if msg_obj.init.sock not in self._conns:
             log.add_conn("Cannot send the message over the closed connection: %(type)s %(msg_obj)s", {
-                'type': msg_class,
-                'msg_obj': msg_obj
+                "type": msg_class,
+                "msg_obj": msg_obj
             })
             return
 
@@ -1856,9 +1844,9 @@ class SoulseekNetworkThread(Thread):
 
             else:
                 log.add_debug("Distrib message type %(type)i size %(size)i contents %(msg_buffer)s unknown", {
-                    'type': msgtype,
-                    'size': msgsize - 1,
-                    'msg_buffer': msg_buffer[idx + 5:idx + msgsize_total]
+                    "type": msgtype,
+                    "size": msgsize - 1,
+                    "msg_buffer": msg_buffer[idx + 5:idx + msgsize_total]
                 })
 
                 conn_obj.ibuf = bytearray()
@@ -1878,8 +1866,8 @@ class SoulseekNetworkThread(Thread):
 
         if msg_obj.init.sock not in self._conns:
             log.add_conn("Cannot send the message over the closed connection: %(type)s %(msg_obj)s", {
-                'type': msg_class,
-                'msg_obj': msg_obj
+                "type": msg_class,
+                "msg_obj": msg_obj
             })
             return
 
@@ -2236,12 +2224,13 @@ class SoulseekNetworkThread(Thread):
                 continue
 
             current_time = time.time()
-            num_sockets = self._numsockets
 
             # Send updated connection count to core. Avoid sending too many
             # updates at once, if there are a lot of connections.
             if (current_time - self._last_conn_stat_time) >= 1:
-                events.emit_main_thread("set-connection-stats", self._numsockets, self._total_downloads,
+                num_sockets = self._numsockets
+
+                events.emit_main_thread("set-connection-stats", num_sockets, self._total_downloads,
                                         self._total_download_bandwidth, self._total_uploads,
                                         self._total_upload_bandwidth)
 
@@ -2270,7 +2259,7 @@ class SoulseekNetworkThread(Thread):
             self._calc_loops_per_second(current_time)
 
             # Don't exhaust the CPU
-            time.sleep(1 / 60)
+            time.sleep(self.SLEEP_MIN_IDLE)
 
         # Networking thread aborted
         self._manual_server_disconnect = True

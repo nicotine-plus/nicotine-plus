@@ -27,19 +27,19 @@ class Plugin(BasePlugin):
         super().__init__(*args, **kwargs)
 
         self.settings = {
-            'users': []
+            "users": []
         }
         self.metasettings = {
-            'users': {
-                'description': 'Username',
-                'type': 'list string'
+            "users": {
+                "description": "Username",
+                "type": "list string"
             }
         }
         self.user_statuses = {}
 
     def user_status_notification(self, user, status, _privileged):
 
-        if user not in self.settings['users']:
+        if user not in self.settings["users"]:
             return
 
         if status == UserStatus.OFFLINE:

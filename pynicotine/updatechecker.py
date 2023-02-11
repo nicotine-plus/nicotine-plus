@@ -58,7 +58,7 @@ class UpdateChecker:
                 message = _("You are using the latest version of %s") % config.application_name
 
         except Exception as error:
-            title = ("Latest Version Unknown")
+            title = _("Latest Version Unknown")
             message = _("Cannot retrieve latest version: %s") % error
 
         log.add(message, title=title)
@@ -84,11 +84,11 @@ class UpdateChecker:
             response_body = response.read().decode("utf-8")
 
         data = json.loads(response_body)
-        h_latest_version = data['info']['version']
+        h_latest_version = data["info"]["version"]
         latest_version = cls.create_integer_version(h_latest_version)
 
         try:
-            date = data['releases'][h_latest_version][0]['upload_time']
+            date = data["releases"][h_latest_version][0]["upload_time"]
         except Exception:
             date = None
 

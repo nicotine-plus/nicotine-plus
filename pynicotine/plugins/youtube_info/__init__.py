@@ -32,31 +32,31 @@ class Plugin(BasePlugin):
         super().__init__(*args, **kwargs)
 
         self.settings = {
-            'api_key': '',
-            'color': 'Local',
-            'format': [
-                '* Title: %title%',
-                '* Duration: %duration% - Views: %views%']
+            "api_key": "",
+            "color": "Local",
+            "format": [
+                "* Title: %title%",
+                "* Duration: %duration% - Views: %views%"]
         }
         self.metasettings = {
-            'api_key': {
-                'description': 'YouTube Data v3 API key:',
-                'type': 'string'
+            "api_key": {
+                "description": "YouTube Data v3 API key:",
+                "type": "string"
             },
-            'color': {
-                'description': 'Message color:',
-                'type': 'dropdown',
-                'options': ('Remote', 'Local', 'Action', 'Hilite')
+            "color": {
+                "description": "Message color:",
+                "type": "dropdown",
+                "options": ("Remote", "Local", "Action", "Hilite")
             },
-            'format': {
-                'description': 'Message format',
-                'type': 'list string'
+            "format": {
+                "description": "Message format",
+                "type": "list string"
             }
         }
 
         self.last_video_id = {
-            'private': {},
-            'public': {}
+            "private": {},
+            "public": {}
         }
 
     def incoming_public_chat_notification(self, room, user, line):
@@ -65,7 +65,7 @@ class Plugin(BasePlugin):
                 or self.core.network_filter.is_user_ip_ignored(user)):
             return
 
-        video_id = self.get_video_id('public', room, line)
+        video_id = self.get_video_id("public", room, line)
         if not video_id:
             return
 
@@ -73,8 +73,8 @@ class Plugin(BasePlugin):
         if not parsed:
             return
 
-        for msg in self.settings['format']:
-            self.echo_public(room, self.str_replace(msg, parsed), self.settings['color'].lower())
+        for msg in self.settings["format"]:
+            self.echo_public(room, self.str_replace(msg, parsed), self.settings["color"].lower())
 
     def incoming_private_chat_notification(self, user, line):
 
@@ -82,7 +82,7 @@ class Plugin(BasePlugin):
                 or self.core.network_filter.is_user_ip_ignored(user)):
             return
 
-        video_id = self.get_video_id('private', user, line)
+        video_id = self.get_video_id("private", user, line)
         if not video_id:
             return
 
@@ -90,17 +90,17 @@ class Plugin(BasePlugin):
         if not parsed:
             return
 
-        for msg in self.settings['format']:
-            self.echo_private(user, self.str_replace(msg, parsed), self.settings['color'].lower())
+        for msg in self.settings["format"]:
+            self.echo_private(user, self.str_replace(msg, parsed), self.settings["color"].lower())
 
     def get_video_id(self, mode, source, line):
 
-        match = re.search(r'(https?://((m|music)\.)?|www\.)youtu(\.be/|be\.com/(shorts/|watch\S+v=))'
-                          r'(?P<video_id>[-\w]{11})', line)
+        match = re.search(r"(https?://((m|music)\.)?|www\.)youtu(\.be/|be\.com/(shorts/|watch\S+v=))"
+                          r"(?P<video_id>[-\w]{11})", line)
         if not match:
             return None
 
-        video_id = match.group('video_id')
+        video_id = match.group("video_id")
         if source in self.last_video_id[mode] and self.last_video_id[mode][source] == video_id:
             return None
 
@@ -110,10 +110,10 @@ class Plugin(BasePlugin):
 
     def parse_response(self, video_id):
 
-        api_key = self.settings['api_key']
+        api_key = self.settings["api_key"]
 
         if not api_key:
-            self.log('No API key specified')
+            self.log("No API key specified")
             return None
 
         try:
@@ -123,69 +123,69 @@ class Plugin(BasePlugin):
                 response_body = response.read().decode("utf-8")
 
         except Exception as error:
-            self.log('Failed to connect to www.googleapis.com: %s', error)
+            self.log("Failed to connect to www.googleapis.com: %s", error)
             return None
 
         try:
             data = json.loads(response_body)
 
         except Exception as error:
-            self.log('Failed to parse response from www.googleapis.com: %s', str(error))
+            self.log("Failed to parse response from www.googleapis.com: %s", str(error))
             return None
 
-        if 'error' in data:
-            error_message = data['error'].get('message', False)
+        if "error" in data:
+            error_message = data["error"].get("message", False)
             if not error_message:
                 # This should not occur
-                error_message = str(data['error'])
+                error_message = str(data["error"])
             self.log(error_message)
             return None
 
-        total_results = data.get('pageInfo', {}).get('totalResults', False)
+        total_results = data.get("pageInfo", {}).get("totalResults", False)
 
         if not total_results:
             if isinstance(total_results, int):
                 # Video removed / invalid id
-                self.log('Video unavailable')
+                self.log("Video unavailable")
 
             elif isinstance(total_results, bool):
                 # This should not occur
-                self.log('Youtube API appears to be broken')
+                self.log("Youtube API appears to be broken")
             return None
 
         try:
-            data = data['items'][0]
+            data = data["items"][0]
 
-            title = data['snippet']['title']
-            description = data['snippet']['description']
-            channel = data['snippet']['channelTitle']
-            live = data['snippet']['liveBroadcastContent']
+            title = data["snippet"]["title"]
+            description = data["snippet"]["description"]
+            channel = data["snippet"]["channelTitle"]
+            live = data["snippet"]["liveBroadcastContent"]
 
-            duration = data['contentDetails']['duration']
-            quality = data['contentDetails']['definition'].upper()
+            duration = data["contentDetails"]["duration"]
+            quality = data["contentDetails"]["definition"].upper()
 
-            views = data['statistics'].get('viewCount', 'RESTRICTED')
-            likes = data['statistics'].get('likeCount', 'LIKES')
+            views = data["statistics"].get("viewCount", "RESTRICTED")
+            likes = data["statistics"].get("likeCount", "LIKES")
 
         except KeyError:
             # This should not occur
             self.log('An error occurred while parsing id "%s"', video_id)
             return None
 
-        if likes != 'LIKES':
+        if likes != "LIKES":
             likes = humanize(int(likes))
 
-        if views != 'RESTRICTED':
+        if views != "RESTRICTED":
             views = humanize(int(views))
 
-        if live in ('live', 'upcoming'):
+        if live in ("live", "upcoming"):
             duration = live.upper()
         else:
             duration = self.get_duration(duration)
 
         return {
-            '%title%': title, '%description%': description, '%duration%': duration, '%quality%': quality,
-            '%channel%': channel, '%views%': views, '%likes%': likes
+            "%title%": title, "%description%": description, "%duration%": duration, "%quality%": quality,
+            "%channel%": channel, "%views%": views, "%likes%": likes
         }
 
     @staticmethod
@@ -201,9 +201,9 @@ class Plugin(BasePlugin):
     def get_duration(iso_8601_duration):
 
         seconds = 0
-        intervals = {'D': 86400, 'H': 3600, 'M': 60, 'S': 1}
+        intervals = {"D": 86400, "H": 3600, "M": 60, "S": 1}
 
-        for num, designator in re.findall(r'(\d+)([DHMS])', iso_8601_duration):
+        for num, designator in re.findall(r"(\d+)([DHMS])", iso_8601_duration):
             seconds += intervals[designator] * int(num)
 
         return human_length(seconds)

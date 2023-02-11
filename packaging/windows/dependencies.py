@@ -30,10 +30,11 @@ def install_pacman():
     arch = os.environ.get("ARCH") or "x86_64"
     prefix = f"mingw-w64-{arch}-"
     mingw_type = "mingw32" if arch == "i686" else "mingw64"
-    gtk_version = os.environ.get("NICOTINE_GTK_VERSION") or '3'
-    use_libadwaita = gtk_version == '4' and os.environ.get("NICOTINE_LIBADWAITA") == '1'
+    gtk_version = os.environ.get("NICOTINE_GTK_VERSION") or "3"
+    use_libadwaita = gtk_version == "4" and os.environ.get("NICOTINE_LIBADWAITA") == "1"
 
-    packages = [f"{prefix}gettext",
+    packages = [f"{prefix}ca-certificates",
+                f"{prefix}gettext",
                 f"{prefix}gtk{gtk_version}",
                 f"{prefix}python-chardet",
                 f"{prefix}python-cx-freeze",
@@ -64,6 +65,6 @@ def install_pypi():
     subprocess.check_call([sys.executable, "-m", "pip", "install"] + packages)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     install_pacman()
     install_pypi()

@@ -29,6 +29,7 @@ from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.application import GTK_GUI_DIR
 from pynicotine.logfacility import log
+from pynicotine.shares import FileTypes
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import encode_path
 
@@ -38,9 +39,9 @@ from pynicotine.utils import encode_path
 
 LIBADWAITA = None
 try:
-    if os.getenv("NICOTINE_LIBADWAITA") == '1':
+    if os.getenv("NICOTINE_LIBADWAITA") == "1":
         import gi
-        gi.require_version('Adw', '1')
+        gi.require_version("Adw", "1")
 
         from gi.repository import Adw
         LIBADWAITA = Adw
@@ -147,6 +148,11 @@ def set_global_css():
     scrollbar {
         /* Workaround for themes breaking scrollbar hitbox with margins */
         margin: 0;
+    }
+
+    .search-view treeview:disabled {
+        /* Search results with no free slots have no style by default */
+        color: unset;
     }
 
     /* Borders */
@@ -271,7 +277,13 @@ def set_global_css():
 
     if GTK_API_VERSION >= 4:
         css = css + css_gtk4
-        global_css_provider.load_from_data(css)
+
+        try:
+            global_css_provider.load_from_data(css)
+
+        except TypeError:
+            # https://gitlab.gnome.org/GNOME/pygobject/-/merge_requests/231
+            global_css_provider.load_from_data(css.decode("utf-8"), length=-1)
 
         Gtk.StyleContext.add_provider_for_display(  # pylint: disable=no-member
             Gdk.Display.get_default(), global_css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
@@ -301,6 +313,15 @@ else:
     ICON_THEME = Gtk.IconTheme.get_default()  # pylint: disable=no-member
 
 CUSTOM_ICON_THEME_NAME = ".nicotine-icon-theme"
+FILE_TYPE_ICON_LABELS = {
+    "application-x-executable-symbolic": _("Executable"),
+    "audio-x-generic-symbolic": _("Audio"),
+    "image-x-generic-symbolic": _("Image"),
+    "package-x-generic-symbolic": _("Archive"),
+    "text-x-generic-symbolic": _("Miscellaneous"),
+    "video-x-generic-symbolic": _("Video"),
+    "x-office-document-symbolic": _("Document/Text")
+}
 USER_STATUS_ICON_NAMES = {
     UserStatus.ONLINE: "nplus-status-online",
     UserStatus.AWAY: "nplus-status-away",
@@ -434,14 +455,42 @@ def load_icons():
     load_custom_icons()
 
 
-def get_flag_icon_name(country):
+def get_flag_icon_name(country_code):
 
-    country = country.lower().replace("flag_", "")
-
-    if not country:
+    if not country_code:
         return ""
 
-    return f"nplus-flag-{country}"
+    return f"nplus-flag-{country_code.lower()}"
+
+
+def get_file_type_icon_name(filename):
+
+    result = filename.rsplit(".", 1)
+
+    if len(result) < 2:
+        return "text-x-generic-symbolic"
+
+    extension = result[-1].lower()
+
+    if extension in FileTypes.AUDIO:
+        return "audio-x-generic-symbolic"
+
+    if extension in FileTypes.IMAGE:
+        return "image-x-generic-symbolic"
+
+    if extension in FileTypes.VIDEO:
+        return "video-x-generic-symbolic"
+
+    if extension in FileTypes.ARCHIVE:
+        return "package-x-generic-symbolic"
+
+    if extension in FileTypes.DOCUMENT_TEXT:
+        return "x-office-document-symbolic"
+
+    if extension in FileTypes.EXECUTABLE:
+        return "application-x-executable-symbolic"
+
+    return "text-x-generic-symbolic"
 
 
 def on_icon_theme_changed(*_args):
@@ -552,7 +601,8 @@ def _get_custom_color_css():
         (".notebook-tab-changed", config.sections["ui"]["tab_changed"]),
         (".notebook-tab-highlight", config.sections["ui"]["tab_hilite"]),
         ("entry", config.sections["ui"]["inputcolor"]),
-        ("treeview", treeview_text_color)
+        ("treeview", treeview_text_color),
+        (".search-view treeview:disabled", config.sections["ui"]["searchq"])
     ):
         if color:
             css.extend(
@@ -602,7 +652,12 @@ def update_custom_css():
     css.extend(_get_custom_font_css())
     css.extend(_get_custom_color_css())
 
-    CUSTOM_CSS_PROVIDER.load_from_data(css)
+    try:
+        CUSTOM_CSS_PROVIDER.load_from_data(css)
+
+    except TypeError:
+        # https://gitlab.gnome.org/GNOME/pygobject/-/merge_requests/231
+        CUSTOM_CSS_PROVIDER.load_from_data(css.decode("utf-8"), length=-1)
 
     if GTK_API_VERSION >= 4:
         Gtk.StyleContext.add_provider_for_display(  # pylint: disable=no-member
@@ -616,20 +671,24 @@ def update_custom_css():
 
 def update_tag_visuals(tag, color_id):
 
+    enable_colored_usernames = config.sections["ui"]["usernamehotspots"]
+    is_hotspot_tag = (color_id in ("useraway", "useronline", "useroffline"))
     color_hex = config.sections["ui"].get(color_id)
+
+    if is_hotspot_tag and not enable_colored_usernames:
+        color_hex = None
 
     if not color_hex:
         tag.set_property("foreground-set", False)
-        return
-
-    tag.set_property("foreground", color_hex)
+    else:
+        tag.set_property("foreground", color_hex)
 
     # URLs
     if color_id == "urlcolor":
         tag.set_property("underline", Pango.Underline.SINGLE)
 
     # Hotspots
-    if color_id not in ("useraway", "useronline", "useroffline"):
+    if not is_hotspot_tag:
         return
 
     usernamestyle = config.sections["ui"]["usernamestyle"]

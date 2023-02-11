@@ -23,7 +23,6 @@ import time
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.events import events
-from pynicotine.scheduler import scheduler
 from pynicotine.utils import clean_file
 from pynicotine.utils import encode_path
 from pynicotine.utils import open_file_path
@@ -80,7 +79,7 @@ class Logger:
         self._log_levels = {LogLevel.DEFAULT}
         self._log_files = {}
 
-        scheduler.add(delay=10, callback=self._close_inactive_log_files, repeat=True)
+        events.schedule(delay=10, callback=self._close_inactive_log_files, repeat=True)
 
     """ Log Levels """
 
@@ -132,7 +131,7 @@ class Logger:
             os.makedirs(folder_path_encoded)
 
         log_file = self._log_files[file_path] = LogFile(
-            path=file_path, handle=open(encode_path(file_path), 'ab'))  # pylint: disable=consider-using-with
+            path=file_path, handle=open(encode_path(file_path), "ab"))  # pylint: disable=consider-using-with
 
         # Disable file access for outsiders
         os.chmod(file_path_encoded, 0o600)
@@ -147,14 +146,14 @@ class Logger:
         text = f"{timestamp} {text}\n"
 
         try:
-            log_file.handle.write(text.encode('utf-8', 'replace'))
+            log_file.handle.write(text.encode("utf-8", "replace"))
             log_file.last_active = time.time()
 
         except Exception as error:
             # Avoid infinite recursion
             should_log_file = (folder_path != config.sections["logging"]["debuglogsdir"])
 
-            self.add(_("Couldn't write to log file \"%(filename)s\": %(error)s"), {
+            self.add(_('Couldn\'t write to log file "%(filename)s": %(error)s'), {
                 "filename": os.path.join(folder_path, base_name),
                 "error": error
             }, should_log_file=should_log_file)
@@ -164,8 +163,8 @@ class Logger:
         try:
             log_file.handle.close()
 
-        except IOError as error:
-            self.add_debug("Failed to close log file \"%(filename)s\": %(error)s", {
+        except OSError as error:
+            self.add_debug('Failed to close log file "%(filename)s": %(error)s', {
                 "filename": log_file.path,
                 "error": error
             })

@@ -22,8 +22,8 @@ from threading import Thread
 from urllib.parse import urlsplit
 
 from pynicotine.config import config
+from pynicotine.events import events
 from pynicotine.logfacility import log
-from pynicotine.scheduler import scheduler
 
 
 MULTICAST_HOST = "239.255.255.250"
@@ -48,12 +48,12 @@ class SSDPResponse:
         import email.parser
 
         self.message = message
-        self.headers = list(email.parser.Parser().parsestr('\r\n'.join(message.splitlines()[1:])).items())
+        self.headers = list(email.parser.Parser().parsestr("\r\n".join(message.splitlines()[1:])).items())
 
     def __bytes__(self):
         """ Return complete SSDP response """
 
-        return self.message.encode('utf-8')
+        return self.message.encode("utf-8")
 
 
 class SSDPRequest:
@@ -82,7 +82,7 @@ class SSDPRequest:
         for header_name, header_value in self.headers.items():
             headers.append(f"{header_name}: {header_value}")
 
-        return '\r\n'.join(headers).encode('utf-8') + b'\r\n\r\n'
+        return "\r\n".join(headers).encode("utf-8") + b"\r\n\r\n"
 
 
 class SSDP:
@@ -200,7 +200,7 @@ class SSDP:
             while True:
                 try:
                     message = sock.recv(65507)  # Maximum size of UDP message
-                    SSDP.add_service(services, locations, SSDPResponse(message.decode('utf-8')))
+                    SSDP.add_service(services, locations, SSDPResponse(message.decode("utf-8")))
 
                 except socket.timeout:
                     break
@@ -247,21 +247,21 @@ class UPnP:
             ('<?xml version="1.0"?>\r\n'
              + '<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" '
              + 's:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">'
-             + '<s:Body>'
+             + "<s:Body>"
              + '<u:AddPortMapping xmlns:u="%s">'
-             + '<NewRemoteHost></NewRemoteHost>'
-             + '<NewExternalPort>%s</NewExternalPort>'
-             + '<NewProtocol>%s</NewProtocol>'
-             + '<NewInternalPort>%s</NewInternalPort>'
-             + '<NewInternalClient>%s</NewInternalClient>'
-             + '<NewEnabled>1</NewEnabled>'
-             + '<NewPortMappingDescription>%s</NewPortMappingDescription>'
-             + '<NewLeaseDuration>%s</NewLeaseDuration>'
-             + '</u:AddPortMapping>'
-             + '</s:Body>'
-             + '</s:Envelope>\r\n') %
+             + "<NewRemoteHost></NewRemoteHost>"
+             + "<NewExternalPort>%s</NewExternalPort>"
+             + "<NewProtocol>%s</NewProtocol>"
+             + "<NewInternalPort>%s</NewInternalPort>"
+             + "<NewInternalClient>%s</NewInternalClient>"
+             + "<NewEnabled>1</NewEnabled>"
+             + "<NewPortMappingDescription>%s</NewPortMappingDescription>"
+             + "<NewLeaseDuration>%s</NewLeaseDuration>"
+             + "</u:AddPortMapping>"
+             + "</s:Body>"
+             + "</s:Envelope>\r\n") %
             (service_type, public_port, protocol, private_port, private_ip, mapping_description, lease_duration)
-        ).encode('utf-8')
+        ).encode("utf-8")
 
         log.add_debug("UPnP: Add port mapping request headers: %s", headers)
         log.add_debug("UPnP: Add port mapping request contents: %s", body)
@@ -375,7 +375,7 @@ class UPnP:
         The default interval is 4 hours. """
 
         self.cancel_timer()
-        self._timer = scheduler.add(delay=RENEWAL_INTERVAL, callback=self.add_port_mapping)
+        self._timer = events.schedule(delay=RENEWAL_INTERVAL, callback=self.add_port_mapping)
 
     def cancel_timer(self):
-        scheduler.cancel(self._timer)
+        events.cancel_scheduled(self._timer)

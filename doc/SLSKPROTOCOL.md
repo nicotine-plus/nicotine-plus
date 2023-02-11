@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on November 29, 2022
+Last updated on January 16, 2023
 
 Since the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify or extend the protocol in ways that negatively impact the network.
 
@@ -163,8 +163,8 @@ but it handles the protocol well enough (and can be modified).
 | 1    | [Login](#server-code-1)                           |            |
 | 2    | [Set Listen Port](#server-code-2)                 |            |
 | 3    | [Get Peer Address](#server-code-3)                |            |
-| 5    | [Add User](#server-code-5)                        |            |
-| 6    | [Remove User](#server-code-6)                     |            |
+| 5    | [Watch User](#server-code-5)                      |            |
+| 6    | [Unwatch User](#server-code-6)                    |            |
 | 7    | [Get User Status](#server-code-7)                 |            |
 | 13   | [Say in Chat Room](#server-code-13)               |            |
 | 14   | [Join Room](#server-code-14)                      |            |
@@ -250,9 +250,9 @@ but it handles the protocol well enough (and can be modified).
 | 146  | [Private Room Operator Removed](#server-code-146) |            |
 | 148  | [Private Room Owned](#server-code-148)            |            |
 | 149  | [Message Users](#server-code-149)                 |            |
-| 150  | [Ask Public Chat](#server-code-150)               | Deprecated |
-| 151  | [Stop Public Chat](#server-code-151)              | Deprecated |
-| 152  | [Public Chat Message](#server-code-152)           | Deprecated |
+| 150  | [Join Global Room](#server-code-150)              | Deprecated |
+| 151  | [Leave Global Room](#server-code-151)             | Deprecated |
+| 152  | [Global Room Message](#server-code-152)           | Deprecated |
 | 153  | [Related Searches](#server-code-153)              | Obsolete   |
 | 1001 | [Can't Connect To Peer](#server-code-1001)        |            |
 | 1003 | [Can't Create Room](#server-code-1003)            |            |
@@ -335,7 +335,7 @@ We send this to the server to ask for a peer's address (IP address and port), gi
 
 ## Server Code 5
 
-### AddUser
+### WatchUser
 
 Used to be kept updated about a user's stats. When a user's stats have changed, the server sends a [GetUserStats](#server-code-36) response message with the new user stats.
 
@@ -357,7 +357,7 @@ Used to be kept updated about a user's stats. When a user's stats have changed, 
 
 ## Server Code 6
 
-### RemoveUser
+### UnwatchUser
 
 Used when we no longer want to be kept updated about a user's stats.
 
@@ -655,7 +655,7 @@ We send this to server to indicate the number of folder and files that we share.
 
 ### GetUserStats
 
-The server sends this to indicate a change in a user's statistics, if we've requested to watch the user in [AddUser](#server-code-5) previously. A user's stats can also be requested by sending a [GetUserStats](#server-code-36) message to the server, but [AddUser](#server-code-5) should be used instead.
+The server sends this to indicate a change in a user's statistics, if we've requested to watch the user in [WatchUser](#server-code-5) previously. A user's stats can also be requested by sending a [GetUserStats](#server-code-36) message to the server, but [WatchUser](#server-code-5) should be used instead.
 
 ### Data Order
 
@@ -1419,7 +1419,7 @@ We send this after a finished upload to let the server update the speed statisti
 
 ### UserPrivileged
 
-**DEPRECATED, use [AddUser](#server-code-5) and [GetUserStatus](#server-code-7) server messages**
+**DEPRECATED, use [WatchUser](#server-code-5) and [GetUserStatus](#server-code-7) server messages**
 
 We ask the server whether a user is privileged or not.
 
@@ -1756,7 +1756,7 @@ Sends a broadcast private message to the given list of online users.
 
 ## Server Code 150
 
-### JoinPublicRoom
+### JoinGlobalRoom
 
 **DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
@@ -1771,7 +1771,7 @@ We ask the server to send us messages from all public rooms, also known as publi
 
 ## Server Code 151
 
-### LeavePublicRoom
+### LeaveGlobalRoom
 
 **DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
@@ -1786,7 +1786,7 @@ We ask the server to stop sending us messages from all public rooms, also known 
 
 ## Server Code 152
 
-### PublicRoomMessage
+### GlobalRoomMessage
 
 **DEPRECATED, used in Soulseek NS but not SoulseekQt**
 

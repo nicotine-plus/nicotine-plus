@@ -46,7 +46,8 @@ class PrivateChat:
             ("server-login", self._server_login),
             ("server-disconnect", self._server_disconnect),
             ("start", self._start),
-            ("set-away-mode", self._set_away_mode)
+            ("set-away-mode", self._set_away_mode),
+            ("user-status", self._user_status)
         ):
             events.connect(event_name, callback)
 
@@ -197,6 +198,12 @@ class PrivateChat:
             msg_obj.user = user
             events.emit("message-user", msg_obj, queued_message=True)
 
+    def _user_status(self, msg):
+        """ Server code: 7 """
+
+        if msg.status == UserStatus.OFFLINE:
+            self.private_message_queue.pop(msg.user, None)
+
     def _message_user(self, msg, queued_message=False):
         """ Server code: 22 """
 
@@ -219,8 +226,7 @@ class PrivateChat:
             user_address = core.user_addresses.get(user)
 
             if user_address is not None:
-                ip_address, _port = user_address
-                if core.network_filter.is_ip_ignored(ip_address):
+                if core.network_filter.is_user_ip_ignored(user):
                     msg.user = None
                     return
 

@@ -31,7 +31,6 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
-from pynicotine.scheduler import scheduler
 from pynicotine.slskmessages import increment_token
 from pynicotine.utils import TRANSLATE_PUNCTUATION
 
@@ -51,11 +50,11 @@ class Search:
             self.searches[self.token] = {"id": self.token, "term": term, "mode": "wishlist", "ignore": True}
 
         for event_name, callback in (
-            ("distributed-search-request", self._distrib_search),
+            ("file-search-request-distributed", self._file_search_request_distributed),
+            ("file-search-request-server", self._file_search_request_server),
             ("file-search-response", self._file_search_response),
             ("quit", self._quit),
             ("server-disconnect", self._server_disconnect),
-            ("server-search-request", self._search_request),
             ("set-wishlist-interval", self._set_wishlist_interval)
         ):
             events.connect(event_name, callback)
@@ -64,7 +63,7 @@ class Search:
         self.searches.clear()
 
     def _server_disconnect(self, _msg):
-        scheduler.cancel(self._wishlist_timer_id)
+        events.cancel_scheduled(self._wishlist_timer_id)
         self.wishlist_interval = 0
 
     def request_folder_download(self, user, folder, visible_files):
@@ -162,17 +161,17 @@ class Search:
 
         # Get excluded words (starting with "-")
         search_term_words = search_term.split()
-        search_term_words_special = [p for p in search_term_words if p.startswith(('-', '*')) and len(p) > 1]
+        search_term_words_special = [p for p in search_term_words if p.startswith(("-", "*")) and len(p) > 1]
 
         # Remove words starting with "-", results containing these are excluded by us later
-        search_term_without_special = ' '.join(p for p in search_term_words if p not in search_term_words_special)
+        search_term_without_special = " ".join(p for p in search_term_words if p not in search_term_words_special)
 
         if config.sections["searches"]["remove_special_chars"]:
             """
             Remove special characters from search term
             SoulseekQt doesn't seem to send search results if special characters are included (July 7, 2020)
             """
-            stripped_search_term = ' '.join(search_term_without_special.translate(TRANSLATE_PUNCTUATION).split())
+            stripped_search_term = " ".join(search_term_without_special.translate(TRANSLATE_PUNCTUATION).split())
 
             # Only modify search term if string also contains non-special characters
             if stripped_search_term:
@@ -255,7 +254,7 @@ class Search:
         if not text:
             return
 
-        log.add_search(_("Searching for wishlist item \"%s\""), text)
+        log.add_search(_('Searching for wishlist item "%s"'), text)
 
         self.add_allowed_token(token)
         core.queue.append(slskmessages.WishlistSearch(token, text))
@@ -317,8 +316,8 @@ class Search:
         if self.wishlist_interval > 0:
             log.add_search(_("Wishlist wait period set to %s seconds"), self.wishlist_interval)
 
-            scheduler.cancel(self._wishlist_timer_id)
-            self._wishlist_timer_id = scheduler.add(
+            events.cancel_scheduled(self._wishlist_timer_id)
+            self._wishlist_timer_id = events.schedule(
                 delay=self.wishlist_interval, callback=self.do_wishlist_search_interval, repeat=True)
         else:
             log.add(_("Server does not permit performing wishlist searches at this time"))
@@ -342,16 +341,16 @@ class Search:
             msg.token = None
             return
 
-        if core.network_filter.is_ip_ignored(ip_address):
+        if core.network_filter.is_user_ip_ignored(username, ip_address):
             msg.token = None
 
-    def _search_request(self, msg):
+    def _file_search_request_server(self, msg):
         """ Server code: 26, 42 and 120 """
 
         self.process_search_request(msg.searchterm, msg.user, msg.token, direct=True)
         core.pluginhandler.search_request_notification(msg.searchterm, msg.user, msg.token)
 
-    def _distrib_search(self, msg):
+    def _file_search_request_distributed(self, msg):
         """ Distrib code: 3 """
 
         self.process_search_request(msg.searchterm, msg.user, msg.token, direct=False)
@@ -459,16 +458,16 @@ class Search:
         excluded_words = []
         partial_words = []
 
-        if '-' in searchterm or '*' in searchterm:
+        if "-" in searchterm or "*" in searchterm:
             for word in searchterm.split():
                 if len(word) < 1:
                     continue
 
-                if word.startswith('-'):
+                if word.startswith("-"):
                     for subword in word.translate(TRANSLATE_PUNCTUATION).split():
                         excluded_words.append(subword)
 
-                elif word.startswith('*'):
+                elif word.startswith("*"):
                     for subword in word.translate(TRANSLATE_PUNCTUATION).split():
                         partial_words.append(subword)
 
@@ -480,7 +479,7 @@ class Search:
             # Don't send search response if search term contains too few characters
             return
 
-        checkuser, _reason = core.network_filter.check_user(user, None)
+        checkuser, _reason = core.network_filter.check_user(user)
 
         if not checkuser:
             return
@@ -517,7 +516,7 @@ class Search:
                 fileinfos.append(fileinfo)
 
         if numresults != len(fileinfos):
-            log.add_debug(("Error: File index inconsistency while responding to search request \"%(query)s\". "
+            log.add_debug(('Error: File index inconsistency while responding to search request "%(query)s". '
                            "Expected %(expected_num)i results, but found %(total_num)i results in database."), {
                 "query": searchterm_old,
                 "expected_num": numresults,
@@ -541,8 +540,8 @@ class Search:
 
         core.send_message_to_peer(user, message)
 
-        log.add_search(_("User %(user)s is searching for \"%(query)s\", found %(num)i results"), {
-            'user': user,
-            'query': searchterm_old,
-            'num': numresults
+        log.add_search(_('User %(user)s is searching for "%(query)s", found %(num)i results'), {
+            "user": user,
+            "query": searchterm_old,
+            "num": numresults
         })
