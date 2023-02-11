@@ -17,6 +17,7 @@ If you are using any of the operating systems listed, you can install Nicotine+ 
 | [Fedora](https://packages.fedoraproject.org/pkgs/nicotine+/nicotine+/)                  | `nicotine+`         |
 | [Gentoo](https://packages.gentoo.org/packages/net-p2p/nicotine+)                        | `net-p2p/nicotine+` |
 | [Manjaro](https://software.manjaro.org/package/nicotine+)                               | `nicotine+`         |
+| [MX Linux](https://mxrepo.com)                                                          | `nicotine`          |
 | [NixOS](https://search.nixos.org/packages?show=nicotine-plus)                           | `nicotine-plus`     |
 | [OpenBSD](https://openports.pl/path/net/nicotine-plus)                                  | `net/nicotine-plus` |
 | [Parabola](https://www.parabola.nu/packages/community/x86_64/nicotine+/)                | `nicotine+`         |
