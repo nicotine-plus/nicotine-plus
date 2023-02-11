@@ -50,11 +50,12 @@ class TreeView:
         self.widget = Gtk.TreeView(visible=True)
         self.widget_name = name
         self.columns = columns
-        self.column_numbers = None
         self.model = None
-        self.iterator_key_column = 0
         self.iterators = {}
+        self._iterator_key_column = 0
         self._iter_keys = {}
+        self._column_ids = {}
+        self._column_numbers = None
 
         parent.set_property("child", self.widget)
         self.initialise_columns(columns)
@@ -178,7 +179,7 @@ class TreeView:
         default_sort_type = None
         data_types = []
 
-        for column_data in columns:
+        for column_index, (column_id, column_data) in enumerate(columns.items()):
             data_type = column_data.get("data_type")
 
             if not data_type:
@@ -194,9 +195,10 @@ class TreeView:
                     data_type = str
 
             data_types.append(data_type)
+            self._column_ids[column_id] = column_index
 
         self.model = Gtk.ListStore(*data_types)
-        self.column_numbers = list(range(self.model.get_n_columns()))
+        self._column_numbers = list(self._column_ids.values())
 
         progress_padding = 1
         height_padding = 4
@@ -206,8 +208,7 @@ class TreeView:
         num_cols = len(columns)
         column_config = None
 
-        for column_index, column_data in enumerate(columns):
-            column_id = column_data["column_id"]
+        for column_index, (column_id, column_data) in enumerate(columns.items()):
             title = column_data.get("title")
 
             if title is None:
@@ -215,7 +216,7 @@ class TreeView:
                 break
 
             column_type = column_data["column_type"]
-            sort_column = column_data["sort_column"]
+            sort_column = column_data.get("sort_column", column_id)
             iterator_key = column_data.get("iterator_key")
             width = column_data.get("width")
             sort_type = column_data.get("default_sort_column")
@@ -225,7 +226,7 @@ class TreeView:
                 default_sort_type = Gtk.SortType.DESCENDING if sort_type == "descending" else Gtk.SortType.ASCENDING
 
             if iterator_key:
-                self.iterator_key_column = column_index
+                self._iterator_key_column = column_index
 
             if self.widget_name:
                 try:
@@ -311,7 +312,7 @@ class TreeView:
             if column_data.get("expand_column"):
                 column.set_expand(True)
 
-            column.set_sort_column_id(sort_column)
+            column.set_sort_column_id(self._column_ids[sort_column])
             cols[column_id] = column
 
         self._append_columns(cols, column_config)
@@ -321,7 +322,7 @@ class TreeView:
         self.widget.emit("columns-changed")
 
         if default_sort_column is not None:
-            self.model.set_sort_column_id(default_sort_column, default_sort_type)
+            self.model.set_sort_column_id(self._column_ids[default_sort_column], default_sort_type)
 
         self.widget.set_model(self.model)
 
@@ -369,9 +370,9 @@ class TreeView:
     def add_row(self, values, select_row=True, prepend=False):
 
         position = 0 if prepend else -1
-        key = values[self.iterator_key_column]
+        key = values[self._iterator_key_column]
 
-        self.iterators[key] = iterator = self.model.insert_with_valuesv(position, self.column_numbers, values)
+        self.iterators[key] = iterator = self.model.insert_with_valuesv(position, self._column_numbers, values)
         self._iter_keys[iterator.user_data] = key
 
         if select_row:
@@ -400,11 +401,11 @@ class TreeView:
 
         return iterators
 
-    def get_row_value(self, iterator, column_index):
-        return self.model.get_value(iterator, column_index)
+    def get_row_value(self, iterator, column_id):
+        return self.model.get_value(iterator, self._column_ids[column_id])
 
-    def set_row_value(self, iterator, column_index, value):
-        return self.model.set_value(iterator, column_index, value)
+    def set_row_value(self, iterator, column_id, value):
+        return self.model.set_value(iterator, self._column_ids[column_id], value)
 
     def select_row(self, iterator):
         self.widget.set_cursor(self.model.get_path(iterator))
@@ -431,7 +432,7 @@ class TreeView:
     def set_search_entry(self, entry):
         self.widget.set_search_entry(entry)
 
-    def show_tooltip(self, pos_x, pos_y, tooltip, sourcecolumn, column_titles, text_function):
+    def show_tooltip(self, pos_x, pos_y, tooltip, column_id, column_titles, text_function):
 
         try:
             bin_x, bin_y = self.widget.convert_widget_to_bin_window_coords(pos_x, pos_y)
@@ -444,7 +445,7 @@ class TreeView:
             return False
 
         iterator = self.model.get_iter(path)
-        column_value = self.model.get_value(iterator, sourcecolumn)
+        column_value = self.get_row_value(iterator, column_id)
 
         # Update tooltip position
         self.widget.set_tooltip_cell(tooltip, path, column)
@@ -467,8 +468,8 @@ class TreeView:
 
         return _("Offline")
 
-    def show_user_status_tooltip(self, pos_x, pos_y, tooltip, column):
-        return self.show_tooltip(pos_x, pos_y, tooltip, column, ("status",), self.get_user_status_tooltip_text)
+    def show_user_status_tooltip(self, pos_x, pos_y, tooltip, column_id):
+        return self.show_tooltip(pos_x, pos_y, tooltip, column_id, ("status",), self.get_user_status_tooltip_text)
 
     @staticmethod
     def get_country_tooltip_text(country_code):
@@ -479,8 +480,8 @@ class TreeView:
 
         return _("Earth")
 
-    def show_country_tooltip(self, pos_x, pos_y, tooltip, column):
-        return self.show_tooltip(pos_x, pos_y, tooltip, column, ("country",), get_country_tooltip_text)
+    def show_country_tooltip(self, pos_x, pos_y, tooltip, column_id):
+        return self.show_tooltip(pos_x, pos_y, tooltip, column_id, ("country",), get_country_tooltip_text)
 
     def on_toggle(self, _widget, path, callback):
         callback(self, self.model.get_iter(path))
@@ -497,11 +498,11 @@ class TreeView:
         if not search_term:
             return True
 
-        for i in range(self.widget.get_n_columns()):
-            if model.get_column_type(i) != GObject.TYPE_STRING:
+        for column_index in self._column_ids.values():
+            if model.get_column_type(column_index) != GObject.TYPE_STRING:
                 continue
 
-            column_value = model.get_value(iterator, i).lower()
+            column_value = model.get_value(iterator, column_index).lower()
 
             if column_value.startswith("nplus-"):
                 # Ignore icon name columns

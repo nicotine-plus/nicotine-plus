@@ -1349,7 +1349,7 @@ class Search:
                 # contents response later
                 destination = core.transfers.get_folder_destination(user, folder, remove_destination=False)
 
-                (_counter, user, _flag, _h_speed, _h_queue, _directory, _filename,
+                (_counter, user, _flag, _h_speed, _h_queue, _directory, _file_type, _filename,
                     _h_size, h_bitrate, h_length, _bitrate, fullpath, _country_code, size, _speed,
                     _queue, _length, _has_free_slots) = row
                 visible_files.append(
