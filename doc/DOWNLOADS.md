@@ -11,18 +11,18 @@ If you want to download the latest unstable build and help test Nicotine+, see [
 
 If you are using any of the operating systems listed, you can install Nicotine+ from the package manager.
 
-| Operating System | Package Name      |
-|------------------|-------------------|
-| Arch Linux       | nicotine+         |
-| Fedora           | nicotine+         |
-| Gentoo           | net-p2p/nicotine+ |
-| Manjaro          | nicotine+         |
-| NixOS            | nicotine-plus     |
-| OpenBSD          | net/nicotine-plus |
-| Parabola         | nicotine+         |
-| Solus            | nicotine-plus     |
-| T2 SDE           | nicotine-plus     |
-| Void Linux       | nicotine+         |
+| Operating System                                                                        | Package Name        |
+|-----------------------------------------------------------------------------------------|---------------------|
+| [Arch Linux](https://archlinux.org/packages/community/any/nicotine+/)                   | `nicotine+`         |
+| [Fedora](https://packages.fedoraproject.org/pkgs/nicotine+/nicotine+/)                  | `nicotine+`         |
+| [Gentoo](https://packages.gentoo.org/packages/net-p2p/nicotine+)                        | `net-p2p/nicotine+` |
+| [Manjaro](https://software.manjaro.org/package/nicotine+)                               | `nicotine+`         |
+| [NixOS](https://search.nixos.org/packages?show=nicotine-plus)                           | `nicotine-plus`     |
+| [OpenBSD](https://openports.pl/path/net/nicotine-plus)                                  | `net/nicotine-plus` |
+| [Parabola](https://www.parabola.nu/packages/community/x86_64/nicotine+/)                | `nicotine+`         |
+| [Solus](https://dev.getsol.us/source/nicotine-plus/)                                    | `nicotine-plus`     |
+| [T2 SDE](https://t2sde.org/packages/nicotine-plus)                                      | `nicotine-plus`     |
+| [Void Linux](https://github.com/void-linux/void-packages/tree/master/srcpkgs/nicotine+) | `nicotine+`         |
 
 ### Ubuntu/Debian
 
@@ -84,10 +84,10 @@ Portable packages are also available. They can be run from any folder and do not
 
 If you are using any of the package managers listed, you can install Nicotine+ using them.
 
-| Package Manager                      | Package Name         |
-|--------------------------------------|----------------------|
-| [Chocolatey](https://chocolatey.org) | nicotine-plus        |
-| [Scoop](https://scoop.sh)            | extras/nicotine-plus |
+| Package Manager                                                                         | Package Name           |
+|-----------------------------------------------------------------------------------------|------------------------|
+| [Chocolatey](https://community.chocolatey.org/packages/nicotine-plus)                   | `nicotine-plus`        |
+| [Scoop](https://github.com/ScoopInstaller/Extras/blob/master/bucket/nicotine-plus.json) | `extras/nicotine-plus` |
 
 
 ## macOS
