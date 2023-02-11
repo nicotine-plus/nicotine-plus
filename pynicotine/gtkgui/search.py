@@ -372,7 +372,7 @@ class Search:
             self.window, "file_search", self.tree_view,
             ["id", _("ID"), 50, "number", has_free_slots_col],
             ["user", _("User"), 200, "text", has_free_slots_col],
-            ["country", _("Country"), 25, "icon", None],
+            ["country", _("Country"), 30, "icon", None],
             ["speed", _("Speed"), 120, "number", has_free_slots_col],
             ["in_queue", _("In Queue"), 110, "number", has_free_slots_col],
             ["folder", _("Folder"), 400, "text", has_free_slots_col],

@@ -61,7 +61,7 @@ class UserList:
                 # Visible columns
                 {"column_id": "status", "column_type": "icon", "title": _("Status"), "width": 25,
                  "sort_column": 10, "hide_header": True},
-                {"column_id": "country", "column_type": "icon", "title": _("Country"), "width": 25,
+                {"column_id": "country", "column_type": "icon", "title": _("Country"), "width": 30,
                  "sort_column": 14, "hide_header": True},
                 {"column_id": "user", "column_type": "text", "title": _("User"), "width": 250,
                  "sort_column": 2, "default_sort_column": "ascending", "iterator_key": True},

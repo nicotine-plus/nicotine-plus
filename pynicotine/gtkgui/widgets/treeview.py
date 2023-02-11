@@ -200,7 +200,7 @@ class TreeView:
 
         progress_padding = 1
         height_padding = 4
-        width_padding = 8 if GTK_API_VERSION >= 4 else 10
+        width_padding = 10 if GTK_API_VERSION >= 4 else 12
 
         cols = {}
         num_cols = len(columns)
@@ -233,11 +233,12 @@ class TreeView:
                 except KeyError:
                     column_config = config.sections["columns"][self.widget_name]
 
-                try:
-                    width = column_config[column_id]["width"]
-                except Exception:
-                    # Invalid value
-                    pass
+                if column_type != "icon":
+                    try:
+                        width = column_config[column_id]["width"]
+                    except Exception:
+                        # Invalid value
+                        pass
 
             if not isinstance(width, int):
                 width = None
@@ -266,7 +267,7 @@ class TreeView:
                 column = Gtk.TreeViewColumn(column_id, renderer, active=column_index)
 
             elif column_type == "icon":
-                renderer = Gtk.CellRendererPixbuf()
+                renderer = Gtk.CellRendererPixbuf(xalign=1.0)
 
                 if column_id == "country":
                     if GTK_API_VERSION >= 4:
@@ -276,12 +277,6 @@ class TreeView:
                         # Use the same size as the original icon
                         renderer.set_property("stock-size", 0)
 
-                if column_id == "file_type":
-                    renderer.set_property("xalign", 1.0)
-
-                    if GTK_API_VERSION == 3:
-                        renderer.set_property("xpad", 2)
-
                 column = Gtk.TreeViewColumn(column_id, renderer, icon_name=column_index)
 
             column_header = column.get_button()
@@ -290,7 +285,7 @@ class TreeView:
             column.set_sizing(Gtk.TreeViewColumnSizing.FIXED)
 
             if width is not None:
-                column.set_resizable(True)
+                column.set_resizable(column_type != "icon")
 
                 if width > 0:
                     column.set_fixed_width(width)
@@ -300,7 +295,7 @@ class TreeView:
                 renderer.set_property("mode", Gtk.CellRendererMode.ACTIVATABLE)
 
             column.set_reorderable(True)
-            column.set_min_width(20)
+            column.set_min_width(24)
 
             label = Gtk.Label(label=title, margin_start=5, margin_end=5, mnemonic_widget=column_header, visible=True)
             column.set_widget(label)
@@ -618,7 +613,7 @@ def initialise_columns(window, treeview_name, treeview, *args):
 
     progress_padding = 1
     height_padding = 4
-    width_padding = 8 if GTK_API_VERSION >= 4 else 10
+    width_padding = 10 if GTK_API_VERSION >= 4 else 12
 
     for column_index, (column_id, title, width, column_type, extra) in enumerate(args):
         if treeview_name:
@@ -627,11 +622,12 @@ def initialise_columns(window, treeview_name, treeview, *args):
             except KeyError:
                 column_config = config.sections["columns"][treeview_name]
 
-            try:
-                width = column_config[column_id]["width"]
-            except Exception:
-                # Invalid value
-                pass
+            if column_type != "icon":
+                try:
+                    width = column_config[column_id]["width"]
+                except Exception:
+                    # Invalid value
+                    pass
 
         if not isinstance(width, int):
             width = 0
@@ -658,7 +654,10 @@ def initialise_columns(window, treeview_name, treeview, *args):
             column = Gtk.TreeViewColumn(column_id, renderer, active=column_index)
 
         elif column_type == "icon":
-            renderer = Gtk.CellRendererPixbuf()
+            renderer = Gtk.CellRendererPixbuf(xalign=1.0)
+
+            if GTK_API_VERSION == 3:
+                renderer.set_property("xpad", 2)
 
             if column_id == "country":
                 if GTK_API_VERSION >= 4:
@@ -667,12 +666,6 @@ def initialise_columns(window, treeview_name, treeview, *args):
                 else:
                     # Use the same size as the original icon
                     renderer.set_property("stock-size", 0)
-
-            if column_id == "file_type":
-                renderer.set_property("xalign", 1.0)
-
-                if GTK_API_VERSION == 3:
-                    renderer.set_property("xpad", 2)
 
             column = Gtk.TreeViewColumn(column_id, renderer, icon_name=column_index)
 
@@ -685,8 +678,7 @@ def initialise_columns(window, treeview_name, treeview, *args):
             column.set_resizable(False)
             column.set_expand(True)
         else:
-            column.set_resizable(True)
-            column.set_min_width(0)
+            column.set_resizable(column_type != "icon")
 
             if width > 0:
                 column.set_fixed_width(width)
@@ -704,7 +696,7 @@ def initialise_columns(window, treeview_name, treeview, *args):
             renderer.set_property("mode", Gtk.CellRendererMode.ACTIVATABLE)
 
         column.set_reorderable(True)
-        column.set_min_width(20)
+        column.set_min_width(24)
 
         label = Gtk.Label(label=title, margin_start=5, margin_end=5, mnemonic_widget=column_header, visible=True)
         column.set_widget(label)
