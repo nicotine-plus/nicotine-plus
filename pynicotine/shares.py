@@ -83,15 +83,14 @@ else:
 
 class FileTypes:
     ARCHIVE = {
-        "7z", "apk", "appimage", "br", "bz2", "deb", "dmg", "flatpak", "gz", "iso", "jar", "lz", "lzma", "msi", "pkg",
-        "rar", "rpm", "tar", "tbz", "tbz2", "tgz", "xz", "zip", "zst"
+        "7z", "br", "bz2", "gz", "iso", "lz", "lzma", "rar", "tar", "tbz", "tbz2", "tgz", "xz", "zip", "zst"
     }
     AUDIO = {
         "aac", "ac3", "afc", "aifc", "aif", "aiff", "ape", "dff", "dts", "flac", "it", "m4a", "mid", "midi", "mod",
         "mp1", "mp2", "mp3", "oga", "ogg", "opus", "s3m", "wav", "wma", "wv", "xm"
     }
     EXECUTABLE = {
-        "bat", "exe", "sh"
+        "apk", "appimage", "bat", "deb", "dmg", "flatpak", "exe", "jar", "msi", "pkg", "rpm", "sh"
     }
     IMAGE = {
         "apng", "avif", "bmp", "gif", "heic", "heif", "ico", "jfif", "jp2", "jpg", "jpe", "jpeg", "png", "psd",

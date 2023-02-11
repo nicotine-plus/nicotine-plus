@@ -56,6 +56,7 @@ from pynicotine.gtkgui.widgets.treeview import show_file_path_tooltip
 from pynicotine.gtkgui.widgets.treeview import show_file_type_tooltip
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
+from pynicotine.shares import FileTypes
 from pynicotine.slskmessages import SEARCH_TOKENS_ALLOWED
 from pynicotine.slskmessages import FileListMessage
 from pynicotine.utils import factorize
@@ -290,10 +291,18 @@ class Searches(IconNotebook):
 
 class Search:
 
+    FILTER_GENERIC_FILE_TYPES = (
+        ("audio", FileTypes.AUDIO),
+        ("executable", FileTypes.EXECUTABLE),
+        ("image", FileTypes.IMAGE),
+        ("video", FileTypes.VIDEO),
+        ("text", FileTypes.DOCUMENT_TEXT),
+        ("archive", FileTypes.ARCHIVE)
+    )
     FILTER_PRESETS = {
         "filterbr": ("0", "128", "160", "192", "256", "320"),
         "filtersize": (">10MiB", "<10MiB", "<5MiB", "<1MiB", ">0"),
-        "filtertype": ("flac|wav|ape|aiff|wv|cue", "mp3|m4a|aac|ogg|opus|wma", "!mp3")
+        "filtertype": ("audio", "image", "video", "text", "archive", "!executable", "audio|image|text")
     }
 
     def __init__(self, searches, text, token, mode, mode_label, show_page):
@@ -943,6 +952,7 @@ class Search:
     def check_file_type(result_filter, value):
 
         allowed = False
+        found_inclusive = False
 
         for ext in result_filter:
             exclude_ext = None
@@ -956,14 +966,17 @@ class Search:
             elif not ext.startswith("."):
                 ext = "." + ext
 
-            if not ext.startswith("!") and value.endswith(ext):
-                allowed = True
-
-            elif ext.startswith("!") and not value.endswith(exclude_ext):
-                allowed = True
-
-            elif ext.startswith("!") and value.endswith(exclude_ext):
+            if ext.startswith("!") and value.endswith(exclude_ext):
                 return False
+
+            if not ext.startswith("!"):
+                found_inclusive = True
+
+                if value.endswith(ext):
+                    allowed = True
+
+        if not found_inclusive:
+            allowed = True
 
         return allowed
 
@@ -1546,6 +1559,20 @@ class Search:
 
             self.push_history(filter_id, value)
             self.active_filter_count += 1
+
+        # Replace generic file type filters with real file extensions
+        file_type_filters = filters["filtertype"]
+
+        for filter_name, file_extensions in self.FILTER_GENERIC_FILE_TYPES:
+            excluded_filter_name = f"!{filter_name}"
+
+            if filter_name in file_type_filters:
+                file_type_filters.remove(filter_name)
+                file_type_filters += list(file_extensions)
+
+            elif excluded_filter_name in file_type_filters:
+                file_type_filters.remove(excluded_filter_name)
+                file_type_filters += ["!" + x for x in file_extensions]
 
         # Apply the new filters
         self.filters = filters
