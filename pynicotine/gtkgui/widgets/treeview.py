@@ -34,6 +34,7 @@ from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
+from pynicotine.gtkgui.widgets.theme import FILE_TYPE_ICON_LABELS
 from pynicotine.gtkgui.widgets.theme import add_css_class
 
 
@@ -199,7 +200,7 @@ class TreeView:
 
         progress_padding = 1
         height_padding = 4
-        width_padding = 10
+        width_padding = 10 if GTK_API_VERSION >= 4 else 12
 
         cols = {}
         num_cols = len(columns)
@@ -232,16 +233,17 @@ class TreeView:
                 except KeyError:
                     column_config = config.sections["columns"][self.widget_name]
 
-                try:
-                    width = column_config[column_id]["width"]
-                except Exception:
-                    # Invalid value
-                    pass
+                if column_type != "icon":
+                    try:
+                        width = column_config[column_id]["width"]
+                    except Exception:
+                        # Invalid value
+                        pass
 
             if not isinstance(width, int):
                 width = None
 
-            xalign = 0
+            xalign = 0.0
 
             if column_type == "text":
                 renderer = Gtk.CellRendererText(single_paragraph_mode=True, xpad=width_padding, ypad=height_padding)
@@ -265,7 +267,7 @@ class TreeView:
                 column = Gtk.TreeViewColumn(column_id, renderer, active=column_index)
 
             elif column_type == "icon":
-                renderer = Gtk.CellRendererPixbuf()
+                renderer = Gtk.CellRendererPixbuf(xalign=1.0)
 
                 if column_id == "country":
                     if GTK_API_VERSION >= 4:
@@ -283,7 +285,7 @@ class TreeView:
             column.set_sizing(Gtk.TreeViewColumnSizing.FIXED)
 
             if width is not None:
-                column.set_resizable(True)
+                column.set_resizable(column_type != "icon")
 
                 if width > 0:
                     column.set_fixed_width(width)
@@ -293,7 +295,7 @@ class TreeView:
                 renderer.set_property("mode", Gtk.CellRendererMode.ACTIVATABLE)
 
             column.set_reorderable(True)
-            column.set_min_width(20)
+            column.set_min_width(24)
 
             label = Gtk.Label(label=title, margin_start=5, margin_end=5, mnemonic_widget=column_header, visible=True)
             column.set_widget(label)
@@ -611,7 +613,7 @@ def initialise_columns(window, treeview_name, treeview, *args):
 
     progress_padding = 1
     height_padding = 4
-    width_padding = 10
+    width_padding = 10 if GTK_API_VERSION >= 4 else 12
 
     for column_index, (column_id, title, width, column_type, extra) in enumerate(args):
         if treeview_name:
@@ -620,16 +622,17 @@ def initialise_columns(window, treeview_name, treeview, *args):
             except KeyError:
                 column_config = config.sections["columns"][treeview_name]
 
-            try:
-                width = column_config[column_id]["width"]
-            except Exception:
-                # Invalid value
-                pass
+            if column_type != "icon":
+                try:
+                    width = column_config[column_id]["width"]
+                except Exception:
+                    # Invalid value
+                    pass
 
         if not isinstance(width, int):
             width = 0
 
-        xalign = 0
+        xalign = 0.0
 
         if column_type == "text":
             renderer = Gtk.CellRendererText(single_paragraph_mode=True, xpad=width_padding, ypad=height_padding)
@@ -651,7 +654,10 @@ def initialise_columns(window, treeview_name, treeview, *args):
             column = Gtk.TreeViewColumn(column_id, renderer, active=column_index)
 
         elif column_type == "icon":
-            renderer = Gtk.CellRendererPixbuf()
+            renderer = Gtk.CellRendererPixbuf(xalign=1.0)
+
+            if GTK_API_VERSION == 3:
+                renderer.set_property("xpad", 2)
 
             if column_id == "country":
                 if GTK_API_VERSION >= 4:
@@ -672,14 +678,13 @@ def initialise_columns(window, treeview_name, treeview, *args):
             column.set_resizable(False)
             column.set_expand(True)
         else:
-            column.set_resizable(True)
-            column.set_min_width(0)
+            column.set_resizable(column_type != "icon")
 
             if width > 0:
                 column.set_fixed_width(width)
 
         if isinstance(extra, int):
-            column.add_attribute(renderer, "foreground", extra)
+            column.add_attribute(renderer, "sensitive", extra)
 
         elif isinstance(extra, tuple):
             weight, underline = extra
@@ -691,7 +696,7 @@ def initialise_columns(window, treeview_name, treeview, *args):
             renderer.set_property("mode", Gtk.CellRendererMode.ACTIVATABLE)
 
         column.set_reorderable(True)
-        column.set_min_width(20)
+        column.set_min_width(24)
 
         label = Gtk.Label(label=title, margin_start=5, margin_end=5, mnemonic_widget=column_header, visible=True)
         column.set_widget(label)
@@ -947,6 +952,10 @@ def get_file_path_tooltip_text(column_value):
     return column_value
 
 
+def get_file_type_tooltip_text(column_value):
+    return FILE_TYPE_ICON_LABELS.get(column_value, _("Unknown"))
+
+
 def get_transfer_file_path_tooltip_text(column_value):
     return column_value.filename or column_value.path
 
@@ -973,6 +982,11 @@ def show_file_path_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn, transf
 
     return show_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn,
                         ("folder", "filename", "path"), func)
+
+
+def show_file_type_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn):
+    return show_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn,
+                        ("file_type"), get_file_type_tooltip_text)
 
 
 def show_user_status_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn):

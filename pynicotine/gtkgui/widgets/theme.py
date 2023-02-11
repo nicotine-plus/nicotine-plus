@@ -29,6 +29,7 @@ from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.application import GTK_GUI_DIR
 from pynicotine.logfacility import log
+from pynicotine.shares import FileTypes
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import encode_path
 
@@ -147,6 +148,11 @@ def set_global_css():
     scrollbar {
         /* Workaround for themes breaking scrollbar hitbox with margins */
         margin: 0;
+    }
+
+    .search-view treeview:disabled {
+        /* Search results with no free slots have no style by default */
+        color: unset;
     }
 
     /* Borders */
@@ -307,6 +313,15 @@ else:
     ICON_THEME = Gtk.IconTheme.get_default()  # pylint: disable=no-member
 
 CUSTOM_ICON_THEME_NAME = ".nicotine-icon-theme"
+FILE_TYPE_ICON_LABELS = {
+    "application-x-executable-symbolic": _("Executable"),
+    "audio-x-generic-symbolic": _("Audio"),
+    "image-x-generic-symbolic": _("Image"),
+    "package-x-generic-symbolic": _("Archive"),
+    "text-x-generic-symbolic": _("Miscellaneous"),
+    "video-x-generic-symbolic": _("Video"),
+    "x-office-document-symbolic": _("Document/Text")
+}
 USER_STATUS_ICON_NAMES = {
     UserStatus.ONLINE: "nplus-status-online",
     UserStatus.AWAY: "nplus-status-away",
@@ -448,6 +463,36 @@ def get_flag_icon_name(country_code):
     return f"nplus-flag-{country_code.lower()}"
 
 
+def get_file_type_icon_name(filename):
+
+    result = filename.rsplit(".", 1)
+
+    if len(result) < 2:
+        return "text-x-generic-symbolic"
+
+    extension = result[-1].lower()
+
+    if extension in FileTypes.AUDIO:
+        return "audio-x-generic-symbolic"
+
+    if extension in FileTypes.IMAGE:
+        return "image-x-generic-symbolic"
+
+    if extension in FileTypes.VIDEO:
+        return "video-x-generic-symbolic"
+
+    if extension in FileTypes.ARCHIVE:
+        return "package-x-generic-symbolic"
+
+    if extension in FileTypes.DOCUMENT_TEXT:
+        return "x-office-document-symbolic"
+
+    if extension in FileTypes.EXECUTABLE:
+        return "application-x-executable-symbolic"
+
+    return "text-x-generic-symbolic"
+
+
 def on_icon_theme_changed(*_args):
     load_custom_icons()
 
@@ -556,7 +601,8 @@ def _get_custom_color_css():
         (".notebook-tab-changed", config.sections["ui"]["tab_changed"]),
         (".notebook-tab-highlight", config.sections["ui"]["tab_hilite"]),
         ("entry", config.sections["ui"]["inputcolor"]),
-        ("treeview", treeview_text_color)
+        ("treeview", treeview_text_color),
+        (".search-view treeview:disabled", config.sections["ui"]["searchq"])
     ):
         if color:
             css.extend(

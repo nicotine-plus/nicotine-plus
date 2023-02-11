@@ -516,7 +516,7 @@ class ChatRoom:
         self.cols = cols = initialise_columns(
             self.window, ("chat_room", room), self.users_list_view,
             ["status", _("Status"), 25, "icon", None],
-            ["country", _("Country"), 25, "icon", None],
+            ["country", _("Country"), 30, "icon", None],
             ["user", _("User"), 155, "text", attribute_columns],
             ["speed", _("Speed"), 100, "number", None],
             ["files", _("Files"), -1, "number", None]
