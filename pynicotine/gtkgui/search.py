@@ -245,13 +245,9 @@ class Searches(IconNotebook):
     def clear_filter_history(self):
 
         # Clear filter history in config
-        config.sections["searches"]["filterin"] = []
-        config.sections["searches"]["filterout"] = []
-        config.sections["searches"]["filtertype"] = []
-        config.sections["searches"]["filtersize"] = []
-        config.sections["searches"]["filterbr"] = []
-        config.sections["searches"]["filterlength"] = []
-        config.sections["searches"]["filtercc"] = []
+        for filter_id in ("filterin", "filterout", "filtertype", "filtersize", "filterbr", "filterlength", "filtercc"):
+            config.sections["searches"][filter_id] = []
+
         config.write_configuration()
 
         # Update filters in search tabs
@@ -293,6 +289,12 @@ class Searches(IconNotebook):
 
 
 class Search:
+
+    FILTER_PRESETS = {
+        "filterbr": ("0", "128", "160", "192", "256", "320"),
+        "filtersize": (">10MiB", "<10MiB", "<5MiB", "<1MiB", ">0"),
+        "filtertype": ("flac|wav|ape|aiff|wv|cue", "mp3|m4a|aac|ogg|opus|wma", "!mp3")
+    }
 
     def __init__(self, searches, text, token, mode, mode_label, show_page):
 
@@ -542,19 +544,10 @@ class Search:
     def update_filter_comboboxes(self):
 
         for filter_id, widget in self.filter_comboboxes.items():
-            presets = None
-
-            if filter_id == "filterbr":
-                presets = ("0", "128", "160", "192", "256", "320")
-
-            elif filter_id == "filtersize":
-                presets = (">10MiB", "<10MiB", "<5MiB", "<1MiB", ">0")
-
-            elif filter_id == "filtertype":
-                presets = ("flac|wav|ape|aiff|wv|cue", "mp3|m4a|aac|ogg|opus|wma", "!mp3")
-
             widget.set_row_separator_func(lambda *_args: 0)
             widget.remove_all()
+
+            presets = self.FILTER_PRESETS.get(filter_id)
 
             if presets:
                 for value in presets:
