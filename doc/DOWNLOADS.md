@@ -4,7 +4,25 @@ Download the current stable version of Nicotine+ for your operating system. For 
 
 If you want to download the latest unstable build and help test Nicotine+, see [TESTING.md](TESTING.md).
 
+
 ## GNU/Linux, *BSD, Solaris
+
+### Operating System Packages
+
+If you are using any of the operating systems listed, you can install Nicotine+ from the package manager.
+
+| Operating System | Package Name      |
+|------------------|-------------------|
+| Arch Linux       | nicotine+         |
+| Fedora           | nicotine+         |
+| Gentoo           | net-p2p/nicotine+ |
+| Manjaro          | nicotine+         |
+| NixOS            | nicotine-plus     |
+| OpenBSD          | net/nicotine-plus |
+| Parabola         | nicotine+         |
+| Solus            | nicotine-plus     |
+| T2 SDE           | nicotine-plus     |
+| Void Linux       | nicotine+         |
 
 ### Ubuntu/Debian
 
@@ -22,41 +40,15 @@ If you prefer to install a .deb package directly, you can [download one here](ht
 
 Unlike the repository installation method, you need to download and install Nicotine+ from the link above every time you want to update to the latest version.
 
-### Fedora
+### Flatpak (GNU/Linux)
 
-To install Nicotine+ on Fedora, run the following:
-
-```sh
-sudo dnf install nicotine+
-```
-
-### Arch Linux/Manjaro/Parabola
-
-Nicotine+ is available in the community repository of Arch Linux, Manjaro and Parabola. To install, run the following:
-
-```sh
-sudo pacman -S nicotine+
-```
-
-### Void Linux
-
-To install Nicotine+ on Void Linux, run the following:
-
-```sh
-sudo xbps-install -S nicotine+
-```
-
-### Other Distributions
-
-#### Flatpak
-
-If your Linux distribution supports [Flatpak](https://www.flatpak.org/setup/), you can install the current stable version of Nicotine+ from Flathub.
+If your Linux distribution supports [Flatpak](https://www.flatpak.org/setup/), you can install Nicotine+ from Flathub.
 
 - [Download Nicotine+ from Flathub](https://flathub.org/apps/details/org.nicotine_plus.Nicotine)
 
-#### pip
+### PyPi (GNU/Linux, *BSD, Solaris)
 
-If Nicotine+ is not packaged for your system, the current stable version can be installed using [pip](https://pip.pypa.io/).
+If no package is available for your operating system, you can install Nicotine+ from [PyPi](https://pypi.org/project/nicotine-plus/).
 
 Ensure the [runtime dependencies](DEPENDENCIES.md) are installed, and run the following:
 
@@ -69,6 +61,7 @@ Keep in mind that Nicotine+ will not update automatically. When a new release is
 ```sh
 pip3 install --upgrade nicotine-plus
 ```
+
 
 ## Windows
 
@@ -114,6 +107,7 @@ In order to upgrade Nicotine+ to a newer release, run the following:
 ```sh
 choco upgrade nicotine-plus
 ```
+
 
 ## macOS
 
