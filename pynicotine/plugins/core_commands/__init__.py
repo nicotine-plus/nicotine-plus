@@ -75,6 +75,15 @@ class Plugin(BasePlugin):
                 "disable": ["cli"],
                 "group": _CommandGroup.CHAT,
             },
+            "ctcp": {
+                "callback": self.ctcp_command,
+                "callback_chatroom": self.ctcp_chatroom_command,
+                "description": _("Send client-to-client protocol query"),
+                "disable": ["cli"],
+                "group": _CommandGroup.CHAT,
+                "usage": ["<user>", "<query>"],
+                "usage_private_chat": ["<query>"]
+            },
             "me": {
                 "callback": self.me_command,
                 "description": _("Say something in the third-person"),
@@ -320,6 +329,17 @@ class Plugin(BasePlugin):
 
         elif user is not None:
             self.core.privatechat.clear_private_messages(user)
+
+    def ctcp_chatroom_command(self, args, **_unused):
+
+        args_split = args.split(maxsplit=1)
+        user, query = args_split[0], args_split[1]
+
+        self.ctcp_command(query, user)
+
+    def ctcp_command(self, args, user=None, **_unused):
+        ctcp_query = f"\x01{args.upper()}\x01"
+        self.send_private(user, ctcp_query)
 
     def me_command(self, args, **_unused):
         self.send_message("/me " + args)  # /me is sent as plain text

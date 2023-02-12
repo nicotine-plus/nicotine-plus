@@ -26,8 +26,6 @@ from pynicotine.slskmessages import UserStatus
 
 class PrivateChat:
 
-    CTCP_VERSION = "\x01VERSION\x01"
-
     def __init__(self):
 
         self.completion_list = []
@@ -157,8 +155,8 @@ class PrivateChat:
 
         user, message = user_text
 
-        if message == self.CTCP_VERSION:
-            ui_message = "CTCP VERSION"
+        if message.startswith("\x01") and message.endswith("\x01"):
+            ui_message = f"CTCP {message[1:-1]}"
         else:
             message = ui_message = self.auto_replace(message)
 
@@ -248,17 +246,21 @@ class PrivateChat:
 
         _user, msg.msg = user_text
         msg.msg = self.censor_chat(msg.msg)
+        ctcp_query = ctcp_reply = ""
 
-        # SEND CLIENT VERSION to user if the following string is sent
-        ctcpversion = False
-        if msg.msg == self.CTCP_VERSION:
-            ctcpversion = True
-            msg.msg = "CTCP VERSION"
+        if msg.msg.startswith("\x01") and msg.msg.endswith("\x01"):
+            ctcp_query = msg.msg[1:-1].strip()
+            msg.msg = f"CTCP {ctcp_query}"
+
+            if ctcp_query == "VERSION":
+                ctcp_reply = f"{ctcp_query}: {config.application_name} {config.version}"
+            else:
+                ctcp_reply = f"ERRMSG {ctcp_query}: Unknown query, available CTCP keywords are VERSION"
 
         core.pluginhandler.incoming_private_chat_notification(user, msg.msg)
 
-        if ctcpversion and not config.sections["server"]["ctcpmsgs"]:
-            self.send_message(user, f"{config.application_name} {config.version}")
+        if ctcp_reply and not config.sections["server"]["ctcpmsgs"]:
+            self.send_message(user, ctcp_reply)
 
         if not msg.newmessage:
             # Message was sent while offline, don't auto-reply
