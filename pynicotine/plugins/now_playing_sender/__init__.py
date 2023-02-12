@@ -16,8 +16,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import Gio
+import sys
+
 from pynicotine.pluginsystem import BasePlugin
+
+if sys.platform not in ("win32", "darwin"):
+    from gi.repository import Gio
 
 
 class Plugin(BasePlugin):
@@ -35,12 +39,28 @@ class Plugin(BasePlugin):
                 "type": "list string"
             }
         }
-
-        self.last_song_url = ""
+        self.commands = {
+            "now": {
+                "callback": self.now_playing_command,
+                "description": _("Announce the song playing now"),
+                "group": _("Now Playing"),
+                "usage": ["[local|broadcast]"],
+                "usage_cli": [""]
+            }
+        }
+        self.bus = None
+        self.signal_id = None
         self.stop = False
+        self.dbus_mpris_service = ""
+        self.last_song_url = ""
+
+    def loaded_notification(self):
+
+        if sys.platform in ("win32", "darwin"):
+            # MPRIS is not available on Windows and macOS
+            return
 
         self.bus = Gio.bus_get_sync(bus_type=Gio.BusType.SESSION)
-        self.signal_id = None
         self.dbus_mpris_service = "org.mpris.MediaPlayer2."
 
         self.add_mpris_signal_receiver()
@@ -49,7 +69,7 @@ class Plugin(BasePlugin):
         self.remove_mpris_signal_receiver()
 
     def add_mpris_signal_receiver(self):
-        """ Receive updates related to MPRIS """
+        """ Receive updates related to MPRIS (Linux only) """
 
         self.signal_id = self.bus.signal_subscribe(
             sender=None,
@@ -64,7 +84,8 @@ class Plugin(BasePlugin):
     def remove_mpris_signal_receiver(self):
         """ Stop receiving updates related to MPRIS """
 
-        self.bus.signal_unsubscribe(self.signal_id)
+        if self.bus and self.signal_id:
+            self.bus.signal_unsubscribe(self.signal_id)
 
     def get_current_mpris_player(self):
         """ Returns the MPRIS client currently selected in Now Playing """
@@ -105,15 +126,6 @@ class Plugin(BasePlugin):
 
         return song_url
 
-    def send_now_playing(self):
-        """ Broadcast Now Playing in selected rooms """
-
-        for room in self.settings["rooms"]:
-            playing = self.core.now_playing.get_np()
-
-            if playing:
-                self.send_public(room, playing)
-
     def song_change(self, _connection, _sender_name, _object_path, _interface_name, _signal_name, parameters):
 
         if self.config.sections["players"]["npplayer"] != "mpris":
@@ -140,8 +152,8 @@ class Plugin(BasePlugin):
             player = self.get_current_mpris_player()
             selected_client_song_url = self.get_current_mpris_song_url(player)
 
-        except Exception:
-            # Selected player is invalid
+        except Exception as error:
+            self.log(f"Selected MPRIS player is invalid. Error: {error}")
             return
 
         if selected_client_song_url != changed_song_url:
@@ -151,4 +163,30 @@ class Plugin(BasePlugin):
         # Keep track of which song is playing
         self.last_song_url = changed_song_url
 
-        self.send_now_playing()
+        self.send_now_playing(broadcast=True)
+
+    def send_now_playing(self, broadcast=False, local=False):
+        """ Broadcast Now Playing in selected rooms, or Send in current chat """
+
+        playing = self.core.now_playing.get_np()
+
+        if local or not playing:
+            # Display output locally
+            self.echo_message(playing)
+            return
+
+        if broadcast:
+            # Broadcast in selected rooms
+            for room in self.settings["rooms"]:
+                self.send_public(room, playing)
+        else:
+            # Send in current chat only
+            self.send_message(playing)
+
+    def now_playing_command(self, args, user=None, room=None):
+        """ /now command """
+
+        self.send_now_playing(
+            broadcast=(args == "broadcast"),
+            local=(args == "local" or (user is None and room is None))
+        )

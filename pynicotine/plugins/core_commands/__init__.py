@@ -66,7 +66,7 @@ class Plugin(BasePlugin):
                 "aliases": ["q", "exit"],
                 "callback": self.quit_command,
                 "description": _("Quit Nicotine+"),
-                "usage": ["[-force]"]
+                "usage": ["[-force]", ""]
             },
             "clear": {
                 "aliases": ["cl"],
@@ -74,6 +74,7 @@ class Plugin(BasePlugin):
                 "description": _("Clear chat window"),
                 "disable": ["cli"],
                 "group": _CommandGroup.CHAT,
+                "usage": [""]
             },
             "me": {
                 "callback": self.me_command,
@@ -205,7 +206,7 @@ class Plugin(BasePlugin):
                 "callback": self.rescan_command,
                 "description": _("Rescan shares"),
                 "group": _CommandGroup.SHARES,
-                "usage": ["[-force]"]
+                "usage": ["[-force]", ""]
             },
             "shares": {
                 "aliases": ["ls"],
