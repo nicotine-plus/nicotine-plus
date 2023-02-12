@@ -9,7 +9,7 @@ If you want to download the latest unstable build and help test Nicotine+, see [
 
 ### Operating System Packages
 
-If you are using any of the operating systems listed, you can install Nicotine+ from the package manager.
+If you are using any of the operating systems listed, you can install Nicotine+ using the package manager.
 
 | Operating System                                                                        | Package Name        |
 |-----------------------------------------------------------------------------------------|---------------------|
