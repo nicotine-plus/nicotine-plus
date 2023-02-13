@@ -305,6 +305,8 @@ class Search:
         "filtertype": ("audio", "image", "video", "text", "archive", "!executable", "audio image text"),
         "filterlength": (">12:00", ">8:00 <=12:00", ">5:00 <=8:00", "!0 <=5:00", "=0")
     }
+    FILTER_SPLIT_DIGIT_PATTERN = re.compile(r"(?:[|&\s])+(?<![<>!=]\s)")  # [pipe, ampersand, space]
+    FILTER_SPLIT_TEXT_PATTERN = re.compile(r"(?:[|&,;\s])+(?<![!]\s)")    # [pipe, ampersand, comma, semicolon, space]
 
     def __init__(self, searches, text, token, mode, mode_label, show_page):
 
@@ -1505,8 +1507,8 @@ class Search:
             except re.error:
                 filter_out = None
 
-        # Split at | pipes ampersands & space(s) but don't split operators spaced before digit
-        seperator_pattern = re.compile(r"(?:[|&\s])+(?<![<>!=]\s)")
+        # Split at | pipes ampersands & space(s) but don't split <>=! math operators spaced before digit condition
+        seperator_pattern = self.FILTER_SPLIT_DIGIT_PATTERN
 
         if filter_size:
             filter_size = seperator_pattern.split(filter_size)
@@ -1517,8 +1519,8 @@ class Search:
         if filter_length:
             filter_length = seperator_pattern.split(filter_length)
 
-        # Split at commas, in addition to pipes ampersands & spaces
-        seperator_pattern = re.compile(r"(?:[|&,;\s])+(?<![!]\s)")
+        # Split at commas, in addition to | pipes ampersands & space(s) but don't split ! not operator before condition
+        seperator_pattern = self.FILTER_SPLIT_TEXT_PATTERN
 
         if filter_country:
             filter_country = seperator_pattern.split(filter_country.upper())
