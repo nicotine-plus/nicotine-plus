@@ -303,7 +303,7 @@ class Search:
         "filterbr": ("!0", "128 <224", ">190 <=320", "=320 =1411", "320"),
         "filtersize": (">50MiB", ">20MiB <=50MiB", ">10MiB <=20MiB", ">5MiB <=10MiB", "<=5MiB"),
         "filtertype": ("audio", "image", "video", "text", "archive", "!executable", "audio image text"),
-        "filterlength": (">12:00", ">8:00 <=12:00", ">5:00 <=8:00", "!0 <=5:00", "=0")
+        "filterlength": (">15:00", ">8:00 <=15:00", ">5:00 <=8:00", ">2:00 <=5:00", "<=2:00")
     }
     FILTER_SPLIT_DIGIT_PATTERN = re.compile(r"(?:[|&\s])+(?<![<>!=]\s)")  # [pipe, ampersand, space]
     FILTER_SPLIT_TEXT_PATTERN = re.compile(r"(?:[|&,;\s])+(?<![!]\s)")    # [pipe, ampersand, comma, semicolon, space]
@@ -927,7 +927,7 @@ class Search:
                 if operation is operator.ne:
                     return False
 
-            if operation(value, digit) and not blocked:
+            if value and operation(value, digit) and not blocked:
                 allowed = True
                 continue
 

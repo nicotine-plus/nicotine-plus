@@ -349,7 +349,7 @@
                 <child>
                   <object class="GtkEntry" id="filter_country_entry">
                     <property name="visible">True</property>
-                    <property name="tooltip-text" translatable="yes">Country code, e.g. US ES !DE !GB</property>
+                    <property name="tooltip-text" translatable="yes">Country code, e.g. US ES or !DE !GB</property>
                     <property name="valign">center</property>
                     <property name="max-width-chars">26</property>
                     <property name="width-chars">16</property>
