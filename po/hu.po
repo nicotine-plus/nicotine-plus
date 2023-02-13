@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2023-02-07 18:25+0000\n"
+"PO-Revision-Date: 2023-02-12 23:23+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -252,7 +252,7 @@ msgstr "A jelszavad megváltozott"
 
 #: pynicotine/core.py:487
 msgid "Password Changed"
-msgstr "Jelszó módosítva"
+msgstr "A jelszó megváltoztatva"
 
 #: pynicotine/geoip.py:24
 msgid "Andorra"
@@ -6344,14 +6344,12 @@ msgid "Upload Speed"
 msgstr "Feltöltési sebesség"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:607
-#, fuzzy
 msgid "Save _Picture"
-msgstr "Mentés _Kép"
+msgstr "_Kép mentése"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:645
-#, fuzzy
 msgid "_Refresh Info"
-msgstr "Frissít"
+msgstr "Információ _frissítése"
 
 #~ msgid "Website"
 #~ msgstr "Weboldal"
