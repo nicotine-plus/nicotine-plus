@@ -98,6 +98,9 @@ class ChatRooms:
 
     def remove_room(self, room):
 
+        if room not in self.joined_rooms:
+            return
+
         if room == self.GLOBAL_ROOM_NAME:
             core.queue.append(slskmessages.LeaveGlobalRoom())
         else:
@@ -117,6 +120,9 @@ class ChatRooms:
         events.emit("echo-room-message", room, message, message_type)
 
     def send_message(self, room, message):
+
+        if room not in self.joined_rooms:
+            return
 
         event = core.pluginhandler.outgoing_public_chat_event(room, message)
         if event is None:
