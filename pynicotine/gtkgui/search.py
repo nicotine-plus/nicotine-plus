@@ -559,17 +559,19 @@ class Search:
             widget.set_row_separator_func(lambda *_args: 0)
             widget.remove_all()
 
-            for value in config.sections["searches"][filter_id]:
-                widget.append_text(value)
-
             presets = self.FILTER_PRESETS.get(filter_id)
 
             if presets:
-                widget.append_text("")  # Separator
-                widget.set_row_separator_func(self.on_combobox_check_separator)
-
                 for value in presets:
                     widget.append_text(value)
+
+                widget.append_text("")  # Separator
+
+            for value in config.sections["searches"][filter_id]:
+                widget.append_text(value)
+
+            if presets:
+                widget.set_row_separator_func(self.on_combobox_check_separator)
 
     def populate_filters(self):
 
