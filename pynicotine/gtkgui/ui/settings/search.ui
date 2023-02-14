@@ -225,7 +225,7 @@
                 <child>
                   <object class="GtkEntry" id="filter_file_type_entry">
                     <property name="visible">True</property>
-                    <property name="tooltip-text" translatable="yes">File type, e.g. flac wav !mp3 !m4a</property>
+                    <property name="tooltip-text" translatable="yes">File type, e.g. flac wav or !mp3 !m4a</property>
                     <property name="valign">center</property>
                     <property name="max-width-chars">26</property>
                     <property name="width-chars">16</property>
