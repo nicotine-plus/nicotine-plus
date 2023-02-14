@@ -300,7 +300,7 @@ class Search:
         ("archive", FileTypes.ARCHIVE)
     )
     FILTER_PRESETS = {
-        "filterbr": ("!0", "128 <224", ">190 <=320", "=320 =1411", "320"),
+        "filterbr": ("!0", "128 <=256", "192 <=320", "=320", ">320"),
         "filtersize": (">50MiB", ">20MiB <=50MiB", ">10MiB <=20MiB", ">5MiB <=10MiB", "<=5MiB"),
         "filtertype": ("audio", "image", "video", "text", "archive", "!executable", "audio image text"),
         "filterlength": (">15:00", ">8:00 <=15:00", ">5:00 <=8:00", ">2:00 <=5:00", "<=2:00")
