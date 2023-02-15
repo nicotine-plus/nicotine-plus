@@ -48,15 +48,6 @@ def install_pacman():
 
     subprocess.check_call(["pacman", "--noconfirm", "-S", "--needed"] + packages)
 
-    # Downgrade Cairo for now due to text rendering performance issues
-    downgrade_packages = [f"{prefix}cairo-1.17.4-4-any.pkg.tar.zst",
-                          f"{prefix}pango-1.50.11-1-any.pkg.tar.zst"]
-
-    for package in downgrade_packages:
-        subprocess.check_call(["curl", "-O", f"https://repo.msys2.org/mingw/{mingw_type}/{package}"])
-
-    subprocess.check_call(["pacman", "--noconfirm", "-U"] + downgrade_packages)
-
 
 def install_pypi():
     """ Install dependencies from PyPi """
