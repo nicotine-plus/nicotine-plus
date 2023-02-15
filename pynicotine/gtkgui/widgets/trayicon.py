@@ -669,6 +669,9 @@ class StatusIconImplementation(BaseImplementation):
 
         self.gtk_menu = self.build_gtk_menu()
 
+    def unload(self):
+        self.hide()
+
     def on_status_icon_popup(self, _status_icon, button, _activate_time):
 
         if button == 3:
@@ -767,7 +770,7 @@ class TrayIcon:
             "org.kde.StatusNotifierWatcher",
             Gio.BusNameWatcherFlags.NONE,
             self.load,
-            self.unload
+            self._on_watcher_unload
         )
 
     def load(self, *_args):
@@ -812,6 +815,10 @@ class TrayIcon:
         if self.implementation:
             self.implementation.unload()
             self.implementation = None
+
+    def _on_watcher_unload(self, *_args):
+        if isinstance(self.implementation, StatusNotifierImplementation):
+            self.unload()
 
     def update_window_visibility(self):
         if self.implementation:
