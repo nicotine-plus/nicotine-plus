@@ -574,8 +574,7 @@ class SoulseekNetworkThread(Thread):
             # Distributed and file connections are critical, always assume they are active
             return True
 
-        # Check if message buffers contain anything
-        return bool(conn_obj.obuf or conn_obj.ibuf)
+        return len(conn_obj.obuf) > 0 or len(conn_obj.ibuf) > 0
 
     def _has_existing_user_socket(self, user, conn_type):
 
@@ -983,9 +982,6 @@ class SoulseekNetworkThread(Thread):
         self._close_socket(sock, shutdown=(connection_list != self._connsinprogress))
         self._numsockets -= 1
 
-        conn_obj.ibuf.clear()
-        conn_obj.obuf.clear()
-
         if conn_obj.__class__ is ServerConnection:
             # Disconnected from server, clean up connections and queue
             self._server_disconnect()
@@ -1186,7 +1182,7 @@ class SoulseekNetworkThread(Thread):
             self._close_socket(server_socket, shutdown=False)
             self._server_disconnect()
 
-    def _process_server_input(self, msg_buffer):
+    def _process_server_input(self, conn_obj, msg_buffer):
         """ Server has sent us something, this function retrieves messages
         from the msg_buffer, creates message objects and returns them and the rest
         of the msg_buffer. """
@@ -1344,10 +1340,8 @@ class SoulseekNetworkThread(Thread):
             idx += msgsize_total
             buffer_len -= msgsize_total
 
-        del msg_buffer_mem
-
         if idx:
-            del msg_buffer[:idx]
+            conn_obj.ibuf = msg_buffer[idx:]
 
     def _process_server_output(self, msg_obj):
 
@@ -1415,7 +1409,7 @@ class SoulseekNetworkThread(Thread):
                         if init is None:
                             log.add_conn(("Indirect connection attempt with token %s previously expired, "
                                           "closing connection"), msg.token)
-                            del msg_buffer_mem
+                            conn_obj.ibuf = bytearray()
                             self._close_connection(self._conns, conn_obj.sock)
                             return None
 
@@ -1444,7 +1438,7 @@ class SoulseekNetworkThread(Thread):
                         })
 
                         if not self._verify_peer_connection_type(conn_type):
-                            del msg_buffer_mem
+                            conn_obj.ibuf = bytearray()
                             self._close_connection(self._conns, conn_obj.sock)
                             return None
 
@@ -1464,17 +1458,16 @@ class SoulseekNetworkThread(Thread):
                     "size": msgsize - 1,
                     "msg_buffer": msg_buffer[idx + 5:idx + msgsize_total]
                 })
-                del msg_buffer_mem
+
+                conn_obj.ibuf = bytearray()
                 self._close_connection(self._conns, conn_obj.sock)
                 return None
 
             idx += msgsize_total
             buffer_len -= msgsize_total
 
-        del msg_buffer_mem
-
         if idx:
-            del msg_buffer[:idx]
+            conn_obj.ibuf = msg_buffer[idx:]
 
         return init
 
@@ -1594,10 +1587,8 @@ class SoulseekNetworkThread(Thread):
             idx += msgsize_total
             buffer_len -= msgsize_total
 
-        del msg_buffer_mem
-
         if idx:
-            del msg_buffer[:idx]
+            conn_obj.ibuf = msg_buffer[idx:]
             conn_obj.has_post_init_activity = True
 
         if search_result_received and not self._connection_still_active(conn_obj):
@@ -1705,10 +1696,8 @@ class SoulseekNetworkThread(Thread):
                     events.emit_main_thread("upload-file-error", conn_obj.fileupl.token, conn_obj.fileupl.file, error)
                     self._close_connection(self._conns, conn_obj.sock)
 
-        del msg_buffer_mem
-
         if idx:
-            del msg_buffer[:idx]
+            conn_obj.ibuf = msg_buffer[idx:]
             conn_obj.has_post_init_activity = True
 
     def _process_file_output(self, msg_obj):
@@ -1749,13 +1738,13 @@ class SoulseekNetworkThread(Thread):
 
     """ Distributed Connection """
 
-    def _verify_parent_connection(self, conn_obj, msg_buffer_mem):
+    def _verify_parent_connection(self, conn_obj):
         """ Verify that a connection is our current parent connection """
 
         if self._parent_socket is not None and conn_obj.sock != self._parent_socket:
             log.add_conn("Received a distributed message from user %s, who is not our parent. Closing connection.",
                          conn_obj.init.target_user)
-            del msg_buffer_mem
+            conn_obj.ibuf = bytearray()
             self._close_connection(self._conns, conn_obj.sock)
             return False
 
@@ -1801,11 +1790,11 @@ class SoulseekNetworkThread(Thread):
                     msg_class, msg_buffer_mem[idx + 5:idx + msgsize_total], msgsize - 1, "distrib", conn_obj.init)
 
                 if msg is not None:
-                    if msg_class is DistribSearch and not self._verify_parent_connection(conn_obj, msg_buffer_mem):
+                    if msg_class is DistribSearch and not self._verify_parent_connection(conn_obj):
                         return
 
                     if msg_class is DistribEmbeddedMessage:
-                        if not self._verify_parent_connection(conn_obj, msg_buffer_mem):
+                        if not self._verify_parent_connection(conn_obj):
                             return
 
                         msg = self._unpack_embedded_message(msg)
@@ -1816,7 +1805,7 @@ class SoulseekNetworkThread(Thread):
                             # presumably buggy clients
                             log.add_conn(("Received an invalid branch level value %(level)s from user %(user)s. "
                                           "Closing connection."), {"level": msg.value, "user": msg.init.target_user})
-                            del msg_buffer_mem
+                            conn_obj.ibuf = bytearray()
                             self._close_connection(self._conns, conn_obj.sock)
                             return
 
@@ -1833,7 +1822,7 @@ class SoulseekNetworkThread(Thread):
 
                         elif conn_obj.sock != self._parent_socket:
                             # Unwanted connection, close it
-                            del msg_buffer_mem
+                            conn_obj.ibuf = bytearray()
                             self._close_connection(self._conns, conn_obj.sock)
                             return
 
@@ -1844,7 +1833,7 @@ class SoulseekNetworkThread(Thread):
                                          msg.value + 1)
 
                     elif msg_class is DistribBranchRoot:
-                        if not self._verify_parent_connection(conn_obj, msg_buffer_mem):
+                        if not self._verify_parent_connection(conn_obj):
                             return
 
                         # Inform the server of our branch root
@@ -1859,17 +1848,16 @@ class SoulseekNetworkThread(Thread):
                     "size": msgsize - 1,
                     "msg_buffer": msg_buffer[idx + 5:idx + msgsize_total]
                 })
-                del msg_buffer_mem
+
+                conn_obj.ibuf = bytearray()
                 self._close_connection(self._conns, conn_obj.sock)
                 return
 
             idx += msgsize_total
             buffer_len -= msgsize_total
 
-        del msg_buffer_mem
-
         if idx:
-            del msg_buffer[:idx]
+            conn_obj.ibuf = msg_buffer[idx:]
             conn_obj.has_post_init_activity = True
 
     def _process_distrib_output(self, msg_obj):
@@ -2091,7 +2079,7 @@ class SoulseekNetworkThread(Thread):
             return
 
         if conn_obj.sock is self._server_socket:
-            self._process_server_input(conn_obj.ibuf)
+            self._process_server_input(conn_obj, conn_obj.ibuf)
             return
 
         init = conn_obj.init
@@ -2175,9 +2163,9 @@ class SoulseekNetworkThread(Thread):
         if limit is None:
             bytes_send = sock.send(conn_obj.obuf)
         else:
-            bytes_send = sock.send(memoryview(conn_obj.obuf)[:limit])
+            bytes_send = sock.send(conn_obj.obuf[:limit])
 
-        del conn_obj.obuf[:bytes_send]
+        conn_obj.obuf = conn_obj.obuf[bytes_send:]
 
         if self._is_upload(conn_obj) and conn_obj.fileupl.offset is not None:
             conn_obj.fileupl.sentbytes += bytes_send
