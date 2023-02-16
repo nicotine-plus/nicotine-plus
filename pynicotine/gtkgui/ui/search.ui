@@ -187,7 +187,7 @@
                                 <property name="primary-icon-name">emblem-ok-symbolic</property>
                                 <signal name="activate" handler="on_refilter"/>
                                 <signal name="changed" handler="on_filter_entry_changed"/>
-                                <signal name="icon-press" handler="on_refilter"/>
+                                <signal name="icon-press" handler="on_filter_include_icon_press"/>
                               </object>
                             </child>
                             <style>
@@ -215,7 +215,7 @@
                                 <property name="primary-icon-name">action-unavailable-symbolic</property>
                                 <signal name="activate" handler="on_refilter"/>
                                 <signal name="changed" handler="on_filter_entry_changed"/>
-                                <signal name="icon-press" handler="on_refilter"/>
+                                <signal name="icon-press" handler="on_filter_exclude_icon_press"/>
                               </object>
                             </child>
                             <style>
@@ -243,7 +243,7 @@
                                 <property name="primary-icon-name">text-x-generic-symbolic</property>
                                 <signal name="activate" handler="on_refilter"/>
                                 <signal name="changed" handler="on_filter_entry_changed"/>
-                                <signal name="icon-press" handler="on_refilter"/>
+                                <signal name="icon-press" handler="on_filter_file_type_icon_press"/>
                               </object>
                             </child>
                             <style>
@@ -271,7 +271,7 @@
                                 <property name="primary-icon-name">drive-harddisk-symbolic</property>
                                 <signal name="activate" handler="on_refilter"/>
                                 <signal name="changed" handler="on_filter_entry_changed"/>
-                                <signal name="icon-press" handler="on_refilter"/>
+                                <signal name="icon-press" handler="on_filter_file_size_icon_press"/>
                               </object>
                             </child>
                             <style>
@@ -299,7 +299,7 @@
                                 <property name="primary-icon-name">audio-volume-high-symbolic</property>
                                 <signal name="activate" handler="on_refilter"/>
                                 <signal name="changed" handler="on_filter_entry_changed"/>
-                                <signal name="icon-press" handler="on_refilter"/>
+                                <signal name="icon-press" handler="on_filter_bitrate_icon_press"/>
                               </object>
                             </child>
                             <style>
@@ -327,7 +327,7 @@
                                 <property name="primary-icon-name">media-playback-start-symbolic</property>
                                 <signal name="activate" handler="on_refilter"/>
                                 <signal name="changed" handler="on_filter_entry_changed"/>
-                                <signal name="icon-press" handler="on_refilter"/>
+                                <signal name="icon-press" handler="on_filter_length_icon_press"/>
                               </object>
                             </child>
                             <style>
@@ -359,7 +359,7 @@
                                     <property name="primary-icon-name">mark-location-symbolic</property>
                                     <signal name="activate" handler="on_refilter"/>
                                     <signal name="changed" handler="on_filter_entry_changed"/>
-                                    <signal name="icon-press" handler="on_refilter"/>
+                                    <signal name="icon-press" handler="on_filter_country_icon_press"/>
                                   </object>
                                 </child>
                                 <style>

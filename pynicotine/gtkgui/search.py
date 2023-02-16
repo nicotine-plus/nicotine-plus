@@ -559,19 +559,30 @@ class Search:
             widget.set_row_separator_func(lambda *_args: 0)
             widget.remove_all()
 
-            presets = self.FILTER_PRESETS.get(filter_id)
+            filter_presets = self.FILTER_PRESETS.get(filter_id)
+            filter_history = config.sections["searches"][filter_id]
 
-            if presets:
-                for value in presets:
+            if filter_presets:
+                for value in filter_presets:
                     widget.append_text(value)
 
                 widget.append_text("")  # Separator
+                widget.set_row_separator_func(self.on_combobox_check_separator)
 
-            for value in config.sections["searches"][filter_id]:
+            for value in filter_history:
                 widget.append_text(value)
 
-            if presets:
-                widget.set_row_separator_func(self.on_combobox_check_separator)
+            entry = widget.get_child()
+            filter_name = entry.get_placeholder_text().title().strip("…")
+
+            if entry.get_text():
+                entry.set_icon_tooltip_text(0, _("Clear %s Filter") % filter_name)  # 0=GTK_ENTRY_ICON_PRIMARY
+
+            elif filter_history:
+                entry.set_icon_tooltip_text(0, _("Recall %s Filter") % filter_name)  # 0=GTK_ENTRY_ICON_PRIMARY
+
+            else:
+                entry.set_icon_tooltip_text(0, filter_name)  # 0=GTK_ENTRY_ICON_PRIMARY
 
     def populate_filters(self):
 
@@ -1470,6 +1481,7 @@ class Search:
             return
 
         history = config.sections["searches"].get(filter_id)
+        old_history = history[:]
 
         if history is None:
             return
@@ -1481,7 +1493,9 @@ class Search:
             del history[-1]
 
         history.insert(0, value)
-        config.write_configuration()
+
+        if history != old_history:
+            config.write_configuration()
 
     def on_refilter(self, *_args):
 
@@ -1595,6 +1609,49 @@ class Search:
     def on_filter_entry_changed(self, widget):
         if not widget.get_text():
             self.on_refilter()
+
+    def _filter_entry_toggle(self, widget, click_event, filter_id):
+
+        if click_event.triggers_context_menu():
+            self.filter_comboboxes.get(filter_id).popup()  # TODO: the list won't stay open
+            return
+
+        filter_history = config.sections["searches"][filter_id]
+        filter_recent_value = filter_history[0] if filter_history else ""
+        filter_entry_value = widget.get_text()
+
+        # Recall last filter entry if box empty
+        if not filter_entry_value:
+            widget.set_text(filter_recent_value)
+
+        # Activate new filter entry or Clear Filter
+        if filter_entry_value != filter_recent_value:
+            self.on_refilter()
+        else:
+            widget.set_text("")
+
+        widget.grab_focus_without_selecting()
+
+    def on_filter_include_icon_press(self, widget, _icon_pos, event, *_args):
+        self._filter_entry_toggle(widget, event, "filterin")
+
+    def on_filter_exclude_icon_press(self, widget, _icon_pos, event, *_args):
+        self._filter_entry_toggle(widget, event, "filterout")
+
+    def on_filter_file_size_icon_press(self, widget, _icon_pos, event, *_args):
+        self._filter_entry_toggle(widget, event, "filtersize")
+
+    def on_filter_bitrate_icon_press(self, widget, _icon_pos, event, *_args):
+        self._filter_entry_toggle(widget, event, "filterbr")
+
+    def on_filter_country_icon_press(self, widget, _icon_pos, event, *_args):
+        self._filter_entry_toggle(widget, event, "filtercc")
+
+    def on_filter_file_type_icon_press(self, widget, _icon_pos, event, *_args):
+        self._filter_entry_toggle(widget, event, "filtertype")
+
+    def on_filter_length_icon_press(self, widget, _icon_pos, event, *_args):
+        self._filter_entry_toggle(widget, event, "filterlength")
 
     def on_clear_filters(self, *_args):
 
