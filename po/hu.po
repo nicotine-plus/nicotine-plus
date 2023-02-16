@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2023-02-12 23:23+0000\n"
+"PO-Revision-Date: 2023-02-16 17:18+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -559,102 +559,82 @@ msgid "France"
 msgstr "Franciaország"
 
 #: pynicotine/geoip.py:100
-#, fuzzy
 msgid "Gabon"
 msgstr "Gabon"
 
 #: pynicotine/geoip.py:101
-#, fuzzy
 msgid "Great Britain"
 msgstr "Nagy-Britannia"
 
 #: pynicotine/geoip.py:102
-#, fuzzy
 msgid "Grenada"
 msgstr "Grenada"
 
 #: pynicotine/geoip.py:103
-#, fuzzy
 msgid "Georgia"
 msgstr "Grúzia"
 
 #: pynicotine/geoip.py:104
-#, fuzzy
 msgid "French Guiana"
 msgstr "Francia Guyana"
 
 #: pynicotine/geoip.py:105
-#, fuzzy
 msgid "Guernsey"
 msgstr "Guernsey"
 
 #: pynicotine/geoip.py:106
-#, fuzzy
 msgid "Ghana"
 msgstr "Ghána"
 
 #: pynicotine/geoip.py:107
-#, fuzzy
 msgid "Gibraltar"
 msgstr "Gibraltár"
 
 #: pynicotine/geoip.py:108
-#, fuzzy
 msgid "Greenland"
 msgstr "Grönland"
 
 #: pynicotine/geoip.py:109
-#, fuzzy
 msgid "Gambia"
 msgstr "Gambia"
 
 #: pynicotine/geoip.py:110
-#, fuzzy
 msgid "Guinea"
 msgstr "Guinea"
 
 #: pynicotine/geoip.py:111
-#, fuzzy
 msgid "Guadeloupe"
 msgstr "Guadeloupe"
 
 #: pynicotine/geoip.py:112
-#, fuzzy
 msgid "Equatorial Guinea"
 msgstr "Egyenlítői-Guinea"
 
 #: pynicotine/geoip.py:113
-#, fuzzy
 msgid "Greece"
 msgstr "Görögország"
 
 #: pynicotine/geoip.py:114
-#, fuzzy
 msgid "South Georgia & South Sandwich Islands"
-msgstr "Dél-Georgia és a Déli-Sandwich-szigetek"
+msgstr "Dél-Georgia és Déli-Sandwich-szigetek"
 
 #: pynicotine/geoip.py:115
-#, fuzzy
 msgid "Guatemala"
 msgstr "Guatemala"
 
 #: pynicotine/geoip.py:116
-#, fuzzy
 msgid "Guam"
 msgstr "Guam"
 
 #: pynicotine/geoip.py:117
-#, fuzzy
 msgid "Guinea-Bissau"
 msgstr "Bissau-Guinea"
 
 #: pynicotine/geoip.py:118
-#, fuzzy
 msgid "Guyana"
 msgstr "Guyana"
 
 #: pynicotine/geoip.py:119
-#, fuzzy
 msgid "Hong Kong"
 msgstr "Hongkong"
 
@@ -663,22 +643,18 @@ msgid "Heard & McDonald Islands"
 msgstr "Heard & McDonald Islands"
 
 #: pynicotine/geoip.py:121
-#, fuzzy
 msgid "Honduras"
 msgstr "Honduras"
 
 #: pynicotine/geoip.py:122
-#, fuzzy
 msgid "Croatia"
 msgstr "Horvátország"
 
 #: pynicotine/geoip.py:123
-#, fuzzy
 msgid "Haiti"
 msgstr "Haiti"
 
 #: pynicotine/geoip.py:124
-#, fuzzy
 msgid "Hungary"
 msgstr "Magyarország"
 
@@ -687,92 +663,74 @@ msgid "Indonesia"
 msgstr "Indonézia"
 
 #: pynicotine/geoip.py:126
-#, fuzzy
 msgid "Ireland"
 msgstr "Írország"
 
 #: pynicotine/geoip.py:127
-#, fuzzy
 msgid "Israel"
 msgstr "Izrael"
 
 #: pynicotine/geoip.py:128
-#, fuzzy
 msgid "Isle of Man"
 msgstr "Man-sziget"
 
 #: pynicotine/geoip.py:129
-#, fuzzy
 msgid "India"
 msgstr "India"
 
 #: pynicotine/geoip.py:130
-#, fuzzy
 msgid "British Indian Ocean Territory"
-msgstr "Brit Indiai-óceáni terület"
+msgstr "Brit Indiai-óceáni Terület"
 
 #: pynicotine/geoip.py:131
-#, fuzzy
 msgid "Iraq"
 msgstr "Irak"
 
 #: pynicotine/geoip.py:132
-#, fuzzy
 msgid "Iran"
 msgstr "Irán"
 
 #: pynicotine/geoip.py:133
-#, fuzzy
 msgid "Iceland"
 msgstr "Izland"
 
 #: pynicotine/geoip.py:134
-#, fuzzy
 msgid "Italy"
 msgstr "Olaszország"
 
 #: pynicotine/geoip.py:135
-#, fuzzy
 msgid "Jersey"
 msgstr "Jersey"
 
 #: pynicotine/geoip.py:136
-#, fuzzy
 msgid "Jamaica"
 msgstr "Jamaika"
 
 #: pynicotine/geoip.py:137
-#, fuzzy
 msgid "Jordan"
 msgstr "Jordánia"
 
 #: pynicotine/geoip.py:138
-#, fuzzy
 msgid "Japan"
 msgstr "Japán"
 
 #: pynicotine/geoip.py:139
-#, fuzzy
 msgid "Kenya"
 msgstr "Kenya"
 
 #: pynicotine/geoip.py:140
-#, fuzzy
 msgid "Kyrgyzstan"
 msgstr "Kirgizisztán"
 
 #: pynicotine/geoip.py:141
-#, fuzzy
 msgid "Cambodia"
 msgstr "Kambodzsa"
 
 #: pynicotine/geoip.py:142
-#, fuzzy
 msgid "Kiribati"
 msgstr "Kiribati"
 
 #: pynicotine/geoip.py:143
-#, fuzzy
 msgid "Comoros"
 msgstr "Comore-szigetek"
 
@@ -781,187 +739,150 @@ msgid "Saint Kitts & Nevis"
 msgstr "Saint Kitts & Nevis"
 
 #: pynicotine/geoip.py:145
-#, fuzzy
 msgid "North Korea"
 msgstr "Észak-Korea"
 
 #: pynicotine/geoip.py:146
-#, fuzzy
 msgid "South Korea"
 msgstr "Dél-Korea"
 
 #: pynicotine/geoip.py:147
-#, fuzzy
 msgid "Kuwait"
 msgstr "Kuwait"
 
 #: pynicotine/geoip.py:148
-#, fuzzy
 msgid "Cayman Islands"
 msgstr "Kajmán-szigetek"
 
 #: pynicotine/geoip.py:149
-#, fuzzy
 msgid "Kazakhstan"
 msgstr "Kazahsztán"
 
 #: pynicotine/geoip.py:150
-#, fuzzy
 msgid "Laos"
 msgstr "Laosz"
 
 #: pynicotine/geoip.py:151
-#, fuzzy
 msgid "Lebanon"
 msgstr "Libanon"
 
 #: pynicotine/geoip.py:152
-#, fuzzy
 msgid "Saint Lucia"
 msgstr "Saint Lucia"
 
 #: pynicotine/geoip.py:153
-#, fuzzy
 msgid "Liechtenstein"
 msgstr "Liechtenstein"
 
 #: pynicotine/geoip.py:154
-#, fuzzy
 msgid "Sri Lanka"
 msgstr "Srí Lanka"
 
 #: pynicotine/geoip.py:155
-#, fuzzy
 msgid "Liberia"
 msgstr "Libéria"
 
 #: pynicotine/geoip.py:156
-#, fuzzy
 msgid "Lesotho"
 msgstr "Lesotho"
 
 #: pynicotine/geoip.py:157
-#, fuzzy
 msgid "Lithuania"
 msgstr "Litvánia"
 
 #: pynicotine/geoip.py:158
-#, fuzzy
 msgid "Luxembourg"
 msgstr "Luxemburg"
 
 #: pynicotine/geoip.py:159
-#, fuzzy
 msgid "Latvia"
 msgstr "Lettország"
 
 #: pynicotine/geoip.py:160
-#, fuzzy
 msgid "Libya"
 msgstr "Líbia"
 
 #: pynicotine/geoip.py:161
-#, fuzzy
 msgid "Morocco"
 msgstr "Marokkó"
 
 #: pynicotine/geoip.py:162
-#, fuzzy
 msgid "Monaco"
 msgstr "Monaco"
 
 #: pynicotine/geoip.py:163
-#, fuzzy
 msgid "Moldova"
 msgstr "Moldova"
 
 #: pynicotine/geoip.py:164
-#, fuzzy
 msgid "Montenegro"
 msgstr "Montenegró"
 
 #: pynicotine/geoip.py:165
-#, fuzzy
 msgid "Saint Martin"
 msgstr "Saint Martin"
 
 #: pynicotine/geoip.py:166
-#, fuzzy
 msgid "Madagascar"
 msgstr "Madagaszkár"
 
 #: pynicotine/geoip.py:167
-#, fuzzy
 msgid "Marshall Islands"
 msgstr "Marshall-szigetek"
 
 #: pynicotine/geoip.py:168
-#, fuzzy
 msgid "North Macedonia"
 msgstr "Észak-Macedónia"
 
 #: pynicotine/geoip.py:169
-#, fuzzy
 msgid "Mali"
 msgstr "Mali"
 
 #: pynicotine/geoip.py:170
-#, fuzzy
 msgid "Myanmar"
 msgstr "Mianmar"
 
 #: pynicotine/geoip.py:171
-#, fuzzy
 msgid "Mongolia"
 msgstr "Mongólia"
 
 #: pynicotine/geoip.py:172
-#, fuzzy
 msgid "Macau"
 msgstr "Makaó"
 
 #: pynicotine/geoip.py:173
-#, fuzzy
 msgid "Northern Mariana Islands"
-msgstr "Északi Mariana-szigetek"
+msgstr "Északi-Mariana-szigetek"
 
 #: pynicotine/geoip.py:174
-#, fuzzy
 msgid "Martinique"
 msgstr "Martinique"
 
 #: pynicotine/geoip.py:175
-#, fuzzy
 msgid "Mauritania"
 msgstr "Mauritánia"
 
 #: pynicotine/geoip.py:176
-#, fuzzy
 msgid "Montserrat"
 msgstr "Montserrat"
 
 #: pynicotine/geoip.py:177
-#, fuzzy
 msgid "Malta"
 msgstr "Málta"
 
 #: pynicotine/geoip.py:178
-#, fuzzy
 msgid "Mauritius"
 msgstr "Mauritius"
 
 #: pynicotine/geoip.py:179
-#, fuzzy
 msgid "Maldives"
 msgstr "Maldív-szigetek"
 
 #: pynicotine/geoip.py:180
-#, fuzzy
 msgid "Malawi"
 msgstr "Malawi"
 
 #: pynicotine/geoip.py:181
-#, fuzzy
 msgid "Mexico"
 msgstr "Mexikó"
 
@@ -1055,7 +976,7 @@ msgstr "Lengyelország"
 
 #: pynicotine/geoip.py:204
 msgid "Saint Pierre & Miquelon"
-msgstr "Saint Pierre és Miquelon"
+msgstr "Saint-Pierre és Miquelon"
 
 #: pynicotine/geoip.py:205
 msgid "Pitcairn"
@@ -1067,75 +988,61 @@ msgstr "Puerto Rico"
 
 #: pynicotine/geoip.py:207
 msgid "State of Palestine"
-msgstr "Palesztinia"
+msgstr "Palesztina"
 
 #: pynicotine/geoip.py:208
-#, fuzzy
 msgid "Portugal"
 msgstr "Portugália"
 
 #: pynicotine/geoip.py:209
-#, fuzzy
 msgid "Palau"
 msgstr "Palau"
 
 #: pynicotine/geoip.py:210
-#, fuzzy
 msgid "Paraguay"
 msgstr "Paraguay"
 
 #: pynicotine/geoip.py:211
-#, fuzzy
 msgid "Qatar"
 msgstr "Katar"
 
 #: pynicotine/geoip.py:212
-#, fuzzy
 msgid "Réunion"
 msgstr "Réunion"
 
 #: pynicotine/geoip.py:213
-#, fuzzy
 msgid "Romania"
 msgstr "Románia"
 
 #: pynicotine/geoip.py:214
-#, fuzzy
 msgid "Serbia"
 msgstr "Szerbia"
 
 #: pynicotine/geoip.py:215
-#, fuzzy
 msgid "Russia"
 msgstr "Oroszország"
 
 #: pynicotine/geoip.py:216
-#, fuzzy
 msgid "Rwanda"
 msgstr "Ruanda"
 
 #: pynicotine/geoip.py:217
-#, fuzzy
 msgid "Saudi Arabia"
 msgstr "Szaúd-Arábia"
 
 #: pynicotine/geoip.py:218
-#, fuzzy
 msgid "Solomon Islands"
 msgstr "Salamon-szigetek"
 
 #: pynicotine/geoip.py:219
-#, fuzzy
 msgid "Seychelles"
-msgstr "Seychelles-szigetek"
+msgstr "Seychelle-szigetek"
 
 #: pynicotine/geoip.py:220
-#, fuzzy
 msgid "Sudan"
 msgstr "Szudán"
 
 #: pynicotine/geoip.py:221
-#, fuzzy
 msgid "Sweden"
 msgstr "Svédország"
 
@@ -1145,7 +1052,7 @@ msgstr "Szingapúr"
 
 #: pynicotine/geoip.py:223
 msgid "Saint Helena"
-msgstr "Saint Helena"
+msgstr "Szent Ilona-sziget"
 
 #: pynicotine/geoip.py:224
 msgid "Slovenia"
@@ -1153,7 +1060,7 @@ msgstr "Szlovénia"
 
 #: pynicotine/geoip.py:225
 msgid "Svalbard & Jan Mayen Islands"
-msgstr "Spitzbergák és Jan Mayen-szigetek"
+msgstr "Spitzbergák és Jan Mayen-sziget"
 
 #: pynicotine/geoip.py:226
 msgid "Slovak Republic"
@@ -1201,7 +1108,7 @@ msgstr "Szíria"
 
 #: pynicotine/geoip.py:237
 msgid "Eswatini"
-msgstr "Eswatini"
+msgstr "Szváziföld"
 
 #: pynicotine/geoip.py:238
 msgid "Turks & Caicos Islands"
@@ -1277,7 +1184,7 @@ msgstr "Uganda"
 
 #: pynicotine/geoip.py:256
 msgid "U.S. Minor Outlying Islands"
-msgstr "Egyesült Államok kisebb peremszigetek"
+msgstr "Egyesült Államok kisebb távoli szigetei"
 
 #: pynicotine/geoip.py:257
 msgid "United States"
@@ -1297,7 +1204,7 @@ msgstr "Szentszék (Vatikán városállam)"
 
 #: pynicotine/geoip.py:261
 msgid "Saint Vincent & The Grenadines"
-msgstr "Szent Vincent és a Grenadin-szigetek"
+msgstr "Saint Vincent és a Grenadine-szigetek"
 
 #: pynicotine/geoip.py:262
 msgid "Venezuela"
@@ -1309,7 +1216,7 @@ msgstr "Brit Virgin-szigetek"
 
 #: pynicotine/geoip.py:264
 msgid "U.S. Virgin Islands"
-msgstr "U.S Virgin-szigetek"
+msgstr "Amerikai Virgin-szigetek"
 
 #: pynicotine/geoip.py:265
 msgid "Viet Nam"
@@ -1321,7 +1228,7 @@ msgstr "Vanuatu"
 
 #: pynicotine/geoip.py:267
 msgid "Wallis & Futuna"
-msgstr "Vallisz és Futuna"
+msgstr "Wallis és Futuna"
 
 #: pynicotine/geoip.py:268
 msgid "Samoa"
@@ -1337,7 +1244,7 @@ msgstr "Jemen"
 
 #: pynicotine/geoip.py:271
 msgid "Mayotte"
-msgstr "Majotte"
+msgstr "Mayotte"
 
 #: pynicotine/geoip.py:272
 msgid "South Africa"
@@ -1349,7 +1256,7 @@ msgstr "Zambia"
 
 #: pynicotine/geoip.py:274
 msgid "Zimbabwe"
-msgstr "Zimbabve"
+msgstr "Zimbabwe"
 
 #: pynicotine/gtkgui/__init__.py:46
 #, python-format
@@ -1465,7 +1372,7 @@ msgstr "Üzenetek barátoknak"
 
 #: pynicotine/gtkgui/application.py:690
 msgid "Send private message to all online buddies:"
-msgstr "Privát üzenet küldése az összes online barátnak:"
+msgstr "Privát üzenet küldése az összes bejelentkezett barátnak:"
 
 #: pynicotine/gtkgui/application.py:715
 msgid "Select a Saved Shares List File"
@@ -1923,7 +1830,7 @@ msgstr "Jobbra"
 #: pynicotine/gtkgui/widgets/treeview.py:464
 #: pynicotine/gtkgui/widgets/treeview.py:971
 msgid "Online"
-msgstr "Elérhető"
+msgstr "Bejelentkezve"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1383
 #: pynicotine/gtkgui/mainwindow.py:460
@@ -2629,7 +2536,7 @@ msgstr "* Üzenet(ek)et kapott, amíg nem volt elérhető"
 
 #: pynicotine/gtkgui/search.py:77
 msgid "_Global"
-msgstr "_Globális"
+msgstr "_Teljes"
 
 #: pynicotine/gtkgui/search.py:78
 msgid "_Buddies"
@@ -2684,11 +2591,11 @@ msgstr "Fájl(ok) _letöltése"
 
 #: pynicotine/gtkgui/search.py:432 pynicotine/gtkgui/userbrowse.py:306
 msgid "Download File(s) _To…"
-msgstr "Fájl(ok) le_töltése ide…"
+msgstr "Fájl(ok) letöltése _ide…"
 
 #: pynicotine/gtkgui/search.py:433
 msgid "Download _Folder(s)"
-msgstr "Könyvtár(ak) letöltése"
+msgstr "_Könyvtár(ak) letöltése"
 
 #: pynicotine/gtkgui/search.py:434
 msgid "Download F_older(s) To…"
@@ -2722,8 +2629,8 @@ msgid ""
 "Filtered out incorrect search result %(filepath)s from user %(user)s for "
 "search query \"%(query)s\""
 msgstr ""
-"A helytelen keresési eredmény %(filepath)s kiszűrve a %(user)s "
-"felhasználótól, a \"%(query)s\" keresési lekérdezésre"
+"%(filepath)s a helytelen keresési eredmény kiszűrve a %(user)s "
+"felhasználótól, a „%(query)s” keresési lekérdezésre"
 
 #: pynicotine/gtkgui/search.py:653 pynicotine/gtkgui/userbrowse.py:455
 #, python-format
@@ -3882,7 +3789,7 @@ msgstr ""
 #: pynicotine/userbrowse.py:218
 #, python-format
 msgid "Can't save shares, '%(user)s', reported error: %(error)s"
-msgstr "Nem lehet megosztást elmenteni, '%(user)s', hiba: %(error)s"
+msgstr "Nem lehet a megosztásokat elmenteni, '%(user)s', hiba: %(error)s"
 
 #: pynicotine/userbrowse.py:316
 #, python-format
@@ -3912,7 +3819,7 @@ msgstr "%(user)s távol van"
 #: pynicotine/userlist.py:291
 #, python-format
 msgid "%(user)s is online"
-msgstr "%(user)s elérhető"
+msgstr "%(user)s bejelentkezett"
 
 #: pynicotine/userlist.py:294
 #, python-format
@@ -4561,12 +4468,12 @@ msgid ""
 "Add users as buddies to share specific folders with them and receive "
 "notifications when they are online"
 msgstr ""
-"Adjon hozzá felhasználókat a barátokként, hogy megoszthasson velük bizonyos "
-"mappákat és értesítést kapjon ha csatlakozva vannak"
+"Adjon hozzá felhasználókat barátokként, hogy megoszthasson velük bizonyos "
+"mappákat és értesítést kapjon ha be vannak jelentkezve"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1474
 msgid "Join or create room…"
-msgstr "Csatlakozz vagy hozz létre szobát…"
+msgstr "Csatlakozz, vagy hozz létre szobát…"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1475
 msgid ""
@@ -4778,7 +4685,7 @@ msgstr "/pa 'user'"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:730
 msgid "Open private chat window for user 'user'"
-msgstr "Privát csevegésablak nyitása a(z) 'user' felhasználónak"
+msgstr "Privát csevegési ablak megnyitása a(z) 'user' felhasználónak"
 
 #: pynicotine/gtkgui/ui/popovers/downloadspeeds.ui:25
 #: pynicotine/gtkgui/ui/settings/downloads.ui:126
@@ -4913,9 +4820,9 @@ msgid ""
 "search, it can only narrow it down. To broaden or change your search terms, "
 "perform a new search."
 msgstr ""
-"Ahogy a neve is sugallja, a keresésieredmény-szűrő nem tudja kiterjeszteni "
+"Ahogy a neve is sugallja, a keresési eredményszűrő nem tudja kiterjeszteni "
 "az eredeti keresést, csak szűkíteni tudja azt. A keresési kifejezések "
-"bővítéséhez vagy módosításához hajtson végre új keresést."
+"bővítéséhez, vagy módosításához hajtson végre új keresést."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:66
 msgid "Result Filter Usage"
@@ -5326,7 +5233,7 @@ msgstr "A tabulátor billentyű lenyomásával végig lapozhat a befejezéseken"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:160
 msgid "Enable completion drop-down list"
-msgstr "Befejezéslegördülő lista engedélyezése"
+msgstr "Befejezés legördülő lista engedélyezése"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:168
 msgid "Hide drop-down when only one matches"
@@ -5551,7 +5458,7 @@ msgstr "Hozzáad"
 #: pynicotine/gtkgui/ui/settings/downloads.ui:520
 #: pynicotine/gtkgui/ui/settings/downloads.ui:536
 msgid "Load Defaults"
-msgstr "Alapértelmezettek betöltése"
+msgstr "Alapértelmezések betöltése"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:577
 msgid "Verify Filters"
@@ -5637,7 +5544,7 @@ msgstr "A távol van állapot előtti tétlenség percekben (0 a letiltáshoz):"
 msgid ""
 "Once you interact with the application being away, status will be set to "
 "online."
-msgstr "Amint kapcsolatba lép az alkalmazással, az állapot kapcsolódott lesz."
+msgstr "Amint kapcsolatba lép az alkalmazással, az állapot bejelentkezett lesz."
 
 #: pynicotine/gtkgui/ui/settings/network.ui:302
 msgid "Auto-reply message when away:"
@@ -5645,7 +5552,7 @@ msgstr "Automatikus válaszüzenet, ha távol van:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:328
 msgid "Miscellaneous"
-msgstr "Vegyes"
+msgstr "Egyéb"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:340
 msgid "Use UPnP to forward listening port"
@@ -5728,7 +5635,7 @@ msgstr "Készítette:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:45
 msgid "Enable search history"
-msgstr "A keresési előzmények engedélyezése"
+msgstr "Keresési előzmények engedélyezése"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:52
 msgid "Remove special characters from search terms"
@@ -5744,7 +5651,7 @@ msgstr ""
 #: pynicotine/gtkgui/ui/settings/search.ui:60
 msgid "Show privately shared files in search results"
 msgstr ""
-"A magánjellegű(privát) megosztott fájlok megjelenítése a keresési "
+"A magánjellegű (privát) megosztott fájlok megjelenítése a keresési "
 "eredményekben"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:62
@@ -5767,7 +5674,7 @@ msgstr "Keresési előzmények törlése"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:152
 msgid "Enable search result filters by default"
-msgstr "Keresésieredmény–szűrők engedélyezése alapértelmezettként"
+msgstr "Keresési eredményszűrők engedélyezése alapértelmezettként"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:165
 msgid "Include:"
@@ -5847,20 +5754,20 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:37
 msgid "Rescan shares on startup"
-msgstr "Megosztások átvizsgálása indításkor"
+msgstr "Megosztások újra átvizsgálása indításkor"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:38
 msgid ""
 "Automatically rescans the contents of your shared folders on startup. If "
 "disabled, your shares are only updated when you manually initiate a rescan."
 msgstr ""
-"Automatikusan átvizsgálja a megosztott mappák tartalmát indításkor. Ha "
+"Automatikusan újra átvizsgálja a megosztott mappák tartalmát indításkor. Ha "
 "kikapcsolja, a megosztások csak akkor frissülnek ha kézileg kezdeményezi az "
 "újbóli átvizsgálást."
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:45
 msgid "Limit buddy-only shares to trusted buddies"
-msgstr "Korlátozza a barátoknak szóló megosztásokat megbízható barátokra"
+msgstr "Korlátozza a barátoknak szóló megosztásokat a megbízható barátokra"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:60
 msgid "Autoclear finished/cancelled uploads from transfer list"
@@ -5942,7 +5849,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:347
 msgid "Round Robin"
-msgstr "Round Robin"
+msgstr "Round Robin mód"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:348
 msgid "First In, First Out"
@@ -6169,12 +6076,10 @@ msgid "Command output text color:"
 msgstr "Parancskimeneti szöveg színe:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:946
-#, fuzzy
 msgid "/me action text color:"
-msgstr "/me action text color:"
+msgstr "/me művelet szövegének színe:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:988
-#, fuzzy
 msgid "Highlighted text color:"
 msgstr "Kiemelt szöveg színe:"
 
@@ -6195,27 +6100,22 @@ msgid "Text entry text color:"
 msgstr "Szövegbevitel szövegének a színe:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1188
-#, fuzzy
 msgid "User Statuses"
-msgstr "Egyesült Államok"
+msgstr "Felhasználói állapotok"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1210
-#, fuzzy
 msgid "Online color:"
-msgstr "Online szöveg színe:"
+msgstr "A „Bejelentkezve” színe:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1252
-#, fuzzy
 msgid "Away color:"
-msgstr "Away szöveg színe:"
+msgstr "A „Távollét” színe:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1294
-#, fuzzy
 msgid "Offline color:"
-msgstr "Offline szöveg színe:"
+msgstr "A „Nincs bejelentjezve” színe:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1340
-#, fuzzy
 msgid "Tab Labels"
 msgstr "Lapcímkék"
 
@@ -6228,45 +6128,38 @@ msgid "Changed tab label color:"
 msgstr "A lapcímke színe megváltozott:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1447
-#, fuzzy
 msgid "Highlighted tab label color:"
 msgstr "Kiemelt lapcímke színe:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1493
-#, fuzzy
 msgid "Fonts"
-msgstr "Betűtípus"
+msgstr "Betűtípusok"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1511
 msgid "Global font:"
-msgstr "Globális betűtípus:"
+msgstr "Általános betűtípus:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1558
-#, fuzzy
 msgid "List font:"
-msgstr "Lista betűtípus:"
+msgstr "Lista betűtípusa:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1605
 msgid "Text view font:"
 msgstr "Szövegnézet betűtípusa:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1652
-#, fuzzy
 msgid "Chat font:"
-msgstr "Chat betűtípus:"
+msgstr "Csevegés betűtípusa:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1699
-#, fuzzy
 msgid "Transfers font:"
 msgstr "Átvitelek betűtípusa:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1746
-#, fuzzy
 msgid "Search font:"
 msgstr "Keresés betűtípusa:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1793
-#, fuzzy
 msgid "Browse font:"
 msgstr "Tallózás betűtípusa:"
 
@@ -6275,14 +6168,12 @@ msgid "Icons"
 msgstr "Ikonok"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1867
-#, fuzzy
 msgid "Icon theme folder:"
-msgstr "Hiányos iratmappa:"
+msgstr "Ikontéma mappa:"
 
 #: pynicotine/gtkgui/ui/uploads.ui:102
-#, fuzzy
 msgid "Abort User(s)"
-msgstr "User(ek)"
+msgstr "Felhasználó(k) megszakítása"
 
 #: pynicotine/gtkgui/ui/uploads.ui:132
 msgid "Ban User(s)"
@@ -6293,17 +6184,14 @@ msgid "Clear All Finished/Cancelled Uploads"
 msgstr "Törölje az összes Befejezett/Megszüntetett feltöltést"
 
 #: pynicotine/gtkgui/ui/uploads.ui:184 pynicotine/gtkgui/ui/uploads.ui:200
-#, fuzzy
 msgid "Message All"
-msgstr "Üzenetek"
+msgstr "Üzenet mindenkinek"
 
 #: pynicotine/gtkgui/ui/uploads.ui:215
-#, fuzzy
 msgid "Clear Specific Uploads"
-msgstr "Minden feltöltés törlése"
+msgstr "Megadott feltöltések törlése"
 
 #: pynicotine/gtkgui/ui/userbrowse.ui:118
-#, fuzzy
 msgid "Shared"
 msgstr "Megosztott"
 
