@@ -300,10 +300,13 @@ class Search:
         ("archive", FileTypes.ARCHIVE)
     )
     FILTER_PRESETS = {
-        "filterbr": ("0", "128", "160", "192", "256", "320"),
-        "filtersize": (">10MiB", "<10MiB", "<5MiB", "<1MiB", ">0"),
-        "filtertype": ("audio", "image", "video", "text", "archive", "!executable", "audio|image|text")
+        "filterbr": ("!0", "128 <=192", ">192 <320", "=320", ">320"),
+        "filtersize": (">50MiB", ">20MiB <=50MiB", ">10MiB <=20MiB", ">5MiB <=10MiB", "<=5MiB"),
+        "filtertype": ("audio", "image", "video", "text", "archive", "!executable", "audio image text"),
+        "filterlength": (">15:00", ">8:00 <=15:00", ">5:00 <=8:00", ">2:00 <=5:00", "<=2:00")
     }
+    FILTER_SPLIT_DIGIT_PATTERN = re.compile(r"(?:[|&\s])+(?<![<>!=]\s)")  # [pipe, ampersand, space]
+    FILTER_SPLIT_TEXT_PATTERN = re.compile(r"(?:[|&,;\s])+(?<![!]\s)")    # [pipe, ampersand, comma, semicolon, space]
 
     def __init__(self, searches, text, token, mode, mode_label, show_page):
 
@@ -884,6 +887,7 @@ class Search:
         return operator.ge, condition
 
     def check_digit(self, result_filter, value, file_size=False):
+        """ Check if any conditions in result_filter match value """
 
         allowed = blocked = False
 
@@ -891,7 +895,7 @@ class Search:
             operation, digit = self._split_operator(condition)
 
             if file_size:
-                digit, factor = factorize(digit)  # File Size
+                digit, factor = factorize(digit)
 
                 if digit is None:
                     # Invalid Size unit
@@ -904,16 +908,18 @@ class Search:
                 adjust = 0
 
                 try:
-                    digit = int(digit)  # Bitrate (or raw size, or seconds)
-
+                    # Bitrate in Kb/s or Duration in seconds
+                    digit = int(digit)
                 except ValueError:
-                    if ":" not in digit:  # Duration
+                    if ":" not in digit:
+                        # Invalid syntax
                         continue
 
                     try:
-                        # Convert string from HH:MM:SS or MM:SS into Seconds as integer
+                        # Duration: Convert string from HH:MM:SS or MM:SS into Seconds as integer
                         digit = sum(x * int(t) for x, t in zip([1, 60, 3600], reversed(digit.split(":"))))
                     except ValueError:
+                        # Invalid Duration unit
                         continue
 
             if (digit - adjust) <= value <= (digit + adjust):
@@ -923,7 +929,7 @@ class Search:
                 if operation is operator.ne:
                     return False
 
-            elif operation(value, digit) and not blocked:
+            if value and operation(value, digit) and not blocked:
                 allowed = True
                 continue
 
@@ -1484,11 +1490,11 @@ class Search:
 
         filter_in = self.filter_include_combobox.get_active_text().strip()
         filter_out = self.filter_exclude_combobox.get_active_text().strip()
-        filter_size = self.filter_file_size_combobox.get_active_text().replace(" ", "")
-        filter_bitrate = self.filter_bitrate_combobox.get_active_text().replace(" ", "")
-        filter_country = self.filter_country_combobox.get_active_text().replace(" ", "")
-        filter_file_type = self.filter_file_type_combobox.get_active_text().replace(" ", "")
-        filter_length = self.filter_length_combobox.get_active_text().replace(" ", "")
+        filter_size = self.filter_file_size_combobox.get_active_text().strip()
+        filter_bitrate = self.filter_bitrate_combobox.get_active_text().strip()
+        filter_country = self.filter_country_combobox.get_active_text().strip()
+        filter_file_type = self.filter_file_type_combobox.get_active_text().strip()
+        filter_length = self.filter_length_combobox.get_active_text().strip()
         filter_free_slot = self.filter_free_slot_button.get_active()
 
         if filter_in:
@@ -1503,20 +1509,26 @@ class Search:
             except re.error:
                 filter_out = None
 
+        # Split at | pipes ampersands & space(s) but don't split <>=! math operators spaced before digit condition
+        seperator_pattern = self.FILTER_SPLIT_DIGIT_PATTERN
+
         if filter_size:
-            filter_size = filter_size.split("|")
+            filter_size = seperator_pattern.split(filter_size)
 
         if filter_bitrate:
-            filter_bitrate = filter_bitrate.split("|")
-
-        if filter_country:
-            filter_country = filter_country.upper().split("|")
-
-        if filter_file_type:
-            filter_file_type = filter_file_type.lower().split("|")
+            filter_bitrate = seperator_pattern.split(filter_bitrate)
 
         if filter_length:
-            filter_length = filter_length.split("|")
+            filter_length = seperator_pattern.split(filter_length)
+
+        # Split at commas, in addition to | pipes ampersands & space(s) but don't split ! not operator before condition
+        seperator_pattern = self.FILTER_SPLIT_TEXT_PATTERN
+
+        if filter_country:
+            filter_country = seperator_pattern.split(filter_country.upper())
+
+        if filter_file_type:
+            filter_file_type = seperator_pattern.split(filter_file_type.lower())
 
         filters = {
             "filterin": filter_in,
@@ -1555,7 +1567,7 @@ class Search:
                 value = value.pattern
 
             elif filter_id in ("filtersize", "filterbr", "filtercc", "filtertype", "filterlength"):
-                value = "|".join(value)
+                value = " ".join(value)
 
             self.push_history(filter_id, value)
             self.active_filter_count += 1
