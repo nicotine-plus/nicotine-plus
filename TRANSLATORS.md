@@ -4,6 +4,7 @@
  - Maite Guix (2022)
 
 ## Chinese (Simplified)
+ - hylau (2023)
  - hadwin (2022)
 
 ## Czech

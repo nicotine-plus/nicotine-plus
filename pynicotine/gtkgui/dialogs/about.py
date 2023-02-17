@@ -192,6 +192,7 @@ class About(Dialog):
    - Maite Guix (2022)""",
 
         """>> <b>Chinese (Simplified)</b>
+   - hylau (2023)
    - hadwin (2022)""",
 
         """>> <b>Czech</b>
