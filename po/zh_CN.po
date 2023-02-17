@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2023-02-16 17:18+0000\n"
+"PO-Revision-Date: 2023-02-17 18:15+0000\n"
 "Last-Translator: hylau <h2y3.lau@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/zh_Hans/>\n"
@@ -244,1247 +244,998 @@ msgid "Password Changed"
 msgstr "密码已更改"
 
 #: pynicotine/geoip.py:24
-#, fuzzy
 msgid "Andorra"
 msgstr "安道尔"
 
 #: pynicotine/geoip.py:25
-#, fuzzy
 msgid "United Arab Emirates"
 msgstr "阿拉伯联合酋长国"
 
 #: pynicotine/geoip.py:26
-#, fuzzy
 msgid "Afghanistan"
 msgstr "阿富汗"
 
 #: pynicotine/geoip.py:27
-#, fuzzy
 msgid "Antigua & Barbuda"
 msgstr "安提瓜和巴布达"
 
 #: pynicotine/geoip.py:28
-#, fuzzy
 msgid "Anguilla"
 msgstr "安圭拉"
 
 #: pynicotine/geoip.py:29
-#, fuzzy
 msgid "Albania"
 msgstr "阿尔巴尼亚"
 
 #: pynicotine/geoip.py:30
-#, fuzzy
 msgid "Armenia"
 msgstr "亚美尼亚"
 
 #: pynicotine/geoip.py:31
-#, fuzzy
 msgid "Angola"
 msgstr "安哥拉"
 
 #: pynicotine/geoip.py:32
-#, fuzzy
 msgid "Antarctica"
 msgstr "南极洲"
 
 #: pynicotine/geoip.py:33
-#, fuzzy
 msgid "Argentina"
 msgstr "阿根廷"
 
 #: pynicotine/geoip.py:34
-#, fuzzy
 msgid "American Samoa"
 msgstr "美属萨摩亚"
 
 #: pynicotine/geoip.py:35
-#, fuzzy
 msgid "Austria"
 msgstr "奥地利"
 
 #: pynicotine/geoip.py:36
-#, fuzzy
 msgid "Australia"
 msgstr "澳大利亚"
 
 #: pynicotine/geoip.py:37
-#, fuzzy
 msgid "Aruba"
 msgstr "阿鲁巴岛"
 
 #: pynicotine/geoip.py:38
-#, fuzzy
 msgid "Åland Islands"
 msgstr "奥兰群岛"
 
 #: pynicotine/geoip.py:39
-#, fuzzy
 msgid "Azerbaijan"
 msgstr "阿塞拜疆"
 
 #: pynicotine/geoip.py:40
-#, fuzzy
 msgid "Bosnia & Herzegovina"
 msgstr "波斯尼亚和黑塞哥维那"
 
 #: pynicotine/geoip.py:41
-#, fuzzy
 msgid "Barbados"
 msgstr "巴巴多斯"
 
 #: pynicotine/geoip.py:42
-#, fuzzy
 msgid "Bangladesh"
 msgstr "孟加拉国"
 
 #: pynicotine/geoip.py:43
-#, fuzzy
 msgid "Belgium"
 msgstr "比利时"
 
 #: pynicotine/geoip.py:44
-#, fuzzy
 msgid "Burkina Faso"
 msgstr "布基纳法索"
 
 #: pynicotine/geoip.py:45
-#, fuzzy
 msgid "Bulgaria"
 msgstr "保加利亚"
 
 #: pynicotine/geoip.py:46
-#, fuzzy
 msgid "Bahrain"
 msgstr "巴林"
 
 #: pynicotine/geoip.py:47
-#, fuzzy
 msgid "Burundi"
 msgstr "布隆迪"
 
 #: pynicotine/geoip.py:48
-#, fuzzy
 msgid "Benin"
 msgstr "贝宁"
 
 #: pynicotine/geoip.py:49
-#, fuzzy
 msgid "Saint Barthelemy"
 msgstr "圣巴泰勒米"
 
 #: pynicotine/geoip.py:50
-#, fuzzy
 msgid "Bermuda"
 msgstr "百慕大"
 
 #: pynicotine/geoip.py:51
-#, fuzzy
 msgid "Brunei Darussalam"
 msgstr "文莱达鲁萨兰国"
 
 #: pynicotine/geoip.py:52
-#, fuzzy
 msgid "Bolivia"
 msgstr "玻利维亚"
 
 #: pynicotine/geoip.py:53
-#, fuzzy
 msgid "Bonaire, Sint Eustatius and Saba"
 msgstr "博内尔岛、圣尤斯特歇斯岛和萨巴岛"
 
 #: pynicotine/geoip.py:54
-#, fuzzy
 msgid "Brazil"
 msgstr "巴西"
 
 #: pynicotine/geoip.py:55
-#, fuzzy
 msgid "Bahamas"
 msgstr "巴哈马"
 
 #: pynicotine/geoip.py:56
-#, fuzzy
 msgid "Bhutan"
 msgstr "不丹"
 
 #: pynicotine/geoip.py:57
-#, fuzzy
 msgid "Bouvet Island"
 msgstr "布维岛"
 
 #: pynicotine/geoip.py:58
-#, fuzzy
 msgid "Botswana"
 msgstr "博茨瓦纳"
 
 #: pynicotine/geoip.py:59
-#, fuzzy
 msgid "Belarus"
 msgstr "白俄罗斯"
 
 #: pynicotine/geoip.py:60
-#, fuzzy
 msgid "Belize"
 msgstr "伯利兹"
 
 #: pynicotine/geoip.py:61
-#, fuzzy
 msgid "Canada"
 msgstr "加拿大"
 
 #: pynicotine/geoip.py:62
-#, fuzzy
 msgid "Cocos (Keeling) Islands"
 msgstr "科科斯（基林）群岛"
 
 #: pynicotine/geoip.py:63
-#, fuzzy
 msgid "Democratic Republic of Congo"
 msgstr "刚果民主共和国"
 
 #: pynicotine/geoip.py:64
-#, fuzzy
 msgid "Central African Republic"
 msgstr "中非共和国"
 
 #: pynicotine/geoip.py:65
-#, fuzzy
 msgid "Congo"
 msgstr "刚果"
 
 #: pynicotine/geoip.py:66
-#, fuzzy
 msgid "Switzerland"
 msgstr "瑞士"
 
 #: pynicotine/geoip.py:67
-#, fuzzy
 msgid "Ivory Coast"
 msgstr "象牙海岸"
 
 #: pynicotine/geoip.py:68
-#, fuzzy
 msgid "Cook Islands"
 msgstr "库克群岛"
 
 #: pynicotine/geoip.py:69
-#, fuzzy
 msgid "Chile"
 msgstr "智利"
 
 #: pynicotine/geoip.py:70
-#, fuzzy
 msgid "Cameroon"
 msgstr "喀麦隆"
 
 #: pynicotine/geoip.py:71
-#, fuzzy
 msgid "China"
 msgstr "中国"
 
 #: pynicotine/geoip.py:72
-#, fuzzy
 msgid "Colombia"
 msgstr "哥伦比亚"
 
 #: pynicotine/geoip.py:73
-#, fuzzy
 msgid "Costa Rica"
 msgstr "哥斯达黎加"
 
 #: pynicotine/geoip.py:74
-#, fuzzy
 msgid "Cuba"
 msgstr "古巴"
 
 #: pynicotine/geoip.py:75
-#, fuzzy
 msgid "Cabo Verde"
 msgstr "佛得角"
 
 #: pynicotine/geoip.py:76
-#, fuzzy
 msgid "Curaçao"
 msgstr "库拉索"
 
 #: pynicotine/geoip.py:77
-#, fuzzy
 msgid "Christmas Island"
 msgstr "圣诞岛"
 
 #: pynicotine/geoip.py:78
-#, fuzzy
 msgid "Cyprus"
 msgstr "塞浦路斯"
 
 #: pynicotine/geoip.py:79
-#, fuzzy
 msgid "Czech Republic"
 msgstr "捷克共和国"
 
 #: pynicotine/geoip.py:80
-#, fuzzy
 msgid "Germany"
 msgstr "德国"
 
 #: pynicotine/geoip.py:81
-#, fuzzy
 msgid "Djibouti"
 msgstr "吉布提"
 
 #: pynicotine/geoip.py:82
-#, fuzzy
 msgid "Denmark"
 msgstr "丹麦"
 
 #: pynicotine/geoip.py:83
-#, fuzzy
 msgid "Dominica"
 msgstr "多米尼克"
 
 #: pynicotine/geoip.py:84
-#, fuzzy
 msgid "Dominican Republic"
 msgstr "多明尼加共和国"
 
 #: pynicotine/geoip.py:85
-#, fuzzy
 msgid "Algeria"
 msgstr "阿尔及利亚"
 
 #: pynicotine/geoip.py:86
-#, fuzzy
 msgid "Ecuador"
 msgstr "厄瓜多尔"
 
 #: pynicotine/geoip.py:87
-#, fuzzy
 msgid "Estonia"
 msgstr "爱沙尼亚"
 
 #: pynicotine/geoip.py:88
-#, fuzzy
 msgid "Egypt"
 msgstr "埃及"
 
 #: pynicotine/geoip.py:89
-#, fuzzy
 msgid "Western Sahara"
-msgstr "撒哈拉沙漠西部"
+msgstr "西撒哈拉"
 
 #: pynicotine/geoip.py:90
-#, fuzzy
 msgid "Eritrea"
 msgstr "厄立特里亚"
 
 #: pynicotine/geoip.py:91
-#, fuzzy
 msgid "Spain"
 msgstr "西班牙"
 
 #: pynicotine/geoip.py:92
-#, fuzzy
 msgid "Ethiopia"
 msgstr "埃塞俄比亚"
 
 #: pynicotine/geoip.py:93
-#, fuzzy
 msgid "Europe"
 msgstr "欧洲"
 
 #: pynicotine/geoip.py:94
-#, fuzzy
 msgid "Finland"
 msgstr "芬兰"
 
 #: pynicotine/geoip.py:95
-#, fuzzy
 msgid "Fiji"
 msgstr "斐济"
 
 #: pynicotine/geoip.py:96
-#, fuzzy
 msgid "Falkland Islands (Malvinas)"
 msgstr "福克兰群岛（马尔维纳斯）"
 
 #: pynicotine/geoip.py:97
-#, fuzzy
 msgid "Micronesia"
-msgstr "密克罗尼西亚"
+msgstr "密克罗尼西亚联邦"
 
 #: pynicotine/geoip.py:98
-#, fuzzy
 msgid "Faroe Islands"
 msgstr "法罗群岛"
 
 #: pynicotine/geoip.py:99
-#, fuzzy
 msgid "France"
 msgstr "法国"
 
 #: pynicotine/geoip.py:100
-#, fuzzy
 msgid "Gabon"
 msgstr "加蓬"
 
 #: pynicotine/geoip.py:101
-#, fuzzy
 msgid "Great Britain"
 msgstr "大不列颠"
 
 #: pynicotine/geoip.py:102
-#, fuzzy
 msgid "Grenada"
 msgstr "格林纳达"
 
 #: pynicotine/geoip.py:103
-#, fuzzy
 msgid "Georgia"
-msgstr "乔治亚州"
+msgstr "格鲁吉亚"
 
 #: pynicotine/geoip.py:104
-#, fuzzy
 msgid "French Guiana"
 msgstr "法属圭亚那"
 
 #: pynicotine/geoip.py:105
-#, fuzzy
 msgid "Guernsey"
 msgstr "根西岛"
 
 #: pynicotine/geoip.py:106
-#, fuzzy
 msgid "Ghana"
 msgstr "加纳"
 
 #: pynicotine/geoip.py:107
-#, fuzzy
 msgid "Gibraltar"
 msgstr "直布罗陀"
 
 #: pynicotine/geoip.py:108
-#, fuzzy
 msgid "Greenland"
-msgstr "格陵兰"
+msgstr "格陵兰岛"
 
 #: pynicotine/geoip.py:109
-#, fuzzy
 msgid "Gambia"
 msgstr "冈比亚"
 
 #: pynicotine/geoip.py:110
-#, fuzzy
 msgid "Guinea"
 msgstr "几内亚"
 
 #: pynicotine/geoip.py:111
-#, fuzzy
 msgid "Guadeloupe"
 msgstr "瓜德罗普"
 
 #: pynicotine/geoip.py:112
-#, fuzzy
 msgid "Equatorial Guinea"
 msgstr "赤道几内亚"
 
 #: pynicotine/geoip.py:113
-#, fuzzy
 msgid "Greece"
 msgstr "希腊"
 
 #: pynicotine/geoip.py:114
-#, fuzzy
 msgid "South Georgia & South Sandwich Islands"
 msgstr "南乔治亚岛和南桑威奇群岛"
 
 #: pynicotine/geoip.py:115
-#, fuzzy
 msgid "Guatemala"
 msgstr "危地马拉"
 
 #: pynicotine/geoip.py:116
-#, fuzzy
 msgid "Guam"
 msgstr "关岛"
 
 #: pynicotine/geoip.py:117
-#, fuzzy
 msgid "Guinea-Bissau"
-msgstr "几内亚比绍"
+msgstr "几内亚比索"
 
 #: pynicotine/geoip.py:118
-#, fuzzy
 msgid "Guyana"
 msgstr "圭亚那"
 
 #: pynicotine/geoip.py:119
-#, fuzzy
 msgid "Hong Kong"
 msgstr "香港"
 
 #: pynicotine/geoip.py:120
-#, fuzzy
 msgid "Heard & McDonald Islands"
 msgstr "赫德和麦克唐纳群岛"
 
 #: pynicotine/geoip.py:121
-#, fuzzy
 msgid "Honduras"
 msgstr "洪都拉斯"
 
 #: pynicotine/geoip.py:122
-#, fuzzy
 msgid "Croatia"
 msgstr "克罗地亚"
 
 #: pynicotine/geoip.py:123
-#, fuzzy
 msgid "Haiti"
 msgstr "海地"
 
 #: pynicotine/geoip.py:124
-#, fuzzy
 msgid "Hungary"
 msgstr "匈牙利"
 
 #: pynicotine/geoip.py:125
-#, fuzzy
 msgid "Indonesia"
 msgstr "印度尼西亚"
 
 #: pynicotine/geoip.py:126
-#, fuzzy
 msgid "Ireland"
 msgstr "爱尔兰"
 
 #: pynicotine/geoip.py:127
-#, fuzzy
 msgid "Israel"
 msgstr "以色列"
 
 #: pynicotine/geoip.py:128
-#, fuzzy
 msgid "Isle of Man"
 msgstr "马恩岛"
 
 #: pynicotine/geoip.py:129
-#, fuzzy
 msgid "India"
 msgstr "印度"
 
 #: pynicotine/geoip.py:130
-#, fuzzy
 msgid "British Indian Ocean Territory"
 msgstr "英属印度洋领地"
 
 #: pynicotine/geoip.py:131
-#, fuzzy
 msgid "Iraq"
 msgstr "伊拉克"
 
 #: pynicotine/geoip.py:132
-#, fuzzy
 msgid "Iran"
 msgstr "伊朗"
 
 #: pynicotine/geoip.py:133
-#, fuzzy
 msgid "Iceland"
 msgstr "冰岛"
 
 #: pynicotine/geoip.py:134
-#, fuzzy
 msgid "Italy"
 msgstr "意大利"
 
 #: pynicotine/geoip.py:135
-#, fuzzy
 msgid "Jersey"
-msgstr "球衣"
+msgstr "泽西岛"
 
 #: pynicotine/geoip.py:136
-#, fuzzy
 msgid "Jamaica"
 msgstr "牙买加"
 
 #: pynicotine/geoip.py:137
-#, fuzzy
 msgid "Jordan"
 msgstr "约旦"
 
 #: pynicotine/geoip.py:138
-#, fuzzy
 msgid "Japan"
 msgstr "日本"
 
 #: pynicotine/geoip.py:139
-#, fuzzy
 msgid "Kenya"
 msgstr "肯尼亚"
 
 #: pynicotine/geoip.py:140
-#, fuzzy
 msgid "Kyrgyzstan"
 msgstr "吉尔吉斯斯坦"
 
 #: pynicotine/geoip.py:141
-#, fuzzy
 msgid "Cambodia"
 msgstr "柬埔寨"
 
 #: pynicotine/geoip.py:142
-#, fuzzy
 msgid "Kiribati"
 msgstr "基里巴斯"
 
 #: pynicotine/geoip.py:143
-#, fuzzy
 msgid "Comoros"
 msgstr "科摩罗"
 
 #: pynicotine/geoip.py:144
-#, fuzzy
 msgid "Saint Kitts & Nevis"
 msgstr "圣基茨和尼维斯"
 
 #: pynicotine/geoip.py:145
-#, fuzzy
 msgid "North Korea"
-msgstr "北朝鲜"
+msgstr "朝鲜"
 
 #: pynicotine/geoip.py:146
-#, fuzzy
 msgid "South Korea"
 msgstr "韩国"
 
 #: pynicotine/geoip.py:147
-#, fuzzy
 msgid "Kuwait"
 msgstr "科威特"
 
 #: pynicotine/geoip.py:148
-#, fuzzy
 msgid "Cayman Islands"
 msgstr "开曼群岛"
 
 #: pynicotine/geoip.py:149
-#, fuzzy
 msgid "Kazakhstan"
 msgstr "哈萨克斯坦"
 
 #: pynicotine/geoip.py:150
-#, fuzzy
 msgid "Laos"
 msgstr "老挝"
 
 #: pynicotine/geoip.py:151
-#, fuzzy
 msgid "Lebanon"
 msgstr "黎巴嫩"
 
 #: pynicotine/geoip.py:152
-#, fuzzy
 msgid "Saint Lucia"
 msgstr "圣卢西亚"
 
 #: pynicotine/geoip.py:153
-#, fuzzy
 msgid "Liechtenstein"
 msgstr "列支敦士登"
 
 #: pynicotine/geoip.py:154
-#, fuzzy
 msgid "Sri Lanka"
 msgstr "斯里兰卡"
 
 #: pynicotine/geoip.py:155
-#, fuzzy
 msgid "Liberia"
 msgstr "利比里亚"
 
 #: pynicotine/geoip.py:156
-#, fuzzy
 msgid "Lesotho"
 msgstr "莱索托"
 
 #: pynicotine/geoip.py:157
-#, fuzzy
 msgid "Lithuania"
 msgstr "立陶宛"
 
 #: pynicotine/geoip.py:158
-#, fuzzy
 msgid "Luxembourg"
 msgstr "卢森堡"
 
 #: pynicotine/geoip.py:159
-#, fuzzy
 msgid "Latvia"
 msgstr "拉脱维亚"
 
 #: pynicotine/geoip.py:160
-#, fuzzy
 msgid "Libya"
 msgstr "利比亚"
 
 #: pynicotine/geoip.py:161
-#, fuzzy
 msgid "Morocco"
 msgstr "摩洛哥"
 
 #: pynicotine/geoip.py:162
-#, fuzzy
 msgid "Monaco"
 msgstr "摩纳哥"
 
 #: pynicotine/geoip.py:163
-#, fuzzy
 msgid "Moldova"
 msgstr "摩尔多瓦"
 
 #: pynicotine/geoip.py:164
-#, fuzzy
 msgid "Montenegro"
 msgstr "黑山"
 
 #: pynicotine/geoip.py:165
-#, fuzzy
 msgid "Saint Martin"
 msgstr "圣马丁"
 
 #: pynicotine/geoip.py:166
-#, fuzzy
 msgid "Madagascar"
 msgstr "马达加斯加"
 
 #: pynicotine/geoip.py:167
-#, fuzzy
 msgid "Marshall Islands"
 msgstr "马绍尔群岛"
 
 #: pynicotine/geoip.py:168
-#, fuzzy
 msgid "North Macedonia"
 msgstr "北马其顿"
 
 #: pynicotine/geoip.py:169
-#, fuzzy
 msgid "Mali"
 msgstr "马里"
 
 #: pynicotine/geoip.py:170
-#, fuzzy
 msgid "Myanmar"
 msgstr "缅甸"
 
 #: pynicotine/geoip.py:171
-#, fuzzy
 msgid "Mongolia"
 msgstr "蒙古"
 
 #: pynicotine/geoip.py:172
-#, fuzzy
 msgid "Macau"
 msgstr "澳门"
 
 #: pynicotine/geoip.py:173
-#, fuzzy
 msgid "Northern Mariana Islands"
 msgstr "北马里亚纳群岛"
 
 #: pynicotine/geoip.py:174
-#, fuzzy
 msgid "Martinique"
-msgstr "马提尼克岛"
+msgstr "马提尼克"
 
 #: pynicotine/geoip.py:175
-#, fuzzy
 msgid "Mauritania"
 msgstr "毛里塔尼亚"
 
 #: pynicotine/geoip.py:176
-#, fuzzy
 msgid "Montserrat"
-msgstr "蒙特塞拉特"
+msgstr "蒙塞拉特岛"
 
 #: pynicotine/geoip.py:177
-#, fuzzy
 msgid "Malta"
 msgstr "马耳他"
 
 #: pynicotine/geoip.py:178
-#, fuzzy
 msgid "Mauritius"
 msgstr "毛里求斯"
 
 #: pynicotine/geoip.py:179
-#, fuzzy
 msgid "Maldives"
 msgstr "马尔代夫"
 
 #: pynicotine/geoip.py:180
-#, fuzzy
 msgid "Malawi"
 msgstr "马拉维"
 
 #: pynicotine/geoip.py:181
-#, fuzzy
 msgid "Mexico"
 msgstr "墨西哥"
 
 #: pynicotine/geoip.py:182
-#, fuzzy
 msgid "Malaysia"
 msgstr "马来西亚"
 
 #: pynicotine/geoip.py:183
-#, fuzzy
 msgid "Mozambique"
 msgstr "莫桑比克"
 
 #: pynicotine/geoip.py:184
-#, fuzzy
 msgid "Namibia"
 msgstr "纳米比亚"
 
 #: pynicotine/geoip.py:185
-#, fuzzy
 msgid "New Caledonia"
 msgstr "新喀里多尼亚"
 
 #: pynicotine/geoip.py:186
-#, fuzzy
 msgid "Niger"
 msgstr "尼日尔"
 
 #: pynicotine/geoip.py:187
-#, fuzzy
 msgid "Norfolk Island"
 msgstr "诺福克岛"
 
 #: pynicotine/geoip.py:188
-#, fuzzy
 msgid "Nigeria"
 msgstr "尼日利亚"
 
 #: pynicotine/geoip.py:189
-#, fuzzy
 msgid "Nicaragua"
 msgstr "尼加拉瓜"
 
 #: pynicotine/geoip.py:190
-#, fuzzy
 msgid "Netherlands"
 msgstr "荷兰"
 
 #: pynicotine/geoip.py:191
-#, fuzzy
 msgid "Norway"
 msgstr "挪威"
 
 #: pynicotine/geoip.py:192
-#, fuzzy
 msgid "Nepal"
 msgstr "尼泊尔"
 
 #: pynicotine/geoip.py:193
-#, fuzzy
 msgid "Nauru"
 msgstr "瑙鲁"
 
 #: pynicotine/geoip.py:194
-#, fuzzy
 msgid "Niue"
 msgstr "纽埃"
 
 #: pynicotine/geoip.py:195
-#, fuzzy
 msgid "New Zealand"
 msgstr "新西兰"
 
 #: pynicotine/geoip.py:196
-#, fuzzy
 msgid "Oman"
 msgstr "阿曼"
 
 #: pynicotine/geoip.py:197
-#, fuzzy
 msgid "Panama"
 msgstr "巴拿马"
 
 #: pynicotine/geoip.py:198
-#, fuzzy
 msgid "Peru"
 msgstr "秘鲁"
 
 #: pynicotine/geoip.py:199
-#, fuzzy
 msgid "French Polynesia"
-msgstr "法属波利尼西亚"
+msgstr "法国波利尼西亚"
 
 #: pynicotine/geoip.py:200
-#, fuzzy
 msgid "Papua New Guinea"
 msgstr "巴布亚新几内亚"
 
 #: pynicotine/geoip.py:201
-#, fuzzy
 msgid "Philippines"
 msgstr "菲律宾"
 
 #: pynicotine/geoip.py:202
-#, fuzzy
 msgid "Pakistan"
 msgstr "巴基斯坦"
 
 #: pynicotine/geoip.py:203
-#, fuzzy
 msgid "Poland"
 msgstr "波兰"
 
 #: pynicotine/geoip.py:204
-#, fuzzy
 msgid "Saint Pierre & Miquelon"
-msgstr "圣皮埃尔和密克隆"
+msgstr "圣皮埃尔和密克隆群岛"
 
 #: pynicotine/geoip.py:205
-#, fuzzy
 msgid "Pitcairn"
-msgstr "皮特凯恩"
+msgstr "皮特凯恩群岛"
 
 #: pynicotine/geoip.py:206
-#, fuzzy
 msgid "Puerto Rico"
 msgstr "波多黎各"
 
 #: pynicotine/geoip.py:207
-#, fuzzy
 msgid "State of Palestine"
 msgstr "巴勒斯坦国"
 
 #: pynicotine/geoip.py:208
-#, fuzzy
 msgid "Portugal"
 msgstr "葡萄牙"
 
 #: pynicotine/geoip.py:209
-#, fuzzy
 msgid "Palau"
-msgstr "帕劳"
+msgstr "帛琉"
 
 #: pynicotine/geoip.py:210
-#, fuzzy
 msgid "Paraguay"
 msgstr "巴拉圭"
 
 #: pynicotine/geoip.py:211
-#, fuzzy
 msgid "Qatar"
 msgstr "卡塔尔"
 
 #: pynicotine/geoip.py:212
-#, fuzzy
 msgid "Réunion"
-msgstr "团圆"
+msgstr "留尼汪"
 
 #: pynicotine/geoip.py:213
-#, fuzzy
 msgid "Romania"
 msgstr "罗马尼亚"
 
 #: pynicotine/geoip.py:214
-#, fuzzy
 msgid "Serbia"
 msgstr "塞尔维亚"
 
 #: pynicotine/geoip.py:215
-#, fuzzy
 msgid "Russia"
 msgstr "俄罗斯"
 
 #: pynicotine/geoip.py:216
-#, fuzzy
 msgid "Rwanda"
 msgstr "卢旺达"
 
 #: pynicotine/geoip.py:217
-#, fuzzy
 msgid "Saudi Arabia"
 msgstr "沙特阿拉伯"
 
 #: pynicotine/geoip.py:218
-#, fuzzy
 msgid "Solomon Islands"
 msgstr "所罗门群岛"
 
 #: pynicotine/geoip.py:219
-#, fuzzy
 msgid "Seychelles"
 msgstr "塞舌尔"
 
 #: pynicotine/geoip.py:220
-#, fuzzy
 msgid "Sudan"
 msgstr "苏丹"
 
 #: pynicotine/geoip.py:221
-#, fuzzy
 msgid "Sweden"
 msgstr "瑞典"
 
 #: pynicotine/geoip.py:222
-#, fuzzy
 msgid "Singapore"
 msgstr "新加坡"
 
 #: pynicotine/geoip.py:223
-#, fuzzy
 msgid "Saint Helena"
-msgstr "圣赫勒拿"
+msgstr "圣赫勒拿岛"
 
 #: pynicotine/geoip.py:224
-#, fuzzy
 msgid "Slovenia"
 msgstr "斯洛文尼亚"
 
 #: pynicotine/geoip.py:225
-#, fuzzy
 msgid "Svalbard & Jan Mayen Islands"
-msgstr "斯瓦尔巴和扬马延群岛"
+msgstr "斯瓦尔巴群岛和扬马延群岛"
 
 #: pynicotine/geoip.py:226
-#, fuzzy
 msgid "Slovak Republic"
 msgstr "斯洛伐克共和国"
 
 #: pynicotine/geoip.py:227
-#, fuzzy
 msgid "Sierra Leone"
 msgstr "塞拉利昂"
 
 #: pynicotine/geoip.py:228
-#, fuzzy
 msgid "San Marino"
 msgstr "圣马力诺"
 
 #: pynicotine/geoip.py:229
-#, fuzzy
 msgid "Senegal"
 msgstr "塞内加尔"
 
 #: pynicotine/geoip.py:230
-#, fuzzy
 msgid "Somalia"
 msgstr "索马里"
 
 #: pynicotine/geoip.py:231
-#, fuzzy
 msgid "Suriname"
 msgstr "苏里南"
 
 #: pynicotine/geoip.py:232
-#, fuzzy
 msgid "South Sudan"
 msgstr "南苏丹"
 
 #: pynicotine/geoip.py:233
-#, fuzzy
 msgid "Sao Tome & Principe"
 msgstr "圣多美和普林西比"
 
 #: pynicotine/geoip.py:234
-#, fuzzy
 msgid "El Salvador"
 msgstr "萨尔瓦多"
 
 #: pynicotine/geoip.py:235
-#, fuzzy
 msgid "Sint Maarten"
-msgstr "圣马丁"
+msgstr "荷属圣马丁"
 
 #: pynicotine/geoip.py:236
-#, fuzzy
 msgid "Syria"
 msgstr "叙利亚"
 
 #: pynicotine/geoip.py:237
-#, fuzzy
 msgid "Eswatini"
 msgstr "斯威士兰"
 
 #: pynicotine/geoip.py:238
-#, fuzzy
 msgid "Turks & Caicos Islands"
 msgstr "特克斯和凯科斯群岛"
 
 #: pynicotine/geoip.py:239
-#, fuzzy
 msgid "Chad"
 msgstr "乍得"
 
 #: pynicotine/geoip.py:240
-#, fuzzy
 msgid "French Southern Territories"
 msgstr "法属南部领地"
 
 #: pynicotine/geoip.py:241
-#, fuzzy
 msgid "Togo"
 msgstr "多哥"
 
 #: pynicotine/geoip.py:242
-#, fuzzy
 msgid "Thailand"
 msgstr "泰国"
 
 #: pynicotine/geoip.py:243
-#, fuzzy
 msgid "Tajikistan"
 msgstr "塔吉克斯坦"
 
 #: pynicotine/geoip.py:244
-#, fuzzy
 msgid "Tokelau"
 msgstr "托克劳"
 
 #: pynicotine/geoip.py:245
-#, fuzzy
 msgid "Timor-Leste"
 msgstr "东帝汶"
 
 #: pynicotine/geoip.py:246
-#, fuzzy
 msgid "Turkmenistan"
 msgstr "土库曼斯坦"
 
 #: pynicotine/geoip.py:247
-#, fuzzy
 msgid "Tunisia"
 msgstr "突尼斯"
 
 #: pynicotine/geoip.py:248
-#, fuzzy
 msgid "Tonga"
 msgstr "汤加"
 
 #: pynicotine/geoip.py:249
-#, fuzzy
 msgid "Turkey"
-msgstr "火鸡"
+msgstr "土耳其"
 
 #: pynicotine/geoip.py:250
-#, fuzzy
 msgid "Trinidad & Tobago"
 msgstr "特立尼达和多巴哥"
 
 #: pynicotine/geoip.py:251
-#, fuzzy
 msgid "Tuvalu"
 msgstr "图瓦卢"
 
 #: pynicotine/geoip.py:252
-#, fuzzy
 msgid "Taiwan"
 msgstr "台湾"
 
 #: pynicotine/geoip.py:253
-#, fuzzy
 msgid "Tanzania"
 msgstr "坦桑尼亚"
 
 #: pynicotine/geoip.py:254
-#, fuzzy
 msgid "Ukraine"
 msgstr "乌克兰"
 
 #: pynicotine/geoip.py:255
-#, fuzzy
 msgid "Uganda"
 msgstr "乌干达"
 
 #: pynicotine/geoip.py:256
-#, fuzzy
 msgid "U.S. Minor Outlying Islands"
 msgstr "美国本土外小岛屿"
 
 #: pynicotine/geoip.py:257
-#, fuzzy
 msgid "United States"
 msgstr "美国"
 
 #: pynicotine/geoip.py:258
-#, fuzzy
 msgid "Uruguay"
 msgstr "乌拉圭"
 
 #: pynicotine/geoip.py:259
-#, fuzzy
 msgid "Uzbekistan"
 msgstr "乌兹别克斯坦"
 
 #: pynicotine/geoip.py:260
-#, fuzzy
 msgid "Holy See (Vatican City State)"
-msgstr "圣座（梵蒂冈城邦）"
+msgstr "罗马教廷（梵蒂冈城国）"
 
 #: pynicotine/geoip.py:261
-#, fuzzy
 msgid "Saint Vincent & The Grenadines"
 msgstr "圣文森特和格林纳丁斯"
 
 #: pynicotine/geoip.py:262
-#, fuzzy
 msgid "Venezuela"
 msgstr "委内瑞拉"
 
 #: pynicotine/geoip.py:263
-#, fuzzy
 msgid "British Virgin Islands"
 msgstr "英属维尔京群岛"
 
 #: pynicotine/geoip.py:264
-#, fuzzy
 msgid "U.S. Virgin Islands"
 msgstr "美属维尔京群岛"
 
 #: pynicotine/geoip.py:265
-#, fuzzy
 msgid "Viet Nam"
 msgstr "越南"
 
 #: pynicotine/geoip.py:266
-#, fuzzy
 msgid "Vanuatu"
 msgstr "瓦努阿图"
 
 #: pynicotine/geoip.py:267
-#, fuzzy
 msgid "Wallis & Futuna"
-msgstr "瓦利斯和富图纳"
+msgstr "瓦利斯群岛和富图纳群岛"
 
 #: pynicotine/geoip.py:268
-#, fuzzy
 msgid "Samoa"
 msgstr "萨摩亚"
 
 #: pynicotine/geoip.py:269
-#, fuzzy
 msgid "Kosovo"
 msgstr "科索沃"
 
 #: pynicotine/geoip.py:270
-#, fuzzy
 msgid "Yemen"
 msgstr "也门"
 
 #: pynicotine/geoip.py:271
-#, fuzzy
 msgid "Mayotte"
-msgstr "马约特岛"
+msgstr "马约特"
 
 #: pynicotine/geoip.py:272
-#, fuzzy
 msgid "South Africa"
 msgstr "南非"
 
@@ -2034,9 +1785,8 @@ msgid "Edit Replacement"
 msgstr "编辑替换"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1307
-#, fuzzy
 msgid "Enter a text pattern and what to replace it with:"
-msgstr "分别输入文本模式和替换："
+msgstr "输入文本模式及其替换内容："
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1375
 msgid "Top"
@@ -2434,12 +2184,10 @@ msgid "Rating"
 msgstr "评分"
 
 #: pynicotine/gtkgui/interests.py:89
-#, fuzzy
 msgid "Item"
 msgstr "条目"
 
 #: pynicotine/gtkgui/interests.py:128 pynicotine/gtkgui/interests.py:136
-#, fuzzy
 msgid "Re_commendations for Item"
 msgstr "Re_commendations 条目"
 
@@ -3030,7 +2778,6 @@ msgid "Failed"
 msgstr "失败的"
 
 #: pynicotine/gtkgui/uploads.py:69
-#, fuzzy
 msgid "User Logged Off"
 msgstr "用户已登出"
 
@@ -3059,7 +2806,6 @@ msgid "Upload Folder…"
 msgstr "上传文件夹…"
 
 #: pynicotine/gtkgui/userbrowse.py:225
-#, fuzzy
 msgid "Upload Folder & Subfolders…"
 msgstr "上传文件夹和子文件夹…"
 
@@ -3236,7 +2982,6 @@ msgid "_OK"
 msgstr "_确定"
 
 #: pynicotine/gtkgui/widgets/dialogs.py:396
-#, fuzzy
 msgid "_No"
 msgstr "_不"
 
@@ -3321,12 +3066,10 @@ msgid "Select a File"
 msgstr "选择一个文件"
 
 #: pynicotine/gtkgui/widgets/filechooser.py:130
-#, fuzzy
 msgid "Select a Folder"
 msgstr "选择一个文件夹"
 
 #: pynicotine/gtkgui/widgets/filechooser.py:150
-#, fuzzy
 msgid "Select an Image"
 msgstr "选择图像"
 
@@ -3344,9 +3087,8 @@ msgid "(None)"
 msgstr "（无）"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:107
-#, fuzzy
 msgid "Close Tab"
-msgstr "_关闭标签"
+msgstr "关闭选项卡"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:238
 msgid "Unread Tabs"
@@ -3405,7 +3147,7 @@ msgid "Remove from Private Room %s"
 msgstr "从私人房间移除 %s"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:426
-#, fuzzy, python-format
+#, python-format
 msgid "Add to Private Room %s"
 msgstr "添加到私人房间 %s"
 
@@ -3426,7 +3168,7 @@ msgstr "请输入天数!"
 #: pynicotine/gtkgui/widgets/popupmenu.py:564
 #, python-format
 msgid "Gift days of your Soulseek privileges to user %(user)s (%(days_left)s):"
-msgstr "用户 %(user)s 赠送Soulseek特权的天数 %(days_left)s"
+msgstr "用户 %(user)s 赠送Soulseek特权的天数 %(days_left)s："
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:565
 #, python-format
@@ -3530,9 +3272,9 @@ msgid "Couldn't write to log file \"%(filename)s\": %(error)s"
 msgstr "无法写入日志文件“%(filename)s”：%(error)s"
 
 #: pynicotine/logfacility.py:204
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot access log file %(path)s: %(error)s"
-msgstr "无法保存文件 %(path)s：%(error)s"
+msgstr "无法访问日志文件 %(path)s：%(error)s"
 
 #: pynicotine/notifications.py:96 pynicotine/notifications.py:115
 #, python-format
@@ -3548,9 +3290,8 @@ msgstr "Last.fm：请提供您的 Last.fm 用户名和 API 密钥"
 #: pynicotine/nowplaying.py:214 pynicotine/nowplaying.py:260
 #: pynicotine/nowplaying.py:270 pynicotine/nowplaying.py:278
 #: pynicotine/nowplaying.py:292 pynicotine/nowplaying.py:307
-#, fuzzy
 msgid "Now Playing Error"
-msgstr "现在播放格式"
+msgstr "正在播放错误"
 
 #: pynicotine/nowplaying.py:139
 #, python-format
@@ -3760,14 +3501,13 @@ msgid "Unable to read shares database. Please rescan your shares. Error: %s"
 msgstr "无法读取共享数据库。请重新扫描您的共享。错误： %s"
 
 #: pynicotine/slskproto.py:297
-#, fuzzy, python-format
+#, python-format
 msgid "Specified network interface '%s' is not available"
-msgstr "指定的网络接口“%s”不存在"
+msgstr "指定的网络接口'%s'不可用"
 
 #: pynicotine/slskproto.py:298
-#, fuzzy
 msgid "Unknown Network Interface"
-msgstr "用户界面"
+msgstr "未知的用户界面"
 
 #: pynicotine/slskproto.py:308
 #, python-format
@@ -3833,7 +3573,6 @@ msgid "Cannot save file in %(folder_path)s: %(error)s"
 msgstr "无法保存文件在 %(folder_path)s: %(error)s"
 
 #: pynicotine/transfers.py:1187 pynicotine/transfers.py:2029
-#, fuzzy
 msgid "Download Folder Error"
 msgstr "下载文件夹出错"
 
@@ -3860,9 +3599,8 @@ msgid "%(file)s downloaded from %(user)s"
 msgstr "%(file)s 下载自 %(user)s"
 
 #: pynicotine/transfers.py:1961
-#, fuzzy
 msgid "File Downloaded"
-msgstr "文件下载"
+msgstr "文件已下载"
 
 #: pynicotine/transfers.py:1967
 #, python-format
@@ -3875,14 +3613,13 @@ msgid "Trouble executing '%s'"
 msgstr "执行“%s”时出现问题"
 
 #: pynicotine/transfers.py:1986
-#, fuzzy, python-format
+#, python-format
 msgid "%(folder)s downloaded from %(user)s"
-msgstr "%(file)s 下载自 %(user)s"
+msgstr "%(folder)s 下载自 %(user)s"
 
 #: pynicotine/transfers.py:1990
-#, fuzzy
 msgid "Folder Downloaded"
-msgstr "已下载文件夹"
+msgstr "文件夹已下载"
 
 #: pynicotine/transfers.py:1996
 #, python-format
@@ -3930,14 +3667,12 @@ msgid "Error: %(num)d Download filters failed! %(error)s "
 msgstr "错误：%(num)d 下载过滤器失败！ %(error)s "
 
 #: pynicotine/updatechecker.py:45
-#, fuzzy
 msgid "Up to Date"
 msgstr "最新"
 
 #: pynicotine/updatechecker.py:48
-#, fuzzy
 msgid "Out of Date"
-msgstr "过时"
+msgstr "已过时"
 
 #: pynicotine/updatechecker.py:49
 #, python-format
@@ -4007,9 +3742,9 @@ msgid "Picture saved to %s"
 msgstr "图片保存到 %s"
 
 #: pynicotine/userinfo.py:101
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot save picture to %(filename)s: %(error)s"
-msgstr "无法保存 %(filename)s：%(error)s"
+msgstr "图片无法保存到 %(filename)s：%(error)s"
 
 #: pynicotine/userinfo.py:121
 #, python-format
@@ -4032,14 +3767,13 @@ msgid "%(user)s is offline"
 msgstr "%(user)s 已离线"
 
 #: pynicotine/userlist.py:297
-#, fuzzy
 msgid "Buddy Status"
-msgstr "好友名称"
+msgstr "好友状态"
 
 #: pynicotine/utils.py:364
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot open file path %(path)s: %(error)s"
-msgstr "无法保存文件 %(path)s：%(error)s"
+msgstr "无法打开文件路径 %(path)s：%(error)s"
 
 #: pynicotine/utils.py:397
 #, python-format
@@ -4084,7 +3818,6 @@ msgid "Toggle Text-to-Speech"
 msgstr "切换文字转语音"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:147
-#, fuzzy
 msgid "Chat Room Command Help"
 msgstr "聊天室命令帮助"
 
@@ -4098,14 +3831,12 @@ msgid "_Auto-join Room"
 msgstr "_自动加入房间"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:261
-#, fuzzy
 msgid "Room Wall"
-msgstr "房间墙壁"
+msgstr "房间留言板"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:276
-#, fuzzy
 msgid "R_oom Wall"
-msgstr "房间墙壁"
+msgstr "房间留言版"
 
 #: pynicotine/gtkgui/ui/dialogs/about.ui:95
 msgid "Created by"
@@ -4120,9 +3851,8 @@ msgid "License"
 msgstr "许可"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:6
-#, fuzzy
 msgid "_Previous"
-msgstr "上一个文件"
+msgstr "_上一个"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:62
 msgid "Welcome to Nicotine+"
@@ -4171,9 +3901,8 @@ msgstr "从范围内选择监听端口。使用范围内的第一个可用端口
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:302
 #: pynicotine/gtkgui/ui/settings/network.ui:161
-#, fuzzy
 msgid "First Port"
-msgstr "第一个港口"
+msgstr "第一个端口"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:308
 #: pynicotine/gtkgui/ui/settings/network.ui:179
@@ -4182,9 +3911,8 @@ msgstr "到"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:317
 #: pynicotine/gtkgui/ui/settings/network.ui:188
-#, fuzzy
 msgid "Last Port"
-msgstr "最后一个港口"
+msgstr "最后一个端口"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:342
 msgid "Download Files to Folder"
@@ -4219,17 +3947,14 @@ msgstr "向 Soulseek 捐款可授予您在特定时间段内的特权。如果�
 "特权用户之前。"
 
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:21
-#, fuzzy
 msgid "Previous File"
 msgstr "上一个文件"
 
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:35
-#, fuzzy
 msgid "Next File"
 msgstr "下一个文件"
 
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:49
-#, fuzzy
 msgid "Download File"
 msgstr "下载文件"
 
@@ -4246,9 +3971,8 @@ msgid "_Export…"
 msgstr "导出…"
 
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:18
-#, fuzzy
 msgid "_Apply"
-msgstr "应用"
+msgstr "_应用"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:6
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:55
@@ -4483,14 +4207,12 @@ msgid "Clear Finished"
 msgstr "清除已完成"
 
 #: pynicotine/gtkgui/ui/downloads.ui:185
-#, fuzzy
 msgid "Clear Specific Downloads"
-msgstr "清除所有下载"
+msgstr "清除特定的下载"
 
 #: pynicotine/gtkgui/ui/downloads.ui:194 pynicotine/gtkgui/ui/uploads.ui:224
-#, fuzzy
 msgid "Clear _All…"
-msgstr "清除所有…"
+msgstr "移除_全部…"
 
 #: pynicotine/gtkgui/ui/interests.ui:24
 msgid "Personal Interests"
@@ -4509,22 +4231,18 @@ msgid "Add something you dislike…"
 msgstr "添加你不喜欢的东西…"
 
 #: pynicotine/gtkgui/ui/interests.ui:154
-#, fuzzy
 msgid "Refresh Recommendations"
-msgstr "刷新推荐列表"
+msgstr "刷新建议"
 
 #: pynicotine/gtkgui/ui/interests.ui:224
-#, fuzzy
 msgid "Refresh Similar Users"
-msgstr "类似用户"
+msgstr "刷新相似用户"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:27
-#, fuzzy
 msgid "Main Menu"
-msgstr "打开主菜单"
+msgstr "主菜单"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:89
-#, fuzzy
 msgid "Search Scope"
 msgstr "搜索范围"
 
@@ -4555,7 +4273,6 @@ msgid "_Wishlist"
 msgstr "_心愿单"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:215
-#, fuzzy
 msgid "Configure Searches"
 msgstr "配置搜索"
 
@@ -4567,12 +4284,10 @@ msgstr "输入搜索词以搜索 Soulseek 网络上其他用户共享的文件"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:439
 #: pynicotine/gtkgui/ui/mainwindow.ui:678 pynicotine/gtkgui/ui/search.ui:138
-#, fuzzy
 msgid "File Grouping Mode"
-msgstr "文件分组方式"
+msgstr "文件分组模式"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:456
-#, fuzzy
 msgid "Configure Downloads"
 msgstr "配置下载"
 
@@ -4583,7 +4298,6 @@ msgid ""
 msgstr "您从其他用户下载的文件在此处排队，按需暂停和恢复"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:695
-#, fuzzy
 msgid "Configure Uploads"
 msgstr "配置上传"
 
@@ -4605,9 +4319,8 @@ msgid "_Open List"
 msgstr "_打开列表"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:871
-#, fuzzy
 msgid "Configure Shares"
-msgstr "_配置共享库"
+msgstr "配置共享"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:938
 msgid ""
@@ -4639,7 +4352,6 @@ msgstr "聊天_历史"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1197
 #: pynicotine/gtkgui/ui/mainwindow.ui:1516
-#, fuzzy
 msgid "Configure Chats"
 msgstr "配置聊天"
 
@@ -4649,9 +4361,8 @@ msgid ""
 msgstr "输入用户的姓名以私下与他们开始文本对话"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1350
-#, fuzzy
 msgid "_Message All"
-msgstr "消息（托盘）"
+msgstr "_留言全部"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1416
 msgid ""
@@ -4673,7 +4384,7 @@ msgstr "输入您要加入的房间的名称。如果房间不存在，它将被
 msgid ""
 "Join an existing chat room, or create a new room to chat with other users on "
 "the Soulseek network"
-msgstr "加入现有的聊天室，或创建一个新的房间，与Soulseek网络上的其他用户聊天。"
+msgstr "加入现有的聊天室，或创建一个新的房间，与Soulseek网络上的其他用户聊天"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1738
 msgid "Scanning Shares"
@@ -4684,19 +4395,16 @@ msgid "Connections"
 msgstr "连接"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1787
-#, fuzzy
 msgid "Downloading (Speed / Active Users)"
 msgstr "下载（速度/活跃用户）"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1817
-#, fuzzy
 msgid "Uploading (Speed / Active Users)"
 msgstr "上传（速度/活跃用户）"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1882
-#, fuzzy
 msgid "Show Log History Pane"
-msgstr "显示_日志历史记录窗格"
+msgstr "显示日志历史窗格"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:29
 msgid "Chat Room Commands"
@@ -4886,9 +4594,8 @@ msgstr "不限制下载速度"
 
 #: pynicotine/gtkgui/ui/popovers/downloadspeeds.ui:49
 #: pynicotine/gtkgui/ui/settings/downloads.ui:150
-#, fuzzy
 msgid "Use download speed limit (KiB/s):"
-msgstr "替代下载速度限制 (KiB/s)："
+msgstr "使用下载速度限制 (KiB/s)："
 
 #: pynicotine/gtkgui/ui/popovers/downloadspeeds.ui:59
 #: pynicotine/gtkgui/ui/popovers/downloadspeeds.ui:85
@@ -4904,9 +4611,8 @@ msgstr "每秒千字节（2^10 字节）。"
 
 #: pynicotine/gtkgui/ui/popovers/downloadspeeds.ui:75
 #: pynicotine/gtkgui/ui/settings/downloads.ui:174
-#, fuzzy
 msgid "Use alternative download speed limit (KiB/s):"
-msgstr "替代下载速度限制 (KiB/s)："
+msgstr "使用替代下载速度限制 （KiB/s）："
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:29
 msgid "Private Chat Commands"
@@ -4953,9 +4659,8 @@ msgid "Show IP for user"
 msgstr "显示用户 IP"
 
 #: pynicotine/gtkgui/ui/popovers/roomlist.ui:27
-#, fuzzy
 msgid "Refresh Rooms"
-msgstr "刷新房间列表"
+msgstr "刷新房间"
 
 #: pynicotine/gtkgui/ui/popovers/roomlist.ui:77
 msgid "_Show feed of public chat room messages"
@@ -4987,7 +4692,6 @@ msgid ""
 msgstr "搜索结果筛选器用于优化显示的搜索结果。"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:48
-#, fuzzy
 msgid ""
 "Each list of search results has its own filter which can be revealed by "
 "toggling the Result Filters button. A filter is made up of multiple fields, "
@@ -4995,11 +4699,9 @@ msgid ""
 "Filtering is applied immediately to results already received, and also to "
 "those yet to arrive."
 msgstr ""
-"每个搜索结果列表都有自己的过滤器，可以通过切换“结果过滤器”按钮来显示。一个过"
-"滤器由多个字段组成，在其任一字段中按 Enter 时都会应用所有这些字段。过滤会立即"
-"应用于已经收到的结果，也适用于尚未到达的结果。要再次查看完整结果，只需清除所"
-"有术语的过滤器并重新应用它。顾名思义，搜索结果过滤器不能扩大您原来的搜索范"
-"围，它只能缩小范围。要扩大或更改您的搜索词，请执行新的搜索。"
+"每个搜索结果列表都有自己的过滤器，可以通过切换“结果过滤器”按钮来显示。过滤器"
+"由多个字段组成，在其任一字段中按 Enter "
+"时将应用所有这些字段。过滤会立即应用于已收到的结果，也适用于尚未到达的结果。"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:57
 msgid ""
@@ -5010,48 +4712,43 @@ msgstr "顾名思义，搜索结果过滤器不能扩大您原来的搜索范围
 "改搜索项，请执行新的搜索。"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:66
-#, fuzzy
 msgid "Result Filter Usage"
-msgstr "结果过滤器"
+msgstr "结果筛选器用法"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:78
 msgid "Include Text"
 msgstr "包含文本"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:95
-#, fuzzy
 msgid "Files, folders and usernames containing this text will be shown."
-msgstr "将显示包含此文本的文件和文件夹。"
+msgstr "显示包含此文本的文件、文件夹和用户名。"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:105
-#, fuzzy
 msgid ""
 "Case is insensitive, but word order is important: 'Instrumental Remix' will "
 "not show any 'Remix Instrumental'"
-msgstr ""
-"不区分大小写，但词序很重要：“Spears Brittany”不会显示任何“Brittany Spears”"
+msgstr "不区分大小写，但词序很重要：“Instrumental Remix”不会显示任何“Remix "
+"Instrumental”的结果"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:115
-#, fuzzy
 msgid ""
 "For order-insensitive filtering, as well as filtering several exact phrases, "
 "vertical bars can be used to separate phrases and words.\n"
 "    Example: Remix|Instrumental|Dub Mix"
 msgstr ""
-"对于不区分顺序的过滤，以及过滤几个确切的短语，可以使用竖线来分隔短语和单"
-"词。\n"
-"    示例：斯皮尔斯|布列塔尼|我美丽的专辑|你好"
+"对于不区分顺序的过滤，以及过滤几个确切的短语，可以使用竖线来分隔短语和单词。"
+"\n"
+"    示例：Remix|Instrumental|Dub Mix"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:127
 msgid "Exclude Text"
 msgstr "排除文本"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:139
-#, fuzzy
 msgid ""
 "As above, but files, folders and usernames are filtered out if the text "
 "matches."
-msgstr "如上所述，但如果文本匹配，文件和文件夹将被过滤掉。"
+msgstr "如上所述，但如果文本匹配，则会过滤掉文件、文件夹和用户名。"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:148
 msgid "File Type"
@@ -5094,7 +4791,6 @@ msgid ""
 msgstr "默认情况下，使用的单位是字节，匹配大于或等于该值的文件将。"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:228
-#, fuzzy
 msgid ""
 "Append b, k, m, or g (alternatively kib, mib, or gib) to specify byte, "
 "kibibyte, mebibyte, or gibibyte units:\n"
@@ -5102,25 +4798,23 @@ msgid ""
 msgstr ""
 "附加 b、k、m 或 g（或者 kib、mib 或 gib）以指定 byte、kibibyte、mebibyte 或 "
 "gibibyte 单位：\n"
-"    <1024k 将找到 1024 千字节（即 1 兆字节）或更小的文件。"
+"    20m以显示大于20 MiB（兆字节）的文件。"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:239
-#, fuzzy
 msgid ""
 "Prepend = to a value to specify an exact match:\n"
 "    =1024 only matches files that are 1 KiB (kibibyte)."
 msgstr ""
-"将 = 添加到一个值以指定完全匹配：\n"
+"前缀=指定精确匹配的值：\n"
 "    =1024 仅匹配大小为 1024 字节（即 1 kibibyte）的文件。"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:250
-#, fuzzy
 msgid ""
 "Prepend ! to a value to exclude files of a specific size:\n"
 "    !30.5m to hide files that are 30.5 MiB (mebibytes)."
 msgstr ""
-"将 = 添加到一个值以指定完全匹配：\n"
-"    =1024 仅匹配大小为 1024 字节（即 1 kibibyte）的文件。"
+"前置!到一个值以排除特定大小的文件：\n"
+"    !30.5m 用于隐藏 30.5 MiB（兆字节）的文件。"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:261
 msgid ""
@@ -5133,13 +4827,10 @@ msgstr ""
 "    但小于 1 GiB（千兆字节），在条件之间使用|。"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:273
-#, fuzzy
 msgid ""
 "The better-known variants kb, mb, and gb can also be used for kilobyte, "
 "megabyte, and gigabyte units."
-msgstr ""
-"为方便起见，也可以使用众所周知的千字节、兆字节和千兆字节单位的变体 kb、mb 和 "
-"gb。"
+msgstr "常见的kb、mb和gb也可以用于千字节、兆字节和千兆字节单位。"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:301
 msgid "Filters files based upon their bitrate."
@@ -5164,9 +4855,8 @@ msgstr ""
 "     最大比特率为 1411 Kb/s。"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:352
-#, fuzzy
 msgid "Filters files based upon their duration."
-msgstr "根据比特率过滤文件。"
+msgstr "根据文件的持续时间过滤文件。"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:362
 msgid ""
@@ -5186,16 +4876,15 @@ msgstr ""
 "    <5:30:00 显示时长少于 5 个半小时的文件。"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:384
-#, fuzzy
 msgid ""
 "Multiple conditions can be specified with | pipe separators:\n"
 "    >6:00|<12:00 to show files between 6 and 12 minutes long.\n"
 "    !9:54|!8:43|!7:32 to hide some specific files from the results.\n"
 "    =5:34|=4:23|=3:05 to include files with specific durations."
 msgstr ""
-"可以使用 | 指定多个条件管道分离器：\n"
+"使用|分隔符指定多个条件：\n"
 "    >6:00|<12:00 显示 6 到 12 分钟之间的文件。\n"
-"    !9:54|!8:43|!7:32 从结果中隐藏一些特定文件。\n"
+"    !9:54|!8:43|!7:32 从结果中隐藏特定文件。\n"
 "    =5:34|=4:23|=3:05 包含具有特定持续时间的文件。"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:397
@@ -5203,21 +4892,18 @@ msgid "To exclude non-audio files use !0 in the duration filter."
 msgstr "要排除非音频文件，在持续时间过滤器中使用 !0。"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:420
-#, fuzzy
 msgid "Filters files based upon users' geographical location."
-msgstr "根据用户所在国家/地区过滤文件。"
+msgstr "根据用户的地理位置过滤文件。"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:430
-#, fuzzy
 msgid ""
 "Uses country codes defined by ISO 3166-2:\n"
 "    US will only show results from users with IP addresses in the United "
 "States. !GB will hide results that come from users in the United Kingdom "
 "(Great Britain)."
 msgstr ""
-"使用 ISO 3166-2 定义的国家代码（参见 Wikipedia）：\n"
-"    'US' 只会返回来自通过美国连接的用户的文件。同样，“GB”返回来自具有英国 IP "
-"的用户的文件。"
+"使用ISO 3166-2定义的国家代码：\n"
+"    美国将只显示具有美国IP地址的用户的结果。!GB将隐藏来自英国用户的结果。"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:440
 #: pynicotine/gtkgui/ui/search.ui:377
@@ -5226,18 +4912,16 @@ msgid "Free Slot"
 msgstr "免费槽位"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:452
-#, fuzzy
 msgid ""
 "Show only those results from users which have at least one upload slot free, "
 "i.e. files that are available immediately."
-msgstr "仅显示至少有一个免费上传插槽的用户的结果。立即应用此过滤器。"
+msgstr "仅显示至少有一个可用上传槽位的用户的结果，即立即可用的文件。"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:473
 msgid "To view the full results again, simply clear all active filters."
 msgstr "要再次查看完整结果，只需清除所有激活过滤器。"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:482
-#, fuzzy
 msgid "See the preferences to set default search result filter options."
 msgstr "有关更多过滤器选项，请参阅首选项。"
 
@@ -5253,18 +4937,15 @@ msgstr "不限制上传速度"
 
 #: pynicotine/gtkgui/ui/popovers/uploadspeeds.ui:49
 #: pynicotine/gtkgui/ui/settings/uploads.ui:167
-#, fuzzy
 msgid "Use upload speed limit (KiB/s):"
-msgstr "替代上传速度限制 (KiB/s)："
+msgstr "使用上传速度限制 （KiB/s）："
 
 #: pynicotine/gtkgui/ui/popovers/uploadspeeds.ui:75
 #: pynicotine/gtkgui/ui/settings/uploads.ui:191
-#, fuzzy
 msgid "Use alternative upload speed limit (KiB/s):"
-msgstr "替代上传速度限制 (KiB/s)："
+msgstr "使用备用上传速度限制 （KiB/s）："
 
 #: pynicotine/gtkgui/ui/privatechat.ui:87
-#, fuzzy
 msgid "Private Chat Command Help"
 msgstr "私聊命令帮助"
 
@@ -5337,9 +5018,8 @@ msgid "Country code, e.g. US|GB|ES or !DE|!GB"
 msgstr "国家/地区代码，例如：US|GB|ES 或 !DE|!GB"
 
 #: pynicotine/gtkgui/ui/search.ui:409
-#, fuzzy
 msgid "Clear Active Filters"
-msgstr "清除所有活动过滤器"
+msgstr "移除所有活动过滤器"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:35
 msgid ""
@@ -5664,9 +5344,8 @@ msgid "Log debug messages to file"
 msgstr "调试信息记录到文件"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:62
-#, fuzzy
 msgid "Log timestamp format:"
-msgstr "日志文件时间戳格式："
+msgstr "日志时间戳格式："
 
 #: pynicotine/gtkgui/ui/settings/log.ui:92
 msgid "Folder Locations"
@@ -6000,7 +5679,6 @@ msgid "Round Robin"
 msgstr "循环调度"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:348
-#, fuzzy
 msgid "First In, First Out"
 msgstr "先进先出"
 
@@ -6050,293 +5728,235 @@ msgid "Prefer dark mode"
 msgstr "倾向深色模式"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:40
-#, fuzzy
 msgid "Note that the operating system's theme may take precedence."
 msgstr "请注意，操作系统的主题可能优先。"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:50
-#, fuzzy
 msgid "Display tray icon"
 msgstr "显示托盘图标"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:58
-#, fuzzy
 msgid "Minimize to tray on startup"
 msgstr "启动时最小化到托盘"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:67
-#, fuzzy
 msgid "Restore the previously active main tab at startup"
-msgstr "在启动时恢复以前活动的主选项卡"
+msgstr "在启动时恢复先前活动的主选项卡"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:68
-#, fuzzy
 msgid "By default the leftmost tab is activated at startup"
 msgstr "默认情况下，最左边的选项卡在启动时被激活"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:80
-#, fuzzy
 msgid "Language (requires a restart):"
-msgstr "监听端口范围（需要重启）："
+msgstr "语言（需要重新启动）："
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:92
-#, fuzzy
 msgid "System Default"
-msgstr "默认"
+msgstr "系统默认"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:106
-#, fuzzy
 msgid "When closing Nicotine+:"
-msgstr "关闭尼古丁+时："
+msgstr "关闭 Nicotine+ 时："
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:118
-#, fuzzy
 msgid "Quit program"
 msgstr "退出程序"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:119
-#, fuzzy
 msgid "Show confirmation dialog"
 msgstr "显示确认对话框"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:120
-#, fuzzy
 msgid "Run in the background"
 msgstr "在后台运行"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:135
-#, fuzzy
 msgid "Tab bar position:"
 msgstr "标签栏位置："
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:167
-#, fuzzy
 msgid "Visible main tabs:"
-msgstr "可见的主要标签："
+msgstr "可见的主选项卡："
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:317
-#, fuzzy
 msgid "Notifications"
 msgstr "通知"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:340
-#, fuzzy
 msgid "Enable sound for notifications"
 msgstr "启用通知声音"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:346
-#, fuzzy
 msgid "Show notification for private chats and mentions in the window title"
 msgstr "在窗口标题中显示私人聊天和提及的通知"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:367
-#, fuzzy
 msgid "Show notifications for:"
-msgstr "显示通知："
+msgstr "显示以下通知："
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:393
-#, fuzzy
 msgid "Finished file downloads"
 msgstr "完成文件下载"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:405
-#, fuzzy
 msgid "Finished folder downloads"
-msgstr "完成文件夹下载"
+msgstr "已完成的文件夹下载"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:417
-#, fuzzy
 msgid "Private messages"
 msgstr "私人信息"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:429
-#, fuzzy
 msgid "Chat room messages"
-msgstr "聊天室消息"
+msgstr "聊天室信息"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:441
-#, fuzzy
 msgid "Chat room mentions"
 msgstr "聊天室提及"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:453
-#, fuzzy
 msgid "Wishlist results found"
-msgstr "找到心愿单结果"
+msgstr "心愿单已发现"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:480
-#, fuzzy
 msgid "Secondary Tabs"
-msgstr "辅助标签"
+msgstr "辅助选项卡"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:497
-#, fuzzy
 msgid "Close-buttons on secondary tabs"
 msgstr "辅助选项卡上的关闭按钮"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:517
-#, fuzzy
 msgid "Chat room tab bar position:"
-msgstr "聊天室标签栏位置："
+msgstr "聊天室选项卡位置："
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:540
-#, fuzzy
 msgid "Private chat tab bar position:"
-msgstr "私聊标签栏位置："
+msgstr "私人聊天选项卡栏位置："
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:563
-#, fuzzy
 msgid "Search tab bar position:"
-msgstr "搜索标签栏位置："
+msgstr "搜索选项卡栏位置："
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:586
-#, fuzzy
 msgid "User info tab bar position:"
-msgstr "用户信息标签栏位置："
+msgstr "用户信息选项卡栏位置："
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:609
-#, fuzzy
 msgid "User browse tab bar position:"
-msgstr "用户浏览标签栏位置："
+msgstr "用户浏览选项卡栏位置："
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:652
-#, fuzzy
 msgid ""
 "Show reverse file paths in search and transfer views (requires a restart)"
 msgstr "在搜索和传输视图中显示反向文件路径（需要重新启动）"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:672
-#, fuzzy
 msgid "List text color:"
 msgstr "列表文本颜色："
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:714
-#, fuzzy
 msgid "Queued search result text color:"
-msgstr "排队的搜索结果文本颜色："
+msgstr "排队搜索结果文本颜色："
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:783
-#, fuzzy
 msgid "Chat username appearance:"
 msgstr "聊天用户名外观："
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:796
-#, fuzzy
 msgid "bold"
-msgstr "大胆的"
+msgstr "粗体"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:797
-#, fuzzy
 msgid "italic"
 msgstr "斜体"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:798
-#, fuzzy
 msgid "underline"
-msgstr "强调"
+msgstr "下划线"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:799
-#, fuzzy
 msgid "normal"
-msgstr "普通的"
+msgstr "标准"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:820
-#, fuzzy
 msgid "Remote text color:"
 msgstr "远程文本颜色："
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:862
-#, fuzzy
 msgid "Local text color:"
 msgstr "本地文本颜色："
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:904
-#, fuzzy
 msgid "Command output text color:"
-msgstr "远程文本颜色："
+msgstr "命令输出文本颜色："
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:946
-#, fuzzy
 msgid "/me action text color:"
 msgstr "/me 动作文本颜色："
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:988
-#, fuzzy
 msgid "Highlighted text color:"
-msgstr "突出显示的文本颜色："
+msgstr "高亮文本颜色："
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1030
-#, fuzzy
 msgid "URL link text color:"
 msgstr "URL 链接文本颜色："
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1077
-#, fuzzy
 msgid "Text Entries"
 msgstr "文本条目"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1099
-#, fuzzy
 msgid "Text entry background color:"
 msgstr "文本输入背景颜色："
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1141
-#, fuzzy
 msgid "Text entry text color:"
 msgstr "文字输入文字颜色："
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1188
-#, fuzzy
 msgid "User Statuses"
-msgstr "美国"
+msgstr "用户状态"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1210
-#, fuzzy
 msgid "Online color:"
-msgstr "在线文字颜色："
+msgstr "在线颜色："
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1252
-#, fuzzy
 msgid "Away color:"
-msgstr "离开文字颜色："
+msgstr "离开颜色："
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1294
-#, fuzzy
 msgid "Offline color:"
-msgstr "离线文字颜色："
+msgstr "离线颜色："
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1340
-#, fuzzy
 msgid "Tab Labels"
-msgstr "标签标签"
+msgstr "选项卡标签"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1363
-#, fuzzy
 msgid "Regular tab label color:"
-msgstr "常规标签标签颜色："
+msgstr "常规选项卡标签颜色："
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1405
-#, fuzzy
 msgid "Changed tab label color:"
-msgstr "更改标签标签颜色："
+msgstr "更改选项卡标签颜色："
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1447
-#, fuzzy
 msgid "Highlighted tab label color:"
-msgstr "突出显示的标签标签颜色："
+msgstr "高亮选项卡标签颜色："
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1493
-#, fuzzy
 msgid "Fonts"
 msgstr "字体"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1511
-#, fuzzy
 msgid "Global font:"
 msgstr "全局字体："
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1558
-#, fuzzy
 msgid "List font:"
 msgstr "列表字体："
 
@@ -6345,42 +5965,34 @@ msgid "Text view font:"
 msgstr "文本视图字体："
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1652
-#, fuzzy
 msgid "Chat font:"
 msgstr "聊天字体："
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1699
-#, fuzzy
 msgid "Transfers font:"
-msgstr "转移字体："
+msgstr "传输字体："
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1746
-#, fuzzy
 msgid "Search font:"
 msgstr "搜索字体："
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1793
-#, fuzzy
 msgid "Browse font:"
 msgstr "浏览字体："
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1843
-#, fuzzy
 msgid "Icons"
 msgstr "图标"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1867
-#, fuzzy
 msgid "Icon theme folder:"
-msgstr "不完整的文件夹："
+msgstr "图标主题文件夹："
 
 #: pynicotine/gtkgui/ui/uploads.ui:102
-#, fuzzy
 msgid "Abort User(s)"
 msgstr "中止用户"
 
 #: pynicotine/gtkgui/ui/uploads.ui:132
-#, fuzzy
 msgid "Ban User(s)"
 msgstr "禁止用户"
 
@@ -6389,72 +6001,58 @@ msgid "Clear All Finished/Cancelled Uploads"
 msgstr "清除所有已完成/已取消的上传"
 
 #: pynicotine/gtkgui/ui/uploads.ui:184 pynicotine/gtkgui/ui/uploads.ui:200
-#, fuzzy
 msgid "Message All"
-msgstr "消息（托盘）"
+msgstr "全部留言"
 
 #: pynicotine/gtkgui/ui/uploads.ui:215
-#, fuzzy
 msgid "Clear Specific Uploads"
-msgstr "清除所有上传"
+msgstr "清除特定上传"
 
 #: pynicotine/gtkgui/ui/userbrowse.ui:118
-#, fuzzy
 msgid "Shared"
 msgstr "共享"
 
 #: pynicotine/gtkgui/ui/userbrowse.ui:155
-#, fuzzy
 msgid "Search Files and Folders"
-msgstr "搜索文件和文件夹（完全匹配）"
+msgstr "搜索文件和文件夹"
 
 #: pynicotine/gtkgui/ui/userbrowse.ui:167
-#, fuzzy
 msgid "Save Shares List to Disk"
-msgstr "_将共享列表保存到磁盘"
+msgstr "将共享列表保存到磁盘"
 
 #: pynicotine/gtkgui/ui/userbrowse.ui:183
-#, fuzzy
 msgid "Refresh Files"
 msgstr "刷新文件"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:123
-#, fuzzy
 msgid "Shared Files"
 msgstr "共享文件"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:150
-#, fuzzy
 msgid "Shared Folders"
 msgstr "共享文件夹"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:177
-#, fuzzy
 msgid "Upload Slots"
-msgstr "上传槽"
+msgstr "上传槽位"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:204
-#, fuzzy
 msgid "Queued Uploads"
 msgstr "排队上传"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:231
-#, fuzzy
 msgid "Free Upload Slots"
-msgstr "免费上传插槽"
+msgstr "免费上传槽位"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:258
-#, fuzzy
 msgid "Upload Speed"
 msgstr "上传速度"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:607
-#, fuzzy
 msgid "Save _Picture"
 msgstr "保存图片"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:645
-#, fuzzy
 msgid "_Refresh Info"
 msgstr "_刷新信息"
 
