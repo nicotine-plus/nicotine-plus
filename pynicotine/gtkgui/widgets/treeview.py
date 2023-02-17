@@ -56,6 +56,8 @@ class TreeView:
         self._iter_keys = {}
         self._column_ids = {}
         self._column_numbers = None
+        self._sort_column = None
+        self._sort_type = None
 
         parent.set_property("child", self.widget)
         self.initialise_columns(columns)
@@ -249,6 +251,14 @@ class TreeView:
             if column_type == "text":
                 renderer = Gtk.CellRendererText(single_paragraph_mode=True, xpad=width_padding, ypad=height_padding)
                 column = Gtk.TreeViewColumn(column_id, renderer, text=column_index)
+                text_underline_column = column_data.get("text_underline_column")
+                text_weight_column = column_data.get("text_weight_column")
+
+                if text_underline_column:
+                    column.add_attribute(renderer, "underline", self._column_ids[text_underline_column])
+
+                if text_weight_column:
+                    column.add_attribute(renderer, "weight", self._column_ids[text_weight_column])
 
             elif column_type == "number":
                 xalign = 1
@@ -366,6 +376,15 @@ class TreeView:
             column_config[self.widget_name][subpage] = saved_columns
         else:
             column_config[self.widget_name] = saved_columns
+
+    def disable_sorting(self):
+
+        self._sort_column, self._sort_type = self.model.get_sort_column_id()
+        self.model.set_default_sort_func(lambda *args: 0)
+        self.model.set_sort_column_id(-1, Gtk.SortType.ASCENDING)
+
+    def enable_sorting(self):
+        self.model.set_sort_column_id(self._sort_column, self._sort_type)
 
     def add_row(self, values, select_row=True, prepend=False):
 
