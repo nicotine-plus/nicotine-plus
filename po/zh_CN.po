@@ -7,7 +7,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
 "PO-Revision-Date: 2023-05-17 14:53+0000\n"
-"Last-Translator: hadwin <huadiw@gmail.com>\n"
+"Last-Translator: hylau <h2y3.lau@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -248,9 +248,8 @@ msgstr "你没有特权。不需要特权，但允许您的下载在非特权用
 msgid ""
 "%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of "
 "Soulseek privileges left"
-msgstr ""
-"剩余 %(days)i 天，%(hours)i 小时，%(minutes)i 分钟，%(seconds)i 秒的Soulseek"
-"权限"
+msgstr "剩余 %(days)i 天，%(hours)i 小时，%(minutes)i 分钟，%(seconds)i "
+"秒的Soulseek权限"
 
 #: pynicotine/core.py:482
 msgid "Your password has been changed"
@@ -1648,8 +1647,7 @@ msgstr "结果过滤器"
 msgid ""
 "Filtered out incorrect search result %(filepath)s from user %(user)s for "
 "search query \"%(query)s\""
-msgstr ""
-"为搜索查询 %(query)s 从用户 %(user)s 中筛选出不正确的搜索结果 %(filepath)s"
+msgstr "为搜索查询 %(query)s 从用户 %(user)s 中筛选出不正确的搜索结果 %(filepath)s"
 
 #: pynicotine/gtkgui/search.py:713 pynicotine/gtkgui/userbrowse.py:459
 #, python-format
@@ -3760,8 +3758,8 @@ msgid ""
 "delete %(dir)s/*.db and try again. If that doesn't help, please file a bug "
 "report with this stack trace included: %(trace)s"
 msgstr ""
-"重新扫描共享时出现严重错误。如果此问题仍然存在，请删除 %(dir)s/*.db 并重试。"
-"如果这没有帮助，请提交包含此堆栈跟踪的错误报告：%(trace)s"
+"重新扫描共享时出现严重错误。如果此问题仍然存在，请删除 %(dir)s/*.db "
+"并重试。如果这没有帮助，请提交包含此堆栈跟踪的错误报告：%(trace)s"
 
 #: pynicotine/shares.py:259
 #, python-format
@@ -4134,9 +4132,8 @@ msgid ""
 "To create a new Soulseek account, fill in your desired username and "
 "password. If you already have an account, fill in your existing login "
 "details."
-msgstr ""
-"为创建新的 Soulseek 帐户填写您想要的用户名和密码。如果您已经有一个帐户，请填"
-"写您现有的登录详情。"
+msgstr "为创建新的 Soulseek "
+"帐户填写您想要的用户名和密码。如果您已经有一个帐户，请填写您现有的登录详情。"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:147
 msgid ""
@@ -4152,8 +4149,7 @@ msgid ""
 "Nicotine+ uses peer-to-peer networking to connect to other users. In order "
 "to allow users to connect to you without trouble, an open listening port is "
 "crucial."
-msgstr ""
-"Nicotine+ 使用点对点网络连接到其他用户。为了让用户能够顺利连接到你，一个开放"
+msgstr "Nicotine+ 使用点对点网络连接到其他用户。为了让用户能够顺利连接到你，一个开放"
 "的监听端口是至关重要的。"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:270
@@ -4215,8 +4211,7 @@ msgstr "文件传输速度取决于您从中下载的用户。一些用户会更
 msgid ""
 "Donating to Soulseek grants you privileges for a certain time period. If you "
 "have privileges, your downloads will be queued ahead of non-privileged users."
-msgstr ""
-"向 Soulseek 捐款可授予您在特定时间段内的特权。如果您有特权，您的下载将排在非"
+msgstr "向 Soulseek 捐款可授予您在特定时间段内的特权。如果您有特权，您的下载将排在非"
 "特权用户之前。"
 
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:21
@@ -4538,9 +4533,8 @@ msgstr "查找内容…"
 msgid ""
 "Search patterns: with a word = term, without a word = -term, partial word = "
 "*erm"
-msgstr ""
-"搜索模式：输入包含的文字 = 搜索内容，排除包含的文字 = -搜索内容，模糊匹配 = *"
-"内容"
+msgstr "搜索模式：输入包含的文字 = 搜索内容，排除包含的文字 = -搜索内容，模糊匹配 = "
+"*内容"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:179
 msgid "_Wishlist"
@@ -4600,8 +4594,7 @@ msgstr "配置共享"
 msgid ""
 "Enter the name of a user, whose shared files you'd like to browse. You can "
 "also save the list to disk, and inspect it later on."
-msgstr ""
-"输入要浏览其共享文件的用户的名称。您还可以将列表保存到磁盘，以便稍后检查。"
+msgstr "输入要浏览其共享文件的用户的名称。您还可以将列表保存到磁盘，以便稍后检查。"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:961
 msgid "Enter the username of the person whose information you want to see"
@@ -4730,9 +4723,8 @@ msgstr "_接受私人房间邀请"
 msgid ""
 "The room wall feature allows users in a room to specify a unique message to "
 "display to others. Recent messages are shown at the top."
-msgstr ""
-"房间墙功能允许房间中的用户指定要向其他人显示的唯一消息。最近的消息显示在顶"
-"部。"
+msgstr "房间墙功能允许房间中的用户指定要向其他人显示的唯一消息。最近的消息显示在顶部"
+"。"
 
 #: pynicotine/gtkgui/ui/popovers/roomwall.ui:46
 msgid "Set wall message…"
@@ -4757,16 +4749,15 @@ msgid ""
 "those yet to arrive."
 msgstr ""
 "每个搜索结果列表都有自己的过滤器，可以通过切换“结果过滤器”按钮来显示。过滤器"
-"由多个字段组成，在其任一字段中按 Enter 时将应用所有这些字段。过滤会立即应用于"
-"已收到的结果，也适用于尚未到达的结果。"
+"由多个字段组成，在其任一字段中按 Enter "
+"时将应用所有这些字段。过滤会立即应用于已收到的结果，也适用于尚未到达的结果。"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:57
 msgid ""
 "As the name suggests, a search result filter cannot expand your original "
 "search, it can only narrow it down. To broaden or change your search terms, "
 "perform a new search."
-msgstr ""
-"顾名思义，搜索结果过滤器不能扩大您原来的搜索范围，它只能缩小范围。要扩大或更"
+msgstr "顾名思义，搜索结果过滤器不能扩大您原来的搜索范围，它只能缩小范围。要扩大或更"
 "改搜索项，请执行新的搜索。"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:66
@@ -4785,8 +4776,7 @@ msgstr "显示包含此文本的文件、文件夹和用户名。"
 msgid ""
 "Case is insensitive, but word order is important: 'Instrumental Remix' will "
 "not show any 'Remix Instrumental'"
-msgstr ""
-"不区分大小写，但词序很重要：“Instrumental Remix”不会显示任何“Remix "
+msgstr "不区分大小写，但词序很重要：“Instrumental Remix”不会显示任何“Remix "
 "Instrumental”的结果"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:115
@@ -5018,8 +5008,7 @@ msgid ""
 "Filter in results whose file paths contain the specified text. Multiple "
 "phrases and words can be specified, e.g. exact phrase|music|term|exact "
 "phrase two"
-msgstr ""
-"过滤文件路径包含指定文本的结果。可以指定多个短语和单词，例如确切：短语|音乐|"
+msgstr "过滤文件路径包含指定文本的结果。可以指定多个短语和单词，例如确切：短语|音乐|"
 "术语|精确的短语"
 
 #: pynicotine/gtkgui/ui/search.ui:215
@@ -5032,8 +5021,7 @@ msgid ""
 "Filter out results whose file paths contain the specified text. Multiple "
 "phrases and words can be specified, e.g. exact phrase|music|term|exact "
 "phrase two"
-msgstr ""
-"过滤文件路径包含指定文本的结果。可以指定多个短语和单词，例如确切：短语|音乐|"
+msgstr "过滤文件路径包含指定文本的结果。可以指定多个短语和单词，例如确切：短语|音乐|"
 "术语|精确的短语"
 
 #: pynicotine/gtkgui/ui/search.ui:244
@@ -5359,9 +5347,8 @@ msgid ""
 "<b>Syntax:</b> Letters are case-insensitive. All Python regular expressions "
 "are supported if escaping is disabled. For simple filters, keeping escaping "
 "enabled is recommended."
-msgstr ""
-"<b> 语法：</b> 字母不区分大小写。如果禁用转义，则支持所有 Python 正则表达式。"
-"对于简单的过滤器，建议保持启用转义。"
+msgstr "<b> 语法：</b> 字母不区分大小写。如果禁用转义，则支持所有 Python "
+"正则表达式。对于简单的过滤器，建议保持启用转义。"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:416
 msgid "Add"
@@ -5480,9 +5467,8 @@ msgid ""
 "Binds connections to a specific network interface, useful for e.g. ensuring "
 "a VPN is used at all times. Leave empty to use any available interface. Only "
 "change this value if you know what you are doing."
-msgstr ""
-"连接绑定到特定的网络接口，例如确保始终使用 VPN。保留为空以使用任何可用接口。"
-"仅当您知道自己在做什么时才更改此值。"
+msgstr "连接绑定到特定的网络接口，例如确保始终使用 "
+"VPN。保留为空以使用任何可用接口。仅当您知道自己在做什么时才更改此值。"
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:30
 msgid ""
@@ -5624,8 +5610,7 @@ msgstr "响应其他用户的搜索请求"
 msgid ""
 "If a user on the Soulseek network searches for a file that exists in your "
 "shares, search results will be sent to the user."
-msgstr ""
-"如果 Soulseek 网络上的用户搜索您的共享中存在的文件，搜索结果将发送给用户。"
+msgstr "如果 Soulseek 网络上的用户搜索您的共享中存在的文件，搜索结果将发送给用户。"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:487
 msgid "Searches shorter than this number of characters will be ignored:"
@@ -5643,8 +5628,7 @@ msgstr "在启动时重新扫描共享"
 msgid ""
 "Automatically rescans the contents of your shared folders on startup. If "
 "disabled, your shares are only updated when you manually initiate a rescan."
-msgstr ""
-"启动时自动重新扫描共享文件夹的内容。如果禁用，您的共享仅在手动启动重新扫描时"
+msgstr "启动时自动重新扫描共享文件夹的内容。如果禁用，您的共享仅在手动启动重新扫描时"
 "更新。"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:45
