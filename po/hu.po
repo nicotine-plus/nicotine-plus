@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2023-02-16 17:18+0000\n"
+"PO-Revision-Date: 2023-02-18 13:33+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -206,8 +206,7 @@ msgstr "Nem tud csatlakozni"
 #, python-format
 msgid "Cannot retrieve the IP of user %s, since this user is offline"
 msgstr ""
-"%s felhasználó IP-címe nem kérhető le, mert a felhasználó offline állapotban "
-"van"
+"%s felhasználó IP-címe nem kérhető le, mert a felhasználó nincs bejelentkezve"
 
 #: pynicotine/core.py:397
 #, python-format
@@ -268,7 +267,7 @@ msgstr "Afganisztán"
 
 #: pynicotine/geoip.py:27
 msgid "Antigua & Barbuda"
-msgstr "Antigua & Barbuda"
+msgstr "Antigua és Barbuda"
 
 #: pynicotine/geoip.py:28
 msgid "Anguilla"
@@ -364,7 +363,7 @@ msgstr "Bermuda"
 
 #: pynicotine/geoip.py:51
 msgid "Brunei Darussalam"
-msgstr "Brunei Darussalam"
+msgstr "Brunei"
 
 #: pynicotine/geoip.py:52
 msgid "Bolivia"
@@ -384,7 +383,7 @@ msgstr "Bahamák"
 
 #: pynicotine/geoip.py:56
 msgid "Bhutan"
-msgstr "Bhutan"
+msgstr "Bhután"
 
 #: pynicotine/geoip.py:57
 msgid "Bouvet Island"
@@ -408,7 +407,7 @@ msgstr "Kanada"
 
 #: pynicotine/geoip.py:62
 msgid "Cocos (Keeling) Islands"
-msgstr "Cocos (Keeling) Islands"
+msgstr "Kókusz (Keeling)-szigetek"
 
 #: pynicotine/geoip.py:63
 msgid "Democratic Republic of Congo"
@@ -640,7 +639,7 @@ msgstr "Hongkong"
 
 #: pynicotine/geoip.py:120
 msgid "Heard & McDonald Islands"
-msgstr "Heard & McDonald Islands"
+msgstr "Heard-sziget és McDonald-szigetek"
 
 #: pynicotine/geoip.py:121
 msgid "Honduras"
@@ -736,7 +735,7 @@ msgstr "Comore-szigetek"
 
 #: pynicotine/geoip.py:144
 msgid "Saint Kitts & Nevis"
-msgstr "Saint Kitts & Nevis"
+msgstr "Saint Kitts és Nevis"
 
 #: pynicotine/geoip.py:145
 msgid "North Korea"
@@ -1184,7 +1183,7 @@ msgstr "Uganda"
 
 #: pynicotine/geoip.py:256
 msgid "U.S. Minor Outlying Islands"
-msgstr "Egyesült Államok kisebb távoli szigetei"
+msgstr "Egyesült Államok külterületi kis szigetek"
 
 #: pynicotine/geoip.py:257
 msgid "United States"
@@ -1317,8 +1316,8 @@ msgstr "A megosztások nem elérhetők"
 msgid ""
 "Verify that external disks are mounted and folder permissions are correct."
 msgstr ""
-"Ellenőrizze, hogy a külső lemezek csatlakoztatva vannak-e és a "
-"mappaengedélyek megfelelőek-e."
+"Ellenőrizze, hogy a külső lemezek felcsatolása és a mappaengedélyek "
+"helyesek-e."
 
 #: pynicotine/gtkgui/application.py:498 pynicotine/gtkgui/application.py:523
 #: pynicotine/gtkgui/widgets/dialogs.py:322
@@ -1451,7 +1450,7 @@ msgstr "Fájlok"
 
 #: pynicotine/gtkgui/chatrooms.py:530
 msgid "Sear_ch User's Files"
-msgstr "Felhasználók fájlainak kere_sése"
+msgstr "Felhasználók fájlainak keresé_se"
 
 #: pynicotine/gtkgui/chatrooms.py:531 pynicotine/gtkgui/chatrooms.py:736
 #: pynicotine/gtkgui/userlist.py:108 pynicotine/gtkgui/userlist.py:168
@@ -1535,7 +1534,7 @@ msgstr "%s elhagyta a szobát"
 #: pynicotine/gtkgui/chatrooms.py:1016
 #, python-format
 msgid "%s has gone away"
-msgstr "%s nincs a gépénél"
+msgstr "%s távol van"
 
 #: pynicotine/gtkgui/chatrooms.py:1019
 #, python-format
@@ -1561,7 +1560,7 @@ msgstr "Véglegesen törölni akarja a szoba összes naplózott üzenetét?"
 
 #: pynicotine/gtkgui/dialogs/about.py:345
 msgid "About"
-msgstr "Rólunk"
+msgstr "Névjegy"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:86
 #: pynicotine/gtkgui/dialogs/preferences.py:485
