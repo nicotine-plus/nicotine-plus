@@ -2719,7 +2719,7 @@ class Preferences(Dialog):
         if portmap_required:
             core.protothread.upnp.add_port_mapping()
         else:
-            core.protothread.upnp.cancel_timer()
+            core.protothread.upnp.remove_port_mapping()
 
         if theme_required:
             # Dark mode
