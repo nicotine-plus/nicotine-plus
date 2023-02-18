@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2023-02-18 13:40+0000\n"
+"PO-Revision-Date: 2023-02-18 13:49+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/fr/>\n"
@@ -3625,9 +3625,7 @@ msgstr "Le serveur ne répond pas, nouvelle tentative dans %i secondes"
 #: pynicotine/slskproto.py:800
 #, python-format
 msgid "Cannot connect to server %(host)s:%(port)s: %(error)s"
-msgstr ""
-"Impossible de se connecter au serveur %(host)s :%(port)s : %(error)s : "
-"%(error)s"
+msgstr "Impossible de se connecter au serveur %(host)s :%(port)s : %(error)s"
 
 #: pynicotine/slskproto.py:897
 #, python-format
@@ -3652,7 +3650,7 @@ msgstr "Ne peut obtenir un verrou exclusif sur le fichier - Erreur E/S  : %s"
 #: pynicotine/transfers.py:1181
 #, python-format
 msgid "Cannot save file in %(folder_path)s: %(error)s"
-msgstr "Impossible d'enregistrer le fichier sur %(folder_path)s: %(error)s"
+msgstr "Impossible d'enregistrer le fichier sur %(folder_path)s : %(error)s"
 
 #: pynicotine/transfers.py:1187 pynicotine/transfers.py:2029
 msgid "Download Folder Error"
@@ -5689,7 +5687,7 @@ msgstr "Version :"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:229
 msgid "Created by:"
-msgstr "Créé par:"
+msgstr "Créé par :"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:45
 msgid "Enable search history"
