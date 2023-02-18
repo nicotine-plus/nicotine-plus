@@ -7,7 +7,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
 "PO-Revision-Date: 2023-02-18 13:49+0000\n"
-"Last-Translator: Han <hboetes@gmail.com>\n"
+"Last-Translator: zniavre <zniavre2048@gmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/fr/>\n"
 "Language: fr\n"
@@ -227,9 +227,8 @@ msgid "IP Address"
 msgstr "Adresse IP"
 
 #: pynicotine/core.py:448
-#, fuzzy
 msgid "Soulseek Announcement"
-msgstr "Client Soulseek"
+msgstr "Annonce de Soulseek"
 
 #: pynicotine/core.py:456
 #, python-format
