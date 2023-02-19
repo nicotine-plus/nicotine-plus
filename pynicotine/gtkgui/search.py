@@ -363,8 +363,9 @@ class Search:
         self.users = set()
         self.all_data = []
         self.grouping_mode = None
-        self.filters = None
-        self.clearing_filters = False
+        self.filters = {}
+        self.filters_redo = []
+        self.populating_filters = False
         self.active_filter_count = 0
         self.num_results_found = 0
         self.num_results_visible = 0
@@ -472,6 +473,9 @@ class Search:
         self.expand_button.set_active(config.sections["searches"]["expand_searches"])
 
         # Filters
+        self.filter_buttons = {
+            "filterslot": self.filter_free_slot_button
+        }
         self.filter_comboboxes = {
             "filterin": self.filter_include_combobox,
             "filterout": self.filter_exclude_combobox,
@@ -580,32 +584,71 @@ class Search:
 
         sfilter = config.sections["searches"]["defilter"]
         num_filters = len(sfilter)
+        stored_filters = {}
 
         if num_filters > 0:
-            self.filter_include_combobox.get_child().set_text(str(sfilter[0]))
+            stored_filters["filterin"] = str(sfilter[0])
 
         if num_filters > 1:
-            self.filter_exclude_combobox.get_child().set_text(str(sfilter[1]))
+            stored_filters["filterout"] = str(sfilter[1])
 
         if num_filters > 2:
-            self.filter_file_size_combobox.get_child().set_text(str(sfilter[2]))
+            stored_filters["filtersize"] = str(sfilter[2])
 
         if num_filters > 3:
-            self.filter_bitrate_combobox.get_child().set_text(str(sfilter[3]))
+            stored_filters["filterbr"] = str(sfilter[3])
 
         if num_filters > 4:
-            self.filter_free_slot_button.set_active(bool(sfilter[4]))
+            stored_filters["filterslot"] = bool(sfilter[4])
 
         if num_filters > 5:
-            self.filter_country_combobox.get_child().set_text(str(sfilter[5]))
+            stored_filters["filtercc"] = str(sfilter[5])
 
         if num_filters > 6:
-            self.filter_file_type_combobox.get_child().set_text(str(sfilter[6]))
+            stored_filters["filtertype"] = str(sfilter[6])
 
         if num_filters > 7:
-            self.filter_length_combobox.get_child().set_text(str(sfilter[7]))
+            stored_filters["filterlength"] = str(sfilter[7])
+
+        self.set_filters(stored_filters)
+
+    def set_filters(self, stored_filters=None):
+        """ Recall result filter values from a dict """
+
+        if not stored_filters:
+            # Clear Filters
+            stored_filters = {}
+
+        self.populating_filters = True
+
+        for filter_id, button in self.filter_buttons.items():
+            value = stored_filters.get(filter_id, False)
+            button.set_active(value)
+
+        for filter_id, combobox in self.filter_comboboxes.items():
+            value = stored_filters.get(filter_id, "")
+            combobox.get_child().set_text(value)
+
+        self.populating_filters = False
 
         self.on_refilter()
+
+    def get_filters(self):
+        """ Return a dict of the active result filter values """
+
+        stored_filters = {}
+
+        for filter_id, value in self.filters.items():
+            if filter_id in self.filter_buttons:
+                stored_filters[filter_id] = value
+
+            elif filter_id in ("filterin", "filterout"):
+                stored_filters[filter_id] = value.pattern if value else ""
+
+            elif filter_id in self.filter_comboboxes:
+                stored_filters[filter_id] = " ".join(value)
+
+        return stored_filters
 
     def add_result_list(self, result_list, user, country_code, inqueue, ulspeed, h_speed,
                         h_queue, has_free_slots, private=False):
@@ -1485,7 +1528,7 @@ class Search:
 
     def on_refilter(self, *_args):
 
-        if self.clearing_filters:
+        if self.populating_filters:
             return
 
         filter_in = self.filter_include_combobox.get_active_text().strip()
@@ -1598,20 +1641,20 @@ class Search:
 
     def on_clear_filters(self, *_args):
 
-        self.clearing_filters = True
-
-        for widget in self.filter_comboboxes.values():
-            widget.get_child().set_text("")
-
-        self.filter_free_slot_button.set_active(False)
+        if self.filters_redo:
+            # Recall Filters from data stored as dict
+            stored_filters = self.filters_redo.pop()
+            self.set_filters(stored_filters)
+        else:
+            # Store redo data before clearing the filters
+            active_filters = self.get_filters()
+            self.filters_redo.append(active_filters)
+            self.set_filters(False)
 
         if self.filters_button.get_active():
             self.filter_include_combobox.get_child().grab_focus()
         else:
             self.tree_view.grab_focus()
-
-        self.clearing_filters = False
-        self.on_refilter()
 
     def on_clear(self, *_args):
 
