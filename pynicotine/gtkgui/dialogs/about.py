@@ -239,7 +239,7 @@ class About(Dialog):
    - Ingmar K. Steen (Hyriand) (2003–2004)""",
 
         """>> <b>Hungarian</b>
-   - Szia Tomi (2023)
+   - Szia Tomi (2022-2023)
    - Nils (2009)
    - David Balazs (djbaloo) (2006–2020)""",
 
@@ -250,7 +250,7 @@ class About(Dialog):
    - dbazza (2003–2004)""",
 
         """>> <b>Latvian</b>
-   - Pagal3 (2023)""",
+   - Pagal3 (2022-2023)""",
 
         """>> <b>Lithuanian</b>
    - mantas (2020)
