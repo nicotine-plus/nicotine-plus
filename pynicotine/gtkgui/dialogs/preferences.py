@@ -721,31 +721,43 @@ class UploadsPage:
     def __init__(self, application):
 
         ui_template = UserInterface(scope=self, path="settings/uploads.ui")
-
-        # pylint: disable=invalid-name
-        (self.AutoclearFinished, self.FirstInFirstOut, self.FriendsNoLimits,
-         self.LimitSpeed, self.LimitSpeedAlternative, self.LimitTotalTransfers, self.Main, self.MaxUserFiles,
-         self.MaxUserQueue, self.PreferFriends, self.QueueBandwidth, self.QueueSlots, self.QueueUseBandwidth,
-         self.QueueUseSlots, self.UnlimitedUploadSpeed, self.UploadDoubleClick, self.UseAltUploadSpeedLimit,
-         self.UseUploadSpeedLimit) = ui_template.widgets
+        (
+            self.Main,  # pylint: disable=invalid-name
+            self.alt_speed_spinner,
+            self.autoclear_uploads_toggle,
+            self.limit_total_transfers_radio,
+            self.max_queued_files_spinner,
+            self.max_queued_size_spinner,
+            self.no_buddy_limits_toggle,
+            self.prioritize_buddies_toggle,
+            self.speed_spinner,
+            self.upload_bandwidth_spinner,
+            self.upload_double_click_combobox,
+            self.upload_queue_type_combobox,
+            self.upload_slots_spinner,
+            self.use_alt_speed_limit_radio,
+            self.use_speed_limit_radio,
+            self.use_unlimited_speed_radio,
+            self.use_upload_slots_radio
+        ) = ui_template.widgets
 
         self.application = application
 
         self.options = {
             "transfers": {
-                "autoclear_uploads": self.AutoclearFinished,
-                "uploadbandwidth": self.QueueBandwidth,
-                "useupslots": self.QueueUseSlots,
-                "uploadslots": self.QueueSlots,
-                "uploadlimit": self.LimitSpeed,
-                "uploadlimitalt": self.LimitSpeedAlternative,
-                "fifoqueue": self.FirstInFirstOut,
-                "limitby": self.LimitTotalTransfers,
-                "queuelimit": self.MaxUserQueue,
-                "filelimit": self.MaxUserFiles,
-                "friendsnolimits": self.FriendsNoLimits,
-                "preferfriends": self.PreferFriends,
-                "upload_doubleclick": self.UploadDoubleClick
+                "autoclear_uploads": self.autoclear_uploads_toggle,
+                "uploadbandwidth": self.upload_bandwidth_spinner,
+                "useupslots": self.use_upload_slots_radio,
+                "uploadslots": self.upload_slots_spinner,
+                "uploadlimit": self.speed_spinner,
+                "uploadlimitalt": self.alt_speed_spinner,
+                "fifoqueue": self.upload_queue_type_combobox,
+                "limitby": self.limit_total_transfers_radio,
+                "queuelimit": self.max_queued_size_spinner,
+                "filelimit": self.max_queued_files_spinner,
+                "friendsnolimits": self.no_buddy_limits_toggle,
+                "preferfriends": self.prioritize_buddies_toggle,
+                "upload_doubleclick": self.upload_double_click_combobox
             }
         }
 
@@ -756,20 +768,20 @@ class UploadsPage:
         use_speed_limit = config.sections["transfers"]["use_upload_speed_limit"]
 
         if use_speed_limit == "primary":
-            self.UseUploadSpeedLimit.set_active(True)
+            self.use_speed_limit_radio.set_active(True)
 
         elif use_speed_limit == "alternative":
-            self.UseAltUploadSpeedLimit.set_active(True)
+            self.use_alt_speed_limit_radio.set_active(True)
 
         else:
-            self.UnlimitedUploadSpeed.set_active(True)
+            self.use_unlimited_speed_radio.set_active(True)
 
     def get_settings(self):
 
-        if self.UseUploadSpeedLimit.get_active():
+        if self.use_speed_limit_radio.get_active():
             use_speed_limit = "primary"
 
-        elif self.UseAltUploadSpeedLimit.get_active():
+        elif self.use_alt_speed_limit_radio.get_active():
             use_speed_limit = "alternative"
 
         else:
@@ -777,20 +789,20 @@ class UploadsPage:
 
         return {
             "transfers": {
-                "autoclear_uploads": self.AutoclearFinished.get_active(),
-                "uploadbandwidth": self.QueueBandwidth.get_value_as_int(),
-                "useupslots": self.QueueUseSlots.get_active(),
-                "uploadslots": self.QueueSlots.get_value_as_int(),
+                "autoclear_uploads": self.autoclear_uploads_toggle.get_active(),
+                "uploadbandwidth": self.upload_bandwidth_spinner.get_value_as_int(),
+                "useupslots": self.use_upload_slots_radio.get_active(),
+                "uploadslots": self.upload_slots_spinner.get_value_as_int(),
                 "use_upload_speed_limit": use_speed_limit,
-                "uploadlimit": self.LimitSpeed.get_value_as_int(),
-                "uploadlimitalt": self.LimitSpeedAlternative.get_value_as_int(),
-                "fifoqueue": bool(self.FirstInFirstOut.get_active()),
-                "limitby": self.LimitTotalTransfers.get_active(),
-                "queuelimit": self.MaxUserQueue.get_value_as_int(),
-                "filelimit": self.MaxUserFiles.get_value_as_int(),
-                "friendsnolimits": self.FriendsNoLimits.get_active(),
-                "preferfriends": self.PreferFriends.get_active(),
-                "upload_doubleclick": self.UploadDoubleClick.get_active()
+                "uploadlimit": self.speed_spinner.get_value_as_int(),
+                "uploadlimitalt": self.alt_speed_spinner.get_value_as_int(),
+                "fifoqueue": bool(self.upload_queue_type_combobox.get_active()),
+                "limitby": self.limit_total_transfers_radio.get_active(),
+                "queuelimit": self.max_queued_size_spinner.get_value_as_int(),
+                "filelimit": self.max_queued_files_spinner.get_value_as_int(),
+                "friendsnolimits": self.no_buddy_limits_toggle.get_active(),
+                "preferfriends": self.prioritize_buddies_toggle.get_active(),
+                "upload_doubleclick": self.upload_double_click_combobox.get_active()
             }
         }
 
