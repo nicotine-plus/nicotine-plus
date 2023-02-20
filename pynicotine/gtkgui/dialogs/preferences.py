@@ -76,6 +76,7 @@ class NetworkPage:
             self.current_port_label,
             self.first_port_spinner,
             self.last_port_spinner,
+            self.natpmp_toggle,
             self.network_interface_combobox,
             self.network_interface_label,
             self.soulseek_server_entry,
@@ -84,7 +85,8 @@ class NetworkPage:
         ) = ui_template.widgets
 
         self.application = application
-        self.portmap_required = False
+        self.upnp_portmap_required = False
+        self.natpmp_portmap_required = False
 
         self.check_port_status_label.connect("activate-link", lambda x, url: open_uri(url))
 
@@ -97,6 +99,7 @@ class NetworkPage:
                 "autoreply": self.auto_reply_message_entry,
                 "interface": self.network_interface_combobox,
                 "upnp": self.upnp_toggle,
+                "natpmp": self.natpmp_toggle,
                 "auto_connect_startup": self.auto_connect_startup_toggle
             }
         }
@@ -144,11 +147,13 @@ class NetworkPage:
         self.first_port_spinner.set_value(first_port)
         self.last_port_spinner.set_value(last_port)
 
-        self.portmap_required = False
+        self.upnp_portmap_required = False
+        self.natpmp_portmap_required = False
 
     def get_settings(self):
 
-        self.portmap_required = False
+        self.upnp_portmap_required = False
+        self.natpmp_portmap_required = False
 
         try:
             server_addr = self.soulseek_server_entry.get_text().split(":")
@@ -173,6 +178,7 @@ class NetworkPage:
                 "autoreply": self.auto_reply_message_entry.get_text(),
                 "interface": self.network_interface_combobox.get_active_text(),
                 "upnp": self.upnp_toggle.get_active(),
+                "natpmp": self.natpmp_toggle.get_active(),
                 "auto_connect_startup": self.auto_connect_startup_toggle.get_active()
             }
         }
@@ -220,7 +226,10 @@ class NetworkPage:
         ).show()
 
     def on_toggle_upnp(self, *_args):
-        self.portmap_required = self.upnp_toggle.get_active()
+        self.upnp_portmap_required = self.upnp_toggle.get_active()
+
+    def on_toggle_natpmp(self, *_args):
+        self.natpmp_portmap_required = self.natpmp_toggle.get_active()
 
     def on_default_server(self, *_args):
         server_address, server_port = config.defaults["server"]["server"]
@@ -2602,10 +2611,12 @@ class Preferences(Dialog):
         }
 
         try:
-            portmap_required = self.pages["network"].portmap_required
+            upnp_portmap_required = self.pages["network"].upnp_portmap_required
+            natpmp_portmap_required = self.pages["network"].natpmp_portmap_required
 
         except KeyError:
-            portmap_required = False
+            upnp_portmap_required = False
+            natpmp_portmap_required = False
 
         try:
             rescan_required = self.pages["shares"].rescan_required
@@ -2641,21 +2652,27 @@ class Preferences(Dialog):
             for key, data in page.get_settings().items():
                 options[key].update(data)
 
-        return (portmap_required, rescan_required, theme_required, completion_required,
-                ip_ban_required, search_required, options)
+        return (upnp_portmap_required, natpmp_portmap_required, rescan_required, 
+                theme_required, completion_required, ip_ban_required, search_required, options)
 
     def update_settings(self, settings_closed=False):
 
-        (portmap_required, rescan_required, theme_required, completion_required,
-            ip_ban_required, search_required, options) = self.get_settings()
+        (upnp_portmap_required, natpmp_portmap_required, rescan_required, 
+            theme_required, completion_required, ip_ban_required, 
+            search_required, options) = self.get_settings()
 
         for key, data in options.items():
             config.sections[key].update(data)
 
-        if portmap_required:
+        if upnp_portmap_required:
             core.protothread.upnp.add_port_mapping()
         else:
             core.protothread.upnp.cancel_timer()
+
+        if natpmp_portmap_required:
+            core.protothread.natpmp.add_port_mapping()
+        else:
+            core.protothread.natpmp.cancel_timer()
 
         if theme_required:
             # Dark mode
