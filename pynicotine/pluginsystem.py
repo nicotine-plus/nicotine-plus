@@ -438,10 +438,6 @@ class PluginHandler:
 
     def _import_plugin_instance(self, plugin_name):
 
-        if sys.platform in ("win32", "darwin") and plugin_name == "now_playing_sender":
-            # MPRIS is not available on Windows and macOS
-            return None
-
         try:
             # Import builtin plugin
             from importlib import import_module
@@ -566,10 +562,6 @@ class PluginHandler:
                     file_path = entry.name.decode("utf-8", "replace")
 
                     if file_path == "core_commands":
-                        continue
-
-                    if sys.platform in ("win32", "darwin") and file_path == "now_playing_sender":
-                        # MPRIS is not available on Windows and macOS
                         continue
 
                     if entry.is_dir() and file_path not in plugin_list:

@@ -61,7 +61,6 @@ class Core:
         self.privatechat = None
         self.chatrooms = None
         self.pluginhandler = None
-        self.now_playing = None
         self.protothread = None
         self.geoip = None
         self.notifications = None
@@ -112,7 +111,6 @@ class Core:
         from pynicotine.interests import Interests
         from pynicotine.networkfilter import NetworkFilter
         from pynicotine.notifications import Notifications
-        from pynicotine.nowplaying import NowPlaying
         from pynicotine.pluginsystem import PluginHandler
         from pynicotine.privatechat import PrivateChat
         from pynicotine.search import Search
@@ -145,7 +143,6 @@ class Core:
         self.geoip = GeoIP()
         self.notifications = Notifications()
         self.network_filter = NetworkFilter()
-        self.now_playing = NowPlaying()
         self.statistics = Statistics()
         self.update_checker = UpdateChecker()
 
