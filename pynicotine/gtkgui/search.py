@@ -108,6 +108,7 @@ class Searches(IconNotebook):
             ("file-search-response", self.file_search_response),
             ("remove-search", self.remove_search),
             ("remove-wish", self.update_wish_button),
+            ("set-filters", self.populate_filters),
             ("show-search", self.show_search)
         ):
             events.connect(event_name, callback)
@@ -282,6 +283,15 @@ class Searches(IconNotebook):
 
         page.file_search_response(msg)
 
+    def populate_filters(self, token, filters, refilter=True):
+
+        page = self.pages.get(token)
+
+        if page is None:
+            return
+
+        page.populate_filters(filters, refilter)
+
     def update_wish_button(self, wish):
 
         for page in self.pages.values():
@@ -364,7 +374,7 @@ class Search:
         self.all_data = []
         self.grouping_mode = None
         self.filters = None
-        self.clearing_filters = False
+        self.populating_filters = False
         self.active_filter_count = 0
         self.num_results_found = 0
         self.num_results_visible = 0
@@ -472,6 +482,9 @@ class Search:
         self.expand_button.set_active(config.sections["searches"]["expand_searches"])
 
         # Filters
+        self.filter_buttons = {
+            "filterslot": self.filter_free_slot_button
+        }
         self.filter_comboboxes = {
             "filterin": self.filter_include_combobox,
             "filterout": self.filter_exclude_combobox,
@@ -483,7 +496,6 @@ class Search:
         }
 
         self.filters_button.set_active(config.sections["searches"]["filters_visible"])
-        self.populate_filters()
 
         # Wishlist
         self.update_wish_button()
@@ -573,39 +585,27 @@ class Search:
             if presets:
                 widget.set_row_separator_func(self.on_combobox_check_separator)
 
-    def populate_filters(self):
+    def populate_filters(self, filters_dict=None, refilter=True):
+        """ Recall values from given stored_filters dict """
 
-        if not config.sections["searches"]["enablefilters"]:
-            return
+        if not filters_dict:
+            # Clear Filters
+            filters_dict = {}
 
-        sfilter = config.sections["searches"]["defilter"]
-        num_filters = len(sfilter)
+        self.populating_filters = True
 
-        if num_filters > 0:
-            self.filter_include_combobox.get_child().set_text(str(sfilter[0]))
+        for filter_id, button in self.filter_buttons.items():
+            value = bool(filters_dict.get(filter_id, False))
+            button.set_active(value)
 
-        if num_filters > 1:
-            self.filter_exclude_combobox.get_child().set_text(str(sfilter[1]))
+        for filter_id, combobox in self.filter_comboboxes.items():
+            value = str(filters_dict.get(filter_id, ""))
+            combobox.get_child().set_text(value)
 
-        if num_filters > 2:
-            self.filter_file_size_combobox.get_child().set_text(str(sfilter[2]))
+        self.populating_filters = False
 
-        if num_filters > 3:
-            self.filter_bitrate_combobox.get_child().set_text(str(sfilter[3]))
-
-        if num_filters > 4:
-            self.filter_free_slot_button.set_active(bool(sfilter[4]))
-
-        if num_filters > 5:
-            self.filter_country_combobox.get_child().set_text(str(sfilter[5]))
-
-        if num_filters > 6:
-            self.filter_file_type_combobox.get_child().set_text(str(sfilter[6]))
-
-        if num_filters > 7:
-            self.filter_length_combobox.get_child().set_text(str(sfilter[7]))
-
-        self.on_refilter()
+        if refilter:
+            self.on_refilter()
 
     def add_result_list(self, result_list, user, country_code, inqueue, ulspeed, h_speed,
                         h_queue, has_free_slots, private=False):
@@ -1485,7 +1485,7 @@ class Search:
 
     def on_refilter(self, *_args):
 
-        if self.clearing_filters:
+        if self.populating_filters:
             return
 
         filter_in = self.filter_include_combobox.get_active_text().strip()
@@ -1598,20 +1598,12 @@ class Search:
 
     def on_clear_filters(self, *_args):
 
-        self.clearing_filters = True
-
-        for widget in self.filter_comboboxes.values():
-            widget.get_child().set_text("")
-
-        self.filter_free_slot_button.set_active(False)
+        self.populate_filters(None)
 
         if self.filters_button.get_active():
             self.filter_include_combobox.get_child().grab_focus()
         else:
             self.tree_view.grab_focus()
-
-        self.clearing_filters = False
-        self.on_refilter()
 
     def on_clear(self, *_args):
 

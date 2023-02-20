@@ -37,6 +37,17 @@ from pynicotine.utils import TRANSLATE_PUNCTUATION
 
 class Search:
 
+    FILTERS_EMPTY = {
+        "filterin": "",       # [0] Include text
+        "filterout": "",      # [1] Exclude text
+        "filtersize": "",     # [2] File Size
+        "filterbr": "",       # [3] Bitrate
+        "filterslot": False,  # [4] Free Slot (button)
+        "filtercc": "",       # [5] Country Code
+        "filtertype": "",     # [6] File Type
+        "filterlength": ""    # [7] Duration
+    }
+
     def __init__(self):
 
         self.searches = {}
@@ -186,7 +197,7 @@ class Search:
 
         return search_term, search_term_without_special, room, users
 
-    def do_search(self, search_term, mode, room=None, user=None, switch_page=True):
+    def do_search(self, search_term, mode, room=None, user=None, switch_page=True, filters=None):
 
         # Validate search term and run it through plugins
         search_term, _search_term_without_special, room, users = self.process_search_term(search_term, mode, room, user)
@@ -194,6 +205,11 @@ class Search:
         # Get a new search token
         self.token = increment_token(self.token)
 
+        # Apply given or default filters
+        if config.sections["searches"]["enablefilters"]:
+            filters = filters or self._get_default_filters(config.sections["searches"]["defilter"])
+
+        # Push search term history
         if config.sections["searches"]["enable_history"]:
             items = config.sections["searches"]["history"]
 
@@ -221,6 +237,7 @@ class Search:
         self.add_search(search_term, mode, ignore=False)
 
         events.emit("do-search", self.token, search_term, mode, room, users, switch_page)
+        events.emit("set-filters", self.token, filters, refilter=False)
 
     def do_global_search(self, text):
         core.queue.append(slskmessages.FileSearch(self.token, text))
@@ -321,6 +338,33 @@ class Search:
                 delay=self.wishlist_interval, callback=self.do_wishlist_search_interval, repeat=True)
         else:
             log.add(_("Server does not permit performing wishlist searches at this time"))
+
+    def set_filters(self, search_term, filters_dict):
+        """ Recall values from given filters_dict into all searches matching search_term """
+
+        for token, search in self.searches:
+            if search["term"] == search_term:
+                events.emit("set-filters", token, filters_dict)
+
+    def get_filters(self, _search_term):
+        """ Return currently active filters in a dict, for use as needed elsewhere """
+        return {"filterdummy": "not implemented"}
+
+    def _get_default_filters(self, sfilter):
+        """ Recall values from given sfilter list ["defilter"] """
+
+        filters_dict = self.FILTERS_EMPTY
+        num_filters = len(sfilter)
+
+        # Convert from list to dict
+        for i, filter_id in enumerate(filters_dict):
+            if num_filters > i == 4:
+                filters_dict[filter_id] = bool(sfilter[i])  # Free Slot ["filterslot"]
+
+            elif num_filters > i:
+                filters_dict[filter_id] = str(sfilter[i])
+
+        return filters_dict
 
     def _file_search_response(self, msg):
         """ Peer message: 9 """

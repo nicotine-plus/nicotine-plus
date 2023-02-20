@@ -139,6 +139,7 @@ EVENT_NAMES = {
     "remove-search",
     "remove-wish",
     "set-wishlist-interval",
+    "set-filters",
     "show-search",
 
     # Statistics
