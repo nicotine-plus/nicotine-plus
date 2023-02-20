@@ -51,7 +51,7 @@
  - Ingmar K. Steen (Hyriand) (2003–2004)
 
 ## Hungarian
- - Szia Tomi (2023)
+ - Szia Tomi (2022-2023)
  - Nils (2009)
  - David Balazs (djbaloo) (2006–2020)
 
@@ -62,7 +62,7 @@
  - dbazza (2003–2004)
 
 ## Latvian
- - Pagal3 (2023)
+ - Pagal3 (2022-2023)
 
 ## Lithuanian
  - mantas (2020)
