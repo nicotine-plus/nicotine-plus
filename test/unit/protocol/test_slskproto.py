@@ -81,6 +81,7 @@ class SoulseekNetworkTest(TestCase):
 
         self.queue = deque()
         config.sections["server"]["upnp"] = False
+        config.sections["server"]["natpmp"] = False
         self.protothread = SoulseekNetworkThread(queue=self.queue, user_addresses={})
         self.protothread.start()
         self.protothread._enable_message_queue()  # pylint: disable=protected-access

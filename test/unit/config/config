@@ -20,6 +20,7 @@ away = False
 private_chatrooms = False
 command_aliases = {}
 interface = 
+natpmp = False
 
 [transfers]
 incompletedir = 
