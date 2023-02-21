@@ -41,7 +41,8 @@ class Plugin(BasePlugin):
         self.settings = {
             "format": "%artist% - %title%",
             "lastfm_username_api_key": "",
-            "listenbrainz_username": ""
+            "listenbrainz_username": "",
+            "other_command": ""
         }
         self.metasettings = {
             "source": {
@@ -49,7 +50,8 @@ class Plugin(BasePlugin):
                 "type": "dropdown",
                 "options": [
                     "Last.fm",
-                    "ListenBrainz"
+                    "ListenBrainz",
+                    "Other"
                 ]
             },
             "format": {
@@ -63,6 +65,14 @@ class Plugin(BasePlugin):
             "listenbrainz_username": {
                 "description": "ListenBrainz username:",
                 "type": "string"
+            },
+            "mpris_player": {
+                "description": "MPRIS player (e.g. amarok, audacious, exaile); leave empty to autodetect:",
+                "type": "string"
+            },
+            "other_command": {
+                "description": "Other command:",
+                "type": "string"
             }
         }
 
@@ -75,10 +85,8 @@ class Plugin(BasePlugin):
                 self.settings[option_key] = value
 
             self.metasettings["source"]["options"].append("MPRIS")
-            self.metasettings["mpris_player"] = {
-                "description": "MPRIS player (e.g. amarok, audacious, exaile); leave empty to autodetect:",
-                "type": "string"
-            }
+            self.metasettings["source"]["options"].sort()
+
             self.metasettings["rooms"] = {
                 "description": "Rooms to broadcast in (MPRIS only)",
                 "type": "list string"
@@ -87,15 +95,15 @@ class Plugin(BasePlugin):
             self.bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
             self.dbus_mpris_service = "org.mpris.MediaPlayer2."
             self.signal_id = None
+            self.last_song_url = ""
 
             self.add_mpris_signal_receiver()
 
         else:
             # MPRIS is not available on Windows and macOS
             self.settings["source"] = "Last.fm"
+            del self.metasettings["mpris_player"]
             self.bus = None
-
-        self.last_song_url = ""
 
     def disable(self):
         self.remove_mpris_signal_receiver()
@@ -128,7 +136,7 @@ class Plugin(BasePlugin):
         track_info = None
 
         if player == "Last.fm":
-            track_info = self.lastfm("")
+            track_info = self.lastfm()
 
         elif player == "ListenBrainz":
             track_info = self.listenbrainz()
@@ -136,9 +144,8 @@ class Plugin(BasePlugin):
         elif player == "MPRIS":
             track_info = self.mpris()
 
-        elif player == "other":
-            # TODO
-            pass
+        elif player == "Other":
+            track_info = self.other()
 
         if not track_info:
             return None
@@ -163,20 +170,29 @@ class Plugin(BasePlugin):
 
     """ Last.fm """
 
-    def lastfm(self, user):
+    def lastfm(self):
         """ Function to get the last song played via Last.fm API """
 
         try:
-            user, apikey = user.split(";")
+            user, api_key = self.settings["lastfm_username_api_key"].split(";")
 
         except ValueError:
             log.add(_("Last.fm: Please provide both your Last.fm username and API key"), title=_("Now Playing Error"))
             return None
 
+        audioscrobbler_url = (
+            "https://ws.audioscrobbler.com/2.0/"
+            "?method=user.getrecenttracks"
+            f"&user={user}"
+            f"&api_key={api_key}"
+            "&limit=1"
+            "&format=json"
+        )
+
         try:
             from urllib.request import urlopen
-            with urlopen((f"https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={user}&api_key={apikey}"
-                          f"&limit=1&format=json"), timeout=10) as response:
+
+            with urlopen(audioscrobbler_url, timeout=10) as response:
                 response_body = response.read().decode("utf-8")
 
         except Exception as error:
@@ -216,34 +232,7 @@ class Plugin(BasePlugin):
 
         # https://media.readthedocs.org/pdf/mpris2/latest/mpris2.pdf
 
-        player = self.settings["mpris_player"]
-
-        if not player:
-            dbus_proxy = Gio.DBusProxy.new_for_bus_sync(
-                bus_type=Gio.BusType.SESSION,
-                flags=Gio.DBusProxyFlags.NONE,
-                info=None,
-                name="org.freedesktop.DBus",
-                object_path="/org/freedesktop/DBus",
-                interface_name="org.freedesktop.DBus"
-            )
-            names = dbus_proxy.ListNames()
-            players = []
-
-            for name in names:
-                if name.startswith(self.dbus_mpris_service):
-                    players.append(name[len(self.dbus_mpris_service):])
-
-            if not players:
-                log.add(_("MPRIS: Could not find a suitable MPRIS player"), title=_("Now Playing Error"))
-                return None
-
-            player = players[0]
-            if len(players) > 1:
-                log.add(_("Found multiple MPRIS players: %(players)s. Using: %(player)s"),
-                        {"players": players, "player": player})
-            else:
-                log.add(_("Auto-detected MPRIS player: %s"), player)
+        player = self.get_current_mpris_player()
 
         try:
             dbus_proxy = Gio.DBusProxy.new_for_bus_sync(
@@ -325,13 +314,13 @@ class Plugin(BasePlugin):
             self.bus.signal_unsubscribe(self.signal_id)
 
     def get_current_mpris_player(self):
-        """ Returns the MPRIS client currently selected in Now Playing """
+        """ Returns the MPRIS client currently selected in plugin settings """
 
-        player = self.config.sections["players"]["npothercommand"]
+        player = self.settings["mpris_player"]
 
         if not player:
-            dbus_proxy = Gio.DBusProxy.new_sync(
-                bus=self.bus,
+            dbus_proxy = Gio.DBusProxy.new_for_bus_sync(
+                bus_type=Gio.BusType.SESSION,
                 flags=Gio.DBusProxyFlags.NONE,
                 info=None,
                 name="org.freedesktop.DBus",
@@ -339,11 +328,22 @@ class Plugin(BasePlugin):
                 interface_name="org.freedesktop.DBus"
             )
             names = dbus_proxy.ListNames()
+            players = []
 
             for name in names:
                 if name.startswith(self.dbus_mpris_service):
-                    player = name[len(self.dbus_mpris_service):]
-                    break
+                    players.append(name[len(self.dbus_mpris_service):])
+
+            if not players:
+                log.add(_("MPRIS: Could not find a suitable MPRIS player"), title=_("Now Playing Error"))
+                return None
+
+            player = players[0]
+            if len(players) > 1:
+                log.add(_("Found multiple MPRIS players: %(players)s. Using: %(player)s"),
+                        {"players": players, "player": player})
+            else:
+                log.add(_("Auto-detected MPRIS player: %s"), player)
 
         return player
 
@@ -413,9 +413,12 @@ class Plugin(BasePlugin):
             log.add(_("ListenBrainz: Please provide your ListenBrainz username"), title=_("Now Playing Error"))
             return None
 
+        listenbrainz_url = f"https://api.listenbrainz.org/1/user/{username}/playing-now"
+
         try:
             from urllib.request import urlopen
-            with urlopen(f"https://api.listenbrainz.org/1/user/{username}/playing-now", timeout=10) as response:
+
+            with urlopen(listenbrainz_url, timeout=10) as response:
                 response_body = response.read().decode("utf-8")
 
         except Exception as error:
@@ -438,9 +441,31 @@ class Plugin(BasePlugin):
             track_info["%album%"] = album = track["release_name"]
             track_info["%nowplaying%"] = f"{artist} - {album} - {title}"
 
-            return track_info
-
         except Exception:
             log.add(_("ListenBrainz: Could not get current track from ListenBrainz: %(error)s"),
                     {"error": str(response_body)}, title=_("Now Playing Error"))
-        return None
+            return None
+
+        return track_info
+
+    def other(self):
+
+        command = self.settings["other_command"]
+
+        if not command:
+            return None
+
+        track_info = {}
+
+        try:
+            from pynicotine.utils import execute_command
+
+            output = execute_command(command, returnoutput=True)
+            track_info["nowplaying"] = output
+
+        except Exception as error:
+            log.add(_("Executing '%(command)s' failed: %(error)s"),
+                    {"command": command, "error": error}, title=_("Now Playing Error"))
+            return None
+
+        return track_info
