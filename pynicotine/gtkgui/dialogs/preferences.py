@@ -2747,9 +2747,9 @@ class Preferences(Dialog):
             config.sections[key].update(data)
 
         if portmap_required:
-            core.protothread.upnp.add_port_mapping()
+            core.protothread.portmapper.add_port_mapping()
         else:
-            core.protothread.upnp.remove_port_mapping()
+            core.protothread.portmapper.remove_port_mapping()
 
         if theme_required:
             # Dark mode
