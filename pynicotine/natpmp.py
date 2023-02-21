@@ -624,6 +624,8 @@ class NatPMP:
         if not self.configured():
             return
 
+        self.cancel_timer()
+
         # Remove the mapping 
         if blocking:
             self._remove_port_mapping()

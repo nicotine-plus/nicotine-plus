@@ -420,8 +420,7 @@ class SoulseekNetworkThread(Thread):
         # UPnP
         self.upnp.cancel_timer()
         # NAT-PMP
-        self.natpmp.cancel_timer()
-        self.natpmp.remove_port_mapping()
+        self.natpmp.remove_port_mapping(blocking=True)
 
         for sock in self._conns.copy():
             self._close_connection(self._conns, sock, callback=False)
