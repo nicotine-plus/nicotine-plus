@@ -217,25 +217,24 @@ class UPnP:
 
         self.port = None
         self.local_ip_address = None
+        self._service = None
         self._timer = None
 
-    @staticmethod
-    def _request_port_mapping(service, protocol, public_port, private_ip, private_port,
-                              mapping_description, lease_duration):
+    def _request_port_mapping(self, public_port, private_ip, private_port, mapping_description, lease_duration):
         """
         Function that adds a port mapping to the router.
-        If a port mapping already exists, it is updated with a lease period of 24 hours.
+        If a port mapping already exists, it is updated with a lease period of 12 hours.
         """
 
         from urllib.request import Request
         from urllib.request import urlopen
         from xml.etree import ElementTree
 
-        service_type = service.service_type
-        control_url = service.control_url
+        service_type = self._service.service_type
+        control_url = self._service.control_url
 
-        log.add_debug("UPnP: Adding port mapping (%s %s/%s, %s) at url '%s'",
-                      (private_ip, private_port, protocol, service_type, control_url))
+        log.add_debug("UPnP: Adding port mapping (%s %s, %s) at url '%s'",
+                      (private_ip, private_port, service_type, control_url))
 
         headers = {
             "Host": urlsplit(control_url).netloc,
@@ -251,7 +250,7 @@ class UPnP:
              + '<u:AddPortMapping xmlns:u="%s">'
              + "<NewRemoteHost></NewRemoteHost>"
              + "<NewExternalPort>%s</NewExternalPort>"
-             + "<NewProtocol>%s</NewProtocol>"
+             + "<NewProtocol>TCP</NewProtocol>"
              + "<NewInternalPort>%s</NewInternalPort>"
              + "<NewInternalClient>%s</NewInternalClient>"
              + "<NewEnabled>1</NewEnabled>"
@@ -260,7 +259,7 @@ class UPnP:
              + "</u:AddPortMapping>"
              + "</s:Body>"
              + "</s:Envelope>\r\n") %
-            (service_type, public_port, protocol, private_port, private_ip, mapping_description, lease_duration)
+            (service_type, public_port, private_port, private_ip, mapping_description, lease_duration)
         ).encode("utf-8")
 
         log.add_debug("UPnP: Add port mapping request headers: %s", headers)
@@ -281,6 +280,50 @@ class UPnP:
 
         return error_code, error_description
 
+    def _remove_port_mapping(self):
+
+        if not self._service:
+            return
+
+        from urllib.request import Request
+        from urllib.request import urlopen
+
+        service_type = self._service.service_type
+        control_url = self._service.control_url
+
+        headers = {
+            "Host": urlsplit(control_url).netloc,
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPACTION": f'"{service_type}#DeletePortMapping"'
+        }
+
+        body = (
+            ('<?xml version="1.0"?>\r\n'
+             + '<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" '
+             + 's:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">'
+             + "<s:Body>"
+             + '<u:DeletePortMapping xmlns:u="%s">'
+             + "<NewRemoteHost></NewRemoteHost>"
+             + "<NewExternalPort>%s</NewExternalPort>"
+             + "<NewProtocol>TCP</NewProtocol>"
+             + "</u:DeletePortMapping>"
+             + "</s:Body>"
+             + "</s:Envelope>\r\n") %
+            (service_type, self.port)
+        ).encode("utf-8")
+
+        log.add_debug("UPnP: Remove port mapping request headers: %s", headers)
+        log.add_debug("UPnP: Remove port mapping request contents: %s", body)
+
+        try:
+            with urlopen(Request(control_url, data=body, headers=headers), timeout=HTTP_REQUEST_TIMEOUT) as response:
+                log.add_debug("UPnP: Remove port mapping response: %s", response.read())
+
+        except Exception as error:
+            log.add_debug("UPnP: Failed to remove port mapping: %s", error)
+
+        self._service = None
+
     @staticmethod
     def _find_service(private_ip):
 
@@ -295,14 +338,14 @@ class UPnP:
 
         return service
 
-    def _update_port_mapping(self, lease_duration=86400):
+    def _update_port_mapping(self, lease_duration=43200):
         """
         This function supports creating a Port Mapping via the UPnP
         IGDv1 and IGDv2 protocol.
 
         Any UPnP port mapping done with IGDv2 will expire after a
         maximum of 7 days (lease period), according to the protocol.
-        We set the lease period to a shorter 24 hours, and regularly
+        We set the lease period to a shorter 12 hours, and regularly
         renew the port mapping.
         """
 
@@ -310,9 +353,9 @@ class UPnP:
             log.add_debug("UPnP: Creating Port Mapping rule...")
 
             # Find router
-            service = self._find_service(self.local_ip_address)
+            self._service = self._find_service(self.local_ip_address)
 
-            if not service:
+            if not self._service:
                 raise RuntimeError(_("No UPnP devices found"))
 
             # Perform the port mapping
@@ -323,8 +366,6 @@ class UPnP:
             ))
 
             error_code, error_description = self._request_port_mapping(
-                service=service,
-                protocol="TCP",
                 public_port=self.port,
                 private_ip=self.local_ip_address,
                 private_port=self.port,
@@ -370,12 +411,22 @@ class UPnP:
 
         self._start_timer()
 
+    def remove_port_mapping(self, blocking=False):
+
+        self._cancel_timer()
+
+        if blocking:
+            self._remove_port_mapping()
+            return
+
+        Thread(target=self._remove_port_mapping, name="UPnPRemovePortmapping", daemon=True).start()
+
     def _start_timer(self):
-        """ Port mapping entries last 24 hours, we need to regularly renew them.
+        """ Port mapping entries last 12 hours, we need to regularly renew them.
         The default interval is 4 hours. """
 
-        self.cancel_timer()
+        self._cancel_timer()
         self._timer = events.schedule(delay=RENEWAL_INTERVAL, callback=self.add_port_mapping)
 
-    def cancel_timer(self):
+    def _cancel_timer(self):
         events.cancel_scheduled(self._timer)

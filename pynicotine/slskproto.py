@@ -417,9 +417,8 @@ class SoulseekNetworkThread(Thread):
         self._bound_ip = self._interface = self._listen_port_range = self._server_socket = None
 
         self._close_listen_socket()
-        # UPnP
-        self.upnp.cancel_timer()
-        # NAT-PMP
+
+        self.upnp.remove_port_mapping(blocking=True)
         self.natpmp.remove_port_mapping(blocking=True)
 
         for sock in self._conns.copy():

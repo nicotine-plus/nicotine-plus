@@ -81,6 +81,32 @@ else:
     sys.exit()
 
 
+class FileTypes:
+    ARCHIVE = {
+        "7z", "br", "bz2", "gz", "iso", "lz", "lzma", "rar", "tar", "tbz", "tbz2", "tgz", "xz", "zip", "zst"
+    }
+    AUDIO = {
+        "aac", "ac3", "afc", "aifc", "aif", "aiff", "ape", "dff", "dts", "flac", "it", "m4a", "mid", "midi", "mod",
+        "mp1", "mp2", "mp3", "oga", "ogg", "opus", "s3m", "wav", "wma", "wv", "xm"
+    }
+    EXECUTABLE = {
+        "apk", "appimage", "bat", "deb", "dmg", "flatpak", "exe", "jar", "msi", "pkg", "rpm", "sh"
+    }
+    IMAGE = {
+        "apng", "avif", "bmp", "gif", "heic", "heif", "ico", "jfif", "jp2", "jpg", "jpe", "jpeg", "png", "psd",
+        "raw", "svg", "svgz", "tif", "tiff", "webp"
+    }
+    DOCUMENT_TEXT = {
+        "cue", "csv", "doc", "docx", "epub", "htm", "html", "m3u", "m3u8", "md5", "log", "lrc", "md", "nfo", "odp",
+        "ods", "odt", "opf", "oxps", "pdf", "ppt", "pptx", "ps", "rst", "rtf", "sfv", "sha1", "sha256", "srt",
+        "txt", "xls", "xlsx", "xps"
+    }
+    VIDEO = {
+        "3gp", "amv", "asf", "avi", "f4v", "flv", "m2ts", "m2v", "m4p", "m4v", "mov", "mp4", "mpe", "mpeg", "mpg",
+        "mkv", "mts", "ogv", "ts", "vob", "webm", "wmv"
+    }
+
+
 class Scanner(Process):
     """ Separate process responsible for building shares. It handles scanning of
     folders and files, as well as building databases and writing them to disk. """
@@ -205,7 +231,8 @@ class Scanner(Process):
             real = real.rstrip("\\") + "\\"
 
             if path.startswith(real):
-                virtualpath = virtual + "\\" + path[len(real):]
+                path_no_prefix = path[len(real):]
+                virtualpath = f"{virtual}\\{path_no_prefix}"
                 return virtualpath
 
         return "__INTERNAL_ERROR__" + path
@@ -333,7 +360,7 @@ class Scanner(Process):
 
             if entry is None:
                 if filename is not None:
-                    entry_stat = os.stat(encode_path(folder + "\\" + filename))
+                    entry_stat = os.stat(encode_path(f"{folder}\\{filename}"))
                 else:
                     entry_stat = os.stat(encode_path(folder))
             else:
@@ -511,12 +538,12 @@ class Scanner(Process):
                 filename = fileinfo[0]
 
                 # Add to file index
-                fileinfo[0] = folder + "\\" + filename
-                fileindex_db[repr(file_index)] = fileinfo
+                fileinfo[0] = f"{folder}\\{filename}"
+                fileindex_db[f"{file_index}"] = fileinfo
 
                 # Collect words from filenames for Search index
                 # Use set to prevent duplicates
-                for k in set((folder + " " + filename).lower().translate(TRANSLATE_PUNCTUATION).split()):
+                for k in set((f"{folder} {filename}").lower().translate(TRANSLATE_PUNCTUATION).split()):
                     try:
                         wordindex[k].append(file_index)
                     except KeyError:
@@ -619,7 +646,7 @@ class Shares:
         # Check if virtual share name is already in use
         counter = 1
         while new_virtual_name in (x[0] for x in shared_folders):
-            new_virtual_name = virtual_name + str(counter)
+            new_virtual_name = f"{virtual_name}{counter}"
             counter += 1
 
         return new_virtual_name

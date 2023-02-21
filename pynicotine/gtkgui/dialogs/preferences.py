@@ -62,6 +62,23 @@ from pynicotine.utils import open_uri
 from pynicotine.utils import unescape
 
 
+PAGE_IDS = [
+    ("network", _("Network"), "network-wireless-symbolic"),
+    ("user-interface", _("User Interface"), "view-grid-symbolic"),
+    ("shares", _("Shares"), "folder-symbolic"),
+    ("downloads", _("Downloads"), "document-save-symbolic"),
+    ("uploads", _("Uploads"), "emblem-shared-symbolic"),
+    ("searches", _("Searches"), "system-search-symbolic"),
+    ("user-profile", _("User Profile"), "avatar-default-symbolic"),
+    ("chats", _("Chats"), "insert-text-symbolic"),
+    ("now-playing", _("Now Playing"), "folder-music-symbolic"),
+    ("logging", _("Logging"), "folder-documents-symbolic"),
+    ("banned-users", _("Banned Users"), "action-unavailable-symbolic"),
+    ("ignored-users", _("Ignored Users"), "microphone-sensitivity-muted-symbolic"),
+    ("plugins", _("Plugins"), "list-add-symbolic"),
+    ("url-handlers", _("URL Handlers"), "insert-link-symbolic")]
+
+
 class NetworkPage:
 
     def __init__(self, application):
@@ -279,12 +296,21 @@ class DownloadsPage:
         self.filter_list_view = TreeView(
             application.window, parent=self.filter_list_container, multi_select=True,
             activate_row_callback=self.on_edit_filter,
-            columns=[
-                {"column_id": "filter", "column_type": "text", "title": _("Filter"), "sort_column": 0,
-                 "width": 150, "expand_column": True, "default_sort_column": "ascending"},
-                {"column_id": "escaped", "column_type": "toggle", "title": _("Escaped"), "width": 0,
-                 "sort_column": 1, "toggle_callback": self.on_toggle_escaped}
-            ]
+            columns={
+                "filter": {
+                    "column_type": "text",
+                    "title": _("Filter"),
+                    "width": 150,
+                    "expand_column": True,
+                    "default_sort_column": "ascending"
+                },
+                "escaped": {
+                    "column_type": "toggle",
+                    "title": _("Escaped"),
+                    "width": 0,
+                    "toggle_callback": self.on_toggle_escaped
+                }
+            }
         )
 
         self.options = {
@@ -337,7 +363,7 @@ class DownloadsPage:
         download_filters = []
 
         for dfilter, iterator in self.filter_list_view.iterators.items():
-            escaped = self.filter_list_view.get_row_value(iterator, 1)
+            escaped = self.filter_list_view.get_row_value(iterator, "escaped")
             download_filters.append([dfilter, int(escaped)])
 
         download_filters.sort()
@@ -365,8 +391,8 @@ class DownloadsPage:
 
     def on_toggle_escaped(self, list_view, iterator):
 
-        value = list_view.get_row_value(iterator, 1)
-        list_view.set_row_value(iterator, 1, not value)
+        value = list_view.get_row_value(iterator, "escaped")
+        list_view.set_row_value(iterator, "escaped", not value)
 
         self.on_verify_filter()
 
@@ -378,8 +404,8 @@ class DownloadsPage:
         iterator = self.filter_list_view.iterators.get(dfilter)
 
         if iterator is not None:
-            self.filter_list_view.set_row_value(iterator, 0, dfilter)
-            self.filter_list_view.set_row_value(iterator, 1, escaped)
+            self.filter_list_view.set_row_value(iterator, "filter", dfilter)
+            self.filter_list_view.set_row_value(iterator, "escaped", escaped)
         else:
             self.filter_list_view.add_row([dfilter, escaped])
 
@@ -403,8 +429,8 @@ class DownloadsPage:
         escaped = dialog.get_option_value()
 
         if new_dfilter in self.filter_list_view.iterators:
-            self.filter_list_view.set_row_value(iterator, 0, new_dfilter)
-            self.filter_list_view.set_row_value(iterator, 1, escaped)
+            self.filter_list_view.set_row_value(iterator, "filter", new_dfilter)
+            self.filter_list_view.set_row_value(iterator, "escaped", escaped)
         else:
             self.filter_list_view.remove_row(iterator)
             self.filter_list_view.add_row([new_dfilter, escaped])
@@ -414,8 +440,8 @@ class DownloadsPage:
     def on_edit_filter(self, *_args):
 
         for iterator in self.filter_list_view.get_selected_rows():
-            dfilter = self.filter_list_view.get_row_value(iterator, 0)
-            escaped = self.filter_list_view.get_row_value(iterator, 1)
+            dfilter = self.filter_list_view.get_row_value(iterator, "filter")
+            escaped = self.filter_list_view.get_row_value(iterator, "escaped")
 
             EntryDialog(
                 parent=self.application.preferences,
@@ -451,8 +477,8 @@ class DownloadsPage:
         outfilter = "(\\\\("
 
         for dfilter, iterator in self.filter_list_view.iterators.items():
-            dfilter = self.filter_list_view.get_row_value(iterator, 0)
-            escaped = self.filter_list_view.get_row_value(iterator, 1)
+            dfilter = self.filter_list_view.get_row_value(iterator, "filter")
+            escaped = self.filter_list_view.get_row_value(iterator, "escaped")
 
             if escaped:
                 dfilter = re.escape(dfilter)
@@ -516,14 +542,27 @@ class SharesPage:
         self.shares_list_view = TreeView(
             application.window, parent=self.shares_list_container, multi_select=True,
             activate_row_callback=self.on_edit_shared_folder,
-            columns=[
-                {"column_id": "virtual_folder", "column_type": "text", "title": _("Virtual Folder"), "width": 65,
-                 "sort_column": 0, "expand_column": True, "default_sort_column": "ascending"},
-                {"column_id": "folder", "column_type": "text", "title": _("Folder"), "width": 150,
-                 "sort_column": 1, "expand_column": True},
-                {"column_id": "buddies", "column_type": "toggle", "title": _("Buddy-only"), "width": 0,
-                 "sort_column": 2, "toggle_callback": self.on_toggle_folder_buddy_only},
-            ]
+            columns={
+                "virtual_name": {
+                    "column_type": "text",
+                    "title": _("Virtual Folder"),
+                    "width": 65,
+                    "expand_column": True,
+                    "default_sort_column": "ascending"
+                },
+                "folder": {
+                    "column_type": "text",
+                    "title": _("Folder"),
+                    "width": 150,
+                    "expand_column": True
+                },
+                "buddy_only": {
+                    "column_type": "toggle",
+                    "title": _("Buddy-only"),
+                    "width": 0,
+                    "toggle_callback": self.on_toggle_folder_buddy_only
+                }
+            }
         )
 
         self.options = {
@@ -565,16 +604,16 @@ class SharesPage:
 
     def _set_shared_folder_buddy_only(self, iterator, is_buddy_only):
 
-        if is_buddy_only == self.shares_list_view.get_row_value(iterator, 2):
+        if is_buddy_only == self.shares_list_view.get_row_value(iterator, "buddy_only"):
             return
 
         self.rescan_required = True
 
-        virtual_name = self.shares_list_view.get_row_value(iterator, 0)
-        folder_path = self.shares_list_view.get_row_value(iterator, 1)
+        virtual_name = self.shares_list_view.get_row_value(iterator, "virtual_name")
+        folder_path = self.shares_list_view.get_row_value(iterator, "folder")
         mapping = (virtual_name, folder_path)
 
-        self.shares_list_view.set_row_value(iterator, 2, is_buddy_only)
+        self.shares_list_view.set_row_value(iterator, "buddy_only", is_buddy_only)
 
         if is_buddy_only:
             self.shared_folders.remove(mapping)
@@ -627,8 +666,8 @@ class SharesPage:
         virtual_name = core.shares.get_normalized_virtual_name(
             virtual_name, shared_folders=(self.shared_folders + self.buddy_shared_folders)
         )
-        old_virtual_name = self.shares_list_view.get_row_value(iterator, 0)
-        folder_path = self.shares_list_view.get_row_value(iterator, 1)
+        old_virtual_name = self.shares_list_view.get_row_value(iterator, "virtual_name")
+        folder_path = self.shares_list_view.get_row_value(iterator, "folder")
 
         old_mapping = (old_virtual_name, folder_path)
         new_mapping = (virtual_name, folder_path)
@@ -641,15 +680,15 @@ class SharesPage:
         shared_folders.remove(old_mapping)
         shared_folders.append(new_mapping)
 
-        self.shares_list_view.set_row_value(iterator, 0, virtual_name)
+        self.shares_list_view.set_row_value(iterator, "virtual_name", virtual_name)
         self._set_shared_folder_buddy_only(iterator, is_buddy_only)
 
     def on_edit_shared_folder(self, *_args):
 
         for iterator in self.shares_list_view.get_selected_rows():
-            virtual_name = self.shares_list_view.get_row_value(iterator, 0)
-            folder_path = self.shares_list_view.get_row_value(iterator, 1)
-            is_buddy_only = self.shares_list_view.get_row_value(iterator, 2)
+            virtual_name = self.shares_list_view.get_row_value(iterator, "virtual_name")
+            folder_path = self.shares_list_view.get_row_value(iterator, "folder")
+            is_buddy_only = self.shares_list_view.get_row_value(iterator, "buddy_only")
 
             EntryDialog(
                 parent=self.application.preferences,
@@ -664,15 +703,15 @@ class SharesPage:
             return
 
     def on_toggle_folder_buddy_only(self, list_view, iterator):
-        self._set_shared_folder_buddy_only(iterator, is_buddy_only=not list_view.get_row_value(iterator, 2))
+        self._set_shared_folder_buddy_only(iterator, is_buddy_only=not list_view.get_row_value(iterator, "buddy_only"))
 
     def on_remove_shared_folder(self, *_args):
 
         iterators = reversed(self.shares_list_view.get_selected_rows())
 
         for iterator in iterators:
-            virtual_name = self.shares_list_view.get_row_value(iterator, 0)
-            folder_path = self.shares_list_view.get_row_value(iterator, 1)
+            virtual_name = self.shares_list_view.get_row_value(iterator, "virtual_name")
+            folder_path = self.shares_list_view.get_row_value(iterator, "folder")
             mapping = (virtual_name, folder_path)
 
             if mapping in self.buddy_shared_folders:
@@ -691,31 +730,43 @@ class UploadsPage:
     def __init__(self, application):
 
         ui_template = UserInterface(scope=self, path="settings/uploads.ui")
-
-        # pylint: disable=invalid-name
-        (self.AutoclearFinished, self.FirstInFirstOut, self.FriendsNoLimits,
-         self.LimitSpeed, self.LimitSpeedAlternative, self.LimitTotalTransfers, self.Main, self.MaxUserFiles,
-         self.MaxUserQueue, self.PreferFriends, self.QueueBandwidth, self.QueueSlots, self.QueueUseBandwidth,
-         self.QueueUseSlots, self.UnlimitedUploadSpeed, self.UploadDoubleClick, self.UseAltUploadSpeedLimit,
-         self.UseUploadSpeedLimit) = ui_template.widgets
+        (
+            self.Main,  # pylint: disable=invalid-name
+            self.alt_speed_spinner,
+            self.autoclear_uploads_toggle,
+            self.limit_total_transfers_radio,
+            self.max_queued_files_spinner,
+            self.max_queued_size_spinner,
+            self.no_buddy_limits_toggle,
+            self.prioritize_buddies_toggle,
+            self.speed_spinner,
+            self.upload_bandwidth_spinner,
+            self.upload_double_click_combobox,
+            self.upload_queue_type_combobox,
+            self.upload_slots_spinner,
+            self.use_alt_speed_limit_radio,
+            self.use_speed_limit_radio,
+            self.use_unlimited_speed_radio,
+            self.use_upload_slots_radio
+        ) = ui_template.widgets
 
         self.application = application
 
         self.options = {
             "transfers": {
-                "autoclear_uploads": self.AutoclearFinished,
-                "uploadbandwidth": self.QueueBandwidth,
-                "useupslots": self.QueueUseSlots,
-                "uploadslots": self.QueueSlots,
-                "uploadlimit": self.LimitSpeed,
-                "uploadlimitalt": self.LimitSpeedAlternative,
-                "fifoqueue": self.FirstInFirstOut,
-                "limitby": self.LimitTotalTransfers,
-                "queuelimit": self.MaxUserQueue,
-                "filelimit": self.MaxUserFiles,
-                "friendsnolimits": self.FriendsNoLimits,
-                "preferfriends": self.PreferFriends,
-                "upload_doubleclick": self.UploadDoubleClick
+                "autoclear_uploads": self.autoclear_uploads_toggle,
+                "uploadbandwidth": self.upload_bandwidth_spinner,
+                "useupslots": self.use_upload_slots_radio,
+                "uploadslots": self.upload_slots_spinner,
+                "uploadlimit": self.speed_spinner,
+                "uploadlimitalt": self.alt_speed_spinner,
+                "fifoqueue": self.upload_queue_type_combobox,
+                "limitby": self.limit_total_transfers_radio,
+                "queuelimit": self.max_queued_size_spinner,
+                "filelimit": self.max_queued_files_spinner,
+                "friendsnolimits": self.no_buddy_limits_toggle,
+                "preferfriends": self.prioritize_buddies_toggle,
+                "upload_doubleclick": self.upload_double_click_combobox
             }
         }
 
@@ -726,20 +777,20 @@ class UploadsPage:
         use_speed_limit = config.sections["transfers"]["use_upload_speed_limit"]
 
         if use_speed_limit == "primary":
-            self.UseUploadSpeedLimit.set_active(True)
+            self.use_speed_limit_radio.set_active(True)
 
         elif use_speed_limit == "alternative":
-            self.UseAltUploadSpeedLimit.set_active(True)
+            self.use_alt_speed_limit_radio.set_active(True)
 
         else:
-            self.UnlimitedUploadSpeed.set_active(True)
+            self.use_unlimited_speed_radio.set_active(True)
 
     def get_settings(self):
 
-        if self.UseUploadSpeedLimit.get_active():
+        if self.use_speed_limit_radio.get_active():
             use_speed_limit = "primary"
 
-        elif self.UseAltUploadSpeedLimit.get_active():
+        elif self.use_alt_speed_limit_radio.get_active():
             use_speed_limit = "alternative"
 
         else:
@@ -747,20 +798,20 @@ class UploadsPage:
 
         return {
             "transfers": {
-                "autoclear_uploads": self.AutoclearFinished.get_active(),
-                "uploadbandwidth": self.QueueBandwidth.get_value_as_int(),
-                "useupslots": self.QueueUseSlots.get_active(),
-                "uploadslots": self.QueueSlots.get_value_as_int(),
+                "autoclear_uploads": self.autoclear_uploads_toggle.get_active(),
+                "uploadbandwidth": self.upload_bandwidth_spinner.get_value_as_int(),
+                "useupslots": self.use_upload_slots_radio.get_active(),
+                "uploadslots": self.upload_slots_spinner.get_value_as_int(),
                 "use_upload_speed_limit": use_speed_limit,
-                "uploadlimit": self.LimitSpeed.get_value_as_int(),
-                "uploadlimitalt": self.LimitSpeedAlternative.get_value_as_int(),
-                "fifoqueue": bool(self.FirstInFirstOut.get_active()),
-                "limitby": self.LimitTotalTransfers.get_active(),
-                "queuelimit": self.MaxUserQueue.get_value_as_int(),
-                "filelimit": self.MaxUserFiles.get_value_as_int(),
-                "friendsnolimits": self.FriendsNoLimits.get_active(),
-                "preferfriends": self.PreferFriends.get_active(),
-                "upload_doubleclick": self.UploadDoubleClick.get_active()
+                "uploadlimit": self.speed_spinner.get_value_as_int(),
+                "uploadlimitalt": self.alt_speed_spinner.get_value_as_int(),
+                "fifoqueue": bool(self.upload_queue_type_combobox.get_active()),
+                "limitby": self.limit_total_transfers_radio.get_active(),
+                "queuelimit": self.max_queued_size_spinner.get_value_as_int(),
+                "filelimit": self.max_queued_files_spinner.get_value_as_int(),
+                "friendsnolimits": self.no_buddy_limits_toggle.get_active(),
+                "preferfriends": self.prioritize_buddies_toggle.get_active(),
+                "upload_doubleclick": self.upload_double_click_combobox.get_active()
             }
         }
 
@@ -821,21 +872,32 @@ class IgnoredUsersPage:
         self.ignored_users = []
         self.ignored_users_list_view = TreeView(
             application.window, parent=self.ignored_users_container, multi_select=True,
-            columns=[
-                {"column_id": "username", "column_type": "text", "title": _("Username"), "sort_column": 0,
-                 "default_sort_column": "ascending"}
-            ]
+            columns={
+                "username": {
+                    "column_type": "text",
+                    "title": _("Username"),
+                    "default_sort_column": "ascending"
+                }
+            }
         )
 
         self.ignored_ips = {}
         self.ignored_ips_list_view = TreeView(
             application.window, parent=self.ignored_ips_container, multi_select=True,
-            columns=[
-                {"column_id": "ip_address", "column_type": "text", "title": _("IP Address"), "sort_column": 0,
-                 "width": 50, "expand_column": True},
-                {"column_id": "user", "column_type": "text", "title": _("User"), "sort_column": 1,
-                 "expand_column": True, "default_sort_column": "ascending"}
-            ]
+            columns={
+                "ip_address": {
+                    "column_type": "text",
+                    "title": _("IP Address"),
+                    "width": 50,
+                    "expand_column": True
+                },
+                "user": {
+                    "column_type": "text",
+                    "title": _("User"),
+                    "expand_column": True,
+                    "default_sort_column": "ascending"
+                }
+            }
         )
 
         self.options = {
@@ -885,7 +947,7 @@ class IgnoredUsersPage:
     def on_remove_ignored_user(self, *_args):
 
         for iterator in reversed(self.ignored_users_list_view.get_selected_rows()):
-            user = self.ignored_users_list_view.get_row_value(iterator, 0)
+            user = self.ignored_users_list_view.get_row_value(iterator, "username")
 
             self.ignored_users_list_view.remove_row(iterator)
             self.ignored_users.remove(user)
@@ -914,7 +976,7 @@ class IgnoredUsersPage:
     def on_remove_ignored_ip(self, *_args):
 
         for iterator in reversed(self.ignored_ips_list_view.get_selected_rows()):
-            ip_address = self.ignored_ips_list_view.get_row_value(iterator, 0)
+            ip_address = self.ignored_ips_list_view.get_row_value(iterator, "ip_address")
 
             self.ignored_ips_list_view.remove_row(iterator)
             del self.ignored_ips[ip_address]
@@ -943,21 +1005,32 @@ class BannedUsersPage:
         self.banned_users = []
         self.banned_users_list_view = TreeView(
             application.window, parent=self.banned_users_container, multi_select=True,
-            columns=[
-                {"column_id": "username", "column_type": "text", "title": _("Username"), "sort_column": 0,
-                 "default_sort_column": "ascending"}
-            ]
+            columns={
+                "username": {
+                    "column_type": "text",
+                    "title": _("Username"),
+                    "default_sort_column": "ascending"
+                }
+            }
         )
 
         self.banned_ips = {}
         self.banned_ips_list_view = TreeView(
             application.window, parent=self.banned_ips_container, multi_select=True,
-            columns=[
-                {"column_id": "ip_address", "column_type": "text", "title": _("IP Address"), "sort_column": 0,
-                 "width": 50, "expand_column": True},
-                {"column_id": "user", "column_type": "text", "title": _("User"), "sort_column": 1,
-                 "expand_column": True, "default_sort_column": "ascending"}
-            ]
+            columns={
+                "ip_address": {
+                    "column_type": "text",
+                    "title": _("IP Address"),
+                    "width": 50,
+                    "expand_column": True
+                },
+                "user": {
+                    "column_type": "text",
+                    "title": _("User"),
+                    "expand_column": True,
+                    "default_sort_column": "ascending"
+                }
+            }
         )
 
         self.options = {
@@ -1029,7 +1102,7 @@ class BannedUsersPage:
     def on_remove_banned_user(self, *_args):
 
         for iterator in reversed(self.banned_users_list_view.get_selected_rows()):
-            user = self.banned_users_list_view.get_row_value(iterator, 0)
+            user = self.banned_users_list_view.get_row_value(iterator, "username")
 
             self.banned_users_list_view.remove_row(iterator)
             self.banned_users.remove(user)
@@ -1059,7 +1132,7 @@ class BannedUsersPage:
     def on_remove_banned_ip(self, *_args):
 
         for iterator in reversed(self.banned_ips_list_view.get_selected_rows()):
-            ip_address = self.banned_ips_list_view.get_row_value(iterator, 0)
+            ip_address = self.banned_ips_list_view.get_row_value(iterator, "ip_address")
 
             self.banned_ips_list_view.remove_row(iterator)
             del self.banned_ips[ip_address]
@@ -1070,40 +1143,69 @@ class ChatsPage:
     def __init__(self, application):
 
         ui_template = UserInterface(scope=self, path="settings/chats.ui")
-
-        # pylint: disable=invalid-name
-        (self.CensorCheck, self.CensorList,
-         self.CensorReplaceCombo, self.CharactersCompletion, self.ChatRoomFormat,
-         self.CompleteBuddiesCheck, self.CompleteCommandsCheck, self.CompleteRoomNamesCheck,
-         self.CompleteUsersInRoomsCheck, self.CompletionCycleCheck, self.CompletionDropdownCheck,
-         self.CompletionTabCheck, self.Main, self.OneMatchCheck, self.PrivateChatFormat,
-         self.PrivateLogLines, self.PrivateMessage,
-         self.ReopenPrivateChats, self.ReplaceCheck, self.ReplacementList,
-         self.RoomLogLines, self.RoomMessage, self.SpellCheck,
-         self.TTSCommand, self.TextToSpeech, self.ctcp_toggle) = ui_template.widgets
+        (
+            self.Main,  # pylint: disable=invalid-name
+            self.auto_replace_words_toggle,
+            self.censor_list_container,
+            self.censor_replacement_combobox,
+            self.censor_text_patterns_toggle,
+            self.complete_buddy_names_toggle,
+            self.complete_commands_toggle,
+            self.complete_room_names_toggle,
+            self.complete_room_usernames_toggle,
+            self.cycle_tab_completion_toggle,
+            self.enable_completion_dropdown_toggle,
+            self.enable_ctcp_toggle,
+            self.enable_spell_checker_toggle,
+            self.enable_tab_completion_toggle,
+            self.enable_tts_toggle,
+            self.hide_dropdown_single_match_toggle,
+            self.min_chars_dropdown_spinner,
+            self.recent_private_messages_spinner,
+            self.recent_room_messages_spinner,
+            self.reopen_private_chats_toggle,
+            self.replacement_list_container,
+            self.timestamp_private_chat_entry,
+            self.timestamp_room_entry,
+            self.tts_command_combobox,
+            self.tts_private_message_entry,
+            self.tts_room_message_entry,
+        ) = ui_template.widgets
 
         self.application = application
         self.completion_required = False
 
         self.censored_patterns = []
         self.censor_list_view = TreeView(
-            application.window, parent=self.CensorList, multi_select=True, activate_row_callback=self.on_edit_censored,
-            columns=[
-                {"column_id": "pattern", "column_type": "text", "title": _("Pattern"), "sort_column": 0,
-                 "default_sort_column": "ascending"}
-            ]
+            application.window, parent=self.censor_list_container, multi_select=True,
+            activate_row_callback=self.on_edit_censored,
+            columns={
+                "pattern": {
+                    "column_type": "text",
+                    "title": _("Pattern"),
+                    "default_sort_column": "ascending"
+                }
+            }
         )
 
         self.replacements = {}
         self.replacement_list_view = TreeView(
-            application.window, parent=self.ReplacementList, multi_select=True,
+            application.window, parent=self.replacement_list_container, multi_select=True,
             activate_row_callback=self.on_edit_replacement,
-            columns=[
-                {"column_id": "pattern", "column_type": "text", "title": _("Pattern"), "sort_column": 0,
-                 "width": 100, "expand_column": True, "default_sort_column": "ascending"},
-                {"column_id": "replacement", "column_type": "text", "title": _("Replacement"), "sort_column": 1,
-                 "expand_column": True}
-            ]
+            columns={
+                "pattern": {
+                    "column_type": "text",
+                    "title": _("Pattern"),
+                    "width": 100,
+                    "expand_column": True,
+                    "default_sort_column": "ascending"
+                },
+                "replacement": {
+                    "column_type": "text",
+                    "title": _("Replacement"),
+                    "expand_column": True
+                }
+            }
         )
 
         self.options = {
@@ -1111,36 +1213,36 @@ class ChatsPage:
                 "ctcpmsgs": None  # Special case in set_settings
             },
             "logging": {
-                "readroomlines": self.RoomLogLines,
-                "readprivatelines": self.PrivateLogLines,
-                "rooms_timestamp": self.ChatRoomFormat,
-                "private_timestamp": self.PrivateChatFormat
+                "readroomlines": self.recent_room_messages_spinner,
+                "readprivatelines": self.recent_private_messages_spinner,
+                "rooms_timestamp": self.timestamp_room_entry,
+                "private_timestamp": self.timestamp_private_chat_entry
             },
             "privatechat": {
-                "store": self.ReopenPrivateChats
+                "store": self.reopen_private_chats_toggle
             },
             "words": {
-                "tab": self.CompletionTabCheck,
-                "cycle": self.CompletionCycleCheck,
-                "dropdown": self.CompletionDropdownCheck,
-                "characters": self.CharactersCompletion,
-                "roomnames": self.CompleteRoomNamesCheck,
-                "buddies": self.CompleteBuddiesCheck,
-                "roomusers": self.CompleteUsersInRoomsCheck,
-                "commands": self.CompleteCommandsCheck,
-                "onematch": self.OneMatchCheck,
+                "tab": self.enable_tab_completion_toggle,
+                "cycle": self.cycle_tab_completion_toggle,
+                "dropdown": self.enable_completion_dropdown_toggle,
+                "characters": self.min_chars_dropdown_spinner,
+                "roomnames": self.complete_room_names_toggle,
+                "buddies": self.complete_buddy_names_toggle,
+                "roomusers": self.complete_room_usernames_toggle,
+                "commands": self.complete_commands_toggle,
+                "onematch": self.hide_dropdown_single_match_toggle,
                 "censored": self.censor_list_view,
-                "censorwords": self.CensorCheck,
-                "censorfill": self.CensorReplaceCombo,
+                "censorwords": self.censor_text_patterns_toggle,
+                "censorfill": self.censor_replacement_combobox,
                 "autoreplaced": self.replacement_list_view,
-                "replacewords": self.ReplaceCheck
+                "replacewords": self.auto_replace_words_toggle
             },
             "ui": {
-                "spellcheck": self.SpellCheck,
-                "speechenabled": self.TextToSpeech,
-                "speechcommand": self.TTSCommand,
-                "speechrooms": self.RoomMessage,
-                "speechprivate": self.PrivateMessage
+                "spellcheck": self.enable_spell_checker_toggle,
+                "speechenabled": self.enable_tts_toggle,
+                "speechcommand": self.tts_command_combobox,
+                "speechrooms": self.tts_room_message_entry,
+                "speechprivate": self.tts_private_message_entry
             }
         }
 
@@ -1158,9 +1260,9 @@ class ChatsPage:
             from gi.repository import Gspell  # noqa: F401; pylint:disable=unused-import
 
         except (ImportError, ValueError):
-            self.SpellCheck.set_visible(False)
+            self.enable_spell_checker_toggle.set_visible(False)
 
-        self.ctcp_toggle.set_active(not config.sections["server"]["ctcpmsgs"])
+        self.enable_ctcp_toggle.set_active(not config.sections["server"]["ctcpmsgs"])
 
         self.censored_patterns = config.sections["words"]["censored"][:]
         self.replacements = config.sections["words"]["autoreplaced"].copy()
@@ -1173,56 +1275,56 @@ class ChatsPage:
 
         return {
             "server": {
-                "ctcpmsgs": not self.ctcp_toggle.get_active()
+                "ctcpmsgs": not self.enable_ctcp_toggle.get_active()
             },
             "logging": {
-                "readroomlines": self.RoomLogLines.get_value_as_int(),
-                "readprivatelines": self.PrivateLogLines.get_value_as_int(),
-                "private_timestamp": self.PrivateChatFormat.get_text(),
-                "rooms_timestamp": self.ChatRoomFormat.get_text()
+                "readroomlines": self.recent_room_messages_spinner.get_value_as_int(),
+                "readprivatelines": self.recent_private_messages_spinner.get_value_as_int(),
+                "private_timestamp": self.timestamp_private_chat_entry.get_text(),
+                "rooms_timestamp": self.timestamp_room_entry.get_text()
             },
             "privatechat": {
-                "store": self.ReopenPrivateChats.get_active()
+                "store": self.reopen_private_chats_toggle.get_active()
             },
             "words": {
-                "tab": self.CompletionTabCheck.get_active(),
-                "cycle": self.CompletionCycleCheck.get_active(),
-                "dropdown": self.CompletionDropdownCheck.get_active(),
-                "characters": self.CharactersCompletion.get_value_as_int(),
-                "roomnames": self.CompleteRoomNamesCheck.get_active(),
-                "buddies": self.CompleteBuddiesCheck.get_active(),
-                "roomusers": self.CompleteUsersInRoomsCheck.get_active(),
-                "commands": self.CompleteCommandsCheck.get_active(),
-                "onematch": self.OneMatchCheck.get_active(),
+                "tab": self.enable_tab_completion_toggle.get_active(),
+                "cycle": self.cycle_tab_completion_toggle.get_active(),
+                "dropdown": self.enable_completion_dropdown_toggle.get_active(),
+                "characters": self.min_chars_dropdown_spinner.get_value_as_int(),
+                "roomnames": self.complete_room_names_toggle.get_active(),
+                "buddies": self.complete_buddy_names_toggle.get_active(),
+                "roomusers": self.complete_room_usernames_toggle.get_active(),
+                "commands": self.complete_commands_toggle.get_active(),
+                "onematch": self.hide_dropdown_single_match_toggle.get_active(),
                 "censored": self.censored_patterns[:],
-                "censorwords": self.CensorCheck.get_active(),
-                "censorfill": self.CensorReplaceCombo.get_active_id(),
+                "censorwords": self.censor_text_patterns_toggle.get_active(),
+                "censorfill": self.censor_replacement_combobox.get_active_id(),
                 "autoreplaced": self.replacements.copy(),
-                "replacewords": self.ReplaceCheck.get_active()
+                "replacewords": self.auto_replace_words_toggle.get_active()
             },
             "ui": {
-                "spellcheck": self.SpellCheck.get_active(),
-                "speechenabled": self.TextToSpeech.get_active(),
-                "speechcommand": self.TTSCommand.get_active_text(),
-                "speechrooms": self.RoomMessage.get_text(),
-                "speechprivate": self.PrivateMessage.get_text()
+                "spellcheck": self.enable_spell_checker_toggle.get_active(),
+                "speechenabled": self.enable_tts_toggle.get_active(),
+                "speechcommand": self.tts_command_combobox.get_active_text(),
+                "speechrooms": self.tts_room_message_entry.get_text(),
+                "speechprivate": self.tts_private_message_entry.get_text()
             }
         }
 
     def on_completion_changed(self, *_args):
         self.completion_required = True
 
-    def on_default_private(self, *_args):
-        self.PrivateMessage.set_text(config.defaults["ui"]["speechprivate"])
+    def on_default_tts_private_message(self, *_args):
+        self.tts_private_message_entry.set_text(config.defaults["ui"]["speechprivate"])
 
-    def on_default_rooms(self, *_args):
-        self.RoomMessage.set_text(config.defaults["ui"]["speechrooms"])
+    def on_default_tts_room_message(self, *_args):
+        self.tts_room_message_entry.set_text(config.defaults["ui"]["speechrooms"])
 
-    def on_room_default_timestamp(self, *_args):
-        self.ChatRoomFormat.set_text(config.defaults["logging"]["rooms_timestamp"])
+    def on_default_timestamp_room(self, *_args):
+        self.timestamp_room_entry.set_text(config.defaults["logging"]["rooms_timestamp"])
 
-    def on_private_default_timestamp(self, *_args):
-        self.PrivateChatFormat.set_text(config.defaults["logging"]["private_timestamp"])
+    def on_default_timestamp_private_chat(self, *_args):
+        self.timestamp_private_chat_entry.set_text(config.defaults["logging"]["private_timestamp"])
 
     def on_add_censored_response(self, dialog, _response_id, _data):
 
@@ -1249,16 +1351,16 @@ class ChatsPage:
         if not pattern:
             return
 
-        old_pattern = self.censor_list_view.get_row_value(iterator, 0)
+        old_pattern = self.censor_list_view.get_row_value(iterator, "pattern")
         self.censored_patterns.remove(old_pattern)
 
-        self.censor_list_view.set_row_value(iterator, 0, pattern)
+        self.censor_list_view.set_row_value(iterator, "pattern", pattern)
         self.censored_patterns.append(pattern)
 
     def on_edit_censored(self, *_args):
 
         for iterator in self.censor_list_view.get_selected_rows():
-            pattern = self.censor_list_view.get_row_value(iterator, 0)
+            pattern = self.censor_list_view.get_row_value(iterator, "pattern")
 
             EntryDialog(
                 parent=self.application.preferences,
@@ -1274,7 +1376,7 @@ class ChatsPage:
     def on_remove_censored(self, *_args):
 
         for iterator in reversed(self.censor_list_view.get_selected_rows()):
-            censor = self.censor_list_view.get_row_value(iterator, 0)
+            censor = self.censor_list_view.get_row_value(iterator, "pattern")
 
             self.censor_list_view.remove_row(iterator)
             self.censored_patterns.remove(censor)
@@ -1308,18 +1410,18 @@ class ChatsPage:
         if not pattern or not replacement:
             return
 
-        old_pattern = self.replacement_list_view.get_row_value(iterator, 0)
+        old_pattern = self.replacement_list_view.get_row_value(iterator, "pattern")
         del self.replacements[old_pattern]
 
         self.replacements[pattern] = replacement
-        self.replacement_list_view.set_row_value(iterator, 0, pattern)
-        self.replacement_list_view.set_row_value(iterator, 1, replacement)
+        self.replacement_list_view.set_row_value(iterator, "pattern", pattern)
+        self.replacement_list_view.set_row_value(iterator, "replacement", replacement)
 
     def on_edit_replacement(self, *_args):
 
         for iterator in self.replacement_list_view.get_selected_rows():
-            pattern = self.replacement_list_view.get_row_value(iterator, 0)
-            replacement = self.replacement_list_view.get_row_value(iterator, 1)
+            pattern = self.replacement_list_view.get_row_value(iterator, "pattern")
+            replacement = self.replacement_list_view.get_row_value(iterator, "replacement")
 
             EntryDialog(
                 parent=self.application.preferences,
@@ -1336,7 +1438,7 @@ class ChatsPage:
     def on_remove_replacement(self, *_args):
 
         for iterator in reversed(self.replacement_list_view.get_selected_rows()):
-            replacement = self.replacement_list_view.get_row_value(iterator, 0)
+            replacement = self.replacement_list_view.get_row_value(iterator, "pattern")
 
             self.replacement_list_view.remove_row(iterator)
             del self.replacements[replacement]
@@ -1925,12 +2027,21 @@ class UrlHandlersPage:
         self.protocol_list_view = TreeView(
             application.window, parent=self.protocol_list_container, multi_select=True,
             activate_row_callback=self.on_edit_handler,
-            columns=[
-                {"column_id": "protocol", "column_type": "text", "title": _("Protocol"), "sort_column": 0,
-                 "width": 120, "expand_column": True, "iterator_key": True, "default_sort_column": "ascending"},
-                {"column_id": "command", "column_type": "text", "title": _("Command"), "sort_column": 1,
-                 "expand_column": True}
-            ]
+            columns={
+                "protocol": {
+                    "column_type": "text",
+                    "title": _("Protocol"),
+                    "width": 120,
+                    "expand_column": True,
+                    "iterator_key": True,
+                    "default_sort_column": "ascending"
+                },
+                "command": {
+                    "column_type": "text",
+                    "title": _("Command"),
+                    "expand_column": True
+                }
+            }
         )
 
     def set_settings(self):
@@ -1974,7 +2085,7 @@ class UrlHandlersPage:
         self.protocols[protocol] = command
 
         if iterator:
-            self.protocol_list_view.set_row_value(iterator, 1, command)
+            self.protocol_list_view.set_row_value(iterator, "command", command)
             return
 
         self.protocol_list_view.add_row([protocol, command])
@@ -1998,16 +2109,16 @@ class UrlHandlersPage:
         if not command:
             return
 
-        protocol = self.protocol_list_view.get_row_value(iterator, 0)
+        protocol = self.protocol_list_view.get_row_value(iterator, "protocol")
 
         self.protocols[protocol] = command
-        self.protocol_list_view.set_row_value(iterator, 1, command)
+        self.protocol_list_view.set_row_value(iterator, "command", command)
 
     def on_edit_handler(self, *_args):
 
         for iterator in self.protocol_list_view.get_selected_rows():
-            protocol = self.protocol_list_view.get_row_value(iterator, 0)
-            command = self.protocol_list_view.get_row_value(iterator, 1)
+            protocol = self.protocol_list_view.get_row_value(iterator, "protocol")
+            command = self.protocol_list_view.get_row_value(iterator, "command")
 
             EntryDialog(
                 parent=self.application.preferences,
@@ -2023,7 +2134,7 @@ class UrlHandlersPage:
     def on_remove_handler(self, *_args):
 
         for iterator in reversed(self.protocol_list_view.get_selected_rows()):
-            protocol = self.protocol_list_view.get_row_value(iterator, 0)
+            protocol = self.protocol_list_view.get_row_value(iterator, "protocol")
 
             self.protocol_list_view.remove_row(iterator)
             del self.protocols[protocol]
@@ -2236,7 +2347,6 @@ class PluginsPage:
         ) = ui_template.widgets
 
         self.application = application
-        self.enabled_plugins = []
         self.selected_plugin = None
 
         self.options = {
@@ -2250,21 +2360,28 @@ class PluginsPage:
         self.plugin_list_view = TreeView(
             application.window, parent=self.plugin_list_container, always_select=True,
             select_row_callback=self.on_select_plugin,
-            columns=[
+            columns={
                 # Visible columns
-                {"column_id": "enabled", "column_type": "toggle", "title": _("Enabled"), "width": 0,
-                 "sort_column": 0, "toggle_callback": self.on_plugin_toggle, "hide_header": True},
-                {"column_id": "plugin", "column_type": "text", "title": _("Plugin"), "sort_column": 1,
-                 "default_sort_column": "ascending"},
+                "enabled": {
+                    "column_type": "toggle",
+                    "title": _("Enabled"),
+                    "width": 0,
+                    "toggle_callback": self.on_plugin_toggle,
+                    "hide_header": True
+                },
+                "plugin": {
+                    "column_type": "text",
+                    "title": _("Plugin"),
+                    "default_sort_column": "ascending"
+                },
 
                 # Hidden data columns
-                {"column_id": "plugin_hidden", "data_type": str}
-            ]
+                "plugin_id": {"data_type": str}
+            }
         )
 
     def set_settings(self):
 
-        self.enabled_plugins.clear()
         self.plugin_list_view.clear()
 
         self.application.preferences.set_widgets_data(self.options)
@@ -2279,15 +2396,11 @@ class PluginsPage:
             enabled = (plugin_id in config.sections["plugins"]["enabled"])
             self.plugin_list_view.add_row([enabled, plugin_name, plugin_id], select_row=False)
 
-            if enabled:
-                self.enabled_plugins.append(plugin_id)
-
     def get_settings(self):
 
         return {
             "plugins": {
-                "enable": self.enable_plugins_toggle.get_active(),
-                "enabled": self.enabled_plugins[:]
+                "enable": self.enable_plugins_toggle.get_active()
             }
         }
 
@@ -2300,7 +2413,7 @@ class PluginsPage:
             self.selected_plugin = _("No Plugin Selected")
             info = {}
         else:
-            self.selected_plugin = list_view.get_row_value(iterator, 2)
+            self.selected_plugin = list_view.get_row_value(iterator, "plugin_id")
             info = core.pluginhandler.get_plugin_info(self.selected_plugin)
 
         plugin_name = info.get("Name", self.selected_plugin)
@@ -2319,24 +2432,19 @@ class PluginsPage:
 
     def on_plugin_toggle(self, list_view, iterator):
 
-        plugin_id = list_view.get_row_value(iterator, 2)
-        value = list_view.get_row_value(iterator, 0)
-        list_view.set_row_value(iterator, 0, not value)
+        plugin_id = list_view.get_row_value(iterator, "plugin_id")
+        enabled = core.pluginhandler.toggle_plugin(plugin_id)
 
-        if not value:
-            core.pluginhandler.enable_plugin(plugin_id)
-            self.enabled_plugins.append(plugin_id)
-        else:
-            core.pluginhandler.disable_plugin(plugin_id)
-            self.enabled_plugins.remove(plugin_id)
-
+        list_view.set_row_value(iterator, "enabled", enabled)
         self.check_plugin_settings_button(plugin_id)
 
     def on_enable_plugins(self, *_args):
 
+        enabled_plugin_ids = config.sections["plugins"]["enabled"].copy()
+
         if self.enable_plugins_toggle.get_active():
             # Enable all selected plugins
-            for plugin_id in self.enabled_plugins:
+            for plugin_id in enabled_plugin_ids:
                 core.pluginhandler.enable_plugin(plugin_id)
 
             self.check_plugin_settings_button(self.selected_plugin)
@@ -2346,6 +2454,7 @@ class PluginsPage:
         for plugin in core.pluginhandler.enabled_plugins.copy():
             core.pluginhandler.disable_plugin(plugin)
 
+        config.sections["plugins"]["enabled"] = enabled_plugin_ids
         self.plugin_settings_button.set_sensitive(False)
 
     def on_add_plugins(self, *_args):
@@ -2402,23 +2511,8 @@ class Preferences(Dialog):
             self.viewport.set_focus_vadjustment(self.content.get_vadjustment())
 
         self.pages = {}
-        self.page_ids = [
-            ("network", _("Network"), "network-wireless-symbolic"),
-            ("user-interface", _("User Interface"), "view-grid-symbolic"),
-            ("shares", _("Shares"), "folder-symbolic"),
-            ("downloads", _("Downloads"), "document-save-symbolic"),
-            ("uploads", _("Uploads"), "emblem-shared-symbolic"),
-            ("searches", _("Searches"), "system-search-symbolic"),
-            ("user-profile", _("User Profile"), "avatar-default-symbolic"),
-            ("chats", _("Chats"), "insert-text-symbolic"),
-            ("now-playing", _("Now Playing"), "folder-music-symbolic"),
-            ("logging", _("Logging"), "folder-documents-symbolic"),
-            ("banned-users", _("Banned Users"), "action-unavailable-symbolic"),
-            ("ignored-users", _("Ignored Users"), "microphone-sensitivity-muted-symbolic"),
-            ("plugins", _("Plugins"), "list-add-symbolic"),
-            ("url-handlers", _("URL Handlers"), "insert-link-symbolic")]
 
-        for _page_id, label, icon_name in self.page_ids:
+        for _page_id, label, icon_name in PAGE_IDS:
             box = Gtk.Box(margin_top=8, margin_bottom=8, margin_start=12, margin_end=12, spacing=12, visible=True)
             icon = Gtk.Image(icon_name=icon_name, visible=True)
             label = Gtk.Label(label=label, xalign=0, visible=True)
@@ -2437,7 +2531,7 @@ class Preferences(Dialog):
         if page_id is None:
             return
 
-        for index, (n_page_id, _label, _icon_name) in enumerate(self.page_ids):
+        for index, (n_page_id, _label, _icon_name) in enumerate(PAGE_IDS):
             if n_page_id != page_id:
                 continue
 
@@ -2667,7 +2761,7 @@ class Preferences(Dialog):
         if upnp_portmap_required:
             core.protothread.upnp.add_port_mapping()
         else:
-            core.protothread.upnp.cancel_timer()
+            core.protothread.upnp.remove_port_mapping()
 
         if natpmp_portmap_required:
             core.protothread.natpmp.add_port_mapping()
@@ -2790,7 +2884,7 @@ class Preferences(Dialog):
 
     def on_switch_page(self, _listbox, row):
 
-        page_id, _label, _icon_name = self.page_ids[row.get_index()]
+        page_id, _label, _icon_name = PAGE_IDS[row.get_index()]
         old_page = self.viewport.get_child()
 
         if old_page:

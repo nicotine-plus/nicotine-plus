@@ -36,7 +36,7 @@ class Dialog(Window):
 
     def __init__(self, widget=None, parent=None, content_box=None, buttons_start=(), buttons_end=(),
                  default_button=None, show_callback=None, close_callback=None, title="", width=0, height=0,
-                 modal=True, resizable=True, close_destroy=True, show_title_buttons=True):
+                 modal=True, resizable=True, close_destroy=True, show_title=True, show_title_buttons=True):
 
         self.parent = parent
         self.modal = modal
@@ -74,7 +74,7 @@ class Dialog(Window):
                 container.add(content_box)     # pylint: disable=no-member
 
         if config.sections["ui"]["header_bar"]:
-            self._init_header_bar(buttons_start, buttons_end, show_title_buttons)
+            self._init_header_bar(buttons_start, buttons_end, show_title, show_title_buttons)
         else:
             self._init_action_area(container, buttons_start, buttons_end)
 
@@ -88,15 +88,22 @@ class Dialog(Window):
         self.set_title(title)
         self._set_dialog_properties()
 
-    def _init_header_bar(self, buttons_start=(), buttons_end=(), show_title_buttons=True):
+    def _init_header_bar(self, buttons_start=(), buttons_end=(), show_title=True, show_title_buttons=True):
 
         header_bar = Gtk.HeaderBar()
         self.widget.set_titlebar(header_bar)
 
         if GTK_API_VERSION >= 4:
-            header_bar.set_show_title_buttons(show_title_buttons)  # pylint: disable=no-member
+            header_bar.set_show_title_buttons(show_title_buttons)    # pylint: disable=no-member
+
+            if not show_title:
+                header_bar.set_title_widget(Gtk.Box())               # pylint: disable=no-member
+                add_css_class(header_bar, "flat")
         else:
-            header_bar.set_show_close_button(show_title_buttons)   # pylint: disable=no-member
+            header_bar.set_show_close_button(show_title_buttons)     # pylint: disable=no-member
+
+            if not show_title:
+                header_bar.set_custom_title(Gtk.Box(visible=False))  # pylint: disable=no-member
 
         for button in buttons_start:
             header_bar.pack_start(button)
@@ -494,13 +501,10 @@ class PluginSettingsDialog(Dialog):
     def _generate_label(text):
         return Gtk.Label(label=text, use_markup=True, hexpand=True, wrap=True, xalign=0, visible=bool(text))
 
-    def _generate_widget_container(self, description, child_widget, vertical=False):
+    def _generate_widget_container(self, description, child_widget, homogeneous=False,
+                                   orientation=Gtk.Orientation.HORIZONTAL):
 
-        container = Gtk.Box(spacing=12, visible=True)
-
-        if vertical:
-            container.set_orientation(Gtk.Orientation.VERTICAL)
-
+        container = Gtk.Box(homogeneous=homogeneous, orientation=orientation, spacing=12, visible=True)
         label = self._generate_label(description)
 
         if GTK_API_VERSION >= 4:
@@ -570,7 +574,7 @@ class PluginSettingsDialog(Dialog):
     def _add_dropdown_option(self, option_name, option_value, description, items):
 
         self.option_widgets[option_name] = combobox = Gtk.ComboBoxText(valign=Gtk.Align.CENTER, visible=True)
-        label = self._generate_widget_container(description, combobox)
+        label = self._generate_widget_container(description, combobox, homogeneous=True)
         label.set_mnemonic_widget(combobox)
 
         for text_label in items:
@@ -582,7 +586,7 @@ class PluginSettingsDialog(Dialog):
 
         self.option_widgets[option_name] = entry = Gtk.Entry(hexpand=True, valign=Gtk.Align.CENTER,
                                                              visible=True)
-        label = self._generate_widget_container(description, entry)
+        label = self._generate_widget_container(description, entry, homogeneous=True)
         label.set_mnemonic_widget(entry)
 
         self.application.preferences.set_widget(entry, option_value)
@@ -600,7 +604,7 @@ class PluginSettingsDialog(Dialog):
             box.add(scrolled_window)     # pylint: disable=no-member
 
         self.option_widgets[option_name] = textview = TextView(scrolled_window)
-        label = self._generate_widget_container(description, frame_container, vertical=True)
+        label = self._generate_widget_container(description, frame_container, orientation=Gtk.Orientation.VERTICAL)
         label.set_mnemonic_widget(textview.widget)
         self.application.preferences.set_widget(textview, option_value)
 
@@ -616,9 +620,12 @@ class PluginSettingsDialog(Dialog):
         from pynicotine.gtkgui.widgets.treeview import TreeView
         self.option_widgets[option_name] = treeview = TreeView(
             self.application.window, parent=scrolled_window,
-            columns=[
-                {"column_id": description, "column_type": "text", "title": description, "sort_column": 0}
-            ]
+            columns={
+                "description": {
+                    "column_type": "text",
+                    "title": description
+                }
+            }
         )
         self.application.preferences.set_widget(treeview, option_value)
 
@@ -655,7 +662,7 @@ class PluginSettingsDialog(Dialog):
     def _add_file_option(self, option_name, option_value, description, file_chooser_type):
 
         button_widget = Gtk.Button(hexpand=True, valign=Gtk.Align.CENTER, visible=True)
-        label = self._generate_widget_container(description, button_widget)
+        label = self._generate_widget_container(description, button_widget, homogeneous=True)
 
         self.option_widgets[option_name] = FileChooserButton(button_widget, self.widget, file_chooser_type)
         label.set_mnemonic_widget(button_widget)
@@ -729,19 +736,19 @@ class PluginSettingsDialog(Dialog):
         if not value:
             return
 
-        treeview, iterator = data
-        treeview.set_row_value(iterator, 0, value)
+        treeview, iterator, column_id = data
+        treeview.set_row_value(iterator, column_id, value)
 
     def on_edit(self, _widget, treeview, description):
 
         for iterator in treeview.get_selected_rows():
-            value = treeview.get_row_value(iterator, 0)
+            value = treeview.get_row_value(iterator, description)
 
             EntryDialog(
                 parent=self,
                 title=description,
                 callback=self.on_edit_response,
-                callback_data=(treeview, iterator),
+                callback_data=(treeview, iterator, description),
                 default=value
             ).show()
             return
