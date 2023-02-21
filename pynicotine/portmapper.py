@@ -16,7 +16,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import re
 import socket
+import struct
+import subprocess
+import sys
 
 from threading import Thread
 from urllib.parse import urlsplit
@@ -41,7 +45,128 @@ class BaseImplementation:
         self.local_ip_address = local_ip_address
 
 
+class NATPMP(BaseImplementation):
+    """ Implementation of the NAT-PMP protocol
+    https://www.rfc-editor.org/rfc/rfc6886 """
+
+    NAME = "NAT-PMP"
+    REQUEST_PORT = 5351
+    REQUEST_TIMEOUT = 1  # 1 second
+    SUCCESS_RESULT = 0
+
+    class PortmapResponse:
+
+        def __init__(self, message):
+
+            self.message = message
+            (
+                _version,
+                _op_code,
+                self.result,
+                _sec_since_epoch,
+                _private_port,
+                _public_port,
+                _lease_duration
+            ) = struct.unpack('!BBHIHHI', message)
+
+        def __bytes__(self):
+            return self.message
+
+    class PortmapRequest:
+
+        RESERVED_VALUE = 0
+        TCP_OP_CODE = 2
+        VERSION = 0
+
+        def __init__(self, public_port, private_port, lease_duration):
+
+            self._public_port = public_port
+            self._private_port = private_port
+            self._lease_duration = lease_duration
+
+        def sendto(self, sock, addr):
+
+            msg = bytes(self)
+            sock.sendto(msg, addr)
+
+            log.add_debug("NAT-PMP: Portmap request: %s", msg)
+
+        def __bytes__(self):
+
+            return struct.pack(
+                '!BBHHHI',
+                self.VERSION,
+                self.TCP_OP_CODE,
+                self.RESERVED_VALUE,
+                self._private_port,
+                self._public_port,
+                self._lease_duration
+            )
+
+    def __init__(self):
+        super().__init__()
+        self._gateway_address = None
+
+    @staticmethod
+    def _get_gateway_address():
+
+        if sys.platform == "linux":
+            output = subprocess.check_output(["ip", "route", "list"])
+            return output.rsplit(b"default via", maxsplit=1)[-1].split()[0]
+
+        if sys.platform == "win32":
+            gateway_pattern = re.compile(b".*?0.0.0.0[ ]+0.0.0.0[ ]+(.*?)[ ]+?.*?\n")
+        else:
+            gateway_pattern = re.compile(b"(?:default|0\\.0\\.0\\.0|::/0)\\s+([\\w\\.:]+)\\s+.*UG")
+
+        output = subprocess.check_output(["netstat", "-rn"], shell=True)
+        return gateway_pattern.search(output).group(1)
+
+    def _request_port_mapping(self, public_port, private_port, lease_duration):
+
+        with socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM, proto=socket.IPPROTO_UDP) as sock:
+            sock.bind((self.local_ip_address, 0))
+            sock.settimeout(self.REQUEST_TIMEOUT)
+
+            request = self.PortmapRequest(public_port, private_port, lease_duration)
+            request.sendto(sock, (self._gateway_address, self.REQUEST_PORT))
+
+            try:
+                response = self.PortmapResponse(message=sock.recv(16))
+                return response.result
+
+            except socket.timeout:
+                pass
+
+        return None
+
+    def add_port_mapping(self, lease_duration):
+
+        self._gateway_address = self._get_gateway_address()
+        result = self._request_port_mapping(
+            public_port=self.port,
+            private_port=self.port,
+            lease_duration=lease_duration
+        )
+
+        if result != self.SUCCESS_RESULT:
+            raise PortmapError(f"NAT-PMP error code {result}")
+
+    def remove_port_mapping(self):
+
+        result = self._request_port_mapping(
+            public_port=0,
+            private_port=self.port,
+            lease_duration=0
+        )
+        self._gateway_address = None
+
+        if result != self.SUCCESS_RESULT:
+            raise PortmapError(f"NAT-PMP error code {result}")
+
+
 class UPnP(BaseImplementation):
+    """ Implementation of the UPnP protocol """
 
     NAME = "UPnP"
     MULTICAST_HOST = "239.255.255.250"
@@ -66,8 +191,6 @@ class UPnP(BaseImplementation):
             self.headers = list(email.parser.Parser().parsestr("\r\n".join(message.splitlines()[1:])).items())
 
         def __bytes__(self):
-            """ Return complete SSDP response """
-
             return self.message.encode("utf-8")
 
     class SSDPRequest:
@@ -391,9 +514,11 @@ class PortMapper:
 
         self._active_implementation = None
         self._timer = None
+        self._natpmp = NATPMP()
         self._upnp = UPnP()
 
     def set_port(self, port, local_ip_address):
+        self._natpmp.set_port(port, local_ip_address)
         self._upnp.set_port(port, local_ip_address)
 
     def _add_port_mapping(self):
@@ -401,8 +526,15 @@ class PortMapper:
         log.add_debug("Creating Port Mapping rule...")
 
         try:
-            self._active_implementation = self._upnp
-            self._upnp.add_port_mapping(self.LEASE_DURATION)
+            try:
+                self._active_implementation = self._natpmp
+                self._natpmp.add_port_mapping(self.LEASE_DURATION)
+
+            except Exception as error:
+                log.add_debug("NAT-PMP not available, falling back to UPnP: %s", error)
+
+                self._active_implementation = self._upnp
+                self._upnp.add_port_mapping(self.LEASE_DURATION)
 
             log.add(_("%(protocol)s: External port %(external_port)s successfully forwarded to local "
                       "IP address %(ip_address)s port %(local_port)s"), {
