@@ -125,7 +125,7 @@ jobs:
         run: python3 -m unittest -v
 
   macos:
-    runs-on: macos-10.15
+    runs-on: macos-11
     strategy:
       matrix:
         gtk: [3, 4]
