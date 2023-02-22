@@ -26,8 +26,24 @@ from pynicotine.events import events
 from pynicotine.logfacility import log
 
 
-class UPnP:
+class PortmapError(Exception):
+    pass
 
+
+class BaseImplementation:
+
+    def __init__(self):
+        self.port = None
+        self.local_ip_address = None
+
+    def set_port(self, port, local_ip_address):
+        self.port = port
+        self.local_ip_address = local_ip_address
+
+
+class UPnP(BaseImplementation):
+
+    NAME = "UPnP"
     MULTICAST_HOST = "239.255.255.250"
     MULTICAST_PORT = 1900
     MULTICAST_TTL = 2         # Should default to 2 according to UPnP specification
@@ -207,14 +223,8 @@ class UPnP:
             return services
 
     def __init__(self):
-
-        self.port = None
-        self.local_ip_address = None
+        super().__init__()
         self._service = None
-
-    def set_port(self, port, local_ip_address):
-        self.port = port
-        self.local_ip_address = local_ip_address
 
     @staticmethod
     def _find_service(private_ip):
@@ -281,7 +291,7 @@ class UPnP:
         xml = ElementTree.fromstring(response_body.decode("utf-8"))
 
         if xml.find(".//{http://schemas.xmlsoap.org/soap/envelope/}Body") is None:
-            raise RuntimeError(f"Invalid response: {response_body}")
+            raise PortmapError(f"Invalid response: {response_body}")
 
         log.add_debug("UPnP: Add port mapping response: %s", response_body)
 
@@ -301,53 +311,34 @@ class UPnP:
         renew the port mapping.
         """
 
-        try:
-            log.add_debug("UPnP: Creating Port Mapping rule...")
+        # Find router
+        self._service = self._find_service(self.local_ip_address)
 
-            # Find router
-            self._service = self._find_service(self.local_ip_address)
+        if not self._service:
+            raise PortmapError(_("No UPnP devices found"))
 
-            if not self._service:
-                raise RuntimeError(_("No UPnP devices found"))
+        # Perform the port mapping
+        log.add_debug("UPnP: Trying to redirect external WAN port %s TCP => %s port %s TCP", (
+            self.port,
+            self.local_ip_address,
+            self.port
+        ))
 
-            # Perform the port mapping
-            log.add_debug("UPnP: Trying to redirect external WAN port %s TCP => %s port %s TCP", (
-                self.port,
-                self.local_ip_address,
-                self.port
-            ))
+        error_code, error_description = self._request_port_mapping(
+            public_port=self.port,
+            private_ip=self.local_ip_address,
+            private_port=self.port,
+            mapping_description="NicotinePlus",
+            lease_duration=lease_duration
+        )
 
-            error_code, error_description = self._request_port_mapping(
-                public_port=self.port,
-                private_ip=self.local_ip_address,
-                private_port=self.port,
-                mapping_description="NicotinePlus",
-                lease_duration=lease_duration
-            )
-
-            if error_code == "725" and lease_duration > 0:
-                log.add_debug("UPnP: Router requested permanent lease duration")
-                self.add_port_mapping(lease_duration=0)
-                return
-
-            if error_code or error_description:
-                raise RuntimeError(f"Error code {error_code}: {error_description}")
-
-        except Exception as error:
-            from traceback import format_exc
-            log.add(_("UPnP: Failed to forward external port %(external_port)s: %(error)s"), {
-                "external_port": self.port,
-                "error": error
-            })
-            log.add_debug(format_exc())
+        if error_code == "725" and lease_duration > 0:
+            log.add_debug("UPnP: Router requested permanent lease duration")
+            self.add_port_mapping(lease_duration=0)
             return
 
-        log.add(_("UPnP: External port %(external_port)s successfully forwarded to local "
-                  "IP address %(ip_address)s port %(local_port)s"), {
-            "external_port": self.port,
-            "ip_address": self.local_ip_address,
-            "local_port": self.port
-        })
+        if error_code or error_description:
+            raise PortmapError(f"Error code {error_code}: {error_description}")
 
     def remove_port_mapping(self):
 
@@ -359,6 +350,7 @@ class UPnP:
 
         service_type = self._service.service_type
         control_url = self._service.control_url
+        self._service = None
 
         headers = {
             "Host": urlsplit(control_url).netloc,
@@ -384,15 +376,9 @@ class UPnP:
         log.add_debug("UPnP: Remove port mapping request headers: %s", headers)
         log.add_debug("UPnP: Remove port mapping request contents: %s", body)
 
-        try:
-            with urlopen(
-                    Request(control_url, data=body, headers=headers), timeout=self.HTTP_REQUEST_TIMEOUT) as response:
-                log.add_debug("UPnP: Remove port mapping response: %s", response.read())
-
-        except Exception as error:
-            log.add_debug("UPnP: Failed to remove port mapping: %s", error)
-
-        self._service = None
+        with urlopen(
+                Request(control_url, data=body, headers=headers), timeout=self.HTTP_REQUEST_TIMEOUT) as response:
+            log.add_debug("UPnP: Remove port mapping response: %s", response.read())
 
 
 class PortMapper:
@@ -402,6 +388,8 @@ class PortMapper:
     LEASE_DURATION = 43200    # 12 hours
 
     def __init__(self):
+
+        self._active_implementation = None
         self._timer = None
         self._upnp = UPnP()
 
@@ -409,10 +397,46 @@ class PortMapper:
         self._upnp.set_port(port, local_ip_address)
 
     def _add_port_mapping(self):
-        self._upnp.add_port_mapping(self.LEASE_DURATION)
+
+        log.add_debug("Creating Port Mapping rule...")
+
+        try:
+            self._active_implementation = self._upnp
+            self._upnp.add_port_mapping(self.LEASE_DURATION)
+
+            log.add(_("%(protocol)s: External port %(external_port)s successfully forwarded to local "
+                      "IP address %(ip_address)s port %(local_port)s"), {
+                "protocol": self._active_implementation.NAME,
+                "external_port": self._active_implementation.port,
+                "ip_address": self._active_implementation.local_ip_address,
+                "local_port": self._active_implementation.port
+            })
+
+        except Exception as error:
+            from traceback import format_exc
+            log.add(_("%(protocol)s: Failed to forward external port %(external_port)s: %(error)s"), {
+                "protocol": self._active_implementation.NAME,
+                "external_port": self._active_implementation.port,
+                "error": error
+            })
+            log.add_debug(format_exc())
+            self._active_implementation = None
 
     def _remove_port_mapping(self):
-        self._upnp.remove_port_mapping()
+
+        if not self._active_implementation:
+            return
+
+        try:
+            self._active_implementation.remove_port_mapping()
+
+        except Exception as error:
+            log.add_debug("%(protocol)s: Failed to remove port mapping: %(error)s", {
+                "protocol": self._active_implementation.NAME,
+                "error": error
+            })
+
+        self._active_implementation = None
 
     def add_port_mapping(self, blocking=False):
 
