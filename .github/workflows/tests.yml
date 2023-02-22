@@ -143,7 +143,7 @@ jobs:
       - name: Install dependencies
         run: |
           brew install python
-          python3 packaging/macos/dependencies_core.py
+          python3 packaging/macos/dependencies.py
 
       - name: Flake8 linter
         run: flake8
