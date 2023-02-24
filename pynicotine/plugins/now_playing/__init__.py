@@ -39,7 +39,7 @@ class Plugin(BasePlugin):
             }
         }
         self.settings = {
-            "format": "%artist% - %title%",
+            "format": "np: $n",
             "lastfm_username_api_key": "",
             "listenbrainz_username": "",
             "other_command": ""
@@ -133,33 +133,48 @@ class Plugin(BasePlugin):
     def get_np(self, format_message=None):
 
         player = self.settings["source"]
-        track_info = None
+        playing = None
 
         if player == "Last.fm":
-            track_info = self.lastfm()
+            playing = self.lastfm()
 
         elif player == "ListenBrainz":
-            track_info = self.listenbrainz()
+            playing = self.listenbrainz()
 
         elif player == "MPRIS":
-            track_info = self.mpris()
+            playing = self.mpris()
 
         elif player == "Other":
-            track_info = self.other()
+            playing = self.other()
 
-        if not track_info:
-            return None
+        if not playing:
+            return "" if format_message else None
 
         if not format_message:
             format_message = self.settings["format"]
 
-        for placeholder, value in track_info.items():
-            format_message = format_message.replace(placeholder, value)
+        for placeholder, value in playing.items():
+            format_message = format_message.replace(f"%{placeholder}%", value)
 
-        format_message = " ".join(x for x in format_message.replace("\r", "\n").split("\n") if x)
-        return format_message
+        format_message = format_message.replace("%", "%%")  # Escaping user supplied % symbols
+        format_message = format_message.replace("$t", "%(title)s")
+        format_message = format_message.replace("$a", "%(artist)s")
+        format_message = format_message.replace("$b", "%(album)s")
+        format_message = format_message.replace("$c", "%(comment)s")
+        format_message = format_message.replace("$n", "%(nowplaying)s")
+        format_message = format_message.replace("$k", "%(track)s")
+        format_message = format_message.replace("$l", "%(length)s")
+        format_message = format_message.replace("$y", "%(year)s")
+        format_message = format_message.replace("$r", "%(bitrate)s")
+        format_message = format_message.replace("$f", "%(filename)s")
+        format_message = format_message.replace("$p", "%(program)s")
 
-    def send_now_playing(self):
+        playing = format_message % playing
+        playing = " ".join(x for x in playing.replace("\r", "\n").split("\n") if x)
+
+        return playing
+
+    def broadcast_now_playing(self):
         """ Broadcast Now Playing in selected rooms """
 
         playing = self.get_np()
@@ -201,29 +216,29 @@ class Plugin(BasePlugin):
             return None
 
         try:
-            track_info = {}
+            playing = {}
             json_api = json.loads(response_body)
             lastplayed = json_api["recenttracks"]["track"]
 
             try:
-                # In most cases, a list containing a single track dictionary is sent
+                # In most cases, a list containing a single dictionary is sent
                 lastplayed = lastplayed[0]
 
             except KeyError:
                 # On rare occasions, the track dictionary is not wrapped in a list
                 pass
 
-            track_info["%artist%"] = artist = lastplayed["artist"]["#text"]
-            track_info["%title%"] = title = lastplayed["name"]
-            track_info["%album%"] = album = lastplayed["album"]["#text"]
-            track_info["%nowplaying%"] = f"{artist} - {album} - {title}"
+            playing["artist"] = artist = lastplayed["artist"]["#text"]
+            playing["title"] = title = lastplayed["name"]
+            playing["album"] = album = lastplayed["album"]["#text"]
+            playing["nowplaying"] = f"{artist} - {album} - {title}"
 
         except Exception:
             log.add(_("Last.fm: Could not get recent track from Audioscrobbler: %(error)s"), {"error": response_body},
                     title=_("Now Playing Error"))
             return None
 
-        return track_info
+        return playing
 
     """ MPRIS """
 
@@ -250,45 +265,45 @@ class Plugin(BasePlugin):
                     {"player": player, "exception": error}, title=_("Now Playing Error"))
             return None
 
-        track_info = {}
-        track_info["%program%"] = player
+        playing = {}
+        playing["program"] = player
         list_mapping = [("xesam:artist", "artist")]
 
         for source, dest in list_mapping:
             try:
-                track_info[dest] = "+".join(metadata[source])
+                playing[dest] = "+".join(metadata[source])
             except KeyError:
-                track_info[dest] = "?"
+                playing[dest] = "?"
 
         mapping = [
-            ("xesam:title", "%title%"),
-            ("xesam:album", "%album%"),
-            ("xesam:contentCreated", "%year%"),
-            ("xesam:comment", "%comment%"),
-            ("xesam:audioBitrate", "%bitrate%"),
-            ("xesam:url", "%filename%"),
-            ("xesak:trackNumber", "%track%")
+            ("xesam:title", "title"),
+            ("xesam:album", "album"),
+            ("xesam:contentCreated", "year"),
+            ("xesam:comment", "comment"),
+            ("xesam:audioBitrate", "bitrate"),
+            ("xesam:url", "filename"),
+            ("xesak:trackNumber", "track")
         ]
 
         for source, dest in mapping:
             try:
-                track_info[dest] = str(metadata[source])
+                playing[dest] = str(metadata[source])
             except KeyError:
-                track_info[dest] = "?"
+                playing[dest] = "?"
 
         # The length is in microseconds, and be represented as a signed 64-bit integer.
         try:
-            track_info["%duration%"] = human_length(metadata["mpris:length"] // 1000000)
+            playing["duration"] = human_length(metadata["mpris:length"] // 1000000)
         except KeyError:
-            track_info["%duration%"] = "?"
+            playing["duration"] = "?"
 
-        if track_info["%artist%"] != "":
-            track_info["%nowplaying%"] += track_info["%artist%"]
+        if playing["artist"] != "":
+            playing["nowplaying"] += playing["artist"]
 
-        if track_info["%title%"] != "":
-            track_info["%nowplaying%"] += " - " + track_info["%title%"]
+        if playing["title"] != "":
+            playing["nowplaying"] += " - " + playing["title"]
 
-        return track_info
+        return playing
 
     def add_mpris_signal_receiver(self):
         """ Receive updates related to MPRIS """
@@ -400,7 +415,7 @@ class Plugin(BasePlugin):
         # Keep track of which song is playing
         self.last_song_url = changed_song_url
 
-        self.send_now_playing()
+        self.broadcast_now_playing()
 
     """ ListenBrainz """
 
@@ -427,7 +442,7 @@ class Plugin(BasePlugin):
             return None
 
         try:
-            track_info = {}
+            playing = {}
             json_api = json.loads(response_body)["payload"]
 
             if not json_api["playing_now"]:
@@ -436,17 +451,17 @@ class Plugin(BasePlugin):
 
             track = json_api["listens"][0]["track_metadata"]
 
-            track_info["%artist%"] = artist = track["artist_name"]
-            track_info["%title%"] = title = track["track_name"]
-            track_info["%album%"] = album = track["release_name"]
-            track_info["%nowplaying%"] = f"{artist} - {album} - {title}"
+            playing["artist"] = artist = track["artist_name"]
+            playing["title"] = title = track["track_name"]
+            playing["album"] = album = track["release_name"]
+            playing["nowplaying"] = f"{artist} - {album} - {title}"
 
         except Exception:
             log.add(_("ListenBrainz: Could not get current track from ListenBrainz: %(error)s"),
                     {"error": str(response_body)}, title=_("Now Playing Error"))
             return None
 
-        return track_info
+        return playing
 
     def other(self):
 
@@ -455,17 +470,17 @@ class Plugin(BasePlugin):
         if not command:
             return None
 
-        track_info = {}
+        playing = {}
 
         try:
             from pynicotine.utils import execute_command
 
             output = execute_command(command, returnoutput=True)
-            track_info["nowplaying"] = output
+            playing["nowplaying"] = output
 
         except Exception as error:
             log.add(_("Executing '%(command)s' failed: %(error)s"),
                     {"command": command, "error": error}, title=_("Now Playing Error"))
             return None
 
-        return track_info
+        return playing
