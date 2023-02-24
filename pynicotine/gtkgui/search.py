@@ -364,7 +364,7 @@ class Search:
         self.all_data = []
         self.grouping_mode = None
         self.filters = {}
-        self.filters_redo = []
+        self.filters_undo = []
         self.populating_filters = False
         self.active_filter_count = 0
         self.num_results_found = 0
@@ -1641,15 +1641,13 @@ class Search:
 
     def on_clear_filters(self, *_args):
 
-        if self.filters_redo:
+        if self.filters_undo:
             # Recall Filters from data stored as dict
-            stored_filters = self.filters_redo.pop()
-            self.set_filters(stored_filters)
+            self.set_filters(self.filters_undo.pop())
         else:
-            # Store redo data before clearing the filters
-            active_filters = self.get_filters()
-            self.filters_redo.append(active_filters)
-            self.set_filters(False)
+            # Store undo data, then clear all filters
+            self.filters_undo.append(self.get_filters())
+            self.set_filters(None)
 
         if self.filters_button.get_active():
             self.filter_include_combobox.get_child().grab_focus()
