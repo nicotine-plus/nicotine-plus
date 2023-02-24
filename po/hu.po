@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2023-02-18 13:33+0000\n"
+"PO-Revision-Date: 2023-02-24 02:23+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -1679,7 +1679,7 @@ msgstr "Letöltési szűrő hozzáadása"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:358
 msgid "Enter a new download filter:"
-msgstr "Írjon be egy új letöltési szűrőt:"
+msgstr "Adjon meg egy új letöltési szűrőt:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:361
 #: pynicotine/gtkgui/dialogs/preferences.py:393
@@ -1757,11 +1757,11 @@ msgstr "Adja meg a letiltani kívánt felhasználó nevét:"
 #: pynicotine/gtkgui/widgets/popupmenu.py:367
 #: pynicotine/gtkgui/widgets/popupmenu.py:399
 msgid "Ban IP Address"
-msgstr "IP cím tiltása"
+msgstr "IP cím letiltása"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1036
 msgid "Enter an IP address you want to ban:"
-msgstr "Írja be a tiltani kívánt IP-címet:"
+msgstr "Írja be a letiltani kívánt IP-címet:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1073
 #: pynicotine/gtkgui/dialogs/preferences.py:1082
@@ -1770,7 +1770,7 @@ msgstr "Minta"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1084
 msgid "Replacement"
-msgstr "Csere"
+msgstr "Helyettesítés"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1219
 msgid "Censor Pattern"
@@ -1793,19 +1793,19 @@ msgstr "Cenzúrázott minták szerkesztése"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1277
 msgid "Add Replacement"
-msgstr "Csere hozzáadása"
+msgstr "Helyettesítés hozzáadása"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1278
 msgid "Enter a text pattern and what to replace it with"
-msgstr "Adjon meg egy szövegmintát és a cserét"
+msgstr "Adjon meg egy szövegmintát és azt, hogy mit kell helyettesítenie"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1306
 msgid "Edit Replacement"
-msgstr "Csere szerkesztése"
+msgstr "Helyettesítés szerkesztése"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1307
 msgid "Enter a text pattern and what to replace it with:"
-msgstr "Adjon meg egy szövegmintát és a cserét:"
+msgstr "Adjon meg egy szövegmintát és azt, hogy mit kell helyettesítenie:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1375
 msgid "Top"
@@ -1856,7 +1856,7 @@ msgstr "A lap megváltozott"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1386
 msgid "Tab Highlight"
-msgstr "Kiemelt(fontos) lap"
+msgstr "Kiemelt lap"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1387
 msgid "Window"
@@ -1892,7 +1892,7 @@ msgstr "URL-kezelők megadása"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1947
 msgid "Enter the protocol and the command for the URL handler:"
-msgstr "Adja meg az URL-kezelő protokollját és parancsát:"
+msgstr "Adja meg az URL-kezelő protokollját és a parancsát:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1974
 msgid "Edit Command"
@@ -1901,7 +1901,7 @@ msgstr "Parancsszerkesztés"
 #: pynicotine/gtkgui/dialogs/preferences.py:1975
 #, python-format
 msgid "Enter a new command for protocol %s:"
-msgstr "Adja meg %s protokoll új parancsát:"
+msgstr "Adja meg a(z) %s protokoll új parancsát:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2113
 msgid "Username;APIKEY:"
@@ -2112,7 +2112,7 @@ msgstr "Kívánság szerkesztése"
 #: pynicotine/gtkgui/dialogs/wishlist.py:117
 #, python-format
 msgid "Enter new value for wish '%s':"
-msgstr "Adja meg a kívánság új értékét '%s':"
+msgstr "Adjon meg új értéket a(z) '%s' kívánsághoz:"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:145
 msgid "Clear Wishlist?"
@@ -2212,7 +2212,7 @@ msgstr "Tétel"
 
 #: pynicotine/gtkgui/interests.py:128 pynicotine/gtkgui/interests.py:136
 msgid "Re_commendations for Item"
-msgstr "Javaslatok a _tételhez"
+msgstr "_Javaslatok a tételhez"
 
 #: pynicotine/gtkgui/interests.py:129 pynicotine/gtkgui/interests.py:137
 #: pynicotine/gtkgui/interests.py:148 pynicotine/gtkgui/userinfo.py:282
