@@ -52,8 +52,8 @@ class NATPMP(BaseImplementation):
     NAME = "NAT-PMP"
     REQUEST_PORT = 5351
     SUCCESS_RESULT = 0
-    REQUEST_INIT_TIMEOUT = 0.250 # seconds
     REQUEST_ATTEMPTS = 2 # spec says 9, but 2 should be enough
+    REQUEST_INIT_TIMEOUT = 0.250 # seconds
 
     class PortmapResponse:
 
@@ -85,12 +85,12 @@ class NATPMP(BaseImplementation):
             self._private_port = private_port
             self._lease_duration = lease_duration
 
-        def sendto(self, sock, addr):
+        def sendto(self, sock, addr, num_attempt):
 
             msg = bytes(self)
             sock.sendto(msg, addr)
 
-            log.add_debug("NAT-PMP: Portmap request: %s", msg)
+            log.add_debug(f"NAT-PMP: Portmap request attempt {num_attempt} of {NATPMP.REQUEST_ATTEMPTS}: {msg}")
 
         def __bytes__(self):
 
@@ -127,14 +127,13 @@ class NATPMP(BaseImplementation):
 
         with socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM, proto=socket.IPPROTO_UDP) as sock:
             sock.bind((self.local_ip_address, 0))
-
             request = self.PortmapRequest(public_port, private_port, lease_duration)
-
             timeout = self.REQUEST_INIT_TIMEOUT
             i = 1
+
             while i <= self.REQUEST_ATTEMPTS:
                 sock.settimeout(timeout)
-                request.sendto(sock, (self._gateway_address, self.REQUEST_PORT))
+                request.sendto(sock, (self._gateway_address, self.REQUEST_PORT), i)
 
                 try:
                     response = self.PortmapResponse(message=sock.recv(16))
@@ -142,10 +141,9 @@ class NATPMP(BaseImplementation):
 
                 except socket.timeout:
                     timeout *= 2
-                    log.add_debug(f"NAT-PMP: Attempt {i} timed out, increased timeout to {timeout}s")
                     i += 1
 
-        log.add_debug(f"NAT-PMP: Fatal: all attempts timed out")
+        log.add_debug(f"NAT-PMP: Giving up, all {self.REQUEST_ATTEMPTS} portmap requests timed out")
 
         return None
 
