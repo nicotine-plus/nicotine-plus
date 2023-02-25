@@ -26,7 +26,6 @@ import sys
 from ast import literal_eval
 from time import time
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
@@ -204,7 +203,9 @@ class BasePlugin:
         log.add(self.human_name + ": " + msg, msg_args)
 
     def send_public(self, room, text):
-        core.queue.append(slskmessages.SayChatroom(room, text))
+        """ Send chat message to a room, must already be joined. """
+
+        core.chatrooms.send_message(room, text)
 
     def send_private(self, user, text, show_ui=True, switch_page=True):
         """ Send user message in private.

@@ -85,7 +85,7 @@ from pynicotine.slskmessages import UploadFile
 from pynicotine.slskmessages import UserInfoResponse
 from pynicotine.slskmessages import UserStatus
 from pynicotine.slskmessages import increment_token
-from pynicotine.upnp import UPnP
+from pynicotine.portmapper import PortMapper
 
 
 # Set the maximum number of open files to the hard limit reported by the OS.
@@ -192,7 +192,7 @@ class SoulseekNetworkThread(Thread):
         super().__init__(name="SoulseekNetworkThread")
 
         self.listenport = None
-        self.upnp = None
+        self.portmapper = None
 
         self._queue = queue
         self._user_addresses = user_addresses
@@ -415,7 +415,7 @@ class SoulseekNetworkThread(Thread):
         self._bound_ip = self._interface = self._listen_port_range = self._server_socket = None
 
         self._close_listen_socket()
-        self.upnp.cancel_timer()
+        self.portmapper.remove_port_mapping(blocking=True)
 
         for sock in self._conns.copy():
             self._close_connection(self._conns, sock, callback=False)
@@ -1213,8 +1213,9 @@ class SoulseekNetworkThread(Thread):
                     elif msg_class is Login:
                         if msg.success:
                             # Ensure listening port is open
-                            self.upnp.local_ip_address, self.upnp.port = self._user_addresses[self._server_username]
-                            self.upnp.add_port_mapping(blocking=True)
+                            local_ip_address, port = self._user_addresses[self._server_username]
+                            self.portmapper.set_port(port, local_ip_address)
+                            self.portmapper.add_port_mapping(blocking=True)
 
                             # Check for indirect connection timeouts
                             self._conn_timeouts_timer_id = events.schedule(
@@ -2211,7 +2212,7 @@ class SoulseekNetworkThread(Thread):
     def run(self):
 
         events.emit_main_thread("set-connection-stats")
-        self.upnp = UPnP()
+        self.portmapper = PortMapper()
 
         # Watch sockets for I/0 readiness with the selectors module. Only call register() after a socket
         # is bound, otherwise watching the socket not guaranteed to work (breaks on OpenBSD at least)

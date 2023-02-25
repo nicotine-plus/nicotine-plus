@@ -229,7 +229,7 @@
                                 <property name="has-tooltip">True</property>
                                 <property name="enable-tree-lines">True</property>
                                 <property name="headers-visible">False</property>
-                                <signal name="query-tooltip" handler="on_tooltip"/>
+                                <signal name="query-tooltip" handler="on_folder_tooltip"/>
                                 <signal name="row-activated" handler="on_folder_row_activated"/>
                                 <child internal-child="selection">
                                   <object class="GtkTreeSelection">
@@ -285,7 +285,7 @@
                                 <property name="visible">True</property>
                                 <property name="has-tooltip">True</property>
                                 <property name="rubber-banding">True</property>
-                                <signal name="query-tooltip" handler="on_tooltip"/>
+                                <signal name="query-tooltip" handler="on_file_tooltip"/>
                                 <signal name="row-activated" handler="on_file_row_activated"/>
                                 <child internal-child="selection">
                                   <object class="GtkTreeSelection">

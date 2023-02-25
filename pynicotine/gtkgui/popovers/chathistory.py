@@ -54,11 +54,17 @@ class ChatHistory(Popover):
 
         self.list_view = TreeView(
             window, parent=self.list_container, activate_row_callback=self.on_show_user,
-            columns=[
-                {"column_id": "user", "column_type": "text", "title": _("User"), "width": 175,
-                 "sort_column": 0},
-                {"column_id": "latest_message", "column_type": "text", "title": _("Latest Message"), "sort_column": 1}
-            ]
+            columns={
+                "user": {
+                    "column_type": "text",
+                    "title": _("User"),
+                    "width": 175
+                },
+                "latest_message": {
+                    "column_type": "text",
+                    "title": _("Latest Message")
+                }
+            }
         )
         self.list_view.set_search_entry(self.search_entry)
 
@@ -163,7 +169,7 @@ class ChatHistory(Popover):
     def on_show_user(self, *_args):
 
         for iterator in self.list_view.get_selected_rows():
-            username = self.list_view.get_row_value(iterator, 0)
+            username = self.list_view.get_row_value(iterator, "user")
 
             core.privatechat.show_user(username)
             self.close(use_transition=False)

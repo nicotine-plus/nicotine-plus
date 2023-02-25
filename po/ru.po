@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2023-02-01 19:45+0000\n"
+"PO-Revision-Date: 2023-02-16 17:18+0000\n"
 "Last-Translator: Kirill Feoktistov <feoktistovk@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ru/>\n"
@@ -2657,7 +2657,7 @@ msgstr "_Фильтры результата"
 #: pynicotine/gtkgui/search.py:995
 #, python-format
 msgid "%d active filter(s)"
-msgstr "%d активные фильтры"
+msgstr "%d активных(ый)"
 
 #: pynicotine/gtkgui/search.py:1048
 msgid "Add Wi_sh"
