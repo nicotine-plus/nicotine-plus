@@ -129,9 +129,8 @@ class NATPMP(BaseImplementation):
             sock.bind((self.local_ip_address, 0))
             request = self.PortmapRequest(public_port, private_port, lease_duration)
             timeout = self.REQUEST_INIT_TIMEOUT
-            i = 1
 
-            while i <= self.REQUEST_ATTEMPTS:
+            for i in range(1, self.REQUEST_ATTEMPTS + 1):
                 sock.settimeout(timeout)
                 request.sendto(sock, self._gateway_address, self.REQUEST_PORT, i)
 
@@ -141,7 +140,6 @@ class NATPMP(BaseImplementation):
 
                 except socket.timeout:
                     timeout *= 2
-                    i += 1
 
         log.add_debug(f"NAT-PMP: Giving up, all {self.REQUEST_ATTEMPTS} portmap requests timed out")
 
