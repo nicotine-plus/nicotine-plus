@@ -51,9 +51,9 @@ class NATPMP(BaseImplementation):
 
     NAME = "NAT-PMP"
     REQUEST_PORT = 5351
+    REQUEST_ATTEMPTS = 2  # spec says 9, but 2 should be enough
+    REQUEST_INIT_TIMEOUT = 0.250  # seconds
     SUCCESS_RESULT = 0
-    REQUEST_ATTEMPTS = 2 # spec says 9, but 2 should be enough
-    REQUEST_INIT_TIMEOUT = 0.250 # seconds
 
     class PortmapResponse:
 
