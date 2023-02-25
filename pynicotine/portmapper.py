@@ -85,10 +85,10 @@ class NATPMP(BaseImplementation):
             self._private_port = private_port
             self._lease_duration = lease_duration
 
-        def sendto(self, sock, addr, num_attempt):
+        def sendto(self, sock, addr, port, num_attempt):
 
             msg = bytes(self)
-            sock.sendto(msg, addr)
+            sock.sendto(msg, (addr, port))
 
             log.add_debug(f"NAT-PMP: Portmap request attempt {num_attempt} of {NATPMP.REQUEST_ATTEMPTS}: {msg}")
 
@@ -133,7 +133,7 @@ class NATPMP(BaseImplementation):
 
             while i <= self.REQUEST_ATTEMPTS:
                 sock.settimeout(timeout)
-                request.sendto(sock, (self._gateway_address, self.REQUEST_PORT), i)
+                request.sendto(sock, self._gateway_address, self.REQUEST_PORT, i)
 
                 try:
                     response = self.PortmapResponse(message=sock.recv(16))
