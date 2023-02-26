@@ -551,7 +551,7 @@
                         <child>
                           <object class="GtkImage">
                             <property name="visible">True</property>
-                            <property name="icon-name">network-wired-symbolic</property>
+                            <property name="icon-name">network-server-symbolic</property>
                           </object>
                         </child>
                         <child>
