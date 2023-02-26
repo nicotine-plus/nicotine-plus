@@ -41,19 +41,21 @@
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
-                        <property name="spacing">12</property>
+                        <property name="spacing">6</property>
                         <property name="orientation">vertical</property>
                         <property name="vexpand">True</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
                             <property name="margin-start">12</property>
-                            <property name="margin-end">12</property>
-                            <property name="margin-top">12</property>
+                            <property name="margin-end">6</property>
+                            <property name="margin-top">6</property>
                             <property name="spacing">12</property>
                             <child>
                               <object class="GtkLabel" id="user_label">
                                 <property name="visible">True</property>
+                                <property name="margin-top">6</property>
+                                <property name="margin-bottom">6</property>
                                 <property name="single-line-mode">True</property>
                                 <property name="xalign">0</property>
                                 <property name="wrap-mode">word-char</property>
@@ -67,6 +69,31 @@
                               <object class="GtkImage" id="country_icon">
                                 <property name="visible">False</property>
                                 <property name="tooltip-text" bind-source="country_label" bind-property="label" bind-flags="bidirectional|sync-create"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="visible">True</property>
+                                <property name="hexpand">True</property>
+                                <property name="halign">end</property>
+                                <property name="valign">start</property>
+                                <child>
+                                  <object class="GtkButton" id="edit_profile_button">
+                                    <property name="visible">True</property>
+                                    <property name="tooltip-text" translatable="yes">Edit Profile</property>
+                                    <signal name="clicked" handler="on_edit_profile"/>
+                                    <child>
+                                      <object class="GtkImage">
+                                        <property name="visible">True</property>
+                                        <property name="icon-name">document-edit-symbolic</property>
+                                      </object>
+                                    </child>
+                                    <style>
+                                      <class name="circular"/>
+                                      <class name="image-button"/>
+                                    </style>
+                                  </object>
+                                </child>
                               </object>
                             </child>
                           </object>
@@ -309,17 +336,44 @@
                         <property name="spacing">6</property>
                         <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkLabel">
+                          <object class="GtkBox">
                             <property name="visible">True</property>
-                            <property name="xalign">0</property>
-                            <property name="margin-start">12</property>
-                            <property name="margin-end">12</property>
-                            <property name="margin-top">12</property>
-                            <property name="margin-bottom">12</property>
-                            <property name="label" translatable="yes">Interests</property>
-                            <style>
-                              <class name="heading"/>
-                            </style>
+                            <property name="margin-start">6</property>
+                            <property name="margin-end">6</property>
+                            <property name="margin-top">6</property>
+                            <property name="margin-bottom">6</property>
+                            <property name="spacing">12</property>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">True</property>
+                                <property name="hexpand">True</property>
+                                <property name="xalign">0</property>
+                                <property name="margin-start">6</property>
+                                <property name="margin-top">6</property>
+                                <property name="margin-bottom">6</property>
+                                <property name="label" translatable="yes">Interests</property>
+                                <style>
+                                  <class name="heading"/>
+                                </style>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkButton" id="edit_interests_button">
+                                <property name="visible">True</property>
+                                <property name="tooltip-text" translatable="yes">Edit Interests</property>
+                                <signal name="clicked" handler="on_edit_interests"/>
+                                <child>
+                                  <object class="GtkImage">
+                                    <property name="visible">True</property>
+                                    <property name="icon-name">document-edit-symbolic</property>
+                                  </object>
+                                </child>
+                                <style>
+                                  <class name="circular"/>
+                                  <class name="image-button"/>
+                                </style>
+                              </object>
+                            </child>
                           </object>
                         </child>
                         <child>

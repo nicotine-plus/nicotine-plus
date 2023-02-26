@@ -436,7 +436,7 @@ class MainWindow(Window):
         # Action status
         self.application.lookup_action("connect").set_enabled(not is_online)
 
-        for action_name in ("disconnect", "soulseek-privileges", "away-accel", "away",
+        for action_name in ("disconnect", "soulseek-privileges", "away-accel", "away", "personal-profile",
                             "message-downloading-users", "message-buddies"):
             self.application.lookup_action(action_name).set_enabled(is_online)
 
