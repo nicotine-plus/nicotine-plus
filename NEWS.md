@@ -6,10 +6,15 @@
 
  * Fixed a crash on some systems after running for a few days
  * Fixed an issue where some private messages were ignored after a user reconnected
+ * Fixed an issue where downloads with long file names could fail on eCryptfs file systems
+ * Fixed an issue where the file transfer progress was sometimes incorrect
+ * Fixed an issue where the tray icon could disappear after locking the screen
 
 ### Issues closed on GitHub
 
  * Messages are wonky ([#2329](https://github.com/nicotine-plus/nicotine-plus/issues/2329))
+ * Current download progress reflects single download instead of total ([#2373](https://github.com/nicotine-plus/nicotine-plus/issues/2373))
+ * Download I/O error: \[Errno 36\] File name too long ([#2375](https://github.com/nicotine-plus/nicotine-plus/issues/2375))
 
 
 ## Version 3.2.8 (January 6, 2023)
