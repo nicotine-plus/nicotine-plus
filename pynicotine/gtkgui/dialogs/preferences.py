@@ -256,7 +256,6 @@ class DownloadsPage:
             self.autoclear_downloads_toggle,
             self.download_double_click_combobox,
             self.download_folder_button,
-            self.download_reverse_order_toggle,
             self.enable_username_subfolders_toggle,
             self.enable_filters_toggle,
             self.file_finished_command_entry,
@@ -307,7 +306,6 @@ class DownloadsPage:
         self.options = {
             "transfers": {
                 "autoclear_downloads": self.autoclear_downloads_toggle,
-                "reverseorder": self.download_reverse_order_toggle,
                 "remotedownloads": self.accept_sent_files_toggle,
                 "uploadallowed": self.sent_files_permission_combobox,
                 "incompletedir": self.incomplete_folder_button,
@@ -362,7 +360,6 @@ class DownloadsPage:
         return {
             "transfers": {
                 "autoclear_downloads": self.autoclear_downloads_toggle.get_active(),
-                "reverseorder": self.download_reverse_order_toggle.get_active(),
                 "remotedownloads": self.accept_sent_files_toggle.get_active(),
                 "uploadallowed": self.sent_files_permission_combobox.get_active(),
                 "incompletedir": self.incomplete_folder_button.get_path(),

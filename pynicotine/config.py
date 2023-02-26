@@ -204,7 +204,7 @@ class Config:
                 "afterfinish": "",
                 "afterfolder": "",
                 "lock": True,
-                "reverseorder": False,
+                "reverseorder": False,  # TODO: remove in 3.3.0
                 "fifoqueue": False,
                 "usecustomban": False,
                 "limitby": True,
