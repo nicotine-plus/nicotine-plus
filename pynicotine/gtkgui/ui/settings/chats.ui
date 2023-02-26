@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.0"/>
-  <object class="GtkAdjustment" id="adjustment_PrivateLogLines">
+  <object class="GtkAdjustment" id="_recent_private_messages_adjustment">
     <property name="upper">10000</property>
     <property name="step-increment">50</property>
     <property name="page-increment">100</property>
   </object>
-  <object class="GtkAdjustment" id="adjustment_RoomLogLines">
+  <object class="GtkAdjustment" id="_recent_room_messages_adjustment">
     <property name="upper">10000</property>
     <property name="step-increment">50</property>
     <property name="page-increment">100</property>
   </object>
-  <object class="GtkAdjustment" id="adjustment_CharactersCompletion">
+  <object class="GtkAdjustment" id="_min_chars_dropdown_adjustment">
     <property name="lower">1</property>
     <property name="upper">10</property>
     <property name="step-increment">1</property>
@@ -40,20 +40,20 @@
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="SpellCheck">
+          <object class="GtkCheckButton" id="enable_spell_checker_toggle">
             <property name="label" translatable="yes">Enable spell checker (requires a restart)</property>
             <property name="visible">True</property>
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="ReopenPrivateChats">
+          <object class="GtkCheckButton" id="reopen_private_chats_toggle">
             <property name="label" translatable="yes">Restore previously open private chats on startup</property>
             <property name="visible">True</property>
             <property name="use-underline">True</property>
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="ctcp_toggle">
+          <object class="GtkCheckButton" id="enable_ctcp_toggle">
             <property name="label" translatable="yes">Enable CTCP-like private message responses (client version)</property>
             <property name="visible">True</property>
             <property name="use-underline">True</property>
@@ -71,14 +71,14 @@
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
-                <property name="mnemonic-widget">PrivateLogLines</property>
+                <property name="mnemonic-widget">recent_private_messages_spinner</property>
               </object>
             </child>
             <child>
-              <object class="GtkSpinButton" id="PrivateLogLines">
+              <object class="GtkSpinButton" id="recent_private_messages_spinner">
                 <property name="visible">True</property>
                 <property name="max-width-chars">9</property>
-                <property name="adjustment">adjustment_PrivateLogLines</property>
+                <property name="adjustment">_recent_private_messages_adjustment</property>
                 <property name="numeric">True</property>
                 <property name="valign">center</property>
               </object>
@@ -97,14 +97,14 @@
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
-                <property name="mnemonic-widget">RoomLogLines</property>
+                <property name="mnemonic-widget">recent_room_messages_spinner</property>
               </object>
             </child>
             <child>
-              <object class="GtkSpinButton" id="RoomLogLines">
+              <object class="GtkSpinButton" id="recent_room_messages_spinner">
                 <property name="visible">True</property>
                 <property name="max-width-chars">9</property>
-                <property name="adjustment">adjustment_RoomLogLines</property>
+                <property name="adjustment">_recent_room_messages_adjustment</property>
                 <property name="numeric">True</property>
                 <property name="valign">center</property>
               </object>
@@ -142,21 +142,21 @@
                 <property name="spacing">12</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkCheckButton" id="CompletionTabCheck">
+                  <object class="GtkCheckButton" id="enable_tab_completion_toggle">
                     <property name="label" translatable="yes">Enable tab-key completion</property>
                     <property name="visible">True</property>
                     <signal name="toggled" handler="on_completion_changed"/>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkCheckButton" id="CompletionCycleCheck">
+                  <object class="GtkCheckButton" id="cycle_tab_completion_toggle">
                     <property name="label" translatable="yes">Cycle through completions when pressing tab-key</property>
                     <property name="visible">True</property>
                     <signal name="toggled" handler="on_completion_changed"/>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkCheckButton" id="CompletionDropdownCheck">
+                  <object class="GtkCheckButton" id="enable_completion_dropdown_toggle">
                     <property name="label" translatable="yes">Enable completion drop-down list</property>
                     <property name="visible">True</property>
                     <property name="margin-top">12</property>
@@ -164,7 +164,7 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkCheckButton" id="OneMatchCheck">
+                  <object class="GtkCheckButton" id="hide_dropdown_single_match_toggle">
                     <property name="label" translatable="yes">Hide drop-down when only one matches</property>
                     <property name="visible">True</property>
                     <signal name="toggled" handler="on_completion_changed"/>
@@ -182,13 +182,13 @@
                         <property name="xalign">0</property>
                         <property name="wrap">True</property>
                         <property name="wrap-mode">word-char</property>
-                        <property name="mnemonic-widget">CharactersCompletion</property>
+                        <property name="mnemonic-widget">min_chars_dropdown_spinner</property>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkSpinButton" id="CharactersCompletion">
+                      <object class="GtkSpinButton" id="min_chars_dropdown_spinner">
                         <property name="visible">True</property>
-                        <property name="adjustment">adjustment_CharactersCompletion</property>
+                        <property name="adjustment">_min_chars_dropdown_adjustment</property>
                         <property name="numeric">True</property>
                         <property name="valign">center</property>
                         <property name="max-width-chars">9</property>
@@ -222,7 +222,6 @@
                         <property name="opacity">0.6</property>
                         <property name="wrap">True</property>
                         <property name="wrap-mode">word-char</property>
-                        <property name="mnemonic-widget">CompleteBuddiesCheck</property>
                         <style>
                           <class name="heading"/>
                         </style>
@@ -242,7 +241,7 @@
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <child>
-                              <object class="GtkCheckButton" id="CompleteBuddiesCheck">
+                              <object class="GtkCheckButton" id="complete_buddy_names_toggle">
                                 <property name="label" translatable="yes">Buddy names</property>
                                 <property name="visible">True</property>
                                 <signal name="toggled" handler="on_completion_changed"/>
@@ -255,7 +254,7 @@
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <child>
-                              <object class="GtkCheckButton" id="CompleteUsersInRoomsCheck">
+                              <object class="GtkCheckButton" id="complete_room_usernames_toggle">
                                 <property name="label" translatable="yes">Chat room usernames</property>
                                 <property name="visible">True</property>
                                 <signal name="toggled" handler="on_completion_changed"/>
@@ -268,7 +267,7 @@
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <child>
-                              <object class="GtkCheckButton" id="CompleteRoomNamesCheck">
+                              <object class="GtkCheckButton" id="complete_room_names_toggle">
                                 <property name="label" translatable="yes">Room names</property>
                                 <property name="visible">True</property>
                                 <signal name="toggled" handler="on_completion_changed"/>
@@ -281,8 +280,8 @@
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <child>
-                              <object class="GtkCheckButton" id="CompleteCommandsCheck">
-                                <property name="label" translatable="yes">Built-in commands</property>
+                              <object class="GtkCheckButton" id="complete_commands_toggle">
+                                <property name="label" translatable="yes">Commands</property>
                                 <property name="visible">True</property>
                                 <signal name="toggled" handler="on_completion_changed"/>
                               </object>
@@ -332,18 +331,18 @@
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
-                <property name="mnemonic-widget">PrivateChatFormat</property>
+                <property name="mnemonic-widget">timestamp_private_chat_entry</property>
               </object>
             </child>
             <child>
-              <object class="GtkEntry" id="PrivateChatFormat">
+              <object class="GtkEntry" id="timestamp_private_chat_entry">
                 <property name="visible">True</property>
                 <property name="valign">center</property>
                 <property name="tooltip-text">https://docs.python.org/3/library/time.html</property>
                 <property name="width-chars">14</property>
                 <property name="secondary-icon-name">edit-undo-symbolic</property>
                 <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
-                <signal name="icon-press" handler="on_private_default_timestamp"/>
+                <signal name="icon-press" handler="on_default_timestamp_private_chat"/>
               </object>
             </child>
           </object>
@@ -360,18 +359,18 @@
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
-                <property name="mnemonic-widget">ChatRoomFormat</property>
+                <property name="mnemonic-widget">timestamp_room_entry</property>
               </object>
             </child>
             <child>
-              <object class="GtkEntry" id="ChatRoomFormat">
+              <object class="GtkEntry" id="timestamp_room_entry">
                 <property name="visible">True</property>
                 <property name="valign">center</property>
                 <property name="tooltip-text">https://docs.python.org/3/library/time.html</property>
                 <property name="width-chars">14</property>
                 <property name="secondary-icon-name">edit-undo-symbolic</property>
                 <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
-                <signal name="icon-press" handler="on_room_default_timestamp"/>
+                <signal name="icon-press" handler="on_default_timestamp_room"/>
               </object>
             </child>
           </object>
@@ -395,7 +394,7 @@
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="TextToSpeech">
+          <object class="GtkCheckButton" id="enable_tts_toggle">
             <property name="label" translatable="yes">Enable Text-to-Speech</property>
             <property name="visible">True</property>
           </object>
@@ -412,11 +411,11 @@
                 <property name="label" translatable="yes">Text-to-Speech command:</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
-                <property name="mnemonic-widget">TTSCommand</property>
+                <property name="mnemonic-widget">tts_command_combobox</property>
               </object>
             </child>
             <child>
-              <object class="GtkComboBoxText" id="TTSCommand">
+              <object class="GtkComboBoxText" id="tts_command_combobox">
                 <property name="visible">True</property>
                 <property name="valign">center</property>
                 <property name="has-entry">True</property>
@@ -446,17 +445,17 @@
                 <property name="label" translatable="yes">Private chat message:</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
-                <property name="mnemonic-widget">PrivateMessage</property>
+                <property name="mnemonic-widget">tts_private_message_entry</property>
               </object>
             </child>
             <child>
-              <object class="GtkEntry" id="PrivateMessage">
+              <object class="GtkEntry" id="tts_private_message_entry">
                 <property name="visible">True</property>
                 <property name="valign">center</property>
                 <property name="width-chars">14</property>
                 <property name="secondary-icon-name">edit-undo-symbolic</property>
                 <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
-                <signal name="icon-press" handler="on_default_private"/>
+                <signal name="icon-press" handler="on_default_tts_private_message"/>
               </object>
             </child>
           </object>
@@ -473,17 +472,17 @@
                 <property name="label" translatable="yes">Chat room message:</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
-                <property name="mnemonic-widget">RoomMessage</property>
+                <property name="mnemonic-widget">tts_room_message_entry</property>
               </object>
             </child>
             <child>
-              <object class="GtkEntry" id="RoomMessage">
+              <object class="GtkEntry" id="tts_room_message_entry">
                 <property name="visible">True</property>
                 <property name="valign">center</property>
                 <property name="width-chars">14</property>
                 <property name="secondary-icon-name">edit-undo-symbolic</property>
                 <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
-                <signal name="icon-press" handler="on_default_rooms"/>
+                <signal name="icon-press" handler="on_default_tts_room_message"/>
               </object>
             </child>
           </object>
@@ -527,7 +526,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkCheckButton" id="CensorCheck">
+                      <object class="GtkCheckButton" id="censor_text_patterns_toggle">
                         <property name="label" translatable="yes">Enable censoring of text patterns</property>
                         <property name="visible">True</property>
                       </object>
@@ -544,11 +543,11 @@
                             <property name="label" translatable="yes">Replace censored letters with:</property>
                             <property name="wrap">True</property>
                             <property name="wrap-mode">word-char</property>
-                            <property name="mnemonic-widget">CensorReplaceCombo</property>
+                            <property name="mnemonic-widget">censor_replacement_combobox</property>
                           </object>
                         </child>
                         <child>
-                          <object class="GtkComboBoxText" id="CensorReplaceCombo">
+                          <object class="GtkComboBoxText" id="censor_replacement_combobox">
                             <property name="visible">True</property>
                             <property name="id-column">0</property>
                             <property name="valign">center</property>
@@ -594,7 +593,7 @@
                             <property name="visible">True</property>
                             <property name="orientation">vertical</property>
                             <child>
-                              <object class="GtkScrolledWindow" id="CensorList">
+                              <object class="GtkScrolledWindow" id="censor_list_container">
                                 <property name="visible">True</property>
                                 <property name="hexpand">True</property>
                                 <property name="vexpand">True</property>
@@ -744,7 +743,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkCheckButton" id="ReplaceCheck">
+                      <object class="GtkCheckButton" id="auto_replace_words_toggle">
                         <property name="visible">True</property>
                         <property name="label" translatable="yes">Enable automatic replacement of words</property>
                       </object>
@@ -779,7 +778,7 @@
                             <property name="visible">True</property>
                             <property name="orientation">vertical</property>
                             <child>
-                              <object class="GtkScrolledWindow" id="ReplacementList">
+                              <object class="GtkScrolledWindow" id="replacement_list_container">
                                 <property name="visible">True</property>
                                 <property name="height-request">300</property>
                                 <property name="hexpand">True</property>

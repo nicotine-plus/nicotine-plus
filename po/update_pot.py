@@ -37,5 +37,5 @@ def update_pot():
     subprocess.check_call(["xgettext", "--join-existing", "-L", "Python", "-o", "po/nicotine.pot"] + files)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     update_pot()

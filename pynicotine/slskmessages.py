@@ -63,19 +63,19 @@ Constants
 
 
 class MessageType:
-    INTERNAL = 'N'
-    INIT = 'I'
-    SERVER = 'S'
-    PEER = 'P'
-    FILE = 'F'
-    DISTRIBUTED = 'D'
+    INTERNAL = "N"
+    INIT = "I"
+    SERVER = "S"
+    PEER = "P"
+    FILE = "F"
+    DISTRIBUTED = "D"
 
 
 class ConnectionType:
-    SERVER = 'S'
-    PEER = 'P'
-    FILE = 'F'
-    DISTRIBUTED = 'D'
+    SERVER = "S"
+    PEER = "P"
+    FILE = "F"
+    DISTRIBUTED = "D"
 
 
 class LoginFailure:
@@ -95,12 +95,12 @@ class TransferDirection:
 
 
 class FileAttribute:
-    BITRATE = 0
-    DURATION = 1
-    VBR = 2
-    ENCODER = 3
-    SAMPLE_RATE = 4
-    BIT_DEPTH = 5
+    BITRATE = "0"
+    DURATION = "1"
+    VBR = "2"
+    ENCODER = "3"
+    SAMPLE_RATE = "4"
+    BIT_DEPTH = "5"
 
 
 """
@@ -436,7 +436,7 @@ class GetPeerAddress(ServerMessage):
         pos, self.port = self.unpack_uint32(message, pos)
 
 
-class AddUser(ServerMessage):
+class WatchUser(ServerMessage):
     """ Server code: 5 """
     """ Used to be kept updated about a user's stats. When a user's
     stats have changed, the server sends a GetUserStats response message
@@ -479,7 +479,7 @@ class AddUser(ServerMessage):
         pos, self.country = self.unpack_string(message, pos)
 
 
-class RemoveUser(ServerMessage):
+class UnwatchUser(ServerMessage):
     """ Server code: 6 """
     """ Used when we no longer want to be kept updated about a
     user's stats. """
@@ -811,7 +811,7 @@ class FileSearch(ServerMessage):
         self.user = None
 
         if text:
-            self.searchterm = ' '.join(x for x in text.split() if x != '-')
+            self.searchterm = " ".join(x for x in text.split() if x != "-")
 
     def make_network_message(self):
         msg = bytearray()
@@ -923,9 +923,9 @@ class SharedFoldersFiles(ServerMessage):
 class GetUserStats(ServerMessage):
     """ Server code: 36 """
     """ The server sends this to indicate a change in a user's statistics,
-    if we've requested to watch the user in AddUser previously. A user's
+    if we've requested to watch the user in WatchUser previously. A user's
     stats can also be requested by sending a GetUserStats message to the
-    server, but AddUser should be used instead. """
+    server, but WatchUser should be used instead. """
 
     __slots__ = ("user", "avgspeed", "uploadnum", "files", "dirs")
 
@@ -1432,7 +1432,7 @@ class SearchParent(ServerMessage):
     def strunreverse(string):
         strlist = string.split(".")
         strlist.reverse()
-        return '.'.join(strlist)
+        return ".".join(strlist)
 
     def make_network_message(self):
         return self.pack_uint32(inet_aton(self.strunreverse(self.parentip)))
@@ -1806,7 +1806,7 @@ class RoomSearch(ServerMessage):
     def __init__(self, room=None, token=None, text=""):
         self.room = room
         self.token = token
-        self.searchterm = ' '.join([x for x in text.split() if x != '-'])
+        self.searchterm = " ".join([x for x in text.split() if x != "-"])
         self.user = None
 
     def make_network_message(self):
@@ -1841,7 +1841,7 @@ class SendUploadSpeed(ServerMessage):
 class UserPrivileged(ServerMessage):
     """ Server code: 122 """
     """ We ask the server whether a user is privileged or not. """
-    """ DEPRECATED, use AddUser and GetUserStatus server messages """
+    """ DEPRECATED, use WatchUser and GetUserStatus server messages """
 
     __slots__ = ("user", "privileged")
 
@@ -2203,7 +2203,7 @@ class MessageUsers(ServerMessage):
         return msg
 
 
-class JoinPublicRoom(ServerMessage):
+class JoinGlobalRoom(ServerMessage):
     """ Server code: 150 """
     """ We ask the server to send us messages from all public rooms, also
     known as public room feed. """
@@ -2215,7 +2215,7 @@ class JoinPublicRoom(ServerMessage):
         return b""
 
 
-class LeavePublicRoom(ServerMessage):
+class LeaveGlobalRoom(ServerMessage):
     """ Server code: 151 """
     """ We ask the server to stop sending us messages from all public rooms,
     also known as public room feed. """
@@ -2227,7 +2227,7 @@ class LeavePublicRoom(ServerMessage):
         return b""
 
 
-class PublicRoomMessage(ServerMessage):
+class GlobalRoomMessage(ServerMessage):
     """ Server code: 152 """
     """ The server sends this when a new message has been written in the public
     room feed (every single line written in every public room). """
@@ -2418,7 +2418,7 @@ class FileListMessage(PeerMessage):
 
         if fileinfo[2] is None or fileinfo[3] is None:
             # No metadata
-            msg.extend(cls.pack_string(''))
+            msg.extend(cls.pack_string(""))
             msg.extend(cls.pack_uint32(0))
         else:
             # FileExtension, NumAttributes
@@ -2462,11 +2462,11 @@ class FileListMessage(PeerMessage):
     def parse_file_attributes(attributes):
 
         try:
-            bitrate = attributes.get(str(FileAttribute.BITRATE))
-            length = attributes.get(str(FileAttribute.DURATION))
-            vbr = attributes.get(str(FileAttribute.VBR))
-            sample_rate = attributes.get(str(FileAttribute.SAMPLE_RATE))
-            bit_depth = attributes.get(str(FileAttribute.BIT_DEPTH))
+            bitrate = attributes.get(FileAttribute.BITRATE)
+            length = attributes.get(FileAttribute.DURATION)
+            vbr = attributes.get(FileAttribute.VBR)
+            sample_rate = attributes.get(FileAttribute.SAMPLE_RATE)
+            bit_depth = attributes.get(FileAttribute.BIT_DEPTH)
 
         except AttributeError:
             # Legacy attribute list format used for shares lists saved in Nicotine+ 3.2.2 and earlier
@@ -2530,7 +2530,7 @@ class FileListMessage(PeerMessage):
             h_bitrate = ""
 
         else:
-            h_bitrate = str(bitrate)
+            h_bitrate = f"{bitrate}"
 
             if vbr == 1:
                 h_bitrate += " (vbr)"
@@ -2626,7 +2626,7 @@ class SharedFileListResponse(FileListMessage):
         shares = []
         for _ in range(ndir):
             pos, directory = self.unpack_string(message, pos)
-            directory = directory.replace('/', '\\')
+            directory = directory.replace("/", "\\")
             pos, nfiles = self.unpack_uint32(message, pos)
 
             files = []
@@ -2643,7 +2643,7 @@ class SharedFileListResponse(FileListMessage):
                 for _ in range(numattr):
                     pos, attrnum = self.unpack_uint32(message, pos)
                     pos, attr = self.unpack_uint32(message, pos)
-                    attrs[str(attrnum)] = attr
+                    attrs[f"{attrnum}"] = attr
 
                 files.append((code, name, size, ext, attrs))
 
@@ -2748,9 +2748,9 @@ class FileSearchResponse(FileListMessage):
                 for _ in range(numattr):
                     pos, attrnum = self.unpack_uint32(message, pos)
                     pos, attr = self.unpack_uint32(message, pos)
-                    attrs[str(attrnum)] = attr
+                    attrs[f"{attrnum}"] = attr
 
-            results.append((code, name.replace('/', '\\'), size, ext, attrs))
+            results.append((code, name.replace("/", "\\"), size, ext, attrs))
 
         results.sort(key=itemgetter(1))
         return pos, results
@@ -2927,7 +2927,7 @@ class FolderContentsResponse(PeerMessage):
 
         for _ in range(ndir):
             pos, directory = self.unpack_string(message, pos)
-            directory = directory.replace('/', '\\')
+            directory = directory.replace("/", "\\")
             pos, nfiles = self.unpack_uint32(message, pos)
 
             shares[folder][directory] = []
@@ -2944,7 +2944,7 @@ class FolderContentsResponse(PeerMessage):
                 for _ in range(numattr):
                     pos, attrnum = self.unpack_uint32(message, pos)
                     pos, attr = self.unpack_uint32(message, pos)
-                    attrs[str(attrnum)] = attr
+                    attrs[f"{attrnum}"] = attr
 
                 shares[folder][directory].append((code, name, size, ext, attrs))
 
@@ -3377,14 +3377,13 @@ Message Events
 
 
 NETWORK_MESSAGE_EVENTS = {
-    AddUser: "watch-user",
     AdminMessage: "admin-message",
     ChangePassword: "change-password",
     CheckPrivileges: "check-privileges",
     ConnectToPeer: "connect-to-peer",
-    DistribSearch: "distributed-search-request",
+    DistribSearch: "file-search-request-distributed",
     FileDownloadInit: "file-download-init",
-    FileSearch: "server-search-request",
+    FileSearch: "file-search-request-server",
     FileSearchResponse: "file-search-response",
     FileUploadInit: "file-upload-init",
     FolderContentsRequest: "folder-contents-request",
@@ -3393,6 +3392,7 @@ NETWORK_MESSAGE_EVENTS = {
     GetUserStats: "user-stats",
     GetUserStatus: "user-status",
     GlobalRecommendations: "global-recommendations",
+    GlobalRoomMessage: "global-room-message",
     ItemRecommendations: "item-recommendations",
     ItemSimilarUsers: "item-similar-users",
     JoinRoom: "join-room",
@@ -3414,11 +3414,10 @@ NETWORK_MESSAGE_EVENTS = {
     PrivateRoomToggle: "private-room-toggle",
     PrivateRoomUsers: "private-room-users",
     PrivilegedUsers: "privileged-users",
-    PublicRoomMessage: "public-room-message",
     QueueUpload: "queue-upload",
     Recommendations: "recommendations",
     RoomList: "room-list",
-    RoomSearch: "server-search-request",
+    RoomSearch: "file-search-request-server",
     RoomTickerAdd: "ticker-add",
     RoomTickerRemove: "ticker-remove",
     RoomTickerState: "ticker-set",
@@ -3436,7 +3435,8 @@ NETWORK_MESSAGE_EVENTS = {
     UserInterests: "user-interests",
     UserJoinedRoom: "user-joined-room",
     UserLeftRoom: "user-left-room",
-    UserSearch: "server-search-request",
+    UserSearch: "file-search-request-server",
+    WatchUser: "watch-user",
     WishlistInterval: "set-wishlist-interval"
 }
 
@@ -3450,8 +3450,8 @@ SERVER_MESSAGE_CODES = {
     Login: 1,
     SetWaitPort: 2,
     GetPeerAddress: 3,
-    AddUser: 5,
-    RemoveUser: 6,
+    WatchUser: 5,
+    UnwatchUser: 6,
     GetUserStatus: 7,
     SayChatroom: 13,
     JoinRoom: 14,
@@ -3537,9 +3537,9 @@ SERVER_MESSAGE_CODES = {
     PrivateRoomOperatorRemoved: 146,
     PrivateRoomOwned: 148,
     MessageUsers: 149,
-    JoinPublicRoom: 150,          # Deprecated
-    LeavePublicRoom: 151,         # Deprecated
-    PublicRoomMessage: 152,       # Deprecated
+    JoinGlobalRoom: 150,          # Deprecated
+    LeaveGlobalRoom: 151,         # Deprecated
+    GlobalRoomMessage: 152,       # Deprecated
     RelatedSearch: 153,           # Obsolete
     CantConnectToPeer: 1001,
     CantCreateRoom: 1003

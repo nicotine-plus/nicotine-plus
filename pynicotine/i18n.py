@@ -49,15 +49,15 @@ LANGUAGES = (
     ("sv", "Svenska"),
     ("tr", "Türkçe"),
     ("uk", "Українська"),
-    ("zh_Hans", "汉语")
+    ("zh_CN", "汉语")
 )
 
 
-def _set_default_system_language(language=None):
+def _set_system_language(language=None):
     """ Extracts the default system language and applies it on systems that don't
     set the 'LANGUAGE' environment variable by default (Windows, macOS) """
 
-    if os.getenv("LANGUAGE") is None:
+    if not language and os.getenv("LANGUAGE") is None:
         if sys.platform == "win32":
             import ctypes
             windll = ctypes.windll.kernel32
@@ -68,21 +68,19 @@ def _set_default_system_language(language=None):
                 import subprocess
                 language_output = subprocess.check_output(("defaults", "read", "-g", "AppleLanguages"))
                 languages = language_output.decode("utf-8").strip('()\n" ').split(",")
-
-                if languages:
-                    language = languages[0][:2]
+                language = next(iter(languages), None)
 
             except Exception as error:
                 print("Cannot load translations for default system language: %s", error)
 
-    if language is not None:
+    if language:
         os.environ["LANGUAGE"] = language
 
 
 def apply_translations(language=None):
 
     # Use the same language as the rest of the system
-    _set_default_system_language(language)
+    _set_system_language(language)
 
     # Install translations for Python
     gettext.install(TRANSLATION_DOMAIN, LOCALE_PATH)

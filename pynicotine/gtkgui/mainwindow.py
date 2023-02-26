@@ -41,7 +41,6 @@ from pynicotine.gtkgui.uploads import Uploads
 from pynicotine.gtkgui.userbrowse import UserBrowses
 from pynicotine.gtkgui.userinfo import UserInfos
 from pynicotine.gtkgui.userlist import UserList
-from pynicotine.gtkgui.widgets.iconnotebook import TabLabel
 from pynicotine.gtkgui.widgets.dialogs import MessageDialog
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
@@ -56,7 +55,6 @@ from pynicotine.gtkgui.widgets.theme import set_use_header_bar
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.gtkgui.widgets.window import Window
 from pynicotine.logfacility import log
-from pynicotine.scheduler import scheduler
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import human_speed
 from pynicotine.utils import open_file_path
@@ -67,7 +65,6 @@ class MainWindow(Window):
     def __init__(self, application):
 
         self.application = application
-        self.initialized = False
         self.current_page_id = ""
         self.auto_away = False
         self.away_timer_id = None
@@ -85,15 +82,17 @@ class MainWindow(Window):
             self.buddy_list_container,
             self.chatrooms_buddy_list_container,
             self.chatrooms_container,
+            self.chatrooms_content,
             self.chatrooms_end,
             self.chatrooms_entry,
-            self.chatrooms_notebook,
             self.chatrooms_page,
             self.chatrooms_paned,
             self.chatrooms_title,
             self.chatrooms_toolbar,
-            self.chatrooms_toolbar_contents,
+            self.chatrooms_toolbar_content,
             self.connections_label,
+            self.container,
+            self.content,
             self.download_files_label,
             self.download_status_button,
             self.download_status_label,
@@ -106,7 +105,7 @@ class MainWindow(Window):
             self.downloads_page,
             self.downloads_title,
             self.downloads_toolbar,
-            self.downloads_toolbar_contents,
+            self.downloads_toolbar_content,
             self.header_bar,
             self.header_end,
             self.header_end_container,
@@ -118,35 +117,34 @@ class MainWindow(Window):
             self.interests_page,
             self.interests_title,
             self.interests_toolbar,
-            self.interests_toolbar_contents,
+            self.interests_toolbar_content,
             self.log_container,
             self.log_search_bar,
             self.log_search_entry,
-            self.log_view,
-            self.notebook,
+            self.log_view_container,
+            self.private_content,
             self.private_end,
             self.private_entry,
             self.private_history_button,
-            self.private_notebook,
             self.private_page,
             self.private_title,
             self.private_toolbar,
-            self.private_toolbar_contents,
+            self.private_toolbar_content,
             self.room_list_button,
             self.room_search_combobox,
             self.room_search_entry,
             self.scan_progress_bar,
             self.search_combobox,
             self.search_combobox_button,
+            self.search_content,
             self.search_end,
             self.search_entry,
             self.search_mode_button,
             self.search_mode_label,
-            self.search_notebook,
             self.search_page,
             self.search_title,
             self.search_toolbar,
-            self.search_toolbar_contents,
+            self.search_toolbar_content,
             self.status_label,
             self.upload_files_label,
             self.upload_status_button,
@@ -160,39 +158,38 @@ class MainWindow(Window):
             self.uploads_page,
             self.uploads_title,
             self.uploads_toolbar,
-            self.uploads_toolbar_contents,
+            self.uploads_toolbar_content,
             self.user_search_combobox,
             self.user_search_entry,
             self.user_status_button,
             self.user_status_icon,
             self.user_status_label,
             self.userbrowse_combobox,
+            self.userbrowse_content,
             self.userbrowse_end,
             self.userbrowse_entry,
-            self.userbrowse_notebook,
             self.userbrowse_page,
             self.userbrowse_title,
             self.userbrowse_toolbar,
-            self.userbrowse_toolbar_contents,
+            self.userbrowse_toolbar_content,
             self.userinfo_combobox,
+            self.userinfo_content,
             self.userinfo_end,
             self.userinfo_entry,
-            self.userinfo_notebook,
             self.userinfo_page,
             self.userinfo_title,
             self.userinfo_toolbar,
-            self.userinfo_toolbar_contents,
+            self.userinfo_toolbar_content,
             self.userlist_content,
             self.userlist_end,
             self.userlist_page,
             self.userlist_title,
             self.userlist_toolbar,
-            self.userlist_toolbar_contents,
-            self.vertical_paned,
-            self.window
+            self.userlist_toolbar_content,
+            self.vertical_paned
         ) = ui_template.widgets
-        super().__init__(self.window)
 
+        super().__init__(widget=Gtk.ApplicationWindow(child=self.container))
         self.header_bar.pack_end(self.header_end)
 
         if GTK_API_VERSION >= 4:
@@ -214,15 +211,16 @@ class MainWindow(Window):
             self.horizontal_paned.child_set_property(self.buddy_list_container, "resize", False)
             self.chatrooms_paned.child_set_property(self.chatrooms_buddy_list_container, "resize", False)
 
-            self.vertical_paned.child_set_property(self.notebook, "resize", True)
-            self.vertical_paned.child_set_property(self.notebook, "shrink", False)
+            self.vertical_paned.child_set_property(self.content, "resize", True)
+            self.vertical_paned.child_set_property(self.content, "shrink", False)
             self.vertical_paned.child_set_property(self.log_container, "resize", False)
             self.vertical_paned.child_set_property(self.log_container, "shrink", False)
 
         """ Logging """
 
-        self.log_view = TextView(self.log_view, auto_scroll=True, parse_urls=False)
-        self.log_search_bar = TextSearchBar(self.log_view.textview, self.log_search_bar, self.log_search_entry,
+        self.log_view = TextView(self.log_view_container, auto_scroll=not config.sections["logging"]["logcollapsed"],
+                                 parse_urls=False, editable=False, vertical_margin=5, pixels_below_lines=2)
+        self.log_search_bar = TextSearchBar(self.log_view.widget, self.log_search_bar, self.log_search_entry,
                                             controller_widget=self.log_container)
 
         self.create_log_context_menu()
@@ -237,11 +235,10 @@ class MainWindow(Window):
         # Initialize main notebook
         self.notebook = IconNotebook(
             self,
-            widget=self.notebook,
+            parent=self.content,
             switch_page_callback=self.on_switch_page,
             reorder_page_callback=self.on_page_reordered
         )
-        self.initialize_main_tabs()
 
         # Initialize other notebooks
         self.interests = Interests(self)
@@ -262,10 +259,12 @@ class MainWindow(Window):
 
         """ Tab Visibility/Order """
 
+        self.append_main_tabs()
         self.set_tab_positions()
         self.set_main_tabs_order()
         self.set_main_tabs_visibility()
         self.set_last_session_tab()
+        self.connect_tab_signals()
 
         """ Events """
 
@@ -290,7 +289,6 @@ class MainWindow(Window):
         """ Show Window """
 
         self.init_window()
-        self.initialized = True
 
     """ Initialize """
 
@@ -298,10 +296,10 @@ class MainWindow(Window):
 
         # Set main window title and icon
         self.set_title(config.application_name)
-        self.window.set_default_icon_name(config.application_id)
+        self.widget.set_default_icon_name(config.application_id)
 
         # Set main window size
-        self.window.set_default_size(width=config.sections["ui"]["width"],
+        self.widget.set_default_size(width=config.sections["ui"]["width"],
                                      height=config.sections["ui"]["height"])
 
         # Set main window position
@@ -310,60 +308,54 @@ class MainWindow(Window):
             y_pos = config.sections["ui"]["yposition"]
 
             if x_pos == -1 and y_pos == -1:
-                self.window.set_position(Gtk.WindowPosition.CENTER)
+                self.widget.set_position(Gtk.WindowPosition.CENTER)
             else:
-                self.window.move(x_pos, y_pos)
+                self.widget.move(x_pos, y_pos)
 
         # Maximize main window if necessary
         if config.sections["ui"]["maximized"]:
-            self.window.maximize()
+            self.widget.maximize()
 
         # Auto-away mode
         if GTK_API_VERSION >= 4:
             self.gesture_click = Gtk.GestureClick()
-            self.window.add_controller(self.gesture_click)
+            self.widget.add_controller(self.gesture_click)
 
             key_controller = Gtk.EventControllerKey()
             key_controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
             key_controller.connect("key-released", self.on_cancel_auto_away)
-            self.window.add_controller(key_controller)
+            self.widget.add_controller(key_controller)
 
         else:
-            self.gesture_click = Gtk.GestureMultiPress(widget=self.window)
-            self.window.connect("key-release-event", self.on_cancel_auto_away)
+            self.gesture_click = Gtk.GestureMultiPress(widget=self.widget)
+            self.widget.connect("key-release-event", self.on_cancel_auto_away)
 
         self.gesture_click.set_button(0)
         self.gesture_click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
         self.gesture_click.connect("pressed", self.on_cancel_auto_away)
 
         # Clear notifications when main window is focused
-        self.window.connect("notify::is-active", self.on_window_active_changed)
-        self.window.connect("notify::visible", self.on_window_visible_changed)
+        self.widget.connect("notify::is-active", self.on_window_active_changed)
+        self.widget.connect("notify::visible", self.on_window_visible_changed)
 
-        # System window close (X) and window state
+        # System window close (X)
         if GTK_API_VERSION >= 4:
-            self.window.connect("close-request", self.on_close_request)
-
-            self.window.connect("notify::default-width", self.on_window_property_changed, "width")
-            self.window.connect("notify::default-height", self.on_window_property_changed, "height")
-            self.window.connect("notify::maximized", self.on_window_property_changed, "maximized")
-
+            self.widget.connect("close-request", self.on_close_request)
         else:
-            self.window.connect("delete-event", self.on_close_request)
+            self.widget.connect("delete-event", self.on_close_request)
 
-            self.window.connect("size-allocate", self.on_window_size_changed)
-            self.window.connect("notify::is-maximized", self.on_window_property_changed, "maximized")
-
-        self.application.add_window(self.window)
+        self.application.add_window(self.widget)
 
     def set_help_overlay(self, help_overlay):
-        self.window.set_help_overlay(help_overlay)
+        self.widget.set_help_overlay(help_overlay)
 
     """ Window State """
 
-    def on_window_active_changed(self, window, param):
+    def on_window_active_changed(self, *_args):
 
-        if not window.get_property(param.name):
+        self.save_window_state()
+
+        if not self.is_active():
             return
 
         self.chatrooms.clear_notifications()
@@ -372,26 +364,6 @@ class MainWindow(Window):
 
         self.application.notifications.set_urgency_hint(False)
 
-    @staticmethod
-    def on_window_property_changed(window, param, config_property):
-        config.sections["ui"][config_property] = window.get_property(param.name)
-
-    @staticmethod
-    def on_window_size_changed(window, _allocation):
-
-        if config.sections["ui"]["maximized"]:
-            return
-
-        width, height = window.get_size()
-
-        config.sections["ui"]["width"] = width
-        config.sections["ui"]["height"] = height
-
-        x_pos, y_pos = window.get_position()
-
-        config.sections["ui"]["xposition"] = x_pos
-        config.sections["ui"]["yposition"] = y_pos
-
     def on_window_visible_changed(self, *_args):
         self.application.tray_icon.update_window_visibility()
 
@@ -399,13 +371,36 @@ class MainWindow(Window):
         for page in (self.userlist, self.chatrooms, self.downloads, self.uploads):
             page.save_columns()
 
+    def save_window_state(self):
+
+        config.sections["ui"]["maximized"] = self.is_maximized()
+
+        if config.sections["ui"]["maximized"]:
+            return
+
+        width = self.get_width()
+        height = self.get_height()
+
+        config.sections["ui"]["width"] = width
+        config.sections["ui"]["height"] = height
+
+        position = self.get_position()
+
+        if position is None:
+            return
+
+        x_pos, y_pos = position
+
+        config.sections["ui"]["xposition"] = x_pos
+        config.sections["ui"]["yposition"] = y_pos
+
     def show(self):
 
-        self.window.present()
+        self.widget.present()
 
         if GTK_API_VERSION == 3:
             # Fix for Windows where minimized window is not shown when unhiding from tray
-            self.window.deiconify()
+            self.widget.deiconify()
 
     """ Connection """
 
@@ -427,7 +422,7 @@ class MainWindow(Window):
             focus_widget = self.search_entry
 
         if focus_widget is not None:
-            GLib.idle_add(lambda: focus_widget.grab_focus() == -1, priority=GLib.PRIORITY_HIGH_IDLE)
+            focus_widget.grab_focus()
 
     def server_disconnect(self, _msg):
         self.update_user_status()
@@ -476,9 +471,12 @@ class MainWindow(Window):
 
     # View
 
-    def set_show_header_bar(self, show):
+    def on_use_header_bar(self, action, state):
 
-        if show:
+        action.set_state(state)
+        enabled = state.get_boolean()
+
+        if enabled:
             self.hide_current_toolbar()
             self.show_header_bar(self.current_page_id)
 
@@ -486,30 +484,19 @@ class MainWindow(Window):
             self.hide_current_header_bar()
             self.show_toolbar(self.current_page_id)
 
-        set_use_header_bar(show)
+        set_use_header_bar(enabled)
+        config.sections["ui"]["header_bar"] = enabled
 
-    def on_show_header_bar(self, action, *_args):
+    def on_show_log_history(self, action, state):
 
-        state = config.sections["ui"]["header_bar"]
-        self.set_show_header_bar(not state)
-        action.set_state(GLib.Variant("b", not state))
+        action.set_state(state)
+        visible = state.get_boolean()
+        self.log_view.auto_scroll = visible
 
-        config.sections["ui"]["header_bar"] = not state
+        if visible:
+            self.log_view.scroll_bottom()
 
-    def set_show_log_history(self, show):
-
-        self.log_view.auto_scroll = show
-
-        if show:
-            GLib.idle_add(self.log_view.scroll_bottom)
-
-    def on_show_log_history(self, action, *_args):
-
-        state = config.sections["logging"]["logcollapsed"]
-        self.set_show_log_history(state)
-        action.set_state(GLib.Variant("b", state))
-
-        config.sections["logging"]["logcollapsed"] = not state
+        config.sections["logging"]["logcollapsed"] = not visible
 
     def set_toggle_buddy_list(self, mode, force_show=True):
 
@@ -572,20 +559,19 @@ class MainWindow(Window):
     def on_toggle_buddy_list(self, action, state):
         """ Function used to switch around the UI the BuddyList position """
 
-        mode = state.get_string()
-
-        self.set_toggle_buddy_list(mode)
         action.set_state(state)
 
+        mode = state.get_string()
+        self.set_toggle_buddy_list(mode)
         config.sections["ui"]["buddylistinchatrooms"] = mode
 
     """ Actions """
 
     def add_action(self, action):
-        self.window.add_action(action)
+        self.widget.add_action(action)
 
     def lookup_action(self, action_name):
-        return self.window.lookup_action(action_name)
+        return self.widget.lookup_action(action_name)
 
     def set_up_actions(self):
 
@@ -602,16 +588,15 @@ class MainWindow(Window):
 
         # View
 
-        state = config.sections["ui"]["header_bar"]
-        action = Gio.SimpleAction(name="show-header-bar", state=GLib.Variant("b", state))
-        action.connect("change-state", self.on_show_header_bar)
+        state = GLib.Variant("b", config.sections["ui"]["header_bar"])
+        action = Gio.SimpleAction(name="use-header-bar", state=state)
+        action.connect("change-state", self.on_use_header_bar)
         self.add_action(action)
 
-        state = not config.sections["logging"]["logcollapsed"]
-        action = Gio.SimpleAction(name="show-log-history", state=GLib.Variant("b", state))
+        state = GLib.Variant("b", not config.sections["logging"]["logcollapsed"])
+        action = Gio.SimpleAction(name="show-log-history", state=state)
         action.connect("change-state", self.on_show_log_history)
         self.add_action(action)
-        self.set_show_log_history(state)
 
         state = config.sections["ui"]["buddylistinchatrooms"]
 
@@ -711,7 +696,7 @@ class MainWindow(Window):
         menu = PopupMenu(self.application)
         menu.add_items(
             ("$" + _("Prefer Dark _Mode"), "app.prefer-dark-mode"),
-            ("$" + _("Use _Header Bar"), "win.show-header-bar"),
+            ("$" + _("Use _Header Bar"), "win.use-header-bar"),
             ("$" + _("Show _Log History Pane"), "win.show-log-history"),
             ("", None),
             ("O" + _("Buddy List in Separate Tab"), "win.toggle-buddy-list", "tab"),
@@ -817,15 +802,15 @@ class MainWindow(Window):
     def show_header_bar(self, page_id):
         """ Set a headerbar for the main window (client side decorations enabled) """
 
-        if self.window.get_titlebar() != self.header_bar:
-            self.window.set_titlebar(self.header_bar)
-            self.window.set_show_menubar(False)
+        if self.widget.get_titlebar() != self.header_bar:
+            self.widget.set_titlebar(self.header_bar)
+            self.widget.set_show_menubar(False)
 
             if GTK_API_VERSION == 3:
                 self.lookup_action("main-menu").set_enabled(True)
 
                 # Avoid "Untitled window" in certain desktop environments
-                self.header_bar.set_title(self.window.get_title())
+                self.header_bar.set_title(self.widget.get_title())
 
         title_widget = getattr(self, f"{page_id}_title")
         title_widget.get_parent().remove(title_widget)
@@ -855,7 +840,7 @@ class MainWindow(Window):
         self.header_title.remove(title_widget)
         self.header_end_container.remove(end_widget)
 
-        toolbar = getattr(self, f"{self.current_page_id}_toolbar_contents")
+        toolbar = getattr(self, f"{self.current_page_id}_toolbar_content")
 
         if GTK_API_VERSION >= 4:
             toolbar.append(title_widget)
@@ -867,18 +852,18 @@ class MainWindow(Window):
     def show_toolbar(self, page_id):
         """ Show the non-CSD toolbar """
 
-        if not self.window.get_show_menubar():
-            self.window.set_show_menubar(True)
+        if not self.widget.get_show_menubar():
+            self.widget.set_show_menubar(True)
             self.header_menu.get_popover().set_visible(False)
 
             if GTK_API_VERSION == 3:
                 # Don't override builtin accelerator for menu bar
                 self.lookup_action("main-menu").set_enabled(False)
 
-            if self.window.get_titlebar():
-                self.window.unrealize()
-                self.window.set_titlebar(None)
-                self.window.map()
+            if self.widget.get_titlebar():
+                self.widget.unrealize()
+                self.widget.set_titlebar(None)
+                self.widget.map()
 
         toolbar = getattr(self, f"{page_id}_toolbar")
         toolbar.set_visible(True)
@@ -903,10 +888,7 @@ class MainWindow(Window):
             self.hide_current_toolbar()
             self.show_toolbar(page_id)
 
-        self.current_page_id = page_id
-
-        if self.initialized:
-            config.sections["ui"]["last_tab_id"] = page_id
+        self.current_page_id = config.sections["ui"]["last_tab_id"] = page_id
 
     def on_change_focus_view(self, *_args):
         """ F6: move focus between header bar/toolbar and main content """
@@ -944,10 +926,9 @@ class MainWindow(Window):
 
     """ Main Notebook """
 
-    def initialize_main_tabs(self):
+    def append_main_tabs(self):
 
-        # Translation for the labels of tabs, icon names
-        tab_data = [
+        for tab_id, tab_text, tab_icon_name in (
             ("search", _("Search Files"), "system-search-symbolic"),
             ("downloads", _("Downloads"), "document-save-symbolic"),
             ("uploads", _("Uploads"), "emblem-shared-symbolic"),
@@ -957,22 +938,25 @@ class MainWindow(Window):
             ("userlist", _("Buddies"), "contact-new-symbolic"),
             ("chatrooms", _("Chat Rooms"), "user-available-symbolic"),
             ("interests", _("Interests"), "emblem-default-symbolic")
-        ]
-
-        # Initialize tabs labels
-        for i in range(self.notebook.get_n_pages()):
-            tab_id, tab_text, tab_icon_name = tab_data[i]
-            page = self.notebook.get_nth_page(i)
+        ):
+            page = getattr(self, f"{tab_id}_page")
             page.id = tab_id
 
-            menu_label = TabLabel(tab_text)
-            tab_label = TabLabel(tab_text)
-            tab_label.set_start_icon_name(tab_icon_name)
+            self.notebook.append_page(page, tab_text)
 
-            # Apply tab label
-            self.notebook.set_labels(page, tab_label, menu_label)
+            tab_label = self.notebook.get_tab_label(page)
+            tab_label.set_start_icon_name(tab_icon_name)
             self.notebook.set_tab_reorderable(page, True)
             self.set_tab_expand(page)
+
+    def connect_tab_signals(self):
+
+        self.notebook.connect_signals()
+        self.chatrooms.connect_signals()
+        self.search.connect_signals()
+        self.privatechat.connect_signals()
+        self.userinfo.connect_signals()
+        self.userbrowse.connect_signals()
 
     def on_switch_page(self, _notebook, page, _page_num):
 
@@ -989,14 +973,14 @@ class MainWindow(Window):
 
         elif page == self.uploads_page:
             self.uploads.update_model(forceupdate=True)
-            self.notebook.remove_tab_hilite(self.uploads_page)
+            self.notebook.remove_tab_changed(self.uploads_page)
 
             if self.uploads.container.get_visible():
                 focus_widget = self.uploads.tree_view
 
         elif page == self.downloads_page:
             self.downloads.update_model(forceupdate=True)
-            self.notebook.remove_tab_hilite(self.downloads_page)
+            self.notebook.remove_tab_changed(self.downloads_page)
 
             if self.downloads.container.get_visible():
                 focus_widget = self.downloads.tree_view
@@ -1027,10 +1011,6 @@ class MainWindow(Window):
 
     def on_page_reordered(self, *_args):
 
-        if not self.initialized:
-            # Don't save the tab order until the window is ready
-            return
-
         page_ids = []
 
         for i in range(self.notebook.get_n_pages()):
@@ -1052,7 +1032,7 @@ class MainWindow(Window):
         if page is None:
             return False
 
-        tab_label, _menu_label = notebook.get_labels(page)
+        tab_label = notebook.get_tab_label(page)
         tab_label.close_callback()
         return True
 
@@ -1112,7 +1092,7 @@ class MainWindow(Window):
         config.sections["ui"]["modes_visible"][page.id] = True
         page.set_visible(True)
 
-        self.notebook.set_show_tabs(True)
+        self.content.set_visible(True)
 
     def hide_tab(self, page):
 
@@ -1120,7 +1100,7 @@ class MainWindow(Window):
         page.set_visible(False)
 
         if self.notebook.get_n_pages() <= 1:
-            self.notebook.set_show_tabs(False)
+            self.content.set_visible(False)
 
     def set_main_tabs_order(self):
 
@@ -1250,10 +1230,10 @@ class MainWindow(Window):
         away_interval = config.sections["server"]["autoaway"]
 
         if away_interval > 0:
-            self.away_timer_id = scheduler.add(delay=(60 * away_interval), callback=self.set_auto_away)
+            self.away_timer_id = events.schedule(delay=(60 * away_interval), callback=self.set_auto_away)
 
     def remove_away_timer(self):
-        scheduler.cancel(self.away_timer_id)
+        events.cancel_scheduled(self.away_timer_id)
 
     def on_cancel_auto_away(self, *_args):
 
@@ -1285,7 +1265,7 @@ class MainWindow(Window):
             ("$" + _("[Debug] Miscellaneous"), "app.log-miscellaneous"),
         )
 
-        PopupMenu(self.application, self.log_view.textview, self.on_popup_menu_log).add_items(
+        PopupMenu(self.application, self.log_view.widget, self.on_popup_menu_log).add_items(
             ("#" + _("_Find…"), self.on_find_log_window),
             ("", None),
             ("#" + _("_Copy"), self.log_view.on_copy_text),
@@ -1300,7 +1280,7 @@ class MainWindow(Window):
         )
 
     def log_callback(self, timestamp_format, msg, title, level):
-        GLib.idle_add(self.update_log, timestamp_format, msg, title, level, priority=GLib.PRIORITY_LOW)
+        events.invoke_main_thread(self.update_log, timestamp_format, msg, title, level)
 
     def update_log(self, timestamp_format, msg, title, level):
 
@@ -1351,11 +1331,11 @@ class MainWindow(Window):
 
         if self.download_status_label.get_text() != download_bandwidth_text:
             self.download_status_label.set_text(download_bandwidth_text)
-            self.application.tray_icon.set_download_status(_("Downloads: %(speed)s") % {'speed': download_bandwidth})
+            self.application.tray_icon.set_download_status(_("Downloads: %(speed)s") % {"speed": download_bandwidth})
 
         if self.upload_status_label.get_text() != upload_bandwidth_text:
             self.upload_status_label.set_text(upload_bandwidth_text)
-            self.application.tray_icon.set_upload_status(_("Uploads: %(speed)s") % {'speed': upload_bandwidth})
+            self.application.tray_icon.set_upload_status(_("Uploads: %(speed)s") % {"speed": upload_bandwidth})
 
     def update_download_limits(self):
         self.update_bandwidth_label_underlines(transfer_type="download")
@@ -1380,11 +1360,11 @@ class MainWindow(Window):
         remove_css_class(label, "underline")
 
     def show_scan_progress(self):
-        GLib.idle_add(self.scan_progress_bar.show)
+        self.scan_progress_bar.show()
 
     def set_scan_progress(self, value):
         self.scan_progress_indeterminate = False
-        GLib.idle_add(self.scan_progress_bar.set_fraction, value)
+        self.scan_progress_bar.set_fraction(value)
 
     def set_scan_indeterminate(self):
 
@@ -1406,7 +1386,7 @@ class MainWindow(Window):
 
     def hide_scan_progress(self):
         self.scan_progress_indeterminate = False
-        GLib.idle_add(self.scan_progress_bar.hide)
+        self.scan_progress_bar.hide()
 
     """ Exit """
 
@@ -1438,7 +1418,7 @@ class MainWindow(Window):
             dialog.close()
 
         # Run in Background
-        self.window.set_visible(False)
+        self.widget.set_visible(False)
 
         # Save config, in case application is killed later
         config.write_configuration()

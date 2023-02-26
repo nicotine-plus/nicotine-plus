@@ -67,9 +67,11 @@ class FastConfigure(Dialog):
             default_button=self.next_button,
             show_callback=self.on_show,
             close_callback=self.on_close,
+            title=_("Setup Assistant"),
             width=720,
             height=450,
             resizable=False,
+            show_title=False,
             close_destroy=False
         )
 
@@ -82,12 +84,20 @@ class FastConfigure(Dialog):
         self.shares_list_view = TreeView(
             application.window, parent=self.shares_list_container, multi_select=True,
             activate_row_callback=self.on_edit_shared_folder,
-            columns=[
-                {"column_id": "virtual_folder", "column_type": "text", "title": _("Virtual Folder"), "width": 1,
-                 "sort_column": 0, "expand_column": True},
-                {"column_id": "folder", "column_type": "text", "title": _("Folder"), "width": 125,
-                 "sort_column": 1, "expand_column": True}
-            ]
+            columns={
+                "virtual_folder": {
+                    "column_type": "text",
+                    "title": _("Virtual Folder"),
+                    "width": 1,
+                    "expand_column": True
+                },
+                "folder": {
+                    "column_type": "text",
+                    "title": _("Folder"),
+                    "width": 125,
+                    "expand_column": True
+                }
+            }
         )
 
         self.reset_completeness()
@@ -116,7 +126,7 @@ class FastConfigure(Dialog):
         self.reset_completeness()
 
     def on_download_folder_selected(self):
-        config.sections['transfers']['downloaddir'] = self.download_folder_button.get_path()
+        config.sections["transfers"]["downloaddir"] = self.download_folder_button.get_path()
 
     def on_add_shared_folder_selected(self, selected, _data):
 
@@ -165,8 +175,8 @@ class FastConfigure(Dialog):
         virtual_name = core.shares.get_normalized_virtual_name(
             virtual_name, shared_folders=(shared_folders + buddy_shared_folders)
         )
-        old_virtual_name = self.shares_list_view.get_row_value(iterator, 0)
-        folder_path = self.shares_list_view.get_row_value(iterator, 1)
+        old_virtual_name = self.shares_list_view.get_row_value(iterator, "virtual_folder")
+        folder_path = self.shares_list_view.get_row_value(iterator, "folder")
 
         old_mapping = (old_virtual_name, folder_path)
         new_mapping = (virtual_name, folder_path)
@@ -174,18 +184,18 @@ class FastConfigure(Dialog):
         shared_folders.remove(old_mapping)
         shared_folders.append(new_mapping)
 
-        self.shares_list_view.set_row_value(iterator, 0, virtual_name)
+        self.shares_list_view.set_row_value(iterator, "virtual_folder", virtual_name)
 
     def on_edit_shared_folder(self, *_args):
 
         for iterator in self.shares_list_view.get_selected_rows():
-            virtual_name = self.shares_list_view.get_row_value(iterator, 0)
-            folder_path = self.shares_list_view.get_row_value(iterator, 1)
+            virtual_name = self.shares_list_view.get_row_value(iterator, "virtual_folder")
+            folder_path = self.shares_list_view.get_row_value(iterator, "folder")
 
             EntryDialog(
                 parent=self,
                 title=_("Edit Shared Folder"),
-                message=_("Enter new virtual name for '%(dir)s':") % {'dir': folder_path},
+                message=_("Enter new virtual name for '%(dir)s':") % {"dir": folder_path},
                 default=virtual_name,
                 callback=self.on_edit_shared_folder_response,
                 callback_data=iterator
@@ -195,8 +205,8 @@ class FastConfigure(Dialog):
     def on_remove_shared_folder(self, *_args):
 
         for iterator in reversed(self.shares_list_view.get_selected_rows()):
-            virtual_name = self.shares_list_view.get_row_value(iterator, 0)
-            folder_path = self.shares_list_view.get_row_value(iterator, 1)
+            virtual_name = self.shares_list_view.get_row_value(iterator, "virtual_folder")
+            folder_path = self.shares_list_view.get_row_value(iterator, "folder")
             mapping = (virtual_name, folder_path)
 
             config.sections["transfers"]["shared"].remove(mapping)
@@ -281,9 +291,9 @@ class FastConfigure(Dialog):
         self.last_port_entry.set_value(last_port)
 
         # share_page
-        if config.sections['transfers']['downloaddir']:
+        if config.sections["transfers"]["downloaddir"]:
             self.download_folder_button.set_path(
-                config.sections['transfers']['downloaddir']
+                config.sections["transfers"]["downloaddir"]
             )
 
         self.shares_list_view.clear()

@@ -78,13 +78,13 @@ class FileProperties(Dialog):
 
         if self.total_length:
             self.set_title(_("File Properties (%(num)i of %(total)i  /  %(size)s  /  %(length)s)") % {
-                'num': index, 'total': total_files, 'size': total_size,
-                'length': human_length(self.total_length)
+                "num": index, "total": total_files, "size": total_size,
+                "length": human_length(self.total_length)
             })
             return
 
         self.set_title(_("File Properties (%(num)i of %(total)i  /  %(size)s)") % {
-                       'num': index, 'total': total_files, 'size': total_size})
+                       "num": index, "total": total_files, "size": total_size})
 
     def update_current_file(self):
         """ Updates the UI with properties for the selected file """
@@ -97,10 +97,10 @@ class FileProperties(Dialog):
         h_size = human_size(properties["size"])
         bytes_size = humanize(properties["size"])
 
-        self.filename_value_label.set_text(str(properties["filename"]))
-        self.folder_value_label.set_text(str(properties["directory"]))
+        self.filename_value_label.set_text(properties["filename"])
+        self.folder_value_label.set_text(properties["directory"])
         self.filesize_value_label.set_text(f"{h_size} ({bytes_size} B)")
-        self.username_value_label.set_text(str(properties["user"]))
+        self.username_value_label.set_text(properties["user"])
 
         path = properties.get("path") or ""
         bitrate = properties.get("bitrate") or ""
@@ -109,13 +109,13 @@ class FileProperties(Dialog):
         speed = properties.get("speed") or 0
         country = properties.get("country") or ""
 
-        self.path_value_label.set_text(str(path))
+        self.path_value_label.set_text(path)
         self.path_row.set_visible(bool(path))
 
-        self.bitrate_value_label.set_text(str(bitrate))
+        self.bitrate_value_label.set_text(bitrate)
         self.bitrate_row.set_visible(bool(bitrate))
 
-        self.length_value_label.set_text(str(length))
+        self.length_value_label.set_text(length)
         self.length_row.set_visible(bool(length))
 
         self.queue_value_label.set_text(humanize(queue_position))
@@ -124,7 +124,7 @@ class FileProperties(Dialog):
         self.speed_value_label.set_text(human_speed(speed))
         self.speed_row.set_visible(bool(speed))
 
-        self.country_value_label.set_text(str(country))
+        self.country_value_label.set_text(country)
         self.country_row.set_visible(bool(country))
 
         self.update_title()

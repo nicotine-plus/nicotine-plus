@@ -88,7 +88,8 @@ disable=missing-class-docstring,
         pointless-string-statement,
         duplicate-code,
         no-value-for-parameter,
-        no-self-use
+        no-self-use,
+        superfluous-parens
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option
@@ -490,7 +491,7 @@ exclude-too-few-public-methods=
 ignored-parents=
 
 # Maximum number of arguments for function / method.
-max-args=16
+max-args=18
 
 # Maximum number of attributes for a class (see R0902).
 max-attributes=150
@@ -563,7 +564,5 @@ preferred-modules=
 
 [EXCEPTIONS]
 
-# Exceptions that will emit a warning when being caught. Defaults to
-# "BaseException, Exception".
-overgeneral-exceptions=BaseException,
-                       Exception
+# Exceptions that will emit a warning when being caught.
+overgeneral-exceptions=builtins.BaseException,builtins.Exception

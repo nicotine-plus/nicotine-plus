@@ -46,21 +46,21 @@ class MockSocket(Mock):
 
     def set_data(self, datafile):
 
-        windows_line_ending = b'\r\n'
-        unix_line_ending = b'\n'
+        windows_line_ending = b"\r\n"
+        unix_line_ending = b"\n"
 
         file_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), datafile)
 
-        with open(encode_path(file_path), 'rb') as file_handle:
+        with open(encode_path(file_path), "rb") as file_handle:
             content = file_handle.read()
 
         content = content.replace(windows_line_ending, unix_line_ending)
-        logs = pickle.loads(content, encoding='bytes')
+        logs = pickle.loads(content, encoding="bytes")
         self.events = {}
 
-        for mode in b'send', b'recv':
-            for time, event in logs[b'transactions'][mode].items():
-                self.events[time] = (mode.decode('latin1'), event)
+        for mode in b"send", b"recv":
+            for time, event in logs[b"transactions"][mode].items():
+                self.events[time] = (mode.decode("latin1"), event)
 
     @staticmethod
     def send(data):
@@ -69,7 +69,7 @@ class MockSocket(Mock):
     @staticmethod
     def recv(bufsize):
         print(f"recving {bufsize} data")
-        return b''
+        return b""
 
 
 class SoulseekNetworkTest(TestCase):
@@ -95,21 +95,21 @@ class SoulseekNetworkTest(TestCase):
         sleep(SLSKPROTO_RUN_TIME / 2)
         self.assertIsNone(self.protothread._server_socket)  # pylint: disable=protected-access
 
-    @patch('socket.socket')
+    @patch("socket.socket")
     def test_server_conn(self, _mock_socket):
 
-        self.queue.append(ServerConnect(addr=('0.0.0.0', 0), login=('dummy', 'dummy'), listen_port_range=(1024, 65535)))
+        self.queue.append(ServerConnect(addr=("0.0.0.0", 0), login=("dummy", "dummy"), listen_port_range=(1024, 65535)))
         sleep(SLSKPROTO_RUN_TIME)
 
-        if hasattr(socket, 'TCP_USER_TIMEOUT'):
+        if hasattr(socket, "TCP_USER_TIMEOUT"):
             self.assertEqual(
                 self.protothread._server_socket.setsockopt.call_count, 10)  # pylint: disable=no-member,protected-access
 
-        elif hasattr(socket, 'TCP_KEEPIDLE') or hasattr(socket, 'TCP_KEEPALIVE'):
+        elif hasattr(socket, "TCP_KEEPIDLE") or hasattr(socket, "TCP_KEEPALIVE"):
             self.assertEqual(
                 self.protothread._server_socket.setsockopt.call_count, 9)  # pylint: disable=no-member,protected-access
 
-        elif hasattr(socket, 'SIO_KEEPALIVE_VALS'):
+        elif hasattr(socket, "SIO_KEEPALIVE_VALS"):
             self.assertEqual(
                 self.protothread._server_socket.ioctl.call_count, 1)       # pylint: disable=no-member,protected-access
             self.assertEqual(
@@ -122,7 +122,7 @@ class SoulseekNetworkTest(TestCase):
 
     def test_login(self):
 
-        self.queue.append(ServerConnect(addr=('0.0.0.0', 0), login=('dummy', 'dummy'), listen_port_range=(1024, 65535)))
+        self.queue.append(ServerConnect(addr=("0.0.0.0", 0), login=("dummy", "dummy"), listen_port_range=(1024, 65535)))
 
         sleep(SLSKPROTO_RUN_TIME / 2)
 

@@ -52,7 +52,7 @@ from pynicotine.utils import encode_path
 
 if importlib.util.find_spec("_gdbm"):
 
-    def shelve_open_gdbm(filename, flag='c', protocol=None, writeback=False):
+    def shelve_open_gdbm(filename, flag="c", protocol=None, writeback=False):
         import _gdbm  # pylint: disable=import-error
         return shelve.Shelf(_gdbm.open(filename, flag), protocol, writeback)
 
@@ -68,7 +68,7 @@ elif importlib.util.find_spec("semidbm"):
     except AttributeError:
         pass
 
-    def shelve_open_semidbm(filename, flag='c', protocol=None, writeback=False):
+    def shelve_open_semidbm(filename, flag="c", protocol=None, writeback=False):
         return shelve.Shelf(semidbm.open(filename, flag), protocol, writeback)
 
     shelve.open = shelve_open_semidbm
@@ -79,6 +79,32 @@ else:
         "option2": "semidbm"
     })
     sys.exit()
+
+
+class FileTypes:
+    ARCHIVE = {
+        "7z", "br", "bz2", "gz", "iso", "lz", "lzma", "rar", "tar", "tbz", "tbz2", "tgz", "xz", "zip", "zst"
+    }
+    AUDIO = {
+        "aac", "ac3", "afc", "aifc", "aif", "aiff", "ape", "dff", "dts", "flac", "it", "m4a", "mid", "midi", "mod",
+        "mp1", "mp2", "mp3", "oga", "ogg", "opus", "s3m", "wav", "wma", "wv", "xm"
+    }
+    EXECUTABLE = {
+        "apk", "appimage", "bat", "deb", "dmg", "flatpak", "exe", "jar", "msi", "pkg", "rpm", "sh"
+    }
+    IMAGE = {
+        "apng", "avif", "bmp", "gif", "heic", "heif", "ico", "jfif", "jp2", "jpg", "jpe", "jpeg", "png", "psd",
+        "raw", "svg", "svgz", "tif", "tiff", "webp"
+    }
+    DOCUMENT_TEXT = {
+        "cue", "csv", "doc", "docx", "epub", "htm", "html", "m3u", "m3u8", "md5", "log", "lrc", "md", "nfo", "odp",
+        "ods", "odt", "opf", "oxps", "pdf", "ppt", "pptx", "ps", "rst", "rtf", "sfv", "sha1", "sha256", "srt",
+        "txt", "xls", "xlsx", "xps"
+    }
+    VIDEO = {
+        "3gp", "amv", "asf", "avi", "f4v", "flv", "m2ts", "m2v", "m4p", "m4v", "mov", "mp4", "mpe", "mpeg", "mpg",
+        "mkv", "mts", "ogv", "ts", "vob", "webm", "wmv"
+    }
 
 
 class Scanner(Process):
@@ -103,7 +129,7 @@ class Scanner(Process):
     def run(self):
 
         try:
-            rename_process(b'nicotine-scan')
+            rename_process(b"nicotine-scan")
 
             from pynicotine.external.tinytag import TinyTag
             self.tinytag = TinyTag()
@@ -175,7 +201,7 @@ class Scanner(Process):
         db_path = os.path.join(self.config.data_dir, destination + ".db")
         self.remove_db_file(db_path)
 
-        return shelve.open(db_path, flag='n', protocol=pickle.HIGHEST_PROTOCOL)
+        return shelve.open(db_path, flag="n", protocol=pickle.HIGHEST_PROTOCOL)
 
     @staticmethod
     def remove_db_file(db_path):
@@ -191,21 +217,22 @@ class Scanner(Process):
 
     def real2virtual(self, path):
 
-        path = path.replace('/', '\\')
+        path = path.replace("/", "\\")
 
         for virtual, real, *_unused in Shares.virtual_mapping(self.config):
             # Remove slashes from share name to avoid path conflicts
-            virtual = virtual.replace('/', '_').replace('\\', '_')
+            virtual = virtual.replace("/", "_").replace("\\", "_")
 
-            real = real.replace('/', '\\')
+            real = real.replace("/", "\\")
             if path == real:
                 return virtual
 
             # Use rstrip to remove trailing separator from root directories
-            real = real.rstrip('\\') + '\\'
+            real = real.rstrip("\\") + "\\"
 
             if path.startswith(real):
-                virtualpath = virtual + '\\' + path[len(real):]
+                path_no_prefix = path[len(real):]
+                virtualpath = f"{virtual}\\{path_no_prefix}"
                 return virtualpath
 
         return "__INTERNAL_ERROR__" + path
@@ -289,8 +316,8 @@ class Scanner(Process):
 
             except OSError as error:
                 self.queue.put((_("Error while scanning folder %(path)s: %(error)s"), {
-                    'path': folder,
-                    'error': error
+                    "path": folder,
+                    "error": error
                 }, LogLevel.DEFAULT))
 
         # Save data to databases
@@ -316,7 +343,7 @@ class Scanner(Process):
 
         # If the last folder in the path starts with a dot, we exclude it
         if filename is None:
-            last_folder = os.path.basename(os.path.normpath(folder.replace('\\', '/')))
+            last_folder = os.path.basename(os.path.normpath(folder.replace("\\", "/")))
 
             if last_folder.startswith("."):
                 return True
@@ -333,7 +360,7 @@ class Scanner(Process):
 
             if entry is None:
                 if filename is not None:
-                    entry_stat = os.stat(encode_path(folder + '\\' + filename))
+                    entry_stat = os.stat(encode_path(f"{folder}\\{filename}"))
                 else:
                     entry_stat = os.stat(encode_path(folder))
             else:
@@ -366,8 +393,8 @@ class Scanner(Process):
 
             except KeyError:
                 self.queue.put(("Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'", {
-                    'vdir': virtual_folder,
-                    'dir': folder
+                    "vdir": virtual_folder,
+                    "dir": folder
                 }, LogLevel.MISCELLANEOUS))
 
         try:
@@ -388,11 +415,11 @@ class Scanner(Process):
 
                         except Exception as error:
                             self.queue.put((_("Error while scanning file %(path)s: %(error)s"),
-                                           {'path': entry.path, 'error': error}, LogLevel.DEFAULT))
+                                           {"path": entry.path, "error": error}, LogLevel.DEFAULT))
 
                         continue
 
-                    path = entry.path.decode("utf-8", "replace").replace('\\', os.sep)
+                    path = entry.path.decode("utf-8", "replace").replace("\\", os.sep)
 
                     if self.is_hidden(path, entry=entry):
                         continue
@@ -407,7 +434,7 @@ class Scanner(Process):
 
         except OSError as error:
             self.queue.put((_("Error while scanning folder %(path)s: %(error)s"),
-                           {'path': folder, 'error': error}, LogLevel.DEFAULT))
+                           {"path": folder, "error": error}, LogLevel.DEFAULT))
 
         if not folder_unchanged:
             files[virtual_folder] = file_list
@@ -436,7 +463,7 @@ class Scanner(Process):
 
             except Exception as error:
                 self.queue.put((_("Error while scanning metadata for file %(path)s: %(error)s"),
-                               {'path': pathname, 'error': error}, LogLevel.DEFAULT))
+                               {"path": pathname, "error": error}, LogLevel.DEFAULT))
 
         if audio is not None:
             bitrate = audio.bitrate
@@ -511,12 +538,12 @@ class Scanner(Process):
                 filename = fileinfo[0]
 
                 # Add to file index
-                fileinfo[0] = folder + '\\' + filename
-                fileindex_db[repr(file_index)] = fileinfo
+                fileinfo[0] = f"{folder}\\{filename}"
+                fileindex_db[f"{file_index}"] = fileinfo
 
                 # Collect words from filenames for Search index
                 # Use set to prevent duplicates
-                for k in set((folder + " " + filename).lower().translate(TRANSLATE_PUNCTUATION).split()):
+                for k in set((f"{folder} {filename}").lower().translate(TRANSLATE_PUNCTUATION).split()):
                     try:
                         wordindex[k].append(file_index)
                     except KeyError:
@@ -582,17 +609,17 @@ class Shares:
 
     def virtual2real(self, path):
 
-        path = path.replace('/', os.sep).replace('\\', os.sep)
+        path = path.replace("/", os.sep).replace("\\", os.sep)
 
         for virtual, real, *_unused in self.virtual_mapping(config):
             # Remove slashes from share name to avoid path conflicts
-            virtual = virtual.replace('/', '_').replace('\\', '_')
+            virtual = virtual.replace("/", "_").replace("\\", "_")
 
             if path == virtual:
                 return real
 
             if path.startswith(virtual + os.sep):
-                realpath = real.rstrip('/\\') + path[len(virtual):]
+                realpath = real.rstrip("/\\") + path[len(virtual):]
                 return realpath
 
         return "__INTERNAL_ERROR__" + path
@@ -613,13 +640,13 @@ class Shares:
             virtual_name = "Shared"
 
         # Remove slashes from share name to avoid path conflicts
-        virtual_name = virtual_name.replace('/', '_').replace('\\', '_')
+        virtual_name = virtual_name.replace("/", "_").replace("\\", "_")
         new_virtual_name = str(virtual_name)
 
         # Check if virtual share name is already in use
         counter = 1
         while new_virtual_name in (x[0] for x in shared_folders):
-            new_virtual_name = virtual_name + str(counter)
+            new_virtual_name = f"{virtual_name}{counter}"
             counter += 1
 
         return new_virtual_name
@@ -631,7 +658,7 @@ class Shares:
             if isinstance(shared_folder, tuple):
                 return shared_folder
 
-            virtual = shared_folder.replace('/', '_').replace('\\', '_').strip('_')
+            virtual = shared_folder.replace("/", "_").replace("\\", "_").strip("_")
             log.add("Renaming shared folder '%s' to '%s'. A rescan of your share is required.",
                     (shared_folder, virtual))
             return virtual, shared_folder
@@ -652,7 +679,7 @@ class Shares:
 
             try:
                 if os.path.exists(db_path_encoded):
-                    shares[destination] = shelve.open(db_path, flag='r', protocol=pickle.HIGHEST_PROTOCOL)
+                    shares[destination] = shelve.open(db_path, flag="r", protocol=pickle.HIGHEST_PROTOCOL)
 
             except Exception:
                 from traceback import format_exc
@@ -667,7 +694,7 @@ class Shares:
             return True
 
         log.add(_("Failed to process the following databases: %(names)s"), {
-            'names': '\n'.join(errors)
+            "names": "\n".join(errors)
         })
         log.add(exception)
         return False
@@ -679,7 +706,7 @@ class Shares:
             "path": realfilename
         })
 
-        folder_path, _sep, basename = virtualfilename.rpartition('\\')
+        folder_path, _sep, basename = virtualfilename.rpartition("\\")
         shared_files = self.share_dbs.get("files")
         bshared_files = self.share_dbs.get("buddyfiles")
         file_is_shared = False
@@ -803,7 +830,7 @@ class Shares:
 
         return shared_folders, shared_folders_buddy
 
-    def process_scanner_messages(self, scanner, scanner_queue):
+    def process_scanner_messages(self, scanner, scanner_queue, emit_event):
 
         while scanner.is_alive():
             # Cooldown
@@ -820,11 +847,11 @@ class Shares:
                     log.add(template, msg_args=args, level=log_level)
 
                 elif isinstance(item, float):
-                    events.emit("set-scan-progress", item)
+                    emit_event("set-scan-progress", item)
 
                 elif item == "indeterminate":
-                    events.emit("show-scan-progress")
-                    events.emit("set-scan-indeterminate")
+                    emit_event("show-scan-progress")
+                    emit_event("set-scan-indeterminate")
 
                 elif isinstance(item, SharedFileListResponse):
                     if item.type == "normal":
@@ -859,7 +886,7 @@ class Shares:
             unavailable_shares = self.check_shares_available()
 
             if unavailable_shares:
-                log.add(_("Rescan aborted due to unavailable shares"))
+                log.add(_("Rescan aborted due to unavailable shares: %s"), unavailable_shares)
                 rescan = False
 
                 events.emit("shares-unavailable", unavailable_shares)
@@ -877,17 +904,18 @@ class Shares:
 
         if use_thread:
             Thread(
-                target=self._process_scanner, args=(scanner, scanner_queue), name="ProcessShareScanner", daemon=True
+                target=self._process_scanner, args=(scanner, scanner_queue, events.emit_main_thread),
+                name="ProcessShareScanner", daemon=True
             ).start()
             return None
 
-        return self._process_scanner(scanner, scanner_queue)
+        return self._process_scanner(scanner, scanner_queue, events.emit)
 
-    def _process_scanner(self, scanner, scanner_queue):
+    def _process_scanner(self, scanner, scanner_queue, emit_event):
 
         # Let the scanner process do its thing
-        error = self.process_scanner_messages(scanner, scanner_queue)
-        events.emit("hide-scan-progress")
+        error = self.process_scanner_messages(scanner, scanner_queue, emit_event)
+        emit_event("hide-scan-progress")
 
         # Scanning done, load shares in the main process again
         self.load_shares(self.share_dbs, self.share_db_paths)
@@ -918,7 +946,7 @@ class Shares:
 
         self.requested_share_times[user] = request_time
 
-        log.add(_("User %(user)s is browsing your list of shared files"), {'user': user})
+        log.add(_("User %(user)s is browsing your list of shared files"), {"user": user})
 
         ip_address, _port = msg.init.addr
         checkuser, reason = core.network_filter.check_user(user, ip_address)
@@ -975,9 +1003,9 @@ class Shares:
                         init=init, directory=msg.dir, token=msg.token, shares=shares[msg.dir]))
                     return
 
-                if msg.dir.rstrip('\\') in shares:
+                if msg.dir.rstrip("\\") in shares:
                     core.queue.append(FolderContentsResponse(
-                        init=init, directory=msg.dir, token=msg.token, shares=shares[msg.dir.rstrip('\\')]))
+                        init=init, directory=msg.dir, token=msg.token, shares=shares[msg.dir.rstrip("\\")]))
                     return
 
             except Exception as error:

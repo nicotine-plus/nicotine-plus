@@ -17,11 +17,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys
-import threading
 import time
 
-from collections import deque
-
+from pynicotine.cli import cli
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
@@ -32,15 +30,14 @@ class Application:
 
     def __init__(self):
 
-        self.init_exception_handler()
-        self.thread_events = deque()
+        sys.excepthook = self.exception_hook
 
         for log_level in ("download", "upload"):
             log.add_log_level(log_level, is_permanent=False)
 
         for event_name, callback in (
-            ("shares-unavailable", self.shares_unavailable),
-            ("thread-event", self.thread_event)
+            ("confirm-quit", self.on_confirm_quit),
+            ("shares-unavailable", self.on_shares_unavailable)
         ):
             events.connect(event_name, callback)
 
@@ -49,60 +46,33 @@ class Application:
         core.start()
         core.connect()
 
-        # Main loop, process events from threads
+        # Main loop, process events from threads 20 times per second
         while not core.shutdown:
-            if self.thread_events:
-                event_list = []
-
-                while self.thread_events:
-                    event_list.append(self.thread_events.popleft())
-
-                for event_name, args, kwargs in event_list:
-                    events.emit(event_name, *args, **kwargs)
-
-            time.sleep(1 / 60)
+            events.process_thread_events()
+            time.sleep(0.05)
 
         # Shut down with exit code 0 (success)
         config.write_configuration()
         return 0
 
-    def thread_event(self, event_name, *args, **kwargs):
-        self.thread_events.append((event_name, args, kwargs))
-
-    def init_exception_handler(self):
-
-        sys.excepthook = self.on_critical_error
-
-        if hasattr(threading, "excepthook"):
-            threading.excepthook = self.on_critical_error_threading
-            return
-
-        # Workaround for Python <= 3.7
-        init_thread = threading.Thread.__init__
-
-        def init_thread_excepthook(self, *args, **kwargs):
-
-            init_thread(self, *args, **kwargs)
-            run_thread = self.run
-
-            def run_with_excepthook(*args2, **kwargs2):
-                try:
-                    run_thread(*args2, **kwargs2)
-                except Exception:
-                    sys.excepthook(*sys.exc_info())
-
-            self.run = run_with_excepthook
-
-        threading.Thread.__init__ = init_thread_excepthook
-
-    def on_critical_error(self, _exc_type, exc_value, _exc_traceback):
+    def exception_hook(self, _exc_type, exc_value, _exc_traceback):
         core.quit()
         raise exc_value
 
-    @staticmethod
-    def on_critical_error_threading(args):
-        raise args.exc_value
+    def on_confirm_quit_response(self, user_input):
+        if user_input.lower().startswith("y"):
+            core.quit()
 
-    def shares_unavailable(self, shares):
-        for virtual_name, folder_path in shares:
-            log.add(f"• \"{virtual_name}\" {folder_path}")
+    def on_confirm_quit(self, _remember):
+        cli.prompt("Do you really want to quit Nicotine+ (Y/N)?: ", callback=self.on_confirm_quit_response)
+
+    def on_shares_unavailable_response(self, user_input):
+
+        if user_input == "test":
+            core.shares.rescan_shares()
+            return
+
+        log.add("no")
+
+    def on_shares_unavailable(self, _shares):
+        cli.prompt("Enter some text: ", callback=self.on_shares_unavailable_response)

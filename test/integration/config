@@ -205,6 +205,7 @@ reverse_file_paths = True
 language = 
 textviewfont = 
 chatcommand = #908e8b
+exact_file_sizes = False
 
 [private_rooms]
 rooms = {}

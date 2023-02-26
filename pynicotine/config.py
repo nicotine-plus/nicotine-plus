@@ -67,8 +67,8 @@ class Config:
 © 2001–2003 PySoulSeek Contributors"""
 
         self.website_url = "https://nicotine-plus.org"
-        self.privileges_url = "https://www.slsknet.org/userlogin.php?username=%s"
-        self.portchecker_url = "http://tools.slsknet.org/porttest.php?port=%s"
+        self.privileges_url = "https://www.slsknet.org/qtlogin.php?username=%s"
+        self.portchecker_url = "https://www.slsknet.org/porttest.php?port=%s"
         self.issue_tracker_url = "https://github.com/nicotine-plus/nicotine-plus/issues"
         self.translations_url = "https://nicotine-plus.org/doc/TRANSLATIONS"
 
@@ -86,7 +86,7 @@ class Config:
 
         if sys.platform == "win32":
             try:
-                data_dir = os.path.join(os.environ['APPDATA'], 'nicotine')
+                data_dir = os.path.join(os.environ["APPDATA"], "nicotine")
             except KeyError:
                 data_dir, _filename = os.path.split(sys.argv[0])
 
@@ -95,7 +95,7 @@ class Config:
 
         home = os.path.expanduser("~")
 
-        legacy_dir = os.path.join(home, '.nicotine')
+        legacy_dir = os.path.join(home, ".nicotine")
 
         if os.path.isdir(legacy_dir.encode("utf-8")):
             return legacy_dir, legacy_dir
@@ -103,12 +103,12 @@ class Config:
         def xdg_path(xdg, default):
             path = os.environ.get(xdg)
 
-            path = path.split(':')[0] if path else default
+            path = path.split(":")[0] if path else default
 
-            return os.path.join(path, 'nicotine')
+            return os.path.join(path, "nicotine")
 
-        config_dir = xdg_path('XDG_CONFIG_HOME', os.path.join(home, '.config'))
-        data_dir = xdg_path('XDG_DATA_HOME', os.path.join(home, '.local', 'share'))
+        config_dir = xdg_path("XDG_CONFIG_HOME", os.path.join(home, ".config"))
+        data_dir = xdg_path("XDG_DATA_HOME", os.path.join(home, ".local", "share"))
 
         return config_dir, data_dir
 
@@ -133,7 +133,7 @@ class Config:
             from pynicotine.logfacility import log
 
             log.add(_("Can't create directory '%(path)s', reported error: %(error)s"),
-                    {'path': path, 'error': msg})
+                    {"path": path, "error": msg})
             return False
 
         return True
@@ -153,7 +153,7 @@ class Config:
             from pynicotine.logfacility import log
 
             log.add(_("Can't create directory '%(path)s', reported error: %(error)s"),
-                    {'path': self.data_dir, 'error': msg})
+                    {"path": self.data_dir, "error": msg})
 
     def load_config(self):
 
@@ -185,9 +185,9 @@ class Config:
                 "command_aliases": {}
             },
             "transfers": {
-                "incompletedir": os.path.join(self.data_dir, 'incomplete'),
-                "downloaddir": os.path.join(self.data_dir, 'downloads'),
-                "uploaddir": os.path.join(self.data_dir, 'received'),
+                "incompletedir": os.path.join(self.data_dir, "incomplete"),
+                "downloaddir": os.path.join(self.data_dir, "downloads"),
+                "uploaddir": os.path.join(self.data_dir, "received"),
                 "usernamesubfolders": False,
                 "shared": [],
                 "buddyshared": [],
@@ -229,7 +229,6 @@ class Config:
                 "downloadregexp": "",
                 "downloadfilters": [
                     ["desktop.ini", 1],
-                    ["folder.jpg", 1],
                     ["*.url", 1],
                     ["thumbs.db", 1],
                     ["albumart(_{........-....-....-....-............}_)?(_?(large|small))?\\.jpg", 0]
@@ -403,7 +402,8 @@ class Config:
                 "maximized": True,
                 "urgencyhint": True,
                 "file_path_tooltips": True,
-                "reverse_file_paths": True
+                "reverse_file_paths": True,
+                "exact_file_sizes": False
             },
             "private_rooms": {
                 "rooms": {}
@@ -583,7 +583,7 @@ class Config:
         from pynicotine.utils import encode_path
 
         try:
-            with open(encode_path(filename), 'a+', encoding="utf-8") as file_handle:
+            with open(encode_path(filename), "a+", encoding="utf-8") as file_handle:
                 file_handle.seek(0)
                 self.parser.read_file(file_handle)
 
@@ -609,15 +609,15 @@ class Config:
         conv_filename = encode_path(f"{self.filename}.conv")
         os.replace(self.filename, conv_filename)
 
-        with open(conv_filename, 'rb') as file_handle:
+        with open(conv_filename, "rb") as file_handle:
             rawdata = file_handle.read()
 
-        from_encoding = detect(rawdata)['encoding']
+        from_encoding = detect(rawdata)["encoding"]
 
         with open(conv_filename, encoding=from_encoding) as file_read:
-            with open(encode_path(self.filename), 'w', encoding="utf-8") as file_write:
+            with open(encode_path(self.filename), "w", encoding="utf-8") as file_write:
                 for line in file_read:
-                    file_write.write(line[:-1] + '\r\n')
+                    file_write.write(line[:-1] + "\r\n")
 
         os.remove(conv_filename)
 
@@ -645,7 +645,7 @@ class Config:
                 elif (j not in self.defaults.get(i, {}) and j not in self.removed_options.get(i, {})
                         and i != "plugins" and j != "filter"):
                     log.add_debug("Unknown config option '%(option)s' in section '%(section)s'",
-                                  {'option': j, 'section': i})
+                                  {"option": j, "section": i})
 
                 else:
                     """ Attempt to get the default value for a config option. If there's no default
@@ -692,9 +692,9 @@ class Config:
                         self.sections[i][j] = default_val
 
                         log.add("Config error: Couldn't decode '%s' section '%s' value '%s', value has been reset", (
-                            (i[:120] + '…') if len(i) > 120 else i,
-                            (j[:120] + '…') if len(j) > 120 else j,
-                            (val[:120] + '…') if len(val) > 120 else val
+                            (i[:120] + "…") if len(i) > 120 else i,
+                            (j[:120] + "…") if len(j) > 120 else j,
+                            (val[:120] + "…") if len(val) > 120 else val
                         ))
 
         # Add any default options not present in the config file

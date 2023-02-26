@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.0"/>
-  <object class="GtkAdjustment" id="adjustment_DownloadSpeed">
+  <object class="GtkAdjustment" id="_speed_adjustment">
     <property name="upper">1000000</property>
     <property name="step-increment">10</property>
     <property name="page-increment">50</property>
   </object>
-  <object class="GtkAdjustment" id="adjustment_DownloadSpeedAlternative">
+  <object class="GtkAdjustment" id="_alt_speed_adjustment">
     <property name="upper">1000000</property>
     <property name="step-increment">10</property>
     <property name="page-increment">50</property>
@@ -34,20 +34,20 @@
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="AutoclearFinished">
+          <object class="GtkCheckButton" id="autoclear_downloads_toggle">
             <property name="label" translatable="yes">Autoclear finished/filtered downloads from transfer list</property>
             <property name="visible">True</property>
             <property name="use-underline">True</property>
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="DownloadReverseOrder">
+          <object class="GtkCheckButton" id="download_reverse_order_toggle">
             <property name="label" translatable="yes">Download folders in reverse alphanumerical order</property>
             <property name="visible">True</property>
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="UsernameSubfolders">
+          <object class="GtkCheckButton" id="enable_username_subfolders_toggle">
             <property name="label" translatable="yes">Store completed downloads in username subfolders</property>
             <property name="visible">True</property>
             <property name="use-underline">True</property>
@@ -59,16 +59,16 @@
             <property name="homogeneous">True</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkCheckButton" id="RemoteDownloads">
-                <property name="label" translatable="yes">Allow these users to send you files:</property>
+              <object class="GtkCheckButton" id="accept_sent_files_toggle">
+                <property name="label" translatable="yes">Allow users to send you any files:</property>
                 <property name="visible">True</property>
                 <property name="use-underline">True</property>
               </object>
             </child>
             <child>
-              <object class="GtkComboBoxText" id="UploadsAllowed">
+              <object class="GtkComboBoxText" id="sent_files_permission_combobox">
                 <property name="visible">True</property>
-                <property name="sensitive" bind-source="RemoteDownloads" bind-property="active" bind-flags="bidirectional|sync-create"/>
+                <property name="sensitive" bind-source="accept_sent_files_toggle" bind-property="active" bind-flags="bidirectional|sync-create"/>
                 <property name="valign">center</property>
                 <items>
                   <item translatable="yes">No one</item>
@@ -92,11 +92,11 @@
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
-                <property name="mnemonic-widget">DownloadDoubleClick</property>
+                <property name="mnemonic-widget">download_double_click_combobox</property>
               </object>
             </child>
             <child>
-              <object class="GtkComboBoxText" id="DownloadDoubleClick">
+              <object class="GtkComboBoxText" id="download_double_click_combobox">
                 <property name="visible">True</property>
                 <property name="valign">center</property>
                 <items>
@@ -134,7 +134,7 @@
           </object>
         </child>
         <child>
-          <object class="GtkRadioButton" id="UnlimitedDownloadSpeed">
+          <object class="GtkRadioButton" id="use_unlimited_speed_radio">
             <property name="visible">True</property>
             <property name="hexpand">True</property>
             <property name="label" translatable="yes">Unlimited download speed</property>
@@ -146,18 +146,18 @@
             <property name="visible">True</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkRadioButton" id="UseDownloadSpeedLimit">
+              <object class="GtkRadioButton" id="use_speed_limit_radio">
                 <property name="label" translatable="yes">Use download speed limit (KiB/s):</property>
                 <property name="hexpand">True</property>
                 <property name="visible">True</property>
-                <property name="group">UnlimitedDownloadSpeed</property>
+                <property name="group">use_unlimited_speed_radio</property>
               </object>
             </child>
             <child>
-              <object class="GtkSpinButton" id="DownloadSpeed">
+              <object class="GtkSpinButton" id="speed_spinner">
                 <property name="visible">True</property>
                 <property name="tooltip-text" translatable="yes">Kibibytes (2^10 bytes) per second.</property>
-                <property name="adjustment">adjustment_DownloadSpeed</property>
+                <property name="adjustment">_speed_adjustment</property>
                 <property name="numeric">True</property>
                 <property name="valign">center</property>
                 <property name="max-width-chars">8</property>
@@ -170,18 +170,18 @@
             <property name="visible">True</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkRadioButton" id="UseAltDownloadSpeedLimit">
+              <object class="GtkRadioButton" id="use_alt_speed_limit_radio">
                 <property name="label" translatable="yes">Use alternative download speed limit (KiB/s):</property>
                 <property name="hexpand">True</property>
                 <property name="visible">True</property>
-                <property name="group">UnlimitedDownloadSpeed</property>
+                <property name="group">use_unlimited_speed_radio</property>
               </object>
             </child>
             <child>
-              <object class="GtkSpinButton" id="DownloadSpeedAlternative">
+              <object class="GtkSpinButton" id="alt_speed_spinner">
                 <property name="visible">True</property>
                 <property name="tooltip-text" translatable="yes">Kibibytes (2^10 bytes) per second.</property>
-                <property name="adjustment">adjustment_DownloadSpeedAlternative</property>
+                <property name="adjustment">_alt_speed_adjustment</property>
                 <property name="numeric">True</property>
                 <property name="valign">center</property>
                 <property name="max-width-chars">8</property>
@@ -216,16 +216,16 @@
             <property name="spacing">12</property>
             <child>
               <object class="GtkLabel">
-                <property name="label" translatable="yes">Incomplete file folder:</property>
+                <property name="label" translatable="yes">Finished downloads:</property>
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
-                <property name="mnemonic-widget">IncompleteDir</property>
+                <property name="mnemonic-widget">download_folder_button</property>
               </object>
             </child>
             <child>
-              <object class="GtkButton" id="IncompleteDir">
+              <object class="GtkButton" id="download_folder_button">
                 <property name="visible">True</property>
                 <property name="valign">center</property>
               </object>
@@ -239,16 +239,16 @@
             <property name="spacing">12</property>
             <child>
               <object class="GtkLabel">
-                <property name="label" translatable="yes">Download folder:</property>
+                <property name="label" translatable="yes">Incomplete downloads:</property>
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
-                <property name="mnemonic-widget">DownloadDir</property>
+                <property name="mnemonic-widget">incomplete_folder_button</property>
               </object>
             </child>
             <child>
-              <object class="GtkButton" id="DownloadDir">
+              <object class="GtkButton" id="incomplete_folder_button">
                 <property name="visible">True</property>
                 <property name="valign">center</property>
               </object>
@@ -262,16 +262,16 @@
             <property name="spacing">12</property>
             <child>
               <object class="GtkLabel">
-                <property name="label" translatable="yes">Save buddies' uploads to:</property>
+                <property name="label" translatable="yes">Received files:</property>
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
-                <property name="mnemonic-widget">UploadDir</property>
+                <property name="mnemonic-widget">received_folder_button</property>
               </object>
             </child>
             <child>
-              <object class="GtkButton" id="UploadDir">
+              <object class="GtkButton" id="received_folder_button">
                 <property name="visible">True</property>
                 <property name="valign">center</property>
               </object>
@@ -315,11 +315,11 @@
                     <property name="label" translatable="yes">Run command after file download finishes ($ for file path):</property>
                     <property name="wrap">True</property>
                     <property name="wrap-mode">word-char</property>
-                    <property name="mnemonic-widget">AfterDownload</property>
+                    <property name="mnemonic-widget">file_finished_command_entry</property>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkEntry" id="AfterDownload">
+                  <object class="GtkEntry" id="file_finished_command_entry">
                     <property name="visible">True</property>
                     <property name="width-chars">16</property>
                   </object>
@@ -338,11 +338,11 @@
                     <property name="label" translatable="yes">Run command after folder download finishes ($ for folder path):</property>
                     <property name="wrap">True</property>
                     <property name="wrap-mode">word-char</property>
-                    <property name="mnemonic-widget">AfterFolder</property>
+                    <property name="mnemonic-widget">folder_finished_command_entry</property>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkEntry" id="AfterFolder">
+                  <object class="GtkEntry" id="folder_finished_command_entry">
                     <property name="visible">True</property>
                     <property name="width-chars">16</property>
                   </object>
@@ -373,7 +373,7 @@
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="DownloadFilter">
+          <object class="GtkCheckButton" id="enable_filters_toggle">
             <property name="label" translatable="yes">Enable download filters</property>
             <property name="visible">True</property>
             <property name="use-underline">True</property>
@@ -398,7 +398,7 @@
                 <property name="visible">True</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkScrolledWindow" id="FilterView">
+                  <object class="GtkScrolledWindow" id="filter_list_container">
                     <property name="visible">True</property>
                     <property name="height-request">200</property>
                     <property name="hexpand">True</property>
@@ -558,7 +558,7 @@
             <property name="visible">True</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkButton" id="_VerifyFilters">
+              <object class="GtkButton" id="_verify_filters_button">
                 <property name="visible">True</property>
                 <signal name="clicked" handler="on_verify_filter"/>
                 <child>
@@ -576,7 +576,7 @@
                         <property name="visible">True</property>
                         <property name="label" translatable="yes">Verify Filters</property>
                         <property name="use-underline">True</property>
-                        <property name="mnemonic-widget">_VerifyFilters</property>
+                        <property name="mnemonic-widget">_verify_filters_button</property>
                       </object>
                     </child>
                   </object>
@@ -584,7 +584,7 @@
               </object>
             </child>
             <child>
-              <object class="GtkLabel" id="VerifiedLabel">
+              <object class="GtkLabel" id="filter_status_label">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Unverified</property>
                 <property name="selectable">True</property>

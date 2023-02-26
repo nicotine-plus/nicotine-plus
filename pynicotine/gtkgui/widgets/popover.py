@@ -35,20 +35,20 @@ class Popover:
         self.default_width = width
         self.default_height = height
 
-        self.popover = Gtk.Popover(child=content_box)
-        self.popover.connect("notify::visible", self._on_show)
-        self.popover.connect("closed", self._on_close)
+        self.widget = Gtk.Popover(child=content_box)
+        self.widget.connect("notify::visible", self._on_visible_changed)
+        self.widget.connect("closed", self._on_close)
 
-        add_css_class(self.popover, "generic-popover")
+        add_css_class(self.widget, "generic-popover")
 
-    def _on_show(self, _popover, param):
+    def _on_visible_changed(self, *_args):
 
-        if not self.popover.get_property(param.name):
+        if not self.widget.is_visible():
             return
 
         if GTK_API_VERSION >= 4:
             # Workaround for https://gitlab.gnome.org/GNOME/gtk/-/issues/4529
-            self.popover.child_focus(Gtk.DirectionType.TAB_FORWARD)
+            self.widget.child_focus(Gtk.DirectionType.TAB_FORWARD)
 
         self._resize_popover()
 
@@ -76,15 +76,15 @@ class Popover:
         if main_window_height and popover_height > main_window_height:
             popover_height = main_window_height - 60
 
-        self.popover.get_child().set_size_request(popover_width, popover_height)
+        self.widget.get_child().set_size_request(popover_width, popover_height)
 
     def show(self):
-        self.popover.popup()
+        self.widget.popup()
 
     def close(self, use_transition=True):
 
         if use_transition:
-            self.popover.popdown()
+            self.widget.popdown()
             return
 
-        self.popover.set_visible(False)
+        self.widget.set_visible(False)

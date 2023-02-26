@@ -96,7 +96,7 @@ class PopupMenu:
             self.popup_menu.connect("closed", lambda *_args: self.parent.child_focus(Gtk.DirectionType.TAB_FORWARD))
         else:
             self.popup_menu = Gtk.Menu.new_from_model(self.model)
-            self.popup_menu.attach_to_widget(parent, None)
+            self.popup_menu.attach_to_widget(parent)
 
         return self.popup_menu
 
@@ -181,7 +181,7 @@ class PopupMenu:
             # Create new section
 
             self.menu_section = Gio.Menu()
-            menuitem = Gio.MenuItem.new_section(None, self.menu_section)
+            menuitem = Gio.MenuItem.new_section(label=None, section=self.menu_section)
             self.model.append_item(menuitem)
 
             if not item[0]:
@@ -379,7 +379,7 @@ class UserPopupMenu(PopupMenu):
         if not self.useritem:
             return
 
-        self.useritem.set_label(user.replace('_', '__'))  # Escape underscores to disable mnemonics
+        self.useritem.set_label(user.replace("_", "__"))  # Escape underscores to disable mnemonics
         self.model.remove(0)
         self.model.prepend_item(self.useritem)
 
@@ -397,9 +397,9 @@ class UserPopupMenu(PopupMenu):
         self.actions[_("Ignore User")].set_state(
             GLib.Variant("b", core.network_filter.is_user_ignored(self.user)))
         self.actions[_("Ban IP Address")].set_state(
-            GLib.Variant("b", core.network_filter.get_cached_banned_user_ip(self.user) or False))
+            GLib.Variant("b", core.network_filter.is_user_ip_banned(self.user)))
         self.actions[_("Ignore IP Address")].set_state(
-            GLib.Variant("b", core.network_filter.get_cached_ignored_user_ip(self.user) or False))
+            GLib.Variant("b", core.network_filter.is_user_ip_ignored(self.user)))
 
         self.editing = False
 

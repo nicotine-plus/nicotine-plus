@@ -34,23 +34,23 @@ from pynicotine.slskmessages import UserStatus
 class ChatEntry:
     """ Custom text entry with support for chat commands and completions """
 
-    def __init__(self, application, entry, completion, entity, message_class, send_message, is_chatroom=False):
+    def __init__(self, application, widget, completion, entity, message_class, send_message, is_chatroom=False):
 
         self.application = application
-        self.entry = entry
+        self.widget = widget
         self.completion = completion
         self.entity = entity
         self.message_class = message_class
         self.send_message = send_message
         self.is_chatroom = is_chatroom
 
-        entry.connect("activate", self.on_enter)
-        Accelerator("<Shift>Tab", entry, self.on_tab_complete_accelerator, True)
-        Accelerator("Tab", entry, self.on_tab_complete_accelerator)
+        widget.connect("activate", self.on_enter)
+        Accelerator("<Shift>Tab", widget, self.on_tab_complete_accelerator, True)
+        Accelerator("Tab", widget, self.on_tab_complete_accelerator)
 
         # Emoji Picker (disable on Windows and macOS for now until we render emoji properly there)
         if sys.platform not in ("win32", "darwin"):
-            self.entry.set_property("show-emoji-icon", True)
+            self.widget.set_property("show-emoji-icon", True)
 
         # Spell Check
         if config.sections["ui"]["spellcheck"]:
@@ -59,9 +59,9 @@ class ChatEntry:
 
             if self.application.spell_checker:
                 from gi.repository import Gspell  # pylint:disable=no-name-in-module
-                spell_buffer = Gspell.EntryBuffer.get_from_gtk_entry_buffer(entry.get_buffer())
+                spell_buffer = Gspell.EntryBuffer.get_from_gtk_entry_buffer(widget.get_buffer())
                 spell_buffer.set_spell_checker(self.application.spell_checker)
-                spell_view = Gspell.Entry.get_from_gtk_entry(entry)
+                spell_view = Gspell.Entry.get_from_gtk_entry(widget)
                 spell_view.set_inline_spell_checking(True)
 
     def on_enter(self, *_args):
@@ -69,7 +69,7 @@ class ChatEntry:
         if core.user_status == UserStatus.OFFLINE:
             return
 
-        text = self.entry.get_text()
+        text = self.widget.get_text()
 
         if not text:
             return
@@ -77,10 +77,10 @@ class ChatEntry:
         is_double_slash_cmd = text.startswith("//")
         is_single_slash_cmd = (text.startswith("/") and not is_double_slash_cmd)
 
-        if not is_single_slash_cmd or text.startswith("/me"):
-            # Regular chat message (/me is sent as plain text)
+        if not is_single_slash_cmd:
+            # Regular chat message
 
-            self.entry.set_text("")
+            self.widget.set_text("")
 
             if is_double_slash_cmd:
                 # Remove first slash and send the rest of the command as plain text
@@ -92,130 +92,30 @@ class ChatEntry:
         cmd_split = text.split(maxsplit=1)
         cmd = cmd_split[0]
 
-        # Clear chat entry
-        self.entry.set_text("")
-
         if len(cmd_split) == 2:
             args = arg_self = cmd_split[1]
         else:
             args = ""
             arg_self = "" if self.is_chatroom else self.entity
 
-        if cmd in ("/w", "/whois", "/info"):
-            if arg_self:
-                core.userinfo.show_user(arg_self)
-
-        elif cmd in ("/b", "/browse"):
-            if arg_self:
-                core.userbrowse.browse_user(arg_self)
-
-        elif cmd == "/ip":
-            if arg_self:
-                core.request_ip_address(arg_self)
-
-        elif cmd == "/pm":
-            if args:
-                core.privatechat.show_user(args)
-
-        elif cmd in ("/m", "/msg"):
-            if args:
-                args_split = args.split(" ", maxsplit=1)
-                user = args_split[0]
-                msg = None
-
-                if len(args_split) == 2:
-                    msg = args_split[1]
-
-                if msg:
-                    core.privatechat.show_user(user)
-                    core.privatechat.send_message(user, msg)
-
-        elif cmd in ("/s", "/search"):
-            if args:
-                core.search.do_search(args, "global")
-
-        elif cmd in ("/us", "/usearch"):
-            args_split = args.split(" ", maxsplit=1)
-
-            if len(args_split) == 2:
-                core.search.do_search(args_split[1], "user", user=args_split[0])
-
-        elif cmd in ("/rs", "/rsearch"):
-            if args:
-                core.search.do_search(args, "rooms")
-
-        elif cmd in ("/bs", "/bsearch"):
-            if args:
-                core.search.do_search(args, "buddies")
-
-        elif cmd in ("/j", "/join"):
-            if args:
-                core.chatrooms.show_room(args)
-
-        elif cmd in ("/l", "/leave", "/p", "/part"):
-            if args:
-                core.chatrooms.remove_room(args)
-            else:
-                core.chatrooms.remove_room(self.entity)
-
-        elif cmd in ("/ad", "/add", "/buddy"):
-            if args:
-                core.userlist.add_buddy(args)
-
-        elif cmd in ("/rem", "/unbuddy"):
-            if args:
-                core.userlist.remove_buddy(args)
-
-        elif cmd == "/ban":
-            if args:
-                core.network_filter.ban_user(args)
-
-        elif cmd == "/ignore":
-            if args:
-                core.network_filter.ignore_user(args)
-
-        elif cmd == "/ignoreip":
-            if args:
-                core.network_filter.ignore_ip(args)
-
-        elif cmd == "/unban":
-            if args:
-                core.network_filter.unban_user(args)
-
-        elif cmd == "/unignore":
-            if args:
-                core.network_filter.unignore_user(args)
-
-        elif cmd == "/ctcpversion":
+        if cmd == "/ctcpversion":
             if arg_self:
                 core.privatechat.show_user(arg_self)
                 core.privatechat.send_message(arg_self, core.privatechat.CTCP_VERSION)
-
-        elif cmd in ("/clear", "/cl"):
-            if self.is_chatroom:
-                core.chatrooms.clear_room_messages(self.entity)
-            else:
-                core.privatechat.clear_private_messages(self.entity)
-
-        elif cmd in ("/a", "/away"):
-            core.set_away_mode(core.user_status != UserStatus.AWAY, save_state=True)
-
-        elif cmd in ("/q", "/quit", "/exit"):
-            core.confirm_quit()
 
         elif cmd == "/now":
             core.now_playing.display_now_playing(
                 callback=lambda np_message: self.send_message(self.entity, np_message))
 
-        elif cmd == "/toggle":
-            if args:
-                core.pluginhandler.toggle_plugin(args)
-
         elif self.is_chatroom:
-            core.pluginhandler.trigger_chatroom_command_event(self.entity, cmd[1:], args)
+            if not core.pluginhandler.trigger_chatroom_command_event(self.entity, cmd[1:], args):
+                return
 
-        elif not self.is_chatroom:
-            core.pluginhandler.trigger_private_chat_command_event(self.entity, cmd[1:], args)
+        elif not core.pluginhandler.trigger_private_chat_command_event(self.entity, cmd[1:], args):
+            return
+
+        # Clear chat entry
+        self.widget.set_text("")
 
     def on_tab_complete_accelerator(self, widget, state, backwards=False):
         """ Tab and Shift+Tab: tab complete chat """
@@ -429,14 +329,14 @@ class ChatCompletion:
             return True
 
         if not self.midwaycompletion:
-            self.completions['completions'] = self.get_completions(text, self.completion_list)
+            self.completions["completions"] = self.get_completions(text, self.completion_list)
 
-            if self.completions['completions']:
+            if self.completions["completions"]:
                 self.midwaycompletion = True
-                self.completions['currentindex'] = -1
+                self.completions["currentindex"] = -1
                 currentnick = text
         else:
-            currentnick = self.completions['completions'][self.completions['currentindex']]
+            currentnick = self.completions["completions"][self.completions["currentindex"]]
 
         if self.midwaycompletion:
             # We're still completing, block handler to avoid modifying midwaycompletion value
@@ -447,10 +347,10 @@ class ChatCompletion:
                 if backwards:
                     direction = -1  # Backward cycle
 
-                self.completions['currentindex'] = ((self.completions['currentindex'] + direction) %
-                                                    len(self.completions['completions']))
+                self.completions["currentindex"] = ((self.completions["currentindex"] + direction) %
+                                                    len(self.completions["completions"]))
 
-                newnick = self.completions['completions'][self.completions['currentindex']]
+                newnick = self.completions["completions"][self.completions["currentindex"]]
                 self.entry.insert_text(newnick, preix)
                 self.entry.set_position(preix + len(newnick))
 
@@ -459,9 +359,8 @@ class ChatCompletion:
 
 class CompletionEntry:
 
-    def __init__(self, entry, model, column=0):
+    def __init__(self, widget, model, column=0):
 
-        self.entry = entry
         self.model = model
         self.column = column
 
@@ -469,7 +368,7 @@ class CompletionEntry:
                                          popup_single_match=False, model=model)
         completion.set_text_column(column)
         completion.set_match_func(self.entry_completion_find_match)
-        entry.set_completion(completion)
+        widget.set_completion(completion)
 
     def entry_completion_find_match(self, _completion, entry_text, iterator):
 

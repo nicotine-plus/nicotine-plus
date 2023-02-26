@@ -32,12 +32,12 @@ This is the actual client code. Actual GUI classes are in the separate modules
 import os
 import signal
 import sys
-import time
+import threading
 
 from collections import deque
-from threading import Thread
 
 from pynicotine import slskmessages
+from pynicotine.cli import cli
 from pynicotine.config import config
 from pynicotine.events import events
 from pynicotine.logfacility import log
@@ -75,11 +75,12 @@ class Core:
         self.port = None
 
         self.shutdown = False
+        self.enable_cli = False
         self.user_status = slskmessages.UserStatus.OFFLINE
         self.login_username = None  # Only present while logged in
         self.user_ip_address = None
         self.privileges_left = None
-        self.ban_message = "You are banned from downloading my shared files. Ban message: \"%s\""
+        self.ban_message = 'You are banned from downloading my shared files. Ban message: "%s"'
 
         self.queue = deque()
         self.message_events = {}
@@ -92,7 +93,6 @@ class Core:
             ("admin-message", self._admin_message),
             ("change-password", self._change_password),
             ("check-privileges", self._check_privileges),
-            ("cli-command", self._cli_command),
             ("peer-address", self._get_peer_address),
             ("privileged-users", self._privileged_users),
             ("server-disconnect", self._server_disconnect),
@@ -101,7 +101,7 @@ class Core:
             ("thread-callback", self._thread_callback),
             ("user-stats", self._user_stats),
             ("user-status", self._user_status),
-            ("watch-user", self._add_user)
+            ("watch-user", self._watch_user)
         ):
             events.connect(event_name, callback)
 
@@ -125,11 +125,12 @@ class Core:
         from pynicotine.userinfo import UserInfo
         from pynicotine.userlist import UserList
 
+        self.enable_cli = enable_cli
+        self._init_thread_exception_hook()
         config.load_config()
 
         if enable_cli:
-            events.connect("log-message", self.log_cli)
-            Thread(target=self.process_cli_input, name="CLIInputProcessor", daemon=True).start()
+            cli.enable_logging()
 
         script_dir = os.path.dirname(__file__)
 
@@ -159,46 +160,44 @@ class Core:
         self.chatrooms = ChatRooms()
         self.pluginhandler = PluginHandler()
 
-    """ CLI """
+    def _init_thread_exception_hook(self):
 
-    def process_cli_input(self):
+        def thread_excepthook(args):
+            sys.excepthook(*args[:3])
 
-        while not self.shutdown:
-            try:
-                user_input = input()
+        if hasattr(threading, "excepthook"):
+            threading.excepthook = thread_excepthook
+            return
 
-            except EOFError:
-                return
+        # Workaround for Python <= 3.7
+        init_thread = threading.Thread.__init__
 
-            if not user_input:
-                continue
+        def init_thread_excepthook(self, *args, **kwargs):
 
-            command, *args = user_input.split(maxsplit=1)
+            init_thread(self, *args, **kwargs)
+            run_thread = self.run
 
-            if command.startswith("/"):
-                command = command[1:]
+            def run_with_excepthook(*args2, **kwargs2):
+                try:
+                    run_thread(*args2, **kwargs2)
+                except Exception:
+                    thread_excepthook(sys.exc_info())
 
-            if args:
-                (args,) = args
+            self.run = run_with_excepthook
 
-            events.emit_main_thread("cli-command", command, args)
-
-    @staticmethod
-    def log_cli(timestamp_format, msg, _title, _level):
-
-        timestamp = time.strftime(timestamp_format)
-
-        try:
-            print(f"[{timestamp}] {msg}", flush=True)
-
-        except OSError:
-            # stdout is gone, prevent future errors
-            sys.stdout = open(os.devnull, "w", encoding="utf-8")  # pylint: disable=consider-using-with
+        threading.Thread.__init__ = init_thread_excepthook
 
     """ Actions """
 
     def start(self):
+
+        if self.enable_cli:
+            cli.enable_prompt()
+
         events.emit("start")
+
+    def setup(self):
+        events.emit("setup")
 
     def confirm_quit(self, remember=False):
 
@@ -234,7 +233,7 @@ class Core:
 
         if config.need_config():
             log.add(_("You need to specify a username and password before connecting…"))
-            events.emit("setup")
+            self.setup()
             return
 
         events.emit("enable-message-queue")
@@ -313,7 +312,7 @@ class Core:
             # Already being watched, and we don't need to re-fetch the status/stats
             return
 
-        self.queue.append(slskmessages.AddUser(user))
+        self.queue.append(slskmessages.WatchUser(user))
 
         # Get privilege status
         self.queue.append(slskmessages.GetUserStatus(user))
@@ -325,9 +324,6 @@ class Core:
     def _thread_callback(self, callback, *args, **kwargs):
         callback(*args, **kwargs)
 
-    def _cli_command(self, command, args):
-        self.pluginhandler.trigger_cli_command_event(command, args or "")
-
     def _server_timeout(self):
         if not config.need_config():
             self.connect()
@@ -337,6 +333,7 @@ class Core:
         self.user_status = slskmessages.UserStatus.OFFLINE
 
         # Clean up connections
+        self.user_addresses.clear()
         self.user_statuses.clear()
         self.watched_users.clear()
 
@@ -396,13 +393,13 @@ class Core:
             return
 
         log.add(_("IP address of user %(user)s: %(ip)s, port %(port)i%(country)s"), {
-            'user': user,
-            'ip': msg.ip_address,
-            'port': msg.port,
-            'country': country
+            "user": user,
+            "ip": msg.ip_address,
+            "port": msg.port,
+            "country": country
         }, title=_("IP Address"))
 
-    def _add_user(self, msg):
+    def _watch_user(self, msg):
         """ Server code: 5 """
 
         if msg.userexists:
@@ -434,10 +431,10 @@ class Core:
         """ Server code: 36 """
 
         stats = {
-            'avgspeed': msg.avgspeed,
-            'uploadnum': msg.uploadnum,
-            'files': msg.files,
-            'dirs': msg.dirs,
+            "avgspeed": msg.avgspeed,
+            "uploadnum": msg.uploadnum,
+            "files": msg.files,
+            "dirs": msg.dirs,
         }
 
         self.pluginhandler.user_stats_notification(msg.user, stats)
@@ -464,15 +461,15 @@ class Core:
         days = hours // 24
 
         if msg.seconds == 0:
-            log.add(_("You have no Soulseek privileges. Privileges are not required, but allow your downloads "
-                      "to be queued ahead of non-privileged users."))
+            log.add(_("You have no Soulseek privileges. While privileges are active, your downloads "
+                      "will be queued ahead of those of non-privileged users."))
         else:
             log.add(_("%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of "
                       "Soulseek privileges left"), {
-                'days': days,
-                'hours': hours % 24,
-                'minutes': mins % 60,
-                'seconds': msg.seconds % 60
+                "days": days,
+                "hours": hours % 24,
+                "minutes": mins % 60,
+                "seconds": msg.seconds % 60
             })
 
         self.privileges_left = msg.seconds

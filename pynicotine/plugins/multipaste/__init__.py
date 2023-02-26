@@ -29,17 +29,17 @@ class Plugin(BasePlugin):
         super().__init__(*args, **kwargs)
 
         self.settings = {
-            'maxpubliclines': 4,
-            'maxprivatelines': 8
+            "maxpubliclines": 4,
+            "maxprivatelines": 8
         }
         self.metasettings = {
-            'maxpubliclines': {
-                "description": 'The maximum number of lines that will be pasted in public',
-                'type': 'int'
+            "maxpubliclines": {
+                "description": "The maximum number of lines that will be pasted in public",
+                "type": "int"
             },
-            'maxprivatelines': {
-                "description": 'The maximum number of lines that will be pasted in private',
-                'type': 'int'
+            "maxprivatelines": {
+                "description": "The maximum number of lines that will be pasted in private",
+                "type": "int"
             }
         }
 
@@ -48,14 +48,14 @@ class Plugin(BasePlugin):
         lines = [x for x in line.splitlines() if x]
 
         if len(lines) > 1:
-            if len(lines) > self.settings['maxprivatelines']:
-                self.log("Posting %s of %s lines.", (self.settings['maxprivatelines'], len(lines)))
+            if len(lines) > self.settings["maxprivatelines"]:
+                self.log("Posting %s of %s lines.", (self.settings["maxprivatelines"], len(lines)))
             else:
                 self.log("Splitting lines.")
-            for split_line in lines[:self.settings['maxprivatelines']]:
+            for split_line in lines[:self.settings["maxprivatelines"]]:
                 self.send_private(user, split_line)
 
-            return returncode['zap']
+            return returncode["zap"]
 
         return None
 
@@ -64,13 +64,13 @@ class Plugin(BasePlugin):
         lines = [x for x in line.splitlines() if x]
 
         if len(lines) > 1:
-            if len(lines) > self.settings['maxpubliclines']:
-                self.log("Posting %s of %s lines.", (self.settings['maxpubliclines'], len(lines)))
+            if len(lines) > self.settings["maxpubliclines"]:
+                self.log("Posting %s of %s lines.", (self.settings["maxpubliclines"], len(lines)))
             else:
                 self.log("Splitting lines.")
-            for split_line in lines[:self.settings['maxpubliclines']]:
+            for split_line in lines[:self.settings["maxpubliclines"]]:
                 self.send_public(room, split_line)
 
-            return returncode['zap']
+            return returncode["zap"]
 
         return None

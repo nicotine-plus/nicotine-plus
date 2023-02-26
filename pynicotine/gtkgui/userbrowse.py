@@ -40,9 +40,11 @@ from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import FilePopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
+from pynicotine.gtkgui.widgets.theme import get_file_type_icon_name
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.treeview import save_columns
 from pynicotine.gtkgui.widgets.treeview import show_file_path_tooltip
+from pynicotine.gtkgui.widgets.treeview import show_file_type_tooltip
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.slskmessages import FileListMessage
 from pynicotine.slskmessages import UserStatus
@@ -57,7 +59,7 @@ class UserBrowses(IconNotebook):
 
         super().__init__(
             window,
-            widget=window.userbrowse_notebook,
+            parent=window.userbrowse_content,
             parent_page=window.userbrowse_page
         )
         self.file_properties = None
@@ -119,7 +121,7 @@ class UserBrowses(IconNotebook):
         self.remove_page(page.container)
         del self.pages[user]
 
-    def peer_connection_error(self, user, *_args):
+    def peer_connection_error(self, user, *_args, **_kwargs):
 
         page = self.pages.get(user)
 
@@ -250,28 +252,33 @@ class UserBrowse:
         # Setup file_list_view
         self.treeview_name = "user_browse"
         self.file_store = Gtk.ListStore(
-            str,                  # (0) file name
-            str,                  # (1) hsize
-            str,                  # (2) hbitrate
-            str,                  # (3) hlength
-            GObject.TYPE_UINT64,  # (4) size
-            GObject.TYPE_UINT,    # (5) bitrate
-            GObject.TYPE_UINT     # (6) length
+            str,                  # (0) file type icon
+            str,                  # (1) file name
+            str,                  # (2) hsize
+            str,                  # (3) hbitrate
+            str,                  # (4) hlength
+            GObject.TYPE_UINT64,  # (5) size
+            GObject.TYPE_UINT,    # (6) bitrate
+            GObject.TYPE_UINT     # (7) length
         )
 
         self.file_column_offsets = {}
         self.file_column_numbers = list(range(self.file_store.get_n_columns()))
         cols = initialise_columns(
             self.window, "user_browse", self.file_list_view,
+            ["file_type", _("File Type"), 30, "icon", None],
             ["filename", _("Filename"), 600, "text", None],
             ["size", _("Size"), 100, "number", None],
             ["bitrate", _("Bitrate"), 100, "number", None],
             ["length", _("Duration"), 100, "number", None]
         )
-        cols["filename"].set_sort_column_id(0)
-        cols["size"].set_sort_column_id(4)
-        cols["bitrate"].set_sort_column_id(5)
-        cols["length"].set_sort_column_id(6)
+        cols["file_type"].set_sort_column_id(0)
+        cols["filename"].set_sort_column_id(1)
+        cols["size"].set_sort_column_id(5)
+        cols["bitrate"].set_sort_column_id(6)
+        cols["length"].set_sort_column_id(7)
+
+        cols["file_type"].get_widget().set_visible(False)
 
         self.file_list_view.set_model(self.file_store)
 
@@ -434,14 +441,14 @@ class UserBrowse:
             current_path = None
             root_processed = False
 
-            for subfolder in folder.split('\\'):
+            for subfolder in folder.split("\\"):
                 parent = self.dir_iters.get(current_path)
 
                 if not root_processed:
                     current_path = subfolder
                     root_processed = True
                 else:
-                    current_path = '\\'.join([current_path, subfolder])
+                    current_path = "\\".join([current_path, subfolder])
 
                 if current_path in self.dir_iters:
                     # Folder was already added to tree
@@ -449,7 +456,7 @@ class UserBrowse:
 
                 if not subfolder:
                     # Most likely a root folder
-                    subfolder = '\\'
+                    subfolder = "\\"
 
                 if private:
                     subfolder = _("[PRIVATE]  %s") % subfolder
@@ -559,7 +566,7 @@ class UserBrowse:
 
         self.indeterminate_progress = False
 
-        self.userbrowses.request_tab_hilite(self.container)
+        self.userbrowses.request_tab_changed(self.container)
         self.progress_bar.set_fraction(1.0)
         self.refresh_button.set_sensitive(True)
 
@@ -592,9 +599,11 @@ class UserBrowse:
 
         for _code, filename, size, _ext, attrs, *_unused in files:
             selected_folder_size += size
+            h_size = humanize(size) if config.sections["ui"]["exact_file_sizes"] else human_size(size)
             h_bitrate, bitrate, h_length, length = FileListMessage.parse_result_bitrate_length(size, attrs)
 
-            file_row = [filename, human_size(size), h_bitrate, h_length,
+            file_row = [get_file_type_icon_name(filename),
+                        filename, h_size, h_bitrate, h_length,
                         GObject.Value(GObject.TYPE_UINT64, size),
                         GObject.Value(GObject.TYPE_UINT, bitrate),
                         GObject.Value(GObject.TYPE_UINT, length)]
@@ -613,8 +622,8 @@ class UserBrowse:
 
         for path in paths:
             iterator = model.get_iter(path)
-            rawfilename = model.get_value(iterator, 0)
-            filesize = model.get_value(iterator, 4)
+            rawfilename = model.get_value(iterator, 1)
+            filesize = model.get_value(iterator, 5)
 
             self.selected_files[rawfilename] = filesize
 
@@ -704,6 +713,16 @@ class UserBrowse:
 
     """ Callbacks (folder_tree_view) """
 
+    @staticmethod
+    def on_folder_tooltip(widget, pos_x, pos_y, _keyboard_mode, tooltip):
+
+        file_path_tooltip = show_file_path_tooltip(widget, pos_x, pos_y, tooltip, 0)
+
+        if file_path_tooltip:
+            return file_path_tooltip
+
+        return False
+
     def on_select_dir(self, selection):
 
         _model, iterator = selection.get_selected()
@@ -772,7 +791,7 @@ class UserBrowse:
         EntryDialog(
             parent=self.window,
             title=str_title,
-            message=_('Enter the name of the user you want to upload to:'),
+            message=_("Enter the name of the user you want to upload to:"),
             callback=self.on_upload_directory_to_response,
             callback_data=recurse,
             droplist=sorted(core.userlist.buddies)
@@ -793,7 +812,7 @@ class UserBrowse:
         if self.selected_folder is None:
             return
 
-        path = self.selected_folder + '\\'
+        path = self.selected_folder + "\\"
         url = core.userbrowse.get_soulseek_url(self.user, path)
         copy_text(url)
 
@@ -921,6 +940,16 @@ class UserBrowse:
 
     """ Callbacks (file_list_view) """
 
+    @staticmethod
+    def on_file_tooltip(widget, pos_x, pos_y, _keyboard_mode, tooltip):
+
+        file_path_tooltip = show_file_path_tooltip(widget, pos_x, pos_y, tooltip, 1)
+
+        if file_path_tooltip:
+            return file_path_tooltip
+
+        return show_file_type_tooltip(widget, pos_x, pos_y, tooltip, 0)
+
     def on_column_position_changed(self, column, _param):
         """ Save column position and width to config """
 
@@ -995,8 +1024,8 @@ class UserBrowse:
 
         EntryDialog(
             parent=self.window,
-            title=_('Upload File(s) To User'),
-            message=_('Enter the name of the user you want to upload to:'),
+            title=_("Upload File(s) To User"),
+            message=_("Enter the name of the user you want to upload to:"),
             callback=self.on_upload_files_response,
             droplist=sorted(core.userlist.buddies)
         ).show()
@@ -1047,15 +1076,15 @@ class UserBrowse:
 
             for path in paths:
                 iterator = model.get_iter(path)
-                filename = model.get_value(iterator, 0)
-                file_size = model.get_value(iterator, 4)
+                filename = model.get_value(iterator, 1)
+                file_size = model.get_value(iterator, 5)
                 virtual_path = "\\".join([folder, filename])
                 selected_size += file_size
-                selected_length += model.get_value(iterator, 6)
+                selected_length += model.get_value(iterator, 7)
 
                 data.append({"user": self.user, "fn": virtual_path, "filename": filename,
-                             "directory": folder, "size": file_size, "bitrate": model.get_value(iterator, 2),
-                             "length": model.get_value(iterator, 3)})
+                             "directory": folder, "size": file_size, "bitrate": model.get_value(iterator, 3),
+                             "length": model.get_value(iterator, 4)})
 
         if data:
             if self.userbrowses.file_properties is None:
@@ -1193,16 +1222,6 @@ class UserBrowse:
         return True
 
     """ Callbacks (General) """
-
-    @staticmethod
-    def on_tooltip(widget, pos_x, pos_y, _keyboard_mode, tooltip):
-
-        file_path_tooltip = show_file_path_tooltip(widget, pos_x, pos_y, tooltip, 0)
-
-        if file_path_tooltip:
-            return file_path_tooltip
-
-        return False
 
     def on_expand(self, *_args):
 

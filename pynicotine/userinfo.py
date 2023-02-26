@@ -118,7 +118,7 @@ class UserInfo:
         self.requested_info_times[user] = request_time
 
         if core.login_username != user:
-            log.add(_("User %(user)s is viewing your profile"), {'user': user})
+            log.add(_("User %(user)s is viewing your profile"), {"user": user})
 
         status, reason = core.network_filter.check_user(user, ip_address)
 
@@ -132,7 +132,7 @@ class UserInfo:
             try:
                 userpic = config.sections["userinfo"]["pic"]
 
-                with open(encode_path(userpic), 'rb') as file_handle:
+                with open(encode_path(userpic), "rb") as file_handle:
                     pic = file_handle.read()
 
             except Exception:

@@ -28,7 +28,6 @@ from gi.repository import Gio
 from gi.repository import GLib
 
 from pynicotine.config import config
-from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
 from pynicotine.utils import truncate_string_byte
@@ -52,32 +51,12 @@ class Notifications:
         ):
             events.connect(event_name, callback)
 
-    def add(self, location, user, room=None):
-
-        item = room if location == "rooms" else user
-
-        if core.notifications.add_hilite_item(location, item):
-            self.application.tray_icon.update_icon()
-
-        if config.sections["ui"]["urgencyhint"] and not self.application.window.is_active():
-            self.set_urgency_hint(True)
-
-        self.set_title(user)
-
-    def clear(self, location, user=None, room=None):
-
-        item = room if location == "rooms" else user
-
-        if core.notifications.remove_hilite_item(location, item):
-            self.set_title(item)
-            self.application.tray_icon.update_icon()
-
-    def set_title(self, user=None):
+    def update_title(self):
 
         app_name = config.application_name
 
-        if (not core.notifications.chat_hilites["rooms"]
-                and not core.notifications.chat_hilites["private"]):
+        if (not self.application.window.chatrooms.highlighted_rooms
+                and not self.application.window.privatechat.highlighted_users):
             # Reset Title
             self.application.window.set_title(app_name)
             return
@@ -85,17 +64,17 @@ class Notifications:
         if not config.sections["notifications"]["notification_window_title"]:
             return
 
-        if core.notifications.chat_hilites["private"]:
+        if self.application.window.privatechat.highlighted_users:
             # Private Chats have a higher priority
-            user = core.notifications.chat_hilites["private"][-1]
-            notification_text = _("Private Message from %(user)s") % {'user': user}
+            user = self.application.window.privatechat.highlighted_users[-1]
+            notification_text = _("Private Message from %(user)s") % {"user": user}
 
             self.application.window.set_title(f"{app_name} - {notification_text}")
 
-        elif core.notifications.chat_hilites["rooms"]:
+        elif self.application.window.chatrooms.highlighted_rooms:
             # Allow for the possibility the username is not available
-            room = core.notifications.chat_hilites["rooms"][-1]
-            notification_text = _("Mentioned by %(user)s in Room %(room)s") % {'user': user, 'room': room}
+            room, user = list(self.application.window.chatrooms.highlighted_rooms.items())[-1]
+            notification_text = _("Mentioned by %(user)s in Room %(room)s") % {"user": user, "room": room}
 
             self.application.window.set_title(f"{app_name} - {notification_text}")
 
@@ -145,7 +124,7 @@ class Notifications:
                 else:
                     notification.set_default_action(action)
 
-            self.application.send_notification(None, notification)
+            self.application.send_notification(event_id=None, notification=notification)
 
             if config.sections["notifications"]["notification_popup_sound"]:
                 Gdk.Display.get_default().beep()

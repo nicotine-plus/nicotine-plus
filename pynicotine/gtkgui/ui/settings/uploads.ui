@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.0"/>
-  <object class="GtkAdjustment" id="adjustment_LimitSpeed">
+  <object class="GtkAdjustment" id="_speed_adjustment">
     <property name="upper">1000000</property>
     <property name="step-increment">10</property>
     <property name="page-increment">50</property>
   </object>
-  <object class="GtkAdjustment" id="adjustment_LimitSpeedAlternative">
+  <object class="GtkAdjustment" id="_alt_speed_adjustment">
     <property name="upper">1000000</property>
     <property name="step-increment">10</property>
     <property name="page-increment">50</property>
   </object>
-  <object class="GtkAdjustment" id="adjustment_MaxUserFiles">
+  <object class="GtkAdjustment" id="_max_queued_files_adjustment">
     <property name="upper">1000000</property>
     <property name="step-increment">10</property>
     <property name="page-increment">50</property>
   </object>
-  <object class="GtkAdjustment" id="adjustment_MaxUserQueue">
+  <object class="GtkAdjustment" id="_max_queued_size_adjustment">
     <property name="upper">1000000</property>
     <property name="step-increment">25</property>
     <property name="page-increment">100</property>
   </object>
-  <object class="GtkAdjustment" id="adjustment_QueueBandwidth">
+  <object class="GtkAdjustment" id="_upload_bandwidth_adjustment">
     <property name="upper">1000000</property>
     <property name="step-increment">10</property>
     <property name="page-increment">50</property>
   </object>
-  <object class="GtkAdjustment" id="adjustment_QueueSlots">
+  <object class="GtkAdjustment" id="_upload_slots_adjustment">
     <property name="lower">1</property>
     <property name="upper">1000000</property>
     <property name="step-increment">1</property>
@@ -55,7 +55,7 @@
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="AutoclearFinished">
+          <object class="GtkCheckButton" id="autoclear_uploads_toggle">
             <property name="visible">True</property>
             <property name="label" translatable="yes">Autoclear finished/cancelled uploads from transfer list</property>
           </object>
@@ -72,11 +72,11 @@
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
-                <property name="mnemonic-widget">UploadDoubleClick</property>
+                <property name="mnemonic-widget">upload_double_click_combobox</property>
               </object>
             </child>
             <child>
-              <object class="GtkComboBoxText" id="UploadDoubleClick">
+              <object class="GtkComboBoxText" id="upload_double_click_combobox">
                 <property name="visible">True</property>
                 <property name="valign">center</property>
                 <items>
@@ -123,7 +123,7 @@
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
-                <property name="mnemonic-widget">_LimitPerTransfer</property>
+                <property name="mnemonic-widget">_limit_per_transfers_radio</property>
               </object>
             </child>
             <child>
@@ -131,7 +131,7 @@
                 <property name="visible">True</property>
                 <property name="spacing">6</property>
                 <child>
-                  <object class="GtkRadioButton" id="_LimitPerTransfer">
+                  <object class="GtkRadioButton" id="_limit_per_transfers_radio">
                     <property name="label" translatable="yes">Per transfer</property>
                     <property name="visible">True</property>
                     <property name="use-underline">True</property>
@@ -139,11 +139,11 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkRadioButton" id="LimitTotalTransfers">
+                  <object class="GtkRadioButton" id="limit_total_transfers_radio">
                     <property name="label" translatable="yes">Total transfers</property>
                     <property name="visible">True</property>
                     <property name="use-underline">True</property>
-                    <property name="group">_LimitPerTransfer</property>
+                    <property name="group">_limit_per_transfers_radio</property>
                   </object>
                 </child>
               </object>
@@ -151,7 +151,7 @@
           </object>
         </child>
         <child>
-          <object class="GtkRadioButton" id="UnlimitedUploadSpeed">
+          <object class="GtkRadioButton" id="use_unlimited_speed_radio">
             <property name="visible">True</property>
             <property name="hexpand">True</property>
             <property name="label" translatable="yes">Unlimited upload speed</property>
@@ -163,18 +163,18 @@
             <property name="visible">True</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkRadioButton" id="UseUploadSpeedLimit">
+              <object class="GtkRadioButton" id="use_speed_limit_radio">
                 <property name="label" translatable="yes">Use upload speed limit (KiB/s):</property>
                 <property name="visible">True</property>
                 <property name="hexpand">True</property>
-                <property name="group">UnlimitedUploadSpeed</property>
+                <property name="group">use_unlimited_speed_radio</property>
               </object>
             </child>
             <child>
-              <object class="GtkSpinButton" id="LimitSpeed">
+              <object class="GtkSpinButton" id="speed_spinner">
                 <property name="visible">True</property>
                 <property name="tooltip-text" translatable="yes">Kibibytes (2^10 bytes) per second.</property>
-                <property name="adjustment">adjustment_LimitSpeed</property>
+                <property name="adjustment">_speed_adjustment</property>
                 <property name="numeric">True</property>
                 <property name="valign">center</property>
                 <property name="max-width-chars">8</property>
@@ -187,18 +187,18 @@
             <property name="visible">True</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkRadioButton" id="UseAltUploadSpeedLimit">
+              <object class="GtkRadioButton" id="use_alt_speed_limit_radio">
                 <property name="label" translatable="yes">Use alternative upload speed limit (KiB/s):</property>
                 <property name="visible">True</property>
                 <property name="hexpand">True</property>
-                <property name="group">UnlimitedUploadSpeed</property>
+                <property name="group">use_unlimited_speed_radio</property>
               </object>
             </child>
             <child>
-              <object class="GtkSpinButton" id="LimitSpeedAlternative">
+              <object class="GtkSpinButton" id="alt_speed_spinner">
                 <property name="visible">True</property>
                 <property name="tooltip-text" translatable="yes">Kibibytes (2^10 bytes) per second.</property>
-                <property name="adjustment">adjustment_LimitSpeedAlternative</property>
+                <property name="adjustment">_alt_speed_adjustment</property>
                 <property name="numeric">True</property>
                 <property name="valign">center</property>
                 <property name="max-width-chars">8</property>
@@ -227,7 +227,7 @@
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="FriendsNoLimits">
+          <object class="GtkCheckButton" id="no_buddy_limits_toggle">
             <property name="visible">True</property>
             <property name="label" translatable="yes">Individual limits do not apply to buddies</property>
           </object>
@@ -244,7 +244,7 @@
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
                 <property name="xalign">0</property>
-                <property name="mnemonic-widget">MaxUserQueue</property>
+                <property name="mnemonic-widget">max_queued_size_spinner</property>
               </object>
             </child>
             <child>
@@ -252,10 +252,10 @@
                 <property name="visible">True</property>
                 <property name="spacing">12</property>
                 <child>
-                  <object class="GtkSpinButton" id="MaxUserQueue">
+                  <object class="GtkSpinButton" id="max_queued_size_spinner">
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Mebibytes (2^20 bytes).</property>
-                    <property name="adjustment">adjustment_MaxUserQueue</property>
+                    <property name="adjustment">_max_queued_size_adjustment</property>
                     <property name="numeric">True</property>
                     <property name="valign">center</property>
                     <property name="max-width-chars">10</property>
@@ -278,9 +278,9 @@
             <property name="halign">end</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkSpinButton" id="MaxUserFiles">
+              <object class="GtkSpinButton" id="max_queued_files_spinner">
                 <property name="visible">True</property>
-                <property name="adjustment">adjustment_MaxUserFiles</property>
+                <property name="adjustment">_max_queued_files_adjustment</property>
                 <property name="numeric">True</property>
                 <property name="valign">center</property>
                 <property name="max-width-chars">10</property>
@@ -291,7 +291,7 @@
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">files</property>
                 <property name="xalign">0</property>
-                <property name="mnemonic-widget">MaxUserFiles</property>
+                <property name="mnemonic-widget">max_queued_files_spinner</property>
               </object>
             </child>
           </object>
@@ -317,7 +317,7 @@
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="PreferFriends">
+          <object class="GtkCheckButton" id="prioritize_buddies_toggle">
             <property name="visible">True</property>
             <property name="label" translatable="yes">Prioritize all buddies</property>
           </object>
@@ -334,11 +334,11 @@
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
                 <property name="xalign">0</property>
-                <property name="mnemonic-widget">FirstInFirstOut</property>
+                <property name="mnemonic-widget">upload_queue_type_combobox</property>
               </object>
             </child>
             <child>
-              <object class="GtkComboBoxText" id="FirstInFirstOut">
+              <object class="GtkComboBoxText" id="upload_queue_type_combobox">
                 <property name="visible">True</property>
                 <property name="valign">center</property>
                 <property name="tooltip-text" translatable="yes">Round Robin: Files will be uploaded in cyclical fashion to the users waiting in queue.
@@ -356,7 +356,7 @@ First In, First Out: Files will be uploaded in the order they were queued.</prop
             <property name="visible">True</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkRadioButton" id="QueueUseBandwidth">
+              <object class="GtkRadioButton" id="_use_upload_bandwidth_radio">
                 <property name="visible">True</property>
                 <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Allocate upload slots until total transfer speed reaches (KiB/s):</property>
@@ -365,11 +365,11 @@ First In, First Out: Files will be uploaded in the order they were queued.</prop
               </object>
             </child>
             <child>
-              <object class="GtkSpinButton" id="QueueBandwidth">
+              <object class="GtkSpinButton" id="upload_bandwidth_spinner">
                 <property name="visible">True</property>
-                <property name="sensitive" bind-source="QueueUseSlots" bind-property="active" bind-flags="bidirectional|invert-boolean|sync-create"/>
+                <property name="sensitive" bind-source="use_upload_slots_radio" bind-property="active" bind-flags="bidirectional|invert-boolean|sync-create"/>
                 <property name="tooltip-text" translatable="yes">Kibibytes (2^10 bytes) per second.</property>
-                <property name="adjustment">adjustment_QueueBandwidth</property>
+                <property name="adjustment">_upload_bandwidth_adjustment</property>
                 <property name="numeric">True</property>
                 <property name="valign">center</property>
                 <property name="max-width-chars">8</property>
@@ -382,18 +382,18 @@ First In, First Out: Files will be uploaded in the order they were queued.</prop
             <property name="visible">True</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkRadioButton" id="QueueUseSlots">
+              <object class="GtkRadioButton" id="use_upload_slots_radio">
                 <property name="visible">True</property>
                 <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Maximum number of active uploads:</property>
-                <property name="group">QueueUseBandwidth</property>
+                <property name="group">_use_upload_bandwidth_radio</property>
               </object>
             </child>
             <child>
-              <object class="GtkSpinButton" id="QueueSlots">
+              <object class="GtkSpinButton" id="upload_slots_spinner">
                 <property name="visible">True</property>
-                <property name="sensitive" bind-source="QueueUseSlots" bind-property="active" bind-flags="bidirectional|sync-create"/>
-                <property name="adjustment">adjustment_QueueSlots</property>
+                <property name="sensitive" bind-source="use_upload_slots_radio" bind-property="active" bind-flags="bidirectional|sync-create"/>
+                <property name="adjustment">_upload_slots_adjustment</property>
                 <property name="numeric">True</property>
                 <property name="valign">center</property>
                 <property name="max-width-chars">8</property>

@@ -17,18 +17,37 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import subprocess
 import sys
 
-""" Script used to install packaging dependencies in Homebrew """
+""" Script used to install dependencies in Homebrew """
+
+
+def install_brew():
+    """ Install dependencies from the main Homebrew repos """
+
+    gtk_version = os.environ.get("NICOTINE_GTK_VERSION") or "3"
+    use_libadwaita = gtk_version == "4" and os.environ.get("NICOTINE_LIBADWAITA") == "1"
+
+    packages = ["adwaita-icon-theme",
+                "gettext",
+                "gobject-introspection",
+                f"gtk+{gtk_version}"]
+
+    if use_libadwaita:
+        packages.append("libadwaita")
+
+    subprocess.check_call(["brew", "install"] + packages)
 
 
 def install_pypi():
     """ Install dependencies from PyPi """
 
-    packages = ["cx_Freeze"]
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "--no-binary", ','.join(packages)] + packages)
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "--no-binary", "cx_Freeze",
+                           "-e", ".[packaging,test]", "semidbm"])
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
+    install_brew()
     install_pypi()

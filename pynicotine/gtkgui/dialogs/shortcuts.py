@@ -28,7 +28,7 @@ class Shortcuts(Dialog):
         self.dialog, self.emoji_shortcut = ui_template.widgets
 
         super().__init__(
-            dialog=self.dialog,
+            widget=self.dialog,
             parent=application.window,
             close_destroy=False
         )
