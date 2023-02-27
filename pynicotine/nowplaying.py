@@ -34,8 +34,6 @@ class NowPlaying:
     playing in a media player """
 
     def __init__(self):
-
-        self._bus = None
         self.title_clear()
 
     def title_clear(self):
@@ -155,7 +153,7 @@ class NowPlaying:
             self.title["artist"] = artist = lastplayed["artist"]["#text"]
             self.title["title"] = title = lastplayed["name"]
             self.title["album"] = album = lastplayed["album"]["#text"]
-            self.title["nowplaying"] = f"{_('Last played')}: {artist} - {album} - {title}"
+            self.title["nowplaying"] = f"{artist} - {album} - {title}"
 
         except Exception:
             log.add(_("Last.fm: Could not get recent track from Audioscrobbler: %(error)s"),
@@ -170,19 +168,18 @@ class NowPlaying:
         # https://media.readthedocs.org/pdf/mpris2/latest/mpris2.pdf
 
         from gi.repository import Gio  # pylint: disable=import-error
-        self._bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
 
         dbus_mpris_service = "org.mpris.MediaPlayer2."
-        dbus_mpris_player_service = "org.mpris.MediaPlayer2.Player"
-        dbus_mpris_path = "/org/mpris/MediaPlayer2"
-        dbus_property = "org.freedesktop.DBus.Properties"
 
         if not player:
-            dbus_proxy = Gio.DBusProxy.new_sync(
-                self._bus, Gio.DBusProxyFlags.NONE, None,
-                "org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus", None
+            dbus_proxy = Gio.DBusProxy.new_for_bus_sync(
+                bus_type=Gio.BusType.SESSION,
+                flags=Gio.DBusProxyFlags.NONE,
+                info=None,
+                name="org.freedesktop.DBus",
+                object_path="/org/freedesktop/DBus",
+                interface_name="org.freedesktop.DBus"
             )
-
             names = dbus_proxy.ListNames()
             players = []
 
@@ -202,12 +199,15 @@ class NowPlaying:
                 log.add(_("Auto-detected MPRIS player: %s"), player)
 
         try:
-            dbus_proxy = Gio.DBusProxy.new_sync(
-                self._bus, Gio.DBusProxyFlags.NONE, None,
-                dbus_mpris_service + player, dbus_mpris_path, dbus_property, None
+            dbus_proxy = Gio.DBusProxy.new_for_bus_sync(
+                bus_type=Gio.BusType.SESSION,
+                flags=Gio.DBusProxyFlags.NONE,
+                info=None,
+                name=dbus_mpris_service + player,
+                object_path="/org/mpris/MediaPlayer2",
+                interface_name="org.freedesktop.DBus.Properties"
             )
-
-            metadata = dbus_proxy.Get("(ss)", dbus_mpris_player_service, "Metadata")
+            metadata = dbus_proxy.Get("(ss)", "org.mpris.MediaPlayer2.Player", "Metadata")
 
         except Exception as error:
             log.add(_("MPRIS: Something went wrong while querying %(player)s: %(exception)s"),
@@ -283,7 +283,7 @@ class NowPlaying:
             self.title["artist"] = artist = track["artist_name"]
             self.title["title"] = title = track["track_name"]
             self.title["album"] = album = track["release_name"]
-            self.title["nowplaying"] = f"{_('Playing now')}: {artist} - {album} - {title}"
+            self.title["nowplaying"] = f"{artist} - {album} - {title}"
 
             return True
 

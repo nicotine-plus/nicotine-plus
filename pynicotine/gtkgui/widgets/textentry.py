@@ -92,9 +92,6 @@ class ChatEntry:
         cmd_split = text.split(maxsplit=1)
         cmd = cmd_split[0]
 
-        # Clear chat entry
-        self.widget.set_text("")
-
         if len(cmd_split) == 2:
             args = arg_self = cmd_split[1]
         else:
@@ -111,10 +108,14 @@ class ChatEntry:
                 callback=lambda np_message: self.send_message(self.entity, np_message))
 
         elif self.is_chatroom:
-            core.pluginhandler.trigger_chatroom_command_event(self.entity, cmd[1:], args)
+            if not core.pluginhandler.trigger_chatroom_command_event(self.entity, cmd[1:], args):
+                return
 
-        elif not self.is_chatroom:
-            core.pluginhandler.trigger_private_chat_command_event(self.entity, cmd[1:], args)
+        elif not core.pluginhandler.trigger_private_chat_command_event(self.entity, cmd[1:], args):
+            return
+
+        # Clear chat entry
+        self.widget.set_text("")
 
     def on_tab_complete_accelerator(self, widget, state, backwards=False):
         """ Tab and Shift+Tab: tab complete chat """

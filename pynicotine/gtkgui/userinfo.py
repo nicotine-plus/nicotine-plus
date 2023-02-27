@@ -89,16 +89,24 @@ class UserInfos(IconNotebook):
         self.window.userinfo_entry.set_text("")
         core.userinfo.show_user(username)
 
-    def show_user(self, user, switch_page=True, **_unused):
+    def show_user(self, user, refresh=False, switch_page=True):
 
-        if user not in self.pages:
+        page = self.pages.get(user)
+
+        if page is None:
+            refresh = True
             self.pages[user] = page = UserInfo(self, user)
+
             self.append_page(page.container, user, focus_callback=page.on_focus,
                              close_callback=page.on_close, user=user)
             page.set_label(self.get_tab_label_inner(page.container))
 
+        if refresh:
+            page.update_button_states()
+            page.set_in_progress()
+
         if switch_page:
-            self.set_current_page(self.pages[user].container)
+            self.set_current_page(page.container)
             self.window.change_main_page(self.window.userinfo_page)
 
     def remove_user(self, user):
@@ -200,6 +208,8 @@ class UserInfo:
             self.country_label,
             self.description_view_container,
             self.dislikes_list_container,
+            self.edit_interests_button,
+            self.edit_profile_button,
             self.free_upload_slots_label,
             self.horizontal_paned,
             self.ignore_unignore_user_label,
@@ -251,19 +261,25 @@ class UserInfo:
         # Set up likes list
         self.likes_list_view = TreeView(
             self.window, parent=self.likes_list_container,
-            columns=[
-                {"column_id": "likes", "column_type": "text", "title": _("Likes"), "sort_column": 0,
-                 "default_sort_column": "ascending"}
-            ]
+            columns={
+                "likes": {
+                    "column_type": "text",
+                    "title": _("Likes"),
+                    "default_sort_column": "ascending"
+                }
+            }
         )
 
         # Set up dislikes list
         self.dislikes_list_view = TreeView(
             self.window, parent=self.dislikes_list_container,
-            columns=[
-                {"column_id": "dislikes", "column_type": "text", "title": _("Dislikes"), "sort_column": 0,
-                 "default_sort_column": "ascending"}
-            ]
+            columns={
+                "dislikes": {
+                    "column_type": "text",
+                    "title": _("Dislikes"),
+                    "default_sort_column": "ascending"
+                }
+            }
         )
 
         # Popup menus
@@ -275,19 +291,19 @@ class UserInfo:
             ("#" + _("_Close Tab"), self.on_close)
         )
 
-        def get_interest_items(list_view):
-            return (("$" + _("I _Like This"), self.window.interests.on_like_recommendation, list_view),
-                    ("$" + _("I _Dislike This"), self.window.interests.on_dislike_recommendation, list_view),
+        def get_interest_items(list_view, column_id):
+            return (("$" + _("I _Like This"), self.window.interests.on_like_recommendation, list_view, column_id),
+                    ("$" + _("I _Dislike This"), self.window.interests.on_dislike_recommendation, list_view, column_id),
                     ("", None),
-                    ("#" + _("_Search for Item"), self.window.interests.on_recommend_search, list_view))
+                    ("#" + _("_Search for Item"), self.window.interests.on_recommend_search, list_view, column_id))
 
         self.likes_popup_menu = PopupMenu(self.window.application, self.likes_list_view.widget,
                                           self.on_popup_likes_menu)
-        self.likes_popup_menu.add_items(*get_interest_items(self.likes_list_view))
+        self.likes_popup_menu.add_items(*get_interest_items(self.likes_list_view, "likes"))
 
         self.dislikes_popup_menu = PopupMenu(self.window.application, self.dislikes_list_view.widget,
                                              self.on_popup_dislikes_menu)
-        self.dislikes_popup_menu.add_items(*get_interest_items(self.dislikes_list_view))
+        self.dislikes_popup_menu.add_items(*get_interest_items(self.dislikes_list_view, "dislikes"))
 
         self.picture_popup_menu = PopupMenu(self.window.application, self.picture_view)
         self.picture_popup_menu.add_items(
@@ -297,9 +313,6 @@ class UserInfo:
             ("", None),
             ("#" + _("Save Picture"), self.on_save_picture)
         )
-
-        self.update_button_states()
-        self.set_in_progress()
 
     def clear(self):
 
@@ -462,6 +475,13 @@ class UserInfo:
 
     """ Button States """
 
+    def update_edit_button_state(self):
+
+        is_personal_profile = (self.user == core.login_username)
+
+        for widget in (self.edit_interests_button, self.edit_profile_button):
+            widget.set_visible(is_personal_profile)
+
     def update_buddy_button_state(self):
         label = _("Remove _Buddy") if self.user in core.userlist.buddies else _("Add _Buddy")
         self.add_remove_buddy_label.set_text_with_mnemonic(label)
@@ -476,6 +496,7 @@ class UserInfo:
 
     def update_button_states(self):
 
+        self.update_edit_button_state()
         self.update_buddy_button_state()
         self.update_ban_button_state()
         self.update_ignore_button_state()
@@ -487,7 +508,7 @@ class UserInfo:
         if msg is None:
             return
 
-        if msg.descr:
+        if msg.descr is not None:
             self.description_view.clear()
             self.description_view.append_line(msg.descr)
 
@@ -541,10 +562,16 @@ class UserInfo:
         self.user_popup_menu.toggle_user_items()
 
     def on_popup_likes_menu(self, menu, *_args):
-        self.window.interests.toggle_menu_items(menu, self.likes_list_view, column=0)
+        self.window.interests.toggle_menu_items(menu, self.likes_list_view, column_id="likes")
 
     def on_popup_dislikes_menu(self, menu, *_args):
-        self.window.interests.toggle_menu_items(menu, self.dislikes_list_view, column=0)
+        self.window.interests.toggle_menu_items(menu, self.dislikes_list_view, column_id="dislikes")
+
+    def on_edit_profile(self, *_args):
+        self.window.application.on_preferences(page_id="user-profile")
+
+    def on_edit_interests(self, *_args):
+        self.window.change_main_page(self.window.interests_page)
 
     def on_send_message(self, *_args):
         core.privatechat.show_user(self.user)
@@ -621,7 +648,6 @@ class UserInfo:
         return True
 
     def on_refresh(self, *_args):
-        self.set_in_progress()
         core.userinfo.show_user(self.user, refresh=True)
 
     def on_focus(self, *_args):

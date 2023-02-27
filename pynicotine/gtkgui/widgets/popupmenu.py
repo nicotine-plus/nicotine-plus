@@ -96,7 +96,7 @@ class PopupMenu:
             self.popup_menu.connect("closed", lambda *_args: self.parent.child_focus(Gtk.DirectionType.TAB_FORWARD))
         else:
             self.popup_menu = Gtk.Menu.new_from_model(self.model)
-            self.popup_menu.attach_to_widget(parent, None)
+            self.popup_menu.attach_to_widget(parent)
 
         return self.popup_menu
 
@@ -181,7 +181,7 @@ class PopupMenu:
             # Create new section
 
             self.menu_section = Gio.Menu()
-            menuitem = Gio.MenuItem.new_section(None, self.menu_section)
+            menuitem = Gio.MenuItem.new_section(label=None, section=self.menu_section)
             self.model.append_item(menuitem)
 
             if not item[0]:

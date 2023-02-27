@@ -39,8 +39,8 @@
         <property name="valign">center</property>
         <property name="margin-start">24</property>
         <property name="margin-end">24</property>
-        <property name="margin-top">24</property>
-        <property name="margin-bottom">48</property>
+        <property name="margin-top">6</property>
+        <property name="margin-bottom">30</property>
         <property name="orientation">vertical</property>
         <property name="spacing">24</property>
         <child>
@@ -114,8 +114,8 @@
         <property name="valign">center</property>
         <property name="margin-start">30</property>
         <property name="margin-end">30</property>
-        <property name="margin-top">12</property>
-        <property name="margin-bottom">30</property>
+        <property name="margin-top">6</property>
+        <property name="margin-bottom">18</property>
         <property name="orientation">vertical</property>
         <property name="spacing">30</property>
         <child>
@@ -236,8 +236,8 @@
         <property name="valign">center</property>
         <property name="margin-start">30</property>
         <property name="margin-end">30</property>
-        <property name="margin-top">12</property>
-        <property name="margin-bottom">30</property>
+        <property name="margin-top">6</property>
+        <property name="margin-bottom">24</property>
         <property name="orientation">vertical</property>
         <property name="spacing">30</property>
         <child>
@@ -326,8 +326,8 @@
         <property name="visible">True</property>
         <property name="margin-start">30</property>
         <property name="margin-end">30</property>
-        <property name="margin-top">30</property>
-        <property name="margin-bottom">30</property>
+        <property name="margin-top">18</property>
+        <property name="margin-bottom">24</property>
         <property name="orientation">vertical</property>
         <property name="spacing">30</property>
         <child>
@@ -522,8 +522,8 @@
         <property name="valign">center</property>
         <property name="margin-start">30</property>
         <property name="margin-end">30</property>
-        <property name="margin-top">12</property>
-        <property name="margin-bottom">36</property>
+        <property name="margin-top">6</property>
+        <property name="margin-bottom">24</property>
         <property name="orientation">vertical</property>
         <property name="spacing">30</property>
         <child>

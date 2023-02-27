@@ -112,8 +112,8 @@
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="margin-start">12</property>
-                    <property name="label" translatable="yes">For order-insensitive filtering, as well as filtering several exact phrases, vertical bars can be used to separate phrases and words.
-    Example: Remix|Instrumental|Dub Mix</property>
+                    <property name="label" translatable="yes">Use | (or pipes) to seperate several exact phrases. Example:
+    Remix|Dub Mix|Instrumental</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
                   </object>
@@ -167,8 +167,8 @@
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="margin-start">12</property>
-                <property name="label" translatable="yes">Multiple file extensions can be specified, which in turn will broaden the list of results.
-    Example: flac|wav|ape</property>
+                <property name="label" translatable="yes">Multiple file extensions can be specified, which in turn will reveal more from the list of results. Example:
+    flac wav ape</property>
                 <property name="selectable">True</property>
                 <property name="wrap">True</property>
               </object>
@@ -178,8 +178,8 @@
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="margin-start">12</property>
-                <property name="label" translatable="yes">It is also possible to invert the filter, specifying file extensions you don't want in your results.
-    Example: !mp3|!jpg</property>
+                <property name="label" translatable="yes">It is also possible to invert the filter, specifying file extensions you don't want in your results with an exclamation mark! Example:
+    !mp3 !jpg</property>
                 <property name="selectable">True</property>
                 <property name="wrap">True</property>
               </object>
@@ -215,7 +215,7 @@
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="margin-start">12</property>
-                    <property name="label" translatable="yes">By default, the unit used is bytes and files greater than or equal to the value will be matched.</property>
+                    <property name="label" translatable="yes">By default, the unit used is bytes (B) and files greater than or equal to (>=) the value will be matched.</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
                   </object>
@@ -237,7 +237,7 @@
                     <property name="xalign">0</property>
                     <property name="margin-start">12</property>
                     <property name="label" translatable="yes">Prepend = to a value to specify an exact match:
-    =1024 only matches files that are 1 KiB (kibibyte).</property>
+    =1024 matches files that are exactly 1 KiB (kibibyte).</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
                   </object>
@@ -258,9 +258,8 @@
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="margin-start">12</property>
-                    <property name="label" translatable="yes">Prepend &lt; or &gt; to find files smaller/larger than the given value:
-    &gt;10.5m|&lt;1g to show files larger than 10.5 MiB (mebibytes),
-    but smaller than 1 GiB (gibibytes), use a | between conditions.</property>
+                    <property name="label" translatable="yes">Prepend &lt; or &gt; to find files smaller/larger than the given value. Use a space between each condition to include a range:
+    &gt;10.5m &lt;1g to show files larger than 10.5 MiB, but smaller than 1 GiB.</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
                   </object>
@@ -318,9 +317,8 @@
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="margin-start">12</property>
-                    <property name="label" translatable="yes">Like File Size (above), operators =, !, &lt;, and &gt; can be used, and multiple conditions can be specified with | pipes:
-    &gt;256|&lt;1411 to show files with a bitrate of at least 256 Kb/s
-    with a maximum bitrate of 1411 Kb/s.</property>
+                    <property name="label" translatable="yes">Like File Size (above), operators =, !, &lt;, &gt;, &lt;= or &gt;= can be used, and multiple conditions can be specified, for example to show files with a bitrate of at least 256 Kb/s with a maximum bitrate of 1411 Kb/s:
+    256 &lt;=1411</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
                   </object>
@@ -359,7 +357,7 @@
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="margin-start">12</property>
-                    <property name="label" translatable="yes">By default, files longer than or equal to the entered duration will be matched, unless an operator (=, !, &lt;, or &gt;) is used.</property>
+                    <property name="label" translatable="yes">By default, files longer than or equal to (>=) the entered duration will be matched, unless an operator (=, !, &lt;=, &lt; or &gt;) is used.</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
                   </object>
@@ -370,7 +368,8 @@
                     <property name="xalign">0</property>
                     <property name="margin-start">12</property>
                     <property name="label" translatable="yes">Enter a raw value in seconds or use the MM:SS and HH:MM:SS time formats:
-    &gt;5:30 to show files at least 5 and a half minutes long.
+    =53 shows files that are around 53 seconds long.
+    &gt;5:30 to show files more than 5 and a half minutes long.
     &lt;5:30:00 shows files less than 5 and a half hours long.</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
@@ -381,20 +380,10 @@
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="margin-start">12</property>
-                    <property name="label" translatable="yes">Multiple conditions can be specified with | pipe separators:
-    &gt;6:00|&lt;12:00 to show files between 6 and 12 minutes long.
-    !9:54|!8:43|!7:32 to hide some specific files from the results.
-    =5:34|=4:23|=3:05 to include files with specific durations.</property>
-                    <property name="selectable">True</property>
-                    <property name="wrap">True</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="xalign">0</property>
-                    <property name="margin-start">12</property>
-                    <property name="label" translatable="yes">To exclude non-audio files use !0 in the duration filter.</property>
+                    <property name="label" translatable="yes">Multiple conditions can be specified:
+    &gt;6:00 &lt;12:00 to show files between 6 and 12 minutes long.
+    !9:54 !8:43 !7:32 to hide some specific files from the results.
+    =5:34 =4:23 =3:05 to include files with specific durations.</property>
                     <property name="selectable">True</property>
                     <property name="wrap">True</property>
                   </object>
@@ -417,7 +406,9 @@
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="margin-start">12</property>
-                <property name="label" translatable="yes">Filters files based upon users' geographical location.</property>
+                <property name="label" translatable="yes">Filters files based upon users' geographical location according to country codes defined by ISO 3166-2:
+    US will only show results from users with IP addresses in the United States.
+    !GB will hide results that come from users in Great Britain.</property>
                 <property name="selectable">True</property>
                 <property name="wrap">True</property>
               </object>
@@ -427,8 +418,7 @@
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="margin-start">12</property>
-                <property name="label" translatable="yes">Uses country codes defined by ISO 3166-2:
-    US will only show results from users with IP addresses in the United States. !GB will hide results that come from users in the United Kingdom (Great Britain).</property>
+                <property name="label" translatable="yes">Multiple countries can be specified with commas or spaces.</property>
                 <property name="selectable">True</property>
                 <property name="wrap">True</property>
               </object>
@@ -450,36 +440,6 @@
                 <property name="xalign">0</property>
                 <property name="margin-start">12</property>
                 <property name="label" translatable="yes">Show only those results from users which have at least one upload slot free, i.e. files that are available immediately.</property>
-                <property name="selectable">True</property>
-                <property name="wrap">True</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="label" translatable="yes">Clear</property>
-                <property name="selectable">True</property>
-                <style>
-                  <class name="italic"/>
-                </style>
-              </object>
-            </child>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="margin-start">12</property>
-                <property name="label" translatable="yes">To view the full results again, simply clear all active filters.</property>
-                <property name="selectable">True</property>
-                <property name="wrap">True</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="label" translatable="yes">See the preferences to set default search result filter options.</property>
                 <property name="selectable">True</property>
                 <property name="wrap">True</property>
               </object>

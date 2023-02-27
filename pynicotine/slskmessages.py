@@ -95,12 +95,12 @@ class TransferDirection:
 
 
 class FileAttribute:
-    BITRATE = 0
-    DURATION = 1
-    VBR = 2
-    ENCODER = 3
-    SAMPLE_RATE = 4
-    BIT_DEPTH = 5
+    BITRATE = "0"
+    DURATION = "1"
+    VBR = "2"
+    ENCODER = "3"
+    SAMPLE_RATE = "4"
+    BIT_DEPTH = "5"
 
 
 """
@@ -2462,11 +2462,11 @@ class FileListMessage(PeerMessage):
     def parse_file_attributes(attributes):
 
         try:
-            bitrate = attributes.get(str(FileAttribute.BITRATE))
-            length = attributes.get(str(FileAttribute.DURATION))
-            vbr = attributes.get(str(FileAttribute.VBR))
-            sample_rate = attributes.get(str(FileAttribute.SAMPLE_RATE))
-            bit_depth = attributes.get(str(FileAttribute.BIT_DEPTH))
+            bitrate = attributes.get(FileAttribute.BITRATE)
+            length = attributes.get(FileAttribute.DURATION)
+            vbr = attributes.get(FileAttribute.VBR)
+            sample_rate = attributes.get(FileAttribute.SAMPLE_RATE)
+            bit_depth = attributes.get(FileAttribute.BIT_DEPTH)
 
         except AttributeError:
             # Legacy attribute list format used for shares lists saved in Nicotine+ 3.2.2 and earlier
@@ -2530,7 +2530,7 @@ class FileListMessage(PeerMessage):
             h_bitrate = ""
 
         else:
-            h_bitrate = str(bitrate)
+            h_bitrate = f"{bitrate}"
 
             if vbr == 1:
                 h_bitrate += " (vbr)"
@@ -2643,7 +2643,7 @@ class SharedFileListResponse(FileListMessage):
                 for _ in range(numattr):
                     pos, attrnum = self.unpack_uint32(message, pos)
                     pos, attr = self.unpack_uint32(message, pos)
-                    attrs[str(attrnum)] = attr
+                    attrs[f"{attrnum}"] = attr
 
                 files.append((code, name, size, ext, attrs))
 
@@ -2748,7 +2748,7 @@ class FileSearchResponse(FileListMessage):
                 for _ in range(numattr):
                     pos, attrnum = self.unpack_uint32(message, pos)
                     pos, attr = self.unpack_uint32(message, pos)
-                    attrs[str(attrnum)] = attr
+                    attrs[f"{attrnum}"] = attr
 
             results.append((code, name.replace("/", "\\"), size, ext, attrs))
 
@@ -2944,7 +2944,7 @@ class FolderContentsResponse(PeerMessage):
                 for _ in range(numattr):
                     pos, attrnum = self.unpack_uint32(message, pos)
                     pos, attr = self.unpack_uint32(message, pos)
-                    attrs[str(attrnum)] = attr
+                    attrs[f"{attrnum}"] = attr
 
                 shares[folder][directory].append((code, name, size, ext, attrs))
 

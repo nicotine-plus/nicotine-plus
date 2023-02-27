@@ -53,10 +53,13 @@ class WishList(Dialog):
         self.application = application
         self.list_view = TreeView(
             application.window, parent=self.list_container, multi_select=True, activate_row_callback=self.on_edit_wish,
-            columns=[
-                {"column_id": "wish", "column_type": "text", "title": _("Wish"), "sort_column": 0,
-                 "default_sort_column": "ascending"}
-            ]
+            columns={
+                "wish": {
+                    "column_type": "text",
+                    "title": _("Wish"),
+                    "default_sort_column": "ascending"
+                }
+            }
         )
 
         for wish in config.sections["server"]["autosearch"]:
@@ -109,7 +112,7 @@ class WishList(Dialog):
     def on_edit_wish(self, *_args):
 
         for iterator in self.list_view.get_selected_rows():
-            old_wish = self.list_view.get_row_value(iterator, 0)
+            old_wish = self.list_view.get_row_value(iterator, "wish")
 
             EntryDialog(
                 parent=self,
@@ -124,7 +127,7 @@ class WishList(Dialog):
     def on_remove_wish(self, *_args):
 
         for iterator in reversed(self.list_view.get_selected_rows()):
-            wish = self.list_view.get_row_value(iterator, 0)
+            wish = self.list_view.get_row_value(iterator, "wish")
             core.search.remove_wish(wish)
 
         self.wish_entry.grab_focus()

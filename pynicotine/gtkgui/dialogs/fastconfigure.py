@@ -65,9 +65,11 @@ class FastConfigure(Dialog):
             default_button=self.next_button,
             show_callback=self.on_show,
             close_callback=self.on_close,
+            title=_("Setup Assistant"),
             width=720,
             height=450,
             resizable=False,
+            show_title=False,
             close_destroy=False
         )
 
@@ -80,12 +82,20 @@ class FastConfigure(Dialog):
         self.shares_list_view = TreeView(
             application.window, parent=self.shares_list_container, multi_select=True,
             activate_row_callback=self.on_edit_shared_folder,
-            columns=[
-                {"column_id": "virtual_folder", "column_type": "text", "title": _("Virtual Folder"), "width": 1,
-                 "sort_column": 0, "expand_column": True},
-                {"column_id": "folder", "column_type": "text", "title": _("Folder"), "width": 125,
-                 "sort_column": 1, "expand_column": True}
-            ]
+            columns={
+                "virtual_folder": {
+                    "column_type": "text",
+                    "title": _("Virtual Folder"),
+                    "width": 1,
+                    "expand_column": True
+                },
+                "folder": {
+                    "column_type": "text",
+                    "title": _("Folder"),
+                    "width": 125,
+                    "expand_column": True
+                }
+            }
         )
 
         self.reset_completeness()
@@ -139,21 +149,21 @@ class FastConfigure(Dialog):
     def on_edit_shared_folder_response(self, dialog, _response_id, iterator):
 
         new_virtual_name = dialog.get_entry_value()
-        folder_path = self.shares_list_view.get_row_value(iterator, 1)
+        folder_path = self.shares_list_view.get_row_value(iterator, "folder")
 
         new_mapping = core.shares.new_folder_mapping("public", new_virtual_name, folder_path)
 
         if not new_mapping:
             return
 
-        self.shares_list_view.set_row_value(iterator, 0, new_mapping[0])
+        self.shares_list_view.set_row_value(iterator, "virtual_folder", new_mapping[0])
         self.rescan_required = True
 
     def on_edit_shared_folder(self, *_args):
 
         for iterator in self.shares_list_view.get_selected_rows():
-            virtual_name = self.shares_list_view.get_row_value(iterator, 0)
-            folder_path = self.shares_list_view.get_row_value(iterator, 1)
+            virtual_name = self.shares_list_view.get_row_value(iterator, "virtual_folder")
+            folder_path = self.shares_list_view.get_row_value(iterator, "folder")
 
             EntryDialog(
                 parent=self,
@@ -168,8 +178,8 @@ class FastConfigure(Dialog):
     def on_remove_shared_folder(self, *_args):
 
         for iterator in reversed(self.shares_list_view.get_selected_rows()):
-            virtual_name = self.shares_list_view.get_row_value(iterator, 0)
-            folder_path = self.shares_list_view.get_row_value(iterator, 1)
+            virtual_name = self.shares_list_view.get_row_value(iterator, "virtual_folder")
+            folder_path = self.shares_list_view.get_row_value(iterator, "folder")
             mapping = (virtual_name, folder_path)
 
             config.sections["transfers"]["shared"].remove(mapping)

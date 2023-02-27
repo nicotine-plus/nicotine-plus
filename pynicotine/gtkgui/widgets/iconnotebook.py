@@ -97,15 +97,15 @@ class TabLabel:
             return
 
         if GTK_API_VERSION >= 4:
-            self.close_button = Gtk.Button.new_from_icon_name("window-close-symbolic")
+            self.close_button = Gtk.Button(icon_name="window-close-symbolic")
             self.close_button.is_close_button = True
             self.close_button.get_child().is_close_button = True
             self.container.append(self.close_button)  # pylint: disable=no-member
         else:
-            self.close_button = Gtk.Button.new_from_icon_name("window-close-symbolic",
-                                                              Gtk.IconSize.BUTTON)  # pylint: disable=no-member
-            self.container.add(self.close_button)  # pylint: disable=no-member
-            self.close_button.add_events(Gdk.EventMask.SCROLL_MASK | Gdk.EventMask.SMOOTH_SCROLL_MASK)
+            self.close_button = Gtk.Button(image=Gtk.Image(icon_name="window-close-symbolic"))
+            self.container.add(self.close_button)     # pylint: disable=no-member
+            self.close_button.add_events(             # pylint: disable=no-member
+                Gdk.EventMask.SCROLL_MASK | Gdk.EventMask.SMOOTH_SCROLL_MASK)
 
         add_css_class(self.close_button, "flat")
         self.close_button.set_tooltip_text(_("Close Tab"))
@@ -204,6 +204,7 @@ class TabLabel:
             return
 
         self.set_start_icon_name(icon_name)
+        add_css_class(self.start_icon, "colored-icon")
         add_css_class(self.start_icon, "user-status")
 
     def set_start_icon_name(self, icon_name):
