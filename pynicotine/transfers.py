@@ -782,7 +782,7 @@ class Transfers:
                     return
 
                 destination = self.get_folder_destination(username, directory)
-                files.sort(key=itemgetter(1), reverse=config.sections["transfers"]["reverseorder"])
+                files.sort(key=itemgetter(1))
 
                 log.add_transfer(("Attempting to download files in folder %(folder)s for user %(user)s. "
                                   "Destination path: %(destination)s"), {

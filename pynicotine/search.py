@@ -69,7 +69,7 @@ class Search:
     def request_folder_download(self, user, folder, visible_files):
 
         # First queue the visible search results
-        visible_files.sort(key=itemgetter(1), reverse=config.sections["transfers"]["reverseorder"])
+        visible_files.sort(key=itemgetter(1))
 
         for file in visible_files:
             user, fullpath, destination, size, bitrate, length = file

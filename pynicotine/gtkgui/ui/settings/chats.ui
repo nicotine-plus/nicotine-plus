@@ -149,23 +149,8 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkCheckButton" id="cycle_tab_completion_toggle">
-                    <property name="label" translatable="yes">Cycle through completions when pressing tab-key</property>
-                    <property name="visible">True</property>
-                    <signal name="toggled" handler="on_completion_changed"/>
-                  </object>
-                </child>
-                <child>
                   <object class="GtkCheckButton" id="enable_completion_dropdown_toggle">
                     <property name="label" translatable="yes">Enable completion drop-down list</property>
-                    <property name="visible">True</property>
-                    <property name="margin-top">12</property>
-                    <signal name="toggled" handler="on_completion_changed"/>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkCheckButton" id="hide_dropdown_single_match_toggle">
-                    <property name="label" translatable="yes">Hide drop-down when only one matches</property>
                     <property name="visible">True</property>
                     <signal name="toggled" handler="on_completion_changed"/>
                   </object>

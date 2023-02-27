@@ -19,7 +19,6 @@
 import json
 import os
 
-from operator import itemgetter
 from threading import Thread
 
 from pynicotine import slskmessages
@@ -248,9 +247,6 @@ class UserBrowse:
             destination = core.transfers.get_folder_destination(user, folder, remove_prefix)
 
             if files:
-                if config.sections["transfers"]["reverseorder"]:
-                    files.sort(key=itemgetter(1), reverse=True)
-
                 for file_data in files:
                     virtualpath = "\\".join([folder, file_data[1]])
                     size = file_data[2]
