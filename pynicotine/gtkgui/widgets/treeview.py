@@ -56,15 +56,18 @@ class TreeView:
         self._iter_keys = {}
         self._column_ids = {}
         self._column_numbers = None
+        self._default_sort_column = None
+        self._default_sort_type = Gtk.SortType.ASCENDING
         self._sort_column = None
         self._sort_type = None
+        self._reset_sort_column = None
 
         parent.set_property("child", self.widget)
         self.initialise_columns(columns)
 
         Accelerator("<Primary>c", self.widget, self.on_copy_cell_data_accelerator)
         self.column_menu = self.widget.column_menu = PopupMenu(
-            self.window.application, self.widget, callback=self._press_header, connect_events=False)
+            self.window.application, self.widget, callback=self.on_column_header_menu, connect_events=False)
 
         if multi_select:
             self.widget.set_rubber_banding(True)
@@ -144,39 +147,8 @@ class TreeView:
             column.set_resizable(True)
             break
 
-    def _header_toggle(self, _action, _state, columns, index):
-
-        column = columns[index]
-        column.set_visible(not column.get_visible())
-        self._set_last_column_autosize()
-
-    def _press_header(self, menu, _treeview):
-
-        columns = self.widget.get_columns()
-        visible_columns = [column for column in columns if column.get_visible()]
-        menu.clear()
-
-        for column_num, column in enumerate(columns, start=1):
-            title = column.get_widget().get_text()
-
-            if title == "":
-                title = _("Column #%i") % column_num
-
-            menu.add_items(
-                ("$" + title, None)
-            )
-            menu.update_model()
-            menu.actions[title].set_state(GLib.Variant("b", column in visible_columns))
-
-            if column in visible_columns:
-                menu.actions[title].set_enabled(len(visible_columns) > 1)
-
-            menu.actions[title].connect("activate", self._header_toggle, columns, column_num - 1)
-
     def initialise_columns(self, columns):
 
-        default_sort_column = None
-        default_sort_type = None
         data_types = []
 
         for column_index, (column_id, column_data) in enumerate(columns.items()):
@@ -210,20 +182,22 @@ class TreeView:
 
         for column_index, (column_id, column_data) in enumerate(columns.items()):
             title = column_data.get("title")
-
-            if title is None:
-                # All visible columns processed
-                break
-
-            column_type = column_data["column_type"]
             sort_column = column_data.get("sort_column", column_id)
-            iterator_key = column_data.get("iterator_key")
-            width = column_data.get("width")
             sort_type = column_data.get("default_sort_column")
 
             if sort_type:
-                default_sort_column = sort_column
-                default_sort_type = Gtk.SortType.DESCENDING if sort_type == "descending" else Gtk.SortType.ASCENDING
+                self._default_sort_column = self._column_ids[sort_column]
+                self._default_sort_type = (Gtk.SortType.DESCENDING if sort_type == "descending"
+                                           else Gtk.SortType.ASCENDING)
+                self.model.set_sort_column_id(self._default_sort_column, self._default_sort_type)
+
+            if title is None:
+                # Hidden data column
+                continue
+
+            column_type = column_data["column_type"]
+            iterator_key = column_data.get("iterator_key")
+            width = column_data.get("width")
 
             if iterator_key:
                 self._iterator_key_column = column_index
@@ -289,6 +263,7 @@ class TreeView:
                 column = Gtk.TreeViewColumn(column_id, renderer, icon_name=column_index)
 
             column_header = column.get_button()
+            column_header.connect("clicked", self.on_column_header_pressed, column)
 
             # Required for fixed height mode
             column.set_sizing(Gtk.TreeViewColumnSizing.FIXED)
@@ -328,9 +303,6 @@ class TreeView:
 
         self.widget.connect("columns-changed", self._set_last_column_autosize)
         self.widget.emit("columns-changed")
-
-        if default_sort_column is not None:
-            self.model.set_sort_column_id(self._column_ids[default_sort_column], default_sort_type)
 
         self.widget.set_model(self.model)
 
@@ -379,7 +351,7 @@ class TreeView:
 
         self._sort_column, self._sort_type = self.model.get_sort_column_id()
         self.model.set_default_sort_func(lambda *args: 0)
-        self.model.set_sort_column_id(-1, Gtk.SortType.ASCENDING)
+        self.model.set_sort_column_id(Gtk.TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID, Gtk.SortType.ASCENDING)
 
     def enable_sorting(self):
         self.model.set_sort_column_id(self._sort_column, self._sort_type)
@@ -411,10 +383,10 @@ class TreeView:
     def get_selected_rows(self):
 
         iterators = []
-        model, paths = self.widget.get_selection().get_selected_rows()
+        _model, paths = self.widget.get_selection().get_selected_rows()
 
         for path in paths:
-            iterators.append(model.get_iter(path))
+            iterators.append(self.model.get_iter(path))
 
         return iterators
 
@@ -443,6 +415,7 @@ class TreeView:
 
         self.model.clear()
         self.iterators.clear()
+        self._iter_keys.clear()
 
         self.widget.set_model(self.model)
 
@@ -476,6 +449,47 @@ class TreeView:
     def on_select_row(self, selection, callback):
         _model, iterator = selection.get_selected()
         callback(self, iterator)
+
+    def on_column_header_pressed(self, _treeview, column):
+        """ Reset sorting when column header has been pressed three times """
+
+        if not self._reset_sort_column and column.get_sort_order() == Gtk.SortType.DESCENDING:
+            self._reset_sort_column = column
+            return
+
+        if self._reset_sort_column == column and self._default_sort_column is not None:
+            self.model.set_sort_column_id(self._default_sort_column, self._default_sort_type)
+
+        self._reset_sort_column = None
+
+    def on_column_header_toggled(self, _action, _state, columns, index):
+
+        column = columns[index]
+        column.set_visible(not column.get_visible())
+        self._set_last_column_autosize()
+
+    def on_column_header_menu(self, menu, _treeview):
+
+        columns = self.widget.get_columns()
+        visible_columns = [column for column in columns if column.get_visible()]
+        menu.clear()
+
+        for column_num, column in enumerate(columns, start=1):
+            title = column.get_widget().get_text()
+
+            if title == "":
+                title = _("Column #%i") % column_num
+
+            menu.add_items(
+                ("$" + title, None)
+            )
+            menu.update_model()
+            menu.actions[title].set_state(GLib.Variant("b", column in visible_columns))
+
+            if column in visible_columns:
+                menu.actions[title].set_enabled(len(visible_columns) > 1)
+
+            menu.actions[title].connect("activate", self.on_column_header_toggled, columns, column_num - 1)
 
     def on_search_match(self, model, _column, search_term, iterator):
 
@@ -535,13 +549,12 @@ class TreeView:
         """ Ctrl+C: copy cell data """
 
         path, column = self.widget.get_cursor()
-        model = self.widget.get_model()
 
         if path is None:
             return False
 
-        iterator = model.get_iter(path)
-        cell_value = str(model.get_value(iterator, column.get_sort_column_id()))
+        iterator = self.model.get_iter(path)
+        cell_value = str(self.model.get_value(iterator, column.get_sort_column_id()))
 
         copy_text(cell_value)
         return True

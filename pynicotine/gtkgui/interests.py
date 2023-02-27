@@ -143,7 +143,11 @@ class Interests:
                 # Hidden data columns
                 "status_data": {"data_type": int},
                 "speed_data": {"data_type": GObject.TYPE_UINT},
-                "files_data": {"data_type": GObject.TYPE_UINT}
+                "files_data": {"data_type": GObject.TYPE_UINT},
+                "rating_data": {
+                    "data_type": GObject.TYPE_UINT,
+                    "default_sort_column": "descending"
+                }
             }
         )
 
@@ -391,16 +395,16 @@ class Interests:
 
         self.similar_users_list_view.clear()
 
-        for user in users:
+        for user, rating in users.items():
             self.similar_users_list_view.add_row([
                 USER_STATUS_ICON_NAMES[UserStatus.OFFLINE],
                 user,
-                "", "0", 0, 0, 0
+                "", "0", 0, 0, 0,
+                rating
             ], select_row=False)
 
     def similar_users(self, msg):
-        # Sort users by rating (largest number of identical likes)
-        self.set_similar_users(sorted(msg.users, key=msg.users.get, reverse=True))
+        self.set_similar_users(msg.users)
 
     def item_similar_users(self, msg):
         self.set_similar_users(msg.users, msg.thing)

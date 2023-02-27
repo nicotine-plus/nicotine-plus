@@ -22,6 +22,8 @@ import time
 
 from collections import deque
 
+from gi.repository import GObject
+
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
@@ -63,6 +65,12 @@ class ChatHistory(Popover):
                 "latest_message": {
                     "column_type": "text",
                     "title": _("Latest Message")
+                },
+
+                # Hidden data columns
+                "timestamp_data": {
+                    "data_type": GObject.TYPE_UINT64,
+                    "default_sort_column": "descending"
                 }
             }
         )
@@ -86,6 +94,7 @@ class ChatHistory(Popover):
         username = os.path.basename(file_path[:-4]).decode("utf-8", "replace")
         is_safe_username = ("_" not in username)
         login_username = config.sections["server"]["login"]
+        timestamp = os.path.getmtime(file_path)
 
         read_num_lines = 1 if is_safe_username else 25
         latest_message = None
@@ -131,19 +140,19 @@ class ChatHistory(Popover):
                     username = line_username
                     break
 
-        return username, latest_message
+        return username, latest_message, timestamp
 
     def load_users(self):
 
         log_path = os.path.join(config.sections["logging"]["privatelogsdir"], "*.log")
-        user_logs = sorted(glob.glob(encode_path(log_path)), key=os.path.getmtime)
+        user_logs = glob.glob(encode_path(log_path))
 
         for file_path in user_logs:
             try:
-                username, latest_message = self.load_user(file_path)
+                username, latest_message, timestamp = self.load_user(file_path)
 
                 if latest_message is not None:
-                    self.update_user(username, latest_message.strip())
+                    self.update_user(username, latest_message.strip(), timestamp)
 
             except OSError:
                 continue
@@ -155,16 +164,20 @@ class ChatHistory(Popover):
         if iterator is not None:
             self.list_view.remove_row(iterator)
 
-    def update_user(self, username, message, add_timestamp=False):
+    def update_user(self, username, message, timestamp=None):
 
         self.remove_user(username)
 
-        if add_timestamp:
+        if not timestamp:
             timestamp_format = config.sections["logging"]["log_timestamp"]
             timestamp = time.strftime(timestamp_format)
             message = f"{timestamp} {message}"
 
-        self.list_view.add_row([username, message], select_row=False, prepend=True)
+        self.list_view.add_row([
+            username,
+            message,
+            GObject.Value(GObject.TYPE_UINT64, timestamp)
+        ], select_row=False, prepend=True)
 
     def on_show_user(self, *_args):
 

@@ -473,7 +473,7 @@ class PrivateChat:
                 folder_path=config.sections["logging"]["privatelogsdir"], base_name=f"{clean_file(self.user)}.log",
                 text=line, timestamp=timestamp
             )
-            self.chats.history.update_user(self.user, line, add_timestamp=True)
+            self.chats.history.update_user(self.user, line)
 
     def echo_private_message(self, text, message_type):
 
@@ -508,7 +508,7 @@ class PrivateChat:
                 folder_path=config.sections["logging"]["privatelogsdir"],
                 base_name=f"{clean_file(self.user)}.log", text=line
             )
-            self.chats.history.update_user(self.user, line, add_timestamp=True)
+            self.chats.history.update_user(self.user, line)
 
     def user_name_event(self, pos_x, pos_y, user):
 
