@@ -44,10 +44,10 @@ from pynicotine.gtkgui.widgets.theme import add_css_class
 class TreeView:
 
     def __init__(self, window, parent, columns, multi_select=False, always_select=False,
-                 name=None, activate_row_callback=None, select_row_callback=None, tooltip_callback=None):
+                 name=None, activate_row_callback=None, select_row_callback=None):
 
         self.window = window
-        self.widget = Gtk.TreeView(visible=True)
+        self.widget = Gtk.TreeView(has_tooltip=True, visible=True)
         self.widget_name = name
         self.columns = columns
         self.model = None
@@ -79,9 +79,7 @@ class TreeView:
         if select_row_callback:
             self.widget.get_selection().connect("changed", self.on_select_row, select_row_callback)
 
-        if tooltip_callback:
-            self.widget.set_has_tooltip(True)
-            self.widget.connect("query-tooltip", self.on_tooltip, tooltip_callback)
+        self.widget.connect("query-tooltip", self.on_tooltip)
 
         self.widget.set_fixed_height_mode(True)
         self.widget.set_search_equal_func(self.on_search_match)
@@ -451,56 +449,23 @@ class TreeView:
     def set_search_entry(self, entry):
         self.widget.set_search_entry(entry)
 
-    def show_tooltip(self, pos_x, pos_y, tooltip, column_id, column_titles, text_function):
-
-        try:
-            bin_x, bin_y = self.widget.convert_widget_to_bin_window_coords(pos_x, pos_y)
-            path, column, _cell_x, _cell_y = self.widget.get_path_at_pos(bin_x, bin_y)
-
-        except TypeError:
-            return False
-
-        if column.get_title() not in column_titles:
-            return False
-
-        iterator = self.model.get_iter(path)
-        column_value = self.get_row_value(iterator, column_id)
-
-        # Update tooltip position
-        self.widget.set_tooltip_cell(tooltip, path, column)
-
-        text = text_function(column_value)
-        if not text:
-            return False
-
-        tooltip.set_text(text)
-        return True
-
     @staticmethod
-    def get_user_status_tooltip_text(column_value):
+    def get_user_status_tooltip_text(icon_name):
 
-        if column_value == 1:
+        if "away" in icon_name:
             return _("Away")
 
-        if column_value == 2:
+        if "online" in icon_name:
             return _("Online")
 
         return _("Offline")
 
-    def show_user_status_tooltip(self, pos_x, pos_y, tooltip, column_id):
-        return self.show_tooltip(pos_x, pos_y, tooltip, column_id, ("status",), self.get_user_status_tooltip_text)
-
     @staticmethod
-    def get_country_tooltip_text(country_code):
+    def get_country_tooltip_text(icon_name):
 
-        if country_code:
-            country_name = GeoIP.country_code_to_name(country_code)
-            return f"{country_name} ({country_code})"
-
-        return _("Earth")
-
-    def show_country_tooltip(self, pos_x, pos_y, tooltip, column_id):
-        return self.show_tooltip(pos_x, pos_y, tooltip, column_id, ("country",), get_country_tooltip_text)
+        country_code = icon_name[-2:].upper()
+        country_name = GeoIP.country_code_to_name(country_code)
+        return f"{country_name} ({country_code})"
 
     def on_toggle(self, _widget, path, callback):
         callback(self, self.model.get_iter(path))
@@ -532,8 +497,39 @@ class TreeView:
 
         return True
 
-    def on_tooltip(self, _widget, pos_x, pos_y, keyboard_mode, tooltip, callback):
-        return callback(self, pos_x, pos_y, keyboard_mode, tooltip)
+    def on_tooltip(self, _widget, pos_x, pos_y, _keyboard_mode, tooltip):
+
+        try:
+            bin_x, bin_y = self.widget.convert_widget_to_bin_window_coords(pos_x, pos_y)
+            is_blank, path, column, _cell_x, _cell_y = self.widget.is_blank_at_pos(bin_x, bin_y)
+
+        except TypeError:
+            return False
+
+        if is_blank:
+            return False
+
+        column_id = column.get_title()
+        iterator = self.model.get_iter(path)
+        value = self.get_row_value(iterator, column_id)
+
+        if not value:
+            return False
+
+        if not isinstance(value, str):
+            return False
+
+        if column_id == "country":
+            value = self.get_country_tooltip_text(value)
+
+        elif column_id == "status":
+            value = self.get_user_status_tooltip_text(value)
+
+        # Update tooltip position
+        self.widget.set_tooltip_cell(tooltip, path, column)
+
+        tooltip.set_text(value)
+        return True
 
     def on_copy_cell_data_accelerator(self, *_args):
         """ Ctrl+C: copy cell data """

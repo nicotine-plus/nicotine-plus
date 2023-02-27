@@ -109,7 +109,7 @@ class Interests:
 
         self.similar_users_list_view = TreeView(
             window, parent=self.similar_users_list_container,
-            activate_row_callback=self.on_ru_row_activated, tooltip_callback=self.on_tooltip,
+            activate_row_callback=self.on_ru_row_activated,
             columns={
                 # Visible columns
                 "status": {
@@ -484,7 +484,3 @@ class Interests:
 
             core.userinfo.show_user(user)
             return
-
-    @staticmethod
-    def on_tooltip(list_view, pos_x, pos_y, _keyboard_mode, tooltip):
-        return list_view.show_user_status_tooltip(pos_x, pos_y, tooltip, column_id="status_data")

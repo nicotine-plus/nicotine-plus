@@ -56,7 +56,7 @@ class UserList:
         # Columns
         self.list_view = TreeView(
             window, parent=self.list_container, name="buddy_list",
-            activate_row_callback=self.on_row_activated, tooltip_callback=self.on_tooltip,
+            activate_row_callback=self.on_row_activated,
             columns={
                 # Visible columns
                 "status": {
@@ -421,20 +421,6 @@ class UserList:
             callback_data=user,
             default=note
         ).show()
-
-    @staticmethod
-    def on_tooltip(list_view, pos_x, pos_y, _keyboard_mode, tooltip):
-
-        status_tooltip = list_view.show_user_status_tooltip(pos_x, pos_y, tooltip, "status_data")
-        country_tooltip = list_view.show_country_tooltip(pos_x, pos_y, tooltip, "country_data")
-
-        if status_tooltip:
-            return status_tooltip
-
-        if country_tooltip:
-            return country_tooltip
-
-        return False
 
     def server_disconnect(self, *_args):
 

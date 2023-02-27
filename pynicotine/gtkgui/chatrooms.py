@@ -493,7 +493,7 @@ class ChatRoom:
 
         self.users_list_view = TreeView(
             self.window, parent=self.users_list_container, name="chat_room",
-            activate_row_callback=self.on_row_activated, tooltip_callback=self.on_tooltip,
+            activate_row_callback=self.on_row_activated,
             columns={
                 # Visible columns
                 "status": {
@@ -1209,16 +1209,6 @@ class ChatRoom:
             return
 
         core.chatrooms.remove_room(self.room)
-
-    @staticmethod
-    def on_tooltip(list_view, pos_x, pos_y, _keyboard_mode, tooltip):
-
-        status_tooltip = list_view.show_user_status_tooltip(pos_x, pos_y, tooltip, "status_data")
-
-        if status_tooltip:
-            return status_tooltip
-
-        return list_view.show_country_tooltip(pos_x, pos_y, tooltip, "country_data")
 
     def on_log_toggled(self, *_args):
 
