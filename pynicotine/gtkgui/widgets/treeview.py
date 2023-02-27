@@ -976,17 +976,6 @@ def get_transfer_file_path_tooltip_text(column_value):
     return column_value.filename or column_value.path
 
 
-def get_user_status_tooltip_text(column_value):
-
-    if column_value == 1:
-        return _("Away")
-
-    if column_value == 2:
-        return _("Online")
-
-    return _("Offline")
-
-
 def show_country_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn):
     return show_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn,
                         ("country",), get_country_tooltip_text)
@@ -1003,7 +992,3 @@ def show_file_path_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn, transf
 def show_file_type_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn):
     return show_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn,
                         ("file_type"), get_file_type_tooltip_text)
-
-
-def show_user_status_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn):
-    return show_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn, ("status",), get_user_status_tooltip_text)
