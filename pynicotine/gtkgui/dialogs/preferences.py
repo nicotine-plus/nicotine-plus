@@ -819,6 +819,8 @@ class UserProfilePage:
         ) = ui_template.widgets
 
         self.application = application
+        self.user_profile_required = False
+
         self.description_view = TextView(self.description_view_container, parse_urls=False)
         self.select_picture_button = FileChooserButton(
             self.select_picture_button, parent=application.preferences, chooser_type="image")
@@ -831,15 +833,25 @@ class UserProfilePage:
         }
 
     def set_settings(self):
+
         self.description_view.clear()
         self.application.preferences.set_widgets_data(self.options)
 
+        self.user_profile_required = False
+
     def get_settings(self):
+
+        description = repr(self.description_view.get_text())
+        picture_path = self.select_picture_button.get_path()
+
+        if (description != config.sections["userinfo"]["descr"]
+                or picture_path != config.sections["userinfo"]["pic"]):
+            self.user_profile_required = True
 
         return {
             "userinfo": {
-                "descr": repr(self.description_view.get_text()),
-                "pic": self.select_picture_button.get_path()
+                "descr": description,
+                "pic": picture_path
             }
         }
 
@@ -2695,6 +2707,10 @@ class Preferences(Dialog):
             "plugins": {}
         }
 
+        for page in self.pages.values():
+            for key, data in page.get_settings().items():
+                options[key].update(data)
+
         try:
             portmap_required = self.pages["network"].portmap_required
 
@@ -2714,6 +2730,12 @@ class Preferences(Dialog):
             theme_required = False
 
         try:
+            user_profile_required = self.pages["user-profile"].user_profile_required
+
+        except KeyError:
+            user_profile_required = False
+
+        try:
             completion_required = self.pages["chats"].completion_required
 
         except KeyError:
@@ -2731,16 +2753,12 @@ class Preferences(Dialog):
         except KeyError:
             search_required = False
 
-        for page in self.pages.values():
-            for key, data in page.get_settings().items():
-                options[key].update(data)
-
-        return (portmap_required, rescan_required, theme_required, completion_required,
+        return (portmap_required, rescan_required, theme_required, user_profile_required, completion_required,
                 ip_ban_required, search_required, options)
 
     def update_settings(self, settings_closed=False):
 
-        (portmap_required, rescan_required, theme_required, completion_required,
+        (portmap_required, rescan_required, theme_required, user_profile_required, completion_required,
             ip_ban_required, search_required, options) = self.get_settings()
 
         for key, data in options.items():
@@ -2766,6 +2784,9 @@ class Preferences(Dialog):
 
             self.application.window.chatrooms.update_tags()
             self.application.window.privatechat.update_tags()
+
+        if user_profile_required and core.login_username:
+            core.userinfo.show_user(core.login_username, refresh=True)
 
         if completion_required:
             core.chatrooms.update_completions()
