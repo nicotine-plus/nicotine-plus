@@ -407,7 +407,8 @@ class Interests:
         self.set_similar_users(msg.users)
 
     def item_similar_users(self, msg):
-        self.set_similar_users(msg.users, msg.thing)
+        rating = 0
+        self.set_similar_users({user: rating for user in msg.users}, msg.thing)
 
     def user_status(self, msg):
 
