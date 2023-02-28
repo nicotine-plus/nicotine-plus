@@ -57,7 +57,7 @@ class RoomList(Popover):
 
         self.list_view = TreeView(
             self.window, parent=self.list_container,
-            activate_row_callback=self.on_row_activated,
+            activate_row_callback=self.on_row_activated, search_entry=self.search_entry,
             columns={
                 # Visible columns
                 "room": {
@@ -81,7 +81,6 @@ class RoomList(Popover):
                 "room_underline_data": {"data_type": Pango.Underline}
             }
         )
-        self.list_view.set_search_entry(self.search_entry)
 
         self.popup_room = None
         self.popup_menu = PopupMenu(window.application, self.list_view.widget, self.on_popup_menu)

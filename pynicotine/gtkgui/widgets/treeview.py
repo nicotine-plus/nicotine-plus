@@ -44,7 +44,7 @@ from pynicotine.gtkgui.widgets.theme import add_css_class
 class TreeView:
 
     def __init__(self, window, parent, columns, multi_select=False, always_select=False,
-                 name=None, activate_row_callback=None, select_row_callback=None):
+                 name=None, activate_row_callback=None, select_row_callback=None, search_entry=None):
 
         self.window = window
         self.widget = Gtk.TreeView(has_tooltip=True, visible=True)
@@ -81,6 +81,9 @@ class TreeView:
 
         if select_row_callback:
             self.widget.get_selection().connect("changed", self.on_select_row, select_row_callback)
+
+        if search_entry:
+            self.widget.set_search_entry(search_entry)
 
         self.widget.connect("query-tooltip", self.on_tooltip)
 
@@ -418,9 +421,6 @@ class TreeView:
         self._iter_keys.clear()
 
         self.widget.set_model(self.model)
-
-    def set_search_entry(self, entry):
-        self.widget.set_search_entry(entry)
 
     @staticmethod
     def get_user_status_tooltip_text(icon_name):

@@ -56,6 +56,7 @@ class ChatHistory(Popover):
 
         self.list_view = TreeView(
             window, parent=self.list_container, activate_row_callback=self.on_show_user,
+            search_entry=self.search_entry,
             columns={
                 "user": {
                     "column_type": "text",
@@ -74,7 +75,6 @@ class ChatHistory(Popover):
                 }
             }
         )
-        self.list_view.set_search_entry(self.search_entry)
 
         Accelerator("<Primary>f", self.widget, self.on_search_accelerator)
         CompletionEntry(window.private_entry, self.list_view.model, column=0)
