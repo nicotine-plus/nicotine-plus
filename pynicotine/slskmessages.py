@@ -2362,6 +2362,7 @@ class SharedFileList(PeerMessage):
     def _parse_result_list(self, message, pos=0):
         pos, ndir = self.unpack_uint32(message, pos)
 
+        ext = ""
         shares = []
         for _ in range(ndir):
             pos, directory = self.unpack_string(message, pos)
@@ -2374,7 +2375,7 @@ class SharedFileList(PeerMessage):
                 pos, code = self.unpack_uint8(message, pos)
                 pos, name = self.unpack_string(message, pos)
                 pos, size = self.parse_file_size(message, pos)
-                pos, ext = self.unpack_string(message, pos)
+                pos, _ext = self.unpack_string(message, pos)  # Obsolete, ignore
                 pos, numattr = self.unpack_uint32(message, pos)
 
                 attrs = {}
@@ -2501,12 +2502,13 @@ class FileSearchResult(PeerMessage):
     def _parse_result_list(self, message, pos):
         pos, nfiles = self.unpack_uint32(message, pos)
 
+        ext = ""
         results = []
         for _ in range(nfiles):
             pos, code = self.unpack_uint8(message, pos)
             pos, name = self.unpack_string(message, pos)
             pos, size = self.parse_file_size(message, pos)
-            pos, ext = self.unpack_string(message, pos)
+            pos, _ext = self.unpack_string(message, pos)  # Obsolete, ignore
             pos, numattr = self.unpack_uint32(message, pos)
 
             attrs = {}
@@ -2687,13 +2689,14 @@ class FolderContentsResponse(PeerMessage):
             directory = directory.replace('/', '\\')
             pos, nfiles = self.unpack_uint32(message, pos)
 
+            ext = ""
             shares[folder][directory] = []
 
             for _ in range(nfiles):
                 pos, code = self.unpack_uint8(message, pos)
                 pos, name = self.unpack_string(message, pos)
                 pos, size = self.unpack_uint64(message, pos)
-                pos, ext = self.unpack_string(message, pos)
+                pos, _ext = self.unpack_string(message, pos)  # Obsolete, ignore
                 pos, numattr = self.unpack_uint32(message, pos)
 
                 attrs = {}
