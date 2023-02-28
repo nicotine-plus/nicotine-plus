@@ -18,7 +18,7 @@
             <property name="visible">True</property>
             <property name="hexpand">True</property>
             <property name="width-chars">15</property>
-            <signal name="changed" handler="on_search_room"/>
+            <signal name="activate" handler="on_row_activated"/>
           </object>
         </child>
         <child>
@@ -48,15 +48,9 @@
           <object class="GtkBox">
             <property name="visible">True</property>
             <child>
-              <object class="GtkScrolledWindow">
+              <object class="GtkScrolledWindow" id="list_container">
                 <property name="visible">True</property>
                 <property name="hexpand">True</property>
-                <child>
-                  <object class="GtkTreeView" id="list_view">
-                    <property name="visible">True</property>
-                    <signal name="row-activated" handler="on_row_activated"/>
-                  </object>
-                </child>
               </object>
             </child>
           </object>
