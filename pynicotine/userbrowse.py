@@ -158,6 +158,10 @@ class UserBrowse:
 
         filename_encoded = encode_path(filename)
 
+        def json_keys_to_integer(dictionary):
+            # JSON stores file attribute types as strings, convert them back to integers
+            return {int(k): v for k, v in dictionary}
+
         try:
             try:
                 # Try legacy format first
@@ -170,7 +174,7 @@ class UserBrowse:
                 # Try new format
 
                 with open(filename_encoded, encoding="utf-8") as file_handle:
-                    shares_list = json.load(file_handle)
+                    shares_list = json.load(file_handle, object_pairs_hook=json_keys_to_integer)
 
             # Basic sanity check
             for _folder, files in shares_list:
