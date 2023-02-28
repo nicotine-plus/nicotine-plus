@@ -95,12 +95,12 @@ class TransferDirection:
 
 
 class FileAttribute:
-    BITRATE = "0"
-    DURATION = "1"
-    VBR = "2"
-    ENCODER = "3"
-    SAMPLE_RATE = "4"
-    BIT_DEPTH = "5"
+    BITRATE = 0
+    DURATION = 1
+    VBR = 2
+    ENCODER = 3
+    SAMPLE_RATE = 4
+    BIT_DEPTH = 5
 
 
 """
@@ -2643,7 +2643,7 @@ class SharedFileListResponse(FileListMessage):
                 for _ in range(numattr):
                     pos, attrnum = self.unpack_uint32(message, pos)
                     pos, attr = self.unpack_uint32(message, pos)
-                    attrs[f"{attrnum}"] = attr
+                    attrs[attrnum] = attr
 
                 files.append((code, name, size, ext, attrs))
 
@@ -2749,7 +2749,7 @@ class FileSearchResponse(FileListMessage):
                 for _ in range(numattr):
                     pos, attrnum = self.unpack_uint32(message, pos)
                     pos, attr = self.unpack_uint32(message, pos)
-                    attrs[f"{attrnum}"] = attr
+                    attrs[attrnum] = attr
 
             results.append((code, name.replace("/", "\\"), size, ext, attrs))
 
@@ -2946,7 +2946,7 @@ class FolderContentsResponse(PeerMessage):
                 for _ in range(numattr):
                     pos, attrnum = self.unpack_uint32(message, pos)
                     pos, attr = self.unpack_uint32(message, pos)
-                    attrs[f"{attrnum}"] = attr
+                    attrs[attrnum] = attr
 
                 shares[folder][directory].append((code, name, size, ext, attrs))
 
