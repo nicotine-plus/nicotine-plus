@@ -39,6 +39,8 @@ INT_UNPACK = Struct("<i").unpack_from
 UINT_UNPACK = Struct("<I").unpack_from
 UINT64_UNPACK = Struct("<Q").unpack_from
 
+BOOL_PACK = Struct("?").pack
+UINT8_PACK = Struct("B").pack
 INT_PACK = Struct("<i").pack
 UINT_PACK = Struct("<I").pack
 UINT64_PACK = Struct("<Q").pack
@@ -238,23 +240,23 @@ class SlskMessage(Message):
         if latin1:
             try:
                 # Try to encode in latin-1 first for older clients (Soulseek NS)
-                encoded = bytes(content, "latin-1")
+                encoded = content.encode("latin-1")
 
             except Exception:
-                encoded = bytes(content, "utf-8", "replace")
+                encoded = content.encode("utf-8", "replace")
 
         else:
-            encoded = bytes(content, "utf-8", "replace")
+            encoded = content.encode("utf-8", "replace")
 
         return UINT_PACK(len(encoded)) + encoded
 
     @staticmethod
     def pack_bool(content):
-        return bytes([1]) if content else bytes([0])
+        return BOOL_PACK(content)
 
     @staticmethod
     def pack_uint8(content):
-        return bytes([content])
+        return UINT8_PACK(content)
 
     @staticmethod
     def pack_int32(content):
@@ -287,17 +289,19 @@ class SlskMessage(Message):
     def unpack_string(message, start=0):
 
         length = UINT_UNPACK(message, start)[0]
-        string = message[start + 4:start + length + 4]
+        content = message[start + 4:start + length + 4].tobytes()
 
         try:
-            string = str(string, "utf-8")
+            string = content.decode("utf-8")
+
         except Exception:
             # Older clients (Soulseek NS)
-
             try:
-                string = str(string, "latin-1")
+                string = content.decode("latin-1")
+
             except Exception as error:
                 from pynicotine.logfacility import log
+                string = content
                 log.add_debug("Error trying to decode string '%s': %s", (string, error))
 
         return start + 4 + length, string
