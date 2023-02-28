@@ -43,16 +43,17 @@ from pynicotine.gtkgui.widgets.theme import add_css_class
 
 class TreeView:
 
-    def __init__(self, window, parent, columns, multi_select=False, always_select=False,
+    def __init__(self, window, parent, columns, has_tree=False, multi_select=False, always_select=False,
                  name=None, secondary_name=None, activate_row_callback=None, select_row_callback=None,
                  search_entry=None):
 
         self.window = window
-        self.widget = Gtk.TreeView(has_tooltip=True, visible=True)
+        self.widget = Gtk.TreeView(enable_tree_lines=True, has_tooltip=True, visible=True)
         self.model = None
         self.iterators = {}
         self._widget_name = name
         self._secondary_name = secondary_name
+        self._has_tree = has_tree
         self._columns = columns
         self._iterator_key_column = 0
         self._iter_keys = {}
@@ -175,21 +176,24 @@ class TreeView:
             data_types.append(data_type)
             self._column_ids[column_id] = column_index
 
-        self.model = Gtk.ListStore(*data_types)
+        model_class = Gtk.TreeStore if self._has_tree else Gtk.ListStore
+        self.model = model_class(*data_types)
         self._column_numbers = list(self._column_ids.values())
 
         progress_padding = 1
         height_padding = 4
         width_padding = 10 if GTK_API_VERSION >= 4 else 12
 
-        cols = {}
-        num_cols = len(columns)
+        column_widgets = {}
         column_config = None
+        num_columns = len(columns)
+        has_visible_column_header = False
 
         for column_index, (column_id, column_data) in enumerate(columns.items()):
             title = column_data.get("title")
             sort_column = column_data.get("sort_column", column_id)
             sort_type = column_data.get("default_sort_column")
+            iterator_key = column_data.get("iterator_key")
 
             if sort_type:
                 self._default_sort_column = self._column_ids[sort_column]
@@ -197,16 +201,15 @@ class TreeView:
                                            else Gtk.SortType.ASCENDING)
                 self.model.set_sort_column_id(self._default_sort_column, self._default_sort_type)
 
+            if iterator_key:
+                self._iterator_key_column = column_index
+
             if title is None:
                 # Hidden data column
                 continue
 
             column_type = column_data["column_type"]
-            iterator_key = column_data.get("iterator_key")
             width = column_data.get("width")
-
-            if iterator_key:
-                self._iterator_key_column = column_index
 
             if self._widget_name:
                 try:
@@ -281,7 +284,7 @@ class TreeView:
                     column.set_fixed_width(width)
 
             # Allow individual cells to receive visual focus
-            if num_cols > 1:
+            if num_columns > 1:
                 renderer.set_property("mode", Gtk.CellRendererMode.ACTIVATABLE)
 
             column.set_reorderable(True)
@@ -297,6 +300,8 @@ class TreeView:
 
             if column_data.get("hide_header"):
                 column.get_widget().set_visible(False)
+            else:
+                has_visible_column_header = True
 
             if column_data.get("expand_column"):
                 column.set_expand(True)
@@ -305,10 +310,12 @@ class TreeView:
                 column.connect("notify::x-offset", self.on_column_position_changed)
 
             column.set_sort_column_id(self._column_ids[sort_column])
-            cols[column_id] = column
+            column_widgets[column_id] = column
 
-        self._append_columns(cols, column_config)
-        self._hide_columns(cols, column_config)
+        self.widget.set_headers_visible(has_visible_column_header)
+
+        self._append_columns(column_widgets, column_config)
+        self._hide_columns(column_widgets, column_config)
 
         self.widget.connect("columns-changed", self._set_last_column_autosize)
         self.widget.emit("columns-changed")
@@ -365,12 +372,18 @@ class TreeView:
     def enable_sorting(self):
         self.model.set_sort_column_id(self._sort_column, self._sort_type)
 
-    def add_row(self, values, select_row=True, prepend=False):
+    def add_row(self, values, select_row=True, prepend=False, parent_iterator=None):
 
         position = 0 if prepend else -1
         key = values[self._iterator_key_column]
 
-        self.iterators[key] = iterator = self.model.insert_with_valuesv(position, self._column_numbers, values)
+        if self._has_tree:
+            self.iterators[key] = iterator = self.model.insert_with_values(
+                parent_iterator, position, self._column_numbers, values
+            )
+        else:
+            self.iterators[key] = iterator = self.model.insert_with_valuesv(position, self._column_numbers, values)
+
         self._iter_keys[iterator.user_data] = key
 
         if select_row:
@@ -399,28 +412,58 @@ class TreeView:
 
         return iterators
 
+    def get_focused_row(self):
+
+        path, _column = self.widget.get_cursor()
+
+        if path is not None:
+            return self.model.get_iter(path)
+
+        return None
+
     def get_row_value(self, iterator, column_id):
         return self.model.get_value(iterator, self._column_ids[column_id])
 
     def set_row_value(self, iterator, column_id, value):
         return self.model.set_value(iterator, self._column_ids[column_id], value)
 
-    def select_row(self, iterator, should_focus=True):
+    def remove_row(self, iterator):
+        del self.iterators[self._iter_keys[iterator.user_data]]
+        self.model.remove(iterator)
+
+    def select_row(self, iterator=None, should_focus=True, should_expand=False):
+
+        if iterator is None:
+            iterator = self.model.get_iter_first()
 
         if should_focus:
             path = self.model.get_path(iterator)
+
+            if should_expand:
+                self.widget.expand_to_path(path)
+
             self.widget.set_cursor(self.model.get_path(iterator))
             self.widget.scroll_to_cell(path, column=None, use_align=True, row_align=0.5, col_align=0.5)
             return
 
         self.widget.get_selection().select_iter(iterator)
 
-    def remove_row(self, iterator):
-        del self.iterators[self._iter_keys[iterator.user_data]]
-        self.model.remove(iterator)
-
     def unselect_all_rows(self):
         self.widget.get_selection().unselect_all()
+
+    def expand_row(self, iterator):
+        path = self.model.get_path(iterator)
+        return self.widget.expand_row(path, open_all=False)
+
+    def collapse_row(self, iterator):
+        path = self.model.get_path(iterator)
+        return self.widget.collapse_row(path)
+
+    def expand_all_rows(self):
+        self.widget.expand_all()
+
+    def collapse_all_rows(self):
+        self.widget.collapse_all()
 
     def get_focused_column(self):
         _path, column = self.widget.get_cursor()
@@ -434,6 +477,10 @@ class TreeView:
 
     def is_selection_empty(self):
         return self.widget.get_selection().count_selected_rows() == 0
+
+    def is_row_expanded(self, iterator):
+        path = self.model.get_path(iterator)
+        return self.widget.row_expanded(path)
 
     def grab_focus(self):
         self.widget.grab_focus()

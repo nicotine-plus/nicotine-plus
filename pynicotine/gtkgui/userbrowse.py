@@ -42,8 +42,6 @@ from pynicotine.gtkgui.widgets.popupmenu import FilePopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.theme import get_file_type_icon_name
 from pynicotine.gtkgui.widgets.treeview import TreeView
-from pynicotine.gtkgui.widgets.treeview import initialise_columns
-from pynicotine.gtkgui.widgets.treeview import show_file_path_tooltip
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.slskmessages import FileListMessage
 from pynicotine.slskmessages import UserStatus
@@ -163,7 +161,7 @@ class UserBrowse:
             self.expand_button,
             self.expand_icon,
             self.file_list_container,
-            self.folder_tree_view,
+            self.folder_tree_container,
             self.info_bar,
             self.num_folders_label,
             self.progress_bar,
@@ -196,16 +194,19 @@ class UserBrowse:
         self.info_bar = InfoBar(self.info_bar, button=self.retry_button)
 
         # Setup folder_tree_view
-        self.dir_store = Gtk.TreeStore(str)
-        self.dir_column_numbers = list(range(self.dir_store.get_n_columns()))
-        cols = initialise_columns(
-            self.window, None, self.folder_tree_view,
-            ["folder", _("Folder"), -1, "text", None]
+        self.folder_tree_view = TreeView(
+            self.window, parent=self.folder_tree_container, has_tree=True, always_select=True,
+            activate_row_callback=self.on_folder_row_activated,
+            select_row_callback=self.on_select_dir,
+            columns={
+                # Visible columns
+                "folder": {
+                    "column_type": "text",
+                    "title": _("Folder"),
+                    "hide_header": True
+                }
+            }
         )
-        cols["folder"].set_sort_column_id(0)
-
-        self.folder_tree_view.get_selection().connect("changed", self.on_select_dir)
-        self.folder_tree_view.set_model(self.dir_store)
 
         # Popup Menu (folder_tree_view)
         self.user_popup_menu = UserPopupMenu(self.window.application, None, self.on_tab_popup)
@@ -217,7 +218,8 @@ class UserBrowse:
             ("#" + _("_Close Tab"), self.on_close)
         )
 
-        self.folder_popup_menu = PopupMenu(self.window.application, self.folder_tree_view, self.on_folder_popup_menu)
+        self.folder_popup_menu = PopupMenu(self.window.application, self.folder_tree_view.widget,
+                                           self.on_folder_popup_menu)
 
         if user == config.sections["server"]["login"]:
             self.folder_popup_menu.add_items(
@@ -331,17 +333,17 @@ class UserBrowse:
             )
 
         # Key Bindings (folder_tree_view)
-        Accelerator("Left", self.folder_tree_view, self.on_folder_collapse_accelerator)
-        Accelerator("minus", self.folder_tree_view, self.on_folder_collapse_accelerator)  # "-"
-        Accelerator("backslash", self.folder_tree_view, self.on_folder_collapse_sub_accelerator)  # "\"
-        Accelerator("equal", self.folder_tree_view, self.on_folder_expand_sub_accelerator)  # "=" (for US/UK laptop)
-        Accelerator("Right", self.folder_tree_view, self.on_folder_expand_accelerator)
+        Accelerator("Left", self.folder_tree_view.widget, self.on_folder_collapse_accelerator)
+        Accelerator("minus", self.folder_tree_view.widget, self.on_folder_collapse_accelerator)  # "-"
+        Accelerator("backslash", self.folder_tree_view.widget, self.on_folder_collapse_sub_accelerator)  # "\"
+        Accelerator("equal", self.folder_tree_view.widget, self.on_folder_expand_sub_accelerator)  # "=" (for US/UK)
+        Accelerator("Right", self.folder_tree_view.widget, self.on_folder_expand_accelerator)
 
-        Accelerator("<Shift>Return", self.folder_tree_view, self.on_folder_focus_filetree_accelerator)  # brwse into
-        Accelerator("<Primary>Return", self.folder_tree_view, self.on_folder_transfer_to_accelerator)  # w/to prompt
-        Accelerator("<Shift><Primary>Return", self.folder_tree_view, self.on_folder_transfer_accelerator)  # no prmt
-        Accelerator("<Primary><Alt>Return", self.folder_tree_view, self.on_folder_open_manager_accelerator)
-        Accelerator("<Alt>Return", self.folder_tree_view, self.on_file_properties_accelerator, True)
+        Accelerator("<Shift>Return", self.folder_tree_view.widget, self.on_folder_focus_filetree_accelerator)
+        Accelerator("<Primary>Return", self.folder_tree_view.widget, self.on_folder_transfer_to_accelerator)
+        Accelerator("<Shift><Primary>Return", self.folder_tree_view.widget, self.on_folder_transfer_accelerator)
+        Accelerator("<Primary><Alt>Return", self.folder_tree_view.widget, self.on_folder_open_manager_accelerator)
+        Accelerator("<Alt>Return", self.folder_tree_view.widget, self.on_file_properties_accelerator, True)
 
         # Key Bindings (file_list_view)
         for accelerator in ("<Shift>Tab", "BackSpace", "backslash"):  # Avoid header, navigate up, "\"
@@ -356,7 +358,7 @@ class UserBrowse:
         Accelerator("<Alt>Return", self.file_list_view.widget, self.on_file_properties_accelerator)
 
         # Key Bindings (General)
-        for widget in (self.container, self.folder_tree_view, self.file_list_view.widget):
+        for widget in (self.container, self.folder_tree_view.widget, self.file_list_view.widget):
             Accelerator("<Primary>f", widget, self.on_search_accelerator)  # Find focus
 
         Accelerator("F3", self.container, self.on_search_next_accelerator)
@@ -393,15 +395,10 @@ class UserBrowse:
         self.selected_folder = None
         self.selected_files.clear()
 
-        self.folder_tree_view.set_model(None)
-
         self.dir_iters.clear()
         self.dir_user_data.clear()
-        self.dir_store.clear()
-
+        self.folder_tree_view.clear()
         self.file_list_view.clear()
-
-        self.folder_tree_view.set_model(self.dir_store)
 
     def make_new_model(self, shares, private_shares=None):
 
@@ -421,16 +418,12 @@ class UserBrowse:
         self.num_folders_label.set_text(humanize(self.num_folders))
 
         if self.expand_button.get_active():
-            self.folder_tree_view.expand_all()
+            self.folder_tree_view.expand_all_rows()
         else:
-            self.folder_tree_view.collapse_all()
+            self.folder_tree_view.collapse_all_rows()
 
-        iterator = self.dir_store.get_iter_first()
-
-        if iterator:
-            path = self.dir_store.get_path(iterator)
-            self.folder_tree_view.set_cursor(path)
-
+        # Select first row
+        self.folder_tree_view.select_row()
         self.set_finished()
 
     def create_folder_tree(self, shares, private=False):
@@ -465,8 +458,8 @@ class UserBrowse:
                 if private:
                     subfolder = _("[PRIVATE]  %s") % subfolder
 
-                self.dir_iters[current_path] = iterator = self.dir_store.insert_with_values(
-                    parent, -1, self.dir_column_numbers, [subfolder]
+                self.dir_iters[current_path] = iterator = self.folder_tree_view.add_row(
+                    [subfolder], select_row=False, parent_iterator=parent
                 )
                 self.dir_user_data[iterator.user_data] = current_path
 
@@ -489,10 +482,7 @@ class UserBrowse:
         self.queued_path = None
 
         # Scroll to the requested folder
-        path = self.dir_store.get_path(iterator)
-        self.folder_tree_view.expand_to_path(path)
-        self.folder_tree_view.set_cursor(path)
-        self.folder_tree_view.scroll_to_cell(path, None, True, 0.5, 0.5)
+        self.folder_tree_view.select_row(iterator, should_expand=True)
 
         iterator = self.file_list_view.iterators.get(filename)
 
@@ -643,10 +633,9 @@ class UserBrowse:
     def select_search_match_folder(self):
 
         directory = self.search_list[self.search_position]
-        path = self.dir_store.get_path(self.dir_iters[directory])
+        iterator = self.dir_iters[directory]
 
-        self.folder_tree_view.expand_to_path(path)
-        self.folder_tree_view.set_cursor(path)
+        self.folder_tree_view.select_row(iterator, should_expand=True)
 
     def select_search_match_files(self):
 
@@ -699,19 +688,9 @@ class UserBrowse:
 
     """ Callbacks (folder_tree_view) """
 
-    @staticmethod
-    def on_folder_tooltip(widget, pos_x, pos_y, _keyboard_mode, tooltip):
+    def on_select_dir(self, *_args):
 
-        file_path_tooltip = show_file_path_tooltip(widget, pos_x, pos_y, tooltip, 0)
-
-        if file_path_tooltip:
-            return file_path_tooltip
-
-        return False
-
-    def on_select_dir(self, selection):
-
-        _model, iterator = selection.get_selected()
+        iterator = self.folder_tree_view.get_focused_row()
 
         if iterator is None:
             return
@@ -804,16 +783,18 @@ class UserBrowse:
 
     """ Key Bindings (folder_tree_view) """
 
-    def on_folder_row_activated(self, _treeview, path, _column):
+    def on_folder_row_activated(self, *_args):
 
-        if path is None:
+        iterator = self.folder_tree_view.get_focused_row()
+
+        if iterator is None:
             return
 
         # Keyboard accessibility support for <Return> key behaviour
-        if self.folder_tree_view.row_expanded(path):
-            expandable = self.folder_tree_view.collapse_row(path)
+        if self.folder_tree_view.is_row_expanded(iterator):
+            expandable = self.folder_tree_view.collapse_row(iterator)
         else:
-            expandable = self.folder_tree_view.expand_row(path, False)
+            expandable = self.folder_tree_view.expand_row(iterator)
 
         if not expandable and not self.file_list_view.is_empty():
             # This is the deepest level, so move focus over to Files if there are any
@@ -826,24 +807,24 @@ class UserBrowse:
         """ Left: collapse row
             Shift+Left (Gtk) | "-" | "/" (Gtk) | """
 
-        path, _focus_column = self.folder_tree_view.get_cursor()
+        iterator = self.folder_tree_view.get_focused_row()
 
-        if path is None:
+        if iterator is None:
             return False
 
-        self.folder_tree_view.collapse_row(path)
+        self.folder_tree_view.collapse_row(iterator)
         return True
 
     def on_folder_expand_accelerator(self, *_args):
         """ Right: expand row
             Shift+Right (Gtk) | "+" (Gtk) |    """
 
-        path, _focus_column = self.folder_tree_view.get_cursor()
+        iterator = self.folder_tree_view.get_focused_row()
 
-        if path is None:
+        if iterator is None:
             return False
 
-        expandable = self.folder_tree_view.expand_row(path, False)
+        expandable = self.folder_tree_view.expand_row(iterator)
 
         if not expandable and not self.file_list_view.is_empty():
             self.file_list_view.grab_focus()
@@ -853,24 +834,24 @@ class UserBrowse:
     def on_folder_collapse_sub_accelerator(self, *_args):
         """ \backslash: collapse or expand to show subs """
 
-        path, _focus_column = self.folder_tree_view.get_cursor()
+        iterator = self.folder_tree_view.get_focused_row()
 
-        if path is None:
+        if iterator is None:
             return False
 
-        self.folder_tree_view.collapse_row(path)  # show 2nd level
-        self.folder_tree_view.expand_row(path, False)
+        self.folder_tree_view.collapse_row(iterator)  # show 2nd level
+        self.folder_tree_view.expand_row(iterator)
         return True
 
     def on_folder_expand_sub_accelerator(self, *_args):
         """ =equal: expand only (dont move focus)   """
 
-        path, _focus_column = self.folder_tree_view.get_cursor()
+        iterator = self.folder_tree_view.get_focused_row()
 
-        if path is None:
+        if iterator is None:
             return False
 
-        self.folder_tree_view.expand_row(path, False)
+        self.folder_tree_view.expand_row(iterator)
         return True
 
     def on_folder_focus_filetree_accelerator(self, *_args):
@@ -1195,10 +1176,10 @@ class UserBrowse:
         active = self.expand_button.get_active()
 
         if active:
-            self.folder_tree_view.expand_all()
+            self.folder_tree_view.expand_all_rows()
             self.expand_icon.set_property("icon-name", "go-up-symbolic")
         else:
-            self.folder_tree_view.collapse_all()
+            self.folder_tree_view.collapse_all_rows()
             self.expand_icon.set_property("icon-name", "go-down-symbolic")
 
         config.sections["userbrowse"]["expand_folders"] = active
