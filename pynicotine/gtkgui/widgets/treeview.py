@@ -432,7 +432,11 @@ class TreeView:
     def select_row(self, iterator=None, should_focus=True, should_expand=False):
 
         if iterator is None:
+            # Select first row if available
             iterator = self.model.get_iter_first()
+
+            if iterator is None:
+                return
 
         if should_focus:
             path = self.model.get_path(iterator)
@@ -440,7 +444,7 @@ class TreeView:
             if should_expand:
                 self.widget.expand_to_path(path)
 
-            self.widget.set_cursor(self.model.get_path(iterator))
+            self.widget.set_cursor(path)
             self.widget.scroll_to_cell(path, column=None, use_align=True, row_align=0.5, col_align=0.5)
             return
 
