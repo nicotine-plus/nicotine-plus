@@ -353,8 +353,6 @@ class DownloadsPage:
             escaped = self.filter_list_view.get_row_value(iterator, "escaped")
             download_filters.append([dfilter, int(escaped)])
 
-        download_filters.sort()
-
         return {
             "transfers": {
                 "autoclear_downloads": self.autoclear_downloads_toggle.get_active(),
@@ -2371,7 +2369,7 @@ class PluginsPage:
 
         self.application.preferences.set_widgets_data(self.options)
 
-        for plugin_id in sorted(core.pluginhandler.list_installed_plugins()):
+        for plugin_id in core.pluginhandler.list_installed_plugins():
             try:
                 info = core.pluginhandler.get_plugin_info(plugin_id)
             except OSError:

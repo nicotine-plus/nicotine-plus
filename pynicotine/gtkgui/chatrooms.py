@@ -25,6 +25,7 @@
 import os
 
 from collections import deque
+from locale import strxfrm
 
 from gi.repository import GLib
 from gi.repository import GObject
@@ -1235,6 +1236,6 @@ class ChatRoom:
 
         # No duplicates
         completion_list = list(set(completion_list))
-        completion_list.sort(key=str.lower)
+        completion_list.sort(key=strxfrm)
 
         self.chatrooms.completion.set_completion_list(completion_list)

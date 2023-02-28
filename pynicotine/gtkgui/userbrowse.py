@@ -23,6 +23,8 @@
 
 import os
 
+from locale import strxfrm
+
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
@@ -628,7 +630,7 @@ class UserBrowse:
                 if self.query in file_data[1].lower():
                     temp_list.add(directory)
 
-        self.search_list = sorted(temp_list)
+        self.search_list = sorted(temp_list, key=strxfrm)
 
     def select_search_match_folder(self):
 
@@ -759,7 +761,7 @@ class UserBrowse:
             message=_("Enter the name of the user you want to upload to:"),
             callback=self.on_upload_directory_to_response,
             callback_data=recurse,
-            droplist=sorted(core.userlist.buddies)
+            droplist=sorted(core.userlist.buddies, key=strxfrm)
         ).show()
 
     def on_upload_directory_recursive_to(self, *_args):
@@ -972,7 +974,7 @@ class UserBrowse:
             title=_("Upload File(s) To User"),
             message=_("Enter the name of the user you want to upload to:"),
             callback=self.on_upload_files_response,
-            droplist=sorted(core.userlist.buddies)
+            droplist=sorted(core.userlist.buddies, key=strxfrm)
         ).show()
 
     def on_play_files(self, *_args):
