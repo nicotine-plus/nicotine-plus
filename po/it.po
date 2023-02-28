@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2023-02-24 02:23+0000\n"
+"PO-Revision-Date: 2023-02-28 06:13+0000\n"
 "Last-Translator: Gabriele <gabboxl0@gmail.com>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/it/>\n"
@@ -3674,9 +3674,8 @@ msgid "%(folder)s downloaded from %(user)s"
 msgstr "%(folder)s scaricato da %(user)s"
 
 #: pynicotine/transfers.py:1990
-#, fuzzy
 msgid "Folder Downloaded"
-msgstr "Cartella ricevuta"
+msgstr "Cartella scaricata"
 
 #: pynicotine/transfers.py:1996
 #, python-format
@@ -3724,14 +3723,12 @@ msgid "Error: %(num)d Download filters failed! %(error)s "
 msgstr "Errore: %(num)d Download filtri rotto %(error)s "
 
 #: pynicotine/updatechecker.py:45
-#, fuzzy
 msgid "Up to Date"
 msgstr "Aggiornata"
 
 #: pynicotine/updatechecker.py:48
-#, fuzzy
 msgid "Out of Date"
-msgstr "Obsoleta"
+msgstr "Versione obsoleta"
 
 #: pynicotine/updatechecker.py:49
 #, python-format
@@ -3963,7 +3960,6 @@ msgstr ""
 "cui porte di ascolto sono aperte."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:280
-#, fuzzy
 msgid ""
 "Choose a range to select a listening port from. The first available port in "
 "the range will be used."
@@ -4279,18 +4275,16 @@ msgid "Clear"
 msgstr "Pulisci"
 
 #: pynicotine/gtkgui/ui/downloads.ui:154
-#, fuzzy
 msgid "Clear All Finished/Filtered Downloads"
-msgstr "Pulisci tutti i download finiti e filtrati."
+msgstr "Pulisci tutti i download completati e filtrati."
 
 #: pynicotine/gtkgui/ui/downloads.ui:170 pynicotine/gtkgui/ui/uploads.ui:170
 msgid "Clear Finished"
 msgstr "Pulisci Completati"
 
 #: pynicotine/gtkgui/ui/downloads.ui:185
-#, fuzzy
 msgid "Clear Specific Downloads"
-msgstr "Pulisci Tutti i Download"
+msgstr "Pulisci download specifici"
 
 #: pynicotine/gtkgui/ui/downloads.ui:194 pynicotine/gtkgui/ui/uploads.ui:224
 msgid "Clear _All…"
@@ -4459,9 +4453,8 @@ msgstr ""
 "Inserisci il nome di un utente per avviare una conversazione testuale privata"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1350
-#, fuzzy
 msgid "_Message All"
-msgstr "Messaggi"
+msgstr "_Messaggia tutti"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1416
 msgid ""
@@ -4472,7 +4465,6 @@ msgstr ""
 "ricevere notifiche quando sono online"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1474
-#, fuzzy
 msgid "Join or create room…"
 msgstr "Unisciti o crea una stanza…"
 
@@ -4501,18 +4493,16 @@ msgid "Connections"
 msgstr "Connessioni"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1787
-#, fuzzy
 msgid "Downloading (Speed / Active Users)"
-msgstr "Ricezione (velocità / utenti attivi)"
+msgstr "In download (velocità / utenti attivi)"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1817
 msgid "Uploading (Speed / Active Users)"
 msgstr "Invio (velocità / utenti attivi)"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1882
-#, fuzzy
 msgid "Show Log History Pane"
-msgstr "Mostra Crono_logia Registro"
+msgstr "Mostra pannello log cronologia"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:29
 msgid "Chat Room Commands"
@@ -4702,9 +4692,8 @@ msgstr "Velocità download illimitata"
 
 #: pynicotine/gtkgui/ui/popovers/downloadspeeds.ui:49
 #: pynicotine/gtkgui/ui/settings/downloads.ui:150
-#, fuzzy
 msgid "Use download speed limit (KiB/s):"
-msgstr "Limite alternativo velocità di download (KiB/s):"
+msgstr "Usa limite velocità di download (KiB/s):"
 
 #: pynicotine/gtkgui/ui/popovers/downloadspeeds.ui:59
 #: pynicotine/gtkgui/ui/popovers/downloadspeeds.ui:85
@@ -4720,9 +4709,8 @@ msgstr "Kibibyte (2^10 byte) per secondo."
 
 #: pynicotine/gtkgui/ui/popovers/downloadspeeds.ui:75
 #: pynicotine/gtkgui/ui/settings/downloads.ui:174
-#, fuzzy
 msgid "Use alternative download speed limit (KiB/s):"
-msgstr "Limite alternativo velocità di download (KiB/s):"
+msgstr "Usa velocità alternativa di download (KiB/s):"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:29
 msgid "Private Chat Commands"
@@ -5543,9 +5531,8 @@ msgstr ""
 "fanno distinzione tra maiuscole e minuscole e sono univoci."
 
 #: pynicotine/gtkgui/ui/settings/network.ui:135
-#, fuzzy
 msgid "Listening port range:"
-msgstr "Porta di ascolto non impostata"
+msgstr "Range porte di ascolto:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:209
 msgid "Public IP address:"
@@ -5577,9 +5564,8 @@ msgid "Miscellaneous"
 msgstr "Varie"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:340
-#, fuzzy
 msgid "Use UPnP to forward listening port"
-msgstr "Usa UPnP per l'inoltro della porta di ascolto (intervallo in ore):"
+msgstr "Usa UPnP per l'inoltro della porta di ascolto"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:348
 msgid "Auto-connect to server on startup"
@@ -6123,19 +6109,16 @@ msgid "User Statuses"
 msgstr "Stato degli utenti"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1210
-#, fuzzy
 msgid "Online color:"
-msgstr "Colore testo Connesso:"
+msgstr "Colore Online:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1252
-#, fuzzy
 msgid "Away color:"
-msgstr "Colore testo Assente:"
+msgstr "Colore Assente:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1294
-#, fuzzy
 msgid "Offline color:"
-msgstr "Colore testo Disconnesso:"
+msgstr "Colore Offline:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1340
 msgid "Tab Labels"
@@ -6166,9 +6149,8 @@ msgid "List font:"
 msgstr "Carattere lista:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1605
-#, fuzzy
 msgid "Text view font:"
-msgstr "Carattere visualizzazione testo:"
+msgstr "Font carattere visualizzato:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1652
 msgid "Chat font:"
@@ -6211,9 +6193,8 @@ msgid "Message All"
 msgstr "Messaggia tutti"
 
 #: pynicotine/gtkgui/ui/uploads.ui:215
-#, fuzzy
 msgid "Clear Specific Uploads"
-msgstr "Pulisci Tutti gli Upload"
+msgstr "Pulisci upload specifici"
 
 #: pynicotine/gtkgui/ui/userbrowse.ui:118
 msgid "Shared"
