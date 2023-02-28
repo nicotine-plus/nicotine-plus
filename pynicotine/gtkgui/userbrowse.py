@@ -564,9 +564,7 @@ class UserBrowse:
         self.progress_bar.set_fraction(1.0)
         self.refresh_button.set_sensitive(True)
 
-    def set_directory(self, iter_user_data):
-
-        directory = self.folder_tree_view.iterator_keys.get(iter_user_data)
+    def set_directory(self, directory):
 
         if directory is None or self.selected_folder == directory:
             return
@@ -697,7 +695,8 @@ class UserBrowse:
         if iterator is None:
             return
 
-        self.set_directory(iterator.user_data)
+        folder_path = self.folder_tree_view.get_row_value(iterator, "folder_path_data")
+        self.set_directory(folder_path)
 
     def on_folder_popup_menu(self, *_args):
         self.user_popup_menu.toggle_user_items()

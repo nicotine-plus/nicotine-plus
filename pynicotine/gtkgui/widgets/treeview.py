@@ -51,11 +51,11 @@ class TreeView:
         self.widget = Gtk.TreeView(enable_tree_lines=True, has_tooltip=True, visible=True)
         self.model = None
         self.iterators = {}
-        self.iterator_keys = {}
         self._widget_name = name
         self._secondary_name = secondary_name
         self._has_tree = has_tree
         self._columns = columns
+        self._iterator_keys = {}
         self._iterator_key_column = 0
         self._column_ids = {}
         self._column_offsets = {}
@@ -382,7 +382,7 @@ class TreeView:
         else:
             self.iterators[key] = iterator = self.model.insert_with_valuesv(position, self._column_numbers, values)
 
-        self.iterator_keys[iterator.user_data] = key
+        self._iterator_keys[iterator.user_data] = key
 
         if select_row:
             self.select_row(iterator)
@@ -426,7 +426,7 @@ class TreeView:
         return self.model.set_value(iterator, self._column_ids[column_id], value)
 
     def remove_row(self, iterator):
-        del self.iterators[self.iterator_keys[iterator.user_data]]
+        del self.iterators[self._iterator_keys[iterator.user_data]]
         self.model.remove(iterator)
 
     def select_row(self, iterator=None, should_focus=True, should_expand=False):
@@ -489,7 +489,7 @@ class TreeView:
 
         self.model.clear()
         self.iterators.clear()
-        self.iterator_keys.clear()
+        self._iterator_keys.clear()
 
         self.widget.set_model(self.model)
 
