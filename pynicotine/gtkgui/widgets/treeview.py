@@ -364,10 +364,8 @@ class TreeView:
             column_config[self._widget_name] = saved_columns
 
     def disable_sorting(self):
-
         self._sort_column, self._sort_type = self.model.get_sort_column_id()
-        self.model.set_default_sort_func(lambda *args: 0)
-        self.model.set_sort_column_id(Gtk.TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID, Gtk.SortType.ASCENDING)
+        self.model.set_sort_column_id(Gtk.TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID, Gtk.SortType.ASCENDING)
 
     def enable_sorting(self):
         self.model.set_sort_column_id(self._sort_column, self._sort_type)
