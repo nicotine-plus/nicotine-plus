@@ -169,6 +169,7 @@ class UserBrowse:
             self.progress_bar,
             self.refresh_button,
             self.retry_button,
+            self.save_button,
             self.search_entry,
             self.share_size_label
         ) = ui_template.widgets
@@ -542,6 +543,7 @@ class UserBrowse:
         GLib.timeout_add(1000, self.pulse_progress)
 
         self.refresh_button.set_sensitive(False)
+        self.save_button.set_sensitive(False)
 
     def shared_file_list_progress(self, position, total):
 
@@ -563,6 +565,7 @@ class UserBrowse:
         self.userbrowses.request_tab_changed(self.container)
         self.progress_bar.set_fraction(1.0)
         self.refresh_button.set_sensitive(True)
+        self.save_button.set_sensitive(bool(self.num_folders))
 
     def set_directory(self, directory):
 
@@ -1231,6 +1234,9 @@ class UserBrowse:
 
     def on_save_accelerator(self, *_args):
         """ Ctrl+S: Save Shares List """
+
+        if not self.save_button.get_sensitive():
+            return False
 
         self.on_save()
         return True
