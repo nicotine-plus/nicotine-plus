@@ -170,13 +170,14 @@ class ChatHistory(Popover):
 
         if not timestamp:
             timestamp_format = config.sections["logging"]["log_timestamp"]
-            timestamp = time.strftime(timestamp_format)
-            message = f"{timestamp} {message}"
+            timestamp = time.time()
+            h_timestamp = time.strftime(timestamp_format)
+            message = f"{h_timestamp} {message}"
 
         self.list_view.add_row([
             username,
             message,
-            GObject.Value(GObject.TYPE_UINT64, timestamp)
+            GObject.Value(GObject.TYPE_UINT64, int(timestamp))
         ], select_row=False, prepend=True)
 
     def on_show_user(self, *_args):
