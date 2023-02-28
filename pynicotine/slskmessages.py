@@ -19,7 +19,7 @@
 
 import zlib
 
-from operator import itemgetter
+from locale import strxfrm
 from socket import inet_aton
 from socket import inet_ntoa
 from struct import Struct
@@ -2647,10 +2647,10 @@ class SharedFileListResponse(FileListMessage):
 
                 files.append((code, name, size, ext, attrs))
 
-            files.sort(key=itemgetter(1))
+            files.sort(key=lambda x: strxfrm(x[1]))
             shares.append((directory, files))
 
-        shares.sort(key=itemgetter(0))
+        shares.sort(key=lambda x: strxfrm(x[0]))
         return pos, shares
 
     def _parse_network_message(self, message):
@@ -2752,7 +2752,7 @@ class FileSearchResponse(FileListMessage):
 
             results.append((code, name.replace("/", "\\"), size, ext, attrs))
 
-        results.sort(key=itemgetter(1))
+        results.sort(key=lambda x: strxfrm(x[1]))
         return pos, results
 
     def _parse_network_message(self, message):

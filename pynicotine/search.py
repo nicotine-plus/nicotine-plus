@@ -24,6 +24,7 @@
 import random
 
 from itertools import islice
+from locale import strxfrm
 from operator import itemgetter
 
 from pynicotine import slskmessages
@@ -69,7 +70,7 @@ class Search:
     def request_folder_download(self, user, folder, visible_files):
 
         # First queue the visible search results
-        visible_files.sort(key=itemgetter(1))
+        visible_files.sort(key=lambda x: strxfrm(x[1]))
 
         for file in visible_files:
             user, fullpath, destination, size, bitrate, length = file
