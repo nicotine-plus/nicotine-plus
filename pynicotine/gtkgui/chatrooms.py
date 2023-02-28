@@ -384,15 +384,6 @@ class ChatRooms(IconNotebook):
         for page in self.pages.values():
             page.update_tags()
 
-    def save_columns(self):
-
-        for room in config.sections["columns"]["chat_room"].copy():
-            if room not in self.pages:
-                del config.sections["columns"]["chat_room"][room]
-
-        for page in self.pages.values():
-            page.save_columns()
-
     def server_login(self, msg):
 
         if not msg.success:
@@ -488,11 +479,8 @@ class ChatRoom:
 
         self.toggle_chat_buttons()
 
-        if room not in config.sections["columns"]["chat_room"]:
-            config.sections["columns"]["chat_room"][room] = {}
-
         self.users_list_view = TreeView(
-            self.window, parent=self.users_list_container, name="chat_room",
+            self.window, parent=self.users_list_container, name="chat_room", secondary_name=room,
             activate_row_callback=self.on_row_activated,
             columns={
                 # Visible columns
@@ -1137,9 +1125,6 @@ class ChatRoom:
             self.chat_view.update_tag(tag)
 
         self.chat_view.update_tags()
-
-    def save_columns(self):
-        self.users_list_view.save_columns(subpage=self.room)
 
     def server_disconnect(self):
 

@@ -44,17 +44,20 @@ from pynicotine.gtkgui.widgets.theme import add_css_class
 class TreeView:
 
     def __init__(self, window, parent, columns, multi_select=False, always_select=False,
-                 name=None, activate_row_callback=None, select_row_callback=None, search_entry=None):
+                 name=None, secondary_name=None, activate_row_callback=None, select_row_callback=None,
+                 search_entry=None):
 
         self.window = window
         self.widget = Gtk.TreeView(has_tooltip=True, visible=True)
-        self.widget_name = name
-        self.columns = columns
         self.model = None
         self.iterators = {}
+        self._widget_name = name
+        self._secondary_name = secondary_name
+        self._columns = columns
         self._iterator_key_column = 0
         self._iter_keys = {}
         self._column_ids = {}
+        self._column_offsets = {}
         self._column_numbers = None
         self._default_sort_column = None
         self._default_sort_type = Gtk.SortType.ASCENDING
@@ -205,11 +208,11 @@ class TreeView:
             if iterator_key:
                 self._iterator_key_column = column_index
 
-            if self.widget_name:
+            if self._widget_name:
                 try:
-                    column_config = config.sections["columns"][self.widget_name[0]][self.widget_name[1]]
+                    column_config = config.sections["columns"][self._widget_name][self._secondary_name]
                 except KeyError:
-                    column_config = config.sections["columns"][self.widget_name]
+                    column_config = config.sections["columns"][self._widget_name]
 
                 if column_type != "icon":
                     try:
@@ -298,6 +301,9 @@ class TreeView:
             if column_data.get("expand_column"):
                 column.set_expand(True)
 
+            if self._widget_name:
+                column.connect("notify::x-offset", self.on_column_position_changed)
+
             column.set_sort_column_id(self._column_ids[sort_column])
             cols[column_id] = column
 
@@ -309,7 +315,7 @@ class TreeView:
 
         self.widget.set_model(self.model)
 
-    def save_columns(self, subpage=None):
+    def save_columns(self):
         """ Save a treeview's column widths and visibilities for the next session """
 
         saved_columns = {}
@@ -329,7 +335,7 @@ class TreeView:
                     if not visible:
                         saved_columns[title] = {
                             "visible": visible,
-                            "width": column_config[self.widget_name][title]["width"]
+                            "width": column_config[self._widget_name][title]["width"]
                         }
 
                     continue
@@ -340,15 +346,15 @@ class TreeView:
 
             saved_columns[title] = {"visible": visible, "width": width}
 
-        if subpage is not None:
+        if self._secondary_name is not None:
             try:
-                column_config[self.widget_name]
+                column_config[self._widget_name]
             except KeyError:
-                column_config[self.widget_name] = {}
+                column_config[self._widget_name] = {}
 
-            column_config[self.widget_name][subpage] = saved_columns
+            column_config[self._widget_name][self._secondary_name] = saved_columns
         else:
-            column_config[self.widget_name] = saved_columns
+            column_config[self._widget_name] = saved_columns
 
     def disable_sorting(self):
 
@@ -490,6 +496,18 @@ class TreeView:
                 menu.actions[title].set_enabled(len(visible_columns) > 1)
 
             menu.actions[title].connect("activate", self.on_column_header_toggled, columns, column_num - 1)
+
+    def on_column_position_changed(self, column, _param):
+        """ Save column position and width to config """
+
+        column_id = column.get_title()
+        offset = column.get_x_offset()
+
+        if self._column_offsets.get(column_id) == offset:
+            return
+
+        self._column_offsets[column_id] = offset
+        self.save_columns()
 
     def on_search_match(self, model, _column, search_term, iterator):
 
@@ -850,7 +868,7 @@ def hide_columns(_treeview, cols, column_config):
             pass
 
 
-def save_columns(treeview_name, columns, subpage=None):
+def save_columns(treeview_name, columns):
     """ Save a treeview's column widths and visibilities for the next session """
 
     saved_columns = {}
@@ -881,15 +899,7 @@ def save_columns(treeview_name, columns, subpage=None):
 
         saved_columns[title] = {"visible": visible, "width": width}
 
-    if subpage is not None:
-        try:
-            column_config[treeview_name]
-        except KeyError:
-            column_config[treeview_name] = {}
-
-        column_config[treeview_name][subpage] = saved_columns
-    else:
-        column_config[treeview_name] = saved_columns
+    column_config[treeview_name] = saved_columns
 
 
 def press_header(menu, treeview):

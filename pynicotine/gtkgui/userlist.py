@@ -167,9 +167,6 @@ class UserList:
         ):
             events.connect(event_name, callback)
 
-    def save_columns(self):
-        self.list_view.save_columns()
-
     def update_visible(self):
 
         if config.sections["ui"]["buddylistinchatrooms"] in ("always", "chatrooms"):

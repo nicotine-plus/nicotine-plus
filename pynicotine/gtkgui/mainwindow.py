@@ -368,7 +368,7 @@ class MainWindow(Window):
         self.application.tray_icon.update_window_visibility()
 
     def save_columns(self, *_args):
-        for page in (self.userlist, self.chatrooms, self.downloads, self.uploads):
+        for page in (self.downloads, self.uploads):
             page.save_columns()
 
     def save_window_state(self):
