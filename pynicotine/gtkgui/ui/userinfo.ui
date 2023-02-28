@@ -682,7 +682,7 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="visible">True</property>
-                            <property name="label" translatable="yes">_Refresh Info</property>
+                            <property name="label" translatable="yes">_Refresh Profile</property>
                             <property name="use-underline">True</property>
                             <property name="mnemonic-widget">refresh_button</property>
                             <style>
