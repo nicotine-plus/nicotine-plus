@@ -165,8 +165,6 @@ class NetworkPage:
 
     def get_settings(self):
 
-        self.portmap_required = False
-
         try:
             server_addr = self.soulseek_server_entry.get_text().split(":")
             server_addr[1] = int(server_addr[1])
@@ -1065,8 +1063,6 @@ class BannedUsersPage:
 
     def get_settings(self):
 
-        self.ip_ban_required = False
-
         return {
             "server": {
                 "banlist": self.banned_users[:],
@@ -1266,8 +1262,6 @@ class ChatsPage:
         self.completion_required = False
 
     def get_settings(self):
-
-        self.completion_required = False
 
         return {
             "server": {
@@ -1626,7 +1620,6 @@ class UserInterfacePage:
 
     def get_settings(self):
 
-        self.theme_required = False
         enabled_tabs = {}
 
         for page_id, widget in self.tabs.items():
@@ -1931,8 +1924,6 @@ class SearchesPage:
         self.cleared_filter_history_icon.set_visible(False)
 
     def get_settings(self):
-
-        self.search_required = False
 
         return {
             "searches": {
