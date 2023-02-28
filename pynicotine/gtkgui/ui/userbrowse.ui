@@ -276,24 +276,10 @@
                         <property name="visible">True</property>
                         <property name="vexpand">True</property>
                         <child>
-                          <object class="GtkScrolledWindow">
+                          <object class="GtkScrolledWindow" id="file_list_container">
                             <property name="width-request">450</property>
                             <property name="visible">True</property>
                             <property name="hexpand">True</property>
-                            <child>
-                              <object class="GtkTreeView" id="file_list_view">
-                                <property name="visible">True</property>
-                                <property name="has-tooltip">True</property>
-                                <property name="rubber-banding">True</property>
-                                <signal name="query-tooltip" handler="on_file_tooltip"/>
-                                <signal name="row-activated" handler="on_file_row_activated"/>
-                                <child internal-child="selection">
-                                  <object class="GtkTreeSelection">
-                                    <property name="mode">multiple</property>
-                                  </object>
-                                </child>
-                              </object>
-                            </child>
                             <style>
                               <class name="userbrowse-view"/>
                             </style>

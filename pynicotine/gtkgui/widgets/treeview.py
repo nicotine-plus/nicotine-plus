@@ -405,8 +405,15 @@ class TreeView:
     def set_row_value(self, iterator, column_id, value):
         return self.model.set_value(iterator, self._column_ids[column_id], value)
 
-    def select_row(self, iterator):
-        self.widget.set_cursor(self.model.get_path(iterator))
+    def select_row(self, iterator, should_focus=True):
+
+        if should_focus:
+            path = self.model.get_path(iterator)
+            self.widget.set_cursor(self.model.get_path(iterator))
+            self.widget.scroll_to_cell(path, column=None, use_align=True, row_align=0.5, col_align=0.5)
+            return
+
+        self.widget.get_selection().select_iter(iterator)
 
     def remove_row(self, iterator):
         del self.iterators[self._iter_keys[iterator.user_data]]
@@ -414,6 +421,19 @@ class TreeView:
 
     def unselect_all_rows(self):
         self.widget.get_selection().unselect_all()
+
+    def get_focused_column(self):
+        _path, column = self.widget.get_cursor()
+        return column.get_title()
+
+    def get_visible_columns(self):
+        return [column.get_title() for column in self.widget.get_columns() if column.get_visible()]
+
+    def is_empty(self):
+        return not self.iterators
+
+    def is_selection_empty(self):
+        return self.widget.get_selection().count_selected_rows() == 0
 
     def grab_focus(self):
         self.widget.grab_focus()
@@ -445,6 +465,10 @@ class TreeView:
         country_code = icon_name[-2:].upper()
         country_name = GeoIP.country_code_to_name(country_code)
         return f"{country_name} ({country_code})"
+
+    @staticmethod
+    def get_file_type_tooltip_text(icon_name):
+        return FILE_TYPE_ICON_LABELS.get(icon_name, _("Unknown"))
 
     def on_toggle(self, _widget, path, callback):
         callback(self, self.model.get_iter(path))
@@ -556,6 +580,9 @@ class TreeView:
 
         elif column_id == "status":
             value = self.get_user_status_tooltip_text(value)
+
+        elif column_id == "file_type":
+            value = self.get_file_type_tooltip_text(value)
 
         # Update tooltip position
         self.widget.set_tooltip_cell(tooltip, path, column)

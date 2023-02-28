@@ -41,10 +41,9 @@ from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import FilePopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.theme import get_file_type_icon_name
+from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
-from pynicotine.gtkgui.widgets.treeview import save_columns
 from pynicotine.gtkgui.widgets.treeview import show_file_path_tooltip
-from pynicotine.gtkgui.widgets.treeview import show_file_type_tooltip
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.slskmessages import FileListMessage
 from pynicotine.slskmessages import UserStatus
@@ -163,7 +162,7 @@ class UserBrowse:
             self.container,
             self.expand_button,
             self.expand_icon,
-            self.file_list_view,
+            self.file_list_container,
             self.folder_tree_view,
             self.info_bar,
             self.num_folders_label,
@@ -185,7 +184,6 @@ class UserBrowse:
 
         self.dir_iters = {}
         self.dir_user_data = {}
-        self.file_iters = {}
 
         self.selected_folder = None
         self.selected_folder_size = 0
@@ -250,44 +248,53 @@ class UserBrowse:
             )
 
         # Setup file_list_view
-        self.treeview_name = "user_browse"
-        self.file_store = Gtk.ListStore(
-            str,                  # (0) file type icon
-            str,                  # (1) file name
-            str,                  # (2) hsize
-            str,                  # (3) hbitrate
-            str,                  # (4) hlength
-            GObject.TYPE_UINT64,  # (5) size
-            GObject.TYPE_UINT,    # (6) bitrate
-            GObject.TYPE_UINT     # (7) length
+        self.file_list_view = TreeView(
+            self.window, parent=self.file_list_container, name="user_browse",
+            multi_select=True, activate_row_callback=self.on_file_row_activated,
+            columns={
+                # Visible columns
+                "file_type": {
+                    "column_type": "icon",
+                    "title": _("File Type"),
+                    "width": 30,
+                    "hide_header": True
+                },
+                "filename": {
+                    "column_type": "text",
+                    "title": _("File Name"),
+                    "width": 600,
+                    "default_sort_column": "ascending",
+                    "iterator_key": True
+                },
+                "size": {
+                    "column_type": "number",
+                    "title": _("File Name"),
+                    "width": 100,
+                    "sort_column": "size_data"
+                },
+                "bitrate": {
+                    "column_type": "number",
+                    "title": _("Bitrate"),
+                    "width": 100,
+                    "sort_column": "bitrate_data"
+                },
+                "length": {
+                    "column_type": "number",
+                    "title": _("Duration"),
+                    "width": 100,
+                    "sort_column": "length_data"
+                },
+
+                # Hidden data columns
+                "size_data": {"data_type": GObject.TYPE_UINT64},
+                "bitrate_data": {"data_type": GObject.TYPE_UINT},
+                "length_data": {"data_type": GObject.TYPE_UINT}
+            }
         )
-
-        self.file_column_offsets = {}
-        self.file_column_numbers = list(range(self.file_store.get_n_columns()))
-        cols = initialise_columns(
-            self.window, "user_browse", self.file_list_view,
-            ["file_type", _("File Type"), 30, "icon", None],
-            ["filename", _("Filename"), 600, "text", None],
-            ["size", _("Size"), 100, "number", None],
-            ["bitrate", _("Bitrate"), 100, "number", None],
-            ["length", _("Duration"), 100, "number", None]
-        )
-        cols["file_type"].set_sort_column_id(0)
-        cols["filename"].set_sort_column_id(1)
-        cols["size"].set_sort_column_id(5)
-        cols["bitrate"].set_sort_column_id(6)
-        cols["length"].set_sort_column_id(7)
-
-        cols["file_type"].get_widget().set_visible(False)
-
-        self.file_list_view.set_model(self.file_store)
-
-        for column in self.file_list_view.get_columns():
-            self.file_column_offsets[column.get_title()] = 0
-            column.connect("notify::x-offset", self.on_column_position_changed)
 
         # Popup Menu (file_list_view)
-        self.file_popup_menu = FilePopupMenu(self.window.application, self.file_list_view, self.on_file_popup_menu)
+        self.file_popup_menu = FilePopupMenu(self.window.application, self.file_list_view.widget,
+                                             self.on_file_popup_menu)
 
         if user == config.sections["server"]["login"]:
             self.file_popup_menu.add_items(
@@ -338,18 +345,18 @@ class UserBrowse:
 
         # Key Bindings (file_list_view)
         for accelerator in ("<Shift>Tab", "BackSpace", "backslash"):  # Avoid header, navigate up, "\"
-            Accelerator(accelerator, self.file_list_view, self.on_focus_folder_accelerator)
+            Accelerator(accelerator, self.file_list_view.widget, self.on_focus_folder_accelerator)
 
-        Accelerator("Left", self.file_list_view, self.on_focus_folder_left_accelerator)
+        Accelerator("Left", self.file_list_view.widget, self.on_focus_folder_left_accelerator)
 
-        Accelerator("<Shift>Return", self.file_list_view, self.on_file_transfer_multi_accelerator)  # multi activate
-        Accelerator("<Primary>Return", self.file_list_view, self.on_file_transfer_to_accelerator)  # with to prompt
-        Accelerator("<Shift><Primary>Return", self.file_list_view, self.on_file_transfer_accelerator)  # no prompt
-        Accelerator("<Primary><Alt>Return", self.file_list_view, self.on_file_open_manager_accelerator)
-        Accelerator("<Alt>Return", self.file_list_view, self.on_file_properties_accelerator)
+        Accelerator("<Shift>Return", self.file_list_view.widget, self.on_file_transfer_multi_accelerator)
+        Accelerator("<Primary>Return", self.file_list_view.widget, self.on_file_transfer_to_accelerator)
+        Accelerator("<Shift><Primary>Return", self.file_list_view.widget, self.on_file_transfer_accelerator)
+        Accelerator("<Primary><Alt>Return", self.file_list_view.widget, self.on_file_open_manager_accelerator)
+        Accelerator("<Alt>Return", self.file_list_view.widget, self.on_file_properties_accelerator)
 
         # Key Bindings (General)
-        for widget in (self.container, self.folder_tree_view, self.file_list_view):
+        for widget in (self.container, self.folder_tree_view, self.file_list_view.widget):
             Accelerator("<Primary>f", widget, self.on_search_accelerator)  # Find focus
 
         Accelerator("F3", self.container, self.on_search_next_accelerator)
@@ -387,17 +394,14 @@ class UserBrowse:
         self.selected_files.clear()
 
         self.folder_tree_view.set_model(None)
-        self.file_list_view.set_model(None)
 
         self.dir_iters.clear()
         self.dir_user_data.clear()
         self.dir_store.clear()
 
-        self.file_iters.clear()
-        self.file_store.clear()
+        self.file_list_view.clear()
 
         self.folder_tree_view.set_model(self.dir_store)
-        self.file_list_view.set_model(self.file_store)
 
     def make_new_model(self, shares, private_shares=None):
 
@@ -490,15 +494,13 @@ class UserBrowse:
         self.folder_tree_view.set_cursor(path)
         self.folder_tree_view.scroll_to_cell(path, None, True, 0.5, 0.5)
 
-        iterator = self.file_iters.get(filename)
+        iterator = self.file_list_view.iterators.get(filename)
 
         if not iterator:
             return
 
         # Scroll to the requested file
-        path = self.file_store.get_path(iterator)
-        self.file_list_view.set_cursor(path)
-        self.file_list_view.scroll_to_cell(path, None, True, 0.5, 0.5)
+        self.file_list_view.select_row(iterator)
 
     def shared_file_list(self, msg):
 
@@ -577,12 +579,7 @@ class UserBrowse:
         if directory is None or self.selected_folder == directory:
             return
 
-        self.file_list_view.set_model(None)
-
-        self.file_store.clear()
-        self.file_iters.clear()
-
-        self.file_list_view.set_model(self.file_store)
+        self.file_list_view.clear()
 
         self.selected_folder = directory
         files = core.userbrowse.user_shares[self.user].get(directory)
@@ -591,9 +588,7 @@ class UserBrowse:
             return
 
         # Temporarily disable sorting for increased performance
-        sort_column, sort_type = self.file_store.get_sort_column_id()
-        self.file_store.set_default_sort_func(lambda *_args: 0)
-        self.file_store.set_sort_column_id(-1, Gtk.SortType.ASCENDING)
+        self.file_list_view.disable_sorting()
 
         selected_folder_size = 0
 
@@ -602,28 +597,27 @@ class UserBrowse:
             h_size = humanize(size) if config.sections["ui"]["exact_file_sizes"] else human_size(size)
             h_bitrate, bitrate, h_length, length = FileListMessage.parse_result_bitrate_length(size, attrs)
 
-            file_row = [get_file_type_icon_name(filename),
-                        filename, h_size, h_bitrate, h_length,
-                        GObject.Value(GObject.TYPE_UINT64, size),
-                        GObject.Value(GObject.TYPE_UINT, bitrate),
-                        GObject.Value(GObject.TYPE_UINT, length)]
-
-            self.file_iters[filename] = self.file_store.insert_with_valuesv(-1, self.file_column_numbers, file_row)
+            self.file_list_view.add_row([
+                get_file_type_icon_name(filename),
+                filename,
+                h_size,
+                h_bitrate,
+                h_length,
+                GObject.Value(GObject.TYPE_UINT64, size),
+                GObject.Value(GObject.TYPE_UINT, bitrate),
+                GObject.Value(GObject.TYPE_UINT, length)
+            ], select_row=False)
 
         self.selected_folder_size = selected_folder_size
-
-        if sort_column is not None and sort_type is not None:
-            self.file_store.set_sort_column_id(sort_column, sort_type)
+        self.file_list_view.enable_sorting()
 
     def select_files(self):
 
         self.selected_files.clear()
-        model, paths = self.file_list_view.get_selection().get_selected_rows()
 
-        for path in paths:
-            iterator = model.get_iter(path)
-            rawfilename = model.get_value(iterator, 1)
-            filesize = model.get_value(iterator, 5)
+        for iterator in self.file_list_view.get_selected_rows():
+            rawfilename = self.file_list_view.get_row_value(iterator, "filename")
+            filesize = self.file_list_view.get_row_value(iterator, "size_data")
 
             self.selected_files[rawfilename] = filesize
 
@@ -659,23 +653,15 @@ class UserBrowse:
         result_files = []
         found_first_match = False
 
-        for filepath, iterator in self.file_iters.items():
+        for filepath, iterator in self.file_list_view.iterators.items():
             if self.query in filepath.lower():
                 result_files.append(iterator)
 
-        selection = self.file_list_view.get_selection()
-        selection.unselect_all()
+        self.file_list_view.unselect_all_rows()
 
         for iterator in result_files:
             # Select each matching file in folder
-            selection.select_iter(iterator)
-
-            if found_first_match:
-                continue
-
-            # Position cursor at first match
-            path = self.file_store.get_path(iterator)
-            self.file_list_view.scroll_to_cell(path, None, True, 0.5, 0.5)
+            self.file_list_view.select_row(iterator, should_focus=(not found_first_match))
             found_first_match = True
 
     def find_search_matches(self, reverse=False):
@@ -829,7 +815,7 @@ class UserBrowse:
         else:
             expandable = self.folder_tree_view.expand_row(path, False)
 
-        if not expandable and len(self.file_store) > 0:
+        if not expandable and not self.file_list_view.is_empty():
             # This is the deepest level, so move focus over to Files if there are any
             self.file_list_view.grab_focus()
 
@@ -859,7 +845,7 @@ class UserBrowse:
 
         expandable = self.folder_tree_view.expand_row(path, False)
 
-        if not expandable and len(self.file_store) > 0:
+        if not expandable and not self.file_list_view.is_empty():
             self.file_list_view.grab_focus()
 
         return True
@@ -890,7 +876,7 @@ class UserBrowse:
     def on_folder_focus_filetree_accelerator(self, *_args):
         """ Shift+Enter: focus selection over FileTree  """
 
-        if len(self.file_store) >= 1:
+        if not self.file_list_view.is_empty():
             self.file_list_view.grab_focus()
             return True
 
@@ -902,12 +888,12 @@ class UserBrowse:
                         Download Folder Into...         """
 
         if self.user == config.sections["server"]["login"]:
-            if len(self.file_store) >= 1:
+            if not self.file_list_view.is_empty():
                 self.on_upload_directory_to()
             else:
                 self.on_upload_directory_recursive_to()
 
-        elif len(self.file_store) >= 1:
+        elif not self.file_list_view.is_empty():
             self.on_download_directory_to()
 
         return True
@@ -921,7 +907,7 @@ class UserBrowse:
             self.on_upload_directory_recursive_to()
             return True
 
-        if len(self.file_store) <= 0:
+        if self.file_list_view.is_empty():
             # don't risk accidental recursive download
             self.on_folder_expand_sub_accelerator()
             return True
@@ -939,28 +925,6 @@ class UserBrowse:
         return True
 
     """ Callbacks (file_list_view) """
-
-    @staticmethod
-    def on_file_tooltip(widget, pos_x, pos_y, _keyboard_mode, tooltip):
-
-        file_path_tooltip = show_file_path_tooltip(widget, pos_x, pos_y, tooltip, 1)
-
-        if file_path_tooltip:
-            return file_path_tooltip
-
-        return show_file_type_tooltip(widget, pos_x, pos_y, tooltip, 0)
-
-    def on_column_position_changed(self, column, _param):
-        """ Save column position and width to config """
-
-        col_title = column.get_title()
-        offset = column.get_x_offset()
-
-        if self.file_column_offsets[col_title] == offset:
-            return
-
-        self.file_column_offsets[col_title] = offset
-        save_columns(self.treeview_name, self.file_list_view.get_columns())
 
     def on_file_popup_menu(self, menu, _widget):
 
@@ -1072,19 +1036,22 @@ class UserBrowse:
                              "directory": folder, "size": file_size, "bitrate": h_bitrate, "length": h_length})
 
         else:
-            model, paths = self.file_list_view.get_selection().get_selected_rows()
-
-            for path in paths:
-                iterator = model.get_iter(path)
-                filename = model.get_value(iterator, 1)
-                file_size = model.get_value(iterator, 5)
+            for iterator in self.file_list_view.get_selected_rows():
+                filename = self.file_list_view.get_row_value(iterator, "filename")
+                file_size = self.file_list_view.get_row_value(iterator, "size_data")
                 virtual_path = "\\".join([folder, filename])
                 selected_size += file_size
-                selected_length += model.get_value(iterator, 7)
+                selected_length += self.file_list_view.get_row_value(iterator, "length_data")
 
-                data.append({"user": self.user, "fn": virtual_path, "filename": filename,
-                             "directory": folder, "size": file_size, "bitrate": model.get_value(iterator, 3),
-                             "length": model.get_value(iterator, 4)})
+                data.append({
+                    "user": self.user,
+                    "fn": virtual_path,
+                    "filename": filename,
+                    "directory": folder,
+                    "size": file_size,
+                    "bitrate": self.file_list_view.get_row_value(iterator, "bitrate"),
+                    "length": self.file_list_view.get_row_value(iterator, "length")
+                })
 
         if data:
             if self.userbrowses.file_properties is None:
@@ -1124,9 +1091,9 @@ class UserBrowse:
     def on_focus_folder_left_accelerator(self, *_args):
         """ Left: focus back parent folder (left arrow) """
 
-        _path, column = self.file_list_view.get_cursor()
+        column_id = self.file_list_view.get_focused_column()
 
-        if self.file_list_view.get_column(0) != column:
+        if self.file_list_view.get_visible_columns()[0] != column_id:
             return False  # allow horizontal scrolling
 
         self.folder_tree_view.grab_focus()
@@ -1143,11 +1110,11 @@ class UserBrowse:
         """ Ctrl+Enter: Upload File(s) To...
                         Download File(s) Into...  """
 
-        if len(self.file_store) <= 0:  # avoid navigation trap
+        if self.file_list_view.is_empty():  # avoid navigation trap
             self.folder_tree_view.grab_focus()
             return True
 
-        if self.file_list_view.get_selection().count_selected_rows() <= 0:  # do folder instead
+        if self.file_list_view.is_selection_empty():  # do folder instead
             self.on_folder_transfer_to_accelerator()
             return True
 
@@ -1164,20 +1131,20 @@ class UserBrowse:
         """ Shift+Ctrl+Enter: Upload File(s) To...
             (without prompt)  Download File(s) """
 
-        if len(self.file_store) <= 0:
+        if self.file_list_view.is_empty():
             self.folder_tree_view.grab_focus()  # avoid nav trap
             return True
 
         self.select_files()
 
         if self.user == config.sections["server"]["login"]:
-            if self.file_list_view.get_selection().count_selected_rows() >= 1:
+            if not self.file_list_view.is_selection_empty():
                 self.on_upload_files()
             else:
                 self.on_upload_directory_to()
 
         else:  # [user is not self]
-            if self.file_list_view.get_selection().count_selected_rows() >= 1:
+            if not self.file_list_view.is_selection_empty():
                 self.on_download_files()  # (no prompt, Single or Multi-selection)
             else:
                 self.on_download_directory()  # (without prompt, No-selection=All)
@@ -1188,7 +1155,7 @@ class UserBrowse:
         """ Shift+Enter: Send to Player (multiple files)
                          Download Files (multiple)   """
 
-        if len(self.file_store) <= 0:
+        if self.file_list_view.is_empty():
             self.folder_tree_view.grab_focus()  # avoid nav trap
             return True
 
@@ -1215,7 +1182,7 @@ class UserBrowse:
     def on_file_properties_accelerator(self, *_args):
         """ Alt+Enter: show file properties dialog """
 
-        if len(self.file_store) <= 0:
+        if self.file_list_view.is_empty():
             self.folder_tree_view.grab_focus()  # avoid nav trap
 
         self.on_file_properties(*_args)
@@ -1260,7 +1227,7 @@ class UserBrowse:
 
     def on_focus(self):
 
-        if self.file_list_view.get_selection().count_selected_rows() >= 1:
+        if not self.file_list_view.is_selection_empty():
             self.file_list_view.grab_focus()
             return
 
@@ -1317,7 +1284,7 @@ class UserBrowse:
     def on_search_escape_accelerator(self, *_args):
         """ Escape: navigate out of search_entry """
 
-        if self.file_list_view.get_selection().count_selected_rows() >= 1:
+        if not self.file_list_view.is_selection_empty():
             self.file_list_view.grab_focus()
         else:
             self.folder_tree_view.grab_focus()
