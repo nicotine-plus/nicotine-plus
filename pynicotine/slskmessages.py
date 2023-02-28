@@ -2415,14 +2415,13 @@ class FileListMessage(PeerMessage):
         msg.extend(cls.pack_uint8(1))
         msg.extend(cls.pack_string(fileinfo[0]))
         msg.extend(cls.pack_uint64(fileinfo[1]))
+        msg.extend(cls.pack_string(""))
 
         if fileinfo[2] is None or fileinfo[3] is None:
             # No metadata
-            msg.extend(cls.pack_string(""))
             msg.extend(cls.pack_uint32(0))
         else:
-            # FileExtension, NumAttributes
-            msg.extend(cls.pack_string("mp3"))
+            # NumAttributes
             msg.extend(cls.pack_uint32(3))
 
             audio_info = fileinfo[2]
