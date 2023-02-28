@@ -274,7 +274,7 @@ class SlskMessage(Message):
         length = UINT_UNPACK(message, start)[0]
         content = message[start + 4:start + length + 4]
 
-        return start + 4 + length, content
+        return start + 4 + length, content.tobytes()
 
     def make_network_message(self):
         """ Returns binary array, that can be sent over the network"""
