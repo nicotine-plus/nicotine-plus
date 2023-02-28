@@ -2362,7 +2362,7 @@ class SharedFileList(PeerMessage):
     def _parse_result_list(self, message, pos=0):
         pos, ndir = self.unpack_uint32(message, pos)
 
-        ext = ""
+        ext = None
         shares = []
         for _ in range(ndir):
             pos, directory = self.unpack_string(message, pos)
@@ -2502,7 +2502,7 @@ class FileSearchResult(PeerMessage):
     def _parse_result_list(self, message, pos):
         pos, nfiles = self.unpack_uint32(message, pos)
 
-        ext = ""
+        ext = None
         results = []
         for _ in range(nfiles):
             pos, code = self.unpack_uint8(message, pos)
@@ -2689,7 +2689,7 @@ class FolderContentsResponse(PeerMessage):
             directory = directory.replace('/', '\\')
             pos, nfiles = self.unpack_uint32(message, pos)
 
-            ext = ""
+            ext = None
             shares[folder][directory] = []
 
             for _ in range(nfiles):
