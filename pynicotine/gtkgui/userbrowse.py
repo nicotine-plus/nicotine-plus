@@ -182,9 +182,6 @@ class UserBrowse:
         self.num_folders = 0
         self.share_size = 0
 
-        self.dir_iters = {}
-        self.dir_user_data = {}
-
         self.selected_folder = None
         self.selected_folder_size = 0
         self.selected_files = {}
@@ -206,6 +203,12 @@ class UserBrowse:
                     "column_type": "text",
                     "title": _("Folder"),
                     "hide_header": True
+                },
+
+                # Hidden data columns
+                "folder_path_data": {
+                    "data_type": str,
+                    "iterator_key": True
                 }
             }
         )
@@ -397,8 +400,6 @@ class UserBrowse:
         self.selected_folder = None
         self.selected_files.clear()
 
-        self.dir_iters.clear()
-        self.dir_user_data.clear()
         self.folder_tree_view.clear()
         self.file_list_view.clear()
 
@@ -441,7 +442,7 @@ class UserBrowse:
             root_processed = False
 
             for subfolder in folder.split("\\"):
-                parent = self.dir_iters.get(current_path)
+                parent = self.folder_tree_view.iterators.get(current_path)
 
                 if not root_processed:
                     current_path = subfolder
@@ -449,7 +450,7 @@ class UserBrowse:
                 else:
                     current_path = "\\".join([current_path, subfolder])
 
-                if current_path in self.dir_iters:
+                if current_path in self.folder_tree_view.iterators:
                     # Folder was already added to tree
                     continue
 
@@ -460,10 +461,9 @@ class UserBrowse:
                 if private:
                     subfolder = _("[PRIVATE]  %s") % subfolder
 
-                self.dir_iters[current_path] = iterator = self.folder_tree_view.add_row(
-                    [subfolder], select_row=False, parent_iterator=parent
+                self.folder_tree_view.add_row(
+                    [subfolder, current_path], select_row=False, parent_iterator=parent
                 )
-                self.dir_user_data[iterator.user_data] = current_path
 
             for filedata in files:
                 total_size += filedata[2]
@@ -476,7 +476,7 @@ class UserBrowse:
             return
 
         folder, filename = self.queued_path.rsplit("\\", 1)
-        iterator = self.dir_iters.get(folder)
+        iterator = self.folder_tree_view.iterators.get(folder)
 
         if not iterator:
             return
@@ -566,7 +566,7 @@ class UserBrowse:
 
     def set_directory(self, iter_user_data):
 
-        directory = self.dir_user_data.get(iter_user_data)
+        directory = self.folder_tree_view.iterator_keys.get(iter_user_data)
 
         if directory is None or self.selected_folder == directory:
             return
@@ -635,7 +635,7 @@ class UserBrowse:
     def select_search_match_folder(self):
 
         directory = self.search_list[self.search_position]
-        iterator = self.dir_iters[directory]
+        iterator = self.folder_tree_view.iterators[directory]
 
         self.folder_tree_view.select_row(iterator, should_expand=True)
 
