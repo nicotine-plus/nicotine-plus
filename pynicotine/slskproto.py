@@ -122,8 +122,8 @@ else:
     MAXSOCKETS = min(max(int(MAXFILELIMIT * 0.75), 50), 3072)
 
 SIOCGIFADDR = 0x8915 if sys.platform == "linux" else 0xc0206921  # 0xc0206921 for *BSD, macOS
-UINT_UNPACK = struct.Struct("<I").unpack
-DOUBLE_UINT_UNPACK = struct.Struct("<II").unpack
+UINT32_UNPACK = struct.Struct("<I").unpack
+DOUBLE_UINT32_UNPACK = struct.Struct("<II").unpack
 
 
 class Connection:
@@ -1196,7 +1196,7 @@ class SoulseekNetworkThread(Thread):
 
         # Server messages are 8 bytes or greater in length
         while buffer_len >= 8:
-            msgsize, msgtype = DOUBLE_UINT_UNPACK(msg_buffer_mem[idx:idx + 8])
+            msgsize, msgtype = DOUBLE_UINT32_UNPACK(msg_buffer_mem[idx:idx + 8])
             msgsize_total = msgsize + 4
 
             if msgsize_total > buffer_len or msgsize < 0:
@@ -1384,7 +1384,7 @@ class SoulseekNetworkThread(Thread):
 
         # Peer init messages are 8 bytes or greater in length
         while buffer_len >= 8 and init is None:
-            msgsize = UINT_UNPACK(msg_buffer_mem[idx:idx + 4])[0]
+            msgsize = UINT32_UNPACK(msg_buffer_mem[idx:idx + 4])[0]
             msgsize_total = msgsize + 4
 
             if msgsize_total > buffer_len or msgsize < 0:
@@ -1548,7 +1548,7 @@ class SoulseekNetworkThread(Thread):
 
         # Peer messages are 8 bytes or greater in length
         while buffer_len >= 8:
-            msgsize, msgtype = DOUBLE_UINT_UNPACK(msg_buffer_mem[idx:idx + 8])
+            msgsize, msgtype = DOUBLE_UINT32_UNPACK(msg_buffer_mem[idx:idx + 8])
             msgsize_total = msgsize + 4
 
             try:
@@ -1793,7 +1793,7 @@ class SoulseekNetworkThread(Thread):
 
         # Distributed messages are 5 bytes or greater in length
         while buffer_len >= 5:
-            msgsize = UINT_UNPACK(msg_buffer_mem[idx:idx + 4])[0]
+            msgsize = UINT32_UNPACK(msg_buffer_mem[idx:idx + 4])[0]
             msgsize_total = msgsize + 4
 
             if msgsize_total > buffer_len or msgsize < 0:

@@ -32,17 +32,17 @@ exchange. Basically there are three types of messages: internal messages,
 server messages and p2p messages (between clients). """
 
 
-UINT_LIMIT = 4294967295
+UINT32_LIMIT = 4294967295
 UINT64_LIMIT = 18446744073709551615
 
-INT_UNPACK = Struct("<i").unpack_from
-UINT_UNPACK = Struct("<I").unpack_from
+INT32_UNPACK = Struct("<i").unpack_from
+UINT32_UNPACK = Struct("<I").unpack_from
 UINT64_UNPACK = Struct("<Q").unpack_from
 
 BOOL_PACK = Struct("?").pack
 UINT8_PACK = Struct("B").pack
-INT_PACK = Struct("<i").pack
-UINT_PACK = Struct("<I").pack
+INT32_PACK = Struct("<i").pack
+UINT32_PACK = Struct("<I").pack
 UINT64_PACK = Struct("<Q").pack
 
 SEARCH_TOKENS_ALLOWED = set()
@@ -51,7 +51,7 @@ SEARCH_TOKENS_ALLOWED = set()
 def increment_token(token):
     """ Increment a token used by file search, transfer and connection requests """
 
-    if token < 0 or token >= UINT_LIMIT:
+    if token < 0 or token >= UINT32_LIMIT:
         # Protocol messages use unsigned integers for tokens
         token = 0
 
@@ -232,7 +232,7 @@ class SlskMessage(Message):
 
     @staticmethod
     def pack_bytes(content):
-        return UINT_PACK(len(content)) + content
+        return UINT32_PACK(len(content)) + content
 
     @staticmethod
     def pack_string(content, latin1=False):
@@ -248,7 +248,7 @@ class SlskMessage(Message):
         else:
             encoded = content.encode("utf-8", "replace")
 
-        return UINT_PACK(len(encoded)) + encoded
+        return UINT32_PACK(len(encoded)) + encoded
 
     @staticmethod
     def pack_bool(content):
@@ -260,11 +260,11 @@ class SlskMessage(Message):
 
     @staticmethod
     def pack_int32(content):
-        return INT_PACK(content)
+        return INT32_PACK(content)
 
     @staticmethod
     def pack_uint32(content):
-        return UINT_PACK(content)
+        return UINT32_PACK(content)
 
     @staticmethod
     def pack_uint64(content):
@@ -273,7 +273,7 @@ class SlskMessage(Message):
     @staticmethod
     def unpack_bytes(message, start=0):
 
-        length = UINT_UNPACK(message, start)[0]
+        length = UINT32_UNPACK(message, start)[0]
         content = message[start + 4:start + length + 4]
 
         return start + 4 + length, content.tobytes()
@@ -288,7 +288,7 @@ class SlskMessage(Message):
     @staticmethod
     def unpack_string(message, start=0):
 
-        length = UINT_UNPACK(message, start)[0]
+        length = UINT32_UNPACK(message, start)[0]
         content = message[start + 4:start + length + 4].tobytes()
 
         try:
@@ -320,11 +320,11 @@ class SlskMessage(Message):
 
     @staticmethod
     def unpack_int32(message, start=0):
-        return start + 4, INT_UNPACK(message, start)[0]
+        return start + 4, INT32_UNPACK(message, start)[0]
 
     @staticmethod
     def unpack_uint32(message, start=0):
-        return start + 4, UINT_UNPACK(message, start)[0]
+        return start + 4, UINT32_UNPACK(message, start)[0]
 
     @staticmethod
     def unpack_uint64(message, start=0):
@@ -2528,7 +2528,7 @@ class FileListMessage(PeerMessage):
                 length = -1
 
         # Ignore invalid values
-        if bitrate <= 0 or bitrate > UINT_LIMIT:
+        if bitrate <= 0 or bitrate > UINT32_LIMIT:
             bitrate = 0
             h_bitrate = ""
 
@@ -2538,7 +2538,7 @@ class FileListMessage(PeerMessage):
             if vbr == 1:
                 h_bitrate += " (vbr)"
 
-        if length < 0 or length > UINT_LIMIT:
+        if length < 0 or length > UINT32_LIMIT:
             length = 0
             h_length = ""
 
