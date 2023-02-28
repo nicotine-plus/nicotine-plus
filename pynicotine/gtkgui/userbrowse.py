@@ -270,7 +270,7 @@ class UserBrowse:
                 },
                 "size": {
                     "column_type": "number",
-                    "title": _("File Name"),
+                    "title": _("Size"),
                     "width": 100,
                     "sort_column": "size_data"
                 },
