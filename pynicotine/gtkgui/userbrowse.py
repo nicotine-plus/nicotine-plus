@@ -565,7 +565,7 @@ class UserBrowse:
         self.userbrowses.request_tab_changed(self.container)
         self.progress_bar.set_fraction(1.0)
         self.refresh_button.set_sensitive(True)
-        self.save_button.set_sensitive(bool(self.num_folders))
+        self.save_button.set_sensitive(not self.folder_tree_view.is_empty())
 
     def set_directory(self, directory):
 
