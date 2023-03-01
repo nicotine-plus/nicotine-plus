@@ -25,6 +25,7 @@
 import os
 
 from collections import deque
+from locale import strxfrm
 
 from gi.repository import GLib
 from gi.repository import GObject
@@ -384,15 +385,6 @@ class ChatRooms(IconNotebook):
         for page in self.pages.values():
             page.update_tags()
 
-    def save_columns(self):
-
-        for room in config.sections["columns"]["chat_room"].copy():
-            if room not in self.pages:
-                del config.sections["columns"]["chat_room"][room]
-
-        for page in self.pages.values():
-            page.save_columns()
-
     def server_login(self, msg):
 
         if not msg.success:
@@ -488,12 +480,9 @@ class ChatRoom:
 
         self.toggle_chat_buttons()
 
-        if room not in config.sections["columns"]["chat_room"]:
-            config.sections["columns"]["chat_room"][room] = {}
-
         self.users_list_view = TreeView(
-            self.window, parent=self.users_list_container, name="chat_room",
-            activate_row_callback=self.on_row_activated, tooltip_callback=self.on_tooltip,
+            self.window, parent=self.users_list_container, name="chat_room", secondary_name=room,
+            activate_row_callback=self.on_row_activated,
             columns={
                 # Visible columns
                 "status": {
@@ -1138,9 +1127,6 @@ class ChatRoom:
 
         self.chat_view.update_tags()
 
-    def save_columns(self):
-        self.users_list_view.save_columns(subpage=self.room)
-
     def server_disconnect(self):
 
         self.users_list_view.clear()
@@ -1210,16 +1196,6 @@ class ChatRoom:
 
         core.chatrooms.remove_room(self.room)
 
-    @staticmethod
-    def on_tooltip(list_view, pos_x, pos_y, _keyboard_mode, tooltip):
-
-        status_tooltip = list_view.show_user_status_tooltip(pos_x, pos_y, tooltip, "status_data")
-
-        if status_tooltip:
-            return status_tooltip
-
-        return list_view.show_country_tooltip(pos_x, pos_y, tooltip, "country_data")
-
     def on_log_toggled(self, *_args):
 
         if not self.log_toggle.get_active():
@@ -1260,6 +1236,6 @@ class ChatRoom:
 
         # No duplicates
         completion_list = list(set(completion_list))
-        completion_list.sort(key=str.lower)
+        completion_list.sort(key=strxfrm)
 
         self.chatrooms.completion.set_completion_list(completion_list)

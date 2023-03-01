@@ -204,7 +204,7 @@ class Config:
                 "afterfinish": "",
                 "afterfolder": "",
                 "lock": True,
-                "reverseorder": False,
+                "reverseorder": False,  # TODO: remove in 3.3.0
                 "fifoqueue": False,
                 "usecustomban": False,
                 "limitby": True,
@@ -260,7 +260,7 @@ class Config:
                 "censorwords": False,
                 "replacewords": False,
                 "tab": True,
-                "cycle": False,
+                "cycle": False,  # TODO: remove in 3.3.0
                 "dropdown": False,
                 "characters": 3,
                 "roomnames": False,
@@ -268,7 +268,7 @@ class Config:
                 "roomusers": True,
                 "commands": True,
                 "aliases": True,
-                "onematch": False
+                "onematch": False  # TODO: remove in 3.3.0
             },
             "logging": {
                 "debug": False,

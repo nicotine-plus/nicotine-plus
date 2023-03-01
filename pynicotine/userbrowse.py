@@ -19,7 +19,6 @@
 import json
 import os
 
-from operator import itemgetter
 from threading import Thread
 
 from pynicotine import slskmessages
@@ -161,6 +160,10 @@ class UserBrowse:
 
         filename_encoded = encode_path(filename)
 
+        def json_keys_to_integer(dictionary):
+            # JSON stores file attribute types as strings, convert them back to integers
+            return {int(k): v for k, v in dictionary}
+
         try:
             try:
                 # Try legacy format first
@@ -173,7 +176,7 @@ class UserBrowse:
                 # Try new format
 
                 with open(filename_encoded, encoding="utf-8") as file_handle:
-                    shares_list = json.load(file_handle)
+                    shares_list = json.load(file_handle, object_pairs_hook=json_keys_to_integer)
 
             # Basic sanity check
             for _folder, files in shares_list:
@@ -248,9 +251,6 @@ class UserBrowse:
             destination = core.transfers.get_folder_destination(user, folder, remove_prefix)
 
             if files:
-                if config.sections["transfers"]["reverseorder"]:
-                    files.sort(key=itemgetter(1), reverse=True)
-
                 for file_data in files:
                     virtualpath = "\\".join([folder, file_data[1]])
                     size = file_data[2]

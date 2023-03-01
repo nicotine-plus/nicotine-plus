@@ -24,6 +24,7 @@
 import os
 
 from collections import deque
+from locale import strxfrm
 
 from gi.repository import GLib
 
@@ -473,7 +474,7 @@ class PrivateChat:
                 folder_path=config.sections["logging"]["privatelogsdir"], base_name=f"{clean_file(self.user)}.log",
                 text=line, timestamp=timestamp
             )
-            self.chats.history.update_user(self.user, line, add_timestamp=True)
+            self.chats.history.update_user(self.user, line)
 
     def echo_private_message(self, text, message_type):
 
@@ -508,7 +509,7 @@ class PrivateChat:
                 folder_path=config.sections["logging"]["privatelogsdir"],
                 base_name=f"{clean_file(self.user)}.log", text=line
             )
-            self.chats.history.update_user(self.user, line, add_timestamp=True)
+            self.chats.history.update_user(self.user, line)
 
     def user_name_event(self, pos_x, pos_y, user):
 
@@ -573,6 +574,6 @@ class PrivateChat:
 
         # No duplicates
         completion_list = list(set(completion_list))
-        completion_list.sort(key=str.lower)
+        completion_list.sort(key=strxfrm)
 
         self.chats.completion.set_completion_list(completion_list)

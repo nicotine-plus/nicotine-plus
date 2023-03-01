@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk
+from gi.repository import GObject
 from gi.repository import Pango
 
 from pynicotine.config import config
@@ -27,8 +27,9 @@ from pynicotine.gtkgui.widgets.popover import Popover
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import add_css_class
-from pynicotine.gtkgui.widgets.treeview import initialise_columns
+from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.ui import UserInterface
+from pynicotine.utils import humanize
 
 
 class RoomList(Popover):
@@ -38,7 +39,7 @@ class RoomList(Popover):
         ui_template = UserInterface(scope=self, path="popovers/roomlist.ui")
         (
             self.container,
-            self.list_view,
+            self.list_container,
             self.private_room_toggle,
             self.public_feed_toggle,
             self.refresh_button,
@@ -52,33 +53,37 @@ class RoomList(Popover):
             height=500
         )
 
-        self.room_iters = {}
         self.initializing_feed = False
 
-        self.room_model = Gtk.ListStore(
-            str,
-            int,
-            Pango.Weight,
-            Pango.Underline
-        )
+        self.list_view = TreeView(
+            self.window, parent=self.list_container,
+            activate_row_callback=self.on_row_activated, search_entry=self.search_entry,
+            columns={
+                # Visible columns
+                "room": {
+                    "column_type": "text",
+                    "title": _("Room"),
+                    "width": 260,
+                    "expand_column": True,
+                    "text_underline_column": "room_underline_data",
+                    "text_weight_column": "room_weight_data"
+                },
+                "users": {
+                    "column_type": "number",
+                    "title": _("Users"),
+                    "sort_column": "users_data",
+                    "default_sort_column": "descending"
+                },
 
-        self.room_filter = self.room_model.filter_new()
-        self.room_filter.set_visible_func(self.room_match_function)
-        self.room_model_filtered = Gtk.TreeModelSort(model=self.room_filter)
-        self.list_view.set_model(self.room_model_filtered)
-
-        self.column_numbers = list(range(self.room_model.get_n_columns()))
-        attribute_columns = (2, 3)
-        self.cols = initialise_columns(
-            window, None, self.list_view,
-            ["room", _("Room"), 260, "text", attribute_columns],
-            ["users", _("Users"), 100, "number", attribute_columns]
+                # Hidden data columns
+                "users_data": {"data_type": GObject.TYPE_UINT},
+                "room_weight_data": {"data_type": Pango.Weight},
+                "room_underline_data": {"data_type": Pango.Underline}
+            }
         )
-        self.cols["room"].set_sort_column_id(0)
-        self.cols["users"].set_sort_column_id(1)
 
         self.popup_room = None
-        self.popup_menu = PopupMenu(window.application, self.list_view, self.on_popup_menu)
+        self.popup_menu = PopupMenu(window.application, self.list_view.widget, self.on_popup_menu)
         self.popup_menu.add_items(
             ("#" + _("Join Room"), self.on_popup_join),
             ("#" + _("Leave Room"), self.on_popup_leave),
@@ -91,61 +96,23 @@ class RoomList(Popover):
         self.private_room_toggle.connect("toggled", self.on_toggle_accept_private_room)
 
         Accelerator("<Primary>f", self.widget, self.on_search_accelerator)
-        CompletionEntry(window.chatrooms_entry, self.room_model, column=0)
+        CompletionEntry(window.chatrooms_entry, self.list_view.model, column=0)
 
         if GTK_API_VERSION >= 4:
             add_css_class(widget=window.room_list_button.get_first_child(), css_class="arrow-button")
 
         window.room_list_button.set_popover(self.widget)
 
-    @staticmethod
-    def get_selected_room(treeview):
+    def get_selected_room(self):
 
-        model, iterator = treeview.get_selection().get_selected()
+        for iterator in self.list_view.get_selected_rows():
+            return self.list_view.get_row_value(iterator, "room")
 
-        if iterator is None:
-            return None
-
-        return model.get_value(iterator, 0)
-
-    @staticmethod
-    def private_rooms_sort(model, iter1, iter2, _column):
-
-        try:
-            private1 = model.get_value(iter1, 2) * 10000
-            private1 += model.get_value(iter1, 1)
-        except Exception:
-            private1 = 0
-
-        try:
-            private2 = model.get_value(iter2, 2) * 10000
-            private2 += model.get_value(iter2, 1)
-        except Exception:
-            private2 = 0
-
-        return (private1 > private2) - (private1 < private2)
-
-    def room_match_function(self, model, iterator, _data=None):
-
-        query = self.search_entry.get_text().lower()
-
-        if not query:
-            return True
-
-        value = model.get_value(iterator, 0)
-
-        if query in value.lower():
-            return True
-
-        return False
+        return None
 
     def set_room_list(self, rooms, owned_rooms, other_private_rooms):
 
-        # Temporarily disable sorting for improved performance
-        sort_column, sort_type = self.room_model.get_sort_column_id()
-        self.room_model.set_default_sort_func(lambda *_args: 0)
-        self.room_model.set_sort_column_id(-1, Gtk.SortType.DESCENDING)
-
+        self.list_view.disable_sorting()
         self.clear()
 
         for room, users in owned_rooms:
@@ -157,10 +124,7 @@ class RoomList(Popover):
         for room, users in rooms:
             self.update_room(room, users)
 
-        self.room_model.set_default_sort_func(self.private_rooms_sort)
-
-        if sort_column is not None and sort_type is not None:
-            self.room_model.set_sort_column_id(sort_column, sort_type)
+        self.list_view.enable_sorting()
 
     def toggle_public_feed(self, active):
 
@@ -170,31 +134,43 @@ class RoomList(Popover):
 
     def update_room(self, room, user_count, private=False, owned=False):
 
-        iterator = self.room_iters.get(room)
+        iterator = self.list_view.iterators.get(room)
+        h_user_count = humanize(user_count)
+
+        if private or owned:
+            # Show private/owned rooms first
+            user_count += 10000000
 
         if iterator is not None:
-            self.room_model.set_value(iterator, 1, user_count)
+            self.list_view.set_row_value(iterator, "users", h_user_count)
+            self.list_view.set_row_value(iterator, "users_data", user_count)
             return
 
         text_weight = Pango.Weight.BOLD if private else Pango.Weight.NORMAL
         text_underline = Pango.Underline.SINGLE if owned else Pango.Underline.NONE
 
-        self.room_iters[room] = self.room_model.insert_with_valuesv(
-            -1, self.column_numbers,
-            [room, user_count, text_weight, text_underline]
-        )
+        self.list_view.add_row([
+            room,
+            h_user_count,
+            user_count,
+            text_weight,
+            text_underline
+        ], select_row=False)
 
-    def on_row_activated(self, treeview, _path, _column):
+    def clear(self):
+        self.list_view.clear()
 
-        room = self.get_selected_room(treeview)
+    def on_row_activated(self, *_args):
+
+        room = self.get_selected_room()
 
         if room is not None:
             self.popup_room = room
             self.on_popup_join()
 
-    def on_popup_menu(self, menu, widget):
+    def on_popup_menu(self, menu, _widget):
 
-        room = self.get_selected_room(widget)
+        room = self.get_selected_room()
         self.popup_room = room
 
         menu.actions[_("Join Room")].set_enabled(room not in core.chatrooms.joined_rooms)
@@ -228,9 +204,6 @@ class RoomList(Popover):
     def on_popup_leave(self, *_args):
         core.chatrooms.remove_room(self.popup_room)
 
-    def on_search_room(self, *_args):
-        self.room_filter.refilter()
-
     def on_refresh(self, *_args):
         core.chatrooms.request_room_list()
 
@@ -242,7 +215,3 @@ class RoomList(Popover):
 
         self.search_entry.grab_focus()
         return True
-
-    def clear(self):
-        self.room_model.clear()
-        self.room_iters.clear()

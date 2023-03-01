@@ -43,28 +43,35 @@ from pynicotine.gtkgui.widgets.theme import add_css_class
 
 class TreeView:
 
-    def __init__(self, window, parent, columns, multi_select=False, always_select=False,
-                 name=None, activate_row_callback=None, select_row_callback=None, tooltip_callback=None):
+    def __init__(self, window, parent, columns, has_tree=False, multi_select=False, always_select=False,
+                 name=None, secondary_name=None, activate_row_callback=None, select_row_callback=None,
+                 search_entry=None):
 
         self.window = window
-        self.widget = Gtk.TreeView(visible=True)
-        self.widget_name = name
-        self.columns = columns
+        self.widget = Gtk.TreeView(enable_tree_lines=True, has_tooltip=True, visible=True)
         self.model = None
         self.iterators = {}
+        self._widget_name = name
+        self._secondary_name = secondary_name
+        self._has_tree = has_tree
+        self._columns = columns
+        self._iterator_keys = {}
         self._iterator_key_column = 0
-        self._iter_keys = {}
         self._column_ids = {}
+        self._column_offsets = {}
         self._column_numbers = None
+        self._default_sort_column = None
+        self._default_sort_type = Gtk.SortType.ASCENDING
         self._sort_column = None
         self._sort_type = None
+        self._reset_sort_column = None
 
         parent.set_property("child", self.widget)
         self.initialise_columns(columns)
 
         Accelerator("<Primary>c", self.widget, self.on_copy_cell_data_accelerator)
         self.column_menu = self.widget.column_menu = PopupMenu(
-            self.window.application, self.widget, callback=self._press_header, connect_events=False)
+            self.window.application, self.widget, callback=self.on_column_header_menu, connect_events=False)
 
         if multi_select:
             self.widget.set_rubber_banding(True)
@@ -79,9 +86,10 @@ class TreeView:
         if select_row_callback:
             self.widget.get_selection().connect("changed", self.on_select_row, select_row_callback)
 
-        if tooltip_callback:
-            self.widget.set_has_tooltip(True)
-            self.widget.connect("query-tooltip", self.on_tooltip, tooltip_callback)
+        if search_entry:
+            self.widget.set_search_entry(search_entry)
+
+        self.widget.connect("query-tooltip", self.on_tooltip)
 
         self.widget.set_fixed_height_mode(True)
         self.widget.set_search_equal_func(self.on_search_match)
@@ -146,39 +154,8 @@ class TreeView:
             column.set_resizable(True)
             break
 
-    def _header_toggle(self, _action, _state, columns, index):
-
-        column = columns[index]
-        column.set_visible(not column.get_visible())
-        self._set_last_column_autosize()
-
-    def _press_header(self, menu, _treeview):
-
-        columns = self.widget.get_columns()
-        visible_columns = [column for column in columns if column.get_visible()]
-        menu.clear()
-
-        for column_num, column in enumerate(columns, start=1):
-            title = column.get_widget().get_text()
-
-            if title == "":
-                title = _("Column #%i") % column_num
-
-            menu.add_items(
-                ("$" + title, None)
-            )
-            menu.update_model()
-            menu.actions[title].set_state(GLib.Variant("b", column in visible_columns))
-
-            if column in visible_columns:
-                menu.actions[title].set_enabled(len(visible_columns) > 1)
-
-            menu.actions[title].connect("activate", self._header_toggle, columns, column_num - 1)
-
     def initialise_columns(self, columns):
 
-        default_sort_column = None
-        default_sort_type = None
         data_types = []
 
         for column_index, (column_id, column_data) in enumerate(columns.items()):
@@ -199,42 +176,46 @@ class TreeView:
             data_types.append(data_type)
             self._column_ids[column_id] = column_index
 
-        self.model = Gtk.ListStore(*data_types)
+        model_class = Gtk.TreeStore if self._has_tree else Gtk.ListStore
+        self.model = model_class(*data_types)
         self._column_numbers = list(self._column_ids.values())
 
         progress_padding = 1
         height_padding = 4
         width_padding = 10 if GTK_API_VERSION >= 4 else 12
 
-        cols = {}
-        num_cols = len(columns)
+        column_widgets = {}
         column_config = None
+        num_columns = len(columns)
+        has_visible_column_header = False
 
         for column_index, (column_id, column_data) in enumerate(columns.items()):
             title = column_data.get("title")
-
-            if title is None:
-                # All visible columns processed
-                break
-
-            column_type = column_data["column_type"]
             sort_column = column_data.get("sort_column", column_id)
-            iterator_key = column_data.get("iterator_key")
-            width = column_data.get("width")
             sort_type = column_data.get("default_sort_column")
+            iterator_key = column_data.get("iterator_key")
 
             if sort_type:
-                default_sort_column = sort_column
-                default_sort_type = Gtk.SortType.DESCENDING if sort_type == "descending" else Gtk.SortType.ASCENDING
+                self._default_sort_column = self._column_ids[sort_column]
+                self._default_sort_type = (Gtk.SortType.DESCENDING if sort_type == "descending"
+                                           else Gtk.SortType.ASCENDING)
+                self.model.set_sort_column_id(self._default_sort_column, self._default_sort_type)
 
             if iterator_key:
                 self._iterator_key_column = column_index
 
-            if self.widget_name:
+            if title is None:
+                # Hidden data column
+                continue
+
+            column_type = column_data["column_type"]
+            width = column_data.get("width")
+
+            if self._widget_name:
                 try:
-                    column_config = config.sections["columns"][self.widget_name[0]][self.widget_name[1]]
+                    column_config = config.sections["columns"][self._widget_name][self._secondary_name]
                 except KeyError:
-                    column_config = config.sections["columns"][self.widget_name]
+                    column_config = config.sections["columns"][self._widget_name]
 
                 if column_type != "icon":
                     try:
@@ -291,6 +272,7 @@ class TreeView:
                 column = Gtk.TreeViewColumn(column_id, renderer, icon_name=column_index)
 
             column_header = column.get_button()
+            column_header.connect("clicked", self.on_column_header_pressed, column)
 
             # Required for fixed height mode
             column.set_sizing(Gtk.TreeViewColumnSizing.FIXED)
@@ -302,7 +284,7 @@ class TreeView:
                     column.set_fixed_width(width)
 
             # Allow individual cells to receive visual focus
-            if num_cols > 1:
+            if num_columns > 1:
                 renderer.set_property("mode", Gtk.CellRendererMode.ACTIVATABLE)
 
             column.set_reorderable(True)
@@ -318,25 +300,29 @@ class TreeView:
 
             if column_data.get("hide_header"):
                 column.get_widget().set_visible(False)
+            else:
+                has_visible_column_header = True
 
             if column_data.get("expand_column"):
                 column.set_expand(True)
 
-            column.set_sort_column_id(self._column_ids[sort_column])
-            cols[column_id] = column
+            if self._widget_name:
+                column.connect("notify::x-offset", self.on_column_position_changed)
 
-        self._append_columns(cols, column_config)
-        self._hide_columns(cols, column_config)
+            column.set_sort_column_id(self._column_ids[sort_column])
+            column_widgets[column_id] = column
+
+        self.widget.set_headers_visible(has_visible_column_header)
+
+        self._append_columns(column_widgets, column_config)
+        self._hide_columns(column_widgets, column_config)
 
         self.widget.connect("columns-changed", self._set_last_column_autosize)
         self.widget.emit("columns-changed")
 
-        if default_sort_column is not None:
-            self.model.set_sort_column_id(self._column_ids[default_sort_column], default_sort_type)
-
         self.widget.set_model(self.model)
 
-    def save_columns(self, subpage=None):
+    def save_columns(self):
         """ Save a treeview's column widths and visibilities for the next session """
 
         saved_columns = {}
@@ -356,7 +342,7 @@ class TreeView:
                     if not visible:
                         saved_columns[title] = {
                             "visible": visible,
-                            "width": column_config[self.widget_name][title]["width"]
+                            "width": column_config[self._widget_name][title]["width"]
                         }
 
                     continue
@@ -367,32 +353,36 @@ class TreeView:
 
             saved_columns[title] = {"visible": visible, "width": width}
 
-        if subpage is not None:
+        if self._secondary_name is not None:
             try:
-                column_config[self.widget_name]
+                column_config[self._widget_name]
             except KeyError:
-                column_config[self.widget_name] = {}
+                column_config[self._widget_name] = {}
 
-            column_config[self.widget_name][subpage] = saved_columns
+            column_config[self._widget_name][self._secondary_name] = saved_columns
         else:
-            column_config[self.widget_name] = saved_columns
+            column_config[self._widget_name] = saved_columns
 
     def disable_sorting(self):
-
         self._sort_column, self._sort_type = self.model.get_sort_column_id()
-        self.model.set_default_sort_func(lambda *args: 0)
-        self.model.set_sort_column_id(-1, Gtk.SortType.ASCENDING)
+        self.model.set_sort_column_id(Gtk.TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID, Gtk.SortType.ASCENDING)
 
     def enable_sorting(self):
         self.model.set_sort_column_id(self._sort_column, self._sort_type)
 
-    def add_row(self, values, select_row=True, prepend=False):
+    def add_row(self, values, select_row=True, prepend=False, parent_iterator=None):
 
         position = 0 if prepend else -1
         key = values[self._iterator_key_column]
 
-        self.iterators[key] = iterator = self.model.insert_with_valuesv(position, self._column_numbers, values)
-        self._iter_keys[iterator.user_data] = key
+        if self._has_tree:
+            self.iterators[key] = iterator = self.model.insert_with_values(
+                parent_iterator, position, self._column_numbers, values
+            )
+        else:
+            self.iterators[key] = iterator = self.model.insert_with_valuesv(position, self._column_numbers, values)
+
+        self._iterator_keys[iterator.user_data] = key
 
         if select_row:
             self.select_row(iterator)
@@ -413,12 +403,21 @@ class TreeView:
     def get_selected_rows(self):
 
         iterators = []
-        model, paths = self.widget.get_selection().get_selected_rows()
+        _model, paths = self.widget.get_selection().get_selected_rows()
 
         for path in paths:
-            iterators.append(model.get_iter(path))
+            iterators.append(self.model.get_iter(path))
 
         return iterators
+
+    def get_focused_row(self):
+
+        path, _column = self.widget.get_cursor()
+
+        if path is not None:
+            return self.model.get_iter(path)
+
+        return None
 
     def get_row_value(self, iterator, column_id):
         return self.model.get_value(iterator, self._column_ids[column_id])
@@ -426,15 +425,64 @@ class TreeView:
     def set_row_value(self, iterator, column_id, value):
         return self.model.set_value(iterator, self._column_ids[column_id], value)
 
-    def select_row(self, iterator):
-        self.widget.set_cursor(self.model.get_path(iterator))
-
     def remove_row(self, iterator):
-        del self.iterators[self._iter_keys[iterator.user_data]]
+        del self.iterators[self._iterator_keys[iterator.user_data]]
         self.model.remove(iterator)
+
+    def select_row(self, iterator=None, should_focus=True, should_expand=False):
+
+        if iterator is None:
+            # Select first row if available
+            iterator = self.model.get_iter_first()
+
+            if iterator is None:
+                return
+
+        if should_focus:
+            path = self.model.get_path(iterator)
+
+            if should_expand:
+                self.widget.expand_to_path(path)
+
+            self.widget.set_cursor(path)
+            self.widget.scroll_to_cell(path, column=None, use_align=True, row_align=0.5, col_align=0.5)
+            return
+
+        self.widget.get_selection().select_iter(iterator)
 
     def unselect_all_rows(self):
         self.widget.get_selection().unselect_all()
+
+    def expand_row(self, iterator):
+        path = self.model.get_path(iterator)
+        return self.widget.expand_row(path, open_all=False)
+
+    def collapse_row(self, iterator):
+        path = self.model.get_path(iterator)
+        return self.widget.collapse_row(path)
+
+    def expand_all_rows(self):
+        self.widget.expand_all()
+
+    def collapse_all_rows(self):
+        self.widget.collapse_all()
+
+    def get_focused_column(self):
+        _path, column = self.widget.get_cursor()
+        return column.get_title()
+
+    def get_visible_columns(self):
+        return [column.get_title() for column in self.widget.get_columns() if column.get_visible()]
+
+    def is_empty(self):
+        return not self.iterators
+
+    def is_selection_empty(self):
+        return self.widget.get_selection().count_selected_rows() == 0
+
+    def is_row_expanded(self, iterator):
+        path = self.model.get_path(iterator)
+        return self.widget.row_expanded(path)
 
     def grab_focus(self):
         self.widget.grab_focus()
@@ -445,62 +493,31 @@ class TreeView:
 
         self.model.clear()
         self.iterators.clear()
+        self._iterator_keys.clear()
 
         self.widget.set_model(self.model)
 
-    def set_search_entry(self, entry):
-        self.widget.set_search_entry(entry)
-
-    def show_tooltip(self, pos_x, pos_y, tooltip, column_id, column_titles, text_function):
-
-        try:
-            bin_x, bin_y = self.widget.convert_widget_to_bin_window_coords(pos_x, pos_y)
-            path, column, _cell_x, _cell_y = self.widget.get_path_at_pos(bin_x, bin_y)
-
-        except TypeError:
-            return False
-
-        if column.get_title() not in column_titles:
-            return False
-
-        iterator = self.model.get_iter(path)
-        column_value = self.get_row_value(iterator, column_id)
-
-        # Update tooltip position
-        self.widget.set_tooltip_cell(tooltip, path, column)
-
-        text = text_function(column_value)
-        if not text:
-            return False
-
-        tooltip.set_text(text)
-        return True
-
     @staticmethod
-    def get_user_status_tooltip_text(column_value):
+    def get_user_status_tooltip_text(icon_name):
 
-        if column_value == 1:
+        if "away" in icon_name:
             return _("Away")
 
-        if column_value == 2:
+        if "online" in icon_name:
             return _("Online")
 
         return _("Offline")
 
-    def show_user_status_tooltip(self, pos_x, pos_y, tooltip, column_id):
-        return self.show_tooltip(pos_x, pos_y, tooltip, column_id, ("status",), self.get_user_status_tooltip_text)
+    @staticmethod
+    def get_country_tooltip_text(icon_name):
+
+        country_code = icon_name[-2:].upper()
+        country_name = GeoIP.country_code_to_name(country_code)
+        return f"{country_name} ({country_code})"
 
     @staticmethod
-    def get_country_tooltip_text(country_code):
-
-        if country_code:
-            country_name = GeoIP.country_code_to_name(country_code)
-            return f"{country_name} ({country_code})"
-
-        return _("Earth")
-
-    def show_country_tooltip(self, pos_x, pos_y, tooltip, column_id):
-        return self.show_tooltip(pos_x, pos_y, tooltip, column_id, ("country",), get_country_tooltip_text)
+    def get_file_type_tooltip_text(icon_name):
+        return FILE_TYPE_ICON_LABELS.get(icon_name, _("Unknown"))
 
     def on_toggle(self, _widget, path, callback):
         callback(self, self.model.get_iter(path))
@@ -511,6 +528,59 @@ class TreeView:
     def on_select_row(self, selection, callback):
         _model, iterator = selection.get_selected()
         callback(self, iterator)
+
+    def on_column_header_pressed(self, _treeview, column):
+        """ Reset sorting when column header has been pressed three times """
+
+        if not self._reset_sort_column and column.get_sort_order() == Gtk.SortType.DESCENDING:
+            self._reset_sort_column = column
+            return
+
+        if self._reset_sort_column == column and self._default_sort_column is not None:
+            self.model.set_sort_column_id(self._default_sort_column, self._default_sort_type)
+
+        self._reset_sort_column = None
+
+    def on_column_header_toggled(self, _action, _state, columns, index):
+
+        column = columns[index]
+        column.set_visible(not column.get_visible())
+        self._set_last_column_autosize()
+
+    def on_column_header_menu(self, menu, _treeview):
+
+        columns = self.widget.get_columns()
+        visible_columns = [column for column in columns if column.get_visible()]
+        menu.clear()
+
+        for column_num, column in enumerate(columns, start=1):
+            title = column.get_widget().get_text()
+
+            if title == "":
+                title = _("Column #%i") % column_num
+
+            menu.add_items(
+                ("$" + title, None)
+            )
+            menu.update_model()
+            menu.actions[title].set_state(GLib.Variant("b", column in visible_columns))
+
+            if column in visible_columns:
+                menu.actions[title].set_enabled(len(visible_columns) > 1)
+
+            menu.actions[title].connect("activate", self.on_column_header_toggled, columns, column_num - 1)
+
+    def on_column_position_changed(self, column, _param):
+        """ Save column position and width to config """
+
+        column_id = column.get_title()
+        offset = column.get_x_offset()
+
+        if self._column_offsets.get(column_id) == offset:
+            return
+
+        self._column_offsets[column_id] = offset
+        self.save_columns()
 
     def on_search_match(self, model, _column, search_term, iterator):
 
@@ -532,20 +602,53 @@ class TreeView:
 
         return True
 
-    def on_tooltip(self, _widget, pos_x, pos_y, keyboard_mode, tooltip, callback):
-        return callback(self, pos_x, pos_y, keyboard_mode, tooltip)
+    def on_tooltip(self, _widget, pos_x, pos_y, _keyboard_mode, tooltip):
+
+        try:
+            bin_x, bin_y = self.widget.convert_widget_to_bin_window_coords(pos_x, pos_y)
+            is_blank, path, column, _cell_x, _cell_y = self.widget.is_blank_at_pos(bin_x, bin_y)
+
+        except TypeError:
+            return False
+
+        if is_blank:
+            return False
+
+        column_id = column.get_title()
+        iterator = self.model.get_iter(path)
+        value = self.get_row_value(iterator, column_id)
+
+        if not value:
+            return False
+
+        if not isinstance(value, str):
+            return False
+
+        if column_id == "country":
+            value = self.get_country_tooltip_text(value)
+
+        elif column_id == "status":
+            value = self.get_user_status_tooltip_text(value)
+
+        elif column_id == "file_type":
+            value = self.get_file_type_tooltip_text(value)
+
+        # Update tooltip position
+        self.widget.set_tooltip_cell(tooltip, path, column)
+
+        tooltip.set_text(value)
+        return True
 
     def on_copy_cell_data_accelerator(self, *_args):
         """ Ctrl+C: copy cell data """
 
         path, column = self.widget.get_cursor()
-        model = self.widget.get_model()
 
         if path is None:
             return False
 
-        iterator = model.get_iter(path)
-        cell_value = str(model.get_value(iterator, column.get_sort_column_id()))
+        iterator = self.model.get_iter(path)
+        cell_value = str(self.model.get_value(iterator, column.get_sort_column_id()))
 
         copy_text(cell_value)
         return True
@@ -841,7 +944,7 @@ def hide_columns(_treeview, cols, column_config):
             pass
 
 
-def save_columns(treeview_name, columns, subpage=None):
+def save_columns(treeview_name, columns):
     """ Save a treeview's column widths and visibilities for the next session """
 
     saved_columns = {}
@@ -872,15 +975,7 @@ def save_columns(treeview_name, columns, subpage=None):
 
         saved_columns[title] = {"visible": visible, "width": width}
 
-    if subpage is not None:
-        try:
-            column_config[treeview_name]
-        except KeyError:
-            column_config[treeview_name] = {}
-
-        column_config[treeview_name][subpage] = saved_columns
-    else:
-        column_config[treeview_name] = saved_columns
+    column_config[treeview_name] = saved_columns
 
 
 def press_header(menu, treeview):
@@ -980,17 +1075,6 @@ def get_transfer_file_path_tooltip_text(column_value):
     return column_value.filename or column_value.path
 
 
-def get_user_status_tooltip_text(column_value):
-
-    if column_value == 1:
-        return _("Away")
-
-    if column_value == 2:
-        return _("Online")
-
-    return _("Offline")
-
-
 def show_country_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn):
     return show_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn,
                         ("country",), get_country_tooltip_text)
@@ -1007,7 +1091,3 @@ def show_file_path_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn, transf
 def show_file_type_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn):
     return show_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn,
                         ("file_type"), get_file_type_tooltip_text)
-
-
-def show_user_status_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn):
-    return show_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn, ("status",), get_user_status_tooltip_text)

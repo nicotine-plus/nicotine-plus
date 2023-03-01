@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2023-02-18 13:33+0000\n"
+"PO-Revision-Date: 2023-02-28 06:13+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -1679,7 +1679,7 @@ msgstr "Letöltési szűrő hozzáadása"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:358
 msgid "Enter a new download filter:"
-msgstr "Írjon be egy új letöltési szűrőt:"
+msgstr "Adjon meg egy új letöltési szűrőt:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:361
 #: pynicotine/gtkgui/dialogs/preferences.py:393
@@ -1757,11 +1757,11 @@ msgstr "Adja meg a letiltani kívánt felhasználó nevét:"
 #: pynicotine/gtkgui/widgets/popupmenu.py:367
 #: pynicotine/gtkgui/widgets/popupmenu.py:399
 msgid "Ban IP Address"
-msgstr "IP cím tiltása"
+msgstr "IP cím letiltása"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1036
 msgid "Enter an IP address you want to ban:"
-msgstr "Írja be a tiltani kívánt IP-címet:"
+msgstr "Írja be a letiltani kívánt IP-címet:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1073
 #: pynicotine/gtkgui/dialogs/preferences.py:1082
@@ -1770,7 +1770,7 @@ msgstr "Minta"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1084
 msgid "Replacement"
-msgstr "Csere"
+msgstr "Helyettesítés"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1219
 msgid "Censor Pattern"
@@ -1793,19 +1793,19 @@ msgstr "Cenzúrázott minták szerkesztése"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1277
 msgid "Add Replacement"
-msgstr "Csere hozzáadása"
+msgstr "Helyettesítés hozzáadása"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1278
 msgid "Enter a text pattern and what to replace it with"
-msgstr "Adjon meg egy szövegmintát és a cserét"
+msgstr "Adjon meg egy szövegmintát és azt, hogy mit kell helyettesítenie"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1306
 msgid "Edit Replacement"
-msgstr "Csere szerkesztése"
+msgstr "Helyettesítés szerkesztése"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1307
 msgid "Enter a text pattern and what to replace it with:"
-msgstr "Adjon meg egy szövegmintát és a cserét:"
+msgstr "Adjon meg egy szövegmintát és azt, hogy mit kell helyettesítenie:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1375
 msgid "Top"
@@ -1856,7 +1856,7 @@ msgstr "A lap megváltozott"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1386
 msgid "Tab Highlight"
-msgstr "Kiemelt(fontos) lap"
+msgstr "Kiemelt lap"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1387
 msgid "Window"
@@ -1892,7 +1892,7 @@ msgstr "URL-kezelők megadása"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1947
 msgid "Enter the protocol and the command for the URL handler:"
-msgstr "Adja meg az URL-kezelő protokollját és parancsát:"
+msgstr "Adja meg az URL-kezelő protokollját és a parancsát:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1974
 msgid "Edit Command"
@@ -1901,7 +1901,7 @@ msgstr "Parancsszerkesztés"
 #: pynicotine/gtkgui/dialogs/preferences.py:1975
 #, python-format
 msgid "Enter a new command for protocol %s:"
-msgstr "Adja meg %s protokoll új parancsát:"
+msgstr "Adja meg a(z) %s protokoll új parancsát:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2113
 msgid "Username;APIKEY:"
@@ -2112,7 +2112,7 @@ msgstr "Kívánság szerkesztése"
 #: pynicotine/gtkgui/dialogs/wishlist.py:117
 #, python-format
 msgid "Enter new value for wish '%s':"
-msgstr "Adja meg a kívánság új értékét '%s':"
+msgstr "Adjon meg új értéket a(z) '%s' kívánsághoz:"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:145
 msgid "Clear Wishlist?"
@@ -2212,7 +2212,7 @@ msgstr "Tétel"
 
 #: pynicotine/gtkgui/interests.py:128 pynicotine/gtkgui/interests.py:136
 msgid "Re_commendations for Item"
-msgstr "Javaslatok a _tételhez"
+msgstr "_Javaslatok a tételhez"
 
 #: pynicotine/gtkgui/interests.py:129 pynicotine/gtkgui/interests.py:137
 #: pynicotine/gtkgui/interests.py:148 pynicotine/gtkgui/userinfo.py:282
@@ -2717,7 +2717,7 @@ msgstr "Nem engedélyezett bővítmény"
 
 #: pynicotine/gtkgui/transferlist.py:103 pynicotine/gtkgui/uploads.py:67
 msgid "Cancelled"
-msgstr "Törölve"
+msgstr "Visszavonva"
 
 #: pynicotine/gtkgui/transferlist.py:107
 msgid "Banned"
@@ -2849,7 +2849,7 @@ msgstr "Mappa _letöltése"
 
 #: pynicotine/gtkgui/userbrowse.py:238 pynicotine/gtkgui/userbrowse.py:309
 msgid "Download Folder _To…"
-msgstr "Mappa le_töltése ide…"
+msgstr "Mappa letöltése _ide…"
 
 #: pynicotine/gtkgui/userbrowse.py:239
 msgid "Download Folder & Subfolders"
@@ -2886,11 +2886,11 @@ msgstr "Válassza ki több mappa letöltésének a célhelyét"
 
 #: pynicotine/gtkgui/userbrowse.py:768
 msgid "Upload Folder (with Subfolders) To User"
-msgstr "Mappa feltöltése (az almappákkal) a felhasználóhoz"
+msgstr "Mappa feltöltése (az almappákkal) a felhasználónak"
 
 #: pynicotine/gtkgui/userbrowse.py:770
 msgid "Upload Folder To User"
-msgstr "Mappa feltöltése a felhasználóhoz"
+msgstr "Mappa feltöltése a felhasználónak"
 
 #: pynicotine/gtkgui/userbrowse.py:775 pynicotine/gtkgui/userbrowse.py:999
 msgid "Enter the name of the user you want to upload to:"
@@ -2923,7 +2923,7 @@ msgstr "Kép mentése"
 #: pynicotine/gtkgui/userinfo.py:366
 #, python-format
 msgid "Failed to load picture for user %(user)s: %(error)s"
-msgstr "A(z) %(user)s felhasználó képe nem tölthető be: %(error)s"
+msgstr "A(z) %(user)s felhasználó(k) képét nem sikerült betölteni: %(error)s"
 
 #: pynicotine/gtkgui/userinfo.py:415
 msgid ""
@@ -2945,11 +2945,11 @@ msgstr "_Barát hozzáadása"
 
 #: pynicotine/gtkgui/userinfo.py:470
 msgid "Unban User"
-msgstr "Letiltott felhasználó engedélyezése"
+msgstr "Felhasználó letiltásának visszavonása"
 
 #: pynicotine/gtkgui/userinfo.py:474
 msgid "Unignore User"
-msgstr "Felhasználó figyelmen kívül hagyásának törlése"
+msgstr "Felhasználó figyelmen kívül hagyásának visszavonása"
 
 #: pynicotine/gtkgui/userinfo.py:496
 msgid "Yes"
@@ -3093,15 +3093,15 @@ msgstr "Eltávolít"
 
 #: pynicotine/gtkgui/widgets/filechooser.py:37
 msgid "Select a File"
-msgstr "Válasszon egy fájlt"
+msgstr "Válasszon ki egy fájlt"
 
 #: pynicotine/gtkgui/widgets/filechooser.py:130
 msgid "Select a Folder"
-msgstr "Válasszon egy mappát"
+msgstr "Válasszon ki egy mappát"
 
 #: pynicotine/gtkgui/widgets/filechooser.py:150
 msgid "Select an Image"
-msgstr "Válasszon egy képet"
+msgstr "Válasszon ki egy képet"
 
 #: pynicotine/gtkgui/widgets/filechooser.py:157
 msgid "All images"
@@ -3145,7 +3145,7 @@ msgstr "%s fájl(ok) kiválasztva"
 #: pynicotine/gtkgui/widgets/popupmenu.py:350
 #: pynicotine/gtkgui/ui/userinfo.ui:419
 msgid "Send M_essage"
-msgstr "(_M) Üzenet küldése"
+msgstr "_Üzenet küldése"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:353
 msgid "Show User I_nfo"
@@ -3164,12 +3164,12 @@ msgstr "_Barát hozzáadása"
 #: pynicotine/gtkgui/widgets/popupmenu.py:362
 #: pynicotine/gtkgui/widgets/popupmenu.py:389
 msgid "_Gift Privileges…"
-msgstr "(_G) Kiváltságok adása…"
+msgstr "Kiváltságok _adása…"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:369
 #: pynicotine/gtkgui/ui/userinfo.ui:574
 msgid "Show IP A_ddress"
-msgstr "IP cím mutatása (_d)"
+msgstr "IP-_cím mutatása"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:424
 #, python-format
@@ -3184,12 +3184,12 @@ msgstr "Hozzáadás a(z) %s privát szobához"
 #: pynicotine/gtkgui/widgets/popupmenu.py:433
 #, python-format
 msgid "Remove as Operator of %s"
-msgstr "Eltávolítás %s Operátoraként"
+msgstr "Eltávolítás %s operátoraként"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:435
 #, python-format
 msgid "Add as Operator of %s"
-msgstr "Hozzáadás %s Operátoraként"
+msgstr "Hozzáadás %s operátoraként"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:553
 msgid "Please enter number of days!"
@@ -3232,7 +3232,7 @@ msgstr "Csatlakozás"
 #: pynicotine/gtkgui/widgets/trayicon.py:99
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:27
 msgid "Disconnect"
-msgstr "Megszakít"
+msgstr "Szétkapcsol"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:104
 msgid "Send Message"
@@ -3258,7 +3258,7 @@ msgstr "Üzenet küldés indítása"
 #: pynicotine/gtkgui/widgets/trayicon.py:216
 msgid "Enter the name of the user whom you want to send a message:"
 msgstr ""
-"Írja be annak a felhasználónak a nevét, akinek üzenetet szeretne küldeni:"
+"Adja meg annak a felhasználónak a nevét akinek üzenetet szeretne küldeni:"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:235
 msgid "Request User Info"
@@ -3300,7 +3300,7 @@ msgstr "Csoportosítás mappa szerint"
 
 #: pynicotine/gtkgui/widgets/treeview.py:571
 msgid "Group by User"
-msgstr "Felhasználók szerinti csoportosítás"
+msgstr "Csoportosítás felhasználók szerint"
 
 #: pynicotine/logfacility.py:156
 #, python-format
@@ -3967,7 +3967,7 @@ msgid ""
 "Choose a range to select a listening port from. The first available port in "
 "the range will be used."
 msgstr ""
-"Válasszon egy tartományt a figyelési porthoz. A tartomány első elérhető "
+"Válasszon ki egy tartományt a figyelési porthoz. A tartomány első elérhető "
 "portja lesz használva."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:302

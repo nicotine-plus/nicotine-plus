@@ -1276,7 +1276,7 @@ class Search:
         selected_length = 0
 
         for iterator in self.selected_results.values():
-            virtual_path = self.resultsmodel.get_value(iterator, 11)
+            virtual_path = self.resultsmodel.get_value(iterator, 12)
             directory, filename = virtual_path.rsplit("\\", 1)
             file_size = self.resultsmodel.get_value(iterator, 14)
             selected_size += file_size

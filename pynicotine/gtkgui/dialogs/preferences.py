@@ -164,8 +164,6 @@ class NetworkPage:
 
     def get_settings(self):
 
-        self.portmap_required = False
-
         try:
             server_addr = self.soulseek_server_entry.get_text().split(":")
             server_addr[1] = int(server_addr[1])
@@ -255,7 +253,6 @@ class DownloadsPage:
             self.autoclear_downloads_toggle,
             self.download_double_click_combobox,
             self.download_folder_button,
-            self.download_reverse_order_toggle,
             self.enable_username_subfolders_toggle,
             self.enable_filters_toggle,
             self.file_finished_command_entry,
@@ -306,7 +303,6 @@ class DownloadsPage:
         self.options = {
             "transfers": {
                 "autoclear_downloads": self.autoclear_downloads_toggle,
-                "reverseorder": self.download_reverse_order_toggle,
                 "remotedownloads": self.accept_sent_files_toggle,
                 "uploadallowed": self.sent_files_permission_combobox,
                 "incompletedir": self.incomplete_folder_button,
@@ -356,12 +352,9 @@ class DownloadsPage:
             escaped = self.filter_list_view.get_row_value(iterator, "escaped")
             download_filters.append([dfilter, int(escaped)])
 
-        download_filters.sort()
-
         return {
             "transfers": {
                 "autoclear_downloads": self.autoclear_downloads_toggle.get_active(),
-                "reverseorder": self.download_reverse_order_toggle.get_active(),
                 "remotedownloads": self.accept_sent_files_toggle.get_active(),
                 "uploadallowed": self.sent_files_permission_combobox.get_active(),
                 "incompletedir": self.incomplete_folder_button.get_path(),
@@ -818,6 +811,8 @@ class UserProfilePage:
         ) = ui_template.widgets
 
         self.application = application
+        self.user_profile_required = False
+
         self.description_view = TextView(self.description_view_container, parse_urls=False)
         self.select_picture_button = FileChooserButton(
             self.select_picture_button, parent=application.preferences, chooser_type="image")
@@ -830,15 +825,25 @@ class UserProfilePage:
         }
 
     def set_settings(self):
+
         self.description_view.clear()
         self.application.preferences.set_widgets_data(self.options)
 
+        self.user_profile_required = False
+
     def get_settings(self):
+
+        description = repr(self.description_view.get_text())
+        picture_path = self.select_picture_button.get_path()
+
+        if (description != config.sections["userinfo"]["descr"]
+                or picture_path != config.sections["userinfo"]["pic"]):
+            self.user_profile_required = True
 
         return {
             "userinfo": {
-                "descr": repr(self.description_view.get_text()),
-                "pic": self.select_picture_button.get_path()
+                "descr": description,
+                "pic": picture_path
             }
         }
 
@@ -1055,8 +1060,6 @@ class BannedUsersPage:
 
     def get_settings(self):
 
-        self.ip_ban_required = False
-
         return {
             "server": {
                 "banlist": self.banned_users[:],
@@ -1143,13 +1146,11 @@ class ChatsPage:
             self.complete_commands_toggle,
             self.complete_room_names_toggle,
             self.complete_room_usernames_toggle,
-            self.cycle_tab_completion_toggle,
             self.enable_completion_dropdown_toggle,
             self.enable_ctcp_toggle,
             self.enable_spell_checker_toggle,
             self.enable_tab_completion_toggle,
             self.enable_tts_toggle,
-            self.hide_dropdown_single_match_toggle,
             self.min_chars_dropdown_spinner,
             self.recent_private_messages_spinner,
             self.recent_room_messages_spinner,
@@ -1213,14 +1214,12 @@ class ChatsPage:
             },
             "words": {
                 "tab": self.enable_tab_completion_toggle,
-                "cycle": self.cycle_tab_completion_toggle,
                 "dropdown": self.enable_completion_dropdown_toggle,
                 "characters": self.min_chars_dropdown_spinner,
                 "roomnames": self.complete_room_names_toggle,
                 "buddies": self.complete_buddy_names_toggle,
                 "roomusers": self.complete_room_usernames_toggle,
                 "commands": self.complete_commands_toggle,
-                "onematch": self.hide_dropdown_single_match_toggle,
                 "censored": self.censor_list_view,
                 "censorwords": self.censor_text_patterns_toggle,
                 "censorfill": self.censor_replacement_combobox,
@@ -1261,8 +1260,6 @@ class ChatsPage:
 
     def get_settings(self):
 
-        self.completion_required = False
-
         return {
             "server": {
                 "ctcpmsgs": not self.enable_ctcp_toggle.get_active()
@@ -1278,14 +1275,12 @@ class ChatsPage:
             },
             "words": {
                 "tab": self.enable_tab_completion_toggle.get_active(),
-                "cycle": self.cycle_tab_completion_toggle.get_active(),
                 "dropdown": self.enable_completion_dropdown_toggle.get_active(),
                 "characters": self.min_chars_dropdown_spinner.get_value_as_int(),
                 "roomnames": self.complete_room_names_toggle.get_active(),
                 "buddies": self.complete_buddy_names_toggle.get_active(),
                 "roomusers": self.complete_room_usernames_toggle.get_active(),
                 "commands": self.complete_commands_toggle.get_active(),
-                "onematch": self.hide_dropdown_single_match_toggle.get_active(),
                 "censored": self.censored_patterns[:],
                 "censorwords": self.censor_text_patterns_toggle.get_active(),
                 "censorfill": self.censor_replacement_combobox.get_active_id(),
@@ -1622,7 +1617,6 @@ class UserInterfacePage:
 
     def get_settings(self):
 
-        self.theme_required = False
         enabled_tabs = {}
 
         for page_id, widget in self.tabs.items():
@@ -1928,8 +1922,6 @@ class SearchesPage:
 
     def get_settings(self):
 
-        self.search_required = False
-
         return {
             "searches": {
                 "maxresults": self.max_sent_results_spinner.get_value_as_int(),
@@ -2194,7 +2186,7 @@ class PluginsPage:
 
         self.application.preferences.set_widgets_data(self.options)
 
-        for plugin_id in sorted(core.pluginhandler.list_installed_plugins()):
+        for plugin_id in core.pluginhandler.list_installed_plugins():
             try:
                 info = core.pluginhandler.get_plugin_info(plugin_id)
             except OSError:
@@ -2512,6 +2504,10 @@ class Preferences(Dialog):
             "plugins": {}
         }
 
+        for page in self.pages.values():
+            for key, data in page.get_settings().items():
+                options[key].update(data)
+
         try:
             portmap_required = self.pages["network"].portmap_required
 
@@ -2531,6 +2527,12 @@ class Preferences(Dialog):
             theme_required = False
 
         try:
+            user_profile_required = self.pages["user-profile"].user_profile_required
+
+        except KeyError:
+            user_profile_required = False
+
+        try:
             completion_required = self.pages["chats"].completion_required
 
         except KeyError:
@@ -2548,25 +2550,21 @@ class Preferences(Dialog):
         except KeyError:
             search_required = False
 
-        for page in self.pages.values():
-            for key, data in page.get_settings().items():
-                options[key].update(data)
-
-        return (portmap_required, rescan_required, theme_required, completion_required,
+        return (portmap_required, rescan_required, theme_required, user_profile_required, completion_required,
                 ip_ban_required, search_required, options)
 
     def update_settings(self, settings_closed=False):
 
-        (portmap_required, rescan_required, theme_required, completion_required,
+        (portmap_required, rescan_required, theme_required, user_profile_required, completion_required,
             ip_ban_required, search_required, options) = self.get_settings()
 
         for key, data in options.items():
             config.sections[key].update(data)
 
         if portmap_required:
-            core.protothread.upnp.add_port_mapping()
+            core.protothread.portmapper.add_port_mapping()
         else:
-            core.protothread.upnp.remove_port_mapping()
+            core.protothread.portmapper.remove_port_mapping()
 
         if theme_required:
             # Dark mode
@@ -2583,6 +2581,9 @@ class Preferences(Dialog):
 
             self.application.window.chatrooms.update_tags()
             self.application.window.privatechat.update_tags()
+
+        if user_profile_required and core.login_username:
+            core.userinfo.show_user(core.login_username, refresh=True)
 
         if completion_required:
             core.chatrooms.update_completions()

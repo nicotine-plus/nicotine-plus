@@ -252,8 +252,8 @@ class Application:
         action.connect("activate", self.on_configure_ignored_users)
         self.add_action(action)
 
-        action = Gio.SimpleAction(name="update-user-profile")
-        action.connect("activate", self.on_update_user_profile)
+        action = Gio.SimpleAction(name="personal-profile", enabled=False)
+        action.connect("activate", self.on_personal_profile)
         self.add_action(action)
 
         # Notifications
@@ -661,11 +661,11 @@ class Application:
     def on_configure_uploads(self, *_args):
         self.on_preferences(page_id="uploads")
 
-    def on_update_user_profile(self, *_args):
-        self.on_preferences(page_id="user-profile")
-
     def on_configure_ignored_users(self, *_args):
         self.on_preferences(page_id="ignored-users")
+
+    def on_personal_profile(self, *_args):
+        core.userinfo.show_user(core.login_username)
 
     @staticmethod
     def on_prefer_dark_mode(action, *_args):

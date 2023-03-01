@@ -180,6 +180,8 @@ class TabLabel:
         else:
             add_css_class(self.container, "notebook-tab-changed")
 
+        add_css_class(self.container, "bold")
+
         icon_name = "nplus-tab-highlight" if self.is_important else "nplus-tab-changed"
         self.end_icon.set_property("icon-name", icon_name)
         self.end_icon.set_visible(True)
@@ -191,6 +193,7 @@ class TabLabel:
 
         remove_css_class(self.container, "notebook-tab-changed")
         remove_css_class(self.container, "notebook-tab-highlight")
+        remove_css_class(self.container, "bold")
 
         self.end_icon.set_property("icon-name", None)
         self.end_icon.set_visible(False)

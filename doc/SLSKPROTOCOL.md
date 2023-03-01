@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on January 16, 2023
+Last updated on February 28, 2023
 
 Since the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify or extend the protocol in ways that negatively impact the network.
 
@@ -64,6 +64,7 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
 |-----------------|----------------------------------------------------------------------------------|
 | INVALIDUSERNAME | Username is longer than 30 characters or contains invalid characters (non-ASCII) |
 | INVALIDPASS     | Password for existing user is incorrect                                          |
+| INVALIDVERSION  | Client version is outdated                                                       |
 
 ### User Status Codes
 

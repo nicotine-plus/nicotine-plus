@@ -211,7 +211,7 @@ class ChatCompletion:
 
         config_words = config.sections["words"]
 
-        self.entry_completion.set_popup_single_match(not config_words["onematch"])
+        self.entry_completion.set_popup_single_match(False)
         self.entry_completion.set_minimum_key_length(config_words["characters"])
         self.entry_completion.set_inline_completion(False)
 
@@ -312,17 +312,6 @@ class ChatCompletion:
         i = self.entry.get_position()
         text = text[:i].split(" ")[-1]
         preix = i - len(text)
-
-        if not config.sections["words"]["cycle"]:
-            completion, single = self.get_completion(text, self.completion_list)
-            if completion:
-                if single and i == len(text) and not text.startswith("/"):
-                    completion += ": "
-                self.entry.delete_text(preix, i)
-                self.entry.insert_text(completion, preix)
-                self.entry.set_position(preix + len(completion))
-
-            return True
 
         if not self.midwaycompletion:
             self.completions["completions"] = self.get_completions(text, self.completion_list)
