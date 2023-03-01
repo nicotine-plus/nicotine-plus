@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2023-05-13 20:21+0000\n"
+"PO-Revision-Date: 2023-05-17 14:53+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -1323,8 +1323,8 @@ msgstr "A megosztások nem elérhetők"
 msgid ""
 "Verify that external disks are mounted and folder permissions are correct."
 msgstr ""
-"Ellenőrizze, hogy a külső lemezek felcsatolása és a mappaengedélyek helyesek-"
-"e."
+"Ellenőrizze, hogy a külső lemezek felcsatolása és a mappaengedélyek "
+"helyesek-e."
 
 #: pynicotine/gtkgui/application.py:498 pynicotine/gtkgui/application.py:523
 #: pynicotine/gtkgui/widgets/dialogs.py:322
@@ -6057,8 +6057,7 @@ msgstr "A távol van állapot előtti tétlenség percekben (0 a letiltáshoz):"
 msgid ""
 "Once you interact with the application being away, status will be set to "
 "online."
-msgstr ""
-"Amint kapcsolatba lép az alkalmazással, az állapot bejelentkezett lesz."
+msgstr "Amint kapcsolatba lép az alkalmazással, az állapot bejelentkezett lesz."
 
 #: pynicotine/gtkgui/ui/settings/network.ui:302
 msgid "Auto-reply message when away:"
@@ -6260,8 +6259,7 @@ msgstr ""
 #: pynicotine/gtkgui/ui/settings/search.ui:484
 #: pynicotine/gtkgui/ui/settings/search.ui:487
 msgid "Searches shorter than this number of characters will be ignored:"
-msgstr ""
-"Az ennél a karakterszámnál rövidebb kereséseket figyelmen kívül hagyja:"
+msgstr "Az ennél a karakterszámnál rövidebb kereséseket figyelmen kívül hagyja:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:510
 #: pynicotine/gtkgui/ui/settings/search.ui:513
