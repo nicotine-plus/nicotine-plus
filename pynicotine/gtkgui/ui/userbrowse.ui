@@ -161,9 +161,8 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkButton">
+                                  <object class="GtkButton" id="save_button">
                                     <property name="visible">True</property>
-                                    <property name="sensitive" bind-source="refresh_button" bind-property="sensitive" bind-flags="bidirectional|sync-create"/>
                                     <property name="tooltip-text" translatable="yes">Save Shares List to Disk</property>
                                     <signal name="clicked" handler="on_save"/>
                                     <child>
