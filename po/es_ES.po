@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2023-02-21 21:23+0000\n"
-"Last-Translator: Juan <benitesjn@gmail.com>\n"
+"PO-Revision-Date: 2023-03-02 15:38+0000\n"
+"Last-Translator: Jackson Baber <jacksonthomasbaber@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/es/>\n"
 "Language: es_ES\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.16-dev\n"
+"X-Generator: Weblate 4.16.2-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -2867,7 +2867,6 @@ msgid "Download Folder & Subfolders"
 msgstr "Descargar carpeta y subcarpeta(s)"
 
 #: pynicotine/gtkgui/userbrowse.py:240
-#, fuzzy
 msgid "Download Folder & Subfolders To…"
 msgstr "Descargar carpeta y subcarpeta(s) en…"
 
@@ -2910,7 +2909,6 @@ msgid "Enter the name of the user you want to upload to:"
 msgstr "Introduce el nombre del usuario al que deseas subir archivos:"
 
 #: pynicotine/gtkgui/userbrowse.py:976
-#, fuzzy
 msgid "Select Destination Folder for Files"
 msgstr "Seleccione carpeta de destino para el/los archivo(s)"
 
