@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2023-02-28 06:13+0000\n"
+"PO-Revision-Date: 2023-03-02 15:38+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.16-dev\n"
+"X-Generator: Weblate 4.16.2-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -211,7 +211,7 @@ msgstr ""
 #: pynicotine/core.py:397
 #, python-format
 msgid "IP address of user %(user)s: %(ip)s, port %(port)i%(country)s"
-msgstr "%(user)s IP címe %(ip)s, port: %(port)i%(country)s"
+msgstr "%(user)s IP-címe %(ip)s, port: %(port)i%(country)s"
 
 #: pynicotine/core.py:402 pynicotine/gtkgui/dialogs/preferences.py:798
 #: pynicotine/gtkgui/dialogs/preferences.py:928
@@ -1757,7 +1757,7 @@ msgstr "Adja meg a letiltani kívánt felhasználó nevét:"
 #: pynicotine/gtkgui/widgets/popupmenu.py:367
 #: pynicotine/gtkgui/widgets/popupmenu.py:399
 msgid "Ban IP Address"
-msgstr "IP cím letiltása"
+msgstr "IP-cím letiltása"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1036
 msgid "Enter an IP address you want to ban:"
@@ -1797,7 +1797,7 @@ msgstr "Helyettesítés hozzáadása"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1278
 msgid "Enter a text pattern and what to replace it with"
-msgstr "Adjon meg egy szövegmintát és azt, hogy mit kell helyettesítenie"
+msgstr "Adjon meg egy szövegmintát és azt, hogy mi helyettesítse"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1306
 msgid "Edit Replacement"
@@ -1805,7 +1805,7 @@ msgstr "Helyettesítés szerkesztése"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1307
 msgid "Enter a text pattern and what to replace it with:"
-msgstr "Adjon meg egy szövegmintát és azt, hogy mit kell helyettesítenie:"
+msgstr "Adjon meg egy szövegmintát és azt, hogy mi helyettesítse:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1375
 msgid "Top"
@@ -3636,7 +3636,7 @@ msgstr "Letöltés elindult: %(user)s user, %(file)s fájl"
 #, python-format
 msgid "Upload started: user %(user)s, IP address %(ip)s, file %(file)s"
 msgstr ""
-"A feltöltés elindult: felhasználó %(user)s, IP cím %(ip)s, fájl %(file)s"
+"A feltöltés elindult: felhasználó %(user)s, IP-cím %(ip)s, fájl %(file)s"
 
 #: pynicotine/transfers.py:1861
 #, python-format
@@ -3699,7 +3699,7 @@ msgstr "Letöltés befejeződött: %(user)s felasználó, %(file)s fájl"
 #, python-format
 msgid "Upload finished: user %(user)s, IP address %(ip)s, file %(file)s"
 msgstr ""
-"A feltöltés befejeződött: felhasználó %(user)s, IP cím %(ip)s, fájl %(file)s"
+"A feltöltés befejeződött: felhasználó %(user)s, IP-cím %(ip)s, fájl %(file)s"
 
 #: pynicotine/transfers.py:2430
 #, python-format
