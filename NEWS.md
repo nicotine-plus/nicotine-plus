@@ -8,7 +8,7 @@
  * Fixed a crash on some systems after running for a few days
  * Fixed an issue where some private messages were ignored after a user reconnected
  * Fixed an issue where downloads with long file names could fail on eCryptfs file systems
- * Fixed an issue where the file transfer progress was sometimes incorrect
+ * Fixed an issue where the displayed total percentage of folder transfers was incorrect
  * Fixed an issue where the tray icon could disappear after locking the screen
 
 ### Issues closed on GitHub
