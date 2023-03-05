@@ -782,25 +782,23 @@ class UserBrowse:
 
     """ Key Bindings (folder_tree_view) """
 
-    def on_folder_row_activated(self, *_args):
-
-        iterator = self.folder_tree_view.get_focused_row()
+    def on_folder_row_activated(self, tree_view, iterator, _column_id):
 
         if iterator is None:
             return
 
         # Keyboard accessibility support for <Return> key behaviour
-        if self.folder_tree_view.is_row_expanded(iterator):
-            expandable = self.folder_tree_view.collapse_row(iterator)
+        if tree_view.is_row_expanded(iterator):
+            expandable = tree_view.collapse_row(iterator)
         else:
-            expandable = self.folder_tree_view.expand_row(iterator)
+            expandable = tree_view.expand_row(iterator)
 
         if not expandable and not self.file_list_view.is_empty():
             # This is the deepest level, so move focus over to Files if there are any
             self.file_list_view.grab_focus()
 
         # Note: Other Folder actions are handled by Accelerator functions [Shift/Ctrl/Alt+Return]
-        # TODO: Mouse double-click actions will need *_args for keycode state & mods [Ctrl/Alt+DblClick]
+        # TODO: Mouse double-click actions will need keycode state & mods [Shift/Ctrl+DblClick]
 
     def on_folder_collapse_accelerator(self, *_args):
         """ Left: collapse row
@@ -1059,7 +1057,7 @@ class UserBrowse:
 
     """ Key Bindings (file_list_view) """
 
-    def on_file_row_activated(self, _treeview, _path, _column):
+    def on_file_row_activated(self, _tree_view, _path, _column):
 
         self.select_files()
 
