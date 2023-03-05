@@ -2628,6 +2628,7 @@ class SharedFileListResponse(FileListMessage):
 
         ext = None
         shares = []
+
         for _ in range(ndir):
             pos, directory = self.unpack_string(message, pos)
             directory = directory.replace("/", "\\")
@@ -2651,10 +2652,14 @@ class SharedFileListResponse(FileListMessage):
 
                 files.append((code, name, size, ext, attrs))
 
-            files.sort(key=lambda x: strxfrm(x[1]))
+            if nfiles > 1:
+                files.sort(key=lambda x: strxfrm(x[1]))
+
             shares.append((directory, files))
 
-        shares.sort(key=lambda x: strxfrm(x[0]))
+        if ndir > 1:
+            shares.sort(key=lambda x: strxfrm(x[0]))
+
         return pos, shares
 
     def _parse_network_message(self, message):
@@ -2740,6 +2745,7 @@ class FileSearchResponse(FileListMessage):
 
         ext = None
         results = []
+
         for _ in range(nfiles):
             pos, code = self.unpack_uint8(message, pos)
             pos, name = self.unpack_string(message, pos)
@@ -2757,7 +2763,9 @@ class FileSearchResponse(FileListMessage):
 
             results.append((code, name.replace("/", "\\"), size, ext, attrs))
 
-        results.sort(key=lambda x: strxfrm(x[1]))
+        if nfiles > 1:
+            results.sort(key=lambda x: strxfrm(x[1]))
+
         return pos, results
 
     def _parse_network_message(self, message):

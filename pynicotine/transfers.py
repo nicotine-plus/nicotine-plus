@@ -782,7 +782,9 @@ class Transfers:
                     return
 
                 destination = self.get_folder_destination(username, directory)
-                files.sort(key=lambda x: strxfrm(x[1]))
+
+                if num_files > 1:
+                    files.sort(key=lambda x: strxfrm(x[1]))
 
                 log.add_transfer(("Attempting to download files in folder %(folder)s for user %(user)s. "
                                   "Destination path: %(destination)s"), {
