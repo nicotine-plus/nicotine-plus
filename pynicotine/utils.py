@@ -291,11 +291,11 @@ def human_length(seconds):
 def get_file_attributes(attributes):
 
     try:
-        bitrate = attributes.get(str(FileAttribute.BITRATE))
-        length = attributes.get(str(FileAttribute.DURATION))
-        vbr = attributes.get(str(FileAttribute.VBR))
-        sample_rate = attributes.get(str(FileAttribute.SAMPLE_RATE))
-        bit_depth = attributes.get(str(FileAttribute.BIT_DEPTH))
+        bitrate = attributes.get(FileAttribute.BITRATE)
+        length = attributes.get(FileAttribute.DURATION)
+        vbr = attributes.get(FileAttribute.VBR)
+        sample_rate = attributes.get(FileAttribute.SAMPLE_RATE)
+        bit_depth = attributes.get(FileAttribute.BIT_DEPTH)
 
     except AttributeError:
         # Legacy attribute list format used for shares lists saved in Nicotine+ 3.2.2 and earlier
