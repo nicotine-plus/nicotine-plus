@@ -688,14 +688,12 @@ class UserBrowse:
 
     """ Callbacks (folder_tree_view) """
 
-    def on_select_dir(self, *_args):
-
-        iterator = self.folder_tree_view.get_focused_row()
+    def on_select_dir(self, tree_view, iterator):
 
         if iterator is None:
             return
 
-        folder_path = self.folder_tree_view.get_row_value(iterator, "folder_path_data")
+        folder_path = tree_view.get_row_value(iterator, "folder_path_data")
         self.set_directory(folder_path)
 
     def on_folder_popup_menu(self, *_args):
