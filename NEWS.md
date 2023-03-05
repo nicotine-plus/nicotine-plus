@@ -1,6 +1,6 @@
 # Release Notes
 
-## Version 3.2.9 (Development Version 1)
+## Version 3.2.9 (March 5, 2023)
 
 ### Corrections
 
