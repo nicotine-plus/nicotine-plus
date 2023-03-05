@@ -177,7 +177,7 @@ class ChatHistory(Popover):
         self.list_view.add_row([
             username,
             message,
-            GObject.Value(GObject.TYPE_UINT64, int(timestamp))
+            int(timestamp)
         ], select_row=False, prepend=True)
 
     def on_show_user(self, *_args):

@@ -444,8 +444,8 @@ class Interests:
 
         self.similar_users_list_view.set_row_value(iterator, "speed", h_speed)
         self.similar_users_list_view.set_row_value(iterator, "files", h_files)
-        self.similar_users_list_view.set_row_value(iterator, "speed_data", GObject.Value(GObject.TYPE_UINT, avgspeed))
-        self.similar_users_list_view.set_row_value(iterator, "files_data", GObject.Value(GObject.TYPE_UINT, files))
+        self.similar_users_list_view.set_row_value(iterator, "speed_data", avgspeed)
+        self.similar_users_list_view.set_row_value(iterator, "files_data", files)
 
     @staticmethod
     def toggle_menu_items(menu, list_view, column_id):

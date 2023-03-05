@@ -207,10 +207,7 @@ class UserBrowse:
                 },
 
                 # Hidden data columns
-                "folder_path_data": {
-                    "data_type": str,
-                    "iterator_key": True
-                }
+                "folder_path_data": {"iterator_key": True}
             }
         )
 
@@ -596,9 +593,9 @@ class UserBrowse:
                 h_size,
                 h_bitrate,
                 h_length,
-                GObject.Value(GObject.TYPE_UINT64, size),
-                GObject.Value(GObject.TYPE_UINT, bitrate),
-                GObject.Value(GObject.TYPE_UINT, length)
+                size,
+                bitrate,
+                length
             ], select_row=False)
 
         self.selected_folder_size = selected_folder_size

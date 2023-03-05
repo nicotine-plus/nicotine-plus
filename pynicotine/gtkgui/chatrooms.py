@@ -678,8 +678,8 @@ class ChatRoom:
             h_speed,
             h_files,
             status,
-            GObject.Value(GObject.TYPE_UINT, avgspeed),
-            GObject.Value(GObject.TYPE_UINT, files),
+            avgspeed,
+            files,
             country_code,
             weight,
             underline
@@ -1016,8 +1016,8 @@ class ChatRoom:
 
         self.users_list_view.set_row_value(iterator, "speed", h_speed)
         self.users_list_view.set_row_value(iterator, "files", humanize(num_files))
-        self.users_list_view.set_row_value(iterator, "speed_data", GObject.Value(GObject.TYPE_UINT, speed))
-        self.users_list_view.set_row_value(iterator, "files_data", GObject.Value(GObject.TYPE_UINT, num_files))
+        self.users_list_view.set_row_value(iterator, "speed_data", speed)
+        self.users_list_view.set_row_value(iterator, "files_data", num_files)
 
     def user_status(self, msg):
 

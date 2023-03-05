@@ -59,6 +59,7 @@ class TreeView:
         self._iterator_key_column = 0
         self._column_ids = {}
         self._column_offsets = {}
+        self._column_gvalues = []
         self._column_numbers = None
         self._default_sort_column = None
         self._default_sort_type = Gtk.SortType.ASCENDING
@@ -162,7 +163,8 @@ class TreeView:
             data_type = column_data.get("data_type")
 
             if not data_type:
-                column_type = column_data["column_type"]
+                gvalue = None
+                column_type = column_data.get("column_type")
 
                 if column_type == "progress":
                     data_type = int
@@ -172,8 +174,11 @@ class TreeView:
 
                 else:
                     data_type = str
+            else:
+                gvalue = GObject.Value(data_type)
 
             data_types.append(data_type)
+            self._column_gvalues.append(gvalue)
             self._column_ids[column_id] = column_index
 
         model_class = Gtk.TreeStore if self._has_tree else Gtk.ListStore
@@ -372,6 +377,13 @@ class TreeView:
 
     def add_row(self, values, select_row=True, prepend=False, parent_iterator=None):
 
+        for i, value in enumerate(values):
+            gvalue = self._column_gvalues[i]
+
+            if gvalue is not None:
+                gvalue.set_value(value)
+                values[i] = gvalue
+
         position = 0 if prepend else -1
         key = values[self._iterator_key_column]
 
@@ -423,7 +435,15 @@ class TreeView:
         return self.model.get_value(iterator, self._column_ids[column_id])
 
     def set_row_value(self, iterator, column_id, value):
-        return self.model.set_value(iterator, self._column_ids[column_id], value)
+
+        column_index = self._column_ids[column_id]
+        gvalue = self._column_gvalues[column_index]
+
+        if gvalue is not None:
+            gvalue.set_value(value)
+            value = gvalue
+
+        return self.model.set_value(iterator, column_index, value)
 
     def remove_row(self, iterator):
         del self.iterators[self._iterator_keys[iterator.user_data]]

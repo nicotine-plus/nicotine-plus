@@ -242,8 +242,8 @@ class UserList:
 
         self.list_view.set_row_value(iterator, "speed", h_speed)
         self.list_view.set_row_value(iterator, "files", h_files)
-        self.list_view.set_row_value(iterator, "speed_data", GObject.Value(GObject.TYPE_UINT, avgspeed))
-        self.list_view.set_row_value(iterator, "files_data", GObject.Value(GObject.TYPE_UINT, files))
+        self.list_view.set_row_value(iterator, "speed_data", avgspeed)
+        self.list_view.set_row_value(iterator, "files_data", files)
 
     def add_buddy(self, user, user_data):
 
