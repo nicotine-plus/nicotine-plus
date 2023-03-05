@@ -38,10 +38,10 @@ jobs:
         run: xvfb-run python -m unittest -v
 
   ubuntu:
-    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-18.04, ubuntu-20.04, ubuntu-22.04]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -56,12 +56,16 @@ jobs:
       - name: Run autopkgtest
         run: sudo autopkgtest . -- null
 
-  fedora:
-    runs-on: ubuntu-latest
-    container: fedora:rawhide
+  fedora-rocky:
     strategy:
       matrix:
+        container: ['fedora:rawhide', 'rockylinux:8']
         gtk: [3, 4]
+        exclude:
+          - container: 'rockylinux:8'
+            gtk: 4
+    runs-on: ubuntu-latest
+    container: ${{ matrix.container }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -69,7 +73,9 @@ jobs:
           fetch-depth: 0
 
       - name: Install dependencies
-        run: dnf -y install gettext gtk${{ matrix.gtk }} pylint python3-flake8 python3-gobject python3-pytest-xvfb
+        run: |
+          dnf -y install gettext gtk${{ matrix.gtk }} python3 python3-gobject python3-pip xorg-x11-server-Xvfb
+          python3 -m pip install -e ".[test]"
 
       - name: Flake8 linter
         run: python3 -m flake8
@@ -78,7 +84,7 @@ jobs:
         run: python3 -m pylint pynicotine test
 
       - name: Integration and unit tests
-        run: python3 -m pytest -s -v
+        run: xvfb-run python3 -m unittest -v
 
   windows:
     runs-on: windows-latest
