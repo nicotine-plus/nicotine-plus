@@ -421,7 +421,7 @@ class UserBrowse:
         if self.expand_button.get_active():
             self.folder_tree_view.expand_all_rows()
         else:
-            self.folder_tree_view.collapse_all_rows()
+            self.folder_tree_view.expand_root_rows()
 
         # Select first row
         self.folder_tree_view.select_row()
