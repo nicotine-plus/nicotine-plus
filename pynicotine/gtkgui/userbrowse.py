@@ -489,8 +489,8 @@ class UserBrowse:
         if not iterator:
             return
 
-        # Scroll to the requested file
-        self.file_list_view.select_row(iterator)
+        # Scroll to the requested file and grab focus to it
+        self.file_list_view.select_row(iterator, should_expand=True)
 
     def shared_file_list(self, msg):
 
@@ -610,6 +610,14 @@ class UserBrowse:
             filesize = self.file_list_view.get_row_value(iterator, "size_data")
 
             self.selected_files[rawfilename] = filesize
+
+    def get_selected_folder_path(self):
+        return f'{self.selected_folder or ""}\\'
+
+    def get_selected_file_path(self):
+        selected_folder = self.get_selected_folder_path()
+        selected_file = next(iter(self.selected_files)) if self.selected_files else ""
+        return f"{selected_folder}{selected_file}"
 
     """ Search """
 
@@ -765,20 +773,13 @@ class UserBrowse:
         self.on_upload_directory_to(recurse=True)
 
     def on_copy_folder_path(self, *_args):
-
-        if self.selected_folder is None:
-            return
-
-        copy_text(self.selected_folder)
+        folder_path = self.get_selected_folder_path()
+        copy_text(f"{self.user}\\{folder_path}")
 
     def on_copy_dir_url(self, *_args):
-
-        if self.selected_folder is None:
-            return
-
-        path = self.selected_folder + "\\"
-        url = core.userbrowse.get_soulseek_url(self.user, path)
-        copy_text(url)
+        folder_path = self.get_selected_folder_path()
+        folder_url = core.userbrowse.get_soulseek_url(self.user, folder_path)
+        copy_text(folder_url)
 
     """ Key Bindings (folder_tree_view) """
 
@@ -1039,25 +1040,17 @@ class UserBrowse:
             self.userbrowses.file_properties.show()
 
     def on_copy_file_path(self, *_args):
-
-        if self.selected_folder is None or not self.selected_files:
-            return
-
-        text = "\\".join([self.selected_folder, next(iter(self.selected_files))])
-        copy_text(text)
+        file_path = self.get_selected_file_path()
+        copy_text(f"{self.user}\\{file_path}")
 
     def on_copy_url(self, *_args):
-
-        if not self.selected_files:
-            return
-
-        path = "\\".join([self.selected_folder, next(iter(self.selected_files))])
-        url = core.userbrowse.get_soulseek_url(self.user, path)
-        copy_text(url)
+        file_path = self.get_selected_file_path()
+        file_url = core.userbrowse.get_soulseek_url(self.user, file_path)
+        copy_text(file_url)
 
     """ Key Bindings (file_list_view) """
 
-    def on_file_row_activated(self, _tree_view, _path, _column):
+    def on_file_row_activated(self, _tree_view, _iterator, _column_id):
 
         self.select_files()
 
@@ -1196,12 +1189,15 @@ class UserBrowse:
             # Refresh is already in progress
             return
 
+        # Remember selection after refresh
+        self.select_files()
+        path = self.get_selected_file_path()
+
         self.clear_model()
-        self.folder_tree_view.grab_focus()
         self.info_bar.set_visible(False)
 
         self.set_in_progress()
-        core.userbrowse.browse_user(self.user, local_shares_type=self.local_shares_type, new_request=True)
+        core.userbrowse.browse_user(self.user, path=path, local_shares_type=self.local_shares_type, new_request=True)
 
     def on_focus(self):
 

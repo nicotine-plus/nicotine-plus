@@ -463,6 +463,7 @@ class TreeView:
 
             if should_expand:
                 self.widget.expand_to_path(path)
+                self.widget.grab_focus()
 
             self.widget.set_cursor(path)
             self.widget.scroll_to_cell(path, column=None, use_align=True, row_align=0.5, col_align=0.5)
