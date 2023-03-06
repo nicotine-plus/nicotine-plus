@@ -88,7 +88,7 @@ class UserBrowses(IconNotebook):
         if entry_text.startswith("slsk://"):
             core.userbrowse.open_soulseek_url(entry_text)
         else:
-            core.userbrowse.browse_user(entry_text)
+            core.userbrowse.open_soulseek_path(entry_text)
 
     def show_user(self, user, path=None, local_shares_type=None, switch_page=True):
 
@@ -473,7 +473,13 @@ class UserBrowse:
         if self.queued_path is None:
             return
 
-        folder, filename = self.queued_path.rsplit("\\", 1)
+        split_path = self.queued_path.rsplit("\\", 1)
+
+        if len(split_path) == 2:
+            folder, filename = split_path
+        else:
+            folder, filename = self.queued_path, ""
+
         iterator = self.folder_tree_view.iterators.get(folder)
 
         if not iterator:

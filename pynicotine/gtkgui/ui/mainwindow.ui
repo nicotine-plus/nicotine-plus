@@ -782,11 +782,12 @@
                         <property name="has-entry">True</property>
                         <child internal-child="entry">
                           <object class="GtkEntry" id="userbrowse_entry">
-                            <property name="max-width-chars">45</property>
+                            <property name="max-width-chars">75</property>
                             <property name="width-chars">5</property>
-                            <property name="placeholder-text" translatable="yes">Username…</property>
-                            <property name="tooltip-text" translatable="yes">Enter the username of the person whose files you want to see</property>
+                            <property name="placeholder-text" translatable="yes">Username\Location…</property>
+                            <property name="tooltip-text" translatable="yes">Enter a username or path of the shared files you want to see</property>
                             <property name="primary-icon-name">avatar-default-symbolic</property>
+                            <signal name="changed" handler="on_entry_changed"/>
                             <signal name="activate" handler="on_get_shares"/>
                             <signal name="icon-press" handler="on_get_shares"/>
                           </object>

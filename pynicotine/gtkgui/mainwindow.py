@@ -1185,6 +1185,24 @@ class MainWindow(Window):
 
     """ Shares """
 
+    def on_entry_changed(self, entry):
+
+        primary_icon = "avatar-default-symbolic"
+        entry_text = entry.get_text().lstrip("\\")
+        login = core.login_username
+
+        if entry_text.startswith("slsk://"):
+            primary_icon = "insert-link-symbolic"
+
+        elif entry_text == login or (login and entry_text.replace("/", "\\").startswith(f"{login}\\")):
+            primary_icon = "user-home-symbolic"
+
+        elif "\\" in entry_text:
+            primary_icon = "folder-open-symbolic" if entry_text.endswith("\\") else "folder-symbolic"
+
+        if entry.get_icon_name(0) != primary_icon:
+            entry.set_icon_from_icon_name(0, primary_icon)
+
     def on_get_shares(self, *_args):
         self.userbrowse.on_get_shares()
 
