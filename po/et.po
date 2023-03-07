@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
 "PO-Revision-Date: 2023-03-07 21:37+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Last-Translator: PriitUring <priit.uring@gmail.com>\n"
 "Language-Team: Estonian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/et/>\n"
 "Language: et\n"
@@ -211,7 +211,7 @@ msgstr "lõpetatud"
 
 #: pynicotine/core.py:228
 msgid "done"
-msgstr ""
+msgstr "valmis"
 
 #: pynicotine/core.py:235
 #, fuzzy
@@ -1120,7 +1120,7 @@ msgstr "Holland"
 
 #: pynicotine/geoip.py:191
 msgid "Norway"
-msgstr ""
+msgstr "Norra"
 
 #: pynicotine/geoip.py:192
 #, fuzzy
