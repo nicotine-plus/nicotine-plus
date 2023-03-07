@@ -309,11 +309,22 @@ class UserBrowse:
         import urllib.parse
 
         try:
-            user, file_path = urllib.parse.unquote(url[7:]).split("/", 1)
-            self.browse_user(user, path=file_path.replace("/", "\\"))
+            user, path = urllib.parse.unquote(url[7:]).split("/", 1)
+            split_path = path.split("/")
+
+            # Allow URL to a root share path with no trailing slash
+            file_path = "\\".join(split_path) if len(split_path) >= 2 else f"{split_path[0]}\\"
+
+        except ValueError:
+            # Allow URL with only a username
+            user, file_path = urllib.parse.unquote(url[7:]), None
 
         except Exception:
+            # Unreachable code?
             log.add(_("Invalid Soulseek URL: %s"), url)
+            return
+
+        self.browse_user(user, path=file_path)
 
     def _shared_file_list_response(self, msg):
 
