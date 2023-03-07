@@ -4595,7 +4595,6 @@ msgid "_Set Up…"
 msgstr "_Seadista…"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:137
-#, fuzzy
 msgid ""
 "To create a new Soulseek account, fill in your desired username and "
 "password. If you already have an account, fill in your existing login "
