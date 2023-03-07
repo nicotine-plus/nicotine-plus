@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2023-03-07 21:37+0000\n"
+"PO-Revision-Date: 2023-03-08 19:12+0000\n"
 "Last-Translator: PriitUring <priit.uring@gmail.com>\n"
 "Language-Team: Estonian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/et/>\n"
@@ -67,19 +67,17 @@ msgid "Soulseek;Nicotine;sharing;chat;messaging;P2P;peer-to-peer;GTK;"
 msgstr "Soulseek;Nikotiin;jagamine;vestlus;sõnumid;P2P;peer-to-peer;GTK;"
 
 #: pynicotine/__init__.py:37
-#, fuzzy, python-format
+#, python-format
 msgid "Website: %s"
-msgstr "Veebisait: %s"
+msgstr "Veebileht: %s"
 
 #: pynicotine/__init__.py:43
-#, fuzzy
 msgid "show this help message and exit"
 msgstr "näita seda abiteadet ja välju"
 
 #: pynicotine/__init__.py:46
-#, fuzzy
 msgid "file"
-msgstr "faili"
+msgstr "fail"
 
 #: pynicotine/__init__.py:47
 #, fuzzy
@@ -132,9 +130,8 @@ msgid "start the program in headless mode (no GUI)"
 msgstr "käivitage programm peata režiimis (ilma GUI-ta)"
 
 #: pynicotine/__init__.py:75
-#, fuzzy
 msgid "display version and exit"
-msgstr "kuva versiooni ja välju"
+msgstr "kuva versioon ja välju"
 
 #: pynicotine/__init__.py:105
 #, fuzzy, python-format
@@ -154,12 +151,12 @@ msgstr ""
 "proovige uuesti."
 
 #: pynicotine/chatrooms.py:247
-#, fuzzy, python-format
+#, python-format
 msgid "You have been added to a private room: %(room)s"
 msgstr "Teid lisati privaatsesse ruumi: %(room)s"
 
 #: pynicotine/chatrooms.py:342
-#, fuzzy, python-format
+#, python-format
 msgid "Chat message from user '%(user)s' in room '%(room)s': %(message)s"
 msgstr "Vestlussõnum kasutajalt „%(user)s” ruumis „%(room)s”: %(message)s"
 
@@ -174,7 +171,7 @@ msgid "Error backing up config: %s"
 msgstr "Viga konfiguratsiooni varundamisel: %s"
 
 #: pynicotine/config.py:827
-#, fuzzy, python-format
+#, python-format
 msgid "Config backed up to: %s"
 msgstr "Konfiguratsioon varundatud: %s"
 
@@ -195,7 +192,6 @@ msgid "terminating"
 msgstr "lõpetades"
 
 #: pynicotine/core.py:215
-#, fuzzy
 msgid "application closing"
 msgstr "rakenduse sulgemine"
 
@@ -224,7 +220,6 @@ msgid "Unable to connect to the server. Reason: %s"
 msgstr "Serveriga ei saa ühendust luua. Põhjus: %s"
 
 #: pynicotine/core.py:371
-#, fuzzy
 msgid "Cannot Connect"
 msgstr "Ei saa ühendust"
 
@@ -251,7 +246,7 @@ msgid "Soulseek Announcement"
 msgstr "Soulseeki teadaanne"
 
 #: pynicotine/core.py:456
-#, fuzzy, python-format
+#, python-format
 msgid "%i privileged users"
 msgstr "%i privilegeeritud kasutajad"
 
@@ -274,12 +269,10 @@ msgstr ""
 "Soulseeki privileege on jäänud"
 
 #: pynicotine/core.py:487
-#, fuzzy
 msgid "Your password has been changed"
 msgstr "Teie parool on muudetud"
 
 #: pynicotine/core.py:487
-#, fuzzy
 msgid "Password Changed"
 msgstr "Parool muudetud"
 
@@ -344,7 +337,6 @@ msgid "Austria"
 msgstr "Austria"
 
 #: pynicotine/geoip.py:36
-#, fuzzy
 msgid "Australia"
 msgstr "Austraalia"
 
@@ -414,7 +406,6 @@ msgid "Saint Barthelemy"
 msgstr "Püha Barthelemy"
 
 #: pynicotine/geoip.py:50
-#, fuzzy
 msgid "Bermuda"
 msgstr "Bermuda"
 
@@ -424,7 +415,6 @@ msgid "Brunei Darussalam"
 msgstr "Brunei Darussalam"
 
 #: pynicotine/geoip.py:52
-#, fuzzy
 msgid "Bolivia"
 msgstr "Boliivia"
 
@@ -434,7 +424,6 @@ msgid "Bonaire, Sint Eustatius and Saba"
 msgstr "Bonaire, Sint Eustatius ja Saba"
 
 #: pynicotine/geoip.py:54
-#, fuzzy
 msgid "Brazil"
 msgstr "Brasiilia"
 
@@ -459,7 +448,6 @@ msgid "Botswana"
 msgstr "Botswana"
 
 #: pynicotine/geoip.py:59
-#, fuzzy
 msgid "Belarus"
 msgstr "Valgevene"
 
@@ -469,7 +457,6 @@ msgid "Belize"
 msgstr "Belize"
 
 #: pynicotine/geoip.py:61
-#, fuzzy
 msgid "Canada"
 msgstr "Kanada"
 
@@ -479,22 +466,18 @@ msgid "Cocos (Keeling) Islands"
 msgstr "Kookose (Keelingi) saared"
 
 #: pynicotine/geoip.py:63
-#, fuzzy
 msgid "Democratic Republic of Congo"
 msgstr "Kongo Demokraatlik Vabariik"
 
 #: pynicotine/geoip.py:64
-#, fuzzy
 msgid "Central African Republic"
 msgstr "Kesk-Aafrika Vabariik"
 
 #: pynicotine/geoip.py:65
-#, fuzzy
 msgid "Congo"
 msgstr "Kongo"
 
 #: pynicotine/geoip.py:66
-#, fuzzy
 msgid "Switzerland"
 msgstr "Šveits"
 
@@ -509,7 +492,6 @@ msgid "Cook Islands"
 msgstr "Cooki saared"
 
 #: pynicotine/geoip.py:69
-#, fuzzy
 msgid "Chile"
 msgstr "Tšiili"
 
@@ -519,7 +501,6 @@ msgid "Cameroon"
 msgstr "Kamerun"
 
 #: pynicotine/geoip.py:71
-#, fuzzy
 msgid "China"
 msgstr "Hiina"
 
@@ -534,7 +515,6 @@ msgid "Costa Rica"
 msgstr "Costa Rica"
 
 #: pynicotine/geoip.py:74
-#, fuzzy
 msgid "Cuba"
 msgstr "Kuuba"
 
@@ -554,17 +534,14 @@ msgid "Christmas Island"
 msgstr "Jõulusaar"
 
 #: pynicotine/geoip.py:78
-#, fuzzy
 msgid "Cyprus"
 msgstr "Küpros"
 
 #: pynicotine/geoip.py:79
-#, fuzzy
 msgid "Czech Republic"
 msgstr "Tšehhi Vabariik"
 
 #: pynicotine/geoip.py:80
-#, fuzzy
 msgid "Germany"
 msgstr "Saksamaa"
 
@@ -574,7 +551,6 @@ msgid "Djibouti"
 msgstr "Djibouti"
 
 #: pynicotine/geoip.py:82
-#, fuzzy
 msgid "Denmark"
 msgstr "Taani"
 
@@ -584,7 +560,6 @@ msgid "Dominica"
 msgstr "Dominica"
 
 #: pynicotine/geoip.py:84
-#, fuzzy
 msgid "Dominican Republic"
 msgstr "Dominikaani Vabariik"
 
@@ -599,52 +574,42 @@ msgid "Ecuador"
 msgstr "Ecuador"
 
 #: pynicotine/geoip.py:87
-#, fuzzy
 msgid "Estonia"
 msgstr "Eesti"
 
 #: pynicotine/geoip.py:88
-#, fuzzy
 msgid "Egypt"
 msgstr "Egiptus"
 
 #: pynicotine/geoip.py:89
-#, fuzzy
 msgid "Western Sahara"
 msgstr "Lääne-Sahara"
 
 #: pynicotine/geoip.py:90
-#, fuzzy
 msgid "Eritrea"
 msgstr "Eritrea"
 
 #: pynicotine/geoip.py:91
-#, fuzzy
 msgid "Spain"
 msgstr "Hispaania"
 
 #: pynicotine/geoip.py:92
-#, fuzzy
 msgid "Ethiopia"
 msgstr "Etioopia"
 
 #: pynicotine/geoip.py:93
-#, fuzzy
 msgid "Europe"
 msgstr "Euroopa"
 
 #: pynicotine/geoip.py:94
-#, fuzzy
 msgid "Finland"
 msgstr "Soome"
 
 #: pynicotine/geoip.py:95
-#, fuzzy
 msgid "Fiji"
 msgstr "Fidži"
 
 #: pynicotine/geoip.py:96
-#, fuzzy
 msgid "Falkland Islands (Malvinas)"
 msgstr "Falklandi saared (Malviinid)"
 
@@ -654,12 +619,10 @@ msgid "Micronesia"
 msgstr "Mikroneesia"
 
 #: pynicotine/geoip.py:98
-#, fuzzy
 msgid "Faroe Islands"
 msgstr "Fääri saared"
 
 #: pynicotine/geoip.py:99
-#, fuzzy
 msgid "France"
 msgstr "Prantsusmaa"
 
@@ -669,7 +632,6 @@ msgid "Gabon"
 msgstr "Gabon"
 
 #: pynicotine/geoip.py:101
-#, fuzzy
 msgid "Great Britain"
 msgstr "Suurbritannia"
 
@@ -729,7 +691,6 @@ msgid "Equatorial Guinea"
 msgstr "Ekvatoriaalne Guinea"
 
 #: pynicotine/geoip.py:113
-#, fuzzy
 msgid "Greece"
 msgstr "Kreeka"
 
@@ -784,22 +745,18 @@ msgid "Haiti"
 msgstr "Haiti"
 
 #: pynicotine/geoip.py:124
-#, fuzzy
 msgid "Hungary"
 msgstr "Ungari"
 
 #: pynicotine/geoip.py:125
-#, fuzzy
 msgid "Indonesia"
 msgstr "Indoneesia"
 
 #: pynicotine/geoip.py:126
-#, fuzzy
 msgid "Ireland"
 msgstr "Iirimaa"
 
 #: pynicotine/geoip.py:127
-#, fuzzy
 msgid "Israel"
 msgstr "Iisrael"
 
@@ -809,7 +766,6 @@ msgid "Isle of Man"
 msgstr "Mani saar"
 
 #: pynicotine/geoip.py:129
-#, fuzzy
 msgid "India"
 msgstr "India"
 
@@ -819,22 +775,18 @@ msgid "British Indian Ocean Territory"
 msgstr "Briti India ookeani territoorium"
 
 #: pynicotine/geoip.py:131
-#, fuzzy
 msgid "Iraq"
 msgstr "Iraak"
 
 #: pynicotine/geoip.py:132
-#, fuzzy
 msgid "Iran"
 msgstr "Iraan"
 
 #: pynicotine/geoip.py:133
-#, fuzzy
 msgid "Iceland"
 msgstr "Island"
 
 #: pynicotine/geoip.py:134
-#, fuzzy
 msgid "Italy"
 msgstr "Itaalia"
 
@@ -849,17 +801,14 @@ msgid "Jamaica"
 msgstr "Jamaica"
 
 #: pynicotine/geoip.py:137
-#, fuzzy
 msgid "Jordan"
 msgstr "Jordaania"
 
 #: pynicotine/geoip.py:138
-#, fuzzy
 msgid "Japan"
 msgstr "Jaapan"
 
 #: pynicotine/geoip.py:139
-#, fuzzy
 msgid "Kenya"
 msgstr "Keenia"
 
@@ -889,17 +838,14 @@ msgid "Saint Kitts & Nevis"
 msgstr "Saint Kitts ja Nevis"
 
 #: pynicotine/geoip.py:145
-#, fuzzy
 msgid "North Korea"
 msgstr "Põhja-Korea"
 
 #: pynicotine/geoip.py:146
-#, fuzzy
 msgid "South Korea"
 msgstr "Lõuna-Korea"
 
 #: pynicotine/geoip.py:147
-#, fuzzy
 msgid "Kuwait"
 msgstr "Kuveit"
 
@@ -909,7 +855,6 @@ msgid "Cayman Islands"
 msgstr "Kaimani saared"
 
 #: pynicotine/geoip.py:149
-#, fuzzy
 msgid "Kazakhstan"
 msgstr "Kasahstan"
 
@@ -919,7 +864,6 @@ msgid "Laos"
 msgstr "Laos"
 
 #: pynicotine/geoip.py:151
-#, fuzzy
 msgid "Lebanon"
 msgstr "Liibanon"
 
@@ -934,7 +878,6 @@ msgid "Liechtenstein"
 msgstr "Liechtenstein"
 
 #: pynicotine/geoip.py:154
-#, fuzzy
 msgid "Sri Lanka"
 msgstr "Sri Lanka"
 
@@ -949,22 +892,18 @@ msgid "Lesotho"
 msgstr "Lesotho"
 
 #: pynicotine/geoip.py:157
-#, fuzzy
 msgid "Lithuania"
 msgstr "Leedu"
 
 #: pynicotine/geoip.py:158
-#, fuzzy
 msgid "Luxembourg"
 msgstr "Luksemburg"
 
 #: pynicotine/geoip.py:159
-#, fuzzy
 msgid "Latvia"
 msgstr "Läti"
 
 #: pynicotine/geoip.py:160
-#, fuzzy
 msgid "Libya"
 msgstr "Liibüa"
 
@@ -1004,7 +943,6 @@ msgid "Marshall Islands"
 msgstr "Marshalli saared"
 
 #: pynicotine/geoip.py:168
-#, fuzzy
 msgid "North Macedonia"
 msgstr "Põhja-Makedoonia"
 
@@ -1019,7 +957,6 @@ msgid "Myanmar"
 msgstr "Myanmar"
 
 #: pynicotine/geoip.py:171
-#, fuzzy
 msgid "Mongolia"
 msgstr "Mongoolia"
 
@@ -1039,7 +976,6 @@ msgid "Martinique"
 msgstr "Martinique"
 
 #: pynicotine/geoip.py:175
-#, fuzzy
 msgid "Mauritania"
 msgstr "Mauritaania"
 
@@ -1059,7 +995,6 @@ msgid "Mauritius"
 msgstr "Mauritius"
 
 #: pynicotine/geoip.py:179
-#, fuzzy
 msgid "Maldives"
 msgstr "Maldiivid"
 
@@ -1069,17 +1004,14 @@ msgid "Malawi"
 msgstr "Malawi"
 
 #: pynicotine/geoip.py:181
-#, fuzzy
 msgid "Mexico"
 msgstr "Mehhiko"
 
 #: pynicotine/geoip.py:182
-#, fuzzy
 msgid "Malaysia"
 msgstr "Malaisia"
 
 #: pynicotine/geoip.py:183
-#, fuzzy
 msgid "Mozambique"
 msgstr "Mosambiik"
 
@@ -1089,7 +1021,6 @@ msgid "Namibia"
 msgstr "Namiibia"
 
 #: pynicotine/geoip.py:185
-#, fuzzy
 msgid "New Caledonia"
 msgstr "Uus-Kaledoonia"
 
@@ -1104,7 +1035,6 @@ msgid "Norfolk Island"
 msgstr "Norfolki saar"
 
 #: pynicotine/geoip.py:188
-#, fuzzy
 msgid "Nigeria"
 msgstr "Nigeeria"
 
@@ -1114,7 +1044,6 @@ msgid "Nicaragua"
 msgstr "Nicaragua"
 
 #: pynicotine/geoip.py:190
-#, fuzzy
 msgid "Netherlands"
 msgstr "Holland"
 
@@ -1138,7 +1067,6 @@ msgid "Niue"
 msgstr "Niue"
 
 #: pynicotine/geoip.py:195
-#, fuzzy
 msgid "New Zealand"
 msgstr "Uus-Meremaa"
 
@@ -1153,7 +1081,6 @@ msgid "Panama"
 msgstr "Panama"
 
 #: pynicotine/geoip.py:198
-#, fuzzy
 msgid "Peru"
 msgstr "Peruu"
 
@@ -1168,7 +1095,6 @@ msgid "Papua New Guinea"
 msgstr "Paapua Uus-Guinea"
 
 #: pynicotine/geoip.py:201
-#, fuzzy
 msgid "Philippines"
 msgstr "Filipiinid"
 
@@ -1178,7 +1104,6 @@ msgid "Pakistan"
 msgstr "Pakistan"
 
 #: pynicotine/geoip.py:203
-#, fuzzy
 msgid "Poland"
 msgstr "Poola"
 
@@ -1238,7 +1163,6 @@ msgid "Serbia"
 msgstr "Serbia"
 
 #: pynicotine/geoip.py:215
-#, fuzzy
 msgid "Russia"
 msgstr "Venemaa"
 
@@ -1248,27 +1172,22 @@ msgid "Rwanda"
 msgstr "Rwanda"
 
 #: pynicotine/geoip.py:217
-#, fuzzy
 msgid "Saudi Arabia"
 msgstr "Saudi Araabia"
 
 #: pynicotine/geoip.py:218
-#, fuzzy
 msgid "Solomon Islands"
 msgstr "Saalomoni saared"
 
 #: pynicotine/geoip.py:219
-#, fuzzy
 msgid "Seychelles"
 msgstr "Seišellid"
 
 #: pynicotine/geoip.py:220
-#, fuzzy
 msgid "Sudan"
 msgstr "Sudaan"
 
 #: pynicotine/geoip.py:221
-#, fuzzy
 msgid "Sweden"
 msgstr "Rootsi"
 
@@ -1283,7 +1202,6 @@ msgid "Saint Helena"
 msgstr "Püha Helena"
 
 #: pynicotine/geoip.py:224
-#, fuzzy
 msgid "Slovenia"
 msgstr "Sloveenia"
 
@@ -1293,7 +1211,6 @@ msgid "Svalbard & Jan Mayen Islands"
 msgstr "Svalbard ja Jan Mayeni saared"
 
 #: pynicotine/geoip.py:226
-#, fuzzy
 msgid "Slovak Republic"
 msgstr "Slovakkia"
 
@@ -1313,7 +1230,6 @@ msgid "Senegal"
 msgstr "Senegal"
 
 #: pynicotine/geoip.py:230
-#, fuzzy
 msgid "Somalia"
 msgstr "Somaalia"
 
@@ -1323,7 +1239,6 @@ msgid "Suriname"
 msgstr "Suriname"
 
 #: pynicotine/geoip.py:232
-#, fuzzy
 msgid "South Sudan"
 msgstr "Lõuna-Sudaan"
 
@@ -1343,7 +1258,6 @@ msgid "Sint Maarten"
 msgstr "Sint Maarten"
 
 #: pynicotine/geoip.py:236
-#, fuzzy
 msgid "Syria"
 msgstr "Süüria"
 
@@ -1393,12 +1307,10 @@ msgid "Timor-Leste"
 msgstr "Ida-Timor"
 
 #: pynicotine/geoip.py:246
-#, fuzzy
 msgid "Turkmenistan"
 msgstr "Türkmenistan"
 
 #: pynicotine/geoip.py:247
-#, fuzzy
 msgid "Tunisia"
 msgstr "Tuneesia"
 
@@ -1433,7 +1345,6 @@ msgid "Tanzania"
 msgstr "Tansaania"
 
 #: pynicotine/geoip.py:254
-#, fuzzy
 msgid "Ukraine"
 msgstr "Ukraina"
 
@@ -1513,7 +1424,6 @@ msgid "Kosovo"
 msgstr "Kosovo"
 
 #: pynicotine/geoip.py:270
-#, fuzzy
 msgid "Yemen"
 msgstr "Jeemen"
 
@@ -1523,7 +1433,6 @@ msgid "Mayotte"
 msgstr "Mayotte"
 
 #: pynicotine/geoip.py:272
-#, fuzzy
 msgid "South Africa"
 msgstr "Lõuna-Aafrika"
 
@@ -1575,7 +1484,6 @@ msgid "Quit Nicotine+"
 msgstr "Lõpetage Nicotine+"
 
 #: pynicotine/gtkgui/application.py:468
-#, fuzzy
 msgid "Do you really want to exit?"
 msgstr "Kas soovite tõesti väljuda?"
 
@@ -1590,7 +1498,6 @@ msgid "_Run in Background"
 msgstr "_Käita taustal"
 
 #: pynicotine/gtkgui/application.py:471
-#, fuzzy
 msgid "Remember choice"
 msgstr "Pea meeles valik"
 
@@ -1609,7 +1516,6 @@ msgstr "Veenduge, et välised kettad on ühendatud ja kausta load on õiged."
 #: pynicotine/gtkgui/widgets/dialogs.py:322
 #: pynicotine/gtkgui/widgets/dialogs.py:436
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:6
-#, fuzzy
 msgid "_Cancel"
 msgstr "_Tühista"
 
@@ -1714,7 +1620,6 @@ msgstr "Muutke ruum privaatseks"
 
 #: pynicotine/gtkgui/chatrooms.py:494 pynicotine/gtkgui/interests.py:101
 #: pynicotine/gtkgui/transferlist.py:126 pynicotine/gtkgui/userlist.py:62
-#, fuzzy
 msgid "Status"
 msgstr "Olek"
 
@@ -1723,7 +1628,6 @@ msgstr "Olek"
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:311
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:408
 #: pynicotine/gtkgui/ui/userinfo.ui:285
-#, fuzzy
 msgid "Country"
 msgstr "Riik"
 
@@ -1737,21 +1641,18 @@ msgstr "Riik"
 #: pynicotine/gtkgui/userbrowse.py:247 pynicotine/gtkgui/userbrowse.py:299
 #: pynicotine/gtkgui/userbrowse.py:316 pynicotine/gtkgui/userlist.py:66
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:241
-#, fuzzy
 msgid "User"
 msgstr "Kasutaja"
 
 #: pynicotine/gtkgui/chatrooms.py:497 pynicotine/gtkgui/interests.py:105
 #: pynicotine/gtkgui/search.py:384 pynicotine/gtkgui/transferlist.py:130
 #: pynicotine/gtkgui/userlist.py:68
-#, fuzzy
 msgid "Speed"
 msgstr "Kiirus"
 
 #: pynicotine/gtkgui/chatrooms.py:498 pynicotine/gtkgui/interests.py:107
 #: pynicotine/gtkgui/userlist.py:70 pynicotine/gtkgui/ui/mainwindow.ui:390
 #: pynicotine/gtkgui/ui/mainwindow.ui:629
-#, fuzzy
 msgid "Files"
 msgstr "Failid"
 
@@ -1768,7 +1669,6 @@ msgstr "Privaatsed toad"
 
 #: pynicotine/gtkgui/chatrooms.py:537 pynicotine/gtkgui/chatrooms.py:549
 #: pynicotine/gtkgui/privatechat.py:277
-#, fuzzy
 msgid "Find…"
 msgstr "Leia…"
 
@@ -1777,13 +1677,11 @@ msgstr "Leia…"
 #: pynicotine/gtkgui/privatechat.py:279 pynicotine/gtkgui/privatechat.py:358
 #: pynicotine/gtkgui/search.py:439 pynicotine/gtkgui/transferlist.py:182
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:170
-#, fuzzy
 msgid "Copy"
 msgstr "Kopeeri"
 
 #: pynicotine/gtkgui/chatrooms.py:540 pynicotine/gtkgui/chatrooms.py:553
 #: pynicotine/gtkgui/privatechat.py:281
-#, fuzzy
 msgid "Copy All"
 msgstr "Kopeeri kõik"
 
@@ -1794,38 +1692,32 @@ msgstr "Kustuta tegevusvaade"
 
 #: pynicotine/gtkgui/chatrooms.py:544 pynicotine/gtkgui/chatrooms.py:559
 #: pynicotine/gtkgui/chatrooms.py:564
-#, fuzzy
 msgid "_Leave Room"
 msgstr "_Lahku ruumist"
 
 #: pynicotine/gtkgui/chatrooms.py:552 pynicotine/gtkgui/chatrooms.py:770
 #: pynicotine/gtkgui/privatechat.py:280 pynicotine/gtkgui/privatechat.py:359
-#, fuzzy
 msgid "Copy Link"
 msgstr "Kopeeri link"
 
 #: pynicotine/gtkgui/chatrooms.py:555
-#, fuzzy
 msgid "View Room Log"
 msgstr "Vaata ruumi logi"
 
 #: pynicotine/gtkgui/chatrooms.py:556
-#, fuzzy
 msgid "Delete Room Log…"
 msgstr "Kustuta ruumi logi…"
 
 #: pynicotine/gtkgui/chatrooms.py:558 pynicotine/gtkgui/privatechat.py:286
-#, fuzzy
 msgid "Clear Message View"
 msgstr "Kustuta sõnumivaade"
 
 #: pynicotine/gtkgui/chatrooms.py:726
-#, fuzzy
 msgid "--- old messages above ---"
 msgstr "--- vanad sõnumid ülal ---"
 
 #: pynicotine/gtkgui/chatrooms.py:814
-#, fuzzy, python-format
+#, python-format
 msgid "%(user)s mentioned you in room %(room)s"
 msgstr "%(user)s mainis teid ruumis %(room)s"
 
@@ -1841,12 +1733,12 @@ msgid "Message by %(user)s in Room %(room)s"
 msgstr "Sõnum kasutajalt %(user)s ruumis %(room)s"
 
 #: pynicotine/gtkgui/chatrooms.py:941
-#, fuzzy, python-format
+#, python-format
 msgid "%s joined the room"
 msgstr "%s liitus ruumiga"
 
 #: pynicotine/gtkgui/chatrooms.py:964
-#, fuzzy, python-format
+#, python-format
 msgid "%s left the room"
 msgstr "%s lahkus ruumist"
 
@@ -1856,27 +1748,23 @@ msgid "%s has gone away"
 msgstr "%s on kadunud"
 
 #: pynicotine/gtkgui/chatrooms.py:1019
-#, fuzzy, python-format
+#, python-format
 msgid "%s has returned"
 msgstr "%s on tagasi tulnud"
 
 #: pynicotine/gtkgui/chatrooms.py:1118 pynicotine/gtkgui/privatechat.py:337
-#, fuzzy
 msgid "--- disconnected ---"
 msgstr "--- lahti ühendatud ---"
 
 #: pynicotine/gtkgui/chatrooms.py:1143 pynicotine/gtkgui/privatechat.py:332
-#, fuzzy
 msgid "--- reconnected ---"
 msgstr "--- uuesti ühendatud ---"
 
 #: pynicotine/gtkgui/chatrooms.py:1217 pynicotine/gtkgui/privatechat.py:384
-#, fuzzy
 msgid "Delete Logged Messages?"
 msgstr "Kas kustutada logitud sõnumid?"
 
 #: pynicotine/gtkgui/chatrooms.py:1218
-#, fuzzy
 msgid ""
 "Do you really want to permanently delete all logged messages for this room?"
 msgstr ""
@@ -1897,7 +1785,6 @@ msgstr "Virtuaalne kaust"
 #: pynicotine/gtkgui/dialogs/preferences.py:487 pynicotine/gtkgui/search.py:386
 #: pynicotine/gtkgui/uploads.py:43 pynicotine/gtkgui/userbrowse.py:203
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:132
-#, fuzzy
 msgid "Folder"
 msgstr "Kaust"
 
@@ -1913,7 +1800,6 @@ msgstr "_Järgmine"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:148
 #: pynicotine/gtkgui/dialogs/preferences.py:578
-#, fuzzy
 msgid "Add a Shared Folder"
 msgstr "Lisage jagatud kaust"
 
@@ -1932,7 +1818,6 @@ msgstr "Sisestage '%(dir)s'le uus virtuaalne nimi:"
 #: pynicotine/gtkgui/dialogs/fileproperties.py:68
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:252
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:307
-#, fuzzy
 msgid "File Properties"
 msgstr "Faili omadused"
 
@@ -1961,23 +1846,19 @@ msgstr "<b>%(ip)s</b>, port %(port)s"
 #: pynicotine/gtkgui/ui/userinfo.ui:188 pynicotine/gtkgui/ui/userinfo.ui:215
 #: pynicotine/gtkgui/ui/userinfo.ui:242 pynicotine/gtkgui/ui/userinfo.ui:269
 #: pynicotine/gtkgui/ui/userinfo.ui:296
-#, fuzzy
 msgid "Unknown"
 msgstr "Tundmatu"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:117
 #: pynicotine/gtkgui/ui/settings/network.ui:232
-#, fuzzy
 msgid "Check Port Status"
 msgstr "Kontrollige pordi olekut"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:182
-#, fuzzy
 msgid "Password Change Rejected"
 msgstr "Paroolivahetus tagasi lükatud"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:201
-#, fuzzy
 msgid "Enter a new password for your Soulseek account:"
 msgstr "Sisestage oma Soulseeki kontole uus parool:"
 
@@ -1992,16 +1873,14 @@ msgstr ""
 "Soulseeki konto parooli muuta, peate olema sellele kontole sisse logitud."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:206
-#, fuzzy
 msgid "Enter password to use when logging in:"
 msgstr "Sisestage sisselogimisel kasutatav parool:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:210
 #: pynicotine/gtkgui/ui/settings/network.ui:98
 #: pynicotine/gtkgui/ui/settings/network.ui:113
-#, fuzzy
 msgid "Change Password"
-msgstr "Muuda salasõna"
+msgstr "Muuda parooli"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:248
 #, fuzzy
@@ -2019,7 +1898,6 @@ msgid "Add Download Filter"
 msgstr "Lisa allalaadimisfilter"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:358
-#, fuzzy
 msgid "Enter a new download filter:"
 msgstr "Sisestage uus allalaadimisfilter:"
 
@@ -2030,12 +1908,10 @@ msgid "Escape filter"
 msgstr "Põgenemisfilter"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:387
-#, fuzzy
 msgid "Edit Download Filter"
-msgstr "Redigeeri allalaadimisfiltrit"
+msgstr "Muuda allalaadimisfiltrit"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:388
-#, fuzzy
 msgid "Modify the following download filter:"
 msgstr "Muutke järgmist allalaadimisfiltrit:"
 
@@ -2055,7 +1931,6 @@ msgid "Buddy-only"
 msgstr "Ainult sõbrale"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:625
-#, fuzzy
 msgid "Share with buddies only"
 msgstr "Jaga ainult sõpradega"
 
@@ -2063,7 +1938,6 @@ msgstr "Jaga ainult sõpradega"
 #: pynicotine/gtkgui/dialogs/preferences.py:920
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:177
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:234
-#, fuzzy
 msgid "Username"
 msgstr "Kasutajanimi"
 
@@ -2082,12 +1956,10 @@ msgstr "Sisestage kasutaja nimi, keda soovite ignoreerida:"
 #: pynicotine/gtkgui/dialogs/preferences.py:882
 #: pynicotine/gtkgui/widgets/popupmenu.py:368
 #: pynicotine/gtkgui/widgets/popupmenu.py:401
-#, fuzzy
 msgid "Ignore IP Address"
 msgstr "IP-aadressi ignoreerimine"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:883
-#, fuzzy
 msgid "Enter an IP address you want to ignore:"
 msgstr "Sisestage IP-aadress, mida soovite ignoreerida:"
 
@@ -2123,7 +1995,6 @@ msgstr "Sisestage IP-aadress, mille soovite keelata:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1073
 #: pynicotine/gtkgui/dialogs/preferences.py:1082
-#, fuzzy
 msgid "Pattern"
 msgstr "Muster"
 
@@ -2210,7 +2081,6 @@ msgstr "Internetis"
 #: pynicotine/gtkgui/widgets/treeview.py:461
 #: pynicotine/gtkgui/widgets/treeview.py:968
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:34
-#, fuzzy
 msgid "Away"
 msgstr "Eemal"
 
@@ -2220,7 +2090,6 @@ msgstr "Eemal"
 #: pynicotine/gtkgui/widgets/treeview.py:466
 #: pynicotine/gtkgui/widgets/treeview.py:973
 #: pynicotine/gtkgui/ui/mainwindow.ui:1865
-#, fuzzy
 msgid "Offline"
 msgstr "Võrguühenduseta"
 
@@ -2265,7 +2134,6 @@ msgid "Protocol"
 msgstr "Protokoll"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1891
-#, fuzzy
 msgid "Command"
 msgstr "Käsk"
 
@@ -2304,18 +2172,15 @@ msgstr ""
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2121
 #: pynicotine/gtkgui/ui/settings/network.ui:75
-#, fuzzy
 msgid "Username:"
 msgstr "Kasutajanimi:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2125
-#, fuzzy
 msgid "Command:"
 msgstr "Käsk:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2133
 #: pynicotine/gtkgui/dialogs/preferences.py:2136
-#, fuzzy
 msgid "Title"
 msgstr "Pealkiri"
 
@@ -2334,7 +2199,6 @@ msgstr "Kunstnik"
 #: pynicotine/gtkgui/search.py:390 pynicotine/gtkgui/userbrowse.py:269
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:182
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:335
-#, fuzzy
 msgid "Duration"
 msgstr "Kestus"
 
@@ -2353,7 +2217,6 @@ msgid "Comment"
 msgstr "Kommenteeri"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2146
-#, fuzzy
 msgid "Album"
 msgstr "Album"
 
@@ -2363,9 +2226,8 @@ msgid "Track Number"
 msgstr "Raja number"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2150
-#, fuzzy
 msgid "Year"
-msgstr "aasta"
+msgstr "Aasta"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2152
 #, fuzzy
@@ -2373,12 +2235,10 @@ msgid "Filename (URI)"
 msgstr "Failinimi (URI)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2154
-#, fuzzy
 msgid "Program"
 msgstr "Programm"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2214
-#, fuzzy
 msgid "Enabled"
 msgstr "Lubatud"
 
@@ -2407,7 +2267,6 @@ msgstr "Võrk"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2365
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:16
-#, fuzzy
 msgid "User Interface"
 msgstr "Kasutajaliides"
 
@@ -2423,7 +2282,6 @@ msgstr "Aktsiad"
 #: pynicotine/gtkgui/ui/mainwindow.ui:512
 #: pynicotine/gtkgui/ui/settings/downloads.ui:26
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:206
-#, fuzzy
 msgid "Downloads"
 msgstr "Allalaadimised"
 
@@ -2433,27 +2291,23 @@ msgstr "Allalaadimised"
 #: pynicotine/gtkgui/ui/mainwindow.ui:751
 #: pynicotine/gtkgui/ui/settings/uploads.ui:47
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:218
-#, fuzzy
 msgid "Uploads"
 msgstr "Üleslaadimised"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2369
 #: pynicotine/gtkgui/ui/settings/search.ui:33
-#, fuzzy
 msgid "Searches"
 msgstr "Otsingud"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2370
 #: pynicotine/gtkgui/mainwindow.py:955 pynicotine/gtkgui/ui/mainwindow.ui:1088
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:242
-#, fuzzy
 msgid "User Info"
 msgstr "Kasutajateave"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2371
 #: pynicotine/gtkgui/ui/settings/chats.ui:32
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:761
-#, fuzzy
 msgid "Chats"
 msgstr "Vestlused"
 
@@ -2520,7 +2374,6 @@ msgstr "Kas soovite tõesti ülekandestatistikat lähtestada?"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:47
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:314
-#, fuzzy
 msgid "Wishlist"
 msgstr "Soovinimekiri"
 
@@ -2540,12 +2393,10 @@ msgid "Enter new value for wish '%s':"
 msgstr "Sisestage soovile '%s' uus väärtus:"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:145
-#, fuzzy
 msgid "Clear Wishlist?"
 msgstr "Kas kustutada soovinimekiri?"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:146
-#, fuzzy
 msgid "Do you really want to clear your wishlist?"
 msgstr "Kas soovite tõesti oma soovinimekirja tühjendada?"
 
@@ -2566,13 +2417,11 @@ msgid "P_ause"
 msgstr "P_ause"
 
 #: pynicotine/gtkgui/downloads.py:62
-#, fuzzy
 msgid "Finished / Filtered"
 msgstr "Valmis / filtreeritud"
 
 #: pynicotine/gtkgui/downloads.py:64 pynicotine/gtkgui/transferlist.py:105
 #: pynicotine/gtkgui/uploads.py:66
-#, fuzzy
 msgid "Finished"
 msgstr "Valmis"
 
@@ -2582,39 +2431,32 @@ msgid "Paused"
 msgstr "Peatatud"
 
 #: pynicotine/gtkgui/downloads.py:66 pynicotine/gtkgui/transferlist.py:106
-#, fuzzy
 msgid "Filtered"
 msgstr "Filtreeritud"
 
 #: pynicotine/gtkgui/downloads.py:67
-#, fuzzy
 msgid "Deleted"
 msgstr "Kustutatud"
 
 #: pynicotine/gtkgui/downloads.py:68 pynicotine/gtkgui/uploads.py:70
-#, fuzzy
 msgid "Queued…"
 msgstr "Järjekorras…"
 
 #: pynicotine/gtkgui/downloads.py:70 pynicotine/gtkgui/uploads.py:72
-#, fuzzy
 msgid "Everything…"
 msgstr "Kõik…"
 
 #: pynicotine/gtkgui/downloads.py:109
-#, fuzzy
 msgid "Clear Queued Downloads"
 msgstr "Tühjendage järjekorras olevad allalaadimised"
 
 #: pynicotine/gtkgui/downloads.py:110
-#, fuzzy
 msgid "Do you really want to clear all queued downloads?"
 msgstr "Kas soovite tõesti kõik järjekorras olevad allalaadimised tühjendada?"
 
 #: pynicotine/gtkgui/downloads.py:122
-#, fuzzy
 msgid "Clear All Downloads"
-msgstr "Kustuta kõik allalaadimised"
+msgstr "Eemalda kõik allalaadimised"
 
 #: pynicotine/gtkgui/downloads.py:123
 #, fuzzy
@@ -2798,14 +2640,12 @@ msgid "_Transfer Statistics"
 msgstr "_Ülekande statistika"
 
 #: pynicotine/gtkgui/mainwindow.py:756
-#, fuzzy
 msgid "Report a _Bug"
-msgstr "Teata veast"
+msgstr "Teata _veast"
 
 #: pynicotine/gtkgui/mainwindow.py:757
-#, fuzzy
 msgid "Improve T_ranslations"
-msgstr "Parandage T_tõlkeid"
+msgstr "Parandage T_õlkeid"
 
 #: pynicotine/gtkgui/mainwindow.py:758
 #, fuzzy
@@ -2823,12 +2663,10 @@ msgid "_View"
 msgstr "_Vaata"
 
 #: pynicotine/gtkgui/mainwindow.py:779 pynicotine/gtkgui/mainwindow.py:794
-#, fuzzy
 msgid "_Help"
-msgstr "_Aidake"
+msgstr "_Abi"
 
 #: pynicotine/gtkgui/mainwindow.py:791
-#, fuzzy
 msgid "_File"
 msgstr "_Fail"
 
@@ -2869,14 +2707,12 @@ msgstr "Sõbrad"
 #: pynicotine/gtkgui/mainwindow.py:958 pynicotine/gtkgui/ui/mainwindow.ui:1572
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:639
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:278
-#, fuzzy
 msgid "Chat Rooms"
 msgstr "Jututoad"
 
 #: pynicotine/gtkgui/mainwindow.py:959 pynicotine/gtkgui/ui/mainwindow.ui:1633
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:290
 #: pynicotine/gtkgui/ui/userinfo.ui:333
-#, fuzzy
 msgid "Interests"
 msgstr "Huvid"
 
@@ -2885,12 +2721,10 @@ msgstr "Huvid"
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:510
 #: pynicotine/gtkgui/ui/settings/downloads.ui:106
 #: pynicotine/gtkgui/ui/settings/uploads.ui:86
-#, fuzzy
 msgid "Search"
 msgstr "Otsing"
 
 #: pynicotine/gtkgui/mainwindow.py:1280
-#, fuzzy
 msgid "Chat"
 msgstr "Vestlus"
 
@@ -2915,17 +2749,14 @@ msgid "[Debug] Miscellaneous"
 msgstr "[Silumine] Mitmesugust"
 
 #: pynicotine/gtkgui/mainwindow.py:1289
-#, fuzzy
 msgid "_Find…"
 msgstr "_Leia…"
 
 #: pynicotine/gtkgui/mainwindow.py:1291 pynicotine/gtkgui/mainwindow.py:1317
-#, fuzzy
 msgid "_Copy"
 msgstr "_Kopeeri"
 
 #: pynicotine/gtkgui/mainwindow.py:1292
-#, fuzzy
 msgid "Copy _All"
 msgstr "Kopeeri _Kõik"
 
@@ -2950,17 +2781,16 @@ msgid "Clear Log View"
 msgstr "Tühjenda logivaade"
 
 #: pynicotine/gtkgui/mainwindow.py:1354
-#, fuzzy, python-format
+#, python-format
 msgid "Downloads: %(speed)s"
 msgstr "Allalaadimised: %(speed)s"
 
 #: pynicotine/gtkgui/mainwindow.py:1358
-#, fuzzy, python-format
+#, python-format
 msgid "Uploads: %(speed)s"
 msgstr "Üleslaadimised: %(speed)s"
 
 #: pynicotine/gtkgui/popovers/chathistory.py:60
-#, fuzzy
 msgid "Latest Message"
 msgstr "Viimane sõnum"
 
@@ -2975,7 +2805,6 @@ msgstr "Tuba"
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:275
 #: pynicotine/gtkgui/ui/settings/ban.ui:133
 #: pynicotine/gtkgui/ui/settings/ignore.ui:66
-#, fuzzy
 msgid "Users"
 msgstr "Kasutajad"
 
@@ -3005,7 +2834,6 @@ msgstr "Tühista ruumi liikmelisus"
 
 #: pynicotine/gtkgui/privatechat.py:271 pynicotine/gtkgui/search.py:448
 #: pynicotine/gtkgui/userbrowse.py:216 pynicotine/gtkgui/userinfo.py:274
-#, fuzzy
 msgid "Close All Tabs…"
 msgstr "Sule kõik vahelehed…"
 
@@ -3016,17 +2844,14 @@ msgid "_Close Tab"
 msgstr "_Sulge vahekaart"
 
 #: pynicotine/gtkgui/privatechat.py:283
-#, fuzzy
 msgid "View Chat Log"
 msgstr "Vaata vestluslogi"
 
 #: pynicotine/gtkgui/privatechat.py:284
-#, fuzzy
 msgid "Delete Chat Log…"
 msgstr "Kustuta vestluslogi…"
 
 #: pynicotine/gtkgui/privatechat.py:385
-#, fuzzy
 msgid ""
 "Do you really want to permanently delete all logged messages for this user?"
 msgstr ""
@@ -3059,31 +2884,26 @@ msgid "_Rooms"
 msgstr "_Toad"
 
 #: pynicotine/gtkgui/search.py:80
-#, fuzzy
 msgid "_User"
 msgstr "_Kasutaja"
 
 #: pynicotine/gtkgui/search.py:381
-#, fuzzy
 msgid "ID"
 msgstr "ID"
 
 #: pynicotine/gtkgui/search.py:385
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:261
-#, fuzzy
 msgid "In Queue"
 msgstr "Järjekorras"
 
 #: pynicotine/gtkgui/search.py:387 pynicotine/gtkgui/transferlist.py:125
 #: pynicotine/gtkgui/userbrowse.py:266
-#, fuzzy
 msgid "Filename"
 msgstr "Faili nimi"
 
 #: pynicotine/gtkgui/search.py:388 pynicotine/gtkgui/transferlist.py:129
 #: pynicotine/gtkgui/userbrowse.py:267
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:107
-#, fuzzy
 msgid "Size"
 msgstr "Suurus"
 
@@ -3096,7 +2916,6 @@ msgstr "Kopeerige _Failitee"
 #: pynicotine/gtkgui/search.py:423 pynicotine/gtkgui/transferlist.py:163
 #: pynicotine/gtkgui/userbrowse.py:231 pynicotine/gtkgui/userbrowse.py:245
 #: pynicotine/gtkgui/userbrowse.py:297 pynicotine/gtkgui/userbrowse.py:314
-#, fuzzy
 msgid "Copy _URL"
 msgstr "Kopeeri _URL"
 
@@ -3217,12 +3036,10 @@ msgid "Select Destination Folder"
 msgstr "Valige Sihtkaust"
 
 #: pynicotine/gtkgui/transferlist.py:94
-#, fuzzy
 msgid "Queued"
 msgstr "Järjekorras"
 
 #: pynicotine/gtkgui/transferlist.py:95
-#, fuzzy
 msgid "Queued (prioritized)"
 msgstr "Järjekorras (prioriteetne)"
 
@@ -3262,7 +3079,6 @@ msgid "Disallowed extension"
 msgstr "Keelatud laiendus"
 
 #: pynicotine/gtkgui/transferlist.py:103 pynicotine/gtkgui/uploads.py:67
-#, fuzzy
 msgid "Cancelled"
 msgstr "Tühistatud"
 
@@ -3287,12 +3103,10 @@ msgid "File not shared"
 msgstr "Faili ei jagatud"
 
 #: pynicotine/gtkgui/transferlist.py:112
-#, fuzzy
 msgid "Download folder error"
 msgstr "Kausta allalaadimise viga"
 
 #: pynicotine/gtkgui/transferlist.py:113
-#, fuzzy
 msgid "Local file error"
 msgstr "Kohaliku faili viga"
 
@@ -3302,7 +3116,6 @@ msgid "Remote file error"
 msgstr "Kaugfaili viga"
 
 #: pynicotine/gtkgui/transferlist.py:127
-#, fuzzy
 msgid "Queue"
 msgstr "Järjekord"
 
@@ -3327,7 +3140,6 @@ msgid "Send to _Player"
 msgstr "Saada _Playerile"
 
 #: pynicotine/gtkgui/transferlist.py:172
-#, fuzzy
 msgid "_Open in File Manager"
 msgstr "_Ava failihalduris"
 
@@ -3352,7 +3164,6 @@ msgid "Select User's Transfers"
 msgstr "Valige Kasutajate ülekanded"
 
 #: pynicotine/gtkgui/uploads.py:45
-#, fuzzy
 msgid "_Abort"
 msgstr "_ Katkesta"
 
@@ -5172,7 +4983,6 @@ msgid "Configure Shares"
 msgstr "Seadistage jagamised"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:938
-#, fuzzy
 msgid ""
 "Enter the name of a user, whose shared files you'd like to browse. You can "
 "also save the list to disk, and inspect it later on."
@@ -5669,7 +5479,6 @@ msgid "Include Text"
 msgstr "Kaasa tekst"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:95
-#, fuzzy
 msgid "Files, folders and usernames containing this text will be shown."
 msgstr "Kuvatakse seda teksti sisaldavad failid, kaustad ja kasutajanimed."
 
@@ -6363,14 +6172,12 @@ msgid "Events"
 msgstr "Sündmused"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:315
-#, fuzzy
 msgid "Run command after file download finishes ($ for file path):"
-msgstr "Käivitage käsk pärast faili allalaadimise lõppu ($ failitee jaoks):"
+msgstr "Käivitage käsk pärast faili allalaadimist ($ failitee jaoks):"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:338
-#, fuzzy
 msgid "Run command after folder download finishes ($ for folder path):"
-msgstr "Käivitage käsk pärast kausta allalaadimise lõppu ($ kaustatee jaoks):"
+msgstr "Käivitage käsk pärast kausta allalaadimiset ($ kaustatee jaoks):"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:365
 #, fuzzy
@@ -7255,7 +7062,6 @@ msgid "Browse font:"
 msgstr "Sirvi fonti:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1843
-#, fuzzy
 msgid "Icons"
 msgstr "Ikoonid"
 
@@ -7290,14 +7096,12 @@ msgid "Clear Specific Uploads"
 msgstr "Kustuta konkreetsed üleslaadimised"
 
 #: pynicotine/gtkgui/ui/userbrowse.ui:118
-#, fuzzy
 msgid "Shared"
 msgstr "Jagatud"
 
 #: pynicotine/gtkgui/ui/userbrowse.ui:155
-#, fuzzy
 msgid "Search Files and Folders"
-msgstr "Otsige failidest ja kaustadest"
+msgstr "Otsige faile ja kaustasid"
 
 #: pynicotine/gtkgui/ui/userbrowse.ui:167
 #, fuzzy
@@ -7305,17 +7109,14 @@ msgid "Save Shares List to Disk"
 msgstr "Salvestage aktsiate loend kettale"
 
 #: pynicotine/gtkgui/ui/userbrowse.ui:183
-#, fuzzy
 msgid "Refresh Files"
 msgstr "Värskenda faile"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:123
-#, fuzzy
 msgid "Shared Files"
 msgstr "Jagatud failid"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:150
-#, fuzzy
 msgid "Shared Folders"
 msgstr "Jagatud kaustad"
 
@@ -7325,7 +7126,6 @@ msgid "Upload Slots"
 msgstr "Slotside üleslaadimine"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:204
-#, fuzzy
 msgid "Queued Uploads"
 msgstr "Järjekorras üleslaadimised"
 
@@ -7335,12 +7135,10 @@ msgid "Free Upload Slots"
 msgstr "Tasuta üleslaadimispesad"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:258
-#, fuzzy
 msgid "Upload Speed"
 msgstr "Üleslaadimiskiirus"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:607
-#, fuzzy
 msgid "Save _Picture"
 msgstr "Salvesta _Pilt"
 
