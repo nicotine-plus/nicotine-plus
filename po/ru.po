@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2023-02-16 17:18+0000\n"
-"Last-Translator: Kirill Feoktistov <feoktistovk@gmail.com>\n"
+"PO-Revision-Date: 2023-03-07 21:16+0000\n"
+"Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ru/>\n"
 "Language: ru\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.16-dev\n"
+"X-Generator: Weblate 4.16.2-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -1579,6 +1579,7 @@ msgid "Folder"
 msgstr "Каталог"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:105
+#, fuzzy
 msgid "_Finish"
 msgstr "Завершить"
 
