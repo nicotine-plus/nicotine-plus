@@ -3456,7 +3456,6 @@ msgstr ""
 "faile privaatselt."
 
 #: pynicotine/gtkgui/userbrowse.py:520
-#, fuzzy
 msgid ""
 "Unable to request shared files from user. Either the user is offline, you "
 "both have a closed listening port, or there's a temporary connectivity issue."
