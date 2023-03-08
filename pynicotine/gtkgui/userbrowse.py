@@ -84,11 +84,7 @@ class UserBrowses(IconNotebook):
             return
 
         self.window.userbrowse_entry.set_text("")
-
-        if entry_text.startswith("slsk://"):
-            core.userbrowse.open_soulseek_url(entry_text)
-        else:
-            core.userbrowse.open_soulseek_path(entry_text)
+        core.userbrowse.open_soulseek_path(entry_text)
 
     def show_user(self, user, path=None, local_shares_type=None, switch_page=True):
 

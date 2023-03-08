@@ -317,6 +317,10 @@ class UserBrowse:
 
     def open_soulseek_path(self, entry_text):
 
+        if entry_text.startswith("slsk://"):
+            self.open_soulseek_url(entry_text)
+            return
+
         text = entry_text.lstrip("\\")
 
         if "\\" in text:

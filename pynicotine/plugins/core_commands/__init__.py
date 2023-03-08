@@ -152,8 +152,8 @@ class Plugin(BasePlugin):
                 "description": _("Browse files of user"),
                 "disable": ["cli"],
                 "group": _CommandGroup.USERS,
-                "usage": ["<user>"],
-                "usage_private_chat": ["[user]"]
+                "usage": ["<user\\folder or url>"],
+                "usage_private_chat": ["[user\\folder or url]"]
             },
             "whois": {
                 "aliases": ["info", "w"],
@@ -399,7 +399,7 @@ class Plugin(BasePlugin):
         if args:
             user = args
 
-        self.core.userbrowse.browse_user(user)
+        self.core.userbrowse.open_soulseek_path(user)
 
     def whois_command(self, args, user=None, **_unused):
 
