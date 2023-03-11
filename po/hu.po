@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2023-03-11 23:15+0000\n"
+"PO-Revision-Date: 2023-03-11 23:23+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -3582,7 +3582,7 @@ msgstr "Csatlakozás ide: %(host)s:%(port)s"
 #: pynicotine/slskproto.py:447
 #, python-format
 msgid "Disconnected from server %(host)s:%(port)s"
-msgstr "Szétkapcsolva a szerverről %(host)s:%(port)s"
+msgstr "Lekapcsolódva a szerverről %(host)s:%(port)s"
 
 #: pynicotine/slskproto.py:453
 msgid "Someone logged in to your Soulseek account elsewhere"
@@ -3601,7 +3601,7 @@ msgstr "Nem lehet csatlakozni a szerverre, %(host)s:%(port)s: %(error)s"
 #: pynicotine/slskproto.py:897
 #, python-format
 msgid "Connected to server %(host)s:%(port)s, logging in…"
-msgstr "Csatlakozva a szerverhez: %(host)s:%(port)s, belépés…"
+msgstr "Csatlakozva a szerverhez: %(host)s:%(port)s, bejelentkezés…"
 
 #: pynicotine/transfers.py:1103
 #, python-format
