@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2023-03-02 15:38+0000\n"
+"PO-Revision-Date: 2023-03-11 23:05+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -3630,13 +3630,13 @@ msgstr "Letöltési mappa hiba"
 #: pynicotine/transfers.py:1201
 #, python-format
 msgid "Download started: user %(user)s, file %(file)s"
-msgstr "Letöltés elindult: %(user)s user, %(file)s fájl"
+msgstr "A letöltés elindult: %(user)s felhasználó, %(file)s fájl"
 
 #: pynicotine/transfers.py:1286
 #, python-format
 msgid "Upload started: user %(user)s, IP address %(ip)s, file %(file)s"
 msgstr ""
-"A feltöltés elindult: felhasználó %(user)s, IP-cím %(ip)s, fájl %(file)s"
+"A feltöltés elindult: %(user)s felhasználó, %(ip)s IP-cím, %(file)s fájl"
 
 #: pynicotine/transfers.py:1861
 #, python-format
@@ -3645,7 +3645,7 @@ msgid ""
 "download folder. Error: %s"
 msgstr ""
 "A letöltés nem menthető a felhasználónév almappába, visszaáll az "
-"alapértelmezett letöltési mappába. Hiba: %s"
+"alapértelmezett letöltési mappa. Hiba: %s"
 
 #: pynicotine/transfers.py:1957
 #, python-format
@@ -3664,7 +3664,7 @@ msgstr "Végrehajtva: %s"
 #: pynicotine/transfers.py:1970
 #, python-format
 msgid "Trouble executing '%s'"
-msgstr "Végrehajtási hiba '%s'"
+msgstr "Hiba történt a végrehajtás közben '%s'"
 
 #: pynicotine/transfers.py:1986
 #, python-format
@@ -3683,12 +3683,12 @@ msgstr "Futtatva a könyvtárban: %s"
 #: pynicotine/transfers.py:1999
 #, python-format
 msgid "Trouble executing on folder: %s"
-msgstr "Futtatási probléma a könyvtárban: %s"
+msgstr "Hiba történt végrehajtás közben a könyvtárban: %s"
 
 #: pynicotine/transfers.py:2021
 #, python-format
 msgid "Couldn't move '%(tempfile)s' to '%(file)s': %(error)s"
-msgstr "Nem lehetett mozgatni '%(tempfile)s' ide: '%(file)s', %(error)s"
+msgstr "'%(tempfile)s', nem lehetett ide mozgatni '%(file)s': %(error)s"
 
 #: pynicotine/transfers.py:2054
 #, python-format
