@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2023-03-11 23:05+0000\n"
+"PO-Revision-Date: 2023-03-11 23:15+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -3616,7 +3616,7 @@ msgstr "Feltöltési I/O hiba: %s"
 #: pynicotine/transfers.py:1168
 #, python-format
 msgid "Can't get an exclusive lock on file - I/O error: %s"
-msgstr "Nem lehet hozzáférni a fájlhoz - I/O hiba: %s"
+msgstr "Nem kaphat kizárólagos hozzáférési engedélyt a fájlhoz – I/O hiba: %s"
 
 #: pynicotine/transfers.py:1181
 #, python-format
