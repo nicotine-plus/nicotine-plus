@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2023-03-11 23:23+0000\n"
+"PO-Revision-Date: 2023-03-11 23:41+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -3591,7 +3591,7 @@ msgstr "Valaki máshol bejelentkezett az Ön Soulseek fiókjába"
 #: pynicotine/slskproto.py:476
 #, python-format
 msgid "The server seems to be down or not responding, retrying in %i seconds"
-msgstr "A szerver nem működik vagy nem válaszol, újrapróbálás %i mp múlva"
+msgstr "A szerver leállt, vagy nem válaszol, újrapróbálás %i másodperc múlva"
 
 #: pynicotine/slskproto.py:800
 #, python-format
