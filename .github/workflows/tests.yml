@@ -74,7 +74,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          dnf -y install gettext gtk${{ matrix.gtk }} python3 python3-gobject python3-pip xorg-x11-server-Xvfb
+          dnf -y install gettext gtk${{ matrix.gtk }} python3 python3-gobject python3-pip getopt xorg-x11-server-Xvfb
           python3 -m pip install -e ".[test]"
 
       - name: Flake8 linter
