@@ -73,6 +73,7 @@ class IP2Location:
 
     def _get_record(self, ip_address):
 
+        country_code = ""
         low = 0
         ipnum = struct.unpack('!L', socket.inet_aton(ip_address))[0]
 
@@ -89,15 +90,17 @@ class IP2Location:
             low = self._readi(indexpos)
             high = self._readi(indexpos + 4)
 
-        while low <= high:
+        while low <= high and not country_code:
             mid = int((low + high) / 2)
             ipfrom = self._readi(baseaddr + mid * (self._dbcolumn * 4 + off))
             ipto = self._readi(baseaddr + (mid + 1) * (self._dbcolumn * 4 + off))
 
             if ipfrom <= ipno < ipto:
-                return self._read_record(mid)
+                country_code = self._read_record(mid)
 
             if ipno < ipfrom:
                 high = mid - 1
             else:
                 low = mid + 1
+
+        return country_code
