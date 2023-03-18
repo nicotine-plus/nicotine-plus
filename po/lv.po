@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
-"PO-Revision-Date: 2023-04-05 11:32+0000\n"
+"PO-Revision-Date: 2023-05-17 14:54+0000\n"
 "Last-Translator: Pagal3 <p4gal3@protonmail.com>\n"
 "Language-Team: Latvian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/lv/>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n % 10 == 0 || n % 100 >= 11 && n % 100 <= "
 "19) ? 0 : ((n % 10 == 1 && n % 100 != 11) ? 1 : 2);\n"
-"X-Generator: Weblate 4.17-dev\n"
+"X-Generator: Weblate 4.18-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -56,8 +56,7 @@ msgstr "Grafiskais klients Soulseek peer-to-peer tīklam"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:12
 msgid "Soulseek;Nicotine;sharing;chat;messaging;P2P;peer-to-peer;GTK;"
-msgstr ""
-"Soulseek;Nicotine;kopīgošana;tērzēšana;ziņapmaiņa;P2P;peer-to-peer;GTK;"
+msgstr "Soulseek;Nicotine;kopīgošana;tērzēšana;ziņapmaiņa;P2P;peer-to-peer;GTK;"
 
 #: pynicotine/__init__.py:37
 #, python-format
@@ -255,8 +254,8 @@ msgid ""
 "%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of "
 "Soulseek privileges left"
 msgstr ""
-"Atlikušas %(days)i dienas, %(hours)i stundas, %(minutes)i minūtes, "
-"%(seconds)i sekundes Soulseek privilēģijām"
+"Atlikušas %(days)i dienas, %(hours)i stundas, %(minutes)i minūtes, %(seconds)"
+"i sekundes Soulseek privilēģijām"
 
 #: pynicotine/core.py:482
 msgid "Your password has been changed"
@@ -3824,8 +3823,7 @@ msgstr "Klausīšanās portā: %i"
 #: pynicotine/slskproto.py:323
 #, python-format
 msgid "No listening port is available in the specified port range %s–%s"
-msgstr ""
-"Norādītajā portu diapazonā %s–%s nav pieejams neviens klausīšanās ports"
+msgstr "Norādītajā portu diapazonā %s–%s nav pieejams neviens klausīšanās ports"
 
 #: pynicotine/slskproto.py:324
 msgid "Listening Port Unavailable"
