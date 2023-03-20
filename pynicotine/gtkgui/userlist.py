@@ -35,6 +35,7 @@ from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.ui import UserInterface
+from pynicotine.slskmessages import UINT64_LIMIT
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
@@ -126,7 +127,7 @@ class UserList:
                 "status_data": {"data_type": int},
                 "speed_data": {"data_type": GObject.TYPE_UINT},
                 "files_data": {"data_type": GObject.TYPE_UINT},
-                "last_seen_data": {"data_type": int},
+                "last_seen_data": {"data_type": GObject.TYPE_UINT64},
                 "country_data": {"data_type": str}
             }
         )
@@ -328,7 +329,7 @@ class UserList:
         if iterator is None:
             return
 
-        last_seen = 2147483647  # Gtk only allows range -2147483648 to 2147483647 in set()
+        last_seen = UINT64_LIMIT
         h_last_seen = ""
 
         if not online:
