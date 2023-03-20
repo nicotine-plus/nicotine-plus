@@ -323,6 +323,7 @@ class Search:
         """ Peer message: 9 """
 
         if msg.token not in slskmessages.SEARCH_TOKENS_ALLOWED:
+            msg.token = None
             return
 
         search = self.searches.get(msg.token)

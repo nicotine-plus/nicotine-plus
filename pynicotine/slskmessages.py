@@ -24,9 +24,7 @@ from socket import inet_aton
 from socket import inet_ntoa
 from struct import Struct
 
-from pynicotine.config import config
 from pynicotine.utils import UINT32_LIMIT
-from pynicotine.utils import debug
 from pynicotine.utils import human_length
 
 """ This module contains message classes, that networking and UI thread
@@ -280,7 +278,9 @@ class SlskMessage(Message):
     def make_network_message(self):
         """ Returns binary array, that can be sent over the network"""
 
-        raise NotImplementedError("Empty message made, class %s", self.__class__)
+        from pynicotine.logfacility import log
+        log.add_debug("Empty message made, class %s", self.__class__)
+        return b""
 
     @staticmethod
     def unpack_string(message, start=0):
@@ -293,7 +293,13 @@ class SlskMessage(Message):
 
         except Exception:
             # Older clients (Soulseek NS)
-            string = content.decode("latin-1")
+            try:
+                string = content.decode("latin-1")
+
+            except Exception as error:
+                from pynicotine.logfacility import log
+                string = content
+                log.add_debug("Error trying to decode string '%s': %s", (string, error))
 
         return start + 4 + length, string
 
@@ -325,9 +331,11 @@ class SlskMessage(Message):
         """ Extracts information from the message and sets up fields
         in an object"""
 
-        raise NotImplementedError("Can't parse incoming messages, class %s", self.__class__)
+        from pynicotine.logfacility import log
+        log.add_debug("Can't parse incoming messages, class %s", self.__class__)
 
     def debug(self, message=None):
+        from pynicotine.utils import debug
         debug(type(self).__name__, self.__dict__, repr(message))
 
 
@@ -2775,7 +2783,7 @@ class FileSearchResponse(FileListMessage):
         if message[pos:]:
             pos, self.unknown = self.unpack_uint32(message, pos)
 
-        if message[pos:] and config.sections["searches"]["private_search_results"]:
+        if message[pos:]:
             pos, self.privatelist = self._parse_result_list(message, pos)
 
 

@@ -256,9 +256,6 @@ class Searches(IconNotebook):
 
     def file_search_response(self, msg):
 
-        if msg.token not in slskmessages.SEARCH_TOKENS_ALLOWED:
-            return
-
         page = self.pages.get(msg.token)
 
         if page is None:
@@ -722,7 +719,7 @@ class Search:
         update_ui = self.add_result_list(msg.list, user, country_code, inqueue, ulspeed, h_speed,
                                          h_queue, has_free_slots)
 
-        if msg.privatelist:
+        if msg.privatelist and config.sections["searches"]["private_search_results"]:
             update_ui_private = self.add_result_list(
                 msg.privatelist, user, country_code, inqueue, ulspeed, h_speed, h_queue,
                 has_free_slots, private=True
