@@ -248,13 +248,15 @@ class UserList:
     def add_buddy(self, user, user_data):
 
         country_code = user_data.country.replace("flag_", "")
-        last_seen = user_data.last_seen
 
         try:
-            time_from_epoch = time.mktime(time.strptime(last_seen, "%m/%d/%Y %H:%M:%S"))
+            last_seen_time = time.strptime(user_data.last_seen, "%m/%d/%Y %H:%M:%S")
+            last_seen = time.mktime(last_seen_time)
+            h_last_seen = time.strftime("%x %X", last_seen_time)
+
         except ValueError:
-            last_seen = _("Never seen")
-            time_from_epoch = 0
+            last_seen = 0
+            h_last_seen = _("Never seen")
 
         self.list_view.add_row([
             USER_STATUS_ICON_NAMES.get(user_data.status, ""),
@@ -264,10 +266,10 @@ class UserList:
             bool(user_data.is_trusted),
             bool(user_data.notify_status),
             bool(user_data.is_prioritized),
-            str(last_seen),
+            str(h_last_seen),
             str(user_data.note),
             0, 0, 0,
-            time_from_epoch,
+            last_seen,
             str(country_code)
         ], select_row=core.userlist.allow_saving_buddies)
 
@@ -326,15 +328,15 @@ class UserList:
         if iterator is None:
             return
 
-        last_seen = ""
-        time_from_epoch = 2147483647  # Gtk only allows range -2147483648 to 2147483647 in set()
+        last_seen = 2147483647  # Gtk only allows range -2147483648 to 2147483647 in set()
+        h_last_seen = ""
 
         if not online:
-            last_seen = time.strftime("%m/%d/%Y %H:%M:%S")
-            time_from_epoch = time.mktime(time.strptime(last_seen, "%m/%d/%Y %H:%M:%S"))
+            last_seen = time.time()
+            h_last_seen = time.strftime("%x %X", time.localtime(last_seen))
 
-        self.list_view.set_row_value(iterator, "last_seen", last_seen)
-        self.list_view.set_row_value(iterator, "last_seen_data", int(time_from_epoch))
+        self.list_view.set_row_value(iterator, "last_seen", h_last_seen)
+        self.list_view.set_row_value(iterator, "last_seen_data", last_seen)
 
     def user_country(self, user, country_code):
 
