@@ -2076,7 +2076,7 @@ class SoulseekNetworkThread(Thread):
             try:
                 self._write_data(conn_obj_established, current_time)
 
-            except OSError as error:
+            except (OSError, ValueError) as error:
                 log.add_conn("Cannot write data to connection %(addr)s, closing connection. Error: %(error)s", {
                     "addr": conn_obj_established.addr,
                     "error": error
