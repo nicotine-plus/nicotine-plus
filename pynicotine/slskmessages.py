@@ -233,14 +233,14 @@ class SlskMessage(Message):
         return UINT32_PACK(len(content)) + content
 
     @staticmethod
-    def pack_string(content, latin1=False):
+    def pack_string(content, is_legacy=False):
 
-        if latin1:
+        if is_legacy:
+            # Legacy string
             try:
-                # Try to encode in latin-1 first for older clients (Soulseek NS)
                 encoded = content.encode("latin-1")
 
-            except Exception:
+            except UnicodeEncodeError:
                 encoded = content.encode("utf-8", "replace")
 
         else:
@@ -285,8 +285,8 @@ class SlskMessage(Message):
         try:
             string = content.decode("utf-8")
 
-        except Exception:
-            # Older clients (Soulseek NS)
+        except UnicodeDecodeError:
+            # Legacy strings
             string = content.decode("latin-1")
 
         return start + 4 + length, string
@@ -797,7 +797,7 @@ class FileSearch(ServerMessage):
     def make_network_message(self):
         msg = bytearray()
         msg.extend(self.pack_uint32(self.token))
-        msg.extend(self.pack_string(self.searchterm, latin1=True))
+        msg.extend(self.pack_string(self.searchterm, is_legacy=True))
 
         return msg
 
@@ -974,7 +974,7 @@ class UserSearch(ServerMessage):
         msg = bytearray()
         msg.extend(self.pack_string(self.user))
         msg.extend(self.pack_uint32(self.token))
-        msg.extend(self.pack_string(self.searchterm, latin1=True))
+        msg.extend(self.pack_string(self.searchterm, is_legacy=True))
 
         return msg
 
@@ -1794,7 +1794,7 @@ class RoomSearch(ServerMessage):
         msg = bytearray()
         msg.extend(self.pack_string(self.room))
         msg.extend(self.pack_uint32(self.token))
-        msg.extend(self.pack_string(self.searchterm, latin1=True))
+        msg.extend(self.pack_string(self.searchterm, is_legacy=True))
 
         return msg
 
@@ -2880,7 +2880,7 @@ class FolderContentsRequest(PeerMessage):
     def make_network_message(self):
         msg = bytearray()
         msg.extend(self.pack_uint32(self.token))
-        msg.extend(self.pack_string(self.dir, latin1=True))
+        msg.extend(self.pack_string(self.dir, is_legacy=True))
 
         return msg
 
@@ -3067,7 +3067,7 @@ class QueueUpload(PeerMessage):
         self.legacy_client = legacy_client
 
     def make_network_message(self):
-        return self.pack_string(self.file, latin1=self.legacy_client)
+        return self.pack_string(self.file, is_legacy=self.legacy_client)
 
     def parse_network_message(self, message):
         _pos, self.file = self.unpack_string(message)
