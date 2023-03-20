@@ -23,7 +23,6 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
-from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import encode_path
 from pynicotine.utils import unescape
 
@@ -65,7 +64,7 @@ class UserInfo:
 
         events.emit("user-info-show-user", user=user, refresh=refresh, switch_page=switch_page)
 
-        if core.user_status == UserStatus.OFFLINE:
+        if core.user_status == slskmessages.UserStatus.OFFLINE:
             events.emit("peer-connection-error", user)
             return
 

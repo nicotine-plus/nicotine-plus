@@ -26,9 +26,6 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
-from pynicotine.slskmessages import FileListMessage
-from pynicotine.slskmessages import PeerInit
-from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import clean_file
 from pynicotine.utils import encode_path
 from pynicotine.utils import RestrictedUnpickler
@@ -80,7 +77,7 @@ class UserBrowse:
 
         built = msg.make_network_message()
         msg.parse_network_message(built)
-        msg.init = PeerInit(target_user=username)
+        msg.init = slskmessages.PeerInit(target_user=username)
 
         events.emit_main_thread("shared-file-list-response", msg)
 
@@ -131,7 +128,7 @@ class UserBrowse:
 
         self._show_user(username, path=path, switch_page=switch_page)
 
-        if core.user_status == UserStatus.OFFLINE:
+        if core.user_status == slskmessages.UserStatus.OFFLINE:
             events.emit("peer-connection-error", username)
             return
 
@@ -195,7 +192,7 @@ class UserBrowse:
 
         self._show_user(username)
 
-        msg = slskmessages.SharedFileListResponse(init=PeerInit(target_user=username))
+        msg = slskmessages.SharedFileListResponse(init=slskmessages.PeerInit(target_user=username))
         msg.list = shares_list
 
         events.emit("shared-file-list-response", msg)
@@ -224,7 +221,8 @@ class UserBrowse:
 
         virtualpath = "\\".join([folder, file_data[1]])
         size = file_data[2]
-        h_bitrate, _bitrate, h_length, _length = FileListMessage.parse_result_bitrate_length(size, file_data[4])
+        h_bitrate, _bitrate, h_length, _length = slskmessages.FileListMessage.parse_result_bitrate_length(
+            size, file_data[4])
 
         core.transfers.get_file(user, virtualpath, prefix, size=size, bitrate=h_bitrate, length=h_length)
 
@@ -254,7 +252,7 @@ class UserBrowse:
                 for file_data in files:
                     virtualpath = "\\".join([folder, file_data[1]])
                     size = file_data[2]
-                    h_bitrate, _bitrate, h_length, _length = FileListMessage.parse_result_bitrate_length(
+                    h_bitrate, _bitrate, h_length, _length = slskmessages.FileListMessage.parse_result_bitrate_length(
                         size, file_data[4])
 
                     core.transfers.get_file(user, virtualpath, destination,

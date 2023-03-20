@@ -24,12 +24,12 @@ from locale import strxfrm
 from gi.repository import Gio
 from gi.repository import GLib
 
+from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_GUI_DIR
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.logfacility import log
-from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import encode_path
 
 
@@ -129,7 +129,7 @@ class BaseImplementation:
 
     def update_user_status(self):
 
-        sensitive = core.user_status != UserStatus.OFFLINE
+        sensitive = core.user_status != slskmessages.UserStatus.OFFLINE
 
         for item in (self.away_item, self.send_message_item,
                      self.lookup_info_item, self.lookup_shares_item):
@@ -139,7 +139,7 @@ class BaseImplementation:
 
         self.set_item_visible(self.connect_item, not sensitive)
         self.set_item_visible(self.disconnect_item, sensitive)
-        self.set_item_toggled(self.away_item, core.user_status == UserStatus.AWAY)
+        self.set_item_toggled(self.away_item, core.user_status == slskmessages.UserStatus.AWAY)
 
         self.update_icon()
         self.update_menu()
@@ -155,10 +155,10 @@ class BaseImplementation:
                      or self.application.window.privatechat.highlighted_users)):
             icon_name = "msg"
 
-        elif core.user_status == UserStatus.ONLINE:
+        elif core.user_status == slskmessages.UserStatus.ONLINE:
             icon_name = "connect"
 
-        elif core.user_status == UserStatus.AWAY:
+        elif core.user_status == slskmessages.UserStatus.AWAY:
             icon_name = "away"
 
         else:

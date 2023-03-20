@@ -29,6 +29,7 @@ from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
 
+from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
@@ -45,8 +46,6 @@ from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.theme import get_file_type_icon_name
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.ui import UserInterface
-from pynicotine.slskmessages import FileListMessage
-from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import human_size
 from pynicotine.utils import humanize
 from pynicotine.utils import open_file_path
@@ -150,7 +149,7 @@ class UserBrowses(IconNotebook):
 
     def server_disconnect(self, *_args):
         for user, page in self.pages.items():
-            self.set_user_status(page.container, user, UserStatus.OFFLINE)
+            self.set_user_status(page.container, user, slskmessages.UserStatus.OFFLINE)
 
 
 class UserBrowse:
@@ -585,7 +584,7 @@ class UserBrowse:
         for _code, filename, size, _ext, attrs, *_unused in files:
             selected_folder_size += size
             h_size = humanize(size) if config.sections["ui"]["exact_file_sizes"] else human_size(size)
-            h_bitrate, bitrate, h_length, length = FileListMessage.parse_result_bitrate_length(size, attrs)
+            h_bitrate, bitrate, h_length, length = slskmessages.FileListMessage.parse_result_bitrate_length(size, attrs)
 
             self.file_list_view.add_row([
                 get_file_type_icon_name(filename),
@@ -1005,7 +1004,7 @@ class UserBrowse:
                 filename = file_data[1]
                 file_size = file_data[2]
                 virtual_path = "\\".join([folder, filename])
-                h_bitrate, _bitrate, h_length, length = FileListMessage.parse_result_bitrate_length(
+                h_bitrate, _bitrate, h_length, length = slskmessages.FileListMessage.parse_result_bitrate_length(
                     file_size, file_data[4])
                 selected_size += file_size
                 selected_length += length

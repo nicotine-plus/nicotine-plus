@@ -25,6 +25,7 @@ import time
 
 from gi.repository import GObject
 
+from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
@@ -35,8 +36,7 @@ from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.ui import UserInterface
-from pynicotine.slskmessages import UINT64_LIMIT
-from pynicotine.slskmessages import UserStatus
+from pynicotine.utils import UINT64_LIMIT
 from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
 
@@ -425,7 +425,7 @@ class UserList:
     def server_disconnect(self, *_args):
 
         for iterator in self.list_view.get_all_rows():
-            self.list_view.set_row_value(iterator, "status", USER_STATUS_ICON_NAMES[UserStatus.OFFLINE])
+            self.list_view.set_row_value(iterator, "status", USER_STATUS_ICON_NAMES[slskmessages.UserStatus.OFFLINE])
             self.list_view.set_row_value(iterator, "speed", "")
             self.list_view.set_row_value(iterator, "files", "")
             self.list_view.set_row_value(iterator, "status_data", 0)

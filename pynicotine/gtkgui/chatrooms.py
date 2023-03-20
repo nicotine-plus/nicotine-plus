@@ -55,7 +55,6 @@ from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
-from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import clean_file
 from pynicotine.utils import encode_path
 from pynicotine.utils import humanize
@@ -1036,10 +1035,10 @@ class ChatRoom:
         if status == self.users_list_view.get_row_value(iterator, "status_data"):
             return
 
-        if status == UserStatus.AWAY:
+        if status == slskmessages.UserStatus.AWAY:
             action = _("%s has gone away")
 
-        elif status == UserStatus.ONLINE:
+        elif status == slskmessages.UserStatus.ONLINE:
             action = _("%s has returned")
 
         else:

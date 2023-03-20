@@ -43,10 +43,6 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
-from pynicotine.slskmessages import increment_token
-from pynicotine.slskmessages import FileListMessage
-from pynicotine.slskmessages import TransferDirection
-from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import execute_command
 from pynicotine.utils import clean_file
 from pynicotine.utils import clean_path
@@ -481,7 +477,7 @@ class Transfers:
 
         events.emit("update-download-limits")
 
-        if core.user_status == UserStatus.OFFLINE:
+        if core.user_status == slskmessages.UserStatus.OFFLINE:
             return
 
         use_speed_limit = config.sections["transfers"]["use_download_speed_limit"]
@@ -501,7 +497,7 @@ class Transfers:
 
         events.emit("update-upload-limits")
 
-        if core.user_status == UserStatus.OFFLINE:
+        if core.user_status == slskmessages.UserStatus.OFFLINE:
             return
 
         use_speed_limit = config.sections["transfers"]["use_upload_speed_limit"]
@@ -641,7 +637,7 @@ class Transfers:
         update = False
         username = msg.user
         privileged = msg.privileged
-        user_offline = (msg.status == UserStatus.OFFLINE)
+        user_offline = (msg.status == slskmessages.UserStatus.OFFLINE)
         download_statuses = ("Queued", "Getting status", "Too many files", "Too many megabytes", "Pending shutdown.",
                              "User logged off", "Connection timeout", "Remote file error", "Cancelled")
         upload_statuses = ("Getting status", "User logged off", "Connection timeout")
@@ -796,7 +792,8 @@ class Transfers:
                 for file in files:
                     virtualpath = directory.rstrip("\\") + "\\" + file[1]
                     size = file[2]
-                    h_bitrate, _bitrate, h_length, _length = FileListMessage.parse_result_bitrate_length(size, file[4])
+                    h_bitrate, _bitrate, h_length, _length = slskmessages.FileListMessage.parse_result_bitrate_length(
+                        size, file[4])
 
                     self.get_file(
                         username, virtualpath, path=destination,
@@ -846,7 +843,7 @@ class Transfers:
 
         user = msg.init.target_user
 
-        if msg.direction == TransferDirection.UPLOAD:
+        if msg.direction == slskmessages.TransferDirection.UPLOAD:
             response = self._transfer_request_downloads(msg)
 
             log.add_transfer(("Responding to download request with token %(token)s for file %(filename)s "
@@ -855,7 +852,7 @@ class Transfers:
                 "allowed": response.allowed, "reason": response.reason
             })
 
-        elif msg.direction == TransferDirection.DOWNLOAD:
+        elif msg.direction == slskmessages.TransferDirection.DOWNLOAD:
             response = self._transfer_request_uploads(msg)
 
             if response is None:
@@ -1471,7 +1468,7 @@ class Transfers:
             status = None
 
             if download.status != "Finished":
-                if core.user_statuses.get(download.user) == UserStatus.OFFLINE:
+                if core.user_statuses.get(download.user) == slskmessages.UserStatus.OFFLINE:
                     status = "User logged off"
                 else:
                     status = "Cancelled"
@@ -1504,7 +1501,7 @@ class Transfers:
 
             status = None
 
-            if core.user_statuses.get(upload.user) == UserStatus.OFFLINE:
+            if core.user_statuses.get(upload.user) == slskmessages.UserStatus.OFFLINE:
                 status = "User logged off"
             else:
                 status = "Cancelled"
@@ -1636,7 +1633,7 @@ class Transfers:
             except re.error:
                 pass
 
-        if UserStatus.OFFLINE in (core.user_status, core.user_statuses.get(user)):
+        if slskmessages.UserStatus.OFFLINE in (core.user_status, core.user_statuses.get(user)):
             # Either we are offline or the user we want to download from is
             transfer.status = "User logged off"
 
@@ -1691,7 +1688,7 @@ class Transfers:
 
         core.watch_user(user)
 
-        if UserStatus.OFFLINE in (core.user_status, core.user_statuses.get(user)):
+        if slskmessages.UserStatus.OFFLINE in (core.user_status, core.user_statuses.get(user)):
             # Either we are offline or the user we want to upload to is
             transfer.status = "User logged off"
 
@@ -1700,7 +1697,7 @@ class Transfers:
             return
 
         if not locally_queued:
-            self.token = increment_token(self.token)
+            self.token = slskmessages.increment_token(self.token)
             transfer.token = self.token
             transfer.status = "Getting status"
             self.transfer_request_times[transfer] = time.time()
@@ -1713,8 +1710,8 @@ class Transfers:
 
             core.send_message_to_peer(
                 user, slskmessages.TransferRequest(
-                    direction=TransferDirection.UPLOAD, token=transfer.token, file=filename, filesize=size,
-                    realfile=real_path))
+                    direction=slskmessages.TransferDirection.UPLOAD, token=transfer.token, file=filename,
+                    filesize=size, realfile=real_path))
 
         self.update_upload(transfer)
 

@@ -29,6 +29,7 @@ from collections import defaultdict
 from gi.repository import GObject
 from gi.repository import Gtk
 
+from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
@@ -57,8 +58,6 @@ from pynicotine.gtkgui.widgets.treeview import show_file_type_tooltip
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
 from pynicotine.shares import FileTypes
-from pynicotine.slskmessages import SEARCH_TOKENS_ALLOWED
-from pynicotine.slskmessages import FileListMessage
 from pynicotine.utils import factorize
 from pynicotine.utils import humanize
 from pynicotine.utils import human_size
@@ -257,7 +256,7 @@ class Searches(IconNotebook):
 
     def file_search_response(self, msg):
 
-        if msg.token not in SEARCH_TOKENS_ALLOWED:
+        if msg.token not in slskmessages.SEARCH_TOKENS_ALLOWED:
             return
 
         page = self.pages.get(msg.token)
@@ -660,7 +659,8 @@ class Search:
 
             size = result[2]
             h_size = humanize(size) if config.sections["ui"]["exact_file_sizes"] else human_size(size)
-            h_bitrate, bitrate, h_length, length = FileListMessage.parse_result_bitrate_length(size, result[4])
+            h_bitrate, bitrate, h_length, length = slskmessages.FileListMessage.parse_result_bitrate_length(
+                size, result[4])
 
             if private:
                 name = _("[PRIVATE]  %s") % name

@@ -25,15 +25,13 @@ from socket import inet_ntoa
 from struct import Struct
 
 from pynicotine.config import config
+from pynicotine.utils import UINT32_LIMIT
 from pynicotine.utils import human_length
 
 """ This module contains message classes, that networking and UI thread
 exchange. Basically there are three types of messages: internal messages,
 server messages and p2p messages (between clients). """
 
-
-UINT32_LIMIT = 4294967295
-UINT64_LIMIT = 18446744073709551615
 
 INT32_UNPACK = Struct("<i").unpack_from
 UINT32_UNPACK = Struct("<I").unpack_from
