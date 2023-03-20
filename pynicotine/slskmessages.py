@@ -81,6 +81,7 @@ class ConnectionType:
 class LoginFailure:
     USERNAME = "INVALIDUSERNAME"
     PASSWORD = "INVALIDPASS"
+    VERSION = "INVALIDVERSION"
 
 
 class UserStatus:
