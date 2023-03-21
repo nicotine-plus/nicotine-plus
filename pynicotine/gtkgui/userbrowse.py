@@ -616,7 +616,7 @@ class UserBrowse:
 
     def get_selected_file_path(self):
         selected_folder = self.get_selected_folder_path()
-        selected_file = next(iter(self.selected_files)) if self.selected_files else ""
+        selected_file = next(iter(self.selected_files), "")
         return f"{selected_folder}{selected_file}"
 
     """ Search """
