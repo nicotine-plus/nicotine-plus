@@ -169,21 +169,21 @@ class Plugin(BasePlugin):
                 "description": _("Show IP address or username"),
                 "group": _CommandGroup.NETWORK_FILTERS,
                 "usage": ["<user or ip>"],
-                "usage_private_chat": ["[user]", "[ip]"]
+                "usage_private_chat": ["[user or ip]"]
             },
             "ban": {
                 "callback": self.ban_command,
                 "description": _("Block connections from user or IP address"),
                 "group": _CommandGroup.NETWORK_FILTERS,
                 "usage": ["<user or ip>"],
-                "usage_private_chat": ["[user]", "[ip]"]
+                "usage_private_chat": ["[user or ip]"]
             },
             "unban": {
                 "callback": self.unban_command,
                 "description": _("Remove user or IP address from ban lists"),
                 "group": _CommandGroup.NETWORK_FILTERS,
                 "usage": ["<user or ip>"],
-                "usage_private_chat": ["[user]", "[ip]"]
+                "usage_private_chat": ["[user or ip]"]
             },
             "ignore": {
                 "callback": self.ignore_command,
@@ -191,7 +191,7 @@ class Plugin(BasePlugin):
                 "disable": ["cli"],
                 "group": _CommandGroup.NETWORK_FILTERS,
                 "usage": ["<user or ip>"],
-                "usage_private_chat": ["[user]", "[ip]"]
+                "usage_private_chat": ["[user or ip]"]
             },
             "unignore": {
                 "callback": self.unignore_command,
@@ -199,7 +199,7 @@ class Plugin(BasePlugin):
                 "disable": ["cli"],
                 "group": _CommandGroup.NETWORK_FILTERS,
                 "usage": ["<user or ip>"],
-                "usage_private_chat": ["[user]", "[ip]"]
+                "usage_private_chat": ["[user or ip]"]
             },
             "rescan": {
                 "callback": self.rescan_command,
