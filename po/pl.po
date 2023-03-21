@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2023-01-15 11:51+0000\n"
-"Last-Translator: Mariusz <wisniowy@g.pl>\n"
+"PO-Revision-Date: 2023-03-07 18:52+0000\n"
+"Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/pl/>\n"
 "Language: pl\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.15.1-dev\n"
+"X-Generator: Weblate 4.16.2-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -2534,7 +2534,7 @@ msgstr "Prywatna wiadomość od %(user)s"
 
 #: pynicotine/gtkgui/privatechat.py:431
 msgid "* Messages sent while you were offline"
-msgstr "* Wiadomości wysłane, podczas bycia rozłączonym."
+msgstr "* Wiadomości wysłane, podczas bycia rozłączonym"
 
 #: pynicotine/gtkgui/search.py:77
 msgid "_Global"
@@ -4276,7 +4276,7 @@ msgstr "Wyczyść"
 
 #: pynicotine/gtkgui/ui/downloads.ui:154
 msgid "Clear All Finished/Filtered Downloads"
-msgstr "Wyczyść wszystkie zakończone/filtrowane pobrania."
+msgstr "Wyczyść wszystkie zakończone/filtrowane pobrania"
 
 #: pynicotine/gtkgui/ui/downloads.ui:170 pynicotine/gtkgui/ui/uploads.ui:170
 msgid "Clear Finished"
@@ -6162,7 +6162,7 @@ msgstr "Zablokuj użytkownika/ów"
 
 #: pynicotine/gtkgui/ui/uploads.ui:154
 msgid "Clear All Finished/Cancelled Uploads"
-msgstr "Wyczyść wszystkie zakończone i anulowane wysyłania."
+msgstr "Wyczyść wszystkie zakończone i anulowane wysyłania"
 
 #: pynicotine/gtkgui/ui/uploads.ui:184 pynicotine/gtkgui/ui/uploads.ui:200
 msgid "Message All"

@@ -21,6 +21,7 @@
 from gi.repository import GLib
 from gi.repository import GObject
 
+from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
@@ -30,7 +31,6 @@ from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
 from pynicotine.gtkgui.widgets.ui import UserInterface
-from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
 
@@ -226,7 +226,7 @@ class Interests:
     def populate_recommendations(self):
         """ Populates the lists of recommendations and similar users if empty """
 
-        if self.populated_recommends or core.user_status == UserStatus.OFFLINE:
+        if self.populated_recommends or core.user_status == slskmessages.UserStatus.OFFLINE:
             return
 
         self.on_recommendations_clicked()
@@ -397,7 +397,7 @@ class Interests:
 
         for user, rating in users.items():
             self.similar_users_list_view.add_row([
-                USER_STATUS_ICON_NAMES[UserStatus.OFFLINE],
+                USER_STATUS_ICON_NAMES[slskmessages.UserStatus.OFFLINE],
                 user,
                 "", "0", 0, 0, 0,
                 rating

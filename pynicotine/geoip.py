@@ -293,7 +293,7 @@ class GeoIP:
 
         country_code = self._ip2location.get_country_code(addr)
 
-        if country_code == "-":
+        if country_code is None or country_code == "-":
             country_code = ""
 
         return country_code

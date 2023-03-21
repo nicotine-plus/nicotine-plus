@@ -24,16 +24,14 @@ from socket import inet_aton
 from socket import inet_ntoa
 from struct import Struct
 
-from pynicotine.config import config
+from pynicotine.utils import UINT32_LIMIT
+from pynicotine.utils import debug
 from pynicotine.utils import human_length
 
 """ This module contains message classes, that networking and UI thread
 exchange. Basically there are three types of messages: internal messages,
 server messages and p2p messages (between clients). """
 
-
-UINT32_LIMIT = 4294967295
-UINT64_LIMIT = 18446744073709551615
 
 INT32_UNPACK = Struct("<i").unpack_from
 UINT32_UNPACK = Struct("<I").unpack_from
@@ -83,6 +81,7 @@ class ConnectionType:
 class LoginFailure:
     USERNAME = "INVALIDUSERNAME"
     PASSWORD = "INVALIDPASS"
+    VERSION = "INVALIDVERSION"
 
 
 class UserStatus:
@@ -235,14 +234,14 @@ class SlskMessage(Message):
         return UINT32_PACK(len(content)) + content
 
     @staticmethod
-    def pack_string(content, latin1=False):
+    def pack_string(content, is_legacy=False):
 
-        if latin1:
+        if is_legacy:
+            # Legacy string
             try:
-                # Try to encode in latin-1 first for older clients (Soulseek NS)
                 encoded = content.encode("latin-1")
 
-            except Exception:
+            except UnicodeEncodeError:
                 encoded = content.encode("utf-8", "replace")
 
         else:
@@ -278,13 +277,6 @@ class SlskMessage(Message):
 
         return start + 4 + length, content.tobytes()
 
-    def make_network_message(self):
-        """ Returns binary array, that can be sent over the network"""
-
-        from pynicotine.logfacility import log
-        log.add_debug("Empty message made, class %s", self.__class__)
-        return b""
-
     @staticmethod
     def unpack_string(message, start=0):
 
@@ -294,15 +286,9 @@ class SlskMessage(Message):
         try:
             string = content.decode("utf-8")
 
-        except Exception:
-            # Older clients (Soulseek NS)
-            try:
-                string = content.decode("latin-1")
-
-            except Exception as error:
-                from pynicotine.logfacility import log
-                string = content
-                log.add_debug("Error trying to decode string '%s': %s", (string, error))
+        except UnicodeDecodeError:
+            # Legacy strings
+            string = content.decode("latin-1")
 
         return start + 4 + length, string
 
@@ -330,15 +316,7 @@ class SlskMessage(Message):
     def unpack_uint64(message, start=0):
         return start + 8, UINT64_UNPACK(message, start)[0]
 
-    def parse_network_message(self, _message):
-        """ Extracts information from the message and sets up fields
-        in an object"""
-
-        from pynicotine.logfacility import log
-        log.add_debug("Can't parse incoming messages, class %s", self.__class__)
-
     def debug(self, message=None):
-        from pynicotine.utils import debug
         debug(type(self).__name__, self.__dict__, repr(message))
 
 
@@ -820,7 +798,7 @@ class FileSearch(ServerMessage):
     def make_network_message(self):
         msg = bytearray()
         msg.extend(self.pack_uint32(self.token))
-        msg.extend(self.pack_string(self.searchterm, latin1=True))
+        msg.extend(self.pack_string(self.searchterm, is_legacy=True))
 
         return msg
 
@@ -997,7 +975,7 @@ class UserSearch(ServerMessage):
         msg = bytearray()
         msg.extend(self.pack_string(self.user))
         msg.extend(self.pack_uint32(self.token))
-        msg.extend(self.pack_string(self.searchterm, latin1=True))
+        msg.extend(self.pack_string(self.searchterm, is_legacy=True))
 
         return msg
 
@@ -1817,7 +1795,7 @@ class RoomSearch(ServerMessage):
         msg = bytearray()
         msg.extend(self.pack_string(self.room))
         msg.extend(self.pack_uint32(self.token))
-        msg.extend(self.pack_string(self.searchterm, latin1=True))
+        msg.extend(self.pack_string(self.searchterm, is_legacy=True))
 
         return msg
 
@@ -2786,7 +2764,7 @@ class FileSearchResponse(FileListMessage):
         if message[pos:]:
             pos, self.unknown = self.unpack_uint32(message, pos)
 
-        if message[pos:] and config.sections["searches"]["private_search_results"]:
+        if message[pos:]:
             pos, self.privatelist = self._parse_result_list(message, pos)
 
 
@@ -2903,7 +2881,7 @@ class FolderContentsRequest(PeerMessage):
     def make_network_message(self):
         msg = bytearray()
         msg.extend(self.pack_uint32(self.token))
-        msg.extend(self.pack_string(self.dir, latin1=True))
+        msg.extend(self.pack_string(self.dir, is_legacy=True))
 
         return msg
 
@@ -3090,7 +3068,7 @@ class QueueUpload(PeerMessage):
         self.legacy_client = legacy_client
 
     def make_network_message(self):
-        return self.pack_string(self.file, latin1=self.legacy_client)
+        return self.pack_string(self.file, is_legacy=self.legacy_client)
 
     def parse_network_message(self, message):
         _pos, self.file = self.unpack_string(message)

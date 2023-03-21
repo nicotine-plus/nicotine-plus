@@ -22,10 +22,10 @@ from os.path import commonprefix
 
 from gi.repository import Gtk
 
+from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
-from pynicotine.slskmessages import UserStatus
 
 
 """ Text Entry-related """
@@ -66,7 +66,7 @@ class ChatEntry:
 
     def on_enter(self, *_args):
 
-        if core.user_status == UserStatus.OFFLINE:
+        if core.user_status == slskmessages.UserStatus.OFFLINE:
             return
 
         text = self.widget.get_text()

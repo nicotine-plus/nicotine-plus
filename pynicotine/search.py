@@ -31,7 +31,6 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
-from pynicotine.slskmessages import increment_token
 from pynicotine.utils import TRANSLATE_PUNCTUATION
 
 
@@ -46,7 +45,7 @@ class Search:
 
         # Create wishlist searches
         for term in config.sections["server"]["autosearch"]:
-            self.token = increment_token(self.token)
+            self.token = slskmessages.increment_token(self.token)
             self.searches[self.token] = {"id": self.token, "term": term, "mode": "wishlist", "ignore": True}
 
         for event_name, callback in (
@@ -190,7 +189,7 @@ class Search:
         search_term, _search_term_without_special, room, users = self.process_search_term(search_term, mode, room, user)
 
         # Get a new search token
-        self.token = increment_token(self.token)
+        self.token = slskmessages.increment_token(self.token)
 
         if config.sections["searches"]["enable_history"]:
             items = config.sections["searches"]["history"]
@@ -280,7 +279,7 @@ class Search:
             return
 
         # Get a new search token
-        self.token = increment_token(self.token)
+        self.token = slskmessages.increment_token(self.token)
 
         if wish not in config.sections["server"]["autosearch"]:
             config.sections["server"]["autosearch"].append(wish)
@@ -324,6 +323,7 @@ class Search:
         """ Peer message: 9 """
 
         if msg.token not in slskmessages.SEARCH_TOKENS_ALLOWED:
+            msg.token = None
             return
 
         search = self.searches.get(msg.token)

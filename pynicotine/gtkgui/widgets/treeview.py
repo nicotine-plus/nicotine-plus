@@ -487,6 +487,16 @@ class TreeView:
     def collapse_all_rows(self):
         self.widget.collapse_all()
 
+    def expand_root_rows(self):
+
+        model = self.model
+        iterator = model.get_iter_first()
+
+        while iterator:
+            path = model.get_path(iterator)
+            self.widget.expand_to_path(path)
+            iterator = model.iter_next(iterator)
+
     def get_focused_column(self):
         _path, column = self.widget.get_cursor()
         return column.get_title()
@@ -737,7 +747,7 @@ def collapse_treeview(treeview, grouping_mode):
     treeview.collapse_all()
 
     if grouping_mode == "folder_grouping":
-        # Group by folder
+        # Group by folder; expand_root_rows()
 
         model = treeview.get_model()
         iterator = model.get_iter_first()
