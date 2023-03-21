@@ -1482,7 +1482,7 @@ class Search:
             # Button filters do not store history
             return
 
-        if history[0] == value:
+        if history and history[0] == value:
             # Most recent item selected, nothing to do
             return
 
