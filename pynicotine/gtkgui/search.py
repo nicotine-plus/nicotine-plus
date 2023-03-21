@@ -467,7 +467,7 @@ class Search:
 
         self.expand_button.set_active(config.sections["searches"]["expand_searches"])
 
-        # Filters
+        # Filter combobox widgets
         self.filter_comboboxes = {
             "filterin": self.filter_include_combobox,
             "filterout": self.filter_exclude_combobox,
@@ -477,6 +477,10 @@ class Search:
             "filtertype": self.filter_file_type_combobox,
             "filterlength": self.filter_length_combobox
         }
+
+        # Filter text entry widgets
+        for filter_id, combobox in self.filter_comboboxes.items():
+            combobox.get_child().filter_id = filter_id
 
         self.filters_button.set_active(config.sections["searches"]["filters_visible"])
         self.populate_filters()
@@ -542,8 +546,14 @@ class Search:
         return show_file_type_tooltip(widget, pos_x, pos_y, tooltip, 6)
 
     def on_combobox_popup_shown(self, combobox, _param):
+
+        # Refilter
         entry = combobox.get_child()
         entry.emit("activate")
+
+        # Highlight current list item
+        text = combobox.get_active_text()
+        combobox.set_active_id(text)
 
     def on_combobox_check_separator(self, model, iterator):
         # Render empty value as separator
@@ -1469,6 +1479,11 @@ class Search:
         history = config.sections["searches"].get(filter_id)
 
         if history is None:
+            # Button filters do not store history
+            return
+
+        if history and history[0] == value:
+            # Most recent item selected, nothing to do
             return
 
         if value in history:
@@ -1592,6 +1607,24 @@ class Search:
     def on_filter_entry_changed(self, widget):
         if not widget.get_text():
             self.on_refilter()
+
+    def on_filter_entry_icon_press(self, entry, *_args):
+
+        history = config.sections["searches"].get(entry.filter_id)
+        recall_text = history[0] if history else ""
+        text = entry.get_text()
+
+        # Recall last filter entry if box empty
+        if not text:
+            entry.grab_focus_without_selecting()
+            entry.set_text(recall_text)
+            entry.set_position(-1)
+
+        # Activate new filter entry or Clear Filter
+        if text != recall_text:
+            self.on_refilter()
+        else:
+            entry.set_text("")
 
     def on_clear_filters(self, *_args):
 
