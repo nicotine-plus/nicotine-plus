@@ -305,13 +305,16 @@ class UserBrowse:
     def open_soulseek_url(self, url):
 
         import urllib.parse
+        url_split = urllib.parse.unquote(url[7:]).split("/", 1)
 
-        try:
-            user, file_path = urllib.parse.unquote(url[7:]).split("/", 1)
-            self.browse_user(user, path=file_path.replace("/", "\\"))
+        if len(url_split) >= 2:
+            user, file_path = url_split
+            file_path = file_path.replace("/", "\\")
+        else:
+            user, = url_split
+            file_path = None
 
-        except Exception:
-            log.add(_("Invalid Soulseek URL: %s"), url)
+        self.browse_user(user, path=file_path)
 
     def _shared_file_list_response(self, msg):
 

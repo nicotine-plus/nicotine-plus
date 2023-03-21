@@ -469,10 +469,15 @@ class UserBrowse:
 
     def browse_queued_path(self):
 
-        if self.queued_path is None:
+        if not self.queued_path:
             return
 
-        folder, filename = self.queued_path.rsplit("\\", 1)
+        folder = filename = None
+        path_split = self.queued_path.rsplit("\\", 1)
+
+        if len(path_split) >= 2:
+            folder, filename = path_split
+
         iterator = self.folder_tree_view.iterators.get(folder)
 
         if not iterator:
