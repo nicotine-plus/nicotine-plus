@@ -468,7 +468,8 @@ class UserBrowse:
         if not self.queued_path:
             return
 
-        folder = filename = None
+        folder = self.queued_path
+        filename = None
         path_split = self.queued_path.rsplit("\\", 1)
 
         if len(path_split) >= 2:
