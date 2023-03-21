@@ -178,6 +178,7 @@
                             <property name="visible">True</property>
                             <property name="has-entry">True</property>
                             <property name="hexpand">True</property>
+                            <property name="id-column">0</property>
                             <signal name="notify::popup-shown" handler="on_combobox_popup_shown"/>
                             <child internal-child="entry">
                               <object class="GtkEntry">
@@ -187,7 +188,7 @@
                                 <property name="primary-icon-name">emblem-ok-symbolic</property>
                                 <signal name="activate" handler="on_refilter"/>
                                 <signal name="changed" handler="on_filter_entry_changed"/>
-                                <signal name="icon-press" handler="on_refilter"/>
+                                <signal name="icon-press" handler="on_filter_entry_icon_press"/>
                               </object>
                             </child>
                             <style>
@@ -206,6 +207,7 @@
                             <property name="visible">True</property>
                             <property name="has-entry">True</property>
                             <property name="hexpand">True</property>
+                            <property name="id-column">0</property>
                             <signal name="notify::popup-shown" handler="on_combobox_popup_shown"/>
                             <child internal-child="entry">
                               <object class="GtkEntry">
@@ -215,7 +217,7 @@
                                 <property name="primary-icon-name">action-unavailable-symbolic</property>
                                 <signal name="activate" handler="on_refilter"/>
                                 <signal name="changed" handler="on_filter_entry_changed"/>
-                                <signal name="icon-press" handler="on_refilter"/>
+                                <signal name="icon-press" handler="on_filter_entry_icon_press"/>
                               </object>
                             </child>
                             <style>
@@ -234,6 +236,7 @@
                             <property name="visible">True</property>
                             <property name="has-entry">True</property>
                             <property name="hexpand">True</property>
+                            <property name="id-column">0</property>
                             <signal name="notify::popup-shown" handler="on_combobox_popup_shown"/>
                             <child internal-child="entry">
                               <object class="GtkEntry">
@@ -243,7 +246,7 @@
                                 <property name="primary-icon-name">text-x-generic-symbolic</property>
                                 <signal name="activate" handler="on_refilter"/>
                                 <signal name="changed" handler="on_filter_entry_changed"/>
-                                <signal name="icon-press" handler="on_refilter"/>
+                                <signal name="icon-press" handler="on_filter_entry_icon_press"/>
                               </object>
                             </child>
                             <style>
@@ -262,6 +265,7 @@
                             <property name="visible">True</property>
                             <property name="has-entry">True</property>
                             <property name="hexpand">True</property>
+                            <property name="id-column">0</property>
                             <signal name="notify::popup-shown" handler="on_combobox_popup_shown"/>
                             <child internal-child="entry">
                               <object class="GtkEntry">
@@ -271,7 +275,7 @@
                                 <property name="primary-icon-name">drive-harddisk-symbolic</property>
                                 <signal name="activate" handler="on_refilter"/>
                                 <signal name="changed" handler="on_filter_entry_changed"/>
-                                <signal name="icon-press" handler="on_refilter"/>
+                                <signal name="icon-press" handler="on_filter_entry_icon_press"/>
                               </object>
                             </child>
                             <style>
@@ -290,6 +294,7 @@
                             <property name="visible">True</property>
                             <property name="has-entry">True</property>
                             <property name="hexpand">True</property>
+                            <property name="id-column">0</property>
                             <signal name="notify::popup-shown" handler="on_combobox_popup_shown"/>
                             <child internal-child="entry">
                               <object class="GtkEntry">
@@ -299,7 +304,7 @@
                                 <property name="primary-icon-name">audio-volume-high-symbolic</property>
                                 <signal name="activate" handler="on_refilter"/>
                                 <signal name="changed" handler="on_filter_entry_changed"/>
-                                <signal name="icon-press" handler="on_refilter"/>
+                                <signal name="icon-press" handler="on_filter_entry_icon_press"/>
                               </object>
                             </child>
                             <style>
@@ -318,6 +323,7 @@
                             <property name="visible">True</property>
                             <property name="has-entry">True</property>
                             <property name="hexpand">True</property>
+                            <property name="id-column">0</property>
                             <signal name="notify::popup-shown" handler="on_combobox_popup_shown"/>
                             <child internal-child="entry">
                               <object class="GtkEntry">
@@ -327,7 +333,7 @@
                                 <property name="primary-icon-name">media-playback-start-symbolic</property>
                                 <signal name="activate" handler="on_refilter"/>
                                 <signal name="changed" handler="on_filter_entry_changed"/>
-                                <signal name="icon-press" handler="on_refilter"/>
+                                <signal name="icon-press" handler="on_filter_entry_icon_press"/>
                               </object>
                             </child>
                             <style>
@@ -350,6 +356,7 @@
                                 <property name="visible">True</property>
                                 <property name="has-entry">True</property>
                                 <property name="hexpand">True</property>
+                                <property name="id-column">0</property>
                                 <signal name="notify::popup-shown" handler="on_combobox_popup_shown"/>
                                 <child internal-child="entry">
                                   <object class="GtkEntry">
@@ -359,7 +366,7 @@
                                     <property name="primary-icon-name">mark-location-symbolic</property>
                                     <signal name="activate" handler="on_refilter"/>
                                     <signal name="changed" handler="on_filter_entry_changed"/>
-                                    <signal name="icon-press" handler="on_refilter"/>
+                                    <signal name="icon-press" handler="on_filter_entry_icon_press"/>
                                   </object>
                                 </child>
                                 <style>

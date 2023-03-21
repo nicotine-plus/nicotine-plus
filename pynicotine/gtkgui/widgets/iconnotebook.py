@@ -26,6 +26,7 @@ from gi.repository import Gdk
 from gi.repository import GLib
 from gi.repository import Gtk
 
+from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
@@ -34,7 +35,6 @@ from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
 from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.gtkgui.widgets.theme import remove_css_class
-from pynicotine.slskmessages import UserStatus
 
 
 """ Icon Notebook """
@@ -180,6 +180,8 @@ class TabLabel:
         else:
             add_css_class(self.container, "notebook-tab-changed")
 
+        add_css_class(self.container, "bold")
+
         icon_name = "nplus-tab-highlight" if self.is_important else "nplus-tab-changed"
         self.end_icon.set_property("icon-name", icon_name)
         self.end_icon.set_visible(True)
@@ -191,6 +193,7 @@ class TabLabel:
 
         remove_css_class(self.container, "notebook-tab-changed")
         remove_css_class(self.container, "notebook-tab-highlight")
+        remove_css_class(self.container, "bold")
 
         self.end_icon.set_property("icon-name", None)
         self.end_icon.set_visible(False)
@@ -349,7 +352,7 @@ class IconNotebook:
         self.parent.set_visible(True)
 
         if user is not None:
-            status = core.user_statuses.get(user, UserStatus.OFFLINE)
+            status = core.user_statuses.get(user, slskmessages.UserStatus.OFFLINE)
             self.set_user_status(page, text, status)
 
     def remove_page(self, page):
@@ -500,10 +503,10 @@ class IconNotebook:
 
     def set_user_status(self, page, user, status):
 
-        if status == UserStatus.AWAY:
+        if status == slskmessages.UserStatus.AWAY:
             status_text = _("Away")
 
-        elif status == UserStatus.ONLINE:
+        elif status == slskmessages.UserStatus.ONLINE:
             status_text = _("Online")
 
         else:

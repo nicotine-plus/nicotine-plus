@@ -34,9 +34,11 @@ from pynicotine.utils import open_uri
 class TextView:
 
     if GTK_API_VERSION >= 4:
+        DEFAULT_CURSOR = Gdk.Cursor(name="default")
         POINTER_CURSOR = Gdk.Cursor(name="pointer")
         TEXT_CURSOR = Gdk.Cursor(name="text")
     else:
+        DEFAULT_CURSOR = Gdk.Cursor.new_from_name(Gdk.Display.get_default(), "default")
         POINTER_CURSOR = Gdk.Cursor.new_from_name(Gdk.Display.get_default(), "pointer")
         TEXT_CURSOR = Gdk.Cursor.new_from_name(Gdk.Display.get_default(), "text")
 
@@ -205,7 +207,11 @@ class TextView:
             self.cursor_window = self.widget.get_window(Gtk.TextWindowType.TEXT)  # pylint: disable=no-member
 
         for tag in self.get_tags_for_pos(pos_x, pos_y):
-            if hasattr(tag, "url") or hasattr(tag, "username"):
+            if hasattr(tag, "username"):
+                cursor = self.DEFAULT_CURSOR
+                break
+
+            if hasattr(tag, "url"):
                 cursor = self.POINTER_CURSOR
                 break
 

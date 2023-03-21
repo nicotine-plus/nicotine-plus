@@ -21,6 +21,7 @@
 from gi.repository import GLib
 from gi.repository import GObject
 
+from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
@@ -30,7 +31,6 @@ from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
 from pynicotine.gtkgui.widgets.ui import UserInterface
-from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
 
@@ -109,7 +109,7 @@ class Interests:
 
         self.similar_users_list_view = TreeView(
             window, parent=self.similar_users_list_container,
-            activate_row_callback=self.on_ru_row_activated, tooltip_callback=self.on_tooltip,
+            activate_row_callback=self.on_ru_row_activated,
             columns={
                 # Visible columns
                 "status": {
@@ -143,7 +143,11 @@ class Interests:
                 # Hidden data columns
                 "status_data": {"data_type": int},
                 "speed_data": {"data_type": GObject.TYPE_UINT},
-                "files_data": {"data_type": GObject.TYPE_UINT}
+                "files_data": {"data_type": GObject.TYPE_UINT},
+                "rating_data": {
+                    "data_type": GObject.TYPE_UINT,
+                    "default_sort_column": "descending"
+                }
             }
         )
 
@@ -222,7 +226,7 @@ class Interests:
     def populate_recommendations(self):
         """ Populates the lists of recommendations and similar users if empty """
 
-        if self.populated_recommends or core.user_status == UserStatus.OFFLINE:
+        if self.populated_recommends or core.user_status == slskmessages.UserStatus.OFFLINE:
             return
 
         self.on_recommendations_clicked()
@@ -391,19 +395,20 @@ class Interests:
 
         self.similar_users_list_view.clear()
 
-        for user in users:
+        for user, rating in users.items():
             self.similar_users_list_view.add_row([
-                USER_STATUS_ICON_NAMES[UserStatus.OFFLINE],
+                USER_STATUS_ICON_NAMES[slskmessages.UserStatus.OFFLINE],
                 user,
-                "", "0", 0, 0, 0
+                "", "0", 0, 0, 0,
+                rating
             ], select_row=False)
 
     def similar_users(self, msg):
-        # Sort users by rating (largest number of identical likes)
-        self.set_similar_users(sorted(msg.users, key=msg.users.get, reverse=True))
+        self.set_similar_users(msg.users)
 
     def item_similar_users(self, msg):
-        self.set_similar_users(msg.users, msg.thing)
+        rating = 0
+        self.set_similar_users({user: rating for user in msg.users}, msg.thing)
 
     def user_status(self, msg):
 
@@ -439,8 +444,8 @@ class Interests:
 
         self.similar_users_list_view.set_row_value(iterator, "speed", h_speed)
         self.similar_users_list_view.set_row_value(iterator, "files", h_files)
-        self.similar_users_list_view.set_row_value(iterator, "speed_data", GObject.Value(GObject.TYPE_UINT, avgspeed))
-        self.similar_users_list_view.set_row_value(iterator, "files_data", GObject.Value(GObject.TYPE_UINT, files))
+        self.similar_users_list_view.set_row_value(iterator, "speed_data", avgspeed)
+        self.similar_users_list_view.set_row_value(iterator, "files_data", files)
 
     @staticmethod
     def toggle_menu_items(menu, list_view, column_id):
@@ -484,7 +489,3 @@ class Interests:
 
             core.userinfo.show_user(user)
             return
-
-    @staticmethod
-    def on_tooltip(list_view, pos_x, pos_y, _keyboard_mode, tooltip):
-        return list_view.show_user_status_tooltip(pos_x, pos_y, tooltip, column_id="status_data")
