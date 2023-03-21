@@ -979,7 +979,7 @@
                     <child>
                       <object class="GtkButton" id="_update_profile_button">
                         <property name="visible">True</property>
-                        <property name="action-name">app.update-user-profile</property>
+                        <property name="action-name">app.personal-profile</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
@@ -987,13 +987,13 @@
                             <child>
                               <object class="GtkImage">
                                 <property name="visible">True</property>
-                                <property name="icon-name">document-edit-symbolic</property>
+                                <property name="icon-name">user-home-symbolic</property>
                               </object>
                             </child>
                             <child>
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
-                                <property name="label" translatable="yes">_Update Profile</property>
+                                <property name="label" translatable="yes">_Personal Profile</property>
                                 <property name="use-underline">True</property>
                                 <property name="mnemonic-widget">_update_profile_button</property>
                               </object>

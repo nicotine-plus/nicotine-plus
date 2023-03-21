@@ -48,6 +48,8 @@ class SlskMessageTest(TestCase):
         obj = SlskMessage()
 
         # Act
+        boolean_message = obj.pack_bool(123)
+        unsigned_int8_message = obj.pack_uint8(123)
         unsigned_int32_message = obj.pack_uint32(123)
         signed_int32_message = obj.pack_int32(123)
         unsigned_int64_message = obj.pack_uint64(123)
@@ -55,9 +57,11 @@ class SlskMessageTest(TestCase):
         str_message = obj.pack_string("teststring")
 
         # Assert
-        self.assertEqual(b"{\x00\x00\x00", unsigned_int32_message)
-        self.assertEqual(b"{\x00\x00\x00", signed_int32_message)
-        self.assertEqual(b"{\x00\x00\x00\x00\x00\x00\x00", unsigned_int64_message)
+        self.assertEqual(b"\x01", boolean_message)
+        self.assertEqual(b"\x7B", unsigned_int8_message)
+        self.assertEqual(b"\x7B\x00\x00\x00", unsigned_int32_message)
+        self.assertEqual(b"\x7B\x00\x00\x00", signed_int32_message)
+        self.assertEqual(b"\x7B\x00\x00\x00\x00\x00\x00\x00", unsigned_int64_message)
         self.assertEqual(b"\t\x00\x00\x00testbytes", bytes_message)
         self.assertEqual(b"\n\x00\x00\x00teststring", str_message)
 
@@ -381,7 +385,7 @@ class PrivateRoomRemoveUserMessageTest(TestCase):
 
     def test_parse_network_message(self):
         # Arrange
-        message = b"\x08\x00\x00\x00nicotine\x05\x00\x00\x00admin"
+        message = memoryview(b"\x08\x00\x00\x00nicotine\x05\x00\x00\x00admin")
 
         # Act
         obj = PrivateRoomRemoveUser()

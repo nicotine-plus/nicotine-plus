@@ -36,6 +36,7 @@ from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Pango
 
+from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
@@ -56,7 +57,6 @@ from pynicotine.gtkgui.widgets.theme import update_custom_css
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.i18n import LANGUAGES
-from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import open_file_path
 from pynicotine.utils import open_uri
 from pynicotine.utils import unescape
@@ -165,8 +165,6 @@ class NetworkPage:
 
     def get_settings(self):
 
-        self.portmap_required = False
-
         try:
             server_addr = self.soulseek_server_entry.get_text().split(":")
             server_addr[1] = int(server_addr[1])
@@ -210,7 +208,7 @@ class NetworkPage:
             self.on_change_password()
             return
 
-        if core.user_status == UserStatus.OFFLINE:
+        if core.user_status == slskmessages.UserStatus.OFFLINE:
             config.sections["server"]["passw"] = password
             config.write_configuration()
             return
@@ -219,7 +217,7 @@ class NetworkPage:
 
     def on_change_password(self, *_args):
 
-        if core.user_status != UserStatus.OFFLINE:
+        if core.user_status != slskmessages.UserStatus.OFFLINE:
             message = _("Enter a new password for your Soulseek account:")
         else:
             message = (_("You are currently logged out of the Soulseek network. If you want to change "
@@ -256,7 +254,6 @@ class DownloadsPage:
             self.autoclear_downloads_toggle,
             self.download_double_click_combobox,
             self.download_folder_button,
-            self.download_reverse_order_toggle,
             self.enable_username_subfolders_toggle,
             self.enable_filters_toggle,
             self.file_finished_command_entry,
@@ -307,7 +304,6 @@ class DownloadsPage:
         self.options = {
             "transfers": {
                 "autoclear_downloads": self.autoclear_downloads_toggle,
-                "reverseorder": self.download_reverse_order_toggle,
                 "remotedownloads": self.accept_sent_files_toggle,
                 "uploadallowed": self.sent_files_permission_combobox,
                 "incompletedir": self.incomplete_folder_button,
@@ -357,12 +353,9 @@ class DownloadsPage:
             escaped = self.filter_list_view.get_row_value(iterator, "escaped")
             download_filters.append([dfilter, int(escaped)])
 
-        download_filters.sort()
-
         return {
             "transfers": {
                 "autoclear_downloads": self.autoclear_downloads_toggle.get_active(),
-                "reverseorder": self.download_reverse_order_toggle.get_active(),
                 "remotedownloads": self.accept_sent_files_toggle.get_active(),
                 "uploadallowed": self.sent_files_permission_combobox.get_active(),
                 "incompletedir": self.incomplete_folder_button.get_path(),
@@ -721,31 +714,43 @@ class UploadsPage:
     def __init__(self, application):
 
         ui_template = UserInterface(scope=self, path="settings/uploads.ui")
-
-        # pylint: disable=invalid-name
-        (self.AutoclearFinished, self.FirstInFirstOut, self.FriendsNoLimits,
-         self.LimitSpeed, self.LimitSpeedAlternative, self.LimitTotalTransfers, self.Main, self.MaxUserFiles,
-         self.MaxUserQueue, self.PreferFriends, self.QueueBandwidth, self.QueueSlots, self.QueueUseBandwidth,
-         self.QueueUseSlots, self.UnlimitedUploadSpeed, self.UploadDoubleClick, self.UseAltUploadSpeedLimit,
-         self.UseUploadSpeedLimit) = ui_template.widgets
+        (
+            self.Main,  # pylint: disable=invalid-name
+            self.alt_speed_spinner,
+            self.autoclear_uploads_toggle,
+            self.limit_total_transfers_radio,
+            self.max_queued_files_spinner,
+            self.max_queued_size_spinner,
+            self.no_buddy_limits_toggle,
+            self.prioritize_buddies_toggle,
+            self.speed_spinner,
+            self.upload_bandwidth_spinner,
+            self.upload_double_click_combobox,
+            self.upload_queue_type_combobox,
+            self.upload_slots_spinner,
+            self.use_alt_speed_limit_radio,
+            self.use_speed_limit_radio,
+            self.use_unlimited_speed_radio,
+            self.use_upload_slots_radio
+        ) = ui_template.widgets
 
         self.application = application
 
         self.options = {
             "transfers": {
-                "autoclear_uploads": self.AutoclearFinished,
-                "uploadbandwidth": self.QueueBandwidth,
-                "useupslots": self.QueueUseSlots,
-                "uploadslots": self.QueueSlots,
-                "uploadlimit": self.LimitSpeed,
-                "uploadlimitalt": self.LimitSpeedAlternative,
-                "fifoqueue": self.FirstInFirstOut,
-                "limitby": self.LimitTotalTransfers,
-                "queuelimit": self.MaxUserQueue,
-                "filelimit": self.MaxUserFiles,
-                "friendsnolimits": self.FriendsNoLimits,
-                "preferfriends": self.PreferFriends,
-                "upload_doubleclick": self.UploadDoubleClick
+                "autoclear_uploads": self.autoclear_uploads_toggle,
+                "uploadbandwidth": self.upload_bandwidth_spinner,
+                "useupslots": self.use_upload_slots_radio,
+                "uploadslots": self.upload_slots_spinner,
+                "uploadlimit": self.speed_spinner,
+                "uploadlimitalt": self.alt_speed_spinner,
+                "fifoqueue": self.upload_queue_type_combobox,
+                "limitby": self.limit_total_transfers_radio,
+                "queuelimit": self.max_queued_size_spinner,
+                "filelimit": self.max_queued_files_spinner,
+                "friendsnolimits": self.no_buddy_limits_toggle,
+                "preferfriends": self.prioritize_buddies_toggle,
+                "upload_doubleclick": self.upload_double_click_combobox
             }
         }
 
@@ -756,20 +761,20 @@ class UploadsPage:
         use_speed_limit = config.sections["transfers"]["use_upload_speed_limit"]
 
         if use_speed_limit == "primary":
-            self.UseUploadSpeedLimit.set_active(True)
+            self.use_speed_limit_radio.set_active(True)
 
         elif use_speed_limit == "alternative":
-            self.UseAltUploadSpeedLimit.set_active(True)
+            self.use_alt_speed_limit_radio.set_active(True)
 
         else:
-            self.UnlimitedUploadSpeed.set_active(True)
+            self.use_unlimited_speed_radio.set_active(True)
 
     def get_settings(self):
 
-        if self.UseUploadSpeedLimit.get_active():
+        if self.use_speed_limit_radio.get_active():
             use_speed_limit = "primary"
 
-        elif self.UseAltUploadSpeedLimit.get_active():
+        elif self.use_alt_speed_limit_radio.get_active():
             use_speed_limit = "alternative"
 
         else:
@@ -777,20 +782,20 @@ class UploadsPage:
 
         return {
             "transfers": {
-                "autoclear_uploads": self.AutoclearFinished.get_active(),
-                "uploadbandwidth": self.QueueBandwidth.get_value_as_int(),
-                "useupslots": self.QueueUseSlots.get_active(),
-                "uploadslots": self.QueueSlots.get_value_as_int(),
+                "autoclear_uploads": self.autoclear_uploads_toggle.get_active(),
+                "uploadbandwidth": self.upload_bandwidth_spinner.get_value_as_int(),
+                "useupslots": self.use_upload_slots_radio.get_active(),
+                "uploadslots": self.upload_slots_spinner.get_value_as_int(),
                 "use_upload_speed_limit": use_speed_limit,
-                "uploadlimit": self.LimitSpeed.get_value_as_int(),
-                "uploadlimitalt": self.LimitSpeedAlternative.get_value_as_int(),
-                "fifoqueue": bool(self.FirstInFirstOut.get_active()),
-                "limitby": self.LimitTotalTransfers.get_active(),
-                "queuelimit": self.MaxUserQueue.get_value_as_int(),
-                "filelimit": self.MaxUserFiles.get_value_as_int(),
-                "friendsnolimits": self.FriendsNoLimits.get_active(),
-                "preferfriends": self.PreferFriends.get_active(),
-                "upload_doubleclick": self.UploadDoubleClick.get_active()
+                "uploadlimit": self.speed_spinner.get_value_as_int(),
+                "uploadlimitalt": self.alt_speed_spinner.get_value_as_int(),
+                "fifoqueue": bool(self.upload_queue_type_combobox.get_active()),
+                "limitby": self.limit_total_transfers_radio.get_active(),
+                "queuelimit": self.max_queued_size_spinner.get_value_as_int(),
+                "filelimit": self.max_queued_files_spinner.get_value_as_int(),
+                "friendsnolimits": self.no_buddy_limits_toggle.get_active(),
+                "preferfriends": self.prioritize_buddies_toggle.get_active(),
+                "upload_doubleclick": self.upload_double_click_combobox.get_active()
             }
         }
 
@@ -807,6 +812,8 @@ class UserProfilePage:
         ) = ui_template.widgets
 
         self.application = application
+        self.user_profile_required = False
+
         self.description_view = TextView(self.description_view_container, parse_urls=False)
         self.select_picture_button = FileChooserButton(
             self.select_picture_button, parent=application.preferences, chooser_type="image")
@@ -819,15 +826,25 @@ class UserProfilePage:
         }
 
     def set_settings(self):
+
         self.description_view.clear()
         self.application.preferences.set_widgets_data(self.options)
 
+        self.user_profile_required = False
+
     def get_settings(self):
+
+        description = repr(self.description_view.get_text())
+        picture_path = self.select_picture_button.get_path()
+
+        if (description != config.sections["userinfo"]["descr"]
+                or picture_path != config.sections["userinfo"]["pic"]):
+            self.user_profile_required = True
 
         return {
             "userinfo": {
-                "descr": repr(self.description_view.get_text()),
-                "pic": self.select_picture_button.get_path()
+                "descr": description,
+                "pic": picture_path
             }
         }
 
@@ -1044,8 +1061,6 @@ class BannedUsersPage:
 
     def get_settings(self):
 
-        self.ip_ban_required = False
-
         return {
             "server": {
                 "banlist": self.banned_users[:],
@@ -1122,24 +1137,40 @@ class ChatsPage:
     def __init__(self, application):
 
         ui_template = UserInterface(scope=self, path="settings/chats.ui")
-
-        # pylint: disable=invalid-name
-        (self.CensorCheck, self.CensorList,
-         self.CensorReplaceCombo, self.CharactersCompletion, self.ChatRoomFormat,
-         self.CompleteBuddiesCheck, self.CompleteCommandsCheck, self.CompleteRoomNamesCheck,
-         self.CompleteUsersInRoomsCheck, self.CompletionCycleCheck, self.CompletionDropdownCheck,
-         self.CompletionTabCheck, self.Main, self.OneMatchCheck, self.PrivateChatFormat,
-         self.PrivateLogLines, self.PrivateMessage,
-         self.ReopenPrivateChats, self.ReplaceCheck, self.ReplacementList,
-         self.RoomLogLines, self.RoomMessage, self.SpellCheck,
-         self.TTSCommand, self.TextToSpeech, self.ctcp_toggle) = ui_template.widgets
+        (
+            self.Main,  # pylint: disable=invalid-name
+            self.auto_replace_words_toggle,
+            self.censor_list_container,
+            self.censor_replacement_combobox,
+            self.censor_text_patterns_toggle,
+            self.complete_buddy_names_toggle,
+            self.complete_commands_toggle,
+            self.complete_room_names_toggle,
+            self.complete_room_usernames_toggle,
+            self.enable_completion_dropdown_toggle,
+            self.enable_ctcp_toggle,
+            self.enable_spell_checker_toggle,
+            self.enable_tab_completion_toggle,
+            self.enable_tts_toggle,
+            self.min_chars_dropdown_spinner,
+            self.recent_private_messages_spinner,
+            self.recent_room_messages_spinner,
+            self.reopen_private_chats_toggle,
+            self.replacement_list_container,
+            self.timestamp_private_chat_entry,
+            self.timestamp_room_entry,
+            self.tts_command_combobox,
+            self.tts_private_message_entry,
+            self.tts_room_message_entry,
+        ) = ui_template.widgets
 
         self.application = application
         self.completion_required = False
 
         self.censored_patterns = []
         self.censor_list_view = TreeView(
-            application.window, parent=self.CensorList, multi_select=True, activate_row_callback=self.on_edit_censored,
+            application.window, parent=self.censor_list_container, multi_select=True,
+            activate_row_callback=self.on_edit_censored,
             columns={
                 "pattern": {
                     "column_type": "text",
@@ -1151,7 +1182,7 @@ class ChatsPage:
 
         self.replacements = {}
         self.replacement_list_view = TreeView(
-            application.window, parent=self.ReplacementList, multi_select=True,
+            application.window, parent=self.replacement_list_container, multi_select=True,
             activate_row_callback=self.on_edit_replacement,
             columns={
                 "pattern": {
@@ -1174,36 +1205,34 @@ class ChatsPage:
                 "ctcpmsgs": None  # Special case in set_settings
             },
             "logging": {
-                "readroomlines": self.RoomLogLines,
-                "readprivatelines": self.PrivateLogLines,
-                "rooms_timestamp": self.ChatRoomFormat,
-                "private_timestamp": self.PrivateChatFormat
+                "readroomlines": self.recent_room_messages_spinner,
+                "readprivatelines": self.recent_private_messages_spinner,
+                "rooms_timestamp": self.timestamp_room_entry,
+                "private_timestamp": self.timestamp_private_chat_entry
             },
             "privatechat": {
-                "store": self.ReopenPrivateChats
+                "store": self.reopen_private_chats_toggle
             },
             "words": {
-                "tab": self.CompletionTabCheck,
-                "cycle": self.CompletionCycleCheck,
-                "dropdown": self.CompletionDropdownCheck,
-                "characters": self.CharactersCompletion,
-                "roomnames": self.CompleteRoomNamesCheck,
-                "buddies": self.CompleteBuddiesCheck,
-                "roomusers": self.CompleteUsersInRoomsCheck,
-                "commands": self.CompleteCommandsCheck,
-                "onematch": self.OneMatchCheck,
+                "tab": self.enable_tab_completion_toggle,
+                "dropdown": self.enable_completion_dropdown_toggle,
+                "characters": self.min_chars_dropdown_spinner,
+                "roomnames": self.complete_room_names_toggle,
+                "buddies": self.complete_buddy_names_toggle,
+                "roomusers": self.complete_room_usernames_toggle,
+                "commands": self.complete_commands_toggle,
                 "censored": self.censor_list_view,
-                "censorwords": self.CensorCheck,
-                "censorfill": self.CensorReplaceCombo,
+                "censorwords": self.censor_text_patterns_toggle,
+                "censorfill": self.censor_replacement_combobox,
                 "autoreplaced": self.replacement_list_view,
-                "replacewords": self.ReplaceCheck
+                "replacewords": self.auto_replace_words_toggle
             },
             "ui": {
-                "spellcheck": self.SpellCheck,
-                "speechenabled": self.TextToSpeech,
-                "speechcommand": self.TTSCommand,
-                "speechrooms": self.RoomMessage,
-                "speechprivate": self.PrivateMessage
+                "spellcheck": self.enable_spell_checker_toggle,
+                "speechenabled": self.enable_tts_toggle,
+                "speechcommand": self.tts_command_combobox,
+                "speechrooms": self.tts_room_message_entry,
+                "speechprivate": self.tts_private_message_entry
             }
         }
 
@@ -1221,9 +1250,9 @@ class ChatsPage:
             from gi.repository import Gspell  # noqa: F401; pylint:disable=unused-import
 
         except (ImportError, ValueError):
-            self.SpellCheck.set_visible(False)
+            self.enable_spell_checker_toggle.set_visible(False)
 
-        self.ctcp_toggle.set_active(not config.sections["server"]["ctcpmsgs"])
+        self.enable_ctcp_toggle.set_active(not config.sections["server"]["ctcpmsgs"])
 
         self.censored_patterns = config.sections["words"]["censored"][:]
         self.replacements = config.sections["words"]["autoreplaced"].copy()
@@ -1232,60 +1261,56 @@ class ChatsPage:
 
     def get_settings(self):
 
-        self.completion_required = False
-
         return {
             "server": {
-                "ctcpmsgs": not self.ctcp_toggle.get_active()
+                "ctcpmsgs": not self.enable_ctcp_toggle.get_active()
             },
             "logging": {
-                "readroomlines": self.RoomLogLines.get_value_as_int(),
-                "readprivatelines": self.PrivateLogLines.get_value_as_int(),
-                "private_timestamp": self.PrivateChatFormat.get_text(),
-                "rooms_timestamp": self.ChatRoomFormat.get_text()
+                "readroomlines": self.recent_room_messages_spinner.get_value_as_int(),
+                "readprivatelines": self.recent_private_messages_spinner.get_value_as_int(),
+                "private_timestamp": self.timestamp_private_chat_entry.get_text(),
+                "rooms_timestamp": self.timestamp_room_entry.get_text()
             },
             "privatechat": {
-                "store": self.ReopenPrivateChats.get_active()
+                "store": self.reopen_private_chats_toggle.get_active()
             },
             "words": {
-                "tab": self.CompletionTabCheck.get_active(),
-                "cycle": self.CompletionCycleCheck.get_active(),
-                "dropdown": self.CompletionDropdownCheck.get_active(),
-                "characters": self.CharactersCompletion.get_value_as_int(),
-                "roomnames": self.CompleteRoomNamesCheck.get_active(),
-                "buddies": self.CompleteBuddiesCheck.get_active(),
-                "roomusers": self.CompleteUsersInRoomsCheck.get_active(),
-                "commands": self.CompleteCommandsCheck.get_active(),
-                "onematch": self.OneMatchCheck.get_active(),
+                "tab": self.enable_tab_completion_toggle.get_active(),
+                "dropdown": self.enable_completion_dropdown_toggle.get_active(),
+                "characters": self.min_chars_dropdown_spinner.get_value_as_int(),
+                "roomnames": self.complete_room_names_toggle.get_active(),
+                "buddies": self.complete_buddy_names_toggle.get_active(),
+                "roomusers": self.complete_room_usernames_toggle.get_active(),
+                "commands": self.complete_commands_toggle.get_active(),
                 "censored": self.censored_patterns[:],
-                "censorwords": self.CensorCheck.get_active(),
-                "censorfill": self.CensorReplaceCombo.get_active_id(),
+                "censorwords": self.censor_text_patterns_toggle.get_active(),
+                "censorfill": self.censor_replacement_combobox.get_active_id(),
                 "autoreplaced": self.replacements.copy(),
-                "replacewords": self.ReplaceCheck.get_active()
+                "replacewords": self.auto_replace_words_toggle.get_active()
             },
             "ui": {
-                "spellcheck": self.SpellCheck.get_active(),
-                "speechenabled": self.TextToSpeech.get_active(),
-                "speechcommand": self.TTSCommand.get_active_text(),
-                "speechrooms": self.RoomMessage.get_text(),
-                "speechprivate": self.PrivateMessage.get_text()
+                "spellcheck": self.enable_spell_checker_toggle.get_active(),
+                "speechenabled": self.enable_tts_toggle.get_active(),
+                "speechcommand": self.tts_command_combobox.get_active_text(),
+                "speechrooms": self.tts_room_message_entry.get_text(),
+                "speechprivate": self.tts_private_message_entry.get_text()
             }
         }
 
     def on_completion_changed(self, *_args):
         self.completion_required = True
 
-    def on_default_private(self, *_args):
-        self.PrivateMessage.set_text(config.defaults["ui"]["speechprivate"])
+    def on_default_tts_private_message(self, *_args):
+        self.tts_private_message_entry.set_text(config.defaults["ui"]["speechprivate"])
 
-    def on_default_rooms(self, *_args):
-        self.RoomMessage.set_text(config.defaults["ui"]["speechrooms"])
+    def on_default_tts_room_message(self, *_args):
+        self.tts_room_message_entry.set_text(config.defaults["ui"]["speechrooms"])
 
-    def on_room_default_timestamp(self, *_args):
-        self.ChatRoomFormat.set_text(config.defaults["logging"]["rooms_timestamp"])
+    def on_default_timestamp_room(self, *_args):
+        self.timestamp_room_entry.set_text(config.defaults["logging"]["rooms_timestamp"])
 
-    def on_private_default_timestamp(self, *_args):
-        self.PrivateChatFormat.set_text(config.defaults["logging"]["private_timestamp"])
+    def on_default_timestamp_private_chat(self, *_args):
+        self.timestamp_private_chat_entry.set_text(config.defaults["logging"]["private_timestamp"])
 
     def on_add_censored_response(self, dialog, _response_id, _data):
 
@@ -1463,9 +1488,10 @@ class UserInterfacePage:
 
         # Icon preview
         icon_list = [
-            (USER_STATUS_ICON_NAMES[UserStatus.ONLINE], _("Online"), 16, ("colored-icon", "user-status")),
-            (USER_STATUS_ICON_NAMES[UserStatus.AWAY], _("Away"), 16, ("colored-icon", "user-status")),
-            (USER_STATUS_ICON_NAMES[UserStatus.OFFLINE], _("Offline"), 16, ("colored-icon", "user-status")),
+            (USER_STATUS_ICON_NAMES[slskmessages.UserStatus.ONLINE], _("Online"), 16, ("colored-icon", "user-status")),
+            (USER_STATUS_ICON_NAMES[slskmessages.UserStatus.AWAY], _("Away"), 16, ("colored-icon", "user-status")),
+            (USER_STATUS_ICON_NAMES[slskmessages.UserStatus.OFFLINE], _("Offline"), 16,
+             ("colored-icon", "user-status")),
             ("nplus-tab-changed", _("Tab Changed"), 16, ("colored-icon", "notebook-tab-changed")),
             ("nplus-tab-highlight", _("Tab Highlight"), 16, ("colored-icon", "notebook-tab-highlight")),
             (config.application_id, _("Window"), 64, ())]
@@ -1593,7 +1619,6 @@ class UserInterfacePage:
 
     def get_settings(self):
 
-        self.theme_required = False
         enabled_tabs = {}
 
         for page_id, widget in self.tabs.items():
@@ -1898,8 +1923,6 @@ class SearchesPage:
         self.cleared_filter_history_icon.set_visible(False)
 
     def get_settings(self):
-
-        self.search_required = False
 
         return {
             "searches": {
@@ -2347,7 +2370,7 @@ class PluginsPage:
 
         self.application.preferences.set_widgets_data(self.options)
 
-        for plugin_id in sorted(core.pluginhandler.list_installed_plugins()):
+        for plugin_id in core.pluginhandler.list_installed_plugins():
             try:
                 info = core.pluginhandler.get_plugin_info(plugin_id)
             except OSError:
@@ -2530,7 +2553,7 @@ class Preferences(Dialog):
             return widget.get_text()
 
         if isinstance(widget, TextView):
-            return repr(widget.get_text())
+            return widget.get_text()
 
         if isinstance(widget, Gtk.CheckButton):
             try:
@@ -2665,6 +2688,10 @@ class Preferences(Dialog):
             "plugins": {}
         }
 
+        for page in self.pages.values():
+            for key, data in page.get_settings().items():
+                options[key].update(data)
+
         try:
             portmap_required = self.pages["network"].portmap_required
 
@@ -2684,6 +2711,12 @@ class Preferences(Dialog):
             theme_required = False
 
         try:
+            user_profile_required = self.pages["user-profile"].user_profile_required
+
+        except KeyError:
+            user_profile_required = False
+
+        try:
             completion_required = self.pages["chats"].completion_required
 
         except KeyError:
@@ -2701,25 +2734,21 @@ class Preferences(Dialog):
         except KeyError:
             search_required = False
 
-        for page in self.pages.values():
-            for key, data in page.get_settings().items():
-                options[key].update(data)
-
-        return (portmap_required, rescan_required, theme_required, completion_required,
+        return (portmap_required, rescan_required, theme_required, user_profile_required, completion_required,
                 ip_ban_required, search_required, options)
 
     def update_settings(self, settings_closed=False):
 
-        (portmap_required, rescan_required, theme_required, completion_required,
+        (portmap_required, rescan_required, theme_required, user_profile_required, completion_required,
             ip_ban_required, search_required, options) = self.get_settings()
 
         for key, data in options.items():
             config.sections[key].update(data)
 
         if portmap_required:
-            core.protothread.upnp.add_port_mapping()
+            core.protothread.portmapper.add_port_mapping()
         else:
-            core.protothread.upnp.remove_port_mapping()
+            core.protothread.portmapper.remove_port_mapping()
 
         if theme_required:
             # Dark mode
@@ -2736,6 +2765,9 @@ class Preferences(Dialog):
 
             self.application.window.chatrooms.update_tags()
             self.application.window.privatechat.update_tags()
+
+        if user_profile_required and core.login_username:
+            core.userinfo.show_user(core.login_username, refresh=True)
 
         if completion_required:
             core.chatrooms.update_completions()

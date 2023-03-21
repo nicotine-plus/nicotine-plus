@@ -46,8 +46,8 @@ from pynicotine.gtkgui.widgets.treeview import select_user_row_iter
 from pynicotine.gtkgui.widgets.treeview import show_file_path_tooltip
 from pynicotine.gtkgui.widgets.treeview import show_file_type_tooltip
 from pynicotine.gtkgui.widgets.ui import UserInterface
-from pynicotine.slskmessages import UINT64_LIMIT
 from pynicotine.transfers import Transfer
+from pynicotine.utils import UINT64_LIMIT
 from pynicotine.utils import human_length
 from pynicotine.utils import human_size
 from pynicotine.utils import human_speed

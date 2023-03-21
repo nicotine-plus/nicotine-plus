@@ -19,12 +19,13 @@
 
 import zlib
 
-from operator import itemgetter
+from locale import strxfrm
 from socket import inet_aton
 from socket import inet_ntoa
 from struct import Struct
 
-from pynicotine.config import config
+from pynicotine.utils import UINT32_LIMIT
+from pynicotine.utils import debug
 from pynicotine.utils import human_length
 
 """ This module contains message classes, that networking and UI thread
@@ -32,15 +33,14 @@ exchange. Basically there are three types of messages: internal messages,
 server messages and p2p messages (between clients). """
 
 
-UINT_LIMIT = 4294967295
-UINT64_LIMIT = 18446744073709551615
-
-INT_UNPACK = Struct("<i").unpack_from
-UINT_UNPACK = Struct("<I").unpack_from
+INT32_UNPACK = Struct("<i").unpack_from
+UINT32_UNPACK = Struct("<I").unpack_from
 UINT64_UNPACK = Struct("<Q").unpack_from
 
-INT_PACK = Struct("<i").pack
-UINT_PACK = Struct("<I").pack
+BOOL_PACK = Struct("?").pack
+UINT8_PACK = Struct("B").pack
+INT32_PACK = Struct("<i").pack
+UINT32_PACK = Struct("<I").pack
 UINT64_PACK = Struct("<Q").pack
 
 SEARCH_TOKENS_ALLOWED = set()
@@ -49,7 +49,7 @@ SEARCH_TOKENS_ALLOWED = set()
 def increment_token(token):
     """ Increment a token used by file search, transfer and connection requests """
 
-    if token < 0 or token >= UINT_LIMIT:
+    if token < 0 or token >= UINT32_LIMIT:
         # Protocol messages use unsigned integers for tokens
         token = 0
 
@@ -81,6 +81,7 @@ class ConnectionType:
 class LoginFailure:
     USERNAME = "INVALIDUSERNAME"
     PASSWORD = "INVALIDPASS"
+    VERSION = "INVALIDVERSION"
 
 
 class UserStatus:
@@ -95,12 +96,12 @@ class TransferDirection:
 
 
 class FileAttribute:
-    BITRATE = "0"
-    DURATION = "1"
-    VBR = "2"
-    ENCODER = "3"
-    SAMPLE_RATE = "4"
-    BIT_DEPTH = "5"
+    BITRATE = 0
+    DURATION = 1
+    VBR = 2
+    ENCODER = 3
+    SAMPLE_RATE = 4
+    BIT_DEPTH = 5
 
 
 """
@@ -230,39 +231,39 @@ class SlskMessage(Message):
 
     @staticmethod
     def pack_bytes(content):
-        return UINT_PACK(len(content)) + content
+        return UINT32_PACK(len(content)) + content
 
     @staticmethod
-    def pack_string(content, latin1=False):
+    def pack_string(content, is_legacy=False):
 
-        if latin1:
+        if is_legacy:
+            # Legacy string
             try:
-                # Try to encode in latin-1 first for older clients (Soulseek NS)
-                encoded = bytes(content, "latin-1")
+                encoded = content.encode("latin-1")
 
-            except Exception:
-                encoded = bytes(content, "utf-8", "replace")
+            except UnicodeEncodeError:
+                encoded = content.encode("utf-8", "replace")
 
         else:
-            encoded = bytes(content, "utf-8", "replace")
+            encoded = content.encode("utf-8", "replace")
 
-        return UINT_PACK(len(encoded)) + encoded
+        return UINT32_PACK(len(encoded)) + encoded
 
     @staticmethod
     def pack_bool(content):
-        return bytes([1]) if content else bytes([0])
+        return BOOL_PACK(content)
 
     @staticmethod
     def pack_uint8(content):
-        return bytes([content])
+        return UINT8_PACK(content)
 
     @staticmethod
     def pack_int32(content):
-        return INT_PACK(content)
+        return INT32_PACK(content)
 
     @staticmethod
     def pack_uint32(content):
-        return UINT_PACK(content)
+        return UINT32_PACK(content)
 
     @staticmethod
     def pack_uint64(content):
@@ -271,34 +272,23 @@ class SlskMessage(Message):
     @staticmethod
     def unpack_bytes(message, start=0):
 
-        length = UINT_UNPACK(message, start)[0]
+        length = UINT32_UNPACK(message, start)[0]
         content = message[start + 4:start + length + 4]
 
-        return start + 4 + length, content
-
-    def make_network_message(self):
-        """ Returns binary array, that can be sent over the network"""
-
-        from pynicotine.logfacility import log
-        log.add_debug("Empty message made, class %s", self.__class__)
-        return b""
+        return start + 4 + length, content.tobytes()
 
     @staticmethod
     def unpack_string(message, start=0):
 
-        length = UINT_UNPACK(message, start)[0]
-        string = message[start + 4:start + length + 4]
+        length = UINT32_UNPACK(message, start)[0]
+        content = message[start + 4:start + length + 4].tobytes()
 
         try:
-            string = str(string, "utf-8")
-        except Exception:
-            # Older clients (Soulseek NS)
+            string = content.decode("utf-8")
 
-            try:
-                string = str(string, "latin-1")
-            except Exception as error:
-                from pynicotine.logfacility import log
-                log.add_debug("Error trying to decode string '%s': %s", (string, error))
+        except UnicodeDecodeError:
+            # Legacy strings
+            string = content.decode("latin-1")
 
         return start + 4 + length, string
 
@@ -316,25 +306,17 @@ class SlskMessage(Message):
 
     @staticmethod
     def unpack_int32(message, start=0):
-        return start + 4, INT_UNPACK(message, start)[0]
+        return start + 4, INT32_UNPACK(message, start)[0]
 
     @staticmethod
     def unpack_uint32(message, start=0):
-        return start + 4, UINT_UNPACK(message, start)[0]
+        return start + 4, UINT32_UNPACK(message, start)[0]
 
     @staticmethod
     def unpack_uint64(message, start=0):
         return start + 8, UINT64_UNPACK(message, start)[0]
 
-    def parse_network_message(self, _message):
-        """ Extracts information from the message and sets up fields
-        in an object"""
-
-        from pynicotine.logfacility import log
-        log.add_debug("Can't parse incoming messages, class %s", self.__class__)
-
     def debug(self, message=None):
-        from pynicotine.utils import debug
         debug(type(self).__name__, self.__dict__, repr(message))
 
 
@@ -816,7 +798,7 @@ class FileSearch(ServerMessage):
     def make_network_message(self):
         msg = bytearray()
         msg.extend(self.pack_uint32(self.token))
-        msg.extend(self.pack_string(self.searchterm, latin1=True))
+        msg.extend(self.pack_string(self.searchterm, is_legacy=True))
 
         return msg
 
@@ -993,7 +975,7 @@ class UserSearch(ServerMessage):
         msg = bytearray()
         msg.extend(self.pack_string(self.user))
         msg.extend(self.pack_uint32(self.token))
-        msg.extend(self.pack_string(self.searchterm, latin1=True))
+        msg.extend(self.pack_string(self.searchterm, is_legacy=True))
 
         return msg
 
@@ -1813,7 +1795,7 @@ class RoomSearch(ServerMessage):
         msg = bytearray()
         msg.extend(self.pack_string(self.room))
         msg.extend(self.pack_uint32(self.token))
-        msg.extend(self.pack_string(self.searchterm, latin1=True))
+        msg.extend(self.pack_string(self.searchterm, is_legacy=True))
 
         return msg
 
@@ -2415,14 +2397,13 @@ class FileListMessage(PeerMessage):
         msg.extend(cls.pack_uint8(1))
         msg.extend(cls.pack_string(fileinfo[0]))
         msg.extend(cls.pack_uint64(fileinfo[1]))
+        msg.extend(cls.pack_string(""))
 
         if fileinfo[2] is None or fileinfo[3] is None:
             # No metadata
-            msg.extend(cls.pack_string(""))
             msg.extend(cls.pack_uint32(0))
         else:
-            # FileExtension, NumAttributes
-            msg.extend(cls.pack_string("mp3"))
+            # NumAttributes
             msg.extend(cls.pack_uint32(3))
 
             audio_info = fileinfo[2]
@@ -2525,7 +2506,7 @@ class FileListMessage(PeerMessage):
                 length = -1
 
         # Ignore invalid values
-        if bitrate <= 0 or bitrate > UINT_LIMIT:
+        if bitrate <= 0 or bitrate > UINT32_LIMIT:
             bitrate = 0
             h_bitrate = ""
 
@@ -2535,7 +2516,7 @@ class FileListMessage(PeerMessage):
             if vbr == 1:
                 h_bitrate += " (vbr)"
 
-        if length < 0 or length > UINT_LIMIT:
+        if length < 0 or length > UINT32_LIMIT:
             length = 0
             h_length = ""
 
@@ -2623,7 +2604,9 @@ class SharedFileListResponse(FileListMessage):
     def _parse_result_list(self, message, pos=0):
         pos, ndir = self.unpack_uint32(message, pos)
 
+        ext = None
         shares = []
+
         for _ in range(ndir):
             pos, directory = self.unpack_string(message, pos)
             directory = directory.replace("/", "\\")
@@ -2635,7 +2618,7 @@ class SharedFileListResponse(FileListMessage):
                 pos, code = self.unpack_uint8(message, pos)
                 pos, name = self.unpack_string(message, pos)
                 pos, size = self.parse_file_size(message, pos)
-                pos, ext = self.unpack_string(message, pos)
+                pos, _ext = self.unpack_string(message, pos)  # Obsolete, ignore
                 pos, numattr = self.unpack_uint32(message, pos)
 
                 attrs = {}
@@ -2643,14 +2626,18 @@ class SharedFileListResponse(FileListMessage):
                 for _ in range(numattr):
                     pos, attrnum = self.unpack_uint32(message, pos)
                     pos, attr = self.unpack_uint32(message, pos)
-                    attrs[f"{attrnum}"] = attr
+                    attrs[attrnum] = attr
 
                 files.append((code, name, size, ext, attrs))
 
-            files.sort(key=itemgetter(1))
+            if nfiles > 1:
+                files.sort(key=lambda x: strxfrm(x[1]))
+
             shares.append((directory, files))
 
-        shares.sort(key=itemgetter(0))
+        if ndir > 1:
+            shares.sort(key=lambda x: strxfrm(x[0]))
+
         return pos, shares
 
     def _parse_network_message(self, message):
@@ -2734,12 +2721,14 @@ class FileSearchResponse(FileListMessage):
     def _parse_result_list(self, message, pos):
         pos, nfiles = self.unpack_uint32(message, pos)
 
+        ext = None
         results = []
+
         for _ in range(nfiles):
             pos, code = self.unpack_uint8(message, pos)
             pos, name = self.unpack_string(message, pos)
             pos, size = self.parse_file_size(message, pos)
-            pos, ext = self.unpack_string(message, pos)
+            pos, _ext = self.unpack_string(message, pos)  # Obsolete, ignore
             pos, numattr = self.unpack_uint32(message, pos)
 
             attrs = {}
@@ -2748,11 +2737,13 @@ class FileSearchResponse(FileListMessage):
                 for _ in range(numattr):
                     pos, attrnum = self.unpack_uint32(message, pos)
                     pos, attr = self.unpack_uint32(message, pos)
-                    attrs[f"{attrnum}"] = attr
+                    attrs[attrnum] = attr
 
             results.append((code, name.replace("/", "\\"), size, ext, attrs))
 
-        results.sort(key=itemgetter(1))
+        if nfiles > 1:
+            results.sort(key=lambda x: strxfrm(x[1]))
+
         return pos, results
 
     def _parse_network_message(self, message):
@@ -2773,7 +2764,7 @@ class FileSearchResponse(FileListMessage):
         if message[pos:]:
             pos, self.unknown = self.unpack_uint32(message, pos)
 
-        if message[pos:] and config.sections["searches"]["private_search_results"]:
+        if message[pos:]:
             pos, self.privatelist = self._parse_result_list(message, pos)
 
 
@@ -2890,7 +2881,7 @@ class FolderContentsRequest(PeerMessage):
     def make_network_message(self):
         msg = bytearray()
         msg.extend(self.pack_uint32(self.token))
-        msg.extend(self.pack_string(self.dir, latin1=True))
+        msg.extend(self.pack_string(self.dir, is_legacy=True))
 
         return msg
 
@@ -2930,13 +2921,14 @@ class FolderContentsResponse(PeerMessage):
             directory = directory.replace("/", "\\")
             pos, nfiles = self.unpack_uint32(message, pos)
 
+            ext = None
             shares[folder][directory] = []
 
             for _ in range(nfiles):
                 pos, code = self.unpack_uint8(message, pos)
                 pos, name = self.unpack_string(message, pos)
                 pos, size = self.unpack_uint64(message, pos)
-                pos, ext = self.unpack_string(message, pos)
+                pos, _ext = self.unpack_string(message, pos)  # Obsolete, ignore
                 pos, numattr = self.unpack_uint32(message, pos)
 
                 attrs = {}
@@ -2944,7 +2936,7 @@ class FolderContentsResponse(PeerMessage):
                 for _ in range(numattr):
                     pos, attrnum = self.unpack_uint32(message, pos)
                     pos, attr = self.unpack_uint32(message, pos)
-                    attrs[f"{attrnum}"] = attr
+                    attrs[attrnum] = attr
 
                 shares[folder][directory].append((code, name, size, ext, attrs))
 
@@ -3076,7 +3068,7 @@ class QueueUpload(PeerMessage):
         self.legacy_client = legacy_client
 
     def make_network_message(self):
-        return self.pack_string(self.file, latin1=self.legacy_client)
+        return self.pack_string(self.file, is_legacy=self.legacy_client)
 
     def parse_network_message(self, message):
         _pos, self.file = self.unpack_string(message)
