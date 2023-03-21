@@ -21,7 +21,6 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
-from pynicotine.slskmessages import UserStatus
 
 
 class PrivateChat:
@@ -201,7 +200,7 @@ class PrivateChat:
     def _user_status(self, msg):
         """ Server code: 7 """
 
-        if msg.status == UserStatus.OFFLINE:
+        if msg.status == slskmessages.UserStatus.OFFLINE:
             self.private_message_queue.pop(msg.user, None)
 
     def _message_user(self, msg, queued_message=False):
@@ -266,7 +265,7 @@ class PrivateChat:
 
         autoreply = config.sections["server"]["autoreply"]
 
-        if autoreply and core.user_status == UserStatus.AWAY and user not in self.away_message_users:
+        if autoreply and core.user_status == slskmessages.UserStatus.AWAY and user not in self.away_message_users:
             self.send_automatic_message(user, autoreply)
             self.away_message_users.add(user)
 

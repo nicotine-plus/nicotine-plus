@@ -364,12 +364,13 @@ class EntryDialog(MessageDialog):
                              (_("_Cancel"), Gtk.ResponseType.CANCEL),
                              (action_button_label, Gtk.ResponseType.OK)])
 
-        self.toggle = self._add_option_toggle(option_label, option_value)
         self.entry = self._add_entry_combobox(default, visibility, droplist)
         self.second_entry = None
 
         if use_second_entry:
             self.second_entry = self._add_entry_combobox(second_default, visibility, second_droplist)
+
+        self.toggle = self._add_option_toggle(option_label, option_value)
 
     def _add_combobox(self, items, visibility=True):
 

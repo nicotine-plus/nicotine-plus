@@ -41,12 +41,6 @@
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="download_reverse_order_toggle">
-            <property name="label" translatable="yes">Download folders in reverse alphanumerical order</property>
-            <property name="visible">True</property>
-          </object>
-        </child>
-        <child>
           <object class="GtkCheckButton" id="enable_username_subfolders_toggle">
             <property name="label" translatable="yes">Store completed downloads in username subfolders</property>
             <property name="visible">True</property>

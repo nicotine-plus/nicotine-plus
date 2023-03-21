@@ -19,7 +19,6 @@
 import json
 import os
 
-from operator import itemgetter
 from threading import Thread
 
 from pynicotine import slskmessages
@@ -27,9 +26,6 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
-from pynicotine.slskmessages import FileListMessage
-from pynicotine.slskmessages import PeerInit
-from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import clean_file
 from pynicotine.utils import encode_path
 from pynicotine.utils import RestrictedUnpickler
@@ -81,7 +77,7 @@ class UserBrowse:
 
         built = msg.make_network_message()
         msg.parse_network_message(built)
-        msg.init = PeerInit(target_user=username)
+        msg.init = slskmessages.PeerInit(target_user=username)
 
         events.emit_main_thread("shared-file-list-response", msg)
 
@@ -132,7 +128,7 @@ class UserBrowse:
 
         self._show_user(username, path=path, switch_page=switch_page)
 
-        if core.user_status == UserStatus.OFFLINE:
+        if core.user_status == slskmessages.UserStatus.OFFLINE:
             events.emit("peer-connection-error", username)
             return
 
@@ -161,6 +157,10 @@ class UserBrowse:
 
         filename_encoded = encode_path(filename)
 
+        def json_keys_to_integer(dictionary):
+            # JSON stores file attribute types as strings, convert them back to integers
+            return {int(k): v for k, v in dictionary}
+
         try:
             try:
                 # Try legacy format first
@@ -173,7 +173,7 @@ class UserBrowse:
                 # Try new format
 
                 with open(filename_encoded, encoding="utf-8") as file_handle:
-                    shares_list = json.load(file_handle)
+                    shares_list = json.load(file_handle, object_pairs_hook=json_keys_to_integer)
 
             # Basic sanity check
             for _folder, files in shares_list:
@@ -192,7 +192,7 @@ class UserBrowse:
 
         self._show_user(username)
 
-        msg = slskmessages.SharedFileListResponse(init=PeerInit(target_user=username))
+        msg = slskmessages.SharedFileListResponse(init=slskmessages.PeerInit(target_user=username))
         msg.list = shares_list
 
         events.emit("shared-file-list-response", msg)
@@ -221,7 +221,8 @@ class UserBrowse:
 
         virtualpath = "\\".join([folder, file_data[1]])
         size = file_data[2]
-        h_bitrate, _bitrate, h_length, _length = FileListMessage.parse_result_bitrate_length(size, file_data[4])
+        h_bitrate, _bitrate, h_length, _length = slskmessages.FileListMessage.parse_result_bitrate_length(
+            size, file_data[4])
 
         core.transfers.get_file(user, virtualpath, prefix, size=size, bitrate=h_bitrate, length=h_length)
 
@@ -248,13 +249,10 @@ class UserBrowse:
             destination = core.transfers.get_folder_destination(user, folder, remove_prefix)
 
             if files:
-                if config.sections["transfers"]["reverseorder"]:
-                    files.sort(key=itemgetter(1), reverse=True)
-
                 for file_data in files:
                     virtualpath = "\\".join([folder, file_data[1]])
                     size = file_data[2]
-                    h_bitrate, _bitrate, h_length, _length = FileListMessage.parse_result_bitrate_length(
+                    h_bitrate, _bitrate, h_length, _length = slskmessages.FileListMessage.parse_result_bitrate_length(
                         size, file_data[4])
 
                     core.transfers.get_file(user, virtualpath, destination,
@@ -307,13 +305,16 @@ class UserBrowse:
     def open_soulseek_url(self, url):
 
         import urllib.parse
+        url_split = urllib.parse.unquote(url[7:]).split("/", 1)
 
-        try:
-            user, file_path = urllib.parse.unquote(url[7:]).split("/", 1)
-            self.browse_user(user, path=file_path.replace("/", "\\"))
+        if len(url_split) >= 2:
+            user, file_path = url_split
+            file_path = file_path.replace("/", "\\")
+        else:
+            user, = url_split
+            file_path = None
 
-        except Exception:
-            log.add(_("Invalid Soulseek URL: %s"), url)
+        self.browse_user(user, path=file_path)
 
     def _shared_file_list_response(self, msg):
 

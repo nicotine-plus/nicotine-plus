@@ -20,8 +20,8 @@
 import socket
 import threading
 
+from pynicotine import slskmessages
 from pynicotine.pluginsystem import BasePlugin, ResponseThrottle
-from pynicotine.slskmessages import GetPeerAddress
 
 
 class Plugin(BasePlugin):
@@ -86,7 +86,7 @@ class Plugin(BasePlugin):
             threading.Thread(target=self.check_port, args=(user, ip_address, port, announce)).start()
         else:
             self.pending_user = user, announce
-            self.core.queue.append(GetPeerAddress(user))
+            self.core.queue.append(slskmessages.GetPeerAddress(user))
 
     def check_port(self, user, ip_address, port, announce):
 

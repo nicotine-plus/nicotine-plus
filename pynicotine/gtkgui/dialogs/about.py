@@ -192,6 +192,7 @@ class About(Dialog):
    - Maite Guix (2022)""",
 
         """>> <b>Chinese (Simplified)</b>
+   - hylau (2023)
    - hadwin (2022)""",
 
         """>> <b>Czech</b>
@@ -201,7 +202,7 @@ class About(Dialog):
    - mathsped (2003–2004)""",
 
         """>> <b>Dutch</b>
-   - Han Boetes (hboetes) (2021–2022)
+   - Han Boetes (hboetes) (2021–2023)
    - Kenny Verstraete (2009)
    - nince78 (2007)
    - Ingmar K. Steen (Hyriand) (2003–2004)""",
@@ -227,19 +228,19 @@ class About(Dialog):
    - Michael Labouebe (gfarmerfr) (2016–2017)
    - Monsieur Poisson (2009–2010)
    - ManWell (2007)
-   - zniavre (2007–2022)
+   - zniavre (2007–2023)
    - systr (2006)
    - Julien Wajsberg (flashfr) (2003–2004)""",
 
         """>> <b>German</b>
-   - Han Boetes (hboetes) (2021–2022)
+   - Han Boetes (hboetes) (2021–2023)
    - Meokater (2007)
    - (._.) (2007)
    - lippel (2004)
    - Ingmar K. Steen (Hyriand) (2003–2004)""",
 
         """>> <b>Hungarian</b>
-   - Szia Tomi (2022)
+   - Szia Tomi (2022-2023)
    - Nils (2009)
    - David Balazs (djbaloo) (2006–2020)""",
 
@@ -250,7 +251,7 @@ class About(Dialog):
    - dbazza (2003–2004)""",
 
         """>> <b>Latvian</b>
-   - Pagal3 (2022)""",
+   - Pagal3 (2022-2023)""",
 
         """>> <b>Lithuanian</b>
    - mantas (2020)
