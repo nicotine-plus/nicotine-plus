@@ -1608,10 +1608,7 @@ class Search:
         if not widget.get_text():
             self.on_refilter()
 
-    def on_filter_entry_icon_press(self, entry, _icon_pos, press_event, *_args):
-
-        if press_event.triggers_context_menu():
-            return
+    def on_filter_entry_icon_press(self, entry, *_args):
 
         history = config.sections["searches"].get(entry.filter_id)
         recall_text = history[0] if history else ""
