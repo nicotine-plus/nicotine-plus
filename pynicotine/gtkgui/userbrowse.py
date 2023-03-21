@@ -487,10 +487,12 @@ class UserBrowse:
         iterator = self.file_list_view.iterators.get(filename)
 
         if not iterator:
+            self.folder_tree_view.grab_focus()
             return
 
-        # Scroll to the requested file and grab focus to it
-        self.file_list_view.select_row(iterator, should_expand=True)
+        # Scroll to the requested file
+        self.file_list_view.select_row(iterator)
+        self.file_list_view.grab_focus()
 
     def shared_file_list(self, msg):
 
