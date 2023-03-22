@@ -745,13 +745,10 @@ class Shares:
         if self.should_compress_shares:
             self.rescan_shares(init=True, rescan=False)
 
-        if share_type == "normal":
-            return self.compressed_shares_normal
-
         if share_type == "buddy":
             return self.compressed_shares_buddy
 
-        return None
+        return self.compressed_shares_normal
 
     @staticmethod
     def close_shares(share_dbs):
