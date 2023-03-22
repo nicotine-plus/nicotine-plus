@@ -36,6 +36,11 @@ import sys
 from ast import literal_eval
 from collections import defaultdict
 
+from pynicotine.i18n import apply_translations
+from pynicotine.utils import encode_path
+from pynicotine.utils import load_file
+from pynicotine.utils import write_file_and_backup
+
 
 class Config:
     """
@@ -122,7 +127,6 @@ class Config:
             # Only file name specified, use current folder
             return True
 
-        from pynicotine.utils import encode_path
         path_encoded = encode_path(path)
 
         try:
@@ -142,7 +146,6 @@ class Config:
         """ Create the folder for storing data in (shared files etc.),
         if the folder doesn't exist """
 
-        from pynicotine.utils import encode_path
         data_dir_encoded = encode_path(self.data_dir)
 
         try:
@@ -156,8 +159,6 @@ class Config:
                     {"path": self.data_dir, "error": msg})
 
     def load_config(self):
-
-        from pynicotine.utils import load_file
 
         log_dir = os.path.join(self.data_dir, "logs")
         self.defaults = {
@@ -570,7 +571,6 @@ class Config:
         language = self.sections["ui"]["language"]
 
         if language:
-            from pynicotine.i18n import apply_translations
             apply_translations(language)
 
         from pynicotine.logfacility import log
@@ -579,8 +579,6 @@ class Config:
 
     def parse_config(self, filename):
         """ Parses the config file """
-
-        from pynicotine.utils import encode_path
 
         try:
             with open(encode_path(filename), "a+", encoding="utf-8") as file_handle:
@@ -605,7 +603,6 @@ class Config:
                     "the application again.")
             sys.exit()
 
-        from pynicotine.utils import encode_path
         conv_filename = encode_path(f"{self.filename}.conv")
         os.replace(self.filename, conv_filename)
 
@@ -794,7 +791,6 @@ class Config:
             return
 
         from pynicotine.logfacility import log
-        from pynicotine.utils import write_file_and_backup
 
         write_file_and_backup(self.filename, self.write_config_callback, protect=True)
         log.add_debug("Saved configuration: %(file)s", {"file": self.filename})
@@ -802,7 +798,6 @@ class Config:
     def write_config_backup(self, filename):
 
         from pynicotine.logfacility import log
-        from pynicotine.utils import encode_path
 
         if not filename.endswith(".tar.bz2"):
             filename += ".tar.bz2"

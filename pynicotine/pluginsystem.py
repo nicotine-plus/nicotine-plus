@@ -837,7 +837,7 @@ class PluginHandler:
                             rejection_message = f"Missing {arg} argument"
                             break
 
-                        if "|" not in arg:
+                        if num_args <= i or "|" not in arg:
                             continue
 
                         choices = arg[1:-1].split("|")

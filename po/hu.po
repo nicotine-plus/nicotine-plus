@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2023-03-02 15:38+0000\n"
+"PO-Revision-Date: 2023-03-16 12:08+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -1345,7 +1345,7 @@ msgid ""
 "User %s already exists, and the password you entered is invalid. Please "
 "choose another username if this is your first time logging in."
 msgstr ""
-"A(z) %s felhasználó már létezik és a megadott jelszó érvénytelen. Kérjük "
+"A(z) %s felhasználó már létezik és a megadott jelszó érvénytelen. Kérem "
 "válasszon másik felhasználónevet ha először jelentkezik be."
 
 #: pynicotine/gtkgui/application.py:524
@@ -1386,7 +1386,7 @@ msgid ""
 "Nicotine+ has encountered a critical error and needs to exit. Please copy "
 "the following message and include it in a bug report:"
 msgstr ""
-"A Nicotine+ kritikus hibát észlelt és ki kell lépnie. Kérjük másolja ki az "
+"A Nicotine+ kritikus hibát észlelt és ki kell lépnie. Kérem másolja ki az "
 "alábbi üzenetet és írja be a hibajelentésbe:"
 
 #: pynicotine/gtkgui/application.py:796
@@ -3154,7 +3154,7 @@ msgstr "Felhasználói i_nformációk megjelenítése"
 #: pynicotine/gtkgui/widgets/popupmenu.py:356
 #: pynicotine/gtkgui/ui/userinfo.ui:451
 msgid "_Browse Files"
-msgstr "Fájlok _Böngészése"
+msgstr "Fájlok _böngészése"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:359
 #: pynicotine/gtkgui/widgets/popupmenu.py:391
@@ -3193,7 +3193,7 @@ msgstr "Hozzáadás %s operátoraként"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:553
 msgid "Please enter number of days!"
-msgstr "Kérjük adja meg a napok számát!"
+msgstr "Kérem adja meg a napok számát!"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:564
 #, python-format
@@ -3222,7 +3222,7 @@ msgstr "Nicotine+ mutatása"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:89
 msgid "Hide Nicotine+"
-msgstr "Nicotine+ elrejtése"
+msgstr "A Nicotine+ elrejtése"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:98
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:20
@@ -3236,7 +3236,7 @@ msgstr "Szétkapcsol"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:104
 msgid "Send Message"
-msgstr "Üzenet Küldése"
+msgstr "Üzenet küldése"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:105
 msgid "Request User's Info"
@@ -3253,7 +3253,7 @@ msgstr "Kilépés"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:215
 msgid "Start Messaging"
-msgstr "Üzenet küldés indítása"
+msgstr "Üzenetküldés indítása"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:216
 msgid "Enter the name of the user whom you want to send a message:"
@@ -3267,7 +3267,7 @@ msgstr "Felhasználói információk kérése"
 #: pynicotine/gtkgui/widgets/trayicon.py:236
 msgid "Enter the name of the user whose info you want to see:"
 msgstr ""
-"Adja meg annak a felhasználónak a nevét, akinek az adatait látni szeretné:"
+"Adja meg annak a felhasználónak a nevét akinek az adatait látni szeretné:"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:255
 msgid "Request Shares List"
@@ -3315,11 +3315,11 @@ msgstr "Nem fér hozzá a naplófájlhoz %(path)s: %(error)s"
 #: pynicotine/notifications.py:96 pynicotine/notifications.py:115
 #, python-format
 msgid "Text-to-speech for message failed: %s"
-msgstr "Az üzenet szövegből-beszéddé alakítása sikertelen: %s"
+msgstr "Az üzenet szövegből beszéddé alakítása sikertelen: %s"
 
 #: pynicotine/nowplaying.py:129
 msgid "Last.fm: Please provide both your Last.fm username and API key"
-msgstr "Last.fm: Kérjük adja meg a Last.fm felhasználónevét és API-kulcsát"
+msgstr "Last.fm: Kérem adja meg a Last.fm felhasználónevét és API-kulcsát"
 
 #: pynicotine/nowplaying.py:129 pynicotine/nowplaying.py:140
 #: pynicotine/nowplaying.py:162 pynicotine/nowplaying.py:194
@@ -3327,7 +3327,7 @@ msgstr "Last.fm: Kérjük adja meg a Last.fm felhasználónevét és API-kulcsá
 #: pynicotine/nowplaying.py:270 pynicotine/nowplaying.py:278
 #: pynicotine/nowplaying.py:292 pynicotine/nowplaying.py:307
 msgid "Now Playing Error"
-msgstr "Lejátszó hiba"
+msgstr "Lejátszóhiba"
 
 #: pynicotine/nowplaying.py:139
 #, python-format
@@ -3362,7 +3362,7 @@ msgstr "MPRIS: Hiba történt a(z) %(player)s lekérése közben: %(exception)s"
 
 #: pynicotine/nowplaying.py:260
 msgid "ListenBrainz: Please provide your ListenBrainz username"
-msgstr "ListenBrainz: Kérjük, adja meg ListenBrainz felhasználónevét"
+msgstr "ListenBrainz: Kérem adja meg ListenBrainz felhasználónevét"
 
 #: pynicotine/nowplaying.py:269
 #, python-format
@@ -3383,11 +3383,11 @@ msgstr ""
 #: pynicotine/nowplaying.py:306
 #, python-format
 msgid "Executing '%(command)s' failed: %(error)s"
-msgstr "'%(command)s' parancs futása sikertelen: %(error)s"
+msgstr "'%(command)s' parancs végrehajtása sikertelen: %(error)s"
 
 #: pynicotine/pluginsystem.py:396
 msgid "Loading plugin system"
-msgstr "Bővítmény rendszer betöltése"
+msgstr "Bővítményrendszer betöltése"
 
 #: pynicotine/pluginsystem.py:493
 #, python-format
@@ -3395,7 +3395,7 @@ msgid ""
 "Unable to load plugin %(name)s. Plugin folder name contains invalid "
 "characters: %(characters)s"
 msgstr ""
-"Nem sikerült betölteni a(z) %(name)s plugint. A plugin mappa neve "
+"Nem sikerült betölteni a(z) %(name)s bővítményt. A bővítmény mappa neve "
 "érvénytelen karaktereket tartalmaz: %(characters)s"
 
 #: pynicotine/pluginsystem.py:542
@@ -3409,7 +3409,7 @@ msgid ""
 "Unable to load plugin %(module)s\n"
 "%(exc_trace)s"
 msgstr ""
-"Nem sikerült betölteni a plugint %(module)s\n"
+"Nem sikerült betölteni a bővítményt: %(module)s\n"
 "%(exc_trace)s"
 
 #: pynicotine/pluginsystem.py:606
@@ -3423,7 +3423,7 @@ msgid ""
 "Unable to unload plugin %(module)s\n"
 "%(exc_trace)s"
 msgstr ""
-"Nem sikerült letölteni a bővítményt %(module)s\n"
+"A(z) %(module)s bővítmény nem zárható be\n"
 "%(exc_trace)s"
 
 #: pynicotine/pluginsystem.py:678
@@ -3432,8 +3432,8 @@ msgid ""
 "Plugin %(module)s failed with error %(errortype)s: %(error)s.\n"
 "Trace: %(trace)s"
 msgstr ""
-"A(z) %(module)s beépülő hibás az alábbi típussal: %(errortype)s: %(error)s.\n"
-"Útvonal: %(trace)s"
+"%(module)s sikertelen bővítmény az alábbi hibával %(errortype)s: %(error)s.\n"
+"Nyomkövetés: %(trace)s"
 
 #: pynicotine/privatechat.py:206
 #, python-format
@@ -3463,15 +3463,15 @@ msgstr "A kiszolgáló jelenleg nem engedélyezi a kívánságlistás keresést"
 #, python-format
 msgid "User %(user)s is searching for \"%(query)s\", found %(num)i results"
 msgstr ""
-"%(user)s felhasználó a \"%(query)s\" kifejezésre keres, %(num)i találatot "
-"talált"
+"%(user)s felhasználó a(z) \"%(query)s\" kifejezésre keresett, %(num)i "
+"találatot talált"
 
 #: pynicotine/shares.py:77
 #, python-format
 msgid "Cannot find %(option1)s or %(option2)s, please install either one."
 msgstr ""
-"Nem található a(z) %(option1)s, vagy a(z) %(option2)s program, kérem "
-"telepítse valamelyiket."
+"Nem található a(z) %(option1)s, vagy a(z) %(option2)s kérem telepítse "
+"valamelyiket."
 
 #: pynicotine/shares.py:121
 msgid "Rescanning shares…"
@@ -3496,8 +3496,8 @@ msgid ""
 msgstr ""
 "Súlyos hiba történt a megosztások újraellenőrzése közben. Ha a probléma "
 "továbbra is fennáll törölje a(z) %(dir)s/*.db fájlt és próbálja meg újra. Ha "
-"ez sem segít, kérem küldjön hibajelentést, amelyben szerepel ez a verem-"
-"nyomkövető: %(trace)s"
+"ez nem segít, kérem küldjön hibajelentést amely tartalmazza a következő "
+"veremnyomkövetőt: %(trace)s"
 
 #: pynicotine/shares.py:236
 #, python-format
@@ -3542,14 +3542,14 @@ msgstr "%(user)s felhasználó a megosztott fájl listádat böngészi"
 #, python-format
 msgid "Failed to fetch the shared folder %(folder)s: %(error)s"
 msgstr ""
-"Nem sikerült beolvasni a(z) %(folder)s megosztott mappa tartalmát: %(error)s"
+"Nem sikerült lekérni a(z) %(folder)s megosztott mappa tartalmát: %(error)s"
 
 #: pynicotine/slskmessages.py:2609
 #, python-format
 msgid "Unable to read shares database. Please rescan your shares. Error: %s"
 msgstr ""
-"A megosztási adatbázis nem olvasható. Kérjük olvassa újra a megosztásokat. "
-"Hiba: %s"
+"A megosztási adatbázis nem olvasható. Kérem végezze el a megosztások "
+"újraolvasását. Hiba: %s"
 
 #: pynicotine/slskproto.py:297
 #, python-format
@@ -3568,11 +3568,11 @@ msgstr "Figyelés a(z) %i porton"
 #: pynicotine/slskproto.py:316
 #, python-format
 msgid "No listening port is available in the specified port range %s–%s"
-msgstr "A megadott porttartományban %s–%s nincs figyelőport"
+msgstr "A megadott porttartományban nincs elérhető figyelőport %s–%s"
 
 #: pynicotine/slskproto.py:317
 msgid "Listening Port Unavailable"
-msgstr "A figyelő port nem érhető el"
+msgstr "A figyelőport nem elérhető"
 
 #: pynicotine/slskproto.py:407
 #, python-format
@@ -3582,7 +3582,7 @@ msgstr "Csatlakozás ide: %(host)s:%(port)s"
 #: pynicotine/slskproto.py:447
 #, python-format
 msgid "Disconnected from server %(host)s:%(port)s"
-msgstr "Szétkapcsolva a szerverről %(host)s:%(port)s"
+msgstr "Lekapcsolódva a szerverről %(host)s:%(port)s"
 
 #: pynicotine/slskproto.py:453
 msgid "Someone logged in to your Soulseek account elsewhere"
@@ -3591,7 +3591,7 @@ msgstr "Valaki máshol bejelentkezett az Ön Soulseek fiókjába"
 #: pynicotine/slskproto.py:476
 #, python-format
 msgid "The server seems to be down or not responding, retrying in %i seconds"
-msgstr "A szerver nem működik vagy nem válaszol, újrapróbálás %i mp múlva"
+msgstr "A szerver leállt, vagy nem válaszol. Újrapróbálás %i másodperc múlva"
 
 #: pynicotine/slskproto.py:800
 #, python-format
@@ -3601,7 +3601,7 @@ msgstr "Nem lehet csatlakozni a szerverre, %(host)s:%(port)s: %(error)s"
 #: pynicotine/slskproto.py:897
 #, python-format
 msgid "Connected to server %(host)s:%(port)s, logging in…"
-msgstr "Csatlakozva a szerverhez: %(host)s:%(port)s, belépés…"
+msgstr "Csatlakozva a szerverhez: %(host)s:%(port)s, bejelentkezés…"
 
 #: pynicotine/transfers.py:1103
 #, python-format
@@ -3616,7 +3616,7 @@ msgstr "Feltöltési I/O hiba: %s"
 #: pynicotine/transfers.py:1168
 #, python-format
 msgid "Can't get an exclusive lock on file - I/O error: %s"
-msgstr "Nem lehet hozzáférni a fájlhoz - I/O hiba: %s"
+msgstr "Nem kaphat kizárólagos hozzáférési engedélyt a fájlhoz – I/O hiba: %s"
 
 #: pynicotine/transfers.py:1181
 #, python-format
@@ -3630,7 +3630,7 @@ msgstr "Letöltési mappa hiba"
 #: pynicotine/transfers.py:1201
 #, python-format
 msgid "Download started: user %(user)s, file %(file)s"
-msgstr "Letöltés elindult: %(user)s user, %(file)s fájl"
+msgstr "A letöltés elindult: %(user)s felhasználó, %(file)s fájl"
 
 #: pynicotine/transfers.py:1286
 #, python-format
@@ -3645,7 +3645,7 @@ msgid ""
 "download folder. Error: %s"
 msgstr ""
 "A letöltés nem menthető a felhasználónév almappába, visszaáll az "
-"alapértelmezett letöltési mappába. Hiba: %s"
+"alapértelmezett letöltési mappa. Hiba: %s"
 
 #: pynicotine/transfers.py:1957
 #, python-format
@@ -3664,7 +3664,7 @@ msgstr "Végrehajtva: %s"
 #: pynicotine/transfers.py:1970
 #, python-format
 msgid "Trouble executing '%s'"
-msgstr "Végrehajtási hiba '%s'"
+msgstr "Hiba történt a végrehajtás közben '%s'"
 
 #: pynicotine/transfers.py:1986
 #, python-format
@@ -3683,12 +3683,12 @@ msgstr "Futtatva a könyvtárban: %s"
 #: pynicotine/transfers.py:1999
 #, python-format
 msgid "Trouble executing on folder: %s"
-msgstr "Futtatási probléma a könyvtárban: %s"
+msgstr "Hiba történt végrehajtás közben a könyvtárban: %s"
 
 #: pynicotine/transfers.py:2021
 #, python-format
 msgid "Couldn't move '%(tempfile)s' to '%(file)s': %(error)s"
-msgstr "Nem lehetett mozgatni '%(tempfile)s' ide: '%(file)s', %(error)s"
+msgstr "'%(tempfile)s', nem lehetett ide mozgatni '%(file)s': %(error)s"
 
 #: pynicotine/transfers.py:2054
 #, python-format
@@ -3714,12 +3714,12 @@ msgstr "Feltöltés megszakítva, %(user)s user, %(file)s fájl"
 #: pynicotine/transfers.py:2580
 #, python-format
 msgid "Error: Download Filter failed! Verify your filters. Reason: %s"
-msgstr "Hiba: Letöltési Szűrő hibás! Ellenőrizd a szűrőket. Oka: %s"
+msgstr "Hiba: A letöltési szűrő hibás! Ellenőrizd a szűrőket. Az ok: %s"
 
 #: pynicotine/transfers.py:2595
 #, python-format
 msgid "Error: %(num)d Download filters failed! %(error)s "
-msgstr "Hiba: %(num)d Letöltési szűrő hibás! %(error)s "
+msgstr "Hiba: %(num)d letöltési szűrő hibás! %(error)s "
 
 #: pynicotine/updatechecker.py:45
 msgid "Up to Date"
@@ -3782,13 +3782,13 @@ msgstr "A megosztások betöltése a lemezről nem sikerült: %(error)s"
 #, python-format
 msgid "Saved list of shared files for user '%(user)s' to %(dir)s"
 msgstr ""
-"A(z) '%(user)s' felhasználó megosztott fájljainak listája ide %(dir)s lett "
-"mentve"
+"A(z) '%(user)s' felhasználó megosztott fájljainak listája ide lett mentve: "
+"%(dir)s"
 
 #: pynicotine/userbrowse.py:218
 #, python-format
 msgid "Can't save shares, '%(user)s', reported error: %(error)s"
-msgstr "Nem lehet a megosztásokat elmenteni, '%(user)s', hiba: %(error)s"
+msgstr "'%(user)s' megosztásait nem lehet elmenteni. A hiba: %(error)s"
 
 #: pynicotine/userbrowse.py:316
 #, python-format
@@ -3803,7 +3803,7 @@ msgstr "Kép elmentve ide: %s"
 #: pynicotine/userinfo.py:101
 #, python-format
 msgid "Cannot save picture to %(filename)s: %(error)s"
-msgstr "A kép nem menthető %(filename)s: %(error)s"
+msgstr "A kép nem menthető a(z) %(filename)s fájlba: %(error)s"
 
 #: pynicotine/userinfo.py:121
 #, python-format
@@ -3950,17 +3950,17 @@ msgid ""
 "to allow users to connect to you without trouble, an open listening port is "
 "crucial."
 msgstr ""
-"A Nicotine+ a P2P hálózatot használja a többi felhasználóhoz való "
+"A Nicotine+ P2P hálózatot használ a többi felhasználóhoz való "
 "csatlakozáshoz. Ahhoz, hogy a felhasználók gond nélkül csatlakozhassanak "
-"Önhöz, elengedhetetlen a nyitott figyelő port."
+"önhöz, elengedhetetlen a nyitott figyelőport."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:270
 msgid ""
 "If your listening port is closed, you will only be able to connect to users "
 "whose listening ports are open."
 msgstr ""
-"Ha a figyelő portja zárva van, csak olyan felhasználókhoz tud csatlakozni "
-"akiknek a figyelő portja nyitva van."
+"Ha a figyelőportja zárva van, csak olyan felhasználókhoz tud csatlakozni "
+"akiknek a figyelőportja nyitva van."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:280
 msgid ""
@@ -3998,7 +3998,7 @@ msgid ""
 "Users on the Soulseek network will be able to download files from folders "
 "you share. Sharing files is crucial for the health of the Soulseek network."
 msgstr ""
-"A Soulseek hálózat felhasználói letölthetnek fájlokat az Ön által megosztott "
+"A Soulseek hálózat felhasználói letölthetnek fájlokat az ön által megosztott "
 "mappákból. A fájlok megosztása létfontosságú a Soulseek hálózat működése "
 "szempontjából."
 
@@ -5555,7 +5555,7 @@ msgstr "Egyéb"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:340
 msgid "Use UPnP to forward listening port"
-msgstr "UPnP használata a figyelő port továbbításához"
+msgstr "UPnP használata a figyelőport továbbításához"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:348
 msgid "Auto-connect to server on startup"
@@ -5731,7 +5731,7 @@ msgid ""
 "shares, search results will be sent to the user."
 msgstr ""
 "Ha egy felhasználó a Soulseek hálózaton egy olyan fájlt keres, amely "
-"megtalálható az Ön megosztásaiban, a keresési eredmények elküldésre kerülnek "
+"megtalálható az ön megosztásaiban, a keresési eredmények elküldésre kerülnek "
 "a felhasználónak."
 
 #: pynicotine/gtkgui/ui/settings/search.ui:484

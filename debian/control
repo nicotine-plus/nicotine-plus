@@ -24,7 +24,7 @@ Package: nicotine
 Architecture: all
 Depends: ${python3:Depends},
          ${misc:Depends},
-         gir1.2-gtk-4.0 (>= 4.6.6) | gir1.2-gtk-3.0 (>= 3.22.30),
+         gir1.2-gtk-4.0 (>= 4.6.8) | gir1.2-gtk-3.0 (>= 3.22.30),
          python3-gdbm,
          python3-gi
 Recommends: gir1.2-gspell-1

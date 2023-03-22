@@ -29,6 +29,7 @@ from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
 
+from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
@@ -45,8 +46,6 @@ from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.theme import get_file_type_icon_name
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.ui import UserInterface
-from pynicotine.slskmessages import FileListMessage
-from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import human_size
 from pynicotine.utils import humanize
 from pynicotine.utils import open_file_path
@@ -150,7 +149,7 @@ class UserBrowses(IconNotebook):
 
     def server_disconnect(self, *_args):
         for user, page in self.pages.items():
-            self.set_user_status(page.container, user, UserStatus.OFFLINE)
+            self.set_user_status(page.container, user, slskmessages.UserStatus.OFFLINE)
 
 
 class UserBrowse:
@@ -421,7 +420,7 @@ class UserBrowse:
         if self.expand_button.get_active():
             self.folder_tree_view.expand_all_rows()
         else:
-            self.folder_tree_view.collapse_all_rows()
+            self.folder_tree_view.expand_root_rows()
 
         # Select first row
         self.folder_tree_view.select_row()
@@ -470,10 +469,15 @@ class UserBrowse:
 
     def browse_queued_path(self):
 
-        if self.queued_path is None:
+        if not self.queued_path:
             return
 
-        folder, filename = self.queued_path.rsplit("\\", 1)
+        folder = filename = None
+        path_split = self.queued_path.rsplit("\\", 1)
+
+        if len(path_split) >= 2:
+            folder, filename = path_split
+
         iterator = self.folder_tree_view.iterators.get(folder)
 
         if not iterator:
@@ -482,7 +486,7 @@ class UserBrowse:
         self.queued_path = None
 
         # Scroll to the requested folder
-        self.folder_tree_view.select_row(iterator, should_expand=True)
+        self.folder_tree_view.select_row(iterator)
 
         iterator = self.file_list_view.iterators.get(filename)
 
@@ -587,7 +591,7 @@ class UserBrowse:
         for _code, filename, size, _ext, attrs, *_unused in files:
             selected_folder_size += size
             h_size = humanize(size) if config.sections["ui"]["exact_file_sizes"] else human_size(size)
-            h_bitrate, bitrate, h_length, length = FileListMessage.parse_result_bitrate_length(size, attrs)
+            h_bitrate, bitrate, h_length, length = slskmessages.FileListMessage.parse_result_bitrate_length(size, attrs)
 
             self.file_list_view.add_row([
                 get_file_type_icon_name(filename),
@@ -645,7 +649,7 @@ class UserBrowse:
         directory = self.search_list[self.search_position]
         iterator = self.folder_tree_view.iterators[directory]
 
-        self.folder_tree_view.select_row(iterator, should_expand=True)
+        self.folder_tree_view.select_row(iterator)
 
     def select_search_match_files(self):
 
@@ -660,7 +664,7 @@ class UserBrowse:
 
         for iterator in result_files:
             # Select each matching file in folder
-            self.file_list_view.select_row(iterator, should_focus=(not found_first_match))
+            self.file_list_view.select_row(iterator, should_scroll=(not found_first_match))
             found_first_match = True
 
     def find_search_matches(self, reverse=False):
@@ -1008,7 +1012,7 @@ class UserBrowse:
                 filename = file_data[1]
                 file_size = file_data[2]
                 virtual_path = "\\".join([folder, filename])
-                h_bitrate, _bitrate, h_length, length = FileListMessage.parse_result_bitrate_length(
+                h_bitrate, _bitrate, h_length, length = slskmessages.FileListMessage.parse_result_bitrate_length(
                     file_size, file_data[4])
                 selected_size += file_size
                 selected_length += length
