@@ -486,7 +486,7 @@ class UserBrowse:
         self.queued_path = None
 
         # Scroll to the requested folder
-        self.folder_tree_view.select_row(iterator, should_expand=True)
+        self.folder_tree_view.select_row(iterator)
 
         iterator = self.file_list_view.iterators.get(filename)
 
@@ -639,7 +639,7 @@ class UserBrowse:
         directory = self.search_list[self.search_position]
         iterator = self.folder_tree_view.iterators[directory]
 
-        self.folder_tree_view.select_row(iterator, should_expand=True)
+        self.folder_tree_view.select_row(iterator)
 
     def select_search_match_files(self):
 
@@ -654,7 +654,7 @@ class UserBrowse:
 
         for iterator in result_files:
             # Select each matching file in folder
-            self.file_list_view.select_row(iterator, should_focus=(not found_first_match))
+            self.file_list_view.select_row(iterator, should_scroll=(not found_first_match))
             found_first_match = True
 
     def find_search_matches(self, reverse=False):
