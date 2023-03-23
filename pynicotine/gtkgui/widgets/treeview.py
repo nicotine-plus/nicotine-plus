@@ -776,7 +776,7 @@ def initialise_columns(window, treeview_name, treeview, *args):
             except KeyError:
                 column_config = config.sections["columns"][treeview_name]
 
-            if column_type != "icon":
+            if column_type != "icon" and column_id not in ("folder", "filename", "path"):
                 try:
                     width = column_config[column_id]["width"]
                 except Exception:

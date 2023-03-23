@@ -123,9 +123,9 @@ class TransferList:
         self.cols = cols = initialise_columns(
             window, transfer_type, self.tree_view,
             ["user", _("User"), 200, "text", None],
-            ["path", self.path_label, 400, "text", None],
+            ["path", self.path_label, 200, "text", None],
             ["file_type", _("File Type"), 40, "icon", None],
-            ["filename", _("Filename"), 400, "text", None],
+            ["filename", _("Filename"), 200, "text", None],
             ["status", _("Status"), 140, "text", None],
             ["queue_position", _("Queue"), 90, "number", None],
             ["percent", _("Percent"), 90, "progress", None],
@@ -148,6 +148,9 @@ class TransferList:
         cols["time_left"].set_sort_column_id(16)
 
         cols["file_type"].get_widget().set_visible(False)
+
+        cols["path"].set_expand(True)
+        cols["filename"].set_expand(True)
 
         menu = create_grouping_menu(
             window, config.sections["transfers"][f"group{transfer_type}s"], self.on_toggle_tree)
