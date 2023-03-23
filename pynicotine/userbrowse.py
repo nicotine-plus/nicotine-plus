@@ -81,7 +81,7 @@ class UserBrowse:
 
         events.emit_main_thread("shared-file-list-response", msg)
 
-    def browse_local_shares(self, path=None, share_type=None, new_request=False):
+    def browse_local_shares(self, path=None, share_type="buddy", new_request=False):
         """ Browse your own shares """
 
         username = config.sections["server"]["login"] or "Default"

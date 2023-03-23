@@ -625,7 +625,7 @@ class Application:
         core.shares.rescan_shares()
 
     def on_browse_public_shares(self, *_args):
-        core.userbrowse.browse_local_shares(share_type="normal", new_request=True)
+        core.userbrowse.browse_local_shares(share_type="public", new_request=True)
 
     def on_browse_buddy_shares(self, *_args):
         core.userbrowse.browse_local_shares(share_type="buddy", new_request=True)
