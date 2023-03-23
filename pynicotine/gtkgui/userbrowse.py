@@ -781,7 +781,7 @@ class UserBrowse:
 
     def on_copy_folder_path(self, *_args):
         folder_path = self.get_selected_folder_path()
-        copy_text(f"{self.user}\\{folder_path}")
+        copy_text(folder_path)
 
     def on_copy_dir_url(self, *_args):
         folder_path = self.get_selected_folder_path()
@@ -1048,7 +1048,7 @@ class UserBrowse:
 
     def on_copy_file_path(self, *_args):
         file_path = self.get_selected_file_path()
-        copy_text(f"{self.user}\\{file_path}")
+        copy_text(file_path)
 
     def on_copy_url(self, *_args):
         file_path = self.get_selected_file_path()
