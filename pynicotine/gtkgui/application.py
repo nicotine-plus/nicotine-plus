@@ -625,10 +625,10 @@ class Application:
         core.shares.rescan_shares()
 
     def on_browse_public_shares(self, *_args):
-        core.userbrowse.browse_local_public_shares(new_request=True)
+        core.userbrowse.browse_local_shares(share_type="normal", new_request=True)
 
     def on_browse_buddy_shares(self, *_args):
-        core.userbrowse.browse_local_buddy_shares(new_request=True)
+        core.userbrowse.browse_local_shares(share_type="buddy", new_request=True)
 
     def on_load_shares_from_disk_selected(self, selected, _data):
         for filename in selected:

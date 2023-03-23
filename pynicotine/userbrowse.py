@@ -72,7 +72,7 @@ class UserBrowse:
         del self.user_shares[user]
         events.emit("user-browse-remove-user", user)
 
-    def parse_local_shares(self, username, msg):
+    def _parse_local_shares(self, username, msg):
         """ Parse a local shares list and show it in the UI """
 
         built = msg.make_network_message()
@@ -81,33 +81,20 @@ class UserBrowse:
 
         events.emit_main_thread("shared-file-list-response", msg)
 
-    def browse_local_public_shares(self, path=None, new_request=None):
-        """ Browse your own public shares """
+    def browse_local_shares(self, path=None, share_type=None, new_request=False):
+        """ Browse your own shares """
 
         username = config.sections["server"]["login"] or "Default"
 
         if username not in self.user_shares or new_request:
-            msg = core.shares.get_compressed_shares_message("normal")
+            msg = core.shares.get_compressed_shares_message(share_type)
             Thread(
-                target=self.parse_local_shares, args=(username, msg), name="LocalShareParser", daemon=True
+                target=self._parse_local_shares, args=(username, msg), name="LocalShareParser", daemon=True
             ).start()
 
-        self._show_user(username, path=path, local_shares_type="normal")
+        self._show_user(username, path=path, local_shares_type=share_type)
 
-    def browse_local_buddy_shares(self, path=None, new_request=False):
-        """ Browse your own buddy shares """
-
-        username = config.sections["server"]["login"] or "Default"
-
-        if username not in self.user_shares or new_request:
-            msg = core.shares.get_compressed_shares_message("buddy")
-            Thread(
-                target=self.parse_local_shares, args=(username, msg), name="LocalBuddyShareParser", daemon=True
-            ).start()
-
-        self._show_user(username, path=path, local_shares_type="buddy")
-
-    def browse_user(self, username, path=None, local_shares_type=None, new_request=False, switch_page=True):
+    def browse_user(self, username, path=None, local_shares_type="buddy", new_request=False, switch_page=True):
         """ Browse a user's shares """
 
         if not username:
@@ -119,11 +106,7 @@ class UserBrowse:
             user_share.clear()
 
         if username == (config.sections["server"]["login"] or "Default"):
-            if local_shares_type == "normal":
-                self.browse_local_public_shares(path, new_request)
-                return
-
-            self.browse_local_buddy_shares(path, new_request)
+            self.browse_local_shares(path, local_shares_type, new_request)
             return
 
         self._show_user(username, path=path, switch_page=switch_page)
