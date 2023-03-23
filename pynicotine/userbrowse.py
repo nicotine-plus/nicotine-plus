@@ -81,22 +81,18 @@ class UserBrowse:
 
         events.emit_main_thread("shared-file-list-response", msg)
 
-    def browse_local_shares(self, path=None, shares_type=None, new_request=False):
+    def browse_local_shares(self, path=None, share_type=None, new_request=False):
         """ Browse your own shares """
 
         username = config.sections["server"]["login"] or "Default"
 
         if username not in self.user_shares or new_request:
-            msg = core.shares.get_compressed_shares_message(shares_type)
-
+            msg = core.shares.get_compressed_shares_message(share_type)
             Thread(
-                target=self._parse_local_shares,
-                args=(username, msg),
-                name="LocalShareParser",
-                daemon=True
+                target=self._parse_local_shares, args=(username, msg), name="LocalShareParser", daemon=True
             ).start()
 
-        self._show_user(username, path=path, local_shares_type=shares_type)
+        self._show_user(username, path=path, local_shares_type=share_type)
 
     def browse_user(self, username, path=None, local_shares_type="buddy", new_request=False, switch_page=True):
         """ Browse a user's shares """
