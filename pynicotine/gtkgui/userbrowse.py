@@ -266,7 +266,8 @@ class UserBrowse:
                 "filename": {
                     "column_type": "text",
                     "title": _("File Name"),
-                    "width": 600,
+                    "width": 150,
+                    "expand_column": True,
                     "default_sort_column": "ascending",
                     "iterator_key": True
                 },
