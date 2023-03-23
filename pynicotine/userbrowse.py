@@ -60,13 +60,13 @@ class UserBrowse:
 
         core.send_message_to_peer(username, slskmessages.UploadQueueNotification())
 
-    def _show_user(self, user, path=None, local_shares_type=None, switch_page=True):
+    def _show_user(self, user, path=None, local_share_type=None, switch_page=True):
 
         if user not in self.user_shares:
             self.user_shares[user] = {}
 
         events.emit(
-            "user-browse-show-user", user=user, path=path, local_shares_type=local_shares_type, switch_page=switch_page)
+            "user-browse-show-user", user=user, path=path, local_share_type=local_share_type, switch_page=switch_page)
 
     def remove_user(self, user):
         del self.user_shares[user]
@@ -92,9 +92,9 @@ class UserBrowse:
                 target=self._parse_local_shares, args=(username, msg), name="LocalShareParser", daemon=True
             ).start()
 
-        self._show_user(username, path=path, local_shares_type=share_type)
+        self._show_user(username, path=path, local_share_type=share_type)
 
-    def browse_user(self, username, path=None, local_shares_type="buddy", new_request=False, switch_page=True):
+    def browse_user(self, username, path=None, local_share_type="buddy", new_request=False, switch_page=True):
         """ Browse a user's shares """
 
         if not username:
@@ -106,7 +106,7 @@ class UserBrowse:
             user_share.clear()
 
         if username == (config.sections["server"]["login"] or "Default"):
-            self.browse_local_shares(path, local_shares_type, new_request)
+            self.browse_local_shares(path, local_share_type, new_request)
             return
 
         self._show_user(username, path=path, switch_page=switch_page)
