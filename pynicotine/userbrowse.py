@@ -98,7 +98,7 @@ class UserBrowse:
 
         self._show_user(username, path=path, local_shares_type=shares_type)
 
-    def browse_user(self, username, path=None, local_shares_type=None, new_request=False, switch_page=True):
+    def browse_user(self, username, path=None, local_shares_type="buddy", new_request=False, switch_page=True):
         """ Browse a user's shares """
 
         if not username:
@@ -110,7 +110,7 @@ class UserBrowse:
             user_share.clear()
 
         if username == (config.sections["server"]["login"] or "Default"):
-            self.browse_local_shares(path, local_shares_type or "buddy", new_request)
+            self.browse_local_shares(path, local_shares_type, new_request)
             return
 
         self._show_user(username, path=path, switch_page=switch_page)
