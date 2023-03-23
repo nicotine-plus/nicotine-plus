@@ -215,6 +215,7 @@ class TreeView:
 
             column_type = column_data["column_type"]
             width = column_data.get("width")
+            should_expand_column = column_data.get("expand_column")
 
             if self._widget_name:
                 try:
@@ -222,7 +223,9 @@ class TreeView:
                 except KeyError:
                     column_config = config.sections["columns"][self._widget_name]
 
-                if column_type != "icon":
+                # Restore saved column width if the column size is fixed. For expandable
+                # columns, the width becomes the minimum width, so use the default value in those cases.
+                if not should_expand_column and column_type != "icon":
                     try:
                         width = column_config[column_id]["width"]
                     except Exception:
@@ -308,7 +311,7 @@ class TreeView:
             else:
                 has_visible_column_header = True
 
-            if column_data.get("expand_column"):
+            if should_expand_column:
                 column.set_expand(True)
 
             if self._widget_name:
@@ -773,7 +776,7 @@ def initialise_columns(window, treeview_name, treeview, *args):
             except KeyError:
                 column_config = config.sections["columns"][treeview_name]
 
-            if column_type != "icon":
+            if column_type != "icon" and column_id not in ("folder", "filename", "path"):
                 try:
                     width = column_config[column_id]["width"]
                 except Exception:

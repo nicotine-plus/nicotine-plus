@@ -385,9 +385,9 @@ class Search:
             ["country", _("Country"), 30, "icon", None],
             ["speed", _("Speed"), 120, "number", has_free_slots_col],
             ["in_queue", _("In Queue"), 110, "number", has_free_slots_col],
-            ["folder", _("Folder"), 400, "text", has_free_slots_col],
+            ["folder", _("Folder"), 200, "text", has_free_slots_col],
             ["file_type", _("File Type"), 40, "icon", has_free_slots_col],
-            ["filename", _("Filename"), 400, "text", has_free_slots_col],
+            ["filename", _("Filename"), 200, "text", has_free_slots_col],
             ["size", _("Size"), 100, "number", has_free_slots_col],
             ["bitrate", _("Bitrate"), 100, "number", has_free_slots_col],
             ["length", _("Duration"), 100, "number", has_free_slots_col]
@@ -407,6 +407,9 @@ class Search:
 
         cols["country"].get_widget().set_visible(False)
         cols["file_type"].get_widget().set_visible(False)
+
+        cols["folder"].set_expand(True)
+        cols["filename"].set_expand(True)
 
         for column in self.tree_view.get_columns():
             self.column_offsets[column.get_title()] = 0

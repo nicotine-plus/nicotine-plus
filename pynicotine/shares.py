@@ -144,7 +144,7 @@ class Scanner(Process):
                 self.queue.put((_("%(num)s folders found before rescan, rebuilding…"),
                                {"num": start_num_folders}, LogLevel.DEFAULT))
 
-                new_mtimes, new_files, new_streams = self.rescan_dirs("normal", rebuild=self.rebuild)
+                new_mtimes, new_files, new_streams = self.rescan_dirs("public", rebuild=self.rebuild)
                 _new_mtimes, new_files, _new_streams = self.rescan_dirs("buddy", new_mtimes, new_files,
                                                                         new_streams, self.rebuild)
 
@@ -171,10 +171,10 @@ class Scanner(Process):
     def create_compressed_shares_message(self, share_type):
         """ Create a message that will later contain a compressed list of our shares """
 
-        if share_type == "normal":
-            streams = self.share_dbs.get("streams")
-        else:
+        if share_type == "buddy":
             streams = self.share_dbs.get("buddystreams")
+        else:
+            streams = self.share_dbs.get("streams")
 
         compressed_shares = slskmessages.SharedFileListResponse(shares=streams)
         compressed_shares.make_network_message()
@@ -184,7 +184,7 @@ class Scanner(Process):
         self.queue.put(compressed_shares)
 
     def create_compressed_shares(self):
-        self.create_compressed_shares_message("normal")
+        self.create_compressed_shares_message("public")
         self.create_compressed_shares_message("buddy")
 
     def create_db_file(self, destination):
@@ -557,7 +557,7 @@ class Shares:
         self.pending_network_msgs = []
         self.rescanning = False
         self.should_compress_shares = False
-        self.compressed_shares_normal = slskmessages.SharedFileListResponse()
+        self.compressed_shares_public = slskmessages.SharedFileListResponse()
         self.compressed_shares_buddy = slskmessages.SharedFileListResponse()
 
         self.convert_shares()
@@ -745,13 +745,10 @@ class Shares:
         if self.should_compress_shares:
             self.rescan_shares(init=True, rescan=False)
 
-        if share_type == "normal":
-            return self.compressed_shares_normal
-
         if share_type == "buddy":
             return self.compressed_shares_buddy
 
-        return None
+        return self.compressed_shares_public
 
     @staticmethod
     def close_shares(share_dbs):
@@ -850,8 +847,8 @@ class Shares:
                     emit_event("set-scan-indeterminate")
 
                 elif isinstance(item, slskmessages.SharedFileListResponse):
-                    if item.type == "normal":
-                        self.compressed_shares_normal = item
+                    if item.type == "public":
+                        self.compressed_shares_public = item
 
                     elif item.type == "buddy":
                         self.compressed_shares_buddy = item
@@ -954,15 +951,15 @@ class Shares:
         shares_list = None
 
         if checkuser == 1:
-            # Send Normal Shares
-            shares_list = self.get_compressed_shares_message("normal")
+            # Send public shares
+            shares_list = self.get_compressed_shares_message("public")
 
         elif checkuser == 2:
-            # Send Buddy Shares
+            # Send buddy shares
             shares_list = self.get_compressed_shares_message("buddy")
 
         if not shares_list:
-            # Nyah, Nyah
+            # Nyah, nyah
             shares_list = slskmessages.SharedFileListResponse(init=msg.init)
 
         shares_list.init = msg.init
@@ -980,14 +977,14 @@ class Shares:
             message = core.ban_message % reason
             core.privatechat.send_automatic_message(username, message)
 
-        normalshares = self.share_dbs.get("streams")
-        buddyshares = self.share_dbs.get("buddystreams")
+        public_shares = self.share_dbs.get("streams")
+        buddy_shares = self.share_dbs.get("buddystreams")
 
-        if checkuser == 1 and normalshares is not None:
-            shares = normalshares
+        if checkuser == 1 and public_shares is not None:
+            shares = public_shares
 
-        elif checkuser == 2 and buddyshares is not None:
-            shares = buddyshares
+        elif checkuser == 2 and buddy_shares is not None:
+            shares = buddy_shares
 
         else:
             shares = {}

@@ -89,7 +89,7 @@ class UserBrowses(IconNotebook):
         else:
             core.userbrowse.browse_user(entry_text)
 
-    def show_user(self, user, path=None, local_shares_type=None, switch_page=True):
+    def show_user(self, user, path=None, local_share_type=None, switch_page=True):
 
         if user not in self.pages:
             self.pages[user] = page = UserBrowse(self, user)
@@ -99,7 +99,7 @@ class UserBrowses(IconNotebook):
             page.set_label(self.get_tab_label_inner(page.container))
 
         page = self.pages[user]
-        page.local_shares_type = local_shares_type
+        page.local_share_type = local_share_type
         page.queued_path = path
 
         page.browse_queued_path()
@@ -177,7 +177,7 @@ class UserBrowse:
         self.window = userbrowses.window
         self.user = user
         self.indeterminate_progress = True
-        self.local_shares_type = None
+        self.local_share_type = None
         self.queued_path = None
         self.num_folders = 0
         self.share_size = 0
@@ -266,7 +266,8 @@ class UserBrowse:
                 "filename": {
                     "column_type": "text",
                     "title": _("File Name"),
-                    "width": 600,
+                    "width": 150,
+                    "expand_column": True,
                     "default_sort_column": "ascending",
                     "iterator_key": True
                 },
@@ -1203,7 +1204,7 @@ class UserBrowse:
         self.info_bar.set_visible(False)
 
         self.set_in_progress()
-        core.userbrowse.browse_user(self.user, path=path, local_shares_type=self.local_shares_type, new_request=True)
+        core.userbrowse.browse_user(self.user, path=path, local_share_type=self.local_share_type, new_request=True)
 
     def on_focus(self):
 
