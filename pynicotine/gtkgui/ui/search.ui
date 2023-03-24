@@ -411,15 +411,13 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton">
+                  <object class="GtkButton" id="clear_undo_filters_button">
                     <property name="visible">True</property>
-                    <property name="tooltip-text" translatable="yes">Clear Active Filters</property>
                     <property name="valign">start</property>
-                    <signal name="clicked" handler="on_clear_filters"/>
+                    <signal name="clicked" handler="on_clear_undo_filters"/>
                     <child>
-                      <object class="GtkImage">
+                      <object class="GtkImage" id="clear_undo_filters_icon">
                         <property name="visible">True</property>
-                        <property name="icon-name">edit-clear-symbolic</property>
                       </object>
                     </child>
                     <style>
