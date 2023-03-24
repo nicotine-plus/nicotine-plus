@@ -122,7 +122,7 @@ class Searches(IconNotebook):
             if tab.container != page:
                 continue
 
-            tab.update_filter_comboboxes()
+            tab.update_filter_widgets()
             break
 
     def on_search_mode(self, action, state):
@@ -252,7 +252,8 @@ class Searches(IconNotebook):
 
         # Update filters in search tabs
         for page in self.pages.values():
-            page.update_filter_comboboxes()
+            page.filters_undo = page.EMPTY_FILTERS
+            page.update_filter_widgets()
 
     def file_search_response(self, msg):
 
@@ -301,6 +302,16 @@ class Search:
         "filtertype": ("audio", "image", "video", "text", "archive", "!executable", "audio image text"),
         "filterlength": (">15:00", ">8:00 <=15:00", ">5:00 <=8:00", ">2:00 <=5:00", "<=2:00")
     }
+    EMPTY_FILTERS = {
+        "filterin": None,
+        "filterout": None,
+        "filtersize": None,
+        "filterbr": None,
+        "filtercc": None,
+        "filtertype": None,
+        "filterlength": None,
+        "filterslot": False
+    }
     FILTER_SPLIT_DIGIT_PATTERN = re.compile(r"(?:[|&\s])+(?<![<>!=]\s)")  # [pipe, ampersand, space]
     FILTER_SPLIT_TEXT_PATTERN = re.compile(r"(?:[|&,;\s])+(?<![!]\s)")    # [pipe, ampersand, comma, semicolon, space]
 
@@ -311,6 +322,8 @@ class Search:
             self.add_wish_button,
             self.add_wish_icon,
             self.add_wish_label,
+            self.clear_undo_filters_button,
+            self.clear_undo_filters_icon,
             self.container,
             self.expand_button,
             self.expand_icon,
@@ -360,7 +373,7 @@ class Search:
         self.all_data = []
         self.grouping_mode = None
         self.filters = {}
-        self.filters_undo = []
+        self.filters_undo = self.EMPTY_FILTERS
         self.populating_filters = False
         self.active_filter_count = 0
         self.num_results_found = 0
@@ -565,7 +578,7 @@ class Search:
         # Render empty value as separator
         return not model.get_value(iterator, 0)
 
-    def update_filter_comboboxes(self):
+    def update_filter_widgets(self):
 
         for filter_id, widget in self.filter_comboboxes.items():
             widget.set_row_separator_func(lambda *_args: 0)
@@ -584,6 +597,17 @@ class Search:
 
             if presets:
                 widget.set_row_separator_func(self.on_combobox_check_separator)
+
+        if self.filters_undo == self.EMPTY_FILTERS:
+            tooltip_text = _("Clear Filters")
+            icon_name = "edit-clear-symbolic"
+        else:
+            tooltip_text = _("Restore Filters")
+            icon_name = "edit-undo-symbolic"
+
+        if self.clear_undo_filters_button.get_tooltip_text() != tooltip_text:
+            self.clear_undo_filters_button.set_tooltip_text(tooltip_text)
+            self.clear_undo_filters_icon.set_property("icon-name", icon_name)
 
     def populate_filters(self):
 
@@ -620,12 +644,8 @@ class Search:
 
         self.set_filters(stored_filters)
 
-    def set_filters(self, stored_filters=None):
+    def set_filters(self, stored_filters):
         """ Recall result filter values from a dict """
-
-        if not stored_filters:
-            # Clear Filters
-            stored_filters = {}
 
         self.populating_filters = True
 
@@ -635,28 +655,22 @@ class Search:
 
         for filter_id, combobox in self.filter_comboboxes.items():
             value = stored_filters.get(filter_id, "")
+
+            if not value:
+                value = ""
+
+            elif isinstance(value, list):
+                value = " ".join(value)
+
+            elif not isinstance(value, str):
+                value = value.pattern
+
             combobox.get_child().set_text(value)
 
         self.populating_filters = False
+        self.filters_undo = self.filters
 
         self.on_refilter()
-
-    def get_filters(self):
-        """ Return a dict of the active result filter values """
-
-        stored_filters = {}
-
-        for filter_id, value in self.filters.items():
-            if filter_id in self.filter_buttons:
-                stored_filters[filter_id] = value
-
-            elif filter_id in ("filterin", "filterout"):
-                stored_filters[filter_id] = value.pattern if value else ""
-
-            elif filter_id in self.filter_comboboxes:
-                stored_filters[filter_id] = " ".join(value)
-
-        return stored_filters
 
     def add_result_list(self, result_list, user, country_code, inqueue, ulspeed, h_speed,
                         h_queue, has_free_slots, private=False):
@@ -1461,7 +1475,7 @@ class Search:
     def on_counter_button(self, *_args):
 
         if self.num_results_found > self.num_results_visible:
-            self.on_clear_filters()
+            self.on_clear_undo_filters()
         else:
             self.window.application.lookup_action("configure-searches").activate()
 
@@ -1545,47 +1559,53 @@ class Search:
         if self.populating_filters:
             return
 
-        filter_in = self.filter_include_combobox.get_active_text().strip()
-        filter_out = self.filter_exclude_combobox.get_active_text().strip()
-        filter_size = self.filter_file_size_combobox.get_active_text().strip()
-        filter_bitrate = self.filter_bitrate_combobox.get_active_text().strip()
-        filter_country = self.filter_country_combobox.get_active_text().strip()
-        filter_file_type = self.filter_file_type_combobox.get_active_text().strip()
-        filter_length = self.filter_length_combobox.get_active_text().strip()
+        filter_in = filter_out = filter_size = filter_bitrate = filter_country = filter_file_type = filter_length = None
+        filter_in_str = self.filter_include_combobox.get_active_text().strip()
+        filter_out_str = self.filter_exclude_combobox.get_active_text().strip()
+        filter_size_str = self.filter_file_size_combobox.get_active_text().strip()
+        filter_bitrate_str = self.filter_bitrate_combobox.get_active_text().strip()
+        filter_country_str = self.filter_country_combobox.get_active_text().strip()
+        filter_file_type_str = self.filter_file_type_combobox.get_active_text().strip()
+        filter_length_str = self.filter_length_combobox.get_active_text().strip()
         filter_free_slot = self.filter_free_slot_button.get_active()
 
-        if filter_in:
-            try:
-                filter_in = re.compile(filter_in, flags=re.IGNORECASE)
-            except re.error:
-                filter_in = None
+        # Include/exclude text
+        error_entries = set()
+        filter_include_entry = self.filter_include_combobox.get_child()
+        filter_exclude_entry = self.filter_exclude_combobox.get_child()
 
-        if filter_out:
+        if filter_in_str:
             try:
-                filter_out = re.compile(filter_out, flags=re.IGNORECASE)
+                filter_in = re.compile(filter_in_str, flags=re.IGNORECASE)
             except re.error:
-                filter_out = None
+                error_entries.add(filter_include_entry)
+
+        if filter_out_str:
+            try:
+                filter_out = re.compile(filter_out_str, flags=re.IGNORECASE)
+            except re.error:
+                error_entries.add(filter_exclude_entry)
 
         # Split at | pipes ampersands & space(s) but don't split <>=! math operators spaced before digit condition
         seperator_pattern = self.FILTER_SPLIT_DIGIT_PATTERN
 
-        if filter_size:
-            filter_size = seperator_pattern.split(filter_size)
+        if filter_size_str:
+            filter_size = seperator_pattern.split(filter_size_str)
 
-        if filter_bitrate:
-            filter_bitrate = seperator_pattern.split(filter_bitrate)
+        if filter_bitrate_str:
+            filter_bitrate = seperator_pattern.split(filter_bitrate_str)
 
-        if filter_length:
-            filter_length = seperator_pattern.split(filter_length)
+        if filter_length_str:
+            filter_length = seperator_pattern.split(filter_length_str)
 
         # Split at commas, in addition to | pipes ampersands & space(s) but don't split ! not operator before condition
         seperator_pattern = self.FILTER_SPLIT_TEXT_PATTERN
 
-        if filter_country:
-            filter_country = seperator_pattern.split(filter_country.upper())
+        if filter_country_str:
+            filter_country = seperator_pattern.split(filter_country_str.upper())
 
-        if filter_file_type:
-            filter_file_type = seperator_pattern.split(filter_file_type.lower())
+        if filter_file_type_str:
+            filter_file_type = seperator_pattern.split(filter_file_type_str.lower())
 
         filters = {
             "filterin": filter_in,
@@ -1598,22 +1618,20 @@ class Search:
             "filterlength": filter_length,
         }
 
+        # Set red background if invalid regex pattern is detected
+        for entry in (filter_include_entry, filter_exclude_entry):
+            css_class_function = add_css_class if entry in error_entries else remove_css_class
+            css_class_function(entry, "error")
+
         if self.filters == filters:
             # Filters have not changed, no need to refilter
             return
 
+        if filters not in (self.EMPTY_FILTERS, self.filters_undo):
+            # Filters changed while we had undo history
+            self.filters_undo = self.EMPTY_FILTERS
+
         self.active_filter_count = 0
-
-        # Set red background if invalid regex pattern is detected
-        filter_include_entry = self.filter_include_combobox.get_child()
-        filter_exclude_entry = self.filter_exclude_combobox.get_child()
-
-        for filter_regex, entry in (
-            (filter_in, filter_include_entry),
-            (filter_out, filter_exclude_entry)
-        ):
-            css_class_function = add_css_class if filter_regex is None else remove_css_class
-            css_class_function(entry, "error")
 
         # Add filters to history
         for filter_id, value in filters.items():
@@ -1632,20 +1650,21 @@ class Search:
         # Replace generic file type filters with real file extensions
         file_type_filters = filters["filtertype"]
 
-        for filter_name, file_extensions in self.FILTER_GENERIC_FILE_TYPES:
-            excluded_filter_name = f"!{filter_name}"
+        if file_type_filters:
+            for filter_name, file_extensions in self.FILTER_GENERIC_FILE_TYPES:
+                excluded_filter_name = f"!{filter_name}"
 
-            if filter_name in file_type_filters:
-                file_type_filters.remove(filter_name)
-                file_type_filters += list(file_extensions)
+                if filter_name in file_type_filters:
+                    file_type_filters.remove(filter_name)
+                    file_type_filters += list(file_extensions)
 
-            elif excluded_filter_name in file_type_filters:
-                file_type_filters.remove(excluded_filter_name)
-                file_type_filters += ["!" + x for x in file_extensions]
+                elif excluded_filter_name in file_type_filters:
+                    file_type_filters.remove(excluded_filter_name)
+                    file_type_filters += ["!" + x for x in file_extensions]
 
         # Apply the new filters
         self.filters = filters
-        self.update_filter_comboboxes()
+        self.update_filter_widgets()
         self.clear_model()
         self.update_model()
 
@@ -1671,15 +1690,9 @@ class Search:
         else:
             entry.set_text("")
 
-    def on_clear_filters(self, *_args):
+    def on_clear_undo_filters(self, *_args):
 
-        if self.filters_undo:
-            # Recall Filters from data stored as dict
-            self.set_filters(self.filters_undo.pop())
-        else:
-            # Store undo data, then clear all filters
-            self.filters_undo.append(self.get_filters())
-            self.set_filters(None)
+        self.set_filters(self.filters_undo)
 
         if self.filters_button.get_active():
             self.filter_include_combobox.get_child().grab_focus()
