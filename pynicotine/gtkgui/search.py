@@ -252,7 +252,7 @@ class Searches(IconNotebook):
 
         # Update filters in search tabs
         for page in self.pages.values():
-            page.filters_undo = page.EMPTY_FILTERS
+            page.filters_undo = page.FILTERS_EMPTY
             page.update_filter_widgets()
 
     def file_search_response(self, msg):
@@ -302,7 +302,9 @@ class Search:
         "filtertype": ("audio", "image", "video", "text", "archive", "!executable", "audio image text"),
         "filterlength": (">15:00", ">8:00 <=15:00", ">5:00 <=8:00", ">2:00 <=5:00", "<=2:00")
     }
-    EMPTY_FILTERS = {
+    FILTER_SPLIT_DIGIT_PATTERN = re.compile(r"(?:[|&\s])+(?<![<>!=]\s)")  # [pipe, ampersand, space]
+    FILTER_SPLIT_TEXT_PATTERN = re.compile(r"(?:[|&,;\s])+(?<![!]\s)")    # [pipe, ampersand, comma, semicolon, space]
+    FILTERS_EMPTY = {
         "filterin": (None, ""),
         "filterout": (None, ""),
         "filtersize": (None, ""),
@@ -312,8 +314,6 @@ class Search:
         "filterlength": (None, ""),
         "filterslot": (False, False)
     }
-    FILTER_SPLIT_DIGIT_PATTERN = re.compile(r"(?:[|&\s])+(?<![<>!=]\s)")  # [pipe, ampersand, space]
-    FILTER_SPLIT_TEXT_PATTERN = re.compile(r"(?:[|&,;\s])+(?<![!]\s)")    # [pipe, ampersand, comma, semicolon, space]
 
     def __init__(self, searches, text, token, mode, mode_label, show_page):
 
@@ -373,7 +373,7 @@ class Search:
         self.all_data = []
         self.grouping_mode = None
         self.filters = {}
-        self.filters_undo = self.EMPTY_FILTERS
+        self.filters_undo = self.FILTERS_EMPTY
         self.populating_filters = False
         self.active_filter_count = 0
         self.num_results_found = 0
@@ -598,7 +598,7 @@ class Search:
             if presets:
                 widget.set_row_separator_func(self.on_combobox_check_separator)
 
-        if self.filters_undo == self.EMPTY_FILTERS:
+        if self.filters_undo == self.FILTERS_EMPTY:
             tooltip_text = _("Clear Filters")
             icon_name = "edit-clear-symbolic"
         else:
@@ -1630,9 +1630,9 @@ class Search:
             # Filters have not changed, no need to refilter
             return
 
-        if filters not in (self.EMPTY_FILTERS, self.filters_undo):
+        if filters not in (self.FILTERS_EMPTY, self.filters_undo):
             # Filters changed while we had undo history
-            self.filters_undo = self.EMPTY_FILTERS
+            self.filters_undo = self.FILTERS_EMPTY
 
         self.active_filter_count = 0
 
