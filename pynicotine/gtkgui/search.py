@@ -122,7 +122,7 @@ class Searches(IconNotebook):
             if tab.container != page:
                 continue
 
-            tab.update_filter_comboboxes()
+            tab.update_filter_widgets()
             break
 
     def on_search_mode(self, action, state):
@@ -252,7 +252,8 @@ class Searches(IconNotebook):
 
         # Update filters in search tabs
         for page in self.pages.values():
-            page.update_filter_comboboxes()
+            page.filters_undo = page.EMPTY_FILTERS
+            page.update_filter_widgets()
 
     def file_search_response(self, msg):
 
@@ -301,6 +302,16 @@ class Search:
         "filtertype": ("audio", "image", "video", "text", "archive", "!executable", "audio image text"),
         "filterlength": (">15:00", ">8:00 <=15:00", ">5:00 <=8:00", ">2:00 <=5:00", "<=2:00")
     }
+    EMPTY_FILTERS = {
+        "filterin": "",
+        "filterout": "",
+        "filtersize": "",
+        "filterbr": "",
+        "filtercc": "",
+        "filtertype": "",
+        "filterlength": "",
+        "filterslot": False
+    }
     FILTER_SPLIT_DIGIT_PATTERN = re.compile(r"(?:[|&\s])+(?<![<>!=]\s)")  # [pipe, ampersand, space]
     FILTER_SPLIT_TEXT_PATTERN = re.compile(r"(?:[|&,;\s])+(?<![!]\s)")    # [pipe, ampersand, comma, semicolon, space]
 
@@ -311,6 +322,8 @@ class Search:
             self.add_wish_button,
             self.add_wish_icon,
             self.add_wish_label,
+            self.clear_undo_filters_button,
+            self.clear_undo_filters_icon,
             self.container,
             self.expand_button,
             self.expand_icon,
@@ -359,8 +372,7 @@ class Search:
         self.users = set()
         self.all_data = []
         self.grouping_mode = None
-        self.filters = {}
-        self.filters_undo = []
+        self.filters = self.filters_undo = self.EMPTY_FILTERS
         self.populating_filters = False
         self.active_filter_count = 0
         self.num_results_found = 0
@@ -565,7 +577,7 @@ class Search:
         # Render empty value as separator
         return not model.get_value(iterator, 0)
 
-    def update_filter_comboboxes(self):
+    def update_filter_widgets(self):
 
         for filter_id, widget in self.filter_comboboxes.items():
             widget.set_row_separator_func(lambda *_args: 0)
@@ -584,6 +596,17 @@ class Search:
 
             if presets:
                 widget.set_row_separator_func(self.on_combobox_check_separator)
+
+        if self.filters_undo == self.EMPTY_FILTERS:
+            tooltip_text = _("Clear Filters")
+            icon_name = "edit-clear-symbolic"
+        else:
+            tooltip_text = _("Restore Filters")
+            icon_name = "edit-undo-symbolic"
+
+        if self.clear_undo_filters_button.get_tooltip_text() != tooltip_text:
+            self.clear_undo_filters_button.set_tooltip_text(tooltip_text)
+            self.clear_undo_filters_icon.set_property("icon-name", icon_name)
 
     def populate_filters(self):
 
@@ -620,12 +643,8 @@ class Search:
 
         self.set_filters(stored_filters)
 
-    def set_filters(self, stored_filters=None):
+    def set_filters(self, stored_filters):
         """ Recall result filter values from a dict """
-
-        if not stored_filters:
-            # Clear Filters
-            stored_filters = {}
 
         self.populating_filters = True
 
@@ -635,28 +654,19 @@ class Search:
 
         for filter_id, combobox in self.filter_comboboxes.items():
             value = stored_filters.get(filter_id, "")
+
+            if isinstance(value, list):
+                value = " ".join(value)
+
+            elif isinstance(value, re.Pattern):
+                value = value.pattern
+
             combobox.get_child().set_text(value)
 
         self.populating_filters = False
+        self.filters_undo = self.filters.copy()
 
         self.on_refilter()
-
-    def get_filters(self):
-        """ Return a dict of the active result filter values """
-
-        stored_filters = {}
-
-        for filter_id, value in self.filters.items():
-            if filter_id in self.filter_buttons:
-                stored_filters[filter_id] = value
-
-            elif filter_id in ("filterin", "filterout"):
-                stored_filters[filter_id] = value.pattern if value else ""
-
-            elif filter_id in self.filter_comboboxes:
-                stored_filters[filter_id] = " ".join(value)
-
-        return stored_filters
 
     def add_result_list(self, result_list, user, country_code, inqueue, ulspeed, h_speed,
                         h_queue, has_free_slots, private=False):
@@ -1461,7 +1471,7 @@ class Search:
     def on_counter_button(self, *_args):
 
         if self.num_results_found > self.num_results_visible:
-            self.on_clear_filters()
+            self.on_clear_undo_filters()
         else:
             self.window.application.lookup_action("configure-searches").activate()
 
@@ -1602,6 +1612,10 @@ class Search:
             # Filters have not changed, no need to refilter
             return
 
+        if filters not in (self.EMPTY_FILTERS, self.filters_undo):
+            # Filters changed while we had undo history
+            self.filters_undo = self.EMPTY_FILTERS
+
         self.active_filter_count = 0
 
         # Set red background if invalid regex pattern is detected
@@ -1645,7 +1659,7 @@ class Search:
 
         # Apply the new filters
         self.filters = filters
-        self.update_filter_comboboxes()
+        self.update_filter_widgets()
         self.clear_model()
         self.update_model()
 
@@ -1671,15 +1685,9 @@ class Search:
         else:
             entry.set_text("")
 
-    def on_clear_filters(self, *_args):
+    def on_clear_undo_filters(self, *_args):
 
-        if self.filters_undo:
-            # Recall Filters from data stored as dict
-            self.set_filters(self.filters_undo.pop())
-        else:
-            # Store undo data, then clear all filters
-            self.filters_undo.append(self.get_filters())
-            self.set_filters(None)
+        self.set_filters(self.filters_undo)
 
         if self.filters_button.get_active():
             self.filter_include_combobox.get_child().grab_focus()
