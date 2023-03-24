@@ -303,14 +303,14 @@ class Search:
         "filterlength": (">15:00", ">8:00 <=15:00", ">5:00 <=8:00", ">2:00 <=5:00", "<=2:00")
     }
     EMPTY_FILTERS = {
-        "filterin": None,
-        "filterout": None,
-        "filtersize": None,
-        "filterbr": None,
-        "filtercc": None,
-        "filtertype": None,
-        "filterlength": None,
-        "filterslot": False
+        "filterin": (None, ""),
+        "filterout": (None, ""),
+        "filtersize": (None, ""),
+        "filterbr": (None, ""),
+        "filtercc": (None, ""),
+        "filtertype": (None, ""),
+        "filterlength": (None, ""),
+        "filterslot": (False, False)
     }
     FILTER_SPLIT_DIGIT_PATTERN = re.compile(r"(?:[|&\s])+(?<![<>!=]\s)")  # [pipe, ampersand, space]
     FILTER_SPLIT_TEXT_PATTERN = re.compile(r"(?:[|&,;\s])+(?<![!]\s)")    # [pipe, ampersand, comma, semicolon, space]
@@ -619,22 +619,23 @@ class Search:
         stored_filters = {}
 
         if num_filters > 0:
-            stored_filters["filterin"] = str(sfilter[0])
+            stored_filters["filterin"] = (None, str(sfilter[0]))
 
         if num_filters > 1:
-            stored_filters["filterout"] = str(sfilter[1])
+            stored_filters["filterout"] = (None, str(sfilter[1]))
 
         if num_filters > 2:
-            stored_filters["filtersize"] = str(sfilter[2])
+            stored_filters["filtersize"] = (None, str(sfilter[2]))
 
         if num_filters > 3:
-            stored_filters["filterbr"] = str(sfilter[3])
+            stored_filters["filterbr"] = (None, str(sfilter[3]))
 
         if num_filters > 4:
-            stored_filters["filterslot"] = bool(sfilter[4])
+            free_slot = bool(sfilter[4])
+            stored_filters["filterslot"] = (free_slot, free_slot)
 
         if num_filters > 5:
-            stored_filters["filtercc"] = str(sfilter[5])
+            stored_filters["filtercc"] = (None, str(sfilter[5]))
 
         if num_filters > 6:
             stored_filters["filtertype"] = str(sfilter[6])
@@ -650,22 +651,12 @@ class Search:
         self.populating_filters = True
 
         for filter_id, button in self.filter_buttons.items():
-            value = stored_filters.get(filter_id, False)
-            button.set_active(value)
+            _value, h_value = stored_filters.get(filter_id, False)
+            button.set_active(h_value)
 
         for filter_id, combobox in self.filter_comboboxes.items():
-            value = stored_filters.get(filter_id, "")
-
-            if not value:
-                value = ""
-
-            elif isinstance(value, list):
-                value = " ".join(value)
-
-            elif not isinstance(value, str):
-                value = value.pattern
-
-            combobox.get_child().set_text(value)
+            _value, h_value = stored_filters.get(filter_id, "")
+            combobox.get_child().set_text(h_value)
 
         self.populating_filters = False
         self.filters_undo = self.filters
@@ -1057,7 +1048,7 @@ class Search:
         if self.active_filter_count == 0:
             return True
 
-        for filter_id, filter_value in self.filters.items():
+        for filter_id, (filter_value, _h_filter_value) in self.filters.items():
             if not filter_value:
                 continue
 
@@ -1586,6 +1577,11 @@ class Search:
             except re.error:
                 error_entries.add(filter_exclude_entry)
 
+        for entry in (filter_include_entry, filter_exclude_entry):
+            # Set red background if invalid regex pattern is detected
+            css_class_function = add_css_class if entry in error_entries else remove_css_class
+            css_class_function(entry, "error")
+
         # Split at | pipes ampersands & space(s) but don't split <>=! math operators spaced before digit condition
         seperator_pattern = self.FILTER_SPLIT_DIGIT_PATTERN
 
@@ -1607,21 +1603,28 @@ class Search:
         if filter_file_type_str:
             filter_file_type = seperator_pattern.split(filter_file_type_str.lower())
 
-        filters = {
-            "filterin": filter_in,
-            "filterout": filter_out,
-            "filtersize": filter_size,
-            "filterbr": filter_bitrate,
-            "filterslot": filter_free_slot,
-            "filtercc": filter_country,
-            "filtertype": filter_file_type,
-            "filterlength": filter_length,
-        }
+            # Replace generic file type filters with real file extensions
+            for filter_name, file_extensions in self.FILTER_GENERIC_FILE_TYPES:
+                excluded_filter_name = f"!{filter_name}"
 
-        # Set red background if invalid regex pattern is detected
-        for entry in (filter_include_entry, filter_exclude_entry):
-            css_class_function = add_css_class if entry in error_entries else remove_css_class
-            css_class_function(entry, "error")
+                if filter_name in filter_file_type:
+                    filter_file_type.remove(filter_name)
+                    filter_file_type += list(file_extensions)
+
+                elif excluded_filter_name in filter_file_type:
+                    filter_file_type.remove(excluded_filter_name)
+                    filter_file_type += ["!" + x for x in file_extensions]
+
+        filters = {
+            "filterin": (filter_in, filter_in_str),
+            "filterout": (filter_out, filter_out_str),
+            "filtersize": (filter_size, filter_size_str),
+            "filterbr": (filter_bitrate, filter_bitrate_str),
+            "filterslot": (filter_free_slot, filter_free_slot),
+            "filtercc": (filter_country, filter_country_str),
+            "filtertype": (filter_file_type, filter_file_type_str),
+            "filterlength": (filter_length, filter_length_str),
+        }
 
         if self.filters == filters:
             # Filters have not changed, no need to refilter
@@ -1634,33 +1637,12 @@ class Search:
         self.active_filter_count = 0
 
         # Add filters to history
-        for filter_id, value in filters.items():
-            if not value:
+        for filter_id, (_value, h_value) in filters.items():
+            if not h_value:
                 continue
 
-            if filter_id in ("filterin", "filterout"):
-                value = value.pattern
-
-            elif filter_id in ("filtersize", "filterbr", "filtercc", "filtertype", "filterlength"):
-                value = " ".join(value)
-
-            self.push_history(filter_id, value)
+            self.push_history(filter_id, h_value)
             self.active_filter_count += 1
-
-        # Replace generic file type filters with real file extensions
-        file_type_filters = filters["filtertype"]
-
-        if file_type_filters:
-            for filter_name, file_extensions in self.FILTER_GENERIC_FILE_TYPES:
-                excluded_filter_name = f"!{filter_name}"
-
-                if filter_name in file_type_filters:
-                    file_type_filters.remove(filter_name)
-                    file_type_filters += list(file_extensions)
-
-                elif excluded_filter_name in file_type_filters:
-                    file_type_filters.remove(excluded_filter_name)
-                    file_type_filters += ["!" + x for x in file_extensions]
 
         # Apply the new filters
         self.filters = filters
