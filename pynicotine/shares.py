@@ -140,9 +140,9 @@ class Scanner(Process):
             if self.rescan:
                 start_num_folders = len(list(self.share_dbs.get("buddyfiles", {})))
 
-                self.queue.put((_("Rescanning shares…"), None, LogLevel.DEFAULT))
-                self.queue.put((_("%(num)s folders found before rescan, rebuilding…"),
-                               {"num": start_num_folders}, LogLevel.DEFAULT))
+                self.queue.put((_("%(num)s folders found before rescan"), {"num": start_num_folders}, LogLevel.DEFAULT))
+                self.queue.put((_("Rebuilding shares…") if self.rebuild else _("Rescanning shares…"),
+                               None, LogLevel.DEFAULT))
 
                 new_mtimes, new_files, new_streams = self.rescan_dirs("public", rebuild=self.rebuild)
                 _new_mtimes, new_files, _new_streams = self.rescan_dirs("buddy", new_mtimes, new_files,

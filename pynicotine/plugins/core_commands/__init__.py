@@ -205,7 +205,7 @@ class Plugin(BasePlugin):
                 "callback": self.rescan_command,
                 "description": _("Rescan shares"),
                 "group": _CommandGroup.SHARES,
-                "usage": ["[-force]"]
+                "usage": ["[force|rebuild]"]
             },
             "shares": {
                 "aliases": ["ls"],
@@ -484,8 +484,11 @@ class Plugin(BasePlugin):
     """ Configure Shares """
 
     def rescan_command(self, args, **_unused):
-        force = (args.lstrip("- ") in ("force", "f"))
-        self.core.shares.rescan_shares(force=force)
+
+        rebuild = (args == "rebuild")
+        force = (args == "force") or rebuild
+
+        self.core.shares.rescan_shares(rebuild=rebuild, force=force)
 
     def list_shares_command(self, args, **_unused):
 
