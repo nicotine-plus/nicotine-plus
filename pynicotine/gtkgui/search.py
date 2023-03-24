@@ -1676,9 +1676,7 @@ class Search:
 
         self.set_filters(self.filters_undo)
 
-        if self.filters_button.get_active():
-            self.filter_include_combobox.get_child().grab_focus()
-        else:
+        if not self.filters_button.get_active():
             self.tree_view.grab_focus()
 
     def on_clear(self, *_args):
