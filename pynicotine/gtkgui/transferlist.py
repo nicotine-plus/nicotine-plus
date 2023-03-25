@@ -30,7 +30,7 @@ from gi.repository import Gtk
 from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.dialogs.fileproperties import FileProperties
-from pynicotine.gtkgui.utils import copy_text
+from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
@@ -910,7 +910,7 @@ class TransferList:
         transfer = next(iter(self.selected_transfers), None)
 
         if transfer:
-            copy_text(transfer.filename)
+            clipboard.copy_text(transfer.filename)
 
     def on_play_files(self, *_args):
         # Implemented in subclasses

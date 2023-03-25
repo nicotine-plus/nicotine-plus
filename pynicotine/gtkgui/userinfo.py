@@ -26,7 +26,6 @@ from gi.repository import Gdk
 from gi.repository import GdkPixbuf
 from gi.repository import Gio
 from gi.repository import GLib
-from gi.repository import GObject
 from gi.repository import Gtk
 
 from pynicotine import slskmessages
@@ -34,6 +33,7 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.filechooser import FileChooserSave
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
@@ -563,12 +563,7 @@ class UserInfo:
         if self.picture_data is None:
             return
 
-        if GTK_API_VERSION >= 4:
-            value = GObject.Value(Gdk.Texture, self.picture_data)
-            content = Gdk.ContentProvider.new_for_value(value)
-            Gdk.Display.get_default().get_clipboard().set_content(content)
-        else:
-            Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD).set_image(self.picture_data)
+        clipboard.copy_image(self.picture_data)
 
     def on_save_picture_response(self, file_path, *_args):
 

@@ -31,7 +31,7 @@ from gi.repository import Gtk
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
-from pynicotine.gtkgui.utils import copy_text
+from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.theme import FILE_TYPE_ICON_LABELS
@@ -681,7 +681,7 @@ class TreeView:
         iterator = self.model.get_iter(path)
         cell_value = str(self.model.get_value(iterator, column.get_sort_column_id()))
 
-        copy_text(cell_value)
+        clipboard.copy_text(cell_value)
         return True
 
 
@@ -911,7 +911,7 @@ def on_copy_cell_data_accelerator(treeview, *_args):
     iterator = model.get_iter(path)
     cell_value = str(model.get_value(iterator, column.get_sort_column_id()))
 
-    copy_text(cell_value)
+    clipboard.copy_text(cell_value)
     return True
 
 

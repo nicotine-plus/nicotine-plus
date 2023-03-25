@@ -34,7 +34,7 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.dialogs.fileproperties import FileProperties
-from pynicotine.gtkgui.utils import copy_text
+from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.filechooser import FolderChooser
@@ -780,12 +780,12 @@ class UserBrowse:
 
     def on_copy_folder_path(self, *_args):
         folder_path = self.get_selected_folder_path()
-        copy_text(folder_path)
+        clipboard.copy_text(folder_path)
 
     def on_copy_dir_url(self, *_args):
         folder_path = self.get_selected_folder_path()
         folder_url = core.userbrowse.get_soulseek_url(self.user, folder_path)
-        copy_text(folder_url)
+        clipboard.copy_text(folder_url)
 
     """ Key Bindings (folder_tree_view) """
 
@@ -1047,12 +1047,12 @@ class UserBrowse:
 
     def on_copy_file_path(self, *_args):
         file_path = self.get_selected_file_path()
-        copy_text(file_path)
+        clipboard.copy_text(file_path)
 
     def on_copy_url(self, *_args):
         file_path = self.get_selected_file_path()
         file_url = core.userbrowse.get_soulseek_url(self.user, file_path)
-        copy_text(file_url)
+        clipboard.copy_text(file_url)
 
     """ Key Bindings (file_list_view) """
 

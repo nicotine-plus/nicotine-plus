@@ -23,7 +23,7 @@ from gi.repository import Gdk
 from gi.repository import Gtk
 
 from pynicotine.gtkgui.application import GTK_API_VERSION
-from pynicotine.gtkgui.utils import copy_text
+from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets.theme import update_tag_visuals
 from pynicotine.utils import open_uri
 
@@ -304,10 +304,10 @@ class TextView:
         self.widget.emit("copy-clipboard")
 
     def on_copy_link(self, *_args):
-        copy_text(self.get_url_for_current_pos())
+        clipboard.copy_text(self.get_url_for_current_pos())
 
     def on_copy_all_text(self, *_args):
-        copy_text(self.get_text())
+        clipboard.copy_text(self.get_text())
 
     def on_clear_all_text(self, *_args):
         self.clear()

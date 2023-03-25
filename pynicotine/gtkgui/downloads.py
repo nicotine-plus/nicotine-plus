@@ -31,7 +31,7 @@ from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.popovers.downloadspeeds import DownloadSpeeds
 from pynicotine.gtkgui.transferlist import TransferList
-from pynicotine.gtkgui.utils import copy_text
+from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.utils import open_file_path
 
@@ -147,7 +147,7 @@ class Downloads(TransferList):
 
         if transfer:
             url = core.userbrowse.get_soulseek_url(transfer.user, transfer.filename)
-            copy_text(url)
+            clipboard.copy_text(url)
 
     def on_copy_dir_url(self, *_args):
 
@@ -156,7 +156,7 @@ class Downloads(TransferList):
         if transfer:
             url = core.userbrowse.get_soulseek_url(
                 transfer.user, transfer.filename.rsplit("\\", 1)[0] + "\\")
-            copy_text(url)
+            clipboard.copy_text(url)
 
     def on_open_file_manager(self, *_args):
 

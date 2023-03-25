@@ -703,9 +703,9 @@ class Application:
         loop, error = data
 
         if response_id == 2:
-            from pynicotine.gtkgui.utils import copy_text
+            from pynicotine.gtkgui.widgets import clipboard
 
-            copy_text(error)
+            clipboard.copy_text(error)
             open_uri(config.issue_tracker_url)
 
             self.show_critical_error_dialog(error, loop)
