@@ -30,7 +30,8 @@ from gi.repository import Gtk
 from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.dialogs.fileproperties import FileProperties
-from pynicotine.gtkgui.utils import copy_text
+from pynicotine.gtkgui.widgets import clipboard
+from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import FilePopupMenu
@@ -45,9 +46,8 @@ from pynicotine.gtkgui.widgets.treeview import save_columns
 from pynicotine.gtkgui.widgets.treeview import select_user_row_iter
 from pynicotine.gtkgui.widgets.treeview import show_file_path_tooltip
 from pynicotine.gtkgui.widgets.treeview import show_file_type_tooltip
-from pynicotine.gtkgui.widgets.ui import UserInterface
-from pynicotine.slskmessages import UINT64_LIMIT
 from pynicotine.transfers import Transfer
+from pynicotine.utils import UINT64_LIMIT
 from pynicotine.utils import human_length
 from pynicotine.utils import human_size
 from pynicotine.utils import human_speed
@@ -62,12 +62,11 @@ class TransferList:
 
     def __init__(self, window, transfer_type):
 
-        ui_template = UserInterface(scope=self, path=f"{transfer_type}s.ui")
         (
             self.clear_all_button,
             self.container,
             self.tree_view
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path=f"{transfer_type}s.ui")
 
         self.window = window
         self.type = transfer_type
@@ -123,9 +122,9 @@ class TransferList:
         self.cols = cols = initialise_columns(
             window, transfer_type, self.tree_view,
             ["user", _("User"), 200, "text", None],
-            ["path", self.path_label, 400, "text", None],
+            ["path", self.path_label, 200, "text", None],
             ["file_type", _("File Type"), 40, "icon", None],
-            ["filename", _("Filename"), 400, "text", None],
+            ["filename", _("Filename"), 200, "text", None],
             ["status", _("Status"), 140, "text", None],
             ["queue_position", _("Queue"), 90, "number", None],
             ["percent", _("Percent"), 90, "progress", None],
@@ -148,6 +147,9 @@ class TransferList:
         cols["time_left"].set_sort_column_id(16)
 
         cols["file_type"].get_widget().set_visible(False)
+
+        cols["path"].set_expand(True)
+        cols["filename"].set_expand(True)
 
         menu = create_grouping_menu(
             window, config.sections["transfers"][f"group{transfer_type}s"], self.on_toggle_tree)
@@ -908,7 +910,7 @@ class TransferList:
         transfer = next(iter(self.selected_transfers), None)
 
         if transfer:
-            copy_text(transfer.filename)
+            clipboard.copy_text(transfer.filename)
 
     def on_play_files(self, *_args):
         # Implemented in subclasses

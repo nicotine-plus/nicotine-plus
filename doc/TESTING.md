@@ -50,7 +50,7 @@ Portable packages are also available. They can be run from any folder and do not
 
 ## macOS
 
-Unstable installers for macOS Catalina 10.15 and newer are built after every commit to the master branch.
+Unstable installers for macOS Big Sur 11 and newer are built after every commit to the master branch.
 
 - [Download Unstable macOS Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-installer.zip) [[Info](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-installer)]
 

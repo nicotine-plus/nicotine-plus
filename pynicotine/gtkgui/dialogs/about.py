@@ -20,8 +20,8 @@ from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.dialogs import Dialog
-from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.utils import open_uri
 
 
@@ -202,7 +202,7 @@ class About(Dialog):
    - mathsped (2003–2004)""",
 
         """>> <b>Dutch</b>
-   - Han Boetes (hboetes) (2021–2022)
+   - Han Boetes (hboetes) (2021–2023)
    - Kenny Verstraete (2009)
    - nince78 (2007)
    - Ingmar K. Steen (Hyriand) (2003–2004)""",
@@ -228,19 +228,19 @@ class About(Dialog):
    - Michael Labouebe (gfarmerfr) (2016–2017)
    - Monsieur Poisson (2009–2010)
    - ManWell (2007)
-   - zniavre (2007–2022)
+   - zniavre (2007–2023)
    - systr (2006)
    - Julien Wajsberg (flashfr) (2003–2004)""",
 
         """>> <b>German</b>
-   - Han Boetes (hboetes) (2021–2022)
+   - Han Boetes (hboetes) (2021–2023)
    - Meokater (2007)
    - (._.) (2007)
    - lippel (2004)
    - Ingmar K. Steen (Hyriand) (2003–2004)""",
 
         """>> <b>Hungarian</b>
-   - Szia Tomi (2022)
+   - Szia Tomi (2022-2023)
    - Nils (2009)
    - David Balazs (djbaloo) (2006–2020)""",
 
@@ -251,7 +251,7 @@ class About(Dialog):
    - dbazza (2003–2004)""",
 
         """>> <b>Latvian</b>
-   - Pagal3 (2022)""",
+   - Pagal3 (2022-2023)""",
 
         """>> <b>Lithuanian</b>
    - mantas (2020)
@@ -329,7 +329,6 @@ Copyright (c) 2017 IP2Location.com
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="dialogs/about.ui")
         (
             self.application_name_label,
             self.authors_container,
@@ -340,7 +339,7 @@ Copyright (c) 2017 IP2Location.com
             self.translators_container,
             self.version_label,
             self.website_label
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="dialogs/about.ui")
 
         super().__init__(
             parent=application.window,

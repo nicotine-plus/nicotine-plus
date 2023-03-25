@@ -24,6 +24,7 @@
 import os
 
 from collections import deque
+from locale import strxfrm
 
 from gi.repository import GLib
 
@@ -33,6 +34,7 @@ from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.popovers.chatcommandhelp import ChatCommandHelp
 from pynicotine.gtkgui.popovers.chathistory import ChatHistory
+from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
@@ -42,9 +44,7 @@ from pynicotine.gtkgui.widgets.textentry import ChatEntry
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_COLORS
-from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
-from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import clean_file
 from pynicotine.utils import encode_path
 
@@ -241,14 +241,13 @@ class PrivateChats(IconNotebook):
 
         for user, page in self.pages.items():
             page.server_disconnect()
-            self.set_user_status(page.container, user, UserStatus.OFFLINE)
+            self.set_user_status(page.container, user, slskmessages.UserStatus.OFFLINE)
 
 
 class PrivateChat:
 
     def __init__(self, chats, user):
 
-        ui_template = UserInterface(scope=self, path="privatechat.ui")
         (
             self.chat_entry,
             self.chat_view_container,
@@ -258,7 +257,7 @@ class PrivateChat:
             self.search_bar,
             self.search_entry,
             self.speech_toggle
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="privatechat.ui")
 
         self.user = user
         self.chats = chats
@@ -266,7 +265,7 @@ class PrivateChat:
 
         self.loaded = False
         self.offline_message = False
-        self.status = core.user_statuses.get(user, UserStatus.OFFLINE)
+        self.status = core.user_statuses.get(user, slskmessages.UserStatus.OFFLINE)
 
         self.chat_view = TextView(self.chat_view_container, editable=False, horizontal_margin=10,
                                   vertical_margin=5, pixels_below_lines=2)
@@ -362,8 +361,8 @@ class PrivateChat:
         self.chat_view.append_line(_("--- disconnected ---"), tag=self.tag_highlight, timestamp_format=timestamp_format)
         self.offline_message = False
 
-        self.update_remote_username_tag(status=UserStatus.OFFLINE)
-        self.update_local_username_tag(status=UserStatus.OFFLINE)
+        self.update_remote_username_tag(status=slskmessages.UserStatus.OFFLINE)
+        self.update_local_username_tag(status=slskmessages.UserStatus.OFFLINE)
 
     def clear(self):
 
@@ -473,7 +472,7 @@ class PrivateChat:
                 folder_path=config.sections["logging"]["privatelogsdir"], base_name=f"{clean_file(self.user)}.log",
                 text=line, timestamp=timestamp
             )
-            self.chats.history.update_user(self.user, line, add_timestamp=True)
+            self.chats.history.update_user(self.user, line)
 
     def echo_private_message(self, text, message_type):
 
@@ -508,7 +507,7 @@ class PrivateChat:
                 folder_path=config.sections["logging"]["privatelogsdir"],
                 base_name=f"{clean_file(self.user)}.log", text=line
             )
-            self.chats.history.update_user(self.user, line, add_timestamp=True)
+            self.chats.history.update_user(self.user, line)
 
     def user_name_event(self, pos_x, pos_y, user):
 
@@ -573,6 +572,6 @@ class PrivateChat:
 
         # No duplicates
         completion_list = list(set(completion_list))
-        completion_list.sort(key=str.lower)
+        completion_list.sort(key=strxfrm)
 
         self.chats.completion.set_completion_list(completion_list)

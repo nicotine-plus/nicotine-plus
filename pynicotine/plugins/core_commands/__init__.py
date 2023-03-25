@@ -16,8 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from pynicotine import slskmessages
 from pynicotine.pluginsystem import BasePlugin
-from pynicotine.slskmessages import UserStatus
 
 
 class _CommandGroup:
@@ -169,21 +169,21 @@ class Plugin(BasePlugin):
                 "description": _("Show IP address or username"),
                 "group": _CommandGroup.NETWORK_FILTERS,
                 "usage": ["<user or ip>"],
-                "usage_private_chat": ["[user]", "[ip]"]
+                "usage_private_chat": ["[user or ip]"]
             },
             "ban": {
                 "callback": self.ban_command,
                 "description": _("Block connections from user or IP address"),
                 "group": _CommandGroup.NETWORK_FILTERS,
                 "usage": ["<user or ip>"],
-                "usage_private_chat": ["[user]", "[ip]"]
+                "usage_private_chat": ["[user or ip]"]
             },
             "unban": {
                 "callback": self.unban_command,
                 "description": _("Remove user or IP address from ban lists"),
                 "group": _CommandGroup.NETWORK_FILTERS,
                 "usage": ["<user or ip>"],
-                "usage_private_chat": ["[user]", "[ip]"]
+                "usage_private_chat": ["[user or ip]"]
             },
             "ignore": {
                 "callback": self.ignore_command,
@@ -191,7 +191,7 @@ class Plugin(BasePlugin):
                 "disable": ["cli"],
                 "group": _CommandGroup.NETWORK_FILTERS,
                 "usage": ["<user or ip>"],
-                "usage_private_chat": ["[user]", "[ip]"]
+                "usage_private_chat": ["[user or ip]"]
             },
             "unignore": {
                 "callback": self.unignore_command,
@@ -199,7 +199,7 @@ class Plugin(BasePlugin):
                 "disable": ["cli"],
                 "group": _CommandGroup.NETWORK_FILTERS,
                 "usage": ["<user or ip>"],
-                "usage_private_chat": ["[user]", "[ip]"]
+                "usage_private_chat": ["[user or ip]"]
             },
             "rescan": {
                 "callback": self.rescan_command,
@@ -292,12 +292,12 @@ class Plugin(BasePlugin):
 
     def away_command(self, _args, **_unused):
 
-        if self.core.user_status == UserStatus.OFFLINE:
+        if self.core.user_status == slskmessages.UserStatus.OFFLINE:
             self.output(_("Offline"))
             return
 
-        self.core.set_away_mode(self.core.user_status != UserStatus.AWAY, save_state=True)
-        self.output(_("Online") if self.core.user_status == UserStatus.ONLINE else _("Away"))
+        self.core.set_away_mode(self.core.user_status != slskmessages.UserStatus.AWAY, save_state=True)
+        self.output(_("Online") if self.core.user_status == slskmessages.UserStatus.ONLINE else _("Away"))
 
     def quit_command(self, args, **_unused):
 

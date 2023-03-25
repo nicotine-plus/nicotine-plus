@@ -19,25 +19,24 @@
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
+from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.treeview import TreeView
-from pynicotine.gtkgui.widgets.ui import UserInterface
 
 
 class WishList(Dialog):
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="dialogs/wishlist.ui")
         (
             self.container,
             self.list_container,
             self.wish_entry
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="dialogs/wishlist.ui")
 
         super().__init__(
             parent=application.window,

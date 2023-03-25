@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2022-12-27 21:00+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2023-03-02 15:38+0000\n"
+"Last-Translator: Jackson Baber <jacksonthomasbaber@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/es/>\n"
 "Language: es_ES\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.15.1-dev\n"
+"X-Generator: Weblate 4.16.2-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -1768,9 +1768,8 @@ msgid "Ban IP Address"
 msgstr "Vetar dirección IP"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1036
-#, fuzzy
 msgid "Enter an IP address you want to ban:"
-msgstr "Introduce la dirección IP que deseas bloquear:"
+msgstr "Introduzca la dirección IP que deseas bloquear:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1073
 #: pynicotine/gtkgui/dialogs/preferences.py:1082
@@ -1861,21 +1860,18 @@ msgid "Offline"
 msgstr "Fuera de línea"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1385
-#, fuzzy
 msgid "Tab Changed"
-msgstr "Contraseña modificada"
+msgstr "Pestaña cambiada"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1386
-#, fuzzy
 msgid "Tab Highlight"
-msgstr "Destacar"
+msgstr "Resaltar pestaña"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1387
 msgid "Window"
 msgstr "Ventana"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1391
-#, fuzzy
 msgid "Online (Tray)"
 msgstr "Conectado (Bandeja)"
 
@@ -1884,9 +1880,8 @@ msgid "Away (Tray)"
 msgstr "Ausente (Bandeja)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1393
-#, fuzzy
 msgid "Offline (Tray)"
-msgstr "Fuera de línea"
+msgstr "Fuera de línea (Bandeja)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1394
 msgid "Message (Tray)"
@@ -2546,9 +2541,8 @@ msgid "Private Message from %(user)s"
 msgstr "Mensaje privado de %(user)s"
 
 #: pynicotine/gtkgui/privatechat.py:431
-#, fuzzy
 msgid "* Messages sent while you were offline"
-msgstr "* Mensaje(s) recibidos(s) mientras estabas desconectado."
+msgstr "* Mensaje(s) enviado(s) mientras estabas desconectado."
 
 #: pynicotine/gtkgui/search.py:77
 msgid "_Global"
@@ -2628,9 +2622,8 @@ msgid "F_ile Properties"
 msgstr "Propiedades del a_rchivo"
 
 #: pynicotine/gtkgui/search.py:440 pynicotine/gtkgui/transferlist.py:184
-#, fuzzy
 msgid "User Actions"
-msgstr "Acciones de transferencia"
+msgstr "Acciones del usuario"
 
 #: pynicotine/gtkgui/search.py:445
 msgid "Copy Search Term"
@@ -2668,9 +2661,9 @@ msgid "_Result Filters"
 msgstr "Filtros de _resultados"
 
 #: pynicotine/gtkgui/search.py:995
-#, fuzzy, python-format
+#, python-format
 msgid "%d active filter(s)"
-msgstr "Limpiar todos los filtros activos"
+msgstr "%d filtro(s) activo(s)"
 
 #: pynicotine/gtkgui/search.py:1048
 msgid "Add Wi_sh"
@@ -2850,7 +2843,6 @@ msgid "Upload Folder…"
 msgstr "Subir carpeta…"
 
 #: pynicotine/gtkgui/userbrowse.py:225
-#, fuzzy
 msgid "Upload Folder & Subfolders…"
 msgstr "Subir carpeta y subcarpeta(s)…"
 
@@ -2871,12 +2863,10 @@ msgid "Download Folder _To…"
 msgstr "Descargar carpeta _en…"
 
 #: pynicotine/gtkgui/userbrowse.py:239
-#, fuzzy
 msgid "Download Folder & Subfolders"
 msgstr "Descargar carpeta y subcarpeta(s)"
 
 #: pynicotine/gtkgui/userbrowse.py:240
-#, fuzzy
 msgid "Download Folder & Subfolders To…"
 msgstr "Descargar carpeta y subcarpeta(s) en…"
 
@@ -2919,7 +2909,6 @@ msgid "Enter the name of the user you want to upload to:"
 msgstr "Introduce el nombre del usuario al que deseas subir archivos:"
 
 #: pynicotine/gtkgui/userbrowse.py:976
-#, fuzzy
 msgid "Select Destination Folder for Files"
 msgstr "Seleccione carpeta de destino para el/los archivo(s)"
 

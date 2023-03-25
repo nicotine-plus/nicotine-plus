@@ -19,15 +19,17 @@
 import os
 import sys
 
+from locale import strxfrm
+
 from gi.repository import Gio
 from gi.repository import GLib
 
+from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_GUI_DIR
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.logfacility import log
-from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import encode_path
 
 
@@ -127,7 +129,7 @@ class BaseImplementation:
 
     def update_user_status(self):
 
-        sensitive = core.user_status != UserStatus.OFFLINE
+        sensitive = core.user_status != slskmessages.UserStatus.OFFLINE
 
         for item in (self.away_item, self.send_message_item,
                      self.lookup_info_item, self.lookup_shares_item):
@@ -137,7 +139,7 @@ class BaseImplementation:
 
         self.set_item_visible(self.connect_item, not sensitive)
         self.set_item_visible(self.disconnect_item, sensitive)
-        self.set_item_toggled(self.away_item, core.user_status == UserStatus.AWAY)
+        self.set_item_toggled(self.away_item, core.user_status == slskmessages.UserStatus.AWAY)
 
         self.update_icon()
         self.update_menu()
@@ -153,10 +155,10 @@ class BaseImplementation:
                      or self.application.window.privatechat.highlighted_users)):
             icon_name = "msg"
 
-        elif core.user_status == UserStatus.ONLINE:
+        elif core.user_status == slskmessages.UserStatus.ONLINE:
             icon_name = "connect"
 
-        elif core.user_status == UserStatus.AWAY:
+        elif core.user_status == slskmessages.UserStatus.AWAY:
             icon_name = "away"
 
         else:
@@ -218,7 +220,7 @@ class BaseImplementation:
             title=_("Start Messaging"),
             message=_("Enter the name of the user whom you want to send a message:"),
             callback=self.on_open_private_chat_response,
-            droplist=sorted(core.userlist.buddies)
+            droplist=sorted(core.userlist.buddies, key=strxfrm)
         ).show()
 
     def on_get_a_users_info_response(self, dialog, _response_id, _data):
@@ -238,7 +240,7 @@ class BaseImplementation:
             title=_("View User Profile"),
             message=_("Enter the name of the user whose profile you want to see:"),
             callback=self.on_get_a_users_info_response,
-            droplist=sorted(core.userlist.buddies)
+            droplist=sorted(core.userlist.buddies, key=strxfrm)
         ).show()
 
     def on_get_a_users_shares_response(self, dialog, _response_id, _data):
@@ -258,7 +260,7 @@ class BaseImplementation:
             title=_("Browse Shares"),
             message=_("Enter the name of the user whose shares you want to see:"),
             callback=self.on_get_a_users_shares_response,
-            droplist=sorted(core.userlist.buddies)
+            droplist=sorted(core.userlist.buddies, key=strxfrm)
         ).show()
 
     def is_visible(self):  # pylint:disable=no-self-use

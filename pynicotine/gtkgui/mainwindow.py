@@ -28,6 +28,7 @@ from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
 
+from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
@@ -41,6 +42,7 @@ from pynicotine.gtkgui.uploads import Uploads
 from pynicotine.gtkgui.userbrowse import UserBrowses
 from pynicotine.gtkgui.userinfo import UserInfos
 from pynicotine.gtkgui.userlist import UserList
+from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.dialogs import MessageDialog
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
@@ -52,10 +54,8 @@ from pynicotine.gtkgui.widgets.theme import load_icons
 from pynicotine.gtkgui.widgets.theme import remove_css_class
 from pynicotine.gtkgui.widgets.theme import set_global_style
 from pynicotine.gtkgui.widgets.theme import set_use_header_bar
-from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.gtkgui.widgets.window import Window
 from pynicotine.logfacility import log
-from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import human_speed
 from pynicotine.utils import open_file_path
 
@@ -76,7 +76,6 @@ class MainWindow(Window):
 
         """ Load UI """
 
-        ui_template = UserInterface(scope=self, path="mainwindow.ui")
         (
             self.add_buddy_entry,
             self.buddy_list_container,
@@ -187,7 +186,7 @@ class MainWindow(Window):
             self.userlist_toolbar,
             self.userlist_toolbar_content,
             self.vertical_paned
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="mainwindow.ui")
 
         super().__init__(widget=Gtk.ApplicationWindow(child=self.container))
         self.header_bar.pack_end(self.header_end)
@@ -368,7 +367,7 @@ class MainWindow(Window):
         self.application.tray_icon.update_window_visibility()
 
     def save_columns(self, *_args):
-        for page in (self.userlist, self.chatrooms, self.downloads, self.uploads):
+        for page in (self.downloads, self.uploads):
             page.save_columns()
 
     def save_window_state(self):
@@ -430,13 +429,13 @@ class MainWindow(Window):
     def update_user_status(self):
 
         status = core.user_status
-        is_online = (status != UserStatus.OFFLINE)
-        is_away = (status == UserStatus.AWAY)
+        is_online = (status != slskmessages.UserStatus.OFFLINE)
+        is_away = (status == slskmessages.UserStatus.AWAY)
 
         # Action status
         self.application.lookup_action("connect").set_enabled(not is_online)
 
-        for action_name in ("disconnect", "soulseek-privileges", "away-accel", "away",
+        for action_name in ("disconnect", "soulseek-privileges", "away-accel", "away", "personal-profile",
                             "message-downloading-users", "message-buddies"):
             self.application.lookup_action(action_name).set_enabled(is_online)
 
@@ -451,10 +450,10 @@ class MainWindow(Window):
         # Status bar
         username = core.login_username
 
-        if status == UserStatus.AWAY:
+        if status == slskmessages.UserStatus.AWAY:
             status_text = _("Away")
 
-        elif status == UserStatus.ONLINE:
+        elif status == slskmessages.UserStatus.ONLINE:
             status_text = _("Online")
 
         else:
@@ -1207,7 +1206,7 @@ class MainWindow(Window):
             self.auto_away = True
             self.away_timer_id = None
 
-            if core.user_status != UserStatus.AWAY:
+            if core.user_status != slskmessages.UserStatus.AWAY:
                 core.set_away_mode(True)
 
             return
@@ -1215,7 +1214,7 @@ class MainWindow(Window):
         if self.auto_away:
             self.auto_away = False
 
-            if core.user_status == UserStatus.AWAY:
+            if core.user_status == slskmessages.UserStatus.AWAY:
                 core.set_away_mode(False)
 
         # Reset away timer
@@ -1224,7 +1223,7 @@ class MainWindow(Window):
 
     def create_away_timer(self):
 
-        if core.user_status != UserStatus.ONLINE:
+        if core.user_status != slskmessages.UserStatus.ONLINE:
             return
 
         away_interval = config.sections["server"]["autoaway"]

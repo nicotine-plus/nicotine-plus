@@ -20,21 +20,20 @@ from gi.repository import Gtk
 
 from pynicotine import slskmessages
 from pynicotine.core import core
+from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.popover import Popover
 from pynicotine.gtkgui.widgets.textview import TextView
-from pynicotine.gtkgui.widgets.ui import UserInterface
 
 
 class RoomWall(Popover):
 
     def __init__(self, window, room):
 
-        ui_template = UserInterface(scope=self, path="popovers/roomwall.ui")
         (
             self.container,
             self.message_entry,
             self.message_view_container,
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="popovers/roomwall.ui")
 
         super().__init__(
             window=window,

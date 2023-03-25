@@ -22,12 +22,12 @@ import os
 
 from pynicotine.config import config
 from pynicotine.core import core
+from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
 from pynicotine.gtkgui.widgets.filechooser import FolderChooser
 from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.treeview import TreeView
-from pynicotine.gtkgui.widgets.ui import UserInterface
 
 
 class FastConfigure(Dialog):
@@ -37,7 +37,6 @@ class FastConfigure(Dialog):
         self.rescan_required = False
         self.finished = False
 
-        ui_template = UserInterface(scope=self, path="dialogs/fastconfigure.ui")
         (
             self.account_page,
             self.download_folder_button,
@@ -55,7 +54,7 @@ class FastConfigure(Dialog):
             self.summary_page,
             self.username_entry,
             self.welcome_page
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="dialogs/fastconfigure.ui")
 
         self.pages = [self.welcome_page, self.account_page, self.port_page, self.share_page, self.summary_page]
 

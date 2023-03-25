@@ -18,11 +18,11 @@
 
 import time
 
+from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
-from pynicotine.slskmessages import UserStatus
 
 
 class Buddy:
@@ -109,7 +109,7 @@ class UserList:
                 is_trusted=is_trusted,
                 last_seen=last_seen,
                 country=country,
-                status=UserStatus.OFFLINE
+                status=slskmessages.UserStatus.OFFLINE
             )
             events.emit("add-buddy", user, user_data)
 
@@ -130,7 +130,7 @@ class UserList:
     def _server_disconnect(self, _msg):
 
         for user, user_data in self.buddies.items():
-            user_data.status = UserStatus.OFFLINE
+            user_data.status = slskmessages.UserStatus.OFFLINE
             self.set_buddy_last_seen(user, is_online=False)
 
         self.save_buddy_list()
@@ -152,13 +152,13 @@ class UserList:
             is_trusted=is_trusted,
             last_seen=last_seen,
             country=country,
-            status=UserStatus.OFFLINE
+            status=slskmessages.UserStatus.OFFLINE
         )
         self.save_buddy_list()
 
         events.emit("add-buddy", user, user_data)
 
-        if core.user_status == UserStatus.OFFLINE:
+        if core.user_status == slskmessages.UserStatus.OFFLINE:
             return
 
         # Request user status, speed and number of shared files
@@ -284,10 +284,10 @@ class UserList:
         if not notify:
             return
 
-        if msg.status == UserStatus.AWAY:
+        if msg.status == slskmessages.UserStatus.AWAY:
             status_text = _("%(user)s is away")
 
-        elif msg.status == UserStatus.ONLINE:
+        elif msg.status == slskmessages.UserStatus.ONLINE:
             status_text = _("%(user)s is online")
 
         else:
