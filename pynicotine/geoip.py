@@ -16,6 +16,8 @@
 
 import os
 
+from pynicotine.external.ip2location import IP2Location
+
 
 class GeoIP:
     """ Country-related class """
@@ -275,19 +277,16 @@ class GeoIP:
     }
 
     def __init__(self):
-
-        from pynicotine.external.ip2location import IP2Location
         self._ip2location = IP2Location(os.path.join(os.path.dirname(__file__), "external", "ipcountrydb.bin"))
 
-    @classmethod
-    def country_code_to_name(cls, country_code):
+    def country_code_to_name(self, country_code):
 
         country_code = country_code.upper()
 
-        if country_code not in cls.COUNTRY_LIST:
+        if country_code not in self.COUNTRY_LIST:
             return country_code
 
-        return cls.COUNTRY_LIST[country_code]
+        return self.COUNTRY_LIST[country_code]
 
     def get_country_code(self, addr):
 

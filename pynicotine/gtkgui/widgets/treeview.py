@@ -29,7 +29,7 @@ from gi.repository import GObject
 from gi.repository import Gtk
 
 from pynicotine.config import config
-from pynicotine.geoip import GeoIP
+from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
@@ -543,7 +543,7 @@ class TreeView:
     def get_country_tooltip_text(icon_name):
 
         country_code = icon_name[-2:].upper()
-        country_name = GeoIP.country_code_to_name(country_code)
+        country_name = core.geoip.country_code_to_name(country_code)
         return f"{country_name} ({country_code})"
 
     @staticmethod
@@ -1088,7 +1088,7 @@ def show_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn, column_titles, t
 def get_country_tooltip_text(country_code):
 
     if country_code:
-        country_name = GeoIP.country_code_to_name(country_code)
+        country_name = core.geoip.country_code_to_name(country_code)
         return f"{country_name} ({country_code})"
 
     return _("Earth")
