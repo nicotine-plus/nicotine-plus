@@ -33,6 +33,7 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.filechooser import FileChooserSave
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.infobar import InfoBar
@@ -41,7 +42,6 @@ from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
 from pynicotine.gtkgui.widgets.treeview import TreeView
-from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
 from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
@@ -199,7 +199,6 @@ class UserInfo:
 
     def __init__(self, userinfos, user):
 
-        ui_template = UserInterface(scope=self, path="userinfo.ui")
         (
             self.add_remove_buddy_label,
             self.ban_unban_user_label,
@@ -227,7 +226,7 @@ class UserInfo:
             self.upload_slots_label,
             self.upload_speed_label,
             self.user_label
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="userinfo.ui")
 
         self.userinfos = userinfos
         self.window = userinfos.window

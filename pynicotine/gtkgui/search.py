@@ -36,6 +36,7 @@ from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.dialogs.fileproperties import FileProperties
 from pynicotine.gtkgui.utils import copy_text
+from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.filechooser import FolderChooser
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
@@ -55,7 +56,6 @@ from pynicotine.gtkgui.widgets.treeview import select_user_row_iter
 from pynicotine.gtkgui.widgets.treeview import show_country_tooltip
 from pynicotine.gtkgui.widgets.treeview import show_file_path_tooltip
 from pynicotine.gtkgui.widgets.treeview import show_file_type_tooltip
-from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
 from pynicotine.shares import FileTypes
 from pynicotine.utils import factorize
@@ -317,7 +317,6 @@ class Search:
 
     def __init__(self, searches, text, token, mode, mode_label, show_page):
 
-        ui_template = UserInterface(scope=self, path="search.ui")
         (
             self.add_wish_button,
             self.add_wish_icon,
@@ -342,7 +341,7 @@ class Search:
             self.results_button,
             self.results_label,
             self.tree_view
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="search.ui")
 
         self.searches = searches
         self.window = searches.window

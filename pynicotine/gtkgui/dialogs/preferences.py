@@ -41,6 +41,7 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.popovers.searchfilterhelp import SearchFilterHelp
+from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
 from pynicotine.gtkgui.widgets.filechooser import FileChooserSave
 from pynicotine.gtkgui.widgets.filechooser import FolderChooser
@@ -55,7 +56,6 @@ from pynicotine.gtkgui.widgets.theme import load_custom_icons
 from pynicotine.gtkgui.widgets.theme import set_dark_mode
 from pynicotine.gtkgui.widgets.theme import update_custom_css
 from pynicotine.gtkgui.widgets.treeview import TreeView
-from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.i18n import LANGUAGES
 from pynicotine.utils import open_file_path
 from pynicotine.utils import open_uri
@@ -83,7 +83,6 @@ class NetworkPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/network.ui")
         (
             self.Main,  # pylint: disable=invalid-name
             self.auto_away_spinner,
@@ -98,7 +97,7 @@ class NetworkPage:
             self.soulseek_server_entry,
             self.upnp_toggle,
             self.username_entry
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="settings/network.ui")
 
         self.application = application
         self.portmap_required = False
@@ -246,7 +245,6 @@ class DownloadsPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/downloads.ui")
         (
             self.Main,  # pylint: disable=invalid-name
             self.accept_sent_files_toggle,
@@ -267,7 +265,7 @@ class DownloadsPage:
             self.use_alt_speed_limit_radio,
             self.use_speed_limit_radio,
             self.use_unlimited_speed_radio
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="settings/downloads.ui")
 
         self.application = application
 
@@ -509,13 +507,12 @@ class SharesPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/shares.ui")
         (
             self.Main,  # pylint: disable=invalid-name
             self.buddy_shares_trusted_only_toggle,
             self.rescan_on_startup_toggle,
             self.shares_list_container
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="settings/shares.ui")
 
         self.application = application
 
@@ -713,7 +710,6 @@ class UploadsPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/uploads.ui")
         (
             self.Main,  # pylint: disable=invalid-name
             self.alt_speed_spinner,
@@ -732,7 +728,7 @@ class UploadsPage:
             self.use_speed_limit_radio,
             self.use_unlimited_speed_radio,
             self.use_upload_slots_radio
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="settings/uploads.ui")
 
         self.application = application
 
@@ -804,12 +800,11 @@ class UserProfilePage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/userinfo.ui")
         (
             self.Main,  # pylint: disable=invalid-name
             self.description_view_container,
             self.select_picture_button
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="settings/userinfo.ui")
 
         self.application = application
         self.user_profile_required = False
@@ -856,12 +851,11 @@ class IgnoredUsersPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/ignore.ui")
         (
             self.Main,  # pylint: disable=invalid-name
             self.ignored_ips_container,
             self.ignored_users_container
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="settings/ignore.ui")
 
         self.application = application
 
@@ -982,7 +976,6 @@ class BannedUsersPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/ban.ui")
         (
             self.Main,  # pylint: disable=invalid-name
             self.ban_message_entry,
@@ -993,7 +986,7 @@ class BannedUsersPage:
             self.geo_block_message_entry,
             self.geo_block_message_toggle,
             self.geo_block_toggle
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="settings/ban.ui")
 
         self.application = application
         self.ip_ban_required = False
@@ -1136,7 +1129,6 @@ class ChatsPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/chats.ui")
         (
             self.Main,  # pylint: disable=invalid-name
             self.auto_replace_words_toggle,
@@ -1162,7 +1154,7 @@ class ChatsPage:
             self.tts_command_combobox,
             self.tts_private_message_entry,
             self.tts_room_message_entry,
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="settings/chats.ui")
 
         self.application = application
         self.completion_required = False
@@ -1434,8 +1426,6 @@ class UserInterfacePage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/userinterface.ui")
-
         # pylint: disable=invalid-name
         (self.ChatRoomsPosition, self.CloseAction, self.DarkMode,
          self.DefaultBrowserFont, self.DefaultChatFont, self.DefaultGlobalFont, self.DefaultListFont,
@@ -1456,7 +1446,7 @@ class UserInterfacePage:
          self.SelectListFont, self.SelectSearchFont, self.SelectTextViewFont, self.SelectTransfersFont,
          self.StartupHidden, self.TabClosers, self.TabSelectPrevious, self.ThemeDir, self.TraySettings,
          self.TrayiconCheck, self.UserBrowsePosition, self.UserInfoPosition, self.UsernameHotspots,
-         self.UsernameStyle) = ui_template.widgets
+         self.UsernameStyle) = ui.load(scope=self, path="settings/userinterface.ui")
 
         self.application = application
         self.theme_required = False
@@ -1772,7 +1762,6 @@ class LoggingPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/log.ui")
         (
             self.Main,  # pylint: disable=invalid-name
             self.chatroom_log_folder_button,
@@ -1784,7 +1773,7 @@ class LoggingPage:
             self.log_transfer_toggle,
             self.private_chat_log_folder_button,
             self.transfer_log_folder_button
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="settings/log.ui")
 
         self.application = application
 
@@ -1842,7 +1831,6 @@ class SearchesPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/search.ui")
         (
             self.Main,  # pylint: disable=invalid-name
             self.cleared_filter_history_icon,
@@ -1864,7 +1852,7 @@ class SearchesPage:
             self.remove_special_chars_toggle,
             self.repond_search_requests_toggle,
             self.show_private_results_toggle
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="settings/search.ui")
 
         self.application = application
         self.search_required = False
@@ -1963,13 +1951,12 @@ class UrlHandlersPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/urlhandlers.ui")
         (
             self.Main,  # pylint: disable=invalid-name
             self.file_manager_combobox,
             self.media_player_combobox,
             self.protocol_list_container
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="settings/urlhandlers.ui")
 
         self.application = application
 
@@ -2136,11 +2123,10 @@ class NowPlayingPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/nowplaying.ui")
-
         # pylint: disable=invalid-name
-        (self.Example, self.Legend, self.Main, self.NPCommand, self.NPFormat, self.NP_lastfm, self.NP_listenbrainz,
-         self.NP_mpris, self.NP_other, self.player_input, self.test_now_playing) = ui_template.widgets
+        (self.Example, self.Legend, self.Main, self.NPCommand, self.NPFormat,
+         self.NP_lastfm, self.NP_listenbrainz, self.NP_mpris, self.NP_other,
+         self.player_input, self.test_now_playing) = ui.load(scope=self, path="settings/nowplaying.ui")
 
         self.application = application
 
@@ -2318,7 +2304,6 @@ class PluginsPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/plugin.ui")
         (
             self.Main,  # pylint: disable=invalid-name
             self.enable_plugins_toggle,
@@ -2328,7 +2313,7 @@ class PluginsPage:
             self.plugin_name_label,
             self.plugin_settings_button,
             self.plugin_version_label
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="settings/plugin.ui")
 
         self.application = application
         self.selected_plugin = None
@@ -2462,7 +2447,6 @@ class Preferences(Dialog):
 
         self.application = application
 
-        ui_template = UserInterface(scope=self, path="dialogs/preferences.ui")
         (
             self.apply_button,
             self.cancel_button,
@@ -2472,7 +2456,7 @@ class Preferences(Dialog):
             self.ok_button,
             self.preferences_list,
             self.viewport
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="dialogs/preferences.ui")
 
         super().__init__(
             parent=application.window,

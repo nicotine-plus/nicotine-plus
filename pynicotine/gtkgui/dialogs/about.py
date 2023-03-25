@@ -20,8 +20,8 @@ from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.dialogs import Dialog
-from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.utils import open_uri
 
 
@@ -329,7 +329,6 @@ Copyright (c) 2017 IP2Location.com
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="dialogs/about.ui")
         (
             self.application_name_label,
             self.authors_container,
@@ -340,7 +339,7 @@ Copyright (c) 2017 IP2Location.com
             self.translators_container,
             self.version_label,
             self.website_label
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="dialogs/about.ui")
 
         super().__init__(
             parent=application.window,

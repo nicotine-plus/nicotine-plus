@@ -31,6 +31,7 @@ from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.dialogs.fileproperties import FileProperties
 from pynicotine.gtkgui.utils import copy_text
+from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import FilePopupMenu
@@ -45,7 +46,6 @@ from pynicotine.gtkgui.widgets.treeview import save_columns
 from pynicotine.gtkgui.widgets.treeview import select_user_row_iter
 from pynicotine.gtkgui.widgets.treeview import show_file_path_tooltip
 from pynicotine.gtkgui.widgets.treeview import show_file_type_tooltip
-from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.transfers import Transfer
 from pynicotine.utils import UINT64_LIMIT
 from pynicotine.utils import human_length
@@ -62,12 +62,11 @@ class TransferList:
 
     def __init__(self, window, transfer_type):
 
-        ui_template = UserInterface(scope=self, path=f"{transfer_type}s.ui")
         (
             self.clear_all_button,
             self.container,
             self.tree_view
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path=f"{transfer_type}s.ui")
 
         self.window = window
         self.type = transfer_type

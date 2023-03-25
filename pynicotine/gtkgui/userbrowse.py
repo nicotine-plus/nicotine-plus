@@ -35,6 +35,7 @@ from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.dialogs.fileproperties import FileProperties
 from pynicotine.gtkgui.utils import copy_text
+from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.filechooser import FolderChooser
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
@@ -45,7 +46,6 @@ from pynicotine.gtkgui.widgets.popupmenu import FilePopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.theme import get_file_type_icon_name
 from pynicotine.gtkgui.widgets.treeview import TreeView
-from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.utils import human_size
 from pynicotine.utils import humanize
 from pynicotine.utils import open_file_path
@@ -156,7 +156,6 @@ class UserBrowse:
 
     def __init__(self, userbrowses, user):
 
-        ui_template = UserInterface(scope=self, path="userbrowse.ui")
         (
             self.container,
             self.expand_button,
@@ -171,7 +170,7 @@ class UserBrowse:
             self.save_button,
             self.search_entry,
             self.share_size_label
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="userbrowse.ui")
 
         self.userbrowses = userbrowses
         self.window = userbrowses.window

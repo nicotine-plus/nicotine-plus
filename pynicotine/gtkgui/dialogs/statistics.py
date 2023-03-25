@@ -21,9 +21,9 @@ import time
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
+from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
-from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.utils import human_size
 from pynicotine.utils import humanize
 
@@ -32,7 +32,6 @@ class Statistics(Dialog):
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="dialogs/statistics.ui")
         (
             self.close_button,
             self.completed_downloads_session_label,
@@ -51,7 +50,7 @@ class Statistics(Dialog):
             self.started_uploads_total_label,
             self.uploaded_size_session_label,
             self.uploaded_size_total_label
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="dialogs/statistics.ui")
 
         super().__init__(
             parent=application.window,

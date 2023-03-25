@@ -41,6 +41,7 @@ from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.popovers.chatcommandhelp import ChatCommandHelp
 from pynicotine.gtkgui.popovers.roomlist import RoomList
 from pynicotine.gtkgui.popovers.roomwall import RoomWall
+from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
@@ -53,7 +54,6 @@ from pynicotine.gtkgui.widgets.theme import USER_STATUS_COLORS
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
 from pynicotine.gtkgui.widgets.treeview import TreeView
-from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
 from pynicotine.utils import clean_file
 from pynicotine.utils import encode_path
@@ -406,7 +406,6 @@ class ChatRoom:
 
     def __init__(self, chatrooms, room, users):
 
-        ui_template = UserInterface(scope=self, path="chatrooms.ui")
         (
             self.activity_container,
             self.activity_search_bar,
@@ -430,7 +429,7 @@ class ChatRoom:
             self.users_label,
             self.users_list_container,
             self.users_paned
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="chatrooms.ui")
 
         self.chatrooms = chatrooms
         self.window = chatrooms.window
