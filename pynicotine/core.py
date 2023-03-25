@@ -64,7 +64,6 @@ class Core:
         self.pluginhandler = None
         self.now_playing = None
         self.protothread = None
-        self.geoip = None
         self.notifications = None
         self.update_checker = None
 
@@ -109,7 +108,6 @@ class Core:
     def init_components(self, enable_cli=False):
 
         from pynicotine.chatrooms import ChatRooms
-        from pynicotine.geoip import GeoIP
         from pynicotine.interests import Interests
         from pynicotine.networkfilter import NetworkFilter
         from pynicotine.notifications import Notifications
@@ -142,7 +140,6 @@ class Core:
         self.queue.clear()
         self.protothread = SoulseekNetworkThread(queue=self.queue, user_addresses=self.user_addresses)
 
-        self.geoip = GeoIP()
         self.notifications = Notifications()
         self.network_filter = NetworkFilter()
         self.now_playing = NowPlaying()
@@ -293,7 +290,7 @@ class Core:
 
         if user_address and user != self.login_username:
             ip_address, _port = user_address
-            country_code = self.geoip.get_country_code(ip_address)
+            country_code = self.network_filter.get_country_code(ip_address)
             return country_code
 
         if user not in self._ip_requested:
@@ -372,7 +369,7 @@ class Core:
         """ Server code: 3 """
 
         user = msg.user
-        country_code = self.geoip.get_country_code(msg.ip_address)
+        country_code = self.network_filter.get_country_code(msg.ip_address)
         events.emit("user-country", user, country_code)
 
         if user not in self._ip_requested:
@@ -383,7 +380,7 @@ class Core:
         self.pluginhandler.user_resolve_notification(user, msg.ip_address, msg.port, country_code)
 
         if country_code:
-            country_name = self.geoip.country_code_to_name(country_code)
+            country_name = self.network_filter.COUNTRIES.get(country_code, _("Unknown"))
             country = f" ({country_code} / {country_name})"
         else:
             country = ""

@@ -470,7 +470,7 @@ class UserInfo:
         if not country_code:
             return
 
-        country_name = core.geoip.country_code_to_name(country_code)
+        country_name = core.network_filter.COUNTRIES.get(country_code, _("Unknown"))
         country_text = f"{country_name} ({country_code})"
 
         self.country_label.set_text(country_text)

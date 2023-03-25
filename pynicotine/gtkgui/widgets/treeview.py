@@ -543,7 +543,7 @@ class TreeView:
     def get_country_tooltip_text(icon_name):
 
         country_code = icon_name[-2:].upper()
-        country_name = core.geoip.country_code_to_name(country_code)
+        country_name = core.network_filter.COUNTRIES.get(country_code, _("Unknown"))
         return f"{country_name} ({country_code})"
 
     @staticmethod
@@ -1088,7 +1088,7 @@ def show_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn, column_titles, t
 def get_country_tooltip_text(country_code):
 
     if country_code:
-        country_name = core.geoip.country_code_to_name(country_code)
+        country_name = core.network_filter.COUNTRIES.get(country_code, _("Unknown"))
         return f"{country_name} ({country_code})"
 
     return _("Earth")

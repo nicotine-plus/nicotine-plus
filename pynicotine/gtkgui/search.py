@@ -748,7 +748,7 @@ class Search:
 
         self.users.add(user)
         ip_address = msg.init.addr[0]
-        country_code = core.geoip.get_country_code(ip_address)
+        country_code = core.network_filter.get_country_code(ip_address)
         has_free_slots = msg.freeulslots
 
         if has_free_slots:
@@ -1327,7 +1327,7 @@ class Search:
             selected_size += file_size
             selected_length += self.resultsmodel.get_value(iterator, 17)
             country_code = self.resultsmodel.get_value(iterator, 13)
-            country_name = core.geoip.country_code_to_name(country_code)
+            country_name = core.network_filter.COUNTRIES.get(country_code, _("Unknown"))
             country = f"{country_name} ({country_code})"
 
             data.append({
