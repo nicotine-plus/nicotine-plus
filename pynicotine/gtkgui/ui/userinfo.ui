@@ -405,6 +405,10 @@
                     <child>
                       <object class="GtkBox" id="picture_container">
                         <property name="visible">True</property>
+                        <property name="margin-start">36</property>
+                        <property name="margin-end">36</property>
+                        <property name="margin-top">36</property>
+                        <property name="margin-bottom">36</property>
                         <child>
                           <object class="GtkImage" id="placeholder_picture">
                             <property name="visible" bind-source="picture_view" bind-property="visible" bind-flags="bidirectional|invert-boolean|sync-create"/>
@@ -418,10 +422,8 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkScrolledWindow" id="picture_view">
+                          <object class="GtkBox" id="picture_view">
                             <property name="visible">False</property>
-                            <property name="hexpand">True</property>
-                            <property name="vexpand">True</property>
                           </object>
                         </child>
                       </object>

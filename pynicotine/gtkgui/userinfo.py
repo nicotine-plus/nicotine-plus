@@ -26,6 +26,7 @@ from gi.repository import Gdk
 from gi.repository import GdkPixbuf
 from gi.repository import Gio
 from gi.repository import GLib
+from gi.repository import GObject
 from gi.repository import Gtk
 
 from pynicotine import slskmessages
@@ -237,24 +238,20 @@ class UserInfo:
 
         if GTK_API_VERSION >= 4:
             self.country_icon.set_pixel_size(21)
-
-            self.picture = Gtk.Picture(can_shrink=False, halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER)
-            self.scroll_controller = Gtk.EventControllerScroll(flags=Gtk.EventControllerScrollFlags.VERTICAL)
-            self.scroll_controller.connect("scroll", self.on_scroll)
-            self.picture_view.add_controller(self.scroll_controller)
+            self.picture = Gtk.Picture(can_shrink=True, keep_aspect_ratio=True, hexpand=True, vexpand=True)
+            self.picture_view.append(self.picture)  # pylint: disable=no-member
         else:
             # Setting a pixel size of 21 results in a misaligned country flag
             self.country_icon.set_pixel_size(0)
 
-            self.picture = Gtk.Image(visible=True)
-            self.picture_view.connect("scroll-event", self.on_scroll_event)
+            self.picture = Gtk.EventBox(hexpand=True, vexpand=True, visible=True)
+            self.picture.connect("draw", self.on_draw_picture)
 
-        self.picture_view.set_property("child", self.picture)
+            self.picture_view.add(self.picture)    # pylint: disable=no-member
 
         self.user = user
-        self.picture_data_original = self.picture_data_scaled = None
-        self.zoom_factor = 5
-        self.actual_zoom = 0
+        self.picture_data = None
+        self.picture_surface = None
         self.indeterminate_progress = True
 
         # Set up likes list
@@ -304,12 +301,9 @@ class UserInfo:
                                              self.on_popup_dislikes_menu)
         self.dislikes_popup_menu.add_items(*get_interest_items(self.dislikes_list_view, "dislikes"))
 
-        self.picture_popup_menu = PopupMenu(self.window.application, self.picture_view)
+        self.picture_popup_menu = PopupMenu(self.window.application, self.picture)
         self.picture_popup_menu.add_items(
-            ("#" + _("Zoom 1:1"), self.make_zoom_normal),
-            ("#" + _("Zoom In"), self.make_zoom_in),
-            ("#" + _("Zoom Out"), self.make_zoom_out),
-            ("", None),
+            ("#" + _("Copy Picture"), self.on_copy_picture),
             ("#" + _("Save Picture"), self.on_save_picture)
         )
 
@@ -333,45 +327,25 @@ class UserInfo:
 
     """ General """
 
-    def set_pixbuf(self, pixbuf):
-
-        if GTK_API_VERSION >= 4:
-            self.picture.set_pixbuf(pixbuf)
-        else:
-            self.picture.set_from_pixbuf(pixbuf)
-
-        del pixbuf
-
     def load_picture(self, data):
 
         if not data:
             if GTK_API_VERSION >= 4:
                 self.picture.set_paintable(None)
-            else:
-                self.picture.clear()
 
-            self.picture_data_original = self.picture_data_scaled = None
+            self.picture_data = None
             self.placeholder_picture.set_visible(True)
             return
 
         try:
-            allocation = self.picture_container.get_allocation()
-            max_width = allocation.width - 72
-            max_height = allocation.height - 72
+            if GTK_API_VERSION >= 4:
+                self.picture_data = Gdk.Texture.new_from_bytes(GLib.Bytes(data))
+                self.picture.set_paintable(self.picture_data)
+            else:
+                data_stream = Gio.MemoryInputStream.new_from_bytes(GLib.Bytes(data))
+                self.picture_data = GdkPixbuf.Pixbuf.new_from_stream(data_stream, cancellable=None)
+                self.picture_surface = Gdk.cairo_surface_create_from_pixbuf(self.picture_data, scale=1, for_window=None)
 
-            # Keep the original picture size for saving to disk
-            data_stream = Gio.MemoryInputStream.new_from_bytes(GLib.Bytes(data))
-            self.picture_data_original = GdkPixbuf.Pixbuf.new_from_stream(data_stream, cancellable=None)
-            picture_width = self.picture_data_original.get_width()
-            picture_height = self.picture_data_original.get_height()
-
-            # Scale picture before displaying
-            ratio = min(max_width / picture_width, max_height / picture_height)
-            self.picture_data_scaled = self.picture_data_original.scale_simple(
-                ratio * picture_width, ratio * picture_height, GdkPixbuf.InterpType.BILINEAR)
-            self.set_pixbuf(self.picture_data_scaled)
-
-            self.actual_zoom = 0
             self.picture_view.set_visible(True)
 
         except Exception as error:
@@ -379,44 +353,6 @@ class UserInfo:
                 "user": self.user,
                 "error": error
             })
-
-    def make_zoom_normal(self, *_args):
-        self.actual_zoom = 0
-        self.set_pixbuf(self.picture_data_scaled)
-
-    def make_zoom_in(self, *_args):
-
-        def calc_zoom_in(w_h):
-            return w_h + w_h * self.actual_zoom / 100 + w_h * self.zoom_factor / 100
-
-        if self.picture_data_scaled is None or self.actual_zoom >= 100:
-            return
-
-        self.actual_zoom += self.zoom_factor
-        width = calc_zoom_in(self.picture_data_scaled.get_width())
-        height = calc_zoom_in(self.picture_data_scaled.get_height())
-
-        picture_zoomed = self.picture_data_scaled.scale_simple(width, height, GdkPixbuf.InterpType.NEAREST)
-        self.set_pixbuf(picture_zoomed)
-
-    def make_zoom_out(self, *_args):
-
-        def calc_zoom_out(w_h):
-            return w_h + w_h * self.actual_zoom / 100 - w_h * self.zoom_factor / 100
-
-        if self.picture_data_scaled is None:
-            return
-
-        self.actual_zoom -= self.zoom_factor
-        width = calc_zoom_out(self.picture_data_scaled.get_width())
-        height = calc_zoom_out(self.picture_data_scaled.get_height())
-
-        if width < 42 or height < 42:
-            self.actual_zoom += self.zoom_factor
-            return
-
-        picture_zoomed = self.picture_data_scaled.scale_simple(width, height, GdkPixbuf.InterpType.NEAREST)
-        self.set_pixbuf(picture_zoomed)
 
     def peer_connection_error(self):
 
@@ -515,7 +451,7 @@ class UserInfo:
         self.queued_uploads_label.set_text(humanize(msg.queuesize))
         self.free_upload_slots_label.set_text(_("Yes") if msg.slotsavail else _("No"))
 
-        self.picture_data_original = self.picture_data_scaled = None
+        self.picture_data = None
         self.load_picture(msg.pic)
 
         self.info_bar.set_visible(False)
@@ -556,6 +492,23 @@ class UserInfo:
             self.dislikes_list_view.add_row([hate], select_row=False)
 
     """ Callbacks """
+
+    def on_draw_picture(self, area, context):
+        """ Draws a centered picture that fills the drawing area """
+
+        area_width = area.get_allocated_width()
+        area_height = area.get_allocated_height()
+        picture_width = self.picture_surface.get_width()
+        picture_height = self.picture_surface.get_height()
+
+        scale_factor = min(area_width / picture_width, area_height / picture_height)
+        translate_x = (area_width - (picture_width * scale_factor)) / 2
+        translate_y = (area_height - (picture_height * scale_factor)) / 2
+
+        context.translate(translate_x, translate_y)
+        context.scale(scale_factor, scale_factor)
+        context.set_source_surface(self.picture_surface, 0, 0)
+        context.paint()
 
     def on_tab_popup(self, *_args):
         self.user_popup_menu.toggle_user_items()
@@ -605,14 +558,31 @@ class UserInfo:
 
         core.network_filter.ignore_user(self.user)
 
+    def on_copy_picture(self, *_args):
+
+        if self.picture_data is None:
+            return
+
+        if GTK_API_VERSION >= 4:
+            value = GObject.Value(Gdk.Texture, self.picture_data)
+            content = Gdk.ContentProvider.new_for_value(value)
+            Gdk.Display.get_default().get_clipboard().set_content(content)
+        else:
+            Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD).set_image(self.picture_data)
+
     def on_save_picture_response(self, file_path, *_args):
-        _success, picture_bytes = self.picture_data_original.save_to_bufferv(
-            type="png", option_keys=[], option_values=[])
+
+        if GTK_API_VERSION >= 4:
+            picture_bytes = self.picture_data.save_to_png_bytes().get_data()
+        else:
+            _success, picture_bytes = self.picture_data.save_to_bufferv(
+                type="png", option_keys=[], option_values=[])
+
         core.userinfo.save_user_picture(file_path, picture_bytes)
 
     def on_save_picture(self, *_args):
 
-        if self.picture_data_original is None:
+        if self.picture_data is None:
             return
 
         current_date_time = time.strftime("%Y-%m-%d_%H-%M-%S")
@@ -623,28 +593,6 @@ class UserInfo:
             initial_folder=config.sections["transfers"]["downloaddir"],
             initial_file=f"{self.user}_{current_date_time}.png"
         ).show()
-
-    def on_scroll(self, _controller=None, _scroll_x=0, scroll_y=0):
-
-        if scroll_y < 0:
-            self.make_zoom_in()
-        else:
-            self.make_zoom_out()
-
-        return True
-
-    def on_scroll_event(self, _widget, event):
-
-        if event.direction == Gdk.ScrollDirection.SMOOTH:
-            return self.on_scroll(scroll_y=event.delta_y)
-
-        if event.direction == Gdk.ScrollDirection.DOWN:
-            self.make_zoom_out()
-
-        elif event.direction == Gdk.ScrollDirection.UP:
-            self.make_zoom_in()
-
-        return True
 
     def on_refresh(self, *_args):
         core.userinfo.show_user(self.user, refresh=True)
