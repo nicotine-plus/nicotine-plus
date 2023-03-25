@@ -29,6 +29,7 @@
 This is the actual client code. Actual GUI classes are in the separate modules
 """
 
+import json
 import os
 import signal
 import sys
@@ -120,7 +121,6 @@ class Core:
         from pynicotine.slskproto import SoulseekNetworkThread
         from pynicotine.statistics import Statistics
         from pynicotine.transfers import Transfers
-        from pynicotine.updatechecker import UpdateChecker
         from pynicotine.userbrowse import UserBrowse
         from pynicotine.userinfo import UserInfo
         from pynicotine.userlist import UserList
@@ -483,6 +483,77 @@ class Core:
         config.write_configuration()
 
         log.add(_("Your password has been changed"), title=_("Password Changed"))
+
+
+class UpdateChecker:
+
+    def __init__(self):
+        self._thread = None
+
+    def check(self):
+
+        if self._thread and self._thread.is_alive():
+            return
+
+        self._thread = threading.Thread(target=self._check, name="UpdateChecker", daemon=True)
+        self._thread.start()
+
+    def _check(self):
+
+        try:
+            h_latest_version, latest_version, date = self.retrieve_latest_version()
+            version = self.create_integer_version(config.version)
+            title = _("Up to Date")
+
+            if latest_version > version:
+                title = _("Out of Date")
+                message = _("Version %(version)s is available, released on %(date)s") % {
+                    "version": h_latest_version,
+                    "date": date
+                }
+
+            elif version > latest_version:
+                message = _("You are using a development version of %s") % config.application_name
+
+            else:
+                message = _("You are using the latest version of %s") % config.application_name
+
+        except Exception as error:
+            title = _("Latest Version Unknown")
+            message = _("Cannot retrieve latest version: %s") % error
+
+        log.add(message, title=title)
+
+    @staticmethod
+    def create_integer_version(version):
+
+        major, minor, patch = version.split(".")[:3]
+        stable = 1
+
+        if "dev" in version or "rc" in version:
+            # Example: 2.0.1.dev1
+            # A dev version will be one less than a stable version
+            stable = 0
+
+        return (int(major) << 24) + (int(minor) << 16) + (int(patch.split("rc", 1)[0]) << 8) + stable
+
+    @classmethod
+    def retrieve_latest_version(cls):
+
+        from urllib.request import urlopen
+        with urlopen("https://pypi.org/pypi/nicotine-plus/json", timeout=5) as response:
+            response_body = response.read().decode("utf-8")
+
+        data = json.loads(response_body)
+        h_latest_version = data["info"]["version"]
+        latest_version = cls.create_integer_version(h_latest_version)
+
+        try:
+            date = data["releases"][h_latest_version][0]["upload_time"]
+        except Exception:
+            date = None
+
+        return h_latest_version, latest_version, date
 
 
 core = Core()
