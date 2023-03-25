@@ -21,7 +21,7 @@ import datetime
 from unittest import TestCase
 
 from pynicotine.config import config
-from pynicotine.updatechecker import UpdateChecker
+from pynicotine.core import UpdateChecker
 
 
 class VersionTest(TestCase):
