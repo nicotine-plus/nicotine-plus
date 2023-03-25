@@ -309,10 +309,10 @@ class Search:
         "filterout": (None, ""),
         "filtersize": (None, ""),
         "filterbr": (None, ""),
+        "filterslot": (False, False),
         "filtercc": (None, ""),
         "filtertype": (None, ""),
-        "filterlength": (None, ""),
-        "filterslot": (False, False)
+        "filterlength": (None, "")
     }
 
     def __init__(self, searches, text, token, mode, mode_label, show_page):
@@ -505,7 +505,7 @@ class Search:
             combobox.get_child().filter_id = filter_id
 
         self.filters_button.set_active(config.sections["searches"]["filters_visible"])
-        self.populate_filters()
+        self.populate_default_filters()
 
         # Wishlist
         self.update_wish_button()
@@ -612,39 +612,25 @@ class Search:
             self.clear_undo_filters_button.set_tooltip_text(tooltip_text)
             self.clear_undo_filters_icon.set_property("icon-name", icon_name)
 
-    def populate_filters(self):
+    def populate_default_filters(self):
 
         if not config.sections["searches"]["enablefilters"]:
             return
 
         sfilter = config.sections["searches"]["defilter"]
         num_filters = len(sfilter)
-        stored_filters = {}
+        stored_filters = self.FILTERS_EMPTY.copy()
 
-        if num_filters > 0:
-            stored_filters["filterin"] = (None, str(sfilter[0]))
+        # Convert from list to dict
+        for i, filter_id in enumerate(stored_filters):
+            if i >= num_filters:
+                break
 
-        if num_filters > 1:
-            stored_filters["filterout"] = (None, str(sfilter[1]))
+            if filter_id in self.filter_buttons:
+                stored_filters[filter_id] = (False, bool(sfilter[i]))
 
-        if num_filters > 2:
-            stored_filters["filtersize"] = (None, str(sfilter[2]))
-
-        if num_filters > 3:
-            stored_filters["filterbr"] = (None, str(sfilter[3]))
-
-        if num_filters > 4:
-            free_slot = bool(sfilter[4])
-            stored_filters["filterslot"] = (free_slot, free_slot)
-
-        if num_filters > 5:
-            stored_filters["filtercc"] = (None, str(sfilter[5]))
-
-        if num_filters > 6:
-            stored_filters["filtertype"] = str(sfilter[6])
-
-        if num_filters > 7:
-            stored_filters["filterlength"] = str(sfilter[7])
+            elif filter_id in self.filter_comboboxes:
+                stored_filters[filter_id] = (None, str(sfilter[i]))
 
         self.set_filters(stored_filters)
 
@@ -654,11 +640,11 @@ class Search:
         self.populating_filters = True
 
         for filter_id, button in self.filter_buttons.items():
-            _value, h_value = stored_filters.get(filter_id, False)
+            _value, h_value = stored_filters.get(filter_id, (False, False))
             button.set_active(h_value)
 
         for filter_id, combobox in self.filter_comboboxes.items():
-            _value, h_value = stored_filters.get(filter_id, "")
+            _value, h_value = stored_filters.get(filter_id, (None, ""))
             combobox.get_child().set_text(h_value)
 
         self.populating_filters = False
