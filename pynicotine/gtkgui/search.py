@@ -619,7 +619,7 @@ class Search:
 
         sfilter = config.sections["searches"]["defilter"]
         num_filters = len(sfilter)
-        stored_filters = self.FILTERS_EMPTY
+        stored_filters = self.FILTERS_EMPTY.copy()
 
         # Convert from list to dict
         for i, filter_id in enumerate(stored_filters):
