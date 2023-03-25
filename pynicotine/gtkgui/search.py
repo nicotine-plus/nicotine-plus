@@ -35,7 +35,7 @@ from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.dialogs.fileproperties import FileProperties
-from pynicotine.gtkgui.utils import copy_text
+from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.filechooser import FolderChooser
@@ -1430,7 +1430,7 @@ class Search:
 
         for iterator in self.selected_results.values():
             filepath = self.resultsmodel.get_value(iterator, 12)
-            copy_text(filepath)
+            clipboard.copy_text(filepath)
             return
 
     def on_copy_url(self, *_args):
@@ -1439,7 +1439,7 @@ class Search:
             user = self.resultsmodel.get_value(iterator, 1)
             filepath = self.resultsmodel.get_value(iterator, 12)
             url = core.userbrowse.get_soulseek_url(user, filepath)
-            copy_text(url)
+            clipboard.copy_text(url)
             return
 
     def on_copy_dir_url(self, *_args):
@@ -1448,7 +1448,7 @@ class Search:
             user = self.resultsmodel.get_value(iterator, 1)
             filepath = self.resultsmodel.get_value(iterator, 12)
             url = core.userbrowse.get_soulseek_url(user, filepath.rsplit("\\", 1)[0] + "\\")
-            copy_text(url)
+            clipboard.copy_text(url)
             return
 
     def on_counter_button(self, *_args):
@@ -1506,7 +1506,7 @@ class Search:
         self.tree_view.grab_focus()
 
     def on_copy_search_term(self, *_args):
-        copy_text(self.text)
+        clipboard.copy_text(self.text)
 
     @staticmethod
     def push_history(filter_id, value):

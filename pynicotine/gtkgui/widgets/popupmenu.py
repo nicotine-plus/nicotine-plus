@@ -28,7 +28,7 @@ from gi.repository import Gtk
 from pynicotine import slskmessages
 from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
-from pynicotine.gtkgui.utils import copy_text
+from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.utils import TRANSLATE_PUNCTUATION
@@ -536,7 +536,7 @@ class UserPopupMenu(PopupMenu):
         action.set_state(state)
 
     def on_copy_user(self, *_args):
-        copy_text(self.user)
+        clipboard.copy_text(self.user)
 
     def on_give_privileges_response(self, dialog, _response_id, _data):
 
