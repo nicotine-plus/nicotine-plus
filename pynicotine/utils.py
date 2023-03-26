@@ -131,6 +131,21 @@ def humanize(number):
     return f"{number:n}"
 
 
+def pluralize(items, item_type="files"):
+    """ Convert a raw numeric digit into a human readable string describing the quantity of items """
+
+    pluralization = {
+        "files": ["0 Files", _("1 File"), _("%s Files")],
+        "files-selected": ["0 Files Selected", _("1 File Selected"), _("%s Files Selected")]
+    }
+    zero, singular, plural = pluralization.get(item_type, ["No Items", "1 Item", "%s Items"])
+
+    if not items:
+        return zero
+
+    return singular if items == 1 else plural % humanize(items)
+
+
 def factorize(filesize, base=1024):
     """ Converts filesize string with a given unit into raw integer size,
         defaults to binary for "k", "m", "g" suffixes (KiB, MiB, GiB) """

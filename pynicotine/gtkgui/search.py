@@ -59,9 +59,10 @@ from pynicotine.gtkgui.widgets.treeview import show_file_type_tooltip
 from pynicotine.logfacility import log
 from pynicotine.shares import FileTypes
 from pynicotine.utils import factorize
-from pynicotine.utils import humanize
 from pynicotine.utils import human_size
 from pynicotine.utils import human_speed
+from pynicotine.utils import humanize
+from pynicotine.utils import pluralize
 
 
 class Searches(IconNotebook):
@@ -1297,7 +1298,7 @@ class Search:
 
         self.select_results()
         self.populate_popup_menu_users()
-        menu.set_num_selected_files(len(self.selected_results))
+        menu.set_num_selected_files(pluralize(len(self.selected_results), "files-selected"))
 
     def on_browse_folder(self, *_args):
 
@@ -1369,7 +1370,8 @@ class Search:
 
         FolderChooser(
             parent=self.window,
-            title=_("Select Destination Folder for File(s)"),
+            title=(_("Select Destination To Download %(selection)s")
+                   % {"selection": pluralize(len(self.selected_results))}),
             callback=self.on_download_files_to_selected,
             initial_folder=config.sections["transfers"]["downloaddir"]
         ).show()
@@ -1421,7 +1423,7 @@ class Search:
 
         FolderChooser(
             parent=self.window,
-            title=_("Select Destination Folder"),
+            title=_("Select Destination To Download %(selection)s") % {"selection": _("Folder")},
             callback=self.on_download_folders_to_selected,
             initial_folder=config.sections["transfers"]["downloaddir"]
         ).show()

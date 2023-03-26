@@ -49,6 +49,7 @@ from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.utils import human_size
 from pynicotine.utils import humanize
 from pynicotine.utils import open_file_path
+from pynicotine.utils import pluralize
 
 
 class UserBrowses(IconNotebook):
@@ -578,6 +579,7 @@ class UserBrowse:
         self.file_list_view.clear()
 
         self.selected_folder = directory
+        self.selected_folder_size = 0
         files = core.userbrowse.user_shares[self.user].get(directory)
 
         if not files:
@@ -586,10 +588,8 @@ class UserBrowse:
         # Temporarily disable sorting for increased performance
         self.file_list_view.disable_sorting()
 
-        selected_folder_size = 0
-
         for _code, filename, size, _ext, attrs, *_unused in files:
-            selected_folder_size += size
+            self.selected_folder_size += size
             h_size = humanize(size) if config.sections["ui"]["exact_file_sizes"] else human_size(size)
             h_bitrate, bitrate, h_length, length = slskmessages.FileListMessage.parse_result_bitrate_length(size, attrs)
 
@@ -604,7 +604,6 @@ class UserBrowse:
                 length
             ], select_row=False)
 
-        self.selected_folder_size = selected_folder_size
         self.file_list_view.enable_sorting()
 
     def select_files(self):
@@ -616,6 +615,14 @@ class UserBrowse:
             filesize = self.file_list_view.get_row_value(iterator, "size_data")
 
             self.selected_files[rawfilename] = filesize
+
+    def get_human_files_sum(self, item_type="files"):
+        files_count = pluralize(len(self.selected_files), item_type)
+        files_size = human_size(sum(self.selected_files.values()))
+        return f"{files_count} ({files_size})"
+
+    def get_human_folder_sum(self, is_recurse=False):
+        return _("Folder & Subfolders") if is_recurse else _("Folder") + f" ({human_size(self.selected_folder_size)})"
 
     def get_selected_folder_path(self):
         return f'{self.selected_folder or ""}\\'
@@ -727,14 +734,9 @@ class UserBrowse:
 
     def on_download_directory_to(self, *_args, recurse=False):
 
-        if recurse:
-            str_title = _("Select Destination for Downloading Multiple Folders")
-        else:
-            str_title = _("Select Destination Folder")
-
         FolderChooser(
             parent=self.window,
-            title=str_title,
+            title=_("Select Destination To Download %(selection)s") % {"selection": self.get_human_folder_sum(recurse)},
             callback=self.on_download_directory_to_selected,
             callback_data=recurse,
             initial_folder=config.sections["transfers"]["downloaddir"]
@@ -761,14 +763,9 @@ class UserBrowse:
         if folder is None:
             return
 
-        if recurse:
-            str_title = _("Upload Folder (with Subfolders) To User")
-        else:
-            str_title = _("Upload Folder To User")
-
         EntryDialog(
             parent=self.window,
-            title=str_title,
+            title=_("Upload %(selection)s To User") % {"selection": self.get_human_folder_sum(recurse)},
             message=_("Enter the name of the user you want to upload to:"),
             callback=self.on_upload_directory_to_response,
             callback_data=recurse,
@@ -914,7 +911,7 @@ class UserBrowse:
     def on_file_popup_menu(self, menu, _widget):
 
         self.select_files()
-        menu.set_num_selected_files(len(self.selected_files))
+        menu.set_num_selected_files(self.get_human_files_sum("files-selected"))
 
         self.user_popup_menu.toggle_user_items()
 
@@ -951,7 +948,7 @@ class UserBrowse:
 
         FolderChooser(
             parent=self.window,
-            title=_("Select Destination Folder for Files"),
+            title=_("Select Destination To Download %(selection)s") % {"selection": self.get_human_files_sum()},
             callback=self.on_download_files_to_selected,
             initial_folder=path
         ).show()
@@ -973,7 +970,7 @@ class UserBrowse:
 
         EntryDialog(
             parent=self.window,
-            title=_("Upload File(s) To User"),
+            title=_("Upload %(selection)s To User") % {"selection": self.get_human_files_sum()},
             message=_("Enter the name of the user you want to upload to:"),
             callback=self.on_upload_files_response,
             droplist=sorted(core.userlist.buddies, key=strxfrm)
@@ -1004,6 +1001,7 @@ class UserBrowse:
 
         if all_files:
             files = core.userbrowse.user_shares[self.user].get(folder)
+            selected_size = self.selected_folder_size
 
             if not files:
                 return
@@ -1014,7 +1012,6 @@ class UserBrowse:
                 virtual_path = "\\".join([folder, filename])
                 h_bitrate, _bitrate, h_length, length = slskmessages.FileListMessage.parse_result_bitrate_length(
                     file_size, file_data[4])
-                selected_size += file_size
                 selected_length += length
 
                 data.append({"user": self.user, "fn": virtual_path, "filename": filename,

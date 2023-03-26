@@ -52,6 +52,7 @@ from pynicotine.utils import human_length
 from pynicotine.utils import human_size
 from pynicotine.utils import human_speed
 from pynicotine.utils import humanize
+from pynicotine.utils import pluralize
 
 
 class TransferList:
@@ -784,7 +785,7 @@ class TransferList:
     def on_popup_menu(self, menu, _widget):
 
         self.select_transfers()
-        menu.set_num_selected_files(len(self.selected_transfers))
+        menu.set_num_selected_files(pluralize(len(self.selected_transfers), "files-selected"))
 
         self.populate_popup_menu_users()
 
