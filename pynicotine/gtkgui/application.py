@@ -126,195 +126,83 @@ class Application:
 
     def set_up_actions(self):
 
-        # General
+        # Regular actions
 
-        action = Gio.SimpleAction(name="connect")
-        action.connect("activate", self.on_connect)
-        self.add_action(action)
+        for action_name, callback, parameter_type, is_enabled in (
+            # General
+            ("connect", self.on_connect, None, True),
+            ("disconnect", self.on_disconnect, None, False),
+            ("soulseek-privileges", self.on_soulseek_privileges, None, False),
+            ("away", self.on_away, None, False),
+            ("away-accel", self.on_away_accelerator, None, False),
+            ("message-downloading-users", self.on_message_downloading_users, None, False),
+            ("message-buddies", self.on_message_buddies, None, False),
+            ("wishlist", self.on_wishlist, None, True),
+            ("force-quit", self.on_force_quit, None, True),
+            ("quit", self.on_quit, None, True),
 
-        action = Gio.SimpleAction(name="disconnect", enabled=False)
-        action.connect("activate", self.on_disconnect)
-        self.add_action(action)
+            # Shares
+            ("rescan-shares", self.on_rescan_shares, None, True),
+            ("browse-public-shares", self.on_browse_public_shares, None, True),
+            ("browse-buddy-shares", self.on_browse_buddy_shares, None, True),
+            ("load-shares-from-disk", self.on_load_shares_from_disk, None, True),
 
-        action = Gio.SimpleAction(name="soulseek-privileges", enabled=False)
-        action.connect("activate", self.on_soulseek_privileges)
-        self.add_action(action)
+            # Configuration
 
-        action = Gio.SimpleAction(name="away-accel", enabled=False)
-        action.cooldown_time = 0  # needed to prevent server ban
-        action.connect("activate", self.on_away_accelerator)
-        self.add_action(action)
+            ("preferences", self.on_preferences, None, True),
+            ("configure-shares", self.on_configure_shares, None, True),
+            ("configure-downloads", self.on_configure_downloads, None, True),
+            ("configure-uploads", self.on_configure_uploads, None, True),
+            ("configure-chats", self.on_configure_chats, None, True),
+            ("configure-searches", self.on_configure_searches, None, True),
+            ("configure-ignored-users", self.on_configure_ignored_users, None, True),
+            ("personal-profile", self.on_personal_profile, None, False),
 
-        action = Gio.SimpleAction(name="away", enabled=False)
-        action.connect("activate", self.on_away)
-        self.add_action(action)
+            # Notifications
+            ("chatroom-notification-activated", self.on_chatroom_notification_activated, "s", True),
+            ("download-notification-activated", self.on_download_notification_activated, None, True),
+            ("private-chat-notification-activated", self.on_private_chat_notification_activated, "s", True),
+            ("search-notification-activated", self.on_search_notification_activated, "s", True),
 
-        state = config.sections["ui"]["dark_mode"]
-        action = Gio.SimpleAction(name="prefer-dark-mode", state=GLib.Variant("b", state))
-        action.connect("change-state", self.on_prefer_dark_mode)
-        self.add_action(action)
+            # Help
+            ("keyboard-shortcuts", self.on_keyboard_shortcuts, None, True),
+            ("setup-assistant", self.on_fast_configure, None, True),
+            ("transfer-statistics", self.on_transfer_statistics, None, True),
+            ("report-bug", self.on_report_bug, None, True),
+            ("improve-translations", self.on_improve_translations, None, True),
+            ("check-latest-version", self.on_check_latest_version, None, True),
+            ("about", self.on_about, None, True)
+        ):
+            if parameter_type:
+                parameter_type = GLib.VariantType(parameter_type)
 
-        action = Gio.SimpleAction(name="message-downloading-users", enabled=False)
-        action.connect("activate", self.on_message_downloading_users)
-        self.add_action(action)
+            action = Gio.SimpleAction(name=action_name, parameter_type=parameter_type, enabled=is_enabled)
+            action.connect("activate", callback)
+            self.add_action(action)
 
-        action = Gio.SimpleAction(name="message-buddies", enabled=False)
-        action.connect("activate", self.on_message_buddies)
-        self.add_action(action)
+        self.lookup_action("away-accel").cooldown_time = 0  # needed to prevent server ban
 
-        action = Gio.SimpleAction(name="wishlist")
-        action.connect("activate", self.on_wishlist)
-        self.add_action(action)
+        # Stateful actions
 
-        action = Gio.SimpleAction(name="force-quit")
-        action.connect("activate", self.on_force_quit)
-        self.add_action(action)
+        enabled_logs = config.sections["logging"]["debugmodes"]
 
-        action = Gio.SimpleAction(name="quit")
-        action.connect("activate", self.on_quit)
-        self.add_action(action)
+        for action_name, callback, state in (
+            # General
+            ("prefer-dark-mode", self.on_prefer_dark_mode, config.sections["ui"]["dark_mode"]),
 
-        # Shares
-
-        action = Gio.SimpleAction(name="rescan-shares")
-        action.connect("activate", self.on_rescan_shares)
-        self.add_action(action)
-
-        action = Gio.SimpleAction(name="browse-public-shares")
-        action.connect("activate", self.on_browse_public_shares)
-        self.add_action(action)
-
-        action = Gio.SimpleAction(name="browse-buddy-shares")
-        action.connect("activate", self.on_browse_buddy_shares)
-        self.add_action(action)
-
-        action = Gio.SimpleAction(name="load-shares-from-disk")
-        action.connect("activate", self.on_load_shares_from_disk)
-        self.add_action(action)
-
-        # Help
-
-        action = Gio.SimpleAction(name="keyboard-shortcuts")
-        action.connect("activate", self.on_keyboard_shortcuts)
-        self.add_action(action)
-
-        action = Gio.SimpleAction(name="setup-assistant")
-        action.connect("activate", self.on_fast_configure)
-        self.add_action(action)
-
-        action = Gio.SimpleAction(name="transfer-statistics")
-        action.connect("activate", self.on_transfer_statistics)
-        self.add_action(action)
-
-        action = Gio.SimpleAction(name="report-bug")
-        action.connect("activate", self.on_report_bug)
-        self.add_action(action)
-
-        action = Gio.SimpleAction(name="improve-translations")
-        action.connect("activate", self.on_improve_translations)
-        self.add_action(action)
-
-        action = Gio.SimpleAction(name="check-latest-version")
-        action.connect("activate", self.on_check_latest_version)
-        self.add_action(action)
-
-        action = Gio.SimpleAction(name="about")
-        action.connect("activate", self.on_about)
-        self.add_action(action)
-
-        # Configuration
-
-        action = Gio.SimpleAction(name="preferences")
-        action.connect("activate", self.on_preferences)
-        self.add_action(action)
-
-        action = Gio.SimpleAction(name="configure-shares")
-        action.connect("activate", self.on_configure_shares)
-        self.add_action(action)
-
-        action = Gio.SimpleAction(name="configure-downloads")
-        action.connect("activate", self.on_configure_downloads)
-        self.add_action(action)
-
-        action = Gio.SimpleAction(name="configure-uploads")
-        action.connect("activate", self.on_configure_uploads)
-        self.add_action(action)
-
-        action = Gio.SimpleAction(name="configure-chats")
-        action.connect("activate", self.on_configure_chats)
-        self.add_action(action)
-
-        action = Gio.SimpleAction(name="configure-searches")
-        action.connect("activate", self.on_configure_searches)
-        self.add_action(action)
-
-        action = Gio.SimpleAction(name="configure-ignored-users")
-        action.connect("activate", self.on_configure_ignored_users)
-        self.add_action(action)
-
-        action = Gio.SimpleAction(name="personal-profile", enabled=False)
-        action.connect("activate", self.on_personal_profile)
-        self.add_action(action)
-
-        # Notifications
-
-        action = Gio.SimpleAction(name="chatroom-notification-activated", parameter_type=GLib.VariantType("s"))
-        action.connect("activate", self.on_chatroom_notification_activated)
-        self.add_action(action)
-
-        action = Gio.SimpleAction(name="download-notification-activated")
-        action.connect("activate", self.on_download_notification_activated)
-        self.add_action(action)
-
-        action = Gio.SimpleAction(name="private-chat-notification-activated", parameter_type=GLib.VariantType("s"))
-        action.connect("activate", self.on_private_chat_notification_activated)
-        self.add_action(action)
-
-        action = Gio.SimpleAction(name="search-notification-activated", parameter_type=GLib.VariantType("s"))
-        action.connect("activate", self.on_search_notification_activated)
-        self.add_action(action)
-
-        # Logging
-
-        state = ("download" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction(name="log-downloads", state=GLib.Variant("b", state))
-        action.connect("change-state", self.on_debug_downloads)
-        self.add_action(action)
-
-        state = ("upload" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction(name="log-uploads", state=GLib.Variant("b", state))
-        action.connect("change-state", self.on_debug_uploads)
-        self.add_action(action)
-
-        state = ("search" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction(name="log-searches", state=GLib.Variant("b", state))
-        action.connect("change-state", self.on_debug_searches)
-        self.add_action(action)
-
-        state = ("chat" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction(name="log-chat", state=GLib.Variant("b", state))
-        action.connect("change-state", self.on_debug_chat)
-        self.add_action(action)
-
-        state = ("connection" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction(name="log-connections", state=GLib.Variant("b", state))
-        action.connect("change-state", self.on_debug_connections)
-        self.add_action(action)
-
-        state = ("message" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction(name="log-messages", state=GLib.Variant("b", state))
-        action.connect("change-state", self.on_debug_messages)
-        self.add_action(action)
-
-        state = ("transfer" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction(name="log-transfers", state=GLib.Variant("b", state))
-        action.connect("change-state", self.on_debug_transfers)
-        self.add_action(action)
-
-        state = ("miscellaneous" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction(name="log-miscellaneous", state=GLib.Variant("b", state))
-        action.connect("change-state", self.on_debug_miscellaneous)
-        self.add_action(action)
+            # Logging
+            ("log-downloads", self.on_debug_downloads, ("download" in enabled_logs)),
+            ("log-uploads", self.on_debug_uploads, ("upload" in enabled_logs)),
+            ("log-searches", self.on_debug_searches, ("search" in enabled_logs)),
+            ("log-chat", self.on_debug_chat, ("chat" in enabled_logs)),
+            ("log-connections", self.on_debug_connections, ("connection" in enabled_logs)),
+            ("log-messages", self.on_debug_messages, ("message" in enabled_logs)),
+            ("log-transfers", self.on_debug_transfers, ("transfer" in enabled_logs)),
+            ("log-miscellaneous", self.on_debug_miscellaneous, ("miscellaneous" in enabled_logs))
+        ):
+            action = Gio.SimpleAction(name=action_name, state=GLib.Variant("b", state))
+            action.connect("change-state", callback)
+            self.add_action(action)
 
     def set_up_action_accels(self):
 
