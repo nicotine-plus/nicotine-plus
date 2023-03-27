@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on February 28, 2023
+Last updated on March 28, 2023
 
 Since the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify or extend the protocol in ways that negatively impact the network.
 
@@ -297,6 +297,7 @@ We send this to the server right after the connection has been established. Serv
     2.  **string** <ins>greet</ins> *MOTD string*
     3.  **uint32** <ins>Your IP Address</ins>
     4.  **string** <ins>hash</ins> *MD5 hex digest of the password string*
+    5.  **bool** <ins>is supporter</ins>  *If we have donated to Soulseek at some point in the past*
   - Receive Login Failure
     1.  **bool** <ins>failure</ins> **0**
     2.  **string** <ins>reason</ins> *see [Login Failure Reasons](#login-failure-reasons)*

@@ -336,7 +336,7 @@ class Login(ServerMessage):
     established. Server responds with the greeting message. """
 
     __slots__ = ("username", "passwd", "version", "minorversion", "success", "reason",
-                 "banner", "ip_address", "checksum")
+                 "banner", "ip_address", "checksum", "is_supporter")
 
     def __init__(self, username=None, passwd=None, version=None, minorversion=None):
         self.username = username
@@ -348,6 +348,7 @@ class Login(ServerMessage):
         self.banner = None
         self.ip_address = None
         self.checksum = None
+        self.is_supporter = None
 
     def make_network_message(self):
         from hashlib import md5
@@ -370,17 +371,15 @@ class Login(ServerMessage):
 
         if not self.success:
             pos, self.reason = self.unpack_string(message, pos)
-        else:
-            pos, self.banner = self.unpack_string(message, pos)
-
-        if not message[pos:]:
             return
 
+        pos, self.banner = self.unpack_string(message, pos)
         pos, self.ip_address = self.unpack_ip(message, pos)
+        pos, self.checksum = self.unpack_string(message, pos)  # MD5 hexdigest of the password you sent
 
-        # MD5 hexdigest of the password you sent
-        if len(message[pos:]) >= 4:
-            pos, self.checksum = self.unpack_string(message, pos)
+        # Soulfind support
+        if message[pos:]:
+            pos, self.is_supporter = self.unpack_bool(message, pos)
 
 
 class SetWaitPort(ServerMessage):
