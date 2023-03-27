@@ -36,7 +36,8 @@ from pynicotine.utils import TRANSLATE_PUNCTUATION
 
 class Search:
 
-    __slots__ = ("token", "term", "mode", "room", "users", "is_ignored")
+    __slots__ = ("token", "term", "mode", "room", "users", "is_ignored", "max_results",
+                 "num_results", "results", "term_words_include", "term_words_ignore")
 
     def __init__(self, token=None, term=None, mode="global", room=None, users=None, is_ignored=False):
 
@@ -46,6 +47,44 @@ class Search:
         self.room = room
         self.users = users
         self.is_ignored = is_ignored
+
+        self.max_results = config.sections["searches"]["max_displayed_results"]
+        self.num_results = 0
+        self.results = {}
+        self.term_words_include = []
+        self.term_words_ignore = []
+
+        for word in term.lower().split():
+            if word.startswith("*"):
+                if len(word) > 1:
+                    self.term_words_include.append(word[1:])
+
+            elif word.startswith("-"):
+                if len(word) > 1:
+                    self.term_words_ignore.append(word[1:])
+
+            else:
+                self.term_words_include.append(word)
+
+
+class SearchResult:
+
+    __slots__ = ("num", "user", "file_path", "size", "attributes", "speed", "country_code", "queue",
+                 "has_free_slots", "is_private")
+
+    def __init__(self, num=None, user=None, file_path=None, size=None, attributes=None, speed=None, country_code=None,
+                 queue=None, has_free_slots=None, is_private=False):
+
+        self.num = num
+        self.user = user
+        self.file_path = file_path
+        self.size = size
+        self.attributes = attributes
+        self.speed = speed
+        self.country_code = country_code
+        self.queue = queue
+        self.has_free_slots = has_free_slots
+        self.is_private = is_private
 
 
 class Searches:
@@ -122,12 +161,24 @@ class Searches:
         if search.term in config.sections["server"]["autosearch"]:
             search.is_ignored = True
         else:
+            self.clear_results(token)
             del self.searches[token]
 
         events.emit("remove-search", token)
 
     def show_search(self, token):
         events.emit("show-search", token)
+
+    def clear_results(self, token):
+
+        search = self.searches.get(token)
+
+        if search is None:
+            return
+
+        search.num_results = 0
+        search.max_results = config.sections["searches"]["max_displayed_results"]
+        search.results.clear()
 
     def process_search_term(self, search_term, mode, room=None, user=None):
 
@@ -289,6 +340,50 @@ class Searches:
                 self.do_wishlist_search(search.token, term)
                 break
 
+    def _add_results(self, search, results, user, country_code, queue, speed, has_free_slots, is_private=False):
+
+        for _code, fullpath, size, _ext, attributes in results:
+            if search.num_results >= search.max_results:
+                break
+
+            fullpath_lower = fullpath.lower()
+
+            if any(word in fullpath_lower for word in search.term_words_ignore):
+                # Filter out results with filtered words (e.g. nicotine -music)
+                log.add_debug(("Filtered out excluded search result %(filepath)s from user %(user)s for "
+                               'search term "%(query)s"'), {
+                    "filepath": fullpath,
+                    "user": user,
+                    "query": search.term
+                })
+                continue
+
+            if not any(word in fullpath_lower for word in search.term_words_include):
+                # Certain users may send us wrong results, filter out such ones
+                log.add_search(_("Filtered out incorrect search result %(filepath)s from user %(user)s for "
+                                 'search query "%(query)s"'), {
+                    "filepath": fullpath,
+                    "user": user,
+                    "query": search.term
+                })
+                continue
+
+            search.num_results += 1
+            search.results[user].append(
+                SearchResult(
+                    num=search.num_results,
+                    user=user,
+                    file_path=fullpath,
+                    size=size,
+                    attributes=attributes,
+                    speed=speed,
+                    country_code=country_code,
+                    queue=queue,
+                    has_free_slots=has_free_slots,
+                    is_private=is_private
+                )
+            )
+
     def add_wish(self, wish):
 
         if not wish:
@@ -337,17 +432,23 @@ class Searches:
     def _file_search_response(self, msg):
         """ Peer message: 9 """
 
-        if msg.token not in slskmessages.SEARCH_TOKENS_ALLOWED:
-            msg.token = None
-            return
-
         search = self.searches.get(msg.token)
 
         if search is None or search.is_ignored:
             msg.token = None
             return
 
+        if search.num_results >= search.max_results:
+            core.search.remove_allowed_token(msg.token)
+            msg.token = None
+            return
+
         username = msg.init.target_user
+
+        if username in search.results:
+            msg.token = None
+            return
+
         ip_address = msg.init.addr[0]
 
         if core.network_filter.is_user_ignored(username):
@@ -356,6 +457,20 @@ class Searches:
 
         if core.network_filter.is_user_ip_ignored(username, ip_address):
             msg.token = None
+            return
+
+        search.results[username] = []
+
+        country_code = core.network_filter.get_country_code(ip_address)
+        has_free_slots = msg.freeulslots
+        speed = msg.ulspeed or 0
+        queue = msg.inqueue or 1  # Ensure value is always >= 1
+
+        self._add_results(search, msg.list, username, country_code, queue, speed, has_free_slots)
+
+        if msg.privatelist and config.sections["searches"]["private_search_results"]:
+            self._add_results(search, msg.privatelist, username, country_code, queue, speed, has_free_slots,
+                              is_private=True)
 
     def _file_search_request_server(self, msg):
         """ Server code: 26, 42 and 120 """

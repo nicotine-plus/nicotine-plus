@@ -56,7 +56,6 @@ from pynicotine.gtkgui.widgets.treeview import select_user_row_iter
 from pynicotine.gtkgui.widgets.treeview import show_country_tooltip
 from pynicotine.gtkgui.widgets.treeview import show_file_path_tooltip
 from pynicotine.gtkgui.widgets.treeview import show_file_type_tooltip
-from pynicotine.logfacility import log
 from pynicotine.shares import FileTypes
 from pynicotine.utils import factorize
 from pynicotine.utils import humanize
@@ -271,13 +270,6 @@ class Searches(IconNotebook):
             mode_label = _("Wish")
             page = self.create_page(msg.token, search_term, mode, mode_label, show_page=False)
 
-        # No more things to add because we've reached the result limit
-        if page.num_results_found >= page.max_limit:
-            core.search.remove_allowed_token(msg.token)
-            page.max_limited = True
-            page.update_result_counter()
-            return
-
         page.file_search_response(msg)
 
     def update_wish_button(self, wish):
@@ -348,38 +340,18 @@ class Search:
         self.window = searches.window
 
         self.text = text
-        self.searchterm_words_include = []
-        self.searchterm_words_ignore = []
-
-        for word in text.lower().split():
-            if word.startswith("*"):
-                if len(word) > 1:
-                    self.searchterm_words_include.append(word[1:])
-
-            elif word.startswith("-"):
-                if len(word) > 1:
-                    self.searchterm_words_ignore.append(word[1:])
-
-            else:
-                self.searchterm_words_include.append(word)
-
         self.token = token
         self.mode = mode
         self.mode_label = mode_label
         self.show_page = show_page
         self.usersiters = {}
         self.directoryiters = {}
-        self.users = set()
-        self.all_data = []
         self.grouping_mode = None
         self.filters = {}
         self.filters_undo = self.FILTERS_EMPTY
         self.populating_filters = False
         self.active_filter_count = 0
-        self.num_results_found = 0
         self.num_results_visible = 0
-        self.max_limit = config.sections["searches"]["max_displayed_results"]
-        self.max_limited = False
 
         # Use dict instead of list for faster membership checks
         self.selected_users = {}
@@ -652,162 +624,75 @@ class Search:
 
         self.on_refilter()
 
-    def add_result_list(self, result_list, user, country_code, inqueue, ulspeed, h_speed,
-                        h_queue, has_free_slots, private=False):
-        """ Adds a list of search results to the treeview. Lists can either contain publicly or
-        privately shared files. """
-
-        update_ui = False
-
-        for result in result_list:
-            if self.num_results_found >= self.max_limit:
-                self.max_limited = True
-                break
-
-            fullpath = result[1]
-            fullpath_lower = fullpath.lower()
-
-            if any(word in fullpath_lower for word in self.searchterm_words_ignore):
-                # Filter out results with filtered words (e.g. nicotine -music)
-                log.add_debug(("Filtered out excluded search result %(filepath)s from user %(user)s for "
-                               'search term "%(query)s"'), {
-                    "filepath": fullpath,
-                    "user": user,
-                    "query": self.text
-                })
-                continue
-
-            if not any(word in fullpath_lower for word in self.searchterm_words_include):
-                # Certain users may send us wrong results, filter out such ones
-                log.add_search(_("Filtered out incorrect search result %(filepath)s from user %(user)s for "
-                                 'search query "%(query)s"'), {
-                    "filepath": fullpath,
-                    "user": user,
-                    "query": self.text
-                })
-                continue
-
-            self.num_results_found += 1
-            fullpath_split = fullpath.split("\\")
-
-            if config.sections["ui"]["reverse_file_paths"]:
-                # Reverse file path, file name is the first item. next() retrieves the name and removes
-                # it from the iterator.
-                fullpath_split = reversed(fullpath_split)
-                name = next(fullpath_split)
-
-            else:
-                # Regular file path, file name is the last item. Retrieve it and remove it from the list.
-                name = fullpath_split.pop()
-
-            # Join the resulting items into a folder path
-            directory = "\\".join(fullpath_split)
-
-            size = result[2]
-            h_size = humanize(size) if config.sections["ui"]["exact_file_sizes"] else human_size(size)
-            h_bitrate, bitrate, h_length, length = slskmessages.FileListMessage.parse_result_bitrate_length(
-                size, result[4])
-
-            if private:
-                name = _("[PRIVATE]  %s") % name
-
-            is_result_visible = self.append(
-                [
-                    self.num_results_found,
-                    user,
-                    get_flag_icon_name(country_code),
-                    h_speed,
-                    h_queue,
-                    directory,
-                    get_file_type_icon_name(name),
-                    name,
-                    h_size,
-                    h_bitrate,
-                    h_length,
-                    GObject.Value(GObject.TYPE_UINT, bitrate),
-                    fullpath,
-                    country_code,
-                    GObject.Value(GObject.TYPE_UINT64, size),
-                    GObject.Value(GObject.TYPE_UINT, ulspeed),
-                    GObject.Value(GObject.TYPE_UINT, inqueue),
-                    GObject.Value(GObject.TYPE_UINT, length),
-                    has_free_slots
-                ]
-            )
-
-            if is_result_visible:
-                update_ui = True
-
-        return update_ui
-
     def file_search_response(self, msg):
 
-        user = msg.init.target_user
+        search = core.search.searches.get(self.token)
 
-        if user in self.users:
+        if search is None:
             return
 
-        self.users.add(user)
-        ip_address = msg.init.addr[0]
-        country_code = core.network_filter.get_country_code(ip_address)
-        has_free_slots = msg.freeulslots
+        user = msg.init.target_user
+        results = search.results.get(user)
 
-        if has_free_slots:
-            inqueue = 0
-            h_queue = ""
-        else:
-            inqueue = msg.inqueue or 1  # Ensure value is always >= 1
-            h_queue = humanize(inqueue)
+        if not results:
+            return
 
-        h_speed = ""
-        ulspeed = msg.ulspeed or 0
+        for result in results:
+            if self.check_filter(result):
+                self.add_result_to_model(result)
 
-        if ulspeed > 0:
-            h_speed = human_speed(ulspeed)
+        # If this search wasn't initiated by us (e.g. wishlist), and the results aren't spoofed, show tab
+        if not self.show_page:
+            self.searches.create_page(self.token, self.text)
+            self.show_page = True
 
-        update_ui = self.add_result_list(msg.list, user, country_code, inqueue, ulspeed, h_speed,
-                                         h_queue, has_free_slots)
+            if self.mode == "wishlist" and config.sections["notifications"]["notification_popup_wish"]:
+                core.notifications.show_search_notification(
+                    str(self.token), self.text,
+                    title=_("Wishlist Results Found")
+                )
 
-        if msg.privatelist and config.sections["searches"]["private_search_results"]:
-            update_ui_private = self.add_result_list(
-                msg.privatelist, user, country_code, inqueue, ulspeed, h_speed, h_queue,
-                has_free_slots, private=True
-            )
-
-            if not update_ui and update_ui_private:
-                update_ui = True
-
-        if update_ui:
-            # If this search wasn't initiated by us (e.g. wishlist), and the results aren't spoofed, show tab
-            if not self.show_page:
-                self.searches.create_page(self.token, self.text)
-                self.show_page = True
-
-                if self.mode == "wishlist" and config.sections["notifications"]["notification_popup_wish"]:
-                    core.notifications.show_search_notification(
-                        str(self.token), self.text,
-                        title=_("Wishlist Results Found")
-                    )
-
-            self.searches.request_tab_changed(self.container)
+        self.searches.request_tab_changed(self.container)
 
         # Update number of results, even if they are all filtered
         self.update_result_counter()
 
-    def append(self, row):
+    def add_result_to_model(self, result):
 
-        self.all_data.append(row)
+        user = result.user
+        country_code = result.country_code
+        flag_icon_name = get_flag_icon_name(country_code)
+        has_free_slots = result.has_free_slots
+        speed = result.speed
+        queue = result.queue
+        h_speed = human_speed(speed) if speed > 0 else ""
+        h_queue = humanize(queue) if not has_free_slots else ""
+        g_speed = GObject.Value(GObject.TYPE_UINT, speed)
+        g_queue = GObject.Value(GObject.TYPE_UINT, queue)
 
-        if not self.check_filter(row):
-            return False
+        file_path = result.file_path
+        file_path_split = file_path.split("\\")
+        size = result.size
+        h_size = humanize(size) if config.sections["ui"]["exact_file_sizes"] else human_size(size)
+        h_bitrate, bitrate, h_length, length = slskmessages.FileListMessage.parse_result_bitrate_length(
+            size, result.attributes)
 
-        self.add_row_to_model(row)
-        return True
+        if config.sections["ui"]["reverse_file_paths"]:
+            # Reverse file path, file name is the first item. next() retrieves the name and removes
+            # it from the iterator.
+            file_path_split = reversed(file_path_split)
+            name = next(file_path_split)
+        else:
+            # Regular file path, file name is the last item. Retrieve it and remove it from the list.
+            name = file_path_split.pop()
 
-    def add_row_to_model(self, row):
-        (_counter, user, flag, h_speed, h_queue, directory, _file_type, _filename, _h_size, _h_bitrate,
-            _h_length, _bitrate, fullpath, country_code, _size, speed, queue, _length, has_free_slots) = row
+        # Join the resulting items into a folder path
+        directory = "\\".join(file_path_split)
 
+        if result.is_private:
+            name = _("[PRIVATE]  %s") % name
+
+        # Grouping
         expand_user = False
         expand_folder = False
 
@@ -823,7 +708,7 @@ class Search:
                     [
                         empty_int,
                         user,
-                        flag,
+                        flag_icon_name,
                         h_speed,
                         h_queue,
                         empty_str,
@@ -836,8 +721,8 @@ class Search:
                         empty_str,
                         country_code,
                         empty_int,
-                        speed,
-                        queue,
+                        g_speed,
+                        g_queue,
                         empty_int,
                         has_free_slots
                     ]
@@ -861,7 +746,7 @@ class Search:
                         [
                             empty_int,
                             user,
-                            flag,
+                            flag_icon_name,
                             h_speed,
                             h_queue,
                             directory,
@@ -871,26 +756,46 @@ class Search:
                             empty_str,
                             empty_str,
                             empty_int,
-                            fullpath.rsplit("\\", 1)[0] + "\\",
+                            file_path.rsplit("\\", 1)[0] + "\\",
                             country_code,
                             empty_int,
-                            speed,
-                            queue,
+                            g_speed,
+                            g_queue,
                             empty_int,
                             has_free_slots
                         ]
                     )
                     expand_folder = self.expand_button.get_active()
 
-                row = row[:]
-                row[5] = ""  # Directory not visible for file row if "group by folder" is enabled
-
+                directory = ""
                 parent = self.directoryiters[user_directory]
         else:
             parent = None
 
         # Note that we use insert_with_values instead of append, as this reduces
         # overhead by bypassing useless row conversion to GObject.Value in PyGObject.
+
+        row = [
+            result.num,
+            user,
+            flag_icon_name,
+            h_speed,
+            h_queue,
+            directory,
+            get_file_type_icon_name(name),
+            name,
+            h_size,
+            h_bitrate,
+            h_length,
+            GObject.Value(GObject.TYPE_UINT, bitrate),
+            file_path,
+            country_code,
+            GObject.Value(GObject.TYPE_UINT64, size),
+            g_speed,
+            g_queue,
+            GObject.Value(GObject.TYPE_UINT, length),
+            has_free_slots
+        ]
 
         if parent is None:
             iterator = self.resultsmodel.insert_with_valuesv(-1, self.column_numbers, row)
@@ -1032,7 +937,7 @@ class Search:
 
         return allowed
 
-    def check_filter(self, row):
+    def check_filter(self, result):
 
         if self.active_filter_count == 0:
             return True
@@ -1041,28 +946,34 @@ class Search:
             if not filter_value:
                 continue
 
-            if filter_id == "filtertype" and not self.check_file_type(filter_value, row[12].lower()):
+            if filter_id == "filtertype" and not self.check_file_type(filter_value, result.file_path.lower()):
                 return False
 
-            if filter_id == "filtercc" and not self.check_country(filter_value, row[13].upper()):
+            if filter_id == "filtercc" and not self.check_country(filter_value, result.country_code.upper()):
                 return False
 
-            if filter_id == "filterin" and not filter_value.search(row[12]) and not filter_value.fullmatch(row[1]):
+            if (filter_id == "filterin" and not filter_value.search(result.file_path)
+                    and not filter_value.fullmatch(result.user)):
                 return False
 
-            if filter_id == "filterout" and (filter_value.search(row[12]) or filter_value.fullmatch(row[1])):
+            if (filter_id == "filterout"
+                    and (filter_value.search(result.file_path) or filter_value.fullmatch(result.user))):
                 return False
 
-            if filter_id == "filterslot" and row[16].get_value() > 0:
+            if filter_id == "filterslot" and not result.has_free_slots:
                 return False
 
-            if filter_id == "filtersize" and not self.check_digit(filter_value, row[14].get_value(), file_size=True):
+            if filter_id == "filtersize" and not self.check_digit(filter_value, result.size, file_size=True):
                 return False
 
-            if filter_id == "filterbr" and not self.check_digit(filter_value, row[11].get_value()):
+            if (filter_id == "filterbr"
+                    and not self.check_digit(
+                        filter_value, result.attributes.get(slskmessages.FileAttribute.BITRATE, 0))):
                 return False
 
-            if filter_id == "filterlength" and not self.check_digit(filter_value, row[17].get_value()):
+            if (filter_id == "filterlength"
+                    and not self.check_digit(
+                        filter_value, result.attributes.get(slskmessages.FileAttribute.DURATION, 0))):
                 return False
 
         return True
@@ -1079,10 +990,7 @@ class Search:
     def clear_model(self, stored_results=False):
 
         if stored_results:
-            self.all_data.clear()
-            self.num_results_found = 0
-            self.max_limited = False
-            self.max_limit = config.sections["searches"]["max_displayed_results"]
+            core.search.clear_results(self.token)
 
         self.tree_view.set_model(None)
 
@@ -1100,9 +1008,12 @@ class Search:
         self.resultsmodel.set_default_sort_func(lambda *_args: 0)
         self.resultsmodel.set_sort_column_id(-1, Gtk.SortType.ASCENDING)
 
-        for row in self.all_data:
-            if self.check_filter(row):
-                self.add_row_to_model(row)
+        search = core.search.searches[self.token]
+
+        for user_results in search.results.values():
+            for result in user_results:
+                if self.check_filter(result):
+                    self.add_result_to_model(result)
 
         # Update number of results
         self.update_result_counter()
@@ -1245,15 +1156,18 @@ class Search:
 
     def update_result_counter(self):
 
-        if self.max_limited or self.num_results_found > self.num_results_visible:
+        search = core.search.searches[self.token]
+        num_results = search.num_results
+
+        if num_results > self.num_results_visible:
             # Append plus symbol "+" if Results are Filtered and/or reached 'Maximum per search'
             str_plus = "+"
 
             # Display total results on the tooltip, but only if we know the exact number of results
-            if self.max_limited:
-                total = f"> {self.max_limit}+"
+            if num_results >= search.max_results:
+                total = f"> {search.max_results}+"
             else:
-                total = self.num_results_found
+                total = num_results
 
             self.results_button.set_tooltip_text(_("Total: %s") % total)
 
@@ -1397,21 +1311,22 @@ class Search:
             requested_folders[user][folder] = download_location
 
             visible_files = []
-            for row in self.all_data:
+            for result in core.search.searches[self.token].results[user]:
+                file_path = result.file_path
 
                 # Find the wanted directory
-                if folder != row[12].rsplit("\\", 1)[0]:
+                if folder != file_path.rsplit("\\", 1)[0]:
                     continue
 
                 # remove_destination is False because we need the destination for the full folder
                 # contents response later
                 destination = core.transfers.get_folder_destination(user, folder, remove_destination=False)
 
-                (_counter, user, _flag, _h_speed, _h_queue, _directory, _file_type, _filename,
-                    _h_size, h_bitrate, h_length, _bitrate, fullpath, _country_code, size, _speed,
-                    _queue, _length, _has_free_slots) = row
-                visible_files.append(
-                    (user, fullpath, destination, size.get_value(), h_bitrate, h_length))
+                size = result.size
+                h_bitrate, _bitrate, h_length, _length = slskmessages.FileListMessage.parse_result_bitrate_length(
+                    size, result.attributes)
+
+                visible_files.append((user, file_path, destination, size, h_bitrate, h_length))
 
             core.search.request_folder_download(user, folder, visible_files)
 
@@ -1454,7 +1369,7 @@ class Search:
 
     def on_counter_button(self, *_args):
 
-        if self.num_results_found > self.num_results_visible:
+        if core.search.searches[self.token].num_results > self.num_results_visible:
             self.on_clear_undo_filters()
         else:
             self.window.application.lookup_action("configure-searches").activate()
