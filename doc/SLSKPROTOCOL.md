@@ -208,7 +208,7 @@ but it handles the protocol well enough (and can be modified).
 | 86   | [Parent Inactivity Timeout](#server-code-86)      | Obsolete   |
 | 87   | [Search Inactivity Timeout](#server-code-87)      | Obsolete   |
 | 88   | [Minimum Parents In Cache](#server-code-88)       | Obsolete   |
-| 90   | [Distributed Alive Interval](#server-code-90)     | Obsolete   |
+| 90   | [Distributed Ping Interval](#server-code-90)      | Obsolete   |
 | 91   | [Add Privileged User](#server-code-91)            | Obsolete   |
 | 92   | [Check Privileges](#server-code-92)               |            |
 | 93   | [Embedded Message](#server-code-93)               |            |
@@ -1090,7 +1090,7 @@ The server sends us a speed ratio determining the number of children we can have
   - Send
       - *No Message*
   - Receive
-    1.  **uint32** <ins>number</ins>
+    1.  **uint32** <ins>seconds</ins>
 
 ## Server Code 87
 
@@ -1103,7 +1103,7 @@ The server sends us a speed ratio determining the number of children we can have
   - Send
       - *No Message*
   - Receive
-    1.  **uint32** <ins>number</ins>
+    1.  **uint32** <ins>seconds</ins>
 
 ## Server Code 88
 
@@ -1120,7 +1120,7 @@ The server sends us a speed ratio determining the number of children we can have
 
 ## Server Code 90
 
-### DistribAliveInterval
+### DistribPingInterval
 
 **OBSOLETE, no longer sent by the server**
 
@@ -1129,7 +1129,7 @@ The server sends us a speed ratio determining the number of children we can have
   - Send
       - *No Message*
   - Receive
-    1.  **uint32** <ins>number</ins>
+    1.  **uint32** <ins>seconds</ins>
 
 ## Server Code 91
 
