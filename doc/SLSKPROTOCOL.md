@@ -2471,7 +2471,7 @@ Distributed messages are sent to peers over a 'D' connection, and are used for t
 
 | Code | Message                                  | Status     |
 |------|------------------------------------------|------------|
-| 0    | [Ping](#distributed-code-0)              |            |
+| 0    | [Ping](#distributed-code-0)              | Deprecated |
 | 3    | [Search Request](#distributed-code-3)    |            |
 | 4    | [Branch Level](#distributed-code-4)      |            |
 | 5    | [Branch Root](#distributed-code-5)       |            |
@@ -2480,9 +2480,11 @@ Distributed messages are sent to peers over a 'D' connection, and are used for t
 
 ## Distributed Code 0
 
-### DistribAlive
+### DistribPing
 
-Send it every 60 sec.
+**DEPRECATED, sent by Soulseek NS but not SoulseekQt**
+
+We ping distributed children every 60 seconds.
 
 ### Data Order
 

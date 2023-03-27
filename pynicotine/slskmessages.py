@@ -1487,7 +1487,7 @@ class MinParentsInCache(ServerMessage):
         _pos, self.num = self.unpack_uint32(message)
 
 
-class DistribAliveInterval(ServerMessage):
+class DistribPingInterval(ServerMessage):
     """ Server code: 90 """
     """ OBSOLETE, no longer sent by the server """
 
@@ -3236,8 +3236,10 @@ class DistribMessage(SlskMessage):
     msgtype = MessageType.DISTRIBUTED
 
 
-class DistribAlive(DistribMessage):
+class DistribPing(DistribMessage):
     """ Distrib code: 0 """
+    """ We ping distributed children every 60 seconds. """
+    """ DEPRECATED, sent by Soulseek NS but not SoulseekQt """
 
     __slots__ = ("init",)
 
@@ -3485,7 +3487,7 @@ SERVER_MESSAGE_CODES = {
     ParentInactivityTimeout: 86,  # Obsolete
     SearchInactivityTimeout: 87,  # Obsolete
     MinParentsInCache: 88,        # Obsolete
-    DistribAliveInterval: 90,     # Obsolete
+    DistribPingInterval: 90,      # Obsolete
     AddToPrivileged: 91,          # Obsolete
     CheckPrivileges: 92,
     EmbeddedMessage: 93,
@@ -3564,7 +3566,7 @@ PEER_MESSAGE_CODES = {
 }
 
 DISTRIBUTED_MESSAGE_CODES = {
-    DistribAlive: 0,
+    DistribPing: 0,               # Deprecated
     DistribSearch: 3,
     DistribBranchLevel: 4,
     DistribBranchRoot: 5,
