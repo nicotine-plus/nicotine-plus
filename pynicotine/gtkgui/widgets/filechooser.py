@@ -133,6 +133,8 @@ class FolderChooser(FileChooser):
 
         super().__init__(parent, callback, callback_data, title, initial_folder, select_multiple=select_multiple)
 
+        self.file_chooser.set_accept_label(_("_Select"))
+
         if not self.using_new_api:
             self.file_chooser.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
             return
