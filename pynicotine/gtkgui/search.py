@@ -601,6 +601,8 @@ class Search:
             if presets:
                 widget.set_row_separator_func(self.on_combobox_check_separator)
 
+        self.update_filter_counter(self.active_filter_count)
+
         if self.filters_undo == self.FILTERS_EMPTY:
             tooltip_text = _("Clear Filters")
             icon_name = "edit-clear-symbolic"
@@ -1106,7 +1108,6 @@ class Search:
 
         # Update number of results
         self.update_result_counter()
-        self.update_filter_counter(self.active_filter_count)
 
         if sort_column is not None and sort_type is not None:
             self.resultsmodel.set_sort_column_id(sort_column, sort_type)
