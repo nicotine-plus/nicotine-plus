@@ -114,7 +114,7 @@ class Core:
         from pynicotine.nowplaying import NowPlaying
         from pynicotine.pluginsystem import PluginHandler
         from pynicotine.privatechat import PrivateChat
-        from pynicotine.search import Search
+        from pynicotine.search import Searches
         from pynicotine.shares import Shares
         from pynicotine.slskproto import SoulseekNetworkThread
         from pynicotine.statistics import Statistics
@@ -147,7 +147,7 @@ class Core:
         self.update_checker = UpdateChecker()
 
         self.shares = Shares()
-        self.search = Search()
+        self.search = Searches()
         self.transfers = Transfers()
         self.interests = Interests()
         self.userbrowse = UserBrowse()

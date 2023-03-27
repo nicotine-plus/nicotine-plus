@@ -102,8 +102,8 @@ class Searches(IconNotebook):
         self.file_properties = None
 
         for event_name, callback in (
+            ("add-search", self.add_search),
             ("add-wish", self.update_wish_button),
-            ("do-search", self.do_search),
             ("file-search-response", self.file_search_response),
             ("remove-search", self.remove_search),
             ("remove-wish", self.update_wish_button),
@@ -191,20 +191,21 @@ class Searches(IconNotebook):
 
         return page
 
-    def do_search(self, token, search_term, mode, room=None, users=None, switch_page=True):
+    def add_search(self, token, search, switch_page=True):
 
+        mode = search.mode
         mode_label = None
 
         if mode == "rooms":
-            mode_label = room.strip()
+            mode_label = search.room.strip()
 
         elif mode == "user":
-            mode_label = ",".join(users)
+            mode_label = ",".join(search.users)
 
         elif mode == "buddies":
             mode_label = _("Buddies")
 
-        self.create_page(token, search_term, mode, mode_label)
+        self.create_page(token, search.term, mode, mode_label)
 
         if switch_page:
             self.show_search(token)
@@ -265,7 +266,7 @@ class Searches(IconNotebook):
             if search_item is None:
                 return
 
-            search_term = search_item["term"]
+            search_term = search_item.term
             mode = "wishlist"
             mode_label = _("Wish")
             page = self.create_page(msg.token, search_term, mode, mode_label, show_page=False)
