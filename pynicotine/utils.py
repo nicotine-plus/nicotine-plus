@@ -131,6 +131,15 @@ def humanize(number):
     return f"{number:n}"
 
 
+def pluralize(number, label):
+
+    pluralization = {
+        "selected_files": ["0 Files Selected", _("1 File Selected"), _("%s Files Selected")],
+    }
+
+    return pluralization[label][number] if number < 2 else pluralization[label][2] % humanize(number)
+
+
 def factorize(filesize, base=1024):
     """ Converts filesize string with a given unit into raw integer size,
         defaults to binary for "k", "m", "g" suffixes (KiB, MiB, GiB) """
