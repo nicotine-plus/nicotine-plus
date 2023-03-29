@@ -32,7 +32,7 @@ from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.utils import TRANSLATE_PUNCTUATION
-from pynicotine.utils import pluralize
+from pynicotine.utils import human_count
 
 
 """ Popup/Context Menu """
@@ -327,7 +327,7 @@ class FilePopupMenu(PopupMenu):
     def set_num_selected_files(self, num_files):
 
         self.actions["selected_files"].set_enabled(False)
-        self.items["selected_files"].set_label(pluralize(num_files, "selected_files"))
+        self.items["selected_files"].set_label(human_count(num_files, "selected_files"))
         self.model.remove(0)
         self.model.prepend_item(self.items["selected_files"])
 

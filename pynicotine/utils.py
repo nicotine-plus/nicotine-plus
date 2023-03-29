@@ -86,6 +86,28 @@ def encode_path(path, prefix=True):
     return path.encode("utf-8")
 
 
+def human_count(number, label):
+
+    pluralization_labels = {
+        "selected_files": ["0 Files Selected", _("1 File Selected"), _("%s Files Selected")],
+    }
+    zero, singular, plural = pluralization_labels.get(label, ["No Items", "Item", "%i Items"])
+
+    if not number:
+        return zero.replace("%s", "0").replace("%i", "0")
+
+    if number == 1:
+        return singular.replace("%s", "1").replace("%i", "1")
+
+    if "%s" in plural:
+        return plural % humanize(number)
+
+    if "%i" in plural:
+        return plural % number
+
+    return plural
+
+
 def human_length(seconds):
 
     minutes, seconds = divmod(int(seconds), 60)
@@ -129,15 +151,6 @@ def human_size(filesize):
 
 def humanize(number):
     return f"{number:n}"
-
-
-def pluralize(number, label):
-
-    pluralization = {
-        "selected_files": ["0 Files Selected", _("1 File Selected"), _("%s Files Selected")],
-    }
-
-    return pluralization[label][number] if number < 2 else pluralization[label][2] % humanize(number)
 
 
 def factorize(filesize, base=1024):
