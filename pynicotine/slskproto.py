@@ -1831,10 +1831,10 @@ class SoulseekNetworkThread(Thread):
     def _send_child_peer_message(self, msg):
 
         msg_class = msg.__class__
-        msg_slots = msg.__slots__
+        msg_attrs = [getattr(msg, s) for s in msg.__slots__]
 
         for conn_obj in self._child_peers.values():
-            msg_child = msg_class(*[getattr(msg, s) for s in msg_slots])
+            msg_child = msg_class(*msg_attrs)
             msg_child.init = conn_obj.init
 
             self._queue.append(msg_child)
