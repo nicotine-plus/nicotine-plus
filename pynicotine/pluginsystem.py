@@ -894,15 +894,9 @@ class PluginHandler:
         are precisely the same except for how n+ responds to them, both can be
         triggered by this function. """
 
-        function_name_camelcase = function_name.title().replace("_", "")
-
         for module, plugin in self.enabled_plugins.items():
             try:
-                if hasattr(plugin, function_name_camelcase):
-                    plugin.log(f"{function_name_camelcase} is deprecated, please use {function_name}")
-                    return_value = getattr(plugin, function_name_camelcase)(*args)
-                else:
-                    return_value = getattr(plugin, function_name)(*args)
+                return_value = getattr(plugin, function_name)(*args)
 
             except Exception:
                 self.show_plugin_error(module, sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
