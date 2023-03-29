@@ -2518,6 +2518,8 @@ Search request that arrives through the distributed network. We transmit the sea
 
 We tell our distributed children what our position is in our branch (xth generation) on the distributed network.
 
+If we receive a branch level of 0 from a parent, we should mark the parent as our branch root, since they won't send a [DistribBranchRoot](#distributed-code-5) message in this case.
+
 ### Data Order
 
   - Send
@@ -2530,6 +2532,8 @@ We tell our distributed children what our position is in our branch (xth generat
 ### DistribBranchRoot
 
 We tell our distributed children the username of the root of the branch we're in on the distributed network.
+
+This message should not be sent when we're the branch root.
 
 ### Data Order
 
