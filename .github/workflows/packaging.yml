@@ -87,7 +87,12 @@ jobs:
         run: python3 packaging/windows/dependencies.py
 
       - name: Freeze application
-        run: python3 packaging/windows/setup.py bdist_msi
+        run: |
+          python3 packaging/windows/setup.py build_exe
+
+          # Workaround for https://github.com/marcelotduarte/cx_Freeze/issues/1850
+          cp packaging/windows/build/package/Nicotine+/lib/libwinpthread*.dll packaging/windows/build/package/Nicotine+/
+          python3 packaging/windows/setup.py bdist_msi --skip-build
 
       - name: Archive installer artifacts
         uses: actions/upload-artifact@v3
