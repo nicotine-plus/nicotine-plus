@@ -887,7 +887,10 @@ class PluginHandler:
                 break
 
         if plugin:
-            plugin.output(_("Unknown command: %s. Type /help to list available commands.") % "/" + command)
+            plugin.output(_("Unknown command: %(command)s. Type %(help_command)s to list available commands.") % {
+                "command": f"/{command}",
+                "help_command": "/help"
+            })
 
         self.command_source = None
         return is_successful
