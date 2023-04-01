@@ -650,7 +650,6 @@ class Search:
             combobox.get_child().set_text(h_value)
 
         self.populating_filters = False
-        self.filters_undo = self.filters
 
         self.on_refilter()
 
@@ -1620,8 +1619,11 @@ class Search:
             # Filters have not changed, no need to refilter
             return
 
-        if filters not in (self.FILTERS_EMPTY, self.filters_undo):
-            # Filters changed while we had undo history
+        if self.filters and filters == self.FILTERS_EMPTY:
+            # Filters cleared, enable Restore Filters
+            self.filters_undo = self.filters
+        else:
+            # Filters active, enable Clear Filters
             self.filters_undo = self.FILTERS_EMPTY
 
         self.active_filter_count = 0
