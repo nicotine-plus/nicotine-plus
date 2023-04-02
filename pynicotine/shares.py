@@ -337,11 +337,12 @@ class Scanner(Process):
     def is_hidden(folder, filename=None, entry=None):
         """ Stop sharing any dot/hidden directories/files """
 
-        # If the last folder in the path starts with a dot, we exclude it
+        # If the last folder in the path starts with a dot, or is a Synology extended
+        # attribute folder, we exclude it
         if filename is None:
             last_folder = os.path.basename(os.path.normpath(folder.replace("\\", "/")))
 
-            if last_folder.startswith("."):
+            if last_folder.startswith(".") or last_folder == "@eaDir":
                 return True
 
         # If we're asked to check a file we exclude it if it start with a dot
