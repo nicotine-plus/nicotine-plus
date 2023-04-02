@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
-"PO-Revision-Date: 2023-04-05 11:32+0000\n"
+"PO-Revision-Date: 2023-05-17 14:53+0000\n"
 "Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/tr/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.17-dev\n"
+"X-Generator: Weblate 4.18-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -56,8 +56,8 @@ msgstr "Soulseek eşler arası ağı için grafiksel istemci"
 #: data/org.nicotine_plus.Nicotine.desktop.in:12
 msgid "Soulseek;Nicotine;sharing;chat;messaging;P2P;peer-to-peer;GTK;"
 msgstr ""
-"Soulseek;Nicotine;sharing;chat;messaging;P2P;peer-to-peer;GTK;paylaşım,"
-"sohbet;mesajlaşma;eşler-arası;"
+"Soulseek;Nicotine;sharing;chat;messaging;P2P;peer-to-"
+"peer;GTK;paylaşım,sohbet;mesajlaşma;eşler-arası;"
 
 #: pynicotine/__init__.py:37
 #, python-format
@@ -228,8 +228,8 @@ msgstr ""
 #, python-format
 msgid "IP address of user %(user)s: %(ip)s, port %(port)i%(country)s"
 msgstr ""
-"%(user)s kullanıcısının IP adresi: %(ip)s, bağlantı noktası %(port)i"
-"%(country)s"
+"%(user)s kullanıcısının IP adresi: %(ip)s, bağlantı noktası "
+"%(port)i%(country)s"
 
 #: pynicotine/core.py:397 pynicotine/gtkgui/dialogs/preferences.py:880
 #: pynicotine/gtkgui/dialogs/preferences.py:1012
