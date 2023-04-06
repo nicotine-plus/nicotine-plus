@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
-"PO-Revision-Date: 2022-12-28 04:57+0000\n"
-"Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
+"PO-Revision-Date: 2023-04-02 00:16+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/tr/>\n"
 "Language: tr\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.15.1-dev\n"
+"X-Generator: Weblate 4.17-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -2201,8 +2201,9 @@ msgid "%s File(s) Selected"
 msgstr "%s Dosya Seçildi"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:350
+#, fuzzy
 msgid "View User _Profile"
-msgstr ""
+msgstr "Kullanıcı _Profilini Görüntüle"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:353
 #: pynicotine/gtkgui/ui/userinfo.ui:461
@@ -2275,16 +2276,19 @@ msgid "Executable"
 msgstr "Çalıştırıldı: %s"
 
 #: pynicotine/gtkgui/widgets/theme.py:318
+#, fuzzy
 msgid "Audio"
-msgstr ""
+msgstr "Ses"
 
 #: pynicotine/gtkgui/widgets/theme.py:319
+#, fuzzy
 msgid "Image"
-msgstr ""
+msgstr "resim"
 
 #: pynicotine/gtkgui/widgets/theme.py:320
+#, fuzzy
 msgid "Archive"
-msgstr ""
+msgstr "Arşiv"
 
 #: pynicotine/gtkgui/widgets/theme.py:321 pynicotine/pluginsystem.py:758
 #: pynicotine/gtkgui/ui/settings/network.ui:328
@@ -2292,12 +2296,14 @@ msgid "Miscellaneous"
 msgstr "Çeşitli"
 
 #: pynicotine/gtkgui/widgets/theme.py:322
+#, fuzzy
 msgid "Video"
-msgstr ""
+msgstr "Video"
 
 #: pynicotine/gtkgui/widgets/theme.py:323
+#, fuzzy
 msgid "Document/Text"
-msgstr ""
+msgstr "Belge/Metin"
 
 #: pynicotine/gtkgui/widgets/theme.py:431
 #, python-format
@@ -2328,8 +2334,9 @@ msgstr "Mesaj Gönder"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:110
 #: pynicotine/gtkgui/widgets/trayicon.py:240
+#, fuzzy
 msgid "View User Profile"
-msgstr ""
+msgstr "Kullanıcı Profilini Görüntüle"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:116
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:76
@@ -3501,8 +3508,9 @@ msgid "Leave chat room"
 msgstr "Geçerli odadan ayrıl"
 
 #: pynicotine/plugins/core_commands/__init__.py:104
+#, fuzzy
 msgid "Say message in specified chat room"
-msgstr ""
+msgstr "Belirtilen sohbet odasında mesajı söyle"
 
 #: pynicotine/plugins/core_commands/__init__.py:111
 #, fuzzy
@@ -3545,8 +3553,9 @@ msgid "Show IP address or username"
 msgstr "Kullanıcının IP adresini göster"
 
 #: pynicotine/plugins/core_commands/__init__.py:176
+#, fuzzy
 msgid "Block connections from user or IP address"
-msgstr ""
+msgstr "Kullanıcıdan veya IP adresinden gelen bağlantıları engelle"
 
 #: pynicotine/plugins/core_commands/__init__.py:183
 #, fuzzy
@@ -3554,8 +3563,9 @@ msgid "Remove user or IP address from ban lists"
 msgstr "Yasaklama listenizden kullanıcıyı kaldırın"
 
 #: pynicotine/plugins/core_commands/__init__.py:190
+#, fuzzy
 msgid "Silence messages from user or IP address"
-msgstr ""
+msgstr "Kullanıcıdan veya IP adresinden gelen mesajları susturma"
 
 #: pynicotine/plugins/core_commands/__init__.py:198
 #, fuzzy
@@ -3572,8 +3582,9 @@ msgid "List shares"
 msgstr "Paylaşımları yeniden tara"
 
 #: pynicotine/plugins/core_commands/__init__.py:220
+#, fuzzy
 msgid "Start global file search"
-msgstr ""
+msgstr "Genel dosya aramayı başlat"
 
 #: pynicotine/plugins/core_commands/__init__.py:228
 #, fuzzy
@@ -3591,24 +3602,24 @@ msgid "Search a user's shared files"
 msgstr "'sorgu' için bir kullanıcının paylaşımlarını ara"
 
 #: pynicotine/plugins/core_commands/__init__.py:272
-#, python-format
+#, fuzzy, python-format
 msgid "Listing %(num)i available commands:"
-msgstr ""
+msgstr "%(num)i mevcut komutları listeleme:"
 
 #: pynicotine/plugins/core_commands/__init__.py:274
-#, python-format
+#, fuzzy, python-format
 msgid "Listing %(num)i available commands matching \"%(query)s\":"
-msgstr ""
+msgstr "\"%(query)s\" ile eşleşen mevcut %(num)i komutları listeleniyor:"
 
 #: pynicotine/plugins/core_commands/__init__.py:286
-#, python-format
+#, fuzzy, python-format
 msgid "Type %(command)s to list similar commands"
-msgstr ""
+msgstr "Benzer komutları listelemek için %(command)s yazın"
 
 #: pynicotine/plugins/core_commands/__init__.py:289
-#, python-format
+#, fuzzy, python-format
 msgid "Type %(command)s to list available commands"
-msgstr ""
+msgstr "Mevcut komutları listelemek için %(command)s yazın"
 
 #: pynicotine/plugins/core_commands/__init__.py:338
 #: pynicotine/plugins/core_commands/__init__.py:350
@@ -3650,9 +3661,9 @@ msgstr ""
 "içeriyor: %(characters)s"
 
 #: pynicotine/pluginsystem.py:525
-#, python-format
+#, fuzzy, python-format
 msgid "Conflicting %(interface)s command in plugin %(name)s: %(command)s"
-msgstr ""
+msgstr "Eklentide çakışan %(interface)s komutu %(name)s: %(command)s"
 
 #: pynicotine/pluginsystem.py:549
 #, python-format
@@ -3697,9 +3708,9 @@ msgid "No description"
 msgstr "Açıklama sağlanmadı"
 
 #: pynicotine/pluginsystem.py:837
-#, python-format
+#, fuzzy, python-format
 msgid "Missing %s argument"
-msgstr ""
+msgstr "%s bağımsız değişkeni eksik"
 
 #: pynicotine/pluginsystem.py:846
 #, fuzzy, python-format
@@ -3707,16 +3718,18 @@ msgid "Invalid argument, possible choices: %s"
 msgstr "Geçersiz yanıt: %s"
 
 #: pynicotine/pluginsystem.py:851
-#, python-format
+#, fuzzy, python-format
 msgid "Usage: %(command)s %(args)s"
-msgstr ""
+msgstr "Kullanım: %(command)s %(args)s"
 
 #: pynicotine/pluginsystem.py:890
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "Unknown command: %(command)s. Type %(help_command)s to list available "
 "commands."
 msgstr ""
+"Bilinmeyen komut: %(command)s. Mevcut komutları listelemek için "
+"%(help_command)s yazın."
 
 #: pynicotine/portmapper.py:446
 msgid "No UPnP devices found"
@@ -4245,11 +4258,15 @@ msgstr "Klasörleri Paylaş"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:383
 #: pynicotine/gtkgui/ui/settings/shares.ui:25
+#, fuzzy
 msgid ""
 "Soulseek users will be able to download from your shares. Contribute to the "
 "Soulseek network by sharing your own collection and by resharing what you "
 "downloaded from other users."
 msgstr ""
+"Soulseek kullanıcıları paylaşımlarınızdan indirebilecekler. Kendi "
+"koleksiyonunuzu paylaşarak ve diğer kullanıcılardan indirdiklerinizi yeniden "
+"paylaşarak Soulseek ağına katkıda bulunun."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:546
 msgid "You are ready to use Nicotine+!"
@@ -4868,10 +4885,13 @@ msgstr ""
 "'Instrumental Remix' herhangi bir 'Remix Instrumental' göstermeyecektir"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:115
+#, fuzzy
 msgid ""
 "Use | (or pipes) to seperate several exact phrases. Example:\n"
 "    Remix|Dub Mix|Instrumental"
 msgstr ""
+"Kullan | (veya borular) birkaç kesin tümceyi ayırmak için. Örnek:\n"
+"    Remix|Dub Mix|Enstrümantal"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:127
 msgid "Exclude Text"
@@ -5056,8 +5076,9 @@ msgstr ""
 "(Büyük Britanya) kullanıcılardan gelen sonuçları gizleyecektir."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:421
+#, fuzzy
 msgid "Multiple countries can be specified with commas or spaces."
-msgstr ""
+msgstr "Virgül veya boşluklarla birden çok ülke belirtilebilir."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:430
 #: pynicotine/gtkgui/ui/search.ui:384
@@ -5145,8 +5166,9 @@ msgstr "Dosya boyutu…"
 
 #: pynicotine/gtkgui/ui/search.ui:274
 #: pynicotine/gtkgui/ui/settings/search.ui:259
+#, fuzzy
 msgid "File size, e.g. >10.5m <1g"
-msgstr ""
+msgstr "Dosya boyutu, örn. >10.5m <1g"
 
 #: pynicotine/gtkgui/ui/search.ui:302
 msgid "Bitrate…"
@@ -5154,8 +5176,9 @@ msgstr "Bit hızı…"
 
 #: pynicotine/gtkgui/ui/search.ui:303
 #: pynicotine/gtkgui/ui/settings/search.ui:290
+#, fuzzy
 msgid "Bitrate, e.g. 256 <1412"
-msgstr ""
+msgstr "Bit hızı, örn. 256 <1412"
 
 #: pynicotine/gtkgui/ui/search.ui:331
 msgid "Duration…"
@@ -5424,8 +5447,9 @@ msgid "Incomplete downloads:"
 msgstr "Tamamlanan İndirmeler"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:259
+#, fuzzy
 msgid "Received files:"
-msgstr ""
+msgstr "Alınan dosyalar:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:285
 msgid "Events"
@@ -5565,8 +5589,9 @@ msgid "Auto-reply message when away:"
 msgstr "Uzaktayken otomatik yanıt mesajı:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:340
+#, fuzzy
 msgid "Automatically forward listening port (UPnP/NAT-PMP)"
-msgstr ""
+msgstr "Dinleme bağlantı noktasını otomatik olarak ilet (UPnP/NAT-PMP)"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:348
 msgid "Auto-connect to server on startup"
@@ -6014,8 +6039,9 @@ msgid "Tab bar positions:"
 msgstr "Sekme çubuğu konumu:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:664
+#, fuzzy
 msgid "Main tabs"
-msgstr ""
+msgstr "Ana sekmeler"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:869
 #, fuzzy

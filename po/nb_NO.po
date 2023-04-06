@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
-"PO-Revision-Date: 2022-12-27 21:00+0000\n"
+"PO-Revision-Date: 2023-04-02 00:16+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/nb_NO/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.15.1-dev\n"
+"X-Generator: Weblate 4.17-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -2357,8 +2357,9 @@ msgid "%s File(s) Selected"
 msgstr "%s Valgt(e) fil(er)"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:350
+#, fuzzy
 msgid "View User _Profile"
-msgstr ""
+msgstr "Vis brukerprofil"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:353
 #: pynicotine/gtkgui/ui/userinfo.ui:461
@@ -2435,16 +2436,19 @@ msgid "Executable"
 msgstr "Utført: %s"
 
 #: pynicotine/gtkgui/widgets/theme.py:318
+#, fuzzy
 msgid "Audio"
-msgstr ""
+msgstr "Lyd"
 
 #: pynicotine/gtkgui/widgets/theme.py:319
+#, fuzzy
 msgid "Image"
-msgstr ""
+msgstr "Bilde"
 
 #: pynicotine/gtkgui/widgets/theme.py:320
+#, fuzzy
 msgid "Archive"
-msgstr ""
+msgstr "Arkiv"
 
 #: pynicotine/gtkgui/widgets/theme.py:321 pynicotine/pluginsystem.py:758
 #: pynicotine/gtkgui/ui/settings/network.ui:328
@@ -2452,12 +2456,14 @@ msgid "Miscellaneous"
 msgstr "Ymse"
 
 #: pynicotine/gtkgui/widgets/theme.py:322
+#, fuzzy
 msgid "Video"
-msgstr ""
+msgstr "Video"
 
 #: pynicotine/gtkgui/widgets/theme.py:323
+#, fuzzy
 msgid "Document/Text"
-msgstr ""
+msgstr "Dokument/tekst"
 
 #: pynicotine/gtkgui/widgets/theme.py:431
 #, fuzzy, python-format
@@ -2488,8 +2494,9 @@ msgstr "Send melding"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:110
 #: pynicotine/gtkgui/widgets/trayicon.py:240
+#, fuzzy
 msgid "View User Profile"
-msgstr ""
+msgstr "Se brukerprofil"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:116
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:76
@@ -3836,8 +3843,9 @@ msgid "Leave chat room"
 msgstr "Forlat nåværende rom"
 
 #: pynicotine/plugins/core_commands/__init__.py:104
+#, fuzzy
 msgid "Say message in specified chat room"
-msgstr ""
+msgstr "Si melding i spesifisert chatterom"
 
 #: pynicotine/plugins/core_commands/__init__.py:111
 #, fuzzy
@@ -3880,8 +3888,9 @@ msgid "Show IP address or username"
 msgstr "Vis IP for bruker"
 
 #: pynicotine/plugins/core_commands/__init__.py:176
+#, fuzzy
 msgid "Block connections from user or IP address"
-msgstr ""
+msgstr "Blokker tilkoblinger fra bruker eller IP-adresse"
 
 #: pynicotine/plugins/core_commands/__init__.py:183
 #, fuzzy
@@ -3889,8 +3898,9 @@ msgid "Remove user or IP address from ban lists"
 msgstr "Fjern bruker fra bannlysningslisten din"
 
 #: pynicotine/plugins/core_commands/__init__.py:190
+#, fuzzy
 msgid "Silence messages from user or IP address"
-msgstr ""
+msgstr "Demp meldinger fra bruker eller IP-adresse"
 
 #: pynicotine/plugins/core_commands/__init__.py:198
 #, fuzzy
@@ -3908,8 +3918,9 @@ msgid "List shares"
 msgstr "Skann aksjer på nytt"
 
 #: pynicotine/plugins/core_commands/__init__.py:220
+#, fuzzy
 msgid "Start global file search"
-msgstr ""
+msgstr "Start globalt filsøk"
 
 #: pynicotine/plugins/core_commands/__init__.py:228
 #, fuzzy
@@ -3927,24 +3938,24 @@ msgid "Search a user's shared files"
 msgstr "Søk etter spørring på en brukers delte ressurser"
 
 #: pynicotine/plugins/core_commands/__init__.py:272
-#, python-format
+#, fuzzy, python-format
 msgid "Listing %(num)i available commands:"
-msgstr ""
+msgstr "Viser %(num)i tilgjengelige kommandoer:"
 
 #: pynicotine/plugins/core_commands/__init__.py:274
-#, python-format
+#, fuzzy, python-format
 msgid "Listing %(num)i available commands matching \"%(query)s\":"
-msgstr ""
+msgstr "Viser %(num)i tilgjengelige kommandoer som samsvarer med \"%(query)s\":"
 
 #: pynicotine/plugins/core_commands/__init__.py:286
-#, python-format
+#, fuzzy, python-format
 msgid "Type %(command)s to list similar commands"
-msgstr ""
+msgstr "Skriv %(command)s for å vise lignende kommandoer"
 
 #: pynicotine/plugins/core_commands/__init__.py:289
-#, python-format
+#, fuzzy, python-format
 msgid "Type %(command)s to list available commands"
-msgstr ""
+msgstr "Skriv %(command)s for å vise tilgjengelige kommandoer"
 
 #: pynicotine/plugins/core_commands/__init__.py:338
 #: pynicotine/plugins/core_commands/__init__.py:350
@@ -3987,9 +3998,9 @@ msgstr ""
 "inneholder ugyldige tegn: %(characters)s"
 
 #: pynicotine/pluginsystem.py:525
-#, python-format
+#, fuzzy, python-format
 msgid "Conflicting %(interface)s command in plugin %(name)s: %(command)s"
-msgstr ""
+msgstr "Motstridende %(interface)s-kommando i plugin %(name)s: %(command)s"
 
 #: pynicotine/pluginsystem.py:549
 #, fuzzy, python-format
@@ -4034,9 +4045,9 @@ msgid "No description"
 msgstr "Ingen beskrivelse angitt"
 
 #: pynicotine/pluginsystem.py:837
-#, python-format
+#, fuzzy, python-format
 msgid "Missing %s argument"
-msgstr ""
+msgstr "Mangler %s argument"
 
 #: pynicotine/pluginsystem.py:846
 #, fuzzy, python-format
@@ -4044,16 +4055,18 @@ msgid "Invalid argument, possible choices: %s"
 msgstr "Ugyldig Soulseek URL: %s"
 
 #: pynicotine/pluginsystem.py:851
-#, python-format
+#, fuzzy, python-format
 msgid "Usage: %(command)s %(args)s"
-msgstr ""
+msgstr "Bruk: %(command)s %(args)s"
 
 #: pynicotine/pluginsystem.py:890
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "Unknown command: %(command)s. Type %(help_command)s to list available "
 "commands."
 msgstr ""
+"Ukjent kommando: %(command)s. Skriv %(help_command)s for å vise "
+"tilgjengelige kommandoer."
 
 #: pynicotine/portmapper.py:446
 #, fuzzy
@@ -4608,11 +4621,15 @@ msgstr "Dele mapper"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:383
 #: pynicotine/gtkgui/ui/settings/shares.ui:25
+#, fuzzy
 msgid ""
 "Soulseek users will be able to download from your shares. Contribute to the "
 "Soulseek network by sharing your own collection and by resharing what you "
 "downloaded from other users."
 msgstr ""
+"Soulseek-brukere vil kunne laste ned fra delingene dine. Bidra til Soulseek-"
+"nettverket ved å dele din egen samling og ved å videredele det du lastet ned "
+"fra andre brukere."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:546
 #, fuzzy
@@ -5315,10 +5332,13 @@ msgstr ""
 "vise noen 'Brittany Spears'"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:115
+#, fuzzy
 msgid ""
 "Use | (or pipes) to seperate several exact phrases. Example:\n"
 "    Remix|Dub Mix|Instrumental"
 msgstr ""
+"Bruk | (eller rør) for å skille flere eksakte fraser. Eksempel:\n"
+"    Remix|Dub Mix|Instrumental"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:127
 #, fuzzy
@@ -5510,8 +5530,9 @@ msgstr ""
 "samme måte returnerer GB filer fra brukere med IPer i Storbritannia."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:421
+#, fuzzy
 msgid "Multiple countries can be specified with commas or spaces."
-msgstr ""
+msgstr "Flere land kan angis med komma eller mellomrom."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:430
 #: pynicotine/gtkgui/ui/search.ui:384
@@ -5615,8 +5636,9 @@ msgstr "Filstørrelse…"
 
 #: pynicotine/gtkgui/ui/search.ui:274
 #: pynicotine/gtkgui/ui/settings/search.ui:259
+#, fuzzy
 msgid "File size, e.g. >10.5m <1g"
-msgstr ""
+msgstr "Filstørrelse, f.eks. >10,5m <1g"
 
 #: pynicotine/gtkgui/ui/search.ui:302
 #, fuzzy
@@ -5625,8 +5647,9 @@ msgstr "Bitrate…"
 
 #: pynicotine/gtkgui/ui/search.ui:303
 #: pynicotine/gtkgui/ui/settings/search.ui:290
+#, fuzzy
 msgid "Bitrate, e.g. 256 <1412"
-msgstr ""
+msgstr "Bitrate, f.eks. 256 <1412"
 
 #: pynicotine/gtkgui/ui/search.ui:331
 #, fuzzy
@@ -5929,8 +5952,9 @@ msgid "Incomplete downloads:"
 msgstr "Fullførte nedlastninger"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:259
+#, fuzzy
 msgid "Received files:"
-msgstr ""
+msgstr "Mottatte filer:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:285
 msgid "Events"
@@ -6085,8 +6109,9 @@ msgid "Auto-reply message when away:"
 msgstr "Svar meldingen automatisk når du er borte:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:340
+#, fuzzy
 msgid "Automatically forward listening port (UPnP/NAT-PMP)"
-msgstr ""
+msgstr "Videresend automatisk lytteport (UPnP/NAT-PMP)"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:348
 #, fuzzy
@@ -6599,8 +6624,9 @@ msgid "Tab bar positions:"
 msgstr "Plassering av tabulatorlinje:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:664
+#, fuzzy
 msgid "Main tabs"
-msgstr ""
+msgstr "Hovedfaner"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:869
 #, fuzzy

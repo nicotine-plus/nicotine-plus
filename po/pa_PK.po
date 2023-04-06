@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
-"PO-Revision-Date: 2022-12-27 21:00+0000\n"
+"PO-Revision-Date: 2023-04-02 00:16+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Punjabi (Pakistan) <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/pa_PK/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.15.1-dev\n"
+"X-Generator: Weblate 4.17-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -1616,8 +1616,9 @@ msgstr "ਸ਼ੇਅਰ ਬ੍ਰਾਊਜ਼ ਕਰੋ"
 #: pynicotine/gtkgui/mainwindow.py:935 pynicotine/gtkgui/ui/mainwindow.ui:1051
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:548
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:754
+#, fuzzy
 msgid "User Profiles"
-msgstr ""
+msgstr "ਯੂਜ਼ਰ ਪ੍ਰੋਫਾਈਲ"
 
 #: pynicotine/gtkgui/mainwindow.py:936
 #: pynicotine/plugins/core_commands/__init__.py:26
@@ -2561,8 +2562,9 @@ msgid "%s File(s) Selected"
 msgstr "%s ਫਾਈਲਾਂ ਚੁਣੀਆਂ ਗਈਆਂ"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:350
+#, fuzzy
 msgid "View User _Profile"
-msgstr ""
+msgstr "ਯੂਜ਼ਰ _ਪ੍ਰੋਫਾਈਲ ਦੇਖੋ"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:353
 #: pynicotine/gtkgui/ui/userinfo.ui:461
@@ -2640,16 +2642,19 @@ msgid "Executable"
 msgstr "ਚਲਾਇਆ ਗਿਆ: %s"
 
 #: pynicotine/gtkgui/widgets/theme.py:318
+#, fuzzy
 msgid "Audio"
-msgstr ""
+msgstr "ਆਡੀਓ"
 
 #: pynicotine/gtkgui/widgets/theme.py:319
+#, fuzzy
 msgid "Image"
-msgstr ""
+msgstr "ਚਿੱਤਰ"
 
 #: pynicotine/gtkgui/widgets/theme.py:320
+#, fuzzy
 msgid "Archive"
-msgstr ""
+msgstr "ਪੁਰਾਲੇਖ"
 
 #: pynicotine/gtkgui/widgets/theme.py:321 pynicotine/pluginsystem.py:758
 #: pynicotine/gtkgui/ui/settings/network.ui:328
@@ -2658,12 +2663,14 @@ msgid "Miscellaneous"
 msgstr "ਫੁਟਕਲ"
 
 #: pynicotine/gtkgui/widgets/theme.py:322
+#, fuzzy
 msgid "Video"
-msgstr ""
+msgstr "ਵੀਡੀਓ"
 
 #: pynicotine/gtkgui/widgets/theme.py:323
+#, fuzzy
 msgid "Document/Text"
-msgstr ""
+msgstr "ਦਸਤਾਵੇਜ਼/ਟੈਕਸਟ"
 
 #: pynicotine/gtkgui/widgets/theme.py:431
 #, fuzzy, python-format
@@ -2699,8 +2706,9 @@ msgstr "ਸੁਨੇਹਾ ਭੇਜੋ"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:110
 #: pynicotine/gtkgui/widgets/trayicon.py:240
+#, fuzzy
 msgid "View User Profile"
-msgstr ""
+msgstr "ਯੂਜ਼ਰ ਪ੍ਰੋਫਾਈਲ ਦੇਖੋ"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:116
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:76
@@ -4134,8 +4142,9 @@ msgid "Leave chat room"
 msgstr "ਮੌਜੂਦਾ ਕਮਰਾ ਛੱਡੋ"
 
 #: pynicotine/plugins/core_commands/__init__.py:104
+#, fuzzy
 msgid "Say message in specified chat room"
-msgstr ""
+msgstr "ਖਾਸ ਚੈਟ ਰੂਮ ਵਿੱਚ ਸੁਨੇਹਾ ਕਹੋ"
 
 #: pynicotine/plugins/core_commands/__init__.py:111
 #, fuzzy
@@ -4168,8 +4177,9 @@ msgid "Browse files of user"
 msgstr "ਉਪਭੋਗਤਾ 'ਉਪਭੋਗਤਾ' ਦੀਆਂ ਫਾਈਲਾਂ ਨੂੰ ਬ੍ਰਾਊਜ਼ ਕਰੋ"
 
 #: pynicotine/plugins/core_commands/__init__.py:161
+#, fuzzy
 msgid "Show user profile information"
-msgstr ""
+msgstr "ਉਪਭੋਗਤਾ ਪ੍ਰੋਫਾਈਲ ਜਾਣਕਾਰੀ ਦਿਖਾਓ"
 
 #: pynicotine/plugins/core_commands/__init__.py:169
 #, fuzzy
@@ -4177,8 +4187,9 @@ msgid "Show IP address or username"
 msgstr "ਉਪਭੋਗਤਾ ਲਈ IP ਦਿਖਾਓ"
 
 #: pynicotine/plugins/core_commands/__init__.py:176
+#, fuzzy
 msgid "Block connections from user or IP address"
-msgstr ""
+msgstr "ਉਪਭੋਗਤਾ ਜਾਂ IP ਪਤੇ ਤੋਂ ਕਨੈਕਸ਼ਨਾਂ ਨੂੰ ਬਲੌਕ ਕਰੋ"
 
 #: pynicotine/plugins/core_commands/__init__.py:183
 #, fuzzy
@@ -4186,8 +4197,9 @@ msgid "Remove user or IP address from ban lists"
 msgstr "ਆਪਣੀ ਪਾਬੰਦੀ ਸੂਚੀ ਵਿੱਚੋਂ ਉਪਭੋਗਤਾ ਨੂੰ ਹਟਾਓ"
 
 #: pynicotine/plugins/core_commands/__init__.py:190
+#, fuzzy
 msgid "Silence messages from user or IP address"
-msgstr ""
+msgstr "ਉਪਭੋਗਤਾ ਜਾਂ IP ਪਤੇ ਤੋਂ ਸੁਨੇਹਿਆਂ ਨੂੰ ਚੁੱਪ ਕਰੋ"
 
 #: pynicotine/plugins/core_commands/__init__.py:198
 #, fuzzy
@@ -4205,8 +4217,9 @@ msgid "List shares"
 msgstr "ਸ਼ੇਅਰਾਂ ਨੂੰ ਮੁੜ-ਸਕੈਨ ਕਰੋ"
 
 #: pynicotine/plugins/core_commands/__init__.py:220
+#, fuzzy
 msgid "Start global file search"
-msgstr ""
+msgstr "ਗਲੋਬਲ ਫਾਈਲ ਖੋਜ ਸ਼ੁਰੂ ਕਰੋ"
 
 #: pynicotine/plugins/core_commands/__init__.py:228
 #, fuzzy
@@ -4224,24 +4237,24 @@ msgid "Search a user's shared files"
 msgstr "'ਕਵੇਰੀ' ਲਈ ਉਪਭੋਗਤਾ ਦੇ ਸ਼ੇਅਰ ਖੋਜੋ"
 
 #: pynicotine/plugins/core_commands/__init__.py:272
-#, python-format
+#, fuzzy, python-format
 msgid "Listing %(num)i available commands:"
-msgstr ""
+msgstr "ਸੂਚੀਬੱਧ %(num)i ਉਪਲਬਧ ਕਮਾਂਡਾਂ:"
 
 #: pynicotine/plugins/core_commands/__init__.py:274
-#, python-format
+#, fuzzy, python-format
 msgid "Listing %(num)i available commands matching \"%(query)s\":"
-msgstr ""
+msgstr "\"%(query)s\" ਨਾਲ ਮੇਲ ਖਾਂਦੀਆਂ %(num)i ਉਪਲਬਧ ਕਮਾਂਡਾਂ ਦੀ ਸੂਚੀ:"
 
 #: pynicotine/plugins/core_commands/__init__.py:286
-#, python-format
+#, fuzzy, python-format
 msgid "Type %(command)s to list similar commands"
-msgstr ""
+msgstr "ਸਮਾਨ ਕਮਾਂਡਾਂ ਨੂੰ ਸੂਚੀਬੱਧ ਕਰਨ ਲਈ %(command)s ਟਾਈਪ ਕਰੋ"
 
 #: pynicotine/plugins/core_commands/__init__.py:289
-#, python-format
+#, fuzzy, python-format
 msgid "Type %(command)s to list available commands"
-msgstr ""
+msgstr "ਉਪਲਬਧ ਕਮਾਂਡਾਂ ਨੂੰ ਸੂਚੀਬੱਧ ਕਰਨ ਲਈ %(command)s ਟਾਈਪ ਕਰੋ"
 
 #: pynicotine/plugins/core_commands/__init__.py:338
 #: pynicotine/plugins/core_commands/__init__.py:350
@@ -4284,9 +4297,9 @@ msgstr ""
 "%(characters)s"
 
 #: pynicotine/pluginsystem.py:525
-#, python-format
+#, fuzzy, python-format
 msgid "Conflicting %(interface)s command in plugin %(name)s: %(command)s"
-msgstr ""
+msgstr "ਪਲੱਗਇਨ %(name)s ਵਿੱਚ ਵਿਰੋਧੀ %(interface)s ਕਮਾਂਡ: %(command)s"
 
 #: pynicotine/pluginsystem.py:549
 #, fuzzy, python-format
@@ -4331,9 +4344,9 @@ msgid "No description"
 msgstr "ਸਵੈ ਵਰਣਨ"
 
 #: pynicotine/pluginsystem.py:837
-#, python-format
+#, fuzzy, python-format
 msgid "Missing %s argument"
-msgstr ""
+msgstr "ਗੁੰਮ %s ਆਰਗੂਮੈਂਟ"
 
 #: pynicotine/pluginsystem.py:846
 #, fuzzy, python-format
@@ -4341,16 +4354,18 @@ msgid "Invalid argument, possible choices: %s"
 msgstr "ਅਵੈਧ ਜਵਾਬ: %s"
 
 #: pynicotine/pluginsystem.py:851
-#, python-format
+#, fuzzy, python-format
 msgid "Usage: %(command)s %(args)s"
-msgstr ""
+msgstr "ਵਰਤੋਂ: %(command)s %(args)s"
 
 #: pynicotine/pluginsystem.py:890
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "Unknown command: %(command)s. Type %(help_command)s to list available "
 "commands."
 msgstr ""
+"ਅਗਿਆਤ ਕਮਾਂਡ: %(command)s। ਉਪਲਬਧ ਕਮਾਂਡਾਂ ਨੂੰ ਸੂਚੀਬੱਧ ਕਰਨ ਲਈ %(help_command)s "
+"ਟਾਈਪ ਕਰੋ।"
 
 #: pynicotine/portmapper.py:446
 #, fuzzy
@@ -4909,11 +4924,15 @@ msgstr "ਫੋਲਡਰ ਸਾਂਝੇ ਕਰੋ"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:383
 #: pynicotine/gtkgui/ui/settings/shares.ui:25
+#, fuzzy
 msgid ""
 "Soulseek users will be able to download from your shares. Contribute to the "
 "Soulseek network by sharing your own collection and by resharing what you "
 "downloaded from other users."
 msgstr ""
+"Soulseek ਉਪਭੋਗਤਾ ਤੁਹਾਡੇ ਸ਼ੇਅਰਾਂ ਤੋਂ ਡਾਊਨਲੋਡ ਕਰਨ ਦੇ ਯੋਗ ਹੋਣਗੇ. ਆਪਣੇ ਖੁਦ ਦੇ "
+"ਸੰਗ੍ਰਹਿ ਨੂੰ ਸਾਂਝਾ ਕਰਕੇ ਅਤੇ ਦੂਜੇ ਉਪਭੋਗਤਾਵਾਂ ਤੋਂ ਜੋ ਤੁਸੀਂ ਡਾਉਨਲੋਡ ਕੀਤਾ ਹੈ ਉਸਨੂੰ"
+" ਮੁੜ ਸਾਂਝਾ ਕਰਕੇ ਸੋਲਸੀਕ ਨੈਟਵਰਕ ਵਿੱਚ ਯੋਗਦਾਨ ਪਾਓ।"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:546
 #, fuzzy
@@ -5646,10 +5665,13 @@ msgstr ""
 "ਨਹੀਂ ਦਿਖਾਏਗਾ"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:115
+#, fuzzy
 msgid ""
 "Use | (or pipes) to seperate several exact phrases. Example:\n"
 "    Remix|Dub Mix|Instrumental"
 msgstr ""
+"ਵਰਤੋ | (ਜਾਂ ਪਾਈਪਾਂ) ਕਈ ਸਹੀ ਵਾਕਾਂਸ਼ਾਂ ਨੂੰ ਵੱਖ ਕਰਨ ਲਈ। ਉਦਾਹਰਨ:\n"
+"    ਰੀਮਿਕਸ|ਡਬ ਮਿਕਸ|ਇੰਸਟਰੂਮੈਂਟਲ"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:127
 #, fuzzy
@@ -5838,8 +5860,9 @@ msgstr ""
 "ਕਿੰਗਡਮ (ਗ੍ਰੇਟ ਬ੍ਰਿਟੇਨ) ਦੇ ਉਪਭੋਗਤਾਵਾਂ ਤੋਂ ਆਉਣ ਵਾਲੇ ਨਤੀਜਿਆਂ ਨੂੰ ਲੁਕਾਏਗਾ।"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:421
+#, fuzzy
 msgid "Multiple countries can be specified with commas or spaces."
-msgstr ""
+msgstr "ਕਈ ਦੇਸ਼ਾਂ ਨੂੰ ਕੌਮੇ ਜਾਂ ਸਪੇਸ ਨਾਲ ਨਿਸ਼ਚਿਤ ਕੀਤਾ ਜਾ ਸਕਦਾ ਹੈ।"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:430
 #: pynicotine/gtkgui/ui/search.ui:384
@@ -5942,8 +5965,9 @@ msgstr "ਫਾਈਲ ਦਾ ਆਕਾਰ…"
 
 #: pynicotine/gtkgui/ui/search.ui:274
 #: pynicotine/gtkgui/ui/settings/search.ui:259
+#, fuzzy
 msgid "File size, e.g. >10.5m <1g"
-msgstr ""
+msgstr "ਫਾਈਲ ਦਾ ਆਕਾਰ, ਉਦਾਹਰਨ ਲਈ >10.5m <1g"
 
 #: pynicotine/gtkgui/ui/search.ui:302
 #, fuzzy
@@ -5952,8 +5976,9 @@ msgstr "ਬਿੱਟਰੇਟ…"
 
 #: pynicotine/gtkgui/ui/search.ui:303
 #: pynicotine/gtkgui/ui/settings/search.ui:290
+#, fuzzy
 msgid "Bitrate, e.g. 256 <1412"
-msgstr ""
+msgstr "ਬਿੱਟਰੇਟ, ਉਦਾਹਰਨ ਲਈ 256 <1412"
 
 #: pynicotine/gtkgui/ui/search.ui:331
 #, fuzzy
@@ -6271,8 +6296,9 @@ msgid "Incomplete downloads:"
 msgstr "ਡਾਊਨਲੋਡ ਪੂਰੇ ਹੋਏ"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:259
+#, fuzzy
 msgid "Received files:"
-msgstr ""
+msgstr "ਪ੍ਰਾਪਤ ਹੋਈਆਂ ਫਾਈਲਾਂ:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:285
 #, fuzzy
@@ -6432,8 +6458,9 @@ msgid "Auto-reply message when away:"
 msgstr "ਦੂਰ ਹੋਣ 'ਤੇ ਸਵੈ-ਜਵਾਬ ਸੁਨੇਹਾ:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:340
+#, fuzzy
 msgid "Automatically forward listening port (UPnP/NAT-PMP)"
-msgstr ""
+msgstr "ਆਟੋਮੈਟਿਕਲੀ ਅੱਗੇ ਸੁਣਨ ਵਾਲਾ ਪੋਰਟ (UPnP/NAT-PMP)"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:348
 #, fuzzy
@@ -6967,8 +6994,9 @@ msgid "Tab bar positions:"
 msgstr "ਟੈਬ ਬਾਰ ਸਥਿਤੀ:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:664
+#, fuzzy
 msgid "Main tabs"
-msgstr ""
+msgstr "ਮੁੱਖ ਟੈਬਾਂ"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:869
 #, fuzzy

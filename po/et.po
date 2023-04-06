@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
-"PO-Revision-Date: 2023-03-08 19:12+0000\n"
-"Last-Translator: PriitUring <priit.uring@gmail.com>\n"
+"PO-Revision-Date: 2023-04-02 00:16+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Estonian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/et/>\n"
 "Language: et\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.16.2-dev\n"
+"X-Generator: Weblate 4.17-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -1547,8 +1547,9 @@ msgstr "Sirvige aktsiaid"
 #: pynicotine/gtkgui/mainwindow.py:935 pynicotine/gtkgui/ui/mainwindow.ui:1051
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:548
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:754
+#, fuzzy
 msgid "User Profiles"
-msgstr ""
+msgstr "Kasutajaprofiilid"
 
 #: pynicotine/gtkgui/mainwindow.py:936
 #: pynicotine/plugins/core_commands/__init__.py:26
@@ -2465,8 +2466,9 @@ msgid "%s File(s) Selected"
 msgstr "%s Fail(id) on valitud"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:350
+#, fuzzy
 msgid "View User _Profile"
-msgstr ""
+msgstr "Kuva kasutaja _profiil"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:353
 #: pynicotine/gtkgui/ui/userinfo.ui:461
@@ -2545,16 +2547,19 @@ msgid "Executable"
 msgstr "Teostatud: %s"
 
 #: pynicotine/gtkgui/widgets/theme.py:318
+#, fuzzy
 msgid "Audio"
-msgstr ""
+msgstr "Heli"
 
 #: pynicotine/gtkgui/widgets/theme.py:319
+#, fuzzy
 msgid "Image"
-msgstr ""
+msgstr "Pilt"
 
 #: pynicotine/gtkgui/widgets/theme.py:320
+#, fuzzy
 msgid "Archive"
-msgstr ""
+msgstr "Arhiiv"
 
 #: pynicotine/gtkgui/widgets/theme.py:321 pynicotine/pluginsystem.py:758
 #: pynicotine/gtkgui/ui/settings/network.ui:328
@@ -2563,12 +2568,14 @@ msgid "Miscellaneous"
 msgstr "Mitmesugust"
 
 #: pynicotine/gtkgui/widgets/theme.py:322
+#, fuzzy
 msgid "Video"
-msgstr ""
+msgstr "Video"
 
 #: pynicotine/gtkgui/widgets/theme.py:323
+#, fuzzy
 msgid "Document/Text"
-msgstr ""
+msgstr "Dokument/tekst"
 
 #: pynicotine/gtkgui/widgets/theme.py:431
 #, fuzzy, python-format
@@ -2604,8 +2611,9 @@ msgstr "Saada sõnum"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:110
 #: pynicotine/gtkgui/widgets/trayicon.py:240
+#, fuzzy
 msgid "View User Profile"
-msgstr ""
+msgstr "Vaata kasutajaprofiili"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:116
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:76
@@ -3955,8 +3963,9 @@ msgid "Leave chat room"
 msgstr "Lahku praegusest ruumist"
 
 #: pynicotine/plugins/core_commands/__init__.py:104
+#, fuzzy
 msgid "Say message in specified chat room"
-msgstr ""
+msgstr "Öelge sõnum määratud jututoas"
 
 #: pynicotine/plugins/core_commands/__init__.py:111
 #, fuzzy
@@ -3989,8 +3998,9 @@ msgid "Browse files of user"
 msgstr "Sirvi kasutaja 'kasutaja' faile"
 
 #: pynicotine/plugins/core_commands/__init__.py:161
+#, fuzzy
 msgid "Show user profile information"
-msgstr ""
+msgstr "Kuva kasutajaprofiili teave"
 
 #: pynicotine/plugins/core_commands/__init__.py:169
 #, fuzzy
@@ -3998,8 +4008,9 @@ msgid "Show IP address or username"
 msgstr "Näita kasutaja IP-d"
 
 #: pynicotine/plugins/core_commands/__init__.py:176
+#, fuzzy
 msgid "Block connections from user or IP address"
-msgstr ""
+msgstr "Blokeeri ühendused kasutaja või IP-aadressi kaudu"
 
 #: pynicotine/plugins/core_commands/__init__.py:183
 #, fuzzy
@@ -4007,8 +4018,9 @@ msgid "Remove user or IP address from ban lists"
 msgstr "Eemalda kasutaja oma keelunimekirjast"
 
 #: pynicotine/plugins/core_commands/__init__.py:190
+#, fuzzy
 msgid "Silence messages from user or IP address"
-msgstr ""
+msgstr "Vaigista sõnumid kasutajalt või IP-aadressilt"
 
 #: pynicotine/plugins/core_commands/__init__.py:198
 #, fuzzy
@@ -4026,8 +4038,9 @@ msgid "List shares"
 msgstr "Kontrolli aktsiaid uuesti"
 
 #: pynicotine/plugins/core_commands/__init__.py:220
+#, fuzzy
 msgid "Start global file search"
-msgstr ""
+msgstr "Käivitage globaalne failiotsing"
 
 #: pynicotine/plugins/core_commands/__init__.py:228
 #, fuzzy
@@ -4045,24 +4058,24 @@ msgid "Search a user's shared files"
 msgstr "Otsi kasutaja jagamistest päringut"
 
 #: pynicotine/plugins/core_commands/__init__.py:272
-#, python-format
+#, fuzzy, python-format
 msgid "Listing %(num)i available commands:"
-msgstr ""
+msgstr "Saadaolevate %(num)i käskude loend:"
 
 #: pynicotine/plugins/core_commands/__init__.py:274
-#, python-format
+#, fuzzy, python-format
 msgid "Listing %(num)i available commands matching \"%(query)s\":"
-msgstr ""
+msgstr "Loetledes %(num)i saadaolevad käsud, mis vastavad \"%(query)s\":"
 
 #: pynicotine/plugins/core_commands/__init__.py:286
-#, python-format
+#, fuzzy, python-format
 msgid "Type %(command)s to list similar commands"
-msgstr ""
+msgstr "Sarnaste käskude loendi kuvamiseks tippige %(command)s"
 
 #: pynicotine/plugins/core_commands/__init__.py:289
-#, python-format
+#, fuzzy, python-format
 msgid "Type %(command)s to list available commands"
-msgstr ""
+msgstr "Saadaolevate käskude loendi kuvamiseks tippige %(command)s"
 
 #: pynicotine/plugins/core_commands/__init__.py:338
 #: pynicotine/plugins/core_commands/__init__.py:350
@@ -4105,9 +4118,9 @@ msgstr ""
 "märke: %(characters)s"
 
 #: pynicotine/pluginsystem.py:525
-#, python-format
+#, fuzzy, python-format
 msgid "Conflicting %(interface)s command in plugin %(name)s: %(command)s"
-msgstr ""
+msgstr "Konfliktne käsk %(interface)s pistikprogrammis %(name)s: %(command)s"
 
 #: pynicotine/pluginsystem.py:549
 #, fuzzy, python-format
@@ -4152,26 +4165,28 @@ msgid "No description"
 msgstr "Enesekirjeldus"
 
 #: pynicotine/pluginsystem.py:837
-#, python-format
+#, fuzzy, python-format
 msgid "Missing %s argument"
-msgstr ""
+msgstr "Argument %s puudub"
 
 #: pynicotine/pluginsystem.py:846
-#, python-format
+#, fuzzy, python-format
 msgid "Invalid argument, possible choices: %s"
-msgstr ""
+msgstr "Kehtetu argument, võimalikud valikud: %s"
 
 #: pynicotine/pluginsystem.py:851
-#, python-format
+#, fuzzy, python-format
 msgid "Usage: %(command)s %(args)s"
-msgstr ""
+msgstr "Kasutamine: %(command)s %(args)s"
 
 #: pynicotine/pluginsystem.py:890
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "Unknown command: %(command)s. Type %(help_command)s to list available "
 "commands."
 msgstr ""
+"Tundmatu käsk: %(command)s. Saadaolevate käskude loendi kuvamiseks tippige "
+"%(help_command)s."
 
 #: pynicotine/portmapper.py:446
 #, fuzzy
@@ -4733,11 +4748,15 @@ msgstr "Jaga kaustu"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:383
 #: pynicotine/gtkgui/ui/settings/shares.ui:25
+#, fuzzy
 msgid ""
 "Soulseek users will be able to download from your shares. Contribute to the "
 "Soulseek network by sharing your own collection and by resharing what you "
 "downloaded from other users."
 msgstr ""
+"Soulseeki kasutajad saavad teie aktsiatest alla laadida. Andke oma panus "
+"Soulseeki võrku, jagades oma kollektsiooni ja jagades edasi seda, mida olete "
+"teistelt kasutajatelt alla laadinud."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:546
 #, fuzzy
@@ -5469,10 +5488,13 @@ msgstr ""
 "\" ei näita ühtegi \"Remix Instrumental\""
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:115
+#, fuzzy
 msgid ""
 "Use | (or pipes) to seperate several exact phrases. Example:\n"
 "    Remix|Dub Mix|Instrumental"
 msgstr ""
+"Kasuta | (või torud), et eraldada mitu täpset fraasi. Näide:\n"
+"    Remix|Dub Mix|Instrumentaal"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:127
 #, fuzzy
@@ -5665,8 +5687,9 @@ msgstr ""
 "saadud tulemused."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:421
+#, fuzzy
 msgid "Multiple countries can be specified with commas or spaces."
-msgstr ""
+msgstr "Koma või tühikutega saab määrata mitu riiki."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:430
 #: pynicotine/gtkgui/ui/search.ui:384
@@ -5768,8 +5791,9 @@ msgstr "Faili suurus…"
 
 #: pynicotine/gtkgui/ui/search.ui:274
 #: pynicotine/gtkgui/ui/settings/search.ui:259
+#, fuzzy
 msgid "File size, e.g. >10.5m <1g"
-msgstr ""
+msgstr "Faili suurus, nt. >10,5m <1g"
 
 #: pynicotine/gtkgui/ui/search.ui:302
 #, fuzzy
@@ -5778,8 +5802,9 @@ msgstr "Bitikiirus…"
 
 #: pynicotine/gtkgui/ui/search.ui:303
 #: pynicotine/gtkgui/ui/settings/search.ui:290
+#, fuzzy
 msgid "Bitrate, e.g. 256 <1412"
-msgstr ""
+msgstr "Bitikiirus, nt. 256 <1412"
 
 #: pynicotine/gtkgui/ui/search.ui:331
 #, fuzzy
@@ -6098,8 +6123,9 @@ msgid "Incomplete downloads:"
 msgstr "Lõpetatud allalaadimised"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:259
+#, fuzzy
 msgid "Received files:"
-msgstr ""
+msgstr "Vastuvõetud failid:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:285
 #, fuzzy
@@ -6258,8 +6284,9 @@ msgid "Auto-reply message when away:"
 msgstr "Automaatvastuse sõnum, kui olete eemal:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:340
+#, fuzzy
 msgid "Automatically forward listening port (UPnP/NAT-PMP)"
-msgstr ""
+msgstr "Kuulamispordi automaatne edastamine (UPnP/NAT-PMP)"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:348
 #, fuzzy
@@ -6800,8 +6827,9 @@ msgid "Tab bar positions:"
 msgstr "Tabeldusriba asukoht:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:664
+#, fuzzy
 msgid "Main tabs"
-msgstr ""
+msgstr "Peamised vahekaardid"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:869
 #, fuzzy

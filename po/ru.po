@@ -6,17 +6,17 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
-"PO-Revision-Date: 2023-03-11 20:33+0000\n"
-"Last-Translator: Kirill Feoktistov <feoktistovk@gmail.com>\n"
+"PO-Revision-Date: 2023-04-02 00:16+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.16.2-dev\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 4.17-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -2203,8 +2203,9 @@ msgid "%s File(s) Selected"
 msgstr "%s выделенных файла"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:350
+#, fuzzy
 msgid "View User _Profile"
-msgstr ""
+msgstr "Просмотр профиля пользователя"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:353
 #: pynicotine/gtkgui/ui/userinfo.ui:461
@@ -2276,16 +2277,19 @@ msgid "Executable"
 msgstr "Выполнено: %s"
 
 #: pynicotine/gtkgui/widgets/theme.py:318
+#, fuzzy
 msgid "Audio"
-msgstr ""
+msgstr "Аудио"
 
 #: pynicotine/gtkgui/widgets/theme.py:319
+#, fuzzy
 msgid "Image"
-msgstr ""
+msgstr "Изображение"
 
 #: pynicotine/gtkgui/widgets/theme.py:320
+#, fuzzy
 msgid "Archive"
-msgstr ""
+msgstr "Архив"
 
 #: pynicotine/gtkgui/widgets/theme.py:321 pynicotine/pluginsystem.py:758
 #: pynicotine/gtkgui/ui/settings/network.ui:328
@@ -2293,12 +2297,14 @@ msgid "Miscellaneous"
 msgstr "Разное"
 
 #: pynicotine/gtkgui/widgets/theme.py:322
+#, fuzzy
 msgid "Video"
-msgstr ""
+msgstr "видео"
 
 #: pynicotine/gtkgui/widgets/theme.py:323
+#, fuzzy
 msgid "Document/Text"
-msgstr ""
+msgstr "Документ/Текст"
 
 #: pynicotine/gtkgui/widgets/theme.py:431
 #, python-format
@@ -2329,8 +2335,9 @@ msgstr "Отправить сообщение"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:110
 #: pynicotine/gtkgui/widgets/trayicon.py:240
+#, fuzzy
 msgid "View User Profile"
-msgstr ""
+msgstr "Просмотр профиля пользователя"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:116
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:76
@@ -3502,8 +3509,9 @@ msgid "Leave chat room"
 msgstr "Покинуть текущую комнату"
 
 #: pynicotine/plugins/core_commands/__init__.py:104
+#, fuzzy
 msgid "Say message in specified chat room"
-msgstr ""
+msgstr "Произнести сообщение в указанном чате"
 
 #: pynicotine/plugins/core_commands/__init__.py:111
 #, fuzzy
@@ -3546,8 +3554,9 @@ msgid "Show IP address or username"
 msgstr "Показать IP-адрес пользователя"
 
 #: pynicotine/plugins/core_commands/__init__.py:176
+#, fuzzy
 msgid "Block connections from user or IP address"
-msgstr ""
+msgstr "Блокировать подключения от пользователя или IP-адреса"
 
 #: pynicotine/plugins/core_commands/__init__.py:183
 #, fuzzy
@@ -3555,8 +3564,9 @@ msgid "Remove user or IP address from ban lists"
 msgstr "Удалить пользователя из списка блокировки"
 
 #: pynicotine/plugins/core_commands/__init__.py:190
+#, fuzzy
 msgid "Silence messages from user or IP address"
-msgstr ""
+msgstr "Отключить сообщения от пользователя или IP-адреса"
 
 #: pynicotine/plugins/core_commands/__init__.py:198
 #, fuzzy
@@ -3573,8 +3583,9 @@ msgid "List shares"
 msgstr "Пересканировать общие файлы"
 
 #: pynicotine/plugins/core_commands/__init__.py:220
+#, fuzzy
 msgid "Start global file search"
-msgstr ""
+msgstr "Начать глобальный поиск файлов"
 
 #: pynicotine/plugins/core_commands/__init__.py:228
 #, fuzzy
@@ -3592,24 +3603,24 @@ msgid "Search a user's shared files"
 msgstr "Искать по общим файлам пользователей 'запрос'"
 
 #: pynicotine/plugins/core_commands/__init__.py:272
-#, python-format
+#, fuzzy, python-format
 msgid "Listing %(num)i available commands:"
-msgstr ""
+msgstr "Список %(num)i доступных команд:"
 
 #: pynicotine/plugins/core_commands/__init__.py:274
-#, python-format
+#, fuzzy, python-format
 msgid "Listing %(num)i available commands matching \"%(query)s\":"
-msgstr ""
+msgstr "Список %(num)i доступных команд, соответствующих «%(query)s»:"
 
 #: pynicotine/plugins/core_commands/__init__.py:286
-#, python-format
+#, fuzzy, python-format
 msgid "Type %(command)s to list similar commands"
-msgstr ""
+msgstr "Введите %(command)s, чтобы получить список похожих команд."
 
 #: pynicotine/plugins/core_commands/__init__.py:289
-#, python-format
+#, fuzzy, python-format
 msgid "Type %(command)s to list available commands"
-msgstr ""
+msgstr "Введите %(command)s, чтобы просмотреть список доступных команд."
 
 #: pynicotine/plugins/core_commands/__init__.py:338
 #: pynicotine/plugins/core_commands/__init__.py:350
@@ -3651,9 +3662,9 @@ msgstr ""
 "недопустимые символы: %(characters)s"
 
 #: pynicotine/pluginsystem.py:525
-#, python-format
+#, fuzzy, python-format
 msgid "Conflicting %(interface)s command in plugin %(name)s: %(command)s"
-msgstr ""
+msgstr "Конфликтующая команда %(interface)s в плагине %(name)s: %(command)s"
 
 #: pynicotine/pluginsystem.py:549
 #, python-format
@@ -3698,9 +3709,9 @@ msgid "No description"
 msgstr "Информация отображаемая всем пользователям, зашедшим в ваш профиль"
 
 #: pynicotine/pluginsystem.py:837
-#, python-format
+#, fuzzy, python-format
 msgid "Missing %s argument"
-msgstr ""
+msgstr "Отсутствует аргумент %s"
 
 #: pynicotine/pluginsystem.py:846
 #, fuzzy, python-format
@@ -3708,16 +3719,18 @@ msgid "Invalid argument, possible choices: %s"
 msgstr "Неверный ответ: %s"
 
 #: pynicotine/pluginsystem.py:851
-#, python-format
+#, fuzzy, python-format
 msgid "Usage: %(command)s %(args)s"
-msgstr ""
+msgstr "Использование: %(command)s %(args)s"
 
 #: pynicotine/pluginsystem.py:890
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "Unknown command: %(command)s. Type %(help_command)s to list available "
 "commands."
 msgstr ""
+"Неизвестная команда: %(command)s. Введите %(help_command)s, чтобы "
+"просмотреть список доступных команд."
 
 #: pynicotine/portmapper.py:446
 msgid "No UPnP devices found"
@@ -4247,11 +4260,15 @@ msgstr "Раздать каталоги"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:383
 #: pynicotine/gtkgui/ui/settings/shares.ui:25
+#, fuzzy
 msgid ""
 "Soulseek users will be able to download from your shares. Contribute to the "
 "Soulseek network by sharing your own collection and by resharing what you "
 "downloaded from other users."
 msgstr ""
+"Пользователи Soulseek смогут скачивать с ваших общих ресурсов. Внесите свой "
+"вклад в сеть Soulseek, поделившись своей собственной коллекцией и "
+"опубликовав то, что вы скачали у других пользователей."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:546
 msgid "You are ready to use Nicotine+!"
@@ -4871,10 +4888,13 @@ msgstr ""
 "покажет никаких 'Remix Instrumental'"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:115
+#, fuzzy
 msgid ""
 "Use | (or pipes) to seperate several exact phrases. Example:\n"
 "    Remix|Dub Mix|Instrumental"
 msgstr ""
+"Использование | (или трубы), чтобы разделить несколько точных фраз. Пример:\n"
+"    Ремикс|Даб Микс|Инструментальная"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:127
 msgid "Exclude Text"
@@ -5061,8 +5081,9 @@ msgstr ""
 "пользователей из Великобритании."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:421
+#, fuzzy
 msgid "Multiple countries can be specified with commas or spaces."
-msgstr ""
+msgstr "Несколько стран можно указать с помощью запятых или пробелов."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:430
 #: pynicotine/gtkgui/ui/search.ui:384
@@ -5156,8 +5177,9 @@ msgstr "Размер файла…"
 
 #: pynicotine/gtkgui/ui/search.ui:274
 #: pynicotine/gtkgui/ui/settings/search.ui:259
+#, fuzzy
 msgid "File size, e.g. >10.5m <1g"
-msgstr ""
+msgstr "Размер файла, например. >10,5м <1г"
 
 #: pynicotine/gtkgui/ui/search.ui:302
 msgid "Bitrate…"
@@ -5165,8 +5187,9 @@ msgstr "Битрейт…"
 
 #: pynicotine/gtkgui/ui/search.ui:303
 #: pynicotine/gtkgui/ui/settings/search.ui:290
+#, fuzzy
 msgid "Bitrate, e.g. 256 <1412"
-msgstr ""
+msgstr "Битрейт, например. 256 <1412"
 
 #: pynicotine/gtkgui/ui/search.ui:331
 msgid "Duration…"
@@ -5436,8 +5459,9 @@ msgid "Incomplete downloads:"
 msgstr "Завершённые загрузки"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:259
+#, fuzzy
 msgid "Received files:"
-msgstr ""
+msgstr "Полученные файлы:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:285
 msgid "Events"
@@ -5572,8 +5596,9 @@ msgid "Auto-reply message when away:"
 msgstr "Автоответчик при отсутствии:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:340
+#, fuzzy
 msgid "Automatically forward listening port (UPnP/NAT-PMP)"
-msgstr ""
+msgstr "Автоматически перенаправлять прослушиваемый порт (UPnP/NAT-PMP)"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:348
 msgid "Auto-connect to server on startup"
@@ -6023,8 +6048,9 @@ msgid "Tab bar positions:"
 msgstr "Положение панели вкладок:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:664
+#, fuzzy
 msgid "Main tabs"
-msgstr ""
+msgstr "Основные вкладки"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:869
 #, fuzzy

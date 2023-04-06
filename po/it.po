@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
-"PO-Revision-Date: 2023-02-28 06:13+0000\n"
-"Last-Translator: Gabriele <gabboxl0@gmail.com>\n"
+"PO-Revision-Date: 2023-04-02 00:16+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/it/>\n"
 "Language: it\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.16-dev\n"
+"X-Generator: Weblate 4.17-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -2274,16 +2274,19 @@ msgid "Executable"
 msgstr "Eseguito: %s"
 
 #: pynicotine/gtkgui/widgets/theme.py:318
+#, fuzzy
 msgid "Audio"
-msgstr ""
+msgstr "Audio"
 
 #: pynicotine/gtkgui/widgets/theme.py:319
+#, fuzzy
 msgid "Image"
-msgstr ""
+msgstr "Immagine"
 
 #: pynicotine/gtkgui/widgets/theme.py:320
+#, fuzzy
 msgid "Archive"
-msgstr ""
+msgstr "Archivio"
 
 #: pynicotine/gtkgui/widgets/theme.py:321 pynicotine/pluginsystem.py:758
 #: pynicotine/gtkgui/ui/settings/network.ui:328
@@ -2291,12 +2294,14 @@ msgid "Miscellaneous"
 msgstr "Varie"
 
 #: pynicotine/gtkgui/widgets/theme.py:322
+#, fuzzy
 msgid "Video"
-msgstr ""
+msgstr "video"
 
 #: pynicotine/gtkgui/widgets/theme.py:323
+#, fuzzy
 msgid "Document/Text"
-msgstr ""
+msgstr "Documento/Testo"
 
 #: pynicotine/gtkgui/widgets/theme.py:431
 #, python-format
@@ -2327,8 +2332,9 @@ msgstr "Invia Messaggio"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:110
 #: pynicotine/gtkgui/widgets/trayicon.py:240
+#, fuzzy
 msgid "View User Profile"
-msgstr ""
+msgstr "Visualizza il profilo utente"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:116
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:76
@@ -3505,8 +3511,9 @@ msgid "Leave chat room"
 msgstr "Lascia canale attuale"
 
 #: pynicotine/plugins/core_commands/__init__.py:104
+#, fuzzy
 msgid "Say message in specified chat room"
-msgstr ""
+msgstr "Pronuncia il messaggio nella chat room specificata"
 
 #: pynicotine/plugins/core_commands/__init__.py:111
 #, fuzzy
@@ -3559,8 +3566,9 @@ msgid "Remove user or IP address from ban lists"
 msgstr "Rimuovi utente dalla tua lista bloccati"
 
 #: pynicotine/plugins/core_commands/__init__.py:190
+#, fuzzy
 msgid "Silence messages from user or IP address"
-msgstr ""
+msgstr "Silenziare i messaggi dall'utente o dall'indirizzo IP"
 
 #: pynicotine/plugins/core_commands/__init__.py:198
 #, fuzzy
@@ -3577,8 +3585,9 @@ msgid "List shares"
 msgstr "Aggiorna condivisi"
 
 #: pynicotine/plugins/core_commands/__init__.py:220
+#, fuzzy
 msgid "Start global file search"
-msgstr ""
+msgstr "Avvia la ricerca globale dei file"
 
 #: pynicotine/plugins/core_commands/__init__.py:228
 #, fuzzy
@@ -3596,24 +3605,24 @@ msgid "Search a user's shared files"
 msgstr "Cerca 'interrogazione' fra le condivisione dell'utente"
 
 #: pynicotine/plugins/core_commands/__init__.py:272
-#, python-format
+#, fuzzy, python-format
 msgid "Listing %(num)i available commands:"
-msgstr ""
+msgstr "Elenco dei comandi disponibili %(num)i:"
 
 #: pynicotine/plugins/core_commands/__init__.py:274
-#, python-format
+#, fuzzy, python-format
 msgid "Listing %(num)i available commands matching \"%(query)s\":"
-msgstr ""
+msgstr "Elenco dei comandi disponibili %(num)i corrispondenti a \"%(query)s\":"
 
 #: pynicotine/plugins/core_commands/__init__.py:286
-#, python-format
+#, fuzzy, python-format
 msgid "Type %(command)s to list similar commands"
-msgstr ""
+msgstr "Digita %(command)s per elencare comandi simili"
 
 #: pynicotine/plugins/core_commands/__init__.py:289
-#, python-format
+#, fuzzy, python-format
 msgid "Type %(command)s to list available commands"
-msgstr ""
+msgstr "Digitare %(command)s per elencare i comandi disponibili"
 
 #: pynicotine/plugins/core_commands/__init__.py:338
 #: pynicotine/plugins/core_commands/__init__.py:350
@@ -3655,9 +3664,9 @@ msgstr ""
 "dell'estensione contiene caratteri non validi: %(characters)s"
 
 #: pynicotine/pluginsystem.py:525
-#, python-format
+#, fuzzy, python-format
 msgid "Conflicting %(interface)s command in plugin %(name)s: %(command)s"
-msgstr ""
+msgstr "Comando %(interface)s in conflitto nel plug-in %(name)s: %(command)s"
 
 #: pynicotine/pluginsystem.py:549
 #, python-format
@@ -3702,9 +3711,9 @@ msgid "No description"
 msgstr "Nessuna descrizione"
 
 #: pynicotine/pluginsystem.py:837
-#, python-format
+#, fuzzy, python-format
 msgid "Missing %s argument"
-msgstr ""
+msgstr "Argomento %s mancante"
 
 #: pynicotine/pluginsystem.py:846
 #, fuzzy, python-format
@@ -3712,16 +3721,18 @@ msgid "Invalid argument, possible choices: %s"
 msgstr "Risposta non valida: %s"
 
 #: pynicotine/pluginsystem.py:851
-#, python-format
+#, fuzzy, python-format
 msgid "Usage: %(command)s %(args)s"
-msgstr ""
+msgstr "Utilizzo: %(command)s %(args)s"
 
 #: pynicotine/pluginsystem.py:890
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "Unknown command: %(command)s. Type %(help_command)s to list available "
 "commands."
 msgstr ""
+"Comando sconosciuto: %(command)s. Digitare %(help_command)s per elencare i "
+"comandi disponibili."
 
 #: pynicotine/portmapper.py:446
 msgid "No UPnP devices found"
@@ -4250,11 +4261,15 @@ msgstr "Condividi Cartelle"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:383
 #: pynicotine/gtkgui/ui/settings/shares.ui:25
+#, fuzzy
 msgid ""
 "Soulseek users will be able to download from your shares. Contribute to the "
 "Soulseek network by sharing your own collection and by resharing what you "
 "downloaded from other users."
 msgstr ""
+"Gli utenti di Soulseek potranno scaricare dalle tue condivisioni. "
+"Contribuisci alla rete Soulseek condividendo la tua collezione e "
+"ricondividendo ciò che hai scaricato da altri utenti."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:546
 msgid "You are ready to use Nicotine+!"
@@ -4877,10 +4892,13 @@ msgstr ""
 "importante: \"Spears Britney\" non mostrerà alcuna \"Britney Spears\""
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:115
+#, fuzzy
 msgid ""
 "Use | (or pipes) to seperate several exact phrases. Example:\n"
 "    Remix|Dub Mix|Instrumental"
 msgstr ""
+"Usa | (o pipe) per separare diverse frasi esatte. Esempio:\n"
+"    Remix|Dub Mix|Strumentale"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:127
 msgid "Exclude Text"
@@ -5065,8 +5083,9 @@ msgstr ""
 "stesso modo, 'GB' restituisce file da utenti del Regno Unito."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:421
+#, fuzzy
 msgid "Multiple countries can be specified with commas or spaces."
-msgstr ""
+msgstr "È possibile specificare più paesi con virgole o spazi."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:430
 #: pynicotine/gtkgui/ui/search.ui:384
@@ -5169,8 +5188,9 @@ msgstr "Bitrate…"
 
 #: pynicotine/gtkgui/ui/search.ui:303
 #: pynicotine/gtkgui/ui/settings/search.ui:290
+#, fuzzy
 msgid "Bitrate, e.g. 256 <1412"
-msgstr ""
+msgstr "Bitrate, ad es. 256<1412"
 
 #: pynicotine/gtkgui/ui/search.ui:331
 msgid "Duration…"
@@ -5437,8 +5457,9 @@ msgid "Incomplete downloads:"
 msgstr "Download Completati"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:259
+#, fuzzy
 msgid "Received files:"
-msgstr ""
+msgstr "File ricevuti:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:285
 msgid "Events"
@@ -5575,8 +5596,9 @@ msgid "Auto-reply message when away:"
 msgstr "Risposta automatica quando assente:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:340
+#, fuzzy
 msgid "Automatically forward listening port (UPnP/NAT-PMP)"
-msgstr ""
+msgstr "Porta di ascolto in avanti automatico (UPnP/NAT-PMP)"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:348
 msgid "Auto-connect to server on startup"
@@ -6025,8 +6047,9 @@ msgid "Tab bar positions:"
 msgstr "Posizione barra delle schede:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:664
+#, fuzzy
 msgid "Main tabs"
-msgstr ""
+msgstr "Schede principali"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:869
 #, fuzzy

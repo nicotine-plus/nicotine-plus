@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
-"PO-Revision-Date: 2022-12-27 21:00+0000\n"
+"PO-Revision-Date: 2023-04-02 00:16+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Esperanto <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/eo/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.15.1-dev\n"
+"X-Generator: Weblate 4.17-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -2571,8 +2571,9 @@ msgid "%s File(s) Selected"
 msgstr "%s Dosiero(j) Elektita(j)."
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:350
+#, fuzzy
 msgid "View User _Profile"
-msgstr ""
+msgstr "Rigardu Uzantan _Profilon"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:353
 #: pynicotine/gtkgui/ui/userinfo.ui:461
@@ -2652,16 +2653,19 @@ msgid "Executable"
 msgstr "Efektive: %s"
 
 #: pynicotine/gtkgui/widgets/theme.py:318
+#, fuzzy
 msgid "Audio"
-msgstr ""
+msgstr "Aŭdio"
 
 #: pynicotine/gtkgui/widgets/theme.py:319
+#, fuzzy
 msgid "Image"
-msgstr ""
+msgstr "Bildo"
 
 #: pynicotine/gtkgui/widgets/theme.py:320
+#, fuzzy
 msgid "Archive"
-msgstr ""
+msgstr "Arkivo"
 
 #: pynicotine/gtkgui/widgets/theme.py:321 pynicotine/pluginsystem.py:758
 #: pynicotine/gtkgui/ui/settings/network.ui:328
@@ -2670,12 +2674,14 @@ msgid "Miscellaneous"
 msgstr "Diversaj"
 
 #: pynicotine/gtkgui/widgets/theme.py:322
+#, fuzzy
 msgid "Video"
-msgstr ""
+msgstr "Video"
 
 #: pynicotine/gtkgui/widgets/theme.py:323
+#, fuzzy
 msgid "Document/Text"
-msgstr ""
+msgstr "Dokumento/Teksto"
 
 #: pynicotine/gtkgui/widgets/theme.py:431
 #, fuzzy, python-format
@@ -2711,8 +2717,9 @@ msgstr "Sendi mesaĝon"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:110
 #: pynicotine/gtkgui/widgets/trayicon.py:240
+#, fuzzy
 msgid "View User Profile"
-msgstr ""
+msgstr "Rigardu Uzantan Profilon"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:116
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:76
@@ -4128,8 +4135,9 @@ msgid "Leave chat room"
 msgstr "Forlasu la nunan ĉambron"
 
 #: pynicotine/plugins/core_commands/__init__.py:104
+#, fuzzy
 msgid "Say message in specified chat room"
-msgstr ""
+msgstr "Diru mesaĝon en specifita babilejo"
 
 #: pynicotine/plugins/core_commands/__init__.py:111
 #, fuzzy
@@ -4172,8 +4180,9 @@ msgid "Show IP address or username"
 msgstr "Montru IP por uzanto"
 
 #: pynicotine/plugins/core_commands/__init__.py:176
+#, fuzzy
 msgid "Block connections from user or IP address"
-msgstr ""
+msgstr "Bloki konektojn de uzanto aŭ IP-adreso"
 
 #: pynicotine/plugins/core_commands/__init__.py:183
 #, fuzzy
@@ -4181,8 +4190,9 @@ msgid "Remove user or IP address from ban lists"
 msgstr "Forigi uzanton el via malpermesa listo"
 
 #: pynicotine/plugins/core_commands/__init__.py:190
+#, fuzzy
 msgid "Silence messages from user or IP address"
-msgstr ""
+msgstr "Silentigi mesaĝojn de uzanto aŭ IP-adreso"
 
 #: pynicotine/plugins/core_commands/__init__.py:198
 #, fuzzy
@@ -4200,8 +4210,9 @@ msgid "List shares"
 msgstr "Reskani akciojn"
 
 #: pynicotine/plugins/core_commands/__init__.py:220
+#, fuzzy
 msgid "Start global file search"
-msgstr ""
+msgstr "Komencu tutmondan dosierserĉon"
 
 #: pynicotine/plugins/core_commands/__init__.py:228
 #, fuzzy
@@ -4219,24 +4230,24 @@ msgid "Search a user's shared files"
 msgstr "Serĉu la akciojn de uzanto por 'demando'"
 
 #: pynicotine/plugins/core_commands/__init__.py:272
-#, python-format
+#, fuzzy, python-format
 msgid "Listing %(num)i available commands:"
-msgstr ""
+msgstr "Listo de %(num)i disponeblaj komandoj:"
 
 #: pynicotine/plugins/core_commands/__init__.py:274
-#, python-format
+#, fuzzy, python-format
 msgid "Listing %(num)i available commands matching \"%(query)s\":"
-msgstr ""
+msgstr "Listo de %(num)i disponeblaj komandoj kongruaj kun \"%(query)s\":"
 
 #: pynicotine/plugins/core_commands/__init__.py:286
-#, python-format
+#, fuzzy, python-format
 msgid "Type %(command)s to list similar commands"
-msgstr ""
+msgstr "Tajpu %(command)s por listigi similajn komandojn"
 
 #: pynicotine/plugins/core_commands/__init__.py:289
-#, python-format
+#, fuzzy, python-format
 msgid "Type %(command)s to list available commands"
-msgstr ""
+msgstr "Tajpu %(command)s por listigi disponeblajn komandojn"
 
 #: pynicotine/plugins/core_commands/__init__.py:338
 #: pynicotine/plugins/core_commands/__init__.py:350
@@ -4279,9 +4290,9 @@ msgstr ""
 "nevalidajn signojn: %(characters)s"
 
 #: pynicotine/pluginsystem.py:525
-#, python-format
+#, fuzzy, python-format
 msgid "Conflicting %(interface)s command in plugin %(name)s: %(command)s"
-msgstr ""
+msgstr "Konfliktanta %(interface)s komando en kromaĵo %(name)s: %(command)s"
 
 #: pynicotine/pluginsystem.py:549
 #, fuzzy, python-format
@@ -4326,9 +4337,9 @@ msgid "No description"
 msgstr "Mempriskribo"
 
 #: pynicotine/pluginsystem.py:837
-#, python-format
+#, fuzzy, python-format
 msgid "Missing %s argument"
-msgstr ""
+msgstr "Mankas %s argumento"
 
 #: pynicotine/pluginsystem.py:846
 #, fuzzy, python-format
@@ -4336,16 +4347,18 @@ msgid "Invalid argument, possible choices: %s"
 msgstr "Nevalida Soulseek URL: %s"
 
 #: pynicotine/pluginsystem.py:851
-#, python-format
+#, fuzzy, python-format
 msgid "Usage: %(command)s %(args)s"
-msgstr ""
+msgstr "Uzado: %(command)s %(args)s"
 
 #: pynicotine/pluginsystem.py:890
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "Unknown command: %(command)s. Type %(help_command)s to list available "
 "commands."
 msgstr ""
+"Nekonata komando: %(command)s. Tajpu %(help_command)s por listigi "
+"disponeblajn komandojn."
 
 #: pynicotine/portmapper.py:446
 #, fuzzy
@@ -4905,11 +4918,15 @@ msgstr "Kunhavigi Dosierujojn"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:383
 #: pynicotine/gtkgui/ui/settings/shares.ui:25
+#, fuzzy
 msgid ""
 "Soulseek users will be able to download from your shares. Contribute to the "
 "Soulseek network by sharing your own collection and by resharing what you "
 "downloaded from other users."
 msgstr ""
+"Uzantoj de Soulseek povos elŝuti el viaj akcioj. Kontribuu al la reto "
+"Soulseek dividante vian propran kolekton kaj redividante tion, kion vi "
+"elŝutis de aliaj uzantoj."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:546
 #, fuzzy
@@ -5654,10 +5671,13 @@ msgstr ""
 "montros neniun 'Brittany Spears'"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:115
+#, fuzzy
 msgid ""
 "Use | (or pipes) to seperate several exact phrases. Example:\n"
 "    Remix|Dub Mix|Instrumental"
 msgstr ""
+"Uzu | (aŭ pipoj) por apartigi plurajn ekzaktajn frazojn. Ekzemplo:\n"
+"    Remiksaĵo|Dub Mix|Instrumenta"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:127
 #, fuzzy
@@ -5853,8 +5873,9 @@ msgstr ""
 "'GB' resendas dosierojn de uzantoj kun IP-oj en Britio."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:421
+#, fuzzy
 msgid "Multiple countries can be specified with commas or spaces."
-msgstr ""
+msgstr "Pluraj landoj povas esti specifitaj per komoj aŭ spacoj."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:430
 #: pynicotine/gtkgui/ui/search.ui:384
@@ -5958,8 +5979,9 @@ msgstr "Dosiera grandeco…"
 
 #: pynicotine/gtkgui/ui/search.ui:274
 #: pynicotine/gtkgui/ui/settings/search.ui:259
+#, fuzzy
 msgid "File size, e.g. >10.5m <1g"
-msgstr ""
+msgstr "Dosiera grandeco, ekz. > 10,5 m < 1 g"
 
 #: pynicotine/gtkgui/ui/search.ui:302
 #, fuzzy
@@ -5968,8 +5990,9 @@ msgstr "Bitrapideco…"
 
 #: pynicotine/gtkgui/ui/search.ui:303
 #: pynicotine/gtkgui/ui/settings/search.ui:290
+#, fuzzy
 msgid "Bitrate, e.g. 256 <1412"
-msgstr ""
+msgstr "Bitrate, ekz. 256 <1412"
 
 #: pynicotine/gtkgui/ui/search.ui:331
 #, fuzzy
@@ -6287,8 +6310,9 @@ msgid "Incomplete downloads:"
 msgstr "Finitaj Elŝutoj"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:259
+#, fuzzy
 msgid "Received files:"
-msgstr ""
+msgstr "Ricevitaj dosieroj:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:285
 #, fuzzy
@@ -6451,8 +6475,9 @@ msgid "Auto-reply message when away:"
 msgstr "Aŭtomate responda mesaĝo kiam for:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:340
+#, fuzzy
 msgid "Automatically forward listening port (UPnP/NAT-PMP)"
-msgstr ""
+msgstr "Aŭtomate plusendi aŭskultan havenon (UPnP/NAT-PMP)"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:348
 #, fuzzy
@@ -6991,8 +7016,9 @@ msgid "Tab bar positions:"
 msgstr "Pozicio de langeto:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:664
+#, fuzzy
 msgid "Main tabs"
-msgstr ""
+msgstr "Ĉefaj langetoj"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:869
 #, fuzzy
