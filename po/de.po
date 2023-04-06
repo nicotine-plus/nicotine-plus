@@ -7,7 +7,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
 "PO-Revision-Date: 2023-04-07 18:51+0000\n"
-"Last-Translator: Han <hboetes@gmail.com>\n"
+"Last-Translator: phelissimo_ <phelissimo@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
 "Language: de\n"
@@ -2340,10 +2340,8 @@ msgstr ""
 "Geben Sie den Namen des Benutzers ein, dem Sie eine Nachricht senden möchten:"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:241
-#, fuzzy
 msgid "Enter the name of the user whose profile you want to see:"
-msgstr ""
-"Geben Sie den Namen des Benutzers ein, dessen Freigaben Sie sehen möchten:"
+msgstr "Name des Benutzers, dessen Profil Sie sehen möchten:"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:261
 msgid "Enter the name of the user whose shares you want to see:"
@@ -3541,9 +3539,8 @@ msgid "Block connections from user or IP address"
 msgstr "Verbindungen von Benutzer oder IP-Adresse blockieren"
 
 #: pynicotine/plugins/core_commands/__init__.py:183
-#, fuzzy
 msgid "Remove user or IP address from ban lists"
-msgstr "Benutzer aus Sperrliste entfernen"
+msgstr "Benutzer oder IP-Adresse aus Banliste entfernen"
 
 #: pynicotine/plugins/core_commands/__init__.py:190
 msgid "Silence messages from user or IP address"
@@ -3566,14 +3563,12 @@ msgid "Start global file search"
 msgstr "Globale Dateisuche starten"
 
 #: pynicotine/plugins/core_commands/__init__.py:228
-#, fuzzy
 msgid "Search files in joined rooms"
-msgstr "Suche in Dateien und Ordnern"
+msgstr "Suchen von Dateien in verbundenen Räumen"
 
 #: pynicotine/plugins/core_commands/__init__.py:236
-#, fuzzy
 msgid "Search files of all buddies"
-msgstr "Suche in Dateien und Ordnern"
+msgstr "Dateien aller Freunde durchsuchen"
 
 #: pynicotine/plugins/core_commands/__init__.py:244
 msgid "Search a user's shared files"
@@ -3608,7 +3603,7 @@ msgid "Not joined in room %s"
 msgstr "Nicht beigetreten in Raum %s"
 
 #: pynicotine/plugins/core_commands/__init__.py:441
-#, fuzzy, python-format
+#, python-format
 msgid "Banned %s"
 msgstr "Gesperrt (%s)"
 
