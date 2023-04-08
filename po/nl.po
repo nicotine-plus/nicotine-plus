@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
-"PO-Revision-Date: 2023-04-05 11:32+0000\n"
+"PO-Revision-Date: 2023-04-09 05:48+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -3519,95 +3519,87 @@ msgid "Block connections from user or IP address"
 msgstr "Blokkeer verbindingen van gebruiker of IP-adres"
 
 #: pynicotine/plugins/core_commands/__init__.py:183
-#, fuzzy
 msgid "Remove user or IP address from ban lists"
-msgstr "Gebruikers- of IP-adres verwijderen uit banlijsten"
+msgstr "Gebruikers- of IP-adres uit banlijst verwijderen"
 
 #: pynicotine/plugins/core_commands/__init__.py:190
-#, fuzzy
 msgid "Silence messages from user or IP address"
 msgstr "Berichten van gebruiker of IP-adres negeren"
 
 #: pynicotine/plugins/core_commands/__init__.py:198
-#, fuzzy
 msgid "Remove user or IP address from ignore lists"
-msgstr "Gebruiker niet meer negeren"
+msgstr "Gebruiker of IP-adres uit negeerlijsten verwijderen"
 
 #: pynicotine/plugins/core_commands/__init__.py:206
 msgid "Rescan shares"
 msgstr "Herlees gedeelde bestanden"
 
 #: pynicotine/plugins/core_commands/__init__.py:213
-#, fuzzy
 msgid "List shares"
-msgstr "Herlees gedeelde bestanden"
+msgstr "Gedeelde bestandenlijst"
 
 #: pynicotine/plugins/core_commands/__init__.py:220
-#, fuzzy
 msgid "Start global file search"
-msgstr "Start globaal zoeken naar bestanden"
+msgstr "Globaal naar bestanden zoeken"
 
 #: pynicotine/plugins/core_commands/__init__.py:228
-#, fuzzy
 msgid "Search files in joined rooms"
-msgstr "Bestanden en mappen zoeken"
+msgstr "Zoek bestanden in toegetreden kamers"
 
 #: pynicotine/plugins/core_commands/__init__.py:236
-#, fuzzy
 msgid "Search files of all buddies"
-msgstr "Bestanden en mappen zoeken"
+msgstr "Zoek bestanden van alle vrienden"
 
 #: pynicotine/plugins/core_commands/__init__.py:244
-#, fuzzy
 msgid "Search a user's shared files"
-msgstr "Doorzoek de bestanden van een gebruiker naar '…'"
+msgstr "Doorzoek de gedeelde bestanden van een gebruiker"
 
 #: pynicotine/plugins/core_commands/__init__.py:272
-#, fuzzy, python-format
+#, python-format
 msgid "Listing %(num)i available commands:"
-msgstr "Lijst van %(num)i beschikbare opdrachten:"
+msgstr "Lijst %(num)i beschikbare commando's:"
 
 #: pynicotine/plugins/core_commands/__init__.py:274
-#, fuzzy, python-format
+#, python-format
 msgid "Listing %(num)i available commands matching \"%(query)s\":"
 msgstr ""
-"Lijst met %(num)i beschikbare opdrachten die overeenkomen met \"%(query)s\":"
+"Lijst %(num)i beschikbare commando's die overeenkomen met \"%(query)s\":"
 
 #: pynicotine/plugins/core_commands/__init__.py:286
-#, fuzzy, python-format
+#, python-format
 msgid "Type %(command)s to list similar commands"
 msgstr "Typ %(command)s om vergelijkbare opdrachten weer te geven"
 
 #: pynicotine/plugins/core_commands/__init__.py:289
-#, fuzzy, python-format
+#, python-format
 msgid "Type %(command)s to list available commands"
-msgstr "Typ %(command)s om de beschikbare opdrachten weer te geven"
+msgstr "Typ %(command)s voor een lijst met beschikbare commando's"
 
 #: pynicotine/plugins/core_commands/__init__.py:338
 #: pynicotine/plugins/core_commands/__init__.py:350
-#, fuzzy, python-format
+#, python-format
 msgid "Not joined in room %s"
-msgstr "%s is binnengekomen"
+msgstr "Niet in de kamer %s"
 
 #: pynicotine/plugins/core_commands/__init__.py:441
-#, fuzzy, python-format
+#, python-format
 msgid "Banned %s"
-msgstr "Verbannen (%s)"
+msgstr "Verbannen %s"
 
 #: pynicotine/plugins/core_commands/__init__.py:455
-#, fuzzy, python-format
+#, python-format
 msgid "Unbanned %s"
-msgstr "Verbannen (%s)"
+msgstr "Ontbannen %s"
 
 #: pynicotine/plugins/core_commands/__init__.py:468
-#, fuzzy, python-format
+#, python-format
 msgid "Ignored %s"
-msgstr "Genegeerde IP's:"
+msgstr "Genegeerd %s"
 
 #: pynicotine/plugins/core_commands/__init__.py:482
-#, fuzzy, python-format
+#, python-format
 msgid "Unignored %s"
-msgstr "Ontnegeer gebruiker"
+msgstr "Ontnegeer %s"
 
 #: pynicotine/pluginsystem.py:398
 msgid "Loading plugin system"
@@ -3623,9 +3615,9 @@ msgstr ""
 "tekens: %(characters)s"
 
 #: pynicotine/pluginsystem.py:525
-#, fuzzy, python-format
+#, python-format
 msgid "Conflicting %(interface)s command in plugin %(name)s: %(command)s"
-msgstr "Conflicterende opdracht %(interface)s in plug-in %(name)s: %(command)s"
+msgstr "Botsende %(interface)s opdracht in plug-in %(name)s: %(command)s"
 
 #: pynicotine/pluginsystem.py:549
 #, python-format
@@ -3665,22 +3657,21 @@ msgstr ""
 "Spoor: %(trace)s"
 
 #: pynicotine/pluginsystem.py:757
-#, fuzzy
 msgid "No description"
-msgstr "Geen beschrijving gegeven"
+msgstr "Geen omschrijving"
 
 #: pynicotine/pluginsystem.py:837
-#, fuzzy, python-format
+#, python-format
 msgid "Missing %s argument"
 msgstr "Ontbrekend argument %s."
 
 #: pynicotine/pluginsystem.py:846
-#, fuzzy, python-format
+#, python-format
 msgid "Invalid argument, possible choices: %s"
-msgstr "Ongeldig antwoord: %s"
+msgstr "Ongeldig argument, mogelijke keuzes: %s"
 
 #: pynicotine/pluginsystem.py:851
-#, fuzzy, python-format
+#, python-format
 msgid "Usage: %(command)s %(args)s"
 msgstr "Gebruik: %(command)s %(args)s"
 
