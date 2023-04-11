@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
-"PO-Revision-Date: 2023-04-07 18:51+0000\n"
-"Last-Translator: phelissimo_ <phelissimo@gmail.com>\n"
+"PO-Revision-Date: 2023-04-12 14:52+0000\n"
+"Last-Translator: Jörn Weigend <das.jott@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
 "Language: de\n"
@@ -3498,9 +3498,8 @@ msgid "Leave chat room"
 msgstr "Aktuellen Raum verlassen"
 
 #: pynicotine/plugins/core_commands/__init__.py:104
-#, fuzzy
 msgid "Say message in specified chat room"
-msgstr "Sagen Sie eine Nachricht im angegebenen Chatroom"
+msgstr "Nachricht im gewählten Chatroom sagen"
 
 #: pynicotine/plugins/core_commands/__init__.py:111
 msgid "Open private chat"
@@ -3618,9 +3617,9 @@ msgid "Ignored %s"
 msgstr "Ignoriert %s"
 
 #: pynicotine/plugins/core_commands/__init__.py:482
-#, fuzzy, python-format
+#, python-format
 msgid "Unignored %s"
-msgstr "Benutzer nicht ignorieren"
+msgstr "%s nicht mehr ignoriert"
 
 #: pynicotine/pluginsystem.py:398
 msgid "Loading plugin system"
@@ -3719,12 +3718,12 @@ msgstr ""
 "Adresse %(ip_address)s und Port %(local_port)s weitergeleitet"
 
 #: pynicotine/portmapper.py:554
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "%(protocol)s: Failed to forward external port %(external_port)s: %(error)s"
 msgstr ""
-"UPnP: Externer Port konnte nicht weitergeleitet werden %(external_port)s: "
-"%(error)s"
+"%(protocol)s: Weiterleitung des externen Ports %(external_port)s "
+"fehlgeschlagen : %(error)s"
 
 #: pynicotine/privatechat.py:212
 #, python-format
@@ -3822,9 +3821,9 @@ msgstr ""
 "werden: %s"
 
 #: pynicotine/shares.py:882
-#, fuzzy, python-format
+#, python-format
 msgid "Rescan aborted due to unavailable shares: %s"
-msgstr "Erneuter Scan wegen nicht verfügbarer Freigaben abgebrochen"
+msgstr "Erneuter Scan wegen nicht verfügbarer Freigaben abgebrochen: %s"
 
 #: pynicotine/shares.py:942
 #, python-format
@@ -4051,9 +4050,9 @@ msgid "Cannot save picture to %(filename)s: %(error)s"
 msgstr "Das Bild kann nicht auf %(filename)s gespeichert werden: %(error)s"
 
 #: pynicotine/userinfo.py:120
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s is viewing your profile"
-msgstr "%(user)s macht eine Benutzerinfo-Anfrage"
+msgstr "Benutzer %(user)s sieht Ihr Profil an"
 
 #: pynicotine/userlist.py:288
 #, python-format
@@ -4122,9 +4121,8 @@ msgstr ""
 "hinzufügen möchten"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:97 pynicotine/gtkgui/ui/privatechat.ui:51
-#, fuzzy
 msgid "Send message…"
-msgstr "Nachricht senden"
+msgstr "Nachricht senden…"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:104 pynicotine/gtkgui/ui/privatechat.ui:58
 msgid "Toggle Text-to-Speech"
@@ -4681,9 +4679,8 @@ msgstr ""
 "möchten"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:996
-#, fuzzy
 msgid "_Personal Profile"
-msgstr "Persönliche Abneigungen"
+msgstr "_Persönliches Profil"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1062
 msgid ""
@@ -4883,7 +4880,6 @@ msgstr ""
 "wichtig: 'Instrumental Remix' zeigt kein 'Remix Instrumental'"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:115
-#, fuzzy
 msgid ""
 "Use | (or pipes) to seperate several exact phrases. Example:\n"
 "    Remix|Dub Mix|Instrumental"
@@ -4939,13 +4935,12 @@ msgid "Filters files based upon their file size."
 msgstr "Filtert Dateien basierend auf ihrer Dateigröße."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:218
-#, fuzzy
 msgid ""
 "By default, the unit used is bytes (B) and files greater than or equal to "
 "(>=) the value will be matched."
 msgstr ""
-"Standardmäßig wird die Einheit Byte verwendet, und Dateien, die größer oder "
-"gleich dem Wert sind, werden abgeglichen."
+"Standardmäßig wird die Einheit Byte (B) verwendet und Dateien, die größer "
+"oder gleich (>=) dem Wert sind, werden abgeglichen."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:228
 msgid ""
