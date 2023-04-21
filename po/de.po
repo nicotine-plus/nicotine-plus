@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
-"PO-Revision-Date: 2023-04-12 14:52+0000\n"
-"Last-Translator: Jörn Weigend <das.jott@gmail.com>\n"
+"PO-Revision-Date: 2023-04-16 17:43+0000\n"
+"Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
 "Language: de\n"
@@ -3612,7 +3612,7 @@ msgid "Unbanned %s"
 msgstr "Entsperrt %s"
 
 #: pynicotine/plugins/core_commands/__init__.py:468
-#, fuzzy, python-format
+#, python-format
 msgid "Ignored %s"
 msgstr "Ignoriert %s"
 
@@ -4052,7 +4052,7 @@ msgstr "Das Bild kann nicht auf %(filename)s gespeichert werden: %(error)s"
 #: pynicotine/userinfo.py:120
 #, python-format
 msgid "User %(user)s is viewing your profile"
-msgstr "Benutzer %(user)s sieht Ihr Profil an"
+msgstr "Benutzer %(user)s sieht dein Profil an"
 
 #: pynicotine/userlist.py:288
 #, python-format
