@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2023-04-01 22:18+0000\n"
+"PO-Revision-Date: 2023-04-17 22:48+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.17-dev\n"
+"X-Generator: Weblate 4.17\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -6911,11 +6911,9 @@ msgid "View User Profile"
 msgstr "Felhasználói profil megtekintése"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:241
-#, fuzzy
 msgid "Enter the name of the user whose profile you want to see:"
 msgstr ""
-"Adja meg annak a felhasználónak a nevét, akinek a megosztásait látni "
-"szeretné:"
+"Adja meg annak a felhasználónak a nevét, akinek a profilját látni szeretné:"
 
 #: pynicotine/plugins/core_commands/__init__.py:27
 msgid "Network Filters"
@@ -6986,32 +6984,28 @@ msgid "Block connections from user or IP address"
 msgstr "Felhasználótól vagy IP-címről érkező kapcsolatok blokkolása"
 
 #: pynicotine/plugins/core_commands/__init__.py:183
-#, fuzzy
 msgid "Remove user or IP address from ban lists"
-msgstr "Felhasználó eltávolítása a tiltólistáról"
+msgstr "Felhasználó vagy IP-cím eltávolítása a tiltólistákról"
 
 #: pynicotine/plugins/core_commands/__init__.py:190
 msgid "Silence messages from user or IP address"
 msgstr "Felhasználótól vagy IP-címről érkező üzenetek elnémítása"
 
 #: pynicotine/plugins/core_commands/__init__.py:198
-#, fuzzy
 msgid "Remove user or IP address from ignore lists"
-msgstr "Felhasználó eltávolítása a mellőzőlistáról"
+msgstr "Felhasználó vagy IP-cím eltávolítása a mellőzőlistákról"
 
 #: pynicotine/plugins/core_commands/__init__.py:213
-#, fuzzy
 msgid "List shares"
-msgstr "Megosztás újraolvasása"
+msgstr "Megosztások listája"
 
 #: pynicotine/plugins/core_commands/__init__.py:220
 msgid "Start global file search"
 msgstr "Globális fájlkeresés indítása"
 
 #: pynicotine/plugins/core_commands/__init__.py:228
-#, fuzzy
 msgid "Search files in joined rooms"
-msgstr "Fájlok és mappák keresése"
+msgstr "Fájlok keresése a csatlakozott szobákban"
 
 #: pynicotine/plugins/core_commands/__init__.py:236
 #, fuzzy
