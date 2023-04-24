@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
-"PO-Revision-Date: 2023-04-09 05:48+0000\n"
+"PO-Revision-Date: 2023-04-21 19:52+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.17-dev\n"
+"X-Generator: Weblate 4.18-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -244,7 +244,6 @@ msgid "%i privileged users"
 msgstr "%i gebruikers met privileges"
 
 #: pynicotine/core.py:461
-#, fuzzy
 msgid ""
 "You have no Soulseek privileges. While privileges are active, your downloads "
 "will be queued ahead of those of non-privileged users."
@@ -3676,32 +3675,34 @@ msgid "Usage: %(command)s %(args)s"
 msgstr "Gebruik: %(command)s %(args)s"
 
 #: pynicotine/pluginsystem.py:890
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Unknown command: %(command)s. Type %(help_command)s to list available "
 "commands."
 msgstr ""
-"Onbekend commando: %(command)s. Typ %(help_command)s om de beschikbare "
-"opdrachten weer te geven."
+"Onbekende opdracht: %(command)s. Typ %(help_command)s voor een lijst met "
+"beschikbare commando's."
 
 #: pynicotine/portmapper.py:446
 msgid "No UPnP devices found"
 msgstr "Geen UPnP-apparaten gevonden"
 
 #: pynicotine/portmapper.py:544
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "%(protocol)s: External port %(external_port)s successfully forwarded to "
 "local IP address %(ip_address)s port %(local_port)s"
 msgstr ""
-"UPnP: Externe poort %(external_port)s succesvol doorgestuurd naar lokaal IP-"
-"adres %(ip_address)s poort %(local_port)s"
+"%(protocol)s: Externe poort %(external_port)s succesvol doorgestuurd naar "
+"lokaal IP adres %(ip_address)s poort %(local_port)s"
 
 #: pynicotine/portmapper.py:554
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "%(protocol)s: Failed to forward external port %(external_port)s: %(error)s"
-msgstr "UPnP: Doorsturen externe poort %(external_port)s mislukt: %(error)s"
+msgstr ""
+"%(protocol)s: Externe poort door sturen naar poort %(external_port)s mislukt:"
+" %(error)s"
 
 #: pynicotine/privatechat.py:212
 #, python-format
@@ -3798,9 +3799,9 @@ msgstr ""
 "sturen: %s"
 
 #: pynicotine/shares.py:882
-#, fuzzy, python-format
+#, python-format
 msgid "Rescan aborted due to unavailable shares: %s"
-msgstr "Nieuwe scan afgebroken vanwege niet-beschikbare shares"
+msgstr "Opnieuw scannen afgebroken vanwege niet-beschikbare shares: %s"
 
 #: pynicotine/shares.py:942
 #, python-format
@@ -4020,9 +4021,9 @@ msgid "Cannot save picture to %(filename)s: %(error)s"
 msgstr "Kan de afbeelding niet opslaan naar %(filename)s: %(error)s"
 
 #: pynicotine/userinfo.py:120
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s is viewing your profile"
-msgstr "Gebruiker %(user)s leest je gebruikersinfo"
+msgstr "Gebruiker %(user)s bekijkt uw profiel"
 
 #: pynicotine/userlist.py:288
 #, python-format
@@ -4090,9 +4091,8 @@ msgstr ""
 "vriendenlijst"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:97 pynicotine/gtkgui/ui/privatechat.ui:51
-#, fuzzy
 msgid "Send message…"
-msgstr "Verstuur privé-bericht"
+msgstr "Verstuur bericht"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:104 pynicotine/gtkgui/ui/privatechat.ui:58
 msgid "Toggle Text-to-Speech"
@@ -4214,14 +4214,13 @@ msgstr "Deel mappen"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:383
 #: pynicotine/gtkgui/ui/settings/shares.ui:25
-#, fuzzy
 msgid ""
 "Soulseek users will be able to download from your shares. Contribute to the "
 "Soulseek network by sharing your own collection and by resharing what you "
 "downloaded from other users."
 msgstr ""
-"Soulseek-gebruikers kunnen downloaden van uw shares. Draag bij aan het "
-"Soulseek-netwerk door uw eigen verzameling te delen en door opnieuw te delen "
+"Soulseek-gebruikers kunnen downloaden van jouw shares. Draag bij aan het "
+"Soulseek-netwerk door je eigen verzameling te delen en door opnieuw te delen "
 "wat u van andere gebruikers hebt gedownload."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:546
@@ -4644,9 +4643,8 @@ msgid "Enter the username of the person whose information you want to see"
 msgstr "Voer de gebruikersnaam in van de persoon wiens informatie je wilt zien"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:996
-#, fuzzy
 msgid "_Personal Profile"
-msgstr "Persoonlijke ongenoegens"
+msgstr "_Persoonlijk profiel"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1062
 msgid ""
@@ -4843,12 +4841,11 @@ msgstr ""
 "'Instrumental Remix' zal geen 'Remix Instrumental' laten zien"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:115
-#, fuzzy
 msgid ""
 "Use | (or pipes) to seperate several exact phrases. Example:\n"
 "    Remix|Dub Mix|Instrumental"
 msgstr ""
-"Gebruik | (of pijpen) om verschillende exacte zinnen van elkaar te scheiden. "
+"Gebruik | (of pijp) om verschillende exacte zinnen van elkaar te scheiden. "
 "Voorbeeld:\n"
 "    Remix|Dubmix|Instrumentaal"
 
@@ -4869,26 +4866,25 @@ msgid "Filters files based upon their file extension."
 msgstr "Filtert bestanden op basis van hun bestandsextensie."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:170
-#, fuzzy
 msgid ""
 "Multiple file extensions can be specified, which in turn will reveal more "
 "from the list of results. Example:\n"
 "    flac wav ape"
 msgstr ""
 "Meerdere bestandsextensies kunnen worden opgegeven, waardoor de lijst met "
-"resultaten wordt uitgebreid.\n"
-"    Voorbeeld: flac|wav|ape"
+"resultaten wordt uitgebreid. Voorbeeld:\n"
+"flac wav ape"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:181
-#, fuzzy
 msgid ""
 "It is also possible to invert the filter, specifying file extensions you "
 "don't want in your results with an exclamation mark! Example:\n"
 "    !mp3 !jpg"
 msgstr ""
-"Het is ook mogelijk om het filter om te keren, door bestandsextensies op te "
-"geven die je niet in jouw resultaten wilt hebben.\n"
-"    Voorbeeld: !mp3|!jpg"
+"Het is ook mogelijk om het filter om te keren, door bestandsextensies die u "
+"niet in uw resultaten wilt hebben te specificeren met een uitroepteken. "
+"Voorbeeld:\n"
+"    !mp3 !jpg"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:191
 msgid "File Size"
@@ -4899,13 +4895,12 @@ msgid "Filters files based upon their file size."
 msgstr "Filtert bestanden op basis van hun bestandsgrootte."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:218
-#, fuzzy
 msgid ""
 "By default, the unit used is bytes (B) and files greater than or equal to "
 "(>=) the value will be matched."
 msgstr ""
-"De standaard gebruikte eenheid is bytes en bestanden groter dan of gelijk "
-"aan de waarde zullen worden gematcht."
+"De standaard gebruikte eenheid is bytes (B) en bestanden groter dan of "
+"gelijk aan (>=) de waarde worden gematcht."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:228
 msgid ""
@@ -4918,12 +4913,11 @@ msgstr ""
 "    20m om bestanden groter dan 20 MiB (mebibytes) weer te geven."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:239
-#, fuzzy
 msgid ""
 "Prepend = to a value to specify an exact match:\n"
 "    =1024 matches files that are exactly 1 KiB (kibibyte)."
 msgstr ""
-"Voeg = toe voor een waarde om een exacte overeenkomst te specificeren:\n"
+"Zeg = voor een waarde om een exacte overeenkomst te specificeren:\n"
 "    =1024 komt alleen overeen met bestanden van 1 KiB (kibibyte)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:250
@@ -4936,16 +4930,15 @@ msgstr ""
 "    !30.5m om bestanden te verbergen die 30.5 MiB (mebibytes) groot zijn."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:261
-#, fuzzy
 msgid ""
 "Prepend < or > to find files smaller/larger than the given value. Use a "
 "space between each condition to include a range:\n"
 "    >10.5m <1g to show files larger than 10.5 MiB, but smaller than 1 GiB."
 msgstr ""
-"Voeg < of > voor toe om bestanden te vinden die kleiner/groter zijn dan de "
-"opgegeven waarde:\n"
-"    >10,5m|<1g om bestanden groter dan 10,5 MiB (mebibytes) weer te geven,\n"
-"    maar kleiner dan 1 GiB (gibibytes), gebruik een | tussen voorwaarden."
+"Gebruik < of > toe om bestanden te zoeken die kleiner/groter zijn dan de "
+"opgegeven waarde. Gebruik een spatie tussen elke voorwaarde:\n"
+"    >10,5m <1g om bestanden groter dan 10,5 MiB, maar kleiner dan 1 GiB weer "
+"te geven."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:272
 msgid ""
@@ -6223,9 +6216,8 @@ msgid "_Refresh Profile"
 msgstr "Bestanden vernieuwen"
 
 #: pynicotine/plugins/core_commands/PLUGININFO:3
-#, fuzzy
 msgid "Nicotine+ Commands"
-msgstr "Nicotine+ Team"
+msgstr "Nicotine+ Commando's"
 
 #, python-format
 #~ msgid "Cannot find %s or newer, please install it."
