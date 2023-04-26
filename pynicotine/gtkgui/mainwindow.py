@@ -678,7 +678,7 @@ class MainWindow(Window):
 
         menu.add_items(
             ("", None),
-            ("#" + label, "app.quit")
+            ("#" + label, "app.confirm-quit")
         )
 
     def create_file_menu(self):

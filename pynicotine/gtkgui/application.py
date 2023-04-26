@@ -72,7 +72,7 @@ class Application:
         for event_name, callback in (
             ("confirm-quit", self.on_confirm_quit),
             ("invalid-password", self.on_invalid_password),
-            ("quit", self._instance.quit),
+            ("quit", self.on_quit),
             ("setup", self.on_fast_configure),
             ("shares-unavailable", self.on_shares_unavailable)
         ):
@@ -138,8 +138,8 @@ class Application:
             ("message-downloading-users", self.on_message_downloading_users, None, False),
             ("message-buddies", self.on_message_buddies, None, False),
             ("wishlist", self.on_wishlist, None, True),
-            ("force-quit", self.on_force_quit, None, True),
-            ("quit", self.on_quit, None, True),
+            ("confirm-quit", self.on_confirm_quit_request, None, True),
+            ("quit", self.on_quit_request, None, True),
 
             # Shares
             ("rescan-shares", self.on_rescan_shares, None, True),
@@ -212,7 +212,7 @@ class Application:
             ("app.disconnect", ["<Shift><Primary>d"]),
             ("app.away-accel", ["<Primary>h"]),
             ("app.wishlist", ["<Shift><Primary>w"]),
-            ("app.force-quit", ["<Primary><Alt>q"]),
+            ("app.quit", ["<Primary><Alt>q"]),
             ("app.rescan-shares", ["<Shift><Primary>r"]),
             ("app.keyboard-shortcuts", ["<Primary>question", "F1"]),
             ("app.preferences", ["<Primary>comma", "<Primary>p"]),
@@ -291,6 +291,9 @@ class Application:
             option_label=_("Remember choice") if remember else None,
             callback=self.on_confirm_quit_response
         ).show()
+
+    def on_quit(self):
+        self._instance.quit()
 
     def on_shares_unavailable_response(self, _dialog, response_id, _data):
 
@@ -710,8 +713,8 @@ class Application:
         # Explicitly hide tray icon, otherwise it will not disappear on Windows
         self.tray_icon.set_visible(False)
 
-    def on_force_quit(self, *_args):
-        core.quit()
-
-    def on_quit(self, *_args):
+    def on_confirm_quit_request(self, *_args):
         core.confirm_quit()
+
+    def on_quit_request(self, *_args):
+        core.quit()
