@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2023-04-17 22:48+0000\n"
+"PO-Revision-Date: 2023-04-24 22:51+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.17\n"
+"X-Generator: Weblate 4.18-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -5160,7 +5160,7 @@ msgstr "A privát csevegés parancsok"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:57
 msgid "Close the current private chat"
-msgstr "Jelenlegi privát csevegés bezárása"
+msgstr "A jelenlegi privát csevegés bezárása"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:270
 msgid "Add user to your buddy-list"
@@ -5205,7 +5205,7 @@ msgstr "Szobalista frissítése"
 #: pynicotine/gtkgui/ui/popovers/roomlist.ui:77
 #: pynicotine/gtkgui/ui/popovers/roomlist.ui:71
 msgid "_Show feed of public chat room messages"
-msgstr "A nyilvános csevegőszoba üzenetek feedjének _megjelenítése"
+msgstr "A nyilvános csevegőszoba üzenetfolyamának _megjelenítése"
 
 #: pynicotine/gtkgui/ui/popovers/roomlist.ui:91
 #: pynicotine/gtkgui/ui/popovers/roomlist.ui:85
@@ -6925,7 +6925,7 @@ msgstr "Elérhető parancsok listája"
 
 #: pynicotine/plugins/core_commands/__init__.py:49
 msgid "Toggle away status"
-msgstr "Átkapcsolja a távol van állapotodat"
+msgstr "A távol van állapot átkapcsolása"
 
 #: pynicotine/plugins/core_commands/__init__.py:53
 msgid "Manage plugins"
@@ -7008,14 +7008,12 @@ msgid "Search files in joined rooms"
 msgstr "Fájlok keresése a csatlakozott szobákban"
 
 #: pynicotine/plugins/core_commands/__init__.py:236
-#, fuzzy
 msgid "Search files of all buddies"
-msgstr "Fájlok és mappák keresése"
+msgstr "Keresés a barátok fájljaiban"
 
 #: pynicotine/plugins/core_commands/__init__.py:244
-#, fuzzy
 msgid "Search a user's shared files"
-msgstr "Keresés egy felhasználó megosztásaiban a „lekérdezés” kifejezésre"
+msgstr "Keresés egy felhasználó megosztott fájljaiban"
 
 #: pynicotine/plugins/core_commands/__init__.py:272
 #, python-format
@@ -7039,19 +7037,19 @@ msgstr "Az elérhető parancsok listájához írja be a(z) %(command)s parancsot
 
 #: pynicotine/plugins/core_commands/__init__.py:338
 #: pynicotine/plugins/core_commands/__init__.py:350
-#, fuzzy, python-format
+#, python-format
 msgid "Not joined in room %s"
-msgstr "%s csatlakozott a szobához"
+msgstr "Nincs csatlakozva a(z) %s szobához"
 
 #: pynicotine/plugins/core_commands/__init__.py:441
-#, fuzzy, python-format
+#, python-format
 msgid "Banned %s"
 msgstr "Kitiltva (%s)"
 
 #: pynicotine/plugins/core_commands/__init__.py:455
-#, fuzzy, python-format
+#, python-format
 msgid "Unbanned %s"
-msgstr "Kitiltva (%s)"
+msgstr "Kitiltás feloldva (%s)"
 
 #: pynicotine/plugins/core_commands/__init__.py:468
 #, python-format
@@ -7080,9 +7078,9 @@ msgid "Missing %s argument"
 msgstr "Hiányzó %s argumentum"
 
 #: pynicotine/pluginsystem.py:846
-#, fuzzy, python-format
+#, python-format
 msgid "Invalid argument, possible choices: %s"
-msgstr "Érvénytelen válasz: %s"
+msgstr "Hibás érvelés, a lehetséges választási lehetőségek: %s"
 
 #: pynicotine/pluginsystem.py:851
 #, python-format
@@ -7121,9 +7119,9 @@ msgid "Rescan aborted due to unavailable shares: %s"
 msgstr "Az újrakeresés megszakítva a nem elérhető megosztások miatt: %s"
 
 #: pynicotine/userinfo.py:120
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s is viewing your profile"
-msgstr "%(user)s felhasználó az Ön felhasználói adatait olvassa"
+msgstr "%(user)s felhasználó az Ön profilját nézi"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:97 pynicotine/gtkgui/ui/privatechat.ui:51
 msgid "Send message…"
@@ -7141,9 +7139,8 @@ msgstr ""
 "felhasználóktól letöltött tartalmak újra megosztásával."
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:996
-#, fuzzy
 msgid "_Personal Profile"
-msgstr "Személyes ellenszenv"
+msgstr "Személyes _profil"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:115
 msgid ""
@@ -7154,44 +7151,41 @@ msgstr ""
 "    Remix|Dub Mix|Instrumental"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:170
-#, fuzzy
 msgid ""
 "Multiple file extensions can be specified, which in turn will reveal more "
 "from the list of results. Example:\n"
 "    flac wav ape"
 msgstr ""
-"Több fájlkiterjesztés is megadható, ami viszont bővíti a találatok "
-"listáját.\n"
-"    Például: flac|wav|ape"
+"Több fájlkiterjesztés is megadható, ami viszont bővíti a találatok listáját. "
+"Például:\n"
+"    flac wav ape"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:181
-#, fuzzy
 msgid ""
 "It is also possible to invert the filter, specifying file extensions you "
 "don't want in your results with an exclamation mark! Example:\n"
 "    !mp3 !jpg"
 msgstr ""
-"Lehetőség van a szűrő megfordítására is, megadva azokat a "
-"fájlkiterjesztéseket, amelyeket nem szeretne az eredményekben látni.\n"
-"    Például: !mp3|!jpg"
+"Lehetőség van a szűrők megfordítására is, megadva azokat a "
+"fájlkiterjesztéseket, amelyeket nem szeretne az eredményekben látni. Például:"
+"\n"
+"    !mp3 !jpg"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:218
-#, fuzzy
 msgid ""
 "By default, the unit used is bytes (B) and files greater than or equal to "
 "(>=) the value will be matched."
 msgstr ""
-"Alapértelmezés szerint a használt mértékegység bájt és az értéknél nagyobb "
-"vagy azzal egyenlő fájlok illeszkednek."
+"Alapértelmezés szerint a használt mértékegység bájt (B) és az értéknél "
+"nagyobb vagy azzal egyenlő (>=) méretű fájlok illeszkednek."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:239
-#, fuzzy
 msgid ""
 "Prepend = to a value to specify an exact match:\n"
 "    =1024 matches files that are exactly 1 KiB (kibibyte)."
 msgstr ""
-"Az = (egyenlő) jelet a pontos egyezés megadásához az érték elé kell tenni:\n"
-"    =1024 csak az 1KiB méretű (kilóbájt) fájlokra illik."
+"A pontos egyezés megadásához az érték elé kell tenni a = jelet:\n"
+"    =1024 csak az 1KiB (kilobájt) méretű fájlokra illik."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:261
 msgid ""
@@ -7218,13 +7212,12 @@ msgstr ""
 "    256<=1411"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:360
-#, fuzzy
 msgid ""
 "By default, files longer than or equal to (>=) the entered duration will be "
 "matched, unless an operator (=, !, <=, < or >) is used."
 msgstr ""
-"Alapértelmezés szerint a megadott időtartamnál hosszabb vagy azzal megegyező "
-"fájlok illeszkednek, kivéve ha operátort (=, !, <, vagy >) használ."
+"Alapértelmezés szerint a megadott időtartamnál hosszabb vagy azzal egyenlő "
+"fájlok (>=) illeszkednek, kivéve ha operátort (=, !, <=, < vagy >) használ."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:370
 msgid ""
@@ -7240,18 +7233,18 @@ msgstr ""
 "    <5:30:00 5 és fél óránál rövidebb fájlokat jelenít meg."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:383
-#, fuzzy
 msgid ""
 "Multiple conditions can be specified:\n"
 "    >6:00 <12:00 to show files between 6 and 12 minutes long.\n"
 "    !9:54 !8:43 !7:32 to hide some specific files from the results.\n"
 "    =5:34 =4:23 =3:05 to include files with specific durations."
 msgstr ""
-"Több feltétel is megadható a | cső elválasztó használatával:\n"
-"    >6:00|<12:00, a 6 és 12 perc hosszúság közötti fájlok megjelenítéséhez.\n"
-"    !9:54|!8:43|!7:32, megadott hosszúságú fájlok elrejtéséhez a találatok "
+"Több feltétel is megadható:\n"
+"    >6:00 <12:00, a 6 és 12 perc közötti hosszúságú fájlok megjelenítéséhez."
+"\n"
+"    !9:54 !8:43 !7:32, megadott hosszúságú fájlok elrejtéséhez a találatok "
 "közül.\n"
-"    =5:34|=4:23|=3:05, megadott időtartamú fájlok megjelenítéséhez."
+"    =5:34 =4:23 =3:05, megadott időtartamú fájlok belefoglalásához."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:409
 msgid ""
@@ -7273,9 +7266,8 @@ msgstr "Több ország is megadható vesszővel vagy szóközzel."
 
 #: pynicotine/gtkgui/ui/search.ui:245
 #: pynicotine/gtkgui/ui/settings/search.ui:228
-#, fuzzy
 msgid "File type, e.g. flac wav or !mp3 !m4a"
-msgstr "Fájltípus, pl. flac|wav|ape vagy !mp3|!m4a"
+msgstr "Fájltípus, pl. flac wav ape vagy !mp3 !m4a"
 
 #: pynicotine/gtkgui/ui/search.ui:274
 #: pynicotine/gtkgui/ui/settings/search.ui:259
@@ -7289,20 +7281,17 @@ msgstr "Bitráta, pl. 256 <1412"
 
 #: pynicotine/gtkgui/ui/search.ui:332
 #: pynicotine/gtkgui/ui/settings/search.ui:321
-#, fuzzy
 msgid "Duration, e.g. >6:00 <12:00 !6:54"
-msgstr "Időtartam, pl. 2:20|!3:30|=4:40"
+msgstr "Időtartam, pl. >6:00 <12:00 !6:54"
 
 #: pynicotine/gtkgui/ui/search.ui:365
 #: pynicotine/gtkgui/ui/settings/search.ui:352
-#, fuzzy
 msgid "Country code, e.g. US ES or !DE !GB"
-msgstr "Országkód, pl. US|GB|ES vagy !DE|!GB"
+msgstr "Országkód, pl. US ES vagy !DE !GB"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:57
-#, fuzzy
 msgid "Allow users to send you any files:"
-msgstr "Engedélyezi ezeknek a felhasználóknak, hogy fájlokat küldjenek:"
+msgstr "Engedélyezi a felhasználóknak, hogy fájlokat küldjenek Önnek:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:213
 msgid "Finished downloads:"
@@ -7321,55 +7310,44 @@ msgid "Automatically forward listening port (UPnP/NAT-PMP)"
 msgstr "Figyelőport automatikus továbbítása (UPnP/NAT-PMP)"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:232
-#, fuzzy
 msgid "Limits do not apply to buddies"
-msgstr "A sorkorlátozás nem vonatkozik a barátokra"
+msgstr "A sorkorlátozások nem vonatkoznak a barátokra"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:627
-#, fuzzy
 msgid "Tab bar positions:"
 msgstr "A lapsáv helyzete:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:664
-#, fuzzy
 msgid "Main tabs"
-msgstr "Fő"
+msgstr "Főlapok"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:869
-#, fuzzy
 msgid "Show reverse file paths (requires a restart)"
-msgstr ""
-"Fordított fájlútvonalak megjelenítése a keresési és az átviteli nézetekben "
-"(újraindítást igényel)"
+msgstr "Fordított fájlútvonalak megjelenítése (újraindítást igényel)"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:876
 msgid "Show exact file sizes (requires a restart)"
 msgstr "Pontos fájlméretek megjelenítése (újraindítást igényel)"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1006
-#, fuzzy
 msgid "Enable colored usernames"
-msgstr "Csevegőszobák felhasználónevei"
+msgstr "Színes felhasználónevek engedélyezése"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:83
-#, fuzzy
 msgid "Edit Profile"
-msgstr "Megosztott könyvtár szerkesztése"
+msgstr "Profil szerkesztése"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:363
-#, fuzzy
 msgid "Edit Interests"
-msgstr "Érdeklődések"
+msgstr "Érdeklődési körök szerkesztése"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:687
-#, fuzzy
 msgid "_Refresh Profile"
-msgstr "Fájlok frissítése"
+msgstr "P_rofil frissítése"
 
 #: pynicotine/plugins/core_commands/PLUGININFO:3
-#, fuzzy
 msgid "Nicotine+ Commands"
-msgstr "Nicotine+ Csapat"
+msgstr "Nicotine+ parancsok"
 
 #~ msgid "Website"
 #~ msgstr "Weboldal"
