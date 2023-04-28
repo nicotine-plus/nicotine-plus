@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2023-04-24 22:51+0000\n"
+"PO-Revision-Date: 2023-04-28 23:02+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -1763,7 +1763,7 @@ msgstr "Letöltési szűrő hozzáadása"
 #: pynicotine/gtkgui/dialogs/preferences.py:358
 #: pynicotine/gtkgui/dialogs/preferences.py:401
 msgid "Enter a new download filter:"
-msgstr "Adjon meg egy új letöltési szűrőt:"
+msgstr "Adjon meg egy új letöltésszűrőt:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:361
 #: pynicotine/gtkgui/dialogs/preferences.py:393
@@ -1780,7 +1780,7 @@ msgstr "Letöltési szűrő szerkesztése"
 #: pynicotine/gtkgui/dialogs/preferences.py:388
 #: pynicotine/gtkgui/dialogs/preferences.py:431
 msgid "Modify the following download filter:"
-msgstr "Módosítsa a következő letöltési szűrőt:"
+msgstr "Módosítsa a következő letöltésszűrőt:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:453
 #: pynicotine/gtkgui/dialogs/preferences.py:496
@@ -2355,26 +2355,26 @@ msgstr "Befejezett / Szűrt"
 #: pynicotine/gtkgui/uploads.py:66 pynicotine/gtkgui/downloads.py:66
 #: pynicotine/gtkgui/transferlist.py:106
 msgid "Finished"
-msgstr "Befejezve"
+msgstr "Befejezett"
 
 #: pynicotine/gtkgui/downloads.py:65 pynicotine/gtkgui/transferlist.py:104
 #: pynicotine/gtkgui/downloads.py:67 pynicotine/gtkgui/transferlist.py:105
 msgid "Paused"
-msgstr "Megállítva"
+msgstr "Megállított"
 
 #: pynicotine/gtkgui/downloads.py:66 pynicotine/gtkgui/transferlist.py:106
 #: pynicotine/gtkgui/downloads.py:68 pynicotine/gtkgui/transferlist.py:107
 msgid "Filtered"
-msgstr "Szűrve"
+msgstr "Szűrt"
 
 #: pynicotine/gtkgui/downloads.py:67 pynicotine/gtkgui/downloads.py:69
 msgid "Deleted"
-msgstr "Törölve"
+msgstr "Törölt"
 
 #: pynicotine/gtkgui/downloads.py:68 pynicotine/gtkgui/uploads.py:70
 #: pynicotine/gtkgui/downloads.py:70
 msgid "Queued…"
-msgstr "Sorban áll…"
+msgstr "Sorba állított…"
 
 #: pynicotine/gtkgui/downloads.py:70 pynicotine/gtkgui/uploads.py:72
 #: pynicotine/gtkgui/downloads.py:72
@@ -4082,12 +4082,12 @@ msgstr "Feltöltés megszakítva, %(user)s user, %(file)s fájl"
 #: pynicotine/transfers.py:2580 pynicotine/transfers.py:2584
 #, python-format
 msgid "Error: Download Filter failed! Verify your filters. Reason: %s"
-msgstr "Hiba: A letöltési szűrő hibás! Ellenőrizze a szűrőket. Az ok: %s"
+msgstr "Hiba: A letöltésszűrő hibás! Ellenőrizze a szűrőket. Az ok: %s"
 
 #: pynicotine/transfers.py:2595 pynicotine/transfers.py:2599
 #, python-format
 msgid "Error: %(num)d Download filters failed! %(error)s "
-msgstr "Hiba: %(num)d letöltési szűrő hibás! %(error)s "
+msgstr "Hiba: %(num)d letöltésszűrő hibás! %(error)s "
 
 #: pynicotine/updatechecker.py:45 pynicotine/core.py:503
 msgid "Up to Date"
@@ -4954,7 +4954,7 @@ msgstr "Csatlakozás a szobához"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:86
 msgid "Leave current room"
-msgstr "A szoba elhagyása"
+msgstr "A jelenlegi szoba elhagyása"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:114
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:85
@@ -5940,12 +5940,12 @@ msgstr ""
 #: pynicotine/gtkgui/ui/settings/downloads.ui:365
 #: pynicotine/gtkgui/ui/settings/downloads.ui:359
 msgid "Download Filters"
-msgstr "Letöltési szűrők"
+msgstr "Letöltésszűrők"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:377
 #: pynicotine/gtkgui/ui/settings/downloads.ui:371
 msgid "Enable download filters"
-msgstr "Letöltési szűrők engedélyezése"
+msgstr "Letöltésszűrők engedélyezése"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:386
 #: pynicotine/gtkgui/ui/settings/downloads.ui:380
