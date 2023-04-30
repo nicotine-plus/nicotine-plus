@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
-"PO-Revision-Date: 2023-04-21 19:52+0000\n"
+"PO-Revision-Date: 2023-04-28 23:02+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -4961,32 +4961,29 @@ msgstr ""
 "altijd Kb/s (Kilobits per seconde)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:320
-#, fuzzy
 msgid ""
 "Like File Size (above), operators =, !, <, >, <= or >= can be used, and "
 "multiple conditions can be specified, for example to show files with a "
 "bitrate of at least 256 Kb/s with a maximum bitrate of 1411 Kb/s:\n"
 "    256 <=1411"
 msgstr ""
-"Net als bij Bestandsgrootte (hierboven), kunnen operators =, !, < en > "
-"worden gebruikt en kunnen meerdere voorwaarden worden opgegeven met | "
-"pijpen:\n"
-"    >256|<1411 om bestanden te tonen met een bitrate van minimaal 256 Kb/s\n"
-"    en een maximale bitrate van 1411 Kb/s."
+"Net als Bestandsgrootte (hierboven) kunnen operatoren =, !, <, >, <= of >= "
+"worden gebruikt en kunnen meerdere voorwaarden worden opgegeven, "
+"bijvoorbeeld om bestanden weer te geven met een bitsnelheid van minimaal 256 "
+"Kb/s met een maximale bitsnelheid van 1411 Kb/s:\n"
+"    256 <=1411"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:350
 msgid "Filters files based upon their duration."
 msgstr "Filtert bestanden op basis van hun duur."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:360
-#, fuzzy
 msgid ""
 "By default, files longer than or equal to (>=) the entered duration will be "
 "matched, unless an operator (=, !, <=, < or >) is used."
 msgstr ""
-"Standaard worden bestanden die langer zijn dan of gelijk zijn aan de "
-"ingevoerde duur vergeleken, tenzij een operator (=, !, < of >) wordt "
-"gebruikt."
+"Standaard worden bestanden die groter of gelijk zijn aan de ingevoerde duur "
+"vergeleken, tenzij een operator (=, !, < of >) wordt gebruikt."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:370
 #, fuzzy
