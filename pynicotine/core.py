@@ -1,5 +1,5 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
-# COPYRIGHT (C) 2020-2022 Mathias <mail@mathias.is>
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Mathias <mail@mathias.is>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (C) 2013 eLvErDe <gandalf@le-vert.net>

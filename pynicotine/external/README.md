@@ -21,7 +21,7 @@ Original source code: https://github.com/chrislim2888/IP2Location-Python
 
 MIT
 
-Copyright (c) 2021-2022 Nicotine+ Contributors  
+Copyright (c) 2021-2023 Nicotine+ Contributors  
 Copyright (c) 2017 IP2Location.com
 
 
@@ -34,5 +34,5 @@ Original source code: https://github.com/devsnd/tinytag
 
 MIT
 
-Copyright (c) 2020-2022 Nicotine+ Contributors  
-Copyright (c) 2014-2022 Tom Wallroth
+Copyright (c) 2020-2023 Nicotine+ Contributors  
+Copyright (c) 2014-2023 Tom Wallroth
