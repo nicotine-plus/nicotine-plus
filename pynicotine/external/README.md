@@ -2,7 +2,7 @@
 
 ## Country Database
 
-- Last updated on January 6, 2023
+- Last updated on May 2, 2023
 - Original file name "IP2LOCATION-LITE-DB1.BIN" renamed to "ipcountrydb.bin"
 - Fetched from https://lite.ip2location.com/database/ip-country
 
@@ -10,7 +10,7 @@
 
 Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
 
-Copyright (c) 2001-2022 Hexasoft Development Sdn. Bhd.
+Copyright (c) 2001-2023 Hexasoft Development Sdn. Bhd.
 
 ## Source Code
 
