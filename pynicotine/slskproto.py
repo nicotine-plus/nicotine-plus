@@ -193,7 +193,7 @@ class SoulseekNetworkThread(Thread):
 
         super().__init__(name="SoulseekNetworkThread")
 
-        self.listenport = None
+        self.listen_port = None
         self.portmapper = None
 
         self._queue = queue
@@ -206,7 +206,6 @@ class SoulseekNetworkThread(Thread):
 
         self._selector = None
         self._listen_socket = None
-        self._listen_port_range = None
         self._bound_ip = None
         self._interface = None
 
@@ -292,7 +291,7 @@ class SoulseekNetworkThread(Thread):
         self._selector.unregister(self._listen_socket)
         self._close_socket(self._listen_socket, shutdown=False)
         self._listen_socket = None
-        self.listenport = None
+        self.listen_port = None
 
     def _bind_listen_port(self):
 
@@ -307,22 +306,20 @@ class SoulseekNetworkThread(Thread):
 
         ip_address = self._bound_ip or "0.0.0.0"
 
-        for listenport in range(int(self._listen_port_range[0]), int(self._listen_port_range[1]) + 1):
-            try:
-                self._listen_socket.bind((ip_address, listenport))
-                self._listen_socket.listen(self.CONNECTION_BACKLOG_LENGTH)
-                self.listenport = listenport
-                log.add(_("Listening on port: %i"), listenport)
-                log.add_debug("Maximum number of concurrent connections (sockets): %i", MAXSOCKETS)
-                return True
+        try:
+            self._listen_socket.bind((ip_address, self.listen_port))
+            self._listen_socket.listen(self.CONNECTION_BACKLOG_LENGTH)
 
-            except OSError as error:
-                log.add_debug("Cannot listen on port %(port)s: %(error)s", {"port": listenport, "error": error})
-                continue
+        except OSError as error:
+            self.listen_port = None
+            log.add(_("Cannot listen on port %(port)s. Ensure no other application uses it, or choose a "
+                      "different port. Error: %(error)s"), {"port": self.listen_port, "error": error},
+                    title=_("Listening Port Unavailable"))
+            return False
 
-        log.add(_("No listening port is available in the specified port range %s–%s"), self._listen_port_range,
-                title=_("Listening Port Unavailable"))
-        return False
+        log.add(_("Listening on port: %i"), self.listen_port)
+        log.add_debug("Maximum number of concurrent connections (sockets): %i", MAXSOCKETS)
+        return True
 
     @staticmethod
     def _get_interface_ip_address(if_name):
@@ -401,7 +398,7 @@ class SoulseekNetworkThread(Thread):
             self._interface = msg_obj.interface
 
         self._bound_ip = msg_obj.bound_ip
-        self._listen_port_range = msg_obj.listen_port_range
+        self.listen_port = msg_obj.listen_port
 
         if not self._create_listen_socket():
             self._should_process_queue = False
@@ -419,7 +416,7 @@ class SoulseekNetworkThread(Thread):
         """ We're disconnecting from the server, clean up """
 
         self._should_process_queue = False
-        self._bound_ip = self._interface = self._listen_port_range = self._server_socket = None
+        self._bound_ip = self._interface = self._server_socket = None
 
         self._close_listen_socket()
         self.portmapper.remove_port_mapping(blocking=True)
@@ -915,7 +912,7 @@ class SoulseekNetworkThread(Thread):
         )
 
         login, password = conn_obj.login
-        self._user_addresses[login] = (self._find_local_ip_address(), self.listenport)
+        self._user_addresses[login] = (self._find_local_ip_address(), self.listen_port)
         conn_obj.login = True
 
         self._server_address = addr
@@ -938,7 +935,7 @@ class SoulseekNetworkThread(Thread):
             )
         )
 
-        self._queue.append(SetWaitPort(self.listenport))
+        self._queue.append(SetWaitPort(self.listen_port))
 
     def _replace_existing_connection(self, init):
 

@@ -170,7 +170,7 @@ class Config:
                 "ctcpmsgs": False,
                 "autosearch": [],
                 "autoreply": "",
-                "portrange": (2234, 2239),
+                "portrange": (2234, 2234),
                 "upnp": True,
                 "upnp_interval": 4,
                 "auto_connect_startup": True,
@@ -754,9 +754,6 @@ class Config:
 
         if (len(port_range) != 2 or not all(isinstance(i, int) for i in port_range)):
             self.sections["server"]["portrange"] = self.defaults["server"]["portrange"]
-        else:
-            # Setting the port range in numerical order
-            self.sections["server"]["portrange"] = (min(port_range), max(port_range))
 
         self.config_loaded = True
 

@@ -240,7 +240,7 @@ class Core:
             login=(config.sections["server"]["login"], config.sections["server"]["passw"]),
             interface=config.sections["server"]["interface"],
             bound_ip=self.bindip,
-            listen_port_range=(self.port, self.port) if self.port else config.sections["server"]["portrange"]
+            listen_port=self.port if self.port else config.sections["server"]["portrange"][0]
         ))
 
     def disconnect(self):
