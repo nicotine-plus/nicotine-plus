@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
-"PO-Revision-Date: 2023-04-28 23:02+0000\n"
+"PO-Revision-Date: 2023-05-02 14:47+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -3477,9 +3477,8 @@ msgid "Leave chat room"
 msgstr "Chatroom verlaten"
 
 #: pynicotine/plugins/core_commands/__init__.py:104
-#, fuzzy
 msgid "Say message in specified chat room"
-msgstr "Zeg een bericht in de opgegeven chatroom"
+msgstr "Stuur bericht naar chatroom"
 
 #: pynicotine/plugins/core_commands/__init__.py:111
 msgid "Open private chat"
@@ -3662,7 +3661,7 @@ msgstr "Geen omschrijving"
 #: pynicotine/pluginsystem.py:837
 #, python-format
 msgid "Missing %s argument"
-msgstr "Ontbrekend argument %s."
+msgstr "Ontbrekend argument %s"
 
 #: pynicotine/pluginsystem.py:846
 #, python-format
@@ -4092,7 +4091,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:97 pynicotine/gtkgui/ui/privatechat.ui:51
 msgid "Send message…"
-msgstr "Verstuur bericht"
+msgstr "Verstuur bericht…"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:104 pynicotine/gtkgui/ui/privatechat.ui:58
 msgid "Toggle Text-to-Speech"
@@ -5016,7 +5015,6 @@ msgstr ""
 "voegen."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:409
-#, fuzzy
 msgid ""
 "Filters files based upon users' geographical location according to country "
 "codes defined by ISO 3166-2:\n"
@@ -5026,8 +5024,8 @@ msgid ""
 msgstr ""
 "Gebruikt landcodes gedefinieerd door ISO 3166-2:\n"
 "    US zal alleen resultaten tonen van gebruikers met IP-adressen in de "
-"Verenigde Staten. !GB zal resultaten verbergen van gebruikers in het "
-"Verenigd Koninkrijk (Groot-Brittannië)."
+"Verenigde Staten.\n"
+"    !GB zal resultaten verbergen van gebruikers uit Groot-Brittannië."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:421
 #, fuzzy
@@ -5542,7 +5540,6 @@ msgid "Auto-reply message when away:"
 msgstr "Automatisch antwoord bij afwezigheid:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:340
-#, fuzzy
 msgid "Automatically forward listening port (UPnP/NAT-PMP)"
 msgstr "Luisterpoort automatisch doorsturen (UPnP/NAT-PMP)"
 
@@ -5780,9 +5777,8 @@ msgid "Queue Limits"
 msgstr "Wachtrijlimieten"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:232
-#, fuzzy
 msgid "Limits do not apply to buddies"
-msgstr "Wachtrijbeperkingen gelden niet voor vrienden"
+msgstr "Limieten gelden niet voor buddies"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:243
 msgid "Each user may queue a maximum of either:"
@@ -5987,26 +5983,20 @@ msgid "Visible main tabs:"
 msgstr "Zichtbare hoofdtabbladen:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:627
-#, fuzzy
 msgid "Tab bar positions:"
-msgstr "Tab balk positie:"
+msgstr "Tab bar posities:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:664
-#, fuzzy
 msgid "Main tabs"
-msgstr "hoofdvenster"
+msgstr "Hoofdtabbladen"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:869
-#, fuzzy
 msgid "Show reverse file paths (requires a restart)"
-msgstr ""
-"Toon omgekeerde bestandspaden in zoek- en overdrachtsweergaven (vereist een "
-"herstart)"
+msgstr "Bestandspaden omgekeerd weergeven (herstart vereist)"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:876
-#, fuzzy
 msgid "Show exact file sizes (requires a restart)"
-msgstr "Netwerkinterface (vereist een herstart):"
+msgstr "Toon exacte bestandsgroottes (herstart vereist)"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:896
 msgid "List text color:"
@@ -6017,9 +6007,8 @@ msgid "Queued search result text color:"
 msgstr "Tekstkleur zoekresultaat in wachtrij:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1006
-#, fuzzy
 msgid "Enable colored usernames"
-msgstr "Chatkamer gebruikersnamen"
+msgstr "Gekleurde gebruikersnamen inschakelen"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1019
 msgid "Chat username appearance:"
@@ -6170,9 +6159,8 @@ msgid "Refresh Files"
 msgstr "Bestanden vernieuwen"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:83
-#, fuzzy
 msgid "Edit Profile"
-msgstr "Filter bewerken"
+msgstr "Profiel bewerken"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:136
 msgid "Shared Files"
@@ -6199,18 +6187,16 @@ msgid "Upload Speed"
 msgstr "Upload snelheid"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:363
-#, fuzzy
 msgid "Edit Interests"
-msgstr "Interesses"
+msgstr "Interesses bewerken"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:649
 msgid "Save _Picture"
 msgstr "Bewaar _Beeld"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:687
-#, fuzzy
 msgid "_Refresh Profile"
-msgstr "Bestanden vernieuwen"
+msgstr "_Profiel vernieuwen"
 
 #: pynicotine/plugins/core_commands/PLUGININFO:3
 msgid "Nicotine+ Commands"
