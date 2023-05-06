@@ -7,7 +7,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
 "PO-Revision-Date: 2023-05-17 14:53+0000\n"
-"Last-Translator: Han <hboetes@gmail.com>\n"
+"Last-Translator: Saumon <maxime@saumon.io>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/fr/>\n"
 "Language: fr\n"
@@ -231,8 +231,8 @@ msgstr ""
 #, python-format
 msgid "IP address of user %(user)s: %(ip)s, port %(port)i%(country)s"
 msgstr ""
-"L'adresse IP de l'utilisateur %(user)s est %(ip)s, son port est %(port)i"
-"%(country)s"
+"L'adresse IP de l'utilisateur %(user)s est %(ip)s, son port est "
+"%(port)i%(country)s"
 
 #: pynicotine/core.py:397 pynicotine/gtkgui/dialogs/preferences.py:880
 #: pynicotine/gtkgui/dialogs/preferences.py:1012
