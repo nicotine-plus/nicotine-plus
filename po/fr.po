@@ -7,7 +7,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
 "PO-Revision-Date: 2023-05-06 20:32+0000\n"
-"Last-Translator: Saumon <maxime@saumon.io>\n"
+"Last-Translator: subu_versus <claire.stutz@yahoo.fr>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/fr/>\n"
 "Language: fr\n"
@@ -3473,9 +3473,8 @@ msgid "Executing '%(command)s' failed: %(error)s"
 msgstr "L'exécution de '%(command)s' a échoué : %(error)s"
 
 #: pynicotine/plugins/core_commands/__init__.py:27
-#, fuzzy
 msgid "Network Filters"
-msgstr "Filtres de réseau"
+msgstr "Filtres réseaux"
 
 #: pynicotine/plugins/core_commands/__init__.py:43
 msgid "List available commands"
