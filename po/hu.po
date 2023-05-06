@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2023-05-06 17:22+0000\n"
+"PO-Revision-Date: 2023-05-06 20:32+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -4781,7 +4781,7 @@ msgid ""
 "Files you download from other users are queued here, and can be paused and "
 "resumed on demand"
 msgstr ""
-"A fájlok amiket más felhasználóktól tölt le itt vannak sorba állítva, és "
+"A fájlok, amiket más felhasználóktól tölt le, itt vannak sorba állítva, és "
 "igény szerint szüneteltethetők és folytathatók"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:695
@@ -4944,12 +4944,12 @@ msgstr "Csevegőszoba parancsok"
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:46
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:656
 msgid "/join /j 'room'"
-msgstr "/join /j „szoba”"
+msgstr "/csatlakozás/cs 'room'"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:58
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:668
 msgid "Join room 'room'"
-msgstr "Csatlakozás a szobához"
+msgstr "Csatlakozás a szobához 'room'"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:86
 msgid "Leave current room"
@@ -4963,7 +4963,7 @@ msgstr "Csevegőablak tisztítása"
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:130
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:101
 msgid "/me 'message'"
-msgstr "/me „üzenet”"
+msgstr "/ü 'message'"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:142
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:113
@@ -5244,8 +5244,8 @@ msgid ""
 "Filtering is applied immediately to results already received, and also to "
 "those yet to arrive."
 msgstr ""
-"Minden keresési eredménylistának saját szűrője van, amelyet az "
-"Eredményszűrők gomb megnyomásával lehet megjeleníteni. Egy szűrő több "
+"Minden keresésieredmény-listának saját szűrője van, amelyet az "
+"eredményszűrők gomb megnyomásával lehet megjeleníteni. Egy szűrő több "
 "mezőből áll, amelyek mindegyike akkor kerül alkalmazásra, ha bármelyik "
 "mezőjében lenyomja az Enter billentyűt. A szűrés azonnal alkalmazásra kerül "
 "a már beérkezett és a még beérkező eredményekre is."
