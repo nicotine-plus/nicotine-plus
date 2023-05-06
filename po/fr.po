@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
-"PO-Revision-Date: 2023-05-06 20:32+0000\n"
-"Last-Translator: subu_versus <claire.stutz@yahoo.fr>\n"
+"PO-Revision-Date: 2023-05-09 10:01+0000\n"
+"Last-Translator: Saumon <maxime@saumon.io>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/fr/>\n"
 "Language: fr\n"
@@ -3474,7 +3474,7 @@ msgstr "L'exécution de '%(command)s' a échoué : %(error)s"
 
 #: pynicotine/plugins/core_commands/__init__.py:27
 msgid "Network Filters"
-msgstr "Filtres réseaux"
+msgstr "Filtres réseau"
 
 #: pynicotine/plugins/core_commands/__init__.py:43
 msgid "List available commands"
@@ -3505,7 +3505,6 @@ msgid "Leave chat room"
 msgstr "Quitter le salon de discussion"
 
 #: pynicotine/plugins/core_commands/__init__.py:104
-#, fuzzy
 msgid "Say message in specified chat room"
 msgstr "Dire un message dans le salon de discussion spécifié"
 
@@ -3604,7 +3603,7 @@ msgstr "Tapez %(command)s pour lister les commandes disponibles"
 
 #: pynicotine/plugins/core_commands/__init__.py:338
 #: pynicotine/plugins/core_commands/__init__.py:350
-#, fuzzy, python-format
+#, python-format
 msgid "Not joined in room %s"
 msgstr "Salon %s non rejoint"
 
@@ -3626,7 +3625,7 @@ msgstr "%s ignoré"
 #: pynicotine/plugins/core_commands/__init__.py:482
 #, python-format
 msgid "Unignored %s"
-msgstr "Ne plus ignorer %s"
+msgstr "%s désignoré"
 
 #: pynicotine/pluginsystem.py:398
 msgid "Loading plugin system"
@@ -5583,7 +5582,6 @@ msgid "Auto-reply message when away:"
 msgstr "Message de réponse automatique en cas d'absence :"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:340
-#, fuzzy
 msgid "Automatically forward listening port (UPnP/NAT-PMP)"
 msgstr "Transférer automatiquement le port d'écoute (UPnP/NAT-PMP)"
 
@@ -6044,14 +6042,12 @@ msgid "Main tabs"
 msgstr "Onglets principaux"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:869
-#, fuzzy
 msgid "Show reverse file paths (requires a restart)"
-msgstr ""
-"Afficher les chemins d’accès aux fichiers inversés (nécessite un redémarrage)"
+msgstr "Afficher les chemins de fichiers inversés (nécessite un redémarrage)"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:876
 msgid "Show exact file sizes (requires a restart)"
-msgstr "Afficher la taille des fichiers (nécessite un redémarrage)"
+msgstr "Afficher la taille exacte des fichiers (nécessite un redémarrage)"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:896
 msgid "List text color:"
@@ -6067,7 +6063,7 @@ msgstr "Activer les noms d'utilisateurs colorés"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1019
 msgid "Chat username appearance:"
-msgstr "Apparence du nom d’utilisateur dans les discussions :"
+msgstr "Apparence du nom d’utilisateur dans les discussions :"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1032
 msgid "bold"
