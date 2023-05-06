@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
-"PO-Revision-Date: 2023-05-06 20:32+0000\n"
+"PO-Revision-Date: 2023-05-09 10:01+0000\n"
 "Last-Translator: Havokdan <havokdan@yahoo.com.br>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/pt_BR/>\n"
@@ -3831,9 +3831,9 @@ msgstr ""
 "contém caracteres inválidos: %(characters)s"
 
 #: pynicotine/pluginsystem.py:525
-#, fuzzy, python-format
+#, python-format
 msgid "Conflicting %(interface)s command in plugin %(name)s: %(command)s"
-msgstr "Comando %(interface)s conflitante no plug-in %(name)s: %(command)s"
+msgstr "Comando %(interface)s conflitante no plugin %(name)s: %(command)s"
 
 #: pynicotine/pluginsystem.py:549
 #, python-format
@@ -3877,7 +3877,7 @@ msgid "No description"
 msgstr "Sem descrição"
 
 #: pynicotine/pluginsystem.py:837
-#, fuzzy, python-format
+#, python-format
 msgid "Missing %s argument"
 msgstr "Argumento %s ausente"
 
@@ -3887,12 +3887,12 @@ msgid "Invalid argument, possible choices: %s"
 msgstr "Argumento inválido, escolhas possíveis: %s"
 
 #: pynicotine/pluginsystem.py:851
-#, fuzzy, python-format
+#, python-format
 msgid "Usage: %(command)s %(args)s"
 msgstr "Uso: %(command)s %(args)s"
 
 #: pynicotine/pluginsystem.py:890
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Unknown command: %(command)s. Type %(help_command)s to list available "
 "commands."
@@ -5069,7 +5069,6 @@ msgstr ""
 "importante: 'Instrumental Remix' não mostrará nenhum 'Remix Instrumental'"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:115
-#, fuzzy
 msgid ""
 "Use | (or pipes) to seperate several exact phrases. Example:\n"
 "    Remix|Dub Mix|Instrumental"
@@ -5094,26 +5093,24 @@ msgid "Filters files based upon their file extension."
 msgstr "Filtra arquivos com base em sua extensão de arquivo."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:170
-#, fuzzy
 msgid ""
 "Multiple file extensions can be specified, which in turn will reveal more "
 "from the list of results. Example:\n"
 "    flac wav ape"
 msgstr ""
 "Várias extensões de arquivo podem ser especificadas, o que, por sua vez, "
-"ampliará a lista de resultados.\n"
-"Exemplo: flac|wav|ape"
+"revelará mais da lista de resultados. Exemplo:\n"
+"    flac wav ape"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:181
-#, fuzzy
 msgid ""
 "It is also possible to invert the filter, specifying file extensions you "
 "don't want in your results with an exclamation mark! Example:\n"
 "    !mp3 !jpg"
 msgstr ""
-"Também é possível inverter o filtro, especificando as extensões de arquivo "
-"que você não deseja em seus resultados.\n"
-"Exemplo: !mp3|!jpg"
+"Também é possível inverter o filtro, especificando extensões de arquivo que "
+"você não deseja em seus resultados com um ponto de exclamação! Exemplo:\n"
+"    !mp3 !jpg"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:191
 msgid "File Size"
@@ -5142,13 +5139,12 @@ msgstr ""
 "20m para mostrar arquivos maiores que 20 MiB (mebibytes)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:239
-#, fuzzy
 msgid ""
 "Prepend = to a value to specify an exact match:\n"
 "    =1024 matches files that are exactly 1 KiB (kibibyte)."
 msgstr ""
-"Anexar = a um valor para especificar uma correspondência exata:\n"
-"=1024 corresponde apenas a arquivos com 1 KiB (kibibyte)."
+"Anexe = a um valor para especificar uma correspondência exata:\n"
+"    =1024 corresponde a arquivos com exatamente 1 KiB (kibibyte)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:250
 msgid ""
@@ -5159,15 +5155,15 @@ msgstr ""
 "!30,5m para ocultar arquivos com 30,5 MiB (mebibytes)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:261
-#, fuzzy
 msgid ""
 "Prepend < or > to find files smaller/larger than the given value. Use a "
 "space between each condition to include a range:\n"
 "    >10.5m <1g to show files larger than 10.5 MiB, but smaller than 1 GiB."
 msgstr ""
-"Anexe ou para localizar arquivos menores/maiores que o valor fornecido:\n"
-"10,5m| 1g para mostrar arquivos maiores que 10,5 MiB (mebibytes),\n"
-"mas menor que 1 GiB (gibibytes), use um | entre as condições."
+"Anexe ou para localizar arquivos menores/maiores que o valor fornecido. Use "
+"um espaço entre cada condição para incluir um intervalo:\n"
+"    >10,5m<1g para mostrar arquivos maiores que 10,5 MiB, mas menores que 1 "
+"GiB."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:272
 msgid ""
@@ -5190,59 +5186,57 @@ msgstr ""
 "sempre Kb/s (Kilobits por segundo)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:320
-#, fuzzy
 msgid ""
 "Like File Size (above), operators =, !, <, >, <= or >= can be used, and "
 "multiple conditions can be specified, for example to show files with a "
 "bitrate of at least 256 Kb/s with a maximum bitrate of 1411 Kb/s:\n"
 "    256 <=1411"
 msgstr ""
-"Assim como o Tamanho do Arquivo (acima), os operadores =, !, e podem ser "
-"usados, e várias condições podem ser especificadas com | tubos:\n"
-"256| 1411 para mostrar arquivos com uma taxa de bits de pelo menos 256 Kb/s\n"
-"com uma taxa de bits máxima de 1411 Kb/s."
+"Como Tamanho do arquivo (acima), os operadores =, !, <, >, <= ou >= podem "
+"ser usados e várias condições podem ser especificadas, por exemplo, para "
+"mostrar arquivos com uma taxa de bits de pelo menos 256 Kb/s com uma taxa de "
+"bits máxima de 1411 Kb /s:\n"
+"    256 <=1411"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:350
 msgid "Filters files based upon their duration."
 msgstr "Filtra arquivos com base em sua duração."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:360
-#, fuzzy
 msgid ""
 "By default, files longer than or equal to (>=) the entered duration will be "
 "matched, unless an operator (=, !, <=, < or >) is used."
 msgstr ""
-"Por padrão, os arquivos maiores ou iguais à duração inserida serão "
-"correspondidos, a menos que um operador (=, !, ou ) seja usado."
+"Por padrão, arquivos maiores ou iguais a (>=) a duração inserida serão "
+"correspondidos, a menos que um operador (=, !, <=, < ou>)seja usado."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:370
-#, fuzzy
 msgid ""
 "Enter a raw value in seconds or use the MM:SS and HH:MM:SS time formats:\n"
 "    =53 shows files that are around 53 seconds long.\n"
 "    >5:30 to show files more than 5 and a half minutes long.\n"
 "    <5:30:00 shows files less than 5 and a half hours long."
 msgstr ""
-"Insira um valor bruto em segundos ou use os formatos de hora MM:SS e HH:MM:"
-"SS:\n"
-"5:30 para mostrar arquivos com pelo menos 5 minutos e meio de duração.\n"
-"5:30:00 mostra arquivos com menos de 5 horas e meia de duração."
+"Insira um valor bruto em segundos ou use os formatos de hora MM:SS e "
+"HH:MM:SS:\n"
+"    =53 mostra arquivos com cerca de 53 segundos de duração.\n"
+"    >5:30 para mostrar arquivos com mais de 5 minutos e meio.\n"
+"    <5:30:00 mostra arquivos com menos de 5 horas e meia de duração."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:383
-#, fuzzy
 msgid ""
 "Multiple conditions can be specified:\n"
 "    >6:00 <12:00 to show files between 6 and 12 minutes long.\n"
 "    !9:54 !8:43 !7:32 to hide some specific files from the results.\n"
 "    =5:34 =4:23 =3:05 to include files with specific durations."
 msgstr ""
-"Várias condições podem ser especificadas com | separadores de tubos:\n"
-"6:00 | 12:00 para mostrar arquivos entre 6 e 12 minutos de duração.\n"
-"!9:54|!8:43|!7:32 para ocultar alguns arquivos específicos dos resultados.\n"
-"=5:34|=4:23|=3:05 para incluir arquivos com durações específicas."
+"Várias condições podem ser especificadas:\n"
+"    >6:00 <12:00 para mostrar arquivos entre 6 e 12 minutos de duração.\n"
+"    !9:54 !8:43 !7:32 para ocultar alguns arquivos específicos dos "
+"resultados.\n"
+"    =5:34 =4:23 =3:05 para incluir arquivos com durações específicas."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:409
-#, fuzzy
 msgid ""
 "Filters files based upon users' geographical location according to country "
 "codes defined by ISO 3166-2:\n"
@@ -5250,13 +5244,13 @@ msgid ""
 "States.\n"
 "    !GB will hide results that come from users in Great Britain."
 msgstr ""
-"Usa códigos de país definidos pela ISO 3166-2:\n"
-"Os EUA só mostrarão resultados de usuários com endereços IP nos Estados "
-"Unidos. !GB ocultará resultados provenientes de usuários no Reino Unido (Grã-"
-"Bretanha)."
+"Filtra arquivos com base na localização geográfica dos usuários de acordo "
+"com os códigos de país definidos pela ISO 3166-2:\n"
+"    Os US mostrarão apenas resultados de usuários com endereços IP nos "
+"Estados Unidos\n"
+"    !GB ocultará os resultados provenientes de usuários da Grã-Bretanha."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:421
-#, fuzzy
 msgid "Multiple countries can be specified with commas or spaces."
 msgstr "Vários países podem ser especificados com vírgulas ou espaços."
 
@@ -5338,9 +5332,8 @@ msgstr "Tipo de arquivo…"
 
 #: pynicotine/gtkgui/ui/search.ui:245
 #: pynicotine/gtkgui/ui/settings/search.ui:228
-#, fuzzy
 msgid "File type, e.g. flac wav or !mp3 !m4a"
-msgstr "Tipo de arquivo, por exemplo: flac|wav|ape ou !mp3|!m4a"
+msgstr "Tipo de arquivo, por exemplo, flac wav ou !mp3 !m4a"
 
 #: pynicotine/gtkgui/ui/search.ui:273
 msgid "File size…"
@@ -5348,9 +5341,8 @@ msgstr "Tamanho do arquivo…"
 
 #: pynicotine/gtkgui/ui/search.ui:274
 #: pynicotine/gtkgui/ui/settings/search.ui:259
-#, fuzzy
 msgid "File size, e.g. >10.5m <1g"
-msgstr "Tamanho do arquivo, por exemplo >10,5m <1g"
+msgstr "Tamanho do arquivo, por exemplo, >10,5m <1g"
 
 #: pynicotine/gtkgui/ui/search.ui:302
 msgid "Bitrate…"
@@ -5358,9 +5350,8 @@ msgstr "Bitrate…"
 
 #: pynicotine/gtkgui/ui/search.ui:303
 #: pynicotine/gtkgui/ui/settings/search.ui:290
-#, fuzzy
 msgid "Bitrate, e.g. 256 <1412"
-msgstr "Taxa de bits, por exemplo 256 <1412"
+msgstr "Taxa de bits, por exemplo, 256 <1412"
 
 #: pynicotine/gtkgui/ui/search.ui:331
 msgid "Duration…"
@@ -5368,9 +5359,8 @@ msgstr "Duração…"
 
 #: pynicotine/gtkgui/ui/search.ui:332
 #: pynicotine/gtkgui/ui/settings/search.ui:321
-#, fuzzy
 msgid "Duration, e.g. >6:00 <12:00 !6:54"
-msgstr "Duração, por exemplo: 2:20|!3:30|=4:40"
+msgstr "Duração, por exemplo, >6:00 <12:00 !6:54"
 
 #: pynicotine/gtkgui/ui/search.ui:364
 msgid "Country code…"
@@ -5378,9 +5368,8 @@ msgstr "Código do país…"
 
 #: pynicotine/gtkgui/ui/search.ui:365
 #: pynicotine/gtkgui/ui/settings/search.ui:352
-#, fuzzy
 msgid "Country code, e.g. US ES or !DE !GB"
-msgstr "Código de país, por exemplo: EUA| GB|ES ou !DE|! Gb"
+msgstr "Código do país, por exemplo, US ES ou !OF !GB"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:35
 msgid ""
@@ -5473,9 +5462,8 @@ msgid "Room names"
 msgstr "Nomes de salas"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:269
-#, fuzzy
 msgid "Commands"
-msgstr "Comentários"
+msgstr "Comandos"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:297
 msgid "Timestamps"
@@ -5575,9 +5563,8 @@ msgid "Store completed downloads in username subfolders"
 msgstr "Armazenar downloads concluídos em subpastas de nome de usuário"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:57
-#, fuzzy
 msgid "Allow users to send you any files:"
-msgstr "Permitir que meu amigos me enviem arquivos:"
+msgstr "Permita que os usuários enviem qualquer arquivo para você:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:68
 msgid "No one"
@@ -5621,19 +5608,16 @@ msgid "Folders"
 msgstr "Pastas"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:213
-#, fuzzy
 msgid "Finished downloads:"
-msgstr "Downloads de arquivos concluídos"
+msgstr "Downloads concluídos:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:236
-#, fuzzy
 msgid "Incomplete downloads:"
-msgstr "Downloads Concluídos"
+msgstr "Downloads incompletos:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:259
-#, fuzzy
 msgid "Received files:"
-msgstr "Requisitando arquivo"
+msgstr "Arquivos recebidos:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:285
 msgid "Events"
@@ -5770,7 +5754,6 @@ msgid "Auto-reply message when away:"
 msgstr "Mensagem de resposta automática quando estiver ausente:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:340
-#, fuzzy
 msgid "Automatically forward listening port (UPnP/NAT-PMP)"
 msgstr "Encaminhar automaticamente a porta de escuta (UPnP/NAT-PMP)"
 
@@ -6013,9 +5996,8 @@ msgid "Queue Limits"
 msgstr "Limites de fila"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:232
-#, fuzzy
 msgid "Limits do not apply to buddies"
-msgstr "Limites de fila não se aplicam a amigos"
+msgstr "Limites não se aplicam a amigos"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:243
 msgid "Each user may queue a maximum of either:"
@@ -6220,26 +6202,20 @@ msgid "Visible main tabs:"
 msgstr "Abas principais visíveis:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:627
-#, fuzzy
 msgid "Tab bar positions:"
-msgstr "Posição da barra de abas:"
+msgstr "Posições da barra de abas:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:664
-#, fuzzy
 msgid "Main tabs"
 msgstr "Abas principais"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:869
-#, fuzzy
 msgid "Show reverse file paths (requires a restart)"
-msgstr ""
-"Mostrar caminhos de arquivo reversos nas visualizações de pesquisa e "
-"transferência (requer reinicialização)"
+msgstr "Mostrar caminhos de arquivo reversos (requer uma reinicialização)"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:876
-#, fuzzy
 msgid "Show exact file sizes (requires a restart)"
-msgstr "Interface de rede (requer reinicialização):"
+msgstr "Mostrar tamanhos de arquivo exatos (requer uma reinicialização)"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:896
 msgid "List text color:"
@@ -6250,9 +6226,8 @@ msgid "Queued search result text color:"
 msgstr "Cor do texto do resultado da pesquisa na fila:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1006
-#, fuzzy
 msgid "Enable colored usernames"
-msgstr "Nomes de usuário da sala de bate-papo"
+msgstr "Habilitar nomes de usuários coloridos"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1019
 msgid "Chat username appearance:"
@@ -6403,9 +6378,8 @@ msgid "Refresh Files"
 msgstr "Atualizar arquivos"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:83
-#, fuzzy
 msgid "Edit Profile"
-msgstr "Editar Pasta Compartilhada"
+msgstr "Editar Perfil"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:136
 msgid "Shared Files"
@@ -6432,23 +6406,20 @@ msgid "Upload Speed"
 msgstr "Velocidade de upload"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:363
-#, fuzzy
 msgid "Edit Interests"
-msgstr "Interesses"
+msgstr "Editar Interesses"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:649
 msgid "Save _Picture"
 msgstr "Salvar _Imagem"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:687
-#, fuzzy
 msgid "_Refresh Profile"
-msgstr "Atualizar arquivos"
+msgstr "_Atualizar perfil"
 
 #: pynicotine/plugins/core_commands/PLUGININFO:3
-#, fuzzy
 msgid "Nicotine+ Commands"
-msgstr "Equipe Nicotine+"
+msgstr "Comandos do Nicotine+"
 
 #, python-format
 #~ msgid "Cannot find %s or newer, please install it."
