@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
-"PO-Revision-Date: 2023-05-09 10:01+0000\n"
-"Last-Translator: zniavre <zniavre2048@gmail.com>\n"
+"PO-Revision-Date: 2023-05-09 10:03+0000\n"
+"Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/fr/>\n"
 "Language: fr\n"
@@ -692,9 +692,8 @@ msgid "Searches"
 msgstr "Recherches"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:72
-#, fuzzy
 msgid "User Profile"
-msgstr "Profil d'utilisateur"
+msgstr "Profil de l’utilisateur"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:73
 #: pynicotine/gtkgui/ui/settings/chats.ui:32
@@ -3717,12 +3716,12 @@ msgid "No UPnP devices found"
 msgstr "Aucun appareil UPnP trouvé"
 
 #: pynicotine/portmapper.py:544
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "%(protocol)s: External port %(external_port)s successfully forwarded to "
 "local IP address %(ip_address)s port %(local_port)s"
 msgstr ""
-"%(protocol)s: Le port externe %(external_port)s a été redirigé avec succès "
+"%(protocol)s: Le port externe %(external_port)s a été transféré avec succès "
 "vers l'adresse IP locale %(ip_address)s port %(local_port)s"
 
 #: pynicotine/portmapper.py:554
