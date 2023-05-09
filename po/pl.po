@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
-"PO-Revision-Date: 2023-04-02 00:16+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2023-05-09 10:01+0000\n"
+"Last-Translator: Mariusz <wisniowy@g.pl>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/pl/>\n"
 "Language: pl\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.17-dev\n"
+"X-Generator: Weblate 4.18-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -243,13 +243,12 @@ msgid "%i privileged users"
 msgstr "%i uprzywilejowanych użytkowników"
 
 #: pynicotine/core.py:461
-#, fuzzy
 msgid ""
 "You have no Soulseek privileges. While privileges are active, your downloads "
 "will be queued ahead of those of non-privileged users."
 msgstr ""
-"Nie masz już żadnych przywilejów. Nie są one konieczne, ale pozwalają "
-"ściągać pliki poza kolejką nieuprzywilejowanych użytkowników."
+"Nie masz już przywilejów Soulseek. Gdy są one aktywne, pliki do pobrania "
+"będą umieszczane w kolejce przed plikami użytkowników nieuprzywilejowanych."
 
 #: pynicotine/core.py:464
 #, python-format
@@ -292,9 +291,8 @@ msgid "You are using the latest version of %s"
 msgstr "Używasz najnowszej wersji %s"
 
 #: pynicotine/core.py:519
-#, fuzzy
 msgid "Latest Version Unknown"
-msgstr "Sprawdź _ostatnią wersje"
+msgstr "Najnowsza wersja Nieznana"
 
 #: pynicotine/core.py:520
 #, python-format
@@ -684,9 +682,8 @@ msgid "Searches"
 msgstr "Wyszukiwanie"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:72
-#, fuzzy
 msgid "User Profile"
-msgstr "Przeglądanie użytkownika"
+msgstr "Profil użytkownika"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:73
 #: pynicotine/gtkgui/ui/settings/chats.ui:32
@@ -1395,9 +1392,8 @@ msgstr "Przeglądaj udostępnione zasoby"
 #: pynicotine/gtkgui/mainwindow.py:935 pynicotine/gtkgui/ui/mainwindow.ui:1051
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:548
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:754
-#, fuzzy
 msgid "User Profiles"
-msgstr "Przeglądanie użytkownika"
+msgstr "Profile użytkowników"
 
 #: pynicotine/gtkgui/mainwindow.py:936
 #: pynicotine/plugins/core_commands/__init__.py:26
@@ -1661,14 +1657,12 @@ msgid "Clear All Results"
 msgstr "Wyczyść wszystkie wyniki"
 
 #: pynicotine/gtkgui/search.py:607
-#, fuzzy
 msgid "Clear Filters"
-msgstr "Wyczyść filtrowane"
+msgstr "Wyczyść filtry"
 
 #: pynicotine/gtkgui/search.py:610
-#, fuzzy
 msgid "Restore Filters"
-msgstr "Filtrowanie wyników"
+msgstr "Przywróć filtry"
 
 #: pynicotine/gtkgui/search.py:683
 #, python-format
@@ -1908,7 +1902,6 @@ msgid "Download Folder & Subfolders To…"
 msgstr "Pobierz folder i podfolder(y) do…"
 
 #: pynicotine/gtkgui/userbrowse.py:267
-#, fuzzy
 msgid "File Name"
 msgstr "Nazwa pliku"
 
@@ -1958,9 +1951,8 @@ msgid "Upload File(s) To User"
 msgstr "Wyślij plik(i) do użytkownika"
 
 #: pynicotine/gtkgui/userinfo.py:306
-#, fuzzy
 msgid "Copy Picture"
-msgstr "Zdjęcie:"
+msgstr "Kopiuj zdjęcie"
 
 #: pynicotine/gtkgui/userinfo.py:307
 msgid "Save Picture"
@@ -2146,9 +2138,8 @@ msgid "Select a Folder"
 msgstr "Wybierz folder"
 
 #: pynicotine/gtkgui/widgets/filechooser.py:136
-#, fuzzy
 msgid "_Select"
-msgstr "Wybierz wszystko"
+msgstr "_Wybierz"
 
 #: pynicotine/gtkgui/widgets/filechooser.py:153
 msgid "Select an Image"
@@ -2199,9 +2190,8 @@ msgid "%s File(s) Selected"
 msgstr "%s Plik(ów) wybrany(ch)"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:350
-#, fuzzy
 msgid "View User _Profile"
-msgstr "Przeglądanie użytkownika"
+msgstr "Wyświetl profil użytkownika"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:353
 #: pynicotine/gtkgui/ui/userinfo.ui:461
@@ -2269,22 +2259,18 @@ msgid "Gift Privileges"
 msgstr "Przywileje prezentowe"
 
 #: pynicotine/gtkgui/widgets/theme.py:317
-#, fuzzy
 msgid "Executable"
-msgstr "Wywołano: %s"
+msgstr "Wykonywalny"
 
 #: pynicotine/gtkgui/widgets/theme.py:318
-#, fuzzy
 msgid "Audio"
 msgstr "Audio"
 
 #: pynicotine/gtkgui/widgets/theme.py:319
-#, fuzzy
 msgid "Image"
-msgstr "Obraz:"
+msgstr "Obraz"
 
 #: pynicotine/gtkgui/widgets/theme.py:320
-#, fuzzy
 msgid "Archive"
 msgstr "Archiwum"
 
@@ -2294,12 +2280,10 @@ msgid "Miscellaneous"
 msgstr "Różne"
 
 #: pynicotine/gtkgui/widgets/theme.py:322
-#, fuzzy
 msgid "Video"
 msgstr "Wideo"
 
 #: pynicotine/gtkgui/widgets/theme.py:323
-#, fuzzy
 msgid "Document/Text"
 msgstr "Dokument/Tekst"
 
@@ -2332,7 +2316,6 @@ msgstr "Wyślij wiadomość"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:110
 #: pynicotine/gtkgui/widgets/trayicon.py:240
-#, fuzzy
 msgid "View User Profile"
 msgstr "Wyświetl profil użytkownika"
 
@@ -2350,9 +2333,8 @@ msgid "Enter the name of the user whom you want to send a message:"
 msgstr "Wprowadź nazwę użytkownika, do którego chcesz wysłać wiadomość:"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:241
-#, fuzzy
 msgid "Enter the name of the user whose profile you want to see:"
-msgstr "Wprowadź nazwę użytkownika, którego listę zasobów chcesz otrzymać:"
+msgstr "Wprowadź nazwę użytkownika, którego profil chcesz wyświetlić:"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:261
 msgid "Enter the name of the user whose shares you want to see:"
@@ -3469,14 +3451,12 @@ msgid "Executing '%(command)s' failed: %(error)s"
 msgstr "Problem z wywołaniem '%(command)s': %(error)s"
 
 #: pynicotine/plugins/core_commands/__init__.py:27
-#, fuzzy
 msgid "Network Filters"
-msgstr "Interfejs sieciowy:"
+msgstr "Filtry sieciowe"
 
 #: pynicotine/plugins/core_commands/__init__.py:43
-#, fuzzy
 msgid "List available commands"
-msgstr "Wbudowane komendy"
+msgstr "Lista dostępnych komend"
 
 #: pynicotine/plugins/core_commands/__init__.py:49
 #, fuzzy
@@ -3484,12 +3464,10 @@ msgid "Toggle away status"
 msgstr "Przełącza Cię w status \"Zaraz wracam\""
 
 #: pynicotine/plugins/core_commands/__init__.py:53
-#, fuzzy
 msgid "Manage plugins"
-msgstr "Włącz wtyczki"
+msgstr "Zarządzaj wtyczkami"
 
 #: pynicotine/plugins/core_commands/__init__.py:74
-#, fuzzy
 msgid "Clear chat window"
 msgstr "Wyczyść okno czatu"
 
@@ -3498,9 +3476,8 @@ msgid "Say something in the third-person"
 msgstr "Powiedz coś w trzeciej osobie"
 
 #: pynicotine/plugins/core_commands/__init__.py:88
-#, fuzzy
 msgid "Join chat room"
-msgstr "Dołącz lub utwórz pokój…"
+msgstr "Dołącz do czatu"
 
 #: pynicotine/plugins/core_commands/__init__.py:96
 #, fuzzy
@@ -3523,47 +3500,38 @@ msgid "Close private chat"
 msgstr "Zamknij aktualny prywatny czat"
 
 #: pynicotine/plugins/core_commands/__init__.py:128
-#, fuzzy
 msgid "Send private message to user"
-msgstr "Wyślij prywatną wiadomość do wszystkich znajomych online:"
+msgstr "Wyślij prywatną wiadomość do użytkownika"
 
 #: pynicotine/plugins/core_commands/__init__.py:136
-#, fuzzy
 msgid "Add user to buddy list"
 msgstr "Dodaj użytkownika do listy znajomych"
 
 #: pynicotine/plugins/core_commands/__init__.py:144
-#, fuzzy
 msgid "Remove buddy from buddy list"
 msgstr "Usuń użytkownika z listy znajomych"
 
 #: pynicotine/plugins/core_commands/__init__.py:152
-#, fuzzy
 msgid "Browse files of user"
-msgstr "Przeglądaj pliki użytkownika 'użytkownik'"
+msgstr "Przeglądaj pliki użytkownika"
 
 #: pynicotine/plugins/core_commands/__init__.py:161
-#, fuzzy
 msgid "Show user profile information"
-msgstr "Informacje użytkownika"
+msgstr "Pokaż informacje o profilu użytkownika"
 
 #: pynicotine/plugins/core_commands/__init__.py:169
-#, fuzzy
 msgid "Show IP address or username"
-msgstr "Pokaż IP użytkownika"
+msgstr "Pokaż adres IP lub nazwę użytkownika"
 
 #: pynicotine/plugins/core_commands/__init__.py:176
-#, fuzzy
 msgid "Block connections from user or IP address"
-msgstr "Blokuj nierozwiązywalne adresy IP"
+msgstr "Blokuj połączenia od użytkownika lub adresu IP"
 
 #: pynicotine/plugins/core_commands/__init__.py:183
-#, fuzzy
 msgid "Remove user or IP address from ban lists"
-msgstr "Usuń użytkownika z zablokowanych"
+msgstr "Usuń użytkownika lub adres IP z listy zablokowanych"
 
 #: pynicotine/plugins/core_commands/__init__.py:190
-#, fuzzy
 msgid "Silence messages from user or IP address"
 msgstr "Wycisz wiadomości od użytkownika lub adresu IP"
 
@@ -3579,10 +3547,9 @@ msgstr "Przeskanuj udostępnione zasoby"
 #: pynicotine/plugins/core_commands/__init__.py:213
 #, fuzzy
 msgid "List shares"
-msgstr "Przeskanuj udostępnione zasoby"
+msgstr "Wylistuj udostępnione zasoby"
 
 #: pynicotine/plugins/core_commands/__init__.py:220
-#, fuzzy
 msgid "Start global file search"
 msgstr "Rozpocznij globalne wyszukiwanie plików"
 
@@ -3592,9 +3559,8 @@ msgid "Search files in joined rooms"
 msgstr "Wyszukiwanie plików i folderów"
 
 #: pynicotine/plugins/core_commands/__init__.py:236
-#, fuzzy
 msgid "Search files of all buddies"
-msgstr "Wyszukiwanie plików i folderów"
+msgstr "Wyszukiwanie plików wśród znajomych"
 
 #: pynicotine/plugins/core_commands/__init__.py:244
 #, fuzzy
@@ -3613,12 +3579,12 @@ msgstr ""
 "Wyświetlanie listy dostępnych poleceń %(num)i pasujących do „%(query)s”:"
 
 #: pynicotine/plugins/core_commands/__init__.py:286
-#, fuzzy, python-format
+#, python-format
 msgid "Type %(command)s to list similar commands"
 msgstr "Wpisz %(command)s, aby wyświetlić listę podobnych poleceń"
 
 #: pynicotine/plugins/core_commands/__init__.py:289
-#, fuzzy, python-format
+#, python-format
 msgid "Type %(command)s to list available commands"
 msgstr "Wpisz %(command)s, aby wyświetlić listę dostępnych poleceń"
 
@@ -3629,14 +3595,14 @@ msgid "Not joined in room %s"
 msgstr "%s dołączył do pokoju"
 
 #: pynicotine/plugins/core_commands/__init__.py:441
-#, fuzzy, python-format
+#, python-format
 msgid "Banned %s"
-msgstr "Zablokowany (%s)"
+msgstr "Zablokowany %s"
 
 #: pynicotine/plugins/core_commands/__init__.py:455
-#, fuzzy, python-format
+#, python-format
 msgid "Unbanned %s"
-msgstr "Zablokowany (%s)"
+msgstr "Odblokowany %s"
 
 #: pynicotine/plugins/core_commands/__init__.py:468
 #, fuzzy, python-format
@@ -3662,9 +3628,9 @@ msgstr ""
 "nieprawidłowe znaki: %(characters)s"
 
 #: pynicotine/pluginsystem.py:525
-#, fuzzy, python-format
+#, python-format
 msgid "Conflicting %(interface)s command in plugin %(name)s: %(command)s"
-msgstr "Konfliktowe polecenie %(interface)s w wtyczce %(name)s: %(command)s"
+msgstr "Konfliktowe polecenie %(interface)s we wtyczce %(name)s: %(command)s"
 
 #: pynicotine/pluginsystem.py:549
 #, python-format
@@ -3704,22 +3670,21 @@ msgstr ""
 "Trace: %(trace)s"
 
 #: pynicotine/pluginsystem.py:757
-#, fuzzy
 msgid "No description"
-msgstr "Własny opis:"
+msgstr "Brak opisu"
 
 #: pynicotine/pluginsystem.py:837
-#, fuzzy, python-format
+#, python-format
 msgid "Missing %s argument"
-msgstr "Brak argumentu %s."
+msgstr "Brak argumentu %s"
 
 #: pynicotine/pluginsystem.py:846
-#, fuzzy, python-format
+#, python-format
 msgid "Invalid argument, possible choices: %s"
-msgstr "Nieprawidłowa odpowiedź: %s"
+msgstr "Nieprawidłowy argument, możliwe opcje: %s"
 
 #: pynicotine/pluginsystem.py:851
-#, fuzzy, python-format
+#, python-format
 msgid "Usage: %(command)s %(args)s"
 msgstr "Użycie: %(command)s %(args)s"
 
@@ -3737,20 +3702,21 @@ msgid "No UPnP devices found"
 msgstr "Nie znaleziono urządzeń UPnP"
 
 #: pynicotine/portmapper.py:544
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "%(protocol)s: External port %(external_port)s successfully forwarded to "
 "local IP address %(ip_address)s port %(local_port)s"
 msgstr ""
-"UPnP: Port zewnętrzny %(external_port)s pomyślnie przekierowany na lokalny "
-"adres IP %(ip_address)s port %(local_port)s"
+"%(protocol)s: Zewnętrzny port %(external_port)s pomyślnie przekierowany na "
+"lokalny adres IP %(ip_address)s port %(local_port)s"
 
 #: pynicotine/portmapper.py:554
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "%(protocol)s: Failed to forward external port %(external_port)s: %(error)s"
 msgstr ""
-"UPnP: Nie udało się przekazać portu zewnętrznego %(external_port)s: %(error)s"
+"%(protocol)s: Nie udało się przekierować portu zewnętrznego "
+"%(external_port)s: %(error)s"
 
 #: pynicotine/privatechat.py:212
 #, python-format
@@ -3846,9 +3812,9 @@ msgid "Failed to send number of shared files to the server: %s"
 msgstr "Nie udało się wysłać liczby udostępnionych plików do serwera: %s"
 
 #: pynicotine/shares.py:882
-#, fuzzy, python-format
+#, python-format
 msgid "Rescan aborted due to unavailable shares: %s"
-msgstr "Ponowne skanowanie zostało przerwane z powodu niedostępnych udziałów"
+msgstr "Ponowne skanowanie przerwane z powodu niedostępnych udziałów: %s"
 
 #: pynicotine/shares.py:942
 #, python-format
@@ -4071,9 +4037,9 @@ msgid "Cannot save picture to %(filename)s: %(error)s"
 msgstr "Nie można zapisać zdjęcia do %(filename)s: %(error)s"
 
 #: pynicotine/userinfo.py:120
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s is viewing your profile"
-msgstr "Użytkownik %(user)s przegląda informacje o tobie"
+msgstr "Użytkownik %(user)s wyświetla Twój profil"
 
 #: pynicotine/userlist.py:288
 #, python-format
@@ -4139,9 +4105,8 @@ msgstr ""
 "Wprowadź nazwę użytkownika osoby, którą chcesz dodać do listy znajomych"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:97 pynicotine/gtkgui/ui/privatechat.ui:51
-#, fuzzy
 msgid "Send message…"
-msgstr "Wyślij _wiadomość"
+msgstr "Wyślij wiadomość…"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:104 pynicotine/gtkgui/ui/privatechat.ui:58
 msgid "Toggle Text-to-Speech"
@@ -4693,9 +4658,8 @@ msgid "Enter the username of the person whose information you want to see"
 msgstr "Wprowadź nazwę użytkownika osoby, której informacje chcesz zobaczyć"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:996
-#, fuzzy
 msgid "_Personal Profile"
-msgstr "Osobiste niechęci"
+msgstr "_Profil personalny"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1062
 msgid ""
@@ -4939,13 +4903,12 @@ msgid "Filters files based upon their file size."
 msgstr "Filtrowanie plików na podstawie rozmiaru."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:218
-#, fuzzy
 msgid ""
 "By default, the unit used is bytes (B) and files greater than or equal to "
 "(>=) the value will be matched."
 msgstr ""
-"Domyślnie używaną jednostką jest bajt, a pliki większe lub równe tej "
-"wartości będą dopasowywane."
+"Domyślnie używaną jednostką jest bajt (B), a pliki większe lub równe (>=) "
+"tej wartości będą dopasowywane."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:228
 msgid ""
@@ -5023,13 +4986,12 @@ msgid "Filters files based upon their duration."
 msgstr "Filtruje pliki na podstawie czasu ich trwania."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:360
-#, fuzzy
 msgid ""
 "By default, files longer than or equal to (>=) the entered duration will be "
 "matched, unless an operator (=, !, <=, < or >) is used."
 msgstr ""
-"Domyślnie dopasowywane będą pliki dłuższe lub równe wprowadzonemu czasowi "
-"trwania, chyba że zostanie użyty operator (=, !, < lub >)."
+"Domyślnie dopasowywane będą pliki dłuższe lub równe (>=) wprowadzonemu "
+"czasowi trwania, chyba że użyty zostanie operator (=, !, <=, < lub >)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:370
 #, fuzzy
@@ -5072,7 +5034,6 @@ msgstr ""
 "Wielkiej Brytanii (Great Britain)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:421
-#, fuzzy
 msgid "Multiple countries can be specified with commas or spaces."
 msgstr "Można określić wiele krajów za pomocą przecinków lub spacji."
 
@@ -5154,9 +5115,8 @@ msgstr "Typ pliku…"
 
 #: pynicotine/gtkgui/ui/search.ui:245
 #: pynicotine/gtkgui/ui/settings/search.ui:228
-#, fuzzy
 msgid "File type, e.g. flac wav or !mp3 !m4a"
-msgstr "Typ pliku, np. flac|wav|ape lub !mp3|!m4a"
+msgstr "Typ pliku, np. flac wav lub !mp3 !m4a"
 
 #: pynicotine/gtkgui/ui/search.ui:273
 msgid "File size…"
@@ -5164,9 +5124,8 @@ msgstr "Rozmiar pliku…"
 
 #: pynicotine/gtkgui/ui/search.ui:274
 #: pynicotine/gtkgui/ui/settings/search.ui:259
-#, fuzzy
 msgid "File size, e.g. >10.5m <1g"
-msgstr "Rozmiar pliku..."
+msgstr "Rozmiar pliku, np. >10.5m <1g"
 
 #: pynicotine/gtkgui/ui/search.ui:302
 msgid "Bitrate…"
@@ -5174,7 +5133,6 @@ msgstr "Bitrate…"
 
 #: pynicotine/gtkgui/ui/search.ui:303
 #: pynicotine/gtkgui/ui/settings/search.ui:290
-#, fuzzy
 msgid "Bitrate, e.g. 256 <1412"
 msgstr "Szybkość transmisji, np. 256 <1412"
 
@@ -5184,9 +5142,8 @@ msgstr "Czas trwania…"
 
 #: pynicotine/gtkgui/ui/search.ui:332
 #: pynicotine/gtkgui/ui/settings/search.ui:321
-#, fuzzy
 msgid "Duration, e.g. >6:00 <12:00 !6:54"
-msgstr "Czas trwania, np. 2:20|!3:30|=4:40"
+msgstr "Czas trwania, np. >6:00 <12:00 !6:54"
 
 #: pynicotine/gtkgui/ui/search.ui:364
 msgid "Country code…"
@@ -5194,9 +5151,8 @@ msgstr "Kod kraju…"
 
 #: pynicotine/gtkgui/ui/search.ui:365
 #: pynicotine/gtkgui/ui/settings/search.ui:352
-#, fuzzy
 msgid "Country code, e.g. US ES or !DE !GB"
-msgstr "Kod kraju, np. US|GB|ES lub !DE|!GB"
+msgstr "Kod kraju, np. US ES lub !DE !GB"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:35
 msgid ""
@@ -5390,9 +5346,8 @@ msgid "Store completed downloads in username subfolders"
 msgstr "Przechowuj ukończone pobrania w podfolderach z nazwą użytkownika"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:57
-#, fuzzy
 msgid "Allow users to send you any files:"
-msgstr "Zezwól tym użytkownikom na wysyłanie plików do ciebie:"
+msgstr "Zezwalaj użytkownikom na wysyłanie dowolnych plików:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:68
 msgid "No one"
@@ -5441,14 +5396,12 @@ msgid "Finished downloads:"
 msgstr "Zakończone pobieranie plików"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:236
-#, fuzzy
 msgid "Incomplete downloads:"
-msgstr "Zakończone pobierania"
+msgstr "Niekompletne pobierania:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:259
-#, fuzzy
 msgid "Received files:"
-msgstr "Żądanie pliku"
+msgstr "Otrzymane pliki:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:285
 msgid "Events"
@@ -5584,9 +5537,8 @@ msgid "Auto-reply message when away:"
 msgstr "Automatyczna odpowiedź podczas nieobecności:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:340
-#, fuzzy
 msgid "Automatically forward listening port (UPnP/NAT-PMP)"
-msgstr "Automatycznie prześlij port nasłuchiwania (UPnP/NAT-PMP)"
+msgstr "Automatycznie przekierowuj port nasłuchiwania (UPnP/NAT-PMP)"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:348
 msgid "Auto-connect to server on startup"
@@ -5823,9 +5775,8 @@ msgid "Queue Limits"
 msgstr "Limity kolejek"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:232
-#, fuzzy
 msgid "Limits do not apply to buddies"
-msgstr "Limity kolejek nie dotyczą znajomych"
+msgstr "Limity nie dotyczą znajomych"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:243
 msgid "Each user may queue a maximum of either:"
@@ -6039,16 +5990,12 @@ msgid "Main tabs"
 msgstr "Główne zakładki"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:869
-#, fuzzy
 msgid "Show reverse file paths (requires a restart)"
-msgstr ""
-"Pokaż odwrotne ścieżki plików w widokach wyszukiwania i transferu (wymaga "
-"ponownego uruchomienia)"
+msgstr "Pokaż odwrotne ścieżki plików (wymaga ponownego uruchomienia)"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:876
-#, fuzzy
 msgid "Show exact file sizes (requires a restart)"
-msgstr "Interfejs sieciowy (wymaga restartu):"
+msgstr "Pokaż dokładne rozmiary plików (wymaga ponownego uruchomienia)"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:896
 msgid "List text color:"
@@ -6059,9 +6006,8 @@ msgid "Queued search result text color:"
 msgstr "Kolor tekstu wyników wyszukiwania w kolejce:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1006
-#, fuzzy
 msgid "Enable colored usernames"
-msgstr "Nazwy użytkowników czatów"
+msgstr "Włącz kolorowe nazwy użytkowników"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1019
 msgid "Chat username appearance:"
@@ -6212,9 +6158,8 @@ msgid "Refresh Files"
 msgstr "Odśwież pliki"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:83
-#, fuzzy
 msgid "Edit Profile"
-msgstr "Edytuj filtr"
+msgstr "Edytuj profil"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:136
 msgid "Shared Files"
@@ -6241,18 +6186,16 @@ msgid "Upload Speed"
 msgstr "Prędkość wysyłania"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:363
-#, fuzzy
 msgid "Edit Interests"
-msgstr "Zainteresowania"
+msgstr "Edytuj zainteresowania"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:649
 msgid "Save _Picture"
 msgstr "Zapisz _zdjęcie"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:687
-#, fuzzy
 msgid "_Refresh Profile"
-msgstr "Odśwież pliki"
+msgstr "_Odśwież profil"
 
 #: pynicotine/plugins/core_commands/PLUGININFO:3
 #, fuzzy

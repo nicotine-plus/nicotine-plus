@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
-"PO-Revision-Date: 2023-05-04 19:22+0000\n"
+"PO-Revision-Date: 2023-05-09 10:01+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
@@ -340,7 +340,7 @@ msgstr "Teile nicht verfügbar"
 msgid ""
 "Verify that external disks are mounted and folder permissions are correct."
 msgstr ""
-"Stellen Sie sicher, dass externe Datenträger bereitgestellt sind und die "
+"Stelle sicher, dass externe Datenträger bereitgestellt sind und die "
 "Ordnerberechtigungen korrekt sind."
 
 #: pynicotine/gtkgui/application.py:317 pynicotine/gtkgui/application.py:339
@@ -369,9 +369,9 @@ msgid ""
 "User %s already exists, and the password you entered is invalid. Please "
 "choose another username if this is your first time logging in."
 msgstr ""
-"Der Benutzer %s existiert bereits, und das von Ihnen eingegebene Passwort "
-"ist ungültig. Bitte wählen Sie einen anderen Benutzernamen, wenn Sie sich "
-"zum ersten Mal anmelden."
+"Der Benutzer %s existiert bereits, und das eingegebene Passwort ist "
+"ungültig. Bitte wähle einen anderen Benutzernamen, falls das die erste "
+"Anmeldung ist."
 
 #: pynicotine/gtkgui/application.py:340
 msgid "Change _Login Details"
@@ -399,7 +399,7 @@ msgstr "Private Nachricht an alle Online-Freunde senden:"
 
 #: pynicotine/gtkgui/application.py:531
 msgid "Select a Saved Shares List File"
-msgstr "Wählen Sie eine gespeicherte Freigabeliste"
+msgstr "Wähle eine gespeicherte Freigabeliste"
 
 #: pynicotine/gtkgui/application.py:611
 msgid "Critical Error"
@@ -411,8 +411,7 @@ msgid ""
 "the following message and include it in a bug report:"
 msgstr ""
 "Nicotine+ ist auf einen kritischen Fehler gestoßen und muss beendet werden. "
-"Bitte kopieren Sie die folgende Meldung und fügen Sie sie in einen "
-"Fehlerbericht ein:"
+"Bitte kopiere die folgende Meldung und füge es in einen Fehlerbericht ein:"
 
 #: pynicotine/gtkgui/application.py:615
 msgid "_Quit Nicotine+"
@@ -429,7 +428,7 @@ msgstr "Neuen Raum erstellen?"
 #: pynicotine/gtkgui/chatrooms.py:185
 #, python-format
 msgid "Do you really want to create a new room \"%s\"?"
-msgstr "Möchten Sie wirklich einen neuen Raum \"%s\" erstellen?"
+msgstr "Möchtest du wirklich einen neuen Raum \"%s\" erstellen?"
 
 #: pynicotine/gtkgui/chatrooms.py:186
 msgid "Make room private"
@@ -581,7 +580,7 @@ msgstr "Protokollierte Nachrichten löschen?"
 msgid ""
 "Do you really want to permanently delete all logged messages for this room?"
 msgstr ""
-"Möchten Sie wirklich alle protokollierten Nachrichten für diesen Raum "
+"Möchtest du wirklich alle protokollierten Nachrichten für diesen Raum "
 "dauerhaft löschen?"
 
 #: pynicotine/gtkgui/dialogs/about.py:348
@@ -739,7 +738,7 @@ msgstr "Passwortänderung abgelehnt"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:220
 msgid "Enter a new password for your Soulseek account:"
-msgstr "Geben Sie ein neues Passwort für Ihr Soulseek-Konto ein:"
+msgstr "Gebe ein neues Passwort für das Soulseek-Konto ein:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:222
 msgid ""
@@ -747,14 +746,13 @@ msgid ""
 "the password of an existing Soulseek account, you need to be logged into "
 "that account."
 msgstr ""
-"Sie sind derzeit vom Soulseek-Netzwerk abgemeldet. Wenn Sie das Passwort "
-"eines bestehenden Soulseek-Kontos ändern möchten, müssen Sie in diesem Konto "
+"Du bist derzeit vom Soulseek-Netzwerk abgemeldet. Wenn du das Passwort eines "
+"bestehenden Soulseek-Kontos ändern möchtest, müsst du in diesem Konto "
 "angemeldet sein."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:225
 msgid "Enter password to use when logging in:"
-msgstr ""
-"Geben Sie das Passwort ein, das Sie bei der Anmeldung verwenden möchten:"
+msgstr "Gebe das Passwort für die Anmeldung ein:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:229
 #: pynicotine/gtkgui/ui/settings/network.ui:98
@@ -789,7 +787,7 @@ msgstr "Downloadfilter bearbeiten"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:431
 msgid "Modify the following download filter:"
-msgstr "Ändern Sie den folgenden Download-Filter:"
+msgstr "Ändere den folgenden Download-Filter:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:496
 #, python-format

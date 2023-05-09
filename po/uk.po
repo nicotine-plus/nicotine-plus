@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
-"PO-Revision-Date: 2023-04-02 00:16+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2023-05-06 20:32+0000\n"
+"Last-Translator: Vladyslav Anisimov <uniss@ua.fm>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/uk/>\n"
 "Language: uk\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.17-dev\n"
+"X-Generator: Weblate 4.18-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -826,7 +826,7 @@ msgstr "Лише для друзів"
 #: pynicotine/gtkgui/dialogs/preferences.py:680
 #, fuzzy
 msgid "Share with buddies only"
-msgstr "Поділитися лише з друзями?"
+msgstr "Поділитися лише з друзями"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:868
 #: pynicotine/gtkgui/dialogs/preferences.py:1000
@@ -918,7 +918,7 @@ msgstr "Заміна"
 #: pynicotine/gtkgui/dialogs/preferences.py:1378
 #, fuzzy
 msgid "Enter a text pattern and what to replace it with"
-msgstr "Введіть шаблон тексту та заміну відповідно:"
+msgstr "Введіть шаблон тексту та чим замінити"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1406
 #, fuzzy
@@ -2006,7 +2006,7 @@ msgstr "Вивантажити файл(-и) користувачеві"
 #: pynicotine/gtkgui/userinfo.py:306
 #, fuzzy
 msgid "Copy Picture"
-msgstr "Зображення:"
+msgstr "Копіювати Зображення"
 
 #: pynicotine/gtkgui/userinfo.py:307
 msgid "Save Picture"
@@ -2035,7 +2035,7 @@ msgstr "Видалити б_ажання"
 #: pynicotine/gtkgui/userinfo.py:421
 #, fuzzy
 msgid "Add _Buddy"
-msgstr "Додати друга…"
+msgstr "Додати _друга"
 
 #: pynicotine/gtkgui/userinfo.py:425
 #, fuzzy
@@ -2238,7 +2238,7 @@ msgstr "Непрочитані вкладинки"
 #: pynicotine/gtkgui/widgets/iconnotebook.py:403
 #, fuzzy
 msgid "All Tabs"
-msgstr "Закрити всі вкладки?"
+msgstr "Всі вкладки"
 
 #: pynicotine/gtkgui/widgets/notifications.py:133
 #, python-format
@@ -2269,7 +2269,7 @@ msgstr "_Перегляд файлів"
 #: pynicotine/gtkgui/widgets/popupmenu.py:391
 #, fuzzy
 msgid "_Add Buddy"
-msgstr "Додати друга…"
+msgstr "Д_одати друга"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:362
 #: pynicotine/gtkgui/widgets/popupmenu.py:389
@@ -3552,7 +3552,7 @@ msgstr "Скажіть щось від третьої особи"
 #: pynicotine/plugins/core_commands/__init__.py:88
 #, fuzzy
 msgid "Join chat room"
-msgstr "Приєднайтеся або створіть кімнату…"
+msgstr "Приєднатися до кімнати"
 
 #: pynicotine/plugins/core_commands/__init__.py:96
 #, fuzzy
@@ -3577,7 +3577,7 @@ msgstr "Закрийте поточний приватний чат"
 #: pynicotine/plugins/core_commands/__init__.py:128
 #, fuzzy
 msgid "Send private message to user"
-msgstr "Надіслати приватне повідомлення всім друзям онлайн:"
+msgstr "Надіслати приватне повідомлення користувачу"
 
 #: pynicotine/plugins/core_commands/__init__.py:136
 #, fuzzy
@@ -4201,7 +4201,7 @@ msgstr ""
 #: pynicotine/gtkgui/ui/chatrooms.ui:97 pynicotine/gtkgui/ui/privatechat.ui:51
 #, fuzzy
 msgid "Send message…"
-msgstr "Відправити повідомлення"
+msgstr "Відправити повідомлення…"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:104 pynicotine/gtkgui/ui/privatechat.ui:58
 msgid "Toggle Text-to-Speech"
@@ -4873,7 +4873,7 @@ msgstr "Обмеження швидкості завантаження"
 #: pynicotine/gtkgui/ui/settings/downloads.ui:134
 #, fuzzy
 msgid "Unlimited download speed"
-msgstr "Обмеження швидкості вивантаження:"
+msgstr "Необмежена швидкість завантаження"
 
 #: pynicotine/gtkgui/ui/popovers/downloadspeeds.ui:49
 #: pynicotine/gtkgui/ui/settings/downloads.ui:144
@@ -5211,7 +5211,7 @@ msgstr "Обмеження швидкості вивантаження"
 #: pynicotine/gtkgui/ui/settings/uploads.ui:157
 #, fuzzy
 msgid "Unlimited upload speed"
-msgstr "Обмеження швидкості вивантаження:"
+msgstr "Необмежена швидкість вивантаження"
 
 #: pynicotine/gtkgui/ui/popovers/uploadspeeds.ui:49
 #: pynicotine/gtkgui/ui/settings/uploads.ui:167
