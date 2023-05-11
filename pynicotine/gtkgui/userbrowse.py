@@ -522,8 +522,8 @@ class UserBrowse:
 
         self.retry_button.set_visible(True)
         self.info_bar.show_message(
-            _("Unable to request shared files from user. Either the user is offline, you both have "
-              "a closed listening port, or there's a temporary connectivity issue."),
+            _("Unable to request shared files from user. Either the user is offline, the listening ports "
+              "are closed on both sides, or there is a temporary connectivity issue."),
             message_type=Gtk.MessageType.ERROR
         )
 
