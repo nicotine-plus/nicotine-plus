@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
-"PO-Revision-Date: 2023-05-09 10:01+0000\n"
+"PO-Revision-Date: 2023-05-12 13:21+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
@@ -821,7 +821,7 @@ msgstr "Benutzer ignorieren"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:933
 msgid "Enter the name of the user you want to ignore:"
-msgstr "Geben Sie den Namen des Benutzers ein, den Sie ignorieren möchten:"
+msgstr "Geben den Namen des Benutzers ein, den du ignorieren möchtest:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:961
 #: pynicotine/gtkgui/widgets/popupmenu.py:368
@@ -831,7 +831,7 @@ msgstr "IP-Adresse ignorieren"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:962
 msgid "Enter an IP address you want to ignore:"
-msgstr "Geben Sie eine IP-Adresse ein, die Sie ignorieren möchten:"
+msgstr "Geben eine IP-Adresse ein, die du ignorieren möchtest:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:962
 #: pynicotine/gtkgui/dialogs/preferences.py:1115
@@ -846,7 +846,7 @@ msgstr "Benutzer blocken"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1085
 msgid "Enter the name of the user you want to ban:"
-msgstr "Geben Sie den Namen des Benutzers ein, den Sie blockieren möchten:"
+msgstr "Gebe den Namen des Benutzers ein, den du blockieren möchtest:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1114
 #: pynicotine/gtkgui/widgets/popupmenu.py:367
@@ -878,9 +878,9 @@ msgid ""
 "don't want to match strings inside words (may fail at the beginning and end "
 "of lines)."
 msgstr ""
-"Geben Sie ein Muster ein, das Sie zensiert haben möchten. Fügen Sie "
-"Leerzeichen um das Muster herum hinzu, wenn Sie Zeichenfolgen in Wörtern "
-"nicht abgleichen möchten (kann am Anfang und Ende von Zeilen fehlschlagen)."
+"Geben ein Muster ein, das du zensiert haben möchtest. Füge Leerzeichen um "
+"das Muster herum hinzu, wenn du Zeichenfolgen in Wörtern nicht abgleichen "
+"möchtest (kann am Anfang und Ende von Zeilen fehlschlagen)."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1345
 msgid "Edit Censored Pattern"
@@ -892,7 +892,7 @@ msgstr "Ersatz hinzufügen"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1378
 msgid "Enter a text pattern and what to replace it with"
-msgstr "Geben Sie ein Textmuster ein und womit es ersetzt werden soll"
+msgstr "Gebe ein Textmuster ein und womit es ersetzt werden soll"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1406
 msgid "Edit Replacement"
@@ -900,7 +900,7 @@ msgstr "Ersatz bearbeiten"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1407
 msgid "Enter a text pattern and what to replace it with:"
-msgstr "Geben Sie ein Textmuster ein und womit es ersetzt werden soll:"
+msgstr "Gebe ein Textmuster ein und womit es ersetzt werden soll:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1474
 msgid "Top"
@@ -987,7 +987,7 @@ msgstr "URL-Handler hinzufügen"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2069
 msgid "Enter the protocol and the command for the URL handler:"
-msgstr "Geben Sie das Protokoll und den Befehl für den URL-Handler ein:"
+msgstr "Gebe das Protokoll und den Befehl für den URL-Händler ein:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2096
 msgid "Edit Command"
@@ -996,7 +996,7 @@ msgstr "Befehl bearbeiten"
 #: pynicotine/gtkgui/dialogs/preferences.py:2097
 #, python-format
 msgid "Enter a new command for protocol %s:"
-msgstr "Geben Sie einen neuen Befehl für das Protokoll %s ein:"
+msgstr "Gebe einen neuen Befehl für das Protokoll %s ein:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2234
 msgid "Username;APIKEY:"
@@ -1091,7 +1091,7 @@ msgstr "Präferenzen"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2829
 msgid "Pick a File Name for Config Backup"
-msgstr "Wählen Sie einen Dateinamen für die Konfigurationssicherung"
+msgstr "Wähle einen Dateinamen für die Konfigurationssicherung"
 
 #: pynicotine/gtkgui/dialogs/statistics.py:61
 msgid "Transfer Statistics"
@@ -1108,7 +1108,7 @@ msgstr "Übertragungsstatistik zurücksetzen?"
 
 #: pynicotine/gtkgui/dialogs/statistics.py:103
 msgid "Do you really want to reset transfer statistics?"
-msgstr "Möchten Sie die Übertragungsstatistik wirklich zurücksetzen?"
+msgstr "Übertragungsstatistik wirklich zurücksetzen?"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:46
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:314
@@ -1134,7 +1134,7 @@ msgstr "Wunschliste löschen?"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:148
 msgid "Do you really want to clear your wishlist?"
-msgstr "Möchten Sie Ihre Wunschliste wirklich löschen?"
+msgstr "Wunschliste wirklich löschen?"
 
 #: pynicotine/gtkgui/downloads.py:44
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:157
@@ -1184,7 +1184,7 @@ msgstr "Löschen von Downloads in der Warteschlange"
 
 #: pynicotine/gtkgui/downloads.py:112
 msgid "Do you really want to clear all queued downloads?"
-msgstr "Möchten Sie wirklich alle Downloads in der Warteschlange löschen?"
+msgstr "Wirklich alle Downloads in der Warteschlange löschen?"
 
 #: pynicotine/gtkgui/downloads.py:124
 msgid "Clear All Downloads"
@@ -1192,7 +1192,7 @@ msgstr "Alle Downloads löschen"
 
 #: pynicotine/gtkgui/downloads.py:125
 msgid "Do you really want to clear all downloads?"
-msgstr "Möchten Sie wirklich alle Downloads löschen?"
+msgstr "Wirklich alle Downloads löschen?"
 
 #: pynicotine/gtkgui/downloads.py:137
 #, python-format
@@ -1205,8 +1205,7 @@ msgid ""
 "Do you really want to download %(num)i files from %(user)s's folder "
 "%(folder)s?"
 msgstr ""
-"Möchten Sie wirklich %(num)i-Dateien aus dem %(user)s-Ordner %(folder)s "
-"herunterladen?"
+"Wirklich %(num)i-Dateien aus dem %(user)s-Ordner %(folder)s herunterladen?"
 
 #: pynicotine/gtkgui/interests.py:70 pynicotine/gtkgui/userinfo.py:263
 msgid "Likes"
@@ -1551,8 +1550,8 @@ msgstr "Chatprotokoll löschen…"
 msgid ""
 "Do you really want to permanently delete all logged messages for this user?"
 msgstr ""
-"Möchten Sie wirklich alle protokollierten Nachrichten für diesen Benutzer "
-"dauerhaft löschen?"
+"Wirklich alle protokollierten Nachrichten für diesen Benutzer dauerhaft "
+"löschen?"
 
 #: pynicotine/gtkgui/privatechat.py:428
 #: pynicotine/gtkgui/widgets/notifications.py:70
@@ -1857,7 +1856,7 @@ msgstr "Uploads in der Warteschlange löschen"
 
 #: pynicotine/gtkgui/uploads.py:111
 msgid "Do you really want to clear all queued uploads?"
-msgstr "Möchten Sie wirklich alle Uploads in der Warteschlange löschen?"
+msgstr "Wirklich alle Uploads in der Warteschlange löschen?"
 
 #: pynicotine/gtkgui/uploads.py:123
 msgid "Clear All Uploads"
@@ -1865,7 +1864,7 @@ msgstr "Alle Uploads löschen"
 
 #: pynicotine/gtkgui/uploads.py:124
 msgid "Do you really want to clear all uploads?"
-msgstr "Möchten Sie wirklich alle Uploads löschen?"
+msgstr "Wirklich alle Uploads löschen?"
 
 #: pynicotine/gtkgui/userbrowse.py:217
 msgid "_Save Shares List to Disk"
@@ -1925,8 +1924,8 @@ msgid ""
 "both have a closed listening port, or there's a temporary connectivity issue."
 msgstr ""
 "Es ist nicht möglich, freigegebene Dateien vom Benutzer anzufordern. "
-"Entweder ist der Benutzer offline, Sie haben beide einen geschlossenen "
-"Empfangsport oder es gibt ein vorübergehendes Verbindungsproblem."
+"Entweder ist der Benutzer offline, die Empfangsporten sind beidseitig "
+"geschlossen oder es gibt ein vorübergehendes Verbindungsproblem."
 
 #: pynicotine/gtkgui/userbrowse.py:731
 msgid "Select Destination for Downloading Multiple Folders"
