@@ -7,7 +7,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
 "PO-Revision-Date: 2023-05-17 14:53+0000\n"
-"Last-Translator: Han <hboetes@gmail.com>\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/fi/>\n"
 "Language: fi\n"
@@ -5767,8 +5767,8 @@ msgid ""
 "Values must be entered as numeric digits only. The unit is always Kb/s "
 "(Kilobits per second)."
 msgstr ""
-"Arvot tulee syöttää vain numeerisina numeroina. Yksikkö on aina Kb/s "
-"(kilobittia sekunnissa)."
+"Arvot tulee syöttää vain numeerisina numeroina. Yksikkö on aina Kb/s ("
+"kilobittia sekunnissa)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:320
 #, fuzzy
@@ -6550,8 +6550,8 @@ msgid ""
 "until the uploader gives explicit permission. Ask them kindly."
 msgstr ""
 "Muut asiakkaat voivat tarjota mahdollisuuden lähettää yksityisesti jaettuja "
-"tiedostoja vastauksena hakupyyntöihin. Tällaiset tiedostot on etuliitteenä "
-"\"[PRIVATE FILE]\", eivätkä ne ole ladattavissa, ellei lataaja anna "
+"tiedostoja vastauksena hakupyyntöihin. Tällaiset tiedostot on etuliitteenä \""
+"[PRIVATE FILE]\", eivätkä ne ole ladattavissa, ellei lataaja anna "
 "nimenomaista lupaa."
 
 #: pynicotine/gtkgui/ui/settings/search.ui:75
@@ -6968,8 +6968,8 @@ msgstr "Päävälilehdet"
 #, fuzzy
 msgid "Show reverse file paths (requires a restart)"
 msgstr ""
-"Käänteisten tiedostopolkujen näyttäminen haku- ja siirtonäkökoissa "
-"(edellyttää uudelleenkäynnistystä)"
+"Käänteisten tiedostopolkujen näyttäminen haku- ja siirtonäkökoissa ("
+"edellyttää uudelleenkäynnistystä)"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:876
 #, fuzzy
