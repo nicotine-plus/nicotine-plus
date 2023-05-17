@@ -7,7 +7,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
 "PO-Revision-Date: 2023-05-17 14:53+0000\n"
-"Last-Translator: MELERIX <melerix@outlook.com>\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Spanish (Chile) <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/es_CL/>\n"
 "Language: es_CL\n"
@@ -127,8 +127,8 @@ msgstr ""
 msgid ""
 "Failed to scan shares. Please close other Nicotine+ instances and try again."
 msgstr ""
-"Fallo al escanear compartidos. Por favor cierra otras instancias de Nicotine"
-"+ e intenta de nuevo."
+"Fallo al escanear compartidos. Por favor cierra otras instancias de Nicotine+"
+" e intenta de nuevo."
 
 #: pynicotine/chatrooms.py:254
 #, python-format
@@ -2444,8 +2444,7 @@ msgstr "Tierra"
 #: pynicotine/logfacility.py:156
 #, python-format
 msgid "Couldn't write to log file \"%(filename)s\": %(error)s"
-msgstr ""
-"No se pudo escribir en el archivo de registro «%(filename)s»: %(error)s"
+msgstr "No se pudo escribir en el archivo de registro «%(filename)s»: %(error)s"
 
 #: pynicotine/logfacility.py:204
 #, fuzzy, python-format
@@ -3923,8 +3922,7 @@ msgstr "Reanálisis abortado debido a recursos compartidos no disponibles"
 #: pynicotine/shares.py:942
 #, python-format
 msgid "User %(user)s is browsing your list of shared files"
-msgstr ""
-"El usuario %(user)s está navegando por su lista de archivos compartidos"
+msgstr "El usuario %(user)s está navegando por su lista de archivos compartidos"
 
 #: pynicotine/shares.py:1005
 #, python-format
@@ -5934,8 +5932,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/search.ui:487
 msgid "Searches shorter than this number of characters will be ignored:"
-msgstr ""
-"Las búsquedas más cortas que este número de caracteres serán ignoradas:"
+msgstr "Las búsquedas más cortas que este número de caracteres serán ignoradas:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:513
 msgid "Maximum search results to send per search request:"
@@ -6050,8 +6047,8 @@ msgstr "Primero en entrar, Primero en salir"
 #: pynicotine/gtkgui/ui/settings/uploads.ui:362
 msgid "Queue uploads if total transfer speed reaches (KiB/s):"
 msgstr ""
-"Poner en cola las subidas si la velocidad total de transferencia alcanza "
-"(KiB/s):"
+"Poner en cola las subidas si la velocidad total de transferencia alcanza ("
+"KiB/s):"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:387
 msgid "Limit number of upload slots to:"
