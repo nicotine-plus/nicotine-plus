@@ -171,10 +171,10 @@ class Scanner(Process):
     def create_compressed_shares_message(self, share_type):
         """ Create a message that will later contain a compressed list of our shares """
 
-        if share_type == "buddy":
-            streams = self.share_dbs.get("buddystreams")
-        else:
+        if share_type == "public":
             streams = self.share_dbs.get("streams")
+        else:
+            streams = self.share_dbs.get(f"{share_type}streams")
 
         compressed_shares = slskmessages.SharedFileListResponse(shares=streams)
         compressed_shares.make_network_message()
@@ -248,10 +248,10 @@ class Scanner(Process):
             if source is None:
                 continue
 
-            try:
-                if share_type == "buddy":
-                    destination = "buddy" + destination
+            if share_type != "public":
+                destination = f"{share_type}{destination}"
 
+            try:
                 self.share_dbs[destination] = share_db = self.create_db_file(destination)
                 share_db.update(source)
 
@@ -558,8 +558,10 @@ class Shares:
         self.pending_network_msgs = []
         self.rescanning = False
         self.should_compress_shares = False
-        self.compressed_shares_public = slskmessages.SharedFileListResponse()
-        self.compressed_shares_buddy = slskmessages.SharedFileListResponse()
+        self.compressed_shares = {}
+
+        for share_type in ["public", "buddy"]:
+            self.compressed_shares[share_type] = slskmessages.SharedFileListResponse()
 
         self.convert_shares()
         self.share_db_paths = [
@@ -746,27 +748,13 @@ class Shares:
         if self.should_compress_shares:
             self.rescan_shares(init=True, rescan=False)
 
-        if share_type == "buddy":
-            return self.compressed_shares_buddy
-
-        return self.compressed_shares_public
+        return self.compressed_shares.get(share_type)
 
     @staticmethod
     def close_shares(share_dbs):
-
-        dbs = [
-            "files", "streams", "wordindex",
-            "fileindex", "mtimes",
-            "buddyfiles", "buddystreams", "buddywordindex",
-            "buddyfileindex", "buddymtimes"
-        ]
-
-        for database in dbs:
-            db_file = share_dbs.get(database)
-
-            if db_file is not None:
-                share_dbs[database].close()
-                del share_dbs[database]
+        for database in share_dbs.copy():
+            share_dbs[database].close()
+            del share_dbs[database]
 
     def send_num_shared_folders_files(self):
         """ Send number publicly shared files to the server. """
@@ -848,12 +836,7 @@ class Shares:
                     emit_event("set-scan-indeterminate")
 
                 elif isinstance(item, slskmessages.SharedFileListResponse):
-                    if item.type == "public":
-                        self.compressed_shares_public = item
-
-                    elif item.type == "buddy":
-                        self.compressed_shares_buddy = item
-
+                    self.compressed_shares[item.type] = item
                     self.should_compress_shares = False
 
         return False
