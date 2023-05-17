@@ -7,7 +7,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
 "PO-Revision-Date: 2023-05-17 14:53+0000\n"
-"Last-Translator: Vladyslav Anisimov <uniss@ua.fm>\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/uk/>\n"
 "Language: uk\n"
@@ -322,8 +322,8 @@ msgstr "Не вдається знайти %s, будь ласка, встано
 #, fuzzy
 msgid "No graphical environment available, using headless (no GUI) mode"
 msgstr ""
-"Немає доступного графічного середовища, використовується безголовий режим "
-"(без GUI)."
+"Немає доступного графічного середовища, використовується безголовий режим ("
+"без GUI)."
 
 #: pynicotine/gtkgui/application.py:287
 #: pynicotine/plugins/core_commands/__init__.py:68
@@ -6173,8 +6173,8 @@ msgstr "Основні вкладки"
 #, fuzzy
 msgid "Show reverse file paths (requires a restart)"
 msgstr ""
-"Показувати зворотні шляхи до файлів у переглядах пошуку та передачі "
-"(потрібно перезавантажити)"
+"Показувати зворотні шляхи до файлів у переглядах пошуку та передачі ("
+"потрібно перезавантажити)"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:876
 #, fuzzy
