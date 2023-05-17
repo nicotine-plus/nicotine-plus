@@ -91,6 +91,7 @@
                 <property name="margin-start">24</property>
                 <property name="margin-end">24</property>
                 <property name="use-underline">True</property>
+                <property name="mnemonic-widget">set_up_button</property>
               </object>
             </child>
             <style>
