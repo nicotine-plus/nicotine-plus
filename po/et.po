@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
-"PO-Revision-Date: 2023-04-02 00:16+0000\n"
+"PO-Revision-Date: 2023-05-17 14:54+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Estonian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/et/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.17-dev\n"
+"X-Generator: Weblate 4.18-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -3894,8 +3894,7 @@ msgstr "Automaatselt tuvastatud MPRIS-mängija: %s"
 #: pynicotine/nowplaying.py:213
 #, fuzzy, python-format
 msgid "MPRIS: Something went wrong while querying %(player)s: %(exception)s"
-msgstr ""
-"MPRIS: midagi läks päringu %(player)s: %(exception)s esitamisel valesti"
+msgstr "MPRIS: midagi läks päringu %(player)s: %(exception)s esitamisel valesti"
 
 #: pynicotine/nowplaying.py:260
 #, fuzzy
@@ -5484,8 +5483,8 @@ msgid ""
 "Case is insensitive, but word order is important: 'Instrumental Remix' will "
 "not show any 'Remix Instrumental'"
 msgstr ""
-"Tõstu ei ole tundlik, kuid sõnade järjekord on oluline: \"Instrumental Remix"
-"\" ei näita ühtegi \"Remix Instrumental\""
+"Tõstu ei ole tundlik, kuid sõnade järjekord on oluline: \"Instrumental "
+"Remix\" ei näita ühtegi \"Remix Instrumental\""
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:115
 #, fuzzy
@@ -5591,8 +5590,8 @@ msgid ""
 "space between each condition to include a range:\n"
 "    >10.5m <1g to show files larger than 10.5 MiB, but smaller than 1 GiB."
 msgstr ""
-"Antud väärtusest väiksemate/suuremate failide leidmiseks lisage ette < või "
-">:\n"
+"Antud väärtusest väiksemate/suuremate failide leidmiseks lisage ette < või >:"
+"\n"
 "    >10,5m|<1g, et näidata faile, mis on suuremad kui 10,5 MiB (mebibaiti),\n"
 "    kuid väiksem kui 1 GiB (gibibaiti), kasutage a | tingimuste vahel."
 
@@ -5616,8 +5615,8 @@ msgid ""
 "Values must be entered as numeric digits only. The unit is always Kb/s "
 "(Kilobits per second)."
 msgstr ""
-"Väärtused tuleb sisestada ainult numbriliste numbritena. Ühik on alati Kb/s "
-"(kilobitti sekundis)."
+"Väärtused tuleb sisestada ainult numbriliste numbritena. Ühik on alati Kb/s ("
+"kilobitti sekundis)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:320
 #, fuzzy
