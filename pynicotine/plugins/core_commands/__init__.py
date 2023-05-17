@@ -82,6 +82,12 @@ class Plugin(BasePlugin):
                 "group": _CommandGroup.CHAT,
                 "usage": ["<something..>"]
             },
+            "now": {
+                "callback": self.now_command,
+                "description": _("Announce the song currently playing"),
+                "disable": ["cli"],
+                "group": _CommandGroup.CHAT
+            },
             "join": {
                 "aliases": ["j"],
                 "callback": self.join_command,
@@ -323,6 +329,9 @@ class Plugin(BasePlugin):
 
     def me_command(self, args, **_unused):
         self.send_message("/me " + args)  # /me is sent as plain text
+
+    def now_command(self, _args, **_unused):
+        self.core.now_playing.display_now_playing(callback=self.send_message)
 
     """ Chat Rooms """
 
