@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-27 22:26+0200\n"
-"PO-Revision-Date: 2023-05-12 13:21+0000\n"
+"PO-Revision-Date: 2023-05-13 20:21+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -7023,7 +7023,7 @@ msgstr "%(num)i elérhető parancs listázása:"
 #, python-format
 msgid "Listing %(num)i available commands matching \"%(query)s\":"
 msgstr ""
-"A \\\"%(query)s\\\" kérdésnek megfelelő %(num)i elérhető parancs felsorolása:"
+"A \"%(query)s\" kérdésnek megfelelő %(num)i elérhető parancs felsorolása:"
 
 #: pynicotine/plugins/core_commands/__init__.py:286
 #, python-format
