@@ -128,6 +128,14 @@ class Plugin(BasePlugin):
                 "usage_chatroom": ["<user>"],
                 "usage_private_chat": ["[user]"]
             },
+            "ctcpversion": {
+                "callback": self.ctcpversion_command,
+                "description": _("Request user's client version"),
+                "disable": ["cli"],
+                "group": _CommandGroup.PRIVATE_CHAT,
+                "usage_chatroom": ["<user>"],
+                "usage_private_chat": ["[user]"]
+            },
             "msg": {
                 "aliases": ["m"],
                 "callback": self.msg_command,
@@ -379,6 +387,13 @@ class Plugin(BasePlugin):
         self.output(f"Closing private chat of user {user}")
         self.core.privatechat.remove_user(user)
         return True
+
+    def ctcpversion_command(self, args, user=None, **_unused):
+
+        if args:
+            user = args
+
+        self.send_private(user, self.core.privatechat.CTCP_VERSION, show_ui=True)
 
     def msg_command(self, args, **_unused):
 
