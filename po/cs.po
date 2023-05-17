@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
-"PO-Revision-Date: 2023-04-02 00:16+0000\n"
+"PO-Revision-Date: 2023-05-17 14:53+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/cs/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Weblate 4.17-dev\n"
+"X-Generator: Weblate 4.18-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -1944,8 +1944,8 @@ msgid ""
 "Filtered out incorrect search result %(filepath)s from user %(user)s for "
 "search query \"%(query)s\""
 msgstr ""
-"Odfiltrován nesprávný výsledek vyhledávání %(filepath)s od uživatele "
-"%(user)s pro vyhledávací dotaz \"%(query)s\""
+"Odfiltrován nesprávný výsledek vyhledávání %(filepath)s od uživatele %(user)"
+"s pro vyhledávací dotaz \"%(query)s\""
 
 #: pynicotine/gtkgui/search.py:713 pynicotine/gtkgui/userbrowse.py:459
 #, fuzzy, python-format
@@ -4383,8 +4383,7 @@ msgstr ""
 #, fuzzy, python-format
 msgid ""
 "%(protocol)s: Failed to forward external port %(external_port)s: %(error)s"
-msgstr ""
-"UPnP: Nepodařilo se přeposlat externí port %(external_port)s: %(error)s"
+msgstr "UPnP: Nepodařilo se přeposlat externí port %(external_port)s: %(error)s"
 
 #: pynicotine/privatechat.py:212
 #, fuzzy, python-format
@@ -6600,8 +6599,8 @@ msgid ""
 "until the uploader gives explicit permission. Ask them kindly."
 msgstr ""
 "Ostatní klienti mohou nabídnout možnost odesílat soukromě sdílené soubory v "
-"reakci na žádosti o vyhledávání. Tyto soubory mají předponu \"[PRIVATE "
-"FILE]\" a nelze je stáhnout, pokud uploader nepovolí výslovné oprávnění."
+"reakci na žádosti o vyhledávání. Tyto soubory mají předponu \"[PRIVATE FILE]"
+"\" a nelze je stáhnout, pokud uploader nepovolí výslovné oprávnění."
 
 #: pynicotine/gtkgui/ui/settings/search.ui:75
 #, fuzzy
@@ -7022,8 +7021,8 @@ msgstr "Hlavní karty"
 #, fuzzy
 msgid "Show reverse file paths (requires a restart)"
 msgstr ""
-"Zobrazení cest k reverzním souborům v zobrazeních vyhledávání a přenosu "
-"(vyžaduje restartování)"
+"Zobrazení cest k reverzním souborům v zobrazeních vyhledávání a přenosu ("
+"vyžaduje restartování)"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:876
 #, fuzzy
