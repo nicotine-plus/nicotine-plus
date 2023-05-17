@@ -7,7 +7,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
 "PO-Revision-Date: 2023-05-17 14:52+0000\n"
-"Last-Translator: Han <hboetes@gmail.com>\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Basque <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/eu/>\n"
 "Language: eu\n"
@@ -165,8 +165,7 @@ msgstr ""
 #: pynicotine/config.py:139 pynicotine/config.py:158
 #, python-format
 msgid "Can't create directory '%(path)s', reported error: %(error)s"
-msgstr ""
-"Ezin da '%(path)s' direktorioa sortu, jakinarazitako errorea: %(error)s"
+msgstr "Ezin da '%(path)s' direktorioa sortu, jakinarazitako errorea: %(error)s"
 
 #: pynicotine/config.py:819
 #, fuzzy, python-format
@@ -4356,8 +4355,7 @@ msgstr ""
 #, fuzzy, python-format
 msgid ""
 "%(protocol)s: Failed to forward external port %(external_port)s: %(error)s"
-msgstr ""
-"UPnP: Ezin izan da kanpoko ataka birbidali %(external_port)s: %(error)s"
+msgstr "UPnP: Ezin izan da kanpoko ataka birbidali %(external_port)s: %(error)s"
 
 #: pynicotine/privatechat.py:212
 #, fuzzy, python-format
@@ -4547,8 +4545,7 @@ msgstr "I / O errorea kargatzean: %s"
 #: pynicotine/transfers.py:1160
 #, python-format
 msgid "Can't get an exclusive lock on file - I/O error: %s"
-msgstr ""
-"Ezin da blokeo esklusiboa lortu fitxategiaren gainean - S/I errorea: %s"
+msgstr "Ezin da blokeo esklusiboa lortu fitxategiaren gainean - S/I errorea: %s"
 
 #: pynicotine/transfers.py:1173
 #, fuzzy, python-format
@@ -5863,8 +5860,8 @@ msgid ""
 "States.\n"
 "    !GB will hide results that come from users in Great Britain."
 msgstr ""
-"ISO 3166-2-k definitutako herrialde-kodeak erabiltzen ditu (ikus "
-"Wikipedia):\n"
+"ISO 3166-2-k definitutako herrialde-kodeak erabiltzen ditu (ikus Wikipedia):"
+"\n"
 "    \"AEB\" k Estatu Batuetatik konektatutako erabiltzaileen fitxategiak "
 "soilik itzuliko ditu. Era berean, \"GB\" k Erresuma Batuko IPak dituzten "
 "erabiltzaileen fitxategiak itzultzen ditu."
@@ -6587,8 +6584,8 @@ msgid ""
 "until the uploader gives explicit permission. Ask them kindly."
 msgstr ""
 "Beste bezero batzuek modu pribatuan partekatutako fitxategiak bidaltzeko "
-"aukera eskain dezakete bilaketa eskaerei erantzunez. Fitxategi horiek "
-"\"[FITXATU PRIBATUA]\" izenarekin aurrez zehaztuta daude, eta ezin dira "
+"aukera eskain dezakete bilaketa eskaerei erantzunez. Fitxategi horiek \"["
+"FITXATU PRIBATUA]\" izenarekin aurrez zehaztuta daude, eta ezin dira "
 "deskargatu kargatzaileak baimen esplizitua eman ezean."
 
 #: pynicotine/gtkgui/ui/settings/search.ui:75
