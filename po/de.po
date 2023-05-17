@@ -7,7 +7,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
 "PO-Revision-Date: 2023-05-17 14:52+0000\n"
-"Last-Translator: Han <hboetes@gmail.com>\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
 "Language: de\n"
@@ -3905,8 +3905,8 @@ msgstr "Upload-E/A-Fehler: %s"
 #, python-format
 msgid "Can't get an exclusive lock on file - I/O error: %s"
 msgstr ""
-"Kann keine exklusive Zugriffsberechtigung auf Datei reklamieren – E/A "
-"Fehler: %s"
+"Kann keine exklusive Zugriffsberechtigung auf Datei reklamieren – E/A Fehler:"
+" %s"
 
 #: pynicotine/transfers.py:1173
 #, python-format
