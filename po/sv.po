@@ -7,7 +7,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
 "PO-Revision-Date: 2023-05-17 14:53+0000\n"
-"Last-Translator: Han <hboetes@gmail.com>\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/sv/>\n"
 "Language: sv\n"
@@ -4392,8 +4392,7 @@ msgstr "Servern tillåter inte sökningar i önskelistan för närvarande."
 #: pynicotine/search.py:556
 #, fuzzy, python-format
 msgid "User %(user)s is searching for \"%(query)s\", found %(num)i results"
-msgstr ""
-"Användaren %(user)s söker efter \"%(query)s\" och får %(num)i resultat."
+msgstr "Användaren %(user)s söker efter \"%(query)s\" och får %(num)i resultat."
 
 #: pynicotine/shares.py:73
 #, python-format
@@ -5727,8 +5726,8 @@ msgid ""
 "kibibyte, mebibyte, or gibibyte units:\n"
 "    20m to show files larger than 20 MiB (mebibytes)."
 msgstr ""
-"Lägg till b, k, m eller g (alternativt kib, mib eller gib) för att ange "
-"byte-, kibibyte-, mebibyte- eller gibibyte-enheter:\n"
+"Lägg till b, k, m eller g (alternativt kib, mib eller gib) för att ange byte-"
+", kibibyte-, mebibyte- eller gibibyte-enheter:\n"
 "    <1024k hittar filer som är 1024 kibabyte (dvs. 1 mbyte) eller mindre."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:239
@@ -5781,8 +5780,8 @@ msgid ""
 "Values must be entered as numeric digits only. The unit is always Kb/s "
 "(Kilobits per second)."
 msgstr ""
-"Värden måste endast anges som numeriska siffror. Enheten är alltid Kb/s "
-"(kilobit per sekund)."
+"Värden måste endast anges som numeriska siffror. Enheten är alltid Kb/s ("
+"kilobit per sekund)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:320
 #, fuzzy
