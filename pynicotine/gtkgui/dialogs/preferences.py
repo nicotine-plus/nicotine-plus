@@ -1372,7 +1372,7 @@ class ChatsPage:
         EntryDialog(
             parent=self.application.preferences,
             title=_("Add Replacement"),
-            message=_("Enter a text pattern and what to replace it with"),
+            message=_("Enter a text pattern and what to replace it with:"),
             callback=self.on_add_replacement_response,
             use_second_entry=True
         ).show()
