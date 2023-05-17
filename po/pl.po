@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
-"PO-Revision-Date: 2023-05-09 10:01+0000\n"
+"PO-Revision-Date: 2023-05-13 20:21+0000\n"
 "Last-Translator: Mariusz <wisniowy@g.pl>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/pl/>\n"
@@ -2175,9 +2175,8 @@ msgid "Unread Tabs"
 msgstr "Nieprzeczytane karty"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:403
-#, fuzzy
 msgid "All Tabs"
-msgstr "Zamknąć wszystkie karty?"
+msgstr "Wszystkie karty"
 
 #: pynicotine/gtkgui/widgets/notifications.py:133
 #, python-format
@@ -3459,7 +3458,6 @@ msgid "List available commands"
 msgstr "Lista dostępnych komend"
 
 #: pynicotine/plugins/core_commands/__init__.py:49
-#, fuzzy
 msgid "Toggle away status"
 msgstr "Przełącza Cię w status \"Zaraz wracam\""
 
@@ -3480,24 +3478,20 @@ msgid "Join chat room"
 msgstr "Dołącz do czatu"
 
 #: pynicotine/plugins/core_commands/__init__.py:96
-#, fuzzy
 msgid "Leave chat room"
 msgstr "Opuść ten pokój"
 
 #: pynicotine/plugins/core_commands/__init__.py:104
-#, fuzzy
 msgid "Say message in specified chat room"
 msgstr "Powiedz wiadomość w określonym pokoju rozmów"
 
 #: pynicotine/plugins/core_commands/__init__.py:111
-#, fuzzy
 msgid "Open private chat"
-msgstr "Czat prywatny:"
+msgstr "Otwórz czat prywatny"
 
 #: pynicotine/plugins/core_commands/__init__.py:119
-#, fuzzy
 msgid "Close private chat"
-msgstr "Zamknij aktualny prywatny czat"
+msgstr "Zamknij czat prywatny"
 
 #: pynicotine/plugins/core_commands/__init__.py:128
 msgid "Send private message to user"
@@ -3536,16 +3530,14 @@ msgid "Silence messages from user or IP address"
 msgstr "Wycisz wiadomości od użytkownika lub adresu IP"
 
 #: pynicotine/plugins/core_commands/__init__.py:198
-#, fuzzy
 msgid "Remove user or IP address from ignore lists"
-msgstr "Usuń użytkownika z listy ignorowanych"
+msgstr "Usuń użytkownika lub adres IP z listy ignorowanych"
 
 #: pynicotine/plugins/core_commands/__init__.py:206
 msgid "Rescan shares"
 msgstr "Przeskanuj udostępnione zasoby"
 
 #: pynicotine/plugins/core_commands/__init__.py:213
-#, fuzzy
 msgid "List shares"
 msgstr "Wylistuj udostępnione zasoby"
 
@@ -3554,29 +3546,26 @@ msgid "Start global file search"
 msgstr "Rozpocznij globalne wyszukiwanie plików"
 
 #: pynicotine/plugins/core_commands/__init__.py:228
-#, fuzzy
 msgid "Search files in joined rooms"
-msgstr "Wyszukiwanie plików i folderów"
+msgstr "Wyszukiwanie plików wśród dołączonych pokojów"
 
 #: pynicotine/plugins/core_commands/__init__.py:236
 msgid "Search files of all buddies"
 msgstr "Wyszukiwanie plików wśród znajomych"
 
 #: pynicotine/plugins/core_commands/__init__.py:244
-#, fuzzy
 msgid "Search a user's shared files"
-msgstr "Przeszukaj zasoby użytkownika pod kątem frazy 'zapytanie'"
+msgstr "Wyszukiwanie wśród plików udostępnionych przez użytkownika"
 
 #: pynicotine/plugins/core_commands/__init__.py:272
-#, fuzzy, python-format
+#, python-format
 msgid "Listing %(num)i available commands:"
-msgstr "Lista dostępnych poleceń %(num)i:"
+msgstr "Zestawienie %(num)i dostępnych poleceń:"
 
 #: pynicotine/plugins/core_commands/__init__.py:274
-#, fuzzy, python-format
+#, python-format
 msgid "Listing %(num)i available commands matching \"%(query)s\":"
-msgstr ""
-"Wyświetlanie listy dostępnych poleceń %(num)i pasujących do „%(query)s”:"
+msgstr "Lista %(num)i dostępnych poleceń pasujących do \"%(query)s\":"
 
 #: pynicotine/plugins/core_commands/__init__.py:286
 #, python-format
@@ -3590,9 +3579,9 @@ msgstr "Wpisz %(command)s, aby wyświetlić listę dostępnych poleceń"
 
 #: pynicotine/plugins/core_commands/__init__.py:338
 #: pynicotine/plugins/core_commands/__init__.py:350
-#, fuzzy, python-format
+#, python-format
 msgid "Not joined in room %s"
-msgstr "%s dołączył do pokoju"
+msgstr "Nie połączony w pokoju %s"
 
 #: pynicotine/plugins/core_commands/__init__.py:441
 #, python-format
@@ -3605,14 +3594,14 @@ msgid "Unbanned %s"
 msgstr "Odblokowany %s"
 
 #: pynicotine/plugins/core_commands/__init__.py:468
-#, fuzzy, python-format
+#, python-format
 msgid "Ignored %s"
-msgstr "Zignorowane adresy IP:"
+msgstr "Zignorowano %s"
 
 #: pynicotine/plugins/core_commands/__init__.py:482
-#, fuzzy, python-format
+#, python-format
 msgid "Unignored %s"
-msgstr "Nie ignoruj użytkownika"
+msgstr "Nieignorowany %s"
 
 #: pynicotine/pluginsystem.py:398
 msgid "Loading plugin system"
@@ -3689,7 +3678,7 @@ msgid "Usage: %(command)s %(args)s"
 msgstr "Użycie: %(command)s %(args)s"
 
 #: pynicotine/pluginsystem.py:890
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Unknown command: %(command)s. Type %(help_command)s to list available "
 "commands."
@@ -4227,7 +4216,6 @@ msgstr "Udostępnianie folderów"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:383
 #: pynicotine/gtkgui/ui/settings/shares.ui:25
-#, fuzzy
 msgid ""
 "Soulseek users will be able to download from your shares. Contribute to the "
 "Soulseek network by sharing your own collection and by resharing what you "
@@ -4851,12 +4839,11 @@ msgstr ""
 "\"Instrumental Remix\" nie pokaże żadnego \"Remix Instrumental\""
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:115
-#, fuzzy
 msgid ""
 "Use | (or pipes) to seperate several exact phrases. Example:\n"
 "    Remix|Dub Mix|Instrumental"
 msgstr ""
-"Użyj | (lub rury), aby oddzielić kilka dokładnych fraz. Przykład:\n"
+"Użyj | (lub potoków), aby oddzielić kilka dokładnych fraz. Przykład:\n"
 "    Remiksy|Dub Mix|Instrumentalne"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:127
@@ -4874,25 +4861,24 @@ msgid "Filters files based upon their file extension."
 msgstr "Filtrowanie plików na podstawie rozszerzenia."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:170
-#, fuzzy
 msgid ""
 "Multiple file extensions can be specified, which in turn will reveal more "
 "from the list of results. Example:\n"
 "    flac wav ape"
 msgstr ""
-"Można podać wiele rozszerzeń plików, co z kolei poszerzy listę wyników.\n"
-"  Przykład: flac|wav|ape"
+"Można podać wiele rozszerzeń plików, co z kolei poszerzy listę wyników. "
+"Przykład:\n"
+"    flac|wav|ape"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:181
-#, fuzzy
 msgid ""
 "It is also possible to invert the filter, specifying file extensions you "
 "don't want in your results with an exclamation mark! Example:\n"
 "    !mp3 !jpg"
 msgstr ""
-"Możliwe jest również odwrócenie filtru, określając rozszerzenia plików, "
-"których nie chcesz mieć w wynikach.\n"
-"   Przykład: !mp3|!jpg"
+"Możliwe jest również odwrócenie filtra, określając rozszerzenia plików, "
+"których nie chcesz w wynikach za pomocą wykrzyknika! Przykład:\n"
+"    !mp3 !jpg"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:191
 msgid "File Size"
@@ -4921,7 +4907,6 @@ msgstr ""
 "    20m aby pokazać pliki większe niż 20 MiB (mebibajtów)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:239
-#, fuzzy
 msgid ""
 "Prepend = to a value to specify an exact match:\n"
 "    =1024 matches files that are exactly 1 KiB (kibibyte)."
@@ -4938,15 +4923,15 @@ msgstr ""
 "    !30,5m, aby ukryć pliki, które mają 30,5 MiB (mebibajtów)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:261
-#, fuzzy
 msgid ""
 "Prepend < or > to find files smaller/larger than the given value. Use a "
 "space between each condition to include a range:\n"
 "    >10.5m <1g to show files larger than 10.5 MiB, but smaller than 1 GiB."
 msgstr ""
-"Poprzedź < lub >, aby znaleźć pliki mniejsze/większe od podanej wartości:\n"
-"    >10.5m|<1g aby pokazać pliki większe niż 10.5 MiB (mebibajtów),\n"
-"    ale mniejsze niż 1 GiB (gibibajt), użyj znaku | pomiędzy warunkami."
+"Poprzedź < lub >, aby znaleźć pliki mniejsze/większe od podanej wartości. "
+"Użyj spacji pomiędzy każdym warunkiem, aby zawrzeć zakres:\n"
+"    >10,5m <1g, aby pokazać pliki większe niż 10,5 MiB, ale mniejsze niż 1 "
+"GiB."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:272
 msgid ""
@@ -4969,17 +4954,16 @@ msgstr ""
 "(kilobity na sekundę)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:320
-#, fuzzy
 msgid ""
 "Like File Size (above), operators =, !, <, >, <= or >= can be used, and "
 "multiple conditions can be specified, for example to show files with a "
 "bitrate of at least 256 Kb/s with a maximum bitrate of 1411 Kb/s:\n"
 "    256 <=1411"
 msgstr ""
-"Podobnie jak w przypadku rozmiaru pliku (powyżej), można użyć operatorów "
-"=, !, < i >, a także określić wiele warunków za pomocą | :\n"
-"    >256|<1411, aby pokazać pliki o bitrate co najmniej 256 Kb/s\n"
-"    z maksymalnym bitrate 1411 Kb/s."
+"Podobnie jak rozmiar pliku (powyżej), operatory =, !, <, >, <= lub >= mogą "
+"być używane i można określić wiele warunków, na przykład, aby wyświetlić "
+"pliki o przepływności co najmniej 256 Kb/s z maksymalną bitrate 1411 Kb/s:\n"
+"    256 <=1411"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:350
 msgid "Filters files based upon their duration."
@@ -4994,20 +4978,19 @@ msgstr ""
 "czasowi trwania, chyba że użyty zostanie operator (=, !, <=, < lub >)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:370
-#, fuzzy
 msgid ""
 "Enter a raw value in seconds or use the MM:SS and HH:MM:SS time formats:\n"
 "    =53 shows files that are around 53 seconds long.\n"
 "    >5:30 to show files more than 5 and a half minutes long.\n"
 "    <5:30:00 shows files less than 5 and a half hours long."
 msgstr ""
-"Wprowadź nieprzetworzoną wartość w sekundach lub użyj formatu czasu MM:SS i "
-"HH:MM:SS:\n"
-"    > 5:30, aby wyświetlić pliki o długości co najmniej 5 i pół minuty.\n"
-"    <5:30:00 wyświetla pliki krótsze niż 5 i pół godziny."
+"Wprowadź surową wartość w sekundach lub użyj formatów czasu MM:SS i HH:MM:SS:"
+"\n"
+"    =53 pokazuje pliki, które mają około 53 sekundy długości.\n"
+"    >5:30 pokazuje pliki o długości większej niż 5 i pół minuty.\n"
+"    <5:30:00 pokazuje pliki o długości mniejszej niż 5 i pół godziny."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:383
-#, fuzzy
 msgid ""
 "Multiple conditions can be specified:\n"
 "    >6:00 <12:00 to show files between 6 and 12 minutes long.\n"
@@ -5020,7 +5003,6 @@ msgstr ""
 "    =5:34|=4:23|=3:05, aby uwzględnić pliki o określonym czasie trwania."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:409
-#, fuzzy
 msgid ""
 "Filters files based upon users' geographical location according to country "
 "codes defined by ISO 3166-2:\n"
@@ -5028,10 +5010,11 @@ msgid ""
 "States.\n"
 "    !GB will hide results that come from users in Great Britain."
 msgstr ""
-"Używa kodów krajów zdefiniowanych przez ISO 3166-2:\n"
+"Filtruje pliki na podstawie położenia geograficznego użytkowników zgodnie z "
+"kodami krajów zdefiniowanymi przez ISO 3166-2:\n"
 "    US pokaże tylko wyniki pochodzące od użytkowników z adresami IP w "
-"Stanach Zjednoczonych. GB ukryje wyniki pochodzące od użytkowników z "
-"Wielkiej Brytanii (Great Britain)."
+"Stanach Zjednoczonych.\n"
+"    !GB ukryje wyniki pochodzące od użytkowników z Wielkiej Brytanii."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:421
 msgid "Multiple countries can be specified with commas or spaces."
@@ -5391,9 +5374,8 @@ msgid "Folders"
 msgstr "Foldery"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:213
-#, fuzzy
 msgid "Finished downloads:"
-msgstr "Zakończone pobieranie plików"
+msgstr "Zakończone pobierania:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:236
 msgid "Incomplete downloads:"
@@ -5980,14 +5962,12 @@ msgid "Visible main tabs:"
 msgstr "Widoczne karty główne:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:627
-#, fuzzy
 msgid "Tab bar positions:"
-msgstr "Pozycja paska kart:"
+msgstr "Pozycje paska kart:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:664
-#, fuzzy
 msgid "Main tabs"
-msgstr "Główne zakładki"
+msgstr "Główne karty"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:869
 msgid "Show reverse file paths (requires a restart)"
@@ -6198,9 +6178,8 @@ msgid "_Refresh Profile"
 msgstr "_Odśwież profil"
 
 #: pynicotine/plugins/core_commands/PLUGININFO:3
-#, fuzzy
 msgid "Nicotine+ Commands"
-msgstr "Zespół Nicotine+"
+msgstr "Polecenia Nicotine+"
 
 #, python-format
 #~ msgid "Cannot find %s or newer, please install it."
