@@ -7,7 +7,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
 "PO-Revision-Date: 2023-05-17 14:53+0000\n"
-"Last-Translator: Mariusz <wisniowy@g.pl>\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/pl/>\n"
 "Language: pl\n"
@@ -3420,8 +3420,7 @@ msgstr "Automatyczne wybieranie odtwarzacza MPRIS: %s"
 #: pynicotine/nowplaying.py:213
 #, python-format
 msgid "MPRIS: Something went wrong while querying %(player)s: %(exception)s"
-msgstr ""
-"MPRIS. Coś poszło nie tak podczas odpytywania %(player)s: %(exception)s"
+msgstr "MPRIS. Coś poszło nie tak podczas odpytywania %(player)s: %(exception)s"
 
 #: pynicotine/nowplaying.py:260
 msgid "ListenBrainz: Please provide your ListenBrainz username"
@@ -5855,8 +5854,7 @@ msgstr "Tryb nocny"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:40
 msgid "Note that the operating system's theme may take precedence."
-msgstr ""
-"Należy pamiętać, że motyw systemu operacyjnego może mieć pierwszeństwo."
+msgstr "Należy pamiętać, że motyw systemu operacyjnego może mieć pierwszeństwo."
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:50
 msgid "Display tray icon"
