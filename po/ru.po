@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
-"PO-Revision-Date: 2023-05-09 10:01+0000\n"
+"PO-Revision-Date: 2023-05-12 13:21+0000\n"
 "Last-Translator: Mehavoid <tontole@riseup.net>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ru/>\n"
@@ -5128,9 +5128,8 @@ msgstr "Продолжительность…"
 
 #: pynicotine/gtkgui/ui/search.ui:332
 #: pynicotine/gtkgui/ui/settings/search.ui:321
-#, fuzzy
 msgid "Duration, e.g. >6:00 <12:00 !6:54"
-msgstr "Продолжительность, например 2:20|!3:30|=4:40"
+msgstr "Продолжительность, например >6:00 <12:00 !6:54"
 
 #: pynicotine/gtkgui/ui/search.ui:364
 msgid "Country code…"
@@ -5138,9 +5137,8 @@ msgstr "Код страны…"
 
 #: pynicotine/gtkgui/ui/search.ui:365
 #: pynicotine/gtkgui/ui/settings/search.ui:352
-#, fuzzy
 msgid "Country code, e.g. US ES or !DE !GB"
-msgstr "Код страны, например US|GB|ES или !DE|!GB"
+msgstr "Код страны, например US ES или !DE !GB"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:35
 msgid ""
@@ -5234,9 +5232,8 @@ msgid "Room names"
 msgstr "Названия комнат"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:269
-#, fuzzy
 msgid "Commands"
-msgstr "Команда"
+msgstr "Команды"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:297
 msgid "Timestamps"
@@ -5390,7 +5387,6 @@ msgid "Incomplete downloads:"
 msgstr "Завершённые загрузки"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:259
-#, fuzzy
 msgid "Received files:"
 msgstr "Полученные файлы:"
 
@@ -5527,7 +5523,6 @@ msgid "Auto-reply message when away:"
 msgstr "Автоответчик при отсутствии:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:340
-#, fuzzy
 msgid "Automatically forward listening port (UPnP/NAT-PMP)"
 msgstr "Автоматически перенаправлять прослушиваемый порт (UPnP/NAT-PMP)"
 
@@ -5765,9 +5760,8 @@ msgid "Queue Limits"
 msgstr "Лимиты очереди"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:232
-#, fuzzy
 msgid "Limits do not apply to buddies"
-msgstr "Лимиты на очередь не распространяются на друзей"
+msgstr "Ограничения не распространяются на друзей"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:243
 msgid "Each user may queue a maximum of either:"
@@ -5879,9 +5873,8 @@ msgid "Minimize to tray on startup"
 msgstr "Сворачивать Nicotine+ в область уведомлений при запуске"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:73
-#, fuzzy
 msgid "Language (requires a restart):"
-msgstr "Диапазон прослушиваемых портов (требуется перезапуск):"
+msgstr "Язык (требуется перезапуск программы):"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:85
 #, fuzzy
