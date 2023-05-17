@@ -7,7 +7,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
 "PO-Revision-Date: 2023-05-17 14:53+0000\n"
-"Last-Translator: Han <hboetes@gmail.com>\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Slovak <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/sk/>\n"
 "Language: sk\n"
@@ -341,8 +341,8 @@ msgstr "Nedá sa nájsť %s, nainštalujte ho."
 #, fuzzy
 msgid "No graphical environment available, using headless (no GUI) mode"
 msgstr ""
-"Nie je k dispozícii žiadne grafické prostredie, používa sa bezhlavý (bez "
-"GUI) režim"
+"Nie je k dispozícii žiadne grafické prostredie, používa sa bezhlavý (bez GUI)"
+" režim"
 
 #: pynicotine/gtkgui/application.py:287
 #: pynicotine/plugins/core_commands/__init__.py:68
@@ -4313,8 +4313,7 @@ msgstr ""
 #, fuzzy, python-format
 msgid ""
 "%(protocol)s: Failed to forward external port %(external_port)s: %(error)s"
-msgstr ""
-"UPnP: Nepodarilo sa preposlať externý port %(external_port)s: %(error)s"
+msgstr "UPnP: Nepodarilo sa preposlať externý port %(external_port)s: %(error)s"
 
 #: pynicotine/privatechat.py:212
 #, fuzzy, python-format
@@ -4345,8 +4344,7 @@ msgstr ""
 #: pynicotine/search.py:556
 #, fuzzy, python-format
 msgid "User %(user)s is searching for \"%(query)s\", found %(num)i results"
-msgstr ""
-"Používateľ %(user)s vyhľadáva \"%(query)s\", čím vráti výsledky %(num)i"
+msgstr "Používateľ %(user)s vyhľadáva \"%(query)s\", čím vráti výsledky %(num)i"
 
 #: pynicotine/shares.py:73
 #, fuzzy, python-format
@@ -5733,8 +5731,8 @@ msgid ""
 "Values must be entered as numeric digits only. The unit is always Kb/s "
 "(Kilobits per second)."
 msgstr ""
-"Hodnoty musia byť zadané len ako číselné číslice. Jednotkou je vždy Kb/s "
-"(kilobity za sekundu)."
+"Hodnoty musia byť zadané len ako číselné číslice. Jednotkou je vždy Kb/s ("
+"kilobity za sekundu)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:320
 #, fuzzy
@@ -6878,8 +6876,7 @@ msgstr "Obnovenie predtým otvorených súkromných chatov pri spustení"
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:319
 #, fuzzy
 msgid "By default the leftmost tab is activated at startup"
-msgstr ""
-"V predvolenom nastavení je karta Hľadať súbory aktivovaná pri spustení."
+msgstr "V predvolenom nastavení je karta Hľadať súbory aktivovaná pri spustení."
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:325
 #, fuzzy
