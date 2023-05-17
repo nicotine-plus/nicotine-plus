@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
-"PO-Revision-Date: 2023-05-12 13:21+0000\n"
-"Last-Translator: ms-afk <scagnolmarco@gmail.com>\n"
+"PO-Revision-Date: 2023-05-17 14:53+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/it/>\n"
 "Language: it\n"
@@ -876,8 +876,8 @@ msgid ""
 "of lines)."
 msgstr ""
 "Inserisci un modello che desideri censurare. Aggiungi spazi attorno alle "
-"parole se non desideri corrispondenze con stringhe interne alle parole: "
-"(potrebbe fallire all'inizio e alla fine delle linee)."
+"parole se non desideri corrispondenze con stringhe interne alle parole: ("
+"potrebbe fallire all'inizio e alla fine delle linee)."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1345
 msgid "Edit Censored Pattern"
@@ -4064,8 +4064,7 @@ msgstr "Impossibile aprire l'URL %(url)s: %(error)s"
 #: pynicotine/utils.py:424
 #, python-format
 msgid "Something went wrong while reading file %(filename)s: %(error)s"
-msgstr ""
-"Qualcosa è andato storto nella lettura del file %(filename)s: %(error)s"
+msgstr "Qualcosa è andato storto nella lettura del file %(filename)s: %(error)s"
 
 #: pynicotine/utils.py:429
 #, python-format
@@ -5818,8 +5817,7 @@ msgstr "Primo dentro, primo fuori"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:362
 msgid "Queue uploads if total transfer speed reaches (KiB/s):"
-msgstr ""
-"Accoda upload se la velocità totale di trasferimento raggiunge (KiB/s):"
+msgstr "Accoda upload se la velocità totale di trasferimento raggiunge (KiB/s):"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:387
 msgid "Limit number of upload slots to:"
