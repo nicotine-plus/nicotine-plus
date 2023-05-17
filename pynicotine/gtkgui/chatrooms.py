@@ -1172,8 +1172,8 @@ class ChatRoom:
 
         elif active and self.room not in autojoin:
             autojoin.append(self.room)
+            self.chatrooms.on_reordered_page()  # Save room order
 
-        self.chatrooms.on_reordered_page()  # Save room order
         config.write_configuration()
 
     def on_focus(self, *_args):
