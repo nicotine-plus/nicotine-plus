@@ -7,7 +7,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-19 01:29+0300\n"
 "PO-Revision-Date: 2023-05-19 01:59+0000\n"
-"Last-Translator: Han <hboetes@gmail.com>\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
 "Language: nl\n"
@@ -3478,8 +3478,9 @@ msgid "Say something in the third-person"
 msgstr "Zeg iets in de derde-persoon"
 
 #: pynicotine/plugins/core_commands/__init__.py:87
+#, fuzzy
 msgid "Announce the song currently playing"
-msgstr ""
+msgstr "Kondig het nummer aan dat momenteel wordt afgespeeld"
 
 #: pynicotine/plugins/core_commands/__init__.py:94
 msgid "Join chat room"
@@ -3852,11 +3853,13 @@ msgid "Unknown Network Interface"
 msgstr "Onbekende netwerkkaart"
 
 #: pynicotine/slskproto.py:315
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "Cannot listen on port %(port)s. Ensure no other application uses it, or "
 "choose a different port. Error: %(error)s"
 msgstr ""
+"Kan niet luisteren op poort %(port)s. Zorg ervoor dat er geen andere "
+"applicatie gebruik van maakt, of kies een andere poort. Fout: %(error)s"
 
 #: pynicotine/slskproto.py:317
 msgid "Listening Port Unavailable"
@@ -4206,10 +4209,13 @@ msgstr ""
 "met gebruikers waarvan de luisterpoort open is."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:277
+#, fuzzy
 msgid ""
 "If necessary, choose a different listening port below. This can also be done "
 "later in the preferences."
 msgstr ""
+"Kies hieronder eventueel een andere luisterpoort. Dit kan ook later in de "
+"voorkeuren."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:316
 msgid "Download Files to Folder"
