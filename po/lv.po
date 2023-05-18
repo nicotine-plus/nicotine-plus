@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-19 01:29+0300\n"
-"PO-Revision-Date: 2023-05-17 14:54+0000\n"
+"PO-Revision-Date: 2023-05-19 01:59+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Latvian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/lv/>\n"
@@ -3474,8 +3474,9 @@ msgid "Say something in the third-person"
 msgstr "Sacīt kaut ko trešajā personā"
 
 #: pynicotine/plugins/core_commands/__init__.py:87
+#, fuzzy
 msgid "Announce the song currently playing"
-msgstr ""
+msgstr "Paziņojiet pašlaik atskaņoto dziesmu"
 
 #: pynicotine/plugins/core_commands/__init__.py:94
 msgid "Join chat room"
@@ -3842,11 +3843,13 @@ msgid "Unknown Network Interface"
 msgstr "Nezināms Tīkla Interfeiss"
 
 #: pynicotine/slskproto.py:315
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "Cannot listen on port %(port)s. Ensure no other application uses it, or "
 "choose a different port. Error: %(error)s"
 msgstr ""
+"Nevar klausīties portā %(port)s. Pārliecinieties, ka neviena cita "
+"lietojumprogramma to neizmanto, vai izvēlieties citu portu. Kļūda: %(error)s"
 
 #: pynicotine/slskproto.py:317
 msgid "Listening Port Unavailable"
@@ -4196,10 +4199,13 @@ msgstr ""
 "tiem lietotājiem, kuru klausīšanās porti ir atvērti."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:277
+#, fuzzy
 msgid ""
 "If necessary, choose a different listening port below. This can also be done "
 "later in the preferences."
 msgstr ""
+"Ja nepieciešams, tālāk izvēlieties citu klausīšanās portu. To var izdarīt "
+"arī vēlāk preferencēs."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:316
 msgid "Download Files to Folder"
