@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-19 01:29+0300\n"
-"PO-Revision-Date: 2023-05-17 14:54+0000\n"
-"Last-Translator: dtalens <databio@gmail.com>\n"
+"PO-Revision-Date: 2023-05-19 01:59+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ca/>\n"
 "Language: ca\n"
@@ -3522,8 +3522,9 @@ msgid "Say something in the third-person"
 msgstr "Dir alguna cosa en tercera persona"
 
 #: pynicotine/plugins/core_commands/__init__.py:87
+#, fuzzy
 msgid "Announce the song currently playing"
-msgstr ""
+msgstr "Anuncia la cançó que es reprodueix actualment"
 
 #: pynicotine/plugins/core_commands/__init__.py:94
 #, fuzzy
@@ -3919,11 +3920,13 @@ msgid "Unknown Network Interface"
 msgstr "Interfície de xarxa desconeguda"
 
 #: pynicotine/slskproto.py:315
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "Cannot listen on port %(port)s. Ensure no other application uses it, or "
 "choose a different port. Error: %(error)s"
 msgstr ""
+"No es pot escoltar al port %(port)s. Assegureu-vos que cap altra aplicació "
+"l'utilitzi o trieu un port diferent. Error: %(error)s"
 
 #: pynicotine/slskproto.py:317
 msgid "Listening Port Unavailable"
@@ -4280,10 +4283,13 @@ msgstr ""
 "que tinguin els ports d'escolta oberts."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:277
+#, fuzzy
 msgid ""
 "If necessary, choose a different listening port below. This can also be done "
 "later in the preferences."
 msgstr ""
+"Si cal, tria un port d'escolta diferent a continuació. Això també es pot fer "
+"més endavant a les preferències."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:316
 msgid "Download Files to Folder"
