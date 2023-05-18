@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-19 01:29+0300\n"
-"PO-Revision-Date: 2023-05-17 14:53+0000\n"
+"PO-Revision-Date: 2023-05-19 01:59+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/uk/>\n"
@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Weblate 4.18-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
@@ -3560,8 +3560,9 @@ msgid "Say something in the third-person"
 msgstr "Скажіть щось від третьої особи"
 
 #: pynicotine/plugins/core_commands/__init__.py:87
+#, fuzzy
 msgid "Announce the song currently playing"
-msgstr ""
+msgstr "Оголосити пісню, яка зараз грає"
 
 #: pynicotine/plugins/core_commands/__init__.py:94
 #, fuzzy
@@ -3952,11 +3953,13 @@ msgid "Unknown Network Interface"
 msgstr "Користувацький інтерфейс"
 
 #: pynicotine/slskproto.py:315
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "Cannot listen on port %(port)s. Ensure no other application uses it, or "
 "choose a different port. Error: %(error)s"
 msgstr ""
+"Не вдається прослухати через порт %(port)s. Переконайтеся, що жодна інша "
+"програма не використовує його, або виберіть інший порт. Помилка: %(error)s"
 
 #: pynicotine/slskproto.py:317
 #, fuzzy
@@ -4323,10 +4326,13 @@ msgstr ""
 "користувачів, чиї порти прослуховування відкриті."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:277
+#, fuzzy
 msgid ""
 "If necessary, choose a different listening port below. This can also be done "
 "later in the preferences."
 msgstr ""
+"За потреби виберіть інший порт прослуховування нижче. Це також можна зробити "
+"пізніше в налаштуваннях."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:316
 msgid "Download Files to Folder"
