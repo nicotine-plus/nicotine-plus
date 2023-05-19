@@ -1,5 +1,5 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
-# COPYRIGHT (C) 2020-2022 Mathias <mail@mathias.is>
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Mathias <mail@mathias.is>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (C) 2013 eLvErDe <gandalf@le-vert.net>
@@ -114,7 +114,7 @@ class Core:
         from pynicotine.nowplaying import NowPlaying
         from pynicotine.pluginsystem import PluginHandler
         from pynicotine.privatechat import PrivateChat
-        from pynicotine.search import Search
+        from pynicotine.search import Searches
         from pynicotine.shares import Shares
         from pynicotine.slskproto import SoulseekNetworkThread
         from pynicotine.statistics import Statistics
@@ -147,7 +147,7 @@ class Core:
         self.update_checker = UpdateChecker()
 
         self.shares = Shares()
-        self.search = Search()
+        self.search = Searches()
         self.transfers = Transfers()
         self.interests = Interests()
         self.userbrowse = UserBrowse()
@@ -240,7 +240,7 @@ class Core:
             login=(config.sections["server"]["login"], config.sections["server"]["passw"]),
             interface=config.sections["server"]["interface"],
             bound_ip=self.bindip,
-            listen_port_range=(self.port, self.port) if self.port else config.sections["server"]["portrange"]
+            listen_port=self.port if self.port else config.sections["server"]["portrange"][0]
         ))
 
     def disconnect(self):

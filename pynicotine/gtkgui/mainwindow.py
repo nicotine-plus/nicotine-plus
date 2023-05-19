@@ -678,7 +678,7 @@ class MainWindow(Window):
 
         menu.add_items(
             ("", None),
-            ("#" + label, "app.quit")
+            ("#" + label, "app.confirm-quit")
         )
 
     def create_file_menu(self):
@@ -1359,7 +1359,7 @@ class MainWindow(Window):
         remove_css_class(label, "underline")
 
     def show_scan_progress(self):
-        self.scan_progress_bar.show()
+        self.scan_progress_bar.set_visible(True)
 
     def set_scan_progress(self, value):
         self.scan_progress_indeterminate = False
@@ -1385,7 +1385,7 @@ class MainWindow(Window):
 
     def hide_scan_progress(self):
         self.scan_progress_indeterminate = False
-        self.scan_progress_bar.hide()
+        self.scan_progress_bar.set_visible(False)
 
     """ Exit """
 

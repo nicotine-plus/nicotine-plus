@@ -90,8 +90,7 @@ class NetworkPage:
             self.auto_reply_message_entry,
             self.check_port_status_label,
             self.current_port_label,
-            self.first_port_spinner,
-            self.last_port_spinner,
+            self.listen_port_spinner,
             self.network_interface_combobox,
             self.network_interface_label,
             self.soulseek_server_entry,
@@ -123,13 +122,13 @@ class NetworkPage:
         unknown_label = _("Unknown")
 
         # Listening port status
-        if core.protothread.listenport:
-            url = config.portchecker_url % str(core.protothread.listenport)
+        if core.protothread.listen_port:
+            url = config.portchecker_url % str(core.protothread.listen_port)
             port_status_text = _("Check Port Status")
 
             self.current_port_label.set_markup(_("<b>%(ip)s</b>, port %(port)s") % {
                 "ip": core.user_ip_address or unknown_label,
-                "port": core.protothread.listenport or unknown_label
+                "port": core.protothread.listen_port or unknown_label
             })
             self.check_port_status_label.set_markup(f"<a href='{url}' title='{url}'>{port_status_text}</a>")
             self.check_port_status_label.set_visible(True)
@@ -156,9 +155,8 @@ class NetworkPage:
         server_hostname, server_port = config.sections["server"]["server"]
         self.soulseek_server_entry.set_text(f"{server_hostname}:{server_port}")
 
-        first_port, last_port = config.sections["server"]["portrange"]
-        self.first_port_spinner.set_value(first_port)
-        self.last_port_spinner.set_value(last_port)
+        listen_port, _unused_port = config.sections["server"]["portrange"]
+        self.listen_port_spinner.set_value(listen_port)
 
         self.portmap_required = False
 
@@ -172,17 +170,13 @@ class NetworkPage:
         except Exception:
             server_addr = config.defaults["server"]["server"]
 
-        first_port = self.first_port_spinner.get_value_as_int()
-        last_port = self.last_port_spinner.get_value_as_int()
-
-        if first_port > last_port:
-            first_port, last_port = last_port, first_port
+        listen_port = self.listen_port_spinner.get_value_as_int()
 
         return {
             "server": {
                 "server": server_addr,
                 "login": self.username_entry.get_text(),
-                "portrange": (first_port, last_port),
+                "portrange": (listen_port, listen_port),
                 "autoaway": self.auto_away_spinner.get_value_as_int(),
                 "autoreply": self.auto_reply_message_entry.get_text(),
                 "interface": self.network_interface_combobox.get_active_text(),
@@ -279,6 +273,9 @@ class DownloadsPage:
             self.received_folder_button, parent=application.preferences, chooser_type="folder"
         )
 
+        self.filter_syntax_description = _("<b>Syntax</b>: Letters are case-insensitive. All Python regular "
+                                           "expressions are supported if escaping is disabled. For simple filters, "
+                                           "keeping escaping enabled is recommended.")
         self.filter_list_view = TreeView(
             application.window, parent=self.filter_list_container, multi_select=True,
             activate_row_callback=self.on_edit_filter,
@@ -398,7 +395,7 @@ class DownloadsPage:
         EntryDialog(
             parent=self.application.preferences,
             title=_("Add Download Filter"),
-            message=_("Enter a new download filter:"),
+            message=self.filter_syntax_description + "\n\n" + _("Enter a new download filter:"),
             callback=self.on_add_filter_response,
             option_value=True,
             option_label=_("Escape filter"),
@@ -428,7 +425,7 @@ class DownloadsPage:
             EntryDialog(
                 parent=self.application.preferences,
                 title=_("Edit Download Filter"),
-                message=_("Modify the following download filter:"),
+                message=self.filter_syntax_description + "\n\n" + _("Modify the following download filter:"),
                 callback=self.on_edit_filter_response,
                 callback_data=iterator,
                 default=dfilter,
@@ -1375,7 +1372,7 @@ class ChatsPage:
         EntryDialog(
             parent=self.application.preferences,
             title=_("Add Replacement"),
-            message=_("Enter a text pattern and what to replace it with"),
+            message=_("Enter a text pattern and what to replace it with:"),
             callback=self.on_add_replacement_response,
             use_second_entry=True
         ).show()

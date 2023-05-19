@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -91,23 +91,9 @@ class ChatEntry:
 
         cmd_split = text.split(maxsplit=1)
         cmd = cmd_split[0]
+        args = cmd_split[1] if len(cmd_split) == 2 else ""
 
-        if len(cmd_split) == 2:
-            args = arg_self = cmd_split[1]
-        else:
-            args = ""
-            arg_self = "" if self.is_chatroom else self.entity
-
-        if cmd == "/ctcpversion":
-            if arg_self:
-                core.privatechat.show_user(arg_self)
-                core.privatechat.send_message(arg_self, core.privatechat.CTCP_VERSION)
-
-        elif cmd == "/now":
-            core.now_playing.display_now_playing(
-                callback=lambda np_message: self.send_message(self.entity, np_message))
-
-        elif self.is_chatroom:
+        if self.is_chatroom:
             if not core.pluginhandler.trigger_chatroom_command_event(self.entity, cmd[1:], args):
                 return
 

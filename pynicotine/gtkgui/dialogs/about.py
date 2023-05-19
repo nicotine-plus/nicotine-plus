@@ -319,7 +319,7 @@ Copyright (c) 2014–2022 Tom Wallroth
 <a href="https://github.com/devsnd/tinytag">https://github.com/devsnd/tinytag</a>""",
 
         """<b>Country database licensed under the CC-BY-SA-4.0 License.</b>
-Copyright (c) 2001-2022 Hexasoft Development Sdn. Bhd.
+Copyright (c) 2001-2023 Hexasoft Development Sdn. Bhd.
 This program includes IP2Location LITE data available from:
 <a href="https://lite.ip2location.com">https://lite.ip2location.com</a>""",
 

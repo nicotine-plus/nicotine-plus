@@ -82,6 +82,12 @@ class Plugin(BasePlugin):
                 "group": _CommandGroup.CHAT,
                 "usage": ["<something..>"]
             },
+            "now": {
+                "callback": self.now_command,
+                "description": _("Announce the song currently playing"),
+                "disable": ["cli"],
+                "group": _CommandGroup.CHAT
+            },
             "join": {
                 "aliases": ["j"],
                 "callback": self.join_command,
@@ -117,6 +123,14 @@ class Plugin(BasePlugin):
                 "aliases": ["c"],
                 "callback": self.close_command,
                 "description": _("Close private chat"),
+                "disable": ["cli"],
+                "group": _CommandGroup.PRIVATE_CHAT,
+                "usage_chatroom": ["<user>"],
+                "usage_private_chat": ["[user]"]
+            },
+            "ctcpversion": {
+                "callback": self.ctcpversion_command,
+                "description": _("Request user's client version"),
                 "disable": ["cli"],
                 "group": _CommandGroup.PRIVATE_CHAT,
                 "usage_chatroom": ["<user>"],
@@ -205,7 +219,7 @@ class Plugin(BasePlugin):
                 "callback": self.rescan_command,
                 "description": _("Rescan shares"),
                 "group": _CommandGroup.SHARES,
-                "usage": ["[-force]"]
+                "usage": ["[force|rebuild]"]
             },
             "shares": {
                 "aliases": ["ls"],
@@ -324,6 +338,9 @@ class Plugin(BasePlugin):
     def me_command(self, args, **_unused):
         self.send_message("/me " + args)  # /me is sent as plain text
 
+    def now_command(self, _args, **_unused):
+        self.core.now_playing.display_now_playing(callback=self.send_message)
+
     """ Chat Rooms """
 
     def join_command(self, args, **_unused):
@@ -370,6 +387,13 @@ class Plugin(BasePlugin):
         self.output(f"Closing private chat of user {user}")
         self.core.privatechat.remove_user(user)
         return True
+
+    def ctcpversion_command(self, args, user=None, **_unused):
+
+        if args:
+            user = args
+
+        self.send_private(user, self.core.privatechat.CTCP_VERSION, show_ui=True)
 
     def msg_command(self, args, **_unused):
 
@@ -484,8 +508,11 @@ class Plugin(BasePlugin):
     """ Configure Shares """
 
     def rescan_command(self, args, **_unused):
-        force = (args.lstrip("- ") in ("force", "f"))
-        self.core.shares.rescan_shares(force=force)
+
+        rebuild = (args == "rebuild")
+        force = (args == "force") or rebuild
+
+        self.core.shares.rescan_shares(rebuild=rebuild, force=force)
 
     def list_shares_command(self, args, **_unused):
 

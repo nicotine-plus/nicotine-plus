@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
@@ -102,8 +102,8 @@ class Searches(IconNotebook):
         self.file_properties = None
 
         for event_name, callback in (
+            ("add-search", self.add_search),
             ("add-wish", self.update_wish_button),
-            ("do-search", self.do_search),
             ("file-search-response", self.file_search_response),
             ("remove-search", self.remove_search),
             ("remove-wish", self.update_wish_button),
@@ -191,20 +191,21 @@ class Searches(IconNotebook):
 
         return page
 
-    def do_search(self, token, search_term, mode, room=None, users=None, switch_page=True):
+    def add_search(self, token, search, switch_page=True):
 
+        mode = search.mode
         mode_label = None
 
         if mode == "rooms":
-            mode_label = room.strip()
+            mode_label = search.room.strip()
 
         elif mode == "user":
-            mode_label = ",".join(users)
+            mode_label = ",".join(search.users)
 
         elif mode == "buddies":
             mode_label = _("Buddies")
 
-        self.create_page(token, search_term, mode, mode_label)
+        self.create_page(token, search.term, mode, mode_label)
 
         if switch_page:
             self.show_search(token)
@@ -265,7 +266,7 @@ class Searches(IconNotebook):
             if search_item is None:
                 return
 
-            search_term = search_item["term"]
+            search_term = search_item.term
             mode = "wishlist"
             mode_label = _("Wish")
             page = self.create_page(msg.token, search_term, mode, mode_label, show_page=False)
@@ -600,6 +601,8 @@ class Search:
             if presets:
                 widget.set_row_separator_func(self.on_combobox_check_separator)
 
+        self.update_filter_counter(self.active_filter_count)
+
         if self.filters_undo == self.FILTERS_EMPTY:
             tooltip_text = _("Clear Filters")
             icon_name = "edit-clear-symbolic"
@@ -647,7 +650,6 @@ class Search:
             combobox.get_child().set_text(h_value)
 
         self.populating_filters = False
-        self.filters_undo = self.filters
 
         self.on_refilter()
 
@@ -1105,7 +1107,6 @@ class Search:
 
         # Update number of results
         self.update_result_counter()
-        self.update_filter_counter(self.active_filter_count)
 
         if sort_column is not None and sort_type is not None:
             self.resultsmodel.set_sort_column_id(sort_column, sort_type)
@@ -1618,8 +1619,11 @@ class Search:
             # Filters have not changed, no need to refilter
             return
 
-        if filters not in (self.FILTERS_EMPTY, self.filters_undo):
-            # Filters changed while we had undo history
+        if self.filters and filters == self.FILTERS_EMPTY:
+            # Filters cleared, enable Restore Filters
+            self.filters_undo = self.filters
+        else:
+            # Filters active, enable Clear Filters
             self.filters_undo = self.FILTERS_EMPTY
 
         self.active_filter_count = 0

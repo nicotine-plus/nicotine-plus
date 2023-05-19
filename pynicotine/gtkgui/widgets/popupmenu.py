@@ -550,7 +550,7 @@ class UserPopupMenu(PopupMenu):
             core.request_give_privileges(self.user, days)
 
         except ValueError:
-            self.on_give_privileges(error=_("Please enter number of days!"))
+            self.on_give_privileges(error=_("Please enter number of days."))
 
     def on_give_privileges(self, *_args, error=None):
 

@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2009-2011 quinox <quinox@users.sf.net>
 #
@@ -40,8 +40,7 @@ class FastConfigure(Dialog):
         (
             self.account_page,
             self.download_folder_button,
-            self.first_port_entry,
-            self.last_port_entry,
+            self.listen_port_entry,
             self.main_icon,
             self.next_button,
             self.password_entry,
@@ -123,6 +122,18 @@ class FastConfigure(Dialog):
 
     def on_entry_changed(self, *_args):
         self.reset_completeness()
+
+    def on_user_entry_activate(self, *_args):
+
+        if not self.username_entry.get_text():
+            self.username_entry.grab_focus()
+            return
+
+        if not self.password_entry.get_text():
+            self.password_entry.grab_focus()
+            return
+
+        self.on_next()
 
     def on_download_folder_selected(self):
         config.sections["transfers"]["downloaddir"] = self.download_folder_button.get_path()
@@ -258,9 +269,8 @@ class FastConfigure(Dialog):
             return True
 
         # port_page
-        first_port = min(self.first_port_entry.get_value_as_int(), self.last_port_entry.get_value_as_int())
-        last_port = max(self.first_port_entry.get_value_as_int(), self.last_port_entry.get_value_as_int())
-        config.sections["server"]["portrange"] = (first_port, last_port)
+        listen_port = self.listen_port_entry.get_value_as_int()
+        config.sections["server"]["portrange"] = (listen_port, listen_port)
 
         # account_page
         if config.need_config():
@@ -285,9 +295,8 @@ class FastConfigure(Dialog):
         self.password_entry.set_text(config.sections["server"]["passw"])
 
         # port_page
-        first_port, last_port = config.sections["server"]["portrange"]
-        self.first_port_entry.set_value(first_port)
-        self.last_port_entry.set_value(last_port)
+        listen_port, _unused_port = config.sections["server"]["portrange"]
+        self.listen_port_entry.set_value(listen_port)
 
         # share_page
         if config.sections["transfers"]["downloaddir"]:

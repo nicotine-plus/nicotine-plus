@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2013 SeeSchloss <see@seos.fr>
 # COPYRIGHT (C) 2009-2010 quinox <quinox@users.sf.net>
@@ -522,8 +522,8 @@ class UserBrowse:
 
         self.retry_button.set_visible(True)
         self.info_bar.show_message(
-            _("Unable to request shared files from user. Either the user is offline, you both have "
-              "a closed listening port, or there's a temporary connectivity issue."),
+            _("Unable to request shared files from user. Either the user is offline, the listening ports "
+              "are closed on both sides, or there is a temporary connectivity issue."),
             message_type=Gtk.MessageType.ERROR
         )
 

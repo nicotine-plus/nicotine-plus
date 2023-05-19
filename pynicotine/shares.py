@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (C) 2009-2011 quinox <quinox@users.sf.net>
@@ -140,9 +140,9 @@ class Scanner(Process):
             if self.rescan:
                 start_num_folders = len(list(self.share_dbs.get("buddyfiles", {})))
 
-                self.queue.put((_("Rescanning shares…"), None, LogLevel.DEFAULT))
-                self.queue.put((_("%(num)s folders found before rescan, rebuilding…"),
-                               {"num": start_num_folders}, LogLevel.DEFAULT))
+                self.queue.put((_("%(num)s folders found before rescan"), {"num": start_num_folders}, LogLevel.DEFAULT))
+                self.queue.put((_("Rebuilding shares…") if self.rebuild else _("Rescanning shares…"),
+                               None, LogLevel.DEFAULT))
 
                 new_mtimes, new_files, new_streams = self.rescan_dirs("public", rebuild=self.rebuild)
                 _new_mtimes, new_files, _new_streams = self.rescan_dirs("buddy", new_mtimes, new_files,
@@ -171,10 +171,10 @@ class Scanner(Process):
     def create_compressed_shares_message(self, share_type):
         """ Create a message that will later contain a compressed list of our shares """
 
-        if share_type == "buddy":
-            streams = self.share_dbs.get("buddystreams")
-        else:
+        if share_type == "public":
             streams = self.share_dbs.get("streams")
+        else:
+            streams = self.share_dbs.get(f"{share_type}streams")
 
         compressed_shares = slskmessages.SharedFileListResponse(shares=streams)
         compressed_shares.make_network_message()
@@ -248,10 +248,10 @@ class Scanner(Process):
             if source is None:
                 continue
 
-            try:
-                if share_type == "buddy":
-                    destination = "buddy" + destination
+            if share_type != "public":
+                destination = f"{share_type}{destination}"
 
+            try:
                 self.share_dbs[destination] = share_db = self.create_db_file(destination)
                 share_db.update(source)
 
@@ -337,11 +337,12 @@ class Scanner(Process):
     def is_hidden(folder, filename=None, entry=None):
         """ Stop sharing any dot/hidden directories/files """
 
-        # If the last folder in the path starts with a dot, we exclude it
+        # If the last folder in the path starts with a dot, or is a Synology extended
+        # attribute folder, we exclude it
         if filename is None:
             last_folder = os.path.basename(os.path.normpath(folder.replace("\\", "/")))
 
-            if last_folder.startswith("."):
+            if last_folder.startswith(".") or last_folder == "@eaDir":
                 return True
 
         # If we're asked to check a file we exclude it if it start with a dot
@@ -557,8 +558,10 @@ class Shares:
         self.pending_network_msgs = []
         self.rescanning = False
         self.should_compress_shares = False
-        self.compressed_shares_public = slskmessages.SharedFileListResponse()
-        self.compressed_shares_buddy = slskmessages.SharedFileListResponse()
+        self.compressed_shares = {}
+
+        for share_type in ["public", "buddy"]:
+            self.compressed_shares[share_type] = slskmessages.SharedFileListResponse()
 
         self.convert_shares()
         self.share_db_paths = [
@@ -745,27 +748,13 @@ class Shares:
         if self.should_compress_shares:
             self.rescan_shares(init=True, rescan=False)
 
-        if share_type == "buddy":
-            return self.compressed_shares_buddy
-
-        return self.compressed_shares_public
+        return self.compressed_shares.get(share_type)
 
     @staticmethod
     def close_shares(share_dbs):
-
-        dbs = [
-            "files", "streams", "wordindex",
-            "fileindex", "mtimes",
-            "buddyfiles", "buddystreams", "buddywordindex",
-            "buddyfileindex", "buddymtimes"
-        ]
-
-        for database in dbs:
-            db_file = share_dbs.get(database)
-
-            if db_file is not None:
-                share_dbs[database].close()
-                del share_dbs[database]
+        for database in share_dbs.copy():
+            share_dbs[database].close()
+            del share_dbs[database]
 
     def send_num_shared_folders_files(self):
         """ Send number publicly shared files to the server. """
@@ -847,12 +836,7 @@ class Shares:
                     emit_event("set-scan-indeterminate")
 
                 elif isinstance(item, slskmessages.SharedFileListResponse):
-                    if item.type == "public":
-                        self.compressed_shares_public = item
-
-                    elif item.type == "buddy":
-                        self.compressed_shares_buddy = item
-
+                    self.compressed_shares[item.type] = item
                     self.should_compress_shares = False
 
         return False

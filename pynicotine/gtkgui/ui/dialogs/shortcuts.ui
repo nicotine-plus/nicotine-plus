@@ -72,7 +72,7 @@
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">True</property>
-                <property name="action-name">app.force-quit</property>
+                <property name="action-name">app.quit</property>
                 <property name="title" translatable="yes">Quit</property>
               </object>
             </child>

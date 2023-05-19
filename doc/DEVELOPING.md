@@ -170,7 +170,7 @@ Release dates are not set in stone, as Nicotine+ development is done by voluntee
 
 The following is a step-by-step guide detailing what a Nicotine+ maintainer should do when releasing a new version of Nicotine+.
 
- 1. Ensure that Nicotine+ works on at least these four systems: Windows, macOS, the oldest Ubuntu version we still support (18.04), as well as the newest Ubuntu release available.
+ 1. Ensure that Nicotine+ works on at least these four systems: Windows, macOS, Rocky Linux 8, as well as the newest Ubuntu release available.
 
  2. Update the translation template by running
 ```
