@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2008 gallows <g4ll0ws@gmail.com>
@@ -153,7 +153,7 @@ class NowPlaying:
             self.title["artist"] = artist = lastplayed["artist"]["#text"]
             self.title["title"] = title = lastplayed["name"]
             self.title["album"] = album = lastplayed["album"]["#text"]
-            self.title["nowplaying"] = f"{_('Last played')}: {artist} - {album} - {title}"
+            self.title["nowplaying"] = f"{artist} - {album} - {title}"
 
         except Exception:
             log.add(_("Last.fm: Could not get recent track from Audioscrobbler: %(error)s"),
@@ -283,7 +283,7 @@ class NowPlaying:
             self.title["artist"] = artist = track["artist_name"]
             self.title["title"] = title = track["track_name"]
             self.title["album"] = album = track["release_name"]
-            self.title["nowplaying"] = f"{_('Playing now')}: {artist} - {album} - {title}"
+            self.title["nowplaying"] = f"{artist} - {album} - {title}"
 
             return True
 

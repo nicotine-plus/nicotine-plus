@@ -178,6 +178,7 @@
                             <property name="visible">True</property>
                             <property name="has-entry">True</property>
                             <property name="hexpand">True</property>
+                            <property name="id-column">0</property>
                             <signal name="notify::popup-shown" handler="on_combobox_popup_shown"/>
                             <child internal-child="entry">
                               <object class="GtkEntry">
@@ -187,7 +188,7 @@
                                 <property name="primary-icon-name">emblem-ok-symbolic</property>
                                 <signal name="activate" handler="on_refilter"/>
                                 <signal name="changed" handler="on_filter_entry_changed"/>
-                                <signal name="icon-press" handler="on_refilter"/>
+                                <signal name="icon-press" handler="on_filter_entry_icon_press"/>
                               </object>
                             </child>
                             <style>
@@ -206,6 +207,7 @@
                             <property name="visible">True</property>
                             <property name="has-entry">True</property>
                             <property name="hexpand">True</property>
+                            <property name="id-column">0</property>
                             <signal name="notify::popup-shown" handler="on_combobox_popup_shown"/>
                             <child internal-child="entry">
                               <object class="GtkEntry">
@@ -215,7 +217,7 @@
                                 <property name="primary-icon-name">action-unavailable-symbolic</property>
                                 <signal name="activate" handler="on_refilter"/>
                                 <signal name="changed" handler="on_filter_entry_changed"/>
-                                <signal name="icon-press" handler="on_refilter"/>
+                                <signal name="icon-press" handler="on_filter_entry_icon_press"/>
                               </object>
                             </child>
                             <style>
@@ -234,16 +236,17 @@
                             <property name="visible">True</property>
                             <property name="has-entry">True</property>
                             <property name="hexpand">True</property>
+                            <property name="id-column">0</property>
                             <signal name="notify::popup-shown" handler="on_combobox_popup_shown"/>
                             <child internal-child="entry">
                               <object class="GtkEntry">
                                 <property name="width-chars">12</property>
                                 <property name="placeholder-text" translatable="yes">File type…</property>
-                                <property name="tooltip-text" translatable="yes">File type, e.g. flac|wav|ape or !mp3|!m4a</property>
+                                <property name="tooltip-text" translatable="yes">File type, e.g. flac wav or !mp3 !m4a</property>
                                 <property name="primary-icon-name">text-x-generic-symbolic</property>
                                 <signal name="activate" handler="on_refilter"/>
                                 <signal name="changed" handler="on_filter_entry_changed"/>
-                                <signal name="icon-press" handler="on_refilter"/>
+                                <signal name="icon-press" handler="on_filter_entry_icon_press"/>
                               </object>
                             </child>
                             <style>
@@ -262,16 +265,17 @@
                             <property name="visible">True</property>
                             <property name="has-entry">True</property>
                             <property name="hexpand">True</property>
+                            <property name="id-column">0</property>
                             <signal name="notify::popup-shown" handler="on_combobox_popup_shown"/>
                             <child internal-child="entry">
                               <object class="GtkEntry">
                                 <property name="width-chars">10</property>
                                 <property name="placeholder-text" translatable="yes">File size…</property>
-                                <property name="tooltip-text" translatable="yes">File size</property>
+                                <property name="tooltip-text" translatable="yes">File size, e.g. &gt;10.5m &lt;1g</property>
                                 <property name="primary-icon-name">drive-harddisk-symbolic</property>
                                 <signal name="activate" handler="on_refilter"/>
                                 <signal name="changed" handler="on_filter_entry_changed"/>
-                                <signal name="icon-press" handler="on_refilter"/>
+                                <signal name="icon-press" handler="on_filter_entry_icon_press"/>
                               </object>
                             </child>
                             <style>
@@ -290,16 +294,17 @@
                             <property name="visible">True</property>
                             <property name="has-entry">True</property>
                             <property name="hexpand">True</property>
+                            <property name="id-column">0</property>
                             <signal name="notify::popup-shown" handler="on_combobox_popup_shown"/>
                             <child internal-child="entry">
                               <object class="GtkEntry">
                                 <property name="width-chars">10</property>
                                 <property name="placeholder-text" translatable="yes">Bitrate…</property>
-                                <property name="tooltip-text" translatable="yes">Bitrate</property>
+                                <property name="tooltip-text" translatable="yes">Bitrate, e.g. 256 &lt;1412</property>
                                 <property name="primary-icon-name">audio-volume-high-symbolic</property>
                                 <signal name="activate" handler="on_refilter"/>
                                 <signal name="changed" handler="on_filter_entry_changed"/>
-                                <signal name="icon-press" handler="on_refilter"/>
+                                <signal name="icon-press" handler="on_filter_entry_icon_press"/>
                               </object>
                             </child>
                             <style>
@@ -318,16 +323,17 @@
                             <property name="visible">True</property>
                             <property name="has-entry">True</property>
                             <property name="hexpand">True</property>
+                            <property name="id-column">0</property>
                             <signal name="notify::popup-shown" handler="on_combobox_popup_shown"/>
                             <child internal-child="entry">
                               <object class="GtkEntry">
                                 <property name="width-chars">10</property>
                                 <property name="placeholder-text" translatable="yes">Duration…</property>
-                                <property name="tooltip-text" translatable="yes">Duration, e.g. 2:20|!3:30|=4:40</property>
+                                <property name="tooltip-text" translatable="yes">Duration, e.g. &gt;6:00 &lt;12:00 !6:54</property>
                                 <property name="primary-icon-name">media-playback-start-symbolic</property>
                                 <signal name="activate" handler="on_refilter"/>
                                 <signal name="changed" handler="on_filter_entry_changed"/>
-                                <signal name="icon-press" handler="on_refilter"/>
+                                <signal name="icon-press" handler="on_filter_entry_icon_press"/>
                               </object>
                             </child>
                             <style>
@@ -350,16 +356,17 @@
                                 <property name="visible">True</property>
                                 <property name="has-entry">True</property>
                                 <property name="hexpand">True</property>
+                                <property name="id-column">0</property>
                                 <signal name="notify::popup-shown" handler="on_combobox_popup_shown"/>
                                 <child internal-child="entry">
                                   <object class="GtkEntry">
                                     <property name="width-chars">12</property>
                                     <property name="placeholder-text" translatable="yes">Country code…</property>
-                                    <property name="tooltip-text" translatable="yes">Country code, e.g. US|GB|ES or !DE|!GB</property>
+                                    <property name="tooltip-text" translatable="yes">Country code, e.g. US ES or !DE !GB</property>
                                     <property name="primary-icon-name">mark-location-symbolic</property>
                                     <signal name="activate" handler="on_refilter"/>
                                     <signal name="changed" handler="on_filter_entry_changed"/>
-                                    <signal name="icon-press" handler="on_refilter"/>
+                                    <signal name="icon-press" handler="on_filter_entry_icon_press"/>
                                   </object>
                                 </child>
                                 <style>
@@ -404,15 +411,13 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton">
+                  <object class="GtkButton" id="clear_undo_filters_button">
                     <property name="visible">True</property>
-                    <property name="tooltip-text" translatable="yes">Clear Active Filters</property>
                     <property name="valign">start</property>
-                    <signal name="clicked" handler="on_clear_filters"/>
+                    <signal name="clicked" handler="on_clear_undo_filters"/>
                     <child>
-                      <object class="GtkImage">
+                      <object class="GtkImage" id="clear_undo_filters_icon">
                         <property name="visible">True</property>
-                        <property name="icon-name">edit-clear-symbolic</property>
                       </object>
                     </child>
                     <style>

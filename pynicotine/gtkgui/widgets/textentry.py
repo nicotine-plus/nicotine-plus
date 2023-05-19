@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -22,10 +22,10 @@ from os.path import commonprefix
 
 from gi.repository import Gtk
 
+from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
-from pynicotine.slskmessages import UserStatus
 
 
 """ Text Entry-related """
@@ -66,7 +66,7 @@ class ChatEntry:
 
     def on_enter(self, *_args):
 
-        if core.user_status == UserStatus.OFFLINE:
+        if core.user_status == slskmessages.UserStatus.OFFLINE:
             return
 
         text = self.widget.get_text()
@@ -93,11 +93,7 @@ class ChatEntry:
         cmd = cmd_split[0]
         args = cmd_split[1] if len(cmd_split) == 2 else ""
 
-        if cmd == "/now":
-            core.now_playing.display_now_playing(
-                callback=lambda np_message: self.send_message(self.entity, np_message))
-
-        elif self.is_chatroom:
+        if self.is_chatroom:
             if not core.pluginhandler.trigger_chatroom_command_event(self.entity, cmd[1:], args):
                 return
 
@@ -205,7 +201,7 @@ class ChatCompletion:
 
         config_words = config.sections["words"]
 
-        self.entry_completion.set_popup_single_match(not config_words["onematch"])
+        self.entry_completion.set_popup_single_match(False)
         self.entry_completion.set_minimum_key_length(config_words["characters"])
         self.entry_completion.set_inline_completion(False)
 
@@ -306,17 +302,6 @@ class ChatCompletion:
         i = self.entry.get_position()
         text = text[:i].split(" ")[-1]
         preix = i - len(text)
-
-        if not config.sections["words"]["cycle"]:
-            completion, single = self.get_completion(text, self.completion_list)
-            if completion:
-                if single and i == len(text) and not text.startswith("/"):
-                    completion += ": "
-                self.entry.delete_text(preix, i)
-                self.entry.insert_text(completion, preix)
-                self.entry.set_position(preix + len(completion))
-
-            return True
 
         if not self.midwaycompletion:
             self.completions["completions"] = self.get_completions(text, self.completion_list)

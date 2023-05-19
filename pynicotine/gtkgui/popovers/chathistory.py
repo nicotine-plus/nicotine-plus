@@ -22,15 +22,17 @@ import time
 
 from collections import deque
 
+from gi.repository import GObject
+
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.popover import Popover
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.gtkgui.widgets.treeview import TreeView
-from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.utils import encode_path
 
 
@@ -38,12 +40,11 @@ class ChatHistory(Popover):
 
     def __init__(self, window):
 
-        ui_template = UserInterface(scope=self, path="popovers/chathistory.ui")
         (
             self.container,
             self.list_container,
             self.search_entry
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="popovers/chathistory.ui")
 
         super().__init__(
             window=window,
@@ -54,6 +55,7 @@ class ChatHistory(Popover):
 
         self.list_view = TreeView(
             window, parent=self.list_container, activate_row_callback=self.on_show_user,
+            search_entry=self.search_entry,
             columns={
                 "user": {
                     "column_type": "text",
@@ -63,10 +65,15 @@ class ChatHistory(Popover):
                 "latest_message": {
                     "column_type": "text",
                     "title": _("Latest Message")
+                },
+
+                # Hidden data columns
+                "timestamp_data": {
+                    "data_type": GObject.TYPE_UINT64,
+                    "default_sort_column": "descending"
                 }
             }
         )
-        self.list_view.set_search_entry(self.search_entry)
 
         Accelerator("<Primary>f", self.widget, self.on_search_accelerator)
         CompletionEntry(window.private_entry, self.list_view.model, column=0)
@@ -86,6 +93,7 @@ class ChatHistory(Popover):
         username = os.path.basename(file_path[:-4]).decode("utf-8", "replace")
         is_safe_username = ("_" not in username)
         login_username = config.sections["server"]["login"]
+        timestamp = os.path.getmtime(file_path)
 
         read_num_lines = 1 if is_safe_username else 25
         latest_message = None
@@ -131,19 +139,19 @@ class ChatHistory(Popover):
                     username = line_username
                     break
 
-        return username, latest_message
+        return username, latest_message, timestamp
 
     def load_users(self):
 
         log_path = os.path.join(config.sections["logging"]["privatelogsdir"], "*.log")
-        user_logs = sorted(glob.glob(encode_path(log_path)), key=os.path.getmtime)
+        user_logs = glob.glob(encode_path(log_path))
 
         for file_path in user_logs:
             try:
-                username, latest_message = self.load_user(file_path)
+                username, latest_message, timestamp = self.load_user(file_path)
 
                 if latest_message is not None:
-                    self.update_user(username, latest_message.strip())
+                    self.update_user(username, latest_message.strip(), timestamp)
 
             except OSError:
                 continue
@@ -155,16 +163,21 @@ class ChatHistory(Popover):
         if iterator is not None:
             self.list_view.remove_row(iterator)
 
-    def update_user(self, username, message, add_timestamp=False):
+    def update_user(self, username, message, timestamp=None):
 
         self.remove_user(username)
 
-        if add_timestamp:
+        if not timestamp:
             timestamp_format = config.sections["logging"]["log_timestamp"]
-            timestamp = time.strftime(timestamp_format)
-            message = f"{timestamp} {message}"
+            timestamp = time.time()
+            h_timestamp = time.strftime(timestamp_format)
+            message = f"{h_timestamp} {message}"
 
-        self.list_view.add_row([username, message], select_row=False, prepend=True)
+        self.list_view.add_row([
+            username,
+            message,
+            int(timestamp)
+        ], select_row=False, prepend=True)
 
     def on_show_user(self, *_args):
 

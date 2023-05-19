@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -132,6 +132,8 @@ class FolderChooser(FileChooser):
                  initial_folder=None, select_multiple=False):
 
         super().__init__(parent, callback, callback_data, title, initial_folder, select_multiple=select_multiple)
+
+        self.file_chooser.set_accept_label(_("_Select"))
 
         if not self.using_new_api:
             self.file_chooser.set_action(Gtk.FileChooserAction.SELECT_FOLDER)

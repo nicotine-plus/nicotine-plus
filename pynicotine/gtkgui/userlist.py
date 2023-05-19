@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 # COPYRIGHT (C) 2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2009 quinox <quinox@users.sf.net>
@@ -25,17 +25,18 @@ import time
 
 from gi.repository import GObject
 
+from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
+from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
 from pynicotine.gtkgui.widgets.treeview import TreeView
-from pynicotine.gtkgui.widgets.ui import UserInterface
-from pynicotine.slskmessages import UserStatus
+from pynicotine.utils import UINT64_LIMIT
 from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
 
@@ -44,19 +45,18 @@ class UserList:
 
     def __init__(self, window):
 
-        ui_template = UserInterface(scope=self, path="buddylist.ui")
         (
             self.container,
             self.list_container,
             self.toolbar
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="buddylist.ui")
 
         self.window = window
 
         # Columns
         self.list_view = TreeView(
             window, parent=self.list_container, name="buddy_list",
-            activate_row_callback=self.on_row_activated, tooltip_callback=self.on_tooltip,
+            activate_row_callback=self.on_row_activated,
             columns={
                 # Visible columns
                 "status": {
@@ -126,7 +126,7 @@ class UserList:
                 "status_data": {"data_type": int},
                 "speed_data": {"data_type": GObject.TYPE_UINT},
                 "files_data": {"data_type": GObject.TYPE_UINT},
-                "last_seen_data": {"data_type": int},
+                "last_seen_data": {"data_type": GObject.TYPE_UINT64},
                 "country_data": {"data_type": str}
             }
         )
@@ -166,9 +166,6 @@ class UserList:
             ("user-status", self.user_status)
         ):
             events.connect(event_name, callback)
-
-    def save_columns(self):
-        self.list_view.save_columns()
 
     def update_visible(self):
 
@@ -245,19 +242,21 @@ class UserList:
 
         self.list_view.set_row_value(iterator, "speed", h_speed)
         self.list_view.set_row_value(iterator, "files", h_files)
-        self.list_view.set_row_value(iterator, "speed_data", GObject.Value(GObject.TYPE_UINT, avgspeed))
-        self.list_view.set_row_value(iterator, "files_data", GObject.Value(GObject.TYPE_UINT, files))
+        self.list_view.set_row_value(iterator, "speed_data", avgspeed)
+        self.list_view.set_row_value(iterator, "files_data", files)
 
     def add_buddy(self, user, user_data):
 
         country_code = user_data.country.replace("flag_", "")
-        last_seen = user_data.last_seen
 
         try:
-            time_from_epoch = time.mktime(time.strptime(last_seen, "%m/%d/%Y %H:%M:%S"))
+            last_seen_time = time.strptime(user_data.last_seen, "%m/%d/%Y %H:%M:%S")
+            last_seen = time.mktime(last_seen_time)
+            h_last_seen = time.strftime("%x %X", last_seen_time)
+
         except ValueError:
-            last_seen = _("Never seen")
-            time_from_epoch = 0
+            last_seen = 0
+            h_last_seen = _("Never seen")
 
         self.list_view.add_row([
             USER_STATUS_ICON_NAMES.get(user_data.status, ""),
@@ -267,10 +266,10 @@ class UserList:
             bool(user_data.is_trusted),
             bool(user_data.notify_status),
             bool(user_data.is_prioritized),
-            str(last_seen),
+            str(h_last_seen),
             str(user_data.note),
             0, 0, 0,
-            time_from_epoch,
+            last_seen,
             str(country_code)
         ], select_row=core.userlist.allow_saving_buddies)
 
@@ -329,15 +328,15 @@ class UserList:
         if iterator is None:
             return
 
-        last_seen = ""
-        time_from_epoch = 2147483647  # Gtk only allows range -2147483648 to 2147483647 in set()
+        last_seen = UINT64_LIMIT
+        h_last_seen = ""
 
         if not online:
-            last_seen = time.strftime("%m/%d/%Y %H:%M:%S")
-            time_from_epoch = time.mktime(time.strptime(last_seen, "%m/%d/%Y %H:%M:%S"))
+            last_seen = time.time()
+            h_last_seen = time.strftime("%x %X", time.localtime(last_seen))
 
-        self.list_view.set_row_value(iterator, "last_seen", last_seen)
-        self.list_view.set_row_value(iterator, "last_seen_data", int(time_from_epoch))
+        self.list_view.set_row_value(iterator, "last_seen", h_last_seen)
+        self.list_view.set_row_value(iterator, "last_seen_data", last_seen)
 
     def user_country(self, user, country_code):
 
@@ -422,24 +421,10 @@ class UserList:
             default=note
         ).show()
 
-    @staticmethod
-    def on_tooltip(list_view, pos_x, pos_y, _keyboard_mode, tooltip):
-
-        status_tooltip = list_view.show_user_status_tooltip(pos_x, pos_y, tooltip, "status_data")
-        country_tooltip = list_view.show_country_tooltip(pos_x, pos_y, tooltip, "country_data")
-
-        if status_tooltip:
-            return status_tooltip
-
-        if country_tooltip:
-            return country_tooltip
-
-        return False
-
     def server_disconnect(self, *_args):
 
         for iterator in self.list_view.get_all_rows():
-            self.list_view.set_row_value(iterator, "status", USER_STATUS_ICON_NAMES[UserStatus.OFFLINE])
+            self.list_view.set_row_value(iterator, "status", USER_STATUS_ICON_NAMES[slskmessages.UserStatus.OFFLINE])
             self.list_view.set_row_value(iterator, "speed", "")
             self.list_view.set_row_value(iterator, "files", "")
             self.list_view.set_row_value(iterator, "status_data", 0)

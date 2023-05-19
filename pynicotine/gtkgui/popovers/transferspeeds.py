@@ -19,9 +19,9 @@
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.popover import Popover
 from pynicotine.gtkgui.widgets.theme import add_css_class
-from pynicotine.gtkgui.widgets.ui import UserInterface
 
 
 class TransferSpeeds(Popover):
@@ -30,7 +30,6 @@ class TransferSpeeds(Popover):
 
         self.transfer_type = transfer_type
 
-        ui_template = UserInterface(scope=self, path=f"popovers/{transfer_type}speeds.ui")
         (
             self.alt_speed_spinner,
             self.container,
@@ -38,7 +37,7 @@ class TransferSpeeds(Popover):
             self.use_alt_limit_radio,
             self.use_limit_radio,
             self.use_unlimited_speed_radio
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path=f"popovers/{transfer_type}speeds.ui")
 
         super().__init__(
             window=window,

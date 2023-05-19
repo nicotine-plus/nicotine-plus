@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -260,7 +260,7 @@ class MessageDialog(Window):
 
         widget = Gtk.MessageDialog(
             transient_for=parent.widget if parent else None, destroy_with_parent=True, message_type=message_type,
-            default_width=width, text=title, secondary_text=message
+            default_width=width, text=title, secondary_text=message, secondary_use_markup=True
         )
         super().__init__(widget=widget)
         widget.connect("response", self.on_response, callback, callback_data)
@@ -364,12 +364,13 @@ class EntryDialog(MessageDialog):
                              (_("_Cancel"), Gtk.ResponseType.CANCEL),
                              (action_button_label, Gtk.ResponseType.OK)])
 
-        self.toggle = self._add_option_toggle(option_label, option_value)
         self.entry = self._add_entry_combobox(default, visibility, droplist)
         self.second_entry = None
 
         if use_second_entry:
             self.second_entry = self._add_entry_combobox(second_default, visibility, second_droplist)
+
+        self.toggle = self._add_option_toggle(option_label, option_value)
 
     def _add_combobox(self, items, visibility=True):
 

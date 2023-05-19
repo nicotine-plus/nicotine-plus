@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -25,12 +25,12 @@ from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Pango
 
+from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.application import GTK_GUI_DIR
 from pynicotine.logfacility import log
 from pynicotine.shares import FileTypes
-from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import encode_path
 
 
@@ -323,9 +323,9 @@ FILE_TYPE_ICON_LABELS = {
     "x-office-document-symbolic": _("Document/Text")
 }
 USER_STATUS_ICON_NAMES = {
-    UserStatus.ONLINE: "nplus-status-online",
-    UserStatus.AWAY: "nplus-status-away",
-    UserStatus.OFFLINE: "nplus-status-offline"
+    slskmessages.UserStatus.ONLINE: "nplus-status-online",
+    slskmessages.UserStatus.AWAY: "nplus-status-away",
+    slskmessages.UserStatus.OFFLINE: "nplus-status-offline"
 }
 
 
@@ -389,9 +389,9 @@ def load_custom_icons(update=False):
         return
 
     icon_names = (
-        ("away", USER_STATUS_ICON_NAMES[UserStatus.AWAY]),
-        ("online", USER_STATUS_ICON_NAMES[UserStatus.ONLINE]),
-        ("offline", USER_STATUS_ICON_NAMES[UserStatus.OFFLINE]),
+        ("away", USER_STATUS_ICON_NAMES[slskmessages.UserStatus.AWAY]),
+        ("online", USER_STATUS_ICON_NAMES[slskmessages.UserStatus.ONLINE]),
+        ("offline", USER_STATUS_ICON_NAMES[slskmessages.UserStatus.OFFLINE]),
         ("hilite", "nplus-tab-highlight"),
         ("hilite3", "nplus-tab-changed"),
         ("trayicon_away", "nplus-tray-away"),
@@ -522,9 +522,9 @@ PANGO_WEIGHTS = {
     Pango.Weight.ULTRAHEAVY: 1000
 }
 USER_STATUS_COLORS = {
-    UserStatus.ONLINE: "useronline",
-    UserStatus.AWAY: "useraway",
-    UserStatus.OFFLINE: "useroffline"
+    slskmessages.UserStatus.ONLINE: "useronline",
+    slskmessages.UserStatus.AWAY: "useraway",
+    slskmessages.UserStatus.OFFLINE: "useroffline"
 }
 
 

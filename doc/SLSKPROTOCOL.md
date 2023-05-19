@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on January 16, 2023
+Last updated on March 28, 2023
 
 Since the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify or extend the protocol in ways that negatively impact the network.
 
@@ -64,6 +64,7 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
 |-----------------|----------------------------------------------------------------------------------|
 | INVALIDUSERNAME | Username is longer than 30 characters or contains invalid characters (non-ASCII) |
 | INVALIDPASS     | Password for existing user is incorrect                                          |
+| INVALIDVERSION  | Client version is outdated                                                       |
 
 ### User Status Codes
 
@@ -207,7 +208,7 @@ but it handles the protocol well enough (and can be modified).
 | 86   | [Parent Inactivity Timeout](#server-code-86)      | Obsolete   |
 | 87   | [Search Inactivity Timeout](#server-code-87)      | Obsolete   |
 | 88   | [Minimum Parents In Cache](#server-code-88)       | Obsolete   |
-| 90   | [Distributed Alive Interval](#server-code-90)     | Obsolete   |
+| 90   | [Distributed Ping Interval](#server-code-90)      | Obsolete   |
 | 91   | [Add Privileged User](#server-code-91)            | Obsolete   |
 | 92   | [Check Privileges](#server-code-92)               |            |
 | 93   | [Embedded Message](#server-code-93)               |            |
@@ -296,6 +297,7 @@ We send this to the server right after the connection has been established. Serv
     2.  **string** <ins>greet</ins> *MOTD string*
     3.  **uint32** <ins>Your IP Address</ins>
     4.  **string** <ins>hash</ins> *MD5 hex digest of the password string*
+    5.  **bool** <ins>is supporter</ins>  *If we have donated to Soulseek at some point in the past*
   - Receive Login Failure
     1.  **bool** <ins>failure</ins> **0**
     2.  **string** <ins>reason</ins> *see [Login Failure Reasons](#login-failure-reasons)*
@@ -1088,7 +1090,7 @@ The server sends us a speed ratio determining the number of children we can have
   - Send
       - *No Message*
   - Receive
-    1.  **uint32** <ins>number</ins>
+    1.  **uint32** <ins>seconds</ins>
 
 ## Server Code 87
 
@@ -1101,7 +1103,7 @@ The server sends us a speed ratio determining the number of children we can have
   - Send
       - *No Message*
   - Receive
-    1.  **uint32** <ins>number</ins>
+    1.  **uint32** <ins>seconds</ins>
 
 ## Server Code 88
 
@@ -1118,7 +1120,7 @@ The server sends us a speed ratio determining the number of children we can have
 
 ## Server Code 90
 
-### DistribAliveInterval
+### DistribPingInterval
 
 **OBSOLETE, no longer sent by the server**
 
@@ -1127,7 +1129,7 @@ The server sends us a speed ratio determining the number of children we can have
   - Send
       - *No Message*
   - Receive
-    1.  **uint32** <ins>number</ins>
+    1.  **uint32** <ins>seconds</ins>
 
 ## Server Code 91
 
@@ -2469,7 +2471,7 @@ Distributed messages are sent to peers over a 'D' connection, and are used for t
 
 | Code | Message                                  | Status     |
 |------|------------------------------------------|------------|
-| 0    | [Ping](#distributed-code-0)              |            |
+| 0    | [Ping](#distributed-code-0)              | Deprecated |
 | 3    | [Search Request](#distributed-code-3)    |            |
 | 4    | [Branch Level](#distributed-code-4)      |            |
 | 5    | [Branch Root](#distributed-code-5)       |            |
@@ -2478,9 +2480,11 @@ Distributed messages are sent to peers over a 'D' connection, and are used for t
 
 ## Distributed Code 0
 
-### DistribAlive
+### DistribPing
 
-Send it every 60 sec.
+**DEPRECATED, sent by Soulseek NS but not SoulseekQt**
+
+We ping distributed children every 60 seconds.
 
 ### Data Order
 
@@ -2514,6 +2518,8 @@ Search request that arrives through the distributed network. We transmit the sea
 
 We tell our distributed children what our position is in our branch (xth generation) on the distributed network.
 
+If we receive a branch level of 0 from a parent, we should mark the parent as our branch root, since they won't send a [DistribBranchRoot](#distributed-code-5) message in this case.
+
 ### Data Order
 
   - Send
@@ -2526,6 +2532,8 @@ We tell our distributed children what our position is in our branch (xth generat
 ### DistribBranchRoot
 
 We tell our distributed children the username of the root of the branch we're in on the distributed network.
+
+This message should not be sent when we're the branch root.
 
 ### Data Order
 

@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 # COPYRIGHT (C) 2020 Lene Preuss <lene.preuss@gmail.com>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2007 daelstorm <daelstorm@gmail.com>
@@ -30,6 +30,8 @@ import pickle
 import sys
 import webbrowser
 
+UINT32_LIMIT = 4294967295
+UINT64_LIMIT = 18446744073709551615
 FILE_SIZE_SUFFIXES = ["B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"]
 PUNCTUATION = ["!", '"', "#", "$", "%", "&", "'", "(", ")", "*", "+", ",", "-", ".", "/", ":", ";", "<", "=", ">",
                "?", "@", "[", "\\", "]", "^", "_", "`", "{", "|", "}", "~", "–", "—", "‐", "’", "“", "”", "…"]
