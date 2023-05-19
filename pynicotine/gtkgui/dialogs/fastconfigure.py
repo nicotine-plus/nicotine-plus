@@ -123,6 +123,18 @@ class FastConfigure(Dialog):
     def on_entry_changed(self, *_args):
         self.reset_completeness()
 
+    def on_user_entry_activate(self, *_args):
+
+        if not self.username_entry.get_text():
+            self.username_entry.grab_focus()
+            return
+
+        if not self.password_entry.get_text():
+            self.password_entry.grab_focus()
+            return
+
+        self.on_next()
+
     def on_download_folder_selected(self):
         config.sections["transfers"]["downloaddir"] = self.download_folder_button.get_path()
 

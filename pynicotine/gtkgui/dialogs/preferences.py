@@ -273,6 +273,9 @@ class DownloadsPage:
             self.received_folder_button, parent=application.preferences, chooser_type="folder"
         )
 
+        self.filter_syntax_description = _("<b>Syntax</b>: Letters are case-insensitive. All Python regular "
+                                           "expressions are supported if escaping is disabled. For simple filters, "
+                                           "keeping escaping enabled is recommended.")
         self.filter_list_view = TreeView(
             application.window, parent=self.filter_list_container, multi_select=True,
             activate_row_callback=self.on_edit_filter,
@@ -392,7 +395,7 @@ class DownloadsPage:
         EntryDialog(
             parent=self.application.preferences,
             title=_("Add Download Filter"),
-            message=_("Enter a new download filter:"),
+            message=self.filter_syntax_description + "\n\n" + _("Enter a new download filter:"),
             callback=self.on_add_filter_response,
             option_value=True,
             option_label=_("Escape filter"),
@@ -422,7 +425,7 @@ class DownloadsPage:
             EntryDialog(
                 parent=self.application.preferences,
                 title=_("Edit Download Filter"),
-                message=_("Modify the following download filter:"),
+                message=self.filter_syntax_description + "\n\n" + _("Modify the following download filter:"),
                 callback=self.on_edit_filter_response,
                 callback_data=iterator,
                 default=dfilter,
@@ -1369,7 +1372,7 @@ class ChatsPage:
         EntryDialog(
             parent=self.application.preferences,
             title=_("Add Replacement"),
-            message=_("Enter a text pattern and what to replace it with"),
+            message=_("Enter a text pattern and what to replace it with:"),
             callback=self.on_add_replacement_response,
             use_second_entry=True
         ).show()

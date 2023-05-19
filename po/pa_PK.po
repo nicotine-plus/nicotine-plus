@@ -5,9 +5,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-02 01:17+0300\n"
-"PO-Revision-Date: 2023-04-02 00:16+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"POT-Creation-Date: 2023-05-19 01:29+0300\n"
+"PO-Revision-Date: 2023-05-17 14:54+0000\n"
+"Last-Translator: bgo-eiu <huyaqoob+toolforge@gmail.com>\n"
 "Language-Team: Punjabi (Pakistan) <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/pa_PK/>\n"
 "Language: pa_PK\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.17-dev\n"
+"X-Generator: Weblate 4.18-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -53,7 +53,7 @@ msgid "Soulseek Client"
 msgstr "ਸੋਲਸੀਕ ਕਲਾਇੰਟ"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:7 pynicotine/__init__.py:36
-#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:76
+#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:70
 #, fuzzy
 msgid "Graphical client for the Soulseek peer-to-peer network"
 msgstr "ਸੋਲਸੀਕ ਪੀਅਰ-ਟੂ-ਪੀਅਰ ਨੈੱਟਵਰਕ ਲਈ ਗ੍ਰਾਫਿਕਲ ਕਲਾਇੰਟ"
@@ -163,12 +163,12 @@ msgstr "ਕਮਰੇ '%(room)s' ਵਿੱਚ ਉਪਭੋਗਤਾ '%(user)s' �
 msgid "Can't create directory '%(path)s', reported error: %(error)s"
 msgstr "ਡਾਇਰੈਕਟਰੀ '%(path)s' ਨਹੀਂ ਬਣਾਈ ਜਾ ਸਕਦੀ, ਰਿਪੋਰਟ ਕੀਤੀ ਗਈ ਗਲਤੀ: %(error)s"
 
-#: pynicotine/config.py:819
+#: pynicotine/config.py:816
 #, fuzzy, python-format
 msgid "Error backing up config: %s"
 msgstr "ਸੰਰਚਨਾ ਦਾ ਬੈਕਅੱਪ ਲੈਣ ਵਿੱਚ ਤਰੁੱਟੀ: %s"
 
-#: pynicotine/config.py:822
+#: pynicotine/config.py:819
 #, fuzzy, python-format
 msgid "Config backed up to: %s"
 msgstr "ਸੰਰਚਨਾ ਦਾ ਬੈਕਅੱਪ ਲਿਆ ਗਿਆ: %s"
@@ -224,14 +224,14 @@ msgstr "ਸਰਵਰ ਨਾਲ ਜੁੜਨ ਵਿੱਚ ਅਸਮਰੱਥ। �
 msgid "Cannot Connect"
 msgstr "ਜੁੜੋ"
 
-#: pynicotine/core.py:383 pynicotine/gtkgui/dialogs/preferences.py:123
+#: pynicotine/core.py:383 pynicotine/gtkgui/dialogs/preferences.py:122
 #: pynicotine/gtkgui/search.py:1331 pynicotine/gtkgui/userinfo.py:473
 #: pynicotine/gtkgui/widgets/popupmenu.py:560
 #: pynicotine/gtkgui/widgets/treeview.py:546
 #: pynicotine/gtkgui/widgets/treeview.py:551
 #: pynicotine/gtkgui/widgets/treeview.py:1091
 #: pynicotine/gtkgui/widgets/treeview.py:1102
-#: pynicotine/gtkgui/ui/settings/network.ui:223
+#: pynicotine/gtkgui/ui/settings/network.ui:145
 #: pynicotine/gtkgui/ui/userinfo.ui:147 pynicotine/gtkgui/ui/userinfo.ui:174
 #: pynicotine/gtkgui/ui/userinfo.ui:201 pynicotine/gtkgui/ui/userinfo.ui:228
 #: pynicotine/gtkgui/ui/userinfo.ui:255 pynicotine/gtkgui/ui/userinfo.ui:282
@@ -250,8 +250,8 @@ msgstr "ਉਪਭੋਗਤਾ %s ਦਾ IP ਪ੍ਰਾਪਤ ਨਹੀਂ ਕ�
 msgid "IP address of user %(user)s: %(ip)s, port %(port)i%(country)s"
 msgstr "ਉਪਭੋਗਤਾ %(user)s ਦਾ IP ਪਤਾ %(ip)s ਹੈ, ਪੋਰਟ %(port)i%(country)s"
 
-#: pynicotine/core.py:397 pynicotine/gtkgui/dialogs/preferences.py:880
-#: pynicotine/gtkgui/dialogs/preferences.py:1012
+#: pynicotine/core.py:397 pynicotine/gtkgui/dialogs/preferences.py:877
+#: pynicotine/gtkgui/dialogs/preferences.py:1009
 #, fuzzy
 msgid "IP Address"
 msgstr "IP ਪਤਾ"
@@ -365,18 +365,18 @@ msgstr "_ਬੈਕਗ੍ਰਾਉਂਡ ਵਿੱਚ ਚਲਾਓ"
 msgid "Remember choice"
 msgstr "ਚੋਣ ਨੂੰ ਯਾਦ ਰੱਖੋ"
 
-#: pynicotine/gtkgui/application.py:314
+#: pynicotine/gtkgui/application.py:317
 #, fuzzy
 msgid "Shares Not Available"
 msgstr "ਸ਼ੇਅਰ ਉਪਲਬਧ ਨਹੀਂ ਹਨ"
 
-#: pynicotine/gtkgui/application.py:315
+#: pynicotine/gtkgui/application.py:318
 #, fuzzy
 msgid ""
 "Verify that external disks are mounted and folder permissions are correct."
 msgstr "ਜਾਂਚ ਕਰੋ ਕਿ ਬਾਹਰੀ ਡਿਸਕਾਂ ਮਾਊਂਟ ਕੀਤੀਆਂ ਗਈਆਂ ਹਨ ਅਤੇ ਫੋਲਡਰ ਅਨੁਮਤੀਆਂ ਸਹੀ ਹਨ।"
 
-#: pynicotine/gtkgui/application.py:317 pynicotine/gtkgui/application.py:339
+#: pynicotine/gtkgui/application.py:320 pynicotine/gtkgui/application.py:342
 #: pynicotine/gtkgui/widgets/dialogs.py:364
 #: pynicotine/gtkgui/widgets/dialogs.py:470
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:6
@@ -384,23 +384,23 @@ msgstr "ਜਾਂਚ ਕਰੋ ਕਿ ਬਾਹਰੀ ਡਿਸਕਾਂ ਮਾ�
 msgid "_Cancel"
 msgstr "_ਰੱਦ ਕਰੋ"
 
-#: pynicotine/gtkgui/application.py:318 pynicotine/gtkgui/uploads.py:44
+#: pynicotine/gtkgui/application.py:321 pynicotine/gtkgui/uploads.py:44
 #: pynicotine/gtkgui/ui/userbrowse.ui:6
 #, fuzzy
 msgid "_Retry"
 msgstr "_ਮੁੜ ਕੋਸ਼ਿਸ਼ ਕਰੋ"
 
-#: pynicotine/gtkgui/application.py:319
+#: pynicotine/gtkgui/application.py:322
 #, fuzzy
 msgid "_Force Rescan"
 msgstr "_ਫੋਰਸ ਰੀਸਕੈਨ ਕਰੋ"
 
-#: pynicotine/gtkgui/application.py:331
+#: pynicotine/gtkgui/application.py:334
 #, fuzzy
 msgid "Invalid Password"
 msgstr "ਗਲਤ ਪਾਸਵਰਡ"
 
-#: pynicotine/gtkgui/application.py:332
+#: pynicotine/gtkgui/application.py:335
 #, fuzzy, python-format
 msgid ""
 "User %s already exists, and the password you entered is invalid. Please "
@@ -409,47 +409,47 @@ msgstr ""
 "ਉਪਭੋਗਤਾ %s ਪਹਿਲਾਂ ਹੀ ਮੌਜੂਦ ਹੈ, ਅਤੇ ਤੁਹਾਡੇ ਦੁਆਰਾ ਦਰਜ ਕੀਤਾ ਪਾਸਵਰਡ ਅਵੈਧ ਹੈ। ਜੇਕਰ ਤੁਸੀਂ ਪਹਿਲੀ "
 "ਵਾਰ ਲੌਗਇਨ ਕਰ ਰਹੇ ਹੋ ਤਾਂ ਕਿਰਪਾ ਕਰਕੇ ਕੋਈ ਹੋਰ ਉਪਭੋਗਤਾ ਨਾਮ ਚੁਣੋ।"
 
-#: pynicotine/gtkgui/application.py:340
+#: pynicotine/gtkgui/application.py:343
 #, fuzzy
 msgid "Change _Login Details"
 msgstr "_ਲੌਗਇਨ ਵੇਰਵੇ ਬਦਲੋ"
 
-#: pynicotine/gtkgui/application.py:492
+#: pynicotine/gtkgui/application.py:495
 #, fuzzy
 msgid "Message Downloading Users"
 msgstr "ਸੁਨੇਹਾ ਡਾਊਨਲੋਡ ਕਰਨ ਵਾਲੇ ਉਪਭੋਗਤਾ"
 
-#: pynicotine/gtkgui/application.py:493
+#: pynicotine/gtkgui/application.py:496
 #, fuzzy
 msgid "Send private message to all users who are downloading from you:"
 msgstr "ਉਹਨਾਂ ਸਾਰੇ ਉਪਭੋਗਤਾਵਾਂ ਨੂੰ ਨਿੱਜੀ ਸੰਦੇਸ਼ ਭੇਜੋ ਜੋ ਤੁਹਾਡੇ ਤੋਂ ਡਾਊਨਲੋਡ ਕਰ ਰਹੇ ਹਨ:"
 
-#: pynicotine/gtkgui/application.py:494 pynicotine/gtkgui/application.py:507
+#: pynicotine/gtkgui/application.py:497 pynicotine/gtkgui/application.py:510
 #, fuzzy
 msgid "_Send Message"
 msgstr "ਸੁਨੇਹਾ ਭੇਜੋ"
 
-#: pynicotine/gtkgui/application.py:505
+#: pynicotine/gtkgui/application.py:508
 #, fuzzy
 msgid "Message Buddies"
 msgstr "ਭਰੋਸੇਮੰਦ ਬੱਡੀਜ਼"
 
-#: pynicotine/gtkgui/application.py:506
+#: pynicotine/gtkgui/application.py:509
 #, fuzzy
 msgid "Send private message to all online buddies:"
 msgstr "ਸਾਰੇ ਔਨਲਾਈਨ ਦੋਸਤਾਂ ਨੂੰ ਨਿੱਜੀ ਸੰਦੇਸ਼ ਭੇਜੋ:"
 
-#: pynicotine/gtkgui/application.py:531
+#: pynicotine/gtkgui/application.py:534
 #, fuzzy
 msgid "Select a Saved Shares List File"
 msgstr "ਇੱਕ ਸੁਰੱਖਿਅਤ ਸ਼ੇਅਰ ਸੂਚੀ ਫਾਇਲ ਦੀ ਚੋਣ ਕਰੋ"
 
-#: pynicotine/gtkgui/application.py:611
+#: pynicotine/gtkgui/application.py:614
 #, fuzzy
 msgid "Critical Error"
 msgstr "ਗੰਭੀਰ ਤਰੁੱਟੀ"
 
-#: pynicotine/gtkgui/application.py:612
+#: pynicotine/gtkgui/application.py:615
 #, fuzzy
 msgid ""
 "Nicotine+ has encountered a critical error and needs to exit. Please copy "
@@ -458,38 +458,38 @@ msgstr ""
 "ਨਿਕੋਟੀਨ+ ਨੇ ਇੱਕ ਗੰਭੀਰ ਤਰੁੱਟੀ ਦਾ ਸਾਹਮਣਾ ਕੀਤਾ ਹੈ ਅਤੇ ਇਸਨੂੰ ਬਾਹਰ ਜਾਣ ਦੀ ਲੋੜ ਹੈ। ਕਿਰਪਾ ਕਰਕੇ "
 "ਹੇਠਾਂ ਦਿੱਤੇ ਸੰਦੇਸ਼ ਨੂੰ ਕਾਪੀ ਕਰੋ ਅਤੇ ਇਸਨੂੰ ਬੱਗ ਰਿਪੋਰਟ ਵਿੱਚ ਸ਼ਾਮਲ ਕਰੋ:"
 
-#: pynicotine/gtkgui/application.py:615
+#: pynicotine/gtkgui/application.py:618
 #, fuzzy
 msgid "_Quit Nicotine+"
 msgstr "_ਨਿਕੋਟੀਨ+ ਛੱਡੋ"
 
-#: pynicotine/gtkgui/application.py:616
+#: pynicotine/gtkgui/application.py:619
 #, fuzzy
 msgid "_Copy & Report Bug"
 msgstr "_ ਕਾਪੀ ਕਰੋ ਅਤੇ ਬੱਗ ਦੀ ਰਿਪੋਰਟ ਕਰੋ"
 
-#: pynicotine/gtkgui/chatrooms.py:184
+#: pynicotine/gtkgui/chatrooms.py:176
 #, fuzzy
 msgid "Create New Room?"
 msgstr "ਨਵਾਂ ਕਮਰਾ ਬਣਾਉਣਾ ਹੈ?"
 
-#: pynicotine/gtkgui/chatrooms.py:185
+#: pynicotine/gtkgui/chatrooms.py:177
 #, fuzzy, python-format
 msgid "Do you really want to create a new room \"%s\"?"
 msgstr "ਕੀ ਤੁਸੀਂ ਸੱਚਮੁੱਚ ਇੱਕ ਨਵਾਂ ਕਮਰਾ \"%s\" ਬਣਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?"
 
-#: pynicotine/gtkgui/chatrooms.py:186
+#: pynicotine/gtkgui/chatrooms.py:178
 #, fuzzy
 msgid "Make room private"
 msgstr "ਕਮਰੇ ਨੂੰ ਨਿੱਜੀ ਬਣਾਓ"
 
-#: pynicotine/gtkgui/chatrooms.py:488 pynicotine/gtkgui/interests.py:116
+#: pynicotine/gtkgui/chatrooms.py:480 pynicotine/gtkgui/interests.py:116
 #: pynicotine/gtkgui/transferlist.py:128 pynicotine/gtkgui/userlist.py:64
 #, fuzzy
 msgid "Status"
 msgstr "ਸਥਿਤੀ"
 
-#: pynicotine/gtkgui/chatrooms.py:495 pynicotine/gtkgui/search.py:399
+#: pynicotine/gtkgui/chatrooms.py:487 pynicotine/gtkgui/search.py:399
 #: pynicotine/gtkgui/userlist.py:71
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:311
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:397
@@ -498,9 +498,9 @@ msgstr "ਸਥਿਤੀ"
 msgid "Country"
 msgstr "ਦੇਸ਼"
 
-#: pynicotine/gtkgui/chatrooms.py:502
-#: pynicotine/gtkgui/dialogs/preferences.py:886
-#: pynicotine/gtkgui/dialogs/preferences.py:1018
+#: pynicotine/gtkgui/chatrooms.py:494
+#: pynicotine/gtkgui/dialogs/preferences.py:883
+#: pynicotine/gtkgui/dialogs/preferences.py:1015
 #: pynicotine/gtkgui/interests.py:123
 #: pynicotine/gtkgui/popovers/chathistory.py:62
 #: pynicotine/gtkgui/privatechat.py:310 pynicotine/gtkgui/search.py:398
@@ -511,39 +511,39 @@ msgstr "ਦੇਸ਼"
 msgid "User"
 msgstr "ਉਪਭੋਗਤਾ"
 
-#: pynicotine/gtkgui/chatrooms.py:512 pynicotine/gtkgui/interests.py:130
+#: pynicotine/gtkgui/chatrooms.py:504 pynicotine/gtkgui/interests.py:130
 #: pynicotine/gtkgui/search.py:400 pynicotine/gtkgui/transferlist.py:132
 #: pynicotine/gtkgui/userlist.py:85
 #, fuzzy
 msgid "Speed"
 msgstr "ਗਤੀ"
 
-#: pynicotine/gtkgui/chatrooms.py:519 pynicotine/gtkgui/interests.py:137
+#: pynicotine/gtkgui/chatrooms.py:511 pynicotine/gtkgui/interests.py:137
 #: pynicotine/gtkgui/userlist.py:91 pynicotine/gtkgui/ui/mainwindow.ui:364
 #: pynicotine/gtkgui/ui/mainwindow.ui:600
 #, fuzzy
 msgid "Files"
 msgstr "ਫਾਈਲਾਂ"
 
-#: pynicotine/gtkgui/chatrooms.py:556
+#: pynicotine/gtkgui/chatrooms.py:548
 #, fuzzy
 msgid "Sear_ch User's Files"
 msgstr "ਸਰਚ_ਚ ਉਪਭੋਗਤਾ ਦੀਆਂ ਫਾਈਲਾਂ"
 
-#: pynicotine/gtkgui/chatrooms.py:557 pynicotine/gtkgui/chatrooms.py:762
+#: pynicotine/gtkgui/chatrooms.py:549 pynicotine/gtkgui/chatrooms.py:754
 #: pynicotine/gtkgui/userlist.py:150 pynicotine/gtkgui/userlist.py:205
 #, fuzzy
 msgid "Private Rooms"
 msgstr "ਪ੍ਰਾਈਵੇਟ ਕਮਰੇ"
 
-#: pynicotine/gtkgui/chatrooms.py:563 pynicotine/gtkgui/chatrooms.py:575
+#: pynicotine/gtkgui/chatrooms.py:555 pynicotine/gtkgui/chatrooms.py:567
 #: pynicotine/gtkgui/privatechat.py:299
 #, fuzzy
 msgid "Find…"
 msgstr "ਲੱਭੋ…"
 
-#: pynicotine/gtkgui/chatrooms.py:565 pynicotine/gtkgui/chatrooms.py:577
-#: pynicotine/gtkgui/chatrooms.py:789 pynicotine/gtkgui/chatrooms.py:792
+#: pynicotine/gtkgui/chatrooms.py:557 pynicotine/gtkgui/chatrooms.py:569
+#: pynicotine/gtkgui/chatrooms.py:781 pynicotine/gtkgui/chatrooms.py:784
 #: pynicotine/gtkgui/privatechat.py:301 pynicotine/gtkgui/privatechat.py:382
 #: pynicotine/gtkgui/search.py:461 pynicotine/gtkgui/transferlist.py:190
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:170
@@ -551,101 +551,101 @@ msgstr "ਲੱਭੋ…"
 msgid "Copy"
 msgstr "ਕਾਪੀ ਕਰੋ"
 
-#: pynicotine/gtkgui/chatrooms.py:566 pynicotine/gtkgui/chatrooms.py:579
+#: pynicotine/gtkgui/chatrooms.py:558 pynicotine/gtkgui/chatrooms.py:571
 #: pynicotine/gtkgui/privatechat.py:303
 #, fuzzy
 msgid "Copy All"
 msgstr "ਸਭ ਨੂੰ ਕਾਪੀ ਕਰੋ"
 
-#: pynicotine/gtkgui/chatrooms.py:568
+#: pynicotine/gtkgui/chatrooms.py:560
 #, fuzzy
 msgid "Clear Activity View"
 msgstr "ਗਤੀਵਿਧੀ ਦ੍ਰਿਸ਼ ਨੂੰ ਸਾਫ਼ ਕਰੋ"
 
-#: pynicotine/gtkgui/chatrooms.py:570 pynicotine/gtkgui/chatrooms.py:585
-#: pynicotine/gtkgui/chatrooms.py:590
+#: pynicotine/gtkgui/chatrooms.py:562 pynicotine/gtkgui/chatrooms.py:577
+#: pynicotine/gtkgui/chatrooms.py:582
 #, fuzzy
 msgid "_Leave Room"
 msgstr "_ਕਮਰਾ ਛੱਡੋ"
 
-#: pynicotine/gtkgui/chatrooms.py:578 pynicotine/gtkgui/chatrooms.py:793
+#: pynicotine/gtkgui/chatrooms.py:570 pynicotine/gtkgui/chatrooms.py:785
 #: pynicotine/gtkgui/privatechat.py:302 pynicotine/gtkgui/privatechat.py:383
 #, fuzzy
 msgid "Copy Link"
 msgstr "ਲਿੰਕ ਕਾਪੀ ਕਰੋ"
 
-#: pynicotine/gtkgui/chatrooms.py:581
+#: pynicotine/gtkgui/chatrooms.py:573
 #, fuzzy
 msgid "View Room Log"
 msgstr "ਰੂਮ ਲੌਗ ਦੇਖੋ"
 
-#: pynicotine/gtkgui/chatrooms.py:582
+#: pynicotine/gtkgui/chatrooms.py:574
 #, fuzzy
 msgid "Delete Room Log…"
 msgstr "ਰੂਮ ਲੌਗ ਮਿਟਾਓ…"
 
-#: pynicotine/gtkgui/chatrooms.py:584 pynicotine/gtkgui/privatechat.py:308
+#: pynicotine/gtkgui/chatrooms.py:576 pynicotine/gtkgui/privatechat.py:308
 #, fuzzy
 msgid "Clear Message View"
 msgstr "ਸੁਨੇਹਾ ਦ੍ਰਿਸ਼ ਸਾਫ਼ ਕਰੋ"
 
-#: pynicotine/gtkgui/chatrooms.py:752
+#: pynicotine/gtkgui/chatrooms.py:744
 #, fuzzy
 msgid "--- old messages above ---"
 msgstr "--- ਉੱਪਰ ਪੁਰਾਣੇ ਸੁਨੇਹੇ ---"
 
-#: pynicotine/gtkgui/chatrooms.py:836
+#: pynicotine/gtkgui/chatrooms.py:828
 #, fuzzy, python-format
 msgid "%(user)s mentioned you in room %(room)s"
 msgstr "%(user)s ਨੇ %(room)s ਕਮਰੇ ਵਿੱਚ ਤੁਹਾਡਾ ਜ਼ਿਕਰ ਕੀਤਾ"
 
-#: pynicotine/gtkgui/chatrooms.py:841
+#: pynicotine/gtkgui/chatrooms.py:833
 #: pynicotine/gtkgui/widgets/notifications.py:77
 #, fuzzy, python-format
 msgid "Mentioned by %(user)s in Room %(room)s"
 msgstr "%(room)s ਕਮਰੇ ਵਿੱਚ %(user)s ਦੁਆਰਾ ਸੁਨੇਹਾ"
 
-#: pynicotine/gtkgui/chatrooms.py:859
+#: pynicotine/gtkgui/chatrooms.py:851
 #, fuzzy, python-format
 msgid "Message by %(user)s in Room %(room)s"
 msgstr "%(room)s ਕਮਰੇ ਵਿੱਚ %(user)s ਦੁਆਰਾ ਸੁਨੇਹਾ"
 
-#: pynicotine/gtkgui/chatrooms.py:963
+#: pynicotine/gtkgui/chatrooms.py:955
 #, fuzzy, python-format
 msgid "%s joined the room"
 msgstr "%s ਕਮਰੇ ਵਿੱਚ ਸ਼ਾਮਲ ਹੋਏ"
 
-#: pynicotine/gtkgui/chatrooms.py:986
+#: pynicotine/gtkgui/chatrooms.py:978
 #, fuzzy, python-format
 msgid "%s left the room"
 msgstr "%s ਨੇ ਕਮਰਾ ਛੱਡ ਦਿੱਤਾ"
 
-#: pynicotine/gtkgui/chatrooms.py:1038
+#: pynicotine/gtkgui/chatrooms.py:1030
 #, fuzzy, python-format
 msgid "%s has gone away"
 msgstr "%s ਦੂਰ ਚਲਾ ਗਿਆ ਹੈ"
 
-#: pynicotine/gtkgui/chatrooms.py:1041
+#: pynicotine/gtkgui/chatrooms.py:1033
 #, fuzzy, python-format
 msgid "%s has returned"
 msgstr "%s ਵਾਪਸ ਆ ਗਿਆ ਹੈ"
 
-#: pynicotine/gtkgui/chatrooms.py:1138 pynicotine/gtkgui/privatechat.py:361
+#: pynicotine/gtkgui/chatrooms.py:1130 pynicotine/gtkgui/privatechat.py:361
 #, fuzzy
 msgid "--- disconnected ---"
 msgstr "--- ਡਿਸਕਨੈਕਟ ਕੀਤਾ ਗਿਆ ---"
 
-#: pynicotine/gtkgui/chatrooms.py:1161 pynicotine/gtkgui/privatechat.py:356
+#: pynicotine/gtkgui/chatrooms.py:1153 pynicotine/gtkgui/privatechat.py:356
 #, fuzzy
 msgid "--- reconnected ---"
 msgstr "--- ਮੁੜ ਜੁੜਿਆ ---"
 
-#: pynicotine/gtkgui/chatrooms.py:1221 pynicotine/gtkgui/privatechat.py:408
+#: pynicotine/gtkgui/chatrooms.py:1214 pynicotine/gtkgui/privatechat.py:408
 #, fuzzy
 msgid "Delete Logged Messages?"
 msgstr "ਕੀ ਲੌਗ ਕੀਤੇ ਸੁਨੇਹਿਆਂ ਨੂੰ ਮਿਟਾਉਣਾ ਹੈ?"
 
-#: pynicotine/gtkgui/chatrooms.py:1222
+#: pynicotine/gtkgui/chatrooms.py:1215
 #, fuzzy
 msgid ""
 "Do you really want to permanently delete all logged messages for this room?"
@@ -656,49 +656,49 @@ msgstr "ਕੀ ਤੁਸੀਂ ਸੱਚਮੁੱਚ ਇਸ ਕਮਰੇ ਲਈ 
 msgid "About"
 msgstr "ਜਿਬੂਟੀ"
 
-#: pynicotine/gtkgui/dialogs/fastconfigure.py:69
+#: pynicotine/gtkgui/dialogs/fastconfigure.py:68
 #, fuzzy
 msgid "Setup Assistant"
 msgstr "_ ਸਹਾਇਕ ਸੈੱਟਅੱਪ ਕਰੋ"
 
-#: pynicotine/gtkgui/dialogs/fastconfigure.py:89
-#: pynicotine/gtkgui/dialogs/preferences.py:529
+#: pynicotine/gtkgui/dialogs/fastconfigure.py:88
+#: pynicotine/gtkgui/dialogs/preferences.py:526
 #, fuzzy
 msgid "Virtual Folder"
 msgstr "ਵਰਚੁਅਲ ਫੋਲਡਰ"
 
-#: pynicotine/gtkgui/dialogs/fastconfigure.py:95
-#: pynicotine/gtkgui/dialogs/preferences.py:536 pynicotine/gtkgui/search.py:402
+#: pynicotine/gtkgui/dialogs/fastconfigure.py:94
+#: pynicotine/gtkgui/dialogs/preferences.py:533 pynicotine/gtkgui/search.py:402
 #: pynicotine/gtkgui/uploads.py:43 pynicotine/gtkgui/userbrowse.py:203
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:132
 #, fuzzy
 msgid "Folder"
 msgstr "ਫੋਲਡਰ"
 
-#: pynicotine/gtkgui/dialogs/fastconfigure.py:114
+#: pynicotine/gtkgui/dialogs/fastconfigure.py:113
 #, fuzzy
 msgid "_Finish"
 msgstr "_ ਸਮਾਪਤ"
 
-#: pynicotine/gtkgui/dialogs/fastconfigure.py:114
+#: pynicotine/gtkgui/dialogs/fastconfigure.py:113
 #, fuzzy
 msgid "_Next"
 msgstr "_ਅਗਲਾ"
 
-#: pynicotine/gtkgui/dialogs/fastconfigure.py:157
-#: pynicotine/gtkgui/dialogs/preferences.py:633
+#: pynicotine/gtkgui/dialogs/fastconfigure.py:168
+#: pynicotine/gtkgui/dialogs/preferences.py:630
 #, fuzzy
 msgid "Add a Shared Folder"
 msgstr "ਇੱਕ ਸਾਂਝਾ ਫੋਲਡਰ ਸ਼ਾਮਲ ਕਰੋ"
 
-#: pynicotine/gtkgui/dialogs/fastconfigure.py:196
-#: pynicotine/gtkgui/dialogs/preferences.py:676
+#: pynicotine/gtkgui/dialogs/fastconfigure.py:207
+#: pynicotine/gtkgui/dialogs/preferences.py:673
 #, fuzzy
 msgid "Edit Shared Folder"
 msgstr "ਸ਼ੇਅਰਡ ਫੋਲਡਰ ਦਾ ਸੰਪਾਦਨ ਕਰੋ"
 
-#: pynicotine/gtkgui/dialogs/fastconfigure.py:197
-#: pynicotine/gtkgui/dialogs/preferences.py:677
+#: pynicotine/gtkgui/dialogs/fastconfigure.py:208
+#: pynicotine/gtkgui/dialogs/preferences.py:674
 #, fuzzy, python-format
 msgid "Enter new virtual name for '%(dir)s':"
 msgstr "'%(dir)s' ਲਈ ਨਵਾਂ ਵਰਚੁਅਲ ਨਾਮ ਦਰਜ ਕਰੋ:"
@@ -721,7 +721,7 @@ msgid "File Properties (%(num)i of %(total)i  /  %(size)s)"
 msgstr "ਫਾਈਲ ਵਿਸ਼ੇਸ਼ਤਾਵਾਂ (%(total)i / %(size)s ਦਾ %(num)i)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:66
-#: pynicotine/gtkgui/ui/settings/network.ui:33
+#: pynicotine/gtkgui/ui/settings/network.ui:27
 #, fuzzy
 msgid "Network"
 msgstr "ਨੈੱਟਵਰਕ"
@@ -813,28 +813,28 @@ msgstr "ਪਲੱਗਇਨ"
 msgid "URL Handlers"
 msgstr "URL ਹੈਂਡਲਰ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:128
-#: pynicotine/gtkgui/ui/settings/network.ui:232
+#: pynicotine/gtkgui/dialogs/preferences.py:127
+#: pynicotine/gtkgui/ui/settings/network.ui:154
 #, fuzzy
 msgid "Check Port Status"
 msgstr "ਪੋਰਟ ਸਥਿਤੀ ਦੀ ਜਾਂਚ ਕਰੋ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:130
+#: pynicotine/gtkgui/dialogs/preferences.py:129
 #, fuzzy, python-format
 msgid "<b>%(ip)s</b>, port %(port)s"
 msgstr "<b>%(ip)s</b>, ਪੋਰਟ %(port)s"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:201
+#: pynicotine/gtkgui/dialogs/preferences.py:195
 #, fuzzy
 msgid "Password Change Rejected"
 msgstr "ਪਾਸਵਰਡ ਤਬਦੀਲੀ ਨੂੰ ਅਸਵੀਕਾਰ ਕੀਤਾ ਗਿਆ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:220
+#: pynicotine/gtkgui/dialogs/preferences.py:214
 #, fuzzy
 msgid "Enter a new password for your Soulseek account:"
 msgstr "ਆਪਣੇ Soulseek ਖਾਤੇ ਲਈ ਇੱਕ ਨਵਾਂ ਪਾਸਵਰਡ ਦਰਜ ਕਰੋ:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:222
+#: pynicotine/gtkgui/dialogs/preferences.py:216
 #, fuzzy
 msgid ""
 "You are currently logged out of the Soulseek network. If you want to change "
@@ -844,154 +844,164 @@ msgstr ""
 "ਤੁਸੀਂ ਵਰਤਮਾਨ ਵਿੱਚ Soulseek ਨੈੱਟਵਰਕ ਤੋਂ ਲੌਗ ਆਊਟ ਹੋ। ਜੇਕਰ ਤੁਸੀਂ ਮੌਜੂਦਾ ਸੋਲਸੀਕ ਖਾਤੇ ਦਾ ਪਾਸਵਰਡ "
 "ਬਦਲਣਾ ਚਾਹੁੰਦੇ ਹੋ, ਤਾਂ ਤੁਹਾਨੂੰ ਉਸ ਖਾਤੇ ਵਿੱਚ ਲੌਗਇਨ ਕਰਨ ਦੀ ਲੋੜ ਹੈ।"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:225
+#: pynicotine/gtkgui/dialogs/preferences.py:219
 #, fuzzy
 msgid "Enter password to use when logging in:"
 msgstr "ਲਾਗਇਨ ਕਰਨ ਵੇਲੇ ਵਰਤਣ ਲਈ ਪਾਸਵਰਡ ਦਰਜ ਕਰੋ:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:229
-#: pynicotine/gtkgui/ui/settings/network.ui:98
-#: pynicotine/gtkgui/ui/settings/network.ui:113
+#: pynicotine/gtkgui/dialogs/preferences.py:223
+#: pynicotine/gtkgui/ui/settings/network.ui:92
+#: pynicotine/gtkgui/ui/settings/network.ui:107
 #, fuzzy
 msgid "Change Password"
 msgstr "ਪਾਸਵਰਡ ਬਦਲੋ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:288
+#: pynicotine/gtkgui/dialogs/preferences.py:276
+#, fuzzy
+msgid ""
+"<b>Syntax</b>: Letters are case-insensitive. All Python regular expressions "
+"are supported if escaping is disabled. For simple filters, keeping escaping "
+"enabled is recommended."
+msgstr ""
+"<b>ਸੰਟੈਕਸ:</b> ਅੱਖਰ ਕੇਸ-ਸੰਵੇਦਨਸ਼ੀਲ ਹਨ। ਸਾਰੇ ਪਾਈਥਨ ਨਿਯਮਤ ਸਮੀਕਰਨ ਸਮਰਥਿਤ ਹਨ ਜੇਕਰ ਐਸਕੇਪਿੰਗ "
+"ਅਯੋਗ ਹੈ। ਸਧਾਰਨ ਫਿਲਟਰਾਂ ਲਈ, ਬਚਣ ਨੂੰ ਸਮਰੱਥ ਰੱਖਣ ਦੀ ਸਿਫ਼ਾਰਸ਼ ਕੀਤੀ ਜਾਂਦੀ ਹੈ।"
+
+#: pynicotine/gtkgui/dialogs/preferences.py:285
 #, fuzzy
 msgid "Filter"
 msgstr "ਫਿਲਟਰ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:295
+#: pynicotine/gtkgui/dialogs/preferences.py:292
 #, fuzzy
 msgid "Escaped"
 msgstr "ਬਚ ਗਿਆ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:400
+#: pynicotine/gtkgui/dialogs/preferences.py:397
 #, fuzzy
 msgid "Add Download Filter"
 msgstr "ਡਾਊਨਲੋਡ ਫਿਲਟਰ ਸ਼ਾਮਲ ਕਰੋ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:401
+#: pynicotine/gtkgui/dialogs/preferences.py:398
 #, fuzzy
 msgid "Enter a new download filter:"
 msgstr "ਇੱਕ ਨਵਾਂ ਡਾਊਨਲੋਡ ਫਿਲਟਰ ਦਾਖਲ ਕਰੋ:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:404
-#: pynicotine/gtkgui/dialogs/preferences.py:436
+#: pynicotine/gtkgui/dialogs/preferences.py:401
+#: pynicotine/gtkgui/dialogs/preferences.py:433
 #, fuzzy
 msgid "Escape filter"
 msgstr "Escape ਫਿਲਟਰ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:430
+#: pynicotine/gtkgui/dialogs/preferences.py:427
 #, fuzzy
 msgid "Edit Download Filter"
 msgstr "ਡਾਊਨਲੋਡ ਫਿਲਟਰ ਦਾ ਸੰਪਾਦਨ ਕਰੋ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:431
+#: pynicotine/gtkgui/dialogs/preferences.py:428
 #, fuzzy
 msgid "Modify the following download filter:"
 msgstr "ਹੇਠਾਂ ਦਿੱਤੇ ਡਾਊਨਲੋਡ ਫਿਲਟਰ ਨੂੰ ਸੋਧੋ:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:496
+#: pynicotine/gtkgui/dialogs/preferences.py:493
 #, fuzzy, python-format
 msgid "%(num)d Failed! %(error)s "
 msgstr "%(num)d ਅਸਫਲ! %(error)s "
 
-#: pynicotine/gtkgui/dialogs/preferences.py:503
+#: pynicotine/gtkgui/dialogs/preferences.py:500
 #, fuzzy
 msgid "Filters Successful"
 msgstr "ਫਿਲਟਰ ਸਫਲ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:542
+#: pynicotine/gtkgui/dialogs/preferences.py:539
 #, fuzzy
 msgid "Buddy-only"
 msgstr "ਬੱਡੀ-ਸਿਰਫ਼"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:680
+#: pynicotine/gtkgui/dialogs/preferences.py:677
 #, fuzzy
 msgid "Share with buddies only"
 msgstr "ਸਿਰਫ ਦੋਸਤਾਂ ਨਾਲ ਸਾਂਝਾ ਕਰੋ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:868
-#: pynicotine/gtkgui/dialogs/preferences.py:1000
-#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:177
+#: pynicotine/gtkgui/dialogs/preferences.py:865
+#: pynicotine/gtkgui/dialogs/preferences.py:997
+#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:172
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:234
 #, fuzzy
 msgid "Username"
 msgstr "ਯੂਜ਼ਰਨੇਮ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:932
+#: pynicotine/gtkgui/dialogs/preferences.py:929
 #: pynicotine/gtkgui/userinfo.py:429 pynicotine/gtkgui/widgets/popupmenu.py:365
 #: pynicotine/gtkgui/widgets/popupmenu.py:397
 #, fuzzy
 msgid "Ignore User"
 msgstr "ਉਪਭੋਗਤਾ ਨੂੰ ਅਣਡਿੱਠ ਕਰੋ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:933
+#: pynicotine/gtkgui/dialogs/preferences.py:930
 #, fuzzy
 msgid "Enter the name of the user you want to ignore:"
 msgstr "ਉਸ ਉਪਭੋਗਤਾ ਦਾ ਨਾਮ ਦਰਜ ਕਰੋ ਜਿਸ ਨੂੰ ਤੁਸੀਂ ਅਣਡਿੱਠ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:961
+#: pynicotine/gtkgui/dialogs/preferences.py:958
 #: pynicotine/gtkgui/widgets/popupmenu.py:368
 #: pynicotine/gtkgui/widgets/popupmenu.py:401
 #, fuzzy
 msgid "Ignore IP Address"
 msgstr "IP ਪਤੇ ਨੂੰ ਅਣਡਿੱਠ ਕਰੋ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:962
+#: pynicotine/gtkgui/dialogs/preferences.py:959
 #, fuzzy
 msgid "Enter an IP address you want to ignore:"
 msgstr "ਇੱਕ IP ਪਤਾ ਦਰਜ ਕਰੋ ਜਿਸਨੂੰ ਤੁਸੀਂ ਅਣਡਿੱਠ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:962
-#: pynicotine/gtkgui/dialogs/preferences.py:1115
+#: pynicotine/gtkgui/dialogs/preferences.py:959
+#: pynicotine/gtkgui/dialogs/preferences.py:1112
 #, fuzzy
 msgid "* is a wildcard"
 msgstr "* ਇੱਕ ਵਾਈਲਡਕਾਰਡ ਹੈ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1084
+#: pynicotine/gtkgui/dialogs/preferences.py:1081
 #: pynicotine/gtkgui/userinfo.py:425 pynicotine/gtkgui/widgets/popupmenu.py:364
 #: pynicotine/gtkgui/widgets/popupmenu.py:396
 #, fuzzy
 msgid "Ban User"
 msgstr "ਵਰਤੋਂਕਾਰ 'ਤੇ ਪਾਬੰਦੀ ਲਗਾਓ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1085
+#: pynicotine/gtkgui/dialogs/preferences.py:1082
 #, fuzzy
 msgid "Enter the name of the user you want to ban:"
 msgstr "ਉਸ ਉਪਭੋਗਤਾ ਦਾ ਨਾਮ ਦਰਜ ਕਰੋ ਜਿਸ 'ਤੇ ਤੁਸੀਂ ਪਾਬੰਦੀ ਲਗਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1114
+#: pynicotine/gtkgui/dialogs/preferences.py:1111
 #: pynicotine/gtkgui/widgets/popupmenu.py:367
 #: pynicotine/gtkgui/widgets/popupmenu.py:399
 #, fuzzy
 msgid "Ban IP Address"
 msgstr "IP ਪਤੇ 'ਤੇ ਪਾਬੰਦੀ ਲਗਾਓ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1115
+#: pynicotine/gtkgui/dialogs/preferences.py:1112
 #, fuzzy
 msgid "Enter an IP address you want to ban:"
 msgstr "ਇੱਕ IP ਪਤਾ ਦਰਜ ਕਰੋ ਜਿਸਨੂੰ ਤੁਸੀਂ ਬਲੌਕ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1169
-#: pynicotine/gtkgui/dialogs/preferences.py:1182
+#: pynicotine/gtkgui/dialogs/preferences.py:1166
+#: pynicotine/gtkgui/dialogs/preferences.py:1179
 #, fuzzy
 msgid "Pattern"
 msgstr "ਪੈਟਰਨ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1189
+#: pynicotine/gtkgui/dialogs/preferences.py:1186
 #, fuzzy
 msgid "Replacement"
 msgstr "ਬਦਲਣਾ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1319
+#: pynicotine/gtkgui/dialogs/preferences.py:1316
 #, fuzzy
 msgid "Censor Pattern"
 msgstr "ਸੈਂਸਰ ਪੈਟਰਨ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1320
-#: pynicotine/gtkgui/dialogs/preferences.py:1346
+#: pynicotine/gtkgui/dialogs/preferences.py:1317
+#: pynicotine/gtkgui/dialogs/preferences.py:1343
 #, fuzzy
 msgid ""
 "Enter a pattern you want to censor. Add spaces around the pattern if you "
@@ -1001,186 +1011,182 @@ msgstr ""
 "ਉਹ ਪੈਟਰਨ ਦਾਖਲ ਕਰੋ ਜਿਸ ਨੂੰ ਤੁਸੀਂ ਸੈਂਸਰ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ। ਪੈਟਰਨ ਦੇ ਆਲੇ-ਦੁਆਲੇ ਸਪੇਸ ਜੋੜੋ ਜੇਕਰ ਤੁਸੀਂ ਸ਼ਬਦਾਂ "
 "ਦੇ ਅੰਦਰ ਸਟ੍ਰਿੰਗਾਂ ਨਾਲ ਮੇਲ ਨਹੀਂ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ (ਲਾਈਨਾਂ ਦੇ ਸ਼ੁਰੂ ਅਤੇ ਅੰਤ ਵਿੱਚ ਅਸਫਲ ਹੋ ਸਕਦਾ ਹੈ)।"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1345
+#: pynicotine/gtkgui/dialogs/preferences.py:1342
 #, fuzzy
 msgid "Edit Censored Pattern"
 msgstr "ਸੈਂਸਰ ਕੀਤੇ ਪੈਟਰਨ ਦਾ ਸੰਪਾਦਨ ਕਰੋ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1377
+#: pynicotine/gtkgui/dialogs/preferences.py:1374
 #, fuzzy
 msgid "Add Replacement"
 msgstr "ਤਬਦੀਲੀ ਸ਼ਾਮਲ ਕਰੋ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1378
-#, fuzzy
-msgid "Enter a text pattern and what to replace it with"
-msgstr "ਇੱਕ ਟੈਕਸਟ ਪੈਟਰਨ ਦਰਜ ਕਰੋ ਅਤੇ ਇਸਨੂੰ ਕਿਸ ਨਾਲ ਬਦਲਣਾ ਹੈ"
-
-#: pynicotine/gtkgui/dialogs/preferences.py:1406
-#, fuzzy
-msgid "Edit Replacement"
-msgstr "ਬਦਲੀ ਦਾ ਸੰਪਾਦਨ ਕਰੋ"
-
-#: pynicotine/gtkgui/dialogs/preferences.py:1407
+#: pynicotine/gtkgui/dialogs/preferences.py:1375
+#: pynicotine/gtkgui/dialogs/preferences.py:1404
 #, fuzzy
 msgid "Enter a text pattern and what to replace it with:"
 msgstr "ਇੱਕ ਟੈਕਸਟ ਪੈਟਰਨ ਦਰਜ ਕਰੋ ਅਤੇ ਇਸਨੂੰ ਕਿਸ ਨਾਲ ਬਦਲਣਾ ਹੈ:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1474
+#: pynicotine/gtkgui/dialogs/preferences.py:1403
+#, fuzzy
+msgid "Edit Replacement"
+msgstr "ਬਦਲੀ ਦਾ ਸੰਪਾਦਨ ਕਰੋ"
+
+#: pynicotine/gtkgui/dialogs/preferences.py:1471
 #, fuzzy
 msgid "Top"
 msgstr "ਸਿਖਰ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1475
+#: pynicotine/gtkgui/dialogs/preferences.py:1472
 #, fuzzy
 msgid "Bottom"
 msgstr "ਹੇਠਾਂ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1476
+#: pynicotine/gtkgui/dialogs/preferences.py:1473
 #, fuzzy
 msgid "Left"
 msgstr "ਖੱਬੇ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1477
+#: pynicotine/gtkgui/dialogs/preferences.py:1474
 #, fuzzy
 msgid "Right"
 msgstr "ਸੱਜਾ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1481
+#: pynicotine/gtkgui/dialogs/preferences.py:1478
 #: pynicotine/gtkgui/mainwindow.py:457
 #: pynicotine/gtkgui/widgets/iconnotebook.py:510
 #: pynicotine/gtkgui/widgets/treeview.py:538
-#: pynicotine/plugins/core_commands/__init__.py:300
+#: pynicotine/plugins/core_commands/__init__.py:314
 #, fuzzy
 msgid "Online"
 msgstr "ਔਨਲਾਈਨ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1482
+#: pynicotine/gtkgui/dialogs/preferences.py:1479
 #: pynicotine/gtkgui/mainwindow.py:454
 #: pynicotine/gtkgui/widgets/iconnotebook.py:507
 #: pynicotine/gtkgui/widgets/trayicon.py:105
 #: pynicotine/gtkgui/widgets/treeview.py:535
-#: pynicotine/plugins/core_commands/__init__.py:300
+#: pynicotine/plugins/core_commands/__init__.py:314
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:34
 #, fuzzy
 msgid "Away"
 msgstr "ਦੂਰ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1483
+#: pynicotine/gtkgui/dialogs/preferences.py:1480
 #: pynicotine/gtkgui/mainwindow.py:461
 #: pynicotine/gtkgui/widgets/iconnotebook.py:513
 #: pynicotine/gtkgui/widgets/treeview.py:540
-#: pynicotine/plugins/core_commands/__init__.py:296
+#: pynicotine/plugins/core_commands/__init__.py:310
 #: pynicotine/gtkgui/ui/mainwindow.ui:1810
 #, fuzzy
 msgid "Offline"
 msgstr "ਔਫਲਾਈਨ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1485
+#: pynicotine/gtkgui/dialogs/preferences.py:1482
 #, fuzzy
 msgid "Tab Changed"
 msgstr "ਪਾਸਵਰਡ ਤਬਦੀਲੀ ਨੂੰ ਅਸਵੀਕਾਰ ਕੀਤਾ ਗਿਆ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1486
+#: pynicotine/gtkgui/dialogs/preferences.py:1483
 #, fuzzy
 msgid "Tab Highlight"
 msgstr "ਹਾਈਲਾਈਟ ਕਰੋ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1487
+#: pynicotine/gtkgui/dialogs/preferences.py:1484
 #, fuzzy
 msgid "Window"
 msgstr "ਵਿੰਡੋ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1491
+#: pynicotine/gtkgui/dialogs/preferences.py:1488
 #, fuzzy
 msgid "Online (Tray)"
 msgstr "ਜੁੜਿਆ (ਟ੍ਰੇ)"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1492
+#: pynicotine/gtkgui/dialogs/preferences.py:1489
 #, fuzzy
 msgid "Away (Tray)"
 msgstr "ਦੂਰ (ਟ੍ਰੇ)"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1493
+#: pynicotine/gtkgui/dialogs/preferences.py:1490
 #, fuzzy
 msgid "Offline (Tray)"
 msgstr "ਔਫਲਾਈਨ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1494
+#: pynicotine/gtkgui/dialogs/preferences.py:1491
 #, fuzzy
 msgid "Message (Tray)"
 msgstr "ਸੁਨੇਹਾ (ਟ੍ਰੇ)"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2004
+#: pynicotine/gtkgui/dialogs/preferences.py:2001
 #, fuzzy
 msgid "Protocol"
 msgstr "ਪ੍ਰੋਟੋਕੋਲ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2012
+#: pynicotine/gtkgui/dialogs/preferences.py:2009
 #, fuzzy
 msgid "Command"
 msgstr "ਹੁਕਮ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2068
+#: pynicotine/gtkgui/dialogs/preferences.py:2065
 #, fuzzy
 msgid "Add URL Handler"
 msgstr "URL ਹੈਂਡਲਰ ਸ਼ਾਮਲ ਕਰੋ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2069
+#: pynicotine/gtkgui/dialogs/preferences.py:2066
 #, fuzzy
 msgid "Enter the protocol and the command for the URL handler:"
 msgstr "URL ਹੈਂਡਲਰ ਲਈ ਪ੍ਰੋਟੋਕੋਲ ਅਤੇ ਕਮਾਂਡ ਦਰਜ ਕਰੋ:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2096
+#: pynicotine/gtkgui/dialogs/preferences.py:2093
 #, fuzzy
 msgid "Edit Command"
 msgstr "ਕਮਾਂਡ ਸੋਧੋ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2097
+#: pynicotine/gtkgui/dialogs/preferences.py:2094
 #, fuzzy, python-format
 msgid "Enter a new command for protocol %s:"
 msgstr "ਪ੍ਰੋਟੋਕੋਲ %s ਲਈ ਇੱਕ ਨਵੀਂ ਕਮਾਂਡ ਦਿਓ:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2234
+#: pynicotine/gtkgui/dialogs/preferences.py:2231
 #, fuzzy
 msgid "Username;APIKEY:"
 msgstr "ਉਪਭੋਗਤਾ ਨਾਮ;APIKEY:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2238
+#: pynicotine/gtkgui/dialogs/preferences.py:2235
 #, fuzzy
 msgid ""
 "Music player (e.g. amarok, audacious, exaile); leave empty to autodetect:"
 msgstr "ਮਿਊਜ਼ਿਕ ਪਲੇਅਰ (ਜਿਵੇਂ ਕਿ ਅਮਰੋਕ, ਹੌਸਲਾ, ਐਕਸਾਈਲ); ਸਵੈ-ਪਛਾਣ ਲਈ ਖਾਲੀ ਛੱਡੋ:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2242
-#: pynicotine/gtkgui/ui/settings/network.ui:75
+#: pynicotine/gtkgui/dialogs/preferences.py:2239
+#: pynicotine/gtkgui/ui/settings/network.ui:69
 #, fuzzy
 msgid "Username:"
 msgstr "ਉਪਭੋਗਤਾ ਨਾਮ:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2246
+#: pynicotine/gtkgui/dialogs/preferences.py:2243
 #, fuzzy
 msgid "Command:"
 msgstr "ਹੁਕਮ:"
 
+#: pynicotine/gtkgui/dialogs/preferences.py:2251
 #: pynicotine/gtkgui/dialogs/preferences.py:2254
-#: pynicotine/gtkgui/dialogs/preferences.py:2257
 #, fuzzy
 msgid "Title"
 msgstr "ਸਿਰਲੇਖ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2256
+#: pynicotine/gtkgui/dialogs/preferences.py:2253
 #, fuzzy, python-format
 msgid "Now Playing (typically \"%(artist)s - %(title)s\")"
 msgstr "ਹੁਣ ਚੱਲ ਰਿਹਾ ਹੈ (ਆਮ ਤੌਰ 'ਤੇ \"%(artist)s - %(title)s\")"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2257
-#: pynicotine/gtkgui/dialogs/preferences.py:2265
+#: pynicotine/gtkgui/dialogs/preferences.py:2254
+#: pynicotine/gtkgui/dialogs/preferences.py:2262
 #, fuzzy
 msgid "Artist"
 msgstr "ਕਲਾਕਾਰ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2259
+#: pynicotine/gtkgui/dialogs/preferences.py:2256
 #: pynicotine/gtkgui/search.py:407 pynicotine/gtkgui/userbrowse.py:287
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:182
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:333
@@ -1188,7 +1194,7 @@ msgstr "ਕਲਾਕਾਰ"
 msgid "Duration"
 msgstr "ਮਿਆਦ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2261
+#: pynicotine/gtkgui/dialogs/preferences.py:2258
 #: pynicotine/gtkgui/search.py:406 pynicotine/gtkgui/userbrowse.py:281
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:209
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:283
@@ -1196,59 +1202,59 @@ msgstr "ਮਿਆਦ"
 msgid "Bitrate"
 msgstr "ਬਿੱਟਰੇਟ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2263
+#: pynicotine/gtkgui/dialogs/preferences.py:2260
 #, fuzzy
 msgid "Comment"
 msgstr "ਟਿੱਪਣੀ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2267
+#: pynicotine/gtkgui/dialogs/preferences.py:2264
 #, fuzzy
 msgid "Album"
 msgstr "ਐਲਬਮ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2269
+#: pynicotine/gtkgui/dialogs/preferences.py:2266
 #, fuzzy
 msgid "Track Number"
 msgstr "ਟਰੈਕ ਨੰਬਰ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2271
+#: pynicotine/gtkgui/dialogs/preferences.py:2268
 #, fuzzy
 msgid "Year"
 msgstr "ਸਾਲ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2273
+#: pynicotine/gtkgui/dialogs/preferences.py:2270
 #, fuzzy
 msgid "Filename (URI)"
 msgstr "ਫਾਈਲ ਨਾਮ (URI)"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2275
+#: pynicotine/gtkgui/dialogs/preferences.py:2272
 #, fuzzy
 msgid "Program"
 msgstr "ਪ੍ਰੋਗਰਾਮ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2336
+#: pynicotine/gtkgui/dialogs/preferences.py:2333
 #, fuzzy
 msgid "Enabled"
 msgstr "ਸਮਰਥਿਤ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2343
+#: pynicotine/gtkgui/dialogs/preferences.py:2340
 #, fuzzy
 msgid "Plugin"
 msgstr "ਪਲੱਗਇਨ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2382
+#: pynicotine/gtkgui/dialogs/preferences.py:2379
 #, fuzzy
 msgid "No Plugin Selected"
 msgstr "ਕੋਈ ਪਲੱਗਇਨ ਨਹੀਂ ਚੁਣਿਆ ਗਿਆ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2468
+#: pynicotine/gtkgui/dialogs/preferences.py:2465
 #: pynicotine/gtkgui/widgets/trayicon.py:115
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:62
 #, fuzzy
 msgid "Preferences"
 msgstr "ਤਰਜੀਹਾਂ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2829
+#: pynicotine/gtkgui/dialogs/preferences.py:2826
 #, fuzzy
 msgid "Pick a File Name for Config Backup"
 msgstr "ਕੌਂਫਿਗ ਬੈਕਅਪ ਲਈ ਇੱਕ ਫਾਈਲ ਨਾਮ ਚੁਣੋ"
@@ -2251,8 +2257,9 @@ msgstr ""
 #: pynicotine/gtkgui/userbrowse.py:525
 #, fuzzy
 msgid ""
-"Unable to request shared files from user. Either the user is offline, you "
-"both have a closed listening port, or there's a temporary connectivity issue."
+"Unable to request shared files from user. Either the user is offline, the "
+"listening ports are closed on both sides, or there is a temporary "
+"connectivity issue."
 msgstr ""
 "ਉਪਭੋਗਤਾ ਤੋਂ ਸਾਂਝੀਆਂ ਫਾਈਲਾਂ ਦੀ ਬੇਨਤੀ ਕਰਨ ਵਿੱਚ ਅਸਮਰੱਥ। ਜਾਂ ਤਾਂ ਉਪਭੋਗਤਾ ਔਫਲਾਈਨ ਹੈ, ਤੁਹਾਡੇ ਦੋਵਾਂ "
 "ਕੋਲ ਇੱਕ ਬੰਦ ਸੁਣਨ ਵਾਲਾ ਪੋਰਟ ਹੈ, ਜਾਂ ਕੋਈ ਅਸਥਾਈ ਕਨੈਕਟੀਵਿਟੀ ਸਮੱਸਿਆ ਹੈ।"
@@ -2421,8 +2428,8 @@ msgid "%s Settings"
 msgstr "%s ਸੈਟਿੰਗਾਂ"
 
 #: pynicotine/gtkgui/widgets/dialogs.py:635
-#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:418
-#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:434
+#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:392
+#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:408
 #: pynicotine/gtkgui/ui/settings/ban.ui:172
 #: pynicotine/gtkgui/ui/settings/ban.ui:188
 #: pynicotine/gtkgui/ui/settings/ban.ui:294
@@ -2431,7 +2438,7 @@ msgstr "%s ਸੈਟਿੰਗਾਂ"
 #: pynicotine/gtkgui/ui/settings/chats.ui:617
 #: pynicotine/gtkgui/ui/settings/chats.ui:787
 #: pynicotine/gtkgui/ui/settings/chats.ui:803
-#: pynicotine/gtkgui/ui/settings/downloads.ui:432
+#: pynicotine/gtkgui/ui/settings/downloads.ui:422
 #: pynicotine/gtkgui/ui/settings/ignore.ui:105
 #: pynicotine/gtkgui/ui/settings/ignore.ui:121
 #: pynicotine/gtkgui/ui/settings/ignore.ui:226
@@ -2445,16 +2452,16 @@ msgid "Add…"
 msgstr "ਸ਼ਾਮਲ ਕਰੋ…"
 
 #: pynicotine/gtkgui/widgets/dialogs.py:638
-#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:449
-#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:465
+#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:423
+#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:439
 #: pynicotine/gtkgui/ui/dialogs/wishlist.ui:61
 #: pynicotine/gtkgui/ui/dialogs/wishlist.ui:76
 #: pynicotine/gtkgui/ui/settings/chats.ui:632
 #: pynicotine/gtkgui/ui/settings/chats.ui:648
 #: pynicotine/gtkgui/ui/settings/chats.ui:818
 #: pynicotine/gtkgui/ui/settings/chats.ui:834
-#: pynicotine/gtkgui/ui/settings/downloads.ui:447
-#: pynicotine/gtkgui/ui/settings/downloads.ui:463
+#: pynicotine/gtkgui/ui/settings/downloads.ui:437
+#: pynicotine/gtkgui/ui/settings/downloads.ui:453
 #: pynicotine/gtkgui/ui/settings/shares.ui:112
 #: pynicotine/gtkgui/ui/settings/shares.ui:128
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:189
@@ -2464,8 +2471,8 @@ msgid "Edit…"
 msgstr "ਸੰਪਾਦਿਤ ਕਰੋ…"
 
 #: pynicotine/gtkgui/widgets/dialogs.py:641
-#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:480
-#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:496
+#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:454
+#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:470
 #: pynicotine/gtkgui/ui/dialogs/wishlist.ui:91
 #: pynicotine/gtkgui/ui/dialogs/wishlist.ui:106
 #: pynicotine/gtkgui/ui/settings/ban.ui:203
@@ -2476,8 +2483,8 @@ msgstr "ਸੰਪਾਦਿਤ ਕਰੋ…"
 #: pynicotine/gtkgui/ui/settings/chats.ui:679
 #: pynicotine/gtkgui/ui/settings/chats.ui:849
 #: pynicotine/gtkgui/ui/settings/chats.ui:865
-#: pynicotine/gtkgui/ui/settings/downloads.ui:478
-#: pynicotine/gtkgui/ui/settings/downloads.ui:494
+#: pynicotine/gtkgui/ui/settings/downloads.ui:468
+#: pynicotine/gtkgui/ui/settings/downloads.ui:484
 #: pynicotine/gtkgui/ui/settings/ignore.ui:136
 #: pynicotine/gtkgui/ui/settings/ignore.ui:152
 #: pynicotine/gtkgui/ui/settings/ignore.ui:257
@@ -2618,7 +2625,7 @@ msgstr "%s ਦੇ ਆਪਰੇਟਰ ਵਜੋਂ ਸ਼ਾਮਲ ਕਰੋ"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:553
 #, fuzzy
-msgid "Please enter number of days!"
+msgid "Please enter number of days."
 msgstr "ਕਿਰਪਾ ਕਰਕੇ ਦਿਨਾਂ ਦੀ ਗਿਣਤੀ ਦਰਜ ਕਰੋ!"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:564
@@ -2657,7 +2664,7 @@ msgid "Archive"
 msgstr "ਪੁਰਾਲੇਖ"
 
 #: pynicotine/gtkgui/widgets/theme.py:321 pynicotine/pluginsystem.py:758
-#: pynicotine/gtkgui/ui/settings/network.ui:328
+#: pynicotine/gtkgui/ui/settings/network.ui:277
 #, fuzzy
 msgid "Miscellaneous"
 msgstr "ਫੁਟਕਲ"
@@ -4131,153 +4138,162 @@ msgstr "ਚੈਟ ਵਿੰਡੋ ਨੂੰ ਸਾਫ਼ ਕਰੋ"
 msgid "Say something in the third-person"
 msgstr "ਤੀਜੇ-ਵਿਅਕਤੀ ਵਿੱਚ ਕੁਝ ਕਹੋ"
 
-#: pynicotine/plugins/core_commands/__init__.py:88
+#: pynicotine/plugins/core_commands/__init__.py:87
+msgid "Announce the song currently playing"
+msgstr ""
+
+#: pynicotine/plugins/core_commands/__init__.py:94
 #, fuzzy
 msgid "Join chat room"
 msgstr "ਸ਼ਾਮਲ ਹੋਵੋ ਜਾਂ ਕਮਰਾ ਬਣਾਓ…"
 
-#: pynicotine/plugins/core_commands/__init__.py:96
+#: pynicotine/plugins/core_commands/__init__.py:102
 #, fuzzy
 msgid "Leave chat room"
 msgstr "ਮੌਜੂਦਾ ਕਮਰਾ ਛੱਡੋ"
 
-#: pynicotine/plugins/core_commands/__init__.py:104
+#: pynicotine/plugins/core_commands/__init__.py:110
 #, fuzzy
 msgid "Say message in specified chat room"
 msgstr "ਖਾਸ ਚੈਟ ਰੂਮ ਵਿੱਚ ਸੁਨੇਹਾ ਕਹੋ"
 
-#: pynicotine/plugins/core_commands/__init__.py:111
+#: pynicotine/plugins/core_commands/__init__.py:117
 #, fuzzy
 msgid "Open private chat"
 msgstr "ਨਿੱਜੀ ਚੈਟ"
 
-#: pynicotine/plugins/core_commands/__init__.py:119
+#: pynicotine/plugins/core_commands/__init__.py:125
 #, fuzzy
 msgid "Close private chat"
 msgstr "ਮੌਜੂਦਾ ਨਿੱਜੀ ਚੈਟ ਬੰਦ ਕਰੋ"
 
-#: pynicotine/plugins/core_commands/__init__.py:128
+#: pynicotine/plugins/core_commands/__init__.py:133
+#, fuzzy
+msgid "Request user's client version"
+msgstr "ਉਪਭੋਗਤਾ ਦੀ ਜਾਣਕਾਰੀ ਲਈ ਬੇਨਤੀ ਕਰੋ"
+
+#: pynicotine/plugins/core_commands/__init__.py:142
 #, fuzzy
 msgid "Send private message to user"
 msgstr "ਸਾਰੇ ਔਨਲਾਈਨ ਦੋਸਤਾਂ ਨੂੰ ਨਿੱਜੀ ਸੰਦੇਸ਼ ਭੇਜੋ:"
 
-#: pynicotine/plugins/core_commands/__init__.py:136
+#: pynicotine/plugins/core_commands/__init__.py:150
 #, fuzzy
 msgid "Add user to buddy list"
 msgstr "ਯੂਜ਼ਰ ਨੂੰ ਆਪਣੀ ਬੱਡੀ-ਲਿਸਟ ਵਿੱਚ ਸ਼ਾਮਲ ਕਰੋ"
 
-#: pynicotine/plugins/core_commands/__init__.py:144
+#: pynicotine/plugins/core_commands/__init__.py:158
 #, fuzzy
 msgid "Remove buddy from buddy list"
 msgstr "ਆਪਣੀ ਬੱਡੀ-ਲਿਸਟ ਵਿੱਚੋਂ ਉਪਭੋਗਤਾ ਨੂੰ ਹਟਾਓ"
 
-#: pynicotine/plugins/core_commands/__init__.py:152
+#: pynicotine/plugins/core_commands/__init__.py:166
 #, fuzzy
 msgid "Browse files of user"
 msgstr "ਉਪਭੋਗਤਾ 'ਉਪਭੋਗਤਾ' ਦੀਆਂ ਫਾਈਲਾਂ ਨੂੰ ਬ੍ਰਾਊਜ਼ ਕਰੋ"
 
-#: pynicotine/plugins/core_commands/__init__.py:161
+#: pynicotine/plugins/core_commands/__init__.py:175
 #, fuzzy
 msgid "Show user profile information"
 msgstr "ਉਪਭੋਗਤਾ ਪ੍ਰੋਫਾਈਲ ਜਾਣਕਾਰੀ ਦਿਖਾਓ"
 
-#: pynicotine/plugins/core_commands/__init__.py:169
+#: pynicotine/plugins/core_commands/__init__.py:183
 #, fuzzy
 msgid "Show IP address or username"
 msgstr "ਉਪਭੋਗਤਾ ਲਈ IP ਦਿਖਾਓ"
 
-#: pynicotine/plugins/core_commands/__init__.py:176
+#: pynicotine/plugins/core_commands/__init__.py:190
 #, fuzzy
 msgid "Block connections from user or IP address"
 msgstr "ਉਪਭੋਗਤਾ ਜਾਂ IP ਪਤੇ ਤੋਂ ਕਨੈਕਸ਼ਨਾਂ ਨੂੰ ਬਲੌਕ ਕਰੋ"
 
-#: pynicotine/plugins/core_commands/__init__.py:183
+#: pynicotine/plugins/core_commands/__init__.py:197
 #, fuzzy
 msgid "Remove user or IP address from ban lists"
 msgstr "ਆਪਣੀ ਪਾਬੰਦੀ ਸੂਚੀ ਵਿੱਚੋਂ ਉਪਭੋਗਤਾ ਨੂੰ ਹਟਾਓ"
 
-#: pynicotine/plugins/core_commands/__init__.py:190
+#: pynicotine/plugins/core_commands/__init__.py:204
 #, fuzzy
 msgid "Silence messages from user or IP address"
 msgstr "ਉਪਭੋਗਤਾ ਜਾਂ IP ਪਤੇ ਤੋਂ ਸੁਨੇਹਿਆਂ ਨੂੰ ਚੁੱਪ ਕਰੋ"
 
-#: pynicotine/plugins/core_commands/__init__.py:198
+#: pynicotine/plugins/core_commands/__init__.py:212
 #, fuzzy
 msgid "Remove user or IP address from ignore lists"
 msgstr "ਆਪਣੀ ਅਣਦੇਖੀ ਸੂਚੀ ਵਿੱਚੋਂ ਉਪਭੋਗਤਾ ਨੂੰ ਹਟਾਓ"
 
-#: pynicotine/plugins/core_commands/__init__.py:206
+#: pynicotine/plugins/core_commands/__init__.py:220
 #, fuzzy
 msgid "Rescan shares"
 msgstr "ਸ਼ੇਅਰਾਂ ਨੂੰ ਮੁੜ-ਸਕੈਨ ਕਰੋ"
 
-#: pynicotine/plugins/core_commands/__init__.py:213
+#: pynicotine/plugins/core_commands/__init__.py:227
 #, fuzzy
 msgid "List shares"
 msgstr "ਸ਼ੇਅਰਾਂ ਨੂੰ ਮੁੜ-ਸਕੈਨ ਕਰੋ"
 
-#: pynicotine/plugins/core_commands/__init__.py:220
+#: pynicotine/plugins/core_commands/__init__.py:234
 #, fuzzy
 msgid "Start global file search"
 msgstr "ਗਲੋਬਲ ਫਾਈਲ ਖੋਜ ਸ਼ੁਰੂ ਕਰੋ"
 
-#: pynicotine/plugins/core_commands/__init__.py:228
+#: pynicotine/plugins/core_commands/__init__.py:242
 #, fuzzy
 msgid "Search files in joined rooms"
 msgstr "ਫਾਈਲਾਂ ਅਤੇ ਫੋਲਡਰਾਂ ਦੀ ਖੋਜ ਕਰੋ (ਸਹੀ ਮੇਲ)"
 
-#: pynicotine/plugins/core_commands/__init__.py:236
+#: pynicotine/plugins/core_commands/__init__.py:250
 #, fuzzy
 msgid "Search files of all buddies"
 msgstr "ਫਾਈਲਾਂ ਅਤੇ ਫੋਲਡਰਾਂ ਦੀ ਖੋਜ ਕਰੋ (ਸਹੀ ਮੇਲ)"
 
-#: pynicotine/plugins/core_commands/__init__.py:244
+#: pynicotine/plugins/core_commands/__init__.py:258
 #, fuzzy
 msgid "Search a user's shared files"
 msgstr "'ਕਵੇਰੀ' ਲਈ ਉਪਭੋਗਤਾ ਦੇ ਸ਼ੇਅਰ ਖੋਜੋ"
 
-#: pynicotine/plugins/core_commands/__init__.py:272
+#: pynicotine/plugins/core_commands/__init__.py:286
 #, fuzzy, python-format
 msgid "Listing %(num)i available commands:"
 msgstr "ਸੂਚੀਬੱਧ %(num)i ਉਪਲਬਧ ਕਮਾਂਡਾਂ:"
 
-#: pynicotine/plugins/core_commands/__init__.py:274
+#: pynicotine/plugins/core_commands/__init__.py:288
 #, fuzzy, python-format
 msgid "Listing %(num)i available commands matching \"%(query)s\":"
 msgstr "\"%(query)s\" ਨਾਲ ਮੇਲ ਖਾਂਦੀਆਂ %(num)i ਉਪਲਬਧ ਕਮਾਂਡਾਂ ਦੀ ਸੂਚੀ:"
 
-#: pynicotine/plugins/core_commands/__init__.py:286
+#: pynicotine/plugins/core_commands/__init__.py:300
 #, fuzzy, python-format
 msgid "Type %(command)s to list similar commands"
 msgstr "ਸਮਾਨ ਕਮਾਂਡਾਂ ਨੂੰ ਸੂਚੀਬੱਧ ਕਰਨ ਲਈ %(command)s ਟਾਈਪ ਕਰੋ"
 
-#: pynicotine/plugins/core_commands/__init__.py:289
+#: pynicotine/plugins/core_commands/__init__.py:303
 #, fuzzy, python-format
 msgid "Type %(command)s to list available commands"
 msgstr "ਉਪਲਬਧ ਕਮਾਂਡਾਂ ਨੂੰ ਸੂਚੀਬੱਧ ਕਰਨ ਲਈ %(command)s ਟਾਈਪ ਕਰੋ"
 
-#: pynicotine/plugins/core_commands/__init__.py:338
-#: pynicotine/plugins/core_commands/__init__.py:350
+#: pynicotine/plugins/core_commands/__init__.py:355
+#: pynicotine/plugins/core_commands/__init__.py:367
 #, fuzzy, python-format
 msgid "Not joined in room %s"
 msgstr "%s ਕਮਰੇ ਵਿੱਚ ਸ਼ਾਮਲ ਹੋਏ"
 
-#: pynicotine/plugins/core_commands/__init__.py:441
+#: pynicotine/plugins/core_commands/__init__.py:465
 #, fuzzy, python-format
 msgid "Banned %s"
 msgstr "ਤੇ ਪਾਬੰਦੀ"
 
-#: pynicotine/plugins/core_commands/__init__.py:455
+#: pynicotine/plugins/core_commands/__init__.py:479
 #, fuzzy, python-format
 msgid "Unbanned %s"
 msgstr "ਵਰਤੋਂਕਾਰ 'ਤੇ ਪਾਬੰਦੀ ਲਗਾਓ"
 
-#: pynicotine/plugins/core_commands/__init__.py:468
+#: pynicotine/plugins/core_commands/__init__.py:492
 #, fuzzy, python-format
 msgid "Ignored %s"
 msgstr "ਅਣਡਿੱਠ ਕੀਤੇ ਉਪਭੋਗਤਾ"
 
-#: pynicotine/plugins/core_commands/__init__.py:482
+#: pynicotine/plugins/core_commands/__init__.py:506
 #, fuzzy, python-format
 msgid "Unignored %s"
 msgstr "ਉਪਭੋਗਤਾ ਨੂੰ ਅਣਡਿੱਠ ਕਰੋ"
@@ -4364,8 +4380,7 @@ msgid ""
 "Unknown command: %(command)s. Type %(help_command)s to list available "
 "commands."
 msgstr ""
-"ਅਗਿਆਤ ਕਮਾਂਡ: %(command)s। ਉਪਲਬਧ ਕਮਾਂਡਾਂ ਨੂੰ ਸੂਚੀਬੱਧ ਕਰਨ ਲਈ %(help_command)s "
-"ਟਾਈਪ ਕਰੋ।"
+"ਅਗਿਆਤ ਕਮਾਂਡ: %(command)s। ਉਪਲਬਧ ਕਮਾਂਡਾਂ ਨੂੰ ਸੂਚੀਬੱਧ ਕਰਨ ਲਈ %(help_command)s ਟਾਈਪ ਕਰੋ।"
 
 #: pynicotine/portmapper.py:446
 #, fuzzy
@@ -4426,14 +4441,19 @@ msgstr ""
 "ਕਰੋ।"
 
 #: pynicotine/shares.py:143
+#, fuzzy, python-format
+msgid "%(num)s folders found before rescan"
+msgstr "ਰੀਸਕੈਨ ਤੋਂ ਪਹਿਲਾਂ %(num)s ਫੋਲਡਰ ਲੱਭੇ, ਮੁੜ ਨਿਰਮਾਣ…"
+
+#: pynicotine/shares.py:144
 #, fuzzy
-msgid "Rescanning shares…"
+msgid "Rebuilding shares…"
 msgstr "ਸ਼ੇਅਰਾਂ ਨੂੰ ਮੁੜ ਸਕੈਨ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ…"
 
 #: pynicotine/shares.py:144
-#, fuzzy, python-format
-msgid "%(num)s folders found before rescan, rebuilding…"
-msgstr "ਰੀਸਕੈਨ ਤੋਂ ਪਹਿਲਾਂ %(num)s ਫੋਲਡਰ ਲੱਭੇ, ਮੁੜ ਨਿਰਮਾਣ…"
+#, fuzzy
+msgid "Rescanning shares…"
+msgstr "ਸ਼ੇਅਰਾਂ ਨੂੰ ਮੁੜ ਸਕੈਨ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ…"
 
 #: pynicotine/shares.py:151
 #, fuzzy, python-format
@@ -4456,42 +4476,42 @@ msgstr ""
 msgid "Can't save %(filename)s: %(error)s"
 msgstr "%(filename)s ਨੂੰ ਸੁਰੱਖਿਅਤ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਦਾ: %(error)s"
 
-#: pynicotine/shares.py:314 pynicotine/shares.py:432
+#: pynicotine/shares.py:314 pynicotine/shares.py:433
 #, fuzzy, python-format
 msgid "Error while scanning folder %(path)s: %(error)s"
 msgstr "ਫੋਲਡਰ %(path)s ਨੂੰ ਸਕੈਨ ਕਰਨ ਦੌਰਾਨ ਗਲਤੀ: %(error)s"
 
-#: pynicotine/shares.py:413
+#: pynicotine/shares.py:414
 #, fuzzy, python-format
 msgid "Error while scanning file %(path)s: %(error)s"
 msgstr "ਫ਼ਾਈਲ %(path)s ਨੂੰ ਸਕੈਨ ਕਰਨ ਦੌਰਾਨ ਤਰੁੱਟੀ: %(error)s"
 
-#: pynicotine/shares.py:461
+#: pynicotine/shares.py:462
 #, fuzzy, python-format
 msgid "Error while scanning metadata for file %(path)s: %(error)s"
 msgstr "ਫ਼ਾਈਲ %(path)s ਲਈ ਮੈਟਾਡੇਟਾ ਸਕੈਨ ਕਰਨ ਦੌਰਾਨ ਤਰੁੱਟੀ: %(error)s"
 
-#: pynicotine/shares.py:692
+#: pynicotine/shares.py:695
 #, fuzzy, python-format
 msgid "Failed to process the following databases: %(names)s"
 msgstr "ਹੇਠਾਂ ਦਿੱਤੇ ਡੇਟਾਬੇਸ ਦੀ ਪ੍ਰਕਿਰਿਆ ਕਰਨ ਵਿੱਚ ਅਸਫਲ: %(names)s"
 
-#: pynicotine/shares.py:798
+#: pynicotine/shares.py:787
 #, fuzzy, python-format
 msgid "Failed to send number of shared files to the server: %s"
 msgstr "ਸਰਵਰ ਨੂੰ ਸ਼ੇਅਰ ਕੀਤੀਆਂ ਫਾਈਲਾਂ ਦੀ ਗਿਣਤੀ ਭੇਜਣ ਵਿੱਚ ਅਸਫਲ: %s"
 
-#: pynicotine/shares.py:882
+#: pynicotine/shares.py:866
 #, fuzzy, python-format
 msgid "Rescan aborted due to unavailable shares: %s"
 msgstr "ਅਣਉਪਲਬਧ ਸ਼ੇਅਰਾਂ ਕਾਰਨ ਮੁੜ-ਸਕੈਨ ਅਧੂਰਾ ਛੱਡਿਆ ਗਿਆ"
 
-#: pynicotine/shares.py:942
+#: pynicotine/shares.py:926
 #, fuzzy, python-format
 msgid "User %(user)s is browsing your list of shared files"
 msgstr "ਵਰਤੋਂਕਾਰ %(user)s ਤੁਹਾਡੀਆਂ ਸਾਂਝੀਆਂ ਕੀਤੀਆਂ ਫ਼ਾਈਲਾਂ ਦੀ ਸੂਚੀ ਨੂੰ ਬ੍ਰਾਊਜ਼ ਕਰ ਰਿਹਾ ਹੈ"
 
-#: pynicotine/shares.py:1005
+#: pynicotine/shares.py:989
 #, fuzzy, python-format
 msgid "Failed to fetch the shared folder %(folder)s: %(error)s"
 msgstr "ਸਾਂਝੇ ਕੀਤੇ ਫੋਲਡਰ %(folder)s ਨੂੰ ਪ੍ਰਾਪਤ ਕਰਨ ਵਿੱਚ ਅਸਫਲ: %(error)s"
@@ -4501,58 +4521,60 @@ msgstr "ਸਾਂਝੇ ਕੀਤੇ ਫੋਲਡਰ %(folder)s ਨੂੰ ਪ੍
 msgid "Unable to read shares database. Please rescan your shares. Error: %s"
 msgstr "ਸ਼ੇਅਰ ਡੇਟਾਬੇਸ ਨੂੰ ਪੜ੍ਹਨ ਵਿੱਚ ਅਸਮਰੱਥ। ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੇ ਸ਼ੇਅਰ ਰੀਸਕੈਨ ਕਰੋ। ਤਰੁੱਟੀ: %s"
 
-#: pynicotine/slskproto.py:304
+#: pynicotine/slskproto.py:303
 #, fuzzy, python-format
 msgid "Specified network interface '%s' is not available"
 msgstr "ਨਿਰਧਾਰਿਤ ਨੈੱਟਵਰਕ ਇੰਟਰਫੇਸ '%s' ਮੌਜੂਦ ਨਹੀਂ ਹੈ"
 
-#: pynicotine/slskproto.py:305
+#: pynicotine/slskproto.py:304
 #, fuzzy
 msgid "Unknown Network Interface"
 msgstr "ਯੂਜ਼ਰ ਇੰਟਰਫੇਸ"
 
 #: pynicotine/slskproto.py:315
-#, fuzzy, python-format
-msgid "Listening on port: %i"
-msgstr "ਪੋਰਟ 'ਤੇ ਸੁਣਨਾ: %i"
+#, python-format
+msgid ""
+"Cannot listen on port %(port)s. Ensure no other application uses it, or "
+"choose a different port. Error: %(error)s"
+msgstr ""
 
-#: pynicotine/slskproto.py:323
-#, fuzzy, python-format
-msgid "No listening port is available in the specified port range %s–%s"
-msgstr "ਨਿਰਧਾਰਤ ਪੋਰਟ ਰੇਂਜ %s–%s ਵਿੱਚ ਕੋਈ ਸੁਣਨ ਵਾਲਾ ਪੋਰਟ ਉਪਲਬਧ ਨਹੀਂ ਹੈ"
-
-#: pynicotine/slskproto.py:324
+#: pynicotine/slskproto.py:317
 #, fuzzy
 msgid "Listening Port Unavailable"
 msgstr "ਪੋਰਟ 'ਤੇ ਸੁਣਨਾ: %i"
 
-#: pynicotine/slskproto.py:414
+#: pynicotine/slskproto.py:320
+#, fuzzy, python-format
+msgid "Listening on port: %i"
+msgstr "ਪੋਰਟ 'ਤੇ ਸੁਣਨਾ: %i"
+
+#: pynicotine/slskproto.py:411
 #, fuzzy, python-format
 msgid "Connecting to %(host)s:%(port)s"
 msgstr "%(host)s ਨਾਲ ਜੁੜ ਰਿਹਾ ਹੈ:%(port)s"
 
-#: pynicotine/slskproto.py:464
+#: pynicotine/slskproto.py:461
 #, fuzzy, python-format
 msgid "Disconnected from server %(host)s:%(port)s"
 msgstr "ਸਰਵਰ %(host)s ਤੋਂ ਡਿਸਕਨੈਕਟ ਕੀਤਾ ਗਿਆ:%(port)s"
 
-#: pynicotine/slskproto.py:470
+#: pynicotine/slskproto.py:467
 #, fuzzy
 msgid "Someone logged in to your Soulseek account elsewhere"
 msgstr "ਕਿਸੇ ਨੇ ਤੁਹਾਡੇ Soulseek ਖਾਤੇ ਵਿੱਚ ਕਿਤੇ ਹੋਰ ਲੌਗਇਨ ਕੀਤਾ ਹੈ"
 
-#: pynicotine/slskproto.py:493
+#: pynicotine/slskproto.py:490
 #, fuzzy, python-format
 msgid "The server seems to be down or not responding, retrying in %i seconds"
 msgstr ""
 "ਜਾਪਦਾ ਹੈ ਕਿ ਸਰਵਰ ਡਾਊਨ ਹੈ ਜਾਂ ਜਵਾਬ ਨਹੀਂ ਦੇ ਰਿਹਾ, %i ਸਕਿੰਟਾਂ ਵਿੱਚ ਮੁੜ ਕੋਸ਼ਿਸ਼ ਕਰ ਰਿਹਾ ਹੈ"
 
-#: pynicotine/slskproto.py:813
+#: pynicotine/slskproto.py:810
 #, fuzzy, python-format
 msgid "Cannot connect to server %(host)s:%(port)s: %(error)s"
 msgstr "ਸਰਵਰ ਨਾਲ ਕਨੈਕਟ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਦਾ %(host)s:%(port)s: %(error)s"
 
-#: pynicotine/slskproto.py:911
+#: pynicotine/slskproto.py:908
 #, fuzzy, python-format
 msgid "Connected to server %(host)s:%(port)s, logging in…"
 msgstr "ਸਰਵਰ ਨਾਲ ਕਨੈਕਟ ਕੀਤਾ %(host)s:%(port)s, ਲਾਗਇਨ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ…"
@@ -4834,17 +4856,17 @@ msgstr "ਲਾਇਸੰਸ"
 msgid "_Previous"
 msgstr "_ਪਿਛਲਾ"
 
-#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:62
+#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:56
 #, fuzzy
 msgid "Welcome to Nicotine+"
 msgstr "ਨਿਕੋਟੀਨ+ ਵਿੱਚ ਤੁਹਾਡਾ ਸੁਆਗਤ ਹੈ"
 
-#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:96
+#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:90
 #, fuzzy
 msgid "_Set Up…"
 msgstr "_ਸਥਾਪਨਾ ਕਰਨਾ…"
 
-#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:137
+#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:132
 #, fuzzy
 msgid ""
 "To create a new Soulseek account, fill in your desired username and "
@@ -4854,7 +4876,7 @@ msgstr ""
 "ਨਵਾਂ Soulseek ਖਾਤਾ ਬਣਾਉਣ ਲਈ, ਆਪਣਾ ਲੋੜੀਂਦਾ ਉਪਭੋਗਤਾ ਨਾਮ ਅਤੇ ਪਾਸਵਰਡ ਭਰੋ। ਜੇਕਰ ਤੁਹਾਡੇ ਕੋਲ "
 "ਪਹਿਲਾਂ ਹੀ ਖਾਤਾ ਹੈ, ਤਾਂ ਆਪਣੇ ਮੌਜੂਦਾ ਲੌਗਇਨ ਵੇਰਵੇ ਭਰੋ।"
 
-#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:147
+#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:142
 #, fuzzy
 msgid ""
 "If your desired username is already taken, you will be prompted to change it."
@@ -4862,12 +4884,12 @@ msgstr ""
 "ਜੇਕਰ ਤੁਹਾਡਾ ਲੋੜੀਂਦਾ ਉਪਯੋਗਕਰਤਾ ਨਾਮ ਪਹਿਲਾਂ ਹੀ ਲਿਆ ਗਿਆ ਹੈ, ਤਾਂ ਤੁਹਾਨੂੰ ਇਸਨੂੰ ਬਦਲਣ ਲਈ ਕਿਹਾ "
 "ਜਾਵੇਗਾ।"
 
-#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:209
+#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:205
 #, fuzzy
 msgid "Password"
 msgstr "ਪਾਸਵਰਡ"
 
-#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:260
+#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:257
 #, fuzzy
 msgid ""
 "Nicotine+ uses peer-to-peer networking to connect to other users. In order "
@@ -4877,7 +4899,7 @@ msgstr ""
 "ਨਿਕੋਟੀਨ+ ਦੂਜੇ ਉਪਭੋਗਤਾਵਾਂ ਨਾਲ ਜੁੜਨ ਲਈ ਪੀਅਰ-ਟੂ-ਪੀਅਰ ਨੈੱਟਵਰਕਿੰਗ ਦੀ ਵਰਤੋਂ ਕਰਦਾ ਹੈ। ਉਪਭੋਗਤਾਵਾਂ ਨੂੰ "
 "ਬਿਨਾਂ ਕਿਸੇ ਸਮੱਸਿਆ ਦੇ ਤੁਹਾਡੇ ਨਾਲ ਜੁੜਨ ਦੀ ਆਗਿਆ ਦੇਣ ਲਈ, ਇੱਕ ਖੁੱਲਾ ਸੁਣਨ ਵਾਲਾ ਪੋਰਟ ਮਹੱਤਵਪੂਰਨ ਹੈ।"
 
-#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:270
+#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:267
 #, fuzzy
 msgid ""
 "If your listening port is closed, you will only be able to connect to users "
@@ -4886,43 +4908,23 @@ msgstr ""
 "ਜੇਕਰ ਤੁਹਾਡਾ ਸੁਣਨ ਵਾਲਾ ਪੋਰਟ ਬੰਦ ਹੈ, ਤਾਂ ਤੁਸੀਂ ਸਿਰਫ਼ ਉਹਨਾਂ ਵਰਤੋਂਕਾਰਾਂ ਨਾਲ ਕਨੈਕਟ ਕਰ ਸਕੋਗੇ ਜਿਨ੍ਹਾਂ "
 "ਦੇ ਸੁਣਨ ਵਾਲੇ ਪੋਰਟ ਖੁੱਲ੍ਹੇ ਹਨ।"
 
-#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:280
-#, fuzzy
+#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:277
 msgid ""
-"Choose a range to select a listening port from. The first available port in "
-"the range will be used."
+"If necessary, choose a different listening port below. This can also be done "
+"later in the preferences."
 msgstr ""
-"ਸੁਣਨ ਵਾਲੇ ਪੋਰਟ ਨੂੰ ਚੁਣਨ ਲਈ ਇੱਕ ਰੇਂਜ ਚੁਣੋ। ਰੇਂਜ ਵਿੱਚ ਪਹਿਲੀ ਉਪਲਬਧ ਪੋਰਟ ਦੀ ਵਰਤੋਂ ਕੀਤੀ ਜਾਵੇਗੀ।"
 
-#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:302
-#: pynicotine/gtkgui/ui/settings/network.ui:161
-#, fuzzy
-msgid "First Port"
-msgstr "ਪਹਿਲੀ ਪੋਰਟ"
-
-#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:308
-#: pynicotine/gtkgui/ui/settings/network.ui:179
-#, fuzzy
-msgid "to"
-msgstr "ਨੂੰ"
-
-#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:317
-#: pynicotine/gtkgui/ui/settings/network.ui:188
-#, fuzzy
-msgid "Last Port"
-msgstr "ਆਖਰੀ ਪੋਰਟ"
-
-#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:342
+#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:316
 #, fuzzy
 msgid "Download Files to Folder"
 msgstr "ਫਾਈਲਾਂ ਨੂੰ ਫੋਲਡਰ ਵਿੱਚ ਡਾਊਨਲੋਡ ਕਰੋ"
 
-#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:369
+#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:343
 #, fuzzy
 msgid "Share Folders"
 msgstr "ਫੋਲਡਰ ਸਾਂਝੇ ਕਰੋ"
 
-#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:383
+#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:357
 #: pynicotine/gtkgui/ui/settings/shares.ui:25
 #, fuzzy
 msgid ""
@@ -4930,16 +4932,16 @@ msgid ""
 "Soulseek network by sharing your own collection and by resharing what you "
 "downloaded from other users."
 msgstr ""
-"Soulseek ਉਪਭੋਗਤਾ ਤੁਹਾਡੇ ਸ਼ੇਅਰਾਂ ਤੋਂ ਡਾਊਨਲੋਡ ਕਰਨ ਦੇ ਯੋਗ ਹੋਣਗੇ. ਆਪਣੇ ਖੁਦ ਦੇ "
-"ਸੰਗ੍ਰਹਿ ਨੂੰ ਸਾਂਝਾ ਕਰਕੇ ਅਤੇ ਦੂਜੇ ਉਪਭੋਗਤਾਵਾਂ ਤੋਂ ਜੋ ਤੁਸੀਂ ਡਾਉਨਲੋਡ ਕੀਤਾ ਹੈ ਉਸਨੂੰ"
-" ਮੁੜ ਸਾਂਝਾ ਕਰਕੇ ਸੋਲਸੀਕ ਨੈਟਵਰਕ ਵਿੱਚ ਯੋਗਦਾਨ ਪਾਓ।"
+"Soulseek ਉਪਭੋਗਤਾ ਤੁਹਾਡੇ ਸ਼ੇਅਰਾਂ ਤੋਂ ਡਾਊਨਲੋਡ ਕਰਨ ਦੇ ਯੋਗ ਹੋਣਗੇ. ਆਪਣੇ ਖੁਦ ਦੇ ਸੰਗ੍ਰਹਿ ਨੂੰ ਸਾਂਝਾ ਕਰਕੇ "
+"ਅਤੇ ਦੂਜੇ ਉਪਭੋਗਤਾਵਾਂ ਤੋਂ ਜੋ ਤੁਸੀਂ ਡਾਉਨਲੋਡ ਕੀਤਾ ਹੈ ਉਸਨੂੰ ਮੁੜ ਸਾਂਝਾ ਕਰਕੇ ਸੋਲਸੀਕ ਨੈਟਵਰਕ ਵਿੱਚ ਯੋਗਦਾਨ "
+"ਪਾਓ।"
 
-#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:546
+#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:520
 #, fuzzy
 msgid "You are ready to use Nicotine+!"
 msgstr "ਤੁਸੀਂ ਨਿਕੋਟੀਨ+ ਦੀ ਵਰਤੋਂ ਕਰਨ ਲਈ ਤਿਆਰ ਹੋ!"
 
-#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:566
+#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:540
 #, fuzzy
 msgid ""
 "File transfer speeds depend on users you are downloading from. Certain users "
@@ -4948,7 +4950,7 @@ msgstr ""
 "ਫਾਈਲ ਟ੍ਰਾਂਸਫਰ ਦੀ ਗਤੀ ਉਹਨਾਂ ਉਪਭੋਗਤਾਵਾਂ 'ਤੇ ਨਿਰਭਰ ਕਰਦੀ ਹੈ ਜਿਨ੍ਹਾਂ ਤੋਂ ਤੁਸੀਂ ਡਾਊਨਲੋਡ ਕਰ ਰਹੇ ਹੋ। "
 "ਕੁਝ ਉਪਭੋਗਤਾ ਤੇਜ਼ ਹੋਣਗੇ, ਜਦੋਂ ਕਿ ਦੂਸਰੇ ਹੌਲੀ ਹੋਣਗੇ।"
 
-#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:576
+#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:550
 #, fuzzy
 msgid ""
 "Donating to Soulseek grants you privileges for a certain time period. If you "
@@ -6132,7 +6134,7 @@ msgstr "ਨਿੱਜੀ ਚੈਟ ਫਾਰਮੈਟ:"
 #: pynicotine/gtkgui/ui/settings/chats.ui:442
 #: pynicotine/gtkgui/ui/settings/chats.ui:469
 #: pynicotine/gtkgui/ui/settings/log.ui:76
-#: pynicotine/gtkgui/ui/settings/network.ui:374
+#: pynicotine/gtkgui/ui/settings/network.ui:323
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:75
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:119
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:362
@@ -6325,33 +6327,23 @@ msgstr "ਫਿਲਟਰ ਡਾਊਨਲੋਡ ਕਰੋ"
 msgid "Enable download filters"
 msgstr "ਡਾਊਨਲੋਡ ਫਿਲਟਰ ਚਾਲੂ ਕਰੋ"
 
-#: pynicotine/gtkgui/ui/settings/downloads.ui:380
-#, fuzzy
-msgid ""
-"<b>Syntax:</b> Letters are case-insensitive. All Python regular expressions "
-"are supported if escaping is disabled. For simple filters, keeping escaping "
-"enabled is recommended."
-msgstr ""
-"<b>ਸੰਟੈਕਸ:</b> ਅੱਖਰ ਕੇਸ-ਸੰਵੇਦਨਸ਼ੀਲ ਹਨ। ਸਾਰੇ ਪਾਈਥਨ ਨਿਯਮਤ ਸਮੀਕਰਨ ਸਮਰਥਿਤ ਹਨ ਜੇਕਰ ਐਸਕੇਪਿੰਗ "
-"ਅਯੋਗ ਹੈ। ਸਧਾਰਨ ਫਿਲਟਰਾਂ ਲਈ, ਬਚਣ ਨੂੰ ਸਮਰੱਥ ਰੱਖਣ ਦੀ ਸਿਫ਼ਾਰਸ਼ ਕੀਤੀ ਜਾਂਦੀ ਹੈ।"
-
-#: pynicotine/gtkgui/ui/settings/downloads.ui:416
+#: pynicotine/gtkgui/ui/settings/downloads.ui:406
 #, fuzzy
 msgid "Add"
 msgstr "ਸ਼ਾਮਲ ਕਰੋ"
 
-#: pynicotine/gtkgui/ui/settings/downloads.ui:514
-#: pynicotine/gtkgui/ui/settings/downloads.ui:530
+#: pynicotine/gtkgui/ui/settings/downloads.ui:504
+#: pynicotine/gtkgui/ui/settings/downloads.ui:520
 #, fuzzy
 msgid "Load Defaults"
 msgstr "ਪੂਰਵ-ਨਿਰਧਾਰਤ ਲੋਡ ਕਰੋ"
 
-#: pynicotine/gtkgui/ui/settings/downloads.ui:571
+#: pynicotine/gtkgui/ui/settings/downloads.ui:562
 #, fuzzy
 msgid "Verify Filters"
 msgstr "ਫਿਲਟਰਾਂ ਦੀ ਪੁਸ਼ਟੀ ਕਰੋ"
 
-#: pynicotine/gtkgui/ui/settings/downloads.ui:583
+#: pynicotine/gtkgui/ui/settings/downloads.ui:574
 #, fuzzy
 msgid "Unverified"
 msgstr "ਅਸਪਸ਼ਟ"
@@ -6414,7 +6406,7 @@ msgstr "ਲੌਗ ਫੋਲਡਰ ਟ੍ਰਾਂਸਫਰ ਕਰੋ:"
 msgid "Debug logs folder:"
 msgstr "ਡੀਬੱਗ ਲੌਗ ਫੋਲਡਰ:"
 
-#: pynicotine/gtkgui/ui/settings/network.ui:57
+#: pynicotine/gtkgui/ui/settings/network.ui:51
 #, fuzzy
 msgid ""
 "Log in to an existing Soulseek account or create a new one. Usernames are "
@@ -6423,27 +6415,27 @@ msgstr ""
 "ਇੱਕ ਮੌਜੂਦਾ Soulseek ਖਾਤੇ ਵਿੱਚ ਲੌਗ ਇਨ ਕਰੋ ਜਾਂ ਇੱਕ ਨਵਾਂ ਬਣਾਓ। ਵਰਤੋਂਕਾਰ ਨਾਂ ਕੇਸ-ਸੰਵੇਦਨਸ਼ੀਲ ਅਤੇ "
 "ਵਿਲੱਖਣ ਹਨ।"
 
-#: pynicotine/gtkgui/ui/settings/network.ui:135
-#, fuzzy
-msgid "Listening port range:"
-msgstr "ਪੋਰਟ 'ਤੇ ਸੁਣਨਾ: %i"
-
-#: pynicotine/gtkgui/ui/settings/network.ui:209
+#: pynicotine/gtkgui/ui/settings/network.ui:131
 #, fuzzy
 msgid "Public IP address:"
 msgstr "ਜਨਤਕ IP ਪਤਾ:"
 
-#: pynicotine/gtkgui/ui/settings/network.ui:257
+#: pynicotine/gtkgui/ui/settings/network.ui:172
+#, fuzzy
+msgid "Listening port:"
+msgstr "ਪੋਰਟ 'ਤੇ ਸੁਣਨਾ: %i"
+
+#: pynicotine/gtkgui/ui/settings/network.ui:206
 #, fuzzy
 msgid "Away Status"
 msgstr "ਦੂਰ ਸਥਿਤੀ"
 
-#: pynicotine/gtkgui/ui/settings/network.ui:275
+#: pynicotine/gtkgui/ui/settings/network.ui:224
 #, fuzzy
 msgid "Minutes of inactivity before going away (0 to disable):"
 msgstr "ਦੂਰ ਜਾਣ ਤੋਂ ਪਹਿਲਾਂ ਅਕਿਰਿਆਸ਼ੀਲਤਾ ਦੇ ਮਿੰਟ (ਅਯੋਗ ਕਰਨ ਲਈ 0):"
 
-#: pynicotine/gtkgui/ui/settings/network.ui:276
+#: pynicotine/gtkgui/ui/settings/network.ui:225
 #, fuzzy
 msgid ""
 "Once you interact with the application being away, status will be set to "
@@ -6452,32 +6444,32 @@ msgstr ""
 "ਇੱਕ ਵਾਰ ਜਦੋਂ ਤੁਸੀਂ ਐਪਲੀਕੇਸ਼ਨ ਦੇ ਦੂਰ ਹੋਣ ਨਾਲ ਇੰਟਰੈਕਟ ਕਰਦੇ ਹੋ, ਤਾਂ ਸਥਿਤੀ ਔਨਲਾਈਨ 'ਤੇ ਸੈੱਟ ਕੀਤੀ "
 "ਜਾਵੇਗੀ।"
 
-#: pynicotine/gtkgui/ui/settings/network.ui:302
+#: pynicotine/gtkgui/ui/settings/network.ui:251
 #, fuzzy
 msgid "Auto-reply message when away:"
 msgstr "ਦੂਰ ਹੋਣ 'ਤੇ ਸਵੈ-ਜਵਾਬ ਸੁਨੇਹਾ:"
 
-#: pynicotine/gtkgui/ui/settings/network.ui:340
+#: pynicotine/gtkgui/ui/settings/network.ui:289
 #, fuzzy
 msgid "Automatically forward listening port (UPnP/NAT-PMP)"
 msgstr "ਆਟੋਮੈਟਿਕਲੀ ਅੱਗੇ ਸੁਣਨ ਵਾਲਾ ਪੋਰਟ (UPnP/NAT-PMP)"
 
-#: pynicotine/gtkgui/ui/settings/network.ui:348
+#: pynicotine/gtkgui/ui/settings/network.ui:297
 #, fuzzy
 msgid "Auto-connect to server on startup"
 msgstr "ਸਟਾਰਟਅੱਪ 'ਤੇ ਸਰਵਰ ਨਾਲ ਆਟੋ-ਕਨੈਕਟ ਕਰੋ"
 
-#: pynicotine/gtkgui/ui/settings/network.ui:361
+#: pynicotine/gtkgui/ui/settings/network.ui:310
 #, fuzzy
 msgid "Soulseek server:"
 msgstr "ਸੋਲਸੀਕ ਸਰਵਰ:"
 
-#: pynicotine/gtkgui/ui/settings/network.ui:388
+#: pynicotine/gtkgui/ui/settings/network.ui:337
 #, fuzzy
 msgid "Network interface:"
 msgstr "ਨੈੱਟਵਰਕ ਖੋਜਾਂ"
 
-#: pynicotine/gtkgui/ui/settings/network.ui:399
+#: pynicotine/gtkgui/ui/settings/network.ui:348
 #, fuzzy
 msgid ""
 "Binds connections to a specific network interface, useful for e.g. ensuring "
@@ -7263,6 +7255,33 @@ msgstr "ਫਾਈਲਾਂ ਨੂੰ ਤਾਜ਼ਾ ਕਰੋ"
 msgid "Nicotine+ Commands"
 msgstr "ਨਿਕੋਟੀਨ+ ਟੀਮ"
 
+#, fuzzy
+#~ msgid "Enter a text pattern and what to replace it with"
+#~ msgstr "ਇੱਕ ਟੈਕਸਟ ਪੈਟਰਨ ਦਰਜ ਕਰੋ ਅਤੇ ਇਸਨੂੰ ਕਿਸ ਨਾਲ ਬਦਲਣਾ ਹੈ"
+
+#, fuzzy, python-format
+#~ msgid "No listening port is available in the specified port range %s–%s"
+#~ msgstr "ਨਿਰਧਾਰਤ ਪੋਰਟ ਰੇਂਜ %s–%s ਵਿੱਚ ਕੋਈ ਸੁਣਨ ਵਾਲਾ ਪੋਰਟ ਉਪਲਬਧ ਨਹੀਂ ਹੈ"
+
+#, fuzzy
+#~ msgid ""
+#~ "Choose a range to select a listening port from. The first available port "
+#~ "in the range will be used."
+#~ msgstr ""
+#~ "ਸੁਣਨ ਵਾਲੇ ਪੋਰਟ ਨੂੰ ਚੁਣਨ ਲਈ ਇੱਕ ਰੇਂਜ ਚੁਣੋ। ਰੇਂਜ ਵਿੱਚ ਪਹਿਲੀ ਉਪਲਬਧ ਪੋਰਟ ਦੀ ਵਰਤੋਂ ਕੀਤੀ ਜਾਵੇਗੀ।"
+
+#, fuzzy
+#~ msgid "First Port"
+#~ msgstr "ਪਹਿਲੀ ਪੋਰਟ"
+
+#, fuzzy
+#~ msgid "to"
+#~ msgstr "ਨੂੰ"
+
+#, fuzzy
+#~ msgid "Last Port"
+#~ msgstr "ਆਖਰੀ ਪੋਰਟ"
+
 #, fuzzy, python-format
 #~ msgid "Cannot find %s or newer, please install it."
 #~ msgstr "%s ਜਾਂ ਨਵਾਂ ਨਹੀਂ ਲੱਭ ਸਕਦਾ, ਕਿਰਪਾ ਕਰਕੇ ਇਸਨੂੰ ਸਥਾਪਿਤ ਕਰੋ।"
@@ -7485,10 +7504,6 @@ msgstr "ਨਿਕੋਟੀਨ+ ਟੀਮ"
 #, fuzzy
 #~ msgid "Browse shares of user"
 #~ msgstr "ਉਪਭੋਗਤਾ ਦੇ ਸ਼ੇਅਰ ਬ੍ਰਾਊਜ਼ ਕਰੋ"
-
-#, fuzzy
-#~ msgid "Request user's info"
-#~ msgstr "ਉਪਭੋਗਤਾ ਦੀ ਜਾਣਕਾਰੀ ਲਈ ਬੇਨਤੀ ਕਰੋ"
 
 #, fuzzy
 #~ msgid ""

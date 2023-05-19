@@ -322,8 +322,11 @@ class NetworkFilter:
             ip_addresses = self._get_user_ip_addresses(username, ip_list, request_action="add")
             ip_address = next(iter(ip_addresses), f"? ({username})")
 
-        if ip_address and (ip_address not in ip_list or ip_list[ip_address] != username):
-            ip_list[ip_address] = username
+        if not ip_address:
+            return None
+
+        if ip_address not in ip_list or (username and ip_list[ip_address] != username):
+            ip_list[ip_address] = username or ""
             config.write_configuration()
 
         return ip_address
@@ -622,9 +625,6 @@ class NetworkFilter:
         elif request == "remove":
             self.unban_user_ip(user, ip_address)
 
-    def get_previous_banned_user_ips(self, user):
-        return self._get_previous_user_ip_addresses(user, config.sections["server"]["ipblocklist"])
-
     def is_user_banned(self, user):
         return user in config.sections["server"]["banlist"]
 
@@ -670,9 +670,6 @@ class NetworkFilter:
 
         elif request == "remove":
             self.unignore_user_ip(user, ip_address)
-
-    def get_previous_ignored_user_ips(self, user):
-        return self._get_previous_user_ip_addresses(user, config.sections["server"]["ipignorelist"])
 
     def is_user_ignored(self, user):
         return user in config.sections["server"]["ignorelist"]

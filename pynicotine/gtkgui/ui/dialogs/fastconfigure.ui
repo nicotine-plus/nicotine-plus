@@ -91,6 +91,7 @@
                 <property name="margin-start">24</property>
                 <property name="margin-end">24</property>
                 <property name="use-underline">True</property>
+                <property name="mnemonic-widget">set_up_button</property>
               </object>
             </child>
             <style>
@@ -179,6 +180,7 @@
                       <object class="GtkEntry" id="username_entry">
                         <property name="visible">True</property>
                         <property name="width-chars">20</property>
+                        <signal name="activate" handler="on_user_entry_activate"/>
                         <signal name="changed" handler="on_entry_changed"/>
                       </object>
                     </child>
@@ -212,6 +214,7 @@
                         <property name="visible">True</property>
                         <property name="visibility">False</property>
                         <property name="width-chars">20</property>
+                        <signal name="activate" handler="on_user_entry_activate"/>
                         <signal name="changed" handler="on_entry_changed"/>
                       </object>
                     </child>
