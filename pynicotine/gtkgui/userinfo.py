@@ -28,10 +28,13 @@ from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
 
+from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.widgets import clipboard
+from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.filechooser import FileChooserSave
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.infobar import InfoBar
@@ -40,9 +43,7 @@ from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
 from pynicotine.gtkgui.widgets.treeview import TreeView
-from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
-from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
 
@@ -89,16 +90,24 @@ class UserInfos(IconNotebook):
         self.window.userinfo_entry.set_text("")
         core.userinfo.show_user(username)
 
-    def show_user(self, user, switch_page=True, **_unused):
+    def show_user(self, user, refresh=False, switch_page=True):
 
-        if user not in self.pages:
+        page = self.pages.get(user)
+
+        if page is None:
+            refresh = True
             self.pages[user] = page = UserInfo(self, user)
+
             self.append_page(page.container, user, focus_callback=page.on_focus,
                              close_callback=page.on_close, user=user)
             page.set_label(self.get_tab_label_inner(page.container))
 
+        if refresh:
+            page.update_button_states()
+            page.set_in_progress()
+
         if switch_page:
-            self.set_current_page(self.pages[user].container)
+            self.set_current_page(page.container)
             self.window.change_main_page(self.window.userinfo_page)
 
     def remove_user(self, user):
@@ -184,14 +193,13 @@ class UserInfos(IconNotebook):
 
     def server_disconnect(self, *_args):
         for user, page in self.pages.items():
-            self.set_user_status(page.container, user, UserStatus.OFFLINE)
+            self.set_user_status(page.container, user, slskmessages.UserStatus.OFFLINE)
 
 
 class UserInfo:
 
     def __init__(self, userinfos, user):
 
-        ui_template = UserInterface(scope=self, path="userinfo.ui")
         (
             self.add_remove_buddy_label,
             self.ban_unban_user_label,
@@ -200,6 +208,8 @@ class UserInfo:
             self.country_label,
             self.description_view_container,
             self.dislikes_list_container,
+            self.edit_interests_button,
+            self.edit_profile_button,
             self.free_upload_slots_label,
             self.horizontal_paned,
             self.ignore_unignore_user_label,
@@ -217,7 +227,7 @@ class UserInfo:
             self.upload_slots_label,
             self.upload_speed_label,
             self.user_label
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="userinfo.ui")
 
         self.userinfos = userinfos
         self.window = userinfos.window
@@ -228,42 +238,44 @@ class UserInfo:
 
         if GTK_API_VERSION >= 4:
             self.country_icon.set_pixel_size(21)
-
-            self.picture = Gtk.Picture(can_shrink=False, halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER)
-            self.scroll_controller = Gtk.EventControllerScroll(flags=Gtk.EventControllerScrollFlags.VERTICAL)
-            self.scroll_controller.connect("scroll", self.on_scroll)
-            self.picture_view.add_controller(self.scroll_controller)
+            self.picture = Gtk.Picture(can_shrink=True, keep_aspect_ratio=True, hexpand=True, vexpand=True)
+            self.picture_view.append(self.picture)  # pylint: disable=no-member
         else:
             # Setting a pixel size of 21 results in a misaligned country flag
             self.country_icon.set_pixel_size(0)
 
-            self.picture = Gtk.Image(visible=True)
-            self.picture_view.connect("scroll-event", self.on_scroll_event)
+            self.picture = Gtk.EventBox(hexpand=True, vexpand=True, visible=True)
+            self.picture.connect("draw", self.on_draw_picture)
 
-        self.picture_view.set_property("child", self.picture)
+            self.picture_view.add(self.picture)    # pylint: disable=no-member
 
         self.user = user
-        self.picture_data_original = self.picture_data_scaled = None
-        self.zoom_factor = 5
-        self.actual_zoom = 0
+        self.picture_data = None
+        self.picture_surface = None
         self.indeterminate_progress = True
 
         # Set up likes list
         self.likes_list_view = TreeView(
             self.window, parent=self.likes_list_container,
-            columns=[
-                {"column_id": "likes", "column_type": "text", "title": _("Likes"), "sort_column": 0,
-                 "default_sort_column": "ascending"}
-            ]
+            columns={
+                "likes": {
+                    "column_type": "text",
+                    "title": _("Likes"),
+                    "default_sort_column": "ascending"
+                }
+            }
         )
 
         # Set up dislikes list
         self.dislikes_list_view = TreeView(
             self.window, parent=self.dislikes_list_container,
-            columns=[
-                {"column_id": "dislikes", "column_type": "text", "title": _("Dislikes"), "sort_column": 0,
-                 "default_sort_column": "ascending"}
-            ]
+            columns={
+                "dislikes": {
+                    "column_type": "text",
+                    "title": _("Dislikes"),
+                    "default_sort_column": "ascending"
+                }
+            }
         )
 
         # Popup menus
@@ -275,31 +287,25 @@ class UserInfo:
             ("#" + _("_Close Tab"), self.on_close)
         )
 
-        def get_interest_items(list_view):
-            return (("$" + _("I _Like This"), self.window.interests.on_like_recommendation, list_view),
-                    ("$" + _("I _Dislike This"), self.window.interests.on_dislike_recommendation, list_view),
+        def get_interest_items(list_view, column_id):
+            return (("$" + _("I _Like This"), self.window.interests.on_like_recommendation, list_view, column_id),
+                    ("$" + _("I _Dislike This"), self.window.interests.on_dislike_recommendation, list_view, column_id),
                     ("", None),
-                    ("#" + _("_Search for Item"), self.window.interests.on_recommend_search, list_view))
+                    ("#" + _("_Search for Item"), self.window.interests.on_recommend_search, list_view, column_id))
 
         self.likes_popup_menu = PopupMenu(self.window.application, self.likes_list_view.widget,
                                           self.on_popup_likes_menu)
-        self.likes_popup_menu.add_items(*get_interest_items(self.likes_list_view))
+        self.likes_popup_menu.add_items(*get_interest_items(self.likes_list_view, "likes"))
 
         self.dislikes_popup_menu = PopupMenu(self.window.application, self.dislikes_list_view.widget,
                                              self.on_popup_dislikes_menu)
-        self.dislikes_popup_menu.add_items(*get_interest_items(self.dislikes_list_view))
+        self.dislikes_popup_menu.add_items(*get_interest_items(self.dislikes_list_view, "dislikes"))
 
-        self.picture_popup_menu = PopupMenu(self.window.application, self.picture_view)
+        self.picture_popup_menu = PopupMenu(self.window.application, self.picture)
         self.picture_popup_menu.add_items(
-            ("#" + _("Zoom 1:1"), self.make_zoom_normal),
-            ("#" + _("Zoom In"), self.make_zoom_in),
-            ("#" + _("Zoom Out"), self.make_zoom_out),
-            ("", None),
+            ("#" + _("Copy Picture"), self.on_copy_picture),
             ("#" + _("Save Picture"), self.on_save_picture)
         )
-
-        self.update_button_states()
-        self.set_in_progress()
 
     def clear(self):
 
@@ -321,45 +327,25 @@ class UserInfo:
 
     """ General """
 
-    def set_pixbuf(self, pixbuf):
-
-        if GTK_API_VERSION >= 4:
-            self.picture.set_pixbuf(pixbuf)
-        else:
-            self.picture.set_from_pixbuf(pixbuf)
-
-        del pixbuf
-
     def load_picture(self, data):
 
         if not data:
             if GTK_API_VERSION >= 4:
                 self.picture.set_paintable(None)
-            else:
-                self.picture.clear()
 
-            self.picture_data_original = self.picture_data_scaled = None
+            self.picture_data = None
             self.placeholder_picture.set_visible(True)
             return
 
         try:
-            allocation = self.picture_container.get_allocation()
-            max_width = allocation.width - 72
-            max_height = allocation.height - 72
+            if GTK_API_VERSION >= 4:
+                self.picture_data = Gdk.Texture.new_from_bytes(GLib.Bytes(data))
+                self.picture.set_paintable(self.picture_data)
+            else:
+                data_stream = Gio.MemoryInputStream.new_from_bytes(GLib.Bytes(data))
+                self.picture_data = GdkPixbuf.Pixbuf.new_from_stream(data_stream, cancellable=None)
+                self.picture_surface = Gdk.cairo_surface_create_from_pixbuf(self.picture_data, scale=1, for_window=None)
 
-            # Keep the original picture size for saving to disk
-            data_stream = Gio.MemoryInputStream.new_from_bytes(GLib.Bytes(data))
-            self.picture_data_original = GdkPixbuf.Pixbuf.new_from_stream(data_stream, cancellable=None)
-            picture_width = self.picture_data_original.get_width()
-            picture_height = self.picture_data_original.get_height()
-
-            # Scale picture before displaying
-            ratio = min(max_width / picture_width, max_height / picture_height)
-            self.picture_data_scaled = self.picture_data_original.scale_simple(
-                ratio * picture_width, ratio * picture_height, GdkPixbuf.InterpType.BILINEAR)
-            self.set_pixbuf(self.picture_data_scaled)
-
-            self.actual_zoom = 0
             self.picture_view.set_visible(True)
 
         except Exception as error:
@@ -367,44 +353,6 @@ class UserInfo:
                 "user": self.user,
                 "error": error
             })
-
-    def make_zoom_normal(self, *_args):
-        self.actual_zoom = 0
-        self.set_pixbuf(self.picture_data_scaled)
-
-    def make_zoom_in(self, *_args):
-
-        def calc_zoom_in(w_h):
-            return w_h + w_h * self.actual_zoom / 100 + w_h * self.zoom_factor / 100
-
-        if self.picture_data_scaled is None or self.actual_zoom >= 100:
-            return
-
-        self.actual_zoom += self.zoom_factor
-        width = calc_zoom_in(self.picture_data_scaled.get_width())
-        height = calc_zoom_in(self.picture_data_scaled.get_height())
-
-        picture_zoomed = self.picture_data_scaled.scale_simple(width, height, GdkPixbuf.InterpType.NEAREST)
-        self.set_pixbuf(picture_zoomed)
-
-    def make_zoom_out(self, *_args):
-
-        def calc_zoom_out(w_h):
-            return w_h + w_h * self.actual_zoom / 100 - w_h * self.zoom_factor / 100
-
-        if self.picture_data_scaled is None:
-            return
-
-        self.actual_zoom -= self.zoom_factor
-        width = calc_zoom_out(self.picture_data_scaled.get_width())
-        height = calc_zoom_out(self.picture_data_scaled.get_height())
-
-        if width < 42 or height < 42:
-            self.actual_zoom += self.zoom_factor
-            return
-
-        picture_zoomed = self.picture_data_scaled.scale_simple(width, height, GdkPixbuf.InterpType.NEAREST)
-        self.set_pixbuf(picture_zoomed)
 
     def peer_connection_error(self):
 
@@ -462,6 +410,13 @@ class UserInfo:
 
     """ Button States """
 
+    def update_edit_button_state(self):
+
+        is_personal_profile = (self.user == core.login_username)
+
+        for widget in (self.edit_interests_button, self.edit_profile_button):
+            widget.set_visible(is_personal_profile)
+
     def update_buddy_button_state(self):
         label = _("Remove _Buddy") if self.user in core.userlist.buddies else _("Add _Buddy")
         self.add_remove_buddy_label.set_text_with_mnemonic(label)
@@ -476,6 +431,7 @@ class UserInfo:
 
     def update_button_states(self):
 
+        self.update_edit_button_state()
         self.update_buddy_button_state()
         self.update_ban_button_state()
         self.update_ignore_button_state()
@@ -487,7 +443,7 @@ class UserInfo:
         if msg is None:
             return
 
-        if msg.descr:
+        if msg.descr is not None:
             self.description_view.clear()
             self.description_view.append_line(msg.descr)
 
@@ -495,7 +451,7 @@ class UserInfo:
         self.queued_uploads_label.set_text(humanize(msg.queuesize))
         self.free_upload_slots_label.set_text(_("Yes") if msg.slotsavail else _("No"))
 
-        self.picture_data_original = self.picture_data_scaled = None
+        self.picture_data = None
         self.load_picture(msg.pic)
 
         self.info_bar.set_visible(False)
@@ -514,7 +470,7 @@ class UserInfo:
         if not country_code:
             return
 
-        country_name = core.geoip.country_code_to_name(country_code)
+        country_name = core.network_filter.COUNTRIES.get(country_code, _("Unknown"))
         country_text = f"{country_name} ({country_code})"
 
         self.country_label.set_text(country_text)
@@ -537,14 +493,37 @@ class UserInfo:
 
     """ Callbacks """
 
+    def on_draw_picture(self, area, context):
+        """ Draws a centered picture that fills the drawing area """
+
+        area_width = area.get_allocated_width()
+        area_height = area.get_allocated_height()
+        picture_width = self.picture_surface.get_width()
+        picture_height = self.picture_surface.get_height()
+
+        scale_factor = min(area_width / picture_width, area_height / picture_height)
+        translate_x = (area_width - (picture_width * scale_factor)) / 2
+        translate_y = (area_height - (picture_height * scale_factor)) / 2
+
+        context.translate(translate_x, translate_y)
+        context.scale(scale_factor, scale_factor)
+        context.set_source_surface(self.picture_surface, 0, 0)
+        context.paint()
+
     def on_tab_popup(self, *_args):
         self.user_popup_menu.toggle_user_items()
 
     def on_popup_likes_menu(self, menu, *_args):
-        self.window.interests.toggle_menu_items(menu, self.likes_list_view, column=0)
+        self.window.interests.toggle_menu_items(menu, self.likes_list_view, column_id="likes")
 
     def on_popup_dislikes_menu(self, menu, *_args):
-        self.window.interests.toggle_menu_items(menu, self.dislikes_list_view, column=0)
+        self.window.interests.toggle_menu_items(menu, self.dislikes_list_view, column_id="dislikes")
+
+    def on_edit_profile(self, *_args):
+        self.window.application.on_preferences(page_id="user-profile")
+
+    def on_edit_interests(self, *_args):
+        self.window.change_main_page(self.window.interests_page)
 
     def on_send_message(self, *_args):
         core.privatechat.show_user(self.user)
@@ -579,14 +558,26 @@ class UserInfo:
 
         core.network_filter.ignore_user(self.user)
 
+    def on_copy_picture(self, *_args):
+
+        if self.picture_data is None:
+            return
+
+        clipboard.copy_image(self.picture_data)
+
     def on_save_picture_response(self, file_path, *_args):
-        _success, picture_bytes = self.picture_data_original.save_to_bufferv(
-            type="png", option_keys=[], option_values=[])
+
+        if GTK_API_VERSION >= 4:
+            picture_bytes = self.picture_data.save_to_png_bytes().get_data()
+        else:
+            _success, picture_bytes = self.picture_data.save_to_bufferv(
+                type="png", option_keys=[], option_values=[])
+
         core.userinfo.save_user_picture(file_path, picture_bytes)
 
     def on_save_picture(self, *_args):
 
-        if self.picture_data_original is None:
+        if self.picture_data is None:
             return
 
         current_date_time = time.strftime("%Y-%m-%d_%H-%M-%S")
@@ -598,30 +589,7 @@ class UserInfo:
             initial_file=f"{self.user}_{current_date_time}.png"
         ).show()
 
-    def on_scroll(self, _controller=None, _scroll_x=0, scroll_y=0):
-
-        if scroll_y < 0:
-            self.make_zoom_in()
-        else:
-            self.make_zoom_out()
-
-        return True
-
-    def on_scroll_event(self, _widget, event):
-
-        if event.direction == Gdk.ScrollDirection.SMOOTH:
-            return self.on_scroll(scroll_y=event.delta_y)
-
-        if event.direction == Gdk.ScrollDirection.DOWN:
-            self.make_zoom_out()
-
-        elif event.direction == Gdk.ScrollDirection.UP:
-            self.make_zoom_in()
-
-        return True
-
     def on_refresh(self, *_args):
-        self.set_in_progress()
         core.userinfo.show_user(self.user, refresh=True)
 
     def on_focus(self, *_args):

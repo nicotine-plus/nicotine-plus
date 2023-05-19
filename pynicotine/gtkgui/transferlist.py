@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 # COPYRIGHT (C) 2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
@@ -30,12 +30,14 @@ from gi.repository import Gtk
 from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.dialogs.fileproperties import FileProperties
-from pynicotine.gtkgui.utils import copy_text
+from pynicotine.gtkgui.widgets import clipboard
+from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import FilePopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.theme import add_css_class
+from pynicotine.gtkgui.widgets.theme import get_file_type_icon_name
 from pynicotine.gtkgui.widgets.theme import remove_css_class
 from pynicotine.gtkgui.widgets.treeview import collapse_treeview
 from pynicotine.gtkgui.widgets.treeview import create_grouping_menu
@@ -43,9 +45,9 @@ from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.treeview import save_columns
 from pynicotine.gtkgui.widgets.treeview import select_user_row_iter
 from pynicotine.gtkgui.widgets.treeview import show_file_path_tooltip
-from pynicotine.gtkgui.widgets.ui import UserInterface
-from pynicotine.slskmessages import UINT64_LIMIT
+from pynicotine.gtkgui.widgets.treeview import show_file_type_tooltip
 from pynicotine.transfers import Transfer
+from pynicotine.utils import UINT64_LIMIT
 from pynicotine.utils import human_length
 from pynicotine.utils import human_size
 from pynicotine.utils import human_speed
@@ -60,12 +62,11 @@ class TransferList:
 
     def __init__(self, window, transfer_type):
 
-        ui_template = UserInterface(scope=self, path=f"{transfer_type}s.ui")
         (
             self.clear_all_button,
             self.container,
             self.tree_view
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path=f"{transfer_type}s.ui")
 
         self.window = window
         self.type = transfer_type
@@ -121,8 +122,9 @@ class TransferList:
         self.cols = cols = initialise_columns(
             window, transfer_type, self.tree_view,
             ["user", _("User"), 200, "text", None],
-            ["path", self.path_label, 400, "text", None],
-            ["filename", _("Filename"), 400, "text", None],
+            ["path", self.path_label, 200, "text", None],
+            ["file_type", _("File Type"), 40, "icon", None],
+            ["filename", _("Filename"), 200, "text", None],
             ["status", _("Status"), 140, "text", None],
             ["queue_position", _("Queue"), 90, "number", None],
             ["percent", _("Percent"), 90, "progress", None],
@@ -134,14 +136,20 @@ class TransferList:
 
         cols["user"].set_sort_column_id(0)
         cols["path"].set_sort_column_id(1)
-        cols["filename"].set_sort_column_id(2)
-        cols["status"].set_sort_column_id(3)
-        cols["queue_position"].set_sort_column_id(13)
-        cols["percent"].set_sort_column_id(5)
-        cols["size"].set_sort_column_id(10)
-        cols["speed"].set_sort_column_id(12)
-        cols["time_elapsed"].set_sort_column_id(14)
-        cols["time_left"].set_sort_column_id(15)
+        cols["file_type"].set_sort_column_id(2)
+        cols["filename"].set_sort_column_id(3)
+        cols["status"].set_sort_column_id(4)
+        cols["queue_position"].set_sort_column_id(14)
+        cols["percent"].set_sort_column_id(6)
+        cols["size"].set_sort_column_id(11)
+        cols["speed"].set_sort_column_id(13)
+        cols["time_elapsed"].set_sort_column_id(15)
+        cols["time_left"].set_sort_column_id(16)
+
+        cols["file_type"].get_widget().set_visible(False)
+
+        cols["path"].set_expand(True)
+        cols["filename"].set_expand(True)
 
         menu = create_grouping_menu(
             window, config.sections["transfers"][f"group{transfer_type}s"], self.on_toggle_tree)
@@ -193,21 +201,22 @@ class TransferList:
         self.transfersmodel = tree_model_class(
             str,                   # (0)  user
             str,                   # (1)  path
-            str,                   # (2)  file name
-            str,                   # (3)  translated status
-            str,                   # (4)  hqueue position
-            int,                   # (5)  percent
-            str,                   # (6)  hsize
-            str,                   # (7)  hspeed
-            str,                   # (8)  htime elapsed
-            str,                   # (9)  htime left
-            GObject.TYPE_UINT64,   # (10) size
-            GObject.TYPE_UINT64,   # (11) current bytes
-            GObject.TYPE_UINT64,   # (12) speed
-            GObject.TYPE_UINT,     # (13) queue position
-            int,                   # (14) time elapsed
-            GObject.TYPE_UINT64,   # (15) time left
-            GObject.TYPE_PYOBJECT  # (16) transfer object
+            str,                   # (2)  file type icon
+            str,                   # (3)  file name
+            str,                   # (4)  translated status
+            str,                   # (5)  hqueue position
+            int,                   # (6)  percent
+            str,                   # (7)  hsize
+            str,                   # (8)  hspeed
+            str,                   # (9)  htime elapsed
+            str,                   # (10) htime left
+            GObject.TYPE_UINT64,   # (11) size
+            GObject.TYPE_UINT64,   # (12) current bytes
+            GObject.TYPE_UINT64,   # (13) speed
+            GObject.TYPE_UINT,     # (14) queue position
+            int,                   # (15) time elapsed
+            GObject.TYPE_UINT64,   # (16) time left
+            GObject.TYPE_PYOBJECT  # (17) transfer object
         )
 
         if self.tree_users is not None:
@@ -244,7 +253,7 @@ class TransferList:
 
     def select_transfer(self, model, iterator, select_user=False):
 
-        transfer = model.get_value(iterator, 16)
+        transfer = model.get_value(iterator, 17)
 
         if transfer.filename is not None and transfer not in self.selected_transfers:
             self.selected_transfers[transfer] = None
@@ -388,7 +397,7 @@ class TransferList:
             return
 
         while iterator is not None:
-            transfer = self.transfersmodel.get_value(iterator, 16)
+            transfer = self.transfersmodel.get_value(iterator, 17)
             status = transfer.status
 
             if status == "Transferring":
@@ -411,37 +420,37 @@ class TransferList:
 
             iterator = self.transfersmodel.iter_next(iterator)
 
-        transfer = self.transfersmodel.get_value(initer, 16)
+        transfer = self.transfersmodel.get_value(initer, 17)
         total_size = min(total_size, UINT64_LIMIT)
         current_byte_offset = min(current_byte_offset, UINT64_LIMIT)
 
         if transfer.status != parent_status:
-            self.transfersmodel.set_value(initer, 3, self.translate_status(parent_status))
+            self.transfersmodel.set_value(initer, 4, self.translate_status(parent_status))
             transfer.status = parent_status
 
         if transfer.speed != speed:
-            self.transfersmodel.set_value(initer, 7, self.get_hspeed(speed))
-            self.transfersmodel.set_value(initer, 12, GObject.Value(GObject.TYPE_UINT64, speed))
+            self.transfersmodel.set_value(initer, 8, self.get_hspeed(speed))
+            self.transfersmodel.set_value(initer, 13, GObject.Value(GObject.TYPE_UINT64, speed))
             transfer.speed = speed
 
         if transfer.time_elapsed != elapsed:
             left = (total_size - current_byte_offset) / speed if speed and total_size > current_byte_offset else 0
-            self.transfersmodel.set_value(initer, 8, self.get_helapsed(elapsed))
-            self.transfersmodel.set_value(initer, 9, self.get_hleft(left))
-            self.transfersmodel.set_value(initer, 14, elapsed)
-            self.transfersmodel.set_value(initer, 15, GObject.Value(GObject.TYPE_UINT64, left))
+            self.transfersmodel.set_value(initer, 9, self.get_helapsed(elapsed))
+            self.transfersmodel.set_value(initer, 10, self.get_hleft(left))
+            self.transfersmodel.set_value(initer, 15, elapsed)
+            self.transfersmodel.set_value(initer, 16, GObject.Value(GObject.TYPE_UINT64, left))
             transfer.time_elapsed = elapsed
 
         if transfer.current_byte_offset != current_byte_offset:
-            self.transfersmodel.set_value(initer, 5, self.get_percent(current_byte_offset, total_size))
-            self.transfersmodel.set_value(initer, 6, self.get_hsize(current_byte_offset, total_size))
-            self.transfersmodel.set_value(initer, 11, GObject.Value(GObject.TYPE_UINT64, current_byte_offset))
+            self.transfersmodel.set_value(initer, 6, self.get_percent(current_byte_offset, total_size))
+            self.transfersmodel.set_value(initer, 7, self.get_hsize(current_byte_offset, total_size))
+            self.transfersmodel.set_value(initer, 12, GObject.Value(GObject.TYPE_UINT64, current_byte_offset))
             transfer.current_byte_offset = current_byte_offset
 
         if transfer.size != total_size:
-            self.transfersmodel.set_value(initer, 5, self.get_percent(current_byte_offset, total_size))
-            self.transfersmodel.set_value(initer, 6, self.get_hsize(current_byte_offset, total_size))
-            self.transfersmodel.set_value(initer, 10, GObject.Value(GObject.TYPE_UINT64, total_size))
+            self.transfersmodel.set_value(initer, 6, self.get_percent(current_byte_offset, total_size))
+            self.transfersmodel.set_value(initer, 7, self.get_hsize(current_byte_offset, total_size))
+            self.transfersmodel.set_value(initer, 11, GObject.Value(GObject.TYPE_UINT64, total_size))
             transfer.size = total_size
 
     def update_specific(self, transfer=None):
@@ -467,32 +476,32 @@ class TransferList:
         if initer is not None:
             translated_status = self.translate_status(status)
 
-            if self.transfersmodel.get_value(initer, 3) != translated_status:
-                self.transfersmodel.set_value(initer, 3, translated_status)
+            if self.transfersmodel.get_value(initer, 4) != translated_status:
+                self.transfersmodel.set_value(initer, 4, translated_status)
 
-            if self.transfersmodel.get_value(initer, 7) != hspeed:
-                self.transfersmodel.set_value(initer, 7, hspeed)
-                self.transfersmodel.set_value(initer, 12, GObject.Value(GObject.TYPE_UINT64, speed))
+            if self.transfersmodel.get_value(initer, 8) != hspeed:
+                self.transfersmodel.set_value(initer, 8, hspeed)
+                self.transfersmodel.set_value(initer, 13, GObject.Value(GObject.TYPE_UINT64, speed))
 
-            if self.transfersmodel.get_value(initer, 8) != helapsed:
-                self.transfersmodel.set_value(initer, 8, helapsed)
-                self.transfersmodel.set_value(initer, 9, self.get_hleft(left))
-                self.transfersmodel.set_value(initer, 14, elapsed)
-                self.transfersmodel.set_value(initer, 15, GObject.Value(GObject.TYPE_UINT64, left))
+            if self.transfersmodel.get_value(initer, 9) != helapsed:
+                self.transfersmodel.set_value(initer, 9, helapsed)
+                self.transfersmodel.set_value(initer, 10, self.get_hleft(left))
+                self.transfersmodel.set_value(initer, 15, elapsed)
+                self.transfersmodel.set_value(initer, 16, GObject.Value(GObject.TYPE_UINT64, left))
 
-            if self.transfersmodel.get_value(initer, 11) != current_byte_offset:
-                self.transfersmodel.set_value(initer, 5, self.get_percent(current_byte_offset, size))
-                self.transfersmodel.set_value(initer, 6, self.get_hsize(current_byte_offset, size))
-                self.transfersmodel.set_value(initer, 11, GObject.Value(GObject.TYPE_UINT64, current_byte_offset))
+            if self.transfersmodel.get_value(initer, 12) != current_byte_offset:
+                self.transfersmodel.set_value(initer, 6, self.get_percent(current_byte_offset, size))
+                self.transfersmodel.set_value(initer, 7, self.get_hsize(current_byte_offset, size))
+                self.transfersmodel.set_value(initer, 12, GObject.Value(GObject.TYPE_UINT64, current_byte_offset))
 
-            elif self.transfersmodel.get_value(initer, 10) != size:
-                self.transfersmodel.set_value(initer, 5, self.get_percent(current_byte_offset, size))
-                self.transfersmodel.set_value(initer, 6, self.get_hsize(current_byte_offset, size))
-                self.transfersmodel.set_value(initer, 10, GObject.Value(GObject.TYPE_UINT64, size))
+            elif self.transfersmodel.get_value(initer, 11) != size:
+                self.transfersmodel.set_value(initer, 6, self.get_percent(current_byte_offset, size))
+                self.transfersmodel.set_value(initer, 7, self.get_hsize(current_byte_offset, size))
+                self.transfersmodel.set_value(initer, 11, GObject.Value(GObject.TYPE_UINT64, size))
 
-            if self.transfersmodel.get_value(initer, 13) != queue_position:
-                self.transfersmodel.set_value(initer, 4, self.get_hqueue_position(queue_position))
-                self.transfersmodel.set_value(initer, 13, GObject.Value(GObject.TYPE_UINT, queue_position))
+            if self.transfersmodel.get_value(initer, 14) != queue_position:
+                self.transfersmodel.set_value(initer, 5, self.get_hqueue_position(queue_position))
+                self.transfersmodel.set_value(initer, 14, GObject.Value(GObject.TYPE_UINT, queue_position))
 
             return False
 
@@ -516,6 +525,7 @@ class TransferList:
                     None, -1, self.column_numbers,
                     [
                         user,
+                        empty_str,
                         empty_str,
                         empty_str,
                         empty_str,
@@ -562,6 +572,7 @@ class TransferList:
                             empty_str,
                             empty_str,
                             empty_str,
+                            empty_str,
                             empty_int,
                             empty_str,
                             empty_str,
@@ -598,6 +609,7 @@ class TransferList:
         row = (
             user,
             path,
+            get_file_type_icon_name(shortfn),
             shortfn,
             self.translate_status(status),
             self.get_hqueue_position(queue_position),
@@ -761,7 +773,13 @@ class TransferList:
 
     @staticmethod
     def on_tooltip(widget, pos_x, pos_y, _keyboard_mode, tooltip):
-        return show_file_path_tooltip(widget, pos_x, pos_y, tooltip, 16, transfer=True)
+
+        file_path_tooltip = show_file_path_tooltip(widget, pos_x, pos_y, tooltip, 17, transfer=True)
+
+        if file_path_tooltip:
+            return file_path_tooltip
+
+        return show_file_type_tooltip(widget, pos_x, pos_y, tooltip, 2)
 
     def on_popup_menu(self, menu, _widget):
 
@@ -892,7 +910,7 @@ class TransferList:
         transfer = next(iter(self.selected_transfers), None)
 
         if transfer:
-            copy_text(transfer.filename)
+            clipboard.copy_text(transfer.filename)
 
     def on_play_files(self, *_args):
         # Implemented in subclasses

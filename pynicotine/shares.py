@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (C) 2009-2011 quinox <quinox@users.sf.net>
@@ -34,18 +34,14 @@ from multiprocessing import Queue
 from threading import Thread
 
 from pynicotine import rename_process
+from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import LogLevel
 from pynicotine.logfacility import log
-from pynicotine.slskmessages import UINT_LIMIT
-from pynicotine.slskmessages import FileListMessage
-from pynicotine.slskmessages import FolderContentsResponse
-from pynicotine.slskmessages import SharedFileListResponse
-from pynicotine.slskmessages import SharedFoldersFiles
-from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import TRANSLATE_PUNCTUATION
+from pynicotine.utils import UINT32_LIMIT
 from pynicotine.utils import encode_path
 
 """ Check if there's an appropriate (performant) database type for shelves """
@@ -79,6 +75,32 @@ else:
         "option2": "semidbm"
     })
     sys.exit()
+
+
+class FileTypes:
+    ARCHIVE = {
+        "7z", "br", "bz2", "gz", "iso", "lz", "lzma", "rar", "tar", "tbz", "tbz2", "tgz", "xz", "zip", "zst"
+    }
+    AUDIO = {
+        "aac", "ac3", "afc", "aifc", "aif", "aiff", "ape", "dff", "dts", "flac", "it", "m4a", "mid", "midi", "mod",
+        "mp1", "mp2", "mp3", "oga", "ogg", "opus", "s3m", "wav", "wma", "wv", "xm"
+    }
+    EXECUTABLE = {
+        "apk", "appimage", "bat", "deb", "dmg", "flatpak", "exe", "jar", "msi", "pkg", "rpm", "sh"
+    }
+    IMAGE = {
+        "apng", "avif", "bmp", "gif", "heic", "heif", "ico", "jfif", "jp2", "jpg", "jpe", "jpeg", "png", "psd",
+        "raw", "svg", "svgz", "tif", "tiff", "webp"
+    }
+    DOCUMENT_TEXT = {
+        "cue", "csv", "doc", "docx", "epub", "htm", "html", "m3u", "m3u8", "md5", "log", "lrc", "md", "nfo", "odp",
+        "ods", "odt", "opf", "oxps", "pdf", "ppt", "pptx", "ps", "rst", "rtf", "sfv", "sha1", "sha256", "srt",
+        "txt", "xls", "xlsx", "xps"
+    }
+    VIDEO = {
+        "3gp", "amv", "asf", "avi", "f4v", "flv", "m2ts", "m2v", "m4p", "m4v", "mov", "mp4", "mpe", "mpeg", "mpg",
+        "mkv", "mts", "ogv", "ts", "vob", "webm", "wmv"
+    }
 
 
 class Scanner(Process):
@@ -118,11 +140,11 @@ class Scanner(Process):
             if self.rescan:
                 start_num_folders = len(list(self.share_dbs.get("buddyfiles", {})))
 
-                self.queue.put((_("Rescanning shares…"), None, LogLevel.DEFAULT))
-                self.queue.put((_("%(num)s folders found before rescan, rebuilding…"),
-                               {"num": start_num_folders}, LogLevel.DEFAULT))
+                self.queue.put((_("%(num)s folders found before rescan"), {"num": start_num_folders}, LogLevel.DEFAULT))
+                self.queue.put((_("Rebuilding shares…") if self.rebuild else _("Rescanning shares…"),
+                               None, LogLevel.DEFAULT))
 
-                new_mtimes, new_files, new_streams = self.rescan_dirs("normal", rebuild=self.rebuild)
+                new_mtimes, new_files, new_streams = self.rescan_dirs("public", rebuild=self.rebuild)
                 _new_mtimes, new_files, _new_streams = self.rescan_dirs("buddy", new_mtimes, new_files,
                                                                         new_streams, self.rebuild)
 
@@ -149,12 +171,12 @@ class Scanner(Process):
     def create_compressed_shares_message(self, share_type):
         """ Create a message that will later contain a compressed list of our shares """
 
-        if share_type == "normal":
+        if share_type == "public":
             streams = self.share_dbs.get("streams")
         else:
-            streams = self.share_dbs.get("buddystreams")
+            streams = self.share_dbs.get(f"{share_type}streams")
 
-        compressed_shares = SharedFileListResponse(shares=streams)
+        compressed_shares = slskmessages.SharedFileListResponse(shares=streams)
         compressed_shares.make_network_message()
         compressed_shares.list = None
         compressed_shares.type = share_type
@@ -162,7 +184,7 @@ class Scanner(Process):
         self.queue.put(compressed_shares)
 
     def create_compressed_shares(self):
-        self.create_compressed_shares_message("normal")
+        self.create_compressed_shares_message("public")
         self.create_compressed_shares_message("buddy")
 
     def create_db_file(self, destination):
@@ -226,10 +248,10 @@ class Scanner(Process):
             if source is None:
                 continue
 
-            try:
-                if share_type == "buddy":
-                    destination = "buddy" + destination
+            if share_type != "public":
+                destination = f"{share_type}{destination}"
 
+            try:
                 self.share_dbs[destination] = share_db = self.create_db_file(destination)
                 share_db.update(source)
 
@@ -315,11 +337,12 @@ class Scanner(Process):
     def is_hidden(folder, filename=None, entry=None):
         """ Stop sharing any dot/hidden directories/files """
 
-        # If the last folder in the path starts with a dot, we exclude it
+        # If the last folder in the path starts with a dot, or is a Synology extended
+        # attribute folder, we exclude it
         if filename is None:
             last_folder = os.path.basename(os.path.normpath(folder.replace("\\", "/")))
 
-            if last_folder.startswith("."):
+            if last_folder.startswith(".") or last_folder == "@eaDir":
                 return True
 
         # If we're asked to check a file we exclude it if it start with a dot
@@ -448,25 +471,25 @@ class Scanner(Process):
             if bitrate is not None:
                 bitrate = int(bitrate + 0.5)  # Round the value with minimal performance loss
 
-                if not UINT_LIMIT > bitrate >= 0:
+                if not UINT32_LIMIT > bitrate >= 0:
                     bitrate = None
 
             if duration is not None:
                 duration = int(duration)
 
-                if not UINT_LIMIT > duration >= 0:
+                if not UINT32_LIMIT > duration >= 0:
                     duration = None
 
             if samplerate is not None:
                 samplerate = int(samplerate)
 
-                if not UINT_LIMIT > samplerate >= 0:
+                if not UINT32_LIMIT > samplerate >= 0:
                     samplerate = None
 
             if bitdepth is not None:
                 bitdepth = int(bitdepth)
 
-                if not UINT_LIMIT > bitdepth >= 0:
+                if not UINT32_LIMIT > bitdepth >= 0:
                     bitdepth = None
 
             audio_info = (bitrate, int(audio.is_vbr), samplerate, bitdepth)
@@ -478,10 +501,10 @@ class Scanner(Process):
         """ Pack all files and metadata in directory """
 
         stream = bytearray()
-        stream.extend(FileListMessage.pack_uint32(len(folder)))
+        stream.extend(slskmessages.FileListMessage.pack_uint32(len(folder)))
 
         for fileinfo in folder:
-            stream.extend(FileListMessage.pack_file_info(fileinfo))
+            stream.extend(slskmessages.FileListMessage.pack_file_info(fileinfo))
 
         return stream
 
@@ -535,8 +558,10 @@ class Shares:
         self.pending_network_msgs = []
         self.rescanning = False
         self.should_compress_shares = False
-        self.compressed_shares_normal = SharedFileListResponse()
-        self.compressed_shares_buddy = SharedFileListResponse()
+        self.compressed_shares = {}
+
+        for share_type in ["public", "buddy"]:
+            self.compressed_shares[share_type] = slskmessages.SharedFileListResponse()
 
         self.convert_shares()
         self.share_db_paths = [
@@ -723,35 +748,18 @@ class Shares:
         if self.should_compress_shares:
             self.rescan_shares(init=True, rescan=False)
 
-        if share_type == "normal":
-            return self.compressed_shares_normal
-
-        if share_type == "buddy":
-            return self.compressed_shares_buddy
-
-        return None
+        return self.compressed_shares.get(share_type)
 
     @staticmethod
     def close_shares(share_dbs):
-
-        dbs = [
-            "files", "streams", "wordindex",
-            "fileindex", "mtimes",
-            "buddyfiles", "buddystreams", "buddywordindex",
-            "buddyfileindex", "buddymtimes"
-        ]
-
-        for database in dbs:
-            db_file = share_dbs.get(database)
-
-            if db_file is not None:
-                share_dbs[database].close()
-                del share_dbs[database]
+        for database in share_dbs.copy():
+            share_dbs[database].close()
+            del share_dbs[database]
 
     def send_num_shared_folders_files(self):
         """ Send number publicly shared files to the server. """
 
-        if not (core and core.user_status != UserStatus.OFFLINE):
+        if not (core and core.user_status != slskmessages.UserStatus.OFFLINE):
             return
 
         if self.rescanning:
@@ -773,7 +781,7 @@ class Shares:
                 sharedfolders = len(list(shared))
                 sharedfiles = len(list(index))
 
-            core.queue.append(SharedFoldersFiles(sharedfolders, sharedfiles))
+            core.queue.append(slskmessages.SharedFoldersFiles(sharedfolders, sharedfiles))
 
         except Exception as error:
             log.add(_("Failed to send number of shared files to the server: %s"), error)
@@ -827,13 +835,8 @@ class Shares:
                     emit_event("show-scan-progress")
                     emit_event("set-scan-indeterminate")
 
-                elif isinstance(item, SharedFileListResponse):
-                    if item.type == "normal":
-                        self.compressed_shares_normal = item
-
-                    elif item.type == "buddy":
-                        self.compressed_shares_buddy = item
-
+                elif isinstance(item, slskmessages.SharedFileListResponse):
+                    self.compressed_shares[item.type] = item
                     self.should_compress_shares = False
 
         return False
@@ -932,16 +935,16 @@ class Shares:
         shares_list = None
 
         if checkuser == 1:
-            # Send Normal Shares
-            shares_list = self.get_compressed_shares_message("normal")
+            # Send public shares
+            shares_list = self.get_compressed_shares_message("public")
 
         elif checkuser == 2:
-            # Send Buddy Shares
+            # Send buddy shares
             shares_list = self.get_compressed_shares_message("buddy")
 
         if not shares_list:
-            # Nyah, Nyah
-            shares_list = SharedFileListResponse(init=msg.init)
+            # Nyah, nyah
+            shares_list = slskmessages.SharedFileListResponse(init=msg.init)
 
         shares_list.init = msg.init
         core.queue.append(shares_list)
@@ -958,14 +961,14 @@ class Shares:
             message = core.ban_message % reason
             core.privatechat.send_automatic_message(username, message)
 
-        normalshares = self.share_dbs.get("streams")
-        buddyshares = self.share_dbs.get("buddystreams")
+        public_shares = self.share_dbs.get("streams")
+        buddy_shares = self.share_dbs.get("buddystreams")
 
-        if checkuser == 1 and normalshares is not None:
-            shares = normalshares
+        if checkuser == 1 and public_shares is not None:
+            shares = public_shares
 
-        elif checkuser == 2 and buddyshares is not None:
-            shares = buddyshares
+        elif checkuser == 2 and buddy_shares is not None:
+            shares = buddy_shares
 
         else:
             shares = {}
@@ -973,12 +976,12 @@ class Shares:
         if checkuser:
             try:
                 if msg.dir in shares:
-                    core.queue.append(FolderContentsResponse(
+                    core.queue.append(slskmessages.FolderContentsResponse(
                         init=init, directory=msg.dir, token=msg.token, shares=shares[msg.dir]))
                     return
 
                 if msg.dir.rstrip("\\") in shares:
-                    core.queue.append(FolderContentsResponse(
+                    core.queue.append(slskmessages.FolderContentsResponse(
                         init=init, directory=msg.dir, token=msg.token, shares=shares[msg.dir.rstrip("\\")]))
                     return
 
@@ -986,4 +989,4 @@ class Shares:
                 log.add(_("Failed to fetch the shared folder %(folder)s: %(error)s"),
                         {"folder": msg.dir, "error": error})
 
-            core.queue.append(FolderContentsResponse(init=init, directory=msg.dir, token=msg.token))
+            core.queue.append(slskmessages.FolderContentsResponse(init=init, directory=msg.dir, token=msg.token))

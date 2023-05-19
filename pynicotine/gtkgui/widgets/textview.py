@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -23,7 +23,7 @@ from gi.repository import Gdk
 from gi.repository import Gtk
 
 from pynicotine.gtkgui.application import GTK_API_VERSION
-from pynicotine.gtkgui.utils import copy_text
+from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets.theme import update_tag_visuals
 from pynicotine.utils import open_uri
 
@@ -34,9 +34,11 @@ from pynicotine.utils import open_uri
 class TextView:
 
     if GTK_API_VERSION >= 4:
+        DEFAULT_CURSOR = Gdk.Cursor(name="default")
         POINTER_CURSOR = Gdk.Cursor(name="pointer")
         TEXT_CURSOR = Gdk.Cursor(name="text")
     else:
+        DEFAULT_CURSOR = Gdk.Cursor.new_from_name(Gdk.Display.get_default(), "default")
         POINTER_CURSOR = Gdk.Cursor.new_from_name(Gdk.Display.get_default(), "pointer")
         TEXT_CURSOR = Gdk.Cursor.new_from_name(Gdk.Display.get_default(), "text")
 
@@ -205,7 +207,11 @@ class TextView:
             self.cursor_window = self.widget.get_window(Gtk.TextWindowType.TEXT)  # pylint: disable=no-member
 
         for tag in self.get_tags_for_pos(pos_x, pos_y):
-            if hasattr(tag, "url") or hasattr(tag, "username"):
+            if hasattr(tag, "username"):
+                cursor = self.DEFAULT_CURSOR
+                break
+
+            if hasattr(tag, "url"):
                 cursor = self.POINTER_CURSOR
                 break
 
@@ -298,10 +304,10 @@ class TextView:
         self.widget.emit("copy-clipboard")
 
     def on_copy_link(self, *_args):
-        copy_text(self.get_url_for_current_pos())
+        clipboard.copy_text(self.get_url_for_current_pos())
 
     def on_copy_all_text(self, *_args):
-        copy_text(self.get_text())
+        clipboard.copy_text(self.get_text())
 
     def on_clear_all_text(self, *_args):
         self.clear()

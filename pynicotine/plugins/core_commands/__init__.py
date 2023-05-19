@@ -16,8 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from pynicotine import slskmessages
 from pynicotine.pluginsystem import BasePlugin
-from pynicotine.slskmessages import UserStatus
 
 
 class _CommandGroup:
@@ -91,6 +91,12 @@ class Plugin(BasePlugin):
                 "usage": ["<user>", "<query>"],
                 "usage_private_chat": ["<query>"]
             },
+            "now": {
+                "callback": self.now_command,
+                "description": _("Announce the song currently playing"),
+                "disable": ["cli"],
+                "group": _CommandGroup.CHAT
+            },
             "join": {
                 "aliases": ["j"],
                 "callback": self.join_command,
@@ -126,6 +132,14 @@ class Plugin(BasePlugin):
                 "aliases": ["c"],
                 "callback": self.close_command,
                 "description": _("Close private chat"),
+                "disable": ["cli"],
+                "group": _CommandGroup.PRIVATE_CHAT,
+                "usage_chatroom": ["<user>"],
+                "usage_private_chat": ["[user]"]
+            },
+            "ctcpversion": {
+                "callback": self.ctcpversion_command,
+                "description": _("Request user's client version"),
                 "disable": ["cli"],
                 "group": _CommandGroup.PRIVATE_CHAT,
                 "usage_chatroom": ["<user>"],
@@ -178,21 +192,21 @@ class Plugin(BasePlugin):
                 "description": _("Show IP address or username"),
                 "group": _CommandGroup.NETWORK_FILTERS,
                 "usage": ["<user or ip>"],
-                "usage_private_chat": ["[user]", "[ip]"]
+                "usage_private_chat": ["[user or ip]"]
             },
             "ban": {
                 "callback": self.ban_command,
                 "description": _("Block connections from user or IP address"),
                 "group": _CommandGroup.NETWORK_FILTERS,
                 "usage": ["<user or ip>"],
-                "usage_private_chat": ["[user]", "[ip]"]
+                "usage_private_chat": ["[user or ip]"]
             },
             "unban": {
                 "callback": self.unban_command,
                 "description": _("Remove user or IP address from ban lists"),
                 "group": _CommandGroup.NETWORK_FILTERS,
                 "usage": ["<user or ip>"],
-                "usage_private_chat": ["[user]", "[ip]"]
+                "usage_private_chat": ["[user or ip]"]
             },
             "ignore": {
                 "callback": self.ignore_command,
@@ -200,7 +214,7 @@ class Plugin(BasePlugin):
                 "disable": ["cli"],
                 "group": _CommandGroup.NETWORK_FILTERS,
                 "usage": ["<user or ip>"],
-                "usage_private_chat": ["[user]", "[ip]"]
+                "usage_private_chat": ["[user or ip]"]
             },
             "unignore": {
                 "callback": self.unignore_command,
@@ -208,13 +222,13 @@ class Plugin(BasePlugin):
                 "disable": ["cli"],
                 "group": _CommandGroup.NETWORK_FILTERS,
                 "usage": ["<user or ip>"],
-                "usage_private_chat": ["[user]", "[ip]"]
+                "usage_private_chat": ["[user or ip]"]
             },
             "rescan": {
                 "callback": self.rescan_command,
                 "description": _("Rescan shares"),
                 "group": _CommandGroup.SHARES,
-                "usage": ["[-force]"]
+                "usage": ["[force|rebuild]"]
             },
             "shares": {
                 "aliases": ["ls"],
@@ -301,12 +315,12 @@ class Plugin(BasePlugin):
 
     def away_command(self, _args, **_unused):
 
-        if self.core.user_status == UserStatus.OFFLINE:
+        if self.core.user_status == slskmessages.UserStatus.OFFLINE:
             self.output(_("Offline"))
             return
 
-        self.core.set_away_mode(self.core.user_status != UserStatus.AWAY, save_state=True)
-        self.output(_("Online") if self.core.user_status == UserStatus.ONLINE else _("Away"))
+        self.core.set_away_mode(self.core.user_status != slskmessages.UserStatus.AWAY, save_state=True)
+        self.output(_("Online") if self.core.user_status == slskmessages.UserStatus.ONLINE else _("Away"))
 
     def quit_command(self, args, **_unused):
 
@@ -332,6 +346,9 @@ class Plugin(BasePlugin):
 
     def me_command(self, args, **_unused):
         self.send_message("/me " + args)  # /me is sent as plain text
+
+    def now_command(self, _args, **_unused):
+        self.core.now_playing.display_now_playing(callback=self.send_message)
 
     """ Chat Rooms """
 
@@ -379,6 +396,13 @@ class Plugin(BasePlugin):
         self.output(f"Closing private chat of user {user}")
         self.core.privatechat.remove_user(user)
         return True
+
+    def ctcpversion_command(self, args, user=None, **_unused):
+
+        if args:
+            user = args
+
+        self.send_private(user, self.core.privatechat.CTCP_VERSION, show_ui=True)
 
     def msg_command(self, args, **_unused):
 
@@ -493,8 +517,11 @@ class Plugin(BasePlugin):
     """ Configure Shares """
 
     def rescan_command(self, args, **_unused):
-        force = (args.lstrip("- ") in ("force", "f"))
-        self.core.shares.rescan_shares(force=force)
+
+        rebuild = (args == "rebuild")
+        force = (args == "force") or rebuild
+
+        self.core.shares.rescan_shares(rebuild=rebuild, force=force)
 
     def list_shares_command(self, args, **_unused):
 

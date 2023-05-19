@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -260,7 +260,7 @@ class MessageDialog(Window):
 
         widget = Gtk.MessageDialog(
             transient_for=parent.widget if parent else None, destroy_with_parent=True, message_type=message_type,
-            default_width=width, text=title, secondary_text=message
+            default_width=width, text=title, secondary_text=message, secondary_use_markup=True
         )
         super().__init__(widget=widget)
         widget.connect("response", self.on_response, callback, callback_data)
@@ -364,12 +364,13 @@ class EntryDialog(MessageDialog):
                              (_("_Cancel"), Gtk.ResponseType.CANCEL),
                              (action_button_label, Gtk.ResponseType.OK)])
 
-        self.toggle = self._add_option_toggle(option_label, option_value)
         self.entry = self._add_entry_combobox(default, visibility, droplist)
         self.second_entry = None
 
         if use_second_entry:
             self.second_entry = self._add_entry_combobox(second_default, visibility, second_droplist)
+
+        self.toggle = self._add_option_toggle(option_label, option_value)
 
     def _add_combobox(self, items, visibility=True):
 
@@ -620,9 +621,12 @@ class PluginSettingsDialog(Dialog):
         from pynicotine.gtkgui.widgets.treeview import TreeView
         self.option_widgets[option_name] = treeview = TreeView(
             self.application.window, parent=scrolled_window,
-            columns=[
-                {"column_id": description, "column_type": "text", "title": description, "sort_column": 0}
-            ]
+            columns={
+                "description": {
+                    "column_type": "text",
+                    "title": description
+                }
+            }
         )
         self.application.preferences.set_widget(treeview, option_value)
 
@@ -733,19 +737,19 @@ class PluginSettingsDialog(Dialog):
         if not value:
             return
 
-        treeview, iterator = data
-        treeview.set_row_value(iterator, 0, value)
+        treeview, iterator, column_id = data
+        treeview.set_row_value(iterator, column_id, value)
 
     def on_edit(self, _widget, treeview, description):
 
         for iterator in treeview.get_selected_rows():
-            value = treeview.get_row_value(iterator, 0)
+            value = treeview.get_row_value(iterator, description)
 
             EntryDialog(
                 parent=self,
                 title=description,
                 callback=self.on_edit_response,
-                callback_data=(treeview, iterator),
+                callback_data=(treeview, iterator, description),
                 default=value
             ).show()
             return

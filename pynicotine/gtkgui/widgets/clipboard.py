@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2021-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2021-2023 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gi.repository import Gdk
+from gi.repository import GObject
 from gi.repository import Gtk
 
 from pynicotine.gtkgui.application import GTK_API_VERSION
@@ -25,12 +26,25 @@ from pynicotine.gtkgui.application import GTK_API_VERSION
 """ Clipboard """
 
 
+if GTK_API_VERSION >= 4:
+    _clipboard = Gdk.Display.get_default().get_clipboard()
+else:
+    _clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
+
+
 def copy_text(text):
 
     if GTK_API_VERSION >= 4:
-        clipboard = Gdk.Display.get_default().get_clipboard()
-        clipboard.set(text)
-        return
+        _clipboard.set(text)
+    else:
+        _clipboard.set_text(text, -1)
 
-    clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
-    clipboard.set_text(text, -1)
+
+def copy_image(image_data):
+
+    if GTK_API_VERSION >= 4:
+        value = GObject.Value(Gdk.Texture, image_data)
+        content = Gdk.ContentProvider.new_for_value(value)
+        _clipboard.set_content(content)
+    else:
+        _clipboard.set_image(image_data)

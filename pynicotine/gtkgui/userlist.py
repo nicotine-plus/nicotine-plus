@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 # COPYRIGHT (C) 2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2009 quinox <quinox@users.sf.net>
@@ -25,17 +25,18 @@ import time
 
 from gi.repository import GObject
 
+from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
+from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
 from pynicotine.gtkgui.widgets.treeview import TreeView
-from pynicotine.gtkgui.widgets.ui import UserInterface
-from pynicotine.slskmessages import UserStatus
+from pynicotine.utils import UINT64_LIMIT
 from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
 
@@ -44,49 +45,90 @@ class UserList:
 
     def __init__(self, window):
 
-        ui_template = UserInterface(scope=self, path="buddylist.ui")
         (
             self.container,
             self.list_container,
             self.toolbar
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="buddylist.ui")
 
         self.window = window
 
         # Columns
         self.list_view = TreeView(
             window, parent=self.list_container, name="buddy_list",
-            activate_row_callback=self.on_row_activated, tooltip_callback=self.on_tooltip,
-            columns=[
+            activate_row_callback=self.on_row_activated,
+            columns={
                 # Visible columns
-                {"column_id": "status", "column_type": "icon", "title": _("Status"), "width": 25,
-                 "sort_column": 10, "hide_header": True},
-                {"column_id": "country", "column_type": "icon", "title": _("Country"), "width": 25,
-                 "sort_column": 14, "hide_header": True},
-                {"column_id": "user", "column_type": "text", "title": _("User"), "width": 250,
-                 "sort_column": 2, "default_sort_column": "ascending", "iterator_key": True},
-                {"column_id": "speed", "column_type": "number", "title": _("Speed"), "width": 150,
-                 "sort_column": 11},
-                {"column_id": "files", "column_type": "number", "title": _("Files"), "width": 150,
-                 "sort_column": 12},
-                {"column_id": "trusted", "column_type": "toggle", "title": _("Trusted"), "width": 0,
-                 "sort_column": 5, "toggle_callback": self.on_trusted},
-                {"column_id": "notify", "column_type": "toggle", "title": _("Notify"), "width": 0,
-                 "sort_column": 6, "toggle_callback": self.on_notify},
-                {"column_id": "privileged", "column_type": "toggle", "title": _("Prioritized"), "width": 0,
-                 "sort_column": 7, "toggle_callback": self.on_prioritized},
-                {"column_id": "last_seen", "column_type": "text", "title": _("Last Seen"), "width": 160,
-                 "sort_column": 13},
-                {"column_id": "comments", "column_type": "text", "title": _("Note"), "width": 400,
-                 "sort_column": 9},
+                "status": {
+                    "column_type": "icon",
+                    "title": _("Status"),
+                    "width": 25,
+                    "sort_column": "status_data",
+                    "hide_header": True
+                },
+                "country": {
+                    "column_type": "icon",
+                    "title": _("Country"),
+                    "width": 30,
+                    "sort_column": "country_data",
+                    "hide_header": True
+                },
+                "user": {
+                    "column_type": "text",
+                    "title": _("User"),
+                    "width": 250,
+                    "default_sort_column": "ascending",
+                    "iterator_key": True
+                },
+                "speed": {
+                    "column_type": "number",
+                    "title": _("Speed"),
+                    "width": 150,
+                    "sort_column": "speed_data"
+                },
+                "files": {
+                    "column_type": "number",
+                    "title": _("Files"),
+                    "width": 150,
+                    "sort_column": "files_data"
+                },
+                "trusted": {
+                    "column_type": "toggle",
+                    "title": _("Trusted"),
+                    "width": 0,
+                    "toggle_callback": self.on_trusted
+                },
+                "notify": {
+                    "column_type": "toggle",
+                    "title": _("Notify"),
+                    "width": 0,
+                    "toggle_callback": self.on_notify
+                },
+                "privileged": {
+                    "column_type": "toggle",
+                    "title": _("Prioritized"),
+                    "width": 0,
+                    "toggle_callback": self.on_prioritized
+                },
+                "last_seen": {
+                    "column_type": "text",
+                    "title": _("Last Seen"),
+                    "width": 160,
+                    "sort_column": "last_seen_data"
+                },
+                "comments": {
+                    "column_type": "text",
+                    "title": _("Note"),
+                    "width": 400
+                },
 
                 # Hidden data columns
-                {"column_id": "status_hidden", "data_type": int},
-                {"column_id": "speed_hidden", "data_type": GObject.TYPE_UINT},
-                {"column_id": "files_hidden", "data_type": GObject.TYPE_UINT},
-                {"column_id": "last_seen_hidden", "data_type": int},
-                {"column_id": "country_hidden", "data_type": str}
-            ]
+                "status_data": {"data_type": int},
+                "speed_data": {"data_type": GObject.TYPE_UINT},
+                "files_data": {"data_type": GObject.TYPE_UINT},
+                "last_seen_data": {"data_type": GObject.TYPE_UINT64},
+                "country_data": {"data_type": str}
+            }
         )
 
         # Lists
@@ -125,9 +167,6 @@ class UserList:
         ):
             events.connect(event_name, callback)
 
-    def save_columns(self):
-        self.list_view.save_columns()
-
     def update_visible(self):
 
         if config.sections["ui"]["buddylistinchatrooms"] in ("always", "chatrooms"):
@@ -137,12 +176,10 @@ class UserList:
 
     def get_selected_username(self):
 
-        iterators = self.list_view.get_selected_rows()
+        for iterator in self.list_view.get_selected_rows():
+            return self.list_view.get_row_value(iterator, "user")
 
-        if not iterators:
-            return None
-
-        return self.list_view.get_row_value(iterators[0], 2)
+        return None
 
     def on_row_activated(self, _list_view, _iterator, column_id):
 
@@ -180,11 +217,11 @@ class UserList:
         if not status_icon_name:
             return
 
-        if status == self.list_view.get_row_value(iterator, 10):
+        if status == self.list_view.get_row_value(iterator, "status_data"):
             return
 
-        self.list_view.set_row_value(iterator, 0, status_icon_name)
-        self.list_view.set_row_value(iterator, 10, status)
+        self.list_view.set_row_value(iterator, "status", status_icon_name)
+        self.list_view.set_row_value(iterator, "status_data", status)
 
     def user_stats(self, msg):
 
@@ -203,21 +240,23 @@ class UserList:
         files = msg.files
         h_files = humanize(files)
 
-        self.list_view.set_row_value(iterator, 3, h_speed)
-        self.list_view.set_row_value(iterator, 4, h_files)
-        self.list_view.set_row_value(iterator, 11, GObject.Value(GObject.TYPE_UINT, avgspeed))
-        self.list_view.set_row_value(iterator, 12, GObject.Value(GObject.TYPE_UINT, files))
+        self.list_view.set_row_value(iterator, "speed", h_speed)
+        self.list_view.set_row_value(iterator, "files", h_files)
+        self.list_view.set_row_value(iterator, "speed_data", avgspeed)
+        self.list_view.set_row_value(iterator, "files_data", files)
 
     def add_buddy(self, user, user_data):
 
         country_code = user_data.country.replace("flag_", "")
-        last_seen = user_data.last_seen
 
         try:
-            time_from_epoch = time.mktime(time.strptime(last_seen, "%m/%d/%Y %H:%M:%S"))
+            last_seen_time = time.strptime(user_data.last_seen, "%m/%d/%Y %H:%M:%S")
+            last_seen = time.mktime(last_seen_time)
+            h_last_seen = time.strftime("%x %X", last_seen_time)
+
         except ValueError:
-            last_seen = _("Never seen")
-            time_from_epoch = 0
+            last_seen = 0
+            h_last_seen = _("Never seen")
 
         self.list_view.add_row([
             USER_STATUS_ICON_NAMES.get(user_data.status, ""),
@@ -227,10 +266,10 @@ class UserList:
             bool(user_data.is_trusted),
             bool(user_data.notify_status),
             bool(user_data.is_prioritized),
-            str(last_seen),
+            str(h_last_seen),
             str(user_data.note),
             0, 0, 0,
-            time_from_epoch,
+            last_seen,
             str(country_code)
         ], select_row=core.userlist.allow_saving_buddies)
 
@@ -259,28 +298,28 @@ class UserList:
         iterator = self.list_view.iterators.get(user)
 
         if iterator is not None:
-            self.list_view.set_row_value(iterator, 9, note)
+            self.list_view.set_row_value(iterator, "comments", note)
 
     def buddy_trusted(self, user, trusted):
 
         iterator = self.list_view.iterators.get(user)
 
         if iterator is not None:
-            self.list_view.set_row_value(iterator, 5, trusted)
+            self.list_view.set_row_value(iterator, "trusted", trusted)
 
     def buddy_notify(self, user, notify):
 
         iterator = self.list_view.iterators.get(user)
 
         if iterator is not None:
-            self.list_view.set_row_value(iterator, 6, notify)
+            self.list_view.set_row_value(iterator, "notify", notify)
 
     def buddy_prioritized(self, user, prioritized):
 
         iterator = self.list_view.iterators.get(user)
 
         if iterator is not None:
-            self.list_view.set_row_value(iterator, 7, prioritized)
+            self.list_view.set_row_value(iterator, "privileged", prioritized)
 
     def buddy_last_seen(self, user, online):
 
@@ -289,15 +328,15 @@ class UserList:
         if iterator is None:
             return
 
-        last_seen = ""
-        time_from_epoch = 2147483647  # Gtk only allows range -2147483648 to 2147483647 in set()
+        last_seen = UINT64_LIMIT
+        h_last_seen = ""
 
         if not online:
-            last_seen = time.strftime("%m/%d/%Y %H:%M:%S")
-            time_from_epoch = time.mktime(time.strptime(last_seen, "%m/%d/%Y %H:%M:%S"))
+            last_seen = time.time()
+            h_last_seen = time.strftime("%x %X", time.localtime(last_seen))
 
-        self.list_view.set_row_value(iterator, 8, last_seen)
-        self.list_view.set_row_value(iterator, 13, int(time_from_epoch))
+        self.list_view.set_row_value(iterator, "last_seen", h_last_seen)
+        self.list_view.set_row_value(iterator, "last_seen_data", last_seen)
 
     def user_country(self, user, country_code):
 
@@ -311,8 +350,8 @@ class UserList:
         if not flag_icon_name:
             return
 
-        self.list_view.set_row_value(iterator, 1, flag_icon_name)
-        self.list_view.set_row_value(iterator, 14, country_code)
+        self.list_view.set_row_value(iterator, "country", flag_icon_name)
+        self.list_view.set_row_value(iterator, "country_data", country_code)
 
     def on_add_buddy(self, *_args):
 
@@ -330,22 +369,22 @@ class UserList:
 
     def on_trusted(self, list_view, iterator):
 
-        user = list_view.get_row_value(iterator, 2)
-        value = list_view.get_row_value(iterator, 5)
+        user = list_view.get_row_value(iterator, "user")
+        value = list_view.get_row_value(iterator, "trusted")
 
         core.userlist.set_buddy_trusted(user, not value)
 
     def on_notify(self, list_view, iterator):
 
-        user = list_view.get_row_value(iterator, 2)
-        value = list_view.get_row_value(iterator, 6)
+        user = list_view.get_row_value(iterator, "user")
+        value = list_view.get_row_value(iterator, "notify")
 
         core.userlist.set_buddy_notify(user, not value)
 
     def on_prioritized(self, list_view, iterator):
 
-        user = list_view.get_row_value(iterator, 2)
-        value = list_view.get_row_value(iterator, 7)
+        user = list_view.get_row_value(iterator, "user")
+        value = list_view.get_row_value(iterator, "privileged")
 
         core.userlist.set_buddy_prioritized(user, not value)
 
@@ -371,7 +410,7 @@ class UserList:
         if iterator is None:
             return
 
-        note = self.list_view.get_row_value(iterator, 9) or ""
+        note = self.list_view.get_row_value(iterator, "comments") or ""
 
         EntryDialog(
             parent=self.window,
@@ -382,26 +421,12 @@ class UserList:
             default=note
         ).show()
 
-    @staticmethod
-    def on_tooltip(list_view, pos_x, pos_y, _keyboard_mode, tooltip):
-
-        status_tooltip = list_view.show_user_status_tooltip(pos_x, pos_y, tooltip, 10)
-        country_tooltip = list_view.show_country_tooltip(pos_x, pos_y, tooltip, 14)
-
-        if status_tooltip:
-            return status_tooltip
-
-        if country_tooltip:
-            return country_tooltip
-
-        return False
-
     def server_disconnect(self, *_args):
 
         for iterator in self.list_view.get_all_rows():
-            self.list_view.set_row_value(iterator, 0, USER_STATUS_ICON_NAMES[UserStatus.OFFLINE])
-            self.list_view.set_row_value(iterator, 3, "")
-            self.list_view.set_row_value(iterator, 4, "")
-            self.list_view.set_row_value(iterator, 10, 0)
-            self.list_view.set_row_value(iterator, 11, 0)
-            self.list_view.set_row_value(iterator, 12, 0)
+            self.list_view.set_row_value(iterator, "status", USER_STATUS_ICON_NAMES[slskmessages.UserStatus.OFFLINE])
+            self.list_view.set_row_value(iterator, "speed", "")
+            self.list_view.set_row_value(iterator, "files", "")
+            self.list_view.set_row_value(iterator, "status_data", 0)
+            self.list_view.set_row_value(iterator, "speed_data", 0)
+            self.list_view.set_row_value(iterator, "files_data", 0)

@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
@@ -26,7 +26,6 @@ import sys
 from ast import literal_eval
 from time import time
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
@@ -204,7 +203,9 @@ class BasePlugin:
         log.add(self.human_name + ": " + msg, msg_args)
 
     def send_public(self, room, text):
-        core.queue.append(slskmessages.SayChatroom(room, text))
+        """ Send chat message to a room, must already be joined. """
+
+        core.chatrooms.send_message(room, text)
 
     def send_private(self, user, text, show_ui=True, switch_page=True):
         """ Send user message in private.
@@ -833,21 +834,24 @@ class PluginHandler:
                             num_required_args += 1
 
                         if num_args < num_required_args:
-                            rejection_message = f"Missing {arg} argument"
+                            rejection_message = _("Missing %s argument") % arg
                             break
 
-                        if "|" not in arg:
+                        if num_args <= i or "|" not in arg:
                             continue
 
                         choices = arg[1:-1].split("|")
 
                         if args_split[i] not in choices:
-                            rejection_message = f"Invalid argument, possible choices: {' | '.join(choices)}"
+                            rejection_message = _("Invalid argument, possible choices: %s") % " | ".join(choices)
                             break
 
                     if rejection_message:
                         plugin.output(rejection_message)
-                        plugin.output(f"Usage: {'/' + command} {' '.join(usage)}")
+                        plugin.output(_("Usage: %(command)s %(args)s") % {
+                            "command": "/" + command,
+                            "args": " ".join(usage)
+                        })
                         break
 
                     callback = data.get(f"callback_{command_interface}", data.get("callback"))
@@ -883,7 +887,10 @@ class PluginHandler:
                 break
 
         if plugin:
-            plugin.output(f"Unknown command: {'/' + command}. Type /help to list available commands.")
+            plugin.output(_("Unknown command: %(command)s. Type %(help_command)s to list available commands.") % {
+                "command": f"/{command}",
+                "help_command": "/help"
+            })
 
         self.command_source = None
         return is_successful
@@ -893,15 +900,9 @@ class PluginHandler:
         are precisely the same except for how n+ responds to them, both can be
         triggered by this function. """
 
-        function_name_camelcase = function_name.title().replace("_", "")
-
         for module, plugin in self.enabled_plugins.items():
             try:
-                if hasattr(plugin, function_name_camelcase):
-                    plugin.log(f"{function_name_camelcase} is deprecated, please use {function_name}")
-                    return_value = getattr(plugin, function_name_camelcase)(*args)
-                else:
-                    return_value = getattr(plugin, function_name)(*args)
+                return_value = getattr(plugin, function_name)(*args)
 
             except Exception:
                 self.show_plugin_error(module, sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])

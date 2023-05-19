@@ -161,9 +161,8 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkButton">
+                                  <object class="GtkButton" id="save_button">
                                     <property name="visible">True</property>
-                                    <property name="sensitive" bind-source="refresh_button" bind-property="sensitive" bind-flags="bidirectional|sync-create"/>
                                     <property name="tooltip-text" translatable="yes">Save Shares List to Disk</property>
                                     <signal name="clicked" handler="on_save"/>
                                     <child>
@@ -220,27 +219,12 @@
                         <property name="visible">True</property>
                         <property name="vexpand">True</property>
                         <child>
-                          <object class="GtkScrolledWindow">
+                          <object class="GtkScrolledWindow" id="folder_tree_container">
                             <property name="visible">True</property>
                             <property name="hexpand">True</property>
-                            <child>
-                              <object class="GtkTreeView" id="folder_tree_view">
-                                <property name="visible">True</property>
-                                <property name="has-tooltip">True</property>
-                                <property name="enable-tree-lines">True</property>
-                                <property name="headers-visible">False</property>
-                                <signal name="query-tooltip" handler="on_tooltip"/>
-                                <signal name="row-activated" handler="on_folder_row_activated"/>
-                                <child internal-child="selection">
-                                  <object class="GtkTreeSelection">
-                                    <property name="mode">browse</property>
-                                  </object>
-                                </child>
-                                <style>
-                                  <class name="userbrowse-view"/>
-                                </style>
-                              </object>
-                            </child>
+                            <style>
+                              <class name="userbrowse-view"/>
+                            </style>
                           </object>
                         </child>
                       </object>
@@ -276,24 +260,10 @@
                         <property name="visible">True</property>
                         <property name="vexpand">True</property>
                         <child>
-                          <object class="GtkScrolledWindow">
+                          <object class="GtkScrolledWindow" id="file_list_container">
                             <property name="width-request">450</property>
                             <property name="visible">True</property>
                             <property name="hexpand">True</property>
-                            <child>
-                              <object class="GtkTreeView" id="file_list_view">
-                                <property name="visible">True</property>
-                                <property name="has-tooltip">True</property>
-                                <property name="rubber-banding">True</property>
-                                <signal name="query-tooltip" handler="on_tooltip"/>
-                                <signal name="row-activated" handler="on_file_row_activated"/>
-                                <child internal-child="selection">
-                                  <object class="GtkTreeSelection">
-                                    <property name="mode">multiple</property>
-                                  </object>
-                                </child>
-                              </object>
-                            </child>
                             <style>
                               <class name="userbrowse-view"/>
                             </style>

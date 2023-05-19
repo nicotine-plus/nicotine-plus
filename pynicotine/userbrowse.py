@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -19,7 +19,6 @@
 import json
 import os
 
-from operator import itemgetter
 from threading import Thread
 
 from pynicotine import slskmessages
@@ -27,9 +26,6 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
-from pynicotine.slskmessages import FileListMessage
-from pynicotine.slskmessages import PeerInit
-from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import clean_file
 from pynicotine.utils import encode_path
 from pynicotine.utils import RestrictedUnpickler
@@ -64,54 +60,41 @@ class UserBrowse:
 
         core.send_message_to_peer(username, slskmessages.UploadQueueNotification())
 
-    def _show_user(self, user, path=None, local_shares_type=None, switch_page=True):
+    def _show_user(self, user, path=None, local_share_type=None, switch_page=True):
 
         if user not in self.user_shares:
             self.user_shares[user] = {}
 
         events.emit(
-            "user-browse-show-user", user=user, path=path, local_shares_type=local_shares_type, switch_page=switch_page)
+            "user-browse-show-user", user=user, path=path, local_share_type=local_share_type, switch_page=switch_page)
 
     def remove_user(self, user):
         del self.user_shares[user]
         events.emit("user-browse-remove-user", user)
 
-    def parse_local_shares(self, username, msg):
+    def _parse_local_shares(self, username, msg):
         """ Parse a local shares list and show it in the UI """
 
         built = msg.make_network_message()
         msg.parse_network_message(built)
-        msg.init = PeerInit(target_user=username)
+        msg.init = slskmessages.PeerInit(target_user=username)
 
         events.emit_main_thread("shared-file-list-response", msg)
 
-    def browse_local_public_shares(self, path=None, new_request=None):
-        """ Browse your own public shares """
+    def browse_local_shares(self, path=None, share_type="buddy", new_request=False):
+        """ Browse your own shares """
 
         username = config.sections["server"]["login"] or "Default"
 
         if username not in self.user_shares or new_request:
-            msg = core.shares.get_compressed_shares_message("normal")
+            msg = core.shares.get_compressed_shares_message(share_type)
             Thread(
-                target=self.parse_local_shares, args=(username, msg), name="LocalShareParser", daemon=True
+                target=self._parse_local_shares, args=(username, msg), name="LocalShareParser", daemon=True
             ).start()
 
-        self._show_user(username, path=path, local_shares_type="normal")
+        self._show_user(username, path=path, local_share_type=share_type)
 
-    def browse_local_buddy_shares(self, path=None, new_request=False):
-        """ Browse your own buddy shares """
-
-        username = config.sections["server"]["login"] or "Default"
-
-        if username not in self.user_shares or new_request:
-            msg = core.shares.get_compressed_shares_message("buddy")
-            Thread(
-                target=self.parse_local_shares, args=(username, msg), name="LocalBuddyShareParser", daemon=True
-            ).start()
-
-        self._show_user(username, path=path, local_shares_type="buddy")
-
-    def browse_user(self, username, path=None, local_shares_type=None, new_request=False, switch_page=True):
+    def browse_user(self, username, path=None, local_share_type="buddy", new_request=False, switch_page=True):
         """ Browse a user's shares """
 
         if not username:
@@ -123,16 +106,12 @@ class UserBrowse:
             user_share.clear()
 
         if username == (config.sections["server"]["login"] or "Default"):
-            if local_shares_type == "normal":
-                self.browse_local_public_shares(path, new_request)
-                return
-
-            self.browse_local_buddy_shares(path, new_request)
+            self.browse_local_shares(path, local_share_type, new_request)
             return
 
         self._show_user(username, path=path, switch_page=switch_page)
 
-        if core.user_status == UserStatus.OFFLINE:
+        if core.user_status == slskmessages.UserStatus.OFFLINE:
             events.emit("peer-connection-error", username)
             return
 
@@ -161,6 +140,10 @@ class UserBrowse:
 
         filename_encoded = encode_path(filename)
 
+        def json_keys_to_integer(dictionary):
+            # JSON stores file attribute types as strings, convert them back to integers
+            return {int(k): v for k, v in dictionary}
+
         try:
             try:
                 # Try legacy format first
@@ -173,7 +156,7 @@ class UserBrowse:
                 # Try new format
 
                 with open(filename_encoded, encoding="utf-8") as file_handle:
-                    shares_list = json.load(file_handle)
+                    shares_list = json.load(file_handle, object_pairs_hook=json_keys_to_integer)
 
             # Basic sanity check
             for _folder, files in shares_list:
@@ -192,7 +175,7 @@ class UserBrowse:
 
         self._show_user(username)
 
-        msg = slskmessages.SharedFileListResponse(init=PeerInit(target_user=username))
+        msg = slskmessages.SharedFileListResponse(init=slskmessages.PeerInit(target_user=username))
         msg.list = shares_list
 
         events.emit("shared-file-list-response", msg)
@@ -221,7 +204,8 @@ class UserBrowse:
 
         virtualpath = "\\".join([folder, file_data[1]])
         size = file_data[2]
-        h_bitrate, _bitrate, h_length, _length = FileListMessage.parse_result_bitrate_length(size, file_data[4])
+        h_bitrate, _bitrate, h_length, _length = slskmessages.FileListMessage.parse_result_bitrate_length(
+            size, file_data[4])
 
         core.transfers.get_file(user, virtualpath, prefix, size=size, bitrate=h_bitrate, length=h_length)
 
@@ -248,13 +232,10 @@ class UserBrowse:
             destination = core.transfers.get_folder_destination(user, folder, remove_prefix)
 
             if files:
-                if config.sections["transfers"]["reverseorder"]:
-                    files.sort(key=itemgetter(1), reverse=True)
-
                 for file_data in files:
                     virtualpath = "\\".join([folder, file_data[1]])
                     size = file_data[2]
-                    h_bitrate, _bitrate, h_length, _length = FileListMessage.parse_result_bitrate_length(
+                    h_bitrate, _bitrate, h_length, _length = slskmessages.FileListMessage.parse_result_bitrate_length(
                         size, file_data[4])
 
                     core.transfers.get_file(user, virtualpath, destination,
@@ -307,13 +288,16 @@ class UserBrowse:
     def open_soulseek_url(self, url):
 
         import urllib.parse
+        url_split = urllib.parse.unquote(url[7:]).split("/", 1)
 
-        try:
-            user, file_path = urllib.parse.unquote(url[7:]).split("/", 1)
-            self.browse_user(user, path=file_path.replace("/", "\\"))
+        if len(url_split) >= 2:
+            user, file_path = url_split
+            file_path = file_path.replace("/", "\\")
+        else:
+            user, = url_split
+            file_path = None
 
-        except Exception:
-            log.add(_("Invalid Soulseek URL: %s"), url)
+        self.browse_user(user, path=file_path)
 
     def _shared_file_list_response(self, msg):
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2009-2010 quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2009 hedonist <ak@sensi.org>
@@ -104,6 +104,6 @@ functionality while keeping current with the Soulseek protocol.""",
         ],
         python_requires=">=3.6",
         install_requires=["PyGObject>=3.22"],
-        extras_require={"test": ["flake8", "pylint"]},
+        extras_require={"packaging": ["cx_Freeze"], "test": ["flake8", "pylint"]},
         cmdclass={"build_py": BuildPyCommand}
     )

@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from pynicotine.core import core
-from pynicotine.gtkgui.widgets.ui import UserInterface
+from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.utils import human_length
 from pynicotine.utils import human_size
@@ -34,7 +34,6 @@ class FileProperties(Dialog):
         self.total_length = 0
         self.current_index = 0
 
-        ui_template = UserInterface(scope=self, path="dialogs/fileproperties.ui")
         (
             self.bitrate_row,
             self.bitrate_value_label,
@@ -56,7 +55,7 @@ class FileProperties(Dialog):
             self.speed_row,
             self.speed_value_label,
             self.username_value_label
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="dialogs/fileproperties.ui")
 
         Dialog.__init__(
             self,

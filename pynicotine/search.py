@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
@@ -31,11 +31,24 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
-from pynicotine.slskmessages import increment_token
 from pynicotine.utils import TRANSLATE_PUNCTUATION
 
 
 class Search:
+
+    __slots__ = ("token", "term", "mode", "room", "users", "is_ignored")
+
+    def __init__(self, token=None, term=None, mode="global", room=None, users=None, is_ignored=False):
+
+        self.token = token
+        self.term = term
+        self.mode = mode
+        self.room = room
+        self.users = users
+        self.is_ignored = is_ignored
+
+
+class Searches:
 
     def __init__(self):
 
@@ -46,8 +59,8 @@ class Search:
 
         # Create wishlist searches
         for term in config.sections["server"]["autosearch"]:
-            self.token = increment_token(self.token)
-            self.searches[self.token] = {"id": self.token, "term": term, "mode": "wishlist", "ignore": True}
+            self.token = slskmessages.increment_token(self.token)
+            self.searches[self.token] = Search(token=self.token, term=term, mode="wishlist", is_ignored=True)
 
         for event_name, callback in (
             ("file-search-request-distributed", self._file_search_request_distributed),
@@ -69,8 +82,6 @@ class Search:
     def request_folder_download(self, user, folder, visible_files):
 
         # First queue the visible search results
-        visible_files.sort(key=itemgetter(1), reverse=config.sections["transfers"]["reverseorder"])
-
         for file in visible_files:
             user, fullpath, destination, size, bitrate, length = file
 
@@ -93,9 +104,12 @@ class Search:
         """ Disallow parsing search result messages for a search ID """
         slskmessages.SEARCH_TOKENS_ALLOWED.discard(token)
 
-    def add_search(self, term, mode, ignore):
-        self.searches[self.token] = {"id": self.token, "term": term, "mode": mode, "ignore": ignore}
+    def add_search(self, term, mode, room=None, users=None, is_ignored=False):
+
+        self.searches[self.token] = search = Search(token=self.token, term=term, mode=mode, room=room,
+                                                    users=users, is_ignored=is_ignored)
         self.add_allowed_token(self.token)
+        return search
 
     def remove_search(self, token):
 
@@ -105,8 +119,8 @@ class Search:
         if search is None:
             return
 
-        if search["term"] in config.sections["server"]["autosearch"]:
-            search["ignore"] = True
+        if search.term in config.sections["server"]["autosearch"]:
+            search.is_ignored = True
         else:
             del self.searches[token]
 
@@ -192,7 +206,7 @@ class Search:
         search_term, _search_term_without_special, room, users = self.process_search_term(search_term, mode, room, user)
 
         # Get a new search token
-        self.token = increment_token(self.token)
+        self.token = slskmessages.increment_token(self.token)
 
         if config.sections["searches"]["enable_history"]:
             items = config.sections["searches"]["history"]
@@ -218,9 +232,8 @@ class Search:
         elif mode == "user":
             self.do_peer_search(search_term, users)
 
-        self.add_search(search_term, mode, ignore=False)
-
-        events.emit("do-search", self.token, search_term, mode, room, users, switch_page)
+        search = self.add_search(search_term, mode, room, users)
+        events.emit("add-search", search.token, search, switch_page)
 
     def do_global_search(self, text):
         core.queue.append(slskmessages.FileSearch(self.token, text))
@@ -271,9 +284,9 @@ class Search:
         searches.insert(0, term)
 
         for search in self.searches.values():
-            if search["term"] == term and search["mode"] == "wishlist":
-                search["ignore"] = False
-                self.do_wishlist_search(search["id"], term)
+            if search.term == term and search.mode == "wishlist":
+                search.is_ignored = False
+                self.do_wishlist_search(search.token, term)
                 break
 
     def add_wish(self, wish):
@@ -282,14 +295,13 @@ class Search:
             return
 
         # Get a new search token
-        self.token = increment_token(self.token)
+        self.token = slskmessages.increment_token(self.token)
 
         if wish not in config.sections["server"]["autosearch"]:
             config.sections["server"]["autosearch"].append(wish)
             config.write_configuration()
 
-        self.add_search(wish, "wishlist", ignore=True)
-
+        self.add_search(wish, "wishlist", is_ignored=True)
         events.emit("add-wish", wish)
 
     def remove_wish(self, wish):
@@ -299,7 +311,7 @@ class Search:
             config.write_configuration()
 
             for search in self.searches.values():
-                if search["term"] == wish and search["mode"] == "wishlist":
+                if search.term == wish and search.mode == "wishlist":
                     del search
                     break
 
@@ -326,11 +338,12 @@ class Search:
         """ Peer message: 9 """
 
         if msg.token not in slskmessages.SEARCH_TOKENS_ALLOWED:
+            msg.token = None
             return
 
         search = self.searches.get(msg.token)
 
-        if search is None or search["ignore"]:
+        if search is None or search.is_ignored:
             msg.token = None
             return
 
