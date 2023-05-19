@@ -247,9 +247,8 @@ class About(Dialog):
    - David Balazs (djbaloo) (2006–2020)""",
 
         """>> <b>Italian</b>
-   - Gabrielle (2023)
+   - Gabboxl (2022-2023)
    - ms-afk (2023)
-   - Gabboxl (2022)
    - Gianluca Boiano (2020–2022)
    - nicola (2007)
    - dbazza (2003–2004)""",
@@ -265,14 +264,13 @@ class About(Dialog):
    - Allan Nordhøy (comradekingu) (2021)""",
 
         """>> <b>Polish</b>
-   - Mariusz (2023)
-   - mariachini (2017–2022)
+   - mariachini (2017–2023)
    - Amun-Ra (2007)
    - thine (2007)
    - Wojciech Owczarek (owczi) (2003–2004)""",
 
         """>> <b>Portuguese (Brazil)</b>
-   - Havokdan (2023)
+   - Havokdan (2022-2023)
    - Guilherme Santos (2022)
    - b1llso (2022)
    - Nicolas Abril (2021)
@@ -280,10 +278,9 @@ class About(Dialog):
    - Felipe Nogaroto Gonzalez (Suicide|Solution) (2006)""",
 
         """>> <b>Russian</b>
-   - Kirill Feoktistov (2023)
+   - SnIPeRSnIPeR (2022-2023)
    - Mehavoid (2021–2023)
-   - AHOHNMYC (2022)
-   - SnIPeRSnIPeR (2022)""",
+   - AHOHNMYC (2022)""",
 
         """>> <b>Slovak</b>
    - Jozef Říha (2006-2008)""",
@@ -296,7 +293,7 @@ class About(Dialog):
    - Dreslo (2003–2004)""",
 
         """>> <b>Spanish (Spain)</b>
-   - gallegonovato(2023)
+   - gallegonovato (2023)
    - MELERIX (2021-2023)
    - tagomago (2021–2022)
    - Strange (2021)
