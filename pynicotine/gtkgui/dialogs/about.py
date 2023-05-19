@@ -222,18 +222,20 @@ class About(Dialog):
    - Kari Viittanen (Kalevi) (2006–2007)""",
 
         """>> <b>French</b>
+   - subu_versus (2023)
+   - zniavre (2007–2023)
    - Lisapple (2021–2022)
    - melmorabity (2021–2022)
    - m-balthazar (2020)
    - Michael Labouebe (gfarmerfr) (2016–2017)
    - Monsieur Poisson (2009–2010)
    - ManWell (2007)
-   - zniavre (2007–2023)
    - systr (2006)
    - Julien Wajsberg (flashfr) (2003–2004)""",
 
         """>> <b>German</b>
    - Han Boetes (hboetes) (2021–2023)
+   - phelissimo_ (2023)
    - Meokater (2007)
    - (._.) (2007)
    - lippel (2004)
@@ -245,6 +247,8 @@ class About(Dialog):
    - David Balazs (djbaloo) (2006–2020)""",
 
         """>> <b>Italian</b>
+   - Gabrielle (2023)
+   - ms-afk (2023)
    - Gabboxl (2022)
    - Gianluca Boiano (2020–2022)
    - nicola (2007)
@@ -261,12 +265,14 @@ class About(Dialog):
    - Allan Nordhøy (comradekingu) (2021)""",
 
         """>> <b>Polish</b>
+   - Mariusz (2023)
    - mariachini (2017–2022)
    - Amun-Ra (2007)
    - thine (2007)
    - Wojciech Owczarek (owczi) (2003–2004)""",
 
         """>> <b>Portuguese (Brazil)</b>
+   - Havokdan (2023)
    - Guilherme Santos (2022)
    - b1llso (2022)
    - Nicolas Abril (2021)
@@ -274,22 +280,24 @@ class About(Dialog):
    - Felipe Nogaroto Gonzalez (Suicide|Solution) (2006)""",
 
         """>> <b>Russian</b>
+   - Kirill Feoktistov (2023)
+   - Mehavoid (2021–2023)
    - AHOHNMYC (2022)
-   - SnIPeRSnIPeR (2022)
-   - Mehavoid (2021–2022)""",
+   - SnIPeRSnIPeR (2022)""",
 
         """>> <b>Slovak</b>
    - Jozef Říha (2006-2008)""",
 
         """>> <b>Spanish (Chile)</b>
-   - MELERIX (2021–2022)
+   - MELERIX (2021–2023)
    - tagomago (2021–2022)
    - Strange (2021)
    - Silvio Orta (2007)
    - Dreslo (2003–2004)""",
 
         """>> <b>Spanish (Spain)</b>
-   - MELERIX (2021)
+   - gallegonovato(2023)
+   - MELERIX (2021-2023)
    - tagomago (2021–2022)
    - Strange (2021)
    - Silvio Orta (2007)
@@ -300,7 +308,7 @@ class About(Dialog):
    - Markus Magnuson (alimony) (2003–2004)""",
 
         """>> <b>Turkish</b>
-   - Oğuz Ersen (2021–2022)""",
+   - Oğuz Ersen (2021–2023)""",
 
         """>> <b>Ukrainian</b>
    - uniss2209 (2022)"""]
