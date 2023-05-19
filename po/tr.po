@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-19 01:29+0300\n"
-"PO-Revision-Date: 2023-05-19 01:59+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2023-05-20 20:11+0000\n"
+"Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/tr/>\n"
 "Language: tr\n"
@@ -761,7 +761,6 @@ msgid "Change Password"
 msgstr "Parola Değiştir"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:276
-#, fuzzy
 msgid ""
 "<b>Syntax</b>: Letters are case-insensitive. All Python regular expressions "
 "are supported if escaping is disabled. For simple filters, keeping escaping "
@@ -1928,7 +1927,6 @@ msgstr ""
 "paylaşmıyor ya da dosyaları özel olarak paylaşıyor."
 
 #: pynicotine/gtkgui/userbrowse.py:525
-#, fuzzy
 msgid ""
 "Unable to request shared files from user. Either the user is offline, the "
 "listening ports are closed on both sides, or there is a temporary "
@@ -2249,9 +2247,8 @@ msgid "Add as Operator of %s"
 msgstr "%s İşleticisi Olarak Ekle"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:553
-#, fuzzy
 msgid "Please enter number of days."
-msgstr "Lütfen gün sayısını girin!"
+msgstr "Lütfen gün sayısını girin."
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:564
 #, python-format
@@ -3484,9 +3481,8 @@ msgid "Say something in the third-person"
 msgstr "Üçüncü şahıs ağzından bir şey söyle"
 
 #: pynicotine/plugins/core_commands/__init__.py:87
-#, fuzzy
 msgid "Announce the song currently playing"
-msgstr "Şu anda çalan şarkıyı duyurun"
+msgstr "Şu anda oynatılan şarkıyı duyur"
 
 #: pynicotine/plugins/core_commands/__init__.py:94
 msgid "Join chat room"
@@ -3509,9 +3505,8 @@ msgid "Close private chat"
 msgstr "Özel sohbeti kapat"
 
 #: pynicotine/plugins/core_commands/__init__.py:133
-#, fuzzy
 msgid "Request user's client version"
-msgstr "Kullanıcı bilgilerini iste"
+msgstr "Kullanıcının istemci sürümünü iste"
 
 #: pynicotine/plugins/core_commands/__init__.py:142
 msgid "Send private message to user"
@@ -3762,14 +3757,13 @@ msgid "Cannot find %(option1)s or %(option2)s, please install either one."
 msgstr "%(option1)s veya %(option2)s bulunamıyor, lütfen birini kurun."
 
 #: pynicotine/shares.py:143
-#, fuzzy, python-format
+#, python-format
 msgid "%(num)s folders found before rescan"
 msgstr "Yeniden taramadan sonra %(num)s klasör bulundu"
 
 #: pynicotine/shares.py:144
-#, fuzzy
 msgid "Rebuilding shares…"
-msgstr "Paylaşımlar yeniden taranıyor…"
+msgstr "Paylaşımlar yeniden oluşturuluyor…"
 
 #: pynicotine/shares.py:144
 msgid "Rescanning shares…"
@@ -3853,12 +3847,12 @@ msgid "Unknown Network Interface"
 msgstr "Bilinmeyen Ağ Arayüzü"
 
 #: pynicotine/slskproto.py:315
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Cannot listen on port %(port)s. Ensure no other application uses it, or "
 "choose a different port. Error: %(error)s"
 msgstr ""
-"%(port)s bağlantı noktasında dinlenemiyor. Başka hiçbir uygulamanın "
+"%(port)s bağlantı noktasında dinlenemiyor. Başka bir uygulamanın "
 "kullanmadığından emin olun veya farklı bir bağlantı noktası seçin. Hata: "
 "%(error)s"
 
@@ -4209,7 +4203,6 @@ msgstr ""
 "açık olan kullanıcılara bağlanabilirsiniz."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:277
-#, fuzzy
 msgid ""
 "If necessary, choose a different listening port below. This can also be done "
 "later in the preferences."
@@ -5499,9 +5492,8 @@ msgid "Public IP address:"
 msgstr "Genel IP adresi:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:172
-#, fuzzy
 msgid "Listening port:"
-msgstr "Dinleme bağlantı noktası aralığı:"
+msgstr "Dinleme bağlantı noktası:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:206
 msgid "Away Status"
