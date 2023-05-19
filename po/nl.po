@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-19 01:29+0300\n"
-"PO-Revision-Date: 2023-05-17 14:53+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2023-05-19 01:59+0000\n"
+"Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
 "Language: nl\n"
@@ -758,15 +758,15 @@ msgid "Change Password"
 msgstr "Verander wachtwoord"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:276
-#, fuzzy
 msgid ""
 "<b>Syntax</b>: Letters are case-insensitive. All Python regular expressions "
 "are supported if escaping is disabled. For simple filters, keeping escaping "
 "enabled is recommended."
 msgstr ""
 "<b>Syntaxis:</b> Letters zijn niet hoofdlettergevoelig. Alle reguliere "
-"expressies van Python worden ondersteund als escaping is uitgeschakeld. Voor "
-"eenvoudige filters wordt aanbevolen om escape ingeschakeld te houden."
+"expressies van Python worden ondersteund als \"escaping\" is uitgeschakeld. "
+"Voor eenvoudige filters wordt aanbevolen om \"escape\" ingeschakeld te "
+"houden."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:285
 msgid "Filter"
@@ -1923,15 +1923,14 @@ msgstr ""
 "gebruiker niets, ofwel hij deelt de bestanden alleen privé."
 
 #: pynicotine/gtkgui/userbrowse.py:525
-#, fuzzy
 msgid ""
 "Unable to request shared files from user. Either the user is offline, the "
 "listening ports are closed on both sides, or there is a temporary "
 "connectivity issue."
 msgstr ""
-"Kan geen shares van gebruiker opvragen. Ofwel is de gebruiker offline, "
-"hebben jullie allebei een gesloten luisterpoort of is er een tijdelijk "
-"verbindingsprobleem."
+"Kan geen gedeelde bestanden opvragen bij de gebruiker. Ofwel is de gebruiker "
+"offline, de luisterpoorten zijn aan beide kanten gesloten, of er is een "
+"tijdelijk verbindingsprobleem."
 
 #: pynicotine/gtkgui/userbrowse.py:731
 msgid "Select Destination for Downloading Multiple Folders"
@@ -2245,9 +2244,8 @@ msgid "Add as Operator of %s"
 msgstr "Toevoegen als operator van %s"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:553
-#, fuzzy
 msgid "Please enter number of days."
-msgstr "Vul het aantal dagen in!"
+msgstr "Vul het aantal dagen in."
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:564
 #, python-format
