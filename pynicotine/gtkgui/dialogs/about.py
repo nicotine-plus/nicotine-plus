@@ -31,11 +31,11 @@ class About(Dialog):
         "<b>Nicotine+ Team</b>",
 
         """>> <b>Mat (mathiascode)</b>
-   - Maintainer (2020–present)
+   - Maintainer (2020-present)
    - Developer""",
 
         """>> <b>eLvErDe</b>
-   - Maintainer (2013–2016)
+   - Maintainer (2013-2016)
    - Domain name administrator
    - Source code migration from SVN to GitHub
    - Developer""",
@@ -58,19 +58,19 @@ class About(Dialog):
         "\nInactive",
 
         """>> <b>daelstorm</b>
-   - Maintainer (2004–2009)
+   - Maintainer (2004-2009)
    - Developer""",
 
         """>> <b>quinox</b>
-   - Maintainer (2009–2012)
+   - Maintainer (2009-2012)
    - Developer""",
 
         """>> <b>Michael Labouebe (gfarmerfr)</b>
-   - Maintainer (2016–2017)
+   - Maintainer (2016-2017)
    - Developer""",
 
         """>> <b>Kip Warner</b>
-   - Maintainer (2018–2020)
+   - Maintainer (2018-2020)
    - Developer
    - Debianization""",
 
@@ -113,7 +113,7 @@ class About(Dialog):
         "\n<b>Nicotine Team</b>",
 
         """>> <b>Ingmar K. Steen (Hyriand)</b>
-   - Maintainer (2003–2004)""",
+   - Maintainer (2003-2004)""",
 
         """>> <b>daelstorm</b>
    - Beta tester
@@ -151,7 +151,7 @@ class About(Dialog):
         "\n<b>PySoulSeek Contributors</b>",
 
         """>> <b>Alexander Kanavin</b>
-   - Maintainer (2001–2003)""",
+   - Maintainer (2001-2003)""",
 
         """>> <b>Nir Arbel</b>
    - Helped with many protocol questions, and of course he designed and implemented the whole system""",
@@ -199,75 +199,75 @@ class About(Dialog):
    - burnmail123 (2021)""",
 
         """>> <b>Danish</b>
-   - mathsped (2003–2004)""",
+   - mathsped (2003-2004)""",
 
         """>> <b>Dutch</b>
-   - Han Boetes (hboetes) (2021–2023)
+   - Han Boetes (hboetes) (2021-2023)
    - Kenny Verstraete (2009)
    - nince78 (2007)
-   - Ingmar K. Steen (Hyriand) (2003–2004)""",
+   - Ingmar K. Steen (Hyriand) (2003-2004)""",
 
         """>> <b>English</b>
-   - slook (2021–2023)
-   - Han Boetes (hboetes) (2021–2023)
-   - Mat (mathiascode) (2020–2023)
+   - slook (2021-2023)
+   - Han Boetes (hboetes) (2021-2023)
+   - Mat (mathiascode) (2020-2023)
    - Michael Labouebe (gfarmerfr) (2016)
-   - daelstorm (2004–2009)
-   - Ingmar K. Steen (Hyriand) (2003–2004)""",
+   - daelstorm (2004-2009)
+   - Ingmar K. Steen (Hyriand) (2003-2004)""",
 
         """>> <b>Euskara</b>
-   - Julen (2006–2007)""",
+   - Julen (2006-2007)""",
 
         """>> <b>Finnish</b>
-   - Kari Viittanen (Kalevi) (2006–2007)""",
+   - Kari Viittanen (Kalevi) (2006-2007)""",
 
         """>> <b>French</b>
    - subu_versus (2023)
-   - zniavre (2007–2023)
-   - Lisapple (2021–2022)
-   - melmorabity (2021–2022)
+   - zniavre (2007-2023)
+   - Lisapple (2021-2022)
+   - melmorabity (2021-2022)
    - m-balthazar (2020)
-   - Michael Labouebe (gfarmerfr) (2016–2017)
-   - Monsieur Poisson (2009–2010)
+   - Michael Labouebe (gfarmerfr) (2016-2017)
+   - Monsieur Poisson (2009-2010)
    - ManWell (2007)
    - systr (2006)
-   - Julien Wajsberg (flashfr) (2003–2004)""",
+   - Julien Wajsberg (flashfr) (2003-2004)""",
 
         """>> <b>German</b>
-   - Han Boetes (hboetes) (2021–2023)
+   - Han Boetes (hboetes) (2021-2023)
    - phelissimo_ (2023)
    - Meokater (2007)
    - (._.) (2007)
    - lippel (2004)
-   - Ingmar K. Steen (Hyriand) (2003–2004)""",
+   - Ingmar K. Steen (Hyriand) (2003-2004)""",
 
         """>> <b>Hungarian</b>
    - Szia Tomi (2022-2023)
    - Nils (2009)
-   - David Balazs (djbaloo) (2006–2020)""",
+   - David Balazs (djbaloo) (2006-2020)""",
 
         """>> <b>Italian</b>
    - Gabboxl (2022-2023)
    - ms-afk (2023)
-   - Gianluca Boiano (2020–2022)
+   - Gianluca Boiano (2020-2022)
    - nicola (2007)
-   - dbazza (2003–2004)""",
+   - dbazza (2003-2004)""",
 
         """>> <b>Latvian</b>
    - Pagal3 (2022-2023)""",
 
         """>> <b>Lithuanian</b>
    - mantas (2020)
-   - Žygimantas Beručka (2006–2009)""",
+   - Žygimantas Beručka (2006-2009)""",
 
         """>> <b>Norwegian Bokmål</b>
    - Allan Nordhøy (comradekingu) (2021)""",
 
         """>> <b>Polish</b>
-   - mariachini (2017–2023)
+   - mariachini (2017-2023)
    - Amun-Ra (2007)
    - thine (2007)
-   - Wojciech Owczarek (owczi) (2003–2004)""",
+   - Wojciech Owczarek (owczi) (2003-2004)""",
 
         """>> <b>Portuguese (Brazil)</b>
    - Havokdan (2022-2023)
@@ -279,33 +279,33 @@ class About(Dialog):
 
         """>> <b>Russian</b>
    - SnIPeRSnIPeR (2022-2023)
-   - Mehavoid (2021–2023)
+   - Mehavoid (2021-2023)
    - AHOHNMYC (2022)""",
 
         """>> <b>Slovak</b>
    - Jozef Říha (2006-2008)""",
 
         """>> <b>Spanish (Chile)</b>
-   - MELERIX (2021–2023)
-   - tagomago (2021–2022)
+   - MELERIX (2021-2023)
+   - tagomago (2021-2022)
    - Strange (2021)
    - Silvio Orta (2007)
-   - Dreslo (2003–2004)""",
+   - Dreslo (2003-2004)""",
 
         """>> <b>Spanish (Spain)</b>
    - gallegonovato (2023)
    - MELERIX (2021-2023)
-   - tagomago (2021–2022)
+   - tagomago (2021-2022)
    - Strange (2021)
    - Silvio Orta (2007)
-   - Dreslo (2003–2004)""",
+   - Dreslo (2003-2004)""",
 
         """>> <b>Swedish</b>
    - mitramai (2021)
-   - Markus Magnuson (alimony) (2003–2004)""",
+   - Markus Magnuson (alimony) (2003-2004)""",
 
         """>> <b>Turkish</b>
-   - Oğuz Ersen (2021–2023)""",
+   - Oğuz Ersen (2021-2023)""",
 
         """>> <b>Ukrainian</b>
    - uniss2209 (2022)"""]
@@ -315,12 +315,12 @@ class About(Dialog):
 GNU General Public License v3.0 or later</a>, with the following exceptions:""",
 
         """<b>Country flags licensed under the MIT License.</b>
-Copyright (c) 2016–2017 Bowtie AB
-Copyright (c) 2018–2020 Jack Marsh
+Copyright (c) 2016-2017 Bowtie AB
+Copyright (c) 2018-2020 Jack Marsh
 <a href="https://github.com/jackiboy/flagpack">https://github.com/jackiboy/flagpack</a>""",
 
         """<b>tinytag licensed under the MIT License.</b>
-Copyright (c) 2014–2022 Tom Wallroth
+Copyright (c) 2014-2022 Tom Wallroth
 <a href="https://github.com/devsnd/tinytag">https://github.com/devsnd/tinytag</a>""",
 
         """<b>Country database licensed under the CC-BY-SA-4.0 License.</b>
