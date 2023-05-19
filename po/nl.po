@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-19 01:29+0300\n"
-"PO-Revision-Date: 2023-05-19 02:15+0000\n"
+"PO-Revision-Date: 2023-05-19 02:30+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -3759,7 +3759,7 @@ msgstr "Kan %(option1)s of %(option2)s niet vinden, installeer een van beide."
 #: pynicotine/shares.py:143
 #, python-format
 msgid "%(num)s folders found before rescan"
-msgstr "%(num)s-mappen gevonden vóór het opnieuw scannen"
+msgstr "%(num)s mappen gevonden voor rescan"
 
 #: pynicotine/shares.py:144
 msgid "Rebuilding shares…"
