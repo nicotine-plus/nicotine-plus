@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-19 01:29+0300\n"
-"PO-Revision-Date: 2023-05-20 20:11+0000\n"
+"PO-Revision-Date: 2023-05-21 16:28+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -221,7 +221,8 @@ msgstr "Ismeretlen"
 #, python-format
 msgid "Cannot retrieve the IP of user %s, since this user is offline"
 msgstr ""
-"%s felhasználó IP-címe nem kérhető le, mert a felhasználó nincs bejelentkezve"
+"A(z) %s felhasználó IP-címe nem kérhető le, mert a felhasználó nincs "
+"bejelentkezve"
 
 #: pynicotine/core.py:392
 #, python-format
@@ -821,21 +822,21 @@ msgstr "Felhasználónév"
 #: pynicotine/gtkgui/userinfo.py:429 pynicotine/gtkgui/widgets/popupmenu.py:365
 #: pynicotine/gtkgui/widgets/popupmenu.py:397
 msgid "Ignore User"
-msgstr "Felhasználó figyelmen kívül hagyása"
+msgstr "Felhasználó mellőzése"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:930
 msgid "Enter the name of the user you want to ignore:"
-msgstr "Írja be a figyelmen kívül hagyni kívánt felhasználó nevét:"
+msgstr "Írja be a mellőzni kívánt felhasználó nevét:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:958
 #: pynicotine/gtkgui/widgets/popupmenu.py:368
 #: pynicotine/gtkgui/widgets/popupmenu.py:401
 msgid "Ignore IP Address"
-msgstr "IP-cím figyelmen kívül hagyása"
+msgstr "IP-cím mellőzése"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:959
 msgid "Enter an IP address you want to ignore:"
-msgstr "Adja meg a figyelmen kívül hagyni kívánt IP-címet:"
+msgstr "Adja meg a mellőzni kívánt IP-címet:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:959
 #: pynicotine/gtkgui/dialogs/preferences.py:1112
@@ -1241,12 +1242,12 @@ msgstr "_Eltávolítja a tételt"
 #: pynicotine/gtkgui/interests.py:180 pynicotine/gtkgui/interests.py:455
 #: pynicotine/gtkgui/userinfo.py:291
 msgid "I _Like This"
-msgstr "Ezt _szeretem"
+msgstr "Ez tet_szik nekem"
 
 #: pynicotine/gtkgui/interests.py:181 pynicotine/gtkgui/interests.py:458
 #: pynicotine/gtkgui/userinfo.py:292
 msgid "I _Dislike This"
-msgstr "Ezt nem s_zeretem"
+msgstr "E_z nem tetszik nekem"
 
 #: pynicotine/gtkgui/interests.py:183
 msgid "_Recommendations for Item"
@@ -1272,7 +1273,7 @@ msgstr "Hasonló felhasználók"
 
 #: pynicotine/gtkgui/mainwindow.py:665
 msgid "_Connect"
-msgstr "_Csatlakozás"
+msgstr "Kap_csolódás"
 
 #: pynicotine/gtkgui/mainwindow.py:666
 msgid "_Disconnect"
@@ -1578,7 +1579,7 @@ msgstr "_Szobák"
 
 #: pynicotine/gtkgui/search.py:82
 msgid "_User"
-msgstr "F_elhasználó"
+msgstr "Fel_használó"
 
 #: pynicotine/gtkgui/search.py:397
 msgid "ID"
@@ -1990,7 +1991,7 @@ msgstr "Felhasználó tiltásának visszavonása"
 
 #: pynicotine/gtkgui/userinfo.py:429
 msgid "Unignore User"
-msgstr "Felhasználó figyelmen kívül hagyásának visszavonása"
+msgstr "Felhasználó mellőzésének visszavonása"
 
 #: pynicotine/gtkgui/userinfo.py:452
 msgid "Yes"
@@ -2233,12 +2234,12 @@ msgstr "Hozzáadás a(z) %s privát szobához"
 #: pynicotine/gtkgui/widgets/popupmenu.py:433
 #, python-format
 msgid "Remove as Operator of %s"
-msgstr "Eltávolítás %s operátoraként"
+msgstr "Eltávolítás a(z) %s operátoraként"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:435
 #, python-format
 msgid "Add as Operator of %s"
-msgstr "Hozzáadás %s operátoraként"
+msgstr "Hozzáadás a(z) %s operátoraként"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:553
 msgid "Please enter number of days."
@@ -3579,8 +3580,7 @@ msgstr "%(num)i elérhető parancs listázása:"
 #: pynicotine/plugins/core_commands/__init__.py:288
 #, python-format
 msgid "Listing %(num)i available commands matching \"%(query)s\":"
-msgstr ""
-"A \"%(query)s\" kérdésnek megfelelő %(num)i elérhető parancs felsorolása:"
+msgstr "A „%(query)s” kérdésnek megfelelő %(num)i elérhető parancs felsorolása:"
 
 #: pynicotine/plugins/core_commands/__init__.py:300
 #, python-format
@@ -3611,12 +3611,12 @@ msgstr "%s tiltása feloldva"
 #: pynicotine/plugins/core_commands/__init__.py:492
 #, python-format
 msgid "Ignored %s"
-msgstr "Mellőzött %s"
+msgstr "%s mellőzve"
 
 #: pynicotine/plugins/core_commands/__init__.py:506
 #, python-format
 msgid "Unignored %s"
-msgstr "Figyelmen kívül hagyás visszavonva %s"
+msgstr "%s mellőzése visszavonva"
 
 #: pynicotine/pluginsystem.py:398
 msgid "Loading plugin system"
@@ -3640,7 +3640,7 @@ msgstr ""
 #: pynicotine/pluginsystem.py:549
 #, python-format
 msgid "Loaded plugin %s"
-msgstr "Betöltött bővítmény %s"
+msgstr "%s betöltött bővítmény"
 
 #: pynicotine/pluginsystem.py:553
 #, python-format
@@ -3654,7 +3654,7 @@ msgstr ""
 #: pynicotine/pluginsystem.py:618
 #, python-format
 msgid "Unloaded plugin %s"
-msgstr "Betöltetlen bővítmény %s"
+msgstr "%s betöltetlen bővítmény"
 
 #: pynicotine/pluginsystem.py:622
 #, python-format
@@ -3736,7 +3736,7 @@ msgstr "Csatlakozott szobák "
 #: pynicotine/search.py:270
 #, python-format
 msgid "Searching for wishlist item \"%s\""
-msgstr "„%s” kívánságlista-elem keresése"
+msgstr "A(z) „%s” kívánságlista-elem keresése"
 
 #: pynicotine/search.py:329
 #, python-format
@@ -3751,14 +3751,14 @@ msgstr "A kiszolgáló jelenleg nem engedélyezi a kívánságlistás keresést"
 #, python-format
 msgid "User %(user)s is searching for \"%(query)s\", found %(num)i results"
 msgstr ""
-"%(user)s felhasználó a(z) \"%(query)s\" kérdéssel keresett, és %(num)i "
+"%(user)s felhasználó a(z) „%(query)s” kérdéssel keresett, és %(num)i "
 "találatot talált"
 
 #: pynicotine/shares.py:73
 #, python-format
 msgid "Cannot find %(option1)s or %(option2)s, please install either one."
 msgstr ""
-"Nem található a(z) %(option1)s, vagy a(z) %(option2)s kérem telepítse "
+"Nem található a(z) %(option1)s vagy a(z) %(option2)s, kérem telepítse "
 "valamelyiket."
 
 #: pynicotine/shares.py:143
@@ -3847,7 +3847,7 @@ msgstr ""
 #: pynicotine/slskproto.py:303
 #, python-format
 msgid "Specified network interface '%s' is not available"
-msgstr "A megadott hálózati interfész '%s', nem elérhető"
+msgstr "A(z) '%s' hálózati interfész nem elérhető"
 
 #: pynicotine/slskproto.py:304
 msgid "Unknown Network Interface"
@@ -3980,7 +3980,7 @@ msgstr "Futtatva a könyvtárban: %s"
 #: pynicotine/transfers.py:1994
 #, python-format
 msgid "Trouble executing on folder: %s"
-msgstr "Hiba történt végrehajtás közben a könyvtárban: %s"
+msgstr "A könyvtárban végrehajtás közben hiba történt: %s"
 
 #: pynicotine/transfers.py:2017
 #, python-format
@@ -4684,7 +4684,7 @@ msgstr "_Csevegéselőzmények"
 #: pynicotine/gtkgui/ui/mainwindow.ui:1155
 #: pynicotine/gtkgui/ui/mainwindow.ui:1466
 msgid "Configure Chats"
-msgstr "Csevegés beállítás"
+msgstr "Csevegések beállítása"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1222
 msgid ""
