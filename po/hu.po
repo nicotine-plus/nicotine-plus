@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-19 01:29+0300\n"
-"PO-Revision-Date: 2023-05-19 01:59+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2023-05-20 20:11+0000\n"
+"Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
 "Language: hu\n"
@@ -283,7 +283,7 @@ msgstr "A(z) %(version)s verzió elérhető, kiadva %(date)s"
 #: pynicotine/core.py:513
 #, python-format
 msgid "You are using a development version of %s"
-msgstr "Úgy tűnik a(z) %s fejlesztői verzióját használja"
+msgstr "Ön a(z) %s fejlesztői verzióját használja"
 
 #: pynicotine/core.py:516
 #, python-format
@@ -302,7 +302,7 @@ msgstr "Nem lehet lekérni a legújabb verziót: %s"
 #: pynicotine/gtkgui/__init__.py:48 pynicotine/gtkgui/__init__.py:57
 #, python-format
 msgid "Cannot find %s, please install it."
-msgstr "Nem található a(z) %s, kérem telepítse."
+msgstr "A(z) %s nem található, kérem telepítse."
 
 #: pynicotine/gtkgui/__init__.py:95
 msgid "No graphical environment available, using headless (no GUI) mode"
@@ -755,7 +755,6 @@ msgid "Change Password"
 msgstr "Jelszó módosítása"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:276
-#, fuzzy
 msgid ""
 "<b>Syntax</b>: Letters are case-insensitive. All Python regular expressions "
 "are supported if escaping is disabled. For simple filters, keeping escaping "
@@ -1921,14 +1920,13 @@ msgstr ""
 "meg semmit, vagy a fájlokat privát módon osztja meg."
 
 #: pynicotine/gtkgui/userbrowse.py:525
-#, fuzzy
 msgid ""
 "Unable to request shared files from user. Either the user is offline, the "
 "listening ports are closed on both sides, or there is a temporary "
 "connectivity issue."
 msgstr ""
 "Nem lehet megosztott fájlokat kérni a felhasználótól. A felhasználó nincs "
-"bejelentkezve, vagy mindkettőjüknek zárt a figyelő portja, vagy átmeneti "
+"bejelentkezve, vagy mindkét oldalon zárt a figyelőport, vagy átmeneti "
 "kapcsolódási probléma áll fenn."
 
 #: pynicotine/gtkgui/userbrowse.py:731
@@ -1975,7 +1973,7 @@ msgid ""
 "issue."
 msgstr ""
 "Nem sikerült információt kérni a felhasználótól. Vagy mindkettőtöknek zárt a "
-"figyelő portja, vagy a felhasználó nincs bejelentkezve, vagy átmeneti "
+"figyelőportja, vagy a felhasználó nincs bejelentkezve, vagy átmeneti "
 "kapcsolati probléma áll fenn."
 
 #: pynicotine/gtkgui/userinfo.py:421
@@ -2243,9 +2241,8 @@ msgid "Add as Operator of %s"
 msgstr "Hozzáadás %s operátoraként"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:553
-#, fuzzy
 msgid "Please enter number of days."
-msgstr "Kérem adja meg a napok számát!"
+msgstr "Kérem adja meg a napok számát."
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:564
 #, python-format
@@ -2313,7 +2310,7 @@ msgstr "Csatlakozás"
 #: pynicotine/gtkgui/widgets/trayicon.py:104
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:27
 msgid "Disconnect"
-msgstr "Szétkapcsol"
+msgstr "Lecsatlakozás"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:109
 msgid "Send Message"
@@ -2807,7 +2804,7 @@ msgstr "India"
 
 #: pynicotine/networkfilter.py:138
 msgid "British Indian Ocean Territory"
-msgstr "Brit Indiai-óceáni Terület"
+msgstr "Brit Indiai-óceáni terület"
 
 #: pynicotine/networkfilter.py:139
 msgid "Iraq"
@@ -3219,7 +3216,7 @@ msgstr "Dél-Szudán"
 
 #: pynicotine/networkfilter.py:241
 msgid "Sao Tome & Principe"
-msgstr "São Tomé és Príncipe"
+msgstr "Sao Tome és Principe"
 
 #: pynicotine/networkfilter.py:242
 msgid "El Salvador"
@@ -3400,7 +3397,7 @@ msgstr "Last.fm: Kérem adja meg a Last.fm felhasználónevét és API-kulcsát"
 #: pynicotine/nowplaying.py:270 pynicotine/nowplaying.py:278
 #: pynicotine/nowplaying.py:292 pynicotine/nowplaying.py:307
 msgid "Now Playing Error"
-msgstr "Lejátszóhiba"
+msgstr "Most játszott hiba"
 
 #: pynicotine/nowplaying.py:137
 #, python-format
@@ -3483,9 +3480,8 @@ msgid "Say something in the third-person"
 msgstr "Mond valamit kívülállóként"
 
 #: pynicotine/plugins/core_commands/__init__.py:87
-#, fuzzy
 msgid "Announce the song currently playing"
-msgstr "Hirdesse az éppen lejátszott dalt"
+msgstr "Az most játszott dal bejelentése"
 
 #: pynicotine/plugins/core_commands/__init__.py:94
 msgid "Join chat room"
@@ -3508,9 +3504,8 @@ msgid "Close private chat"
 msgstr "Privát csevegés bezárása"
 
 #: pynicotine/plugins/core_commands/__init__.py:133
-#, fuzzy
 msgid "Request user's client version"
-msgstr "Felhasználói információk kérése"
+msgstr "A felhasználó ügyfélverziójának lekérése"
 
 #: pynicotine/plugins/core_commands/__init__.py:142
 msgid "Send private message to user"
@@ -3550,7 +3545,7 @@ msgstr "Felhasználótól vagy IP-címről érkező üzenetek elnémítása"
 
 #: pynicotine/plugins/core_commands/__init__.py:212
 msgid "Remove user or IP address from ignore lists"
-msgstr "Felhasználó vagy IP-cím eltávolítása a mellőzőlistákról"
+msgstr "Felhasználó vagy IP-cím eltávolítása a mellőzőlistáról"
 
 #: pynicotine/plugins/core_commands/__init__.py:220
 msgid "Rescan shares"
@@ -3606,12 +3601,12 @@ msgstr "Nincs csatlakozva a(z) %s szobához"
 #: pynicotine/plugins/core_commands/__init__.py:465
 #, python-format
 msgid "Banned %s"
-msgstr "Tiltva (%s)"
+msgstr "%s tiltva"
 
 #: pynicotine/plugins/core_commands/__init__.py:479
 #, python-format
 msgid "Unbanned %s"
-msgstr "Tiltás feloldva (%s)"
+msgstr "%s tiltása feloldva"
 
 #: pynicotine/plugins/core_commands/__init__.py:492
 #, python-format
@@ -3640,8 +3635,7 @@ msgstr ""
 #, python-format
 msgid "Conflicting %(interface)s command in plugin %(name)s: %(command)s"
 msgstr ""
-"Összeférhetetlen %(interface)s parancs a(z) %(name)s bővítményben: "
-"%(command)s"
+"A(z) %(interface)s parancs ütközik a(z) %(name)s bővítményben: %(command)s"
 
 #: pynicotine/pluginsystem.py:549
 #, python-format
@@ -3768,14 +3762,13 @@ msgstr ""
 "valamelyiket."
 
 #: pynicotine/shares.py:143
-#, fuzzy, python-format
+#, python-format
 msgid "%(num)s folders found before rescan"
-msgstr "%(num)s mappákat találtak az újbóli szkennelés után"
+msgstr "%(num)s mappa található az újraszkennelés előtt"
 
 #: pynicotine/shares.py:144
-#, fuzzy
 msgid "Rebuilding shares…"
-msgstr "Megosztások frissítése…"
+msgstr "Megosztások újraépítése…"
 
 #: pynicotine/shares.py:144
 msgid "Rescanning shares…"
@@ -3861,17 +3854,17 @@ msgid "Unknown Network Interface"
 msgstr "Ismeretlen hálózati interfész"
 
 #: pynicotine/slskproto.py:315
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Cannot listen on port %(port)s. Ensure no other application uses it, or "
 "choose a different port. Error: %(error)s"
 msgstr ""
-"Nem lehet hallgatni az %(port)s porton. Győződjön meg arról, hogy más "
+"A(z) %(port)s porton nem lehet figyelni. Győződjön meg arról, hogy más "
 "alkalmazás nem használja, vagy válasszon másik portot. Hiba: %(error)s"
 
 #: pynicotine/slskproto.py:317
 msgid "Listening Port Unavailable"
-msgstr "A figyelő port nem elérhető"
+msgstr "A figyelőport nem elérhető"
 
 #: pynicotine/slskproto.py:320
 #, python-format
@@ -4207,24 +4200,23 @@ msgid ""
 msgstr ""
 "A Nicotine+ program P2P hálózatot használ a többi felhasználóhoz való "
 "csatlakozáshoz. Ahhoz, hogy a felhasználók gond nélkül csatlakozhassanak "
-"Önhöz, elengedhetetlen a nyitott figyelő port."
+"Önhöz, elengedhetetlen a nyitott figyelőport."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:267
 msgid ""
 "If your listening port is closed, you will only be able to connect to users "
 "whose listening ports are open."
 msgstr ""
-"Ha a figyelő portja zárva van, csak olyan felhasználókhoz tud csatlakozni "
-"akiknek a figyelő portja nyitva van."
+"Ha a figyelőportja zárva van, csak olyan felhasználókhoz tud csatlakozni "
+"akiknek a figyelőportja nyitva van."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:277
-#, fuzzy
 msgid ""
 "If necessary, choose a different listening port below. This can also be done "
 "later in the preferences."
 msgstr ""
-"Ha szükséges, válasszon egy másik hallgatási portot alább. Ez később is "
-"megtehető a beállításoknál."
+"Ha szükséges válasszon egy másik figyelőportot az alábbiakban. Ez később is "
+"megtehető a beállításokban."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:316
 msgid "Download Files to Folder"
@@ -4518,7 +4510,7 @@ msgstr "Szünet"
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1900
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1973
 msgid "Clear"
-msgstr "Tisztítás"
+msgstr "Törlés"
 
 #: pynicotine/gtkgui/ui/downloads.ui:154
 msgid "Clear All Finished/Filtered Downloads"
@@ -4526,7 +4518,7 @@ msgstr "Törölje az összes kész/szűrt letöltést"
 
 #: pynicotine/gtkgui/ui/downloads.ui:170 pynicotine/gtkgui/ui/uploads.ui:170
 msgid "Clear Finished"
-msgstr "Befejezettek eltávolítása"
+msgstr "Befejezettek törlése"
 
 #: pynicotine/gtkgui/ui/downloads.ui:185
 msgid "Clear Specific Downloads"
@@ -4687,12 +4679,12 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1130
 msgid "Chat _History"
-msgstr "_Csevegéstörténet"
+msgstr "_Csevegéselőzmények"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1155
 #: pynicotine/gtkgui/ui/mainwindow.ui:1466
 msgid "Configure Chats"
-msgstr "Csevegés beállítása"
+msgstr "Csevegés beállítás"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1222
 msgid ""
@@ -4944,9 +4936,9 @@ msgid ""
 "Prepend = to a value to specify an exact match:\n"
 "    =1024 matches files that are exactly 1 KiB (kibibyte)."
 msgstr ""
-"A pontos egyezés megadásához az érték elé kell tenni az egyenlőségjelet "
-"(=):\n"
-"    =1024 csak az 1KiB (kilobájt) méretű fájlokra illik."
+"A pontos egyezés megadásához az érték elé kell tenni az egyenlőségjelet (=):"
+"\n"
+"    =1024 csak az 1KiB (kilobájt) méretű fájlokra illeszkedik."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:250
 msgid ""
@@ -4995,10 +4987,10 @@ msgid ""
 "bitrate of at least 256 Kb/s with a maximum bitrate of 1411 Kb/s:\n"
 "    256 <=1411"
 msgstr ""
-"A fájlmérethez hasonlóan (fent) használhatók az operátorok =, !, <,>,<= vagy "
-">= és több feltétel is megadható, például a legalább 256 Kb/s bitsebességű "
-"és 1411 Kb/s maximális bitsebességű fájlok megjelenítése\n"
-"    256<=1411"
+"A fájlmérethez hasonlóan (fent) használhatók az operátorok =, !, <, >, <= "
+"vagy >= és több feltétel is megadható, például a legalább 256 Kb/s "
+"bitsebességű és 1411 Kb/s maximális bitsebességű fájlok megjelenítése\n"
+"    256 <=1411"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:350
 msgid "Filters files based upon their duration."
@@ -5049,9 +5041,9 @@ msgid ""
 msgstr ""
 "A fájlokat a felhasználók földrajzi helye alapján szűri az ISO 3166-2 "
 "szabványban meghatározott országkódok szerint:\n"
-"    Az USA csak az Egyesült Államokbeli IP-című felhasználók eredményeit "
+"    US csak az Egyesült Államokbeli IP-című felhasználók eredményeit "
 "jeleníti meg.\n"
-"    ! A GB elrejti a Nagy-Britanniai felhasználóktól származó találatokat."
+"    A !GB elrejti a Nagy-Britanniai felhasználóktól származó találatokat."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:421
 msgid "Multiple countries can be specified with commas or spaces."
@@ -5261,7 +5253,7 @@ msgstr "Csevegőszobák felhasználónevei"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:256
 msgid "Room names"
-msgstr "Szobanevek"
+msgstr "Szoba nevek"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:269
 msgid "Commands"
@@ -5519,9 +5511,8 @@ msgid "Public IP address:"
 msgstr "Nyilvános IP-cím:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:172
-#, fuzzy
 msgid "Listening port:"
-msgstr "Figyelőport-tartomány:"
+msgstr "Figyelőport:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:206
 msgid "Away Status"
