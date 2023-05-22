@@ -28,7 +28,7 @@
  - Ingmar K. Steen (Hyriand) (2003–2004)
 
 ## Euskara
- - Julen (2006-2007)
+ - Julen (2006–2007)
 
 ## Finnish
  - Kari Viittanen (Kalevi) (2006–2007)
@@ -54,19 +54,19 @@
  - Ingmar K. Steen (Hyriand) (2003–2004)
 
 ## Hungarian
- - Szia Tomi (2022-2023)
+ - Szia Tomi (2022–2023)
  - Nils (2009)
  - David Balazs (djbaloo) (2006–2020)
 
 ## Italian
- - Gabboxl (2022-2023)
+ - Gabboxl (2022–2023)
  - ms-afk (2023)
  - Gianluca Boiano (2020–2022)
  - nicola (2007)
  - dbazza (2003–2004)
 
 ## Latvian
- - Pagal3 (2022-2023)
+ - Pagal3 (2022–2023)
 
 ## Lithuanian
  - mantas (2020)
@@ -82,7 +82,7 @@
  - Wojciech Owczarek (owczi) (2003–2004)
 
 ## Portuguese (Brazil)
- - Havokdan (2022-2023)
+ - Havokdan (2022–2023)
  - Guilherme Santos (2022)
  - b1llso (2022)
  - Nicolas Abril (2021)
@@ -90,7 +90,7 @@
  - Felipe Nogaroto Gonzalez (Suicide|Solution) (2006)
 
 ## Russian
- - SnIPeRSnIPeR (2022-2023)
+ - SnIPeRSnIPeR (2022–2023)
  - Mehavoid (2021–2023)
  - AHOHNMYC (2022)
 
@@ -106,7 +106,7 @@
 
 ## Spanish (Spain)
  - gallegonovato (2023)
- - MELERIX (2021-2023)
+ - MELERIX (2021–2023)
  - tagomago (2021–2022)
  - Strange (2021)
  - Silvio Orta (2007)

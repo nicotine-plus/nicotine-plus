@@ -242,19 +242,19 @@ class About(Dialog):
    - Ingmar K. Steen (Hyriand) (2003–2004)""",
 
         """>> <b>Hungarian</b>
-   - Szia Tomi (2022-2023)
+   - Szia Tomi (2022–2023)
    - Nils (2009)
    - David Balazs (djbaloo) (2006–2020)""",
 
         """>> <b>Italian</b>
-   - Gabboxl (2022-2023)
+   - Gabboxl (2022–2023)
    - ms-afk (2023)
    - Gianluca Boiano (2020–2022)
    - nicola (2007)
    - dbazza (2003–2004)""",
 
         """>> <b>Latvian</b>
-   - Pagal3 (2022-2023)""",
+   - Pagal3 (2022–2023)""",
 
         """>> <b>Lithuanian</b>
    - mantas (2020)
@@ -270,7 +270,7 @@ class About(Dialog):
    - Wojciech Owczarek (owczi) (2003–2004)""",
 
         """>> <b>Portuguese (Brazil)</b>
-   - Havokdan (2022-2023)
+   - Havokdan (2022–2023)
    - Guilherme Santos (2022)
    - b1llso (2022)
    - Nicolas Abril (2021)
@@ -278,12 +278,12 @@ class About(Dialog):
    - Felipe Nogaroto Gonzalez (Suicide|Solution) (2006)""",
 
         """>> <b>Russian</b>
-   - SnIPeRSnIPeR (2022-2023)
+   - SnIPeRSnIPeR (2022–2023)
    - Mehavoid (2021–2023)
    - AHOHNMYC (2022)""",
 
         """>> <b>Slovak</b>
-   - Jozef Říha (2006-2008)""",
+   - Jozef Říha (2006–2008)""",
 
         """>> <b>Spanish (Chile)</b>
    - MELERIX (2021–2023)
@@ -294,7 +294,7 @@ class About(Dialog):
 
         """>> <b>Spanish (Spain)</b>
    - gallegonovato (2023)
-   - MELERIX (2021-2023)
+   - MELERIX (2021–2023)
    - tagomago (2021–2022)
    - Strange (2021)
    - Silvio Orta (2007)
@@ -324,7 +324,7 @@ Copyright (c) 2014–2022 Tom Wallroth
 <a href="https://github.com/devsnd/tinytag">https://github.com/devsnd/tinytag</a>""",
 
         """<b>Country database licensed under the CC-BY-SA-4.0 License.</b>
-Copyright (c) 2001-2023 Hexasoft Development Sdn. Bhd.
+Copyright (c) 2001–2023 Hexasoft Development Sdn. Bhd.
 This program includes IP2Location LITE data available from:
 <a href="https://lite.ip2location.com">https://lite.ip2location.com</a>""",
 
