@@ -273,9 +273,8 @@ class DownloadsPage:
             self.received_folder_button, parent=application.preferences, chooser_type="folder"
         )
 
-        self.filter_syntax_description = _("<b>Syntax</b>: Letters are case-insensitive. All Python regular "
-                                           "expressions are supported if escaping is disabled. For simple filters, "
-                                           "keeping escaping enabled is recommended.")
+        self.filter_syntax_description = _("<b>Syntax</b>: Case-insensitive. If enabled, Python regular expressions "
+                                           "can be used, otherwise only wildcard * matches are supported.")
         self.filter_list_view = TreeView(
             application.window, parent=self.filter_list_container, multi_select=True,
             activate_row_callback=self.on_edit_filter,
@@ -287,11 +286,11 @@ class DownloadsPage:
                     "expand_column": True,
                     "default_sort_column": "ascending"
                 },
-                "escaped": {
+                "regex": {
                     "column_type": "toggle",
-                    "title": _("Escaped"),
+                    "title": _("Regex"),
                     "width": 0,
-                    "toggle_callback": self.on_toggle_escaped
+                    "toggle_callback": self.on_toggle_regex
                 }
             }
         )
@@ -304,7 +303,6 @@ class DownloadsPage:
                 "incompletedir": self.incomplete_folder_button,
                 "downloaddir": self.download_folder_button,
                 "uploaddir": self.received_folder_button,
-                "downloadfilters": self.filter_list_view,
                 "enablefilters": self.enable_filters_toggle,
                 "downloadlimit": self.speed_spinner,
                 "downloadlimitalt": self.alt_speed_spinner,
@@ -331,6 +329,15 @@ class DownloadsPage:
         else:
             self.use_unlimited_speed_radio.set_active(True)
 
+        for item in config.sections["transfers"]["downloadfilters"]:
+            if not isinstance(item, list) or len(item) < 2:
+                continue
+
+            dfilter, escaped = item
+            enable_regex = not escaped
+
+            self.filter_list_view.add_row([dfilter, enable_regex], select_row=False)
+
     def get_settings(self):
 
         if self.use_speed_limit_radio.get_active():
@@ -345,8 +352,8 @@ class DownloadsPage:
         download_filters = []
 
         for dfilter, iterator in self.filter_list_view.iterators.items():
-            escaped = self.filter_list_view.get_row_value(iterator, "escaped")
-            download_filters.append([dfilter, int(escaped)])
+            enable_regex = self.filter_list_view.get_row_value(iterator, "regex")
+            download_filters.append([dfilter, not enable_regex])
 
         return {
             "transfers": {
@@ -368,25 +375,25 @@ class DownloadsPage:
             }
         }
 
-    def on_toggle_escaped(self, list_view, iterator):
+    def on_toggle_regex(self, list_view, iterator):
 
-        value = list_view.get_row_value(iterator, "escaped")
-        list_view.set_row_value(iterator, "escaped", not value)
+        value = list_view.get_row_value(iterator, "regex")
+        list_view.set_row_value(iterator, "regex", not value)
 
         self.on_verify_filter()
 
     def on_add_filter_response(self, dialog, _response_id, _data):
 
         dfilter = dialog.get_entry_value()
-        escaped = dialog.get_option_value()
+        enable_regex = dialog.get_option_value()
 
         iterator = self.filter_list_view.iterators.get(dfilter)
 
         if iterator is not None:
             self.filter_list_view.set_row_value(iterator, "filter", dfilter)
-            self.filter_list_view.set_row_value(iterator, "escaped", escaped)
+            self.filter_list_view.set_row_value(iterator, "regex", enable_regex)
         else:
-            self.filter_list_view.add_row([dfilter, escaped])
+            self.filter_list_view.add_row([dfilter, enable_regex])
 
         self.on_verify_filter()
 
@@ -397,22 +404,22 @@ class DownloadsPage:
             title=_("Add Download Filter"),
             message=self.filter_syntax_description + "\n\n" + _("Enter a new download filter:"),
             callback=self.on_add_filter_response,
-            option_value=True,
-            option_label=_("Escape filter"),
+            option_value=False,
+            option_label=_("Enable regular expressions"),
             droplist=self.filter_list_view.iterators
         ).show()
 
     def on_edit_filter_response(self, dialog, _response_id, iterator):
 
         new_dfilter = dialog.get_entry_value()
-        escaped = dialog.get_option_value()
+        enable_regex = dialog.get_option_value()
 
         if new_dfilter in self.filter_list_view.iterators:
             self.filter_list_view.set_row_value(iterator, "filter", new_dfilter)
-            self.filter_list_view.set_row_value(iterator, "escaped", escaped)
+            self.filter_list_view.set_row_value(iterator, "regex", enable_regex)
         else:
             self.filter_list_view.remove_row(iterator)
-            self.filter_list_view.add_row([new_dfilter, escaped])
+            self.filter_list_view.add_row([new_dfilter, enable_regex])
 
         self.on_verify_filter()
 
@@ -420,7 +427,7 @@ class DownloadsPage:
 
         for iterator in self.filter_list_view.get_selected_rows():
             dfilter = self.filter_list_view.get_row_value(iterator, "filter")
-            escaped = self.filter_list_view.get_row_value(iterator, "escaped")
+            enable_regex = self.filter_list_view.get_row_value(iterator, "regex")
 
             EntryDialog(
                 parent=self.application.preferences,
@@ -429,8 +436,8 @@ class DownloadsPage:
                 callback=self.on_edit_filter_response,
                 callback_data=iterator,
                 default=dfilter,
-                option_value=escaped,
-                option_label=_("Escape filter")
+                option_value=enable_regex,
+                option_label=_("Enable regular expressions")
             ).show()
             return
 
@@ -457,9 +464,9 @@ class DownloadsPage:
 
         for dfilter, iterator in self.filter_list_view.iterators.items():
             dfilter = self.filter_list_view.get_row_value(iterator, "filter")
-            escaped = self.filter_list_view.get_row_value(iterator, "escaped")
+            enable_regex = self.filter_list_view.get_row_value(iterator, "regex")
 
-            if escaped:
+            if not enable_regex:
                 dfilter = re.escape(dfilter)
                 dfilter = dfilter.replace("\\*", ".*")
 
