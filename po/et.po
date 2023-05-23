@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-22 18:50+0300\n"
-"PO-Revision-Date: 2023-05-19 01:59+0000\n"
+"PO-Revision-Date: 2023-05-22 16:51+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Estonian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/et/>\n"
@@ -821,10 +821,13 @@ msgid "Change Password"
 msgstr "Muuda parooli"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:276
+#, fuzzy
 msgid ""
 "<b>Syntax</b>: Case-insensitive. If enabled, Python regular expressions can "
 "be used, otherwise only wildcard * matches are supported."
 msgstr ""
+"<b>Süntaks</b>: tõstutundlik. Kui see on lubatud, saab kasutada Pythoni "
+"regulaaravaldisi, vastasel juhul toetatakse ainult metamärgi * vasteid."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:284
 #, fuzzy
@@ -832,8 +835,9 @@ msgid "Filter"
 msgstr "Filter"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:291
+#, fuzzy
 msgid "Regex"
-msgstr ""
+msgstr "Regex"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:404
 #, fuzzy
@@ -846,8 +850,9 @@ msgstr "Sisestage uus allalaadimisfilter:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:408
 #: pynicotine/gtkgui/dialogs/preferences.py:440
+#, fuzzy
 msgid "Enable regular expressions"
-msgstr ""
+msgstr "Luba regulaaravaldised"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:434
 msgid "Edit Download Filter"

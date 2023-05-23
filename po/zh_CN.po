@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-22 18:50+0300\n"
-"PO-Revision-Date: 2023-05-19 01:59+0000\n"
+"PO-Revision-Date: 2023-05-22 16:51+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/zh_Hans/>\n"
@@ -746,18 +746,21 @@ msgid "Change Password"
 msgstr "更改密码"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:276
+#, fuzzy
 msgid ""
 "<b>Syntax</b>: Case-insensitive. If enabled, Python regular expressions can "
 "be used, otherwise only wildcard * matches are supported."
-msgstr ""
+msgstr "<b>语法</b>：不区分大小写。如果启用，则可以使用 Python 正则表达式，"
+"否则仅支持通配符 * 匹配。"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:284
 msgid "Filter"
 msgstr "筛选"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:291
+#, fuzzy
 msgid "Regex"
-msgstr ""
+msgstr "正则表达式"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:404
 msgid "Add Download Filter"
@@ -769,8 +772,9 @@ msgstr "输入新的下载过滤器："
 
 #: pynicotine/gtkgui/dialogs/preferences.py:408
 #: pynicotine/gtkgui/dialogs/preferences.py:440
+#, fuzzy
 msgid "Enable regular expressions"
-msgstr ""
+msgstr "启用正则表达式"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:434
 msgid "Edit Download Filter"
