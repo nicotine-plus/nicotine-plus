@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-22 18:50+0300\n"
-"PO-Revision-Date: 2023-05-19 01:58+0000\n"
+"PO-Revision-Date: 2023-05-22 16:51+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Basque <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/eu/>\n"
@@ -861,18 +861,23 @@ msgid "Change Password"
 msgstr "Aldatu pasahitza"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:276
+#, fuzzy
 msgid ""
 "<b>Syntax</b>: Case-insensitive. If enabled, Python regular expressions can "
 "be used, otherwise only wildcard * matches are supported."
 msgstr ""
+"<b>Sintaxia</b>: maiuskulak eta minuskulak bereizten ditu. Gaituta badago, "
+"Python-en adierazpen erregularrak erabil daitezke, bestela komodin * bat-"
+"etortzeak soilik onartzen dira."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:284
 msgid "Filter"
 msgstr "Iragazkia"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:291
+#, fuzzy
 msgid "Regex"
-msgstr ""
+msgstr "Regex"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:404
 #, fuzzy
@@ -885,8 +890,9 @@ msgstr "Deskarga iragazki berria idatzi:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:408
 #: pynicotine/gtkgui/dialogs/preferences.py:440
+#, fuzzy
 msgid "Enable regular expressions"
-msgstr ""
+msgstr "Gaitu adierazpen erregularrak"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:434
 #, fuzzy

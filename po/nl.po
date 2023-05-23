@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-22 18:50+0300\n"
-"PO-Revision-Date: 2023-05-19 02:30+0000\n"
+"PO-Revision-Date: 2023-05-22 17:12+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -762,6 +762,9 @@ msgid ""
 "<b>Syntax</b>: Case-insensitive. If enabled, Python regular expressions can "
 "be used, otherwise only wildcard * matches are supported."
 msgstr ""
+"<b>Syntax</b>: Hoofdlettergevoelig. Indien ingeschakeld kunnen Python "
+"reguliere uitdrukkingen worden gebruikt, anders worden alleen jokertekens * "
+"ondersteund."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:284
 msgid "Filter"
@@ -769,7 +772,7 @@ msgstr "Filter"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:291
 msgid "Regex"
-msgstr ""
+msgstr "Regex"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:404
 msgid "Add Download Filter"
@@ -782,7 +785,7 @@ msgstr "Geef een nieuwe download-filter op:"
 #: pynicotine/gtkgui/dialogs/preferences.py:408
 #: pynicotine/gtkgui/dialogs/preferences.py:440
 msgid "Enable regular expressions"
-msgstr ""
+msgstr "Reguliere expressies inschakelen"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:434
 msgid "Edit Download Filter"

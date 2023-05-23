@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-22 18:50+0300\n"
-"PO-Revision-Date: 2023-05-19 01:59+0000\n"
+"PO-Revision-Date: 2023-05-22 16:51+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Lithuanian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/lt/>\n"
@@ -842,18 +842,23 @@ msgid "Change Password"
 msgstr "Slaptažodis:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:276
+#, fuzzy
 msgid ""
 "<b>Syntax</b>: Case-insensitive. If enabled, Python regular expressions can "
 "be used, otherwise only wildcard * matches are supported."
 msgstr ""
+"<b>Sintaksė</b>: neskiriamos didžiosios ir mažosios raidės. Jei įjungta, "
+"Python įprastos išraiškos gali būti naudojamos, kitu atveju palaikomos tik "
+"pakaitos simbolio * atitiktys."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:284
 msgid "Filter"
 msgstr "Filtruoti"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:291
+#, fuzzy
 msgid "Regex"
-msgstr ""
+msgstr "Regex"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:404
 #, fuzzy
@@ -866,8 +871,9 @@ msgstr "Įveskite naują atsiuntimo filtrą:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:408
 #: pynicotine/gtkgui/dialogs/preferences.py:440
+#, fuzzy
 msgid "Enable regular expressions"
-msgstr ""
+msgstr "Įgalinti reguliariąsias išraiškas"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:434
 #, fuzzy

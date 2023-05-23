@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-22 18:50+0300\n"
-"PO-Revision-Date: 2023-05-19 01:59+0000\n"
+"PO-Revision-Date: 2023-05-22 16:51+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/pl/>\n"
@@ -759,18 +759,23 @@ msgid "Change Password"
 msgstr "Zmień hasło"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:276
+#, fuzzy
 msgid ""
 "<b>Syntax</b>: Case-insensitive. If enabled, Python regular expressions can "
 "be used, otherwise only wildcard * matches are supported."
 msgstr ""
+"<b>Składnia</b>: wielkość liter nie ma znaczenia. Jeśli ta opcja jest "
+"włączona, można używać wyrażeń regularnych języka Python, w przeciwnym razie "
+"obsługiwane są tylko dopasowania wieloznaczne *."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:284
 msgid "Filter"
 msgstr "Filtr"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:291
+#, fuzzy
 msgid "Regex"
-msgstr ""
+msgstr "wyrażenie regularne"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:404
 msgid "Add Download Filter"
@@ -782,8 +787,9 @@ msgstr "Wprowadź nowy filtr pobierania:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:408
 #: pynicotine/gtkgui/dialogs/preferences.py:440
+#, fuzzy
 msgid "Enable regular expressions"
-msgstr ""
+msgstr "Włącz wyrażenia regularne"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:434
 msgid "Edit Download Filter"

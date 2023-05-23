@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-22 18:50+0300\n"
-"PO-Revision-Date: 2023-05-20 20:11+0000\n"
+"PO-Revision-Date: 2023-05-23 00:08+0000\n"
 "Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/tr/>\n"
@@ -765,6 +765,9 @@ msgid ""
 "<b>Syntax</b>: Case-insensitive. If enabled, Python regular expressions can "
 "be used, otherwise only wildcard * matches are supported."
 msgstr ""
+"<b>Söz dizimi</b>: Büyük/küçük harfe duyarlı değildir. Etkinleştirilirse "
+"Python düzenli ifadeleri kullanılabilir, aksi takdirde yalnızca joker "
+"karakter * eşleşmeleri desteklenir."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:284
 msgid "Filter"
@@ -772,7 +775,7 @@ msgstr "Filtre"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:291
 msgid "Regex"
-msgstr ""
+msgstr "Düzenli ifade"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:404
 msgid "Add Download Filter"
@@ -785,7 +788,7 @@ msgstr "Yeni bir indirme filtresi girin:"
 #: pynicotine/gtkgui/dialogs/preferences.py:408
 #: pynicotine/gtkgui/dialogs/preferences.py:440
 msgid "Enable regular expressions"
-msgstr ""
+msgstr "Düzenli ifadeleri etkinleştir"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:434
 msgid "Edit Download Filter"
