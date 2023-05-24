@@ -315,7 +315,7 @@ class NetworkFilter:
 
         if not username:
             # Try to get a username from currently active connections
-            username = self.get_online_username(ip_address) or ""
+            username = self.get_online_username(ip_address)
 
         elif not self.is_ip_address(ip_address):
             # Try to get a known address for the user, use username as placeholder otherwise
