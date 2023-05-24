@@ -48,8 +48,8 @@ class Plugin(BasePlugin):
             "port": {
                 "callback": self.port_checker_command,
                 "description": "Check firewall state of user",
-                "usage": ["<user>"],
-                "usage_private_chat": ["[user]"]
+                "parameters": ["<user>"],
+                "parameters_private_chat": ["[user]"]
             }
         }
         self.throttle = ResponseThrottle(self.core, self.human_name)

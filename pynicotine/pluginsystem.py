@@ -759,7 +759,7 @@ class PluginHandler:
 
             if data:
                 commands = ", /".join([command] + data.get("aliases", []))
-                parameters = " ".join(data.get(f"usage_{command_interface}", data.get("usage", [])))
+                parameters = " ".join(data.get(f"parameters_{command_interface}", data.get("parameters", [])))
 
                 command_message = f"{commands} {parameters}".strip()
                 description = data.get("description", description)
@@ -824,23 +824,23 @@ class PluginHandler:
 
                     command_found = True
                     rejection_message = None
-                    usage = data.get(f"usage_{command_interface}", data.get("usage", []))
+                    parameters = data.get(f"parameters_{command_interface}", data.get("parameters", []))
                     args_split = args.split()
                     num_args = len(args_split)
                     num_required_args = 0
 
-                    for i, arg in enumerate(usage):
-                        if arg.startswith("<"):
+                    for i, parameter in enumerate(parameters):
+                        if parameter.startswith("<"):
                             num_required_args += 1
 
                         if num_args < num_required_args:
-                            rejection_message = _("Missing %s argument") % arg
+                            rejection_message = _("Missing %s argument") % parameter
                             break
 
-                        if num_args <= i or "|" not in arg:
+                        if num_args <= i or "|" not in parameter:
                             continue
 
-                        choices = arg[1:-1].split("|")
+                        choices = parameter[1:-1].split("|")
 
                         if args_split[i] not in choices:
                             rejection_message = _("Invalid argument, possible choices: %s") % " | ".join(choices)
@@ -848,9 +848,9 @@ class PluginHandler:
 
                     if rejection_message:
                         plugin.output(rejection_message)
-                        plugin.output(_("Usage: %(command)s %(args)s") % {
+                        plugin.output(_("Usage: %(command)s %(parameters)s") % {
                             "command": "/" + command,
-                            "args": " ".join(usage)
+                            "parameters": " ".join(parameters)
                         })
                         break
 

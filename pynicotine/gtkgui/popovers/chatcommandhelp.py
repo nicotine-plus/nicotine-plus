@@ -88,8 +88,8 @@ class ChatCommandHelp(Popover):
         for group_name, commands in core.pluginhandler.get_command_descriptions(self.interface).items():
             section_container = self._create_command_section(group_name)
 
-            for command_usage, description in commands:
-                self._create_command_row(section_container, command_usage, description)
+            for command, description in commands:
+                self._create_command_row(section_container, command, description)
 
         self.scrollable.set_property("child", self.container)
         self.container.child_focus(Gtk.DirectionType.TAB_FORWARD)
