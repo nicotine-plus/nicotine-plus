@@ -394,7 +394,7 @@ class ChatRooms:
             self.completion_list += list(core.userlist.buddies)
 
         if config.sections["words"]["commands"]:
-            self.completion_list += list(core.pluginhandler.chatroom_commands)
+            self.completion_list += core.pluginhandler.get_command_list("chatroom")
 
         events.emit("room-completion-list", self.completion_list)
 

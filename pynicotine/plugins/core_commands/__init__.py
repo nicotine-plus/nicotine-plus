@@ -276,9 +276,7 @@ class Plugin(BasePlugin):
             command_interface = "cli"
 
         search_query = " ".join(args.lower().split(" ", maxsplit=1))
-        command_groups = self.parent.get_command_descriptions(
-            command_interface, search_query=search_query
-        )
+        command_groups = self.parent.get_command_groups_data(command_interface, search_query=search_query)
         num_commands = sum(len(command_groups[x]) for x in command_groups)
         output_text = ""
 
@@ -290,11 +288,12 @@ class Plugin(BasePlugin):
                 "query": search_query
             }
 
-        for group_name, commands in command_groups.items():
+        for group_name, command_data in command_groups.items():
             output_text += f"\n\n{group_name}:"
 
-            for command, description in commands:
-                output_text += f"\n\t{command}  -  {description}"
+            for command, aliases, parameters, description in command_data:
+                command_message = f"/{', /'.join([command] + aliases)} {' '.join(parameters)}".strip()
+                output_text += f"\n\t{command_message}  -  {description}"
 
         if not search_query:
             output_text += "\n\n" + _("Type %(command)s to list similar commands") % {"command": "/help [query]"}
