@@ -948,7 +948,8 @@ class ChatRoom:
             return
 
         # Add to completion list, and completion drop-down
-        self.chatrooms.completion.add_completion(username)
+        if self.chatrooms.completion.entry == self.chat_entry:
+            self.chatrooms.completion.add_completion(username)
 
         if not core.network_filter.is_user_ignored(username) and not core.network_filter.is_user_ip_ignored(username):
             self.activity_view.append_line(
@@ -969,7 +970,7 @@ class ChatRoom:
             return
 
         # Remove from completion list, and completion drop-down
-        if username not in core.userlist.buddies:
+        if self.chatrooms.completion.entry == self.chat_entry and username not in core.userlist.buddies:
             self.chatrooms.completion.remove_completion(username)
 
         if not core.network_filter.is_user_ignored(username) and \
